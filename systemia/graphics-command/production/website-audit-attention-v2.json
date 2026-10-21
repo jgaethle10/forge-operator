@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.graphics-command.website-audit-production-brief.v2",
+  "campaignId": "website-audit-attention-001",
+  "offerUrl": "https://fabric.systemiacommandcenters.com/offers/website-audit",
+  "priceUsd": 49,
+  "objective": "Turn the working Quick Win Audit funnel into a scroll-stopping commercial system using Evercraft Graphics Command, Fallen Creative Council, Visual Desk, Media Studio, Shot Tournament, and Clip.",
+  "hookVariants": [
+    {
+      "id": "traffic-customers",
+      "hook": "TRAFFIC UP. CUSTOMERS DOWN?",
+      "subhook": "Find the leak before you buy more traffic.",
+      "cta": "SEE WHAT'S LEAKING"
+    },
+    {
+      "id": "before-rebuild",
+      "hook": "BEFORE YOU REBUILD, FIND THE LEAK.",
+      "subhook": "Spend $49 to see what is actually broken first.",
+      "cta": "GET THE AUDIT"
+    },
+    {
+      "id": "more-traffic",
+      "hook": "MORE TRAFFIC WON'T FIX A LEAK.",
+      "subhook": "Fix the conversion path before you feed it more clicks.",
+      "cta": "FIND THE LEAK"
+    }
+  ],
+  "audio": {
+    "sonicHook": [
+      "Traffic up.",
+      "Sales flat.",
+      "Find the leak.",
+      "Fix what counts."
+    ],
+    "musicPrompt": "Twelve-second premium tech-commercial cue. Tight dry percussion, restrained bass pulse, clean modern tension, no trailer boom, no corporate uplift, no vocals. Build urgency in the first two seconds, create a small scan-like transition in the middle, and leave clean space for the spoken hook and CTA.",
+    "sfxPrompt": "Short tactile digital scan and conversion-lock sound design. Crisp, expensive, minimal, no arcade bleeps, no giant cinematic impacts.",
+    "providerExecutionState": "provider_ready_unrequested",
+    "paidGenerationAuthorized": false
+  },
+  "nextGates": [
+    "Generate multiple visual candidates through verified Media Studio providers only after paid-generation authorization.",
+    "Run candidates through the Shot Tournament with truth, composition, motion, continuity, brand, beauty, subject-coverage, and editability judges.",
+    "Admit only provider-receipted, commercial-rights-cleared winners into the timeline.",
+    "Render social and offer-page variants, then hand selected assets to Evercraft Clip. Publication authority remains downstream."
+  ],
+  "boundaries": {
+    "noFakeCustomerMetrics": true,
+    "syntheticVisualsMustNotMasqueradeAsEvidence": true,
+    "commercialRightsRequired": true,
+    "provenanceReceiptRequired": true,
+    "publicationAuthority": false
+  }
+}

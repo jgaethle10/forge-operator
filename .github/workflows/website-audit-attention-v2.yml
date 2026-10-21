@@ -1,0 +1,59 @@
+name: Website Audit Attention v2
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/build-website-audit-v2.mjs'
+      - 'systemia/graphics-command/website-audit-v2.test.mjs'
+      - 'systemia/graphics-command/production/website-audit-attention-v2.json'
+      - 'systemia/graphics-command/campaigns/website-audit-attention.json'
+      - 'systemia/graphics-command/commercial-*.mjs'
+      - 'systemia/media-studio/creative-council-saban-adapter.mjs'
+      - '.github/workflows/website-audit-attention-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  attention-pack-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove v2 attention pack
+        run: node --test systemia/graphics-command/website-audit-v2.test.mjs
+
+      - name: Build provider-ready campaign pack
+        run: |
+          rm -rf _website_audit_v2
+          node systemia/graphics-command/build-website-audit-v2.mjs --output _website_audit_v2
+          test -f _website_audit_v2/website-audit-attention/poster-hook-traffic-customers-feed.svg
+          test -f _website_audit_v2/website-audit-attention/poster-hook-before-rebuild-feed.svg
+          test -f _website_audit_v2/website-audit-attention/poster-hook-more-traffic-feed.svg
+          test -f _website_audit_v2/website-audit-attention/audio-brief-v2.json
+          test -f _website_audit_v2/website-audit-attention/production-needs-v2.json
+          test -f _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          test -f _website_audit_v2/website-audit-attention/clip-handoff-v2.json
+          test -f _website_audit_v2/website-audit-attention/attention-pack-v2.json
+          grep -q '"creativeCouncilStatus": "reconciled"' _website_audit_v2/website-audit-attention/attention-pack-v2.json
+          grep -q '"scrollStopScore": 1' _website_audit_v2/website-audit-attention/attention-pack-v2.json
+          grep -q '"providerExecutionState": "provider_ready_unrequested"' _website_audit_v2/website-audit-attention/production-needs-v2.json
+          grep -q '"paidGenerationAuthorized": false' _website_audit_v2/website-audit-attention/production-needs-v2.json
+          grep -q '"candidateCount": 4' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"modelDiversity": 2' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"tournamentRequired": true' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"paidGenerationAuthorized": false' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"publicationAuthority": false' _website_audit_v2/website-audit-attention/attention-pack-v2.json
+
+      - name: Preserve Website Audit v2 pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-audit-attention-v2
+          path: _website_audit_v2/website-audit-attention
+          if-no-files-found: error
+          retention-days: 90
