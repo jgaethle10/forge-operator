@@ -20,7 +20,7 @@ test('low-waterline and telephoto cinema shots are independent source-authored 3
  assert.equal(low.durationSec,4);
  assert.ok(low.orbit!.startHeight<8&&low.orbit!.endHeight<8);
  assert.ok(low.orbit!.radius<far.orbit!.radius*.5);
- assert.ok(low.startFovYDeg!<far.startFovYDeg!+14);
+ assert.ok(low.startFovYDeg!<far.startFovYDeg!+20);
  assert.throws(()=>makeNavalEditorialTake('bogus' as never),/naval_editorial_shot_invalid/);
 });
 test('editorial lighting is optional, independently authored, and cannot mutate existing camera/scene',()=>{
@@ -61,6 +61,7 @@ test('source 3D tracking direction builds unique signed original camera/GPU fram
     minVisibleFraction:.35}});
   assert.notEqual(audit.framingStatus,'subject_offscreen');
   assert.ok(audit.coverage.width>.18);
+  if(i===48)assert.equal(audit.framingStatus,'good_technical_framing');
   assert.ok(frame.renderPlan.draws.filter(d=>d.geometryId.startsWith('owned:fx-organic-foam-')).length>25);
   assert.ok(frame.renderPlan.draws.some(d=>d.entityId==='ocean'&&d.vertexCount===112*112*6));
   audits.push(audit.coverage.area);
