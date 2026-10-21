@@ -9,6 +9,24 @@
 - A separate, green **Specialist Edge External Canary** skipped the HTTPS/MCP test because its required specialist origin was not configured; it cannot substitute for the universal Fabric external canary.
 - Evercraft Payments remained `held_owned_payment_endpoint_unconfigured`. Restoring network ingress is not a payment receipt.
 
+## October 21 verified recovery and separate readiness gates
+
+**Field fix, operator executed:** the router's UPnP entries WAN TCP 80 and TCP 443 had still pointed at `192.168.88.3`, although ChromeOS Wi-Fi was at `192.168.88.5`. The bounded operator-confirmed repair updated only the precisely named Evercraft web entries to `.5:18080` and `.5:8443`. The router read them back successfully. Do not rerun this old-address repair or blindly delete mappings after they are corrected.
+
+**Independent witness:** GitHub run [39635483612](https://github.com/jgaethle10/forge-operator/actions/runs/39635483612) on the recovery branch passed the new `scripts/fabric-ingress-external-canary.mjs` with `public_dns`, TCP80/443, trusted TLS, runtime health, ChatGPT-style GET/SSE, signed device attestation, MCP initialize, read-only tools/list and a real nontransactional tools/call all true. This is an externally witnessed **ingress-and-read-only-MCP** receipt, not blanket platform launch readiness.
+
+**Separate remaining holds:**
+- The *full operator public-edge canary* still fails at `journal_live_edition_missing`. The current `public/journal/index.json` intentionally says `live_edition:false` with no current stories. Never fabricate freshness, reactivate expired articles, or bypass editorial approval to make the full canary green.
+- The dedicated installed `Evercraft_Fabric` connector reported provider probe HTTP 429 while another `Evercraft` connector successfully served read-only capabilities. Investigate the connector/provider binding separately from the now-proven public endpoint.
+- Customer payment/fulfillment and complete product publishing are not attested by ingress success.
+
+**Prevention and operations:**
+1. Reserve `192.168.88.5` for the Chromebook's **actual ChromeOS Wi-Fi MAC address** in the gateway DHCP settings; record the reservation without posting MAC addresses publicly. Do not assume Crostini's internal `100.115.*` address is the router target.
+2. Keep ChromeOS Linux forwarding TCP `18080` and `8443` enabled.
+3. The independent ingress workflow `.github/workflows/evercraft-fabric-public-ingress-monitor.yml` is configured for a 20-minute cadence **when merged into the default branch**. It records real failure stages and artifacts; the PR run passing does not establish that default-branch scheduling is installed.
+4. Preserve the full strict canary alongside the ingress monitor. A journal hold and a network outage must have different incident owners and release semantics.
+5. If external ingress fails again, inspect actual router target with UPnP GetSpecificPortMappingEntry and compare ChromeOS Wi-Fi IP before any mutation. Never remove unrelated mappings or enable Saban relay solely based on a stale content/publication failure.
+
 ## Preferred architecture: Evercraft Network + Saban + Evercraft Edge
 
 Do **not** create an independent fourth networking stack.
