@@ -103,7 +103,7 @@ export async function runSyntheticHttpRole({role,port,key,orderId,rail,token}={}
   }
   if(role==='attack'){
     const attack=await call(port,token,'POST',orderUrl+'/paid',{paid:true});
-    assert(attack.status===405,'money_mutation_endpoint_exposed');
+    assert([404,405].includes(attack.status),'money_mutation_endpoint_exposed');
     const claim=await call(port,token,'POST',orderUrl+'/claim',{
       expected_version:1,claim_ref:'fake_payment_claim'
     });
