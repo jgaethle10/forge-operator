@@ -6,13 +6,13 @@ from pathlib import Path
 import hashlib,json,urllib.request,argparse
 BASE="https://theremin.music.uiowa.edu/sound%20files/MIS"
 SOURCES={
- "violin_pp":"Strings/violin2012/Violin.arco.pp.sulD.D4B4.stereo.aif",
- "violin_mf":"Strings/violin2012/Violin.arco.mf.sulD.D4B4.stereo.aif",
- "viola_pp":"Strings/viola2012/Viola.arco.sulG.pp.C4B4.stereo.aif",
- "cello_pp":"Strings/cello2012/Cello.arco.pp.sulC.C3C4.stereo.aif",
- "cello_mf":"Strings/cello2012/Cello.arco.mf.sulC.C3C4.stereo.aif",
- "bass_pp_low":"Strings/doublebass2012/Bass.arco.sulE.pp.E1Bb1.stereo.aif",
- "bass_pp_mid":"Strings/doublebass2012/Bass.arco.sulE.pp.B1Bb2.stereo.aif",
+ "violin_pp":"Strings/violin2012/Violin.arco.pp.sulD.D4B4.mono.aif",
+ "violin_mf":"Strings/violin2012/Violin.arco.mf.sulD.D4B4.mono.aif",
+ "viola_pp":"Strings/viola2012/Viola.arco.sulG.pp.C4B4.mono.aif",
+ "cello_pp":"Strings/cello2012/Cello.arco.pp.sulC.C3C4.mono.aif",
+ "cello_mf":"Strings/cello2012/Cello.arco.mf.sulC.C3C4.mono.aif",
+ "bass_pp_low":"Strings/doublebass2012/Bass.arco.sulE.pp.E1Bb1.mono.aif",
+ "bass_pp_mid":"Strings/doublebass2012/Bass.arco.sulE.pp.B1Bb2.mono.aif",
  "flute_pp":"Woodwinds/flute/Flute.vib.pp.C5B5.aiff",
  "horn_pp":"Brass/frenchhorn/Horn.pp.C4B4.aiff",
  "bassoon_pp":"Woodwinds/bassoon/Bassoon.pp.C3B3.aiff",
