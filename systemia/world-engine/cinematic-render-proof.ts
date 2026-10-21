@@ -226,6 +226,24 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:'none'},
             depthStencil:{format:'depth24plus',depthWriteEnabled:true,depthCompare:'less'}
           });
+          // Native alpha-composited smoke: genuine GPU fragment blending with
+          // depth testing, depth writes OFF. Opaque legacy shots retain exact
+          // original pipeline and draw order.
+          const transparentPipeline=device.createRenderPipeline({
+            layout:device.createPipelineLayout({bindGroupLayouts:[frameLayout,objectLayout]}),
+            vertex:{module,entryPoint:'vs_main',buffers:[{arrayStride:48,attributes:[
+              {shaderLocation:0,offset:0,format:'float32x3'},
+              {shaderLocation:1,offset:12,format:'float32x3'},
+              {shaderLocation:2,offset:24,format:'float32x2'},
+              {shaderLocation:3,offset:32,format:'float32x4'}]}]},
+            fragment:{module,entryPoint:'fs_main',targets:[{format:'rgba8unorm',
+              blend:{
+                color:{srcFactor:'src-alpha',dstFactor:'one-minus-src-alpha',operation:'add'},
+                alpha:{srcFactor:'one',dstFactor:'one-minus-src-alpha',operation:'add'}
+              }}]},
+            primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:'none'},
+            depthStencil:{format:'depth24plus',depthWriteEnabled:false,depthCompare:'less'}
+          });
           const shadowModule=device.createShaderModule({code:shadowShader});
           const shadowErrors=(await shadowModule.getCompilationInfo()).messages
             .filter(m=>m.type==='error').map(m=>m.message);
@@ -287,7 +305,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           });
           const shadowSampler=device.createSampler({compare:'less-equal'});
           // Dedicated synthetic lab runtime; all values come from canonically verified WebGPU plans.
-          (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,buffers,
+          (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,transparentPipeline,buffers,
             fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline};
           return {ok:true};
         },{shader,shadowShader,geometries,textures,width:WIDTH,height:HEIGHT,
@@ -368,7 +386,20 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           });
           pass.setPipeline(r.pipeline);pass.setBindGroup(0,frameGroup);
           const objects:any[]=[];
-          for(const draw of plan.draws){
+          // Two actual render passes within one depth-tested scene: first
+          // opaque objects, then semitransparent meshes, back-to-front.
+          const opaque=plan.draws.filter((d:any)=>d.alphaMode!=='blend');
+          const transparent=plan.draws.filter((d:any)=>d.alphaMode==='blend');
+          const distanceSquared=(d:any)=>{
+            const m=d.modelMatrix,p=plan.cameraPosition;
+            return (m[12]-p[0])**2+(m[13]-p[1])**2+(m[14]-p[2])**2;
+          };
+          transparent.sort((a:any,b:any)=>distanceSquared(b)-distanceSquared(a));
+          let blending=false;
+          for(const draw of [...opaque,...transparent]){
+            if(draw.alphaMode==='blend'&&!blending){
+              pass.setPipeline(r.transparentPipeline);blending=true;
+            }
             const obj=new Float32Array([
               ...draw.modelMatrix,...draw.normalMatrix,
               ...draw.baseColor,draw.materialModel,draw.metallic,draw.roughness,draw.alphaCutoff,
@@ -597,6 +628,8 @@ async function main(){
         sequence.frames[Math.floor(sequence.frames.length/2)].activeFxParticles,
         sequence.frames[sequence.frames.length-2].activeFxParticles],
       realGpuParticleDrawsAtMiddle:sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.draws.filter(d=>d.entityId.startsWith('vfx-')).length,
+      realGpuTransparentParticlesAtMiddle:sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.draws.filter(d=>d.entityId.startsWith('vfx-')&&d.alphaMode==='blend').length,
+      separateDepthTestedAlphaBlendPipeline:true,
       originalWebGpuMeshes:true,fluidDynamicsVerified:false,
       photorealisticSmokeVerified:false,historicallyVerifiedWeather:false,
       publicationAuthority:false}}:{}),
