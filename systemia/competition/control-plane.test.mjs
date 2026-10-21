@@ -74,8 +74,8 @@ test("verified Kaggle lane becomes autonomous only after build, QA and package",
 
 test("gate queue is deadline ordered, deduplicated, and only includes due gates", () => {
   const items = [
-    { provider: "devpost", opportunity_id: "b", title: "B", deadline: "2026-10-30T00:00:00Z", human_gates: ["accept_terms", "accept_terms"], notify_human: true },
-    { provider: "devpost", opportunity_id: "a", title: "A", deadline: "2026-10-20T00:00:00Z", human_gates: ["mfa"], notify_human: true },
+    { provider: "devpost", opportunity_id: "b", title: "B", deadline: "2026-10-30T00:00:00Z", human_gates: ["accept_terms", "accept_terms"], human_gate_packets: [{ gate: "accept_terms", actionable: true, action_url: "https://example.com/gate", action: "Complete the provider gate.", why: "Provider requires account-holder action.", after: "Systemia resumes." }], notify_human: true },
+    { provider: "devpost", opportunity_id: "a", title: "A", deadline: "2026-10-20T00:00:00Z", human_gates: ["mfa"], human_gate_packets: [{ gate: "mfa", actionable: true, action_url: "https://example.com/gate", action: "Complete the provider gate.", why: "Provider requires account-holder action.", after: "Systemia resumes." }], notify_human: true },
     { provider: "devpost", opportunity_id: "deferred", title: "Deferred", deadline: "2026-10-10T00:00:00Z", human_gates: ["accept_terms"], notify_human: false },
   ];
   const queue = compileHumanGateQueue(items);
@@ -116,9 +116,78 @@ test("human gate becomes due once team preparation is complete", () => {
       submission_executor: "api",
     },
     build: { state: "built", raven_qa_state: "passed", submission_package_ready: true },
+    human_gate_details: {
+      accept_terms: {
+        action_url: "https://example.com/competition/rules",
+        action: "Open the provider page and click Accept Rules.",
+        why: "The provider requires the account holder to accept the current competition rules before entry.",
+        after: "Systemia resumes provider submission and verifies the external receipt.",
+      },
+    },
   }, { now: NOW });
 
   assert.equal(result.state, "held_human_gate");
   assert.equal(result.human_gate_due, true);
   assert.equal(result.notify_human, true);
+});
+
+
+test("vague human gate stays with Systemia instead of notifying Jesse", () => {
+  const result = classifyCompetitionOpportunity({
+    opportunity_id: "unclear-kaggle",
+    provider: "kaggle",
+    title: "Unclear Kaggle Entry",
+    deadline: "2026-11-30T00:00:00Z",
+    rules: {
+      verification_state: "verified",
+      eligible: true,
+      new_terms_required: true,
+    },
+    authorization: {
+      provider_authenticated: true,
+      terms_state: "not_accepted",
+      submission_executor: "api",
+    },
+    build: { state: "built", raven_qa_state: "passed", submission_package_ready: true },
+  }, { now: NOW });
+
+  assert.equal(result.notify_human, false);
+  assert.equal(result.human_gate_actionable, false);
+  assert.ok(result.team_blockers.includes("human_gate_packet_incomplete"));
+  assert.equal(result.next_team_action, "prepare_exact_human_gate_packet");
+  assert.equal(compileHumanGateQueue([result]).length, 0);
+});
+
+test("human gate queue carries the exact click packet", () => {
+  const result = classifyCompetitionOpportunity({
+    opportunity_id: "clear-kaggle",
+    provider: "kaggle",
+    title: "Clear Kaggle Entry",
+    deadline: "2026-11-30T00:00:00Z",
+    rules: {
+      verification_state: "verified",
+      eligible: true,
+      new_terms_required: true,
+    },
+    authorization: {
+      provider_authenticated: true,
+      terms_state: "not_accepted",
+      submission_executor: "api",
+    },
+    build: { state: "built", raven_qa_state: "passed", submission_package_ready: true },
+    human_gate_details: {
+      accept_terms: {
+        action_url: "https://example.com/competition/rules",
+        action: "Click Accept Rules.",
+        why: "Provider requires account-holder acceptance.",
+        after: "Systemia takes submission back over.",
+      },
+    },
+  }, { now: NOW });
+
+  const queue = compileHumanGateQueue([result]);
+  assert.equal(queue.length, 1);
+  assert.equal(queue[0].action_url, "https://example.com/competition/rules");
+  assert.equal(queue[0].action, "Click Accept Rules.");
+  assert.equal(queue[0].after, "Systemia takes submission back over.");
 });
