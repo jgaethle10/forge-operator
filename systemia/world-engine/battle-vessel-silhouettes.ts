@@ -203,7 +203,7 @@ export function historicSilhouetteWorld():WorldDefinition{
  ocean.transform.scale={x:4,y:1,z:4};
  world.visualScene.directionalShadows={
   ...world.visualScene.directionalShadows!,
-  focus:{x:12,y:3,z:8},halfExtent:110,resolution:512
+  focus:{x:12,y:3,z:8},halfExtent:100,resolution:512
  };
  const cam=world.entities.find(e=>e.id==='cinema-camera');
  if(!cam?.camera)throw Error('battle_camera_missing');
