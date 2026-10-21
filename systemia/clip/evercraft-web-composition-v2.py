@@ -115,7 +115,7 @@ def render(out):
   f=Fraction(ratio).limit_denominator(1800)
   a=resample_poly(a,f.numerator,f.denominator,axis=0).astype('float32')
   add(cello,a,sec(beat),held*60/BPM[min(7,int(beat//4))],
-      .28*(.4+.6*vel/127)*exp,-.24,.165,.33)
+      .52*(.4+.6*vel/127)*exp,-.24,.165,.33)
  mix=piano+cello
  pk=np.max(np.abs(mix))
  if pk>.83:mix*=.83/pk
