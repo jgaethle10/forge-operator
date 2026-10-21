@@ -1,0 +1,71 @@
+name: Journal Archive Independent Fallback Canary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/newsroom/**'
+      - 'public/journal/**'
+      - '.github/workflows/journal-archive-public-canary.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-archive-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Verify independent Journal archive route
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          base="https://jgaethle10.github.io/forge-operator/journal"
+          page="$base/"
+          index="$base/index.json"
+          ok=false
+
+          for attempt in 1 2 3 4 5 6; do
+            if curl --fail --silent --show-error --location --max-time 16 "$page" -o artifacts/journal-archive.html &&
+               curl --fail --silent --show-error --location --max-time 16 "$index" -o artifacts/journal-archive-index.json &&
+               grep -qi 'Evercraft Journal' artifacts/journal-archive.html &&
+               jq -e '.schema=="evercraft.journal.index.v1" and (.archive | type=="array") and (.stories | type=="array")' artifacts/journal-archive-index.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 10
+          done
+          test "$ok" = true
+
+          live_count="$(jq '.stories | length' artifacts/journal-archive-index.json)"
+          archived_count="$(jq '.archive | length' artifacts/journal-archive-index.json)"
+          test $((live_count + archived_count)) -gt 0
+
+          jq -n \
+            --arg origin "$base" \
+            --arg observed_at "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            --argjson live "$live_count" \
+            --argjson archived "$archived_count" \
+            '{
+              schema: "evercraft.journal.archive-fallback-canary.v1",
+              verified: true,
+              origin: $origin,
+              observed_at: $observed_at,
+              independent_from_owned_edge: true,
+              live_story_count: $live,
+              archived_story_count: $archived,
+              state: (if $live > 0 then "fallback_current_edition" else "fallback_archive_only" end),
+              note: "This checks GitHub Pages archive accessibility, not the canonical Journal or active editorial production."
+            }' > artifacts/journal-archive-fallback-receipt.json
+          cat artifacts/journal-archive-fallback-receipt.json
+      - name: Preserve independent archive receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: journal-archive-fallback-check
+          path: artifacts/
+          retention-days: 30
