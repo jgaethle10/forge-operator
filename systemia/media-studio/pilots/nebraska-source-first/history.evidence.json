@@ -1,0 +1,209 @@
+{
+  "schema": "evercraft.fallen.nebraska-historical-research.v1",
+  "asOf": "2026-10-21",
+  "narrativeCorrection": "Nebraska program history, dynasty systems, decline, rebuild and future, not a 2026 highlight-doc in three pieces",
+  "claims": [
+    {
+      "id": "program-has-early-game-film",
+      "era": "origins",
+      "statement": "History Nebraska RG6137.MI has genuinely moving early Nebraska football film, first segment believed around 1919 but exact year unsettled",
+      "status": "archival_artifact_verified_dating_provisional",
+      "sources": [
+        "https://nebraska.access.preservica.com/uncategorized/IO_b8e868d0-911f-4fce-9feb-3316f16b8b0c/",
+        "https://history.nebraska.gov/earliest-video-of-husker-football/"
+      ],
+      "requires": "Preserve uncertainty and collection-specific written publication permission."
+    },
+    {
+      "id": "devaney-arrival",
+      "era": "rise",
+      "statement": "Bob Devaney became Nebraska head coach in 1962 and oversaw the 1970 and 1971 national title teams.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football",
+        "https://huskers.com/national-championships-football"
+      ]
+    },
+    {
+      "id": "dewaney-championships",
+      "era": "rise",
+      "statement": "Nebraska recognized football national championships for 1970 and 1971.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/national-championships-football"
+      ]
+    },
+    {
+      "id": "osborne-long-era",
+      "era": "dynasty",
+      "statement": "Tom Osborne succeeded Devaney in 1973 and coached through Nebraska's 1997 season.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "three-nineties-titles",
+      "era": "dynasty",
+      "statement": "Nebraska recognizes national championships from 1994, 1995 and 1997, giving the program five since 1970.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/national-championships-football"
+      ]
+    },
+    {
+      "id": "walkon-development-system",
+      "era": "dynasty",
+      "statement": "Investigate how scholarship recruiting, walk-on development, strength and conditioning, staff continuity, option offense and defense actually worked; no single factor is pre-certified as the unique cause.",
+      "status": "investigative_question",
+      "sources": [
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "solich-inherited",
+      "era": "transition",
+      "statement": "Frank Solich became head coach after Osborne; he finished with a 58-19 record over six seasons.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "2002-season-fall",
+      "era": "transition",
+      "statement": "The 2002 team ended 7-7; Solich was dismissed after Nebraska's 9-3 2003 regular season.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "2001-colorado-rock",
+      "era": "transition",
+      "statement": "The 2001 team lost 62-36 to Colorado, a frequently cited symbolic rupture, not by itself proof of the entire cause of the program's later decline.",
+      "status": "established_result_debate_open",
+      "sources": [
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "callahan-change",
+      "era": "decline",
+      "statement": "Bill Callahan replaced Solich and installed a West Coast Offense; the Huskers were 5-6 in 2004 and 5-7 in 2007.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/staff/bill-callahan",
+        "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "pelini-not-blanket-failure",
+      "era": "decline",
+      "statement": "Bo Pelini coached from 2008 through 2014 and had at least nine wins in each of his seven seasons, yet never won a conference championship; dismissing the era as equivalent to later losing seasons would be misleading.",
+      "status": "established_record_context_needed",
+      "sources": [
+        "https://huskers.com/news/2019/04/08/history-of-nebraska-football",
+        "https://www.nfl.com/news/nebraska-coach-bo-pelini-fired-after-seven-seasons-0ap3000000436068"
+      ]
+    },
+    {
+      "id": "big-ten-move",
+      "era": "decline",
+      "statement": "Nebraska began Big Ten competition in 2011. Investigate scheduling, recruiting, finances and football adaptation without assuming conference membership alone caused losing.",
+      "status": "established_date_hypothesis_open",
+      "sources": [
+        "https://huskers.com/news/2019/04/08/history-of-nebraska-football"
+      ]
+    },
+    {
+      "id": "riley-and-frost",
+      "era": "decline",
+      "statement": "The Mike Riley and Scott Frost tenures followed the Pelini era and preceded Matt Rhule's hiring for 2023; quantify each era from dated records rather than assign motives or treat them as one administration.",
+      "status": "historical_era_require_detailed_film_research",
+      "sources": [
+        "https://huskers.com/news/2019/04/08/history-of-nebraska-football",
+        "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+      ]
+    },
+    {
+      "id": "2024-bowl-breakthrough",
+      "era": "rebuild",
+      "statement": "In 2024 Nebraska went 7-6 and beat Boston College 20-15 in the Pinstripe Bowl for its first bowl win since 2015 and first winning season since 2016.",
+      "status": "established_historical_record",
+      "sources": [
+        "https://huskers.com/news/2024/12/28/huskers-topple-boston-college-in-bad-boy-mowers-pinstripe-bowl"
+      ]
+    },
+    {
+      "id": "rhule-first-three-record",
+      "era": "rebuild",
+      "statement": "Under Matt Rhule Nebraska finished 5-7 in 2023, 7-6 in 2024, and 7-6 in 2025.",
+      "status": "established_records",
+      "sources": [
+        "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+      ]
+    },
+    {
+      "id": "2026-record-incomplete",
+      "era": "current",
+      "statement": "As of October 21, 2026, Nebraska was 5-2, having lost 20-17 to Indiana and 17-14 at Oregon after a 5-0 start; its season was not over.",
+      "status": "dated_observation",
+      "sources": [
+        "https://huskers.com/sports/football/schedule",
+        "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit"
+      ]
+    },
+    {
+      "id": "2026-defensive-work",
+      "era": "current",
+      "statement": "Nebraska recorded 11 tackles for loss and held Oregon to 242 total yards on October 17, yet lost 17-14. A serious turnaround story should examine both progress and unresolved fourth-quarter execution.",
+      "status": "dated_observation",
+      "sources": [
+        "https://huskers.com/news/2026/10/17/fb-recap"
+      ]
+    },
+    {
+      "id": "modern-development-questions",
+      "era": "rebuild",
+      "statement": "Investigate current roster retention, player development, portal recruiting, NIL/revenue sharing, staffing, facilities and competitiveness. University claims and independent evaluations must be separately attributed.",
+      "status": "investigative_question",
+      "sources": [
+        "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+      ]
+    },
+    {
+      "id": "future-unwritten",
+      "era": "future",
+      "statement": "Washington on October 31 and the subsequent 2026 games and outcomes are not known as of October 21. No forecast is documentary evidence.",
+      "status": "future_pending",
+      "sources": [
+        "https://huskers.com/sports/football/schedule"
+      ]
+    }
+  ],
+  "interpretationsToInvestigate": [
+    {
+      "id": "what-created-dominance",
+      "question": "How did Devaney/Osborne institutionalize recruiting, nutrition/conditioning, walk-ons, staff continuity and Nebraska-wide support? Assess actual evidence and historic inequities with sources."
+    },
+    {
+      "id": "loss-of-recipe",
+      "question": "What changed materially in university leadership, NCAA scholarship rules, national recruiting, competitive balance and offense/defense? Compare competing explanations rather than presupposing one."
+    },
+    {
+      "id": "is-9-win-pelini-era-decline",
+      "question": "Why was a consistent nine-win program considered below expectations? Contrast wins, conference titles, institutional relationships and expectations separately."
+    },
+    {
+      "id": "riley-frost-responsibility",
+      "question": "Separate verifiable results, staffing and football systems from unsupported claims about personal motives, blame or private conduct."
+    },
+    {
+      "id": "rhule-rebuild-proof",
+      "question": "Differentiate bowl return, defensive improvement, recruiting and roster retention from merely positive institutional messaging; explicitly discuss 2026 close-loss evidence."
+    }
+  ],
+  "rightsPolicy": "Research citations and archival license labels never substitute for footage copyright, distributor rights, participants' releases or collection-use permissions",
+  "publicationAuthorityGranted": false
+}
