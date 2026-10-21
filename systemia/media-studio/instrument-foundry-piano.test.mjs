@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample} from './instrument-foundry-piano.mjs';
+import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample,foundryPianoVoiceGain} from './instrument-foundry-piano.mjs';
 import {applyPulseGridTransaction,createPulseGridSession,undoPulseGridReceipt,validatePulseGridSession} from './pulsegrid-session.ts';
 
 const D='a'.repeat(64),id='audio-sha256:'+D;
@@ -210,4 +210,38 @@ test('implausibly tiny samples cannot generate pathological gain schedules',()=>
   buffer:{duration:.004},pitch:60,velocity:.6,time:0,duration:.5,
   selection,createSource:m.createSource}),/too short for click-free/);
  assert.equal(m.calls.filter(x=>x[0]==='start').length,0);
+});
+
+test('distinct recorded dynamic layers avoid double attenuating their natural soft timbre',()=>{
+ const soft={asset_id:id,root_pitch:60,velocity_min:0,velocity_max:.4,release_sec:.18};
+ const full=patch().samples[0];
+ // A separately recorded soft layer is already physically quieter.
+ const quietWithLayer=foundryPianoVoiceGain(.2,soft);
+ const legacy=foundryPianoVoiceGain(.2,full);
+ assert.ok(quietWithLayer>legacy,'gentle response compensates redundant attenuation');
+ assert.ok(quietWithLayer<legacy*1.5,'soft-note boost stays conservative');
+ assert.ok(Math.abs(foundryPianoVoiceGain(1,full)-.68)<1e-10);
+});
+test('cosine-square sampled release has monotonic curve with bounded end and finite events',()=>{
+ const m=mockAudio(),selection=selectFoundrySample(patch(),60,.3);
+ const receipt=scheduleFoundryPianoNote({context:m.context,destination:{},buffer:{duration:1.2},
+   pitch:60,velocity:.3,time:.1,duration:.4,selection,createSource:m.createSource});
+ const gains=m.calls.filter(c=>c[0]==='gain');
+ const release=gains.filter(c=>c[1]==='ramp'&&c[3]>receipt.release_start);
+ assert.equal(release.length,4);
+ assert.ok(release.every(c=>Number.isFinite(c[2])&&c[2]>=.0001));
+ assert.ok(release.every((c,i)=>i===0||c[2]<release[i-1][2]));
+ assert.ok(release.every((c,i)=>i===0||c[3]>release[i-1][3]));
+ assert.ok(Math.abs(release.at(-1)[3]-receipt.stop_time)<1e-9);
+ assert.equal(receipt.release_curve,'cosine_squared_4');
+ assert.equal(receipt.commercial_rights_verified,false);
+});
+test('piano gain never exceeds calibrated headroom for valid MIDI velocity',()=>{
+ for(const v of [.001,.05,.2,.4,.7,1]){
+   for(const s of [patch().samples[0],{velocity_min:0,velocity_max:.4}]){
+     const g=foundryPianoVoiceGain(v,s);
+     assert.ok(g>=0.0001&&g<=.68);
+   }
+ }
+ assert.throws(()=>foundryPianoVoiceGain(1.5,patch().samples[0]),/Invalid piano velocity/);
 });
