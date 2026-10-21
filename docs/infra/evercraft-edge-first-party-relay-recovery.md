@@ -110,6 +110,57 @@ Observe the independently scheduled **Chromebook Operator Public Edge Canary** (
 
 An accepted UPnP/NAT-PMP/PCP mapping proves configuration acknowledgement, **not** host forwarding, trusted TLS, live public MCP, or payment. Host-forward self-probes from Penguin are advisory because Crostini-to-ChromeOS hairpin behavior is not authoritative.
 
+## Penguin operator-only v2 timer upgrade
+
+A GitHub PR or a passed external canary is **not** evidence that new router code
+is installed on Penguin. The old resident helper is a 253-byte wrapper with no
+latest.json receipt. The new upgrade must be staged in a **durable checkout**
+because the systemd helper references its repository path after installation.
+
+**Phase A: stage and inspect without modifying the live service.**
+
+\`\`\`bash
+cd ~/.local/share/evercraft/forge-operator
+git fetch --no-tags origin fix/fabric-edge-mapping-truth-20261020
+RUNTIME="$HOME/.local/share/evercraft/router-map-v2"
+# Use a fresh path; never silently reuse a stale worktree.
+test ! -e "$RUNTIME" || { echo "STOP: staged worktree already exists"; exit 1; }
+git worktree add --detach "$RUNTIME" FETCH_HEAD
+bash "$RUNTIME/scripts/upgrade-fabric-router-map-resident.sh" \
+  --repo-root "$RUNTIME" --preflight
+\`\`\`
+
+This creates only a durable candidate checkout and performs a read-only
+configuration/systemd observation. It does **not** change UPnP, services, DNS,
+or router settings. Review the commit and preflight output. Independently
+confirm the Chromebook's current **ChromeOS Wi-Fi IP** in ChromeOS settings
+and that Linux forwarding for TCP 18080/8443 remains enabled. Do not substitute
+Crostini's 100.115.x.x address for the ChromeOS Wi-Fi host. If the target IP
+has changed, stop and investigate before proceeding.
+
+**Phase B: separate operator-authorized promotion (only after review).**
+
+\`\`\`bash
+RUNTIME="$HOME/.local/share/evercraft/router-map-v2"
+bash "$RUNTIME/scripts/upgrade-fabric-router-map-resident.sh" \
+  --repo-root "$RUNTIME" \
+  --apply --confirm-ip 192.168.88.5
+\`\`\`
+
+The script requires an interactive \`UPGRADE\` confirmation. It backs up the
+saved router configuration, refresh helper, and systemd service/timer units;
+pauses the old timer; runs the web-only installer; demands independent readback
+of **both** exact Evercraft labels, internal ports, ChromeOS Wi-Fi target,
+\`scope=web\`, and \`public_ingress_verified=false\` in its local receipt.
+If installation/receipt validation fails, its EXIT trap restores the old
+files and the prior timer state without deleting router mappings. Backup
+snapshots are retained for operator rollback even after success.
+
+**Final gate:** check the independent outside-in HTTPS/SSE/signed-attestation/
+MCP monitor *after* the field upgrade. The local UPnP readback alone cannot
+prove public access. Keep the strict Journal canary and payment/fulfillment
+gates independent. Do not auto-merge or auto-publish.
+
 ## Release gate
 
-**Current:** local Fabric healthy, public HTTPS/MCP failed external verification, relay node not commissioned, payments held. Do not mark Evercraft commercially online until independently verified exact-origin ingress **and** separately verified offer checkout, settled payment, and fulfillment.
+**Updated October 21:** the field router repair restored both Evercraft TCP web mappings to the Chromebook Wi-Fi host, and the independent ingress monitor passed HTTPS, SSE, signed device attestation, and real read-only MCP discovery. The v2 **timer hardening remains draft and not installed on Penguin**. The full strict canary remains blocked by `journal_live_edition_missing`, and dedicated installed ChatGPT Fabric provider probing remains separate. No commissioned outbound relay or verified production checkout is implied. Do not mark Evercraft commercially online until separately verifying offer checkout, settled payment and fulfillment.
