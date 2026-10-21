@@ -1,0 +1,44 @@
+name: Journal and Clip Gravity Continuity
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/journal-clip-gravity.mjs'
+      - 'systemia/newsroom/journal-clip-gravity.test.mjs'
+      - 'systemia/clip/social-publisher-runtime.mjs'
+      - 'systemia/clip/facebook-page-publisher.mjs'
+      - '.github/workflows/journal-clip-gravity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/newsroom/journal-clip-gravity.mjs'
+      - 'systemia/newsroom/journal-clip-gravity.test.mjs'
+      - 'systemia/clip/social-publisher-runtime.mjs'
+      - 'systemia/clip/facebook-page-publisher.mjs'
+      - '.github/workflows/journal-clip-gravity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate independent social release and duplicate guard
+        run: |
+          node --test \
+            systemia/newsroom/journal-clip-gravity.test.mjs \
+            systemia/newsroom/journal-clip-bridge.test.mjs \
+            systemia/clip/social-publisher-runtime.test.mjs \
+            systemia/clip/facebook-page-publisher.test.mjs
+      - name: Preflight remains read-only
+        run: |
+          test -z "$EVERCRAFT_CLIP_GRAVITY_STATE_DIR"
+          echo "No live Facebook credentials or release approvals installed in CI."
+          echo "Provider publishing requires an approved release and explicit local --fire."
