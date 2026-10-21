@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.web.fetch.ci-demonstration.v1",
+  "context": "ephemeral_github_runner_not_production",
+  "endpoint_state": "loopback_only_temporary",
+  "customer_access_verified": false,
+  "browser_available": false,
+  "search_available": false,
+  "source_url": "https://example.com/",
+  "checked_at": "2026-10-21T02:56:21.983Z",
+  "tests": {
+    "health_local_only": true,
+    "initialized": true,
+    "fetch_discoverable": true,
+    "browser_not_advertised": true,
+    "actual_https_fetch": true,
+    "receipt_hashes": true,
+    "private_target_denied": true
+  },
+  "public_content": {
+    "source_url_redacted": "https://example.com/",
+    "title": "Example Domain",
+    "excerpt": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+    "retrieved_at": "2026-10-21T02:56:22.060Z",
+    "http_status": 200,
+    "content_sha256": "sha256:25ddf2c883e0d1958ea971d279a7e4f0fd446724ee3db7db19dadabd4a62e484",
+    "evidence_receipt_sha256": "sha256:19b7528a822b66f6939fe3daae0b29ec25bc9ee5d290fcd79299540c87843bf8"
+  },
+  "ci_demonstration_passed": true
+}

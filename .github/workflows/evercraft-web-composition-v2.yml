@@ -1,0 +1,36 @@
+name: Evercraft Web composed recorded-instrument audition
+on:
+  pull_request:
+    paths:
+      - 'systemia/clip/evercraft-web-composition-v2.py'
+      - 'systemia/clip/evercraft-real-piano-audition.py'
+      - 'systemia/clip/evercraft-web-recorded-cello-audition.py'
+      - 'tests/evercraft-web-composition-v2.test.py'
+      - '.github/workflows/evercraft-web-composition-v2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  composition-audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audio dependencies for real recorded sample decoding
+        run: python -m pip install numpy==2.2.6 scipy==1.15.3 soundfile==0.13.1
+      - name: Music structure and no-release unit tests
+        run: python tests/evercraft-web-composition-v2.test.py
+      - name: Render new musical phrase with pinned CC0 recorded piano and cello
+        run: python systemia/clip/evercraft-web-composition-v2.py
+      - name: Preserve lossless music references and source receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-web-new-melody-piano-cello-UNAPPROVED
+          path: |
+            artifacts/evercraft-web-composition-v2/*.wav
+            artifacts/evercraft-web-composition-v2/composition-proof.json
+          retention-days: 7
+          if-no-files-found: error

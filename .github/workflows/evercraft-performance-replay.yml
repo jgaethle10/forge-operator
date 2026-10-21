@@ -1,0 +1,25 @@
+name: Evercraft real human-take MIDI replay
+on:
+  pull_request:
+    paths:
+      - 'public/evercraft-performance-capture/**'
+      - 'tests/evercraft-real-human-take-replay.test.py'
+      - '.github/workflows/evercraft-performance-replay.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install audio runtime
+        run: python -m pip install numpy==2.2.6 soundfile==0.13.1
+      - name: Test event pairing, pedal release and recorded-sample replay
+        run: python tests/evercraft-real-human-take-replay.test.py
+      - name: Confirm browser capture static privacy and timing contracts
+        run: node --test tests/evercraft-performance-capture.test.mjs
