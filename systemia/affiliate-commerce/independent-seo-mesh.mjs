@@ -47,7 +47,7 @@ const seed={
   description:'Check contact-form delivery, mobile calls to action and conversion assumptions before paying for additional traffic.',
   intro:'A site can attract visitors and still miss serious customers if its inquiry flow is broken. Diagnose the journey before spending on another advertisement.',
   sections:[
-   ['Test the actual contact path','Submit a legitimate test inquiry on desktop and mobile and check inbox delivery. Monitor spam filters and the owner's follow-up time.'],
+   ['Test the actual contact path','Submit a legitimate test inquiry on desktop and mobile and check inbox delivery. Monitor spam filters and the follow-up time from the responsible owner.'],
    ['Check mobile clarity','Verify the main contact action is visible and tappable on small screens, without popups obscuring the phone number or request form.'],
    ['Treat conversion math as a scenario','Visitors multiplied by an assumed lead rate describes a model, not a guarantee. Compare assumptions to your own verified analytics.'],
    ['Reduce uncertainty in the offer','Explain the service area, what the business performs, how estimates work and what a prospective customer should do next.'],
@@ -83,7 +83,7 @@ const seed={
   description:'Document a decision, a responsible owner, a deadline and unresolved questions without claiming everyone agreed.',
   intro:'A transcript preserves words, but a useful action record needs explicit ownership and acknowledgement.',
   sections:[
-   ['Separate decisions from suggestions','A good meeting summary clearly labels what was approved, debated and postponed. Never turn one person's idea into a group commitment.'],
+   ['Separate decisions from suggestions','A good meeting summary clearly labels what was approved, debated and postponed. Never turn an individual's idea into a group commitment.'],
    ['Name the responsible role','Assign each action to a person or accountable team, rather than saying everyone owns it.'],
    ['Add due dates with context','A target date should be accepted by the owner. Note dependencies and what could prevent completion.'],
    ['Preserve unresolved disagreement','Record the open question, the person responsible for resolving it, and the next decision meeting.'],
