@@ -1,0 +1,68 @@
+{
+  "schema": "evercraft.payments.existing-provider-links.v1",
+  "checked_on": "2026-10-21",
+  "authority": "Evercraft Payments (canonical order ledger target)",
+  "processor": "Stripe",
+  "current_processor_account": "Systemia",
+  "state": "existing_active_live_processor_links_confirmed_by_provider",
+  "processor_checkout_available": true,
+  "canonical_order_reconciliation": "manual_not_automated",
+  "fulfillment_authority": "human_review",
+  "payment_received_verified": false,
+  "forbidden_substitutions": [
+    "Garage Field Notes PDF products",
+    "FindMyPart Quick Hunt",
+    "Website Quick Win Audit"
+  ],
+  "conditions": "Only use an existing link for its original exact product/price. A Stripe-hosted checkout is a paid intent surface, not a completed payment or Evercraft Payments receipt.",
+  "links": [
+    {
+      "key": "weekly-social",
+      "name": "Social Media Management · Weekly",
+      "amount_cents": 10000,
+      "price": "$100",
+      "url": "https://buy.stripe.com/4gM3cweaOcwJ1Za1I84AU0d",
+      "payment_link_id": "plink_1U4uEXK4iDjqpECV8jfAriJQ",
+      "stripe_product_id": "prod_V4cGNCezEew2dm",
+      "stripe_price_id": "price_1U4T2MK4iDjqpECVqSxLlBn8",
+      "description": "One week of social media management. Scope, start date, supported channels and deliverables must be confirmed before work begins.",
+      "note": "Service capacity, scheduling and channel access require individual confirmation."
+    },
+    {
+      "key": "asset-diagnosis",
+      "name": "Asset Diagnosis",
+      "amount_cents": 14900,
+      "price": "$149",
+      "url": "https://buy.stripe.com/dRm9AU0jYdANdHS72s4AU0a",
+      "payment_link_id": "plink_1U4QhsK4iDjqpECVRK9Qgbps",
+      "stripe_product_id": "prod_V4ZrYAjgvFtJug",
+      "stripe_price_id": "price_1U4QhlK4iDjqpECVuUcr2XnI",
+      "description": "One-time digital or operational asset diagnosis. Confirm which asset is in scope before proceeding.",
+      "note": "The assessment scope and written handoff will be agreed individually."
+    },
+    {
+      "key": "ai-boardroom-standard",
+      "name": "AI Boardroom · Standard Review",
+      "amount_cents": 25000,
+      "price": "$250",
+      "url": "https://buy.stripe.com/14AdRaaYC68lcDO0E44AU08",
+      "payment_link_id": "plink_1U4QhsK4iDjqpECVFswYIOrd",
+      "stripe_product_id": "prod_V4ZruGhbFyITCF",
+      "stripe_price_id": "price_1U4QhlK4iDjqpECVH2SFMHx7",
+      "description": "A bounded AI Boardroom review. Scope and what will be delivered are confirmed before work starts.",
+      "note": "An AI assessment is decision support, not licensed professional advice."
+    },
+    {
+      "key": "ai-boardroom-financial",
+      "name": "AI Boardroom · Deep Dive with Financial Modeling",
+      "amount_cents": 50000,
+      "price": "$500",
+      "url": "https://buy.stripe.com/3cIbJ2feSfIVcDO1I84AU09",
+      "payment_link_id": "plink_1U4QhsK4iDjqpECVd94vMVSP",
+      "stripe_product_id": "prod_V4ZrjGDcuNeOoz",
+      "stripe_price_id": "price_1U4QhlK4iDjqpECVhOTAtXEK",
+      "description": "A bounded AI Boardroom review with financial-scenario modeling. Assumptions and deliverables require confirmation.",
+      "note": "Models are scenarios, not a promise of business outcomes or investment returns."
+    }
+  ]
+}
