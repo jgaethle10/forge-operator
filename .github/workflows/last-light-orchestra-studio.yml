@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'systemia/media-studio/last-light-orchestra-*.py'
+      - 'systemia/media-studio/last-light-orchestra-score.json'
+      - 'systemia/media-studio/last-light-orchestra-score.test.mjs'
       - '.github/workflows/last-light-orchestra-studio.yml'
   workflow_dispatch:
 
@@ -19,6 +21,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Verify original piano SHA, no-live-orchestra truth, score coverage and key
+        run: node --test systemia/media-studio/last-light-orchestra-score.test.mjs
       - name: Fetch actual orchestral acoustic recordings (fail closed)
         run: |
           python systemia/media-studio/last-light-orchestra-source-intake.py \
