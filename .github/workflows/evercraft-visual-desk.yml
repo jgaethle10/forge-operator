@@ -58,7 +58,7 @@ jobs:
           node -e "const fs=require('fs');const b=fs.readFileSync('$asset');const p=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);if(!b.subarray(0,8).equals(p))process.exit(9)"
 
       - name: Prove visual story factory and Radar admission bridge
-        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/production-mesh.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
+        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/production-mesh.test.mjs systemia/graphics-command/production-capability-audit.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
@@ -107,6 +107,8 @@ jobs:
           test -f _visual_desk_release/website-audit-attention/commercial-build-receipt.json
           test -f _visual_desk_release/website-audit-attention/production-jobpack.json
           test -f _visual_desk_release/website-audit-attention/production-mesh-receipt.json
+          test -f _visual_desk_release/website-audit-attention/production-capability-audit.json
+          grep -q '"status": "inventoried_runtime_unverified"' _visual_desk_release/website-audit-attention/production-capability-audit.json
           grep -q '"customerReady": false' _visual_desk_release/website-audit-attention/production-mesh-receipt.json
           grep -q '"status": "preproduction_verified_downstream_blocked"' _visual_desk_release/website-audit-attention/production-mesh-receipt.json
           grep -q '__evercraftRenderAt' _visual_desk_release/washington-active-volcanoes/motion.html
