@@ -91,6 +91,8 @@ jobs:
           node-version: '22'
       - name: Verify router mapping control cannot fake production ingress
         run: node --test tests/edge-mapping-control.test.mjs
+      - name: Prove Saban Fabric outbound bridge and device attestation
+        run: node systemia/saban/fabric-edge-relay.proof.mjs
       - name: Prove Fabric MCP, human offer storefront, and mobile door
         run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
