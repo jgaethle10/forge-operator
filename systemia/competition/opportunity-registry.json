@@ -91,7 +91,13 @@
         "standalone_export_state": "verified_artifact_ready",
         "last_verified_on": "2026-10-07",
         "public_source_url": "https://github.com/jgaethle10/forge-operator/tree/runbook-zero-public",
-        "public_source_commit": "113039852a57308faecab100814caaf54ead21f1"
+        "public_source_commit": "e48b9f77e7810b5666f29d6c07475494220487a1",
+        "source_merge_commit": "38a334e3cda8a5ff620604c0cbf786b716343e2f",
+        "judging_packet_state": "verified_published_to_public_branch",
+        "public_export_artifact_id": 11507062029,
+        "public_export_digest": "sha256:fd0d5e527e9b0cf83d2a22c5c6e1d146475d89d2072cb80b8f90e72e851230dc",
+        "public_export_file_count": 15,
+        "provider_gate": "legitimate_token_factory_credential_or_account_onboarding"
       }
     },
     {
