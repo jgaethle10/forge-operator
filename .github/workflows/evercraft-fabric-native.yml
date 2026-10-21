@@ -146,5 +146,5 @@ jobs:
           npm run test:fabric-directory
           npm run test:fabric-local
           npm run test:remote-operator
-          node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs
+          node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs tests/edge-mapping-control.test.mjs
           npm run proof:specialist-handoff-yard
