@@ -317,7 +317,9 @@
     "lineage:fsck": "node systemia/lineage/cli.mjs fsck",
     "proof:saban-capacity-lifecycle": "node systemia/saban/capacity-lifecycle.proof.mjs",
     "proof:saban-capacity-reclamation-executor": "node systemia/saban/capacity-reclamation-executor.proof.mjs",
-    "proof:saban-failure-domain-audit": "node systemia/saban/failure-domain-audit.proof.mjs"
+    "proof:saban-failure-domain-audit": "node systemia/saban/failure-domain-audit.proof.mjs",
+    "test:forge-operator-compute": "node --test systemia/compute/forge-operator-container-runtime.test.mjs systemia/compute/forge-operator-service-spec.test.mjs tests/forge-operator-compute-contract.test.mjs",
+    "proof:forge-operator-compute": "node systemia/compute/forge-operator-compute.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

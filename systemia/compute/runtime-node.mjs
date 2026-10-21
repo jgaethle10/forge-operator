@@ -17,6 +17,10 @@ import {
   browserContainerAvailable,
   startBrowserContainer,
 } from '../evercraft-web/browser-worker/container-runtime.mjs';
+import {
+  forgeOperatorContainerAvailable,
+  startForgeOperatorContainer,
+} from './forge-operator-container-runtime.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startForensicRecordRuntime } from '../forensic-record/runtime.mjs';
@@ -94,6 +98,7 @@ function bearer(req) {
 }
 
 const BRIDGED_WORKLOADS = new Set([
+  'systemia.forge-operator-runtime.v1',
   'systemia.evercraft-web-browser.v1',
   'systemia.specialist-handoff-mcp.v1',
   'systemia.fabric-local-mcp.v1',
@@ -545,6 +550,7 @@ export async function startEvercraftComputeNode({
   failureDomain = '',
   zeroCost = false,
   browserRuntimeFactory = null,
+  forgeRuntimeFactory = null,
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
@@ -693,11 +699,24 @@ export async function startEvercraftComputeNode({
   const browserRuntimeReady =
     typeof browserRuntimeFactory === 'function' ||
     browserContainerAvailable();
+  const forgeRuntimeReady =
+    typeof forgeRuntimeFactory === 'function' ||
+    forgeOperatorContainerAvailable();
 
   const forensiscopeTranscriptionCapability = transcriptionCapabilityStatus();
   const serviceCapabilities = {
     forensiscope_transcription: forensiscopeTranscriptionCapability.ready === true,
     evercraft_web_browser: browserRuntimeReady,
+    forge_operator: {
+      ready: forgeRuntimeReady,
+      workload_class: 'systemia.forge-operator-runtime.v1',
+      immutable_container_required: true,
+      immutable_release_sha_required: true,
+      image_digest_required: true,
+      release_execution_receipt_required: true,
+      public_route_requires_deployment_receipt: true,
+      arbitrary_image_execution: false,
+    },
     evercraft_home_identity: evercraftHomeIdentityCapability,
     public_edge: publicEdgeCapability,
     remote_operator: remoteOperator ? {
@@ -939,6 +958,9 @@ export async function startEvercraftComputeNode({
   }
   if (browserRuntimeReady) {
     supported.add('systemia.evercraft-web-browser.v1');
+  }
+  if (forgeRuntimeReady) {
+    supported.add('systemia.forge-operator-runtime.v1');
   }
 
   async function stopService(serviceId, reason = 'operator_requested') {
@@ -2498,6 +2520,85 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instanceId,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.forge-operator-runtime.v1') {
+          if (!forgeRuntimeReady) {
+            return send(res, 503, { error: 'forge_operator_container_runtime_unavailable' });
+          }
+          const releaseRef = String(body.release_ref || '').trim().toLowerCase();
+          const imageDigest = String(body.input?.image_digest || '').trim().toLowerCase();
+          const releaseReceiptRef = String(body.input?.release_receipt_ref || '').trim();
+          const repository = String(
+            body.input?.repository || 'ghcr.io/jgaethle10/forge-operator'
+          ).trim();
+
+          if (!/^[a-f0-9]{40}$/.test(releaseRef)) {
+            return send(res, 422, { error: 'forge_operator_immutable_release_ref_required' });
+          }
+          if (!/^sha256:[a-f0-9]{64}$/.test(imageDigest)) {
+            return send(res, 422, { error: 'forge_operator_image_digest_required' });
+          }
+          if (!releaseReceiptRef || releaseReceiptRef.length > 1024) {
+            return send(res, 422, { error: 'forge_operator_release_execution_receipt_required' });
+          }
+          if (!/^ghcr\.io\/[a-z0-9._-]+\/[a-z0-9._-]+$/i.test(repository)) {
+            return send(res, 422, { error: 'forge_operator_repository_invalid' });
+          }
+
+          const factory = typeof forgeRuntimeFactory === 'function'
+            ? forgeRuntimeFactory
+            : startForgeOperatorContainer;
+          const runtime = await factory({
+            releaseRef,
+            imageDigest,
+            releaseReceiptRef,
+            repository,
+            requireAiReady: body.input?.require_ai_ready !== false,
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/api/health',
+            benchmark_discovery_path: '/api/systemia-university/benchmarks',
+            benchmark_evaluate_path: '/api/systemia-university/evaluate',
+            instance_id: runtime.instanceId,
+            immutable_container: true,
+            release_ref: releaseRef,
+            image_digest: imageDigest,
+            release_execution_receipt_ref: releaseReceiptRef,
+            arbitrary_image_execution: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            release_ref: releaseRef,
+            image_digest: imageDigest,
+            arbitrary_image_execution: false,
           });
           return send(res, 200, {
             ok: true,
