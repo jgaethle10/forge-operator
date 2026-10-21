@@ -273,7 +273,12 @@ test('Fallen Sessions arrangement editor exposes every track and bar through bou
   assert.match(css,/min-width:980px/);
 });
 
-test('Fallen Sessions arrangement UI states the scheduler truth boundary',()=>{
+test('Fallen Sessions arrangement transport invokes the canonical audio scheduler',()=>{
   const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
-  assert.match(ui,/Transport remains scene playback until the arrangement scheduler lands/);
+  assert.match(ui,/playArrangement\(session\)/);
+  assert.match(ui,/toggleArrangementPlay/);
+  assert.match(ui,/Arrangement is empty\. Assign at least one scene before playback/);
+  assert.match(ui,/Transport \{audioStatus\.playback_mode\}/);
+  assert.match(ui,/Arrangement bar \{audioStatus\.arrangement_bar\+1\}/);
+  assert.match(ui,/Contiguous repeated scene cells preserve clip phase across bars/);
 });

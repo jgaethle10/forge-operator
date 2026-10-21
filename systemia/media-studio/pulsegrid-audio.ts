@@ -1,6 +1,13 @@
-import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
+import {
+  PULSEGRID_ARRANGEMENT_BARS,
+  PULSEGRID_STEPS_PER_BAR,
+  type PulseGridAudioAsset,
+  type PulseGridSession,
+  type PulseGridTrack,
+} from './pulsegrid-session.js';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
+export type PulseGridPlaybackMode = 'scene' | 'arrangement';
 export type PulseGridAudioAssetResolver = (asset:PulseGridAudioAsset)=>Promise<Blob|null>;
 
 export type PulseGridAudioStatus = {
@@ -12,6 +19,8 @@ export type PulseGridAudioStatus = {
   track_buses: number;
   latency_ms: number | null;
   cached_audio_assets: number;
+  playback_mode: PulseGridPlaybackMode;
+  arrangement_bar: number | null;
 };
 
 type PulseGridTrackBus = {
@@ -30,6 +39,7 @@ export class PulseGridAudioEngine {
   private clockNode: AudioWorkletNode | null = null;
   private clockSink: GainNode | null = null;
   private clockMode: PulseGridClockMode = 'cold';
+  private playbackMode: PulseGridPlaybackMode = 'scene';
   private session: PulseGridSession | null = null;
   private scene = 0;
   private step = 0;
@@ -61,6 +71,10 @@ export class PulseGridAudioEngine {
       track_buses: this.trackBuses.size,
       latency_ms: context ? Math.round(latencySeconds * 1000) : null,
       cached_audio_assets: this.audioBuffers.size,
+      playback_mode: this.playbackMode,
+      arrangement_bar: this.playbackMode === 'arrangement'
+        ? Math.floor(this.step / PULSEGRID_STEPS_PER_BAR) % PULSEGRID_ARRANGEMENT_BARS
+        : null,
     };
   }
 
@@ -93,6 +107,10 @@ export class PulseGridAudioEngine {
   setScene(scene: number) {
     const maxScene = Math.max(0, (this.session?.tracks[0]?.clips.length || 1) - 1);
     this.scene = Math.max(0, Math.min(Math.round(scene), maxScene));
+    if (this.playing && this.playbackMode === 'arrangement') {
+      this.emitStatus();
+      return;
+    }
     this.step = 0;
     if (this.context) {
       this.nextTime = this.context.currentTime + 0.05;
@@ -109,8 +127,38 @@ export class PulseGridAudioEngine {
   }
 
   async play(session: PulseGridSession, scene = session.active_scene) {
+    this.playbackMode = 'scene';
     this.updateSession(session);
     this.setScene(scene);
+    const context = await this.ensureContext();
+    if (context.state === 'suspended') await context.resume();
+    await this.prepareAudioAssets();
+    if (this.playing) return;
+
+    this.playing = true;
+    this.step = 0;
+    const workletReady = await this.ensureWorkletClock();
+
+    if (!this.playing) return;
+    if (workletReady && this.clockNode) {
+      this.clockMode = 'worklet';
+      this.clockNode.port.postMessage({
+        type: 'start',
+        bpm: this.session?.transport.bpm || 120,
+        swing: this.session?.transport.swing || 0,
+        steps: this.loopSteps(),
+        lookaheadSec: this.scheduleAheadSeconds,
+        startTime: context.currentTime + 0.07,
+      });
+    } else {
+      this.startFallbackClock();
+    }
+    this.emitStatus();
+  }
+
+  async playArrangement(session: PulseGridSession) {
+    this.playbackMode = 'arrangement';
+    this.updateSession(session);
     const context = await this.ensureContext();
     if (context.state === 'suspended') await context.resume();
     await this.prepareAudioAssets();
@@ -176,13 +224,18 @@ export class PulseGridAudioEngine {
     if(!context||!session||!resolver)return;
 
     const wanted=new Map<string,PulseGridAudioAsset>();
-    for(const track of session.tracks){
-      if(track.type!=='audio')continue;
-      const clip=track.clips[this.scene];
-      if(!clip?.audio_asset_id)continue;
-      const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
-      if(asset&&asset.rights!=='restricted')wanted.set(asset.id,asset);
-    }
+    session.tracks.forEach((track,trackIndex)=>{
+      if(track.type!=='audio')return;
+      const sceneIndexes = this.playbackMode === 'arrangement'
+        ? [...new Set((session.arrangement[trackIndex]||[]).filter((scene):scene is number=>Number.isInteger(scene)))]
+        : [this.scene];
+      for(const sceneIndex of sceneIndexes){
+        const clip=track.clips[sceneIndex];
+        if(!clip?.audio_asset_id)continue;
+        const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
+        if(asset&&asset.rights!=='restricted')wanted.set(asset.id,asset);
+      }
+    });
 
     const loads:Promise<void>[]=[];
     for(const asset of wanted.values()){
@@ -341,11 +394,35 @@ export class PulseGridAudioEngine {
   }
 
   private loopSteps() {
-    if (!this.session) return 16;
+    if (!this.session) return PULSEGRID_STEPS_PER_BAR;
+    if (this.playbackMode === 'arrangement') {
+      return PULSEGRID_ARRANGEMENT_BARS * PULSEGRID_STEPS_PER_BAR;
+    }
     return Math.max(
       1,
       ...this.session.tracks.map((track) => track.clips[this.scene]?.steps.length || 1),
     );
+  }
+
+  private resolveArrangementPosition(trackIndex:number,track:PulseGridTrack,globalStep:number){
+    const session=this.session;
+    if(!session)return null;
+    const bar=Math.floor(globalStep/PULSEGRID_STEPS_PER_BAR)%PULSEGRID_ARRANGEMENT_BARS;
+    const stepInBar=globalStep%PULSEGRID_STEPS_PER_BAR;
+    const row=session.arrangement[trackIndex];
+    const scene=row?.[bar];
+    if(scene===null||scene===undefined)return null;
+    const clip=track.clips[scene];
+    if(!clip)return null;
+
+    let runStart=bar;
+    while(runStart>0&&row[runStart-1]===scene)runStart-=1;
+    let runEnd=bar;
+    while(runEnd+1<PULSEGRID_ARRANGEMENT_BARS&&row[runEnd+1]===scene)runEnd+=1;
+
+    const elapsedSteps=(bar-runStart)*PULSEGRID_STEPS_PER_BAR+stepInBar;
+    const step=elapsedSteps%clip.steps.length;
+    return {bar,stepInBar,scene,clip,step,runStart,runEnd};
   }
 
   private stepDuration(step: number) {
@@ -433,13 +510,20 @@ export class PulseGridAudioEngine {
     this.ensureTrackBuses();
     const anySolo = this.session.tracks.some((track) => track.solo);
 
-    for (const track of this.session.tracks) {
+    for (let trackIndex=0; trackIndex<this.session.tracks.length; trackIndex+=1) {
+      const track=this.session.tracks[trackIndex];
       if (track.muted || (anySolo && !track.solo)) continue;
-      const clip = track.clips[this.scene];
       const bus = this.trackBuses.get(track.id);
-      if (!clip || !bus) continue;
+      if (!bus) continue;
 
-      const step = globalStep % clip.steps.length;
+      const arrangementPosition = this.playbackMode === 'arrangement'
+        ? this.resolveArrangementPosition(trackIndex,track,globalStep)
+        : null;
+      const clip = this.playbackMode === 'arrangement'
+        ? arrangementPosition?.clip
+        : track.clips[this.scene];
+      if (!clip) continue;
+      const step = arrangementPosition?.step ?? (globalStep % clip.steps.length);
       const probability = clip.probabilities[step] ?? 1;
       const microtime = (clip.microtiming[step] ?? 0) / 1000;
       const autoVolume = clip.automation.volume[step] ?? 1;
@@ -458,12 +542,18 @@ export class PulseGridAudioEngine {
       }
 
       if (track.type === 'audio') {
-        if(step===0&&clip.audio_asset_id){
+        const shouldStart = this.playbackMode === 'arrangement'
+          ? Boolean(arrangementPosition && arrangementPosition.bar===arrangementPosition.runStart && arrangementPosition.stepInBar===0)
+          : step===0;
+        if(shouldStart&&clip.audio_asset_id){
           const assetBuffer=this.audioBuffers.get(clip.audio_asset_id);
           if(assetBuffer){
-            const sceneDuration=Array.from({length:clip.steps.length},(_,index)=>this.stepDuration(index))
+            const durationSteps = arrangementPosition
+              ? (arrangementPosition.runEnd-arrangementPosition.runStart+1)*PULSEGRID_STEPS_PER_BAR
+              : clip.steps.length;
+            const playbackDuration=Array.from({length:durationSteps},(_,index)=>this.stepDuration(index))
               .reduce((total,value)=>total+value,0);
-            this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration);
+            this.scheduleAudioAsset(bus.input,assetBuffer,time,playbackDuration);
           }
         }
         continue;

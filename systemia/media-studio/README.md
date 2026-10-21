@@ -526,3 +526,23 @@ Arrangement edits use the reversible `arrangement.set_slot` operation. The opera
 Fallen Sessions exposes the same matrix as a horizontally scrollable track-by-bar editor. The browser does not mutate `session.arrangement` directly.
 
 Transport remains scene playback in this slice. Arrangement playback is intentionally deferred until the audio scheduler consumes the canonical timeline itself; the UI states that boundary instead of implying the timeline is already audible.
+
+
+### PulseGrid 0.25 canonical arrangement playback
+
+The browser audio engine can now execute the canonical sixteen-bar arrangement graph instead of remaining scene-only.
+
+`playArrangement(session)` uses the same PulseGrid session snapshot, AudioWorklet/fallback clock, reusable track DSP buses, verified asset resolver and scheduled-source lifecycle as scene playback. It does not create a second timeline model.
+
+Arrangement semantics are explicit:
+
+- each track resolves its scene from its canonical arrangement row for the current bar;
+- an empty slot is silence for that track;
+- contiguous repeated references to the same scene preserve clip phase across bars;
+- a scene change or empty slot starts a new run;
+- the arrangement loops after the canonical sixteen-bar length;
+- arrangement playback starts at bar one in this slice.
+
+Audio-track assets are preloaded only from canonical arrangement scene references. Restricted assets stay excluded and missing local bytes remain silence. An audio asset starts once at the beginning of a contiguous arrangement run and is bounded to that run so it cannot bleed into the next scene assignment.
+
+Audio status now reports scene-vs-arrangement playback mode plus the current arrangement bar. Fallen Sessions exposes separate scene and arrangement transport controls and refuses to start an empty arrangement.
