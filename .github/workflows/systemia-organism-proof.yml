@@ -48,6 +48,8 @@ jobs:
         run: node --test systemia/organism/goal-attempt-fence.test.mjs
       - name: Reject self-reported or stale provider recovery claims
         run: node --test systemia/organism/goal-provider-observation.test.mjs
+      - name: Re-fetch provider status read-only before signing an attempt observation
+        run: node --test systemia/organism/goal-provider-refetch.test.mjs
       - name: Commit durable execution checkpoint before adapter callback
         run: node --test systemia/organism/goal-durable-dispatch.test.mjs
       - name: Forbid volatile stateful and gated adapter execution
