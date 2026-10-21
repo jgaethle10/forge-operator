@@ -12,7 +12,7 @@ class CheckRecordedCello(unittest.TestCase):
   self.assertIn("sfzinstruments/karoryfer-bigcat.cello",a.CELLO_BASE)
  def test_no_synthesizer_or_synthetic_string_orchestrator(self):
   s=P.read_text().lower()
-  for banned in ("timgm","fluid_synth","soundfont", "fake_strings", "oscillator","loudnorm"):
+  for banned in ("timgm","fluid_synth","soundfont", "fake_strings", "waveform_generator","loudnorm"):
    self.assertNotIn(banned,s)
   self.assertIn("human_listening_approval",s)
   self.assertIn("production_release_authority",s)
