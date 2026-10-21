@@ -289,7 +289,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         ],
         entities: [...characters.map((character) => ({
           id: character.id!,
-          kind: 'character',
+          kind: 'character' as const,
           name: character.name,
           description: [character.role, character.description].filter(Boolean).join('. '),
           immutableTraits: { family_role: character.role || 'Family' },
@@ -297,7 +297,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
           referenceAssetIds: ['ref-' + character.id],
         })), {
           id: 'family-story-world',
-          kind: 'location',
+          kind: 'location' as const,
           name: 'Family Story World',
           description: 'Unverified episode setting anchor; actual backgrounds and spatial continuity still require evidence.',
           immutableTraits: { scope: 'story-world' },
