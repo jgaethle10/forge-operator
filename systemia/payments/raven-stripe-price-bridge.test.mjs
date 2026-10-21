@@ -113,25 +113,29 @@ test('invalid orders, mismatch prices and pre-paid states fail closed before any
   assert.throws(()=>buildRavenStripeCheckoutPlan({...input,providerPrice:null}),/provider_price_not_refetched/);
 });
 
-test('only exact open unpaid Stripe-hosted sessions match an Evercraft order',()=>{
+
+test('a Stripe-hosted checkout URL with a fragment and exact line item remains unpaid',()=>{
   const plan=build('website-audit');
+  const binding=STRIPE_FIXED_PRICE_BINDINGS['website-audit'];
   const session={
-    id:'cs_live_ABC123',url:'https://checkout.stripe.com/c/pay/cs_live_ABC123',
+    object:'checkout.session',id:'cs_live_ABC123',
+    url:'https://checkout.stripe.com/c/pay/cs_live_ABC123#fid-example',
     livemode:true,mode:'payment',status:'open',payment_status:'unpaid',
-    client_reference_id:plan.order_key,currency:plan.currency,
-    amount_total:plan.amount_cents,
+    client_reference_id:plan.order_key,currency:'usd',amount_total:4900,
     metadata:{evercraft_order_key:plan.order_key,evercraft_offer_key:plan.offer_key},
   };
-  const ok=inspectCreatedStripeCheckoutSession(plan,session);
-  assert.equal(ok.ok,true);
-  assert.equal(ok.state,'checkout_prepared_unpaid');
-  assert.equal(ok.payment_verified,false);
-  assert.equal(ok.fulfillment_released,false);
-  for(const p of [
-    {url:'https://evil.example/pay'},
-    {id:'cs_test_ABC123'}, {livemode:false},
-    {payment_status:'paid'}, {status:'complete'},
-    {amount_total:100},{client_reference_id:'buyer-other'},
-    {metadata:{...session.metadata,evercraft_offer_key:'wrong'}},
-  ])assert.equal(inspectCreatedStripeCheckoutSession(plan,{...session,...p}).ok,false);
+  const item={quantity:1,currency:'usd',amount_total:4900,price:{
+    id:binding.stripe_price,product:binding.stripe_product,unit_amount:4900,currency:'usd',
+  }};
+  const lines={object:'list',has_more:false,data:[item]};
+  const valid=inspectCreatedStripeCheckoutSession(plan,session,lines);
+  assert.equal(valid.ok,true);
+  assert.equal(valid.payment_verified,false);
+  assert.equal(valid.fulfillment_released,false);
+  assert.equal(valid.checkout_url,session.url);
+  assert.equal(inspectCreatedStripeCheckoutSession(plan,session).ok,false);
+  assert.equal(inspectCreatedStripeCheckoutSession(plan,session,{...lines,has_more:true}).ok,false);
+  assert.equal(inspectCreatedStripeCheckoutSession(plan,session,{...lines,data:[item,item]}).ok,false);
+  assert.equal(inspectCreatedStripeCheckoutSession(plan,session,{...lines,data:[{...item,price:{...item.price,id:'price_wrong'}}]}).ok,false);
+  assert.equal(inspectCreatedStripeCheckoutSession(plan,{...session,url:'https://checkout.stripe.com/c/pay/cs_live_DIFFERENT'},lines).ok,false);
 });
