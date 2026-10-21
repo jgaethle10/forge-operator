@@ -44,3 +44,33 @@ node scripts/systemia-stripe-connection.mjs --status
 ```
 
 The status command masks the account identifier and truthfully displays `runtime_authorized:false` and `checkout_verified:false`. Do not merge, advertise live checkout, or promote payment/fulfillment from CI alone.
+
+## Read-only Penguin vault preflight
+
+After locally staging this branch, run:
+
+```bash
+node scripts/systemia-stripe-vault-preflight.mjs
+```
+
+The preflight checks the existing **encrypted** Evercraft provider vault's metadata
+and file permissions only. It never instantiates `ProviderCredentialVault` on a
+missing directory, creates a credential, decrypts an envelope, calls Stripe,
+returns a raw account ID, or displays a credential reference. It prints a
+sanitized state such as `sealed_live_stripe_metadata_found_not_authenticated`,
+`existing_private_vault_no_stripe_record`, `not_found_no_changes`, or a
+permission hold. It resolves the selected vault directory from
+`RAVEN_PROVIDER_CREDENTIAL_STATE_DIR` if explicitly configured, otherwise the
+standard Penguin local-organism vault path.
+
+**Interpretation:** Finding a sealed provider metadata record does NOT prove
+which Stripe account it authenticates, active charges capability, or successful
+checkout. A `not_found_no_changes` result only means **this selected path**
+wasn't found; an existing vault might be bound at another authorized systemd
+location. Do not paste a token in chat and do not invent credentials to turn
+a metadata hold green.
+
+If an encrypted Stripe credential already exists, the next gate is authorized
+account revalidation through Raven. If it doesn't, the operator can authorize a
+single hidden-input intake through Evercraft's existing credential vault.
+Do not create a second Stripe-specific vault or bypass Evercraft Payments.
