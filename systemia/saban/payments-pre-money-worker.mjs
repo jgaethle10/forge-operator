@@ -106,7 +106,7 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1]
   }catch(e){
     console.error(JSON.stringify({
       schema:'evercraft.saban.payments-pre-money-worker.v1',
-      status:'blocked',reason:String(e?.message||'worker_error').slice(0,95),
+      status:'blocked',reason:e?.code==='EEXIST'?'lock_collision':String(e?.message||'worker_error').slice(0,95),
       synthetic:true,external_payment_attempted:false
     }));
     process.exitCode=1;
