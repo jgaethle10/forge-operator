@@ -3,6 +3,7 @@
 // Fixed read-only MCP methods only. No orders, payments, provider API spend or messages.
 import fs from 'node:fs';
 import path from 'node:path';
+import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError } from './discovery-path-classify.mjs';
 const origin=process.env.EVERCRAFT_PROBE_ORIGIN||'https://fabric.systemiacommandcenters.com';
 const out=process.env.EVERCRAFT_PROBE_OUT||'artifacts/saban/discovery-path';
 const intents=[
@@ -35,12 +36,23 @@ for(const [name,accept] of profiles){
    const expectedUrl='https://fabric.systemiacommandcenters.com/offers/'+slug;
    row.intents.push({intent,expected,matched:match?.public_id||null,match_ok:match?.public_id===expected,human_offer_url:url,offer_link_ok:url===expectedUrl,start_url_state:match?.start_url_state||null});
   }
- }catch(e){row.errors.push(e.message)}
+ }catch(e){
+  const failure=safeNetworkFailure(e);
+  row.errors.push(safeProbeError(e));
+  if(failure.cause_code)row.error_causes=[failure.cause_code];
+ }
  receipt.profiles.push(row);
 }
 await Promise.all(['/llms.txt','/.well-known/evercraft-chum.json','/offers','/offers.json','/robots.txt','/sitemap.xml','/health'].map(async surface=>{
- try{const r=await fetch(origin+surface,{signal:AbortSignal.timeout(15000)});receipt.surfaces.push({path:surface,status:r.status});}catch(e){receipt.surfaces.push({path:surface,status:0,error:e.message})}
+ try{const r=await fetch(origin+surface,{signal:AbortSignal.timeout(15000)});receipt.surfaces.push({path:surface,status:r.status});}catch(e){receipt.surfaces.push({path:surface,status:0,...safeNetworkFailure(e)})}
 }));
 receipt.ok=receipt.profiles.every(p=>p.initialized&&p.errors.length===0&&p.intents.length===intents.length&&p.intents.every(i=>i.match_ok&&i.offer_link_ok))&&receipt.surfaces.every(s=>s.status===200);
+receipt.surfaces.sort((a,b)=>a.path.localeCompare(b.path));
+receipt.diagnosis=classifyDiscoveryReceipt(receipt);
 fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
-console.log(JSON.stringify(receipt,null,2));if(!receipt.ok)process.exitCode=1;
+console.log(JSON.stringify(receipt,null,2));
+if(!receipt.ok){
+  // Keep stdout machine-readable for existing tests; GitHub Actions gets a useful error annotation.
+  console.error('::error title=Saban discovery probe::'+receipt.diagnosis.code+': '+receipt.diagnosis.next_action);
+  process.exitCode=1;
+}
