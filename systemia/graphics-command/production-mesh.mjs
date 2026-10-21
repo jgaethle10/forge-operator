@@ -44,8 +44,20 @@ function verifyCouncil(plan, reconciliation) {
     assert(blueprint.status === 'ready_for_asset_or_provider_routing', 'council_shot_not_ready');
     assert(Array.isArray(blueprint.rejection_contract) && blueprint.rejection_contract.length > 0, 'council_rejection_contract_missing');
     assert(!blueprint.missing_roles?.length && !blueprint.findings?.length, 'council_findings_present');
-    const roles = plan.council.roles || [];
-    assert(roles.every((role) => Object.values(blueprint.creative_genome || {}).some((proposal) => proposal && typeof proposal === 'object')), 'council_genome_missing');
+    const categories = {
+      story_architect:'story', cinematography_director:'camera',
+      visual_evidence_scout:'coverage', data_graphics_director:'graphics',
+      world_builder:'world', edit_rhythm_director:'edit', sound_director:'sound',
+      brand_art_director:'art_direction', documentary_truth_guard:'truth',
+      beauty_judge:'beauty'
+    };
+    assert((plan.council.roles || []).length === 10, 'council_role_set_incomplete');
+    for (const role of plan.council.roles) {
+      const category = categories[role];
+      const proposal = category && blueprint.creative_genome?.[category];
+      assert(proposal?.category === category && Array.isArray(proposal.reject_if) && proposal.reject_if.length > 0,
+        'council_genome_missing:' + role);
+    }
   }
   return expected;
 }
