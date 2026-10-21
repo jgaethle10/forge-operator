@@ -35,6 +35,7 @@ import {
 import {
   fabricMobileManifest,
   renderFabricMobileApp,
+  normalizeCompanionForm,
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
@@ -1292,9 +1293,28 @@ export async function startFabricLocalRuntime({
         );
       }
 
-      if (req.method==='GET' && String(req.url||'').startsWith('/mobile?')) {
-        const parsed=new URL(String(req.url||''),'http://fabric.local');
-        const query=String(parsed.searchParams.get('q')||'').trim().slice(0,4000);
+      if ((req.method==='GET' && String(req.url||'').startsWith('/mobile?')) ||
+          (req.method==='POST' && (req.url==='/mobile'||req.url==='/mobile/'))) {
+        // Freeform prompts use POST so user descriptions are not placed in
+        // browser URLs or links. The prewritten journey links remain GET.
+        let rawQuery='';
+        let rawForm='';
+        if(req.method==='POST'){
+          let input;
+          try {
+            input=await readOfferInput(req,{maxBytes:8192});
+          } catch {
+            return sendJson(res,400,{error:'invalid_mobile_discovery_request',transactional:false,external_action_taken:false});
+          }
+          rawQuery=String(input.q||'');
+          rawForm=String(input.form||'');
+        } else {
+          const parsed=new URL(String(req.url||''),'http://fabric.local');
+          rawQuery=String(parsed.searchParams.get('q')||'');
+          rawForm=String(parsed.searchParams.get('form')||'');
+        }
+        const query=rawQuery.trim().slice(0,4000);
+        const form=normalizeCompanionForm(rawForm);
         let matches=[];
         let error='';
         if(query.length>=3){
@@ -1315,6 +1335,18 @@ export async function startFabricLocalRuntime({
         }else if(query){
           error='Describe the problem in at least three characters.';
         }
+        // This is an ephemeral, server-observed discovery trace, NOT a
+        // permanent audit receipt or proof of completed downstream work.
+        const proof=query?{
+          observed_at:new Date().toISOString(),
+          display_id:crypto.randomBytes(7).toString('hex'),
+          status:error?'error':matches.length?'matched':'no_match',
+          candidates:matches.length,
+          source:'Evercraft Fabric owned directory',
+          external_action_taken:false,
+          payment_submitted:false,
+          boardroom_invoked:false,
+        }:null;
         return sendMobileHtml(
           res,
           200,
@@ -1323,6 +1355,8 @@ export async function startFabricLocalRuntime({
             matches,
             capabilityCount:preparedCatalog().capabilities.length,
             error,
+            proof,
+            form,
           })
         );
       }
