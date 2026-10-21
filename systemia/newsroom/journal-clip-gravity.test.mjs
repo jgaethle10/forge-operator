@@ -35,7 +35,7 @@ function release(){
       approved_at: '2026-10-21T17:05:00.000Z',
       copy_sha256: sha(copy),
     },
-    freshness_expires_at: '2026-10-21T23:59:00.000Z',
+    freshness_expires_at: '2026-10-21T23:00:00.000Z',
     claims_receipt_ref: 'systemia:toledo:claim-reactor:1',
     sources: [
       {source_id: 'city', url: 'https://toledo.oh.gov/news/2026/10/21/hazmat-evacuation-in-north-toledo', evidence_state: 'verified', verified_at: '2026-10-21T16:45:00.000Z'},
