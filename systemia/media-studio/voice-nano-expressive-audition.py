@@ -40,7 +40,9 @@ def run(outdir):
     model=ChatterboxTurboTTS.from_pretrained(device='cpu',nano=True)
     loadsec=round(time.time()-start,2)
     result={'schema':'evercraft.voice-foundry.chatterbox-nano-emotion-probe.v1',
-        'externalModel':MODEL,'modelCard':MODEL_CARD,'codeLicenseClaim':'MIT upstream',
+        'externalModel':MODEL,'modelCard':MODEL_CARD,
+        'sourceCheckoutSha':os.environ.get('EVERCRAFT_MODEL_SOURCE_COMMIT'),
+        'codeLicenseClaim':'MIT upstream',
         'modelLicenseClaim':'MIT upstream model card','modelWeightRevisionPinned':False,
         'originalEvercraftModel':False,'directPreviousAudioConditioning':False,
         'emotionControl':'native [chuckle] tag without scene audio conditioning',
