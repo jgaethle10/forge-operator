@@ -9,6 +9,30 @@
 - A separate, green **Specialist Edge External Canary** skipped the HTTPS/MCP test because its required specialist origin was not configured; it cannot substitute for the universal Fabric external canary.
 - Evercraft Payments remained `held_owned_payment_endpoint_unconfigured`. Restoring network ingress is not a payment receipt.
 
+## Preferred architecture: Evercraft Network + Saban + Evercraft Edge
+
+Do **not** create an independent fourth networking stack.
+
+- **Evercraft Network (control/observation):** collect node/route health, failure domains, reachability, identity freshness, durable receipt references, offline/partition classification and router-address drift. Discovery never grants execution or authorizes a production DNS route. Its mesh/aircraft/offline continuity proofs are not evidence of a deployed public gateway.
+- **Saban / Evercraft Compute (admission + data path):** use the existing `systemia/network/outbound-capacity-broker.mjs`, `outbound-node-agent.mjs`, `federated-service-bridge.mjs`, authorized NodeSeed identities and Yard lease/relay APIs. The agent connects **outward** to an already reachable broker; a short-lived single-service relay handles Fabric requests. No inbound Penguin or Node002 shell is granted, and the gateway never gets allocator authority.
+- **Evercraft Edge (public ingress):** place Caddy with valid HTTPS/TLS and a loopback-only Saban federated bridge on a **real externally reachable node**. The gateway has a stable service identity, route and health/rollback receipts independent of which compute node runs the read-only Fabric.
+- **Systemia (authority and recovery):** route creation/renewal and promotion require admission, external canaries and explicit operational authority. Handle broker restarts by reconstructing scoped relay authority from attested identity and deployment receipts, not persisted relay tokens (track #852).
+- **Payment authority remains separate:** public access does not confer payment capability or proof of checkout, settlement or delivery.
+
+Existing source-level software proof: `systemia/saban/fabric-edge-relay.proof.mjs` performs a two-node Fabric -> outbound broker -> federated bridge -> signed attestation -> MCP initialize/tool roundtrip. It is a **local proof only**, not an operating public endpoint. The related #719 PR must be reconciled against main before production promotion; do not assert it is merged.
+
+### Route admission decision
+
+| Condition | Permitted status |
+|---|---|
+| Penguin Fabric healthy; no verified external host | `local_only_public_held` |
+| Authorized Saban broker + outward agent, but no trusted public HTTPS | `private_relay_only` |
+| Trusted public HTTPS host + scoped broker relay + fresh identity/route receipt | `external_canary_required` |
+| Exact production hostname verified externally for TLS, health, signed identity and read-only MCP | `public_route_verified` |
+| Provider checkout/settlement/fulfillment unverified | `commerce_held` regardless of route |
+
+The SSH `-R` reverse-relay scripts remain a narrowly scoped **fallback** transport for an already authorized relay host. Do not run both against the same production hostname without a supervised migration/rollback. Saban's logical capacity or local mesh alone does not remove the requirement for a public ingress host.
+
 ## Why a first-party outbound relay
 
 Our existing assets:
