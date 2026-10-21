@@ -1,0 +1,25 @@
+name: Fallen cinematic action finish
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/action-finish.mjs'
+      - 'systemia/media-studio/action-finish.test.mjs'
+      - 'systemia/media-studio/ACTION_FINISH.md'
+      - '.github/workflows/fallen-action-finish.yml'
+      - 'package.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-ffmpeg-render-and-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Ensure FFmpeg present
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Test real codec, audio and fail-closed gates
+        run: node --test systemia/media-studio/action-finish.test.mjs

@@ -29,6 +29,8 @@
     "proof:nodeseed-placement": "node systemia/network/nodeseed-placement-label-proof.mjs",
     "test:release-policy": "node systemia/release/release-policy.test.mjs && node systemia/release/scoped-approval.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
+    "media:action-finish": "node systemia/media-studio/action-finish.mjs",
+    "test:action-finish": "node --test systemia/media-studio/action-finish.test.mjs",
     "test:media-studio": "node --import tsx --test systemia/media-studio/*.test.ts",
     "proof:factory": "node systemia/proof-factory/proof-factory.mjs",
     "test:proof-factory": "node tests/proof-factory.test.mjs",
