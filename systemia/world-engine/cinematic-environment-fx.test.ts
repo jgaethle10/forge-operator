@@ -83,6 +83,8 @@ test('actual canonical camera, visual and WebGPU plans contain dynamic GPU FX dr
  const drawn=mid.renderPlan.draws.filter(d=>d.entityId.startsWith('vfx-'));
  assert.ok(drawn.length>40);
  assert.ok(drawn.some(d=>d.geometryId==='owned:fx-cinematic-3d-puff'));
+ assert.ok(drawn.filter(d=>d.alphaMode==='blend').length>20);
+ assert.ok(drawn.filter(d=>d.alphaMode==='blend').every(d=>d.baseColor[3]<1));
  assert.ok(drawn.some(d=>d.geometryId==='owned:fx-cinematic-wake-crest'));
  assert.ok(drawn.every(d=>d.castsShadow===false));
  assert.notEqual(first.renderPlan.digest,mid.renderPlan.digest);
