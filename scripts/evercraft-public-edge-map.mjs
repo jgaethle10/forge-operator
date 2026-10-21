@@ -20,6 +20,11 @@ for (let i = 2; i < process.argv.length; i += 2) {
 const gateway = args.get('gateway');
 const host = args.get('host');
 const scope = String(args.get('scope') || 'web').toLowerCase();
+const renewOwned = String(args.get('renew-owned') || '0');
+if(!['0','1'].includes(renewOwned)){
+  console.error('Invalid --renew-owned; expected 0 or 1.');
+  process.exit(2);
+}
 if (!gateway || !host) {
   console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip> [--scope all|web|dns]');
   process.exit(2);
@@ -50,6 +55,7 @@ const out = {
   attempts: [],
   scope,
   mappings,
+  owned_lease_renewal_requested:renewOwned==='1',
   host_forward_preflight: null,
   // Router acknowledgement is not external connectivity evidence.
   public_ingress_verified: false,
@@ -370,7 +376,8 @@ async function upnpMap() {
             host:tagValue(xml,'NewInternalClient'),
             internal:Number(tagValue(xml,'NewInternalPort')),
             description:tagValue(xml,'NewPortMappingDescription'),
-            enabled:tagValue(xml,'NewEnabled')
+            enabled:tagValue(xml,'NewEnabled'),
+            lease_seconds:tagValue(xml,'NewLeaseDuration')
           };
         }catch(error){
           if(error.upnpCode==='714') missing=true;
@@ -378,7 +385,7 @@ async function upnpMap() {
         }
         const decision=readbackError
           ? {action:'hold',state:'readback_failed',ownership_verified:false}
-          : planUpnpMapping(existing,{...m,host},{missing});
+          : planUpnpMapping(existing,{...m,host},{missing,renewHealthy:renewOwned==='1'});
         planned.push({requested:m,selector,decision,error:readbackError});
       }
 
@@ -424,12 +431,14 @@ async function upnpMap() {
             host:tagValue(xml,'NewInternalClient'),
             internal:Number(tagValue(xml,'NewInternalPort')),
             description:tagValue(xml,'NewPortMappingDescription'),
-            enabled:tagValue(xml,'NewEnabled')
+            enabled:tagValue(xml,'NewEnabled'),
+            lease_seconds:tagValue(xml,'NewLeaseDuration')
           };
           const verified=planUpnpMapping(observed,{...m,host});
-          if(verified.action!=='keep') throw new Error('upnp_mapping_readback_mismatch');
+          if(!['keep','renew'].includes(verified.action)) throw new Error('upnp_mapping_readback_mismatch');
           mapped.push({
             requested:m,success:true,readback_verified:true,
+            renewed:row.decision.action==='renew',
             observed_host:observed.host,observed_port:observed.internal
           });
         }catch(error){
