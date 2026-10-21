@@ -7,6 +7,8 @@ on:
       - "systemia/organism/**"
       - "systemia/saban/**"
       - "systemia/autonomy/**"
+      - ".github/workflows/systemia-legacy-rescue-watch.yml"
+      - "tests/legacy-rescue-schedule-preemption.test.mjs"
       - "systemia/signal-fabric/**"
       - "systemia/yard/**"
       - "systemia/compute/**"
@@ -25,6 +27,8 @@ on:
       - "systemia/organism/**"
       - "systemia/saban/**"
       - "systemia/autonomy/**"
+      - ".github/workflows/systemia-legacy-rescue-watch.yml"
+      - "tests/legacy-rescue-schedule-preemption.test.mjs"
       - "systemia/signal-fabric/**"
       - "systemia/yard/**"
       - "systemia/compute/**"
@@ -50,4 +54,5 @@ jobs:
       - run: npm run machine:status
       - run: node --check systemia/autonomy/github-revenue-heartbeat.mjs
       - run: node --test systemia/autonomy/revenue-liveness.test.mjs
+      - run: node --test tests/legacy-rescue-schedule-preemption.test.mjs
       - run: npm run proof:control-plane
