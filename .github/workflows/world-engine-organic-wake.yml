@@ -54,7 +54,8 @@ jobs:
           const f=r.organicWake,o=r.animatedOcean,e=r.environmentalFx;
           if(!f||f.source!=='original_non_chevron_3d_curved_alpha_foam_patches'||
              f.sourceGeometryPrefix!=='owned:fx-organic-foam-'||
-             f.originalGeometryVariants!==4||f.centeredOnNativeWaveSurface!==true||
+             f.originalGeometryVariants!==4||f.nativeWgslFeatheredAlphaAndNoise!==true||
+             f.centeredOnNativeWaveSurface!==true||
              f.movingActorWakeSources!==4||f.realGpuFoamDrawsAtMiddle<25||
              f.hasOldChevronDraws!==false||f.fluidDynamicsOrHistoricalWeatherVerified!==false||
              f.publicationAuthority!==false||o?.vertexCount!==112*112*6||
