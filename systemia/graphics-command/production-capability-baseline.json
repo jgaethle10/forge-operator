@@ -98,6 +98,7 @@
     "systemia/media-studio/timeline-export.ts",
     "systemia/media-studio/timeline-ingest.ts",
     "systemia/media-studio/timeline.ts",
+    "systemia/media-studio/toon-shot-handoff.mjs",
     "systemia/media-studio/types.ts",
     "systemia/media-studio/virtual-production.ts",
     "systemia/media-studio/visual-coverage.ts",
