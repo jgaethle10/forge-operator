@@ -36,3 +36,15 @@ jobs:
         run: node systemia/yard/web-fetch-owned-resident.proof.mjs
       - name: Independent GitHub runner public HTTPS Fetch smoke
         run: node --test systemia/evercraft-web/owned-fetch-mcp/live-smoke.test.mjs
+      - name: Capture verified temporary-runner Fetch evidence (NOT production)
+        env:
+          EVERCRAFT_WEB_DEMO_RECEIPT_PATH: artifacts/evercraft-web-ci-fetch-receipt.json
+        run: node systemia/evercraft-web/owned-fetch-mcp/ci-demonstration-receipt.mjs
+      - name: Upload public-safe Fetch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-web-ephemeral-fetch-receipt
+          path: artifacts/evercraft-web-ci-fetch-receipt.json
+          if-no-files-found: warn
+          retention-days: 7
