@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {planUpnpMapping,parseUpnpErrorCode} from '../scripts/edge-upnp-mapping-policy.mjs';
+import {planUpnpMapping,parseUpnpErrorCode,decodeUpnpCdata} from '../scripts/edge-upnp-mapping-policy.mjs';
 
 const desired={external:443,internal:8443,proto:'TCP',desc:'Evercraft Fabric HTTPS',host:'192.168.88.5'};
 const existing=(patch={})=>({
@@ -13,6 +13,26 @@ const existing=(patch={})=>({
 test('identical occupied Evercraft port is preserved without AddPortMapping',()=>{
   assert.deepEqual(planUpnpMapping(existing(),desired).action,'keep');
   assert.equal(planUpnpMapping(existing(),desired).ownership_verified,true);
+});
+
+test('router CDATA-labeled Evercraft mappings normalize and retain exact owner gate',()=>{
+  const cases=[
+    ['Evercraft Fabric HTTP','<![CDATA[Evercraft Fabric HTTP]]>',80,18080],
+    ['Evercraft Fabric HTTPS','<![CDATA[Evercraft Fabric HTTPS]]>',443,8443],
+  ];
+  for(const [label,raw,external,internal] of cases){
+    const normalized=decodeUpnpCdata(raw);
+    assert.equal(normalized,label);
+    const expected={external,internal,proto:'TCP',desc:label,host:'192.168.88.5'};
+    const observed={host:'192.168.88.5',internal,enabled:'1',description:normalized,lease_seconds:'0'};
+    assert.equal(planUpnpMapping(observed,expected).action,'keep');
+    assert.equal(planUpnpMapping({...observed,description:decodeUpnpCdata('<![CDATA[Not Evercraft]]>')},expected).action,'hold');
+  }
+  assert.equal(decodeUpnpCdata('<![CDATA[Evercraft Fabric HTTP]]> tail'),'<![CDATA[Evercraft Fabric HTTP]]> tail');
+  assert.equal(decodeUpnpCdata(null),null);
+  const source=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
+  assert.match(source,/return decodeUpnpCdata\(block\.match\(re\)\?\.\[1\] \?\? null\)/);
+  assert.match(source,/description:tagValue\(xml,'NewPortMappingDescription'\)/);
 });
 
 test('only verified owned finite-lease ports renew when the resident clock says due',()=>{
