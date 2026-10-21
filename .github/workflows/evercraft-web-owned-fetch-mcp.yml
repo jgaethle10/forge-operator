@@ -1,0 +1,50 @@
+name: Evercraft Web owned Fetch MCP proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/owned-fetch-mcp/**'
+      - 'systemia/evercraft-web/browser-worker/policy.mjs'
+      - 'systemia/yard/web-fetch-owned-resident.proof.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'evercraft.compute.json'
+      - '.github/workflows/evercraft-web-owned-fetch-mcp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-web-owned-fetch-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  owned-fetch-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse owned MCP implementation
+        run: node --check systemia/evercraft-web/owned-fetch-mcp/server.mjs
+      - name: Read-only MCP security and cold-client tests
+        run: node --test systemia/evercraft-web/owned-fetch-mcp/server.test.mjs
+      - name: Leased private Evercraft Compute + Yard service proof
+        run: node systemia/yard/web-fetch-owned-resident.proof.mjs
+      - name: Independent GitHub runner public HTTPS Fetch smoke
+        run: node --test systemia/evercraft-web/owned-fetch-mcp/live-smoke.test.mjs
+      - name: Capture verified temporary-runner Fetch evidence (NOT production)
+        env:
+          EVERCRAFT_WEB_DEMO_RECEIPT_PATH: artifacts/evercraft-web-ci-fetch-receipt.json
+        run: node systemia/evercraft-web/owned-fetch-mcp/ci-demonstration-receipt.mjs
+      - name: Upload public-safe Fetch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-web-ephemeral-fetch-receipt
+          path: artifacts/evercraft-web-ci-fetch-receipt.json
+          if-no-files-found: warn
+          retention-days: 7
