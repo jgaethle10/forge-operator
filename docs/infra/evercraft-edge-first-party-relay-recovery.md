@@ -53,6 +53,24 @@ External client -- trusted HTTPS:443 --> authorized public relay node/Caddy
                                  Fabric 127.0.0.1:8787 (read-only MCP)
 ```
 
+## Fastest zero-spend recovery attempt: correct stale Chromebook LAN target
+
+**Operator-confirmed** ChromeOS Wi-Fi address on October 20: `192.168.88.5`, previously `192.168.88.3`. The installed router mapping reads `EVERCRAFT_ROUTER_LAN_HOST` from `/etc/evercraft/router-map.env`. A resident timer can faithfully **repeat a wrong address** indefinitely.
+
+Run this only on the **Chromebook Penguin** node after confirming its current ChromeOS Wi-Fi IP is still `192.168.88.5` and the Linux TCP 18080/8443 forwarding switches are enabled:
+
+```bash
+sudo cp -a /etc/evercraft/router-map.env /etc/evercraft/router-map.env.before-ip-fix
+sudo sed -i 's/^EVERCRAFT_ROUTER_LAN_HOST=.*/EVERCRAFT_ROUTER_LAN_HOST=192.168.88.5/' /etc/evercraft/router-map.env
+grep '^EVERCRAFT_ROUTER_LAN_HOST=' /etc/evercraft/router-map.env
+sudo systemctl start evercraft-router-map.service
+cat /var/lib/evercraft/router-map/latest.json
+```
+
+A `systemctl start` failure or an `AddPortMapping` conflict is **not** proof that the external route has recovered. Do not broaden mappings or blindly remove existing rules: old 80/443 entries owned by the former `.3` target may require an exact, owner-confirmed replacement. The update should target `192.168.88.5:18080/8443` only for Fabric web mappings; DNS 53 is a separate service scope. If the ChromeOS IP moves again, update the DHCP reservation and refresh the target rather than assuming the in-guest `100.115.*` address is the router-facing host.
+
+Observe the independently scheduled **Chromebook Operator Public Edge Canary** (not the specialist canary) for actual trusted HTTPS, signed device identity and MCP. If externally unreachable after correcting the mapping, pivot to the authorized Saban outbound architecture below; repeated `19090` phone tests and Crostini self-hairpin curls do not establish customer reachability.
+
 ## No-cutover sequence
 
 1. Identify an **existing** independently reachable host, its owner, SSH host-key fingerprint, real external IP and upstream TLS/ACME capability. If absent, **hold**: do not manufacture a public URL, pay for hosting, or silently use a third-party intermediary.
