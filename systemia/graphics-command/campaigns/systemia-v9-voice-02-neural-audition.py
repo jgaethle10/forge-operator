@@ -6,8 +6,6 @@ the earlier three-voice neural shootout. Text is specific to V9 scenes.
 No fabricated cast approvals, no provider spend, no publication.
 """
 import hashlib,json,pathlib,sys,subprocess
-import numpy as np
-import soundfile as sf
 
 VOICE_ID="af_heart"
 CUES=[
@@ -27,6 +25,8 @@ def verify():
   print("Voice 02 founder-preferred Kokoro V9 narration cue plan OK")
 def render(folder):
   verify()
+  import numpy as np
+  import soundfile as sf
   from kokoro import KPipeline
   out=pathlib.Path(folder);out.mkdir(parents=True,exist_ok=False)
   model=KPipeline(lang_code="a")
