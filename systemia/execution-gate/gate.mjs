@@ -81,6 +81,58 @@ function requestFingerprint(input) {
   return sha256(JSON.stringify(canonical(input.request)));
 }
 
+// A replay key is not a bearer credential. Bind it to the exact original
+// principal, product, action, resource, route, request and metering identity
+// before revealing an existing lease or allowing recovery.
+function preparationReplayBinding(input) {
+  const meter = input?.meter || null;
+  return {
+    actor_ref: requiredString(input?.actor_ref, 'actor_ref'),
+    passport_product: requiredString(input?.passport_product, 'passport_product'),
+    scope: requiredString(input?.scope, 'scope'),
+    resource_ref: input?.resource_ref ? requiredString(input.resource_ref, 'resource_ref') : null,
+    specialist_slug: requiredString(input?.specialist_slug, 'specialist_slug'),
+    route_mode: input?.route_mode ? requiredString(input.route_mode, 'route_mode') : 'remote_mcp',
+    request_fingerprint: requestFingerprint(input),
+    meter: meter ? {
+      subject_ref: requiredString(meter.subject_ref, 'meter.subject_ref'),
+      product: requiredString(meter.product, 'meter.product'),
+      metric: requiredString(meter.metric, 'meter.metric'),
+      quantity: positiveNumber(meter.quantity, 'meter.quantity'),
+      unit: meter.unit ? String(meter.unit) : null,
+    } : null,
+  };
+}
+
+function assertSamePreparationReplay(input, prior) {
+  const incoming = preparationReplayBinding(input);
+  const recorded = {
+    actor_ref: prior.actor_ref,
+    passport_product: prior.passport_product,
+    scope: prior.scope,
+    resource_ref: prior.resource_ref || null,
+    specialist_slug: prior.specialist_slug,
+    route_mode: prior.route_mode || 'remote_mcp',
+    request_fingerprint: prior.request_fingerprint,
+    meter: prior.meter ? {
+      subject_ref: prior.meter.subject_ref,
+      product: prior.meter.product,
+      metric: prior.meter.metric,
+      quantity: prior.meter.quantity,
+      unit: prior.meter.unit || null,
+    } : null,
+  };
+  if (
+    JSON.stringify(incoming) !== JSON.stringify(recorded) ||
+    (input?.lease_id && requiredString(input.lease_id, 'lease_id') !== prior.lease_id) ||
+    (input?.permit_id && requiredString(input.permit_id, 'permit_id') !== prior.permit_id) ||
+    (input?.meter_reservation_id &&
+      requiredString(input.meter_reservation_id, 'meter_reservation_id') !== prior.meter_reservation_id)
+  ) {
+    throw new Error('execution_gate_idempotency_binding_conflict');
+  }
+}
+
 export class EvercraftExecutionGate {
   constructor({
     stateDir,
@@ -248,12 +300,16 @@ export class EvercraftExecutionGate {
       const duplicateLatest = duplicate
         ? this.latest.get(duplicate.lease_id) || duplicate
         : null;
+      if (duplicate) {
+        assertSamePreparationReplay(input, duplicate);
+      }
       if (duplicate && duplicateLatest.state !== 'preparing') {
         return {
           state: duplicateLatest.state,
           lease: duplicateLatest,
           duplicate: true,
-          dispatch_allowed: duplicateLatest.state === 'started',
+          // A replay may inspect a matching lease but never issue dispatch twice.
+          dispatch_allowed: false,
         };
       }
 
@@ -487,21 +543,24 @@ export class EvercraftExecutionGate {
   startExecution(input) {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
+      const leaseId = requiredString(input?.lease_id, 'lease_id');
       const duplicate = this.operationIdempotency.get(idempotencyKey);
       if (duplicate) {
+        if (duplicate.lease_id !== leaseId || !['started', 'start_failed'].includes(duplicate.state)) {
+          throw new Error('execution_gate_idempotency_binding_conflict');
+        }
         return {
           state: duplicate.state,
           lease: duplicate,
           duplicate: true,
-          dispatch_allowed: duplicate.state === 'started',
+          dispatch_allowed: false,
         };
       }
 
-      const leaseId = requiredString(input?.lease_id, 'lease_id');
       const current = this.latest.get(leaseId);
       if (!current) throw new Error('lease_not_found');
       if (current.state === 'started') {
-        return { state: 'started', lease: current, duplicate: true, dispatch_allowed: true };
+        return { state: 'started', lease: current, duplicate: true, dispatch_allowed: false };
       }
       if (current.state !== 'prepared') throw new Error('lease_not_prepared');
 
@@ -603,10 +662,15 @@ export class EvercraftExecutionGate {
   completeExecution(input) {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
-      const duplicate = this.operationIdempotency.get(idempotencyKey);
-      if (duplicate) return { state: duplicate.state, lease: duplicate, duplicate: true };
-
       const leaseId = requiredString(input?.lease_id, 'lease_id');
+      const duplicate = this.operationIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        if (duplicate.lease_id !== leaseId || duplicate.state !== 'completed') {
+          throw new Error('execution_gate_idempotency_binding_conflict');
+        }
+        return { state: duplicate.state, lease: duplicate, duplicate: true };
+      }
+
       const current = this.latest.get(leaseId);
       if (!current) throw new Error('lease_not_found');
       if (current.state !== 'started') throw new Error('lease_not_started');
@@ -639,10 +703,15 @@ export class EvercraftExecutionGate {
   cancelExecution(input) {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
-      const duplicate = this.operationIdempotency.get(idempotencyKey);
-      if (duplicate) return { state: duplicate.state, lease: duplicate, duplicate: true };
-
       const leaseId = requiredString(input?.lease_id, 'lease_id');
+      const duplicate = this.operationIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        if (duplicate.lease_id !== leaseId || duplicate.state !== 'cancelled') {
+          throw new Error('execution_gate_idempotency_binding_conflict');
+        }
+        return { state: duplicate.state, lease: duplicate, duplicate: true };
+      }
+
       const current = this.latest.get(leaseId);
       if (!current) throw new Error('lease_not_found');
       if (current.state !== 'prepared') throw new Error('only_prepared_lease_can_cancel');
