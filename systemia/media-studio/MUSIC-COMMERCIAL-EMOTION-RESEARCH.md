@@ -27,3 +27,56 @@ The earlier Evercraft AI Boardroom music-science session was queued with zero co
 ## Sound quality direction
 
 Prioritize authentic recorded performance over oscillator imitations for piano, bowed strings and orchestral timbres, with verified sample licenses. For commercial work, win trust with audible naturalness and intelligible words before layering production spectacle. The music should leave intentional air in the arrangement and earn each crescendo.
+
+## Executable listening control (October 20, 2026)
+
+The adjacent `sound-ab-match.mjs` is now a **gain-only, real-file**
+comparison utility. It refuses unequal-duration edits, requires actual final
+EBU R128 measurements, lowers the shared target when true-peak headroom
+requires it, never inserts compression/limiting, renders 48 kHz 24-bit
+stereo comparison WAVs, and writes a source-SHA-bound sealed mapping.
+
+```bash
+node systemia/media-studio/sound-ab-match.mjs \
+  --a ./takes/original.wav \
+  --b ./takes/experimental.wav \
+  --out ./auditions/experiment-01
+node --test systemia/media-studio/sound-ab-match.test.mjs
+```
+
+Output: blind_A.wav, blind_B.wav, REVIEW_README.txt and
+sealed_source_receipt.json. **DO NOT** inspect the sealed mapping before
+participants record their blinded ratings. It is designed for matching
+two versions of the *same scored edit*, not different-length cuts.
+An empty, silent or unmeasurable reference fails closed.
+
+### Actual engineering study, *The Space Between Notes*
+
+An **original, sixteen-bar, 175-note-event** demonstration was rendered
+offline at nominal 77 BPM using an installed TimGM6mb sampled-instrument
+SoundFont (piano, cello and strings), with two interpretation passes:
+straight metronomic performance and phrase-shaped rubato, accent arcs,
+and a staged orchestration lift. Both were separately captured to
+48 kHz PCM24, gain-only matched and independently measured after MP3
+encoding. Measured from the supplied internal reference MP3s:
+
+| Study condition | Integrated loudness | Loudness range | Measured true peak |
+|---|---:|---:|---:|
+| A, straight | -18.0 LUFS | 2.8 LU | -5.4 dBTP |
+| B, phrase-shaped | -18.0 LUFS | 11.0 LU | -2.0 dBTP |
+
+**This demonstrates a measurable dynamic-range difference, not that B
+is emotionally better.** A/B was run through the standalone utility;
+output WAV measurements agreed to 0.0 LUFS reported difference, with
+checksums and true peak recorded. Developer tool tests passed locally.
+The demo is held for actual blind listening and no audience evaluation
+is fabricated.
+
+**Copyright and source boundary:** TimGM6mb is installed on the
+engineering worker under Debian's `timgm6mb-soundfont` GPL-2 package,
+attributed to Tim Brechbill and David Bolton. No claim that its acoustic
+source samples are Evercraft-owned or cleared for music distribution.
+The original user-approved *Weight of Silence* is left untouched.
+The internal standalone audio demo is *not* a commercial soundtrack
+and may not be promoted into advertising before independent rights
+review. The new engine utility makes no permissions or release claims.
