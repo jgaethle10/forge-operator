@@ -2,13 +2,14 @@
  * Server-side Raven Nexus Stripe adapter.
  *
  * This is a private provider boundary, NOT a public Fabric MCP tool. It
- * requires a separately provisioned, owner-only credential file under Raven
- * Nexus. A ChatGPT-hosted Stripe OAuth connection or the Systemia account
+ * requires a separately authorized Stripe record in the EXISTING encrypted
+ * Evercraft provider vault. A ChatGPT-hosted Stripe OAuth connection or the Systemia account
  * identity reference alone cannot enable it.
  */
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {ProviderCredentialVault} from '../evercraft-home/credential-vault.mjs';
 import {
   STRIPE_FIXED_PRICE_BINDINGS,buildRavenStripeCheckoutPlan,
   inspectCreatedStripeCheckoutSession,
@@ -16,38 +17,46 @@ import {
 
 const STRIPE_ORIGIN='https://api.stripe.com';
 const TIMEOUT_MS=10000;
-export const RAVEN_NEXUS_PRIVATE_ROOT=path.join(
-  os.homedir(),'.local','state','evercraft','raven-nexus','provider-credentials'
+export const RAVEN_NEXUS_DEFAULT_VAULT=path.join(
+  os.homedir(),'.local','state','evercraft','organism','compute','private','provider-credentials'
 );
 
-export function loadRavenStripeSecret({file,readFile=fs.readFileSync}={}){
-  const resolved=path.resolve(String(file||''));
-  if(!file || !path.isAbsolute(file) ||
-     !resolved.startsWith(RAVEN_NEXUS_PRIVATE_ROOT+path.sep)){
-    throw Error('raven_stripe_secret_must_live_in_private_provider_directory');
+export function loadRavenStripeSecret({
+  stateDir=process.env.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR||RAVEN_NEXUS_DEFAULT_VAULT,
+  credentialRef,
+}={}){
+  if(!stateDir||!path.isAbsolute(stateDir)||!/^provider_stripe_live_[a-f0-9]{16}$/.test(String(credentialRef||''))){
+    throw Error('raven_stripe_existing_vault_and_exact_reference_required');
   }
-  const dir=fs.lstatSync(path.dirname(resolved));
-  const st=fs.lstatSync(resolved);
+  // Never auto-provision a second vault or produce a key while checking Stripe.
+  const resolved=path.resolve(stateDir);
+  const keyFile=path.join(resolved,'.vault-key');
+  if(!fs.existsSync(resolved)||!fs.existsSync(keyFile)){
+    throw Error('raven_stripe_credential_vault_not_provisioned');
+  }
   const uid=typeof process.getuid==='function'?process.getuid():null;
-  if(!dir.isDirectory()||dir.isSymbolicLink()||(dir.mode&0o077)!==0||
-     !st.isFile()||st.isSymbolicLink()||(st.mode&0o077)!==0 ||
-     (uid!==null && (dir.uid!==uid||st.uid!==uid))){
-    throw Error('raven_stripe_secret_path_insecure');
+  for(const p of [resolved,keyFile]){
+    const st=fs.lstatSync(p);
+    if(st.isSymbolicLink()||(st.mode&0o077)!==0||
+       (uid!==null&&st.uid!==uid)||
+       (p===resolved?!st.isDirectory():!st.isFile())){
+      throw Error('raven_stripe_credential_vault_insecure');
+    }
   }
-  const fd=fs.openSync(resolved,fs.constants.O_RDONLY|(fs.constants.O_NOFOLLOW||0));
-  try{
-    const check=fs.fstatSync(fd);
-    if(!check.isFile()||(check.mode&0o077)!==0||
-       (uid!==null&&check.uid!==uid)||check.size>1024){
-      throw Error('raven_stripe_secret_file_insecure');
-    }
-    const secret=String(readFile(fd,'utf8')||'').trim();
-    if(!/^sk_live_[A-Za-z0-9]{16,200}$/.test(secret)){
-      throw Error('raven_stripe_live_secret_invalid_or_missing');
-    }
-    return secret;
-  }finally{fs.closeSync(fd);}
+  const vault=new ProviderCredentialVault({stateDir:resolved});
+  const meta=vault.list({provider:'stripe'}).find(x=>
+    x.credential_ref===credentialRef &&
+    x.provider==='stripe'&&x.environment==='live'&&x.status==='active'
+  );
+  if(!meta)throw Error('raven_stripe_live_credential_ref_not_found');
+  const sealed=vault.readSecret(credentialRef);
+  const secret=String(sealed.api_secret||'').trim();
+  if(!/^sk_live_[A-Za-z0-9]{16,200}$/.test(secret)){
+    throw Error('raven_stripe_vault_live_secret_invalid');
+  }
+  return secret;
 }
+
 async function stripeJson({secret,path:apiPath,method='GET',body='',idempotencyKey='',fetchImpl}){
   if(!['GET','POST'].includes(method)||!/^\/v1\/(?:account|prices\/price_[A-Za-z0-9]+|checkout\/sessions)$/.test(apiPath)){
     throw Error('raven_stripe_api_operation_not_allowlisted');
@@ -89,7 +98,7 @@ async function stripeJson({secret,path:apiPath,method='GET',body='',idempotencyK
  * reachable from public user input or MCP, and NEVER updates payment state.
  */
 export async function createRavenStripeCheckoutSession({
-  order,account,secretFile,fetchImpl=fetch,secretReader=loadRavenStripeSecret,
+  order,account,vaultStateDir,credentialRef,fetchImpl=fetch,secretReader=loadRavenStripeSecret,
 }={}){
   const binding=STRIPE_FIXED_PRICE_BINDINGS[order?.slug];
   if(!binding)throw Error('raven_stripe_offer_not_allowlisted');
@@ -103,8 +112,8 @@ export async function createRavenStripeCheckoutSession({
     throw Error('raven_stripe_canonical_order_ineligible');
   }
   // Test clients may inject a mock reader; production entrypoints MUST omit
-  // this parameter so strict Raven file custody checks cannot be bypassed.
-  const secret=secretReader({file:secretFile});
+  // this parameter so the existing Evercraft vault remains mandatory.
+  const secret=secretReader({stateDir:vaultStateDir,credentialRef});
   const identity=await stripeJson({secret,path:'/v1/account',fetchImpl});
   if(identity.object!=='account'||identity.id!==account.stripe_context ||
      identity.charges_enabled!==true){
