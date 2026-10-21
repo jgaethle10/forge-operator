@@ -3,6 +3,7 @@ set -euo pipefail
 
 GATEWAY=""
 LAN_HOST=""
+SCOPE="web"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NODE_BIN="$(command -v node || true)"
 RUN_USER="${SUDO_USER:-$USER}"
@@ -11,15 +12,15 @@ STATE_DIR="/var/lib/evercraft/router-map"
 usage() {
   cat <<'EOF'
 Usage:
-  scripts/install-fabric-router-map-resident.sh --gateway 192.168.88.1 --host 192.168.88.3
+  scripts/install-fabric-router-map-resident.sh --gateway 192.168.88.1 --host 192.168.88.5 [--scope web|dns|all]
 
-Installs a resident systemd timer that reasserts the Evercraft public-edge mappings:
+Installs a resident systemd timer. Default scope is WEB ONLY:
   WAN 80/TCP  -> Chromebook 18080/TCP
   WAN 443/TCP -> Chromebook 8443/TCP
-  WAN 53/TCP  -> Chromebook 1053/TCP
-  WAN 53/UDP  -> Chromebook 1053/UDP
 
-The router-map helper remains hard-scoped to these Evercraft ingress mappings.
+DNS scope is separate and opt-in. Existing valid mappings are read back
+without rewriting; foreign or stale owners require operator confirmation.
+Use --scope dns only for a separately authorized DNS operator mission.
 EOF
 }
 
@@ -27,12 +28,17 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --gateway) GATEWAY="${2:-}"; shift 2 ;;
     --host) LAN_HOST="${2:-}"; shift 2 ;;
+    --scope) SCOPE="${2:-}"; shift 2 ;;
     --repo-root) REPO_ROOT="${2:-}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
 done
 
+if [[ ! "$SCOPE" =~ ^(web|dns|all)$ ]]; then
+  echo "ERROR: scope must be web, dns or all" >&2
+  exit 2
+fi
 if [[ -z "$GATEWAY" || -z "$LAN_HOST" ]]; then
   echo "ERROR: --gateway and --host are required" >&2
   exit 2
@@ -51,6 +57,7 @@ sudo install -d -m 0755 /etc/evercraft
 sudo tee /etc/evercraft/router-map.env >/dev/null <<EOF
 EVERCRAFT_ROUTER_GATEWAY=$GATEWAY
 EVERCRAFT_ROUTER_LAN_HOST=$LAN_HOST
+EVERCRAFT_ROUTER_SCOPE=$SCOPE
 EVERCRAFT_ROUTER_REPO_ROOT=$REPO_ROOT
 EVERCRAFT_ROUTER_NODE=$NODE_BIN
 EOF
@@ -67,7 +74,7 @@ STATE_DIR="/var/lib/evercraft/router-map"
 mkdir -p "$STATE_DIR"
 tmp="$(mktemp "$STATE_DIR/latest.XXXXXX")"
 set +e
-"$EVERCRAFT_ROUTER_NODE"   "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs"   --gateway "$EVERCRAFT_ROUTER_GATEWAY"   --host "$EVERCRAFT_ROUTER_LAN_HOST" >"$tmp"
+"$EVERCRAFT_ROUTER_NODE"   "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs"   --gateway "$EVERCRAFT_ROUTER_GATEWAY"   --host "$EVERCRAFT_ROUTER_LAN_HOST"   --scope "${EVERCRAFT_ROUTER_SCOPE:-web}" >"$tmp"
 code=$?
 set -e
 chmod 0640 "$tmp"
