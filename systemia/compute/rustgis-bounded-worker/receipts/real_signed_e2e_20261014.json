@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.rustgis.worker-real-e2e-proof.v1",
+  "mission_key": "evercraft-rustgis-geospatial-engine-evaluation-20261013",
+  "observed_date": "2026-10-14",
+  "run_environment": "Temporary isolated scratch directory inside Systemia Base44 application sandbox, NOT a dedicated OS-isolated Evercraft compute node",
+  "release_tag": "v0.2.0",
+  "release_archive_sha256": "1cd13d8c5d84777537d211314adc745ccf9341707b546555e24a294f990b384a",
+  "rustgis_cli_sha256": "2481682c2e9f7577565b91d35b256109eb7d4f25ebe9e795f0a19fe4ce86917b",
+  "source": "canary_baseline.geojson",
+  "original_bundle_fixture_features": 41,
+  "test_cases": [
+    {
+      "job": "signed-real-render",
+      "status": "verified",
+      "output": "map.png",
+      "sha256": "978bc5e11db2bc6f5681ff7a2cda834e066de779ffe6f7b5a734800ef71d2d6c",
+      "bytes": 42838,
+      "dimensions": [
+        640,
+        420
+      ]
+    },
+    {
+      "job": "signed-real-buffer-100m",
+      "status": "verified",
+      "output": "buffered.rgis",
+      "sha256": "2fe125cb2fbdd2e3063b092d29cbac19e0a76e35c3aa52e8a7729d6e1f9a5ab4",
+      "bytes": 98097,
+      "buffer_meters": 100
+    }
+  ],
+  "signed_permits": "ephemeral Ed25519 issuer per run, not persisted or registered as production authority",
+  "unit_tests": {
+    "passed": 18,
+    "failed": 0,
+    "engine": "mock executable"
+  },
+  "remote_jobs_enabled": false,
+  "limits": [
+    "No actual Saban dispatch",
+    "No dedicated OS runtime isolation verified",
+    "No HP/Chromebook node compute enrollment",
+    "No source-geospatial claims; synthetic only",
+    "No production API or customer shipment",
+    "Actual RustGIS output bytes verified in ephemeral sandbox but not included in this source bundle"
+  ]
+}

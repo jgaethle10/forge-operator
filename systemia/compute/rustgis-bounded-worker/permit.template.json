@@ -1,0 +1,5 @@
+{
+  "schema": "evercraft.rustgis.permit.v1",
+  "job_id": "canary-JOB_ID",
+  "signature": "REPLACE_WITH_BASE64_ED25519_SIGNATURE_OVER_CANONICAL_JOB_JSON"
+}

@@ -1,0 +1,47 @@
+name: RustGIS bounded worker policy
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/rustgis-bounded-worker/**'
+      - '.github/workflows/rustgis-bounded-worker-policy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/compute/rustgis-bounded-worker/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify signed synthetic worker policy and replay gates
+        run: node systemia/compute/rustgis-bounded-worker/tests/test-worker.mjs
+      - name: Verify read-only Saban evidence reconciliation and tamper refusal
+        run: node systemia/compute/rustgis-bounded-worker/tests/saban-evidence-bridge.test.mjs
+
+  real-engine-synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch official pinned RustGIS v0.2.0 Linux CLI for synthetic QA only
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 --max-time 120             'https://github.com/opengeos/RustGIS/releases/download/v0.2.0/RustGIS-0.2.0-linux-x86_64.tar.gz'             -o /tmp/rustgis-v020.tar.gz
+          echo '1cd13d8c5d84777537d211314adc745ccf9341707b546555e24a294f990b384a  /tmp/rustgis-v020.tar.gz' | sha256sum -c -
+          mkdir -p /tmp/evercraft-rustgis-bin
+          tar -xzf /tmp/rustgis-v020.tar.gz -C /tmp/evercraft-rustgis-bin
+          node systemia/compute/rustgis-bounded-worker/tests/real-cli-e2e.mjs             /tmp/evercraft-rustgis-bin/RustGIS-0.2.0-linux-x86_64/rustgis-cli
