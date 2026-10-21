@@ -24,3 +24,14 @@ Each is an original speculative brand voiceover, not a factual customer testimon
 For proof-readiness require: exact product SKU, feature evidence with recorded screencast and real latency; no exaggerated "all-in-one" claims; licensed stock/filmed clips, commercial model/voice/brand rights cleared; distribution target with working URL; integrated sound mix, picture lock, customer disclosures as needed, final user approval.
 
 No claims that the RC23 copy is stronger until listening and evidence. Keep original Bella and Heart source audios immutable, PR #1465 draft and unmerged.
+
+
+## Actual neural proof and calibrated comparison (October 20, 2026)
+- RC23 Actions: https://github.com/jgaethle10/forge-operator/actions/runs/39554571506, completed **success**, all 9 planned real neural takes rendered.
+- Artifact: 12324948216, evercraft-rc23-script-one-refinement. Downloaded source ZIP independently checked. All **nine WAV and nine MP3 files match** their evidence.json SHA-256 receipts.
+- Original RC22 problem first take: actual downloaded from run 39545754923, checked against its original evidence.json, and placed as reference FIRST in each final comparison reel and as direct playable files in the offline review room.
+- IMPORTANT acoustic nuance: regeneration of the original RC22 identical text/voice/seed in RC23 did **not** create byte-identical WAVs. Frame counts and durations agree; audio sample correlations are 0.999859 Bella, 0.999769 Heart, 0.999697 85% Heart (aligned samples). This is very close but NOT bit-identical, and the cause wasn't independently isolated. The new RC23 original re-renders stay in the source data, but the final user-facing reference is the literal RC22 favorite original, not the approximation.
+- The three-script listening reels use **unaltered original RC22 MP3 first**, followed by RC23 F and M, in constant Bella/Heart/85%-Heart voices. The combined reel is re-encoded only for convenient playback, with 750ms between complete takes. The individual original MP3 and WAV file checksums remain unchanged.
+- The private ZIP contains an offline scorecard to compare hook, credibility and ending separately, source_parity.json with truthful non-equality, actual 9 new original neural WAVs and MP3s, three original RC22 reference WAV/MP3s, source evidence and three comparison reels.
+- No founder winner has yet been selected among O/F/M, so no script is declared approved. No feature or time-saving claim has been independently validated through a real screencast. No customer or public publication authorization. PR #1465 remains unmerged.
+- After the real experiment passed, workflow voice-rc23-script-one.yml was set back to manual dispatch only.
