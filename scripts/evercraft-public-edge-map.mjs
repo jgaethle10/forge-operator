@@ -602,6 +602,24 @@ async function main() {
     return;
   }
 
+  // NAT-PMP and PCP do not provide an ownership-bearing readback equivalent
+  // to UPnP GetSpecificPortMappingEntry on this topology. Crostini's source
+  // address is not the Chromebook's ChromeOS Wi-Fi LAN address. Until a
+  // first-party ownership attestation exists, do NOT send unverified
+  // protocol writes when UPnP is unavailable. Preserve implementation for
+  // future verified adapters, but do not execute it from the resident timer.
+  out.error='verified_upnp_readback_required';
+  out.unverified_fallbacks_skipped=['NAT-PMP','PCP'];
+  const refused=assessRouterMappings(mappings,upnp.mappings||[]);
+  out.production_mapping_control_ok=refused.production_mapping_control_ok;
+  out.diagnostic_mapping_control_ok=refused.diagnostic_mapping_control_ok;
+  out.web_mapping_control_ok=refused.web_mapping_control_ok;
+  out.dns_mapping_control_ok=refused.dns_mapping_control_ok;
+  out.missing_production_mappings=refused.missing_production_mappings;
+  console.log(JSON.stringify(out,null,2));
+  process.exitCode=1;
+  return;
+
   const natpmp = await natPmpMap().catch(e => ({ method: 'NAT-PMP', success: false, error: e.message }));
   out.attempts.push(natpmp);
   if (natpmp.success) {
