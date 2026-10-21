@@ -17,6 +17,8 @@ function fixture(){
       characters:[{id:'ember',lockedTraits:{species:'fox',fur:'rust'},
         referenceAssetIds:['ember-original-prototype']}],
       dialogue:[],
+      previewMotion:{specimenProfile:'original_fox_v1',reach:.75,
+        blinkAtSec:.7,gazeX:.4,lanternLift:.8,tailEnergy:.3},
     }],
   };
   return {...core,digest:digest(core)};
@@ -27,6 +29,8 @@ test('a real packet-bound single original fox shot routes to a local synthetic p
   assert.equal(plan.frameCount,24);
   assert.equal(plan.durationSec,1);
   assert.equal(plan.boundToRealShotId,true);
+  assert.equal(plan.previewMotion.reach,.75);
+  assert.match(plan.previewMotionDigest,/^[a-f0-9]{64}$/);
   assert.equal(plan.referenceMatched,false);
   assert.equal(plan.publicationAuthority,false);
 });
@@ -42,6 +46,14 @@ test('explicitly rejects humans, missing shots, voice and incompatible timing',(
   const tooLong=fixture();tooLong.shots[0].frameCount=240;tooLong.frameCount=240;
   const {digest:___,...longCore}=tooLong;tooLong.digest=digest(longCore);
   assert.throws(()=>prepareToonCelPreview({packet:tooLong,shotId:'lantern-fox-shot'}),/duration_outside_canary_bounds/);
+  const missingMotion=fixture();delete missingMotion.shots[0].previewMotion;
+  const {digest:____,...missingCore}=missingMotion;missingMotion.digest=digest(missingCore);
+  assert.throws(()=>prepareToonCelPreview({packet:missingMotion,shotId:'lantern-fox-shot'}),
+    /authored_preview_motion_required/);
+  const illegalMotion=fixture();illegalMotion.shots[0].previewMotion.gazeX=7;
+  const {digest:_____,...illegalCore}=illegalMotion;illegalMotion.digest=digest(illegalCore);
+  assert.throws(()=>prepareToonCelPreview({packet:illegalMotion,shotId:'lantern-fox-shot'}),
+    /preview_motion_range_invalid:gazeX/);
   assert.throws(()=>renderToonCelPreview({packet:original,shotId:'lantern-fox-shot',outDir:'/tmp/cel-preview-test'}),
     /explicit_canary_opt_in_required/);
 });
