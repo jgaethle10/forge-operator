@@ -222,11 +222,47 @@ def render(piano_path,cache,out_path):
    "These are VSCO2 CE CC0 recorded multisamples, not a live orchestra.\n"+
    "Do not use for public release until human artistic approval.\n")
  return receipt
+
+def render_stems_only(cache,out_path):
+ """Produce record-backed instruments WITHOUT importing or regenerating piano.
+
+ The founder-approved, checksum-protected piano is mixed afterwards from
+ its exact original binary WAV; rebuilding it from score is not equivalent.
+ """
+ cache=Path(cache);out_path=Path(out_path)
+ bank,sources=acquire(cache)
+ parts,events=voices(bank)
+ out_path.mkdir(parents=True,exist_ok=True)
+ files={}
+ for part,clip in parts.items():
+  fn=f"isolated_{part}_VSCO_CC0.wav"
+  sf.write(out_path/fn,clip,SR,subtype="PCM_24")
+  files[fn]=sha256((out_path/fn).read_bytes())
+ receipt={"schema":"evercraft.last-light.instrument-stems-only.v1",
+    "expected_canonical_piano_sha256":PIANO_SHA,
+    "piano_included":False,"piano_reconstructed_or_modified":False,
+    "source_library":"Versilian Studios VSCO 2 Community Edition",
+    "source_license":"CC0-1.0",
+    "source_provenance":sources,"musical_notes":events,"output_sha256":files,
+    "human_listening_approved":False,"public_release_approved":False,
+    "performed_live_ensemble":False,"independently_recorded_instrument_samples":True}
+ (out_path/"instrument-lab-provenance.json").write_text(json.dumps(receipt,indent=2)+"\n")
+ (out_path/"LISTEN_FIRST.txt").write_text(
+  "Piano deliberately omitted. These are dry isolated sampled acoustic instruments.\n"+
+  "Mix exclusively against an independently sha256-verified original The Last Light piano WAV.\n"+
+  "Human artistic approval pending; no public release.\n")
+ return receipt
+
 if __name__=="__main__":
  parser=argparse.ArgumentParser()
- parser.add_argument("--piano",required=True,type=Path)
+ parser.add_argument("--piano",type=Path)
+ parser.add_argument("--stems-only",action="store_true")
  parser.add_argument("--cache",required=True,type=Path)
  parser.add_argument("--out",required=True,type=Path)
  options=parser.parse_args()
- result=render(options.piano,options.cache,options.out)
+ if options.stems_only:
+  result=render_stems_only(options.cache,options.out)
+ else:
+  if options.piano is None:parser.error("--piano is required unless --stems-only")
+  result=render(options.piano,options.cache,options.out)
  print("verified_outputs",list(result["output_sha256"]))
