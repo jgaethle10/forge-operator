@@ -1,0 +1,47 @@
+name: Fallen Captured Source Audio
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/studio-create.ts"
+      - "systemia/media-studio/studio-create.test.ts"
+      - "systemia/media-studio/captured-audio-native-proof.ts"
+      - ".github/workflows/fallen-captured-source-audio.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/studio-create.ts"
+      - "systemia/media-studio/studio-create.test.ts"
+      - "systemia/media-studio/captured-audio-native-proof.ts"
+      - ".github/workflows/fallen-captured-source-audio.yml"
+permissions:
+  contents: read
+jobs:
+  recorded-source-native-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install canonical Studio dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check Studio captured-audio admission contracts
+        run: node --import tsx --test systemia/media-studio/studio-create.test.ts
+      - name: Ensure media tools
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Compile two original-source A/V test clips and prove real audio survives the cut
+        run: node --import tsx systemia/media-studio/captured-audio-native-proof.ts "$RUNNER_TEMP/fallen-source-audio"
+      - name: Preserve test-only proof and receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-captured-source-audio-test-only
+          path: |
+            ${{ runner.temp }}/fallen-source-audio/Native_Fallen_Captured_Source_Audio_QA.mp4
+            ${{ runner.temp }}/fallen-source-audio/receipt.json
+          if-no-files-found: error
+          retention-days: 14
