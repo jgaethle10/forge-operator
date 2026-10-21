@@ -81,3 +81,23 @@ export function classifyDiscoveryReceipt(receipt) {
     limitation: 'no_commercial_outcome_inferred'
   };
 }
+
+// The buyer connection-options response is authoritative. Never resurrect a
+// suppressed purchase link from the more permissive discovery/match catalog.
+export function assessBuyerHandoff(match, options, expectedId, expectedUrl) {
+  const match_ok = match?.public_id === expectedId;
+  const held = options?.buyer_checkout_available === false ||
+    Boolean(options?.checkout_suppression_reason) ||
+    /^held(?:_|-)/.test(options?.human_buyer_options_state || '');
+  const optionUrl = options?.human_offer_url;
+  const offer_link_ok = !held && typeof optionUrl === 'string' && optionUrl === expectedUrl;
+  return {
+    matched: match_ok ? expectedId : null,
+    match_ok,
+    human_offer_url: offer_link_ok ? expectedUrl : null,
+    offer_link_ok,
+    buyer_handoff_state: held ? 'held_payment_authority' :
+      offer_link_ok ? 'verified_connection_option' : 'missing_or_mismatched_connection_option'
+  };
+}
+
