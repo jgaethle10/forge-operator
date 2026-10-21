@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /** Strict local UPnP web-mapping receipt verifier. Not public ingress proof. */
 import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 export function verifyFabricWebRouterReceipt(receipt,host){
   if(!/^(\d{1,3}\.){3}\d{1,3}$/.test(String(host||''))){
@@ -37,7 +39,7 @@ export function verifyFabricWebRouterReceipt(receipt,host){
   };
 }
 
-if(import.meta.url===new URL('file://'+process.argv[1]).href){
+if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1])){
   const argv=process.argv.slice(2), fileIndex=argv.indexOf('--file'),hostIndex=argv.indexOf('--host');
   const file=fileIndex>=0?argv[fileIndex+1]:null;
   const host=hostIndex>=0?argv[hostIndex+1]:null;
