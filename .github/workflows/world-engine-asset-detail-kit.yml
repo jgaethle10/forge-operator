@@ -1,0 +1,77 @@
+name: World Engine original parametric asset detail kit GPU proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/parametric-asset-kit.ts'
+      - 'systemia/world-engine/parametric-asset-kit.test.ts'
+      - 'systemia/world-engine/battle-vessel-silhouettes.ts'
+      - '.github/workflows/world-engine-asset-detail-kit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-multi-asset-webgpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install original World Engine dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install original owned Browser Worker GPU renderer
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Validate reusable geometric detail assets, scene composition and all World Engine regressions
+        run: |
+          npx tsx --test systemia/world-engine/parametric-asset-kit.test.ts
+          npm run test:world-engine
+      - name: Install local H264 encoder when absent
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render distinct model meshes, moving real 3D water, camera and transparent FX
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          CINEMATIC_FORMAT: wide
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-asset-detail-gpu
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-asset-detail-browser
+        run: npm run world:cinematic-render-proof
+      - name: Verify genuine new 3D GPU shot and historical/release limitations
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const dir='/tmp/evercraft-asset-detail-gpu',video=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json')));
+          const sha=crypto.createHash('sha256').update(fs.readFileSync(video)).digest('hex');
+          if(r.output.sha256!==sha||r.output.audioCodec!==null||r.publicationAuthority!==false||
+             r.exactGpuReadbackFrames!==96||r.uniqueRawFrameDigests<85||
+             r.animatedOcean?.vertexCount!==112*112*6||r.animatedOcean?.physicsOrCFDVerified!==false||
+             r.actorMotion?.actorCount!==4||r.environmentalFx?.emitterCount!==12||
+             r.environmentalFx?.realGpuTransparentParticlesAtMiddle<20)
+             throw Error('new_parametric_asset_gpu_integrity_gate_failed');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',video]));
+          const v=probe.streams.find(x=>x.codec_type==='video');
+          if(v?.codec_name!=='h264'||v.width!==640||v.height!==360||
+             Number(v.nb_frames)!==96||probe.streams.some(x=>x.codec_type==='audio'))
+             throw Error('actual_original_silent_gpu_video_invalid');
+          console.log('NEW_ORIGINAL_PARAMETRIC_ASSETS_GPU_ACCEPTANCE',{sha256:sha,
+            frames:96,animatedOceanVertices:r.animatedOcean.vertexCount,
+            actorMotionGroups:r.actorMotion.actorCount,noPublication:true});
+          NODE
+      - name: Preserve exact native GPU film and original sample frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-procedural-asset-detail-kit-original-gpu
+          path: |
+            /tmp/evercraft-asset-detail-gpu/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-asset-detail-gpu/receipt.json
+            /tmp/evercraft-asset-detail-gpu/opening.png
+            /tmp/evercraft-asset-detail-gpu/middle.png
+            /tmp/evercraft-asset-detail-gpu/closing.png
+          retention-days: 7
+          if-no-files-found: error
