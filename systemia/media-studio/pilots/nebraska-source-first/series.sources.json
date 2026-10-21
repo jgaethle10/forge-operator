@@ -377,14 +377,18 @@
       "id": "nixon-white-house-tape-662-010",
       "title": "Actual February 1 1972 Oval Office conversation with Devaney, Rodgers, Tagge and championship players",
       "kind": "primary_original_audio",
-      "acquisitionState": "official_record_identified_public_mirror_verification_running",
-      "rightsStatus": "reel_original_comparison_speaker_audition_and_distribution_rights_missing",
+      "acquisitionState": "mirror_audio_acquired_checksum_verified_origin_comparison_pending",
+      "rightsStatus": "research_audio_original_mirror_obtained_per_record_not_approved_for_distribution",
       "researchSource": "https://www.nixonlibrary.gov/white-house-tapes/662/conversation-662-010",
       "episodePlacement": "ep01-first-two-titles",
       "publicationEligible": false,
       "permissionReceiptId": null,
       "editorialApprovalReceiptId": null,
-      "provenance": "official source program/archive listing; original moving film or audio NOT verified by byte hashes yet"
+      "provenance": "official source program/archive listing; original moving film or audio NOT verified by byte hashes yet",
+      "sha256": "2272b0607a3b9fd6fa0da901065721d19da85664be3451b3a76c1d6d533df893",
+      "bytes": 61027509,
+      "durationSec": 1525.524898,
+      "sourceFileProvenance": "independent research mirror of NARA White House tape, unreviewed speaker/audio content; original master comparison still needed"
     },
     {
       "id": "nixon-nebraska-speech-1971-whca",
@@ -489,6 +493,45 @@
       "permissionReceiptId": null,
       "editorialApprovalReceiptId": null,
       "provenance": "official source program/archive listing; original moving film or audio NOT verified by byte hashes yet"
+    },
+    {
+      "id": "nixon-white-house-1972-coach-interview",
+      "title": "February 1 1972 nine-minute original White House press center interview with University of Nebraska football coach and Gerald Warren",
+      "kind": "primary_original_audio",
+      "researchSource": "https://www.nixonlibrary.gov/research/almanac/february-1-1972",
+      "originalCatalogId": "WHCA-SR-H-506",
+      "acquisitionState": "official_catalog_only_no_audio_bytes",
+      "rightsStatus": "library_copy_original_master_and_reuse_rights_not_reviewed",
+      "episodePlacement": "ep01-first-two-titles",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "nixon-white-house-1972-photo-rolls",
+      "title": "White House Photo Office original team portraits: WHPO-8358, WHPO-8359, WHPO-8362 (frames 01A–02A, 6A–32A)",
+      "kind": "primary_photographic_archive",
+      "researchSource": "https://www.nixonlibrary.gov/research/almanac/february-1-1972",
+      "originalCatalogId": "WHPO-8358/8359/8362",
+      "acquisitionState": "official_catalog_only_original_scans_not_acquired",
+      "rightsStatus": "photo_negative_authenticity_original_file_reuse_and_attribution_pending",
+      "episodePlacement": "ep01-first-two-titles",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "nixon-white-house-1971-unl-championship-address",
+      "title": "January 14 1971 public presidential address recognizing 1970 Nebraska champions, WHCA-SR-P-710102",
+      "kind": "primary_original_audio",
+      "researchSource": "https://www.nixonlibrary.gov/research/almanac/january-14-1971",
+      "originalCatalogId": "WHCA-SR-P-710102",
+      "acquisitionState": "official_catalog_only_audio_not_ingested",
+      "rightsStatus": "original_audio_digitization_and_reuse_review_pending",
+      "episodePlacement": "ep01-first-two-titles",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
     }
   ],
   "production": {
