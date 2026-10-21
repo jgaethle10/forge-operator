@@ -4,7 +4,7 @@
 Usage: python3 systemia/media-studio/toon-cel-canary.py --out /tmp/toon-canary
 Requires cairosvg and ffmpeg+ffprobe. No network, provider calls or source photos.
 """
-import argparse, hashlib, json, math, pathlib, subprocess, wave
+import argparse, hashlib, json, math, pathlib, shutil, subprocess, wave
 from array import array
 import cairosvg
 
@@ -12,12 +12,13 @@ def curve(n):
     n=max(0.,min(1.,n))
     return n*n*(3-2*n)
 
-def frame_svg(frame,fps,motion=None):
+def frame_svg(frame,fps,motion=None,mouth_open=0):
     # A small explicitly authored, bounded 2D performance rig, NOT an AI actor.
     motion=motion or {'reach':1,'blinkAtSec':2.1,'gazeX':0,'lanternLift':1,'tailEnergy':.5}
     reach=motion['reach']
     gaze_x=motion['gazeX']
     tail_energy=motion['tailEnergy']
+    mouth_open=max(0,min(1,mouth_open))
     t=frame/fps
     lift=curve((t-.45)/1.8)*motion['lanternLift']
     wave=curve((t-.6)/1.5)
@@ -67,6 +68,8 @@ def frame_svg(frame,fps,motion=None):
 <path d="M-36 43Q-14 18 5 24Q24 18 40 43Q23 74 4 74Q-12 70 -36 43Z" fill="#fff1df"/>
 <ellipse cx="5" cy="40" rx="11" ry="7" fill="#292a33"/>
 <path d="M5 48Q0 61 -10 59M5 48Q13 61 23 59" stroke="#63434a" stroke-width="3" fill="none" stroke-linecap="round"/>
+<ellipse cx="5" cy="66" rx="{5+8*mouth_open:.2f}" ry="{1.2+15*mouth_open:.2f}" fill="#3c2731" stroke="#72444b" stroke-width="1.7"/>
+<ellipse cx="5" cy="{70+6*mouth_open:.2f}" rx="{1+6*mouth_open:.2f}" ry="{.5+3*mouth_open:.2f}" fill="#e88c99" opacity="{min(1,mouth_open*1.5):.2f}"/>
 </g>
 </g>
 <circle cx="{x:.2f}" cy="{y:.2f}" r="{glow:.2f}" fill="url(#halo)"/>
@@ -81,7 +84,9 @@ def frame_svg(frame,fps,motion=None):
 <path d="M0 519Q360 510 610 520T960 515" fill="none" stroke="#799080" stroke-width="2" opacity=".3"/>
 </svg>'''
 
-def audio(path,seconds,rate=32000):
+def audio(path,seconds,rate=32000,voice_samples=None,voice_start=0):
+    voice_samples=voice_samples or []
+    voice_start_sample=round(voice_start*rate)
     pcm=array('h')
     notes=[(0.06,523.25),(.9,659.25),(1.8,783.99),(2.8,659.25)]
     for i in range(round(seconds*rate)):
@@ -90,7 +95,10 @@ def audio(path,seconds,rate=32000):
         pad=sum((.023-j*.004)*math.sin(2*math.pi*frequency*.5*t) for j,frequency in enumerate([220,329.63,392,493.88]))
         lead=sum(.08*math.exp(-3.5*(t-start))*(math.sin(2*math.pi*f*(t-start))+.31*math.sin(4*math.pi*f*(t-start)))
                  for start,f in notes if t>=start)
-        pcm.append(int(max(-1,min(1,(pad+lead)*fade))*30000))
+        pos=i-voice_start_sample
+        voice=(voice_samples[pos]/32768) if 0<=pos<len(voice_samples) else 0.
+        mix=(pad+lead)*fade*(.28 if voice_samples else 1)+voice*.8
+        pcm.append(int(max(-1,min(1,mix))*30000))
     with wave.open(str(path),'wb') as f:
         f.setnchannels(1);f.setsampwidth(2);f.setframerate(rate);f.writeframes(pcm.tobytes())
 
@@ -111,6 +119,45 @@ def read_motion(motion_path,seconds):
     motion_digest=hashlib.sha256(canonical.encode('utf-8')).hexdigest()
     return motion,motion_digest,'explicit_authored_original_fox_v1'
 
+def offline_speech(out,phrase,seconds,start_sec,rate=32000):
+    """Synthetic scratch speech, never a Voice Foundry or locked actor voice."""
+    if phrase!='Hello, little light.':
+        raise ValueError('toon_speech_canary_phrase_not_supported')
+    if not (.2<=start_sec<=seconds-1.2):
+        raise ValueError('toon_speech_canary_window_invalid')
+    engine=shutil.which('espeak-ng') or shutil.which('espeak')
+    if not engine:
+        raise RuntimeError('toon_speech_canary_espeak_missing')
+    scratch=out/'scratch-speech.wav'
+    normalized=out/'scratch-speech-pcm.wav'
+    command([engine,'-s','138','-p','62','-a','115','-w',str(scratch),phrase])
+    command(['ffmpeg','-v','error','-y','-i',str(scratch),'-ar',str(rate),
+        '-ac','1','-c:a','pcm_s16le',str(normalized)])
+    with wave.open(str(normalized),'rb') as f:
+        if f.getnchannels()!=1 or f.getsampwidth()!=2 or f.getframerate()!=rate:
+            raise RuntimeError('toon_speech_canary_wav_format_mismatch')
+        samples=array('h')
+        samples.frombytes(f.readframes(f.getnframes()))
+    last=len(samples)/rate
+    if start_sec+last>seconds-.02:
+        raise ValueError('toon_speech_canary_line_exceeds_shot')
+    return samples,normalized
+
+def frame_mouth_poses(voice_samples,start_sec,seconds,fps,rate=32000):
+    if not voice_samples: return [0.]*round(seconds*fps)
+    count=round(seconds*fps)
+    poses=[]
+    for frame in range(count):
+        # Look at the true PCM amplitude in the corresponding audio window;
+        # frame timestamps share the same master sample clock as the AAC mix.
+        a=max(0,round((frame/fps-start_sec)*rate))
+        b=min(len(voice_samples),round(((frame+1)/fps-start_sec)*rate))
+        if b<=a or a>=len(voice_samples): poses.append(0.);continue
+        span=voice_samples[a:b]
+        rms=(sum(value*value for value in span)/len(span))**.5/32768
+        poses.append(min(1.,max(0.,(rms-.009)*8)))
+    return poses
+
 def command(args):
     result=subprocess.run(args,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     if result.returncode:raise RuntimeError(args[0]+'_failed:'+result.stderr[-1300:])
@@ -118,18 +165,25 @@ def command(args):
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def render(out,seconds=3,fps=24,width=768,height=432,motion_path=None):
+def render(out,seconds=3,fps=24,width=768,height=432,motion_path=None,speech_line=None,speech_start_sec=.45):
     if not (.5<=seconds<=8 and 12<=fps<=60 and 320<=width<=1920 and 180<=height<=1080):
         raise ValueError('toon_canary_bounds_invalid')
     motion,motion_digest,motion_source=read_motion(motion_path,seconds)
     output=pathlib.Path(out).resolve(); frames=output/'frames'
     frames.mkdir(parents=True,exist_ok=True)
     count=round(seconds*fps)
+    if speech_line:
+        voice_samples,voice_path=offline_speech(output,speech_line,seconds,speech_start_sec)
+        poses=frame_mouth_poses(voice_samples,speech_start_sec,seconds,fps)
+        if max(poses)<=.12 or not any(value==0 for value in poses):
+            raise RuntimeError('toon_speech_canary_mouth_contrast_missing')
+    else:
+        voice_samples=[];voice_path=None;poses=[0.]*count
     for i in range(count):
-        cairosvg.svg2png(bytestring=frame_svg(i,fps,motion).encode(),
+        cairosvg.svg2png(bytestring=frame_svg(i,fps,motion,poses[i]).encode(),
                         output_width=width,output_height=height,
                         write_to=str(frames/f'frame-{i:05d}.png'))
-    wav=output/'original-synth-score.wav';audio(wav,seconds)
+    wav=output/'original-synth-score.wav';audio(wav,seconds,voice_samples=voice_samples,voice_start=speech_start_sec)
     mp4=output/'toon-cel-canary.mp4'
     command(['ffmpeg','-hide_banner','-loglevel','error','-y','-framerate',str(fps),
              '-i',str(frames/'frame-%05d.png'),'-i',str(wav),'-c:v','libx264',
@@ -150,9 +204,23 @@ def render(out,seconds=3,fps=24,width=768,height=432,motion_path=None):
       'sampleFrameIndex':min(count-1,round(count*.67)),
       'sampleFrameSha256':digest(frames/f"frame-{min(count-1,round(count*.67)):05d}.png"),
       'shotHandoffConnected':False,'characterIdentityVerified':False,
-      'lipSyncVerified':False,'performanceAdmitted':False,
+      'lipSyncVerified':False,'phonemeTimingVerified':False,'voiceProfileMatched':False,
+      'audioReactiveMouthObserved':bool(speech_line),'speechEngine':'espeak_scratch_test_only' if speech_line else None,
+      'speechText':speech_line,'speechStartSec':speech_start_sec if speech_line else None,
+      'speechPcmDigest':digest(voice_path) if voice_path else None,
+      'mouthPoseDigest':hashlib.sha256(json.dumps(poses,separators=(',',':')).encode()).hexdigest(),
+      'mouthActiveFrames':sum(value>.12 for value in poses),'mouthSilentFrames':sum(value==0 for value in poses),
+      'performanceAdmitted':False,
       'masterQcPassed':False,'publicationAuthority':False
     }
+    if speech_line:
+        (output/'audio-mouth-track.json').write_text(json.dumps({
+            'schema':'evercraft.fallen.audio-reactive-mouth-track.v1',
+            'source':'measured_pcm_frame_rms',
+            'speechText':speech_line,'startSec':speech_start_sec,
+            'fps':fps,'mouthPoses':poses,'phonemeAccurate':False,
+            'voiceProfileMatched':False,'publicationAuthority':False
+        },indent=2)+'\n')
     (output/'render-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt
 
@@ -162,7 +230,9 @@ if __name__=='__main__':
     p.add_argument('--seconds',type=float,default=3)
     p.add_argument('--fps',type=int,default=24)
     p.add_argument('--motion-json')
+    p.add_argument('--speech-line')
+    p.add_argument('--speech-start-sec',type=float,default=.45)
     p.add_argument('--width',type=int,default=768)
     p.add_argument('--height',type=int,default=432)
     args=p.parse_args()
-    print(json.dumps(render(args.out,args.seconds,args.fps,args.width,args.height,args.motion_json),indent=2))
+    print(json.dumps(render(args.out,args.seconds,args.fps,args.width,args.height,args.motion_json,args.speech_line,args.speech_start_sec),indent=2))
