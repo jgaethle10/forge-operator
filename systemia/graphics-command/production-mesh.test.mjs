@@ -86,3 +86,16 @@ test('Megazord rejects incomplete creative reconciliation even when overall stat
   assert.throws(()=>assembleGraphicsProductionMesh({...input,reconciliation:forged}),
     /graphics_mesh_council_shot_count_mismatch/);
 });
+
+test('Megazord rejects a seemingly reconciled council with no sound-director genome',async(t)=>{
+  const input=await fixture(t);
+  const brokenBlueprint={...input.reconciliation.blueprints[0],
+    creative_genome:{...input.reconciliation.blueprints[0].creative_genome}};
+  delete brokenBlueprint.creative_genome.sound;
+  const forged={...input.reconciliation,
+    blueprints:[brokenBlueprint,...input.reconciliation.blueprints.slice(1)]};
+  fs.writeFileSync(path.join(input.dir,'creative-council-reconciliation.json'),
+    JSON.stringify(forged,null,2)+'\n');
+  assert.throws(()=>assembleGraphicsProductionMesh({...input,reconciliation:forged}),
+    /graphics_mesh_council_genome_missing:sound_director/);
+});
