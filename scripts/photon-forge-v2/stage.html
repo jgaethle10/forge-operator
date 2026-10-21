@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft Photon Forge V2 • Exact-frame cinematic VFX stage</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020309;color:#effaff}
+#stage{position:relative;width:100vw;height:100vh;overflow:hidden;background:#020309}
+canvas{display:block;width:100%;height:100%}
+#grain{pointer-events:none;position:absolute;inset:0;opacity:.10;background:repeating-linear-gradient(0deg,transparent 0px,transparent 2px,#ffffff09 3px)}
+#brand{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:scale(.97);pointer-events:none;text-align:center;text-shadow:0 2px 20px #030918,0 0 44px #5cdaff80}
+#brand h1{font:700 clamp(34px,5.2vw,94px)/1.02 system-ui,-apple-system,Arial,sans-serif;letter-spacing:.27em;margin:0 0 .22em .27em}
+#brand small{font:600 clamp(9px,1vw,17px)/1.25 system-ui,sans-serif;letter-spacing:.48em;color:#9ad5e4;margin-left:.48em}
+#technical{position:absolute;left:3.2%;top:5%;opacity:0;color:#72c2d5;font:600 10px/1.6 ui-monospace,monospace;letter-spacing:.2em;white-space:pre}
+#status{position:absolute;right:3.3%;bottom:5%;opacity:.55;color:#9dbcc4;font:600 10px ui-monospace,monospace;letter-spacing:.17em}
+@media(prefers-reduced-motion:reduce){#grain{display:none}}
+</style></head><body>
+<div id="stage"><canvas id="screen" aria-label="Procedural cinematic 3D photon reactor"></canvas><div id="grain"></div><div id="technical">EVERCRAFT // OPTICAL ARRAY
+PHOTON REACTOR · V02
+SYNTHETIC VFX BENCHMARK</div><div id="brand"><h1>EVERCRAFT</h1><small>BUILD WHAT DOESN'T EXIST</small></div><div id="status">PHOTON FORGE // V02</div></div>
+<script id="vertex-shader" type="x-shader/x-vertex">#version 300 es
+precision highp float;
+const vec2 POS[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));
+out vec2 vUv;
+void main(){vec2 p=POS[gl_VertexID];vUv=p*.5+.5;gl_Position=vec4(p,0.,1.);}
+</script>
+<script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+in vec2 vUv;out vec4 frag;
+uniform vec2 uResolution;uniform float uTime;
+#define PI 3.14159265359
+float sat(float x){return clamp(x,0.,1.);}
+float smooth01(float x){x=sat(x);return x*x*(3.-2.*x);}
+mat2 rot(float a){return mat2(cos(a),-sin(a),sin(a),cos(a));}
+float hash11(float x){return fract(sin(x*127.1)*43758.5453123);}
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float noise3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);float n=dot(i,vec3(1,57,113));return mix(mix(mix(hash11(n),hash11(n+1.),f.x),mix(hash11(n+57.),hash11(n+58.),f.x),f.y),mix(mix(hash11(n+113.),hash11(n+114.),f.x),mix(hash11(n+170.),hash11(n+171.),f.x),f.y),f.z);}
+float torus(vec3 p,vec2 t){return length(vec2(length(p.xy)-t.x,p.z))-t.y;}
+vec3 ringPoint(vec3 p,float a,float b,float c){p.xy*=rot(a);p.yz*=rot(b);p.xz*=rot(c);return p;}
+vec2 scene(vec3 p){
+ float t=uTime;
+ vec3 p1=ringPoint(p,.14*t,.63,.26*t);
+ vec3 p2=ringPoint(p,-.23*t,-.59,-.33*t);
+ vec3 p3=ringPoint(p,.32*t,.21,-.38*t);
+ float r1=torus(p1,vec2(1.94,.105));
+ float r2=torus(p2,vec2(1.51,.075));
+ float r3=torus(p3,vec2(1.13,.052));
+ float core=length(p)-(.34+.07*sin(t*2.3));
+ float mount=length(vec2(length(p.xy)-2.53,p.z))-.035;
+ float d=r1;float id=1.;if(r2<d){d=r2;id=2.;}if(r3<d){d=r3;id=3.;}if(mount<d){d=mount;id=4.;}if(core<d){d=core;id=5.;}
+ return vec2(d,id);
+}
+vec3 norm(vec3 p){float e=.005;vec2 x=vec2(e,0.);return normalize(vec3(scene(p+x.xyy).x-scene(p-x.xyy).x,scene(p+x.yxy).x-scene(p-x.yxy).x,scene(p+x.yyx).x-scene(p-x.yyx).x));}
+vec3 env(vec3 rd){float n=noise3(rd*6.7+vec3(10.));float nn=noise3(rd*15.9+vec3(44.));float neb=smoothstep(.52,.79,n*.75+nn*.25);return vec3(.0026,.006,.014)+vec3(.012,.032,.078)*neb;}
+float star(vec2 uv){vec2 g=uv*vec2(83.,46.);vec2 cell=floor(g),f=fract(g)-.5;float seed=hash21(cell);float a=step(.987,seed);vec2 pos=vec2(hash21(cell+3.11),hash21(cell+18.91))-.5;float d=length(f-pos*.67);return a*pow(sat(1.-d/.065),5.)*(.6+.4*hash21(cell+40.));}
+float beam2(vec2 uv,vec2 a,vec2 b,float width){vec2 pa=uv-a,ba=b-a;float h=sat(dot(pa,ba)/dot(ba,ba));float d=length(pa-ba*h);return exp(-d*d/(width*width));}
+vec3 rays(vec2 uv,float t){
+ float charge=smooth01((t-3.0)/1.2)*(1.-smooth01((t-7.65)/.35));
+ vec3 c=vec3(0.);
+ for(int i=0;i<9;i++){
+  float fi=float(i);float theta=fi*2.*PI/9.+.17*sin(fi*3.);
+  vec2 a=vec2(cos(theta),sin(theta))*(.9+.09*sin(fi*1.83));
+  a.x*=uResolution.x/uResolution.y*.68;
+  vec2 b=.011*vec2(sin(t*1.6+fi),cos(t*2.2+fi));
+  float wav=.9+.1*sin(t*5.+fi*2.);
+  float bright=beam2(uv,a,b,.0045)*1.7+beam2(uv,a,b,.023)*.23+beam2(uv,a,b,.075)*.025;
+  vec3 color=mix(vec3(.055,.72,1.45),vec3(.87,.16,1.5),mod(fi,3.)/2.);
+  c+=color*bright*charge*wav;
+ }
+ return c;
+}
+void main(){
+ vec2 uv=(gl_FragCoord.xy-uResolution*.5)/uResolution.y;
+ float t=uTime;
+ float approach=smooth01(t/6.0);
+ float dist=7.65-approach*2.05;
+ float roll=.008*sin(t*.7),yaw=.16*sin(t*.33),pitch=.11*sin(t*.29);
+ vec3 ro=vec3(.31*sin(t*.31),.13*cos(t*.38),dist);
+ vec3 rd=normalize(vec3(uv*1.42,-1.82));rd.xy*=rot(roll);rd.xz*=rot(yaw);rd.yz*=rot(pitch);
+ vec3 col=env(rd);
+ float stellar=star(uv*vec2(1.,1.)+vec2(t*.0008,t*.0006));col+=vec3(.6,.87,1.)*stellar*.7;
+ float travel=0.,hitId=0.;vec3 hitPos=vec3(0.);
+ for(int i=0;i<70;i++){
+  vec3 p=ro+rd*travel;vec2 h=scene(p);
+  if(h.x<.0028){hitId=h.y;hitPos=p;break;}
+  travel+=max(h.x*.75,.021);
+  if(travel>13.)break;
+ }
+ if(hitId>0.){
+  vec3 n=norm(hitPos);vec3 l=normalize(vec3(-.7,1.,1.9));
+  float diff=max(dot(n,l),0.);vec3 viewDir=-rd;
+  float spec=pow(max(dot(reflect(-l,n),viewDir),0.),52.);
+  float fres=pow(1.-sat(dot(n,viewDir)),3.);
+  float metallic=hitId<4.5?1.:0.;
+  vec3 base=hitId==1.?vec3(.025,.16,.24):hitId==2.?vec3(.10,.037,.20):hitId==3.?vec3(.12,.18,.20):hitId==4.?vec3(.025,.06,.11):vec3(.12,.24,.45);
+  col=base*(.20+.87*diff)+vec3(.7,.87,1.)*spec*.48;
+  float lines=.5+.5*sin(atan(hitPos.y,hitPos.x)*30.+t*7.);
+  col+=mix(vec3(.17,.62,1.1),vec3(.78,.23,1.35),step(1.5,hitId))*((.31+.7*pow(lines,8.))*(.5+.5*diff)+.25*fres);
+  if(hitId>4.5){float swirl=noise3(hitPos*9.+vec3(t*1.2));col+=vec3(.4,1.3,2.1)*(.7+2.0*swirl);}
+  if(metallic>0.)col+=vec3(.045,.19,.29)*fres;
+ }
+ // Bounded, approximate halo from the reactor in camera space.
+ float r=length(uv);float halo=exp(-r*r*4.8)*(0.35+.15*sin(t*2.2));
+ col+=vec3(.012,.067,.12)*halo;
+ col+=rays(uv,t);
+ float ignite=smooth01((t-.65)/1.8);col*=mix(.16,1.,ignite);
+ float convergence=smooth01((t-6.82)/.68);
+ col+=vec3(.17,.53,.92)*exp(-r*r*28.)*convergence*2.0;
+ float blast=smooth01((t-7.52)/.17)*(1.-smooth01((t-8.12)/.65));
+ float shockR=(t-7.53)*1.8;
+ col+=vec3(.30,.88,1.5)*exp(-pow((r-shockR)*38.,2.))*blast*2.5;
+ col+=vec3(.22,.39,.69)*exp(-r*r*3.3)*blast;
+ float reveal=smooth01((t-8.35)/.65);
+ col=mix(col,vec3(.0028,.008,.020)+vec3(.035,.075,.12)*exp(-r*r*4.),reveal);
+ // Filmic approximate photographic tonemapping, not white-clipped neon.
+ col=max(col,vec3(0.));col=(col*(2.51*col+.03))/(col*(2.43*col+.59)+.14);
+ col=pow(col,vec3(.86));
+ col*=1.-.24*smooth01(r/.95);
+ float grain=(hash21(gl_FragCoord.xy+floor(t*24.)*13.)-.5)*.016;
+ col+=grain;
+ frag=vec4(max(col,0.),1.);
+}
+</script>
+<script>
+// Explicit software cinematic preview. It never impersonates WebGL or a World Engine render.
+function makeCpuRenderer(canvas){
+ const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw Error('no_graphics_backend');
+ const PI=Math.PI,TAU=2*PI;
+ const clamp=(a,b,c)=>Math.max(b,Math.min(c,a));
+ const smooth=(a,b,x)=>{const q=clamp((x-a)/(b-a),0,1);return q*q*(3-2*q)};
+ const hash=x=>{const z=Math.sin(x*91.371+78.233)*15731.371;return z-Math.floor(z)};
+ function gradientCircle(x,y,r,inner,outer,scale=1){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,inner);g.addColorStop(1,outer);ctx.globalAlpha=scale;ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.globalAlpha=1;}
+ function point(p,t,w,h){
+  let [x,y,z]=p;const roll=.13*Math.sin(t*.23),yaw=.11*Math.sin(t*.32),pitch=.10*Math.sin(t*.26);
+  let xx=x*Math.cos(yaw)+z*Math.sin(yaw),zz=-x*Math.sin(yaw)+z*Math.cos(yaw);x=xx;z=zz;
+  let yy=y*Math.cos(pitch)-z*Math.sin(pitch);zz=y*Math.sin(pitch)+z*Math.cos(pitch);y=yy;z=zz;
+  xx=x*Math.cos(roll)-y*Math.sin(roll);yy=x*Math.sin(roll)+y*Math.cos(roll);x=xx;y=yy;
+  const cam=7.8-1.9*smooth(0,6,t),scale=h*1.23/(cam-z);
+  return [w*.5+x*scale,h*.51+y*scale,scale,z];
+ }
+ function polyRing(r,ax,ay,az,color,t,w,h,width=1,beads=0){
+  const positions=[];let ct=Math.cos(ax),st=Math.sin(ax),cp=Math.cos(ay),sp=Math.sin(ay),cz=Math.cos(az),sz=Math.sin(az);
+  for(let i=0;i<=160;i++){
+   let a=i*TAU/160,px=r*Math.cos(a),py=r*Math.sin(a),pz=0;
+   let y1=py*ct-pz*st,z1=py*st+pz*ct;py=y1;pz=z1;
+   let x1=px*cp+pz*sp;z1=-px*sp+pz*cp;px=x1;pz=z1;
+   x1=px*cz-py*sz;y1=px*sz+py*cz;px=x1;py=y1;
+   positions.push(point([px,py,pz],t,w,h));
+  }
+  ctx.lineCap='round';ctx.lineJoin='round';
+  for(let i=0;i<160;i++){
+   const a=positions[i],b=positions[i+1],depth=(a[3]+2.8)/5.6;
+   ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);
+   ctx.shadowBlur=14+depth*15;ctx.shadowColor=color;ctx.strokeStyle=color;
+   ctx.globalAlpha=.18+.33*depth;ctx.lineWidth=width*4*clamp(a[2]/75,.75,3);ctx.stroke();
+   ctx.shadowBlur=0;ctx.globalAlpha=.5+.42*depth;ctx.strokeStyle=color;
+   ctx.lineWidth=width*clamp(a[2]/83,.65,2.5);ctx.stroke();
+  }
+  ctx.globalAlpha=1;ctx.shadowBlur=0;
+  for(let i=0;i<beads;i++){
+   const n=(i+Math.sin(t*.2)*.4)/beads;const p=positions[Math.floor((n%1)*159)];
+   const size=(i%5===0?4:2)*clamp(p[2]/90,.7,1.7);
+   ctx.fillStyle=i%3===0?'#ffaeff':'#98f8ff';ctx.shadowColor=color;ctx.shadowBlur=12;
+   ctx.fillRect(p[0]-size/2,p[1]-size/2,size,size);
+  }
+  ctx.shadowBlur=0;
+ }
+ function strokedLaser(a,b,color,width,t,charge){
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+  for(const [lw,op,blur] of [[width*12,.06,28],[width*5,.13,18],[width*2.3,.27,8],[width,.92,0]]){
+   ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.globalAlpha=op*charge;ctx.shadowColor=color;ctx.shadowBlur=blur;ctx.stroke();
+  }
+  ctx.restore();
+ }
+ return (t,w,h)=>{
+  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#02040c';ctx.fillRect(0,0,w,h);
+  // Volumetric light / background dust, in depth-sorted procedural layers.
+  gradientCircle(w*.49,h*.48,h*.72,'#0b1734','#00020a00',.76);
+  gradientCircle(w*.47,h*.44,h*.48,'#13234033','#00020a00',1);
+  for(let i=0;i<260;i++){
+   const x=hash(i*1.11)*w,y=hash(i*3.73)*h,depth=hash(i*4.91),a=.09+depth*.43;
+   const sway=t*(3+depth*19),xx=(x+sway)%w;
+   ctx.fillStyle=depth>.88?`rgba(184,230,255,${a})`:`rgba(102,159,225,${a*.65})`;
+   const r=.35+depth*.8;ctx.fillRect(xx,y,r,r);
+  }
+  const power=smooth(.4,1.7,t);
+  const s=smooth(3.1,4.6,t)*(1-smooth(7.72,8.05,t));
+  ctx.save();ctx.translate(w*.5,h*.51);ctx.scale(.93,.93);ctx.translate(-w*.5,-h*.51);
+  polyRing(2.57,.12*t,.10,-.07*t,'#406486',t,w,h,.8,44);
+  polyRing(2.09,.42+.19*t,.22,-.24*t,'#4fdbfa',t,w,h,1.25,28);
+  polyRing(1.69,-.6-.21*t,-.29,.25*t,'#ab68f4',t,w,h,.95,24);
+  polyRing(1.31,.19+.31*t,.75,-.35*t,'#3eecfc',t,w,h,1.0,30);
+  const core=point([0,0,0],t,w,h),scale=core[2];
+  ctx.globalCompositeOperation='lighter';
+  gradientCircle(core[0],core[1],scale*2.45,'#2db9ff55','#03041a00',power);
+  gradientCircle(core[0],core[1],scale*.91,'#d5ffff','#28c5ff00',power);
+  gradientCircle(core[0],core[1],scale*.51,'#ffffff','#f4d2ff00',power);
+  for(let i=0;i<9;i++){
+   const ang=i*TAU/9+t*.15,src=point([3.15*Math.cos(ang),3.15*Math.sin(ang),-.4+1.1*Math.cos(ang*2)],t,w,h);
+   const c=i%3===1?'#e28bff':'#54dcff';
+   gradientCircle(src[0],src[1],14,c.replace(')',',0.9)'), '#00000000',s);
+   if(s>0)strokedLaser(src,core,c,1.2+hash(i*3.7)*1.3,t,s);
+  }
+  for(let i=0;i<60;i++){
+   const a=hash(i*3.22)*TAU,rad=(.35+hash(i*8.12)*3.2),x=core[0]+Math.cos(a+t*(.11+hash(i)*.19))*rad*scale,y=core[1]+Math.sin(a+t*(.14+hash(i)*.27))*rad*scale;
+   ctx.fillStyle=i%4===0?'#ffe8ff':'#9ae8fc';ctx.globalAlpha=.15+.8*hash(i*1.47);ctx.fillRect(x,y,1.4+hash(i*3.77)*2.6,1.4+hash(i*5.31)*2.6);
+  }
+  ctx.globalAlpha=1;ctx.restore();
+  const build=smooth(6.8,7.6,t);
+  gradientCircle(w*.5,h*.51,h*.36,'#6cffff38','#00000000',build);
+  const flash=smooth(7.55,7.73,t)*(1-smooth(7.92,8.4,t));
+  gradientCircle(w*.5,h*.51,h*.61,'#ffffffb0','#2222ff00',flash);
+  const r=Math.max(0,(t-7.66)*h*.92),shock=flash;
+  ctx.beginPath();ctx.arc(w*.5,h*.51,r,0,TAU);ctx.strokeStyle='#9aeaff';ctx.lineWidth=Math.max(2,16*(1-smooth(7.7,8.5,t)));ctx.shadowColor='#51b9ff';ctx.shadowBlur=38;ctx.globalAlpha=shock;ctx.stroke();ctx.globalAlpha=1;ctx.shadowBlur=0;
+  if(t>8.28){ctx.fillStyle=`rgba(2,5,14,${smooth(8.28,9.0,t)})`;ctx.fillRect(0,0,w,h);gradientCircle(w*.5,h*.52,h*.60,'#102448','#00101b00',smooth(8.28,9,t)*.3)}
+  const vign=ctx.createRadialGradient(w*.5,h*.5,h*.10,w*.5,h*.5,h*.8);vign.addColorStop(0,'#00000000');vign.addColorStop(1,'#000000cf');ctx.fillStyle=vign;ctx.fillRect(0,0,w,h);
+  return {renderer:'cpu2d',synthetic:true};
+ };
+}
+
+</script>
+<script>
+'use strict';
+const FPS=30,DURATION=10,FRAMES=300;
+const canvas=document.getElementById('screen'),brand=document.getElementById('brand'),technical=document.getElementById('technical');
+const gl=canvas.getContext('webgl2',{antialias:false,alpha:false,preserveDrawingBuffer:true,powerPreference:'high-performance'});
+let program,locResolution,locTime;
+function fail(reason){document.body.setAttribute('data-render-error',String(reason));throw Error(String(reason));}
+
+let backend='cpu2d',software,lastRenderTime=0;
+if(!gl){software=makeCpuRenderer(canvas);}else{
+ const vs=shader(gl.VERTEX_SHADER,document.getElementById('vertex-shader').textContent);
+ const fs=shader(gl.FRAGMENT_SHADER,document.getElementById('fragment-shader').textContent);
+ program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))fail(gl.getProgramInfoLog(program));
+ gl.useProgram(program);locResolution=gl.getUniformLocation(program,'uResolution');locTime=gl.getUniformLocation(program,'uTime');
+ const vao=gl.createVertexArray();gl.bindVertexArray(vao);backend='webgl2';
+}
+document.body.setAttribute('data-graphic-backend',backend);
+function clamp(n,min,max){return Math.min(max,Math.max(min,n));}
+function renderAt(value){
+ const t=clamp(Number(value)||0,0,DURATION);lastRenderTime=t;
+ const pixelRatio=Math.min(devicePixelRatio||1,1.3);
+ const w=Math.max(320,Math.round(innerWidth*pixelRatio)),h=Math.max(180,Math.round(innerHeight*pixelRatio));
+ if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;if(gl)gl.viewport(0,0,w,h)}
+ if(gl){gl.uniform2f(locResolution,w,h);gl.uniform1f(locTime,t);gl.drawArrays(gl.TRIANGLES,0,3);}else{software(t,w,h);}
+ const show=clamp((t-8.75)/.55,0,1);brand.style.opacity=String(show);brand.style.transform=`scale(${.965+.035*show})`;
+ technical.style.opacity=String(.55*clamp((t-.4)/.6,0,1)*(1-clamp((t-7.4)/.6,0,1)));
+ document.body.setAttribute('data-last-render-frame',String(Math.round(t*FPS)));
+ return {time:t,frame:Math.round(t*FPS),width:w,height:h,backend};
+}
+window.__evercraftRenderAt=renderAt;
+window.__evercraftRenderFrame=(frame,fps=FPS)=>{if(!Number.isInteger(frame)||frame<0||!Number.isInteger(fps)||fps<1)fail('invalid_exact_frame');return renderAt(frame/fps)};
+window.__evercraftExportPng=()=>{
+ const c=document.createElement('canvas');c.width=canvas.width;c.height=canvas.height;
+ const x=c.getContext('2d');x.drawImage(canvas,0,0);
+ const w=c.width,h=c.height,t=lastRenderTime;
+ x.textAlign='left';x.textBaseline='top';x.globalAlpha=.48;
+ x.fillStyle='#86b3c6';x.font=`600 ${Math.round(h*.018)}px monospace`;
+ x.fillText('EVERCRAFT // OPTICAL ARRAY',w*.033,h*.050);
+ x.fillText('PHOTON REACTOR · V02',w*.033,h*.074);
+ x.fillText('SYNTHETIC VFX BENCHMARK',w*.033,h*.098);
+ x.textAlign='right';x.fillText('PHOTON FORGE // V02',w*.965,h*.935);
+ const brandAlpha=Math.max(0,Math.min(1,(t-8.75)/.55));
+ if(brandAlpha>0){x.save();x.textAlign='center';x.textBaseline='middle';x.globalAlpha=brandAlpha;x.shadowColor='#4ccfff';x.shadowBlur=h*.055;
+ x.fillStyle='#e7f8ff';x.font=`700 ${Math.round(h*.085)}px system-ui,Arial,sans-serif`;x.fillText('E V E R C R A F T',w*.50,h*.50);
+ x.shadowBlur=0;x.font=`600 ${Math.round(h*.018)}px system-ui,Arial,sans-serif`;x.fillStyle='#93bfcd';x.fillText('BUILD WHAT DOESN\'T EXIST',w*.50,h*.585);x.restore();}
+ return c.toDataURL('image/png');
+};
+window.__evercraftStageInfo=()=>({schema:'evercraft.graphics-command.photon-forge-stage.v2',fps:FPS,durationSec:DURATION,frameCount:FRAMES,method:backend==='webgl2'?'owned_webgl2_raymarched_sdf':'software_3d_projection_preview',synthetic:true,audioIncluded:false,publicationAuthority:false,renderPath:'exact_frame'});
+renderAt(0);
+</script></body></html>
