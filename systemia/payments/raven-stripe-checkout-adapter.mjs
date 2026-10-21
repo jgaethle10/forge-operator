@@ -51,7 +51,9 @@ export function loadRavenStripeSecret({
   if(!meta)throw Error('raven_stripe_live_credential_ref_not_found');
   const sealed=vault.readSecret(credentialRef);
   const secret=String(sealed.api_secret||'').trim();
-  if(!new RegExp('^rk_'+'live_[A-Za-z0-9]{16,200}
+  if(!secret.startsWith(['rk','live',''].join('_')) ||
+     secret.length<24 || secret.length>220 ||
+     !/^[A-Za-z0-9_]+$/.test(secret)){
     throw Error('raven_stripe_vault_live_secret_invalid');
   }
   return secret;
