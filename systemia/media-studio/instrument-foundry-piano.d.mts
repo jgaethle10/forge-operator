@@ -22,7 +22,10 @@ export function selectFoundrySample(patch:FoundryInstrumentPatch,pitch:number,ve
   root_pitch:number;
   playback_rate:number;
   release_sec:number;
+  velocity_min:number;
+  velocity_max:number;
 };
+export function foundryPianoVoiceGain(velocity:number, selection:Pick<FoundrySampleLayer,'velocity_min'|'velocity_max'>):number;
 export function scheduleFoundryPianoNote(input:{
   context:AudioContext;
   destination:AudioNode;
@@ -31,6 +34,6 @@ export function scheduleFoundryPianoNote(input:{
   velocity:number;
   time:number;
   duration:number;
-  selection:{asset_id:string;playback_rate:number;release_sec:number};
+  selection:{asset_id:string;playback_rate:number;release_sec:number;velocity_min?:number;velocity_max?:number};
   createSource:()=>AudioBufferSourceNode;
-}):{asset_id:string;start_time:number;stop_time:number;release_start:number;playback_rate:number;commercial_rights_verified:false};
+}):{asset_id:string;start_time:number;stop_time:number;release_start:number;playback_rate:number;voice_gain:number;release_curve:'cosine_squared_4';commercial_rights_verified:false};
