@@ -12,6 +12,7 @@ import wave
 VOICE_A = 'af_bella'
 VOICE_B = 'af_heart'
 CANONICAL = 'This is Evercraft, and this is only the beginning.'
+CONTROLLED_SEED = 1701
 SCENES = (
     ('tagline', CANONICAL),
     ('commercial', "Good ideas don't need louder promises. They need people who show up, do the work, and get it right. That's how trust is built. And it's why Evercraft exists."),
@@ -39,6 +40,7 @@ def validate():
     assert [x[1] for x in TAKES] == [0., .05, .10, .20, 1., 0.]
     assert sum(x[2] for x in TAKES) == 1
     assert SCENES[0][1] == CANONICAL
+    assert CONTROLLED_SEED == 1701
     assert all(words(script).count('evercraft') == 1 for _,script in SCENES)
     print('12 controlled neural audition takes; phoneme overrides prohibited; pure Bella restored')
 
@@ -73,6 +75,8 @@ def render(folder):
       'originalShootout':'https://github.com/jgaethle10/forge-operator/actions/runs/39464600851',
       'originalV05WavSha256':'eac576dc30d5a5e684241de1e7bd187b5f6d3d0f00d39eb413c31255eeb33a14',
       'blendMethod':'torch.lerp(bella,heart,heartWeight) in voice embedding, not output WAV mixing',
+      'controlledSeedResetBeforeEveryTake':CONTROLLED_SEED,
+      'reproducibilityMustBeBitwiseExact':True,
       'lexicalTextChangedAcrossCandidates':False,
       'originalPhonemeTokensModified':False,
       'humanNaturalnessImprovementVerified':False,
@@ -94,6 +98,9 @@ def render(folder):
             voice = VOICE_A if weight == 0 else VOICE_B if weight == 1 else torch.lerp(bella,heart,weight).contiguous()
             if isinstance(voice,torch.Tensor) and not torch.isfinite(voice).all():
                 raise RuntimeError('Nonfinite blend tensor')
+            # Equalize stochastic conditions so 5% timbre blends are not confounded by a different random draw.
+            torch.manual_seed(CONTROLLED_SEED)
+            np.random.seed(CONTROLLED_SEED)
             pieces = [np.asarray(result.audio,dtype=np.float32)
                       for result in pipeline(script,voice=voice,speed=1.0)]
             if not pieces:
@@ -111,6 +118,7 @@ def render(folder):
             report['auditions'].append({
               'id':name, 'scene':scene, 'script':script, 'heartWeight':weight,
               'bellaWeight':1-weight, 'duplicatePureBellaControl':repeat,
+              'randomSeed':CONTROLLED_SEED,
               'originalG2pBrandPhonemes':brand[0], 'g2pMutation':False,
               'wavSha256':sha256(wav), 'mp3Sha256':sha256(mp3),
               'chunkCount':len(pieces),**info
@@ -120,6 +128,8 @@ def render(folder):
         a,b = repeat_reference['A'],repeat_reference['F']
         same = len(a)==len(b)
         corr = float(np.corrcoef(a,b)[0,1]) if same and len(a)>1 else None
+        if not same or not np.array_equal(a,b):
+            raise RuntimeError('Repeated pure V05 control failed fixed-seed bitwise parity: '+scene)
         report['reproducibilityChecks'].append({
           'scene':scene, 'sameFrameCount':same,
           'sampleCorrelation':round(corr,7) if corr is not None else None,
