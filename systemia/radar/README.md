@@ -100,7 +100,7 @@ Set `RADAR_STATE_DIR` to a persistent mounted path in production.
 - `RADAR_MAX_SIGNALS=8`
 - `RADAR_STATE_DIR=/persistent/path`
 - `RADAR_INTERNAL_TOKEN=...`
-- `RADAR_JOURNAL_URL=https://journal.evercraft.global/`
+- `RADAR_JOURNAL_URL=https://fabric.systemiacommandcenters.com/journal/`
 
 Production defaults the resident on. Development defaults it off unless explicitly enabled.
 
