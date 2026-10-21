@@ -37,7 +37,7 @@ def words(text):
 def validate():
     assert VOICE_A == 'af_bella' and VOICE_B == 'af_heart'
     assert len(TAKES) == 7 and len(SCENES) == 2
-    assert len(set(x[0] for x in TAKES)) == 6
+    assert len(set(x[0] for x in TAKES)) == 7
     assert [x[1] for x in TAKES] == [.80, 0., .60, 1., .90, .40, 1.]
     assert sum(x[2] for x in TAKES) == 1
     assert SCENES[0][1] == CANONICAL
