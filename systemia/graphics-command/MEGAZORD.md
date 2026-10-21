@@ -87,3 +87,26 @@ Generated bundles now include production-capability-audit.json and production jo
 - The repository inventory does not include family-supplied photographs/videos held outside the checkout, unattached local workstation assets or unconnected external apps.
 
 The purpose of this audit is to preserve all these lanes in a single traceable inventory, identify what can be routed next, and prevent accidental claims that every source module is already running in production.
+
+
+## Toon Shot Handoff v1: now callable by the family cartoon app
+
+Fallen Series Mode is now wired to a separate planning and admission boundary:
+
+- Backend route: POST /api/fallen/family/toon-handoff
+- Source: systemia/media-studio/toon-shot-handoff.mjs
+- Tests: systemia/media-studio/toon-shot-handoff.test.ts and systemia/media-studio/family-http.test.ts
+
+Request JSON has four keys: bible (the returned family series bible), seriesPlan (the returned Series Mode plan), shots (human/agent-authored shot directions), and optionally fps (24 to 60). Every shot must supply id, visualNeedId matching a real video production need, durationSec, locationId, action, soundDirection, characters, and dialogueCueIds. Visible characters must have five explicit acting directions: objective, physicalAction, face, gazeTarget, hands.
+
+The family episode now includes a stable family-story-world location anchor. It is a declared story world, **not a rendered environment asset**. Individual shot environments, visuals and rights still require later evidence.
+
+The handoff rejects:
+- missing or duplicate shots, visual needs, characters, cue IDs or dialogue assignments;
+- altered character bible, absent reference IDs, unknown location or unbound voice;
+- missing hand/facial/eyeline/action direction or unseen speakers;
+- incompatible shot timing, aspect ratio or continuity state.
+
+Successful response state is preproduction_work_orders_only. It includes frame-accurate assignments, immutable traits, voice IDs, explicit mouth/phoneme sync requirements, and animation/render/audio/QC gates. No paid model request is made. The family UI itself still needs an editable shot-directions panel before this is a one-click consumer workflow.
+
+This is a mechanical step toward stable, performing characters, not proof that an animation is finished. Character photo reference identifiers are declarations, not proof that identity matching, hand anatomy or frame continuity passed.
