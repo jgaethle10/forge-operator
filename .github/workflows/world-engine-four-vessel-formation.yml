@@ -27,6 +27,8 @@ jobs:
         run: |
           npx tsx --test systemia/world-engine/four-vessel-proxy-scene.test.ts
           npm run test:world-engine
+      - name: Install native local H264 encoder
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
       - name: Verify actual original multi-vessel WebGPU frame rendering to MP4
         env:
           CINEMATIC_SCENE: denmark_strait_formation
