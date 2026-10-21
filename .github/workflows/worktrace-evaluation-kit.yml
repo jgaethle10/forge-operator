@@ -1,0 +1,62 @@
+name: WorkTrace evaluation format proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/worktrace/evaluation-kit/**'
+      - '.github/workflows/worktrace-evaluation-kit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  worktrace-eval-example:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: systemia/worktrace/evaluation-kit
+    steps:
+      - name: Checkout Evercraft source
+        uses: actions/checkout@v4
+      - name: Install Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and seven safety/score tests
+        run: |
+          node --check worktrace-evaluator.mjs
+          node --test worktrace-evaluator.test.mjs
+      - name: Check safe illustrative candidate (no network)
+        run: |
+          node worktrace-evaluator.mjs example-safe.json > "$RUNNER_TEMP/worktrace-safe-report.json"
+          node --input-type=module -e "import fs from 'node:fs';const r=JSON.parse(fs.readFileSync(process.argv[1]));if(r.awarded_points!==10||r.status!=='illustrative_pass')process.exit(2);" "$RUNNER_TEMP/worktrace-safe-report.json"
+      - name: Prove fail-closed illustrative candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node worktrace-evaluator.mjs example-unsafe.json > "$RUNNER_TEMP/worktrace-unsafe-report.json"
+          code=$?
+          set -e
+          test "$code" -eq 1
+          node --input-type=module -e "import fs from 'node:fs';const r=JSON.parse(fs.readFileSync(process.argv[1]));if(r.awarded_points!==0||r.status!=='fail_closed')process.exit(2);" "$RUNNER_TEMP/worktrace-unsafe-report.json"
+      - name: Publish status and artifact (illustrative, not customer dataset)
+        if: always()
+        shell: bash
+        run: |
+          echo '### WorkTrace structural evaluator' >> "$GITHUB_STEP_SUMMARY"
+          echo 'This is a public demonstration; no training-data licensing, recordings, model calls, external actions or sales claimed.' >> "$GITHUB_STEP_SUMMARY"
+          test -f "$RUNNER_TEMP/worktrace-safe-report.json" && echo '- Structured example: scored' >> "$GITHUB_STEP_SUMMARY" || true
+          test -f "$RUNNER_TEMP/worktrace-unsafe-report.json" && echo '- Unsafe example: fail-closed test run' >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Upload evaluation receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worktrace-evaluation-illustrative-receipts
+          path: |
+            ${{ runner.temp }}/worktrace-safe-report.json
+            ${{ runner.temp }}/worktrace-unsafe-report.json
+          retention-days: 7
+          if-no-files-found: warn
