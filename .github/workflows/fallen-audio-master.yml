@@ -6,6 +6,8 @@ on:
       - 'systemia/media-studio/audio-master.ts'
       - 'systemia/media-studio/audio-master.test.ts'
       - 'systemia/media-studio/audio-master.integration.test.ts'
+      - 'systemia/media-studio/sound-ab-match.mjs'
+      - 'systemia/media-studio/sound-ab-match.test.mjs'
       - 'systemia/media-studio/timeline.ts'
       - 'systemia/media-studio/timeline-export.ts'
       - 'systemia/media-studio/timeline-export.test.ts'
@@ -30,3 +32,4 @@ jobs:
           fi
           ffmpeg -version | head -n 1
       - run: node --import tsx --test systemia/media-studio/audio-master.test.ts systemia/media-studio/timeline-export.test.ts systemia/media-studio/audio-master.integration.test.ts
+      - run: node --test systemia/media-studio/sound-ab-match.test.mjs

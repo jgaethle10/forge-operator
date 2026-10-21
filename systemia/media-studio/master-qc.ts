@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { measureAudioLoudness, type AudioLoudnessEvidence } from './audio-loudness-evidence.js';
 
 export interface StudioMasterQcPolicy {
   expectedDurationSec?:number;
@@ -34,6 +35,8 @@ export interface StudioMasterQcReceipt {
     blackRatio:number;
     freezeRatio:number;
     silenceRatio:number;
+    /** New measured field; optional only for historical receipts/test fixtures. */
+    loudness?:AudioLoudnessEvidence|null;
   };
   policy:Required<StudioMasterQcPolicy>;
   reasons:string[];
@@ -178,6 +181,9 @@ export function assessStudioMaster(input:{
   const freezeDurationSec=sumMatches(freezeLog,/freeze_duration:\s*([0-9.]+)/g);
   const silenceDurationSec=audio?silenceDuration(silenceLog,durationSec):durationSec;
 
+  // Measure the actual encoded programme, *after* normalisation and AAC.
+  // An output policy is not itself evidence that a LUFS/true-peak target was met.
+  const loudness=audio?measureAudioLoudness(input.filePath):null;
   const measurements={
     durationSec,
     width,
@@ -192,6 +198,7 @@ export function assessStudioMaster(input:{
     blackRatio:ratio(blackDurationSec,durationSec),
     freezeRatio:ratio(freezeDurationSec,durationSec),
     silenceRatio:ratio(silenceDurationSec,durationSec),
+    loudness,
   };
 
   const reasons:string[]=[];
@@ -225,7 +232,7 @@ export function assessStudioMaster(input:{
       'ffprobe:streams+format',
       'ffmpeg:blackdetect',
       'ffmpeg:freezedetect',
-      ...(audio?['ffmpeg:silencedetect']:[]),
+      ...(audio?['ffmpeg:silencedetect','ffmpeg:ebur128:peak=true:final_encoded_output']:[]),
     ],
     boundaries:{
       technicalQcOnly:true,

@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { makeTimelineProject } from './timeline.js';
 import { renderTimelineExport } from './timeline-export.js';
+import { assessStudioMaster } from './master-qc.js';
 
 function run(binary:string,args:string[]){
   const result=spawnSync(binary,args,{encoding:'utf8'});
@@ -88,4 +89,14 @@ test('renders a real role-aware mastered MP4 with dialogue and music',()=>{
   const audio=probe.streams.find(stream=>stream.codec_type==='audio');
   assert.equal(audio?.codec_name,'aac');
   assert.equal(audio?.sample_rate,'48000');
+  // A requested -14 LUFS/-1 dBTP export is not proof that AAC achieved those
+  // values. Independently inspect the encoded final MP4 and keep both facts.
+  const qc=assessStudioMaster({filePath:out,expectedSha256:receipt.sha256});
+  assert.equal(qc.measurements.loudness?.analysis,'ffmpeg_ebur128_peak_true');
+  assert.equal(qc.measurements.loudness?.evidenceStatus,'measured');
+  assert.ok(Number.isFinite(qc.measurements.loudness?.integratedLufs));
+  assert.ok(Number.isFinite(qc.measurements.loudness?.truePeakDbtp));
+  assert.equal(qc.measurements.loudness?.publicationAuthorityGranted,false);
+  assert.ok(qc.evidenceRefs.includes('ffmpeg:ebur128:peak=true:final_encoded_output'));
+
 });
