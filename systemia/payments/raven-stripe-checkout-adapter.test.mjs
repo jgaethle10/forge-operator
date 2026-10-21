@@ -2,8 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
+import {ProviderCredentialVault} from '../evercraft-home/credential-vault.mjs';
 import {
-  createRavenStripeCheckoutSession,loadRavenStripeSecret,RAVEN_NEXUS_PRIVATE_ROOT,
+  createRavenStripeCheckoutSession,loadRavenStripeSecret,
 } from './raven-stripe-checkout-adapter.mjs';
 import {STRIPE_FIXED_PRICE_BINDINGS} from './raven-stripe-price-bridge.mjs';
 
@@ -62,25 +64,38 @@ function mockStripe({wrongAccount=false,disabled=false,wrongPrice=false,paidSess
   return {fetchImpl,requests};
 }
 
-test('Raven credential file boundary holds without storing a key-shaped fixture',()=>{
-  assert.throws(()=>loadRavenStripeSecret({file:'/tmp/provider.key'}),/private_provider_directory/);
-  fs.mkdirSync(RAVEN_NEXUS_PRIVATE_ROOT,{recursive:true,mode:0o700});
-  const dir=fs.mkdtempSync(path.join(RAVEN_NEXUS_PRIVATE_ROOT,'test-'));
-  const file=path.join(dir,'provider.key');
+test('existing encrypted Evercraft vault is mandatory: no parallel raw secret file is created',()=>{
+  assert.throws(()=>loadRavenStripeSecret({
+    stateDir:'/tmp/not-provisioned-raven-provider-vault',
+    credentialRef:'provider_stripe_live_0123456789abcdef',
+  }),/not_provisioned/);
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-raven-stripe-vault-'));
   try{
-    fs.writeFileSync(file,'invalid-test-value',{mode:0o600});
-    assert.throws(()=>loadRavenStripeSecret({file}),/live_secret_invalid/);
-    fs.chmodSync(file,0o644);
-    assert.throws(()=>loadRavenStripeSecret({file}),/insecure/);
-    const symlink=path.join(dir,'alias.key');
-    fs.symlinkSync(file,symlink);
-    assert.throws(()=>loadRavenStripeSecret({file:symlink}),/insecure/);
+    const vault=new ProviderCredentialVault({stateDir:dir});
+    const meta=vault.put({
+      provider:'stripe',environment:'live',label:'primary',
+      apiKeyId:'test-only-identifier',
+      apiSecret:'test-not-a-stripe-key-value',
+    });
+    const result=vault.list({provider:'stripe'});
+    assert.equal(result.length,1);
+    assert.equal(result[0].credential_ref,meta.credential_ref);
+    assert.throws(()=>loadRavenStripeSecret({
+      stateDir:dir,credentialRef:meta.credential_ref
+    }),/live_secret_invalid/);
+    assert.throws(()=>loadRavenStripeSecret({
+      stateDir:dir,credentialRef:'provider_stripe_live_0123456789abcdef'
+    }),/credential_ref_not_found/);
+    fs.chmodSync(path.join(dir,'.vault-key'),0o644);
+    assert.throws(()=>loadRavenStripeSecret({
+      stateDir:dir,credentialRef:meta.credential_ref
+    }),/vault_insecure/);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 
 test('authenticated mock performs account, price and idempotent checkout calls, but never declares paid',async()=>{
   const fake=mockStripe();
-  const opts={order,account,secretFile:'mock-file-not-read',fetchImpl:fake.fetchImpl,secretReader:mockReader};
+  const opts={order,account,vaultStateDir:'mock-vault-not-read',credentialRef:'mock-ref-not-read',fetchImpl:fake.fetchImpl,secretReader:mockReader};
   const ready=await createRavenStripeCheckoutSession(opts);
   assert.equal(ready.state,'checkout_prepared_unpaid');
   assert.equal(ready.checkout_ready,true);
@@ -102,7 +117,7 @@ test('account identity, charge status and price mismatches reject before POST',a
   for(const config of [{wrongAccount:true},{disabled:true},{wrongPrice:true}]){
     const fake=mockStripe(config);
     await assert.rejects(createRavenStripeCheckoutSession({
-      order,account,secretFile:'unused',fetchImpl:fake.fetchImpl,secretReader:mockReader
+      order,account,vaultStateDir:'mock-vault-not-read',credentialRef:'mock-ref-not-read',fetchImpl:fake.fetchImpl,secretReader:mockReader
     }));
     assert.ok(fake.requests.length>=1);
     assert.ok(fake.requests.every(req=>req.method==='GET'));
@@ -112,7 +127,7 @@ test('account identity, charge status and price mismatches reject before POST',a
 test('provider session reporting paid or completed at creation is rejected',async()=>{
   const fake=mockStripe({paidSession:true});
   await assert.rejects(createRavenStripeCheckoutSession({
-    order,account,secretFile:'unused',fetchImpl:fake.fetchImpl,secretReader:mockReader
+    order,account,vaultStateDir:'mock-vault-not-read',credentialRef:'mock-ref-not-read',fetchImpl:fake.fetchImpl,secretReader:mockReader
   }),/new_session_unverified/);
 });
 
@@ -123,7 +138,7 @@ test('buyer confirmation, persisted order, non-synthetic unpaid state required b
     {payment_state:'paid'},{synthetic:true},{amount_cents:1},{order_truth:'stripe'}
   ]){
     await assert.rejects(createRavenStripeCheckoutSession({
-      order:{...order,...patch},account,secretFile:'unused',fetchImpl:fake.fetchImpl,
+      order:{...order,...patch},account,vaultStateDir:'mock-vault-not-read',credentialRef:'mock-ref-not-read',fetchImpl:fake.fetchImpl,
       secretReader:()=>{throw Error('should_not_read_secret');}
     }),/canonical_order_ineligible/);
   }
