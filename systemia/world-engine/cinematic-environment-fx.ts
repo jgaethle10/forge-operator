@@ -12,6 +12,8 @@ import {validateWorldDefinition} from './engine.js';
 import type {GeometryAsset} from './webgpu.js';
 import {validateGeometryAsset} from './webgpu.js';
 import {sampleCinematicActorTrack,validateActorMotionRig,type ActorMotionRig} from './cinematic-actor-motion.js';
+import {organicFoamSelection} from './organic-wake-geometry.js';
+import {sampleAnimatedOceanWave} from './animated-ocean.js';
 
 export type FxKind='wake'|'spray'|'smoke';
 export type CinematicFxEmitter={
@@ -113,9 +115,11 @@ const rotate=(p:Vec3,degrees:number):Vec3=>{
  const a=degrees*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
  return {x:c*p.x+s*p.z,y:p.y,z:-s*p.x+c*p.z};
 };
-export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotionRig,fx:CinematicFxRig):WorldDefinition{
+export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotionRig,fx:CinematicFxRig,options:{organicWake?:boolean}={}):WorldDefinition{
  const proof=validateCinematicFxRig(world,actors,fx);
  if(world.entities.some(e=>e.id.startsWith('vfx-')))reject('already_attached');
+ if(options.organicWake!==undefined&&typeof options.organicWake!=='boolean')reject('organic_wake_option_invalid');
+ const organicWake=options.organicWake===true;
  const scene=structuredClone(world);
  if(!scene.visualScene)reject('no_visual_scene');
  const base=scene.visualScene.materials.find(m=>m.id==='foam');
@@ -124,6 +128,10 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
   ...[.48,.33,.21,.10].map((alpha,i)=>({...structuredClone(base),
     id:'vfx-wake-'+i,baseColor:{r:.62,g:.78,b:.81,a:alpha},
     alphaMode:'blend' as const,roughness:.98,metallic:0,doubleSided:true})),
+  ...(organicWake?[.30,.19,.11,.055].map((alpha,i)=>({...structuredClone(base),
+     id:'vfx-wake-organic-'+i,
+     baseColor:{r:.49,g:.66,b:.71,a:alpha},
+     alphaMode:'blend' as const,roughness:1,metallic:0,doubleSided:true})):[]),
   ...[.70,.26].map((alpha,i)=>({...structuredClone(base),id:'vfx-spray-'+i,
     baseColor:{r:.77,g:.86,b:.87,a:alpha},alphaMode:'blend' as const,
     roughness:1,metallic:0,doubleSided:true})),
@@ -136,8 +144,10 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
    id:fxId(emitter,i),name:'Original GPU '+emitter.kind+' emitter '+emitter.id+' '+i,
    transform:{position:{x:0,y:-100,z:0},scale:{x:1,y:1,z:1}},
    renderable:{
-    geometryRef:emitter.kind==='wake'?'owned:fx-cinematic-wake-crest':'owned:fx-cinematic-3d-puff',
-    materialId:'vfx-'+emitter.kind+'-0',
+    geometryRef:emitter.kind==='wake'?
+      (organicWake?organicFoamSelection(emitter.id,i):'owned:fx-cinematic-wake-crest'):
+      'owned:fx-cinematic-3d-puff',
+    materialId:organicWake&&emitter.kind==='wake'?'vfx-wake-organic-0':'vfx-'+emitter.kind+'-0',
     visible:false,castsShadow:false,receivesShadow:false
    },
    tags:['world_engine_original_fx','cinematic_fx_not_physics',emitter.kind,emitter.actorId]
@@ -146,6 +156,8 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
  scene.metadata={...(scene.metadata||{}),
   environmentalFx:'original_deterministic_GPU_mesh_emitters_not_CFD',
   fxRigDigest:proof.rigDigest,fxOriginalGeometries:proof.originalGeometryAssets,
+  ...(organicWake?{organicFoamStyle:'individually_curved_surface_fragments_not_chevron',
+    originalFoamVariants:4,physicsOrCFDVerified:false}:{}),
   fxPublicationAuthority:false};
  validateWorldDefinition(scene);
  return scene;
@@ -181,7 +193,9 @@ export function animateCinematicFx(world:WorldDefinition,entities:WorldEntity[],
     const anchor=rotate(emitter.anchorLocal,yaw);
     const drift=rotate(emitter.driftLocal,yaw);
     const progress=age/emitter.lifetimeSec;
-    if(emitter.kind==='wake')entity.renderable!.materialId='vfx-wake-'+Math.min(3,Math.floor(progress*4));
+    if(emitter.kind==='wake')entity.renderable!.materialId=
+      (world.metadata?.organicFoamStyle?'vfx-wake-organic-':'vfx-wake-')+
+      Math.min(3,Math.floor(progress*4));
     if(emitter.kind==='smoke')entity.renderable!.materialId='vfx-smoke-'+Math.min(3,Math.floor(progress*4));
     if(emitter.kind==='spray')entity.renderable!.materialId='vfx-spray-'+Math.min(1,Math.floor(progress*2));
     const wiggle=.065*Math.sin(7*progress+i*.81+emitter.phase*5);
@@ -189,13 +203,23 @@ export function animateCinematicFx(world:WorldDefinition,entities:WorldEntity[],
     const radius=emitter.radius*(emitter.kind==='wake'?
      (.48+1.5*progress):emitter.kind==='smoke'?
      (.55+1.8*progress):(.25+.75*progress));
-    const x=track.pivot.x+pose.displacement.x+anchor.x+age*drift.x+wiggle;
-    const y=track.pivot.y+pose.displacement.y+anchor.y+age*drift.y+splash;
-    const z=track.pivot.z+pose.displacement.z+anchor.z+age*drift.z;
+    const organic=emitter.kind==='wake'&&Boolean(world.metadata?.organicFoamStyle);
+    // Foam fragments feather laterally instead of fixed V-shaped quads.
+    const lateral=organic?Math.sin((i+1)*2.39996+emitter.phase*8.0)*radius*.43*progress:0;
+    const offset=organic?rotate({x:lateral,y:0,z:0},yaw):{x:0,y:0,z:0};
+    const x=track.pivot.x+pose.displacement.x+anchor.x+age*drift.x+wiggle+offset.x;
+    const nominalY=track.pivot.y+pose.displacement.y+anchor.y+age*drift.y+splash;
+    // Match current source-WGSL ocean phase at every foam fragment center.
+    // Original static-water/other 3D FX paths remain exactly unchanged.
+    const z0=track.pivot.z+pose.displacement.z+anchor.z+age*drift.z+offset.z;
+    const y=organic&&world.metadata?.animatedOceanShaderOptIn===true?
+      -.60+sampleAnimatedOceanWave(x,z0,timeSec).height+.055:nominalY;
+    const z=z0;
     entity.transform.position={x,y,z};
     entity.transform.rotationDeg={x:0,y:yaw,z:0};
     entity.transform.scale=emitter.kind==='wake'?
-     {x:radius*1.15,y:.045,z:radius*.42}:
+     (organic?{x:radius*(.29+.23*progress),y:1,z:radius*(.45+progress*.5)}:
+     {x:radius*1.15,y:.045,z:radius*.42}):
      {x:radius,y:radius*(emitter.kind==='smoke'?1.35:1),z:radius};
     state.push({id:entityId,x,y,z,age});
     active++;

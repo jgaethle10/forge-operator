@@ -911,6 +911,24 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     metallic = saturate(metallic * orm.b);
   }
 
+  // Native opt-in ship wake surface shading: feather edges and create
+  // broken translucent noise without any external foam image/texture.
+  // shadowFlags.z = -2 is a dedicated opt-in original foam marker;
+  // never changes ordinary World Engine materials, animated water, or UI.
+  if (object.shadowFlags.z < -1.5) {
+    let side = clamp(input.uv.x,0.0,1.0);
+    let along = clamp(input.uv.y,0.0,1.0);
+    let edgeDistance=min(side,1.0-side);
+    let edgeFade=smoothstep(0.0,0.36,edgeDistance);
+    let ends=smoothstep(0.0,0.14,along)*smoothstep(0.0,0.14,1.0-along);
+    let ripple = 0.5+0.5*sin(input.worldPosition.x*3.7+
+      input.worldPosition.z*1.9+object.shadowFlags.w*1.35);
+    let breakup=0.5+0.5*sin(input.worldPosition.z*5.8-
+      input.worldPosition.x*2.3+sin(side*11.0+along*9.0));
+    let dissolve=smoothstep(0.18,0.78,0.58*ripple+0.42*breakup);
+    base.a *= edgeFade*ends*(0.23+0.77*dissolve);
+    base.rgb=mix(base.rgb,vec3<f32>(0.15,0.23,0.27),0.25);
+  }
   if (alphaCutoff >= 0.0 && base.a < alphaCutoff) {
     discard;
   }
