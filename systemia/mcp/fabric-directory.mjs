@@ -242,8 +242,15 @@ export function normalizeFabricCatalog(input=[]){
       pricing:clean(item.pricing||'',900)||null,
       use_when:normalizeUseWhen(item.use_when),
       entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
-      start_url_state:owned?'owned_offer_page_available':clean(item.start_url_state||'',120)||null,
-      human_offer_url:owned?.human_form_url||null,
+      // The catalog may know a bounded offer page, but the same tool's
+      // connection-options RPC keeps checkout suppressed after provider 402.
+      // Listing/matching must NOT claim a buyable human continuation.
+      start_url_state:owned?'checkout_held_provider_http_402':clean(item.start_url_state||'',120)||null,
+      advertised_offer_page_url:owned?.human_form_url||null,
+      advertised_offer_page_state:owned?'catalog_route_only_not_live_checkout_proof':null,
+      human_offer_url:null,
+      buyer_checkout_available:false,
+      human_buyer_options_state:owned?'held_provider_http_402_requires_new_payment_receipt':'no_verified_buyer_route',
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
