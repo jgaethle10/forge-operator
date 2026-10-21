@@ -90,6 +90,9 @@ test('installed refresh script defaults to WEB only and preserves separate DNS o
   assert.match(src,/--renew-owned "\$renew_due"/);
   assert.match(src,/now-last >= 21600/);
   assert.match(src,/last-owned-lease-renewal/);
-  assert.match(src,/if \[\[ "\$code" -eq 0 && "\$renew_due" -eq 1 \]\]/);
+  assert.match(src,/if \[\[ "\$code" -eq 0 \]\] &&/);
+  assert.match(src,/grep -Eq/);
+  assert.match(src,/\[\[:space:\]\]\*/);
+  assert.match(src,/last-owned-lease-renewal/);
   assert.match(src,/\^\(web\|dns\|all\)\$/);
 });
