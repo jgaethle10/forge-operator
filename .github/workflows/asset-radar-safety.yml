@@ -1,0 +1,25 @@
+name: Aiden Asset Radar Safety
+on:
+  pull_request:
+    paths:
+      - 'systemia/asset-radar/**'
+      - '.github/workflows/asset-radar-safety.yml'
+  push:
+    branches:
+      - 'feat/aiden-undervalued-asset-radar-*'
+    paths:
+      - 'systemia/asset-radar/**'
+      - '.github/workflows/asset-radar-safety.yml'
+permissions:
+  contents: read
+jobs:
+  asset-radar-unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail-closed valuation and marketplace adapter tests
+        run: node --test systemia/asset-radar/*.test.mjs
