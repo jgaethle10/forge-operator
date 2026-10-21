@@ -1,0 +1,31 @@
+name: Human played piano reference for Evercraft audio research
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'systemia/clip/external-human-piano-reference.py'
+      - '.github/workflows/evercraft-human-piano-reference.yml'
+permissions:
+  contents: read
+jobs:
+  real-performance-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install real audio decoding
+        run: python -m pip install numpy==2.2.6 soundfile==0.13.1
+      - name: Retrieve properly attributed human performance reference
+        run: python systemia/clip/external-human-piano-reference.py
+      - name: Preserve example as research ONLY
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-external-human-performance-benchmark-not-our-music
+          path: |
+            artifacts/evercraft-human-played-reference/*.wav
+            artifacts/evercraft-human-played-reference/*.json
+          if-no-files-found: error
+          retention-days: 7
