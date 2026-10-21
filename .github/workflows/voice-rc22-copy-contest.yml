@@ -1,10 +1,5 @@
 name: Voice Foundry RC22 Copy and Dialogue (private only)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc22-copy-contest.yml'
-      - 'systemia/media-studio/voice-rc22-copy-contest.py'
-      - 'tests/media-voice-rc22-copy-contest.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
