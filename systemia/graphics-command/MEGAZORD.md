@@ -110,3 +110,43 @@ The handoff rejects:
 Successful response state is preproduction_work_orders_only. It includes frame-accurate assignments, immutable traits, voice IDs, explicit mouth/phoneme sync requirements, and animation/render/audio/QC gates. No paid model request is made. The family UI itself still needs an editable shot-directions panel before this is a one-click consumer workflow.
 
 This is a mechanical step toward stable, performing characters, not proof that an animation is finished. Character photo reference identifiers are declarations, not proof that identity matching, hand anatomy or frame continuity passed.
+
+
+## Real encoded 2D toon canary (October 20)
+
+The owned systemia/media-studio/toon-cel-canary.py script renders an **actual**
+original cel animation from authored SVG curves at deterministic timestamps. It
+rasterizes frames with CairoSVG, generates a small original instrumental synthesis
+with Python's wave module, encodes an H.264/AAC MP4 via FFmpeg, uses FFprobe to
+validate the stream dimensions and codecs, and writes a SHA-256-backed JSON receipt.
+
+Run on a workstation with FFmpeg, FFprobe and the Python cairosvg package:
+
+    python3 systemia/media-studio/toon-cel-canary.py --out /tmp/fallen-toon-canary --seconds 3 --fps 24 --width 768 --height 432
+
+The existing Visual Desk CI workflow generates its own one-second 480×270 version
+and retains the MP4, original score and receipt as a GitHub Actions artifact.
+The frame output is evidence of rasterized and encoded pixels, rather than a
+compositor mockup or an HTML-only motion plan.
+
+**Scope and limitations:**
+- The authored fox and lantern are a self-contained *synthetic canary character*,
+  not a family member, photograph-derived identity, approved cast member or a
+  licensed third-party character.
+- The canary contains no spoken words; it **does not** prove speech, lip sync,
+  expressive generative voices, model provider access, skeletal-motion quality or
+  an identity-correct episode.
+- The renderer is currently a standalone source-backed test and **does not**
+  consume the full toon-shot-handoff contract yet. The real family toon
+  pipeline still needs an adapter from validated shot directions to an
+  identity-aware visual runtime and subsequent actor/master review.
+- The synthetic instrumental is original, not a vetted Evercraft music master.
+- No paid media or third-party API calls occur. Do not publish or sell this
+  generated canary as finished cartoon work.
+
+Remaining work is *execution integration*, not more contract documents:
+1. Exact-frame identity-aware character renderer consuming actual toon shot IDs,
+   approved visual references and animation rig poses.
+2. Matched voice/viseme timeline and original-score output from owned audio.
+3. Visual observer rejection and master QA over a playable produced film.
+4. Explicit delivery/Clip authorization only after all evidence is admitted.
