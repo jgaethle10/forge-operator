@@ -1,0 +1,42 @@
+name: Parcel Desk review (offline only)
+
+on:
+  pull_request:
+    paths:
+      - "distribution/parcel-desk/**"
+      - ".github/workflows/parcel-desk-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parcel-desk-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-integrity-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Checkout review candidate
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Exact-byte and fail-closed tests
+        run: python -m unittest discover -s distribution/parcel-desk -p 'test_*.py' -v
+      - name: Verify offline review boundary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          src = Path('distribution/parcel-desk/index.html').read_text()
+          assert 'evercraft-parcel-v0.1' in src
+          assert 'ZIP' in src
+          assert 'SHA-256' in src
+          assert 'fetch(' not in src
+          assert 'XMLHttpRequest' not in src
+          assert 'sendBeacon(' not in src
+          print('Public review candidate: offline parcel UI only')
+          PY
