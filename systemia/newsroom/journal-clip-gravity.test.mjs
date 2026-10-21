@@ -7,14 +7,35 @@ import test from 'node:test';
 import {
   buildGravityClipFallbackRequest,
   dispatchGravityClipFallback,
+  gravityReleaseDigest,
+  verifyGravityReleaseAuthority,
 } from './journal-clip-gravity.mjs';
+import { createAttestationPayload, signAttestation } from '../lineage/signatures.mjs';
 
 const now = new Date('2026-10-21T17:55:00.000Z');
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
+const {publicKey, privateKey} = crypto.generateKeyPairSync('ed25519');
+function sign(release, privateSigner = privateKey) {
+  const payload=createAttestationPayload({
+    subjectType:'journal-clip-gravity-release',
+    subjectId:release.story_id,
+    actor:{type:'human',id:'evercraft-operator-test'},
+    keyId:'test-operator-key',
+    issuedAt:'2026-10-21T17:10:00.000Z',
+    claims:{
+      release_sha256:gravityReleaseDigest(release),
+      destination:'facebook-page',
+      copy_sha256:sha(release.approved_copy),
+      authorization_ref:release.distribution_approval.authorization_ref,
+    },
+  });
+  release.operator_attestation=signAttestation(payload,privateSigner);
+  return release;
+}
 
 function release(){
   const copy = 'North Toledo authorities are responding to a hazardous chemical release. Follow the latest official instructions rather than relying on photos of dense fog. Current city updates: https://toledo.oh.gov/news/2026/10/21/hazmat-evacuation-in-north-toledo';
-  return {
+  const approved = {
     schema: 'evercraft.journal.clip-gravity-release.v1',
     story_id: 'journal:toledo-hazmat:2026-10-21',
     title: 'Toledo chemical release: official guidance and evidence boundaries',
@@ -42,8 +63,9 @@ function release(){
       {source_id: 'county', url: 'https://lucascountyhealth.com/public-health-advisory-glycidyl-methacrylate-gma-chemical-release-in-toledo/', evidence_state: 'reported', verified_at: '2026-10-21T16:50:00.000Z'},
     ],
   };
+  return sign(approved);
 }
-const opts = {now};
+const opts = {now,trustedPublicKey:publicKey};
 const stateRoot = () => fs.mkdtempSync(path.join(os.tmpdir(), 'journal-gravity-'));
 const credential = () => ({safe_status: {facebook: 'resolved'}, config: {pageId: 'test-page', pageAccessToken: 'test-token'}});
 const adapterFactory = () => ({
@@ -70,7 +92,7 @@ test('Gravity routes an independently approved source-cited release without requ
 
 test('dry run never resolves credentials or calls provider', async () => {
   const result = await dispatchGravityClipFallback({
-    release: release(), now, stateRoot: stateRoot(), fire: false,
+    release: release(), now, stateRoot: stateRoot(), fire: false, trustedPublicKey:publicKey,
     resolveCredential: () => { throw new Error('should_not_resolve_credentials'); },
     publisher: () => { throw new Error('should_not_publish'); },
   });
@@ -124,13 +146,13 @@ test('provider receipt is durable and a second attempt never calls the provider'
     return {schema: 'evercraft.clip.social-publish-receipt.v1', status: 'published', remoteId: result.remoteId, url: result.url};
   };
   const first = await dispatchGravityClipFallback({
-    release: release(), now, stateRoot: dir, fire: true,
+    release: release(), now, stateRoot: dir, fire: true, trustedPublicKey:publicKey,
     resolveCredential: credential, adapterFactory, publisher,
   });
   assert.equal(first.status, 'provider_published');
   assert.equal(first.provider_published, true);
   const second = await dispatchGravityClipFallback({
-    release: release(), now, stateRoot: dir, fire: true,
+    release: release(), now, stateRoot: dir, fire: true, trustedPublicKey:publicKey,
     resolveCredential: () => {throw new Error('credentials should not be touched');},
     adapterFactory, publisher,
   });
@@ -144,7 +166,7 @@ test('ambiguous or failed publish returns manual reconciliation hold, never blin
   const dir = stateRoot();
   let calls = 0;
   const args = {
-    release: release(), now, stateRoot: dir, fire: true,
+    release: release(), now, stateRoot: dir, fire: true, trustedPublicKey:publicKey,
     resolveCredential: credential, adapterFactory,
     publisher: async () => {
       calls++;
@@ -163,7 +185,7 @@ test('no Facebook credential means zero provider calls', async () => {
   const dir = stateRoot();
   let calls = 0;
   await assert.rejects(() => dispatchGravityClipFallback({
-    release: release(), now, stateRoot: dir, fire: true,
+    release: release(), now, stateRoot: dir, fire: true, trustedPublicKey:publicKey,
     resolveCredential: () => ({safe_status: {facebook: 'missing'}}),
     adapterFactory,
     publisher: async () => {calls++;},
@@ -200,4 +222,40 @@ test('explicit risk classification cannot be omitted', () => {
   const input = release();
   delete input.risk_class;
   assert.throws(() => buildGravityClipFallbackRequest(input, opts), /risk_class_required/);
+});
+
+test('self-declared Systemia approval cannot publish without trusted operator signature',()=>{
+  const r=release();
+  delete r.operator_attestation;
+  assert.throws(()=>buildGravityClipFallbackRequest(r,opts),/operator_attestation_required/);
+});
+test('a forged title after valid signature invalidates the full release digest',()=>{
+  const r=release();
+  r.title='Urgent all-clear, do not trust the authorities';
+  assert.throws(()=>buildGravityClipFallbackRequest(r,opts),/operator_attestation_scope_or_digest_mismatch/);
+});
+test('caller-supplied public key cannot substitute for configured trusted key',()=>{
+  const r=release();
+  const attacker=crypto.generateKeyPairSync('ed25519');
+  sign(r,attacker.privateKey);
+  assert.throws(()=>buildGravityClipFallbackRequest(r,opts),/operator_signature_invalid/);
+});
+test('key must be installed independently of the JSON release',()=>{
+  assert.throws(()=>buildGravityClipFallbackRequest(release(),{now}),/trusted_operator_key_required/);
+});
+test('a signed release cannot change the distribution authorization after approval',()=>{
+  const r=release();
+  r.distribution_approval.authorization_ref='other-approval';
+  assert.throws(()=>buildGravityClipFallbackRequest(r,opts),/operator_attestation_scope_or_digest_mismatch/);
+});
+test('operator attestation expires before stale repost is possible',()=>{
+  const r=release();
+  assert.throws(()=>verifyGravityReleaseAuthority(r,{trustedPublicKey:publicKey,now:new Date('2026-10-21T19:55:00Z')}),/operator_attestation_expired_or_not_current/);
+});
+test('live dispatch requires signature even when adapter would otherwise accept',async()=>{
+  const r=release();
+  delete r.operator_attestation;
+  let calls=0;
+  await assert.rejects(()=>dispatchGravityClipFallback({release:r,now,fire:true,trustedPublicKey:publicKey,stateRoot:stateRoot(),publisher:async()=>{calls++;}}),/operator_attestation_required/);
+  assert.equal(calls,0);
 });
