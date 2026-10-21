@@ -54,7 +54,8 @@ jobs:
           if(!d||d.shot!=='waterline_tracking'||!d.sourceCameraWorldRig||
              !d.gradedOriginalPbrMaterials||d.realGpuHeroFrameSamples?.length!==5||
              d.realGpuHeroFrameSamples.some(x=>!x.observable||x.framingStatus==='subject_offscreen'||
-                x.coverage.width<=.18)||d.cameraReviewRequired!==true||
+                x.coverage.width<=.18)||
+             d.realGpuHeroFrameSamples.find(x=>x.frameIndex===48)?.framingStatus!=='good_technical_framing'||d.cameraReviewRequired!==true||
              d.historicalCameraOrLightingVerified!==false||d.founderApproved!==false||
              d.publicationAuthority!==false||
              r.hullLoft?.vertexCounts?.length!==4||
