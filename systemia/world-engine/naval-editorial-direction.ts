@@ -14,8 +14,8 @@ export function makeNavalEditorialTake(shot:NavalEditorialShot):CinematicCameraT
   id:'evercraft-waterline-steel-low-angle-opt-in-not-history',
   cameraEntityId:'cinema-camera',targetEntityId:'bismarck-ship-hull',
   durationSec:4,fps:24,move:'orbit',ease:'smootherstep',
-  orbit:{radius:36,startAngleDeg:-80,endAngleDeg:-64,startHeight:5.8,endHeight:4.8},
-  lookAtOffset:{x:0,y:3.75,z:0},startFovYDeg:40,endFovYDeg:38
+  orbit:{radius:41,startAngleDeg:-80,endAngleDeg:-64,startHeight:6.3,endHeight:5.6},
+  lookAtOffset:{x:0,y:3.75,z:0},startFovYDeg:43,endFovYDeg:42
  };
  if(shot==='compressed_formation')return {
   schema:'evercraft.world-engine.cinematic-camera-take.v1',
@@ -37,9 +37,9 @@ export function applyNavalEditorialGrade(original:WorldDefinition,shot:NavalEdit
  // haze, physically motivated PBR parameters but no measured calibration.
  for(const m of scene.materials){
   if(/^battle-.*-hull$/.test(m.id)){
-   m.baseColor={r:m.baseColor.r*1.16,g:m.baseColor.g*1.15,
-    b:m.baseColor.b*1.12,a:1};
-   m.roughness=.74;m.metallic=.17;
+   m.baseColor={r:m.baseColor.r*1.04,g:m.baseColor.g*1.05,
+    b:m.baseColor.b*1.06,a:1};
+   m.roughness=.67;m.metallic=.30;
   }
   if(m.id==='steel'){m.roughness=.64;m.metallic=.26;}
   if(m.id==='barrel'||m.id==='turret'){m.roughness=.54;m.metallic=.24;}
@@ -47,12 +47,12 @@ export function applyNavalEditorialGrade(original:WorldDefinition,shot:NavalEdit
  const ambient=world.entities.find(e=>e.id==='ambient');
  const sun=world.entities.find(e=>e.id==='sun');
  if(!ambient?.light||!sun?.light)throw Error('naval_editorial_missing_lights');
- ambient.light.intensity=1.65;
- ambient.light.color={r:.43,g:.54,b:.67};
- sun.light.intensity=4.3;
+ ambient.light.intensity=1.49;
+ ambient.light.color={r:.36,g:.49,b:.64};
+ sun.light.intensity=3.65;
  sun.light.color={r:.83,g:.87,b:.91};
  sun.transform.rotationDeg={x:-47,y:-48,z:0};
- scene.colorManagement={toneMapper:'aces_filmic',exposureBiasStops:-.11};
+ scene.colorManagement={toneMapper:'aces_filmic',exposureBiasStops:-.25};
  scene.atmosphere={
   color:{r:.23,g:.31,b:.39},
   density:.006,startDistance:38,heightFalloff:.011,referenceHeight:0
