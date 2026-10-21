@@ -2,7 +2,7 @@
  * Conservative UPnP control policy for known Evercraft ports.
  * Readback always precedes writes. A foreign or unverified owner is never changed.
  */
-export function planUpnpMapping(existing,expected,{missing=false}={}){
+export function planUpnpMapping(existing,expected,{missing=false,renewHealthy=false}={}){
   if(!expected||typeof expected!=='object'||!expected.desc||
      !Number.isInteger(expected.external)||expected.external<1||expected.external>65535||
      !Number.isInteger(expected.internal)||expected.internal<1||expected.internal>65535||
@@ -16,6 +16,8 @@ export function planUpnpMapping(existing,expected,{missing=false}={}){
     internal:Number(existing.internal),
     description:String(existing.description||''),
     enabled:String(existing.enabled||''),
+    lease_seconds:/^(0|[1-9][0-9]*)$/.test(String(existing.lease_seconds??''))
+      ? Number(existing.lease_seconds) : null,
   };
   if(observed.description!==expected.desc){
     return {action:'hold',state:'foreign_mapping',ownership_verified:false,observed};
@@ -23,6 +25,16 @@ export function planUpnpMapping(existing,expected,{missing=false}={}){
   if(observed.host!==expected.host||observed.internal!==expected.internal||
       !['1','true'].includes(observed.enabled.toLowerCase())){
     return {action:'hold',state:'owned_mapping_drift',ownership_verified:true,observed};
+  }
+  // A verified, healthy, finite-lease mapping needs bounded renewal before
+  // the router expires it. A zero lease is conventionally indefinite.
+  // Routers vary in whether the readback is total or remaining duration,
+  // so the resident timer also periodically requests renewal.
+  if(observed.lease_seconds!==0 && (
+    renewHealthy===true ||
+    (Number.isFinite(observed.lease_seconds) && observed.lease_seconds>0 && observed.lease_seconds<=3600)
+  )){
+    return {action:'renew',state:'owned_lease_renewal_due',ownership_verified:true,observed};
   }
   return {action:'keep',state:'already_correct',ownership_verified:true,observed};
 }
