@@ -1,10 +1,5 @@
 name: Voice Foundry RC26 Female Commercial Cold Open (private)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc26-female-opening.yml'
-      - 'systemia/media-studio/voice-rc26-female-opening.py'
-      - 'tests/media-voice-rc26-female-opening.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
