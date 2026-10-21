@@ -285,7 +285,7 @@
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
     "test:product-url-fabric": "node tests/product-url-fabric.test.mjs",
     "proof:rivet-mail": "node systemia/domain-authority/rivet-public-mail.proof.mjs",
-    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs",
+    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs systemia/shipping/recipient-access-gate.test.mjs",
     "test:household-fabric-gateway": "node tests/household-fabric-gateway.test.mjs",
     "test:household-fabric-ui": "node tests/household-fabric-today-ui.test.mjs",
     "test:faie": "node --test systemia/faie/*.test.mjs",

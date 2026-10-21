@@ -1,3 +1,40 @@
+import { verifyRecipientAccess } from './recipient-access-gate.mjs';
+
+function preSendRecipientGate({ envelope, recipient_access, at = new Date() }) {
+  const plan = recipient_access?.plan;
+  const evidence = recipient_access?.evidence;
+  // Public verifier key is pinned in the operator runtime, never provided by a producer.
+  const trusted_verifier_public_key = process.env.EVERCRAFT_SHIPPING_VERIFIER_PUBLIC_KEY;
+  const reasons = [];
+  if (!plan) reasons.push('shipping_independent_recipient_plan_missing');
+  if (!evidence) reasons.push('shipping_independent_recipient_attestation_missing');
+  if (!trusted_verifier_public_key) reasons.push('shipping_trusted_verifier_public_key_missing');
+  if (plan) {
+    if (plan.recipient_ref !== envelope?.recipient?.recipient_ref) reasons.push('shipping_recipient_binding_mismatch');
+    if (plan.channel !== 'email' && plan.channel !== envelope?.channel) reasons.push('shipping_channel_binding_mismatch');
+    if (plan.authorization_ref !== envelope?.authorization_ref) reasons.push('shipping_authorization_binding_mismatch');
+    if (plan.package_manifest?.package_digest !== envelope?.package_manifest?.package_digest) {
+      reasons.push('shipping_package_digest_mismatch');
+    }
+    const sourceRows = plan.package_manifest?.artifacts || [];
+    const targetRows = envelope?.package_manifest?.artifacts || [];
+    if (sourceRows.length !== targetRows.length || sourceRows.some((item, i) =>
+      item.client_filename !== targetRows[i]?.client_filename ||
+      item.sha256 !== targetRows[i]?.sha256 ||
+      item.size_bytes !== targetRows[i]?.size_bytes ||
+      item.mime_type !== targetRows[i]?.mime_type)) {
+      reasons.push('shipping_artifact_manifest_mismatch');
+    }
+  }
+  if (!reasons.length) {
+    const verified = verifyRecipientAccess({
+      plan, evidence, trusted_verifier_public_key, now:new Date(at).getTime()
+    });
+    reasons.push(...verified.reasons);
+  }
+  return { pass:reasons.length === 0, reasons:[...new Set(reasons)] };
+}
+
 import {
   classifyDeliveryFailure,
   nextDispatchRoute,
@@ -85,13 +122,24 @@ export async function dispatchVerifiedShipment({
   adapter,
   ledger_file = 'state/shipping/shipping-ledger.json',
   provider = 'external',
-  now = () => new Date()
+  now = () => new Date(),
+  recipient_access = null
 } = {}) {
   if (!envelope?.dispatch_ready) {
     return {
       state:'blocked_preflight',
       delivered:false,
       reasons:envelope?.reasons || ['shipment_not_dispatch_ready']
+    };
+  }
+  // Every new external dispatch MUST prove independently verified recipient
+  // access before even reserving a shipment. No silent legacy bypass is allowed.
+  const preflight = preSendRecipientGate({ envelope, recipient_access, at:now() });
+  if (!preflight.pass) {
+    return {
+      state:'blocked_recipient_access',
+      delivered:false,
+      reasons:preflight.reasons
     };
   }
   if (!adapter || typeof adapter.send !== 'function' || typeof adapter.readSent !== 'function') {
@@ -182,6 +230,14 @@ export async function dispatchVerifiedShipment({
         verification_required:route.verification_required === true,
         attempts
       };
+    }
+
+    // A preflight may expire while a connector is recovering from errors.
+    // Recheck immediately before each provider send, including fallback.
+    const justInTime = preSendRecipientGate({ envelope, recipient_access, at:now() });
+    if (!justInTime.pass) {
+      return {state:'blocked_recipient_access', delivered:false,
+        shipment_key:shipmentKey, reasons:justInTime.reasons, attempts};
     }
 
     try {
