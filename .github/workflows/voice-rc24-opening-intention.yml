@@ -1,10 +1,5 @@
 name: Voice Foundry RC24 Opening Intention (private)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc24-opening-intention.yml'
-      - 'systemia/media-studio/voice-rc24-opening-intention.py'
-      - 'tests/media-voice-rc24-opening-intention.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
