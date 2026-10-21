@@ -1,0 +1,46 @@
+name: Voice Foundry RC26 Female Commercial Cold Open (private)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/voice-rc26-female-opening.yml'
+      - 'systemia/media-studio/voice-rc26-female-opening.py'
+      - 'tests/media-voice-rc26-female-opening.test.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  female-commercial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout research only
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source and release guard tests before inference
+        run: |
+          python systemia/media-studio/voice-rc26-female-opening.py --verify-only
+          node --test tests/media-voice-rc26-female-opening.test.mjs
+      - name: Install licensed-for-evaluation Kokoro runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Real neural female-scene-first audition
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-rc26-female-opening.py private-rc26-openings
+          test -s private-rc26-openings/evidence.json
+          test -s private-rc26-openings/LISTEN.html
+          test "$(find private-rc26-openings -maxdepth 1 -name '*.wav' | wc -l)" -eq 4
+          test "$(find private-rc26-openings -maxdepth 1 -name '*.mp3' | wc -l)" -eq 4
+      - name: Archive original dry voice recordings
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-rc26-female-openings
+          path: private-rc26-openings/
+          retention-days: 7
+          if-no-files-found: error
