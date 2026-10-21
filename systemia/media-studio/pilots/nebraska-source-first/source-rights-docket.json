@@ -63,12 +63,21 @@
   ],
   "rightsContacts": [
     {
+      "organization": "Veritone Sports",
+      "role": "Big Ten Conference and Big Ten Network archival footage and associated video IP licensing agent",
+      "contactName": "Sports Licensing",
+      "email": "sports@veritone.com",
+      "source": "https://bigten.org/sports/2026/7/22/big-ten-network.aspx",
+      "status": "gmail_draft_created_not_sent",
+      "notes": "Agent is listed by Big Ten for Big Ten and BTN video licensing. Specific FOX and Oregon/Indiana 2026 clip owners and included original audio must be confirmed rather than assumed."
+    },
+    {
       "organization": "Nebraska Athletics Communications",
       "role": "Football interview/press inquiries",
       "contactName": "Keith Mann",
       "email": "kmann@huskers.com",
       "source": "https://huskers.com/media",
-      "status": "identified_not_contacted"
+      "status": "gmail_draft_created_not_sent"
     },
     {
       "organization": "Nebraska Athletics Licensing",
@@ -83,7 +92,7 @@
       "role": "Archival footage licensing",
       "email": "fromthearchives@nebraskapublicmedia.org",
       "source": "https://nebraskapublicmedia.org/es/watch/archives/",
-      "status": "identified_not_contacted",
+      "status": "gmail_draft_created_not_sent",
       "notes": "May assess research or digitization fee"
     }
   ],
