@@ -218,7 +218,7 @@ export function animateCinematicFx(world:WorldDefinition,entities:WorldEntity[],
     entity.transform.position={x,y,z};
     entity.transform.rotationDeg={x:0,y:yaw,z:0};
     entity.transform.scale=emitter.kind==='wake'?
-     (organic?{x:radius*(.55+.42*progress),y:1,z:radius*(.80+progress*.8)}:
+     (organic?{x:radius*(.29+.23*progress),y:1,z:radius*(.45+progress*.5)}:
      {x:radius*1.15,y:.045,z:radius*.42}):
      {x:radius,y:radius*(emitter.kind==='smoke'?1.35:1),z:radius};
     state.push({id:entityId,x,y,z,age});
