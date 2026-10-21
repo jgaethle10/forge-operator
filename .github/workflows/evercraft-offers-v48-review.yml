@@ -1,0 +1,20 @@
+name: Evercraft V4.8 review-only source checks
+on:
+  pull_request:
+    paths:
+      - 'review-artifacts/offers-v48/**'
+      - 'tests/evercraft-offers-v48-review.test.mjs'
+      - '.github/workflows/evercraft-offers-v48-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/evercraft-offers-v48-review.test.mjs
