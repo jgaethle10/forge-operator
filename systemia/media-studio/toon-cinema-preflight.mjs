@@ -35,8 +35,16 @@ export function prepareToonCinemaShot({
     guard(typeof frame.approvalEvidenceRef==='string'&&frame.approvalEvidenceRef.length>=8,
       'approval_evidence_missing');
     guard(['owned','licensed'].includes(frame.commercialRights),'commercial_rights_missing');
-    guard(typeof frame.url==='string'&&/^https:\/\/[a-z0-9.-]+(?:\/|$)/i.test(frame.url),
-      'url_must_be_https');
+    let url;
+    try{url=new URL(frame.url);}catch{guard(false,'url_invalid')}
+    guard(url.protocol==='https:','url_must_be_https');
+    const host=url.hostname.toLowerCase();
+    guard(host.includes('.')&&!host.endsWith('.local')&&host!=='localhost'&&
+      !host.includes('..')&&!host.endsWith('.internal')&&
+      !/^\d+\.\d+\.\d+\.\d+$/.test(host) &&
+      !host.startsWith('127.')&&!host.startsWith('10.')&&
+      host!=='169.254.169.254','url_host_not_public');
+    guard(!url.username&&!url.password,'url_credentials_forbidden');
     // Verified reference bytes, reachability and consent are checked at runtime
     // and are not inferred from any of these string declarations.
   }
@@ -78,7 +86,7 @@ export function prepareToonCinemaShot({
     generatedVideo:false,
     actualReferenceIdentityVerified:false,
     runtimeReferenceBytesVerified:false,
-    sourceImageArtApproved:frame?.approvalState==='declared_approved',
+    sourceImageArtApprovalDeclared:frame?.approvalState==='declared_approved',
     paidGenerationApprovalDeclared:explicitPaidGenerationApproval===true,
     runtimeExecutionEligible:executionEligible,
     audiovisualPerformanceVerified:false,
