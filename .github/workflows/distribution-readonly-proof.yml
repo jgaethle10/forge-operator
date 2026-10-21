@@ -1,0 +1,78 @@
+name: Evercraft Distribution Read-only Proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/distribution/revenue-route-audit.mjs'
+      - 'systemia/distribution/revenue-route-audit.test.mjs'
+      - 'systemia/distribution/owned-offer-parity.mjs'
+      - 'systemia/distribution/owned-offer-parity.test.mjs'
+      - 'systemia/distribution/owned-offer-parity-fixture.json'
+      - 'systemia/distribution/partner-brief-preview.test.mjs'
+      - 'public/partners/workflow-continuity/index.html'
+      - 'docs/commerce/WORKFLOW_CONTINUITY_PARTNER_BRIEF_20261017.md'
+      - '.github/workflows/distribution-readonly-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: distribution-readonly-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run bounded offline tests
+        run: node --test systemia/distribution/revenue-route-audit.test.mjs systemia/distribution/partner-brief-preview.test.mjs systemia/distribution/owned-offer-parity.test.mjs
+      - name: Inspect stale source catalog without changing it
+        run: |
+          node systemia/distribution/revenue-route-audit.mjs public/chum/sell-now.json > distribution-readonly-audit.json
+          node --input-type=module -e "import fs from 'node:fs'; const a=JSON.parse(fs.readFileSync('distribution-readonly-audit.json')); if(a.payment_verified || a.live_http_verified) process.exit(1); console.log({snapshot_stale:a.snapshot_stale, observed_catalog_count:a.declared_sell_now_count, held:a.sell_now_without_declared_https_start_count});"
+      - name: Compare all fifteen approved offer declarations with source buyer contracts
+        run: node systemia/distribution/owned-offer-parity.mjs > distribution-offer-parity.json
+      - name: Independent public GET-only canary (no checkout POST)
+        run: node systemia/distribution/owned-offer-parity.mjs --live > distribution-live-readback.json
+      - name: Emit inspected facts with correct evidence boundaries
+        if: always()
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='distribution-offer-parity.json';
+          const live='distribution-live-readback.json';
+          const rows=[];
+          rows.push('## Distribution read-only acceptance');
+          if (fs.existsSync(p)) {
+            const d=JSON.parse(fs.readFileSync(p,'utf8'));
+            rows.push('- Approved human offers: '+d.declared_public_offer_count+' (snapshot declarations)');
+            rows.push('- Exact capability-id AND price matches: '+d.canonical_id_declared_match_count);
+            rows.push('- Unverified/generic ID or price mapping: '+d.generic_or_unverified_id_count+'; human-route existence is a separate observation');
+            rows.push('- Price/host/consent declaration mismatches: '+d.mismatches.length);
+          } else rows.push('- Source parity output missing; cannot claim pass');
+          if (fs.existsSync(live)) {
+            const d=JSON.parse(fs.readFileSync(live,'utf8'));
+            rows.push('- Independent public GET and price readback: '+d.live_readback?.verified_count+'/'+d.declared_public_offer_count);
+            rows.push('- Raw HTML customer email field not found: '+(d.live_readback?.fields_unverified||[]).length+' (inspection needed, not automatic checkout failure)');
+          } else rows.push('- External GET output missing; cannot claim live check');
+          rows.push('- Provider checkout created: NO TEST');
+          rows.push('- Provider paid receipt: NO TEST');
+          rows.push('- Customer delivery: NO TEST');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,rows.join('\n')+'\n');
+          console.log(rows.join('\n'));
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: distribution-readonly-audit
+          path: |
+            distribution-readonly-audit.json
+            distribution-offer-parity.json
+            distribution-live-readback.json
+          if-no-files-found: warn
+          retention-days: 7
