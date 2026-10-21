@@ -119,10 +119,10 @@ test('explicit hold defeats even an apparently valid options URL', () => {
   assert.equal(hold.offer_link_ok,false);
   assert.equal(hold.buyer_handoff_state,'held_payment_authority');
 });
-test('unheld exact connection-option URL passes without claiming payment', () => {
+test('exact authorized checkout option is required; an offer URL never proves payment', () => {
   const url='https://fabric.systemiacommandcenters.com/offers/website-audit';
   const id='audit-center-website-audit-machine-v1';
-  const result=assessBuyerHandoff({public_id:id}, {human_offer_url:url},id,url);
+  const result=assessBuyerHandoff({public_id:id}, {ok:true,public_id:id,buyer_checkout_available:true,human_offer_url:url},id,url);
   assert.equal(result.offer_link_ok,true);
   assert.equal(result.human_offer_url,url);
   assert.equal(result.buyer_handoff_state,'verified_connection_option');
@@ -140,4 +140,35 @@ test('explicit payment-authority hold receives own diagnosis rather than wrong c
   const finding=classifyDiscoveryReceipt(receipt);
   assert.equal(finding.code,'buyer_handoff_held_by_payment_authority');
   assert.match(finding.limitation,/catalog_sell_now_label/);
+});
+
+test('an exact URL without positive checkout authorization fails closed', () => {
+  const id='audit-center-website-audit-machine-v1';
+  const url='https://fabric.systemiacommandcenters.com/offers/website-audit';
+  const result=assessBuyerHandoff({public_id:id,human_offer_url:url},{ok:true,public_id:id,human_offer_url:url},id,url);
+  assert.equal(result.offer_link_ok,false);
+  assert.equal(result.human_offer_url,null);
+  assert.equal(result.buyer_handoff_state,'unverified_payment_authority');
+});
+test('authorized URL for a different capability is not buyer-ready', () => {
+  const id='audit-center-website-audit-machine-v1';
+  const url='https://fabric.systemiacommandcenters.com/offers/website-audit';
+  const result=assessBuyerHandoff({public_id:id},{ok:true,public_id:'ibmi-rescue-v1',buyer_checkout_available:true,human_offer_url:url},id,url);
+  assert.equal(result.offer_link_ok,false);
+  assert.equal(result.buyer_handoff_state,'unverified_payment_authority');
+});
+test('explicit checkout authority does not repair a mismatched discovery result', () => {
+  const id='audit-center-website-audit-machine-v1';
+  const url='https://fabric.systemiacommandcenters.com/offers/website-audit';
+  const result=assessBuyerHandoff({public_id:'ibmi-rescue-v1'}, {ok:true,public_id:id,buyer_checkout_available:true,human_offer_url:url},id,url);
+  assert.equal(result.match_ok,false);
+  assert.equal(result.offer_link_ok,false);
+  assert.equal(result.human_offer_url,null);
+});
+test('success-looking but unverified options response remains held', () => {
+  const id='findmypart-paid-hunt-v1';
+  const url='https://fabric.systemiacommandcenters.com/offers/findmypart';
+  const result=assessBuyerHandoff({public_id:id}, {ok:false,public_id:id,buyer_checkout_available:true,human_offer_url:url},id,url);
+  assert.equal(result.offer_link_ok,false);
+  assert.equal(result.buyer_handoff_state,'unverified_payment_authority');
 });
