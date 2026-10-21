@@ -1,0 +1,38 @@
+name: Fallen Documentary Preflight
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/documentary-preflight.mjs"
+      - "systemia/media-studio/documentary-preflight.test.mjs"
+      - "systemia/media-studio/DOCUMENTARY-PREFLIGHT.md"
+      - ".github/workflows/fallen-documentary-preflight.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/documentary-preflight.mjs"
+      - "systemia/media-studio/documentary-preflight.test.mjs"
+      - "systemia/media-studio/DOCUMENTARY-PREFLIGHT.md"
+      - ".github/workflows/fallen-documentary-preflight.yml"
+permissions:
+  contents: read
+jobs:
+  documentary-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Ensure FFmpeg and FFprobe
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Check documentary preflight syntax
+        run: node --check systemia/media-studio/documentary-preflight.mjs
+      - name: Run documentary preflight regression tests
+        run: node --test systemia/media-studio/documentary-preflight.test.mjs
