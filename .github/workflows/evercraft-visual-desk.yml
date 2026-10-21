@@ -63,7 +63,7 @@ jobs:
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
           npm install --no-audit --no-fund
-          node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts systemia/media-studio/toon-shot-handoff.test.ts systemia/media-studio/family-http.test.ts src/fallen-toon-shot-drafts.test.ts
+          node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts systemia/media-studio/toon-shot-handoff.test.ts systemia/media-studio/family-http.test.ts systemia/media-studio/toon-cel-adapter.test.mjs src/fallen-toon-shot-drafts.test.ts
 
       - name: Prove Radar remains healthy after spatial projection
         run: npm run test:radar
@@ -166,6 +166,22 @@ jobs:
           assert.equal(p.sha256,crypto.createHash('sha256').update(fs.readFileSync('_toon_cel_canary/toon-cel-canary.mp4')).digest('hex'));
           NODE
 
+      - name: Render validated Series Mode fox shot into bound MP4 preview
+        run: |
+          node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
+            _toon_bound_canary /tmp/fallen-toon-cel-env/bin/python
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const r=JSON.parse(fs.readFileSync('_toon_bound_canary/toon-shot-binding-receipt.json','utf8'));
+          assert.equal(r.state,'rendered_synthetic_preview_only');
+          assert.equal(r.actualMovieBytesVerified,true);
+          assert.equal(r.referenceMatched,false);
+          assert.equal(r.dialogueSynced,false);
+          assert.equal(r.publicationAuthority,false);
+          assert.ok(fs.statSync(r.mediaPath).size>1000);
+          NODE
+
       - name: Preserve reproducible toon MP4 canary
         uses: actions/upload-artifact@v4
         with:
@@ -174,6 +190,9 @@ jobs:
             _toon_cel_canary/toon-cel-canary.mp4
             _toon_cel_canary/original-synth-score.wav
             _toon_cel_canary/render-receipt.json
+            _toon_bound_canary/toon-cel-canary.mp4
+            _toon_bound_canary/toon-shot-binding-receipt.json
+            _toon_bound_canary/bound-shot-work-order.json
           if-no-files-found: error
           retention-days: 30
 
