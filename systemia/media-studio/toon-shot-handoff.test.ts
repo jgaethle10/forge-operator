@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {compileSeriesEpisode} from './series.ts';
+import type {MediaProject,SeriesBible} from './types.js';
 import {compileToonShotHandoff,inspectToonHandoff,renderToonShotDirection} from './toon-shot-handoff.mjs';
 
 const bible={
@@ -25,7 +26,7 @@ const project={
     rights:'owned',entityRefs:['ember'],tags:['character']}],
 };
 function fixture(){
-  const episode=compileSeriesEpisode(project,bible);
+  const episode=compileSeriesEpisode(project as MediaProject,bible as SeriesBible);
   const videoNeeds=episode.productionNeeds.filter(n=>n.kind==='video');
   assert.ok(videoNeeds.length>0,'fixture requires actual generated video work orders');
   return {bible,episode,
