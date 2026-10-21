@@ -83,7 +83,7 @@ const seed={
   description:'Document a decision, a responsible owner, a deadline and unresolved questions without claiming everyone agreed.',
   intro:'A transcript preserves words, but a useful action record needs explicit ownership and acknowledgement.',
   sections:[
-   ['Separate decisions from suggestions','A good meeting summary clearly labels what was approved, debated and postponed. Never turn an individual's idea into a group commitment.'],
+   ['Separate decisions from suggestions','A good meeting summary clearly labels what was approved, debated and postponed. Never turn a personal suggestion into a group commitment.'],
    ['Name the responsible role','Assign each action to a person or accountable team, rather than saying everyone owns it.'],
    ['Add due dates with context','A target date should be accepted by the owner. Note dependencies and what could prevent completion.'],
    ['Preserve unresolved disagreement','Record the open question, the person responsible for resolving it, and the next decision meeting.'],
