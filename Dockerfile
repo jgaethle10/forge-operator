@@ -10,7 +10,7 @@ RUN npm install \
      esac
 
 COPY . .
-RUN npm run build
+RUN npm run chum:capabilities && npm run chum:mirror && npm run build
 
 FROM node:22-alpine AS runtime
 RUN apk add --no-cache ffmpeg && ffmpeg -version && ffprobe -version
