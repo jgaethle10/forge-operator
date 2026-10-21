@@ -1,0 +1,46 @@
+name: Voice Foundry RC22 Copy and Dialogue (private only)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/voice-rc22-copy-contest.yml'
+      - 'systemia/media-studio/voice-rc22-copy-contest.py'
+      - 'tests/media-voice-rc22-copy-contest.test.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  copy-contest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout Voice Foundry branch
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Assert copy integrity and performance-safety gates
+        run: |
+          python systemia/media-studio/voice-rc22-copy-contest.py --verify-only
+          node --test tests/media-voice-rc22-copy-contest.test.mjs
+      - name: Install CPU Kokoro runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render fourteen actual commercial reads and two-cast dialogue
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-rc22-copy-contest.py private-rc22-copy-contest
+          test -s private-rc22-copy-contest/evidence.json
+          test -s private-rc22-copy-contest/LISTEN.html
+          test "$(find private-rc22-copy-contest -maxdepth 1 -name '*.wav' | wc -l)" -eq 14
+          test "$(find private-rc22-copy-contest -maxdepth 1 -name '*.mp3' | wc -l)" -eq 14
+      - name: Upload private original WAVs and previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-rc22-commercial-copy-audition
+          path: private-rc22-copy-contest/
+          retention-days: 7
+          if-no-files-found: error
