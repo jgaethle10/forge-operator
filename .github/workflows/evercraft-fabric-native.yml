@@ -117,6 +117,24 @@ jobs:
             "$origin/mcp")"
           printf '%s' "$init" | jq -e '.result.serverInfo.name == "evercraft-fabric"' >/dev/null
           echo "PUBLIC_FABRIC_MCP_INITIALIZE=verified"
+          echo "Checking tools/list and a read-only capability match..."
+          tools="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            "$origin/mcp")"
+          printf '%s' "$tools" | jq -e '
+            .result.tools | any(.name == "match_evercraft_capability" and .annotations.readOnlyHint == true)
+          ' >/dev/null
+          match="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"match_evercraft_capability","arguments":{"intent":"Find read-only Evercraft software capabilities for a small business","limit":2}}}' \
+            "$origin/mcp")"
+          printf '%s' "$match" | jq -e '
+            .result.isError == false and
+            .result.structuredContent.external_action_taken == false and
+            .result.structuredContent.transactional == false
+          ' >/dev/null
+          echo "PUBLIC_FABRIC_READ_ONLY_MCP=verified"
           echo "Note: full identity/authorization canary remains a separate required gate."
 
       - name: Verify complete external Fabric public-edge canary
