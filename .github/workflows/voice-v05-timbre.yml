@@ -1,11 +1,6 @@
 name: Voice Foundry V05 Identity Audition (private only)
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-v05-timbre.yml'
-      - 'systemia/media-studio/voice-v05-timbre-lab.py'
-      - 'tests/media-voice-v05-timbre.test.mjs'
   workflow_dispatch:
 
 permissions:
