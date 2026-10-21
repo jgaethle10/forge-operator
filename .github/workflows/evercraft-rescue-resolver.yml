@@ -45,6 +45,6 @@ jobs:
       - name: Install disposable test browser
         run: |
           npm --prefix systemia/rescue-resolver/browser-proof install --no-audit --no-fund --package-lock=false
-          node systemia/rescue-resolver/browser-proof/node_modules/playwright/cli.js install --with-deps chromium
+          npm exec --prefix systemia/rescue-resolver/browser-proof -- playwright install --with-deps chromium
       - name: Browser-level opt-in, rescue, donation boundary and reversal
         run: node systemia/rescue-resolver/browser-proof/e2e.mjs
