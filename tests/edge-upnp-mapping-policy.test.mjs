@@ -89,6 +89,10 @@ test('installed refresh script defaults to WEB only and preserves separate DNS o
   assert.match(src,/--scope "\$\{EVERCRAFT_ROUTER_SCOPE:-web\}"/);
   assert.match(src,/--renew-owned "\$renew_due"/);
   assert.match(src,/now-last >= 21600/);
+  // No prior successful tick means read back first, not a forced duplicate UPnP Add.
+  assert.match(src,/last="\$\(stat -c %Y "\$renew_marker" 2>\/dev\/null \|\| true\)"/);
+  assert.match(src,/if \[\[ -n "\$last" \]\]; then/);
+  assert.match(src,/\[\[ ! -e "\$renew_marker" \]\]/);
   assert.match(src,/last-owned-lease-renewal/);
   assert.match(src,/if \[\[ "\$code" -eq 0 \]\] &&/);
   assert.match(src,/grep -Eq/);
