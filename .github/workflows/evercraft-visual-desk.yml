@@ -63,7 +63,7 @@ jobs:
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
           npm install --no-audit --no-fund
-          node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts systemia/media-studio/toon-shot-handoff.test.ts systemia/media-studio/family-http.test.ts systemia/media-studio/toon-cel-adapter.test.mjs src/fallen-toon-shot-drafts.test.ts
+          node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts systemia/media-studio/toon-shot-handoff.test.ts systemia/media-studio/family-http.test.ts systemia/media-studio/toon-cel-adapter.test.mjs systemia/media-studio/toon-cinema-preflight.test.mjs src/fallen-toon-shot-drafts.test.ts
 
       - name: Prove Radar remains healthy after spatial projection
         run: npm run test:radar
