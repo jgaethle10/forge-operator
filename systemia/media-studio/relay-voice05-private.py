@@ -3,7 +3,6 @@
 No token editing, speech cloning, embedding blends, publish or rights claims.
 """
 import hashlib,json,os,pathlib,wave
-import numpy as np
 LINES=[
  ("a01","Everyone leaves the meeting feeling certain.",1.15),
  ("a02","Until the same date means two different things.",6.55),
@@ -22,7 +21,7 @@ def validate():
     print("Relay private V05: pure af_bella, 7 unique scenes, natural G2P")
 def make(outdir):
     validate()
-    import torch,soundfile as sf
+    import torch,soundfile as sf,numpy as np
     from kokoro import KPipeline
     out=pathlib.Path(outdir);out.mkdir(parents=True,exist_ok=False)
     pipe=KPipeline(lang_code='a')
