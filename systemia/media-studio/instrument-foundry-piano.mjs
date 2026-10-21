@@ -78,7 +78,23 @@ export function selectFoundrySample(patch,pitch,velocity){
   const sample=candidates[0];
   return {asset_id:sample.asset_id,root_pitch:sample.root_pitch,
     playback_rate:Math.pow(2,(pitch-sample.root_pitch)/12),
-    release_sec:sample.release_sec};
+    release_sec:sample.release_sec,velocity_min:sample.velocity_min,velocity_max:sample.velocity_max};
+}
+
+/**
+ * Conservative velocity response for *actual* separately-recorded dynamic layers.
+ * Recorded pianissimo already contains softer hammer physics. Applying full MIDI
+ * attenuation again suppresses its body a second time. This bounded curve only
+ * engages on specifically mapped velocity layers. Single-sample legacy patches
+ * keep their established gain, and no missing timbral layer is synthesized.
+ * This is an audition hypothesis, not a listener-quality certification.
+ */
+export function foundryPianoVoiceGain(velocity,selection){
+  if(!Number.isFinite(velocity)||velocity<=0||velocity>1)throw new Error('Invalid piano velocity');
+  const min=selection?.velocity_min,max=selection?.velocity_max;
+  const hasDistinctRecordedLayer=Number.isFinite(min)&&Number.isFinite(max)&&
+    min>=0&&max<=1&&min<max&&(max-min)<0.999;
+  return Math.max(0.0001,0.68*Math.pow(velocity,hasDistinctRecordedLayer?0.82:1));
 }
 
 export function scheduleFoundryPianoNote({
@@ -107,15 +123,23 @@ export function scheduleFoundryPianoNote({
   const attackEnd=time+attackSeconds;
   const end=time+sounding;
   const releaseStart=time+Math.max(attackSeconds,Math.min(duration,sounding-releaseSeconds));
-  const voiceGain=Math.max(.0001,velocity*.68);
+  const voiceGain=foundryPianoVoiceGain(velocity,selection);
   gain.gain.setValueAtTime(.0001,time);
   gain.gain.linearRampToValueAtTime(voiceGain,attackEnd);
   gain.gain.setValueAtTime(voiceGain,releaseStart);
-  gain.gain.linearRampToValueAtTime(.0001,end);
+  // A bounded cosine-squared release eases both ends of the damper transition.
+  // Four AudioParam segments avoid an abrupt slope change while preserving
+  // the exact original WAV onset, timbre, and finite recorded tail.
+  for(let step=1;step<=4;step++){
+    const progress=step/4;
+    const shape=Math.cos(Math.PI*progress/2)**2;
+    const level=.0001+(voiceGain-.0001)*shape;
+    gain.gain.linearRampToValueAtTime(level,releaseStart+(end-releaseStart)*progress);
+  }
   source.connect(gain);
   gain.connect(destination);
   source.start(time);
   source.stop(end);
   return {asset_id:selection.asset_id,start_time:time,stop_time:end,release_start:releaseStart,
-    playback_rate:selection.playback_rate,commercial_rights_verified:false};
+    playback_rate:selection.playback_rate,voice_gain:voiceGain,release_curve:'cosine_squared_4',commercial_rights_verified:false};
 }
