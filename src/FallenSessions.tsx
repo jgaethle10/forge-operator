@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
+  PULSEGRID_MAX_CLIP_BARS,
   PulseGridAudioEngine,
   PulseGridBrowserAudioAssetVault,
   applyPulseGridOperation,
@@ -13,6 +14,12 @@ import {
   type PulseGridOperation,
   type PulseGridSession,
 } from '../systemia/media-studio/pulsegrid-browser';
+import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
+import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
+import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
+import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
+import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
+import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
 const PITCHES=Array.from({length:13},(_,index)=>72-index);
@@ -42,6 +49,9 @@ function latestUndoableReceipt(session:PulseGridSession){
 export default function FallenSessions(){
   const [session,setSession]=useState<PulseGridSession>(()=>createPulseGridSession('First Light'));
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
+  const [foundryRootPitch,setFoundryRootPitch]=useState(60);
+  const [foundryVelocityMin,setFoundryVelocityMin]=useState(0);
+  const [foundryVelocityMax,setFoundryVelocityMax]=useState(1);
   const [selectedScene,setSelectedScene]=useState(0);
   const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
   const [selectedStepIndex,setSelectedStepIndex]=useState<number|null>(null);
@@ -62,6 +72,7 @@ export default function FallenSessions(){
   const heldMidiNotesRef=useRef(new Map<string,HeldMidiNote>());
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
+  const foundryInputRef=useRef<HTMLInputElement|null>(null);
   const recorderRef=useRef<MediaRecorder|null>(null);
   const recordingStreamRef=useRef<MediaStream|null>(null);
   const recordingSceneRef=useRef(0);
@@ -97,7 +108,9 @@ export default function FallenSessions(){
     selectedSceneRef.current=selectedScene;
     setSelectedNoteId(null);
     setSelectedStepIndex(null);
+    const active=Boolean(audioRef.current?.status.playing);
     audioRef.current?.setScene(selectedScene);
+    if(active)setStatus('Scene changed · playback paused to verify recordings. Press Play to continue.');
   },[selectedScene]);
 
   useEffect(()=>()=>{ 
@@ -187,6 +200,128 @@ export default function FallenSessions(){
       successLabel+' · '+asset.duration_sec.toFixed(2)+'s · '+
       asset.sample_rate+' Hz · '+asset.channels+'ch · rights '+asset.rights
     );
+  }
+
+  async function armFoundryPianoFromTake(){
+    // Only an explicit human audition action may bind a local WAV to the
+    // canonical MIDI notes. Never infer sample copyright from storage.
+    setStatus('Checking sample before arming recorded piano…');
+    try{
+      const current=sessionRef.current;
+      const audioTrack=current.tracks.find(track=>track.type==='audio');
+      const keysTrack=current.tracks.find(track=>track.id==='keys'&&track.type==='synth');
+      if(!audioTrack||!keysTrack)throw new Error('Piano and Audio Take tracks are required.');
+      const assetId=audioTrack.clips[selectedScene]?.audio_asset_id;
+      if(!assetId)throw new Error('Import a verified Foundry WAV into this scene first.');
+      const asset=current.assets.find(candidate=>candidate.id===assetId);
+      if(!asset||asset.mime_type!=='audio/wav'||asset.rights==='restricted'){
+        throw new Error('A permitted canonical WAV is required for piano audition.');
+      }
+      const blob=await vaultRef.current?.getVerifiedBlob(asset);
+      if(!blob)throw new Error('Foundry recording is missing from local verified storage.');
+      const sampleBytes=new Uint8Array(await blob.arrayBuffer());
+      await verifyFoundryWavBytes(asset,sampleBytes);
+      const signalQa=analyzeFoundryPianoWav(sampleBytes);
+      if(signalQa.status!=='technical_signal_pass'){
+        throw new Error('Piano capture held: '+signalQa.blockers.join(', ')+
+          '. Record another take before arming.');
+      }
+      const root=foundryRootPitch;
+      if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
+      const pitchEvidence=checkFoundryPianoRootPitch(sampleBytes,root);
+      if(pitchEvidence.status!=='consistent'){
+        throw new Error('Piano root MIDI '+root+' not confirmed ('+pitchEvidence.reason+
+          (pitchEvidence.cents_error===null?'':', '+pitchEvidence.cents_error+' cents')+
+          '). Keep this WAV for independent musician pitch review or record another take.');
+      }
+      if(!Number.isFinite(foundryVelocityMin)||!Number.isFinite(foundryVelocityMax)||
+         foundryVelocityMin<0||foundryVelocityMax>1||foundryVelocityMin>=foundryVelocityMax){
+        throw new Error('Recorded velocity layer must have a valid min/max range from 0 to 1.');
+      }
+      const existing=keysTrack.clips[selectedScene]?.provenance?.foundry_piano_patch as FoundryInstrumentPatch|undefined;
+      const patch=appendFoundryPianoSample(existing,{
+        asset_id:asset.id,root_pitch:root,velocity_min:foundryVelocityMin,
+        velocity_max:foundryVelocityMax,release_sec:0.22,
+      },current.assets);
+      const result=applyPulseGridTransaction(current,{
+        intent:'Add locally verified recording to one reversible multi-note piano bank; internal audition only.',
+        operations:[
+          // Detach the raw Audio Take clip after assigning the SAME registered
+          // asset to MIDI Keys. Otherwise Play would trigger both at once.
+          // The asset remains in the vault and undo restores this attachment.
+          {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:null},
+          {type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,patch},
+        ],
+      },'human');
+      setSession(result.session);
+      setSelectedTrackId(keysTrack.id);
+      setStatus('Foundry piano bank now has '+patch.samples.length+' verified sample layers; latest MIDI root '+root+' (±2 semitones). Technical signal gate passed (peak '+signalQa.metrics.peak_dbfs+
+        ' dBFS, tail '+signalQa.metrics.tail_rms_dbfs+
+        ' dBFS, pitch '+pitchEvidence.cents_error+
+        ' cents from MIDI '+root+'); raw take detached; musician review and performer rights still unverified.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
+    }
+  }
+
+  async function importFoundryWavFile(file:File){
+    // This is a strictly local, unknown-rights audition path. It cannot certify
+    // a performer, claim sample ownership, or authorize public music release.
+    const vault=vaultRef.current;
+    if(!vault)return;
+    const scene=selectedScene;
+    setStatus('Verifying Foundry WAV for internal audition…');
+    try{
+      if(!/\.wav$/i.test(file.name)||file.size<44||file.size>64*1024*1024){
+        throw new Error('Foundry import requires a WAV file between 44 bytes and 64 MB.');
+      }
+      // Normalize inconsistent browser WAV MIME types without modifying bytes.
+      const wav=new Blob([file],{type:'audio/wav'});
+      const asset=await vault.ingest(wav,{
+        source_name:file.name,
+        source_refs:['local-file:'+file.name],
+        source_state:'imported',
+        rights:'unknown',
+      });
+      const verified=await vault.getVerifiedBlob(asset);
+      if(!verified)throw new Error('The stored Foundry take was not found.');
+      await verifyFoundryWavBytes(asset,new Uint8Array(await verified.arrayBuffer()));
+      const current=sessionRef.current;
+      const audioTrack=current.tracks.find((candidate)=>candidate.type==='audio');
+      if(!audioTrack)throw new Error('No canonical audio track exists.');
+      // This digest proves the locally supplied bytes, not artist/sample ownership.
+      const barDuration=4*60/current.transport.bpm; // 16 canonical 16th-steps per bar
+      const requiredBars=Math.max(1,Math.ceil((asset.duration_sec+0.01)/barDuration));
+      if(requiredBars>PULSEGRID_MAX_CLIP_BARS){
+        throw new Error('Foundry take exceeds the 16-bar audition limit. Use a shorter WAV; long-form masters require a separate arrangement path.');
+      }
+      const candidate={...asset,source_refs:['sha256:'+asset.digest]};
+      const admitted=compileFoundryImport({
+        session:current,assets:[candidate],
+        attachments:[{track_id:audioTrack.id,scene,asset_id:asset.id}],
+        actor:'human',
+      });
+      const currentBars=audioTrack.clips[scene]?.bars||1;
+      const operations=[
+        ...(requiredBars>currentBars
+          ? [{type:'clip.set_bars' as const,track_id:audioTrack.id,scene,bars:requiredBars}]
+          : []),
+        ...admitted.transaction.operations,
+        {type:'clip.set_audio_playback_mode' as const,track_id:audioTrack.id,scene,mode:'one_shot' as const},
+      ];
+      const committed=applyPulseGridTransaction(current,{
+        intent:'Verify, size, and attach Foundry WAV for internal audition.',
+        operations,
+      },admitted.actor);
+      setSession(committed.session);
+      setSelectedTrackId(audioTrack.id);
+      setSelectedScene(scene);
+      setStatus('Foundry WAV verified and attached for local audition · rights UNKNOWN · no commercial release clearance.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Foundry WAV verification failed.');
+    }finally{
+      if(foundryInputRef.current)foundryInputRef.current.value='';
+    }
   }
 
   async function importAudioFile(file:File){
@@ -665,6 +800,8 @@ export default function FallenSessions(){
     setStatus('New canonical session created.');
   }
 
+  const musicInsights=useMemo(()=>analyzePulseGridMusic(session,selectedScene),[session,selectedScene]);
+  const counterpointEvidence=useMemo(()=>analyzePulseGridCounterpoint(session,selectedScene),[session,selectedScene]);
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
   const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
@@ -697,11 +834,32 @@ export default function FallenSessions(){
         hidden
         onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
       />
+      <input
+        ref={foundryInputRef}
+        type="file"
+        accept=".wav,audio/wav,audio/x-wav,audio/wave"
+        hidden
+        onChange={(event)=>{const file=event.target.files?.[0];if(file)void importFoundryWavFile(file)}}
+      />
       <section className="fsToolbar" aria-label="Session controls">
         <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
         <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
         <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
         <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
+        <button onClick={()=>foundryInputRef.current?.click()} disabled={recording}>Import Foundry WAV</button>
+        <label className="fsFoundryRootLabel">Piano root MIDI
+          <input aria-label="Foundry piano root MIDI note" type="number" min={21} max={108}
+            value={foundryRootPitch} onChange={(event)=>setFoundryRootPitch(Number(event.target.value))}/>
+        </label>
+        <label className="fsFoundryRootLabel">Velocity min
+          <input aria-label="Foundry minimum sample velocity" type="number" min={0} max={1} step={0.05}
+            value={foundryVelocityMin} onChange={(event)=>setFoundryVelocityMin(Number(event.target.value))}/>
+        </label>
+        <label className="fsFoundryRootLabel">Velocity max
+          <input aria-label="Foundry maximum sample velocity" type="number" min={0} max={1} step={0.05}
+            value={foundryVelocityMax} onChange={(event)=>setFoundryVelocityMax(Number(event.target.value))}/>
+        </label>
+        <button onClick={()=>void armFoundryPianoFromTake()} disabled={recording}>Arm Recorded Piano</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
@@ -711,6 +869,45 @@ export default function FallenSessions(){
       </section>
 
       <div className="fsStatus">{status}</div>
+      <details className="fsMusicInsights">
+        <summary>Music Theory Lab · Scene {selectedScene+1} · {musicInsights.note_count} pitched notes</summary>
+        <p className="fsMusicInsightCaution">Observations for your ears to evaluate. No inferred key,
+          originality score, automatic composition edits or publishing clearance.</p>
+        <div className="fsMusicInsightStats">
+          <span>Parts {musicInsights.pitched_track_count}</span>
+          <span>Prominent MIDI pitch classes {musicInsights.prominent_pitch_classes.map(item=>item.pitch_class).join(' · ')||'none'}</span>
+          <span>Register overlaps {musicInsights.register_proximity_examples}</span>
+          <span>Between-note rests {musicInsights.track_profiles.reduce((sum,part)=>sum+part.rest_gap_count,0)}</span>
+        </div>
+        <p className="fsMusicInsightCaution">Complete chromatic evidence (12 classes, note count / duration-weighted MIDI velocity;
+          zero means absent, not an inferred key): {musicInsights.pitch_class_evidence.map(item=>
+            item.pitch_class+': '+item.note_count+' / '+item.weight.toFixed(3)).join(' · ')}</p>
+        {musicInsights.track_profiles.filter(part=>part.rest_gap_count>0).map(part=>(
+          <p key={'rest-'+part.track_id} className="fsMusicInsightCaution">
+            {part.track_id}: {part.rest_gap_count} measured gaps, longest {part.longest_rest_steps.toFixed(2)} steps.
+            Consider whether they give another voice space or heighten anticipation.
+          </p>
+        ))}
+        {musicInsights.findings.map((finding,index)=>(
+          <p key={finding.kind+'-'+index}><strong>{finding.observation}</strong> {finding.recommendation}</p>
+        ))}
+        <p className="fsMusicInsightCaution">Dynamic arc by quarter: {musicInsights.velocity_arc.map(q=>
+          q.mean_note_velocity.toFixed(2)).join(' · ')}. Velocity is not a loudness measurement.</p>
+        <div className="fsMusicInsightStats" aria-label="Counterpoint and motion analysis">
+          <span>Aligned voice onsets {counterpointEvidence.simultaneous_single_note_onsets}</span>
+          <span>Contrary motions {counterpointEvidence.motion_summary.contrary}</span>
+          <span>Parallel fifths {counterpointEvidence.motion_summary.parallel_fifths}</span>
+          <span>Parallel octaves/unisons {counterpointEvidence.motion_summary.parallel_octaves_or_unisons}</span>
+        </div>
+        {counterpointEvidence.findings.map((finding,index)=>(
+          <p key={'counterpoint-'+finding.kind+'-'+index}>
+            <strong>{finding.observation}</strong> {finding.recommendation}
+          </p>
+        ))}
+        <p className="fsMusicInsightCaution">Counterpoint evidence is limited to aligned, unambiguous single-note onsets.
+          No voice identity is assumed for chords or overlapping notes. Classical parallel intervals are not universal errors.</p>
+
+      </details>
 
       <section className="fsWorkspace">
         <aside className="fsTracks">

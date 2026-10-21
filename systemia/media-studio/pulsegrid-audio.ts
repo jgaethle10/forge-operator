@@ -1,4 +1,9 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
+import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
+import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
+import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
+import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
+import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
 export type PulseGridAudioAssetResolver = (asset:PulseGridAudioAsset)=>Promise<Blob|null>;
@@ -38,6 +43,9 @@ export class PulseGridAudioEngine {
   private noiseBuffer: AudioBuffer | null = null;
   private assetResolver: PulseGridAudioAssetResolver | null = null;
   private readonly audioBuffers = new Map<string, AudioBuffer>();
+  private audioAuthoritySignature: string | null = null;
+  private audioCacheEpoch = 0;
+  private playbackAttempt = 0;
   private readonly pendingAssetLoads = new Map<string, Promise<void>>();
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
@@ -64,35 +72,54 @@ export class PulseGridAudioEngine {
     };
   }
 
-  setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
-    if(this.assetResolver===resolver)return;
-    this.assetResolver=resolver;
+  // Do not carry a decoded recording across project, rights, source or
+  // resolver boundaries. Existing in-flight reads are discarded by epoch.
+  private invalidateAudioCache() {
+    this.audioCacheEpoch += 1;
     this.audioBuffers.clear();
     this.pendingAssetLoads.clear();
-    if(this.context&&this.session&&resolver){
-      void this.prepareAudioAssets();
-    }
     this.emitStatus();
   }
 
+  setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
+    if(this.assetResolver===resolver)return;
+    if(this.playing)this.stop();
+    this.playbackAttempt+=1; // Cancel even a Play still waiting for Web Audio initialization.
+    this.assetResolver=resolver;
+    this.invalidateAudioCache();
+  }
+
   updateSession(session: PulseGridSession) {
-    this.session = structuredClone(session);
-    this.scene = Math.max(
-      0,
-      Math.min(this.scene, Math.max(0, session.tracks[0]?.clips.length - 1 || 0)),
-    );
-    if (this.context) {
+    const authority=pulseGridAudioAuthoritySignature(session);
+    if(this.audioAuthoritySignature!==authority){
+      if(this.playing)this.stop();
+      this.playbackAttempt+=1;
+      this.audioAuthoritySignature=authority;
+      this.invalidateAudioCache();
+    }
+    this.session=structuredClone(session);
+    this.scene=Math.max(0,Math.min(this.scene,Math.max(0,session.tracks[0]?.clips.length-1||0)));
+    if(this.context){
       this.ensureTrackBuses();
       this.syncAllTrackBuses(this.context.currentTime);
       this.configureClock();
-      void this.prepareAudioAssets();
+      // No fire-and-forget reads: verified audio is loaded and awaited in play().
     }
     this.emitStatus();
   }
 
   setScene(scene: number) {
     const maxScene = Math.max(0, (this.session?.tracks[0]?.clips.length || 1) - 1);
-    this.scene = Math.max(0, Math.min(Math.round(scene), maxScene));
+    const nextScene = Math.max(0, Math.min(Math.round(scene), maxScene));
+    // Do not keep a transport running into a different scene until its
+    // recorded samples have been authorized, verified and decoded. This
+    // deliberately requires a new Play press instead of silent note loss.
+    if(nextScene!==this.scene){
+      if(this.playing)this.stop();
+      this.playbackAttempt+=1;
+      this.invalidateAudioCache();
+    }
+    this.scene = nextScene;
     this.step = 0;
     if (this.context) {
       this.nextTime = this.context.currentTime + 0.05;
@@ -109,35 +136,40 @@ export class PulseGridAudioEngine {
   }
 
   async play(session: PulseGridSession, scene = session.active_scene) {
+    if(this.playing)this.stop();
     this.updateSession(session);
     this.setScene(scene);
-    const context = await this.ensureContext();
-    if (context.state === 'suspended') await context.resume();
+    // Reauthorize on EVERY explicit Play. A locally cached buffer from an
+    // older audition never grants permission to play it again.
+    const attempt=++this.playbackAttempt;
+    this.invalidateAudioCache();
+    const context=await this.ensureContext();
+    if(context.state==='suspended')await context.resume();
+    if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
     await this.prepareAudioAssets();
-    if (this.playing) return;
+    if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
-    this.playing = true;
-    this.step = 0;
-    const workletReady = await this.ensureWorkletClock();
+    this.playing=true;
+    this.step=0;
+    const workletReady=await this.ensureWorkletClock();
+    if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
-    if (!this.playing) return;
-    if (workletReady && this.clockNode) {
-      this.clockMode = 'worklet';
+    if(workletReady&&this.clockNode){
+      this.clockMode='worklet';
       this.clockNode.port.postMessage({
-        type: 'start',
-        bpm: this.session?.transport.bpm || 120,
-        swing: this.session?.transport.swing || 0,
-        steps: this.loopSteps(),
-        lookaheadSec: this.scheduleAheadSeconds,
-        startTime: context.currentTime + 0.07,
+        type:'start',bpm:this.session?.transport.bpm||120,
+        swing:this.session?.transport.swing||0,
+        steps:this.loopSteps(),lookaheadSec:this.scheduleAheadSeconds,
+        startTime:context.currentTime+0.07,
       });
-    } else {
+    }else{
       this.startFallbackClock();
     }
     this.emitStatus();
   }
 
   stop() {
+    this.playbackAttempt += 1;
     this.playing = false;
     if (this.fallbackTimer) clearInterval(this.fallbackTimer);
     this.fallbackTimer = null;
@@ -156,8 +188,7 @@ export class PulseGridAudioEngine {
     this.master?.disconnect();
     this.master = null;
     this.noiseBuffer = null;
-    this.audioBuffers.clear();
-    this.pendingAssetLoads.clear();
+    this.invalidateAudioCache();
     const context = this.context;
     this.context = null;
     this.clockMode = 'cold';
@@ -173,15 +204,36 @@ export class PulseGridAudioEngine {
     const context=this.context;
     const session=this.session;
     const resolver=this.assetResolver;
-    if(!context||!session||!resolver)return;
+    if(!context||!session)return;
+    const requiresVerifiedAudio=session.tracks.some(track=>{
+      const clip=track.clips[this.scene];
+      return Boolean(clip?.audio_asset_id || clip?.provenance?.foundry_piano_patch);
+    });
+    if(!resolver){
+      if(requiresVerifiedAudio)throw new Error('PulseGrid verified audio resolver is required for sampled playback.');
+      return;
+    }
 
     const wanted=new Map<string,PulseGridAudioAsset>();
     for(const track of session.tracks){
-      if(track.type!=='audio')continue;
       const clip=track.clips[this.scene];
-      if(!clip?.audio_asset_id)continue;
-      const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
-      if(asset&&asset.rights!=='restricted')wanted.set(asset.id,asset);
+      if(!clip)continue;
+      if(track.type==='audio'&&clip.audio_asset_id){
+        const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
+        if(!asset||asset.rights==='restricted')throw new Error('PulseGrid audio take is missing or restricted.');
+        wanted.set(asset.id,asset);
+      }
+      if(clip.provenance?.foundry_piano_patch){
+        const patch=clip.provenance.foundry_piano_patch as FoundryInstrumentPatch;
+        if(track.type!=='synth')throw new Error('Recorded piano patch requires a synth instrument track.');
+        validateFoundryPatch(patch,session.assets);
+        for(const note of clip.notes){
+          const selected=selectFoundrySample(patch,note.pitch,note.velocity);
+          const asset=session.assets.find(candidate=>candidate.id===selected.asset_id);
+          if(!asset)throw new Error('Foundry recording missing from canonical graph.');
+          wanted.set(asset.id,asset);
+        }
+      }
     }
 
     const loads:Promise<void>[]=[];
@@ -189,18 +241,24 @@ export class PulseGridAudioEngine {
       if(this.audioBuffers.has(asset.id))continue;
       const existing=this.pendingAssetLoads.get(asset.id);
       if(existing){loads.push(existing);continue}
+      const epoch=this.audioCacheEpoch;
+      const checkActive=()=>epoch===this.audioCacheEpoch&&resolver===this.assetResolver&&
+        context===this.context&&this.session?.session_id===session.session_id;
       const load=(async()=>{
         const blob=await resolver(asset);
-        if(!blob)return;
+        if(!blob)throw new Error('PulseGrid audio asset is missing from verified storage: '+asset.id);
+        if(!checkActive())throw new Error('PulseGrid audio authorization changed during loading.');
         const bytes=await blob.arrayBuffer();
         const buffer=await context.decodeAudioData(bytes.slice(0));
+        if(!checkActive())throw new Error('PulseGrid audio authorization changed during decoding.');
         this.audioBuffers.set(asset.id,buffer);
-      })().finally(()=>{
-        this.pendingAssetLoads.delete(asset.id);
+      })();
+      const tracked=load.finally(()=>{
+        if(this.pendingAssetLoads.get(asset.id)===tracked)this.pendingAssetLoads.delete(asset.id);
         this.emitStatus();
       });
-      this.pendingAssetLoads.set(asset.id,load);
-      loads.push(load);
+      this.pendingAssetLoads.set(asset.id,tracked);
+      loads.push(tracked);
     }
     await Promise.all(loads);
   }
@@ -211,20 +269,12 @@ export class PulseGridAudioEngine {
     return source;
   }
 
-  private scheduleAudioAsset(destination:AudioNode,buffer:AudioBuffer,time:number,duration:number){
+  private scheduleAudioAsset(destination:AudioNode,buffer:AudioBuffer,time:number,duration:number,mode:'loop'|'one_shot'='loop'){
     const context=this.context!;
-    const source=this.trackSource(context.createBufferSource());
-    source.buffer=buffer;
-    if(buffer.duration<duration){
-      source.loop=true;
-      source.loopEnd=Math.max(0.01,buffer.duration);
-      source.connect(destination);
-      source.start(time);
-      source.stop(time+duration);
-      return;
-    }
-    source.connect(destination);
-    source.start(time,0,Math.min(buffer.duration,duration));
+    return schedulePulseGridAudioBuffer({
+      buffer,time,duration,mode,destination,
+      createSource:()=>this.trackSource(context.createBufferSource()),
+    });
   }
 
   private async ensureContext() {
@@ -463,26 +513,39 @@ export class PulseGridAudioEngine {
           if(assetBuffer){
             const sceneDuration=Array.from({length:clip.steps.length},(_,index)=>this.stepDuration(index))
               .reduce((total,value)=>total+value,0);
-            this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration);
+            const mode=clip.provenance?.audio_playback_mode==='one_shot'?'one_shot':'loop';
+            this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration,mode);
           }
         }
         continue;
       }
 
       const noteEvents = clip.notes.filter((note) => Math.round(note.start) === step);
+      const foundryPatch=clip.provenance?.foundry_piano_patch as FoundryInstrumentPatch|undefined;
       for (const note of noteEvents) {
         if (Math.random() > (note.probability ?? 1)) continue;
-        this.note(
-          bus.input,
-          track,
-          note.pitch,
-          time + (note.microtiming || 0) / 1000,
-          this.stepDuration(step) * Math.max(0.01, note.length),
-          note.velocity,
-        );
+        const noteTime=time+(note.microtiming||0)/1000;
+        const noteDuration=pulseGridNoteDurationSeconds({
+          bpm:this.session.transport.bpm,
+          swing:this.session.transport.swing,
+          start_step:step,
+          length_steps:Math.max(0.01,note.length),
+        });
+        if(foundryPatch){
+          const selected=selectFoundrySample(foundryPatch,note.pitch,note.velocity);
+          const buffer=this.audioBuffers.get(selected.asset_id);
+          if(!buffer)throw new Error('Verified Foundry piano recording was not prepared: '+selected.asset_id);
+          scheduleFoundryPianoNote({
+            context:this.context,destination:bus.input,buffer,pitch:note.pitch,
+            velocity:note.velocity,time:noteTime,duration:noteDuration,selection:selected,
+            createSource:()=>this.trackSource(this.context!.createBufferSource()),
+          });
+        }else{
+          this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
+        }
       }
 
-      if (!noteEvents.length && velocity > 0 && Math.random() <= probability) {
+      if (!foundryPatch && !noteEvents.length && velocity > 0 && Math.random() <= probability) {
         const pitch = track.id === 'bass' ? 36 : track.id === 'bell' ? 72 : 60;
         this.note(bus.input, track, pitch, time + microtime, this.stepDuration(step) * 0.85, velocity);
       }

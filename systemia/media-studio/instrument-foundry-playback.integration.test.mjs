@@ -1,0 +1,322 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {PulseGridAudioEngine} from './pulsegrid-audio.ts';
+import {createPulseGridSession,applyPulseGridTransaction,undoPulseGridReceipt} from './pulsegrid-session.ts';
+import {createFoundryVerifiedResolver} from './instrument-foundry-resolver.mjs';
+
+// An executable integration harness for the REAL PulseGridAudioEngine.
+// AudioContext is simulated; this proves verified bytes -> decode request ->
+// AudioBufferSourceNode scheduling, NOT sound quality or device playback.
+class Param {
+  constructor(){this.value=0;this.events=[];}
+  setValueAtTime(v,t){this.events.push(['set',v,t]);this.value=v;return this}
+  linearRampToValueAtTime(v,t){this.events.push(['ramp',v,t]);return this}
+  exponentialRampToValueAtTime(v,t){this.events.push(['exponential',v,t]);return this}
+  setTargetAtTime(v,t,c){this.events.push(['target',v,t,c]);return this}
+}
+class Node {
+  constructor(){this.gain=new Param();this.Q=new Param();this.frequency=new Param();this.delayTime=new Param();this.playbackRate=new Param();}
+  connect(){return this}
+  disconnect(){}
+  addEventListener(){}
+}
+class Source extends Node {
+  constructor(ctx){super();this.ctx=ctx;this.starts=[];this.stops=[];this.buffer=null;this.loop=false}
+  start(...args){this.starts.push(args);this.ctx.starts.push({type:'buffer',args,source:this})}
+  stop(...args){this.stops.push(args)}
+}
+class SimulatedAudioContext {
+  static instances=[];
+  constructor(){
+    this.currentTime=0;
+    this.sampleRate=48000;
+    this.baseLatency=0.015;
+    this.destination=new Node();
+    this.state='running';
+    this.starts=[];
+    this.decodeCalls=0;
+    this.createdOscillators=0;
+    SimulatedAudioContext.instances.push(this);
+  }
+  createGain(){return new Node()}
+  createBiquadFilter(){return new Node()}
+  createDelay(){return new Node()}
+  createBufferSource(){return new Source(this)}
+  createOscillator(){this.createdOscillators++;return new Node()}
+  createBuffer(){return {getChannelData:()=>new Float32Array(4800)}}
+  async decodeAudioData(raw){
+    this.decodeCalls++;
+    const b=new Uint8Array(raw);
+    // Mock AudioContext only: reject anything other than a correctly structured WAV.
+    if(String.fromCharCode(...b.subarray(0,4))!=='RIFF')throw new Error('Non-WAV audio decode');
+    return {duration:0.75,sampleRate:48000,numberOfChannels:1};
+  }
+  async close(){this.state='closed'}
+  async resume(){this.state='running'}
+}
+function wav(){
+  const b=Buffer.alloc(44+48000);
+  b.write('RIFF',0);b.writeUInt32LE(b.length-8,4);b.write('WAVE',8);
+  b.write('fmt ',12);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);
+  b.writeUInt16LE(1,22);b.writeUInt32LE(48000,24);b.writeUInt32LE(96000,28);
+  b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(48000,40);
+  for(let i=44;i<b.length;i+=2)b.writeInt16LE(Math.round(1250*Math.sin((i-44)*.043)),i);
+  return b;
+}
+function prepare(){
+  const bytes=wav(),digest=createHash('sha256').update(bytes).digest('hex');
+  const asset={id:'audio-sha256:'+digest,digest,kind:'audio',mime_type:'audio/wav',
+    byte_length:bytes.length,duration_sec:.5,sample_rate:48000,channels:1,
+    source_refs:['sha256:'+digest],source_state:'recording',rights:'unknown',
+    source_name:'integrity-fixture-not-real-piano',parent_asset_ids:[]};
+  const source=createPulseGridSession('Foundry whole-chain integration');
+  const patch={kind:'recorded_piano_v1',max_transpose_semitones:2,
+    samples:[{asset_id:asset.id,root_pitch:60,velocity_min:0,velocity_max:1,release_sec:.2}]};
+  const committed=applyPulseGridTransaction(source,{intent:'test canonical recorded instrument chain',
+    operations:[
+      {type:'asset.register_audio',asset},
+      {type:'note.add',track_id:'keys',scene:0,note:{pitch:60,start:0,velocity:.7,length:2}},
+      {type:'clip.set_foundry_piano_patch',track_id:'keys',scene:0,patch},
+    ]},'human');
+  return {session:committed.session,bytes,asset};
+}
+function resolverOf(bytes,options={}){
+  return createFoundryVerifiedResolver({
+    scope:{tenant_id:'integrity-test',session_id:'playback-test',purpose:'audition'},
+    authorizeRead:options.authorizeRead|| (async()=>true),
+    readBytes:options.readBytes || (async()=>new Uint8Array(bytes)),
+    onReceipt:options.onReceipt,
+  });
+}
+async function withSimulatedAudio(run){
+  const original=globalThis.AudioContext,originalWorklet=globalThis.AudioWorkletNode;
+  globalThis.AudioContext=SimulatedAudioContext;
+  globalThis.AudioWorkletNode=undefined;
+  try{return await run()}finally{
+    if(original===undefined)delete globalThis.AudioContext;else globalThis.AudioContext=original;
+    if(originalWorklet===undefined)delete globalThis.AudioWorkletNode;else globalThis.AudioWorkletNode=originalWorklet;
+  }
+}
+test('entire pipeline: authorized WAV bytes -> actual PulseGrid decoding -> MIDI sample source starts (simulated audio output)',{concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes,asset}=prepare();
+    const receipts=[];
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(bytes,{onReceipt:r=>receipts.push(r)}));
+    try{
+      await engine.play(session,0);
+      const context=SimulatedAudioContext.instances.at(-1);
+      assert.equal(context.decodeCalls,1);
+      assert.equal(context.createdOscillators,0,'actual sample must not degrade to synthetic oscillator');
+      const voices=context.starts.filter(s=>s.type==='buffer');
+      assert.equal(voices.length,1);
+      assert.ok(voices[0].source.playbackRate.events.length>0,'MIDI pitch rendered through sampled playbackRate');
+      assert.equal(voices[0].source.loop,false);
+      assert.equal(receipts.length,1);
+      assert.equal(receipts[0].digest,asset.digest);
+      assert.equal(receipts[0].release_ready,false);
+      assert.equal(engine.status.playing,true);
+    }finally{await engine.close()}
+  });
+});
+test('denied recording fails before decode/source scheduling (simulated output)',{concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes}=prepare();
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(bytes,{authorizeRead:async()=>false}));
+    try{
+      await assert.rejects(engine.play(session,0),/not authorized/);
+      const context=SimulatedAudioContext.instances.at(-1);
+      assert.equal(context.decodeCalls,0);
+      assert.equal(context.starts.length,0);
+      assert.equal(engine.status.playing,false);
+    }finally{await engine.close()}
+  });
+});
+test('altered stored bytes are rejected by the real resolver before simulated playback', {concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes}=prepare();const mutated=Buffer.from(bytes);mutated[120]^=1;
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(mutated));
+    try{
+      await assert.rejects(engine.play(session,0),/SHA-256 mismatch/);
+      assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
+    }finally{await engine.close()}
+  });
+});
+test('missing resolver refuses to claim MIDI instrument playback',{concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session}=prepare();
+    const engine=new PulseGridAudioEngine();
+    try{
+      await assert.rejects(engine.play(session,0),/verified audio resolver is required/);
+      assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
+    }finally{await engine.close()}
+  });
+});
+
+test('switching scenes stops sampled playback until new scene is verified and explicitly started', {concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes}=prepare();
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(bytes));
+    try{
+      await engine.play(session,0);
+      assert.equal(engine.status.playing,true);
+      const prevSources=SimulatedAudioContext.instances.at(-1).starts;
+      assert.equal(prevSources.length,1);
+      engine.setScene(1);
+      assert.equal(engine.status.playing,false);
+      assert.equal(engine.status.scene,1);
+      assert.ok(prevSources[0].source.stops.length>=1,'prior piano source is stopped on scene change');
+      await engine.play(session,1);
+      assert.equal(engine.status.playing,true);
+      // No sampled instrument patch on empty scene 1.
+      assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,1);
+    }finally{await engine.close()}
+  });
+});
+
+test('arming a recorded piano detaches raw clip, leaves one playable voice, and undo restores audio take', {concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes,asset}=prepare();
+    const raw=applyPulseGridTransaction(session,{
+      intent:'attach raw take before arming',
+      operations:[{type:'clip.attach_audio_asset',track_id:'audio',scene:0,asset_id:asset.id}]
+    },'human').session;
+    assert.equal(raw.tracks.find(x=>x.id==='audio').clips[0].audio_asset_id,asset.id);
+    const pianoPatch=raw.tracks.find(x=>x.id==='keys').clips[0].provenance.foundry_piano_patch;
+    const armed=applyPulseGridTransaction(raw,{
+      intent:'move raw audition take to MIDI piano, no doubling',
+      operations:[
+        {type:'clip.attach_audio_asset',track_id:'audio',scene:0,asset_id:null},
+        {type:'clip.set_foundry_piano_patch',track_id:'keys',scene:0,patch:pianoPatch},
+      ],
+    },'human');
+    assert.equal(armed.session.tracks.find(x=>x.id==='audio').clips[0].audio_asset_id,null);
+    assert.equal(armed.session.assets.length,1,'recording is not deleted');
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(bytes));
+    try{
+      await engine.play(armed.session,0);
+      assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,1,'single sampled MIDI note, not raw WAV plus MIDI note');
+    }finally{await engine.close()}
+    const reverted=undoPulseGridReceipt(armed.session,armed.receipt.id,'human');
+    assert.equal(reverted.session.tracks.find(x=>x.id==='audio').clips[0].audio_asset_id,asset.id);
+    assert.equal(reverted.session.assets[0].id,asset.id);
+  });
+});
+
+test('each explicit playback reauthorizes even when audio digest and graph are unchanged',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  let grant=true,reads=0;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes,{
+    authorizeRead:async()=>{reads++;return grant}
+  }));
+  try{
+    await engine.play(session,0);
+    assert.equal(reads,1);
+    engine.stop();
+    grant=false;
+    await assert.rejects(engine.play(session,0),/not authorized/);
+    assert.equal(reads,2,'cached prior authorization cannot bypass the new read');
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+  }finally{await engine.close()}
+ });
+});
+test('changing recording rights mid-playback stops voices and evicts decoded samples',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+    await engine.play(session,0);
+    assert.equal(engine.status.cached_audio_assets,1);
+    const context=SimulatedAudioContext.instances.at(-1);
+    const restricted=structuredClone(session);
+    restricted.assets[0].rights='restricted';
+    engine.updateSession(restricted);
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+    assert.ok(context.starts[0].source.stops.length>0);
+    await assert.rejects(engine.play(restricted,0),/missing or restricted/);
+    assert.equal(engine.status.playing,false);
+  }finally{await engine.close()}
+ });
+});
+test('late async sample read cannot refill another session cache',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  let release;
+  const gate=new Promise(resolve=>{release=resolve});
+  let entered;
+  const firstRead=new Promise(resolve=>{entered=resolve});
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes,{
+    readBytes:async()=>{entered();await gate;return new Uint8Array(bytes)}
+  }));
+  try{
+    const playing=engine.play(session,0);
+    await firstRead;
+    const different=structuredClone(session);
+    different.session_id='new-authenticated-session';
+    engine.updateSession(different);
+    release();
+    await assert.rejects(playing,/authorization changed|superseded/);
+    assert.equal(engine.status.cached_audio_assets,0);
+    assert.equal(engine.status.playing,false);
+    assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
+  }finally{release();await engine.close()}
+ });
+});
+test('resolver swap stops old voices and forces fresh decoding only from replacement resolver',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+    await engine.play(session,0);
+    const old=SimulatedAudioContext.instances.at(-1);
+    assert.equal(old.decodeCalls,1);
+    engine.setAudioAssetResolver(resolverOf(bytes,{authorizeRead:async()=>false}));
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+    await assert.rejects(engine.play(session,0),/not authorized/);
+    assert.equal(old.decodeCalls,1);
+  }finally{await engine.close()}
+ });
+});
+
+test('resolver swap cancels a Play still waiting for AudioContext resume',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  let release,entered;
+  const gate=new Promise(resolve=>{release=resolve});
+  const resumed=new Promise(resolve=>{entered=resolve});
+  class Suspended extends SimulatedAudioContext{
+    constructor(){super();this.state='suspended'}
+    async resume(){entered();await gate;this.state='running'}
+  }
+  globalThis.AudioContext=Suspended;
+  let reads=0;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes,{
+    authorizeRead:async()=>{reads++;return true}
+  }));
+  try{
+    const opening=engine.play(session,0);
+    await resumed;
+    engine.setAudioAssetResolver(resolverOf(bytes,{authorizeRead:async()=>false}));
+    release();
+    await assert.rejects(opening,/superseded/);
+    assert.equal(reads,0);
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+    assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
+  }finally{release();await engine.close()}
+ });
+});
