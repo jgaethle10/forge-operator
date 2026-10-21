@@ -149,7 +149,7 @@ jobs:
           python3 -m venv /tmp/fallen-toon-cel-env
           /tmp/fallen-toon-cel-env/bin/pip install --disable-pip-version-check CairoSVG==2.7.1
           sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg
+          sudo apt-get install -y -qq ffmpeg espeak-ng
           ffmpeg -version | head -n 1
           /tmp/fallen-toon-cel-env/bin/python systemia/media-studio/toon-cel-canary.py \
             --out _toon_cel_canary --seconds 1 --fps 24 --width 480 --height 270
@@ -194,6 +194,32 @@ jobs:
           assert.ok(fs.statSync(r.mediaPath).size>1000);
           NODE
 
+      - name: Render speech-reactive original fox with measured mouth frame proof
+        run: |
+          set -euo pipefail
+          node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
+            _toon_dialogue_canary /tmp/fallen-toon-cel-env/bin/python speak
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const dir='_toon_dialogue_canary';
+          const r=JSON.parse(fs.readFileSync(dir+'/render-receipt.json','utf8'));
+          const b=JSON.parse(fs.readFileSync(dir+'/toon-shot-binding-receipt.json','utf8'));
+          const track=JSON.parse(fs.readFileSync(dir+'/audio-mouth-track.json','utf8'));
+          assert.equal(r.speechText,'Hello, little light.');
+          assert.equal(r.audioReactiveMouthObserved,true);
+          assert.equal(r.phonemeTimingVerified,false);
+          assert.equal(r.voiceProfileMatched,false);
+          assert.ok(r.mouthActiveFrames>0&&r.mouthSilentFrames>0);
+          assert.notEqual(r.activeMouthCropSha256,r.silentMouthCropSha256);
+          assert.equal(b.measuredAudioMouthReactivity,true);
+          assert.equal(b.dialogueSynced,false);
+          assert.equal(b.filmMasterReady,false);
+          assert.equal(b.publicationAuthority,false);
+          assert.equal(track.phonemeAccurate,false);
+          assert.equal(track.mouthPoses.length,b.frameCount);
+          NODE
+
       - name: Preserve reproducible toon MP4 canary
         uses: actions/upload-artifact@v4
         with:
@@ -210,6 +236,12 @@ jobs:
             _toon_bound_canary_observe/toon-shot-binding-receipt.json
             _toon_bound_canary_observe/bound-shot-work-order.json
             _toon_bound_canary_observe/authored-motion.json
+            _toon_dialogue_canary/toon-cel-canary.mp4
+            _toon_dialogue_canary/original-synth-score.wav
+            _toon_dialogue_canary/render-receipt.json
+            _toon_dialogue_canary/toon-shot-binding-receipt.json
+            _toon_dialogue_canary/audio-mouth-track.json
+            _toon_dialogue_canary/bound-shot-work-order.json
           if-no-files-found: error
           retention-days: 30
 
