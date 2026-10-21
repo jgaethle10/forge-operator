@@ -58,6 +58,10 @@ export function validateActorMotionRig(world:WorldDefinition,rig:ActorMotionRig)
   }
   if(track.keyframes[0].timeSec!==0||track.keyframes.at(-1)!.timeSec!==rig.durationSec)
    error('keyframe_boundaries');
+  const origin=track.keyframes[0];
+  if(origin.headingDeg!==0||origin.displacement.x!==0||
+     origin.displacement.y!==0||origin.displacement.z!==0)
+    error('authored_origin_must_match_original_world');
   if(track.heave&&(!finite(track.heave.amplitude)||!finite(track.heave.frequencyHz)||
        !finite(track.heave.phaseRad)||track.heave.frequencyHz<.03||
        track.heave.frequencyHz>2||Math.abs(track.heave.phaseRad)>2*Math.PI))
@@ -94,6 +98,9 @@ export function animateCinematicEntities(world:WorldDefinition,entities:WorldEnt
   const heave=track.heave?track.heave.amplitude*(Math.sin(2*Math.PI*track.heave.frequencyHz*timeSec+track.heave.phaseRad)-Math.sin(track.heave.phaseRad)):0;
   const roll=track.roll?track.roll.amplitudeDeg*(Math.sin(2*Math.PI*track.roll.frequencyHz*timeSec+track.roll.phaseRad)-Math.sin(track.roll.phaseRad)):0;
   for(const id of track.entityIds){
+   // Preserve the untouched canonical frame plan exactly at time zero.
+   // A film that opts into animation must start from the same genuine scene.
+   if(timeSec===0)continue;
    const original=world.entities.find(e=>e.id===id);
    const current=entities.find(e=>e.id===id);
    if(!current||!original)error('animated_entity_missing_'+id);
