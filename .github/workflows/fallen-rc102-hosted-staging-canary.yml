@@ -1,0 +1,46 @@
+name: Fallen RC1.0.2 hosted staging canary
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/fallen-rc102-hosted-staging-canary.yml'
+      - 'scripts/fallen-mobile-canary/**'
+      - 'systemia/media-studio/hosted-mobile/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fallen-staging-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify actual served HTML against approved RC1.0.2 bytes
+        run: node scripts/fallen-mobile-canary/check-source.mjs
+
+  mobile-browser:
+    needs: source-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser QA dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/fallen-qa" --no-audit --no-fund --no-save playwright@1.56.1
+          "$RUNNER_TEMP/fallen-qa/node_modules/.bin/playwright" install --with-deps chromium webkit
+      - name: Execute read-only Chromium and WebKit phone-sized verification
+        env:
+          FALLEN_QA_PLAYWRIGHT_MODULE: ${{ runner.temp }}/fallen-qa/node_modules/playwright
+        run: node scripts/fallen-mobile-canary/check-browser.mjs
