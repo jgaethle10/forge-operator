@@ -9,6 +9,7 @@ import {makeAnimatedOceanGrid,attachAnimatedOcean} from './animated-ocean.js';
 import {organicFoamGeometry} from './organic-wake-geometry.js';
 import {buildCinematicCameraSequence} from './cinematic-rig.js';
 import {auditWebGpuHeroFraming} from './shot-composition.js';
+import {auditNavalEditorialForeground} from './naval-foreground-audit.js';
 
 test('low-waterline and telephoto cinema shots are independent source-authored 3D cameras',()=>{
  const low=makeNavalEditorialTake('waterline_tracking');
@@ -62,6 +63,11 @@ test('source 3D tracking direction builds unique signed original camera/GPU fram
   assert.notEqual(audit.framingStatus,'subject_offscreen');
   assert.ok(audit.coverage.width>.18);
   if(i===48)assert.equal(audit.framingStatus,'good_technical_framing');
+  const foreground=auditNavalEditorialForeground({plan:frame.renderPlan,
+    geometries:assets,hero:'bismarck'});
+  assert.equal(foreground.estimatedForegroundClear,true);
+  assert.equal(foreground.visibleNearfieldObstructions.length,0);
+  assert.equal(foreground.compared.length,3);
   assert.ok(frame.renderPlan.draws.filter(d=>d.geometryId.startsWith('owned:fx-organic-foam-')).length>25);
   assert.ok(frame.renderPlan.draws.some(d=>d.entityId==='ocean'&&d.vertexCount===112*112*6));
   audits.push(audit.coverage.area);
