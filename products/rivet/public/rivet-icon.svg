@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+<title id="title">RIVET map pin, lightning bolt and navigation arrow</title>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#62D134"/><stop offset="1" stop-color="#008F71"/></linearGradient></defs>
+<path fill="url(#g)" d="M359 283 265 328 292 335 298 378 336 324Z"/>
+<path fill="url(#g)" d="M279 165 206 249 250 252 232 313 306 233 264 229Z"/>
+<path fill="url(#g)" d="M266 106c-74 0-130 51-130 119 0 45 27 84 46 107 18 23 40 50 62 72l36-56c-21-2-39-12-54-27-24-24-62-66-62-96 0-52 43-93 96-93 48 0 90 34 90 93 0 17-5 34-14 48 25-8 39-25 39-49 0-66-49-118-109-118Z"/>
+</svg>

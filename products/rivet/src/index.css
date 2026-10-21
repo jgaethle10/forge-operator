@@ -1,0 +1,431 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --font-heading: ui-sans-serif, system-ui, sans-serif;
+    --font-body: ui-sans-serif, system-ui, sans-serif;
+    --font-display: ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: clip;
+    background: #061017;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply font-body;
+    width: 100%;
+    min-width: 0;
+    min-height: 100dvh;
+    margin: 0;
+    overflow-x: clip;
+    overscroll-behavior: none;
+    touch-action: pan-y pinch-zoom;
+    background: #061017;
+    color: #e2e8f0;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  #root {
+    width: 100%;
+    min-width: 0;
+    min-height: 100dvh;
+    overflow-x: clip;
+    overscroll-behavior: none;
+    background: #061017;
+    isolation: isolate;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    max-width: 100%;
+  }
+
+  p,
+  td,
+  th {
+    overflow-wrap: anywhere;
+  }
+}
+
+@supports (padding: max(0px)) {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Original RIVET brand restoration.
+   Team-selected direction: deep navy foundation, electric blue primary, warm orange secondary. */
+:root {
+  --rivet-bg: #050b14;
+  --rivet-bg-elev: #081321;
+  --rivet-panel: #0b1726;
+  --rivet-panel-soft: #0e1c2d;
+  --rivet-text: #f7f9fc;
+  --rivet-muted: #93a4b8;
+  --rivet-border: rgba(148,163,184,.16);
+  --rivet-blue: #1479ff;
+  --rivet-blue-strong: #075fdb;
+  --rivet-blue-soft: rgba(20,121,255,.14);
+  --rivet-orange: #ff9d2e;
+  --rivet-orange-soft: rgba(255,157,46,.12);
+  --rivet-success: #5dd39e;
+  --rivet-focus: #ffb347;
+}
+
+html,
+body,
+#root {
+  background: var(--rivet-bg) !important;
+  color: var(--rivet-text);
+}
+
+.rivet-shell {
+  background:
+    radial-gradient(circle at 76% 0%, rgba(20,121,255,.13), transparent 30%),
+    radial-gradient(circle at 12% 14%, rgba(255,157,46,.055), transparent 24%),
+    linear-gradient(180deg,var(--rivet-bg),#07101c 54%,var(--rivet-bg));
+  color: var(--rivet-text);
+}
+
+.rivet-header {
+  background: color-mix(in srgb,var(--rivet-bg) 95%,transparent);
+  border-color: var(--rivet-border);
+  box-shadow: 0 10px 32px rgba(0,0,0,.18);
+}
+
+.rivet-sidebar {
+  background: var(--rivet-bg-elev);
+  border-color: var(--rivet-border);
+}
+
+.rivet-card {
+  background: color-mix(in srgb,var(--rivet-panel) 95%,transparent);
+  border-color: var(--rivet-border);
+  box-shadow: 0 16px 50px rgba(0,0,0,.18);
+}
+
+.rivet-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 36px;
+  width: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(79,170,255,.32);
+  background: linear-gradient(145deg,#1689ff,#075fdb);
+  color: white;
+  box-shadow: 0 12px 30px rgba(20,121,255,.26), inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.rivet-mark::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rivet-orange);
+  box-shadow: 0 0 0 3px var(--rivet-bg), 0 0 14px rgba(255,157,46,.42);
+}
+
+.rivet-shell [class*="text-cyan-"],
+.rivet-shell [class*="text-sky-"] {
+  color: var(--rivet-blue) !important;
+}
+
+.rivet-shell [class*="border-cyan-"],
+.rivet-shell [class*="border-sky-"] {
+  border-color: color-mix(in srgb,var(--rivet-blue) 42%,transparent) !important;
+}
+
+.rivet-shell [class*="bg-cyan-"],
+.rivet-shell [class*="bg-sky-"] {
+  background-color: var(--rivet-blue-soft) !important;
+}
+
+.rivet-shell .bg-cyan-300,
+.rivet-shell .bg-sky-300 {
+  background: linear-gradient(135deg,#1689ff,#075fdb) !important;
+  color: white !important;
+}
+
+.rivet-shell [class*="text-amber-"],
+.rivet-shell [class*="text-orange-"] {
+  color: var(--rivet-orange) !important;
+}
+
+.rivet-shell [class*="border-amber-"],
+.rivet-shell [class*="border-orange-"] {
+  border-color: color-mix(in srgb,var(--rivet-orange) 42%,transparent) !important;
+}
+
+.rivet-shell [class*="bg-amber-"],
+.rivet-shell [class*="bg-orange-"] {
+  background-color: var(--rivet-orange-soft) !important;
+}
+
+.rivet-shell [class*="text-violet-"] {
+  color: color-mix(in srgb,var(--rivet-blue) 72%,white) !important;
+}
+
+.rivet-shell [class*="border-violet-"] {
+  border-color: color-mix(in srgb,var(--rivet-blue) 34%,transparent) !important;
+}
+
+.rivet-shell [class*="bg-violet-"] {
+  background-color: rgba(20,121,255,.10) !important;
+}
+
+.rivet-shell [class*="text-emerald-"] {
+  color: var(--rivet-success) !important;
+}
+
+.rivet-shell [class*="border-emerald-"] {
+  border-color: color-mix(in srgb,var(--rivet-success) 38%,transparent) !important;
+}
+
+.rivet-shell [class*="bg-emerald-"] {
+  background-color: rgba(93,211,158,.10) !important;
+}
+
+.rivet-shell input,
+.rivet-shell textarea,
+.rivet-shell select {
+  background-color: var(--rivet-panel-soft);
+  color: var(--rivet-text);
+}
+
+.rivet-shell input:focus,
+.rivet-shell textarea:focus,
+.rivet-shell select:focus,
+.rivet-shell button:focus-visible,
+.rivet-shell a:focus-visible {
+  outline-color: var(--rivet-focus);
+}
+
+.rivet-address-menu {
+  background: rgba(8,19,33,.985) !important;
+  border-color: var(--rivet-border) !important;
+}
+
+@media (hover:hover) {
+  .rivet-card:hover {
+    border-color: color-mix(in srgb,var(--rivet-blue) 24%,var(--rivet-border));
+    box-shadow: 0 20px 60px rgba(0,0,0,.24);
+  }
+}
+
+/* RIVET Brand Kit Vol.1 — 2026-09-24 */
+:root {
+  --rivet-midnight:#0B1424;
+  --rivet-neon:#62D134;
+  --rivet-cobalt:#1F4AAB;
+  --rivet-bone:#F5F2EA;
+  --rivet-slate:#64748B;
+  --rivet-teal:#008F71;
+  --rivet-surface:#FBF9F4;
+  --rivet-surface-strong:#FFFFFF;
+  --rivet-line:rgba(11,20,36,.12);
+  --rivet-shadow:rgba(11,20,36,.09);
+  --rivet-live-soft:rgba(98,209,52,.12);
+  --rivet-cobalt-soft:rgba(31,74,171,.10);
+  --font-heading:"Open Sauce One","Public Sans",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"Public Sans",ui-sans-serif,system-ui,sans-serif;
+  --font-display:var(--font-heading);
+  --background:44 36% 94%;
+  --foreground:218 53% 9%;
+  --card:44 30% 97%;
+  --card-foreground:218 53% 9%;
+  --popover:44 30% 97%;
+  --popover-foreground:218 53% 9%;
+  --primary:222 69% 40%;
+  --primary-foreground:44 36% 94%;
+  --secondary:44 25% 90%;
+  --secondary-foreground:218 53% 9%;
+  --muted:44 22% 90%;
+  --muted-foreground:215 16% 47%;
+  --accent:102 63% 51%;
+  --accent-foreground:218 53% 9%;
+  --border:218 20% 82%;
+  --input:218 20% 82%;
+  --ring:222 69% 40%;
+}
+.dark {
+  --rivet-surface:#101B2D;
+  --rivet-surface-strong:#142238;
+  --rivet-line:rgba(245,242,234,.13);
+  --rivet-shadow:rgba(0,0,0,.28);
+  --rivet-live-soft:rgba(98,209,52,.12);
+  --rivet-cobalt-soft:rgba(31,74,171,.24);
+  --background:218 53% 9%;
+  --foreground:44 36% 94%;
+  --card:218 47% 12%;
+  --card-foreground:44 36% 94%;
+  --popover:218 47% 12%;
+  --popover-foreground:44 36% 94%;
+  --primary:102 63% 51%;
+  --primary-foreground:218 53% 9%;
+  --secondary:218 35% 17%;
+  --secondary-foreground:44 36% 94%;
+  --muted:218 35% 17%;
+  --muted-foreground:215 18% 67%;
+  --accent:102 63% 51%;
+  --accent-foreground:218 53% 9%;
+  --border:218 24% 24%;
+  --input:218 24% 24%;
+  --ring:102 63% 51%;
+}
+html,body,#root{background:var(--rivet-bone)!important;color:var(--rivet-midnight);font-family:var(--font-body);}
+.dark body,.dark #root{background:var(--rivet-midnight)!important;color:var(--rivet-bone);}
+h1,h2,h3,h4,h5,h6,.font-heading{font-family:var(--font-heading);font-weight:600;}
+.rivet-shell{
+  background:
+    radial-gradient(circle at 84% 4%,rgba(98,209,52,.13),transparent 30%),
+    radial-gradient(circle at 12% 17%,rgba(31,74,171,.06),transparent 27%),
+    linear-gradient(180deg,#F8F6F0 0%,var(--rivet-bone) 55%,#F1EEE5 100%)!important;
+  color:var(--rivet-midnight)!important;
+}
+.dark .rivet-shell{
+  background:
+    radial-gradient(circle at 82% 2%,rgba(98,209,52,.12),transparent 30%),
+    radial-gradient(circle at 12% 17%,rgba(31,74,171,.18),transparent 28%),
+    linear-gradient(180deg,var(--rivet-midnight) 0%,#091220 62%,var(--rivet-midnight) 100%)!important;
+  color:var(--rivet-bone)!important;
+}
+.rivet-shell>.fixed.inset-0.pointer-events-none{
+  background:radial-gradient(circle at 13% 10%,rgba(98,209,52,.10),transparent 28%),radial-gradient(circle at 86% 20%,rgba(31,74,171,.06),transparent 26%)!important;
+}
+.dark .rivet-shell>.fixed.inset-0.pointer-events-none{
+  background:radial-gradient(circle at 13% 10%,rgba(98,209,52,.08),transparent 28%),radial-gradient(circle at 86% 20%,rgba(31,74,171,.16),transparent 26%)!important;
+}
+.rivet-header{background:color-mix(in srgb,var(--rivet-bone) 91%,transparent)!important;border-color:var(--rivet-line)!important;box-shadow:0 10px 32px var(--rivet-shadow);}
+.dark .rivet-header{background:color-mix(in srgb,var(--rivet-midnight) 92%,transparent)!important;}
+.rivet-sidebar{background:color-mix(in srgb,var(--rivet-bone) 92%,var(--rivet-slate) 8%)!important;border-color:var(--rivet-line)!important;}
+.dark .rivet-sidebar{background:#101B2D!important;}
+.rivet-card{background:color-mix(in srgb,var(--rivet-surface) 96%,transparent)!important;border-color:var(--rivet-line)!important;box-shadow:0 16px 48px var(--rivet-shadow);}
+.rivet-logo-tile{background:transparent!important;border-color:transparent!important;box-shadow:none!important;}
+.rivet-theme-toggle{border:1px solid var(--rivet-line);background:color-mix(in srgb,var(--rivet-surface-strong) 82%,transparent);color:var(--rivet-midnight);}
+.dark .rivet-theme-toggle{color:var(--rivet-bone);}
+.rivet-shell .text-white,.rivet-shell .text-slate-100,.rivet-shell .text-slate-200{color:var(--rivet-midnight)!important;}
+.rivet-shell .text-slate-300{color:rgba(11,20,36,.80)!important;}
+.rivet-shell .text-slate-400,.rivet-shell .text-slate-500,.rivet-shell .text-slate-600{color:var(--rivet-slate)!important;}
+.dark .rivet-shell .text-white,.dark .rivet-shell .text-slate-100,.dark .rivet-shell .text-slate-200{color:var(--rivet-bone)!important;}
+.dark .rivet-shell .text-slate-300{color:rgba(245,242,234,.82)!important;}
+.dark .rivet-shell .text-slate-400,.dark .rivet-shell .text-slate-500{color:#A5AFBC!important;}
+.dark .rivet-shell .text-slate-600{color:#7E8B9C!important;}
+.rivet-shell [class*="border-white/"]{border-color:var(--rivet-line)!important;}
+.rivet-shell [class*="bg-black/"],.rivet-shell [class*="bg-white/"]{background-color:rgba(11,20,36,.035)!important;}
+.dark .rivet-shell [class*="bg-black/"],.dark .rivet-shell [class*="bg-white/"]{background-color:rgba(245,242,234,.05)!important;}
+.rivet-shell input,.rivet-shell textarea,.rivet-shell select,.rivet-address-menu{background:var(--rivet-surface-strong)!important;color:var(--rivet-midnight)!important;border-color:var(--rivet-line)!important;}
+.dark .rivet-shell input,.dark .rivet-shell textarea,.dark .rivet-shell select,.dark .rivet-address-menu{background:#101B2D!important;color:var(--rivet-bone)!important;}
+.rivet-shell .bg-cyan-300,.rivet-shell .bg-blue-500,.rivet-shell .bg-blue-600{background:var(--rivet-cobalt)!important;color:var(--rivet-bone)!important;}
+.rivet-shell [class*="text-cyan-"],.rivet-shell [class*="text-sky-"],.rivet-shell [class*="text-blue-"]{color:var(--rivet-cobalt)!important;}
+.rivet-shell [class*="border-cyan-"],.rivet-shell [class*="border-sky-"],.rivet-shell [class*="border-blue-"]{border-color:rgba(31,74,171,.26)!important;}
+.rivet-shell [class*="bg-cyan-"],.rivet-shell [class*="bg-sky-"],.rivet-shell [class*="bg-blue-"]{background-color:var(--rivet-cobalt-soft)!important;}
+.rivet-shell .bg-cyan-300,.rivet-shell .bg-blue-500,.rivet-shell .bg-blue-600{background-color:var(--rivet-cobalt)!important;}
+.rivet-shell [class*="text-emerald-"]{color:#378C1D!important;}
+.rivet-shell [class*="border-emerald-"]{border-color:rgba(98,209,52,.35)!important;}
+.rivet-shell [class*="bg-emerald-"]{background-color:var(--rivet-live-soft)!important;}
+.dark .rivet-shell [class*="text-emerald-"]{color:var(--rivet-neon)!important;}
+.rivet-shell [class*="text-amber-"],.rivet-shell [class*="text-orange-"],.rivet-shell [class*="text-violet-"]{color:var(--rivet-slate)!important;}
+.rivet-shell [class*="border-amber-"],.rivet-shell [class*="border-orange-"],.rivet-shell [class*="border-violet-"]{border-color:rgba(100,116,139,.28)!important;}
+.rivet-shell [class*="bg-amber-"],.rivet-shell [class*="bg-orange-"],.rivet-shell [class*="bg-violet-"]{background-color:rgba(100,116,139,.09)!important;}
+.rivet-shell a:focus-visible,.rivet-shell button:focus-visible,.rivet-shell input:focus,.rivet-shell textarea:focus,.rivet-shell select:focus{outline:2px solid var(--rivet-cobalt);outline-offset:2px;}

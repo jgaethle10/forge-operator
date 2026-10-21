@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.systemia.change-receipt.v1",
+  "product": "RIVET",
+  "change_id": "rivet-brand-kit-vol1-2026-09-25",
+  "brand_source": "RIVET Brand Kit Vol.1",
+  "brand_source_updated": "2026-09-24",
+  "applied": {
+    "default_theme": "Bone light",
+    "alternate_theme": "Midnight dark",
+    "palette": [
+      "#0B1424",
+      "#62D134",
+      "#1F4AAB",
+      "#F5F2EA",
+      "#64748B"
+    ],
+    "heading_family": "Open Sauce One",
+    "body_family": "Public Sans",
+    "logo": "map pin + lightning bolt + navigation arrow",
+    "theme_preference": "persisted in localStorage",
+    "browser_theme_color": "theme-aware",
+    "pdf_accent": "Midnight + Neon"
+  },
+  "migration": {
+    "github_path": "products/rivet",
+    "base44_status": "legacy compatibility adapter",
+    "runtime_target": "Systemia -> Yard Operator -> Evercraft Compute"
+  },
+  "release_state": "candidate",
+  "evidence_required_before_ready": [
+    "CI gates pass",
+    "authenticated report generation reaches generation_state=ready",
+    "source-backed evidence present",
+    "live route independently verified"
+  ]
+}

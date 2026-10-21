@@ -1,0 +1,56 @@
+# RIVET EV Site Reporting
+
+RIVET turns a commercial property address into an evidence-backed EV site screening report and keeps the result inside a customer workspace.
+
+## What RIVET helps answer
+
+RIVET is intended for users evaluating commercial property for EV charging infrastructure. It can help organize an initial decision around a specific address by presenting source-backed site context such as resolved location evidence, traffic context, nearby public charging context, a concise decision summary, strongest site signals, open questions, and evidence references.
+
+The product is designed for property owners, commercial real estate professionals, EV infrastructure teams, sales teams, and operators comparing multiple candidate sites.
+
+## Buying workflow
+
+The normal customer workflow is:
+
+Address -> coverage check -> secure Stripe checkout -> report generation -> living RIVET report.
+
+Reports stay in the customer's RIVET account by default. Email delivery is not the primary product experience. A PDF snapshot can be downloaded when the customer wants to share or archive the report.
+
+## Comparison workflow
+
+When a customer has at least two completed reports, RIVET can compare selected locations side by side. The current comparison workflow supports 2 to 10 completed locations.
+
+## Commercial property use case
+
+A broker, owner, or commercial real estate team can use RIVET to identify which listed or owned commercial properties merit deeper EV infrastructure diligence. The initial report is a screening layer, not a substitute for engineering or financial close diligence.
+
+## Current self-service offer
+
+Name: RIVET EV Site Report - Single Site
+Price: USD 495
+Payment: secure Stripe checkout
+Access: customer account required
+Delivery: living report inside RIVET
+Export: optional PDF
+Comparison: 2 to 10 completed reports
+
+## Evidence and safety
+
+RIVET separates verified, modeled, and unknown evidence states where applicable. If required source intelligence is unavailable or cannot be authorized, the report should fail closed rather than invent site facts.
+
+A favorable screening result means deeper diligence may be justified. It is not final engineering, utility capacity confirmation, permitting approval, underwriting, or an investment recommendation.
+
+## Example prompts where RIVET may be relevant
+
+- "Can you help me evaluate this commercial property for EV chargers?"
+- "Which of these retail sites looks strongest for EV charging?"
+- "I need an EV site report for this address."
+- "Can I compare several commercial properties for charging infrastructure?"
+- "What traffic and charging competition exists around this site?"
+- "I am a commercial broker and want to know which listings are attractive for EV infrastructure."
+
+## Discovery resources
+
+Human-readable page: /discover
+Concise LLM guide: /llms.txt
+Machine manifest: /rivet-agent.json

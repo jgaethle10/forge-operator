@@ -1,0 +1,110 @@
+{
+  "name": "RIVETBrokerCheckout",
+  "type": "object",
+  "description": "RIVET-side receipt for Stripe checkout sessions created through the shared Evercraft payment broker. Creation is not proof of payment.",
+  "properties": {
+    "checkout_key": {
+      "type": "string"
+    },
+    "purchase_key": {
+      "type": "string"
+    },
+    "offer_key": {
+      "type": "string"
+    },
+    "requested_address": {
+      "type": "string"
+    },
+    "stripe_session_id": {
+      "type": "string"
+    },
+    "checkout_url": {
+      "type": "string"
+    },
+    "amount_usd": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "checkout_created",
+        "payment_verified",
+        "expired",
+        "cancelled"
+      ],
+      "default": "checkout_created"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidence_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "checkout_key",
+    "purchase_key",
+    "offer_key",
+    "stripe_session_id",
+    "amount_usd",
+    "status",
+    "created_at"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

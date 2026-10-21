@@ -1,0 +1,26 @@
+{
+  "schema": "evercraft.rivet.brand.v1",
+  "version": "1.0",
+  "updated": "2026-09-24",
+  "default_theme": "light",
+  "dark_mode": true,
+  "colors": {
+    "midnight": "#0B1424",
+    "neon": "#62D134",
+    "deep_cobalt": "#1F4AAB",
+    "bone": "#F5F2EA",
+    "slate": "#64748B"
+  },
+  "typography": {
+    "headings": "Open Sauce One",
+    "body": "Public Sans"
+  },
+  "color_roles": {
+    "midnight": "product and dark-mode foundation",
+    "neon": "live or locatable state",
+    "deep_cobalt": "single primary action",
+    "bone": "light-mode foundation and accent",
+    "slate": "minimal secondary accent"
+  },
+  "logo": "map pin + lightning bolt + navigation arrow"
+}

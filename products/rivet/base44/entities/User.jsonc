@@ -1,0 +1,30 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role of the user in the app",
+      "enum": [
+        "admin",
+        "user"
+      ]
+    },
+    "rivet_owner": {
+      "type": "boolean",
+      "default": false,
+      "description": "Approved RIVET owner workspace access."
+    },
+    "rivet_owner_name": {
+      "type": "string",
+      "description": "RIVET owner display name."
+    },
+    "rivet_lane": {
+      "type": "string",
+      "description": "Primary operating lane for this owner."
+    }
+  },
+  "required": [
+    "role"
+  ]
+}

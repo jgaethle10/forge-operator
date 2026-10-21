@@ -1,0 +1,313 @@
+{
+  "name": "RIVETReport",
+  "type": "object",
+  "description": "Customer-facing reporting workflow record. Stores report assembly and delivery state while keeping generalized intelligence-engine IP outside the reporting company data model.",
+  "properties": {
+    "report_key": {
+      "type": "string"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "preliminary_site_opportunity",
+        "full_site_opportunity",
+        "reporting_readiness",
+        "custom"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "data_collection",
+        "analysis",
+        "qa",
+        "ready",
+        "delivered",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "due_date": {
+      "type": "string"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_email": {
+      "type": "string"
+    },
+    "verdict": {
+      "type": "string"
+    },
+    "executive_summary": {
+      "type": "string"
+    },
+    "traffic_summary": {
+      "type": "string"
+    },
+    "top_drivers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_notes": {
+      "type": "string"
+    },
+    "report_body": {
+      "type": "string"
+    },
+    "core_work_ref": {
+      "type": "string"
+    },
+    "delivery_url": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "delivered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "decision_label": {
+      "type": "string"
+    },
+    "decision_body": {
+      "type": "string"
+    },
+    "decision_tone": {
+      "type": "string",
+      "enum": [
+        "green",
+        "blue",
+        "amber",
+        "red"
+      ],
+      "default": "blue"
+    },
+    "generation_state": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "generating",
+        "ready",
+        "failed"
+      ],
+      "default": "not_started"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "max_aadt": {
+      "type": "number"
+    },
+    "traffic_label": {
+      "type": "string"
+    },
+    "traffic_source_name": {
+      "type": "string"
+    },
+    "traffic_source_url": {
+      "type": "string"
+    },
+    "traffic_points_json": {
+      "type": "string"
+    },
+    "charger_count": {
+      "type": "number"
+    },
+    "charger_source_status": {
+      "type": "string"
+    },
+    "strongest_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_state": {
+      "type": "string"
+    },
+    "detailed_report_state": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "requested",
+        "in_progress",
+        "ready"
+      ],
+      "default": "not_requested"
+    },
+    "state": {
+      "type": "string"
+    },
+    "postal_code": {
+      "type": "string"
+    },
+    "aliev_source_status": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "ready",
+        "failed"
+      ],
+      "default": "not_requested"
+    },
+    "aliev_app_id": {
+      "type": "string"
+    },
+    "aliev_evidence_state": {
+      "type": "string"
+    },
+    "aliev_retrieved_at": {
+      "type": "string"
+    },
+    "aliev_report_data_json": {
+      "type": "string"
+    },
+    "aliev_source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Authenticated customer email allowed to view this purchased report."
+    },
+    "purchase_key": {
+      "type": "string",
+      "description": "Authoritative commerce ledger key linked to this report."
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "not_required"
+    },
+    "payment_verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "report_price_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "customer_visible": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "report_key",
+    "address",
+    "report_type",
+    "title",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        },
+        {
+          "data.customer_email": "{{user.email}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "RIVET",
+  "description": "EV site reporting for commercial properties. RIVET screens a commercial address, supports secure paid report generation, keeps reports in a customer workspace, offers optional PDF export, and supports 2-10 location comparisons.",
+  "category": ["EV infrastructure", "commercial real estate", "site screening", "EV charging"],
+  "intents": [
+    "EV charging site feasibility report",
+    "commercial property EV charging opportunity",
+    "EV infrastructure site screening",
+    "compare EV charging locations",
+    "traffic and charging context for a commercial address"
+  ],
+  "offer": {
+    "name": "RIVET EV Site Report - Single Site",
+    "price": {"amount": 495, "currency": "USD"},
+    "payment": "Stripe",
+    "authentication_required": true,
+    "delivery": "Living report in RIVET customer workspace",
+    "pdf_export": true,
+    "comparison": {"minimum_reports": 2, "maximum_reports": 10}
+  },
+  "workflow": [
+    "sign_in_or_register",
+    "enter_address",
+    "coverage_check",
+    "stripe_checkout",
+    "server_side_payment_verification",
+    "report_generation",
+    "living_report",
+    "optional_pdf",
+    "optional_multi_site_comparison"
+  ],
+  "evidence_boundary": "Screening and reporting only. Not final engineering, utility interconnection approval, permitting, underwriting, legal diligence, or investment approval.",
+  "public_resources": {
+    "product_page": "/discover",
+    "llm_summary": "/llms.txt",
+    "llm_detail": "/llms-full.txt"
+  },
+  "invocation": {
+    "mode": "human-authenticated purchase flow",
+    "note": "Public machine discovery is enabled. Report purchase and protected report access still require an authenticated customer account."
+  }
+}
