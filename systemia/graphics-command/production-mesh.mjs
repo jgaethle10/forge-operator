@@ -154,6 +154,7 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
     shots,
     capabilityRegistry:{auditDigest:capabilityAudit.digest,sourceTreeDigest:capabilityAudit.sourceTreeDigest,
       featureCount:capabilityAudit.featureCount,sourceModuleCount:capabilityAudit.sourceModuleCount,
+      productionProfiles:capabilityAudit.profiles.map(p=>({id:p.id,name:p.name,status:p.status,requiredFeatures:p.requirements,evidence:p.evidence,executionVerified:false})),
       toonAndCharacterCapabilities:capabilityAudit.toonAndCharacterCapabilities,
       unadmittedCapabilities:capabilityAudit.features.filter(f=>f.commercialMeshState==='not_admitted_to_commercial_mesh').map(f=>f.id)},
     departments:{
