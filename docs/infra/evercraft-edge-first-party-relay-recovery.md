@@ -120,14 +120,20 @@ because the systemd helper references its repository path after installation.
 **Phase A: stage and inspect without modifying the live service.**
 
 ```bash
-cd ~/.local/share/evercraft/forge-operator
-git fetch --no-tags origin fix/fabric-edge-mapping-truth-20261020
-RUNTIME="$HOME/.local/share/evercraft/router-map-v2"
-# Use a fresh path; never silently reuse a stale worktree.
-test ! -e "$RUNTIME" || { echo "STOP: staged worktree already exists"; exit 1; }
-git worktree add --detach "$RUNTIME" FETCH_HEAD
-bash "$RUNTIME/scripts/upgrade-fabric-router-map-resident.sh" \
-  --repo-root "$RUNTIME" --preflight
+(
+  set -e
+  cd ~/.local/share/evercraft/forge-operator
+  git fetch --no-tags origin fix/fabric-edge-mapping-truth-20261020
+  RUNTIME="$HOME/.local/share/evercraft/router-map-v2"
+  # Use a fresh path; never silently reuse a stale worktree.
+  if [ -e "$RUNTIME" ]; then
+    echo "STOP: staged worktree already exists; inspect before updating" >&2
+    exit 1
+  fi
+  git worktree add --detach "$RUNTIME" FETCH_HEAD
+  bash "$RUNTIME/scripts/upgrade-fabric-router-map-resident.sh" \
+    --repo-root "$RUNTIME" --preflight
+)
 ```
 
 This creates only a durable candidate checkout and performs a read-only
