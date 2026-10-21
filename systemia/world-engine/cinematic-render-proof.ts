@@ -24,6 +24,7 @@ import {fourVesselProxyWorld,fourVesselProxyTake} from './four-vessel-proxy-scen
 import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} from './battle-vessel-silhouettes.js';
 import {makeBattleMotionDemo} from './battle-motion-demo.js';
 import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
+import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -404,7 +405,10 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               ...draw.modelMatrix,...draw.normalMatrix,
               ...draw.baseColor,draw.materialModel,draw.metallic,draw.roughness,draw.alphaCutoff,
               ...draw.emissive,draw.emissiveIntensity,...draw.textureFlags,
-              draw.receivesShadow?1:0,0,0,0
+              draw.receivesShadow?1:0,
+              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?1:0,
+              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?plan.timeSec:0,
+              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?0.80:0
             ]);
             const buffer=device.createBuffer({size:obj.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
             device.queue.writeBuffer(buffer,0,obj);
@@ -490,13 +494,17 @@ async function main(){
   const isSilhouette=process.env.CINEMATIC_SCENE==='denmark_strait_silhouettes';
   const isBattleship=process.env.CINEMATIC_SCENE==='battleship'||isFormation||isSilhouette;
   const useFx=process.env.BATTLE_FX==='1';
+  const useAnimatedOcean=process.env.BATTLE_ANIMATED_OCEAN==='1';
+  if(useAnimatedOcean&&!isSilhouette)throw Error('animated_ocean_requires_naval_silhouette_scene');
   if(useFx&&!isSilhouette)throw Error('cinematic_environment_fx_requires_naval_geometry');
   const originalWorld=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
   const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
     ?makeBattleMotionDemo(originalWorld):undefined;
   const fxRig=useFx?makeBattleEnvironmentFx():undefined;
-  const world=fxRig?attachCinematicFxToWorld(originalWorld,actorRig!,fxRig):originalWorld;
-  const geometries=useFx?[...battleVesselGeometry(),...cinematicFxGeometry()]
+  const stagedWorld=fxRig?attachCinematicFxToWorld(originalWorld,actorRig!,fxRig):originalWorld;
+  const world=useAnimatedOcean?attachAnimatedOcean(stagedWorld):stagedWorld;
+  const geometries=useAnimatedOcean?[...battleVesselGeometry(),...(useFx?cinematicFxGeometry():[]),makeAnimatedOceanGrid()]
+    :useFx?[...battleVesselGeometry(),...cinematicFxGeometry()]
     :isSilhouette?battleVesselGeometry():isBattleship?battleshipGeometry():industrialGeometry();
   const textures=isBattleship?[]:industrialTextures();
   const rotorTake:CinematicCameraTake={
@@ -633,6 +641,18 @@ async function main(){
       originalWebGpuMeshes:true,fluidDynamicsVerified:false,
       photorealisticSmokeVerified:false,historicallyVerifiedWeather:false,
       publicationAuthority:false}}:{}),
+    ...(useAnimatedOcean?{animatedOcean:{
+      geometryRef:OCEAN_WAVE_GEOMETRY_ID,
+      originalNativeWgslVertexDeformation:true,
+      analyticalTimeDependentNormal:true,
+      amplitude:OCEAN_WAVE_AMPLITUDE,
+      vertexCount:makeAnimatedOceanGrid().positions.length/3,
+      firstPhaseSec:sequence.frames[0].timeSec,
+      lastRenderedPhaseSec:sequence.frames[sequence.frames.length-2].timeSec,
+      physicsOrCFDVerified:false,
+      historicalWeatherVerified:false,
+      publicationAuthority:false
+    }}:{}),
     firstFramePlanDigest:sequence.frames[0].renderPlan.digest,
     lastFramePlanDigest:sequence.frames[sequence.frames.length-2].renderPlan.digest,
     renderProfile:raw.profile,softwareAdapterForced:raw.softwareAdapterForced,
@@ -666,6 +686,7 @@ async function main(){
       ...(isFormation?['Four distinct staged naval actors are genuine GPU-mesh entities but their geometry, courses and distance are artistic placeholders']:[]),
       ...(isSilhouette?['Four separately authored original silhouette assemblies use researched turret counts; no photogrammetry, verified scale, 1941 positioning or battle simulation']:[]),
       ...(useFx?['Procedural 3D moving wake, spray and exhaust actors in true GPU scene; particles are stylized illustration, not fluid or volumetric simulation']:[]),
+      ...(useAnimatedOcean?['Native WebGPU vertex shader deforming actual water mesh with time-varying waves and computed normals; no physical weather/CFD claim']:[]),
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');

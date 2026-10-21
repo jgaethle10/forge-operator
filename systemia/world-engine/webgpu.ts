@@ -791,13 +791,34 @@ struct VertexOut {
   @location(3) tangent: vec4<f32>,
 };
 
+// Owned World Engine animated-water shader extension: enabled ONLY for one
+// explicitly opt-in surface geometry, via spare existing shadowFlags channels.
+// No uniform-buffer layout changes and no effect on existing shots.
+fn animatedWaterHeightNormal(position: vec3<f32>, timeSec: f32, amplitude: f32) -> vec4<f32> {
+  let a = position.x * 0.21 + position.z * 0.12 + timeSec * 1.4;
+  let b = position.x * -0.14 + position.z * 0.24 - timeSec * 0.8;
+  let c = position.x * 0.45 + position.z * 0.33 + timeSec * 2.3;
+  let h = amplitude * (0.43 * sin(a) + 0.38 * sin(b) + 0.22 * sin(c));
+  let slopeX = amplitude * (0.43 * 0.21 * cos(a) +
+    0.38 * -0.14 * cos(b) + 0.22 * 0.45 * cos(c));
+  let slopeZ = amplitude * (0.43 * 0.12 * cos(a) +
+    0.38 * 0.24 * cos(b) + 0.22 * 0.33 * cos(c));
+  return vec4<f32>(normalize(vec3<f32>(-slopeX, 1.0, -slopeZ)), h);
+}
+
 @vertex
 fn vs_main(input: VertexIn) -> VertexOut {
   var out: VertexOut;
-  let world = object.model * vec4<f32>(input.position, 1.0);
+  var world = object.model * vec4<f32>(input.position, 1.0);
+  var normalWorld = normalize((object.normalMatrix * vec4<f32>(input.normal, 0.0)).xyz);
+  if(object.shadowFlags.y > 0.5) {
+    let surface = animatedWaterHeightNormal(world.xyz, object.shadowFlags.z, object.shadowFlags.w);
+    world.y += surface.w;
+    normalWorld = surface.xyz;
+  }
   out.position = frame.viewProjection * world;
   out.worldPosition = world.xyz;
-  out.normal = normalize((object.normalMatrix * vec4<f32>(input.normal, 0.0)).xyz);
+  out.normal = normalWorld;
   out.uv = input.uv;
   out.tangent = vec4(
     normalize((object.normalMatrix * vec4<f32>(input.tangent.xyz, 0.0)).xyz),
@@ -862,6 +883,21 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
   var metallic = saturate(object.material.y);
   var roughness = clamp(object.material.z, 0.04, 1.0);
   let alphaCutoff = object.material.w;
+  if(object.shadowFlags.y > 0.5) {
+    // Source-authored directional water striations. A visual surface shader,
+    // not a measured ocean spectrum, opaque card or layered video texture.
+    let crest = smoothstep(0.24, 0.72,
+      (input.worldPosition.y + 0.60) / max(object.shadowFlags.w, 0.01));
+    let x = input.worldPosition.x;
+    let z = input.worldPosition.z;
+    let t = object.shadowFlags.z;
+    let streak = pow(0.5 + 0.5 * sin(x * 1.1 + z * 1.6 - t * 3.4 +
+      0.5 * sin(z * 0.21 + x * 0.17)), 6.0);
+    let fine = 0.5 + 0.5 * sin(x * 0.52 - z * 0.88 - t * 1.8);
+    let foam = crest * (0.24 + 0.76 * streak) * (0.72 + 0.28 * fine);
+    base.rgb = mix(base.rgb, vec3<f32>(0.18, 0.30, 0.34), clamp(foam * 0.57, 0.0, 0.62));
+    roughness = mix(roughness, 0.68, foam * 0.35);
+  }
 
   if (object.textureFlags.x > 0.5) {
     base *= textureSample(baseColorTexture, materialSampler, input.uv);

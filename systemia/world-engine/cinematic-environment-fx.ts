@@ -121,7 +121,9 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
  const base=scene.visualScene.materials.find(m=>m.id==='foam');
  if(!base)reject('foam_base_material_missing');
  scene.visualScene.materials.push(
-  {...structuredClone(base),id:'vfx-wake',baseColor:{r:.65,g:.83,b:.86,a:1},roughness:.98,metallic:0,doubleSided:true},
+  ...[.48,.33,.21,.10].map((alpha,i)=>({...structuredClone(base),
+    id:'vfx-wake-'+i,baseColor:{r:.62,g:.78,b:.81,a:alpha},
+    alphaMode:'blend' as const,roughness:.98,metallic:0,doubleSided:true})),
   ...[.70,.26].map((alpha,i)=>({...structuredClone(base),id:'vfx-spray-'+i,
     baseColor:{r:.77,g:.86,b:.87,a:alpha},alphaMode:'blend' as const,
     roughness:1,metallic:0,doubleSided:true})),
@@ -135,7 +137,7 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
    transform:{position:{x:0,y:-100,z:0},scale:{x:1,y:1,z:1}},
    renderable:{
     geometryRef:emitter.kind==='wake'?'owned:fx-cinematic-wake-crest':'owned:fx-cinematic-3d-puff',
-    materialId:'vfx-'+emitter.kind+(emitter.kind==='wake'?'':'-0'),
+    materialId:'vfx-'+emitter.kind+'-0',
     visible:false,castsShadow:false,receivesShadow:false
    },
    tags:['world_engine_original_fx','cinematic_fx_not_physics',emitter.kind,emitter.actorId]
@@ -179,6 +181,7 @@ export function animateCinematicFx(world:WorldDefinition,entities:WorldEntity[],
     const anchor=rotate(emitter.anchorLocal,yaw);
     const drift=rotate(emitter.driftLocal,yaw);
     const progress=age/emitter.lifetimeSec;
+    if(emitter.kind==='wake')entity.renderable!.materialId='vfx-wake-'+Math.min(3,Math.floor(progress*4));
     if(emitter.kind==='smoke')entity.renderable!.materialId='vfx-smoke-'+Math.min(3,Math.floor(progress*4));
     if(emitter.kind==='spray')entity.renderable!.materialId='vfx-spray-'+Math.min(1,Math.floor(progress*2));
     const wiggle=.065*Math.sin(7*progress+i*.81+emitter.phase*5);
@@ -192,7 +195,7 @@ export function animateCinematicFx(world:WorldDefinition,entities:WorldEntity[],
     entity.transform.position={x,y,z};
     entity.transform.rotationDeg={x:0,y:yaw,z:0};
     entity.transform.scale=emitter.kind==='wake'?
-     {x:radius*1.7,y:.07,z:radius*.60}:
+     {x:radius*1.15,y:.045,z:radius*.42}:
      {x:radius,y:radius*(emitter.kind==='smoke'?1.35:1),z:radius};
     state.push({id:entityId,x,y,z,age});
     active++;
