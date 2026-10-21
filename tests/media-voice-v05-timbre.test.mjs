@@ -22,6 +22,11 @@ test('original Kokoro text generation is protected; alternate IPA edits forbidde
  assert.match(source,/humanNaturalnessImprovementVerified':False/);
  assert.match(source,/commercialPublicationAuthorized':False/);
  assert.match(source,/duplicatePureBellaControl/);
+ assert.match(source,/CONTROLLED_SEED = 1701/);
+ assert.match(source,/torch\.manual_seed\(CONTROLLED_SEED\)/);
+ assert.match(source,/np\.random\.seed\(CONTROLLED_SEED\)/);
+ assert.match(source,/np\.array_equal\(a,b\)/);
+ assert.match(source,/failed fixed-seed bitwise parity/);
 });
 test('experiment tests identity vectors not transcription and hashes actual outputs',()=>{
  assert.match(source,/torch\.lerp\(bella,heart,weight\)/);
