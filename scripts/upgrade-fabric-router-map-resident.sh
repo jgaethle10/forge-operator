@@ -31,6 +31,8 @@ done
 error(){ echo "BLOCKED: $*" >&2; exit 2; }
 [[ -n "$RUNTIME_ROOT" ]] || error 'provide --repo-root for the durable mapper checkout'
 RUNTIME_ROOT="$(realpath -e -- "$RUNTIME_ROOT")" || error 'runtime checkout missing'
+[[ "$RUNTIME_ROOT" =~ ^[A-Za-z0-9_./-]+$ ]] ||
+  error 'runtime path contains characters unsafe for the saved shell environment'
 [[ "$RUNTIME_ROOT" != /tmp* && "$RUNTIME_ROOT" != /var/tmp* ]] ||
   error 'runtime checkout cannot be temporary'
 for path in \
