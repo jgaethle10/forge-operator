@@ -28,6 +28,8 @@ const FEATURES=[
   ['toon_shot_handoff','systemia/media-studio/toon-shot-handoff.mjs','toon'],
   ['toon_cel_mp4_canary','systemia/media-studio/toon-cel-canary.py','toon'],
   ['toon_cel_packet_adapter','systemia/media-studio/toon-cel-adapter.mjs','toon'],
+  ['toon_audition_board','systemia/media-studio/toon-audition-board.py','toon'],
+  ['toon_cinema_model_preflight','systemia/media-studio/toon-cinema-preflight.mjs','toon'],
   ['identity_fingerprinting','systemia/media-studio/identity-fingerprint.ts','toon'],
   ['character_performance','systemia/media-studio/performance-director.ts','toon'],
   ['dialogue_lipsync_admission','systemia/media-studio/dialogue-sync-gate.ts','toon'],
