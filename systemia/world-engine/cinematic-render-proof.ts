@@ -23,6 +23,8 @@ import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-sc
 import {fourVesselProxyWorld,fourVesselProxyTake} from './four-vessel-proxy-scene.js';
 import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} from './battle-vessel-silhouettes.js';
 import {makeBattleMotionDemo} from './battle-motion-demo.js';
+import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
+import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
 import {directWorldEngineShot,type DirectorShotType} from './shot-director.js';
@@ -456,9 +458,16 @@ async function main(){
   const isFormation=process.env.CINEMATIC_SCENE==='denmark_strait_formation';
   const isSilhouette=process.env.CINEMATIC_SCENE==='denmark_strait_silhouettes';
   const isBattleship=process.env.CINEMATIC_SCENE==='battleship'||isFormation||isSilhouette;
-  const geometries=isSilhouette?battleVesselGeometry():isBattleship?battleshipGeometry():industrialGeometry();
+  const useFx=process.env.BATTLE_FX==='1';
+  if(useFx&&!isSilhouette)throw Error('cinematic_environment_fx_requires_naval_geometry');
+  const originalWorld=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
+  const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
+    ?makeBattleMotionDemo(originalWorld):undefined;
+  const fxRig=useFx?makeBattleEnvironmentFx():undefined;
+  const world=fxRig?attachCinematicFxToWorld(originalWorld,actorRig!,fxRig):originalWorld;
+  const geometries=useFx?[...battleVesselGeometry(),...cinematicFxGeometry()]
+    :isSilhouette?battleVesselGeometry():isBattleship?battleshipGeometry():industrialGeometry();
   const textures=isBattleship?[]:industrialTextures();
-  const world=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
   const rotorTake:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',
     id:'orbital-foundry-take-one',cameraEntityId:'cinema-camera',targetEntityId:'reactor',
@@ -484,7 +493,8 @@ async function main(){
   }):null;
   const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
     world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures,
-    ...(isSilhouette&&process.env.BATTLE_MOTION==='1'?{actorRig:makeBattleMotionDemo(world)}:{})
+    ...(actorRig?{actorRig}:{}),
+    ...(fxRig?{fxRig}:{})
   });
   if(!director&&native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
@@ -580,6 +590,16 @@ async function main(){
       historicalTrajectoriesAuthenticated:false,
       rigidBodyPhysicsExecuted:false,
       humanCreativeReviewRequired:true}}:{}),
+    ...(sequence.fxRigProof?{environmentalFx:{...sequence.fxRigProof,
+      firstFrameDigest:sequence.frames[0].environmentalFxDigest,
+      lastFrameDigest:sequence.frames[sequence.frames.length-2].environmentalFxDigest,
+      activeParticleSamples:[sequence.frames[0].activeFxParticles,
+        sequence.frames[Math.floor(sequence.frames.length/2)].activeFxParticles,
+        sequence.frames[sequence.frames.length-2].activeFxParticles],
+      realGpuParticleDrawsAtMiddle:sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.draws.filter(d=>d.entityId.startsWith('vfx-')).length,
+      originalWebGpuMeshes:true,fluidDynamicsVerified:false,
+      photorealisticSmokeVerified:false,historicallyVerifiedWeather:false,
+      publicationAuthority:false}}:{}),
     firstFramePlanDigest:sequence.frames[0].renderPlan.digest,
     lastFramePlanDigest:sequence.frames[sequence.frames.length-2].renderPlan.digest,
     renderProfile:raw.profile,softwareAdapterForced:raw.softwareAdapterForced,
@@ -612,6 +632,7 @@ async function main(){
     claims:['Real owned-WGSL shader pixels rendered from canonical World Engine moving 3D camera frame plans',
       ...(isFormation?['Four distinct staged naval actors are genuine GPU-mesh entities but their geometry, courses and distance are artistic placeholders']:[]),
       ...(isSilhouette?['Four separately authored original silhouette assemblies use researched turret counts; no photogrammetry, verified scale, 1941 positioning or battle simulation']:[]),
+      ...(useFx?['Procedural 3D moving wake, spray and exhaust actors in true GPU scene; particles are stylized illustration, not fluid or volumetric simulation']:[]),
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
