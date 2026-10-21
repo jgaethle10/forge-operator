@@ -16,7 +16,7 @@ if not 500000<len(data)<22000000 or not data.startswith(b"OggS"):
     raise RuntimeError("source_unverified_or_invalid")
 with sf.SoundFile(io.BytesIO(data)) as f:
     start=67.0;duration=13.5
-    if f.duration<start+duration:raise RuntimeError("unexpected_source_duration")
+    if f.frames/f.samplerate<start+duration:raise RuntimeError("unexpected_source_duration")
     sample_rate=f.samplerate;f.seek(int(start*sample_rate))
     sound=f.read(int(duration*sample_rate),dtype="float32",always_2d=True)
 fade=int(.12*sample_rate)
