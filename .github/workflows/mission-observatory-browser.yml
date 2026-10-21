@@ -1,0 +1,50 @@
+name: Mission Observatory Browser QA
+
+on:
+  pull_request:
+    paths:
+      - 'public/visuals/mission-observatory/**'
+      - 'systemia/visual-desk/mission-observatory.browser.cjs'
+      - '.github/workflows/mission-observatory-browser.yml'
+  push:
+    branches:
+      - 'feat/living-intelligence-observatory-*'
+    paths:
+      - 'public/visuals/mission-observatory/**'
+      - 'systemia/visual-desk/mission-observatory.browser.cjs'
+      - '.github/workflows/mission-observatory-browser.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-browser-qa:
+    name: Desktop and responsive Chromium review
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install isolated browser test runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/observatory-browser"
+          npm install --prefix "$RUNNER_TEMP/observatory-browser" --no-save --no-package-lock --no-audit --no-fund playwright@1.56.1
+          node "$RUNNER_TEMP/observatory-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Exercise mission scene and capture device screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH="$RUNNER_TEMP/observatory-browser/node_modules" node systemia/visual-desk/mission-observatory.browser.cjs
+      - name: Upload independent QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission-observatory-browser-review
+          path: _mission_observatory_review/
+          if-no-files-found: warn
+          retention-days: 30
