@@ -1,10 +1,5 @@
 name: Voice Foundry RC25 Cold Open Acting (private only)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc25-coldopen-acting.yml'
-      - 'systemia/media-studio/voice-rc25-coldopen-acting.py'
-      - 'tests/media-voice-rc25-coldopen-acting.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
