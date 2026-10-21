@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 import crypto from 'crypto';
 import { compileSeriesEpisode } from './series.js';
+import { compileToonShotHandoff } from './toon-shot-handoff.mjs';
 import type { MediaProject, SeriesBible } from './types.js';
 
 type FamilyCharacter = {
@@ -278,7 +279,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
           'Preserve approved character identity and recognizable reference traits across every scene.',
           'Family-friendly tone. No silent redesigns between scenes or episodes.',
         ],
-        entities: characters.map((character) => ({
+        entities: [...characters.map((character) => ({
           id: character.id!,
           kind: 'character',
           name: character.name,
@@ -286,7 +287,14 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
           immutableTraits: { family_role: character.role || 'Family' },
           voiceProfileId: 'fallen-voice-' + character.id + '-v1',
           referenceAssetIds: ['ref-' + character.id],
-        })),
+        })), {
+          id: 'family-story-world',
+          kind: 'location',
+          name: 'Family Story World',
+          description: 'Unverified episode setting anchor; actual backgrounds and spatial continuity still require evidence.',
+          immutableTraits: { scope: 'story-world' },
+          referenceAssetIds: [],
+        }],
         canon: [],
       };
 
@@ -362,6 +370,32 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
             error instanceof Error
               ? error.message
               : 'Fallen could not compile the series episode.',
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/family/toon-handoff',
+    rateLimit(30, 60 * 60 * 1000),
+    (req: Request, res: Response) => {
+      const bytes = Buffer.byteLength(JSON.stringify(req.body ?? {}), 'utf8');
+      if (bytes > 400_000 || !Array.isArray(req.body?.shots) || req.body.shots.length > 60) {
+        res.status(413).json({ success: false, error: 'toon_handoff_payload_too_large_or_invalid' });
+        return;
+      }
+      try {
+        const handoff = compileToonShotHandoff({
+          bible: req.body.bible,
+          episode: req.body.seriesPlan,
+          shots: req.body.shots,
+          fps: req.body.fps ?? 24,
+        });
+        res.json({ success: true, data: { handoff } });
+      } catch (error) {
+        res.status(422).json({
+          success: false,
+          error: error instanceof Error ? error.message : 'toon_handoff_rejected',
         });
       }
     },
