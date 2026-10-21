@@ -1,0 +1,51 @@
+name: Roman public continuity canary (read-only)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'systemia/migrations/base44-exit/roman-continuity-canary*'
+      - '.github/workflows/roman-continuity-canary.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline canary regression suite
+        run: node --test systemia/migrations/base44-exit/roman-continuity-canary.test.mjs
+      - name: Regional public probe (advisory, not a cutover signal)
+        shell: bash
+        run: |
+          set +e
+          node systemia/migrations/base44-exit/roman-continuity-canary.mjs > roman-continuity.json
+          code=$?
+          cat roman-continuity.json
+          if [ "$code" -ne 0 ]; then
+            echo '::warning::One GitHub runner could not verify both campaign hostnames; this is not proof of downtime.'
+          fi
+          exit 0
+      - name: Public DNS and HTTP response fingerprint (no cookies or body)
+        shell: bash
+        run: |
+          for host in voteroman.com www.voteroman.com; do
+            echo "DNS observations: $host"
+            getent ahostsv4 "$host" | awk '{print $1}' | sort -u | head -n 5 || true
+            echo "HTTPS GET headers: $host"
+            curl --silent --show-error --max-time 15 --proto '=https' --max-redirs 0 \
+              -D roman-response-headers.tmp -o /dev/null "https://${host}/" || true
+            awk '(/^HTTP\// || tolower($0) ~ /^(server|content-type|via|x-cache|x-served-by|retry-after|cf-ray|x-powered-by):/) {print substr($0,1,160)}' roman-response-headers.tmp || true
+            rm -f roman-response-headers.tmp
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: roman-continuity-advisory
+          path: roman-continuity.json
+          retention-days: 7
