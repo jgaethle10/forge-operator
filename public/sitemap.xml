@@ -19,10 +19,10 @@
   <url><loc>/chum/answers/</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/chum/answers/index.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
-  <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-20T11:49:44.334Z</lastmod></url>
-  <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-20T11:49:44.334Z</lastmod></url>
+  <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
+  <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-17T08:49:39.330Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-21T17:18:22.336Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-21T13:11:45.934Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-21T13:11:45.934Z</lastmod></url>
@@ -708,6 +708,9 @@
   <url><loc>/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/</loc><lastmod>2026-10-20T11:49:44.334Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json</loc><lastmod>2026-10-20T11:49:44.334Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt</loc><lastmod>2026-10-20T11:49:44.334Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/answer.json</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/llms.txt</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/</loc><lastmod>2026-10-01T05:00:27.354Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json</loc><lastmod>2026-10-01T05:00:27.354Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/llms.txt</loc><lastmod>2026-10-01T05:00:27.354Z</lastmod></url>

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-21T17:18:22.336Z",
-  "url_count": 2987,
+  "updated_at": "2026-10-21T17:20:20.028Z",
+  "url_count": 2990,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -123,14 +123,14 @@
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "8d0a39b79205a12f76dc73ac468a6ea933601ca316f263f0abea940b9b8f8d76",
-      "last_changed": "2026-10-20T11:49:44.334Z",
+      "content_sha256": "9c6eb3c2ae83b367b018dffff9438242ae0fb892f220e5952a8554d6a8a10915",
+      "last_changed": "2026-10-21T17:20:20.028Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "5d064006f5de2bb97e4d8b7fca7bc6cf6a99ae9d8cd493389945629b307c5d53",
-      "last_changed": "2026-10-20T11:49:44.334Z",
+      "content_sha256": "e79ff309dbf3a8e499b672aa609647886c006ce7d36de3f31cb7b84da8d1ce3b",
+      "last_changed": "2026-10-21T17:20:20.028Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "c65f3f9708b98d472ec0ad549f1bffec225684aa22a2302205ad8f0bec576cef",
-      "last_changed": "2026-10-21T17:18:22.336Z",
+      "content_sha256": "7711d0649e381f1348bf78cffff948d6429c2ead60a7cd4d158c10e867bd46b7",
+      "last_changed": "2026-10-21T17:20:20.028Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -4235,6 +4235,24 @@
       "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
       "content_sha256": "0d628bbcde40c7aa35570123b413d12dac5301cdb2f989598d9098b4f703551e",
       "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/": {
+      "path": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/",
+      "content_sha256": "dfd3f835c2222f8edeb0eb15f9edf1e1891fe06816bdde5c1beeac4eab63af64",
+      "last_changed": "2026-10-21T17:20:20.028Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/answer.json": {
+      "path": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/answer.json",
+      "content_sha256": "3b5a494245793d04add03169f1e9e95e59464b08775d247667172de73edb3f8d",
+      "last_changed": "2026-10-21T17:20:20.028Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/llms.txt": {
+      "path": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/llms.txt",
+      "content_sha256": "4f36ee5c5dadc815a73e3b69944d9bca84ebe1c1995d2c4a5be30a4c9fe5eccc",
+      "last_changed": "2026-10-21T17:20:20.028Z",
       "priority": 86
     },
     "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/": {

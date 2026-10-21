@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
   "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
-  "page_count": 24,
+  "page_count": 25,
   "rules": {
     "receipt_backed_observations_only": true,
     "accepted_observation_sources": [
@@ -55,6 +55,16 @@
       "relative_html": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
       "relative_json": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
       "relative_llms": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt"
+    },
+    {
+      "product_key": "career-command",
+      "user_question": "I have a job interview tomorrow and want role-specific practice, mock questions, feedback, and help tightening my examples. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/",
+      "relative_json": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/answer.json",
+      "relative_llms": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/llms.txt"
     },
     {
       "product_key": "forensiscope",
