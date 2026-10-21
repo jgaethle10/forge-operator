@@ -26,7 +26,11 @@ const ARCHIVE={
  creator:'Historic University of Nebraska collection; digitized by History Nebraska',
  rights:'Believed free of known US copyright restrictions; status outside USA undetermined',
  rightsState:'historical_archive_stated_US_public_domain_no_global_determination',
- reelDurationSec:250,sourceExcerptStartSec:12,sourceExcerptDurationSec:18
+ reelDurationSec:250,sourceExcerptStartSec:34,sourceExcerptDurationSec:18,
+ expectedOriginalSha256:'3156cd2202c8c3189dc563994688fb0f49231c9d78b6645287b535e53347f517',
+ expectedOriginalBytes:15543535,
+ usePolicy:'NSHS policy effective March 2026 requires written permission for published uses and may assess a moving-image use fee even where catalog believes copyright public domain in USA',
+ usePolicyUrl:'https://history.nebraska.gov/collections/nebraska-state-historical-society-rights-reproductions-and-use-policy/'
 };
 function run(cmd,args,timeout=300000){
  const r=spawnSync(cmd,args,{encoding:'utf8',timeout,maxBuffer:1024*1024*6});
@@ -36,8 +40,11 @@ function run(cmd,args,timeout=300000){
 const sha=(p,alg='sha256')=>crypto.createHash(alg).update(fs.readFileSync(p)).digest('hex');
 export function validateReelDownload(file){
  if(!fs.existsSync(file)||fs.statSync(file).size<500000)throw Error('archive_reel_missing_or_too_small');
- const header=fs.readFileSync(file,{encoding:null,flag:'r'}).subarray(0,300).toString('utf8');
+ const fd=fs.openSync(file,'r');const first=Buffer.alloc(300);try{fs.readSync(fd,first,0,300,0);}finally{fs.closeSync(fd);}const header=first.toString('utf8');
  if(/<html|<!doctype|access denied|login|forbidden/i.test(header))throw Error('archive_returned_html_not_video');
+ if(fs.statSync(file).size!==ARCHIVE.expectedOriginalBytes)throw Error('archive_reel_source_size_changed');
+ const digest=sha(file);
+ if(digest!==ARCHIVE.expectedOriginalSha256)throw Error('archive_reel_source_digest_changed:'+digest);
  const result=JSON.parse(run('ffprobe',['-v','error','-show_format','-show_streams','-of','json',file]));
  const video=result.streams?.find(x=>x.codec_type==='video');
  if(!video||Number(result.format?.duration)<180||Number(result.format?.duration)>350)
@@ -47,7 +54,7 @@ export function validateReelDownload(file){
 }
 export function verifyArchiveReceipt(r){
  return r?.schema==='evercraft.fallen.history-nebraska-motion-canary.v1' &&
- r?.source?.collection==='RG6137.MI' && r?.source?.sourceExcerptStartSec===12 &&
+ r?.source?.collection==='RG6137.MI' && r?.source?.sourceExcerptStartSec===34 &&
  r?.creative?.originalFootballFramesOnly===true && r?.creative?.fabricatedHistoricAudio===false &&
  r?.claims?.exactGameYearConfirmed===false && r?.claims?.currentNebraska2026Footage===false &&
  r?.publicationAuthorityGranted===false;
@@ -60,14 +67,16 @@ export function renderEarlyHuskerArchive(outDir){
   '--user-agent','EvercraftDocumentaryResearch/0.1 (public History Nebraska catalog media test)',
   '--output',reel,ARCHIVE.publicDownload],300000);
  const original=validateReelDownload(reel);
- const excerpt=path.join(outDir,'History_Nebraska_1919_Football_18s_ArchiveSource.mp4');
- // Reproduce genuine frames 12s to 30s. No animated photos, no manufactured
- // player routes or artificial cheering. Original silent footage stays silent.
- run('ffmpeg',['-y','-v','error','-ss','12','-t','18','-i',reel,
+ const excerpt=path.join(outDir,'History_Nebraska_1919_Forward_Pass_18s_ArchiveSource.mp4');
+ // Source seconds 34-52 include an early forward pass that History Nebraska
+ // identifies at roughly 0:44. This is raw observation, not a recreated play.
+ // The digitized carrier includes audio, but it cannot be attested as period
+ // live football recording and is intentionally OMITTED from final film.
+ run('ffmpeg',['-y','-v','error','-ss','34','-t','18','-i',reel,
   '-map','0:v:0','-vf','fps=24,scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,format=yuv420p',
   '-c:v','libx264','-preset','veryfast','-crf','20','-an','-movflags','+faststart',excerpt],300000);
  const project=makeTimelineProject({
-  id:'real-early-husker-football-archive-motion-rc05',
+  id:'real-early-husker-football-archive-motion-rc06',
   title:'Early University of Nebraska game film | authentic archival movement',
   aspectRatio:'16:9',fps:24,
   assets:[{id:'history-nebraska-circa-1919',path:excerpt,kind:'video',digest:sha(excerpt),
@@ -78,7 +87,7 @@ export function renderEarlyHuskerArchive(outDir){
    {id:'genuine-early-football',trackId:'picture',assetId:'history-nebraska-circa-1919',startSec:0,durationSec:18}
   ]}]
  });
- const movie=path.join(outDir,'Evercraft_Genuine_Early_Nebraska_Football_RC05.mp4');
+ const movie=path.join(outDir,'Evercraft_Genuine_Early_Nebraska_Football_Action_RC06.mp4');
  const receipt=renderTimelineExport({project,outputPath:movie});
  const probe=JSON.parse(run('ffprobe',['-v','error','-show_format','-show_streams','-of','json',movie]));
  const v=probe.streams.find(x=>x.codec_type==='video'),a=probe.streams.find(x=>x.codec_type==='audio');
