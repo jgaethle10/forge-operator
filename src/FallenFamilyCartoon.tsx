@@ -128,6 +128,8 @@ export default function FallenFamilyCartoon() {
   const [toonHandoff, setToonHandoff] = useState<ToonHandoffPacket|null>(null);
   const [pilotFrameBinding, setPilotFrameBinding] = useState('');
   const mediaEpoch=useRef(0);
+  const seriesEpoch=useRef(0);
+  const handoffEpoch=useRef(0);
   const [providerConsent, setProviderConsent] = useState(false);
   const [loading, setLoading] = useState<string>('');
   const [error, setError] = useState('');
@@ -156,6 +158,7 @@ export default function FallenFamilyCartoon() {
     setPilotFrameBinding('');
   }
   function invalidateToonPlan() {
+    handoffEpoch.current+=1;
     setToonHandoff(null);
     invalidateShotMedia();
   }
@@ -178,6 +181,8 @@ export default function FallenFamilyCartoon() {
     if(draft) setSelectedScene(draft.sceneIndex);
   }
   function resetSeriesPlan() {
+    seriesEpoch.current+=1;
+    handoffEpoch.current+=1;
     setEpisode(null);
     setToonDrafts([]);
     setToonHandoff(null);
@@ -219,7 +224,8 @@ export default function FallenFamilyCartoon() {
     try {
       const photoDataUrl = await resizeImage(file);
       updateCharacter(index, { photoName: file.name, photoDataUrl });
-      invalidateShotMedia();
+      invalidateToonPlan();
+      setCharacterSheet('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not prepare that photo.');
     }
@@ -240,6 +246,7 @@ export default function FallenFamilyCartoon() {
     }
 
     setLoading('episode');
+    const requestEpoch=seriesEpoch.current;
     try {
       const response = await fetch('/api/fallen/family/episode', {
         method: 'POST',
@@ -257,6 +264,7 @@ export default function FallenFamilyCartoon() {
       if (!response.ok || !payload.success || !payload.data) {
         throw new Error(payload.error || 'Fallen could not build the episode.');
       }
+      if(requestEpoch!==seriesEpoch.current) return;
       setEpisode(payload.data);
       setToonDrafts(buildToonShotDrafts(payload.data));
       setSelectedToonIndex(0);
@@ -281,6 +289,7 @@ export default function FallenFamilyCartoon() {
 
     setLoading('characters');
     setError('');
+    const requestEpoch=mediaEpoch.current;
     try {
       const response = await fetch('/api/fallen/family/character-sheet', {
         method: 'POST',
@@ -302,6 +311,7 @@ export default function FallenFamilyCartoon() {
       if (!response.ok || !payload.success || !payload.imageDataUrl) {
         throw new Error(payload.error || 'Character sheet generation failed.');
       }
+      if(requestEpoch!==mediaEpoch.current) return;
       setCharacterSheet(payload.imageDataUrl);
       invalidateShotMedia();
     } catch (err) {
@@ -319,6 +329,7 @@ export default function FallenFamilyCartoon() {
     setLoading('toon');
     setError('');
     invalidateToonPlan();
+    const requestEpoch=handoffEpoch.current;
     try {
       const response=await fetch('/api/fallen/family/toon-handoff',{
         method:'POST',headers:{'Content-Type':'application/json'},
@@ -334,6 +345,7 @@ export default function FallenFamilyCartoon() {
         packet.state!=='preproduction_work_orders_only') {
         throw new Error(payload.error||'Shot directions could not be validated.');
       }
+      if(requestEpoch!==handoffEpoch.current) return;
       setToonHandoff(packet);
     }catch(err){
       setError(err instanceof Error?err.message:'Shot direction validation failed.');
@@ -489,17 +501,17 @@ export default function FallenFamilyCartoon() {
           <div className="fallen-two">
             <label>
               Series name
-              <input value={seriesTitle} onChange={(event) => setSeriesTitle(event.target.value)} />
+              <input value={seriesTitle} onChange={(event) => {resetSeriesPlan();setSeriesTitle(event.target.value);}} />
             </label>
             <label>
               Episode title
-              <input value={episodeTitle} onChange={(event) => setEpisodeTitle(event.target.value)} />
+              <input value={episodeTitle} onChange={(event) => {resetSeriesPlan();setEpisodeTitle(event.target.value);}} />
             </label>
           </div>
 
           <label>
             Animation look
-            <select value={style} onChange={(event) => setStyle(event.target.value)}>
+            <select value={style} onChange={(event) => {resetSeriesPlan();setStyle(event.target.value);}}>
               {STYLE_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
@@ -567,7 +579,7 @@ export default function FallenFamilyCartoon() {
             <textarea
               rows={5}
               value={premise}
-              onChange={(event) => setPremise(event.target.value)}
+              onChange={(event) => {resetSeriesPlan();setPremise(event.target.value);}}
               placeholder="Example: The family tries to build the world's greatest blanket fort, but the dog keeps stealing the pillows. Keep it funny, warm, and about working together."
             />
           </label>
