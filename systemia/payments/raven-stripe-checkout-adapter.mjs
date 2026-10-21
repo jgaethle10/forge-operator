@@ -89,7 +89,7 @@ async function stripeJson({secret,path:apiPath,method='GET',body='',idempotencyK
  * reachable from public user input or MCP, and NEVER updates payment state.
  */
 export async function createRavenStripeCheckoutSession({
-  order,account,secretFile,fetchImpl=fetch,
+  order,account,secretFile,fetchImpl=fetch,secretReader=loadRavenStripeSecret,
 }={}){
   const binding=STRIPE_FIXED_PRICE_BINDINGS[order?.slug];
   if(!binding)throw Error('raven_stripe_offer_not_allowlisted');
@@ -102,7 +102,9 @@ export async function createRavenStripeCheckoutSession({
      order.synthetic!==false){
     throw Error('raven_stripe_canonical_order_ineligible');
   }
-  const secret=loadRavenStripeSecret({file:secretFile});
+  // Test clients may inject a mock reader; production entrypoints MUST omit
+  // this parameter so strict Raven file custody checks cannot be bypassed.
+  const secret=secretReader({file:secretFile});
   const identity=await stripeJson({secret,path:'/v1/account',fetchImpl});
   if(identity.object!=='account'||identity.id!==account.stripe_context ||
      identity.charges_enabled!==true){
