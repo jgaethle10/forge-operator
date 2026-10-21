@@ -1,0 +1,14 @@
+{
+  "name": "@evercraft/graphics-raster-review",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Isolated, synthetic-only Graphics Department SVG-to-PNG review artifacts; no public MCP or payment authority",
+  "dependencies": {
+    "@resvg/resvg-js": "2.6.2"
+  },
+  "scripts": {
+    "test": "node --test ./raster-review.test.mjs",
+    "proof": "node ./build-review-gallery.mjs"
+  }
+}

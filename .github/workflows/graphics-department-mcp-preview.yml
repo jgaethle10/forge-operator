@@ -1,0 +1,40 @@
+name: Graphics Department MCP Preview
+
+on:
+  push:
+    paths:
+      - 'systemia/mcp/graphics-department*.mjs'
+      - 'systemia/mcp/graphics-mcp-client-conformance.test.mjs'
+      - 'systemia/mcp/GRAPHICS_DEPARTMENT_MCP_RC001.md'
+      - '.github/workflows/graphics-department-mcp-preview.yml'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/commercial-renderer.mjs'
+  pull_request:
+    paths:
+      - 'systemia/mcp/graphics-department*.mjs'
+      - 'systemia/mcp/graphics-mcp-client-conformance.test.mjs'
+      - 'systemia/mcp/GRAPHICS_DEPARTMENT_MCP_RC001.md'
+      - '.github/workflows/graphics-department-mcp-preview.yml'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/commercial-renderer.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  graphics-mcp-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax conformance
+        run: |
+          node --check systemia/mcp/graphics-department.mjs
+          node --check systemia/mcp/graphics-department-server.mjs
+          node --check systemia/mcp/graphics-department.test.mjs
+          node --check systemia/mcp/graphics-mcp-client-conformance.test.mjs
+      - name: Local renderer and MCP security tests
+        run: node --test systemia/mcp/graphics-department.test.mjs systemia/mcp/graphics-mcp-client-conformance.test.mjs

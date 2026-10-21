@@ -1,0 +1,44 @@
+name: Graphics PNG Review Gallery
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/graphics-raster-review/**'
+      - 'systemia/mcp/graphics-art-directed.mjs'
+      - 'systemia/mcp/graphics-data-story.mjs'
+      - 'systemia/mcp/graphics-department.mjs'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/commercial-renderer.mjs'
+      - '.github/workflows/graphics-png-review-gallery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  png-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated exact-version raster dependency
+        run: npm install --prefix systemia/mcp/graphics-raster-review --ignore-scripts --no-audit --no-fund --package-lock=false
+      - name: Syntax validation
+        run: |
+          node --check systemia/mcp/graphics-raster-review/raster-review.mjs
+          node --check systemia/mcp/graphics-raster-review/build-review-gallery.mjs
+          node --check systemia/mcp/graphics-raster-review/raster-review.test.mjs
+      - name: Real PNG integrity and gallery tests
+        run: node --test systemia/mcp/graphics-raster-review/raster-review.test.mjs
+      - name: Generate isolated six-image proof gallery
+        run: node systemia/mcp/graphics-raster-review/build-review-gallery.mjs graphics-review
+      - name: Package synthetic, non-public review files
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-graphics-png-review
+          path: graphics-review/
+          retention-days: 7
+          if-no-files-found: error
