@@ -10,7 +10,7 @@ const resident = createRadarResident({
   intervalMs: Number(process.env.RADAR_INTERVAL_MS || 5 * 60 * 1000),
   materialityThreshold: Number(process.env.RADAR_MATERIALITY_THRESHOLD || 0.58),
   maxSignals: Number(process.env.RADAR_MAX_SIGNALS || 8),
-  journalUrl: process.env.RADAR_JOURNAL_URL || 'https://journal.evercraft.global/'
+  journalUrl: process.env.RADAR_JOURNAL_URL || 'https://fabric.systemiacommandcenters.com/journal/'
 });
 
 if (mode === 'once') {
