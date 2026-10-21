@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import {renderCommercialPoster, renderCommercialMotion} from './commercial-renderer.mjs';
 
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const hashJson = (value) => sha256(JSON.stringify(value));
@@ -92,12 +93,17 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
   for (const format of plan.formats || []) {
     const expected = formatMap.get(format.id);
     assert(expected && format.width === expected[0] && format.height === expected[1], 'format_unsupported:' + format.id);
-    artifacts.push(verifyPoster(root, 'poster-' + format.id + '.svg', format.width, format.height));
+    const fileName='poster-' + format.id + '.svg';
+    const poster=verifyPoster(root, fileName, format.width, format.height);
+    assert(textArtifact(root,fileName).text === renderCommercialPoster(campaign,plan,format.id),
+      'svg_content_mismatch:' + format.id);
+    artifacts.push(poster);
   }
   assert(artifacts.length === formatMap.size && new Set((plan.formats || []).map((x) => x.id)).size === formatMap.size, 'format_coverage_incomplete');
   const motion = textArtifact(root, 'motion.html');
   assert(motion.text.includes('window.__evercraftRenderAt=renderAt') &&
     motion.text.includes('window.__evercraftRenderFrame='), 'exact_frame_api_missing');
+  assert(motion.text === renderCommercialMotion(campaign,plan), 'motion_content_mismatch');
   artifacts.push({path:'motion.html', sha256:motion.sha256, sizeBytes:motion.sizeBytes, kind:'exact_frame_html_stage'});
   const inputFiles = [
     ['campaign.json', campaign], ['graphics-plan.json', plan],
