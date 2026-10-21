@@ -1,0 +1,32 @@
+name: RIVET Freshness Owner Review Evidence
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/rivet-freshness-governance-review.mjs'
+      - 'systemia/organism/rivet-freshness-governance-review.test.mjs'
+      - 'systemia/rivet/report-runtime.mjs'
+      - '.github/workflows/rivet-freshness-owner-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review-witness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reproduce source behavior with synthetic noncustomer fixture
+        run: node --test systemia/organism/rivet-freshness-governance-review.test.mjs
+      - name: Preserve owner-review-only evidence
+        run: |
+          node systemia/organism/rivet-freshness-governance-review.mjs rivet-freshness-governance-review.json
+          node -e "const e=require('./rivet-freshness-governance-review.json'); if(e.partner_or_owner_approval_observed||e.protected_source_modified||e.protected_test_modified||e.assessment_authority||e.customer_suitability_proved)process.exit(1)"
+          node -e "const fs=require('fs');const e=require('./rivet-freshness-governance-review.json');fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'## RIVET freshness requires partner review\\n\\nWith zero observed session records, old decision: '+e.baseline_decision+'; timestamp-only decision: '+e.with_refresh_decision+'.\\n\\n**No approval or protected baseline change has occurred.**\\n')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rivet-freshness-owner-review-witness
+          path: rivet-freshness-governance-review.json
+          retention-days: 30
