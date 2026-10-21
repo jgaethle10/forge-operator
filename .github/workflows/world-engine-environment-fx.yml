@@ -1,0 +1,90 @@
+name: World Engine original GPU environment FX proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/cinematic-environment-fx.ts'
+      - 'systemia/world-engine/cinematic-environment-fx.test.ts'
+      - 'systemia/world-engine/battle-environment-fx.ts'
+      - 'systemia/world-engine/cinematic-actor-motion.ts'
+      - 'systemia/world-engine/cinematic-rig.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-environment-fx.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  owned-animated-world-fx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 32
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned World Engine code
+        run: npm install --no-audit --no-fund
+      - name: Install owned WebGPU browser runtime
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Test original native wake, smoke and spray geometries through real signed GPU plan compiler
+        run: |
+          npx tsx --test systemia/world-engine/cinematic-environment-fx.test.ts
+          npm run test:world-engine
+      - name: Install native H264 encoder if missing
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render original four moving vessels with true 3D born and fading environmental FX geometry
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          CINEMATIC_FORMAT: wide
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-native-environment-fx
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-environment-fx-browser
+        run: npm run world:cinematic-render-proof
+      - name: Independent verify actual original GPU film and provenance rather than opaque labels
+        run: |
+          node <<'NODE'
+          const crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+          const dir='/tmp/evercraft-native-environment-fx';
+          const f=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const sha=crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+          const fx=r.environmentalFx,m=r.actorMotion;
+          if(!fx||!m||fx.schema!=='evercraft.world-engine.cinematic-fx-rig.v1'||
+             fx.emitterCount!==12||fx.particleBudget!==104||fx.originalGeometryAssets!==2||
+             !fx.originalWebGpuMeshes||fx.realGpuParticleDrawsAtMiddle<35||
+             fx.realGpuTransparentParticlesAtMiddle<20||
+             fx.separateDepthTestedAlphaBlendPipeline!==true||
+             fx.firstFrameDigest===fx.lastFrameDigest||
+             fx.activeParticleSamples.some(n=>!(n>35))||
+             fx.fluidDynamicsVerified!==false||fx.historicallyVerifiedWeather!==false||
+             fx.publicationAuthority!==false||m.publicationAuthority!==false||
+             r.publicationAuthority!==false||r.exactGpuReadbackFrames!==96||
+             r.output.sha256!==sha||r.uniqueRawFrameDigests<60||
+             r.output.audioCodec!==null)
+            throw Error('native_procedural_fx_evidence_failed');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',f]));
+          const v=probe.streams.find(x=>x.codec_type==='video');
+          if(!v||v.codec_name!=='h264'||v.width!==640||v.height!==360||
+             Number(v.nb_frames)!==96||probe.streams.some(x=>x.codec_type==='audio'))
+            throw Error('fx_movie_not_original_verified_h264');
+          console.log('GENUINE_GPU_WORLDSPACE_ENVIRONMENT_FX_ACCEPTANCE',{
+            movieSha256:sha,particleBudget:fx.particleBudget,
+            activeAtMid:fx.realGpuParticleDrawsAtMiddle,
+            distinctGpuReadbackFrames:r.uniqueRawFrameDigests,
+            noCFDClaim:fx.fluidDynamicsVerified===false});
+          NODE
+      - name: Preserve independently inspectable genuine film, receipt, source frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-native-3d-environment-effects-original-gpu
+          path: |
+            /tmp/evercraft-native-environment-fx/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-native-environment-fx/receipt.json
+            /tmp/evercraft-native-environment-fx/opening.png
+            /tmp/evercraft-native-environment-fx/middle.png
+            /tmp/evercraft-native-environment-fx/closing.png
+          retention-days: 7
+          if-no-files-found: error

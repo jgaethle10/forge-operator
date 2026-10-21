@@ -5,6 +5,7 @@ import {compileVisualFrame,verifyVisualFrameContract} from './visual.js';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,type GeometryAsset,type WebGpuRenderPlan} from './webgpu.js';
 import type {TextureAsset} from './texture.js';
 import {animateCinematicEntities,validateActorMotionRig,type ActorMotionRig} from './cinematic-actor-motion.js';
+import {animateCinematicFx,validateCinematicFxRig,type CinematicFxRig} from './cinematic-environment-fx.js';
 
 export type CinematicMove='dolly'|'crane'|'orbit'|'follow';
 export type CinematicEase='linear'|'smoothstep'|'smootherstep';
@@ -41,6 +42,8 @@ export interface CinematicCameraFrame {
   frameDigest:string;
   renderPlan:WebGpuRenderPlan;
   actorMotionDigest?:string;
+  environmentalFxDigest?:string;
+  activeFxParticles?:number;
 }
 export interface CinematicCameraSequence {
   schema:'evercraft.world-engine.cinematic-camera-sequence.v1';
@@ -52,6 +55,7 @@ export interface CinematicCameraSequence {
   frameCount:number;
   frames:CinematicCameraFrame[];
   actorRigProof?:{schema:string;rigDigest:string;rigId:string;actorCount:number;entityCount:number;publicationAuthority:false};
+  fxRigProof?:{schema:string;id:string;rigDigest:string;emitterCount:number;particleBudget:number;originalGeometryAssets:number;publicationAuthority:false};
   boundaries:{
     actualWorldGeometryRequired:true;
     worldSimulationUsesFixedSteps:true;
@@ -161,11 +165,14 @@ export function buildCinematicCameraSequence(input:{
   viewport:{width:number;height:number};
   textures?:TextureAsset[];
   actorRig?:ActorMotionRig;
+  fxRig?:CinematicFxRig;
 }):CinematicCameraSequence{
   const {world,take}=input;
   const {startFov,endFov,count}=validateTake(world,take);
   if(input.actorRig&&input.actorRig.durationSec!==take.durationSec)err('actor_rig_duration_mismatch');
   const actorRigProof=input.actorRig?validateActorMotionRig(world,input.actorRig):undefined;
+  if(input.fxRig&&!input.actorRig)err('fx_requires_actor_rig');
+  const fxRigProof=input.fxRig?validateCinematicFxRig(world,input.actorRig!,input.fxRig):undefined;
   const runtime=new EvercraftWorldRuntime(world);
   const frames:CinematicCameraFrame[]=[];
   const stride=world.tickRateHz/take.fps;
@@ -177,7 +184,8 @@ export function buildCinematicCameraSequence(input:{
     // VisualFrame and WebGPU render plan. It is cinematic animation, not
     // collision physics or mutation of the sealed simulation snapshot.
     const animated=input.actorRig?animateCinematicEntities(world,snapshot.entities,input.actorRig,snapshot.timeSec):undefined;
-    const sceneEntities=animated?.entities??snapshot.entities;
+    const effected=input.fxRig?animateCinematicFx(world,animated!.entities,input.actorRig!,input.fxRig,snapshot.timeSec):undefined;
+    const sceneEntities=effected?.entities??animated?.entities??snapshot.entities;
     const targetEntity=sceneEntities.find(entity=>entity.id===take.targetEntityId);
     if(!targetEntity||targetEntity.renderable?.visible===false)err('runtime_target_missing');
     const target={x:targetEntity.transform.position.x+offset.x,
@@ -205,7 +213,9 @@ export function buildCinematicCameraSequence(input:{
       index,timeSec:snapshot.timeSec,tick:snapshot.tick,
       cameraPosition:position,cameraRotationDeg:rotation,lookAt:target,
       fovYDeg,frameDigest:frame.digest,renderPlan,
-      ...(animated?{actorMotionDigest:animated.evidence.animationDigest}:{})
+      ...(animated?{actorMotionDigest:animated.evidence.animationDigest}:{}),
+      ...(effected?{environmentalFxDigest:effected.evidence.frameDigest,
+        activeFxParticles:effected.evidence.activeParticles}:{})
     });
   }
   return {
@@ -213,6 +223,7 @@ export function buildCinematicCameraSequence(input:{
     takeId:take.id,worldId:world.id,worldDefinitionDigest:worldDefinitionDigest(world),
     fps:take.fps,durationSec:take.durationSec,frameCount:frames.length,frames,
     ...(actorRigProof?{actorRigProof}:{}),
+    ...(fxRigProof?{fxRigProof}:{}),
     boundaries:{actualWorldGeometryRequired:true,worldSimulationUsesFixedSteps:true,
       webGpuPlansDigestVerified:true,renderingNotPerformed:true,
       visualReviewStillRequired:true,publicationAuthority:false}

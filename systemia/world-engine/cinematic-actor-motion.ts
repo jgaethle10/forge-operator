@@ -87,6 +87,14 @@ function sampleKeyframes(track:ActorTrack,t:number){
  y:mix(a.displacement.y,z.displacement.y),z:mix(a.displacement.z,z.displacement.z)},
  headingDeg:mix(a.headingDeg,z.headingDeg)};
 }
+/** Pure sampled motion used by attached VFX emitters for past-world positions.
+ * Caller must validate its rig with validateActorMotionRig first.
+ */
+export function sampleCinematicActorTrack(track:ActorTrack,timeSec:number){
+ if(!Number.isFinite(timeSec))error('track_sample_time_invalid');
+ const t=Math.max(0,Math.min(track.keyframes.at(-1)!.timeSec,timeSec));
+ return sampleKeyframes(track,t);
+}
 export function animateCinematicEntities(world:WorldDefinition,entities:WorldEntity[],rig:ActorMotionRig,timeSec:number){
  if(!finite(timeSec)||timeSec<0||timeSec>rig.durationSec+1e-7)error('time_invalid');
  const evidence=validateActorMotionRig(world,rig);
