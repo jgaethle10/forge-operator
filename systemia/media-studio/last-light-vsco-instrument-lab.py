@@ -29,12 +29,19 @@ SOURCES={
 }
 # Phrase choices stay separate from sample-bank identity. No scale slicing,
 # ensemble doubling, default MIDI substitutes, fake sustain loop or compression.
+# Founder rejected the previous orchestration's counter-melody. This is a
+# SEPARATE second audition, not a retroactive approval of orchestral tone.
+# Piano score source: recorded-steinway-phrasing-v2.py, protected WAV immutable.
+# Sound only exact sample roots; no transposing a neighboring violin/cello take.
+# The first 8.9 seconds are left piano only, and all parts retire by 27.5.
 SCORE={
- "cello":[(8.10,"E3",1.8,.43),(10.70,"G3",1.75,.40),(13.55,"F3",1.8,.42),
-          (16.20,"C3",2.20,.55),(19.05,"G3",2.20,.65),(22.15,"E3",1.65,.45),
-          (26.55,"G3",1.65,.37)],
- "violin":[(12.10,"G4",1.45,.33),(14.30,"B4",1.55,.36),(17.70,"E4",1.53,.43),
-           (19.80,"G4",2.30,.62),(22.75,"Gb4",1.80,.39),(26.18,"B4",1.55,.31)]
+ "cello":[(9.20,"E3",1.60,.34),(11.18,"G3",1.25,.31),
+          (13.33,"E3",1.30,.31),(16.16,"C3",1.28,.33),
+          (19.45,"G3",1.45,.49),(22.10,"E3",1.22,.32),
+          (26.33,"G3",.95,.26)],
+ "violin":[(12.20,"E4",.82,.25),(16.24,"E4",.92,.28),
+           (19.55,"G4",1.12,.57),(23.60,"E4",1.10,.29),
+           (26.15,"G4",1.10,.23)]
 }
 SEATS={"cello":(.12,-37.5),"violin":(-.26,-41.5)}
 NOTE={"C":0,"Db":1,"D":2,"Eb":3,"E":4,"F":5,"Gb":6,"G":7,"Ab":8,"A":9,"Bb":10,"B":11}
@@ -122,13 +129,15 @@ def rendered_note(audio,part,held,touch,semitones):
  x=audio[:frames].copy()
  n=len(x);env=np.ones(n,dtype=np.float64)
  # Never fade a bow attack for hundreds of milliseconds like a string pad.
- attack=min(round(.022*SR),round(.08*n))
+ # A 5 ms anti-click guard leaves the source bow onset audible;
+ # the former 22 ms envelope softened the acoustic transient unnaturally.
+ attack=min(round(.005*SR),round(.04*n))
  env[:attack]=np.sin(np.linspace(0,math.pi/2,attack))**1.0
  tail=int(release*SR)
  env[-tail:]=np.cos(np.linspace(0,math.pi/2,tail))**2
  # Gentle phrase swells on only the recorded waveform, not manufactured vibrato.
- span=int(min(held,1.8)*SR);t=np.linspace(0,1,span)
- env[:span]*=.88+.12*np.sin(math.pi*t)
+ # Do not synthesize a false bow swell from a constant gain LFO;
+ # recorded soft and strong layers carry their own dynamic character.
  measured=measure_rms(x[int(.15*SR):min(len(x),int(.85*SR))])
  if measured<1e-5:raise ValueError("recording_silent")
  target_db=SEATS[part][1]
@@ -141,6 +150,7 @@ def voices(bank,score=SCORE):
   out=np.zeros((int(DURATION*SR),2),dtype=np.float64)
   for when,note,held,touch in events:
    sample,root,layer,transposition=choose(bank,part,note,touch)
+   if transposition!=0:raise ValueError("last_light_counterline_requires_exact_recorded_pitch")
    audio,gain_db=rendered_note(sample,part,held,touch,transposition)
    start=int(round(when*SR));end=min(len(out),start+len(audio))
    if start>=len(out) or end<=start:raise ValueError("score_outside_canvas")
