@@ -94,6 +94,35 @@ export function renderBeforeEchoNative(outputDir:string,sceneFile:string){
  if(v?.codec_name!=='h264'||v.width!==1920||v.height!==1080||audio||Math.abs(Number(final.format.duration)-50)>.25)
   throw Error('historical_visual_master_wrong_codec_duration_or_silence');
  run('ffmpeg',['-v','error','-xerror','-i',master,'-f','null','-'],160000);
+ // Technical only: differentiate movement in football footage from a frozen
+ // authentic 1973 photograph. This does not prove players, events or aesthetics.
+ const luminanceFrame=(sec:number)=>{
+  const raw=spawnSync('ffmpeg',['-v','error','-ss',String(sec),'-i',master,
+   '-vf','scale=320:180,format=gray','-frames:v','1','-f','rawvideo','pipe:1'],
+   {encoding:null,maxBuffer:1024*1024,timeout:30000});
+  const frame=Buffer.isBuffer(raw.stdout)?raw.stdout:Buffer.from(raw.stdout||'');
+  if(raw.status!==0||frame.length!==320*180)throw Error('native_scene_pixel_probe_missing:'+sec);
+  return frame;
+ };
+ const meanDifference=(a:Buffer,b:Buffer)=>{
+  let sum=0;for(let i=0;i<a.length;i++)sum+=Math.abs(a[i]-b[i]);
+  return Number((sum/a.length).toFixed(3));
+ };
+ const actionMotionMeanDifference=meanDifference(luminanceFrame(24),luminanceFrame(24.4));
+ const archivalStillMeanDifference=meanDifference(luminanceFrame(47),luminanceFrame(47.4));
+ if(actionMotionMeanDifference<4)throw Error('early_football_action_appears_frozen');
+ if(archivalStillMeanDifference>1)throw Error('authentic_1973_still_was_animated');
+ const datedFrame=luminanceFrame(47);
+ let archivalLabelInkPixels=0;
+ // Small on-screen provenance caption belongs in the left black margin.
+ // Check glyph-like brightness there; semantic text identity needs human review.
+ for(let y=160;y<180;y++)for(let x=0;x<70;x++){
+  if(datedFrame[y*320+x]>120)archivalLabelInkPixels++;
+ }
+ if(archivalLabelInkPixels<15)throw Error('archival_1973_date_caption_invisible');
+ const visualQA={actionMotionMeanDifference,archivalStillMeanDifference,
+  archivalLabelInkPixels,pixelsDoNotEstablishEventIdentity:true,
+  humanShotQualityApprovalPending:true};
  const stills:any[]=[];
  for(const sec of [3,13,24,38,47]){
   const imageFile=path.join(outputDir,'review-'+sec+'.jpg');
@@ -105,7 +134,7 @@ export function renderBeforeEchoNative(outputDir:string,sceneFile:string){
   sourceReel:{sha256:sha(reel),bytes:fs.statSync(reel).size},
   sourcePhoto:{sha1:sha(photo,'sha1'),recordId:'NARA 547323'},
   output:{sha256:sha(master),bytes:fs.statSync(master).size,durationSec:Number(final.format.duration),videoCodec:v.codec_name,
-   audioCodec:null,fullDecodePassed:true,shots:stills},
+   audioCodec:null,fullDecodePassed:true,visualQA,shots:stills},
   timelineProject:project,exportReceipt:receipt,
   claims:{historicalGameYearProven:false,laterSegmentGameYearProven:false,
    currentFootballGameFootage:false,realRecordedHistoricSound:false,
