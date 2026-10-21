@@ -78,3 +78,52 @@ Do not:
 - describe Stripe as Evercraft's payment product.
 
 The user-facing brand and product surface is **Evercraft Payments**.
+
+## Durable Systemia Stripe account reference (October 21)
+
+The *operator-approved ChatGPT Stripe connector* can confirm an account identity,
+but its OAuth session/API credentials are managed by that external connector and
+**cannot be copied, escrowed, or delegated into Penguin merely by remembering
+the account**.
+
+To stop losing the correct account association, Systemia persists a local,
+private **identity-only** connection reference. It contains only the Stripe
+account context identifier, account display name, mode (live/test), observation
+date and Evercraft Payments / Raven Nexus routing boundaries. It does **not**
+contain an OAuth token, API key, bank number, payment receipt, verified checkout,
+or authority to move money.
+
+Run **once** from Penguin after fetching and reviewing this change:
+
+```bash
+node scripts/systemia-stripe-connection.mjs --register \
+  --stripe-context "<account ID confirmed by the authorized Stripe connector>" \
+  --account-name "Evercraft Media & Technologies" \
+  --livemode true --observed-date 2026-10-21 --confirm-live
+node scripts/systemia-stripe-connection.mjs --status
+```
+
+By default, the registry file is at
+`~/.local/state/evercraft/systemia/payments/provider-connections/stripe.json`
+or under `$XDG_STATE_HOME` when configured. Its containing directory must be
+private (`0700`), the file is owner-only (`0600`), and a repeated registration
+with the same identity is idempotent. A different Stripe account or livemode
+requires an explicitly reviewed `--replace` and, for live mode,
+`--confirm-live`.
+
+The account ID is **never committed to GitHub**, sent in URL query strings, or
+stored in a public offer catalog. The status command masks its identifier.
+
+Future Systemia/Raven workers may read this identity reference to choose
+the intended account **after** obtaining their own authorized connector
+connection/secret through Raven Nexus. No worker may infer working Stripe
+credentials, a checkout, or settled payment from its mere existence.
+`requireStripeRuntimeAuthorization()` deliberately fails closed until a
+separate authenticated provider adapter is reviewed.
+
+**Live findings, not a payment claim:** the authorized Stripe connection
+listed the Evercraft Media & Technologies account in live mode on October 21,
+2026. A read-only `GET /v1/payment_links` query returned zero Payment Links.
+That is distinct from the existing public buyer-forms HTTP 402 hold. First
+repair the authorized processor checkout/receipt path, then promote individual
+offers only with provider-backed settlement and order/entitlement linkage.
