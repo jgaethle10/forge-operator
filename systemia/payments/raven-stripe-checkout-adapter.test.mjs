@@ -109,14 +109,14 @@ test('authenticated mock performs account, price and idempotent checkout calls, 
   assert.equal(ready.receipt_created,false);
   assert.equal(ready.entitlement_granted,false);
   assert.equal(ready.fulfillment_released,false);
-  assert.deepEqual(fake.requests.map(x=>x.method),['GET','GET','POST']);
+  assert.deepEqual(fake.requests.map(x=>x.method),['GET','GET','POST','GET']);
   assert.ok(fake.requests.every(x=>x.authorization==='Bearer '+mockCredential));
   assert.match(fake.requests[2].idempotency,/^evercraft-checkout-[a-f0-9]{44}$/);
   assert.equal(new URLSearchParams(fake.requests[2].body).get('line_items[0][price]'),providerPrice.id);
   assert.equal(JSON.stringify(ready).includes(mockCredential),false);
   const second=await createRavenStripeCheckoutSession(opts);
   assert.equal(second.checkout_url,ready.checkout_url);
-  assert.equal(fake.requests[2].idempotency,fake.requests[5].idempotency);
+  assert.equal(fake.requests[2].idempotency,fake.requests[6].idempotency);
 });
 
 test('account identity, charge status and price mismatches reject before POST',async()=>{
