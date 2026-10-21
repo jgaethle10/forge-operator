@@ -1,0 +1,14 @@
+{
+  "name": "@evercraft/servicem8-part-research-pilot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Private no-data ServiceM8 job-card handoff to FindMyPart. Not deployed or billed.",
+  "scripts": {
+    "test": "node --test tests/part-research.test.mjs",
+    "validate": "node --test tests/part-research.test.mjs && addon-kit deploy --dry-run"
+  },
+  "devDependencies": {
+    "@servicem8/addon-kit": "1.3.1"
+  }
+}

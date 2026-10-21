@@ -1,0 +1,39 @@
+name: ServiceM8 private add-on proof
+
+on:
+  pull_request:
+    paths:
+      - 'integrations/servicem8/part-research/**'
+      - '.github/workflows/servicem8-private-addon-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: servicem8-private-addon-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: integrations/servicem8/part-research
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Privacy and deterministic behavior invariants
+        run: node --test tests/part-research.test.mjs
+      - name: Install pinned official ServiceM8 Addon Kit
+        run: npm install --no-audit --no-fund --no-save @servicem8/addon-kit@1.3.1
+      - name: Validate real ServiceM8 manifest and package, no login or deployment
+        run: ./node_modules/.bin/addon-kit deploy --dry-run
+      - name: Explicit authorization boundary
+        run: |
+          echo '## ServiceM8 Addon Kit: dry run only' >> "$GITHUB_STEP_SUMMARY"
+          echo 'No ServiceM8 account accessed, terms accepted, add-on installed, code deployed, customer records read or payment initiated.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'A successful dry run is source/package compatibility, not ServiceM8 Store approval or partner certification.' >> "$GITHUB_STEP_SUMMARY"
