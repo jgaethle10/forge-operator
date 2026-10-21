@@ -51,6 +51,10 @@ jobs:
         run: node --test systemia/evercraft-os/runtime-capsule.test.mjs
       - name: Prove Systemia-gated owned runtime launch
         run: node --test systemia/evercraft-os/systemia-launcher.test.mjs
+      - name: Prove persistent Evercraft OS user host
+        run: node --test systemia/evercraft-os/host-supervisor.test.mjs
+      - name: Validate user-host installer syntax
+        run: bash -n systemia/evercraft-os/install-user-host.sh
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Emit boot envelope
