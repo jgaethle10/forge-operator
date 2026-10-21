@@ -471,6 +471,44 @@ function toolResult(payload){
   };
 }
 
+// Commerce stays fail-closed after the provider HTTP 402 incident. Public
+// discovery must not advertise a checkout URL that the detailed connection
+// tool is holding. A limited human inquiry route remains available for six
+// reviewed offers; this is an email contact, not a charge or paid entitlement.
+const SALES_INQUIRY_IDS=new Set([
+  'audit-center-website-audit-machine-v1',
+  'findmypart-paid-hunt-v1',
+  'ibmi-rescue-v1',
+  'legacy-rescue-lab-v1',
+  'site-survive-rapid-audit-v1',
+  'workflow-foundry-xray-v1',
+]);
+const CHECKOUT_HOLD_REASON='evercraft_public_commercial_mcp_http402_20261017';
+function publicCheckoutSafeCapability(capability){
+  const hadOfferUrl=Boolean(capability.human_offer_url);
+  const humanSalesInquiry=SALES_INQUIRY_IDS.has(capability.public_id)
+    ? {
+      channel:'email',
+      email:'jessegaethle10@gmail.com',
+      subject:'Evercraft inquiry: '+capability.name,
+      state:'human_scope_and_payment_arrangement_required',
+      order_created:false,
+      payment_verified:false,
+      fulfillment_authorized:false,
+    }
+    : null;
+  return {
+    ...capability,
+    human_offer_url:null,
+    start_url_state:hadOfferUrl
+      ? 'held_provider_http_402_requires_new_payment_receipt'
+      : capability.start_url_state,
+    buyer_checkout_available:false,
+    checkout_suppression_reason:hadOfferUrl?CHECKOUT_HOLD_REASON:null,
+    human_sales_inquiry:humanSalesInquiry,
+  };
+}
+
 export async function executeFabricDirectoryRpc(rpc,catalog=[]){
   const normalized=normalizeFabricCatalog(catalog);
   const method=clean(rpc?.method,120);
@@ -498,7 +536,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
     if(name==='match_evercraft_capability'){
       const intent=clean(args.intent,4000);
       if(intent.length<3) return rpcError(id,-32602,'intent must contain at least 3 characters');
-      const matches=matchFabricCapabilities(intent,normalized,{limit:args.limit});
+      const matches=matchFabricCapabilities(intent,normalized,{limit:args.limit}).map(publicCheckoutSafeCapability);
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
@@ -512,7 +550,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
 
     if(name==='list_evercraft_capabilities'){
       const limit=Math.max(1,Math.min(100,Number(args.limit||25)));
-      const capabilities=normalized.slice(0,limit);
+      const capabilities=normalized.slice(0,limit).map(publicCheckoutSafeCapability);
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
@@ -528,6 +566,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       const publicId=clean(args.public_id,160);
       const capability=normalized.find((x)=>x.public_id===publicId);
       if(!capability) return rpcError(id,-32602,'unknown public_id');
+      const buyerSafe=publicCheckoutSafeCapability(capability);
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
@@ -543,7 +582,8 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         human_buyer_options:[],
         human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',
         buyer_checkout_available:false,
-        checkout_suppression_reason:'evercraft_public_commercial_mcp_http402_20261017',
+        checkout_suppression_reason:CHECKOUT_HOLD_REASON,
+        human_sales_inquiry:buyerSafe.human_sales_inquiry,
         transactional:false,
         external_action_taken:false,
       }));
