@@ -14,7 +14,7 @@ test('a login page or nonexistent file cannot pose as historic football video',(
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 function base(){return {schema:'evercraft.fallen.history-nebraska-motion-canary.v1',
-  source:{collection:'RG6137.MI',sourceExcerptStartSec:12},
+  source:{collection:'RG6137.MI',sourceExcerptStartSec:34},
   creative:{originalFootballFramesOnly:true,fabricatedHistoricAudio:false},
   claims:{exactGameYearConfirmed:false,currentNebraska2026Footage:false},
   publicationAuthorityGranted:false};}
