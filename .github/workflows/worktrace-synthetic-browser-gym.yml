@@ -1,0 +1,55 @@
+name: WorkTrace synthetic browser gym proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/browser-worker/worktrace-synthetic-gym*'
+      - '.github/workflows/worktrace-synthetic-browser-gym.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-agent-gym:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: systemia/evercraft-web/browser-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install native Playwright/Chromium on runner
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install chromium
+      - name: Run exactly two synthetic browser scenarios
+        run: |
+          node --check worktrace-synthetic-gym.proof.mjs
+          node worktrace-synthetic-gym.proof.mjs
+      - name: Upload real video/screenshots and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-worktrace-synthetic-chromium-proof
+          path: systemia/evercraft-web/browser-worker/artifacts/worktrace/synthetic-gym/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Output truthful summary
+        if: always()
+        shell: bash
+        run: |
+          echo '## WorkTrace synthetic offline gym' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Real Chromium; synthetic invented task; human narrator: NONE; AI agent: NONE.' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No production deployment, external site submission, customer payment or dataset licensing.' >> "$GITHUB_STEP_SUMMARY"
+          if test -f artifacts/worktrace/synthetic-gym/receipt.json; then
+            node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=JSON.parse(fs.readFileSync('artifacts/worktrace/synthetic-gym/receipt.json'));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            '- Scenarios: '+p.scenarios.map(x=>x.id+'='+x.outcome).join(', ')+'\n'+
+            '- Receipt: '+p.receipt_sha256+'\n');
+          NODE
+          else
+            echo '- Proof incomplete; see job failure.' >> "$GITHUB_STEP_SUMMARY"
+          fi
