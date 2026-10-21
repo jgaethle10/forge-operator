@@ -13,6 +13,10 @@ import { recommendFormation } from '../saban/autoscaler.mjs';
 import { executeDistributedMultiplicationPlan } from '../saban/distributed-executor.mjs';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { hashFile } from './authorized-source.mjs';
+import { queryEvidenceGraph } from './evidence-query.mjs';
+import { listForensiScopeAgentTools, invokeForensiScopeAgentTool } from './agent-tools.mjs';
+import { persistEvidenceGraph, loadEvidenceGraph, verifyEvidenceRef } from './evidence-store.mjs';
+import { listForensiScopeGatewayTools, invokeForensiScopeGatewayTool } from './agent-gateway.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -120,6 +124,7 @@ const workItems = expandPartitionedWorkItems(proofContract, [{
     requested_outputs: [
       'media_probe',
       'timeline',
+      'scene_boundaries',
       'duplicate_review',
       'audio_prep',
       'source_integrity'
@@ -134,7 +139,7 @@ const formation = recommendFormation({
   workItemCount: workItems.length
 });
 assert.equal(formation.strategy, 'work_conserving');
-assert.equal(formation.logical_agents, 24);
+assert.equal(formation.logical_agents, 28);
 
 const plan = buildMultiplicationPlan({
   contract: proofContract,
@@ -195,7 +200,7 @@ if (receipt.quality?.status !== 'pass') {
 }
 
 assert.equal(sourceHashBefore, sourceHashAfter);
-assert.equal(receipt.scheduler_summary.counts.completed, 24);
+assert.equal(receipt.scheduler_summary.counts.completed, 28);
 assert.equal(receipt.pool_summary.nodes.length, 2);
 assert.ok(
   receipt.pool_summary.rejected_nodes.some(
@@ -209,10 +214,12 @@ assert.equal(receipt.reconciliation.status, 'reconciled');
 assert.equal(receipt.reconciliation.source_integrity_preserved, true);
 assert.equal(receipt.reconciliation.worker_statuses.media_probe_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.timeline_worker, 4);
+assert.equal(receipt.reconciliation.worker_statuses.scene_boundary_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.frame_hash_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.audio_extract_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.transcription_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.provenance_guard, 4);
+assert.ok(receipt.reconciliation.scene_boundaries.length > 0);
 assert.ok(receipt.reconciliation.duplicate_review.perceptual_signature_count > 0);
 assert.ok(receipt.reconciliation.duplicate_review.near_repeated_pairs > 0);
 assert.ok(
@@ -239,6 +246,11 @@ assert.equal(
   receipt.reconciliation.evidence_graph.indexes.transcript_node_ids.length,
   receipt.reconciliation.transcription.segment_count
 );
+assert.equal(
+  receipt.reconciliation.evidence_graph.indexes.scene_boundary_node_ids.length,
+  receipt.reconciliation.scene_boundaries.length
+);
+assert.ok(receipt.reconciliation.evidence_graph.indexes.scene_boundary_node_ids.length > 0);
 assert.ok(
   receipt.reconciliation.evidence_graph.llm_projection.relationship_counts.near_duplicate_of > 0
 );
@@ -247,6 +259,159 @@ assert.ok(
     .filter((node) => node.kind === 'transcript_segment')
     .every((node) => node.engine_id === 'forensiscope-ci-contract')
 );
+
+const evidenceQuery = queryEvidenceGraph(
+  receipt.reconciliation.evidence_graph,
+  {
+    query: 'boundary-3',
+    topK: 3,
+    contextRadiusSeconds: 3
+  }
+);
+assert.equal(evidenceQuery.schema, 'evercraft.forensiscope.evidence-query-result.v1');
+assert.ok(evidenceQuery.match_count > 0);
+assert.ok(evidenceQuery.hits[0].text.includes('boundary-3'));
+assert.equal(evidenceQuery.hits[0].source_sha256, sourceHashAfter);
+assert.ok(evidenceQuery.hits[0].evidence_id);
+assert.equal(evidenceQuery.answer_policy.evidence_retrieval_only, true);
+assert.equal(evidenceQuery.answer_policy.unsupported_answer_generation, false);
+
+const agentTools = listForensiScopeAgentTools();
+assert.deepEqual(
+  agentTools.map((tool) => tool.name).sort(),
+  [
+    'forensiscope_build_context_packet',
+    'forensiscope_get_duplicate_relationships',
+    'forensiscope_get_timeline',
+    'forensiscope_query_evidence'
+  ]
+);
+
+const agentEvidenceQuery = invokeForensiScopeAgentTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.ok(agentEvidenceQuery.match_count > 0);
+assert.equal(agentEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
+
+const agentTimeline = invokeForensiScopeAgentTool({
+  name: 'forensiscope_get_timeline',
+  args: {
+    start_seconds: 0,
+    end_seconds: 8,
+    limit: 50
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.ok(agentTimeline.count > 0);
+assert.equal(agentTimeline.source_sha256, sourceHashAfter);
+
+const agentDuplicates = invokeForensiScopeAgentTool({
+  name: 'forensiscope_get_duplicate_relationships',
+  args: {
+    kind: 'near',
+    limit: 50
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.ok(agentDuplicates.count > 0);
+assert.equal(agentDuplicates.source_sha256, sourceHashAfter);
+
+const contextPacket = invokeForensiScopeAgentTool({
+  name: 'forensiscope_build_context_packet',
+  args: {
+    query: 'boundary-3',
+    max_chars: 4000,
+    top_k: 3,
+    context_radius_seconds: 3
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.equal(contextPacket.schema, 'evercraft.forensiscope.context-packet.v1');
+assert.equal(contextPacket.source_sha256, sourceHashAfter);
+assert.ok(contextPacket.atoms.length > 0);
+assert.ok(contextPacket.evidence_ids.length > 0);
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(contextPacket.packet_digest));
+assert.ok(contextPacket.used_chars_estimate <= contextPacket.budget_chars);
+assert.equal(
+  contextPacket.downstream_instruction.answer_only_from_packet_or_explicitly_state_insufficient_evidence,
+  true
+);
+
+const storedEvidence = persistEvidenceGraph(
+  receipt.reconciliation.evidence_graph,
+  { rootDir }
+);
+assert.ok(/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(storedEvidence.evidence_ref));
+assert.equal(storedEvidence.source_sha256, sourceHashAfter);
+
+const loadedEvidence = loadEvidenceGraph(storedEvidence.evidence_ref, { rootDir });
+assert.equal(loadedEvidence.graph.source_sha256, sourceHashAfter);
+assert.equal(
+  loadedEvidence.graph.node_count,
+  receipt.reconciliation.evidence_graph.node_count
+);
+
+const verifiedEvidence = verifyEvidenceRef(storedEvidence.evidence_ref, { rootDir });
+assert.equal(verifiedEvidence.verified, true);
+assert.equal(verifiedEvidence.graph_digest, storedEvidence.graph_digest);
+
+const persistedEvidenceQuery = invokeForensiScopeAgentTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  graph: loadedEvidence.graph
+});
+assert.ok(persistedEvidenceQuery.match_count > 0);
+assert.equal(persistedEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
+
+const gatewayTools = listForensiScopeGatewayTools();
+assert.equal(gatewayTools.length, 4);
+assert.ok(
+  gatewayTools.every((tool) =>
+    tool.inputSchema.required.includes('evidence_ref')
+  )
+);
+
+const gatewayQuery = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    evidence_ref: storedEvidence.evidence_ref,
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  rootDir
+});
+assert.equal(gatewayQuery.schema, 'evercraft.forensiscope.gateway-result.v1');
+assert.equal(gatewayQuery.evidence_ref, storedEvidence.evidence_ref);
+assert.equal(gatewayQuery.graph_digest, storedEvidence.graph_digest);
+assert.equal(gatewayQuery.authority.accepts_raw_media, false);
+assert.equal(gatewayQuery.authority.starts_analysis_jobs, false);
+assert.ok(gatewayQuery.result.match_count > 0);
+
+const gatewayPacket = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_build_context_packet',
+  args: {
+    evidence_ref: storedEvidence.evidence_ref,
+    query: 'boundary-3',
+    max_chars: 4000,
+    top_k: 3,
+    context_radius_seconds: 3
+  },
+  rootDir
+});
+assert.equal(gatewayPacket.result.source_sha256, sourceHashAfter);
+assert.ok(gatewayPacket.result.atoms.length > 0);
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(gatewayPacket.result.packet_digest));
 
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
@@ -266,6 +431,7 @@ const proof = {
   near_repeated_pairs: receipt.reconciliation.duplicate_review.near_repeated_pairs,
   perceptual_signature_count: receipt.reconciliation.duplicate_review.perceptual_signature_count,
   timeline_entries: receipt.reconciliation.timeline.length,
+  scene_boundaries: receipt.reconciliation.scene_boundaries.length,
   audio_shards_prepared: receipt.reconciliation.audio_assets.filter(
     (entry) => entry.state === 'prepared_for_transcription'
   ).length,
@@ -275,6 +441,23 @@ const proof = {
   evidence_graph_nodes: receipt.reconciliation.evidence_graph.node_count,
   evidence_graph_edges: receipt.reconciliation.evidence_graph.edge_count,
   llm_evidence_atoms: receipt.reconciliation.evidence_graph.llm_projection.transcript_atoms.length,
+  evidence_query_matches: evidenceQuery.match_count,
+  evidence_query_top_id: evidenceQuery.hits[0].evidence_id,
+  agent_tool_count: agentTools.length,
+  agent_query_matches: agentEvidenceQuery.match_count,
+  agent_timeline_nodes: agentTimeline.count,
+  agent_near_duplicate_relationships: agentDuplicates.count,
+  context_packet_atoms: contextPacket.atoms.length,
+  context_packet_digest: contextPacket.packet_digest,
+  context_packet_budget_chars: contextPacket.budget_chars,
+  evidence_ref: storedEvidence.evidence_ref,
+  evidence_graph_digest: storedEvidence.graph_digest,
+  evidence_ref_verified: verifiedEvidence.verified,
+  persisted_evidence_query_matches: persistedEvidenceQuery.match_count,
+  gateway_tool_count: gatewayTools.length,
+  gateway_query_matches: gatewayQuery.result.match_count,
+  gateway_context_packet_digest: gatewayPacket.result.packet_digest,
+  gateway_accepts_raw_media: gatewayQuery.authority.accepts_raw_media,
   public_machine_intake_enabled: false
 };
 

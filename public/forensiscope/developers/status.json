@@ -77,5 +77,34 @@
     "unknown_person_identification_not_claimed": true,
     "guilt_or_intent_determination_not_claimed": true,
     "authenticity_or_admissibility_certification_not_claimed": true
+  },
+  "private_next_generation_runtime": {
+    "state": "proof_verified_private_not_publicly_callable",
+    "proof_lane": "systemia/saban-forensiscope-v2",
+    "capabilities": [
+      "distributed long-media sharding across Saban and NodeSeed",
+      "timestamped transcription with overlap-aware reconciliation",
+      "visual scene-boundary detection",
+      "exact frame duplicate detection",
+      "perceptual near-duplicate detection",
+      "source-integrity and derivative-integrity verification",
+      "deterministic evidence graph",
+      "content-addressed immutable evidence references",
+      "evidence query by completed result reference",
+      "context-budgeted LLM evidence packets",
+      "timeline-window retrieval",
+      "duplicate-relationship retrieval"
+    ],
+    "agent_query_gateway": {
+      "state": "proof_verified_private",
+      "accepts_completed_evidence_ref": true,
+      "accepts_raw_media": false,
+      "starts_analysis_jobs": false,
+      "creates_checkout": false,
+      "creates_payment_obligation": false
+    },
+    "public_endpoint": null,
+    "public_mcp_exposure": false,
+    "note": "These capabilities are proof-verified in the private Evercraft execution lane. Do not infer that the current public MCP exposes them until a separate public canary receipt says so."
   }
 }

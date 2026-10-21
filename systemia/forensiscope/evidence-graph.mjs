@@ -28,6 +28,7 @@ export function buildEvidenceGraph({
   sourceSha256,
   transcript = {},
   timeline = [],
+  sceneBoundaries = [],
   exactDuplicateGroups = [],
   nearDuplicatePairs = []
 } = {}) {
@@ -85,6 +86,34 @@ export function buildEvidenceGraph({
     };
     nodes.push(node);
     keyframeNodes.push(node);
+    edges.push({
+      id: stableId('edge', ['derived_from', id, sourceId]),
+      kind: 'derived_from',
+      from: id,
+      to: sourceId
+    });
+  }
+
+  const sceneBoundaryNodes = [];
+  for (const boundary of sceneBoundaries || []) {
+    const timestamp = timeKey(boundary.timestamp_seconds);
+    if (timestamp === null) continue;
+    const id = stableId('scene', [
+      sourceSha256,
+      timestamp,
+      boundary.detector || null,
+      finite(boundary.threshold)
+    ]);
+    const node = {
+      id,
+      kind: 'scene_boundary',
+      timestamp_seconds: timestamp,
+      detector: boundary.detector || null,
+      threshold: finite(boundary.threshold),
+      shard_index: boundary.shard_index ?? null
+    };
+    nodes.push(node);
+    sceneBoundaryNodes.push(node);
     edges.push({
       id: stableId('edge', ['derived_from', id, sourceId]),
       kind: 'derived_from',
@@ -153,6 +182,7 @@ export function buildEvidenceGraph({
     .filter((node) =>
       node.kind === 'transcript_segment' ||
       node.kind === 'keyframe' ||
+      node.kind === 'scene_boundary' ||
       node.kind === 'visual_moment'
     )
     .sort(sortByTime)
@@ -181,6 +211,7 @@ export function buildEvidenceGraph({
       chronological_node_ids: timeNodes,
       transcript_node_ids: transcriptNodes.map((node) => node.id),
       keyframe_node_ids: keyframeNodes.map((node) => node.id),
+      scene_boundary_node_ids: sceneBoundaryNodes.map((node) => node.id),
       visual_moment_node_ids: [...visualMoments.values()].map((node) => node.id)
     },
     llm_projection: {
