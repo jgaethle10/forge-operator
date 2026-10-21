@@ -5,7 +5,12 @@ import {loadFabricCatalogFromRepository, matchFabricCapabilities} from '../syste
 test('owned native offer links replace obsolete holds only for exact approved price and sale state',()=>{
  const catalog=loadFabricCatalogFromRepository();
  const audit=catalog.find(x=>x.public_id==='audit-center-website-audit-machine-v1');
- assert.equal(audit.human_offer_url,'https://fabric.systemiacommandcenters.com/offers/website-audit');assert.equal(audit.start_url_state,'owned_offer_page_available');
+ assert.equal(audit.human_offer_url,null);
+ assert.equal(audit.buyer_checkout_available,false);
+ assert.equal(audit.human_buyer_options_state,'held_provider_http_402_requires_new_payment_receipt');
+ assert.equal(audit.advertised_offer_page_url,'https://fabric.systemiacommandcenters.com/offers/website-audit');
+ assert.equal(audit.advertised_offer_page_state,'catalog_route_only_not_live_checkout_proof');
+ assert.equal(audit.start_url_state,'checkout_held_provider_http_402');
  assert.equal(ownedOfferLink({...audit,commercial_state:'hold'}),null);assert.equal(ownedOfferLink({...audit,entry_paid_offer:{price_usd_normalized:1}}),null);
  assert.equal(ownedOfferLink({...audit,public_id:'unknown'}),null);
  assert.equal(ownedOfferLink(audit).payment_verified,false);
@@ -33,8 +38,10 @@ test('Workflow X-Ray is a distinct, fixed-price, consent-gated owned diagnosis d
  assert.ok(xray);
  assert.equal(xray.commercial_state,'sell_now');
  assert.equal(xray.entry_paid_offer?.price_usd_normalized,250);
- assert.equal(xray.human_offer_url,'https://fabric.systemiacommandcenters.com/offers/workflow-xray');
- assert.equal(xray.start_url_state,'owned_offer_page_available');
+ assert.equal(xray.human_offer_url,null);
+ assert.equal(xray.advertised_offer_page_url,'https://fabric.systemiacommandcenters.com/offers/workflow-xray');
+ assert.equal(xray.start_url_state,'checkout_held_provider_http_402');
+ assert.equal(xray.buyer_checkout_available,false);
  assert.equal(ownedOfferLink(xray)?.offer_key,'workflow_foundry.xray_250.v1');
  assert.equal(ownedOfferLink({...xray,commercial_state:'hold'}),null);
  assert.equal(ownedOfferLink({...xray,entry_paid_offer:{price_usd_normalized:249}}),null);
