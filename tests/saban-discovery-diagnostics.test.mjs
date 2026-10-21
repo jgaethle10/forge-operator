@@ -128,3 +128,16 @@ test('unheld exact connection-option URL passes without claiming payment', () =>
   assert.equal(result.buyer_handoff_state,'verified_connection_option');
   assert.equal('payment_verified' in result,false);
 });
+
+test('explicit payment-authority hold receives own diagnosis rather than wrong capability match', () => {
+  const receipt={
+    ok:false,
+    profiles:[{initialized:true,errors:[],intents:[{
+      match_ok:true,offer_link_ok:false,buyer_handoff_state:'held_payment_authority'
+    }]}],
+    surfaces:[{path:'/health',status:200}]
+  };
+  const finding=classifyDiscoveryReceipt(receipt);
+  assert.equal(finding.code,'buyer_handoff_held_by_payment_authority');
+  assert.match(finding.limitation,/catalog_sell_now_label/);
+});
