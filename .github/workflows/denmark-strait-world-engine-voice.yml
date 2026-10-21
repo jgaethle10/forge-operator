@@ -1,0 +1,142 @@
+name: Evercraft historical battle real GPU + Voice Foundry narration
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/denmark-strait-world-engine-voice.yml'
+      - 'systemia/media-studio/denmark-strait-neural-review.py'
+      - 'systemia/media-studio/director-timeline.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  denmark-strait-historical-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline source and authorial preflight
+        run: |
+          set -euo pipefail
+          node --check systemia/media-studio/director-timeline.mjs
+          python -m py_compile systemia/media-studio/denmark-strait-neural-review.py
+          python systemia/media-studio/denmark-strait-neural-review.py --verify-plan
+      - name: Install already-proven local neural voice inference dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng fonts-dejavu-core libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro>=0.9.4,<1.0' 'soundfile>=0.12,<1.0'
+      - name: Download verified original hero World Engine 3D H264
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-hero_full-wide
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/battle-sources/hero
+      - name: Download verified original true turret camera World Engine 3D H264
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-detail_closeup-square
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/battle-sources/detail
+      - name: Download verified original title-safe World Engine 3D H264
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-title_safe-vertical
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/battle-sources/title
+      - name: Compile documentary shot script only from verified on-disk World Engine source hashes
+        env:
+          ROOT: ${{ runner.temp }}/battle-sources
+          REQUEST: ${{ runner.temp }}/denmark-strait-request.json
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import path from 'node:path'; import crypto from 'node:crypto';
+          const root=process.env.ROOT;
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const kinds=[['hero_full','hero'],['detail_closeup','detail'],['title_safe','title']];
+          const sources={};
+          for(const [intent,folder] of kinds){
+            const dir=path.join(root,folder),mp4=path.join(dir,'battleship-world-engine-trial.mp4'),receiptPath=path.join(dir,'receipt.json');
+            const hash=sha(fs.readFileSync(mp4)),receipt=JSON.parse(fs.readFileSync(receiptPath));
+            if(hash!==receipt.output?.sha256||receipt.publicationAuthority!==false)
+              throw Error('unsigned_native_GPU_source_'+intent);
+            sources[intent]={path:mp4,receiptPath,sha256:hash};
+          }
+          const beats=[
+            ['hero_full','establishing','DENMARK STRAIT  |  24 MAY 1941'],
+            ['hero_full','explanation','ROYAL NAVY  |  HOOD AND PRINCE OF WALES'],
+            ['detail_closeup','detail','GERMAN FORCE  |  BISMARCK AND PRINZ EUGEN'],
+            ['hero_full','action','ABOUT 05:52  |  BRITISH FIRE OPENS'],
+            ['detail_closeup','action','ABOUT 05:55  |  GERMAN SHIPS RETURN FIRE'],
+            ['hero_full','explanation','AROUND 06:00  |  HOOD IS LOST'],
+            ['title_safe','explanation','1,418 ABOARD  |  ONLY THREE SURVIVE'],
+            ['hero_full','closing','MODELED 3D  |  NOT HISTORICAL FOOTAGE']
+          ];
+          const seen=new Set();
+          const shots=beats.map(([source,beat,title],i)=>{
+            const repeated=seen.has(source);seen.add(source);
+            return {source,beat,title,startFrame:0,frames:96,
+              transitionFrames:i===0?0:i===1?6:7,reuseAcknowledged:repeated};
+          });
+          const total=shots.reduce((acc,s)=>acc+s.frames-s.transitionFrames,0);
+          if(total!==720)throw Error('timeline_not_30_sec');
+          const request={schema:'evercraft.fallen.director-timeline-request.v2',
+            id:'denmark-strait-1941-original-gpu-history-proxy',targetSeconds:30,
+            audioPolicy:'silent',sourceClass:'illustrative_3d',
+            publicationAuthority:false,sources,shots};
+          fs.writeFileSync(process.env.REQUEST,JSON.stringify(request,null,2));
+          console.log('SIGNED_SOURCE_TIMELINE', {frames:total,sourceHashes:Object.values(sources).map(s=>s.sha256)});
+          NODE
+      - name: Render real 30 second GPU-source Fallen film with actual pixel QC
+        env:
+          REQUEST: ${{ runner.temp }}/denmark-strait-request.json
+          OUTPUT: ${{ runner.temp }}/battle-silent
+        run: |
+          node systemia/media-studio/director-timeline.mjs "$REQUEST" "$OUTPUT"
+          test -s "$OUTPUT/evercraft-directed-timeline.mp4"
+          test -s "$OUTPUT/receipt.json"
+      - name: Synthesize two owner-shortlisted original neural voices and mux genuine audio
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+          SILENT: ${{ runner.temp }}/battle-silent/evercraft-directed-timeline.mp4
+          OUTPUT: ${{ runner.temp }}/battle-voiced
+        run: |
+          python systemia/media-studio/denmark-strait-neural-review.py "$SILENT" "$OUTPUT"
+          test -s "$OUTPUT/denmark-strait-world-engine-voice-review.mp4"
+          test -s "$OUTPUT/historical-narration-receipt.json"
+      - name: Confirm release remains denied and final exact media digest matches evidence
+        env:
+          OUTPUT: ${{ runner.temp }}/battle-voiced
+        run: |
+          python - <<'PY'
+          import json,os,hashlib,pathlib
+          d=pathlib.Path(os.environ['OUTPUT']);r=json.loads((d/'historical-narration-receipt.json').read_text())
+          movie=d/r['finishedFilm']['file']
+          assert movie.exists() and movie.stat().st_size>100000
+          assert hashlib.sha256(movie.read_bytes()).hexdigest()==r['finishedFilm']['sha256']
+          assert len(r['narrationTakes'])==6 and len(r['sourceProofs'])==3
+          assert not r['creativeApproval'] and not r['publicationAuthority'] and not r['historicalApproval']
+          assert 'GENERIC' in r['pictureState']
+          print('ACTUAL_GPU_HISTORY_VOICE_FILM_TECHNICALLY_VERIFIED',r['finishedFilm'])
+          PY
+      - name: Preserve only internal editable auditory and video review artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-denmark-strait-original-gpu-two-voice-review
+          path: |
+            ${{ runner.temp }}/battle-voiced/denmark-strait-world-engine-voice-review.mp4
+            ${{ runner.temp }}/battle-voiced/historical-narration-receipt.json
+            ${{ runner.temp }}/battle-voiced/take-*.wav
+            ${{ runner.temp }}/battle-silent/receipt.json
+            ${{ runner.temp }}/battle-silent/shot-*.png
+          retention-days: 7
+          if-no-files-found: error
