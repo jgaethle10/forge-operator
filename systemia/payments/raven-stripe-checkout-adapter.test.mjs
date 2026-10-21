@@ -32,7 +32,7 @@ const mockCredential='unit-test-credential-not-real';
 const mockReader=()=>mockCredential;
 const response=value=>Response.json(value,{status:200});
 
-function mockStripe({wrongAccount=false,disabled=false,wrongPrice=false,paidSession=false}={}){
+function mockStripe({wrongAccount=false,disabled=false,wrongPrice=false,paidSession=false,wrongLineItems=false}={}){
   const requests=[];
   const fetchImpl=async(url,req)=>{
     requests.push({url,method:req.method,authorization:req.headers.authorization,
@@ -62,7 +62,7 @@ function mockStripe({wrongAccount=false,disabled=false,wrongPrice=false,paidSess
     if(url.endsWith('/line_items')){
       return response({object:'list',has_more:false,data:[{
         quantity:1,currency:'usd',amount_total:1900,
-        price:{id:providerPrice.id,product:providerPrice.product,unit_amount:1900,currency:'usd'},
+        price:{id:wrongLineItems?'price_mismatch':providerPrice.id,product:providerPrice.product,unit_amount:1900,currency:'usd'},
       }]});
     }
     throw Error('mock_stripe_unexpected_endpoint');
