@@ -210,11 +210,28 @@ export function historicSilhouetteWorld():WorldDefinition{
  cam.camera.far=800;
  cam.camera.projection={type:'perspective',fovYDeg:47};
  cam.transform.position={x:-90,y:30,z:81};
- world.visualScene.clearColor={r:.075,g:.135,b:.205};
+ world.visualScene.clearColor={r:.065,g:.115,b:.175};
+ world.visualScene.colorManagement={toneMapper:'aces_filmic',exposureBiasStops:-.28};
+ world.visualScene.atmosphere={color:{r:.12,g:.22,b:.32},density:.007,startDistance:35,heightFalloff:.013,referenceHeight:0};
+ for(const light of world.entities){
+  if(light.id==='ambient'&&light.light)light.light.intensity=1.45;
+  if(light.id==='sun'&&light.light)light.light.intensity=3.5;
+  if(light.id==='port-rim'&&light.light)light.light.intensity=85;
+  if(light.id==='sun-glow'&&light.light)light.light.intensity=72;
+ }
  validateWorldDefinition(world);
  return world;
 }
-export function historicSilhouetteTake():CinematicCameraTake{
+export function historicSilhouetteTake(profile:'formation'|'bismarck_hero'='formation'):CinematicCameraTake{
+ if(profile==='bismarck_hero')return {
+  schema:'evercraft.world-engine.cinematic-camera-take.v1',
+  id:'denmark-strait-bismarck-closeup-procedural-not-historical',
+  cameraEntityId:'cinema-camera',targetEntityId:'bismarck-ship-hull',
+  durationSec:4,fps:24,move:'orbit',ease:'smootherstep',
+  orbit:{radius:37,startAngleDeg:-67,endAngleDeg:-40,startHeight:12,endHeight:8},
+  lookAtOffset:{x:0,y:4,z:0},startFovYDeg:45,endFovYDeg:42
+ };
+ if(profile!=='formation')throw Error('historic_camera_profile_unapproved');
  return {
   schema:'evercraft.world-engine.cinematic-camera-take.v1',
   id:'denmark-strait-class-silhouette-camera-not-1941-reconstructed',
