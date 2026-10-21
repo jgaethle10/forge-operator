@@ -1,0 +1,27 @@
+name: Animation Foundry Visual Lock
+on:
+  pull_request:
+    paths:
+      - 'systemia/animation-foundry/**'
+      - '.github/workflows/animation-foundry-visual-lock.yml'
+  push:
+    branches:
+      - 'feat/animation-foundry-creative-gate-rc11'
+    paths:
+      - 'systemia/animation-foundry/**'
+      - '.github/workflows/animation-foundry-visual-lock.yml'
+permissions:
+  contents: read
+jobs:
+  creative-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate creative and visual lock regression tests
+        run: node --test systemia/animation-foundry/creative-gate.test.mjs systemia/animation-foundry/visual-lock.test.mjs
+      - name: Validate Blender auditor syntax (not a Blender runtime test)
+        run: python3 -m py_compile systemia/animation-foundry/blender-rig-audit.py
