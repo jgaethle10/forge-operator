@@ -56,3 +56,14 @@ test('unrequested/empty or malformed input is never green',()=>{
   assert.throws(()=>assessRouterMappings(null,[]),TypeError);
   assert.equal(assessRouterMappings(web,[{requested:{...web[0],internal:8443},success:true},ok(web[1])]).production_mapping_control_ok,false);
 });
+
+import fs from 'node:fs';
+
+test('resident mapper uses fail-closed assessment rather than DNS-only shortcut',()=>{
+  const source=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
+  assert.match(source,/assessRouterMappings\(mappings, /);
+  assert.match(source,/public_ingress_verified: false/);
+  assert.match(source,/independent_external_canary_required/);
+  assert.doesNotMatch(source,/result\.success=production\.length>0/);
+  assert.doesNotMatch(source,/out\.production_mapping_control_ok = true;/);
+});
