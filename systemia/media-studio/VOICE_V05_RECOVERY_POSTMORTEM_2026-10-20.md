@@ -35,3 +35,21 @@ Confirmed source phonemes at 'Evercraft': `ˌɛvəɹkɹˈæft`. Attempting to mo
 Portable user listening/verification artifact created outside the source repo: `Evercraft_V05_Recovery_Golden_Baseline.zip` contains authentic recovered original V05 WAV/MP3, unmodified token-route WAV/MP3, altered test WAVs for fingerprint comparison, `audio-comparison-evidence.json`, and a two-take HTML player. The original model weights were not rehosted.
 
 Founder/team learning: 'a changed waveform' is not a better actor. Preserve a beloved performance first, then test one variable at a time against a genuine golden reference.
+
+## Controlled source-path parity: experimental result
+
+Dedicated real Kokoro 0.9.4 CPU GitHub Actions test PASSED at https://github.com/jgaethle10/forge-operator/actions/runs/39524633121 (artifact `evercraft-v05-original-pipeline-recovery`, artifact ID `12313365675`). The script `voice-v05-native-parity.py` seeded torch and NumPy to 1701 separately before native, repeated native, and untouched G2P token synthesis for each scene.
+
+| Script context | Native re-run PCM identical? | Unchanged token-route PCM identical to native? | Dry WAV duration |
+|---|---|---|---:|
+| tagline | YES | YES | 3.725 s |
+| brand | YES | YES | 4.275 s |
+| promise | YES | YES | 4.525 s |
+
+All nine dry WAV SHA-256 values and nine listening MP3 SHA-256 values match the uploaded artifact report, verified independently after download. This **falsifies** the working hypothesis that a different source API necessarily degraded output for these input texts, model and seed. It remains a valid testing control for future code.
+
+**Revised conclusion:** the degraded founder-rejected samples were generated with changed brand-name phonemes, and the unchanged source routes are identical under a controlled repeat. Editing vowel and syllable emphasis is therefore the much more relevant experimental difference. This does NOT prove the IPA edits were the only source of perceived robotic sound, nor that any specific alteration is a correct pronunciation. The legitimate original V05 sound stays our baseline.
+
+**Do not run random seed-search as a default 'voice fix':** the same seed reproduced an identical PCM stream in the control; cross-seed diversity has not been evaluated. More meaningful performance gains are likely to require real expressive conditioning or another capable synthesis architecture with independently licensed voice assets, human performance reference and a carefully designed listening evaluation. Do not claim a human-quality improvement without that evidence.
+
+Outstanding: model checkpoint digests/voice licensing and independent authorized recording; casting and final founder publication remain held.
