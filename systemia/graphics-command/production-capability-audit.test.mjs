@@ -21,6 +21,9 @@ test('full graphics inventory includes EVERY source module in scoped departments
   assert.equal(audit.newUninventoried.length,0);
   assert.equal(audit.missingFromCheckout.length,0);
   assert.ok(audit.features.length>=45);
+  assert.equal(audit.profileCount,8);
+  assert.equal(audit.missingProfileRequirements.length,0);
+  assert.ok(audit.profiles.every(p=>p.status==='contract_only_not_runtime_verified'));
   assert.ok(audit.featuresWithTestFiles>20);
   assert.match(audit.digest,/^[a-f0-9]{64}$/);
   assert.match(audit.sourceTreeDigest,/^[a-f0-9]{64}$/);
@@ -64,4 +67,21 @@ test('the source audit is deterministic when the checkout has not changed',()=>{
   const a=auditGraphicsCapabilities(),b=auditGraphicsCapabilities();
   assert.equal(a.digest,b.digest);
   assert.equal(a.sourceTreeDigest,b.sourceTreeDigest);
+});
+
+test('every production profile has a mandatory evidence gate, never a synthetic ready claim',()=>{
+  const audit=auditGraphicsCapabilities();
+  const profiles=new Map(audit.profiles.map(p=>[p.id,p]));
+  for(const required of ['family_cartoon','documentary','commercial','interactive_world',
+    'music_and_performance','social_creative','data_education','distribution']){
+      const profile=profiles.get(required);
+      assert.ok(profile,required);
+      assert.ok(profile.requirements.length>=6);
+      assert.ok(profile.evidence.length>=4);
+      assert.equal(profile.missingRequiredFeatures.length,0);
+      assert.equal(profile.executionVerified,false);
+  }
+  const cartoon=profiles.get('family_cartoon');
+  assert.ok(cartoon.evidence.includes('body_hand_face_eyeline_visual_review'));
+  assert.ok(cartoon.evidence.includes('viseme_voice_sync_receipt'));
 });
