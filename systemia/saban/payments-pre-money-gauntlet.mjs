@@ -129,7 +129,7 @@ export async function runSabanPreMoneyGauntlet({
     ]);
     const winners=race.filter(x=>x.exit===0&&x.value.status==='completed');
     const losers=race.filter(x=>x.exit!==0&&x.value.status==='blocked'&&
-      ['EEXIST','order_version_conflict','order_payment_rail_already_selected'].includes(x.value.reason));
+      ['lock_collision','order_version_conflict','order_payment_rail_already_selected'].includes(x.value.reason));
     if(winners.length!==1||losers.length!==1)throw Error('concurrent_select_cas_failed');
     workerResults.push({role:'concurrent_cas',status:'completed'});
     const raceAudit=await testWorker({role:'auditor',orderId:raceId});
