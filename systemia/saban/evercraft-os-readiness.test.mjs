@@ -85,4 +85,10 @@ test('reconciliation refuses missing, duplicated, tampered or falsely elevated r
   const elevated = structuredClone(valid);
   elevated[0].runtime_observed = true;
   assert.ok((await reconcile({results: elevated,rootDir})).findings.some(x=>x.startsWith('false_runtime_claim:')));
+  const forged = structuredClone(valid);
+  forged[0].anchors[0].sha256 = 'sha256:forged';
+  assert.ok((await reconcile({results: forged,rootDir})).findings.some(x=>x.startsWith('anchor_evidence_mismatch:')));
+  const omitted = structuredClone(valid);
+  omitted[0].anchors = [];
+  assert.ok((await reconcile({results: omitted,rootDir})).findings.some(x=>x.startsWith('anchor_evidence_mismatch:')));
 });
