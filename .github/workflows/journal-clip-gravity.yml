@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'systemia/newsroom/journal-clip-gravity.mjs'
+      - 'systemia/newsroom/journal-clip-gravity-sign.mjs'
+      - 'systemia/newsroom/GRAVITY-OPERATOR-RUNBOOK.md'
       - 'systemia/newsroom/journal-clip-gravity.test.mjs'
       - 'systemia/clip/social-publisher-runtime.mjs'
       - 'systemia/clip/facebook-page-publisher.mjs'
@@ -12,6 +14,8 @@ on:
     branches: [main]
     paths:
       - 'systemia/newsroom/journal-clip-gravity.mjs'
+      - 'systemia/newsroom/journal-clip-gravity-sign.mjs'
+      - 'systemia/newsroom/GRAVITY-OPERATOR-RUNBOOK.md'
       - 'systemia/newsroom/journal-clip-gravity.test.mjs'
       - 'systemia/clip/social-publisher-runtime.mjs'
       - 'systemia/clip/facebook-page-publisher.mjs'

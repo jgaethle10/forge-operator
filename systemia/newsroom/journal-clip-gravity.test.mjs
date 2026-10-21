@@ -11,6 +11,7 @@ import {
   verifyGravityReleaseAuthority,
 } from './journal-clip-gravity.mjs';
 import { createAttestationPayload, signAttestation } from '../lineage/signatures.mjs';
+import {signGravityRelease,readProtectedOperatorPrivateKey} from './journal-clip-gravity-sign.mjs';
 
 const now = new Date('2026-10-21T17:55:00.000Z');
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
@@ -258,4 +259,40 @@ test('live dispatch requires signature even when adapter would otherwise accept'
   let calls=0;
   await assert.rejects(()=>dispatchGravityClipFallback({release:r,now,fire:true,trustedPublicKey:publicKey,stateRoot:stateRoot(),publisher:async()=>{calls++;}}),/operator_attestation_required/);
   assert.equal(calls,0);
+});
+
+test('offline operator signing produces an independently verifiable full release',()=>{
+  const unsigned=release();
+  delete unsigned.operator_attestation;
+  const signed=signGravityRelease({release:unsigned,privateKey,operatorId:'test-editor',keyId:'test-operator-key',now});
+  const req=buildGravityClipFallbackRequest(signed,opts);
+  assert.equal(req.lineage.story_id,unsigned.story_id);
+  assert.equal(req.metadata.message,unsigned.approved_copy);
+});
+test('signer never silently replaces an already signed packet',()=>{
+  assert.throws(()=>signGravityRelease({release:release(),privateKey,operatorId:'editor',keyId:'test-operator-key',now}),/already_attested/);
+});
+test('signing incomplete public safety review is blocked before any release output',()=>{
+  const unsigned=release();
+  delete unsigned.operator_attestation;
+  unsigned.qualified_public_safety_review.approved=false;
+  assert.throws(()=>signGravityRelease({release:unsigned,privateKey,operatorId:'editor',keyId:'test-operator-key',now}),/public_safety_human_review_required/);
+});
+test('private key protection refuses world-readable or symbolic-link keys',()=>{
+  const dir=stateRoot();
+  const file=path.join(dir,'operator.pem');
+  fs.writeFileSync(file,privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
+  assert.match(readProtectedOperatorPrivateKey(file),/PRIVATE KEY/);
+  fs.chmodSync(file,0o644);
+  assert.throws(()=>readProtectedOperatorPrivateKey(file),/permissions_unsafe/);
+  fs.chmodSync(file,0o600);
+  const symlink=path.join(dir,'link.pem');
+  fs.symlinkSync(file,symlink);
+  assert.throws(()=>readProtectedOperatorPrivateKey(symlink),/permissions_unsafe/);
+});
+test('signer cannot assert a production approval when a story is only researching',()=>{
+  const unsigned=release();
+  delete unsigned.operator_attestation;
+  unsigned.status='researching';
+  assert.throws(()=>signGravityRelease({release:unsigned,privateKey,operatorId:'editor',keyId:'test-operator-key',now}),/story_not_approved/);
 });
