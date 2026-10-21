@@ -90,3 +90,43 @@ test('agent discovery never creates a payment when given a business problem',asy
  assert.equal(r.result.structuredContent.transactional,false);
  assert.equal(r.result.structuredContent.external_action_taken,false);
 });
+
+
+test('MCP list and match never leak a held checkout URL, but reviewed products offer human inquiry',async()=>{
+ const list=await executeFabricDirectoryRpc({jsonrpc:'2.0',id:40,method:'tools/call',
+  params:{name:'list_evercraft_capabilities',arguments:{limit:100}}},catalog);
+ const entries=list.result.structuredContent.capabilities;
+ assert.ok(entries.length>=6);
+ const reviewed=[
+  'audit-center-website-audit-machine-v1',
+  'findmypart-paid-hunt-v1',
+  'ibmi-rescue-v1',
+  'legacy-rescue-lab-v1',
+  'site-survive-rapid-audit-v1',
+  'workflow-foundry-xray-v1',
+ ];
+ for(const id of reviewed){
+  const entry=entries.find(x=>x.public_id===id);
+  assert.ok(entry,id);
+  assert.equal(entry.human_offer_url,null,id);
+  assert.equal(entry.buyer_checkout_available,false,id);
+  assert.equal(entry.start_url_state,'held_provider_http_402_requires_new_payment_receipt',id);
+  assert.equal(entry.checkout_suppression_reason,'evercraft_public_commercial_mcp_http402_20261017',id);
+  assert.equal(entry.human_sales_inquiry?.email,'jessegaethle10@gmail.com',id);
+  assert.equal(entry.human_sales_inquiry?.order_created,false,id);
+  assert.equal(entry.human_sales_inquiry?.payment_verified,false,id);
+ }
+ const rivet=entries.find(x=>x.public_id==='rivet-site-underwriting-v1');
+ assert.equal(rivet.human_sales_inquiry,null);
+ assert.ok(entries.every(x=>x.human_offer_url===null));
+ const match=await executeFabricDirectoryRpc({jsonrpc:'2.0',id:41,method:'tools/call',
+  params:{name:'match_evercraft_capability',arguments:{intent:'Website audit for leads and SEO',limit:5}}},catalog);
+ const matched=match.result.structuredContent.matches;
+ assert.ok(matched.some(x=>x.public_id==='audit-center-website-audit-machine-v1'));
+ assert.ok(matched.every(x=>x.human_offer_url===null&&x.buyer_checkout_available===false));
+ const direct=await run('audit-center-website-audit-machine-v1');
+ assert.equal(direct.buyer_checkout_available,false);
+ assert.equal(direct.human_offer_url,null);
+ assert.equal(direct.human_sales_inquiry.email,'jessegaethle10@gmail.com');
+ assert.equal(direct.human_sales_inquiry.fulfillment_authorized,false);
+});
