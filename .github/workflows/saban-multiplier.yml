@@ -53,6 +53,9 @@ jobs:
       - name: Prove kernel recovery and sharding
         run: npm run proof:saban-kernel
 
+      - name: Verify partner-safe Saban formation evidence
+        run: node systemia/saban/partner-demo-proof.mjs
+
       - name: Execute bounded CHUM swarm
         run: npm run proof:saban-chum
 
