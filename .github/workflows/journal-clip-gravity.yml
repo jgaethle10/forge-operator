@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/newsroom/journal-clip-gravity.mjs'
       - 'systemia/newsroom/journal-clip-gravity-sign.mjs'
+      - 'systemia/newsroom/journal-clip-gravity-readiness.mjs'
+      - 'systemia/newsroom/journal-clip-gravity-readiness.test.mjs'
       - 'systemia/newsroom/GRAVITY-OPERATOR-RUNBOOK.md'
       - 'systemia/newsroom/journal-clip-gravity.test.mjs'
       - 'systemia/clip/social-publisher-runtime.mjs'
@@ -15,6 +17,8 @@ on:
     paths:
       - 'systemia/newsroom/journal-clip-gravity.mjs'
       - 'systemia/newsroom/journal-clip-gravity-sign.mjs'
+      - 'systemia/newsroom/journal-clip-gravity-readiness.mjs'
+      - 'systemia/newsroom/journal-clip-gravity-readiness.test.mjs'
       - 'systemia/newsroom/GRAVITY-OPERATOR-RUNBOOK.md'
       - 'systemia/newsroom/journal-clip-gravity.test.mjs'
       - 'systemia/clip/social-publisher-runtime.mjs'
@@ -38,6 +42,7 @@ jobs:
         run: |
           node --test \
             systemia/newsroom/journal-clip-gravity.test.mjs \
+            systemia/newsroom/journal-clip-gravity-readiness.test.mjs \
             systemia/newsroom/journal-clip-bridge.test.mjs \
             systemia/clip/social-publisher-runtime.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs
