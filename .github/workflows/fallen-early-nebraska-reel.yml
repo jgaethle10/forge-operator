@@ -33,10 +33,11 @@ jobs:
         with:
           name: history-nebraska-genuine-1919ish-football-film-review-only
           path: |
-            ${{ runner.temp }}/nebraska-early-real-football/Evercraft_Genuine_Early_Nebraska_Football_RC05.mp4
+            ${{ runner.temp }}/nebraska-early-real-football/Evercraft_Genuine_Early_Nebraska_Football_Action_RC06.mp4
             ${{ runner.temp }}/nebraska-early-real-football/original-frame-*.jpg
             ${{ runner.temp }}/nebraska-early-real-football/timeline.json
             ${{ runner.temp }}/nebraska-early-real-football/receipt.json
+            ${{ runner.temp }}/nebraska-early-real-football/History_Nebraska_RG6137MI_reel_download
             ${{ runner.temp }}/nebraska-early-real-football/SOURCE_CREDITS.txt
           if-no-files-found: error
           retention-days: 14
