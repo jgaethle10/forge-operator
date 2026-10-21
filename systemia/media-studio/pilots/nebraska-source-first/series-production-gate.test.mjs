@@ -13,7 +13,7 @@ test('program rise, sleeping giant, Rhule rebuild are three real 25 minute outli
  assert.equal(r.episodeCount,3);
  assert.equal(r.sceneCount,18);
  assert.equal(r.acquiredHashVerifiedSources,4);
- assert.equal(r.historicalFactsWithSourceLinks,19);
+ assert.equal(r.historicalFactsWithSourceLinks,20);
  assert.deepEqual(r.episodes.map(e=>e.title),['The Giant','The Sleeping Giant','The Giant Stirs']);
  assert.ok(r.episodes.every(e=>e.draftMinutes===25&&e.availableForPublicFilmMinutes===0&&!e.humanDirectorAcceptance));
 });
