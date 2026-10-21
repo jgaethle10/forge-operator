@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/world-engine/naval-editorial-direction.ts'
       - 'systemia/world-engine/naval-editorial-direction.test.ts'
+      - 'systemia/world-engine/naval-foreground-audit.ts'
       - 'systemia/world-engine/cinematic-render-proof.ts'
       - '.github/workflows/world-engine-editorial-camera.yml'
   workflow_dispatch:
@@ -53,7 +54,8 @@ jobs:
           const d=r.editorialDirection;
           if(!d||d.shot!=='waterline_tracking'||!d.sourceCameraWorldRig||
              !d.gradedOriginalPbrMaterials||d.realGpuHeroFrameSamples?.length!==5||
-             d.realGpuHeroFrameSamples.some(x=>!x.observable||x.framingStatus==='subject_offscreen'||
+             d.realGpuHeroFrameSamples.some(x=>!x.observable||x.foregroundClear!==true||
+                x.nearfieldObstructions?.length!==0||x.framingStatus==='subject_offscreen'||
                 x.coverage.width<=.18)||
              d.realGpuHeroFrameSamples.find(x=>x.frameIndex===48)?.framingStatus!=='good_technical_framing'||d.cameraReviewRequired!==true||
              d.historicalCameraOrLightingVerified!==false||d.founderApproved!==false||
