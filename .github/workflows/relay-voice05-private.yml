@@ -1,0 +1,53 @@
+name: Relay Voice 5 Native Bella Narration (Private)
+on:
+  push:
+    branches: [feat/relay-voice05-film-audition-20261020]
+    paths:
+      - "systemia/media-studio/relay-voice05-private.py"
+      - ".github/workflows/relay-voice05-private.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-v05:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify original unmodified Voice 5 script
+        run: python systemia/media-studio/relay-voice05-private.py --verify-only
+      - name: Install existing Kokoro voice production runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate 7 original native Bella recordings
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/relay-voice05-private.py private-relay-v05
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path('private-relay-v05')
+          receipt=json.loads((root/'evidence.json').read_text())
+          assert receipt['voiceId']=='af_bella'
+          assert receipt['phonemeOverrides'] is False
+          assert receipt['timbreBlends'] is False
+          assert len(receipt['scriptLines'])==7
+          for line in receipt['scriptLines']:
+              data=(root/line['filename']).read_bytes()
+              assert data[:4]==b'RIFF'
+              assert hashlib.sha256(data).hexdigest()==line['sha256']
+              assert 1.0<line['durationSec']<9.0
+          print("Original V05 native voice recordings verified")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-voice05-original-native-private
+          path: private-relay-v05/
+          retention-days: 7
+          if-no-files-found: error
