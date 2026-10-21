@@ -30,6 +30,7 @@ test('Saban cold-client read-only MCP and crawler surfaces work while provider-h
   }
   const receipt=JSON.parse(stdout);
   assert.equal(receipt.ok,false,'checkout held is not a commercially healthy probe');
+  assert.equal(receipt.diagnosis.code,'buyer_handoff_held_by_payment_authority');
   assert.equal(receipt.profiles.length,2);
   assert.equal(receipt.checkout_created,false);
   assert.equal(receipt.provider_recommendation_observed,false);
