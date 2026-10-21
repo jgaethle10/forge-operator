@@ -1,4 +1,16 @@
 /**
+ * IGD SOAP may wrap string values in XML CDATA.
+ * Remove only a complete CDATA wrapper, never substrings or ordinary text:
+ * labels remain subject to the same byte-for-byte ownership comparison.
+ */
+export function decodeUpnpCdata(value){
+  if(value===null||value===undefined) return null;
+  const raw=String(value).trim();
+  const cdata=/^<!\[CDATA\[([\s\S]*)\]\]>$/.exec(raw);
+  return cdata ? cdata[1].trim() : raw;
+}
+
+/**
  * Conservative UPnP control policy for known Evercraft ports.
  * Readback always precedes writes. A foreign or unverified owner is never changed.
  */
