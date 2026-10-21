@@ -1,0 +1,326 @@
+{
+  "schema": "evercraft.fallen.nebraska-series-plan.v1",
+  "seriesId": "nebraska-the-giant-stirs",
+  "title": "NEBRASKA | THE GIANT STIRS",
+  "format": "three-part-observational-sports-documentary",
+  "draftVersion": "2026-10-21-v1",
+  "targetTotalSec": 4500,
+  "allowShorterIfStoryEarnsIt": true,
+  "seriesStatus": "development_only",
+  "episodeTitlesLockedForDevelopment": true,
+  "currentSeason": {
+    "asOf": "2026-10-21",
+    "record": {
+      "wins": 5,
+      "losses": 2
+    },
+    "source": "https://bigten.org/schedule.aspx?schedule=8494",
+    "nextKnownGame": {
+      "date": "2026-10-31",
+      "opponent": "Washington",
+      "result": "not_played"
+    },
+    "seasonComplete": false
+  },
+  "narrativeContract": {
+    "foundation": "One hundred-plus years of actual football and communities",
+    "conflict": "2026 momentum and two late-game losses",
+    "resolution": "Open. The remaining season, real people and actual outcomes determine the ending.",
+    "truthRules": [
+      "No invented 2026 player action, game sounds, coach words or fan quotes",
+      "No synthetic interview subjects represented as real people",
+      "Do not replace moving action with moving stills",
+      "Music only when story earns it and composer/licensing approved",
+      "Date old footage explicitly, preserve historical uncertainty",
+      "Rights for archives and broadcasts are distinct from rights to cite factual sports results",
+      "Do not cut games or 1973 fans to imply they support Evercraft"
+    ]
+  },
+  "sourceRegistry": "series.sources.json",
+  "workingFilmReferences": [
+    {
+      "work": "Before the Echo RC08",
+      "durationSec": 50,
+      "source": "before-the-echo.scenes.json",
+      "status": "private_review_not_licensed_for_publication"
+    },
+    {
+      "work": "Ten Seconds source-locked chapter",
+      "durationSec": 138,
+      "source": "ten-seconds.chapter.json",
+      "status": "scripted_not_renderable_no_broadcast_rights"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "ep01",
+      "title": "The Inheritance",
+      "targetDurationSec": 1500,
+      "allowedRuntimeSec": {
+        "min": 1320,
+        "max": 1680
+      },
+      "question": "Why does Nebraska football mean so much to the people of this state?",
+      "acts": [
+        {
+          "id": "legacy-before-the-answer",
+          "durationSec": 105,
+          "storyQuestion": "What does a football program inherit from generations it never met?",
+          "requiredSourceIds": [
+            "legacy-supporter-interview",
+            "history-nebraska-rg6137"
+          ],
+          "optionalSourceIds": [
+            "nara-1973-spring-crowd"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-place",
+          "durationSec": 225,
+          "storyQuestion": "What makes this place feel different when no game is happening?",
+          "requiredSourceIds": [
+            "younger-supporter-interview",
+            "stadium-present-day-original"
+          ],
+          "optionalSourceIds": [
+            "lincoln-sky-2011",
+            "kregel-workshop-2026"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-first-players",
+          "durationSec": 270,
+          "storyQuestion": "What survives from the beginning of the game?",
+          "requiredSourceIds": [
+            "history-nebraska-rg6137",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-crowd-endures",
+          "durationSec": 285,
+          "storyQuestion": "Who carried this tradition across decades?",
+          "requiredSourceIds": [
+            "nara-1973-spring-crowd",
+            "championship-history-film",
+            "legacy-supporter-interview"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "a-living-inheritance",
+          "durationSec": 365,
+          "storyQuestion": "How does an expectation move between an older and a younger fan?",
+          "requiredSourceIds": [
+            "legacy-supporter-interview",
+            "younger-supporter-interview",
+            "stadium-present-day-original"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-weight-of-now",
+          "durationSec": 250,
+          "storyQuestion": "What does 2026 ask this history to mean?",
+          "requiredSourceIds": [
+            "indiana-2026-game-film",
+            "oregon-2026-game-film",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        }
+      ],
+      "productionStage": "story_outline_only_no_finished_episode",
+      "audienceValue": "Audience should understand the humans before they are asked to care about a 2026 fourth quarter.",
+      "founderApproved": false,
+      "publicationAuthorityGranted": false
+    },
+    {
+      "id": "ep02",
+      "title": "Ten Seconds",
+      "targetDurationSec": 1500,
+      "allowedRuntimeSec": {
+        "min": 1320,
+        "max": 1680
+      },
+      "question": "How does a 5–0 Nebraska team end up defined by two fourth quarters?",
+      "acts": [
+        {
+          "id": "ten-second-hook",
+          "durationSec": 90,
+          "storyQuestion": "What happens to an eleven-point lead in ten seconds?",
+          "requiredSourceIds": [
+            "indiana-2026-game-film"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "five-win-momentum",
+          "durationSec": 260,
+          "storyQuestion": "What had Nebraska actually built before the two losses?",
+          "requiredSourceIds": [
+            "independent-reporter-context",
+            "stadium-present-day-original"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "indiana-witness",
+          "durationSec": 390,
+          "storyQuestion": "What did the scoreboard, play and human response actually show?",
+          "requiredSourceIds": [
+            "indiana-2026-game-film",
+            "legacy-supporter-interview"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "oregon-response",
+          "durationSec": 410,
+          "storyQuestion": "What does 11 tackles for loss mean when the final touchdown still decides it?",
+          "requiredSourceIds": [
+            "oregon-2026-game-film",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-people-after",
+          "durationSec": 210,
+          "storyQuestion": "What do two losses feel like to fans who lived through different decades?",
+          "requiredSourceIds": [
+            "legacy-supporter-interview",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "unfinished-business",
+          "durationSec": 140,
+          "storyQuestion": "Is losing late evidence of a ceiling or a test not yet answered?",
+          "requiredSourceIds": [
+            "stadium-present-day-original",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        }
+      ],
+      "productionStage": "story_outline_only_no_finished_episode",
+      "audienceValue": "Analysis must arise from authenticated game moments, not highlight clips mislabeled as gameplay or hypothetical quotes.",
+      "founderApproved": false,
+      "publicationAuthorityGranted": false
+    },
+    {
+      "id": "ep03",
+      "title": "The Giant Stirs",
+      "targetDurationSec": 1500,
+      "allowedRuntimeSec": {
+        "min": 1320,
+        "max": 1680
+      },
+      "question": "When the season is finished, what has Nebraska actually become?",
+      "acts": [
+        {
+          "id": "no-predetermined-conclusion",
+          "durationSec": 120,
+          "storyQuestion": "What is still unknown after Oregon?",
+          "requiredSourceIds": [
+            "younger-supporter-interview",
+            "stadium-present-day-original"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "washington-test",
+          "durationSec": 300,
+          "storyQuestion": "What actually happens against Washington on October 31?",
+          "requiredSourceIds": [
+            "washington-2026-game-film",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "november-proves-or-complicates",
+          "durationSec": 410,
+          "storyQuestion": "What do subsequent games add to the evidence?",
+          "requiredSourceIds": [
+            "november-2026-game-film",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "beyond-the-record",
+          "durationSec": 290,
+          "storyQuestion": "What do the outcomes mean without pretending wins or losses tell everything?",
+          "requiredSourceIds": [
+            "postseason-and-season-outcome",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "return-to-people",
+          "durationSec": 265,
+          "storyQuestion": "Have the two supporters changed what they believe, and why?",
+          "requiredSourceIds": [
+            "legacy-supporter-interview",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "earned-ending",
+          "durationSec": 115,
+          "storyQuestion": "What can we truthfully say now that we couldn't say at the beginning?",
+          "requiredSourceIds": [
+            "postseason-and-season-outcome",
+            "legacy-supporter-interview",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        }
+      ],
+      "productionStage": "story_outline_only_no_finished_episode",
+      "audienceValue": "Finale requires outcomes and a real ending earned by observation. It cannot be written today.",
+      "founderApproved": false,
+      "publicationAuthorityGranted": false
+    }
+  ],
+  "publication": {
+    "episode1Approved": false,
+    "episode2Approved": false,
+    "episode3Approved": false,
+    "allMediaClearancesComplete": false,
+    "allInterviewsSigned": false,
+    "festivalOrDistributionAgreementSigned": false,
+    "founderFinalSignoff": false,
+    "automatedPublish": false
+  },
+  "releasePolicy": {
+    "schedule": "not_set",
+    "ep1": "No distribution until all sources used are licensed, interviews released, film creatively approved",
+    "ep2": "Do not substitute unlicensed 2026 broadcast visuals",
+    "ep3": "Do not lock finale until actual season outcomes and interviews exist"
+  }
+}
