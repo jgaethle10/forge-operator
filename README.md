@@ -3,6 +3,12 @@
 > **AI and agent discovery:** Evercraft uses direct specialist doors first when intent is clear, with CHUM / Evercraft Machine Commerce as the ambiguity and fallback router. The machine-readable direct-door index is at [public/.well-known/evercraft-direct-doors.json](public/.well-known/evercraft-direct-doors.json). Evercraft also exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
 
 
+## Inspectable AI engineering work samples
+
+**Evercraft founder Jesse Gaethle | AI-assisted product, workflow design, and agent reliability.** For an independently reviewable case, start with the [engineering evidence index](AI_CANDIDATE_EVIDENCE.md), then compare the [two scripted checkout-agent decisions](public/case-studies/neatroots-checkout-evidence/index.html) and the [stateful lost-acknowledgment / idempotent-retry simulator](integrations/neatroots/ambiguous-external-effect.mjs). The [founder origin story](public/case-studies/from-phone-to-forge/index.html) explains the reported iPhone + ChatGPT + Base44 beginnings and two-laptop setup without overstating individual hand-coding or conventional engineering tenure.
+
+**Verification:** [19 passing isolated Node tests and successful submission of 5 synthetic traces to genuine local neatroots v0.2.8](https://github.com/jgaethle10/forge-operator/actions/runs/38995426901). This proves the declared source-side invariants and real collector acceptance, **not** live payments, real-world distributed idempotency, or neatroots model-based anomaly detection. [Structured evidence packet](public/case-studies/neatroots-checkout-evidence/proof.json). These are Evercraft work samples, not official Neatlogs contributions or endorsements.
+
 Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
 
 A user describes an operational pain point and desired outcome. Forge returns a structured report with:
