@@ -4,6 +4,7 @@ import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
 import { assessRouterMappings } from './edge-mapping-control.mjs';
+import {planUpnpMapping,parseUpnpErrorCode} from './edge-upnp-mapping-policy.mjs';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) {
@@ -280,9 +281,16 @@ async function soap(control, serviceType, action, body) {
       'connection': 'close',
     },
     body: envelope,
+    signal: AbortSignal.timeout(8000),
   });
   const text = await res.text();
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 240)}`);
+  if (!res.ok) {
+    // Extract the actual IGD error code instead of truncating the SOAP fault
+    // before its <errorCode>. Never print the router descriptor or raw XML.
+    const error=new Error('upnp_'+action+'_http_'+res.status+'_code_'+(parseUpnpErrorCode(text)||'unknown'));
+    error.upnpCode=parseUpnpErrorCode(text);
+    throw error;
+  }
   return text;
 }
 
@@ -347,53 +355,85 @@ async function upnpMap() {
         });
       }
 
-      const mapped = [];
-      for (const m of mappings) {
-        const b =
-          '<NewRemoteHost></NewRemoteHost>' +
-          `<NewExternalPort>${m.external}</NewExternalPort>` +
-          `<NewProtocol>${m.proto}</NewProtocol>` +
-          `<NewInternalPort>${m.internal}</NewInternalPort>` +
-          `<NewInternalClient>${host}</NewInternalClient>` +
-          '<NewEnabled>1</NewEnabled>' +
-          `<NewPortMappingDescription>${m.desc}</NewPortMappingDescription>` +
-          `<NewLeaseDuration>${Number(m.lifetime || 86400)}</NewLeaseDuration>`;
-        try {
-          await soap(control, service.serviceType, 'AddPortMapping', b);
-          // A router can acknowledge the request while retaining an old client.
-          // Read back the exact external port/protocol and fail closed if its
-          // target is not the currently configured ChromeOS Wi-Fi address.
-          const detail=await soap(
-            control,
-            service.serviceType,
-            'GetSpecificPortMappingEntry',
-            '<NewRemoteHost></NewRemoteHost>'+
-              `<NewExternalPort>${m.external}</NewExternalPort>`+
-              `<NewProtocol>${m.proto}</NewProtocol>`
-          );
-          const observedHost=tagValue(detail,'NewInternalClient');
-          const observedPort=Number(tagValue(detail,'NewInternalPort'));
-          const observedEnabled=tagValue(detail,'NewEnabled');
-          if(observedHost!==host||observedPort!==m.internal||observedEnabled!=='1'){
-            mapped.push({
-              requested:m,
-              success:false,
-              error:'upnp_mapping_readback_mismatch',
-              observed_host:observedHost,
-              observed_port:observedPort,
-              observed_enabled:observedEnabled,
-            });
-          }else{
-            mapped.push({
-              requested:m,
-              success:true,
-              readback_verified:true,
-              observed_host:observedHost,
-              observed_port:observedPort,
-            });
-          }
-        } catch (e) {
-          mapped.push({ requested: m, success: false, error: e.message });
+      // Preflight every selected entry before doing *any* writes. A router
+      // with an old Evercraft target or a foreign owner needs a deliberate,
+      // confirmed repair. A healthy mapping must not be needlessly re-added.
+      const planned=[];
+      for(const m of mappings){
+        const selector='<NewRemoteHost></NewRemoteHost>'+
+          `<NewExternalPort>${m.external}</NewExternalPort>`+
+          `<NewProtocol>${m.proto}</NewProtocol>`;
+        let existing=null,missing=false,readbackError=null;
+        try{
+          const xml=await soap(control,service.serviceType,'GetSpecificPortMappingEntry',selector);
+          existing={
+            host:tagValue(xml,'NewInternalClient'),
+            internal:Number(tagValue(xml,'NewInternalPort')),
+            description:tagValue(xml,'NewPortMappingDescription'),
+            enabled:tagValue(xml,'NewEnabled')
+          };
+        }catch(error){
+          if(error.upnpCode==='714') missing=true;
+          else readbackError=error.message;
+        }
+        const decision=readbackError
+          ? {action:'hold',state:'readback_failed',ownership_verified:false}
+          : planUpnpMapping(existing,{...m,host},{missing});
+        planned.push({requested:m,selector,decision,error:readbackError});
+      }
+
+      if(planned.some(row=>row.decision.action==='hold')){
+        const mapped=planned.map(row=>({
+          requested:row.requested,
+          success:false,
+          error:row.error||row.decision.state,
+          owner_hold:row.decision.action==='hold',
+          observed:row.decision.observed||null
+        }));
+        result.ownership_conflict=true;
+        result.mappings=mapped;
+        result.diagnostics.push({
+          service_type:service.serviceType,control,
+          reason:'upnp_ownership_preflight_hold',
+          mapping_results:mapped
+        });
+        return result;
+      }
+
+      const mapped=[];
+      for(const row of planned){
+        const m=row.requested;
+        if(row.decision.action==='keep'){
+          mapped.push({
+            requested:m,success:true,readback_verified:true,
+            already_correct:true,observed_host:host,observed_port:m.internal
+          });
+          continue;
+        }
+        const b=
+          row.selector+
+          `<NewInternalPort>${m.internal}</NewInternalPort>`+
+          `<NewInternalClient>${host}</NewInternalClient>`+
+          '<NewEnabled>1</NewEnabled>'+
+          `<NewPortMappingDescription>${m.desc}</NewPortMappingDescription>`+
+          `<NewLeaseDuration>${Number(m.lifetime||86400)}</NewLeaseDuration>`;
+        try{
+          await soap(control,service.serviceType,'AddPortMapping',b);
+          const xml=await soap(control,service.serviceType,'GetSpecificPortMappingEntry',row.selector);
+          const observed={
+            host:tagValue(xml,'NewInternalClient'),
+            internal:Number(tagValue(xml,'NewInternalPort')),
+            description:tagValue(xml,'NewPortMappingDescription'),
+            enabled:tagValue(xml,'NewEnabled')
+          };
+          const verified=planUpnpMapping(observed,{...m,host});
+          if(verified.action!=='keep') throw new Error('upnp_mapping_readback_mismatch');
+          mapped.push({
+            requested:m,success:true,readback_verified:true,
+            observed_host:observed.host,observed_port:observed.internal
+          });
+        }catch(error){
+          mapped.push({requested:m,success:false,error:error.message});
         }
       }
       result.mappings = mapped;
