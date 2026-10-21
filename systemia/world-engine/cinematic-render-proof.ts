@@ -482,7 +482,7 @@ async function main(){
     detailTargetEntityId:'turret-fore-a'
   }):null;
   const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
-    world,take:isSilhouette?historicSilhouetteTake():isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
+    world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
   if(!director&&native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
