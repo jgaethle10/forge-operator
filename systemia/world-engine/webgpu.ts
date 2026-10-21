@@ -1,6 +1,9 @@
 import crypto from 'node:crypto';
 import type {
   CameraProjection,
+  AtmosphereDefinition,
+  FilmicColorManagement,
+  CinematicLightingDefinition,
   ColorRGB,
   LightComponent,
   MaterialDefinition,
@@ -94,6 +97,9 @@ export interface WebGpuRenderPlan {
   width:number;
   height:number;
   clearColor:ColorRGB;
+  atmosphere?:AtmosphereDefinition;
+  colorManagement?:FilmicColorManagement;
+  cinematicLighting?:CinematicLightingDefinition;
   viewMatrix:number[];
   projectionMatrix:number[];
   viewProjectionMatrix:number[];
@@ -596,6 +602,9 @@ export function compileWebGpuRenderPlan(
     width:viewport.width,
     height:viewport.height,
     clearColor:clone(frame.clearColor),
+    ...(frame.atmosphere?{atmosphere:clone(frame.atmosphere)}:{}),
+    ...(frame.colorManagement?{colorManagement:clone(frame.colorManagement)}:{}),
+    ...(frame.cinematicLighting?{cinematicLighting:clone(frame.cinematicLighting)}:{}),
     viewMatrix,
     projectionMatrix,
     viewProjectionMatrix,
@@ -668,10 +677,18 @@ function objectUniformData(draw:WebGpuDrawCommand){
 }
 
 function frameUniformData(plan:WebGpuRenderPlan){
+  const fog=plan.atmosphere;
   return floats([
     ...plan.viewProjectionMatrix,
     plan.cameraPosition[0],plan.cameraPosition[1],plan.cameraPosition[2],plan.exposure,
-    plan.lights.length,0,0,0
+    plan.lights.length,0,0,0,
+    fog?.color.r??0,fog?.color.g??0,fog?.color.b??0,fog?.density??0,
+    fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0,
+    plan.colorManagement?.toneMapper==='aces_filmic'?1:0,
+    plan.colorManagement?.exposureBiasStops??0,0,0,
+    plan.cinematicLighting?.shading==='ggx_microfacet'?1:0,
+    plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,
+    0,0
   ]);
 }
 
@@ -680,6 +697,10 @@ struct FrameUniforms {
   viewProjection: mat4x4<f32>,
   cameraExposure: vec4<f32>,
   lightMeta: vec4<f32>,
+  fogColorDensity: vec4<f32>,
+  fogParams: vec4<f32>,
+  gradeParams: vec4<f32>,
+  lightingParams: vec4<f32>,
 };
 
 struct ObjectUniforms {
@@ -734,6 +755,29 @@ fn saturate(value: f32) -> f32 {
   return clamp(value, 0.0, 1.0);
 }
 
+// Actual world-space distance attenuation, not a 2D texture placed over a shot.
+// Density=0 is the pre-existing visual behavior. Unlit interface materials
+// bypass this intentionally so UI labels and product screenshots remain clear.
+fn applyAtmosphericDepth(lit: vec3<f32>, worldPosition: vec3<f32>) -> vec3<f32> {
+  let density = frame.fogColorDensity.w;
+  if (density <= 0.0) { return lit; }
+  let distance = max(length(frame.cameraExposure.xyz - worldPosition) - frame.fogParams.x, 0.0);
+  let midpointAltitude = 0.5 * (frame.cameraExposure.y + worldPosition.y);
+  let altitude = max(midpointAltitude - frame.fogParams.z, 0.0);
+  let effectiveDensity = density * exp(-frame.fogParams.y * altitude);
+  let transmittance = clamp(exp(-effectiveDensity * distance), 0.0, 1.0);
+  return mix(frame.fogColorDensity.rgb, lit, transmittance);
+}
+
+// Compact ACES approximation: bounded highlights with gentle shoulder roll-off.
+fn applyFilmicGrade(linearColor: vec3<f32>) -> vec3<f32> {
+  if (frame.gradeParams.x < 0.5) { return linearColor; }
+  let x=max(linearColor * exp2(frame.gradeParams.y),vec3<f32>(0.0));
+  let numerator=x*(2.51*x+vec3<f32>(0.03));
+  let denominator=x*(2.43*x+vec3<f32>(0.59))+vec3<f32>(0.14);
+  return clamp(numerator/denominator,vec3<f32>(0.0),vec3<f32>(1.0));
+}
+
 @fragment
 fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
   var base = object.baseColor;
@@ -777,6 +821,9 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
   let V = normalize(frame.cameraExposure.xyz - input.worldPosition);
   var lighting = vec3<f32>(0.0);
   var specular = vec3<f32>(0.0);
+  var ggxDirect = vec3<f32>(0.0);
+  var ggxAmbient = vec3<f32>(0.0);
+  let ndotv = max(dot(N,V),0.001);
   let lightCount = u32(frame.lightMeta.x);
 
   for (var i:u32=0u; i<lightCount; i=i+1u) {
@@ -793,7 +840,11 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     let outerCos=colorOuter.w;
 
     if (kind==0u) {
-      lighting += color*intensity*ao;
+      if (frame.lightingParams.x > 0.5) {
+        ggxAmbient += color*intensity*ao;
+      } else {
+        lighting += color*intensity*ao;
+      }
       continue;
     }
 
@@ -809,7 +860,14 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
         continue;
       }
       L=delta/dist;
-      attenuation=saturate(1.0-dist/range);
+      if (frame.lightingParams.y > 0.5) {
+        // Squared inverse-distance falloff with smooth finite source range.
+        let normalizedDistance=dist/range;
+        let cutoff=max(1.0-pow(normalizedDistance,4.0),0.0);
+        attenuation=(cutoff*cutoff)/(1.0+dist*dist);
+      } else {
+        attenuation=saturate(1.0-dist/range);
+      }
       if (kind==3u) {
         let cone=dot(direction,-L);
         let coneWidth=max(innerCos-outerCos,0.00001);
@@ -818,6 +876,27 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     }
 
     let ndotl=max(dot(N,L),0.0);
+    if (frame.lightingParams.x>0.5) {
+      if (ndotl>0.0) {
+        let H=normalize(L+V);
+        let ndoth=max(dot(N,H),0.0);
+        let vdoth=max(dot(V,H),0.0);
+        let alpha=roughness*roughness;
+        let alpha2=alpha*alpha;
+        let t=ndoth*ndoth*(alpha2-1.0)+1.0;
+        let distribution=alpha2/max(3.14159265*t*t,0.000001);
+        let k=pow(roughness+1.0,2.0)/8.0;
+        let geometryV=ndotv/max(ndotv*(1.0-k)+k,0.00001);
+        let geometryL=ndotl/max(ndotl*(1.0-k)+k,0.00001);
+        let F0=mix(vec3<f32>(0.04),base.rgb,metallic);
+        let fresnel=F0+(vec3<f32>(1.0)-F0)*pow(1.0-vdoth,5.0);
+        let microfacet=distribution*geometryV*geometryL*fresnel/max(4.0*ndotv*ndotl,0.001);
+        let diffuseEnergy=(vec3<f32>(1.0)-fresnel)*(1.0-metallic);
+        let diffuseBrdf=diffuseEnergy*base.rgb/3.14159265;
+        ggxDirect += (diffuseBrdf+microfacet)*color*intensity*ndotl*attenuation*ao;
+      }
+      continue;
+    }
     lighting += color*intensity*ndotl*attenuation;
 
     if (ndotl>0.0) {
@@ -830,9 +909,17 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     }
   }
 
-  let diffuse=base.rgb*lighting*mix(1.0,0.25,metallic);
-  let color=(diffuse+specular+emissive)*frame.cameraExposure.w;
-  return vec4<f32>(color,base.a);
+  var color=vec3<f32>(0.0);
+  if (frame.lightingParams.x>0.5) {
+    // Ambient is a bounded fill, NOT a claim of environment-map reflections.
+    let metallicAmbientScale=mix(1.0,0.18,metallic);
+    let ambient=base.rgb*ggxAmbient*metallicAmbientScale;
+    color=(ambient+ggxDirect+emissive)*frame.cameraExposure.w;
+  } else {
+    let diffuse=base.rgb*lighting*mix(1.0,0.25,metallic);
+    color=(diffuse+specular+emissive)*frame.cameraExposure.w;
+  }
+  return vec4<f32>(applyFilmicGrade(applyAtmosphericDepth(color,input.worldPosition)),base.a);
 }
 `;
 
@@ -880,7 +967,7 @@ export class EvercraftWebGpuRenderer {
     private readonly textureBudgetBytes:number
   ){
     this.shaderModule=device.createShaderModule({
-      label:'Evercraft World Engine v15 WGSL',
+      label:'Evercraft World Engine atmospheric depth WGSL',
       code:EVERCRAFT_WEBGPU_WGSL
     });
     this.frameLayout=device.createBindGroupLayout({

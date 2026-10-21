@@ -292,6 +292,8 @@
     "faie:once": "node systemia/faie/cli.mjs --once",
     "faie:resident": "node systemia/faie/cli.mjs --resident",
     "test:world-engine": "node --import tsx --test systemia/world-engine/*.test.ts",
+    "world:cinematic-camera": "tsx systemia/world-engine/cinematic-rig-cli.ts",
+    "world:cinematic-render-proof": "node --import tsx systemia/world-engine/cinematic-render-proof.ts",
     "proof:world-engine": "node --import tsx systemia/world-engine/proof.mjs",
     "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 23 --workers 4 --execute --reconcile",
     "saban:golem:prepare": "npm install --omit=dev --ignore-scripts --prefix systemia/saban/golem-requestor && node systemia/saban/golem-requestor/preflight.mjs --sdk-only",

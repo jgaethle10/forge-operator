@@ -1,0 +1,67 @@
+name: World Engine cinematic pixels
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/**'
+      - 'systemia/evercraft-web/browser-worker/webgpu-reference-frame.mjs'
+      - 'systemia/evercraft-web/browser-worker/native-runtime.mjs'
+      - '.github/workflows/world-engine-cinematic-pixels.yml'
+      - 'package.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-native-webgpu-to-mp4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install root build tools
+        run: npm install --no-audit --no-fund
+      - name: Install pinned browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Verify world scene and camera contracts
+        run: npm run test:world-engine
+      - name: Install FFmpeg encoder for H264/AAC artifact
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render actual pixels through owned WGSL, then H264/AAC
+        env:
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: ${{ runner.temp }}/world-camera-native-browser
+          CINEMATIC_PROOF_OUTPUT: ${{ runner.temp }}/evercraft-world-cinematic
+        run: npm run world:cinematic-render-proof
+      - name: Validate output and review manifest
+        env:
+          PROOF_DIR: ${{ runner.temp }}/evercraft-world-cinematic
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),path=require('node:path');
+          const p=path.join(process.env.PROOF_DIR,'receipt.json');
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          if(r.kind!=='synthetic_internal_canary'||r.output.codec!=='h264'
+            ||r.output.audioCodec!=='aac'||r.output.fps!==24
+            ||r.exactGpuReadbackFrames!==48||r.uniqueRawFrameDigests<3
+            ||r.publicationAuthority!==false||r.hardwareExecutionClaim!==false) process.exit(2);
+          const s=fs.statSync(r.output.path);
+          if(s.size<10000)process.exit(3);
+          console.log('CINEMATIC_REVIEW_ARTIFACT '+JSON.stringify({
+            sha256:r.output.sha256,frameCount:r.exactGpuReadbackFrames,
+            uniqueFrames:r.uniqueRawFrameDigests,bytes:s.size,
+            reviewState:r.visualReviewState
+          }));
+          NODE
+      - name: Upload private synthetic proof for founder pixel review
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-engine-cinematic-pixel-canary
+          path: |
+            ${{ runner.temp }}/evercraft-world-cinematic/orbital-foundry-synthetic-canary.mp4
+            ${{ runner.temp }}/evercraft-world-cinematic/receipt.json
+            ${{ runner.temp }}/evercraft-world-cinematic/opening.png
+            ${{ runner.temp }}/evercraft-world-cinematic/middle.png
+            ${{ runner.temp }}/evercraft-world-cinematic/closing.png
+          if-no-files-found: error
+          retention-days: 7
