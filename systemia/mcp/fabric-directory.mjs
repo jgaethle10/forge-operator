@@ -331,6 +331,12 @@ function scoreEntry(intent,entry,{frequency,total}){
   const phrase=clean(intent).toLowerCase();
   if(phrase&&entry.name.toLowerCase().includes(phrase)) score+=20;
 
+  // Product-specific terminology should favor the IBM i specialist over generic
+  // legacy rescue. Keep the boost gated on explicit IBM i / AS/400 / iSeries words
+  // so an ordinary broken website or old software request is unaffected.
+  const explicitIbmI=/\b(?:ibm[\s-]*i|ibmi|as[\s/-]*400|iseries)\b/.test(phrase);
+  if(explicitIbmI&&entry.public_id==='ibmi-rescue-v1') score+=95;
+
   // Physical-part routing guardrails. Rare generic words such as "broken" must not
   // let software-health capabilities outrank a specialist when the user is holding
   // a real component, while deep sourcing language should still favor the paid hunt.
