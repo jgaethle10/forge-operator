@@ -31,7 +31,7 @@
       "baselineSpeed": 1,
       "directedSpeed": 0.98,
       "sceneStart": 0.38,
-      "sceneEnd": 2.6,
+      "sceneEnd": 1.98,
       "emotion": "neutral competence",
       "intensity": 0.25
     },
@@ -48,7 +48,7 @@
       "directedText": "Perfect... leave it for me to approve.",
       "baselineSpeed": 1,
       "directedSpeed": 0.98,
-      "sceneStart": 2.75,
+      "sceneStart": 2.15,
       "sceneEnd": 4.64,
       "emotion": "confident",
       "intensity": 0.3
@@ -102,7 +102,7 @@
       "directedText": "I had permission to send.",
       "baselineSpeed": 1,
       "directedSpeed": 0.94,
-      "sceneStart": 10.42,
+      "sceneStart": 10.55,
       "sceneEnd": 12.38,
       "emotion": "careful non-defensive",
       "intensity": 0.35
@@ -121,7 +121,7 @@
       "baselineSpeed": 1,
       "directedSpeed": 0.97,
       "sceneStart": 12.55,
-      "sceneEnd": 16.48,
+      "sceneEnd": 16.56,
       "emotion": "recognition turning into resolve",
       "intensity": 0.55
     },
