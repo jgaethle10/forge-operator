@@ -17,7 +17,9 @@ const hash = buffer => crypto.createHash('sha256').update(buffer).digest('hex');
 const sites = [
   {id:'defined-ai',url:'https://defined.ai/partnership-programs',intake:'AI Service Supplier / Data Partner; Jira login required'},
   {id:'scale-ai',url:'https://scale.com/data-partnership',intake:'Book an intro; founder fit review required'},
-  {id:'handshake-ai',url:'https://joinhandshake.com/ai/dp-redesign/',intake:'Talk to our team; founder fit review required'}
+  {id:'handshake-ai',url:'https://joinhandshake.com/ai/dp-redesign/',intake:'Talk to our team; founder fit review required'},
+  {id:'opentrain-ai',url:'https://www.opentrain.ai/',intake:'Data labeling companies: find clients and recruit talent; account review required'},
+  {id:'datatoorder',url:'https://datatoorder.com/sell-ai-training-data/',intake:'Supplier-capacity intake; commercial buyer match not guaranteed'}
 ];
 function cleanUrl(value) {
   try {
