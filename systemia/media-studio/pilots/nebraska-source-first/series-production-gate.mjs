@@ -12,7 +12,7 @@ export function inspectNebraskaHistory(ledger){
  if(ledger?.schema!=='evercraft.fallen.nebraska-historical-research.v1'||ledger?.asOf!=='2026-10-21')
   errors.push('historical_ledger_schema_or_asof_invalid');
  const claims=safe(ledger?.claims),ids=claims.map(x=>x.id);
- if(claims.length<19||new Set(ids).size!==claims.length)errors.push('historical_facts_or_unique_ids_missing');
+ if(claims.length<20||new Set(ids).size!==claims.length)errors.push('historical_facts_or_unique_ids_missing');
  for(const c of claims){
   if(!c.id||!c.era||!c.statement?.trim()||!c.status||!safe(c.sources).length||
    safe(c.sources).some(v=>!/^https:\/\//.test(v)))
@@ -24,6 +24,7 @@ export function inspectNebraskaHistory(ledger){
    errors.push('historical_anchor_missing_or_changed:'+id);
  };
  assertion('devaney-arrival',[/1962/,/1970/,/1971/]);
+ assertion('boyd-epley-strength-program-1969',[/Boyd Epley/,/1969/,/strength/i]);
  assertion('three-nineties-titles',[/1994/,/1995/,/1997/,/five/i]);
  assertion('solich-inherited',[/58-19/,/six seasons/i]);
  assertion('2002-season-fall',[/7-7/,/2003/,/9-3/]);
