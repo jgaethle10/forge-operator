@@ -4,7 +4,7 @@ import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 
-const script=fileURLToPath(new URL('../systemia/media-studio/voice-rc27-female-opening.py',import.meta.url));
+const script=fileURLToPath(new URL('../systemia/media-studio/voice-rc27-line-surgery.py',import.meta.url));
 const src=fs.readFileSync(script,'utf8');
 test('RC27 validates two small opening hypotheses with real audio source controls',()=>{
  const r=spawnSync('python3',[script,'--verify-only'],{encoding:'utf8',timeout:15000});
