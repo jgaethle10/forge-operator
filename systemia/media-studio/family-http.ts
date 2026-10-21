@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 import crypto from 'crypto';
 import { compileSeriesEpisode } from './series.js';
-import { compileToonShotHandoff } from './toon-shot-handoff.mjs';
+import { compileToonShotHandoff, renderToonShotDirection } from './toon-shot-handoff.mjs';
 import type { MediaProject, SeriesBible } from './types.js';
 
 type FamilyCharacter = {
@@ -42,6 +42,14 @@ type FallenFamilyDeps = {
 };
 
 const videoJobs = new Map<string, VideoJob>();
+
+function directionForRequestedShot(body: any): string {
+  if (!body?.toonHandoff && !body?.toonShotId) return '';
+  if (!body?.toonHandoff || !body?.toonShotId) {
+    throw new Error('toon_handoff_shot_pair_required');
+  }
+  return renderToonShotDirection(body.toonHandoff, body.toonShotId);
+}
 
 function slug(value: unknown, fallback: string) {
   const result = String(value ?? '')
@@ -477,6 +485,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsed = parseGeminiError(error);
         res
           .status(
+            String(error?.message || '').startsWith('toon_handoff_') ? 422 :
             parsed.statusCode >= 400 && parsed.statusCode < 600
               ? parsed.statusCode
               : 503,
@@ -506,6 +515,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
       const style = String(req.body?.style || 'Warm 2D storybook cartoon').slice(0, 300);
 
       try {
+        const toonDirection = directionForRequestedShot(req.body);
         const input: any[] = [{
           type: 'text',
           text:
@@ -514,7 +524,8 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
             'Action: ' + String(scene?.action || '') + '. ' +
             'Visual direction: ' + String(scene?.visualPrompt || '') + '. ' +
             'Preserve the supplied character-sheet identities exactly. ' +
-            'Family-friendly, cinematic composition, no captions, no embedded text.',
+            'Family-friendly, cinematic composition, no captions, no embedded text. ' +
+            toonDirection,
         }];
 
         if (req.body?.characterSheetDataUrl) {
@@ -550,6 +561,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsed = parseGeminiError(error);
         res
           .status(
+            String(error?.message || '').startsWith('toon_handoff_') ? 422 :
             parsed.statusCode >= 400 && parsed.statusCode < 600
               ? parsed.statusCode
               : 503,
@@ -579,12 +591,13 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsedImage = parseImageDataUrl(req.body?.imageDataUrl);
         const scene = req.body?.scene || {};
         const style = String(req.body?.style || 'Family-friendly animation').slice(0, 300);
+        const toonDirection = directionForRequestedShot(req.body);
         const prompt =
           style + '. Animate this approved keyframe into a short family-cartoon shot. ' +
           'Scene: ' + String(scene?.title || '') + '. ' +
           'Action: ' + String(scene?.action || '') + '. ' +
           'Preserve character identity, clothing, proportions, and the established art style. ' +
-          'Natural motion, no captions, no new characters.';
+          'Natural motion, no captions, no new characters. ' + toonDirection;
 
         const operation = await ai.models.generateVideos({
           model: 'veo-3.1-generate-preview',
@@ -614,6 +627,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsed = parseGeminiError(error);
         res
           .status(
+            String(error?.message || '').startsWith('toon_handoff_') ? 422 :
             parsed.statusCode >= 400 && parsed.statusCode < 600
               ? parsed.statusCode
               : 503,
