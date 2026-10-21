@@ -84,10 +84,11 @@ function audioWindow(master:string,startSec:number,durationSec:number){
  const r=spawnSync('ffmpeg',['-v','error','-ss',String(startSec),'-t',String(durationSec),
   '-i',master,'-vn','-ac','2','-ar','48000','-f','f32le','pipe:1'],
   {encoding:null,maxBuffer:4*1024*1024,timeout:90000});
- if(r.status!==0||!r.stdout||r.stdout.length<16000)throw Error('native_sound_window_decode_missing:'+startSec);
+ const pcm=Buffer.isBuffer(r.stdout)?r.stdout:Buffer.from(r.stdout);
+ if(r.status!==0||pcm.length<16000)throw Error('native_sound_window_decode_missing:'+startSec);
  let sum=0,peak=0,count=0;
- for(let i=0;i+4<=r.stdout.length;i+=4){
-  const v=r.stdout.readFloatLE(i);
+ for(let i=0;i+4<=pcm.length;i+=4){
+  const v=pcm.readFloatLE(i);
   if(!Number.isFinite(v))throw Error('native_audio_nan');
   sum+=v*v;peak=Math.max(peak,Math.abs(v));count++;
  }
