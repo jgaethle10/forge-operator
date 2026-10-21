@@ -183,3 +183,36 @@ identity. Other spoken text is rejected by this scratch-only renderer.
 The next advancement requires verified word/phoneme timing from an approved
 voice generator, mouth shapes for actual phonetic units rather than volume
 alone, audiovisual alignment testing, and an identity-aware character rig.
+
+
+## Creative-quality reset after user rejected original fox specimen (October 21)
+
+A successful FFmpeg export, matching digest, and basic RMS-driven mouth motion
+did **not** make the clip an acceptable cartoon. The user explicitly rejected
+the scratch-voice, flat front-facing vector specimen. Retain it only as a
+regression fixture, not as character-design or performance proof.
+
+New source-backed tools:
+
+* toon-audition-board.py decodes the **actual encoded video** at multiple
+  timestamps, generates a nine-panel contact sheet, measures sampled pixel
+  differences, binds the board to the movie SHA, and flags scratch speech,
+  missing identity, and missing artistic/voice approval. Pixel change is
+  technical motion evidence only, never an objective claim of visual quality.
+  Visual Desk CI retains the report and board beside the MP4.
+* toon-cinema-preflight.mjs takes a validated Fallen shot and a separately
+  declared, approved start-frame identity reference and requests a
+  high-quality reference-preserving video through the existing Visual Model
+  Fabric. Current Runway Gen-4.5 remains **declared, not live-verified** by
+  default. It will not run until runtime verification, rights and paid
+  execution authorization are independently established. It neither burns
+  provider credits nor asserts an art asset was checked merely from a URL.
+* The scratch eSpeak voice remains explicitly **not** Voice Foundry,
+  lip-sync proof, or approved creative audio.
+
+Current next production milestones: externally approved character art and
+identity-consistent visual source, actual owned/licensed expressive speech
+with a listening-approved performance, meaningful acting and eyelines across
+shot changes, controlled music mix, and human review of real rendered
+frames. No upload, social publication, commercial showcase, or claim of
+finished quality from a technical CI success alone.
