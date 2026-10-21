@@ -110,6 +110,7 @@ export interface VisualModelJob {
   references:VisualReference[];
   continuityDigest:string;
   requires:CreativeRequirement[];
+  modelVariantIndex?:number;
   outputContract:{
     commercialRightsRequired:boolean;
     provenanceRequired:boolean;
@@ -426,31 +427,43 @@ export function buildVisualModelPlan(
 
   const desired=Math.max(1,Math.min(8,Math.trunc(request.candidateCount??4)));
   const diversity=Math.max(1,Math.min(4,Math.trunc(request.modelDiversity??1)));
-  const selected=chooseDiverse(eligible,desired,diversity);
+  const selectedModels=chooseDiverse(eligible,desired,diversity);
+  const selected=[...selectedModels];
+  let fanoutIndex=0;
+  while(selected.length<desired&&selectedModels.length){
+    selected.push(selectedModels[fanoutIndex%selectedModels.length]);
+    fanoutIndex+=1;
+  }
 
-  const jobs=selected.map((row,index):VisualModelJob=>({
-    schema:'evercraft.fallen.visual-model-job.v1',
-    id:`${request.id}-candidate-${String(index+1).padStart(2,'0')}`,
-    requestId:request.id,
-    needId:request.needId,
-    modelId:row.endpoint.id,
-    providerId:row.endpoint.providerId,
-    task:request.task,
-    prompt:request.prompt,
-    durationSec:request.durationSec,
-    aspectRatio:request.aspectRatio,
-    targetResolution:request.targetResolution,
-    references:compatibleReferences(request.references,row.capability)
-      .map(ref=>materializeReferenceForCapability(ref,row.capability)),
-    continuityDigest:request.continuityDigest,
-    requires:[...request.requires],
-    outputContract:{
-      commercialRightsRequired:request.requires.includes('commercial_rights'),
-      provenanceRequired:request.requires.includes('provenance_receipt'),
-      artifactDigestRequired:true,
-      tournamentCandidateRequired:true,
-    },
-  }));
+  const variantCounts=new Map<string,number>();
+  const jobs=selected.map((row,index):VisualModelJob=>{
+    const modelVariantIndex=(variantCounts.get(row.endpoint.id)??0)+1;
+    variantCounts.set(row.endpoint.id,modelVariantIndex);
+    return {
+      schema:'evercraft.fallen.visual-model-job.v1',
+      id:`${request.id}-candidate-${String(index+1).padStart(2,'0')}`,
+      requestId:request.id,
+      needId:request.needId,
+      modelId:row.endpoint.id,
+      providerId:row.endpoint.providerId,
+      task:request.task,
+      prompt:request.prompt,
+      durationSec:request.durationSec,
+      aspectRatio:request.aspectRatio,
+      targetResolution:request.targetResolution,
+      references:compatibleReferences(request.references,row.capability)
+        .map(ref=>materializeReferenceForCapability(ref,row.capability)),
+      continuityDigest:request.continuityDigest,
+      requires:[...request.requires],
+      modelVariantIndex,
+      outputContract:{
+        commercialRightsRequired:request.requires.includes('commercial_rights'),
+        provenanceRequired:request.requires.includes('provenance_receipt'),
+        artifactDigestRequired:true,
+        tournamentCandidateRequired:true,
+      },
+    };
+  });
 
   const planWithoutDigest={
     schema:'evercraft.fallen.visual-model-plan.v1' as const,
