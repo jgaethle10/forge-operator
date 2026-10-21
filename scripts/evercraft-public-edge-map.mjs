@@ -11,7 +11,7 @@ for (let i = 2; i < process.argv.length; i += 2) {
   const k = process.argv[i];
   const v = process.argv[i + 1];
   if (!k?.startsWith('--') || v === undefined) {
-    console.error('Usage: node scripts/evercraft-public-edge-map.mjs --gateway 192.168.88.1 --host 192.168.88.3');
+    console.error('Usage: node scripts/evercraft-public-edge-map.mjs --gateway 192.168.88.1 --host 192.168.88.5 [--scope web|dns|all]');
     process.exit(2);
   }
   args.set(k.slice(2), v);
@@ -19,7 +19,7 @@ for (let i = 2; i < process.argv.length; i += 2) {
 
 const gateway = args.get('gateway');
 const host = args.get('host');
-const scope = String(args.get('scope') || 'all').toLowerCase();
+const scope = String(args.get('scope') || 'web').toLowerCase();
 if (!gateway || !host) {
   console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip> [--scope all|web|dns]');
   process.exit(2);
