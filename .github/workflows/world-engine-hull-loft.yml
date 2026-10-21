@@ -1,0 +1,91 @@
+name: World Engine genuine source multi-station ship hull proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/parametric-hull-loft.ts'
+      - 'systemia/world-engine/parametric-hull-loft.test.ts'
+      - 'systemia/world-engine/battle-vessel-silhouettes.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-hull-loft.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-curved-hull-native-gpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned geometry and engine dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install original native browser WGSL renderer
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Test original 48-station geometry, smooth normals, four vessel styles, signed frame plans
+        run: |
+          npx tsx --test systemia/world-engine/parametric-hull-loft.test.ts
+          npm run test:world-engine
+      - name: Install H264 encoder if absent
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render four real procedural detailed hulls, moving water, organic foam and camera sky
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          CINEMATIC_FORMAT: wide
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ORGANIC_WAKE: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          BATTLE_SKY: "1"
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-source-hull-loft
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-hull-loft-browser
+        run: npm run world:cinematic-render-proof
+      - name: Validate source-owned real 3D hull vertices, original ocean and 96 native GPU frames
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const dir='/tmp/evercraft-source-hull-loft';
+          const film=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const sha=crypto.createHash('sha256').update(fs.readFileSync(film)).digest('hex');
+          const hull=r.hullLoft;
+          if(!hull||hull.source!=='owned_48_station_multi_chine_cambered_deck_parametric_mesh'||
+             hull.vertexCounts?.length!==4||
+             !hull.vertexCounts.every(x=>x.vertices>4000&&x.geometryId.startsWith('owned:battle-vessel-'))||
+             !hull.meshesWrittenByRealSourceAssetBuilder||
+             hull.historicallyAuthenticatedDimensions!==false||
+             hull.hydrostaticStabilityVerified!==false||hull.publicationAuthority!==false||
+             r.organicWake?.realGpuFoamDrawsAtMiddle<25||
+             r.organicWake?.hasOldChevronDraws!==false||
+             r.organicWake?.nativeWgslFeatheredAlphaAndNoise!==true||
+             r.animatedOcean?.vertexCount!==112*112*6||
+             r.proceduralSky?.actualGpuPixelCounterfactualChangedPixels<500||
+             r.actorMotion?.actorCount!==4||r.exactGpuReadbackFrames!==96||
+             r.uniqueRawFrameDigests<80||r.output.sha256!==sha||
+             r.output.audioCodec!==null||r.publicationAuthority!==false)
+             throw Error('authentic_native_48_station_hull_gpu_receipt_invalid');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+           'stream=codec_type,codec_name,width,height,nb_frames','-of','json',film]));
+          const video=probe.streams.find(x=>x.codec_type==='video');
+          if(video?.codec_name!=='h264'||video.width!==640||video.height!==360||
+            Number(video.nb_frames)!==96||probe.streams.some(x=>x.codec_type==='audio'))
+            throw Error('original_native_hull_movie_invalid');
+          console.log('SOURCE_NATIVE_GPU_LOFT_HULLS_VERIFIED',{sha256:sha,
+            vessels:hull.vertexCounts,frames:r.uniqueRawFrameDigests,
+            oldChevronDraws:r.organicWake.hasOldChevronDraws,publicationAllowed:false});
+          NODE
+      - name: Preserve original rendered silent film, decoded frames and signed source receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-original-48-station-hull-lofts-gpu
+          path: |
+            /tmp/evercraft-source-hull-loft/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-source-hull-loft/receipt.json
+            /tmp/evercraft-source-hull-loft/opening.png
+            /tmp/evercraft-source-hull-loft/middle.png
+            /tmp/evercraft-source-hull-loft/closing.png
+          retention-days: 7
+          if-no-files-found: error

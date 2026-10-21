@@ -6,9 +6,10 @@
  */
 import {battleshipWorld,battleshipGeometry} from './battleship-scene.js';
 import {validateWorldDefinition,type WorldDefinition,type WorldEntity} from './engine.js';
-import {validateGeometryAsset,type GeometryAsset} from './webgpu.js';
+import type {GeometryAsset} from './webgpu.js';
 import type {CinematicCameraTake} from './cinematic-rig.js';
 import {parametricAssetGeometry} from './parametric-asset-kit.js';
+import {makeHullLoft} from './parametric-hull-loft.js';
 
 type Vec={x:number;y:number;z:number};
 type Turret={name:string;z:number;guns:2|4;raised:boolean;astern:boolean};
@@ -58,34 +59,11 @@ function normal(a:Pt,b:Pt,c:Pt):Pt{
  return p(n[0]/length,n[1]/length,n[2]/length);
 }
 function vesselHull(v:Vessel):GeometryAsset{
- const positions:number[]=[],normals:number[]=[],uvs:number[]=[];
- const tri=(a:Pt,b:Pt,c:Pt)=>{
-  const n=normal(a,b,c);
-  for(const [i,x] of [a,b,c].entries()){
-   positions.push(...x);normals.push(...n);uvs.push(i===0?0:i===1?1:0,i===2?1:0);
-  }
- };
- const quad=(a:Pt,b:Pt,c:Pt,d:Pt)=>{tri(a,b,c);tri(a,c,d);};
- const a=v.length/2,w=v.beam;
- const stations=[
-  [-1.00,.28],[-.91,.62],[-.72,.86],[-.44,1],[0,1],
-  [.46,.98],[.73,.84],[.90,.51],[1,.025]
- ] as const;
- const upper=(f:number,t:number)=>p(t*w,1.95,f*a);
- const lower=(f:number,t:number)=>p(t*w*.78,-1.35,f*a);
- for(let i=0;i<stations.length-1;i++){
-  const [z0,k0]=stations[i], [z1,k1]=stations[i+1];
-  quad(upper(z0,-k0),lower(z0,-k0),lower(z1,-k1),upper(z1,-k1));
-  quad(upper(z0,k0),upper(z1,k1),lower(z1,k1),lower(z0,k0));
-  quad(upper(z0,-k0),upper(z1,-k1),upper(z1,k1),upper(z0,k0));
-  quad(lower(z0,-k0),lower(z0,k0),lower(z1,k1),lower(z1,-k1));
- }
- const [zStart,kStart]=stations[0],[zEnd,kEnd]=stations.at(-1)!;
- quad(upper(zStart,-kStart),upper(zStart,kStart),lower(zStart,kStart),lower(zStart,-kStart));
- quad(upper(zEnd,kEnd),upper(zEnd,-kEnd),lower(zEnd,-kEnd),lower(zEnd,kEnd));
- const geom:GeometryAsset={schema:'evercraft.world-engine.geometry.v1',
-  id:'owned:battle-vessel-'+v.id+'-hull',primitive:'triangles',positions,normals,uvs};
- validateGeometryAsset(geom);return geom;
+ return makeHullLoft({id:v.id,length:v.length,beam:v.beam,
+  profile:v.profile==='slender-heavy-cruiser'?'slender':
+    v.profile==='long-battlecruiser'?'battlecruiser':
+    v.profile==='compact-battleship'?'full':'balanced',
+  sections:48});
 }
 export function battleVesselGeometry():GeometryAsset[]{
  return [...battleshipGeometry(),...VESSELS.map(v=>vesselHull(v)),...parametricAssetGeometry()];
@@ -120,6 +98,8 @@ export function historicSilhouetteWorld():WorldDefinition{
   historicalEvent:'Battle of the Denmark Strait',eventDate:'1941-05-24',
   geometryScope:'main battery counts and turret arrangements researched; class-specific parametric shapes illustrative, not measured',
   parametricDetailKit:'four reusable original 3D primitive families; no third-party models',
+  loftedHullSource:'48_continuously_faired_3d_sections_cambered_deck_smooth_normals',
+  validatedNavalPlans:false,
   approximateReconstruction:true,
   historicallyAuthenticatedDimensions:false,
   historicallyAuthenticatedPositions:false,
