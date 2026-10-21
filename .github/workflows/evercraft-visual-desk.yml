@@ -221,6 +221,32 @@ jobs:
           assert.equal(track.mouthPoses.length,b.frameCount);
           NODE
 
+      - name: Audit actual scene frames before human creative review
+        run: |
+          set -euo pipefail
+          /tmp/fallen-toon-cel-env/bin/python systemia/media-studio/toon-audition-board.py \
+            --video _toon_dialogue_canary/toon-cel-canary.mp4 \
+            --render-receipt _toon_dialogue_canary/render-receipt.json \
+            --out _toon_audition
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const a=JSON.parse(fs.readFileSync('_toon_audition/audition-report.json','utf8'));
+          const m=fs.readFileSync('_toon_dialogue_canary/toon-cel-canary.mp4');
+          assert.equal(a.sha256,crypto.createHash('sha256').update(m).digest('hex'));
+          assert.equal(a.technicalVideoDecoded,true);
+          assert.equal(a.sampleTimesSec.length,9);
+          assert.equal(a.sampledMotionDifference.length,8);
+          assert.equal(a.speechEngine,'espeak_scratch_test_only');
+          assert.equal(a.characterAppealVerified,false);
+          assert.equal(a.naturalVoiceVerified,false);
+          assert.equal(a.creativeAudienceApproval,false);
+          assert.equal(a.publicationAuthority,false);
+          assert.ok(a.blockers.some(x=>x.includes('Scratch eSpeak')));
+          assert.ok(fs.statSync('_toon_audition/audition-board.jpg').size>10000);
+          NODE
+
       - name: Preserve reproducible toon MP4 canary
         uses: actions/upload-artifact@v4
         with:
@@ -243,6 +269,8 @@ jobs:
             _toon_dialogue_canary/toon-shot-binding-receipt.json
             _toon_dialogue_canary/audio-mouth-track.json
             _toon_dialogue_canary/bound-shot-work-order.json
+            _toon_audition/audition-report.json
+            _toon_audition/audition-board.jpg
           if-no-files-found: error
           retention-days: 30
 
