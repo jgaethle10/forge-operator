@@ -9,7 +9,7 @@ const SCOPES=[
   'systemia/visual-desk','systemia/clip','systemia/worldstate','systemia/capability-mesh'
 ];
 const EXTRA_MODULES=[
-  'src/FallenFamilyCartoon.tsx','src/FallenSessions.tsx','public/the-window/world.mjs',
+  'src/FallenFamilyCartoon.tsx','src/fallen-toon-shot-drafts.ts','src/FallenSessions.tsx','public/the-window/world.mjs',
   'systemia/saban/capability-fabric-composer.mjs',
   'systemia/saban/capability-promotion.mjs',
   'systemia/saban/performance-learning.mjs',
@@ -22,6 +22,7 @@ const NOT_MODULE=/\.test\.[cm]?[jt]sx?$|\.integration\.test\.[cm]?[jt]sx?$|\.pro
 
 const FEATURES=[
   ['family_cartoon_frontend','src/FallenFamilyCartoon.tsx','toon'],
+  ['toon_storyboard_editor','src/fallen-toon-shot-drafts.ts','toon'],
   ['family_cartoon_backend','systemia/media-studio/family-http.ts','toon'],
   ['series_character_canon','systemia/media-studio/series.ts','toon'],
   ['toon_shot_handoff','systemia/media-studio/toon-shot-handoff.mjs','toon'],
@@ -76,7 +77,7 @@ const FEATURES=[
 
 const PRODUCTION_PROFILES=[
   {id:'family_cartoon',name:'Family cartoons and serialized toons',
-   requirements:['family_cartoon_frontend','family_cartoon_backend','series_character_canon','toon_shot_handoff','identity_fingerprinting','character_performance','dialogue_lipsync_admission','scene_continuity','world_skeletal_animation','world_geometry_bridge','narrative_film_pipeline','voice_provider','audio_master','studio_master_qc'],
+   requirements:['family_cartoon_frontend','toon_storyboard_editor','family_cartoon_backend','series_character_canon','toon_shot_handoff','identity_fingerprinting','character_performance','dialogue_lipsync_admission','scene_continuity','world_skeletal_animation','world_geometry_bridge','narrative_film_pipeline','voice_provider','audio_master','studio_master_qc'],
    evidence:['locked_character_bible','approved_character_reference','body_hand_face_eyeline_visual_review','gesture_anatomy_and_identity_review','viseme_voice_sync_receipt','animated_scene_render_receipt','voice_rights_and_music_master','master_quality_and_child_safety_gate']},
   {id:'documentary',name:'History, battle, science and evidence documentaries',
    requirements:['worldstate_data_projection','world_spatial_visuals','world_webgpu','world_materials','cinematic_sequence','visual_observation','sequence_aesthetic_jury','studio_master_qc','studio_delivery'],
