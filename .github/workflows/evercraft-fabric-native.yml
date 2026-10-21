@@ -13,6 +13,8 @@ on:
       - 'systemia/payments/raven-stripe-checkout-adapter.test.mjs'
       - 'systemia/payments/raven-stripe-vault-preflight.test.mjs'
       - 'scripts/systemia-stripe-vault-preflight.mjs'
+      - 'scripts/systemia-stripe-vault-locator.mjs'
+      - 'systemia/payments/raven-stripe-vault-locator.test.mjs'
       - 'scripts/systemia-stripe-connection.mjs'
       - 'systemia/payments/README.md'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
@@ -52,6 +54,8 @@ on:
       - 'systemia/payments/raven-stripe-checkout-adapter.test.mjs'
       - 'systemia/payments/raven-stripe-vault-preflight.test.mjs'
       - 'scripts/systemia-stripe-vault-preflight.mjs'
+      - 'scripts/systemia-stripe-vault-locator.mjs'
+      - 'systemia/payments/raven-stripe-vault-locator.test.mjs'
       - 'scripts/systemia-stripe-connection.mjs'
       - 'systemia/payments/README.md'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
@@ -110,7 +114,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove approved live Stripe fixed-price binding plans without creating checkout
-        run: node --test systemia/payments/raven-stripe-price-bridge.test.mjs systemia/payments/raven-stripe-checkout-adapter.test.mjs systemia/payments/raven-stripe-vault-preflight.test.mjs
+        run: node --test systemia/payments/raven-stripe-price-bridge.test.mjs systemia/payments/raven-stripe-checkout-adapter.test.mjs systemia/payments/raven-stripe-vault-preflight.test.mjs systemia/payments/raven-stripe-vault-locator.test.mjs
 
       - name: Prove private Stripe account reference and Raven Nexus authority boundary
         run: node --test systemia/payments/stripe-connection-registry.test.mjs systemia/payments/payment-routing.test.mjs
