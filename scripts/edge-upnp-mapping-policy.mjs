@@ -4,7 +4,8 @@
  */
 export function planUpnpMapping(existing,expected,{missing=false}={}){
   if(!expected||typeof expected!=='object'||!expected.desc||
-     !Number.isInteger(expected.external)||!Number.isInteger(expected.internal)||
+     !Number.isInteger(expected.external)||expected.external<1||expected.external>65535||
+     !Number.isInteger(expected.internal)||expected.internal<1||expected.internal>65535||
      !['TCP','UDP'].includes(expected.proto)||!expected.host){
     throw new TypeError('upnp_expected_mapping_invalid');
   }
