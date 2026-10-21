@@ -35,7 +35,8 @@ export interface StudioMasterQcReceipt {
     blackRatio:number;
     freezeRatio:number;
     silenceRatio:number;
-    loudness:AudioLoudnessEvidence|null;
+    /** New measured field; optional only for historical receipts/test fixtures. */
+    loudness?:AudioLoudnessEvidence|null;
   };
   policy:Required<StudioMasterQcPolicy>;
   reasons:string[];
