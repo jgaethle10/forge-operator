@@ -43,6 +43,17 @@ The command validates freshness and authority before writing the signed release 
     export EVERCRAFT_CREDENTIAL_STATE_DIR=/persistent/evercraft/provider-credentials
     node systemia/newsroom/journal-clip-gravity.mjs /secure/editorial/story-signed.json
 
+Run the independent **read-only resident readiness preflight** before a provider fire. It checks the trusted signed release, durable attempt ledger and the configured Page access token by making only a GET request for the Page identity. It does not attempt to create a post, and a successful identity read does **not** prove the Page token has `pages_manage_posts` permission:
+
+    node systemia/newsroom/journal-clip-gravity-readiness.mjs \\
+      --signed-release /secure/editorial/story-signed.json \\
+      --trusted-public-key-file /secure/public/journal-clip-operator.pub.pem \\
+      --state-root /persistent/evercraft/journal-clip-gravity \\
+      --credential-state-dir /persistent/evercraft/provider-credentials \\
+      --check-page-identity
+
+This preflight emits a safe JSON receipt with no Page token, no private key, no provider mutation, and the next unblocked operator action. If the durable ledger records any previous attempt, it remains blocked for reconciliation. The state root must exist and be writable; it is not silently created by this check. The operator must separately confirm `pages_manage_posts` and authorized Page tasks before posting.
+
 Only after confirming no prior remote publication and ensuring credentials resolve:
 
     node systemia/newsroom/journal-clip-gravity.mjs /secure/editorial/story-signed.json --fire
