@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {addIndependentSeoMesh} from './independent-seo-mesh.mjs';
 
 const current=path.dirname(fileURLToPath(import.meta.url));
 const root=path.resolve(current,'../..');
@@ -70,6 +71,7 @@ function exportSite({slug,origin,out,sharePng}={}){
  // No site may be indexed before owner-approved domain, privacy/legal, and
  // merchant/publisher compliance gates are independently satisfied.
  fs.writeFileSync(path.join(destination,'robots.txt'),'User-agent: *\nDisallow: /\n','utf8');
+ addIndependentSeoMesh({slug,origin:cleanOrigin,destination});
  return {site:slug,origin:cleanOrigin,output:destination,standalone:true,indexable:false,merchant_approved:false,published:false,share_image:Boolean(sharePng)};
 }
 function main(argv){
