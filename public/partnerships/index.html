@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Evercraft operator partnerships start with one verifiable workflow problem. Model administrative capacity, test a small change, and measure what happened.">
+  <meta property="og:title" content="Operator Partnerships | Evercraft">
+  <meta property="og:description" content="Less operational friction. More provable value. Explore a small, measured partnership with Evercraft.">
+  <meta property="og:type" content="website">
+  <title>Operator Partnerships | Evercraft</title>
+  <style>
+    :root{color-scheme:dark;--bg:#06131b;--ink:#edf9f7;--sub:#adc5c5;--teal:#2bdfc1;--blue:#8ad7ef;--border:#29434b;--card:#10252d}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body:before{content:"";position:absolute;top:0;left:0;right:0;height:720px;pointer-events:none;background:radial-gradient(ellipse at 86% 12%,#0d655c5c,transparent 44%),radial-gradient(ellipse at 10% 38%,#123d6b66,transparent 52%)}
+    a{color:inherit}button,input{font:inherit}.wrap{position:relative;max-width:1140px;margin:auto;padding:0 27px}
+    .nav{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:30px 0;border-bottom:1px solid #ffffff18}
+    .brand{font-size:14px;font-weight:850;letter-spacing:.2em;text-decoration:none}.brand i{display:inline-block;width:11px;height:11px;margin-right:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 20px #2bdfc16e}
+    .nav-link{text-decoration:none;font-size:13px;font-weight:750;color:#d5eeeb;border:1px solid #4c7577;border-radius:100px;padding:10px 16px}
+    .nav-link:hover,.nav-link:focus-visible{border-color:var(--teal)}
+    .hero{padding:93px 0 70px}.overline{font:750 11px/1.4 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+    h1{max-width:850px;font-size:clamp(44px,7vw,90px);line-height:1.01;letter-spacing:-.065em;margin:23px 0 24px;font-weight:850}
+    .gradient{color:var(--teal)}.intro{max-width:650px;font-size:clamp(17px,2vw,21px);line-height:1.65;color:var(--sub)}
+    .action-row{display:flex;flex-wrap:wrap;gap:13px;margin-top:32px}.cta{display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:9px;text-align:center;padding:12px 20px;border-radius:13px;text-decoration:none;font-size:14px;font-weight:800;transition:transform .1s ease,background .15s ease}
+    .cta:hover{transform:translateY(-2px)}.primary{color:#052222;background:var(--teal)}.secondary{background:#ffffff0a;border:1px solid #ffffff35}
+    .trustline{margin-top:25px;color:#86a6a7;font-size:12px}
+    .section{padding:52px 0 76px;border-top:1px solid #ffffff16}.section h2{font-size:clamp(29px,4vw,45px);letter-spacing:-.043em;line-height:1.1;margin:17px 0 18px}
+    .section-lede{color:var(--sub);max-width:690px;margin-bottom:31px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.service{min-height:230px;border:1px solid var(--border);background:linear-gradient(140deg,#16333c91,#0d1d25e0);border-radius:20px;padding:26px}
+    .number{font:800 12px ui-monospace,monospace;color:var(--teal)}.service h3{font-size:19px;line-height:1.28;margin:26px 0 13px}.service p{font-size:14px;color:#b4c7c9;margin:0}
+    .calc{display:grid;grid-template-columns:1.1fr .9fr;overflow:hidden;border:1px solid #3c6567;border-radius:24px;background:#10252c}
+    .calc-controls{padding:33px}.input-line{margin-top:24px}.input-line label{display:flex;justify-content:space-between;gap:20px;font-size:13px;color:#bcd1d0;font-weight:650}
+    .input-line output{font-weight:800;color:#f1fff9;font-variant-numeric:tabular-nums}input[type=range]{accent-color:var(--teal);width:100%;margin-top:12px;cursor:pointer}
+    .calc-result{background:#071a21;border-left:1px solid #36575b;padding:34px}.result-label{font:750 11px/1.5 ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:#9ec7c2}
+    .big{font-size:clamp(44px,5vw,65px);line-height:1.1;letter-spacing:-.05em;font-weight:850;margin:12px 0 25px;font-variant-numeric:tabular-nums}
+    .value{font-size:24px;font-weight:800;color:var(--teal);margin:6px 0 10px;font-variant-numeric:tabular-nums}
+    .caveat{font-size:12px;line-height:1.6;color:#90b1af;margin-top:16px}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{border-top:2px solid #3f817b;padding:20px 13px 12px 0}.step h3{font-size:17px;margin:14px 0 9px}.step p{font-size:13px;color:#abc1c1;margin:0}
+    .last{border:1px solid #2a685e;background:linear-gradient(130deg,#0e3b35,#09232d);border-radius:25px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+    .last h2{margin:8px 0}.last p{margin:0;color:#b8d4d1;max-width:570px}
+    footer{display:flex;justify-content:space-between;gap:24px;padding:28px 0 42px;color:#819ea0;font-size:12px}
+    :focus-visible{outline:3px solid var(--teal);outline-offset:4px}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}.service{min-height:0}.calc{grid-template-columns:1fr}.calc-result{border-left:0;border-top:1px solid #36575b}.steps{grid-template-columns:1fr 1fr}.hero{padding:66px 0}}
+    @media(max-width:540px){.wrap{padding:0 18px}.nav{padding:24px 0}.nav-link{font-size:11px}.hero{padding:58px 0 50px}.section{padding:40px 0 50px}.steps{grid-template-columns:1fr}.last{display:block;padding:24px}.last .cta{margin-top:23px}.action-row .cta{width:100%}footer{display:block}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cta{transition:none}.cta:hover{transform:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="nav">
+      <a class="brand" href="/" aria-label="Evercraft Forge Operator home"><i aria-hidden="true"></i>EVERCRAFT</a>
+      <a class="nav-link" href="/">Open Forge Operator &rarr;</a>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="overline">Growth partnerships / Evidence before promises</div>
+        <h1 id="hero-title">Better operations.<br><span class="gradient">Shared upside, earned.</span></h1>
+        <p class="intro">Evercraft works with operators to identify one expensive handoff, test a small improvement, and measure the difference. We use what you already have before suggesting something new.</p>
+        <div class="action-row">
+          <a class="cta primary" href="#process">See the partnership process &rarr;</a>
+          <a class="cta secondary" href="#calculator">Explore a sample scenario</a>
+        </div>
+        <p class="trustline">No customer information collected on this page. No automatic purchase, enrollment, or contract.</p>
+      </section>
+      <section class="section" id="problems" aria-labelledby="problems-title">
+        <div class="overline">Where value hides</div>
+        <h2 id="problems-title">Start with a real constraint.</h2>
+        <p class="section-lede">These are questions, not diagnoses. We only recommend work after learning how your business actually operates.</p>
+        <div class="grid">
+          <article class="service"><span class="number">01 / CUSTOMER FLOW</span><h3>From first inquiry to completed appointment</h3><p>Where do handoffs slow down? Which customer messages require a human? What happens when the team gets busy?</p></article>
+          <article class="service"><span class="number">02 / TEAM CAPACITY</span><h3>Give time back to the people doing the work</h3><p>Find repetitive office work worth eliminating, with a measured baseline rather than guessed savings.</p></article>
+          <article class="service"><span class="number">03 / SERVICE CONTINUITY</span><h3>Deliver consistent follow-up</h3><p>Make approved reminders, task ownership, documentation and customer service easier to manage.</p></article>
+        </div>
+      </section>
+      <section class="section" id="calculator" aria-labelledby="calc-title">
+        <div class="overline">Interactive example / Not a forecast</div>
+        <h2 id="calc-title">What might saved admin time be worth?</h2>
+        <p class="section-lede">Adjust a hypothetical workflow below. Nothing is uploaded or stored; this is an illustration of how we would frame a measurable pilot.</p>
+        <div class="calc">
+          <div class="calc-controls">
+            <div class="input-line"><label for="tasks">Repeating tasks each month <output id="tasksOut" for="tasks">120</output></label><input id="tasks" type="range" min="0" max="500" step="10" value="120"></div>
+            <div class="input-line"><label for="minutes">Minutes potentially saved per task <output id="minutesOut" for="minutes">6</output></label><input id="minutes" type="range" min="0" max="30" step="1" value="6"></div>
+            <div class="input-line"><label for="rate">Illustrative loaded hourly cost <output id="rateOut" for="rate">$28</output></label><input id="rate" type="range" min="0" max="100" step="2" value="28"></div>
+          </div>
+          <div class="calc-result" aria-live="polite" aria-atomic="true">
+            <div class="result-label">Hypothetical time freed / month</div>
+            <div class="big"><span id="hours">12</span> hrs</div>
+            <div class="result-label">Illustrative equivalent labor capacity</div>
+            <div class="value" id="value">$336 / month</div>
+            <p class="caveat">This is not revenue, realized cash savings, insurance commission, or proven performance. Actual value depends on consented measurement, useful redeployment of time, real operating costs and independently verified outcomes.</p>
+          </div>
+        </div>
+      </section>
+      <section class="section" id="process" aria-labelledby="process-title">
+        <div class="overline">The way we work</div>
+        <h2 id="process-title">One proof. Then a decision.</h2>
+        <div class="steps">
+          <div class="step"><span class="number">01</span><h3>Listen</h3><p>Understand the team, current systems and the actual problem.</p></div>
+          <div class="step"><span class="number">02</span><h3>Establish a baseline</h3><p>Agree on a simple metric and which records count as evidence.</p></div>
+          <div class="step"><span class="number">03</span><h3>Test a small change</h3><p>Protect customer permissions and normal business operations.</p></div>
+          <div class="step"><span class="number">04</span><h3>Verify the outcome</h3><p>Review results and negotiate ongoing work only where it truly fits.</p></div>
+        </div>
+      </section>
+      <section class="section" aria-label="Next step">
+        <div class="last">
+          <div>
+            <div class="overline">No giant transformation pitch</div>
+            <h2>Bring us one workflow.</h2>
+            <p>Describe the bottleneck in your own words. Forge Operator can outline a first diagnostic, with explicit unknowns and human review gates.</p>
+          </div>
+          <a class="cta primary" href="/">Open Forge Operator &rarr;</a>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span>Evercraft LLC &middot; Proof-before-participation</span>
+      <span>Regulated industries require an independent legal and privacy review before performance-based compensation or sensitive-data processing.</span>
+    </footer>
+  </div>
+  <script>
+    (function(){
+      var ids=['tasks','minutes','rate'];
+      var inputs=ids.map(function(id){return document.getElementById(id)});
+      var outputs=ids.map(function(id){return document.getElementById(id+'Out')});
+      var hours=document.getElementById('hours');
+      var value=document.getElementById('value');
+      function update(){
+        var n=Number(inputs[0].value), m=Number(inputs[1].value), r=Number(inputs[2].value);
+        outputs[0].textContent=String(n);
+        outputs[1].textContent=String(m);
+        outputs[2].textContent='$'+r.toLocaleString('en-US');
+        var total=n*m/60;
+        hours.textContent=Number(total.toFixed(1)).toLocaleString('en-US');
+        value.textContent='$'+Math.round(total*r).toLocaleString('en-US')+' / month';
+      }
+      inputs.forEach(function(input){input.addEventListener('input',update)});
+      update();
+    }());
+  </script>
+</body>
+</html>
