@@ -89,6 +89,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify router mapping control cannot fake production ingress
+        run: node --test tests/edge-mapping-control.test.mjs
       - name: Prove Fabric MCP, human offer storefront, and mobile door
         run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
@@ -146,5 +148,5 @@ jobs:
           npm run test:fabric-directory
           npm run test:fabric-local
           npm run test:remote-operator
-          node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs tests/edge-mapping-control.test.mjs
+          node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs
           npm run proof:specialist-handoff-yard
