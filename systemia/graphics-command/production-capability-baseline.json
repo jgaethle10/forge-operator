@@ -6,6 +6,7 @@
     "scripts/fabric-edge-visual-freshness.mjs",
     "src/FallenFamilyCartoon.tsx",
     "src/FallenSessions.tsx",
+    "src/fallen-toon-shot-drafts.ts",
     "systemia/capability-mesh/mesh.mjs",
     "systemia/capability-mesh/runtime.mjs",
     "systemia/clip/build-audience-social-previews.py",
