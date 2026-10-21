@@ -1,0 +1,25 @@
+name: Voice Foundry V17 Local Cadence Repair
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-final-cadence.py'
+      - 'systemia/media-studio/voice-final-cadence.test.py'
+      - '.github/workflows/voice-final-cadence-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cadential-speech-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original non-generative voice editor dependencies
+        run: python -m pip install --disable-pip-version-check numpy soundfile praat-parselmouth
+      - name: Test safe falling ending, unchanged original prefix and fail-closed parameters
+        run: python systemia/media-studio/voice-final-cadence.test.py
