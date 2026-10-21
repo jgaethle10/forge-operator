@@ -1,0 +1,27 @@
+name: Existing Checkout Price and Truth Gate
+on:
+  pull_request:
+    paths:
+      - 'public/mesh/checkout-ready/**'
+      - 'public/mesh/index.html'
+      - 'tests/existing-checkout-links.test.mjs'
+      - '.github/workflows/existing-checkout-links.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/mesh/checkout-ready/**'
+      - 'public/mesh/index.html'
+      - 'tests/existing-checkout-links.test.mjs'
+      - '.github/workflows/existing-checkout-links.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test tests/existing-checkout-links.test.mjs
