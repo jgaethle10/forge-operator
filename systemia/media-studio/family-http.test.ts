@@ -176,3 +176,22 @@ test('family episode can enter the Toon Megazord without provider calls or unear
     assert.match((await failed.json()).error,/direction_missing/);
   });
 });
+
+test('incomplete toon shot direction cannot trigger paid keyframe or pilot video generation',async()=>{
+  await withServer(async origin=>{
+    for(const endpoint of ['scene-image','video/start']){
+      const response=await fetch(origin+'/api/fallen/family/'+endpoint,{
+        method:'POST',headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          consent:true,scene:{title:'Cautious wave',action:'Wave'},
+          imageDataUrl:'data:image/png;base64,YQ==',
+          toonHandoff:{schema:'forged'},toonShotId:'shot-1',
+        }),
+      });
+      assert.equal(response.status,422,endpoint);
+      const payload=await response.json();
+      assert.equal(payload.success,false);
+      assert.match(payload.error,/toon_handoff_packet_schema/);
+    }
+  });
+});
