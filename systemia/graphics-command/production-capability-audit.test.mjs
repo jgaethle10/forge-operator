@@ -85,3 +85,14 @@ test('every production profile has a mandatory evidence gate, never a synthetic 
   assert.ok(cartoon.evidence.includes('body_hand_face_eyeline_visual_review'));
   assert.ok(cartoon.evidence.includes('viseme_voice_sync_receipt'));
 });
+
+test('missing external voices, Kaidance, workers and user assets stay visible but unverified',()=>{
+  const audit=auditGraphicsCapabilities();
+  const surfaces=new Map(audit.externalSurfacesPendingVerification.map(x=>[x.id,x]));
+  for(const id of ['owned_voice_foundry','kaidance_music_studio','little_red_studio',
+    'forensiscope_media_scout','saban_worker_fleet','provider_credentials_and_entitlements',
+    'uncommitted_family_assets','public_edge_runtime']){
+    assert.equal(surfaces.get(id)?.status,'needs_live_inventory');
+    assert.ok(surfaces.get(id)?.evidenceRequired?.length>25);
+  }
+});
