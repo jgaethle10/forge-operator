@@ -1,0 +1,85 @@
+name: World Engine genuine time-deformed native GPU ocean
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/animated-ocean.ts'
+      - 'systemia/world-engine/animated-ocean.test.ts'
+      - 'systemia/world-engine/webgpu.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-animated-ocean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  genuine-animated-ocean-webgpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install World Engine dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install original browser GPU worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Independently test original 3D ocean grid, exact time-dependent normals and signed render plans
+        run: |
+          npx tsx --test systemia/world-engine/animated-ocean.test.ts
+          npm run test:world-engine
+      - name: Install native H264 encoder
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Actual original WGSL animated waves and separate transparent wake/spray/smoke GPU movie
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          CINEMATIC_FORMAT: wide
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-original-animated-water
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-animated-water-browser
+        run: npm run world:cinematic-render-proof
+      - name: Fail closed unless real original 3D ocean, actor motion, alpha compositing and H264 GPU pixels verified
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const root='/tmp/evercraft-original-animated-water';
+          const film=path.join(root,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(root,'receipt.json'),'utf8'));
+          const digest=crypto.createHash('sha256').update(fs.readFileSync(film)).digest('hex');
+          const o=r.animatedOcean,f=r.environmentalFx,a=r.actorMotion;
+          if(!o||o.geometryRef!=='owned:evercraft-dynamic-ocean-grid'||
+             !o.originalNativeWgslVertexDeformation||!o.analyticalTimeDependentNormal||
+             o.vertexCount!==112*112*6||o.firstPhaseSec!==0||o.lastRenderedPhaseSec<=3||
+             o.physicsOrCFDVerified!==false||o.historicalWeatherVerified!==false||
+             o.publicationAuthority!==false||!f||!a||f.emitterCount!==12||
+             f.realGpuTransparentParticlesAtMiddle<20||f.publicationAuthority!==false||
+             a.actorCount!==4||a.publicationAuthority!==false||
+             r.publicationAuthority!==false||r.output.sha256!==digest||
+             r.output.audioCodec!==null||r.exactGpuReadbackFrames!==96||
+             r.uniqueRawFrameDigests<72)
+             throw Error('animated_ocean_provenance_missing_or_not_real');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',film]));
+          const v=probe.streams.find(s=>s.codec_type==='video');
+          if(v?.codec_name!=='h264'||v.width!==640||v.height!==360||
+             Number(v.nb_frames)!==96||probe.streams.some(s=>s.codec_type==='audio'))
+             throw Error('actual_native_ocean_film_invalid');
+          console.log('VERIFIED_ORIGINAL_ANIMATED_WATER_GPU_PIXELS',{sha256:digest,
+            frames:96,oceanVertices:o.vertexCount,alphaFxAtMid:f.realGpuTransparentParticlesAtMiddle,
+            historicalAuthenticityClaim:false});
+          NODE
+      - name: Preserve signed native film, decoded frames and graphics receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-original-native-animated-3d-ocean-gpu
+          path: |
+            /tmp/evercraft-original-animated-water/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-original-animated-water/receipt.json
+            /tmp/evercraft-original-animated-water/opening.png
+            /tmp/evercraft-original-animated-water/middle.png
+            /tmp/evercraft-original-animated-water/closing.png
+          if-no-files-found: error
+          retention-days: 7
