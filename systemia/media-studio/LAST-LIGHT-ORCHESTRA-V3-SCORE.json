@@ -1,0 +1,246 @@
+{
+  "schema": "evercraft.last-light.orchestral-arrangement.v3",
+  "title": "The Last Light: The Answer / Orchestral Arrival",
+  "original_piano_sha256": "630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e",
+  "original_piano_is_immutable": true,
+  "duration_seconds": 35,
+  "sample_rate_hz": 44100,
+  "orchestra_source": "University of Iowa verified solo acoustic recordings; not an actual human ensemble recording",
+  "source_custody": "iowa-orchestra-source-provenance.json",
+  "intake_branch": "feature/last-light-orchestra-recorded-acoustics-20261021",
+  "approval": {
+    "original_piano_selected_by_founder": true,
+    "previous_orchestra_not_accepted": true,
+    "version_3_human_review_pending": true,
+    "commercial_release": false
+  },
+  "segments": [
+    {
+      "from": 0,
+      "to": 7.5,
+      "orchestra": "none",
+      "narrative": "piano establishes question"
+    },
+    {
+      "from": 7.5,
+      "to": 16,
+      "orchestra": "solo cello, violin enters late",
+      "narrative": "genuine melodic counter-answer"
+    },
+    {
+      "from": 16,
+      "to": 25,
+      "orchestra": "violin pair, cello, limited bassoon/horn/flute",
+      "narrative": "one earned orchestral lift"
+    },
+    {
+      "from": 25,
+      "to": 29.1,
+      "orchestra": "decaying strings",
+      "narrative": "resolution returns to piano"
+    },
+    {
+      "from": 29.1,
+      "to": 33.4,
+      "orchestra": "gradual fade",
+      "narrative": "orchestra steps back"
+    },
+    {
+      "from": 33.4,
+      "to": 35,
+      "orchestra": "none",
+      "narrative": "original piano closes alone"
+    }
+  ],
+  "stems": {
+    "cello": [
+      [
+        7.88,
+        "E3",
+        2.25,
+        0.3
+      ],
+      [
+        10.72,
+        "G3",
+        2.08,
+        0.34
+      ],
+      [
+        13.4,
+        "F3",
+        1.9,
+        0.28
+      ],
+      [
+        16.14,
+        "C3",
+        2.55,
+        0.41
+      ],
+      [
+        19.07,
+        "G3",
+        2.48,
+        0.47
+      ],
+      [
+        22.16,
+        "E3",
+        2.2,
+        0.37
+      ],
+      [
+        26.6,
+        "G3",
+        2.12,
+        0.26
+      ],
+      [
+        30.1,
+        "E3",
+        2.58,
+        0.21
+      ]
+    ],
+    "violin_I": [
+      [
+        11.65,
+        "G4",
+        1.93,
+        0.22
+      ],
+      [
+        14.25,
+        "B4",
+        1.56,
+        0.24
+      ],
+      [
+        17.72,
+        "E4",
+        1.65,
+        0.24
+      ],
+      [
+        19.83,
+        "G4",
+        2.44,
+        0.41
+      ],
+      [
+        22.85,
+        "Gb4",
+        1.92,
+        0.29
+      ],
+      [
+        26.12,
+        "B4",
+        1.69,
+        0.19
+      ]
+    ],
+    "violin_II": [
+      [
+        17.32,
+        "G4",
+        1.83,
+        0.15
+      ],
+      [
+        20.06,
+        "E4",
+        1.8,
+        0.23
+      ],
+      [
+        23.4,
+        "G4",
+        1.71,
+        0.18
+      ]
+    ],
+    "double_bass": [
+      [
+        16.31,
+        "C2",
+        2.12,
+        0.16
+      ],
+      [
+        19.16,
+        "E2",
+        2.15,
+        0.23
+      ],
+      [
+        25.4,
+        "E2",
+        2.42,
+        0.18
+      ]
+    ],
+    "bassoon": [
+      [
+        16.3,
+        "C3",
+        1.16,
+        0.12
+      ],
+      [
+        20.16,
+        "E3",
+        1.68,
+        0.18
+      ]
+    ],
+    "french_horn": [
+      [
+        19,
+        "E4",
+        2.01,
+        0.2
+      ],
+      [
+        22.21,
+        "G4",
+        1.63,
+        0.16
+      ]
+    ],
+    "flute": [
+      [
+        19.57,
+        "C5",
+        1.47,
+        0.17
+      ],
+      [
+        23.17,
+        "D5",
+        1.51,
+        0.15
+      ]
+    ]
+  },
+  "musical_note_format": [
+    "time_seconds",
+    "midi_pitch_name",
+    "key_held_seconds",
+    "touch"
+  ],
+  "engineering_gates": {
+    "original_wav_bit_identical": true,
+    "first_7_5_seconds_piano_only": true,
+    "after_33_4_seconds_piano_only": true,
+    "missing_real_sample_fails_closed": true,
+    "no_synthetic_fallback": true,
+    "orchestra_stems_separated": true,
+    "no_master_limiter": true,
+    "air_bus_avoids_bleeding_into_last_1_6_seconds": true,
+    "viola_hold": "pitch-mapping intake not validated",
+    "local_regressions": "7/7 passed for renderer",
+    "sonic_quality": "not established; founder listening gate pending"
+  }
+}
