@@ -26,6 +26,7 @@ import {makeBattleMotionDemo} from './battle-motion-demo.js';
 import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
 import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
 import {CINEMATIC_SKY_WGSL,cinematicSkyCameraUniform,skyShaderSha256} from './native-sky.js';
+import {organicFoamGeometry,ORGANIC_FOAM_PREFIX} from './organic-wake-geometry.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -546,6 +547,8 @@ async function main(){
   const isSilhouette=process.env.CINEMATIC_SCENE==='denmark_strait_silhouettes';
   const isBattleship=process.env.CINEMATIC_SCENE==='battleship'||isFormation||isSilhouette;
   const useFx=process.env.BATTLE_FX==='1';
+  const organicWake=process.env.BATTLE_ORGANIC_WAKE==='1';
+  if(organicWake&&!useFx)throw Error('organic_wake_requires_environmental_fx');
   const useSky=process.env.BATTLE_SKY==='1';
   if(useSky&&!isSilhouette)throw Error('native_sky_requires_distinct_vessel_scene');
   const useAnimatedOcean=process.env.BATTLE_ANIMATED_OCEAN==='1';
@@ -555,10 +558,11 @@ async function main(){
   const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
     ?makeBattleMotionDemo(originalWorld):undefined;
   const fxRig=useFx?makeBattleEnvironmentFx():undefined;
-  const stagedWorld=fxRig?attachCinematicFxToWorld(originalWorld,actorRig!,fxRig):originalWorld;
+  const stagedWorld=fxRig?attachCinematicFxToWorld(originalWorld,actorRig!,fxRig,{organicWake}):originalWorld;
   const world=useAnimatedOcean?attachAnimatedOcean(stagedWorld):stagedWorld;
-  const geometries=useAnimatedOcean?[...battleVesselGeometry(),...(useFx?cinematicFxGeometry():[]),makeAnimatedOceanGrid()]
-    :useFx?[...battleVesselGeometry(),...cinematicFxGeometry()]
+  const geometries=useAnimatedOcean?[...battleVesselGeometry(),...(useFx?cinematicFxGeometry():[]),
+      ...(organicWake?organicFoamGeometry():[]),makeAnimatedOceanGrid()]
+    :useFx?[...battleVesselGeometry(),...cinematicFxGeometry(),...(organicWake?organicFoamGeometry():[])]
     :isSilhouette?battleVesselGeometry():isBattleship?battleshipGeometry():industrialGeometry();
   const textures=isBattleship?[]:industrialTextures();
   const rotorTake:CinematicCameraTake={
@@ -700,6 +704,18 @@ async function main(){
       originalWebGpuMeshes:true,fluidDynamicsVerified:false,
       photorealisticSmokeVerified:false,historicallyVerifiedWeather:false,
       publicationAuthority:false}}:{}),
+    ...(organicWake?{organicWake:{
+      source:'original_non_chevron_3d_curved_alpha_foam_patches',
+      sourceGeometryPrefix:ORGANIC_FOAM_PREFIX,
+      originalGeometryVariants:organicFoamGeometry().length,
+      centeredOnNativeWaveSurface:useAnimatedOcean,
+      movingActorWakeSources:sequence.actorRigProof?.actorCount??0,
+      realGpuFoamDrawsAtMiddle:sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.draws.filter(
+        d=>d.geometryId.startsWith(ORGANIC_FOAM_PREFIX)).length,
+      hasOldChevronDraws:sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.draws.some(
+        d=>d.geometryId==='owned:fx-cinematic-wake-crest'),
+      fluidDynamicsOrHistoricalWeatherVerified:false,publicationAuthority:false
+    }}:{}),
     ...(useAnimatedOcean?{animatedOcean:{
       geometryRef:OCEAN_WAVE_GEOMETRY_ID,
       originalNativeWgslVertexDeformation:true,
@@ -747,6 +763,7 @@ async function main(){
       ...(useFx?['Procedural 3D moving wake, spray and exhaust actors in true GPU scene; particles are stylized illustration, not fluid or volumetric simulation']:[]),
       ...(useAnimatedOcean?['Native WebGPU vertex shader deforming actual water mesh with time-varying waves and computed normals; no physical weather/CFD claim']:[]),
       ...(useSky?['Original native GPU sky fragment shader reconstructs real world camera rays; no sky image, HDRI, authentic historical weather or atmospheric physics']:[]),
+      ...(organicWake?['Original deterministic non-chevron curved 3D foam geometry, following actual prior keyframe paths at source time-varying ocean height, not fluid simulation']:[]),
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
