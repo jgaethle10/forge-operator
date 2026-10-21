@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
-import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {runSabanPreMoneyGauntlet} from './payments-pre-money-gauntlet.mjs';
 
@@ -41,19 +41,25 @@ test('Saban cannot expand worker concurrency beyond bounded local contract',asyn
   await assert.rejects(runSabanPreMoneyGauntlet({maxConcurrent:9000}),/cap_invalid/);
 });
 test('worker cannot run against a live or arbitrary order path',()=>{
-  const worker=path.resolve('systemia/saban/payments-pre-money-worker.mjs');
+  // Resolve from the test module, not process.cwd(): operators execute this
+  // worktree from ~, CI, and other Systemia control directories.
+  const worker=fileURLToPath(new URL('./payments-pre-money-worker.mjs',import.meta.url));
   const x=spawnSync(process.execPath,[worker,'create','/var/lib/evercraft/payments','buyer-00000000-0000-4000-8000-000000000000'],{
+    cwd:os.tmpdir(),
     env:{EVERCRAFT_PAYMENTS_TEST_ONLY:'1',PATH:process.env.PATH||'/usr/bin:/bin'},
     encoding:'utf8',
     timeout:3000,
   });
   assert.notEqual(x.status,0);
   assert.match(x.stderr,/synthetic_ledger_path_required/);
+  assert.doesNotMatch(x.stderr,/MODULE_NOT_FOUND/);
   const y=spawnSync(process.execPath,[worker,'create',os.tmpdir(),'buyer-00000000-0000-4000-8000-000000000000'],{
+    cwd:os.tmpdir(),
     env:{PATH:process.env.PATH||'/usr/bin:/bin'},
     encoding:'utf8',
     timeout:3000,
   });
   assert.notEqual(y.status,0);
   assert.match(y.stderr,/test_worker_not_authorized/);
+  assert.doesNotMatch(y.stderr,/MODULE_NOT_FOUND/);
 });
