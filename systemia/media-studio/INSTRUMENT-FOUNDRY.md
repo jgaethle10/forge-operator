@@ -232,3 +232,63 @@ Output receipt includes source basename, content fingerprint, byte count, select
 This is a convenience intake for a **future genuine acoustic capture session**, not evidence one already occurred. The existing canonical PulseGrid import and Saban preflight still hold independent auth, source licensing, actual browser output, and human musical approval.
 
 [GitHub Foundry run 39090349758](https://github.com/jgaethle10/forge-operator/actions/runs/39090349758) passed **122/122 engineering tests and 8/8 Saban planning tests** with the audit CLI, octave fix and strict receipts. The broader Forge workflows must be checked at the exact current head. The original *Weight of Silence* master is unchanged.
+
+
+## Oct 20 2026: dynamic-performance experiment and genuine-sample acquisition route
+
+Playback head `efa6c08a986e140a3c6f020d24d04b030339a6a8` introduced
+sample-layer-aware piano gain and a bounded cosine-squared four-segment damper
+release. These are **engineering audition candidates**, NOT heard/audited
+improvements or replacements for *The Weight of Silence*. For a single broad
+velocity layer, the established linear MIDI-gain response is retained. For a
+distinctly recorded velocity layer, MIDI attenuation is softened slightly to
+avoid double-counting the naturally quiet source recording. Output remains
+bounded at gain 0.68; sample bytes, onset and pitch are not re-synthesized.
+The release tail stays inside the decoded sample duration. Unit and simulated
+browser-path tests do not certify audible quality. Compare level-matched
+key-offs at short, medium and long durations with headphones and real speakers.
+
+### Two public candidate recording libraries, not yet obtained/admitted
+
+1. **Salamander Grand Piano V3** (Yamaha C5, Alexander Holm):
+   https://github.com/sfzinstruments/SalamanderGrandPiano .
+   Stated license CC BY 3.0, 48kHz/24-bit stereo, 16 recorded velocity layers,
+   minor-third key sampling, with separate release/hammer/string resonance.
+   A commercial integration must carry complete attribution and original
+   source/license and transformation lineage. The original source archive and
+   repository license must be retained in the provenance receipt. **Not an
+   Evercraft-recorded piano.** Using its separate hammer/strings or sustain
+   articulation requires new explicit playback lanes, not pretending the
+   current one-shot sampler already supports those features.
+
+2. **VSCO 2 Community Edition** (Versilian Studios / Sam Gossner and
+   Ivy Audio / Simon Dalzell): https://versilian-studios.com/vsco-community/
+   and https://github.com/sgossner/VSCO-2-CE . The vendor states CC0 for
+   the Community Edition raw orchestral WAV sample set (strings, brass,
+   woodwinds and other sections). This is a starting source for real
+   articulations and bowed-string patches. Credit the contributors as a
+   courtesy and verify the individual downloaded file, original LICENSE,
+   hash, articulation and provenance before registration. Do not label it
+   an Evercraft-owned original recording.
+
+Both are *source candidates*. No WAV bytes were imported in this push, no
+license evidence was attached to individual assets, and no human audible
+comparison was performed. `rights:'licensed'` must be based on independently
+retained evidence, not inferred merely from this paragraph. Preserve the
+existing verified resolver, `rights:'unknown'` intake and release hold.
+
+### Next **audible** proof (do not skip)
+
+- Secure authorized source bytes and pin the actual version, license, author
+  and cryptographic sample digests. Import 3 real piano roots (bass, mid, high)
+  with distinct velocity layers; independently authorize playback.
+- Run capture audit, pitch verification, Source WAV -> canonical asset vault
+  -> mapped MIDI patch -> browser actual audio output. Record device/browser
+  playback receipts separately from WAV SHA/technical checks.
+- Render exactly matched expressive MIDI phrases under old and new gain/release
+  behavior with the **same source samples** and the original *Weight of Silence*
+  as a separate frozen reference. Match listening loudness, record transients,
+  abrupt tail events, stereo image and whether rests actually breathe.
+- Musician/founder blind A/B and release-rights audit are still required.
+  No general claim of best-in-class or commercial-ready instruments before
+  those checks.
