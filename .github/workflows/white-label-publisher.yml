@@ -8,6 +8,7 @@ on:
       - 'systemia/affiliate-commerce/**'
       - 'tests/white-label-publisher.test.mjs'
       - 'tests/independent-publisher-export.test.mjs'
+      - 'tests/independent-seo-mesh.test.mjs'
       - 'tests/audience-sites.test.mjs'
       - 'tests/affiliate-publisher.test.mjs'
       - '.github/workflows/evercraft-journal-pages.yml'
@@ -21,6 +22,7 @@ on:
       - 'systemia/affiliate-commerce/**'
       - 'tests/white-label-publisher.test.mjs'
       - 'tests/independent-publisher-export.test.mjs'
+      - 'tests/independent-seo-mesh.test.mjs'
       - '.github/workflows/white-label-publisher.yml'
 permissions:
   contents: read
@@ -33,4 +35,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/white-label-publisher.test.mjs tests/audience-sites.test.mjs tests/affiliate-publisher.test.mjs tests/independent-publisher-export.test.mjs
+      - run: node --test tests/white-label-publisher.test.mjs tests/audience-sites.test.mjs tests/affiliate-publisher.test.mjs tests/independent-publisher-export.test.mjs tests/independent-seo-mesh.test.mjs
