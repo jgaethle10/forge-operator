@@ -23,17 +23,12 @@ jobs:
         run: python tests/evercraft-real-piano-audition.test.py
       - name: Download only actual recorded CC0 notes and render expressive piano
         run: python systemia/clip/evercraft-real-piano-audition.py
-      - name: Prepare lightweight phone-listening MP3s
-        run: |
-          ffmpeg -hide_banner -loglevel error -y -i artifacts/evercraft-web-piano-audition/evercraft-web-real-piano-close-UNAPPROVED.wav -c:a libmp3lame -b:a 256k artifacts/evercraft-web-piano-audition/evercraft-web-real-piano-close-UNAPPROVED.mp3
-          ffmpeg -hide_banner -loglevel error -y -i artifacts/evercraft-web-piano-audition/evercraft-web-real-piano-room-UNAPPROVED.wav -c:a libmp3lame -b:a 256k artifacts/evercraft-web-piano-audition/evercraft-web-real-piano-room-UNAPPROVED.mp3
       - name: Upload independent listening takes and sample provenance
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-web-new-real-piano-audition-unapproved
           path: |
-            artifacts/evercraft-web-piano-audition/*.mp3
             artifacts/evercraft-web-piano-audition/*.wav
             artifacts/evercraft-web-piano-audition/proof.json
           retention-days: 7
