@@ -78,3 +78,64 @@ Do not:
 - describe Stripe as Evercraft's payment product.
 
 The user-facing brand and product surface is **Evercraft Payments**.
+
+
+## Canonical payment orders
+
+`order-ledger.mjs` adds the first canonical Evercraft payment-order state machine.
+
+The order ledger is intentionally provider-neutral at the product boundary:
+
+```
+offer
+  ↓
+Evercraft Payments order
+  ↓ explicit buyer confirmation
+Raven Nexus checkout handoff
+  ↓ verified Raven settlement receipt
+settlement adapter
+  ↓
+paid Evercraft order
+```
+
+Current states:
+
+- `confirmation_required`: Evercraft created a canonical order, but the buyer has not authorized payment continuation.
+- `confirmed`: an accountable buyer explicitly confirmed the order.
+- `settlement_pending`: Raven Nexus produced a verified checkout-handoff receipt. This is still **not paid**.
+- `paid`: a distinct Raven Nexus settlement receipt verified the exact order, amount, currency and successful settlement state.
+
+### Receipt verification
+
+The ledger refuses Raven handoff or settlement transitions unless a caller supplies a `ravenReceiptVerifier`.
+
+A string that resembles a receipt hash, checkout URL, Stripe event ID, or provider response is not enough to change canonical payment state.
+
+Settlement verification must prove:
+
+- Raven purpose = `payment_settlement_succeeded`;
+- exact Evercraft order ID;
+- exact amount in minor units;
+- exact currency;
+- successful settlement state;
+- a valid Raven receipt hash distinct from the earlier checkout-handoff receipt.
+
+### Idempotency
+
+Order creation requires a caller-owned `requestKey`.
+
+The request key deterministically identifies the canonical order. Repeating the same request with the same economics returns the existing order. Reusing the request key with different product/offer/amount/currency fails instead of creating competing economic truth.
+
+### Tamper evidence
+
+Each order is an append-only hash-chained event history. Materialized order state is recomputed and checked when read. Modifying an earlier event or materialized state breaks verification.
+
+### First proving offer
+
+The test suite uses the Evercraft Lineage Founding Pilot:
+
+- product: `lineage`
+- offer: `lineage-founding-pilot-500`
+- amount: 50,000 USD minor units ($500)
+
+This proves the route without claiming that a public Lineage checkout is live yet. The remaining production integration is a Raven Nexus adapter that can prepare the provider checkout and verify provider settlement into Raven receipts.
