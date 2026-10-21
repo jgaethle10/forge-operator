@@ -69,7 +69,11 @@ def render(samples,events=EVENTS,duration=DURATION):
   out[offset:offset+available,0]+=audio[:available,0]*gain*left*env
   out[offset:offset+available,1]+=audio[:available,1]*gain*right*env
   used.append({'start_seconds':start,'pitch':pitch,'layer':layer,'gain':gain,'held_seconds':held})
- peak=float(np.max(np.abs(out)));safety=min(1,.89/max(peak,1.e-8))
+ peak=float(np.max(np.abs(out)))
+ if peak<1e-5:raise RuntimeError('recorded_performance_below_minimum_signal')
+ # Gain-only recording normalization; never add a compressor or limiter.
+ safety=.72/peak
+ if safety>16:raise RuntimeError('recorded_performance_requires_excessive_gain')
  out*=safety
  fade=min(int(.25*FS),len(out)//8)
  out[-fade:]*=np.linspace(1,0,fade,dtype=np.float32)[:,None]
