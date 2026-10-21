@@ -1,0 +1,87 @@
+name: World Engine differentiated naval vessels original GPU proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/battle-vessel-silhouettes.ts'
+      - 'systemia/world-engine/battle-vessel-silhouettes.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-battle-silhouettes.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  class-specific-native-gpu:
+    strategy:
+      fail-fast: false
+      matrix:
+        camera: [formation, bismarck_hero]
+    runs-on: ubuntu-latest
+    timeout-minutes: 29
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing Evercraft World Engine dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install existing owned Browser Worker WebGPU dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Test procedural hull distinctions, actual 3D entities, turret counts and legacy engine
+        run: |
+          npx tsx --test systemia/world-engine/battle-vessel-silhouettes.test.ts
+          npm run test:world-engine
+      - name: Require local native H264 encoder
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render native GPU 3D ship-class scene, shadow depth passes, moving camera
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          BATTLE_CAMERA: ${{ matrix.camera }}
+          CINEMATIC_FORMAT: wide
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-ship-silhouettes
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-silhouette-browser
+        run: npm run world:cinematic-render-proof
+      - name: Verify actual encoded and sampled GPU pixels, exact evidence, release hold
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const root='/tmp/evercraft-ship-silhouettes';
+          const r=JSON.parse(fs.readFileSync(path.join(root,'receipt.json')));
+          const video=path.join(root,'denmark-strait-class-silhouettes-gpu.mp4');
+          const sum=crypto.createHash('sha256').update(fs.readFileSync(video)).digest('hex');
+          if(sum!==r.output.sha256||r.output.width!==640||r.output.height!==360||
+             r.output.audioCodec!==null||r.exactGpuReadbackFrames!==96||
+             r.sceneType!=='procedural_four_distinct_ship_classes_not_full_reconstruction'||
+             r.uniqueRawFrameDigests<20||r.publicationAuthority!==false||
+             r.shadowCounterfactualChangedPixels<50||r.shadowFilterChangedPixels<10)
+            throw Error('ship_class_native_GPU_integrity_gate');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',video]));
+          const v=probe.streams.find(s=>s.codec_type==='video');
+          if(!v||v.codec_name!=='h264'||Number(v.nb_frames)!==96||
+            probe.streams.some(s=>s.codec_type==='audio'))throw Error('actual_GPU_movie_invalid');
+          const sample=cp.execFileSync('ffmpeg',['-v','error','-i',video,
+            '-vf','fps=3,scale=80:45,format=gray','-f','rawvideo','-']);
+          let blank=0,changed=0;
+          const bytes=80*45,frames=sample.length/bytes;
+          for(let i=0;i<frames;i++){
+            let total=0,diff=0;
+            for(let j=0;j<bytes;j++){total+=sample[i*bytes+j];if(i)diff+=Math.abs(sample[i*bytes+j]-sample[(i-1)*bytes+j]);}
+            if(total/bytes<9)blank++;
+            if(i&&diff/bytes>.2)changed++;
+          }
+          if(blank>0||changed<7)throw Error('battle_scene_frozen_or_black');
+          console.log('ORIGINAL_DISTINCT_NAVAL_PIXEL_ACCEPTANCE',{sha256:sum,encodedFrames:96,decodedSamples:frames,movingPairs:changed,blankSamples:blank});
+          NODE
+      - name: Preserve original GPU movie and three real source frame stills for founder review
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-four-distinct-naval-geometry-${{ matrix.camera }}-native-gpu
+          path: |
+            /tmp/evercraft-ship-silhouettes/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-ship-silhouettes/receipt.json
+            /tmp/evercraft-ship-silhouettes/opening.png
+            /tmp/evercraft-ship-silhouettes/middle.png
+            /tmp/evercraft-ship-silhouettes/closing.png
+          retention-days: 7
+          if-no-files-found: error
