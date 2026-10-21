@@ -122,8 +122,12 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
  if(!base)reject('foam_base_material_missing');
  scene.visualScene.materials.push(
   {...structuredClone(base),id:'vfx-wake',baseColor:{r:.65,g:.83,b:.86,a:1},roughness:.98,metallic:0,doubleSided:true},
-  {...structuredClone(base),id:'vfx-spray',baseColor:{r:.76,g:.89,b:.91,a:1},roughness:.90,metallic:0,doubleSided:true},
-  {...structuredClone(base),id:'vfx-smoke',baseColor:{r:.22,g:.28,b:.34,a:1},roughness:.99,metallic:0,doubleSided:true}
+  ...[.70,.26].map((alpha,i)=>({...structuredClone(base),id:'vfx-spray-'+i,
+    baseColor:{r:.77,g:.86,b:.87,a:alpha},alphaMode:'blend' as const,
+    roughness:1,metallic:0,doubleSided:true})),
+  ...[.32,.24,.14,.06].map((alpha,i)=>({...structuredClone(base),id:'vfx-smoke-'+i,
+    baseColor:{r:.36,g:.38,b:.41,a:alpha},alphaMode:'blend' as const,
+    roughness:1,metallic:0,doubleSided:true}))
  );
  for(const emitter of fx.emitters)for(let i=0;i<emitter.count;i++){
   scene.entities.push({
@@ -131,7 +135,7 @@ export function attachCinematicFxToWorld(world:WorldDefinition,actors:ActorMotio
    transform:{position:{x:0,y:-100,z:0},scale:{x:1,y:1,z:1}},
    renderable:{
     geometryRef:emitter.kind==='wake'?'owned:fx-cinematic-wake-crest':'owned:fx-cinematic-3d-puff',
-    materialId:'vfx-'+emitter.kind,
+    materialId:'vfx-'+emitter.kind+(emitter.kind==='wake'?'':'-0'),
     visible:false,castsShadow:false,receivesShadow:false
    },
    tags:['world_engine_original_fx','cinematic_fx_not_physics',emitter.kind,emitter.actorId]
@@ -175,6 +179,8 @@ export function animateCinematicFx(world:WorldDefinition,entities:WorldEntity[],
     const anchor=rotate(emitter.anchorLocal,yaw);
     const drift=rotate(emitter.driftLocal,yaw);
     const progress=age/emitter.lifetimeSec;
+    if(emitter.kind==='smoke')entity.renderable!.materialId='vfx-smoke-'+Math.min(3,Math.floor(progress*4));
+    if(emitter.kind==='spray')entity.renderable!.materialId='vfx-spray-'+Math.min(1,Math.floor(progress*2));
     const wiggle=.065*Math.sin(7*progress+i*.81+emitter.phase*5);
     const splash=emitter.kind==='spray'?Math.sin(Math.PI*progress)*1.35:0;
     const radius=emitter.radius*(emitter.kind==='wake'?
