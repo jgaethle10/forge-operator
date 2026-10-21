@@ -1,0 +1,43 @@
+name: Fallen Nebraska Real Heritage Film
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/native-nebraska-heritage-study.ts"
+      - "systemia/media-studio/pilots/nebraska-source-first/native-nebraska-heritage-study.test.ts"
+      - ".github/workflows/fallen-nebraska-heritage.yml"
+permissions:
+  contents: read
+jobs:
+  heritage-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install canonical Fallen runtime
+        run: npm install --no-audit --no-fund
+      - name: Fail-closed archival and motion truth tests
+        run: node --import tsx --test systemia/media-studio/pilots/nebraska-source-first/native-nebraska-heritage-study.test.ts
+      - name: Ensure actual codecs and caption rendering
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -filters | grep subtitles
+      - name: Download original National Archives photo, validate published SHA-1, render real Fallen timeline
+        run: node --import tsx systemia/media-studio/pilots/nebraska-source-first/native-nebraska-heritage-study.ts "$RUNNER_TEMP/nebraska-1973-archive"
+      - name: Hold unapproved archival film and receipts for human review
+        uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-1973-source-verified-archival-bridge-review-only
+          path: |
+            ${{ runner.temp }}/nebraska-1973-archive/Evercraft_Nebraska_1973_Archive_Bridge_RC04.mp4
+            ${{ runner.temp }}/nebraska-1973-archive/review-*.jpg
+            ${{ runner.temp }}/nebraska-1973-archive/native-nebraska-heritage-project.json
+            ${{ runner.temp }}/nebraska-1973-archive/native-nebraska-heritage-receipt.json
+            ${{ runner.temp }}/nebraska-1973-archive/ATTRIBUTIONS.txt
+          if-no-files-found: error
+          retention-days: 14
