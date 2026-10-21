@@ -24,3 +24,14 @@ No artificial build-up toward the word "build". The first idea should register a
 
 ## Gates
 Original audio samples from RC22 and RC24 stay intact. No user-approved winner for RC25; no independently checked checkpoint/voice rights or licensed commercial release. Technical green jobs, waveform hashes and expressive-model slider settings are not evidence of improved human acting. This is a draft PR with private audition files only, no advertisement published.
+
+
+## Verified completion | 2026-10-21
+
+- GitHub Actions run 39627315420: BOTH parallel jobs completed successfully. GitHub artifact 12357552886 contains seven real Kokoro neural WAV/MP3 pairs, and artifact 12358607089 contains six Chatterbox default-voice neural WAV/MP3 pairs.
+- Both artifact ZIPs downloaded and each individual audio file independently SHA256 verified against engine-specific evidence.json. Total 13 new WAV plus 13 new MP3, exactly.
+- Original RC22 controls (problem-H, problem-M and problem-B) were independently SHA256 checked against the earlier RC22 evidence and packaged unmodified, six more source files.
+- A complete 44-file offline listening studio was built with four edited-for-review concatenated reels, full original neural WAVs and MP3s, HTML player, three original RC22 references, scorecard and integrity receipt. Reel assembly inserts only 850ms silence between whole takes; no changes inside spoken words. Different architectures are labeled as different speakers.
+- There are no founder listening ratings for RC25 yet, thus no approved improvement or winning opening.
+- Heavy CI workflow switched to workflow_dispatch only after the completed run, avoiding repeat inference for routine documentation changes.
+- No release, voice licensing, commercial feature claims, or customer commitments are implied by technical rendering success.
