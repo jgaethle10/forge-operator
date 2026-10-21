@@ -27,6 +27,7 @@ const FEATURES=[
   ['series_character_canon','systemia/media-studio/series.ts','toon'],
   ['toon_shot_handoff','systemia/media-studio/toon-shot-handoff.mjs','toon'],
   ['toon_cel_mp4_canary','systemia/media-studio/toon-cel-canary.py','toon'],
+  ['toon_cel_packet_adapter','systemia/media-studio/toon-cel-adapter.mjs','toon'],
   ['identity_fingerprinting','systemia/media-studio/identity-fingerprint.ts','toon'],
   ['character_performance','systemia/media-studio/performance-director.ts','toon'],
   ['dialogue_lipsync_admission','systemia/media-studio/dialogue-sync-gate.ts','toon'],
