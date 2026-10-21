@@ -14,7 +14,7 @@ function hash(bytes){return crypto.createHash('sha256').update(bytes).digest('he
  * The built-in fox cel is original artwork. It is NOT a family/identity-aware
  * renderer. Only single-fox, dialogue-free shots may be routed here.
  */
-export function prepareToonCelPreview({packet,shotId}){
+export function prepareToonCelPreview({packet,shotId,allowSpeechCanary=false}){
   const inspection=inspectToonHandoff(packet);
   const shot=packet.shots.find(item=>item.id===shotId);
   fail(shot,'shot_unknown');
@@ -22,7 +22,14 @@ export function prepareToonCelPreview({packet,shotId}){
   const actor=shot.characters[0];
   fail(actor.lockedTraits?.species==='fox','supported_original_fox_only');
   fail(Array.isArray(actor.referenceAssetIds)&&actor.referenceAssetIds.length>0,'character_reference_declared');
-  fail(!shot.dialogue?.length,'spoken_dialogue_not_supported');
+  const cue=shot.dialogue?.[0]||null;
+  if(shot.dialogue?.length){
+    fail(allowSpeechCanary===true,'spoken_dialogue_not_supported');
+    fail(shot.dialogue.length===1&&cue.speakerId===actor.id,
+      'single_visible_speaker_required');
+    fail(cue.text==='Hello, little light.','scratch_speech_phrase_not_supported');
+    fail(cue.voiceProfileId===actor.voiceProfileId,'locked_voice_declared_mismatch');
+  }
   const motion=shot.previewMotion;
   fail(motion?.specimenProfile==='original_fox_v1','authored_preview_motion_required');
   // The full packet digest covers these numeric, authored acting controls.
@@ -37,11 +44,14 @@ export function prepareToonCelPreview({packet,shotId}){
   fail(Number.isInteger(shot.frameCount)&&shot.frameCount>0,'frames_invalid');
   const durationSec=shot.frameCount/shot.fps;
   fail(durationSec>=.5&&durationSec<=8,'duration_outside_canary_bounds');
+  if(cue)fail(durationSec>=3,'speech_shot_too_short');
   fail(inspection.packetDigest===packet.digest,'inspection_digest_mismatch');
   return {
     schema:'evercraft.fallen.toon-cel-preview-plan.v1',
     sourcePacketDigest:packet.digest,shotId:shot.id,entityId:actor.id,
     frameCount:shot.frameCount,fps:shot.fps,durationSec,
+    speechText:cue?.text||null,speechCueId:cue?.id||null,
+    syntheticVoiceOnly:Boolean(cue),scratchSpeechStartSec:cue?.text?.length ? .45 : null,
     previewMotion:structuredClone(motion),previewMotionDigest:hash(Buffer.from(JSON.stringify(motion))),
     kind:'generic_fox_vector_animation_canary',
     state:'ready_for_local_synthetic_preview',
@@ -51,16 +61,18 @@ export function prepareToonCelPreview({packet,shotId}){
   };
 }
 
-export function renderToonCelPreview({packet,shotId,outDir,python='python3',allowSyntheticCanary=false}){
+export function renderToonCelPreview({packet,shotId,outDir,python='python3',allowSyntheticCanary=false,allowSpeechCanary=false}){
   fail(allowSyntheticCanary===true,'explicit_canary_opt_in_required');
   fail(typeof outDir==='string'&&outDir.trim(),'output_directory_required');
-  const plan=prepareToonCelPreview({packet,shotId});
+  const plan=prepareToonCelPreview({packet,shotId,allowSpeechCanary});
   const output=path.resolve(outDir);
   fs.mkdirSync(output,{recursive:true});
   const motionPath=path.join(output,'authored-motion.json');
   fs.writeFileSync(motionPath,JSON.stringify(plan.previewMotion)+'\n');
   const args=[script,'--out',output,'--motion-json',motionPath,'--seconds',String(plan.durationSec),
     '--fps',String(plan.fps),'--width','768','--height','432'];
+  if(plan.speechText)args.push('--speech-line',plan.speechText,
+    '--speech-start-sec',String(plan.scratchSpeechStartSec));
   const execution=spawnSync(python,args,{
     encoding:'utf8',timeout:180000,maxBuffer:2*1024*1024,stdio:['ignore','pipe','pipe'],
   });
@@ -73,6 +85,15 @@ export function renderToonCelPreview({packet,shotId,outDir,python='python3',allo
   fail(sourceReceipt.status==='rendered_canary_not_production_admitted','renderer_state_invalid');
   fail(sourceReceipt.frameCount===plan.frameCount&&sourceReceipt.fps===plan.fps,'render_timing_mismatch');
   fail(sourceReceipt.previewMotionDigest===plan.previewMotionDigest,'render_motion_digest_mismatch');
+  fail(sourceReceipt.audioReactiveMouthObserved===Boolean(plan.speechText),'audio_reactivity_mismatch');
+  if(plan.speechText){
+    fail(sourceReceipt.phonemeTimingVerified===false && sourceReceipt.voiceProfileMatched===false,
+      'unearned_voice_lock_or_phoneme_claim');
+    fail(sourceReceipt.speechText===plan.speechText&&sourceReceipt.mouthActiveFrames>0&&sourceReceipt.mouthSilentFrames>0,
+      'scratch_speech_not_proven');
+    fail(fs.statSync(path.join(output,'audio-mouth-track.json'),{throwIfNoEntry:false})?.isFile(),
+      'audio_mouth_track_missing');
+  }
   fail(sourceReceipt.previewMotionSource==='explicit_authored_original_fox_v1',
     'render_motion_provenance_invalid');
   fail(sourceReceipt.shotHandoffConnected===false&&sourceReceipt.characterIdentityVerified===false&&
@@ -88,10 +109,17 @@ export function renderToonCelPreview({packet,shotId,outDir,python='python3',allo
     frameCount:plan.frameCount,mediaSha256:digest,mediaPath:media,
     previewMotionDigest:plan.previewMotionDigest,
     actualAuthoredMotionApplied:true,
+    speechCueId:plan.speechCueId,
+    scratchSpeechText:plan.speechText,
+    measuredAudioMouthReactivity:Boolean(plan.speechText),
+    measuredMouthPoseDigest:sourceReceipt.mouthPoseDigest,
+    phonemeAccuracyNotEstablished:true,
+    scratchVoiceOnly:Boolean(plan.speechText),
     state:'rendered_synthetic_preview_only',
     actualMovieBytesVerified:true,
     exactRequestedFrameCountVerified:true,
-    referenceMatched:false,dialogueSynced:false,characterPerformanceAdmitted:false,
+    referenceMatched:false,dialogueSynced:false,voiceProfileMatched:false,
+    phonemeTimingVerified:false,characterPerformanceAdmitted:false,
     musicMasterAdmitted:false,filmMasterReady:false,publicationAuthority:false,
     warning:'Packet-bound authored motion controls drive an original fox cel. Character appearance is not identity/reference matched.',
   };
