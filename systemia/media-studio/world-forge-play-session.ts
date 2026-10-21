@@ -3,6 +3,8 @@ import crypto from 'node:crypto';
 import type { WorldForgeProject } from './world-forge.js';
 import {
   compileWorldForgeToWorldEngine,
+  worldEngineEulerToWorldForge,
+  worldEngineVectorToWorldForge,
   type WorldForgeWorldEngineBridgeResult,
 } from './world-forge-world-engine.js';
 import {
@@ -60,6 +62,29 @@ export interface WorldForgePlayStepReceipt {
 export interface WorldForgePlayStepResult {
   snapshot:WorldSnapshot;
   receipt:WorldForgePlayStepReceipt;
+}
+
+export interface WorldForgePlayRuntimeProjection {
+  schema:'evercraft.fallen.world-forge-play-runtime-projection.v1';
+  sessionId:string;
+  projectId:string;
+  projectVersion:number;
+  worldId:string;
+  worldVersion:number;
+  tick:number;
+  timeSec:number;
+  snapshotDigest:string;
+  nodeTransforms:Array<{
+    nodeId:string;
+    entityId:string;
+    transform:{
+      position:{x:number;y:number;z:number};
+      rotationDeg:{x:number;y:number;z:number};
+      scale:{x:number;y:number;z:number};
+    };
+  }>;
+  source:'world-engine-runtime';
+  canonicalAuthoringMutation:false;
 }
 
 export interface WorldForgePlaySyncResult {
@@ -169,6 +194,52 @@ export class WorldForgePlaySession {
   snapshot(){
     this.touch();
     return this._runtime.snapshot();
+  }
+
+  runtimeProjection():WorldForgePlayRuntimeProjection{
+    const snapshot=this._runtime.snapshot();
+    const entities=new Map(snapshot.entities.map(entity=>[entity.id,entity]));
+    const nodeTransforms=this._bridge.receipt.nodeEntityMap
+      .map(mapping=>{
+        const entity=entities.get(mapping.entityId);
+        if(!entity) return null;
+        const rotation=entity.transform.rotationDeg??{x:0,y:0,z:0};
+        const scale=entity.transform.scale??{x:1,y:1,z:1};
+        return {
+          nodeId:mapping.nodeId,
+          entityId:mapping.entityId,
+          transform:{
+            position:worldEngineVectorToWorldForge(
+              entity.transform.position,
+              this._project.unitScaleMeters,
+            ),
+            rotationDeg:worldEngineEulerToWorldForge(rotation),
+            scale:{
+              x:scale.x,
+              y:scale.z,
+              z:scale.y,
+            },
+          },
+        };
+      })
+      .filter((item):item is NonNullable<typeof item>=>Boolean(item))
+      .sort((a,b)=>a.nodeId.localeCompare(b.nodeId));
+
+    this.touch();
+    return {
+      schema:'evercraft.fallen.world-forge-play-runtime-projection.v1',
+      sessionId:this.id,
+      projectId:this._project.id,
+      projectVersion:this._project.version,
+      worldId:snapshot.worldId,
+      worldVersion:snapshot.worldVersion,
+      tick:snapshot.tick,
+      timeSec:snapshot.timeSec,
+      snapshotDigest:snapshot.digest,
+      nodeTransforms,
+      source:'world-engine-runtime',
+      canonicalAuthoringMutation:false,
+    };
   }
 
   summary():WorldForgePlaySessionSummary{

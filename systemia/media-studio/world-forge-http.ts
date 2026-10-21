@@ -221,6 +221,7 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           success:true,
           session:session.summary(),
           snapshot:session.snapshot(),
+          projection:session.runtimeProjection(),
           geometries:session.geometries,
         });
       }catch(error){
@@ -242,6 +243,7 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           success:true,
           session:session.summary(),
           snapshot:session.snapshot(),
+          projection:session.runtimeProjection(),
         });
       }catch(error){
         res.status(404).json({
@@ -266,6 +268,7 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           success:true,
           result,
           session:session.summary(),
+          projection:session.runtimeProjection(),
         });
       }catch(error){
         res.status(422).json({
@@ -301,7 +304,11 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
             ? req.body.reason.slice(0,500)
             : undefined,
         });
-        res.json({success:true,result});
+        res.json({
+          success:true,
+          result,
+          projection:session.runtimeProjection(),
+        });
       }catch(error){
         res.status(422).json({
           success:false,
