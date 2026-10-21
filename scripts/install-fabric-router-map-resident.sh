@@ -90,7 +90,7 @@ code=$?
 set -e
 chmod 0640 "$tmp"
 mv "$tmp" "$STATE_DIR/latest.json"
-if [[ "$code" -eq 0 && "$renew_due" -eq 1 ]]; then
+if [[ "$code" -eq 0 ]] && { [[ "$renew_due" -eq 1 ]] || grep -Eq '"renewed"[[:space:]]*:[[:space:]]*true' "$STATE_DIR/latest.json"; }; then
   tmp_marker="$(mktemp "$STATE_DIR/renewal.XXXXXX")"
   printf "%s\n" "$now" >"$tmp_marker"
   chmod 0640 "$tmp_marker"
