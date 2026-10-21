@@ -1,0 +1,46 @@
+name: Systemia V12 Corrective Dialogue Private Audition
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/campaigns/systemia-v12-correction-audition.py'
+      - '.github/workflows/systemia-v12-correction-audition.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-new-voice-recordings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python systemia/graphics-command/campaigns/systemia-v12-correction-audition.py --verify-only
+      - name: Install owned Voice Foundry model-runtime dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate new complete independent neural dialogue takes
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: python systemia/graphics-command/campaigns/systemia-v12-correction-audition.py --out systemia-v12-voice
+      - name: Check sound sources and safety state
+        run: |
+          python - <<'PY'
+          import json,pathlib,subprocess,hashlib
+          d=pathlib.Path('systemia-v12-voice')
+          r=json.loads((d/'review-receipt.json').read_text())
+          assert len(r['cues'])==2 and not any((r['publicationAuthorized'],r['rightsVerified'],r['humanAuditionApproved']))
+          for c in r['cues']:
+            a=d/c['file'];assert hashlib.sha256(a.read_bytes()).hexdigest()==c['sha256']
+            pr=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-of','json',str(a)]))
+            assert pr['streams'][0]['sample_rate']=='24000' and pr['streams'][0]['channels']==1
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: systemia-v12-original-correction-neural-auditions
+          path: systemia-v12-voice/
+          retention-days: 14
+          if-no-files-found: error
