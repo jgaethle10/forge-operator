@@ -23,3 +23,15 @@ Chatterbox reference-free expressive trial completed successfully in Actions run
 
 ## Guardrails
 Draft PR #1465; never merge, publish, alter canonical V05, claim verified speaker/weights rights, or commercialize without explicit approval.
+
+
+## Actual RC19 outcome (verified neural generation)
+- First run 39535338281 stopped at preflight because a seven-candidate plan retained a uniqueness assertion for six entries. No inference was executed in that failed run. Fix commit: 868ddf8e8bbe90a5ee4cf6128008a1a9b083e98f.
+- Retried GitHub Actions run: https://github.com/jgaethle10/forge-operator/actions/runs/39535480068, **success**.
+- Artifact 12317024082: evercraft-rc19-heart-near-audition. All fourteen WAV and fourteen MP3 files were checked against the corresponding evidence.json SHA256 receipts after download.
+- Repeated pure Heart takes D/G are bit-identical in both scenes, and exactly reproduce prior RC18 pure Heart E WAVs in both scenes. Pure Bella take B is identical to RC18 Bella A WAVs for both scenes. These are byte-for-byte comparisons, not correlation estimates.
+- Tagline durations by take: A 3.450 s, B 3.725 s, C 3.525 s, D 3.425 s, E 3.425 s, F 3.575 s, G 3.425 s. Durations alone cannot identify an improved vowel.
+- Offline listening studio and rating/export scorecard created with validated source hashes. New blind listening results **not yet supplied**. No winner or deployment claimed.
+- The RC19 heavy neural workflow is now manual dispatch only after this successful test, avoiding repeated inference on unrelated PR commits.
+
+**Decision hold**: founder has identified pure Heart as closer on the target vowel, but whether any RC19 blend beats that known reference and preserves preferred overall delivery remains pending human listening. Original V05 remains the approved control, NOT a cleared commercial voice.
