@@ -21,7 +21,7 @@ import {makeBrushedMetalTextures} from './brushed-metal.js';
 import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
 import {fourVesselProxyWorld,fourVesselProxyTake} from './four-vessel-proxy-scene.js';
-import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} from './battle-vessel-silhouettes.js';
+import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry,VESSELS} from './battle-vessel-silhouettes.js';
 import {makeBattleMotionDemo} from './battle-motion-demo.js';
 import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
 import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
@@ -730,6 +730,15 @@ async function main(){
       physicsOrCFDVerified:false,
       historicalWeatherVerified:false,
       publicationAuthority:false
+    }}:{}),
+    ...(isSilhouette&&world.metadata?.loftedHullSource?{hullLoft:{
+      source:'owned_48_station_multi_chine_cambered_deck_parametric_mesh',
+      vertexCounts:sequence.frames[48].renderPlan.draws.filter(d=>
+        VESSELS.some(v=>d.entityId===v.id+'-ship-hull')).map(d=>
+          ({entityId:d.entityId,geometryId:d.geometryId,vertices:d.vertexCount})),
+      meshesWrittenByRealSourceAssetBuilder:true,
+      historicallyAuthenticatedDimensions:false,
+      hydrostaticStabilityVerified:false,publicationAuthority:false
     }}:{}),
     firstFramePlanDigest:sequence.frames[0].renderPlan.digest,
     lastFramePlanDigest:sequence.frames[sequence.frames.length-2].renderPlan.digest,
