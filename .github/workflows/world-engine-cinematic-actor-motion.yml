@@ -1,0 +1,82 @@
+name: Evercraft motion rig real WebGPU actor simulation proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/cinematic-actor-motion.ts'
+      - 'systemia/world-engine/cinematic-actor-motion.test.ts'
+      - 'systemia/world-engine/battle-motion-demo.ts'
+      - 'systemia/world-engine/cinematic-rig.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-cinematic-actor-motion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  moving-real-3d-actors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install native World Engine dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install actual owned WebGPU browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Validate motion rig and GPU scene compilation plus world engine regressions
+        run: |
+          npx tsx --test systemia/world-engine/cinematic-actor-motion.test.ts
+          npm run test:world-engine
+      - name: Native silent H264 encoder
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render actual moving actors through original WGSL depth shadows and native camera
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          CINEMATIC_FORMAT: wide
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-actor-motion-gpu
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-actor-motion-browser
+        run: npm run world:cinematic-render-proof
+      - name: Prove true moving world entities in signed GPU render plans and video frames
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process'),path=require('node:path');
+          const dir='/tmp/evercraft-actor-motion-gpu';
+          const receipt=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json')));
+          const film=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const digest=crypto.createHash('sha256').update(fs.readFileSync(film)).digest('hex');
+          const motion=receipt.actorMotion;
+          if(!motion||motion.schema!=='evercraft.world-engine.actor-motion-rig.v1'||
+             motion.actorCount!==4||motion.entityCount<120||
+             motion.firstAnimatedFrameDigest===motion.lastAnimatedFrameDigest||
+             new Set(motion.actualVerifiedGpuPlanSamples).size!==3||
+             motion.historicalTrajectoriesAuthenticated!==false||
+             motion.rigidBodyPhysicsExecuted!==false||
+             motion.publicationAuthority!==false||receipt.publicationAuthority!==false||
+             receipt.output.sha256!==digest||receipt.exactGpuReadbackFrames!==96||
+             receipt.uniqueRawFrameDigests<20||receipt.output.audioCodec!==null)
+            throw Error('owned_moving_gpu_proof_failed');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,nb_frames,width,height','-of','json',film]));
+          const v=probe.streams.find(s=>s.codec_type==='video');
+          if(v?.codec_name!=='h264'||Number(v.nb_frames)!==96||v.width!==640||
+             v.height!==360||probe.streams.some(s=>s.codec_type==='audio'))
+            throw Error('moving_h264_contract_invalid');
+          console.log('VERIFIED_REAL_WGSL_WORLD_SPACE_ACTOR_MOTION',{digest,actors:motion.actorCount,
+            animatedObjects:motion.entityCount,frames:96});
+          NODE
+      - name: Retain original moving GPU pixels for private creative inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-real-worldspace-actor-motion-gpu
+          path: |
+            /tmp/evercraft-actor-motion-gpu/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-actor-motion-gpu/receipt.json
+            /tmp/evercraft-actor-motion-gpu/opening.png
+            /tmp/evercraft-actor-motion-gpu/middle.png
+            /tmp/evercraft-actor-motion-gpu/closing.png
+          retention-days: 7
+          if-no-files-found: error
