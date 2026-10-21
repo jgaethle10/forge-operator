@@ -112,14 +112,16 @@ export function renderBeforeEchoNative(outputDir:string,sceneFile:string){
  const archivalStillMeanDifference=meanDifference(luminanceFrame(47),luminanceFrame(47.4));
  if(actionMotionMeanDifference<4)throw Error('early_football_action_appears_frozen');
  if(archivalStillMeanDifference>1)throw Error('authentic_1973_still_was_animated');
- const datedFrame=luminanceFrame(47);
+ // Inspect the actual full-resolution safe-area, NOT a downsized frame:
+ // scaling to 320x180 erased thin glyphs in an otherwise correct 1080p label.
+ const labelProbe=spawnSync('ffmpeg',['-v','error','-ss','47','-i',master,
+  '-vf','crop=500:110:0:930,format=gray','-frames:v','1','-f','rawvideo','pipe:1'],
+  {encoding:null,maxBuffer:1024*1024,timeout:30000});
+ const labelPixels=Buffer.isBuffer(labelProbe.stdout)?labelProbe.stdout:Buffer.from(labelProbe.stdout||'');
+ if(labelProbe.status!==0||labelPixels.length!==500*110)throw Error('archival_caption_inspection_invalid');
  let archivalLabelInkPixels=0;
- // Small on-screen provenance caption belongs in the left black margin.
- // Check glyph-like brightness there; semantic text identity needs human review.
- for(let y=160;y<180;y++)for(let x=0;x<70;x++){
-  if(datedFrame[y*320+x]>120)archivalLabelInkPixels++;
- }
- if(archivalLabelInkPixels<15)throw Error('archival_1973_date_caption_invisible');
+ for(const brightness of labelPixels){if(brightness>120)archivalLabelInkPixels++;}
+ if(archivalLabelInkPixels<400)throw Error('archival_1973_date_caption_invisible:'+archivalLabelInkPixels);
  const visualQA={actionMotionMeanDifference,archivalStillMeanDifference,
   archivalLabelInkPixels,pixelsDoNotEstablishEventIdentity:true,
   humanShotQualityApprovalPending:true};
