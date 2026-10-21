@@ -1,0 +1,50 @@
+name: Relay Licensed Commercial Audio Intake
+on:
+  push:
+    branches: [production/relay-commercial-footage-intake-20261019]
+    paths: [".github/workflows/relay-commercial-audio-intake.yml"]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  audio-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire free licensed cinematic tracks and sound effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/relay-audio
+          # Original Mixkit downloads sometimes return 403 to CI runners.
+          # These sources serve the same originally Mixkit-licensed track.
+          # Do not proceed without verifying an actual MPEG asset.
+          curl -fLsS --retry 2 --max-time 70 -A 'Mozilla/5.0' \
+            https://elai-media.s3.eu-west-2.amazonaws.com/music/mixkit-driving-ambition-32.mp3 \
+            -o /tmp/relay-audio/driving_ambition.mp3 ||
+            curl -fLsS --retry 2 --max-time 70 -A 'Mozilla/5.0' \
+            https://affvp.co.uk/wp-content/uploads/2020/11/mixkit-driving-ambition-32.mp3 \
+            -o /tmp/relay-audio/driving_ambition.mp3
+          test "$(stat -c %s /tmp/relay-audio/driving_ambition.mp3)" -gt 300000
+          file /tmp/relay-audio/driving_ambition.mp3
+          for pair in "1318 whoosh" "1273 riser" "1486 impact"; do
+            id="${pair%% *}"; name="${pair#* }"
+            curl -fLsS --retry 3 --max-time 60 "https://assets.mixkit.co/sfx/preview/mixkit-$(case "$name" in whoosh) echo fast-woosh-transition ;; riser) echo cinematic-riser ;; impact) echo impact-woosh ;; esac)-${id}.mp3" -o "/tmp/relay-audio/${name}.mp3" || rm -f "/tmp/relay-audio/${name}.mp3"
+          done
+          for file in /tmp/relay-audio/*.mp3; do test "$(stat -c %s "$file")" -gt 12000; done
+          (cd /tmp/relay-audio; sha256sum *.mp3 > SHA256SUMS.txt)
+          cat > /tmp/relay-audio/RIGHTS.txt <<'EOF'
+          Music provided by Mixkit Stock Music Free License, for commercial/social use.
+          https://mixkit.co/license/modal/musicFree/
+          Silent Descent: Eugenio Mininni, mixkit-silent-descent-614.mp3
+          Fright Night: Michael Ramir C., mixkit-fright-night-871.mp3
+          Driving Ambition: Ahjay Stelino, mixkit-driving-ambition-32.mp3\n          Download fallback from authorized Shotstack/Elai hosted Mixkit track or affvp mirror.
+          Any optional sound effects sourced from Mixkit SFX preview require separate applicable SFX free license compliance.
+          Do not redistribute music as standalone tracks or register them in Content ID.
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-commercial-free-mixkit-audio
+          path: /tmp/relay-audio/
+          if-no-files-found: error
+          retention-days: 7

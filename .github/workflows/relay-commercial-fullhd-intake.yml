@@ -1,0 +1,40 @@
+name: Relay Full HD Footage Intake
+on:
+  push:
+    branches: [production/relay-commercial-footage-intake-20261019]
+    paths: [".github/workflows/relay-commercial-fullhd-intake.yml"]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  fullhd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download original full-HD clips where available
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/relay-fullhd
+          count=0
+          for item in "4802 meeting_end" "315 office_walk" "4648 architect_construction" "241 contract_document" "4813 meeting_conversation"; do
+            id="${item%% *}"; name="${item#* }"
+            url="https://assets.mixkit.co/videos/${id}/${id}-1080.mp4"
+            if curl -fLsS --connect-timeout 20 --max-time 90 --retry 1 "$url" -o "/tmp/relay-fullhd/${name}.mp4"; then
+              test "$(stat -c %s "/tmp/relay-fullhd/${name}.mp4")" -gt 100000
+              count=$((count+1))
+              sha256sum "/tmp/relay-fullhd/${name}.mp4" >> /tmp/relay-fullhd/SHA256SUMS.txt
+              echo "${name} ${url}" >> /tmp/relay-fullhd/origins.txt
+            else
+              rm -f "/tmp/relay-fullhd/${name}.mp4"
+            fi
+          done
+          echo "downloaded_count=$count" >> "$GITHUB_OUTPUT"
+          printf 'Source: Mixkit stock video free license, https://mixkit.co/license/modal/videoFree/\nFootage illustrative, not endorsers or actual Relay users.\n' > /tmp/relay-fullhd/RIGHTS.txt
+          echo "Full HD clips successfully downloaded: $count"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-fullhd-licensed-footage
+          path: /tmp/relay-fullhd/
+          retention-days: 7
+          if-no-files-found: error
