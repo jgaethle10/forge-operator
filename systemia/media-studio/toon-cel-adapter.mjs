@@ -23,6 +23,16 @@ export function prepareToonCelPreview({packet,shotId}){
   fail(actor.lockedTraits?.species==='fox','supported_original_fox_only');
   fail(Array.isArray(actor.referenceAssetIds)&&actor.referenceAssetIds.length>0,'character_reference_declared');
   fail(!shot.dialogue?.length,'spoken_dialogue_not_supported');
+  const motion=shot.previewMotion;
+  fail(motion?.specimenProfile==='original_fox_v1','authored_preview_motion_required');
+  // The full packet digest covers these numeric, authored acting controls.
+  const ranges={reach:[0,1],blinkAtSec:[0,shot.frameCount/shot.fps],
+    gazeX:[-1,1],lanternLift:[0,1],tailEnergy:[0,1]};
+  fail(Object.keys(motion).length===6,'unexpected_preview_motion_fields');
+  for(const [key,[min,max]] of Object.entries(ranges)){
+    fail(typeof motion[key]==='number'&&Number.isFinite(motion[key])&&
+      motion[key]>=min&&motion[key]<=max,'preview_motion_range_invalid:'+key);
+  }
   fail(Number.isInteger(shot.fps)&&shot.fps>=24&&shot.fps<=60,'fps_invalid');
   fail(Number.isInteger(shot.frameCount)&&shot.frameCount>0,'frames_invalid');
   const durationSec=shot.frameCount/shot.fps;
@@ -32,6 +42,7 @@ export function prepareToonCelPreview({packet,shotId}){
     schema:'evercraft.fallen.toon-cel-preview-plan.v1',
     sourcePacketDigest:packet.digest,shotId:shot.id,entityId:actor.id,
     frameCount:shot.frameCount,fps:shot.fps,durationSec,
+    previewMotion:structuredClone(motion),previewMotionDigest:hash(Buffer.from(JSON.stringify(motion))),
     kind:'generic_fox_vector_animation_canary',
     state:'ready_for_local_synthetic_preview',
     boundToRealShotId:true,
@@ -46,7 +57,9 @@ export function renderToonCelPreview({packet,shotId,outDir,python='python3',allo
   const plan=prepareToonCelPreview({packet,shotId});
   const output=path.resolve(outDir);
   fs.mkdirSync(output,{recursive:true});
-  const args=[script,'--out',output,'--seconds',String(plan.durationSec),
+  const motionPath=path.join(output,'authored-motion.json');
+  fs.writeFileSync(motionPath,JSON.stringify(plan.previewMotion)+'\n');
+  const args=[script,'--out',output,'--motion-json',motionPath,'--seconds',String(plan.durationSec),
     '--fps',String(plan.fps),'--width','768','--height','432'];
   const execution=spawnSync(python,args,{
     encoding:'utf8',timeout:180000,maxBuffer:2*1024*1024,stdio:['ignore','pipe','pipe'],
@@ -59,6 +72,9 @@ export function renderToonCelPreview({packet,shotId,outDir,python='python3',allo
   fail(sourceReceipt.schema==='evercraft.fallen.toon-cel-render-proof.v1','renderer_schema_invalid');
   fail(sourceReceipt.status==='rendered_canary_not_production_admitted','renderer_state_invalid');
   fail(sourceReceipt.frameCount===plan.frameCount&&sourceReceipt.fps===plan.fps,'render_timing_mismatch');
+  fail(sourceReceipt.previewMotionDigest===plan.previewMotionDigest,'render_motion_digest_mismatch');
+  fail(sourceReceipt.previewMotionSource==='explicit_authored_original_fox_v1',
+    'render_motion_provenance_invalid');
   fail(sourceReceipt.shotHandoffConnected===false&&sourceReceipt.characterIdentityVerified===false&&
     sourceReceipt.publicationAuthority===false,'renderer_boundaries_invalid');
   const media=path.join(output,'toon-cel-canary.mp4');
@@ -70,12 +86,14 @@ export function renderToonCelPreview({packet,shotId,outDir,python='python3',allo
     packetDigest:plan.sourcePacketDigest,shotId:plan.shotId,entityId:plan.entityId,
     width:sourceReceipt.width,height:sourceReceipt.height,fps:plan.fps,
     frameCount:plan.frameCount,mediaSha256:digest,mediaPath:media,
+    previewMotionDigest:plan.previewMotionDigest,
+    actualAuthoredMotionApplied:true,
     state:'rendered_synthetic_preview_only',
     actualMovieBytesVerified:true,
     exactRequestedFrameCountVerified:true,
     referenceMatched:false,dialogueSynced:false,characterPerformanceAdmitted:false,
     musicMasterAdmitted:false,filmMasterReady:false,publicationAuthority:false,
-    warning:'Packet-bound shot timing with an unrelated original fox cel. Not an identity-matched or provider-generated shot.',
+    warning:'Packet-bound authored motion controls drive an original fox cel. Character appearance is not identity/reference matched.',
   };
   const result={...core,digest:hash(Buffer.from(JSON.stringify(core)))};
   fs.writeFileSync(path.join(output,'toon-shot-binding-receipt.json'),JSON.stringify(result,null,2)+'\n');
