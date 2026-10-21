@@ -28,7 +28,7 @@ jobs:
             systemia/media-studio/pilots/nebraska-source-first/series.sources.json \
             systemia/media-studio/pilots/nebraska-source-first/history.evidence.json \
             "$RUNNER_TEMP/nebraska-three-part-production.json"
-          node -e "const x=require(process.argv[1]);if(x.status!=='structure_passed_sources_and_rights_blocked'||x.targetMinutes!==75||x.sceneCount!==18||x.historicalFactsWithSourceLinks!==19||x.episodes.map(e=>e.title).join('|')!=='The Giant|The Sleeping Giant|The Giant Stirs'||x.episodes.some(e=>e.availableForPublicFilmMinutes!==0))process.exit(1)" "$RUNNER_TEMP/nebraska-three-part-production.json"
+          node -e "const x=require(process.argv[1]);if(x.status!=='structure_passed_sources_and_rights_blocked'||x.targetMinutes!==75||x.sceneCount!==18||x.historicalFactsWithSourceLinks!==20||x.episodes.map(e=>e.title).join('|')!=='The Giant|The Sleeping Giant|The Giant Stirs'||x.episodes.some(e=>e.availableForPublicFilmMinutes!==0))process.exit(1)" "$RUNNER_TEMP/nebraska-three-part-production.json"
       - name: Archive documented history, source inventory and rights blockers for founder review
         uses: actions/upload-artifact@v4
         with:
