@@ -7,8 +7,42 @@ import path from 'node:path';
 const hex=(value,n)=>typeof value==='string'&&new RegExp('^[0-9a-f]{'+n+'}$','i').test(value);
 const safe=(x)=>Array.isArray(x)?x:[];
 
-export function inspectNebraskaSeries(manifest,registry){
- const errors=[],notReady=[];
+export function inspectNebraskaHistory(ledger){
+ const errors=[];
+ if(ledger?.schema!=='evercraft.fallen.nebraska-historical-research.v1'||ledger?.asOf!=='2026-10-21')
+  errors.push('historical_ledger_schema_or_asof_invalid');
+ const claims=safe(ledger?.claims),ids=claims.map(x=>x.id);
+ if(claims.length<19||new Set(ids).size!==claims.length)errors.push('historical_facts_or_unique_ids_missing');
+ for(const c of claims){
+  if(!c.id||!c.era||!c.statement?.trim()||!c.status||!safe(c.sources).length||
+   safe(c.sources).some(v=>!/^https:\/\//.test(v)))
+   errors.push('historical_claim_unattributed:'+c.id);
+ }
+ const assertion=(id,patterns)=>{
+  const claim=claims.find(c=>c.id===id);
+  if(!claim||patterns.some(pattern=>!pattern.test(claim.statement)))
+   errors.push('historical_anchor_missing_or_changed:'+id);
+ };
+ assertion('devaney-arrival',[/1962/,/1970/,/1971/]);
+ assertion('three-nineties-titles',[/1994/,/1995/,/1997/,/five/i]);
+ assertion('solich-inherited',[/58-19/,/six seasons/i]);
+ assertion('2002-season-fall',[/7-7/,/2003/,/9-3/]);
+ assertion('pelini-not-blanket-failure',[/nine wins/i,/seven seasons/i,/never won a conference championship/i]);
+ assertion('big-ten-move',[/2011/,/without assuming/i]);
+ assertion('2024-bowl-breakthrough',[/7-6/,/20-15/,/2015/,/2016/]);
+ assertion('rhule-first-three-record',[/5-7/,/7-6/,/2023/,/2024/,/2025/]);
+ assertion('2026-record-incomplete',[/5-2/,/20-17/,/17-14/,/not over/i]);
+ const investigative=claims.filter(c=>c.status==='investigative_question');
+ if(investigative.length<2||safe(ledger?.interpretationsToInvestigate).length<5||
+  safe(ledger?.interpretationsToInvestigate).some(x=>!x.question?.trim()))
+  errors.push('historical_causes_must_remain_investigative');
+ if(ledger?.publicationAuthorityGranted!==false||
+  !/not.*substitute/i.test(ledger?.rightsPolicy||''))errors.push('history_research_grants_no_media_rights');
+ return [...new Set(errors)];
+}
+
+export function inspectNebraskaSeries(manifest,registry,ledger){
+ const errors=[...inspectNebraskaHistory(ledger)],notReady=[];
  if(manifest?.schema!=='evercraft.fallen.nebraska-series-plan.v1')errors.push('series_schema_invalid');
  if(registry?.schema!=='evercraft.fallen.nebraska-series-source-registry.v1')errors.push('source_registry_schema_invalid');
  if(manifest?.seriesId!==registry?.seriesId)errors.push('series_id_mismatch');
@@ -29,6 +63,22 @@ export function inspectNebraskaSeries(manifest,registry){
  const sourceIds=sources.map(x=>x.id),episodeIds=episodes.map(x=>x.id);
  if(new Set(sourceIds).size!==sourceIds.length||sourceIds.length<10)errors.push('source_registry_duplicates_or_truncated');
  if(episodes.length!==3||episodeIds.join('|')!=='ep01|ep02|ep03')errors.push('three_episode_identity_invalid');
+ const episodeTitles=episodes.map(x=>x.title).join('|');
+ if(episodeTitles!=='The Giant|The Sleeping Giant|The Giant Stirs')errors.push('history_decline_revival_arc_replaced');
+ const requireCoverage=(epId,ids,sourceIdsNeeded)=>{
+  const ep=episodes.find(x=>x.id===epId);
+  const eras=safe(ep?.historicalCoverage);
+  if(!ep||ids.some(id=>!eras.includes(id)))errors.push('historical_era_coverage_missing:'+epId);
+  const required=new Set(safe(ep?.acts).flatMap(a=>safe(a.requiredSourceIds)));
+  if(sourceIdsNeeded.some(id=>!required.has(id)))errors.push('core_historical_visual_or_interview_missing:'+epId);
+ };
+ requireCoverage('ep01',['origins','1970-1971','1994-1995-1997'],
+  ['history-nebraska-rg6137','1970-1971-championship-game-film','1994-1997-championship-game-film','osborne-football-system']);
+ requireCoverage('ep02',['2001-2003','2004-2014','2015-2022'],
+  ['2001-colorado-game-film','2002-2003-solich-records','callahan-era-footage','pelini-era-footage','riley-era-footage','frost-era-footage','2011-big-ten-transition-records']);
+ requireCoverage('ep03',['2023-2025','2026-as-of-Oct21','future-results-open'],
+  ['rhule-2023-arrival','rhule-player-development','2024-pinstripe-bowl-film','2025-season-game-footage',
+   '2026-five-win-start','indiana-2026-game-film','oregon-2026-game-film']);
  const blockedBySource=new Map();
  for(const s of sources){
   if(!s.id||!s.title||!s.kind||!s.acquisitionState||!s.rightsStatus)errors.push('source_has_no_chain_of_custody:'+s.id);
@@ -103,13 +153,17 @@ export function inspectNebraskaSeries(manifest,registry){
    errors.push('finale_cannot_be_fixed_without_future_season_events');
  if(!safe(manifest?.workingFilmReferences).some(x=>x.work==='Before the Echo RC08'&&x.durationSec===50&&x.status==='private_review_not_licensed_for_publication'))
   errors.push('native_review_proof_missing_or_called_release_ready');
+ if(manifest?.historicalEvidence!=='history.evidence.json')errors.push('historical_evidence_registry_not_linked');
+ if(!safe(manifest?.workingFilmReferences).some(x=>x.work==='Ten Seconds source-locked chapter'&&x.possiblePlacement==='ep03-2026-scrutiny'))
+  errors.push('old_2026_chapter_still_driving_entire_series');
  if(!safe(manifest?.workingFilmReferences).some(x=>x.work==='Ten Seconds source-locked chapter'&&x.durationSec===138&&x.status==='scripted_not_renderable_no_broadcast_rights'))
   errors.push('game_chapter_truth_boundary_removed');
  return {
   schema:'evercraft.fallen.nebraska-series-preflight.v1',
   status:errors.length?'rejected':'structure_passed_sources_and_rights_blocked',
-  editorialProgress:'three_episode_structure_only',
+  editorialProgress:'three_episode_history_decline_rebuild_structure_only',
   targetMinutes:total/60,episodeCount:episodes.length,sceneCount:acts,
+  historicalFactsWithSourceLinks:safe(ledger?.claims).length,
   acquiredHashVerifiedSources:sources.filter(s=>s.acquisitionState==='acquired_digest_verified').length,
   episodes:episodeReports,errors:[...new Set(errors)],
   boundaries:{independentAudienceFeedbackNotRecorded:true,
@@ -120,10 +174,11 @@ export function inspectNebraskaSeries(manifest,registry){
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===path.resolve(new URL(import.meta.url).pathname)){
  try{
-  const [seasonFile,sourcesFile,outFile]=process.argv.slice(2);
-  if(!seasonFile||!sourcesFile||!outFile)throw Error('Usage: node series-production-gate.mjs <season.json> <sources.json> <output.json>');
+  const [seasonFile,sourcesFile,historyFile,outFile]=process.argv.slice(2);
+  if(!seasonFile||!sourcesFile||!historyFile||!outFile)throw Error('Usage: node series-production-gate.mjs <season.json> <sources.json> <history.json> <output.json>');
   const result=inspectNebraskaSeries(JSON.parse(fs.readFileSync(seasonFile,'utf8')),
-   JSON.parse(fs.readFileSync(sourcesFile,'utf8')));
+   JSON.parse(fs.readFileSync(sourcesFile,'utf8')),
+   JSON.parse(fs.readFileSync(historyFile,'utf8')));
   fs.mkdirSync(path.dirname(outFile),{recursive:true});
   fs.writeFileSync(outFile,JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify({status:result.status,episodeCount:result.episodeCount,sceneCount:result.sceneCount,
