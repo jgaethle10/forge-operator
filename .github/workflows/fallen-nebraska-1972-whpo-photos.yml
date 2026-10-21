@@ -1,0 +1,34 @@
+name: Nebraska 1972 Historical Team Photo Scout
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/nixon-1972-team-photo-scout.mjs"
+      - "systemia/media-studio/pilots/nebraska-source-first/nixon-1972-team-photo-scout.test.mjs"
+      - ".github/workflows/fallen-nebraska-1972-whpo-photos.yml"
+permissions:
+  contents: read
+jobs:
+  public-whpo-photo-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reject fake contact sheet bytes and invented publication rights
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/nixon-1972-team-photo-scout.test.mjs
+      - name: Install FFprobe
+        run: |
+          if ! command -v ffprobe >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+      - name: Download original official WHPO research contact sheets
+        run: node systemia/media-studio/pilots/nebraska-source-first/nixon-1972-team-photo-scout.mjs "$RUNNER_TEMP/nebraska-nixon-photo"
+      - name: Preserve rights-closed historical photo sheets for director
+        uses: actions/upload-artifact@v4
+        with:
+          name: nara-nixon-nebraska-1972-contact-sheets-research-only
+          path: |
+            ${{ runner.temp }}/nebraska-nixon-photo/*.jpg
+            ${{ runner.temp }}/nebraska-nixon-photo/*.json
+          if-no-files-found: error
+          retention-days: 14
