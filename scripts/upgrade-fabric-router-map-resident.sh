@@ -37,6 +37,7 @@ for path in \
   scripts/evercraft-public-edge-map.mjs \
   scripts/edge-mapping-control.mjs \
   scripts/edge-upnp-mapping-policy.mjs \
+  scripts/verify-fabric-router-receipt.mjs \
   scripts/install-fabric-router-map-resident.sh; do
   [[ -f "$RUNTIME_ROOT/$path" ]] || error "missing runtime file $path"
 done
@@ -139,28 +140,8 @@ SUDO_USER="$RUN_USER" bash "$INSTALLER" \
   --repo-root "$RUNTIME_ROOT"
 
 # Router acknowledgement is NOT independent WAN ingress evidence.
-node --input-type=module - "$STATE_DIR/latest.json" "$HOST" <<'JS'
-import fs from 'node:fs';
-const [file, host]=process.argv.slice(2);
-const receipt=JSON.parse(fs.readFileSync(file,'utf8'));
-if(receipt.ok!==true || receipt.scope!=='web' || receipt.web_mapping_control_ok!==true ||
-   receipt.public_ingress_verified!==false){
-  throw Error('router receipt not web-only healthy and conservatively unverified');
-}
-const upnp=receipt.attempts?.find(x=>x.method==='UPnP-IGD' && x.success===true);
-if(!upnp) throw Error('exact UPnP verification missing');
-for(const [external,internal,desc] of [
-  [80,18080,'Evercraft Fabric HTTP'],[443,8443,'Evercraft Fabric HTTPS']
-]){
-  const row=upnp.mappings?.find(x=>x.requested?.external===external && x.requested?.proto==='TCP');
-  if(row?.success!==true || row.readback_verified!==true ||
-     row.observed_host!==host || row.observed_port!==internal ||
-     row.requested?.desc!==desc){
-    throw Error('WAN '+external+' readback does not match the owned ChromeOS port');
-  }
-}
-console.log('VERIFIED: local router UPnP web mappings 80/443 read back correctly');
-JS
+node "$RUNTIME_ROOT/scripts/verify-fabric-router-receipt.mjs" \
+  --file "$STATE_DIR/latest.json" --host "$HOST"
 systemctl is-active --quiet evercraft-router-map.timer ||
   error 'new timer did not become active'
 committed=1
