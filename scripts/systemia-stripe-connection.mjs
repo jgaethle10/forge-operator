@@ -4,6 +4,8 @@
  * No Stripe secrets are requested or stored. Hosted Stripe connection
  * authorization is still managed externally by the user-approved connector.
  */
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {
   stripeConnectionPath,buildStripeConnectionReference,
   storeStripeConnectionReference,displayStripeConnectionStatus,
@@ -76,7 +78,7 @@ export function runStripeRegistration(argv,{output=console.log}={}){
   return status;
 }
 
-if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href){
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
   try{runStripeRegistration(process.argv.slice(2));}
   catch(e){
     console.error('Systemia Stripe registration blocked:',e.message);
