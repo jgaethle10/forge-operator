@@ -1,30 +1,34 @@
 # Nebraska | The Giant Stirs: source-first film pilot
 
-## Series development | October 21, 2026
+## Series production | October 21, 2026 | Historical-trilogy director correction
 
-**Series:** NEBRASKA | THE GIANT STIRS is now a three-episode observational documentary **in development**, targeting 25 minutes each. No complete episode, trailer release, external distribution, filming release or participant permission is implied by this plan.
+**Original film:** `NEBRASKA | THE GIANT STIRS` is now a **historical-rise → program-decline investigation → evidence-of-turnaround** trilogy. The 2026 games are a piece of Episode 3, not the entire concept. These are development plans, NOT three filmed 25-minute episodes.
 
-- [Season one director's bible](SERIES_BIBLE_SEASON_ONE.md): *The Inheritance*, *Ten Seconds*, *The Giant Stirs*. Six story sequences per episode, 18 across the season. Episode 3 ends with what actually happens, not an invented comeback.
-- [Season structure](series.season1.json): 3 × 1,500 seconds, a full 75 minutes of *editorial targets*, not 75 minutes of finished film.
-- [Unified source inventory](series.sources.json): all verified older-film footage, 1973 crowd, Lincoln sky, Nebraska City workshop, archive leads, required real interviews and missing 2026 game footage remain individually labeled with their rights/identity state.
-- [Real-person field guide](FAN_INTERVIEW_FIELD_GUIDE.md): long-term supporter, younger supporter, independent contextual voice, actual sound and signed participant consent.
-- `series-production-gate.mjs`, `series-production-gate.test.mjs` and `.github/workflows/fallen-nebraska-series.yml` produce a machine-readable episode source-blocker report and refuse false release claims.
-- `before-the-echo.scenes.json`: an actual 50-second **private review cut** built using original source bytes; History Nebraska collection-use permission remains unresolved.
-- `ten-seconds.chapter.json`: 138 seconds of **planned** Episode 2 narrative with game-clock facts, *not* 138 seconds of cleared 2026 broadcast footage.
+- [Season One director's bible](SERIES_BIBLE_SEASON_ONE.md): **Episode 1, The Giant** (earliest history, Devaney/Osborne, five titles); **Episode 2, The Sleeping Giant** (Solich/Callahan/Pelini/Riley/Frost and institutional changes); **Episode 3, The Giant Stirs** (the Rhule-era rebuild and actual future results).
+- [Season structure](series.season1.json): 3 × 1,500-second editorial targets, 18 scenes, 75 minutes **planned only**, with 22–28-minute flexibility for real material.
+- [Historically attributed evidence](history.evidence.json): **20 primary-source and researched claims**, including 1969 Boyd Epley strength development, five titles, nuance in the post-Osborne coaching eras, 2024 first bowl breakthrough and the incomplete 2026 season.
+- [Unified media and participant source registry](series.sources.json): **33 actual source needs/discoveries**, including four verified original media sources, many missing dynasty and decline-era game clips and missing consented interviews.
+- [Source rights docket](source-rights-docket.json): even accessible historical film must have verified collection and distribution permission; research URLs do not automatically grant footage rights.
+- [Interview field guide](FAN_INTERVIEW_FIELD_GUIDE.md): real intergenerational supporters, primary witnesses and independent football researchers, with actual participant consent and original sound.
+- `before-the-echo.scenes.json`: existing authentic 50-second early-football/NARA scene candidate belongs to **Episode 1**, private research review only.
+- `ten-seconds.chapter.json`: source-locked **138-second PLAN**, now a candidate part of **Episode 3**; no authentic 2026 broadcast footage has been acquired.
+- `series-production-gate.mjs` and `series-production-gate.test.mjs` protect this historical plot and reject invented game outcomes, simplistic claims about the Pelini era, unverified broadcast footage, made-up releases and padded-episode completion claims.
+- `.github/workflows/fallen-nebraska-series.yml` writes a machine-readable, source-blocked series preflight receipt.
 
-The 2026 season was 5–2 as of October 21, with Washington next on October 31 (https://bigten.org/schedule.aspx?schedule=8494). Episodes are intentionally not on a release schedule while game rights, real human interviews, editorial quality and other source/collection permissions are missing.
+As of October 21, 2026, Nebraska was 5–2, with Washington scheduled October 31. The rest of the season and Episode 3 ending are *unknown*, not scripted. No episode is scheduled for distribution while rights, interviews, verified original game film, human creative approval and source-attributed analysis are missing.
 
-**Run honest series preflight:**
+**Run a true series development preflight:**
 
 ```sh
 node --test systemia/media-studio/pilots/nebraska-source-first/series-production-gate.test.mjs
 node systemia/media-studio/pilots/nebraska-source-first/series-production-gate.mjs \
   systemia/media-studio/pilots/nebraska-source-first/series.season1.json \
   systemia/media-studio/pilots/nebraska-source-first/series.sources.json \
+  systemia/media-studio/pilots/nebraska-source-first/history.evidence.json \
   /tmp/nebraska-series-preflight.json
 ```
 
-A green test means the development contracts are coherent. It does **not** indicate 75 minutes of actual recorded film, or permission to buy media, interview a person, merge a release or publish.
+**The only valid completed preflight status is** `structure_passed_sources_and_rights_blocked`. That is an honest research/editing plan, not 75 minutes of usable rights-cleared footage, a legal opinion or a certification of film quality.
 
 ---
 
