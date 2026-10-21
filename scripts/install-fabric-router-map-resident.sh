@@ -19,7 +19,7 @@ Installs a resident systemd timer. Default scope is WEB ONLY:
   WAN 443/TCP -> Chromebook 8443/TCP
 
 DNS scope is separate and opt-in. Existing valid mappings are read back
-without rewriting; foreign or stale owners require operator confirmation.
+without unnecessary rewriting; owned finite leases are renewed at most once\nevery six hours (or before observed expiry); foreign or stale owners hold.
 Use --scope dns only for a separately authorized DNS operator mission.
 EOF
 }
@@ -73,12 +73,29 @@ source /etc/evercraft/router-map.env
 STATE_DIR="/var/lib/evercraft/router-map"
 mkdir -p "$STATE_DIR"
 tmp="$(mktemp "$STATE_DIR/latest.XXXXXX")"
+# Bound owned mapping renewal to once every six hours, not every 10-minute
+# timer tick. Keep independent router control and public ingress receipts.
+renew_marker="$STATE_DIR/last-owned-lease-renewal.$EVERCRAFT_ROUTER_LAN_HOST.${EVERCRAFT_ROUTER_SCOPE:-web}"
+now="$(date +%s)"
+last="$(stat -c %Y "$renew_marker" 2>/dev/null || echo 0)"
+renew_due=0
+if [[ ! "$last" =~ ^[0-9]+$ ]] || (( now < last || now-last >= 21600 )); then
+  renew_due=1
+fi
 set +e
-"$EVERCRAFT_ROUTER_NODE"   "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs"   --gateway "$EVERCRAFT_ROUTER_GATEWAY"   --host "$EVERCRAFT_ROUTER_LAN_HOST"   --scope "${EVERCRAFT_ROUTER_SCOPE:-web}" >"$tmp"
+"$EVERCRAFT_ROUTER_NODE" "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs" \
+  --gateway "$EVERCRAFT_ROUTER_GATEWAY" --host "$EVERCRAFT_ROUTER_LAN_HOST" \
+  --scope "${EVERCRAFT_ROUTER_SCOPE:-web}" --renew-owned "$renew_due" >"$tmp"
 code=$?
 set -e
 chmod 0640 "$tmp"
 mv "$tmp" "$STATE_DIR/latest.json"
+if [[ "$code" -eq 0 && "$renew_due" -eq 1 ]]; then
+  tmp_marker="$(mktemp "$STATE_DIR/renewal.XXXXXX")"
+  printf "%s\n" "$now" >"$tmp_marker"
+  chmod 0640 "$tmp_marker"
+  mv "$tmp_marker" "$renew_marker"
+fi
 exit "$code"
 EOF
 sudo chmod 0755 /usr/local/sbin/evercraft-refresh-router-map
