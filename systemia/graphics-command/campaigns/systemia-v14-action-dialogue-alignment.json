@@ -1,0 +1,118 @@
+{
+  "schema": "evercraft.graphics-command.dialogue-action-alignment.v1",
+  "filmId": "systemia-university-i-said-draft-v14-review",
+  "missionRef": "github:issue:1450",
+  "picture": {
+    "source": "same unchanged V12/H264 564-frame video",
+    "fps": 24,
+    "width": 1600,
+    "height": 900,
+    "durationSec": 23.5,
+    "sourceVideoHash": "6d60399c508da1506e26d4ee0754053288f718b0ed07c67d6bab1e1bbea413b1"
+  },
+  "actions": [
+    {
+      "id": "proposal-sent",
+      "timeSec": 5.07,
+      "requiresCue": "sent"
+    },
+    {
+      "id": "client-alert",
+      "timeSec": 7.35,
+      "requiresCue": "repair"
+    },
+    {
+      "id": "send-without-approval-off",
+      "timeSec": 17.74
+    },
+    {
+      "id": "approval-required-on",
+      "timeSec": 19.74
+    },
+    {
+      "id": "agent-confirm-safe",
+      "timeSec": 20.43,
+      "dependsOn": [
+        "send-without-approval-off",
+        "approval-required-on"
+      ],
+      "requiresCue": "resolution"
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "ready",
+      "speaker": "agent",
+      "startSec": 0.48,
+      "endSec": 1.955,
+      "beat": "intro",
+      "sourceSha256": "1199c235baf6b99c48a4bcbe8cabb60c3f5ccb6a15db87076695055a56891fce"
+    },
+    {
+      "id": "owner-intent",
+      "speaker": "owner",
+      "startSec": 2.23,
+      "endSec": 4.556,
+      "beat": "answer",
+      "sourceSha256": "671dc307bbf4162b408445bf369bb0e97b17d5e478c4a29415bdda3a452da8c1"
+    },
+    {
+      "id": "sent",
+      "speaker": "agent",
+      "startSec": 4.83,
+      "endSec": 6.149,
+      "beat": "surprise",
+      "sourceSha256": "6a9e42ee3a4e1976077036108cac6f32f1183359d14fb40dac858512e440f05b"
+    },
+    {
+      "id": "repair",
+      "speaker": "owner",
+      "startSec": 7.48,
+      "endSec": 9.801,
+      "beat": "repair",
+      "sourceSha256": "c0753a42c465a10b11301e7bf0e5f67fcd890e352a797c26fc91902ed904f589"
+    },
+    {
+      "id": "explanation",
+      "speaker": "agent",
+      "startSec": 10.03,
+      "endSec": 11.675,
+      "beat": "clarification",
+      "sourceSha256": "bfded3884a176dd8f378d6f19591e96969fa0faef50fea981fafd644264cbdc1"
+    },
+    {
+      "id": "accountability",
+      "speaker": "owner",
+      "startSec": 12.38,
+      "endSec": 16.173,
+      "beat": "ownership",
+      "sourceSha256": "2edc5a7551bbb96efa362f7618783e722e3d6513a3d6b405b34c80ab034ff662"
+    },
+    {
+      "id": "resolution",
+      "speaker": "agent",
+      "startSec": 20.43,
+      "endSec": 22.186,
+      "beat": "ack_after_visible_switch",
+      "sourceSha256": "367d41537c1269b3a5faf41cbbd358c5fc71ef3da34c9cf38ecc538f93cfcf49"
+    }
+  ],
+  "audio": {
+    "mixStyle": "laptop-agent-vs-human-owner-close-room; scene-dependent sparse score; original restrained fx",
+    "voiceOrigin": "Kokoro 82M via Evercraft Voice Foundry",
+    "performancesAlreadyExist": true,
+    "materialAuditionRightsState": "unverified",
+    "newTtsGenerationThisCut": false,
+    "loudnessLUFS": -16.8,
+    "truePeakDbTP": -1.5
+  },
+  "admission": {
+    "humanActorPerformed": false,
+    "dynamicResponseConditionedVoice": false,
+    "commercialVoiceRightsVerified": false,
+    "productInterfaceVerified": false,
+    "mediaAdmittedToFallen": false,
+    "universityEnrollmentVerified": false,
+    "publicationAuthorized": false
+  }
+}
