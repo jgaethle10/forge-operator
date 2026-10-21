@@ -38,6 +38,9 @@ jobs:
       - name: Install
         run: npm install --no-audit --no-fund
 
+      - name: Verify Systemia Radar storm & flood intake
+        run: npm run test:radar
+
       - name: Typecheck and build
         run: npm run check
 
