@@ -1,8 +1,8 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-10-21T13:11:45.699Z
+Generated: 2026-10-21T18:06:00.204Z
 Observed crawler-like requests: 0
-Negative provider pickup receipts: 176
-Strike-now surfaces: 594
+Negative provider pickup receipts: 177
+Strike-now surfaces: 598
 
 1. [strike_now] score=235 /chum/intents/forensiscope-evidence-review-v1/ :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 2. [strike_now] score=235 /chum/intents/foundry-app-escape-audit-v1/ :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
