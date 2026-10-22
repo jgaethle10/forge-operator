@@ -1,0 +1,411 @@
+{
+  "nepal": {
+    "id": "nepal-budhi-gandaki-2026-10-11-002",
+    "eyebrow": "MISSION 002 / NEPAL / OCTOBER 2026",
+    "title": "The river changed everything.",
+    "subtitle": "Budhi Gandaki flash flood · A changing record of crossings, warnings and essential water systems.",
+    "date": "11 OCT 2026",
+    "place": "Gorkha & Dhading, Nepal",
+    "mode": "Active research · historical snapshot",
+    "palette": "#73efe2",
+    "tone": "nepal",
+    "descriptor": "Flood / public-service impact",
+    "overview": "A date-stamped exploration of a serious flood event and its reported impacts. Information shown here is from public-source research, not Evercraft field verification.",
+    "stat": [
+      [
+        "204",
+        "Homes reported damaged",
+        "NDRRMA, Oct 11 · damaged ≠ destroyed"
+      ],
+      [
+        "11",
+        "Water-scheme entries",
+        "Possible aliases or overlap"
+      ],
+      [
+        "5 / 6",
+        "Bridge categories / names",
+        "Identity reconciliation unresolved"
+      ]
+    ],
+    "milestones": [
+      {
+        "time": "04:45 NPT",
+        "label": "Early local warning",
+        "detail": "A witness reported receiving an upstream warning at 04:45. This is a reported recollection, not a verified instrument time.",
+        "state": "reported",
+        "sources": [
+          "KP"
+        ]
+      },
+      {
+        "time": "05:30 NPT",
+        "label": "Estimated landslide time",
+        "detail": "An NDRRMA situation report estimated a major landslide at 05:30. Event time and warning-receipt times require separate verification.",
+        "state": "reported",
+        "sources": [
+          "NDRRMA",
+          "KP"
+        ]
+      },
+      {
+        "time": "06:15 NPT",
+        "label": "Water through blockage",
+        "detail": "The cited NDRRMA chronology places water emerging through the blockage at approximately 06:15. The causal mechanism remained subject to investigation.",
+        "state": "reported",
+        "sources": [
+          "NDRRMA",
+          "ICIMOD"
+        ]
+      },
+      {
+        "time": "08:40 NPT",
+        "label": "Gauge reading at Arughat",
+        "detail": "A public-source summary of the report records an 8.43 m level at about 08:40. Source and instrument timestamps require preservation.",
+        "state": "reported",
+        "sources": [
+          "NDRRMA",
+          "KP"
+        ]
+      },
+      {
+        "time": "12 OCT",
+        "label": "Lifelines review",
+        "detail": "A later working brief collated 204 reportedly damaged homes and 11 drinking-water scheme entries. These are not independently geolocated facilities.",
+        "state": "reported",
+        "sources": [
+          "NDRRMA",
+          "EC"
+        ]
+      }
+    ],
+    "features": [
+      {
+        "id": "BG-BRIDGE",
+        "x": 26,
+        "y": 46,
+        "label": "Crossings",
+        "short": "5 categories / 6 reported names",
+        "detail": "Two concrete, two suspension and one Bailey bridge occur in NDRRMA categorization. At least six place-name entries appear in local reporting. They are NOT a verified unique crossing count. No coordinates or route status are asserted.",
+        "state": "unresolved",
+        "sources": [
+          "NDRRMA",
+          "EC"
+        ]
+      },
+      {
+        "id": "BG-WASH",
+        "x": 63,
+        "y": 63,
+        "label": "Water schemes",
+        "short": "11 reported scheme entries",
+        "detail": "Water system names can denote aliases, aggregate descriptions, or physical networks. These locations are schematic. No contamination or restoration status is inferred.",
+        "state": "reported",
+        "sources": [
+          "EC"
+        ]
+      },
+      {
+        "id": "BG-HOMES",
+        "x": 76,
+        "y": 46,
+        "label": "Housing",
+        "short": "204 reportedly damaged",
+        "detail": "The October 11 NDRRMA reporting, summarized October 12, cites damaged homes by municipality. Do not equate with destroyed homes or add to separate counts.",
+        "state": "reported",
+        "sources": [
+          "NDRRMA",
+          "EC"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "NDRRMA",
+        "name": "Nepal NDRRMA situation-report portal",
+        "kind": "Government / original reports",
+        "url": "https://ndrrma.gov.np/np/situation-report",
+        "note": "Agency reporting; review the original dated report for each data point."
+      },
+      {
+        "id": "ICIMOD",
+        "name": "ICIMOD, preliminary flood explanation",
+        "kind": "Regional scientific organization",
+        "url": "https://www.icimod.org/press-releases/landslide-dam-breach-may-have-triggered-budhi-gandaki-flash-flood/",
+        "note": "Preliminary hypothesis, not independently proven causation."
+      },
+      {
+        "id": "KP",
+        "name": "Kathmandu Post, warning chronology",
+        "kind": "Newsroom / Oct 12, 2026",
+        "url": "https://kathmandupost.com/national/2026/10/12/budhigandaki-flood-what-the-report-says-about-the-gap-between-local-warnings-and-official-records",
+        "note": "Reports multiple witness and official timestamps with different meaning."
+      },
+      {
+        "id": "EC",
+        "name": "Evercraft Nepal 002 lifelines working brief",
+        "kind": "Evercraft / research synthesis, Oct 12",
+        "url": "https://docs.google.com/document/d/1PA7GhsCZDZglLndyX7Q_AJxNR0_Noc9qn_SsnulJvRI/edit",
+        "note": "Candidate research register, not an authorized field/route assessment."
+      },
+      {
+        "id": "UN",
+        "name": "United Nations Nepal, flood statement",
+        "kind": "UN / Oct 11, 2026",
+        "url": "https://nepal.un.org/en/324212-un-nepal-statement-budhi-gandaki-river-flooding",
+        "note": "Describes imagery coordination; it does not grant imagery reuse rights."
+      }
+    ],
+    "caution": "No field verification. No live travel or route guidance. Symbolic visualization only. Source dates and observation dates must be distinguished."
+  },
+  "helens": {
+    "id": "msh-eruption-1980",
+    "eyebrow": "HISTORY / WASHINGTON / MAY 1980",
+    "title": "A mountain in motion.",
+    "subtitle": "Mount St. Helens · From seismic warnings to landslide, lateral blast and ash cloud.",
+    "date": "18 MAY 1980",
+    "place": "Skamania County, Washington",
+    "mode": "Historical study · USGS-sourced",
+    "palette": "#ffb06a",
+    "tone": "volcano",
+    "descriptor": "Geology / historical reconstruction",
+    "overview": "A demonstration of how measured timelines and documentary evidence could power a visually navigable historical science lesson. The landscape is an artistic schematic, not an eruption model.",
+    "stat": [
+      [
+        "8:32",
+        "Earthquake onset",
+        "Local time, May 18"
+      ],
+      [
+        "5.1",
+        "Magnitude",
+        "USGS event summary"
+      ],
+      [
+        "57",
+        "Lives lost",
+        "Historical USGS record"
+      ]
+    ],
+    "milestones": [
+      {
+        "time": "MAR 1980",
+        "label": "Activity intensifies",
+        "detail": "Earthquakes and deformation signaled volcanic unrest. USGS documents more than 10,000 earthquakes before May 18.",
+        "state": "documented",
+        "sources": [
+          "USGS"
+        ]
+      },
+      {
+        "time": "08:32",
+        "label": "Magnitude 5.1 earthquake",
+        "detail": "A magnitude 5.1 earthquake coincided with the failure of the bulging north flank.",
+        "state": "documented",
+        "sources": [
+          "USGS"
+        ]
+      },
+      {
+        "time": "SECONDS",
+        "label": "Debris avalanche",
+        "detail": "The northern flank and summit slid away in what USGS describes as the largest recorded landslide of its kind.",
+        "state": "documented",
+        "sources": [
+          "USGS"
+        ]
+      },
+      {
+        "time": "MINUTES",
+        "label": "Lateral blast",
+        "detail": "Pressure release triggered a lateral blast, devastating approximately 230 square miles. This illustration is not a physics simulation.",
+        "state": "documented",
+        "sources": [
+          "USGS",
+          "FACTS"
+        ]
+      },
+      {
+        "time": "<15 MIN",
+        "label": "Ash cloud rises",
+        "detail": "USGS reports an ash plume exceeding 80,000 feet within 15 minutes. Ash traveled across large portions of the United States.",
+        "state": "documented",
+        "sources": [
+          "USGS",
+          "FACTS"
+        ]
+      }
+    ],
+    "features": [
+      {
+        "id": "MSH-FLANK",
+        "x": 46,
+        "y": 49,
+        "label": "North flank",
+        "short": "Debris avalanche",
+        "detail": "On May 18, a landslide removed the bulging north flank and initiated a chain of eruptive processes. Exact deposit footprints are not reproduced here.",
+        "state": "documented",
+        "sources": [
+          "USGS"
+        ]
+      },
+      {
+        "id": "MSH-BLAST",
+        "x": 74,
+        "y": 38,
+        "label": "Lateral blast",
+        "short": "~230 sq mi devastated",
+        "detail": "The blast devastated an estimated 230 square miles. The illustrated effect is artistic only, not a spatial analysis of the actual blast.",
+        "state": "documented",
+        "sources": [
+          "FACTS"
+        ]
+      },
+      {
+        "id": "MSH-LAHAR",
+        "x": 22,
+        "y": 72,
+        "label": "Lahars",
+        "short": "River-valley impacts",
+        "detail": "Volcanic mudflows traveled downstream and damaged roads, bridges and homes. Routes drawn here are not actual lahar pathways.",
+        "state": "documented",
+        "sources": [
+          "USGS"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "USGS",
+        "name": "USGS: 1980 Cataclysmic Eruption",
+        "kind": "Federal science agency",
+        "url": "https://www.usgs.gov/volcanoes/mount-st.-helens/science/1980-cataclysmic-eruption",
+        "note": "Primary historical science summary."
+      },
+      {
+        "id": "FACTS",
+        "name": "USGS: 30 Cool Facts about Mount St. Helens",
+        "kind": "Federal science education",
+        "url": "https://pubs.usgs.gov/gip/103/",
+        "note": "Historical milestones and public-impact facts."
+      }
+    ],
+    "caution": "Historical event. Animated topography and particle effects are conceptual, not measured 3D terrain, actual ash advection, or hazard boundaries."
+  },
+  "yakima": {
+    "id": "yakima-water-2026",
+    "eyebrow": "LOCAL IMPACT / YAKIMA VALLEY / 2026",
+    "title": "The water behind the valley.",
+    "subtitle": "Yakima Basin drought · Follow snowpack, storage and the decisions that shape irrigation.",
+    "date": "2026 SEASON",
+    "place": "Yakima Basin, Washington",
+    "mode": "Public-water data · Dated snapshot",
+    "palette": "#acd98f",
+    "tone": "valley",
+    "descriptor": "Water systems / local economy",
+    "overview": "A proposed local-impact exhibit connecting dated water forecasts with their social and economic implications. It does not predict crop outcomes or individual water rights.",
+    "stat": [
+      [
+        "4th",
+        "Consecutive drought year",
+        "Reclamation Aug 2026"
+      ],
+      [
+        "57%",
+        "Reservoir storage full",
+        "As of Aug 1, 2026"
+      ],
+      [
+        "21 MAY",
+        "Proration began",
+        "2026 irrigation season"
+      ]
+    ],
+    "milestones": [
+      {
+        "time": "WINTER",
+        "label": "Low snowpack",
+        "detail": "Reclamation attributed a fourth consecutive drought year in part to winter snowpack less than half of normal.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      },
+      {
+        "time": "21 MAY",
+        "label": "Proration begins",
+        "detail": "The Yakima Basin Project began prorationing and storage control on May 21, 2026. This does not describe every individual water entitlement.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      },
+      {
+        "time": "01 AUG",
+        "label": "Storage snapshot",
+        "detail": "Reclamation reported total reservoir storage at 605,000 acre-feet, 57% full, and 80% of average on August 1.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      },
+      {
+        "time": "06 AUG",
+        "label": "Forecast published",
+        "detail": "The Bureau of Reclamation reported that irrigation demands would not be fully met that season. The forecast is a dated August statement.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      }
+    ],
+    "features": [
+      {
+        "id": "YK-SNOW",
+        "x": 31,
+        "y": 46,
+        "label": "Snowpack",
+        "short": "Below half of normal in winter",
+        "detail": "Snowpack conditions were a major drought driver in the August report. Scene markers are thematic, not surveyed snow stations.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      },
+      {
+        "id": "YK-STORE",
+        "x": 65,
+        "y": 41,
+        "label": "Storage",
+        "short": "57% full on Aug 1",
+        "detail": "August 1 reservoir storage: 605,000 acre-feet (57% full), or 80% of average. Not a live reading.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      },
+      {
+        "id": "YK-FARMS",
+        "x": 59,
+        "y": 73,
+        "label": "Irrigation",
+        "short": "Proration from May 21",
+        "detail": "Proration allocations are governed by water rights and project rules. No crop-loss number or farm-specific shortage is inferred.",
+        "state": "documented",
+        "sources": [
+          "USBR"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "USBR",
+        "name": "Bureau of Reclamation: Aug 2026 Yakima forecast",
+        "kind": "Federal agency / Aug 6, 2026",
+        "url": "https://www.usbr.gov/newsroom/news-release/5385",
+        "note": "Authoritative dated forecast, not a real-time water-status feed."
+      }
+    ],
+    "caution": "Dated agency snapshot, not current conditions. No property-level water-right interpretations, farm-level estimates or live irrigation guidance."
+  }
+}
