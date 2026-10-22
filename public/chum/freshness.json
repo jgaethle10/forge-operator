@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-22T03:30:02.662Z",
+  "updated_at": "2026-10-22T04:56:09.352Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,22 +11,18 @@
   },
   "latest_change_batch": [
     {
-      "path": "/llms.txt",
-      "last_changed": "2026-10-22T03:30:02.662Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-chum.json",
-      "last_changed": "2026-10-22T03:30:02.662Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-22T03:30:02.662Z",
+      "last_changed": "2026-10-22T04:56:09.352Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-22T04:56:09.352Z",
+      "priority": 80
+    },
     {
       "path": "/llms.txt",
       "url": "/llms.txt",
@@ -38,12 +34,6 @@
       "url": "/.well-known/evercraft-chum.json",
       "last_changed": "2026-10-22T03:30:02.662Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-22T03:30:02.662Z",
-      "priority": 80
     },
     {
       "path": "/chum/crawler-radar.json",
