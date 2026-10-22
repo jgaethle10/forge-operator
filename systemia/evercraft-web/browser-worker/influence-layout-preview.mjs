@@ -72,12 +72,15 @@ try{
     const response=await page.goto(local,{waitUntil:'networkidle',timeout:25000});
     const cta=page.getByRole('button',{name:/Continue to checkout/i});
     const rect=await cta.boundingBox();
+    const overflowPx=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
+    const readableHeadline=await page.locator('#audit-title').count()===1;
     const file='branch-'+viewport.name+'-website-audit.png';
     await page.screenshot({path:path.join(out,file),fullPage:true,animations:'disabled'});
     report.views.push({name:viewport.name,status:response?.status()||0,
       priceVisible:await page.getByText(/\$49(?:\b|$)/i).count()>0,
       buttonVisible:await cta.count()>0,
       buttonFirstViewport:rect?rect.y+rect.height<=viewport.height:null,
+      horizontalOverflowPx:overflowPx,readableHeadline,
       buttonTop:rect?Math.round(rect.y):null,
       screenshotFile:file,screenshotSha256:hash(fs.readFileSync(path.join(out,file))),
       formActionVerified:await page.locator('form[action="/api/offers/website-audit/checkout"]').count()>0,
@@ -91,4 +94,5 @@ try{
 fs.writeFileSync(path.join(out,'branch-preview-receipt.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
 console.log(JSON.stringify({schema:report.schema,views:report.views.map(({name,status,buttonTop,buttonFirstViewport,errors})=>({name,status,buttonTop,buttonFirstViewport,errors:errors.length})),publiclyDeployed:false,paymentAttempted:false}));
 if(report.views.some(v=>v.status!==200||v.buttonVisible!==true||v.formActionVerified!==true||
-  v.errors.length||v.blockedMethods.length))process.exitCode=2;
+  v.errors.length||v.blockedMethods.length||v.horizontalOverflowPx>0||
+  v.readableHeadline!==true))process.exitCode=2;
