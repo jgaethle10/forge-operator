@@ -16,7 +16,7 @@ const sha = value => 'sha256:' + createHash('sha256').update(value).digest('hex'
 
 export function validateLoopbackOrigin(endpoint) {
   const url = new URL(String(endpoint || ''));
-  if (url.protocol !== 'http:' || !['localhost','127.0.0.1','[::1]'].includes(url.hostname) ||
+  if (url.protocol !== 'http:' || !['127.0.0.1','[::1]'].includes(url.hostname) ||
       url.username || url.password || url.search || url.hash || url.pathname !== '/') {
     throw new Error('field_probe_requires_plain_loopback_http_origin');
   }
