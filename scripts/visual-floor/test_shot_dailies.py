@@ -47,6 +47,34 @@ class DailiesTests(unittest.TestCase):
   self.assertFalse(res['publicationAuthority'])
   self.assertTrue((out/'shot-dailies.jpg').is_file())
   self.assertTrue(all(len(s['frames'])==3 for s in res['shots']))
+ def test_dark_sparse_native_like_composition_prompts_human_review(self):
+  from PIL import Image
+  a=np.zeros((360,640,3),dtype=np.uint8)
+  a[:]=[3,6,9]
+  cv2.circle(a,(320,184),12,(230,220,100),-1)
+  # A bright central dot in an otherwise near-black frame must not be called
+  # healthy simply because clipped highlights and freeze checks are absent.
+  metrics,_=m._metrics(a)
+  self.assertLess(metrics['meanLuma'],.08)
+  self.assertGreater(metrics['nearlyBlackFraction'],.70)
+  # Check the actual review logic on a 3-shot all-dark film, without using the
+  # native GPU device or pretending this fixture is original rendered evidence.
+  movie=self.root/'dark-native-like.mp4'
+  raw=self.root/'dark.avi'
+  writer=cv2.VideoWriter(str(raw),cv2.VideoWriter_fourcc(*'MJPG'),30,(320,180))
+  if not writer.isOpened():raise RuntimeError('missing_avi_writer')
+  small=cv2.resize(a,(320,180))
+  for i in range(90):
+   frame=small.copy()
+   cv2.circle(frame,(120+i%20,95),2,(230,190,90),-1)
+   writer.write(frame)
+  writer.release()
+  subprocess.run(['ffmpeg','-v','error','-y','-i',str(raw),
+    '-c:v','libx264','-pix_fmt','yuv420p',str(movie)],check=True)
+  result=m.audit(movie,self.pack,self.root/'dark-review',max_tile_width=300)
+  self.assertTrue(all('inspect_underexposed_low_mean_luminance' in row['reviewFlags'] for row in result['shots']))
+  self.assertTrue(all('inspect_overdominant_dark_negative_space' in row['reviewFlags'] for row in result['shots']))
+  self.assertFalse(result['publicationAuthority'])
  def test_stable_framed_digest(self):
   a=m.audit(self.mp4,self.pack,self.root/'repeat1',max_tile_width=300)
   b=m.audit(self.mp4,self.pack,self.root/'repeat2',max_tile_width=300)

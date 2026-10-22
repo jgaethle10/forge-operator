@@ -1,0 +1,32 @@
+name: Native GPU to Visual Floor shot dailies admission
+on:
+  pull_request:
+    paths:
+      - 'scripts/visual-floor/from-native-gpu.mjs'
+      - 'scripts/visual-floor/from-native-gpu.test.mjs'
+      - '.github/workflows/native-gpu-visual-floor.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-movie-to-quality-review-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install video decoder and existing shot dailies dependencies
+        run: |
+          command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+          python3 -m pip install -r scripts/visual-floor/requirements.txt
+      - name: Probe actual locally encoded test footage and reject forged source receipts
+        run: node --test scripts/visual-floor/from-native-gpu.test.mjs
+      - name: Confirm existing visual-floor contracts still pass
+        run: |
+          node --test scripts/visual-floor/visual-floor.test.mjs
+          python3 -m unittest discover -s scripts/visual-floor -p 'test_shot_dailies.py'
