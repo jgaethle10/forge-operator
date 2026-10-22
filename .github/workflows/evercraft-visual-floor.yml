@@ -23,6 +23,7 @@ jobs:
       - run: node --test scripts/visual-floor/visual-floor.test.mjs
       - name: Decode actual test video and pixel sample
         run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
           python -m pip install -r scripts/visual-floor/requirements.txt
           ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=size=320x180:rate=30:duration=2 -c:v libx264 -pix_fmt yuv420p /tmp/visual-floor-smoke.mp4
           python3 scripts/visual-floor/frame-audit.py /tmp/visual-floor-smoke.mp4 --samples 10 --output /tmp/visual-floor-frame-proof.json
