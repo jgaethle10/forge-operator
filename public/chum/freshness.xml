@@ -2,12 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-22T02:37:08.147Z</updated>
+<updated>2026-10-22T03:30:02.662Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:eb1119ab46acbbe2ac257ea9</id><title>/llms.txt</title><updated>2026-10-22T03:30:02.662Z</updated><link href="/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:53be437bedb2961a4981d676</id><title>/.well-known/evercraft-chum.json</title><updated>2026-10-22T03:30:02.662Z</updated><link href="/.well-known/evercraft-chum.json"/><category term="priority-84"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-22T03:30:02.662Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-22T02:37:08.147Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-22T02:37:08.147Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-22T02:37:08.147Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-22T02:37:08.147Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-21T22:57:11.718Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-21T22:57:11.718Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
@@ -28,9 +30,7 @@
 <entry><id>urn:evercraft:chum:13f966c319d488dcd1a55988</id><title>/chum/revenue.html</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/revenue.html"/><category term="priority-90"/></entry>
 <entry><id>urn:evercraft:chum:c5910dc82ba7729311c550e0</id><title>/chum/revenue.json</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/revenue.json"/><category term="priority-90"/></entry>
 <entry><id>urn:evercraft:chum:612a4f1214eb03f297993cdf</id><title>/chum/revenue.txt</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/revenue.txt"/><category term="priority-90"/></entry>
-<entry><id>urn:evercraft:chum:eb1119ab46acbbe2ac257ea9</id><title>/llms.txt</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:3512ff1e15f8ad791030cf1d</id><title>/.well-known/evercraft-agent-commerce.json</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/.well-known/evercraft-agent-commerce.json"/><category term="priority-84"/></entry>
-<entry><id>urn:evercraft:chum:53be437bedb2961a4981d676</id><title>/.well-known/evercraft-chum.json</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/.well-known/evercraft-chum.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:41b734f91fb2b72b19c734fb</id><title>/chum/agent-commerce.html</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/agent-commerce.html"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e69e17b4a8ea861ea1b9c8f7</id><title>/chum/agent-commerce.json</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/agent-commerce.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:bc8eacd8da1fea14773793d1</id><title>/chum/agent-commerce.txt</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/agent-commerce.txt"/><category term="priority-80"/></entry>

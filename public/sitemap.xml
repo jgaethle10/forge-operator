@@ -22,7 +22,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-17T08:49:39.330Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-22T02:37:08.147Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-22T03:30:02.662Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-22T02:37:08.147Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-22T02:37:08.147Z</lastmod></url>
@@ -122,7 +122,7 @@
   <url><loc>/forensiscope/distribution/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/llms.txt</loc><lastmod>2026-10-17T06:06:40.515Z</lastmod></url>
+  <url><loc>/llms.txt</loc><lastmod>2026-10-22T03:30:02.662Z</lastmod></url>
   <url><loc>/llms-full.txt</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/schema.jsonld</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
@@ -136,7 +136,7 @@
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-10-07T20:12:10.944Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-10-17T06:06:40.515Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-10-22T03:30:02.662Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/editorial/long-video-ai-tools/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
