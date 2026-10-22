@@ -46,7 +46,9 @@ test('five fixture files with pinned digests and evidence produce only a silent 
   assert.equal(report.admittedSourceCount,5);
   assert.equal(report.targetDurationSec,25);
   assert.equal(report.publicationAuthority,false);
-  assert.ok(report.editorialHolds.includes('checkout_not_verified'));
+  assert.ok(report.editorialHolds.includes('independent_checkout_verification_required'));
+  assert.equal(report.visualEvidenceReview,'not_performed');
+  assert.equal(report.rightsVerification,'document_present_only_independent_review_required');
   const plan=toFilmPlan(report);
   assert.equal(plan.scenes.length,5);
   assert.equal(plan.scenes.reduce((n,x)=>n+x.durationSec,0),25);
@@ -87,7 +89,9 @@ test('pretending checkout and founder approval is verified cannot grant release 
   input.humanPictureApproval=true;input.releaseAuthority=true;
   const report=inspectFilm(input,{workspace:root,probe});
   assert.equal(report.state,'picture_preview_ready');
-  assert.deepEqual(report.editorialHolds,[]);
+  assert.ok(report.editorialHolds.includes('independent_checkout_verification_required'));
+  assert.ok(report.editorialHolds.includes('human_picture_approval_required'));
+  assert.ok(report.editorialHolds.includes('observed_product_function_verification_required'));
   assert.equal(report.publicationAuthority,false);
   assert.equal(report.releaseAuthority,false);
 });
