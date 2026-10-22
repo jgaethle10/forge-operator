@@ -60,11 +60,7 @@ jobs:
           PY
       - name: Retrieve live GIS geometry into RESEARCH ONLY packages
         run: |
-          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
-            python systemia/evermaps/canal-solar/atlas.py --regions all
-          else
-            python systemia/evermaps/canal-solar/atlas.py --regions sunnyside_wa turlock_modesto_ca
-          fi
+          python systemia/evermaps/canal-solar/atlas.py --regions all
       - name: Save only QA-oriented manifests and internal archive bundles
         if: always()
         uses: actions/upload-artifact@v4
