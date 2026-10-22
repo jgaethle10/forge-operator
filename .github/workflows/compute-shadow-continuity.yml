@@ -1,0 +1,28 @@
+name: Compute shadow continuity source proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/shadow-continuity.mjs'
+      - 'tests/shadow-continuity.test.mjs'
+      - 'systemia/compute/SHADOW_CONTINUITY.md'
+      - '.github/workflows/compute-shadow-continuity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/compute/shadow-continuity.mjs'
+      - 'tests/shadow-continuity.test.mjs'
+      - 'systemia/compute/SHADOW_CONTINUITY.md'
+      - '.github/workflows/compute-shadow-continuity.yml'
+permissions:
+  contents: read
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove shadow evidence and fail-closed authority
+        run: node --test tests/shadow-continuity.test.mjs
