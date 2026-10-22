@@ -41,7 +41,11 @@ export function renderToonPoseAnimatic({
   guard(shot&&Number.isFinite(shot.durationSec)&&shot.durationSec>1&&shot.durationSec<=10,
     'shot_duration_invalid');
   const durations=segmentDurations(frames,shot.durationSec);
-  guard(durations.every(s=>s>=.45),'pose_segment_too_short');
+  const frameStarts=frames.map(frame=>Math.round(frame.atSec*fps));
+  const segmentFrames=frameStarts.map((start,i)=>
+    (frameStarts[i+1]??Math.round(shot.durationSec*fps))-start);
+  guard(segmentFrames.every(count=>count>=Math.round(.45*fps)),
+    'pose_segment_too_short');
   guard(durations.reduce((a,b)=>a+b,0)>0,'empty_segment');
   const root=fs.realpathSync(bundleDir);
   const output=path.resolve(outDir);
@@ -51,21 +55,22 @@ export function renderToonPoseAnimatic({
   const args=['-hide_banner','-loglevel','error','-y'];
   for(const [i,frame] of frames.entries()){
     args.push('-loop','1','-framerate',String(fps),
-      '-t',String(durations[i]),'-i',path.join(root,frame.file));
+      '-t',String((segmentFrames[i]+1)/fps),'-i',path.join(root,frame.file));
   }
   args.push('-i',path.join(root,manifest.dialogueAudio.file));
   const filters=[];
   for(let i=0;i<frames.length;i++){
-    // One authored drawing per actual acting beat. The camera gradually pushes
-    // in, but the drawing itself is never misrepresented as character animation.
-    // Slight alternation prevents identical compositional crops at every cut.
+    // Each real approved pose is a discrete acting beat with a subtle camera
+    // move. Never claim interpolation of missing drawings or a rigged actor.
     const dx=i%2===0?'iw/2-(iw/zoom/2)':'(iw-iw/zoom)*0.35';
     const dy=i%2===0?'ih/2-(ih/zoom/2)':'(ih-ih/zoom)*0.55';
-    filters.push('['+i+':v]scale='+Math.ceil(width*1.1)+':'+Math.ceil(height*1.1)+
-      ':force_original_aspect_ratio=increase,crop='+Math.ceil(width*1.1)+
-      ':'+Math.ceil(height*1.1)+',zoompan=z=\\'min(zoom+0.001,1.12)\\':x=\\''+
-      dx+'\\':y=\\''+dy+'\\':d=1:s='+width+'x'+height+':fps='+fps+
-      ',setsar=1,trim=duration='+durations[i]+',setpts=PTS-STARTPTS[v'+i+']');
+    const zoom="zoompan=z='min(zoom+0.001,1.12)':x='"+dx+
+      "':y='"+dy+"':d=1:s="+width+"x"+height+":fps="+fps;
+    const iw=Math.ceil(width*1.1/2)*2,ih=Math.ceil(height*1.1/2)*2;
+    filters.push('['+i+':v]scale='+iw+':'+ih+
+      ':force_original_aspect_ratio=increase,crop='+iw+':'+ih+
+      ','+zoom+',setsar=1,trim=end_frame='+segmentFrames[i]+
+      ',setpts=PTS-STARTPTS[v'+i+']');
   }
   filters.push(frames.map((_,i)=>'[v'+i+']').join('')+
     'concat=n='+frames.length+':v=1:a=0,fps='+fps+',format=yuv420p[video]');
