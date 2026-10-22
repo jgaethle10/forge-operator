@@ -200,12 +200,27 @@ try{
       },{shaderSource:shader.source,frames:input.frames});
       const rendered=proof.rendered.map(frame=>{
         const raw=Buffer.from(frame.pixels);
+        // Measure actual GPU pixel occupancy, not decorative HTML or source input claims.
+        // The expected background color is sampled from the raw framebuffer corner.
+        const background=[raw[0],raw[1],raw[2]];
+        let occupiedPixels=0;
+        const paletteBins=new Set();
+        for(let offset=0;offset<raw.length;offset+=4){
+          const r=raw[offset],g=raw[offset+1],b=raw[offset+2];
+          if(Math.max(Math.abs(r-background[0]),Math.abs(g-background[1]),Math.abs(b-background[2]))>12)occupiedPixels++;
+          paletteBins.add((r>>4)+':'+(g>>4)+':'+(b>>4));
+        }
+        // 320x200 screen: >45% visual occupancy and a minimum of 8 coarse colors.
+        if(occupiedPixels<29000||paletteBins.size<8){
+          throw Error('rc13_gpu_visual_composition_underfilled:'+frame.sector+':'+occupiedPixels+':'+paletteBins.size);
+        }
         const png=Buffer.from(frame.png,'base64');
         const name='rc13-'+frame.sector+'-tick'+String(frame.tick).padStart(3,'0')+'.png';
         fs.writeFileSync(path.join(outputDir,name),png);
         return{sector:frame.sector,tick:frame.tick,drawCount:frame.drawCount,
           filename:name,sha256:sha256(png),rawPixelSha256:sha256(raw),
-          swatches:frame.swatches,planDigest:frame.planDigest,raw};
+          swatches:frame.swatches,planDigest:frame.planDigest,
+          occupiedPixels,occupancyRatio:Number((occupiedPixels/64000).toFixed(4)),paletteBinCount:paletteBins.size,raw};
       });
       for(const sector of ['response','sports']){
         const [start,end]=rendered.filter(f=>f.sector===sector).sort((a,b)=>a.tick-b.tick);
