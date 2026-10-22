@@ -65,6 +65,11 @@ B=[
  ('thumb_R','hand_R',(.73,-.05,.86),(.62,-.10,.91)),
  ('index_R','hand_R',(.75,-.05,.82),(.8,-.1,.68)),
  ('middle_R','hand_R',(.77,-.05,.82),(.84,-.1,.67)),
+ ('ring_R','hand_R',(.66,-.05,.805),(.68,-.08,.71)),
+ ('pinky_R','hand_R',(.771,-.05,.805),(.785,-.07,.739)),
+ ('middle_L','hand_L',(-.735,-.05,.805),(-.75,-.08,.692)),
+ ('ring_L','hand_L',(-.66,-.05,.805),(-.68,-.08,.713)),
+ ('pinky_L','hand_L',(-.771,-.05,.805),(-.785,-.07,.739)),
  ('thumb_L','hand_L',(-.7,-.04,.86),(-.61,-.08,.90)),
  ('index_L','hand_L',(-.68,-.04,.82),(-.72,-.09,.68)),
  ('hip_L','root',(-.19,0,.92),(-.21,0,.71)),
@@ -175,11 +180,12 @@ if not APPEAL.is_file():raise RuntimeError('V4 art file missing; render held')
 exec(compile(APPEAL.read_text(),str(APPEAL),'exec'),globals())
 
 # Animation: calm glance -> notice -> anticipate -> snap -> relax; all 3D pose data.
-def pose_key(frame,torso=0,head_z=0,upper=-0.10,forearm=0,hand=0,index=0,thumb=0,smile=0):
+def pose_key(frame,torso=0,head_z=0,upper=-0.10,forearm=0,hand=0,index=0,thumb=0,smile=0,middle=0,ring=0,pinky=0):
     scene.frame_set(frame)
     values={'spine':('Y',torso),'head':('Z',head_z),
       'upper_arm_R':('Z',upper),'forearm_R':('Z',forearm),
-      'hand_R':('Z',hand),'index_R':('X',index),'thumb_R':('X',thumb)}
+      'hand_R':('Z',hand),'index_R':('X',index),'thumb_R':('X',thumb),
+      'middle_R':('X',middle),'ring_R':('X',ring),'pinky_R':('X',pinky)}
     for bone,(axis,angle) in values.items():
         pb=arm.pose.bones[bone]
         pb.rotation_mode='XYZ'
@@ -191,12 +197,30 @@ def pose_key(frame,torso=0,head_z=0,upper=-0.10,forearm=0,hand=0,index=0,thumb=0
 
 pose_key(1,head_z=-.14,smile=.10)
 pose_key(9,head_z=.05,upper=-.1,smile=.55)
-pose_key(18,head_z=.12,upper=-.70,forearm=-.65,hand=.28,index=.25,thumb=-.20,smile=.9)
-pose_key(24,head_z=.11,upper=-.82,forearm=-.90,hand=.40,index=.6,thumb=.25,smile=1)
-pose_key(26,head_z=.12,upper=-.82,forearm=-.90,hand=.08,index=-.20,thumb=-.35,smile=1)
-pose_key(29,head_z=.08,upper=-.78,forearm=-.83,hand=.10,index=.1,thumb=.10,smile=.85)
+# A real multi-joint performance curve, not the old single static finger point.
+# Staging: raise -> middle/thumb pressure -> one-frame release -> reaction.
+pose_key(18,head_z=.12,upper=-.70,forearm=-.65,hand=.28,index=.15,thumb=-.20,middle=.23,ring=.10,pinky=.16,smile=.9)
+pose_key(23,head_z=.11,upper=-.81,forearm=-.87,hand=.37,index=.17,thumb=-.40,middle=.73,ring=.25,pinky=.30,smile=1)
+pose_key(24,head_z=.11,upper=-.82,forearm=-.90,hand=.40,index=.19,thumb=-.46,middle=.94,ring=.25,pinky=.30,smile=1)
+pose_key(25,head_z=.12,upper=-.84,forearm=-.92,hand=-.12,index=.12,thumb=.30,middle=-.38,ring=.14,pinky=.18,smile=1)
+pose_key(26,head_z=.12,upper=-.82,forearm=-.90,hand=.08,index=-.20,thumb=-.35,middle=-.18,ring=.12,pinky=.12,smile=1)
+pose_key(29,head_z=.08,upper=-.78,forearm=-.83,hand=.10,index=.1,thumb=.10,middle=.05,ring=.08,pinky=.10,smile=.85)
 pose_key(48,head_z=-.08,upper=-.13,forearm=0,hand=0,index=0,thumb=0,smile=.30)
 
+
+
+# Finger performance is objective evidence only. The creative gate still
+# requires a human closeup to decide whether the finger SNAP reads.
+right_digts=['thumb_R','index_R','middle_R','ring_R','pinky_R']
+if any(b not in arm.pose.bones for b in right_digts):
+    raise RuntimeError('SNAP_RIG_BLOCKED: missing independent right digits')
+scene.frame_set(24)
+press_middle=float(arm.pose.bones['middle_R'].rotation_euler.x)
+scene.frame_set(25)
+release_middle=float(arm.pose.bones['middle_R'].rotation_euler.x)
+release_delta=abs(press_middle-release_middle)
+if release_delta<.8:
+    raise RuntimeError('SNAP_RIG_BLOCKED: insufficient middle finger release')
 
 # Fail if the hand does not visibly travel: the first rig was structurally
 # sound but only twisted along bone axes and never performed a readable snap.
@@ -228,6 +252,9 @@ report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
   'rendered_frames':len(render_frames),
   'visual_design_approved':False,'performance_approved':False,
   'armature_bones':len(arm.data.bones),'face_shapes':len(head.data.shape_keys.key_blocks)-1,
+  'snap_middle_release_radians':round(release_delta,3),
+  'independent_right_finger_bones':right_digts,
+  'snap_creative_approval':False,
   'screen_hand_travel_px':round(screenTravel,2),'start_wrist':start,'snap_contact_wrist':raised,'snap_release_wrist':released,
   'note':'V4 Blender 3D look-development study. Warm lighting and shaped hair. NOT creative-approved.'}
 (out/'proof.json').write_text(json.dumps(report,indent=2))
