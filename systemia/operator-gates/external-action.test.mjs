@@ -71,3 +71,21 @@ test('physical scheduling requires approval of exact time and place',()=>{
   assert.equal(moved.decision,'deny');
   assert.ok(moved.reasons.includes('approved_action_changed'));
 });
+
+test('approval binds actor division purpose and contact, not just message text',()=>{
+ const base={
+  action_type:'send_email',target_ref:'contact:partner',
+  subject_ref:'contact:partner',actor_ref:'agent:owned',
+  division_id:'evercraft-home',purpose:'meeting_scheduling',
+  exact_content:'Would you like to review the example?'
+ };
+ const fp=fingerprintExternalAction(base);
+ const approved={...base,human_approval_state:'explicit',
+   human_approval_ref:'operator:approval-1',approved_action_fingerprint:fp};
+ assert.equal(evaluateExternalAction(approved).decision,'allow');
+ for(const field of ['actor_ref','division_id','purpose','subject_ref']){
+   const altered=evaluateExternalAction({...approved,[field]:'different'});
+   assert.equal(altered.decision,'deny',field);
+   assert.ok(altered.reasons.includes('approved_action_changed'));
+ }
+});
