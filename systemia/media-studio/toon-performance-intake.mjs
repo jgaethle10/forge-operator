@@ -135,6 +135,50 @@ export function verifyToonPerformanceBundle({packet,shotId,bundleDir,manifest,en
   }else{
     guard(!manifest.dialogueAudio,'unexpected_speech_asset');
   }
+  let sceneFrames=null;
+  if(manifest.sceneFrames!==undefined){
+    guard(Array.isArray(manifest.sceneFrames)&&manifest.sceneFrames.length>=2&&
+      manifest.sceneFrames.length<=5,'pose_count_requires_2_to_5');
+    const ids=new Set(),frames=[];
+    let lastTime=-1;
+    for(const frame of manifest.sceneFrames){
+      guard(frame&&typeof frame.id==='string'&&/^[a-z0-9-]{3,64}$/.test(frame.id)&&
+        !ids.has(frame.id),'pose_id_invalid');
+      ids.add(frame.id);
+      guard(actor.referenceAssetIds.includes(frame.referenceAssetId),'pose_reference_not_locked');
+      guard(frame.actorId===actor.id,'pose_actor_mismatch');
+      guard(frame.rightsClaim==='owned'||frame.rightsClaim==='licensed',
+        'pose_rights_undeclared');
+      guard(frame.reviewState==='declared_approved'&&
+        typeof frame.reviewEvidenceRef==='string'&&frame.reviewEvidenceRef.length>=8,
+        'pose_review_not_declared');
+      guard(typeof frame.performanceBeat==='string'&&frame.performanceBeat.trim().length>=8,
+        'pose_performance_beat_missing');
+      guard(typeof frame.atSec==='number'&&Number.isFinite(frame.atSec)&&
+        frame.atSec>=0&&frame.atSec<shot.durationSec,'pose_time_invalid');
+      guard(frame.atSec>lastTime+.45,'pose_time_not_spaced');
+      lastTime=frame.atSec;
+      const bytes=readBoundAsset(bundleDir,frame.file,frame.sha256,5*1024*1024);
+      const ex=path.extname(frame.file).toLowerCase(),kind=extensions[ex];
+      guard(kind&&(kind==='image/png'?isPng(bytes.bytes):isJpeg(bytes.bytes)),
+        'pose_image_magic_invalid');
+      const info=probe(bytes.full).streams?.find(stream=>stream.codec_type==='video');
+      guard(Number.isInteger(info?.width)&&Number.isInteger(info?.height)&&
+        info.width>=960&&info.height>=540,'pose_image_too_small');
+      frames.push({id:frame.id,actorId:actor.id,referenceAssetId:frame.referenceAssetId,
+        file:frame.file,sha256:frame.sha256,atSec:frame.atSec,
+        performanceBeat:frame.performanceBeat,rightsClaim:frame.rightsClaim,
+        reviewEvidenceRef:frame.reviewEvidenceRef,bytesVerified:true});
+    }
+    guard(frames[0].atSec===0,'pose_first_time_must_be_zero');
+    guard(frames[0].sha256===image.sha256&&
+      frames[0].referenceAssetId===image.referenceAssetId,
+      'pose_first_frame_must_bind_identity');
+    guard(new Set(frames.map(frame=>frame.sha256)).size===frames.length,
+      'pose_artwork_must_visibly_differ');
+    guard(shot.durationSec-lastTime>=.5,'pose_last_hold_too_short');
+    sceneFrames=frames;
+  }
   const ref={
     schema:'evercraft.fallen.toon-approved-frame.v1',
     actorId:actor.id,referenceAssetId:image.referenceAssetId,
@@ -157,7 +201,7 @@ export function verifyToonPerformanceBundle({packet,shotId,bundleDir,manifest,en
       likenessAndAnatomyVerified:false,
       commercialRightsIndependentlyVerified:false,
     },
-    dialogue,modelPlan:model.modelPlan,
+    dialogue,sceneFrames,modelPlan:model.modelPlan,
     providerExecutionEligible:false,
     actualProviderGeneration:false,
     actualExpressiveVoiceQualityVerified:false,
