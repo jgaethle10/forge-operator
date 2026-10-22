@@ -129,6 +129,7 @@ export async function runResidentModelDecision({
     const modelResult=parseResult(raw,provider,model);
     reportedCost=modelResult.usage.cost_micro_usd;
     requestId=modelResult.request_id;
+    if(modelResult.usage.output_tokens>gate.max_tokens)throw Error('Provider exceeded reserved output-token limit');
     if(reportedCost>gate.max_cost_micro_usd)throw Error('Provider reported spend above approved cap');
     // Provider request ID must be new within the committed world.
     if(world.agent_experiment_v1?.receipts?.some(r=>r.provider_request_id===requestId))
