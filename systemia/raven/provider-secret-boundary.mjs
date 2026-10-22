@@ -21,7 +21,7 @@ function vaultSecrets(env) {
     return { kaggle: null, numerai: null };
   }
   try {
-    const vault = new ProviderCredentialVault({ stateDir });
+    const vault = new ProviderCredentialVault({ stateDir, readOnly: true });
     const kaggleMeta = vault.list({ provider: "kaggle" })[0] || null;
     const numeraiMeta = vault.list({ provider: "numerai" })[0] || null;
     const kaggleRaw = kaggleMeta ? vault.readSecret(kaggleMeta.credential_ref) : null;
