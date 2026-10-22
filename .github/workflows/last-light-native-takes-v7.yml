@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/media-studio/last-light-v7-native-full-takes.py'
       - 'systemia/media-studio/test_last_light_v7_native_full_takes.py'
+      - 'systemia/media-studio/last-light-v8-acoustic-sync.py'
+      - 'systemia/media-studio/test_last_light_v8_acoustic_sync.py'
       - '.github/workflows/last-light-native-takes-v7.yml'
   workflow_dispatch:
 
@@ -73,4 +75,38 @@ jobs:
         with:
           name: internal-v7-full-original-takes-unapproved
           path: /tmp/v7-instrument-stems/
+          retention-days: 14
+      - name: V8 exact natural-bow rise-alignment regression tests with 3 real WAVs
+        env:
+          LL_V7_SOURCE_ZIP: /tmp/v7-raw-source.zip
+        run: |
+          python -m unittest discover -v \
+            -s systemia/media-studio \
+            -p 'test_last_light_v8_acoustic_sync.py'
+      - name: Independently render V8 native cello and violin score placements
+        run: |
+          python systemia/media-studio/last-light-v8-acoustic-sync.py \
+            --sources /tmp/v7-raw-source.zip \
+            --out /tmp/v8-original-bow-alignment
+          python - <<'PY'
+          import hashlib,json,pathlib
+          p=pathlib.Path('/tmp/v8-original-bow-alignment')
+          receipt=json.loads((p/'V8_SOUND_RECEIPT.json').read_text())
+          assert receipt['human_approval'] is False
+          assert receipt['piano_recreated'] is False
+          assert len(receipt['output_sha256'])==4
+          for variant,notes in receipt['placements'].items():
+           actual={x['id']:x for x in notes}
+           assert abs(actual['violin_G4']['onset_error_ms'])<=20
+           expected='cello_G3'
+           assert abs(actual[expected]['onset_error_ms'])<=20
+          for f,h in receipt['output_sha256'].items():
+           assert hashlib.sha256((p/f).read_bytes()).hexdigest()==h
+          print('V8 VERIFIED: real intact acoustic string recordings, synced arrivals, no piano forgery')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-last-light-v8-unaltered-bow-synced-first-rise
+          path: /tmp/v8-original-bow-alignment/
           retention-days: 14
