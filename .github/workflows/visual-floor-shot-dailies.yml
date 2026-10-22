@@ -1,0 +1,25 @@
+name: Evercraft Visual Floor Shot Dailies
+on:
+  pull_request:
+    paths:
+      - 'scripts/visual-floor/**'
+      - '.github/workflows/visual-floor-shot-dailies.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  shot-dailies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install headless decoder and video probe
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install -r scripts/visual-floor/requirements-shot-dailies.txt
+      - name: Decode real synthetic footage and enforce shot evidence tests
+        run: python -m unittest discover -v -s scripts/visual-floor -p 'test_shot_dailies.py'
