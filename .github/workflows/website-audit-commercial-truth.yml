@@ -1,0 +1,22 @@
+name: Website audit commercial truth
+on:
+  pull_request:
+    paths:
+      - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'public/chum/capabilities.json'
+      - 'systemia/organism/product-fulfillment-registry.json'
+      - 'tests/website-audit-commercial-truth.test.mjs'
+      - '.github/workflows/website-audit-commercial-truth.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  truthful-offer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/website-audit-commercial-truth.test.mjs
