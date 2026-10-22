@@ -915,7 +915,7 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
   // broken translucent noise without any external foam image/texture.
   // shadowFlags.z = -2 is a dedicated opt-in original foam marker;
   // never changes ordinary World Engine materials, animated water, or UI.
-  if (object.shadowFlags.z < -1.5) {
+  if (object.shadowFlags.z < -1.5 && object.shadowFlags.z > -2.5) {
     let side = clamp(input.uv.x,0.0,1.0);
     let along = clamp(input.uv.y,0.0,1.0);
     let edgeDistance=min(side,1.0-side);
@@ -928,6 +928,32 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     let dissolve=smoothstep(0.18,0.78,0.58*ripple+0.42*breakup);
     base.a *= edgeFade*ends*(0.23+0.77*dissolve);
     base.rgb=mix(base.rgb,vec3<f32>(0.15,0.23,0.27),0.25);
+  }
+  // The same real 3D mesh UVs carry source-authored plating. The longitudinal
+  // domain is continuous through 48 loft stations, so no film-space seams or
+  // moving-world-space texture swim. This is illustrative steel weathering,
+  // neither historic naval paint nor measured microfacet performance.
+  if (object.shadowFlags.z < -2.5 && object.shadowFlags.z > -3.5) {
+    let u = clamp(input.uv.x, 0.0, 1.0);
+    let v = clamp(input.uv.y, 0.0, 1.0);
+    // Avoid stamping vertical plating seams on the cambered horizontal deck.
+    let sideMask = 1.0 - smoothstep(0.6, 0.88, abs(input.normal.y));
+    let strake = smoothstep(0.0, 0.10, abs(sin(v * 30.0 * 3.14159265)));
+    let butt = smoothstep(0.0, 0.13, abs(sin((u * 42.0 + floor(v * 10.0) * .41) * 3.14159265)));
+    let panelLine = sideMask * (1.0 - min(strake, butt));
+    let grain = sin(u * 213.4 + 2.8 * sin(v * 31.2)) *
+      sin(v * 99.8 + 2.1 * sin(u * 49.6));
+    let micro = sin(u * 493.1 + v * 227.4) * sin(v * 385.3 - u * 157.2);
+    let wear = 0.5 + 0.5 * grain;
+    // Low-contrast, varied steel instead of identical flat gray triangles.
+    base.rgb *= (0.935 + 0.067 * wear + 0.018 * micro);
+    base.rgb *= (1.0 - 0.15 * panelLine);
+    let streak = pow(0.5 + 0.5 * sin(u * 146.0 + v * 97.0), 6.0);
+    let weather = sideMask * streak * 0.15 * (0.36 + 0.64 * wear);
+    base.rgb = mix(base.rgb, vec3<f32>(0.18, 0.155, 0.142),
+      clamp(weather, 0.0, 0.14));
+    roughness = clamp(roughness + sideMask * (0.045 * grain + 0.075 * weather), 0.18, 0.92);
+    metallic = clamp(metallic * (1.0 - weather * 0.34), 0.0, 1.0);
   }
   if (alphaCutoff >= 0.0 && base.a < alphaCutoff) {
     discard;
