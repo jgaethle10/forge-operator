@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#07111f"/>
+  <meta name="robots" content="noindex,nofollow"/>
+  <title>EverMaps | Evercraft Owned Preview</title>
+  <meta name="description" content="Evercraft-owned map exploration and source-qualified Pacific Northwest wildfire incident observations."/>
+  <link rel="stylesheet" href="/evermaps/style.css"/>
+  <script defer type="module" src="/evermaps/app.js"></script>
+</head>
+<body>
+  <main id="evermaps-app">
+    <header class="em-header">
+      <a href="/evermaps/" class="em-brand" aria-label="EverMaps home">
+        <span class="em-brand-glyph" aria-hidden="true">◎</span>
+        <span>Ever<span class="em-brand-strong">Maps</span></span>
+      </a>
+      <div class="em-header-right"><span class="em-stage">OWNED RUNTIME PREVIEW</span><a class="em-home" href="/">Evercraft Forge ↗</a></div>
+    </header>
+
+    <section class="em-top">
+      <div class="em-overline">EVERCRAFT WORLD INTELLIGENCE <span> / </span> RC001</div>
+      <h1>The world, with its sources attached.</h1>
+      <p>Explore the map and examine public incident records without confusing a report with an active fire. This is an Evercraft-owned preview, not an emergency operations product.</p>
+    </section>
+
+    <section class="em-workspace" aria-label="Interactive map explorer">
+      <div class="em-map-shell">
+        <div class="em-map-heading">
+          <div class="em-map-location"><span class="em-live-dot" aria-hidden="true"></span><span>Pacific Northwest</span><small id="em-zoom-label">Regional map</small></div>
+          <div class="em-map-actions">
+            <button class="em-tool" id="em-home-button" type="button" aria-label="Center on Yakima">⌖ <span>Yakima</span></button>
+            <button class="em-tool" id="em-decrease" type="button" aria-label="Zoom out">−</button>
+            <button class="em-tool" id="em-increase" type="button" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+        <div id="em-map" class="em-map" role="application" aria-label="Pacific Northwest map. Drag to pan, scroll or use buttons to zoom.">
+          <svg id="em-fallback" class="em-fallback" role="img" aria-label="Simplified public-domain regional land and coastline outline"></svg>
+          <div id="em-tiles" class="em-tiles" aria-hidden="true"></div>
+          <div id="em-markers" class="em-markers" aria-label="Source-reported wildfire incident locations"></div>
+          <div class="em-map-compass" aria-hidden="true">N ↑</div>
+
+          <div id="em-map-instruction" class="em-map-hint">Drag to pan · use + / − to zoom</div>
+        </div>
+        <div class="em-map-foot">
+          <span>Source-reported locations only</span>
+          <span>Not fire perimeters, flame fronts, or evacuation directions</span>
+          <div class="em-map-credit">
+            Fallback land: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth (public domain)</a> · Tiles © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="em-panel" aria-label="Incident observations and source status">
+        <div class="em-panel-top">
+          <span class="em-panel-kicker">SOURCE-QUALIFIED LAYER</span>
+          <h2>Wildfire incident reports</h2>
+          <p>National Interagency Fire Center, current wildfire incident location records. These are reports, not a confirmation of ongoing combustion.</p>
+        </div>
+
+        <div class="em-layer-toggle">
+          <div><strong>Reported incidents</strong><span>Pacific Northwest · NIFC WFIGS</span></div>
+          <label class="em-switch"><input type="checkbox" id="em-layer-toggle" checked aria-label="Show NIFC incident reports"/><span class="em-switch-track"></span></label>
+        </div>
+
+        <div id="em-source" class="em-source" role="status" aria-live="polite">
+          <span class="em-source-pulse" aria-hidden="true"></span>
+          <span>Checking source…</span>
+        </div>
+
+        <div class="em-metrics">
+          <div><span>Records returned</span><strong id="em-count">—</strong></div>
+          <div><span>Groups on map</span><strong id="em-groups">—</strong></div>
+        </div>
+
+        <div class="em-list-head">
+          <strong>Incident observations</strong>
+          <button id="em-refresh" type="button">Refresh ↻</button>
+        </div>
+        <div id="em-list" class="em-list" aria-label="Recent source incident records">
+          <p class="em-empty">Awaiting source response.</p>
+        </div>
+        <div class="em-source-foot">
+          <span id="em-fetched">Source check pending</span>
+          <a href="https://www.nifc.gov/fire-information/maps" target="_blank" rel="noreferrer">Official NIFC maps ↗</a>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="em-footer">
+      <p><strong>Evidence before interpretation.</strong> A reported incident may be fully contained, extinguished, or outdated. No marker is an official evacuation order, safety clearance, or indication that flames are currently burning. Verify with local authorities.</p>
+      <p>Evercraft-owned code and API · regional preview · real-world safety guidance not provided · no location permissions or Rewards Points used</p>
+    </footer>
+  </main>
+</body>
+</html>
