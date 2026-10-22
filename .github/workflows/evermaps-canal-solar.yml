@@ -1,0 +1,54 @@
+name: EverMaps Canal Solar Evidence Pipeline
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/evermaps/canal-solar/**'
+      - '.github/workflows/evermaps-canal-solar.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests shapely pyproj
+      - name: Run offline correctness and fail-closed tests
+        run: python -m unittest discover -s systemia/evermaps/canal-solar/tests -v
+
+  extract:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests shapely pyproj
+      - name: Retrieve live GIS geometry into RESEARCH ONLY packages
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            python systemia/evermaps/canal-solar/atlas.py --regions all
+          else
+            python systemia/evermaps/canal-solar/atlas.py --regions sunnyside_wa turlock_modesto_ca
+          fi
+      - name: Save only QA-oriented manifests and internal archive bundles
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evermaps-canal-solar-research-only
+          path: |
+            systemia/evermaps/canal-solar/out/**/manifest.json
+            systemia/evermaps/canal-solar/out/*_RESEARCH_ONLY.zip
+          if-no-files-found: warn
+          retention-days: 5
