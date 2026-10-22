@@ -10,7 +10,7 @@ import officialReferrals from './economic-pressure-review-referrals.json' with {
  * and reviewed, expiring official assistance links. No financial figures,
  * local deals, eligibility grants or live collector data are fabricated.
  */
-export function buildReviewProof(now = new Date('2026-10-14T23:30:00.000Z')) {
+export function buildReviewProof(now = new Date()) {
   const evidence = reviewed.snapshots.map(snapshot => ({
     metric: snapshot.metric,
     geography: snapshot.geography,
