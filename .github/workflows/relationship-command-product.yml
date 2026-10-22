@@ -8,6 +8,8 @@ on:
       - 'systemia/crm/customer-workspace.test.mjs'
       - 'systemia/crm/customer-vault.mjs'
       - 'systemia/crm/customer-vault.test.mjs'
+      - 'systemia/crm/customer-api.mjs'
+      - 'systemia/crm/customer-api.test.mjs'
       - 'systemia/crm/product-surface.test.mjs'
       - 'systemia/crm/commercial-offer.json'
       - 'systemia/crm/COMMERCIAL.md'
@@ -28,4 +30,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify tenant privacy and customer-facing preview
-        run: node --test systemia/crm/customer-workspace.test.mjs systemia/crm/customer-vault.test.mjs systemia/crm/product-surface.test.mjs
+        run: node --test systemia/crm/customer-workspace.test.mjs systemia/crm/customer-vault.test.mjs systemia/crm/customer-api.test.mjs systemia/crm/product-surface.test.mjs
