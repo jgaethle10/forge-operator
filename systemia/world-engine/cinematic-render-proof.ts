@@ -665,7 +665,7 @@ async function main(){
   const audio=measure.streams?.find((s:any)=>s.codec_type==='audio');
   if(!stream||stream.codec_name!=='h264'||stream.width!==WIDTH||stream.height!==HEIGHT||
     Number(stream.nb_frames)!==DURATION*FPS||
-    (isBattleship?Boolean(audio):(!audio||audio.codec_name!=='aac'||audio.channels!==2||audio.sample_rate!=='48000'))){
+    ((isBattleship||isDataConstellation)?Boolean(audio):(!audio||audio.codec_name!=='aac'||audio.channels!==2||audio.sample_rate!=='48000'))){
     throw new Error('cinematic_master_contract_invalid');
   }
   const stills=[];
@@ -684,6 +684,7 @@ async function main(){
       legacySceneOptInOnly:true,historicalWeatherAuthenticated:false,
       physicallyScatteredAtmosphere:false,publicationAuthority:false}}:{}),
     textureAssetDigests:textures.map(asset=>({id:asset.id,digest:textureAssetDigest(asset)})),
+    ...(constellation?{dataConstellation:{...constellation.receipt,sourceNativeWebGpuScene:true,shaderFrameReadbackRequired:true}}:{}),
     ...(sequence.actorRigProof?{actorMotion:{...sequence.actorRigProof,
       firstAnimatedFrameDigest:sequence.frames[0].actorMotionDigest,
       lastAnimatedFrameDigest:sequence.frames[sequence.frames.length-2].actorMotionDigest,
@@ -726,9 +727,9 @@ async function main(){
     shadowCounterfactualChangedPixels:raw.counterfactualChangedPixels,
     shadowFilterChangedPixels:raw.filterChangedPixels,
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
-      durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:isBattleship?null:'aac'},
+      durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:(isBattleship||isDataConstellation)?null:'aac'},
     stills,sourceState:'synthetic_visualization',
-    sceneType:isSilhouette?'procedural_four_distinct_ship_classes_not_full_reconstruction':isFormation?'procedural_four_vessel_illustrative_not_historical_tracks':isBattleship?'procedural_battleship':'procedural_industrial_rotor',
+    sceneType:isSilhouette?'procedural_four_distinct_ship_classes_not_full_reconstruction':isFormation?'procedural_four_vessel_illustrative_not_historical_tracks':isBattleship?'procedural_battleship':isDataConstellation?'original_3d_synthetic_data_constellation':'procedural_industrial_rotor',
     ...(native?{nativeFormat:{
       format:native.spec.format,
       viewport:native.spec.viewport,
@@ -743,7 +744,7 @@ async function main(){
       humanCreativeReviewRequired:true,
       publicationAuthority:false
     }}:{}),
-    soundState:isBattleship?'silent_at_founder_direction_no_sound_invented':'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
+    soundState:(isBattleship||isDataConstellation)?'silent_at_founder_direction_no_sound_invented':'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
     soundReceipt,
     visualReviewState:'unreviewed',publicationAuthority:false,paidProductionReady:false,
     claims:['Real owned-WGSL shader pixels rendered from canonical World Engine moving 3D camera frame plans',
