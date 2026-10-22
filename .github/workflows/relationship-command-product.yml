@@ -1,0 +1,31 @@
+name: Relationship Command product preflight
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'systemia/crm/customer-workspace.mjs'
+      - 'systemia/crm/customer-workspace.test.mjs'
+      - 'systemia/crm/customer-vault.mjs'
+      - 'systemia/crm/customer-vault.test.mjs'
+      - 'systemia/crm/product-surface.test.mjs'
+      - 'systemia/crm/commercial-offer.json'
+      - 'systemia/crm/COMMERCIAL.md'
+      - 'public/products/systemia-relationship-command/**'
+      - 'public/demos/systemia-relationship-command/**'
+      - '.github/workflows/relationship-command-product.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  commercial-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify tenant privacy and customer-facing preview
+        run: node --test systemia/crm/customer-workspace.test.mjs systemia/crm/customer-vault.test.mjs systemia/crm/product-surface.test.mjs
