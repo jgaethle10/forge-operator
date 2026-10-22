@@ -64,6 +64,17 @@ class DailiesTests(unittest.TestCase):
  def test_tampered_work_order_digest_blocked(self):self.reject(lambda a:a['visualFloor']['workOrder']['beats'][0].update(intent='fabricated content'),'work_order_digest_mismatch')
  def test_fps_mismatch_blocked(self):self.reject(lambda a:a.update(fps=24),'jobpack_video_format_mismatch')
  def test_publishing_authority_blocked(self):self.reject(lambda a:a['visualFloor'].update(publicationAuthority=True),'publication_authority_unsafe')
+ def test_actual_js_planfloor_digest_cross_runtime(self):
+  # Exercise the production JavaScript implementation, not a Python approximation.
+  js="""import {planFloor} from './visual-floor.mjs';
+import process from 'node:process';
+const workOrder=planFloor({assetId:'test-001',profile:'cinematic_fx',target:{width:320,height:180,fps:30,durationSec:3},beats:['shot-0','shot-1','shot-2'].map(id=>({id,intent:'Cinematic intentional visual proof',visualProof:'actual rendered pixel'}))});
+process.stdout.write(JSON.stringify(workOrder));"""
+  actual=json.loads(subprocess.check_output(['node','--input-type=module','-e',js],text=True,cwd=str(Path(__file__).parent)))
+  pack=json.loads(json.dumps(self.base));pack['visualFloor']['workOrder']=actual
+  file=self.root/'real-js-jobpack.json';file.write_text(json.dumps(pack))
+  result=m.audit(self.mp4,file,self.root/'js-parity',max_tile_width=300)
+  self.assertEqual(result['input']['workOrderDigest'],actual['digest'])
  def test_real_media_mutation_changes_media_digest(self):
   p=self.root/'other.mp4'
   subprocess.run(['ffmpeg','-v','error','-y','-i',str(self.mp4),'-vf','eq=brightness=0.1','-c:v','libx264',str(p)],check=True)
