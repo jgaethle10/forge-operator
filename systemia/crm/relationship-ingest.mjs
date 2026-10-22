@@ -1,5 +1,7 @@
-import {createHash} from 'node:crypto';
-import {validateRelationshipRecord} from './relationship-policy.mjs';
+import {createHash,randomBytes} from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import {validateRelationshipRecord,readPrivateRelationships} from './relationship-policy.mjs';
 
 const digest=v=>'sha256:'+createHash('sha256').update(v).digest('hex');
 const required=(v,n)=>{if(typeof v!=='string'||!v.trim())throw Error(n+'_required');return v.trim()};
@@ -76,4 +78,42 @@ export function appendRelationshipEvidence({
   contact_permission_granted:false,outbound_policy_unchanged:!!existing,
   mutation_performed:true
  }};
+}
+
+
+/** Append in an owner-controlled private directory, serialized by a lock. */
+export function persistPrivateRelationshipEvidence({
+ file='',initial=null,event=null,now=new Date()
+}={}) {
+ if(typeof file!=='string'||!file.trim())throw Error('private_relationship_path_required');
+ const absolute=path.resolve(file),dir=path.dirname(absolute);
+ const root=fs.lstatSync(dir);
+ if(!root.isDirectory()||root.isSymbolicLink()||
+   (process.platform!=='win32'&&(root.mode&0o077)!==0))
+   throw Error('private_relationship_directory_unsafe');
+ const lock=absolute+'.lock';
+ fs.mkdirSync(lock,{mode:0o700});
+ let tmp='';
+ try{
+   let ledger={schema:'evercraft.crm.relationship-ledger.v1',
+     tenant_id:'evercraft',revision:'genesis',records:[]};
+   try{ledger=readPrivateRelationships(absolute,{now});}
+   catch(e){if(e?.code!=='ENOENT')throw e;}
+   const outcome=appendRelationshipEvidence({ledger,initial,event,now});
+   if(outcome.state==='duplicate')return outcome.receipt;
+   tmp=absolute+'.'+process.pid+'.'+randomBytes(6).toString('hex')+'.tmp';
+   const fd=fs.openSync(tmp,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
+   try{
+     fs.writeFileSync(fd,JSON.stringify(outcome.ledger,null,2)+'\n');
+     fs.fsyncSync(fd);
+   }finally{fs.closeSync(fd);}
+   fs.renameSync(tmp,absolute);
+   tmp='';
+   const dirFd=fs.openSync(dir,fs.constants.O_RDONLY);
+   try{fs.fsyncSync(dirFd);}finally{fs.closeSync(dirFd);}
+   return outcome.receipt;
+ }finally{
+   if(tmp)try{fs.unlinkSync(tmp);}catch{}
+   fs.rmdirSync(lock);
+ }
 }
