@@ -1,7 +1,7 @@
 # Evercraft | Exact-price verified existing service checkout directory
 > Human-confirmed Systemia service purchases. These are existing Stripe links confirmed active in live mode on 2026-10-21.
 Directory: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/
-Merchant settlement: Systemia Stripe account. Evercraft Payments canonical economic ledger is a planned/manual reconciliation boundary, NOT proven automated for these four links.
+Merchant settlement: Systemia Stripe account. Evercraft Payments canonical economic ledger is a planned/manual reconciliation boundary, NOT proven automated for these seven links.
 Checkout success is not proof of payment or fulfillment.
 Offer payment links below must only be used for the exact product and price listed.
 Customers should agree the scope and delivery date before authorizing the charge.
@@ -12,8 +12,12 @@ Customers should agree the scope and delivery date before authorizing the charge
 - [AI Boardroom Standard Review, $250](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/)
 - [AI Boardroom Deep Dive with Financial Modeling, $500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/)
 
+- [Knowledge Activation, $500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/)
+- [Social Intelligence Launch, $1,000](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/)
+- [Institutional Memory System, $1,500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/)
+
 ## Product safety
-- Five other Evercraft-created products (FindMyPart $19, Website Audit $49, and three PDF workbooks $9/$7/$9) have no verified matching Payment Link in the connected accounts. These are NOT sold through the four links.
+- Five other Evercraft-created products (FindMyPart $19, Website Audit $49, and three PDF workbooks $9/$7/$9) have no verified matching Payment Link in the connected accounts. These are NOT sold through the seven links.
 - The hosted fabric.systemiacommandcenters.com offer routes currently hold checkout until owned purchase-intent and payment ops endpoints are configured.
 - Provider-paid receipt and human acceptance are required prior to fulfillment.
 - Do not treat this index, a quote, a checkout visit, an order session or a redirect as a paid receipt.
