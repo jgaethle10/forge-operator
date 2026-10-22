@@ -14,32 +14,24 @@ const good=()=>({
   }
 });
 
-test('only exact approved compatibility route can receive machine credential',()=>{
-  assert.equal(validateRefreshEndpoint(ENDPOINT),ENDPOINT);
-  assert.equal(validateRefreshEndpoint('http://aliev.base44.app/api/functions/refreshSessionFreshness'),null);
-  assert.equal(validateRefreshEndpoint('https://evil.example/api/functions/refreshSessionFreshness'),null);
-  assert.equal(validateRefreshEndpoint(ENDPOINT+'?token=abc'),null);
-  assert.equal(validateRefreshEndpoint('https://aliev.base44.app@evil.example/api/functions/refreshSessionFreshness'),null);
+test('no old provider or unverified replacement route is allowed to receive a machine credential',()=>{
+ assert.equal(validateRefreshEndpoint(ENDPOINT),null);
+ assert.equal(validateRefreshEndpoint('https://fabric.systemiacommandcenters.com/not-yet-admitted'),null);
+ assert.equal(validateRefreshEndpoint('https://evil.example/refresh'),null);
 });
 
-test('holds if origin or machine key missing',async()=>{
-  assert.equal((await runSessionFreshnessOnce({token:'k'})).state,'held_missing_refresh_url');
-  assert.equal((await runSessionFreshnessOnce({url:ENDPOINT})).state,'held_missing_systemia_machine_key');
-});
-
-test('makes authenticated no-redirect POST and checks receipt',async()=>{
-  let target,cfg;
-  const response=await runSessionFreshnessOnce({
-    url:ENDPOINT,token:'hidden',now:()=>NOW,
-    fetchImpl:async(u,options)=>{target=u;cfg=options;return {ok:true,status:200,json:async()=>good()}}
-  });
-  assert.equal(response.ok,true);
-  assert.equal(response.state,'verified');
-  assert.equal(response.historical_sweep_hours,6);
-  assert.equal(target,ENDPOINT);
-  assert.equal(cfg.method,'POST');
-  assert.equal(cfg.redirect,'manual');
-  assert.equal(cfg.headers['x-systemia-machine-key'],'hidden');
+test('hourly session refresh remains held until independently attested owned ingest',async()=>{
+ for(const url of [undefined,ENDPOINT,'https://fabric.systemiacommandcenters.com/not-yet-admitted']){
+  let requests=0;
+  const response=await runSessionFreshnessOnce({url,token:'not-exported',
+   fetchImpl:async()=>{requests++;throw Error('Forbidden network request');}});
+  assert.equal(response.ok,false);
+  assert.equal(response.state,'held_owned_freshness_source_required');
+  assert.equal(response.receipt_verified,false);
+  assert.equal(response.external_requests,0);
+  assert.equal(requests,0);
+  assert.equal(JSON.stringify(response).includes('not-exported'),false);
+ }
 });
 
 test('never claims receipt verified on recent skip',()=>{
@@ -67,11 +59,3 @@ test('history warnings remain warnings, not fabricated clean success',()=>{
   assert.equal(result.historical_watch_warnings,2);
 });
 
-test('holds on unauthorized source response without leaking credentials',async()=>{
-  const result=await runSessionFreshnessOnce({
-    url:ENDPOINT,token:'super-secret',fetchImpl:async()=>({ok:false,status:401})
-  });
-  assert.equal(result.state,'held_refresh_http_error');
-  assert.equal(result.http_status,401);
-  assert.equal(JSON.stringify(result).includes('super-secret'),false);
-});
