@@ -22,7 +22,7 @@ export function verifyNode002ShadowRequest(request,{
   if(!exact(s,['schema','node_id','node_key','device_fingerprint','nonce','observed_at_utc','sample'])) return fail('statement_shape_invalid');
   if(s.schema!==SCHEMA||s.node_id!==NODE||s.node_key!==NODE_KEY||s.device_fingerprint!==FINGERPRINT) return fail('identity_rejected');
   if(!canonicalUuidNonce(s.nonce)) return fail('nonce_invalid');
-  if(typeof s.observed_at_utc!=='string'||!/^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z$/.test(s.observed_at_utc)) return fail('timestamp_invalid');
+  if(typeof s.observed_at_utc!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(s.observed_at_utc)) return fail('timestamp_invalid');
   const sent=Date.parse(s.observed_at_utc);
   if(!Number.isFinite(sent)||Math.abs(now-sent)>maxSkewMs) return fail('timestamp_stale');
   if(!exact(s.sample,['memory_pct','uptime_seconds'])) return fail('sample_shape_invalid');
@@ -47,12 +47,12 @@ export function verifyNode002ShadowRequest(request,{
   }catch{return fail('signature_verification_error')}
   if(!verified) return fail('signature_invalid');
   // Persistent, atomic claim: the same signed nonce cannot be accepted twice.
-  const digest=createHash('sha256').update(s.node_key+'\\0'+s.nonce).digest('hex');
+  const digest=createHash('sha256').update(s.node_key+'\0'+s.nonce).digest('hex');
   try{
     const st=fs.lstatSync(nonceDirectory);
     if(!st.isDirectory()||st.isSymbolicLink()) return fail('nonce_store_unavailable');
     const receiptPath=path.join(nonceDirectory,digest+'.json');
-    const record=JSON.stringify({schema:ACK,node_key:NODE_KEY,nonce:s.nonce,received_at_utc:new Date(now).toISOString(),statement_sha256:fingerprint(JSON.stringify(s)),shadow:true,execution_authorized:false,lease_created:false})+'\\n';
+    const record=JSON.stringify({schema:ACK,node_key:NODE_KEY,nonce:s.nonce,received_at_utc:new Date(now).toISOString(),statement_sha256:fingerprint(JSON.stringify(s)),shadow:true,execution_authorized:false,lease_created:false})+'\n';
     fs.writeFileSync(receiptPath,record,{flag:'wx',mode:0o600});
   }catch(e){return fail(e?.code==='EEXIST'?'nonce_replayed':'nonce_store_unavailable')}
   return {ok:true,schema:ACK,node_key:NODE_KEY,shadow:true,execution_authorized:false,lease_created:false,sample_key:digest};
@@ -62,7 +62,7 @@ export function node002ShadowHttpHandler(options={}){
   return async (req,res)=>{
     const respond=(status,body)=>{res.writeHead(status,{'content-type':'application/json','cache-control':'no-store'});res.end(JSON.stringify(body));};
     if(req.method!=='POST') return respond(405,fail('method_not_allowed'));
-    if(!/^application\\/json(?:\\s*;|$)/i.test(String(req.headers['content-type']||''))) return respond(415,fail('content_type_invalid'));
+    if(!/^application\/json(?:\s*;|$)/i.test(String(req.headers['content-type']||''))) return respond(415,fail('content_type_invalid'));
     let bytes=0,parts=[];
     try{
       for await(const chunk of req){bytes+=chunk.length;if(bytes>4096)return respond(413,fail('payload_too_large'));parts.push(chunk);}
