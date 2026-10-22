@@ -329,7 +329,7 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
       const check = this.verifyDeliveryLedger();
       if (!check.valid) return { state: 'held', integrity_verified: false, total: null, statuses: null, reason: check.reason || 'integrity_hold' };
       const sinceMs = Number(options.sinceMs ?? 24 * 60 * 60 * 1000);
-      if (!fs.existsSync(ledgerFile)) return { window_ms: sinceMs, total: 0, statuses: {} };
+      if (!fs.existsSync(ledgerFile)) return { state: 'verified', integrity_verified: true, window_ms: sinceMs, total: 0, statuses: {} };
       const cutoff = Date.now() - sinceMs;
       const statuses = {};
       let total = 0;
@@ -343,7 +343,7 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
           total += 1;
         } catch {}
       }
-      return { window_ms: sinceMs, total, statuses };
+      return { state: 'verified', integrity_verified: true, window_ms: sinceMs, total, statuses };
     },
     queueDigest(event) { appendJsonLine(digestFile, event); },
     queueOwner(event) { appendJsonLine(ownerQueueFile, event); },
