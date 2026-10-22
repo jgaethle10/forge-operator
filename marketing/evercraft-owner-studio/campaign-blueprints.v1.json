@@ -1,0 +1,2251 @@
+{
+  "schema": "evercraft.owner_studio.campaign_blueprints.v1",
+  "generated_for": "owned_marketing_system",
+  "inventory_date": "2026-10-21",
+  "source_capabilities": "Evercraft Fabric 53-entry public capability directory",
+  "source_verified_links": "public/mesh/checkout-ready/verified-links.json",
+  "portfolio_summary": {
+    "directory_count": 53,
+    "declared_sell_now": 18,
+    "verified_service_links": 7
+  },
+  "style": {
+    "north_star": "Product truth first, emotion without manipulation, proof before polish.",
+    "brand": "Evercraft master-brand architecture; product identity distinct; no unauthorized third-party marks.",
+    "motion": "Kinetic editorial typography, precise UI choreography from real captures, practical human story, no fake dashboards or fabricated testimonials.",
+    "voice": "Naturally paced recorded human speech, variable stresses and releases; never robotic phrase endings; signed voice rights before publishing.",
+    "music": "Evercraft-authored composition or licensed stems with rights receipts. Silence can be more effective than stock crescendos.",
+    "formats": [
+      "16:9 1920x1080 24fps master",
+      "9:16 1080x1920 24fps native composition",
+      "1:1 1080x1080 still",
+      "6s cutdown",
+      "15s cutdown",
+      "30s proof-led master"
+    ],
+    "audio": "Target platform-specific loudness, review mix for mobile, captions with verified text",
+    "shot_evidence": "Capture real authorized product interaction or explicitly label conceptual UI; do not stage real customer results.",
+    "publishing": "owner approval required; all campaigns internally staged, none auto-posted"
+  },
+  "capability_campaigns": [
+    {
+      "id": "agent-proving-mission-v1",
+      "name": "Agent Proving Mission",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"test my AI agent\", you deserve an answer that shows its work.",
+        "reveal": "Explore Agent Proving Mission and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"test my AI agent\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Agent Proving Mission and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"test my AI agent\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Agent Proving Mission and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/agent-proving-mission-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"test my AI agent\", you deserve an answer that shows its work. Explore Agent Proving Mission and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "ai-capability-install-v1",
+      "name": "AI Capability Installation Package",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"install an AI capability\", you deserve an answer that shows its work.",
+        "reveal": "Explore AI Capability Installation Package and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"install an AI capability\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore AI Capability Installation Package and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"install an AI capability\", you deserve an answer that shows its work.",
+        "subheadline": "Explore AI Capability Installation Package and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/ai-capability-install-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"install an AI capability\", you deserve an answer that shows its work. Explore AI Capability Installation Package and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "aliev-site-opportunity-snapshot-v1",
+      "name": "AliEV EV Site Opportunity Intelligence",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$250",
+      "angle": {
+        "hook": "A charging site can look perfect on a map. The numbers have to survive the address.",
+        "reveal": "Investigate demand, nearby charging, site constraints, and the unanswered questions before spending on infrastructure."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A charging site can look perfect on a map. The numbers have to survive the address.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Investigate demand, nearby charging, site constraints, and the unanswered questions before spending on infrastructure.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "A charging site can look perfect on a map. The numbers have to survive the address.",
+        "subheadline": "Investigate demand, nearby charging, site constraints, and the unanswered questions before spending on infrastructure.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A charging site can look perfect on a map. The numbers have to survive the address. Investigate demand, nearby charging, site constraints, and the unanswered questions before spending on infrastructure. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "audit-center-website-audit-machine-v1",
+      "name": "Systemia Website Audit",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$49",
+      "angle": {
+        "hook": "Your website may be getting attention without getting you customers.",
+        "reveal": "Look at the public experience and prioritize the five problems worth fixing first."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Your website may be getting attention without getting you customers.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Look at the public experience and prioritize the five problems worth fixing first.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Review the exact offer"
+      },
+      "website": {
+        "headline": "Your website may be getting attention without getting you customers.",
+        "subheadline": "Look at the public experience and prioritize the five problems worth fixing first.",
+        "action": {
+          "verb": "Review the exact offer",
+          "url": "https://fabric.systemiacommandcenters.com/offers/website-audit",
+          "checkout": "held_or_unverified_must_recheck",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Your website may be getting attention without getting you customers. Look at the public experience and prioritize the five problems worth fixing first. Review the exact offer.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": false,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "buildflow-bounded-agent-action-v1",
+      "name": "BuildFlow Governed Agent Action Layer",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"let an AI act on business systems safely\", you deserve an answer that shows its work.",
+        "reveal": "Explore BuildFlow Governed Agent Action Layer and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"let an AI act on business systems safely\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore BuildFlow Governed Agent Action Layer and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"let an AI act on business systems safely\", you deserve an answer that shows its work.",
+        "subheadline": "Explore BuildFlow Governed Agent Action Layer and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"let an AI act on business systems safely\", you deserve an answer that shows its work. Explore BuildFlow Governed Agent Action Layer and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "buildflow-enterprise-ops-router-v1",
+      "name": "BuildFlow Enterprise Operations Router",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "Your company shouldn't need a complete rebuild to run more smoothly.",
+        "reveal": "Map the current operations before replacing tools."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Your company shouldn't need a complete rebuild to run more smoothly.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Map the current operations before replacing tools.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "Your company shouldn't need a complete rebuild to run more smoothly.",
+        "subheadline": "Map the current operations before replacing tools.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Your company shouldn't need a complete rebuild to run more smoothly. Map the current operations before replacing tools. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "buildflow-entity-resolution-machine-v1",
+      "name": "BuildFlow Business Entity Resolution",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"dedupe our vendor list safely\", you deserve an answer that shows its work.",
+        "reveal": "Explore BuildFlow Business Entity Resolution and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"dedupe our vendor list safely\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore BuildFlow Business Entity Resolution and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"dedupe our vendor list safely\", you deserve an answer that shows its work.",
+        "subheadline": "Explore BuildFlow Business Entity Resolution and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"dedupe our vendor list safely\", you deserve an answer that shows its work. Explore BuildFlow Business Entity Resolution and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "buildflow-process-audit-machine-v1",
+      "name": "Business Process Pattern Audit",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"map how our process actually works\", you deserve an answer that shows its work.",
+        "reveal": "Explore Business Process Pattern Audit and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"map how our process actually works\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Business Process Pattern Audit and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"map how our process actually works\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Business Process Pattern Audit and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"map how our process actually works\", you deserve an answer that shows its work. Explore Business Process Pattern Audit and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "buildflow-procure-to-pay-shadow-v1",
+      "name": "BuildFlow Procure-to-Pay Shadow Audit",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"our invoices do not match receipts\", you deserve an answer that shows its work.",
+        "reveal": "Explore BuildFlow Procure-to-Pay Shadow Audit and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"our invoices do not match receipts\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore BuildFlow Procure-to-Pay Shadow Audit and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"our invoices do not match receipts\", you deserve an answer that shows its work.",
+        "subheadline": "Explore BuildFlow Procure-to-Pay Shadow Audit and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"our invoices do not match receipts\", you deserve an answer that shows its work. Explore BuildFlow Procure-to-Pay Shadow Audit and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "buildflow-shadow-migration-machine-v1",
+      "name": "BuildFlow Shadow Migration Audit",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"analyze this messy ERP export\", you deserve an answer that shows its work.",
+        "reveal": "Explore BuildFlow Shadow Migration Audit and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"analyze this messy ERP export\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore BuildFlow Shadow Migration Audit and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"analyze this messy ERP export\", you deserve an answer that shows its work.",
+        "subheadline": "Explore BuildFlow Shadow Migration Audit and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"analyze this messy ERP export\", you deserve an answer that shows its work. Explore BuildFlow Shadow Migration Audit and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "callproof-complaint-packet-machine-v1",
+      "name": "CallProof Complaint Evidence Packet",
+      "portfolio_state": "verify",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "A difficult call should not become a guessing game.",
+        "reveal": "Reconstruct what the evidence supports before making claims."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A difficult call should not become a guessing game.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Reconstruct what the evidence supports before making claims.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "A difficult call should not become a guessing game.",
+        "subheadline": "Reconstruct what the evidence supports before making claims.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A difficult call should not become a guessing game. Reconstruct what the evidence supports before making claims. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "capability-concierge-v1",
+      "name": "Evercraft Capability Concierge",
+      "portfolio_state": "discovery_only",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"help my business with AI\", you deserve an answer that shows its work.",
+        "reveal": "Explore Evercraft Capability Concierge and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"help my business with AI\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Evercraft Capability Concierge and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"help my business with AI\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Evercraft Capability Concierge and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/capability-concierge-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"help my business with AI\", you deserve an answer that shows its work. Explore Evercraft Capability Concierge and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "career-command-interview-practice-machine-v1",
+      "name": "Career Command Interview Practice + Interview Sprint",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$19",
+      "angle": {
+        "hook": "You don't get a second first answer in an interview.",
+        "reveal": "Practice the hard questions before the moment that counts."
+      },
+      "commercial_20s": {
+        "opening_0_4": "You don't get a second first answer in an interview.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Practice the hard questions before the moment that counts.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "You don't get a second first answer in an interview.",
+        "subheadline": "Practice the hard questions before the moment that counts.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "You don't get a second first answer in an interview. Practice the hard questions before the moment that counts. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "career-command-resume-job-fit-machine-v1",
+      "name": "Career Command Resume + Job Fit Audit",
+      "portfolio_state": "verify",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"check my resume against this job\", you deserve an answer that shows its work.",
+        "reveal": "Explore Career Command Resume + Job Fit Audit and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"check my resume against this job\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Career Command Resume + Job Fit Audit and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"check my resume against this job\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Career Command Resume + Job Fit Audit and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"check my resume against this job\", you deserve an answer that shows its work. Explore Career Command Resume + Job Fit Audit and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "community-health-evidence-brief-v1",
+      "name": "Community Health Evidence Brief",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"community health data\", you deserve an answer that shows its work.",
+        "reveal": "Explore Community Health Evidence Brief and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"community health data\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Community Health Evidence Brief and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"community health data\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Community Health Evidence Brief and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/community-health-evidence-brief-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"community health data\", you deserve an answer that shows its work. Explore Community Health Evidence Brief and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "condition-desk-field-ops-v1",
+      "name": "Condition Desk for Weather-Sensitive Field Operations",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"can my crews work tomorrow\", you deserve an answer that shows its work.",
+        "reveal": "Explore Condition Desk for Weather-Sensitive Field Operations and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"can my crews work tomorrow\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Condition Desk for Weather-Sensitive Field Operations and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"can my crews work tomorrow\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Condition Desk for Weather-Sensitive Field Operations and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/condition-desk-field-ops-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"can my crews work tomorrow\", you deserve an answer that shows its work. Explore Condition Desk for Weather-Sensitive Field Operations and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "datafoundry-data-gap-audit-machine-v1",
+      "name": "Canonical Data Gap Audit",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"audit this dataset for gaps\", you deserve an answer that shows its work.",
+        "reveal": "Explore Canonical Data Gap Audit and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"audit this dataset for gaps\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Canonical Data Gap Audit and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"audit this dataset for gaps\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Canonical Data Gap Audit and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"audit this dataset for gaps\", you deserve an answer that shows its work. Explore Canonical Data Gap Audit and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$49",
+      "angle": {
+        "hook": "Before you pitch for capital, know which story the evidence supports.",
+        "reveal": "Clarify gaps, assumptions and the next questions for one funding route."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Before you pitch for capital, know which story the evidence supports.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Clarify gaps, assumptions and the next questions for one funding route.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "Before you pitch for capital, know which story the evidence supports.",
+        "subheadline": "Clarify gaps, assumptions and the next questions for one funding route.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Before you pitch for capital, know which story the evidence supports. Clarify gaps, assumptions and the next questions for one funding route. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "earthworks-site-autonomy-study-v1",
+      "name": "EarthWorks Site Autonomy Study",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$5,000",
+      "angle": {
+        "hook": "One crowded material loop can shape an entire shift.",
+        "reveal": "Study the real movements before promising an autonomous job site."
+      },
+      "commercial_20s": {
+        "opening_0_4": "One crowded material loop can shape an entire shift.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Study the real movements before promising an autonomous job site.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "One crowded material loop can shape an entire shift.",
+        "subheadline": "Study the real movements before promising an autonomous job site.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "One crowded material loop can shape an entire shift. Study the real movements before promising an autonomous job site. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "eps-estimate-engine-machine-v1",
+      "name": "EPS Estimate Intelligence",
+      "portfolio_state": "contractor_beta",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"contractor estimating software\", you deserve an answer that shows its work.",
+        "reveal": "Explore EPS Estimate Intelligence and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"contractor estimating software\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore EPS Estimate Intelligence and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"contractor estimating software\", you deserve an answer that shows its work.",
+        "subheadline": "Explore EPS Estimate Intelligence and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"contractor estimating software\", you deserve an answer that shows its work. Explore EPS Estimate Intelligence and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "eventwave-paid-promotion-v1",
+      "name": "EventWave Event / Venue Promotion",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$49",
+      "angle": {
+        "hook": "A great event still needs to reach the right people.",
+        "reveal": "Put the event details into an approved, bounded promotional placement."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A great event still needs to reach the right people.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Put the event details into an approved, bounded promotional placement.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "A great event still needs to reach the right people.",
+        "subheadline": "Put the event details into an approved, bounded promotional placement.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A great event still needs to reach the right people. Put the event details into an approved, bounded promotional placement. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "evercraft-clip-social-video-v1",
+      "name": "Evercraft Clip Social Video Production",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "One useful idea deserves more than a template slideshow.",
+        "reveal": "Build a coherent story with real footage, timing and context."
+      },
+      "commercial_20s": {
+        "opening_0_4": "One useful idea deserves more than a template slideshow.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Build a coherent story with real footage, timing and context.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "One useful idea deserves more than a template slideshow.",
+        "subheadline": "Build a coherent story with real footage, timing and context.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "One useful idea deserves more than a template slideshow. Build a coherent story with real footage, timing and context. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "evercraft-network-resilience-membership-v1",
+      "name": "Evercraft Network Resilience + Founding Membership",
+      "portfolio_state": "discovery_only",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"my connection keeps switching between wifi and cellular\", you deserve an answer that shows its work.",
+        "reveal": "Explore Evercraft Network Resilience + Founding Membership and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"my connection keeps switching between wifi and cellular\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Evercraft Network Resilience + Founding Membership and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"my connection keeps switching between wifi and cellular\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Evercraft Network Resilience + Founding Membership and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"my connection keeps switching between wifi and cellular\", you deserve an answer that shows its work. Explore Evercraft Network Resilience + Founding Membership and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "evercraft-web-browser-agent-v1",
+      "name": "Evercraft Web Agent / Fetch & Browser",
+      "portfolio_state": "discovery_only",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"fetch a webpage for my AI agent\", you deserve an answer that shows its work.",
+        "reveal": "Explore Evercraft Web Agent / Fetch & Browser and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"fetch a webpage for my AI agent\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Evercraft Web Agent / Fetch & Browser and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"fetch a webpage for my AI agent\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Evercraft Web Agent / Fetch & Browser and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"fetch a webpage for my AI agent\", you deserve an answer that shows its work. Explore Evercraft Web Agent / Fetch & Browser and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "evermaps-evidence-projection-machine-v1",
+      "name": "Public-Safe Geospatial Evidence Projection",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "A map can persuade, but it also needs evidence.",
+        "reveal": "Separate what the coordinates prove from what they suggest."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A map can persuade, but it also needs evidence.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Separate what the coordinates prove from what they suggest.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "A map can persuade, but it also needs evidence.",
+        "subheadline": "Separate what the coordinates prove from what they suggest.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A map can persuade, but it also needs evidence. Separate what the coordinates prove from what they suggest. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "faie-signal-brief-v1",
+      "name": "FAIE Evidence-First Signal Brief",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$250",
+      "angle": {
+        "hook": "When conditions change, guessing gets expensive.",
+        "reveal": "Translate evidence into a bounded agricultural signal brief."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When conditions change, guessing gets expensive.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Translate evidence into a bounded agricultural signal brief.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "When conditions change, guessing gets expensive.",
+        "subheadline": "Translate evidence into a bounded agricultural signal brief.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When conditions change, guessing gets expensive. Translate evidence into a bounded agricultural signal brief. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "findmypart-paid-hunt-v1",
+      "name": "FindMyPart Paid Part Hunt",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "The machine is waiting on one part nobody can find.",
+        "reveal": "Follow the markings, cross-references and hidden sourcing paths."
+      },
+      "commercial_20s": {
+        "opening_0_4": "The machine is waiting on one part nobody can find.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Follow the markings, cross-references and hidden sourcing paths.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Review the exact offer"
+      },
+      "website": {
+        "headline": "The machine is waiting on one part nobody can find.",
+        "subheadline": "Follow the markings, cross-references and hidden sourcing paths.",
+        "action": {
+          "verb": "Review the exact offer",
+          "url": "https://fabric.systemiacommandcenters.com/offers/findmypart",
+          "checkout": "held_or_unverified_must_recheck",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "The machine is waiting on one part nobody can find. Follow the markings, cross-references and hidden sourcing paths. Review the exact offer.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": false,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "findmypart-part-passport-v1",
+      "name": "FindMyPart Part Passport",
+      "portfolio_state": "free",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"identify this part\", you deserve an answer that shows its work.",
+        "reveal": "Explore FindMyPart Part Passport and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"identify this part\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore FindMyPart Part Passport and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"identify this part\", you deserve an answer that shows its work.",
+        "subheadline": "Explore FindMyPart Part Passport and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"identify this part\", you deserve an answer that shows its work. Explore FindMyPart Part Passport and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "findmypart-repair-shop-desk-v1",
+      "name": "Repair Shop Sourcing Desk",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"source difficult parts for my repair shop\", you deserve an answer that shows its work.",
+        "reveal": "Explore Repair Shop Sourcing Desk and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"source difficult parts for my repair shop\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Repair Shop Sourcing Desk and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"source difficult parts for my repair shop\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Repair Shop Sourcing Desk and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"source difficult parts for my repair shop\", you deserve an answer that shows its work. Explore Repair Shop Sourcing Desk and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "forensiscope-evidence-review-v1",
+      "name": "ForensiScope Evidence Review",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "The answer may be somewhere inside hours of footage.",
+        "reveal": "Find the timestamps, patterns, repeats and evidence trail."
+      },
+      "commercial_20s": {
+        "opening_0_4": "The answer may be somewhere inside hours of footage.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Find the timestamps, patterns, repeats and evidence trail.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "The answer may be somewhere inside hours of footage.",
+        "subheadline": "Find the timestamps, patterns, repeats and evidence trail.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "The answer may be somewhere inside hours of footage. Find the timestamps, patterns, repeats and evidence trail. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$500",
+      "angle": {
+        "hook": "Your app shouldn't become trapped on the platform that built it.",
+        "reveal": "Map the code, data and access needed for a safer exit."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Your app shouldn't become trapped on the platform that built it.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Map the code, data and access needed for a safer exit.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "Your app shouldn't become trapped on the platform that built it.",
+        "subheadline": "Map the code, data and access needed for a safer exit.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Your app shouldn't become trapped on the platform that built it. Map the code, data and access needed for a safer exit. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "freight-load-exception-intelligence-machine-v1",
+      "name": "Freight Load Exception Intelligence",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"what is wrong with this load\", you deserve an answer that shows its work.",
+        "reveal": "Explore Freight Load Exception Intelligence and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"what is wrong with this load\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Freight Load Exception Intelligence and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"what is wrong with this load\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Freight Load Exception Intelligence and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"what is wrong with this load\", you deserve an answer that shows its work. Explore Freight Load Exception Intelligence and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "globalstat-country-intelligence-machine-v1",
+      "name": "Country / Domain Intelligence Slice",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"compare these countries on this metric\", you deserve an answer that shows its work.",
+        "reveal": "Explore Country / Domain Intelligence Slice and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"compare these countries on this metric\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Country / Domain Intelligence Slice and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"compare these countries on this metric\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Country / Domain Intelligence Slice and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"compare these countries on this metric\", you deserve an answer that shows its work. Explore Country / Domain Intelligence Slice and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "ibmi-rescue-v1",
+      "name": "Evercraft IBM i Rescue",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$250",
+      "angle": {
+        "hook": "The upgrade isn't the scary part. It's what nobody documented.",
+        "reveal": "Map the dependencies before touching an IBM i system."
+      },
+      "commercial_20s": {
+        "opening_0_4": "The upgrade isn't the scary part. It's what nobody documented.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Map the dependencies before touching an IBM i system.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Review the exact offer"
+      },
+      "website": {
+        "headline": "The upgrade isn't the scary part. It's what nobody documented.",
+        "subheadline": "Map the dependencies before touching an IBM i system.",
+        "action": {
+          "verb": "Review the exact offer",
+          "url": "https://fabric.systemiacommandcenters.com/offers/ibmi-rescue",
+          "checkout": "held_or_unverified_must_recheck",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "The upgrade isn't the scary part. It's what nobody documented. Map the dependencies before touching an IBM i system. Review the exact offer.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": false,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "income-war-map-v1",
+      "name": "Income War Map Revenue Planning",
+      "portfolio_state": "hold",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"help me make more money\", you deserve an answer that shows its work.",
+        "reveal": "Explore Income War Map Revenue Planning and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"help me make more money\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Income War Map Revenue Planning and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"help me make more money\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Income War Map Revenue Planning and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/income-war-map-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"help me make more money\", you deserve an answer that shows its work. Explore Income War Map Revenue Planning and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "large-document-corpus-review-v1",
+      "name": "Large Document Corpus Review Service",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"review thousands of documents\", you deserve an answer that shows its work.",
+        "reveal": "Explore Large Document Corpus Review Service and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"review thousands of documents\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Large Document Corpus Review Service and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"review thousands of documents\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Large Document Corpus Review Service and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/large-document-corpus-review-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"review thousands of documents\", you deserve an answer that shows its work. Explore Large Document Corpus Review Service and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "legacy-rescue-lab-v1",
+      "name": "Legacy Rescue Lab",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$299",
+      "angle": {
+        "hook": "Just because the software is failing doesn't mean the whole thing needs replacing.",
+        "reveal": "Locate the break and choose a repair path supported by evidence."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Just because the software is failing doesn't mean the whole thing needs replacing.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Locate the break and choose a repair path supported by evidence.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Review the exact offer"
+      },
+      "website": {
+        "headline": "Just because the software is failing doesn't mean the whole thing needs replacing.",
+        "subheadline": "Locate the break and choose a repair path supported by evidence.",
+        "action": {
+          "verb": "Review the exact offer",
+          "url": "https://fabric.systemiacommandcenters.com/offers/legacy-rescue",
+          "checkout": "held_or_unverified_must_recheck",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Just because the software is failing doesn't mean the whole thing needs replacing. Locate the break and choose a repair path supported by evidence. Review the exact offer.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": false,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "lineage-founding-pilot-v1",
+      "name": "Evercraft Lineage Founding Pilot",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": "$500",
+      "angle": {
+        "hook": "If a decision cannot be traced, it cannot be trusted.",
+        "reveal": "Connect the source, edits and approvals behind the result."
+      },
+      "commercial_20s": {
+        "opening_0_4": "If a decision cannot be traced, it cannot be trusted.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Connect the source, edits and approvals behind the result.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "If a decision cannot be traced, it cannot be trusted.",
+        "subheadline": "Connect the source, edits and approvals behind the result.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "If a decision cannot be traced, it cannot be trusted. Connect the source, edits and approvals behind the result. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "littlered-kdp-export-qa-machine-v1",
+      "name": "Book Export QA",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "Finishing the manuscript isn't finishing the book.",
+        "reveal": "Check the export details that readers should never notice."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Finishing the manuscript isn't finishing the book.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Check the export details that readers should never notice.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "Finishing the manuscript isn't finishing the book.",
+        "subheadline": "Check the export details that readers should never notice.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Finishing the manuscript isn't finishing the book. Check the export details that readers should never notice. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "portfolio-sentinel-v1",
+      "name": "Systemia Portfolio Sentinel",
+      "portfolio_state": "commercial_pilot",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "A portfolio needs more than green lights.",
+        "reveal": "Show what changed, what can be trusted and what still needs proof."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A portfolio needs more than green lights.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Show what changed, what can be trusted and what still needs proof.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "A portfolio needs more than green lights.",
+        "subheadline": "Show what changed, what can be trusted and what still needs proof.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A portfolio needs more than green lights. Show what changed, what can be trusted and what still needs proof. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$500",
+      "angle": {
+        "hook": "The easiest door is the one nobody checks.",
+        "reveal": "Start with a bounded review of your business's digital exposure and recovery needs."
+      },
+      "commercial_20s": {
+        "opening_0_4": "The easiest door is the one nobody checks.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Start with a bounded review of your business's digital exposure and recovery needs.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "The easiest door is the one nobody checks.",
+        "subheadline": "Start with a bounded review of your business's digital exposure and recovery needs.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-business-setup-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "The easiest door is the one nobody checks. Start with a bounded review of your business's digital exposure and recovery needs. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$199",
+      "angle": {
+        "hook": "Security begins with the things your household actually depends on.",
+        "reveal": "Review the weak points and the setup work you can authorize."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Security begins with the things your household actually depends on.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Review the weak points and the setup work you can authorize.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "Security begins with the things your household actually depends on.",
+        "subheadline": "Review the weak points and the setup work you can authorize.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-home-setup-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Security begins with the things your household actually depends on. Review the weak points and the setup work you can authorize. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "raven-nexus-pain-router-v1",
+      "name": "Raven Nexus Modular Safety & Stability",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "A problem rarely stays in one system.",
+        "reveal": "Map the safest action path without giving software more authority than it needs."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A problem rarely stays in one system.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Map the safest action path without giving software more authority than it needs.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "A problem rarely stays in one system.",
+        "subheadline": "Map the safest action path without giving software more authority than it needs.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A problem rarely stays in one system. Map the safest action path without giving software more authority than it needs. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "rivet-site-underwriting-v1",
+      "name": "RIVET EV Infrastructure Intelligence",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$299",
+      "angle": {
+        "hook": "The address is only the beginning of an EV site decision.",
+        "reveal": "Surface the land, utility and opportunity questions before commitment."
+      },
+      "commercial_20s": {
+        "opening_0_4": "The address is only the beginning of an EV site decision.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Surface the land, utility and opportunity questions before commitment.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "The address is only the beginning of an EV site decision.",
+        "subheadline": "Surface the land, utility and opportunity questions before commitment.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "The address is only the beginning of an EV site decision. Surface the land, utility and opportunity questions before commitment. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$0.99",
+      "angle": {
+        "hook": "Will that message land the way you think it will?",
+        "reveal": "Pressure-test the writing before you hit send."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Will that message land the way you think it will?",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Pressure-test the writing before you hit send.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "Will that message land the way you think it will?",
+        "subheadline": "Pressure-test the writing before you hit send.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Will that message land the way you think it will? Pressure-test the writing before you hit send. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "site-survive-rapid-audit-v1",
+      "name": "Site-Survive Rapid Audit",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$250",
+      "angle": {
+        "hook": "A site can fail long before a dashboard turns red.",
+        "reveal": "Find the prioritized risks in one rapid, bounded review."
+      },
+      "commercial_20s": {
+        "opening_0_4": "A site can fail long before a dashboard turns red.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Find the prioritized risks in one rapid, bounded review.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Review the exact offer"
+      },
+      "website": {
+        "headline": "A site can fail long before a dashboard turns red.",
+        "subheadline": "Find the prioritized risks in one rapid, bounded review.",
+        "action": {
+          "verb": "Review the exact offer",
+          "url": "https://fabric.systemiacommandcenters.com/offers/site-survive",
+          "checkout": "held_or_unverified_must_recheck",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "A site can fail long before a dashboard turns red. Find the prioritized risks in one rapid, bounded review. Review the exact offer.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": false,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "systemia-yard-runtime-extension-v1",
+      "name": "Systemia Yard Bounded Runtime Extension",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "Software that touches the real world needs a short leash.",
+        "reveal": "Make bounded moves visible, testable and reversible."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Software that touches the real world needs a short leash.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Make bounded moves visible, testable and reversible.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "Software that touches the real world needs a short leash.",
+        "subheadline": "Make bounded moves visible, testable and reversible.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Software that touches the real world needs a short leash. Make bounded moves visible, testable and reversible. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "talent-evidence-profile-machine-v1",
+      "name": "Evidence-Backed Talent Profile",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"evaluate this candidate from the evidence\", you deserve an answer that shows its work.",
+        "reveal": "Explore Evidence-Backed Talent Profile and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"evaluate this candidate from the evidence\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Evidence-Backed Talent Profile and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"evaluate this candidate from the evidence\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Evidence-Backed Talent Profile and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"evaluate this candidate from the evidence\", you deserve an answer that shows its work. Explore Evidence-Backed Talent Profile and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "talent-proof-portal-v1",
+      "name": "Evidence-Backed Talent Proof Portal",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"help me hire based on skills\", you deserve an answer that shows its work.",
+        "reveal": "Explore Evidence-Backed Talent Proof Portal and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"help me hire based on skills\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Evidence-Backed Talent Proof Portal and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"help me hire based on skills\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Evidence-Backed Talent Proof Portal and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/talent-proof-portal-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"help me hire based on skills\", you deserve an answer that shows its work. Explore Evidence-Backed Talent Proof Portal and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "towi-evidence-research-machine-v1",
+      "name": "Evidence-Controlled Research Brief",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "One confident claim can hide an entire stack of assumptions.",
+        "reveal": "Separate sources, inferences and uncertainty before deciding."
+      },
+      "commercial_20s": {
+        "opening_0_4": "One confident claim can hide an entire stack of assumptions.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Separate sources, inferences and uncertainty before deciding.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "One confident claim can hide an entire stack of assumptions.",
+        "subheadline": "Separate sources, inferences and uncertainty before deciding.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "One confident claim can hide an entire stack of assumptions. Separate sources, inferences and uncertainty before deciding. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$500",
+      "angle": {
+        "hook": "The launch date means nothing if the site can't do its job.",
+        "reveal": "Get an agreed scope, clear handoff and a buyer-visible launch plan."
+      },
+      "commercial_20s": {
+        "opening_0_4": "The launch date means nothing if the site can't do its job.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Get an agreed scope, clear handoff and a buyer-visible launch plan.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Discuss scope and availability"
+      },
+      "website": {
+        "headline": "The launch date means nothing if the site can't do its job.",
+        "subheadline": "Get an agreed scope, clear handoff and a buyer-visible launch plan.",
+        "action": {
+          "verb": "Discuss scope and availability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
+          "checkout": "not_verified_at_this_door",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "The launch date means nothing if the site can't do its job. Get an agreed scope, clear handoff and a buyer-visible launch plan. Discuss scope and availability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "workflow-foundry-xray-v1",
+      "name": "Evercraft Workflow X-Ray",
+      "portfolio_state": "sell_now",
+      "entry_price_reference": "$250",
+      "angle": {
+        "hook": "Your team shouldn't have to work around its workflow.",
+        "reveal": "Map one broken process before buying another system."
+      },
+      "commercial_20s": {
+        "opening_0_4": "Your team shouldn't have to work around its workflow.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Map one broken process before buying another system.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Review the exact offer"
+      },
+      "website": {
+        "headline": "Your team shouldn't have to work around its workflow.",
+        "subheadline": "Map one broken process before buying another system.",
+        "action": {
+          "verb": "Review the exact offer",
+          "url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+          "checkout": "held_or_unverified_must_recheck",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "Your team shouldn't have to work around its workflow. Map one broken process before buying another system. Review the exact offer.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": false,
+        "price_may_be_quoted_only_with_current_source": true,
+        "landing_not_same_as_payment": true
+      }
+    },
+    {
+      "id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "portfolio_state": "verification_required",
+      "entry_price_reference": null,
+      "angle": {
+        "hook": "When you ask \"what changed in the real world\", you deserve an answer that shows its work.",
+        "reveal": "Explore Worldstate Reality Delta and examine what the current evidence can actually support."
+      },
+      "commercial_20s": {
+        "opening_0_4": "When you ask \"what changed in the real world\", you deserve an answer that shows its work.",
+        "stakes_4_8": "The wrong guess can cost time, trust or money.",
+        "discovery_8_15": "Explore Worldstate Reality Delta and examine what the current evidence can actually support.",
+        "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
+        "cta_18_20": "Explore the capability"
+      },
+      "website": {
+        "headline": "When you ask \"what changed in the real world\", you deserve an answer that shows its work.",
+        "subheadline": "Explore Worldstate Reality Delta and examine what the current evidence can actually support.",
+        "action": {
+          "verb": "Explore the capability",
+          "url": "https://fabric.systemiacommandcenters.com/capabilities/worldstate-reality-delta-v1",
+          "checkout": "not_sell_now",
+          "can_request_payment": false
+        }
+      },
+      "social": {
+        "short_caption": "When you ask \"what changed in the real world\", you deserve an answer that shows its work. Explore Worldstate Reality Delta and examine what the current evidence can actually support. Explore the capability.",
+        "proof_asset_required": "authorized_real_demo_or_verified_source",
+        "no_auto_publish": true
+      },
+      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "truth_gate": {
+        "not_a_verified_checkout": true,
+        "price_may_be_quoted_only_with_current_source": false,
+        "landing_not_same_as_payment": true
+      }
+    }
+  ],
+  "verified_service_campaigns": [
+    {
+      "id": "systemia-weekly-social",
+      "name": "Social Media Management · Weekly",
+      "verified_payment_link_id": "plink_1U4uEXK4iDjqpECV8jfAriJQ",
+      "verified_url": "https://buy.stripe.com/4gM3cweaOcwJ1Za1I84AU0d",
+      "verified_price": "$100",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "Your business doesn't need another calendar full of empty squares.",
+        "s04_09": "A real week needs a brief, an owner and an approval flow.",
+        "s09_16": "Agree the channels, the posts and what a week of support means.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Discuss a $100 week of social support."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+        "poster_title": "Your business doesn't need another calendar full of empty squares.",
+        "social_caption": "Your business doesn't need another calendar full of empty squares. Agree the channels, the posts and what a week of support means. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    },
+    {
+      "id": "systemia-asset-diagnosis",
+      "name": "Asset Diagnosis",
+      "verified_payment_link_id": "plink_1U4QhsK4iDjqpECVRK9Qgbps",
+      "verified_url": "https://buy.stripe.com/dRm9AU0jYdANdHS72s4AU0a",
+      "verified_price": "$149",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "It looks finished. So why isn't it working?",
+        "s04_09": "An app, website or workflow can exist without delivering the result you expected.",
+        "s09_16": "Choose one asset. Diagnose its gaps. Walk away knowing what to decide next.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Confirm the scope of a $149 Asset Diagnosis."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+        "poster_title": "It looks finished. So why isn't it working?",
+        "social_caption": "It looks finished. So why isn't it working? Choose one asset. Diagnose its gaps. Walk away knowing what to decide next. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    },
+    {
+      "id": "systemia-ai-boardroom-standard",
+      "name": "AI Boardroom · Standard Review",
+      "verified_payment_link_id": "plink_1U4QhsK4iDjqpECVFswYIOrd",
+      "verified_url": "https://buy.stripe.com/14AdRaaYC68lcDO0E44AU08",
+      "verified_price": "$250",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "A hard decision doesn't need louder opinions.",
+        "s04_09": "It needs assumptions made visible and options that can be challenged.",
+        "s09_16": "Give one decision a structured, human-reviewed strategic assessment.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Discuss a $250 Boardroom Standard Review."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+        "poster_title": "A hard decision doesn't need louder opinions.",
+        "social_caption": "A hard decision doesn't need louder opinions. Give one decision a structured, human-reviewed strategic assessment. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    },
+    {
+      "id": "systemia-ai-boardroom-financial",
+      "name": "AI Boardroom · Deep Dive with Financial Modeling",
+      "verified_payment_link_id": "plink_1U4QhsK4iDjqpECVd94vMVSP",
+      "verified_url": "https://buy.stripe.com/3cIbJ2feSfIVcDO1I84AU09",
+      "verified_price": "$500",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "A spreadsheet can make any future look convincing.",
+        "s04_09": "But the assumptions underneath it need daylight.",
+        "s09_16": "Stress-test a bounded scenario and the questions it raises.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Review a $500 Financial Deep Dive."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/",
+        "poster_title": "A spreadsheet can make any future look convincing.",
+        "social_caption": "A spreadsheet can make any future look convincing. Stress-test a bounded scenario and the questions it raises. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    },
+    {
+      "id": "systemia-knowledge-activation",
+      "name": "Knowledge Activation",
+      "verified_payment_link_id": "plink_1U4QhsK4iDjqpECVxTggl5e7",
+      "verified_url": "https://buy.stripe.com/dRmfZifeS1S59rCdqQ4AU07",
+      "verified_price": "$500",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "The answer's somewhere in the company. Nobody knows where.",
+        "s04_09": "Files, notes and decisions fall into separate pockets.",
+        "s09_16": "Define one body of knowledge and a useful way to work with it.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Discuss a $500 Knowledge Activation."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+        "poster_title": "The answer's somewhere in the company. Nobody knows where.",
+        "social_caption": "The answer's somewhere in the company. Nobody knows where. Define one body of knowledge and a useful way to work with it. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    },
+    {
+      "id": "systemia-social-intelligence-launch",
+      "name": "Social Intelligence Launch",
+      "verified_payment_link_id": "plink_1U4RelK4iDjqpECVQntZr27T",
+      "verified_url": "https://buy.stripe.com/8x24gA1o2eER0V672s4AU0b",
+      "verified_price": "$1,000",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "Publishing more isn't the same as understanding your audience.",
+        "s04_09": "Reactions, reach and positioning need their own evidence.",
+        "s09_16": "Build one scoped intelligence-backed launch plan.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Discuss the $1,000 launch engagement."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+        "poster_title": "Publishing more isn't the same as understanding your audience.",
+        "social_caption": "Publishing more isn't the same as understanding your audience. Build one scoped intelligence-backed launch plan. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    },
+    {
+      "id": "systemia-institutional-memory-system",
+      "name": "Institutional Memory System",
+      "verified_payment_link_id": "plink_1U4QhsK4iDjqpECVXob9B34R",
+      "verified_url": "https://buy.stripe.com/14AfZid6K54hfQ00E44AU06",
+      "verified_price": "$1,500",
+      "merchant": "Systemia",
+      "provider_verified_at": "2026-10-21",
+      "state": "provider_link_active_exact_price_paid_receipt_not_verified",
+      "script": {
+        "s00_04": "The most expensive sentence in a company is: nobody remembers why.",
+        "s04_09": "Decisions vanish when people, documents and tools change.",
+        "s09_16": "Design how the evidence, approvals and history survive the handoff.",
+        "s16_20": "Human-reviewed. Scope agreed before payment.",
+        "s20_24": "Scope a $1,500 Institutional Memory System."
+      },
+      "marketing": {
+        "landing_reference": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+        "poster_title": "The most expensive sentence in a company is: nobody remembers why.",
+        "social_caption": "The most expensive sentence in a company is: nobody remembers why. Design how the evidence, approvals and history survive the handoff. Confirm scope and availability before purchasing."
+      },
+      "rights": "Evercraft-created originals only; keep current payment authority and no automated settlement claims",
+      "claim_gates": [
+        "do_not_imply_completed_sales",
+        "do_not_imply_automated_fulfillment",
+        "confirm_scope_capacity_before_paid_checkout"
+      ],
+      "state_review": "copy_approved_for_internal_concept_only_not_published"
+    }
+  ]
+}
