@@ -92,6 +92,10 @@ export interface ScenePlan {
   durationSec: number;
   trimStartSec?: number;
   motion: 'hold' | 'push_in' | 'cover';
+  // Crop anchors on each axis: 0 = left/top, 0.5 = center, 1 = right/bottom.
+  // Optional; center remains the backward-compatible default.
+  cropAnchorX?: number;
+  cropAnchorY?: number;
   transition: 'cut' | 'dissolve';
   intent: string;
   screenText?: string;
