@@ -1,0 +1,45 @@
+name: Economic Pressure Atlas bridge tests
+on:
+  pull_request:
+    paths:
+      - 'systemia/household-fabric/economic-pressure-bridge.mjs'
+      - 'systemia/household-fabric/engine.mjs'
+      - 'systemia/household-fabric/engine.test.mjs'
+      - 'systemia/household-fabric/economic-pressure-page.test.mjs'
+      - 'public/economic-pressure/**'
+      - 'systemia/household-fabric/economic-pressure-proof.mjs'
+      - 'systemia/household-fabric/economic-pressure-bridge.test.mjs'
+      - 'systemia/household-fabric/economic-pressure-reviewed-snapshots.json'
+      - 'systemia/household-fabric/economic-pressure-review-referrals.json'
+      - 'systemia/household-fabric/ECONOMIC_PRESSURE_ATLAS.md'
+      - '.github/workflows/economic-pressure-bridge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/household-fabric/economic-pressure-bridge.mjs'
+      - 'systemia/household-fabric/engine.mjs'
+      - 'systemia/household-fabric/engine.test.mjs'
+      - 'systemia/household-fabric/economic-pressure-page.test.mjs'
+      - 'public/economic-pressure/**'
+      - 'systemia/household-fabric/economic-pressure-proof.mjs'
+      - 'systemia/household-fabric/economic-pressure-bridge.test.mjs'
+      - 'systemia/household-fabric/economic-pressure-reviewed-snapshots.json'
+      - 'systemia/household-fabric/economic-pressure-review-referrals.json'
+  schedule:
+    - cron: '15 15 * * *'
+permissions:
+  contents: read
+jobs:
+  bridge-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test economic provenance and existing household ranking
+        run: |
+          node --test systemia/household-fabric/economic-pressure-bridge.test.mjs systemia/household-fabric/engine.test.mjs systemia/household-fabric/surface.test.mjs systemia/household-fabric/economic-pressure-page.test.mjs
+          node systemia/household-fabric/economic-pressure-proof.mjs > /tmp/yakima-pressure-proof.json
+          node -e "const r=require('/tmp/yakima-pressure-proof.json');if(r.household_opportunities.status!=='degraded'||r.measured_economic_context.length!==7||r.household_opportunities.opportunities.filter(x=>x.category==='benefit').length!==3)process.exit(1)"

@@ -110,3 +110,14 @@ test('sponsored flag never adds ranking value', () => {
 
   assert.equal(rows[0].id, 'organic');
 });
+
+test('future-dated observations cannot masquerade as fresh assistance or fuel', () => {
+  const when = new Date('2026-10-21T19:00:00Z');
+  const future = rankOpportunities([{
+    id: 'future-benefit', title: 'Not yet reviewed',
+    category: 'benefit', observed_at: '2026-10-22T00:00:00Z',
+    source_url: 'https://www.dshs.wa.gov/', evidence_state: 'public',
+    eligibility: 'unknown', gross_savings_cents: 0,
+  }], { now: when });
+  assert.equal(future.length, 0);
+});

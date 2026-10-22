@@ -1,0 +1,115 @@
+{
+  "schema": "systemia.economic-pressure.manual-referral-seed.v1",
+  "geography": "yakima-wa",
+  "reviewed_on": "2026-10-21",
+  "next_review_due": "2026-10-28",
+  "state": "reviewed_public_information_not_live_collection",
+  "eligibility_verified": false,
+  "monetary_savings_claimed": false,
+  "referrals": [
+    {
+      "id": "wa-basic-food-official-20261021",
+      "title": "Check Washington Basic Food (SNAP)",
+      "description": "State program information and how to apply. Eligibility is determined by Washington DSHS after application and review; no individual benefit is guaranteed. If you receive both Basic Food and LIHEAP, 2026 SNAP utility-deduction rules may affect your food benefit amount. Review the DSHS notice and ask the agency about your circumstances; no benefit change is assumed.",
+      "category": "benefit",
+      "source_name": "Washington DSHS",
+      "source_url": "https://www.dshs.wa.gov/family-food-and-housing-services/food-assistance/basic-food-benefits",
+      "observed_at": "2026-10-22T00:00:00.000Z",
+      "expires_at": "2026-10-29T00:00:00.000Z",
+      "evidence_state": "public",
+      "confidence": 1,
+      "eligibility": "unknown",
+      "gross_savings_cents": 0,
+      "gross_earnings_cents": 0,
+      "audience_tags": [
+        "household",
+        "worker"
+      ],
+      "actions": [
+        {
+          "type": "open_url",
+          "label": "Read official eligibility and application steps",
+          "url": "https://www.dshs.wa.gov/family-food-and-housing-services/food-assistance/basic-food-benefits"
+        }
+      ],
+      "raw_metadata": {
+        "verification_method": "manual_review",
+        "reviewed_on": "2026-10-21",
+        "live_collector": false,
+        "application_submitted": false,
+        "monetary_value_claimed": false,
+        "source_link_verified": true,
+        "related_policy_notice_url": "https://www.dshs.wa.gov/sites/default/files/SUA_LIHEAP_Final_Version.pdf"
+      }
+    },
+    {
+      "id": "wa-liheap-official-20261021",
+      "title": "Check energy assistance through Washington LIHEAP",
+      "description": "The state describes eligibility and how to find a county provider. Funding and eligibility are determined by the local provider; no assistance amount is estimated. If you receive both Basic Food and LIHEAP, 2026 SNAP utility-deduction rules may affect your food benefit amount. Review the DSHS notice and ask the agency about your circumstances; no benefit change is assumed.",
+      "category": "benefit",
+      "source_name": "Washington Commerce",
+      "source_url": "https://www.commerce.wa.gov/community-opportunities/liheap/",
+      "observed_at": "2026-10-22T00:00:00.000Z",
+      "expires_at": "2026-10-29T00:00:00.000Z",
+      "evidence_state": "public",
+      "confidence": 1,
+      "eligibility": "unknown",
+      "gross_savings_cents": 0,
+      "gross_earnings_cents": 0,
+      "audience_tags": [
+        "household",
+        "worker"
+      ],
+      "actions": [
+        {
+          "type": "open_url",
+          "label": "Find local LIHEAP provider",
+          "url": "https://www.commerce.wa.gov/community-opportunities/liheap/"
+        }
+      ],
+      "raw_metadata": {
+        "verification_method": "manual_review",
+        "reviewed_on": "2026-10-21",
+        "live_collector": false,
+        "application_submitted": false,
+        "monetary_value_claimed": false,
+        "source_link_verified": true,
+        "related_policy_notice_url": "https://www.dshs.wa.gov/sites/default/files/SUA_LIHEAP_Final_Version.pdf"
+      }
+    },
+    {
+      "id": "wa-211-resource-directory-20261021",
+      "title": "Find nearby food, housing and financial assistance resources",
+      "description": "The Washington 211 resource directory supports locally matched referrals. Individual providers, hours and availability must be confirmed.",
+      "category": "benefit",
+      "source_name": "Washington 211",
+      "source_url": "https://search.wa211.org/",
+      "observed_at": "2026-10-22T00:00:00.000Z",
+      "expires_at": "2026-10-29T00:00:00.000Z",
+      "evidence_state": "public",
+      "confidence": 1,
+      "eligibility": "unknown",
+      "gross_savings_cents": 0,
+      "gross_earnings_cents": 0,
+      "audience_tags": [
+        "household",
+        "worker"
+      ],
+      "actions": [
+        {
+          "type": "open_url",
+          "label": "Search Washington 211 resources",
+          "url": "https://search.wa211.org/"
+        }
+      ],
+      "raw_metadata": {
+        "verification_method": "manual_review",
+        "reviewed_on": "2026-10-21",
+        "live_collector": false,
+        "application_submitted": false,
+        "monetary_value_claimed": false,
+        "source_link_verified": true
+      }
+    }
+  ]
+}

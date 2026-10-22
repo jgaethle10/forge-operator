@@ -1,0 +1,92 @@
+{
+  "schema": "systemia.economic-pressure.reviewed-snapshots.v1",
+  "reviewed_at": "2026-10-21",
+  "review_method": "Manually cross-checked with dated official primary pages. This is an allowlist of fixed observations, not a live ingestion endpoint.",
+  "snapshots": [
+    {
+      "metric": "us-cpi-all-items-yoy",
+      "geography": "us",
+      "observed_period": "2026-09",
+      "unit": "percent",
+      "value": 3.7,
+      "evidence_state": "public",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_10142026.htm",
+      "release_at": "2026-10-14T12:30:00.000Z",
+      "source_date_precision": "exact",
+      "reviewed_on": "2026-10-14"
+    },
+    {
+      "metric": "us-cpi-gasoline-mom",
+      "geography": "us",
+      "observed_period": "2026-09",
+      "unit": "percent",
+      "value": 9.1,
+      "evidence_state": "public",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_10142026.htm",
+      "release_at": "2026-10-14T12:30:00.000Z",
+      "source_date_precision": "exact",
+      "reviewed_on": "2026-10-14"
+    },
+    {
+      "metric": "us-cpi-gasoline-yoy",
+      "geography": "us",
+      "observed_period": "2026-09",
+      "unit": "percent",
+      "value": 34.2,
+      "evidence_state": "public",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_10142026.htm",
+      "release_at": "2026-10-14T12:30:00.000Z",
+      "source_date_precision": "exact",
+      "reviewed_on": "2026-10-14"
+    },
+    {
+      "metric": "yakima-unemployment-rate",
+      "geography": "yakima-wa",
+      "observed_period": "2026-08",
+      "unit": "percent",
+      "value": 5.5,
+      "evidence_state": "public",
+      "source_url": "https://esd.wa.gov/jobs-and-training/labor-market-information/reports-and-research/labor-market-county-profiles/yakima-county-profile",
+      "release_at": null,
+      "source_date_precision": "month_only_updated_september_2026",
+      "reviewed_on": "2026-10-14"
+    },
+    {
+      "metric": "yakima-nonfarm-payroll",
+      "geography": "yakima-wa",
+      "observed_period": "2026-08",
+      "unit": "jobs",
+      "value": 89100,
+      "evidence_state": "public",
+      "source_url": "https://esd.wa.gov/jobs-and-training/labor-market-information/reports-and-research/labor-market-county-profiles/yakima-county-profile",
+      "release_at": null,
+      "source_date_precision": "month_only_updated_september_2026",
+      "reviewed_on": "2026-10-14"
+    },
+    {
+      "metric": "wa-unemployment-rate",
+      "geography": "wa-state",
+      "observed_period": "2026-09",
+      "unit": "percent",
+      "value": 4.8,
+      "evidence_state": "public",
+      "source_url": "https://esd.wa.gov/about-us/news-release/2026/washington-unemployment-rate-decreased-slightly-48-september",
+      "release_at": null,
+      "source_date_precision": "day_only_released_october_14_2026",
+      "reviewed_on": "2026-10-21"
+    },
+    {
+      "metric": "wa-nonfarm-payroll-change",
+      "geography": "wa-state",
+      "observed_period": "2026-09",
+      "unit": "jobs_change",
+      "value": -15400,
+      "evidence_state": "public",
+      "source_url": "https://esd.wa.gov/about-us/news-release/2026/washington-unemployment-rate-decreased-slightly-48-september",
+      "release_at": null,
+      "source_date_precision": "day_only_released_october_14_2026",
+      "reviewed_on": "2026-10-21",
+      "measurement_qualifier": "seasonally adjusted preliminary estimate"
+    }
+  ]
+}
