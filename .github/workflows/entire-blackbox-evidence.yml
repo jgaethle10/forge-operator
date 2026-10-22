@@ -43,6 +43,14 @@ jobs:
           grep -q '"live_integrated": false' /tmp/synthetic-incident.json
           grep -q '"verified_collateral": \[\]' /tmp/synthetic-incident.json
           grep -q '"canonical_admission": "NOT_ADMITTED"' /tmp/synthetic-incident.json
+      - name: Source-bound visual observatory QA
+        run: |
+          node --test ../../systemia/agent-continuity/visual-ops/packet.test.mjs
+          node ../../systemia/agent-continuity/visual-ops/build.mjs \
+            ../../systemia/agent-continuity/scenario.synthetic.json \
+            /tmp/evidence.json /tmp/evercraft-agent-visual-ops.html
+          grep -q 'SYNTHETIC REPLAY' /tmp/evercraft-agent-visual-ops.html
+          grep -q 'external_side_effect_verified' /tmp/evercraft-agent-visual-ops.html
       - name: Synthetic anticipatory defense policy
         run: node --test ../../systemia/agent-continuity/response-policy.test.mjs
       - name: Cross-build candidate binaries
