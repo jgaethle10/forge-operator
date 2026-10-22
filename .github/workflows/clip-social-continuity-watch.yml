@@ -6,6 +6,8 @@ on:
       - 'systemia/clip/social-continuity-watch.workflow.json'
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'distribution/marketing/**'
       - '.github/workflows/clip-social-continuity-watch.yml'
   push:
@@ -15,6 +17,8 @@ on:
       - 'systemia/clip/social-continuity-watch.workflow.json'
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'distribution/marketing/**'
       - '.github/workflows/clip-social-continuity-watch.yml'
   workflow_dispatch:
