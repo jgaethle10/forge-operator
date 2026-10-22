@@ -16,7 +16,8 @@ This bridge joins **context** and **actions** without pretending one is the othe
 
 The pilot recognizes:
 - U.S. CPI all-items annual, gasoline monthly and annual readings from BLS;
-- Yakima County unemployment rate and nonfarm payroll employment from Washington ESD.
+- Washington **statewide**, seasonally adjusted September unemployment (4.8%) and preliminary payroll movement (-15,400), from ESD's October 14 release;
+- **separately**, Yakima County August unemployment rate (5.5%) and nonfarm payroll employment (89,100). No September county figure is inferred from statewide data.
 
 ## Verified CPI snapshot (2026-10-14)
 
@@ -30,9 +31,16 @@ Use date-specific evidence snapshots and revision records. A hard-coded snapshot
 
 ## Actionable but not fabricated: manually reviewed assistance doors
 
-`economic-pressure-review-referrals.json` contains a **reviewed, time-bounded informational seed**, currently three official provider pages for Basic Food, LIHEAP and Washington 211. An independent person must confirm eligibility and program availability. No amounts, awards, enrollments, current provider capacity or automatic collections are claimed. The seed expires October 21, 2026 and will drop out of the Household Fabric results unless reviewed and updated. The engine continues to mark other local categories as degraded instead of imagining prices or job vacancies.
+`economic-pressure-review-referrals.json` contains a **reviewed, time-bounded informational seed**, currently three official provider pages for Basic Food, LIHEAP and Washington 211. An independent person must confirm eligibility and program availability. No amounts, awards, enrollments, current provider capacity or automatic collections are claimed. The original October 14 seed expired October 21 and was not silently extended. On October 21 its three official landing pages were manually reverified and reissued as a new, dated review seed, expiring October 28 (2026-10-29T00:00Z). Its cost and eligibility claims remain zero/unknown. Note that DSHS's 2026 SNAP/LIHEAP utility-deduction changes may affect some households, and must be considered before presenting the combination as financial relief. Review the source guidance: https://www.dshs.wa.gov/sites/default/files/SUA_LIHEAP_Final_Version.pdf. The engine continues to mark other local categories as degraded instead of imagining prices or job vacancies.
 
-A reproducible read-only proof can be produced using `node systemia/household-fabric/economic-pressure-proof.mjs`. Its benefit cards are **not** proof an application was filed or that the household saved money. Monetary value remains zero until attributable, verified evidence exists. The 0 net value is a deliberate unknown, not a judgment about a program's usefulness.
+A reproducible read-only proof, now with seven explicitly reviewed national/state/county context signals, can be produced using `node systemia/household-fabric/economic-pressure-proof.mjs`. Its benefit cards are **not** proof an application was filed or that the household saved money. Monetary value remains zero until attributable, verified evidence exists. The 0 net value is a deliberate unknown, not a judgment about a program's usefulness.
+
+## October 21 review and time semantics
+
+- The proof runner uses the actual evaluation time by default, never a frozen October 14 date. Historical examples must pass an explicit date.
+- Household Fabric now rejects observations dated in the future; expiry removes stale referrals, and missing collection coverage remains degraded.
+- Primary assistance sources: https://www.dshs.wa.gov/family-food-and-housing-services/food-assistance/basic-food-benefits ; https://www.commerce.wa.gov/community-opportunities/liheap/ ; https://search.wa211.org/ . These are **information and application directions**, not proofs of capacity, funding, or approvals.
+- Source-specific Yakima September county data was scheduled for October 20, but the ESD county-profile page still exposes the August series at the time of this review. Do not manufacture a September county rate. Recheck county releases before using a more current number.
 
 ## Acceptance gates
 
