@@ -366,7 +366,7 @@ export function availableBuyerMoments(capabilities=[]){
        !offerPurchaseKeyForSlug(moment.slug)||
        offerCapabilityForSlug(moment.slug,capabilities)?.public_id!==moment.public_id) return [];
     const price=entryPriceLabel(matches[0]);
-    if(!/^\\$[0-9][0-9,.]*$/.test(price))return [];
+    if(!/^\$[0-9][0-9,.]*$/.test(price))return [];
     return [{...moment,price}];
   });
 }
