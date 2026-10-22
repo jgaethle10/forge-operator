@@ -32,7 +32,8 @@ test('four branded service pages preserve verified Stripe product and price iden
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new vm.Script(scripts[0].slice(8,-9)));
   const urls=(html.match(/https:\/\/buy\.stripe\.com\/[a-zA-Z0-9]+/g)||[]);
-  assert.deepEqual(urls,[p.checkout]);
+  assert.ok(urls.length>=2);
+  assert.deepEqual([...new Set(urls)],[p.checkout]);
  }
 });
 test('publisher directory does not silently offer mismatched low-cost PDFs or audit',()=>{
