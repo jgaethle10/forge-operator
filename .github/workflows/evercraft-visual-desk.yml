@@ -249,6 +249,10 @@ jobs:
 
       - name: Verify actual authored image and voice exports for high-fidelity toons
         run: |
+          set -euo pipefail
+          node --check systemia/media-studio/toon-pose-animatic.cli.mjs
+          node --check systemia/media-studio/toon-puppet-binding.mjs
+          /tmp/fallen-toon-cel-env/bin/python -m py_compile systemia/media-studio/toon-puppet-rig.py
           FALLEN_TOON_PYTHON=/tmp/fallen-toon-cel-env/bin/python \
           FALLEN_TOON_PUPPET_PROOF_DIR=_toon_puppet_proof \
           FALLEN_TOON_ANIMATIC_PROOF_DIR=_toon_pose_proof \
