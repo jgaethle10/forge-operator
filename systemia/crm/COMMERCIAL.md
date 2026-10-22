@@ -33,6 +33,12 @@ multiple staff, informal commitments, and missed handoffs.
   \`customer-vault.mjs\` reads a private tenant-file boundary using
   non-name-based SHA-256 paths and rejects unsafe file types and permissions.
   Both are read-only modules, not public API endpoints or identity providers.
+  `customer-api.mjs` now supplies an **attachable, read-only** handler at
+  `/v1/relationship-command/workspace`; an embedding backend must provide a
+  trusted authenticated session callback and private vault. The handler
+  rejects write verbs and client-supplied tenant query overrides, emits
+  no-store/private anti-cache headers and redacts failures. It does **not**
+  start a listener, implement login, or expose customer data by itself.
 - Existing company CRM, relationship policy, signed approval read model,
   Passport/Interaction Ledger and governed mail adapter remain **draft**.
 - Machine-readable launch hold: \`commercial-offer.json\`. Its billing gates
@@ -80,7 +86,7 @@ features or manufacture customer references.
 
 ## Acceptance proofs
 
-- Run: \`node --test systemia/crm/customer-workspace.test.mjs systemia/crm/customer-vault.test.mjs systemia/crm/product-surface.test.mjs\`.
+- Run: \`node --test systemia/crm/customer-workspace.test.mjs systemia/crm/customer-vault.test.mjs systemia/crm/customer-api.test.mjs systemia/crm/product-surface.test.mjs\`.
 - Confirm a viewer cannot inspect operator-only context, a different tenant
   never appears in another tenant's read model, and a no-contact event in a
   different division prevents independent preflight of the same subject.
