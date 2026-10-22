@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import { admitMission, assertControlPlane } from '../control-plane/control-plane.mjs';
 
@@ -16,7 +17,11 @@ export function preflightOsMission({
   softwareId = 'evercraft-os-readiness',
   now = new Date()
 } = {}) {
-  const source = program ?? JSON.parse(readFileSync(resolve(rootDir, PROGRAM_PATH), 'utf8'));
+  const rawProgram = program == null
+    ? readFileSync(resolve(rootDir, PROGRAM_PATH))
+    : Buffer.from(JSON.stringify(program));
+  const source = JSON.parse(rawProgram.toString('utf8'));
+  const programSha256 = 'sha256:' + createHash('sha256').update(rawProgram).digest('hex');
   if (source.schema !== 'evercraft.os.parallel-program.v1' ||
       source.mode !== 'read_only_preflight' ||
       source.state !== 'proposal_not_admitted' ||
@@ -76,6 +81,7 @@ export function preflightOsMission({
   return {
     schema: 'evercraft.os.systemia-readiness-policy.v1',
     mission_key: source.mission_key,
+    program_sha256: programSha256,
     state: 'systemia_policy_plan_admitted',
     policy_receipt_hash: plan.receipt.receipt_hash,
     lane_count: decisions.length,
