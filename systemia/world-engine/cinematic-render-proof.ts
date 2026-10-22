@@ -30,6 +30,7 @@ import {organicFoamGeometry,ORGANIC_FOAM_PREFIX} from './organic-wake-geometry.j
 import {applyNavalEditorialGrade,makeNavalEditorialTake,type NavalEditorialShot} from './naval-editorial-direction.js';
 import {auditWebGpuHeroFraming} from './shot-composition.js';
 import {auditNavalEditorialForeground} from './naval-foreground-audit.js';
+import {stageNavalPlatingSourceWorld,isOriginalLoftedNavalHullGeometry,NAVAL_PLATING_SHADER_SOURCE_ID} from './native-hull-plating.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -173,7 +174,7 @@ async function loopback(){
   return {server,url:'http://127.0.0.1:'+addr.port+'/'};
 }
 async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSequence>['frames'],geometries:GeometryAsset[],textures:TextureAsset[],
-  shader:string,shadowShader:string,out:string,skyShader:string|null=null){
+  shader:string,shadowShader:string,out:string,skyShader:string|null=null,platingEnabled=false){
   const prepared=await prepareNativeBrowserRuntime({
     sourceDir:worker,stateDir:process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),
     allowInstall:true
@@ -345,12 +346,13 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     let counterfactualChangedPixels=0;
     let filterChangedPixels=0;
     let skyCounterfactualChangedPixels=0;
+    let platingCounterfactualChangedPixels=0;
     try{
       for(const frame of plans.slice(0,-1)){
         const packet=frame.renderPlan;
         if(!packet?.digest||!packet.draws?.length)throw new Error('empty_gpu_plan');
         const skyFrame=skyShader?Array.from(cinematicSkyCameraUniform(packet)):null;
-        const renderFrame=async (submittedPlan:any,showSky=true)=>page.evaluate(async({plan,skyValues}:{plan:any;skyValues:number[]|null})=>{
+        const renderFrame=async (submittedPlan:any,showSky=true,showPlating=true)=>page.evaluate(async({plan,skyValues,platingEnabled}:{plan:any;skyValues:number[]|null;platingEnabled:boolean})=>{
           const r=(window as any).__evercraftCinematic;
           const {device}=r;
           const fog=plan.atmosphere;
@@ -453,7 +455,8 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               draw.receivesShadow?1:0,
               draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?1:0,
               draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?plan.timeSec:
-                draw.geometryId.startsWith('owned:fx-organic-foam-')?-2:0,
+                draw.geometryId.startsWith('owned:fx-organic-foam-')?-2:
+                platingEnabled&&/^owned:battle-vessel-(hood|prince-of-wales|bismarck|prinz-eugen)-hull$/.test(draw.geometryId)?-3:0,
               draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?0.80:
                 draw.geometryId.startsWith('owned:fx-organic-foam-')?plan.timeSec:0
             ]);
@@ -492,9 +495,21 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             binary+=String.fromCharCode(...raw.subarray(offset,offset+8192));
           }
           return btoa(binary);
-        },{plan:submittedPlan,skyValues:showSky?skyFrame:null});
+        },{plan:submittedPlan,skyValues:showSky?skyFrame:null,platingEnabled:platingEnabled&&showPlating});
         const base64=await renderFrame(packet);
         const pixels=Buffer.from(base64,'base64');
+        if(frame.index===0&&platingEnabled){
+          const original=Buffer.from(await renderFrame(packet,true,false),'base64');
+          if(original.length!==pixels.length)throw Error('plating_counterfactual_buffer_invalid');
+          fs.writeFileSync(path.join(out,'plating-disabled-first-frame.rgba'),original,{flag:'wx',mode:0o600});
+          for(let i=0;i<pixels.length;i+=4){
+            if(Math.abs(pixels[i]-original[i])>4||
+               Math.abs(pixels[i+1]-original[i+1])>4||
+               Math.abs(pixels[i+2]-original[i+2])>4)platingCounterfactualChangedPixels++;
+          }
+          if(platingCounterfactualChangedPixels<40)
+            throw Error('steel_plating_source_wgsl_has_no_observable_gpu_pixels');
+        }
         if(frame.index===0&&skyShader){
           const previous=Buffer.from(await renderFrame(packet,false),'base64');
           if(previous.length!==pixels.length)throw Error('sky_counterfactual_invalid');
@@ -538,7 +553,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     if(new Set(hashes).size<3)throw new Error('rendered_frames_have_no_visible_motion');
     return {framesFile,profile:selected.name,softwareAdapterForced:selected.forcedSoftware,
       frameHashes:hashes,uniqueFrameHashes:new Set(hashes).size,counterfactualChangedPixels,
-      filterChangedPixels,skyCounterfactualChangedPixels};
+      filterChangedPixels,skyCounterfactualChangedPixels,platingCounterfactualChangedPixels};
   }finally{
     if(browser)await browser.close().catch(()=>{});
     await new Promise<void>(resolve=>server.server.close(()=>resolve()));
@@ -552,6 +567,8 @@ async function main(){
   const isSilhouette=process.env.CINEMATIC_SCENE==='denmark_strait_silhouettes';
   const isBattleship=process.env.CINEMATIC_SCENE==='battleship'||isFormation||isSilhouette;
   const useFx=process.env.BATTLE_FX==='1';
+  const usePlating=process.env.BATTLE_HULL_PLATING==='1';
+  if(usePlating&&!isSilhouette)throw Error('plating_requires_four_original_vessels');
   const organicWake=process.env.BATTLE_ORGANIC_WAKE==='1';
   if(organicWake&&!useFx)throw Error('organic_wake_requires_environmental_fx');
   const useSky=process.env.BATTLE_SKY==='1';
@@ -564,7 +581,8 @@ async function main(){
   if(editorial&&!['waterline_tracking','compressed_formation'].includes(editorial))
     throw Error('editorial_naval_shot_invalid');
   const sceneBase=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
-  const originalWorld=editorial?applyNavalEditorialGrade(sceneBase,editorial):sceneBase;
+  const gradedWorld=editorial?applyNavalEditorialGrade(sceneBase,editorial):sceneBase;
+  const originalWorld=usePlating?stageNavalPlatingSourceWorld(gradedWorld):gradedWorld;
   const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
     ?makeBattleMotionDemo(originalWorld):undefined;
   const fxRig=useFx?makeBattleEnvironmentFx():undefined;
@@ -644,7 +662,7 @@ async function main(){
   const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
   if(!shadowSource)throw new Error('owned_shadow_shader_missing');
-  const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out,useSky?CINEMATIC_SKY_WGSL:null);
+  const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out,useSky?CINEMATIC_SKY_WGSL:null,usePlating);
   const video=path.join(out,isSilhouette?'denmark-strait-class-silhouettes-gpu.mp4':isFormation?'denmark-strait-four-vessel-gpu-proxy.mp4':isBattleship?'battleship-world-engine-trial.mp4':'orbital-foundry-synthetic-canary.mp4');
   let soundReceipt:ReturnType<typeof renderKineticSoundscape>['receipt']|null=null;
   if(isBattleship){
@@ -761,6 +779,16 @@ async function main(){
       physicsOrCFDVerified:false,
       historicalWeatherVerified:false,
       publicationAuthority:false
+    }}:{}),
+    ...(usePlating?{nativeHullPlating:{
+      source:NAVAL_PLATING_SHADER_SOURCE_ID,
+      originalSourceHullMeshesAtMiddle:sequence.frames[48].renderPlan.draws.filter(d=>
+        isOriginalLoftedNavalHullGeometry(d.geometryId)).map(d=>({id:d.entityId,geometryId:d.geometryId})),
+      nativeWgslStableUvSeamPigmentRoughness:true,
+      originalGpuCounterfactualChangedPixels:raw.platingCounterfactualChangedPixels,
+      oldFoamShaderFlagPreserved:true,
+      filmRecolorOrPostprocessing:false,
+      historicallyAuthenticatedPaint:false,publicationAuthority:false
     }}:{}),
     ...(editorial?{editorialDirection:{
       shot:editorial,sourceCameraWorldRig:true,gradedOriginalPbrMaterials:true,
