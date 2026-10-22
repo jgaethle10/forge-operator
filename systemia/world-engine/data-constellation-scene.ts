@@ -88,7 +88,8 @@ export function makeDataConstellationScene(){
   for(let cluster=0;cluster<3;cluster++){
     const root=roots[cluster];
     add({id:'cluster-'+cluster+'-relay',transform:{position:root,scale:vec(.24,.24,.24)},
-      renderable:{geometryRef:'data-constellation:sphere',materialId:materialIds[cluster]}});
+      renderable:{geometryRef:'data-constellation:sphere',materialId:materialIds[cluster]},
+      behaviors:[{kind:'oscillate_y',amplitude:.12,frequencyHz:.4+cluster*.13}]});
     for(let i=0;i<25;i++){
       const spiral=i*2.3999632297+cluster*.42;
       const radius=.56+Math.sqrt((i+1)/25)*2.35;
@@ -99,7 +100,8 @@ export function makeDataConstellationScene(){
       const size=i%9===0?.15:.07+rand()*.048;
       add({id:'cluster-'+cluster+'-signal-'+String(i).padStart(2,'0'),
         transform:{position:p,scale:vec(size,size,size)},
-        renderable:{geometryRef:'data-constellation:sphere',materialId:materialIds[cluster]}});
+        renderable:{geometryRef:'data-constellation:sphere',materialId:materialIds[cluster]},
+        ...(i%5===0?{behaviors:[{kind:'oscillate_y' as const,amplitude:.07,frequencyHz:.7+(i%3)*.2}]}:{})});
     }
   }
   let linkCount=0;
@@ -140,13 +142,13 @@ export function makeDataConstellationScene(){
     visualScene:{
       schema:'evercraft.world-engine.visual-scene.v1',
       initialCameraEntityId:'cinema-camera',
-      clearColor:color(.008,.015,.035),
+      clearColor:color(.021,.032,.065),
       atmosphere:{color:color(.04,.07,.14),density:.034,startDistance:4,heightFalloff:.09,referenceHeight:0},
       cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
-      colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:.25},
+      colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:.65},
       materials:[
-        material('basalt',[.038,.06,.10],.43,.63),
-        material('architecture',[.13,.19,.28],.68,.36),
+        material('basalt',[.08,.12,.20],.48,.57),
+        material('architecture',[.17,.25,.36],.68,.32),
         material('node-cyan',[.13,.58,.86],.38,.24,[.13,.5,.9],.26),
         material('node-ice',[.36,.88,.95],.40,.22,[.24,.75,1],.26),
         material('node-violet',[.53,.35,.87],.42,.29,[.42,.2,.88],.28),
@@ -161,8 +163,8 @@ export function makeDataConstellationScene(){
     schema:'evercraft.world-engine.cinematic-camera-take.v1',id:'constellation-cinematic-take',
     cameraEntityId:'cinema-camera',targetEntityId:'knowledge-core',durationSec:4,fps:24,
     move:'orbit',ease:'smootherstep',
-    orbit:{radius:16,startAngleDeg:-18,endAngleDeg:21,startHeight:3.3,endHeight:4.3},
-    startFovYDeg:50,endFovYDeg:45
+    orbit:{radius:12.8,startAngleDeg:-31,endAngleDeg:32,startHeight:2.9,endHeight:4.25},
+    startFovYDeg:44,endFovYDeg:40
   };
   return {world,take,geometries:[cube(),sphere()],
     receipt:{schema:'evercraft.cinema.data-constellation-scene.v1',
