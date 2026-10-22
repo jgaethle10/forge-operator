@@ -56,7 +56,13 @@ for s,label in [(-1,'L'),(1,'R')]:
 
 # An actual lit portrait, not Workbench gray-plastic preview.
 scene.render.engine='CYCLES'
-scene.cycles.samples=14
+scene.cycles.samples=18
+# Distro Blender 4.0 can lack OpenImageDenoise; render without unsupported CPU denoiser.
+for _layer in scene.view_layers:
+    if hasattr(_layer,'cycles'):
+        _layer.cycles.use_denoising=False
+if hasattr(scene.cycles,'use_denoising'):
+    scene.cycles.use_denoising=False
 scene.render.resolution_x=640;scene.render.resolution_y=360
 scene.render.resolution_percentage=100
 scene.world.use_nodes=True
