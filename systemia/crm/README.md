@@ -108,3 +108,63 @@ New relationships always start \`manual_review_only\` with an empty allowed-purp
 A completed review drops from the heartbeat only after a recorded terminal state, timestamp and evidence. A follow-up date passing does NOT turn an entity into a cold lead. A no-contact event remains a hard relationship-policy hold even if another record attempts to widen allowed purposes.
 
 The remaining production integration work is to mount an owned private CRM store, reconcile actual Gmail/thread and other authoritative sources into records with scoped retention, bind an operator-controlled verifier to the decision/intake services, wire every discretionary sender through \`prepareGovernedContactPermit\`, and verify real-world receipt and rejection behavior. **No real-world partner record or outreach event is created merely by landing this code.**
+
+## Local private intake and independent approval verification (staged October 22)
+
+**No real people, companies, or their correspondence are seeded in source control.**
+The only safe place for those records is an owner-controlled private state
+directory on admitted Evercraft Compute.
+
+A trusted operator or ingestion worker can prepare a private 0600 evidence file
+with one \`evercraft.crm.source-evidence-envelope.v1\` object containing
+\`initial\` (opaque relationship/subject IDs, division, type, initial status,
+source reference and review window) and \`event\` (unique source event reference,
+event type, actual occurrence time, evidence reference and optional private
+context/source message reference). The enclosing directory must be 0700. Run:
+
+\`\`\`bash
+node systemia/crm/relationship-ingest-cli.mjs \
+  --evidence-file /private/evercraft/source-evidence.json \
+  --relationship-ledger-file /private/evercraft/relationships.json
+\`\`\`
+
+The CLI reads its input from the verified private file descriptor, appends one
+event under a private mutation lock, writes an atomic 0600 CRM ledger, and
+prints only a schema, state, opaque hash, and no-contact-authority flags.
+Replay of the same event is idempotent; changed content on the same event ID
+is a conflict. A newly discovered relationship is **manual_review_only**,
+without automatically allowed purposes. Unsafe permissions or invalid
+evidence emit only a redacted hold receipt and exit nonzero.
+
+**Signed operator approvals** are read by
+\`createPrivateApprovalVerifiers({approvalFile,keyFile})\`. The protected approval
+file must have schema \`evercraft.crm.private-approvals.v1\`, tenant
+\`evercraft\`, a list of individually HMAC-SHA256 signed
+\`evercraft.crm.approval.v1\` grants, explicit revocations, and a second
+signature covering the entire ledger (including revocations). The owner-held
+key file must be 0600, contain 32 to 256 key bytes, and live in a protected
+directory. The key is never put in logs, public artifacts or the repository.
+An approved record is not a permit and is never sufficient without fresh
+relationship review, Passport and Interaction Ledger. Approved action
+fingerprints bind division, purpose, actor, target, subject and exact content.
+A replay of an **older but authentic signed approval-ledger snapshot** is
+not yet prevented by an independently anchored monotonic version: prevent
+rollback using locked-down backend access and add a durable trusted watermark
+before production. Creation/signing of approval entries must be implemented
+behind authenticated operator identity, not a public/agent endpoint.
+
+\`prepareContactWithPrivateAuthority\` is the trusted-backend entrypoint.
+Unlike lower-level proofs, it accepts **no caller-supplied approval callback**;
+it uses a private signed authority verifier and then calls the governed
+relationship, Passport and Interaction Ledger checks. It only prepares a
+permit. No email/DM/SMS transport currently consumes these permits in this
+PR. Existing provider-specific verifications such as People account email
+proofs have different authority and must be separately audited, not
+automatically treated as discretionary CRM outreach.
+
+**Release remains blocked on:** real private-state bind, authenticated
+approval issuance and protected anti-rollback watermark, explicit ownership
+and retention policy, source coverage for every Evercraft division, actual
+sender-by-sender enforcement, real recipient resolution at transport, exactly
+once send/permit/provider receipt reconciliation, cross-device/restart
+verification, encrypted backup/restore, and a 300-second live-system proof.
