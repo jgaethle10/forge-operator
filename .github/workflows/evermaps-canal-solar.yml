@@ -61,6 +61,7 @@ jobs:
       - name: Retrieve live GIS geometry into RESEARCH ONLY packages
         run: |
           python systemia/evermaps/canal-solar/atlas.py --regions all
+          python systemia/evermaps/canal-solar/operator_qa.py
       - name: Save only QA-oriented manifests and internal archive bundles
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,6 +69,9 @@ jobs:
           name: evermaps-canal-solar-research-only
           path: |
             systemia/evermaps/canal-solar/out/**/manifest.json
+            systemia/evermaps/canal-solar/out/**/qa_review.json
+            systemia/evermaps/canal-solar/out/**/operator_validation_queue.csv
+            systemia/evermaps/canal-solar/out/market_qa.json
             systemia/evermaps/canal-solar/out/*_RESEARCH_ONLY.zip
           if-no-files-found: warn
           retention-days: 5
