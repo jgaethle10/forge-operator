@@ -40,6 +40,18 @@ jobs:
           node-version: "22"
       - name: Inventory Base44 migration debt
         run: node scripts/inventory-base44-runtime-debt.mjs --out artifacts/base44-runtime-debt/latest.json
+      - name: Verify owned AI installation routes and flag stale product-specific registry entries
+        run: |
+          node --test tests/owned-mcp-exit-audit.test.mjs
+          node scripts/audit-owned-mcp-exit.mjs > artifacts/base44-runtime-debt/owned-mcp-exit.json
+      - name: Upload machine connector migration receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-owned-mcp-exit-inventory
+          path: artifacts/base44-runtime-debt/owned-mcp-exit.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Upload migration-debt receipt
         uses: actions/upload-artifact@v4
         with:
