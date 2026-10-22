@@ -37,10 +37,10 @@ test('response JSON compiles into real World Engine visual scene and valid WebGP
   assert.equal(verifyFallenVisualSceneReceipt(projection.receipt,projection.world,projection.geometryAssets),true);
   const visual=frame(projection);
   assert.equal(verifyVisualFrameContract(visual),true);
-  assert.equal(visual.renderables.length,4);
+  assert.ok(visual.renderables.length>75);
   const plan=compileWebGpuRenderPlan(visual,projection.geometryAssets,{width:900,height:600});
   assert.equal(verifyWebGpuRenderPlan(plan),true);
-  assert.equal(plan.draws.length,4);
+  assert.ok(plan.draws.length>75);
   assert.ok(plan.draws.some(draw=>draw.entityId==='rc13:facility:H1'));
   assert.equal(projection.world.metadata.geospatial_authority,false);
   assert.equal(projection.world.metadata.physically_validated,false);
@@ -55,10 +55,30 @@ test('sports routes compile to actual visible geometry with deterministic orient
   assert.equal(verifyVisualFrameContract(frameA),true);
   const plan=compileWebGpuRenderPlan(frameA,a.geometryAssets,{width:900,height:600});
   assert.equal(verifyWebGpuRenderPlan(plan),true);
-  assert.equal(plan.draws.length,1+3+1+1+1+1); // board, three X segments, QB segment, X/QB markers, defender
+  assert.ok(plan.draws.length>55); // abstract field markings + input routes and markers
   assert.ok(plan.draws.some(draw=>draw.entityId==='rc13:route:X:2'));
   assert.equal(a.world.metadata.tracking_authority,false);
   assert.equal(a.world.metadata.scene_units,'abstract_schematic_not_meters');
+});
+
+test('response and sports stage visuals are decorative and never evidence',()=>{
+  for(const specimen of [response(),sports()]){
+    const handoff=importFallenVisualCase(specimen);
+    const stage=sceneFromFallenVisualHandoff(handoff);
+    const decorative=stage.world.entities.filter((e:any)=>e.tags?.includes('synthetic_editorial_stage'));
+    assert.ok(decorative.length>45);
+    assert.ok(decorative.every((e:any)=>
+      e.properties?.stage_not_evidence===true &&
+      e.properties?.decision_authority===false &&
+      e.properties?.publication_authority===false &&
+      e.properties?.source_rights_state==='unverified'
+    ));
+    assert.ok(stage.world.visualScene.materials.length>15);
+    assert.equal(stage.world.visualScene.initialCameraEntityId,'rc13:camera');
+    assert.equal(stage.world.metadata.geospatial_authority,false);
+    assert.equal(stage.world.metadata.tracking_authority,false);
+    assert.equal(verifyFallenVisualSceneReceipt(stage.receipt,stage.world,stage.geometryAssets),true);
+  }
 });
 
 test('tampering with scene geometry or release flag fails projection receipt',()=>{
