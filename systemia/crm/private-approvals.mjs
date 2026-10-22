@@ -24,6 +24,10 @@ function signature(grant,key) {
  const {signature:ignored,...body}=grant;
  return 'hmac-sha256:'+createHmac('sha256',key).update(JSON.stringify(body)).digest('hex');
 }
+function ledgerSignature(doc,key){
+ const {ledger_signature:ignored,...body}=doc;
+ return 'hmac-sha256:'+createHmac('sha256',key).update(JSON.stringify(body)).digest('hex');
+}
 function equalSignature(actual,expected){
  if(typeof actual!=='string'||!/^hmac-sha256:[0-9a-f]{64}$/.test(actual))return false;
  const a=Buffer.from(actual.slice(12),'hex'),b=Buffer.from(expected.slice(12),'hex');
@@ -37,6 +41,7 @@ function currentGrant({approvalFile,keyFile,approvalRef,now}) {
     !Array.isArray(doc.grants)||doc.grants.length>5000||
     !Array.isArray(doc.revocations)||doc.revocations.length>5000)
     throw Error('approval_ledger_invalid');
+ if(!equalSignature(doc.ledger_signature,ledgerSignature(doc,key)))throw Error('approval_ledger_signature_invalid');
  const unique=new Set();
  for(const row of doc.grants){
   const ref=req(row?.approval_ref,'approval_ref');
