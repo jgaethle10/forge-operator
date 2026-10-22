@@ -20,6 +20,7 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE / "out"
 GEOD = Geod(ellps="WGS84")
 SOURCES = {
+ "USGS_NHD": {"url":"https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6", "where":"ftype = 336 AND fcode <> 33603", "by":"US Geological Survey / The National Map (NHD)", "limits":"Nationwide canals/ditches, including non-irrigation or historically mapped features; not current operation/rights verification."},
  "WA_NHD": {"url":"https://gis.ecology.wa.gov/serverext/rest/services/TCP/EDAT/MapServer/48", "where":"FType = 336 AND FCode <> 33603", "by":"WA Department of Ecology / USGS", "limits":"Canals/ditches include features that may not be open or current."},
  "WA_SVID": {"url":"https://maps.yakimacounty.us/server/rest/services/Irrigation/SVIDLayersMap/FeatureServer/8", "where":"1=1", "by":"Yakima County / Sunnyside Valley Irrigation District contributors", "limits":"District source linework, not construction permission."},
  "CA_USBR": {"url":"https://geo.usbr.gov/server/rest/services/CGB_PAO_CVP_SacRiver_WebLayers_Tiles/MapServer/15", "where":"1=1", "by":"US Bureau of Reclamation", "limits":"Historical and partial CA/NV/OR coverage. Drains, ditches and wasteways included."},
@@ -36,10 +37,10 @@ REGIONS = {
  "fresno_madera_ca": ("Fresno–Madera, CA",[-120.15,36.36,-119.26,37.18],"CA_USBR",[]),
  "stockton_delta_ca": ("Stockton–Delta, CA",[-122.04,37.77,-120.92,38.44],"CA_USBR",[]),
  "sacramento_valley_ca": ("Sacramento Valley, CA",[-122.74,38.43,-121.06,40.4],"CA_USBR",[]),
- "klamath_or_ca": ("Klamath Basin, OR/CA",[-122.13,41.32,-120.46,42.33],"CA_USBR",[]),
- "newlands_nv": ("Newlands/Fallon, NV",[-119.99,39.11,-118.41,39.83],"CA_USBR",[]),
+ "klamath_or_ca": ("Klamath Basin, OR/CA",[-122.13,41.32,-120.46,42.33],"USGS_NHD",[]),
+ "newlands_nv": ("Newlands/Fallon, NV",[-119.99,39.11,-118.41,39.83],"USGS_NHD",[]),
  "medford_jackson_or": ("Medford/Jackson County, OR",[-123.24,42.09,-122.47,42.77],"OR_JACKSON",[]),
- "cache_valley_ut": ("Cache Valley, UT",[-112.26,41.46,-111.45,42.07],"UT_CACHE",[]),
+ "cache_valley_ut": ("Cache Valley, UT",[-112.26,41.46,-111.45,42.07],"USGS_NHD",[]),
  "south_florida_fl": ("South Florida Canal Districts",[-81.25,25.76,-80.05,27.12],"FL_SFWMD",[])
 }
 
