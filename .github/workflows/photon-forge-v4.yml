@@ -37,7 +37,8 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/evercraft-tsx" --no-save --package-lock=false --ignore-scripts --no-audit --no-fund tsx@4.21.0
       - name: Test the real Evercraft World Engine frame producer
-        run: "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" --test scripts/photon-forge-v4/export-world-engine-sequence.test.ts
+        run: |
+          "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" --test scripts/photon-forge-v4/export-world-engine-sequence.test.ts
       - name: Compile source frames in the native Evercraft World Engine
         run: |
           "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" scripts/photon-forge-v4/export-world-engine-sequence.ts \
