@@ -11,6 +11,9 @@ on:
       - "systemia/media-studio/render-geometry.test.ts"
       - "systemia/media-studio/director.ts"
       - "systemia/media-studio/director.test.ts"
+      - "systemia/media-studio/timeline.ts"
+      - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/timeline-export.test.ts"
       - "systemia/media-studio/types.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
@@ -25,6 +28,9 @@ on:
       - "systemia/media-studio/render-geometry.test.ts"
       - "systemia/media-studio/director.ts"
       - "systemia/media-studio/director.test.ts"
+      - "systemia/media-studio/timeline.ts"
+      - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/timeline-export.test.ts"
       - "systemia/media-studio/types.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
@@ -56,7 +62,8 @@ jobs:
             systemia/media-studio/studio-delivery.test.ts \
             systemia/media-studio/master-qc.integration.test.ts \
             systemia/media-studio/render-geometry.test.ts \
-            systemia/media-studio/director.test.ts
+            systemia/media-studio/director.test.ts \
+            systemia/media-studio/timeline-export.test.ts
       - name: Build media fixtures
         run: |
           set -euo pipefail
