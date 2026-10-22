@@ -1,0 +1,73 @@
+name: Animation Foundry Human Mesh Gate
+on:
+  push:
+    branches: [feat/animation-foundry-creative-gate-rc11]
+    paths:
+      - 'systemia/animation-foundry/build-human-mesh-proof.py'
+      - '.github/workflows/animation-foundry-human-mesh.yml'
+  pull_request:
+    paths:
+      - 'systemia/animation-foundry/build-human-mesh-proof.py'
+      - '.github/workflows/animation-foundry-human-mesh.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  human-mesh-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install display dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            xvfb libegl1 libgl1 libopengl0 libgl1-mesa-dri libxi6 libxrender1 \
+            libsm6 libxext6 libxkbcommon0 xz-utils curl ca-certificates
+      - name: Install Blender 4.5.3 from official project mirror
+        run: |
+          set -euo pipefail
+          curl -fLSs --retry 3 --max-time 500 \
+            https://download.blender.org/release/Blender4.5/blender-4.5.3-linux-x64.tar.xz \
+            -o /tmp/blender-4.5.3-linux-x64.tar.xz
+          curl -fLSs --retry 3 \
+            https://download.blender.org/release/Blender4.5/blender-4.5.3.sha256 \
+            -o /tmp/blender.sha256
+          grep -F 'blender-4.5.3-linux-x64.tar.xz' /tmp/blender.sha256 \
+            > /tmp/blender-selected.sha256
+          (cd /tmp && sha256sum -c blender-selected.sha256)
+          tar -xf /tmp/blender-4.5.3-linux-x64.tar.xz -C /tmp
+          /tmp/blender-4.5.3-linux-x64/blender --version | head -2
+      - name: Retrieve MPFB source without bundling it into Evercraft
+        run: |
+          git clone --depth 1 --filter=blob:none \
+            https://github.com/makehumancommunity/mpfb2.git /tmp/mpfb2
+          test -f /tmp/mpfb2/src/mpfb/services/humanservice.py
+      - name: Create actual neutral human base mesh and rig
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          mkdir -p /tmp/human-proof
+          xvfb-run -a /tmp/blender-4.5.3-linux-x64/blender -b -t 2 \
+            --python systemia/animation-foundry/build-human-mesh-proof.py \
+            -- /tmp/mpfb2/src /tmp/human-proof
+      - name: Validate output without fictional character claims
+        run: |
+          test -s /tmp/human-proof/Neutral_MPFB_BaseMesh_Real3D.blend
+          test -s /tmp/human-proof/Neutral_Mesh_Studio_Proof.png
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/human-proof/human_mesh_proof.json'))
+          assert p['status']=='passed'
+          assert p['mesh_vertices']>=5000
+          assert p['rig_bones']>=25
+          assert not p['visual_approval'] and not p['kennedy_character_match']
+          print('MPFB_HUMAN_MESH_VERIFIED',p['mesh_vertices'],p['rig_bones'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evercraft-human-mesh-foundation-not-kennedy
+          path: /tmp/human-proof/
+          retention-days: 14
+          if-no-files-found: warn
