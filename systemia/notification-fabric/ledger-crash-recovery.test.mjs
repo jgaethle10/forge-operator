@@ -36,6 +36,9 @@ test('first write, process reconstruction and HMAC-linked history remain coheren
   assert.equal(proof.valid,true);
   assert.equal(proof.count,2);
   assert.equal(proof.mode,'hmac-sha256');
+  assert.equal(restored.deliveryLedgerHead().state,'verified');
+  assert.equal(restored.deliveryLedgerHead().count,2);
+  assert.equal(restored.deliverySnapshot().integrity_verified,true);
   restored.recordDelivery(delivery(3));
   assert.equal(writer.verifyDeliveryLedger().count,3);
 });
@@ -50,6 +53,10 @@ test('crash after append but before head update holds ledger, never rewrites his
   const check = writer.verifyDeliveryLedger();
   assert.equal(check.valid,false);
   assert.equal(check.reason,'torn_append');
+  assert.equal(writer.deliveryLedgerHead().state,'held');
+  assert.equal(writer.deliveryLedgerHead().count,null);
+  assert.equal(writer.deliverySnapshot().state,'held');
+  assert.equal(writer.deliverySnapshot().total,null);
   assert.throws(()=>writer.recordDelivery(delivery(2)),/notification_delivery_ledger_integrity_hold/);
   assert.equal(fs.readFileSync(file,'utf8'),prior+'{"unfinished":true');
 });
