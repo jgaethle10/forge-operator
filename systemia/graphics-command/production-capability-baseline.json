@@ -103,6 +103,7 @@
     "systemia/media-studio/toon-cel-adapter.mjs",
     "systemia/media-studio/toon-cel-canary.py",
     "systemia/media-studio/toon-cinema-preflight.mjs",
+    "systemia/media-studio/toon-performance-intake.mjs",
     "systemia/media-studio/toon-shot-handoff.mjs",
     "systemia/media-studio/types.ts",
     "systemia/media-studio/virtual-production.ts",
