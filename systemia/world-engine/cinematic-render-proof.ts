@@ -648,18 +648,23 @@ async function main(){
     '-c:v','libx264','-preset','medium','-crf','20','-pix_fmt','yuv420p',
     '-c:a','aac','-b:a','128k','-movflags','+faststart',video]);
   }
-  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
-    '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
-    '-i',path.join(out,'shadow-disabled-first-frame.rgba'),
-    '-frames:v','1',path.join(out,'shadow-disabled-first-frame.png')]);
-  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
-    '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
-    '-i',raw.framesFile,
-    '-frames:v','1',path.join(out,'shadow-enabled-first-frame.png')]);
-  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
-    '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
-    '-i',path.join(out,'shadow-hard-first-frame.rgba'),
-    '-frames:v','1',path.join(out,'shadow-hard-first-frame.png')]);
+  // A native scene without visualScene.directionalShadows has no valid
+  // shadow-on/off counterfactual. Never fabricate files or report a shadow pass.
+  const shadowExpected=Boolean(sequence.frames[0].renderPlan.shadow);
+  if(shadowExpected){
+    for(const [input,output] of [
+      ['shadow-disabled-first-frame.rgba','shadow-disabled-first-frame.png'],
+      ['shadow-hard-first-frame.rgba','shadow-hard-first-frame.png']
+    ] as const){
+      run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+        '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
+        '-i',path.join(out,input),'-frames:v','1',path.join(out,output)]);
+    }
+    run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+      '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
+      '-i',raw.framesFile,
+      '-frames:v','1',path.join(out,'shadow-enabled-first-frame.png')]);
+  }
   const measure=JSON.parse(run('ffprobe',['-v','error','-show_entries','stream=codec_type,codec_name,width,height,r_frame_rate,nb_frames,channels,sample_rate:format=duration','-of','json',video]));
   const stream=measure.streams?.find((s:any)=>s.codec_type==='video');
   const audio=measure.streams?.find((s:any)=>s.codec_type==='audio');
@@ -677,7 +682,7 @@ async function main(){
   const receipt={
     schema:'evercraft.world-engine.cinematic-pixel-proof.v1',kind:'synthetic_internal_canary',
     worldDigest:sequence.worldDefinitionDigest,shaderSha256:shader.sha256,
-    shadowShaderSha256:sha(shadowSource[1]),shadowState:'depth_occlusion_real_gpu',
+    shadowShaderSha256:sha(shadowSource[1]),shadowState:shadowExpected?'depth_occlusion_real_gpu':'not_requested_by_scene',
     ...(useSky?{proceduralSky:{source:'original_camera_ray_webgpu_fullscreen_pass',
       shaderSha256:skyShaderSha256(),worldSpaceCameraRay:true,
       actualGpuPixelCounterfactualChangedPixels:raw.skyCounterfactualChangedPixels,
