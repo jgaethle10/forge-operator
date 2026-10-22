@@ -33,6 +33,11 @@ export function fingerprintExternalAction(input={}){
     starts_at:String(input.starts_at||'').trim()||null,
     location_ref:String(input.location_ref||'').trim()||null,
   };
+  // Bind CRM-specific authority to the exact approved request without
+  // changing legacy fingerprints for requests that carry none of these fields.
+  for(const key of ['subject_ref','division_id','purpose','actor_ref','passport_product']){
+    if(Object.hasOwn(input,key))payload[key]=String(input[key]??'').trim()||null;
+  }
   return sha256(JSON.stringify(payload));
 }
 
