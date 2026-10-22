@@ -2,7 +2,7 @@
 Run with blender -b -t 2 --python build-kennedy-rig-blockout.py -- OUTPUT_DIRECTORY
 Deliberately a production pipeline test; NOT approved model or visual fidelity.
 """
-import bpy, math, json, sys
+import bpy, math, json, sys, os
 from pathlib import Path
 from mathutils import Vector
 
@@ -217,12 +217,15 @@ if abs(released['x']-raised['x'])+abs(released['y']-raised['y'])<2:
 scene.frame_set(1)
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'Kennedy_Rigged3D_BLOCKOUT.blend'))
 # Use actual Blender rendered pixels, not generated storyboard stills.
-for f in range(1,49):
+lookdev_mode=os.environ.get('EVERCRAFT_LOOKDEV_ONLY')=='1'
+render_frames=[1,18,26,40] if lookdev_mode else list(range(1,49))
+for f in render_frames:
     scene.frame_set(f)
     scene.render.filepath=str(out/'frames'/('frame_%04d.png'%f))
     bpy.ops.render.render(write_still=True)
 report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
-  'model':'Kennedy_Rigged3D_BLOCKOUT.blend','stage':'engineering-blockout',
+  'model':'Kennedy_Rigged3D_BLOCKOUT.blend','stage':'lookdev_stills' if lookdev_mode else 'engineering-blockout',
+  'rendered_frames':len(render_frames),
   'visual_design_approved':False,'performance_approved':False,
   'armature_bones':len(arm.data.bones),'face_shapes':len(head.data.shape_keys.key_blocks)-1,
   'screen_hand_travel_px':round(screenTravel,2),'start_wrist':start,'snap_contact_wrist':raised,'snap_release_wrist':released,
