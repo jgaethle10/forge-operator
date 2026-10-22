@@ -63,3 +63,30 @@ test("runtime bindings still override the owned vault", () => {
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("a read-only probe of an empty configured directory never creates a vault key", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "raven-provider-no-mutate-"));
+  try {
+    assert.equal(fs.existsSync(path.join(root, ".vault-key")), false);
+    const before = fs.readdirSync(root);
+    const status = resolveCompetitionProviderSecrets({ EVERCRAFT_CREDENTIAL_STATE_DIR: root });
+    const after = fs.readdirSync(root);
+    assert.deepEqual(status, { kaggle: null, numerai: null });
+    assert.deepEqual(after, before);
+    assert.equal(fs.existsSync(path.join(root, ".vault-key")), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a nonexistent vault path is not created by a read-only provider probe", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "raven-provider-no-dir-"));
+  try {
+    const target = path.join(root, "not-created");
+    const status = resolveCompetitionProviderSecrets({ RAVEN_PROVIDER_CREDENTIAL_STATE_DIR: target });
+    assert.deepEqual(status, { kaggle: null, numerai: null });
+    assert.equal(fs.existsSync(target), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
