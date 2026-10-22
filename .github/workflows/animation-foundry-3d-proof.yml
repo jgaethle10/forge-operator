@@ -21,15 +21,15 @@ jobs:
       - name: Install real Blender and FFmpeg
         run: |
           sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends blender ffmpeg
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends blender ffmpeg xvfb libegl1 libgl1-mesa-dri libgl1 libopengl0
           blender --version | head -2
       - name: Generate rigged 3D engineering blockout and render individual frames
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
-          MESA_GL_VERSION_OVERRIDE: '3.3'
+          MESA_GL_VERSION_OVERRIDE: '4.5'
         run: |
           mkdir -p /tmp/kennedy-3d
-          blender -b -t 2 --python systemia/animation-foundry/build-kennedy-rig-blockout.py -- /tmp/kennedy-3d
+          xvfb-run -a blender -b -t 2 --python systemia/animation-foundry/build-kennedy-rig-blockout.py -- /tmp/kennedy-3d
       - name: Build playable video from real Blender frames
         run: |
           test "$(find /tmp/kennedy-3d/frames -name 'frame_*.png' | wc -l)" -eq 48
@@ -41,7 +41,7 @@ jobs:
           cp /tmp/kennedy-3d/frames/frame_0026.png /tmp/kennedy-3d/Proof_Snap_Pose.png
       - name: Verify structure in Blender runtime
         run: |
-          blender -b /tmp/kennedy-3d/Kennedy_Rigged3D_BLOCKOUT.blend \
+          xvfb-run -a blender -b /tmp/kennedy-3d/Kennedy_Rigged3D_BLOCKOUT.blend \
             -P systemia/animation-foundry/blender-rig-audit.py -- /tmp/kennedy-3d/rig_audit.json
       - uses: actions/upload-artifact@v4
         if: always()
