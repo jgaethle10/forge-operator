@@ -7,6 +7,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import {spawnSync} from 'node:child_process';
 import {verifyToonPerformanceBundle} from './toon-performance-intake.mjs';
+import {renderToonPoseAnimatic} from './toon-pose-animatic.mjs';
 import {runwayGen45Endpoint} from './visual-provider-runway.ts';
 
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
@@ -29,7 +30,7 @@ function pngChunk(kind,data){
   const checksum=Buffer.alloc(4);checksum.writeUInt32BE(crc32(Buffer.concat([tag,data])));
   return Buffer.concat([len,tag,data,checksum]);
 }
-function png(width=960,height=540){
+function png(width=960,height=540,rgb=[36,49,82]){
   const header=Buffer.alloc(13);
   header.writeUInt32BE(width,0);header.writeUInt32BE(height,4);
   header[8]=8;header[9]=2;
@@ -39,7 +40,7 @@ function png(width=960,height=540){
     rows[start]=0;
     for(let x=0;x<width;x++){
       const offset=start+1+x*3;
-      rows[offset]=36;rows[offset+1]=49;rows[offset+2]=82;
+      rows[offset]=rgb[0];rows[offset+1]=rgb[1];rows[offset+2]=rgb[2];
     }
   }
   return Buffer.concat([
@@ -57,7 +58,7 @@ function packet(){
       fps:24,durationSec:5,aspectRatio:'16:9',locationId:'grove',
       action:'Listen then react',soundDirection:'One owned voice line',
       characters:[{id:'hero',name:'The Hero',lockedTraits:{hair:'auburn'},
-        referenceAssetIds:['hero-frame-001'],voiceProfileId:'voice-foundry-hero',
+        referenceAssetIds:['hero-frame-001','hero-frame-002','hero-frame-003'],voiceProfileId:'voice-foundry-hero',
         acting:{objective:'Find the light',physicalAction:'Look, then turn',
           face:'Surprise',gazeTarget:'Light',hands:'Maintain anatomy'}}],
       dialogue:[{id:'cue-1',speakerId:'hero',text:'Look at that light.',
@@ -142,4 +143,71 @@ test('bad bytes, wrong voice, unsafe paths, fake scratch voice and unverified pr
     assert.throws(()=>run({...x.manifest,image:{...x.manifest.image,
       file:'linked.png'}}),/asset_not_regular_file/);
   }finally{fs.rmSync(x.dir,{recursive:true,force:true})}
+});
+
+
+test('actually encodes distinct bound acting poses and the supplied recorded audio into an MP4 animatic',()=>{
+  const x=fixture();
+  const output=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-toon-animatic-'));
+  try{
+    const phase2=png(960,540,[64,95,129]);
+    const phase3=png(960,540,[142,85,109]);
+    fs.writeFileSync(path.join(x.dir,'phase2.png'),phase2);
+    fs.writeFileSync(path.join(x.dir,'phase3.png'),phase3);
+    const pose=(id,file,hash,ref,t,beat)=>({
+      id,file,sha256:hash,referenceAssetId:ref,actorId:'hero',atSec:t,
+      rightsClaim:'owned',reviewState:'declared_approved',
+      reviewEvidenceRef:'human-review:pose-'+id,
+      performanceBeat:beat,
+    });
+    x.manifest.sceneFrames=[
+      pose('pose-establish','hero.png',x.manifest.image.sha256,'hero-frame-001',0,
+        'First hold, listening to a sound'),
+      pose('pose-turn','phase2.png',sha(phase2),'hero-frame-002',1.6,
+        'Head turn, looking for the source'),
+      pose('pose-reaction','phase3.png',sha(phase3),'hero-frame-003',3.2,
+        'Eyes widen, realizing what it is'),
+    ];
+    const result=renderToonPoseAnimatic({packet:x.pkt,shotId:'hero-1',
+      bundleDir:x.dir,manifest:x.manifest,outDir:output});
+    assert.equal(result.state,'rendered_storyboard_animatic_not_character_animation');
+    assert.equal(result.frameCount,120);
+    assert.equal(result.sampledPoseFrames.length,3);
+    assert.equal(new Set(result.sampledPoseFrames.map(p=>p.framePixelSha256)).size,3);
+    assert.equal(result.characterRigAnimated,false);
+    assert.equal(result.voiceQualityApproved,false);
+    assert.equal(result.publicationAuthority,false);
+    assert.ok(fs.statSync(path.join(output,'animatic-review.mp4')).size>6000);
+    const receipt=JSON.parse(fs.readFileSync(path.join(output,'animatic-receipt.json')));
+    assert.equal(receipt.sha256,sha(fs.readFileSync(path.join(output,'animatic-review.mp4'))));
+    assert.throws(()=>renderToonPoseAnimatic({packet:x.pkt,shotId:'hero-1',
+      bundleDir:x.dir,manifest:{...x.manifest,sceneFrames:[
+        x.manifest.sceneFrames[0],{...x.manifest.sceneFrames[1],sha256:x.manifest.sceneFrames[0].sha256},
+      ]},outDir:output}),/asset_sha_mismatch/);
+  }finally{
+    fs.rmSync(x.dir,{recursive:true,force:true});
+    fs.rmSync(output,{recursive:true,force:true});
+  }
+});
+
+test('rejects lone identical image, forged second pose and unsafe missing dialogue before any output',()=>{
+  const x=fixture();
+  const output=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-toon-empty-'));
+  try{
+    assert.throws(()=>renderToonPoseAnimatic({packet:x.pkt,shotId:'hero-1',
+      bundleDir:x.dir,manifest:x.manifest,outDir:output}),
+      /approved_multi_pose_sequence_required/);
+    const a={id:'pose-start',actorId:'hero',referenceAssetId:'hero-frame-001',
+      file:'hero.png',sha256:x.manifest.image.sha256,atSec:0,
+      rightsClaim:'owned',reviewState:'declared_approved',
+      reviewEvidenceRef:'human-review:pose-start',performanceBeat:'Listen and hold'};
+    const b={...a,id:'pose-end',atSec:2.4,reviewEvidenceRef:'human-review:pose-end',
+      performanceBeat:'Raise eyes in surprise'};
+    assert.throws(()=>verifyToonPerformanceBundle({packet:x.pkt,shotId:'hero-1',
+      bundleDir:x.dir,manifest:{...x.manifest,sceneFrames:[a,b]}}),
+      /pose_artwork_must_visibly_differ/);
+  }finally{
+    fs.rmSync(x.dir,{recursive:true,force:true});
+    fs.rmSync(output,{recursive:true,force:true});
+  }
 });
