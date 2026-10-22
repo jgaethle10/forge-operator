@@ -72,6 +72,7 @@ test('actual Passport and Interaction Ledger reject before grant and mint once a
   assert.equal(r.decision,'permit_ready');
   assert.equal(r.send_performed,false);
   assert.ok(r.permit?.permit_id);
+  assert.equal(r.permit.request_fingerprint,fingerprintExternalAction(s.action));
   assert.equal(s.ledger.getRelationshipState(s.subject).last_outbound_at,null);
  }finally{s.cleanup();}
 });
