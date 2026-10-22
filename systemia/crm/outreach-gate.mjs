@@ -1,9 +1,7 @@
-import {createHash} from 'node:crypto';
-import {evaluateExternalAction} from '../operator-gates/external-action.mjs';
+import {evaluateExternalAction,fingerprintExternalAction} from '../operator-gates/external-action.mjs';
 import {preflightRelationshipIntent,readPrivateRelationships} from './relationship-policy.mjs';
 
 const CHANNEL={send_email:'email',send_sms:'sms',send_dm:'dm',place_phone_call:'phone'};
-const hash=v=>'sha256:'+createHash('sha256').update(v).digest('hex');
 const value=(v)=>typeof v==='string'?v.trim():'';
 function denied(reasons,step='crm_context') {
   return {schema:'evercraft.crm.outreach-gate.v1',decision:'deny',reasons:[...new Set(reasons)],
@@ -72,7 +70,7 @@ export function evaluateGovernedOutreach({
     preflight=interactionLedger.preflightContact({
       subject_ref:action.subject_ref,channel,actor_ref:action.actor_ref,
       passport_product:action.passport_product,
-      content_fingerprint:hash(action.exact_content),
+      content_fingerprint:fingerprintExternalAction(action),
       at:now.toISOString()
     });
   } catch { return denied(['interaction_preflight_failed'],'passport_and_history'); }
@@ -107,7 +105,7 @@ export function prepareGovernedContactPermit({
     result=interactionLedger.prepareContactPermit({
       subject_ref:action.subject_ref,channel:CHANNEL[action.action_type],
       actor_ref:action.actor_ref,passport_product:action.passport_product,
-      content_fingerprint:hash(action.exact_content),
+      content_fingerprint:fingerprintExternalAction(action),
       permit_idempotency_key:action.permit_idempotency_key,
       at:now.toISOString()
     });
