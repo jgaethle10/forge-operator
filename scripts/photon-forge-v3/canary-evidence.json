@@ -1,0 +1,22 @@
+{
+  "schema": "evercraft.photon-forge.v3.canary",
+  "title": "Photon Forge V3",
+  "status": "decoded_software_preview",
+  "width": 960,
+  "height": 540,
+  "fps": 30,
+  "frames": 300,
+  "durationSec": 10,
+  "codec": "h264",
+  "audio": false,
+  "sha256": "33ac7aa0b6513bc44fcaaced4fabe50ffcc7f34505f63efbc2ec7b8ed8d8d71c",
+  "sourceSha256": "1c1a62afcb15ff7b200545684a8cb69073fc75aac93eecfed0cb9414834007e7",
+  "renderer": "CPU procedural perspective/2.5D",
+  "webglValidated": false,
+  "worldEngineIntegrated": false,
+  "masterApproved": false,
+  "publicationAuthority": false,
+  "artifactHostedInRepository": false,
+  "testsPassed": 4,
+  "testsNote": "Four local tests passed with MP4 and receipt adjacent; CI smoke tests will skip video if absent."
+}
