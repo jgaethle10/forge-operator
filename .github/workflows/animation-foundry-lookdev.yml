@@ -53,6 +53,28 @@ jobs:
           assert p['status']=='HELD'
           print('FOUNDATION_RIG_HELD_FOR_ART_REVIEW:',p['failures'])
           PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assert waveform cue and anatomically visible finger snap
+        run: |
+          node --test systemia/animation-foundry/snap-performance-gate.test.mjs
+          xvfb-run -a blender -b /tmp/kennedy-lookdev/Kennedy_Rigged3D_BLOCKOUT.blend \
+            --disable-autoexec -P systemia/animation-foundry/blender-snap-trace.py -- \
+            systemia/animation-foundry/kennedy-blockout-snap-map.json /tmp/kennedy-lookdev/snap_trace.json
+          set +e
+          node systemia/animation-foundry/snap-review-cli.mjs \
+            /tmp/kennedy-lookdev/snap_trace.json /tmp/kennedy-lookdev/snap_review.json
+          code=$?
+          set -e
+          test "$code" -eq 10
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/kennedy-lookdev/snap_review.json'))
+          assert r['status']=='HELD' and not r['creativeApproved']
+          assert 'no_thumb_middle_contact' in r['issues'] or 'no_fast_finger_release' in r['issues'] or 'arm_wave_without_finger_flick' in r['issues']
+          print('OLD_RIG_GESTURE_CORRECTLY_REJECTED',r['issues'])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
