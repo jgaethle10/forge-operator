@@ -16,12 +16,33 @@ import {promisify} from 'node:util';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-test('Saban cold-client profiles traverse a real local MCP handshake, match and owned offer links; crawler surfaces are served',async()=>{
+test('Saban cold-client read-only MCP and crawler surfaces work while provider-held buyer links fail closed',async()=>{
  const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,faieSurfaceEnabled:false});
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'saban-discovery-'));
  try{
-  const result=await promisify(execFile)(process.execPath,['systemia/saban/discovery-path-probe.mjs'],{env:{...process.env,EVERCRAFT_PROBE_ORIGIN:runtime.url,EVERCRAFT_PROBE_OUT:dir}});
-  const receipt=JSON.parse(result.stdout);assert.equal(receipt.ok,true);assert.equal(receipt.profiles.length,2);assert.equal(receipt.checkout_created,false);assert.equal(receipt.provider_recommendation_observed,false);
+  let stdout;
+  try {
+    const result=await promisify(execFile)(process.execPath,['systemia/saban/discovery-path-probe.mjs'],{env:{...process.env,EVERCRAFT_PROBE_ORIGIN:runtime.url,EVERCRAFT_PROBE_OUT:dir}});
+    stdout=result.stdout;
+  } catch (error) {
+    assert.equal(error.code,1,'policy-held buyer handoff fails closed, not a script crash');
+    stdout=error.stdout;
+  }
+  const receipt=JSON.parse(stdout);
+  assert.equal(receipt.ok,false,'checkout held is not a commercially healthy probe');
+  assert.equal(receipt.diagnosis.code,'buyer_handoff_held_by_payment_authority');
+  assert.equal(receipt.probe_layers.state,'discovery_ok_buyer_handoff_held');
+  assert.equal(receipt.probe_layers.mcp_readonly_ok,true);
+  assert.equal(receipt.probe_layers.public_discovery_surfaces_ok,true);
+  assert.equal(receipt.probe_layers.catalog_matches_ok,true);
+  assert.equal(receipt.probe_layers.buyer_handoff_authorized,false);
+  assert.equal(receipt.probe_layers.paid_order_verified,false);
+  assert.equal(receipt.profiles.length,2);
+  assert.equal(receipt.checkout_created,false);
+  assert.equal(receipt.provider_recommendation_observed,false);
+  assert.ok(receipt.profiles.every(p=>p.initialized&&p.errors.length===0),'MCP discovery remains healthy');
+  assert.ok(receipt.profiles.every(p=>p.intents.length===3&&p.intents.every(i=>i.match_ok&&!i.offer_link_ok&&i.buyer_handoff_state==='held_payment_authority')),'held buyer handoffs never revive catalog-only offer URLs');
+  assert.ok(receipt.surfaces.every(s=>s.status===200),'public HTTP discovery remains locally healthy');
   const catalog=await fetch(runtime.url+'/offers.json').then(r=>r.json());assert.equal(catalog.offers.length,15);assert.equal(new Set(catalog.offers.map(o=>o.url)).size,15);
  }finally{await runtime.close();fs.rmSync(dir,{recursive:true,force:true});}
 });
