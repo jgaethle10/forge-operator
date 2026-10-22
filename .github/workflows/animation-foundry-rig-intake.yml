@@ -89,6 +89,24 @@ jobs:
           assert len(list(Path('/tmp/rig-intake/review').glob('candidate_*.png')))==3
           print('VALID_LICENSED_BENCHMARK_READ_ONLY',d['armatures'],d['mesh_vertices'])
           PY
+      - name: Test facial, hand and license scorecard
+        run: node --test systemia/animation-foundry/rig-candidate-scorecard.test.mjs
+      - name: Produce rig rejection reasons from inspected scene
+        run: |
+          node --input-type=module <<'JS'
+          import {readFileSync,writeFileSync} from 'node:fs';
+          import {evaluateRigCandidate} from './systemia/animation-foundry/rig-candidate-scorecard.mjs';
+          const m=JSON.parse(readFileSync('/tmp/rig-intake/review/rig_inspection.json','utf8'));
+          const p=JSON.parse(readFileSync('/tmp/rig-intake/provenance.json','utf8'));
+          const r=evaluateRigCandidate(m,{source:p.source,license:p.published_license});
+          writeFileSync('/tmp/rig-intake/review/rig_scorecard.json',JSON.stringify(r,null,2));
+          if(r.characterApproved!==false) throw Error('invalid_character_approval');
+          if(r.status!=='REFERENCE_ONLY') throw Error('benchmark_unexpectedly_promoted_to_performance');
+          if(!r.issues.includes('insufficient_independent_finger_bones')||
+             !r.issues.includes('missing_facial_performance_controls'))
+            throw Error('expected_known_gaps_not_detected');
+          console.log('RIG_BENCHMARK_CORRECTLY_REJECTED_FOR_KENNEDY',r.issues);
+          JS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
