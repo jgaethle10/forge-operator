@@ -34,6 +34,10 @@ export interface SourceAsset {
   tags?: string[];
   notes?: string;
   entityRefs?: string[];
+  // Optional default framing for this media asset. Directors may adjust
+  // these anchors per ScenePlan after compile.
+  cropAnchorX?: number;
+  cropAnchorY?: number;
 }
 
 export interface DialogueLine {
