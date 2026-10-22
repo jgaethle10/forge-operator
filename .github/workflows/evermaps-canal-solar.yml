@@ -35,6 +35,29 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: pip install requests shapely pyproj
+      - name: Probe complementary California canal GIS services
+        run: |
+          python - <<'PY'
+          import requests
+          urlset = {
+            "DWR local mirror FeatureServer": "https://services.arcgis.com/7CRlmWNEbeCqEJ6a/arcgis/rest/services/i12_Canals_and_Aqueducts_local/FeatureServer/0",
+            "DWR local official utility MapServer": "https://utility.arcgis.com/usrsvcs/servers/b43dc55d1e1448f2b384ebb8efac9042/rest/services/InlandWaters/i12_Canals_and_Aqueducts_local/MapServer/0",
+          }
+          for label,url in urlset.items():
+              try:
+                  r=requests.get(url,params={"f":"json"},timeout=18)
+                  j=r.json() if "json" in r.headers.get("Content-Type","") or r.text.lstrip().startswith("{") else {}
+                  print("CALIFORNIA_SOURCE_PROBE",label,"http",r.status_code,
+                        "layer",j.get("name"),"geometry",j.get("geometryType"),
+                        "error",j.get("error"),flush=True)
+                  if r.ok and j.get("geometryType") == "esriGeometryPolyline":
+                      q=requests.get(url+"/query",params={"where":"1=1","geometry":"-121.17,37.25,-120.39,38.18",
+                          "geometryType":"esriGeometryEnvelope","inSR":"4326",
+                          "spatialRel":"esriSpatialRelIntersects","returnCountOnly":"true","f":"json"},timeout=24)
+                      print("CALIFORNIA_SOURCE_COUNT",label,q.status_code,
+                            q.json().get("count") if q.ok else q.text[:120],flush=True)
+              except Exception as e: print("CALIFORNIA_SOURCE_PROBE_FAIL",label,type(e).__name__,str(e)[:160],flush=True)
+          PY
       - name: Retrieve live GIS geometry into RESEARCH ONLY packages
         run: |
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
