@@ -42,9 +42,16 @@ test('HTTP loopback end-to-end exact bytes, encryption and truthful download res
  assert.equal(got.status,200);
  assert.equal(got.headers.get('cache-control'),'private, no-store');
  assert.deepEqual(Buffer.from(await got.arrayBuffer()),bytes);
- const status=await request(base+'/'+id+'/status');
- assert.equal(status.status,200);
- const st=await status.json();
+ // The network response can complete just before the server durably writes its receipt.
+ // Poll the authoritative status rather than making a race-dependent assertion.
+ let st;
+ for(let i=0;i<30;i++){
+  const status=await request(base+'/'+id+'/status');
+  assert.equal(status.status,200);
+  st=await status.json();
+  if(st.download_responses_completed===1)break;
+  await new Promise(resolve=>setTimeout(resolve,20));
+ }
  assert.equal(st.download_responses_completed,1);
  assert.equal(st.recipient_identity_verified,false);
  assert.equal(st.provider_delivery_verified,false);
