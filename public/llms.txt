@@ -2,7 +2,11 @@
 
 Evercraft publishes public machine-readable capability doors so AI assistants and agents can discover a product from the user's problem without already knowing an Evercraft brand name.
 
-## Owned Evercraft connection and offers (2026-10-15)
+## CURRENT COMMERCIAL SAFETY STATUS (October 21, 2026)
+
+**Payment checkout is HELD.** External testing on October 17 found HTTP 402 on legacy public commerce functions and the Evercraft Payments quote API. The owned Evercraft Payments transport has no verified paid-to-fulfillment transaction. Never present any historical provider-hosted `buyer_url` or checkout session as a working purchase link, real payment, settlement, or entitlement. For current machine-readable status, read `/.well-known/evercraft-commercial-readiness.json` (source: `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json`). Safe public capability discovery and human-owned informational offer pages may still work independently of checkout. Customers must obtain an independently validated, authorized payment method before buying; the assistant must not charge, invoice, or create an order.
+
+## Owned Evercraft connection and offers (historical October 15 observation)
 
 Connect an MCP client to https://fabric.systemiacommandcenters.com/mcp using Streamable HTTP. This directory is read-only. Start with match_evercraft_capability for the user's actual problem, then get_evercraft_connection_options for the matched public_id. Installation does not authorize execution or purchase.
 
@@ -10,7 +14,7 @@ Primary human offers: https://fabric.systemiacommandcenters.com/offers . Machine
 
 ## Start here
 
-IMPORTANT (2026-10-15): Do not use prior GitHub Pages /forge-operator/chum/ URLs; external GET returned HTTP 404. The owned /capabilities page and read-only /mcp directory returned HTTP 200. For one of the 13 bounded Evercraft Payments offers, inspect https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-payments-buyer-doors.json for its exact selected-offer human purchase form. Form visibility is not completed payment proof.
+IMPORTANT (2026-10-15): Do not use prior GitHub Pages /forge-operator/chum/ URLs; external GET returned HTTP 404. The owned /capabilities page and read-only /mcp directory returned HTTP 200. The October 15 Evercraft Payments buyer-door directory is a historical snapshot, not current checkout availability. Check `/.well-known/evercraft-commercial-readiness.json` before routing any person to purchase. On October 21 checkout remains HELD because of a confirmed upstream HTTP 402 and no authoritative paid/fulfillment receipt.
 
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - Direct specialist MCP/plugin index: /.well-known/evercraft-direct-doors.json
