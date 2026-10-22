@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import {inspectToonHandoff,renderToonShotDirection} from './toon-shot-handoff.mjs';
 import {buildVisualModelPlan} from './model-fabric.ts';
 import {runwayGen45Endpoint} from './visual-provider-runway.ts';
@@ -35,23 +36,37 @@ export function prepareToonCinemaShot({
     guard(typeof frame.approvalEvidenceRef==='string'&&frame.approvalEvidenceRef.length>=8,
       'approval_evidence_missing');
     guard(['owned','licensed'].includes(frame.commercialRights),'commercial_rights_missing');
-    let url;
-    try{url=new URL(frame.url);}catch{guard(false,'url_invalid')}
-    guard(url.protocol==='https:','url_must_be_https');
-    const host=url.hostname.toLowerCase();
-    guard(host.includes('.')&&!host.endsWith('.local')&&host!=='localhost'&&
-      !host.includes('..')&&!host.endsWith('.internal')&&
-      !/^\d+\.\d+\.\d+\.\d+$/.test(host) &&
-      !host.startsWith('127.')&&!host.startsWith('10.')&&
-      host!=='169.254.169.254','url_host_not_public');
-    guard(!url.username&&!url.password,'url_credentials_forbidden');
+    guard(Boolean(frame.url)!==Boolean(frame.dataUri),'exactly_one_frame_locator_required');
+    if(frame.dataUri){
+      const match=/^data:image\/(png|jpeg);base64,([A-Za-z0-9+/]+={0,2})$/.exec(frame.dataUri);
+      guard(match,'frame_data_uri_invalid');
+      const bytes=Buffer.from(match[2],'base64');
+      guard(bytes.length>32&&bytes.length<=5*1024*1024,'frame_data_uri_size_invalid');
+      guard(bytes.toString('base64')===match[2],'frame_data_uri_noncanonical');
+      guard(crypto.createHash('sha256').update(bytes).digest('hex')===frame.sha256,
+        'frame_data_uri_digest_mismatch');
+      guard(match[1]==='png'
+        ? bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))
+        : bytes[0]===255&&bytes[1]===216,'frame_data_uri_magic_invalid');
+    }else{
+      let url;
+      try{url=new URL(frame.url);}catch{guard(false,'url_invalid')}
+      guard(url.protocol==='https:','url_must_be_https');
+      const host=url.hostname.toLowerCase();
+      guard(host.includes('.')&&!host.endsWith('.local')&&host!=='localhost'&&
+        !host.includes('..')&&!host.endsWith('.internal')&&
+        !/^\d+\.\d+\.\d+\.\d+$/.test(host) &&
+        !host.startsWith('127.')&&!host.startsWith('10.')&&
+        host!=='169.254.169.254','url_host_not_public');
+      guard(!url.username&&!url.password,'url_credentials_forbidden');
+    }
     // Verified reference bytes, reachability and consent are checked at runtime
     // and are not inferred from any of these string declarations.
   }
   const references=frame?[{
     id:frame.referenceAssetId,kind:'image',role:'start_frame',
     digest:frame.sha256,sourceRefs:[frame.approvalEvidenceRef],
-    locator:{kind:'url',value:frame.url},
+    locator:{kind:frame.dataUri?'data_uri':'url',value:frame.dataUri||frame.url},
   }]:[];
   const visualRequest={
     schema:'evercraft.fallen.visual-shot-request.v1',
