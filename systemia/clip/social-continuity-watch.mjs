@@ -101,7 +101,7 @@ if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1
     const result=runSocialContinuityWatch({
       queueFile:arg(a,'--queue','distribution/marketing/evercraft-problem-first-20261022.review.json'),
       receiptDir:arg(a,'--receipts-dir','artifacts/clip/social-publish-receipts'),
-      outputFile:arg(a,'--out','artifacts/clip/social-continuity-watch/latest.json'),
+      outputFile:arg(a,'--out',process.env.SYSTEMIA_WORKSPACE_ROOT?path.join(process.env.SYSTEMIA_WORKSPACE_ROOT,'clip-social-continuity','latest.json'):'artifacts/clip/social-continuity-watch/latest.json'),
       now:arg(a,'--now')||new Date()
     });
     console.log(JSON.stringify({ok:true,status:result.status,counts:result.counts,receipt_source_available:result.receipt_source_available},null,2));
