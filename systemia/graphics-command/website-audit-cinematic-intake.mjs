@@ -16,7 +16,17 @@ const SHOTS=[
   {id:'offer_end_card',durationSec:4,sourceKind:'brand_approved_video',truthState:'brand_artifact'}
 ];
 export const FILM_SHOTS=Object.freeze(SHOTS.map(x=>Object.freeze({...x})));
-function sha256(bytes){return crypto.createHash('sha256').update(bytes).digest('hex');}
+function sha256File(file){
+  // 4 MiB bounded buffer instead of loading an entire multi-gigabyte source video.
+  const hash=crypto.createHash('sha256');
+  const fd=fs.openSync(file,'r');
+  const block=Buffer.allocUnsafe(4*1024*1024);
+  try{
+    let read;
+    while((read=fs.readSync(fd,block,0,block.length,null))>0)hash.update(block.subarray(0,read));
+    return hash.digest('hex');
+  }finally{fs.closeSync(fd);}
+}
 function safeRelative(root,relative){
   if(typeof relative!=='string'||!relative.trim()||path.isAbsolute(relative))throw new Error('relative_asset_path_required');
   const full=path.resolve(root,relative);
@@ -103,7 +113,7 @@ export function inspectFilm(input,{workspace,probe=probeVideo}={}){
       if(used.has(file.path))errors.push('duplicate_shot_asset');
       used.add(file.path);
       try{
-        const actual=sha256(fs.readFileSync(file.path));
+        const actual=sha256File(file.path);
         if(actual!==row?.sha256)errors.push('asset_sha256_mismatch');
       }catch{errors.push('asset_read_failed');}
       const media=probe(file.path);
@@ -127,11 +137,15 @@ export function inspectFilm(input,{workspace,probe=probeVideo}={}){
       sourceRef:row.sourceRef,rights:row.rights,sha256:row.sha256});
   }
   const ready=findings.every(x=>x.status==='admitted');
+  // Self-declared form values do not independently verify product function,
+  // commercial rights, founder approval or live customer payments.
   const editorialHolds=[
-    input.checkoutState==='verified' ? null : 'checkout_not_verified',
-    input.productFunctionState==='verified' ? null : 'product_function_not_verified',
-    input.humanPictureApproval===true ? null : 'human_visual_approval_missing',
-  ].filter(Boolean);
+    'independent_checkout_verification_required',
+    'observed_product_function_verification_required',
+    'independent_asset_rights_review_required',
+    'human_picture_approval_required',
+    'mastered_audio_missing',
+  ];
   return {
     schema:'evercraft.website-audit.film-admission.v1',
     state:ready?'picture_preview_ready':'blocked_missing_real_media',
@@ -143,6 +157,8 @@ export function inspectFilm(input,{workspace,probe=probeVideo}={}){
     renderMode:'silent_picture_preview_only',
     audioStatus:'not_produced',
     cinematicMasterStatus:'not_produced',
+    visualEvidenceReview:'not_performed',
+    rightsVerification:'document_present_only_independent_review_required',
     editorialHolds,
     publicationAuthority:false,
     releaseAuthority:false,
@@ -218,16 +234,16 @@ function cli(){
     console.error((child.stderr||child.error?.message||'render_failed').slice(-1200));
     process.exitCode=1;return;
   }
-  const rendered=fs.readFileSync(target);
+  const renderedDigest=sha256File(target);
   writeJson(path.join(outputRoot,'film-preview-receipt.json'),{
     schema:'evercraft.website-audit.picture-preview-receipt.v1',
-    sha256:sha256(rendered),file:path.basename(target),durationExpectedSec:25,
+    sha256:renderedDigest,file:path.basename(target),durationExpectedSec:25,
     sourceSha256s:report.admitted.map(x=>({id:x.id,sha256:x.sha256})),
     renderState:'silent_picture_preview_only',audioMastered:false,
     cinematicQualityApproved:false,checkoutVerified:false,publicationAuthority:false
   });
   console.log(JSON.stringify({state:'silent_picture_preview_rendered',video:target,
-    sha256:sha256(rendered),publicationAuthority:false}));
+    sha256:renderedDigest,publicationAuthority:false}));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   try{cli();}catch(e){console.error(JSON.stringify({state:'failed_closed',reason:e.message}));process.exitCode=1;}
