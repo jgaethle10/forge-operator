@@ -254,3 +254,56 @@ tone WAV. Those are synthetic QA fixtures, emphatically not creative output
 worth sharing. Artwork direction and recorded expressive voice must still be
 approved, followed by true character rig animation, phoneme sync, original
 music master and audience review before any customer-ready release.
+
+
+## Hierarchical two-dimensional animation rig (October 22)
+
+This push adds a physical offline layered motion stage. The source-backed
+toon-puppet-rig.py accepts original/user-approved full-canvas transparent RGBA
+PNG layers (2 to 12) with per-part pivot, parent ID, z order and signed source
+hash; authored keyframes interpolate rotation/translation/scale with easing.
+Parent-to-child world transforms let heads and limbs inherit body motion. A
+frame-by-frame PIL compositor feeds FFmpeg real RGB motion, followed by an
+actual recorded voice file. This is distinct from the earlier jump-cut pose
+animatic and the rejected stock-looking fox demonstration.
+
+The toon-puppet-binding.mjs wrapper first checks the signed Fallen packet,
+verified source artwork and voice against its locked actor/voice/cue. Each
+layer must also have a corresponding manifest rigParts record including actor,
+allowed reference asset, SHA-256, declared rights and human review evidence.
+False approval claims remain false, no model is invoked or billed, and source
+files are never publicly uploaded.
+
+Invoke the same offline entrypoint used for pose animatics with the two
+optional flags below:
+
+    node --import tsx systemia/media-studio/toon-pose-animatic.cli.mjs \
+      --packet /path/shot-handoff.json \
+      --manifest /path/approved-sources.json \
+      --assets /path/media-files \
+      --shot exact-shot-id \
+      --out /path/render-review \
+      --rig /path/character-rig.json \
+      --python python3
+
+Rig schema: evercraft.fallen.toon-puppet-rig.v1. Include packetDigest, shotId,
+actorId, width, height, fps, durationSec; all layers with id, actorId,
+referenceAssetId, file, sha256, parentId, pivotPx, zIndex; keyframes with
+atSec and for every layer rotationDeg, translatePx and scale; voice with
+file, sha256, cueId and voiceProfileId. Duration is 1-10 seconds at 24-30fps.
+Model has bounded motion and rejects cycles, malformed PNG layers, missing
+alpha, unsafe paths, tampered hashes, missing joints, wrong actor/voice,
+unreviewed source and no pixel motion.
+
+Output: puppet-motion-review.mp4 plus puppet-motion-receipt.json with
+source hashes, audio hash, exact frame count, sampled actual pixel hashes,
+and publication/identity/lip-sync/master QC flags all explicitly false.
+Internal CI uses simplified transparent shapes and a sine wave only as
+technical fixtures, **never** as a creative cartoon for audience review.
+
+IMPORTANT LIMIT: Transforming genuinely separated and correctly drawn parts
+preserves the art better than morphing whole frames, but it still does not
+solve character appealingness, anatomical staging, nuanced facial acting,
+phoneme-driven mouth shapes, music, or human creative admission. Approved
+multilayer character artwork and an auditioned real performance must replace
+the test fixtures before any public-facing scene can be offered.
