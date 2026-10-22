@@ -216,3 +216,41 @@ with a listening-approved performance, meaningful acting and eyelines across
 shot changes, controlled music mix, and human review of real rendered
 frames. No upload, social publication, commercial showcase, or claim of
 finished quality from a technical CI success alone.
+
+
+## Multi-pose real-art scene animatic (October 22)
+
+The toon-pose-animatic.mjs stage can actually encode a sequence of reviewed
+character pose images together with a recorded voice file into an H.264/AAC MP4.
+This is an edited, camera-moved animatic, not character rig animation or
+lip-sync admission. It deliberately does not recycle the rejected flat fox.
+
+Required source manifest: schema evercraft.fallen.toon-performance-sources.v1,
+bound to exact packet digest, shot ID, actor ID. Image PNG/JPEG and recorded
+dialogue each have exact SHA-256, declared ownership/rights and review evidence.
+Speech is bound to its cue text, cue ID, and declared locked voice profile;
+scratch eSpeak is not accepted here. Real audio decode and non-silent PCM are
+required. SceneFrames must contain 2 to 5 unique pose images, with fields:
+id, actorId, referenceAssetId, file, sha256, atSec, performanceBeat,
+rightsClaim, reviewState, reviewEvidenceRef. First image at zero binds the
+identity image; further poses are independently checked as owned/approved
+and must be different, timed, and locked to the same actor.
+
+Offline invocation with Node, ffmpeg, ffprobe and tsx dependency installed:
+
+    node --import tsx systemia/media-studio/toon-pose-animatic.cli.mjs \
+      --packet /path/shot-handoff.json \
+      --manifest /path/production-sources.json \
+      --assets /path/art-and-audio \
+      --shot exact-shot-id \
+      --out /path/scene-review
+
+Emits animatic-review.mp4 and animatic-receipt.json, including source hashes,
+rendered sample hashes, exact frame count, audio hash and honest false quality
+and publication flags. No external provider credits or payments are used.
+
+GitHub CI exercises a generated three-color PNG sequence plus a pure sine
+tone WAV. Those are synthetic QA fixtures, emphatically not creative output
+worth sharing. Artwork direction and recorded expressive voice must still be
+approved, followed by true character rig animation, phoneme sync, original
+music master and audience review before any customer-ready release.
