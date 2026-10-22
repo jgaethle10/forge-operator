@@ -65,6 +65,17 @@ jobs:
           npm install --no-audit --no-fund
           node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts
 
+      - name: Render source-bound cinematic fixture through real Fallen and FFmpeg
+        shell: bash
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          # Test-generated solid colors are synthetic fixture bytes, never source footage.
+          # Actual Fallen integration and exact output digest are verified here.
+          node systemia/graphics-command/website-audit-cinematic-e2e.mjs
+
       - name: Prove Radar remains healthy after spatial projection
         run: npm run test:radar
 
