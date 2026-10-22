@@ -168,3 +168,55 @@ and retention policy, source coverage for every Evercraft division, actual
 sender-by-sender enforcement, real recipient resolution at transport, exactly
 once send/permit/provider receipt reconciliation, cross-device/restart
 verification, encrypted backup/restore, and a 300-second live-system proof.
+
+
+## Governed discretionary email delivery boundary (staged October 22)
+
+\`governed-mail-adapter.mjs\` defines a **single-recipient, no-attachment,
+discretionary email** execution path. It refuses unknown channel actions, CC/BCC,
+ambiguous recipient references and raw agent-supplied destination addresses.
+Its owner-only provider callback receives the mailbox returned by a verified
+private recipient resolver, never by the agent request itself. The full
+human-approved action fingerprint (person, division, purpose, actor, subject,
+email envelope and message content) is also the request fingerprint in the
+underlying Passport action permit.
+
+\`private-recipient-directory.mjs\` loads a protected 0600 file from a
+0700 directory with schema \`evercraft.crm.recipient-directory.v1\`. Each
+link must be uniquely scoped by opaque subject, division and channel, be
+source-evidence-backed, marked verified and recently observed. An unknown,
+insecure, stale, duplicate or cross-division identity mapping denies mail.
+Identity verification is **not consent**: the relationship policy, current
+private approval, Passport and Interaction Ledger gates remain mandatory.
+
+\`resend-outreach-transport.mjs\` provides a narrowly scoped, opt-in
+Resend email transport with sender address/API credential supplied by the
+trusted worker, not by the caller. Its owner-only entrypoint
+\`dispatchOwnedResendOutreach()\` binds the protected recipient resolver,
+signed operator-approval source and governed outbox to the transport. It
+does not replace the separate People account-verification mail system. No
+production worker currently installs this as the exclusive mail path.
+
+Before invoking a provider the governed adapter creates an atomically
+persisted attempt in a 0700 private outbox. The provider idempotency token is
+deterministic per exact action and attempted permit. If the worker crashes,
+the provider times out, or provider acceptance cannot be reconciled with a
+finalized Passport/Interaction Ledger event, the attempt is **held with no
+automatic retry**. A provider acceptance does **not** prove mailbox delivery.
+A successful result is explicitly
+\`provider_accepted_and_recorded\`, not \`delivered\`.
+
+To operate safely, the backend needs operator-owned identity/approval files,
+a trusted recipient directory, live Passport/Interaction Ledger state, a
+private outbox, a sender configuration and an authorized provider transport.
+Do not expose these file paths, callbacks, mail credentials or signing
+keys through agent-controlled APIs. A held attempt needs manual reconciliation
+against the provider before any retry or support action.
+
+**Not yet satisfied:** exclusive control of all outbound mail and other
+contact channels; source-of-truth identity validation on the owned compute
+host; explicit opt-in for contact beyond business context; signed approval
+rollback prevention; crash/restart durability proof on that host; protection
+against external Gmail/Resend APIs bypassing this worker; and provider
+delivery/bounce evidence. This adapter is deliberately not enabled by CI,
+and no messages are sent in tests.
