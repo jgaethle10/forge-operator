@@ -218,20 +218,6 @@
       "restart_backoff_ms": 5000
     },
     {
-      "service_key": "rivet-session-freshness",
-      "mode": "cycle",
-      "manifest": "systemia/organism/rivet-session-freshness.workflow.json",
-      "executable": "systemia/organism/rivet-session-freshness-runner.mjs",
-      "cadence_seconds": 3600,
-      "optional_when_unconfigured": true,
-      "env_args": {
-        "--url": "ALIEV_SESSION_REFRESH_URL"
-      },
-      "optional_env_args": {
-        "--secret-file": "SYSTEMIA_MACHINE_KEY_FILE"
-      }
-    },
-    {
       "service_key": "rivet-report-edge",
       "mode": "resident",
       "manifest": "systemia/organism/rivet-report-edge.workflow.json",

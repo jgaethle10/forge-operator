@@ -9,14 +9,9 @@ import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const SCHEMA='evercraft.rivet.session-freshness-owned-supervisor.v1';
-const LEGACY_ENDPOINT='https://aliev.base44.app/api/functions/refreshSessionFreshness';
-
-export function validateRefreshEndpoint(value){
-  let url;
-  try{url=new URL(String(value||''));}catch{return null;}
-  if(url.toString()!==LEGACY_ENDPOINT || url.username || url.password || url.hash || url.search)return null;
-  return url.toString();
-}
+// No approved owned ingest route exists yet. Historic targets are intentionally
+// never admissible, regardless of credentials or manual invocation.
+export function validateRefreshEndpoint(_value){return null;}
 
 export function assessFreshnessReceipt(payload,nowMs=Date.now()){
   const body=payload&&typeof payload==='object'?payload:{};
@@ -58,28 +53,18 @@ export function assessFreshnessReceipt(payload,nowMs=Date.now()){
   };
 }
 
-export async function runSessionFreshnessOnce({url,token,fetchImpl=fetch,now=()=>Date.now()}={}){
-  if(!url)return {ok:false,state:'held_missing_refresh_url'};
-  const target=validateRefreshEndpoint(url);
-  if(!target)return {ok:false,state:'held_unapproved_refresh_origin'};
-  if(!token)return {ok:false,state:'held_missing_systemia_machine_key'};
-  try{
-    const response=await fetchImpl(target,{
-      method:'POST',redirect:'manual',
-      headers:{
-        'Content-Type':'application/json',
-        'Accept':'application/json',
-        'x-systemia-machine-key':String(token)
-      },
-      body:JSON.stringify({}),
-      signal:AbortSignal.timeout(120000)
-    });
-    if(!response.ok)return {ok:false,state:'held_refresh_http_error',http_status:response.status};
-    const body=await response.json();
-    return assessFreshnessReceipt(body,now());
-  }catch(error){
-    return {ok:false,state:'held_refresh_transport_error',error:error instanceof Error?error.message:String(error)};
-  }
+// Held without any outbound fetch. Re-enable only after a named owned route,
+// authentication and data-reconciliation receipt are independently verified.
+export async function runSessionFreshnessOnce({url,token,fetchImpl,now}={}){
+ void token;void fetchImpl;void now;
+ return {
+  ok:false,
+  state:'held_owned_freshness_source_required',
+  legacy_provider_eject:true,
+  external_requests:0,
+  given_route:!!url,
+  receipt_verified:false
+ };
 }
 
 function argument(name,fallback=''){

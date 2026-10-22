@@ -1671,7 +1671,7 @@ export async function startEvercraftComputeNode({
               body.input?.public_snapshot_site_url || 'https://filescompanion.com/'
             ).trim();
             const apiOrigin = String(
-              body.input?.public_snapshot_api_origin || 'https://base44.app'
+              body.input?.public_snapshot_api_origin || ''
             ).trim();
             let site;
             let api;
@@ -1693,7 +1693,6 @@ export async function startEvercraftComputeNode({
             }
             if (
               !(
-                (api.protocol === 'https:' && api.hostname === 'base44.app') ||
                 (api.protocol === 'http:' && apiLoopback)
               )
             ) {
