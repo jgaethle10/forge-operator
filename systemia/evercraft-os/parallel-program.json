@@ -45,7 +45,8 @@
       "owner": "NodeSeed / Saban / Compute",
       "source_anchors": [
         "systemia/compute/node-seed.mjs",
-        "systemia/saban/nodeseed-pool.mjs"
+        "systemia/saban/nodeseed-pool.mjs",
+        "systemia/evercraft-os/field-node-probe.mjs"
       ],
       "existing_work": [
         "https://github.com/jgaethle10/forge-operator/issues/1332",
