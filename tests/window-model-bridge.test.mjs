@@ -174,3 +174,36 @@ test('a story-memory prompt injection cannot create privileged tool actions',asy
   assert.ok(h.calls.infer[0].request.system_instruction.includes('untrusted story data'));
   assert.equal(w.agent_experiment_v1,undefined);
 });
+
+test('two separately sourced agent choices produce persistent cooperation OR refusal',async()=>{
+  const original=setup();
+  const offerClient=makeHarness({
+    action:{type:'offer_help',to:'r2',kind:'repair'},
+    requestId:'req_two_agents_offer_001'
+  });
+  const offer=await run(original,offerClient,'r1');
+  const invite=offer.world.agent_experiment_v1.invitations[0];
+  assert.equal(invite.state,'pending');
+  assert.equal(offer.receipt.agent_id,'r1');
+
+  const accept=await run(offer.world,makeHarness({
+    action:{type:'respond',invitation_id:invite.id,kind:'accept'},
+    requestId:'req_two_agents_accept_002'
+  }),'r2');
+  const refuse=await run(offer.world,makeHarness({
+    action:{type:'respond',invitation_id:invite.id,kind:'decline'},
+    requestId:'req_two_agents_decline_003'
+  }),'r2');
+
+  assert.equal(accept.receipt.agent_id,'r2');
+  assert.equal(accept.world.agent_experiment_v1.invitations[0].state,'accepted');
+  assert.equal(refuse.world.agent_experiment_v1.invitations[0].state,'declined');
+  assert.equal(accept.world.metrics.repairs,original.metrics.repairs+2);
+  assert.equal(refuse.world.metrics.repairs,original.metrics.repairs);
+  assert.equal(accept.world.agent_experiment_v1.receipts.length,2);
+  assert.equal(refuse.world.agent_experiment_v1.receipts.length,2);
+  assert.notEqual(accept.receipt.outcome,refuse.receipt.outcome);
+  assert.equal(original.agent_experiment_v1,undefined);
+  assert.equal(accept.world.actors[1].bonds.r1>refuse.world.actors[1].bonds.r1,true);
+  assert.equal(accept.world.agent_experiment_v1.receipts.every(r=>r.release_status==='held_not_live'),true);
+});
