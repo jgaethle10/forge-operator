@@ -221,10 +221,119 @@ def render_frame(frame,width=W,height=H,geometries=None):
  return img
 
 
+
+def encode_external_sequence(manifest_path, geometry_path, output_path, fps):
+ """Encode supplied, hash-verified canonical-shaped WorldFrame packets with the OWNED Photon Forge V4 rasterizer.
+
+ A manifest is not evidence that the live World Engine executed. Nothing is sent to a model or external provider.
+ """
+ if fps not in (24,30,60):raise ValueError('sequence_fps_unsupported')
+ manifest_file=Path(manifest_path).resolve()
+ manifest_bytes=manifest_file.read_bytes()
+ if len(manifest_bytes)>262144:raise ValueError('sequence_manifest_too_large')
+ manifest=json.loads(manifest_bytes)
+ if manifest.get('schema')!='evercraft.photon-forge-v4.frame-sequence.v1':raise ValueError('sequence_schema_invalid')
+ if type(manifest.get('fps'))!=int or manifest['fps']!=fps:raise ValueError('sequence_fps_mismatch')
+ names=manifest.get('framePaths')
+ if not isinstance(names,list) or not 2<=len(names)<=900:raise ValueError('sequence_frame_count_invalid')
+ if any(not isinstance(s,str) or not s for s in names) or len(set(names))!=len(names):
+  raise ValueError('sequence_paths_invalid')
+ geometry_file=Path(geometry_path)
+ geometry_bytes=geometry_file.read_bytes()
+ if len(geometry_bytes)>8388608:raise ValueError('sequence_geometry_too_large')
+ geometries=json.loads(geometry_bytes)
+ if not isinstance(geometries,list) or not geometries:raise ValueError('sequence_geometry_invalid')
+ root=manifest_file.parent
+ records=[]
+ world_id=None
+ first_time=None
+ last_tick=-1
+ for i,name in enumerate(names):
+  relative=Path(name)
+  if relative.is_absolute() or '..' in relative.parts or relative.suffix!='.json' or name.startswith('.'):
+   raise ValueError('sequence_path_unsafe')
+  frame_path=(root/relative).resolve()
+  if root not in frame_path.parents or frame_path.is_symlink() or not frame_path.is_file():
+   raise ValueError('sequence_path_unsafe_or_missing')
+  raw=frame_path.read_bytes()
+  if len(raw)>4194304:raise ValueError('sequence_frame_too_large')
+  frame=json.loads(raw)
+  validate_frame(frame,geometries)
+  if world_id is None:
+   world_id=frame['worldId']
+   first_time=frame['timeSec']
+  if frame['worldId']!=world_id:raise ValueError('sequence_world_changed')
+  if frame['tick']<=last_tick:raise ValueError('sequence_ticks_not_increasing')
+  if abs(frame['timeSec']-(first_time+i/fps))>0.0001:raise ValueError('sequence_frame_time_mismatch')
+  last_tick=frame['tick']
+  records.append(dict(path=str(frame_path),sourceSha256=hashlib.sha256(raw).hexdigest(),
+                      digest=frame['digest'],tick=frame['tick'],timeSec=frame['timeSec']))
+ output=Path(output_path)
+ if output.suffix.lower()!='.mp4':raise ValueError('sequence_output_must_be_mp4')
+ output.parent.mkdir(parents=True,exist_ok=True)
+ cmd=['ffmpeg','-loglevel','error','-y','-f','rawvideo','-vcodec','rawvideo',
+      '-s',f'{W}x{H}','-pix_fmt','bgr24','-r',str(fps),'-i','-','-an',
+      '-c:v','libx264','-preset','fast','-crf','18','-pix_fmt','yuv420p',
+      '-movflags','+faststart',str(output)]
+ proc=subprocess.Popen(cmd,stdin=subprocess.PIPE)
+ samples={}
+ try:
+  for i,record in enumerate(records):
+   raw=Path(record['path']).read_bytes()
+   if hashlib.sha256(raw).hexdigest()!=record['sourceSha256']:
+    raise ValueError('sequence_frame_changed_during_render')
+   pixels=render_frame(json.loads(raw),geometries=geometries)
+   if i in {0,len(records)//2,len(records)-1}:
+    samples[str(i)]=dict(frameDigest=record['digest'],frameTick=record['tick'],
+                         pixelsSha256=hashlib.sha256(pixels.tobytes()).hexdigest())
+   proc.stdin.write(pixels.tobytes())
+  proc.stdin.close()
+  exit_code=proc.wait()
+ except BaseException:
+  proc.kill()
+  try:proc.stdin.close()
+  except Exception:pass
+  proc.wait()
+  output.unlink(missing_ok=True)
+  raise
+ if exit_code:
+  output.unlink(missing_ok=True)
+  raise RuntimeError('sequence_ffmpeg_encode_failed')
+ try:
+  probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-count_frames',
+   '-show_entries','stream=codec_type,codec_name,nb_read_frames,width,height',
+   '-show_entries','format=duration','-of','json',str(output)]))
+  videos=[s for s in probe['streams'] if s.get('codec_type')=='video']
+  if len(videos)!=1 or len(probe['streams'])!=1 or videos[0].get('codec_name')!='h264' or int(videos[0]['nb_read_frames'])!=len(records):
+   raise RuntimeError('sequence_encoded_frame_count_invalid')
+ except BaseException:
+  output.unlink(missing_ok=True)
+  raise
+ receipt=dict(schema='evercraft.photon-forge-v4.external-sequence-receipt.v1',
+  status='external_canonical_shaped_frames_encoded_not_mastered',
+  manifestSha256=hashlib.sha256(manifest_bytes).hexdigest(),
+  geometrySha256=hashlib.sha256(geometry_bytes).hexdigest(),
+  worldId=world_id,firstFrameDigest=records[0]['digest'],
+  lastFrameDigest=records[-1]['digest'],firstTick=records[0]['tick'],lastTick=records[-1]['tick'],
+  frameSourceSha256=[r['sourceSha256'] for r in records],
+  width=W,height=H,fps=fps,frameCount=len(records),durationSec=len(records)/fps,
+  outputSha256=hashlib.sha256(output.read_bytes()).hexdigest(),sampleFrames=samples,
+  renderedBy='Evercraft Photon Forge V4 CPU triangle renderer',
+  externalCanonicalShapedFramesRendered=True,originRuntimeUnverified=True,
+  worldEngineRuntimeExecuted=False,webgpuHardwareVerified=False,
+  voiceOrScoreIncluded=False,masterQcApproved=False,publicationAuthority=False)
+ output.with_suffix('.receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+ print(json.dumps(receipt,indent=2))
+ return receipt
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('--output',default=str(OUT/'Evercraft_Photon_Forge_V4_SILENT.mp4'))
  p.add_argument('--preview',type=float);p.add_argument('--fps',type=int,default=FPS)
- p.add_argument('--frame-json');p.add_argument('--geometry-json');a=p.parse_args()
+ p.add_argument('--frame-json');p.add_argument('--geometry-json');p.add_argument('--sequence-manifest');a=p.parse_args()
+ if a.sequence_manifest:
+  if not a.geometry_json or a.frame_json or a.preview is not None:raise ValueError('sequence_requires_geometry_only')
+  encode_external_sequence(a.sequence_manifest,a.geometry_json,a.output,a.fps)
+  return
  if a.frame_json:
   if not a.geometry_json:raise ValueError('geometry_json_required')
   f=json.loads(Path(a.frame_json).read_text());gs=json.loads(Path(a.geometry_json).read_text())
