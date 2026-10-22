@@ -33,6 +33,8 @@ const FEATURES=[
   ['toon_verified_source_intake','systemia/media-studio/toon-performance-intake.mjs','toon'],
   ['toon_pose_animatic_renderer','systemia/media-studio/toon-pose-animatic.mjs','toon'],
   ['toon_pose_animatic_cli','systemia/media-studio/toon-pose-animatic.cli.mjs','toon'],
+  ['toon_layered_puppet_renderer','systemia/media-studio/toon-puppet-rig.py','toon'],
+  ['toon_layered_puppet_binding','systemia/media-studio/toon-puppet-binding.mjs','toon'],
   ['identity_fingerprinting','systemia/media-studio/identity-fingerprint.ts','toon'],
   ['character_performance','systemia/media-studio/performance-director.ts','toon'],
   ['dialogue_lipsync_admission','systemia/media-studio/dialogue-sync-gate.ts','toon'],
