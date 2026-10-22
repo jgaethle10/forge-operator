@@ -110,7 +110,7 @@ try{
         document.body.appendChild(canvas);
         const ctx=canvas.getContext('2d');
         function createBuffer(values,usage,min=4){
-          const bytes=values instanceof Float32Array?values:new Float32Array(values);
+          const bytes=(values instanceof Float32Array||values instanceof Uint32Array)?values:new Float32Array(values);
           const buffer=device.createBuffer({size:Math.max(min,Math.ceil(bytes.byteLength/4)*4),
             usage:usage|GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(buffer,0,bytes);return buffer;
