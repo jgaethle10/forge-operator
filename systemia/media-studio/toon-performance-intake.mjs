@@ -30,10 +30,34 @@ function probe(file){
   guard(!p.error&&p.status===0,'ffprobe_failed');
   try{return JSON.parse(p.stdout)}catch{throw new Error('toon_performance_intake_probe_invalid')}
 }
-function decodeAudio(file){
-  const r=spawnSync('ffmpeg',['-v','error','-i',file,'-map','0:a:0','-f','null','-'],
-    {encoding:'utf8',maxBuffer:200_000,timeout:30000});
+function inspectAudio(file){
+  const r=spawnSync('ffmpeg',['-v','error','-i',file,'-map','0:a:0',
+    '-ac','1','-ar','16000','-f','s16le','pipe:1'],
+    {encoding:null,maxBuffer:4_000_000,timeout:30000});
   guard(!r.error&&r.status===0,'audio_decode_failed');
+  const samples=r.stdout;
+  guard(Buffer.isBuffer(samples)&&samples.length>6400&&samples.length%2===0,
+    'audio_samples_missing');
+  let squares=0,peak=0,clipped=0,active=0;
+  const count=samples.length/2;
+  for(let i=0;i<count;i++){
+    const v=Math.abs(samples.readInt16LE(i*2))/32768;
+    squares+=v*v;
+    peak=Math.max(peak,v);
+    if(v>.02)active++;
+    if(v>=.999)clipped++;
+  }
+  const rms=Math.sqrt(squares/count);
+  const activeFraction=active/count,clippedFraction=clipped/count;
+  guard(rms>=.007&&activeFraction>=.06,'speech_audio_essentially_silent');
+  guard(clippedFraction<=.01,'speech_audio_heavily_clipped');
+  return {
+    measuredPcmSampleRate:16000,
+    rms:Number(rms.toFixed(5)),peak:Number(peak.toFixed(5)),
+    activeFraction:Number(activeFraction.toFixed(5)),
+    clippedFraction:Number(clippedFraction.toFixed(5)),
+    measurementOnlyNotExpressiveVoiceProof:true,
+  };
 }
 function isPng(b){
   return b.length>24&&b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
@@ -96,12 +120,13 @@ export function verifyToonPerformanceBundle({packet,shotId,bundleDir,manifest,en
     guard(stream&&Number.isFinite(sec)&&sec>.2&&sec<=shot.durationSec+.2,
       'audio_timing_invalid');
     guard(Number(stream.sample_rate)>=16000,'audio_sample_rate_low');
-    decodeAudio(audio.full);
+    const acoustic=inspectAudio(audio.full);
     dialogue={
       cueId:cue[0].id,text:cue[0].text,
       voiceProfileId:cue[0].voiceProfileId,
       sourceKindDeclared:voice.sourceKind,
       sha256:audio.sha256,bytesVerified:true,audioDecoded:true,
+      acoustic,
       durationSec:Number(sec.toFixed(3)),reviewEvidenceRef:voice.reviewEvidenceRef,
       rightsClaim:voice.rightsClaim,
       naturalVoiceQualityVerified:false,voiceIdentityVerified:false,
