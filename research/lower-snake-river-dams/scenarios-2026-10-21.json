@@ -1,0 +1,216 @@
+{
+  "schema": "evercraft.research.snake-river-transport-scenarios.v1",
+  "assembled_on": "2026-10-21",
+  "status": "DRAFT_NOT_PUBLISHED",
+  "study_state": "WSDOT final transportation report scheduled December 2026; these are reported October open-house estimates, not primary final-study tables",
+  "geography": "Lower Snake River, Washington and Idaho (four federal dams)",
+  "comparison_year": 2045,
+  "units": {
+    "annual_shipping_cost": "million USD per year",
+    "transport_co2": "reported annual transport GHG tons; original source's metric ton vs US short ton and CO2 vs CO2e labeling unverified",
+    "capital_range": "billion USD"
+  },
+  "sources": [
+    {
+      "id": "wsdot",
+      "type": "primary_study_portal",
+      "url": "https://wsdot.wa.gov/construction-planning/search-studies/lower-snake-river-dams-transportation-study"
+    },
+    {
+      "id": "gazette",
+      "type": "secondary_report_of_wsdot_public_presentation",
+      "published": "2026-10-15",
+      "url": "https://www.wcgazette.com/story/2026/10/15/news/state-releases-dam-breaching-study-results/47135.html"
+    },
+    {
+      "id": "barker",
+      "type": "secondary_report_of_wsdot_public_presentation",
+      "published": "2026-10-08",
+      "url": "https://www.spokesman.com/stories/2026/oct/08/new-study-says-grain-transportation-possible-witho/"
+    },
+    {
+      "id": "wsdot_aug2026",
+      "type": "primary_interim_progress_report",
+      "published": "2026-08",
+      "url": "https://app.leg.wa.gov/ReportsToTheLegislature/Home/GetPDF?fileName=TransportationStudy-Report-LowerSnakeRiverDams-August2026_b9c25b16-ce5f-4a96-9f0c-16f50395227e.pdf",
+      "scope": "Confirms calibration and >100 runs, not October numerical outcomes"
+    },
+    {
+      "id": "wstc_mar2026",
+      "type": "primary_preliminary_presentation_indexed_not_visually_inspected",
+      "published": "2026-03-24",
+      "url": "https://wstc.wa.gov/wp-content/uploads/2026/03/2026-03-24-BP7-LowerSnakeRiverDams-TransportationStudy.pdf",
+      "scope": "Historical preliminary version, not interchangeable with October model. Table access not verified."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": 3,
+      "name": "2045 with dams",
+      "annual_shipping_cost_musd": 256.8,
+      "transport_co2_tpy": 253000,
+      "transportation_capital_cost_billion_usd": null,
+      "annual_shipping_delta_musd": 0,
+      "co2_delta_tpy": 0,
+      "evidence": [
+        "gazette",
+        "barker"
+      ],
+      "notes": "Study Scenario 3 is a 2045 reference case, not verified 2026 spending.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
+    },
+    {
+      "id": 4,
+      "name": "2045 breach without transport upgrades",
+      "annual_shipping_cost_musd": 331.9,
+      "transport_co2_tpy": 394000,
+      "transportation_capital_cost_billion_usd": null,
+      "reported_cost_range_billion_usd": [
+        3.8,
+        5.1
+      ],
+      "annual_shipping_delta_musd": 75.1,
+      "co2_delta_tpy": 141000,
+      "evidence": [
+        "gazette",
+        "barker"
+      ],
+      "notes": "$3.8–5.1B appears as transportation capital in Gazette and as road maintenance through 2045 in Barker reporting. Cost classification disputed pending original presentation/final report; excluded from apples-to-apples capital ranking.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
+    },
+    {
+      "id": 5,
+      "name": "River-parallel rail and grain terminals",
+      "annual_shipping_cost_musd": 322.9,
+      "transport_co2_tpy": 224000,
+      "transportation_capital_cost_billion_usd": null,
+      "reported_cost_range_billion_usd": [
+        4,
+        5.3
+      ],
+      "annual_shipping_delta_musd": 66.1,
+      "co2_delta_tpy": -29000,
+      "evidence": [
+        "barker",
+        "gazette"
+      ],
+      "notes": "Barker reports 4–5.03B and ~$323M annual shipping; Gazette reports 4–5.3B and $322.9M. Preserve disagreement until verified against WSDOT primary table.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified",
+      "disputed_capital_ranges_billion_usd": [
+        {
+          "source_id": "barker",
+          "range": [
+            4,
+            5.03
+          ]
+        },
+        {
+          "source_id": "gazette",
+          "range": [
+            4,
+            5.3
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Short-line rail improvements",
+      "annual_shipping_cost_musd": 316.4,
+      "transport_co2_tpy": 239000,
+      "transportation_capital_cost_billion_usd": [
+        4.4,
+        5.9
+      ],
+      "annual_shipping_delta_musd": 59.6,
+      "co2_delta_tpy": -14000,
+      "evidence": [
+        "gazette",
+        "barker"
+      ],
+      "notes": "Cost and emissions from Barker; shipping cost precision from Gazette.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
+    },
+    {
+      "id": 7,
+      "name": "Comprehensive rail improvements",
+      "annual_shipping_cost_musd": 310.4,
+      "transport_co2_tpy": 231000,
+      "transportation_capital_cost_billion_usd": [
+        4.4,
+        5.8
+      ],
+      "annual_shipping_delta_musd": 53.6,
+      "co2_delta_tpy": -22000,
+      "evidence": [
+        "gazette",
+        "barker"
+      ],
+      "notes": "Rail-heavy package.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
+    },
+    {
+      "id": 8,
+      "name": "Class I rail capacity and terminals",
+      "annual_shipping_cost_musd": 322.7,
+      "transport_co2_tpy": 205000,
+      "transportation_capital_cost_billion_usd": [
+        3.8,
+        5
+      ],
+      "annual_shipping_delta_musd": 65.9,
+      "co2_delta_tpy": -48000,
+      "evidence": [
+        "gazette",
+        "barker"
+      ],
+      "notes": "Reliance on Class I freight willingness, capacity, commercial agreements is unverified.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
+    }
+  ],
+  "shared_repair_in_kind": {
+    "reported_range_billion_usd": [
+      1.7,
+      2.2
+    ],
+    "source": "gazette",
+    "description": "Repair-in-kind for bridges, rails, roads, and utilities reportedly common across breach scenarios; inclusion within reported total costs unresolved. DO NOT ADD AGAIN until cost ledger reconciled."
+  },
+  "exclusions": [
+    "electricity replacement",
+    "grid adequacy and dispatch",
+    "irrigation/municipal water replacement",
+    "salmon and habitat response",
+    "tribal treaty rights and cultural resources",
+    "full dam removal and lock maintenance accounting",
+    "construction lifecycle CO2",
+    "distributional impact on farmers, ports and consumers"
+  ],
+  "publication_gate": {
+    "fact_check": "required",
+    "original_WSDOT_presentation_or_final_report": "required",
+    "stakeholder_review": "recommended",
+    "editorial_10_of_10": "required",
+    "human_release": "required",
+    "original_october_numeric_table": "required",
+    "units_and_gases_verification": "required"
+  },
+  "numeric_claims_source_status": "SECONDARY_REPORTS_OF_OCTOBER_2026_OPEN_HOUSES",
+  "original_october_scenario_tables_verified": false,
+  "primary_progress_evidence": {
+    "document": "WSDOT August 2026 quarterly study report",
+    "url": "https://app.leg.wa.gov/ReportsToTheLegislature/Home/GetPDF?fileName=TransportationStudy-Report-LowerSnakeRiverDams-August2026_b9c25b16-ce5f-4a96-9f0c-16f50395227e.pdf",
+    "finding": "More than 100 total logistics cost model runs; scenario 8 and rail/shipping rates being calibrated; does not provide October scenario cost/emission table",
+    "evidence_scope": "modeling_process_only_not_october_numbers"
+  },
+  "potential_confusion": {
+    "prior_stage_study": "March 2026 work-in-progress presentations included preliminary scenario estimates; the model was calibrated in 2026. Do not splice different snapshot values into one scenario table.",
+    "ghg_metric": "Original October display-board unit and CO2-equivalent convention not yet verified; avoid presenting as precise metric tons of carbon dioxide."
+  }
+}
