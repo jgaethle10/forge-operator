@@ -64,3 +64,35 @@ test('producer rejects unsupported cadence and unreasonable frame counts',t=>{
   assert.throws(()=>exportWorldEngineSequence({outputDir:dir,frames:121,fps:30}),/frames_invalid/);
   assert.throws(()=>exportWorldEngineSequence({outputDir:dir,frames:1,fps:30}),/frames_invalid/);
 });
+
+
+test('authored World Engine scene and geometry use the same native compiler without a new renderer',t=>{
+  const root=temp(t);
+  const original=exportWorldEngineSequence({outputDir:path.join(root,'fixture'),frames:3,fps:30});
+  const worldBytes=fs.readFileSync(path.join(root,'fixture','world-definition.json'));
+  const geometryBytes=fs.readFileSync(path.join(root,'fixture','geometry.json'));
+  const worldInput=JSON.parse(worldBytes.toString('utf8'));
+  const geometryInput=JSON.parse(geometryBytes.toString('utf8'));
+  const result=exportWorldEngineSequence({
+    outputDir:path.join(root,'external'),frames:3,fps:30,
+    worldInput,geometryInput,
+    externalInputSha256:{world:sha(worldBytes),geometry:sha(geometryBytes)}
+  });
+  assert.equal(result.receipt.sceneSource,'provided_world_definition_unverified_rights');
+  assert.equal(result.receipt.engineWasExecutedInThisProcess,true);
+  assert.equal(result.receipt.sourceRightsVerified,false);
+  assert.deepEqual(result.receipt.frames.map(x=>x.digest),original.receipt.frames.map(x=>x.digest));
+  assert.equal(result.receipt.worldDefinitionFileSha256,sha(worldBytes));
+  assert.deepEqual(result.receipt.externalInputSha256,{world:sha(worldBytes),geometry:sha(geometryBytes)});
+
+  const incompatible=structuredClone(geometryInput);
+  incompatible[0].id='missing-from-world';
+  assert.throws(()=>exportWorldEngineSequence({
+    outputDir:path.join(root,'missing-geometry'),frames:3,fps:30,
+    worldInput,geometryInput:incompatible
+  }),/worldframe_export_geometry_missing/);
+  assert.throws(()=>exportWorldEngineSequence({
+    outputDir:path.join(root,'wrong-cadence'),frames:3,fps:24,
+    worldInput,geometryInput
+  }),/worldframe_export_world_fps_mismatch/);
+});
