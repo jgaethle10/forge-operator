@@ -140,9 +140,9 @@ for s,side in [(-1,'L'),(1,'R')]:
     for n in range(4):
         x=s*(.66+n*.037)
         tipz=.691 if n in (1,2) else (.717 if n==0 else .739)
-        bname=('index_'+side if n==1 else ('middle_R' if (side=='R' and n==2) else 'hand_'+side))
-        # The existing rig has a thumb and index; all digits are distinct meshes
-        # and can be further promoted to individual bone controllers.
+        bname=('index_'+side,'middle_'+side,'ring_'+side,'pinky_'+side)[n]
+        # Each of the four digits is now assigned its own control bone.
+        # A future deform pass must add segmented phalanges and better skin weights.
         stroke('Finger_%s_%d'%(side,n),
           [(x,-.052,.805),(x+s*.006,-.063,.757),
            (x+s*.013,-.071,tipz)],.027 if n<3 else .022,skin,bname)
