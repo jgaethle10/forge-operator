@@ -55,3 +55,34 @@ test('main Evercraft storefront links to the new processor-verified service page
  const html=get('index.html');
  assert.ok(html.includes('href="./checkout-ready/"'));
 });
+
+test('three higher-priced exact-match offers have indexable scoped buyer pages and gated checkout',()=>{
+ const routes={
+  'knowledge-activation':'knowledge-activation',
+  'social-intelligence-launch':'social-intelligence-launch',
+  'institutional-memory-system':'institutional-memory-system'
+ };
+ const directory=get('checkout-ready/index.html');
+ const sitemap=get('checkout-ready/sitemap.xml');
+ const llms=get('checkout-ready/llms.txt');
+ for(const [key,slug] of Object.entries(routes)){
+  const item=manifest.links.find(x=>x.key===key);
+  assert.ok(item,'missing '+key);
+  const html=get('checkout-ready/'+slug+'/index.html');
+  const canonical='https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/'+slug+'/';
+  assert.ok(html.includes(item.url),slug);
+  assert.ok(html.includes(item.price),slug);
+  assert.ok(html.includes('<link rel="canonical" href="'+canonical+'">'),slug);
+  assert.match(html,/id="confirm" type="checkbox"/);
+  assert.match(html,/authoritative paid receipt/);
+  assert.ok(directory.includes('href="./'+slug+'/"'));
+  assert.ok(sitemap.includes(canonical));
+  assert.ok(llms.includes(canonical));
+  const code=html.match(/<script>([\s\S]+?)<\/script>/)?.[1];
+  assert.ok(code);
+  assert.doesNotThrow(()=>new vm.Script(code));
+  const stripeUrls=html.match(/https:\/\/buy\.stripe\.com\/[a-zA-Z0-9]+/g)||[];
+  assert.ok(stripeUrls.length>=2);
+  assert.deepEqual([...new Set(stripeUrls)],[item.url]);
+ }
+});
