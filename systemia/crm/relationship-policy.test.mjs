@@ -78,3 +78,13 @@ test('private record loader needs protected file and rejects malformed timeline'
     assert.throws(()=>validateRelationshipRecord(invalid,{now}),/evidence_ref_invalid/);
   }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+test('completed review disappears only with dated supporting evidence',()=>{
+ const completed=record({next_action_state:'completed',
+ next_action_decided_at:'2026-10-19T10:00:00Z',next_action_evidence_ref:'internal:review-resolution'});
+ const recordSet=ledger(completed);
+ const signal=projectRelationshipReview(recordSet,{now:new Date('2026-10-21T20:00:00Z')});
+ assert.equal(signal.signals.length,0);
+ assert.throws(()=>validateRelationshipRecord(record({next_action_state:'completed'}),{now:new Date('2026-10-21T20:00:00Z')}),/next_action_evidence_ref_invalid/);
+ assert.throws(()=>validateRelationshipRecord(record({next_action_state:'completed',next_action_evidence_ref:'internal:resolved'}),{now:new Date('2026-10-21T20:00:00Z')}),/next_action_decided_at_invalid/);
+});
