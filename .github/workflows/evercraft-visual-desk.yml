@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/visual-desk/**'
       - 'systemia/graphics-command/**'
+      - 'systemia/media-studio/toon-*'
+      - 'src/FallenFamilyCartoon.tsx'
+      - 'src/fallen-toon-shot-drafts.ts'
       - 'systemia/media-studio/visual-stage.ts'
       - 'systemia/media-studio/visual-stage-html.ts'
       - 'systemia/media-studio/world-intel-stage.ts'
@@ -21,6 +24,9 @@ on:
     paths:
       - 'systemia/visual-desk/**'
       - 'systemia/graphics-command/**'
+      - 'systemia/media-studio/toon-*'
+      - 'src/FallenFamilyCartoon.tsx'
+      - 'src/fallen-toon-shot-drafts.ts'
       - 'systemia/media-studio/visual-stage.ts'
       - 'systemia/media-studio/visual-stage-html.ts'
       - 'systemia/media-studio/world-intel-stage.ts'
