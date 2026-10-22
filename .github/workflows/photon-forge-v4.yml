@@ -33,3 +33,40 @@ jobs:
           python scripts/photon-forge-v4/render.py --preview 4.9
           test -s scripts/photon-forge-v4/v4_preview_04.9.jpg
           rm scripts/photon-forge-v4/v4_preview_04.9.jpg
+      - name: Install existing Evercraft TypeScript runtime
+        run: npm ci --no-audit --no-fund
+      - name: Test the real Evercraft World Engine frame producer
+        run: node --import tsx --test scripts/photon-forge-v4/export-world-engine-sequence.test.ts
+      - name: Compile source frames in the native Evercraft World Engine
+        run: |
+          node --import tsx scripts/photon-forge-v4/export-world-engine-sequence.ts \
+            --output-dir "$RUNNER_TEMP/evercraft-native-worldframe" --frames 4 --fps 30
+      - name: Encode native World Engine frames with owned Photon Forge V4 renderer
+        run: |
+          python scripts/photon-forge-v4/render.py \
+            --sequence-manifest "$RUNNER_TEMP/evercraft-native-worldframe/sequence.json" \
+            --geometry-json "$RUNNER_TEMP/evercraft-native-worldframe/geometry.json" \
+            --fps 30 --output "$RUNNER_TEMP/evercraft-native-worldframe/evercraft-bridge.mp4"
+      - name: Reconcile native producer and actual encoded video receipts
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'evercraft-native-worldframe'
+          producer=json.loads((root/'producer-receipt.json').read_text())
+          final=json.loads((root/'evercraft-bridge.receipt.json').read_text())
+          assert producer['engineWasExecutedInThisProcess'] is True
+          assert producer['frameProducer']=='EvercraftWorldRuntime + compileVisualFrame'
+          assert producer['framesEncodedByPhotonForge'] is False
+          assert final['frameCount']==len(producer['frames'])==4
+          assert final['firstFrameDigest']==producer['frames'][0]['digest']
+          assert final['lastFrameDigest']==producer['frames'][-1]['digest']
+          assert final['geometrySha256']==producer['geometrySha256']
+          assert final['manifestSha256']==producer['sequenceManifestSha256']
+          assert final['frameSourceSha256']==[f['sha256'] for f in producer['frames']]
+          assert final['outputSha256']==hashlib.sha256((root/'evercraft-bridge.mp4').read_bytes()).hexdigest()
+          assert final['renderedBy']=='Evercraft Photon Forge V4 CPU triangle renderer'
+          assert final['masterQcApproved'] is False and final['publicationAuthority'] is False
+          assert final['originRuntimeUnverified'] is True
+          print('Evercraft World Engine -> Photon Forge H.264 receipts reconciled, fixture-only')
+          PY
