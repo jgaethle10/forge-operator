@@ -27,6 +27,9 @@ import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
 import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
 import {CINEMATIC_SKY_WGSL,cinematicSkyCameraUniform,skyShaderSha256} from './native-sky.js';
 import {organicFoamGeometry,ORGANIC_FOAM_PREFIX} from './organic-wake-geometry.js';
+import {applyNavalEditorialGrade,makeNavalEditorialTake,type NavalEditorialShot} from './naval-editorial-direction.js';
+import {auditWebGpuHeroFraming} from './shot-composition.js';
+import {auditNavalEditorialForeground} from './naval-foreground-audit.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -556,7 +559,12 @@ async function main(){
   const useAnimatedOcean=process.env.BATTLE_ANIMATED_OCEAN==='1';
   if(useAnimatedOcean&&!isSilhouette)throw Error('animated_ocean_requires_naval_silhouette_scene');
   if(useFx&&!isSilhouette)throw Error('cinematic_environment_fx_requires_naval_geometry');
-  const originalWorld=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
+  const editorial=(process.env.BATTLE_EDITORIAL_SHOT||'') as NavalEditorialShot|'';
+  if(editorial&&!isSilhouette)throw Error('editorial_naval_shot_requires_four_original_vessels');
+  if(editorial&&!['waterline_tracking','compressed_formation'].includes(editorial))
+    throw Error('editorial_naval_shot_invalid');
+  const sceneBase=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
+  const originalWorld=editorial?applyNavalEditorialGrade(sceneBase,editorial):sceneBase;
   const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
     ?makeBattleMotionDemo(originalWorld):undefined;
   const fxRig=useFx?makeBattleEnvironmentFx():undefined;
@@ -591,7 +599,7 @@ async function main(){
     detailTargetEntityId:'turret-fore-a'
   }):null;
   const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
-    world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures,
+    world,take:isSilhouette?(editorial?makeNavalEditorialTake(editorial):historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero')):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures,
     ...(actorRig?{actorRig}:{}),
     ...(fxRig?{fxRig}:{})
   });
@@ -609,6 +617,29 @@ async function main(){
   if(actualGeometryFraming?.frameSamples.some(sample=>
     sample.framingStatus==='subject_offscreen'))
     throw Error('battleship_true_geometry_offscreen');
+  const editorialFrameAudit=editorial?[0,24,48,72,95].map(i=>{
+    const frame=sequence.frames[i];
+    const hero=editorial==='compressed_formation'?'hood':'bismarck';
+    const a=auditWebGpuHeroFraming({
+      plan:frame.renderPlan,geometries,
+      subject:{id:'naval-editorial-'+hero,
+        entityIds:[hero+'-ship-hull',hero+'-bridge-tower',hero+'-mast'],
+        minVisibleFraction:.35}
+    });
+    if(a.framingStatus==='subject_offscreen')
+      throw Error('editorial_naval_shot_hero_out_of_frame');
+    const foreground=auditNavalEditorialForeground({
+      plan:frame.renderPlan,geometries,hero});
+    if(!foreground.estimatedForegroundClear)
+      throw Error('editorial_naval_shot_foreground_obstructed');
+    return {frameIndex:i,frameDigest:frame.renderPlan.digest,
+      coverage:a.coverage,center:a.center,
+      framingStatus:a.framingStatus,
+      foregroundClear:foreground.estimatedForegroundClear,
+      nearfieldObstructions:foreground.visibleNearfieldObstructions,
+      foregroundAuditSchema:foreground.schema,
+      observable:a.framingStatus!=='subject_offscreen'};
+  }):null;
   const shader=extractOwnedShader(root);
   const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
@@ -730,6 +761,13 @@ async function main(){
       physicsOrCFDVerified:false,
       historicalWeatherVerified:false,
       publicationAuthority:false
+    }}:{}),
+    ...(editorial?{editorialDirection:{
+      shot:editorial,sourceCameraWorldRig:true,gradedOriginalPbrMaterials:true,
+      gradingSourceSceneDigest:sequence.worldDefinitionDigest,
+      realGpuHeroFrameSamples:editorialFrameAudit,
+      cameraReviewRequired:true,historicalCameraOrLightingVerified:false,
+      founderApproved:false,publicationAuthority:false
     }}:{}),
     ...(isSilhouette&&world.metadata?.loftedHullSource?{hullLoft:{
       source:'owned_48_station_multi_chine_cambered_deck_parametric_mesh',

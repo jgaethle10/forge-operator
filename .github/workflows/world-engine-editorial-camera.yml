@@ -1,0 +1,94 @@
+name: World Engine low-waterline cinematic direction native GPU acceptance
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/naval-editorial-direction.ts'
+      - 'systemia/world-engine/naval-editorial-direction.test.ts'
+      - 'systemia/world-engine/naval-foreground-audit.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-editorial-camera.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-3d-cinematic-direction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned World Engine
+        run: npm install --no-audit --no-fund
+      - name: Install original browser-native WebGPU worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Prove independent real 3D camera, PBR grading and source GPU scene framing
+        run: |
+          npx tsx --test systemia/world-engine/naval-editorial-direction.test.ts
+          npm run test:world-engine
+      - name: Require original H264 codec
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render 96 original low-waterline camera frames with original full cinematic engine
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          CINEMATIC_FORMAT: wide
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_EDITORIAL_SHOT: waterline_tracking
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ORGANIC_WAKE: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          BATTLE_SKY: "1"
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-low-waterline
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-waterline-browser
+        run: npm run world:cinematic-render-proof
+      - name: Confirm real actor framing with original GPU hashes and no unverified release claims
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const root='/tmp/evercraft-low-waterline',movie=path.join(root,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(root,'receipt.json'),'utf8'));
+          const sha=crypto.createHash('sha256').update(fs.readFileSync(movie)).digest('hex');
+          const d=r.editorialDirection;
+          if(!d||d.shot!=='waterline_tracking'||!d.sourceCameraWorldRig||
+             !d.gradedOriginalPbrMaterials||d.realGpuHeroFrameSamples?.length!==5||
+             d.realGpuHeroFrameSamples.some(x=>!x.observable||x.foregroundClear!==true||
+                x.nearfieldObstructions?.length!==0||x.framingStatus==='subject_offscreen'||
+                x.coverage.width<=.18)||
+             d.realGpuHeroFrameSamples.find(x=>x.frameIndex===48)?.framingStatus!=='good_technical_framing'||d.cameraReviewRequired!==true||
+             d.historicalCameraOrLightingVerified!==false||d.founderApproved!==false||
+             d.publicationAuthority!==false||
+             r.hullLoft?.vertexCounts?.length!==4||
+             r.organicWake?.hasOldChevronDraws!==false||
+             r.animatedOcean?.vertexCount!==112*112*6||
+             r.proceduralSky?.actualGpuPixelCounterfactualChangedPixels<500||
+             r.actorMotion?.actorCount!==4||r.exactGpuReadbackFrames!==96||
+             r.uniqueRawFrameDigests<80||r.output.sha256!==sha||
+             r.output.audioCodec!==null||r.publicationAuthority!==false)
+             throw Error('source_gpu_editorial_cinema_receipt_invalid');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',movie]));
+          const v=probe.streams.find(s=>s.codec_type==='video');
+          if(v?.codec_name!=='h264'||v.width!==640||v.height!==360||
+            Number(v.nb_frames)!==96||probe.streams.some(s=>s.codec_type==='audio'))
+            throw Error('original_cinematic_camera_movie_invalid');
+          console.log('ORIGINAL_GPU_WATERLINE_CAMERA_ACCEPTED',{
+            sha256:sha,uniqueGpuFrames:r.uniqueRawFrameDigests,
+            heroFraming:d.realGpuHeroFrameSamples.map(x=>({
+              index:x.frameIndex,coverage:x.coverage,status:x.framingStatus
+            })),releaseAllowed:false});
+          NODE
+      - name: Retain actual original source GPU cinema footage and creative framing receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-native-low-waterline-cinematic-camera-gpu
+          path: |
+            /tmp/evercraft-low-waterline/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-low-waterline/receipt.json
+            /tmp/evercraft-low-waterline/opening.png
+            /tmp/evercraft-low-waterline/middle.png
+            /tmp/evercraft-low-waterline/closing.png
+          if-no-files-found: error
+          retention-days: 7
