@@ -6,8 +6,13 @@ import {prepareContactWithPrivateAuthority} from './private-approvals.mjs';
 
 const hash=x=>'sha256:'+createHash('sha256').update(String(x)).digest('hex');
 const nonempty=x=>typeof x==='string'&&x.trim().length>0;
-const hold=reason=>({schema:'evercraft.crm.governed-mail-result.v1',state:'held',
-  reason,message_sent:false,automatic_retry:false});
+const hold=reason=>{
+  const ambiguous=['provider_result_unknown','provider_accepted_reconciliation_required'].includes(reason);
+  return {schema:'evercraft.crm.governed-mail-result.v1',state:'held',
+    reason,message_sent:ambiguous?null:false,
+    provider_accepted:reason==='provider_accepted_reconciliation_required'?true:ambiguous?null:false,
+    delivery_confirmed:false,automatic_retry:false};
+};
 const privateDir=dir=>{
   const s=fs.lstatSync(dir);
   if(!s.isDirectory()||s.isSymbolicLink()||(process.platform!=='win32'&&(s.mode&0o077)!==0))
@@ -152,8 +157,8 @@ export async function dispatchGovernedEmail({
     if(completed?.state!=='finalized')throw Error('interaction_finalization_incomplete');
     status(path.resolve(outboxDir),attempt,'finalized',provider.message_ref);
     return {schema:'evercraft.crm.governed-mail-result.v1',
-      state:'provider_accepted_and_recorded',message_sent:true,
-      delivery_confirmed:false,automatic_retry:false,
+      state:'provider_accepted_and_recorded',message_sent:null,
+      provider_accepted:true,delivery_confirmed:false,automatic_retry:false,
       provider_receipt_digest:hash(provider.message_ref)};
   }catch{return hold('provider_accepted_reconciliation_required');}
 }
