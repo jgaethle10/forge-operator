@@ -1,0 +1,52 @@
+name: Animation Foundry 3D Rig Proof
+on:
+  push:
+    branches: [feat/animation-foundry-creative-gate-rc11]
+    paths:
+      - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
+      - '.github/workflows/animation-foundry-3d-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  blender-rig-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install real Blender and FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends blender ffmpeg
+          blender --version | head -2
+      - name: Generate rigged 3D engineering blockout and render individual frames
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          MESA_GL_VERSION_OVERRIDE: '3.3'
+        run: |
+          mkdir -p /tmp/kennedy-3d
+          blender -b -t 2 --python systemia/animation-foundry/build-kennedy-rig-blockout.py -- /tmp/kennedy-3d
+      - name: Build playable video from real Blender frames
+        run: |
+          test "$(find /tmp/kennedy-3d/frames -name 'frame_*.png' | wc -l)" -eq 48
+          ffmpeg -v error -y -framerate 12 -i /tmp/kennedy-3d/frames/frame_%04d.png \
+            -c:v libx264 -pix_fmt yuv420p -crf 19 -movflags +faststart \
+            /tmp/kennedy-3d/Kennedy_3D_Rig_Engineering_Blockout.mp4
+          ffprobe -v error -show_entries stream=codec_name,nb_frames,width,height \
+            -of json /tmp/kennedy-3d/Kennedy_3D_Rig_Engineering_Blockout.mp4
+          cp /tmp/kennedy-3d/frames/frame_0026.png /tmp/kennedy-3d/Proof_Snap_Pose.png
+      - name: Verify structure in Blender runtime
+        run: |
+          blender -b /tmp/kennedy-3d/Kennedy_Rigged3D_BLOCKOUT.blend \
+            -P systemia/animation-foundry/blender-rig-audit.py -- /tmp/kennedy-3d/rig_audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kennedy-blender-3d-blockout-proof
+          path: |
+            /tmp/kennedy-3d/*.blend
+            /tmp/kennedy-3d/*.mp4
+            /tmp/kennedy-3d/*.png
+            /tmp/kennedy-3d/*.json
+          retention-days: 14
+          if-no-files-found: warn
