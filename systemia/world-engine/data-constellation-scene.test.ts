@@ -42,6 +42,6 @@ test('World Engine builds real digest-verified camera and GPU render plans from 
   assert.ok(frames.every(f=>f.renderPlan.draws.length>=150));
   assert.ok(frames.every(f=>f.renderPlan.lights.length===5));
   assert.ok(frames.every(f=>f.renderPlan.digest.length===64));
-  assert.notEqual(frames[0].renderPlan.digest,frames[48].renderPlan.digest);
-  assert.notEqual(frames[48].renderPlan.digest,frames[95].renderPlan.digest);
+  assert.notEqual(frames[0].renderPlan.digest,frames[1].renderPlan.digest);
+  assert.notEqual(frames[1].renderPlan.digest,frames[2].renderPlan.digest);
 });
