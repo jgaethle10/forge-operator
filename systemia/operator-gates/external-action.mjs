@@ -38,6 +38,15 @@ export function fingerprintExternalAction(input={}){
   for(const key of ['subject_ref','division_id','purpose','actor_ref','passport_product']){
     if(Object.hasOwn(input,key))payload[key]=String(input[key]??'').trim()||null;
   }
+  // When mail routing supplies envelope data, bind it to the same approval:
+  // subject, sender, copied recipients and attachments cannot be substituted.
+  for(const key of ['email_subject','sender_ref','reply_to_ref',
+    'attachments_sha256','recipient_refs','cc_refs','bcc_refs']){
+    if(Object.hasOwn(input,key)){
+      const v=input[key];
+      payload[key]=Array.isArray(v)?v.map(x=>String(x??'').trim()):String(v??'').trim()||null;
+    }
+  }
   return sha256(JSON.stringify(payload));
 }
 
