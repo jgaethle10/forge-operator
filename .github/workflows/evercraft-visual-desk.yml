@@ -65,13 +65,22 @@ jobs:
           npm install --no-audit --no-fund
           node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts
 
+      - name: Install real FFmpeg and FFprobe for cinematic render proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+
       - name: Render source-bound cinematic fixture through real Fallen and FFmpeg
         shell: bash
         timeout-minutes: 5
         run: |
           set -euo pipefail
-          command -v ffmpeg
-          command -v ffprobe
           # Test-generated solid colors are synthetic fixture bytes, never source footage.
           # Actual Fallen integration and exact output digest are verified here.
           node systemia/graphics-command/website-audit-cinematic-e2e.mjs
