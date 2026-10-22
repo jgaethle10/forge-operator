@@ -65,7 +65,7 @@ test('source 3D tracking direction builds unique signed original camera/GPU fram
   if(i===48)assert.equal(audit.framingStatus,'good_technical_framing');
   const foreground=auditNavalEditorialForeground({plan:frame.renderPlan,
     geometries:assets,hero:'bismarck'});
-  assert.equal(foreground.estimatedForegroundClear,true);
+  assert.equal(foreground.estimatedForegroundClear,true,JSON.stringify({frame:i,camera:frame.cameraPosition,obstructions:foreground.visibleNearfieldObstructions,compared:foreground.compared}));
   assert.equal(foreground.visibleNearfieldObstructions.length,0);
   assert.equal(foreground.compared.length,3);
   assert.ok(frame.renderPlan.draws.filter(d=>d.geometryId.startsWith('owned:fx-organic-foam-')).length>25);
