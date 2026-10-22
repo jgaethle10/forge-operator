@@ -6,9 +6,6 @@ conversational thought which hands meaning forward to "Relay finds the differenc
 No changed spoken words, forced pitches, cloned voices or post-processed contours.
 """
 import hashlib, json, pathlib, sys, re, wave
-import numpy as np
-import torch, soundfile as sf
-from kokoro import KPipeline
 
 BASE="Most mistakes don't announce themselves."
 TAKES=[
@@ -24,6 +21,9 @@ TAKES=[
 def words(s):return re.findall(r"[a-z0-9']+",s.casefold())
 def main(out):
  assert len(TAKES)==8 and all(words(t)==words(BASE) for _,t,_,_ in TAKES)
+ import numpy as np
+ import torch, soundfile as sf
+ from kokoro import KPipeline
  root=pathlib.Path(out);root.mkdir(exist_ok=True,parents=True)
  pipe=KPipeline(lang_code='a')
  receipt=[]
