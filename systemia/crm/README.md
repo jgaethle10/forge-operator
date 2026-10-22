@@ -220,3 +220,29 @@ rollback prevention; crash/restart durability proof on that host; protection
 against external Gmail/Resend APIs bypassing this worker; and provider
 delivery/bounce evidence. This adapter is deliberately not enabled by CI,
 and no messages are sent in tests.
+
+
+### Replay protection and transport limits
+
+For a discretionary email, the durable outbox reservation identity comes from
+the complete approved **external-action fingerprint**, *not* an agent-provided
+permit idempotency key. If a provider times out after possibly accepting the
+email, changing the permit idempotency key cannot reopen delivery of the same
+approved action. Provider idempotency uses that durable reservation ID. A
+failed or ambiguous attempt requires an operator to reconcile provider records
+before any new action or send. A fully finalized provider acceptance is still
+not proof that the person received the email.
+
+The exact recipient resolution is separately sourced from
+\`EVERCRAFT\`-owned, protected data. Current staging includes only a single
+To recipient, plain-text email and no CC/BCC/attachments to prevent hidden
+recipients or body/envelope drift. A generic CRM note, business relationship,
+or a provider directory entry alone never grants outbound contact rights.
+Do not retrofit the independent People email-verification path into this
+marketing/partnership correspondence policy.
+
+CI exercises a synthetic provider and real Passport/Interaction Ledger local
+state. It cannot prove a production account, delivery status, mailbox bounce
+processing, all third-party sends, or an externally anchored anti-rollback
+approval log. The live Systemia bindings and sender cutover must still be
+verified on owned compute before enabling outreach.
