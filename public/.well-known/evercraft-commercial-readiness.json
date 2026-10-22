@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.payments.public-commercial-readiness.v1",
+  "as_of": "2026-10-21",
+  "policy": "fail_closed",
+  "authority": "Evercraft Payments / Raven Nexus",
+  "current_state": "HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED",
+  "commercial_checkout_ready": false,
+  "may_promote_buyer_links": false,
+  "may_claim_verified_revenue": false,
+  "may_charge_customers": false,
+  "may_issue_entitlements": false,
+  "public_capability_discovery": "read_only_available_separately",
+  "public_direct_payment_hosted_providers": "held_unverified_current_transport",
+  "historical_buyer_directory": "/.well-known/evercraft-payments-buyer-doors.json",
+  "historical_buyer_directory_warning": "The 13 buyer_url values in the older snapshot reflect GET/checkout preparation evidence from October 14-15, not current HTTP availability. Those historical URLs must NOT be presented as currently bookable or payable.",
+  "last_failure_evidence": {
+    "category": "upstream_provider_http_402",
+    "observed_date": "2026-10-17",
+    "report_path": "docs/EVERCRAFT_PORTFOLIO_COMMERCIAL_DELIVERY_AUDIT_2026-10-17.md",
+    "downstream_mcp_gate": "held_provider_http_402_requires_new_payment_receipt"
+  },
+  "current_owned_payment_rail": {
+    "provider": "evercraft_owned_only",
+    "endpoint_claim": "no_unverified_legacy_fallback",
+    "checkout_operational_state": "requires_live_configuration_and_independent_acceptance",
+    "authenticated_provider_paid_receipt_observed": false,
+    "signed_deployment_receipt_verified": false,
+    "payment_to_shipping_fulfillment_verified": false
+  },
+  "safe_fallback": {
+    "flow": "Open an owned public capability information page. An interested customer can request scope and a verified payment method through separately authorized human contact. Do not assert any checkout succeeds or automatically create obligations.",
+    "auto_email": false,
+    "auto_invoice": false,
+    "auto_charge": false
+  },
+  "reopen_requires": [
+    "Independently observed owned buyer-facing HTTPS checkout with exact offer, price and real consent",
+    "Owner-authorized processor/onboarding agreement and Raven Nexus payment route",
+    "Checkout POST idempotency and signed provider event/refetch with order/merchant/amount/currency match",
+    "Canonical Evercraft Payments paid or reversed state, reliable refund/chargeback handling",
+    "Systemia entitlement and Shipping fulfillment receipts",
+    "Source-to-runtime immutable signed deployment attestation and rollback",
+    "Fresh external GET and authorized sandbox payment flow canary, with separate permitted real-money acceptance"
+  ],
+  "do_not_confuse_with": [
+    "Public Fabric MCP discovery or healthy /health",
+    "Historical Base44 form GET and synthetic 303 provider redirect",
+    "102 checkout_open ledger entries, none paid in most recent scoped ledger query",
+    "A checkout session or email/scope lead"
+  ]
+}

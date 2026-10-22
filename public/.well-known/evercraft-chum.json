@@ -54,7 +54,7 @@
     "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
     "sell_now_directory_page": null,
     "live_intent_hunter": "/api/chum/hunt",
-    "human_conversion": "https://findmypart.base44.app/functions/evercraftBuy",
+    "human_conversion": null,
     "tracked_human_conversion": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}",
     "crawlable_html_directory": "/capabilities",
     "product_page_pattern": null,
@@ -63,7 +63,9 @@
     "owned_human_offers": "https://fabric.systemiacommandcenters.com/offers",
     "owned_human_offer_catalog": "https://fabric.systemiacommandcenters.com/offers.json",
     "owned_read_only_mcp": "https://fabric.systemiacommandcenters.com/mcp",
-    "workflow_xray_offer": "https://fabric.systemiacommandcenters.com/offers/workflow-xray"
+    "workflow_xray_offer": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+    "human_conversion_state": "held_provider_http_402_requires_new_payment_receipt",
+    "commercial_release_readiness": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json"
   },
   "verified_crawler_controls": [
     {
@@ -140,7 +142,7 @@
     "tracked_start_pattern": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}",
     "tracked_start_activation": "CHUM_PUBLIC_ORIGIN may be configured only after the current Yard DeploymentReceipt independently verifies the same HTTPS live route.",
     "eligibility": "sell_now offers only",
-    "default_behavior": "The owned Fabric capabilities directory is a live discovery surface. For one of thirteen selected approved paid offers, use the verified provider-hosted human buyer form from the Evercraft Payments buyer-door directory until the owned commerce path is independently verified. Explicit consent and authoritative paid receipts are separate.",
+    "default_behavior": "Commercial checkout held after externally observed provider HTTP 402 on October 17, 2026. Route to truthful owned public capability information only. Historical Base44 buyer URLs must not be promoted, POSTed to, or treated as live until current authenticated provider and payment-to-fulfillment evidence establishes safe reactivation.",
     "tracked_behavior": "When a verified Forge public origin is configured, issue a privacy-minimized CHUM referral and HTTP 303 into the same human review flow.",
     "relative_start_urls_published": false,
     "attribution": "signed privacy-minimized referral when the tracked corridor is live; attribution is not required for the human to continue",
@@ -149,6 +151,9 @@
     "checkout_is_payment_proof": false,
     "verified_revenue_requires_authoritative_payment_evidence": true,
     "exact_offer_buyer_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-payments-buyer-doors.json",
-    "external_observation": "2026-10-15: former GitHub Pages /forge-operator/chum/ default 404; owned Fabric /capabilities returned 200 and legacy Evercraft Payments human form /functions/evercraftBuy returned 200. Neither result is payment completion evidence."
+    "external_observation": "2026-10-15: former GitHub Pages /forge-operator/chum/ default 404; owned Fabric /capabilities returned 200 and legacy Evercraft Payments human form /functions/evercraftBuy returned 200. Neither result is payment completion evidence.",
+    "public_checkout_ready": false,
+    "release_state": "HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED",
+    "exact_offer_buyer_directory_state": "historical_get_snapshot_not_currently_payable"
   }
 }

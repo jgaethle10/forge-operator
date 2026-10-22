@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.audit.workflow-writer-baseline.v1",
   "observed_at": "2026-10-15",
-  "note": "Observed legacy exceptions only, not a security approval. Removal is welcome; adding a writer requires separate Systemia and founder review. Seven additional/current OIDC token permission grants are inventoried separately; no claim of verified secrets/access scope.",
+  "note": "Observed legacy exceptions only, not a security approval. Removal is welcome; adding a writer requires separate Systemia and founder review. Seven additional/current OIDC token permission grants are inventoried separately; no claim of verified secrets/access scope. October 21: two preexisting Mossmere simulation jobs write only window-society-state/state/window.json through a SHA-frozen isolated worker. This specific exception is NOT an approval to write main, alter other paths or change worker code without review.",
   "existing_direct_main_writers": [
     ".github/workflows/chum-crawl-pressure.yml",
     ".github/workflows/chum-watershed.yml",
@@ -29,5 +29,23 @@
     ".github/workflows/publish-evercraft-machine-commerce.yml",
     ".github/workflows/publish-evercraft-web-mcp.yml",
     ".github/workflows/publish-mcp-registry.yml"
-  ]
+  ],
+  "existing_isolated_society_state_writers": [
+    {
+      "file": ".github/workflows/window-heartbeat.yml",
+      "blob_sha": "a9cc377e5480bccaa61ff64ac7c3b9a2acb868e5",
+      "state_branch": "window-society-state",
+      "state_path": "state/window.json"
+    },
+    {
+      "file": ".github/workflows/window-upstream-heartbeat.yml",
+      "blob_sha": "7df89187ab39e4ff87aa725d2551679a90d3ace8",
+      "state_branch": "window-society-state",
+      "state_path": "state/window.json"
+    }
+  ],
+  "isolated_society_worker_source": {
+    "path": "systemia/society/window-heartbeat.mjs",
+    "blob_sha": "d09b4038dee910452a384b8329d11bf033f56706"
+  }
 }
