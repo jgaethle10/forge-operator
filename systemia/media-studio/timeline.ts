@@ -38,6 +38,9 @@ export interface TimelineClip {
   x?:number;
   y?:number;
   scale?:number;
+  // Composition anchor for full-frame video/image crops (0 edge, .5 center, 1 opposite edge).
+  cropAnchorX?:number;
+  cropAnchorY?:number;
   rotationDeg?:number;
   label?:string;
 }
