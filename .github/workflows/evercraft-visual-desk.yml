@@ -247,6 +247,10 @@ jobs:
           assert.ok(fs.statSync('_toon_audition/audition-board.jpg').size>10000);
           NODE
 
+      - name: Verify actual authored image and voice exports for high-fidelity toons
+        run: |
+          node --import tsx --test systemia/media-studio/toon-performance-intake.test.mjs
+
       - name: Preserve reproducible toon MP4 canary
         uses: actions/upload-artifact@v4
         with:
