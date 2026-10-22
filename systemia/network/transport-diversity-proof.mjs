@@ -76,6 +76,29 @@ try {
   assert.equal(noRoute.status, 'NO_ROUTE');
   assert.equal(noRoute.selected, null);
 
+  // Invalid requests never silently relax payload or latency requirements.
+  const catalog=defaultTransportCatalog({lanAvailable:true,fileCourierAvailable:true});
+  assert.equal(selectTransport({transports:catalog,payload_bytes:-1}).status,'INVALID_REQUEST');
+  assert.equal(selectTransport({transports:catalog,payload_bytes:1.5}).status,'INVALID_REQUEST');
+  assert.equal(selectTransport({transports:catalog,payload_bytes:Number.NaN}).status,'INVALID_REQUEST');
+  assert.equal(selectTransport({transports:catalog,payload_bytes:Number.MAX_SAFE_INTEGER+1}).status,'INVALID_REQUEST');
+  assert.equal(selectTransport({transports:catalog,max_latency_class:'unknown'}).status,'INVALID_REQUEST');
+  assert.equal(selectTransport({transports:{not:'an_array'}}).status,'INVALID_REQUEST');
+
+  // A claimed VERIFIED state alone is not a usable transport specification.
+  const incomplete=[{
+    id:'unbounded_unknown',state:'verified',purposes:['data'],offline_usable:true,
+    latency_class:'unknown',max_payload_bytes:'unlimited',power_cost:0,
+  }];
+  assert.equal(selectTransport({transports:incomplete,payload_bytes:4096}).status,'NO_ROUTE');
+  const unknownCeiling=[{...incomplete[0],latency_class:'realtime'}];
+  assert.equal(selectTransport({transports:unknownCeiling,payload_bytes:4096}).status,'NO_ROUTE');
+  const unknownLatency=[{...incomplete[0],max_payload_bytes:10000}];
+  assert.equal(selectTransport({transports:unknownLatency,payload_bytes:4096}).status,'NO_ROUTE');
+  const spoofed=[null,{...incomplete[0],id:'too_small',latency_class:'realtime',max_payload_bytes:4}];
+  assert.equal(selectTransport({transports:spoofed,payload_bytes:4096}).status,'NO_ROUTE');
+  assert.equal(selectTransport({transports:catalog,payload_bytes:0}).status,'ROUTE_READY');
+
   // Move the exact same authenticated envelope through a filesystem/removable-media lane.
   const key = 'transport-proof-key';
   const envelope = sealEnvelope({
