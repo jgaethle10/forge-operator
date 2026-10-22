@@ -262,6 +262,8 @@ export function finalizeStudioDelivery(input:{
   const masterQc=assessStudioMaster({
     filePath:videoPath,
     expectedSha256:renderReceipt.sha256,
+    expectedAspectRatio:input.request.project.aspectRatio,
+    expectedFps:input.request.project.fps,
     policy:{expectedDurationSec:projectDuration(input.request.project)},
   });
   fs.writeFileSync(
