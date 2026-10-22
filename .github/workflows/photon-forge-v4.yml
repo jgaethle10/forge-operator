@@ -33,13 +33,14 @@ jobs:
           python scripts/photon-forge-v4/render.py --preview 4.9
           test -s scripts/photon-forge-v4/v4_preview_04.9.jpg
           rm scripts/photon-forge-v4/v4_preview_04.9.jpg
-      - name: Install existing Evercraft TypeScript runtime
-        run: npm ci --no-audit --no-fund
+      - name: Install isolated TypeScript runner without modifying Evercraft dependency tree
+        run: |
+          npm install --prefix "$RUNNER_TEMP/evercraft-tsx" --no-save --package-lock=false --ignore-scripts --no-audit --no-fund tsx@4.21.0
       - name: Test the real Evercraft World Engine frame producer
-        run: node --import tsx --test scripts/photon-forge-v4/export-world-engine-sequence.test.ts
+        run: "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" --test scripts/photon-forge-v4/export-world-engine-sequence.test.ts
       - name: Compile source frames in the native Evercraft World Engine
         run: |
-          node --import tsx scripts/photon-forge-v4/export-world-engine-sequence.ts \
+          "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" scripts/photon-forge-v4/export-world-engine-sequence.ts \
             --output-dir "$RUNNER_TEMP/evercraft-native-worldframe" --frames 4 --fps 30
       - name: Encode native World Engine frames with owned Photon Forge V4 renderer
         run: |
