@@ -44,3 +44,30 @@ test("altered encrypted payload is rejected without leaking source secrets", asy
   const altered = { ...envelope, ciphertext: (envelope.ciphertext[0] === "A" ? "B" : "A") + envelope.ciphertext.slice(1) };
   await assert.rejects(() => receiver.consume(altered, { now: 1001 }));
 });
+
+test("oversized fields are rejected before any encryption or logging", async () => {
+  const receiver = await createPrivateReceiverSession({ now: 1000, ttlMs: 1000 });
+  await assert.rejects(
+    () => sealCustodyForReceiver(receiver.challenge, {
+      KAGGLE_API_TOKEN: "X".repeat(16385),
+    }, { now: 1000 }),
+    /invalid_custody_fields/,
+  );
+});
+
+test("oversized or malformed encrypted envelopes are rejected before allocation", async () => {
+  const receiver = await createPrivateReceiverSession({ now: 1000, ttlMs: 1000 });
+  const envelope = await sealCustodyForReceiver(receiver.challenge, makeFixture(), { now: 1000 });
+  await assert.rejects(() => receiver.consume({
+    ...envelope, ciphertext: "A".repeat(131073),
+  }, { now: 1001 }), /custody_envelope_invalid/);
+  await assert.rejects(() => receiver.consume(envelope, { now: 1002 }), /consumed/);
+});
+
+test("metadata count cannot claim more than six source entries", async () => {
+  const receiver = await createPrivateReceiverSession({ now: 1000, ttlMs: 1000 });
+  const envelope = await sealCustodyForReceiver(receiver.challenge, makeFixture(), { now: 1000 });
+  await assert.rejects(() => receiver.consume({
+    ...envelope, field_count: 100,
+  }, { now: 1001 }), /custody_envelope_invalid/);
+});
