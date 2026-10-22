@@ -136,7 +136,9 @@ jobs:
             if(r.previewPubliclyDeployed!==false||r.customerCheckoutCreated!==false||
               r.paymentPosted!==false||r.views?.length!==2||
               r.views.some(v=>v.formSubmitted!==false||v.paymentAttempted!==false||
-                v.formActionVerified!==true||!v.screenshotSha256?.startsWith("sha256:"))){
+                v.formActionVerified!==true||v.horizontalOverflowPx!==0||
+                v.readableHeadline!==true||v.buttonFirstViewport!==true||
+                !v.screenshotSha256?.startsWith("sha256:"))){
               throw Error("source_preview_boundary_invalid");
             }
             console.log(JSON.stringify(r.views.map(v=>({name:v.name,buttonFirstViewport:v.buttonFirstViewport,buttonTop:v.buttonTop}))));
