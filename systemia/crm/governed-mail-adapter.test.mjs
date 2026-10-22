@@ -114,6 +114,10 @@ test('provider error creates an unknown outcome reservation and never blindly re
   assert.equal(calls,1);
   const again=await dispatchGovernedEmail({...f.args,sendProvider:sender});
   assert.equal(again.state,'held');assert.equal(calls,1);
+  // A different agent permit key must not make the same approved action send twice.
+  const otherKey=await dispatchGovernedEmail({...f.args,
+    action:{...f.action,permit_idempotency_key:'new-agent-retry-key'},sendProvider:sender});
+  assert.equal(otherKey.state,'held');assert.equal(calls,1);
   assert.equal(JSON.parse(fs.readFileSync(path.join(f.outboxDir,'outbox.json'),'utf8')).attempts[0].state,'reserved');
  }finally{f.cleanup();}
 });
