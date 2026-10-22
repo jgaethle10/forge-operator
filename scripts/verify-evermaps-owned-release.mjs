@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
 
 const out=resolve('dist/evermaps');
-const files=['index.html','app.js','style.css','pnw-land.geojson'];
+const files=['index.html','app.js','style.css','pnw-land.geojson','incident-source.mjs'];
 const digests={};
 for(const name of files){
  const path=resolve(out,name);
@@ -30,7 +30,7 @@ for(const name of files){
 if(!process.exitCode){
  const html=readFileSync(resolve(out,'index.html'),'utf8');
  const script=readFileSync(resolve(out,'app.js'),'utf8');
- if(!html.includes('/evermaps/app.js')||!html.includes('/evermaps/style.css')
+ if(!html.includes('./app.js')||!html.includes('./style.css')
     ||!script.includes("fetch('/api/evermaps/incidents/pnw'")){
   console.error('BLOCKED: owned API/web asset linkage missing from built output');
   process.exitCode=1;

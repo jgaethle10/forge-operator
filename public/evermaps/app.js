@@ -1,6 +1,8 @@
+import { fetchWfigs } from './incident-source.mjs';
 // EverMaps RC001. First-party source code and source API. No legacy platform, SDK,
 // auth, virtual geofences or rewards. OSM map tiles are third-party cartography;
 // this is a preview, not an approved production tile-service contract.
+const pagesPreview=location.hostname==='jgaethle10.github.io'&&location.pathname.startsWith('/forge-operator/evermaps/');
 const map=document.querySelector('#em-map');
 const tilesHost=document.querySelector('#em-tiles');
 const fallbackSvg=document.querySelector('#em-fallback');
@@ -114,7 +116,7 @@ function renderFallback(){
 }
 async function loadFallback(){
  try{
-  const response=await fetch('/evermaps/pnw-land.geojson',{cache:'force-cache'});
+  const response=await fetch('./pnw-land.geojson',{cache:'force-cache'});
   if(!response.ok)throw Error('Natural Earth local geography HTTP '+response.status);
   const body=await response.json();
   if(body?.metadata?.rights!=='public domain'||!Array.isArray(body.features)||body.features.length<15)
@@ -274,14 +276,27 @@ function clearUnavailable(message){
 async function refresh(){
  if(state.fetching||!state.showReports)return;
  state.fetching=true;
- sourceLine('Checking NIFC source through Evercraft-owned API…','loading');
+ sourceLine(pagesPreview?'Checking public NIFC source · GitHub Pages staging…':'Checking NIFC source through Evercraft-owned API…','loading');
  state.sourceState='loading';
  const controller=new AbortController();
  const timer=setTimeout(()=>controller.abort(),15000);
  try{
-  const result=await fetch('/api/evermaps/incidents/pnw',{signal:controller.signal,headers:{Accept:'application/json'},cache:'no-store'});
-  if(!result.ok)throw new Error('HTTP '+result.status);
-  const json=await result.json();
+  let json;
+  if(pagesPreview){
+   const reported=await fetchWfigs({timeoutMs:14000});
+   json={
+    schema:'evercraft.evermaps.incident-observations.v1',
+    count:reported.records.length,
+    records:reported.records,
+    fetched_at_utc:new Date().toISOString(),
+    guarantees:{current_feed_is_burning_confirmation:false,zero_records_proves_zero_fires:false,
+     location_is_fire_perimeter:false,evacuation_guidance:false}
+   };
+  }else{
+   const result=await fetch('/api/evermaps/incidents/pnw',{signal:controller.signal,headers:{Accept:'application/json'},cache:'no-store'});
+   if(!result.ok)throw new Error('HTTP '+result.status);
+   json=await result.json();
+  }
   if(!state.showReports)return; // Ignore in-flight results after a user disables this layer.
   if(json.schema!=='evercraft.evermaps.incident-observations.v1'||!Array.isArray(json.records)
    ||json.count!==json.records.length||json.records.length>600
@@ -291,7 +306,7 @@ async function refresh(){
    &&typeof r.name==='string'&&n(r.latitude)&&n(r.longitude));
   state.lastFetch=Date.now();
   state.sourceState=state.records.length?'ready':'empty';
-  fetchedEl.textContent='Source checked '+fmtDate(json.fetched_at_utc);
+  fetchedEl.textContent=(pagesPreview?'NIFC direct staging · ':'Evercraft API · ')+'Source checked '+fmtDate(json.fetched_at_utc);
   sourceLine(state.records.length?
    state.records.length+' incident reports · none confirms active flames':
    'Source responded with zero qualifying reports; no-fires conclusion prohibited',

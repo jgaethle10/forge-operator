@@ -13,8 +13,8 @@ const server=read('server.ts');
 
 test('EverMaps has a real, independently owned static entry point and same-origin API',()=>{
  assert.match(html,/<title>EverMaps \| Evercraft Owned Preview<\/title>/);
- assert.match(html,/src="\/evermaps\/app.js"/);
- assert.match(html,/href="\/evermaps\/style.css"/);
+ assert.match(html,/src="\.\/app.js"/);
+ assert.match(html,/href="\.\/style.css"/);
  assert.match(js,/fetch\('\/api\/evermaps\/incidents\/pnw'/);
  assert.match(server,/registerEvermapsIncidentRoutes\(app/);
  assert.match(docker,/COPY --from=build \/app\/dist \.\/dist/);
@@ -62,8 +62,18 @@ test('public-domain natural-earth geography is bundled and credited as the raste
  assert.ok(land.features.every(f=>f.geometry?.type==='Polygon'));
  assert.match(html,/id="em-fallback"/);
  assert.match(html,/Natural Earth \(public domain\)/);
- assert.match(js,/fetch\('\/evermaps\/pnw-land\.geojson'/);
+ assert.match(js,/fetch\('\.\/pnw-land\.geojson'/);
  assert.match(js,/function renderFallback\(\)/);
  assert.match(js,/function updateTileCoverage\(\)/);
  assert.match(css,/\.em-fallback\{/);
+});
+
+test('Pages staging is path-relative and reuses the exact owned NIFC normalization implementation',()=>{
+ assert.equal(read('public/evermaps/incident-source.mjs'),read('systemia/evermaps/incident-source.mjs'));
+ assert.match(js,/location\.hostname==='jgaethle10\.github\.io'/);
+ assert.match(js,/fetchWfigs\(\{timeoutMs:14000\}\)/);
+ assert.match(html,/href="\.\/style.css"/);
+ assert.match(html,/src="\.\/app.js"/);
+ assert.match(js,/fetch\('\.\/pnw-land\.geojson'/);
+ assert.doesNotMatch(html,/href="\/evermaps\//);
 });
