@@ -249,9 +249,14 @@ jobs:
 
       - name: Verify actual authored image and voice exports for high-fidelity toons
         run: |
-          FALLEN_TOON_ANIMATIC_PROOF_DIR=_toon_pose_proof node --import tsx --test systemia/media-studio/toon-performance-intake.test.mjs
+          FALLEN_TOON_PYTHON=/tmp/fallen-toon-cel-env/bin/python \
+          FALLEN_TOON_PUPPET_PROOF_DIR=_toon_puppet_proof \
+          FALLEN_TOON_ANIMATIC_PROOF_DIR=_toon_pose_proof \
+          node --import tsx --test systemia/media-studio/toon-performance-intake.test.mjs
           test -s _toon_pose_proof/animatic-review.mp4
           test -s _toon_pose_proof/animatic-receipt.json
+          test -s _toon_puppet_proof/puppet-motion-review.mp4
+          test -s _toon_puppet_proof/puppet-motion-receipt.json
 
       - name: Preserve reproducible toon MP4 canary
         uses: actions/upload-artifact@v4
@@ -279,6 +284,8 @@ jobs:
             _toon_audition/audition-board.jpg
             _toon_pose_proof/animatic-review.mp4
             _toon_pose_proof/animatic-receipt.json
+            _toon_puppet_proof/puppet-motion-review.mp4
+            _toon_puppet_proof/puppet-motion-receipt.json
           if-no-files-found: error
           retention-days: 30
 
