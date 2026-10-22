@@ -131,6 +131,22 @@
       "email": "reference@hn.libanswers.com",
       "source": "https://history.nebraska.gov/collections/moving-image-inventories/",
       "status": "gmail_draft_created_not_sent"
+    },
+    {
+      "organization": "Richard Nixon Presidential Library Audiovisual Reference",
+      "role": "Original 1971 and 1972 government 16mm Nebraska champions film P-1127 P-392 NPC-1211-181-72, WHPO 5473/8358/8359/8362 original photo negatives, WHCA first party audio reference",
+      "email": "nixonreference@nara.gov",
+      "source": "https://www.nixonlibrary.gov/finding-aids/white-house-photo-office-collection",
+      "status": "gmail_draft_updated_not_sent",
+      "notes": "Clarify catalog Jan 3 1971 vs public Jan 14 1971 ceremony; original federal film vs third-party broadcast; prices/rights on quote. Do not re-email before reconciling response."
+    },
+    {
+      "organization": "University of Missouri Archives",
+      "role": "Original 1971 Nebraska-Missouri 16mm game film C:31/2/3 item 456 and C:6/30/10 item 71-3, licensed viewing and media transfer",
+      "email": "hlldg5@missouri.edu",
+      "source": "https://muarchives.missouri.edu/contacts.html",
+      "status": "gmail_draft_created_not_sent",
+      "notes": "Published film use base fee $40 per minute or part-minute, nonperpetual one-title use, written permission; no fees approved, digitization and broadcast/IP still separate. Do not present this as Oklahoma 1971 game."
     }
   ],
   "safety": {
