@@ -31,3 +31,15 @@ Testing:
 5. Security audit PR #1469, branch protection, 24-hour unattended endurance, independent two-device observation, and explicit founder release approval.
 
 This branch only builds a fail-closed decision gateway and tests. It has not called an LLM, activated a node, incurred provider fees or moved a production workflow.
+
+## Operator-only model bridge (added after the first boundary slice)
+`systemia/society/window-model-bridge.mjs` can request one choice through an **injected** `providerClient.infer` interface, but has no API key, network client, executable task runner, default model or automatic heartbeat wiring. It refuses to invoke an inference client unless a separately operated `budgetGate.reserve` returns a current, provider-and-model-matched reservation with a maximum token count and micro-USD cap. The gate must be a real authenticated persistent service when deployed; the unit-test in-memory gate is not production authorization.
+
+The bridge sends a scoped resident observation under explicit untrusted-data instructions, accepts only one JSON action, rejects invalid provider/mode/request identifiers, checks reported usage against the reserved limits, signs an adapter custody envelope, asks the existing world validator to apply consequences, and reconciles the reservation before returning a **held** world candidate. Reconciliation or action-validation failures cannot produce a world update. A network/provider charge may still occur on an errored call, so a failed reservation must remain auditable rather than silently refunded.
+
+**Trust statement:** signed adapter custody and an adapter-reported request ID are *not* independent proof of genuine model inference. `provider_evidence_state=adapter_reported_not_independently_verified`, `release_status=held_not_live`, no public production claims. The model bridge's live rollout additionally requires separately validated provider receipts, an operator-approved signing key, a durable reservation/reconciliation backend, and a single-writer journal. Its new tests exercise provider-denial, spoofing, token overspend, resource rejection, replay and prompt-injection action refusal using an intentionally synthetic stub, not a real model.
+
+Local focused command (subject to CI verification):
+```bash
+node --test tests/window-agent-boundary.test.mjs tests/window-model-bridge.test.mjs tests/window-heartbeat.test.mjs
+```
