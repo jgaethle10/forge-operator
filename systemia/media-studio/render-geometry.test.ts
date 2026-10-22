@@ -104,3 +104,48 @@ test('push-in preserves square subject proportions within a portrait canvas',()=
     fs.rmSync(dir,{recursive:true,force:true});
   }
 });
+
+
+test('director crop anchors keep an off-center subject in frame',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-director-framing-'));
+  try{
+    const source=path.join(dir,'off-center.png');
+    ffmpeg([
+      '-y','-v','error','-f','lavfi',
+      '-i','color=c=black:s=640x640:r=1,drawbox=x=465:y=275:w=80:h=80:color=white:t=fill',
+      '-frames:v','1',source,
+    ]);
+    const counts:number[]=[];
+    for(const anchorX of [0,1]){
+      const output=path.join(dir,'anchor-'+anchorX+'.mp4');
+      ffmpeg([
+        '-y','-v','error','-loop','1','-i',source,
+        '-vf',filterFor({...pushIn,cropAnchorX:anchorX},180,320),
+        '-frames:v','15','-c:v','libx264','-pix_fmt','yuv420p',output,
+      ]);
+      const result=spawnSync('ffmpeg',[
+        '-v','error','-i',output,'-frames:v','1',
+        '-f','rawvideo','-pix_fmt','gray','-',
+      ],{encoding:'buffer',maxBuffer:1024*1024});
+      assert.equal(result.status,0,String(result.stderr||'frame_extraction_failed'));
+      const pixels=result.stdout as Buffer;
+      assert.equal(pixels.length,180*320);
+      let visible=0;
+      for(const pixel of pixels){if(pixel>200)visible+=1;}
+      counts.push(visible);
+    }
+    assert.equal(counts[0],0,'left alignment should crop the right-edge subject');
+    assert.ok(counts[1]>1000,'right alignment should retain the right-edge subject');
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+test('out-of-range director crop anchors fail rather than silently moving the subject',()=>{
+  assert.throws(()=>filterFor({...pushIn,cropAnchorX:1.2},180,320),
+    /render_crop_anchor_x_invalid/);
+  assert.throws(()=>filterFor({...pushIn,cropAnchorY:-.1},180,320),
+    /render_crop_anchor_y_invalid/);
+  assert.throws(()=>filterFor({...pushIn,cropAnchorX:NaN},180,320),
+    /render_crop_anchor_x_invalid/);
+});
