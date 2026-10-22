@@ -53,6 +53,7 @@ export async function runOsReadiness({ rootDir = process.cwd(), outputFile = nul
       execution.reconciliation?.status === 'reconciled' &&
       execution.reconciliation?.expected_lanes === 12 &&
       execution.reconciliation?.returned_lanes === 12 &&
+      systemiaPolicy.program_sha256 === execution.reconciliation?.program_sha256 &&
       execution.sample_results?.every(x => x.source_ready === true &&
         x.systemia_admitted === false && x.runtime_observed === false);
   const receipt = {
@@ -64,6 +65,7 @@ export async function runOsReadiness({ rootDir = process.cwd(), outputFile = nul
     systemia_policy: systemiaPolicy,
     systemia_policy_evaluated: true,
     systemia_policy_plan_admitted: true,
+    systemia_policy_matches_reconciled_program: systemiaPolicy.program_sha256 === execution.reconciliation?.program_sha256,
     durable_systemia_mission_recorded: false,
     logical_assignments_executed_locally: execution.quality?.completed || 0,
     logical_assignment_limit: 12,
