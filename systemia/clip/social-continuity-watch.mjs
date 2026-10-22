@@ -93,6 +93,27 @@ export function runSocialContinuityWatch({queueFile,receiptDir,outputFile,now=ne
   const tmp=outputFile+'.'+process.pid+'.tmp';
   fs.writeFileSync(tmp,JSON.stringify(result,null,2)+'\n',{mode:0o600});
   fs.renameSync(tmp,outputFile);
+  // KAIDANCE mission-fabric consumption: preserve a bounded, privacy-safe digest.
+  const unresolved=result.counts.total-result.counts.provider_receipt_recorded;
+  const missionSnapshot={
+    schema:'evercraft.kaidance.mission-snapshot.v1',
+    snapshot_ref:'clip-social-continuity:'+result.campaign_id+':'+result.status,
+    observed_at:result.evaluated_at,
+    source_key:'evercraft-social-continuity-watch',
+    mission_key:'evercraft-social-distribution-engine-2026-09',
+    status:result.status,
+    founder_action_required:result.counts.approval_hold>0,
+    human_gate_required:result.counts.approval_hold>0,
+    counts:{scanned:result.counts.total,changed:unresolved,admitted:0,held:unresolved},
+    delivery_counts:result.counts,
+    evidence_refs:['clip-social-watch:review-queue:'+result.campaign_id,'clip-social-watch:receipt-source-available:'+result.receipt_source_available],
+    actions:result.entries.filter(e=>e.state!=='provider_receipt_recorded').map(e=>({id:e.id,state:e.state,reason:e.reason})).slice(0,100),
+    boundaries:{read_only:true,publication_authority:false,platform_visibility_independently_verified:false},
+  };
+  const missionFile=path.join(path.dirname(outputFile),'mission-snapshot.json');
+  const missionTmp=missionFile+'.'+process.pid+'.tmp';
+  fs.writeFileSync(missionTmp,JSON.stringify(missionSnapshot,null,2)+'\n',{mode:0o600});
+  fs.renameSync(missionTmp,missionFile);
   return result;
 }
 if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1])){
