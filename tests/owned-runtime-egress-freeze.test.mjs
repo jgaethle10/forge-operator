@@ -12,6 +12,8 @@ const json=p=>JSON.parse(read(p));
 test('RIVET resident supervisor no longer schedules the old hourly refresh bridge',()=>{
  const services=json('systemia/core/resident-services.json');
  assert.equal(services.services.some(s=>s.service_key==='rivet-session-freshness'),false);
+ const supervisor=json('systemia/core/supervisor.evercraft.compute.json');
+ assert.equal(supervisor.supervised_workflows.includes('rivet-session-freshness'),false);
  const manifest=json('systemia/organism/rivet-session-freshness.workflow.json');
  assert.equal(manifest.authority.use_base44_as_temporary_compatibility_bridge,false);
  assert.equal(manifest.operational_network_requests_allowed,false);
