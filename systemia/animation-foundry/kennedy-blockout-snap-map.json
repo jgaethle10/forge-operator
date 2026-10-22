@@ -1,0 +1,15 @@
+{
+  "schema": "evercraft.animation.snap-rig-map.v1",
+  "armature": "Kennedy_CTRL_Rig",
+  "bones": {
+    "thumbTip": "thumb_R",
+    "middleTip": "middle_R",
+    "wrist": "hand_R",
+    "palm": "forearm_R"
+  },
+  "metersPerBlenderUnit": 1,
+  "startFrame": 17,
+  "durationSec": 1,
+  "snapAudioTimeSec": 0.75,
+  "note": "RC13 mannequin; expected HELD, not a performed snap"
+}
