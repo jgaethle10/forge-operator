@@ -1,0 +1,64 @@
+{
+  "schema": "evercraft.systemia.base44-exit.slice.v1",
+  "product": "EverMaps",
+  "mission_key": "evermaps-world-street3d-20261013",
+  "slice_key": "evermaps-owned-incident-observations-pnw-v1",
+  "decision": "EverMaps must leave Base44; no new Base44 product engineering",
+  "canonical_owner": {
+    "source_repository": "jgaethle10/forge-operator",
+    "module": "systemia/evermaps/incident-source.mjs",
+    "http": "systemia/evermaps/http.mjs",
+    "test": "tests/evermaps-owned-incident-source.test.mjs",
+    "runtime": "existing Forge server; deploy target requires Yard receipt"
+  },
+  "legacy_reference": {
+    "app_id": "6a985aeccbfb6e930a40137b",
+    "hosting": "https://evermaps.base44.app",
+    "source_export_state": "not_required_for_clean_room_evermaps_replacement",
+    "frontend_migration_state": "owned_mvp_preview_implemented_on_forge_branch_not_deployed",
+    "data_entity_reconciliation_state": "not_assessed",
+    "last_source_verified_frontend": "legacy public experience not imported; independently owned replacement implemented"
+  },
+  "capability": {
+    "purpose": "Serve region-bounded, source-qualified public NIFC incident observations, independent of Base44",
+    "paths": [
+      "GET /api/evermaps/incidents/pnw",
+      "GET /api/evermaps/source-health",
+      "GET /evermaps/ (owned responsive explorer, preview)"
+    ],
+    "source": "NIFC WFIGS current incident location REST service",
+    "guarantees": [
+      "Do not label a current-feed incident as currently burning",
+      "Do not convert a point into a fire perimeter or evacuation information",
+      "Do not show data older than observation freshness limit as current",
+      "Do not return stale cached records when upstream verification fails"
+    ],
+    "no_rewards_points": true,
+    "read_only": true
+  },
+  "verification": {
+    "source_module_written": true,
+    "forge_server_wired": true,
+    "unit_tests_added_to_forge_checks": true,
+    "ci_status": "pending_review",
+    "yard_deployment": "not_done",
+    "live_owned_endpoint_probe": "not_done",
+    "rollback_proof": "not_done",
+    "consumer_frontend_cutover": "not_done",
+    "legacy_retirement": "not_done",
+    "external_release_authorized": false,
+    "owned_web_page_implemented": true,
+    "prod_build_asset_gate_added": true,
+    "browser_qa": "not_yet_proven"
+  },
+  "dependencies": [
+    "Review and pass Forge CI on migration PR",
+    "Systemia admission and exact output gate",
+    "Yard deploy and route-health receipt on authorized owned capacity",
+    "Owned web/3D/VR UI parity, source attribution, and iPhone/Quest acceptance",
+    "Rollback and observation window before any Base44 shutdown",
+    "Rebuild any additional EverMaps features from independent, permitted geographic data and existing first-party Evercraft engines; no legacy export prerequisite",
+    "Protect existing public availability until owned HTTPS domain and origin pass recipient and rollback verification; replace traffic after QA"
+  ],
+  "mission_direction": "NO_NEW_LEGACY_PLATFORM_DEPENDENCY; build owned replacement without requiring source export"
+}

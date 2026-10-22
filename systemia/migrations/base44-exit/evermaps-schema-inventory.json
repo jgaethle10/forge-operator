@@ -1,0 +1,115 @@
+{
+  "schema": "evercraft.systemia.evermaps.legacy-schema-inventory.v1",
+  "app_id": "6a985aeccbfb6e930a40137b",
+  "source": "Base44 entity schema metadata returned through authenticated connector",
+  "capture_date": "2026-10-17",
+  "purpose": "Dependency and data-reconciliation planning only. This is not an entity record export.",
+  "entity_count": 14,
+  "aggregate_field_count": 362,
+  "entity_schema_inventory": [
+    {
+      "entity": "ClimateOceanFieldProjection",
+      "field_count": 33,
+      "required_field_count": 14,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "HeatSmokeAccessGapProjection",
+      "field_count": 21,
+      "required_field_count": 15,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "HeatSmokeActionSiteProjection",
+      "field_count": 42,
+      "required_field_count": 14,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "HeatSmokeActionTransitAccessProjection",
+      "field_count": 23,
+      "required_field_count": 19,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "HeatSmokePowerStateProjection",
+      "field_count": 24,
+      "required_field_count": 22,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "LifelineCoverageProjection",
+      "field_count": 38,
+      "required_field_count": 20,
+      "admin_write_only": true,
+      "read_policy": "not_explicit"
+    },
+    {
+      "entity": "LifelineMapProjection",
+      "field_count": 23,
+      "required_field_count": 15,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "NavigationLightProjection",
+      "field_count": 39,
+      "required_field_count": 11,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "ObservationMapProjection",
+      "field_count": 31,
+      "required_field_count": 13,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "RiverHistoryMapProjection",
+      "field_count": 26,
+      "required_field_count": 14,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    },
+    {
+      "entity": "User",
+      "field_count": 1,
+      "required_field_count": 1,
+      "admin_write_only": false,
+      "read_policy": "not_explicit"
+    },
+    {
+      "entity": "VisualStoryCandidate",
+      "field_count": 22,
+      "required_field_count": 5,
+      "admin_write_only": true,
+      "read_policy": "restricted"
+    },
+    {
+      "entity": "VisualStorySnapshot",
+      "field_count": 16,
+      "required_field_count": 5,
+      "admin_write_only": true,
+      "read_policy": "restricted"
+    },
+    {
+      "entity": "VolcanicLakeHazardProjection",
+      "field_count": 23,
+      "required_field_count": 14,
+      "admin_write_only": true,
+      "read_policy": "public_rule_or_unrestricted"
+    }
+  ],
+  "sensitive_record_data_exported": false,
+  "entity_rows_exported": false,
+  "user_records_exported": false,
+  "credentials_exported": false,
+  "requires": "Authorized export and reconciliation of each approved data domain, identity mapping, source rights, retention, and exact entity count before cutover.",
+  "status": "INVENTORIED_NOT_MIGRATED"
+}

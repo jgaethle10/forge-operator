@@ -29,6 +29,7 @@ COPY --from=build /app/systemia/notification-fabric ./systemia/notification-fabr
 COPY --from=build /app/systemia/signal-fabric ./systemia/signal-fabric
 COPY --from=build /app/systemia/worldstate ./systemia/worldstate
 COPY --from=build /app/systemia/radar ./systemia/radar
+COPY --from=build /app/systemia/evermaps ./systemia/evermaps
 COPY --from=build /app/systemia/visual-desk ./systemia/visual-desk
 COPY --from=build /app/systemia/graphics-command ./systemia/graphics-command
 COPY --from=build /app/systemia/faie ./systemia/faie
