@@ -1,0 +1,78 @@
+name: Evercraft native GPU data constellation proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/data-constellation-scene.ts'
+      - 'systemia/world-engine/data-constellation-scene.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-data-constellation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-real-native-world-engine-pixels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing Evercraft World Engine
+        run: npm install --no-audit --no-fund
+      - name: Install its existing native Chromium worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Validate source-owned 3D scene and GPU-plan contracts
+        run: |
+          npx tsx --test systemia/world-engine/data-constellation-scene.test.ts
+          npm run test:world-engine
+      - name: Confirm H264 available
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render actual source-owned native WebGPU frames, no audio
+        env:
+          CINEMATIC_SCENE: data_constellation
+          CINEMATIC_PROOF_OUTPUT: ${{ runner.temp }}/evercraft-data-constellation-gpu
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: ${{ runner.temp }}/evercraft-data-constellation-browser
+        run: npm run world:cinematic-render-proof
+      - name: Verify original GPU readback, H264 frames and bytes
+        env:
+          PROOF_DIR: ${{ runner.temp }}/evercraft-data-constellation-gpu
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
+          const dir=process.env.PROOF_DIR;
+          const file=path.join(dir,'evercraft-data-constellation-native-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const digest=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          if(r.sceneType!=='original_3d_synthetic_data_constellation'||
+             r.dataConstellation?.nodeCount!==75||r.dataConstellation?.linkCount<60||
+             r.dataConstellation?.publicationAuthority!==false||
+             r.exactGpuReadbackFrames!==96||r.uniqueRawFrameDigests<70||
+             r.output.sha256!==digest||r.output.codec!=='h264'||
+             r.output.width!==640||r.output.height!==360||
+             r.output.audioCodec!==null||r.soundReceipt!==null||
+             r.hardwareExecutionClaim!==false||r.publicationAuthority!==false||
+             r.visualReviewState!=='unreviewed'||r.paidProductionReady!==false)
+             throw Error('native_data_constellation_proof_invalid');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-count_frames',
+            '-show_entries','stream=codec_type,codec_name,width,height,nb_read_frames','-of','json',file]));
+          const video=probe.streams.filter(x=>x.codec_type==='video');
+          if(video.length!==1||video[0].codec_name!=='h264'||video[0].width!==640||
+             video[0].height!==360||Number(video[0].nb_read_frames)!==96||
+             probe.streams.some(x=>x.codec_type==='audio'))throw Error('native_data_constellation_encoded_stream_invalid');
+          console.log('VERIFIED_NATIVE_DATA_CONSTELLATION_GPU_CANARY',{sha256:digest,decodedFrames:96,
+            renderProfile:r.renderProfile,hardwareExecutionClaim:false,publicationAuthority:false});
+          NODE
+      - name: Retain actual cinematic pixels for human inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-data-constellation-gpu-canary
+          path: |
+            ${{ runner.temp }}/evercraft-data-constellation-gpu/evercraft-data-constellation-native-gpu.mp4
+            ${{ runner.temp }}/evercraft-data-constellation-gpu/receipt.json
+            ${{ runner.temp }}/evercraft-data-constellation-gpu/opening.png
+            ${{ runner.temp }}/evercraft-data-constellation-gpu/middle.png
+            ${{ runner.temp }}/evercraft-data-constellation-gpu/closing.png
+          retention-days: 7
+          if-no-files-found: error
