@@ -23,8 +23,11 @@ function atomicWrite(file, value, mode = 0o600) {
 }
 
 export class ProviderCredentialVault {
+  #readOnly = false;
+
   constructor({ stateDir, readOnly = false } = {}) {
     if (!stateDir) throw new Error("credential_state_dir_required");
+    this.#readOnly = Boolean(readOnly);
     this.stateDir = path.resolve(stateDir);
     this.keyFile = path.join(this.stateDir, ".vault-key");
     if (readOnly) {
@@ -51,6 +54,7 @@ export class ProviderCredentialVault {
   }
 
   put({ provider, environment = "live", label = "default", apiKeyId, apiSecret, actorRef = "unknown" } = {}) {
+    if (this.#readOnly) throw new Error("credential_vault_read_only");
     const normalizedProvider = safeSegment(provider, "");
     const normalizedEnvironment = safeSegment(environment, "");
     const normalizedLabel = safeSegment(label);
