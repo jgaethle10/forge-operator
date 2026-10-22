@@ -1,14 +1,6 @@
 name: Animation Foundry 3D Rig Proof
+# Full 48-frame rendering is manual-fire only. Auto-CI uses four-frame lookdev.
 on:
-  push:
-    branches: [feat/animation-foundry-creative-gate-rc11]
-    paths:
-      - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
-      - '.github/workflows/animation-foundry-3d-proof.yml'
-  pull_request:
-    paths:
-      - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
-      - '.github/workflows/animation-foundry-3d-proof.yml'
   workflow_dispatch:
 permissions:
   contents: read
