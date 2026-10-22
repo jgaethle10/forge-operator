@@ -106,6 +106,8 @@
     "systemia/media-studio/toon-performance-intake.mjs",
     "systemia/media-studio/toon-pose-animatic.cli.mjs",
     "systemia/media-studio/toon-pose-animatic.mjs",
+    "systemia/media-studio/toon-puppet-binding.mjs",
+    "systemia/media-studio/toon-puppet-rig.py",
     "systemia/media-studio/toon-shot-handoff.mjs",
     "systemia/media-studio/types.ts",
     "systemia/media-studio/virtual-production.ts",
