@@ -44,6 +44,16 @@ jobs:
         run: |
           node --test tests/owned-mcp-exit-audit.test.mjs
           node scripts/audit-owned-mcp-exit.mjs > artifacts/base44-runtime-debt/owned-mcp-exit.json
+      - name: Inventory full portfolio exit coverage and block false retirement claims
+        run: node scripts/portfolio-provider-exit-status.mjs --out artifacts/base44-runtime-debt/portfolio-provider-exit.json
+      - name: Upload whole-portfolio migration state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-whole-portfolio-provider-exit
+          path: artifacts/base44-runtime-debt/portfolio-provider-exit.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Upload machine connector migration receipt
         if: always()
         uses: actions/upload-artifact@v4
