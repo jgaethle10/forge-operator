@@ -1,5 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { exportSabanToTraceOffice, demoSnapshot } from './bridge.mjs';
 
 const key = 'not-a-real-secret-demo-test-key-with-at-least-32-bytes';
@@ -106,3 +111,59 @@ test('different pseudonym keys do not expose a stable cross-sharing ID',()=>{
   assert.notEqual(exportAt(s,key).agents[0].id, exportAt(s,'another-32-byte-private-test-key-not-real').agents[0].id);
 });
 
+
+const bridgeScript = fileURLToPath(new URL('./bridge.mjs', import.meta.url));
+const cli = (args, env = {}) => spawnSync(process.execPath, [bridgeScript, ...args], {
+  encoding: 'utf8', env: { ...process.env, TRACEOFFICE_EXPORT_KEY: key, ...env },
+});
+
+test('CLI synthetic demo emits valid v1 JSON without touching private data', () => {
+  const result = cli(['--demo']);
+  assert.equal(result.status, 0, result.stderr);
+  traceOfficePublicContract(JSON.parse(result.stdout));
+  assert.ok(JSON.parse(result.stdout).agents.every(x => x.activityLabel.startsWith('SYNTHETIC')));
+});
+
+test('CLI real export refuses terminal output and malformed repeated arguments', () => {
+  for (const args of [['--input', 'private.json'], ['--demo', '--demo'],
+                      ['--input', 'state.json', '--output'], ['--demo', 'surprise'],
+                      ['--demo', '--input', 'state.json']]) {
+    const result = cli(args);
+    assert.notEqual(result.status, 0, JSON.stringify(args));
+    assert.equal(result.stdout, '', 'no private snapshot in stdout');
+  }
+});
+
+test('CLI private export uses an exclusive mode-0600 output and refuses overwrite', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-traceoffice-cli-'));
+  const source = path.join(root, 'internal-work-state.json');
+  const output = path.join(root, 'private-snapshot.json');
+  try {
+    fs.writeFileSync(source, JSON.stringify(seed()));
+    const first = cli(['--input', source, '--output', output]);
+    assert.equal(first.status, 0, first.stderr);
+    assert.equal(first.stdout, '', 'sensitive output must not be logged');
+    assert.equal(fs.statSync(output).mode & 0o777, 0o600);
+    const raw = fs.readFileSync(output, 'utf8');
+    traceOfficePublicContract(JSON.parse(raw));
+    for (const forbidden of ['private-agent-id-001', 'confidential-project-123', 'REDACTION-CANARY'])
+      assert.ok(!raw.includes(forbidden));
+    const second = cli(['--input', source, '--output', output]);
+    assert.notEqual(second.status, 0, 'existing snapshot must not be overwritten');
+    assert.equal(fs.readFileSync(output, 'utf8'), raw, 'output remains unchanged');
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('source contract emits bounded labels compatible with TraceOffice current parser', () => {
+  const s = seed();
+  s.jobs['job-001'].state = 'dead_letter';
+  const output = exportAt(s);
+  for (const a of output.agents) {
+    assert.ok(a.activityLabel.length <= 160);
+    assert.ok(a.id.length <= 100);
+  }
+  assert.ok(output.interactions.length <= 100);
+  traceOfficePublicContract(output);
+});
