@@ -265,6 +265,16 @@ function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
       offerUrl:built.manifest.offerUrl,
     });
   }
+  // Whitelisted editorial OG artwork. Fabric's /visuals route is served from
+  // this generated mirror, not from repository public/ directly.
+  const auditSocialRelative=path.join('website-audit-attention','offer-og-v2.svg');
+  const auditSocialSource=path.resolve(moduleDir,'../../public/visuals',auditSocialRelative);
+  const auditSocialTarget=path.resolve(outputDir,auditSocialRelative);
+  if(fs.existsSync(auditSocialSource)){
+    fs.mkdirSync(path.dirname(auditSocialTarget),{recursive:true,mode:0o700});
+    fs.copyFileSync(auditSocialSource,auditSocialTarget);
+  }
+
   const index={
     schema:'evercraft.fabric.visual-desk-index.v1',
     origin:String(origin||'').replace(/\/$/,''),
