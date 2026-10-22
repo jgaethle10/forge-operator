@@ -25,7 +25,10 @@
     ],
     "audio": "Target platform-specific loudness, review mix for mobile, captions with verified text",
     "shot_evidence": "Capture real authorized product interaction or explicitly label conceptual UI; do not stage real customer results.",
-    "publishing": "owner approval required; all campaigns internally staged, none auto-posted"
+    "publishing": "owner approval required; all campaigns internally staged, none auto-posted",
+    "legal_guardrail": "RIVET owner/governance pause overrides a catalog sell-now label. No contact, ads, brand use or sales claims while hold applies.",
+    "performance_guardrail": "No promises of specific conversions, revenue, supplier availability, rankings, safety or upgrade success. No testimonials without real customer consent.",
+    "scope_guardrail": "Do not conflate Systemia payment links with the separate Evercraft Media & Technologies account; published links are scope-first with manual provider-paid reconciliation."
   },
   "capability_campaigns": [
     {
@@ -1676,28 +1679,29 @@
         "stakes_4_8": "The wrong guess can cost time, trust or money.",
         "discovery_8_15": "Surface the land, utility and opportunity questions before commitment.",
         "proof_15_18": "Show authentic, permissioned product evidence here. Never synthesize a fake success screen.",
-        "cta_18_20": "Discuss scope and availability"
+        "cta_18_20": "No CTA: publication held"
       },
       "website": {
         "headline": "The address is only the beginning of an EV site decision.",
         "subheadline": "Surface the land, utility and opportunity questions before commitment.",
         "action": {
-          "verb": "Discuss scope and availability",
-          "url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
-          "checkout": "not_verified_at_this_door",
+          "verb": "No public campaign or buyer contact until legal/owner approval",
+          "url": null,
+          "checkout": "paused_no_action",
           "can_request_payment": false
         }
       },
       "social": {
-        "short_caption": "The address is only the beginning of an EV site decision. Surface the land, utility and opportunity questions before commitment. Discuss scope and availability.",
+        "short_caption": null,
         "proof_asset_required": "authorized_real_demo_or_verified_source",
         "no_auto_publish": true
       },
-      "production_state": "script_v1_pending_proof_footage_legal_brand_review",
+      "production_state": "BLOCKED_legal_governance_owner_authority_no_contact_no_publishing",
       "truth_gate": {
         "not_a_verified_checkout": true,
         "price_may_be_quoted_only_with_current_source": true,
-        "landing_not_same_as_payment": true
+        "landing_not_same_as_payment": true,
+        "legal_hold": true
       }
     },
     {
