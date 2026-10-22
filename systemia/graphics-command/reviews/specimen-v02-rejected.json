@@ -1,0 +1,80 @@
+{
+  "schema": "evercraft.graphics-command.creative-rejection-record.v1",
+  "artifact": {
+    "name": "evercraft_emotional_specimen_v02.mp4",
+    "sha256": "0f7ad37e2b9f807989de45f0ea133fb58712ba6cdfa3e0ae89b4110e4663be03",
+    "durationSec": 12,
+    "frameRate": 24,
+    "resolution": [
+      720,
+      1280
+    ],
+    "captureLocation": "conversation-local transient media, not published or attached to GitHub",
+    "artifactAvailableFromRepository": false,
+    "visualEvidence": [
+      {
+        "frame": 30,
+        "sha256": "e33a5217f80dbe515baa68b24e345d85401f4464866fe1d3e4c58c37c71aad03"
+      },
+      {
+        "frame": 90,
+        "sha256": "f0b2c0ccf5be4db8c53fcce9c259bf122cff14943c3cb430136c3e265b11e379"
+      },
+      {
+        "frame": 162,
+        "sha256": "aa85f2937714211799dac46c49cffae5055ce2eec6d46b5cd71f47c7e8c413fa"
+      },
+      {
+        "frame": 235,
+        "sha256": "a00ee7eff57bec3db848cafcce79f66b379f1b8d8554842118afcafd682b5681"
+      }
+    ]
+  },
+  "feedback": {
+    "origin": "Qualitative founder reaction to the produced specimen; director's observations derived from contact sheet and locally stored encoded frames",
+    "decision": "reject",
+    "interpretation": "Technically assembled motion graphics with repetitive UI-card framing, not a compelling film; no evidence of earned emotional connection",
+    "findings": [
+      {
+        "dimension": "subject_specificity",
+        "evidence": "Central subject in three beats is the same stylized browser skeleton, with no actual customer, workflow, object or place.",
+        "requiredChange": "Acquire rights-clear story assets or verified product captures and place an identifiable object, person, or real process in the first second."
+      },
+      {
+        "dimension": "shot_variety",
+        "evidence": "Encoded frames 30/90/162 repeat the browser-centered composition and text-led layouts.",
+        "requiredChange": "Rebuild from a real shot list with close-up physical details, establishing scale, purposeful camera movement and distinct compositions."
+      },
+      {
+        "dimension": "motion_with_purpose",
+        "evidence": "Prototype technical audit counted 6.875 seconds of frozen footage, 57.3% of a 12-second video.",
+        "requiredChange": "Animate scene-state changes that advance the story; allow purposeful holds but reject unrelated decorative animation."
+      },
+      {
+        "dimension": "sound_picture_relationship",
+        "evidence": "Music is a procedural bed rather than original thematic scoring tied to meaningful on-screen events.",
+        "requiredChange": "Create and audition an original cue with separate stems; synchronize phrase resolution with the visible turning point and preserve intentional silence."
+      },
+      {
+        "dimension": "earned_emotion",
+        "evidence": "No genuine character reaction, lived stakes, or observed transformation appears in the film.",
+        "requiredChange": "Show a credible person or physical scenario with understandable stakes, and only claim an outcome that the footage or application proves."
+      },
+      {
+        "dimension": "visual_authenticity",
+        "evidence": "Mock browser illustration is visually similar to a template and cannot establish real product operation.",
+        "requiredChange": "Use live-captured software truth or clearly staged physical scenes, provenance labels and exact-frame visual observation."
+      }
+    ]
+  },
+  "technical": {
+    "decodedFrames": 288,
+    "expectedFrames": 288,
+    "freezeRatio": 0.573,
+    "blackDurationSec": 0,
+    "integratedLufs": -21.8,
+    "productionShortEdgePassed": false,
+    "technicalQuality": "rejected"
+  },
+  "next": "Retain as a negative benchmark. Do not recycle its layouts, score it as a Creative Council winner, or publish it. Follow the physical-story-first production brief."
+}

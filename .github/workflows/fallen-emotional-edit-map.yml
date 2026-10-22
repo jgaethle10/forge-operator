@@ -1,0 +1,58 @@
+name: Fallen emotional edit grammar
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/emotional-edit-map.mjs'
+      - 'systemia/graphics-command/emotional-edit-map.test.mjs'
+      - 'systemia/graphics-command/review-emotional-master.mjs'
+      - 'systemia/graphics-command/review-emotional-master.test.mjs'
+      - 'systemia/graphics-command/creative-decision.mjs'
+      - 'systemia/graphics-command/creative-decision.test.mjs'
+      - 'systemia/graphics-command/reviews/**'
+      - 'systemia/graphics-command/build-commercial.mjs'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/campaigns/**'
+      - '.github/workflows/fallen-emotional-edit-map.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/graphics-command/emotional-edit-map.mjs'
+      - 'systemia/graphics-command/emotional-edit-map.test.mjs'
+      - 'systemia/graphics-command/build-commercial.mjs'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/campaigns/**'
+      - '.github/workflows/fallen-emotional-edit-map.yml'
+jobs:
+  preproduction-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Ensure actual FFmpeg and FFprobe are available
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
+      - name: Install TypeScript module runner
+        run: npm install --no-audit --no-fund
+      - name: Verify emotional beat map, commercial renderer and actual encoded master
+        run: node --import tsx --test systemia/graphics-command/emotional-edit-map.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/review-emotional-master.test.mjs systemia/graphics-command/creative-decision.test.mjs
+        env:
+          EVERCRAFT_QC_ARTIFACT_DIR: _emotional_master_validation
+      - name: Retain encoded technical fixture and independently hashed frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-emotional-master-technical-fixture
+          path: _emotional_master_validation/
+          if-no-files-found: warn
+          retention-days: 7

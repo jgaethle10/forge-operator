@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.fallen.physical-concept-observation.v1",
+  "name": "one-request-one-journey-v03",
+  "editorialState": "internal_concept_requires_creative_review",
+  "treatment": "physical-first-one-request-one-journey",
+  "master": {
+    "name": "one_request_physical_concept_v03.mp4",
+    "sha256": "0c1363d80c3df2deb46fc6f38751fb66fcc8d0e978ebd5cc60695782afebd376",
+    "durationSec": 16,
+    "frameRate": 24,
+    "width": 1280,
+    "height": 720,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "frameCount": 384
+  },
+  "source": {
+    "name": "render_physical_journey.py",
+    "sha256": "2986136c1b8e321381d12b00a27884b0413c72e764f46301865352ba1d101f2b",
+    "engine": "VTK 9.6.2 offscreen authored editable 3D scene",
+    "availability": "conversation sandbox artifact pack; not committed to repo",
+    "rights": "original generated geometry and score; no external clips or soundtrack"
+  },
+  "score": {
+    "name": "one_request_original_score_v03.wav",
+    "sha256": "1bf181e37b5b4b5d731001b5b81bc2fd6221a1424638073c80a07eb40ecaa6a1"
+  },
+  "technical": {
+    "state": "technical_fixture_pass_production_not_approved",
+    "blackDurationSec": 0,
+    "freezeDurationSec": 0,
+    "silenceDurationSec": 0,
+    "integratedLufs": -21.2,
+    "belowProductionResolution": true
+  },
+  "disclosure": {
+    "synthetic": true,
+    "productClaims": "none",
+    "observedProductWorkflow": false,
+    "customerCaseStudy": false
+  },
+  "integration": {
+    "systemiaAdmitted": false,
+    "kssCoreUsed": false,
+    "worldEngineStaged": false,
+    "visualObserverIndependent": false,
+    "boardroomReviewed": false,
+    "clipDelivered": false,
+    "publicationAuthority": false
+  },
+  "creativeVerdict": "not_yet_reviewed_do_not_claim_quality",
+  "note": "Actual local film and source code are linked in the originating ChatGPT conversation only; this JSON ledger is a durable pointer to SHA-256 values, not an uploaded film or source repository."
+}
