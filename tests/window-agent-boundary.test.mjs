@@ -80,7 +80,8 @@ test('finite resources and geographic constraints cannot be overruled by agent p
   w.actors[0].coins=1;
   assert.throws(()=>fixture(w,'r1',{type:'share',to:'r2',amount:5}),/Insufficient/);
   w.actors[0].coins=0;
-  assert.throws(()=>fixture(w,'r1',{type:'work'}),/Not able to work|not/);
+  w.actors[0].hunger=0;
+  assert.throws(()=>fixture(w,'r1',{type:'work'}),/Not able to work/);
   w.actors[0].energy=0;
   assert.throws(()=>fixture(w,'r1',{type:'move',zone:'garden'}),/exhausted/);
   assert.equal(w.events.length,0);
