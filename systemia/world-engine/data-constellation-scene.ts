@@ -72,16 +72,16 @@ function edgeTransform(a:V,b:V){
     rotationDeg:vec(-Math.asin(dy/length)*180/Math.PI,Math.atan2(dx,dz)*180/Math.PI,0),
     scale:vec(.012,.012,length/2)};
 }
-export function makeDataConstellationScene(){
+export function makeDataConstellationScene(durationSec:1|4=4){
   const rand=randomSequence();
   const entities:WorldDefinition['entities']=[];
   const add=(e:WorldDefinition['entities'][number])=>entities.push(e);
   const materialIds=['node-cyan','node-ice','node-violet'];
-  const roots=[vec(-4,1.4,-.7),vec(.15,1.8,-1.3),vec(4,1.55,-.5)];
+  const roots=[vec(-4.1,1.2,-2.6),vec(.15,2.35,.75),vec(4.1,1.4,-2.3)];
   const locations:V[][]=[[],[],[]];
   add({id:'cinema-camera',transform:pos(vec(-7,4,17)),
     camera:{projection:{type:'perspective',fovYDeg:46},near:.1,far:130,exposure:1.0}});
-  add({id:'world-floor',transform:{position:vec(0,-2.8,-2),scale:vec(8,.09,5)},
+  add({id:'world-floor',transform:{position:vec(0,-3.6,-2.6),scale:vec(7,.08,4)},
     renderable:{geometryRef:'data-constellation:cube',materialId:'basalt',receivesShadow:true}});
   add({id:'knowledge-core',transform:{position:roots[1],scale:vec(.59,.59,.59)},
     renderable:{geometryRef:'data-constellation:sphere',materialId:'core-gold',castsShadow:true,receivesShadow:true}});
@@ -92,10 +92,10 @@ export function makeDataConstellationScene(){
       behaviors:[{kind:'oscillate_y',amplitude:.12,frequencyHz:.4+cluster*.13}]});
     for(let i=0;i<25;i++){
       const spiral=i*2.3999632297+cluster*.42;
-      const radius=.56+Math.sqrt((i+1)/25)*2.35;
+      const radius=.56+Math.sqrt((i+1)/25)*2.22;
       const p=vec(root.x+Math.cos(spiral)*radius,
-        root.y+Math.sin(spiral*1.67)*1.3+(rand()-.5)*.25,
-        root.z+Math.sin(spiral)*radius*.7+(rand()-.5)*1.4);
+        root.y+Math.sin(spiral*1.67)*1.75+(rand()-.5)*.25,
+        root.z+Math.sin(spiral)*radius*.95+(rand()-.5)*1.4);
       locations[cluster].push(p);
       const size=i%9===0?.15:.07+rand()*.048;
       add({id:'cluster-'+cluster+'-signal-'+String(i).padStart(2,'0'),
@@ -125,6 +125,41 @@ export function makeDataConstellationScene(){
     add({id:'architecture-pier-'+i,transform:{position:vec(x,-1.6,-3.9),scale:vec(.11,1.0,.18)},
       renderable:{geometryRef:'data-constellation:cube',materialId:'architecture'}});
   }
+  // Spatial framing is original triangle geometry rendered by World Engine,
+  // not a 2D frame or borrowed footage. Keep it behind the actual data subject.
+  // Thin paired rails, side ladders and depth-separated stanchions provide
+  // scale, occlusion, and repeatable design-system architecture.
+  for(const z of [-7.3,-4.9,-2.7]){
+    for(const side of [-1,1]){
+      add({id:'cinema-stanchion-'+z+'-'+side,
+        transform:{position:vec(side*6.35,.1,z),scale:vec(.052,2.6,.085)},
+        renderable:{geometryRef:'data-constellation:cube',materialId:'architecture'}});
+      add({id:'cinema-light-edge-'+z+'-'+side,
+        transform:{position:vec(side*6.30,2.7,z),scale:vec(.075,.025,.55)},
+        renderable:{geometryRef:'data-constellation:cube',materialId:'structural-trim',castsShadow:false}});
+    }
+    add({id:'cinema-depth-bridge-'+z,
+      transform:{position:vec(0,3.75,z),scale:vec(6.35,.045,.08)},
+      renderable:{geometryRef:'data-constellation:cube',materialId:'architecture'}});
+  }
+  // Meaningful central detail: directional architectural components surround
+  // the intelligence nucleus without covering the 75 independent data nodes.
+  for(let i=0;i<12;i++){
+    const angle=2*Math.PI*i/12,radial=1.25;
+    const x=roots[1].x+Math.cos(angle)*radial;
+    const y=roots[1].y+Math.sin(angle)*radial;
+    add({id:'core-optics-vane-'+String(i).padStart(2,'0'),
+      transform:{position:vec(x,y,roots[1].z+.3),
+        rotationDeg:vec(0,0,i*30),scale:vec(.09,.32,.08)},
+      renderable:{geometryRef:'data-constellation:cube',materialId:i%3===0?'core-gold':'structural-trim'}});
+  }
+  // Different-depth focal rails give the camera foreground motion cues.
+  for(let i=0;i<9;i++){
+    const x=-5.2+i*1.3;
+    add({id:'floor-coordinate-'+i,
+      transform:{position:vec(x,-3.36,-.75),scale:vec(.018,.016,1.65)},
+      renderable:{geometryRef:'data-constellation:cube',materialId:'structural-trim'}});
+  }
   add({id:'ambient',transform:pos(vec(0,0,0)),
     light:{type:'ambient',color:color(.48,.62,.85),intensity:.72}});
   add({id:'key-light',transform:{position:vec(-7,9,4),rotationDeg:vec(-40,0,0)},
@@ -149,6 +184,7 @@ export function makeDataConstellationScene(){
       materials:[
         material('basalt',[.08,.12,.20],.48,.57),
         material('architecture',[.17,.25,.36],.68,.32),
+        material('structural-trim',[.15,.44,.52],.62,.32,[.03,.23,.34],.22),
         material('node-cyan',[.13,.58,.86],.38,.24,[.13,.5,.9],.26),
         material('node-ice',[.36,.88,.95],.40,.22,[.24,.75,1],.26),
         material('node-violet',[.53,.35,.87],.42,.29,[.42,.2,.88],.28),
@@ -161,14 +197,16 @@ export function makeDataConstellationScene(){
   };
   const take:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',id:'constellation-cinematic-take',
-    cameraEntityId:'cinema-camera',targetEntityId:'knowledge-core',durationSec:4,fps:24,
+    cameraEntityId:'cinema-camera',targetEntityId:'knowledge-core',durationSec,fps:24,
     move:'orbit',ease:'smootherstep',
-    orbit:{radius:12.8,startAngleDeg:-31,endAngleDeg:32,startHeight:2.9,endHeight:4.25},
-    startFovYDeg:44,endFovYDeg:40
+    orbit:{radius:10.6,startAngleDeg:-37,endAngleDeg:35,startHeight:3.3,endHeight:4.65},
+    startFovYDeg:47,endFovYDeg:42
   };
   return {world,take,geometries:[cube(),sphere()],
     receipt:{schema:'evercraft.cinema.data-constellation-scene.v1',
       identity:'synthetic_data_visualization',nodeCount:75,linkCount,
-      materialCount:world.visualScene?.materials.length,publicationAuthority:false,
+      materialCount:world.visualScene?.materials.length,
+      cinematicSpatialArchitecture:true,depthSeparatedClusters:true,
+      publicationAuthority:false,
       customerReady:false}};
 }

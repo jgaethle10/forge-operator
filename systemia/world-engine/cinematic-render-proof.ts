@@ -49,7 +49,7 @@ const highRes=process.env.CINEMATIC_HIGH_RES==='1';
 if(highRes&&!isDataConstellation)throw Error('cinematic_high_res_scene_not_supported');
 const WIDTH=['battleship','denmark_strait_formation','denmark_strait_silhouettes'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.width:isDataConstellation&&highRes?1920:640;
 const HEIGHT=['battleship','denmark_strait_formation','denmark_strait_silhouettes'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.height:isDataConstellation&&highRes?1080:360;
-const FPS=24,DURATION=4;
+const FPS=24,DURATION=isDataConstellation&&highRes?1:4;
 function cube():GeometryAsset{
   const q=[
     {n:[0,0,1],v:[[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]},
@@ -555,7 +555,7 @@ async function main(){
   const useAnimatedOcean=process.env.BATTLE_ANIMATED_OCEAN==='1';
   if(useAnimatedOcean&&!isSilhouette)throw Error('animated_ocean_requires_naval_silhouette_scene');
   if(useFx&&!isSilhouette)throw Error('cinematic_environment_fx_requires_naval_geometry');
-  const constellation=isDataConstellation?makeDataConstellationScene():null;
+  const constellation=isDataConstellation?makeDataConstellationScene(highRes?1:4):null;
   const originalWorld=constellation?.world??(isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld());
   const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
     ?makeBattleMotionDemo(originalWorld):undefined;
@@ -674,7 +674,7 @@ async function main(){
     throw new Error('cinematic_master_contract_invalid');
   }
   const stills=[];
-  for(const [label,time] of [['opening',.22],['middle',2.06],['closing',3.74]] as const){
+  for(const [label,time] of [['opening',Math.min(.22,DURATION*.2)],['middle',DURATION*.5],['closing',DURATION-Math.min(.26,DURATION*.2)]] as const){
     const filename=path.join(out,label+'.png');
     run('ffmpeg',['-hide_banner','-loglevel','error','-y','-ss',String(time),'-i',video,'-frames:v','1',filename]);
     stills.push({label,path:filename,sha256:sha(fs.readFileSync(filename))});

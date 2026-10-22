@@ -18,7 +18,12 @@ test('Original data constellation has deterministic, meaningful 3D geometry and 
   for(const mesh of a.geometries)assert.equal(validateGeometryAsset(mesh),true);
   const ids=a.world.entities.map(x=>x.id);
   assert.equal(new Set(ids).size,ids.length);
-  assert.equal(a.world.visualScene?.materials.length,8);
+  assert.equal(a.world.visualScene?.materials.length,9);
+  assert.equal(a.receipt.cinematicSpatialArchitecture,true);
+  assert.equal(a.receipt.depthSeparatedClusters,true);
+  assert.equal(a.world.entities.filter(e=>e.id.startsWith('core-optics-vane-')).length,12);
+  assert.equal(a.world.entities.filter(e=>e.id.startsWith('cinema-stanchion-')).length,6);
+  assert.equal(a.world.entities.filter(e=>e.id.startsWith('floor-coordinate-')).length,9);
 });
 test('Original cinematic material/camera coverage uses actual lights without over-limit',()=>{
   const {world,take}=makeDataConstellationScene();
@@ -44,4 +49,15 @@ test('World Engine builds real digest-verified camera and GPU render plans from 
   assert.ok(frames.every(f=>f.renderPlan.digest.length===64));
   assert.notEqual(frames[0].renderPlan.digest,frames[1].renderPlan.digest);
   assert.notEqual(frames[1].renderPlan.digest,frames[2].renderPlan.digest);
+});
+
+test('V3 has original spatial hierarchy and intentional camera parallax, not flat effect layers',()=>{
+ const {world,take}=makeDataConstellationScene();
+ const relays=world.entities.filter(e=>/-relay$/.test(e.id));
+ assert.equal(relays.length,3);
+ assert.ok(relays[1].transform.position.z>relays[0].transform.position.z+2);
+ assert.ok(relays[1].transform.position.z>relays[2].transform.position.z+2);
+ assert.ok(Math.abs(take.orbit!.endAngleDeg-take.orbit!.startAngleDeg)>50);
+ assert.ok(take.orbit!.radius<12);
+ assert.equal(world.metadata?.publication_authority,false);
 });

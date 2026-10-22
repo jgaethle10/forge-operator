@@ -1,0 +1,88 @@
+name: Evercraft native World Engine 1080p source-pixel proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/data-constellation-scene.ts'
+      - 'systemia/world-engine/data-constellation-scene.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-data-constellation-1080p.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-1080p-truth-and-pixels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned World Engine
+        run: npm install --no-audit --no-fund
+      - name: Install owned native Chromium worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Check original native cinematic scene and GPU plans
+        run: npx tsx --test systemia/world-engine/data-constellation-scene.test.ts
+      - name: Bounded video encoder preflight
+        timeout-minutes: 11
+        run: |
+          if command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -version | head -1
+          else
+            timeout 540s sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+            command -v ffmpeg
+          fi
+      - name: Render 24 full-resolution original WebGPU pixels at 1920x1080
+        timeout-minutes: 25
+        env:
+          CINEMATIC_SCENE: data_constellation
+          CINEMATIC_HIGH_RES: "1"
+          CINEMATIC_PROOF_OUTPUT: ${{ runner.temp }}/evercraft-native-1080p
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: ${{ runner.temp }}/evercraft-native-1080p-browser
+        run: npm run world:cinematic-render-proof
+      - name: Independent FFprobe, source identity, no-audio and pixel-proof acceptance
+        env:
+          PROOF_DIR: ${{ runner.temp }}/evercraft-native-1080p
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
+          const dir=process.env.PROOF_DIR;
+          const f=path.join(dir,'evercraft-data-constellation-native-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const digest=crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-count_frames',
+            '-show_entries','stream=codec_type,codec_name,width,height,nb_read_frames,r_frame_rate',
+            '-show_entries','format=duration','-of','json',f]));
+          const vs=probe.streams.filter(s=>s.codec_type==='video');
+          if(vs.length!==1||vs[0].codec_name!=='h264'||vs[0].width!==1920||vs[0].height!==1080||
+             Number(vs[0].nb_read_frames)!==24||vs[0].r_frame_rate!=='24/1'||
+             probe.streams.some(s=>s.codec_type==='audio')||
+             Number(probe.format.duration)<.95||Number(probe.format.duration)>1.05)
+             throw Error('native_1080p_encoded_media_invalid');
+          if(r.sceneType!=='original_3d_synthetic_data_constellation'||
+             r.output.sha256!==digest||r.output.width!==1920||r.output.height!==1080||
+             r.output.audioCodec!==null||r.output.durationSec!==1||
+             r.exactGpuReadbackFrames!==24||r.uniqueRawFrameDigests<18||
+             r.hardwareExecutionClaim!==false||r.publicationAuthority!==false||
+             r.visualReviewState!=='unreviewed'||r.paidProductionReady!==false)
+             throw Error('native_1080p_source_gpu_identity_invalid');
+          for(const still of ['opening.png','middle.png','closing.png'])
+            if(!fs.statSync(path.join(dir,still)).size)throw Error('native_1080p_still_missing');
+          console.log('ACTUAL_SOURCE_1080P_WEBGPU_CANARY_VERIFIED',{sha256:digest,frames:24,
+            resolution:'1920x1080',renderProfile:r.renderProfile,hardwareGpuProven:false,
+            creativeQualityApproved:false,publicationAuthority:false});
+          NODE
+      - name: Save actual native full-HD stills and video for creative review
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-world-engine-original-native-1080p-canary
+          path: |
+            ${{ runner.temp }}/evercraft-native-1080p/evercraft-data-constellation-native-gpu.mp4
+            ${{ runner.temp }}/evercraft-native-1080p/receipt.json
+            ${{ runner.temp }}/evercraft-native-1080p/opening.png
+            ${{ runner.temp }}/evercraft-native-1080p/middle.png
+            ${{ runner.temp }}/evercraft-native-1080p/closing.png
+          retention-days: 7
+          if-no-files-found: error
