@@ -1,0 +1,31 @@
+name: The Window Society Lab
+on:
+  pull_request:
+    paths:
+      - "experiments/the-window/**"
+      - ".github/workflows/the-window.yml"
+  push:
+    branches:
+      - "feature/the-window-society-v0"
+    paths:
+      - "experiments/the-window/**"
+      - ".github/workflows/the-window.yml"
+jobs:
+  world-engine-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Check syntax and persistence tests
+        run: |
+          node --check engine.mjs
+          node --check durable-store.mjs
+          node --check server.mjs
+          node --check public/app.js
+          node --test *.test.mjs
+        working-directory: experiments/the-window
