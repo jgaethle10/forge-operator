@@ -152,10 +152,10 @@
       ],
       "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
       "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
-      "outputs": "Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.",
+      "outputs": "Free preview plus a bounded $49 Quick Win Audit using public website evidence and an initial automated snapshot, with five prioritized fixes in a human-reviewed PDF after verified payment and complete intake. Complete Audit and Audit + Patch are separately scoped services.",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
-      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "pricing": "Free preview. Quick Win Audit $49 one-time. Public-site findings are prepared from available evidence, then human-reviewed; the five-priority PDF is delivered within five business days after an accepted URL and verified payment. The $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
       "offers": [
         {
           "name": "Free Preview",
@@ -168,8 +168,8 @@
           "price": "$49",
           "price_usd": 49,
           "billing": "one_time",
-          "fulfillment": "automatic",
-          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+          "fulfillment": "human_review_after_verified_payment",
+          "scope": "Bounded homepage/mobile evidence snapshot and five prioritized recommendations. Human-reviewed PDF within five business days after accepted URL and verified payment; no guaranteed results.",
           "upgrade_credit": "$49"
         },
         {
