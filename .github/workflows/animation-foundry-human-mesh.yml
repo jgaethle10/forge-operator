@@ -46,12 +46,9 @@ jobs:
       - name: Register MPFB as real Blender extension
         run: |
           set -euo pipefail
-          /tmp/blender-4.5.3-linux-x64/blender --command extension repo-add evercraft_local \\
-            --name EvercraftLocal --directory /tmp/blender-extensions
-          /tmp/blender-4.5.3-linux-x64/blender --command extension build \\
-            --source-dir /tmp/mpfb2/src/mpfb --output-filepath /tmp/mpfb.zip
-          /tmp/blender-4.5.3-linux-x64/blender --command extension install-file \\
-            -r evercraft_local -e /tmp/mpfb.zip
+          /tmp/blender-4.5.3-linux-x64/blender --command extension repo-add evercraft_local  --name EvercraftLocal --directory /tmp/blender-extensions
+          /tmp/blender-4.5.3-linux-x64/blender --command extension build  --source-dir /tmp/mpfb2/src/mpfb --output-filepath /tmp/mpfb.zip
+          /tmp/blender-4.5.3-linux-x64/blender --command extension install-file  -r evercraft_local -e /tmp/mpfb.zip
           /tmp/blender-4.5.3-linux-x64/blender --command extension list
       - name: Create actual neutral human base mesh and rig
         env:
