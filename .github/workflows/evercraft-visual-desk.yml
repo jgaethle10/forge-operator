@@ -58,12 +58,32 @@ jobs:
           node -e "const fs=require('fs');const b=fs.readFileSync('$asset');const p=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);if(!b.subarray(0,8).equals(p))process.exit(9)"
 
       - name: Prove visual story factory and Radar admission bridge
-        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
+        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/website-audit-cinematic-intake.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
           npm install --no-audit --no-fund
           node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts
+
+      - name: Install real FFmpeg and FFprobe for cinematic render proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+
+      - name: Render source-bound cinematic fixture through real Fallen and FFmpeg
+        shell: bash
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          # Test-generated solid colors are synthetic fixture bytes, never source footage.
+          # Actual Fallen integration and exact output digest are verified here.
+          node systemia/graphics-command/website-audit-cinematic-e2e.mjs
 
       - name: Prove Radar remains healthy after spatial projection
         run: npm run test:radar

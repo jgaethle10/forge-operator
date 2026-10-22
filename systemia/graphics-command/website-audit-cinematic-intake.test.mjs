@@ -1,0 +1,110 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {FILM_SHOTS,template,inspectFilm,toFilmPlan} from './website-audit-cinematic-intake.mjs';
+
+const sha=buf=>crypto.createHash('sha256').update(buf).digest('hex');
+const probe=()=>({width:1920,height:1080,durationSec:10,videoPresent:true});
+function fixture(t){
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-cinema-test-'));
+  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const input=template();
+  input.shots.forEach((shot,i)=>{
+    fs.mkdirSync(path.join(root,'media'),{recursive:true});
+    fs.mkdirSync(path.join(root,'rights'),{recursive:true});
+    const bytes=Buffer.from('fake-video-fixture-'+i);
+    fs.writeFileSync(path.join(root,shot.file),bytes);
+    fs.writeFileSync(path.join(root,shot.rightsEvidenceFile),'Test rights fixture for '+shot.id);
+    shot.sha256=sha(bytes);
+    shot.rights=i===0?'owned':'licensed';
+    shot.sourceRef='https://example.invalid/fixture/'+shot.id;
+    if(shot.id==='real_audit_capture')shot.evidenceRefs=['captured-local-product-test'];
+    if(shot.id==='five_verified_fixes')shot.evidenceRefs=['fix1','fix2','fix3','fix4','fix5'];
+  });
+  return {root,input};
+}
+test('blank intake identifies every missing film source and withholds publication',t=>{
+  const {root}=fixture(t);
+  const input=template();
+  const report=inspectFilm(input,{workspace:root,probe});
+  assert.equal(report.state,'blocked_missing_real_media');
+  assert.equal(report.missingSourceCount,5);
+  assert.equal(report.publicationAuthority,false);
+  assert.equal(report.audioStatus,'not_produced');
+  assert.ok(report.shots.every(x=>x.issues.includes('asset_sha256_missing')));
+  assert.throws(()=>toFilmPlan(report),/admitted_sources/);
+});
+test('five fixture files with pinned digests and evidence produce only a silent preview plan',t=>{
+  const {root,input}=fixture(t);
+  const report=inspectFilm(input,{workspace:root,probe});
+  assert.equal(report.state,'picture_preview_ready');
+  assert.equal(report.admittedSourceCount,5);
+  assert.equal(report.targetDurationSec,25);
+  assert.equal(report.publicationAuthority,false);
+  assert.ok(report.editorialHolds.includes('independent_checkout_verification_required'));
+  assert.equal(report.visualEvidenceReview,'not_performed');
+  assert.equal(report.rightsVerification,'document_present_only_independent_review_required');
+  const plan=toFilmPlan(report);
+  assert.equal(plan.scenes.length,5);
+  assert.equal(plan.scenes.reduce((n,x)=>n+x.durationSec,0),25);
+  assert.equal(plan.provenance.length,5);
+  assert.ok(plan.scenes.every(x=>x.mediaKind==='video'));
+  assert.equal(plan.aspectRatio,'16:9');
+});
+test('tampered, missing or unlicensed source fails closed',t=>{
+  const {root,input}=fixture(t);
+  fs.writeFileSync(path.join(root,input.shots[0].file),'tampered');
+  fs.unlinkSync(path.join(root,input.shots[1].file));
+  input.shots[2].rights='unknown';
+  const report=inspectFilm(input,{workspace:root,probe});
+  assert.equal(report.state,'blocked_missing_real_media');
+  assert.ok(report.shots[0].issues.includes('asset_sha256_mismatch'));
+  assert.ok(report.shots[1].issues.includes('source_missing_file'));
+  assert.ok(report.shots[2].issues.includes('commercial_rights_unknown'));
+});
+test('unsafe paths, symlinks, missing real audit evidence, and fake five fixes block admission',t=>{
+  const {root,input}=fixture(t);
+  input.shots[0].file='../outside.mp4';
+  input.shots[1].evidenceRefs=[];
+  input.shots[2].evidenceRefs=[];
+  input.shots[3].evidenceRefs=['fix1','fix1','fix2'];
+  const symlink=path.join(root,'media','symlink.mp4');
+  fs.symlinkSync(path.join(root,input.shots[4].file),symlink);
+  input.shots[4].file='media/symlink.mp4';
+  const report=inspectFilm(input,{workspace:root,probe});
+  assert.equal(report.state,'blocked_missing_real_media');
+  assert.ok(report.shots[0].issues.includes('source_unsafe_path'));
+  assert.ok(report.shots[2].issues.includes('product_evidence_refs_missing'));
+  assert.ok(report.shots[3].issues.includes('five_fixes_evidence_missing'));
+  assert.ok(report.shots[4].issues.includes('source_symlink_rejected'));
+});
+test('pretending checkout and founder approval is verified cannot grant release from this intake',t=>{
+  const {root,input}=fixture(t);
+  input.checkoutState='verified';input.productFunctionState='verified';
+  input.humanPictureApproval=true;input.releaseAuthority=true;
+  const report=inspectFilm(input,{workspace:root,probe});
+  assert.equal(report.state,'picture_preview_ready');
+  assert.ok(report.editorialHolds.includes('independent_checkout_verification_required'));
+  assert.ok(report.editorialHolds.includes('human_picture_approval_required'));
+  assert.ok(report.editorialHolds.includes('observed_product_function_verification_required'));
+  assert.equal(report.publicationAuthority,false);
+  assert.equal(report.releaseAuthority,false);
+});
+test('local CLI init creates bounded placeholder without rendering or overwriting',t=>{
+  const {root}=fixture(t);
+  const script=fileURLToPath(new URL('./website-audit-cinematic-intake.mjs',import.meta.url));
+  const dest=path.join(root,'workspace');
+  const first=spawnSync(process.execPath,[script,'--init',dest],{encoding:'utf8',timeout:10000});
+  assert.equal(first.status,0,first.stderr);
+  const manifest=JSON.parse(fs.readFileSync(path.join(dest,'film-intake.json'),'utf8'));
+  assert.equal(manifest.shots.length,5);
+  assert.equal(manifest.releaseAuthority,false);
+  const second=spawnSync(process.execPath,[script,'--init',dest],{encoding:'utf8',timeout:10000});
+  assert.equal(second.status,1);
+  assert.match(second.stderr,/refusing_overwrite/);
+});
