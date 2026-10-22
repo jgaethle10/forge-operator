@@ -14,7 +14,7 @@
     "FindMyPart Quick Hunt",
     "Website Quick Win Audit"
   ],
-  "conditions": "Only use an existing link for its original exact product/price. A Stripe-hosted checkout is a paid intent surface, not a completed payment or Evercraft Payments receipt.",
+  "conditions": "Only use an existing link for its original exact product/price. A Stripe-hosted checkout is a paid intent surface, not a completed payment or Evercraft Payments receipt. Existing Systemia webhooks currently point to legacy provider endpoints, so payment and fulfillment cannot be treated as automatically reconciled.",
   "links": [
     {
       "key": "weekly-social",
@@ -63,6 +63,42 @@
       "stripe_price_id": "price_1U4QhlK4iDjqpECVhOTAtXEK",
       "description": "A bounded AI Boardroom review with financial-scenario modeling. Assumptions and deliverables require confirmation.",
       "note": "Models are scenarios, not a promise of business outcomes or investment returns."
+    },
+    {
+      "key": "knowledge-activation",
+      "name": "Knowledge Activation",
+      "amount_cents": 50000,
+      "price": "$500",
+      "url": "https://buy.stripe.com/dRmfZifeS1S59rCdqQ4AU07",
+      "payment_link_id": "plink_1U4QhsK4iDjqpECVxTggl5e7",
+      "stripe_product_id": "prod_V4Zr47KqoQ8s4b",
+      "stripe_price_id": "price_1U4QhlK4iDjqpECVwqsB5Aes",
+      "description": "A scoped effort to organize or activate usable organizational knowledge. Confirm source access, exact deliverables and handoff.",
+      "note": "Do not supply sensitive records before agreeing on a secure, authorized scope."
+    },
+    {
+      "key": "social-intelligence-launch",
+      "name": "Social Intelligence Launch",
+      "amount_cents": 100000,
+      "price": "$1,000",
+      "url": "https://buy.stripe.com/8x24gA1o2eER0V672s4AU0b",
+      "payment_link_id": "plink_1U4RelK4iDjqpECVQntZr27T",
+      "stripe_product_id": "prod_V4apG7t9NUJxMk",
+      "stripe_price_id": "price_1U4RdoK4iDjqpECVzhUZ5dmB",
+      "description": "A project-based social intelligence launch engagement. Confirm the intended audience, supported analysis and approved delivery scope.",
+      "note": "Requires individually agreed service scope and delivery capacity before checkout; not a guarantee of engagement or growth."
+    },
+    {
+      "key": "institutional-memory-system",
+      "name": "Institutional Memory System",
+      "amount_cents": 150000,
+      "price": "$1,500",
+      "url": "https://buy.stripe.com/14AfZid6K54hfQ00E44AU06",
+      "payment_link_id": "plink_1U4QhsK4iDjqpECVXob9B34R",
+      "stripe_product_id": "prod_V4ZrPRWhjZUTzt",
+      "stripe_price_id": "price_1U4QhlK4iDjqpECVidrwxUxU",
+      "description": "A project-based institutional memory design or implementation engagement. Requirements, rights and acceptance criteria must be agreed first.",
+      "note": "Data handling, integration, retention and access permissions require a written scope before any purchase."
     }
   ]
 }

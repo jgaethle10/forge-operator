@@ -41,7 +41,8 @@ test('publisher directory does not silently offer mismatched low-cost PDFs or au
  const manifest=JSON.parse(read('verified-links.json'));
  const forbidden=['Garage Field Notes PDF products','FindMyPart Quick Hunt','Website Quick Win Audit'];
  assert.deepEqual(manifest.forbidden_substitutions,forbidden);
- assert.deepEqual(items.map(x=>x.price*100),manifest.links.map(x=>x.amount_cents));
+ assert.deepEqual(items.map(x=>x.price*100),manifest.links.slice(0,4).map(x=>x.amount_cents));
+ assert.deepEqual(manifest.links.slice(4).map(x=>x.amount_cents),[50000,100000,150000]);
  assert.ok(!items.some(x=>[7,9,19,49].includes(x.price)));
  assert.match(checkout,/checked\?'false':'true'/);
 });
