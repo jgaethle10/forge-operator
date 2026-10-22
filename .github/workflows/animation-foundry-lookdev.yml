@@ -59,6 +59,7 @@ jobs:
           name: kennedy-rc15-character-lookdev-not-approved
           path: |
             /tmp/kennedy-lookdev/*.jpg
+            /tmp/kennedy-lookdev/*.png
             /tmp/kennedy-lookdev/*.json
             /tmp/kennedy-lookdev/*.blend
             /tmp/kennedy-lookdev/frames/*.png
