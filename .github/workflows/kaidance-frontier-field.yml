@@ -58,7 +58,7 @@ jobs:
             kaidance-frontier-state-${{ runner.os }}-
 
       - name: Prove CRM privacy and freshness contracts
-        run: node --test systemia/crm/heartbeat.test.mjs systemia/crm/interaction-ledger-adapter.test.mjs systemia/crm/kaidance-integration.test.mjs systemia/crm/mission-publisher-integration.test.mjs systemia/crm/relationship-policy.test.mjs systemia/crm/relationship-composite.test.mjs systemia/crm/outreach-gate.test.mjs systemia/crm/outreach-gate.integration.test.mjs systemia/crm/relationship-ingest.test.mjs
+        run: node --test systemia/crm/heartbeat.test.mjs systemia/crm/interaction-ledger-adapter.test.mjs systemia/crm/kaidance-integration.test.mjs systemia/crm/mission-publisher-integration.test.mjs systemia/crm/relationship-policy.test.mjs systemia/crm/relationship-composite.test.mjs systemia/crm/outreach-gate.test.mjs systemia/crm/outreach-gate.integration.test.mjs systemia/crm/relationship-ingest.test.mjs systemia/crm/relationship-decision.test.mjs
 
       - name: Prove frontier + science/hazard contracts
         run: node systemia/organism/kaidance-frontier-proof.mjs
