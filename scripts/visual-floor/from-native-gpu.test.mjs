@@ -60,3 +60,15 @@ test('Missing and malformed source checks block admission before any dailies are
   assert.throws(()=>build({...baseReceipt,worldDigest:'1234'}),/native_floor_native_lineage_invalid/);
   assert.throws(()=>build({...baseReceipt,dataConstellation:{...baseReceipt.dataConstellation,nodeCount:0}}),/native_floor_scene_evidence_invalid/);
 });
+
+test('Canary contract packet can be decoded into actual three-shot visual dailies',()=>{
+  const jobpackPath=path.join(root,'native-jobpack.json'),out=path.join(root,'boards');
+  fs.writeFileSync(jobpackPath,JSON.stringify(build()));
+  execFileSync('python3',['scripts/visual-floor/shot-dailies.py',
+    '--video',videoPath,'--jobpack',jobpackPath,'--out',out],{timeout:30000});
+  const receipt=JSON.parse(fs.readFileSync(path.join(out,'shot-dailies.json'),'utf8'));
+  assert.equal(receipt.video.frameCount,96);
+  assert.equal(receipt.shots.length,3);
+  assert.equal(receipt.publicationAuthority,false);
+  assert.ok(fs.statSync(path.join(out,'shot-dailies.jpg')).size>10000);
+});
