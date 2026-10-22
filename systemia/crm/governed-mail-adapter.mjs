@@ -92,7 +92,8 @@ export async function dispatchGovernedEmail({
     return hold('trusted_transport_not_configured');
   if(!outboxDir)return hold('private_outbox_unavailable');
   const fingerprint=fingerprintExternalAction(action);
-  const attempt=hash(action.subject_ref+'|'+action.permit_idempotency_key+'|'+fingerprint);
+  // Deterministic across new agent-supplied permit IDs: same approved action == same delivery attempt.
+  const attempt=hash('governed-email-v1|'+fingerprint);
   let recipient;
   try{
     recipient=await resolveRecipient({subject_ref:action.subject_ref,division_id:action.division_id});
