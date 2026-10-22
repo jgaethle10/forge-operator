@@ -216,6 +216,19 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(home,/\/capabilities\/native-product-v1/);
     assert.match(home,/\/assets\/evercraft-icon\.png/);
 
+    // Social and ChatGPT link previews append tracking queries to public URLs.
+    // They must not turn a valid landing page into a 404.
+    for(const suffix of ['?utm_source=chatgpt.com','?utm_source=discord&utm_medium=dm','?x=1']){
+      const trackedHome=await fetch(runtime.url+'/'+suffix);
+      assert.equal(trackedHome.status,200,'homepage with tracking: '+suffix);
+      assert.match(trackedHome.headers.get('content-type')||'',/^text\/html/);
+      assert.match(await trackedHome.text(),/Bring the problem/);
+    }
+    const trackedOffers=await fetch(runtime.url+'/offers?utm_source=chatgpt.com');
+    assert.equal(trackedOffers.status,200);
+    assert.match(trackedOffers.headers.get('content-type')||'',/^text\/html/);
+
+
     const directoryResponse=await fetch(runtime.url+'/capabilities');
     assert.equal(directoryResponse.status,200);
     const directory=await directoryResponse.text();
