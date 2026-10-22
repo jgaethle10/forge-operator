@@ -1,0 +1,32 @@
+name: Systemia notification ledger crash safety
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/notification-fabric/**'
+      - '.github/workflows/notification-ledger-crash-safety.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/notification-fabric/**'
+      - '.github/workflows/notification-ledger-crash-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Confirm notification ledger source syntax
+        run: node --check systemia/notification-fabric/store.mjs
+      - name: Prove existing notification behaviors
+        run: node --test systemia/notification-fabric/notification-fabric.test.mjs
+      - name: Prove concurrent journal writers, crash holds, and restart integrity
+        run: node --test systemia/notification-fabric/ledger-crash-recovery.test.mjs
