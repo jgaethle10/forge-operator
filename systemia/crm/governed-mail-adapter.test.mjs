@@ -152,3 +152,27 @@ test('approval revocation blocks provider before outbox reservation',async()=>{
   assert.equal(r.reason,'outreach_not_authorized');assert.equal(calls,0);
  }finally{f.cleanup();}
 });
+
+test('provider accepted but ledger finalization fails: do not resend or claim delivery',async()=>{
+ const f=yard();try{
+  f.grantPassport();let calls=0;
+  const broken={
+   passport:f.ledger.passport,
+   preflightContact:input=>f.ledger.preflightContact(input),
+   prepareContactPermit:input=>f.ledger.prepareContactPermit(input),
+   finalizePermittedContact:()=>{throw Error('private receipt store temporarily unavailable');}
+  };
+  const sendProvider=async()=>{calls++;return {accepted:true,message_ref:'provider:accepted-but-unrecorded'};};
+  const result=await dispatchGovernedEmail({...f.args,interactionLedger:broken,sendProvider});
+  assert.equal(result.state,'held');
+  assert.equal(result.reason,'provider_accepted_reconciliation_required');
+  assert.equal(result.provider_accepted,true);
+  assert.equal(result.delivery_confirmed,false);
+  assert.equal(calls,1);
+  const state=JSON.parse(fs.readFileSync(path.join(f.outboxDir,'outbox.json'),'utf8'));
+  assert.equal(state.attempts[0].state,'provider_accepted_unreconciled');
+  const repeat=await dispatchGovernedEmail({...f.args,interactionLedger:broken,sendProvider});
+  assert.equal(repeat.state,'held');
+  assert.equal(calls,1);
+ }finally{f.cleanup();}
+});
