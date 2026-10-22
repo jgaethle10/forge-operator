@@ -53,6 +53,8 @@ jobs:
         with:
           node-version: 22
 
+      - name: Reject obsolete MCP publication targets before any approval or release
+        run: node scripts/audit-owned-mcp-exit.mjs --publication mcp/evercraft-web/server.json
       - name: Verify and authorize
         id: gate
         shell: bash
