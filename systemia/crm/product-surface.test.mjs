@@ -54,3 +54,17 @@ test('all preview cases are fictional and client note input uses text nodes',()=
  assert.match(demo,/textarea\.value\.trim\(\)/);
  assert.doesNotMatch(demo,/Paola|Pattie Graffe|Yakima Valley Trolleys/);
 });
+
+
+test('commercial offer is explicitly not paid, subscribed or production-provisioned',()=>{
+ const offer=JSON.parse(read('systemia/crm/commercial-offer.json'));
+ assert.equal(offer.schema,'evercraft.crm.commercial-offer.v1');
+ assert.equal(offer.state,'development_preview');
+ assert.equal(offer.billing.checkout_enabled,false);
+ assert.equal(offer.billing.subscriptions_enabled,false);
+ assert.equal(offer.access.self_service_registration,false);
+ assert.equal(offer.verification.production_crm_deployed,false);
+ assert.equal(offer.verification.live_public_checkout_verified,false);
+ assert.ok(offer.readiness_gates.length>=8);
+ assert.equal(offer.public_surfaces.interactive_preview,'/demos/systemia-relationship-command/');
+});
