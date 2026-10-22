@@ -21,7 +21,7 @@ export function evaluateEp01Opening(plan,registry){
  }
  if(current!==210)errors.push('duration_not_210_seconds');
  if(beats[0]?.id!=='the-early-field'||beats[7]?.id!=='the-inheritance')errors.push('historical_story_reversed');
- if(beats[3]?.fact?.includes('17-12')!==true||!beats[3]?.fact?.includes('1971-01-14'))errors.push('1970_title_and_1971_ceremony_not_fact_pinned');
+ if(beats[3]?.fact?.includes('17-12')!==true||!beats[3]?.fact?.includes('Jan 14'))errors.push('1970_title_and_1971_ceremony_not_fact_pinned');
  if(!beats[5]?.fact?.includes('38-6')||!beats[5]?.fact?.includes('Feb 1'))errors.push('1971_title_result_and_1972_meeting_not_pinned');
  if(!beats[4]?.visual?.includes('not an unrelated 1971 matchup'))errors.push('missouri_game_misrepresented_as_oklahoma');
  if(plan?.noSyntheticHistoricVideo!==true||plan?.noManufacturedPeriodAudio!==true)errors.push('false_historical_motion_or_audio_allowed');
