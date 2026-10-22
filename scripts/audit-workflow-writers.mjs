@@ -12,7 +12,7 @@ const ROOT = path.resolve(fileURLToPath(new URL('../', import.meta.url)));
 const BASELINE_PATH = path.join(ROOT,'audits/workflow-writer-baseline-2026-10-15.json');
 const DEFAULT_WORKFLOWS = path.join(ROOT,'.github/workflows');
 const latest = (name) => String(name??'').replaceAll('\\','/');
-const blobSha=(content)=>createHash('sha1').update('blob '+Buffer.byteLength(content)+'\\0').update(content).digest('hex');
+const blobSha=(content)=>createHash('sha1').update('blob '+Buffer.byteLength(content)+String.fromCharCode(0)).update(content).digest('hex');
 
 export function enumerateWorkflows(directory=DEFAULT_WORKFLOWS){
   if(!fs.existsSync(directory))throw new Error('workflow_directory_missing');
@@ -131,7 +131,8 @@ export function auditWorkflowFiles({directory=DEFAULT_WORKFLOWS,baselinePath=BAS
         source.includes("export const STATE_BRANCH='window-society-state';") &&
         source.includes("export const STATE_PATH='state/window.json';") &&
         source.includes('branch:STATE_BRANCH') &&
-        source.includes('ref='+encodeURIComponent('STATE_BRANCH').replace('STATE_BRANCH','STATE_BRANCH'))===false;
+        source.includes("endpoint+'?ref='+encodeURIComponent(STATE_BRANCH)") &&
+        source.includes("const endpoint='/repos/'+repo+'/contents/'+STATE_PATH;");
       // The file is SHA-frozen above. No source edit is accepted until
       // the exact changed worker is reviewed and its blob SHA replaced.
     }
