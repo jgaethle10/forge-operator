@@ -58,6 +58,33 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
   const dedupeFile = path.join(root, 'notification-dedupe.json');
   const ledgerFile = path.join(root, 'delivery-ledger.ndjson');
   const ledgerHeadFile = path.join(root, 'delivery-ledger-head.json');
+  const ledgerLockDir = path.join(root, '.delivery-ledger.lock');
+  // Exclusive across processes sharing the same root. A stale lock is not
+  // automatically stolen because doing so could allow duplicate side effects.
+  const ledgerWait = new Int32Array(new SharedArrayBuffer(4));
+  function withLedgerLock(operation) {
+    ensureDir(root);
+    const deadline = Date.now() + 5000;
+    while (true) {
+      try {
+        fs.mkdirSync(ledgerLockDir, { mode: 0o700 });
+        break;
+      } catch (error) {
+        if (error?.code !== 'EEXIST') throw error;
+        if (Date.now() >= deadline) throw new Error('notification_delivery_ledger_lock_held');
+        Atomics.wait(ledgerWait, 0, 0, 10);
+      }
+    }
+    try { return operation(); }
+    finally { fs.rmdirSync(ledgerLockDir); }
+  }
+  function appendDurableReceipt(value) {
+    const fd = fs.openSync(ledgerFile, 'a', 0o600);
+    try {
+      fs.writeSync(fd, JSON.stringify(value) + '\n');
+      fs.fsyncSync(fd);
+    } finally { fs.closeSync(fd); }
+  }
   const digestFile = path.join(root, 'digest-queue.ndjson');
   const ownerQueueFile = path.join(root, 'owner-queue.ndjson');
   const attentionFile = path.join(root, 'attention-budget.json');
@@ -190,44 +217,72 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
       return item;
     },
     recordDelivery(event) {
-      const head = safeReadJson(ledgerHeadFile, { schema: 'systemia.notification-ledger-head.v1', last_hash: null, count: 0 });
-      const base = { ...event };
-      delete base.prev_hash;
-      delete base.receipt_hash;
-      const hash = receiptHash(head.last_hash, base, receiptSecret);
-      const receipt = { ...base, prev_hash: head.last_hash, receipt_hash: hash };
-      appendJsonLine(ledgerFile, receipt);
-      atomicWriteJson(ledgerHeadFile, {
-        schema: 'systemia.notification-ledger-head.v1',
-        last_hash: hash,
-        count: Number(head.count || 0) + 1,
-        mode: receiptSecret ? 'hmac-sha256' : 'sha256',
-        updated_at: new Date().toISOString(),
+      return withLedgerLock(() => {
+        // Never silently repair a torn append or a missing/mismatched head.
+        const check = this.verifyDeliveryLedger();
+        if (!check.valid) throw new Error('notification_delivery_ledger_integrity_hold');
+        const head = safeReadJson(ledgerHeadFile, {
+          schema: 'systemia.notification-ledger-head.v1', last_hash: null, count: 0,
+        });
+        const base = { ...event };
+        delete base.prev_hash;
+        delete base.receipt_hash;
+        const hash = receiptHash(head.last_hash, base, receiptSecret);
+        const receipt = { ...base, prev_hash: head.last_hash, receipt_hash: hash };
+        appendDurableReceipt(receipt);
+        atomicWriteJson(ledgerHeadFile, {
+          schema: 'systemia.notification-ledger-head.v1',
+          last_hash: hash,
+          count: Number(head.count || 0) + 1,
+          mode: receiptSecret ? 'hmac-sha256' : 'sha256',
+          updated_at: new Date().toISOString(),
+        });
+        return receipt;
       });
-      return receipt;
     },
     verifyDeliveryLedger() {
-      if (!fs.existsSync(ledgerFile)) return { valid: true, count: 0, last_hash: null };
-      const lines = fs.readFileSync(ledgerFile, 'utf8').split('\n').filter(Boolean);
+      const ledgerExists = fs.existsSync(ledgerFile);
+      const headExists = fs.existsSync(ledgerHeadFile);
+      const mode = receiptSecret ? 'hmac-sha256' : 'sha256';
+      if (!ledgerExists && !headExists) {
+        return { valid: true, count: 0, last_hash: null, mode };
+      }
+      if (ledgerExists !== headExists) {
+        return { valid: false, count: 0, last_hash: null, mode, reason: 'ledger_head_missing' };
+      }
       let previous = null;
       let count = 0;
-      for (const line of lines) {
-        const receipt = JSON.parse(line);
-        const { prev_hash, receipt_hash, ...base } = receipt;
-        const expected = receiptHash(previous, base, receiptSecret);
-        if (prev_hash !== previous || receipt_hash !== expected) {
-          return { valid: false, count, last_hash: previous, broken_at: count + 1 };
+      try {
+        const raw = fs.readFileSync(ledgerFile, 'utf8');
+        // Append-only JSONL requires a complete terminating newline.
+        if (raw.length > 0 && !raw.endsWith('\n')) {
+          return { valid: false, count: 0, last_hash: null, mode, reason: 'torn_append' };
         }
-        previous = receipt_hash;
-        count += 1;
+        for (const line of raw.split('\n').filter(Boolean)) {
+          const receipt = JSON.parse(line);
+          if (!receipt || typeof receipt !== 'object' || Array.isArray(receipt)) {
+            return { valid: false, count, last_hash: previous, mode, reason: 'malformed_receipt' };
+          }
+          const { prev_hash, receipt_hash, ...base } = receipt;
+          const expected = receiptHash(previous, base, receiptSecret);
+          if (prev_hash !== previous || receipt_hash !== expected) {
+            return { valid: false, count, last_hash: previous, broken_at: count + 1, mode, reason: 'hash_chain_mismatch' };
+          }
+          previous = receipt_hash;
+          count += 1;
+        }
+        const head = safeReadJson(ledgerHeadFile, null);
+        if (head?.schema !== 'systemia.notification-ledger-head.v1' ||
+            head.mode !== mode ||
+            !Number.isSafeInteger(head.count) ||
+            head.last_hash !== previous ||
+            head.count !== count) {
+          return { valid: false, count, last_hash: previous, mode, reason: 'ledger_head_mismatch' };
+        }
+        return { valid: true, count, last_hash: previous, mode };
+      } catch {
+        return { valid: false, count, last_hash: previous, mode, reason: 'ledger_parse_or_io_error' };
       }
-      const head = safeReadJson(ledgerHeadFile, { last_hash: null, count: 0, mode: receiptSecret ? 'hmac-sha256' : 'sha256' });
-      return {
-        valid: head.last_hash === previous && Number(head.count || 0) === count,
-        count,
-        last_hash: previous,
-        mode: receiptSecret ? 'hmac-sha256' : 'sha256',
-      };
     },
     deliveryLedgerHead() {
       const head = safeReadJson(ledgerHeadFile, {
