@@ -1044,7 +1044,7 @@ export async function startFabricLocalRuntime({
         });
       }
 
-      if (req.method==='GET' && req.url==='/') {
+      if (req.method==='GET' && new URL(String(req.url||'/'),'http://fabric.local').pathname==='/') {
         return sendText(
           res,
           200,
@@ -1053,7 +1053,7 @@ export async function startFabricLocalRuntime({
         );
       }
 
-      if (req.method==='GET' && (req.url==='/offers'||req.url==='/offers/')) {
+      if (req.method==='GET' && ['/offers','/offers/'].includes(new URL(String(req.url||'/'),'http://fabric.local').pathname)) {
         return sendText(
           res,
           200,
