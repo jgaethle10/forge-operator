@@ -14,7 +14,7 @@ export function makeNavalEditorialTake(shot:NavalEditorialShot):CinematicCameraT
   id:'evercraft-waterline-steel-low-angle-opt-in-not-history',
   cameraEntityId:'cinema-camera',targetEntityId:'bismarck-ship-hull',
   durationSec:4,fps:24,move:'orbit',ease:'smootherstep',
-  orbit:{radius:43,startAngleDeg:112,endAngleDeg:100,startHeight:6.3,endHeight:5.6},
+  orbit:{radius:45,startAngleDeg:145,endAngleDeg:135,startHeight:6.3,endHeight:5.6},
   lookAtOffset:{x:0,y:3.75,z:0},startFovYDeg:43,endFovYDeg:42
  };
  if(shot==='compressed_formation')return {
