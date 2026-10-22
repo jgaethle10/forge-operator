@@ -26,12 +26,12 @@ jobs:
       - name: Check original native cinematic scene and GPU plans
         run: npx tsx --test systemia/world-engine/data-constellation-scene.test.ts
       - name: Bounded video encoder preflight
-        timeout-minutes: 3
+        timeout-minutes: 11
         run: |
           if command -v ffmpeg >/dev/null 2>&1; then
             ffmpeg -version | head -1
           else
-            timeout 130s sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+            timeout 540s sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
             command -v ffmpeg
           fi
       - name: Render 24 full-resolution original WebGPU pixels at 1920x1080
