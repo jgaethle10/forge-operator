@@ -10,13 +10,18 @@ const DIMENSIONS: Record<AspectRatio, { width: number; height: number }> = {
   '1:1': { width: 1080, height: 1080 },
 };
 
-function filterFor(scene: ScenePlan, width: number, height: number) {
+export function filterFor(scene: ScenePlan, width: number, height: number) {
   const cover =
     `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},fps=30,format=yuv420p`;
 
   if (scene.mediaKind === 'image' && scene.motion === 'push_in') {
     const frames = Math.max(2, Math.round(scene.durationSec * 30));
-    return `scale=4000:-2,zoompan=z='min(zoom+0.0008,1.08)':d=${frames}:s=${width}x${height}:fps=30,format=yuv420p`;
+    // Normalize the source crop to the output canvas BEFORE zoompan. Without
+    // this, zoompan can remap a square/landscape still to portrait dimensions,
+    // distorting faces and character anatomy even in a correctly sized MP4.
+    const workingWidth = width * 2;
+    const workingHeight = height * 2;
+    return `scale=${workingWidth}:${workingHeight}:force_original_aspect_ratio=increase,crop=${workingWidth}:${workingHeight},setsar=1,zoompan=z='min(zoom+0.0008,1.08)':d=${frames}:s=${width}x${height}:fps=30,format=yuv420p`;
   }
 
   return cover;
