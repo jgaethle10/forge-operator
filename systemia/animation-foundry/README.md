@@ -87,3 +87,12 @@ The serious limitation in the earlier 3D build is the geometry itself: hand-buil
 ## Creative acceptance before a real short
 
 First approve a front / 3-quarter / profile model turnaround. Then show genuine moving eyes, subtle expressions and a **hand-closeup snap with five distinct fingers**. Only after these passes should the project move to portal choreography, a proper song performance, lip sync and a complete cartoon. A pass from CI or a provider never substitutes for actual artistic approval.
+
+
+## Licensed external rig intake (verified Oct 22, 2026)
+
+Instead of using a third-party mesh as "Kennedy," `rig-candidate-inspector.py` runs Blender with `--disable-autoexec`, audits real mesh/control bones/IK/materials/shape keys and renders neutral front, 3/4 and side views. `rig-candidate-scorecard.mjs` then flags missing facial and finger controls, limited geometry and absent licensing evidence. `animation-foundry-rig-intake.yml` downloads a **CC0 benchmark only**, records its original source and downloaded asset hash, rejects ZIP slip/symlinks/large archives and publishes a review-only artifact.
+
+Original CC0 rig benchmark: PINKCANNON, *Tiby 3D rigged model*, https://opengameart.org/content/tiby-3d-rigged-model . Initial GitHub run **39738674901** succeeded in sandboxed Blender; real inspection reported: 4 mesh objects, 1,750 mesh vertices, 1 armature, 16 deform bones, 9 control bones, 4 IK constraints, **zero finger-named bones and zero facial controls/shape keys**. This is **NOT** an audition-quality Kennedy rig. The benchmark binary is not copied into Evercraft source.
+
+Current desired production rig capabilities: complete finger/hand controls with distinct snap contact/release, flexible face with corrective shapes, age-appropriate proportions and supervised visual match to the approved original character, hair/cloth controls, IK/FK for expressive poses, separate singing/phoneme controls, and evidence-backed artwork rights. As always, **creative approval is held** until actual rendered motion is reviewed.
