@@ -1,0 +1,22 @@
+name: Evercraft World Engine editorial-finishing source tests
+on:
+  pull_request:
+    paths:
+      - 'scripts/visual-floor/native-editorial-finish/**'
+      - '.github/workflows/world-engine-editorial-finish.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-film-editorial-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing Visual Floor image analysis libraries
+        run: python -m pip install -r scripts/visual-floor/requirements.txt
+      - name: Test original source-frame usage, three-beat story, no fake customer evidence
+        run: python -m unittest discover -v -s scripts/visual-floor/native-editorial-finish -p 'test_*.py'
