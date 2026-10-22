@@ -126,8 +126,28 @@ export function demoSnapshot({ nowMs = Date.now() } = {}) {
 }
 
 function usage() {
-  return 'Usage: node bridge.mjs --demo [--output snapshot.json] OR node bridge.mjs --input state.json [--output snapshot.json]\n'
-    + 'Real input requires TRACEOFFICE_EXPORT_KEY (>=32 bytes). Output files must not already exist. No network or execution.\n';
+  return 'Usage: node bridge.mjs --demo [--output snapshot.json] OR node bridge.mjs --input state.json --output private-snapshot.json\n'
+    + 'Real input requires TRACEOFFICE_EXPORT_KEY (>=32 bytes) and an explicit output file. Output must not exist. No network or execution.\n';
+}
+function parseCli(args) {
+  if (args.length === 1 && args[0] === '--help') return { help: true };
+  const options = { demo: false, input: null, output: null };
+  const seen = new Set();
+  for (let i = 0; i < args.length; i++) {
+    const flag = args[i];
+    if (!['--demo', '--input', '--output'].includes(flag) || seen.has(flag)) {
+      throw new Error('unrecognized_or_duplicate_argument');
+    }
+    seen.add(flag);
+    if (flag === '--demo') { options.demo = true; continue; }
+    const value = args[++i];
+    if (!value || value.startsWith('--')) throw new Error('missing_argument_value');
+    options[flag.slice(2)] = value;
+  }
+  if (options.demo === Boolean(options.input)) throw new Error('choose_exactly_one_input_or_demo');
+  // Real operational metadata stays out of shell history, terminal scrollback, and CI logs.
+  if (options.input && !options.output) throw new Error('private_export_requires_output_file');
+  return options;
 }
 function writeSnapshot(value, output) {
   const text = JSON.stringify(value, null, 2) + '\n';
@@ -140,23 +160,15 @@ function writeSnapshot(value, output) {
   process.stderr.write(`Created ${target} with mode 0600\n`);
 }
 function main(args) {
-  if (args.includes('--help')) { process.stdout.write(usage()); return; }
-  if (args.some((a) => !['--demo', '--input', '--output'].includes(a) &&
-      (args.indexOf(a) === 0 || !['--input', '--output'].includes(args[args.indexOf(a)-1])))) {
-    throw new Error('unrecognized_argument');
-  }
-  const demo = args.includes('--demo');
-  const i = args.indexOf('--input');
-  const o = args.indexOf('--output');
-  if (demo === (i >= 0) || (i >= 0 && (!args[i+1] || args[i+1].startsWith('--'))) ||
-      (o >= 0 && (!args[o+1] || args[o+1].startsWith('--')))) throw new Error('choose_exactly_one_input_or_demo');
-  const result = demo ? demoSnapshot() : (() => {
-    const file = fs.statSync(args[i+1]);
+  const options = parseCli(args);
+  if (options.help) { process.stdout.write(usage()); return; }
+  const result = options.demo ? demoSnapshot() : (() => {
+    const file = fs.statSync(options.input);
     if (!file.isFile() || file.size > MAX_INPUT_BYTES) throw new Error('invalid_input_file_size');
-    const source = JSON.parse(fs.readFileSync(args[i+1], 'utf8'));
+    const source = JSON.parse(fs.readFileSync(options.input, 'utf8'));
     return exportSabanToTraceOffice(source, { key: process.env.TRACEOFFICE_EXPORT_KEY });
   })();
-  writeSnapshot(result, o >= 0 ? args[o+1] : null);
+  writeSnapshot(result, options.output);
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { main(process.argv.slice(2)); }
