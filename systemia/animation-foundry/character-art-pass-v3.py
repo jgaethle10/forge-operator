@@ -38,6 +38,7 @@ def stroke(name,coords,radius,mat,bone='head'):
     cr=bpy.data.curves.new(name,'CURVE')
     cr.dimensions='3D';cr.resolution_u=12;cr.bevel_resolution=3
     cr.bevel_depth=radius
+    cr.use_fill_caps=True  # prevent the visibly hollow finger / curl cut ends
     spl=cr.splines.new('POLY');spl.points.add(len(coords)-1)
     for p,v in zip(spl.points,coords):p.co=(*v,1)
     obj=bpy.data.objects.new(name,cr)
