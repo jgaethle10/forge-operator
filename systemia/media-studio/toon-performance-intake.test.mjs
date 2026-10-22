@@ -98,6 +98,8 @@ test('real verified source bytes route a high fidelity start-frame without a pai
     assert.equal(result.state,'bytes_verified_creative_and_provider_admission_pending');
     assert.equal(result.identity.width,960);
     assert.equal(result.dialogue.audioDecoded,true);
+    assert.ok(result.dialogue.acoustic.rms>.007);
+    assert.equal(result.dialogue.acoustic.measurementOnlyNotExpressiveVoiceProof,true);
     assert.equal(result.dialogue.voiceIdentityVerified,false);
     assert.equal(result.actualProviderGeneration,false);
     assert.equal(result.providerExecutionEligible,false);
@@ -127,6 +129,13 @@ test('bad bytes, wrong voice, unsafe paths, fake scratch voice and unverified pr
     assert.throws(()=>run({...x.manifest,image:{...x.manifest.image,
       referenceAssetId:'not-the-character'}}),/identity_asset_unknown/);
     assert.throws(()=>run({...x.manifest,dialogueAudio:null}),/dialogue_audio_missing/);
+    const silent=spawnSync('ffmpeg',['-hide_banner','-loglevel','error','-y',
+      '-f','lavfi','-i','anullsrc=channel_layout=mono:sample_rate=32000',
+      '-t','1.2','-c:a','pcm_s16le',path.join(x.dir,'silent.wav')],{encoding:'utf8'});
+    assert.equal(silent.status,0);
+    const silentBytes=fs.readFileSync(path.join(x.dir,'silent.wav'));
+    assert.throws(()=>run({...x.manifest,dialogueAudio:{...x.manifest.dialogueAudio,
+      file:'silent.wav',sha256:sha(silentBytes)}}),/speech_audio_essentially_silent/);
     assert.throws(()=>run({...x.manifest,image:{...x.manifest.image,
       reviewState:'unreviewed'}}),/identity_review_not_declared/);
     fs.symlinkSync(path.join(x.dir,'hero.png'),path.join(x.dir,'linked.png'));
