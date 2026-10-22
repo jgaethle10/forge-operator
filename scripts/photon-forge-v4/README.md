@@ -57,3 +57,26 @@ The renderer produces a real silent H.264 MP4 and sibling .receipt.json with inp
 A canonical-shaped frame with a valid digest is NOT proof that live World Engine executed. The receipt intentionally records originRuntimeUnverified:true, worldEngineRuntimeExecuted:false, webgpuHardwareVerified:false, masterQcApproved:false, publicationAuthority:false. CI success proves software behavior, not customer readiness or artistic quality.
 
 Next production gate: capture live compileVisualFrame() output and authoritative producer receipt on Node002; verify native GPU pixels against the fallback; bind Graphics Command jobpack shot identity, visual/audio timecode and original Voice Foundry score in Fallen; perform founder-led full master QA and only then stage authorized Evercraft Clip distribution.
+
+
+## Actual Evercraft World Engine producer (added on this branch)
+
+export-world-engine-sequence.ts executes the existing EvercraftWorldRuntime, compileVisualFrame and verifyVisualFrameContract in systemia/world-engine/. It writes actual canonical frame packets, source/geometry bytes and snapshot/frame digest receipts. Photon Forge V4 consumes these owned frames, not ChatGPT image outputs.
+
+Its built-in scene of three animated original 3D objects is an engineering fixture, not marketing art. To use an independently authored Evercraft World Engine definition and geometry array instead, run:
+
+    tsx scripts/photon-forge-v4/export-world-engine-sequence.ts \
+      --world-json /owned/scene/world-definition.json \
+      --geometry-json /owned/scene/geometry.json \
+      --output-dir /tmp/evercraft-scene --frames 60 --fps 30
+
+    python scripts/photon-forge-v4/render.py \
+      --sequence-manifest /tmp/evercraft-scene/sequence.json \
+      --geometry-json /tmp/evercraft-scene/geometry.json \
+      --output /tmp/evercraft-scene/owned-preview.mp4 --fps 30
+
+World definitions must use evercraft.world-engine.world.v1 with a valid visual scene and perspective camera. Geometry is an array of evercraft.world-engine.geometry.v1 triangle assets. Runtime tick rate must match requested FPS. The bounded importer validates geometry IDs, indices, source sizes, references, and frame cadence. It does not invoke external image generators, paid providers, or automatic publication.
+
+The producer receipt contains the authored input SHA-256 values, the original engine snapshot/frame digests, and exact producer name. Photon Forge supplies a separate encoded video/decoded frame receipt. The Actions integration test independently reimports the original producer's physical World Engine scene/geometry files, compiles them through the same native engine, encodes both paths and reconciles their hashes.
+
+Provenance: engineWasExecutedInThisProcess:true describes this one compiler process only. It does NOT mean the hardware NextGen node ran or that a deployed commercial engine executed. External scene rights are unverified. The video is a silent software-rendered studio canary, not a reviewed commercial, GPU proof, payment evidence, or Clip release. Real product captures, audio mastering, founder quality review and separately authorized publishing are still required.
