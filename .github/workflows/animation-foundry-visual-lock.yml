@@ -22,6 +22,6 @@ jobs:
         with:
           node-version: '22'
       - name: Validate creative and visual lock regression tests
-        run: node --test systemia/animation-foundry/creative-gate.test.mjs systemia/animation-foundry/visual-lock.test.mjs
+        run: node --test systemia/animation-foundry/creative-gate.test.mjs systemia/animation-foundry/visual-lock.test.mjs systemia/animation-foundry/snap-performance-gate.test.mjs
       - name: Validate Blender auditor syntax (not a Blender runtime test)
-        run: python3 -m py_compile systemia/animation-foundry/blender-rig-audit.py systemia/animation-foundry/blender-scene-bootstrap.py
+        run: python3 -m py_compile systemia/animation-foundry/blender-rig-audit.py systemia/animation-foundry/blender-scene-bootstrap.py systemia/animation-foundry/blender-snap-trace.py
