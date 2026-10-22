@@ -17,10 +17,12 @@ import bpy
 from mathutils import Vector
 if bpy.app.version < (4,2,0):
     raise SystemExit('BLOCKED: MPFB requires Blender >=4.2')
-sys.path.insert(0,str(src))
-import mpfb
-mpfb.register()
-from mpfb.services.humanservice import HumanService
+# MPFB is a Blender extension. Import with its registered repository namespace.
+# Directly importing 'mpfb' breaks bpy.utils.extension_path_user().
+import importlib, addon_utils
+ext_name='bl_ext.evercraft_local.mpfb'
+addon_utils.enable(ext_name,default_set=False,persistent=True)
+HumanService=importlib.import_module(ext_name+'.services.humanservice').HumanService
 
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
