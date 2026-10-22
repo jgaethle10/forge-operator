@@ -156,6 +156,13 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const offer=await fetch(runtime.url+'/offers/website-audit');
     assert.equal(offer.status,200);
     assert.match(await offer.text(),/Quick Win Audit/);
+    const editorialOg=await fetch(runtime.url+'/visuals/website-audit-attention/offer-og-v2.svg');
+    assert.equal(editorialOg.status,200);
+    assert.match(editorialOg.headers.get('content-type')||'',/svg|xml/i);
+    const ogMarkup=await editorialOg.text();
+    assert.match(ogMarkup,/Evercraft Website Audit/);
+    assert.match(ogMarkup,/Illustrative design/);
+
 
     const noConfirmation=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
