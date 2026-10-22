@@ -296,6 +296,25 @@ test('recorded-source-bound articulated joints produce actual changing H264/AAC 
     assert.equal(receipt.lipSyncVerified,false);
     assert.equal(receipt.publicationAuthority,false);
     assert.equal(receipt.videoSha256,sha(fs.readFileSync(receipt.videoPath)));
+    // The documented offline command must work, not just an internal import.
+    const packetFile=path.join(out,'packet.json');
+    const manifestFile=path.join(out,'source-manifest.json');
+    const rigFile=path.join(out,'rig.json');
+    fs.writeFileSync(packetFile,JSON.stringify(x.pkt));
+    fs.writeFileSync(manifestFile,JSON.stringify(x.manifest));
+    fs.writeFileSync(rigFile,JSON.stringify(rig));
+    const cli=spawnSync(process.execPath,['--import','tsx',
+      path.resolve('systemia/media-studio/toon-pose-animatic.cli.mjs'),
+      '--packet',packetFile,'--manifest',manifestFile,'--assets',x.dir,
+      '--shot','hero-1','--out',path.join(out,'cli-proof'),
+      '--rig',rigFile,'--python',process.env.FALLEN_TOON_PYTHON||'python3'],
+      {encoding:'utf8',timeout:120000,maxBuffer:2*1024*1024});
+    assert.equal(cli.status,0,'rig CLI should execute: '+String(cli.stderr).slice(-700));
+    const cliReceipt=JSON.parse(cli.stdout);
+    assert.equal(cliReceipt.characterRigAnimated,true);
+    assert.equal(cliReceipt.publicationAuthority,false);
+    assert.equal(cliReceipt.frameCount,120);
+    assert.equal(cliReceipt.sha256,sha(fs.readFileSync(cliReceipt.output)));
     const tampered=structuredClone(rig);
     tampered.layers[1].sha256='f'.repeat(64);
     assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
