@@ -32,13 +32,21 @@ test('society has continuing events, memories, relationships and aspirations',()
   assert.ok(world.actors.some(a=>a.goal_milestones>0));
   assert.ok(world.actors.some(a=>Object.values(a.bonds).some(x=>x!==50)));
 });
-test('HTML assets use relative links and explicitly disclose projection rather than autonomous server',()=>{
+test('public spectator reads canonical world commits and remains unpromoted',()=>{
   const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
   const js=fs.readFileSync(path.join(dir,'client.mjs'),'utf8');
   assert.match(html,/\.\/client\.mjs/);
   assert.match(html,/\.\/style\.css/);
-  assert.match(html,/not live autonomous AI/i);
-  assert.match(html,/Every viewer reconstructs/);
-  assert.doesNotMatch(js,/new EventSource|fetch\('\/api\/world'/);
-  assert.match(js,/replayWorld/);
+  assert.match(html,/noindex,nofollow/);
+  assert.match(html,/Fictional rule-based agents/);
+  assert.match(html,/independent GitHub runner/);
+  assert.match(html,/id="projects"/);
+  assert.match(html,/id="social-arcs"/);
+  assert.match(js,/renderSocial/);
+  assert.match(js,/window-society-state\/state\/window\.json/);
+  assert.match(js,/crypto\.subtle\.digest/);
+  assert.match(js,/Untrusted or noncanonical world state/);
+  assert.match(js,/World state hash did not match/);
+  assert.match(js,/Heartbeat delayed/);
+  assert.doesNotMatch(js,/replayWorld|advanceWorld|new EventSource/);
 });

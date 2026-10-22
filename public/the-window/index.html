@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
   <title>The Window | Mossmere</title>
-  <meta name="description" content="Look into Mossmere, a persistent experimental society of simulated residents.">
+  <meta name="description" content="Private pre-release observation of Mossmere, a fictional society powered by an independent scheduled world heartbeat.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./client.mjs"></script>
 </head>
@@ -17,16 +19,17 @@
     <main>
       <section class="intro">
         <div>
-          <p class="eyebrow">OBSERVATION 001 / A SHARED TOWN CLOCK</p>
+          <p class="eyebrow">OBSERVATION 001 / WORLDSTATE RECORD</p>
           <h1>Somewhere, life<br><i>keeps happening.</i></h1>
           <p>Meet twelve fictional residents making choices, forming relationships, working, resting, and leaving a story behind. You're not their director. You're looking through the window.</p>
         </div>
-        <div class="timebox"><small>LOCAL TOWN CLOCK</small><strong id="clock">Day 1 · 08:00</strong><span>15 town minutes per 30 real seconds</span><span class="testtag">PUBLIC PREVIEW · RULE-BASED REPLAY</span></div>
+        <div class="timebox"><small>LOCAL TOWN CLOCK</small><strong id="clock">Day 1 · 08:00</strong><span>Up to 10 town steps per scheduled five-minute heartbeat</span><span class="testtag">FOUNDER PREVIEW · NOT FOR DISTRIBUTION</span></div>
       </section>
-      <div class="transparency"><span class="transparency-symbol">◎</span><div><strong>A shared fictional society preview, not live autonomous AI.</strong><span>Every viewer reconstructs the same seeded simulation from a fixed world clock. Residents have continuing goals and memories within that reconstructed timeline. No AI model, server process, or external actions are running behind this public page yet.</span></div></div>
+      <div class="transparency"><span class="transparency-symbol">◎</span><div><strong>Real independent state updates. Fictional rule-based agents, not LLM cognition.</strong><span>An independent GitHub runner advances Mossmere and stores one canonical world state without viewers. Each visitor reads that committed record. Updates are best effort rather than continuously hosted. The agents still use bounded simulation policies, not language-model reasoning.</span></div></div>
+      <div class="heartbeat-receipt" id="heartbeat-receipt" data-state="pending">Reading the latest committed town state…</div>
       <div class="layout">
         <section class="viewport">
-          <div class="panelheading"><div><span class="eyebrow">CLOCK-SYNCHRONIZED WORLD</span><h2>Mossmere, from above</h2></div><span id="town-status">12 residents</span></div>
+          <div class="panelheading"><div><span class="eyebrow">COMMITTED TOWN STATE</span><h2>Mossmere, from above</h2></div><span id="town-status">12 residents</span></div>
           <div class="map" id="map" aria-label="Interactive town map">
             <div class="water"></div><div class="road road-one"></div><div class="road road-two"></div>
             <div class="river-label">Glasswater</div>
@@ -40,13 +43,21 @@
             <div class="panelheading"><div><span class="eyebrow">RESIDENT FILE</span><h2 id="resident-heading">Meet the neighbors</h2></div><span>↗</span></div>
             <div id="profile" class="profile"><p>Choose one of the glowing residents on the map to see their occupation, mood, money, relationships, and recent memories.</p></div>
           </section>
+          <section class="sidepanel social-panel">
+            <div class="panelheading"><div><span class="eyebrow">SOCIAL CONNECTIONS</span><h2>Promises &amp; consequences</h2></div><span id="social-summary">Waiting for the town</span></div>
+            <div id="social-arcs" class="profile">Loading residents’ commitments from the canonical world history.</div>
+          </section>
+          <section class="sidepanel projects-panel">
+            <div class="panelheading"><div><span class="eyebrow">DECISIONS WITH CONSEQUENCES</span><h2>What the town is building</h2></div><span id="project-summary">Civic projects</span></div>
+            <div id="projects" class="profile">The first independent world update is being verified.</div>
+          </section>
           <section class="sidepanel chronicle">
             <div class="panelheading"><div><span class="eyebrow">THE TOWN CHRONICLE</span><h2>What just happened</h2></div><span id="history-count">0 events</span></div>
             <ol id="events" aria-live="polite"><li>The story starts here.</li></ol>
           </section>
         </aside>
       </div>
-      <footer><span>EVERCRAFT / THE WINDOW · v0.1</span><span>Fictional agents. Clock-synchronized deterministic reconstruction. No always-on agent process, no sentience claims.</span></footer>
+      <footer><span>EVERCRAFT / THE WINDOW · v0.1</span><span>Fictional agents · canonical GitHub world commits · best-effort five-minute scheduler · no LLM autonomy or sentience claims.</span></footer>
     </main>
   </div>
 </body>
