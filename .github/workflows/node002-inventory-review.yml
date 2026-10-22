@@ -1,0 +1,67 @@
+name: Node002 inventory source gate (review only)
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/node002-inventory-review/**'
+      - 'systemia/compute/hardware-inventory.mjs'
+      - '.github/workflows/node002-inventory-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-review-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # PR default checkout is a synthetic merge commit. This custody
+          # artifact must bind to the actual reviewed source HEAD instead.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify Node.js and run isolated, no-network tests
+        run: |
+          node --version
+          node --test systemia/compute/node002-inventory-review/*.test.mjs
+      - name: Preserve non-authorizing evidence boundary
+        run: |
+          grep -Fq "UNSIGNED_OWNER_LOCAL_ONLY" systemia/compute/node002-inventory-review/operator-inventory.mjs
+          grep -Fq "execution_authorized:false" systemia/compute/node002-inventory-review/operator-inventory.mjs
+          grep -Fq "No change to" systemia/compute/node002-inventory-review/README.md
+
+      - name: Package pinned REVIEW-HELD source only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/node002
+          files=(systemia/compute/hardware-inventory.mjs
+                 systemia/compute/node002-inventory-review/README.md
+                 systemia/compute/node002-inventory-review/*.mjs)
+          sha256sum "${files[@]}" > dist/node002/SHA256SUMS.txt
+          printf 'git_head_sha=%s\nrelease_state=REVIEW_HELD\nworker_authorized=false\nphysical_execution_proven=false\n' "$(git rev-parse HEAD)" > dist/node002/SOURCE_REF.txt
+          tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
+              --format=ustar -cf dist/node002/node002-source-review.tar "${files[@]}"
+          (cd dist/node002 && sha256sum node002-source-review.tar > ARCHIVE_SHA256.txt)
+          test "$(tar -tf dist/node002/node002-source-review.tar | wc -l)" -ge 5
+          (cd dist/node002 && sha256sum -c ARCHIVE_SHA256.txt)
+          echo "Node002 source-only custody candidate hashes:"
+          cat dist/node002/ARCHIVE_SHA256.txt
+          sha256sum systemia/compute/node002-inventory-review/operator-inventory.mjs
+          {
+            echo "## Node002 source review artifact (not a release)"
+            echo "Source commit: \`$(git rev-parse HEAD)\`"
+            echo "Archive digest:"
+            echo "\`\`\`"
+            cat dist/node002/ARCHIVE_SHA256.txt
+            echo "\`\`\`"
+            echo "Execution: NOT AUTHORIZED. Machine installation: NOT APPROVED."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Archive source custody candidate for independent review
+        uses: actions/upload-artifact@v4
+        with:
+          name: node002-source-review-${{ github.run_id }}
+          path: dist/node002/
+          retention-days: 7
+          if-no-files-found: error
