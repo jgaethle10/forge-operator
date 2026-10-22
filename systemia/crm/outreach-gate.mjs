@@ -19,7 +19,7 @@ function context({relationshipLedgerFile='',now}) {
  * No send/permit/transaction is performed by this function.
  */
 export function evaluateGovernedOutreach({
-  action={},relationshipLedgerFile='',interactionLedger=null,now=new Date()
+  action={},relationshipLedgerFile='',interactionLedger=null,approvalVerifier=null,now=new Date()
 }={}) {
   const channel=CHANNEL[action?.action_type];
   if(!channel)return denied(['unsupported_outreach_channel'],'request');
@@ -32,6 +32,26 @@ export function evaluateGovernedOutreach({
 
   const approval=evaluateExternalAction(action);
   if(approval.decision!=='allow')return denied(['explicit_action_approval_missing_or_changed'],'human_approval');
+  // The requestor cannot establish approval by setting human_approval_state.
+  // Resolve an independently stored, current approval from trusted private state.
+  if(typeof approvalVerifier!=='function')return denied(['trusted_approval_source_unavailable'],'human_approval');
+  let trusted;
+  try{
+    trusted=approvalVerifier({
+      approval_ref:action.human_approval_ref,
+      action_type:action.action_type,
+      action_fingerprint:approval.exact_action_fingerprint,
+      target_ref:action.target_ref,
+      now
+    });
+  }catch{return denied(['trusted_approval_check_failed'],'human_approval');}
+  if(trusted?.then||trusted?.approved!==true||
+     trusted.approval_ref!==action.human_approval_ref||
+     trusted.action_fingerprint!==approval.exact_action_fingerprint||
+     !Number.isFinite(Date.parse(String(trusted.expires_at||'')))||
+     Date.parse(trusted.expires_at)<=now.getTime()) {
+    return denied(['trusted_approval_not_current'],'human_approval');
+  }
 
   let policy;
   try {
@@ -69,10 +89,10 @@ export function evaluateGovernedOutreach({
 
 /** Produces an existing Passport permit only after repeating all freshness checks. No mail transport. */
 export function prepareGovernedContactPermit({
-  action={},relationshipLedgerFile='',interactionLedger=null,now=new Date()
+  action={},relationshipLedgerFile='',interactionLedger=null,approvalVerifier=null,now=new Date()
 }={}) {
   const decision=evaluateGovernedOutreach({
-    action,relationshipLedgerFile,interactionLedger,now
+    action,relationshipLedgerFile,interactionLedger,approvalVerifier,now
   });
   if(decision.decision!=='eligible_for_permit_only')
     return {...decision,permit:null};
