@@ -74,3 +74,25 @@ samples at normal phone viewing size; reject stretched faces or anatomy,
 unreadable or overlapping titles, excessive scene-template repetition,
 monotonous voice delivery, weak brand lockups, or any unverified product claims.
 Any corrected shot must be re-admitted against the new artifact digest.
+
+### Director-controlled subject framing
+
+Both Fallen's storyboard renderer and editable Studio timeline support bounded
+`cropAnchorX` and `cropAnchorY` values on full-frame picture clips:
+
+- `0` aligns the source to the left/top of its canvas crop;
+- `0.5` uses the original centered crop;
+- `1` aligns it to the right/bottom;
+- out-of-range or nonfinite anchors fail the render plan.
+
+`MediaProject.assets[]` may provide asset-level crop-anchor defaults.
+`compileFilmPlan()` preserves these in the editable `FilmPlan.scenes[]`,
+where directors may override them shot by shot. `FallenTimelineProject` picture
+clips have the same crop-anchor options so final Studio delivery preserves the
+creative framing. The actual FFmpeg crop is aspect-preserving and square-pixel.
+
+Pixel-verified regression fixtures now test that a geometric square remains
+square in a portrait zoom, and that anchoring a crop right versus left changes
+whether an off-center subject is visible. Such synthetic fixture tests are
+geometric evidence, **not** proof of realistic faces, acting, camera movement,
+lighting, detailed animation or premium commercial quality.
