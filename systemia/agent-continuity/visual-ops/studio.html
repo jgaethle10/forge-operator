@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Evercraft Black Box × Spider Society | Incident Observatory</title>
+<style>
+:root{--bg:#060913;--surface:#0d1320;--raised:#131d2c;--line:#263449;--muted:#9badc4;--ink:#ebf5ff;--teal:#3ae1ca;--gold:#f7c575;--violet:#b69bff;--red:#f18f8e;--blue:#8cbcf6}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 60% -30%,#1e3150 0,transparent 60%),radial-gradient(ellipse at 0 80%,#172238 0,transparent 45%),var(--bg);color:var(--ink)}
+button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.43}a{color:var(--teal)}
+.frame{max-width:1600px;margin:auto;padding:24px clamp(12px,2.2vw,36px) 42px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:18px}.logo{display:flex;gap:12px;align-items:center;font-weight:800;letter-spacing:.1em;font-size:12px}.logo .mark{width:39px;height:39px;display:grid;place-items:center;background:linear-gradient(145deg,#1a3a48,#112233);border:1px solid #397782;border-radius:12px;color:var(--teal);font-size:23px}.logo small{display:block;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.16em}.top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.pill{border:1px solid #876635;color:var(--gold);background:#49341b40;border-radius:30px;padding:7px 12px;font:700 10px/1.3 system-ui;letter-spacing:.09em}.live-red{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:7px}.outline{background:#182637;border:1px solid #38516a;padding:10px 14px;border-radius:9px;font-weight:650}.outline:hover{background:#20354a}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:27px 0 22px}.eyebrow{color:var(--teal);text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.19em}.hero h1{font-size:clamp(30px,4vw,55px);line-height:1.06;letter-spacing:-.045em;margin:11px 0}.hero p{margin:0;color:var(--muted);max-width:680px;font-size:15px}.incident-pill{font-size:11px;max-width:360px;border-left:2px solid #4c7384;padding:12px 18px;background:#17253650}.incident-pill strong{display:block;color:var(--ink);font-size:12px;word-break:break-all}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.metric{border:1px solid var(--line);border-radius:14px;background:linear-gradient(155deg,#162234a8,#0d1422);padding:16px 19px;min-height:107px}.metric .label{font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.1em;color:var(--muted)}.metric b{display:block;font-size:27px;line-height:1.35;letter-spacing:-.05em}.metric span{display:block;font-size:11px;color:var(--muted)}.metric.danger b{color:var(--gold)}.metric.safe b{color:var(--teal)}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 318px;gap:14px}.panel{border:1px solid var(--line);background:linear-gradient(165deg,#0f1928ee,#0a111e);border-radius:15px;overflow:hidden;box-shadow:0 18px 55px #0002}.panel-header{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.panel-header h2{margin:0;font-size:13px;letter-spacing:.01em}.panel-header p{margin:2px 0 0;color:var(--muted);font-size:10px}.tabs{display:flex;align-items:center;gap:4px;background:#0a1421;padding:4px;border-radius:9px;border:1px solid #223348}.tab{border:0;background:transparent;border-radius:6px;padding:7px 11px;color:var(--muted);font-size:11px;font-weight:650}.tab.active{color:var(--ink);background:#25394e}
+.graph-scroll{overflow:auto}.graph-area{height:515px;position:relative;min-width:780px;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:39px 39px;background-position:center center}.graph-area::after{content:"SOURCE-LOCKED RECONSTRUCTION · NOT LIVE TELEMETRY";position:absolute;bottom:12px;left:17px;font-size:9px;letter-spacing:.13em;color:#7e93a8;pointer-events:none}.graph-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.graph-svg path{fill:none;stroke:#4a657c;stroke-width:1.6;stroke-dasharray:5 6;opacity:.52;vector-effect:non-scaling-stroke}.graph-svg path.highlight{stroke:var(--gold);stroke-width:2.5;opacity:1;stroke-dasharray:none}.graph-node{position:absolute;transform:translate(-50%,-50%);width:158px;min-height:74px;text-align:left;background:#122132ee;border:1px solid #3a536d;border-radius:12px;padding:10px 12px;box-shadow:0 10px 25px #0005;transition:border-color .2s,background .2s,box-shadow .2s}.graph-node:hover,.graph-node.selected{background:#20354a;border-color:var(--teal);box-shadow:0 0 0 2px #3ae1ca19,0 0 35px #3ae1ca18}.graph-node.possible{border-style:dashed;border-color:#80674b}.graph-node .kind{display:block;font-size:8px;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;font-weight:800}.graph-node strong{display:block;font-size:12px;margin:4px 0 3px}.graph-node em{display:block;font-size:9px;color:var(--gold);font-style:normal;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.graph-node.selected em{color:var(--teal)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:13px 18px;border-top:1px solid var(--line);color:var(--muted);font-size:11px}.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--teal);margin-right:6px}.legend .possible-dot{background:var(--gold)}.legend .synth-dot{background:var(--violet)}
+.inspector{padding:18px}.inspector-label{color:var(--teal);font-size:10px;letter-spacing:.16em;font-weight:750}.inspector h3{margin:9px 0 6px;font-size:24px;letter-spacing:-.03em;overflow-wrap:anywhere}.inspector .desc{color:var(--muted);font-size:12px;min-height:55px}.status{display:inline-block;padding:5px 9px;border:1px solid #846842;border-radius:6px;background:#e8aa4830;color:var(--gold);font-size:10px;letter-spacing:.05em;font-weight:800;max-width:100%;overflow-wrap:anywhere}.inspector dl{margin:23px 0}.inspector dl div{border-top:1px solid var(--line);padding:12px 0;display:flex;justify-content:space-between;gap:8px}.inspector dt{color:var(--muted);font-size:11px}.inspector dd{margin:0;font-size:11px;text-align:right;max-width:65%;overflow-wrap:anywhere}.locked{background:#101b2a;border:1px solid #2e435a;border-radius:11px;padding:13px;margin-top:20px}.locked h4{margin:0 0 5px;font-size:12px}.locked p{font-size:11px;color:var(--muted);margin:0 0 12px}.locked button{width:100%;padding:8px;border-radius:7px;background:#243044;border:1px solid #3c5066}.scene-panel{margin-top:14px}.scene-description{padding:17px 19px;display:flex;gap:18px;align-items:start;justify-content:space-between}.scene-count{font-size:44px;font-weight:750;color:var(--teal);line-height:1;letter-spacing:-.08em}.scene-title{margin:0 0 6px;font-size:17px}.scene-copy{font-size:12px;color:var(--muted);max-width:850px;margin:0}.timeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:0 18px 17px}.step{border:1px solid #344b60;border-radius:9px;background:#142234;color:var(--muted);padding:12px 8px;text-align:left;font-size:11px;min-height:71px}.step small{display:block;color:var(--teal);margin-bottom:5px;font-size:10px}.step.active{border-color:var(--teal);background:#1c3a48;color:#fff}.transport{display:flex;gap:9px;padding:0 18px 18px;align-items:center}.transport button{min-width:95px}.transport .progress{margin-left:auto;color:var(--muted);font-size:11px}.evidence-list{padding:10px 18px 25px;display:grid;gap:10px}.evidence-card{background:#142235;border:1px solid #2b3f55;padding:14px;border-radius:10px}.evidence-card strong{font-size:13px}.evidence-card p{color:var(--muted);font-size:12px;margin:7px 0 0}.evidence-card code{font-size:11px;color:var(--gold);overflow-wrap:anywhere}.evidence-card .source{font-size:9px;font-weight:800;letter-spacing:.1em;color:var(--violet)}.foot{color:#8295ad;display:flex;justify-content:space-between;gap:20px;padding:20px 4px;font-size:10px;line-height:1.6}.foot div{max-width:720px}.view-hidden{display:none}
+@media(max-width:1130px){.workspace{grid-template-columns:1fr}.inspector{display:grid;grid-template-columns:1fr 1fr;gap:5px 28px}.inspector dl{grid-row:span 2;margin:0}.locked{grid-column:1/-1}}@media(max-width:760px){.frame{padding:15px 10px}.hero{display:block}.incident-pill{margin-top:17px}.metrics{grid-template-columns:repeat(2,1fr)}.timeline{grid-template-columns:repeat(3,1fr)}.scene-description{gap:10px}.topbar{align-items:start}.top-actions{justify-content:flex-end}.inspector{display:block}.transport{flex-wrap:wrap}.transport .progress{margin-left:0}.foot{display:block}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="frame">
+<header class="topbar">
+ <div class="logo"><span class="mark">⬡</span><span>EVERCRAFT <small>BLACK BOX × SPIDER SOCIETY</small></span></div>
+ <div class="top-actions"><span class="pill"><i class="live-red"></i>SYNTHETIC REPLAY · READ ONLY</span><button id="download" class="outline" type="button">Export evidence packet ↗</button></div>
+</header>
+<section class="hero">
+ <div><div class="eyebrow">Incident intelligence / Operations Observatory</div><h1>The agent stopped.<br>The consequences might not have.</h1><p>Investigate the uncertain external action. Explore possible surviving automation. Every visual assertion stays connected to an evidence state.</p></div>
+ <div class="incident-pill"><span class="eyebrow">Incident / Mission</span><strong id="incident-id"></strong><span id="mission-id"></span></div>
+</section>
+<section class="metrics" aria-label="Incident indicators">
+ <div class="metric danger"><div class="label">External action</div><b id="metric-assessment">UNKNOWN</b><span>No authenticated provider readback</span></div>
+ <div class="metric"><div class="label">Potential downstream</div><b id="metric-possible">0</b><span>Possible, not confirmed</span></div>
+ <div class="metric safe"><div class="label">Verified collateral</div><b id="metric-verified">0</b><span>No independently verified impacts</span></div>
+ <div class="metric"><div class="label">Intervention authority</div><b>HELD</b><span>No live intervention or containment</span></div>
+</section>
+<main class="workspace">
+ <section>
+  <div class="panel">
+   <div class="panel-header"><div><h2>Continuity topology</h2><p>Click an operation, dependency or investigator to inspect it</p></div><div class="tabs" role="tablist"><button class="tab active" role="tab" aria-selected="true" id="tab-graph" data-view="graph">Topology</button><button class="tab" role="tab" aria-selected="false" id="tab-evidence" data-view="evidence">Evidence ledger</button></div></div>
+   <div id="graph-view" class="graph-scroll"><div class="graph-area"><svg id="graph-lines" class="graph-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"></svg><div id="graph-nodes"></div></div></div>
+   <div id="evidence-view" class="evidence-list view-hidden" role="tabpanel" aria-label="Evidence ledger"></div>
+   <div class="legend"><span><i></i>Selected evidence subject</span><span><i class="possible-dot"></i>Possible / unverified</span><span><i class="synth-dot"></i>Synthetic source</span></div>
+  </div>
+  <div class="panel scene-panel">
+   <div class="panel-header"><div><h2>Incident replay</h2><p>Ordered analysis scenes, not observed event timestamps</p></div><span class="pill">NO EXECUTION</span></div>
+   <div class="scene-description"><div class="scene-count" id="scene-count">01</div><div style="flex:1"><h3 class="scene-title" id="scene-title"></h3><p class="scene-copy" id="scene-copy"></p></div></div>
+   <div class="timeline" id="timeline" aria-label="Replay steps"></div>
+   <div class="transport"><button class="outline" id="prev">← Previous</button><button class="outline" id="play">▶ Play replay</button><button class="outline" id="next">Next →</button><span class="progress" id="progress"></span></div>
+  </div>
+ </section>
+ <aside class="panel">
+  <div class="panel-header"><div><h2>Inspector</h2><p>Selected entity and its evidentiary limits</p></div></div>
+  <div class="inspector">
+   <div><span class="inspector-label">SOURCE-BOUND ENTITY</span><h3 id="selection-title">External action</h3><span class="status" id="selection-state">UNKNOWN</span><p class="desc" id="selection-description"></p></div>
+   <dl>
+    <div><dt>Evidence classification</dt><dd id="selection-evidence">SYNTHETIC</dd></div>
+    <div><dt>Source state</dt><dd id="selection-kind">Read-only</dd></div>
+    <div><dt>Provider verified?</dt><dd>NO</dd></div>
+    <div><dt>Containment executed?</dt><dd>NO</dd></div>
+    <div><dt>Canonical admission?</dt><dd>NOT ADMITTED</dd></div>
+   </dl>
+   <div class="locked"><h4>◈ Response gate closed</h4><p>Real scans, retries, suppression, revocation and isolation require authenticated evidence, operator scope and independent approval. This replay has none.</p><button disabled title="No real operations are authorized in synthetic replay">Contain / Stop unavailable</button></div>
+  </div>
+ </aside>
+</main>
+<footer class="foot"><div><strong>Evercraft Agent Continuity</strong> · Read-only incident visualization · Nothing here asserts live agent pursuit, provider settlement, network delivery, publication or remediation.</div><div>Input evidence fingerprint: <span id="fingerprint"></span></div></footer>
+</div>
+<script id="ops-data" type="application/json">__OPS_PACKET_JSON__</script>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const packet=JSON.parse($('ops-data').textContent);
+if(packet.schema!=='evercraft.agent-continuity.visual-ops.v1'||packet.mode!=='SYNTHETIC_REPLAY'||packet.live!==false||packet.read_only!==true)throw Error('Unsupported incident source');
+const text=(id,value)=>{$(id).textContent=String(value)};
+text('incident-id',packet.incident.id);
+text('mission-id',packet.incident.mission_id);
+text('metric-assessment',packet.assessment.replaceAll('_',' '));
+text('metric-possible',packet.possible_impacts);
+text('metric-verified',packet.verified_collateral);
+text('fingerprint','SHA-256 '+packet.source_sha256.slice(0,18)+'…');
+let scene=0,selected='operation',playTimer=null;
+const pos={agent:[19,48],operation:[46,48],blackbox:[46,13],spider:[76,13],systemia:[19,81],network:[76,81]};
+const impactIds=packet.nodes.filter(n=>n.id.startsWith('impact-'));
+impactIds.forEach((n,i)=>{pos[n.id]=[76,34+i*17]});
+const validNodes=new Map(packet.nodes.map(n=>[n.id,n]));
+const draw=()=>{
+  const svg=$('graph-lines');svg.replaceChildren();$('graph-nodes').replaceChildren();
+  for(const e of packet.edges){
+    if(!pos[e.from]||!pos[e.to])continue;
+    const [x1,y1]=pos[e.from],[x2,y2]=pos[e.to];
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const sx=x1*10,sy=y1*6,tx=x2*10,ty=y2*6,curve=(tx-sx)*.48;
+    path.setAttribute('d','M'+sx+' '+sy+' C'+(sx+curve)+' '+sy+' '+(tx-curve)+' '+ty+' '+tx+' '+ty);
+    if(e.from===selected||e.to===selected)path.classList.add('highlight');
+    svg.append(path);
+  }
+  for(const node of packet.nodes){
+    const coords=pos[node.id];if(!coords)continue;
+    const btn=document.createElement('button');btn.type='button';
+    btn.className='graph-node'+(node.id===selected?' selected':'')+(node.state==='POSSIBLE'?' possible':'');
+    btn.style.left=coords[0]+'%';btn.style.top=coords[1]+'%';
+    btn.setAttribute('aria-label',node.label+': '+node.state);
+    btn.setAttribute('aria-pressed',String(node.id===selected));
+    const kind=document.createElement('span');kind.className='kind';kind.textContent=node.kind;
+    const name=document.createElement('strong');name.textContent=node.label;
+    const status=document.createElement('em');status.textContent=node.state.replaceAll('_',' ');
+    btn.append(kind,name,status);
+    btn.onclick=()=>select(node.id);
+    $('graph-nodes').append(btn);
+  }
+};
+function select(id){
+ if(!validNodes.has(id))return;selected=id;const node=validNodes.get(id);
+ text('selection-title',node.label);
+ text('selection-state',node.state.replaceAll('_',' '));
+ text('selection-description',node.detail);
+ text('selection-evidence',node.evidence);
+ text('selection-kind',node.kind.toUpperCase());
+ draw();
+}
+function setScene(i){
+ scene=Math.max(0,Math.min(packet.steps.length-1,i));
+ const s=packet.steps[scene];
+ text('scene-count',s.id);
+ text('scene-title',s.title);
+ text('scene-copy',s.narrative);
+ text('progress','Scene '+(scene+1)+' of '+packet.steps.length);
+ [...$('timeline').children].forEach((el,j)=>{
+  el.classList.toggle('active',j===scene);el.setAttribute('aria-current',j===scene?'step':'false');
+ });
+ select(s.target);
+}
+function stop(){if(playTimer!==null){clearInterval(playTimer);playTimer=null;}text('play','▶ Play replay');}
+for(const [i,s] of packet.steps.entries()){
+ const b=document.createElement('button');b.type='button';b.className='step';
+ const num=document.createElement('small');num.textContent=s.id+' / '+s.kind;
+ const title=document.createElement('span');title.textContent=s.title;
+ b.append(num,title);b.onclick=()=>{stop();setScene(i)};
+ $('timeline').append(b);
+}
+$('prev').onclick=()=>{stop();setScene(scene-1)};
+$('next').onclick=()=>{stop();setScene(scene+1)};
+$('play').onclick=()=>{
+ if(playTimer!==null){stop();return;}
+ if(scene===packet.steps.length-1)setScene(0);
+ text('play','Ⅱ Pause replay');
+ playTimer=setInterval(()=>{if(scene===packet.steps.length-1){stop();return;}setScene(scene+1)},1750);
+};
+for(const t of document.querySelectorAll('[data-view]'))t.onclick=()=>{
+ const graph=t.dataset.view==='graph';
+ $('graph-view').classList.toggle('view-hidden',!graph);
+ $('evidence-view').classList.toggle('view-hidden',graph);
+ for(const el of document.querySelectorAll('[data-view]')){
+  el.classList.toggle('active',el===t);el.setAttribute('aria-selected',String(el===t));
+ }
+};
+const ledger=[
+ ['Black Box assessment',packet.assessment,'External side effect not independently verified'],
+ ['Spider Society persistence',packet.persistence_signal,'Possible survivor, not a live scan'],
+ ['Systemia admission',packet.admission,'No real response authority established'],
+ ['Collateral',String(packet.verified_collateral)+' verified / '+packet.possible_impacts+' possible','Graph edges mark hypotheses only'],
+ ['Evidence fingerprint',packet.source_sha256,'SHA-256 of canonical local synthetic inputs']
+];
+for(const [label,value,description] of ledger){
+ const card=document.createElement('article');card.className='evidence-card';
+ const source=document.createElement('div');source.className='source';source.textContent='SYNTHETIC / NOT EXTERNALLY VERIFIED';
+ const heading=document.createElement('strong');heading.textContent=label;
+ const v=document.createElement('div');const code=document.createElement('code');code.textContent=value;v.append(code);
+ const p=document.createElement('p');p.textContent=description;
+ card.append(source,heading,v,p);$('evidence-view').append(card);
+}
+for(const boundary of packet.boundaries){
+ const card=document.createElement('article');card.className='evidence-card';
+ const source=document.createElement('div');source.className='source';source.textContent='SCOPE LIMITATION';
+ const txt=document.createElement('strong');txt.textContent=boundary;card.append(source,txt);$('evidence-view').append(card);
+}
+$('download').onclick=()=>{
+ const data=JSON.stringify(packet,null,2)+'\n';
+ const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download='evercraft-incident-synthetic-visual-packet.json';
+ a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);
+};
+window.addEventListener('pagehide',stop);
+setScene(0);
+})();
+</script>
+</body>
+</html>
