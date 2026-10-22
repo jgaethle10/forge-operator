@@ -57,6 +57,7 @@ test('missing or incorrect independent pin fails closed',async()=>{
 test('nonloopback or credential-bearing URL rejected before contacting any host',()=>{
   for(const url of [
     'http://192.168.88.5:42420/',
+    'http://localhost:42420/',
     'https://example.com:443/',
     'http://user:pass@127.0.0.1:42420/',
     'http://127.0.0.1:42420/steal',
