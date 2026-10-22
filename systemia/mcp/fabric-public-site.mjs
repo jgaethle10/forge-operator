@@ -127,6 +127,18 @@ h2{font-size:clamp(30px,4.5vw,52px);letter-spacing:-.04em;margin:10px 0 14px}
 .badge{display:inline-block;margin-top:12px;border:1px solid #2a4369;background:#0d1a30;color:#bcd5f8;padding:5px 8px;border-radius:999px;font-size:11px}
 .price{margin-top:14px!important;color:#f7f9fc!important;font-weight:700;font-size:14px!important}
 .cardlinks{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.buyer-moments{padding:10px 0 34px}
+.buyer-moments h2{font-size:clamp(27px,3.8vw,42px);margin:0 0 12px}
+.buyer-moments .sub{margin:0 0 22px}
+.buyer-moment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.buyer-moment{display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:23px;border-radius:18px;border:1px solid #365778;background:linear-gradient(145deg,rgba(24,50,84,.85),rgba(9,20,38,.88));text-decoration:none;min-width:0}
+.buyer-moment:hover{border-color:#8dc8ff;transform:translateY(-1px)}
+.buyer-moment:focus-visible{outline:3px solid #a7eccc;outline-offset:3px}
+.buyer-moment strong{display:block;font-size:19px;line-height:1.35;letter-spacing:-.02em}
+.buyer-moment span{display:block;color:#b9cadf;font-size:13px;line-height:1.5}
+.buyer-moment .moment-action{color:#a7e6ff;font-size:14px;font-weight:750}
+@media(max-width:780px){.buyer-moment-grid{grid-template-columns:1fr}.buyer-moment{padding:18px;gap:11px}.buyer-moment strong{font-size:18px}}
+
 .docs-link{display:inline-block;color:#9ec8ff;font-size:13px;text-decoration:none}
 .detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin:28px 0 70px}
 .detail-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:16px;padding:22px}
@@ -320,7 +332,51 @@ export function listHumanOffers(capabilities=[]){
     .map(item=>({public_id:item.public_id,slug:offerSlugForCapability(item.public_id),name:item.entry_paid_offer?.name||item.name,price:entryPriceLabel(item),url:PUBLIC_ORIGIN+'/offers/'+offerSlugForCapability(item.public_id),human_confirmation_required:true,checkout_is_not_payment:true,paid_delivery_verified:false}));
 }
 
+// Human-reviewed navigation prompts. These link to existing exact owned offer
+// pages only. They never make a machine capability match, charge or fulfillment
+// decision. The existing runtime chooses verified checkout versus an explicitly
+// held, assisted-invoice fallback when processor configuration is unavailable.
+export const APPROVED_BUYER_MOMENTS=Object.freeze([
+  Object.freeze({public_id:'payment-offer-payments-pilot',slug:'payments-pilot',
+    problem:"I can't tell which customer orders are actually paid.",
+    detail:'Connect one offer to verified payment status and order controls'}),
+  Object.freeze({public_id:'audit-center-website-audit-machine-v1',slug:'website-audit',
+    problem:"People visit my website, but they're not contacting us.",
+    detail:'Start with five prioritized public-site improvements'}),
+  Object.freeze({public_id:'payment-offer-browser-diagnosis',slug:'browser-diagnosis',
+    problem:'Our browser workflow fails when someone misses a step.',
+    detail:'Diagnose one bounded browser workflow'}),
+  Object.freeze({public_id:'legacy-rescue-lab-v1',slug:'legacy-rescue',
+    problem:"Our current software is breaking, and rebuilding feels risky.",
+    detail:'Find the smallest defensible rescue path'}),
+  Object.freeze({public_id:'payment-offer-ibmi-xray',slug:'ibmi-xray',
+    problem:"We don't know what our IBM i upgrade could disrupt.",
+    detail:'Map one set of upgrade risks and dependencies'}),
+  Object.freeze({public_id:'findmypart-paid-hunt-v1',slug:'findmypart',
+    problem:"A discontinued part has brought our work to a stop.",
+    detail:'Investigate one hard-to-source physical part'}),
+]);
+
+export function availableBuyerMoments(capabilities=[]){
+  const all=[...(capabilities||[]),...extraOfferItems];
+  return APPROVED_BUYER_MOMENTS.flatMap((moment)=>{
+    const matches=all.filter(item=>item.public_id===moment.public_id&&item.commercial_state==='sell_now');
+    if(matches.length!==1||
+       offerSlugForCapability(moment.public_id)!==moment.slug||
+       !offerPurchaseKeyForSlug(moment.slug)||
+       offerCapabilityForSlug(moment.slug,capabilities)?.public_id!==moment.public_id) return [];
+    const price=entryPriceLabel(matches[0]);
+    if(!/^\$[0-9][0-9,.]*$/.test(price))return [];
+    return [{...moment,price}];
+  });
+}
+
 export function renderOffers(capabilities=[]){
+  const moments=availableBuyerMoments(capabilities).map(({slug,problem,detail,price})=>
+    '<a class="buyer-moment" href="/offers/'+escapeHtml(slug)+'">'
+      +'<div><strong>'+escapeHtml(problem)+'</strong><span>'+escapeHtml(detail)+'</span></div>'
+      +'<span class="moment-action">Review exact offer · '+escapeHtml(price)+' →</span></a>'
+  ).join('');
   const offers=[...(capabilities||[]),...extraOfferItems]
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
     .map((item)=>{
@@ -340,7 +396,8 @@ export function renderOffers(capabilities=[]){
     '<h1>One problem.<br>One clear offer.</h1>',
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
-    '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    moments?'<section class="buyer-moments" aria-labelledby="buyer-moments-heading"><h2 id="buyer-moments-heading">What is slowing you down?</h2><p class="sub">Start with the problem you recognize. Each link opens one existing offer, with its actual price and a checkout or assisted-invoicing path shown according to availability.</p><div class="buyer-moment-grid">'+moments+'</div></section>':'',
+    '<section aria-label="All approved offers"><h2>Browse all offers</h2><div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div></section>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
