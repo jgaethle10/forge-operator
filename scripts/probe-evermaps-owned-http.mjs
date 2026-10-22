@@ -49,7 +49,7 @@ try{
  ensure(health.status===200,'owned source health is not available');
  const status=JSON.parse(health.body);
  ensure(status.schema==='evercraft.evermaps.incident-source-health.v1','wrong health schema');
- ensure(status.legacy_base44_dependency===false,'legacy source dependency exposed');
+ ensure(status.third_party_app_builder_dependency===false,'legacy source dependency exposed');
  observations.source_health=status.state;
  const incident=await get('/api/evermaps/incidents/pnw',{expectType:'application/json',timeout:25000});
  ensure([200,503].includes(incident.status),'incident endpoint must be 200 or explicit 503');
