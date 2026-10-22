@@ -7,7 +7,7 @@
   "comparison_year": 2045,
   "units": {
     "annual_shipping_cost": "million USD per year",
-    "transport_co2": "metric tons CO2 per year (as reported)",
+    "transport_co2": "reported annual transport GHG tons; original source's metric ton vs US short ton and CO2 vs CO2e labeling unverified",
     "capital_range": "billion USD"
   },
   "sources": [
@@ -27,6 +27,20 @@
       "type": "secondary_report_of_wsdot_public_presentation",
       "published": "2026-10-08",
       "url": "https://www.spokesman.com/stories/2026/oct/08/new-study-says-grain-transportation-possible-witho/"
+    },
+    {
+      "id": "wsdot_aug2026",
+      "type": "primary_interim_progress_report",
+      "published": "2026-08",
+      "url": "https://app.leg.wa.gov/ReportsToTheLegislature/Home/GetPDF?fileName=TransportationStudy-Report-LowerSnakeRiverDams-August2026_b9c25b16-ce5f-4a96-9f0c-16f50395227e.pdf",
+      "scope": "Confirms calibration and >100 runs, not October numerical outcomes"
+    },
+    {
+      "id": "wstc_mar2026",
+      "type": "primary_preliminary_presentation_indexed_not_visually_inspected",
+      "published": "2026-03-24",
+      "url": "https://wstc.wa.gov/wp-content/uploads/2026/03/2026-03-24-BP7-LowerSnakeRiverDams-TransportationStudy.pdf",
+      "scope": "Historical preliminary version, not interchangeable with October model. Table access not verified."
     }
   ],
   "scenarios": [
@@ -42,7 +56,9 @@
         "gazette",
         "barker"
       ],
-      "notes": "Study Scenario 3 is a 2045 reference case, not verified 2026 spending."
+      "notes": "Study Scenario 3 is a 2045 reference case, not verified 2026 spending.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
     },
     {
       "id": 4,
@@ -60,7 +76,9 @@
         "gazette",
         "barker"
       ],
-      "notes": "$3.8–5.1B appears as transportation capital in Gazette and as road maintenance through 2045 in Barker reporting. Cost classification disputed pending original presentation/final report; excluded from apples-to-apples capital ranking."
+      "notes": "$3.8–5.1B appears as transportation capital in Gazette and as road maintenance through 2045 in Barker reporting. Cost classification disputed pending original presentation/final report; excluded from apples-to-apples capital ranking.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
     },
     {
       "id": 5,
@@ -78,7 +96,25 @@
         "barker",
         "gazette"
       ],
-      "notes": "Barker reports 4–5.03B and ~$323M annual shipping; Gazette reports 4–5.3B and $322.9M. Preserve disagreement until verified against WSDOT primary table."
+      "notes": "Barker reports 4–5.03B and ~$323M annual shipping; Gazette reports 4–5.3B and $322.9M. Preserve disagreement until verified against WSDOT primary table.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified",
+      "disputed_capital_ranges_billion_usd": [
+        {
+          "source_id": "barker",
+          "range": [
+            4,
+            5.03
+          ]
+        },
+        {
+          "source_id": "gazette",
+          "range": [
+            4,
+            5.3
+          ]
+        }
+      ]
     },
     {
       "id": 6,
@@ -95,7 +131,9 @@
         "gazette",
         "barker"
       ],
-      "notes": "Cost and emissions from Barker; shipping cost precision from Gazette."
+      "notes": "Cost and emissions from Barker; shipping cost precision from Gazette.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
     },
     {
       "id": 7,
@@ -112,7 +150,9 @@
         "gazette",
         "barker"
       ],
-      "notes": "Rail-heavy package."
+      "notes": "Rail-heavy package.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
     },
     {
       "id": 8,
@@ -129,7 +169,9 @@
         "gazette",
         "barker"
       ],
-      "notes": "Reliance on Class I freight willingness, capacity, commercial agreements is unverified."
+      "notes": "Reliance on Class I freight willingness, capacity, commercial agreements is unverified.",
+      "model_year": 2045,
+      "numeric_status": "secondary_reported_oct2026_not_primary_verified"
     }
   ],
   "shared_repair_in_kind": {
@@ -155,6 +197,20 @@
     "original_WSDOT_presentation_or_final_report": "required",
     "stakeholder_review": "recommended",
     "editorial_10_of_10": "required",
-    "human_release": "required"
+    "human_release": "required",
+    "original_october_numeric_table": "required",
+    "units_and_gases_verification": "required"
+  },
+  "numeric_claims_source_status": "SECONDARY_REPORTS_OF_OCTOBER_2026_OPEN_HOUSES",
+  "original_october_scenario_tables_verified": false,
+  "primary_progress_evidence": {
+    "document": "WSDOT August 2026 quarterly study report",
+    "url": "https://app.leg.wa.gov/ReportsToTheLegislature/Home/GetPDF?fileName=TransportationStudy-Report-LowerSnakeRiverDams-August2026_b9c25b16-ce5f-4a96-9f0c-16f50395227e.pdf",
+    "finding": "More than 100 total logistics cost model runs; scenario 8 and rail/shipping rates being calibrated; does not provide October scenario cost/emission table",
+    "evidence_scope": "modeling_process_only_not_october_numbers"
+  },
+  "potential_confusion": {
+    "prior_stage_study": "March 2026 work-in-progress presentations included preliminary scenario estimates; the model was calibrated in 2026. Do not splice different snapshot values into one scenario table.",
+    "ghg_metric": "Original October display-board unit and CO2-equivalent convention not yet verified; avoid presenting as precise metric tons of carbon dioxide."
   }
 }
