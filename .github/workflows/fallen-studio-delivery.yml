@@ -7,6 +7,8 @@ on:
       - "systemia/media-studio/studio-delivery.test.ts"
       - "systemia/media-studio/master-qc.ts"
       - "systemia/media-studio/master-qc.integration.test.ts"
+      - "systemia/media-studio/render.ts"
+      - "systemia/media-studio/render-geometry.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
   push:
@@ -16,6 +18,8 @@ on:
       - "systemia/media-studio/studio-delivery.test.ts"
       - "systemia/media-studio/master-qc.ts"
       - "systemia/media-studio/master-qc.integration.test.ts"
+      - "systemia/media-studio/render.ts"
+      - "systemia/media-studio/render-geometry.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
 
@@ -40,11 +44,12 @@ jobs:
             sudo apt-get install -y ffmpeg
           fi
           ffmpeg -version | head -n 1
-      - name: Delivery and master QC contracts
+      - name: Delivery, geometry and master QC contracts
         run: |
           node --import tsx --test \
             systemia/media-studio/studio-delivery.test.ts \
-            systemia/media-studio/master-qc.integration.test.ts
+            systemia/media-studio/master-qc.integration.test.ts \
+            systemia/media-studio/render-geometry.test.ts
       - name: Build media fixtures
         run: |
           set -euo pipefail
