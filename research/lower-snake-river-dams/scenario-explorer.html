@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="color-scheme" content="dark"/>
+<title>Snake River | Evercraft Research Sandbox</title>
+<style>
+:root{--bg:#09151e;--panel:#12242e;--panel2:#17333d;--line:#2b4550;--ink:#f3f4f0;--muted:#b9c7c8;--teal:#83dccb;--orange:#f2ba74;--red:#e99d91;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#14343b 0%,#09151e 62%);color:var(--ink);min-height:100vh}
+.shell{max-width:1160px;margin:auto;padding:32px clamp(18px,4vw,52px) 80px}
+.eyebrow{text-transform:uppercase;letter-spacing:.17em;color:var(--teal);font-size:12px;font-weight:750}
+h1{font-size:clamp(36px,6vw,70px);font-weight:760;line-height:1.07;letter-spacing:-.04em;max-width:910px;margin:24px 0}
+.intro{font-size:clamp(16px,2.2vw,21px);color:var(--muted);line-height:1.6;max-width:780px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.chip{border:1px solid var(--line);border-radius:100px;padding:10px 14px;font-size:12px;letter-spacing:.04em}
+.chip.warn{border-color:#875b3c;color:var(--orange)}
+.main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr);gap:18px;margin-top:44px}
+.panel{background:linear-gradient(150deg,rgba(25,52,62,.96),rgba(12,32,42,.96));border:1px solid var(--line);border-radius:19px;padding:clamp(18px,2.5vw,28px);min-width:0}
+.label{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 25px}
+button{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:11px;padding:11px 15px;cursor:pointer;font-weight:680}
+button[aria-pressed=true]{color:#07231c;background:var(--teal);border-color:var(--teal)}
+.barrow{display:grid;grid-template-columns:100px 1fr 110px;align-items:center;gap:12px;margin:20px 0}
+.barname{font-size:13px;font-weight:700}.track{height:17px;background:#0b1c25;border-radius:7px;overflow:hidden}.fill{height:100%;background:var(--teal);border-radius:7px;transition:width .2s}
+.barrow:first-of-type .fill{background:var(--orange)}.barvalue{text-align:right;font-size:14px;font-variant-numeric:tabular-nums}
+.scenariobutton{width:100%;text-align:left;display:flex;justify-content:space-between;gap:12px;border-radius:11px;margin:8px 0;padding:14px;font-size:14px}
+.scenariobutton[aria-pressed=true]{color:var(--ink);background:#214b54;border-color:var(--teal)}
+.number{font-size:39px;font-weight:760;letter-spacing:-.04em;line-height:1.1;margin:14px 0}
+.delta{font-size:16px;color:var(--orange);margin-top:8px}
+.note{font-size:13px;color:var(--muted);line-height:1.55}
+.details{margin-top:26px}.details h2{font-size:22px;margin:16px 0 12px}.details p{font-size:15px;line-height:1.65;color:#d5e0df}
+.metric{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:20px}.metric .mini{background:#0b1c25;border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}.mini strong{display:block;font-size:22px;margin-top:8px;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:18px}td,th{padding:13px 8px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+a{color:var(--teal)}footer{margin-top:32px;color:var(--muted);font-size:13px;line-height:1.7}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+@media(max-width:790px){.main{grid-template-columns:1fr}.barrow{grid-template-columns:74px 1fr 85px;gap:8px}.barname,.barvalue{font-size:12px}.metric{grid-template-columns:1fr 1fr}}
+</style></head>
+<body><main class="shell">
+<div class="eyebrow">EVERCRAFT / REGIONAL INFRASTRUCTURE LAB</div>
+<h1>The Snake River decision is bigger than one number.</h1>
+<p class="intro">Six transportation futures for the lower Snake River. Compare the freight costs and emissions that October 2026 WSDOT presentation reporting associates with each scenario, then see what the study cannot yet tell us.</p>
+<div class="chips"><span class="chip warn">RESEARCH DEMO · NOT PUBLISHED JOURNAL CONTENT</span><span class="chip">2045 modeled transportation cases</span><span class="chip">Snapshot: Oct. 21, 2026</span></div>
+<div class="main">
+<section class="panel" aria-label="Scenario comparison"><div class="label">Compare all scenarios</div>
+<div class="controls" role="group" aria-label="Metric"><button id="cost" aria-pressed="true">Annual freight costs</button><button id="co2" aria-pressed="false">Freight CO₂</button></div>
+<div id="bars" aria-live="polite"></div><p class="note">Reference: Scenario 3, with dams, modeled 2045. Bars describe transportation alone, not electricity replacement, dam demolition, water supply, fish recovery, or full lifecycle emissions.</p>
+<div class="details"><div class="label">Select a scenario to inspect</div><div id="options" aria-label="Scenarios"></div></div></section>
+<aside class="panel" aria-live="polite"><div class="label">Scenario inspector</div><div id="scenarioDetails"></div></aside>
+</div>
+<section class="panel details" style="margin-top:18px"><div class="label">Evidence boundaries</div><h2>What the public debate tends to collapse</h2>
+<p><strong>Annual freight expense is not annual highway maintenance.</strong> The modeled $310–323M rail scenarios represent total annual shipping costs; the increase above the 2045 with-dams reference is roughly $54–66M per year.</p>
+<p><strong>A transportation-only emissions reduction is not a net-system CO₂ reduction.</strong> Replacing dam electricity, grid services and construction emissions requires separate accounting. Some rail scenarios emit less transportation CO₂ than the with-dams reference.</p>
+<p><strong>Reported infrastructure figures contain unresolved differences.</strong> Scenario 5 is $4–5.03B in one local account and $4–5.3B in another. The description of Scenario 4's $3.8–5.1B also differs between outlets. A common $1.7–2.2B repair-in-kind estimate must not be double counted until its inclusion in scenario totals is established.</p>
+<p><strong>Salmon, treaty rights, irrigation and power have their own evidence.</strong> They belong in one transparent assessment, not as unsupported add-ons to a freight model. No scenario here is a recommendation for dam breach or retention.</p>
+</section>
+<footer>Read the sources: <a href="https://wsdot.wa.gov/construction-planning/search-studies/lower-snake-river-dams-transportation-study">WSDOT study portal</a> · <a href="https://www.spokesman.com/stories/2026/oct/08/new-study-says-grain-transportation-possible-witho/">Eric Barker, Oct. 8</a> · <a href="https://www.wcgazette.com/story/2026/10/15/news/state-releases-dam-breaching-study-results/47135.html">Whitman County Gazette, Oct. 15</a>.<br/>Proof-of-concept only. Not a public Evercraft policy position. Human editorial and release authorization required.</footer>
+</main>
+<script>
+const cases=[
+{id:3,title:"Retain dams",sub:"2045 reference",cost:256.8,co2:253000,cap:"Not modeled here",note:"The reference assumes the dams remain in place. It is a modeled 2045 case, not a verified current-day shipping bill."},
+{id:4,title:"Breach, no upgrades",sub:"Freight shifts toward roads",cost:331.9,co2:394000,cap:"$3.8–5.1B, category contested",note:"One report labels this as transportation capital, another as cumulative road maintenance through 2045. The categorization must be verified with original WSDOT tables."},
+{id:5,title:"River-parallel rail",sub:"Rail and grain terminals",cost:322.9,co2:224000,cap:"$4–5.03B or $4–5.3B",note:"Local reporting conflicts on the upper cost estimate. Preserve both until WSDOT confirms."},
+{id:6,title:"Short-line rail",sub:"Short-line capacity expansion",cost:316.4,co2:239000,cap:"$4.4–5.9B",note:"Freight-route feasibility, track capacity, rates and access agreements require further validation."},
+{id:7,title:"Comprehensive rail",sub:"Expanded network options",cost:310.4,co2:231000,cap:"$4.4–5.8B",note:"Lowest modeled annual shipping cost among the four rail alternatives, but still above the with-dams reference."},
+{id:8,title:"Class I rail",sub:"Major railroad capacity",cost:322.7,co2:205000,cap:"$3.8–5B",note:"Lowest modeled freight CO₂ of these cases. Assumptions around Class I railroad availability and commercial terms remain decision-critical."}
+];
+let metric="cost",selected=7;
+const format=(v)=>metric==="cost"?"$"+v.toFixed(1)+"M":Math.round(v).toLocaleString()+" t";
+const money=(v)=>"$"+Math.abs(v).toFixed(1)+"M";
+function render(){
+const btn1=document.getElementById("cost"),btn2=document.getElementById("co2");
+btn1.setAttribute("aria-pressed",metric==="cost");btn2.setAttribute("aria-pressed",metric==="co2");
+const max=Math.max(...cases.map(s=>s[metric]));
+document.getElementById("bars").innerHTML=cases.map(s=>'<div class="barrow"><div class="barname">Scenario '+s.id+'</div><div class="track"><div class="fill" style="width:'+Math.round(s[metric]/max*100)+'%;background:'+(s.id===selected?'var(--orange)':'var(--teal)')+'"></div></div><div class="barvalue">'+format(s[metric])+'</div></div>').join("");
+document.getElementById("options").innerHTML=cases.map(s=>'<button class="scenariobutton" type="button" data-id="'+s.id+'" aria-pressed="'+(s.id===selected)+'"><span>'+s.id+'. '+s.title+'</span><span>↗</span></button>').join("");
+document.querySelectorAll("[data-id]").forEach(el=>el.onclick=()=>{selected=Number(el.dataset.id);render()});
+const s=cases.find(c=>c.id===selected),base=cases[0];
+const costDiff=s.cost-base.cost,co2Diff=s.co2-base.co2;
+const co2String=(co2Diff>0?"+":"")+co2Diff.toLocaleString()+" t/yr";
+document.getElementById("scenarioDetails").innerHTML='<h2 style="font-size:27px;margin:18px 0 5px">'+s.title+'</h2><p class="note">'+s.sub+'</p><div class="label" style="margin-top:30px">Annual modeled shipping cost</div><div class="number">$'+s.cost.toFixed(1)+'M</div><div class="delta">'+(costDiff>0?"+":"")+money(costDiff)+' vs. with-dams reference</div><div class="metric"><div class="mini"><div class="label">Transport CO₂</div><strong>'+Math.round(s.co2/1000)+'k tons</strong><span class="note">'+co2String+' change</span></div><div class="mini"><div class="label">Reported capital</div><strong style="font-size:17px">'+s.cap+'</strong></div></div><p class="note" style="margin-top:25px">'+s.note+'</p><p class="note">Costs and emissions do not include energy replacement, water supply, dam maintenance or removal, and fishery outcomes.</p>';
+}
+document.getElementById("cost").onclick=()=>{metric="cost";render()};
+document.getElementById("co2").onclick=()=>{metric="co2";render()};
+render();
+</script></body></html>
