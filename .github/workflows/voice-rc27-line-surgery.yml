@@ -1,10 +1,5 @@
 name: Voice Foundry RC27 Founder Line Polish (private)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc27-line-surgery.yml'
-      - 'systemia/media-studio/voice-rc27-line-surgery.py'
-      - 'tests/media-voice-rc27-line-surgery.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
