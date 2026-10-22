@@ -25,7 +25,12 @@ const approved=new Set([
 ]);
 function assert(cond,message){if(!cond)hits.push({file:'critical_buyer_contract',reason:message})}
 assert(buyer.live_buyer_home===BUYER_HOME,'live_buyer_home_not_exact_verified_route');
-assert(chum.public_entrypoints?.human_conversion===BUYER_HOME,'human_conversion_not_exact_verified_route');
+const release=JSON.parse(fs.readFileSync('public/.well-known/evercraft-commercial-readiness.json','utf8'));
+assert(chum.public_entrypoints?.human_conversion===null,'suppressed_checkout_hub_must_be_null');
+assert(chum.public_entrypoints?.human_conversion_state==='held_provider_http_402_requires_new_payment_receipt','chum_checkout_hold_missing');
+assert(chum.conversion_corridor?.public_checkout_ready===false,'chum_reenables_commerce_without_proof');
+assert(release.current_state==='HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED','commercial_release_safety_state_changed');
+assert(release.commercial_checkout_ready===false && release.may_promote_buyer_links===false && release.may_charge_customers===false,'unapproved_checkout_release_in_source');
 assert(chum.public_entrypoints?.live_machine_catalog==='https://fabric.systemiacommandcenters.com/capabilities','live_catalog_not_owned_verified_route');
 assert(!llms.includes(DEAD_HOME),'llms_advertises_known_404');
 assert(Array.isArray(buyer.offers)&&buyer.offers.length===approved.size,'unexpected_scoped_offer_count');
@@ -77,7 +82,7 @@ if(hits.length){
 }
 console.log(JSON.stringify({
  ok:true,state:'unapproved_legacy_provider_urls_blocked',
- temporary_exception:'13_exact_provider_hosted_human_buyer_forms_only',
+ temporary_exception:'13_archived_exact_offer_urls_source_only_not_public_routing',
  exception_retirement_gate:'independently_verified_owned_replacement_and_payment_to_shipping_chain',
  automated_legacy_url_purge_allowed:false,
  zero_charges:true,
