@@ -39,6 +39,8 @@ jobs:
           node-version: "20"
       - name: Prove Evercraft OS composition
         run: node systemia/evercraft-os/runtime.proof.mjs
+      - name: Validate twelve OS lanes through Systemia mission policy
+        run: node --test systemia/evercraft-os/parallel-mission-bridge.test.mjs
       - name: Execute twelve bounded read-only Saban readiness jobs and reconcile
         run: node --test systemia/saban/evercraft-os-readiness.test.mjs
       - name: Prove twelve parallel OS readiness lanes and Saban authority boundaries
