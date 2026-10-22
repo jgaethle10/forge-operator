@@ -33,20 +33,32 @@ export function auditNavalEditorialForeground(input:{
  };
  const sourceCamera=[...plan.cameraPosition];
  const targetDistance=distance(center(hero),sourceCamera);
- const projected=(id:NavalActorId)=>auditWebGpuHeroFraming({
-  plan,geometries,subject:{id:'naval-foreground-'+id,
-   entityIds:[id+'-ship-hull'],minVisibleFraction:.2}});
- const heroShape=projected(hero);
+ // A near-field gunhouse or bridge can dominate the picture while its
+ // parent hull is offscreen. Analyze the FULL visible actor assembly, not only
+ // its hull rectangle. This caught a real failure in the previous GPU film.
+ const projected=(id:NavalActorId)=>{
+  const ids=plan.draws.filter(d=>d.entityId.startsWith(id+'-'))
+   .map(d=>d.entityId);
+  if(ids.length===0||ids.length>80||new Set(ids).size!==ids.length)
+   throw Error('naval_foreground_actor_mesh_budget_invalid:'+id);
+  return {audit:auditWebGpuHeroFraming({
+   plan,geometries,subject:{id:'naval-foreground-'+id,
+    entityIds:ids,minVisibleFraction:.2}}),componentCount:ids.length};
+ };
+ const heroShape=projected(hero).audit;
  const compared=NAVAL_ACTORS.filter(id=>id!==hero).map(id=>{
-  const shape=projected(id);
+  const item=projected(id);
+  const shape=item.audit;
   const distanceFromCamera=distance(center(id),sourceCamera);
   const overlap=boundsOverlap(heroShape.clippedBounds,shape.clippedBounds);
-  const nearfield=distanceFromCamera<targetDistance*.86;
+  const nearfield=distanceFromCamera<targetDistance*.96;
   const visible=shape.coverage.area>.014;
+  const screenDominance=nearfield&&shape.coverage.area>.065;
   return {id,distanceFromCamera,screenArea:shape.coverage.area,
+   framedActorComponentCount:item.componentCount,
    overlapsHeroFraction:overlap,nearfield,
-   actuallyFramed:visible,
-   obstructionRisk:nearfield&&visible&&overlap>.08};
+   screenDominance,actuallyFramed:visible,
+   obstructionRisk:nearfield&&visible&&(overlap>.065||screenDominance)};
  });
  return {
   schema:'evercraft.world-engine.naval-foreground-camera-audit.v1' as const,
