@@ -82,6 +82,28 @@ jobs:
             -p 3000:3000 \
             forge-operator:${{ github.sha }}
 
+      - name: Verify owned EverMaps routes in the running production container
+        run: |
+          set -euo pipefail
+          node scripts/probe-evermaps-owned-http.mjs
+
+      - name: Prepare Chromium for EverMaps owned visual QA
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npx playwright install --with-deps chromium
+
+      - name: Verify EverMaps desktop, mobile and source-outage browser behavior
+        run: node scripts/probe-evermaps-owned-browser.mjs
+
+      - name: Preserve EverMaps browser screenshots and source-truth receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evermaps-owned-browser-qa
+          path: artifacts/evermaps-browser-qa/
+          if-no-files-found: warn
+          retention-days: 21
+
       - name: Verify health and discovery surfaces
         run: |
           set -euo pipefail

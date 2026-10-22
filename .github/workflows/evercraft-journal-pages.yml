@@ -223,6 +223,36 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Verify owned EverMaps staging over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/evermaps/"
+          echo "Checking owned EverMaps staging at ${target}"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2             "${target}" -o /tmp/evermaps-hosted-index.html
+          grep -q 'EverMaps | Evercraft Owned Preview' /tmp/evermaps-hosted-index.html
+          grep -q 'noindex,nofollow' /tmp/evermaps-hosted-index.html
+          grep -q './app.js' /tmp/evermaps-hosted-index.html
+          grep -q './style.css' /tmp/evermaps-hosted-index.html
+          for file in app.js style.css pnw-land.geojson incident-source.mjs; do
+            curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2               "${target}${file}" -o "/tmp/evermaps-hosted-${file}"
+            test -s "/tmp/evermaps-hosted-${file}"
+          done
+          grep -q 'NIFC direct staging' /tmp/evermaps-hosted-app.js
+          grep -q 'natural-earth-50m-public-domain' /tmp/evermaps-hosted-app.js
+          grep -q 'public domain' /tmp/evermaps-hosted-pnw-land.geojson
+          if grep -iq 'base44' /tmp/evermaps-hosted-app.js /tmp/evermaps-hosted-incident-source.mjs; then
+            echo "BLOCKED: legacy application-builder reference in staging JS"
+            exit 1
+          fi
+          {
+            echo "## EverMaps owned staging verification"
+            echo
+            echo "HTTPS page and required assets verified: ${target}"
+            echo "Read-only, noindex preview; not an emergency map or production cutover."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Verify customer fallback doors
         shell: bash
         run: |
