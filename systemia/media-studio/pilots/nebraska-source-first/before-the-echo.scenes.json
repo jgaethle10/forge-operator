@@ -1,0 +1,78 @@
+{
+  "schema": "evercraft.fallen.nebraska-observational-scene-map.v1",
+  "id": "nebraska-before-the-echo-rc07",
+  "workingTitle": "Before the Echo | Early Nebraska football and its people",
+  "sourceReel": {
+    "recordId": "History Nebraska RG6137.MI",
+    "url": "https://nebraska.access.preservica.com/download/file/IO_b8e868d0-911f-4fce-9feb-3316f16b8b0c",
+    "bytes": 15543535,
+    "sha256": "3156cd2202c8c3189dc563994688fb0f49231c9d78b6645287b535e53347f517",
+    "probableDating": "Opening game material believed c.1919; later game material date uncertain",
+    "recordedContemporaneousAudio": false
+  },
+  "sourcePhoto": {
+    "recordId": "NARA 547323",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/THE_ANNUAL_SPRING_FOOTBALL_GAME_AT_THE_UNIVERSITY_OF_NEBRASKA_IS_A_STADIUM-PACKING_EVENT._IT_IS_AN_INTRA-SQUAD_GAME..._-_NARA_-_547323.jpg",
+    "sha1": "8476a2db33115d25a2fc0a60ea8618dea3795209",
+    "date": "May 1973",
+    "medium": "authentic historical still"
+  },
+  "shots": [
+    {
+      "id": "crowd",
+      "source": "reel",
+      "sourceStartSec": 13.4,
+      "durationSec": 7,
+      "storyFunction": "establish the crowd rather than a title",
+      "dateAttribution": "probably c.1919"
+    },
+    {
+      "id": "field",
+      "source": "reel",
+      "sourceStartSec": 25.8,
+      "durationSec": 7,
+      "storyFunction": "show scale of live play on the early field",
+      "dateAttribution": "probably c.1919"
+    },
+    {
+      "id": "play",
+      "source": "reel",
+      "sourceStartSec": 34.5,
+      "durationSec": 19,
+      "storyFunction": "observe authentic football action through historic pass near source 0:44",
+      "dateAttribution": "probably c.1919"
+    },
+    {
+      "id": "team",
+      "source": "reel",
+      "sourceStartSec": 90.6,
+      "durationSec": 12,
+      "storyFunction": "another real early game scene, not falsely dated",
+      "dateAttribution": "early football, exact year uncertain"
+    },
+    {
+      "id": "crowd1973",
+      "source": "photo",
+      "sourceStartSec": 0,
+      "durationSec": 5,
+      "storyFunction": "observe Nebraska fans across decades",
+      "dateAttribution": "May 1973"
+    }
+  ],
+  "audio": {
+    "historicFieldSound": "unverified_and_excluded",
+    "music": "none",
+    "voice": "none",
+    "syntheticCrowd": "none"
+  },
+  "visual": {
+    "treatment": "light original-frame exposure and deflicker, no generative pixels or motion interpolation",
+    "frameIntegrity": "pillarboxed full frame, no fabricated camera motion"
+  },
+  "production": {
+    "reviewOnly": true,
+    "writtenArchivePublicationPermissionObtained": false,
+    "founderApproved": false,
+    "publicationAuthorityGranted": false
+  }
+}

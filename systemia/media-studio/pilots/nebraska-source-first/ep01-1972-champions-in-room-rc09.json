@@ -1,0 +1,123 @@
+{
+  "schema": "evercraft.fallen.nebraska-1972-room-editorial-map.v1",
+  "name": "Champions in the Room | authentic 1972 tape and photographed White House meeting",
+  "version": "RC09",
+  "actualEditor": "local_ffmpeg_not_native_fallen",
+  "status": "private_research_review_no_publication",
+  "master": {
+    "filename": "Evercraft_1972_Championship_Room_Original_Pictures_And_Tape_RC09.mp4",
+    "sha256": "f2c6a987efcfab6fa2fca020f9dc8840df418ed7a5eead3a27eb4c1963c40807",
+    "durationSec": 48,
+    "resolution": "1920x1080",
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "fullMediaDecodePassed": true
+  },
+  "sources": [
+    {
+      "id": "history-nebraska-rg6137-mi",
+      "kind": "moving_football",
+      "sha256": "3156cd2202c8c3189dc563994688fb0f49231c9d78b6645287b535e53347f517",
+      "originalMediaSec": [
+        34.5,
+        42.5
+      ],
+      "timelineSec": [
+        0,
+        8
+      ],
+      "periodCaptureAudio": false,
+      "attributedYear": "circa early 1900s / game year uncertain",
+      "rights": "private_viewing_only_written_collection_publication_permission_pending"
+    },
+    {
+      "id": "nara-white-house-whpo-8358",
+      "kind": "photographic_contact_sheet",
+      "sha256": "24f5e891cf3634ad447c56e5d79ae75b54102898ccc2a88848319e2e313b1704",
+      "timelineSec": [
+        8,
+        15
+      ],
+      "originalNegativeObtained": false,
+      "captionDate": "1972-02-01",
+      "rights": "not_approved_for_publication"
+    },
+    {
+      "id": "nara-white-house-whpo-8362",
+      "kind": "photographic_contact_sheet",
+      "sha256": "0677f77e6393a00ae8cb4c13fad870f19d4d40260f31df01db9a7bb420c1f9a4",
+      "timelineSec": [
+        15,
+        43
+      ],
+      "originalNegativeObtained": false,
+      "captionDate": "1972-02-01",
+      "rights": "not_approved_for_publication"
+    },
+    {
+      "id": "nara-nixon-662-010",
+      "kind": "original_archival_conversation_research_mirror",
+      "sha256": "2272b0607a3b9fd6fa0da901065721d19da85664be3451b3a76c1d6d533df893",
+      "originalMediaSec": [
+        920,
+        955
+      ],
+      "timelineSec": [
+        8,
+        43
+      ],
+      "dated": "1972-02-01",
+      "syncedToPhotos": false,
+      "speakerTurnIdentityVerified": false,
+      "exactSpokenWordsVerified": false,
+      "comparedWithNARAPreservationMaster": false,
+      "rights": "not_reviewed_for_release"
+    },
+    {
+      "id": "nara-documerica-547323",
+      "kind": "historic_still",
+      "originalSha1": "8476a2db33115d25a2fc0a60ea8618dea3795209",
+      "timelineSec": [
+        43,
+        48
+      ],
+      "dated": "May 1973",
+      "capturedPeriodSound": false,
+      "rights": "public_domain_photo_provenance_present_attribution_editorial_review_pending"
+    }
+  ],
+  "truth": {
+    "inventedSpeech": false,
+    "generatedFootballAction": false,
+    "syntheticCrowd": false,
+    "score": false,
+    "claimsThatVoiceFollowsPhotoRealtime": false,
+    "automaticallyAdmittedAsFilm": false,
+    "publicReleaseAuthority": false,
+    "founderApproved": false
+  },
+  "quality": {
+    "actualObservedEarlyFootballMotion": true,
+    "archivalContactPhotosAreStills": true,
+    "spokenAudioMeasurablyPresentOnMiddleScene": true,
+    "fullDecodePassed": true,
+    "humanDialogueAuditionStillRequired": true
+  },
+  "editorialNext": {
+    "firstImprove": "Obtain actual WHPO individual original 1972 photographic scans and contextual accurate people identities",
+    "secondImprove": "Personally audition/quote-check selected Nixon recording against primary finding aid and NARA original master",
+    "thirdImprove": "Motivate images with Devaney/Osborne football system story rather than showing lots of thumbnails",
+    "forthImprove": "Build native editable Fallen version only after archive material and auditory passages are chosen"
+  },
+  "releaseDependencies": [
+    "History Nebraska written collection-use permission",
+    "1972 audio reuse legal review",
+    "WHPO original photos and selected frame identifications",
+    "founder film review and publication decision"
+  ],
+  "researchSources": [
+    "https://www.nixonlibrary.gov/white-house-tapes/662/conversation-662-010",
+    "https://www.nixonlibrary.gov/research/almanac/february-1-1972",
+    "https://history.nebraska.gov/earliest-video-of-husker-football/"
+  ]
+}

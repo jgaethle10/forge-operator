@@ -1,0 +1,41 @@
+name: Fallen Nebraska Observed Cinema
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/before-the-echo.*"
+      - ".github/workflows/fallen-nebraska-observed-cinema.yml"
+permissions:
+  contents: read
+jobs:
+  original-reel-directed-scene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install canonical Fallen runtime
+        run: npm install --no-audit --no-fund
+      - name: Prove source-locked film grammar and deny invented audio or permission
+        run: node --import tsx --test systemia/media-studio/pilots/nebraska-source-first/before-the-echo-native.test.ts
+      - name: Ensure FFmpeg / FFprobe and historic film filters
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -filters | grep deflicker
+          ffmpeg -hide_banner -filters | grep drawtext
+      - name: Acquire original historic film and NARA photograph, render actual native 1080p Fallen timeline
+        run: node --import tsx systemia/media-studio/pilots/nebraska-source-first/before-the-echo-native.ts systemia/media-studio/pilots/nebraska-source-first/before-the-echo.scenes.json "$RUNNER_TEMP/evercraft-before-the-echo"
+      - name: Preserve private founder-review MP4, real frames and exact source digests
+        uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-before-the-echo-50s-native-film-review-only
+          path: |
+            ${{ runner.temp }}/evercraft-before-the-echo/Evercraft_Nebraska_Before_The_Echo_Native_RC08.mp4
+            ${{ runner.temp }}/evercraft-before-the-echo/review-*.jpg
+            ${{ runner.temp }}/evercraft-before-the-echo/receipt.json
+          if-no-files-found: error
+          retention-days: 14

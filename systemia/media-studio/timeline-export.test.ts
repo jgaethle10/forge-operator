@@ -127,3 +127,20 @@ test('respects a bounded custom audio master policy',()=>{
   assert.match(filter,/sidechaincompress=threshold=0\.08:ratio=6:attack=30:release=420/);
   assert.match(filter,/loudnorm=I=-16:TP=-1\.5:LRA=9:linear=true/);
 });
+
+
+test('places sound by delayed samples, not ignored PTS shifts in FFmpeg amix',()=>{
+  const project=readyProject();
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/offset-audio.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  // Voice begins at .5s; music starts at 0. The production mix must preserve that.
+  assert.match(filter,/atrim=duration=4,asetpts=PTS-STARTPTS,volume=1,adelay=500:all=1\[aclip0\]/);
+  assert.match(filter,/atrim=duration=5,asetpts=PTS-STARTPTS,volume=0\.25,adelay=0:all=1\[aclip1\]/);
+  assert.doesNotMatch(filter,/asetpts=PTS-STARTPTS\+0\.5\/TB/);
+  assert.ok(plan.ffmpegArgs.includes('aac'));
+});
+test('refuses nonfinite or negative audio offsets before assembling FFmpeg',()=>{
+  const project=readyProject();
+  project.tracks.find(t=>t.id==='voice')!.clips[0].startSec=Number.NaN;
+  assert.throws(()=>buildTimelineExportPlan({project,outputPath:'/tmp/invalid-timing.mp4'}),/timeline_export_audio_start_invalid/);
+});

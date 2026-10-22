@@ -1,0 +1,388 @@
+{
+  "schema": "evercraft.fallen.nebraska-series-plan.v1",
+  "seriesId": "nebraska-the-giant-stirs",
+  "title": "NEBRASKA | THE GIANT STIRS",
+  "format": "three-part-observational-sports-documentary",
+  "draftVersion": "2026-10-21-v2-history-sleep-awakening",
+  "targetTotalSec": 4500,
+  "allowShorterIfStoryEarnsIt": true,
+  "seriesStatus": "development_only",
+  "episodeTitlesLockedForDevelopment": true,
+  "currentSeason": {
+    "asOf": "2026-10-21",
+    "record": {
+      "wins": 5,
+      "losses": 2
+    },
+    "source": "https://huskers.com/sports/football/schedule",
+    "nextKnownGame": {
+      "date": "2026-10-31",
+      "opponent": "Washington",
+      "result": "not_played"
+    },
+    "seasonComplete": false
+  },
+  "narrativeContract": {
+    "foundation": "Nebraska's origins, Bob Devaney, Tom Osborne and the system that earned five national championships",
+    "conflict": "The long post-Osborne decline, questions of program leadership and adaptation, multiple distinctive eras, and lost national stature",
+    "resolution": "Evidence of rebuilding under Matt Rhule and what remains unsettled in 2026. Program future is not predetermined.",
+    "truthRules": [
+      "No invented game footage, coach speech, fan quotes, player action or period audio",
+      "Historical facts from original records; competing decline hypotheses require independently attributed evidence",
+      "Bo Pelini's repeated nine-win seasons may not be mislabeled losing seasons or equal to Riley/Frost results",
+      "Do not claim conference changes, staff dismissals, recruiting or coach motives singly caused a complex decline without analysis",
+      "Early 1900s footage may be approximately dated; no false exact attribution",
+      "Distinguish 2024 real bowl progress and 2025 7–6 from 2026 5–2 and late-game failures",
+      "Episode 3 finale is contingent on real October/November and postseason outcomes",
+      "Do not auto-synthesize interviews, archival crowd sound or alleged broadcasts",
+      "No publication without independently reviewed footage rights, signed participant releases and founder approval"
+    ]
+  },
+  "sourceRegistry": "series.sources.json",
+  "workingFilmReferences": [
+    {
+      "work": "Before the Echo RC08",
+      "durationSec": 50,
+      "source": "before-the-echo.scenes.json",
+      "status": "private_review_not_licensed_for_publication",
+      "possiblePlacement": "ep01-origins"
+    },
+    {
+      "work": "Ten Seconds source-locked chapter",
+      "durationSec": 138,
+      "source": "ten-seconds.chapter.json",
+      "status": "scripted_not_renderable_no_broadcast_rights",
+      "possiblePlacement": "ep03-2026-scrutiny",
+      "note": "Reclassify from Ep02 to Ep03. Existing test and real-play requirement still applies."
+    }
+  ],
+  "episodes": [
+    {
+      "id": "ep01",
+      "title": "The Giant",
+      "targetDurationSec": 1500,
+      "allowedRuntimeSec": {
+        "min": 1320,
+        "max": 1680
+      },
+      "question": "How did Nebraska become one of college football's most formidable programs?",
+      "historicalCoverage": [
+        "origins",
+        "1970-1971",
+        "1994-1995-1997"
+      ],
+      "editorialObjective": "Go from origins to the five titles, reveal the institutional football model and emotional identity that made Nebraska a giant, ending on the height of that expectation.",
+      "acts": [
+        {
+          "id": "the-standard",
+          "durationSec": 140,
+          "storyQuestion": "What did winning a national championship actually mean to the state, and why did it seem repeatable?",
+          "requiredSourceIds": [
+            "1994-1997-championship-game-film",
+            "legacy-supporter-interview"
+          ],
+          "optionalSourceIds": [
+            "nara-1973-spring-crowd"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-first-century",
+          "durationSec": 220,
+          "storyQuestion": "Who built Nebraska football before anybody called it a dynasty?",
+          "requiredSourceIds": [
+            "history-nebraska-rg6137",
+            "early-program-records"
+          ],
+          "optionalSourceIds": [
+            "nara-1973-spring-crowd"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "devaney-builds",
+          "durationSec": 250,
+          "storyQuestion": "What changed after Bob Devaney arrived in 1962?",
+          "requiredSourceIds": [
+            "devaney-era-footage",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [
+            "osborne-football-system"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-first-two-titles",
+          "durationSec": 280,
+          "storyQuestion": "What happened in 1970 and 1971, and how did those teams prove sustained dominance was possible?",
+          "requiredSourceIds": [
+            "1970-1971-championship-game-film",
+            "osborne-football-system"
+          ],
+          "optionalSourceIds": [
+            "nara-1973-spring-crowd"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-osborne-system",
+          "durationSec": 300,
+          "storyQuestion": "How did the walk-on system, player development, Blackshirts, recruiting and coaching continuity work together?",
+          "requiredSourceIds": [
+            "osborne-football-system",
+            "program-systems-analyst"
+          ],
+          "optionalSourceIds": [
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-peak-and-inheritance",
+          "durationSec": 310,
+          "storyQuestion": "What did the 1994, 1995 and 1997 championships create for everyone who came next?",
+          "requiredSourceIds": [
+            "1994-1997-championship-game-film",
+            "legacy-supporter-interview",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [
+            "stadium-present-day-original"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        }
+      ],
+      "productionStage": "story_outline_only_no_finished_episode",
+      "founderApproved": false,
+      "publicationAuthorityGranted": false,
+      "audienceValue": "Go from origins to the five titles, reveal the institutional football model and emotional identity that made Nebraska a giant, ending on the height of that expectation."
+    },
+    {
+      "id": "ep02",
+      "title": "The Sleeping Giant",
+      "targetDurationSec": 1500,
+      "allowedRuntimeSec": {
+        "min": 1320,
+        "max": 1680
+      },
+      "question": "How did a perennial national power lose its place, and what actually went wrong?",
+      "historicalCoverage": [
+        "2001-2003",
+        "2004-2014",
+        "2015-2022"
+      ],
+      "editorialObjective": "Investigate turning points and structural explanations fairly, separating 2000s shocks, Pelini-era nine-win consistency, institutional decisions and the much deeper later losing stretch.",
+      "acts": [
+        {
+          "id": "the-first-crack",
+          "durationSec": 170,
+          "storyQuestion": "Was the 2001 Colorado loss a turning point or a warning sign of changes already happening?",
+          "requiredSourceIds": [
+            "2001-colorado-game-film",
+            "program-systems-analyst"
+          ],
+          "optionalSourceIds": [
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "solich-the-decision",
+          "durationSec": 250,
+          "storyQuestion": "How did 2002 and Solich's dismissal after the 2003 regular season change the program's trajectory?",
+          "requiredSourceIds": [
+            "2002-2003-solich-records",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "changing-the-formula",
+          "durationSec": 240,
+          "storyQuestion": "How did Callahan's replacement of core football systems play out, and which criticisms survive the evidence?",
+          "requiredSourceIds": [
+            "callahan-era-footage",
+            "program-systems-analyst"
+          ],
+          "optionalSourceIds": [
+            "early-program-records"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "nine-wins-not-enough",
+          "durationSec": 260,
+          "storyQuestion": "Why was Pelini's consistent nine-win era still viewed as falling short, and how did the 2011 Big Ten move change expectations?",
+          "requiredSourceIds": [
+            "pelini-era-footage",
+            "2011-big-ten-transition-records",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-longest-darkness",
+          "durationSec": 340,
+          "storyQuestion": "How did the Riley and Frost eras differ and why did Nebraska go so long without a bowl appearance?",
+          "requiredSourceIds": [
+            "riley-era-footage",
+            "frost-era-footage",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "what-really-broke",
+          "durationSec": 240,
+          "storyQuestion": "Were the roots coaching turnover, talent, leadership, development, conference demands, or a changing sport? What evidence would distinguish them?",
+          "requiredSourceIds": [
+            "program-systems-analyst",
+            "independent-reporter-context",
+            "2011-big-ten-transition-records"
+          ],
+          "optionalSourceIds": [
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        }
+      ],
+      "productionStage": "story_outline_only_no_finished_episode",
+      "founderApproved": false,
+      "publicationAuthorityGranted": false,
+      "audienceValue": "Investigate turning points and structural explanations fairly, separating 2000s shocks, Pelini-era nine-win consistency, institutional decisions and the much deeper later losing stretch."
+    },
+    {
+      "id": "ep03",
+      "title": "The Giant Stirs",
+      "targetDurationSec": 1500,
+      "allowedRuntimeSec": {
+        "min": 1320,
+        "max": 1680
+      },
+      "question": "What has Nebraska genuinely rebuilt under Matt Rhule, and how far is it from national relevance?",
+      "historicalCoverage": [
+        "2023-2025",
+        "2026-as-of-Oct21",
+        "future-results-open"
+      ],
+      "editorialObjective": "Show changes in staffing, culture, player development and documented outcomes; admit both the bowl milestone and frustrating 2026 finishes, leaving the program's future open.",
+      "acts": [
+        {
+          "id": "what-rhule-inherited",
+          "durationSec": 215,
+          "storyQuestion": "What was Nebraska's actual condition when Rhule took over in 2023?",
+          "requiredSourceIds": [
+            "rhule-2023-arrival",
+            "program-systems-analyst"
+          ],
+          "optionalSourceIds": [
+            "younger-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "rebuilding-a-program",
+          "durationSec": 280,
+          "storyQuestion": "What has changed in recruiting, veteran roster development, facilities, coaching, training and accountability, and can we see it?",
+          "requiredSourceIds": [
+            "rhule-player-development",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [
+            "stadium-present-day-original"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "progress-with-proof",
+          "durationSec": 250,
+          "storyQuestion": "What did the 2024 Pinstripe Bowl breakthrough and the 2025 7-6 record mean, and what limitations remained?",
+          "requiredSourceIds": [
+            "2024-pinstripe-bowl-film",
+            "2025-season-game-footage",
+            "independent-reporter-context"
+          ],
+          "optionalSourceIds": [
+            "younger-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "the-2026-test",
+          "durationSec": 300,
+          "storyQuestion": "What did five straight wins show, and what did the two losses to Indiana and Oregon reveal about finishing?",
+          "requiredSourceIds": [
+            "2026-five-win-start",
+            "indiana-2026-game-film",
+            "oregon-2026-game-film"
+          ],
+          "optionalSourceIds": [
+            "independent-reporter-context",
+            "legacy-supporter-interview"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "an-unfinished-season",
+          "durationSec": 270,
+          "storyQuestion": "How do Nebraska's Washington and remaining 2026 games change the evidence without a scripted winning streak?",
+          "requiredSourceIds": [
+            "washington-2026-game-film",
+            "november-2026-game-film",
+            "younger-supporter-interview"
+          ],
+          "optionalSourceIds": [
+            "stadium-present-day-original"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        },
+        {
+          "id": "where-does-the-giant-go",
+          "durationSec": 185,
+          "storyQuestion": "What can we honestly conclude once the season ends, and how do former and younger supporters see Nebraska's next chapter?",
+          "requiredSourceIds": [
+            "postseason-and-season-outcome",
+            "legacy-supporter-interview",
+            "younger-supporter-interview",
+            "program-systems-analyst"
+          ],
+          "optionalSourceIds": [
+            "stadium-present-day-original"
+          ],
+          "mediaAdmission": "blocked_pending_real_footage_rights_and_director_review"
+        }
+      ],
+      "productionStage": "story_outline_only_no_finished_episode",
+      "founderApproved": false,
+      "publicationAuthorityGranted": false,
+      "audienceValue": "Show changes in staffing, culture, player development and documented outcomes; admit both the bowl milestone and frustrating 2026 finishes, leaving the program's future open."
+    }
+  ],
+  "publication": {
+    "episode1Approved": false,
+    "episode2Approved": false,
+    "episode3Approved": false,
+    "allMediaClearancesComplete": false,
+    "allInterviewsSigned": false,
+    "festivalOrDistributionAgreementSigned": false,
+    "founderFinalSignoff": false,
+    "automatedPublish": false
+  },
+  "releasePolicy": {
+    "schedule": "not_set",
+    "ep1": "No release until factual historical archive, old game footage, voices and rights independently verified and film creatively approved",
+    "ep2": "No single-cause blame narrative or made-up former coach testimony; history rights and primary-source attribution required",
+    "ep3": "Future games must be played and checked; no imagined comeback, forecast ending or unlicensed 2026 broadcast visuals"
+  },
+  "historicalEvidence": "history.evidence.json"
+}

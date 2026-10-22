@@ -1,0 +1,36 @@
+name: Fallen Nebraska Ten Seconds Evidence
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/ten-seconds.*"
+      - ".github/workflows/fallen-nebraska-ten-seconds.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/ten-seconds.*"
+      - ".github/workflows/fallen-nebraska-ten-seconds.yml"
+permissions:
+  contents: read
+jobs:
+  editorial-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Assert sourced game clock and no fake clearances
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/ten-seconds-evidence.test.mjs
+      - name: Write story and blocking source inventory
+        run: |
+          node systemia/media-studio/pilots/nebraska-source-first/ten-seconds-evidence.mjs \
+            systemia/media-studio/pilots/nebraska-source-first/ten-seconds.chapter.json \
+            /tmp/nebraska-ten-seconds-evidence.json
+          node -e "const x=require('/tmp/nebraska-ten-seconds-evidence.json');if(x.status!=='story_locked_media_rights_blocked'||x.missing.length!==8||x.boundaries.publicationAuthorityGranted!==false)process.exit(1)"
+      - name: Preserve reviewed source request and story evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-ten-seconds-story-source-needs-not-film
+          path: /tmp/nebraska-ten-seconds-evidence.json
+          if-no-files-found: error

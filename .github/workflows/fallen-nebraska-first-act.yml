@@ -1,0 +1,34 @@
+name: Fallen Nebraska Dynasty First Act
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/ep01-first-210s.*"
+      - "systemia/media-studio/pilots/nebraska-source-first/series.sources.json"
+      - ".github/workflows/fallen-nebraska-first-act.yml"
+permissions:
+  contents: read
+jobs:
+  dynasty-opening-editorial-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check 1970/71 score clocks, original game identity and source rights
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/ep01-first-210s-gate.test.mjs
+      - name: Output honest shot and acquisition blockers
+        run: |
+          node systemia/media-studio/pilots/nebraska-source-first/ep01-first-210s-gate.mjs \
+            systemia/media-studio/pilots/nebraska-source-first/ep01-first-210s.plan.json \
+            systemia/media-studio/pilots/nebraska-source-first/series.sources.json \
+            "$RUNNER_TEMP/nebraska-ep01-first-act-status.json"
+          node -e "const x=require(process.argv[1]);if(x.status!=='source_locked_no_publication_authority'||x.beats!==8||x.seconds!==210||x.filmRenderProduced!==false)process.exit(1)" "$RUNNER_TEMP/nebraska-ep01-first-act-status.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-ep01-first-210s-sourced-editorial-prototype-not-film
+          path: |
+            ${{ runner.temp }}/nebraska-ep01-first-act-status.json
+            systemia/media-studio/pilots/nebraska-source-first/ep01-first-210s.plan.json
+          if-no-files-found: error

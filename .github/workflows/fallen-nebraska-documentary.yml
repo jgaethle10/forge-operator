@@ -1,0 +1,86 @@
+name: Fallen Nebraska Documentary Pilot
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/**"
+      - "systemia/media-studio/observational_motion.py"
+      - "systemia/media-studio/test_observational_motion.py"
+      - ".github/workflows/fallen-nebraska-documentary.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/**"
+      - "systemia/media-studio/observational_motion.py"
+      - "systemia/media-studio/test_observational_motion.py"
+      - ".github/workflows/fallen-nebraska-documentary.yml"
+permissions:
+  contents: read
+jobs:
+  source-first-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Compile film pilot and prove pending footage is unexportable
+        run: node --import tsx --test systemia/media-studio/pilots/nebraska-source-first/opening.test.ts
+      - name: Verify documentary edit grammar is story-led, not a rhythmic montage
+        run: |
+          node --test systemia/media-studio/pilots/nebraska-source-first/observational-edit-preflight.test.mjs
+          node systemia/media-studio/pilots/nebraska-source-first/observational-edit-preflight.mjs \
+            systemia/media-studio/pilots/nebraska-source-first/opening.plan.json \
+            systemia/media-studio/pilots/nebraska-source-first/opening.observational-edit.json \
+            /tmp/nebraska-observational-edit-report.json
+          node -e "const r=require('/tmp/nebraska-observational-edit-report.json');if(r.status!=='structure_passed_assets_pending'||r.checks.publicationAuthorityGranted!==false)process.exit(1)"
+      - name: Materialize canonical storyboard and blocker inventory
+        run: |
+          npm run media:studio -- studio-create systemia/media-studio/pilots/nebraska-source-first/opening.plan.json /tmp/nebraska-source-first.json
+          node -e "const x=require('/tmp/nebraska-source-first.json');if(x.boundaries.publicationAuthorityGranted!==false || !x.productionNeeds?.length)process.exit(1)"
+  observational-motion-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deterministic motion-test dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.2.6 opencv-python-headless==4.11.0.86
+      - name: Static montage fails; independently moving scene passes
+        run: |
+          cd systemia/media-studio
+          python -m unittest -v test_observational_motion.py
+  real-location-archival-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test source attestation and forbidden fabricated-game claims
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/lincoln-archive-canary.test.mjs
+      - name: Ensure FFmpeg and actual video codecs
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -encoders | grep libx264
+      - name: Acquire SHA1-bound CC BY-SA archival footage and make real-source test cut
+        run: |
+          node systemia/media-studio/pilots/nebraska-source-first/lincoln-archive-canary.mjs "$RUNNER_TEMP/lincoln-original-video"
+      - name: Archive review-only movie, three actual frames and attribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: lincoln-2011-real-archival-footage-review-only
+          path: |
+            ${{ runner.temp }}/lincoln-original-video/Lincoln_2011_Genuine_Archive_Study_8s.mp4
+            ${{ runner.temp }}/lincoln-original-video/frame-*.png
+            ${{ runner.temp }}/lincoln-original-video/receipt.json
+            ${{ runner.temp }}/lincoln-original-video/ATTRIBUTION.txt
+          if-no-files-found: error
+          retention-days: 14

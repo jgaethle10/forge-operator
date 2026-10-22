@@ -114,3 +114,47 @@ test('source media must carry a real digest and lineage',()=>{
   q.sourceAssets[0].sourceRefs=[];
   assert.throws(()=>compileStudioDraft(q),/studio_draft_source_refs_missing:real-opening/);
 });
+
+test('captured microphone is an explicitly admitted, digest-bound, frame-matched source',()=>{
+ const p=plan();
+ p.scenes[0].visual.capturedAudio={rightsRef:'reviewed-source-microphone:rights-receipt-42',volume:.85};
+ p.scenes[0].visual.trimStartSec=0;
+ const bundle=compileStudioDraft(p);
+ const captured=bundle.project.tracks.find(track=>track.kind==='sfx')!.clips.find(clip=>clip.id==='opening-captured-audio');
+ const picture=bundle.project.tracks.find(track=>track.kind==='video')!.clips[0];
+ assert.ok(captured);
+ assert.equal(captured.assetId,'real-opening');
+ assert.equal(captured.startSec,picture.startSec);
+ assert.equal(captured.durationSec,picture.durationSec);
+ assert.equal(captured.trimStartSec,picture.trimStartSec);
+ assert.equal(captured.volume,.85);
+ assert.equal(bundle.productionNeeds.some(need=>need.id.includes('captured-audio')),false);
+ assert.equal(bundle.boundaries.publicationAuthorityGranted,false);
+});
+test('capture audio fails closed for missing, synthetic or unlicensed picture',()=>{
+ const p=plan();p.scenes[1].visual.capturedAudio={rightsRef:'clearance-id'};
+ assert.throws(()=>compileStudioDraft(p),/studio_draft_captured_audio_requires_source:proof/);
+ const q=plan();q.scenes[0].visual.capturedAudio={rightsRef:'clearance-id'};q.sourceAssets[0].rights='unknown';
+ assert.throws(()=>compileStudioDraft(q),/studio_draft_captured_audio_rights_not_admitted:opening/);
+ const z=plan();z.scenes[0].visual.capturedAudio={rightsRef:'clearance-id'};z.sourceAssets[0].evidenceState='synthetic_visualization';
+ assert.throws(()=>compileStudioDraft(z),/studio_draft_captured_audio_not_observed:opening/);
+});
+test('source sound cannot be admitted without a rights receipt or from a still',()=>{
+ const p=plan();p.scenes[0].visual.capturedAudio={rightsRef:' '};
+ assert.throws(()=>compileStudioDraft(p),/studio_draft_captured_audio_rights_ref_missing:opening/);
+ const q=plan();q.scenes[0].visual.capturedAudio={rightsRef:'receipt'};q.sourceAssets[0].kind='image';
+ assert.throws(()=>compileStudioDraft(q),/studio_draft_captured_audio_requires_video:opening/);
+});
+test('picture and source sound trims must be bounded and may not diverge',()=>{
+ const p=plan();p.scenes[0].visual.capturedAudio={rightsRef:'receipt'};
+ p.scenes[0].durationSec=2.5;p.scenes[0].visual.trimStartSec=1;
+ const bundle=compileStudioDraft(p);
+ const picture=bundle.project.tracks.find(t=>t.kind==='video')!.clips[0];
+ const microphone=bundle.project.tracks.find(t=>t.kind==='sfx')!.clips.find(t=>t.id==='opening-captured-audio')!;
+ assert.equal(picture.trimStartSec,1);
+ assert.equal(microphone.trimStartSec,1);
+ const q=plan();q.scenes[0].visual.capturedAudio={rightsRef:'receipt'};q.scenes[0].visual.trimStartSec=2;
+ assert.throws(()=>compileStudioDraft(q),/studio_draft_source_trim_exceeds_duration:opening/);
+ const r=plan();r.scenes[0].visual.trimStartSec=-1;
+ assert.throws(()=>compileStudioDraft(r),/studio_draft_source_trim_invalid:opening/);
+});

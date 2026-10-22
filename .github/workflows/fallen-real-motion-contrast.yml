@@ -1,0 +1,46 @@
+name: Fallen Real Motion Contrast
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/real-motion-contrast.mjs"
+      - "systemia/media-studio/pilots/nebraska-source-first/real-motion-contrast.test.mjs"
+      - ".github/workflows/fallen-real-motion-contrast.yml"
+permissions:
+  contents: read
+jobs:
+  two-source-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install merged Fallen Studio runtime dependencies
+        run: npm install --no-audit --no-fund
+      - name: Source-byte and no-publication tests
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/real-motion-contrast.test.mjs
+      - name: Ensure FFmpeg and FFprobe
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Create two-shot filmed-and-recorded Nebraska motion comparison
+        run: node systemia/media-studio/pilots/nebraska-source-first/real-motion-contrast.mjs "$RUNNER_TEMP/nebraska-motion"
+      - name: Render second pass with native Fallen 1080p editable studio timeline
+        run: node --import tsx systemia/media-studio/pilots/nebraska-source-first/native-fallen-source-proof.ts "$RUNNER_TEMP/nebraska-motion"
+      - name: Review-only film, original-source proof and frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-real-motion-two-shot-review
+          path: |
+            ${{ runner.temp }}/nebraska-motion/Evercraft_Real_Motion_Two_Shot_Study_01.mp4
+            ${{ runner.temp }}/nebraska-motion/Evercraft_Native_Fallen_Real_Source_Study_RC02.mp4
+            ${{ runner.temp }}/nebraska-motion/native-fallen-project.json
+            ${{ runner.temp }}/nebraska-motion/native-fallen-receipt.json
+            ${{ runner.temp }}/nebraska-motion/frame-*.png
+            ${{ runner.temp }}/nebraska-motion/receipt.json
+            ${{ runner.temp }}/nebraska-motion/CREDITS.txt
+          if-no-files-found: error
+          retention-days: 14

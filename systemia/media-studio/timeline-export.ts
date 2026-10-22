@@ -132,7 +132,13 @@ function visualFilter(binding:InputBinding,width:number,height:number,label:stri
 
 function audioFilter(binding:InputBinding,label:string){
   const volume=Math.max(0,binding.clip.volume??1);
-  return `[${binding.inputIndex}:a]atrim=duration=${binding.clip.durationSec},asetpts=PTS-STARTPTS+${binding.clip.startSec}/TB,volume=${volume}[${label}];`;
+  const startSec=binding.clip.startSec;
+  if(!Number.isFinite(startSec)||startSec<0) throw new Error(`timeline_export_audio_start_invalid:${binding.clip.id}`);
+  // amix aligns by sample position, not the positive PTS created by asetpts.
+  // Shift actual audio samples into their timeline slot so a later sound does
+  // not incorrectly play at 0s and leave the end of the movie silent.
+  const delayMs=Math.round(startSec*1000);
+  return `[${binding.inputIndex}:a]atrim=duration=${binding.clip.durationSec},asetpts=PTS-STARTPTS,volume=${volume},adelay=${delayMs}:all=1[${label}];`;
 }
 
 function run(binary:string,args:string[]){

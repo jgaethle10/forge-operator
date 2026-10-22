@@ -1,0 +1,97 @@
+{
+  "schema": "evercraft.fallen.studio-draft-plan.v1",
+  "id": "evercraft-nebraska-giant-stirs-documentary-opening",
+  "title": "Nebraska | The Giant Stirs | Source-First Opening",
+  "prompt": "Source-first documentary about Nebraska's defensive identity and late-game losses. Real licensed football and interview source materials required. No synthetic event impersonation, no substitute typography slides, no invented football plays or quotes. Opening must allow silence. No automatic wall-to-wall score, percussive title-sync cues, or generated crowd ambience. Music may be editorially spotted later only after real source shots and recorded sound are reviewed.",
+  "aspectRatio": "16:9",
+  "fps": 24,
+  "continuityDigest": "nebraska-source-first-fall-2026-creative-lock-01",
+  "sourceAssets": [],
+  "captions": {
+    "enabled": true,
+    "style": "documentary"
+  },
+  "scenes": [
+    {
+      "id": "lincoln-inheritance",
+      "durationSec": 4.5,
+      "visual": {
+        "prompt": "Authentic licensed moving establishing footage of Lincoln and Memorial Stadium. Aerial CC photograph from 2025 is reference only. Hold until moving footage is acquired and cleared. Require genuine within-shot subject/environment action and recorded, cleared on-location audio where applicable; camera motion over a static still does not meet observational action requirements.",
+        "sourceRefs": [
+          "https://commons.wikimedia.org/wiki/File:Memorial_Stadium_Lincoln_Nebraska.jpg",
+          "rights:pending"
+        ]
+      }
+    },
+    {
+      "id": "the-people",
+      "durationSec": 4,
+      "visual": {
+        "prompt": "Authentic filmed consenting multi-generation Nebraska fans with release and recorded location sound, not imagined characters or a generic synthetic fan portrait. Require genuine within-shot subject/environment action and recorded, cleared on-location audio where applicable; camera motion over a static still does not meet observational action requirements.",
+        "sourceRefs": [
+          "interview:needed-real-permission",
+          "rights:pending"
+        ]
+      }
+    },
+    {
+      "id": "physicality",
+      "durationSec": 4,
+      "visual": {
+        "prompt": "Authentic dated and rightsholder-licensed 2026 defensive Nebraska game footage, with exact opponent, timecode, source, and individual play verification. Hold until licensed. Require genuine within-shot subject/environment action and recorded, cleared on-location audio where applicable; camera motion over a static still does not meet observational action requirements.",
+        "sourceRefs": [
+          "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+          "https://huskers.com/news/2026/10/17/fb-recap",
+          "game-film-license:needed"
+        ]
+      },
+      "narration": {
+        "text": "For stretches, the defense looks different.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "late-leads",
+      "durationSec": 3,
+      "visual": {
+        "prompt": "Authentic rightsholder-licensed 2026 Indiana and Oregon fourth-quarter clips. Opponent and score context required. No archival or synthetic substitute. Require genuine within-shot subject/environment action and recorded, cleared on-location audio where applicable; camera motion over a static still does not meet observational action requirements.",
+        "sourceRefs": [
+          "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+          "https://huskers.com/news/2026/10/17/fb-recap",
+          "game-film-license:needed"
+        ]
+      },
+      "narration": {
+        "text": "And then, the final minutes.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "unfinished",
+      "durationSec": 3,
+      "visual": {
+        "prompt": "Real rights-cleared Nebraska fan atmosphere or actual recorded fan interview. No simulated cheering presented as real stadium sound. Require genuine within-shot subject/environment action and recorded, cleared on-location audio where applicable; camera motion over a static still does not meet observational action requirements.",
+        "sourceRefs": [
+          "fan-capture:needed",
+          "rights:pending"
+        ]
+      }
+    },
+    {
+      "id": "last-frame",
+      "durationSec": 4,
+      "visual": {
+        "prompt": "One cleared captured photograph or genuine motion shot of Memorial Stadium with creator, date, license, and attribution ledger; no false 2026 dating. Require genuine within-shot subject/environment action and recorded, cleared on-location audio where applicable; camera motion over a static still does not meet observational action requirements.",
+        "sourceRefs": [
+          "https://commons.wikimedia.org/wiki/File:Memorial_Stadium_-_Lincoln,_Nebraska_-_Cornhuskers_(44250514125).jpg",
+          "capture-date:2018-09-22",
+          "rights:pending"
+        ]
+      }
+    }
+  ]
+}

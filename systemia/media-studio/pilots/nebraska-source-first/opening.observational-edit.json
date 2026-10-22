@@ -1,0 +1,187 @@
+{
+  "schema": "evercraft.fallen.observational-edit-plan.v1",
+  "audienceQuestion": "Is Nebraska recovering its identity before it learns to finish?",
+  "editorialReviewerRef": null,
+  "shots": [
+    {
+      "id": "observational-lincoln-inheritance",
+      "sceneId": "lincoln-inheritance",
+      "startSec": 0,
+      "durationSec": 4.5,
+      "purpose": "establish",
+      "viewerQuestion": "What does this stadium mean when nobody is watching?",
+      "observedChange": "An actual location changes as a person arrives, instead of a dramatic title card.",
+      "actionOrReaction": "An actual location detail changes before the edit.",
+      "cut": {
+        "cause": "observation",
+        "whyNow": "Hold until an actual sound or movement introduces a person."
+      },
+      "source": {
+        "type": "captured_location",
+        "state": "pending",
+        "assetRef": null,
+        "evidenceRef": null,
+        "rightsRef": null,
+        "eventRef": null,
+        "speakerReleaseRef": null
+      },
+      "sound": {
+        "primary": "location",
+        "audioEvidenceRef": null,
+        "musicBed": false
+      },
+      "portraysActual2026Game": false,
+      "humanEditorialApprovalRef": null
+    },
+    {
+      "id": "observational-the-people",
+      "sceneId": "the-people",
+      "startSec": 4.5,
+      "durationSec": 4,
+      "purpose": "reveal",
+      "viewerQuestion": "Who is carrying decades of expectation?",
+      "observedChange": "An actual consenting fan speaks in their own recorded words.",
+      "actionOrReaction": "A real interviewee responds to a recorded question.",
+      "cut": {
+        "cause": "reaction",
+        "whyNow": "Cut on a human response, not a music accent."
+      },
+      "source": {
+        "type": "captured_interview",
+        "state": "pending",
+        "assetRef": null,
+        "evidenceRef": null,
+        "rightsRef": null,
+        "eventRef": null,
+        "speakerReleaseRef": null
+      },
+      "sound": {
+        "primary": "interview",
+        "audioEvidenceRef": null,
+        "musicBed": false
+      },
+      "portraysActual2026Game": false,
+      "humanEditorialApprovalRef": null
+    },
+    {
+      "id": "observational-physicality",
+      "sceneId": "physicality",
+      "startSec": 8.5,
+      "durationSec": 4,
+      "purpose": "prove",
+      "viewerQuestion": "Can the defense change the physical contest?",
+      "observedChange": "One specifically identified, rights-cleared 2026 Nebraska defensive play.",
+      "actionOrReaction": "An actual defender defeats a block or alters a documented play.",
+      "cut": {
+        "cause": "action",
+        "whyNow": "Follow real contact and its on-field consequence."
+      },
+      "source": {
+        "type": "cleared_game_footage",
+        "state": "pending",
+        "assetRef": null,
+        "evidenceRef": null,
+        "rightsRef": null,
+        "eventRef": null,
+        "speakerReleaseRef": null
+      },
+      "sound": {
+        "primary": "field",
+        "audioEvidenceRef": null,
+        "musicBed": false
+      },
+      "portraysActual2026Game": true,
+      "humanEditorialApprovalRef": null
+    },
+    {
+      "id": "observational-late-leads",
+      "sceneId": "late-leads",
+      "startSec": 12.5,
+      "durationSec": 3,
+      "purpose": "complicate",
+      "viewerQuestion": "What changes in the fourth quarter?",
+      "observedChange": "A verifiable late-game drive changes the situation.",
+      "actionOrReaction": "A real game situation develops rather than a scoreboard template.",
+      "cut": {
+        "cause": "contrast",
+        "whyNow": "Contrast field control and its documented loss."
+      },
+      "source": {
+        "type": "cleared_game_footage",
+        "state": "pending",
+        "assetRef": null,
+        "evidenceRef": null,
+        "rightsRef": null,
+        "eventRef": null,
+        "speakerReleaseRef": null
+      },
+      "sound": {
+        "primary": "field",
+        "audioEvidenceRef": null,
+        "musicBed": false
+      },
+      "portraysActual2026Game": true,
+      "humanEditorialApprovalRef": null
+    },
+    {
+      "id": "observational-unfinished",
+      "sceneId": "unfinished",
+      "startSec": 15.5,
+      "durationSec": 3,
+      "purpose": "reveal",
+      "viewerQuestion": "What does that unfinished feeling do to the fans?",
+      "observedChange": "Real signed interview testimony with visible reaction.",
+      "actionOrReaction": "A real interviewed person stops, reflects, or responds.",
+      "cut": {
+        "cause": "reaction",
+        "whyNow": "Leave breathing room for the genuine response."
+      },
+      "source": {
+        "type": "captured_interview",
+        "state": "pending",
+        "assetRef": null,
+        "evidenceRef": null,
+        "rightsRef": null,
+        "eventRef": null,
+        "speakerReleaseRef": null
+      },
+      "sound": {
+        "primary": "interview",
+        "audioEvidenceRef": null,
+        "musicBed": false
+      },
+      "portraysActual2026Game": false,
+      "humanEditorialApprovalRef": null
+    },
+    {
+      "id": "observational-last-frame",
+      "sceneId": "last-frame",
+      "startSec": 18.5,
+      "durationSec": 4,
+      "purpose": "resolve",
+      "viewerQuestion": "What are Nebraska fans waiting to see next?",
+      "observedChange": "Quiet return to an observed, documented real stadium detail.",
+      "actionOrReaction": "An unforced location event occurs in the final shot.",
+      "cut": {
+        "cause": "deliberate_pause",
+        "whyNow": "End on an earned unscored pause without a giant animated title."
+      },
+      "source": {
+        "type": "captured_location",
+        "state": "pending",
+        "assetRef": null,
+        "evidenceRef": null,
+        "rightsRef": null,
+        "eventRef": null,
+        "speakerReleaseRef": null
+      },
+      "sound": {
+        "primary": "intentional_silence",
+        "audioEvidenceRef": null,
+        "musicBed": false
+      },
+      "portraysActual2026Game": false,
+      "humanEditorialApprovalRef": null
+    }
+  ]
+}

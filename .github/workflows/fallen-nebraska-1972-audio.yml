@@ -1,0 +1,38 @@
+name: Nebraska Authentic 1972 Championship Audio Research
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/nixon-1972-championship-audio.mjs"
+      - "systemia/media-studio/pilots/nebraska-source-first/nixon-1972-championship-audio.test.mjs"
+      - ".github/workflows/fallen-nebraska-1972-audio.yml"
+permissions:
+  contents: read
+jobs:
+  period-audio-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check historical audio source and no-quote no-publish contracts
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/nixon-1972-championship-audio.test.mjs
+      - name: Ensure FFmpeg and FFprobe
+        run: |
+          if ! command -v ffprobe >/dev/null 2>&1 || ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Acquire public mirror of original NARA recording and verify complete decodability
+        run: node systemia/media-studio/pilots/nebraska-source-first/nixon-1972-championship-audio.mjs "$RUNNER_TEMP/nebraska-1972-audio"
+      - name: Save separately classified original-sound research and provenance package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-nixon-devaney-1972-unreviewed-original-tape-research-only
+          path: |
+            ${{ runner.temp }}/nebraska-1972-audio/*.mp3
+            ${{ runner.temp }}/nebraska-1972-audio/*.json
+            ${{ runner.temp }}/nebraska-1972-audio/README.txt
+          if-no-files-found: error
+          retention-days: 14

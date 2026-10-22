@@ -15,6 +15,12 @@ export interface StudioDraftScene {
     assetId?:string;
     prompt?:string;
     sourceRefs:string[];
+    // A cut's original recorded audio is opt-in, never synthesized or guessed.
+    trimStartSec?:number;
+    capturedAudio?:{
+      rightsRef:string;
+      volume?:number;
+    };
   };
   narration?:{
     text:string;
@@ -114,6 +120,20 @@ function assertPlan(plan:StudioDraftPlan){
     if(!scene.visual?.sourceRefs?.length) throw new Error(`studio_draft_visual_source_refs_missing:${scene.id}`);
     if(!scene.visual.assetId&&!scene.visual.prompt?.trim()) throw new Error(`studio_draft_visual_missing:${scene.id}`);
     if(scene.narration&&!scene.narration.text?.trim()) throw new Error(`studio_draft_narration_text_missing:${scene.id}`);
+    if(scene.visual.trimStartSec!==undefined &&
+       (!Number.isFinite(scene.visual.trimStartSec)||scene.visual.trimStartSec<0)){
+      throw new Error(`studio_draft_source_trim_invalid:${scene.id}`);
+    }
+    if(scene.visual.capturedAudio){
+      if(!scene.visual.assetId) throw new Error(`studio_draft_captured_audio_requires_source:${scene.id}`);
+      if(!scene.visual.capturedAudio.rightsRef?.trim()){
+        throw new Error(`studio_draft_captured_audio_rights_ref_missing:${scene.id}`);
+      }
+      const volume=scene.visual.capturedAudio.volume??1;
+      if(!Number.isFinite(volume)||volume<0||volume>2){
+        throw new Error(`studio_draft_captured_audio_volume_invalid:${scene.id}`);
+      }
+    }
   }
 }
 
@@ -168,6 +188,21 @@ export function compileStudioDraft(plan:StudioDraftPlan):StudioDraftBundle{
       const source=sourceById.get(visualAssetId);
       if(!source) throw new Error(`studio_draft_source_asset_missing:${visualAssetId}`);
       if(source.kind!=='image'&&source.kind!=='video') throw new Error(`studio_draft_source_visual_kind_invalid:${visualAssetId}`);
+      if(source.durationSec!==undefined && scene.visual.trimStartSec!==undefined &&
+         scene.visual.trimStartSec+scene.durationSec>source.durationSec+.025){
+        throw new Error(`studio_draft_source_trim_exceeds_duration:${scene.id}`);
+      }
+      if(scene.visual.capturedAudio){
+        // A source label cannot by itself grant rights. Real approval is external;
+        // reject unresolved or synthetic picture before binding its microphone.
+        if(source.kind!=='video') throw new Error(`studio_draft_captured_audio_requires_video:${scene.id}`);
+        if(source.rights!=='owned'&&source.rights!=='licensed'){
+          throw new Error(`studio_draft_captured_audio_rights_not_admitted:${scene.id}`);
+        }
+        if(['modeled','inferred','synthetic_visualization'].includes(source.evidenceState??'')){
+          throw new Error(`studio_draft_captured_audio_not_observed:${scene.id}`);
+        }
+      }
     }else{
       const need:ProductionNeed={
         id:`${plan.id}-${scene.id}-visual`,
@@ -191,8 +226,24 @@ export function compileStudioDraft(plan:StudioDraftPlan):StudioDraftBundle{
       assetId:visualAssetId,
       startSec:cursor,
       durationSec:scene.durationSec,
+      trimStartSec:scene.visual.trimStartSec,
       label:scene.screenText||scene.id,
     });
+
+    if(scene.visual.capturedAudio){
+      // Reuse the SAME digest-bound video for picture and its captured microphone,
+      // preserving identical source trims. Falling back to silence is not allowed.
+      sfx.clips.push({
+        id:`${scene.id}-captured-audio`,
+        trackId:sfx.id,
+        assetId:visualAssetId,
+        startSec:cursor,
+        durationSec:scene.durationSec,
+        trimStartSec:scene.visual.trimStartSec,
+        volume:scene.visual.capturedAudio.volume??1,
+        label:`Recorded source audio: ${scene.visual.capturedAudio.rightsRef}`,
+      });
+    }
 
     if(scene.narration){
       const cue:StudioScriptCue={

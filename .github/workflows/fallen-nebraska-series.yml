@@ -1,0 +1,42 @@
+name: Fallen Nebraska Three Part Series
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/series.*"
+      - "systemia/media-studio/pilots/nebraska-source-first/series-production-gate.mjs"
+      - "systemia/media-studio/pilots/nebraska-source-first/series-production-gate.test.mjs"
+      - "systemia/media-studio/pilots/nebraska-source-first/history.evidence.json"
+      - "systemia/media-studio/pilots/nebraska-source-first/SERIES_BIBLE_SEASON_ONE.md"
+      - ".github/workflows/fallen-nebraska-series.yml"
+permissions:
+  contents: read
+jobs:
+  series-development-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify five-title dynasty, post-Osborne decline and evidence-bound rebuilding
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/series-production-gate.test.mjs
+      - name: Validate 75 minutes of structure without falsely claiming completed documentary footage
+        run: |
+          node systemia/media-studio/pilots/nebraska-source-first/series-production-gate.mjs \
+            systemia/media-studio/pilots/nebraska-source-first/series.season1.json \
+            systemia/media-studio/pilots/nebraska-source-first/series.sources.json \
+            systemia/media-studio/pilots/nebraska-source-first/history.evidence.json \
+            "$RUNNER_TEMP/nebraska-three-part-production.json"
+          node -e "const x=require(process.argv[1]);if(x.status!=='structure_passed_sources_and_rights_blocked'||x.targetMinutes!==75||x.sceneCount!==18||x.historicalFactsWithSourceLinks!==20||x.episodes.map(e=>e.title).join('|')!=='The Giant|The Sleeping Giant|The Giant Stirs'||x.episodes.some(e=>e.availableForPublicFilmMinutes!==0))process.exit(1)" "$RUNNER_TEMP/nebraska-three-part-production.json"
+      - name: Archive documented history, source inventory and rights blockers for founder review
+        uses: actions/upload-artifact@v4
+        with:
+          name: nebraska-season1-dynasty-decline-rebuild-research-only
+          path: |
+            ${{ runner.temp }}/nebraska-three-part-production.json
+            systemia/media-studio/pilots/nebraska-source-first/series.season1.json
+            systemia/media-studio/pilots/nebraska-source-first/series.sources.json
+            systemia/media-studio/pilots/nebraska-source-first/history.evidence.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,159 @@
+{
+  "schema": "evercraft.fallen.nebraska-source-docket.v1",
+  "film": "Nebraska | The Giant Stirs",
+  "sources": [
+    {
+      "id": "history-nebraska-early-university-scenes-rg6137-mi",
+      "title": "Early University of Nebraska Scenes",
+      "kind": "authentic_historical_football_moving_film",
+      "originalItem": "https://nebraska.access.preservica.com/uncategorized/IO_b8e868d0-911f-4fce-9feb-3316f16b8b0c/",
+      "research": "https://history.nebraska.gov/earliest-video-of-husker-football/",
+      "sourceCollection": "RG6137.MI",
+      "reelDateAttribution": "likely c. 1919 for first 55 seconds; exact year unconfirmed; c.1912-14 second reel segment",
+      "sourceReelSHA256": "3156cd2202c8c3189dc563994688fb0f49231c9d78b6645287b535e53347f517",
+      "sourceReelBytes": 15543535,
+      "sourceReelDurationSec": 250.116533,
+      "reviewClipReelSeconds": [
+        34,
+        52
+      ],
+      "reviewClipMP4Sha256": "90efcf1f1e9942953ba95f7bd2769bbecd964f44f1d66ca7aa779dc998f3cf15",
+      "observedSubject": "Original recorded Nebraska football action, field and grandstand; historical essay identifies a forward pass around source 00:44",
+      "sound": "original film catalog describes silent; digital carrier has an audio stream but no authentic 1919 live audio is attested; all soundtrack omitted",
+      "catalogCopyrightClaim": "believed public domain under US copyright; international status not determined",
+      "collectionUsePolicy": "https://history.nebraska.gov/collections/nebraska-state-historical-society-rights-reproductions-and-use-policy/",
+      "usageState": "private_research_review_only_written_collection_publication_permission_not_obtained",
+      "potentialFees": "published/commercial uses may incur NSHS moving-image use and copying fees, quoted terms to be confirmed",
+      "productionAdmission": "not_admitted",
+      "boundaries": [
+        "Date not conclusively established",
+        "No representation as 2026 game film",
+        "No synthetic action or source crowd recording",
+        "No publication without NSHS written permission and editor/founder review"
+      ]
+    },
+    {
+      "id": "commons-lincoln-2011-sky",
+      "title": "August 2011 sky in Lincoln, Nebraska",
+      "kind": "authentic_archival_moving_video",
+      "creator": "CrunchySkies",
+      "captureDate": "2011-08-06",
+      "url": "https://commons.wikimedia.org/wiki/File:August_2011_sky_in_Lincoln,_Nebraska.webm",
+      "statedLicense": "CC BY-SA 3.0",
+      "masterAssetSHA1": "d7fb114b1d2e9b0b12556950e0c45b6797f947ac",
+      "localCanaryStatus": "real_original_download_hash_verified_8s_decode_verified",
+      "originalSound": "present_not_editorially_listened",
+      "subjectObserved": "Handheld camera pans from clouds to a windmill in the Lincoln area",
+      "prohibitedSubstitutions": [
+        "2026 football action",
+        "current Memorial Stadium shot",
+        "Nebraska interview or crowd atmosphere"
+      ],
+      "editorialUsage": "Optional geographically relevant archive B-roll, dated in context; source license attribution/sharealike and full editorial review before reuse",
+      "productionAdmission": "not_admitted"
+    },
+    {
+      "id": "commons-memorial-stadium-2025",
+      "title": "Memorial Stadium Lincoln Nebraska.jpg",
+      "kind": "authentic_archival_still",
+      "creator": "Branvil",
+      "captureDate": "2025-08-19",
+      "url": "https://commons.wikimedia.org/wiki/File:Memorial_Stadium_Lincoln_Nebraska.jpg",
+      "statedLicense": "CC BY 4.0",
+      "masterAssetSHA1": "9b902b1ae84f9b12ae93021180d414be7f3075e9",
+      "originalSound": "none_still",
+      "productionAdmission": "not_admitted",
+      "editorialUsage": "Establish actual stadium context as dated still only; not presented as real 2026 moving footage"
+    },
+    {
+      "id": "nebraska-2026-indiana",
+      "kind": "2026_football_action_video",
+      "gameDate": "2026-10-10",
+      "claimSource": "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+      "rightsState": "unlicensed",
+      "productionAdmission": "blocked",
+      "required": "actual clip timecode, original source owner, clearance scope, depicted player/play verification"
+    },
+    {
+      "id": "nebraska-2026-oregon",
+      "kind": "2026_football_action_video",
+      "gameDate": "2026-10-17",
+      "claimSource": "https://huskers.com/news/2026/10/17/fb-recap",
+      "rightsState": "unlicensed",
+      "productionAdmission": "blocked",
+      "required": "actual clip timecode, original source owner, clearance scope, depicted play verification"
+    },
+    {
+      "id": "nebraska-fans",
+      "kind": "real_fan_interview",
+      "rightsState": "not_captured",
+      "productionAdmission": "blocked",
+      "required": "informed consent, signed release, captured voice and video, recording date, truthful context"
+    }
+  ],
+  "rightsContacts": [
+    {
+      "organization": "Veritone Sports",
+      "role": "Big Ten Conference and Big Ten Network archival footage and associated video IP licensing agent",
+      "contactName": "Sports Licensing",
+      "email": "sports@veritone.com",
+      "source": "https://bigten.org/sports/2026/7/22/big-ten-network.aspx",
+      "status": "gmail_draft_created_not_sent",
+      "notes": "Agent is listed by Big Ten for Big Ten and BTN video licensing. Specific FOX and Oregon/Indiana 2026 clip owners and included original audio must be confirmed rather than assumed."
+    },
+    {
+      "organization": "Nebraska Athletics Communications",
+      "role": "Football interview/press inquiries",
+      "contactName": "Keith Mann",
+      "email": "kmann@huskers.com",
+      "source": "https://huskers.com/media",
+      "status": "gmail_draft_created_not_sent"
+    },
+    {
+      "organization": "Nebraska Athletics Licensing",
+      "role": "Brand/licensing inquiries, clarify current game-footage rights owner",
+      "contactName": "Lonna Henrichs",
+      "email": "licensing@unl.edu",
+      "source": "https://licensing.unl.edu/home/contact-us/",
+      "status": "identified_not_contacted"
+    },
+    {
+      "organization": "Nebraska Public Media Archives",
+      "role": "Archival footage licensing",
+      "email": "fromthearchives@nebraskapublicmedia.org",
+      "source": "https://nebraskapublicmedia.org/es/watch/archives/",
+      "status": "gmail_draft_created_not_sent",
+      "notes": "May assess research or digitization fee"
+    },
+    {
+      "organization": "History Nebraska Audiovisual Collections",
+      "role": "RG6137.MI use permission, reproduction and history verification",
+      "email": "reference@hn.libanswers.com",
+      "source": "https://history.nebraska.gov/collections/moving-image-inventories/",
+      "status": "gmail_draft_created_not_sent"
+    },
+    {
+      "organization": "Richard Nixon Presidential Library Audiovisual Reference",
+      "role": "Original 1971 and 1972 government 16mm Nebraska champions film P-1127 P-392 NPC-1211-181-72, WHPO 5473/8358/8359/8362 original photo negatives, WHCA first party audio reference",
+      "email": "nixonreference@nara.gov",
+      "source": "https://www.nixonlibrary.gov/finding-aids/white-house-photo-office-collection",
+      "status": "gmail_draft_updated_not_sent",
+      "notes": "Clarify catalog Jan 3 1971 vs public Jan 14 1971 ceremony; original federal film vs third-party broadcast; prices/rights on quote. Do not re-email before reconciling response."
+    },
+    {
+      "organization": "University of Missouri Archives",
+      "role": "Original 1971 Nebraska-Missouri 16mm game film C:31/2/3 item 456 and C:6/30/10 item 71-3, licensed viewing and media transfer",
+      "email": "hlldg5@missouri.edu",
+      "source": "https://muarchives.missouri.edu/contacts.html",
+      "status": "gmail_draft_created_not_sent",
+      "notes": "Published film use base fee $40 per minute or part-minute, nonperpetual one-title use, written permission; no fees approved, digitization and broadcast/IP still separate. Do not present this as Oklahoma 1971 game."
+    }
+  ],
+  "safety": {
+    "noneOfTheseContactsMessaged": true,
+    "no2026GameFilmLicensed": true,
+    "noExternalPublishing": true,
+    "noPaidSourcePurchase": true,
+    "visualMaterialAcquisitionDoesNotGrantFullRelease": true
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "evercraft.fallen.nebraska-ep01-first-act.v1",
+  "title": "THE GIANT | A program built, not born",
+  "project": "nebraska-the-giant-stirs",
+  "episode": "ep01",
+  "asOf": "2026-10-22",
+  "targetSec": 210,
+  "status": "editorial_scratch_no_film_master",
+  "sourceRegistry": "series.sources.json",
+  "facts": [
+    {
+      "claim": "1971 Orange Bowl Nebraska 17 LSU 12",
+      "source": "https://huskers.com/news/2002/07/09/1971-orange-bowl-1"
+    },
+    {
+      "claim": "1971 Nebraska 35 Oklahoma 31",
+      "source": "https://huskers.com/1971-national-champions"
+    },
+    {
+      "claim": "1972 Orange Bowl Nebraska 38 Alabama 6",
+      "source": "https://huskers.com/news/2002/07/09/1972-orange-bowl"
+    },
+    {
+      "claim": "Five Nebraska football titles",
+      "source": "https://huskers.com/national-championships-football"
+    },
+    {
+      "claim": "Nixon 1971 campus ceremony and 1972 team meeting source dates",
+      "source": "https://www.nixonlibrary.gov/research/almanac/january-14-1971"
+    }
+  ],
+  "beats": [
+    {
+      "id": "the-early-field",
+      "start": 0,
+      "duration": 18,
+      "sourceIds": [
+        "history-nebraska-rg6137"
+      ],
+      "fact": "Early film survives but exact game year not conclusively established",
+      "visual": "actual observed movement, no 1919 audio",
+      "sound": "authentic silent period film",
+      "clearance": "History Nebraska separate written use permission pending"
+    },
+    {
+      "id": "the-builder-arrives",
+      "start": 18,
+      "duration": 28,
+      "sourceIds": [
+        "devaney-era-footage",
+        "early-program-records"
+      ],
+      "fact": "Bob Devaney arrived as Nebraska head coach in 1962",
+      "visual": "actual 1962 period camera footage and source records, not modern staged coaches",
+      "sound": "period audio only if source provenance individually verified",
+      "clearance": "period program film and broadcaster footage unavailable"
+    },
+    {
+      "id": "a-system-emerges",
+      "start": 46,
+      "duration": 24,
+      "sourceIds": [
+        "osborne-football-system",
+        "nixon-npc-1971-nebraska-champions-p1127"
+      ],
+      "fact": "Nebraska's staff developed repeatable football processes; the 1969 strength-training program is one documented part",
+      "visual": "1969 contemporaneous training evidence if acquired; a president's ceremony is NOT strength-training footage",
+      "sound": "don't pair random 1971 presidential speeches with 1969 training as fake sync",
+      "clearance": "authentic staff/training film and Epley accounts pending"
+    },
+    {
+      "id": "first-crown",
+      "start": 70,
+      "duration": 35,
+      "sourceIds": [
+        "1970-1971-championship-game-film",
+        "nixon-foundation-1971-football-ceremony-public-stream"
+      ],
+      "fact": "Nebraska overcame LSU 17-12 in Jan 1 1971 Orange Bowl, Tagge score with 8:50 remaining; Nixon honored team Jan 14",
+      "visual": "actual 1971 Orange Bowl and 1971 Lincoln championship celebration, separately date-labeled",
+      "sound": "original official 1971 speech only if master obtained, not automated sync",
+      "clearance": "1971 bowl video and NARA reference footage need licensed original material"
+    },
+    {
+      "id": "game-of-century",
+      "start": 105,
+      "duration": 30,
+      "sourceIds": [
+        "1970-1971-championship-game-film",
+        "missouri-c31-2-3-1971-nebraska"
+      ],
+      "fact": "Nebraska beat Oklahoma 35-31 in 1971 Game of the Century; Missouri's Oct 9 1971 film is not footage of Oklahoma",
+      "visual": "actual Nebraska–Oklahoma football film, not an unrelated 1971 matchup",
+      "sound": "actual broadcast sound only if verified and licensed",
+      "clearance": "exact Oklahoma plays/broadcast rights missing"
+    },
+    {
+      "id": "the-second-crown",
+      "start": 135,
+      "duration": 35,
+      "sourceIds": [
+        "1970-1971-championship-game-film",
+        "nixon-npc-1972-white-house-nebraska-film"
+      ],
+      "fact": "Nebraska beat Alabama 38-6 in Jan 1 1972 Orange Bowl, Rodgers 77-yard punt-return touchdown; Feb 1 Nixon meeting happened later",
+      "visual": "actual Alabama game film, not 1972 White House video labeled as football action",
+      "sound": "football broadcast and original tape are separate events",
+      "clearance": "Orange Bowl game film and sound missing"
+    },
+    {
+      "id": "champions-enter-room",
+      "start": 170,
+      "duration": 23,
+      "sourceIds": [
+        "nixon-white-house-tape-662-010",
+        "nixon-white-house-whpo-8358",
+        "nixon-npc-1972-white-house-nebraska-film"
+      ],
+      "fact": "Feb 1 1972 championship meeting included Devaney, Tagge and Rodgers; exact audio speakers unverified",
+      "visual": "WHPO original individual negatives if obtained, otherwise genuine contact sheets explicitly labeled research",
+      "sound": "potential genuine meeting audio, only after speaker/quote audition; photographs are not synchronized to speech",
+      "clearance": "NARA master comparison, individual photo scans, rights review and editorial audition pending"
+    },
+    {
+      "id": "the-inheritance",
+      "start": 193,
+      "duration": 17,
+      "sourceIds": [
+        "nara-1973-spring-crowd"
+      ],
+      "fact": "The May 1973 spring football crowd shows supporters; Osborne became head coach in 1973",
+      "visual": "authentic motionless NARA photo, not animated into period video",
+      "sound": "no artificial 1973 cheers",
+      "clearance": "federal photo provenance/attribution and distribution review pending"
+    }
+  ],
+  "reviewOnly": true,
+  "allSourceRightsCleared": false,
+  "approvedNarrationRecorded": false,
+  "noSyntheticHistoricVideo": true,
+  "noManufacturedPeriodAudio": true,
+  "anySceneFilmReady": false,
+  "founderApproved": false,
+  "publicationAuthorityGranted": false
+}
