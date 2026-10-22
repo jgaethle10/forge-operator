@@ -45,8 +45,9 @@ class ExternalSequenceTests(unittest.TestCase):
                     "--output", str(output),
                     "--fps", "30",
                 ],
-                capture_output=True, text=True, check=True,
+                capture_output=True, text=True, check=False,
             )
+            self.assertEqual(completed.returncode, 0, completed.stderr or completed.stdout)
             receipt = json.loads(completed.stdout)
             self.assertTrue(output.exists())
             self.assertGreater(output.stat().st_size, 1000)
