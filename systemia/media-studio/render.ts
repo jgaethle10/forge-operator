@@ -10,9 +10,26 @@ const DIMENSIONS: Record<AspectRatio, { width: number; height: number }> = {
   '1:1': { width: 1080, height: 1080 },
 };
 
+function cropAnchors(scene: ScenePlan) {
+  const x = scene.cropAnchorX ?? 0.5;
+  const y = scene.cropAnchorY ?? 0.5;
+  if (!Number.isFinite(x) || x < 0 || x > 1) {
+    throw new Error('render_crop_anchor_x_invalid:' + scene.id);
+  }
+  if (!Number.isFinite(y) || y < 0 || y > 1) {
+    throw new Error('render_crop_anchor_y_invalid:' + scene.id);
+  }
+  return {x, y};
+}
+
+function directorCrop(width: number, height: number, x: number, y: number) {
+  return `crop=${width}:${height}:(iw-${width})*${x}:(ih-${height})*${y}`;
+}
+
 export function filterFor(scene: ScenePlan, width: number, height: number) {
+  const {x, y} = cropAnchors(scene);
   const cover =
-    `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},fps=30,format=yuv420p`;
+    `scale=${width}:${height}:force_original_aspect_ratio=increase,${directorCrop(width,height,x,y)},setsar=1,fps=30,format=yuv420p`;
 
   if (scene.mediaKind === 'image' && scene.motion === 'push_in') {
     const frames = Math.max(2, Math.round(scene.durationSec * 30));
@@ -21,7 +38,7 @@ export function filterFor(scene: ScenePlan, width: number, height: number) {
     // distorting faces and character anatomy even in a correctly sized MP4.
     const workingWidth = width * 2;
     const workingHeight = height * 2;
-    return `scale=${workingWidth}:${workingHeight}:force_original_aspect_ratio=increase,crop=${workingWidth}:${workingHeight},setsar=1,zoompan=z='min(zoom+0.0008,1.08)':d=${frames}:s=${width}x${height}:fps=30,format=yuv420p`;
+    return `scale=${workingWidth}:${workingHeight}:force_original_aspect_ratio=increase,${directorCrop(workingWidth,workingHeight,x,y)},setsar=1,zoompan=z='min(zoom+0.0008,1.08)':d=${frames}:s=${width}x${height}:fps=30,format=yuv420p`;
   }
 
   return cover;
