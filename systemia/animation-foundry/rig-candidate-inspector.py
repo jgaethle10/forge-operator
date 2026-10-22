@@ -12,9 +12,7 @@ src,out=Path(argv[0]).resolve(),Path(argv[1]).resolve()
 out.mkdir(parents=True,exist_ok=True)
 if not src.is_file() or src.suffix.lower()!='.blend':
     raise SystemExit('BLOCKED: input must be an existing .blend')
-if bpy.app.autoexec_fail is False and not bpy.app.use_event_simulate:
-    # CLI must be invoked with --disable-autoexec. No embedded scripts needed.
-    pass
+# Blender must be started with --disable-autoexec, enforced by the workflow.
 bpy.ops.wm.open_mainfile(filepath=str(src),load_ui=False)
 meshes=[o for o in bpy.data.objects if o.type=='MESH']
 rigs=[o for o in bpy.data.objects if o.type=='ARMATURE']
