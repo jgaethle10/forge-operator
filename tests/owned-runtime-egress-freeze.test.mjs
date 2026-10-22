@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {runSessionFreshnessOnce,validateRefreshEndpoint} from '../systemia/organism/rivet-session-freshness-runner.mjs';
 import {runCanary as forensiScopeCanary} from '../systemia/distribution/forensiscope-commerce-canary.mjs';
+import {discoverLegacyForensicApp,extractPublicForensicSnapshot} from '../systemia/migrations/base44-exit/forensic-record-public-extractor.mjs';
 
 const read=p=>fs.readFileSync(p,'utf8');
 const json=p=>JSON.parse(read(p));
@@ -78,4 +79,26 @@ test('Frozen old-provider entry points contain no outgoing legacy URLs or HTTP i
  assert.doesNotMatch(workflow,/public surface and payment quote probes/i);
  const website=read('.github/workflows/website-commerce-browser-gate.yml');
  assert.doesNotMatch(website,/npx playwright install|Inspect public buyer forms/i);
+});
+
+test('Forensic Record extractor blocks the retired provider before fetching even with injected transport',async()=>{
+ let calls=0;
+ const sourceFetch=async()=>{calls++;throw Error('Network was attempted')};
+ for(const apiOrigin of ['https://base44.app','https://historic.base44.app','https://other.example','']){
+  await assert.rejects(
+   discoverLegacyForensicApp({siteUrl:'https://filescompanion.com/',apiOrigin,sourceFetch}),
+   /forensic_snapshot_legacy_provider_frozen|forensic_public_api_origin/
+  );
+  await assert.rejects(
+   extractPublicForensicSnapshot({siteUrl:'https://filescompanion.com/',apiOrigin,
+    outDir:'/unused-exit-proof',sourceFetch}),
+   /forensic_snapshot_legacy_provider_frozen|forensic_public_api_origin/
+  );
+ }
+ assert.equal(calls,0);
+});
+test('production Compute does not default forensic bootstrap to external legacy API',()=>{
+ const s=read('systemia/compute/runtime-node.mjs');
+ assert.doesNotMatch(s,/public_snapshot_api_origin\s*\|\|\s*['"]https?:\/\//);
+ assert.doesNotMatch(s,/api\.hostname\s*===\s*['"]base44\.app/);
 });
