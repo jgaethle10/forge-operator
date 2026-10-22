@@ -8,6 +8,7 @@ import zlib from 'node:zlib';
 import {spawnSync} from 'node:child_process';
 import {verifyToonPerformanceBundle} from './toon-performance-intake.mjs';
 import {renderToonPoseAnimatic} from './toon-pose-animatic.mjs';
+import {renderBoundPuppetMotion} from './toon-puppet-binding.mjs';
 import {runwayGen45Endpoint} from './visual-provider-runway.ts';
 
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
@@ -211,5 +212,105 @@ test('rejects lone identical image, forged second pose and unsafe missing dialog
   }finally{
     fs.rmSync(x.dir,{recursive:true,force:true});
     fs.rmSync(output,{recursive:true,force:true});
+  }
+});
+
+
+// This is an intentionally ugly articulated fixture: translucent RGBA parts,
+// pure sine audio, exact hashes. It proves motion machinery, NOT character appeal.
+function transparentRigPart(box,rgb,width=480,height=270){
+  const pixels=Buffer.alloc(height*(width*4+1));
+  for(let y=0;y<height;y++){
+    const start=y*(width*4+1);
+    for(let x=0;x<width;x++){
+      if(x>=box[0]&&x<box[2]&&y>=box[1]&&y<box[3]){
+        const i=start+1+4*x;
+        pixels[i]=rgb[0];pixels[i+1]=rgb[1];pixels[i+2]=rgb[2];pixels[i+3]=255;
+      }
+    }
+  }
+  const head=Buffer.alloc(13);head.writeUInt32BE(width,0);head.writeUInt32BE(height,4);
+  head[8]=8;head[9]=6;
+  return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),
+    pngChunk('IHDR',head),pngChunk('IDAT',zlib.deflateSync(pixels)),pngChunk('IEND',Buffer.alloc(0))]);
+}
+function rigFixture(x){
+  const elements=[
+    ['torso',null,[193,117,279,220],[231,151],1,[78,112,149]],
+    ['head','torso',[207,65,266,130],[234,130],2,[216,158,132]],
+    ['arm','torso',[266,139,295,212],[274,146],3,[193,109,99]],
+  ];
+  const layers=elements.map(([id,parentId,box,pivotPx,zIndex,color])=>{
+    const file=id+'.png',contents=transparentRigPart(box,color);
+    fs.writeFileSync(path.join(x.dir,file),contents);
+    return {id,parentId,file,sha256:sha(contents),pivotPx,zIndex,
+      actorId:'hero',referenceAssetId:'rig-'+id};
+  });
+  x.pkt.shots[0].characters[0].referenceAssetIds.push(...layers.map(p=>p.referenceAssetId));
+  const {digest:old,...core}=x.pkt;x.pkt.digest=digest(core);
+  x.manifest.packetDigest=x.pkt.digest;
+  x.manifest.rigParts=layers.map(l=>({
+    id:l.id,file:l.file,sha256:l.sha256,referenceAssetId:l.referenceAssetId,
+    actorId:'hero',rightsClaim:'owned',reviewState:'declared_approved',
+    reviewEvidenceRef:'test-review:'+l.id,
+  }));
+  const zero=()=>Object.fromEntries(layers.map(l=>
+    [l.id,{rotationDeg:0,translatePx:[0,0],scale:1}]));
+  const moved=(a,b)=>({
+    ...zero(),torso:{rotationDeg:1,translatePx:[3,0],scale:1},
+    head:{rotationDeg:a,translatePx:[0,0],scale:1},
+    arm:{rotationDeg:b,translatePx:[0,0],scale:1},
+  });
+  return {
+    schema:'evercraft.fallen.toon-puppet-rig.v1',packetDigest:x.pkt.digest,
+    shotId:'hero-1',actorId:'hero',width:480,height:270,fps:24,durationSec:5,
+    layers,
+    voice:{file:x.manifest.dialogueAudio.file,sha256:x.manifest.dialogueAudio.sha256,
+      cueId:'cue-1',voiceProfileId:'voice-foundry-hero'},
+    keyframes:[{atSec:0,layers:zero()},
+      {atSec:1.6,layers:moved(15,-34)},
+      {atSec:3.8,layers:moved(-10,18)}],
+  };
+}
+
+test('recorded-source-bound articulated joints produce actual changing H264/AAC frames without lip-sync claims',()=>{
+  const x=fixture();
+  const rig=rigFixture(x);
+  const out=process.env.FALLEN_TOON_PUPPET_PROOF_DIR
+    ?path.resolve(process.env.FALLEN_TOON_PUPPET_PROOF_DIR)
+    :fs.mkdtempSync(path.join(os.tmpdir(),'toon-puppet-proof-'));
+  const retain=Boolean(process.env.FALLEN_TOON_PUPPET_PROOF_DIR);
+  try{
+    const receipt=renderBoundPuppetMotion({
+      packet:x.pkt,shotId:'hero-1',manifest:x.manifest,
+      bundleDir:x.dir,rig,outDir:out,
+      python:process.env.FALLEN_TOON_PYTHON||'python3',
+    });
+    assert.equal(receipt.state,'articulated_2d_preview_not_creative_admission');
+    assert.equal(receipt.frameCount,120);
+    assert.equal(receipt.articulatedJointTransformsExecuted,true);
+    assert.equal(receipt.verifiedArtAndSpeechBytes,true);
+    assert.ok(new Set(Object.values(receipt.frameSampleDigests)).size>=3);
+    assert.equal(receipt.humanCreativeApproved,false);
+    assert.equal(receipt.characterIdentityVerified,false);
+    assert.equal(receipt.lipSyncVerified,false);
+    assert.equal(receipt.publicationAuthority,false);
+    assert.equal(receipt.videoSha256,sha(fs.readFileSync(receipt.videoPath)));
+    const tampered=structuredClone(rig);
+    tampered.layers[1].sha256='f'.repeat(64);
+    assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
+      manifest:x.manifest,bundleDir:x.dir,rig:tampered,outDir:out}),
+      /rig_part_binding_mismatch/);
+    const wrongVoice=structuredClone(rig);wrongVoice.voice.cueId='someone-else';
+    assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
+      manifest:x.manifest,bundleDir:x.dir,rig:wrongVoice,outDir:out}),
+      /locked_dialogue_or_voice_mismatch/);
+    const denied=structuredClone(x.manifest);
+    denied.rigParts[0].reviewState='pending';
+    assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
+      manifest:denied,bundleDir:x.dir,rig,outDir:out}),/rig_part_review_missing/);
+  }finally{
+    fs.rmSync(x.dir,{recursive:true,force:true});
+    if(!retain)fs.rmSync(out,{recursive:true,force:true});
   }
 });
