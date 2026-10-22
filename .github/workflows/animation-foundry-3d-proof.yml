@@ -5,6 +5,10 @@ on:
     paths:
       - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
       - '.github/workflows/animation-foundry-3d-proof.yml'
+  pull_request:
+    paths:
+      - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
+      - '.github/workflows/animation-foundry-3d-proof.yml'
   workflow_dispatch:
 permissions:
   contents: read
