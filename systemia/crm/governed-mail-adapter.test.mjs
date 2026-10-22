@@ -9,7 +9,7 @@ import {EvercraftPassport} from '../passport/passport.mjs';
 import {EvercraftInteractionLedger} from '../interaction-ledger/ledger.mjs';
 import {dispatchGovernedEmail} from './governed-mail-adapter.mjs';
 
-const NOW=new Date('2026-10-22T15:00:00Z');
+const NOW=new Date();
 const sign=(v,key)=>'hmac-sha256:'+createHmac('sha256',key).update(JSON.stringify(v)).digest('hex');
 function yard({mode='preflight_eligible',purposes=['meeting_scheduling']}={}){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'crm-mail-proof-'));fs.chmodSync(root,0o700);
@@ -31,8 +31,8 @@ function yard({mode='preflight_eligible',purposes=['meeting_scheduling']}={}){
  const grant={schema:'evercraft.crm.approval.v1',approval_ref:action.human_approval_ref,
   kind:'outreach',action_type:'send_email',actor_ref:action.actor_ref,
   target_ref:action.target_ref,action_fingerprint:action.approved_action_fingerprint,
-  approved:true,issued_at:'2026-10-22T13:00:00Z',
-  expires_at:'2026-10-22T20:00:00Z',
+  approved:true,issued_at:'2026-01-01T00:00:00Z',
+  expires_at:'2030-01-01T00:00:00Z',
   evidence_ref:'synthetic:human-approval'};
  grant.signature=sign(grant,key);
  function writeApproval(revocations=[]){
@@ -62,8 +62,8 @@ function yard({mode='preflight_eligible',purposes=['meeting_scheduling']}={}){
   passport.issueGrant({grant_id:'grant:mail-proof',idempotency_key:'grant:mail-proof',
    subject_ref:action.actor_ref,issuer_ref:'evercraft:identity-authority',
    product:'evercraft-relationship',scopes:['contact.email'],
-   resource_refs:[action.subject_ref],starts_at:'2026-10-01T00:00:00Z',
-   ends_at:'2026-10-23T00:00:00Z',
+   resource_refs:[action.subject_ref],starts_at:'2026-01-01T00:00:00Z',
+   ends_at:'2030-01-01T00:00:00Z',
    max_delegation_depth:0,authority_state:'verified_identity_authority',
    authority_receipt_ref:'synthetic:operator-verified'});
  }
