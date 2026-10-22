@@ -148,7 +148,9 @@ test('bad bytes, wrong voice, unsafe paths, fake scratch voice and unverified pr
 
 test('actually encodes distinct bound acting poses and the supplied recorded audio into an MP4 animatic',()=>{
   const x=fixture();
-  const output=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-toon-animatic-'));
+  const retain=Boolean(process.env.FALLEN_TOON_ANIMATIC_PROOF_DIR);
+  const output=retain?path.resolve(process.env.FALLEN_TOON_ANIMATIC_PROOF_DIR):
+    fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-toon-animatic-'));
   try{
     const phase2=png(960,540,[64,95,129]);
     const phase3=png(960,540,[142,85,109]);
@@ -186,7 +188,7 @@ test('actually encodes distinct bound acting poses and the supplied recorded aud
       ]},outDir:output}),/asset_sha_mismatch/);
   }finally{
     fs.rmSync(x.dir,{recursive:true,force:true});
-    fs.rmSync(output,{recursive:true,force:true});
+    if(!retain)fs.rmSync(output,{recursive:true,force:true});
   }
 });
 
