@@ -27,3 +27,11 @@ The library's cryptographic primitive provides RSA-OAEP SHA-256 wrapped AES-256-
 - Otherwise remain `held`, not green.
 
 Tracking: #1462, Numerai #1451. No production cutover or key import is claimed.
+
+## Read-only vault safety (updated 2026-10-22)
+
+The existing `ProviderCredentialVault` constructor historically created a new encryption key and adjusted custody directory permissions whenever a vault path was provided. A provider "read-only" probe must not do either. The staged patch adds an opt-in `readOnly: true` constructor mode; it requires an already-existing legitimate vault key, rejects `put()`, and performs no directory creation or chmod. Raven's Numerai/Kaggle provider secret boundary uses this mode.
+
+The courier now rejects oversized individual fields and encrypted envelopes before decrypting. It clears transient byte buffers where JavaScript permits, while explicitly **not** claiming zeroization of immutable JS strings. Synthetic regression tests check ciphertext tampering, replay, expiry, field allowlisting, oversized values, empty-path nonmutation, and read-only vault write denial.
+
+These safeguards **do not** authorize the legacy source operation or make a credential transfer live. Until source-side founder authorization, receiving runtime isolation, and independently verified provider receipts exist, this remains a **draft, non-production** capability.
