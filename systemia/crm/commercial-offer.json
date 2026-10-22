@@ -1,0 +1,58 @@
+{
+  "schema": "evercraft.crm.commercial-offer.v1",
+  "product_id": "systemia-relationship-command",
+  "display_name": "Systemia Relationship Command",
+  "owner_organization": "Evercraft LLC",
+  "state": "development_preview",
+  "billing": {
+    "checkout_enabled": false,
+    "subscriptions_enabled": false,
+    "collection_authority": "none",
+    "proposed_setup_usd": 1500,
+    "proposed_monthly_usd": 249,
+    "price_status": "illustrative_unapproved"
+  },
+  "access": {
+    "self_service_registration": false,
+    "customer_tenant_provisioning": "not_enabled",
+    "operator_managed_pilot": "proposed_only"
+  },
+  "public_surfaces": {
+    "product_page": "/products/systemia-relationship-command/",
+    "interactive_preview": "/demos/systemia-relationship-command/"
+  },
+  "pilot_scope": {
+    "included": [
+      "one scoped business workspace",
+      "relationship and evidence timeline",
+      "commitment and follow-up review queue",
+      "documented contact holds",
+      "operator-led weekly outcome review"
+    ],
+    "exclusions": [
+      "unattended mass outreach",
+      "real-time payment collection without verified gateway",
+      "unverified inbox synchronization",
+      "automated promises of revenue recovery",
+      "production SLA without audited infrastructure"
+    ]
+  },
+  "readiness_gates": [
+    "authenticated tenant session service",
+    "private customer vault provisioning and backup",
+    "source authorization and consent records",
+    "retention, deletion and export controls",
+    "complete delivery-route enforcement",
+    "signed approval anti-rollback protections",
+    "payment checkout provider verification",
+    "customer domain HTTPS and external uptime proof",
+    "billing and customer support policy",
+    "owner-approved commercial agreement"
+  ],
+  "verification": {
+    "real_customers_imported": false,
+    "live_public_checkout_verified": false,
+    "production_crm_deployed": false,
+    "real_provider_contact_send_tested": false
+  }
+}
