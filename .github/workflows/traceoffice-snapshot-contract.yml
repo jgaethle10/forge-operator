@@ -1,0 +1,37 @@
+name: TraceOffice Read-Only Interoperability
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/integrations/traceoffice/**'
+      - '.github/workflows/traceoffice-snapshot-contract.yml'
+  push:
+    paths:
+      - 'systemia/integrations/traceoffice/**'
+      - '.github/workflows/traceoffice-snapshot-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Validate Saban metadata export
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test adapter, redaction, and local file boundaries
+        run: node --test systemia/integrations/traceoffice/bridge.test.mjs
+      - name: Generate zero-secret synthetic snapshot
+        run: |
+          node systemia/integrations/traceoffice/bridge.mjs --demo --output /tmp/evercraft-traceoffice-synthetic.json
+          node --input-type=module -e "
+            import fs from 'node:fs';
+            const s=JSON.parse(fs.readFileSync('/tmp/evercraft-traceoffice-synthetic.json','utf8'));
+            if(s.version!==1||s.agents.length!==3||s.interactions.length!==2||
+               s.agents.some(a=>!a.name.includes('SYNTHETIC'))) process.exit(1);
+          "
