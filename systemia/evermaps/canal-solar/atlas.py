@@ -23,6 +23,7 @@ SOURCES = {
  "WA_NHD": {"url":"https://gis.ecology.wa.gov/serverext/rest/services/TCP/EDAT/MapServer/48", "where":"FType = 336 AND FCode <> 33603", "by":"WA Department of Ecology / USGS", "limits":"Canals/ditches include features that may not be open or current."},
  "WA_SVID": {"url":"https://maps.yakimacounty.us/server/rest/services/Irrigation/SVIDLayersMap/FeatureServer/8", "where":"1=1", "by":"Yakima County / Sunnyside Valley Irrigation District contributors", "limits":"District source linework, not construction permission."},
  "CA_USBR": {"url":"https://geo.usbr.gov/server/rest/services/CGB_PAO_CVP_SacRiver_WebLayers_Tiles/MapServer/15", "where":"1=1", "by":"US Bureau of Reclamation", "limits":"Historical and partial CA/NV/OR coverage. Drains, ditches and wasteways included."},
+ "CA_DWR_LOCAL": {"url":"https://utility.arcgis.com/usrsvcs/servers/b43dc55d1e1448f2b384ebb8efac9042/rest/services/InlandWaters/i12_Canals_and_Aqueducts_local/MapServer/0", "where":"1=1", "by":"California Department of Water Resources (CC BY)", "limits":"Local government or agency canals only; excludes major state and federal canals. Historic interpretation and updates may not match current conditions."},
  "OR_JACKSON": {"url":"https://jcportal.jacksoncountyor.gov/server/rest/services/Environmental/Irrigation_Canals/MapServer/7", "where":"TYPE IN (21,22,24)", "by":"Jackson County GIS", "limits":"Physical condition and active irrigation use unverified."},
  "UT_CACHE": {"url":"https://gis.cachecounty.gov/arcgis/rest/services/Canals/Canal_WebMap/MapServer/1", "where":"1=1", "by":"Cache County GIS", "limits":"Can include inactive or piped conveyances."},
  "FL_SFWMD": {"url":"https://geoweb.sfwmd.gov/agsext1/rest/services/WaterManagementSystem/Canals/MapServer/0", "where":"FLOWLINETYPE = 2", "by":"South Florida Water Management District", "limits":"Hydroedges alone do not prove operator access or viability."}
@@ -31,7 +32,7 @@ SOURCES = {
 REGIONS = {
  "sunnyside_wa": ("Sunnyside–Grandview, WA",[-120.09,46.13,-119.64,46.42],"WA_NHD",["WA_SVID"]),
  "yakima_valley_wa": ("Yakima Valley, WA",[-121.03,46.05,-119.23,47.06],"WA_NHD",["WA_SVID"]),
- "turlock_modesto_ca": ("Turlock–Modesto, CA",[-121.17,37.25,-120.39,38.18],"CA_USBR",[]),
+ "turlock_modesto_ca": ("Turlock–Modesto, CA",[-121.17,37.25,-120.39,38.18],"CA_DWR_LOCAL",["CA_USBR"]),
  "fresno_madera_ca": ("Fresno–Madera, CA",[-120.15,36.36,-119.26,37.18],"CA_USBR",[]),
  "stockton_delta_ca": ("Stockton–Delta, CA",[-122.04,37.77,-120.92,38.44],"CA_USBR",[]),
  "sacramento_valley_ca": ("Sacramento Valley, CA",[-122.74,38.43,-121.06,40.4],"CA_USBR",[]),
