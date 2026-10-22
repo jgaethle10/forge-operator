@@ -33,7 +33,7 @@ const outputDir=path.resolve(process.env.EVERCRAFT_RC13_PIXEL_OUTPUT||path.join(
 fs.mkdirSync(outputDir,{recursive:true});
 const input=JSON.parse(execFileSync(process.execPath,[
   '--import','tsx',path.join(repoRoot,'systemia/world-engine/fallen-visual-frames.proof.mjs')
-],{cwd:repoRoot,encoding:'utf8',maxBuffer:12*1024*1024}));
+],{cwd:process.cwd(),encoding:'utf8',maxBuffer:12*1024*1024}));
 if(input.schema!=='evercraft.rc13.gpu-frame-qa-input.v1'||input.frames?.length!==4)throw Error('rc13_gpu_frame_plan_fixture_invalid');
 const shader=extractOwnedShader(repoRoot);
 const stateDir=process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||
