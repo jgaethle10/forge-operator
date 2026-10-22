@@ -285,16 +285,19 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
       }
     },
     deliveryLedgerHead() {
-      const head = safeReadJson(ledgerHeadFile, {
-        schema: 'systemia.notification-ledger-head.v1',
-        last_hash: null,
-        count: 0,
-        mode: receiptSecret ? 'hmac-sha256' : 'sha256',
-      });
+      const validation = this.verifyDeliveryLedger();
+      // A missing/corrupt head cannot appear as an empty, healthy ledger.
+      if (!validation.valid) {
+        return {
+          state: 'held', integrity_verified: false, count: null,
+          last_hash: null, mode: validation.mode, reason: validation.reason || 'integrity_hold',
+        };
+      }
       return {
-        count: Number(head.count || 0),
-        last_hash: head.last_hash || null,
-        mode: head.mode || (receiptSecret ? 'hmac-sha256' : 'sha256'),
+        state: 'verified', integrity_verified: true,
+        count: validation.count,
+        last_hash: validation.last_hash,
+        mode: validation.mode,
       };
     },
     consumeAttentionBudget(principalId, purpose, options = {}) {
@@ -323,6 +326,8 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
       return { allowed, used: allowed ? used + 1 : used, limit, window_ms: windowMs };
     },
     deliverySnapshot(options = {}) {
+      const check = this.verifyDeliveryLedger();
+      if (!check.valid) return { state: 'held', integrity_verified: false, total: null, statuses: null, reason: check.reason || 'integrity_hold' };
       const sinceMs = Number(options.sinceMs ?? 24 * 60 * 60 * 1000);
       if (!fs.existsSync(ledgerFile)) return { window_ms: sinceMs, total: 0, statuses: {} };
       const cutoff = Date.now() - sinceMs;
