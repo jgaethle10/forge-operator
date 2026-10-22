@@ -12,6 +12,9 @@ import {planFloor,probeVideo} from './visual-floor.mjs';
 
 const sha256=v=>crypto.createHash('sha256').update(v).digest('hex');
 const isSha=s=>typeof s==='string'&&/^[a-f0-9]{64}$/.test(s);
+// World Engine extractOwnedShader reports its signed shader ID as sha256:<hex>.
+// Accept that exact canonical shader identity without weakening frame and world hashes.
+const isShaderId=s=>isSha(s)||(typeof s==='string'&&/^sha256:[a-f0-9]{64}$/.test(s));
 const fail=reason=>{throw Error('native_floor_'+reason)};
 const PROFILE='original_3d_synthetic_data_constellation';
 const phases=[
@@ -35,7 +38,7 @@ export function buildNativeFloorJobpack({videoPath,receiptPath}){
      receipt.dataConstellation?.linkCount<60||
      receipt.dataConstellation?.sourceNativeWebGpuScene!==true||
      receipt.dataConstellation?.shaderFrameReadbackRequired!==true)fail('scene_evidence_invalid');
-  if(!isSha(receipt.worldDigest)||!isSha(receipt.shaderSha256)||!isSha(receipt.shadowShaderSha256)||
+  if(!isSha(receipt.worldDigest)||!isShaderId(receipt.shaderSha256)||!isSha(receipt.shadowShaderSha256)||
      !isSha(receipt.firstFramePlanDigest)||!isSha(receipt.lastFramePlanDigest))fail('native_lineage_invalid');
   if(receipt.hardwareExecutionClaim!==false||
      receipt.exactGpuReadbackFrames!==video.frameCount||
