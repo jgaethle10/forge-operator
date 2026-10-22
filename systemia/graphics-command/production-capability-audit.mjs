@@ -31,6 +31,7 @@ const FEATURES=[
   ['toon_audition_board','systemia/media-studio/toon-audition-board.py','toon'],
   ['toon_cinema_model_preflight','systemia/media-studio/toon-cinema-preflight.mjs','toon'],
   ['toon_verified_source_intake','systemia/media-studio/toon-performance-intake.mjs','toon'],
+  ['toon_pose_animatic_renderer','systemia/media-studio/toon-pose-animatic.mjs','toon'],
   ['identity_fingerprinting','systemia/media-studio/identity-fingerprint.ts','toon'],
   ['character_performance','systemia/media-studio/performance-director.ts','toon'],
   ['dialogue_lipsync_admission','systemia/media-studio/dialogue-sync-gate.ts','toon'],
