@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.photon-forge-v4.canary-evidence.v1",
+  "date": "2026-10-21",
+  "video": "Evercraft_Photon_Forge_V4_SILENT.mp4",
+  "videoCheckedIn": false,
+  "sha256": "0033b9581cfa5b7a0a3c4902d832ce591a9c8e940058d1f3c33bc15479438063",
+  "resolution": [
+    960,
+    540
+  ],
+  "fps": 30,
+  "decodedFrames": 300,
+  "durationSec": 10,
+  "localUnitTestsPassed": 5,
+  "localTestsClaimOnly": true,
+  "worldFrameSchema": "evercraft.world-engine.visual-frame.v1",
+  "geometrySchema": "evercraft.world-engine.geometry.v1",
+  "javascriptStableDigestParity": true,
+  "originalAudioIncluded": false,
+  "executedWorldEngineRuntime": false,
+  "liveWorldEngineFrameProcessed": false,
+  "hardwareGpuReadback": false,
+  "materialModel": "approximate_cpu_shading_not_pbr",
+  "qualityApproved": false,
+  "publicationAuthority": false,
+  "notes": "The external frame ingest path has been exercised with the generated canonical-shaped test fixture. It has not yet been executed against a live World Engine runtime frame. Playable MP4 and actual output receipt are provided separately to the user."
+}
