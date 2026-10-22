@@ -5,7 +5,7 @@
 // Usage: node scripts/probe-evermaps-owned-browser.mjs
 // Requires playwright Chromium installed on test runner. No browser secrets used.
 import { chromium } from 'playwright';
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, readFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const origin=process.env.EVERMAPS_SMOKE_ORIGIN||'http://127.0.0.1:3000';
@@ -167,6 +167,86 @@ try{
    unavailable:failure,uncaught_page_errors:errors,
    screenshot_normal:profile.name+'-normal.png',
    screenshot_unavailable:profile.name+'-source-unavailable.png'});
+  await context.close();
+ }
+
+ // Test the exact GitHub Pages *subpath* with the production HTML and asset files.
+ // Mock only transport, not the normalizer: direct NIFC browser mode uses the
+ // identical source adapter shipped by the first-party Forge server.
+ {
+  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  page.setDefaultTimeout(16000);
+  const pageErrors=[];
+  page.on('pageerror',e=>pageErrors.push(String(e.message)));
+  const files=new Set(['index.html','app.js','style.css','incident-source.mjs','pnw-land.geojson']);
+  await page.route('https://jgaethle10.github.io/forge-operator/evermaps/**',async route=>{
+   const name=new URL(route.request().url()).pathname.replace('/forge-operator/evermaps/','')||'index.html';
+   if(!files.has(name)){await route.fulfill({status:404,body:'No such preview file'});return;}
+   const content=await readFile(resolve('public/evermaps',name));
+   const contentType=name.endsWith('.mjs')||name.endsWith('.js')?'application/javascript':
+    name.endsWith('.css')?'text/css':name.endsWith('.json')?'application/json':'text/html';
+   await route.fulfill({status:200,body:content,contentType});
+  });
+  await page.route('https://tile.openstreetmap.org/**',route=>route.abort('failed'));
+  let directSourceDown=false,directCalls=0;
+  await page.route('https://services3.arcgis.com/**',async route=>{
+   directCalls++;
+   const features=fixture.records.map(r=>({
+    attributes:{IncidentTypeCategory:'WF',IrwinID:r.incident_id,IncidentName:r.name,
+     ModifiedOnDateTime_dt:Date.parse(r.modified_at_utc),FireOutDateTime:null,
+     IncidentSize:r.reported_acres,PercentContained:r.reported_containment_percent,POOState:'US-WA'},
+    geometry:{x:r.longitude,y:r.latitude}
+   }));
+   await route.fulfill({
+    status:directSourceDown?503:200,contentType:'application/json',
+    headers:{'access-control-allow-origin':'*'},
+    body:JSON.stringify(directSourceDown?{error:{code:503,message:'Upstream outage'}}:{features})
+   });
+  });
+  let forbiddenApiCalls=0;
+  await page.route('https://jgaethle10.github.io/api/evermaps/**',async route=>{
+   forbiddenApiCalls++;await route.fulfill({status:503,body:'No backend on Pages'});
+  });
+  const response=await page.goto('https://jgaethle10.github.io/forge-operator/evermaps/',{waitUntil:'domcontentloaded',timeout:18000});
+  assert(response?.status()===200,'Pages subpath did not load');
+  await page.waitForFunction(()=>document.querySelector('#em-count')?.textContent==='3',{timeout:17000});
+  await page.waitForFunction(()=>document.querySelector('#em-fallback')?.dataset.source==='natural-earth-50m-public-domain',{timeout:14000});
+  const initial=await page.evaluate(()=>({
+   count:document.querySelector('#em-count')?.textContent,
+   path:location.pathname,
+   source:document.querySelector('#em-fetched')?.textContent,
+   markers:document.querySelectorAll('.em-marker').length,
+   noindex:document.querySelector('meta[name="robots"]')?.content==='noindex,nofollow',
+   fallback:document.querySelector('#em-fallback')?.dataset.source,
+   width:innerWidth,scrollWidth:document.documentElement.scrollWidth
+  }));
+  assert(initial.path==='/forge-operator/evermaps/','Wrong Pages subpath');
+  assert(initial.source.includes('NIFC direct staging'),'Pages incorrectly claims Forge API transport');
+  assert(initial.markers>0&&initial.fallback==='natural-earth-50m-public-domain','Pages has no geographic or incident data');
+  assert(initial.noindex&&initial.scrollWidth<=initial.width+3,'Pages exceeds mobile width or is indexable');
+  assert(directCalls===1&&forbiddenApiCalls===0,'Pages must use direct read-only NIFC, never an unavailable first-party backend');
+  const badge=await page.evaluate(()=>{
+   const el=document.createElement('div');el.id='em-qa-pages-fixture';
+   el.textContent='SYNTHETIC PAGES-STAGING QA · NO REAL FIRE CLAIMS';
+   el.style.cssText='position:absolute;z-index:50;top:12px;right:12px;background:#533719ed;color:#fff4df;border:1px solid #ffd58d;border-radius:8px;padding:8px;font-size:10px;font-weight:800;max-width:260px';
+   document.querySelector('#em-map').append(el);return !!el;
+  });
+  assert(badge,'Pages staging screenshot lacked synthetic warning');
+  await page.screenshot({path:output+'/pages-subpath-synthetic.png',animations:'disabled',timeout:10000});
+  directSourceDown=true;
+  await page.locator('#em-refresh').click();
+  await page.waitForFunction(()=>document.querySelector('#em-source')?.dataset.state==='unavailable');
+  const failed=await page.evaluate(()=>({
+   records:document.querySelector('#em-count')?.textContent,
+   markers:document.querySelectorAll('.em-marker').length
+  }));
+  assert(failed.records==='—'&&failed.markers===0,'Direct-source outage retained stale incident data');
+  assert(pageErrors.length===0,'Pages script exceptions '+pageErrors.join('; '));
+  receipt.scenarios.push({profile:'github-pages-subpath-synthetic',status:'PASS',initial,
+   unavailable:{marker_count:failed.markers},uncaught_page_errors:pageErrors,
+   screenshot_normal:'pages-subpath-synthetic.png',
+   notice:'Preview route simulated locally; NOT external GitHub Pages hosting proof'});
   await context.close();
  }
  receipt.status='PASS';
