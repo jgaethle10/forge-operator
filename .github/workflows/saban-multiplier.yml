@@ -50,6 +50,8 @@ jobs:
       - name: Validate multiplication contracts
         run: npm run check:saban-contracts
 
+      - name: Validate twelve OS lanes through Systemia mission policy
+        run: node --test systemia/evercraft-os/parallel-mission-bridge.test.mjs
       - name: Execute twelve bounded read-only Saban readiness jobs and reconcile
         run: node --test systemia/saban/evercraft-os-readiness.test.mjs
       - name: Run bounded Saban OS source audit and persist receipt
