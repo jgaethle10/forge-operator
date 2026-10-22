@@ -19,7 +19,7 @@ const baseReceipt={
   schema:'evercraft.world-engine.cinematic-pixel-proof.v1',
   kind:'synthetic_internal_canary',
   sceneType:'original_3d_synthetic_data_constellation',
-  worldDigest:sha,shaderSha256:shaB,shadowShaderSha256:sha,
+  worldDigest:sha,shaderSha256:'sha256:'+shaB,shadowShaderSha256:sha,
   firstFramePlanDigest:sha,lastFramePlanDigest:shaB,
   exactGpuReadbackFrames:96,uniqueRawFrameDigests:96,
   hardwareExecutionClaim:false,renderProfile:'contract-test-not-an-actual-gpu-run',
