@@ -1,0 +1,88 @@
+name: Voice Foundry Nano Expressive Model CPU Private Audition
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-nano-expressive-audition.py'
+      - '.github/workflows/voice-nano-expressive-audition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  licensed-model-private-audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prove text invariance and no voice cloning reference
+        run: python systemia/media-studio/voice-nano-expressive-audition.py --verify-only
+      - name: Fail safely on inadequate CPU and disk resources
+        run: |
+          set -euo pipefail
+          df -h .
+          free -h
+          DISK_KB=$(df -Pk . | awk 'NR==2{print $4}')
+          RAM_KB=$(awk '/MemAvailable:/ {print $2}' /proc/meminfo)
+          test "$DISK_KB" -ge 9000000 || { echo "Not enough disk for upstream pretrained model" >&2; exit 1; }
+          test "$RAM_KB" -ge 5000000 || { echo "Not enough available RAM for safe private evaluation" >&2; exit 1; }
+      - name: Install pinned CPU-compatible official speech dependencies
+        run: |
+          python -m pip install --disable-pip-version-check --no-cache-dir \
+            torch==2.6.0 torchaudio==2.6.0 \
+            --index-url https://download.pytorch.org/whl/cpu
+          git clone --depth=1 --branch master https://github.com/resemble-ai/chatterbox.git /tmp/evercraft-upstream-chatterbox
+          test -f /tmp/evercraft-upstream-chatterbox/example_tts_nano.py
+          grep -q 'nano=True' /tmp/evercraft-upstream-chatterbox/example_tts_nano.py
+          SOURCE_SHA="$(git -C /tmp/evercraft-upstream-chatterbox rev-parse HEAD)"
+          echo "EVERCRAFT_MODEL_SOURCE_COMMIT=$SOURCE_SHA" >> "$GITHUB_ENV"
+          python -m pip install --disable-pip-version-check --no-cache-dir /tmp/evercraft-upstream-chatterbox
+          python -c 'import torch,torchaudio;from chatterbox.tts_turbo import ChatterboxTurboTTS;print(torch.__version__,torchaudio.__version__)'
+          printf 'Upstream Nano-capable source checkout %s\n' "$SOURCE_SHA"
+      - name: Produce actual private baseline versus emotional tag takes
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+          HF_HUB_ETAG_TIMEOUT: '30'
+          HF_HUB_DOWNLOAD_TIMEOUT: '300'
+        run: |
+          python systemia/media-studio/voice-nano-expressive-audition.py --out private-nano-audition
+      - name: Ensure ffprobe and FFmpeg available for independent generated audio QA
+        run: |
+          set -euo pipefail
+          if ! command -v ffprobe >/dev/null 2>&1 || ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          ffprobe -version | head -1
+      - name: Independent media, rights and source integrity check
+        run: |
+          python - <<'PY'
+          import json,hashlib,subprocess,pathlib
+          root=pathlib.Path('private-nano-audition')
+          receipt=json.loads((root/'performance-receipt.json').read_text())
+          assert len(receipt['outputs'])==3
+          for key in ['voiceCloningReferenceUsed','humanQualityApproved',
+                      'commercialPublicationAuthorized','directPreviousAudioConditioning',
+                      'originalEvercraftModel','modelWeightRevisionPinned']:
+              assert receipt[key] is False, key
+          for take in receipt['outputs']:
+              p=root/take['file']
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==take['sha256']
+              streams=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-of','json',str(p)]))
+              assert streams['streams'][0]['channels']==1
+              assert take['seconds']>.5
+          print('Real audio files probed; expressive capacity remains human unverified')
+          PY
+      - name: Preserve private audition files even if verification fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-voice-foundry-nano-expression-private-auditions
+          path: private-nano-audition/
+          retention-days: 7
+          if-no-files-found: error

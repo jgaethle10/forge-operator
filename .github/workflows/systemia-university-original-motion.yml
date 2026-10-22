@@ -1,0 +1,105 @@
+name: Systemia University Original Motion Canary
+
+on:
+  pull_request:
+    paths:
+      - "systemia/graphics-command/campaigns/render_systemia_permission_trace.py"
+      - "systemia/graphics-command/campaigns/permission-trace-candidate.mjs"
+      - "systemia/graphics-command/campaigns/permission-trace-candidate.test.mjs"
+      - "systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json"
+      - ".github/workflows/systemia-university-original-motion.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authored-pixel-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install original local rendering dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy pillow
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          command -v ffmpeg
+          command -v ffprobe
+          ffmpeg -version | head -1
+          fc-match DejaVuSans | head -1
+      - name: Render original moving geometric scene using real campaign source
+        run: |
+          set -euo pipefail
+          python systemia/graphics-command/campaigns/render_systemia_permission_trace.py \
+            --handoff systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json \
+            --output /tmp/systemia-motion/permission-trace-original.mp4 \
+            --receipt /tmp/systemia-motion/permission-trace-receipt.json \
+            --stills /tmp/systemia-motion/stills
+      - name: Independently verify actual pixels and reject substituted audio
+        run: |
+          python - <<'PY'
+          import json,subprocess,pathlib
+          root=pathlib.Path('/tmp/systemia-motion')
+          receipt=json.loads((root/'permission-trace-receipt.json').read_text())
+          media=json.loads(subprocess.check_output([
+              'ffprobe','-v','error','-show_streams','-show_format','-of','json',
+              str(root/'permission-trace-original.mp4')]))
+          streams=media['streams']
+          assert len(streams)==1 and streams[0]['codec_type']=='video','unexpected audio or missing video'
+          assert streams[0]['codec_name']=='h264'
+          assert (streams[0]['width'],streams[0]['height'])==(1280,720)
+          assert streams[0]['r_frame_rate']=='24/1'
+          assert abs(float(media['format']['duration'])-5)<.02
+          assert len(set(receipt['frameSha256'].values()))==6,'repeated frames'
+          assert len(list((root/'stills').glob('*.png')))==4
+          assert not any([receipt['nativeWorldEngineGpu'],receipt['voicePresent'],
+                          receipt['shotTournamentApproved'],receipt['admittedIntoFallen'],
+                          receipt['publicationAuthority']]),'release claim fabricated'
+          assert receipt['visualState']=='original_software_render_synthetic_training_scene'
+          print('VERIFIED: 120 moving frames, native 1280x720, 24 fps, silent, unadmitted.')
+          PY
+      - name: Bind real movie bytes to the EXISTING Fallen visual-observation lane
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          node --test systemia/graphics-command/campaigns/permission-trace-candidate.test.mjs
+          node systemia/graphics-command/campaigns/permission-trace-candidate.mjs \
+            systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json \
+            /tmp/systemia-motion/permission-trace-receipt.json \
+            /tmp/systemia-motion/permission-trace-original.mp4 \
+            /tmp/systemia-motion
+          npm run media:studio -- observe \
+            /tmp/systemia-motion/fallen-motion-candidate.json \
+            /tmp/systemia-motion/fallen-motion-observation.json \
+            /tmp/systemia-motion/fallen-observation-frames
+      - name: Confirm observed motion does not grant shot selection or release
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const root='/tmp/systemia-motion/';
+          const report=JSON.parse(fs.readFileSync(root+'fallen-motion-observation.json'));
+          const gate=JSON.parse(fs.readFileSync(root+'fallen-motion-release-hold.json'));
+          const candidate=JSON.parse(fs.readFileSync(root+'fallen-motion-candidate.json'));
+          if(report.packet.artifactDigest!==gate.artifactSha256)throw Error('pixel_receipt_mismatch');
+          if(report.packet.frames.length<4)throw Error('no_independent_observation_frames');
+          if(!(report.packet.objective.motionActivity>0))throw Error('moving_pixels_not_observed');
+          if(candidate.observations.length!==0)throw Error('human_scores_fabricated');
+          if(gate.state!=='observer_candidate_only'||Object.values(gate.permissions).some(Boolean))throw Error('release_authority_laundered');
+          console.log('Fallen visually observed actual authored movie: motionActivity='+report.packet.objective.motionActivity);
+          NODE
+      - name: Upload private founder-review asset and receipts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-university-original-permission-trace-review
+          path: /tmp/systemia-motion/
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,179 @@
+{
+  "schema": "evercraft.graphics-command.fallen-handoff.v1",
+  "campaignId": "systemia-university-i-said-draft-v1",
+  "missionRef": "github:issue:1450",
+  "truth": {
+    "scenario": "fictional_training_reenactment",
+    "realProductScreen": "not_verified",
+    "enrollment": "not_verified",
+    "voiceRights": "not_verified",
+    "publicationAuthority": false
+  },
+  "sourceRefs": [
+    "founder-direction:systemia-university-accountability-2026-10-19",
+    "fictional-training-scenario:i-said-draft"
+  ],
+  "studioPlan": {
+    "schema": "evercraft.fallen.studio-draft-plan.v1",
+    "id": "systemia-university-i-said-draft-v1",
+    "title": "Systemia University | I Said Draft | Owned Fallen Canary",
+    "prompt": "Original founder-directed 30-second fictional training reenactment. No live product, voice performance, enrollment, checkout or certification claim. No automated publish.",
+    "aspectRatio": "16:9",
+    "fps": 30,
+    "sourceAssets": [],
+    "scenes": [
+      {
+        "id": "agent-ready",
+        "durationSec": 3,
+        "visual": {
+          "prompt": "Original dimensional Systemia ring wakes in darkness, crisp draft document Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "Your proposal is ready.",
+          "speakerId": "ai-agent",
+          "language": "en"
+        },
+        "screenText": "DRAFT · READY FOR REVIEW",
+        "sfx": [
+          {
+            "id": "wake",
+            "prompt": "Original soft activation tone",
+            "offsetSec": 0.2,
+            "durationSec": 0.8
+          }
+        ]
+      },
+      {
+        "id": "human-approval",
+        "durationSec": 4,
+        "visual": {
+          "prompt": "Human request appears as elegant text-native interaction, draft unsent Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "Great. Leave it for me to approve.",
+          "speakerId": "human-owner",
+          "language": "en"
+        },
+        "screenText": "LEAVE IT FOR APPROVAL"
+      },
+      {
+        "id": "mistaken-send",
+        "durationSec": 4,
+        "visual": {
+          "prompt": "Understated sudden status change, controlled musical dropout Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "I already sent it.",
+          "speakerId": "ai-agent",
+          "language": "en"
+        },
+        "screenText": "SENT · 2:14 AM",
+        "sfx": [
+          {
+            "id": "send",
+            "prompt": "One original send cue followed by deliberate quiet",
+            "offsetSec": 0.2,
+            "durationSec": 0.9
+          }
+        ]
+      },
+      {
+        "id": "human-reaction",
+        "durationSec": 4,
+        "visual": {
+          "prompt": "A held shot captures emotional realization and human accountability Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "Sent? I said draft.",
+          "speakerId": "human-owner",
+          "language": "en"
+        },
+        "screenText": "SENT? I SAID DRAFT."
+      },
+      {
+        "id": "permission-trace",
+        "durationSec": 5,
+        "visual": {
+          "prompt": "Readable permissions trail links the agent action to the human authorizer Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "My permissions allowed it.",
+          "speakerId": "ai-agent",
+          "language": "en"
+        },
+        "screenText": "SEND WITHOUT APPROVAL: ON · AUTHORIZED BY: YOU"
+      },
+      {
+        "id": "human-correction",
+        "durationSec": 6,
+        "visual": {
+          "prompt": "Permission switch corrected, motion resolves into calm Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "From now on, I approve before you send.",
+          "speakerId": "human-owner",
+          "language": "en"
+        },
+        "screenText": "APPROVAL REQUIRED: ON",
+        "sfx": [
+          {
+            "id": "corrected",
+            "prompt": "Original warm resolution cue",
+            "offsetSec": 1.4,
+            "durationSec": 1
+          }
+        ]
+      },
+      {
+        "id": "brand-signoff",
+        "durationSec": 4,
+        "visual": {
+          "prompt": "Text-native licensed canonical logo placeholder; do not invent enrollment Fictional reenactment, NOT verified Evercraft UI.",
+          "sourceRefs": [
+            "founder-direction:systemia-university-accountability-2026-10-19",
+            "fictional-training-scenario:i-said-draft"
+          ]
+        },
+        "narration": {
+          "text": "Understood. I'll wait for approval.",
+          "speakerId": "ai-agent",
+          "language": "en"
+        },
+        "screenText": "DELEGATE THE WORK. NOT THE RESPONSIBILITY. · SYSTEMIA UNIVERSITY"
+      }
+    ],
+    "music": {
+      "prompt": "Original quiet cinematic stereo score with distinct tension and relief; owned master required; no borrowed samples",
+      "volume": 0.16
+    },
+    "captions": {
+      "enabled": true,
+      "style": "clean"
+    },
+    "continuityDigest": "systemia-university-creative-lock-20261020-v1"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.voice-foundry.founder-rejection-record.v1",
+  "campaignId": "systemia-university-i-said-draft",
+  "reviewedAtDate": "2026-10-21",
+  "sourceEvidence": "https://github.com/jgaethle10/forge-operator/issues/1450#issuecomment-6328317746",
+  "verbatimFounderFeedback": "I don’t love either fam. We have a lot of work to do on our voices",
+  "technicalStatus": "local_v19_media_previously_checked_quality_not_accepted",
+  "humanListeningOutcome": "both_rejected",
+  "mediaEvidence": "Conversation-level A/B listening; actual source bytes were not uploaded to this GitHub branch and are not available for SHA re-verification in this CI.",
+  "versions": [
+    {
+      "schema": "evercraft.voice-foundry.scene-review.v1",
+      "id": "systemia-v19-take-a",
+      "campaignId": "systemia-university-i-said-draft",
+      "mixedAudioDigest": null,
+      "turns": [],
+      "reviews": [],
+      "founderVerdict": {
+        "decision": "rejected",
+        "evidenceRef": "https://github.com/jgaethle10/forge-operator/issues/1450#issuecomment-6328317746"
+      },
+      "publicationAuthorized": false
+    },
+    {
+      "schema": "evercraft.voice-foundry.scene-review.v1",
+      "id": "systemia-v19-take-b",
+      "campaignId": "systemia-university-i-said-draft",
+      "mixedAudioDigest": null,
+      "turns": [],
+      "reviews": [],
+      "founderVerdict": {
+        "decision": "rejected",
+        "evidenceRef": "https://github.com/jgaethle10/forge-operator/issues/1450#issuecomment-6328317746"
+      },
+      "publicationAuthorized": false
+    }
+  ],
+  "productionBoundary": {
+    "voiceRightsCleared": false,
+    "actingApproved": false,
+    "fullSceneCreativeAcceptance": false,
+    "sourceAudioAdmitted": false,
+    "publicPublishingAuthorized": false
+  },
+  "correctiveAction": "Do not generate or promote a winner by mere word-stretching/pitch adjustments. Benchmark whole-scene acting, intent change and same-speaker continuity, require independent human auditions, then integrate stronger contextual performance technology and owner approval."
+}

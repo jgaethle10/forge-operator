@@ -1,0 +1,32 @@
+name: Voice Foundry Word-Level Emphasis Integrity
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-word-emphasis.py'
+      - 'systemia/media-studio/voice-word-emphasis.test.py'
+      - '.github/workflows/voice-word-emphasis-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  non-generative-word-direction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install reviewed local editor dependencies
+        run: |
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'soundfile>=0.12,<1'
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          ffmpeg -hide_banner -filters | grep rubberband
+      - name: Verify original source preservation, moderate emphasis and strict rights hold
+        run: python systemia/media-studio/voice-word-emphasis.test.py

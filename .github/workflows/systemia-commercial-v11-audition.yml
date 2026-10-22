@@ -1,0 +1,57 @@
+name: Systemia Commercial Council V11 Dialogue Audition (private)
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/campaigns/systemia-v11-directed-dialogue.py'
+      - '.github/workflows/systemia-commercial-v11-audition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dramatic-performance-audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate story and timing without needing downloads
+        run: python systemia/graphics-command/campaigns/systemia-v11-directed-dialogue.py --verify-only
+      - name: Prepare existing owner-reviewed neural voice model runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Perform original V02 agent and V06 human dialogue
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python systemia/graphics-command/campaigns/systemia-v11-directed-dialogue.py --out systemia-v11-dialogue
+      - name: Independently validate actual dry audio and hold rights
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,subprocess
+          root=pathlib.Path('systemia-v11-dialogue')
+          report=json.loads((root/'v11-voice-actor-receipt.json').read_text())
+          assert len(report['cues'])==6
+          assert not report['filmPublicationAuthorized']
+          assert not report['voiceModelRightsCleared']
+          assert not report['voiceActingHumanApproved']
+          for cue in report['cues']:
+              file=root/cue['file']
+              assert hashlib.sha256(file.read_bytes()).hexdigest()==cue['sha256']
+              props=json.loads(subprocess.check_output(['ffprobe','-v','quiet','-show_streams','-of','json',str(file)]))
+              assert props['streams'][0]['sample_rate']=='24000' and props['streams'][0]['channels']==1
+          print('6 actual performed neural dialogue files, rights held')
+          PY
+      - name: Private actor take archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-commercial-v11-real-v02-v06-dialogue
+          path: systemia-v11-dialogue/
+          retention-days: 14
+          if-no-files-found: error

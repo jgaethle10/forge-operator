@@ -1,0 +1,91 @@
+name: Systemia University Owned Fallen Canary
+
+on:
+  pull_request:
+    paths:
+      - "systemia/graphics-command/fallen-studio-handoff.ts"
+      - "systemia/graphics-command/fallen-studio-handoff.test.ts"
+      - "systemia/graphics-command/fallen-voice-foundry-handoff.mjs"
+      - "systemia/graphics-command/fallen-voice-foundry-handoff.test.mjs"
+      - "systemia/graphics-command/write-voice-foundry-queue.mjs"
+      - "systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json"
+      - ".github/workflows/systemia-university-owned-fallen-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  governed-studio-draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install project dependencies
+        run: npm install --no-audit --no-fund
+      - name: Test actual Fallen production-need compiler and negative safety gates
+        run: |
+          node --import tsx --test \
+            systemia/graphics-command/fallen-studio-handoff.test.ts \
+            systemia/graphics-command/fallen-voice-foundry-handoff.test.mjs
+      - name: Compile production-owned editable timeline (NO provider work)
+        run: |
+          node --import tsx systemia/graphics-command/fallen-studio-handoff.ts \
+            systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json \
+            /tmp/systemia-university-owned-fallen-canary
+      - name: Produce held Voice Foundry script and timing queue
+        run: |
+          node --import tsx systemia/graphics-command/write-voice-foundry-queue.mjs \
+            /tmp/systemia-university-owned-fallen-canary/fallen-studio-draft.json \
+            /tmp/systemia-university-owned-fallen-canary
+      - name: Check compatibility with the actual held Voice Foundry v1 source (pinned, read-only)
+        run: |
+          set -euo pipefail
+          PINNED_VOICE_FOUNDRY_SHA="4ca64307d3d96a4ace22a523c3283fb87a7dd7a6"
+          git fetch --no-tags --depth=1 origin "$PINNED_VOICE_FOUNDRY_SHA"
+          test "$(git rev-parse FETCH_HEAD)" = "$PINNED_VOICE_FOUNDRY_SHA"
+          mkdir -p /tmp/voice-foundry-compat
+          for name in voice-foundry.mjs voice-performance.mjs voice-continuity.mjs; do
+            git show "FETCH_HEAD:systemia/media-studio/$name" > "/tmp/voice-foundry-compat/$name"
+          done
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {planVoiceSession} from '/tmp/voice-foundry-compat/voice-foundry.mjs';
+          const plan=JSON.parse(fs.readFileSync('/tmp/systemia-university-owned-fallen-canary/voice-foundry-session.held.json','utf8'));
+          const actual=planVoiceSession(plan);
+          assert.equal(actual.schema,'evercraft.voice-foundry.session.v1');
+          assert.equal(actual.status,'held');
+          assert.equal(actual.cues.length,7);
+          assert.ok(actual.cues.every(c=>c.status==='blocked'&&c.reasons.includes('voice_profile_unregistered')));
+          assert.ok(actual.cues.every(c=>c.providerVoiceId===null));
+          assert.equal(actual.providerCallMade,false);
+          assert.equal(actual.paidGenerationAuthorized,false);
+          assert.equal(actual.publicationAuthorityGranted,false);
+          NODE
+      - name: Check every advertised scene remains a production requirement
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const root='/tmp/systemia-university-owned-fallen-canary';
+          const receipt=JSON.parse(fs.readFileSync(root+'/handoff-receipt.json','utf8'));
+          const draft=JSON.parse(fs.readFileSync(root+'/fallen-studio-draft.json','utf8'));
+          if(receipt.status!=='awaiting_governed_assets'||receipt.exportAllowed!==false||receipt.publicationAuthority!==false) throw new Error('release_boundary_broken');
+          if(receipt.durationSec!==30||receipt.pendingPictureCount!==7||receipt.pendingVoiceCount!==7) throw new Error('scene_or_voice_proof_missing');
+          if(!draft.project.assets.every(asset=>asset.path.startsWith('pending://production/'))) throw new Error('unverified_media_leak');
+          if(draft.boundaries.paidGenerationAuthorityGranted!==false) throw new Error('paid_generation_leak');
+          const voice=JSON.parse(fs.readFileSync(root+'/voice-foundry-session.held.json','utf8'));
+          const voiceReceipt=JSON.parse(fs.readFileSync(root+'/voice-handoff-receipt.json','utf8'));
+          if(voice.cues.length!==7 || voice.profiles.length!==0 || voice.cues.some(c=>c.voiceProfileId!==null)) throw new Error('unapproved_voice_cast_leak');
+          if(voiceReceipt.status!=='held_cast_and_rights_required' || voiceReceipt.publicationAuthority!==false) throw new Error('voice_release_boundary_broken');
+          NODE
+      - name: Attach inspectable draft artifacts, never publish
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-university-owned-fallen-draft
+          path: /tmp/systemia-university-owned-fallen-canary/
+          if-no-files-found: error
+          retention-days: 14

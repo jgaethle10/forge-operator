@@ -1,0 +1,36 @@
+name: Voice Foundry Full-Scene Creative Rejection Gate
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-scene-creative-gate.mjs'
+      - 'systemia/media-studio/voice-scene-creative-gate.test.mjs'
+      - 'systemia/graphics-command/campaigns/systemia-v19-founder-rejection.json'
+      - '.github/workflows/voice-scene-creative-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scene-level-creative-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test founder veto, voice consistency and full-scene evidence hold
+        run: node --test systemia/media-studio/voice-scene-creative-gate.test.mjs
+      - name: Prove neither rejected V19 version can be automatically promoted
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import {reviewVoiceScene} from './systemia/media-studio/voice-scene-creative-gate.mjs';
+          const data=JSON.parse(fs.readFileSync('systemia/graphics-command/campaigns/systemia-v19-founder-rejection.json','utf8'));
+          if(data.versions?.length!==2)throw Error('both_v19_takes_must_be_reviewed');
+          for(const candidate of data.versions){
+            const result=reviewVoiceScene(candidate);
+            if(result.status!=='rejected_by_founder'||result.publicationAuthorized!==false)
+              throw Error('founder_rejected_audio_must_never_be_promoted');
+          }
+          console.log('Both V19 candidates rejected; no voice approval or publication.');
+          NODE

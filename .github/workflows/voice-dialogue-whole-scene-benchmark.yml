@@ -1,0 +1,58 @@
+name: Evercraft Voice Foundry Whole-Conversation Benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-dialogue-benchmark.mjs'
+      - 'systemia/media-studio/voice-dialogue-benchmark.test.mjs'
+      - 'systemia/graphics-command/campaigns/systemia-v15-emotion-context-plan.json'
+      - 'systemia/graphics-command/campaigns/systemia-v19-founder-rejection.json'
+      - '.github/workflows/voice-dialogue-whole-scene-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-dialogue-with-honest-hardware-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test contextual dialogue and founder-rejection fail-closed contract
+        run: node --test systemia/media-studio/voice-dialogue-benchmark.test.mjs
+      - name: Create actual two-speaker benchmark plan from existing owned source facts
+        run: |
+          node systemia/media-studio/voice-dialogue-benchmark.mjs prepare \
+            systemia/graphics-command/campaigns/systemia-v15-emotion-context-plan.json \
+            systemia/graphics-command/campaigns/systemia-v19-founder-rejection.json \
+            /tmp/evercraft-voice-scene-benchmark
+      - name: Reject fake voice admission and report actual available GPU
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const dir='/tmp/evercraft-voice-scene-benchmark/';
+          const scene=JSON.parse(fs.readFileSync(dir+'benchmark-held.json','utf8'));
+          const host=JSON.parse(fs.readFileSync(dir+'runtime-audit.json','utf8'));
+          if(scene.dialogue.length!==7 || scene.comparedRejectedTakeIds.length!==2)
+            throw Error('full_dialogue_or_founder_verdict_missing');
+          if(scene.generation.executed!==false || scene.release.publicationAuthorized!==false)
+            throw Error('nonexistent_audio_promoted');
+          if(scene.status!=='held_missing_two_authorized_voice_prefixes')
+            throw Error('unreviewed_voice_prefix_accepted');
+          if(host.modelGeneratedAudio || host.authorizedGpuSpend)
+            throw Error('hardware_audit_implies_execution');
+          console.log(JSON.stringify({dialogueTurns:scene.dialogue.length,
+            status:scene.status,visibleGPUs:host.visibleNvidiaGpus,
+            blocker:host.blocker},null,2));
+          NODE
+      - name: Preserve inspectable request and resource audit only
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-voicefoundry-whole-dialogue-benchmark-held
+          path: /tmp/evercraft-voice-scene-benchmark/
+          retention-days: 14
+          if-no-files-found: error

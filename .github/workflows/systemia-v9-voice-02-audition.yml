@@ -1,0 +1,56 @@
+name: Systemia University Voice 02 Neural Scene Audition (private)
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/campaigns/systemia-v9-voice-02-neural-audition.py'
+      - '.github/workflows/systemia-v9-voice-02-audition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-owned-voice-audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify exact storyboard and original V02 casting plan
+        run: python systemia/graphics-command/campaigns/systemia-v9-voice-02-neural-audition.py --verify-only
+      - name: Install CPU neural speech dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Run existing owned voice generation source (no paid provider)
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python systemia/graphics-command/campaigns/systemia-v9-voice-02-neural-audition.py voice-02-narration
+          test -s voice-02-narration/v9-voice-foundry-audition-receipt.json
+          test "$(find voice-02-narration -maxdepth 1 -name '*-voice-02.wav' | wc -l)" -eq 5
+      - name: Verify five separate dry WAVs and held commercial rights status
+        run: |
+          python - <<'PY'
+          import json,pathlib,subprocess,hashlib
+          root=pathlib.Path('voice-02-narration')
+          r=json.loads((root/'v9-voice-foundry-audition-receipt.json').read_text())
+          assert len(r['cues'])==5 and not r['humanAuditionApproved'] and not r['publicationAuthorized']
+          for c in r['cues']:
+            path=root/c['asset']
+            assert hashlib.sha256(path.read_bytes()).hexdigest()==c['sha256']
+            p=json.loads(subprocess.check_output(['ffprobe','-v','quiet','-show_streams','-of','json',str(path)]))
+            assert p['streams'][0]['sample_rate']=='24000' and p['streams'][0]['channels']==1
+          print('five real neural V02 files measured; human approvals still pending')
+          PY
+      - name: Upload private audition stems, never publish commercial
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-university-v9-voice-02-original-neural-narration
+          path: voice-02-narration/
+          retention-days: 14
+          if-no-files-found: error
