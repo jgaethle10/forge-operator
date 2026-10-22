@@ -102,3 +102,25 @@ test('metadata and encrypted payload persist across vault restart',async t=>{
  assert.deepEqual(recovered,data);
  assert.equal((await restarted.status(id)).download_responses_completed,1);
 });
+
+test('300 MiB original streams into encrypted storage and back without full-file buffering',async t=>{
+ now.value=1000000000;const {gate}=await pilot(t);
+ const mib=1024*1024,block=Buffer.alloc(mib,0x5a);
+ block[0]=13;block[block.length-1]=211;
+ const expected=createHash('sha256');
+ for(let i=0;i<300;i++)expected.update(block);
+ const original_sha256=expected.digest('hex');
+ const {id}=await gate.create({
+  original_size:300*mib,original_sha256,recipient_ref:'large-file@example.test',
+  authorization_ref:'large-file-approval',ttl_ms:3600000
+ });
+ async function* source(){for(let i=0;i<300;i++)yield block;}
+ const uploaded=await gate.upload(id,source());
+ assert.equal(uploaded.original_size,300*mib);
+ const issued=await gate.issue(id,'large-file-approval');
+ let count=0;const recovered=createHash('sha256');
+ const receipt=await gate.download(id,issued.access_token,{write:async bytes=>{count+=bytes.length;recovered.update(bytes);},finish:async()=>{}});
+ assert.equal(count,300*mib);
+ assert.equal(recovered.digest('hex'),original_sha256);
+ assert.equal(receipt.recipient_identity_verified,false);
+});
