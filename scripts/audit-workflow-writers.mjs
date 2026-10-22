@@ -3,6 +3,7 @@
 // IMPORTANT: this text-level gate is a conservative CI tripwire, not branch
 // protection, script provenance analysis, a runner sandbox or a security audit.
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -11,6 +12,7 @@ const ROOT = path.resolve(fileURLToPath(new URL('../', import.meta.url)));
 const BASELINE_PATH = path.join(ROOT,'audits/workflow-writer-baseline-2026-10-15.json');
 const DEFAULT_WORKFLOWS = path.join(ROOT,'.github/workflows');
 const latest = (name) => String(name??'').replaceAll('\\','/');
+const blobSha=(content)=>createHash('sha1').update('blob '+Buffer.byteLength(content)+'\\0').update(content).digest('hex');
 
 export function enumerateWorkflows(directory=DEFAULT_WORKFLOWS){
   if(!fs.existsSync(directory))throw new Error('workflow_directory_missing');
@@ -79,7 +81,7 @@ export function assessWriterInventory(items, baseline){
       findings.push({code:'PUSH_WITHOUT_DECLARED_CONTENTS_WRITE',file:item.file});
     if(item.protected_commercial_file_staging_risk&&item.writer)
       findings.push({code:'DIRECT_STAGE_OF_PROTECTED_BUYER_CONTRACT',file:item.file});
-    if(item.writer&&!prior.has(item.file))
+    if(item.writer&&!prior.has(item.file)&&!item.isolated_writer_verified)
       findings.push({code:'NEW_UNAPPROVED_WORKFLOW_WRITER',file:item.file});
   }
   const writers=items.filter(x=>x.writer).map(x=>x.file).sort();
@@ -116,7 +118,39 @@ export function assessWriterInventory(items, baseline){
 export function auditWorkflowFiles({directory=DEFAULT_WORKFLOWS,baselinePath=BASELINE_PATH}={}){
   const baseline=JSON.parse(fs.readFileSync(baselinePath,'utf8'));
   const files=enumerateWorkflows(directory);
-  const entries=files.map(file=>inspectWorkflow(fs.readFileSync(file,'utf8'),latest(path.relative(ROOT,file))));
+  const isolatedRows=Array.isArray(baseline.existing_isolated_society_state_writers)
+    ? baseline.existing_isolated_society_state_writers:[];
+  const worker=baseline.isolated_society_worker_source||{};
+  let isolatedScriptSafe=false;
+  if(worker.path==='systemia/society/window-heartbeat.mjs' &&
+     /^[a-f0-9]{40}$/.test(worker.blob_sha||'')){
+    const sourcePath=path.join(ROOT,worker.path);
+    if(fs.existsSync(sourcePath)){
+      const source=fs.readFileSync(sourcePath,'utf8');
+      isolatedScriptSafe=blobSha(source)===worker.blob_sha &&
+        source.includes("export const STATE_BRANCH='window-society-state';") &&
+        source.includes("export const STATE_PATH='state/window.json';") &&
+        source.includes('branch:STATE_BRANCH') &&
+        source.includes('ref='+encodeURIComponent('STATE_BRANCH').replace('STATE_BRANCH','STATE_BRANCH'))===false;
+      // The file is SHA-frozen above. No source edit is accepted until
+      // the exact changed worker is reviewed and its blob SHA replaced.
+    }
+  }
+  const entries=files.map(file=>{
+    const source=fs.readFileSync(file,'utf8');
+    const entry=inspectWorkflow(source,latest(path.relative(ROOT,file)));
+    const matching=isolatedRows.filter(row=>row.file===entry.file);
+    entry.isolated_writer_verified=Boolean(
+      matching.length===1 && isolatedScriptSafe &&
+      blobSha(source)===matching[0].blob_sha &&
+      matching[0].state_branch==='window-society-state' &&
+      matching[0].state_path==='state/window.json' &&
+      source.includes('node systemia/society/window-heartbeat.mjs') &&
+      !entry.pushes_to_main&&!entry.has_push_command &&
+      !entry.pulls_untrusted_pr_target&&!entry.id_token_write &&
+      !entry.protected_commercial_file_staging_risk);
+    return entry;
+  });
   return assessWriterInventory(entries,baseline);
 }
 
