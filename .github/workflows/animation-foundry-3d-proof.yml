@@ -43,6 +43,21 @@ jobs:
         run: |
           xvfb-run -a blender -b /tmp/kennedy-3d/Kennedy_Rigged3D_BLOCKOUT.blend \
             -P systemia/animation-foundry/blender-rig-audit.py -- /tmp/kennedy-3d/rig_audit.json
+      - name: Character-art readiness gate (expect HELD for workprint)
+        run: |
+          set +e
+          xvfb-run -a blender -b /tmp/kennedy-3d/Kennedy_Rigged3D_BLOCKOUT.blend \\
+            -P systemia/animation-foundry/studio-character-preflight.py -- /tmp/kennedy-3d/art_readiness.json
+          rc=$?
+          set -e
+          cat /tmp/kennedy-3d/art_readiness.json
+          test "$rc" -eq 10
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/kennedy-3d/art_readiness.json'))
+          assert p['status']=='HELD' and len(p['failures'])>0
+          print('CREATIVE_GATE_CORRECTLY_HELD',p['failures'])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
