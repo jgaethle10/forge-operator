@@ -170,6 +170,13 @@ def audit(video_path: Path, jobpack_path: Path, out_dir: Path, *, max_tile_width
             reasons.append('inspect_potentially_clipped_highlights')
         if any(s['metric']['nearlyBlackFraction']>.90 for s in samples):
             reasons.append('inspect_nearly_black_composition')
+        # Diagnostic prompts, not automatic aesthetic judgments. A deliberately
+        # dark film can pass human review, but low overall exposure in a tiny
+        # bright subject must not silently look healthy on the dailies board.
+        if all(s['metric']['meanLuma']<.08 for s in samples):
+            reasons.append('inspect_underexposed_low_mean_luminance')
+        if all(s['metric']['nearlyBlackFraction']>.70 for s in samples):
+            reasons.append('inspect_overdominant_dark_negative_space')
         if all(s['interSampleChange'] is not None and s['interSampleChange']<.006 for s in samples[1:]):
             reasons.append('inspect_unintended_visual_stillness')
         rows.append({'id':shot['id'],'intent':shot['intent'],'visualProof':shot['visualProof'],
