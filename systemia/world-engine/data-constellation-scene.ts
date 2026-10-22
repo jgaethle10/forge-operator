@@ -47,8 +47,17 @@ function sphere():GeometryAsset{
     const a=row*(sides+1)+col,b=a+sides+1;
     indices.push(a,b,a+1,a+1,b,b+1);
   }
+  // The existing native-film GPU browser worker consumes non-indexed vertex
+  // streams (pass.draw(vertexCount)), so expand the triangles explicitly.
+  // Indexed sphere primitives would pass schema validation but render garbage.
+  const expandedPositions:number[]=[],expandedNormals:number[]=[],expandedUVs:number[]=[];
+  for(const index of indices){
+    expandedPositions.push(...positions.slice(index*3,index*3+3));
+    expandedNormals.push(...normals.slice(index*3,index*3+3));
+    expandedUVs.push(...uvs.slice(index*2,index*2+2));
+  }
   return {schema:'evercraft.world-engine.geometry.v1',id:'data-constellation:sphere',
-    primitive:'triangles',positions,normals,uvs,indices};
+    primitive:'triangles',positions:expandedPositions,normals:expandedNormals,uvs:expandedUVs};
 }
 const material=(id:string,shade:[number,number,number],metallic:number,roughness:number,
   emission?:[number,number,number],intensity=0)=>({
