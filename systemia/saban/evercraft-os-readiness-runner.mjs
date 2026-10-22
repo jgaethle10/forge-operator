@@ -15,6 +15,7 @@ import {
   executeMultiplicationPlan
 } from './multiplier.mjs';
 import { admitMultiplicationRequest } from './admission.mjs';
+import { preflightOsMission } from '../evercraft-os/parallel-mission-bridge.mjs';
 
 export async function runOsReadiness({ rootDir = process.cwd(), outputFile = null } = {}) {
   const registry = loadMultiplicationRegistry(resolve(rootDir, 'systemia/saban/multiplication-registry.json'));
@@ -22,6 +23,12 @@ export async function runOsReadiness({ rootDir = process.cwd(), outputFile = nul
   const workItems = loadWorkItems(contract, rootDir);
   if (workItems.length !== 12 || new Set(workItems.map(x => x.key)).size !== 12) {
     throw new Error('os_readiness_incomplete_or_duplicate_work_items');
+  }
+  const systemiaPolicy = preflightOsMission({ rootDir });
+  if (systemiaPolicy.state !== 'systemia_policy_plan_admitted' ||
+      systemiaPolicy.route_count !== 12 ||
+      systemiaPolicy.durable_systemia_mission_recorded !== false) {
+    throw new Error('systemia_os_readiness_policy_held');
   }
   const admission = admitMultiplicationRequest({
     contract,
@@ -54,6 +61,10 @@ export async function runOsReadiness({ rootDir = process.cwd(), outputFile = nul
     mission_key: 'evercraft-os-parallel-completion-20261021',
     state: passed ? 'source_ready' : 'held',
     scope: 'read_only_local_saban_source_audit',
+    systemia_policy: systemiaPolicy,
+    systemia_policy_evaluated: true,
+    systemia_policy_plan_admitted: true,
+    durable_systemia_mission_recorded: false,
     logical_assignments_executed_locally: execution.quality?.completed || 0,
     logical_assignment_limit: 12,
     local_worker_slots: 4,
