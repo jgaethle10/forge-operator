@@ -15,6 +15,8 @@ const SIGNALS = Object.freeze({
   'us-cpi-all-items-yoy': { geography: 'us', unit: 'percent', hosts: ['www.bls.gov', 'bls.gov'] },
   'us-cpi-gasoline-mom': { geography: 'us', unit: 'percent', hosts: ['www.bls.gov', 'bls.gov'] },
   'us-cpi-gasoline-yoy': { geography: 'us', unit: 'percent', hosts: ['www.bls.gov', 'bls.gov'] },
+  'wa-unemployment-rate': { geography: 'wa-state', unit: 'percent', hosts: ['esd.wa.gov', 'www.esd.wa.gov'] },
+  'wa-nonfarm-payroll-change': { geography: 'wa-state', unit: 'jobs_change', hosts: ['esd.wa.gov', 'www.esd.wa.gov'] },
   'yakima-unemployment-rate': { geography: 'yakima-wa', unit: 'percent', hosts: ['esd.wa.gov', 'www.esd.wa.gov'] },
   'yakima-nonfarm-payroll': { geography: 'yakima-wa', unit: 'jobs', hosts: ['esd.wa.gov', 'www.esd.wa.gov'] },
 });
