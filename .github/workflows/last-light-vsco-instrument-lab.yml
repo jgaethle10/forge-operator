@@ -67,3 +67,11 @@ jobs:
           name: internal-last-light-vsco-recorded-instrument-qa
           path: /tmp/last-light-instrument-audition/
           retention-days: 14
+
+      - name: Archive pinned source samples for reproducible instrument research
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-vsco-pinned-source-bank
+          path: /tmp/vsco-instrument-source-cache/*.wav
+          retention-days: 3
