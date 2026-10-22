@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {appendRelationshipEvidence} from './relationship-ingest.mjs';
+import {appendRelationshipEvidence,persistPrivateRelationshipEvidence} from './relationship-ingest.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {projectRelationshipReview} from './relationship-policy.mjs';
 
 const now=new Date('2026-10-21T20:00:00Z');
@@ -60,4 +63,24 @@ test('an incoming opt-out event does not restore outbound permission',()=>{
  },now});
  assert.equal(b.ledger.records[0].outbound_policy,'manual_review_only');
  assert.equal(b.ledger.records[0].timeline.at(-1).type,'no_contact_requested');
+});
+
+test('private intake writes protected record, accepts replay and rejects insecure ledger',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'crm-private-ingest-'));
+ fs.chmodSync(root,0o700);
+ const file=path.join(root,'relationships.json');
+ try{
+  const created=persistPrivateRelationshipEvidence({file,initial,event:first,now});
+  assert.equal(created.state,'created');
+  assert.equal(fs.statSync(file).mode&0o077,0);
+  const repeated=persistPrivateRelationshipEvidence({file,initial,event:first,now});
+  assert.equal(repeated.state,'duplicate');
+  const second=persistPrivateRelationshipEvidence({file,initial,event:{
+    event_ref:'message:new',type:'meeting_discussed',evidence_ref:'private:ref',occurred_at:'2026-10-12T00:00:00Z'
+  },now});
+  assert.equal(second.state,'appended');
+  assert.equal(JSON.parse(fs.readFileSync(file,'utf8')).records[0].timeline.length,2);
+  fs.chmodSync(file,0o644);
+  assert.throws(()=>persistPrivateRelationshipEvidence({file,initial,event:first,now}),/unsafe/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
