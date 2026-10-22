@@ -198,6 +198,8 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
           ? Math.round(Math.min(timesUsed * duration, availableTrim) * 10) / 10
           : undefined,
       motion: asset.kind === 'image' ? 'push_in' : 'cover',
+      cropAnchorX: asset.cropAnchorX,
+      cropAnchorY: asset.cropAnchorY,
       transition: index === 0 ? 'cut' : 'dissolve',
       intent: BEAT_INTENT[beat],
       screenText: beat === 'cta' ? project.brief.cta : undefined,
