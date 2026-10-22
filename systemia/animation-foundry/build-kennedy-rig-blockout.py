@@ -167,8 +167,8 @@ floor=bpy.context.object;floor.name='Blockout_floor';floor.data.materials.append
 def pose_key(frame,torso=0,head_z=0,upper=-0.10,forearm=0,hand=0,index=0,thumb=0,smile=0):
     scene.frame_set(frame)
     values={'spine':('Y',torso),'head':('Z',head_z),
-      'upper_arm_R':('Y',upper),'forearm_R':('Y',forearm),
-      'hand_R':('Y',hand),'index_R':('X',index),'thumb_R':('X',thumb)}
+      'upper_arm_R':('Z',upper),'forearm_R':('Z',forearm),
+      'hand_R':('Z',hand),'index_R':('X',index),'thumb_R':('X',thumb)}
     for bone,(axis,angle) in values.items():
         pb=arm.pose.bones[bone]
         pb.rotation_mode='XYZ'
@@ -186,6 +186,23 @@ pose_key(26,head_z=.12,upper=-.82,forearm=-.90,hand=.08,index=-.20,thumb=-.35,sm
 pose_key(29,head_z=.08,upper=-.78,forearm=-.83,hand=.10,index=.1,thumb=.10,smile=.85)
 pose_key(48,head_z=-.08,upper=-.13,forearm=0,hand=0,index=0,thumb=0,smile=.30)
 
+
+# Fail if the hand does not visibly travel: the first rig was structurally
+# sound but only twisted along bone axes and never performed a readable snap.
+from bpy_extras.object_utils import world_to_camera_view
+def projected_hand(frame):
+    scene.frame_set(frame); bpy.context.view_layer.update()
+    hand_world=arm.matrix_world @ arm.pose.bones['hand_R'].tail
+    q=world_to_camera_view(scene,cam,hand_world)
+    return {'x':round(q.x*640,2),'y':round((1-q.y)*360,2),
+            'worldZ':round(hand_world.z,3)}
+start=projected_hand(1); raised=projected_hand(24); released=projected_hand(26)
+screenTravel=math.hypot(raised['x']-start['x'],raised['y']-start['y'])
+if screenTravel<42:
+    raise RuntimeError('VISIBLE_SNAP_MOTION_BLOCKED: wrist movement %.1fpx (<42px)'%screenTravel)
+if abs(released['x']-raised['x'])+abs(released['y']-raised['y'])<2:
+    raise RuntimeError('SNAP_RELEASE_BLOCKED: no distinguishable contact/release motion')
+
 scene.frame_set(1)
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'Kennedy_Rigged3D_BLOCKOUT.blend'))
 # Use actual Blender rendered pixels, not generated storyboard stills.
@@ -197,6 +214,7 @@ report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
   'model':'Kennedy_Rigged3D_BLOCKOUT.blend','stage':'engineering-blockout',
   'visual_design_approved':False,'performance_approved':False,
   'armature_bones':len(arm.data.bones),'face_shapes':len(head.data.shape_keys.key_blocks)-1,
+  'screen_hand_travel_px':round(screenTravel,2),'start_wrist':start,'snap_contact_wrist':raised,'snap_release_wrist':released,
   'note':'Genuine Blender 3D rig/animation pipeline proof; placeholder face/hair/hand, not cinematic match.'}
 (out/'proof.json').write_text(json.dumps(report,indent=2))
 print('BLOCKOUT COMPLETE',json.dumps(report))
