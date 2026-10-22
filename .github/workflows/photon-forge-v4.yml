@@ -94,3 +94,47 @@ jobs:
           assert encoded_receipt['publicationAuthority'] is False
           print('Original + externally supplied Evercraft scenes -> native World Engine -> Photon Forge H.264 passed')
           PY
+
+      - name: Produce 2-second continuous-motion Evercraft authored-frame audition
+        run: |
+          "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" scripts/photon-forge-v4/export-world-engine-sequence.ts \
+            --world-json "$RUNNER_TEMP/evercraft-native-worldframe/world-definition.json" \
+            --geometry-json "$RUNNER_TEMP/evercraft-native-worldframe/geometry.json" \
+            --output-dir "$RUNNER_TEMP/evercraft-motion-audition" --frames 60 --fps 30
+          python scripts/photon-forge-v4/render.py \
+            --sequence-manifest "$RUNNER_TEMP/evercraft-motion-audition/sequence.json" \
+            --geometry-json "$RUNNER_TEMP/evercraft-motion-audition/geometry.json" \
+            --fps 30 --output "$RUNNER_TEMP/evercraft-motion-audition/Evercraft_NATIVE_Motion_Audition_SILENT.mp4"
+          python - <<'PY'
+          import json,os,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'evercraft-motion-audition'
+          producer=json.loads((root/'producer-receipt.json').read_text())
+          rendered=json.loads((root/'Evercraft_NATIVE_Motion_Audition_SILENT.receipt.json').read_text())
+          assert producer['engineWasExecutedInThisProcess'] is True
+          assert producer['sceneSource']=='provided_world_definition_unverified_rights'
+          assert rendered['frameCount']==60 and rendered['durationSec']==2
+          assert len(set(frame['digest'] for frame in producer['frames']))==60
+          assert rendered['outputSha256']==hashlib.sha256((root/'Evercraft_NATIVE_Motion_Audition_SILENT.mp4').read_bytes()).hexdigest()
+          assert rendered['sampleFrames']['0']['pixelsSha256']!=rendered['sampleFrames']['30']['pixelsSha256']
+          assert rendered['sampleFrames']['30']['pixelsSha256']!=rendered['sampleFrames']['59']['pixelsSha256']
+          assert rendered['publicationAuthority'] is False
+          print('Real Evercraft CPU-rendered source sequence: 60 changing frames in 2.0s, no audio, no publication')
+          PY
+      - name: Archive original Evercraft cross-engine visual canary for founder review
+        if: success()
+        run: |
+          mkdir -p out/evercraft-native-render-canary
+          cp "$RUNNER_TEMP/evercraft-motion-audition/Evercraft_NATIVE_Motion_Audition_SILENT.mp4" out/evercraft-native-render-canary/
+          cp "$RUNNER_TEMP/evercraft-motion-audition/Evercraft_NATIVE_Motion_Audition_SILENT.receipt.json" out/evercraft-native-render-canary/
+          cp "$RUNNER_TEMP/evercraft-motion-audition/producer-receipt.json" out/evercraft-native-render-canary/
+          cp "$RUNNER_TEMP/evercraft-motion-audition/world-definition.json" out/evercraft-native-render-canary/
+          cp "$RUNNER_TEMP/evercraft-motion-audition/geometry.json" out/evercraft-native-render-canary/
+          cp "$RUNNER_TEMP/evercraft-motion-audition/sequence.json" out/evercraft-native-render-canary/
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: evercraft-native-world-engine-photon-forge-canary
+          path: out/evercraft-native-render-canary/
+          if-no-files-found: error
+          retention-days: 7
