@@ -22,6 +22,14 @@ export function validateRelationshipRecord(r,{now=new Date()}={}) {
   if(ms(r.observed_at,'observed_at')>now.getTime()+120000)throw Error('relationship_future_state');
   if(r.not_before!=null)ms(r.not_before,'not_before');
   if(r.next_review_at!=null)ms(r.next_review_at,'next_review_at');
+  const nextState=r.next_action_state||'open';
+  if(!['open','snoozed','completed','cancelled'].includes(nextState))throw Error('relationship_next_action_state_invalid');
+  // Closing a follow-up is a recorded fact, not an inference from time passing.
+  if(nextState==='completed'||nextState==='cancelled') {
+    req(r.next_action_evidence_ref,'next_action_evidence_ref');
+    if(ms(r.next_action_decided_at,'next_action_decided_at')>now.getTime()+120000)
+      throw Error('relationship_next_action_future_decision');
+  }
   if(!Array.isArray(r.timeline)||r.timeline.length>2000)throw Error('relationship_timeline_invalid');
   const ids=new Set();
   for(const e of r.timeline) {
@@ -101,7 +109,7 @@ export function preflightGovernedContact({ledger,interactionLedger,input,now=new
 /** Review signals only, NEVER outreach actions. Identifiers stay private. */
 export function projectRelationshipReview(ledger,{now=new Date()}={}) {
   const records=ledger.records||[];
-  const signals=records.filter(r=>r.next_review_at&&ms(r.next_review_at,'next_review_at')<=now.getTime())
+  const signals=records.filter(r=>(r.next_action_state||'open')!=='completed'&&(r.next_action_state||'open')!=='cancelled'&&r.next_review_at&&ms(r.next_review_at,'next_review_at')<=now.getTime())
     .map(r=>({signal_key:sha('relationship-review:'+r.relationship_ref),
       domain:'relationships',kind:'partner_followup',state:'held',severity:'normal',
       evidence_state:'reported',observed_at:r.observed_at,due_at:r.next_review_at}));
