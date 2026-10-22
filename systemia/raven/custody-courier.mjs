@@ -14,6 +14,9 @@ export const LEGACY_RAVEN_FIELDS = Object.freeze([
 ]);
 
 const ALLOWED = new Set(LEGACY_RAVEN_FIELDS);
+const MAX_FIELD_CHARS = 16384;
+const MAX_CIPHERTEXT_CHARS = 131072;
+const MAX_WRAPPED_KEY_CHARS = 1024;
 const b64 = (v) => {
   const bytes = v instanceof Uint8Array ? v : new Uint8Array(v);
   let s = "";
@@ -29,7 +32,7 @@ function cleanFields(fields) {
   if (!fields || typeof fields !== "object" || Array.isArray(fields)) throw new Error("invalid_custody_fields");
   const names = Object.keys(fields);
   if (!names.length || names.length > LEGACY_RAVEN_FIELDS.length ||
-      names.some(n => !ALLOWED.has(n) || typeof fields[n] !== "string" || fields[n].length === 0)) {
+      names.some(n => !ALLOWED.has(n) || typeof fields[n] !== "string" || fields[n].length === 0 || fields[n].length > MAX_FIELD_CHARS)) {
     throw new Error("invalid_custody_fields");
   }
   return names.sort();
@@ -67,22 +70,35 @@ export async function createPrivateReceiverSession({ now = Date.now(), ttlMs = 3
       if (bundle?.schema !== "evercraft.raven.custody-envelope.v1" ||
           bundle?.challenge_id !== challenge.id ||
           bundle?.expires_at !== challenge.expires_at) throw new Error("custody_challenge_mismatch");
+      if (typeof bundle.wrapped_key !== "string" || bundle.wrapped_key.length > MAX_WRAPPED_KEY_CHARS ||
+          typeof bundle.ciphertext !== "string" || bundle.ciphertext.length > MAX_CIPHERTEXT_CHARS ||
+          typeof bundle.iv !== "string" || bundle.iv.length !== 16 ||
+          !Number.isSafeInteger(bundle.field_count) || bundle.field_count < 1 ||
+          bundle.field_count > LEGACY_RAVEN_FIELDS.length) throw new Error("custody_envelope_invalid");
       const aad = context(challenge);
       const wrappedKey = fromB64(bundle.wrapped_key);
-      const aesBytes = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, keys.privateKey, wrappedKey);
-      const aes = await crypto.subtle.importKey("raw", aesBytes, "AES-GCM", false, ["decrypt"]);
-      const data = await crypto.subtle.decrypt({
-        name: "AES-GCM",
-        iv: fromB64(bundle.iv),
-        additionalData: aad,
-        tagLength: 128,
-      }, aes, fromB64(bundle.ciphertext));
-      const fields = JSON.parse(td.decode(data));
-      const names = cleanFields(fields);
-      if (names.length !== bundle.field_count) throw new Error("custody_envelope_count_mismatch");
-      // SECURITY: values returned only to the private receiving process in memory.
-      // It must seal into the owned encrypted vault without logging or displaying values.
-      return fields;
+      const aesBytes = new Uint8Array(await crypto.subtle.decrypt({ name: "RSA-OAEP" }, keys.privateKey, wrappedKey));
+      try {
+        const aes = await crypto.subtle.importKey("raw", aesBytes, "AES-GCM", false, ["decrypt"]);
+        const data = new Uint8Array(await crypto.subtle.decrypt({
+          name: "AES-GCM",
+          iv: fromB64(bundle.iv),
+          additionalData: aad,
+          tagLength: 128,
+        }, aes, fromB64(bundle.ciphertext)));
+        try {
+          const fields = JSON.parse(td.decode(data));
+          const names = cleanFields(fields);
+          if (names.length !== bundle.field_count) throw new Error("custody_envelope_count_mismatch");
+          // Returned only to a private receiver process; seal immediately and never log.
+          return fields;
+        } finally {
+          // Best effort for intermediate buffers; returned JS strings are not zeroizable.
+          data.fill(0);
+        }
+      } finally {
+        aesBytes.fill(0);
+      }
     },
   };
 }
@@ -101,11 +117,19 @@ export async function sealCustodyForReceiver(challenge, fields, { now = Date.now
   const aesBytes = crypto.getRandomValues(new Uint8Array(32));
   const aesKey = await crypto.subtle.importKey("raw", aesBytes, "AES-GCM", false, ["encrypt"]);
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const ciphertext = await crypto.subtle.encrypt({
-    name: "AES-GCM", iv, additionalData: context(challenge), tagLength: 128,
-  }, aesKey, te.encode(JSON.stringify(fields)));
-  const wrappedKey = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, aesBytes);
-  aesBytes.fill(0);
+  const plaintext = te.encode(JSON.stringify(fields));
+  let ciphertext;
+  let wrappedKey;
+  try {
+    ciphertext = await crypto.subtle.encrypt({
+      name: "AES-GCM", iv, additionalData: context(challenge), tagLength: 128,
+    }, aesKey, plaintext);
+    wrappedKey = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, aesBytes);
+  } finally {
+    aesBytes.fill(0);
+    // Best effort: JS strings from caller remain in memory until garbage-collected.
+    plaintext.fill(0);
+  }
   return {
     schema: "evercraft.raven.custody-envelope.v1",
     challenge_id: challenge.id,
