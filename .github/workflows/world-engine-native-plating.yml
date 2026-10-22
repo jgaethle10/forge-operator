@@ -1,0 +1,96 @@
+name: World Engine source steel-plating material native GPU proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/native-hull-plating.ts'
+      - 'systemia/world-engine/native-hull-plating.test.ts'
+      - 'systemia/world-engine/webgpu.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-native-plating.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  true-original-steel-material:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install World Engine
+        run: npm install --no-audit --no-fund
+      - name: Install own browser-native WebGPU renderer
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Test real UV-anchored shader, ship model materials and old renderer protections
+        run: |
+          npx tsx --test systemia/world-engine/native-hull-plating.test.ts
+          npm run test:world-engine
+      - name: Install FFmpeg when absent
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render 4 original ships with proper authored steel finish, source sea, source sky, all moving actors
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          CINEMATIC_FORMAT: wide
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ORGANIC_WAKE: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          BATTLE_SKY: "1"
+          BATTLE_HULL_PLATING: "1"
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-native-steel-plating
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-native-plating-browser
+        run: npm run world:cinematic-render-proof
+      - name: Independently confirm native source GPU steel pixel differences versus identical no-plating frame
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const dir='/tmp/evercraft-native-steel-plating',v=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const actual=crypto.createHash('sha256').update(fs.readFileSync(v)).digest('hex');
+          const p=r.nativeHullPlating;
+          if(!p||p.source!=='owned:wgsl-ship-plating-v1'||
+             p.originalSourceHullMeshesAtMiddle?.length!==4||
+             !p.originalSourceHullMeshesAtMiddle.every(x=>x.geometryId.startsWith('owned:battle-vessel-'))||
+             p.nativeWgslStableUvSeamPigmentRoughness!==true||
+             p.originalGpuCounterfactualChangedPixels<40||
+             p.oldFoamShaderFlagPreserved!==true||
+             p.filmRecolorOrPostprocessing!==false||
+             p.historicallyAuthenticatedPaint!==false||p.publicationAuthority!==false||
+             r.hullLoft?.vertexCounts?.length!==4||
+             r.organicWake?.realGpuFoamDrawsAtMiddle<25||
+             r.organicWake?.hasOldChevronDraws!==false||
+             r.animatedOcean?.vertexCount!==112*112*6||
+             r.proceduralSky?.actualGpuPixelCounterfactualChangedPixels<500||
+             r.actorMotion?.actorCount!==4||r.exactGpuReadbackFrames!==96||
+             r.uniqueRawFrameDigests<80||r.output.sha256!==actual||
+             r.output.audioCodec!==null||r.publicationAuthority!==false||
+             !fs.existsSync(path.join(dir,'plating-disabled-first-frame.rgba')))
+             throw Error('native_ship_plating_real_gpu_counterfactual_failed');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',v]));
+          const track=probe.streams.find(s=>s.codec_type==='video');
+          if(track?.codec_name!=='h264'||track.width!==640||track.height!==360||
+             Number(track.nb_frames)!==96||probe.streams.some(s=>s.codec_type==='audio'))
+             throw Error('source_native_plating_movie_invalid');
+          console.log('VERIFIED_NATIVE_SOURCE_STEEL_PLATING',{sha256:actual,
+            ships:p.originalSourceHullMeshesAtMiddle.map(x=>x.id),
+            originalGpuPlatingPixels:p.originalGpuCounterfactualChangedPixels,
+            sourceFrameCount:r.uniqueRawFrameDigests,releaseApproved:false});
+          NODE
+      - name: Save exact original GPU movie, before and after raw pixel proof and real review frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-original-native-3d-steel-plating-gpu
+          path: |
+            /tmp/evercraft-native-steel-plating/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-native-steel-plating/receipt.json
+            /tmp/evercraft-native-steel-plating/opening.png
+            /tmp/evercraft-native-steel-plating/middle.png
+            /tmp/evercraft-native-steel-plating/closing.png
+            /tmp/evercraft-native-steel-plating/plating-disabled-first-frame.rgba
+          if-no-files-found: error
+          retention-days: 7
