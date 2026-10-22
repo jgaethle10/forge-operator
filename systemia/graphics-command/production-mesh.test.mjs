@@ -41,6 +41,12 @@ test('Megazord verifies physical graphics assets, council, timeline and honest d
   assert.equal(jobpack.departments.fallenVisualStage.state,'html_stage_only');
   assert.equal(jobpack.departments.voiceFoundryAndScore.state,'not_executed');
   assert.equal(jobpack.departments.evercraftClip.state,'handoff_only');
+  assert.equal(jobpack.visualFloor.status,'awaiting_real_render_and_independent_review');
+  assert.equal(jobpack.visualFloor.workOrder.profile,'product_commercial');
+  assert.equal(jobpack.visualFloor.workOrder.beats.length,4);
+  assert.equal(jobpack.visualFloor.workOrder.publicationAuthority,false);
+  assert.equal(jobpack.delivery.missing.includes('visual_floor_independent_review'),true);
+  assert.equal(receipt.visualFloorWorkOrderDigest,jobpack.visualFloor.workOrder.digest);
   assert.equal(jobpack.frameCount,360);
   assert.equal(jobpack.shots.length,4);
   assert.equal(jobpack.shots[0].startFrame,0);
