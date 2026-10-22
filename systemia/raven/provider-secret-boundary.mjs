@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 import { ProviderCredentialVault } from "../evercraft-home/credential-vault.mjs";
 
 function first(env, names) {
@@ -15,9 +16,12 @@ function vaultSecrets(env) {
     env?.EVERCRAFT_CREDENTIAL_STATE_DIR ||
     ""
   ).trim();
-  if (!stateDir || !fs.existsSync(stateDir)) return { kaggle: null, numerai: null };
+  // Inspection must not initialize a new vault key in an empty directory.
+  if (!stateDir || !fs.existsSync(path.join(stateDir, ".vault-key"))) {
+    return { kaggle: null, numerai: null };
+  }
   try {
-    const vault = new ProviderCredentialVault({ stateDir });
+    const vault = new ProviderCredentialVault({ stateDir, readOnly: true });
     const kaggleMeta = vault.list({ provider: "kaggle" })[0] || null;
     const numeraiMeta = vault.list({ provider: "numerai" })[0] || null;
     const kaggleRaw = kaggleMeta ? vault.readSecret(kaggleMeta.credential_ref) : null;

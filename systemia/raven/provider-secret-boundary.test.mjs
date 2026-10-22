@@ -63,3 +63,60 @@ test("runtime bindings still override the owned vault", () => {
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("a read-only probe of an empty configured directory never creates a vault key", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "raven-provider-no-mutate-"));
+  try {
+    assert.equal(fs.existsSync(path.join(root, ".vault-key")), false);
+    const before = fs.readdirSync(root);
+    const status = resolveCompetitionProviderSecrets({ EVERCRAFT_CREDENTIAL_STATE_DIR: root });
+    const after = fs.readdirSync(root);
+    assert.deepEqual(status, { kaggle: null, numerai: null });
+    assert.deepEqual(after, before);
+    assert.equal(fs.existsSync(path.join(root, ".vault-key")), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a nonexistent vault path is not created by a read-only provider probe", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "raven-provider-no-dir-"));
+  try {
+    const target = path.join(root, "not-created");
+    const status = resolveCompetitionProviderSecrets({ RAVEN_PROVIDER_CREDENTIAL_STATE_DIR: target });
+    assert.deepEqual(status, { kaggle: null, numerai: null });
+    assert.equal(fs.existsSync(target), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("read-only vault handles cannot write or alter directory permissions", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "raven-provider-readonly-"));
+  try {
+    const writer = new ProviderCredentialVault({ stateDir: root });
+    writer.put({
+      provider: "kaggle",
+      environment: "live",
+      label: "competition-foundry",
+      apiKeyId: "kaggle-fixture-id",
+      apiSecret: "synthetic-test-token-never-a-live-value",
+      actorRef: "proof",
+    });
+    fs.chmodSync(root, 0o750);
+    const filesBefore = fs.readdirSync(root);
+    const readonly = new ProviderCredentialVault({ stateDir: root, readOnly: true });
+    assert.equal(readonly.list({ provider: "kaggle" }).length, 1);
+    assert.throws(() => readonly.put({
+      provider: "numerai",
+      apiKeyId: "synthetic-credential-id",
+      apiSecret: "synthetic-test-secret-never-a-live-value",
+    }), /credential_vault_read_only/);
+    const status = resolveCompetitionProviderSecrets({ EVERCRAFT_CREDENTIAL_STATE_DIR: root });
+    assert.equal(status.kaggle.source, "owned_vault");
+    assert.equal(fs.statSync(root).mode & 0o777, 0o750);
+    assert.deepEqual(fs.readdirSync(root), filesBefore);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
