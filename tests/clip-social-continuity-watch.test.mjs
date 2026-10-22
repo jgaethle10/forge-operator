@@ -49,5 +49,10 @@ test('persist structured local audit without posting, secrets or invented receip
     const x=runSocialContinuityWatch({queueFile:q,receiptDir:r,outputFile:o,now});
     assert.equal(x.counts.provider_receipt_recorded,1);
     assert.equal(JSON.parse(fs.readFileSync(o,'utf8')).status,'receipts_recorded');
+    const mission=JSON.parse(fs.readFileSync(path.join(d,'audit','mission-snapshot.json'),'utf8'));
+    assert.equal(mission.schema,'evercraft.kaidance.mission-snapshot.v1');
+    assert.equal(mission.counts.scanned,1);
+    assert.equal(mission.counts.held,0);
+    assert.equal(mission.boundaries.publication_authority,false);
   }finally{fs.rmSync(d,{recursive:true,force:true});}
 });
