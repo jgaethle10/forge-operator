@@ -706,6 +706,36 @@
       "rightsNote": "Contains Sports Illustrated Walter Iooss photograph authorized for the original publication; that license does not automatically extend to this documentary",
       "researchSource": "https://upload.wikimedia.org/wikipedia/commons/2/24/1971_Nebraska_Cornhuskers_football_media_guide.pdf",
       "episodePlacement": "ep01-the-first-two-titles"
+    },
+    {
+      "id": "nixon-white-house-whpo-8358",
+      "title": "Official February 1 1972 WHPO photographic research contact sheet roll 8358 showing team members and Devaney",
+      "kind": "archival_contact_sheet",
+      "acquisitionState": "acquired_digest_verified",
+      "rightsStatus": "contact_sheet_research_only_individual_original_negative_and_publication_review_pending",
+      "sha256": "24f5e891cf3634ad447c56e5d79ae75b54102898ccc2a88848319e2e313b1704",
+      "originalCatalogId": "WHPO-8358",
+      "date": "1972-02-01",
+      "researchSource": "https://www.nixonlibrary.gov/research/almanac/february-1-1972",
+      "originalNegativeAcquired": false,
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "nixon-white-house-whpo-8362",
+      "title": "Official February 1 1972 WHPO photographic research contact sheet roll 8362 featuring championship-team meeting",
+      "kind": "archival_contact_sheet",
+      "acquisitionState": "acquired_digest_verified",
+      "rightsStatus": "contact_sheet_research_only_individual_original_negative_and_publication_review_pending",
+      "sha256": "0677f77e6393a00ae8cb4c13fad870f19d4d40260f31df01db9a7bb420c1f9a4",
+      "originalCatalogId": "WHPO-8362",
+      "date": "1972-02-01",
+      "researchSource": "https://www.nixonlibrary.gov/research/almanac/february-1-1972",
+      "originalNegativeAcquired": false,
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
     }
   ],
   "production": {
