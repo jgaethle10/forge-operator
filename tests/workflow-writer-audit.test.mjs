@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { inspectWorkflow,assessWriterInventory,auditWorkflowFiles } from '../scripts/audit-workflow-writers.mjs';
+import { inspectWorkflow,assessWriterInventory,auditWorkflowFiles,inspectScopedStateWriterReview } from '../scripts/audit-workflow-writers.mjs';
+import fs from 'node:fs';
 
 const known='.github/workflows/known-publisher.yml';
 const baseline={existing_direct_main_writers:[known]};
@@ -53,4 +54,41 @@ test('real repository audit runs with no new unapproved main writer',()=>{
  assert.ok(r.writers.every(x=>x.startsWith('.github/workflows/')));
  assert.ok(r.writers.includes('.github/workflows/chum-watershed.yml'));
  assert.ok(!r.writers.includes('.github/workflows/legacy-provider-purge.yml'));
+});
+
+test('Mossmere scope review is tied to exact code and cannot authorize changed workflows',()=>{
+  const review=JSON.parse(fs.readFileSync(new URL('../audits/window-state-writer-review-2026-10-19.json',import.meta.url),'utf8'));
+  const workflow=fs.readFileSync(new URL('../.github/workflows/window-upstream-heartbeat.yml',import.meta.url),'utf8');
+  const runner=fs.readFileSync(new URL('../systemia/society/window-heartbeat.mjs',import.meta.url),'utf8');
+  const verified=inspectScopedStateWriterReview(review,workflow,runner);
+  assert.equal(verified.valid,true);
+  const writer=inspectWorkflow(workflow,review.workflow);
+  assert.equal(writer.writer,true);
+  const admitted=assessWriterInventory([writer],baseline,{scopedReview:verified});
+  assert.equal(admitted.ok,true);
+  assert.equal(admitted.scoped_state_writer_review,review.workflow);
+  for(const candidate of [
+    inspectScopedStateWriterReview({...review,workflow_blob_sha:'unreviewed'},workflow,runner),
+    inspectScopedStateWriterReview({...review,state_branch:'main'},workflow,runner),
+    inspectScopedStateWriterReview(review,workflow+'\\n# changed without code review',runner),
+    inspectScopedStateWriterReview(review,workflow,runner+'\\n// changed without code review'),
+  ]) {
+    assert.equal(candidate.valid,false);
+    const blocked=assessWriterInventory([writer],baseline,{scopedReview:candidate});
+    assert.equal(blocked.ok,false);
+    assert.ok(blocked.findings.some(x=>x.code==='NEW_UNAPPROVED_WORKFLOW_WRITER'));
+  }
+  const unrelated=inspectWorkflow('permissions:\n  contents: write\n','.github/workflows/unreviewed-writer.yml');
+  assert.ok(assessWriterInventory([unrelated],baseline,{scopedReview:verified}).findings
+    .some(x=>x.code==='NEW_UNAPPROVED_WORKFLOW_WRITER'));
+});
+
+test('direct Mossmere heartbeat remains read-only and cannot silently resume writes',()=>{
+  const workflow=fs.readFileSync(new URL('../.github/workflows/window-heartbeat.yml',import.meta.url),'utf8');
+  assert.match(workflow,/^permissions:\n  contents: read/m);
+  assert.doesNotMatch(workflow,/^\s*contents: write\s*$/m);
+  assert.match(workflow,/WINDOW_DRY_RUN: 'true'/);
+  const classification=inspectWorkflow(workflow,'.github/workflows/window-heartbeat.yml');
+  assert.equal(classification.writer,false);
+  assert.equal(classification.contents_write,false);
 });

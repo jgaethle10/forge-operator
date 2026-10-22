@@ -5,11 +5,47 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(fileURLToPath(new URL('../', import.meta.url)));
 const BASELINE_PATH = path.join(ROOT,'audits/workflow-writer-baseline-2026-10-15.json');
 const DEFAULT_WORKFLOWS = path.join(ROOT,'.github/workflows');
+const SCOPED_REVIEW_PATH = path.join(ROOT,'audits/window-state-writer-review-2026-10-19.json');
+const SCOPED_WRITER = '.github/workflows/window-upstream-heartbeat.yml';
+const SCOPED_RUNNER = 'systemia/society/window-heartbeat.mjs';
+// This is an exact-code exception candidate, NOT a blanket authorization for
+// any workflow with contents:write or any changed script. Source hashes may
+// change only through a reviewed code change; the standalone inventory file
+// cannot whitelist new writers on its own.
+const SCOPED_WORKFLOW_BLOB_SHA = '9f1e16a5133a7c3d23361afcdc038e3f02cd5956';
+const SCOPED_RUNNER_BLOB_SHA = 'd09b4038dee910452a384b8329d11bf033f56706';
+function gitBlobSha(contents){
+  const data=Buffer.from(contents,'utf8');
+  return createHash('sha1').update('blob '+data.length+'\0').update(data).digest('hex');
+}
+export function inspectScopedStateWriterReview(review, workflowSource, runnerSource){
+  const ok=review?.schema==='evercraft.audit.scoped-state-writer-review.v1' &&
+    review?.workflow===SCOPED_WRITER &&
+    review?.runner===SCOPED_RUNNER &&
+    review?.state_branch==='window-society-state' &&
+    review?.state_path==='state/window.json' &&
+    review?.workflow_blob_sha===SCOPED_WORKFLOW_BLOB_SHA &&
+    review?.runner_blob_sha===SCOPED_RUNNER_BLOB_SHA &&
+    gitBlobSha(workflowSource)===SCOPED_WORKFLOW_BLOB_SHA &&
+    gitBlobSha(runnerSource)===SCOPED_RUNNER_BLOB_SHA &&
+    /^  contents: read\s*$/m.test(workflowSource) &&
+    /^  scheduled-mossmere:\s*\n    permissions:\s*\n      contents: write\s*$/m.test(workflowSource) &&
+    /github\.event\.workflow_run\.event == 'schedule'/.test(workflowSource) &&
+    /github\.event\.workflow_run\.conclusion == 'success'/.test(workflowSource) &&
+    /github\.event\.workflow_run\.head_branch == 'main'/.test(workflowSource) &&
+    /persist-credentials: false/.test(workflowSource) &&
+    /export const STATE_BRANCH='window-society-state'/.test(runnerSource) &&
+    /export const STATE_PATH='state\/window.json'/.test(runnerSource) &&
+    /sha:file\.sha,branch:STATE_BRANCH/.test(runnerSource);
+  return {valid:!!ok,scope:ok?SCOPED_WRITER:null};
+}
+
 const latest = (name) => String(name??'').replaceAll('\\','/');
 
 export function enumerateWorkflows(directory=DEFAULT_WORKFLOWS){
@@ -61,7 +97,7 @@ export function inspectWorkflow(source, relativePath){
   };
 }
 
-export function assessWriterInventory(items, baseline){
+export function assessWriterInventory(items, baseline, {scopedReview=null}={}){
   if(!Array.isArray(items)||!baseline||!Array.isArray(baseline.existing_direct_main_writers)){
     throw new Error('workflow_audit_invalid_inputs');
   }
@@ -79,7 +115,7 @@ export function assessWriterInventory(items, baseline){
       findings.push({code:'PUSH_WITHOUT_DECLARED_CONTENTS_WRITE',file:item.file});
     if(item.protected_commercial_file_staging_risk&&item.writer)
       findings.push({code:'DIRECT_STAGE_OF_PROTECTED_BUYER_CONTRACT',file:item.file});
-    if(item.writer&&!prior.has(item.file))
+    if(item.writer&&!prior.has(item.file)&&!(scopedReview?.valid===true&&scopedReview.scope===item.file))
       findings.push({code:'NEW_UNAPPROVED_WORKFLOW_WRITER',file:item.file});
   }
   const writers=items.filter(x=>x.writer).map(x=>x.file).sort();
@@ -97,6 +133,7 @@ export function assessWriterInventory(items, baseline){
     unpinned_action_references:items.reduce((n,x)=>n+(x.unpinned_action_references||0),0),
     direct_main_push_count:items.filter(x=>x.pushes_to_main).length,
     writers,
+    scoped_state_writer_review:scopedReview?.valid===true?scopedReview.scope:null,
     pushers,
     retired_baseline_writers:retired,
     review_priorities:items.filter(x=>x.writer).filter(x=>x.public_chum_staging_risk||x.immediately_review)
@@ -117,7 +154,14 @@ export function auditWorkflowFiles({directory=DEFAULT_WORKFLOWS,baselinePath=BAS
   const baseline=JSON.parse(fs.readFileSync(baselinePath,'utf8'));
   const files=enumerateWorkflows(directory);
   const entries=files.map(file=>inspectWorkflow(fs.readFileSync(file,'utf8'),latest(path.relative(ROOT,file))));
-  return assessWriterInventory(entries,baseline);
+  let scopedReview={valid:false,scope:null};
+  try {
+    const review=JSON.parse(fs.readFileSync(SCOPED_REVIEW_PATH,'utf8'));
+    const workflow=fs.readFileSync(path.join(ROOT,SCOPED_WRITER),'utf8');
+    const runner=fs.readFileSync(path.join(ROOT,SCOPED_RUNNER),'utf8');
+    scopedReview=inspectScopedStateWriterReview(review,workflow,runner);
+  } catch { /* Invalid or absent review must never grant write authority. */ }
+  return assessWriterInventory(entries,baseline,{scopedReview});
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
