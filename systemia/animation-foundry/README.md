@@ -67,3 +67,23 @@ blender -b path/to/kennedy.blend -P systemia/animation-foundry/blender-rig-audit
 This script has only been syntax-checked in the current environment, which has no Blender; it has **not** inspected a real 3D Kennedy rig. A passing structural audit cannot establish beauty, faithful identity, natural movement or child audience response. Founder visual approval, audio and rights release gates remain separate.
 
 The real outstanding work is modeling, grooming, rigging, facial posing, shot animation and musical performance in a renderer that can produce the target imagery. Never substitute a simple vector drawing and label it the same deliverable.
+
+
+## RC13: actual 3D character art pass, STILL NOT APPROVED
+
+`character-art-pass-v3.py` adds Blender-created facial parts, smaller blue eyes, faint freckle geometry, separate five-finger meshes and many bone-skinned blonde hair strands to the engineering rig. The CI proof created a saved Blender scene and 48 rendered frames. Rig audit reported 21 bones, 120 meshes, four facial shape keys. Screen-space hand movement measured 151.56px. These numbers prove the code and rig move, **not** that the character resembles the founder's approved cinematic artwork. RC13 has string-like hair, rigid body motion and a hand that has not demonstrated a convincing finger snap. Visual release remains HELD.
+
+## Higher-quality human topology trial: MPFB
+
+The serious limitation in the earlier 3D build is the geometry itself: hand-built spheres and tubes aren't a substitute for a well-topologized human mesh. `build-human-mesh-proof.py` is a strictly **neutral mesh-generation study**, using MakeHuman Community MPFB and Blender >=4.2. The dedicated `animation-foundry-human-mesh.yml` workflow tries to install Blender 4.5.3, get official MPFB source, create a human basemesh and built-in rig, then return the scene plus auditable vertex and bone counts. A failed installation/build is a held gate, not a reason to substitute a vector cartoon.
+
+- Upstream: https://github.com/makehumancommunity/mpfb2
+- Documentation: https://static.makehumancommunity.org/mpfb/docs/getting_started.html
+- License: https://github.com/makehumancommunity/mpfb2/blob/master/LICENSE.md
+- MPFB code GPLv3; its bundled generated-model assets are CC0 according to upstream. Keep the dependency and original license documentation separate, audit any additional skin/hair/clothing packs individually.
+- Neither a neutral human basemesh nor the sphere-based RC13 is the approved Kennedy appearance.
+- An approved likeness requires human-directed sculpting/stylization, blonde hair grooming, eye color, freckles, costume, face shapes, hand articulation, animation, sound, rights check, and founder viewing the actual rendered footage.
+
+## Creative acceptance before a real short
+
+First approve a front / 3-quarter / profile model turnaround. Then show genuine moving eyes, subtle expressions and a **hand-closeup snap with five distinct fingers**. Only after these passes should the project move to portal choreography, a proper song performance, lip sync and a complete cartoon. A pass from CI or a provider never substitutes for actual artistic approval.
