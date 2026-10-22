@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071014">
+  <meta name="description" content="Evercraft Relay helps teams surface conflicting project commitments and confirm one shared decision. Request a scoped private pilot.">
+  <meta name="robots" content="index,follow">
+  <meta name="evercraft-release" content="relay-private-pilot-intake-20261022-v1">
+  <link rel="canonical" href="https://jgaethle10.github.io/forge-operator/relay/pilot/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Evercraft">
+  <meta property="og:title" content="Relay | Clarity before consequences">
+  <meta property="og:description" content="The meeting ended. Did everyone hear the same decision? Explore Evercraft Relay and request a private pilot.">
+  <meta property="og:url" content="https://jgaethle10.github.io/forge-operator/relay/pilot/">
+  <meta property="og:image" content="https://jgaethle10.github.io/forge-operator/relay/pilot/share.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Relay | Request a private pilot">
+  <meta name="twitter:description" content="One meeting. Two different plans. One clear decision.">
+  <title>Evercraft Relay | Request a Private Pilot</title>
+  <style>
+    :root{color-scheme:dark;--ink:#f7f8f7;--muted:#afbbbc;--line:#25414a;--bg:#061014;--panel:#0b1c22;--teal:#a6f0da;--amber:#eeb87e;--deep:#112930}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+    body:before{content:"";position:absolute;inset:0 0 auto;height:850px;pointer-events:none;background:radial-gradient(ellipse at 72% 18%,#205b5927 0,transparent 48%),radial-gradient(ellipse at 6% 24%,#23465c36 0,transparent 46%)}
+    a{color:inherit}.wrap{max-width:1120px;margin:auto;padding:0 24px;position:relative}.nav{border-bottom:1px solid #243c4270}.navin{min-height:79px;display:flex;align-items:center;justify-content:space-between;gap:20px}.wordmark{font-size:14px;text-decoration:none;font-weight:800;letter-spacing:.2em}.wordmark span{display:block;font-size:10px;color:var(--teal);letter-spacing:.26em;font-weight:600}.nav a.small{font-size:13px;color:#dde5e5;text-decoration:none;border-bottom:1px solid #647c7b;padding-bottom:2px}
+    .eyebrow{text-transform:uppercase;letter-spacing:.21em;font-size:11px;font-weight:800;color:var(--teal)}.hero{padding:86px 0 80px;display:grid;grid-template-columns:1.06fr .94fr;gap:64px;align-items:center}.hero h1{font-size:clamp(3.4rem,6.6vw,6rem);line-height:1.015;letter-spacing:-.063em;margin:23px 0 25px;font-weight:740}.hero h1 em{font-style:normal;color:var(--teal)}.lede{color:#c2d0d0;max-width:590px;font-size:clamp(1.05rem,2.2vw,1.19rem)}.actions{display:flex;align-items:center;gap:17px;flex-wrap:wrap;margin-top:30px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:15px 23px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:800;letter-spacing:.015em;border:1px solid #57706f;cursor:pointer;min-height:50px}.btn.primary{background:var(--teal);color:#051c1b;border-color:var(--teal)}.btn.secondary{background:transparent;color:#e5efeb}.btn:hover{filter:brightness(1.09)}.helper{font-size:12px;color:var(--muted);margin-top:16px}
+    .scene{background:linear-gradient(165deg,#17343b 0,#081920 48%,#0b1a20 100%);border:1px solid #557b7a68;border-radius:20px;padding:22px;box-shadow:0 32px 115px #0008,0 0 80px #78dcc513;position:relative}.scene:before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,#89eadf,transparent)}.scene .top{display:flex;align-items:center;justify-content:space-between;color:#b3ccca;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid #ffffff20;padding-bottom:17px}.scene .dot{display:inline-block;width:6px;height:6px;border-radius:100%;background:var(--teal);margin-right:8px;box-shadow:0 0 12px var(--teal)}.screenlabel{font-size:12px;color:#a4bdbb;margin:23px 0 13px}.duo{display:grid;grid-template-columns:1fr 1fr;gap:11px}.note{background:#edf1ef;color:#172b2e;border-radius:7px;padding:17px 15px 21px;min-height:150px;box-shadow:0 7px 18px #0002}.note .from{font-size:10px;letter-spacing:.1em;font-weight:800;color:#516468;text-transform:uppercase}.note strong{display:block;font-size:20px;margin:15px 0 5px;letter-spacing:-.03em}.note p{margin:0;font-size:13px;line-height:1.4}.flag{margin-top:12px;background:#53302055;border:1px solid #b78a6277;padding:12px 13px;border-radius:7px;display:flex;align-items:center;gap:10px;color:#f4d8c5;font-size:12px}.flag b{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#fbdcb9}.confirm{display:flex;align-items:center;gap:10px;margin-top:12px;color:#beeedd;font-size:12px;padding:10px 4px}.confirm .check{background:#284e46;border:1px solid #6bc7ac;border-radius:6px;padding:2px 8px;font-weight:900}.scenario{font-size:10px;color:#779393;margin-top:14px;text-align:right}
+    .section{padding:75px 0;border-top:1px solid #ffffff17}.section h2{font-size:clamp(2rem,4.7vw,3.3rem);line-height:1.12;letter-spacing:-.05em;max-width:700px;margin:12px 0 17px}.sub{color:#b9c9c7;max-width:780px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:30px}.step{border:1px solid #35515a;background:#0e2025;padding:25px;border-radius:12px}.step .num{color:var(--teal);font-size:12px;letter-spacing:.1em}.step h3{font-size:21px;margin:18px 0 8px;letter-spacing:-.035em}.step p{margin:0;color:#b9c9c7;font-size:14px}.inquiry{background:radial-gradient(ellipse at right top,#24635831,transparent 65%),#0a1c20}.inquiry-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:55px;align-items:start}.inquiry h2{font-size:clamp(2.5rem,5vw,4rem)}.form{border:1px solid #40605f;border-radius:16px;background:#10272b;padding:28px;box-shadow:0 20px 70px #0004}.form p{color:#c0d1cf;margin:0 0 18px}label{display:block;font-weight:700;font-size:13px;color:#e5eae8;margin:16px 0 6px}input,textarea{font:inherit;color:#fff;width:100%;border:1px solid #557270;background:#07181b;border-radius:7px;padding:12px 13px;outline-offset:3px}input:focus-visible,textarea:focus-visible{outline:2px solid var(--teal)}textarea{min-height:98px;resize:vertical}.form button{width:100%;margin-top:20px}.smallprint{font-size:12px!important;color:#9fb2b1!important;margin-top:15px!important}.contact{font-size:13px;margin-top:17px;color:#bacac8}.contact a{color:#c3ffeb;text-underline-offset:3px}.footer{border-top:1px solid #ffffff21;padding:31px 0;color:#849e9c;font-size:12px}.footflex{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    @media(max-width:870px){.hero,.inquiry-grid{grid-template-columns:1fr;gap:35px}.hero{padding-top:59px}.scene{max-width:580px}.steps{grid-template-columns:1fr}.section{padding:55px 0}}@media(max-width:490px){.wrap{padding:0 18px}.hero h1{font-size:clamp(2.9rem,13vw,4rem)}.hero{padding-bottom:55px}.scene{padding:14px}.note{padding:13px 9px;min-height:140px}.note strong{font-size:18px}.note p{font-size:12px}.form{padding:21px}.navin{min-height:68px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <header class="nav"><div class="wrap navin"><a class="wordmark" href="#top" aria-label="Evercraft Relay home">EVERCRAFT<span>RELAY / PRIVATE PILOT</span></a><a class="small" href="#request">Request a pilot &nearr;</a></div></header>
+  <main id="top">
+    <section class="wrap hero" aria-labelledby="headline">
+      <div>
+        <div class="eyebrow">Clarity before consequences</div>
+        <h1 id="headline">One meeting.<br>Two plans.<br><em>One clear decision.</em></h1>
+        <p class="lede">Everyone leaves the meeting feeling certain. Until the same date means two different things. Relay helps teams surface structured disagreements early, clarify what was decided, and confirm the next step together.</p>
+        <div class="actions"><a class="btn primary" href="#request">Request a private pilot &rarr;</a><a class="btn secondary" href="#how">See how it works</a></div>
+        <p class="helper">Exploratory pilot applications · Human-confirmed workflow · No automatic enrollment</p>
+      </div>
+      <div class="scene" aria-label="Illustrative example of one November 2 milestone understood two different ways">
+        <div class="top"><span><i class="dot"></i>RELAY / MEETING REVIEW</span><span>ILLUSTRATIVE EXAMPLE</span></div>
+        <div class="screenlabel">A date everyone heard differently.</div>
+        <div class="duo">
+          <div class="note"><span class="from">Construction team</span><strong>NOV 02</strong><p>Construction begins</p></div>
+          <div class="note"><span class="from">Permitting team</span><strong>NOV 02</strong><p>Permit submission</p></div>
+        </div>
+        <div class="flag"><b>Difference flagged</b> One date. Two milestones. Needs clarification.</div>
+        <div class="confirm"><span class="check">&#10003;</span><span>Human-confirmed shared decision</span></div>
+        <div class="scenario">Concept illustration · fictional fields · not customer data</div>
+      </div>
+    </section>
+    <section class="section" id="how"><div class="wrap">
+      <div class="eyebrow">The work after the meeting</div><h2>Catch the disagreement before it becomes the delay.</h2>
+      <p class="sub">Relay is being developed around a practical truth: a meeting only creates alignment when everyone can verify the same decisions, owners, and deadlines. The current pilot is bounded to structured information and human confirmation.</p>
+      <div class="steps">
+        <article class="step"><span class="num">01 / COMPARE</span><h3>Capture interpretations</h3><p>Bring separately recorded commitments, milestones, or action items into one structured review.</p></article>
+        <article class="step"><span class="num">02 / CLARIFY</span><h3>Surface differences</h3><p>See mismatched dates, decisions, owners, or statuses before teams act on different assumptions.</p></article>
+        <article class="step"><span class="num">03 / CONFIRM</span><h3>Agree on the record</h3><p>People review and confirm the authoritative next step. Relay doesn't silently declare agreement on their behalf.</p></article>
+      </div>
+    </div></section>
+    <section class="section inquiry" id="request"><div class="wrap inquiry-grid">
+      <div><div class="eyebrow">Evercraft Relay / Limited private review</div><h2>Bring us the meeting you can't afford to misunderstand.</h2><p class="sub">Tell us what your team struggles to align on. We'll review whether a scoped Relay pilot makes sense, what access would be required, and what the next steps would involve.</p><p class="sub">Please don't include confidential recordings, client data, passwords, or private documents in your first inquiry.</p></div>
+      <div class="form"><form id="pilot-request">
+        <div class="eyebrow">Request a private pilot</div><p>A short introduction is enough. This opens a prefilled email draft; it does not submit information to a server.</p>
+        <label for="contact-name">Your name</label><input id="contact-name" name="name" autocomplete="name" maxlength="120" required placeholder="Your name">
+        <label for="contact-email">Reply-to email</label><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="200" required placeholder="you@company.com">
+        <label for="company">Company or team</label><input id="company" name="company" autocomplete="organization" maxlength="180" required placeholder="Your organization">
+        <label for="problem">Where do decisions get lost?</label><textarea id="problem" name="problem" maxlength="1600" required placeholder="For example: meeting follow-ups, schedules, handoffs, owners, or conflicting project milestones."></textarea>
+        <button type="submit" class="btn primary">Open pilot request email &rarr;</button>
+        <p class="smallprint">Your email app will open so you can review and send. Nothing is sent automatically. No fee or access is granted by making an inquiry.</p>
+      </form><p class="contact">Prefer to write directly? <a href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Relay%20Private%20Pilot%20Inquiry">Email Evercraft about Relay</a>.</p></div>
+    </div></section>
+  </main>
+  <footer class="footer"><div class="wrap footflex"><span>EVERCRAFT / RELAY · Clarity before consequences.</span><span>Private pilot inquiries reviewed individually · &copy; 2026 Evercraft</span></div></footer>
+  <script>
+    (function(){
+      'use strict';
+      const form=document.getElementById('pilot-request');
+      form.addEventListener('submit',function(event){
+        event.preventDefault();
+        if(!form.reportValidity())return;
+        const data=new FormData(form);
+        const val=key=>String(data.get(key)||'').trim();
+        const subject='Evercraft Relay | Private pilot inquiry';
+        const body=['Hello Evercraft,','','I would like to discuss a private Relay pilot.','','Name: '+val('name'),'Reply-to: '+val('email'),'Company/team: '+val('company'),'Current challenge:',''+val('problem'),'','I understand this is an inquiry, not automatic enrollment.'].join('\n');
+        window.location.href='mailto:jessegaethle10@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      });
+    })();
+  </script>
+</body>
+</html>
