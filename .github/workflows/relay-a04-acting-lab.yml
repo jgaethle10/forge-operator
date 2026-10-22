@@ -1,0 +1,49 @@
+name: Relay A04 Natural Speech Lab (Private)
+on:
+  push:
+    branches: [feat/relay-voice05-film-audition-20261020]
+    paths:
+      - "systemia/media-studio/relay-a04-acting-lab.py"
+      - ".github/workflows/relay-a04-acting-lab.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-a04:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Prove no script words changed
+        run: python systemia/media-studio/relay-a04-acting-lab.py --verify-only
+      - name: Install recorded Kokoro Bella voice runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Eight independently generated native voice readings
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/relay-a04-acting-lab.py private-relay-a04
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          p=Path('private-relay-a04')
+          v=json.loads((p/'receipt.json').read_text())
+          assert v['words_preserved'] and len(v['takes'])==8
+          for t in v['takes']:
+              b=(p/t['file']).read_bytes()
+              assert b[:4]==b'RIFF'
+              assert hashlib.sha256(b).hexdigest()==t['sha256']
+          print("eight source WAVs independently SHA verified")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-a04-natural-native-bella-private
+          path: private-relay-a04/
+          retention-days: 7
+          if-no-files-found: error
