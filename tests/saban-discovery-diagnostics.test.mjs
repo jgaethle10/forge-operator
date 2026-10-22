@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError, assessBuyerHandoff } from '../systemia/saban/discovery-path-classify.mjs';
+import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError, assessBuyerHandoff, summarizeDiscoveryLayers } from '../systemia/saban/discovery-path-classify.mjs';
 
 const goodProfile = () => ({
   initialized: true, errors: [],
@@ -171,4 +171,38 @@ test('success-looking but unverified options response remains held', () => {
   const result=assessBuyerHandoff({public_id:id}, {ok:false,public_id:id,buyer_checkout_available:true,human_offer_url:url},id,url);
   assert.equal(result.offer_link_ok,false);
   assert.equal(result.buyer_handoff_state,'unverified_payment_authority');
+});
+
+test('healthy discovery reports held buyer handoff without claiming checkout works', () => {
+  const p={initialized:true,errors:[],intents:[{match_ok:true,offer_link_ok:false,buyer_handoff_state:'held_payment_authority'}]};
+  const layers=summarizeDiscoveryLayers({profiles:[p,{...p}],surfaces:[{path:'/health',status:200}]},1);
+  assert.equal(layers.state,'discovery_ok_buyer_handoff_held');
+  assert.equal(layers.mcp_readonly_ok,true);
+  assert.equal(layers.catalog_matches_ok,true);
+  assert.equal(layers.public_discovery_surfaces_ok,true);
+  assert.equal(layers.buyer_handoff_authorized,false);
+  assert.equal(layers.buyer_handoff_held,true);
+  assert.equal(layers.paid_order_verified,false);
+});
+test('explicit authorized navigation is still not provider payment evidence', () => {
+  const p={initialized:true,errors:[],intents:[{match_ok:true,offer_link_ok:true,buyer_handoff_state:'verified_connection_option'}]};
+  const layers=summarizeDiscoveryLayers({profiles:[p],surfaces:[{path:'/health',status:200}]},1);
+  assert.equal(layers.state,'discovery_ok_buyer_navigation_authorized');
+  assert.equal(layers.buyer_handoff_authorized,true);
+  assert.equal(layers.paid_order_verified,false);
+  assert.equal(layers.provider_recommendation_verified,false);
+});
+test('discovery transport failure is not disguised as healthy by an earlier buyer URL', () => {
+  const p={initialized:false,errors:['fetch_failed'],intents:[{match_ok:true,offer_link_ok:true,buyer_handoff_state:'verified_connection_option'}]};
+  const layers=summarizeDiscoveryLayers({profiles:[p],surfaces:[{path:'/health',status:0}]},1);
+  assert.equal(layers.state,'discovery_probe_incomplete_or_failed');
+  assert.equal(layers.buyer_handoff_authorized,false);
+  assert.equal(layers.mcp_readonly_ok,false);
+});
+test('missing authorization remains unverified without a hold or successful route', () => {
+  const p={initialized:true,errors:[],intents:[{match_ok:true,offer_link_ok:false,buyer_handoff_state:'unverified_payment_authority'}]};
+  const layers=summarizeDiscoveryLayers({profiles:[p],surfaces:[{path:'/health',status:200}]},1);
+  assert.equal(layers.state,'discovery_ok_buyer_navigation_unverified');
+  assert.equal(layers.buyer_handoff_authorized,false);
+  assert.equal(layers.buyer_handoff_held,false);
 });
