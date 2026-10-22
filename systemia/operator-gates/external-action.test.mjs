@@ -89,3 +89,36 @@ test('approval binds actor division purpose and contact, not just message text',
    assert.ok(altered.reasons.includes('approved_action_changed'));
  }
 });
+
+test('approved mail envelope locks subject sender recipient lists and attachments',()=>{
+ const action={
+  action_type:'send_email',target_ref:'contact:partner',
+  subject_ref:'contact:partner',division_id:'evercraft-home',
+  purpose:'meeting_scheduling',actor_ref:'operator:human',
+  exact_content:'Final approved email',
+  email_subject:'October meeting example',
+  sender_ref:'mailbox:owned',
+  reply_to_ref:'mailbox:owned',
+  recipient_refs:['contact:partner'],
+  cc_refs:[],bcc_refs:[],
+  attachments_sha256:'sha256:abc123'
+ };
+ const approved={...action,
+  human_approval_state:'explicit',
+  human_approval_ref:'approval:exact-envelope',
+  approved_action_fingerprint:fingerprintExternalAction(action)
+ };
+ assert.equal(evaluateExternalAction(approved).decision,'allow');
+ for(const [field,value] of [
+  ['email_subject','Different subject'],
+  ['sender_ref','mailbox:other'],
+  ['recipient_refs',['contact:other']],
+  ['cc_refs',['contact:other']],
+  ['bcc_refs',['contact:other']],
+  ['attachments_sha256','sha256:other']
+ ]){
+  const test=evaluateExternalAction({...approved,[field]:value});
+  assert.equal(test.decision,'deny',field);
+  assert.ok(test.reasons.includes('approved_action_changed'));
+ }
+});
