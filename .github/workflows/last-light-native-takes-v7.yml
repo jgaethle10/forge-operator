@@ -1,0 +1,76 @@
+name: The Last Light V7 Untouched Acoustic Takes
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-v7-native-full-takes.py'
+      - 'systemia/media-studio/test_last_light_v7_native_full_takes.py'
+      - '.github/workflows/last-light-native-takes-v7.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-waveform-instrument-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install small source-analysis dependencies
+        run: python -m pip install --disable-pip-version-check numpy soundfile
+      - name: Acquire exact independently pinned CC0 acoustic WAVs, not General MIDI
+        run: |
+          python - <<'PY'
+          import importlib.util,io,pathlib,urllib.request,zipfile
+          p=pathlib.Path('systemia/media-studio/last-light-v7-native-full-takes.py')
+          spec=importlib.util.spec_from_file_location('v7',p)
+          v7=importlib.util.module_from_spec(spec);spec.loader.exec_module(v7)
+          output=pathlib.Path('/tmp/v7-raw-source.zip')
+          with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_STORED) as archive:
+           for key,sample in v7.TAKES.items():
+            url=v7.SOURCE_URL_PREFIX+'/'+v7.PATHS[key]
+            request=urllib.request.Request(url,headers={'User-Agent':'Evercraft-Native-Strings-V7-Source-Verification'})
+            with urllib.request.urlopen(request,timeout=35) as response:
+             if response.status!=200:raise RuntimeError('sample_bad_source_status')
+             raw=response.read(6000001)
+            if len(raw)>6000000 or v7.sha(raw)!=sample['sha256'] or v7.git_sha(raw)!=sample['git_sha1']:
+             raise RuntimeError('sample_not_independently_hash_pinned:'+key)
+            archive.writestr(sample['name'],raw)
+            print('SOURCE VERIFIED',key,len(raw),v7.sha(raw))
+          print('3 complete recorded takes fetched and double pinned')
+          PY
+      - name: Seven true-source regression tests, no false piano reconstruction
+        env:
+          LL_V7_SOURCE_ZIP: /tmp/v7-raw-source.zip
+        run: |
+          python -m unittest discover -v \
+            -s systemia/media-studio \
+            -p 'test_last_light_v7_native_full_takes.py'
+      - name: Render only two genuine source-native instrument stems
+        run: |
+          python systemia/media-studio/last-light-v7-native-full-takes.py \
+            --sources /tmp/v7-raw-source.zip \
+            --out /tmp/v7-instrument-stems
+          python - <<'PY'
+          import hashlib,json,pathlib
+          out=pathlib.Path('/tmp/v7-instrument-stems')
+          j=json.loads((out/'V7_PROVENANCE.json').read_text())
+          assert len(j['samples'])==3
+          assert j['original_piano_present'] is False
+          assert j['actual_live_performed_legato'] is False
+          assert j['commercial_release_approved'] is False
+          assert len(j['output_sha256'])==2
+          for name,digest in j['output_sha256'].items():
+           assert hashlib.sha256((out/name).read_bytes()).hexdigest()==digest
+          print('Verified source-native cello and violin stems without faking the piano')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v7-full-original-takes-unapproved
+          path: /tmp/v7-instrument-stems/
+          retention-days: 14
