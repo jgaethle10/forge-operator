@@ -1,0 +1,28 @@
+name: Fabric Buyer Moments Current Main
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/fabric-buyer-moments-current-main.test.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
+      - '.github/workflows/fabric-buyer-moments-current-main.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  human-offer-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check storefront syntax and pricing boundary
+        run: |
+          node --check systemia/mcp/fabric-public-site.mjs
+          node --test tests/fabric-buyer-moments-current-main.test.mjs
+      - name: Check existing checkout and held-mode offer contracts
+        run: node --test tests/fabric-offer-pages.test.mjs
