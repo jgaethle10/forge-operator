@@ -27,8 +27,16 @@ jobs:
         run: |
           npx tsx --test systemia/world-engine/data-constellation-scene.test.ts
           npm run test:world-engine
-      - name: Confirm H264 available
-        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Confirm H264 available without unbounded package-index refresh
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          if command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -version | head -1
+          else
+            timeout 130s sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+            command -v ffmpeg
+          fi
       - name: Render actual source-owned native WebGPU frames, no audio
         env:
           CINEMATIC_SCENE: data_constellation
