@@ -116,3 +116,38 @@ export function assessBuyerHandoff(match, options, expectedId, expectedUrl) {
   };
 }
 
+
+// Report independent readiness layers without treating discovery as payment proof.
+// A held buyer route is a commercial gate, not a failed MCP handshake.
+export function summarizeDiscoveryLayers(receipt, expectedIntentsPerProfile = 3) {
+  const profiles = Array.isArray(receipt?.profiles) ? receipt.profiles : [];
+  const surfaces = Array.isArray(receipt?.surfaces) ? receipt.surfaces : [];
+  const mcp_readonly_ok = profiles.length > 0 &&
+    profiles.every(p => p?.initialized === true && Array.isArray(p.errors) && p.errors.length === 0);
+  const public_discovery_surfaces_ok = surfaces.length > 0 &&
+    surfaces.every(s => s?.status === 200);
+  const catalog_matches_ok = mcp_readonly_ok && profiles.every(p =>
+    Array.isArray(p.intents) && p.intents.length === expectedIntentsPerProfile &&
+    p.intents.every(i => i.match_ok === true));
+  const routes = profiles.flatMap(p => Array.isArray(p?.intents) ? p.intents : []);
+  const buyer_handoff_authorized = catalog_matches_ok && routes.length > 0 &&
+    routes.every(i => i.offer_link_ok === true &&
+      i.buyer_handoff_state === 'verified_connection_option');
+  const buyer_handoff_held = routes.some(i => i.buyer_handoff_state === 'held_payment_authority');
+  const discovery_ok = mcp_readonly_ok && public_discovery_surfaces_ok && catalog_matches_ok;
+  const state = !discovery_ok ? 'discovery_probe_incomplete_or_failed' :
+    buyer_handoff_held ? 'discovery_ok_buyer_handoff_held' :
+    buyer_handoff_authorized ? 'discovery_ok_buyer_navigation_authorized' :
+      'discovery_ok_buyer_navigation_unverified';
+  return {
+    mcp_readonly_ok,
+    public_discovery_surfaces_ok,
+    catalog_matches_ok,
+    buyer_handoff_authorized: discovery_ok && buyer_handoff_authorized,
+    buyer_handoff_held,
+    state,
+    paid_order_verified: false,
+    provider_recommendation_verified: false,
+    note: 'Read-only protocol checks cannot prove checkout, settlement or independent LLM recommendation.'
+  };
+}
