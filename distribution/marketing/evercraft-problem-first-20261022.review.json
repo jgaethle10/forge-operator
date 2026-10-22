@@ -1,0 +1,199 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "evercraft-problem-first-20261022",
+  "document": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "status": "draft_review_only",
+  "owner_approval": false,
+  "publication_authority": false,
+  "published_posts_verified": 0,
+  "platform_connections_verified": false,
+  "goal": "Convert problem-aware organic social conversations into qualified first-party leads, verified pilots and paid work.",
+  "entries": [
+    {
+      "id": "EVC-PF-01",
+      "problem": "Missed calls, lost inquiries",
+      "audience": "service businesses",
+      "proposed_channels": [
+        "facebook",
+        "linkedin"
+      ],
+      "planned_day": "2026-10-22",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-01",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    },
+    {
+      "id": "EVC-PF-02",
+      "problem": "Hard-to-identify parts stall repairs",
+      "audience": "repair shops",
+      "proposed_channels": [
+        "facebook",
+        "linkedin"
+      ],
+      "planned_day": "2026-10-23",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-02",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    },
+    {
+      "id": "EVC-PF-03",
+      "problem": "Meetings without follow-through",
+      "audience": "agencies and project teams",
+      "proposed_channels": [
+        "linkedin",
+        "facebook"
+      ],
+      "planned_day": "2026-10-24",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-03",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    },
+    {
+      "id": "EVC-PF-04",
+      "problem": "Estimate-to-payment friction",
+      "audience": "contractors",
+      "proposed_channels": [
+        "facebook"
+      ],
+      "planned_day": "2026-10-25",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-04",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    },
+    {
+      "id": "EVC-PF-05",
+      "problem": "Small-business security blind spots",
+      "audience": "small business owners",
+      "proposed_channels": [
+        "linkedin",
+        "facebook"
+      ],
+      "planned_day": "2026-10-26",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-05",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    },
+    {
+      "id": "EVC-PF-06",
+      "problem": "Disconnected business systems",
+      "audience": "operators",
+      "proposed_channels": [
+        "linkedin"
+      ],
+      "planned_day": "2026-10-27",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-06",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    },
+    {
+      "id": "EVC-PF-07",
+      "problem": "Marketing the problem, not the software",
+      "audience": "founders and partners",
+      "proposed_channels": [
+        "linkedin",
+        "facebook"
+      ],
+      "planned_day": "2026-10-28",
+      "draft_source": "distribution/marketing/evercraft-problem-first-relaunch-2026-10-22.md#evc-pf-07",
+      "creative_state": "required_real_first_party_evidence_or_reviewed_approved_media",
+      "link_state": "not_verified",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "payment_state": "not_verified",
+      "crm_state": "no_contact_created",
+      "intended_cta": "voluntary conversation or verified inquiry route"
+    }
+  ],
+  "review_gates": [
+    "owner_copy_approval",
+    "first_party_media_qa",
+    "claimed_capabilities_verified",
+    "page_connection_and_brand_verified",
+    "public_link_preflight",
+    "platform_scoped_authorization",
+    "provider_publication_receipt",
+    "crm_reply_logging"
+  ],
+  "prohibited_actions": [
+    "unapproved_auto_publish",
+    "reuse_old_authorization",
+    "mark_content_created_as_published",
+    "claim_unverified_checkout",
+    "unsolicited_bulk_dm",
+    "post_adult_or_suggestive_content_on_evercraft"
+  ]
+}

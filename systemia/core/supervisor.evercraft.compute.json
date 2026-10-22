@@ -22,6 +22,7 @@
   "supervised_workflows": [
     "portfolio-sentinel",
     "eps-social-continuity",
+    "evercraft-social-continuity-watch",
     "raven-private-runtime",
     "raven-inference-gateway",
     "competition-control-plane",
@@ -98,6 +99,7 @@
     "forensic_record_canonical_domain_cutover_remains_separate_gate",
     "space_dudz_clip_publisher_supervised",
     "people_layer_owned_runtime_resident_supervised",
-    "people_layer_base44_runtime_not_required"
+    "people_layer_base44_runtime_not_required",
+    "clip_social_coverage_watch_read_only_and_receipted"
   ]
 }
