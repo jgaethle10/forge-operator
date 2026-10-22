@@ -3,7 +3,7 @@
 // Fixed read-only MCP methods only. No orders, payments, provider API spend or messages.
 import fs from 'node:fs';
 import path from 'node:path';
-import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError, assessBuyerHandoff } from './discovery-path-classify.mjs';
+import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError, assessBuyerHandoff, summarizeDiscoveryLayers } from './discovery-path-classify.mjs';
 const origin=process.env.EVERCRAFT_PROBE_ORIGIN||'https://fabric.systemiacommandcenters.com';
 const out=process.env.EVERCRAFT_PROBE_OUT||'artifacts/saban/discovery-path';
 const intents=[
@@ -49,6 +49,7 @@ await Promise.all(['/llms.txt','/.well-known/evercraft-chum.json','/offers','/of
 receipt.ok=receipt.profiles.every(p=>p.initialized&&p.errors.length===0&&p.intents.length===intents.length&&p.intents.every(i=>i.match_ok&&i.offer_link_ok))&&receipt.surfaces.every(s=>s.status===200);
 receipt.surfaces.sort((a,b)=>a.path.localeCompare(b.path));
 receipt.diagnosis=classifyDiscoveryReceipt(receipt);
+receipt.probe_layers=summarizeDiscoveryLayers(receipt,intents.length);
 fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));
 if(!receipt.ok){
