@@ -1,0 +1,26 @@
+name: Evercraft Visual Floor
+on:
+  pull_request:
+    paths:
+      - 'scripts/visual-floor/**'
+      - 'systemia/graphics-command/production-mesh.mjs'
+      - '.github/workflows/evercraft-visual-floor.yml'
+  workflow_dispatch:
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test scripts/visual-floor/visual-floor.test.mjs
+      - name: Decode actual test video and pixel sample
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg python3-numpy python3-opencv
+          ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=size=320x180:rate=30:duration=2 -c:v libx264 -pix_fmt yuv420p /tmp/visual-floor-smoke.mp4
+          python3 scripts/visual-floor/frame-audit.py /tmp/visual-floor-smoke.mp4 --samples 10 --output /tmp/visual-floor-frame-proof.json
+          python3 -c "import json;d=json.load(open('/tmp/visual-floor-frame-proof.json'));assert d['sampleCount']==10;assert d['schema']=='evercraft.visual-floor.frame-evidence.v1'"
