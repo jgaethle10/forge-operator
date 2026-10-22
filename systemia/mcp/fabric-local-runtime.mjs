@@ -766,11 +766,18 @@ export async function startFabricLocalRuntime({
 
       // Shadow-only Node002 admission. No remote execution or lease authority.
       if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/node002/shadow-telemetry'){
-        return node002ShadowHttpHandler({
-          registeredPublicKeyPem:process.env.EVERCRAFT_NODE002_PUBLIC_KEY_FILE
-            ? fs.readFileSync(process.env.EVERCRAFT_NODE002_PUBLIC_KEY_FILE,'utf8') : null,
-          nonceDirectory:process.env.EVERCRAFT_NODE002_NONCE_DIR||null,
-        })(req,res);
+        const keyFile=process.env.EVERCRAFT_NODE002_PUBLIC_KEY_FILE;
+        const nonceDir=process.env.EVERCRAFT_NODE002_NONCE_DIR;
+        if(!keyFile||!nonceDir) return sendJson(res,503,{ok:false,reason:'receiver_not_configured'});
+        let registeredPublicKeyPem;
+        try {
+          const st=fs.lstatSync(keyFile);
+          if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o022)!==0) throw Error('unsafe_key_file');
+          registeredPublicKeyPem=fs.readFileSync(keyFile,'utf8');
+        } catch {
+          return sendJson(res,503,{ok:false,reason:'receiver_key_unavailable'});
+        }
+        return node002ShadowHttpHandler({registeredPublicKeyPem,nonceDirectory:nonceDir})(req,res);
       }
 
       if (req.method==='OPTIONS') {
