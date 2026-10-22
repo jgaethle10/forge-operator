@@ -247,6 +247,26 @@ for f in render_frames:
     scene.frame_set(f)
     scene.render.filepath=str(out/'frames'/('frame_%04d.png'%f))
     bpy.ops.render.render(write_still=True)
+
+# Two actual Blender closeups at snap compression and release. This is not
+# a substitute for viewing the moving hand, but makes failures observable.
+scene.frame_set(24);bpy.context.view_layer.update()
+_press=arm.matrix_world @ arm.pose.bones['hand_R'].tail
+scene.frame_set(25);bpy.context.view_layer.update()
+_release=arm.matrix_world @ arm.pose.bones['hand_R'].tail
+_focus=(_press+_release)*.5
+_cam_location=cam.location.copy();_cam_rotation=cam.rotation_euler.copy()
+_cam_lens=cam.data.lens
+cam.location=_focus+Vector((0,-1.65,.12))
+cam.rotation_euler=(_focus-cam.location).to_track_quat('-Z','Y').to_euler()
+cam.data.lens=55
+for f,name in ((24,'SnapPress_Closeup.png'),(25,'SnapRelease_Closeup.png')):
+    scene.frame_set(f)
+    scene.render.filepath=str(out/name)
+    bpy.ops.render.render(write_still=True)
+cam.location=_cam_location
+cam.rotation_euler=_cam_rotation
+cam.data.lens=_cam_lens
 report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
   'model':'Kennedy_Rigged3D_BLOCKOUT.blend','stage':'lookdev_stills' if lookdev_mode else 'engineering-blockout',
   'rendered_frames':len(render_frames),
@@ -255,6 +275,7 @@ report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
   'snap_middle_release_radians':round(release_delta,3),
   'independent_right_finger_bones':right_digts,
   'snap_creative_approval':False,
+  'snap_closeup_stills':['SnapPress_Closeup.png','SnapRelease_Closeup.png'],
   'screen_hand_travel_px':round(screenTravel,2),'start_wrist':start,'snap_contact_wrist':raised,'snap_release_wrist':released,
   'note':'V4 Blender 3D look-development study. Warm lighting and shaped hair. NOT creative-approved.'}
 (out/'proof.json').write_text(json.dumps(report,indent=2))
