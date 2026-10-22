@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'systemia/household-fabric/economic-pressure-bridge.mjs'
+      - 'systemia/household-fabric/engine.mjs'
+      - 'systemia/household-fabric/engine.test.mjs'
       - 'systemia/household-fabric/economic-pressure-proof.mjs'
       - 'systemia/household-fabric/economic-pressure-bridge.test.mjs'
       - 'systemia/household-fabric/economic-pressure-reviewed-snapshots.json'
@@ -13,6 +15,8 @@ on:
     branches: [main]
     paths:
       - 'systemia/household-fabric/economic-pressure-bridge.mjs'
+      - 'systemia/household-fabric/engine.mjs'
+      - 'systemia/household-fabric/engine.test.mjs'
       - 'systemia/household-fabric/economic-pressure-proof.mjs'
       - 'systemia/household-fabric/economic-pressure-bridge.test.mjs'
       - 'systemia/household-fabric/economic-pressure-reviewed-snapshots.json'
@@ -32,4 +36,4 @@ jobs:
         run: |
           node --test systemia/household-fabric/economic-pressure-bridge.test.mjs systemia/household-fabric/engine.test.mjs systemia/household-fabric/surface.test.mjs
           node systemia/household-fabric/economic-pressure-proof.mjs > /tmp/yakima-pressure-proof.json
-          node -e "const r=require('/tmp/yakima-pressure-proof.json');if(r.household_opportunities.status!=='degraded'||r.measured_economic_context.length!==5)process.exit(1)"
+          node -e "const r=require('/tmp/yakima-pressure-proof.json');if(r.household_opportunities.status!=='degraded'||r.measured_economic_context.length!==7)process.exit(1)"
