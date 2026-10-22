@@ -5,7 +5,7 @@
 ## What exists now
 
 - NodeSeed already provides `GET /v1/capacity` and nonce-bound `POST /v1/attest`.
-- `field-node-probe.mjs` challenges that **local** NodeSeed over `127.0.0.1`, `localhost`, or `[::1]` only. It verifies the Ed25519 signature, the live nonce, freshness, supported-workload digest, labels, exact pinned device identity and the expected node ID.
+- `field-node-probe.mjs` challenges that **local** NodeSeed over numeric loopback `127.0.0.1` or `[::1]` only. It verifies the Ed25519 signature, the live nonce, freshness, supported-workload digest, labels, exact pinned device identity and the expected node ID.
 - The complete result is a sanitized read-only receipt. No private key, bearer token, public key PEM, complete raw attestation or raw HTTP failure body is displayed.
 - The proof CI uses disposable localhost NodeSeeds. CI green **never means** Node001 or Node002 has been touched.
 
