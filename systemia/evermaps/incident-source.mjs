@@ -1,4 +1,4 @@
-// EverMaps source adapter owned in Forge. No Base44 SDK, keys, accounts or wallet.
+// EverMaps source adapter owned in Forge. No outside application-builder SDK, secrets or wallet.
 // WFIGS current incident records describe reported incidents, NOT live flames.
 export const WFIGS = Object.freeze({
  endpoint:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query',
@@ -123,7 +123,7 @@ export function createOwnedWfigsService({
   health:()=>({
    schema:'evercraft.evermaps.incident-source-health.v1',
    state:cache&&clock()-cache.fetched_at_ms<cacheMs?'fresh':lastFailure?'unavailable':'not_loaded',
-   source:'NIFC WFIGS',legacy_base44_dependency:false,
+   source:'NIFC WFIGS',third_party_app_builder_dependency:false,
    last_attempt_at_utc:lastAttemptAt===null?null:new Date(lastAttemptAt).toISOString(),
    cached_at_utc:cache?new Date(cache.fetched_at_ms).toISOString():null,
    last_failure:lastFailure,
