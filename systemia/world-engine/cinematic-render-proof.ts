@@ -23,6 +23,7 @@ import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-sc
 import {fourVesselProxyWorld,fourVesselProxyTake} from './four-vessel-proxy-scene.js';
 import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} from './battle-vessel-silhouettes.js';
 import {makeBattleMotionDemo} from './battle-motion-demo.js';
+import {makeDataConstellationScene} from './data-constellation-scene.js';
 import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
 import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
 import {CINEMATIC_SKY_WGSL,cinematicSkyCameraUniform,skyShaderSha256} from './native-sky.js';
@@ -43,8 +44,11 @@ const requestedFormat=process.env.CINEMATIC_FORMAT||'wide';
 if(!['wide','square','vertical'].includes(requestedFormat))throw Error('cinematic_native_format_invalid');
 const nativeFormat=requestedFormat as NativeFilmFormat;
 const nativeViewport=composeNativeBattleshipCamera(nativeFormat).viewport;
-const WIDTH=['battleship','denmark_strait_formation','denmark_strait_silhouettes'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.width:640;
-const HEIGHT=['battleship','denmark_strait_formation','denmark_strait_silhouettes'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.height:360;
+const isDataConstellation=process.env.CINEMATIC_SCENE==='data_constellation';
+const highRes=process.env.CINEMATIC_HIGH_RES==='1';
+if(highRes&&!isDataConstellation)throw Error('cinematic_high_res_scene_not_supported');
+const WIDTH=['battleship','denmark_strait_formation','denmark_strait_silhouettes'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.width:isDataConstellation&&highRes?1920:640;
+const HEIGHT=['battleship','denmark_strait_formation','denmark_strait_silhouettes'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.height:isDataConstellation&&highRes?1080:360;
 const FPS=24,DURATION=4;
 function cube():GeometryAsset{
   const q=[
@@ -551,7 +555,8 @@ async function main(){
   const useAnimatedOcean=process.env.BATTLE_ANIMATED_OCEAN==='1';
   if(useAnimatedOcean&&!isSilhouette)throw Error('animated_ocean_requires_naval_silhouette_scene');
   if(useFx&&!isSilhouette)throw Error('cinematic_environment_fx_requires_naval_geometry');
-  const originalWorld=isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
+  const constellation=isDataConstellation?makeDataConstellationScene():null;
+  const originalWorld=constellation?.world??(isSilhouette?historicSilhouetteWorld():isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld());
   const actorRig=isSilhouette&&(process.env.BATTLE_MOTION==='1'||useFx)
     ?makeBattleMotionDemo(originalWorld):undefined;
   const fxRig=useFx?makeBattleEnvironmentFx():undefined;
@@ -559,8 +564,8 @@ async function main(){
   const world=useAnimatedOcean?attachAnimatedOcean(stagedWorld):stagedWorld;
   const geometries=useAnimatedOcean?[...battleVesselGeometry(),...(useFx?cinematicFxGeometry():[]),makeAnimatedOceanGrid()]
     :useFx?[...battleVesselGeometry(),...cinematicFxGeometry()]
-    :isSilhouette?battleVesselGeometry():isBattleship?battleshipGeometry():industrialGeometry();
-  const textures=isBattleship?[]:industrialTextures();
+    :constellation?constellation.geometries:isSilhouette?battleVesselGeometry():isBattleship?battleshipGeometry():industrialGeometry();
+  const textures=isBattleship||isDataConstellation?[]:industrialTextures();
   const rotorTake:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',
     id:'orbital-foundry-take-one',cameraEntityId:'cinema-camera',targetEntityId:'reactor',
@@ -585,7 +590,7 @@ async function main(){
     detailTargetEntityId:'turret-fore-a'
   }):null;
   const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
-    world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures,
+    world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():constellation?constellation.take:rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures,
     ...(actorRig?{actorRig}:{}),
     ...(fxRig?{fxRig}:{})
   });
@@ -608,9 +613,9 @@ async function main(){
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
   if(!shadowSource)throw new Error('owned_shadow_shader_missing');
   const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out,useSky?CINEMATIC_SKY_WGSL:null);
-  const video=path.join(out,isSilhouette?'denmark-strait-class-silhouettes-gpu.mp4':isFormation?'denmark-strait-four-vessel-gpu-proxy.mp4':isBattleship?'battleship-world-engine-trial.mp4':'orbital-foundry-synthetic-canary.mp4');
+  const video=path.join(out,isSilhouette?'denmark-strait-class-silhouettes-gpu.mp4':isFormation?'denmark-strait-four-vessel-gpu-proxy.mp4':isBattleship?'battleship-world-engine-trial.mp4':isDataConstellation?'evercraft-data-constellation-native-gpu.mp4':'orbital-foundry-synthetic-canary.mp4');
   let soundReceipt:ReturnType<typeof renderKineticSoundscape>['receipt']|null=null;
-  if(isBattleship){
+  if(isBattleship||isDataConstellation){
     // The founder rejected the synthetic sound. Ship footage gets NO invented
     // motors, explosions, fake sea recording or score.
     run('ffmpeg',['-hide_banner','-loglevel','error','-y',
