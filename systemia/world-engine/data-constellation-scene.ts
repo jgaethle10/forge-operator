@@ -72,7 +72,7 @@ function edgeTransform(a:V,b:V){
     rotationDeg:vec(-Math.asin(dy/length)*180/Math.PI,Math.atan2(dx,dz)*180/Math.PI,0),
     scale:vec(.012,.012,length/2)};
 }
-export function makeDataConstellationScene(){
+export function makeDataConstellationScene(durationSec:1|4=4){
   const rand=randomSequence();
   const entities:WorldDefinition['entities']=[];
   const add=(e:WorldDefinition['entities'][number])=>entities.push(e);
@@ -197,7 +197,7 @@ export function makeDataConstellationScene(){
   };
   const take:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',id:'constellation-cinematic-take',
-    cameraEntityId:'cinema-camera',targetEntityId:'knowledge-core',durationSec:4,fps:24,
+    cameraEntityId:'cinema-camera',targetEntityId:'knowledge-core',durationSec,fps:24,
     move:'orbit',ease:'smootherstep',
     orbit:{radius:10.6,startAngleDeg:-37,endAngleDeg:35,startHeight:3.3,endHeight:4.65},
     startFovYDeg:47,endFovYDeg:42
