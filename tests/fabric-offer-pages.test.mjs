@@ -40,7 +40,7 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(directory,/Starts at \$49/);
 
   const page=renderOfferPage(websiteAudit);
-  assert.match(page,/Your website is getting attention\. Why isn&#39;t it getting customers\?/);
+  assert.match(page,/See your website through their eyes\./);
   assert.match(page,/What you are buying/);
   assert.match(page,/What you send us/);
   assert.match(page,/What you get back/);
