@@ -224,7 +224,7 @@ export function applyAgentDecision(world,observation,proposal,proof=null,options
   const receipt={schema:RECEIPT_SCHEMA,id:decisionId,world_tick:w.tick,
     agent_id:a.id,observation_hash:proposal.observation_hash,action:structuredClone(action),
     outcome,provenance:provenance.label,provider_request_id:provenance.provider_request_id,
-    before_world_hash:observation.world_hash,after_world_hash:hash(w),event_id:event.id,
+    before_world_hash:observation.world_hash,effects_world_hash:hash(w),event_id:event.id,
     release_status:'held_not_live'};
   lab.receipts.push(receipt);lab.receipts=lab.receipts.slice(-LIMIT);
   return {world:w,receipt:structuredClone(receipt)};
