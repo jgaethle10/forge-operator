@@ -48,3 +48,29 @@ The tournament report schema is `evercraft.graphics-command.shot-tournament.v1`;
 
 
 Rendering does not grant publication authority.
+
+
+## Cinematic geometry floor (October 2026)
+
+The Fallen Studio delivery path now binds its final MP4 technical admission to the
+actual timeline canvas and frame rate, instead of accepting resolution and codec
+alone. The master QC receipt records the encoded and display aspect ratios,
+sample-pixel aspect ratio, target canvas, and frame-rate deviation.
+
+- The displayed aspect ratio must remain within 1.2% of the intended 9:16,
+  16:9, or 1:1 timeline canvas.
+- A known non-square pixel aspect ratio is rejected for owned masters, even
+  when width and height look superficially plausible.
+- A frame-rate mismatch greater than 0.15 FPS is rejected.
+- Existing black-frame, freeze, silence, rights, identity, continuity, and
+  aesthetic gates remain separate and cannot be replaced by these measurements.
+- A technical pass does **not** prove that a face, hand, text placement,
+  voice performance, or cinematic composition looks natural. Those require
+  evidence-backed creative review on the final exact rendered frames.
+- None of these gates grants publication authority.
+
+**Operator checklist before a commercial is released:** review real frame
+samples at normal phone viewing size; reject stretched faces or anatomy,
+unreadable or overlapping titles, excessive scene-template repetition,
+monotonous voice delivery, weak brand lockups, or any unverified product claims.
+Any corrected shot must be re-admitted against the new artifact digest.
