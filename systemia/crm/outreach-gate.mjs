@@ -9,8 +9,7 @@ function denied(reasons,step='crm_context') {
   return {schema:'evercraft.crm.outreach-gate.v1',decision:'deny',reasons:[...new Set(reasons)],
     checked_stage:step,send_performed:false,permit_minted:false,mutation_authorized:false};
 }
-function context({relationshipLedgerFile='',relationshipLedger=null,now}) {
-  if(relationshipLedger)return relationshipLedger;
+function context({relationshipLedgerFile='',now}) {
   if(!relationshipLedgerFile)throw Error('relationship_source_unconfigured');
   return readPrivateRelationships(relationshipLedgerFile,{now});
 }
@@ -20,7 +19,7 @@ function context({relationshipLedgerFile='',relationshipLedger=null,now}) {
  * No send/permit/transaction is performed by this function.
  */
 export function evaluateGovernedOutreach({
-  action={},relationshipLedgerFile='',relationshipLedger=null,interactionLedger=null,now=new Date()
+  action={},relationshipLedgerFile='',interactionLedger=null,now=new Date()
 }={}) {
   const channel=CHANNEL[action?.action_type];
   if(!channel)return denied(['unsupported_outreach_channel'],'request');
@@ -37,7 +36,7 @@ export function evaluateGovernedOutreach({
   let policy;
   try {
     policy=preflightRelationshipIntent({
-      ledger:context({relationshipLedgerFile,relationshipLedger,now}),
+      ledger:context({relationshipLedgerFile,now}),
       subjectRef:action.subject_ref,divisionId:action.division_id,
       purpose:action.purpose,at:now
     });
@@ -70,10 +69,10 @@ export function evaluateGovernedOutreach({
 
 /** Produces an existing Passport permit only after repeating all freshness checks. No mail transport. */
 export function prepareGovernedContactPermit({
-  action={},relationshipLedgerFile='',relationshipLedger=null,interactionLedger=null,now=new Date()
+  action={},relationshipLedgerFile='',interactionLedger=null,now=new Date()
 }={}) {
   const decision=evaluateGovernedOutreach({
-    action,relationshipLedgerFile,relationshipLedger,interactionLedger,now
+    action,relationshipLedgerFile,interactionLedger,now
   });
   if(decision.decision!=='eligible_for_permit_only')
     return {...decision,permit:null};
