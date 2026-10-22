@@ -1,0 +1,31 @@
+name: Mossmere Agent Boundary Laboratory
+on:
+  pull_request:
+    paths:
+      - 'systemia/society/window-agent-boundary.mjs'
+      - 'tests/window-agent-boundary.test.mjs'
+      - '.github/workflows/window-agent-boundary.yml'
+  push:
+    branches:
+      - feat/window-observed-agent-decisions-20261022
+    paths:
+      - 'systemia/society/window-agent-boundary.mjs'
+      - 'tests/window-agent-boundary.test.mjs'
+      - '.github/workflows/window-agent-boundary.yml'
+permissions:
+  contents: read
+jobs:
+  model-choice-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reject untrusted decisions and prove independent choice outcomes
+        run: node --test tests/window-agent-boundary.test.mjs
+      - name: Preserve existing canonical heartbeat tests
+        run: node --test tests/window-heartbeat.test.mjs
