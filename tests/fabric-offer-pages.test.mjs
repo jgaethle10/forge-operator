@@ -36,15 +36,15 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
 
   const directory=renderOffers([websiteAudit]);
   assert.match(directory,/\/offers\/website-audit/);
-  assert.match(directory,/Your website is getting attention/);
+  assert.match(directory,/See your website through their eyes/);
   assert.match(directory,/Starts at \$49/);
 
   const page=renderOfferPage(websiteAudit);
   assert.match(page,/See your website through their eyes\./);
-  assert.match(page,/What you are buying/);
-  assert.match(page,/What you send us/);
-  assert.match(page,/What you get back/);
-  assert.match(page,/How it works/);
+  assert.match(page,/THE FIRST STEP/);
+  assert.match(page,/What you send/);
+  assert.match(page,/What you get/);
+  assert.match(page,/THE VISITOR JOURNEY/);
   assert.match(page,/\/api\/offers\/website-audit\/checkout/);
   assert.match(page,/Continue to checkout/);
   assert.match(page,/name="customer_ref"/);
@@ -57,7 +57,7 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/property="og:url" content="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/name="twitter:card" content="summary_large_image"/);
-  assert.match(page,/property="og:image" content="https:\/\/fabric\.systemiacommandcenters\.com\/visuals\/website-audit-attention\/poster-feed\.svg"/);
+  assert.match(page,/property="og:image" content="https:\/\/fabric\.systemiacommandcenters\.com\/visuals\/website-audit-attention\/offer-og-v2\.svg"/);
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
