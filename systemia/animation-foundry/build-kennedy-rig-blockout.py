@@ -163,6 +163,12 @@ cam.rotation_euler=direction.to_track_quat('-Z','Y').to_euler()
 scene.camera=cam
 bpy.ops.mesh.primitive_plane_add(size=200,location=(0,0,-.03))
 floor=bpy.context.object;floor.name='Blockout_floor';floor.data.materials.append(material('floor',(.14,.10,.23)))
+# Replace the first-generation mannequin face, hair and hands with real
+# Blender geometry; fail rather than silently skipping the approved art pass.
+ART_PASS=Path(__file__).resolve().with_name('character-art-pass-v3.py')
+if not ART_PASS.is_file():raise RuntimeError('Character art pass missing; hold render')
+exec(compile(ART_PASS.read_text(),str(ART_PASS),'exec'),globals())
+
 # Animation: calm glance -> notice -> anticipate -> snap -> relax; all 3D pose data.
 def pose_key(frame,torso=0,head_z=0,upper=-0.10,forearm=0,hand=0,index=0,thumb=0,smile=0):
     scene.frame_set(frame)
@@ -215,6 +221,6 @@ report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
   'visual_design_approved':False,'performance_approved':False,
   'armature_bones':len(arm.data.bones),'face_shapes':len(head.data.shape_keys.key_blocks)-1,
   'screen_hand_travel_px':round(screenTravel,2),'start_wrist':start,'snap_contact_wrist':raised,'snap_release_wrist':released,
-  'note':'Genuine Blender 3D rig/animation pipeline proof; placeholder face/hair/hand, not cinematic match.'}
+  'note':'V3 Blender 3D art study with smaller eyes, wavy hair, five-finger geometry and editable rig; not cinematic character approval.'}
 (out/'proof.json').write_text(json.dumps(report,indent=2))
 print('BLOCKOUT COMPLETE',json.dumps(report))
