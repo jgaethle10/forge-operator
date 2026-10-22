@@ -72,8 +72,8 @@ test('national inflation does not modify locally ranked opportunities or imply s
 
 test('read-only Yakima proof emits five reviewed signals without invented household value', async () => {
   const { buildReviewProof } = await import('./economic-pressure-proof.mjs');
-  const output = buildReviewProof(now);
-  assert.equal(output.measured_economic_context.length, 5);
+  const output = buildReviewProof(new Date('2026-10-22T01:00:00Z'));
+  assert.equal(output.measured_economic_context.length, 7);
   assert.equal(output.household_opportunities.status, 'degraded');
   assert.equal(output.household_opportunities.opportunities.length, 3);
   for (const referral of output.household_opportunities.opportunities) {
@@ -86,4 +86,18 @@ test('read-only Yakima proof emits five reviewed signals without invented househ
   assert.equal(output.household_opportunities.headline.money_kept_cents, 0);
   assert.equal(output.household_opportunities.headline.money_earned_cents, 0);
   assert.equal(output.boundaries.no_live_collector_implied, true);
+  const state = output.measured_economic_context.filter(item => item.geography === 'wa-state');
+  assert.equal(state.length, 2);
+  assert.equal(state.find(item => item.metric === 'wa-unemployment-rate').value, 4.8);
+  assert.equal(state.find(item => item.metric === 'wa-nonfarm-payroll-change').value, -15400);
+});
+
+test('reviewed assistance expires and cannot be presented as a current opportunity', async () => {
+  const { buildReviewProof } = await import('./economic-pressure-proof.mjs');
+  const old = buildReviewProof(new Date('2026-10-21T23:00:00Z'));
+  assert.equal(old.household_opportunities.opportunities.length, 0, 'future-dated seed cannot appear');
+  const expired = buildReviewProof(new Date('2026-10-29T00:00:01Z'));
+  assert.equal(expired.household_opportunities.opportunities.length, 0, 'expired review seed must disappear');
+  assert.equal(expired.household_opportunities.status, 'degraded');
+  assert.equal(expired.household_opportunities.headline.money_kept_cents, 0);
 });
