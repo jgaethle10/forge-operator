@@ -32,6 +32,7 @@ const FEATURES=[
   ['toon_cinema_model_preflight','systemia/media-studio/toon-cinema-preflight.mjs','toon'],
   ['toon_verified_source_intake','systemia/media-studio/toon-performance-intake.mjs','toon'],
   ['toon_pose_animatic_renderer','systemia/media-studio/toon-pose-animatic.mjs','toon'],
+  ['toon_pose_animatic_cli','systemia/media-studio/toon-pose-animatic.cli.mjs','toon'],
   ['identity_fingerprinting','systemia/media-studio/identity-fingerprint.ts','toon'],
   ['character_performance','systemia/media-studio/performance-director.ts','toon'],
   ['dialogue_lipsync_admission','systemia/media-studio/dialogue-sync-gate.ts','toon'],
