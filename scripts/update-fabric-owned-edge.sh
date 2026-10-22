@@ -657,6 +657,7 @@ if ! (
   cd "$REPO_ROOT"
   as_user npm run test:fabric-directory &&
   as_user npm run test:fabric-local &&
+  as_user node --test tests/node002-shadow-ingest.test.mjs tests/node002-shadow-http.test.mjs tests/node002-shadow-release-gates.test.mjs tests/fabric-node002-route.test.mjs &&
   as_user npm run test:remote-operator &&
   as_user node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs &&
   as_user npm run proof:specialist-handoff-yard
