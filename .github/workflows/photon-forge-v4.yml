@@ -43,12 +43,22 @@ jobs:
         run: |
           "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" scripts/photon-forge-v4/export-world-engine-sequence.ts \
             --output-dir "$RUNNER_TEMP/evercraft-native-worldframe" --frames 4 --fps 30
+      - name: Ingest separately authored scene files through the same real World Engine compiler
+        run: |
+          "$RUNNER_TEMP/evercraft-tsx/node_modules/.bin/tsx" scripts/photon-forge-v4/export-world-engine-sequence.ts \
+            --world-json "$RUNNER_TEMP/evercraft-native-worldframe/world-definition.json" \
+            --geometry-json "$RUNNER_TEMP/evercraft-native-worldframe/geometry.json" \
+            --output-dir "$RUNNER_TEMP/evercraft-authored-worldframe" --frames 4 --fps 30
       - name: Encode native World Engine frames with owned Photon Forge V4 renderer
         run: |
           python scripts/photon-forge-v4/render.py \
             --sequence-manifest "$RUNNER_TEMP/evercraft-native-worldframe/sequence.json" \
             --geometry-json "$RUNNER_TEMP/evercraft-native-worldframe/geometry.json" \
             --fps 30 --output "$RUNNER_TEMP/evercraft-native-worldframe/evercraft-bridge.mp4"
+          python scripts/photon-forge-v4/render.py \
+            --sequence-manifest "$RUNNER_TEMP/evercraft-authored-worldframe/sequence.json" \
+            --geometry-json "$RUNNER_TEMP/evercraft-authored-worldframe/geometry.json" \
+            --fps 30 --output "$RUNNER_TEMP/evercraft-authored-worldframe/evercraft-authored.mp4"
       - name: Reconcile native producer and actual encoded video receipts
         run: |
           python - <<'PY'
@@ -70,5 +80,17 @@ jobs:
           assert final['renderedBy']=='Evercraft Photon Forge V4 CPU triangle renderer'
           assert final['masterQcApproved'] is False and final['publicationAuthority'] is False
           assert final['originRuntimeUnverified'] is True
-          print('Evercraft World Engine -> Photon Forge H.264 receipts reconciled, fixture-only')
+          authored=Path(os.environ['RUNNER_TEMP'])/'evercraft-authored-worldframe'
+          source_receipt=json.loads((authored/'producer-receipt.json').read_text())
+          encoded_receipt=json.loads((authored/'evercraft-authored.receipt.json').read_text())
+          assert source_receipt['sceneSource']=='provided_world_definition_unverified_rights'
+          assert source_receipt['sourceRightsVerified'] is False
+          assert source_receipt['engineWasExecutedInThisProcess'] is True
+          assert source_receipt['worldDefinitionDigest']==producer['worldDefinitionDigest']
+          assert [f['digest'] for f in source_receipt['frames']]==[f['digest'] for f in producer['frames']]
+          assert encoded_receipt['frameCount']==len(source_receipt['frames'])==4
+          assert encoded_receipt['frameSourceSha256']==[f['sha256'] for f in source_receipt['frames']]
+          assert encoded_receipt['outputSha256']==hashlib.sha256((authored/'evercraft-authored.mp4').read_bytes()).hexdigest()
+          assert encoded_receipt['publicationAuthority'] is False
+          print('Original + externally supplied Evercraft scenes -> native World Engine -> Photon Forge H.264 passed')
           PY
