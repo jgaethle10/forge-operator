@@ -27,10 +27,14 @@ jobs:
           python laser_foundry.py --format story --output /tmp/evercraft-laser-foundry-story-canary.mp4 --frames 30
           ffprobe -v error -count_frames -show_entries stream=codec_name,width,height,nb_read_frames -of default=noprint_wrappers=1 /tmp/evercraft-laser-foundry-story-canary.mp4
           test "$(ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of csv=p=0 /tmp/evercraft-laser-foundry-story-canary.mp4)" = "30"
+          python laser_foundry.py --format story --native-output --frames 12 --output /tmp/evercraft-laser-foundry-native-story-canary.mp4
+          test "$(ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of csv=p=0 /tmp/evercraft-laser-foundry-native-story-canary.mp4)" = "12"
       - name: Retain actual original output for owner preview
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-laser-foundry-procedural-30-frame-canary
-          path: /tmp/evercraft-laser-foundry-story-canary.mp4
+          path: |
+            /tmp/evercraft-laser-foundry-story-canary.mp4
+            /tmp/evercraft-laser-foundry-native-story-canary.mp4
           retention-days: 7
           if-no-files-found: error
