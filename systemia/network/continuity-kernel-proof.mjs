@@ -189,6 +189,8 @@ assertHeld(validCapacity, [{ ...critical, cpu_units: -1 }], 'cpu_units_invalid')
 assertHeld(validCapacity, [{ ...critical, cpu_units: '1' }], 'cpu_units_invalid');
 assertHeld(validCapacity, [{ ...critical, priority: '0operator' }], 'priority_invalid');
 assertHeld(validCapacity, [{ ...critical, priority: 0.5 }], 'priority_invalid');
+assertHeld(validCapacity, [{ ...critical, required: 'true' }], 'required_invalid');
+assertHeld(validCapacity, [{ ...critical, required: 1 }], 'required_invalid');
 assertHeld(validCapacity, [{ ...critical, fallback: { mode: 'offline', cpu_units: 0.5, memory_mb: null, power_units: 1 } }], 'fallback_memory_mb_invalid');
 assertHeld(validCapacity, [critical, { ...critical }], 'duplicate_id');
 assertHeld(validCapacity, null, 'workloads_must_be_array');
