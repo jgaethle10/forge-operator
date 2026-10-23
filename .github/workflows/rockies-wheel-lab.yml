@@ -1,0 +1,34 @@
+name: Rockies Wheel Lab isolated proof
+
+on:
+  pull_request:
+    paths:
+      - 'prototypes/rockies-wheel-lab/**'
+      - '.github/workflows/rockies-wheel-lab.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'prototypes/rockies-wheel-lab/**'
+      - '.github/workflows/rockies-wheel-lab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rockies-wheel-lab-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test-offline-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify Wheel Lab boundaries and offline contract
+        run: node --test prototypes/rockies-wheel-lab/rc01/*.test.mjs
