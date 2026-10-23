@@ -2,6 +2,19 @@
   "schema": "evercraft.systemia.resident-supervisor-config.v1",
   "services": [
     {
+      "service_key": "evercraft-company-crm-heartbeat",
+      "mode": "cycle",
+      "manifest": "systemia/crm/heartbeat.workflow.json",
+      "executable": "systemia/crm/heartbeat-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_env_args": {
+        "--input": "EVERCRAFT_CRM_HEARTBEAT_INPUT",
+        "--out": "EVERCRAFT_CRM_OUT_DIR",
+        "--interaction-ledger-state": "EVERCRAFT_INTERACTION_LEDGER_STATE_DIR",
+        "--relationship-ledger-file": "EVERCRAFT_CRM_RELATIONSHIP_LEDGER_FILE"
+      }
+    },
+    {
       "service_key": "portfolio-sentinel",
       "mode": "cycle",
       "manifest": "systemia/organism/portfolio-sentinel.workflow.json",

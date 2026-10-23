@@ -2,6 +2,12 @@
   "schema": "evercraft.kaidance.mission-fabric-config.v1",
   "sources": [
     {
+      "source_key": "evercraft-company-crm",
+      "path": "../../artifacts/crm-heartbeat/mission-snapshot.json",
+      "required": true,
+      "stale_after_seconds": 900
+    },
+    {
       "source_key": "portfolio-sentinel",
       "path": "../../artifacts/portfolio-sentinel/mission-snapshot.json",
       "required": false,

@@ -66,6 +66,7 @@ export class SystemiaMissionPublisher {
     configPath,
     allowedRoot,
     ledgerPath,
+    beforeSourceRead = null,
     clock = () => new Date(),
   } = {}) {
     if (!yard) throw new Error('yard is required');
@@ -78,6 +79,7 @@ export class SystemiaMissionPublisher {
     this.configPath = path.resolve(configPath);
     this.allowedRoot = path.resolve(allowedRoot || path.dirname(this.configPath));
     this.ledgerPath = path.resolve(ledgerPath);
+    this.beforeSourceRead = beforeSourceRead;
     this.clock = clock;
     this.timer = null;
     this.inFlight = false;
@@ -156,9 +158,21 @@ export class SystemiaMissionPublisher {
           continue;
         }
 
-        if (!fs.existsSync(sourcePath)) {
-          report.reason = 'source_missing';
-          missing += 1;
+        // CRM snapshots must be freshly read during this publisher cycle, not
+        // merely when an independently scheduled reader happened to run.
+        // A failed refresh must never fall back to yesterday's existing file.
+        let refreshReason = null;
+        if (sourceKey === 'evercraft-company-crm' && this.beforeSourceRead) {
+          try {
+            await this.beforeSourceRead({ sourceKey, sourcePath, now });
+          } catch {
+            refreshReason = 'source_refresh_failed';
+          }
+        }
+        if (refreshReason || !fs.existsSync(sourcePath)) {
+          report.reason = refreshReason || 'source_missing';
+          if (refreshReason) invalid += 1;
+          else missing += 1;
           if (report.required) {
             const hold = syntheticHoldSnapshot(sourceKey, report.reason, now);
             const accepted = await this.yard.pushMissionSnapshot(this.deploymentId, {

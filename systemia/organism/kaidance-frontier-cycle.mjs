@@ -4,6 +4,8 @@ import path from 'node:path';
 import { writeFrontierArtifacts } from './frontier-watch.mjs';
 import { runScienceHazardWatch } from './science-hazard-watch.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
+import { writeCrmHeartbeatArtifacts } from '../crm/heartbeat.mjs';
+import { resolveCompanyRelationshipSource } from '../crm/relationship-composite.mjs';
 
 const rootDir = process.cwd();
 const now = new Date();
@@ -15,6 +17,19 @@ const frontier = writeFrontierArtifacts({
 });
 const science = await runScienceHazardWatch({
   outDir: path.join(artifactRoot, 'science-hazard-watch'),
+  now
+});
+
+// CRM is a required source on every cycle. A missing private adapter is a hold,
+// not evidence that there are zero relationships or outstanding commitments.
+const crm = writeCrmHeartbeatArtifacts({
+  ...resolveCompanyRelationshipSource({
+    inputPath: process.env.EVERCRAFT_CRM_HEARTBEAT_INPUT || '',
+    ledgerStateDir: process.env.EVERCRAFT_INTERACTION_LEDGER_STATE_DIR || '',
+      relationshipLedgerFile: process.env.EVERCRAFT_CRM_RELATIONSHIP_LEDGER_FILE || '',
+    now
+  }),
+  outDir: path.join(artifactRoot, 'crm-heartbeat'),
   now
 });
 
@@ -33,6 +48,12 @@ fs.writeFileSync(configPath, JSON.stringify({
     {
       source_key: 'science-hazard-watch',
       path: '../science-hazard-watch/mission-snapshot.json',
+      required: true,
+      stale_after_seconds: 900
+    },
+    {
+      source_key: 'company-crm',
+      path: '../crm-heartbeat/mission-snapshot.json',
       required: true,
       stale_after_seconds: 900
     }
@@ -68,6 +89,14 @@ const body = {
     recent_medical_matches: science.report.lanes.medical_research.total_recent_matches ?? null,
     held_sources: science.snapshot.counts.held,
     receipt_hash: science.report.receipt_hash
+  },
+  crm: {
+    state: crm.report.state,
+    source_count: crm.report.coverage?.source_count ?? null,
+    open_signals: crm.report.coverage?.open ?? null,
+    overdue_signals: crm.report.coverage?.due ?? null,
+    review_holds: crm.snapshot.counts.held,
+    receipt_hash: crm.report.receipt_hash,
   },
   kaidance: result.ok ? {
     cycle_key: result.cycle?.cycle_key || null,
