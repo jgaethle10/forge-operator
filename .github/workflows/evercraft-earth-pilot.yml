@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: '22'
       - name: Test map evidence pilot
-        run: node --test systemia/evercraft-earth/pilot.test.mjs
+        run: node --test systemia/evercraft-earth/*.test.mjs
