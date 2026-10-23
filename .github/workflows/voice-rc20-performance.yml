@@ -1,0 +1,41 @@
+name: Voice Foundry RC20 Performance Acting (private only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  voice-rc20-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout Voice Foundry draft
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test source gates before model download
+        run: |
+          python systemia/media-studio/voice-rc20-performance.py --verify-only
+          node --test tests/media-voice-rc20-performance.test.mjs
+      - name: Install real Kokoro synthesis runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render scene performance audition
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-rc20-performance.py private-rc20-performance
+          test -s private-rc20-performance/evidence.json
+          test -s private-rc20-performance/LISTEN.html
+          test "$(find private-rc20-performance -maxdepth 1 -name '*.wav' | wc -l)" -eq 12
+          test "$(find private-rc20-performance -maxdepth 1 -name '*.mp3' | wc -l)" -eq 12
+      - name: Upload private original WAVs and matched previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-rc20-scene-performance
+          path: private-rc20-performance/
+          retention-days: 7
+          if-no-files-found: error

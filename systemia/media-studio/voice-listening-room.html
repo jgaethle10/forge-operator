@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft | Voice Listening Room</title>
+<style>
+:root{color-scheme:dark;--bg:#090d10;--surface:#141b1e;--line:#354144;--ink:#f1f2ec;--quiet:#a2b1b4;--gold:#d6b478;--jade:#9bd1c9}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 80% -15%,#2d352e,transparent 36%),var(--bg);color:var(--ink);font:16px/1.6 system-ui,Arial,sans-serif}
+main{max-width:1250px;margin:auto;padding:30px 24px 80px}.eyebrow{font-size:.74rem;letter-spacing:.18em;color:var(--jade);font-weight:800}.mast{border-bottom:1px solid var(--line);padding:45px 0 32px}h1{font-weight:650;letter-spacing:-.06em;line-height:1.03;font-size:clamp(3rem,9vw,6.5rem);margin:18px 0 24px}h2{font-size:1.6rem;letter-spacing:-.03em}h3{font-size:1.1rem;margin:0 0 8px}p{color:var(--quiet)}.lead{max-width:810px;font-size:1.13rem}.pill{display:inline-block;padding:5px 10px;border:1px solid #89764e;color:var(--gold);font-size:.72rem;border-radius:100px;letter-spacing:.05em}.toolbar{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:22px 0}.checkbox{display:flex;align-items:center;gap:9px;color:var(--quiet)}input[type=checkbox]{accent-color:var(--gold);width:17px;height:17px}button{border:1px solid var(--gold);background:var(--gold);color:#1a1b17;border-radius:7px;cursor:pointer;padding:11px 15px;font:600 .9rem system-ui;transition:filter .15s}button:hover{filter:brightness(1.13)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--jade);outline-offset:3px}.secondary{background:transparent;color:var(--gold)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:18px;margin-top:20px}.card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(155deg,#1b2426,#111719);padding:24px;min-width:0}.header{display:flex;justify-content:space-between;align-items:start;gap:8px}.number{color:var(--gold);font:700 .85rem ui-monospace,monospace;letter-spacing:.05em}.wave{height:5px;background:linear-gradient(to right,#41564f,#a9cbb5,#d4b87a,#41564f);margin:22px 0;border-radius:5px}.facts{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.81rem;color:var(--quiet)}.facts strong{font-weight:500;color:var(--ink)}audio{width:100%;margin:8px 0 18px}.caption{font-size:.76rem;color:var(--quiet)}.score{margin-top:20px}.score-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #293538;gap:12px;padding:7px 0}.score-row label{font-size:.85rem}.score-row select{min-width:115px}.score-row select,.field,textarea{background:#0c1315;color:var(--ink);border:1px solid #435157;padding:9px 11px;border-radius:6px;font:inherit}textarea{width:100%;min-height:92px;resize:vertical;margin-top:15px}.panel{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}.reviewer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}.reviewer-grid label{display:flex;flex-direction:column;gap:7px;font-size:.9rem;color:var(--quiet)}.note{color:var(--gold);font-size:.86rem}#status{min-height:28px;margin-top:12px}pre{white-space:pre-wrap;color:#b3d1c8;background:#0d1718;padding:15px;border-radius:9px}a{color:var(--jade)}.data-card{border:1px solid #5e583b;border-radius:13px;padding:20px;background:#242118;margin:24px 0}.script{font-size:1.25rem;color:var(--ink);font-family:Georgia,serif;max-width:880px}.hidden{display:none}@media(max-width:540px){main{padding:20px 16px 80px}.card{padding:17px}}
+</style></head>
+<body><main>
+<div class="eyebrow">EVERCRAFT / FALLEN / VOICE FOUNDRY</div>
+<header class="mast"><span class="pill">PRIVATE AUDITION · NOT PRODUCTION APPROVED</span><h1>The voice<br>must be felt.</h1><p class="lead">Compare actual voice recordings, region-specific delivery, emotional truth and acoustic measurements. No auto-generated quality claims. Human ears are the deciding instrument.</p></header>
+<div class="data-card"><div class="eyebrow">ONE SCRIPT. MULTIPLE PERFORMANCES.</div><p id="context"></p><div class="script" id="script"></div></div>
+<div class="toolbar"><label class="checkbox"><input type="checkbox" id="blind" checked> Blind audition: hide performer identity and accent</label><button class="secondary" id="reveal">Reveal cast</button><span class="pill" id="count">Loading...</span></div>
+<div id="cards" class="grid" aria-label="Voice candidate auditions"></div>
+<section class="panel"><div class="eyebrow">HUMAN EVIDENCE / NO AUTO-APPROVAL</div><h2>Review session</h2><p>Your ratings are <strong>draft listening notes</strong>, not rights verification, verified independent reviews or permission to publish. Use a reviewer ID without passwords or confidential personal data. The exported JSON stays on your device unless you share it.</p>
+<div class="reviewer-grid"><label>Reviewer ID<input class="field" id="reviewer" placeholder="e.g. sound-director-01" maxlength="100"></label><label>Reviewer locale / expertise<input class="field" id="reviewerLocale" placeholder="e.g. en-US, es-MX" maxlength="35"></label></div>
+<div class="toolbar"><label class="checkbox"><input type="checkbox" id="qualified"> I am qualified to assess the requested accent and language</label><label class="checkbox"><input type="checkbox" id="confirm"> I personally listened to every candidate I rated</label></div>
+<button id="export">Export draft listening reviews (.json)</button><p id="status" role="status" aria-live="polite"></p>
+</section><section class="panel"><h2>What a score cannot establish</h2><p>Excellent loudness measurements do not guarantee convincing speech. Good subjective ratings do not establish voice ownership, commercial rights, accent accuracy, pronunciation of names, lipsync or an accepted production master. Voice Foundry deliberately keeps those gates separate.</p></section>
+<footer class="caption">EVERCRAFT VOICE FOUNDRY · OFFLINE LISTENING ROOM · No external scripts, network calls, tracking, storage or paid generation.</footer>
+</main>
+<script src="audition-data.js"></script>
+<script>
+(()=>{'use strict';
+const data=window.__EVERCRAFT_VOICE_AUDITION_DATA__;
+const $=id=>document.getElementById(id);
+const keys=[['naturalness','Naturalness'],['accentAuthenticity','Accent authenticity'],['emotionalTruth','Emotional truth'],['intelligibility','Intelligibility'],['identityConsistency','Voice consistency'],['mixFit','Mix compatibility']];
+if(!data||!Array.isArray(data.candidates)){$('context').textContent='Audition data missing. Build this room using the Voice Foundry kit.';return;}
+$('context').textContent=data.projectId+' • '+data.locale+' • '+data.candidates.length+' recorded takes';$('script').textContent='“'+data.scriptText+'”';$('count').textContent=data.candidates.length+' takes';
+const answers=new Map();let blind=true;
+const cards=[];
+data.candidates.forEach((candidate,index)=>{
+ const card=document.createElement('article');card.className='card';
+ const header=document.createElement('div');header.className='header';
+ const title=document.createElement('h3'); const pill=document.createElement('span');pill.className='pill';pill.textContent=candidate.status==='asr_review_held'?'Speech hold':candidate.signal?.status==='objective_measurements_only'?'Signal measured':'Signal hold'; header.append(title,pill);card.append(header);
+ const number=document.createElement('div');number.className='number';number.textContent='TAKE '+String(index+1).padStart(2,'0');card.append(number);
+ const details=document.createElement('div');details.className='facts';card.append(details);
+ const wave=document.createElement('div');wave.className='wave';card.append(wave);
+ const player=document.createElement('audio');player.controls=true;player.preload='metadata';player.src=candidate.audioPath;player.setAttribute('aria-label','Play take '+(index+1));card.append(player);
+ player.addEventListener('play',()=>document.querySelectorAll('audio').forEach(other=>{if(other!==player)other.pause();}));
+ const measurements=document.createElement('p');measurements.className='caption'; const s=candidate.signal||{};measurements.textContent=`Measured: ${Number(s.durationSec||0).toFixed(2)}s • ${s.integratedLufs??'?'} LUFS • ${s.truePeakDbTP??'?'} dBTP`;card.append(measurements);
+ const transcript=document.createElement('p');transcript.className='caption';
+ if(candidate.transcriptAudit){
+   const t=candidate.transcriptAudit;
+   transcript.textContent=t.status==='candidate_text_match_needs_human_review'
+     ?'Speech recognition: candidate text match ('+(t.wordErrorRate*100).toFixed(1)+'% WER), needs human verification'
+     :'Speech recognition: HOLD. '+(t.reasons||[]).join(', ');
+ }else transcript.textContent='Speech recognition: not provided; spoken-word accuracy unverified';
+ card.append(transcript);
+ const scoreBox=document.createElement('div');scoreBox.className='score';const selects={};
+ keys.forEach(([key,label])=>{
+   const row=document.createElement('div');row.className='score-row';const field=document.createElement('label');field.textContent=label;field.htmlFor='score-'+index+'-'+key;
+   const sel=document.createElement('select');sel.id=field.htmlFor;sel.setAttribute('aria-label','Take '+(index+1)+' '+label);
+   ['Choose','1 · Unusable','2 · Poor','3 · Fair','4 · Strong','5 · Excellent'].forEach((t,i)=>{const opt=document.createElement('option');opt.value=i?String(i):'';opt.textContent=t;sel.append(opt);});row.append(field,sel);scoreBox.append(row);selects[key]=sel;
+ });card.append(scoreBox);
+ const notes=document.createElement('textarea');notes.placeholder='Breaths, pacing, pronunciation, emotion, sibilance, audible glitches, or what made this performance memorable';notes.setAttribute('aria-label','Take '+(index+1)+' listening notes');card.append(notes);
+ $('cards').append(card);cards.push({candidate,index,title,details,selects,notes});
+});
+function draw(){cards.forEach(({candidate,index,title,details})=>{
+ title.textContent=blind?'Candidate '+String.fromCharCode(65+index):candidate.label;
+ details.replaceChildren();
+ const shown=blind?[['Script',data.locale],['Cast','Hidden'],['Accent','Hidden'],['Voice','Hidden']]:[['Locale',candidate.locale],['Accent',candidate.accent],['Presentation',candidate.genderPresentation],['Provider',candidate.provider],['Model',candidate.modelId]];
+ shown.forEach(([label,value])=>{const a=document.createElement('span');a.textContent=label+':';const b=document.createElement('strong');b.textContent=value;details.append(a,b);});
+ });}
+$('blind').addEventListener('change',e=>{blind=e.target.checked;draw();});$('reveal').addEventListener('click',()=>{$('blind').checked=false;blind=false;draw();});draw();
+$('export').addEventListener('click',()=>{
+ try{
+   const reviewerId=$('reviewer').value.trim();const locale=$('reviewerLocale').value.trim();
+   if(!reviewerId||!locale)throw Error('Enter a reviewer ID and your language/locale expertise.');
+   if(!$('confirm').checked)throw Error('Confirm you listened to each candidate before exporting.');
+   const reviews=cards.map(({candidate,index,selects,notes})=>{
+     const scores={};keys.forEach(([key])=>{if(!selects[key].value)throw Error('Complete all six ratings for take '+(index+1)+'.');scores[key]=Number(selects[key].value);});
+     return {candidateId:candidate.id,artifactDigest:candidate.signal.audioDigest,claimedReviewerId:reviewerId,claimedLocale:locale,claimedAccentQualification:$('qualified').checked,scores,notes:notes.value.trim(),unverifiedDraft:true};
+   });
+   const payload={schema:'evercraft.voice-foundry.human-audition-draft.v1',projectId:data.projectId,sourceReport:'audition-report.json',
+     reviewerId,reviewerLocale:locale,qualifiedAccentReviewClaimed:$('qualified').checked,consentAndRightsVerified:false,publicationAuthorityGranted:false,
+     reviews,createdAt:new Date().toISOString(),status:'draft_unverified'};
+   const blob=new Blob([JSON.stringify(payload,null,2)+'\n'],{type:'application/json'});
+   const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='evercraft-voice-audition-'+Date.now()+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+   $('status').textContent='Exported review draft. Independent, accent-qualified review and rights verification are still required.';
+ }catch(err){$('status').textContent=err.message;}
+});
+})();
+</script></body></html>

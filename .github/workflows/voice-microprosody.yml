@@ -1,0 +1,45 @@
+name: Voice Foundry Micro-Prosody Audition (private only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/voice-microprosody.yml'
+      - 'systemia/media-studio/voice-kokoro-microprosody.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  micro-prosody:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate source text and selected voices
+        run: python systemia/media-studio/voice-kokoro-microprosody.py --verify-only
+      - name: Install CPU Kokoro with phoneme control
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render and audit real Kokoro stressed-word auditions
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-kokoro-microprosody.py neural-microprosody
+          test -s neural-microprosody/index.html
+          test -s neural-microprosody/micro-prosody-report.json
+          test "$(find neural-microprosody -maxdepth 1 -name '*.mp3' | wc -l)" -eq 12
+      - name: Publish downloadable private listening artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-kokoro-word-cadence-prosody
+          path: neural-microprosody/
+          retention-days: 7
+          if-no-files-found: error

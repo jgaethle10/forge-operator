@@ -1,0 +1,76 @@
+name: Voice Foundry Architecture Shootout (private only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/voice-model-shootout.yml'
+      - 'systemia/media-studio/voice-model-shootout-ci.py'
+      - 'systemia/media-studio/voice-top3-scene-auditions.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  piper-vs-kokoro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout only private audition source
+        uses: actions/checkout@v4
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify script and candidates before downloading weights
+        run: |
+          python systemia/media-studio/voice-model-shootout-ci.py --verify-only
+      - name: Install CPU neural TTS engines
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'piper-tts==1.3.0' 'kokoro>=0.9.4,<1.0' 'soundfile>=0.12,<1.0'
+          command -v piper
+      - name: Verify prior Piper A/C baseline voice weight
+        run: |
+          set -euo pipefail
+          mkdir -p model
+          BASE='https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/libritts/high'
+          curl -fL --retry 3 --max-time 240 "$BASE/en_US-libritts-high.onnx" -o model/baseline.onnx
+          echo '9127a559e11603f10b366d1a20ac7426826081dbc521de4c2420c57728d73f0f  model/baseline.onnx' | sha256sum -c -
+          curl -fL --retry 3 --max-time 40 "$BASE/en_US-libritts-high.onnx.json" -o model/baseline.onnx.json
+          curl -fL --retry 3 --max-time 40 "$BASE/MODEL_CARD" -o model/PIPER_MODEL_CARD.txt
+          grep -qi 'CC BY 4.0' model/PIPER_MODEL_CARD.txt
+      - name: Generate and compare actual neural speech
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-model-shootout-ci.py model/baseline.onnx model/baseline.onnx.json neural-voice-shootout
+          test -s neural-voice-shootout/index.html
+          test -s neural-voice-shootout/provenance.json
+          test "$(find neural-voice-shootout -maxdepth 1 -name '*.mp3' | wc -l)" -eq 6
+          cp model/PIPER_MODEL_CARD.txt neural-voice-shootout/PIPER_MODEL_CARD.txt
+          printf '%s\n'             'PRIVATE ENGINEERING COMPARISON ONLY: NO RIGHTS OR NATURALNESS CERTIFICATION.'             'Piper A/C LibriTTS model attribution: https://huggingface.co/rhasspy/piper-voices'             'Kokoro source/license: https://huggingface.co/hexgrad/Kokoro-82M (Apache 2.0, review voice/dataset provenance independently)'             > neural-voice-shootout/ATTRIBUTION_AND_LIMITS.txt
+      - name: Render three owner-selected voices across performance scenes
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-top3-scene-auditions.py --verify-only
+          python systemia/media-studio/voice-top3-scene-auditions.py neural-top3-scenes
+          test -s neural-top3-scenes/index.html
+          test -s neural-top3-scenes/voice-scene-report.json
+          test "$(find neural-top3-scenes -maxdepth 1 -name '*.mp3' | wc -l)" -eq 9
+      - name: Upload top-three multi-scene voice auditions
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-top3-kokoro-scene-auditions
+          path: neural-top3-scenes/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Upload blind, playable model shootout
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-piper-vs-kokoro-voice-shootout
+          path: neural-voice-shootout/
+          retention-days: 7
+          if-no-files-found: error

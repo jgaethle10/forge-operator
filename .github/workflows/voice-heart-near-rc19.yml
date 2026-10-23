@@ -1,0 +1,41 @@
+name: Voice Foundry RC19 Heart-near (private audition)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  heart-near-rc19:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout Voice Foundry branch
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify conditions and protections before inference
+        run: |
+          python systemia/media-studio/voice-heart-near-rc19.py --verify-only
+          node --test tests/media-voice-heart-near-rc19.test.mjs
+      - name: Install CPU neural TTS
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render private fourteen-take founder-response audition
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-heart-near-rc19.py private-rc19-heart-near
+          test -s private-rc19-heart-near/evidence.json
+          test -s private-rc19-heart-near/index.html
+          test "$(find private-rc19-heart-near -maxdepth 1 -name '*.wav' | wc -l)" -eq 14
+          test "$(find private-rc19-heart-near -maxdepth 1 -name '*.mp3' | wc -l)" -eq 14
+      - name: Archive source WAV, previews and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-rc19-heart-near-audition
+          path: private-rc19-heart-near/
+          if-no-files-found: error
+          retention-days: 7

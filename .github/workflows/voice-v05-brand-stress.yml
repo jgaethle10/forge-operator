@@ -1,0 +1,45 @@
+name: Voice Foundry V05 Word Stress (private only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/voice-v05-brand-stress.yml'
+      - 'systemia/media-studio/voice-v05-brand-stress-lab.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  v05-brand-stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout Voice Foundry
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check brand IPA and experiment source before inference installation
+        run: python systemia/media-studio/voice-v05-brand-stress-lab.py --verify-only
+      - name: Install Kokoro and audio tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render original versus stress versus vowel
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-v05-brand-stress-lab.py private-v05-stress-vowel
+          test -s private-v05-stress-vowel/index.html
+          test -s private-v05-stress-vowel/evidence.json
+          test "$(find private-v05-stress-vowel -maxdepth 1 -name '*.mp3' | wc -l)" -eq 12
+      - name: Upload private listening comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-v05-brand-stress-vowel
+          path: private-v05-stress-vowel/
+          retention-days: 7
+          if-no-files-found: error

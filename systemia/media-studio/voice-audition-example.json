@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.voice-foundry.audition-input.v1",
+  "projectId": "evercraft-voice-quiet-authority-en",
+  "locale": "en",
+  "scriptText": "Nobody celebrated when the system went quiet. We checked the record. It was still there.",
+  "candidates": [
+    {
+      "id": "warm-feminine-01",
+      "label": "Warm storyteller / feminine",
+      "voiceProfileId": "candidate-f-01",
+      "locale": "en-US",
+      "accent": "general-american",
+      "genderPresentation": "feminine",
+      "scriptText": "Nobody celebrated when the system went quiet. We checked the record. It was still there.",
+      "audioPath": "warm-feminine-01.wav",
+      "provider": "approved-provider-or-consenting-actor",
+      "providerReceiptRef": null,
+      "rightsState": "unknown",
+      "rightsEvidenceRef": null,
+      "performanceDirection": "An intimate documentary read. The first sentence is thoughtful; the last sentence carries quiet conviction, not forced drama.",
+      "modelId": "eleven_v4"
+    },
+    {
+      "id": "resonant-masculine-02",
+      "label": "Resonant storyteller / masculine",
+      "voiceProfileId": "candidate-m-02",
+      "locale": "en-GB",
+      "accent": "british-standard",
+      "genderPresentation": "masculine",
+      "scriptText": "Nobody celebrated when the system went quiet. We checked the record. It was still there.",
+      "audioPath": "resonant-masculine-02.wav",
+      "provider": "approved-provider-or-consenting-actor",
+      "providerReceiptRef": null,
+      "rightsState": "unknown",
+      "rightsEvidenceRef": null,
+      "performanceDirection": "A grounded, human storyteller with natural breath and small pauses; no theatrical announcer voice.",
+      "modelId": "eleven_v4"
+    }
+  ]
+}

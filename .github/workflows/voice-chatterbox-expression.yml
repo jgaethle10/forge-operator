@@ -1,0 +1,41 @@
+name: Voice Foundry Chatterbox Expression (private only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cross-model-expression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout private evaluation source
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify experimental scope before installing models
+        run: |
+          python systemia/media-studio/voice-chatterbox-expressiveness.py --verify-only
+          node --test tests/media-voice-chatterbox-expression.test.mjs
+      - name: Install CPU audio inference requirements
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg libsndfile1
+          python -m pip install --disable-pip-version-check 'chatterbox-tts' 'soundfile>=0.12,<1.0'
+      - name: Render two real default-voice neural takes
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-chatterbox-expressiveness.py private-chatterbox-expression
+          test -s private-chatterbox-expression/evidence.json
+          test -s private-chatterbox-expression/LISTEN_HERE.html
+          test "$(find private-chatterbox-expression -maxdepth 1 -name '*.wav' | wc -l)" -eq 2
+          test "$(find private-chatterbox-expression -maxdepth 1 -name '*.mp3' | wc -l)" -eq 2
+      - name: Upload actual private neural audio
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-chatterbox-expressive-audition
+          path: private-chatterbox-expression/
+          retention-days: 7
+          if-no-files-found: error

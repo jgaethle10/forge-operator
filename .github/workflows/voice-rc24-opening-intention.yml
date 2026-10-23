@@ -1,0 +1,41 @@
+name: Voice Foundry RC24 Opening Intention (private)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  opening-intention:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout draft Voice Foundry branch
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Confirm first-line conditions before downloading models
+        run: |
+          python systemia/media-studio/voice-rc24-opening-intention.py --verify-only
+          node --test tests/media-voice-rc24-opening-intention.test.mjs
+      - name: Install actual CPU Kokoro model runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Record 18 first-line neural performances
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-rc24-opening-intention.py private-rc24-firstline
+          test -s private-rc24-firstline/evidence.json
+          test -s private-rc24-firstline/LISTEN.html
+          test "$(find private-rc24-firstline -maxdepth 1 -name '*.wav' | wc -l)" -eq 18
+          test "$(find private-rc24-firstline -maxdepth 1 -name '*.mp3' | wc -l)" -eq 18
+      - name: Archive unmodified source WAVs and review MP3s
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-rc24-opening-intention
+          path: private-rc24-firstline/
+          retention-days: 7
+          if-no-files-found: error
