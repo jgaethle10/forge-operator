@@ -72,3 +72,7 @@ It checks exact bytes via streaming SHA-256 and size, rejects missing files, dir
 The local inspection gate has also been hardened: signed stage attestations never promote an artifact whose local bytes are missing or mismatched, even if the signature itself is cryptographically valid. The existing separate Systemia drive recovery workflow remains authoritative for its own migration scope.
 
 An isolated path-scoped, read-only GitHub workflow runs both test files. It has no secrets or deploy privileges, does not fetch private user artifacts, and does not automatically publish anything.
+
+## v0.3 preview: adapter-driven preservation
+
+See `docs/artifact-preservation.md` and `scripts/artifact-preservation.mjs`. The explicit coordinator runs a staged upload/download/verify workflow with a supplied adapter, retains private per-phase receipts, detects byte mismatches, and never treats an adapter assertion as independently authenticated cloud storage. This PR contains only an offline local-fixture adapter; real Google Drive credentials, Systemia admission, unattended jobs, device installation, and publication are not enabled. The private real Drive backup operations performed through ChatGPT are separately documented in the owner's private Recovery Vault, not embedded in this public source tree.
