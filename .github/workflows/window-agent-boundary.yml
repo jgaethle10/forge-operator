@@ -6,6 +6,8 @@ on:
       - 'tests/window-agent-boundary.test.mjs'
       - 'systemia/society/window-model-bridge.mjs'
       - 'tests/window-model-bridge.test.mjs'
+      - 'systemia/society/window-local-journal.mjs'
+      - 'tests/window-local-journal.test.mjs'
       - '.github/workflows/window-agent-boundary.yml'
   push:
     branches:
@@ -15,6 +17,8 @@ on:
       - 'tests/window-agent-boundary.test.mjs'
       - 'systemia/society/window-model-bridge.mjs'
       - 'tests/window-model-bridge.test.mjs'
+      - 'systemia/society/window-local-journal.mjs'
+      - 'tests/window-local-journal.test.mjs'
       - '.github/workflows/window-agent-boundary.yml'
 permissions:
   contents: read
@@ -30,6 +34,6 @@ jobs:
         with:
           node-version: '22'
       - name: Reject untrusted decisions and prove independent choice outcomes
-        run: node --test tests/window-agent-boundary.test.mjs tests/window-model-bridge.test.mjs
+        run: node --test tests/window-agent-boundary.test.mjs tests/window-model-bridge.test.mjs tests/window-local-journal.test.mjs
       - name: Preserve existing canonical heartbeat tests
         run: node --test tests/window-heartbeat.test.mjs
