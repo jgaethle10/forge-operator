@@ -1,0 +1,171 @@
+{
+  "schema": "evercraft.instrument-foundry.v10.source-bank.v1",
+  "status": "research_not_human_accepted",
+  "source_repo": "https://github.com/sgossner/VSCO-2-CE",
+  "license": "CC0-1.0",
+  "source_owned_by_evercraft": false,
+  "native_sample_rate": 44100,
+  "number_of_independent_original_acoustic_samples": 12,
+  "velocity_range": {
+    "soft": [
+      1,
+      64
+    ],
+    "strong": [
+      65,
+      127
+    ]
+  },
+  "sfz_mode": "one_shot_unaltered_recorded_release",
+  "actual_performed_legato": false,
+  "technique": "independent per-sample static gain calibration, never waveform substitution",
+  "raw_sample_hashes_are_previously_verified": true,
+  "notes": {
+    "cello": {
+      "C3": [
+        46,
+        50,
+        48
+      ],
+      "E3": [
+        51,
+        53,
+        52
+      ],
+      "G3": [
+        54,
+        57,
+        55
+      ]
+    },
+    "violin": {
+      "E4": [
+        62,
+        65,
+        64
+      ],
+      "G4": [
+        66,
+        69,
+        67
+      ],
+      "C5": [
+        70,
+        74,
+        72
+      ]
+    }
+  },
+  "targets_dbfs": {
+    "cello": {
+      "soft": -34,
+      "strong": -27.5
+    },
+    "violin": {
+      "soft": -35,
+      "strong": -27.5
+    }
+  },
+  "gain_limits_db": {
+    "min": -14,
+    "max": 6
+  },
+  "files": [
+    {
+      "instrument": "cello",
+      "pitch": "C3",
+      "dynamic": "soft",
+      "filename": "susvib_C3_v1_1.wav",
+      "sha256": "a614ee7ca821b44660236e47b89620cf914ec6ad27a99bc0d9764f47dbe512e1",
+      "git_blob_sha1": "73ccb5dc2cc2a07926a1c41aa3c5621b19f420bf"
+    },
+    {
+      "instrument": "cello",
+      "pitch": "C3",
+      "dynamic": "strong",
+      "filename": "susvib_C3_v3_1.wav",
+      "sha256": "51e884d54eea3bf4ba7ee35289a09f15ddb6a52cd849248d01bf18477ccbd07b",
+      "git_blob_sha1": "a192845091cb8e669c72d3ff4a88eb1c5968e626"
+    },
+    {
+      "instrument": "cello",
+      "pitch": "E3",
+      "dynamic": "soft",
+      "filename": "susvib_E3_v1_1.wav",
+      "sha256": "d2f961e30bf64021cf4acbd88e0e7a1fd1840943ae78c62a711bcce3d109216e",
+      "git_blob_sha1": "63f4d6df3a25fb95f417b5d45b5f8bf6a11107bf"
+    },
+    {
+      "instrument": "cello",
+      "pitch": "E3",
+      "dynamic": "strong",
+      "filename": "susvib_E3_v3_1.wav",
+      "sha256": "24a7ffdc23087026c4ef2d421441253c71490df9cf0757e93ffb14b4e61481ef",
+      "git_blob_sha1": "7711cb67795d692b0d732eb8fd234c41d5980f42"
+    },
+    {
+      "instrument": "cello",
+      "pitch": "G3",
+      "dynamic": "soft",
+      "filename": "susvib_G3_v1_1.wav",
+      "sha256": "8d658346b8d2054fd534b3222b5d7a23196d22a83a68c3a04ffb76b21853a3db",
+      "git_blob_sha1": "7880157fbb8e57fb0b7a694b8569701bc0d942ea"
+    },
+    {
+      "instrument": "cello",
+      "pitch": "G3",
+      "dynamic": "strong",
+      "filename": "susvib_G3_v3_1.wav",
+      "sha256": "17df597c259a849870aa25e9fbfa6093371851f83ba7b9deb9cb9e1ec11463a7",
+      "git_blob_sha1": "732d0c80596fdfc593f55b5a24f65c07cd3191cd"
+    },
+    {
+      "instrument": "violin",
+      "pitch": "E4",
+      "dynamic": "soft",
+      "filename": "LLVln_ArcoVib_E4_p.wav",
+      "sha256": "57c5aec0678a5d582d87ab33cd2f8954fea26ffd04c932eb6753d6a78e08736b",
+      "git_blob_sha1": "99279ebc21258ab48aae6eb63d1eb7538f28d306"
+    },
+    {
+      "instrument": "violin",
+      "pitch": "E4",
+      "dynamic": "strong",
+      "filename": "LLVln_ArcoVib_E4_f.wav",
+      "sha256": "418512905f3294a23cf999f0587bf8e04d60192fe317ea8c80c150a85670eda2",
+      "git_blob_sha1": "6b1bcdf57513dd089a2172adc0ddbac4a335b3a0"
+    },
+    {
+      "instrument": "violin",
+      "pitch": "G4",
+      "dynamic": "soft",
+      "filename": "LLVln_ArcoVib_G4_p.wav",
+      "sha256": "ad1ba8442a6b40919093c9c831a8171c7030f7e651fbe075ab87764665deef88",
+      "git_blob_sha1": "7324564c663bf239802020287c217b27c76b8142"
+    },
+    {
+      "instrument": "violin",
+      "pitch": "G4",
+      "dynamic": "strong",
+      "filename": "LLVln_ArcoVib_G4_f.wav",
+      "sha256": "14e3ea3d5172722d4d2686bae5da3d603800a7a474fa295d98275a9410913822",
+      "git_blob_sha1": "f9c1a5547a7e062eb34ee6bef09e559d3839f46e"
+    },
+    {
+      "instrument": "violin",
+      "pitch": "C5",
+      "dynamic": "soft",
+      "filename": "LLVln_ArcoVib_C5_p.wav",
+      "sha256": "77a2133b5f97e1ec0edb759c0c552fc3efa7caf4ce1e0a4aa22625cf4c9da130",
+      "git_blob_sha1": "71f0671d77cf8b79ce1a18ba20d9661e24f086fc"
+    },
+    {
+      "instrument": "violin",
+      "pitch": "C5",
+      "dynamic": "strong",
+      "filename": "LLVln_ArcoVib_C5_f.wav",
+      "sha256": "af72f852ef2892233699851dacf5f8d97d446822d8eb4ce9e0ec27d5a721b118",
+      "git_blob_sha1": "93e9a2cf8106acc5e49ba18dab112c947473917f"
+    }
+  ]
+}
