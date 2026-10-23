@@ -1,0 +1,68 @@
+name: Website Audit editorial review
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-audit-editorial-safe.test.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
+      - 'public/visuals/website-audit-attention/offer-og-v2.svg'
+      - 'systemia/evercraft-web/browser-worker/audit-editorial-preview.mjs'
+      - '.github/workflows/audit-editorial-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offer-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test purchase hold, configured form and visual route
+        run: node --test tests/fabric-audit-editorial-safe.test.mjs tests/fabric-offer-pages.test.mjs
+
+  source-visual-review:
+    needs: offer-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing Saban browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install Chromium
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npx playwright install --with-deps chromium
+      - name: Render local source-only mobile and desktop variants, open and held
+        run: node systemia/evercraft-web/browser-worker/audit-editorial-preview.mjs --out "$RUNNER_TEMP/editorial-source-review"
+      - name: Verify no publication, charge, overflow, or hidden CTA claims
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/editorial-source-review/source-preview-receipt.json","utf8"));
+            if(r.schema!=="evercraft.audit-editorial.source-preview.v1"||
+               r.liveDeployed!==false||r.paymentAttempted!==false||
+               r.publisherAuthorized!==false||r.views.length!==4||r.blockers.length||
+               r.views.some(x=>x.ctaFirstViewport!==true||x.horizontalOverflowPx!==0||
+                 x.readOnly!==true||x.submitted!==false||
+                 x.checkoutFormCount!==(x.name.endsWith("-held")?0:1))){
+              throw Error("unsafe_or_incomplete_editorial_preview");
+            }
+          '
+      - name: Upload clearly labeled non-production visuals even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-audit-editorial-source-review
+          path: \${{ runner.temp }}/editorial-source-review/**
+          if-no-files-found: warn
+          retention-days: 7
