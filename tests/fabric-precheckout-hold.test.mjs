@@ -20,7 +20,7 @@ test('held transport offers honest assisted contact rather than a broken checkou
   assert.match(held,/Online checkout is temporarily unavailable/);
   assert.match(held,/Request an approved invoice/);
   assert.match(held,/mailto:jessegaethle10@gmail.com\?subject=/);
-  assert.match(held,/tel:\+15097590440/);
+  assert.match(held,/Email opens in your own mail app for review/);
   assert.match(held,/\$49/);
   assert.doesNotMatch(held,/Continue to checkout/);
   assert.doesNotMatch(held,/<form\b[^>]*class="checkout-form(?:\s|")/);
