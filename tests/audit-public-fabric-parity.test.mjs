@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {assessFabricParity} from '../scripts/audit-public-fabric-parity.mjs';
+import {assessFabricParity,fabricParityProbeFailureReceipt} from '../scripts/audit-public-fabric-parity.mjs';
 
 const source={capabilities:[
  {public_id:'known-v1',public_url:'https://fabric.systemiacommandcenters.com/capabilities/known-v1'},
@@ -81,4 +81,29 @@ test('scoped, unexpired $250 Workflow X-Ray source-only exception reports missin
  const expired=assessFabricParity({...args,source:extendedSource,observations:observed,exceptions:scopedExceptions,now:'2026-10-22T00:00:00Z'});
  assert.equal(expired.ok,false);
  assert.ok(expired.findings.includes('source_live_exception_expired'));
+});
+
+test('external fetch failure emits a serializable red receipt with no invented readiness',()=>{
+ const receipt=fabricParityProbeFailureReceipt(
+  Object.assign(new Error('fetch failed'),{cause:{code:'ETIMEDOUT'}}),
+  {now:'2026-10-23T21:28:33.000Z'}
+ );
+ const serialized=JSON.parse(JSON.stringify(receipt));
+ assert.equal(serialized.ok,false);
+ assert.equal(serialized.state,'HOLD_EXTERNAL_PROBE_FAILURE');
+ assert.equal(serialized.cause_code,'ETIMEDOUT');
+ assert.equal(serialized.live_mcp_capabilities,null);
+ assert.equal(serialized.source_capabilities,null);
+ assert.equal(serialized.release_lineage_state,'HOLD_PUBLIC_ORIGIN_UNVERIFIED');
+ assert.equal(serialized.paid_receipt_verified,false);
+ assert.equal(serialized.financial_action_taken,false);
+ assert.deepEqual(serialized.findings,['external_parity_probe_failed']);
+});
+
+test('untrusted error codes are normalized before external receipt emission',()=>{
+ const receipt=fabricParityProbeFailureReceipt({
+  message:'outside connection unavailable',code:'secret=value;next=1'
+ });
+ assert.equal(receipt.cause_code,'EXTERNAL_PROBE_FAILED');
+ assert.equal(receipt.ok,false);
 });
