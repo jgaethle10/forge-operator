@@ -58,10 +58,14 @@ function sanitized(state, now) {
 }
 
 export class SabanFencedAckJournal {
-  constructor({stateDir, integritySecret = ''} = {}) {
+  constructor({stateDir, integritySecret = '', maxAttempts = 3} = {}) {
     if (!stateDir) throw new Error('journal_state_dir_required');
     this.root = path.resolve(stateDir);
     this.secret = String(integritySecret);
+    if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 16) {
+      throw new Error('saban_ack_max_attempts_invalid');
+    }
+    this.maxAttempts = maxAttempts;
     fs.mkdirSync(this.root, {recursive:true,mode:0o700});
   }
   filename(jobKey) {
@@ -140,7 +144,7 @@ export class SabanFencedAckJournal {
         }
         return {...sanitized(prior,at),deduplicated:true};
       }
-      const next=this.append(key,'submitted',{workload_class:cls,work_digest:digest},at);
+      const next=this.append(key,'submitted',{workload_class:cls,work_digest:digest,max_attempts:this.maxAttempts},at);
       return {...sanitized(next.state,at),deduplicated:false};
     });
   }
@@ -157,6 +161,7 @@ export class SabanFencedAckJournal {
         throw new Error('saban_ack_ambiguous_completion_requires_review');
       }
       if(current.state!=='queued')throw new Error('saban_ack_job_not_queued');
+      if(current.attempts >= current.max_attempts)throw new Error('saban_ack_retry_budget_exhausted');
       const token=randomBytes(32).toString('hex');
       const next=this.append(key,'leased',{
         worker_id:worker,token_hash:hex(token),expires_ms:at+ms
@@ -175,6 +180,7 @@ export class SabanFencedAckJournal {
       const current=this.replay(key).state;
       if(!current)throw new Error('saban_ack_job_not_found');
       if(current.state==='ack_recorded' &&
+          current.last_worker_id===worker &&
           current.last_token_hash===tokenHash &&
           current.result_digest===result &&
           current.receipt_ref===receipt) {
@@ -202,6 +208,7 @@ export class SabanFencedAckJournal {
       const current=this.replay(key).state;
       if(current?.state!=='leased'||current.lease.worker_id!==worker||
           current.lease.token_hash!==token)throw new Error('saban_ack_stale_or_unowned_lease');
+      if (at>current.lease.expires_ms) throw new Error('saban_ack_lease_expired_hold');
       const next=this.append(key,'held',{reason:why,token_hash:token},at);
       return sanitized(next.state,at);
     });
@@ -217,6 +224,9 @@ export class SabanFencedAckJournal {
       if(current.state!=='held' &&
           !(current.state==='leased'&&at>current.lease.expires_ms)) {
         throw new Error('saban_ack_review_requires_held_or_expired_work');
+      }
+      if(current.attempts >= current.max_attempts) {
+        throw new Error('saban_ack_retry_budget_exhausted');
       }
       const next=this.append(key,'retry_reviewed',{
         approval_ref:approval,evidence_ref:evidence
@@ -239,10 +249,13 @@ function apply(previous,e) {
       if(previous)throw new Error('duplicate_submit_event');
       assertKey(e.workload_class,'workload_class');
       assertHash(e.work_digest,'work_digest');
+      if(!Number.isInteger(e.max_attempts)||e.max_attempts<1||e.max_attempts>16)
+        throw new Error('invalid_retry_budget');
       return {job_key:e.job_key,workload_class:e.workload_class,
-        work_digest:e.work_digest,state:'queued',attempts:0,lease:null};
+        work_digest:e.work_digest,state:'queued',attempts:0,max_attempts:e.max_attempts,lease:null};
     case 'leased':
-      if(previous?.state!=='queued'|| !Number.isSafeInteger(e.expires_ms) ||
+      if(previous?.state!=='queued'||previous.attempts>=previous.max_attempts||
+          !Number.isSafeInteger(e.expires_ms) ||
           e.expires_ms<=e.at_ms || !/^[0-9a-f]{64}$/.test(e.token_hash) ||
           !KEY.test(e.worker_id))throw new Error('invalid_lease_event');
       return {...previous,state:'leased',attempts:previous.attempts+1,
@@ -255,7 +268,7 @@ function apply(previous,e) {
       assertHash(e.result_digest,'result_digest');
       assertKey(e.receipt_ref,'receipt_ref');
       return {...previous,state:'ack_recorded',lease:null,
-        last_token_hash:e.token_hash,result_digest:e.result_digest,
+        last_worker_id:e.worker_id,last_token_hash:e.token_hash,result_digest:e.result_digest,
         receipt_ref:e.receipt_ref};
     case 'held':
       if(previous?.state!=='leased'||previous.lease.token_hash!==e.token_hash)
@@ -266,6 +279,7 @@ function apply(previous,e) {
       if(previous?.state!=='held'&&
           !(previous?.state==='leased'&&e.at_ms>previous.lease.expires_ms))
         throw new Error('invalid_retry_event');
+      if(previous.attempts>=previous.max_attempts)throw new Error('retry_budget_exhausted');
       assertKey(e.approval_ref,'approval_ref');
       assertKey(e.evidence_ref,'evidence_ref');
       return {...previous,state:'queued',lease:null,reason:'retry_review_recorded',
