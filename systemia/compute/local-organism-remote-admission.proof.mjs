@@ -120,6 +120,10 @@ try {
       attempts: state.attempts,
       running: state.running,
       connected: state.connected,
+      session_created_at_least_once: Boolean(state.connected_at),
+      agent_object_present: Boolean(organism.remote_admission.agent),
+      retry_scheduled: Boolean(organism.remote_admission.retryTimer),
+      broker_node_count: broker?.snapshot()?.nodes?.length ?? 0,
       coarse_reason: reason,
     }));
     throw error;
