@@ -96,3 +96,22 @@ square in a portrait zoom, and that anchoring a crop right versus left changes
 whether an off-center subject is visible. Such synthetic fixture tests are
 geometric evidence, **not** proof of realistic faces, acting, camera movement,
 lighting, detailed animation or premium commercial quality.
+
+### Source-safe cover vs contain (full-frame product media)
+
+Fallen now has explicit full-frame fitting, separate from its existing
+director-controlled crop anchors. Set `fitMode: 'cover'` on image or video
+scenes and Studio picture clips to fill the canvas using an aspect-preserving
+crop. This is the backward-compatible default.
+
+Set `fitMode: 'contain'` when the entire source must remain visible, such as
+a product UI, legal disclaimer image, logo card, or infographic. It uses
+aspect-preserving scale-down and a black matte in any leftover canvas space.
+Contain does not use the legacy automatic push-in motion, since zooming
+could cut off the very text or controls it was chosen to protect.
+
+Invalid fit modes reject before render. Studio export and storyboard rendering
+share this semantic choice, but retain their own separately tested codepaths.
+Automated FFmpeg pixel tests verify the light-colored image remains visible
+between dark matte bars. A valid source fit does not replace visual-art
+direction, rights checks, accessibility review or human publication approval.
