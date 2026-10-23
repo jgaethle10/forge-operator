@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
+import { buildFindMyPartIntake, FINDMYPART_PURCHASE_SLUGS, verifyFindMyPartPreflight, verifyFindMyPartCheckoutBinding } from './findmypart-intake.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -1100,11 +1101,18 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        const partScope=FINDMYPART_PURCHASE_SLUGS.includes(slug)
+          ? buildFindMyPartIntake(body,{slug,customerEmail:customerRef})
+          : null;
+        if(partScope && !partScope.ok){
+          return sendJson(res,422,{ok:false,error:partScope.error,message:partScope.message||'',checkout_ready:false,fulfillment_release:false});
+        }
         const websiteUrl=slug==='website-audit'?String(body?.website_url||'').trim().slice(0,1001):null;
         if(slug==='website-audit'&&!websiteUrl){
           return sendJson(res,422,{ok:false,error:'public_https_website_required',checkout_ready:false,fulfillment_release:false});
         }
         let auditedDomain=null;
+        let persistedPartIntakeRef='';
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),15000);
         let upstream;
@@ -1129,7 +1137,31 @@ export async function startFabricLocalRuntime({
             }
             auditedDomain=ready.audited_domain;
           }
-          upstream=await purchaseIntentFetch(directOffer?directPaymentOpsEndpoint:purchaseIntentEndpoint,{
+          if(partScope){
+              // An owned payment service must durably acknowledge the buyer's part
+              // before checkout. Merely displaying a form cannot establish scope.
+              const preflight=await purchaseIntentFetch(directOffer?directPaymentOpsEndpoint:purchaseIntentEndpoint,{
+                method:'POST',headers:{'content-type':'application/json','accept':'application/json'},
+                body:JSON.stringify({
+                  action:'findmypart_prepayment_preflight',
+                  capability_key:capabilityKey,
+                  offer_key:directOffer?.offer_key||'findmypart.quick_hunt_19.v1',
+                  order_key:buyerOrderKey(slug,idempotencyKey),
+                  customer_email:customerRef,
+                  intake:partScope.intake,
+                  intake_digest:partScope.intake_digest,
+                  checkout_created:false,
+                }),
+                signal:controller.signal,
+              });
+              const acknowledged=await preflight.json().catch(()=>null);
+              if(!preflight.ok||!verifyFindMyPartPreflight(acknowledged,partScope.intake_digest)){
+                if(isForm)return sendText(res,503,renderPaymentHoldPage({slug,noAttempt:true}),{contentType:'text/html; charset=utf-8'});
+                return sendJson(res,503,{ok:false,error:'findmypart_intake_not_persisted',checkout_ready:false,fulfillment_release:false});
+              }
+              persistedPartIntakeRef=acknowledged.intake_ref;
+            }
+            upstream=await purchaseIntentFetch(directOffer?directPaymentOpsEndpoint:purchaseIntentEndpoint,{
             method:'POST',
             headers:{
               'content-type':'application/json',
@@ -1139,7 +1171,9 @@ export async function startFabricLocalRuntime({
             body:JSON.stringify(directOffer?{
               action:'create_checkout',offer_key:directOffer.offer_key,
               order_key:buyerOrderKey(slug,idempotencyKey),customer_email:customerRef,
-              source_ref:'fabric-native-offer|'+slug,return_origin:'https://fabric.systemiacommandcenters.com',
+              source_ref:'fabric-native-offer|'+slug,
+                ...(partScope?{intake_ref:persistedPartIntakeRef,intake_digest:partScope.intake_digest}:{}),
+                return_origin:'https://fabric.systemiacommandcenters.com',
               success_path:'/offers/'+slug+'?payment=processing',cancel_path:'/offers/'+slug+'?payment=cancelled',
             }:{
               user_confirmed:true,
@@ -1147,6 +1181,7 @@ export async function startFabricLocalRuntime({
               idempotency_key:idempotencyKey,
               customer_ref:customerRef,
               ...(websiteUrl?{website_url:websiteUrl}:{}),
+                ...(partScope?{intake_ref:persistedPartIntakeRef,intake_digest:partScope.intake_digest}:{}),
             }),
             signal:controller.signal,
           });
@@ -1187,7 +1222,10 @@ export async function startFabricLocalRuntime({
           const candidate=new URL(String(result?.checkout_url||''));
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl||(auditedDomain&&(result?.context_persisted!==true||result?.audited_domain!==auditedDomain))){
+        if(result?.checkout_ready!==true||!checkoutUrl||
+          (auditedDomain&&(result?.context_persisted!==true||result?.audited_domain!==auditedDomain))||
+          (partScope&&(!verifyFindMyPartCheckoutBinding(result,partScope.intake_digest,persistedPartIntakeRef)||
+            Number(result?.amount_cents)!==(directOffer?.amount_cents||1900)||String(result?.currency||'').toLowerCase()!=='usd'))){
           if(isForm){
             return sendText(
               res,
