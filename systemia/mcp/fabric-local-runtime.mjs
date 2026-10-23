@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {node002ShadowHttpHandler} from '../compute/node002-shadow-ingest.mjs';
 import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
@@ -761,6 +762,22 @@ export async function startFabricLocalRuntime({
         });
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
+      }
+
+      // Shadow-only Node002 admission. No remote execution or lease authority.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/node002/shadow-telemetry'){
+        const keyFile=process.env.EVERCRAFT_NODE002_PUBLIC_KEY_FILE;
+        const nonceDir=process.env.EVERCRAFT_NODE002_NONCE_DIR;
+        if(!keyFile||!nonceDir) return sendJson(res,503,{ok:false,reason:'receiver_not_configured'});
+        let registeredPublicKeyPem;
+        try {
+          const st=fs.lstatSync(keyFile);
+          if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o022)!==0) throw Error('unsafe_key_file');
+          registeredPublicKeyPem=fs.readFileSync(keyFile,'utf8');
+        } catch {
+          return sendJson(res,503,{ok:false,reason:'receiver_key_unavailable'});
+        }
+        return node002ShadowHttpHandler({registeredPublicKeyPem,nonceDirectory:nonceDir})(req,res);
       }
 
       if (req.method==='OPTIONS') {
