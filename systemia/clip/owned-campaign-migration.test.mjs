@@ -78,11 +78,16 @@ test('source order is irrelevant for a deterministic cryptographic receipt',()=>
  assert.throws(()=>inspectOwnedClipSnapshot({...a,counts:{...a.counts,ContentPackage:999}}),/owned_digest_mismatch/);
 });
 
-test('excluded Facebook Page and incomplete foreign keys cannot be migrated',()=>{
+test('excluded brands are retained for evidence but are always unpublishable',()=>{
  const blocked=factory();blocked.records.ContentPackage[0].target_page_id='924929507380565';
- assert.throws(()=>prepareOwnedClipSnapshot(blocked),/blocked_page_in_content/);
- const excluded=factory();excluded.records.SocialPage[0].external_id='990957940766644';
- assert.throws(()=>prepareOwnedClipSnapshot(excluded),/blocked_page_in_social_registry/);
+ blocked.records.SocialPage[0].external_id='990957940766644';
+ blocked.records.CampaignReleaseSlot[0].target_page_id='116675248108887';
+ const snap=prepareOwnedClipSnapshot(blocked);
+ assert.equal(inspectOwnedClipSnapshot(snap).status,'ACCEPTED_FOR_PRIVATE_STAGING');
+ assert.equal(snap.records.ContentPackage[0].status,'held');
+ assert.equal(snap.records.ContentPackage[0].is_publish_excluded,true);
+ assert.equal(snap.records.SocialPage[0].status,'excluded');
+ assert.equal(snap.records.CampaignReleaseSlot[0].is_publish_excluded,true);
  const orphan=factory();orphan.records.CampaignReleaseSlot[0].content_package_id='does-not-exist';
  assert.throws(()=>prepareOwnedClipSnapshot(orphan),/orphan_content_package/);
 });
