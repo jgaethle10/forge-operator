@@ -307,3 +307,39 @@ solve character appealingness, anatomical staging, nuanced facial acting,
 phoneme-driven mouth shapes, music, or human creative admission. Approved
 multilayer character artwork and an auditioned real performance must replace
 the test fixtures before any public-facing scene can be offered.
+
+## Authored facial performance on actual rig frames (October 22)
+
+The cutout renderer now supports layered mouth, eye, and brow **sprite
+switches** while preserving joint transforms. This is not amplitude-driven
+speech or a whole-image morph, and does not invent missing character drawings.
+
+Supply 2–6 actual distinct RGBA PNG sprites for each optional face group.
+Every variant carries the same verified actor/source-asset and declared review
+record as other rig parts. Each sprite defines switchGroup = mouth / eyes /
+brows and variant = an exact authored name, e.g. open, closed, round or
+rest. Variants in one group must use the same parent joint, pivot and depth.
+Their decoded pixel contents must differ.
+
+Provide optional rig.facialTracks with one track for every switched group:
+
+    {"group":"mouth","source":"authored_frame_timing","cueId":"cue-1",
+      "events":[{"atFrame":0,"variant":"rest"},
+                {"atFrame":22,"variant":"open"},
+                {"atFrame":36,"variant":"round"},
+                {"atFrame":60,"variant":"rest"}]}
+
+Eye/brow tracks omit cueId. Events must start at frame zero, have strictly
+increasing integer frame indexes, reference exact registered variants, and
+actually change the artwork. Mouth cueId must match the recorded dialogue
+cue locked in the shot. At each rendered frame only the currently selected
+variant is composited, inheriting the same facial/head joint movement.
+CI exercises a blink and a rest/open/round mouth sequence, checks changed
+encoded media, authoritative frame counts, and exact source-event receipts.
+
+**Critical boundary:** these are authored expression switches, not
+phoneme-timed visemes, certified audio-video sync or natural facial acting.
+Even an accurate cue ID cannot establish spoken-phoneme timing. Render
+receipts continue to say phonemeTimingVerified = false,
+lipSyncVerified = false, humanCreativeApproved = false and
+publicationAuthority = false. No ugly fixture is a creative deliverable.
