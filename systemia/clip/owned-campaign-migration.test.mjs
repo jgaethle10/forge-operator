@@ -137,3 +137,20 @@ test('private migration rejects an existing group/world-readable state directory
   assert.throws(()=>stageOwnedClipSnapshot({snapshot:snap,stateDir:temp}),/state_dir_not_private/);
  }finally{fs.chmodSync(temp,0o700);fs.rmSync(temp,{recursive:true,force:true})}
 });
+
+
+test('nested platform copy cannot smuggle OAuth material through allowed JSON fields',()=>{
+ for(const copy of [
+  JSON.stringify({versions:[{text:'A verified commercial',access_token:'DO_NOT_COPY'}]}),
+  {captions:{instagram:{text:'Safe sample',refresh_token:'DO_NOT_COPY'}}},
+ ]){
+  const raw=factory();
+  raw.records.ContentPackage[0].platform_copy_json=copy;
+  assert.throws(()=>prepareOwnedClipSnapshot(raw),/credential_in_allowlisted_field/);
+ }
+ const safe=factory();
+ safe.records.ContentPackage[0].platform_copy_json=JSON.stringify({instagram:{caption:'A reviewable commercial',cta:'Learn more'}});
+ const snapshot=prepareOwnedClipSnapshot(safe);
+ assert.equal(snapshot.records.ContentPackage[0].platform_copy_json.instagram.caption,'A reviewable commercial');
+ assert.equal(inspectOwnedClipSnapshot(snapshot).status,'ACCEPTED_FOR_PRIVATE_STAGING');
+});
