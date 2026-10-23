@@ -359,9 +359,29 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const isPartHunt=['findmypart','part-quick','part-deep','part-rescue'].includes(copy.slug);
   const checkoutHeld=!checkoutConfigured;
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
-  const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
+  const supportBody=encodeURIComponent(isPartHunt
+    ? ['I need help sourcing a hard-to-find part. Please review the scope before sending an approved invoice.',
+      '', 'Chosen tier: '+offerName+' ('+price+')', 'Part/problem:', 'Equipment/model/year:',
+      'Part markings or number:', 'Sources already checked:', 'Urgency/location:',
+      'Photos available (attach in email app):', '',
+      'Please confirm the exact scope, capacity, secure payment instructions and next steps.'].join('\n')
+    : 'I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
+  const partFields=isPartHunt?[
+    '<div class="checkout-note"><strong>Before paying:</strong> give us enough information to identify the stalled repair. This request is kept with the order only if Evercraft Payments confirms the intake was securely saved.</div>',
+    '<label for="fmp-part-description">What part is missing and what has failed? *</label>',
+    '<textarea id="fmp-part-description" name="part_description" minlength="20" maxlength="1600" rows="4" required placeholder="Describe the component, why it is needed, and any physical clues." style="width:100%;min-height:104px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit"></textarea>',
+    '<label for="fmp-equipment">Machine, vehicle, make/model/year *</label>',
+    '<input id="fmp-equipment" name="equipment_context" minlength="4" maxlength="450" required placeholder="e.g. 1986 tractor, specific model or assembly">',
+    '<label for="fmp-part-number">Part number, casting or markings (if known)</label>',
+    '<input id="fmp-part-number" name="part_number" maxlength="180" placeholder="Any stamped or OEM number">',
+    '<label for="fmp-sources">Where have you already looked?</label>',
+    '<textarea id="fmp-sources" name="sources_tried" maxlength="800" rows="2" placeholder="Dealers, catalogs, salvage suppliers, and known dead ends."></textarea>',
+    '<label class="checkout-note"><input name="scope_confirmed" value="true" type="checkbox" required> I confirm these details and understand the hunt price covers research, not the replacement part. Availability, fitment and results cannot be guaranteed.</label>',
+    '<label class="checkout-note"><input name="user_confirmed" value="true" type="checkbox" required> I authorize preparing a secure checkout for this exact research tier after my brief is safely recorded.</label>',
+  ].join('\n'):'';
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
@@ -380,14 +400,16 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
       '</section>',
     ] : [
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
-    '<input type="hidden" name="user_confirmed" value="true">',
+    isPartHunt?'':'<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<label for="offer-customer-email">Email for your receipt and delivery</label>',
     '<input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" style="width:min(100%,340px);padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">',
     copy.slug==='website-audit'?'<label for="offer-website-url">Website to audit (include https://)</label><input id="offer-website-url" name="website_url" type="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true" style="display:block;width:100%;max-width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">':'',
+    partFields,
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
+    isPartHunt?'<div class="checkout-note">Not sure which tier? <a href="/offers/findmypart">Quick $19</a> · <a href="/offers/part-deep">Deep $49</a> · <a href="/offers/part-rescue">Rescue $99</a>. Choose just one.</div>':'',
     '</form>',
     ]),
     '</section>',
