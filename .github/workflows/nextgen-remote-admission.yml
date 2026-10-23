@@ -1,0 +1,40 @@
+name: NextGen authorized remote admission proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/nextgen-remote-doctor.mjs'
+      - 'systemia/compute/nextgen-remote-doctor.test.mjs'
+      - 'systemia/compute/remote-admission-keeper.e2e.proof.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'scripts/nextgen/**'
+      - 'systemia/remote-operator/mcp-gateway.mjs'
+      - 'systemia/remote-operator/mcp-gateway.test.mjs'
+      - 'package.json'
+      - '.github/workflows/nextgen-remote-admission.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove-nextgen-boundaries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify preflight never promotes shadow to live control
+        run: node --test systemia/compute/nextgen-remote-doctor.test.mjs
+      - name: Reject malicious archives and verify pinned offline extraction
+        run: python3 -m unittest discover -v -s scripts/nextgen -p 'test_*.py'
+      - name: Prove scoped MCP write and exec approvals default deny
+        run: node systemia/remote-operator/mcp-gateway.test.mjs
+      - name: Prove transient poll recovery against actual NodeSeed and broker
+        run: node systemia/network/outbound-node-agent-recovery.proof.mjs
+      - name: Prove actual remote admission keeper's unavailable broker and reconnection
+        run: node systemia/compute/remote-admission-keeper.e2e.proof.mjs
+      - name: Preserve existing actual loopback broker remote operator proof
+        run: node systemia/network/remote-operator.proof.mjs

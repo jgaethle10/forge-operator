@@ -519,7 +519,7 @@ if (isCli) {
   );
   const organism = await startLocalOrganism({
     root,
-    nodeId: arg('--node-id', nodeIdDefault()),
+    nodeId: arg('--node-id', process.env.EVERCRAFT_LOCAL_ORGANISM_NODE_ID || nodeIdDefault()),
     releaseRef: arg('--release-ref', sourceReleaseRef()),
     remoteBrokerUrl: arg(
       '--remote-broker',

@@ -64,6 +64,16 @@ elif ! grep -q '^EVERCRAFT_NATIVE_BROWSER_BOOTSTRAP=' "${ENV_FILE}"; then
   set_env_value "EVERCRAFT_NATIVE_BROWSER_BOOTSTRAP" "true"
 fi
 
+# Explicit node identity for non-Chromebook hosts such as HP NextGen WSL2.
+# This value is persisted only in the private user environment file.
+if [[ -n "${EVERCRAFT_LOCAL_ORGANISM_NODE_ID:-}" ]]; then
+  if [[ ! "${EVERCRAFT_LOCAL_ORGANISM_NODE_ID}" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]{2,79}$ ]]; then
+    echo "EVERCRAFT_LOCAL_ORGANISM_NODE_ID must be a bounded safe node identifier." >&2
+    exit 2
+  fi
+  set_env_value "EVERCRAFT_LOCAL_ORGANISM_NODE_ID" "${EVERCRAFT_LOCAL_ORGANISM_NODE_ID}"
+fi
+
 if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
   set_env_value "EVERCRAFT_REMOTE_BROKER_URL" "${EVERCRAFT_REMOTE_BROKER_URL}"
 fi
@@ -200,4 +210,4 @@ else
 fi
 
 echo "State: ${STATE_ROOT}"
-echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
+echo "This user-mode Linux runtime is authorized compute; physical Node 001 field certification is separate and not claimed."
