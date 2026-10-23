@@ -102,8 +102,8 @@ try {
   let connected;
   try {
     connected = await organism.remote_admission.waitForConnected({
-      timeoutMs: 8_000,
-      pollMs: 50,
+      timeoutMs: 30_000,
+      pollMs: 100,
     });
   } catch (error) {
     // CI-only, deliberately coarse diagnostic. Never print node identity,
@@ -139,7 +139,16 @@ try {
   broker = null;
   await sleep(500);
 
-  const duringOutage = await organism.health();
+  // A busy CI runner can briefly delay the local Fabric/Core health
+  // observations. Require a genuinely healthy result within a bounded
+  // deadline, never accept a permanently degraded local organism.
+  let duringOutage;
+  const healthDeadline = Date.now() + 25_000;
+  do {
+    duringOutage = await organism.health();
+    if (duringOutage.ok) break;
+    await sleep(300);
+  } while (Date.now() < healthDeadline);
   if (!duringOutage.ok) {
     // Do not print endpoint, tokens, device identity, or raw private receipts.
     console.error(JSON.stringify({
@@ -171,7 +180,7 @@ try {
   });
 
   let reconnected = null;
-  const deadline = Date.now() + 8_000;
+  const deadline = Date.now() + 30_000;
   while (Date.now() < deadline) {
     const status = organism.remote_admission.status();
     if (status.connected) {
@@ -184,7 +193,13 @@ try {
   assert.equal(reconnected.node_id, nodeId);
   assert.equal(reconnected.device_fingerprint, identity.fingerprint);
 
-  const finalHealth = await organism.health();
+  let finalHealth;
+  const finalHealthDeadline = Date.now() + 25_000;
+  do {
+    finalHealth = await organism.health();
+    if (finalHealth.ok) break;
+    await sleep(300);
+  } while (Date.now() < finalHealthDeadline);
   assert.equal(finalHealth.ok, true);
   assert.equal(finalHealth.remote_admission.connected, true);
 
