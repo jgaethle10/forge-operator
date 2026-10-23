@@ -81,6 +81,36 @@ export function assessFabricParity({
  };
 }
 
+export function fabricParityProbeFailureReceipt(error,{now=new Date().toISOString()}={}){
+ const causeCode=String(error?.cause?.code||error?.code||'EXTERNAL_PROBE_FAILED');
+ const reason=String(error?.message||'external_probe_failed').slice(0,240);
+ return {
+  schema:'evercraft.audit.fabric-source-to-live-parity.v1',
+  observed_at:now,
+  ok:false,
+  state:'HOLD_EXTERNAL_PROBE_FAILURE',
+  findings:['external_parity_probe_failed'],
+  error:'external_parity_probe_failed',
+  reason,
+  cause_code:/^[A-Z0-9_]{3,64}$/.test(causeCode)?causeCode:'EXTERNAL_PROBE_FAILED',
+  source_capabilities:null,
+  live_mcp_capabilities:null,
+  source_only_ids:[],
+  live_only_ids:[],
+  route_checked_count:0,
+  route_ok_count:0,
+  known_404_exception_count:0,
+  source_release_ref_bound:false,
+  deployment_receipt_bound:false,
+  release_lineage_state:'HOLD_PUBLIC_ORIGIN_UNVERIFIED',
+  checkout_end_to_end_verified:false,
+  paid_receipt_verified:false,
+  financial_action_taken:false,
+  limits:['A failed external fetch cannot prove the origin is down, only that this vantage point did not verify it.',
+   'No public capability route, device, deployment, or payment is admitted based on this receipt.'],
+ };
+}
+
 const timeout=ms=>AbortSignal.timeout(ms);
 async function getJson(url){
  const r=await fetch(url,{headers:{'accept':'application/json','user-agent':'Evercraft-ReadOnly-ParityCanary/1.0'},signal:timeout(15000)});
@@ -131,7 +161,11 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   process.stdout.write(JSON.stringify(result,null,2)+'\n');
   if(!result.ok)process.exitCode=1;
  }catch(e){
-  console.error(JSON.stringify({ok:false,error:'external_parity_probe_failed',reason:String(e?.message||e).slice(0,240)}));
+  const receipt=fabricParityProbeFailureReceipt(e);
+  process.stdout.write(JSON.stringify(receipt,null,2)+'\\n');
+  console.error(JSON.stringify({
+    ok:false,error:receipt.error,reason:receipt.reason,cause_code:receipt.cause_code
+  }));
   process.exitCode=1;
  }
 }
