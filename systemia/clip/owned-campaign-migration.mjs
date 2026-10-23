@@ -31,6 +31,16 @@ function canonical(value){
   return value;
 }
 function stable(value){return JSON.stringify(canonical(value));}
+const SECRET_FIELD_KEY=/^(?:access[_-]?token|refresh[_-]?token|api[_-]?key|client[_-]?secret|password|secret|authorization|cookie|session[_-]?cookie|private[_-]?key|bearer[_-]?token)$/i;
+function assertNoNestedCredentials(value,depth=0){
+  if(depth>20)fail('allowlisted_field_nesting_too_deep');
+  if(Array.isArray(value)){for(const item of value)assertNoNestedCredentials(item,depth+1);return;}
+  if(!value||typeof value!=='object')return;
+  for(const [key,child] of Object.entries(value)){
+    if(SECRET_FIELD_KEY.test(key))fail('credential_in_allowlisted_field');
+    assertNoNestedCredentials(child,depth+1);
+  }
+}
 function sourceKey(table,record){return str(record.id||record.slot_key||record.envelope_key||record.campaign_key||record.external_id);}
 function ownedKey(table,record){const key=sourceKey(table,record);if(!key)fail('source_record_key_missing:'+table);return 'clip_'+table.toLowerCase()+'_'+hash(table+':'+key).slice(0,24);}
 function isBlockedPage(id){return BLOCKED_PROVIDER_IDS.has(str(id));}
@@ -68,6 +78,7 @@ function safeRecord(table,legacy,ownedId,lookup){
     if(typeof row.platform_copy_json==='string'){
       try{row.platform_copy_json=JSON.parse(row.platform_copy_json)}catch{fail('platform_copy_json_invalid')}
     }
+    if(row.platform_copy_json!==undefined)assertNoNestedCredentials(row.platform_copy_json);
   }
   if(table==='SocialPage'){
     if(!str(row.external_id)||!str(row.name))fail('social_page_identity_missing');
