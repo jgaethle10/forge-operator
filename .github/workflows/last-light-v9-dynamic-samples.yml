@@ -46,6 +46,7 @@ jobs:
             with urllib.request.urlopen(req,timeout=40) as response:
               if response.status!=200:raise ValueError('cannot_fetch_recording')
               raw=response.read(5_000_001)
+            print('RAW INPUT',x['id'],url,'size',len(raw),'sha256',sha(raw),'git',git(raw),flush=True)
             assert 50000<len(raw)<5_000_000
             assert sha(raw)==x['sha256'],x['id']
             assert git(raw)==x['git_blob_sha1'],x['id']
