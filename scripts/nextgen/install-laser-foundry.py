@@ -36,7 +36,9 @@ def install(archive:Path,destination:Path,expected_sha:str=PINNED_SHA256)->dict:
     if destination.exists() or destination.is_symlink():
         raise ValueError('destination_already_exists_no_implicit_overwrite')
     parent=destination.parent
-    if parent.is_symlink() or parent.exists() and not parent.is_dir():
+    if any(ancestor.is_symlink() for ancestor in (parent,*parent.parents)):
+        raise ValueError('destination_symlink_ancestor_denied')
+    if parent.exists() and not parent.is_dir():
         raise ValueError('destination_parent_unsafe')
     parent.mkdir(mode=0o700,parents=True,exist_ok=True)
     with zipfile.ZipFile(archive) as z:
