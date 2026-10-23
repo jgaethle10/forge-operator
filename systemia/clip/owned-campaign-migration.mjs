@@ -3,6 +3,13 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const SOURCE_CHECKOUT_ROOT=fs.realpathSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'));
+function withinDir(target,root){
+  const relative=path.relative(root,target);
+  return relative===''||(relative!=='..'&&!relative.startsWith('..'+path.sep)&&!path.isAbsolute(relative));
+}
 
 export const SOURCE_SCHEMA='evercraft.clip.legacy-export.v1';
 export const OWNED_SCHEMA='evercraft.clip.owned-campaign-snapshot.v1';
@@ -141,9 +148,14 @@ export function stageOwnedClipSnapshot({snapshot,stateDir}){
   const inspected=inspectOwnedClipSnapshot(snapshot);
   if(!str(stateDir))fail('private_state_dir_missing');
   const resolved=path.resolve(stateDir);
-  // No private campaign/body/account state may be committed inside a checked-out public repo.
-  if(resolved.split(path.sep).includes('.git')||resolved.split(path.sep).includes('public'))fail('unsafe_state_dir');
+  // Reject the entire source checkout, not just its public/ or .git/ subfolders.
+  // A symlinked state directory must not bypass the same policy.
+  if(withinDir(resolved,SOURCE_CHECKOUT_ROOT)||resolved.split(path.sep).includes('public')||resolved.split(path.sep).includes('.git'))fail('unsafe_state_dir');
   fs.mkdirSync(resolved,{recursive:true,mode:0o700});
+  const real=fs.realpathSync(resolved);
+  if(withinDir(real,SOURCE_CHECKOUT_ROOT)||real.split(path.sep).includes('public')||real.split(path.sep).includes('.git'))fail('unsafe_state_dir');
+  const dirStat=fs.statSync(real);
+  if(!dirStat.isDirectory()||(dirStat.mode&0o077)!==0)fail('state_dir_not_private');
   const file=path.join(resolved,'clip-campaign-migration.json');
   const lock=file+'.lock';
   let fd;
