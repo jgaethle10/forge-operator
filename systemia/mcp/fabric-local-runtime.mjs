@@ -405,8 +405,12 @@ export async function startFabricLocalRuntime({
   purchaseIntentFetch=fetch,
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
+  mcprushMachineCommerceToken=process.env.MCPRUSH_MACHINE_COMMERCE_TOKEN||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
+  // Separate publisher-only route. Never change authentication on the public /mcp door.
+  const marketplaceMcpPath='/mcprush/mcp';
+  const marketplaceToken=String(mcprushMachineCommerceToken||'').trim();
   const resolvedReleaseRefFile=String(
     releaseRefFile||
     process.env.EVERCRAFT_FABRIC_RELEASE_REF_FILE||
@@ -639,6 +643,10 @@ export async function startFabricLocalRuntime({
     transport:'Streamable HTTP',
     transport_modes:['application/json','text/event-stream'],
     mcp_path:'/mcp',
+    mcprush_machine_commerce_path:marketplaceMcpPath,
+    mcprush_machine_commerce_token_configured:Boolean(marketplaceToken),
+    mcprush_machine_commerce_tool_scope:'read_only_discovery',
+    mcprush_machine_commerce_verification:'external_not_asserted',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
     capability_count:preparedCatalog().capabilities.length,
     read_only:true,
@@ -733,6 +741,17 @@ export async function startFabricLocalRuntime({
 
   const server=http.createServer(async(req,res)=>{
     try {
+      // The marketplace endpoint has its own credential and fails closed.
+      // mcprush calls carry x-mcprush-token; our existing ChatGPT MCP does not.
+      if(req.url===marketplaceMcpPath){
+        if(!marketplaceToken){
+          return sendJson(res,503,{jsonrpc:'2.0',id:null,error:{code:-32001,message:'Marketplace endpoint not configured.'}});
+        }
+        const presented=req.headers['x-mcprush-token'];
+        if(typeof presented!=='string'||!secureTokenMatches(marketplaceToken,presented)){
+          return sendJson(res,401,{jsonrpc:'2.0',id:null,error:{code:-32001,message:'Marketplace token required.'}});
+        }
+      }
       // Exact custom domains are standalone public frontages, not aliases
       // for Fabric's discovery/commerce/internal routes.
       const publicHost=String(req.headers.host||'').trim().toLowerCase().replace(/:\d+$/,'');
@@ -1521,7 +1540,7 @@ export async function startFabricLocalRuntime({
         return res.end(data);
       }
 
-      if (req.url!=='/mcp') return sendJson(res,404,{error:'not_found'});
+      if (req.url!=='/mcp'&&req.url!==marketplaceMcpPath) return sendJson(res,404,{error:'not_found'});
 
       if (req.method==='GET') {
         const body={
@@ -1581,6 +1600,7 @@ export async function startFabricLocalRuntime({
     instanceId,
     url,
     mcpUrl:url+'/mcp',
+    marketplaceMcpUrl:marketplaceToken?url+marketplaceMcpPath:null,
     health,
     setDeploymentReceipt(value){
       const receipt=String(value||'').trim();
