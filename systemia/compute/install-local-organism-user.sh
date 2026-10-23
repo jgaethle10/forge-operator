@@ -210,4 +210,4 @@ else
 fi
 
 echo "State: ${STATE_ROOT}"
-echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
+echo "This user-mode Linux runtime is authorized compute; physical Node 001 field certification is separate and not claimed."
