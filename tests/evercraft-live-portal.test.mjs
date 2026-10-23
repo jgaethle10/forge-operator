@@ -27,6 +27,6 @@ test('original public work and viewer source still exist without deletion',async
  'public/apps/earthworks-autonomy/index.html',
  'public/apps/eps-estimator/index.html',
  'public/demos/hvac-lead-recovery/index.html',
- 'public/visuals/washington-active-volcanoes/motion.html'
+ 'systemia/visual-desk/stories/washington-active-volcanoes.json'
  ]) {const s=await stat(new URL('../'+path,import.meta.url));assert.ok(s.size>1500,path)}
 });
