@@ -60,7 +60,22 @@ try {
     nativeBrowserPreparer: nativeBrowserProofPreparer,
   });
 
-  const initialHealth = await organism.health();
+  let initialHealth;
+  const initialHealthDeadline = Date.now() + 25_000;
+  do {
+    initialHealth = await organism.health();
+    if (initialHealth.ok) break;
+    await sleep(300);
+  } while (Date.now() < initialHealthDeadline);
+  if (!initialHealth.ok) {
+    console.error(JSON.stringify({
+      schema: 'evercraft.local-organism.remote-admission-proof-diagnostic.v1',
+      failed_stage: 'initial_local_health',
+      kaidance_ok: initialHealth.kaidance?.ok === true,
+      core_ok: initialHealth.systemia_core?.ok === true,
+      fabric_ok: initialHealth.fabric?.ok === true,
+    }));
+  }
   assert.equal(initialHealth.ok, true);
   assert.equal(initialHealth.kaidance.ok, true);
   assert.equal(initialHealth.systemia_core.ok, true);
