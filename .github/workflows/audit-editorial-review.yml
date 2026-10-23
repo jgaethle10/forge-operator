@@ -63,6 +63,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: website-audit-editorial-source-review
-          path: \${{ runner.temp }}/editorial-source-review/**
-          if-no-files-found: warn
+          path: ${{ runner.temp }}/editorial-source-review/**
+          if-no-files-found: error
           retention-days: 7
