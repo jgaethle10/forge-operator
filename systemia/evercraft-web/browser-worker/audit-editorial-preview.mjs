@@ -19,7 +19,7 @@ const item={public_id:'audit-center-website-audit-machine-v1',name:'Systemia Web
   entry_paid_offer:{name:'Quick Win Audit',price:'$49',price_usd_normalized:49,billing:'one_time'},
 };
 const host='127.0.0.1';
-const brandIcon=fs.readFileSync(new URL('../../mcp/assets/evercraft-icon.png',import.meta.url));
+const brandIcon=fs.readFileSync(new URL('../../../plugins/evercraft-fabric/assets/evercraft-icon.png',import.meta.url));
 const watermark='<div aria-label="Source-only design review" style="position:fixed;z-index:999;top:8px;right:8px;max-width:170px;padding:7px 9px;color:#fff;background:#42213c;border:2px solid #e8a0bd;border-radius:7px;font:700 10px system-ui;pointer-events:none">SOURCE REVIEW • NOT LIVE • NO PAYMENT</div>';
 function buildPage(hold){
   const src=renderOfferPage(item,{checkoutConfigured:!hold});
