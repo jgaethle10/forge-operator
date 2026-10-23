@@ -2,7 +2,7 @@
 export const REPO = 'jgaethle10/forge-operator';
 export const API = 'https://api.github.com/repos/' + REPO;
 const GITHUB_PREFIX = 'https://github.com/' + REPO + '/';
-const SENSITIVE = /\b(?:secrets?|credentials?|passwords?|private key|authentication bypass|token|customer record|pii|ssh|vulnerability|exploit|zero.day|security incident|custody|payment credential|router password)\b/i;
+const SENSITIVE = /\b(?:secrets?|credentials?|passwords?|p0|private key|authentication bypass|token|customer record|pii|ssh|vulnerability|exploit|zero.day|security incident|custody|payment credential|router password)\b/i;
 const BAD_BRANCH = /\b(?:private|secrets|production-credential)\b/i;
 const MAX_AGE = 14*24*60*60*1000;
 
