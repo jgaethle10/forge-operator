@@ -73,6 +73,21 @@ export function renderBoundPuppetMotion({
     proof.voiceCueId===source.dialogue.cueId,'render_voice_binding_mismatch');
   check(proof.frameCount===Math.round(shot.durationSec*shot.fps),'frame_count_mismatch');
   check(proof.articulatedJointTransformsExecuted===true,'joint_animation_missing');
+  const requiredTracks=Array.isArray(rig.facialTracks)?rig.facialTracks:[];
+  check(proof.authoredFacialSpritesSwitched===(requiredTracks.length>0),
+    'facial_sprite_execution_mismatch');
+  check(proof.audioPhonemeAlignmentMeasured===false,
+    'unearned_phoneme_claim');
+  for(const track of requiredTracks){
+    const sample=proof.facialSwitchSamples?.[track.group];
+    const counts=proof.facialVisibleFrameCounts?.[track.group];
+    check(Array.isArray(sample)&&sample.length===track.events.length,
+      'facial_event_receipt_missing:'+track.group);
+    check(sample.every((item,i)=>item.atFrame===track.events[i].atFrame&&
+      item.variant===track.events[i].variant),'facial_event_receipt_mismatch:'+track.group);
+    check(Object.values(counts||{}).reduce((a,b)=>a+b,0)===proof.frameCount,
+      'facial_frame_coverage_invalid:'+track.group);
+  }
   check(proof.lipSyncVerified===false&&proof.publicationAuthority===false&&
     proof.humanCreativeApproved===false,'unearned_approval');
   // The returned object is metadata only. No user images, audio or data URI.
