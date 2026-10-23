@@ -23,7 +23,8 @@ test('held transport offers honest assisted contact rather than a broken checkou
   assert.match(held,/tel:\+15097590440/);
   assert.match(held,/\$49/);
   assert.doesNotMatch(held,/Continue to checkout/);
-  assert.doesNotMatch(held,/class="checkout-form"/);
+  assert.doesNotMatch(held,/<form\b[^>]*class="checkout-form(?:\s|")/);
+  assert.doesNotMatch(held,/<form\b[^>]*action="\/api\/offers\/website-audit\/checkout"/);
   assert.doesNotMatch(held,/available now/);
   const configured=renderOfferPage(offer,{checkoutConfigured:true});
   assert.match(configured,/Continue to checkout/);
@@ -40,7 +41,8 @@ test('unconfigured Fabric runtime exposes assisted contact but no checkout form'
     const html=await response.text();
     assert.match(html,/Request an approved invoice/);
     assert.doesNotMatch(html,/Continue to checkout/);
-    assert.doesNotMatch(html,/class="checkout-form"/);
+    assert.doesNotMatch(html,/<form\b[^>]*class="checkout-form(?:\s|")/);
+  assert.doesNotMatch(html,/<form\b[^>]*action="\/api\/offers\/website-audit\/checkout"/);
   }finally{await runtime.close()}
 });
 
@@ -60,7 +62,8 @@ test('one configured owned endpoint is not sufficient to publish a checkout CTA'
       const html=await response.text();
       assert.match(html,/Request an approved invoice/);
       assert.doesNotMatch(html,/Continue to checkout/);
-      assert.doesNotMatch(html,/class="checkout-form"/);
+      assert.doesNotMatch(html,/<form\b[^>]*class="checkout-form(?:\s|")/);
+  assert.doesNotMatch(html,/<form\b[^>]*action="\/api\/offers\/website-audit\/checkout"/);
     }finally{await runtime.close()}
   }
 });
