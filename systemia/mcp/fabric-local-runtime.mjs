@@ -269,6 +269,15 @@ function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
       offerUrl:built.manifest.offerUrl,
     });
   }
+  // Mirror only this declared Website Audit social card into the owned visual router.
+  const auditOgRel=path.join('website-audit-attention','offer-og-v2.svg');
+  const auditOgSource=path.resolve(moduleDir,'../../public/visuals',auditOgRel);
+  const auditOgTarget=path.resolve(outputDir,auditOgRel);
+  if(fs.existsSync(auditOgSource)){
+    fs.mkdirSync(path.dirname(auditOgTarget),{recursive:true,mode:0o700});
+    fs.copyFileSync(auditOgSource,auditOgTarget);
+  }
+
   const index={
     schema:'evercraft.fabric.visual-desk-index.v1',
     origin:String(origin||'').replace(/\/$/,''),
