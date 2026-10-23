@@ -10,7 +10,7 @@ export const TABLES=['SocialPage','DistributionCampaign','ContentPackage','Campa
 export const BLOCKED_PROVIDER_IDS=new Set(['924929507380565','990957940766644','116675248108887']);
 const SOURCE_KEYS={
   SocialPage:['platform','external_id','name','brand_role','status'],
-  DistributionCampaign:['campaign_key','title','objective','source_app','source_package_key','rights_state','target_platforms','canonical_url','cta_label','cta_url','source_refs'],
+  DistributionCampaign:['campaign_key','title','objective','source_app','source_package_key','rights_state','target_platforms','canonical_url','cta_label','cta_url'],
   ContentPackage:['source_asset','content_type','hook','body','platform_copy_json','creative_style','link_url','media_url','target_page_id','target_page_name','campaign_key','target_platforms','publication_class'],
   CampaignReleaseSlot:['slot_key','campaign_key','content_package_id','target_page_id','not_before'],
   MediaDistributionEnvelope:['envelope_key','source_app','source_package_key','title','target_platform','rights_state','media_url','campaign_key','aspect_ratio','duration_seconds'],
@@ -57,17 +57,17 @@ function safeRecord(table,legacy,ownedId,lookup){
   row.provider_receipt_verified=false;
   if(table==='ContentPackage'){
     if(!str(row.body))fail('post_body_missing');
-    if(isBlockedPage(row.target_page_id))fail('blocked_page_in_content');
+    if(isBlockedPage(row.target_page_id)){row.status='held';row.is_publish_excluded=true;}
     if(typeof row.platform_copy_json==='string'){
       try{row.platform_copy_json=JSON.parse(row.platform_copy_json)}catch{fail('platform_copy_json_invalid')}
     }
   }
   if(table==='SocialPage'){
     if(!str(row.external_id)||!str(row.name))fail('social_page_identity_missing');
-    if(isBlockedPage(row.external_id))fail('blocked_page_in_social_registry');
+    if(isBlockedPage(row.external_id)){row.status='excluded';row.is_publish_excluded=true;}
   }
   if(table==='CampaignReleaseSlot'){
-    if(isBlockedPage(row.target_page_id))fail('blocked_page_in_slot');
+    if(isBlockedPage(row.target_page_id))row.is_publish_excluded=true;
     const target=lookup.get('ContentPackage:'+str(legacy.content_package_id));
     if(!target)fail('orphan_content_package:'+str(legacy.slot_key));
     row.content_package_id=target;
@@ -77,7 +77,9 @@ function safeRecord(table,legacy,ownedId,lookup){
   }
   if(table==='MediaDistributionEnvelope'||table==='ContentPackage'){
     const external=str(row.media_url);
-    row.original_media_url=external||null; // migration evidence, not publishable asset.
+    // Do not persist credentials embedded in signed media URLs. The locator is provenance only.
+    let locator=null;try{if(external){const u=new URL(external);locator=u.origin+u.pathname;}}catch{}
+    row.original_media_url=locator; // never a publishable owned asset.
     row.media_url=null;
     row.owned_media_ready=false;
     row.media_migration_state=external?(isLegacyMedia(external)?'legacy_media_needs_copy':'media_needs_owned_verification'):'media_missing';
@@ -127,8 +129,9 @@ export function inspectOwnedClipSnapshot(snapshot){
     if(snapshot.counts?.[table]!==snapshot.records[table].length)fail('owned_count_mismatch:'+table);
     for(const r of snapshot.records[table]){
       if(r.publish_authority!=='none'||r.provider_receipt_verified!==false)fail('unverified_publication');
-      if(r.status!==(table==='ContentPackage'?'draft':'held'))fail('status_not_held');
-      if(isBlockedPage(r.target_page_id)||isBlockedPage(r.external_id))fail('excluded_page');
+      const expected=(r.is_publish_excluded&&table==='SocialPage')?'excluded':(table==='ContentPackage'&&!r.is_publish_excluded?'draft':'held');
+      if(r.status!==expected)fail('status_not_held');
+      if((isBlockedPage(r.target_page_id)||isBlockedPage(r.external_id))&&r.is_publish_excluded!==true)fail('excluded_page_not_marked');
       if((table==='ContentPackage'||table==='MediaDistributionEnvelope')&&(r.media_url!==null||r.owned_media_ready!==false))fail('unsafe_media_promotion');
     }
   }
