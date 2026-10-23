@@ -46,7 +46,7 @@
 <div class="group"><div class="label">DIAMETER <span class="selected" id="sizeName">19 inch</span></div><div class="sizegrid" id="sizes"></div></div>
 <div class="group"><div class="label">WHEEL FINISH <span class="selected" id="finishName">Gloss black</span></div><div class="finishes" id="finishes"></div></div>
 <div class="notice"><b>FITMENT NOT VERIFIED.</b> Wheel diameter alone cannot establish compatibility. A merchant must independently confirm bolt pattern, offset, brake clearance, tire sizing, load rating and vehicle-specific fit.</div>
-<div class="actions"><button id="reset" class="action" type="button">Reset build ↺</button><button id="share" class="action" type="button">Copy build link ↗</button><button id="quote" class="action primary full" type="button">Export shop quote packet →</button></div>
+<div class="actions"><button id="reset" class="action" type="button">Reset build ↺</button><button id="share" class="action" type="button">Copy build summary ↗</button><button id="quote" class="action primary full" type="button">Export shop quote packet →</button></div>
 <div class="footnote">Proof only: no live catalog, vehicle VIN lookup, inventory, payment, shop account, external quote delivery, lead collection or verified fitment. Nothing here is available to buy.</div>
 </aside></div>
 <div class="insights"><div class="insight"><strong>01</strong><b>A shopper can picture it</b><p>Change finishes and wheel designs immediately, without handing over personal information.</p></div><div class="insight"><strong>02</strong><b>A shop can discuss it</b><p>Export a simple concept spec. The shop independently checks fitment, availability and final price.</p></div><div class="insight"><strong>03</strong><b>Evercraft can measure it</b><p>Next test: whether an independent shop wants an embedded version with its real inventory and verified quotes.</p></div></div>
@@ -74,7 +74,33 @@ function repaint(){menu();draw();try{const u=new URL(location.href);for(const [k
 document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('button[data-key]');if(!b)return;const k=b.dataset.key;const v=k==='size'?Number(b.dataset.value):b.dataset.value;if(!safeParam(k,v))return;state[k]=v;repaint()});
 get('reset').addEventListener('click',()=>{Object.assign(state,original);compared=false;repaint();toast('Build reset to the baseline.');});
 const compare=get('compareButton');function setCompare(v){compared=v;draw()}compare.addEventListener('pointerdown',e=>{compare.setPointerCapture(e.pointerId);setCompare(true)});compare.addEventListener('pointerup',()=>setCompare(false));compare.addEventListener('pointercancel',()=>setCompare(false));compare.addEventListener('lostpointercapture',()=>setCompare(false));compare.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter')setCompare(true)});compare.addEventListener('keyup',e=>{if(e.key===' '||e.key==='Enter')setCompare(false)});compare.addEventListener('blur',()=>setCompare(false));
-get('share').addEventListener('click',async()=>{const text=location.href;try{await navigator.clipboard.writeText(text);toast('Build link copied.')}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Build link copied.')}catch{toast('Copy the URL in your address bar.')}ta.remove()}});
+function buildSummary(){
+  const paint=options.paint.find(x=>x.key===state.paint).name;
+  const design=options.style.find(x=>x.key===state.style).name;
+  const finish=options.finish.find(x=>x.key===state.finish).name;
+  return [
+    'WHEEL LAB / CONCEPT BUILD',
+    'Vehicle: original illustrative concept coupe',
+    'Paint: '+paint,
+    'Wheels: '+design+' / '+state.size+' inch / '+finish,
+    'Appearance concept only. Fitment, inventory and price are not verified.',
+    'No order, lead, payment or merchant contact was submitted.'
+  ].join('\n');
+}
+async function copySummary(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    try{await navigator.clipboard.writeText(text);return true}catch{}
+  }
+  const field=document.createElement('textarea');
+  field.value=text;field.readOnly=true;field.style.position='fixed';field.style.opacity='0';
+  document.body.appendChild(field);field.focus();field.select();
+  let copied=false;try{copied=document.execCommand('copy')}catch{}
+  field.remove();return copied;
+}
+get('share').addEventListener('click',async()=>{
+  const copied=await copySummary(buildSummary());
+  toast(copied?'Concept build summary copied. No link or shop submission.':'Copy unavailable. Use Export shop quote packet instead.');
+});
 get('quote').addEventListener('click',()=>{const packet={title:'Wheel Lab concept quote packet',version:'RC01',generated_at:new Date().toISOString(),source:'Evercraft Rockies standalone visual proof',illustrative_only:true,fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,vehicle:'Original concept coupe (not manufacturer-specific)',paint:options.paint.find(x=>x.key===state.paint).name,wheel_design:options.style.find(x=>x.key===state.style).name,diameter_in:state.size,wheel_finish:options.finish.find(x=>x.key===state.finish).name,notes:'Merchant must verify actual vehicle year/make/model, bolt pattern, offset, center bore, brake clearance, tire choice, total rolling diameter, load rating, fitment, stock and final quote before sale. No order or lead has been submitted.'};const b=new Blob([JSON.stringify(packet,null,2)],{type:'application/json'});const href=URL.createObjectURL(b);const link=document.createElement('a');link.href=href;link.download='wheel-lab-concept-quote.json';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),2000);toast('Concept quote packet exported. No shop was contacted.');});
 repaint();})();
 </script>
