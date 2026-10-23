@@ -66,7 +66,7 @@ jobs:
           }
           NODE
           else
-            printf '%s\\n' "Fabric parity: HOLD. No nonempty receipt. External verification NOT established." >> "$GITHUB_STEP_SUMMARY"
+            printf '%s\n' "Fabric parity: HOLD. No nonempty receipt. External verification NOT established." >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Preserve evidence receipt
         if: always()
