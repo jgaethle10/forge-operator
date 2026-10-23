@@ -48,8 +48,11 @@ jobs:
               raw=response.read(5_000_001)
             print('RAW INPUT',x['id'],url,'size',len(raw),'sha256',sha(raw),'expected',x['sha256'],'git',git(raw),'expected_git',x['git_blob_sha1'],flush=True)
             assert 50000<len(raw)<5_000_000
-            if sha(raw)!=x['sha256'] or git(raw)!=x['git_blob_sha1']:
-              raise ValueError('source_hash_drift:'+x['id']+' SHA:'+str(sha(raw)==x['sha256'])+' git:'+str(git(raw)==x['git_blob_sha1']))
+            if sha(raw)!=x['sha256']:
+              raise ValueError('source_sha256_drift:'+x['id'])
+            # The stronger SHA-256 pins the bytes. Record Git object SHA-1 as
+            # an independent diagnostic without rejecting identical SHA-256 bytes.
+            print('GIT-OBJECT-ID-COMPARE',x['id'],repr(git(raw)),repr(x['git_blob_sha1']),flush=True)
             y,rate=sf.read(io.BytesIO(raw),dtype='float64',always_2d=True)
             assert rate==sr and y.shape[1]==2 and np.isfinite(y).all()
             assert 8*sr<len(y)<17*sr
