@@ -1,4 +1,4 @@
-# Evercraft Artifact Custody Engine v0.1
+# Evercraft Artifact Custody Engine v0.2
 
 A deliberately offline, fail-closed **local integrity and attestation verifier**. This is NOT a backup uploader, device installer, publication system, Systemia service, or proof that a cloud provider was contacted. It is a reusable foundation for binding artifact hashes to independent evidence.
 
@@ -58,3 +58,17 @@ Proposed Systemia workflow: local manifest -> authenticated private Drive upload
 - Local file hash is only local-integrity evidence, not cloud backup evidence
 - `inspect` checks passed trust keys, but independent identity assurance and provenance remain upstream responsibilities
 - For private Evercraft archive reconciliation, use the private Drive custody manifest, not code committed publicly
+
+## v0.2: local restored-snapshot comparison
+
+The additional no-network command compares the *actual downloaded bytes* with the retained original snapshot:
+
+```bash
+node scripts/artifact-roundtrip.mjs --original /private/original.bin --restored /private/restored-from-drive.bin --out /private/comparison.json
+```
+
+It checks exact bytes via streaming SHA-256 and size, rejects missing files, directories and symbolic links, and refuses to overwrite either input or an existing report. Exit codes: 0 identical, 2 mismatch, 1 invalid input or unsafe file. Comparison reports omit local paths but include hashes and sizes. A match is **not** a signed Google Drive receipt, does not validate who downloaded the copy or where the bytes originated, and never authorizes publication, Git commits or device installation. `backup_roundtrip_attested` is always false. A future authorized private connector adapter must independently record authenticated Drive file ID, account identity, downloaded bytes, upload correlation, timestamps, and a trusted signed receipt before any custody stage can be promoted.
+
+The local inspection gate has also been hardened: signed stage attestations never promote an artifact whose local bytes are missing or mismatched, even if the signature itself is cryptographically valid. The existing separate Systemia drive recovery workflow remains authoritative for its own migration scope.
+
+An isolated path-scoped, read-only GitHub workflow runs both test files. It has no secrets or deploy privileges, does not fetch private user artifacts, and does not automatically publish anything.
