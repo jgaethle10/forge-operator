@@ -1,0 +1,29 @@
+name: FindMyPart owned buyer gate
+on:
+  pull_request:
+    paths:
+      - 'public/mesh/index.html'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/owned-offer-links.mjs'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/payment-return.mjs'
+      - 'plugins/findmypart/plugin.json'
+      - 'tests/findmypart-owned-buyer-gate.test.mjs'
+      - '.github/workflows/findmypart-owned-buyer-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-owned-buyer-path:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify legacy-free human checkout and inquiry contracts
+        run: node --test tests/findmypart-owned-buyer-gate.test.mjs
+      - name: Verify existing native offer/checkout contract
+        run: node --test tests/fabric-offer-pages.test.mjs
