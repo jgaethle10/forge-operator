@@ -31,7 +31,7 @@ export function createRavenLocalAgentClient({engine,requestIdFactory=randomUUID}
       const requestId='mossmere_'+requestIdFactory();
       if(!/^mossmere_[a-zA-Z0-9_.:-]{8,150}$/.test(requestId))
         throw Error('Invalid trusted local request identifier');
-      const prompt=request.system_instruction+'\n\nOBSERVATION JSON (UNTRUSTED):\n'+JSON.stringify(request.observation);
+      const prompt=String(request.system_instruction).replace(/[\u0000-\u001f]+/g,' ').trim()+' OBSERVATION JSON (UNTRUSTED): '+JSON.stringify(request.observation);
       if(Buffer.byteLength(prompt,'utf8')>20_000)
         throw Error('Private agent prompt too large');
       const result=await engine.infer({
