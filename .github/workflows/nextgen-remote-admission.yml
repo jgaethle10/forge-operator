@@ -4,6 +4,8 @@ on:
     paths:
       - 'systemia/compute/nextgen-remote-doctor.mjs'
       - 'systemia/compute/nextgen-remote-doctor.test.mjs'
+      - 'systemia/compute/remote-admission-keeper.e2e.proof.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
       - 'scripts/nextgen/**'
       - 'systemia/remote-operator/mcp-gateway.mjs'
       - 'systemia/remote-operator/mcp-gateway.test.mjs'
@@ -32,5 +34,7 @@ jobs:
         run: node systemia/remote-operator/mcp-gateway.test.mjs
       - name: Prove transient poll recovery against actual NodeSeed and broker
         run: node systemia/network/outbound-node-agent-recovery.proof.mjs
+      - name: Prove actual remote admission keeper's unavailable broker and reconnection
+        run: node systemia/compute/remote-admission-keeper.e2e.proof.mjs
       - name: Preserve existing actual loopback broker remote operator proof
         run: node systemia/network/remote-operator.proof.mjs
