@@ -33,7 +33,7 @@ function makeHarness({
   const budgetGate={
     reserve:async(request)=>{
       calls.reserve.push(request);
-      return {society:'mossmere',approved:approve,provider,model,
+      return {...request,society:'mossmere',approved:approve,provider,model,
         expires_at:expired?now-10:now+60000,max_tokens:300,
         max_cost_micro_usd:cap,reservation_id:'lease_sandbox_123456789'};
     },
@@ -206,4 +206,14 @@ test('two separately sourced agent choices produce persistent cooperation OR ref
   assert.equal(original.agent_experiment_v1,undefined);
   assert.equal(accept.world.actors[1].bonds.r1>refuse.world.actors[1].bonds.r1,true);
   assert.equal(accept.world.agent_experiment_v1.receipts.every(r=>r.release_status==='held_not_live'),true);
+});
+
+test('a reservation issued for another resident, tick or observation cannot authorize inference',async()=>{
+  for(const field of ['agent_id','world_tick','observation_hash','request_key']){
+    const w=setup(),h=makeHarness(),orig=h.budgetGate.reserve;
+    h.budgetGate.reserve=async request=>({...await orig(request),[field]:field==='world_tick'?999:'wrong'});
+    await assert.rejects(()=>run(w,h),/Invalid or expired model budget reservation/);
+    assert.equal(h.calls.infer.length,0);
+    assert.equal(w.events.length,0);
+  }
 });
