@@ -23,7 +23,7 @@ jobs:
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/offers/website-audit"
           body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
-          printf '%s' "$body" | grep -q "Your website is getting attention"
+          printf '%s' "$body" | grep -q "See your website"
           printf '%s' "$body" | grep -q "Quick Win Audit"
           printf '%s' "$body" | grep -q '\$49'
           printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
