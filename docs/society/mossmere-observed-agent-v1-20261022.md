@@ -54,3 +54,13 @@ To validate locally, using the read-only CI:
 node --test tests/window-agent-boundary.test.mjs tests/window-model-bridge.test.mjs tests/window-local-journal.test.mjs tests/window-heartbeat.test.mjs
 ```
 The local journal is **not deployed**, no autonomous model run is scheduled, and the public visitor's world is unchanged. Use explicit approved provider credentials and an independently persistent budget reservation service before live inference.
+
+## Reused Raven model lane (local Ollama only)
+
+**Do not create another AI gateway.** The existing Raven inference gateway lives in `systemia/raven/inference-gateway.mjs` with a private, loopback-only Ollama/Gemini/OpenAI provider boundary. The first Mossmere adapter `window-raven-ollama-client.mjs` intentionally permits ONLY local Ollama. It accepts a private agent observation, sends a bounded JSON-action prompt through Raven's existing `createInferenceEngine`, verifies the complete server-generated Raven inference receipt including prompt/output digests and provider receipt, and normalizes observed token counts for the existing decision bridge. No public endpoint, authorization secret or hosted model is introduced.
+
+The branch extends the optional Ollama inference call to accept `max_output_tokens`. Raven passes the cap to local Ollama as `options.num_predict`, requires `prompt_eval_count` and `eval_count` on capped responses, rejects output over the cap, and includes measured usage in its source receipt. If the installed Ollama runtime does not report these values, it fails closed. Old, uncapped Raven callers retain their existing behavior. Hosted providers deliberately reject the new budget constraint until similarly enforceable usage and cost ceilings exist. Ollama's external provider bill is zero; local compute/electricity is not claimed to be free.
+
+An approved model-reservation gate is still mandatory for the window model bridge, even when the host model is local. The Raven request ID is a **local Raven authority identifier**, not a provider-issued Ollama transaction identifier. The source adapter is exercised with a **synthetic Ollama HTTP transport** in GitHub CI. It does not prove that an Ollama process is installed or listening on the founder's device.
+
+Operational gate: first independently verify the owned node's Ollama runtime and model inventory, verify authorization and a $0 external-provider-spend reservation, run one bounded local model inference, persist it only to the experimental journal and inspect the redacted observer receipt. Model/source evidence must remain `adapter_reported_not_independently_verified` until independently checked. No automatic public publication, workstation enrollment or external API credentials.
