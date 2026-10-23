@@ -122,6 +122,35 @@ def validate(scene,root):
     fail(keys[0]['atSec']==0,'first_keyframe_must_be_zero')
     fail(keys[-1]['atSec']<=duration-.25,'last_keyframe_too_late')
     fail(changes>0,'all_frames_static')
+    tracks=scene.get('facialTracks',[])
+    fail(isinstance(tracks,list) and len(tracks)<=3,'facial_tracks_invalid')
+    named={}
+    total_frames=round(duration*fps)
+    for track in tracks:
+        group=track.get('group')
+        fail(group in facial_groups and group not in named,'facial_track_unknown_or_duplicate')
+        fail(track.get('source')=='authored_frame_timing','facial_source_not_authored')
+        events=track.get('events')
+        fail(isinstance(events,list) and 2<=len(events)<=40,
+             'facial_events_missing_or_excessive')
+        last=-1;previous_variant=None;states=set()
+        for event in events:
+            frame=event.get('atFrame')
+            variant=event.get('variant')
+            fail(type(frame)==int and 0<=frame<total_frames and frame>last,
+                 'facial_event_frame_invalid')
+            fail(variant in facial_groups[group],'facial_variant_missing')
+            fail(variant!=previous_variant,'facial_event_repetition_invalid')
+            last=frame;previous_variant=variant
+            states.add(variant)
+        fail(events[0]['atFrame']==0 and len(states)>=2,'facial_track_not_switching')
+        if group=='mouth':
+            fail(track.get('cueId')==scene.get('voice',{}).get('cueId'),
+                 'mouth_track_voice_cue_mismatch')
+        else:
+            fail(track.get('cueId') is None,'nonmouth_cue_not_allowed')
+        named[group]=track
+    fail(set(named)==set(facial_groups),'facial_track_group_coverage_invalid')
     audio=scene.get('voice')
     fail(isinstance(audio,dict) and audio.get('cueId') and audio.get('voiceProfileId'),
          'bound_voice_missing')
@@ -130,7 +159,7 @@ def validate(scene,root):
     stream=next((s for s in raw.get('streams',[]) if s.get('codec_type')=='audio'),None)
     length=float(raw.get('format',{}).get('duration') or (stream or {}).get('duration') or 0)
     fail(stream is not None and .2<=length<=duration+.01,'voice_duration_invalid')
-    return by_id,audio_path
+    return by_id,audio_path,facial_groups,named
 def tween(keys,t,layer_id):
     if t>=keys[-1]['atSec']:return keys[-1]['layers'][layer_id]
     i=next(i for i in range(len(keys)-1) if keys[i]['atSec']<=t<keys[i+1]['atSec'])
@@ -143,7 +172,7 @@ def tween(keys,t,layer_id):
             'scale':p['scale']*(1-u)+q['scale']*u}
 def render(scene,assets,out):
     root=pathlib.Path(assets).resolve(strict=True)
-    layers,audio=validate(scene,root)
+    layers,audio,facial_groups,facial_tracks=validate(scene,root)
     output=pathlib.Path(out).resolve()
     fail(output!=root and not output.is_relative_to(root),'output_inside_source_bundle')
     output.mkdir(parents=True,exist_ok=True)
