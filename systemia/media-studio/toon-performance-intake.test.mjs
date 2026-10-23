@@ -239,11 +239,17 @@ function rigFixture(x){
     ['torso',null,[193,117,279,220],[231,151],1,[78,112,149]],
     ['head','torso',[207,65,266,130],[234,130],2,[216,158,132]],
     ['arm','torso',[266,139,295,212],[274,146],3,[193,109,99]],
+    ['mouth-rest','head',[227,107,237,110],[233,127],4,[48,44,52],'mouth','rest'],
+    ['mouth-open','head',[224,105,239,122],[233,127],4,[66,35,47],'mouth','open'],
+    ['mouth-round','head',[228,102,238,117],[233,127],4,[99,42,55],'mouth','round'],
+    ['eyes-open','head',[215,83,254,88],[233,127],5,[50,38,42],'eyes','open'],
+    ['eyes-closed','head',[214,88,255,91],[233,127],5,[90,51,51],'eyes','closed'],
   ];
-  const layers=elements.map(([id,parentId,box,pivotPx,zIndex,color])=>{
+  const layers=elements.map(([id,parentId,box,pivotPx,zIndex,color,switchGroup,variant])=>{
     const file=id+'.png',contents=transparentRigPart(box,color);
     fs.writeFileSync(path.join(x.dir,file),contents);
     return {id,parentId,file,sha256:sha(contents),pivotPx,zIndex,
+      ...(switchGroup?{switchGroup,variant}:{}),
       actorId:'hero',referenceAssetId:'rig-'+id};
   });
   x.pkt.shots[0].characters[0].referenceAssetIds.push(...layers.map(p=>p.referenceAssetId));
@@ -270,6 +276,14 @@ function rigFixture(x){
     keyframes:[{atSec:0,layers:zero()},
       {atSec:1.6,layers:moved(15,-34)},
       {atSec:3.8,layers:moved(-10,18)}],
+    facialTracks:[
+      {group:'mouth',source:'authored_frame_timing',cueId:'cue-1',events:[
+        {atFrame:0,variant:'rest'},{atFrame:22,variant:'open'},
+        {atFrame:36,variant:'round'},{atFrame:60,variant:'rest'}]},
+      {group:'eyes',source:'authored_frame_timing',events:[
+        {atFrame:0,variant:'open'},{atFrame:30,variant:'closed'},
+        {atFrame:34,variant:'open'}]},
+    ],
   };
 }
 
@@ -289,6 +303,14 @@ test('recorded-source-bound articulated joints produce actual changing H264/AAC 
     assert.equal(receipt.state,'articulated_2d_preview_not_creative_admission');
     assert.equal(receipt.frameCount,120);
     assert.equal(receipt.articulatedJointTransformsExecuted,true);
+    assert.equal(receipt.authoredFacialSpritesSwitched,true);
+    assert.equal(receipt.facialTimingSource,'authored_integer_frames');
+    assert.equal(receipt.facialVisibleFrameCounts.eyes.closed,4);
+    assert.ok(receipt.facialVisibleFrameCounts.mouth.open>0);
+    assert.ok(receipt.facialVisibleFrameCounts.mouth.round>0);
+    assert.equal(receipt.facialSwitchSamples.mouth.length,4);
+    assert.equal(receipt.facialSwitchSamples.eyes.length,3);
+    assert.equal(receipt.audioPhonemeAlignmentMeasured,false);
     assert.equal(receipt.verifiedArtAndSpeechBytes,true);
     assert.ok(new Set(Object.values(receipt.frameSampleDigests)).size>=3);
     assert.equal(receipt.humanCreativeApproved,false);
@@ -320,6 +342,21 @@ test('recorded-source-bound articulated joints produce actual changing H264/AAC 
     assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
       manifest:x.manifest,bundleDir:x.dir,rig:tampered,outDir:out}),
       /rig_part_binding_mismatch/);
+    const noEyes=structuredClone(rig);
+    noEyes.facialTracks=noEyes.facialTracks.filter(t=>t.group!=='eyes');
+    assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
+      manifest:x.manifest,bundleDir:x.dir,rig:noEyes,outDir:out}),
+      /facial_track_group_coverage_invalid/);
+    const badCue=structuredClone(rig);
+    badCue.facialTracks.find(t=>t.group==='mouth').cueId='another-speaker';
+    assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
+      manifest:x.manifest,bundleDir:x.dir,rig:badCue,outDir:out}),
+      /mouth_track_voice_cue_mismatch/);
+    const outOfBounds=structuredClone(rig);
+    outOfBounds.facialTracks.find(t=>t.group==='eyes').events[1].atFrame=130;
+    assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
+      manifest:x.manifest,bundleDir:x.dir,rig:outOfBounds,outDir:out}),
+      /facial_event_frame_invalid/);
     const wrongVoice=structuredClone(rig);wrongVoice.voice.cueId='someone-else';
     assert.throws(()=>renderBoundPuppetMotion({packet:x.pkt,shotId:'hero-1',
       manifest:x.manifest,bundleDir:x.dir,rig:wrongVoice,outDir:out}),
