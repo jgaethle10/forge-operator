@@ -372,9 +372,11 @@ def main():
     p.add_argument('--output',required=True)
     p.add_argument('--previews',action='store_true')
     p.add_argument('--frames',type=int,default=360)
+    p.add_argument('--native-output',action='store_true',help='Render optical layers at full output pixel dimensions (CPU heavy)')
     a=p.parse_args()
     if a.format=='story':size=(540,960);out=(1080,1920)
     else:size=(960,540);out=(1920,1080)
+    if a.native_output:size=out
     render(a.output,*size,*out,frames=a.frames,preview_times=[.6,2.5,4.9,7.5,9.0,10.7] if a.previews else None)
 if __name__=='__main__':main()
 
