@@ -140,6 +140,18 @@ try {
   await sleep(500);
 
   const duringOutage = await organism.health();
+  if (!duringOutage.ok) {
+    // Do not print endpoint, tokens, device identity, or raw private receipts.
+    console.error(JSON.stringify({
+      schema: 'evercraft.local-organism.remote-admission-proof-diagnostic.v1',
+      failed_stage: 'broker_outage_local_health',
+      kaidance_ok: duringOutage.kaidance?.ok === true,
+      core_ok: duringOutage.systemia_core?.ok === true,
+      fabric_ok: duringOutage.fabric?.ok === true,
+      remote_configured: duringOutage.remote_admission?.configured === true,
+      remote_connected: duringOutage.remote_admission?.connected === true,
+    }));
+  }
   assert.equal(duringOutage.ok, true);
   assert.equal(duringOutage.kaidance.ok, true);
   assert.equal(duringOutage.systemia_core.ok, true);
