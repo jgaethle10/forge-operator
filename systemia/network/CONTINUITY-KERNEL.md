@@ -35,3 +35,9 @@ Saban therefore needs both topology awareness and **resource triage**. As the ne
 continuity-kernel-proof.mjs verifies four descending resource envelopes. In the survival envelope, analytics, publishing, and ordinary automation are shed while Guardian continuity, identity/trust/routing, receipt lineage, a degraded Saban mission runtime, and Hearth checkpointing remain admitted.
 
 It also verifies the opposite boundary: when even those requirements cannot physically fit, the kernel reports a critical deficit instead of manufacturing a green status.
+
+## Resource evidence admission (fail closed)
+
+The continuity planner now explicitly validates capacity and every workload/fallback resource envelope before sorting or admitting any work. CPU units, memory MB, and power units must each be an explicit finite nonnegative JavaScript number within the safe-integer magnitude bound. Zero is allowed only when intentionally specified; `undefined`, `null`, strings, booleans, NaN, infinity, and negative numbers are not interpreted as free resources. Each workload requires a unique nonempty ID and an integer priority in 0..6; an omitted priority defaults to ordinary. Fallback declarations require a complete resource envelope and named mode.
+
+If evidence is invalid, the planner returns `HOLD_INVALID_RESOURCE_EVIDENCE` with no admitted/degraded workloads, `resource_evidence_valid: false`, and `required_workloads_preserved: false`. It does **not** report a normal brownout or manufacture a green admission. This is a pure planning proof, not deployment, power certification, or hardware authorization.
