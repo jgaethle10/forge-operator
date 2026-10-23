@@ -1,66 +1,32 @@
 # Connect Evercraft to your AI
 
-Evercraft exposes public remote MCP servers so supported AI assistants can discover and use verified public capabilities without requiring users to learn Evercraft's internal product map first.
+Evercraft's universal connection is a **read-only, Evercraft-controlled Fabric MCP**:
 
-## Universal Evercraft MCP
+`https://fabric.systemiacommandcenters.com/mcp`
 
-Evercraft Machine Commerce is the broad front door.
+Use the owned public capability directory at https://fabric.systemiacommandcenters.com/capabilities to review current product information. Start with the tools that the MCP actually advertises; do not assume that older product-specific MCP method names exist on the universal endpoint.
 
-MCP URL:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+## Provider setup
 
-Use it when the user's need could map to multiple Evercraft products or services. It exposes public discovery, pain matching, specialist routing, current offer inspection, and human-confirmed commercial continuations where those are actually wired.
+A client supporting remote Streamable HTTP MCP can connect to the URL above, subject to that client's permissions, settings and marketplace rules. A repository package or manifest does not prove a provider has installed, approved, indexed or recommended the connector.
 
-## Systemia Field Library MCP
+## Specialist services and field playbooks
 
-MCP URL:
-https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+Public capability discovery does not prove that every specialist runtime, Field Library MCP, document delivery feature, upload service or paid offer is live. Product-specific endpoints require independent owned-runtime health checks and authorization before being listed here as supported connections. Never substitute the universal directory URL for a specialist unless its expected tools have been independently confirmed.
 
-Use it when a contractor or home-service operator needs a practical playbook for estimating, cash flow, job costing, scope creep, change orders, scheduling, crew leadership, documentation, materials, equipment, safety, quality control, proposals, customer communication, reviews, referrals, or related field operations.
+## Evercraft Payments
 
-The Field Library MCP is read-only. It exposes public guide/playbook metadata and links, not paid playbook contents or PDFs.
+**Checkout is held**, not live. Historic provider-hosted buyer forms and a buyer-door snapshot are not valid purchase links. Current commercial truth:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json
 
-## Provider connection paths
+A customer may review an owned information page and request a separately verified payment method. No AI installation or read-only discovery action creates charges, invoices, subscriptions, entitlements or verified revenue. Orders and delivery require explicit customer consent, verified provider payment records and Systemia Shipping receipts.
 
-### ChatGPT and Codex
+## Machine-readable discovery
 
-Evercraft's public-distribution path is an OpenAI Plugin submission backed by the production remote MCP. Public publication requires OpenAI review and verified publisher identity. A directory submission is separate from having a funded OpenAI API account.
+- Universal owned MCP: https://fabric.systemiacommandcenters.com/mcp
+- Owned capability directory: https://fabric.systemiacommandcenters.com/capabilities
+- Product metadata: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
+- Buyer-problem index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
+- Commercial safety state: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json
 
-### Claude
-
-In Claude, open Settings → Connectors → Add custom connector and enter the remote MCP URL. On Team or Enterprise, an owner/primary owner configures the organization connector first.
-
-### Gemini
-
-In Gemini web, open Settings → Connected Apps → Custom apps → Add a custom app, then enter the remote MCP URL and follow the connection flow when Custom apps are available for the account.
-
-### Grok
-
-Open grok.com/connectors → New Connector → Custom, enter the remote MCP URL, and complete any authentication configuration.
-
-### Microsoft 365 Copilot
-
-For broad commercial distribution, package the remote MCP as a federated Microsoft 365 Copilot connector and submit it through Microsoft Partner Center for certification and Connectors Gallery distribution. Tenant-specific deployment can use the Microsoft 365 admin center.
-
-## Evercraft Payments: actual buyer handoff
-
-Human purchase hub: https://findmypart.base44.app/functions/evercraftBuy
-
-Machine-readable approved buyer offers: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-payments-buyer-doors.json
-
-The JSON documents 13 prepayment-verified offer journeys and separate native specialist intakes. Agents may surface exact purchase URLs only when the buyer requests one. Do not generate a charge, claim provider settlement, route into an EV legal-hold product, or treat a synthetic QA checkout as revenue. A verified provider payment receipt is still required before paid fulfillment.
-
-## Commercial boundary
-
-Discovery and matching never create a payment obligation. Where a supported tool can prepare checkout, the human must explicitly confirm payment first. Checkout creation is not payment proof. Paid state and fulfillment require authoritative provider verification.
-
-## Public discovery
-
-Machine directory:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
-
-Pain index:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
-
-SELL NOW:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json
+A documented URL is not evidence of fresh external availability. Verify the exact recipient route and tool contract before asserting readiness.
