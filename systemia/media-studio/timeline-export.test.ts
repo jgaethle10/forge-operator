@@ -149,3 +149,24 @@ test('studio timeline rejects invalid crop anchors before exporting',()=>{
     /timeline_export_crop_anchor_x_invalid/,
   );
 });
+
+
+test('contain fit keeps full source content when exporting mismatched aspect ratios',()=>{
+  const project=readyProject();
+  const picture=project.tracks.find(track=>track.kind==='video')!;
+  picture.clips[0].fitMode='contain';
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/full-interface.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  assert.match(filter,/force_original_aspect_ratio=decrease,pad=1920:1080:\(ow-iw\)\/2:\(oh-ih\)\/2:color=black/);
+  assert.doesNotMatch(filter,/force_original_aspect_ratio=increase,crop=1920:1080/);
+});
+
+test('unknown fit mode cannot silently enter final Studio render',()=>{
+  const project=readyProject();
+  const picture=project.tracks.find(track=>track.kind==='video')!;
+  picture.clips[0].fitMode='stretch' as 'cover';
+  assert.throws(
+    ()=>buildTimelineExportPlan({project,outputPath:'/tmp/reject-stretch.mp4'}),
+    /timeline_export_fit_mode_invalid/,
+  );
+});
