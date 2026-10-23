@@ -133,3 +133,35 @@ test('mismatched order-bound context and wrong price both fail closed',async()=>
     }finally{await runtime.close()}
   }
 });
+
+test('Deep and Rescue tiers preserve exact amount and offer key through owned preflight',async()=>{
+  for(const [slug,amount,offerKey] of [
+    ['part-deep',4900,'findmypart.deep_hunt_49.v1'],
+    ['part-rescue',9900,'findmypart.rescue_hunt_99.v1'],
+  ]){
+    const calls=[];
+    let saved=null;
+    const runtime=await startFabricLocalRuntime({...options,purchaseIntentFetch:async(url,opts)=>{
+      const body=JSON.parse(opts.body);calls.push(body);
+      if(body.action==='findmypart_prepayment_preflight'){
+        saved={intake_ref:'intake-'+slug+'-verified',intake_digest:body.intake_digest};
+        return Response.json({ok:true,schema:'raven.findmypart-context-preflight.v1',checkout_created:false,intake_persisted:true,...saved});
+      }
+      return Response.json({ok:true,checkout_ready:true,checkout_url:'https://settlement.example.test/checkout/unpaid',
+        order_key:body.order_key,amount_cents:amount,currency:'usd',payment_state:'unpaid',
+        context_persisted:true,fulfillment_release:false,...saved});
+    }});
+    try{
+      const result=await post(runtime.url,slug,part);
+      assert.equal(result.status,200,slug);
+      const payload=await result.json();
+      assert.equal(payload.checkout_ready,true);
+      assert.equal(payload.payment_state,'unpaid');
+      assert.equal(calls.length,2);
+      assert.equal(calls[0].offer_key,offerKey);
+      assert.equal(calls[1].offer_key,offerKey);
+      assert.equal(calls[0].intake.offer_slug,slug);
+      assert.equal(calls[1].intake_ref,saved.intake_ref);
+    }finally{await runtime.close()}
+  }
+});
