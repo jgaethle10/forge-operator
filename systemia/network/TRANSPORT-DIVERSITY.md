@@ -70,3 +70,5 @@ The automated proof establishes the carrier-neutral routing semantics and a real
 `selectTransport` now refuses an invalid request with `INVALID_REQUEST` rather than treating malformed byte quantities or unknown latency classes as a relaxed delivery requirement. Candidate transports require a numeric nonnegative safe-integer payload ceiling and a recognized latency class. A claimed `verified` label alone is insufficient to route an unbounded payload. A catalog with no eligible candidates returns `NO_ROUTE`.
 
 **Boundary:** route selection is transport suitability only, not peer authorization or live RF/link attestation. Callers must independently authenticate their peer, validate grants and evidence provenance, and satisfy envelope/replay gates before sending or executing anything. No additional physical transport is marked field-verified by this change.
+
+Transport candidates also require an actual purpose list, a nonempty identifier, finite nonnegative numeric power cost, and explicit boolean offline/bidirectional/infrastructure flags. A string pretending to be a purpose list or a negative power cost cannot win by gaming route scores.
