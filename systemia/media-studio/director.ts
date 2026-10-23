@@ -198,7 +198,7 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
           ? Math.round(Math.min(timesUsed * duration, availableTrim) * 10) / 10
           : undefined,
       // A full-frame contain composition must not zoom away important UI or logo edges.
-      motion: asset.kind === 'image' && asset.fitMode !== 'contain' ? 'push_in' : 'hold',
+      motion: asset.fitMode === 'contain' ? 'hold' : asset.kind === 'image' ? 'push_in' : 'cover',
       fitMode: asset.fitMode,
       cropAnchorX: asset.cropAnchorX,
       cropAnchorY: asset.cropAnchorY,
