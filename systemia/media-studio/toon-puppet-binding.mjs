@@ -18,7 +18,7 @@ const refs=items=>new Map(items.map(item=>[item.id,item]));
  * This does NOT imply pose suitability, lip sync or production admission.
  */
 export function renderBoundPuppetMotion({
-  packet,shotId,manifest,bundleDir,rig,outDir,python='python3',
+  packet,shotId,manifest,bundleDir,rig,outDir,python=process.env.FALLEN_TOON_PYTHON||'python3',
 }={}){
   const source=verifyToonPerformanceBundle({packet,shotId,manifest,bundleDir});
   check(source.dialogue?.audioDecoded===true,'recorded_voice_required');
