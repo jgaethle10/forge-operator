@@ -149,3 +149,42 @@ test('out-of-range director crop anchors fail rather than silently moving the su
   assert.throws(()=>filterFor({...pushIn,cropAnchorX:NaN},180,320),
     /render_crop_anchor_x_invalid/);
 });
+
+
+test('contain composition preserves source edges and adds deliberate letterboxing',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-contain-image-'));
+  try{
+    const source=path.join(dir,'full-panel.png');
+    const output=path.join(dir,'portrait.mp4');
+    ffmpeg([
+      '-y','-v','error','-f','lavfi','-i','color=c=white:s=640x640:r=1',
+      '-frames:v','1',source,
+    ]);
+    const filter=filterFor({...pushIn,fitMode:'contain'},180,320);
+    assert.match(filter,/force_original_aspect_ratio=decrease,pad=180:320/);
+    assert.doesNotMatch(filter,/zoompan=/);
+    ffmpeg([
+      '-y','-v','error','-loop','1','-i',source,
+      '-vf',filter,'-frames:v','15','-c:v','libx264','-pix_fmt','yuv420p',output,
+    ]);
+    const pixels=spawnSync('ffmpeg',[
+      '-v','error','-i',output,'-frames:v','1',
+      '-f','rawvideo','-pix_fmt','gray','-',
+    ],{encoding:'buffer',maxBuffer:1024*1024});
+    assert.equal(pixels.status,0,String(pixels.stderr||'extraction_failed'));
+    const buf=pixels.stdout as Buffer;
+    assert.equal(buf.length,180*320);
+    assert.ok(buf[5*180+90]<40,'top matte remains dark');
+    assert.ok(buf[160*180+90]>230,'source retains visible center');
+    assert.ok(buf[315*180+90]<40,'bottom matte remains dark');
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+test('unknown legacy fit mode is never interpreted as aspect-distorting stretch',()=>{
+  assert.throws(
+    ()=>filterFor({...pushIn,fitMode:'stretch' as 'cover'},180,320),
+    /render_fit_mode_invalid/,
+  );
+});
