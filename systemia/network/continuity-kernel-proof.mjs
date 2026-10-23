@@ -164,6 +164,45 @@ const impossible = planContinuity({
 assert.equal(impossible.mode, 'CRITICAL_RESOURCE_DEFICIT');
 assert.equal(impossible.invariants.required_workloads_preserved, false);
 
+
+const validCapacity = { cpu_units: 4, memory_mb: 768, power_units: 8 };
+const critical = {
+  id: 'guardian', required: true, priority: PRIORITY.LIFE_SAFETY,
+  cpu_units: 1, memory_mb: 96, power_units: 2
+};
+function assertHeld(capacity, proposed, expectedCode) {
+  const plan = planContinuity({ capacity, workloads: proposed });
+  assert.equal(plan.mode, 'HOLD_INVALID_RESOURCE_EVIDENCE');
+  assert.equal(plan.invariants.resource_evidence_valid, false);
+  assert.equal(plan.invariants.required_workloads_preserved, false);
+  assert.equal(plan.admitted.length, 0);
+  assert.equal(plan.degraded.length, 0);
+  assert.ok(plan.errors.some((error) => error.includes(expectedCode)), expectedCode);
+}
+
+assertHeld({}, [critical], 'capacity_cpu_units_invalid');
+assertHeld({ ...validCapacity, cpu_units: null }, [critical], 'capacity_cpu_units_invalid');
+assertHeld({ ...validCapacity, cpu_units: -4 }, [critical], 'capacity_cpu_units_invalid');
+assertHeld({ ...validCapacity, power_units: Infinity }, [critical], 'capacity_power_units_invalid');
+assertHeld(validCapacity, [{ ...critical, memory_mb: undefined }], 'memory_mb_invalid');
+assertHeld(validCapacity, [{ ...critical, cpu_units: -1 }], 'cpu_units_invalid');
+assertHeld(validCapacity, [{ ...critical, cpu_units: '1' }], 'cpu_units_invalid');
+assertHeld(validCapacity, [{ ...critical, priority: '0operator' }], 'priority_invalid');
+assertHeld(validCapacity, [{ ...critical, priority: 0.5 }], 'priority_invalid');
+assertHeld(validCapacity, [{ ...critical, required: 'true' }], 'required_invalid');
+assertHeld(validCapacity, [{ ...critical, required: 1 }], 'required_invalid');
+assertHeld(validCapacity, [{ ...critical, fallback: { mode: 'offline', cpu_units: 0.5, memory_mb: null, power_units: 1 } }], 'fallback_memory_mb_invalid');
+assertHeld(validCapacity, [critical, { ...critical }], 'duplicate_id');
+assertHeld(validCapacity, null, 'workloads_must_be_array');
+const zeroCostProof = planContinuity({
+  capacity: validCapacity,
+  workloads: [{ id: 'zero-cost-observer', priority: PRIORITY.ORDINARY, required: false,
+    cpu_units: 0, memory_mb: 0, power_units: 0 }]
+});
+assert.equal(zeroCostProof.mode, 'FULL');
+assert.equal(zeroCostProof.invariants.resource_evidence_valid, true);
+assert.equal(zeroCostProof.admitted.length, 1);
+
 console.log(JSON.stringify({
   schema: 'evercraft.continuity-kernel-proof.v1',
   status: 'PASS',
