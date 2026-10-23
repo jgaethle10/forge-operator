@@ -5,9 +5,12 @@ on:
     paths:
       - 'scripts/artifact-custody.mjs'
       - 'scripts/artifact-roundtrip.mjs'
+      - 'scripts/artifact-preservation.mjs'
       - 'tests/artifact-custody.test.mjs'
       - 'tests/artifact-roundtrip.test.mjs'
+      - 'tests/artifact-preservation.test.mjs'
       - 'docs/artifact-custody.md'
+      - 'docs/artifact-preservation.md'
       - '.github/workflows/artifact-custody-review.yml'
   workflow_dispatch:
 
@@ -24,4 +27,4 @@ jobs:
         with:
           node-version: 22
       - name: Validate offline custody and snapshot comparison
-        run: node --test tests/artifact-custody.test.mjs tests/artifact-roundtrip.test.mjs
+        run: node --test tests/artifact-custody.test.mjs tests/artifact-roundtrip.test.mjs tests/artifact-preservation.test.mjs
