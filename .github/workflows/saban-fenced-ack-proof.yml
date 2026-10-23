@@ -1,0 +1,32 @@
+name: Saban fenced acknowledgment recovery proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/fenced-ack-journal*'
+      - '.github/workflows/saban-fenced-ack-proof.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/fenced-ack-journal*'
+      - '.github/workflows/saban-fenced-ack-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check fenced journal syntax
+        run: node --check systemia/saban/fenced-ack-journal.mjs
+      - name: Prove durable duplicate suppression, stale-worker fencing, review-only retry and integrity hold
+        run: node --test systemia/saban/fenced-ack-journal.test.mjs
