@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/visual-desk/**'
       - 'systemia/graphics-command/**'
+      - 'systemia/media-studio/toon-*'
+      - 'src/FallenFamilyCartoon.tsx'
+      - 'src/fallen-toon-shot-drafts.ts'
       - 'systemia/media-studio/visual-stage.ts'
       - 'systemia/media-studio/visual-stage-html.ts'
       - 'systemia/media-studio/world-intel-stage.ts'
@@ -21,6 +24,9 @@ on:
     paths:
       - 'systemia/visual-desk/**'
       - 'systemia/graphics-command/**'
+      - 'systemia/media-studio/toon-*'
+      - 'src/FallenFamilyCartoon.tsx'
+      - 'src/fallen-toon-shot-drafts.ts'
       - 'systemia/media-studio/visual-stage.ts'
       - 'systemia/media-studio/visual-stage-html.ts'
       - 'systemia/media-studio/world-intel-stage.ts'
@@ -58,12 +64,12 @@ jobs:
           node -e "const fs=require('fs');const b=fs.readFileSync('$asset');const p=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);if(!b.subarray(0,8).equals(p))process.exit(9)"
 
       - name: Prove visual story factory and Radar admission bridge
-        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
+        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/production-mesh.test.mjs systemia/graphics-command/production-capability-audit.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
           npm install --no-audit --no-fund
-          node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts
+          node --import tsx --test systemia/media-studio/visual-stage.test.ts systemia/media-studio/world-intel-stage.test.ts systemia/graphics-command/fallen-bridge.test.ts systemia/media-studio/toon-shot-handoff.test.ts systemia/media-studio/family-http.test.ts systemia/media-studio/toon-cel-adapter.test.mjs systemia/media-studio/toon-cinema-preflight.test.mjs src/fallen-toon-shot-drafts.test.ts
 
       - name: Prove Radar remains healthy after spatial projection
         run: npm run test:radar
@@ -105,6 +111,12 @@ jobs:
           test -f _visual_desk_release/website-audit-attention/motion.html
           test -f _visual_desk_release/website-audit-attention/creative-council-reconciliation.json
           test -f _visual_desk_release/website-audit-attention/commercial-build-receipt.json
+          test -f _visual_desk_release/website-audit-attention/production-jobpack.json
+          test -f _visual_desk_release/website-audit-attention/production-mesh-receipt.json
+          test -f _visual_desk_release/website-audit-attention/production-capability-audit.json
+          grep -q '"status": "inventoried_runtime_unverified"' _visual_desk_release/website-audit-attention/production-capability-audit.json
+          grep -q '"customerReady": false' _visual_desk_release/website-audit-attention/production-mesh-receipt.json
+          grep -q '"status": "preproduction_verified_downstream_blocked"' _visual_desk_release/website-audit-attention/production-mesh-receipt.json
           grep -q '__evercraftRenderAt' _visual_desk_release/washington-active-volcanoes/motion.html
           grep -q '__evercraftRenderAt' _visual_desk_release/website-audit-attention/motion.html
           grep -q 'TRAFFIC UP' _visual_desk_release/website-audit-attention/poster-feed.svg
@@ -136,6 +148,156 @@ jobs:
           grep -q '"labelsClearOfOtherMarkers": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           grep -q '"aspectRatio": "9:16"' _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
           grep -q 'usgs.gov' _visual_desk_release/washington-active-volcanoes/story.json
+
+      - name: Render original toon cel canary to real MP4 and instrumental track
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/fallen-toon-cel-env
+          /tmp/fallen-toon-cel-env/bin/pip install --disable-pip-version-check CairoSVG==2.7.1 Pillow==11.3.0
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng
+          ffmpeg -version | head -n 1
+          /tmp/fallen-toon-cel-env/bin/python systemia/media-studio/toon-cel-canary.py \
+            --out _toon_cel_canary --seconds 1 --fps 24 --width 480 --height 270
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const p=JSON.parse(fs.readFileSync('_toon_cel_canary/render-receipt.json','utf8'));
+          assert.equal(p.status,'rendered_canary_not_production_admitted');
+          assert.equal(p.frameCount,24);
+          assert.equal(p.shotHandoffConnected,false);
+          assert.equal(p.lipSyncVerified,false);
+          assert.equal(p.publicationAuthority,false);
+          assert.equal(p.sha256,crypto.createHash('sha256').update(fs.readFileSync('_toon_cel_canary/toon-cel-canary.mp4')).digest('hex'));
+          NODE
+
+      - name: Render validated Series Mode fox shot into bound MP4 preview
+        run: |
+          node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
+            _toon_bound_canary /tmp/fallen-toon-cel-env/bin/python reach
+          node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
+            _toon_bound_canary_observe /tmp/fallen-toon-cel-env/bin/python observe
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const r=JSON.parse(fs.readFileSync('_toon_bound_canary/toon-shot-binding-receipt.json','utf8'));
+          assert.equal(r.state,'rendered_synthetic_preview_only');
+          assert.equal(r.actualMovieBytesVerified,true);
+          assert.equal(r.actualAuthoredMotionApplied,true);
+          const b=JSON.parse(fs.readFileSync('_toon_bound_canary_observe/toon-shot-binding-receipt.json','utf8'));
+          const aFrames=JSON.parse(fs.readFileSync('_toon_bound_canary/render-receipt.json','utf8'));
+          const bFrames=JSON.parse(fs.readFileSync('_toon_bound_canary_observe/render-receipt.json','utf8'));
+          assert.equal(b.state,'rendered_synthetic_preview_only');
+          assert.equal(b.frameCount,r.frameCount);
+          assert.equal(b.shotId,r.shotId);
+          assert.notEqual(b.previewMotionDigest,r.previewMotionDigest,'authored performances must differ');
+          assert.notEqual(bFrames.sampleFrameSha256,aFrames.sampleFrameSha256,'actual rendered frame pixels must differ');
+          assert.notEqual(b.mediaSha256,r.mediaSha256,'encoded video should reflect acted motion');
+          assert.equal(r.referenceMatched,false);
+          assert.equal(r.dialogueSynced,false);
+          assert.equal(r.publicationAuthority,false);
+          assert.ok(fs.statSync(r.mediaPath).size>1000);
+          NODE
+
+      - name: Render speech-reactive original fox with measured mouth frame proof
+        run: |
+          set -euo pipefail
+          node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
+            _toon_dialogue_canary /tmp/fallen-toon-cel-env/bin/python speak
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const dir='_toon_dialogue_canary';
+          const r=JSON.parse(fs.readFileSync(dir+'/render-receipt.json','utf8'));
+          const b=JSON.parse(fs.readFileSync(dir+'/toon-shot-binding-receipt.json','utf8'));
+          const track=JSON.parse(fs.readFileSync(dir+'/audio-mouth-track.json','utf8'));
+          assert.equal(r.speechText,'Hello, little light.');
+          assert.equal(r.audio,'original_instrumental_plus_synthetic_scratch_speech');
+          assert.equal(r.audioReactiveMouthObserved,true);
+          assert.equal(r.phonemeTimingVerified,false);
+          assert.equal(r.voiceProfileMatched,false);
+          assert.ok(r.mouthActiveFrames>0&&r.mouthSilentFrames>0);
+          assert.notEqual(r.activeMouthCropSha256,r.silentMouthCropSha256);
+          assert.equal(b.measuredAudioMouthReactivity,true);
+          assert.equal(b.dialogueSynced,false);
+          assert.equal(b.filmMasterReady,false);
+          assert.equal(b.publicationAuthority,false);
+          assert.equal(track.phonemeAccurate,false);
+          assert.equal(track.mouthPoses.length,b.frameCount);
+          NODE
+
+      - name: Audit actual scene frames before human creative review
+        run: |
+          set -euo pipefail
+          /tmp/fallen-toon-cel-env/bin/python systemia/media-studio/toon-audition-board.py \
+            --video _toon_dialogue_canary/toon-cel-canary.mp4 \
+            --render-receipt _toon_dialogue_canary/render-receipt.json \
+            --out _toon_audition
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const a=JSON.parse(fs.readFileSync('_toon_audition/audition-report.json','utf8'));
+          const m=fs.readFileSync('_toon_dialogue_canary/toon-cel-canary.mp4');
+          assert.equal(a.sha256,crypto.createHash('sha256').update(m).digest('hex'));
+          assert.equal(a.technicalVideoDecoded,true);
+          assert.equal(a.sampleTimesSec.length,9);
+          assert.equal(a.sampledMotionDifference.length,8);
+          assert.equal(a.speechEngine,'espeak_scratch_test_only');
+          assert.equal(a.characterAppealVerified,false);
+          assert.equal(a.naturalVoiceVerified,false);
+          assert.equal(a.creativeAudienceApproval,false);
+          assert.equal(a.publicationAuthority,false);
+          assert.ok(a.blockers.some(x=>x.includes('Scratch eSpeak')));
+          assert.ok(fs.statSync('_toon_audition/audition-board.jpg').size>10000);
+          NODE
+
+      - name: Verify actual authored image and voice exports for high-fidelity toons
+        run: |
+          set -euo pipefail
+          node --check systemia/media-studio/toon-pose-animatic.cli.mjs
+          node --check systemia/media-studio/toon-puppet-binding.mjs
+          /tmp/fallen-toon-cel-env/bin/python -m py_compile systemia/media-studio/toon-puppet-rig.py
+          FALLEN_TOON_PYTHON=/tmp/fallen-toon-cel-env/bin/python \
+          FALLEN_TOON_PUPPET_PROOF_DIR=_toon_puppet_proof \
+          FALLEN_TOON_ANIMATIC_PROOF_DIR=_toon_pose_proof \
+          node --import tsx --test systemia/media-studio/toon-performance-intake.test.mjs
+          test -s _toon_pose_proof/animatic-review.mp4
+          test -s _toon_pose_proof/animatic-receipt.json
+          test -s _toon_puppet_proof/puppet-motion-review.mp4
+          test -s _toon_puppet_proof/puppet-motion-receipt.json
+
+      - name: Preserve reproducible toon MP4 canary
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-toon-motion-original-canary
+          path: |
+            _toon_cel_canary/toon-cel-canary.mp4
+            _toon_cel_canary/original-synth-score.wav
+            _toon_cel_canary/render-receipt.json
+            _toon_bound_canary/toon-cel-canary.mp4
+            _toon_bound_canary/toon-shot-binding-receipt.json
+            _toon_bound_canary/bound-shot-work-order.json
+            _toon_bound_canary/authored-motion.json
+            _toon_bound_canary_observe/toon-cel-canary.mp4
+            _toon_bound_canary_observe/toon-shot-binding-receipt.json
+            _toon_bound_canary_observe/bound-shot-work-order.json
+            _toon_bound_canary_observe/authored-motion.json
+            _toon_dialogue_canary/toon-cel-canary.mp4
+            _toon_dialogue_canary/original-synth-score.wav
+            _toon_dialogue_canary/render-receipt.json
+            _toon_dialogue_canary/toon-shot-binding-receipt.json
+            _toon_dialogue_canary/audio-mouth-track.json
+            _toon_dialogue_canary/bound-shot-work-order.json
+            _toon_audition/audition-report.json
+            _toon_audition/audition-board.jpg
+            _toon_pose_proof/animatic-review.mp4
+            _toon_pose_proof/animatic-receipt.json
+            _toon_puppet_proof/puppet-motion-review.mp4
+            _toon_puppet_proof/puppet-motion-receipt.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Preserve portable Visual Desk release
         uses: actions/upload-artifact@v4

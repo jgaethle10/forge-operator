@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { buildCommercialCampaign } from './commercial-renderer.mjs';
+import { assembleGraphicsProductionMesh } from './production-mesh.mjs';
 import { runAssignment, reconcile } from '../media-studio/creative-council-saban-adapter.mjs';
 
 function arg(name){
@@ -41,6 +42,15 @@ async function main(){
   const councilPath=path.join(built.dir,'creative-council-reconciliation.json');
   fs.writeFileSync(councilPath,JSON.stringify(reconciliation,null,2)+'\n','utf8');
 
+  const mesh=assembleGraphicsProductionMesh({
+    dir:built.dir,
+    campaign:built.campaign,
+    plan:built.plan,
+    report:built.report,
+    manifest:built.manifest,
+    reconciliation,
+  });
+
   const receipt={
     schema:'evercraft.graphics-command.commercial-build-receipt.v1',
     campaignId:built.campaign.id,
@@ -52,6 +62,9 @@ async function main(){
     councilStatus:reconciliation.status,
     councilShotCount:reconciliation.shot_count,
     councilBlockedShotCount:reconciliation.blocked_shot_count,
+    productionMeshDigest:mesh.receipt.digest,
+    productionMeshStatus:mesh.receipt.status,
+    customerReady:mesh.receipt.customerReady,
     assets:built.manifest.assets,
     offerUrl:built.manifest.offerUrl,
     publicationAuthority:false,

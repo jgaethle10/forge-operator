@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 import crypto from 'crypto';
 import { compileSeriesEpisode } from './series.js';
+import { compileToonShotHandoff, renderToonShotDirection } from './toon-shot-handoff.mjs';
 import type { MediaProject, SeriesBible } from './types.js';
 
 type FamilyCharacter = {
@@ -41,6 +42,14 @@ type FallenFamilyDeps = {
 };
 
 const videoJobs = new Map<string, VideoJob>();
+
+function directionForRequestedShot(body: any): string {
+  if (!body?.toonHandoff && !body?.toonShotId) return '';
+  if (!body?.toonHandoff || !body?.toonShotId) {
+    throw new Error('toon_handoff_shot_pair_required');
+  }
+  return renderToonShotDirection(body.toonHandoff, body.toonShotId);
+}
 
 function slug(value: unknown, fallback: string) {
   const result = String(value ?? '')
@@ -278,15 +287,22 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
           'Preserve approved character identity and recognizable reference traits across every scene.',
           'Family-friendly tone. No silent redesigns between scenes or episodes.',
         ],
-        entities: characters.map((character) => ({
+        entities: [...characters.map((character) => ({
           id: character.id!,
-          kind: 'character',
+          kind: 'character' as const,
           name: character.name,
           description: [character.role, character.description].filter(Boolean).join('. '),
           immutableTraits: { family_role: character.role || 'Family' },
           voiceProfileId: 'fallen-voice-' + character.id + '-v1',
           referenceAssetIds: ['ref-' + character.id],
-        })),
+        })), {
+          id: 'family-story-world',
+          kind: 'location' as const,
+          name: 'Family Story World',
+          description: 'Unverified episode setting anchor; actual backgrounds and spatial continuity still require evidence.',
+          immutableTraits: { scope: 'story-world' },
+          referenceAssetIds: [],
+        }],
         canon: [],
       };
 
@@ -368,6 +384,32 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
   );
 
   app.post(
+    '/api/fallen/family/toon-handoff',
+    rateLimit(30, 60 * 60 * 1000),
+    (req: Request, res: Response) => {
+      const bytes = Buffer.byteLength(JSON.stringify(req.body ?? {}), 'utf8');
+      if (bytes > 400_000 || !Array.isArray(req.body?.shots) || req.body.shots.length > 60) {
+        res.status(413).json({ success: false, error: 'toon_handoff_payload_too_large_or_invalid' });
+        return;
+      }
+      try {
+        const handoff = compileToonShotHandoff({
+          bible: req.body.bible,
+          episode: req.body.seriesPlan,
+          shots: req.body.shots,
+          fps: req.body.fps ?? 24,
+        });
+        res.json({ success: true, data: { handoff } });
+      } catch (error) {
+        res.status(422).json({
+          success: false,
+          error: error instanceof Error ? error.message : 'toon_handoff_rejected',
+        });
+      }
+    },
+  );
+
+  app.post(
     '/api/fallen/family/character-sheet',
     rateLimit(12, 60 * 60 * 1000),
     async (req: Request, res: Response) => {
@@ -443,6 +485,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsed = parseGeminiError(error);
         res
           .status(
+            String(error?.message || '').startsWith('toon_handoff_') ? 422 :
             parsed.statusCode >= 400 && parsed.statusCode < 600
               ? parsed.statusCode
               : 503,
@@ -472,6 +515,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
       const style = String(req.body?.style || 'Warm 2D storybook cartoon').slice(0, 300);
 
       try {
+        const toonDirection = directionForRequestedShot(req.body);
         const input: any[] = [{
           type: 'text',
           text:
@@ -480,7 +524,8 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
             'Action: ' + String(scene?.action || '') + '. ' +
             'Visual direction: ' + String(scene?.visualPrompt || '') + '. ' +
             'Preserve the supplied character-sheet identities exactly. ' +
-            'Family-friendly, cinematic composition, no captions, no embedded text.',
+            'Family-friendly, cinematic composition, no captions, no embedded text. ' +
+            toonDirection,
         }];
 
         if (req.body?.characterSheetDataUrl) {
@@ -516,6 +561,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsed = parseGeminiError(error);
         res
           .status(
+            String(error?.message || '').startsWith('toon_handoff_') ? 422 :
             parsed.statusCode >= 400 && parsed.statusCode < 600
               ? parsed.statusCode
               : 503,
@@ -545,12 +591,13 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsedImage = parseImageDataUrl(req.body?.imageDataUrl);
         const scene = req.body?.scene || {};
         const style = String(req.body?.style || 'Family-friendly animation').slice(0, 300);
+        const toonDirection = directionForRequestedShot(req.body);
         const prompt =
           style + '. Animate this approved keyframe into a short family-cartoon shot. ' +
           'Scene: ' + String(scene?.title || '') + '. ' +
           'Action: ' + String(scene?.action || '') + '. ' +
           'Preserve character identity, clothing, proportions, and the established art style. ' +
-          'Natural motion, no captions, no new characters.';
+          'Natural motion, no captions, no new characters. ' + toonDirection;
 
         const operation = await ai.models.generateVideos({
           model: 'veo-3.1-generate-preview',
@@ -580,6 +627,7 @@ export function registerFallenFamilyRoutes(app: Express, deps: FallenFamilyDeps)
         const parsed = parseGeminiError(error);
         res
           .status(
+            String(error?.message || '').startsWith('toon_handoff_') ? 422 :
             parsed.statusCode >= 400 && parsed.statusCode < 600
               ? parsed.statusCode
               : 503,

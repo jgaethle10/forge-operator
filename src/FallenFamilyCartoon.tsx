@@ -1,5 +1,9 @@
-import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useMemo, useRef, useState } from 'react';
 import './fallen.css';
+import {
+  assignDialogueToShot,buildToonShotDrafts,selectToonShot,
+  type ToonShotDraft,
+} from './fallen-toon-shot-drafts';
 
 type CharacterDraft = {
   id: string;
@@ -40,6 +44,15 @@ type EpisodeResponse = {
     };
   };
   error?: string;
+};
+
+type ToonHandoffPacket = {
+  schema:string;
+  digest:string;
+  state:string;
+  deliveryReady:boolean;
+  frameCount:number;
+  shots:Array<{id:string;sceneIndex?:number}>;
 };
 
 const STYLE_OPTIONS = [
@@ -110,6 +123,13 @@ export default function FallenFamilyCartoon() {
   const [characterSheet, setCharacterSheet] = useState<string>('');
   const [pilotFrame, setPilotFrame] = useState<string>('');
   const [pilotVideo, setPilotVideo] = useState<string>('');
+  const [toonDrafts, setToonDrafts] = useState<ToonShotDraft[]>([]);
+  const [selectedToonIndex, setSelectedToonIndex] = useState(0);
+  const [toonHandoff, setToonHandoff] = useState<ToonHandoffPacket|null>(null);
+  const [pilotFrameBinding, setPilotFrameBinding] = useState('');
+  const mediaEpoch=useRef(0);
+  const seriesEpoch=useRef(0);
+  const handoffEpoch=useRef(0);
   const [providerConsent, setProviderConsent] = useState(false);
   const [loading, setLoading] = useState<string>('');
   const [error, setError] = useState('');
@@ -125,7 +145,53 @@ export default function FallenFamilyCartoon() {
     [characters],
   );
 
+  const selectedToonShot = selectToonShot(toonDrafts,selectedToonIndex);
+  const selectedToonScene = selectedToonShot && episode
+    ? episode.story.scenes[selectedToonShot.sceneIndex] : null;
+  const shotBinding = toonHandoff && selectedToonShot
+    ? toonHandoff.digest + ':' + selectedToonShot.id : '';
+
+  function invalidateShotMedia() {
+    mediaEpoch.current+=1;
+    setPilotFrame('');
+    setPilotVideo('');
+    setPilotFrameBinding('');
+  }
+  function invalidateToonPlan() {
+    handoffEpoch.current+=1;
+    setToonHandoff(null);
+    invalidateShotMedia();
+  }
+  function changeToonDraft(index:number,patch:Partial<ToonShotDraft>) {
+    setToonDrafts(current=>current.map((shot,i)=>i===index?{...shot,...patch}:shot));
+    invalidateToonPlan();
+  }
+  function changeToonActing(entityId:string,field:keyof ToonShotDraft['characters'][number]['acting'],value:string) {
+    if (!selectedToonShot) return;
+    changeToonDraft(selectedToonIndex,{
+      characters:selectedToonShot.characters.map(actor=>actor.entityId===entityId
+        ? {...actor,acting:{...actor.acting,[field]:value}}
+        : actor),
+    });
+  }
+  function chooseToonShot(index:number) {
+    setSelectedToonIndex(index);
+    invalidateShotMedia();
+    const draft=selectToonShot(toonDrafts,index);
+    if(draft) setSelectedScene(draft.sceneIndex);
+  }
+  function resetSeriesPlan() {
+    seriesEpoch.current+=1;
+    handoffEpoch.current+=1;
+    setEpisode(null);
+    setToonDrafts([]);
+    setToonHandoff(null);
+    invalidateShotMedia();
+    setCharacterSheet('');
+  }
+
   function updateCharacter(index: number, patch: Partial<CharacterDraft>) {
+    if ('name' in patch || 'role' in patch || 'description' in patch) resetSeriesPlan();
     setCharacters((current) =>
       current.map((character, characterIndex) =>
         characterIndex === index ? { ...character, ...patch } : character,
@@ -134,6 +200,7 @@ export default function FallenFamilyCartoon() {
   }
 
   function addCharacter() {
+    resetSeriesPlan();
     setCharacters((current) => [
       ...current,
       {
@@ -146,6 +213,7 @@ export default function FallenFamilyCartoon() {
   }
 
   function removeCharacter(index: number) {
+    resetSeriesPlan();
     setCharacters((current) => current.filter((_, characterIndex) => characterIndex !== index));
   }
 
@@ -156,6 +224,8 @@ export default function FallenFamilyCartoon() {
     try {
       const photoDataUrl = await resizeImage(file);
       updateCharacter(index, { photoName: file.name, photoDataUrl });
+      invalidateToonPlan();
+      setCharacterSheet('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not prepare that photo.');
     }
@@ -164,8 +234,7 @@ export default function FallenFamilyCartoon() {
   async function buildEpisode(event: FormEvent) {
     event.preventDefault();
     setError('');
-    setPilotFrame('');
-    setPilotVideo('');
+    resetSeriesPlan();
 
     if (!activeCharacters.length) {
       setError('Add at least one named character.');
@@ -177,6 +246,7 @@ export default function FallenFamilyCartoon() {
     }
 
     setLoading('episode');
+    const requestEpoch=seriesEpoch.current;
     try {
       const response = await fetch('/api/fallen/family/episode', {
         method: 'POST',
@@ -194,7 +264,10 @@ export default function FallenFamilyCartoon() {
       if (!response.ok || !payload.success || !payload.data) {
         throw new Error(payload.error || 'Fallen could not build the episode.');
       }
+      if(requestEpoch!==seriesEpoch.current) return;
       setEpisode(payload.data);
+      setToonDrafts(buildToonShotDrafts(payload.data));
+      setSelectedToonIndex(0);
       setSelectedScene(0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Fallen could not build the episode.');
@@ -216,6 +289,7 @@ export default function FallenFamilyCartoon() {
 
     setLoading('characters');
     setError('');
+    const requestEpoch=mediaEpoch.current;
     try {
       const response = await fetch('/api/fallen/family/character-sheet', {
         method: 'POST',
@@ -237,7 +311,9 @@ export default function FallenFamilyCartoon() {
       if (!response.ok || !payload.success || !payload.imageDataUrl) {
         throw new Error(payload.error || 'Character sheet generation failed.');
       }
+      if(requestEpoch!==mediaEpoch.current) return;
       setCharacterSheet(payload.imageDataUrl);
+      invalidateShotMedia();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Character sheet generation failed.');
     } finally {
@@ -245,10 +321,43 @@ export default function FallenFamilyCartoon() {
     }
   }
 
+  async function validateToonDirections() {
+    if (!episode || !toonDrafts.length) {
+      setError('Build an episode with video work orders first.');
+      return;
+    }
+    setLoading('toon');
+    setError('');
+    invalidateToonPlan();
+    const requestEpoch=handoffEpoch.current;
+    try {
+      const response=await fetch('/api/fallen/family/toon-handoff',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          bible:episode.bible,seriesPlan:episode.seriesPlan,
+          shots:toonDrafts,fps:24,
+        }),
+      });
+      const payload=await response.json();
+      const packet=payload?.data?.handoff as ToonHandoffPacket|undefined;
+      if(!response.ok || !payload.success || !packet ||
+        packet.deliveryReady!==false || packet.shots.length!==toonDrafts.length ||
+        packet.state!=='preproduction_work_orders_only') {
+        throw new Error(payload.error||'Shot directions could not be validated.');
+      }
+      if(requestEpoch!==handoffEpoch.current) return;
+      setToonHandoff(packet);
+    }catch(err){
+      setError(err instanceof Error?err.message:'Shot direction validation failed.');
+    }finally{
+      setLoading('');
+    }
+  }
+
   async function generatePilotFrame() {
-    const scene = episode?.story.scenes[selectedScene];
-    if (!scene) {
-      setError('Build the episode first.');
+    const scene=selectedToonScene;
+    if (!toonHandoff || !selectedToonShot || !scene || !shotBinding) {
+      setError('Validate the toon shot directions before making a keyframe.');
       return;
     }
     if (!providerConsent) {
@@ -258,6 +367,7 @@ export default function FallenFamilyCartoon() {
 
     setLoading('frame');
     setError('');
+    const requestEpoch=mediaEpoch.current;
     try {
       const response = await fetch('/api/fallen/family/scene-image', {
         method: 'POST',
@@ -267,6 +377,8 @@ export default function FallenFamilyCartoon() {
           seriesTitle,
           style,
           scene,
+          toonHandoff,
+          toonShotId:selectedToonShot.id,
           characterSheetDataUrl: characterSheet || null,
         }),
       });
@@ -274,7 +386,9 @@ export default function FallenFamilyCartoon() {
       if (!response.ok || !payload.success || !payload.imageDataUrl) {
         throw new Error(payload.error || 'Pilot frame generation failed.');
       }
+      if(requestEpoch!==mediaEpoch.current) return;
       setPilotFrame(payload.imageDataUrl);
+      setPilotFrameBinding(shotBinding);
       setPilotVideo('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Pilot frame generation failed.');
@@ -284,9 +398,10 @@ export default function FallenFamilyCartoon() {
   }
 
   async function generatePilotClip() {
-    const scene = episode?.story.scenes[selectedScene];
-    if (!scene || !pilotFrame) {
-      setError('Generate a pilot frame first.');
+    const scene=selectedToonScene;
+    if (!scene || !pilotFrame || !toonHandoff || !selectedToonShot ||
+      !shotBinding || pilotFrameBinding!==shotBinding) {
+      setError('Generate a new keyframe using these validated shot directions first.');
       return;
     }
     if (!providerConsent) {
@@ -296,6 +411,7 @@ export default function FallenFamilyCartoon() {
 
     setLoading('video');
     setError('');
+    const requestEpoch=mediaEpoch.current;
     try {
       const start = await fetch('/api/fallen/family/video/start', {
         method: 'POST',
@@ -304,6 +420,8 @@ export default function FallenFamilyCartoon() {
           consent: true,
           scene,
           style,
+          toonHandoff,
+          toonShotId:selectedToonShot.id,
           imageDataUrl: pilotFrame,
           aspectRatio: '16:9',
         }),
@@ -323,6 +441,7 @@ export default function FallenFamilyCartoon() {
           throw new Error(payload.error || 'Pilot video generation failed.');
         }
         if (payload.status === 'ready' && payload.videoUrl) {
+          if(requestEpoch!==mediaEpoch.current) return;
           setPilotVideo(payload.videoUrl);
           return;
         }
@@ -346,6 +465,8 @@ export default function FallenFamilyCartoon() {
         bible: episode.bible,
         story: episode.story,
         seriesPlan: episode.seriesPlan,
+        toonHandoff:toonHandoff||null,
+        toonShotDrafts:toonDrafts,
         generatedAssets: {
           characterSheetIncluded: Boolean(characterSheet),
           pilotFrameIncluded: Boolean(pilotFrame),
@@ -380,17 +501,17 @@ export default function FallenFamilyCartoon() {
           <div className="fallen-two">
             <label>
               Series name
-              <input value={seriesTitle} onChange={(event) => setSeriesTitle(event.target.value)} />
+              <input value={seriesTitle} onChange={(event) => {resetSeriesPlan();setSeriesTitle(event.target.value);}} />
             </label>
             <label>
               Episode title
-              <input value={episodeTitle} onChange={(event) => setEpisodeTitle(event.target.value)} />
+              <input value={episodeTitle} onChange={(event) => {resetSeriesPlan();setEpisodeTitle(event.target.value);}} />
             </label>
           </div>
 
           <label>
             Animation look
-            <select value={style} onChange={(event) => setStyle(event.target.value)}>
+            <select value={style} onChange={(event) => {resetSeriesPlan();setStyle(event.target.value);}}>
               {STYLE_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
@@ -458,7 +579,7 @@ export default function FallenFamilyCartoon() {
             <textarea
               rows={5}
               value={premise}
-              onChange={(event) => setPremise(event.target.value)}
+              onChange={(event) => {resetSeriesPlan();setPremise(event.target.value);}}
               placeholder="Example: The family tries to build the world's greatest blanket fort, but the dog keeps stealing the pillows. Keep it funny, warm, and about working together."
             />
           </label>
@@ -509,7 +630,11 @@ export default function FallenFamilyCartoon() {
                     type="button"
                     className={selectedScene === index ? 'fallen-scene active' : 'fallen-scene'}
                     key={scene.title + index}
-                    onClick={() => setSelectedScene(index)}
+                    onClick={() => {
+                    const linked=toonDrafts.findIndex(shot=>shot.sceneIndex===index);
+                    if(linked>=0) chooseToonShot(linked);
+                    else {setSelectedScene(index);invalidateShotMedia();}
+                  }}
                   >
                     <span>0{index + 1}</span>
                     <div>
@@ -540,9 +665,126 @@ export default function FallenFamilyCartoon() {
       </section>
 
       {episode && (
+        <section className="fallen-shell fallen-production" aria-label="Toon shot director">
+          <div className="fallen-card fallen-toon-desk">
+            <div className="fallen-section-title">3 · Direct the animation</div>
+            <h2>Character acting, hands, voices and shot continuity</h2>
+            <p className="fallen-toon-note">
+              Series Mode creates {episode.story.scenes.length} story scenes but only {toonDrafts.length} optional
+              generated-video work orders. Direct those shots below. The remaining scenes still need
+              actual footage before the episode is complete.
+            </p>
+            {toonDrafts.length === 0 ? (
+              <p className="fallen-error">No generated-video work orders are available for this episode.</p>
+            ) : (
+              <>
+                <div className="fallen-toon-toolbar">
+                  <label>Work order
+                    <select value={selectedToonIndex} onChange={event=>chooseToonShot(Number(event.target.value))}>
+                      {toonDrafts.map((shot,index)=>(
+                        <option value={index} key={shot.id}>
+                          {shot.id} · {shot.durationSec}s
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>Scene used for visual direction
+                    <select value={selectedToonShot?.sceneIndex??0}
+                      onChange={event=>{
+                        const sceneIndex=Number(event.target.value);
+                        const scene=episode.story.scenes[sceneIndex];
+                        changeToonDraft(selectedToonIndex,{sceneIndex,action:scene.action});
+                        setSelectedScene(sceneIndex);
+                      }}>
+                      {episode.story.scenes.map((scene,index)=>(
+                        <option key={scene.title+index} value={index}>{index+1} · {scene.title}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                {selectedToonShot && (
+                  <>
+                    <div className="fallen-toon-toolbar">
+                      <label>Physical action and blocking
+                        <textarea rows={3} maxLength={700} value={selectedToonShot.action}
+                          onChange={event=>changeToonDraft(selectedToonIndex,{action:event.target.value})}/>
+                      </label>
+                      <label>Score, Foley and dialogue mix direction
+                        <textarea rows={3} maxLength={700} value={selectedToonShot.soundDirection}
+                          onChange={event=>changeToonDraft(selectedToonIndex,{soundDirection:event.target.value})}/>
+                      </label>
+                    </div>
+                    <div className="fallen-toon-cast">
+                      {selectedToonShot.characters.map(actor=>(
+                        <div className="fallen-toon-actor" key={actor.entityId}>
+                          <strong>{episode.bible.entities.find((entity:any)=>entity.id===actor.entityId)?.name || actor.entityId}</strong>
+                          <div className="fallen-toon-acting">
+                            {([
+                              ['objective','Objective'],
+                              ['physicalAction','Physical action'],
+                              ['face','Facial expression'],
+                              ['gazeTarget','Eyeline / gaze target'],
+                              ['hands','Hands / paws and grips'],
+                            ] as const).map(([field,label])=>(
+                              <label key={field}>{label}
+                                <textarea rows={2} maxLength={700} value={actor.acting[field]}
+                                  onChange={event=>changeToonActing(actor.entityId,field,event.target.value)}/>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="fallen-toon-dialogue">
+                      <h3>Assign spoken lines to shots</h3>
+                      {(episode.seriesPlan.dialogue||[]).length===0 && (
+                        <p className="fallen-toon-note">No spoken dialogue in this episode.</p>
+                      )}
+                      {(episode.seriesPlan.dialogue||[]).map((cue:any)=>(
+                        <label key={cue.id}>
+                          <span><strong>{cue.speakerId}</strong>: {cue.text}</span>
+                          <select
+                            value={toonDrafts.find(shot=>shot.dialogueCueIds.includes(cue.id))?.id||''}
+                            onChange={event=>{
+                              setToonDrafts(current=>assignDialogueToShot(current,cue.id,event.target.value));
+                              invalidateToonPlan();
+                            }}>
+                            <option value="" disabled>Choose shot</option>
+                            {toonDrafts.map(shot=><option key={shot.id} value={shot.id}>{shot.id}</option>)}
+                          </select>
+                        </label>
+                      ))}
+                    </div>
+                  </>
+                )}
+                <div className="fallen-toon-validation">
+                  <button type="button" className="fallen-primary compact"
+                    disabled={Boolean(loading)} onClick={validateToonDirections}>
+                    {loading==='toon'?'Checking all shot contracts…':'Validate animation work orders'}
+                  </button>
+                  {toonHandoff ? (
+                    <p role="status">
+                      All {toonHandoff.shots.length} shot contracts validated.
+                      {' '}{toonHandoff.frameCount} frames planned. No footage or audio verified yet.
+                    </p>
+                  ):(
+                    <p>Edits invalidate the old shot packet. Validate again before paid generation.</p>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      )}
+
+      {episode && (
         <section className="fallen-shell fallen-production">
           <div className="fallen-card">
-            <div className="fallen-section-title">3 · Make it visual</div>
+            <div className="fallen-section-title">4 · Make it visual</div>
+            <p className="fallen-toon-note">
+              Media generation uses the selected validated shot, not an unreviewed generic prompt.
+              Planned shots do not certify anatomy, identity, audio, or finished video.
+            </p>
             <div className="fallen-actions-row">
               <button
                 type="button"
@@ -555,15 +797,15 @@ export default function FallenFamilyCartoon() {
               <button
                 type="button"
                 className="fallen-secondary"
-                disabled={Boolean(loading)}
+                disabled={Boolean(loading) || !toonHandoff || !selectedToonShot}
                 onClick={generatePilotFrame}
               >
-                {loading === 'frame' ? 'Drawing frame…' : 'Generate selected scene'}
+                {loading === 'frame' ? 'Drawing frame…' : 'Generate selected shot keyframe'}
               </button>
               <button
                 type="button"
                 className="fallen-primary compact"
-                disabled={Boolean(loading) || !pilotFrame}
+                disabled={Boolean(loading) || !pilotFrame || pilotFrameBinding!==shotBinding}
                 onClick={generatePilotClip}
               >
                 {loading === 'video' ? 'Animating pilot…' : 'Animate pilot clip'}
@@ -576,7 +818,7 @@ export default function FallenFamilyCartoon() {
                 {characterSheet ? <img src={characterSheet} alt="Generated family cartoon character sheet" /> : <div className="fallen-media-placeholder">CAST</div>}
               </figure>
               <figure>
-                <figcaption>Selected scene</figcaption>
+                <figcaption>Selected directed shot</figcaption>
                 {pilotFrame ? <img src={pilotFrame} alt="Generated pilot scene" /> : <div className="fallen-media-placeholder">FRAME</div>}
               </figure>
               <figure>
