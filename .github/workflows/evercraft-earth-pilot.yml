@@ -1,0 +1,20 @@
+name: Evercraft Earth pilot checks
+on:
+  pull_request:
+    paths:
+      - 'public/apps/evercraft-earth/**'
+      - 'systemia/evercraft-earth/**'
+      - '.github/workflows/evercraft-earth-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test map evidence pilot
+        run: node --test systemia/evercraft-earth/pilot.test.mjs
