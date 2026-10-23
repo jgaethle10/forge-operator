@@ -16,6 +16,7 @@ const part={
 const catalog=[{
   public_id:'findmypart-paid-hunt-v1',
   name:'FindMyPart Paid Part Hunt',
+  description:'Human-confirmed sourcing research for one hard-to-find or discontinued equipment part.',
   commercial_state:'sell_now',state:'payment_ready',
   pricing:'Quick $19 one-time',
   entry_paid_offer:{name:'Quick Hunt',price:'$19',price_usd_normalized:19,billing:'one_time'},
