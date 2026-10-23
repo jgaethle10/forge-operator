@@ -28,7 +28,7 @@ test('held transport offers honest assisted contact rather than a broken checkou
   assert.doesNotMatch(held,/available now/);
   const configured=renderOfferPage(offer,{checkoutConfigured:true});
   assert.match(configured,/Continue to checkout/);
-  assert.match(configured,/class="checkout-form"/);
+  assert.match(configured,/<form class="checkout-form audit-checkout"/);
 });
 
 test('unconfigured Fabric runtime exposes assisted contact but no checkout form',async()=>{
