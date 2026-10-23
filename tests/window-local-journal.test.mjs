@@ -30,7 +30,7 @@ function client(opts={}){
       input_tokens:100,output_tokens:20,cost_micro_usd:12};
   }};
   const budgetGate={
-    reserve:async()=>{calls.reserve++;return {
+    reserve:async request=>{calls.reserve++;return {...request,
       society:'mossmere',approved:opts.approved!==false,provider,model,
       expires_at:now+60000,max_tokens:200,max_cost_micro_usd:100,
       reservation_id:'approved_lease_12345678'};},
