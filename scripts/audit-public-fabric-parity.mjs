@@ -162,7 +162,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   if(!result.ok)process.exitCode=1;
  }catch(e){
   const receipt=fabricParityProbeFailureReceipt(e);
-  process.stdout.write(JSON.stringify(receipt,null,2)+'\\n');
+  process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
   console.error(JSON.stringify({
     ok:false,error:receipt.error,reason:receipt.reason,cause_code:receipt.cause_code
   }));
