@@ -53,6 +53,8 @@ test('fenced acknowledgement persists and lost-response replay stays idempotent'
   assert.throws(()=>reloaded.acquire({jobKey:base.jobKey,workerId:'local-b'}),/not_queued/);
   assert.throws(()=>reloaded.acknowledge({jobKey:base.jobKey,workerId:'local-a',
     leaseToken:granted.lease_token,resultDigest:digest('d'),receiptRef:'proof:readonly-one'}),/stale_or_unowned/);
+  assert.throws(()=>reloaded.acknowledge({jobKey:base.jobKey,workerId:'other',
+    leaseToken:granted.lease_token,resultDigest:digest('c'),receiptRef:'proof:readonly-one'}),/stale_or_unowned/);
 });
 
 test('late response cannot masquerade as a new lease held by same worker',()=>{
@@ -128,3 +130,22 @@ test('unknown job and lock leftovers fail closed, with no filesystem side effect
   assert.throws(()=>journal.acquire({jobKey:base.jobKey,workerId:'local-a',now:11000}),/lock_held/);
   assert.equal(journal.inspect({jobKey:base.jobKey,now:11000}).state,'queued');
 });
+
+test('retry budget is immutable per submitted job and never overruns explicit bounds',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'saban-bounded-retry-'));
+  scratch.push(dir);
+  const journal=new SabanFencedAckJournal({stateDir:dir,integritySecret:'retry-test',maxAttempts:2});
+  journal.submit(base);
+  const first=journal.acquire({jobKey:base.jobKey,workerId:'a',now:11000,leaseMs:1000});
+  assert.equal(first.attempts,1);
+  journal.reviewRetry({jobKey:base.jobKey,approvalRef:'review-1',evidenceRef:'proof:review-1',now:12001});
+  const second=journal.acquire({jobKey:base.jobKey,workerId:'a',now:12002,leaseMs:1000});
+  assert.equal(second.attempts,2);
+  assert.throws(()=>journal.reviewRetry({jobKey:base.jobKey,approvalRef:'review-2',
+    evidenceRef:'proof:review-2',now:13003}),/retry_budget_exhausted/);
+  assert.equal(journal.inspect({jobKey:base.jobKey,now:13003}).state,'ambiguous_expired');
+  assert.throws(()=>new SabanFencedAckJournal({stateDir:dir,maxAttempts:0}),/max_attempts_invalid/);
+  assert.throws(()=>journal.hold({jobKey:base.jobKey,workerId:'a',
+    leaseToken:second.lease_token,reason:'late',now:13004}),/lease_expired_hold/);
+});
+
