@@ -180,6 +180,13 @@ def render(scene,assets,out):
     frame_count=round(scene['durationSec']*fps)
     images={key:Image.open(root/layer['file']).convert('RGBA') for key,layer in layers.items()}
     transforms={}
+    facial_counts={group:{variant:0 for variant in variants}
+                   for group,variants in facial_groups.items()}
+    facial_event_samples={group:[] for group in facial_tracks}
+    def facial_variant(group,index):
+        events=facial_tracks[group]['events']
+        return next(event['variant'] for event in reversed(events)
+                    if event['atFrame']<=index)
     def world(layer_id,t):
         if layer_id in transforms:return transforms[layer_id]
         layer=layers[layer_id];pose=tween(scene['keyframes'],t,layer_id)
@@ -202,7 +209,16 @@ def render(scene,assets,out):
             t=frame_index/fps
             transforms.clear()
             canvas=Image.new('RGBA',(width,height),(16,19,30,255))
+            visible={group:facial_variant(group,frame_index) for group in facial_tracks}
+            for group,variant in visible.items():
+                facial_counts[group][variant]+=1
+                if any(e['atFrame']==frame_index for e in facial_tracks[group]['events']):
+                    facial_event_samples[group].append({
+                        'atFrame':frame_index,'variant':variant,
+                        'artSha256':layers[facial_groups[group][variant]]['sha256']})
             for key,layer in sorted(layers.items(),key=lambda entry:(entry[1]['zIndex'],entry[0])):
+                group=layer.get('switchGroup')
+                if group and visible[group]!=layer['variant']:continue
                 warped=images[key].transform((width,height),Image.Transform.AFFINE,
                   invert(world(key,t)),resample=Image.Resampling.BICUBIC)
                 canvas=Image.alpha_composite(canvas,warped)
@@ -233,6 +249,11 @@ def render(scene,assets,out):
       'fps':fps,'frameCount':frame_count,'width':width,'height':height,
       'videoSha256':sha(movie.read_bytes()),'videoPath':str(movie),
       'frameSampleDigests':examples,'articulatedJointTransformsExecuted':True,
+      'authoredFacialSpritesSwitched':bool(facial_tracks),
+      'facialSwitchSamples':facial_event_samples,
+      'facialVisibleFrameCounts':facial_counts,
+      'facialTimingSource':'authored_integer_frames' if facial_tracks else None,
+      'audioPhonemeAlignmentMeasured':False,
       'characterIdentityVerified':False,'anatomyQualityVerified':False,
       'naturalVoicePerformanceVerified':False,'lipSyncVerified':False,
       'phonemeTimingVerified':False,'musicMastered':False,'humanCreativeApproved':False,
