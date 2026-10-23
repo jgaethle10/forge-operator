@@ -169,12 +169,31 @@ try {
     await sleep(300);
   } while (Date.now() < healthDeadline);
   if (!duringOutage.ok) {
-    // Do not print endpoint, tokens, device identity, or raw private receipts.
+    // Diagnose by bounded health categories only. Never expose HTTP URLs,
+    // private receipts, provider configuration, credentials or error bodies.
+    const coreRoute = await organism.yard.verifyRoute('systemia-core-local-resident');
+    const coreHealth = coreRoute?.health || {};
+    const counts = {
+      running: coreHealth.running === true,
+      service_count: Number(coreHealth.service_count || 0),
+      failed_count: Number(coreHealth.failed_count || 0),
+      held_count: Number(coreHealth.held_count || 0),
+    };
     console.error(JSON.stringify({
       schema: 'evercraft.local-organism.remote-admission-proof-diagnostic.v1',
       failed_stage: 'broker_outage_local_health',
       kaidance_ok: duringOutage.kaidance?.ok === true,
       core_ok: duringOutage.systemia_core?.ok === true,
+      core_state: String(coreRoute?.state || 'unknown').slice(0,80),
+      core_counts: counts,
+      core_service_statuses: Array.isArray(coreHealth.services)
+        ? coreHealth.services.slice(0,24).map(x => ({
+          key: /^[a-z0-9_-]{1,72}$/i.test(String(x.service_key || ''))
+            ? x.service_key : 'redacted',
+          status: ['running', 'failed', 'held', 'stopped', 'starting', 'completed']
+            .includes(x.status) ? x.status : 'other',
+        }))
+        : [],
       fabric_ok: duringOutage.fabric?.ok === true,
       remote_configured: duringOutage.remote_admission?.configured === true,
       remote_connected: duringOutage.remote_admission?.connected === true,
