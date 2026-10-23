@@ -1,0 +1,27 @@
+name: Artifact custody offline review
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/artifact-custody.mjs'
+      - 'scripts/artifact-roundtrip.mjs'
+      - 'tests/artifact-custody.test.mjs'
+      - 'tests/artifact-roundtrip.test.mjs'
+      - 'docs/artifact-custody.md'
+      - '.github/workflows/artifact-custody-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-integrity-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate offline custody and snapshot comparison
+        run: node --test tests/artifact-custody.test.mjs tests/artifact-roundtrip.test.mjs
