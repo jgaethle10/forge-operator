@@ -27,9 +27,11 @@ function assertFunctions(providerClient,budgetGate) {
   if(typeof budgetGate?.reserve!=='function'||typeof budgetGate?.reconcile!=='function')
     throw Error('External reservation/reconciliation authority required');
 }
-function validateGate(g,provider,model,now){
+function validateGate(g,provider,model,now,{agentId,worldTick,observationHash,requestKey}){
   if(!g||g.society!=='mossmere'||g.approved!==true||
     g.provider!==provider||g.model!==model||
+    g.agent_id!==agentId||g.world_tick!==worldTick||
+    g.observation_hash!==observationHash||g.request_key!==requestKey||
     !Number.isSafeInteger(g.expires_at)||g.expires_at<=now||
     !Number.isSafeInteger(g.max_tokens)||g.max_tokens<1||g.max_tokens>MAX_TOKENS||
     !Number.isSafeInteger(g.max_cost_micro_usd)||g.max_cost_micro_usd<0||
@@ -112,13 +114,16 @@ export async function runResidentModelDecision({
   if(!Number.isSafeInteger(now))throw Error('Invalid run timestamp');
   const observation=residentObservation(world,agentId);
   const observationHash=hash(observation);
-  const approval=await budgetGate.reserve({
+  const requestKey=hash({provider,model,agentId,observationHash});
+  const requestContext={
     society:'mossmere',agent_id:agentId,world_tick:world.tick,
     observation_hash:observationHash,provider,model,
-    request_key:hash({provider,model,agentId,observationHash}),
-    max_tokens:MAX_TOKENS
+    request_key:requestKey,max_tokens:MAX_TOKENS
+  };
+  const approval=await budgetGate.reserve(requestContext);
+  const gate=validateGate(approval,provider,model,now,{
+    agentId,worldTick:world.tick,observationHash,requestKey
   });
-  const gate=validateGate(approval,provider,model,now);
   const request=buildAgentRequest(observation,{provider,model,max_tokens:gate.max_tokens});
   let reportedCost=null,requestId=null;
   try{
