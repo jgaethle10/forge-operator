@@ -43,3 +43,14 @@ Local focused command (subject to CI verification):
 ```bash
 node --test tests/window-agent-boundary.test.mjs tests/window-model-bridge.test.mjs tests/window-heartbeat.test.mjs
 ```
+
+## Local-only durable decision journal (October 23)
+The new `systemia/society/window-local-journal.mjs` provides a **held experimental state file**, separate from the real Mossmere GitHub state branch. Initialization is explicit and refuses to erase a previous sandbox. A local directory lock elects exactly one writer; an abandoned lock requires human inspection, not an unsafe automatic takeover. Model decisions are only requested inside that lock after verifying the prior snapshot. Accepted actions are atomically persisted to a new JSON snapshot after fsync and renamed into place, with a one-to-one sequential receipt hash chain and no automatic archive after 1,024 actions.
+
+The observer projection returns an allowlist of town/agent public facts and a sanitized decision trail, excluding personal memory and provider request identifiers. Neither hashes nor this local sandbox prove independently verified model inference; the attested adapter is currently a contract exercised against a synthetic test client. A checksum detects ordinary corruption but does not protect against a writer who can maliciously rewrite the entire local file. Production hardening would require a separately held signing identity and external verification.
+
+To validate locally, using the read-only CI:
+```bash
+node --test tests/window-agent-boundary.test.mjs tests/window-model-bridge.test.mjs tests/window-local-journal.test.mjs tests/window-heartbeat.test.mjs
+```
+The local journal is **not deployed**, no autonomous model run is scheduled, and the public visitor's world is unchanged. Use explicit approved provider credentials and an independently persistent budget reservation service before live inference.
