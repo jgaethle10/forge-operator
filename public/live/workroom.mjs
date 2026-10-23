@@ -89,6 +89,7 @@ async function refresh(){
  }});
  const now=Date.now();state.waiting=false;
  if(!ok){
+  $('stateText').textContent='PUBLIC SOURCE DELAYED';$('stateLight').className='signal error';
   if(!state.lastSync||now-state.lastSync>INTERVAL*2){state.healthy=false;showHeld('GitHub could not be reached. The portal refuses to invent live engineering progress. Open the source directly to inspect current public work.')}
   $('statusText').textContent='SOURCE UNAVAILABLE';
   return;
