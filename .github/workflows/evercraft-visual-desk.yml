@@ -153,7 +153,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m venv /tmp/fallen-toon-cel-env
-          /tmp/fallen-toon-cel-env/bin/pip install --disable-pip-version-check CairoSVG==2.7.1
+          /tmp/fallen-toon-cel-env/bin/pip install --disable-pip-version-check CairoSVG==2.7.1 Pillow==11.3.0
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg espeak-ng
           ffmpeg -version | head -n 1
