@@ -38,6 +38,8 @@ export interface SourceAsset {
   // these anchors per ScenePlan after compile.
   cropAnchorX?: number;
   cropAnchorY?: number;
+  // 'contain' preserves the full UI/logo/subject within the output canvas.
+  fitMode?: 'cover' | 'contain';
 }
 
 export interface DialogueLine {
@@ -100,6 +102,7 @@ export interface ScenePlan {
   // Optional; center remains the backward-compatible default.
   cropAnchorX?: number;
   cropAnchorY?: number;
+  fitMode?: 'cover' | 'contain';
   transition: 'cut' | 'dissolve';
   intent: string;
   screenText?: string;
