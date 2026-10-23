@@ -31,6 +31,15 @@ async function freeTcpPort() {
   return port;
 }
 
+// This isolated broker-outage proof exercises remote transport and local
+// supervisor survivability, NOT the live internet / repository integrity
+// acceptance of Portfolio Sentinel. Keep its findings/receipts emitted, but
+// avoid letting externally observed main-branch failures return exit code 1
+// and falsely attribute an unrelated Sentinel failure to a broker outage.
+// Production default remains strict and this override is only inside CI proof.
+assert.equal(process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH !== 'false', true);
+process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH = 'false';
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'local-organism-remote-admission-'));
 const nodeId = 'chromebook-remote-proof';
 const computeRoot = path.join(root, 'compute');
