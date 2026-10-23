@@ -95,7 +95,8 @@ export function inspect({ root, manifest, receipts = [], truststore = { issuers:
     } catch { local = 'missing_or_unsafe'; }
     for (const r of receipts) {
       if (r.artifact_sha256 !== a.sha256 || r.artifact_path !== a.path) continue;
-      if (verifyAttestation(r, truststore)) stages[r.stage] = 'attested';
+      // A signed claim cannot promote custody when the local artifact itself is altered.
+      if (local === 'verified' && verifyAttestation(r, truststore)) stages[r.stage] = 'attested';
     }
     report.push({ path: a.path, local_integrity: local, custody: stages });
   }
