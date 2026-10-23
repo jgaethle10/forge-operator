@@ -19,12 +19,17 @@ const item={public_id:'audit-center-website-audit-machine-v1',name:'Systemia Web
   entry_paid_offer:{name:'Quick Win Audit',price:'$49',price_usd_normalized:49,billing:'one_time'},
 };
 const host='127.0.0.1';
+const brandIcon=fs.readFileSync(new URL('../../mcp/assets/evercraft-icon.png',import.meta.url));
 const watermark='<div aria-label="Source-only design review" style="position:fixed;z-index:999;top:8px;right:8px;max-width:170px;padding:7px 9px;color:#fff;background:#42213c;border:2px solid #e8a0bd;border-radius:7px;font:700 10px system-ui;pointer-events:none">SOURCE REVIEW • NOT LIVE • NO PAYMENT</div>';
 function buildPage(hold){
   const src=renderOfferPage(item,{checkoutConfigured:!hold});
   return src.replace('<body>','<body>'+watermark);
 }
 const server=http.createServer((req,res)=>{
+  if(req.method==='GET'&&req.url==='/assets/evercraft-icon.png'){
+    res.writeHead(200,{'content-type':'image/png','cache-control':'no-store'});
+    res.end(brandIcon);return;
+  }
   if(req.method!=='GET'||!['/open','/held'].includes(req.url)){
     res.writeHead(404);res.end();return;
   }
@@ -64,18 +69,19 @@ try{
     const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
     const screenshot=name+'.png';
     await page.screenshot({path:path.join(out,screenshot),fullPage:true,animations:'disabled'});
+    const logoLoaded=await page.locator('.brand img').evaluate(img=>img.complete&&img.naturalWidth>0);
     const countForms=await page.locator('form[action="/api/offers/website-audit/checkout"]').count();
     const entry={name,viewport:{width:view.width,height:view.height},httpStatus:response?.status()||0,
       ctaVisible:await button.count()===1,ctaFirstViewport:Boolean(rect&&rect.y+rect.height<=view.height),
       ctaTop:rect?Math.round(rect.y):null,horizontalOverflowPx:overflow,
       headingVisible:await page.locator('#audit-title').count()===1,
-      checkoutFormCount:countForms,readOnly:true,submitted:false,
+      checkoutFormCount:countForms,brandLogoLoaded:logoLoaded,readOnly:true,submitted:false,
       screenshot,sha256:checksum(fs.readFileSync(path.join(out,screenshot))),
       pageErrors:errors,blockedRequests:blocked};
     report.views.push(entry);
     if(!entry.ctaVisible||!entry.ctaFirstViewport||entry.horizontalOverflowPx||
       entry.httpStatus!==200||!entry.headingVisible||errors.length||blocked.length||
-      countForms!==(hold?0:1))report.blockers.push(name+':visual_or_checkout_contract');
+      countForms!==(hold?0:1)||!logoLoaded)report.blockers.push(name+':visual_or_checkout_contract');
     await ctx.close();
   }
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
