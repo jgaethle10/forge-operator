@@ -3,119 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050c12">
-<meta name="description" content="Watch the actual Evercraft public engineering prototypes and published source-backed visual research. Real working software, clearly labeled synthetic scenarios.">
-<title>Evercraft LIVE | Watch the Work</title>
-<style>
-:root{color-scheme:dark;--bg:#050c12;--ink:#edf8f8;--muted:#9bbfc1;--mint:#75edcd;--border:#254651}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--mint);outline-offset:3px}a{color:inherit}
-#app{position:relative;display:flex;flex-direction:column;width:100%;height:100dvh;min-height:370px;background:var(--bg);overflow:hidden}
-.strap{height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 clamp(12px,2vw,28px);background:#061018;border-bottom:1px solid #1d3b42}
-.brand{font-size:13px;font-weight:900;letter-spacing:.2em;white-space:nowrap}.brand span{color:var(--mint)}
-.pill{font:700 10px ui-monospace,monospace;letter-spacing:.09em;color:#a1dbc9;text-transform:uppercase;text-align:right}
-.pill:before{content:"";display:inline-block;width:7px;height:7px;background:#82dabe;border-radius:50%;box-shadow:0 0 10px #82dabe;margin-right:8px}
-.stage{position:relative;flex:1;min-height:0;overflow:hidden;background:#030b0f}
-.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#07121b;display:block}
-.loading{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#07131b;color:#b8ddd5;font:700 14px ui-monospace,monospace;letter-spacing:.1em;z-index:1;padding:20px}
-.stage.ready .loading{display:none}
-.stage-warning{position:absolute;left:12px;right:12px;top:10px;text-align:center;font:700 11px ui-monospace,monospace;background:#1c1410ed;border:1px solid #805a37;border-radius:8px;padding:10px;z-index:4;display:none}
-.stage.error .stage-warning{display:block}
-.progress{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--mint);box-shadow:0 0 8px var(--mint);z-index:2}
-.dock{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px clamp(12px,2vw,28px);min-height:71px;background:#081720;border-top:1px solid #25505a}
-.now{min-width:0}.eyebrow{font:750 9px ui-monospace,monospace;color:var(--mint);letter-spacing:.15em}.now h1{font-size:clamp(14px,1.7vw,21px);margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.truth{font:650 9px ui-monospace,monospace;color:#9cbcc5;line-height:1.5;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
-.action{border:1px solid #375e67;border-radius:9px;background:#102630;color:#dbf4f0;padding:11px 12px;font-weight:680;font-size:11px;white-space:nowrap}.action.primary{border-color:#75d7bd;background:#124034;color:#defff5}
-.film-hide{display:block}.exit-film{display:none}
-#app.film .strap,#app.film .dock{display:none}
-#app.film .exit-film{display:block;position:absolute;top:12px;right:12px;z-index:8;background:#09242ce8;color:#f1fffb;border:1px solid #78ddc4;padding:11px 14px;border-radius:9px;font-size:12px;font-weight:750}
-#app.film .film-disclosure{display:block}
-.film-disclosure{display:none;position:absolute;bottom:0;left:0;right:0;z-index:4;background:linear-gradient(transparent,#041218a8);padding:26px 16px 9px;text-align:center;font:750 10px ui-monospace,monospace;color:#dbf4ed;pointer-events:none}
-.drawer{position:absolute;right:12px;bottom:84px;z-index:11;width:min(445px,calc(100% - 24px));max-height:min(70dvh,660px);overflow-y:auto;background:#0a1b24f7;border:1px solid #426471;border-radius:18px;padding:18px;box-shadow:0 16px 70px #000c;display:none}
-.drawer.open{display:block}.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:8px}
-.drawer h2{font-size:19px;margin:0;letter-spacing:-.02em}
-.x{background:none;color:#d5f5ea;border:1px solid #3b6870;border-radius:8px;padding:6px 10px;font-size:12px}
-.exhibit{width:100%;background:#102a32;color:#e8fcfa;border:1px solid #30505d;text-align:left;padding:14px;border-radius:12px;margin:0 0 8px}
-.exhibit[aria-pressed="true"]{border-color:#70e3c0;background:#194239}
-.exhibit strong{display:block;font-size:13px}.exhibit small{display:block;font-size:11px;color:#9cbec4;margin-top:5px;line-height:1.4}
-.drawer-foot{font:11px/1.6 ui-monospace,monospace;color:#9db9c3;margin-top:14px}.drawer-foot a{color:#8cf1d5}
-#app.portrait .stage{width:min(100%,calc((100dvh - 46px - 75px)*.5625));margin:auto;border-left:1px solid #2c5156;border-right:1px solid #2c5156}
-#app.portrait.film .stage{width:min(100%,calc(100dvh*.5625))}
-@media(max-width:700px){.pill{font-size:8px}.strap{height:43px}.brand{font-size:11px}.dock{min-height:79px;gap:5px;flex-wrap:wrap;padding:8px 10px}.now{width:100%}.now h1{font-size:14px;margin:2px 0}.now .truth{font-size:8px}.actions{width:100%;justify-content:space-between;gap:5px}.action{flex:1;padding:9px 6px;font-size:10px;text-align:center}.drawer{bottom:11px;max-height:78dvh}#app.portrait .stage{width:100%}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-</style>
+<meta name="theme-color" content="#050a10">
+<meta name="description" content="An evidence-backed public window into real Evercraft software development: current reviews, recorded commits, and CI runs, without invented activity.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src https://api.github.com; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+<title>Evercraft LIVE | Actual Workroom</title>
+<link rel="stylesheet" href="./workroom.css">
 </head>
 <body>
 <div id="app">
-<header class="strap"><div class="brand">EVERCRAFT <span>/ LIVE</span></div><div class="pill">ACTUAL PUBLIC BUILDS · NOT LIVE TELEMETRY</div></header>
-<main class="stage" id="stage" aria-label="Evercraft public engineering demonstration">
-<div id="loading" class="loading" role="status">OPENING AN ACTUAL EVERCRAFT BUILD…</div>
-<iframe id="artifact" sandbox="allow-scripts" referrerpolicy="no-referrer" loading="eager" title="Evercraft engineering prototype"></iframe>
-<div class="stage-warning" id="warning">This exhibit could not be displayed. Choose another public artifact.</div>
-<div class="progress" id="progress"></div>
+<header>
+  <div class="brand"><span class="brandmark" aria-hidden="true">✧</span><span>EVERCRAFT <em>/ WORKROOM</em></span></div>
+  <div class="head-meta"><span id="sourceState"><i class="signal" id="stateLight"></i><span id="stateText">CHECKING PUBLIC SOURCE</span></span><span class="long" id="checkedAt">NOT YET CHECKED</span></div>
+</header>
+<div class="topline">
+  <div class="topline-title">PUBLIC ENGINEERING RECEIPTS / WORK OBSERVED IN GITHUB</div>
+  <div class="topline-stats"><span><strong id="prCount">0</strong>PRs</span><span><strong id="runCount">0</strong>CI</span><span><strong id="commitCount">0</strong>COMMITS</span></div>
+</div>
+<main class="layout">
+  <section class="focus" aria-label="Verified development event">
+    <div class="focus-content">
+      <div class="focus-eyebrow" id="focusCategory">WAITING FOR VERIFIED SOURCE</div>
+      <h1 class="focus-title" id="focusTitle">Connecting to real work…</h1>
+      <div id="eventDetail">Loading public code reviews, commits, and verification records.</div>
+      <div class="focus-grow"></div>
+      <div class="meta-foot">
+        <div class="meta-when"><b id="focusState">UNVERIFIED</b><span id="focusWhen">No source timestamp yet</span></div>
+        <a id="receipt" class="receipt" href="https://github.com/jgaethle10/forge-operator/pulls" target="_blank" rel="noopener noreferrer">OPEN EXACT RECEIPT ↗</a>
+      </div>
+      <div class="proof-bar" aria-hidden="true"><span id="sceneProgress"></span></div>
+    </div>
+    <div class="held show" id="held"><div><h2>Evidence first.</h2><p id="heldMessage">Checking public engineering activity. No simulated work will be displayed.</p><a href="https://github.com/jgaethle10/forge-operator/pulls" target="_blank" rel="noopener noreferrer">Open public Evercraft development ↗</a></div></div>
+  </section>
+  <section class="sidebar" aria-label="Current real development">
+    <div class="panel"><div class="panel-header"><h2>Engineering reviews</h2><small>Recorded public PRs</small></div><div id="recentList" class="cards"></div></div>
+    <div class="panel"><div class="panel-header"><h2>Tests and builds</h2><small>Actual GitHub Actions</small></div><div id="checkList" class="cards"></div></div>
+  </section>
 </main>
-<div class="dock">
-<div class="now"><div class="eyebrow" id="eyebrow">01 / RUNNING SOFTWARE</div><h1 id="name">EarthWorks · Live Yard</h1><div class="truth" id="truth">ACTUAL SOFTWARE · SIMULATED EQUIPMENT · NO PHYSICAL CONTROL</div></div>
-<div class="actions">
-<button class="action" id="browse">Doorways <span aria-hidden="true">▦</span></button>
-<button class="action" id="next">Next →</button>
-<button class="action" id="hold">Hold scene</button>
-<button class="action" id="portrait">9:16</button>
-<button class="action primary" id="film">Film ⛶</button>
+<footer class="footer">
+  <div class="context"><b id="statusText">CONNECTING…</b> · Public repository evidence, replayed in sequence, checked approximately every 10 minutes. Not live Systemia agent telemetry. <a href="https://github.com/jgaethle10/forge-operator" target="_blank" rel="noopener noreferrer">Source ↗</a></div>
+  <div class="toolbar"><button class="btn" id="next">Next receipt ↗</button><button class="btn" id="hold">Hold</button><button class="btn" id="refresh">Refresh</button><button class="btn" id="portrait" aria-pressed="false">9:16</button><button class="btn primary" id="film" aria-pressed="false">Film ⛶</button></div>
+</footer>
+<button id="filmExit" type="button">✕ Exit film</button>
 </div>
-</div>
-<button class="exit-film" id="filmExit" type="button">✕ Exit film</button>
-<div class="film-disclosure">EVERCRAFT · PUBLIC SOFTWARE DEMONSTRATION · SCENARIO DATA IS SIMULATED WHERE MARKED</div>
-<aside class="drawer" id="drawer" aria-label="Public Evercraft work">
-<div class="drawer-top"><h2>Open a real build</h2><button class="x" id="closeDrawer">✕ Close</button></div>
-<div id="doors">
-<button class="exhibit" data-exhibit="earth" aria-pressed="true"><strong>EarthWorks · Live Yard</strong><small>Watch the real jobsite controller run against a simulated fleet and modeled production</small></button>
-<button class="exhibit" data-exhibit="volcano" aria-pressed="false"><strong>Visual Desk · Washington Volcanoes</strong><small>Published motion study backed by USGS source references; not live monitoring</small></button>
-<button class="exhibit" data-exhibit="yard2" aria-pressed="false"><strong>EarthWorks · Toy Yard</strong><small>Second public, interactive autonomy testbed using synthetic equipment states</small></button>
-<button class="exhibit" data-exhibit="estimate" aria-pressed="false"><strong>EPS · Precise Estimator</strong><small>Try a working contractor pricing tool using example inputs</small></button>
-<button class="exhibit" data-exhibit="hvac" aria-pressed="false"><strong>HVAC · Lead Recovery</strong><small>Try the actual lead-intake prototype without real customer data</small></button>
-</div>
-<div class="drawer-foot">Automatic rotation features active visual exhibits only. Calculators and forms stay available on demand. Every artifact is publicly accessible independently. <a id="openSource" href="../demos/earthworks-autonomy/" target="_blank" rel="noopener noreferrer">Open the original work ↗</a></div>
-</aside>
-</div>
-<script>
-(()=>{'use strict';
-const EXHIBITS=[
-{id:'earth',type:'RUNNING SOFTWARE',name:'EarthWorks · Live Yard',url:'../demos/earthworks-autonomy/?studio=1',original:'../demos/earthworks-autonomy/',truth:'ACTUAL EARTHWORKS CONTROLLER · SIMULATED EQUIPMENT · NO PHYSICAL CONTROL',duration:90000,autoplay:true},
-{id:'volcano',type:'PUBLISHED VISUAL RESEARCH',name:'Visual Desk · Washington Volcanoes',url:'../visuals/washington-active-volcanoes/motion.html',original:'../visuals/washington-active-volcanoes/',truth:'USGS-SOURCED VISUALIZATION · NOT A LIVE ERUPTION OR FORECAST',duration:45000,autoplay:true},
-{id:'yard2',type:'RUNNING SOFTWARE',name:'EarthWorks · Toy Yard',url:'../apps/earthworks-autonomy/',original:'../apps/earthworks-autonomy/',truth:'WORKING AUTONOMY DEMO · SYNTHETIC SITE CONDITIONS',duration:60000,autoplay:false},
-{id:'estimate',type:'WORKING COMMERCIAL TOOL',name:'EPS · Precise Estimator',url:'../apps/eps-estimator/',original:'../apps/eps-estimator/',truth:'REAL CALCULATOR · EXAMPLE INPUTS · NOT A CUSTOMER QUOTE',duration:60000,autoplay:false},
-{id:'hvac',type:'WORKING PROTOTYPE',name:'HVAC · Lead Recovery',url:'../demos/hvac-lead-recovery/',original:'../demos/hvac-lead-recovery/',truth:'WORKING INTAKE PROTOTYPE · SAMPLE LEADS ONLY',duration:60000,autoplay:false}
-];
-const $=id=>document.getElementById(id),app=$('app'),frame=$('artifact'),stage=$('stage'),drawer=$('drawer');
-const auto=EXHIBITS.map((x,i)=>x.autoplay?i:-1).filter(i=>i>=0);
-let current=0,active=true,remaining=EXHIBITS[0].duration,clock=performance.now(),lastUrl='';
-function display(i){
- current=(i+EXHIBITS.length)%EXHIBITS.length;const x=EXHIBITS[current];
- remaining=x.duration;clock=performance.now();stage.classList.remove('ready','error');
- $('name').textContent=x.name;$('eyebrow').textContent=String(current+1).padStart(2,'0')+' / '+x.type;
- $('truth').textContent=x.truth;$('openSource').href=x.original;frame.title=x.name+' · real public Evercraft work';
- if(lastUrl!==x.url){frame.src=x.url;lastUrl=x.url}else{frame.src=x.url}
- document.querySelectorAll('[data-exhibit]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.exhibit===x.id)));
- $('hold').textContent=active?'Hold scene':'Resume rotation';$('progress').style.width='0%';
-}
-function next(){let j=auto.indexOf(current);display(auto[(j+1)%auto.length])}
-frame.addEventListener('load',()=>{stage.classList.add('ready')});
-frame.addEventListener('error',()=>{stage.classList.add('error');stage.classList.remove('ready')});
-$('next').onclick=next;
-$('hold').onclick=()=>{active=!active;clock=performance.now();$('hold').textContent=active?'Hold scene':'Resume rotation'};
-$('browse').onclick=()=>drawer.classList.toggle('open');
-$('closeDrawer').onclick=()=>drawer.classList.remove('open');
-document.querySelectorAll('[data-exhibit]').forEach(b=>b.onclick=()=>{display(EXHIBITS.findIndex(x=>x.id===b.dataset.exhibit));active=false;$('hold').textContent='Resume rotation';drawer.classList.remove('open')});
-function toggleFilm(force){app.classList.toggle('film',typeof force==='boolean'?force:!app.classList.contains('film'));drawer.classList.remove('open')}
-$('film').onclick=()=>toggleFilm(true);
-$('filmExit').onclick=()=>toggleFilm(false);
-$('portrait').onclick=()=>{const yes=app.classList.toggle('portrait');$('portrait').textContent=yes?'16:9':'9:16'};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){toggleFilm(false);drawer.classList.remove('open')}if(e.key==='ArrowRight'&&e.target===document.body)next();if(e.key.toLowerCase()==='f'&&e.target===document.body)toggleFilm()});
-function loop(t){requestAnimationFrame(loop);if(document.hidden){clock=t;return}const dt=Math.min(1000,Math.max(0,t-clock));clock=t;if(!active)return;
- remaining-=dt;const x=EXHIBITS[current];$('progress').style.width=(100*(1-Math.max(0,remaining)/x.duration)).toFixed(2)+'%';if(remaining<=0)next()}
-document.addEventListener('visibilitychange',()=>{clock=performance.now()});
-display(0);requestAnimationFrame(loop);
-})();
-</script>
-</body></html>
+<script type="module" src="./workroom.mjs"></script>
+</body>
+</html>

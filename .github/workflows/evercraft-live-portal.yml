@@ -3,15 +3,15 @@ on:
   pull_request:
     paths:
       - 'public/live/**'
-      - 'tests/evercraft-live-portal.test.mjs'
+      - 'tests/evercraft-live-*.test.mjs'
       - '.github/workflows/evercraft-live-portal.yml'
   push:
     branches:
       - main
-      - feature/evercraft-live-portal-rc05
+      - feature/evercraft-live-evidence-workroom-rc08
     paths:
       - 'public/live/**'
-      - 'tests/evercraft-live-portal.test.mjs'
+      - 'tests/evercraft-live-*.test.mjs'
       - '.github/workflows/evercraft-live-portal.yml'
   workflow_dispatch:
 permissions:
@@ -25,5 +25,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate offline recording portal
-        run: node --test tests/evercraft-live-portal.test.mjs
+      - name: Validate source-backed workroom and data honesty
+        run: node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs
