@@ -44,6 +44,15 @@ class InstallTests(unittest.TestCase):
   p,digest=self.fixture(lambda z:z.writestr('LaserFoundryStudio/studio.py','replacement'))
   with self.assertRaisesRegex(ValueError,'archive_manifest_not_exact_allowlist'):
    m.install(p,self.root/'app',digest)
+ def test_rejects_symlinked_destination_parent(self):
+  p,digest=self.fixture()
+  outside=self.root/'outside'
+  outside.mkdir()
+  link=self.root/'linked'
+  link.symlink_to(outside,target_is_directory=True)
+  with self.assertRaisesRegex(ValueError,'destination_symlink_ancestor_denied'):
+   m.install(p,link/'app',digest)
+  self.assertFalse((outside/'app').exists())
  def test_rejects_existing_symlink_target(self):
   p,digest=self.fixture()
   out=self.root/'other'
