@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import test from 'node:test';
 import {
  SOURCE_SCHEMA,OWNED_SCHEMA,prepareOwnedClipSnapshot,
@@ -110,4 +111,29 @@ test('missing private destination or rejected lock cannot commit state',()=>{
   fs.writeFileSync(path.join(dir,'clip-campaign-migration.json.lock'),'owner lock');
   assert.throws(()=>stageOwnedClipSnapshot({snapshot:snap,stateDir:dir}),/concurrent_import_or_stale_lock/);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+
+test('private migration cannot write into the checked-out repo, including through a symlink',()=>{
+ const snap=prepareOwnedClipSnapshot(factory());
+ const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
+ const wouldBePath=path.join(repoRoot,'clip-unsafe-private-stage-test');
+ assert.equal(fs.existsSync(wouldBePath),false);
+ assert.throws(()=>stageOwnedClipSnapshot({snapshot:snap,stateDir:wouldBePath}),/unsafe_state_dir/);
+ assert.equal(fs.existsSync(wouldBePath),false);
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'clip-owned-symlink-'));
+ try{
+  const link=path.join(temp,'checkout-link');
+  fs.symlinkSync(repoRoot,link,'dir');
+  assert.throws(()=>stageOwnedClipSnapshot({snapshot:snap,stateDir:path.join(link,'systemia')}),/unsafe_state_dir/);
+ }finally{fs.rmSync(temp,{recursive:true,force:true})}
+});
+
+test('private migration rejects an existing group/world-readable state directory',()=>{
+ const snap=prepareOwnedClipSnapshot(factory());
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'clip-owned-permissions-'));
+ try{
+  fs.chmodSync(temp,0o755);
+  assert.throws(()=>stageOwnedClipSnapshot({snapshot:snap,stateDir:temp}),/state_dir_not_private/);
+ }finally{fs.chmodSync(temp,0o700);fs.rmSync(temp,{recursive:true,force:true})}
 });
