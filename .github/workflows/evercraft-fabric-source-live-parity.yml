@@ -49,13 +49,24 @@ jobs:
         if: always()
         shell: bash
         run: |
-          if test -f "$RUNNER_TEMP/evercraft-fabric-parity.json"; then
-            node -e '
-              const r=require(process.argv[1]);
-              console.log("Source:",r.source_capabilities,"Live:",r.live_mcp_capabilities,
-                "HTTP 200:",r.route_ok_count,"Missing source IDs:",r.source_only_ids.join(",")||"none",
-                "Release lineage:",r.release_lineage_state,"Findings:",r.findings.length);
-            ' "$RUNNER_TEMP/evercraft-fabric-parity.json" >> "$GITHUB_STEP_SUMMARY"
+          if test -s "$RUNNER_TEMP/evercraft-fabric-parity.json"; then
+            node - "$RUNNER_TEMP/evercraft-fabric-parity.json" <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('node:fs');
+          try {
+            const r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+            console.log("Fabric parity:",r.ok===true?"PASS":"HOLD/FAIL");
+            console.log("Source:",r.source_capabilities??"unverified","Live:",r.live_mcp_capabilities??"unverified",
+              "HTTP 200:",r.route_ok_count??"unverified",
+              "Missing source IDs:",(r.source_only_ids||[]).join(",")||"none recorded",
+              "Release lineage:",r.release_lineage_state||"unverified",
+              "Findings:",(r.findings||[]).join(",")||"none recorded");
+            if(r.error)console.log("External probe error:",r.error,"Cause code:",r.cause_code||"unspecified");
+          }catch{
+            console.log("Fabric parity: HOLD. Receipt missing or unreadable. External verification NOT established.");
+          }
+          NODE
+          else
+            printf '%s\\n' "Fabric parity: HOLD. No nonempty receipt. External verification NOT established." >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Preserve evidence receipt
         if: always()
