@@ -54,6 +54,8 @@ def validate(scene,root):
     layers=scene.get('layers')
     fail(isinstance(layers,list) and 2<=len(layers)<=12,'layer_count_invalid')
     by_id={}
+    facial_groups={}
+    facial_pixels={}
     for layer in layers:
         key=layer.get('id')
         fail(isinstance(key,str) and 2<=len(key)<=60 and key not in by_id,'layer_id_invalid')
@@ -66,11 +68,31 @@ def validate(scene,root):
             fail(im.format=='PNG' and im.mode=='RGBA','layer_must_be_rgba_png')
             fail(im.size==(width,height),'layer_canvas_mismatch')
             fail(im.getchannel('A').getbbox() is not None,'layer_empty_alpha')
+            group=layer.get('switchGroup')
+            variant=layer.get('variant')
+            if group is not None or variant is not None:
+                fail(group in ('mouth','eyes','brows') and isinstance(variant,str)
+                     and 2<=len(variant)<=24 and variant.replace('_','').isalnum(),
+                     'facial_group_or_variant_invalid')
+                facial_groups.setdefault(group,{})
+                fail(variant not in facial_groups[group],'duplicate_facial_variant')
+                facial_groups[group][variant]=key
+                facial_pixels[(group,variant)]=sha(im.tobytes())
         pivot=layer.get('pivotPx')
         fail(isinstance(pivot,list) and len(pivot)==2,'pivot_missing')
         for value,limit in zip(pivot,(width,height)):bounded(value,0,limit,'pivot_out_of_bounds')
         fail(type(layer.get('zIndex'))==int and 0<=layer['zIndex']<=100,'z_index_invalid')
         by_id[key]=layer
+    for group,variants in facial_groups.items():
+        fail(2<=len(variants)<=6,'facial_variant_count_invalid:'+group)
+        fail(len({facial_pixels[(group,v)] for v in variants})==len(variants),
+             'facial_variants_pixel_identical:'+group)
+        members=[by_id[id] for id in variants.values()]
+        first=members[0]
+        fail(all(m.get('parentId')==first.get('parentId') and
+                 m['pivotPx']==first['pivotPx'] and
+                 m['zIndex']==first['zIndex'] for m in members),
+             'facial_layer_alignment_invalid:'+group)
     for key,layer in by_id.items():
         parent=layer.get('parentId')
         fail(parent is None or parent in by_id,'parent_missing')
