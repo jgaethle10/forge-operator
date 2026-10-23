@@ -1,0 +1,36 @@
+name: Evercraft Laser Foundry original motion tests
+on:
+  pull_request:
+    paths:
+      - 'scripts/visual-floor/laser-foundry/**'
+      - '.github/workflows/evercraft-laser-foundry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-laser-cinema-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-owned visual renderer dependencies
+        run: python -m pip install 'numpy>=1.26,<3' 'opencv-python-headless>=4.8,<5' 'Pillow>=10,<13'
+      - name: Test deterministic stage, choreographed cues, actual frame differences and creative boundaries
+        run: python -m unittest discover -v -s scripts/visual-floor/laser-foundry -p 'test_laser_foundry.py'
+      - name: Render actual 30-frame H264 canary, not a declared mock
+        working-directory: scripts/visual-floor/laser-foundry
+        run: |
+          command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+          python laser_foundry.py --format story --output /tmp/evercraft-laser-foundry-story-canary.mp4 --frames 30
+          ffprobe -v error -count_frames -show_entries stream=codec_name,width,height,nb_read_frames -of default=noprint_wrappers=1 /tmp/evercraft-laser-foundry-story-canary.mp4
+          test "$(ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of csv=p=0 /tmp/evercraft-laser-foundry-story-canary.mp4)" = "30"
+      - name: Retain actual original output for owner preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-laser-foundry-procedural-30-frame-canary
+          path: /tmp/evercraft-laser-foundry-story-canary.mp4
+          retention-days: 7
+          if-no-files-found: error
