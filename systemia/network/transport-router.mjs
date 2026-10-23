@@ -31,6 +31,9 @@ export function selectTransport({
     reason,
   });
   if(!Array.isArray(transports)) return invalid('transport_catalog_must_be_array');
+  if(typeof purpose!=='string'||!purpose.trim()){
+    return invalid('purpose_must_be_nonempty_string');
+  }
   if(!Number.isSafeInteger(payload_bytes)||payload_bytes<0){
     return invalid('payload_bytes_must_be_nonnegative_safe_integer');
   }
@@ -40,9 +43,16 @@ export function selectTransport({
   const maxRank=latencyRank[max_latency_class];
 
   const candidates = transports
-    .filter((transport) => transport && typeof transport === 'object')
+    .filter((transport) => transport && typeof transport === 'object' && !Array.isArray(transport))
     .filter((transport) => transport.state === STATE.VERIFIED)
-    .filter((transport) => (transport.purposes || []).includes(purpose))
+    .filter((transport) => typeof transport.id === 'string' && Boolean(transport.id.trim()))
+    .filter((transport) => Array.isArray(transport.purposes) && transport.purposes.includes(purpose))
+    // Untrusted/coerced metrics cannot game suitability rankings.
+    .filter((transport) => typeof transport.power_cost === 'number' &&
+      Number.isFinite(transport.power_cost) && transport.power_cost >= 0)
+    .filter((transport) => typeof transport.bidirectional === 'boolean' &&
+      typeof transport.offline_usable === 'boolean' &&
+      typeof transport.requires_external_infrastructure === 'boolean')
     .filter((transport) => !requires_offline || transport.offline_usable === true)
     .filter((transport) => {
       // Unknown/invalid payload ceilings are not authorization to send unlimited bytes.
