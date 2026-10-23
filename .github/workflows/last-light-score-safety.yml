@@ -1,0 +1,47 @@
+name: Last Light Score Safety Gate
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/LAST-LIGHT-ORCHESTRA-V3-SCORE.json'
+      - '.github/workflows/last-light-score-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preserve-approved-piano:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate orchestral score is structurally safe and leaves the piano alone
+        run: |
+          python3 - <<'PY'
+          import json,pathlib
+          file=pathlib.Path('systemia/media-studio/LAST-LIGHT-ORCHESTRA-V3-SCORE.json')
+          x=json.loads(file.read_text())
+          assert x['schema']=='evercraft.last-light.orchestral-arrangement.v3'
+          assert x['original_piano_sha256']=='630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e'
+          assert x['original_piano_is_immutable'] is True
+          assert x['duration_seconds']==35 and x['sample_rate_hz']==44100
+          a=x['approval']
+          assert a['original_piano_selected_by_founder'] is True
+          assert a['previous_orchestra_not_accepted'] is True
+          assert a['version_3_human_review_pending'] is True
+          assert a['commercial_release'] is False
+          assert len(x['stems'])>=7
+          assert x['engineering_gates']['no_synthetic_fallback'] is True
+          assert x['engineering_gates']['viola_hold']
+          for part,events in x['stems'].items():
+            assert len(events)>=2,part
+            assert events == sorted(events,key=lambda e:e[0]),part
+            for onset,pitch,held,touch in events:
+              assert 7.5<=onset<33.4,(part,onset)
+              assert .5<=held<3.5,(part,held)
+              assert .06<=touch<=.8,(part,touch)
+              assert isinstance(pitch,str) and len(pitch)<=4
+          assert x['segments'][0]['from']==0 and x['segments'][0]['orchestra']=='none'
+          assert x['segments'][-1]['to']==35 and x['segments'][-1]['orchestra']=='none'
+          print('PASS: immutable piano, admission and arrangement structural gates; NOT audio listening approval.')
+          PY

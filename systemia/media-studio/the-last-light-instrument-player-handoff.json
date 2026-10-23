@@ -1,0 +1,156 @@
+{
+  "schema": "evercraft.last-light.instrument-player-handoff.v1",
+  "title": "The Last Light: professionally rendered string-parts bridge",
+  "status": "research_draft_no_human_approval",
+  "approved_piano": {
+    "sha256": "630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e",
+    "duration_s": 35,
+    "original_filename": "Original_The_Last_Light_Piano_UNTOUCHED.wav",
+    "must_be_exact_byte_stream": true,
+    "never_regenerate_from_score": true,
+    "midi_piano_guide_muted": true
+  },
+  "timing": {
+    "tempo_for_midi_alignment_bpm": 120,
+    "sample_accurate_piano_authoritative": true,
+    "events_unquantized_seconds": true,
+    "midi_ticks_per_beat": 960
+  },
+  "routes": [
+    {
+      "track": "Piano timing guide, muted",
+      "channel": 0,
+      "cc7_volume": 0,
+      "notes": 31
+    },
+    {
+      "track": "Cello scoring candidate",
+      "channel": 1,
+      "cc1_and_cc11_expressive": true,
+      "mic_pan_cc10": 72
+    },
+    {
+      "track": "Violin scoring candidate",
+      "channel": 2,
+      "cc1_and_cc11_expressive": true,
+      "mic_pan_cc10": 49
+    }
+  ],
+  "counterlines": {
+    "cello": [
+      [
+        9.2,
+        "E3",
+        1.6,
+        49
+      ],
+      [
+        11.18,
+        "G3",
+        1.25,
+        51
+      ],
+      [
+        13.33,
+        "E3",
+        1.3,
+        44
+      ],
+      [
+        16.16,
+        "C3",
+        1.28,
+        49
+      ],
+      [
+        19.45,
+        "G3",
+        1.45,
+        70
+      ],
+      [
+        22.1,
+        "E3",
+        1.22,
+        50
+      ],
+      [
+        26.33,
+        "G3",
+        0.95,
+        38
+      ]
+    ],
+    "violin": [
+      [
+        12.2,
+        "E4",
+        0.82,
+        42
+      ],
+      [
+        16.24,
+        "E4",
+        0.92,
+        46
+      ],
+      [
+        19.55,
+        "G4",
+        1.12,
+        72
+      ],
+      [
+        23.6,
+        "E4",
+        1.1,
+        45
+      ],
+      [
+        26.15,
+        "G4",
+        1.1,
+        34
+      ]
+    ]
+  },
+  "instruments_to_compare": [
+    {
+      "product": "Orchestral Tools SINEfactory Helix",
+      "cost_tier": "free",
+      "player": "SINEplayer",
+      "works_on": "macOS/Windows",
+      "verified_articulations": [
+        "sustain",
+        "spiccato"
+      ],
+      "verified_true_recorded_legato": false,
+      "do_not_assume_real_transition_samples": true
+    },
+    {
+      "product": "Spitfire BBC Symphony Orchestra Discover",
+      "cost_tier": "free",
+      "player": "Spitfire BBCSO plugin",
+      "verified_articulations": [
+        "long",
+        "spiccato",
+        "pizzicato",
+        "tremolo"
+      ],
+      "verified_true_recorded_legato": false,
+      "do_not_assume_real_transition_samples": true
+    }
+  ],
+  "human_qa": [
+    "Isolated cello and violin tones must be beautiful without reverb",
+    "True recorded legato cannot be inferred from MIDI CC1 or software crossfades",
+    "Listen to notes against piano then as full 35s duet",
+    "Compare loudness-matched renders with founder-loved piano only",
+    "Reject even technically passing instruments if their timbre or melody fails"
+  ],
+  "release": {
+    "commercial_master_approved": false,
+    "human_orchestral_approval": false,
+    "source_audio_owned_by_evercraft": false
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "schema": "evercraft.last-light.orchestral-35s-score.v1",
+  "song": "The Last Light",
+  "status": "founder_loved_piano_reference; orchestral human audition pending",
+  "original_piano_pcm24_sha256": "630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e",
+  "reference_duration_seconds": 35,
+  "original_piano_do_not_overwrite": true,
+  "score_event_fields": [
+    "start_seconds",
+    "note",
+    "duration_seconds",
+    "touch_0_to_1",
+    "recorded_instrument_source_role"
+  ],
+  "recorded_source_rights_statement": "https://theremin.music.uiowa.edu/MIS.html",
+  "recorded_source_receipts_file": "iowa-orchestra-source-provenance.json",
+  "instruments_in_first_audio_workprint": [
+    "violin_I",
+    "violin_II",
+    "cello",
+    "double_bass",
+    "bassoon",
+    "french_horn",
+    "flute"
+  ],
+  "source_note_pitch_validation": "All actually used pitched source snippets independently checked against expected semitone with harmonic analysis; octave and adjacent-note errors held.",
+  "instrument_excluded": "viola: ambiguous note identification in initial pp sample; do not promote unverified source as a sounding stem",
+  "actual_live_orchestra": false,
+  "software_assembled_using_real_note_recordings": true,
+  "commercial_release_approved": false,
+  "mix_policy": "Piano-led, quiet opening, layers add during middle, restrained swell, original theme concludes exposed.",
+  "stem_mixing": "Separate encoded 24-bit recorded part WAVs, two auditable mix variants",
+  "parts": {
+    "violin_I": [
+      [
+        9.6,
+        "B4",
+        1.8,
+        0.4,
+        "violin_pp"
+      ],
+      [
+        12.82,
+        "G4",
+        1.65,
+        0.35,
+        "violin_pp"
+      ],
+      [
+        16.7,
+        "E4",
+        1.65,
+        0.43,
+        "violin_pp"
+      ],
+      [
+        19.05,
+        "G4",
+        2.15,
+        0.6,
+        "violin_mf"
+      ],
+      [
+        22.55,
+        "Gb4",
+        1.7,
+        0.48,
+        "violin_pp"
+      ],
+      [
+        26.4,
+        "B4",
+        1.35,
+        0.33,
+        "violin_pp"
+      ],
+      [
+        30.05,
+        "G4",
+        1.95,
+        0.28,
+        "violin_pp"
+      ]
+    ],
+    "violin_II": [
+      [
+        11.05,
+        "E4",
+        1.85,
+        0.27,
+        "violin_pp"
+      ],
+      [
+        15.95,
+        "G4",
+        2.15,
+        0.36,
+        "violin_pp"
+      ],
+      [
+        19.7,
+        "B4",
+        2.05,
+        0.42,
+        "violin_mf"
+      ],
+      [
+        23.12,
+        "E4",
+        1.85,
+        0.29,
+        "violin_pp"
+      ]
+    ],
+    "cello": [
+      [
+        6.6,
+        "G3",
+        2.1,
+        0.44,
+        "cello_pp"
+      ],
+      [
+        9.1,
+        "E3",
+        1.78,
+        0.38,
+        "cello_mf"
+      ],
+      [
+        12.4,
+        "B3",
+        2.1,
+        0.36,
+        "cello_pp"
+      ],
+      [
+        15.9,
+        "C3",
+        2.2,
+        0.43,
+        "cello_pp"
+      ],
+      [
+        18.6,
+        "G3",
+        2.25,
+        0.52,
+        "cello_mf"
+      ],
+      [
+        22.05,
+        "E3",
+        1.65,
+        0.41,
+        "cello_mf"
+      ],
+      [
+        25.35,
+        "G3",
+        2.2,
+        0.32,
+        "cello_pp"
+      ]
+    ],
+    "double_bass": [
+      [
+        12.4,
+        "E2",
+        2.15,
+        0.3,
+        "bass_pp_mid"
+      ],
+      [
+        15.96,
+        "C2",
+        2.1,
+        0.4,
+        "bass_pp_mid"
+      ],
+      [
+        19,
+        "E2",
+        2.3,
+        0.49,
+        "bass_pp_mid"
+      ],
+      [
+        25.5,
+        "E2",
+        2.5,
+        0.29,
+        "bass_pp_mid"
+      ]
+    ],
+    "bassoon": [
+      [
+        15.95,
+        "C3",
+        1.25,
+        0.26,
+        "bassoon_pp"
+      ],
+      [
+        19.25,
+        "E3",
+        1.82,
+        0.32,
+        "bassoon_pp"
+      ],
+      [
+        25.45,
+        "E3",
+        1.52,
+        0.24,
+        "bassoon_pp"
+      ]
+    ],
+    "french_horn": [
+      [
+        18.65,
+        "E4",
+        1.85,
+        0.41,
+        "horn_pp"
+      ],
+      [
+        20.52,
+        "G4",
+        1.48,
+        0.37,
+        "horn_pp"
+      ],
+      [
+        22.2,
+        "B4",
+        1.7,
+        0.25,
+        "horn_pp"
+      ]
+    ],
+    "flute": [
+      [
+        18.98,
+        "C5",
+        1.45,
+        0.36,
+        "flute_pp"
+      ],
+      [
+        22.72,
+        "D5",
+        1.52,
+        0.33,
+        "flute_pp"
+      ],
+      [
+        27.85,
+        "G5",
+        1.15,
+        0.35,
+        "flute_pp"
+      ],
+      [
+        30.13,
+        "E5",
+        1.45,
+        0.3,
+        "flute_pp"
+      ]
+    ]
+  }
+}
