@@ -41,6 +41,8 @@ export interface TimelineClip {
   // Composition anchor for full-frame video/image crops (0 edge, .5 center, 1 opposite edge).
   cropAnchorX?:number;
   cropAnchorY?:number;
+  // Full-frame picture fit: contain preserves every source pixel; cover fills the canvas.
+  fitMode?:'cover'|'contain';
   rotationDeg?:number;
   label?:string;
 }
