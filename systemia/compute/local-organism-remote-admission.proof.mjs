@@ -99,10 +99,31 @@ try {
     capacityFreshMs: 500,
   });
 
-  const connected = await organism.remote_admission.waitForConnected({
-    timeoutMs: 8_000,
-    pollMs: 50,
-  });
+  let connected;
+  try {
+    connected = await organism.remote_admission.waitForConnected({
+      timeoutMs: 8_000,
+      pollMs: 50,
+    });
+  } catch (error) {
+    // CI-only, deliberately coarse diagnostic. Never print node identity,
+    // fingerprint, broker origin, allocator token, or raw error payload.
+    const state = organism.remote_admission.status();
+    const failure = String(state.last_error || '');
+    const reason = /^remote_(?:challenge|registration|enrollment_request)_failed:\\d+$/.test(failure)
+      ? failure : failure.includes('fetch failed') ? 'network_fetch_failed'
+      : failure.includes('attestation') ? 'attestation_failed'
+      : failure ? 'other_remote_admission_failure' : 'no_error_recorded';
+    console.error(JSON.stringify({
+      schema: 'evercraft.local-organism.remote-admission-proof-diagnostic.v1',
+      failed_stage: 'initial_broker_attachment',
+      attempts: state.attempts,
+      running: state.running,
+      connected: state.connected,
+      coarse_reason: reason,
+    }));
+    throw error;
+  }
   assert.equal(connected.connected, true);
   assert.equal(connected.node_id, nodeId);
   assert.equal(connected.device_fingerprint, identity.fingerprint);
