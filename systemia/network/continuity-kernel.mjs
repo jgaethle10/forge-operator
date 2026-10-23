@@ -96,6 +96,11 @@ function validateInput(capacity, workloads) {
       seen.add(id);
     }
 
+    // A malformed required flag must never downgrade critical work to optional.
+    if (workload.required !== undefined && typeof workload.required !== 'boolean') {
+      errors.push(label + '_required_invalid');
+    }
+
     const priority = workload.priority === undefined
       ? PRIORITY.ORDINARY : workload.priority;
     if (!Number.isInteger(priority) ||
