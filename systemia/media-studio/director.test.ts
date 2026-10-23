@@ -81,3 +81,19 @@ test('film plans carry source asset crop anchors to editable shots',()=>{
   assert.ok(plan.scenes.every(scene=>scene.cropAnchorX===.9));
   assert.ok(plan.scenes.every(scene=>scene.cropAnchorY===.25));
 });
+
+
+test('director keeps full UI assets visible instead of applying automatic zoom',()=>{
+  const plan=compileFilmPlan({
+    id:'logo-safety',
+    brief:{prompt:'Present a complete interface without hiding any controls.',format:'social_short',durationSec:12},
+    assets:[{
+      id:'full-ui',path:'./interface.png',kind:'image',rights:'owned',
+      fitMode:'contain',cropAnchorX:.7,
+    }],
+  });
+  assert.ok(plan.scenes.length>0);
+  assert.ok(plan.scenes.every(scene=>scene.fitMode==='contain'));
+  assert.ok(plan.scenes.every(scene=>scene.motion==='hold'));
+  assert.ok(plan.scenes.every(scene=>scene.cropAnchorX===.7));
+});
