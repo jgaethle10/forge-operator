@@ -28,6 +28,15 @@ function directorCrop(width: number, height: number, x: number, y: number) {
 
 export function filterFor(scene: ScenePlan, width: number, height: number) {
   const {x, y} = cropAnchors(scene);
+  const fitMode = scene.fitMode ?? 'cover';
+  if (fitMode !== 'cover' && fitMode !== 'contain') {
+    throw new Error('render_fit_mode_invalid:' + scene.id);
+  }
+  // A contained asset must retain every edge of its source. Unlike cover,
+  // contain deliberately does not perform push-in zooms which could trim UI text.
+  if (fitMode === 'contain') {
+    return `scale=${width}:${height}:force_original_aspect_ratio=decrease,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=30,format=yuv420p`;
+  }
   const cover =
     `scale=${width}:${height}:force_original_aspect_ratio=increase,${directorCrop(width,height,x,y)},setsar=1,fps=30,format=yuv420p`;
 
