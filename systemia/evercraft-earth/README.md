@@ -50,6 +50,20 @@ The sample format downloadable from the UI contains **invented** numbers and exp
 - Link all claims to exact water system, source and sample records. Dates, methods and jurisdiction-specific thresholds must be verified against currently effective rules.
 - Do not infer health risk, MCL violations, trend significance, wildfire perimeters, or predictive outcomes from this MVP.
 
+## Explicit CSV normalization
+
+The pilot now contains a **fail-closed CSV-to-GeoJSON converter**. It does not fetch agency data automatically.
+
+1. Download the official export, data dictionary and source metadata from the issuing agency.
+2. Inspect the headers, units, detection qualifiers, geolocation and dates. Adapt \`mapping.EXAMPLE.json\` using **actual column names**, not the hypothetical ones in the example.
+3. Run \`node systemia/evercraft-earth/normalize-csv.mjs input.csv mapping.json observations.geojson\`.
+4. If **any** row is invalid, the converter writes no file and reports the first 20 failures. Resolve, do not silently drop records.
+5. Import the resulting GeoJSON through the pilot UI and review every observation against the issuing agency. Do not publish unreviewed numeric comparisons.
+
+The converter requires valid WGS84 coordinates, explicit numeric values, exact dates, HTTPS provenance, stable site IDs, and an explicit allowlist when a qualifier column exists. It refuses blank and non-numeric PFAS measurements rather than treating "ND" as zero. It fails on duplicate site/metric/date records and does not perform unit conversions or safety classifications. Its output includes source SHA-256, parser version, and original CSV row number as lineage metadata. A successful conversion is **not scientific or editorial verification**.
+
+Local tests: \`node --test systemia/evercraft-earth/*.test.mjs\`.
+
 ## Official data entry points verified 2026-10-23
 
 - Washington DOH PFAS dashboard/download: https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/pfas/dashboard
