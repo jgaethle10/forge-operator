@@ -30,5 +30,7 @@ jobs:
         run: python3 -m unittest discover -v -s scripts/nextgen -p 'test_*.py'
       - name: Prove scoped MCP write and exec approvals default deny
         run: node systemia/remote-operator/mcp-gateway.test.mjs
+      - name: Prove transient poll recovery against actual NodeSeed and broker
+        run: node systemia/network/outbound-node-agent-recovery.proof.mjs
       - name: Preserve existing actual loopback broker remote operator proof
         run: node systemia/network/remote-operator.proof.mjs
