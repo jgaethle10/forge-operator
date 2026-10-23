@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import {planFloor} from '../../scripts/visual-floor/visual-floor.mjs';
 import {renderCommercialPoster, renderCommercialMotion} from './commercial-renderer.mjs';
 import {auditGraphicsCapabilities,requireCompleteGraphicsInventory} from './production-capability-audit.mjs';
 
@@ -146,12 +147,26 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
   });
   assert(Math.abs(framesAllocated / fps - plan.motion.targetDurationSec) <= 1/fps, 'duration_frame_mismatch');
 
+  // This is a mandatory design work order, not an aesthetic approval or rendered movie.
+  // A deliverable requires independent decoded-media proof + human/owner signoff later.
+  const visualFloorWorkOrder=planFloor({
+    assetId:campaign.id,
+    profile:'product_commercial',
+    truth:campaign.truthState,
+    target:{width:1080,height:1920,fps,durationSec:plan.motion.targetDurationSec},
+    beats:shots.map(shot=>({
+      id:shot.id,intent:shot.intent,visualProof:shot.screenText||shot.beat
+    }))
+  });
+
   const jobpack = {
     schema:'evercraft.graphics-command.production-jobpack.v1',
     campaignId:campaign.id, campaignDigest:campaign.digest, planDigest:plan.digest,
     fps, frameCount:framesAllocated, resolution:{width:1080,height:1920},
     sourceRefs:campaign.sourceRefs, truthState:campaign.truthState,
     shots,
+    visualFloor:{status:'awaiting_real_render_and_independent_review',workOrder:visualFloorWorkOrder,
+      publicationAuthority:false,customerApproved:false},
     capabilityRegistry:{auditDigest:capabilityAudit.digest,sourceTreeDigest:capabilityAudit.sourceTreeDigest,
       featureCount:capabilityAudit.featureCount,sourceModuleCount:capabilityAudit.sourceModuleCount,
       productionProfiles:capabilityAudit.profiles.map(p=>({id:p.id,name:p.name,status:p.status,requiredFeatures:p.requirements,evidence:p.evidence,executionVerified:false})),
@@ -172,7 +187,7 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
       evercraftClip:{state:'handoff_only',requestedOutput:'authorized_media_intake_and_destination_receipts'}
     },
     delivery:{customerReady:false,publishReady:false,publicationAuthority:false,
-      missing:['rendered_video','voice_music_sfx_master','frame_and_visual_review','master_qc','deployed_visual_desk_receipt','clip_media_intake']},
+      missing:['rendered_video','voice_music_sfx_master','frame_and_visual_review','master_qc','deployed_visual_desk_receipt','clip_media_intake','visual_floor_independent_review']},
   };
   const core = {
     schema:'evercraft.graphics-command.production-mesh.v1',
@@ -184,6 +199,7 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
     capabilityAuditDigest:capabilityAudit.digest,sourceModuleCount:capabilityAudit.sourceModuleCount,
     toonCapabilitiesCount:capabilityAudit.toonAndCharacterCapabilities.length,
     jobpackSha256:hashJson(jobpack),
+    visualFloorWorkOrderDigest:visualFloorWorkOrder.digest,
     status:'preproduction_verified_downstream_blocked',
     publicationAuthority:false, customerReady:false,
     proofBoundary:'Local assets and creative planning verified. No actual World Engine frame, voiced soundtrack, MP4 master, published page or customer delivery attested.'
