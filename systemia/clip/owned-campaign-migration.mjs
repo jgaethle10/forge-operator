@@ -153,14 +153,14 @@ export function stageOwnedClipSnapshot({snapshot,stateDir}){
       const existing=JSON.parse(fs.readFileSync(file,'utf8'));
       const read=inspectOwnedClipSnapshot(existing);
       if(read.sha256!==inspected.sha256)fail('immutable_snapshot_conflict');
-      return {status:'ALREADY_STAGED',path:file,...read};
+      return {...read,status:'ALREADY_STAGED',path:file};
     }
     const tmp=path.join(resolved,'.clip-campaign-migration.'+process.pid+'.tmp');
     try{
       fs.writeFileSync(tmp,JSON.stringify(snapshot,null,2)+'\n',{mode:0o600,flag:'wx'});
       fs.renameSync(tmp,file);
     }finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp)}
-    return {status:'STAGED_PRIVATE_NOT_PUBLISHED',path:file,...inspected};
+    return {...inspected,status:'STAGED_PRIVATE_NOT_PUBLISHED',path:file};
   }finally{fs.closeSync(fd);fs.unlinkSync(lock)}
 }
 export function loadOwnedClipSnapshot(stateDir){
