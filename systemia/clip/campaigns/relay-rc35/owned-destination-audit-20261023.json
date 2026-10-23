@@ -1,0 +1,346 @@
+{
+  "schema": "evercraft.clip.destinations.audit.v1",
+  "observed_on": "2026-10-23",
+  "campaign_key": "evercraft_relay_rc33_launch_20261023_1405",
+  "project": "Evercraft Relay RC35 first commercial",
+  "source_provenance": [
+    "Owner-provided October 23 screenshots of Facebook 'Your profiles & Pages' selector (three images)",
+    "Read-only legacy Evercraft Clip SocialPage query 2026-10-23",
+    "Read-only Clip ContentPackage campaign query 2026-10-23"
+  ],
+  "scope": "Facebook business Pages visible in screenshots union 24 legacy SocialPage registry entries, not an assertion of a complete Meta account inventory",
+  "counts": {
+    "screenshots_distinct_facebook_pages": 20,
+    "legacy_registered_facebook_pages": 24,
+    "facebook_pages_in_union": 26,
+    "missing_from_legacy_clip_registry": 2,
+    "facebook_launch_drafts": 8,
+    "instagram_launch_drafts": 1,
+    "manual_linkedin_founder_post_reported": true,
+    "excluded_facebook_pages": 3
+  },
+  "boundaries": {
+    "no_page_authority_inferred_from_owner_picker": true,
+    "no_fb_ig_oauth_account_parity_assumed": true,
+    "no_provider_publication_inferred_from_draft": true,
+    "duplicate_detection_required": true,
+    "rights_clearance_pending": true,
+    "no_new_base44_authority": true,
+    "editorial_routing_does_not_equal_publish_authorization": true
+  },
+  "hard_exclusion_page_ids": [
+    "116675248108887",
+    "924929507380565",
+    "990957940766644"
+  ],
+  "instagram": [
+    {
+      "handle": "@evercraft.global",
+      "legacy_recorded_id": "27920442640946009",
+      "launch_video_draft_present": true,
+      "verified_published": false
+    }
+  ],
+  "linkedin": {
+    "profile": "Founder LinkedIn",
+    "state": "user_reported_manually_posted",
+    "provider_permalink_unverified": true,
+    "do_not_repost": true
+  },
+  "facebook_pages": [
+    {
+      "platform": "facebook",
+      "name": "ChronoForge",
+      "provider_page_id": "1017086544817578",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": false,
+      "editorial_routing": "editorial_review",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Edge of the Play",
+      "provider_page_id": "513781131811732",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft",
+      "provider_page_id": "1253915241138545",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft Clip",
+      "provider_page_id": "551716401351308",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft Learning Network",
+      "provider_page_id": "356956657493951",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "editorial_review",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft Media & Technologies",
+      "provider_page_id": "1047855798412865",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft Newsroom",
+      "provider_page_id": "108624442073018",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft Property Services",
+      "provider_page_id": "990957940766644",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "hard_exclusion",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Evercraft Transparency Atlas",
+      "provider_page_id": "1302468962947782",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "editorial_review",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Files Companion",
+      "provider_page_id": "1055611517629906",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": false,
+      "editorial_routing": "editorial_review",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Find My Part",
+      "provider_page_id": "322768160925403",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Frame by Frame",
+      "provider_page_id": "517990454723203",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Grizzly Landscaping",
+      "provider_page_id": "100834302391593",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Havenly Cleaning",
+      "provider_page_id": "924929507380565",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "hard_exclusion",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "HolidayHub",
+      "provider_page_id": "1028079337051752",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": false,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Little Red Writing Press",
+      "provider_page_id": null,
+      "legacy_clip_registry": false,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Powder & Pistons",
+      "provider_page_id": "255854147615009",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "R&B Chicken & Soul",
+      "provider_page_id": "116675248108887",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": false,
+      "editorial_routing": "hard_exclusion",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Replay Fuel",
+      "provider_page_id": "426647487192435",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Space Dudz",
+      "provider_page_id": "150998551441188",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Systemia",
+      "provider_page_id": "903924222808906",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": false,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Systemia Radar",
+      "provider_page_id": "955525380981999",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Systemia University",
+      "provider_page_id": "504849522706713",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "relay_direct",
+      "launch_video_draft_present": true,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Trackside",
+      "provider_page_id": "1340694065787548",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Yakima Life: Tips, Tricks, Trades & Connections",
+      "provider_page_id": null,
+      "legacy_clip_registry": false,
+      "observed_in_owner_page_picker": true,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    },
+    {
+      "platform": "facebook",
+      "name": "Yakima Tax Pros",
+      "provider_page_id": "975828538947213",
+      "legacy_clip_registry": true,
+      "observed_in_owner_page_picker": false,
+      "editorial_routing": "unrelated_niche_hold",
+      "launch_video_draft_present": false,
+      "publish_permission_verification": "pending",
+      "publication_receipt": "absent"
+    }
+  ],
+  "next_actions": [
+    "Reconcile Meta page IDs and authorized management tasks with provider identity on owned infrastructure",
+    "Build secure owned CRM/source-of-truth for pages and publish queue; migrate all current legacy Clip drafts and receipts with counts/hashes and delta checks",
+    "Keep RC35 Page releases held until stock/download provenance, direct page identity and per-destination no-duplicate checks succeed",
+    "Publish direct Evercraft Page drafts first, obtain provider IDs/permalinks and first-comment receipt",
+    "Broader brand-family promotion requires a page-specific editorial reason; do not flood unrelated niche audiences",
+    "Do not send to three excluded brands"
+  ]
+}
