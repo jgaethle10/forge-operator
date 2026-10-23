@@ -127,7 +127,24 @@ function visualFilter(binding:InputBinding,width:number,height:number,label:stri
     const opacity=Math.max(0,Math.min(1,clip.opacity??1));
     return `[${binding.inputIndex}:v]scale=iw*${scale}:ih*${scale},format=rgba,colorchannelmixer=aa=${opacity},setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
   }
-  return `[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1,setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
+  const fitMode=clip.fitMode??'cover';
+  if(fitMode!=='cover'&&fitMode!=='contain'){
+    throw new Error('timeline_export_fit_mode_invalid:'+clip.id);
+  }
+  // Contain protects the full UI/logo/image; the unfilled canvas is
+  // intentionally matte-black rather than cutting off meaningful details.
+  if(fitMode==='contain'){
+    return `[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=decrease,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
+  }
+  const anchorX=clip.cropAnchorX??.5;
+  const anchorY=clip.cropAnchorY??.5;
+  if(!Number.isFinite(anchorX)||anchorX<0||anchorX>1){
+    throw new Error('timeline_export_crop_anchor_x_invalid:'+clip.id);
+  }
+  if(!Number.isFinite(anchorY)||anchorY<0||anchorY>1){
+    throw new Error('timeline_export_crop_anchor_y_invalid:'+clip.id);
+  }
+  return `[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}:(iw-${width})*${anchorX}:(ih-${height})*${anchorY},setsar=1,setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
 }
 
 function audioFilter(binding:InputBinding,label:string){

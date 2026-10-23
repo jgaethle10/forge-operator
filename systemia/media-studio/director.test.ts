@@ -66,3 +66,34 @@ test('restricted assets are rejected', () => {
     }),
   );
 });
+
+
+test('film plans carry source asset crop anchors to editable shots',()=>{
+  const plan=compileFilmPlan({
+    id:'framing-test',
+    brief:{prompt:'Produce an off-center subject commercial.',format:'social_short',durationSec:12},
+    assets:[{
+      id:'off-center-hero',path:'./off-center.png',kind:'image',
+      rights:'owned',cropAnchorX:.9,cropAnchorY:.25,
+    }],
+  });
+  assert.ok(plan.scenes.length>0);
+  assert.ok(plan.scenes.every(scene=>scene.cropAnchorX===.9));
+  assert.ok(plan.scenes.every(scene=>scene.cropAnchorY===.25));
+});
+
+
+test('director keeps full UI assets visible instead of applying automatic zoom',()=>{
+  const plan=compileFilmPlan({
+    id:'logo-safety',
+    brief:{prompt:'Present a complete interface without hiding any controls.',format:'social_short',durationSec:12},
+    assets:[{
+      id:'full-ui',path:'./interface.png',kind:'image',rights:'owned',
+      fitMode:'contain',cropAnchorX:.7,
+    }],
+  });
+  assert.ok(plan.scenes.length>0);
+  assert.ok(plan.scenes.every(scene=>scene.fitMode==='contain'));
+  assert.ok(plan.scenes.every(scene=>scene.motion==='hold'));
+  assert.ok(plan.scenes.every(scene=>scene.cropAnchorX===.7));
+});

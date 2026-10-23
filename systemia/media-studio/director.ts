@@ -197,7 +197,11 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
         asset.kind === 'video'
           ? Math.round(Math.min(timesUsed * duration, availableTrim) * 10) / 10
           : undefined,
-      motion: asset.kind === 'image' ? 'push_in' : 'cover',
+      // A full-frame contain composition must not zoom away important UI or logo edges.
+      motion: asset.fitMode === 'contain' ? 'hold' : asset.kind === 'image' ? 'push_in' : 'cover',
+      fitMode: asset.fitMode,
+      cropAnchorX: asset.cropAnchorX,
+      cropAnchorY: asset.cropAnchorY,
       transition: index === 0 ? 'cut' : 'dissolve',
       intent: BEAT_INTENT[beat],
       screenText: beat === 'cta' ? project.brief.cta : undefined,

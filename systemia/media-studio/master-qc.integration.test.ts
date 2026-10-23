@@ -79,3 +79,48 @@ test('digest mismatch fails before quality measurements can launder the wrong fi
     /master_qc_digest_mismatch/
   );
 });
+
+
+test('rejects a master whose shape and frame rate contradict the timeline',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-master-qc-geometry-'));
+  const file=path.join(dir,'incorrect-canvas.mp4');
+  ffmpeg([
+    '-y','-v','error',
+    '-f','lavfi','-i','testsrc2=size=1280x720:rate=30',
+    '-t','1',
+    '-c:v','libx264','-pix_fmt','yuv420p','-an',file,
+  ]);
+  const receipt=assessStudioMaster({
+    filePath:file,
+    expectedAspectRatio:'9:16',
+    expectedFps:60,
+    policy:{requireAudio:false,minShortEdge:720},
+  });
+  assert.equal(receipt.status,'rejected');
+  assert.ok(receipt.reasons.includes('output_aspect_ratio_mismatch'));
+  assert.ok(receipt.reasons.includes('output_fps_mismatch'));
+  assert.ok((receipt.measurements.geometry?.aspectErrorPercent??0)>100);
+  assert.ok((receipt.measurements.geometry?.frameRateErrorFps??0)>29);
+});
+
+test('rejects non-square pixels that would stretch an otherwise correctly sized master',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-master-qc-anamorphic-'));
+  const file=path.join(dir,'stretched.mp4');
+  ffmpeg([
+    '-y','-v','error',
+    '-f','lavfi','-i','testsrc2=size=1280x720:rate=30',
+    '-t','1',
+    '-vf','setsar=2/1',
+    '-c:v','libx264','-pix_fmt','yuv420p','-an',file,
+  ]);
+  const receipt=assessStudioMaster({
+    filePath:file,
+    expectedAspectRatio:'16:9',
+    expectedFps:30,
+    policy:{requireAudio:false,minShortEdge:720},
+  });
+  assert.equal(receipt.status,'rejected');
+  assert.ok(receipt.reasons.includes('non_square_pixel_aspect_ratio'));
+  assert.ok(receipt.reasons.includes('output_aspect_ratio_mismatch'));
+  assert.equal(receipt.measurements.geometry?.sampleAspectRatio,'2:1');
+});

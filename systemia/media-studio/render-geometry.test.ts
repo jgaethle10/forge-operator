@@ -1,0 +1,190 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import test from 'node:test';
+import { filterFor } from './render.js';
+import type { ScenePlan } from './types.js';
+
+const pushIn:ScenePlan={
+  id:'photo-push',beat:'hook',assetId:'square-photo',
+  sourcePath:'./square.png',mediaKind:'image',
+  durationSec:.5,motion:'push_in',transition:'cut',
+  intent:'cinematic push-in on a character portrait',
+};
+
+function ffmpeg(args:string[]){
+  const result=spawnSync('ffmpeg',args,{encoding:'utf8'});
+  if(result.error) throw result.error;
+  if(result.status!==0) throw new Error(result.stderr||'ffmpeg failed');
+}
+
+test('still push-ins normalize aspect before zoompan in every delivery shape',()=>{
+  for(const [width,height] of [[180,320],[320,180],[240,240]]){
+    const filter=filterFor(pushIn,width,height);
+    assert.ok(
+      filter.indexOf('force_original_aspect_ratio=increase')<filter.indexOf('zoompan='),
+      'aspect-preserving scale must happen before zoompan'
+    );
+    assert.match(filter,new RegExp('crop='+width*2+':'+height*2));
+    assert.match(filter,/setsar=1,zoompan=/);
+    assert.ok(filter.includes('s='+width+'x'+height));
+  }
+});
+
+test('a square source renders to portrait with exact pixels and FPS',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-push-in-shape-'));
+  try{
+    const image=path.join(dir,'square.png');
+    const output=path.join(dir,'portrait.mp4');
+    ffmpeg([
+      '-y','-v','error','-f','lavfi',
+      '-i','testsrc2=size=640x640:rate=1',
+      '-frames:v','1',image,
+    ]);
+    ffmpeg([
+      '-y','-v','error','-loop','1','-i',image,
+      '-vf',filterFor(pushIn,180,320),
+      '-frames:v','15','-c:v','libx264','-pix_fmt','yuv420p',
+      output,
+    ]);
+    const probe=spawnSync('ffprobe',[
+      '-v','error','-select_streams','v:0',
+      '-show_entries','stream=width,height,avg_frame_rate',
+      '-of','json',output,
+    ],{encoding:'utf8'});
+    assert.equal(probe.status,0,probe.stderr);
+    const video=JSON.parse(probe.stdout).streams[0];
+    assert.equal(video.width,180);
+    assert.equal(video.height,320);
+    assert.equal(video.avg_frame_rate,'30/1');
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+
+test('push-in preserves square subject proportions within a portrait canvas',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-push-in-subject-'));
+  try{
+    const source=path.join(dir,'subject.png');
+    const output=path.join(dir,'render.mp4');
+    ffmpeg([
+      '-y','-v','error','-f','lavfi',
+      '-i','color=c=black:s=640x640:r=1,drawbox=x=270:y=270:w=100:h=100:color=white:t=fill',
+      '-frames:v','1',source,
+    ]);
+    ffmpeg([
+      '-y','-v','error','-loop','1','-i',source,
+      '-vf',filterFor(pushIn,180,320),
+      '-frames:v','15','-c:v','libx264','-pix_fmt','yuv420p',
+      output,
+    ]);
+    const pixels=spawnSync('ffmpeg',[
+      '-v','error','-i',output,'-frames:v','1','-f','rawvideo',
+      '-pix_fmt','gray','-',
+    ],{encoding:'buffer',maxBuffer:1024*1024});
+    assert.equal(pixels.status,0,String(pixels.stderr||'ffmpeg_extract_failed'));
+    const buf=pixels.stdout as Buffer;
+    assert.equal(buf.length,180*320);
+    let minX=180,maxX=-1,minY=320,maxY=-1;
+    for(let y=0;y<320;y+=1){
+      for(let x=0;x<180;x+=1){
+        if(buf[y*180+x]<=200) continue;
+        minX=Math.min(minX,x);maxX=Math.max(maxX,x);
+        minY=Math.min(minY,y);maxY=Math.max(maxY,y);
+      }
+    }
+    assert.ok(maxX>minX && maxY>minY,'the subject should remain visible');
+    const subjectAspect=(maxX-minX+1)/(maxY-minY+1);
+    assert.ok(Math.abs(subjectAspect-1)<.08,
+      'a square subject cannot become an ellipse; got ratio '+subjectAspect);
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+
+test('director crop anchors keep an off-center subject in frame',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-director-framing-'));
+  try{
+    const source=path.join(dir,'off-center.png');
+    ffmpeg([
+      '-y','-v','error','-f','lavfi',
+      '-i','color=c=black:s=640x640:r=1,drawbox=x=465:y=275:w=80:h=80:color=white:t=fill',
+      '-frames:v','1',source,
+    ]);
+    const counts:number[]=[];
+    for(const anchorX of [0,1]){
+      const output=path.join(dir,'anchor-'+anchorX+'.mp4');
+      ffmpeg([
+        '-y','-v','error','-loop','1','-i',source,
+        '-vf',filterFor({...pushIn,cropAnchorX:anchorX},180,320),
+        '-frames:v','15','-c:v','libx264','-pix_fmt','yuv420p',output,
+      ]);
+      const result=spawnSync('ffmpeg',[
+        '-v','error','-i',output,'-frames:v','1',
+        '-f','rawvideo','-pix_fmt','gray','-',
+      ],{encoding:'buffer',maxBuffer:1024*1024});
+      assert.equal(result.status,0,String(result.stderr||'frame_extraction_failed'));
+      const pixels=result.stdout as Buffer;
+      assert.equal(pixels.length,180*320);
+      let visible=0;
+      for(const pixel of pixels){if(pixel>200)visible+=1;}
+      counts.push(visible);
+    }
+    assert.equal(counts[0],0,'left alignment should crop the right-edge subject');
+    assert.ok(counts[1]>1000,'right alignment should retain the right-edge subject');
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+test('out-of-range director crop anchors fail rather than silently moving the subject',()=>{
+  assert.throws(()=>filterFor({...pushIn,cropAnchorX:1.2},180,320),
+    /render_crop_anchor_x_invalid/);
+  assert.throws(()=>filterFor({...pushIn,cropAnchorY:-.1},180,320),
+    /render_crop_anchor_y_invalid/);
+  assert.throws(()=>filterFor({...pushIn,cropAnchorX:NaN},180,320),
+    /render_crop_anchor_x_invalid/);
+});
+
+
+test('contain composition preserves source edges and adds deliberate letterboxing',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-contain-image-'));
+  try{
+    const source=path.join(dir,'full-panel.png');
+    const output=path.join(dir,'portrait.mp4');
+    ffmpeg([
+      '-y','-v','error','-f','lavfi','-i','color=c=white:s=640x640:r=1',
+      '-frames:v','1',source,
+    ]);
+    const filter=filterFor({...pushIn,fitMode:'contain'},180,320);
+    assert.match(filter,/force_original_aspect_ratio=decrease,pad=180:320/);
+    assert.doesNotMatch(filter,/zoompan=/);
+    ffmpeg([
+      '-y','-v','error','-loop','1','-i',source,
+      '-vf',filter,'-frames:v','15','-c:v','libx264','-pix_fmt','yuv420p',output,
+    ]);
+    const pixels=spawnSync('ffmpeg',[
+      '-v','error','-i',output,'-frames:v','1',
+      '-f','rawvideo','-pix_fmt','gray','-',
+    ],{encoding:'buffer',maxBuffer:1024*1024});
+    assert.equal(pixels.status,0,String(pixels.stderr||'extraction_failed'));
+    const buf=pixels.stdout as Buffer;
+    assert.equal(buf.length,180*320);
+    assert.ok(buf[5*180+90]<40,'top matte remains dark');
+    assert.ok(buf[160*180+90]>230,'source retains visible center');
+    assert.ok(buf[315*180+90]<40,'bottom matte remains dark');
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+test('unknown legacy fit mode is never interpreted as aspect-distorting stretch',()=>{
+  assert.throws(
+    ()=>filterFor({...pushIn,fitMode:'stretch' as 'cover'},180,320),
+    /render_fit_mode_invalid/,
+  );
+});

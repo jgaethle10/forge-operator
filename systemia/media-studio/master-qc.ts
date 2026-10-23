@@ -34,6 +34,15 @@ export interface StudioMasterQcReceipt {
     blackRatio:number;
     freezeRatio:number;
     silenceRatio:number;
+    geometry?:{
+      encodedAspectRatio:number;
+      displayAspectRatio:number;
+      sampleAspectRatio?:string;
+      expectedAspectRatio?:'9:16'|'16:9'|'1:1';
+      aspectErrorPercent?:number;
+      expectedFps?:number;
+      frameRateErrorFps?:number;
+    };
   };
   policy:Required<StudioMasterQcPolicy>;
   reasons:string[];
@@ -54,6 +63,8 @@ type Probe={
     width?:number;
     height?:number;
     avg_frame_rate?:string;
+    sample_aspect_ratio?:string;
+    display_aspect_ratio?:string;
   }>;
   format?:{duration?:string};
 };
@@ -91,6 +102,24 @@ function parseRate(value?:string){
   return a/b;
 }
 
+function parseAspectFraction(value?:string){
+  const match=/^(\d+):(\d+)$/.exec(value??'');
+  if(!match) return undefined;
+  const numerator=Number(match[1]);
+  const denominator=Number(match[2]);
+  if(!Number.isFinite(numerator)||!Number.isFinite(denominator)||numerator<=0||denominator<=0){
+    return undefined;
+  }
+  return numerator/denominator;
+}
+
+function expectedAspectFraction(value?:'9:16'|'16:9'|'1:1'){
+  if(value==='9:16') return 9/16;
+  if(value==='16:9') return 16/9;
+  if(value==='1:1') return 1;
+  return undefined;
+}
+
 function sumMatches(text:string,pattern:RegExp){
   let total=0;
   for(const match of text.matchAll(pattern)){
@@ -121,6 +150,8 @@ export function assessStudioMaster(input:{
   filePath:string;
   expectedSha256?:string;
   policy?:StudioMasterQcPolicy;
+  expectedAspectRatio?:'9:16'|'16:9'|'1:1';
+  expectedFps?:number;
 }):StudioMasterQcReceipt{
   if(!fs.existsSync(input.filePath)) throw new Error('master_qc_file_missing');
   const sha256=hashFile(input.filePath);
@@ -151,6 +182,16 @@ export function assessStudioMaster(input:{
   const fps=parseRate(video?.avg_frame_rate);
   const videoCodec=String(video?.codec_name??'');
   const audioCodec=audio?.codec_name?String(audio.codec_name):undefined;
+  const encodedAspectRatio=width>0&&height>0?width/height:0;
+  const sampleAspectRatio=parseAspectFraction(video?.sample_aspect_ratio);
+  const displayAspectRatio=encodedAspectRatio*(sampleAspectRatio??1);
+  const expectedAspect=expectedAspectFraction(input.expectedAspectRatio);
+  const aspectErrorPercent=expectedAspect&&displayAspectRatio>0
+    ?Number((Math.abs(displayAspectRatio-expectedAspect)/expectedAspect*100).toFixed(3))
+    :undefined;
+  const frameRateErrorFps=Number.isFinite(input.expectedFps)&&Number(input.expectedFps)>0
+    ?Number(Math.abs(fps-Number(input.expectedFps)).toFixed(3))
+    :undefined;
 
   const blackLog=video?run('ffmpeg',[
     '-v','info',
@@ -192,6 +233,15 @@ export function assessStudioMaster(input:{
     blackRatio:ratio(blackDurationSec,durationSec),
     freezeRatio:ratio(freezeDurationSec,durationSec),
     silenceRatio:ratio(silenceDurationSec,durationSec),
+    geometry:{
+      encodedAspectRatio:Number(encodedAspectRatio.toFixed(6)),
+      displayAspectRatio:Number(displayAspectRatio.toFixed(6)),
+      sampleAspectRatio:video?.sample_aspect_ratio,
+      expectedAspectRatio:input.expectedAspectRatio,
+      aspectErrorPercent,
+      expectedFps:input.expectedFps,
+      frameRateErrorFps,
+    },
   };
 
   const reasons:string[]=[];
@@ -205,6 +255,21 @@ export function assessStudioMaster(input:{
   }
   if(Math.min(width,height)<policy.minShortEdge) reasons.push('short_edge_below_min');
   if(fps<policy.minFps) reasons.push('fps_below_min');
+  // Modern owned social and film exports require square pixels. A non-square SAR
+  // changes displayed geometry even when encoded width/height appear correct.
+  if(video&&sampleAspectRatio!==undefined&&Math.abs(sampleAspectRatio-1)>.001){
+    reasons.push('non_square_pixel_aspect_ratio');
+  }
+  if(input.expectedAspectRatio&&aspectErrorPercent===undefined){
+    reasons.push('expected_aspect_ratio_unverifiable');
+  }else if(aspectErrorPercent!==undefined&&aspectErrorPercent>1.2){
+    reasons.push('output_aspect_ratio_mismatch');
+  }
+  if(input.expectedFps!==undefined&&(!Number.isFinite(input.expectedFps)||input.expectedFps<=0)){
+    reasons.push('expected_fps_invalid');
+  }else if(frameRateErrorFps!==undefined&&frameRateErrorFps>.15){
+    reasons.push('output_fps_mismatch');
+  }
   if(policy.expectedDurationSec>0&&Math.abs(durationSec-policy.expectedDurationSec)>policy.durationToleranceSec){
     reasons.push('duration_out_of_tolerance');
   }

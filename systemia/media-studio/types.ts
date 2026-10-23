@@ -34,6 +34,12 @@ export interface SourceAsset {
   tags?: string[];
   notes?: string;
   entityRefs?: string[];
+  // Optional default framing for this media asset. Directors may adjust
+  // these anchors per ScenePlan after compile.
+  cropAnchorX?: number;
+  cropAnchorY?: number;
+  // 'contain' preserves the full UI/logo/subject within the output canvas.
+  fitMode?: 'cover' | 'contain';
 }
 
 export interface DialogueLine {
@@ -92,6 +98,11 @@ export interface ScenePlan {
   durationSec: number;
   trimStartSec?: number;
   motion: 'hold' | 'push_in' | 'cover';
+  // Crop anchors on each axis: 0 = left/top, 0.5 = center, 1 = right/bottom.
+  // Optional; center remains the backward-compatible default.
+  cropAnchorX?: number;
+  cropAnchorY?: number;
+  fitMode?: 'cover' | 'contain';
   transition: 'cut' | 'dissolve';
   intent: string;
   screenText?: string;

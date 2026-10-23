@@ -127,3 +127,46 @@ test('respects a bounded custom audio master policy',()=>{
   assert.match(filter,/sidechaincompress=threshold=0\.08:ratio=6:attack=30:release=420/);
   assert.match(filter,/loudnorm=I=-16:TP=-1\.5:LRA=9:linear=true/);
 });
+
+
+test('studio timeline exporter keeps director-chosen crop anchors in the picture graph',()=>{
+  const project=readyProject();
+  const picture=project.tracks.find(track=>track.kind==='video')!;
+  picture.clips[0].cropAnchorX=.9;
+  picture.clips[0].cropAnchorY=.2;
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/director-framing.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  assert.match(filter,/crop=1920:1080:\(iw-1920\)\*0\.9:\(ih-1080\)\*0\.2/);
+  assert.match(filter,/setsar=1/);
+});
+
+test('studio timeline rejects invalid crop anchors before exporting',()=>{
+  const project=readyProject();
+  const picture=project.tracks.find(track=>track.kind==='video')!;
+  picture.clips[0].cropAnchorX=-.4;
+  assert.throws(
+    ()=>buildTimelineExportPlan({project,outputPath:'/tmp/reject-framing.mp4'}),
+    /timeline_export_crop_anchor_x_invalid/,
+  );
+});
+
+
+test('contain fit keeps full source content when exporting mismatched aspect ratios',()=>{
+  const project=readyProject();
+  const picture=project.tracks.find(track=>track.kind==='video')!;
+  picture.clips[0].fitMode='contain';
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/full-interface.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  assert.match(filter,/force_original_aspect_ratio=decrease,pad=1920:1080:\(ow-iw\)\/2:\(oh-ih\)\/2:color=black/);
+  assert.doesNotMatch(filter,/force_original_aspect_ratio=increase,crop=1920:1080/);
+});
+
+test('unknown fit mode cannot silently enter final Studio render',()=>{
+  const project=readyProject();
+  const picture=project.tracks.find(track=>track.kind==='video')!;
+  picture.clips[0].fitMode='stretch' as 'cover';
+  assert.throws(
+    ()=>buildTimelineExportPlan({project,outputPath:'/tmp/reject-stretch.mp4'}),
+    /timeline_export_fit_mode_invalid/,
+  );
+});
