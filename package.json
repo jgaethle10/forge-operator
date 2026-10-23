@@ -7,6 +7,8 @@
     "dev": "tsx server.ts",
     "build": "npm run journal:build && vite build",
     "preview": "vite preview",
+    "nextgen:doctor": "node systemia/compute/nextgen-remote-doctor.mjs",
+    "nextgen:laser:extract": "python3 scripts/nextgen/install-laser-foundry.py",
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
