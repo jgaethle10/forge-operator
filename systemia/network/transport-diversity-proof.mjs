@@ -98,6 +98,23 @@ try {
   const spoofed=[null,{...incomplete[0],id:'too_small',latency_class:'realtime',max_payload_bytes:4}];
   assert.equal(selectTransport({transports:spoofed,payload_bytes:4096}).status,'NO_ROUTE');
   assert.equal(selectTransport({transports:catalog,payload_bytes:0}).status,'ROUTE_READY');
+  // String purposes and forged negative power budgets cannot win routing.
+  const validShape={id:'valid',state:'verified',purposes:['data'],
+    offline_usable:true,bidirectional:true,latency_class:'realtime',
+    power_cost:4,max_payload_bytes:10000,requires_external_infrastructure:false};
+  const invalidPurposes={...validShape,id:'purposes-string',purposes:'data'};
+  const negativePower={...validShape,id:'negative-power',power_cost:-1000000};
+  const forgedBidirectionality={...validShape,id:'string-bool',bidirectional:'true'};
+  const unknownInfra={...validShape,id:'missing-infra',requires_external_infrastructure:undefined};
+  const dishonestScore=selectTransport({
+    transports:[invalidPurposes,negativePower,forgedBidirectionality,unknownInfra,validShape],
+    purpose:'data',payload_bytes:500,
+  });
+  assert.equal(dishonestScore.status,'ROUTE_READY');
+  assert.equal(dishonestScore.selected.id,'valid');
+  assert.equal(dishonestScore.candidates.length,1);
+  assert.equal(selectTransport({transports:[negativePower],purpose:'data'}).status,'NO_ROUTE');
+  assert.equal(selectTransport({transports:catalog,purpose:''}).status,'INVALID_REQUEST');
 
   // Move the exact same authenticated envelope through a filesystem/removable-media lane.
   const key = 'transport-proof-key';
