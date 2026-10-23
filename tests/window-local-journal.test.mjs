@@ -6,7 +6,7 @@ import path from 'node:path';
 import {generateKeyPairSync} from 'node:crypto';
 import {createWorld} from '../public/the-window/world.mjs';
 import {hash} from '../systemia/society/window-agent-boundary.mjs';
-import {initializeLocalSociety,readLocalSociety,readLocalObserver,runLocalSocietyTurn} from '../systemia/society/window-local-journal.mjs';
+import {initializeLocalSociety,readLocalSociety,readLocalObserver,runLocalSocietyTurn,advanceLocalSocietyClock} from '../systemia/society/window-local-journal.mjs';
 
 const now=Date.parse('2026-10-23T12:00:00Z');
 const provider='approved_test_adapter',model='synthetic_model_v1';
@@ -39,9 +39,9 @@ function client(opts={}){
   return {providerClient,budgetGate,adapterSigningKey:privateKey.export({type:'pkcs8',format:'pem'}),
     trustedAdapterPublicKey:publicKey.export({type:'spki',format:'pem'}),calls};
 }
-function turn(dir,h,agentId='r1'){
+function turn(dir,h,agentId='r1',at=now){
   const {calls,...rest}=h;
-  return runLocalSocietyTurn({dir,agentId,provider,model,now,...rest});
+  return runLocalSocietyTurn({dir,agentId,provider,model,now:at,...rest});
 }
 test('sandbox initializes explicitly, cannot reset existing data and remains held',async t=>{
   const {dir,world}=await sandbox(t);
@@ -149,4 +149,43 @@ test('private memories and provider request IDs never appear in observer project
   assert.ok(!projection.includes('private debugging secret'));
   assert.ok(!projection.includes('request_private_1234567'));
   assert.ok(projection.includes('adapter_attested_unverified_model'));
+});
+
+test('passive world time advances without scripting an agent choice and enables future real choices',async t=>{
+  const {dir}=await sandbox(t);
+  await turn(dir,client({requestId:'request_tick_one_00000001',action:{type:'wait'}}));
+  const before=await readLocalSociety({dir});
+  const priorEvents=before.world.events.map(e=>e.description);
+  const priorPositions=before.world.actors.map(a=>a.zone);
+  const priorActions=before.world.actors.map(a=>a.action);
+  await assert.rejects(()=>advanceLocalSocietyClock({dir,now:now+10_000}),/too early/);
+  const tick=await advanceLocalSocietyClock({dir,now:now+30_000});
+  assert.equal(tick.source,'passive_environment_no_model');
+  const after=await readLocalSociety({dir});
+  assert.equal(after.world.tick,before.world.tick+1);
+  assert.equal(after.world.minute,before.world.minute+15);
+  assert.deepEqual(after.world.events.map(e=>e.description),priorEvents);
+  assert.deepEqual(after.world.actors.map(a=>a.zone),priorPositions);
+  assert.deepEqual(after.world.actors.map(a=>a.action),priorActions);
+  assert.equal(after.records[1].kind,'environment_tick');
+  assert.equal(after.records[1].provider_request_id,null);
+  assert.equal(after.records[1].previous_hash,after.records[0].record_hash);
+  await turn(dir,client({requestId:'request_tick_two_00000002',action:{type:'move',zone:'market'}}),'r1',now+30_000);
+  const result=await readLocalSociety({dir});
+  assert.equal(result.sequence,3);
+  assert.equal(result.world.actors[0].zone,'market');
+  assert.equal(result.records.filter(r=>r.kind==='agent_decision').length,2);
+  assert.equal(result.records.filter(r=>r.kind==='environment_tick').length,1);
+});
+test('the passive clock is a separate factual event in the journal, not fake model activity',async t=>{
+  const {dir}=await sandbox(t);
+  await advanceLocalSocietyClock({dir,now:now+30_000});
+  await advanceLocalSocietyClock({dir,now:now+60_000});
+  const s=await readLocalSociety({dir});
+  assert.equal(s.records.length,2);
+  assert.equal(s.records[0].kind,'environment_tick');
+  assert.equal(s.records[1].kind,'environment_tick');
+  assert.equal(s.world.agent_experiment_v1,undefined);
+  assert.equal((await readLocalObserver({dir})).decisions.length,0);
+  assert.equal(s.world.actors.length,12);
 });
