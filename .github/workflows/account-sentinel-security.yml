@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '22'
       - name: Verify core policy and provider boundary
-        run: node --test systemia/raven/account-sentinel/policy.test.mjs systemia/raven/account-sentinel/demo.test.mjs
+        run: node --test systemia/raven/account-sentinel/policy.test.mjs systemia/raven/account-sentinel/demo.test.mjs systemia/raven/account-sentinel/http-smoke.test.mjs
       - name: Saban workforce scenario multiplication
         run: |
           node systemia/saban/multiplier.mjs \
