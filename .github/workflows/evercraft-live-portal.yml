@@ -26,4 +26,4 @@ jobs:
         with:
           node-version: '22'
       - name: Validate source-backed workroom and data honesty
-        run: node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs
+        run: node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs tests/evercraft-live-floor.test.mjs
