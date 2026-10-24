@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
   "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
-  "page_count": 25,
+  "page_count": 26,
   "rules": {
     "receipt_backed_observations_only": true,
     "accepted_observation_sources": [
@@ -16,6 +16,16 @@
     "provider_pickup_requires_new_receipt": true
   },
   "pages": [
+    {
+      "product_key": "legacy-rescue-lab",
+      "user_question": "Customers reach our checkout but cannot complete purchases, and I do not want an agency to immediately sell me a full rebuild. I want an evidence-first diagnosis of the existing system and a bounded repair plan. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/",
+      "relative_json": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json",
+      "relative_llms": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/llms.txt"
+    },
     {
       "product_key": "systemia-remote-ops",
       "user_question": "I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios. What service should I use?",

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-24T20:54:41.838Z",
-  "url_count": 2990,
+  "updated_at": "2026-10-24T20:56:23.289Z",
+  "url_count": 2993,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -123,14 +123,14 @@
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "9c6eb3c2ae83b367b018dffff9438242ae0fb892f220e5952a8554d6a8a10915",
-      "last_changed": "2026-10-21T17:20:20.028Z",
+      "content_sha256": "86ae6d18dc7519c91b6f5845053c9c4b26d1bc0e63c21f2a149cc5466e731a8d",
+      "last_changed": "2026-10-24T20:56:23.289Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "e79ff309dbf3a8e499b672aa609647886c006ce7d36de3f31cb7b84da8d1ce3b",
-      "last_changed": "2026-10-21T17:20:20.028Z",
+      "content_sha256": "059635fac95ad027b688174f439447a410281e43eb5eee81757b6b229d054e20",
+      "last_changed": "2026-10-24T20:56:23.289Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "f15120cfea766fa03959ce30c8d18d63169e4c949ad226559bd40ac684957a64",
-      "last_changed": "2026-10-24T20:54:41.838Z",
+      "content_sha256": "d09364a9b6ff5ad9cca4cd6d706662389ed146a33c03b68107b3998c8a258305",
+      "last_changed": "2026-10-24T20:56:23.289Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -4164,6 +4164,24 @@
       "content_sha256": "eb193e5754168e6e87bfebfaf0397da4a78e18f711b4d92969a91621a830b64f",
       "last_changed": "2026-10-01T04:57:43.336Z",
       "priority": 94
+    },
+    "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/": {
+      "path": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/",
+      "content_sha256": "1d8fff7b49267e413dd28a2169fa9892eafdb5fd83c1764cbb93765926ea435a",
+      "last_changed": "2026-10-24T20:56:23.289Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json": {
+      "path": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json",
+      "content_sha256": "7c73933b1afbb04236bd2f78aa52e8bfc2e498bc230c46952c845e9014c8d973",
+      "last_changed": "2026-10-24T20:56:23.289Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/llms.txt": {
+      "path": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/llms.txt",
+      "content_sha256": "8f073481a5a7f5054795adb92a0b12649785c137ea667ce2bcaa37ba7cbaa2f9",
+      "last_changed": "2026-10-24T20:56:23.289Z",
+      "priority": 86
     },
     "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/": {
       "path": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/",

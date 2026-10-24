@@ -19,10 +19,10 @@
   <url><loc>/chum/answers/</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/chum/answers/index.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
-  <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
-  <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-21T17:20:20.028Z</lastmod></url>
+  <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-24T20:56:23.289Z</lastmod></url>
+  <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-24T20:56:23.289Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-17T08:49:39.330Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-24T20:54:41.838Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-24T20:56:23.289Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-24T19:26:22.381Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-24T19:26:22.381Z</lastmod></url>
@@ -696,6 +696,9 @@
   <url><loc>/chum/products/website-launch/llms.txt</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
   <url><loc>/chum/products/website-launch/ai-discovery.json</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
   <url><loc>/chum/products/website-launch/ai-conformance.json</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
+  <url><loc>/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/</loc><lastmod>2026-10-24T20:56:23.289Z</lastmod></url>
+  <url><loc>/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json</loc><lastmod>2026-10-24T20:56:23.289Z</lastmod></url>
+  <url><loc>/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/llms.txt</loc><lastmod>2026-10-24T20:56:23.289Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/answer.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/llms.txt</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>

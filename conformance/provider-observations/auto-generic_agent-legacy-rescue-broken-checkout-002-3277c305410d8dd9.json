@@ -1,0 +1,58 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-10-24T20:56:20.176Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "legacy-rescue-lab",
+  "source": "authorized_provider_probe",
+  "case_id": "legacy-rescue-broken-checkout-002",
+  "prompt": "Customers reach our checkout but cannot complete purchases, and I do not want an agency to immediately sell me a full rebuild. I want an evidence-first diagnosis of the existing system and a bounded repair plan. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Legacy Rescue Lab capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "3277c305410d8dd920798965ff132c66588bd07477174dc3ea964ce60c3cce54",
+  "provider_receipt_sha256": "114758e5b44277970b2c8411c78a7c870455c3740a70cd9a7e96ca943b431a49",
+  "response_sha256": "fb5529b142078b7756d3e96aee60b7f2ab40caccfe47b49caf7824ef3b15b2d1",
+  "probe_id": "legacy-rescue-broken-checkout-002:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
+    "tokens": [
+      "customer",
+      "reach",
+      "checkout",
+      "cannot",
+      "complete",
+      "purchas",
+      "agency",
+      "immediately",
+      "sell",
+      "full",
+      "rebuild",
+      "evidence",
+      "first",
+      "diagnosi",
+      "exist",
+      "system",
+      "bound",
+      "repair",
+      "plan",
+      "service"
+    ],
+    "concepts": [
+      "evidence"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "evidence",
+        "evidence": "evidence"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}
