@@ -29,3 +29,16 @@ Systemia's existing approved release receipts should feed RC04's fail-closed med
 ## QA
 `node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs`
 plus existing repository public/mobile and external published-source canaries. Merge/release only after checks and after independent public readback.
+
+## RC09: Observable operations floor
+
+`/live/floor.html` is a separate, broadcast-friendly six-station view of **actual recent public GitHub Actions workflows**. It reuses the existing public-only source and safety boundary. The page groups verification runs into research/maps, Saban/compute, creative studio, product/revenue, network/security, and build/release. Every displayed event links to its GitHub run; there are no generated agents or synthetic animation posing as work.
+
+- `RUNNING` means the public GitHub run is reported `in_progress` **and** last updated within 30 minutes. `QUEUED` reflects public queued/pending status, never execution. Old in-progress and queued states become `UNVERIFIED`.
+- `PASSED`, `FAILED`, and `CANCELLED` are preserved as historical outcomes. No event in the fetched recent sample yields `NO RECENT RUN`, which is not a declaration that no private work exists.
+- Public data refreshes every three minutes while the browser is open. If GitHub is unavailable, the page marks its cached evidence **delayed**, removes unverified running/queued claims, and never substitutes a fake timeline.
+- Use the 9:16, Film and Refresh controls for screen recording / OBS Browser Source. This is **not an actual RTMP broadcaster**, not a 24-hour uptime guarantee, and not a live Systemia/Saban task executor.
+- Unauthenticated GitHub API browser rate limits apply. For true multi-viewer 24/7 streaming, promote an approved public-only server-side receipt projection with caching, explicit consent/rights, redaction, expiration and a separately audited streaming encoder.
+- The RC04 approved-artifact mission remains tracked in [issue #1243](https://github.com/jgaethle10/forge-operator/issues/1243). No raw private agent telemetry can be added until its release gates are independently verified.
+
+QA: `node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs tests/evercraft-live-floor.test.mjs`.
