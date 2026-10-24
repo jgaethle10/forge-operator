@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { runDemoScenario, DEMO_SCENARIOS } from './demo.mjs';
+import { runDemoScenario, DEMO_SCENARIOS, expectedSimulatedProviderReads } from './demo.mjs';
 import { createAccountSentinelGateway } from './gateway.mjs';
 import { createDemoAuditLedger } from './ledger.mjs';
 
@@ -11,9 +11,19 @@ for (const scenario of DEMO_SCENARIOS) {
     assert.equal(out.result.allowed, expectedAllow);
     assert.equal(out.audit_valid, true);
     assert.equal(out.environment, 'SIMULATION_ONLY');
-    assert.equal(out.provider_reads, scenario.id === 'provider_offline' || expectedAllow ? 1 : 0);
+    assert.equal(out.provider_reads, expectedSimulatedProviderReads(scenario.id));
     assert.equal(out.result.data === null, !expectedAllow);
     if (expectedAllow) assert.equal(out.result.data.simulated, true);
+    if (scenario.id.endsWith('_during_read')) {
+      assert.equal(out.result.reason, scenario.id === 'grant_changed_during_read'
+        ? 'grant_changed_during_read' : 'authority_changed_during_read');
+      assert.ok(out.audit_events.some(x => x.event.kind === 'read_withheld'));
+      assert.ok(!out.audit_events.some(x => x.event.kind === 'read_completed'));
+    }
+    if (scenario.id === 'audit_after_read') {
+      assert.equal(out.result.reason, 'audit_unavailable');
+      assert.ok(!out.audit_events.some(x => x.event.kind === 'read_completed'));
+    }
   });
 }
 
