@@ -8,10 +8,12 @@ const deny = (reason, receipt = null) => ({
 });
 
 /**
- * Executes authorized read requests through a private adapter boundary.
- * Dependencies are privileged server-side providers. Callers may supply only a
- * session proof, signed-grant reference and narrow request; never trust fields.
- * This library is not itself an identity provider or banking integration.
+ * Demo/integration policy gateway. Dependencies are privileged server-side
+ * providers, NEVER controlled by the requesting agent or LLM.
+ *
+ * This is not a bank API or a production identity/consent service. Rechecking
+ * just before release reduces stale-authority exposure, but does NOT offer
+ * atomic bank-side revocation or block clients bypassing this gateway.
  */
 export function createAccountSentinelGateway({
   identity, consent, connectors, revocations, bankReader, audit,
@@ -24,67 +26,101 @@ export function createAccountSentinelGateway({
   if (!trustedPublicKeys || typeof trustedPublicKeys !== 'object') {
     throw new Error('trusted_signer_registry_missing');
   }
-
-  const record = async (event) => {
+  const record = async event => {
     const receipt = await audit.append(event);
-    if (!receipt?.hash || typeof receipt.hash !== 'string') throw new Error('audit_receipt_missing');
+    if (!receipt?.hash || typeof receipt.hash !== 'string' ||
+        !/^[a-f0-9]{64}$/.test(receipt.hash)) throw new Error('audit_receipt_missing');
     return receipt;
+  };
+  const resolveAuthority = async input => {
+    const [trustedPrincipal, signedGrant, trustedConnector, trustedRevocations] =
+      await Promise.all([
+        identity.resolve(input.session_proof),
+        consent.get(input.grant_ref),
+        connectors.get(input.request.connector_id),
+        revocations.snapshot(),
+      ]);
+    const decision = evaluateFinancialAgentRequest({
+      request: input.request, signedGrant, trustedPublicKeys, trustedPrincipal,
+      trustedConnector, trustedRevocations, now: clock(),
+    });
+    return { decision, signedGrant };
   };
 
   return Object.freeze({
     async read(input) {
-      // Reject extra properties, including forged "trustedPrincipal" and "trustedConnector".
+      // An external caller may not smuggle privileged context into the request.
       if (!exact(input, ['session_proof', 'grant_ref', 'request']) ||
           typeof input.session_proof !== 'string' || !input.session_proof ||
           typeof input.grant_ref !== 'string' || !input.grant_ref ||
-          !exact(input.request, requestKeys)) {
-        return deny('invalid_gateway_request');
-      }
+          !exact(input.request, requestKeys)) return deny('invalid_gateway_request');
+
       const { request } = input;
-      let decision;
+      const auditBase = {
+        operation: typeof request.operation === 'string' ? request.operation : 'invalid',
+      };
+      let first;
       try {
-        // Each resolver is trusted server-side code, never the request payload.
-        const [principal, signedGrant, connector, revoked] = await Promise.all([
-          identity.resolve(input.session_proof),
-          consent.get(input.grant_ref),
-          connectors.get(request.connector_id),
-          revocations.snapshot(),
-        ]);
-        decision = evaluateFinancialAgentRequest({
-          request, signedGrant, trustedPrincipal: principal,
-          trustedConnector: connector, trustedRevocations: revoked,
-          trustedPublicKeys, now: clock(),
-        });
+        first = await resolveAuthority(input);
       } catch {
-        decision = { allowed: false, reason: 'authority_lookup_unavailable' };
+        first = { decision: { allowed: false, reason: 'authority_lookup_unavailable' } };
       }
-      // No sensitive account IDs, raw grant details, session IDs or response data in audit.
-      const auditBase = { operation: typeof request.operation === 'string' ? request.operation : 'invalid' };
       let receipt;
       try {
-        receipt = await record({ ...auditBase, kind: decision.allowed ? 'preauthorized' : 'denied',
-          reason: decision.reason });
+        receipt = await record({
+          ...auditBase, kind: first.decision.allowed ? 'preauthorized' : 'denied',
+          reason: first.decision.reason,
+        });
       } catch {
-        // Never contact a bank adapter if audit is unavailable.
+        // Bank adapter never called if recording authorization itself fails.
         return deny('audit_unavailable');
       }
-      if (!decision.allowed) return deny(decision.reason, receipt);
+      if (!first.decision.allowed) return deny(first.decision.reason, receipt);
+
+      let data;
       try {
-        // No raw credentials are ever sent from the agent request to this adapter.
-        const data = await bankReader.read({
-          operation: request.operation,
-          account_ref: request.account_ref,
+        // Credentials and authentication NEVER originate in agent input.
+        data = await bankReader.read({
+          operation: request.operation, account_ref: request.account_ref,
           connector_id: request.connector_id,
         });
-        // Even if fetching succeeded, do not release data without the completion receipt.
-        const completed = await record({ ...auditBase, kind: 'read_completed', reason: 'ok' });
-        return { allowed: true, decision: 'allow_read_only', reason: 'scoped_consent_verified',
-          data, receipt: completed };
       } catch {
-        try {
-          receipt = await record({ ...auditBase, kind: 'read_failed', reason: 'provider_or_audit_error' });
-        } catch { /* must not leak provider data */ }
+        try { receipt = await record({ ...auditBase, kind: 'read_failed',
+          reason: 'provider_error' }); } catch { /* never leak provider response */ }
         return deny('provider_or_audit_error', receipt);
+      }
+
+      // A grant can be revoked or the connector disabled while a slow bank
+      // API call is in flight. Revalidate all privileged authority before
+      // releasing any of the returned information to the agent.
+      let current;
+      try {
+        current = await resolveAuthority(input);
+      } catch {
+        current = { decision: { allowed: false, reason: 'authority_lookup_unavailable' } };
+      }
+      const sameGrant = current.decision.allowed &&
+        current.decision.grant_id === first.decision.grant_id &&
+        current.signedGrant?.key_id === first.signedGrant?.key_id &&
+        current.signedGrant?.signature_base64 === first.signedGrant?.signature_base64;
+      if (!sameGrant) {
+        const reason = current.decision.allowed ? 'grant_changed_during_read' :
+          'authority_changed_during_read';
+        try {
+          receipt = await record({ ...auditBase, kind: 'read_withheld', reason });
+        } catch { return deny('audit_unavailable'); }
+        return deny(reason, receipt);
+      }
+
+      try {
+        // Never release data if the final evidence write fails.
+        receipt = await record({ ...auditBase, kind: 'read_completed', reason: 'ok' });
+        return {
+          allowed: true, decision: 'allow_read_only', reason: 'scoped_consent_verified',
+          data, receipt,
+        };
+      } catch {
+        return deny('audit_unavailable');
       }
     },
   });
