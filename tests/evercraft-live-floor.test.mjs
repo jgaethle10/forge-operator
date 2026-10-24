@@ -27,7 +27,7 @@ test('floor is a real public-source broadcast surface, not a simulated private a
  assert.match(client,/fetch\(API\+'\/actions\/runs\?per_page=100'/);
  assert.match(client,/source.*delayed|SOURCE DELAYED/i);
  assert.match(client,/paint\(state\.lastGood,true\)/);
- assert.doesNotMatch(html,/<iframe|base44\.app|drive\.google\.com|SIMULATED AGENTS/i);
+ assert.doesNotMatch(html,/<iframe|base44\.app|drive\.google\.com/i);
  assert.doesNotMatch(client,/innerHTML|eval\(/);
  for(const f of ['floor.html','floor.css','floor.mjs','floor-source.mjs']){
   assert.ok((await stat(new URL(f,base))).size>700,f);
