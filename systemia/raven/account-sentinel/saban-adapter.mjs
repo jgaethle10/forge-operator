@@ -1,4 +1,4 @@
-import { DEMO_SCENARIOS, runDemoScenario } from './demo.mjs';
+import { DEMO_SCENARIOS, runDemoScenario, expectedSimulatedProviderReads } from './demo.mjs';
 
 const ROLES = Object.freeze([
   'identity_guard',
@@ -9,7 +9,7 @@ const ROLES = Object.freeze([
 
 const allowedIds = new Set(DEMO_SCENARIOS.map(({ id }) => id));
 const isFailure = id => id !== 'authorized';
-const expectedCalls = id => id === 'authorized' || id === 'provider_offline' ? 1 : 0;
+const expectedCalls = expectedSimulatedProviderReads;
 const assert = (condition, reason) => {
   if (!condition) throw new Error('account_sentinel_saban_gate_failed:' + reason);
 };
@@ -41,6 +41,17 @@ export async function runAssignment({ assignment }) {
   if (id === 'provider_offline') {
     assert(out.audit_events.some(x => x.event?.kind === 'read_failed'),
       'provider_failure_not_reconciled');
+  }
+  if (id.endsWith('_during_read')) {
+    assert(out.audit_events.some(x => x.event?.kind === 'read_withheld'),
+      'mid_read_authority_revocation_not_recorded');
+    assert(!out.audit_events.some(x => x.event?.kind === 'read_completed'),
+      'data_released_after_authority_change');
+  }
+  if (id === 'audit_after_read') {
+    assert(result.reason === 'audit_unavailable' &&
+      !out.audit_events.some(x => x.event?.kind === 'read_completed'),
+      'final_audit_failure_did_not_fail_closed');
   }
   if (!['audit_offline'].includes(id)) {
     assert(out.audit_events.length >= 1, 'decision_receipt_missing');
