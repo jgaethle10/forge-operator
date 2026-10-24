@@ -61,3 +61,34 @@ If you shared online-banking credentials with any AI agent, stop that practice. 
 ## Product fit
 
 Account Sentinel belongs within **Raven Nexus** for security and permission governance; **Systemia** remains mission authority. **Evercraft Payments** is separate and does not grant permission to access customers' deposit accounts. This capability must not be advertised as an active bank-account firewall until bank integrations and runtime verification pass.
+
+## Runnable local demonstration (v0.2)
+
+A separate loopback-only HTTP console lets reviewers test real decision logic against **synthetic** checking data. No external network connection, bank account, credential, signing key persistence, account monitoring, or commercial checkout is involved.
+
+From the repository root with Node.js 22+:
+
+```bash
+node --test systemia/raven/account-sentinel/policy.test.mjs systemia/raven/account-sentinel/demo.test.mjs
+node systemia/raven/account-sentinel/server.mjs
+```
+
+Then open **http://127.0.0.1:8776** in a browser on the *same computer* (not a public website or phone link).
+
+The dashboard offers 12 scenarios: authorized balance read; transfer attempt; rogue agent; revoked consent; expired consent; tampered grant; different account; missing scope; disabled connector; failed revocation lookup; audit outage; and simulated provider outage. A permitted balance read returns an explicitly simulated $2,847.22 and 1 simulated adapter call. Every blocked scenario reaches the provider **zero times**. Provider outage invokes a simulated provider call but returns no balance. The console displays privacy-minimized, volatile SHA-256 chained evidence entries.
+
+Other API endpoints are `GET /health`, `GET /api/scenarios` and `POST /api/run` with a single allowlisted `{"scenario":"transfer"}` value. This server binds strictly to loopback. **Do not expose or reverse-proxy it to the internet:** its sessions and signing keys are intentionally synthetic and the demo lacks production authentication.
+
+Implementation files:
+
+- `gateway.mjs`: all provider lookups originate from trusted dependencies. The client cannot supply identity, consent, or registry authority objects.
+- `ledger.mjs`: deliberately ephemeral hash-chained simulation receipts, *not* an immutable compliance ledger.
+- `demo.mjs`: fresh ephemeral Ed25519 keys and simulated decision scenarios on every run.
+- `server.mjs` and `dashboard.html`: local visual demonstration, no actual bank adapter.
+- `demo.test.mjs`: 15 scenario/integration checks including proof blocked actions never call the adapter.
+
+The original 24 policy cases and 15 integration checks were exercised locally on Node.js 22. CI must still validate the GitHub branch. This test evidence does not establish production readiness.
+
+### Gap to close before real-bank API access
+
+Production service needs real cryptographic session authentication, authoritative owner consent and revocation (including upstream bank/token revocation), race-safe enforcement at provider egress, encrypted provider credentials, durable anchored audit storage, customer-facing data handling, and provider/legal/security approval. A demo `fresh: true` or `auth_source: evercraft_identity` fixture is not actual verification. Do not expose bank data to third-party models or agents without separate narrow, explicit user consent and approved bank API terms.
