@@ -5,7 +5,7 @@ import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
-import { DEMO_SCENARIOS } from './demo.mjs';
+import { DEMO_SCENARIOS, expectedSimulatedProviderReads } from './demo.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 async function availablePort() {
