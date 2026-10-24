@@ -32,7 +32,7 @@ test('floor is a real public-source broadcast surface, not a simulated private a
  for(const f of ['floor.html','floor.css','floor.mjs','floor-source.mjs']){
   assert.ok((await stat(new URL(f,base))).size>700,f);
  }
- assert.doesNotThrow(()=>new Script(client.replace(/^import[^\n]*\n/g,'')));
+ assert.doesNotThrow(()=>new Script(client.replace(/^import[^\n]*\n/gm,'')));
  assert.ok(css.includes('@media(max-width:640px)'));
  assert.ok(css.includes('#stage.portrait'));
 });
