@@ -62,7 +62,7 @@ If you shared online-banking credentials with any AI agent, stop that practice. 
 
 Account Sentinel belongs within **Raven Nexus** for security and permission governance; **Systemia** remains mission authority. **Evercraft Payments** is separate and does not grant permission to access customers' deposit accounts. This capability must not be advertised as an active bank-account firewall until bank integrations and runtime verification pass.
 
-## Runnable local demonstration (v0.2)
+## Runnable local demonstration (v0.3)
 
 A separate loopback-only HTTP console lets reviewers test real decision logic against **synthetic** checking data. No external network connection, bank account, credential, signing key persistence, account monitoring, or commercial checkout is involved.
 
@@ -75,7 +75,7 @@ node systemia/raven/account-sentinel/server.mjs
 
 Then open **http://127.0.0.1:8776** in a browser on the *same computer* (not a public website or phone link).
 
-The dashboard offers 12 scenarios: authorized balance read; transfer attempt; rogue agent; revoked consent; expired consent; tampered grant; different account; missing scope; disabled connector; failed revocation lookup; audit outage; and simulated provider outage. A permitted balance read returns an explicitly simulated $2,847.22 and 1 simulated adapter call. Every blocked scenario reaches the provider **zero times**. Provider outage invokes a simulated provider call but returns no balance. The console displays privacy-minimized, volatile SHA-256 chained evidence entries.
+The dashboard offers **18 synthetic attack and permission scenarios**. In addition to initial permission denial, it probes account revocation, connector shutdown, identity changes, loss of the revocation authority, consent replacement *during* a simulated bank read, and failure of the final audit record. A permitted read returns a clearly simulated $2,847.22. Initial denials cause **zero** provider calls. Mid-read revocations and failures may cause one simulated read but **never release the returned account data**. The console displays privacy-minimized, volatile SHA-256 chained evidence entries.
 
 Other API endpoints are `GET /health`, `GET /api/scenarios` and `POST /api/run` with a single allowlisted `{"scenario":"transfer"}` value. This server binds strictly to loopback. **Do not expose or reverse-proxy it to the internet:** its sessions and signing keys are intentionally synthetic and the demo lacks production authentication.
 
@@ -85,21 +85,21 @@ Implementation files:
 - `ledger.mjs`: deliberately ephemeral hash-chained simulation receipts, *not* an immutable compliance ledger.
 - `demo.mjs`: fresh ephemeral Ed25519 keys and simulated decision scenarios on every run.
 - `server.mjs` and `dashboard.html`: local visual demonstration, no actual bank adapter.
-- `demo.test.mjs`: 15 scenario/integration checks including proof blocked actions never call the adapter.
+- `demo.test.mjs`: all 18 synthetic scenarios plus integration checks; initial denials never contact the adapter, and mid-read permission changes withhold returned data.
 
 The original 24 policy cases and 15 integration checks were exercised locally on Node.js 22. CI must still validate the GitHub branch. This test evidence does not establish production readiness.
 
 ### Gap to close before real-bank API access
 
-Production service needs real cryptographic session authentication, authoritative owner consent and revocation (including upstream bank/token revocation), race-safe enforcement at provider egress, encrypted provider credentials, durable anchored audit storage, customer-facing data handling, and provider/legal/security approval. A demo `fresh: true` or `auth_source: evercraft_identity` fixture is not actual verification. Do not expose bank data to third-party models or agents without separate narrow, explicit user consent and approved bank API terms.
+Production service needs real cryptographic session authentication, authoritative owner consent and revocation (including upstream bank/token revocation), atomic revocation enforcement at provider egress (the prototype's after-read recheck is not atomic), encrypted provider credentials, durable anchored audit storage, customer-facing data handling, and provider/legal/security approval. A demo `fresh: true` or `auth_source: evercraft_identity` fixture is not actual verification. Do not expose bank data to third-party models or agents without separate narrow, explicit user consent and approved bank API terms.
 
 ## Automated Saban ownership (v0.3)
 
 The human operator does **not** need to run `server.mjs`, `node --test`, or any other terminal command to validate this prototype. They remain optional for local visual review.
 
-The separate `saban-registry.json` registers **account-sentinel** as a bounded, read-only Saban workload. The 12 allowlisted synthetic adversarial scenarios in `saban-scenarios.json` are crossed with four independent Saban assurance roles: identity, consent, provider boundary, and audit. This produces **48 logical agent assignments on four local physical worker slots** in GitHub's CI runner. These slots are not 48 operating-system processes or 48 remote Evercraft machines.
+The separate `saban-registry.json` registers **account-sentinel** as a bounded, read-only Saban workload. The 18 allowlisted synthetic adversarial scenarios in `saban-scenarios.json` are crossed with four independent Saban assurance roles: identity, consent, provider boundary, and audit. This produces **72 logical agent assignments on four local physical worker slots** in GitHub's CI runner. These slots are not 72 operating-system processes or 72 remote Evercraft machines.
 
-`saban-adapter.mjs` invokes the real simulated Account Sentinel gateway for each assignment. A wrong allow/deny decision, unexpected provider adapter call, compromised hash chain, missing synthetic-only boundary, or absent receipt throws a hard error. `reconcile()` independently requires the complete 4 × 12 matrix with no missing/duplicate assignments and zero real bank activity.
+`saban-adapter.mjs` invokes the real simulated Account Sentinel gateway for each assignment. A wrong allow/deny decision, unexpected provider adapter call, compromised hash chain, missing synthetic-only boundary, or absent receipt throws a hard error. `reconcile()` independently requires the complete 4 × 18 matrix with no missing/duplicate assignments and zero real bank activity.
 
 `verify-saban-receipt.mjs` independently checks the Saban execution receipt: quality PASS, every role present, no dead-letter, complete reconciliation, and zero real-world financial actions. CI preserves `account-sentinel-saban-receipt` as a 14-day GitHub Actions artifact. The `http-smoke.test.mjs` test boots the loopback-only dashboard automatically and exercises every scenario over HTTP, including host-boundary and request-injection failures.
 
@@ -110,9 +110,15 @@ Command for maintainers, *not an operator prerequisite*:
 ```bash
 node systemia/saban/multiplier.mjs --software account-sentinel \
   --registry systemia/raven/account-sentinel/saban-registry.json \
-  --fixed --agents 48 --workers 4 --execute --reconcile \
+  --fixed --agents 72 --workers 4 --execute --reconcile \
   --state artifacts/saban-multiplier/account-sentinel-state.json
 node systemia/raven/account-sentinel/verify-saban-receipt.mjs
 ```
 
 If a run fails, keep the PR in draft, inspect the CI logs/receipt, and never quietly reclassify a failed security check as green. No financial or production privileges should be inferred from a successful synthetic Saban run.
+
+## In-flight authority hardening, October 24, 2026
+
+After a simulated bank adapter returns, `gateway.mjs` now performs a **second independent lookup** through trusted identity, consent, connector and revocation services. It verifies the permission still applies to the same subject, agent, account, scope, grant ID and signed envelope before emitting a `read_completed` receipt and releasing any account information. A changed or unavailable authority produces a `read_withheld` receipt and a response with `data: null`. Final receipt failure also withholds data. Saban tests all failure paths.
+
+This is an important reduction of time-of-check/time-of-use exposure, **not a guarantee of instantaneous or atomic revocation**. A real bank partner must enforce tokens and revocation upstream, and a production gateway will need strong session authenticity, durable evidence, concurrency tests and operational proofs. Do not represent this prototype as protection for real customer accounts.
