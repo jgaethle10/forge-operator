@@ -52,7 +52,10 @@ export function inspectNextGen({
     is_linux_wsl:platform==='linux'&&/microsoft|wsl/i.test(release),
     node_22_or_newer:major>=22,
     systemd_user_available:Boolean(systemd),
-    verified_broker_origin_configured:privateBrokerConfigured(home,brokerUrl),
+    // A syntactically valid HTTPS URL is NOT an independently verified
+    // broker deployment, TLS identity, or Yard trust grant.
+    private_https_broker_url_configured:privateBrokerConfigured(home,brokerUrl),
+    verified_broker_origin_configured:false,
     node002_shadow_agent_present:fs.existsSync(path.join(home,'.local/share/evercraft/node002-agent/app/node002-agent.mjs')),
     node_seed_receipt_present:Boolean(seed?.node_id&&seed?.endpoint),
     remote_operator_locally_enabled:local?.remote_operator?.enabled===true&&
@@ -69,7 +72,8 @@ export function inspectNextGen({
   report.next_action=!report.is_linux_wsl?'run_this_preflight_inside_nextgen_wsl':
     !report.node_22_or_newer?'install_node_22_plus_on_nextgen_wsl':
     !report.systemd_user_available?'enable_or_repair_user_systemd_in_wsl':
-    !report.verified_broker_origin_configured?'configure_verified_evercraft_broker_origin_privately':
+    !report.private_https_broker_url_configured?'configure_verified_evercraft_broker_origin_privately':
+    !report.verified_broker_origin_configured?'verify_broker_origin_and_yard_provenance_out_of_band':
     !report.remote_operator_locally_enabled?'owner_authorized_local_enablement_required':
     'yard_exact_device_approval_and_live_mcp_proof_required';
   return report;
@@ -79,5 +83,5 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   console.log(JSON.stringify(report,null,2));
   if(process.argv.includes('--require-local-prerequisites')&&
     (!report.is_linux_wsl||!report.node_22_or_newer||!report.systemd_user_available||
-     !report.verified_broker_origin_configured))process.exitCode=2;
+     !report.private_https_broker_url_configured||!report.verified_broker_origin_configured))process.exitCode=2;
 }
