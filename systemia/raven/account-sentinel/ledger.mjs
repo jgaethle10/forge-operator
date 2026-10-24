@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 
 const GENESIS = '0'.repeat(64);
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-const kinds = new Set(['denied', 'preauthorized', 'read_completed', 'read_failed']);
+const kinds = new Set(['denied', 'preauthorized', 'read_completed', 'read_failed', 'read_withheld']);
 const operations = new Set(['account.read', 'balance.read', 'transactions.read',
   'transfer.create', 'payee.create', 'invalid']);
 const safe = (s, length = 64) => typeof s === 'string' ? s.slice(0, length) : 'invalid';
