@@ -65,7 +65,7 @@ test('Saban-approved account sentinel simulation is accessible end-to-end via lo
       assert.equal(output.audit_valid, true);
       assert.equal(output.result.allowed, id === 'authorized', id);
       assert.equal(output.provider_reads,
-        id === 'authorized' || id === 'provider_offline' ? 1 : 0, id);
+        expectedSimulatedProviderReads(id), id);
       assert.equal(output.result.data?.simulated === true, id === 'authorized', id);
     }
     const inject = await fetch(host + '/api/run', {
