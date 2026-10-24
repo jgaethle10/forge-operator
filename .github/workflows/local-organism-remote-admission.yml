@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/local-organism-route-readiness.test.mjs'
       - 'systemia/compute/remote-admission-keeper.mjs'
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
@@ -15,6 +16,7 @@ on:
       - main
     paths:
       - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/local-organism-route-readiness.test.mjs'
       - 'systemia/compute/remote-admission-keeper.mjs'
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
@@ -33,6 +35,8 @@ jobs:
           node-version: '22'
       - name: Syntax-check installer
         run: bash -n systemia/compute/install-local-organism-user.sh
+      - name: Verify bounded local organism route convergence
+        run: node --test systemia/compute/local-organism-route-readiness.test.mjs
       - name: Prove local Systemia remains healthy without broker
         run: node systemia/compute/local-organism-remote-admission.proof.mjs
       - name: Prove actual admission keeper registration and outage recovery
