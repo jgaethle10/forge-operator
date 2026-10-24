@@ -92,3 +92,27 @@ The original 24 policy cases and 15 integration checks were exercised locally on
 ### Gap to close before real-bank API access
 
 Production service needs real cryptographic session authentication, authoritative owner consent and revocation (including upstream bank/token revocation), race-safe enforcement at provider egress, encrypted provider credentials, durable anchored audit storage, customer-facing data handling, and provider/legal/security approval. A demo `fresh: true` or `auth_source: evercraft_identity` fixture is not actual verification. Do not expose bank data to third-party models or agents without separate narrow, explicit user consent and approved bank API terms.
+
+## Automated Saban ownership (v0.3)
+
+The human operator does **not** need to run `server.mjs`, `node --test`, or any other terminal command to validate this prototype. They remain optional for local visual review.
+
+The separate `saban-registry.json` registers **account-sentinel** as a bounded, read-only Saban workload. The 12 allowlisted synthetic adversarial scenarios in `saban-scenarios.json` are crossed with four independent Saban assurance roles: identity, consent, provider boundary, and audit. This produces **48 logical agent assignments on four local physical worker slots** in GitHub's CI runner. These slots are not 48 operating-system processes or 48 remote Evercraft machines.
+
+`saban-adapter.mjs` invokes the real simulated Account Sentinel gateway for each assignment. A wrong allow/deny decision, unexpected provider adapter call, compromised hash chain, missing synthetic-only boundary, or absent receipt throws a hard error. `reconcile()` independently requires the complete 4 × 12 matrix with no missing/duplicate assignments and zero real bank activity.
+
+`verify-saban-receipt.mjs` independently checks the Saban execution receipt: quality PASS, every role present, no dead-letter, complete reconciliation, and zero real-world financial actions. CI preserves `account-sentinel-saban-receipt` as a 14-day GitHub Actions artifact. The `http-smoke.test.mjs` test boots the loopback-only dashboard automatically and exercises every scenario over HTTP, including host-boundary and request-injection failures.
+
+The Saban kernel is run **automatically in GitHub Actions** whenever the Account Sentinel files change. CI does not claim it has reached the owned Node001/Node002 Saban residents or live bank systems. Moving executions onto physical Evercraft NodeSeed requires actual node enrollment, signed capacity attestation, lease authority, and a new verified runtime receipt.
+
+Command for maintainers, *not an operator prerequisite*:
+
+```bash
+node systemia/saban/multiplier.mjs --software account-sentinel \
+  --registry systemia/raven/account-sentinel/saban-registry.json \
+  --fixed --agents 48 --workers 4 --execute --reconcile \
+  --state artifacts/saban-multiplier/account-sentinel-state.json
+node systemia/raven/account-sentinel/verify-saban-receipt.mjs
+```
+
+If a run fails, keep the PR in draft, inspect the CI logs/receipt, and never quietly reclassify a failed security check as green. No financial or production privileges should be inferred from a successful synthetic Saban run.
