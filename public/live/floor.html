@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070d16">
+<meta name="description" content="Observe real public Evercraft automated workflow receipts on a stream-friendly operations floor. No simulated agents or private telemetry.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src https://api.github.com; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+<title>Evercraft LIVE | Observable Operations Floor</title>
+<link rel="stylesheet" href="./floor.css">
+</head>
+<body>
+<div id="stage">
+ <header class="mast">
+  <div class="identity"><span class="logo" aria-hidden="true">✧</span><div><strong>EVERCRAFT <span>LIVE</span></strong><small>OPERATIONS FLOOR / PUBLIC RECEIPTS</small></div></div>
+  <div class="status"><span class="light" id="sourceLight"></span><span id="sourceLabel">CHECKING GITHUB SOURCE</span><span id="lastCheck">NOT YET CHECKED</span></div>
+ </header>
+ <div class="mission">
+  <div><span class="eyebrow">SYSTEMIA / OBSERVABLE OPERATIONS</span><h1>Watch the work.<br><em>Check the receipts.</em></h1><p>Six stations. Real public workflow runs. Activity is only shown when the source verifies it.</p></div>
+  <div class="totals"><div><b id="runningCount">0</b><span>RUNNING</span></div><div><b id="queuedCount">0</b><span>QUEUED</span></div><div><b id="observedCount">0</b><span>RECENT RUNS</span></div><div><b id="failedCount">0</b><span>FAILED</span></div></div>
+ </div>
+ <div class="floor-layout">
+  <main id="stations" class="stations" aria-label="Six evidence-backed Evercraft workflow stations">
+   <div class="loading">Connecting to verified public workflow records. No simulated agents.</div>
+  </main>
+  <aside class="side" aria-label="Recent workflow receipts">
+   <div class="side-head"><h2>WORK RECEIPTS</h2><span>REAL GITHUB ACTIONS</span></div>
+   <div id="events" class="events"><p class="fallback">Loading public workflow evidence.</p></div>
+   <div class="side-foot" id="evidenceWarning">This wall reflects public CI events only. It cannot attest to private Systemia or Saban agent execution.</div>
+  </aside>
+ </div>
+ <footer>
+  <div class="disclaimer"><strong id="freshness">SOURCE NOT YET VERIFIED</strong><span>Public workflow telemetry, not continuous video of private agents. Completed receipts are historical, not ongoing work.</span></div>
+  <nav aria-label="Broadcast controls"><a href="./">Workroom ↗</a><button id="refresh" type="button">Refresh</button><button id="portrait" type="button" aria-pressed="false">9:16</button><button id="film" type="button" aria-pressed="false">Film ⛶</button></nav>
+ </footer>
+ <button type="button" id="exitFilm">Exit film ✕</button>
+</div>
+<script type="module" src="./floor.mjs"></script>
+</body>
+</html>

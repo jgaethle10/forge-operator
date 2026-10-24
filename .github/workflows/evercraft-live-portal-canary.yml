@@ -37,6 +37,10 @@ jobs:
           check 'live/workroom.mjs' "fetch(API+path"
           check 'live/work-source.mjs' 'normalizePublicActivity'
           check 'live/workroom.css' '.focus-title'
+          check 'live/floor.html' 'Evercraft LIVE | Observable Operations Floor'
+          check 'live/floor.mjs' 'normalizeFloorRuns'
+          check 'live/floor-source.mjs' 'normalizeFloorRuns'
+          check 'live/floor.css' '.station'
           # Original functional artifacts remain available but are not the default 24/7 stage.
           check 'demos/earthworks-autonomy/?studio=1' 'studioCamera'
           check 'visuals/washington-active-volcanoes/motion.html' 'WASHINGTON'
