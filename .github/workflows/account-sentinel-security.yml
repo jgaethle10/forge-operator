@@ -1,0 +1,25 @@
+name: Account Sentinel security checks
+on:
+  push:
+    paths:
+      - 'systemia/raven/account-sentinel/**'
+      - '.github/workflows/account-sentinel-security.yml'
+  pull_request:
+    paths:
+      - 'systemia/raven/account-sentinel/**'
+      - '.github/workflows/account-sentinel-security.yml'
+permissions:
+  contents: read
+jobs:
+  security-policy-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@v4
+      - name: Install Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate policy and simulated gateway behavior
+        run: node --test systemia/raven/account-sentinel/policy.test.mjs systemia/raven/account-sentinel/demo.test.mjs
