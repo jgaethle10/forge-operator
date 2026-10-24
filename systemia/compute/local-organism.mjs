@@ -5,6 +5,7 @@ import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { startNodeSeed } from './node-seed.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 import { RemoteAdmissionKeeper } from './remote-admission-keeper.mjs';
@@ -68,6 +69,47 @@ function sourceReleaseRef() {
 
 function nodeIdDefault() {
   return `chromebook-${os.hostname().replace(/[^a-zA-Z0-9._-]/g, '-')}`;
+}
+
+// A Yard deployment may be accepted before its local health endpoint is
+// available under CPU contention. Do not promote until every required route
+// passes, but allow a short bounded convergence window before failing closed.
+export async function waitForLocalOrganismRoutes({
+  verifyRoute,
+  timeoutMs = 15_000,
+  pollMs = 250,
+  clock = () => Date.now(),
+  sleepImpl = sleep,
+} = {}) {
+  if (typeof verifyRoute !== 'function') throw new Error('local_route_verifier_required');
+  if (!Number.isFinite(timeoutMs) || timeoutMs < 0 || timeoutMs > 60_000)
+    throw new Error('local_route_timeout_out_of_bounds');
+  if (!Number.isFinite(pollMs) || pollMs < 1 || pollMs > 5_000)
+    throw new Error('local_route_poll_out_of_bounds');
+  const deadline = clock() + timeoutMs;
+  let statuses;
+  do {
+    const [kaidanceRoute, coreRoute, fabricRoute] = await Promise.all([
+      verifyRoute('kaidance-local-resident'),
+      verifyRoute('systemia-core-local-resident'),
+      verifyRoute('evercraft-fabric-local-resident'),
+    ]);
+    const fabricOk = fabricRoute?.ok === true ||
+      (fabricRoute?.state === 'public_route_unbound' &&
+       fabricRoute?.local_health_ok === true);
+    statuses = { kaidanceRoute, coreRoute, fabricRoute, fabricOk };
+    if (kaidanceRoute?.ok === true && coreRoute?.ok === true && fabricOk)
+      return statuses;
+    if (clock() >= deadline) break;
+    await sleepImpl(Math.min(pollMs, Math.max(1, deadline - clock())));
+  } while (true);
+  // Deliberately coarse error: never include private host URL or health body.
+  const stateOf = row => /^[a-z_]{1,60}$/.test(String(row?.state || ''))
+    ? String(row.state) : 'unavailable';
+  throw new Error('local_organism_routes_unhealthy:' +
+    ['kaidance=' + stateOf(statuses?.kaidanceRoute),
+     'core=' + stateOf(statuses?.coreRoute),
+     'fabric=' + stateOf(statuses?.fabricRoute)].join(','));
 }
 
 export async function startLocalOrganism({
@@ -284,18 +326,10 @@ export async function startLocalOrganism({
       renewEveryMs: 1_800_000,
     });
 
-    const kaidanceRoute = await yard.verifyRoute('kaidance-local-resident');
-    const coreRoute = await yard.verifyRoute('systemia-core-local-resident');
-    const fabricRoute = await yard.verifyRoute('evercraft-fabric-local-resident');
-    const fabricLocalHealthy =
-      fabricRoute.ok === true ||
-      (
-        fabricRoute.state === 'public_route_unbound' &&
-        fabricRoute.local_health_ok === true
-      );
-    if (!kaidanceRoute.ok || !coreRoute.ok || !fabricLocalHealthy) {
-      throw new Error('local organism route verification failed');
-    }
+    const { kaidanceRoute, coreRoute, fabricRoute } =
+      await waitForLocalOrganismRoutes({
+        verifyRoute: deploymentId => yard.verifyRoute(deploymentId),
+      });
 
     const pulse = await yard.getKaidancePulse('kaidance-local-resident');
 
