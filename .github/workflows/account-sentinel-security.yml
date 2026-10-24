@@ -28,7 +28,7 @@ jobs:
           node systemia/saban/multiplier.mjs \
             --software account-sentinel \
             --registry systemia/raven/account-sentinel/saban-registry.json \
-            --fixed --agents 48 --workers 4 --execute --reconcile \
+            --fixed --agents 72 --workers 4 --execute --reconcile \
             --state artifacts/saban-multiplier/account-sentinel-state.json
       - name: Require complete Saban proof receipt
         run: node systemia/raven/account-sentinel/verify-saban-receipt.mjs
