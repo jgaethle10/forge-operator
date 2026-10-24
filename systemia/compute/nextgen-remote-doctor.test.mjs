@@ -31,6 +31,10 @@ test('startup remote admission receipt is NOT authenticated live MCP control',t=
     remote_admission:{state:'connected'}}));
   const r=inspectNextGen({...wsl,home});
   assert.equal(r.remote_operator_locally_enabled,true);
+  // An HTTPS-shaped string and an old receipt cannot establish server trust.
+  assert.equal(r.private_https_broker_url_configured,true);
+  assert.equal(r.verified_broker_origin_configured,false);
+  assert.equal(r.next_action,'verify_broker_origin_and_yard_provenance_out_of_band');
   assert.equal(r.remote_admission_startup_claim,'connected_at_startup_unverified_currently');
   assert.equal(r.trusted_mcp_control_session_verified,false);
   assert.equal(r.ready_for_remote_install,false);
@@ -41,6 +45,7 @@ test('shadow agent presence does not authorize remote jobs',t=>{
   fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'node002-agent.mjs'),'// shadow');
   const r=inspectNextGen({...wsl,home,brokerUrl:'http://untrusted.example.test'});
   assert.equal(r.node002_shadow_agent_present,true);
+  assert.equal(r.private_https_broker_url_configured,false);
   assert.equal(r.verified_broker_origin_configured,false);
   assert.equal(r.ready_for_remote_install,false);
 });
