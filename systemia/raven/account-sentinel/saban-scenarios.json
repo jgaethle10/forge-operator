@@ -109,6 +109,60 @@
       "network_allowed": false,
       "real_bank_access": false,
       "financial_writes_allowed": false
+    },
+    {
+      "id": "revoked_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "connector_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "identity_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "revocation_unavailable_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "grant_changed_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "audit_after_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
     }
   ]
 }
