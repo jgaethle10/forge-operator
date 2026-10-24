@@ -4,6 +4,8 @@ on:
     paths:
       - 'systemia/compute/nextgen-remote-doctor.mjs'
       - 'systemia/compute/nextgen-remote-doctor.test.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/local-organism-route-readiness.test.mjs'
       - 'systemia/compute/remote-admission-keeper.e2e.proof.mjs'
       - 'systemia/network/outbound-node-agent.mjs'
       - 'scripts/nextgen/**'
@@ -32,6 +34,8 @@ jobs:
         run: python3 -m unittest discover -v -s scripts/nextgen -p 'test_*.py'
       - name: Prove scoped MCP write and exec approvals default deny
         run: node systemia/remote-operator/mcp-gateway.test.mjs
+      - name: Verify bounded actual local organism route readiness
+        run: node --test systemia/compute/local-organism-route-readiness.test.mjs
       - name: Prove transient poll recovery against actual NodeSeed and broker
         run: node systemia/network/outbound-node-agent-recovery.proof.mjs
       - name: Prove actual remote admission keeper's unavailable broker and reconnection
