@@ -15,8 +15,8 @@ try {
   }
   const headers = {'content-type':'application/json','x-work-saban-client':'local-preview'};
   const post = (task,extra={}) => fetch(`${base}/api/compose`, {
-    method:'POST', headers:{...headers,...(extra.headers||{})},
-    body:JSON.stringify({task}), ...extra,
+    method:'POST', ...extra, headers:{...headers,...(extra.headers||{})},
+    body:JSON.stringify({task}),
   });
   const result = await post('Analyze the quarterly sales spreadsheet and prepare slides');
   assert.equal(result.status, 200);
