@@ -57,6 +57,35 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       res.writeHead(200, {'content-type':mime,'cache-control':'no-store','x-content-type-options':'nosniff'});
       return res.end(fs.readFileSync(path.join(root,filename)));
     }
+    if (req.method === 'POST' && req.url === '/api/run-demo-stream') {
+      if (req.headers['x-work-saban-client'] !== 'local-preview') {
+        return reply(res, 403, {ok:false,error:'local_preview_header_required'});
+      }
+      if (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host) {
+        return reply(res,403,{ok:false,error:'cross_origin_forbidden'});
+      }
+      res.writeHead(200, {
+        'content-type':'application/x-ndjson; charset=utf-8',
+        'cache-control':'no-store','x-content-type-options':'nosniff'
+      });
+      const emit=item=>{
+        if (!res.destroyed && !res.writableEnded) res.write(JSON.stringify(item)+'\n');
+      };
+      emit({schema:'evercraft.work-saban.local-stream.v1',type:'accepted',source:'synthetic_fixture',status:'running_local'});
+      try {
+        const execution=await executeLocalSalesReport({
+          csvText:syntheticCsv,localFileReadApproved:true,
+          beforeStage:row=>emit({type:'stage_started',role:row.role}),
+          afterStage:row=>emit({type:'stage_verified',role:row.role,receipt:row})
+        });
+        emit({type:'completed',source:'synthetic_fixture',execution,retention:'not_saved_by_preview'});
+      } catch {
+        emit({type:'failed_closed',error:'demo_execution_not_verified'});
+      } finally {
+        res.end();
+      }
+      return;
+    }
     if (req.method === 'POST' && req.url === '/api/run-demo') {
       if (req.headers['x-work-saban-client'] !== 'local-preview') return reply(res, 403, {ok:false,error:'local_preview_header_required'});
       if (req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) return reply(res, 403, {ok:false,error:'cross_origin_forbidden'});
@@ -107,6 +136,7 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
         const execution = await executeLocalSalesReport({
           csvText:payload.csv_text,
           localFileReadApproved:true,
+          beforeStage:row => emit({type:'stage_started',role:row.role}),
           afterStage:row => emit({type:'stage_verified',role:row.role,receipt:row}),
         });
         emit({type:'completed',execution,retention:'not_saved_by_preview'});
