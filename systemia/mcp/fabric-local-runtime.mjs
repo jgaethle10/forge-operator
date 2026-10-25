@@ -1247,6 +1247,7 @@ export async function startFabricLocalRuntime({
         '/llms.txt':['../../public/llms.txt','text/plain; charset=utf-8'],
         '/llms-full.txt':['../../public/llms-full.txt','text/plain; charset=utf-8'],
         '/.well-known/evercraft-chum.json':['../../public/.well-known/evercraft-chum.json','application/json; charset=utf-8'],
+        '/.well-known/evercraft-commercial-readiness.json':['../../public/.well-known/evercraft-commercial-readiness.json','application/json; charset=utf-8'],
       };
       if(req.method==='GET'&&Object.hasOwn(discoveryFiles,req.url)){
         const [relative,contentType]=discoveryFiles[req.url];
