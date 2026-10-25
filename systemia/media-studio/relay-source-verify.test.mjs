@@ -30,6 +30,21 @@ test('changing decoded frames yield technical proof, not authenticity proof',t=>
   assert.equal(q.actualVideo,true);assert.equal(q.authenticityNotEstablished,true);
   assert.ok(q.maxChangedPixelRatio>=.015);
 });
+test('a moving but muted video is not a filmed dialogue source',t=>{
+  const {dir,run}=make(t),p=path.join(dir,'mute.mp4');
+  run(['-f','lavfi','-i','testsrc2=size=640x360:rate=24:duration=2',
+    '-pix_fmt','yuv420p','-c:v','libx264',p]);
+  assert.throws(()=>verifyRelayFloorSource({id:'mute',path:p},{requiredDurationSec:1,requiresAudio:true}),/live_dialogue_audio_stream_missing/);
+});
+test('video with embedded sound clears only technical-stream verification',t=>{
+  const {dir,run}=make(t),p=path.join(dir,'av.mp4');
+  run(['-f','lavfi','-i','testsrc2=size=640x360:rate=24:duration=2',
+    '-f','lavfi','-i','sine=frequency=400:sample_rate=48000:duration=2',
+    '-shortest','-pix_fmt','yuv420p','-c:v','libx264','-c:a','aac',p]);
+  const q=verifyRelayFloorSource({id:'av',path:p},{requiredDurationSec:1,requiresAudio:true});
+  assert.equal(q.hasEmbeddedAudio,true);
+  assert.equal(q.authenticityNotEstablished,true);
+});
 test('rejects footage shorter than planned shot duration',t=>{
   const {dir,run}=make(t),p=path.join(dir,'short.mp4');
   run(['-f','lavfi','-i','testsrc2=size=640x360:rate=24:duration=1','-pix_fmt','yuv420p','-c:v','libx264',p]);
