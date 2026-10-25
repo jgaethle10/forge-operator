@@ -55,9 +55,15 @@
     {
       "key": "official-mcp-registry",
       "provider": "Official MCP Registry",
-      "status": "UNKNOWN",
-      "public_url": null,
-      "next": "Locate exact live publisher listing and verification"
+      "status": "DISCOVERED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "next": "Verify registry publisher namespace ownership, current remote transport and canonical URL; compare observed version against current build",
+      "evidence": {
+        "source": "Public official registry indexed listing observed on 2026-10-25",
+        "listing_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "observed_version": "1.5.1",
+        "publisher_claim_verified": false
+      }
     },
     {
       "key": "smithery",
@@ -100,6 +106,17 @@
       "status": "UNKNOWN",
       "public_url": null,
       "next": "Determine supported publication path and identity verification"
+    },
+    {
+      "key": "builtwith-legacy-base44-endpoint",
+      "provider": "BuiltWith detected MCP directory",
+      "status": "STALE",
+      "public_url": "https://builtwith.com/mcp/evercraft-ai-suite-08c4d2b8.base44.app",
+      "evidence": {
+        "source": "Public third-party indexed page surfaced Oct 25; historical first and last detection Sep 25, 2026",
+        "observed_remote": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "next": "Request corrected listing/canonical remote endpoint and purge outdated Base44 references where owner controls; do not assume old endpoint live or authoritative"
     }
   ]
 }
