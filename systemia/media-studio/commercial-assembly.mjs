@@ -161,7 +161,8 @@ export function compileApprovedCommercial(input){
       description:clean(input.description)||undefined,
       language:clean(input.language)||'en',
       tags:Array.isArray(input.tags)?input.tags:[]},
-    qualityMode:'commercial'
+    qualityMode:'commercial',
+    commercialAudioFinishing:'two_pass'
   };
   return {schema:'evercraft.fallen.approved-commercial-assembly.v1',
     status:'ready_to_render_not_creatively_approved_by_system',
