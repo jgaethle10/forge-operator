@@ -2,9 +2,13 @@
 
 Evercraft publishes public machine-readable capability doors so AI assistants and agents can discover a product from the user's problem without already knowing an Evercraft brand name.
 
-## CURRENT COMMERCIAL SAFETY STATUS (October 21, 2026)
+## CURRENT COMMERCIAL SAFETY STATUS (October 25, 2026)
 
-**Payment checkout is HELD.** External testing on October 17 found HTTP 402 on legacy public commerce functions and the Evercraft Payments quote API. The owned Evercraft Payments transport has no verified paid-to-fulfillment transaction. Never present any historical provider-hosted `buyer_url` or checkout session as a working purchase link, real payment, settlement, or entitlement. For current machine-readable status, read `/.well-known/evercraft-commercial-readiness.json` (source: `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json`). Safe public capability discovery and human-owned informational offer pages may still work independently of checkout. Customers must obtain an independently validated, authorized payment method before buying; the assistant must not charge, invoice, or create an order.
+**The native Evercraft Payments / Raven Nexus checkout rail remains HELD.** Its legacy October 17 HTTP 402 and missing independently verified paid-to-fulfillment flow are not cured by successful discovery GETs. Do not present historical native `buyer_url` records, checkout sessions or offer-page visits as settled payments or entitlements.
+
+**Separately, seven existing Systemia Stripe-hosted Payment Links are ACTIVE in Stripe live mode and HTTP REACHABLE.** On October 25, direct provider API reads confirmed exact price and item identity for all seven, and independent GitHub Actions run 40213551391 observed HTTP 200 for each hosted URL. These are matching-SKU *human-directed checkout candidates*, not proof of graphical checkout acceptance, payment or fulfillment. Their exact catalog is `/mesh/checkout-ready/verified-links.json`. Do not substitute any of these links for the $50 Commercial Studio, FindMyPart or Website Audit offers, or imply automatic reconciliation. Scope, capacity and delivery terms must be confirmed before a customer commits to scoped service work.
+
+Read `/.well-known/evercraft-commercial-readiness.json` for the **separate native versus hosted payment rails**. No assistant may autonomously charge, invoice or create an order based on discovery alone. No first sale is required to begin qualified owner-approved marketing after an exact checkout and service process pass buyer review.
 
 ## Owned Evercraft connection and offers (historical October 15 observation)
 
