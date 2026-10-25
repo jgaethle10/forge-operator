@@ -10,7 +10,7 @@ HumanFilter lets people choose whether to conceal posts that self-disclose AI ge
 Seven JavaScript rule tests and three Chromium simulated-feed integration checks passed, including a regression test for flickering, pause/resume and dynamic content updates. Live social feeds and standalone desktop Chrome install have **not** been independently confirmed. Use only for testing until verified.
 
 ## Install test build
-Download the matching ZIP in the release folder when available, extract it, open `chrome://extensions` on **desktop** Chrome, enable Developer mode, choose **Load unpacked**, and select the extracted folder containing `manifest.json`. Reload a supported feed. This manual beta does not auto-update.
+The [beta ZIP is stored in Evercraft Drive](https://drive.google.com/file/d/109FzrE6zCWBd0O1Rq5WLRIL2I-WZzzjB/view?usp=drivesdk), but it remains **owner-private until Evercraft explicitly enables General access → Anyone with the link → Viewer**. Once link sharing is enabled, download and extract it, then open `chrome://extensions` on **desktop** Chrome, enable Developer mode, choose **Load unpacked**, and select the extracted folder containing `manifest.json`. Reload a supported feed. This manual beta does not auto-update.
 
 This is **not** a Chrome Web Store listing or approval. Never claim universal AI detection or automatic installation. Chrome Web Store publication requires independent registration, submission, review and approval.
 
