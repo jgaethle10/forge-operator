@@ -13,7 +13,7 @@ Requires Node 22, npm dependencies with tsx, FFmpeg and FFprobe.
 
 Plan writes commercial-editable-project.json and does not render.
 
-Render creates a real MP4, render receipt, master QC receipt, commercial audio QC receipt, and Clip intake manifest through finalizeStudioDelivery() with qualityMode: commercial. It also writes commercial-render-receipt.json. The final audio gate checks the actual encoded media bytes, not merely requested mastering settings.
+Render creates a real MP4, render receipt, master QC receipt, commercial audio QC receipt, commercial audio mastering receipt, and Clip intake manifest through finalizeStudioDelivery() with qualityMode: commercial and the explicit option commercialAudioFinishing: two_pass. This performs a provisional render followed by two-pass EBU loudness finishing, bounds the final AAC duration to the source picture duration, and remeasures the *final* encoded MP4 before Clip handoff. It also writes commercial-render-receipt.json. Other Fallen delivery modes do not automatically receive this finishing option.
 
 Both modes fail on missing rights declarations, missing or changed file bytes, wrong voice script, unlocked voice profile, invalid clip timing, inadequate source duration, unavailable score/SFX, or missing reviewed SRT subtitles when narration exists.
 
