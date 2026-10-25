@@ -8,6 +8,8 @@ on:
       - 'systemia/compute/local-organism-route-readiness.test.mjs'
       - 'systemia/compute/remote-admission-keeper.e2e.proof.mjs'
       - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/remote-broker-public-preflight.mjs'
+      - 'systemia/network/remote-broker-public-preflight.test.mjs'
       - 'scripts/nextgen/**'
       - 'systemia/remote-operator/mcp-gateway.mjs'
       - 'systemia/remote-operator/mcp-gateway.test.mjs'
@@ -38,6 +40,8 @@ jobs:
         run: node --test systemia/compute/local-organism-route-readiness.test.mjs
       - name: Prove transient poll recovery against actual NodeSeed and broker
         run: node systemia/network/outbound-node-agent-recovery.proof.mjs
+      - name: Prove exact HTTPS broker public-health and Yard receipt comparison fails closed
+        run: node --test systemia/network/remote-broker-public-preflight.test.mjs
       - name: Prove actual remote admission keeper's unavailable broker and reconnection
         run: node systemia/compute/remote-admission-keeper.e2e.proof.mjs
       - name: Preserve existing actual loopback broker remote operator proof
