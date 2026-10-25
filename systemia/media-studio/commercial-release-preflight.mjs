@@ -1,4 +1,7 @@
 import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const sha256 = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const nonempty = value => typeof value === 'string' && value.trim().length > 0;
@@ -154,4 +157,26 @@ export function assessClientCommercialRelease(input) {
     },
   };
   return { ...core, reportDigest: sha256(core) };
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const [, , inputPath, outputPath] = process.argv;
+  if (!inputPath) {
+    console.error('Usage: node commercial-release-preflight.mjs <input.json> [receipt.json]');
+    process.exitCode = 1;
+  } else {
+    try {
+      const source = JSON.parse(fs.readFileSync(path.resolve(inputPath), 'utf8'));
+      const result = assessClientCommercialRelease(source);
+      if (outputPath) {
+        fs.mkdirSync(path.dirname(path.resolve(outputPath)), { recursive: true });
+        fs.writeFileSync(path.resolve(outputPath), JSON.stringify(result, null, 2) + '\n', 'utf8');
+      }
+      console.log(JSON.stringify(result, null, 2));
+      if (result.status === 'blocked') process.exitCode = 2;
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exitCode = 1;
+    }
+  }
 }
