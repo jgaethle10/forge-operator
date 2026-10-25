@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { composeWorkSabanMission } from './mission.mjs';
 import { executeLocalSalesReport } from './execute-local.mjs';
-import { MAX_CSV_BYTES } from './csv-core.mjs';
+import { MAX_CSV_BYTES, parseSalesCsv } from './csv-core.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -66,6 +66,56 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       } catch {
         return reply(res,503,{ok:false,error:'demo_execution_not_verified'});
       }
+    }
+    if (req.method === 'POST' && req.url === '/api/run-csv-stream') {
+      if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json'
+          || req.headers['x-work-saban-client'] !== 'local-preview') {
+        return reply(res, 415, {ok:false,error:'json_local_preview_required'});
+      }
+      if (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host) {
+        return reply(res, 403, {ok:false,error:'cross_origin_forbidden'});
+      }
+      let payload;
+      try {
+        payload = await readJsonBounded(req, MAX_CSV_BYTES + 4096);
+        if (payload?.local_file_read_approved !== true) {
+          return reply(res, 403, {ok:false,error:'explicit_local_file_consent_required'});
+        }
+        if (typeof payload.filename !== 'string' || payload.filename.length > 180
+            || !/^[^/\\\u0000-\u001f]+\.csv$/i.test(payload.filename)) {
+          return reply(res, 400, {ok:false,error:'safe_csv_filename_required'});
+        }
+        if (typeof payload.csv_text !== 'string'
+            || Buffer.byteLength(payload.csv_text, 'utf8') > MAX_CSV_BYTES) {
+          return reply(res, 413, {ok:false,error:'csv_too_large'});
+        }
+        parseSalesCsv(payload.csv_text);
+      } catch (error) {
+        const status = error.httpStatus || (String(error.message).startsWith('csv_') ? 400 : 503);
+        return reply(res, status, {ok:false,error:status === 503 ? 'csv_execution_failed_closed' : error.message});
+      }
+      res.writeHead(200, {
+        'content-type':'application/x-ndjson; charset=utf-8',
+        'cache-control':'no-store',
+        'x-content-type-options':'nosniff',
+      });
+      const emit = item => {
+        if (!res.destroyed && !res.writableEnded) res.write(JSON.stringify(item) + '\n');
+      };
+      emit({schema:'evercraft.work-saban.local-stream.v1',type:'accepted',status:'running_local'});
+      try {
+        const execution = await executeLocalSalesReport({
+          csvText:payload.csv_text,
+          localFileReadApproved:true,
+          afterStage:row => emit({type:'stage_verified',role:row.role,receipt:row}),
+        });
+        emit({type:'completed',execution,retention:'not_saved_by_preview'});
+      } catch {
+        emit({type:'failed_closed',error:'stage_execution_not_verified'});
+      } finally {
+        res.end();
+      }
+      return;
     }
     if (req.method === 'POST' && req.url === '/api/run-csv') {
       if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json'
