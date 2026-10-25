@@ -4,6 +4,9 @@ on:
     paths:
       - 'systemia/media-studio/commercial-creative-direction.mjs'
       - 'systemia/media-studio/commercial-creative-direction.test.mjs'
+      - 'systemia/media-studio/studio-create.ts'
+      - 'systemia/media-studio/studio-create.test.ts'
+      - 'systemia/media-studio/commercial-source-trim.integration.test.ts'
       - 'systemia/media-studio/fixtures/sample-commercial-direction.json'
       - '.github/workflows/fallen-commercial-creative-direction.yml'
   workflow_dispatch:
@@ -22,8 +25,16 @@ jobs:
         run: node --test systemia/media-studio/commercial-creative-direction.test.mjs
       - name: Install Studio TypeScript runtime
         run: npm install --no-audit --no-fund
+      - name: Ensure FFmpeg for encoded source-cut proof
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
       - name: Verify editable source-video trim semantics
         run: node --import tsx --test systemia/media-studio/studio-create.test.ts
+      - name: Render and visually verify two different cuts from one source
+        run: node --import tsx --test systemia/media-studio/commercial-source-trim.integration.test.ts
       - name: Compile fictional customer cut sheet into existing Fallen editable timeline
         run: |
           node --import tsx --input-type=module - <<'NODE'
