@@ -104,7 +104,7 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
     const visualSource=assetMap.get(scene.assetId);
     if(!visualSource)throw new Error('commercial_scene_asset_missing:'+sceneId);
     if(brief.creativeStandard==='relay-floor-v1')
-      motionObservations.push(verifyRelayFloorSource(visualSource,{requiredDurationSec:time}));
+      motionObservations.push(verifyRelayFloorSource(visualSource,{requiredDurationSec:time,requiresAudio:Boolean(scene.onScreenDialogue)}));
     const subjects=ensureArray(scene.mustShowSubjects,'must_show_subjects');
     for(const subject of subjects){
       if(!visualSource.subjects.includes(subject))throw new Error('commercial_must_show_not_proven:'+sceneId+':'+subject);
