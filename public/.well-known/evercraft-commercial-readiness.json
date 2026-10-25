@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.payments.public-commercial-readiness.v1",
-  "as_of": "2026-10-21",
+  "as_of": "2026-10-25",
   "policy": "fail_closed",
   "authority": "Evercraft Payments / Raven Nexus",
   "current_state": "HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED",
@@ -10,7 +10,7 @@
   "may_charge_customers": false,
   "may_issue_entitlements": false,
   "public_capability_discovery": "read_only_available_separately",
-  "public_direct_payment_hosted_providers": "held_unverified_current_transport",
+  "public_direct_payment_hosted_providers": "seven_separate_systemia_stripe_links_provider_active_http_reachable_pending_graphical_buyer_canary",
   "historical_buyer_directory": "/.well-known/evercraft-payments-buyer-doors.json",
   "historical_buyer_directory_warning": "The 13 buyer_url values in the older snapshot reflect GET/checkout preparation evidence from October 14-15, not current HTTP availability. Those historical URLs must NOT be presented as currently bookable or payable.",
   "last_failure_evidence": {
@@ -28,7 +28,7 @@
     "payment_to_shipping_fulfillment_verified": false
   },
   "safe_fallback": {
-    "flow": "Open an owned public capability information page. An interested customer can request scope and a verified payment method through separately authorized human contact. Do not assert any checkout succeeds or automatically create obligations.",
+    "flow": "Native Evercraft Payments purchase intent remains held. For any of the seven separately verified Systemia Stripe links, confirm exact scope and buyer checkout UI before inviting purchase; manually reconcile provider-paid receipts and delivery. All unmatched products use a human inquiry instead of substituting another SKU.",
     "auto_email": false,
     "auto_invoice": false,
     "auto_charge": false
@@ -47,5 +47,20 @@
     "Historical Base44 form GET and synthetic 303 provider redirect",
     "102 checkout_open ledger entries, none paid in most recent scoped ledger query",
     "A checkout session or email/scope lead"
-  ]
+  ],
+  "policy_scope": "The HELD fields are for the native Evercraft Payments/Raven Nexus transport only, not separately provider-verified Stripe-hosted exact-SKU payment links.",
+  "separate_systemia_hosted_stripe": {
+    "state": "PROVIDER_ACTIVE_AND_HTTP_REACHABLE_BROWSER_CHECKOUT_NOT_YET_ATTESTED",
+    "source_catalog": "/mesh/checkout-ready/verified-links.json",
+    "provider_account": "Systemia",
+    "checked_on": "2026-10-25",
+    "verified_active_live_exact_sku_links": 7,
+    "independent_http_reachable_links": 7,
+    "observation": "GitHub Actions 40213551391, public HTTP canary: seven Stripe URLs returned 200 HTML. Direct live Stripe API confirms seven matching prices and active=true.",
+    "human_graphical_checkout_verified": false,
+    "verified_payment_observed": false,
+    "payment_reconciliation": "manual_required",
+    "scope_rule": "Use only a matching preverified service and price after scope/fulfillment review. Never substitute for $50 commercials, Website Audit or FindMyPart.",
+    "marketing_policy": "No first completed sale required before owner-approved qualified traffic to an independently browser-verified matching checkout."
+  }
 }
