@@ -80,7 +80,21 @@ try {
   assert.equal(first.core.result.raven_inference_gateway_configured, true);
   assert.equal(first.core.result.raven_inference_provider, 'ollama');
   assert.equal(first.core.result.raven_inference_model, 'proof-local-model');
-  const firstCoreRoute = await first.yard.verifyRoute('systemia-core-local-resident');
+  // The Core health route can briefly be unreachable after the earlier
+  // aggregate health probe on a loaded runner. Require an actual detailed
+  // healthy response, never infer Raven service state from missing data.
+  let firstCoreRoute;
+  const coreRouteDeadline = Date.now() + 20_000;
+  do {
+    firstCoreRoute = await first.yard.verifyRoute('systemia-core-local-resident');
+    if (firstCoreRoute?.ok === true && Array.isArray(firstCoreRoute?.health?.services))
+      break;
+    await sleep(250);
+  } while (Date.now() < coreRouteDeadline);
+  assert.ok(
+    firstCoreRoute?.ok === true && Array.isArray(firstCoreRoute?.health?.services),
+    'Core detailed health must remain available with services within 20 seconds'
+  );
   const firstRavenPrivate = firstCoreRoute.health.services.find(
     (service) => service.service_key === 'raven-private-runtime'
   );
