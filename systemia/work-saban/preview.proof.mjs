@@ -103,6 +103,11 @@ try {
   const floorAsset=await (await fetch(base+'/office-floor.svg')).text();
   assert(officeAsset.includes('stage_verified'));
   assert(floorAsset.includes('floor-desks'));
+  assert(floorAsset.includes('handoff-analyst-writer'));
+  assert(officeAsset.includes('showObservedHandoff'));
+  assert(officeAsset.includes('stage_started'));
+  assert(officeAsset.includes('replayAt'));
+  assert(officeAsset.includes('data-agent'));
   assert((await (await fetch(base+'/')).text()).includes('The Work Floor'));
   const denied = await fetch(`${base}/api/compose`, {
     method:'POST',headers:{'content-type':'text/plain'},body:'oops'
