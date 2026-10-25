@@ -171,6 +171,24 @@ const mismatchedVerifier = new RemoteOperatorGateway({
   approvalVerifier:async req=>({...req,approved:true,one_time_consumed:true,
     root_key:'different-root'}),
 });
+const wrongNodeVerifier = new RemoteOperatorGateway({
+  capacityEndpoint:'http://127.0.0.1:43210/nodes/proof-node',
+  controlToken,clientToken,fetchImpl:fakeFetch,
+  approvalVerifier:async req=>({
+    ...req,approved:true,one_time_consumed:true,
+    node_id:'some-other-authorized-node',
+  }),
+});
+const beforeWrongNode = seen.length;
+const wrongNode = await executeRemoteOperatorMcpRpc({
+  rpc:{jsonrpc:'2.0',id:64,method:'tools/call',
+    params:{name:'remote_exec',arguments:{root_key:'home',program:'git',
+      args:['--version'],approval_ref:'proof:owner-approved'}}},
+  gateway:wrongNodeVerifier,authorization:'Bearer '+clientToken,
+});
+assert.equal(wrongNode.error.message,'remote_operator_scoped_approval_denied');
+assert.equal(seen.length,beforeWrongNode);
+
 const scopeMismatch = await executeRemoteOperatorMcpRpc({
   rpc:{jsonrpc:'2.0',id:63,method:'tools/call',
     params:{name:'remote_exec',arguments:{root_key:'home',program:'git',
