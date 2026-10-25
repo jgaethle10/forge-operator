@@ -1,8 +1,5 @@
 name: EPS RC02 Human Footage Source Scout
 on:
-  pull_request:
-    paths:
-      - ".github/workflows/eps-rc02-human-source-scout.yml"
   workflow_dispatch:
 jobs:
   verify-human-source:
