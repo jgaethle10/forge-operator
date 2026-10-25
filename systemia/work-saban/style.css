@@ -77,3 +77,8 @@ main{max-width:1420px;padding-top:34px}
 @media(prefers-reduced-motion:reduce){
  [data-agent] use,[data-agent] .status-light{animation:none!important}
 }
+
+#floor-connections path{transition:stroke-opacity .28s ease,stroke-width .28s ease}
+#floor-connections path.is-handoff{stroke:#7ad6ef;stroke-opacity:.85;stroke-width:4;stroke-dasharray:10 8;animation:handoff-flow 2.2s linear infinite;filter:drop-shadow(0 0 5px #56d3efaa)}
+@keyframes handoff-flow{to{stroke-dashoffset:-72}}
+@media(prefers-reduced-motion:reduce){#floor-connections path.is-handoff{animation:none!important}}
