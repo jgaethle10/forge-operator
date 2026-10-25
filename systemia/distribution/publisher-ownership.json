@@ -1,0 +1,105 @@
+{
+  "schema": "evercraft.distribution.publisher-ownership.v1",
+  "reviewed_at": "2026-10-25",
+  "policy": "Evidence required for every positive ownership assertion; no publisher-side writes without authority",
+  "entries": [
+    {
+      "key": "chatgpt-evercraft-personal-106",
+      "provider": "OpenAI ChatGPT",
+      "status": "DISCOVERED",
+      "public_url": null,
+      "release": "1.0.6",
+      "visibility": "PRIVATE",
+      "internal_plugin_id": "plugins_6abd65b5b6588191a5dc12ed7a998244",
+      "evidence": {
+        "source": "Plugin Creator personal inventory 2026-10-25"
+      },
+      "next": "Determine canonical release and actual public submission state"
+    },
+    {
+      "key": "chatgpt-evercraft-personal-104",
+      "provider": "OpenAI ChatGPT",
+      "status": "DISCOVERED",
+      "public_url": null,
+      "release": "1.0.4",
+      "visibility": "PRIVATE",
+      "internal_plugin_id": "plugins_6abc8ff0e790819194e339e42a72eac5",
+      "evidence": {
+        "source": "Plugin Creator personal inventory 2026-10-25"
+      },
+      "next": "Reconcile duplicate without deleting"
+    },
+    {
+      "key": "chatgpt-evercraft-development",
+      "provider": "OpenAI ChatGPT",
+      "status": "DISCOVERED",
+      "public_url": null,
+      "release": "1.0.0",
+      "visibility": "PRIVATE",
+      "internal_plugin_id": "plugin_asdk_app_6abc50d3a2188191af12b62d59d1ec3e",
+      "evidence": {
+        "source": "Plugin Creator personal inventory 2026-10-25"
+      },
+      "next": "Determine developer-only versus canonical release"
+    },
+    {
+      "key": "glama-machine-commerce",
+      "provider": "Glama",
+      "status": "CLAIM_REQUIRED",
+      "public_url": "https://glama.ai/mcp/connectors/io.github.jgaethle10/evercraft-machine-commerce",
+      "evidence": {
+        "source": "Public listing observed; account claim NOT verified"
+      },
+      "next": "Check provider claim ownership with authorized account; preserve verification"
+    },
+    {
+      "key": "official-mcp-registry",
+      "provider": "Official MCP Registry",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Locate exact live publisher listing and verification"
+    },
+    {
+      "key": "smithery",
+      "provider": "Smithery",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Locate exact live listing and ownership"
+    },
+    {
+      "key": "claude",
+      "provider": "Anthropic Claude",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Determine supported connector/listing and publisher authorization"
+    },
+    {
+      "key": "gemini",
+      "provider": "Google Gemini",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Determine current supported integration and publication state"
+    },
+    {
+      "key": "grok",
+      "provider": "xAI Grok",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Verify prior MCP listing and publisher controls"
+    },
+    {
+      "key": "perplexity",
+      "provider": "Perplexity",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Discover approved integration/distribution surface"
+    },
+    {
+      "key": "copilot",
+      "provider": "Microsoft Copilot",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Determine supported publication path and identity verification"
+    }
+  ]
+}
