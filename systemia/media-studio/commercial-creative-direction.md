@@ -29,3 +29,9 @@ The performance plan flags scripts requiring more than 175 spoken words per minu
 ## Non-negotiable boundaries
 
 No invented clients, offers, testimonial claims, consent or commercial-use rights. Human review remains necessary for believable cinematography, composition, voice naturalness, music, final audio, rights, mobile readability and client approval. The compiler issues no delivery or social publishing authority, and client approval for delivery never implies promotional repost permission.
+
+## Source-film edit points
+
+Each visual beat may provide visual.trimStartSec (seconds) when referencing an approved video asset. The compiler passes the trim to Fallen's existing timeline clip and FFmpeg exporter. If one source file is used in several beats, every beat must have a distinct explicit in-point so the commercial does not accidentally restart the footage from zero for each scene. The full source duration, when known, is checked against each beat's trim plus its scene duration. Source-image assets cannot be trimmed.
+
+One source video can therefore be edited into multiple real shots without inventing replacement footage, duplicating asset rights, or paying for additional video generation. The final exporter still verifies the actual source file digest and produces its usual QC receipts. The demonstration uses four unique in-points from one fictional 30-second recording.
