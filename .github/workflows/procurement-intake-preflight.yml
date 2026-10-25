@@ -18,3 +18,48 @@ jobs:
           node-version: '22'
       - name: Test government vendor and HRSN readiness contract (no network or portal submit)
         run: node --test systemia/procurement/provider-intake.test.mjs
+  owned-public-portal-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: systemia/evercraft-web/browser-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install first-party Browser Worker dependencies and Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install chromium
+      - name: Check owned worker and government probe source
+        run: |
+          node --check server.mjs
+          node --check ../../procurement/public-portal-probe.mjs
+          node --test policy.test.mjs
+      - name: Probe public agency pages through owned Chromium, no forms
+        run: |
+          set -euo pipefail
+          export EVERCRAFT_BROWSER_WORKER_TOKEN="$(openssl rand -hex 32)"
+          export PORT=18788
+          export EVERCRAFT_BROWSER_LOCAL_URL="http://127.0.0.1:18788"
+          export EVERCRAFT_GOVERNMENT_PROBE_OUTPUT="artifacts/evercraft/government-portal"
+          node server.mjs > "$RUNNER_TEMP/owned-browser-worker.log" 2>&1 &
+          WORKER_PID=$!
+          trap 'kill "$WORKER_PID" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent "http://127.0.0.1:18788/healthz" > /dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then echo "Owned worker readiness failed"; exit 1; fi
+          node ../../procurement/public-portal-probe.mjs
+      - name: Upload redacted first-party portal proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-government-public-page-receipts
+          path: systemia/evercraft-web/browser-worker/artifacts/evercraft/government-portal/
+          retention-days: 7
+          if-no-files-found: warn
