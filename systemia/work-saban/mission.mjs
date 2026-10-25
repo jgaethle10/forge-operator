@@ -16,7 +16,7 @@ const SIGNALS = Object.freeze({
   analyst: /\b(data|spreadsheet|excel|csv|numbers|revenue|sales|budget|finance|financial|trend|metric|kpi|forecast|calculate|compare|report)\b/i,
   researcher: /\b(research|investigate|find|source|market|competitor|survey|compare|evaluate|why|evidence)\b/i,
   writer: /\b(write|email|message|letter|memo|draft|proposal|copy|announce|summary|summarize|newsletter|respond)\b/i,
-  designer: /\b(slide|presentation|deck|pitch|visual|chart|graphic|design|powerpoint)\b/i,
+  designer: /\b(slides?|presentations?|decks?|pitch|visual|charts?|graphics?|design|powerpoint)\b/i,
   operations: /\b(workflow|process|project|schedule|plan|coordinate|organize|inventory|automate|procedure|onboard|operations)\b/i,
 });
 
