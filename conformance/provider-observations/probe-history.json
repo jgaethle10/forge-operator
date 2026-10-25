@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-25T22:32:05.175Z",
+  "updated_at": "2026-10-25T22:45:38.444Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "c607c79cc7f97b90fefbbfbda0604a23f26719f544b67698c2830fcdaf345226",
-      "observed_at": "2026-10-24T04:46:16.816Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-network",
-      "case_id": "network-device-reconnect-003",
-      "prompt_sha256": "8ef0ba6e0ca8d3f1035de1139275f6624eef8ef6c7e8f7bfbe4d3edb753ed697",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "417a863a0794921921c6acc74c834d3d4559ccca31494c0cb93bae0ce4d65728",
-      "response_sha256": "a3a0c0f4230688770c78bb762e60a66dea71fdd74c48a3630ad80f7e65b5f543",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "edc18d6459756d03b613c335c98e507e90b8574535072109fd50b31c31378ffc",
       "observed_at": "2026-10-24T04:46:18.452Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "a98cb09f34e7cceb0700056ab19f5742b10e2958e5df8000d85fb7b436ad90e3",
       "pickup_observed": true,
       "provider_receipt_sha256": "931e1a02f5650417296a3350abf327de394ee6386aafe448f7b76cab6d5bc3a6",
+      "response_sha256": "87a21a9a06b31600fd89e979c9cd864b0782d680db4efad5e1657dd4cd6a7ba0",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "84e2fb466f3908074bd2b9f69dbdde28c7bee1b82b7a57aeac089dde36862d40",
+      "observed_at": "2026-10-25T22:45:38.443Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "faie",
+      "case_id": "faie-001",
+      "prompt_sha256": "a98cb09f34e7cceb0700056ab19f5742b10e2958e5df8000d85fb7b436ad90e3",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "463f47a3f7da10c15aa64c7f76920216fe5d5484ff99825699c49106a594464e",
       "response_sha256": "87a21a9a06b31600fd89e979c9cd864b0782d680db4efad5e1657dd4cd6a7ba0",
       "source": "authorized_provider_probe",
       "privacy": {
