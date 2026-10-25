@@ -92,7 +92,18 @@ export function assessClientCommercialRelease(input) {
   const digest = typeof render.sha256 === 'string' ? render.sha256.toLowerCase() : '';
   add(reasons, 'render_digest_invalid', HEX.test(digest));
   add(reasons, 'master_digest_mismatch', HEX.test(digest) && master.sha256 === digest);
-  add(reasons, 'audio_digest_mismatch', HEX.test(digest) && audio.masterSha256 === digest);
+  const audioMasterDigest = typeof audio.masterSha256 === 'string' ? audio.masterSha256.toLowerCase() :
+    typeof audio.sha256 === 'string' ? audio.sha256.toLowerCase() : '';
+  add(reasons, 'audio_receipt_digest_ambiguous',
+    !(audio.masterSha256 && audio.sha256 && audio.masterSha256.toLowerCase() !== audio.sha256.toLowerCase()));
+  add(reasons, 'audio_digest_mismatch', HEX.test(digest) && audioMasterDigest === digest);
+  add(reasons, 'audio_measured_loudness_missing', finite(audio.measurements?.integratedLufs));
+  add(reasons, 'audio_measured_true_peak_missing', finite(audio.measurements?.truePeakDbtp));
+  add(reasons, 'audio_loudness_outside_commercial_standard',
+    finite(audio.measurements?.integratedLufs) &&
+    audio.measurements.integratedLufs >= -18 && audio.measurements.integratedLufs <= -14);
+  add(reasons, 'audio_true_peak_above_commercial_ceiling',
+    finite(audio.measurements?.truePeakDbtp) && audio.measurements.truePeakDbtp <= -1);
   if (input.clipManifest) {
     add(reasons, 'clip_manifest_schema_invalid', input.clipManifest.schema === 'evercraft.clip.media-intake.v1');
     add(reasons, 'clip_manifest_digest_mismatch', input.clipManifest.media?.sha256 === digest);
