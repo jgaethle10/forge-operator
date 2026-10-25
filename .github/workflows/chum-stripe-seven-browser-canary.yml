@@ -1,0 +1,56 @@
+name: CHUM Systemia Stripe seven browser canary
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/browser-worker/verify-systemia-stripe-seven.mjs'
+      - 'systemia/evercraft-web/browser-worker/verify-systemia-stripe-seven.test.mjs'
+      - 'public/mesh/checkout-ready/verified-links.json'
+      - '.github/workflows/chum-stripe-seven-browser-canary.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '51 16 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chum-systemia-seven-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  buyer-checkout-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate exact-SKU detection contract
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npm install --no-audit --no-fund
+          node --check verify-systemia-stripe-seven.mjs
+          node --test verify-systemia-stripe-seven.test.mjs
+      - name: Install owned Browser Worker Chromium
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npx playwright install --with-deps chromium
+      - name: Inspect seven exact-SKU hosted payment pages without interacting
+        id: browser
+        continue-on-error: true
+        env:
+          EVERCRAFT_STRIPE_BROWSER_RECEIPT: ${{ runner.temp }}/systemia-stripe-seven-browser.json
+        run: node systemia/evercraft-web/browser-worker/verify-systemia-stripe-seven.mjs --gate
+      - name: Save trustworthy buyer-view receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-stripe-seven-buyer-view
+          path: ${{ runner.temp }}/systemia-stripe-seven-browser.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Fail on incomplete rendered checkout proof
+        if: steps.browser.outcome == 'failure'
+        run: |
+          echo 'One or more provider pages failed exact-SKU rendered-checkout proof. No payment, sale or automatic fulfillment has been inferred.'
+          exit 1
