@@ -76,6 +76,7 @@ export function assessClientCommercialRelease(input) {
   const render = input.renderReceipt || {};
   const master = input.masterQc || {};
   const audio = input.audioQc || {};
+  const visual = input.visualQc || {};
   add(reasons, 'order_id_missing', nonempty(order.id));
   add(reasons, 'order_scope_not_confirmed', order.scopeConfirmed === true);
   add(reasons, 'order_format_invalid', ['9:16', '16:9', '1:1'].includes(order.aspectRatio));
@@ -135,6 +136,45 @@ export function assessClientCommercialRelease(input) {
     assetIds.every(nonempty) && new Set(assetIds).size === assetIds.length);
   validateRights(input, assetIds, reasons);
   validateStory(input, order.expectedDurationSec, reasons);
+  // Final encoded picture evidence is independent of per-shot candidate selection.
+  add(reasons, 'visual_qc_schema_invalid', visual.schema === 'evercraft.fallen.commercial-visual-qc.v1');
+  add(reasons, 'visual_qc_state_invalid', ['accepted','review_required'].includes(visual.status));
+  add(reasons, 'visual_digest_mismatch', HEX.test(digest) && visual.masterSha256 === digest);
+  add(reasons, 'visual_duration_mismatch',
+    finite(visual.durationSec) && finite(render.durationSec) &&
+    Math.abs(visual.durationSec-render.durationSec)<=0.2);
+  add(reasons, 'visual_samples_missing', finite(visual.sampledFrames) && visual.sampledFrames>=2);
+  const visibleSegments=Array.isArray(visual.segments)?visual.segments:[];
+  const actualBeatIds=new Set();
+  let expectedStart=0;
+  for(const beat of input.storyboard?.beats || []) {
+    const matching=visibleSegments.filter(row=>row.beatId===beat.id);
+    add(reasons,'visual_beat_coverage_missing_or_duplicate:'+beat.id,matching.length===1);
+    const row=matching[0];
+    if(row){
+      add(reasons,'visual_beat_timeline_mismatch:'+beat.id,
+        finite(row.startSec) && finite(row.endSec) &&
+        Math.abs(row.startSec-expectedStart)<0.06 &&
+        Math.abs(row.endSec-(expectedStart+beat.durationSec))<0.06);
+      add(reasons,'visual_beat_samples_missing:'+beat.id,
+        Number.isInteger(row.sampleCount)&&row.sampleCount>=2);
+      if(!Array.isArray(row.flags))reasons.push('visual_flags_invalid:'+beat.id);
+      else if(row.flags.length){
+        const exceptions=Array.isArray(input.creativeReview?.visualExceptions)?input.creativeReview.visualExceptions:[];
+        const approved=exceptions.some(x=>x.beatId===beat.id &&
+          nonempty(x.reason) && nonempty(x.evidenceRef) && nonempty(x.reviewedBy));
+        add(reasons,'visual_exception_unreviewed:'+beat.id,approved);
+      }
+      actualBeatIds.add(beat.id);
+    }
+    expectedStart+=Number.isFinite(beat.durationSec)?beat.durationSec:0;
+  }
+  for(const row of visibleSegments){
+    if(!actualBeatIds.has(row.beatId))reasons.push('visual_unknown_beat:'+String(row.beatId));
+  }
+  const anyFlags=visibleSegments.some(row=>Array.isArray(row.flags)&&row.flags.length>0);
+  if(visual.status==='accepted'&&anyFlags)reasons.push('visual_unreviewed_flags_in_accepted_receipt');
+  if(visual.status==='review_required'&&!anyFlags)reasons.push('visual_review_state_unexplained');
   const production = input.productionGrade || {};
   add(reasons, 'production_grade_schema_invalid', production.schema === 'evercraft.fallen.production-grade-report.v1');
   add(reasons, 'production_grade_not_accepted', production.status === 'accepted');
