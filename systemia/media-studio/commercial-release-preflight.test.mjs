@@ -34,6 +34,15 @@ const good = () => ({
   clipManifest: {
     schema: 'evercraft.clip.media-intake.v1', media: { sha256: SHA },
   },
+  productionGrade: {
+    schema: 'evercraft.fallen.production-grade-report.v1',
+    status: 'accepted',
+    beatReports: [
+      { beatId: 'intro', status: 'accepted', reasons: [] },
+      { beatId: 'proof', status: 'accepted', reasons: [] },
+      { beatId: 'end', status: 'accepted', reasons: [] },
+    ],
+  },
   rights: ['hero', 'logo', 'music'].map(assetId => ({
     assetId, status: 'verified', permittedUses: ['commercial_video'],
     evidenceRef: 'fixture:permission:' + assetId, reviewedBy: 'producer', reviewedAt: '2026-10-25T12:00:00Z',
@@ -137,4 +146,15 @@ test('incomplete input produces blockers rather than a misleading green status',
   assert.ok(receipt.reasons.includes('audio_qc_not_accepted'));
   assert.ok(receipt.reasons.includes('rights_missing_asset:hero'));
   assert.ok(receipt.reasons.includes('creative_review_unsigned'));
+});
+
+test('all storyboard beats require accepted production-grade visual coverage', () => {
+  const input = good();
+  input.productionGrade.beatReports = input.productionGrade.beatReports.filter(x => x.beatId !== 'proof');
+  let receipt = assessClientCommercialRelease(input);
+  assert.equal(receipt.status, 'blocked');
+  assert.ok(receipt.reasons.includes('production_grade_beat_missing:proof'));
+  input.productionGrade.beatReports.push({ beatId: 'proof', status: 'rejected', reasons: ['hero_media_missing'] });
+  receipt = assessClientCommercialRelease(input);
+  assert.ok(receipt.reasons.includes('production_grade_beat_rejected:proof'));
 });
