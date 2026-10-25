@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {inspectNextGen,consistentNextGenLocalReceipts,nextGenPrerequisiteStatus} from './nextgen-remote-doctor.mjs';
+import {inspectNextGen,consistentNextGenLocalReceipts,nextGenPrerequisiteStatus,probeNextGenLocalLoopback} from './nextgen-remote-doctor.mjs';
 
 function tempHome(t){
   const home=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-nextgen-proof-'));
@@ -116,4 +116,66 @@ test('local prerequisites can pass without broker, remote still fails without in
   decision=nextGenPrerequisiteStatus({...report,is_linux_wsl:false});
   assert.equal(decision.local_prerequisites_passed,false);
   assert.equal(decision.local_foundation_receipts_consistent,false);
+});
+
+function stageSyntheticLocalReceipts(t,overrides={}) {
+  const home=tempHome(t);
+  const root=path.join(home,'.local/state/evercraft/organism');
+  fs.mkdirSync(path.join(root,'compute'),{recursive:true});
+  const fingerprint='sha256:'+'c'.repeat(64);
+  const nodeId='evercraft-node002-nextgen';
+  fs.writeFileSync(path.join(root,'local-organism-receipt.json'),
+    JSON.stringify({schema:'evercraft.local-organism-receipt.v1',
+      node_id:nodeId,device_fingerprint:fingerprint,
+      public_ingress:false,node_endpoint_scope:'loopback_only'}));
+  fs.writeFileSync(path.join(root,'compute/nodeseed-receipt.json'),
+    JSON.stringify({schema:'evercraft.compute.nodeseed-receipt.v1',
+      node_id:nodeId,device_fingerprint:fingerprint,
+      endpoint:overrides.endpoint||'http://127.0.0.1:41515',beacon:null}));
+  return home;
+}
+
+test('live localhost NodeSeed health check is read-only and never grants control',async t=>{
+  const home=stageSyntheticLocalReceipts(t);
+  let observed=null;
+  const report=await probeNextGenLocalLoopback({home,fetchImpl:async (url,opts)=>{
+    observed={url,method:opts.method,redirect:opts.redirect,credentials:opts.headers};
+    return new Response(JSON.stringify({
+      ok:true,node_id:'evercraft-node002-nextgen',runtime:'Evercraft Compute',
+      control_token:'THIS_MUST_NOT_ESCAPE',
+    }),{status:200});
+  }});
+  assert.equal(observed.url,'http://127.0.0.1:41515/v1/health');
+  assert.equal(observed.method,'GET');
+  assert.equal(observed.redirect,'error');
+  assert.equal(JSON.stringify(observed.credentials).includes('authorization'),false);
+  assert.equal(report.local_nodeseed_loopback_health_checked,true);
+  assert.equal(report.local_nodeseed_loopback_health_verified,true);
+  assert.equal(report.remote_control_verified,false);
+  assert.equal(report.local_probe_mutation_performed,false);
+  assert.doesNotMatch(JSON.stringify(report),/THIS_MUST_NOT_ESCAPE|41515/);
+});
+
+test('wrong local NodeSeed identity, failed HTTP, and network outage cannot return live ready',async t=>{
+  const home=stageSyntheticLocalReceipts(t);
+  for(const response of [
+    new Response(JSON.stringify({ok:true,node_id:'different',runtime:'Evercraft Compute'}),{status:200}),
+    new Response(JSON.stringify({ok:false,node_id:'evercraft-node002-nextgen',runtime:'Evercraft Compute'}),{status:200}),
+    new Response(JSON.stringify({ok:true,node_id:'evercraft-node002-nextgen',runtime:'Evercraft Compute'}),{status:403}),
+  ]) {
+    const result=await probeNextGenLocalLoopback({home,fetchImpl:async()=>response});
+    assert.equal(result.local_nodeseed_loopback_health_verified,false);
+  }
+  const unavailable=await probeNextGenLocalLoopback({home,fetchImpl:async()=>{throw new Error('sensitive-path/private.key')}});
+  assert.equal(unavailable.local_nodeseed_loopback_health_verified,false);
+  assert.doesNotMatch(JSON.stringify(unavailable),/sensitive-path/);
+});
+
+test('non-loopback receipts never trigger network requests',async t=>{
+  const home=stageSyntheticLocalReceipts(t,{endpoint:'https://attacker.example.test'});
+  let calls=0;
+  const r=await probeNextGenLocalLoopback({home,fetchImpl:async()=>{calls++;throw Error('bad')}});
+  assert.equal(calls,0);
+  assert.equal(r.local_nodeseed_loopback_health_checked,false);
+  assert.equal(r.local_nodeseed_loopback_health_verified,false);
 });
