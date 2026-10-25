@@ -190,7 +190,11 @@ export function createElevenLabsAudioAdapter(
   const soundModel=config.soundModelId??'eleven_text_to_sound_v2';
   const probe=config.probeDurationSec??probeDurationDefault;
   const runFfmpeg=config.runFfmpeg??runFfmpegDefault;
-  const maxSpeechTempoAdjustmentPct=config.maxSpeechTempoAdjustmentPct??20;
+  // Treat major TTS time-stretch as a failed performance, not a mixing fix.
+  const maxSpeechTempoAdjustmentPct=config.maxSpeechTempoAdjustmentPct??5;
+  if(!Number.isFinite(maxSpeechTempoAdjustmentPct)||maxSpeechTempoAdjustmentPct<0||maxSpeechTempoAdjustmentPct>20){
+    throw new Error('elevenlabs_speech_tempo_policy_invalid');
+  }
 
   return {
     id:'elevenlabs-audio-adapter',
@@ -260,14 +264,18 @@ export function createElevenLabsAudioAdapter(
         const sourcePath=outputBase+'.source.mp3';
         fs.writeFileSync(sourcePath,bytes);
         const observed=probe(sourcePath);
-        fitSpeechTiming({
-          sourcePath,
-          outputPath,
-          observedDuration:observed,
-          targetDuration:need.durationSec,
-          maxAdjustmentPct:maxSpeechTempoAdjustmentPct,
-          runFfmpeg,
-        });
+        try {
+          fitSpeechTiming({
+            sourcePath,
+            outputPath,
+            observedDuration:observed,
+            targetDuration:need.durationSec,
+            maxAdjustmentPct:maxSpeechTempoAdjustmentPct,
+            runFfmpeg,
+          });
+        } finally {
+          fs.rmSync(sourcePath,{force:true});
+        }
       }else{
         fs.writeFileSync(outputPath,bytes);
       }
