@@ -47,3 +47,11 @@ Condenser kWh/L excludes filters, pumps, capital, maintenance and treatment. It 
 4. Judge external freshwater savings and full costs against compliant alternatives, not manufactured yield claims.
 
 Sources: [Washington Ecology rain policy](https://ecology.wa.gov/water-shorelines/water-supply/water-recovery-solutions/rainwater-collection), [EPA agriculture reuse](https://www.epa.gov/waterreuse/reusing-water-agricultural-activities-resources), [2026 AWH evidence](https://doi.org/10.1016/j.ecmx.2026.101928).
+
+## Climate screening v0.2 (Oct 25, 2026)
+
+Run `python climate_feasibility.py` for source-labeled **hypothetical** Yakima roof, humid/dry air physics upper-bounds and electrical cost screens. See [FEASIBILITY_DECISION.md](FEASIBILITY_DECISION.md) for interpretation, research assumptions, alternatives, hold status and proof gates. The new model is advisory-only and never allows input values to be represented as measured site observations.
+
+- Reported Yakima 1991–2020 NOAA-normal annual precipitation: 8.01 inches (published by a secondary historical-climate site); archive cross-check pending.
+- Standalone screening code plus 10 unit tests ran successfully in a local Python 3.13 environment on Oct 25, 2026. Full combined GitHub CI/remote runner status not verified.
+- Scientific contact Gmail drafts remain unsent, and no hardware has been installed or purchased.
