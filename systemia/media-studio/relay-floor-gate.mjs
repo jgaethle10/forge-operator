@@ -37,6 +37,11 @@ export function assertRelayFloorBrief(brief) {
       requirePart(scene.onScreenDialogue.text, 'spoken_text_missing:' + scene.id);
       requirePart(scene.onScreenDialogue.syncAudioAssetRef, 'synchronized_dialogue_audio_missing:' + scene.id);
       requirePart(scene.onScreenDialogue.performerUseConsentRef, 'performer_use_consent_missing:' + scene.id);
+      if (scene.onScreenDialogue.syncAudioAssetRef !== scene.assetId)
+        throw new Error('relay_floor_dialogue_must_use_same_source_audio:' + scene.id);
+      if (String(scene.voiceLine||'').trim().replace(/\s+/g,' ').toLowerCase() !==
+          String(scene.onScreenDialogue.text).trim().replace(/\s+/g,' ').toLowerCase())
+        throw new Error('relay_floor_on_screen_dialogue_voice_cue_mismatch:' + scene.id);
       onScreenSpeech++;
     }
     if (asset.footageClass === 'illustrative_stock') {
