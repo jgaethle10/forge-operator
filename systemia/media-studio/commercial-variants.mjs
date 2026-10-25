@@ -73,6 +73,7 @@ function reviewFrames(video,scenes,outDir){
   const result=[];
   fs.mkdirSync(outDir,{recursive:true});
   for(const [i,scene] of scenes.entries()){
+    if(!Number.isFinite(scene.startSec)||!Number.isFinite(scene.durationSec)||scene.durationSec<=0)throw new Error('commercial_variant_review_timing_invalid:'+scene.id);
     const t=Math.min(scene.startSec+scene.durationSec*.5,scene.startSec+scene.durationSec-0.08);
     const filename='shot-'+String(i+1).padStart(2,'0')+'-'+scene.id.replace(/[^a-zA-Z0-9_-]/g,'_')+'.jpg';
     const out=path.join(outDir,filename);
@@ -95,7 +96,12 @@ export function renderCommercialVariantBatch(batch,outputRoot){
     // Reuse the exact ready-to-render project with reviewed, per-scene focal coordinates.
     const request=row.compiled.deliveryRequest;
     const output=renderCompiledVariant(request,dir);
-    const frames=reviewFrames(output.videoPath,batch.assembly.brief.scenes,path.join(dir,'review-frames'));
+    const compiledPicture=row.compiled.deliveryRequest.project.tracks.find(t=>t.kind==='video');
+    const scenes=compiledPicture.clips.map((clip,i)=>({
+      id:batch.assembly.brief.scenes[i].id,
+      startSec:clip.startSec,durationSec:clip.durationSec
+    }));
+    const frames=reviewFrames(output.videoPath,scenes,path.join(dir,'review-frames'));
     if(output.qualityMode!=='commercial')throw new Error('commercial_variant_wrong_quality_mode');
     variants.push({format:row.format,width:row.width,height:row.height,
       durationSec:output.durationSec,
