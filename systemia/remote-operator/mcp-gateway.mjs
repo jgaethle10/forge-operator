@@ -180,6 +180,11 @@ export class RemoteOperatorGateway {
     fetchImpl = fetch,
   } = {}) {
     this.capacityEndpoint = safeEndpoint(capacityEndpoint);
+    // Node scope comes solely from the gateway's server-side capacity
+    // endpoint, never from MCP arguments supplied by the tool caller.
+    const target = new URL(this.capacityEndpoint);
+    const parts = target.pathname.match(/^\/nodes\/([a-zA-Z0-9._-]{1,128})$/);
+    this.nodeId = parts ? parts[1] : null;
     this.controlToken = String(controlToken || '').trim();
     this.clientToken = String(clientToken || '').trim();
     // Must come from an independently trusted Systemia owner-approval ledger.
@@ -207,7 +212,8 @@ export class RemoteOperatorGateway {
     // Verification callback must atomically consume a one-time independently
     // authorized approval for the exact request, action, and root.
     const bound = await this.approvalVerifier({
-      action, root_key:root, approval_ref:approvalRef, payload_sha256:digest,
+      action, root_key:root, node_id:this.nodeId,
+      approval_ref:approvalRef, payload_sha256:digest,
     });
     if (!bound || bound.approved !== true || bound.one_time_consumed !== true ||
         bound.action !== action || bound.root_key !== root ||
