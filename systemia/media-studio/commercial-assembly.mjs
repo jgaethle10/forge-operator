@@ -181,6 +181,7 @@ export function renderApprovedCommercial(input,outputDir){
     sourceFirstPlanDigest:compiled.sourceFirstPlanDigest,
     mediaSha256:out.mediaSha256,videoPath:out.videoPath,clipManifestPath:out.clipManifestPath,
     audioQcReceiptPath:out.commercialAudioQcReceiptPath,
+    audioMasterReceiptPath:out.commercialAudioMasterReceiptPath,
     qualityMode:out.qualityMode,
     boundaries:{originalFootageSourceVerifiedByHash:true,
       realHumanListenOrVisualReviewNotIndependentlyVerified:true,
