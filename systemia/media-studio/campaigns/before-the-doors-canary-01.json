@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.fallen.visual-shot-request.v1",
+  "id": "before-the-doors-canary-01-dough",
+  "needId": "before-the-doors-dough-motion",
+  "task": "video",
+  "prompt": "Original cinematic live-action-style moving shot, 2 seconds, vertical 9:16. Intimate 50mm macro tracking camera gliding 10 cm from left to right. Inside a small independent bakery before dawn: real adult hands in charcoal sleeves and a walnut-brown apron fold soft risen dough twice across a dark walnut worktop; authentic flour displacement, slight elastic recoil of dough, realistic human motion, naturally grounded shadows. Warm brass practical lights and blue predawn window fill; premium commercial lighting, restrained cinematic depth of field. Natural filmic grain, no cuts, no titles, no logos, no dialogue, no stock-footage overlay. Preserve coherent anatomy and believable material physics. The moving hands and moving dough are the subject.",
+  "durationSec": 2,
+  "aspectRatio": "9:16",
+  "targetResolution": "720p",
+  "continuityDigest": "bce4197c39e3a69865e3af7b2de17a8e176539d4b1307e521d7100550b2daa7a",
+  "requires": [
+    "commercial_rights",
+    "provenance_receipt",
+    "timing_control"
+  ],
+  "references": [],
+  "candidateCount": 1,
+  "modelDiversity": 1,
+  "sourceRefs": [
+    "evercraft-original-script:before-the-doors-2026-10-25",
+    "evercraft-shoot-bible:before-the-doors-v1"
+  ]
+}
