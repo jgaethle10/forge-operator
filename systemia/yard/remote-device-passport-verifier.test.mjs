@@ -114,6 +114,7 @@ test('cancellation and grant revocation fail closed before broker mutation',asyn
     grant_id:grant.grant_id,
     actor_ref:OWNER,
     authority_state:'manual_authorized',
+    authority_receipt_ref:'ci-fixture:synthetic-owner-revocation',
     idempotency_key:randomUUID(),
   });
   await assert.rejects(verify(second),/remote_device_passport_permit_denied/);
