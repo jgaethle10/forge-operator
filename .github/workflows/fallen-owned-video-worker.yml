@@ -5,6 +5,10 @@ on:
     paths:
       - 'systemia/media-studio/owned-video-adapter.mjs'
       - 'systemia/media-studio/owned-video-adapter.test.mjs'
+      - 'systemia/media-studio/owned-video-gpu-preflight.mjs'
+      - 'systemia/media-studio/owned-video-gpu-preflight.test.mjs'
+      - 'systemia/media-studio/owned-video-saban-placement.mjs'
+      - 'systemia/media-studio/owned-video-saban-placement.test.mjs'
       - 'systemia/media-studio/workers/wan-local-worker.py'
       - 'systemia/media-studio/workers/make-weights-manifest.py'
       - 'systemia/media-studio/OWNED-VIDEO-WORKER.md'
@@ -30,7 +34,7 @@ jobs:
           command -v ffmpeg
           command -v ffprobe
       - name: Verify owned-video moving-media and fail-closed contracts
-        run: node --test systemia/media-studio/owned-video-adapter.test.mjs
+        run: node --test systemia/media-studio/owned-video-adapter.test.mjs systemia/media-studio/owned-video-gpu-preflight.test.mjs systemia/media-studio/owned-video-saban-placement.test.mjs
       - name: Syntax-check offline CUDA worker and immutable model inventory tool
         run: |
           python3 -m py_compile systemia/media-studio/workers/wan-local-worker.py
