@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'scripts/studio-public-intake-canary.mjs'
+      - 'public/.well-known/evercraft-chum-attribution.json'
       - '.github/workflows/commercial-studio-public-canary.yml'
   push:
     branches: [main]
