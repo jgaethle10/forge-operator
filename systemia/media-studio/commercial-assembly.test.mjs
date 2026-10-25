@@ -106,6 +106,7 @@ test('renders a playable H264/AAC MP4 and requires encoded commercial audio QC',
   const result=renderApprovedCommercial(input,path.join(dir,'deliver'));
   assert.equal(result.status,'rendered_and_technically_qc_accepted');
   assert.equal(result.qualityMode,'commercial');
+  assert.equal(JSON.parse(fs.readFileSync(result.audioMasterReceiptPath,'utf8')).status,'accepted');
   assert.equal(result.boundaries.platformPublished,false);
   assert.equal(result.boundaries.publicationAuthorityGranted,false);
   assert.ok(fs.statSync(result.videoPath).size>4000);
