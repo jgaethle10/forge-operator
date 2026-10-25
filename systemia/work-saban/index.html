@@ -2,8 +2,23 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Work Saban</title><link rel="stylesheet" href="/style.css"></head>
 <body><main>
 <header><small>EVERCRAFT / SABAN</small><h1>Work Saban<span>.</span></h1><p>You bring the work. Saban brings the team.</p></header>
+<section id="office" class="office-shell" aria-label="Live Work Saban visual office">
+<div class="office-heading"><div><span class="office-eyebrow">SABAN / VISUAL OPERATIONS</span><h2>The Work Floor</h2><p>Watch registered specialists work. Every status comes from actual local worker events.</p></div><div class="office-live"><span class="office-beacon"></span><span id="office-mode">AWAITING A MISSION</span></div></div>
+<div class="office-layout">
+<div class="office-scene-wrap">
+  <div class="office-scene-title"><span><span class="floor-dot"></span> FIRST FLOOR <span class="floor-divider">/</span> OPERATIONS STUDIO</span><span id="office-progress">0 / 5 verified</span></div>
+  <div id="office-scene" class="office-scene" aria-label="Interactive 3D-style office map with six agent desks"></div>
+  <div class="office-bottom"><span>Local workers only</span><span>Click a desk to inspect its work</span><span id="office-current">No active assignment</span></div>
+</div>
+<aside class="office-sidebar">
+ <div class="office-inspector"><span class="office-eyebrow">SELECTED SPECIALIST</span><h3 id="office-agent-name">Mission Director</h3><p id="office-agent-desc">Coordinates the mission and reports real worker events.</p><div class="office-stat"><span>WORK STATE</span><strong id="office-agent-state">AWAITING</strong></div><div class="office-stat"><span>RECEIPT</span><strong id="office-agent-proof">No execution yet</strong></div></div>
+ <div class="office-feed"><div class="office-feed-head"><span class="office-eyebrow">MISSION TRACE</span><span id="office-event-count">0 events</span></div><ol id="office-events" aria-live="polite"><li>Submit a task or run the example team to populate this timeline.</li></ol></div>
+ <div class="office-replay"><span class="office-eyebrow">VERIFIED REPLAY</span><div class="replay-controls"><button id="office-back" type="button" disabled aria-label="Previous verified event">‹</button><button id="office-replay" type="button" disabled>Replay trace</button><button id="office-next" type="button" disabled aria-label="Next verified event">›</button></div><p id="office-replay-caption">Only recorded events. No simulated progress.</p></div>
+</aside>
+</div>
+</section>
 <section class="input"><label for="task">What needs to get done?</label><textarea id="task" maxlength="4000" placeholder="Analyze last month's sales and prepare a presentation for my manager."></textarea><button id="compose">Assemble my team</button> <button id="demo" type="button" class="secondary">Run example team (synthetic data)</button><p class="muted">Local formation preview. No file access, live workers, messages, purchases or system changes.</p></section>
 <section class="input" id="csv-intake"><h2>Run your own sales report</h2><p class="muted">Choose one CSV with month and revenue columns. Your file is sent only to the local Work Saban preview on this computer, never to an AI provider or external service.</p><label for="csv-file">Select CSV (256 KB maximum)</label><input id="csv-file" type="file" accept=".csv,text/csv"><label class="consent"><input id="csv-consent" type="checkbox"> I authorize Work Saban to read this selected file for this single local report.</label><button id="csv-run" disabled>Run my CSV locally</button></section>
 <section id="result" hidden aria-live="polite"><div class="result-head"><h2>Your proposed team</h2><span id="state"></span></div><div id="roles" class="roles"></div><h3>Execution waves</h3><div id="waves" class="waves"></div><h3>Actions requiring your approval</h3><ul id="gates"></ul><p class="muted" id="next"></p><button id="copy">Copy mission proposal</button></section>
 <section id="demo-result" hidden aria-live="polite"><h2>Example mission completed</h2><p class="muted" id="demo-label">Synthetic fixture only. No account access or external sends.</p><div id="demo-steps" class="roles"></div><h3>Audited sales report</h3><pre id="demo-report"></pre><p class="muted" id="demo-proof"></p><button id="save-report" hidden>Save verified report (.md)</button></section><p class="error" id="error" role="alert"></p>
-</main><script src="/app.js" defer></script></body></html>
+</main><script src="/office.js" defer></script><script src="/app.js" defer></script></body></html>
