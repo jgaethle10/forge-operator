@@ -67,6 +67,53 @@ export function nextGenPrerequisiteStatus(report) {
   };
 }
 
+// Optional, explicitly read-only, *live* NodeSeed observation. The endpoint
+// must come from already matched local receipts and is pinned to IPv4 loopback.
+// Never redirect, pass bearer headers, probe public hosts, or return a URL.
+export async function probeNextGenLocalLoopback({
+  home=os.homedir(), fetchImpl=fetch, timeoutMs=1800,
+}={}) {
+  const result={
+    local_nodeseed_loopback_health_checked:false,
+    local_nodeseed_loopback_health_verified:false,
+    local_probe_mutation_performed:false,
+    remote_control_verified:false,
+  };
+  const root=path.join(home,'.local/state/evercraft/organism');
+  const local=readJson(path.join(root,'local-organism-receipt.json'));
+  const seed=readJson(path.join(root,'compute/nodeseed-receipt.json'));
+  if(!consistentNextGenLocalReceipts(local,seed))return result;
+  if(!Number.isInteger(timeoutMs)||timeoutMs<200||timeoutMs>5000)
+    throw new Error('nextgen_local_probe_timeout_invalid');
+  const address=new URL(seed.endpoint);
+  if(address.protocol!=='http:'||address.hostname!=='127.0.0.1'||
+      address.pathname!=='/'||!address.port||
+      address.username||address.password||address.search||address.hash)
+    return result;
+  result.local_nodeseed_loopback_health_checked=true;
+  try{
+    const response=await fetchImpl(address.origin+'/v1/health',{
+      method:'GET',redirect:'error',
+      signal:AbortSignal.timeout(timeoutMs),
+      headers:{accept:'application/json'},
+    });
+    if(response.status!==200)return result;
+    const contentLength=Number(response.headers?.get?.('content-length')||0);
+    if(contentLength>65536)return result;
+    const text=await response.text();
+    if(text.length>65536)return result;
+    const payload=JSON.parse(text);
+    result.local_nodeseed_loopback_health_verified=
+      payload?.ok===true &&
+      payload?.node_id===seed.node_id &&
+      payload?.runtime==='Evercraft Compute';
+  }catch{
+    // Never return raw fetch errors containing local paths, host data or
+    // untrusted HTTP body.
+  }
+  return result;
+}
+
 export function inspectNextGen({
   home=os.homedir(),platform=process.platform,release=os.release(),
   nodeVersion=process.versions.node,userSystemd=null,
@@ -98,6 +145,8 @@ export function inspectNextGen({
     local_foundation_receipts_consistent:consistentNextGenLocalReceipts(local,seed),
     // These files can be stale. This doctor does NOT assert service liveness.
     local_live_process_health_verified:false,
+    local_nodeseed_loopback_health_checked:false,
+    local_nodeseed_loopback_health_verified:false,
     remote_operator_locally_enabled:local?.remote_operator?.enabled===true&&
       Array.isArray(local.remote_operator.root_keys)&&local.remote_operator.root_keys.includes('home'),
     remote_admission_startup_claim:local?.remote_admission?.state==='connected'?
@@ -122,6 +171,10 @@ export function inspectNextGen({
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const report=inspectNextGen();
+  if(process.argv.includes('--probe-loopback')){
+    const probe=await probeNextGenLocalLoopback();
+    Object.assign(report,probe);
+  }
   console.log(JSON.stringify(report,null,2));
   // Machine-local checks must not require externally verified broker trust.
   // Keep those separate, impossible-to-self-attest phases fail-closed.
@@ -129,6 +182,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
      !report.local_prerequisites_passed)process.exitCode=2;
   if(process.argv.includes('--require-local-foundation')&&
      !report.local_foundation_receipts_consistent)process.exitCode=2;
+  if(process.argv.includes('--require-live-local-nodeseed')&&
+     !report.local_nodeseed_loopback_health_verified)process.exitCode=2;
   if(process.argv.includes('--require-live-remote-readiness')&&
      !report.live_remote_control_verified)process.exitCode=2;
 }
