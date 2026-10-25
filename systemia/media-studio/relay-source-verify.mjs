@@ -9,7 +9,7 @@ function run(tool,args,id){
   if(r.error||r.status!==0) throw new Error('relay_floor_media_probe_failed:'+id+':'+tool);
   return r.stdout;
 }
-export function verifyRelayFloorSource(asset,{requiredDurationSec=0}={}){
+export function verifyRelayFloorSource(asset,{requiredDurationSec=0,requiresAudio=false}={}){
   const id=asset?.id||'unknown';
   if(!asset?.path||!fs.existsSync(asset.path)||!fs.statSync(asset.path).isFile())
     throw new Error('relay_floor_media_source_missing:'+id);
@@ -19,6 +19,8 @@ export function verifyRelayFloorSource(asset,{requiredDurationSec=0}={}){
   const v=(probe.streams||[]).find(s=>s.codec_type==='video');
   if(!v||!Number.isInteger(v.width)||!Number.isInteger(v.height))
     throw new Error('relay_floor_actual_video_required:'+id);
+  const hasAudio=(probe.streams||[]).some(s=>s.codec_type==='audio');
+  if(requiresAudio&&!hasAudio) throw new Error('relay_floor_live_dialogue_audio_stream_missing:'+id);
   const duration=Number(v.duration||probe.format?.duration);
   if(!Number.isFinite(duration)||duration<requiredDurationSec-0.05)
     throw new Error('relay_floor_source_shorter_than_shot:'+id);
@@ -40,6 +42,6 @@ export function verifyRelayFloorSource(asset,{requiredDurationSec=0}={}){
   if(maxChangedPixelRatio<0.015) throw new Error('relay_floor_nearly_static_video:'+id);
   return {assetId:id,actualVideo:true,width:v.width,height:v.height,
     durationSec:Number(duration.toFixed(3)),fps:Number(fps.toFixed(2)),inspectedDecodedFrames:frames,
-    maxChangedPixelRatio:Number(maxChangedPixelRatio.toFixed(4)),
+    maxChangedPixelRatio:Number(maxChangedPixelRatio.toFixed(4)),hasEmbeddedAudio:hasAudio,
     humanSubjectAndActionReviewRequired:true,authenticityNotEstablished:true};
 }
