@@ -27,6 +27,7 @@ jobs:
           node --check systemia/work-saban/mission.mjs
           node --check systemia/work-saban/server.mjs
           node --check systemia/work-saban/app.js
+          node --check systemia/work-saban/office.js
           node --check systemia/work-saban/csv-core.mjs
           node --check systemia/work-saban/csv-worker.mjs
           node --check systemia/work-saban/execute-local.mjs
