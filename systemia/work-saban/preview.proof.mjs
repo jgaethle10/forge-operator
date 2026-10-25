@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import http from 'node:http';
 import { startWorkSabanPreview } from './server.mjs';
 
 const server = await startWorkSabanPreview();
@@ -34,11 +35,45 @@ try {
   assert.equal(demo.execution.specialist_receipts.length, 5);
   assert.equal(demo.execution.model_inference, false);
   assert.equal((await fetch(`${base}/api/run-demo`,{method:'POST'})).status,403);
+  const csv = 'month,revenue\n2026-08,100.10\n2026-09,90.05\n';
+  const postCsv = (payload, moreHeaders = {}) => fetch(base + '/api/run-csv', {
+    method: 'POST',
+    headers: {...headers, ...moreHeaders},
+    body: JSON.stringify(payload)
+  });
+  const chosenFile = { filename:'my-sales.csv', csv_text:csv };
+  assert.equal((await postCsv(chosenFile)).status, 403, 'must opt in to one local read');
+  assert.equal((await postCsv({...chosenFile, local_file_read_approved:true}, {origin:'https://bad.example'})).status, 403);
+  assert.equal((await postCsv({...chosenFile, filename:'../secrets.csv', local_file_read_approved:true})).status, 400);
+  assert.equal((await postCsv({...chosenFile, filename:'notes.txt', local_file_read_approved:true})).status, 400);
+  assert.equal((await postCsv({...chosenFile, csv_text:'month,revenue\nbad,100\n2026-09,10', local_file_read_approved:true})).status, 400);
+  assert.equal((await postCsv({...chosenFile, csv_text:'x'.repeat(256 * 1024 + 1), local_file_read_approved:true})).status, 413);
+  const approved = await postCsv({...chosenFile, local_file_read_approved:true});
+  assert.equal(approved.status, 200, 'one explicit file should be processed');
+  const finished = await approved.json();
+  assert.equal(finished.input_source, 'explicit_browser_csv');
+  assert.equal(finished.output_destination, 'http_response_only');
+  assert.equal(finished.retention, 'not_saved_by_preview');
+  assert.equal(finished.execution.status, 'verified_local');
+  assert.equal(finished.execution.revenue_analysis.change_cents, '-1005');
+  assert.equal(finished.execution.specialist_receipts.length, 5);
+  assert.equal(finished.execution.quality.status, 'verified');
+  assert.equal(finished.execution.external_actions.length, 0);
+  assert.equal(finished.execution.model_inference, false);
+  const rebindingStatus = await new Promise((resolve,reject) => {
+    const request = http.request({
+      host:'127.0.0.1', port:address.port, method:'GET', path:'/health',
+      headers:{host:'evil.example'}
+    }, response => { response.resume(); response.on('end',()=>resolve(response.statusCode)); });
+    request.on('error',reject);
+    request.end();
+  });
+  assert.equal(rebindingStatus, 403, 'untrusted Host rejected');
   const denied = await fetch(`${base}/api/compose`, {
     method:'POST',headers:{'content-type':'text/plain'},body:'oops'
   });
   assert.equal(denied.status, 415);
-  console.log('Work Saban preview API proof: PASS (local only, proposal only).');
+  console.log('Work Saban preview API proof: PASS (local-only formation, synthetic demo, consented CSV, hostname and size guards).');
 } finally {
   await new Promise(resolve => server.close(resolve));
 }
