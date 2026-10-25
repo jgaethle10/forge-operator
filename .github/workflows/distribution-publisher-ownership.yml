@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/distribution/publisher-ownership.json'
       - 'systemia/distribution/audit-publisher-ownership.mjs'
+      - 'systemia/distribution/audit-publisher-ownership.test.mjs'
       - '.github/workflows/distribution-publisher-ownership.yml'
   workflow_dispatch:
 permissions:
@@ -17,6 +18,8 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/distribution/audit-publisher-ownership.mjs
+      - name: Regression tests for publisher evidence states
+        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs
       - name: Validate evidence states
         env:
           OUTPUT: ${{ runner.temp }}/publisher-audit.json
