@@ -3,9 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { composeWorkSabanMission } from './mission.mjs';
+import { executeLocalSalesReport } from './execute-local.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const syntheticCsv = fs.readFileSync(path.join(root, 'fixtures/monthly-sales-demo.csv'), 'utf8');
 
 function reply(res, code, data) {
   const bytes = Buffer.from(JSON.stringify(data));
@@ -27,6 +29,16 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       const mime=filename.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/javascript; charset=utf-8';
       res.writeHead(200, {'content-type':mime,'cache-control':'no-store','x-content-type-options':'nosniff'});
       return res.end(fs.readFileSync(path.join(root,filename)));
+    }
+    if (req.method === 'POST' && req.url === '/api/run-demo') {
+      if (req.headers['x-work-saban-client'] !== 'local-preview') return reply(res, 403, {ok:false,error:'local_preview_header_required'});
+      if (req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) return reply(res, 403, {ok:false,error:'cross_origin_forbidden'});
+      try {
+        const execution = await executeLocalSalesReport({csvText:syntheticCsv,localFileReadApproved:true});
+        return reply(res,200,{ok:true,fixture:'synthetic_demo_only',execution});
+      } catch {
+        return reply(res,503,{ok:false,error:'demo_execution_not_verified'});
+      }
     }
     if (req.method !== 'POST' || req.url !== '/api/compose') return reply(res, 404, {ok:false,error:'not_found'});
     if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json' || req.headers['x-work-saban-client'] !== 'local-preview') return reply(res, 415, {ok:false,error:'json_local_preview_required'});
