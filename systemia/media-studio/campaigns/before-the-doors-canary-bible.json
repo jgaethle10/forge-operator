@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.fallen.cinematic-canary-bible.v1",
+  "identity": "fictional-baker-hands-only",
+  "continuityDigest": "bce4197c39e3a69865e3af7b2de17a8e176539d4b1307e521d7100550b2daa7a",
+  "creative": {
+    "title": "BEFORE THE DOORS / 01 / THE WORK",
+    "project": "evercraft-fallen-studios-original-commercial",
+    "scene": "Independent bakery, before sunrise, authentic artisanal work, single setting",
+    "time": "blue pre-dawn with warm practical amber sidelighting",
+    "subject": "Close view of adult baker hands folding risen dough on walnut butcher-block countertop",
+    "wardrobe": "walnut brown apron and charcoal sleeves, no logos",
+    "camera": "50mm macro cinema lens, slow 10cm lateral slider, one continuous shot, controlled shallow depth",
+    "action": "two convincing sequential folds of soft dough with flour displacement and realistic skin detail",
+    "texture": "soft elastic dough, visible wood grain, natural dust falling with gravity",
+    "avoid": [
+      "text or logos",
+      "watermarks",
+      "flat motion graphics",
+      "timelapse jump cuts",
+      "morphing hands",
+      "floating props",
+      "unphysical liquids",
+      "retrofitted stock footage"
+    ]
+  },
+  "publicationAuthority": false,
+  "identityContinuityVerified": false,
+  "modelExecutionVerified": false
+}
