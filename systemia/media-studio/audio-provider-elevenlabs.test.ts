@@ -158,3 +158,38 @@ test('paid audio generation requires explicit authorization before any provider 
   };
   await assert.rejects(()=>adapter.execute(need),/elevenlabs_audio_paid_generation_not_authorized/);
 });
+
+
+test('default commercial voice timing refuses unnatural tempo correction and discards rejected take',async t=>{
+  const outputDir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-voice-fail-'));
+  t.after(()=>fs.rmSync(outputDir,{recursive:true,force:true}));
+  let unexpectedTempoCall=false;
+  const adapter=createElevenLabsAudioAdapter({
+    apiKey:'test-key',outputDir,verified:true,
+    commercialRights:'allowed',allowPaidGeneration:true,defaultVoiceId:'approved-voice',
+    fetchImpl:(async()=>response(200,Buffer.from('voice-preview'))) as any,
+    probeDurationSec:()=>3.6,
+    runFfmpeg:()=>{unexpectedTempoCall=true;throw new Error('should not stretch 20 percent by default');},
+  });
+  const need:ProductionNeed={
+    id:'real-voice-1',kind:'speech',
+    prompt:'A better spoken opening should not sound rushed.',
+    durationSec:3,continuityDigest:'locked-voice',
+    requires:['voice_profile','commercial_rights','provenance_receipt','timing_control'],status:'planned',
+  };
+  await assert.rejects(()=>adapter.execute(need),/elevenlabs_speech_timing_out_of_bounds/);
+  assert.equal(unexpectedTempoCall,false);
+  assert.equal(fs.existsSync(path.join(outputDir,'real-voice-1.source.mp3')),false);
+  assert.equal(fs.existsSync(path.join(outputDir,'real-voice-1.mp3')),false);
+});
+
+test('invalid speech tempo bound fails closed before any provider operation',()=>{
+  assert.throws(()=>createElevenLabsAudioAdapter({
+    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',
+    maxSpeechTempoAdjustmentPct:Infinity
+  }),/elevenlabs_speech_tempo_policy_invalid/);
+  assert.throws(()=>createElevenLabsAudioAdapter({
+    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',
+    maxSpeechTempoAdjustmentPct:21
+  }),/elevenlabs_speech_tempo_policy_invalid/);
+});
