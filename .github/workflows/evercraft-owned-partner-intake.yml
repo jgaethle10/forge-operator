@@ -1,0 +1,92 @@
+name: Evercraft Owned Partner Intake Probe
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/browser-worker/partner-intake-probe.mjs'
+      - '.github/workflows/evercraft-owned-partner-intake.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-partner-intake-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readonly-partner-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: systemia/evercraft-web/browser-worker
+    steps:
+      - name: Checkout own browser source
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install own Browser Worker dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install local runner Chromium engine
+        run: npx playwright install chromium
+      - name: Verify first-party browser syntax and controls
+        run: |
+          node --check partner-intake-probe.mjs
+          node --check server.mjs
+          node --test policy.test.mjs
+      - name: Execute own read-only browser and capture receipts
+        id: probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          export EVERCRAFT_BROWSER_WORKER_TOKEN="$(openssl rand -hex 32)"
+          export PORT=18787
+          export EVERCRAFT_BROWSER_LOCAL_URL="http://127.0.0.1:18787"
+          export EVERCRAFT_PARTNER_PROBE_OUTPUT="artifacts/evercraft/partner-intake"
+          node server.mjs > "$RUNNER_TEMP/owned-browser-worker.log" 2>&1 &
+          WORKER_PID=$!
+          trap 'kill "$WORKER_PID" 2>/dev/null || true' EXIT
+          ready=0
+          for n in $(seq 1 30); do
+            if curl --fail --silent "http://127.0.0.1:18787/healthz" > /dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo "Owned worker failed readiness"
+            exit 1
+          fi
+          node partner-intake-probe.mjs
+      - name: Upload first-party proof (even if partner pages block automation)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-owned-partner-intake-receipts
+          path: systemia/evercraft-web/browser-worker/artifacts/evercraft/partner-intake/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Summarize without claiming applications were sent
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const file='artifacts/evercraft/partner-intake/receipt.json';
+          if (!fs.existsSync(file)) {
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, '## Evercraft owned partner intake\nWorker/runner failed before proof. Zero external forms submitted.\n');
+          } else {
+            const r=JSON.parse(fs.readFileSync(file));
+            const lines=[
+              '## Evercraft owned partner intake',
+              'First-party Browser Worker, ephemeral GitHub runner. No production physical node claim.',
+              'Public pages rendered: '+r.public_pages_rendered+'/'+r.total_sites,
+              'External application submissions: 0',
+              'Accounts, credentials, payment or legal terms: NONE',
+              ...r.sites.map(s=>'- '+s.id+': '+s.state+' HTTP '+String(s.http_status||'n/a')),
+              'Receipt: '+r.receipt_sha256
+            ];
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,lines.join('\n')+'\n');
+          }
+          NODE
