@@ -118,6 +118,9 @@ export function masterCommercialAudio({input,output,expectedSha256,standard={}})
   if(fs.existsSync(output)) throw new Error('audio_master_output_exists');
   const p=standardFor(standard);
   const source=auditCommercialAudio({input,expectedSha256,standard:p});
+  if(source.reasons.includes('multiple_audio_streams_require_review')) {
+    throw new Error('audio_master_multiple_soundtracks_require_editorial_choice');
+  }
   const m=source.measurements;
   if(!m.hasAudio || !m.hasVideo) throw new Error('audio_master_requires_picture_and_sound');
   const stats=m.pass1,keys=['input_i','input_tp','input_lra','input_thresh','target_offset'];
