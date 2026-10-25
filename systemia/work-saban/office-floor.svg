@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="workfloor-art" viewBox="0 0 1024 545" role="img" aria-label="Isometric office floor with six inspectable specialist desks" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="floor" x1="0" y1="0" x2="0.7" y2="1"><stop stop-color="#1a2b49"/><stop offset="1" stop-color="#0e1729"/></linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#31577d" stop-opacity=".5"/><stop offset="1" stop-color="#0b1428" stop-opacity=".15"/></linearGradient>
+    <linearGradient id="desk" x1="0" y1="0" x2="0.85" y2="1"><stop stop-color="#384e71"/><stop offset="1" stop-color="#1e2e49"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#4faaff" stop-opacity=".24"/><stop offset="1" stop-color="#4faaff" stop-opacity="0"/></radialGradient>
+    <pattern id="floorGrid" patternUnits="userSpaceOnUse" width="35" height="35" patternTransform="skewX(-16)">
+      <path d="M35 0H0V35" fill="none" stroke="#83c0f4" stroke-opacity=".055" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="11"/></filter>
+    <filter id="deskShadow" x="-30%" y="-50%" width="160%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
+    <g id="desk-template">
+       <ellipse cx="0" cy="62" rx="106" ry="22" fill="#02070e" opacity=".35" filter="url(#deskShadow)"/>
+       <ellipse class="status-aura" cx="0" cy="21" rx="88" ry="74" fill="url(#glow)"/>
+       <path d="M-72 17L-1 -10L84 14L13 40Z" fill="url(#desk)" stroke="#6888ae" stroke-width="1.8"/>
+       <path d="M-72 17V27L13 50V40Z" fill="#15253d" stroke="#415c7e"/>
+       <path d="M13 40V50L84 24V14Z" fill="#0b192d" stroke="#415c7e"/>
+       <path d="M-62 30V67 M74 28V67" stroke="#334960" stroke-width="6"/>
+       <path d="M-31 1L-31 -31L25 -31L25 -2Z" fill="#071a2d" stroke="#76a4c5" stroke-width="2"/>
+       <path d="M-26 -26H21V-7H-26Z" fill="#193657"/>
+       <path class="work-monitor" d="M-21 -20H10" stroke="#66cbdb" stroke-width="2.5" stroke-linecap="round"/>
+       <path d="M-3 -1V10M-18 11H12" stroke="#8199b6" stroke-width="3"/>
+       <path d="M-24 29L0 21L25 28L0 36Z" fill="#33455f" stroke="#6d89a8"/>
+       <path d="M45 20L55 17L60 20L50 24Z" fill="#7189a6"/>
+       <ellipse cx="0" cy="64" rx="19" ry="9" fill="#0e1628" opacity=".6"/>
+       <path class="agent-torso" d="M-16 37Q0 24 16 37L23 57Q0 67 -23 57Z" fill="#43658b" stroke="#9ecff0" stroke-opacity=".5" stroke-width="1.5"/>
+       <circle class="agent-head" cx="0" cy="29" r="13" fill="#ddc5b1" stroke="#96b6cd" stroke-width="1.3"/>
+       <path d="M-11 26Q-7 9 5 16Q12 18 12 28" fill="#152942" stroke="#182942" stroke-width="2.5"/>
+       <circle cx="11" cy="32" r="3" fill="#8bbbe0"/>
+       <circle class="office-status-light" cx="76" cy="-36" r="5" fill="#8fa5c5"/>
+       <rect x="-79" y="83" width="160" height="36" rx="9" fill="#0a1528" stroke="#3d5c83" stroke-width="1.5"/>
+       <text class="office-desk-name" x="0" y="98" text-anchor="middle" fill="#dceafe" font-size="13" font-weight="700" font-family="system-ui,sans-serif"></text>
+       <text class="office-desk-status" x="0" y="111" text-anchor="middle" fill="#9bb0cb" font-size="10" letter-spacing=".9" font-family="system-ui,sans-serif">IDLE</text>
+    </g>
+  </defs>
+  <ellipse cx="510" cy="340" rx="470" ry="200" fill="#4a9cda" opacity=".12" filter="url(#shadow)"/>
+  <polygon points="160,82 887,82 984,464 60,464" fill="url(#floor)" stroke="#4a688d" stroke-width="2.5"/>
+  <polygon points="160,82 887,82 984,464 60,464" fill="url(#floorGrid)" stroke="none"/>
+  <path d="M160 82L160 40L887 40L887 82" fill="none" stroke="#86c5ec" stroke-opacity=".24" stroke-width="3"/>
+  <polygon points="160,40 887,40 887,82 160,82" fill="url(#wall)"/>
+  <path d="M160 40V82 M285 40V82 M410 40V82 M535 40V82 M660 40V82 M785 40V82 M887 40V82" stroke="#a5ddfa" stroke-opacity=".17" stroke-width="2"/>
+  <polygon points="60,464 160,82 160,40 60,425" fill="#1b3150" fill-opacity=".55" stroke="#55789a" stroke-opacity=".35"/>
+  <path d="M116 256L142 146" stroke="#8dd4f4" stroke-opacity=".14" stroke-width="5"/>
+  <path d="M984 464L1010 444L909 72L887 82" fill="#0c1728" stroke="#41678d" stroke-opacity=".2"/>
+  <path d="M64 467L984 467" stroke="#7bb9d9" stroke-opacity=".4" stroke-width="3"/>
+  <path d="M95 449L958 449" stroke="#acd8e5" stroke-opacity=".12" stroke-width="2"/>
+  <g fill="#9dbad2" fill-opacity=".7" font-size="12" font-family="system-ui,sans-serif" letter-spacing="2">
+    <text x="180" y="106">STRATEGY / RESEARCH / COMMUNICATIONS</text>
+    <text x="180" y="304">CREATIVE / VERIFICATION / DELIVERY</text>
+  </g>
+  <g id="floor-connections" stroke="#64b7dc" fill="none" stroke-opacity=".07" stroke-width="3">
+    <path d="M340 197L393 197"/>
+    <path d="M582 197L634 197"/>
+    <path d="M765 248L765 277L342 277L342 324"/>
+    <path d="M340 383L393 383"/>
+    <path d="M582 383L638 383"/>
+  </g>
+  <g aria-hidden="true">
+    <ellipse cx="920" cy="364" rx="30" ry="11" fill="#4b90c5" opacity=".11"/>
+    <path d="M908 361L920 321L933 361Z" fill="#173d36" stroke="#377d72"/>
+    <path d="M920 344L900 330M920 341L941 327M920 353L904 342M921 352L938 342" stroke="#4caa83" stroke-width="3" stroke-linecap="round"/>
+    <rect x="910" y="361" width="21" height="15" rx="3" fill="#44627b"/>
+    <rect x="904" y="187" width="38" height="17" rx="2" fill="#172a43" stroke="#55728e"/>
+    <path d="M906 191H940" stroke="#5985a5" stroke-width="2"/>
+    <circle cx="919" cy="196" r="2" fill="#5fb6b9"/>
+  </g>
+  <g id="floor-desks"></g>
+  <g font-family="system-ui,sans-serif" font-size="11" fill="#9fbada">
+     <circle cx="110" cy="512" r="4" fill="#58c6a4"/><text x="120" y="516">VERIFIED</text>
+     <circle cx="215" cy="512" r="4" fill="#75b5ff"/><text x="225" y="516">RUNNING</text>
+     <circle cx="320" cy="512" r="4" fill="#a7b9d5"/><text x="330" y="516">IDLE</text>
+     <text x="835" y="516">MODEL CALLS: NONE</text>
+  </g>
+</svg>
