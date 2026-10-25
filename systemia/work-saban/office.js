@@ -30,6 +30,20 @@
     $('office-agent-proof').textContent=proofs[chosen]||(state[chosen]==='proposed'?'Proposal only, not executing':'No execution yet');
     svg?.querySelectorAll('[data-agent]').forEach(g=>g.classList.toggle('is-selected',g.getAttribute('data-agent')===chosen));
   }
+  const handoffPairs={
+    analyst:'director-analyst',
+    writer:'analyst-writer',
+    designer:'writer-designer',
+    auditor:'designer-auditor',
+    coordinator:'auditor-coordinator',
+  };
+  function showObservedHandoff(role) {
+    const route=handoffPairs[role];
+    if(!route||!svg)return;
+    svg.querySelectorAll('#floor-connections path').forEach(p=>p.classList.remove('is-handoff'));
+    const path=svg.querySelector('#handoff-'+route);
+    if(path)path.classList.add('is-handoff');
+  }
   function paint() {
     let verified=0;
     for(const role of roles) {
@@ -54,6 +68,7 @@
   function reset(kind='idle') {
     stopReplay();events=[];replayIndex=-1;running=false;
     roles.forEach(r=>{state[r.id]=kind;delete proofs[r.id];});
+    svg?.querySelectorAll('#floor-connections path').forEach(p=>p.classList.remove('is-handoff'));
     $('office-events').replaceChildren();
     $('office-event-count').textContent='0 events';
     $('office-replay-caption').textContent='Only observed events. No simulated progress.';
@@ -91,6 +106,7 @@
     } else if(event.type==='stage_started') {
       if(!specialists.has(event.role))throw new Error('unregistered_visual_specialist');
       running=true;
+      showObservedHandoff(event.role);
       state[event.role]='running';
       $('office-current').textContent='Executing '+byId[event.role].name;
       append('stage_started',event.role,'Worker assignment started');
