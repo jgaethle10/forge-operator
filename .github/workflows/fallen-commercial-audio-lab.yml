@@ -1,0 +1,22 @@
+name: Fallen commercial audio lab
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/commercial-audio-lab.mjs'
+      - 'systemia/media-studio/commercial-audio-lab.test.mjs'
+      - '.github/workflows/fallen-commercial-audio-lab.yml'
+  workflow_dispatch:
+jobs:
+  audio-lab:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install measurement tools
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Test real FFmpeg finishing and fail-closed QC
+        run: node --test systemia/media-studio/commercial-audio-lab.test.mjs
