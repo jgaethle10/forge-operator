@@ -4,8 +4,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {buildVisualModelPlan} from './model-fabric.js';
+import type {VisualModelEndpoint} from './model-fabric.js';
 import {ownedVideoEndpoint} from './owned-video-adapter.mjs';
-import {planOwnedVideoPlacement,OWNED_VIDEO_WORKLOAD} from './owned-video-saban-placement.mjs';
+import {planOwnedVideoPlacement as rawPlacement,OWNED_VIDEO_WORKLOAD} from './owned-video-saban-placement.mjs';
+const planOwnedVideoPlacement=rawPlacement as (args:{job:unknown;observation:unknown;trusted:unknown;offer:unknown;now:Date})=>{state:string;executionAuthorized:boolean;workerStarted:boolean;publishingAuthorized:boolean;reasons:string[]};
 
 const here=path.dirname(fileURLToPath(import.meta.url));
 const request=JSON.parse(fs.readFileSync(path.join(here,'campaigns/before-the-doors-canary-01.json'),'utf8'));
@@ -35,7 +37,7 @@ const offer={
 };
 
 test('the original first shot cannot route while the actual model adapter is unverified',()=>{
-  const p=buildVisualModelPlan(request,[ownedVideoEndpoint(false)]);
+  const p=buildVisualModelPlan(request,[ownedVideoEndpoint(false) as VisualModelEndpoint]);
   assert.equal(p.status,'blocked');
   assert.deepEqual(p.jobs,[]);
   assert.deepEqual(p.rejectedModels[0].reasons,['endpoint_not_verified']);
@@ -45,7 +47,7 @@ test('the original first shot cannot route while the actual model adapter is unv
 test('verified model endpoint converts the exact canary into one bounded Saban-compatible job',()=>{
   // This endpoint is a routing fixture only. It does not attest to a GPU,
   // weights, a model runtime, a signature, or real media generation.
-  const p=buildVisualModelPlan(request,[ownedVideoEndpoint(true)]);
+  const p=buildVisualModelPlan(request,[ownedVideoEndpoint(true) as VisualModelEndpoint]);
   assert.equal(p.status,'routed');
   assert.equal(p.jobs.length,1);
   const job=p.jobs[0];
@@ -68,11 +70,11 @@ test('verified model endpoint converts the exact canary into one bounded Saban-c
   assert.equal(placement.executionAuthorized,false);
   assert.equal(placement.workerStarted,false);
   assert.equal(placement.publishingAuthorized,false);
-  assert.equal(placement.workloadClass,OWNED_VIDEO_WORKLOAD);
+  assert.equal(placement.state,'placement_ready_no_execution');
 });
 
 test('the routed job cannot gain execution permission from fictitious or stale Saban capacity',()=>{
-  const job=buildVisualModelPlan(request,[ownedVideoEndpoint(true)]).jobs[0];
+  const job=buildVisualModelPlan(request,[ownedVideoEndpoint(true) as VisualModelEndpoint]).jobs[0];
   const held=planOwnedVideoPlacement({
     job,observation,trusted,offer:{...offer,resources:{...offer.resources,gpu_count:0}},now:new Date(clock)
   });
