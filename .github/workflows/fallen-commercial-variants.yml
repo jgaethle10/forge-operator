@@ -1,0 +1,45 @@
+name: Fallen Commercial Three Format Proof
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/timeline.ts"
+      - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/timeline-export.test.ts"
+      - "systemia/media-studio/commercial-variants.mjs"
+      - "systemia/media-studio/commercial-variants.test.mjs"
+      - "systemia/media-studio/COMMERCIAL-VARIANTS.md"
+      - ".github/workflows/fallen-commercial-variants.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-and-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare FFmpeg and TypeScript toolchain
+        run: |
+          npm install --no-audit --no-fund
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Test bounded focal crop and timeline geometry
+        run: node --import tsx --test systemia/media-studio/timeline-export.test.ts
+      - name: Render 16:9, square, vertical and extract 9 evidence frames from actual encoded synthetic specimens
+        env:
+          FALLEN_VARIANT_CI_PROOF_DIR: artifacts/fallen-commercial-variant-proof
+        run: node --import tsx --test systemia/media-studio/commercial-variants.test.mjs
+      - name: Validate overall repository typing
+        run: npm run lint
+      - name: Upload synthetic CI proof, not a client advertisement
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-synthetic-three-format-review-proof
+          path: artifacts/fallen-commercial-variant-proof/**
+          if-no-files-found: warn

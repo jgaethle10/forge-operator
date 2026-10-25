@@ -39,6 +39,9 @@ export interface TimelineClip {
   y?:number;
   scale?:number;
   rotationDeg?:number;
+  // Explicit per-format focal position for commercial aspect-ratio reframing.
+  focalX?:number;
+  focalY?:number;
   label?:string;
 }
 
@@ -119,6 +122,11 @@ function assertProject(project:FallenTimelineProject){
       if(clip.trackId!==track.id) throw new Error(`timeline_clip_track_mismatch:${clip.id}`);
       if(!assetIds.has(clip.assetId)) throw new Error(`timeline_asset_missing:${clip.assetId}`);
       if(clip.startSec<0||clip.durationSec<=0) throw new Error(`timeline_clip_timing_invalid:${clip.id}`);
+      for(const [key,value] of [['focalX',clip.focalX],['focalY',clip.focalY]] as const){
+        if(value!==undefined && (!Number.isFinite(value)||value<0||value>1)){
+          throw new Error(`timeline_clip_invalid_${key}:${clip.id}`);
+        }
+      }
     }
   }
 }

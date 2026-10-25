@@ -127,3 +127,15 @@ test('respects a bounded custom audio master policy',()=>{
   assert.match(filter,/sidechaincompress=threshold=0\.08:ratio=6:attack=30:release=420/);
   assert.match(filter,/loudnorm=I=-16:TP=-1\.5:LRA=9:linear=true/);
 });
+
+test('per-shot focal positions govern framing without silently using center crop',()=>{
+  const project=readyProject();
+  project.aspectRatio='9:16';
+  project.tracks[0].clips[0].focalX=0.85;
+  project.tracks[0].clips[0].focalY=0.25;
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/reframe.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  assert.match(filter,/crop=1080:1920:x=\(iw-ow\)\*0\.85:y=\(ih-oh\)\*0\.25/);
+  project.tracks[0].clips[0].focalX=1.3;
+  assert.throws(()=>buildTimelineExportPlan({project,outputPath:'/tmp/unapproved-crop.mp4'}),/timeline_visual_focus_invalid/);
+});
