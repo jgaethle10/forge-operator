@@ -74,3 +74,27 @@ The deterministic test worker emits FFmpeg test footage (not AI footage) solely 
 - **Shipping / Clip:** master iPhone-safe final MP4, independently audit audio and every cut, hold until owner approval and publish permissions.
 
 Systemia retains command authority; Saban is bounded execution; Fallen retains project graph, model routing, decisions, and edit/export; Clip is a separate distribution boundary.
+
+## V2 GPU admission and Saban placement
+
+These files extend v1 without changing the production authority boundary:
+
+- `owned-video-gpu-preflight.mjs` is an **observational probe**, not an installer, enroller, or authorization path. It checks local NVIDIA CUDA GPU memory, RAM, free output space, model presence, and FFmpeg/FFprobe, then returns a machine-readable block/readiness receipt without exposing private host paths. `node systemia/media-studio/owned-video-gpu-preflight.mjs --observe` always reports node authorization and rights as unverified. The trusted fields must be produced independently by the existing NodeSeed/Systemia private admission path.
+- `owned-video-saban-placement.mjs` emits a bounded Saban *placement intent* only when the read-only hardware receipt is fresh and its trusted attestation binds the **same device, observation digest, and Saban offer ID**. The Saban offer must be attested, eligible for workload `evercraft.fallen.owned-video.v1`, explicitly conformance-verified (not generic container-capable), and carry adequate real GPU, RAM and local storage. Saban's existing heterogeneous planner makes the final resource placement decision. The resulting plan is **not a worker lease** and cannot execute commands, spend money, start video generation, expose a filesystem, or publish anything.
+- For a genuine canary, run `node --test systemia/media-studio/owned-video-gpu-preflight.test.mjs systemia/media-studio/owned-video-saban-placement.test.mjs` locally or wait for CI. Every test uses fictional attestation/test offers and must not be interpreted as a real GPU having passed preflight.
+
+### Owner node probe (read-only)
+
+Run on an authorized candidate GPU host (not the Chromebook or NextGen unless its actual hardware qualifies):
+
+```bash
+node systemia/media-studio/owned-video-gpu-preflight.mjs --observe
+```
+
+The output deliberately reports `state: blocked` until an independently verified NodeSeed attestation, model runtime, commercial rights, immutable worker digest and weights manifest are supplied to the **private** admission process. Do not paste secrets, model paths, or allocator credentials into public logs.
+
+### Status after V2 source implementation
+
+- Owned video software and a bounded scheduler placement contract exist.
+- A suitable authorized Evercraft GPU host and actual Wan checkpoint have **not** been observed through this chat.
+- No live Saban GPU lease has been issued, no real video generation run has been observed, and no new commercial is approved or published.
