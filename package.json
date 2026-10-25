@@ -29,7 +29,7 @@
     "proof:nodeseed-placement": "node systemia/network/nodeseed-placement-label-proof.mjs",
     "test:release-policy": "node systemia/release/release-policy.test.mjs && node systemia/release/scoped-approval.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
-    "test:media-studio": "node --import tsx --test systemia/media-studio/*.test.ts",
+    "test:media-studio": "node --import tsx --test systemia/media-studio/*.test.ts systemia/media-studio/*.test.mjs",
     "proof:factory": "node systemia/proof-factory/proof-factory.mjs",
     "test:proof-factory": "node tests/proof-factory.test.mjs",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
