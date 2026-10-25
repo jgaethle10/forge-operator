@@ -34,6 +34,7 @@ test('first pass rejects quiet video, second pass masters and verifies the actua
   assert.equal(receipt.status,'accepted');
   assert.ok(Math.abs(receipt.after.integratedLufs+16)<=1.5);
   assert.ok(receipt.after.truePeakDbtp<=-1);
+  assert.ok(Math.abs(receipt.after.duration-before.measurements.duration)<=0.10,'mastering must preserve picture sync');
   assert.equal(receipt.publicationAuthorityGranted,false);
   assert.ok(fs.statSync(out).size>1000);
 });

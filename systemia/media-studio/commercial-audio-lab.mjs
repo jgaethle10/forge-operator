@@ -122,15 +122,17 @@ export function masterCommercialAudio({input,output,expectedSha256,standard={}})
   if(!stats || keys.some(key=>finite(stats[key])===null)) throw new Error('audio_master_first_pass_unmeasurable');
   const af=['loudnorm=I='+p.targetLufs,'TP='+p.masteringPeakDbtp,'LRA='+p.targetLra,
     'measured_I='+stats.input_i,'measured_TP='+stats.input_tp,'measured_LRA='+stats.input_lra,
-    'measured_thresh='+stats.input_thresh,'offset='+stats.target_offset,'linear=true'].join(':');
+    'measured_thresh='+stats.input_thresh,'offset='+stats.target_offset,'linear=true'].join(':')+
+    ',apad,atrim=duration='+m.duration+',asetpts=N/SR/TB';
   fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
   const temp=path.join(path.dirname(path.resolve(output)),'.'+path.basename(output)+'.'+process.pid+'.part.mp4');
   try {
     run('ffmpeg',['-nostdin','-y','-hide_banner','-v','warning','-i',input,
       '-map','0:v:0','-map','0:a:0','-c:v','copy','-af',af,
-      '-c:a','aac','-b:a','256k','-ar','48000','-movflags','+faststart',temp]);
+      '-c:a','aac','-b:a','256k','-ar','48000','-t',String(m.duration),'-movflags','+faststart',temp]);
     const qc=auditCommercialAudio({input:temp,standard:p});
     if(qc.status!=='accepted') throw new Error('audio_master_post_qc_rejected:'+qc.reasons.join(','));
+    if(Math.abs(qc.measurements.duration-m.duration)>0.10) throw new Error('audio_master_duration_drift');
     fs.renameSync(temp,output);
     return {schema:'evercraft.fallen.commercial-audio-master.v1',status:'accepted',
       originalSha256:source.sha256,outputSha256:qc.sha256,output:path.resolve(output),
