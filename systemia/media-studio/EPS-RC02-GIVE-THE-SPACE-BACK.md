@@ -37,3 +37,15 @@ The scripted dialogue is a **creative treatment**, not a claim anyone was interv
 - No claimed local Saban dispatch, model inference, paid production call, or rendered RC02 from this change.
 
 **Validation:** `node --test systemia/media-studio/relay-floor-gate.test.mjs`.
+
+## Source scout, October 25 (candidate links, NOT yet downloaded or picture-approved)
+
+The project needs *moving footage*, and authentic EPS footage is still preferred. The current accessible Library search returned EPS project reports/photos but **no verified, identifiable EPS motion-footage file**. Three individually checked Mixkit clip pages explicitly display their **Stock Video Free License** and commercial-use claim; the license does **not** automatically establish that an identifiable person endorses EPS. No download, SHA receipt, talent release, or actual use authorization has been verified here.
+
+| Candidate | Verified catalog page | Proposed use | Outstanding |
+|---|---|---|---|
+| Worker mowing a home yard (12s, 24fps) | https://mixkit.co/free-stock-video/man-mowing-the-lawn-with-a-mower-10472/ | Generic physical-action B-roll, not EPS-branded team | Download, digest, talent/endorsement review, shot approval |
+| Gardener walking with supplies (21s, 24fps) | https://mixkit.co/free-stock-video/gardener-walking-through-a-nursery-842/ | Human working shot if visual context fits edit | Location mismatch: nursery, not residential cleanup; likely reject |
+| Gardener arranging plants (16s, 24fps) | https://mixkit.co/free-stock-video/gardener-arranges-potted-flowers-845/ | Close-up physical action, only if landscaping scope matches | Source/talent review; nursery is not an EPS job |
+
+Do not fabricate an actual EPS makeover or human testimonial from mismatched clips. Creative floor still blocks a montage that cannot show properly cleared people speaking and credible EPS work. Royalty-free library footage is *not* equivalent to cleared advertising use by a person. No download or render has happened at this source-scout stage.
