@@ -171,7 +171,7 @@ export function inspectNextGen({
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const report=inspectNextGen();
-  if(process.argv.includes('--probe-loopback')){
+  if(process.argv.includes('--probe-loopback')||process.argv.includes('--require-live-local-nodeseed')){
     const probe=await probeNextGenLocalLoopback();
     Object.assign(report,probe);
   }
