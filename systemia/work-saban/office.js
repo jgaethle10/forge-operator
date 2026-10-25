@@ -99,7 +99,7 @@
     if(event.type==='accepted') {
       reset('idle');
       running=true;
-      state.director='verified';
+      state.director='admitted';
       proofs.director='Authorized local mission admitted';
       $('office-current').textContent='Mission admitted; awaiting specialist';
       append('accepted','director','Local mission admitted');
