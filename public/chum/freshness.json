@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-25T22:31:12.635Z",
+  "updated_at": "2026-10-25T22:34:32.744Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,40 +11,56 @@
   },
   "latest_change_batch": [
     {
-      "path": "/llms.txt",
-      "last_changed": "2026-10-25T22:31:12.635Z",
-      "priority": 86
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-25T22:34:32.744Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-25T22:34:32.744Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-25T22:31:12.635Z",
+      "last_changed": "2026-10-25T22:34:32.744Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-25T22:34:32.744Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/llms.txt",
-      "url": "/llms.txt",
-      "last_changed": "2026-10-25T22:31:12.635Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-25T22:31:12.635Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-25T21:57:40.097Z",
+      "last_changed": "2026-10-25T22:34:32.744Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-25T21:57:40.097Z",
+      "last_changed": "2026-10-25T22:34:32.744Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-25T22:34:32.744Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-25T22:34:32.744Z",
+      "priority": 80
+    },
+    {
+      "path": "/llms.txt",
+      "url": "/llms.txt",
+      "last_changed": "2026-10-25T22:31:12.635Z",
+      "priority": 86
     },
     {
       "path": "/chum/proof/forensiscope.json",
@@ -61,12 +77,6 @@
     {
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-25T21:57:40.097Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
       "last_changed": "2026-10-25T21:57:40.097Z",
       "priority": 80
     },
