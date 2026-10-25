@@ -4,6 +4,9 @@ on:
     paths:
       - 'systemia/media-studio/commercial-audio-lab.mjs'
       - 'systemia/media-studio/commercial-audio-lab.test.mjs'
+      - 'systemia/media-studio/commercial-creative-roles.test.mjs'
+      - 'systemia/media-studio/creative-council-saban-adapter.mjs'
+      - 'systemia/saban/multiplication-registry.json'
       - '.github/workflows/fallen-commercial-audio-lab.yml'
   workflow_dispatch:
 jobs:
@@ -19,4 +22,4 @@ jobs:
       - name: Install measurement tools
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - name: Test real FFmpeg finishing and fail-closed QC
-        run: node --test systemia/media-studio/commercial-audio-lab.test.mjs
+        run: node --test systemia/media-studio/commercial-audio-lab.test.mjs systemia/media-studio/commercial-creative-roles.test.mjs
