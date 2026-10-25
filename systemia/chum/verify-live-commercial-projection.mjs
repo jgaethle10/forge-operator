@@ -15,10 +15,14 @@ export function assessProjection({llms,readiness,sourceLlms,sourceReadiness}){
   if(typeof llms!=='string'||!llms.includes('seven existing Systemia Stripe-hosted Payment Links'))findings.push('LLMS_HOSTED_LINK_TRUTH_MISSING');
   if(typeof llms==='string'&&llms.includes('**Payment checkout is HELD.**'))findings.push('LLMS_OUTDATED_BLANKET_HOLD');
   if(typeof llms!=='string'||!llms.includes('Do not substitute any of these links'))findings.push('LLMS_EXACT_SKU_SAFETY_MISSING');
+  if(typeof llms!=='string'||!llms.includes('Independent automated browser verification on October 25'))findings.push('LLMS_BROWSER_PROOF_NOT_PUBLISHED');
   if(!readiness||typeof readiness!=='object'||readiness.schema!=='evercraft.payments.public-commercial-readiness.v1')findings.push('READINESS_SCHEMA_INVALID');
   if(readiness?.commercial_checkout_ready!==false||readiness?.may_charge_customers!==false||readiness?.may_issue_entitlements!==false)findings.push('NATIVE_RAIL_HOLD_NOT_EXPLICIT');
   if(readiness?.separate_systemia_hosted_stripe?.verified_active_live_exact_sku_links!==7||
-    readiness?.separate_systemia_hosted_stripe?.state!=='PROVIDER_ACTIVE_AND_HTTP_REACHABLE_BROWSER_CHECKOUT_NOT_YET_ATTESTED')findings.push('HOSTED_STRIPE_STATE_NOT_PROJECTED');
+    readiness?.separate_systemia_hosted_stripe?.state!=='PROVIDER_ACTIVE_HTTP_REACHABLE_AUTOMATED_BUYER_FORM_VERIFIED_UNPAID')findings.push('HOSTED_STRIPE_STATE_NOT_PROJECTED');
+  if(readiness?.separate_systemia_hosted_stripe?.automated_rendered_buyer_form_verified!==true||
+    readiness?.separate_systemia_hosted_stripe?.automated_rendered_exact_sku_forms_verified!==7||
+    !String(readiness?.separate_systemia_hosted_stripe?.automated_browser_receipt_url||'').includes('/artifacts/12614991659'))findings.push('HOSTED_RENDERED_BROWSER_EVIDENCE_MISSING');
   if(readiness?.separate_systemia_hosted_stripe?.human_graphical_checkout_verified!==false||
     readiness?.separate_systemia_hosted_stripe?.verified_payment_observed!==false)findings.push('FALSE_CHECKOUT_OR_PAYMENT_PROOF');
   if(sourceReadiness?.separate_systemia_hosted_stripe?.verified_active_live_exact_sku_links!==7)throw Error('source_contract_changed');
@@ -26,7 +30,7 @@ export function assessProjection({llms,readiness,sourceLlms,sourceReadiness}){
     findings,
     equality:{llms_sha256_equal:typeof llms==='string'&&typeof sourceLlms==='string'&&sha(llms)===sha(sourceLlms),
       readiness_json_equal:readiness&&JSON.stringify(readiness)===JSON.stringify(sourceReadiness)},
-    proof_boundary:'Exact source-to-live byte equality is not required for semantics; semantic pass is not a graphical checkout, sale or fulfillment receipt'};
+    proof_boundary:'External browser verifies item, price and visible payment fields only. Semantic pass is not a payment, human scope acceptance, sale, entitlement or fulfillment receipt'};
 }
 async function fetchText(url,accept){
   const controller=new AbortController();

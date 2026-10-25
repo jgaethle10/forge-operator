@@ -10,7 +10,7 @@
   "may_charge_customers": false,
   "may_issue_entitlements": false,
   "public_capability_discovery": "read_only_available_separately",
-  "public_direct_payment_hosted_providers": "seven_separate_systemia_stripe_links_provider_active_http_reachable_pending_graphical_buyer_canary",
+  "public_direct_payment_hosted_providers": "seven_systemia_stripe_links_provider_active_http_reachable_automated_buyer_forms_verified_unpaid",
   "historical_buyer_directory": "/.well-known/evercraft-payments-buyer-doors.json",
   "historical_buyer_directory_warning": "The 13 buyer_url values in the older snapshot reflect GET/checkout preparation evidence from October 14-15, not current HTTP availability. Those historical URLs must NOT be presented as currently bookable or payable.",
   "last_failure_evidence": {
@@ -50,7 +50,7 @@
   ],
   "policy_scope": "The HELD fields are for the native Evercraft Payments/Raven Nexus transport only, not separately provider-verified Stripe-hosted exact-SKU payment links.",
   "separate_systemia_hosted_stripe": {
-    "state": "PROVIDER_ACTIVE_AND_HTTP_REACHABLE_BROWSER_CHECKOUT_NOT_YET_ATTESTED",
+    "state": "PROVIDER_ACTIVE_HTTP_REACHABLE_AUTOMATED_BUYER_FORM_VERIFIED_UNPAID",
     "source_catalog": "/mesh/checkout-ready/verified-links.json",
     "provider_account": "Systemia",
     "checked_on": "2026-10-25",
@@ -61,6 +61,11 @@
     "verified_payment_observed": false,
     "payment_reconciliation": "manual_required",
     "scope_rule": "Use only a matching preverified service and price after scope/fulfillment review. Never substitute for $50 commercials, Website Audit or FindMyPart.",
-    "marketing_policy": "No first completed sale required before owner-approved qualified traffic to an independently browser-verified matching checkout."
+    "marketing_policy": "No first completed sale required before owner-approved qualified traffic to an independently browser-verified matching checkout.",
+    "automated_rendered_buyer_form_verified": true,
+    "automated_rendered_exact_sku_forms_verified": 7,
+    "automated_browser_checked_at": "2026-10-25T21:35:00Z",
+    "automated_browser_receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40236112575/artifacts/12614991659",
+    "automated_browser_scope": "Headless Chromium confirmed 7/7 Stripe-hosted exact product names, amounts and visible buyer payment forms. No card entry, clicks, submission, purchase, paid receipt or fulfillment."
   }
 }
