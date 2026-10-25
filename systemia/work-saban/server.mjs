@@ -51,9 +51,9 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
       return res.end(page);
     }
-    if (req.method === 'GET' && ['/style.css', '/app.js'].includes(req.url)) {
+    if (req.method === 'GET' && ['/style.css', '/app.js', '/office.js', '/office-floor.svg'].includes(req.url)) {
       const filename=req.url.slice(1);
-      const mime=filename.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/javascript; charset=utf-8';
+      const mime=filename.endsWith('.css') ? 'text/css; charset=utf-8' : filename.endsWith('.svg') ? 'image/svg+xml; charset=utf-8' : 'text/javascript; charset=utf-8';
       res.writeHead(200, {'content-type':mime,'cache-control':'no-store','x-content-type-options':'nosniff'});
       return res.end(fs.readFileSync(path.join(root,filename)));
     }
