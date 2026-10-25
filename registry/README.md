@@ -19,11 +19,12 @@ The names below were historically published or indexed. **Only the universal own
 
 | Registry name | Purpose | Current independent remote proof |
 | --- | --- | --- |
-| `io.github.jgaethle10/evercraft-machine-commerce` | Problem-to-capability routing | Oct 6 v1.7.0 publisher receipt; fresh runtime check required |
+| `io.github.jgaethle10/evercraft-machine-commerce` | Problem-to-capability routing | Registry API 2026-10-25: v1.7.0 → owned Fabric `/mcp`; live cold-client check separate |
 | `io.github.jgaethle10/evercraft-capability-discovery` | Read-only capabilities | Historical registry indexing only |
 | `io.github.jgaethle10/aliev` | EV site screening | Historical registry indexing only |
 | `io.github.jgaethle10/evercraft-clip` | Clip and social-video planning | Historical registry indexing only |
 | `io.github.jgaethle10/forensiscope` | Media analysis and handoff | Historical registry indexing only |
+| `io.github.jgaethle10/faie` | Agricultural intelligence | Registry API 2026-10-25: v1.1.0 → owned Fabric `/mcp/faie`; independent cold-client check pending |
 | `io.github.jgaethle10/findmypart` | Parts discovery | Independent specialist remote not verified here |
 | `io.github.jgaethle10/career-command` | Interview preparation | Independent specialist remote not verified here |
 | `io.github.jgaethle10/systemia-website-audit` | Website auditing | Independent specialist remote not verified here |
