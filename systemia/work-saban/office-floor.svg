@@ -49,11 +49,11 @@
     <text x="180" y="304">CREATIVE / VERIFICATION / DELIVERY</text>
   </g>
   <g id="floor-connections" stroke="#64b7dc" fill="none" stroke-opacity=".07" stroke-width="3">
-    <path d="M340 197L393 197"/>
-    <path d="M582 197L634 197"/>
-    <path d="M765 248L765 277L342 277L342 324"/>
-    <path d="M340 383L393 383"/>
-    <path d="M582 383L638 383"/>
+    <path id="handoff-director-analyst" d="M340 197L393 197"/>
+    <path id="handoff-analyst-writer" d="M582 197L634 197"/>
+    <path id="handoff-writer-designer" d="M765 248L765 277L342 277L342 324"/>
+    <path id="handoff-designer-auditor" d="M340 383L393 383"/>
+    <path id="handoff-auditor-coordinator" d="M582 383L638 383"/>
   </g>
   <g aria-hidden="true">
     <ellipse cx="920" cy="364" rx="30" ry="11" fill="#4b90c5" opacity=".11"/>
