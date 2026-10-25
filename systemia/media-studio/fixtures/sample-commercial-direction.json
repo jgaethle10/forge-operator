@@ -1,0 +1,125 @@
+{
+  "schema": "evercraft.fallen.client-commercial-direction.v1",
+  "id": "sample-workshop-launch",
+  "brand": {
+    "name": "Sample Workshop",
+    "sourceRefs": [
+      "fixture:brand-guide"
+    ]
+  },
+  "audience": "local homeowners seeking cabinet repairs",
+  "goal": "Demonstrate a real repair and invite consultation",
+  "offer": {
+    "text": "Cabinet restoration appointments",
+    "confirmed": true,
+    "evidenceRefs": [
+      "fixture:service-sheet"
+    ]
+  },
+  "cta": {
+    "text": "Request a quote",
+    "confirmed": true
+  },
+  "aspectRatio": "9:16",
+  "durationSec": 30,
+  "sourceAssets": [
+    {
+      "id": "real-work",
+      "path": "/private/sample-work.mp4",
+      "kind": "video",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "rights": "owned",
+      "sourceRefs": [
+        "fixture:real-work"
+      ],
+      "evidenceState": "observed"
+    }
+  ],
+  "music": {
+    "brief": "Warm restrained original instrumental score resolving beneath the final brand title"
+  },
+  "beats": [
+    {
+      "id": "opening",
+      "role": "hook",
+      "durationSec": 4,
+      "subject": "damaged cabinet door",
+      "subjectVisibleAtStart": true,
+      "physicalAction": "A chipped cabinet door enters the workshop and lands on the wooden repair bench",
+      "camera": "Tight follow on damaged edge",
+      "visual": {
+        "assetId": "real-work",
+        "sourceRefs": [
+          "fixture:real-work"
+        ]
+      },
+      "narration": {
+        "text": "A cabinet can have a second life.",
+        "intention": "curious, not salesy"
+      },
+      "musicIntensity": 0.18
+    },
+    {
+      "id": "detail",
+      "role": "proof",
+      "durationSec": 12,
+      "subject": "craftsperson repairing wood",
+      "physicalAction": "A craftsperson repairs the chipped edge and blends a wood finish into the actual door",
+      "camera": "Handheld craft-detail insert",
+      "visual": {
+        "assetId": "real-work",
+        "sourceRefs": [
+          "fixture:real-work"
+        ]
+      },
+      "proofRefs": [
+        "fixture:service-sheet"
+      ],
+      "narration": {
+        "text": "We restore the details you notice every day, using careful preparation, patient craftsmanship, and finishes chosen for each individual piece.",
+        "intention": "precise"
+      },
+      "musicIntensity": 0.35
+    },
+    {
+      "id": "reveal",
+      "role": "body",
+      "durationSec": 8,
+      "subject": "repaired cabinet",
+      "physicalAction": "Open the restored cabinet door under matching natural light in the same room",
+      "camera": "Match-movement reveal",
+      "visual": {
+        "assetId": "real-work",
+        "sourceRefs": [
+          "fixture:real-work"
+        ]
+      },
+      "narration": {
+        "text": "See the difference, without replacing what already belongs.",
+        "intention": "understated confidence"
+      },
+      "musicIntensity": 0.55
+    },
+    {
+      "id": "close",
+      "role": "cta",
+      "durationSec": 6,
+      "subject": "restored cabinet with contact details",
+      "physicalAction": "Show the repaired door from the same angle as the opening with the business details",
+      "camera": "Restrained lockoff",
+      "visual": {
+        "assetId": "real-work",
+        "sourceRefs": [
+          "fixture:real-work"
+        ]
+      },
+      "narration": {
+        "text": "Give us a message to start planning your project.",
+        "intention": "inviting"
+      },
+      "screenText": "Request a quote",
+      "musicIntensity": 0.45,
+      "musicTransition": "Resolve underneath clear brand title"
+    }
+  ]
+}
