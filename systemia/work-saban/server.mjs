@@ -4,10 +4,32 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { composeWorkSabanMission } from './mission.mjs';
 import { executeLocalSalesReport } from './execute-local.mjs';
+import { MAX_CSV_BYTES } from './csv-core.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const syntheticCsv = fs.readFileSync(path.join(root, 'fixtures/monthly-sales-demo.csv'), 'utf8');
+
+async function readJsonBounded(req, maxBytes) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > maxBytes) {
+      const error = new Error('request_too_large');
+      error.httpStatus = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
+  try {
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  } catch {
+    const error = new Error('invalid_json');
+    error.httpStatus = 400;
+    throw error;
+  }
+}
 
 function reply(res, code, data) {
   const bytes = Buffer.from(JSON.stringify(data));
@@ -38,6 +60,42 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
         return reply(res,200,{ok:true,fixture:'synthetic_demo_only',execution});
       } catch {
         return reply(res,503,{ok:false,error:'demo_execution_not_verified'});
+      }
+    }
+    if (req.method === 'POST' && req.url === '/api/run-csv') {
+      if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json'
+          || req.headers['x-work-saban-client'] !== 'local-preview') {
+        return reply(res, 415, {ok:false,error:'json_local_preview_required'});
+      }
+      if (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host) {
+        return reply(res, 403, {ok:false,error:'cross_origin_forbidden'});
+      }
+      try {
+        const payload = await readJsonBounded(req, MAX_CSV_BYTES + 4096);
+        if (payload?.local_file_read_approved !== true) {
+          return reply(res, 403, {ok:false,error:'explicit_local_file_consent_required'});
+        }
+        if (typeof payload?.filename !== 'string' || payload.filename.length > 180
+            || !/^[^/\\\u0000-\u001f]+\.csv$/i.test(payload.filename)) {
+          return reply(res, 400, {ok:false,error:'safe_csv_filename_required'});
+        }
+        if (typeof payload.csv_text !== 'string'
+            || Buffer.byteLength(payload.csv_text, 'utf8') > MAX_CSV_BYTES) {
+          return reply(res, 413, {ok:false,error:'csv_too_large'});
+        }
+        const execution = await executeLocalSalesReport({
+          csvText: payload.csv_text, localFileReadApproved: true
+        });
+        return reply(res, 200, {
+          ok:true, input_source:'explicit_browser_csv',
+          output_destination:'http_response_only',
+          retention:'not_saved_by_preview',
+          execution
+        });
+      } catch (error) {
+        const safeCode = String(error.message || 'csv_run_failed');
+        const status = error.httpStatus || (safeCode.startsWith('csv_') ? 400 : 503);
+        return reply(res, status, {ok:false,error:status === 503 ? 'csv_execution_failed_closed' : safeCode});
       }
     }
     if (req.method !== 'POST' || req.url !== '/api/compose') return reply(res, 404, {ok:false,error:'not_found'});
