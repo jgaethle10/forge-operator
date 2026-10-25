@@ -77,7 +77,7 @@ test('rejects untrusted URL surfaces, IPs, localhost, credentialed, and tampered
     await assert.rejects(comparePublicBrokerWithYardReceipt({
       yardReceipt:{...yard,...mutation}, allowedOrigins:[approvedOrigin],
       fetchImpl: async () => response(health),
-    }), /broker_public_origin_invalid|yard_broker_route_receipt_invalid/);
+    }), /broker_public_origin_invalid|yard_broker_route_receipt_invalid|broker_origin_not_independently_allowlisted/);
   }
 });
 
