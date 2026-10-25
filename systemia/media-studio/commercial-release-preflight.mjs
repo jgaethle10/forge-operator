@@ -124,6 +124,22 @@ export function assessClientCommercialRelease(input) {
     assetIds.every(nonempty) && new Set(assetIds).size === assetIds.length);
   validateRights(input, assetIds, reasons);
   validateStory(input, order.expectedDurationSec, reasons);
+  const production = input.productionGrade || {};
+  add(reasons, 'production_grade_schema_invalid', production.schema === 'evercraft.fallen.production-grade-report.v1');
+  add(reasons, 'production_grade_not_accepted', production.status === 'accepted');
+  const reports = Array.isArray(production.beatReports) ? production.beatReports : [];
+  const beatSet = new Set();
+  for (const row of reports) {
+    if (!nonempty(row?.beatId)) { reasons.push('production_grade_beat_id_missing'); continue; }
+    if (beatSet.has(row.beatId)) reasons.push('production_grade_duplicate_beat:' + row.beatId);
+    beatSet.add(row.beatId);
+    if (row.status !== 'accepted') reasons.push('production_grade_beat_rejected:' + row.beatId);
+  }
+  for (const beat of input.storyboard?.beats || []) {
+    if (nonempty(beat?.id) && !reports.some(row => row.beatId === beat.id && row.status === 'accepted')) {
+      reasons.push('production_grade_beat_missing:' + beat.id);
+    }
+  }
   validateCreative(input, reasons);
 
   const approval = input.clientApproval || { status: 'pending' };
