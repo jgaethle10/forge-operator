@@ -72,7 +72,8 @@ def main():
     model_dir = verify_local_model(request)
 
     import torch
-    from diffusers import WanPipeline
+    from diffusers import AutoencoderKLWan, WanPipeline
+    from diffusers.schedulers.scheduling_unipc_multistep import UniPCMultistepScheduler
     from diffusers.utils import export_to_video
 
     require(torch.cuda.is_available(), 'wan_cuda_gpu_missing')
@@ -82,8 +83,17 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     video_raw = output / 'raw-wan.mp4'
     video_final = output / 'shot.mp4'
-    pipe = WanPipeline.from_pretrained(str(model_dir), local_files_only=True, dtype=torch.bfloat16)
+    # Keep the Wan VAE in float32 to prevent decode artifacts; the denoiser runs in bf16.
+    # This matches the upstream Diffusers reference and uses only pinned local weights.
+    vae = AutoencoderKLWan.from_pretrained(
+        str(model_dir), subfolder='vae', local_files_only=True, dtype=torch.float32
+    )
+    pipe = WanPipeline.from_pretrained(
+        str(model_dir), vae=vae, local_files_only=True, dtype=torch.bfloat16
+    )
+    pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config, flow_shift=3.0)
     pipe.enable_model_cpu_offload()
+    # Wan 1.3B is native 480p only; 720p output is upscaled review footage.
     # Wan requests 4*k+1 frames, generated at 16fps before 24fps delivery conversion.
     frames = 4 * math.ceil(duration * 16 / 4) + 1
     vertical = request['aspectRatio'] == '9:16'
