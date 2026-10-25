@@ -1,0 +1,47 @@
+name: Commercial Studio public inquiry route canary
+on:
+  pull_request:
+    paths:
+      - 'scripts/studio-public-intake-canary.mjs'
+      - 'public/.well-known/evercraft-chum-attribution.json'
+      - '.github/workflows/commercial-studio-public-canary.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/studio-public-intake-canary.mjs'
+      - '.github/workflows/commercial-studio-public-canary.yml'
+      - 'public/commercial-studio/index.html'
+      - 'systemia/mcp/commercial-studio-inquiry.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+  schedule:
+    - cron: '38 15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-pii-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/studio-public-intake-canary.mjs
+      - name: Inspect public form and live preflight without sending a lead
+        id: external
+        continue-on-error: true
+        env:
+          STUDIO_PUBLIC_RECEIPT: ${{ runner.temp }}/studio-public-intake.json
+        run: node scripts/studio-public-intake-canary.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: studio-public-intake-evidence
+          path: ${{ runner.temp }}/studio-public-intake.json
+          if-no-files-found: warn
+      - name: Require public form and route after merge
+        if: github.event_name != 'pull_request' && steps.external.outcome == 'failure'
+        run: |
+          echo 'Public site/route not yet verified. Do not claim live inquiry delivery.'
+          exit 1
