@@ -218,6 +218,7 @@ export class RemoteOperatorGateway {
     });
     if (!bound || bound.approved !== true || bound.one_time_consumed !== true ||
         bound.action !== action || bound.root_key !== root ||
+        !this.nodeId || bound.node_id !== this.nodeId ||
         bound.approval_ref !== approvalRef || bound.payload_sha256 !== digest)
       throw new Error('remote_operator_scoped_approval_denied');
   }
