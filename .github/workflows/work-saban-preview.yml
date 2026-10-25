@@ -27,7 +27,17 @@ jobs:
           node --check systemia/work-saban/mission.mjs
           node --check systemia/work-saban/server.mjs
           node --check systemia/work-saban/app.js
+          node --check systemia/work-saban/csv-core.mjs
+          node --check systemia/work-saban/csv-worker.mjs
+          node --check systemia/work-saban/execute-local.mjs
+          node --check systemia/work-saban/execute-local.proof.mjs
       - name: Prove formation contract
         run: node systemia/work-saban/mission.proof.mjs
       - name: Prove local preview API
         run: node systemia/work-saban/preview.proof.mjs
+      - name: Prove five registered specialist workers, financial audit and delivery
+        run: node systemia/work-saban/execute-local.proof.mjs
+      - name: Run approved local-only synthetic report CLI
+        run: |
+          node systemia/work-saban/execute-local.mjs --demo --out "$RUNNER_TEMP/work-saban"
+          test -f "$(find "$RUNNER_TEMP/work-saban" -name '*.receipt.json' | head -n 1)"
