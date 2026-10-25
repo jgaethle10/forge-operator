@@ -63,3 +63,22 @@ node systemia/work-saban/execute-local.mjs --csv /path/to/monthly-sales.csv --ap
 Only month and revenue columns are analyzed. Input size is bounded to 256 KiB and 2,000 rows. There is **no HTTP customer CSV upload** or third-party account access. The report is written only to an explicit local output directory, alongside a receipt with the input/report digest and worker verification timeline. The source CSV is not uploaded or bundled into the receipt. Temporary test files are removed during CI.
 
 This proves a narrow real office-work outcome with evidence. It does **not** establish generative multi-agent quality, production autonomy, distributed compute readiness, server-side customer security, any payment, or broad office task support. Those require separate gates from Issue #1630.
+
+
+## Visual Work Floor v0.3 (TraceOffice-style experience)
+
+The default local preview now opens into an **isometric virtual office** with six inspectable stations: Mission Director, Data Analyst, Communications Specialist, Presentation Designer, Quality Auditor and Delivery Coordinator. These are visual representations of task roles, not six separate installed language models.
+
+- **Actual worker telemetry:** \`POST /api/run-demo-stream\` and \`POST /api/run-csv-stream\` return NDJSON observations: \`accepted\`, \`stage_started\`, \`stage_verified\`, \`completed\` or \`failed_closed\`. The existing approved local Saban worker execution remains the only source of \`stage_verified\` receipts.
+- **Observed animation, not a scripted show:** a desk changes to *running* only upon a \`stage_started\` event and to *verified* only upon a role-matching \`stage_verified\` quality receipt. The floor never shows ongoing workers based solely on a generated mission proposal.
+- **Agent inspector:** select a desk via pointer or keyboard to inspect role, current state and receipt digest.
+- **Event timeline and replay:** replay the **observed** event sequence, with browser receipt times marked explicitly. Playback can highlight a specialist, but cannot fabricate activity or claim remote model inference.
+- **Failure handling:** missing or failed output does not become a successful delivery. The scene can display a held worker and an error status.
+- **Privacy:** no customer file is persisted by the loopback browser preview; uploaded file contents are passed to the local process and included only in the immediate request, not saved as a source file. Do not expose this preview port to the internet.
+- **Rendering:** first-pass responsive SVG/isometric art with no third-party scene-rendering library. It is a visual monitor of the **local deterministic** worker pipeline, not a 3D free-roaming agent simulation.
+
+Launch the existing local preview with \`node systemia/work-saban/server.mjs\`, then open \`http://127.0.0.1:8789\`. The Work Floor is the top-level experience. Start the synthetic example or upload one explicitly authorized CSV.
+
+### Future 3D/agent-world graduation
+
+Do not animate agents as if they are doing live model reasoning without a supported model/session trace. Next stages are (1) true agent/model session-to-avatar identity mapping, (2) attested distributed NodeSeed events, (3) semantically meaningful avatar locomotion/interaction events backed by work handoff receipts, (4) saved consented session playback with workspace isolation and retention, and (5) a more freely navigable cinematic 3D view once the real telemetry data model can justify it.
