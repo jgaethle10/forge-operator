@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {assertRelayFloorBrief} from './relay-floor-gate.mjs';
+import {verifyRelayFloorSource} from './relay-source-verify.mjs';
 
 const ROLES=[
   'story_architect','cinematography_director','visual_evidence_scout','data_graphics_director',
@@ -59,6 +60,8 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
   const assets=ensureArray(brief.sourceAssets,'source_assets');
   // Opt-in floor for human-led cinematic spots. Never downgrade this to a slideshow.
   assertRelayFloorBrief(brief);
+  if(brief.creativeStandard==='relay-floor-v1'&&!checkFiles)
+    throw new Error('relay_floor_requires_file_verification');
   const scenes=ensureArray(brief.scenes,'scenes');
   if(scenes.length<3)throw new Error('commercial_brief_minimum_three_scenes');
   if(scenes[0]?.beat!=='hook'||scenes.at(-1)?.beat!=='cta')throw new Error('commercial_brief_hook_cta_required');
@@ -85,7 +88,7 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
 
   const ids=new Set();
   let position=0;
-  const timeline=[],sfxSpots=[],voiceTakes=[],musicMap=[],sabanJobs=[];
+  const timeline=[],sfxSpots=[],voiceTakes=[],musicMap=[],sabanJobs=[],motionObservations=[];
   for(const [index,scene] of scenes.entries()){
     const sceneId=requireText(scene.id,'scene_id');
     if(ids.has(sceneId))throw new Error('commercial_scene_duplicate:'+sceneId);
@@ -95,6 +98,8 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
     const intention=requireText(scene.intent,'scene_intent');
     const visualSource=assetMap.get(scene.assetId);
     if(!visualSource)throw new Error('commercial_scene_asset_missing:'+sceneId);
+    if(brief.creativeStandard==='relay-floor-v1')
+      motionObservations.push(verifyRelayFloorSource(visualSource,{requiredDurationSec:time}));
     const subjects=ensureArray(scene.mustShowSubjects,'must_show_subjects');
     for(const subject of subjects){
       if(!visualSource.subjects.includes(subject))throw new Error('commercial_must_show_not_proven:'+sceneId+':'+subject);
@@ -152,6 +157,7 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
   const result={
     schema:'evercraft.fallen.source-first-commercial-plan.v1',id,brand,audience,offer,durationSec,
     formats:[...new Set(formats)],timeline,sfxSpots,voiceTakes,musicMap,
+    ...(brief.creativeStandard==='relay-floor-v1'?{creativeStandard:brief.creativeStandard,motionObservations}:{}),
     sabanInventory:{jobs:sabanJobs},
     releaseGates:{
       sourceDigestsVerified:checkFiles,assetRightsDeclared:true,
