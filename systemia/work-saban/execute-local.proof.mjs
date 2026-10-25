@@ -57,7 +57,7 @@ try {
     }}}), /audit_/);
   assert.throws(()=>parseSalesCsv('month,revenue\n2026-01,1.00\n2026-02,1.005'), /invalid_revenue/);
   assert.throws(()=>parseSalesCsv('month,revenue\n2026-01,1.00\n2026-02,"2.00'), /unclosed_quote/);
-  assert.throws(()=>parseSalesCsv('month,revenue\n2026-01,1.00\n2026-01,2.00'), /distinct_months|$^/); // parse itself succeeds, aggregation below rejects
+  assert.throws(()=>calculateRevenue(parseSalesCsv('month,revenue\n2026-01,1.00\n2026-01,2.00').rows), /distinct_months/);
 } finally {
   fs.rmSync(dir, {recursive:true,force:true});
 }
