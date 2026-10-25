@@ -4,6 +4,10 @@ on:
     paths:
       - 'systemia/media-studio/commercial-audio-lab.mjs'
       - 'systemia/media-studio/commercial-audio-lab.test.mjs'
+      - 'systemia/media-studio/commercial-audio-qc.mjs'
+      - 'systemia/media-studio/commercial-audio-qc.test.mjs'
+      - 'systemia/media-studio/commercial-release-preflight.mjs'
+      - 'systemia/media-studio/commercial-release-preflight.test.mjs'
       - 'systemia/media-studio/commercial-creative-roles.test.mjs'
       - 'systemia/media-studio/creative-council-saban-adapter.mjs'
       - 'systemia/saban/multiplication-registry.json'
@@ -26,4 +30,7 @@ jobs:
       - name: Test real FFmpeg finishing and fail-closed QC
         run: |
           node --test systemia/media-studio/commercial-audio-lab.test.mjs systemia/media-studio/commercial-creative-roles.test.mjs
+      - name: Test commissioned commercial audio and release preflight
+        run: |
+          node --test systemia/media-studio/commercial-audio-qc.test.mjs systemia/media-studio/commercial-release-preflight.test.mjs
           node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory systemia/saban/fixtures/commercial-audio-council-job.json --agents 28 --workers 4 --execute --reconcile
