@@ -98,3 +98,9 @@ The output deliberately reports `state: blocked` until an independently verified
 - Owned video software and a bounded scheduler placement contract exist.
 - A suitable authorized Evercraft GPU host and actual Wan checkpoint have **not** been observed through this chat.
 - No live Saban GPU lease has been issued, no real video generation run has been observed, and no new commercial is approved or published.
+
+## First artistic target: Before the Doors, shot 01
+
+`campaigns/before-the-doors-canary-01.json` and `campaigns/before-the-doors-canary-bible.json` are the first original two-second, vertical, model-neutral **live-action-style cinematic moving shot request**. It depicts real-looking hands folding dough in a bakery. All creative input is newly authored. These files do not contain or reuse any frames or soundtrack from Relay RC35 or rejected studio commercials. Rights/provenance receipts and truthful cinematic motion remain mandatory before an artifact may advance to a human-reviewed Shot Tournament.
+
+The deliberately simple close-up shot avoids character-face identity claims before our I2V continuity system is proven. The first real success condition is a **model-generated moving sequence** that survives frame inspection, not a poster, FFmpeg color bars, or simulated worker footage. No model inference result exists merely because this request is committed.
