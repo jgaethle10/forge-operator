@@ -158,3 +158,24 @@ test('all storyboard beats require accepted production-grade visual coverage', (
   receipt = assessClientCommercialRelease(input);
   assert.ok(receipt.reasons.includes('production_grade_beat_rejected:proof'));
 });
+
+test('canonical Fallen audio-lab receipt is accepted with its native sha256 field', () => {
+  const input = good();
+  input.audioQc = {
+    schema: 'evercraft.fallen.commercial-audio-qc.v1', status: 'accepted', sha256: SHA,
+    measurements: { streamCount: 1, audioStreamCount: 1, integratedLufs: -16, truePeakDbtp: -1.5 }
+  };
+  assert.equal(assessClientCommercialRelease(input).status, 'ready_for_client_preview');
+  input.audioQc.sha256 = 'b'.repeat(64);
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('audio_digest_mismatch'));
+});
+test('no studio-ready claim for clipped, ambiguous or unmeasured sound', () => {
+  const input = good();
+  input.audioQc.sha256 = 'b'.repeat(64);
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('audio_receipt_digest_ambiguous'));
+  delete input.audioQc.sha256;
+  input.audioQc.measurements.truePeakDbtp = -0.2;
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('audio_true_peak_above_commercial_ceiling'));
+  input.audioQc.measurements.integratedLufs = -21;
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('audio_loudness_outside_commercial_standard'));
+});
