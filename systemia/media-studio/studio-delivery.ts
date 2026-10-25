@@ -8,6 +8,7 @@ import {
 } from './narrative-film-admission.js';
 import { renderTimelineExport, type TimelineExportReceipt } from './timeline-export.js';
 import { assessStudioMaster } from './master-qc.js';
+import { auditCommercialAudio } from './commercial-audio-lab.mjs';
 
 export type ClipDestination =
   | 'youtube'
@@ -16,7 +17,7 @@ export type ClipDestination =
   | 'linkedin'
   | 'tiktok';
 
-export type StudioQualityMode='standard'|'narrative_film';
+export type StudioQualityMode='standard'|'narrative_film'|'commercial';
 
 export interface StudioDeliveryRequest {
   schema:'evercraft.fallen.studio-delivery-request.v1';
@@ -73,6 +74,7 @@ export interface ClipDeliveryManifest {
     continuityDigests:string[];
     renderReceiptPath:string;
     masterQcReceiptPath:string;
+    commercialAudioQcReceiptPath?:string;
     narrativeFilmAdmissionDigest?:string;
   };
   boundaries:{
@@ -81,6 +83,7 @@ export interface ClipDeliveryManifest {
     platformPublishStateAsserted:false;
     downstreamClipGateRequired:true;
     narrativeFilmAdmissionRequired:boolean;
+    commercialAudioQcRequired:boolean;
   };
   createdAt:string;
 }
@@ -92,6 +95,7 @@ export interface StudioDeliveryReceipt {
   videoPath:string;
   renderReceiptPath:string;
   masterQcReceiptPath:string;
+  commercialAudioQcReceiptPath?:string;
   clipManifestPath:string;
   mediaSha256:string;
   manifestSha256:string;
@@ -146,7 +150,7 @@ function validateRequest(request:StudioDeliveryRequest){
     if(!allowed.has(destination)) throw new Error('studio_delivery_destination_invalid:'+destination);
   }
   const qualityMode=request.qualityMode??'standard';
-  if(qualityMode!=='standard'&&qualityMode!=='narrative_film'){
+  if(qualityMode!=='standard'&&qualityMode!=='narrative_film'&&qualityMode!=='commercial'){
     throw new Error('studio_delivery_quality_mode_invalid');
   }
   if(qualityMode==='narrative_film'){
@@ -167,6 +171,7 @@ export function buildClipDeliveryManifest(input:{
   renderReceipt:TimelineExportReceipt;
   renderReceiptPath:string;
   masterQcReceiptPath:string;
+  commercialAudioQcReceiptPath?:string;
 }):ClipDeliveryManifest{
   validateRequest(input.request);
   const project=input.request.project;
@@ -175,6 +180,22 @@ export function buildClipDeliveryManifest(input:{
   }
   if(input.renderReceipt.projectVersion!==project.version){
     throw new Error('studio_delivery_render_version_mismatch');
+  }
+  // Commercial Clip intake must carry measured QC for these precise encoded bytes.
+  if(input.request.qualityMode==='commercial'){
+    if(!input.commercialAudioQcReceiptPath) throw new Error('studio_delivery_commercial_audio_qc_missing');
+    if(!fs.existsSync(input.commercialAudioQcReceiptPath)){
+      throw new Error('studio_delivery_commercial_audio_qc_receipt_missing');
+    }
+    const audioQc=JSON.parse(fs.readFileSync(input.commercialAudioQcReceiptPath,'utf8')) as {
+      schema?:string;status?:string;sha256?:string;path?:string;
+    };
+    if(audioQc.schema!=='evercraft.fallen.commercial-audio-qc.v1' ||
+       audioQc.status!=='accepted' ||
+       audioQc.sha256!==input.renderReceipt.sha256 ||
+       path.resolve(String(audioQc.path||''))!==path.resolve(input.renderReceipt.outputPath)){
+      throw new Error('studio_delivery_commercial_audio_qc_unbound_or_rejected');
+    }
   }
 
   const captions=captionAssets(project).map(asset=>({
@@ -222,6 +243,7 @@ export function buildClipDeliveryManifest(input:{
       continuityDigests,
       renderReceiptPath:path.resolve(input.renderReceiptPath),
       masterQcReceiptPath:path.resolve(input.masterQcReceiptPath),
+      commercialAudioQcReceiptPath:input.commercialAudioQcReceiptPath?path.resolve(input.commercialAudioQcReceiptPath):undefined,
       narrativeFilmAdmissionDigest:input.request.narrativeFilmAdmission?.admissionDigest,
     },
     boundaries:{
@@ -230,6 +252,7 @@ export function buildClipDeliveryManifest(input:{
       platformPublishStateAsserted:false,
       downstreamClipGateRequired:true,
       narrativeFilmAdmissionRequired:(input.request.qualityMode??'standard')==='narrative_film',
+      commercialAudioQcRequired:input.request.qualityMode==='commercial',
     },
     createdAt:new Date().toISOString(),
   };
@@ -247,6 +270,7 @@ export function finalizeStudioDelivery(input:{
   const videoPath=path.join(outputDir,slug+'.mp4');
   const renderReceiptPath=path.join(outputDir,slug+'.render-receipt.json');
   const masterQcReceiptPath=path.join(outputDir,slug+'.master-qc.json');
+  const commercialAudioQcReceiptPath=input.request.qualityMode==='commercial'?path.join(outputDir,slug+'.commercial-audio-qc.json'):undefined;
   const clipManifestPath=path.join(outputDir,slug+'.clip-intake.json');
 
   const renderReceipt=renderTimelineExport({
@@ -273,11 +297,21 @@ export function finalizeStudioDelivery(input:{
     throw new Error('studio_delivery_master_qc_rejected:'+masterQc.reasons.join('|'));
   }
 
+  // Technical audio acceptance is mandatory for the commercial quality mode.
+  if(commercialAudioQcReceiptPath){
+    const qc=auditCommercialAudio({input:videoPath,expectedSha256:renderReceipt.sha256});
+    fs.writeFileSync(commercialAudioQcReceiptPath,JSON.stringify(qc,null,2)+'\n','utf8');
+    if(qc.status!=='accepted'){
+      throw new Error('studio_delivery_commercial_audio_qc_rejected:'+qc.reasons.join('|'));
+    }
+  }
+
   const manifest=buildClipDeliveryManifest({
     request:input.request,
     renderReceipt,
     renderReceiptPath,
     masterQcReceiptPath,
+    commercialAudioQcReceiptPath,
   });
   fs.writeFileSync(
     clipManifestPath,
@@ -297,6 +331,7 @@ export function finalizeStudioDelivery(input:{
     videoPath,
     renderReceiptPath,
     masterQcReceiptPath,
+    commercialAudioQcReceiptPath,
     clipManifestPath,
     mediaSha256:renderReceipt.sha256,
     manifestSha256:hashFile(clipManifestPath),

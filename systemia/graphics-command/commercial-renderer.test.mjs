@@ -30,7 +30,10 @@ test('Website Audit campaign compiles as metaphor-first commercial creative',()=
   assert.equal(plan.motion.exactFrame,true);
   assert.equal(plan.truth.noFakeMetric,true);
   assert.equal(plan.publicationAuthority,false);
-  assert.equal(plan.council.roles.length,10);
+  assert.equal(plan.council.roles.length,14);
+  for(const role of ['voice_performance_director','music_composer','sound_design_engineer','mixing_engineer']) {
+    assert.ok(plan.council.roles.includes(role),role);
+  }
 });
 
 test('Website Audit campaign passes commercial scroll-stop gate',()=>{

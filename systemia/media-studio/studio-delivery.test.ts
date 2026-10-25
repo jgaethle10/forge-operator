@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { makeTimelineProject, timelineDigest } from './timeline.js';
 import type { NarrativeFilmAdmissionReceipt } from './narrative-film-admission.js';
 import {
@@ -245,4 +248,37 @@ test('editing the timeline after Film Admission invalidates narrative delivery',
     }),
     /narrative_film_project_version_mismatch/
   );
+});
+
+
+test('commercial mode cannot create a Clip-ready manifest without audio measurement',()=>{
+  const r=request();
+  r.qualityMode='commercial';
+  assert.throws(()=>buildClipDeliveryManifest({
+    request:r,renderReceipt:receipt(),renderReceiptPath:'/tmp/r.json',
+    masterQcReceiptPath:'/tmp/qc.json',
+  }),/studio_delivery_commercial_audio_qc_missing/);
+});
+
+test('commercial Clip manifest requires accepted receipt bound to exact rendered bytes',t=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-commercial-delivery-test-'));
+  t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+  const qcFile=path.join(dir,'audio-qc.json'),r=request();
+  r.qualityMode='commercial';
+  const qc={
+    schema:'evercraft.fallen.commercial-audio-qc.v1',
+    status:'accepted',sha256:'0'.repeat(64),path:'/tmp/final.mp4',
+  };
+  fs.writeFileSync(qcFile,JSON.stringify(qc));
+  const make=()=>buildClipDeliveryManifest({
+    request:r,renderReceipt:receipt(),renderReceiptPath:'/tmp/r.json',
+    masterQcReceiptPath:'/tmp/qc.json',commercialAudioQcReceiptPath:qcFile,
+  });
+  assert.throws(make,/studio_delivery_commercial_audio_qc_unbound_or_rejected/);
+  qc.sha256='c'.repeat(64);
+  fs.writeFileSync(qcFile,JSON.stringify(qc));
+  const manifest=make();
+  assert.equal(manifest.qualityMode,'commercial');
+  assert.equal(manifest.boundaries.commercialAudioQcRequired,true);
+  assert.equal(manifest.provenance.commercialAudioQcReceiptPath,qcFile);
 });

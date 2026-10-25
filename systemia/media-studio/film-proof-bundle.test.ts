@@ -94,7 +94,7 @@ function setup(){
     media:{path:masterPath,sha256:masterSha,sizeBytes:fs.statSync(masterPath).size,width:1920,height:1080,fps:30,durationSec:8,videoCodec:'h264',audioCodec:'aac'},
     captions:[],metadata:{title:'Film',tags:[]},destinations:['youtube'],
     provenance:{inputAssetIds:['s1'],sourceRefs:['story'],continuityDigests:['continuity'],renderReceiptPath:renderPath,masterQcReceiptPath:qcPath,narrativeFilmAdmissionDigest:adm.admissionDigest},
-    boundaries:{publicationAuthorityGranted:false,platformCredentialsConsumed:false,platformPublishStateAsserted:false,downstreamClipGateRequired:true,narrativeFilmAdmissionRequired:true},
+    boundaries:{publicationAuthorityGranted:false,platformCredentialsConsumed:false,platformPublishStateAsserted:false,downstreamClipGateRequired:true,narrativeFilmAdmissionRequired:true,commercialAudioQcRequired:false},
     createdAt:'2026-09-30T00:00:00Z'
   };
   write(renderPath,render);write(qcPath,qc);write(clipPath,clip);
