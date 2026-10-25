@@ -10,10 +10,11 @@ function good() {
   }));
   const scenes = assets.map((a,i)=>({
     id:'s'+i,assetId:a.id,
+    ...(i===0?{voiceLine:'We need this yard back.'}:{}),
     mustShowSubjects:i===0?['visible-human-action','speaking-human']:['visible-human-action'],
     scoreEnergy:[.15,.4,.7,.85,.35][i],
     sfxCues:[{description:['boots-on-gravel','rake-through-leaves','real-tool-movement','haul-truck','yard-ambience'][i]}],
-    ...(i===0?{onScreenDialogue:{text:'We need this yard back.',syncAudioAssetRef:'take-audio-001',performerUseConsentRef:'signed-talent-release-001'}}:{})
+    ...(i===0?{onScreenDialogue:{text:'We need this yard back.',syncAudioAssetRef:'v0',performerUseConsentRef:'signed-talent-release-001'}}:{})
   }));
   return {creativeStandard:'relay-floor-v1',scenes,sourceAssets:assets,
     audioDirection:{dialogue:'human performed natural conversational dialogue',
@@ -39,6 +40,13 @@ test('no talking performer, synced audio, or consent means blocked',()=>{
   assert.throws(()=>assertRelayFloorBrief(b),/on_screen_talking_missing/);
   b.scenes[0].onScreenDialogue={text:'hello',syncAudioAssetRef:'',performerUseConsentRef:'abc'};
   assert.throws(()=>assertRelayFloorBrief(b),/synchronized_dialogue_audio_missing/);
+});
+test('on-camera dialogue must match the actual scene voice cue and same video audio',()=>{
+  const b=good();b.scenes[0].voiceLine='Unrelated TTS narration';
+  assert.throws(()=>assertRelayFloorBrief(b),/voice_cue_mismatch/);
+  b.scenes[0].voiceLine='We need this yard back.';
+  b.scenes[0].onScreenDialogue.syncAudioAssetRef='unrelated-audio-take';
+  assert.throws(()=>assertRelayFloorBrief(b),/same_source_audio/);
 });
 test('single-loop music and empty sound spots cannot pass',()=>{
   const b=good();b.scenes.forEach(s=>{s.scoreEnergy=.5;s.sfxCues=[]});
