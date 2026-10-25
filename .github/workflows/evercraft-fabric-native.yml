@@ -8,6 +8,7 @@ on:
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
       - 'tests/fabric-approved-buyer-handoffs.test.mjs'
+      - 'tests/fabric-mcprush-gateway.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/earthworks-simulator-page.mjs'
@@ -37,6 +38,7 @@ on:
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
       - 'tests/fabric-approved-buyer-handoffs.test.mjs'
+      - 'tests/fabric-mcprush-gateway.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
@@ -145,6 +147,7 @@ jobs:
         run: |
           npm run test:fabric-directory
           npm run test:fabric-local
+          node --test tests/fabric-mcprush-gateway.test.mjs
           npm run test:remote-operator
           node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs
           npm run proof:specialist-handoff-yard
