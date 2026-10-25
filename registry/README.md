@@ -9,7 +9,7 @@ Evercraft publishes discoverable AI capabilities. **Publication in an MCP regist
 - **Human-facing offer directory:** `https://fabric.systemiacommandcenters.com/offers`
 - **Machine discovery:** `https://fabric.systemiacommandcenters.com/.well-known/evercraft-chum.json`
 
-Evidence: the owned Fabric runtime was externally verified on October 6, 2026. The Official MCP Registry publisher job [37499511004](https://github.com/jgaethle10/forge-operator/actions/runs/37499511004) successfully published `io.github.jgaethle10/evercraft-machine-commerce` **v1.7.0** on October 6 pointing to the owned Fabric route. Current registry version, current MCP tool invocation and directory repointing require separate fresh receipts. Public search indexes may still display the older v1.5.1 / Base44 era.
+Evidence: the owned Fabric runtime was externally verified on October 6, 2026. The Official MCP Registry publisher job [37499511004](https://github.com/jgaethle10/forge-operator/actions/runs/37499511004) successfully published `io.github.jgaethle10/evercraft-machine-commerce` **v1.7.0** on October 6 pointing to the owned Fabric route. The October 25 external canary [40228501795](https://github.com/jgaethle10/forge-operator/actions/runs/40228501795) independently confirmed the latest v1.7.0 official registry metadata and a successful MCP initialize plus 3 discovered tools. Third-party directory pickup and real customer use require separate evidence. Public search indexes may still display the older v1.5.1 / Base44 era.
 
 Do **not** use previous GitHub Pages `/forge-operator/chum/` pages, old Base44 functions or a guessed specialist-specific path as an MCP server. GitHub Pages hosts static documents, not our authenticated Streamable HTTP runtime.
 
@@ -19,12 +19,12 @@ The names below were historically published or indexed. **Only the universal own
 
 | Registry name | Purpose | Current independent remote proof |
 | --- | --- | --- |
-| `io.github.jgaethle10/evercraft-machine-commerce` | Problem-to-capability routing | Registry API 2026-10-25: v1.7.0 → owned Fabric `/mcp`; live cold-client check separate |
+| `io.github.jgaethle10/evercraft-machine-commerce` | Problem-to-capability routing | Registry API 2026-10-25: v1.7.0 → owned Fabric `/mcp`; initialize and 3 tools independently verified |
 | `io.github.jgaethle10/evercraft-capability-discovery` | Read-only capabilities | Historical registry indexing only |
 | `io.github.jgaethle10/aliev` | EV site screening | Historical registry indexing only |
 | `io.github.jgaethle10/evercraft-clip` | Clip and social-video planning | Historical registry indexing only |
 | `io.github.jgaethle10/forensiscope` | Media analysis and handoff | Historical registry indexing only |
-| `io.github.jgaethle10/faie` | Agricultural intelligence | Registry API 2026-10-25: v1.1.0 → owned Fabric `/mcp/faie`; independent cold-client check pending |
+| `io.github.jgaethle10/faie` | Agricultural intelligence | Registry API 2026-10-25: v1.1.0 → owned Fabric `/mcp/faie`; initialize and 4 tools independently verified |
 | `io.github.jgaethle10/findmypart` | Parts discovery | Independent specialist remote not verified here |
 | `io.github.jgaethle10/career-command` | Interview preparation | Independent specialist remote not verified here |
 | `io.github.jgaethle10/systemia-website-audit` | Website auditing | Independent specialist remote not verified here |
@@ -33,7 +33,7 @@ The names below were historically published or indexed. **Only the universal own
 | `io.github.jgaethle10/faie` | Agriculture and water intelligence | Independent specialist remote not verified here |
 | `io.github.jgaethle10/eventwave` | Event intelligence | Independent specialist remote not verified here |
 
-The first-party ownership and registry-state evidence ledger is `systemia/distribution/publisher-ownership.json`; the read-only registry inspector is `systemia/distribution/inspect-official-mcp-registry.mjs`. It records observed public remotes, catches stale Base44 endpoints and never equates namespace publication with human account ownership at all other directories.
+The October 25 independent registry inspection identified **16 public Evercraft server entries: 14 still advertise Base44-era endpoints and two advertise owned Fabric endpoints.** Those fourteen routes are priority repoint candidates, not working owned specialist connections. The first-party ownership and registry-state evidence ledger is `systemia/distribution/publisher-ownership.json`; the read-only registry inspector is `systemia/distribution/inspect-official-mcp-registry.mjs`. It records observed public remotes, catches stale Base44 endpoints and never equates namespace publication with human account ownership at all other directories.
 
 ## AI routing and commerce boundary
 
