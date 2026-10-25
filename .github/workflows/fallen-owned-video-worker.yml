@@ -9,6 +9,8 @@ on:
       - 'systemia/media-studio/owned-video-gpu-preflight.test.mjs'
       - 'systemia/media-studio/owned-video-saban-placement.mjs'
       - 'systemia/media-studio/owned-video-saban-placement.test.mjs'
+      - 'systemia/media-studio/owned-video-execution-gate.mjs'
+      - 'systemia/media-studio/owned-video-execution-gate.test.mjs'
       - 'systemia/media-studio/owned-video-canary-contract.test.mjs'
       - 'systemia/media-studio/campaigns/before-the-doors-canary-01.json'
       - 'systemia/media-studio/campaigns/before-the-doors-canary-bible.json'
@@ -37,7 +39,7 @@ jobs:
           command -v ffmpeg
           command -v ffprobe
       - name: Verify owned-video moving-media and fail-closed contracts
-        run: node --test systemia/media-studio/owned-video-adapter.test.mjs systemia/media-studio/owned-video-gpu-preflight.test.mjs systemia/media-studio/owned-video-saban-placement.test.mjs systemia/media-studio/owned-video-canary-contract.test.mjs
+        run: node --test systemia/media-studio/owned-video-adapter.test.mjs systemia/media-studio/owned-video-gpu-preflight.test.mjs systemia/media-studio/owned-video-saban-placement.test.mjs systemia/media-studio/owned-video-execution-gate.test.mjs systemia/media-studio/owned-video-canary-contract.test.mjs
       - name: Syntax-check offline CUDA worker and immutable model inventory tool
         run: |
           python3 -m py_compile systemia/media-studio/workers/wan-local-worker.py
