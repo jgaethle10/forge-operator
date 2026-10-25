@@ -9,6 +9,8 @@ on:
       - 'systemia/distribution/inspect-official-mcp-registry.test.mjs'
       - 'systemia/distribution/build-registry-repoint-queue.mjs'
       - 'systemia/distribution/build-registry-repoint-queue.test.mjs'
+      - 'systemia/distribution/inspect-owned-mcp-cold-client.mjs'
+      - 'systemia/distribution/inspect-owned-mcp-cold-client.test.mjs'
       - 'registry/README.md'
       - '.github/workflows/distribution-publisher-ownership.yml'
   schedule:
@@ -27,8 +29,9 @@ jobs:
       - run: node --check systemia/distribution/audit-publisher-ownership.mjs
       - run: node --check systemia/distribution/inspect-official-mcp-registry.mjs
       - run: node --check systemia/distribution/build-registry-repoint-queue.mjs
+      - run: node --check systemia/distribution/inspect-owned-mcp-cold-client.mjs
       - name: Regression tests for publisher evidence states
-        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs systemia/distribution/inspect-official-mcp-registry.test.mjs systemia/distribution/build-registry-repoint-queue.test.mjs
+        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs systemia/distribution/inspect-official-mcp-registry.test.mjs systemia/distribution/build-registry-repoint-queue.test.mjs systemia/distribution/inspect-owned-mcp-cold-client.test.mjs
       - name: Validate evidence states
         env:
           OUTPUT: ${{ runner.temp }}/publisher-audit.json
@@ -42,6 +45,11 @@ jobs:
       - name: Build conservative repoint queue from external evidence
         if: steps.registry.outcome == 'success'
         run: node systemia/distribution/build-registry-repoint-queue.mjs "${{ runner.temp }}/official-mcp-registry.json" "${{ runner.temp }}/registry-repoint-queue.json"
+      - name: Cold-client verify only owned MCP endpoints listed by official registry
+        id: cold
+        if: steps.registry.outcome == 'success'
+        continue-on-error: true
+        run: node systemia/distribution/inspect-owned-mcp-cold-client.mjs "${{ runner.temp }}/official-mcp-registry.json" "${{ runner.temp }}/owned-mcp-cold-client.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -50,6 +58,7 @@ jobs:
             ${{ runner.temp }}/publisher-audit.json
             ${{ runner.temp }}/official-mcp-registry.json
             ${{ runner.temp }}/registry-repoint-queue.json
+            ${{ runner.temp }}/owned-mcp-cold-client.json
           if-no-files-found: warn
           retention-days: 7
       - name: Preserve external registry observation failures
