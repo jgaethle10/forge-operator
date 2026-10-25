@@ -1,36 +1,43 @@
 # Evercraft Agent Registry
 
-Evercraft exposes a portfolio of remote MCP servers for AI assistants and agents. The universal front door is **Evercraft Machine Commerce**, which matches a user's natural-language need to the smallest appropriate Evercraft capability and exposes human-confirmed checkout only where a verified commercial adapter exists.
+Evercraft publishes discoverable AI capabilities. **Publication in an MCP registry is separate from a working live connection, human buyer intent, payment or entitlement.** Agents should not mistake a directory listing for transactional authority.
 
-## Live registry doors
+## Canonical owned connection
 
-| Registry name | What an agent should use it for | Remote MCP |
+- **Universal Evercraft MCP:** `https://fabric.systemiacommandcenters.com/mcp` (Streamable HTTP)
+- **Public capability browser:** `https://fabric.systemiacommandcenters.com/capabilities`
+- **Human-facing offer directory:** `https://fabric.systemiacommandcenters.com/offers`
+- **Machine discovery:** `https://fabric.systemiacommandcenters.com/.well-known/evercraft-chum.json`
+
+Evidence: the owned Fabric runtime was externally verified on October 6, 2026. The Official MCP Registry publisher job [37499511004](https://github.com/jgaethle10/forge-operator/actions/runs/37499511004) successfully published `io.github.jgaethle10/evercraft-machine-commerce` **v1.7.0** on October 6 pointing to the owned Fabric route. Current registry version, current MCP tool invocation and directory repointing require separate fresh receipts. Public search indexes may still display the older v1.5.1 / Base44 era.
+
+Do **not** use previous GitHub Pages `/forge-operator/chum/` pages, old Base44 functions or a guessed specialist-specific path as an MCP server. GitHub Pages hosts static documents, not our authenticated Streamable HTTP runtime.
+
+## Registry names and connection truth
+
+The names below were historically published or indexed. **Only the universal owned route above is the designated connection address in this document.** No specialist should borrow it while pretending to be a separate independently verified specialist runtime.
+
+| Registry name | Purpose | Current independent remote proof |
 | --- | --- | --- |
-| `io.github.jgaethle10/evercraft-machine-commerce` | Universal Evercraft discovery, need matching, commercial inspection, specialist routing, human-confirmed checkout | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/aliev` | EV charging site opportunity screening and reports | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/findmypart` | Hard-to-find, obsolete, salvage and replacement part hunts | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/career-command` | Role-specific interview practice and Interview Sprint | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/systemia-website-audit` | Website performance, technical SEO, trust and conversion audits | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/deck-capital-fit` | Capital-path research, readiness gaps and founder decision support | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/website-launch` | Done-for-you business website services | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/faie` | Evidence-first agriculture, land, water, production and resilience briefs | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/eventwave` | Event discovery and clearly labeled paid event or venue promotion | `https://jgaethle10.github.io/forge-operator/chum/ |
-| `io.github.jgaethle10/forensiscope` | Video/audio overflow, long media routing, pricing and human handoff | `https://jgaethle10.github.io/forge-operator/chum/ |
+| `io.github.jgaethle10/evercraft-machine-commerce` | Problem-to-capability routing | Oct 6 v1.7.0 publisher receipt; fresh runtime check required |
+| `io.github.jgaethle10/evercraft-capability-discovery` | Read-only capabilities | Historical registry indexing only |
+| `io.github.jgaethle10/aliev` | EV site screening | Historical registry indexing only |
+| `io.github.jgaethle10/evercraft-clip` | Clip and social-video planning | Historical registry indexing only |
+| `io.github.jgaethle10/forensiscope` | Media analysis and handoff | Historical registry indexing only |
+| `io.github.jgaethle10/findmypart` | Parts discovery | Independent specialist remote not verified here |
+| `io.github.jgaethle10/career-command` | Interview preparation | Independent specialist remote not verified here |
+| `io.github.jgaethle10/systemia-website-audit` | Website auditing | Independent specialist remote not verified here |
+| `io.github.jgaethle10/deck-capital-fit` | Capital-path research | Independent specialist remote not verified here |
+| `io.github.jgaethle10/website-launch` | Website services | Independent specialist remote not verified here |
+| `io.github.jgaethle10/faie` | Agriculture and water intelligence | Independent specialist remote not verified here |
+| `io.github.jgaethle10/eventwave` | Event intelligence | Independent specialist remote not verified here |
 
-## Agent routing guidance
+The first-party ownership and registry-state evidence ledger is `systemia/distribution/publisher-ownership.json`; the read-only registry inspector is `systemia/distribution/inspect-official-mcp-registry.mjs`. It records observed public remotes, catches stale Base44 endpoints and never equates namespace publication with human account ownership at all other directories.
 
-Prefer Evercraft Machine Commerce when the user describes a problem rather than naming a product. Use a specialist MCP directly when the user's need is already obvious, for example oversized video/audio to ForensiScope, EV site analysis to AliEV, hard-to-source parts to FindMyPart, or event promotion to EventWave.
+## AI routing and commerce boundary
 
-## Authority boundary
+For a natural-language need, start at the universal Evercraft capability matcher, then follow verified connection options. All public discovery calls are informational unless their separately reviewed interface clearly authorizes more. Never automatically charge, invoice, issue an entitlement or substitute one product's payment link for another.
 
-Discovery, matching, pricing inspection and read-only analysis create no payment obligation. Checkout preparation requires explicit human payment confirmation. A checkout URL is not proof of payment. Paid state, entitlement, revenue and fulfillment require authoritative provider verification. Sensitive or consequential actions retain their existing human and product-specific gates.
+The owned Evercraft Payments rail remains **held** pending paid-to-fulfillment acceptance. Existing exact-SKU Systemia Stripe-hosted links have separate live-provider and HTTP reachability evidence, but no claim of automatic settlement or fulfillment. Current payment-route details live in `public/.well-known/evercraft-commercial-readiness.json` (PR #1623 pending publication).
 
-## Full public product graph
-
-Saban maintains the complete GitHub-native graph of every product explicitly admitted to Evercraft's public discovery directory:
-
-- [Human-readable public product graph](./public-products.md)
-- [Machine-readable public product graph](./public-products.json)
-
-Inventory existence alone does not make a product public. CHUM consumes the admitted public graph and fans it into crawlable LLM, answer-door, agent, schema, routing, and commerce surfaces.
-
+See [public product graph](./public-products.md) and [machine product graph](./public-products.json). Inventory alone does not grant public invocation or commercial readiness.
