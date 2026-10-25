@@ -39,7 +39,7 @@ export function evaluateBuyerView({key,amount_cents,url,status,final_url,visible
   const nameOk=catalogName.every(pattern=>pattern.test(body));
   const priceOk=priceVisible(body,amount_cents);
   const paymentSurface=/(card information|card number|card details|payment method|pay with card|payment details|billing information|credit or debit)/i.test(body);
-  const forbidden=/(payment link (?:is )?(?:inactive|expired)|this payment link is no longer active|link has expired|site can.?t be reached|access denied|bot detection|captcha|verify you are human)/i.test(body);
+  const forbidden=/((?:this )?payment link (?:is )?(?:inactive|expired|no longer active)|link has expired|site can.?t be reached|access denied|bot detection|captcha|verify you are human)/i.test(body);
   const findings=[];
   if(!provider)findings.push('PROVIDER_ORIGIN_NOT_VERIFIED');
   if(status!==200)findings.push('HTTP_NOT_200');
