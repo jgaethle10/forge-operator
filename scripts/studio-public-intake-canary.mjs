@@ -10,7 +10,10 @@ async function observe(url,method='GET',headers={}){
     return {status:res.status,headers:res.headers,body:method==='GET'?(await res.text()).slice(0,220000):''};
   }finally{clearTimeout(timeout);}
 }
+const attribution=JSON.parse(fs.readFileSync(new URL('../public/.well-known/evercraft-chum-attribution.json',import.meta.url),'utf8'));
+const offers=attribution.endpoints?.buyer_frontage?.url_template;
 const findings=[],results=[];
+if(offers!=='https://fabric.systemiacommandcenters.com/offers')findings.push('BUYER_FRONTAGE_POINTS_TO_LEGACY_OR_UNKNOWN_ROUTE');
 try{
   const a=await observe(site);
   const ready=a.status===200&&a.body.includes('Send my commercial brief')&&a.body.includes(endpoint)&&a.body.includes('receipt.received!==true');
@@ -29,6 +32,12 @@ try{
   results.push({name:'non_mutating_method_guard',url:endpoint,status:a.status});
   if(a.status!==405)findings.push('PUBLIC_INTAKE_METHOD_GUARD_UNVERIFIED');
 }catch{findings.push('PUBLIC_INTAKE_METHOD_GUARD_UNOBSERVED');}
+try{
+  const a=await observe(offers);
+  const valid=a.status===200&&/<!doctype html|<html/i.test(a.body)&&/Evercraft/i.test(a.body);
+  results.push({name:'owned_buyer_offer_directory',url:offers,status:a.status,valid_human_offer_page:valid});
+  if(!valid)findings.push('OWNED_BUYER_DIRECTORY_NOT_VISIBLE');
+}catch{findings.push('OWNED_BUYER_DIRECTORY_UNOBSERVED');}
 const receipt={schema:'evercraft.studio.public-intake-readonly-canary.v1',checked_at:new Date().toISOString(),
   state:findings.length?'NOT_YET_VERIFIED':'PUBLIC_INQUIRY_SURFACE_VERIFIED',
   results,findings,
