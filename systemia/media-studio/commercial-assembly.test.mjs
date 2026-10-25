@@ -33,7 +33,7 @@ function specimen(t){
   for(let i=0;i<3;i++){
     const file=path.join(dir,'voice-'+i+'.wav');
     ffmpeg(['-y','-f','lavfi','-i','sine=frequency='+(330+i*80)+':sample_rate=48000',
-      '-t','.72','-af','volume=0.22','-c:a','pcm_s16le',file]);
+      '-t','0.72','-af','volume=0.22','-c:a','pcm_s16le',file]);
     voices.push({...approval(file),sceneId:'beat'+i,scriptText:lines[i],
       voiceProfileId:'locked-demo-voice',durationSec:.72,offsetSec:.1});
   }
@@ -42,7 +42,7 @@ function specimen(t){
     '-t','3.1','-af','volume=0.07','-c:a','pcm_s16le',music]);
   const sound=path.join(dir,'wipe.wav');
   ffmpeg(['-y','-f','lavfi','-i','sine=frequency=660:sample_rate=48000',
-    '-t','.25','-af','volume=0.12','-c:a','pcm_s16le',sound]);
+    '-t','0.25','-af','volume=0.12','-c:a','pcm_s16le',sound]);
   const captions=path.join(dir,'captions.srt');
   fs.writeFileSync(captions,'1\n00:00:00,000 --> 00:00:01,000\nA cleaner place.\n\n2\n00:00:01,000 --> 00:00:02,000\nDetails matter.\n\n3\n00:00:02,000 --> 00:00:03,000\nBook cleaning today.\n');
   const brief={schema:'evercraft.fallen.commercial-brief.v1',id:'specimen-001',brand:'Test Cleaning',
