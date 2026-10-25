@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { EvercraftPassport } from '../passport/passport.mjs';
-import { RemoteOperatorGateway, executeRemoteOperatorMcpRpc } from './mcp-gateway.mjs';
+import { RemoteOperatorGateway, executeRemoteOperatorMcpRpc, registerRemoteOperatorMcp } from './mcp-gateway.mjs';
 import { createRemoteOperatorPassportVerifier, remoteOperatorPermitBinding } from './passport-approval-verifier.mjs';
 
 const OWNER = 'owner:remote-operator-proof';
@@ -171,4 +171,50 @@ test('two concurrent attempts consume exactly once and never double-send',async 
   assert.equal(responses.filter(x=>x.result?.structuredContent?.ok).length,1);
   assert.equal(responses.filter(x=>x.error).length,1);
   assert.equal(forwarded.length,1);
+});
+
+test('real gateway registration accepts protected Passport injection; default remains deny',async t=>{
+  const {passport,grant}=setup(t);
+  const routes=[];
+  const app = {
+    get(path,handler){routes.push(['GET',path,handler]);},
+    post(path,handler){routes.push(['POST',path,handler]);},
+    options(path,handler){routes.push(['OPTIONS',path,handler]);},
+  };
+  let calls=0;
+  const options={
+    capacityEndpoint:'http://127.0.0.1:43210/nodes/'+NODE,
+    controlToken:CONTROL,
+    clientToken:CLIENT,
+    fetchImpl:async ()=>{
+      calls++;
+      return new Response(JSON.stringify({ok:true}),{status:200});
+    },
+  };
+  const without = registerRemoteOperatorMcp(app,options);
+  assert.ok(routes.some(x=>x[0]==='POST' && x[1]==='/mcp/evercraft-remote'));
+  const args=argsFor('remote_exec');
+  permitFor(passport,grant,'remote_exec',args);
+  const req={jsonrpc:'2.0',id:120,method:'tools/call',
+    params:{name:'remote_exec',arguments:args}};
+  const noAuthority = await executeRemoteOperatorMcpRpc({
+    rpc:req,gateway:without.gateway,authorization:'Bearer '+CLIENT,
+  });
+  assert.equal(noAuthority.error.message,'remote_operator_scoped_approval_verifier_not_configured');
+  assert.equal(passport.getActionPermitState(args.approval_ref).active,true);
+  assert.equal(calls,0);
+  const withOwner=registerRemoteOperatorMcp(app,{
+    ...options,passport,ownerSubjectRef:OWNER,
+  });
+  const approved=await executeRemoteOperatorMcpRpc({
+    rpc:req,gateway:withOwner.gateway,authorization:'Bearer '+CLIENT,
+  });
+  assert.equal(approved.result.structuredContent.ok,true);
+  assert.equal(calls,1);
+  assert.equal(passport.getActionPermitState(args.approval_ref).consumed,true);
+  const replay=await executeRemoteOperatorMcpRpc({
+    rpc:req,gateway:withOwner.gateway,authorization:'Bearer '+CLIENT,
+  });
+  assert.equal(replay.error.message,'remote_operator_passport_permit_denied');
+  assert.equal(calls,1);
 });
