@@ -43,6 +43,15 @@ const good = () => ({
       { beatId: 'end', status: 'accepted', reasons: [] },
     ],
   },
+  visualQc: {
+    schema: 'evercraft.fallen.commercial-visual-qc.v1',status:'accepted',
+    masterSha256:SHA,durationSec:30,sampleFps:4,sampledFrames:120,
+    segments: [
+      {beatId:'intro',startSec:0,endSec:4,sampleCount:15,flags:[]},
+      {beatId:'proof',startSec:4,endSec:24,sampleCount:79,flags:[]},
+      {beatId:'end',startSec:24,endSec:30,sampleCount:23,flags:[]},
+    ]
+  },
   rights: ['hero', 'logo', 'music'].map(assetId => ({
     assetId, status: 'verified', permittedUses: ['commercial_video'],
     evidenceRef: 'fixture:permission:' + assetId, reviewedBy: 'producer', reviewedAt: '2026-10-25T12:00:00Z',
@@ -178,4 +187,23 @@ test('no studio-ready claim for clipped, ambiguous or unmeasured sound', () => {
   assert.ok(assessClientCommercialRelease(input).reasons.includes('audio_true_peak_above_commercial_ceiling'));
   input.audioQc.measurements.integratedLufs = -21;
   assert.ok(assessClientCommercialRelease(input).reasons.includes('audio_loudness_outside_commercial_standard'));
+});
+
+test('final picture inspection must match the exact master and all storyboard beats',()=>{
+  const input=good();
+  input.visualQc.masterSha256='b'.repeat(64);
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('visual_digest_mismatch'));
+  input.visualQc.masterSha256=SHA;
+  input.visualQc.segments=input.visualQc.segments.filter(x=>x.beatId!=='proof');
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('visual_beat_coverage_missing_or_duplicate:proof'));
+});
+test('flagged static picture requires named human exception with evidence',()=>{
+  const input=good();
+  input.visualQc.status='review_required';
+  input.visualQc.segments[1].flags=['predominantly_low_motion'];
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('visual_exception_unreviewed:proof'));
+  input.creativeReview.visualExceptions=[{beatId:'proof',reason:'Intentional product demonstration still life',evidenceRef:'review:frame-grid-27',reviewedBy:'director'}];
+  assert.equal(assessClientCommercialRelease(input).status,'ready_for_client_preview');
+  input.visualQc.status='accepted';
+  assert.ok(assessClientCommercialRelease(input).reasons.includes('visual_unreviewed_flags_in_accepted_receipt'));
 });
