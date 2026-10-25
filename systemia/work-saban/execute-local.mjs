@@ -17,7 +17,7 @@ const STAGES = ['analyst', 'writer', 'designer', 'auditor', 'coordinator'];
 
 export async function executeLocalSalesReport({
   csvText, localFileReadApproved = false, rootDir = ROOT,
-  afterStage = null
+  afterStage = null, beforeStage = null
 } = {}) {
   if (localFileReadApproved !== true) throw new Error('explicit_local_file_consent_required');
   const parsed = parseSalesCsv(csvText);
@@ -50,6 +50,7 @@ export async function executeLocalSalesReport({
         leaseSeconds: admission.grant.lease_seconds,
         maxAttempts: admission.grant.max_attempts_per_job,
       });
+      if (typeof beforeStage === 'function') await beforeStage({ role, idempotency_key:assignment.idempotency_key });
       const receipt = await runScheduler({
         state,
         physicalWorkers: admission.grant.physical_workers,
