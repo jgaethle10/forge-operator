@@ -40,6 +40,11 @@ function reply(res, code, data) {
 export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {}) {
   if (host !== '127.0.0.1') throw new Error('preview_must_bind_loopback');
   const server = http.createServer(async (req, res) => {
+    const hostHeader = String(req.headers.host || '');
+    const match = /^(127\.0\.0\.1|localhost):([0-9]{1,5})$/.exec(hostHeader);
+    if (!match || Number(match[2]) !== server.address()?.port) {
+      return reply(res, 403, {ok:false,error:'local_host_required'});
+    }
     res.setHeader('content-security-policy', "default-src 'self'; connect-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
     if (req.method === 'GET' && req.url === '/health') return reply(res, 200, { ok:true, service:'work-saban-preview', live_workers:false, customer_execution:false });
     if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
