@@ -3,3 +3,77 @@
 .secondary{background:#24324f;color:#d9e5ff;border:1px solid #39537e}.secondary:hover{background:#35507b}button:disabled{opacity:.65;cursor:wait}#demo-result{border:1px solid #2f5275;background:#0e1727;padding:24px;border-radius:22px;margin-bottom:25px}#demo-report{white-space:pre-wrap;overflow-wrap:anywhere;background:#070e1b;border-radius:12px;padding:18px;font-size:13px;line-height:1.65;color:#c7d9ee}#demo-result h2{margin:0 0 12px}
 
 #csv-file{display:block;width:100%;margin:12px 0 18px;padding:12px;background:#0b1424;border:1px solid #345077;border-radius:10px;color:#c7d9ee}label.consent{display:flex;align-items:start;gap:10px;font-size:13px;font-weight:500;color:#d7e4fa;line-height:1.5}label.consent input{margin-top:3px;accent-color:#6895ff}#csv-intake h2{margin-top:0;font-size:22px}
+
+/* Spatial Work Floor: actual execution telemetry in an inspectable office, not mock agent activity. */
+main{max-width:1420px;padding-top:34px}
+.office-shell{border:1px solid #294366;border-radius:26px;overflow:hidden;background:linear-gradient(165deg,#122139,#0b1222 78%);box-shadow:0 18px 70px #02071380;margin:28px 0 30px}
+.office-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px 28px 20px;border-bottom:1px solid #2b405e}
+.office-eyebrow{font-size:10px;font-weight:800;letter-spacing:.2em;color:#7fa6e3}
+.office-heading h2{font-size:clamp(24px,3.4vw,40px);margin:7px 0 7px;letter-spacing:-.04em}
+.office-heading p{color:#9bb3d6;font-size:13px;margin:0;line-height:1.5}
+.office-live{display:flex;gap:8px;align-items:center;background:#0a1d2e;border:1px solid #31587a;padding:10px 13px;border-radius:99px;white-space:nowrap;color:#9ccee5;font-size:10px;font-weight:750;letter-spacing:.08em}
+.office-beacon,.floor-dot{display:inline-block;background:#56ca9a;border-radius:50%;width:8px;height:8px;box-shadow:0 0 11px #4bcc9d66}
+.office-layout{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(260px,.9fr)}
+.office-scene-wrap{border-right:1px solid #2b405e;min-width:0}
+.office-scene-title,.office-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:16px 22px 8px;color:#86a9d0;font-size:10px;letter-spacing:.1em;font-weight:750}
+.office-scene-title>span:first-child{display:flex;align-items:center;gap:8px}
+.floor-divider{color:#57779e}
+#office-progress{color:#91ecce;font-size:12px;white-space:nowrap}
+.office-scene{position:relative;min-height:360px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 52% 55%,#1b3353 0%,#0a1425 72%)}
+.workfloor-art{display:block;width:100%;height:auto;max-height:650px;filter:drop-shadow(0 4px 14px #0003)}
+.office-bottom{background:#0a1425;padding:12px 20px;border-top:1px solid #20334d;font-size:10px;letter-spacing:.04em;flex-wrap:wrap}
+#office-current{color:#b9d6f5}
+.office-sidebar{display:grid;grid-template-rows:auto minmax(220px,1fr) auto;min-width:0}
+.office-inspector{padding:20px;border-bottom:1px solid #273b56}
+.office-inspector h3{font-size:20px;letter-spacing:-.025em;margin:10px 0 8px}
+.office-inspector p{color:#a0b5d3;line-height:1.55;font-size:12px;min-height:45px}
+.office-stat{display:flex;align-items:start;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #1e334e}
+.office-stat span{font-size:9px;font-weight:850;color:#7799bc;letter-spacing:.12em}
+.office-stat strong{font-size:10px;color:#d4ecff;font-weight:700;text-align:right;overflow-wrap:anywhere;max-width:175px}
+.office-feed{padding:18px 20px;min-height:160px}
+.office-feed-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#office-event-count{font-size:10px;color:#8aa4c9}
+.office-feed ol{list-style:none;margin:14px 0 0;padding:0;max-height:224px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.office-feed li{margin:0;padding:8px 10px;border:1px solid #233b56;border-left:3px solid #517aa8;border-radius:6px;background:#101f34;font-size:11px;color:#b2c8e3;line-height:1.4}
+.office-feed li.is-verified{border-left-color:#5dd1a9}
+.office-feed li time{display:block;color:#6d95b9;font-size:9px;margin-bottom:4px}
+.office-replay{border-top:1px solid #273b56;padding:17px 20px 20px}
+.replay-controls{display:flex;gap:8px;align-items:center;margin-top:12px}
+.replay-controls button{margin:0;padding:10px 12px;color:#e9f3ff;background:#1e3552;border:1px solid #42658a}
+.replay-controls button:disabled{opacity:.35;cursor:not-allowed}
+.replay-controls button:nth-child(2){flex:1}
+#office-replay-caption{color:#82a0c0;font-size:11px;line-height:1.55;margin-bottom:0}
+[data-agent]{cursor:pointer;outline:none;transition:filter .2s ease}
+[data-agent] .status-light{transition:fill .2s ease}
+[data-agent]:hover,[data-agent]:focus-visible{filter:drop-shadow(0 0 8px #58bfff75)}
+[data-agent].is-selected .desk-name{fill:#a7ebff}
+[data-agent].is-selected .desk-state{fill:#cde0f7}
+[data-agent].is-selected use{filter:drop-shadow(0 0 6px #45afff65)}
+[data-agent][data-state="running"] use{animation:office-active-glow 1.4s ease-in-out infinite}
+[data-agent][data-state="running"] .status-light{animation:office-status-pulse 1.2s ease-in-out infinite}
+[data-agent][data-state="verified"] .desk-state{fill:#6be0b6}
+[data-agent][data-state="failed"] .desk-state{fill:#ffa3a3}
+[data-agent].is-replay-focus use{filter:drop-shadow(0 0 10px #a8d7ff)}
+@keyframes office-active-glow{50%{filter:drop-shadow(0 0 15px #5fafffaa)}}
+@keyframes office-status-pulse{50%{opacity:.25}}
+@media(max-width:1020px){
+  .office-layout{grid-template-columns:1fr}
+  .office-scene-wrap{border-right:0;border-bottom:1px solid #2b405e}
+  .office-sidebar{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+  .office-inspector{border-right:1px solid #273b56}
+  .office-feed{grid-row:span 2}
+  .office-replay{border-top:1px solid #273b56}
+}
+@media(max-width:640px){
+ main{padding:22px 12px}
+ .office-heading{padding:20px;flex-direction:column;align-items:start}
+ .office-scene{min-height:250px}
+ .office-scene-title,.office-bottom{padding:10px 12px;font-size:9px}
+ .office-sidebar{display:block}
+ .office-inspector{border-right:0;border-bottom:1px solid #273b56}
+ .office-feed ol{max-height:180px}
+ #office-current{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ [data-agent] use,[data-agent] .status-light{animation:none!important}
+}
