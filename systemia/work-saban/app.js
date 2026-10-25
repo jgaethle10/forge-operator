@@ -48,7 +48,88 @@ $('demo').addEventListener('click', async () => {
     $('demo-report').textContent = run.report_markdown;
     $('demo-proof').textContent='Actual registered-worker local proof · 5 stages · report SHA-256: ' + run.report_sha256 +
       ' · No LLM inference or external actions';
+    $('demo-label').textContent='Synthetic test fixture only. No customer CSV or external account used.';
+    $('save-report').hidden=true;
+    deliveredRun=null;
     $('demo-result').hidden=false;
   } catch (error) { $('error').textContent=error.message; }
   finally { $('demo').disabled=false; $('demo').textContent='Run example team (synthetic data)'; }
+});
+
+let deliveredRun = null;
+function updateCsvRunButton() {
+  $('csv-run').disabled = !$('csv-file').files?.length || !$('csv-consent').checked;
+}
+$('csv-file').addEventListener('change', updateCsvRunButton);
+$('csv-consent').addEventListener('change', updateCsvRunButton);
+
+$('csv-run').addEventListener('click', async () => {
+  $('error').textContent = '';
+  $('demo-result').hidden = true;
+  $('save-report').hidden = true;
+  deliveredRun = null;
+  const file = $('csv-file').files?.[0];
+  if (!file || !$('csv-consent').checked) {
+    $('error').textContent = 'Select one CSV and approve this single local read.';
+    return;
+  }
+  if (!file.name.toLowerCase().endsWith('.csv') || file.size > 256 * 1024) {
+    $('error').textContent = 'Select a .csv file no larger than 256 KB.';
+    return;
+  }
+  $('csv-run').disabled = true;
+  $('csv-run').textContent = 'Running audited local workers...';
+  try {
+    const text = await file.text();
+    const response = await fetch('/api/run-csv', {
+      method: 'POST',
+      headers: {'content-type':'application/json','x-work-saban-client':'local-preview'},
+      body: JSON.stringify({
+        filename: file.name,
+        csv_text: text,
+        local_file_read_approved: true
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok || !payload.ok) throw new Error(payload.error || 'CSV execution was held');
+    const run = payload.execution;
+    if (run.status !== 'verified_local' || run.quality.status !== 'verified'
+        || run.specialist_receipts.length !== 5) {
+      throw new Error('Audit receipts incomplete');
+    }
+    deliveredRun = run;
+    $('demo-steps').replaceChildren(...run.specialist_receipts.map(row => {
+      const card=document.createElement('div');card.className='role';
+      const label=document.createElement('b');label.textContent=row.role;
+      const state=document.createElement('span');
+      state.textContent=row.status + ' | QA ' + row.quality_status;
+      card.append(label,state);
+      return card;
+    }));
+    $('demo-label').textContent = 'Your explicitly selected local CSV, processed on this computer. The preview did not save your input or call an AI provider.';
+    $('demo-report').textContent = run.report_markdown;
+    $('demo-proof').textContent='Five registered local worker stages · Source: ' + run.source_sha256 +
+      ' · Report: ' + run.report_sha256 + ' · No LLM inference or external actions';
+    $('save-report').hidden = false;
+    $('demo-result').hidden = false;
+    $('csv-consent').checked = false;
+  } catch (error) {
+    $('error').textContent=error.message;
+  } finally {
+    $('csv-run').textContent='Run my CSV locally';
+    updateCsvRunButton();
+  }
+});
+
+$('save-report').addEventListener('click', () => {
+  if (!deliveredRun?.report_markdown || deliveredRun.status !== 'verified_local') return;
+  const content = new Blob([deliveredRun.report_markdown], {type:'text/markdown;charset=utf-8'});
+  const url = URL.createObjectURL(content);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'work-saban-audited-sales-report.md';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
