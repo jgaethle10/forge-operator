@@ -36,7 +36,21 @@ const remoteSeed = await startNodeSeed({
   announce: false,
 });
 
-const yard = new YardOperator({ stateDir: yardState });
+// Isolated CI approval authority. Production must inject an independently
+// authenticated one-time owner-approval ledger, not a callback that trusts
+// whatever action the caller supplies.
+const proofConsumedApprovals = new Set();
+const proofApprovalVerifier = async (request) => {
+  if (proofConsumedApprovals.has(request.approval_ref)) {
+    return { approved: false, one_time_consumed: false };
+  }
+  proofConsumedApprovals.add(request.approval_ref);
+  return { ...request, approved: true, one_time_consumed: true };
+};
+const yard = new YardOperator({
+  stateDir: yardState,
+  remoteDeviceApprovalVerifier: proofApprovalVerifier,
+});
 let keeper = null;
 
 async function deployBroker() {
