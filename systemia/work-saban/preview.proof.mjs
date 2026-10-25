@@ -9,7 +9,7 @@ try {
   const health = await (await fetch(`${base}/health`)).json();
   assert.equal(health.ok, true);
   assert.equal(health.live_workers, false);
-  for (const endpoint of ['/', '/app.js', '/style.css']) {
+  for (const endpoint of ['/', '/app.js', '/style.css', '/office.js', '/office-floor.svg']) {
     const response = await fetch(`${base}${endpoint}`);
     assert.equal(response.status, 200, endpoint);
     assert((await response.text()).length > 100);
@@ -69,11 +69,46 @@ try {
     request.end();
   });
   assert.equal(rebindingStatus, 403, 'untrusted Host rejected');
+  async function stream(url, body, headersOverride = {}) {
+    const response=await fetch(base+url,{
+      method:'POST',
+      headers:{...headers,...headersOverride},
+      body:JSON.stringify(body),
+    });
+    if(!response.ok)return {status:response.status,events:[]};
+    const lines=(await response.text()).split('\n').filter(Boolean);
+    return {status:response.status,events:lines.map(line=>JSON.parse(line))};
+  }
+  const streamPayload={...chosenFile,local_file_read_approved:true};
+  const live=await stream('/api/run-csv-stream',streamPayload);
+  assert.equal(live.status,200);
+  assert.equal(live.events[0].type,'accepted');
+  assert.equal(live.events.filter(x=>x.type==='stage_started').length,5);
+  assert.equal(live.events.filter(x=>x.type==='stage_verified').length,5);
+  assert.deepEqual(live.events.filter(x=>x.type==='stage_verified').map(x=>x.role),
+    ['analyst','writer','designer','auditor','coordinator']);
+  assert.equal(live.events.at(-1).type,'completed');
+  assert.equal(live.events.at(-1).execution.status,'verified_local');
+  assert.equal(live.events.at(-1).execution.model_inference,false);
+  assert.equal(live.events.at(-1).retention,'not_saved_by_preview');
+  const demoStream=await stream('/api/run-demo-stream',undefined,{
+    'content-type':'application/json','x-work-saban-client':'local-preview'
+  });
+  assert.equal(demoStream.events.filter(x=>x.type==='stage_verified').length,5);
+  assert.equal(demoStream.events.at(-1).source,'synthetic_fixture');
+  assert.equal((await stream('/api/run-csv-stream',chosenFile)).status,403);
+  assert.equal((await stream('/api/run-csv-stream',streamPayload,{origin:'https://evil.example'})).status,403);
+  assert.equal((await stream('/api/run-csv-stream',{...streamPayload,csv_text:'month,revenue\n2026-08,12\n2026-09,12.999'})).status,400);
+  const officeAsset=await (await fetch(base+'/office.js')).text();
+  const floorAsset=await (await fetch(base+'/office-floor.svg')).text();
+  assert(officeAsset.includes('stage_verified'));
+  assert(floorAsset.includes('floor-desks'));
+  assert((await (await fetch(base+'/')).text()).includes('The Work Floor'));
   const denied = await fetch(`${base}/api/compose`, {
     method:'POST',headers:{'content-type':'text/plain'},body:'oops'
   });
   assert.equal(denied.status, 415);
-  console.log('Work Saban preview API proof: PASS (local-only formation, synthetic demo, consented CSV, hostname and size guards).');
+  console.log('Work Saban visual office and API proof: PASS (observed stream stages, consent, audit, assets, and host guards).');
 } finally {
   await new Promise(resolve => server.close(resolve));
 }
