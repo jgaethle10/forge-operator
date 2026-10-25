@@ -38,14 +38,22 @@ The scripted dialogue is a **creative treatment**, not a claim anyone was interv
 
 **Validation:** `node --test systemia/media-studio/relay-floor-gate.test.mjs`.
 
-## Source scout, October 25 (candidate links, NOT yet downloaded or picture-approved)
+## Verified source scouting, October 25 (real downloaded frames and encoded preview)
 
-The project needs *moving footage*, and authentic EPS footage is still preferred. The current accessible Library search returned EPS project reports/photos but **no verified, identifiable EPS motion-footage file**. Three individually checked Mixkit clip pages explicitly display their **Stock Video Free License** and commercial-use claim; the license does **not** automatically establish that an identifiable person endorses EPS. No download, SHA receipt, talent release, or actual use authorization has been verified here.
+Source decisions are recorded in the private EPS RC02 Google Drive folder:
+https://drive.google.com/drive/folders/1bwxBBvI7ja1Sn1E-l5N_Rf3Iar77CXAS
 
-| Candidate | Verified catalog page | Proposed use | Outstanding |
-|---|---|---|---|
-| Worker mowing a home yard (12s, 24fps) | https://mixkit.co/free-stock-video/man-mowing-the-lawn-with-a-mower-10472/ | Generic physical-action B-roll, not EPS-branded team | Download, digest, talent/endorsement review, shot approval |
-| Gardener walking with supplies (21s, 24fps) | https://mixkit.co/free-stock-video/gardener-walking-through-a-nursery-842/ | Human working shot if visual context fits edit | Location mismatch: nursery, not residential cleanup; likely reject |
-| Gardener arranging plants (16s, 24fps) | https://mixkit.co/free-stock-video/gardener-arranges-potted-flowers-845/ | Close-up physical action, only if landscaping scope matches | Source/talent review; nursery is not an EPS job |
+**Pexels 7816244, Pavel Danilyuk. REJECTED for EPS.** The source was downloaded through GitHub Actions run 40231404613, decoded and inspected as actual frames. 44.4 seconds, 1920x1080, 25fps; indoor unfinished construction project with three people discussing a plan. No source audio track. Not a believable backyard EPS service scene or usable synchronized actor conversation. Do not use this as the EPS film opener or imply endorsement. Artifact: 12612982246, private seven-day source-review retention.
 
-Do not fabricate an actual EPS makeover or human testimonial from mismatched clips. Creative floor still blocks a montage that cannot show properly cleared people speaking and credible EPS work. Royalty-free library footage is *not* equivalent to cleared advertising use by a person. No download or render has happened at this source-scout stage.
+**Pexels 12215821, Jacob Christensen. CONDITIONAL ACTION B-ROLL only.** Downloaded/decoded through GitHub Actions run 40231590387, original SHA-256 `96ba17dcdbe47b11db954307fb472c0f09c8d4dde2aa603ff6642fbe41fbfe4f`. Genuine 6.55-second residential lawn-mowing motion, H.264 1280x720 at 60fps with original synchronized 48kHz stereo AAC field sound. The actual frame contact sheet was inspected. It does not show an EPS worker, does not contain on-camera dialogue, and does not meet the hero-performance requirement. The annotated six-second silent preview and original footage/probe/receipts are saved to the private Drive folder. No final sound-design approval.
+
+Both candidate sources come from Pexels. Primary license: https://www.pexels.com/license/ . Commercial use can be allowed, but the license forbids implying depicted people endorse a company. No unverified worker/customer claims, no bogus before/after, no publication without exact rights and image-content review.
+
+**Outstanding film blocker**: real approved human **spoken performance with audible synchronized recording and rights**; enough cohesive true outdoor jobs/action/reveal footage; separate reviewed score/ambience/Foley/dialogue stems; director-approved creative, full-length mix and edit. Current assets cannot pass the full Relay-floor preflight. Neither proof is RC02; no Saban dispatch, generation or publishing claimed. 
+
+## Follow-up source tasks
+- Acquire owner-cleared actual EPS crew/job shots for physical work and payoff, or shoot explicitly labeled new illustrative scenes with genuine talent releases
+- Capture a scene where a consenting performer says the approved line on camera with original synchronized sound
+- Record clean EPS-specific location effects and/or clear separately sourced recordings for the final audio stems
+- Conform each eligible shot to 16:9 and 9:16 editorial framing without misrepresenting distinct locations as the same before/after
+- Assemble and master only when the verified source set satisfies `relay-floor-v1` and human review
