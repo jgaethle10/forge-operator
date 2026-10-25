@@ -117,6 +117,58 @@
         "observed_remote": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "next": "Request corrected listing/canonical remote endpoint and purge outdated Base44 references where owner controls; do not assume old endpoint live or authoritative"
+    },
+    {
+      "key": "official-mcp-aliev",
+      "provider": "Official MCP Registry",
+      "status": "DISCOVERED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/aliev",
+        "observed_version": "1.0.6",
+        "publisher_claim_verified": false
+      },
+      "next": "Verify current official API latest version, remote URL and namespace publishing authority; inspect stale endpoints"
+    },
+    {
+      "key": "official-mcp-evercraft-capability-discovery",
+      "provider": "Official MCP Registry",
+      "status": "DISCOVERED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/evercraft-capability-discovery",
+        "observed_version": "1.0.0",
+        "publisher_claim_verified": false
+      },
+      "next": "Verify current official API latest version, remote URL and namespace publishing authority; inspect stale endpoints"
+    },
+    {
+      "key": "official-mcp-evercraft-clip",
+      "provider": "Official MCP Registry",
+      "status": "DISCOVERED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/evercraft-clip",
+        "observed_version": "0.2.1",
+        "publisher_claim_verified": false
+      },
+      "next": "Verify current official API latest version, remote URL and namespace publishing authority; inspect stale endpoints"
+    },
+    {
+      "key": "official-mcp-forensiscope",
+      "provider": "Official MCP Registry",
+      "status": "DISCOVERED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/forensiscope",
+        "observed_version": "1.1.5",
+        "publisher_claim_verified": false
+      },
+      "next": "Verify current official API latest version, remote URL and namespace publishing authority; inspect stale endpoints"
     }
   ]
 }
