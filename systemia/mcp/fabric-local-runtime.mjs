@@ -39,6 +39,7 @@ import {
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
+import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -405,6 +406,7 @@ export async function startFabricLocalRuntime({
   purchaseIntentFetch=fetch,
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
+  studioLeadsDir='',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -416,6 +418,7 @@ export async function startFabricLocalRuntime({
   // resident mirrors, not whatever marker a later updater writes on disk.
   const sourceReleaseRef=readSourceReleaseRef(resolvedReleaseRefFile);
   let deploymentReceiptRef='';
+  const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir});
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
     const now=Date.now();
@@ -761,6 +764,12 @@ export async function startFabricLocalRuntime({
         });
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
+      }
+
+      // Only this bounded route accepts untrusted commercial inquiry data.
+      // It never invokes agents or checkout, sends email, or exposes stored leads.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/commercial-studio/inquiry'){
+        return await studioInquiry(req,res);
       }
 
       if (req.method==='OPTIONS') {
