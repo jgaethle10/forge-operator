@@ -12,6 +12,7 @@ on:
       - 'systemia/media-studio/owned-video-execution-gate.mjs'
       - 'systemia/media-studio/owned-video-execution-gate.test.mjs'
       - 'systemia/media-studio/owned-video-canary-contract.test.mjs'
+      - 'systemia/media-studio/owned-video-canary-pipeline.test.ts'
       - 'systemia/media-studio/campaigns/before-the-doors-canary-01.json'
       - 'systemia/media-studio/campaigns/before-the-doors-canary-bible.json'
       - 'systemia/media-studio/workers/wan-local-worker.py'
@@ -40,6 +41,10 @@ jobs:
           command -v ffprobe
       - name: Verify owned-video moving-media and fail-closed contracts
         run: node --test systemia/media-studio/owned-video-adapter.test.mjs systemia/media-studio/owned-video-gpu-preflight.test.mjs systemia/media-studio/owned-video-saban-placement.test.mjs systemia/media-studio/owned-video-execution-gate.test.mjs systemia/media-studio/owned-video-canary-contract.test.mjs
+      - name: Prove canary-to-Fallen-to-Saban integration using the real model router
+        run: |
+          npm install --no-audit --no-fund
+          node --import tsx --test systemia/media-studio/owned-video-canary-pipeline.test.ts
       - name: Syntax-check offline CUDA worker and immutable model inventory tool
         run: |
           python3 -m py_compile systemia/media-studio/workers/wan-local-worker.py
