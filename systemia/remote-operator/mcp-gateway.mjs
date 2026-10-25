@@ -1,4 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
+import { createRemoteOperatorPassportVerifier } from './passport-approval-verifier.mjs';
 
 function jsonRpc(id, result) {
   return { jsonrpc: '2.0', id: id ?? null, result };
@@ -332,12 +333,22 @@ function configuredGateway(options = {}) {
 
   if (!capacityEndpoint || !controlToken || !clientToken) return null;
 
+  // The default public server has no Passport owner authority: all writes
+  // and exec remain disabled until a trusted deployment explicitly injects
+  // a protected Passport adapter and owner subject. No permit minting here.
+  const verifiedOwnerApproval = options.approvalVerifier ||
+    (options.passport && options.ownerSubjectRef
+      ? createRemoteOperatorPassportVerifier({
+          passport: options.passport,
+          ownerSubjectRef: options.ownerSubjectRef,
+        })
+      : null);
   return new RemoteOperatorGateway({
     capacityEndpoint,
     controlToken,
     clientToken,
     fetchImpl: options.fetchImpl,
-    approvalVerifier: options.approvalVerifier,
+    approvalVerifier: verifiedOwnerApproval,
   });
 }
 
