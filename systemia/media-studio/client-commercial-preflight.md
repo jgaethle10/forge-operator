@@ -41,3 +41,13 @@ Commercial-delivery approval never silently becomes portfolio permission. Period
 ## Limits
 
 The gate does not itself detect phoneme sync or visual identity drift, establish license validity, grant publication authority, accept payment, send client videos, run a Saban swarm, or perform a cinematic render. Those remain separate governed production stages.
+
+## One-command first-customer gate (preferred)
+
+Use the existing Fallen studio delivery to render the master MP4 and produce render, master QC and Clip-intake receipts. Then store the **private** order brief and human-review evidence as one local JSON document with schema evercraft.fallen.client-commercial-gate-request.v1. Keep customer information out of GitHub and social comments.
+
+The JSON document contains studioDelivery with videoPath, renderReceiptPath, masterQcReceiptPath and clipManifestPath; order, storyboard, rights, productionGrade, creativeReview and clientApproval. Paths may be relative to the private request file. See the executable fixtures in customer-commercial-gate.test.mjs for the structure.
+
+    node systemia/media-studio/customer-commercial-gate.mjs ./private/customer-request.json ./private/customer-preflight.json
+
+The command verifies the three existing receipt paths against the actual video, performs final-audio mastering inspection without altering the video, performs beat-specific final-picture motion inspection, and combines the results with rights, visual-coverage, creative review and customer-approval requirements. It writes an operator-readable JSON decision and exits nonzero when blocked. It **does not** render new content, copy customer media to GitHub, send the preview, request payment, or grant publication authority. A client-approved case still requires explicit operator delivery through governed Evercraft Clip/Shipping.
