@@ -1,0 +1,39 @@
+name: Fallen Owned Video Worker Contract
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/owned-video-adapter.mjs'
+      - 'systemia/media-studio/owned-video-adapter.test.mjs'
+      - 'systemia/media-studio/workers/wan-local-worker.py'
+      - 'systemia/media-studio/workers/make-weights-manifest.py'
+      - 'systemia/media-studio/OWNED-VIDEO-WORKER.md'
+      - '.github/workflows/fallen-owned-video-worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owned-video-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Ensure FFmpeg/FFprobe are present
+        run: |
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Verify owned-video moving-media and fail-closed contracts
+        run: node --test systemia/media-studio/owned-video-adapter.test.mjs
+      - name: Syntax-check offline CUDA worker and immutable model inventory tool
+        run: |
+          python3 -m py_compile systemia/media-studio/workers/wan-local-worker.py
+          python3 -m py_compile systemia/media-studio/workers/make-weights-manifest.py
+      - name: Prove no third-party generation is invoked
+        run: |
+          ! grep -iE 'api\.runwayml|api\.elevenlabs|api\.openai\.com' systemia/media-studio/owned-video-adapter.mjs systemia/media-studio/workers/*.py
+          grep -q 'publicationAuthority:false' systemia/media-studio/owned-video-adapter.mjs
