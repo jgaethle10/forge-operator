@@ -1,0 +1,55 @@
+name: EPS RC02 Human Footage Source Scout
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/eps-rc02-human-source-scout.yml"
+  workflow_dispatch:
+jobs:
+  verify-human-source:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source and tool check
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          command -v curl
+          mkdir -p artifacts/eps-rc02-source-scout
+      - name: Download source for PRIVATE creative review
+        shell: bash
+        env:
+          SOURCE_URL: https://videos.pexels.com/video-files/7816244/7816244-hd_1920_1080_25fps.mp4
+        run: |
+          set -euo pipefail
+          cd artifacts/eps-rc02-source-scout
+          curl -fLsS --retry 2 --retry-delay 2 --connect-timeout 12 --max-time 180 \
+            --max-filesize 125829120 "$SOURCE_URL" -o human_consultation_source.mp4
+          test -s human_consultation_source.mp4
+          ffprobe -v error -show_format -show_streams -of json human_consultation_source.mp4 > actual-media-probe.json
+          sha256sum human_consultation_source.mp4 > source.sha256
+          ffmpeg -nostdin -v error -y -ss 12 -i human_consultation_source.mp4 -t 8 \
+            -vf "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='ILLUSTRATIVE STOCK - NOT EPS JOB':fontcolor=white:fontsize=24:x=20:y=h-55:box=1:boxcolor=black@0.80" \
+            -an -r 24 -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -movflags +faststart human_consultation_8s_PRIVATE_REVIEW.mp4
+          ffprobe -v error -show_entries format=duration,size -of json human_consultation_8s_PRIVATE_REVIEW.mp4 > preview-probe.json
+          ffmpeg -nostdin -v error -y -i human_consultation_source.mp4 -vf "fps=1/11,scale=640:360,tile=3x1" -frames:v 1 source-contact-sheet.jpg
+          printf '%s\n' \
+            'Source: https://www.pexels.com/video/people-talking-in-a-under-construction-house-7816244/' \
+            'Creator: Pavel Danilyuk. License: https://www.pexels.com/license/' \
+            'Use: PRIVATE creative source review only, NOT a verified EPS team member or customer.' \
+            'Restriction: Never imply actors endorse EPS. Verify rights and suitability with human review.' \
+            'Audio: Pexels footage not assumed to have performed or synchronized spoken audio.' \
+            'Do not show as real EPS job or completed EPS customer result.' \
+            'Publication authority: FALSE. Narration, worker identity and real job footage remain blocked.' \
+            > SOURCE-PROVENANCE.txt
+      - name: Upload private creative-review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-rc02-human-consultation-source-private-review
+          path: artifacts/eps-rc02-source-scout/
+          retention-days: 7
+          if-no-files-found: error
