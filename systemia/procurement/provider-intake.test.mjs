@@ -22,6 +22,7 @@ test('incomplete HRSN remains blocked without imagined browser run or submission
   assert.ok(p.evidence_keys_blocking.includes('current_scope_insurance'));
   assert.ok(p.evidence_keys_blocking.includes('experience_evidence'));
   assert.equal(p.portal_draft_state,'not_saved');
+  assert.equal(p.portal_draft_capability,'statewide_form_no_save_one_sitting');
   assert.equal(p.submission_state,'not_attempted');
   assert.equal(p.runtime_admission_state,'unverified');
   assert.equal(p.automated_final_submission_authority,false);
