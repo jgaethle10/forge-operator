@@ -4,6 +4,8 @@ on:
     paths:
       - "systemia/media-studio/relay-floor-gate.mjs"
       - "systemia/media-studio/relay-floor-gate.test.mjs"
+      - "systemia/media-studio/relay-source-verify.mjs"
+      - "systemia/media-studio/relay-source-verify.test.mjs"
       - "systemia/media-studio/commercial-shotlist.mjs"
       - ".github/workflows/relay-floor-gate.yml"
   push:
@@ -11,6 +13,8 @@ on:
     paths:
       - "systemia/media-studio/relay-floor-gate.mjs"
       - "systemia/media-studio/relay-floor-gate.test.mjs"
+      - "systemia/media-studio/relay-source-verify.mjs"
+      - "systemia/media-studio/relay-source-verify.test.mjs"
       - "systemia/media-studio/commercial-shotlist.mjs"
 jobs:
   creative-floor:
@@ -24,4 +28,4 @@ jobs:
         with:
           node-version: "22"
       - name: Human motion and speech regression
-        run: node --test systemia/media-studio/relay-floor-gate.test.mjs
+        run: node --test systemia/media-studio/relay-floor-gate.test.mjs systemia/media-studio/relay-source-verify.test.mjs
