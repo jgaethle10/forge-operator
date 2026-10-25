@@ -1,0 +1,48 @@
+name: CHUM live commercial projection
+on:
+  pull_request:
+    paths:
+      - 'systemia/chum/verify-live-commercial-projection.mjs'
+      - 'systemia/chum/verify-live-commercial-projection.test.mjs'
+      - 'public/llms.txt'
+      - 'public/.well-known/evercraft-commercial-readiness.json'
+      - '.github/workflows/chum-live-commercial-projection.yml'
+  schedule:
+    - cron: '29 14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and contract regression
+        run: |
+          node --check systemia/chum/verify-live-commercial-projection.mjs
+          node --test systemia/chum/verify-live-commercial-projection.test.mjs
+      - name: Check actual publicly served payment truth
+        id: external
+        continue-on-error: true
+        env:
+          CHUM_LIVE_PROJECTION_RECEIPT: ${{ runner.temp }}/chum-live-projection.json
+        run: node systemia/chum/verify-live-commercial-projection.mjs
+      - name: Preserve actual public receipt even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-live-commercial-projection-receipt
+          path: ${{ runner.temp }}/chum-live-projection.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Fail closed on stale public discovery
+        if: steps.external.outcome == 'failure'
+        run: |
+          echo 'Fabric did not serve the current commercial truth; do not claim public projection updated.'
+          exit 1
