@@ -1,0 +1,58 @@
+name: EPS RC02 Outdoor Action Footage Scout
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/eps-rc02-outdoor-source-scout.yml"
+  workflow_dispatch:
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check media tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          mkdir -p artifacts/eps-rc02-yard
+      - name: Retrieve and inspect outdoor mowing footage for internal review
+        shell: bash
+        env:
+          VIDEO_URL: https://videos.pexels.com/video-files/12215821/12215821-hd_1920_1080_60fps.mp4
+        run: |
+          set -euo pipefail
+          cd artifacts/eps-rc02-yard
+          curl -fLsS --retry 2 --retry-delay 2 --connect-timeout 12 --max-time 120 \
+            --max-filesize 125829120 "$VIDEO_URL" -o raw_lawn_mower_stock.mp4
+          test -s raw_lawn_mower_stock.mp4
+          ffprobe -v error -show_format -show_streams -of json raw_lawn_mower_stock.mp4 > media-probe.json
+          sha256sum raw_lawn_mower_stock.mp4 > source.sha256
+          ffmpeg -nostdin -v error -y -i raw_lawn_mower_stock.mp4 \
+            -vf "scale=1280:720:flags=lanczos,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='ILLUSTRATIVE STOCK - NOT EPS CREW':fontsize=23:fontcolor=white:x=20:y=h-55:box=1:boxcolor=black@0.80" \
+            -t 6 -an -r 24 -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p -movflags +faststart \
+            lawn_work_PRIVATE_VISUAL_REVIEW.mp4
+          ffmpeg -nostdin -v error -y -i raw_lawn_mower_stock.mp4 \
+            -vf "fps=1/2,scale=480:270,tile=3x1" -frames:v 1 contact-sheet.jpg
+          printf '%s\n' \
+            'Source: https://www.pexels.com/video/man-mowing-lawn-12215821/' \
+            'Creator: Jacob Christensen. Original subject: close-up of a man mowing a residential lawn.' \
+            'License: https://www.pexels.com/license/' \
+            'Private creative review ONLY. Do not imply a depicted person endorses EPS.' \
+            'Footage not shot by EPS and does NOT prove a completed EPS customer result.' \
+            'No source claim of performed dialogue, synchronized speech, EPS location, or EPS crew.' \
+            'Creative approval, source rights review, and founder sign-off remain required.' \
+            'No payment, model generation, publication or Clip release granted.' \
+            > SOURCE-REVIEW.txt
+      - name: Upload candidate and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-rc02-yard-mowing-stock-private-review
+          path: artifacts/eps-rc02-yard/
+          retention-days: 7
+          if-no-files-found: error
