@@ -52,6 +52,11 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
   if(brief?.schema!=='evercraft.fallen.commercial-brief.v1')throw new Error('commercial_brief_schema_invalid');
   const id=requireText(brief.id,'id');
   const brand=requireText(brief.brand,'brand');
+  // EPS has an owner-declared Relay RC35 cinematic floor. It cannot silently
+  // opt out by omitting the creativeStandard field or using the EPS abbreviation.
+  if((/^eps$/i.test(brand)||/^evercraft property services\b/i.test(brand)) &&
+     brief.creativeStandard!=='relay-floor-v1')
+    throw new Error('eps_relay_floor_required');
   const audience=requireText(brief.audience,'audience');
   const offer=requireText(brief.offer,'offer');
   const durationSec=seconds(brief.durationSec,'duration');
