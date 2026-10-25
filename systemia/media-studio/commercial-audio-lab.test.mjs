@@ -67,4 +67,5 @@ test('ambiguous multiple soundtracks never pass studio final-master inspection',
   assert.equal(qc.measurements.audioStreamCount,2);
   assert.equal(qc.status,'rejected');
   assert.ok(qc.reasons.includes('multiple_audio_streams_require_review'));
+  assert.throws(()=>masterCommercialAudio({input:multi,output:path.join(dir,'bad-master.mp4')}),/multiple_soundtracks_require_editorial_choice/);
 });
