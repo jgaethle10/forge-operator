@@ -38,3 +38,17 @@ Final release: source licensing/provenance, client claims, picture approval, mul
 The existing Saban Creative Council can fan creative work across roles; this module only implements the final technical audio measurement and correction boundary. It does not start a remote worker, invoke paid audio providers, or claim that agents have auditioned the mix.
 
 Future integration: call auditCommercialAudio as a required gate for commercial MP4 delivery, and retain receipt alongside existing master-qc receipt. Avoid calling every video release-ready until both technical and human gates pass.
+
+
+## Real commercial Clip handoff integration
+
+Fallen finalizeStudioDelivery now recognizes qualityMode: "commercial". When selected it:
+1. Renders the actual MP4;
+2. Runs the existing picture/codec master gate;
+3. Runs this commercial audio lab against the final encoded MP4;
+4. Writes <slug>.commercial-audio-qc.json, requiring ACCEPTED with a digest matching the render receipt;
+5. Includes the bound commercial audio QC receipt path in the Clip intake manifest.
+
+A rejected or unmeasured commercial cannot claim ready_for_clip_intake. This mode does not perform automatic re-mastering, as the owner must accept all mix changes. Set project.audioMaster.targetLufs to the approved destination target, review the audio, and re-render when needed.
+
+Legacy standard and narrative_film modes preserve their existing admission behavior and do not silently claim commercial-audio approval. Commercial mode is explicitly opted into by the caller; no existing clients are automatically migrated.
