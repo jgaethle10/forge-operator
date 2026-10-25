@@ -22,6 +22,8 @@ jobs:
         run: node --test systemia/media-studio/commercial-creative-direction.test.mjs
       - name: Install Studio TypeScript runtime
         run: npm install --no-audit --no-fund
+      - name: Verify editable source-video trim semantics
+        run: node --import tsx --test systemia/media-studio/studio-create.test.ts
       - name: Compile fictional customer cut sheet into existing Fallen editable timeline
         run: |
           node --import tsx --input-type=module - <<'NODE'
@@ -34,6 +36,7 @@ jobs:
           const bundle=compileStudioDraft(evaluated.studioDraftPlan);
           const picture=bundle.project.tracks.find(t=>t.kind==='video');
           if(picture?.clips.length!==4) throw new Error('four_shot_timeline_missing');
+          if(picture.clips.map(x=>x.trimStartSec).join(',')!=='0,4,16,24') throw new Error('source_video_trim_points_not_preserved');
           if(bundle.script.length!==4 || bundle.captions.length!==4) throw new Error('voice_caption_timeline_missing');
           if(bundle.productionNeeds.filter(x=>x.kind==='speech').length!==4) throw new Error('voice_production_needs_missing');
           if(bundle.productionNeeds.filter(x=>x.kind==='video').length!==0) throw new Error('existing_video_not_reused');
