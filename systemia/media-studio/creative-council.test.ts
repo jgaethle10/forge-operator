@@ -66,7 +66,7 @@ test('creative council inventory turns scenes and semantic gaps into agent-ready
   const inventory = buildCreativeCouncilInventory(plan);
   assert.equal(inventory.schema, 'evercraft.fallen.creative-council-inventory.v1');
   assert.equal(inventory.jobs.length, 2);
-  assert.equal(CREATIVE_COUNCIL_CREW.length, 10);
+  assert.equal(CREATIVE_COUNCIL_CREW.length, 14);
 
   const scene = inventory.jobs.find((job) => job.shot.sourceType === 'scene')?.shot;
   assert.deepEqual(scene?.subjectIds, ['naval-vessel']);
@@ -135,6 +135,10 @@ test('reconciliation produces one multi-department shot genome when all creative
   );
   assert.ok(reconciled.blueprints[0].creative_genome.camera);
   assert.ok(reconciled.blueprints[0].creative_genome.sound);
+  assert.ok(reconciled.blueprints[0].creative_genome.voice_performance);
+  assert.ok(reconciled.blueprints[0].creative_genome.music);
+  assert.ok(reconciled.blueprints[0].creative_genome.sound_design);
+  assert.ok(reconciled.blueprints[0].creative_genome.mix);
   assert.ok(reconciled.blueprints[0].creative_genome.beauty);
   assert.ok(reconciled.blueprints[0].rejection_contract.includes('typewriter_wall'));
 });
