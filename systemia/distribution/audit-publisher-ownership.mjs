@@ -13,7 +13,16 @@ for (const entry of ledger.entries) {
   seen.add(entry.key);
   if (!allowed.has(entry.status)) throw Error('unknown publisher status: '+entry.key);
   if (proofStates.has(entry.status) && (!entry.evidence?.receipt_url || !entry.evidence?.verified_at)) findings.push({key:entry.key,issue:'MISSING_PUBLISHER_RECEIPT'});
-  if (entry.status !== 'UNKNOWN' && !entry.public_url && !entry.evidence?.listing_url) findings.push({key:entry.key,issue:'NO_SOURCE_URL'});
+  // Private personal plugins have backend IDs, not public listing URLs. A private
+  // record must never be promoted to public ownership simply because it is installed.
+  const privateInventory = entry.visibility === 'PRIVATE' && entry.internal_plugin_id
+    && entry.evidence?.source && ['DISCOVERED','UNKNOWN'].includes(entry.status);
+  if (entry.status !== 'UNKNOWN' && !entry.public_url && !entry.evidence?.listing_url && !privateInventory) {
+    findings.push({key:entry.key,issue:'NO_SOURCE_URL_OR_PRIVATE_ID_EVIDENCE'});
+  }
+  if (entry.visibility === 'PRIVATE' && proofStates.has(entry.status)) {
+    findings.push({key:entry.key,issue:'PRIVATE_RECORD_CANNOT_ASSERT_PUBLIC_RELEASE'});
+  }
   if (entry.status === 'PUBLISHED' && entry.current_release_verified !== true) findings.push({key:entry.key,issue:'PUBLIC_RELEASE_NOT_ATTESTED'});
 }
 const receipt = {schema:'evercraft.distribution.publisher-audit.v1', generated_at:new Date().toISOString(), total:ledger.entries.length, statuses:Object.fromEntries([...allowed].map(s=>[s,ledger.entries.filter(e=>e.status===s).length]).filter(([,n])=>n)), findings, status:findings.length?'BLOCKED':'VALID_LEDGER_NOT_OWNERSHIP_PROOF'};
