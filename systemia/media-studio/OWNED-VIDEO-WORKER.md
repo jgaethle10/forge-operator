@@ -104,3 +104,47 @@ The output deliberately reports `state: blocked` until an independently verified
 `campaigns/before-the-doors-canary-01.json` and `campaigns/before-the-doors-canary-bible.json` are the first original two-second, vertical, model-neutral **live-action-style cinematic moving shot request**. It depicts real-looking hands folding dough in a bakery. All creative input is newly authored. These files do not contain or reuse any frames or soundtrack from Relay RC35 or rejected studio commercials. Rights/provenance receipts and truthful cinematic motion remain mandatory before an artifact may advance to a human-reviewed Shot Tournament.
 
 The deliberately simple close-up shot avoids character-face identity claims before our I2V continuity system is proven. The first real success condition is a **model-generated moving sequence** that survives frame inspection, not a poster, FFmpeg color bars, or simulated worker footage. No model inference result exists merely because this request is committed.
+
+
+## Bounded execution after placement (2026-10-25)
+
+The Saban placement intent is **not** permission to run the GPU model. The new
+\`owned-video-execution-gate.mjs\` introduces a separate local-only authority
+boundary for registered NodeSeeds. The execution process reruns Saban's
+placement and GPU-readiness checks before invoking the already-pinned owned
+adapter.
+
+A lease contains only the exact job ID/hash, placement and readiness hashes,
+NodeSeed and Saban offer IDs, pinned worker and model-manifest SHA-256 values,
+license receipt, a random 128-bit lease ID, and issue/expiry times. It is
+valid for at most 180 seconds and exactly one execution. It cannot contain
+shell commands, executable paths, URLs, payment or publication instructions.
+
+Both the **owner authorization identity** and the **Systemia authorization
+identity** sign the stable canonical lease JSON with separate Ed25519 keys.
+The NodeSeed loads public keys from local trust configuration, never from the
+incoming job. No private signing keys belong in GitHub, a video worker or an
+untrusted payload. No actual signer, signing service or live job is activated
+by committing this module.
+
+On execution, the gate:
+
+1. Rejects altered local hardware observations and recomputes placement at
+   issuance time (because Saban's plan hash includes its generation time).
+2. Rechecks *current* GPU/attestation/workload eligibility, then verifies both
+   signatures, scope, expiry and model evidence bindings.
+3. Accepts only the preconfigured, attested local adapter
+   \`evercraft-local-owned-video-v1\`.
+4. Reserves the lease ID atomically in a local restricted ledger; a failure
+   still burns the lease to prevent paid or GPU-heavy duplicate execution.
+5. Re-hashes the resulting media file and checks the returned job,
+   provenance, rights, worker and weight-manifest evidence before writing a
+   durable receipt.
+6. Releases only a **candidate for Fallen's Shot Tournament**. The module
+   never grants publication, client delivery or payment authority.
+
+The local tests use a **mocked** adapter/file to exercise authorization
+mechanics. Neither a mocked adapter nor passing GitHub CI is evidence of
+real AI video generation or production-grade cinematography. Real GPU
+deployment, audited Wan weights, signing identities and operator approval
+must be established separately.
