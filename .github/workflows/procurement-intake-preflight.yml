@@ -1,0 +1,20 @@
+name: Evercraft Procurement Intake Preflight
+on:
+  pull_request:
+    paths:
+      - 'systemia/procurement/**'
+      - '.github/workflows/procurement-intake-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  first-party-offline-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test government vendor and HRSN readiness contract (no network or portal submit)
+        run: node --test systemia/procurement/provider-intake.test.mjs
