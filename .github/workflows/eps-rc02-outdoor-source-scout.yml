@@ -1,8 +1,5 @@
 name: EPS RC02 Outdoor Action Footage Scout
 on:
-  pull_request:
-    paths:
-      - ".github/workflows/eps-rc02-outdoor-source-scout.yml"
   workflow_dispatch:
 jobs:
   source:
