@@ -51,6 +51,42 @@ an independent current host check.
    disconnect its live session and invalidate the associated control grant.
    Do not ship a production remote execution path without this acceptance.
 
+## Passport owner-approval integration
+
+Yard's exact-device `authorize` and `revoke` calls now require a trusted
+server-side verifier. The adapter
+`systemia/yard/remote-device-passport-verifier.mjs` uses the pre-existing
+Evercraft Passport action-permit ledger, NOT arbitrary JSON approval strings.
+
+A trusted identity workflow must independently authenticate the owner and
+issue a grant under product `evercraft.remote-device-trust` with only the
+specific `remote_device.authorize` or `remote_device.revoke` scope. It
+must mint a short-lived `permit_...` for the exact scoped request, exact
+Yard broker deployment, node ID, fingerprint, and request payload digest.
+The remote agent does not get the ability to grant or mint permits.
+
+The offline manual owner review CLI can optionally open a pre-existing
+private Passport state, but it **never** creates grants or permits. It
+requires `--passport-state`, `--owner-subject`, and an existing
+`--approval-ref permit_...` for authorization. Those private paths
+and authenticated subject identities MUST come from an owner-controlled,
+independently verified environment. User-supplied flags do not themselves
+prove identity or grant trust. Do not expose the CLI as an unauthenticated
+MCP or web route. Local OS permissions, authenticated issuance, and the
+trusted management deployment are separate requirements for production.
+
+The verifier checks that the permit belongs to the configured owner,
+correct product and action scope, exact broker + node + fingerprint,
+matching SHA-256 request fingerprint, unexpired active grant, and unused
+state. Passport atomically consumes the permit with a fresh idempotency
+key BEFORE Yard contacts the broker. Repeated use fails closed, including
+across process restarts. If the broker mutation fails after consumption,
+a fresh, independently approved permit is required for a retry.
+
+The proof tests use synthetic local grants and permits inside temporary
+state roots and do not assert that production identity-provider enrollment
+or actual owner approval issuance has been configured.
+
 ## Completion states
 
 - `LOCAL_ONLY`: Current last observed HP state. Machine-local organism active,
