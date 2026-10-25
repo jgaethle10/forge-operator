@@ -1,0 +1,220 @@
+{
+  "schema": "evercraft.distribution.publisher-ownership.v1",
+  "reviewed_at": "2026-10-25",
+  "policy": "Evidence required for every positive ownership assertion; no publisher-side writes without authority",
+  "entries": [
+    {
+      "key": "chatgpt-evercraft-personal-106",
+      "provider": "OpenAI ChatGPT",
+      "status": "DISCOVERED",
+      "public_url": null,
+      "release": "1.0.6",
+      "visibility": "PRIVATE",
+      "internal_plugin_id": "plugins_6abd65b5b6588191a5dc12ed7a998244",
+      "evidence": {
+        "source": "Plugin Creator personal inventory 2026-10-25"
+      },
+      "next": "Determine canonical release and actual public submission state"
+    },
+    {
+      "key": "chatgpt-evercraft-personal-104",
+      "provider": "OpenAI ChatGPT",
+      "status": "DISCOVERED",
+      "public_url": null,
+      "release": "1.0.4",
+      "visibility": "PRIVATE",
+      "internal_plugin_id": "plugins_6abc8ff0e790819194e339e42a72eac5",
+      "evidence": {
+        "source": "Plugin Creator personal inventory 2026-10-25"
+      },
+      "next": "Reconcile duplicate without deleting"
+    },
+    {
+      "key": "chatgpt-evercraft-development",
+      "provider": "OpenAI ChatGPT",
+      "status": "DISCOVERED",
+      "public_url": null,
+      "release": "1.0.0",
+      "visibility": "PRIVATE",
+      "internal_plugin_id": "plugin_asdk_app_6abc50d3a2188191af12b62d59d1ec3e",
+      "evidence": {
+        "source": "Plugin Creator personal inventory 2026-10-25"
+      },
+      "next": "Determine developer-only versus canonical release"
+    },
+    {
+      "key": "glama-machine-commerce",
+      "provider": "Glama",
+      "status": "CLAIM_REQUIRED",
+      "public_url": "https://glama.ai/mcp/connectors/io.github.jgaethle10/evercraft-machine-commerce",
+      "evidence": {
+        "source": "Public listing observed; account claim NOT verified"
+      },
+      "next": "Check provider claim ownership with authorized account; preserve verification"
+    },
+    {
+      "key": "official-mcp-registry",
+      "provider": "Official MCP Registry",
+      "status": "PUBLISHED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "next": "Maintain publisher-owned Fabric v1.7.0, inspect directory pickup and real tool routing; do not confuse discovery with paid conversion",
+      "evidence": {
+        "source": "GitHub Actions MCP publisher, direct fetched publish job logs dated 2026-10-06",
+        "listing_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "publisher_write_verified_as_of": "2026-10-06T16:56:58Z",
+        "published_version_verified": "1.7.0",
+        "published_remote_reported": "https://fabric.systemiacommandcenters.com/mcp",
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/37499511004",
+        "verified_at": "2026-10-06T16:56:58Z",
+        "publisher_claim_verified_historically": true,
+        "current_registry_version_unverified": false,
+        "older_search_index_version": "1.5.1",
+        "current_registry_version": "1.7.0",
+        "current_registry_remote": "https://fabric.systemiacommandcenters.com/mcp",
+        "current_registry_observed_at": "2026-10-25T19:57:59Z",
+        "current_mcp_cold_client": {
+          "initialize": true,
+          "tools_list": true,
+          "tools_count": 3
+        },
+        "runtime_receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40228501795/artifacts/12611757396"
+      },
+      "current_release_verified": true
+    },
+    {
+      "key": "smithery",
+      "provider": "Smithery",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Locate exact live listing and ownership"
+    },
+    {
+      "key": "claude",
+      "provider": "Anthropic Claude",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Determine supported connector/listing and publisher authorization"
+    },
+    {
+      "key": "gemini",
+      "provider": "Google Gemini",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Determine current supported integration and publication state"
+    },
+    {
+      "key": "grok",
+      "provider": "xAI Grok",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Verify prior MCP listing and publisher controls"
+    },
+    {
+      "key": "perplexity",
+      "provider": "Perplexity",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Discover approved integration/distribution surface"
+    },
+    {
+      "key": "copilot",
+      "provider": "Microsoft Copilot",
+      "status": "UNKNOWN",
+      "public_url": null,
+      "next": "Determine supported publication path and identity verification"
+    },
+    {
+      "key": "builtwith-legacy-base44-endpoint",
+      "provider": "BuiltWith detected MCP directory",
+      "status": "STALE",
+      "public_url": "https://builtwith.com/mcp/evercraft-ai-suite-08c4d2b8.base44.app",
+      "evidence": {
+        "source": "Public third-party indexed page surfaced Oct 25; historical first and last detection Sep 25, 2026",
+        "observed_remote": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "next": "Request corrected listing/canonical remote endpoint and purge outdated Base44 references where owner controls; do not assume old endpoint live or authoritative"
+    },
+    {
+      "key": "official-mcp-aliev",
+      "provider": "Official MCP Registry",
+      "status": "STALE",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/aliev",
+        "observed_version": "1.0.6",
+        "publisher_claim_verified": false,
+        "latest_official_registry_observed_at": "2026-10-25T19:50:44Z",
+        "latest_registry_remote_legacy_base44": true,
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40228501795/artifacts/12611757396"
+      },
+      "next": "Gate repoint on verified owned specialist MCP initialize/tools-list; never substitute universal endpoint without genuine specialist capability"
+    },
+    {
+      "key": "official-mcp-evercraft-capability-discovery",
+      "provider": "Official MCP Registry",
+      "status": "STALE",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/evercraft-capability-discovery",
+        "observed_version": "1.0.0",
+        "publisher_claim_verified": false,
+        "latest_official_registry_observed_at": "2026-10-25T19:50:44Z",
+        "latest_registry_remote_legacy_base44": true,
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40228501795/artifacts/12611757396"
+      },
+      "next": "Gate repoint on verified owned specialist MCP initialize/tools-list; never substitute universal endpoint without genuine specialist capability"
+    },
+    {
+      "key": "official-mcp-evercraft-clip",
+      "provider": "Official MCP Registry",
+      "status": "STALE",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/evercraft-clip",
+        "observed_version": "0.2.1",
+        "publisher_claim_verified": false,
+        "latest_official_registry_observed_at": "2026-10-25T19:50:44Z",
+        "latest_registry_remote_legacy_base44": true,
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40228501795/artifacts/12611757396"
+      },
+      "next": "Gate repoint on verified owned specialist MCP initialize/tools-list; never substitute universal endpoint without genuine specialist capability"
+    },
+    {
+      "key": "official-mcp-forensiscope",
+      "provider": "Official MCP Registry",
+      "status": "STALE",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Public Official MCP Registry indexed result dated 2026-09-24 or 2026-09-28, not a current API receipt",
+        "listing_name": "io.github.jgaethle10/forensiscope",
+        "observed_version": "1.1.5",
+        "publisher_claim_verified": false,
+        "latest_official_registry_observed_at": "2026-10-25T19:50:44Z",
+        "latest_registry_remote_legacy_base44": true,
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40228501795/artifacts/12611757396"
+      },
+      "next": "Gate repoint on verified owned specialist MCP initialize/tools-list; never substitute universal endpoint without genuine specialist capability"
+    },
+    {
+      "key": "official-mcp-faie",
+      "provider": "Official MCP Registry",
+      "status": "DISCOVERED",
+      "public_url": "https://registry.modelcontextprotocol.io/",
+      "evidence": {
+        "source": "Official MCP Registry API plus external cold-client verification, GitHub Actions 40228501795 2026-10-25",
+        "listing_name": "io.github.jgaethle10/faie",
+        "current_registry_version": "1.1.0",
+        "current_registry_remote": "https://fabric.systemiacommandcenters.com/mcp/faie",
+        "runtime_initialize_verified": true,
+        "runtime_tools_list_verified": true,
+        "tool_count": 4,
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40228501795/artifacts/12611757396",
+        "publisher_account_claim_verified": false
+      },
+      "next": "Review namespace ownership/publication receipts separately; validate specialist tool function and real user journey before marketing"
+    }
+  ]
+}
