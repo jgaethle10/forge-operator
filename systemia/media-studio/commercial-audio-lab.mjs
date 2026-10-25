@@ -66,10 +66,11 @@ export function silenceRanges(log,duration) {
 function inspect(file,p) {
   const probe=JSON.parse(run('ffprobe',['-v','error','-show_format','-show_streams','-of','json',file]).stdout);
   const streams=probe.streams||[];
-  const hasAudio=streams.some(s=>s.codec_type==='audio');
+  const audioStreamCount=streams.filter(s=>s.codec_type==='audio').length;
+  const hasAudio=audioStreamCount>0;
   const hasVideo=streams.some(s=>s.codec_type==='video');
   const duration=finite(probe.format?.duration)||0;
-  if(!hasAudio || duration<=0) return {hasAudio,hasVideo,duration,integratedLufs:null,truePeakDbtp:null,silenceRatio:0,maxSilentRunSec:0,pass1:null};
+  if(!hasAudio || duration<=0) return {hasAudio,hasVideo,audioStreamCount,streamCount:audioStreamCount,duration,integratedLufs:null,truePeakDbtp:null,silenceRatio:0,maxSilentRunSec:0,pass1:null};
   const log=run('ffmpeg',['-nostdin','-hide_banner','-v','info','-i',file,
     '-map','0:a:0','-af','loudnorm=I='+p.targetLufs+':TP='+p.maxTruePeakDbtp+':LRA='+p.targetLra+':print_format=json',
     '-f','null','-']).stderr;
@@ -80,7 +81,7 @@ function inspect(file,p) {
     '-map','0:a:0','-af','silencedetect=n=-55dB:d=0.35','-f','null','-']).stderr;
   const ranges=silenceRanges(silence,duration);
   const total=ranges.reduce((s,[a,b])=>s+b-a,0);
-  return {hasAudio,hasVideo,duration,integratedLufs:finite(pass1.input_i),
+  return {hasAudio,hasVideo,audioStreamCount,streamCount:audioStreamCount,duration,integratedLufs:finite(pass1.input_i),
     truePeakDbtp:finite(pass1.input_tp),loudnessRangeLu:finite(pass1.input_lra),
     silenceRatio:Number((total/duration).toFixed(4)),
     maxSilentRunSec:Number(Math.max(0,...ranges.map(([a,b])=>b-a)).toFixed(3)),
@@ -93,6 +94,7 @@ export function auditCommercialAudio({input,expectedSha256,standard={}}) {
   if(expectedSha256 && sha256.toLowerCase()!==expectedSha256.toLowerCase()) throw new Error('audio_digest_mismatch');
   const measured=inspect(input,p),reasons=[];
   if(!measured.hasAudio) reasons.push('audio_stream_missing');
+  if(measured.audioStreamCount>1) reasons.push('multiple_audio_streams_require_review');
   if(measured.duration<.5) reasons.push('audio_duration_invalid');
   if(measured.hasAudio) {
     if(measured.integratedLufs===null || measured.truePeakDbtp===null) reasons.push('audio_silent_or_unmeasurable');
@@ -116,6 +118,9 @@ export function masterCommercialAudio({input,output,expectedSha256,standard={}})
   if(fs.existsSync(output)) throw new Error('audio_master_output_exists');
   const p=standardFor(standard);
   const source=auditCommercialAudio({input,expectedSha256,standard:p});
+  if(source.reasons.includes('multiple_audio_streams_require_review')){
+    throw new Error('audio_master_multiple_soundtracks_require_editorial_choice');
+  }
   const m=source.measurements;
   if(!m.hasAudio || !m.hasVideo) throw new Error('audio_master_requires_picture_and_sound');
   const stats=m.pass1,keys=['input_i','input_tp','input_lra','input_thresh','target_offset'];
