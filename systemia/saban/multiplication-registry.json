@@ -575,6 +575,10 @@
         "world_builder",
         "edit_rhythm_director",
         "sound_director",
+        "mixing_engineer",
+        "sound_design_engineer",
+        "music_composer",
+        "voice_performance_director",
         "brand_art_director",
         "documentary_truth_guard",
         "beauty_judge"
@@ -607,7 +611,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 10,
+        "max_agents_per_item": 14,
         "target_logical_per_physical_worker": 8,
         "minimum_role_item_passes": 1
       },
