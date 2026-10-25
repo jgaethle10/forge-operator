@@ -10,6 +10,8 @@ on:
       - 'systemia/media-studio/commercial-release-preflight.test.mjs'
       - 'systemia/media-studio/commercial-visual-qc.mjs'
       - 'systemia/media-studio/commercial-visual-qc.test.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.test.mjs'
       - 'systemia/media-studio/commercial-creative-roles.test.mjs'
       - 'systemia/media-studio/creative-council-saban-adapter.mjs'
       - 'systemia/saban/multiplication-registry.json'
@@ -34,5 +36,5 @@ jobs:
           node --test systemia/media-studio/commercial-audio-lab.test.mjs systemia/media-studio/commercial-creative-roles.test.mjs
       - name: Test commissioned commercial audio and release preflight
         run: |
-          node --test systemia/media-studio/commercial-audio-qc.test.mjs systemia/media-studio/commercial-release-preflight.test.mjs systemia/media-studio/commercial-visual-qc.test.mjs
+          node --test systemia/media-studio/commercial-audio-qc.test.mjs systemia/media-studio/commercial-release-preflight.test.mjs systemia/media-studio/commercial-visual-qc.test.mjs systemia/media-studio/customer-commercial-gate.test.mjs
           node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory systemia/saban/fixtures/commercial-audio-council-job.json --agents 28 --workers 4 --execute --reconcile
