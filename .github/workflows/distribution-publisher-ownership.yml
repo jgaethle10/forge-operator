@@ -5,7 +5,11 @@ on:
       - 'systemia/distribution/publisher-ownership.json'
       - 'systemia/distribution/audit-publisher-ownership.mjs'
       - 'systemia/distribution/audit-publisher-ownership.test.mjs'
+      - 'systemia/distribution/inspect-official-mcp-registry.mjs'
+      - 'systemia/distribution/inspect-official-mcp-registry.test.mjs'
       - '.github/workflows/distribution-publisher-ownership.yml'
+  schedule:
+    - cron: '17 15 * * *'
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,16 +22,30 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/distribution/audit-publisher-ownership.mjs
+      - run: node --check systemia/distribution/inspect-official-mcp-registry.mjs
       - name: Regression tests for publisher evidence states
-        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs
+        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs systemia/distribution/inspect-official-mcp-registry.test.mjs
       - name: Validate evidence states
         env:
           OUTPUT: ${{ runner.temp }}/publisher-audit.json
         run: node systemia/distribution/audit-publisher-ownership.mjs systemia/distribution/publisher-ownership.json "$OUTPUT"
+      - name: Inspect live official MCP registry
+        id: registry
+        continue-on-error: true
+        env:
+          EVERCRAFT_REGISTRY_RECEIPT_PATH: ${{ runner.temp }}/official-mcp-registry.json
+        run: node systemia/distribution/inspect-official-mcp-registry.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: publisher-ownership-audit
-          path: ${{ runner.temp }}/publisher-audit.json
+          path: |
+            ${{ runner.temp }}/publisher-audit.json
+            ${{ runner.temp }}/official-mcp-registry.json
           if-no-files-found: warn
           retention-days: 7
+      - name: Preserve external registry observation failures
+        if: steps.registry.outcome == 'failure'
+        run: |
+          echo 'Official MCP registry could not be verified. Do not claim publication or ownership.'
+          exit 1
