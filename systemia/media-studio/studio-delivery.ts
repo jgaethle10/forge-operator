@@ -8,7 +8,7 @@ import {
 } from './narrative-film-admission.js';
 import { renderTimelineExport, type TimelineExportReceipt } from './timeline-export.js';
 import { assessStudioMaster } from './master-qc.js';
-import { auditCommercialAudio } from './commercial-audio-lab.mjs';
+import { auditCommercialAudio, masterCommercialAudio } from './commercial-audio-lab.mjs';
 
 export type ClipDestination =
   | 'youtube'
@@ -34,6 +34,7 @@ export interface StudioDeliveryRequest {
   sourceApp?:string;
   qualityMode?:StudioQualityMode;
   narrativeFilmAdmission?:NarrativeFilmAdmissionReceipt;
+  commercialAudioFinishing?:'none'|'two_pass';
 }
 
 export interface ClipDeliveryManifest {
@@ -75,6 +76,7 @@ export interface ClipDeliveryManifest {
     renderReceiptPath:string;
     masterQcReceiptPath:string;
     commercialAudioQcReceiptPath?:string;
+    commercialAudioMasterReceiptPath?:string;
     narrativeFilmAdmissionDigest?:string;
   };
   boundaries:{
@@ -96,6 +98,7 @@ export interface StudioDeliveryReceipt {
   renderReceiptPath:string;
   masterQcReceiptPath:string;
   commercialAudioQcReceiptPath?:string;
+  commercialAudioMasterReceiptPath?:string;
   clipManifestPath:string;
   mediaSha256:string;
   manifestSha256:string;
@@ -153,6 +156,13 @@ function validateRequest(request:StudioDeliveryRequest){
   if(qualityMode!=='standard'&&qualityMode!=='narrative_film'&&qualityMode!=='commercial'){
     throw new Error('studio_delivery_quality_mode_invalid');
   }
+  if(request.commercialAudioFinishing && request.commercialAudioFinishing!=='none' &&
+     request.commercialAudioFinishing!=='two_pass'){
+    throw new Error('studio_delivery_commercial_audio_finishing_invalid');
+  }
+  if(request.commercialAudioFinishing==='two_pass'&&qualityMode!=='commercial'){
+    throw new Error('studio_delivery_commercial_audio_finishing_requires_commercial_mode');
+  }
   if(qualityMode==='narrative_film'){
     const validation=validateNarrativeFilmAdmissionForProject({
       project:request.project,
@@ -172,6 +182,7 @@ export function buildClipDeliveryManifest(input:{
   renderReceiptPath:string;
   masterQcReceiptPath:string;
   commercialAudioQcReceiptPath?:string;
+  commercialAudioMasterReceiptPath?:string;
 }):ClipDeliveryManifest{
   validateRequest(input.request);
   const project=input.request.project;
@@ -244,6 +255,7 @@ export function buildClipDeliveryManifest(input:{
       renderReceiptPath:path.resolve(input.renderReceiptPath),
       masterQcReceiptPath:path.resolve(input.masterQcReceiptPath),
       commercialAudioQcReceiptPath:input.commercialAudioQcReceiptPath?path.resolve(input.commercialAudioQcReceiptPath):undefined,
+      commercialAudioMasterReceiptPath:input.commercialAudioMasterReceiptPath?path.resolve(input.commercialAudioMasterReceiptPath):undefined,
       narrativeFilmAdmissionDigest:input.request.narrativeFilmAdmission?.admissionDigest,
     },
     boundaries:{
@@ -271,12 +283,31 @@ export function finalizeStudioDelivery(input:{
   const renderReceiptPath=path.join(outputDir,slug+'.render-receipt.json');
   const masterQcReceiptPath=path.join(outputDir,slug+'.master-qc.json');
   const commercialAudioQcReceiptPath=input.request.qualityMode==='commercial'?path.join(outputDir,slug+'.commercial-audio-qc.json'):undefined;
+  const commercialAudioMasterReceiptPath=input.request.commercialAudioFinishing==='two_pass'?path.join(outputDir,slug+'.commercial-audio-master.json'):undefined;
   const clipManifestPath=path.join(outputDir,slug+'.clip-intake.json');
 
-  const renderReceipt=renderTimelineExport({
+  const draftVideoPath=commercialAudioMasterReceiptPath?path.join(outputDir,slug+'.premaster.mp4'):videoPath;
+  const preliminary=renderTimelineExport({
     project:input.request.project,
-    outputPath:videoPath,
+    outputPath:draftVideoPath,
   });
+  let renderReceipt=preliminary;
+  if(commercialAudioMasterReceiptPath){
+    try{
+      const finish=masterCommercialAudio({
+        input:draftVideoPath,output:videoPath,expectedSha256:preliminary.sha256,
+      });
+      fs.writeFileSync(commercialAudioMasterReceiptPath,JSON.stringify(finish,null,2)+'\n','utf8');
+      renderReceipt={
+        ...preliminary,
+        outputPath:videoPath,
+        sha256:finish.outputSha256,
+        sizeBytes:fs.statSync(videoPath).size,
+      };
+    } finally {
+      if(fs.existsSync(draftVideoPath))fs.rmSync(draftVideoPath,{force:true});
+    }
+  }
   fs.writeFileSync(
     renderReceiptPath,
     JSON.stringify(renderReceipt,null,2)+'\n',
@@ -312,6 +343,7 @@ export function finalizeStudioDelivery(input:{
     renderReceiptPath,
     masterQcReceiptPath,
     commercialAudioQcReceiptPath,
+    commercialAudioMasterReceiptPath,
   });
   fs.writeFileSync(
     clipManifestPath,
@@ -332,6 +364,7 @@ export function finalizeStudioDelivery(input:{
     renderReceiptPath,
     masterQcReceiptPath,
     commercialAudioQcReceiptPath,
+    commercialAudioMasterReceiptPath,
     clipManifestPath,
     mediaSha256:renderReceipt.sha256,
     manifestSha256:hashFile(clipManifestPath),
