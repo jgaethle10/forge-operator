@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {assertRelayFloorBrief} from './relay-floor-gate.mjs';
 
 const ROLES=[
   'story_architect','cinematography_director','visual_evidence_scout','data_graphics_director',
@@ -56,6 +57,8 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
   const formats=ensureArray(brief.formats,'formats');
   if(formats.some(x=>!['9:16','16:9','1:1'].includes(x)))throw new Error('commercial_brief_format_unsupported');
   const assets=ensureArray(brief.sourceAssets,'source_assets');
+  // Opt-in floor for human-led cinematic spots. Never downgrade this to a slideshow.
+  assertRelayFloorBrief(brief);
   const scenes=ensureArray(brief.scenes,'scenes');
   if(scenes.length<3)throw new Error('commercial_brief_minimum_three_scenes');
   if(scenes[0]?.beat!=='hook'||scenes.at(-1)?.beat!=='cta')throw new Error('commercial_brief_hook_cta_required');
