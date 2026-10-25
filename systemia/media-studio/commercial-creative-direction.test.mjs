@@ -13,34 +13,34 @@ const make=()=>({
   cta:{text:'Request a quote',confirmed:true},
   aspectRatio:'9:16',durationSec:30,
   sourceAssets:[
-    {id:'real-work',path:'/private/sample-work.mp4',digest:'1'.repeat(64),kind:'video',
+    {id:'real-work',path:'/private/sample-work.mp4',digest:'1'.repeat(64),kind:'video',durationSec:30,
       rights:'owned',sourceRefs:['fixture:real-work'],evidenceState:'observed'},
   ],
   music:{brief:'Warm, restrained original instrumental with an uplifting final resolution'},
   beats:[
     {id:'opening',role:'hook',durationSec:4,subject:'cabinet door',
       subjectVisibleAtStart:true,physicalAction:'A chipped cabinet door enters the frame and is placed on a repair bench',
-      visual:{assetId:'real-work',sourceRefs:['fixture:real-work']},
+      visual:{assetId:'real-work',trimStartSec:0,sourceRefs:['fixture:real-work']},
       camera:'Tight moving insert following the damaged edge',
       narration:{text:'A cabinet can have a second life.',intention:'curious rather than salesy'},
       musicIntensity:0.18,
     },
     {id:'detail',role:'proof',durationSec:12,subject:'craftsperson repairing wood',
       physicalAction:'A craftsperson repairs the chipped edge and blends a wood finish into the actual door',
-      visual:{assetId:'real-work',sourceRefs:['fixture:real-work']},
+      visual:{assetId:'real-work',trimStartSec:4,sourceRefs:['fixture:real-work']},
       proofRefs:['fixture:service-sheet'],
       narration:{text:'We restore the details you notice every day, using careful preparation, patient craftsmanship, and finishes chosen for each individual piece.',intention:'precise and grounded'},
       musicIntensity:0.35,
     },
     {id:'reveal',role:'body',durationSec:8,subject:'repaired cabinet',
       physicalAction:'Open the restored cabinet door in the same workshop under natural light',
-      visual:{assetId:'real-work',sourceRefs:['fixture:real-work']},
+      visual:{assetId:'real-work',trimStartSec:16,sourceRefs:['fixture:real-work']},
       narration:{text:'See the difference, without replacing what already belongs.',intention:'understated confidence'},
       musicIntensity:0.55,
     },
     {id:'close',role:'cta',durationSec:6,subject:'restored cabinet with business contact',
       physicalAction:'Show the restored door from the same camera angle while the business details appear',
-      visual:{assetId:'real-work',sourceRefs:['fixture:real-work']},
+      visual:{assetId:'real-work',trimStartSec:24,sourceRefs:['fixture:real-work']},
       narration:{text:'Give us a message to start planning your project.',intention:'friendly invitation'},
       screenText:'Request a quote',
       musicIntensity:0.45,musicTransition:'Resolution under brand title',
@@ -58,6 +58,7 @@ test('produces a source-bound 30-second studio draft and actual Saban scene jobs
   assert.equal(r.musicSheet.length,4);
   assert.equal(r.studioDraftPlan.schema,'evercraft.fallen.studio-draft-plan.v1');
   assert.equal(r.studioDraftPlan.scenes[0].visual.assetId,'real-work');
+  assert.deepEqual(r.studioDraftPlan.scenes.map(s=>s.visual.trimStartSec),[0,4,16,24]);
   assert.equal(r.studioDraftPlan.scenes[3].screenText,'Request a quote');
   assert.equal(r.creativeJobs.length,4);
   assert.equal(r.boundaries.noMediaWasGenerated,true);
@@ -146,4 +147,20 @@ test('no text-only hero footage or missing subject coverage escapes story gate',
   const r=evaluateCommercialDirection(input);
   assert.ok(r.blockers.includes('no_text_only_scene:opening'));
   assert.ok(r.blockers.includes('visual_subject_not_confirmed:opening'));
+});
+
+test('reusing one video without unique cut in-points blocks a repetitive commercial',()=>{
+  const input=make();
+  delete input.beats[1].visual.trimStartSec;
+  const r=evaluateCommercialDirection(input);
+  assert.ok(r.blockers.includes('reused_source_requires_trim:real-work'));
+  const duplicate=make();
+  duplicate.beats[1].visual.trimStartSec=0;
+  const check=evaluateCommercialDirection(duplicate);
+  assert.ok(check.blockers.includes('reused_source_repeats_same_segment:real-work'));
+});
+test('source clip range must fit inside the approved original file',()=>{
+  const input=make();
+  input.beats[3].visual.trimStartSec=28;
+  assert.ok(evaluateCommercialDirection(input).blockers.includes('visual_clip_outside_source:close'));
 });
