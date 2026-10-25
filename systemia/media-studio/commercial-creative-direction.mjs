@@ -52,6 +52,7 @@ export function evaluateCommercialDirection(input){
   const beats=Array.isArray(input.beats)?input.beats:[];
   fail('insufficient_story_beats',beats.length>=3&&beats.length<=10);
   const ids=new Set();
+  const sourceUses=new Map();
   let cursor=0;
   let voiceCount=0;
   const shotPlan=[],studioScenes=[],voiceSheet=[],musicSheet=[],creativeJobs=[];
@@ -70,8 +71,18 @@ export function evaluateCommercialDirection(input){
     fail('visual_source_refs_missing:'+id,visualRefs.length>0);
     fail('visual_subject_not_confirmed:'+id,Boolean(clean(beat.subject)));
     if(selectedAsset){
+      const asset=assets.find(a=>a.id===selectedAsset);
       fail('visual_asset_not_found:'+id,seenAssets.has(selectedAsset));
-      fail('visual_asset_kind_invalid:'+id,isVideoOrImage(assets.find(a=>a.id===selectedAsset)));
+      fail('visual_asset_kind_invalid:'+id,isVideoOrImage(asset));
+      if(visual.trimStartSec!==undefined){
+        fail('visual_trim_invalid:'+id,asset?.kind==='video'&&Number.isFinite(visual.trimStartSec)&&visual.trimStartSec>=0);
+      }
+      if(Number.isFinite(asset?.durationSec)){
+        fail('visual_clip_outside_source:'+id,(visual.trimStartSec??0)+sec<=asset.durationSec+.05);
+      }
+      const uses=sourceUses.get(selectedAsset)||[];
+      uses.push({id,offset:visual.trimStartSec});
+      sourceUses.set(selectedAsset,uses);
     }else{
       fail('visual_prompt_missing:'+id,Boolean(clean(visual.prompt)));
       warnings.push('new_visual_requires_generation_or_acquisition:'+id);
@@ -118,6 +129,7 @@ export function evaluateCommercialDirection(input){
       beatId:id,role,startSec:Number(cursor.toFixed(3)),durationSec:sec,subject:clean(beat.subject),
       action,camera:clean(beat.camera)||'motivated subject-following movement',
       sourceRefs:visualRefs,assetId:selectedAsset||null,
+      sourceTrimStartSec:visual.trimStartSec??null,
       visualNeed:selectedAsset?'reuse_approved_source':'unresolved_coverage',
       intent:clean(beat.intent)||action,
     };
@@ -127,6 +139,7 @@ export function evaluateCommercialDirection(input){
     studioScenes.push({
       id,durationSec:sec,visual:{
         ...(selectedAsset?{assetId:selectedAsset}:{prompt:cameraPrompt}),
+        ...(visual.trimStartSec!==undefined?{trimStartSec:visual.trimStartSec}:{}),
         sourceRefs:visualRefs,
       },
       ...(spoken?{narration:{text:spoken,language:clean(narration.language)||'en',
@@ -148,6 +161,15 @@ export function evaluateCommercialDirection(input){
         aspectRatio:input.aspectRatio,coverage:[],sourceRefs:visualRefs},
     });
     cursor+=sec;
+  }
+  for(const [assetId,uses] of sourceUses){
+    if(uses.length<2)continue;
+    fail('reused_source_requires_trim:'+assetId,uses.every(use=>Number.isFinite(use.offset)));
+    if(uses.every(use=>Number.isFinite(use.offset))){
+      fail('reused_source_repeats_same_segment:'+assetId,new Set(uses.map(use=>use.offset)).size===uses.length);
+    }
+    const asset=assets.find(a=>a.id===assetId);
+    advise('reused_source_duration_unverified:'+assetId,Number.isFinite(asset?.durationSec));
   }
   fail('missing_hook',beats[0]?.role==='hook');
   fail('missing_proof',beats.some(beat=>beat.role==='proof'));
