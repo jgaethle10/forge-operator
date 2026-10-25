@@ -26,6 +26,14 @@ try {
   assert.equal(proposal.state, 'proposed_not_admitted');
   assert.equal((await post('x')).status, 400);
   assert.equal((await post('Write an office email', {headers:{origin:'https://untrusted.example'}})).status, 403);
+  const demoResponse = await fetch(`${base}/api/run-demo`, {method:'POST',headers:{'x-work-saban-client':'local-preview'}});
+  assert.equal(demoResponse.status, 200);
+  const demo = await demoResponse.json();
+  assert.equal(demo.fixture, 'synthetic_demo_only');
+  assert.equal(demo.execution.status, 'verified_local');
+  assert.equal(demo.execution.specialist_receipts.length, 5);
+  assert.equal(demo.execution.model_inference, false);
+  assert.equal((await fetch(`${base}/api/run-demo`,{method:'POST'})).status,403);
   const denied = await fetch(`${base}/api/compose`, {
     method:'POST',headers:{'content-type':'text/plain'},body:'oops'
   });
