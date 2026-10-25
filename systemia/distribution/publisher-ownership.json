@@ -55,14 +55,20 @@
     {
       "key": "official-mcp-registry",
       "provider": "Official MCP Registry",
-      "status": "DISCOVERED",
+      "status": "CLAIMED",
       "public_url": "https://registry.modelcontextprotocol.io/",
-      "next": "Verify registry publisher namespace ownership, current remote transport and canonical URL; compare observed version against current build",
+      "next": "Re-check current official registry API metadata versus verified October 6 v1.7.0 publisher receipt, then validate actual remote MCP and downstream directory pickup",
       "evidence": {
-        "source": "Public official registry indexed listing observed on 2026-10-25",
+        "source": "GitHub Actions MCP publisher, direct fetched publish job logs dated 2026-10-06",
         "listing_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "observed_version": "1.5.1",
-        "publisher_claim_verified": false
+        "publisher_write_verified_as_of": "2026-10-06T16:56:58Z",
+        "published_version_verified": "1.7.0",
+        "published_remote_reported": "https://fabric.systemiacommandcenters.com/mcp",
+        "receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/37499511004",
+        "verified_at": "2026-10-06T16:56:58Z",
+        "publisher_claim_verified_historically": true,
+        "current_registry_version_unverified": true,
+        "older_search_index_version": "1.5.1"
       }
     },
     {
