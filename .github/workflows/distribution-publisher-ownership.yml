@@ -7,6 +7,9 @@ on:
       - 'systemia/distribution/audit-publisher-ownership.test.mjs'
       - 'systemia/distribution/inspect-official-mcp-registry.mjs'
       - 'systemia/distribution/inspect-official-mcp-registry.test.mjs'
+      - 'systemia/distribution/build-registry-repoint-queue.mjs'
+      - 'systemia/distribution/build-registry-repoint-queue.test.mjs'
+      - 'registry/README.md'
       - '.github/workflows/distribution-publisher-ownership.yml'
   schedule:
     - cron: '17 15 * * *'
@@ -23,8 +26,9 @@ jobs:
           node-version: '22'
       - run: node --check systemia/distribution/audit-publisher-ownership.mjs
       - run: node --check systemia/distribution/inspect-official-mcp-registry.mjs
+      - run: node --check systemia/distribution/build-registry-repoint-queue.mjs
       - name: Regression tests for publisher evidence states
-        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs systemia/distribution/inspect-official-mcp-registry.test.mjs
+        run: node --test systemia/distribution/audit-publisher-ownership.test.mjs systemia/distribution/inspect-official-mcp-registry.test.mjs systemia/distribution/build-registry-repoint-queue.test.mjs
       - name: Validate evidence states
         env:
           OUTPUT: ${{ runner.temp }}/publisher-audit.json
@@ -35,6 +39,9 @@ jobs:
         env:
           EVERCRAFT_REGISTRY_RECEIPT_PATH: ${{ runner.temp }}/official-mcp-registry.json
         run: node systemia/distribution/inspect-official-mcp-registry.mjs
+      - name: Build conservative repoint queue from external evidence
+        if: steps.registry.outcome == 'success'
+        run: node systemia/distribution/build-registry-repoint-queue.mjs "${{ runner.temp }}/official-mcp-registry.json" "${{ runner.temp }}/registry-repoint-queue.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -42,6 +49,7 @@ jobs:
           path: |
             ${{ runner.temp }}/publisher-audit.json
             ${{ runner.temp }}/official-mcp-registry.json
+            ${{ runner.temp }}/registry-repoint-queue.json
           if-no-files-found: warn
           retention-days: 7
       - name: Preserve external registry observation failures
