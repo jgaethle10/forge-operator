@@ -12,6 +12,37 @@ KAIDANCE and Core active; remote operator disabled; broker absent;
 no live remote MCP session. Do not elevate this owner-observed receipt into
 an independent current host check.
 
+## Read-only evidence and local verification
+
+The repo provides `systemia/compute/nextgen-remote-doctor.mjs`.
+It is a local, **read-only** program; simply reading the files does not
+establish that their processes remain healthy.
+
+- `node systemia/compute/nextgen-remote-doctor.mjs --require-local-prerequisites`
+  checks only NextGen WSL, Node 22+ and user systemd. It does not require or
+  silently configure remote broker trust.
+- `node systemia/compute/nextgen-remote-doctor.mjs --require-local-foundation`
+  additionally requires matching local organism/NodeSeed receipts for exact
+  `evercraft-node002-nextgen`, matching fingerprint, loopback-only endpoint
+  and absent public ingress. These are **historical machine-local receipts**,
+  not an authenticated remote session or a live health observation.
+- `node systemia/compute/nextgen-remote-doctor.mjs --probe-loopback`
+  explicitly makes one bounded HTTP GET to `127.0.0.1` at the endpoint
+  derived from verified matching receipts. It rejects public IPs, non-loopback
+  origins, credentials, redirects, mismatched node IDs and invalid responses,
+  and emits only sanitized booleans. It never accesses control tokens,
+  changes services, enrolls devices or creates public ingress.
+- `node systemia/compute/nextgen-remote-doctor.mjs --require-live-local-nodeseed`
+  runs the same read-only probe and exits nonzero unless the actual local
+  NodeSeed responds with the expected Evercraft Compute node identity.
+- `--require-live-remote-readiness` is separate and still fails closed
+  unless real independent broker/Yard exact-device trust and authenticated
+  MCP control evidence are available. Current doctor cannot fabricate those.
+
+No owner is required to run these probes simply for CI or code completion.
+The physically installed HP remains at its last owner-observed local stage
+until an actual host probe produces a fresh independent receipt.
+
 ## Admission order
 
 1. **Independent deployment.** In the actual Systemia Yard deployment state,
