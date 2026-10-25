@@ -32,7 +32,8 @@
       "sourceRefs": [
         "fixture:real-work"
       ],
-      "evidenceState": "observed"
+      "evidenceState": "observed",
+      "durationSec": 30
     }
   ],
   "music": {
@@ -51,7 +52,8 @@
         "assetId": "real-work",
         "sourceRefs": [
           "fixture:real-work"
-        ]
+        ],
+        "trimStartSec": 0
       },
       "narration": {
         "text": "A cabinet can have a second life.",
@@ -70,7 +72,8 @@
         "assetId": "real-work",
         "sourceRefs": [
           "fixture:real-work"
-        ]
+        ],
+        "trimStartSec": 4
       },
       "proofRefs": [
         "fixture:service-sheet"
@@ -92,7 +95,8 @@
         "assetId": "real-work",
         "sourceRefs": [
           "fixture:real-work"
-        ]
+        ],
+        "trimStartSec": 16
       },
       "narration": {
         "text": "See the difference, without replacing what already belongs.",
@@ -111,7 +115,8 @@
         "assetId": "real-work",
         "sourceRefs": [
           "fixture:real-work"
-        ]
+        ],
+        "trimStartSec": 24
       },
       "narration": {
         "text": "Give us a message to start planning your project.",
