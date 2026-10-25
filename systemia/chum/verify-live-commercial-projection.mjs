@@ -51,9 +51,22 @@ export async function inspect({fetcher=fetchText,sourceLlms,sourceReadiness}){
       }
     }catch(e){results.push({key,url:origin+path,status:null,error:e?.name==='AbortError'?'timeout':'request_failed'});}
   }
+  // Read-only public health is diagnostic, not deployment attestation. Log only non-secret release fields.
+  let runtime_release={status:null,source_release_ref:null,source_release_ref_bound:false,deployment_receipt_bound:false};
+  try{
+    const res=await fetcher(origin+'/health','application/json');
+    runtime_release.status=res.status;
+    if(res.status===200){
+      const health=JSON.parse(res.body);
+      runtime_release.source_release_ref=typeof health?.source_release_ref==='string'&&
+        /^[a-f0-9]{40,64}$/i.test(health.source_release_ref)?health.source_release_ref:null;
+      runtime_release.source_release_ref_bound=health?.source_release_ref_bound===true;
+      runtime_release.deployment_receipt_bound=health?.deployment_receipt_bound===true;
+    }
+  }catch{/* public health diagnostic missing; do not infer current source */}
   const assessment=assessProjection({llms:live.llms,readiness:live.readiness,sourceLlms,sourceReadiness});
   return {schema:'evercraft.chum.live-projection-canary.v1',observed_at:new Date().toISOString(),origin,
-    state:assessment.state,findings:assessment.findings,equality:assessment.equality,checks:results,
+    state:assessment.state,findings:assessment.findings,equality:assessment.equality,checks:results,runtime_release,
     proof_boundary:assessment.proof_boundary};
 }
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)){
