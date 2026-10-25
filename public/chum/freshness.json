@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-25T16:52:24.429Z",
+  "updated_at": "2026-10-25T16:57:56.827Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,71 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/observed/",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/index.json",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-25T16:52:24.429Z",
+      "last_changed": "2026-10-25T16:57:56.827Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt",
+      "url": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/observed/",
+      "url": "/chum/answers/observed/",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/index.json",
+      "url": "/chum/answers/observed/index.json",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/",
+      "url": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json",
+      "url": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-25T16:52:24.429Z",
+      "last_changed": "2026-10-25T16:57:56.827Z",
       "priority": 80
     },
     {
@@ -66,12 +121,6 @@
       "priority": 86
     },
     {
-      "path": "/chum/answers/observed/",
-      "url": "/chum/answers/observed/",
-      "last_changed": "2026-10-24T20:56:23.289Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/",
       "url": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/",
       "last_changed": "2026-10-24T20:56:23.289Z",
@@ -80,12 +129,6 @@
     {
       "path": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json",
       "url": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json",
-      "last_changed": "2026-10-24T20:56:23.289Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/index.json",
-      "url": "/chum/answers/observed/index.json",
       "last_changed": "2026-10-24T20:56:23.289Z",
       "priority": 80
     },
@@ -1496,24 +1539,6 @@
     {
       "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
       "url": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d/",
-      "url": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b.json",
-      "url": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b/",
-      "url": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b/",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     }

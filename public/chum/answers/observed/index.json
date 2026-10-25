@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
   "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
-  "page_count": 26,
+  "page_count": 27,
   "rules": {
     "receipt_backed_observations_only": true,
     "accepted_observation_sources": [
@@ -279,6 +279,16 @@
       "relative_html": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
       "relative_json": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
       "relative_llms": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt"
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "user_question": "My small-business website gets traffic but does not convert well. I want an AI-assisted audit covering performance, technical SEO, trust, conversion friction, and practical fixes. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/",
+      "relative_json": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json",
+      "relative_llms": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt"
     }
   ]
 }

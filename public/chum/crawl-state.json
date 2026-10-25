@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-25T16:52:24.429Z",
-  "url_count": 2993,
+  "updated_at": "2026-10-25T16:57:56.827Z",
+  "url_count": 2996,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -123,14 +123,14 @@
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "86ae6d18dc7519c91b6f5845053c9c4b26d1bc0e63c21f2a149cc5466e731a8d",
-      "last_changed": "2026-10-24T20:56:23.289Z",
+      "content_sha256": "6e4d798e18cf2dcca778dfe733f5fc567c8d550a9c8208c9b7e421b0bd1fa66d",
+      "last_changed": "2026-10-25T16:57:56.827Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "059635fac95ad027b688174f439447a410281e43eb5eee81757b6b229d054e20",
-      "last_changed": "2026-10-24T20:56:23.289Z",
+      "content_sha256": "93be5888f9f7849ff29a2cc0ea6f6c2e093143cade24111e17373b23d2e22212",
+      "last_changed": "2026-10-25T16:57:56.827Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "3e639c212ba45aaa5aed4116fe5ebaf9256fd638305deeb7a70924a195aa8365",
-      "last_changed": "2026-10-25T16:52:24.429Z",
+      "content_sha256": "cea61f65876581d1f40a161f2625a5b3cd9890603f8bc3f81af76d8dac6adf3f",
+      "last_changed": "2026-10-25T16:57:56.827Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -4631,6 +4631,24 @@
       "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt",
       "content_sha256": "359b4c812ba834bd5bcdba46112a87677e856b61ccc36490702b1812c24f0dfb",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/": {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/",
+      "content_sha256": "9ab00f92e93cd69c32db9b4a31cec802c081f87a1dde3a00842d2a18984e96fb",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json": {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json",
+      "content_sha256": "8b1d29d1338bc2e1a7f1aa61b72c258e3fc4e052871e9bd4eac2a56a9d99552b",
+      "last_changed": "2026-10-25T16:57:56.827Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt": {
+      "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt",
+      "content_sha256": "7d188dc7f98dafd227de5a0e674d6e7f2129f8dd3517fa593ece5ed123e47df6",
+      "last_changed": "2026-10-25T16:57:56.827Z",
       "priority": 86
     },
     "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/": {
