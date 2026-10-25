@@ -1,0 +1,16 @@
+{
+  "project": "Evercraft Aqua / Live-Action Film RC02",
+  "disclosure": "Independent illustrative stock footage; no actual Evercraft Aqua hardware exists",
+  "output": "Evercraft_Aqua_Live_Action_RC02_iPhone.mp4",
+  "frames_per_second": 24,
+  "width": 1280,
+  "height": 720,
+  "soundtrack": "original_score_reference.wav",
+  "clips": [
+    {"id":"WATER_MACRO","file":"assets/water_macro.mp4","title":"WATER IS ALWAYS MOVING.","seconds":5,"in_seconds":0,"source_page":"https://mixkit.co/free-stock-video/water-drops-creating-ripples-106/","attribution":"Mixkit, contributor to be verified","license":"Mixkit Free License, confirm for this source","license_verified":false,"camera_footage_verified":false,"file_sha256":""},
+    {"id":"FIELD_IRRIGATION","file":"assets/field_irrigation.mp4","title":"EVERY DROP HAS A PATH.","seconds":5,"in_seconds":0,"source_page":"https://www.pexels.com/video/watering-a-farm-8166769/","attribution":"Amar Preciado / Pexels","license":"Pexels License, attribution appreciated","license_verified":false,"camera_footage_verified":false,"file_sha256":""},
+    {"id":"GREENHOUSE","file":"assets/greenhouse.mp4","title":"WHAT IF WE COULD MEASURE IT?","seconds":6,"in_seconds":0,"source_page":"https://mixkit.co/free-stock-video/greenhouse-and-the-sun-2946/","attribution":"Mixkit, contributor to be verified","license":"Mixkit Free License, confirm for this source","license_verified":false,"camera_footage_verified":false,"file_sha256":""},
+    {"id":"IRRIGATION_DETAIL","file":"assets/irrigation_detail.mp4","title":"RECOVER WHAT MAKES SENSE.","seconds":5,"in_seconds":0,"source_page":"https://www.pexels.com/video/aerial-view-of-agricultural-irrigation-system-34830665/","attribution":"Ahmet Yüksek / Pexels","license":"Pexels License, attribution appreciated","license_verified":false,"camera_footage_verified":false,"file_sha256":""},
+    {"id":"WATER_FINAL","file":"assets/water_final.mp4","title":"EVERCRAFT AQUA","subtitle":"WATERFARM-001  |  RESEARCH IN PROGRESS  |  NOT DEPLOYED","seconds":6,"in_seconds":0,"source_page":"https://mixkit.co/free-stock-video/water-ripples-568/","attribution":"Mixkit, contributor to be verified","license":"Mixkit Free License, confirm for this source","license_verified":false,"camera_footage_verified":false,"file_sha256":""}
+  ]
+}
