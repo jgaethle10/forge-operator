@@ -98,7 +98,6 @@
   }
   function consume(event) {
     if(!event||typeof event.type!=='string')throw new Error('invalid_work_event');
-    window.WorkSaban3D?.consume(event);
     if(event.type==='accepted') {
       reset('idle');
       running=true;
@@ -140,6 +139,7 @@
     } else {
       throw new Error('unknown_visual_work_event');
     }
+    window.WorkSaban3D?.consume(event);
     paint();
   }
   function replayAt(index) {
