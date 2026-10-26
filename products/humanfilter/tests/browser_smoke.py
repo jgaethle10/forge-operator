@@ -75,3 +75,17 @@ with sync_playwright() as p:
     page.close()
     browser.close()
 print('3 mocked site fixtures passed')
+# Supported sites can attach AI labels to the post root itself (not child nodes).
+with sync_playwright() as p:
+    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
+    page=browser.new_page()
+    page.set_content('<article id="root-label" data-post-id="123" aria-label="Made with AI"><p>Quiet nature portrait</p></article>')
+    page.evaluate("""() => {window.chrome={storage:{local:{get:async()=>({})},onChanged:{addListener:()=>{}}}}}""")
+    page.add_style_tag(path=str(ROOT/'content.css'))
+    page.add_script_tag(path=str(ROOT/'rules.js'))
+    page.add_script_tag(content=(ROOT/'content.js').read_text().replace('const host = location.hostname;', 'const host = "www.reddit.com";'))
+    page.wait_for_selector('#root-label[data-humanfilter-hidden="true"] .humanfilter-notice')
+    assert page.locator('#root-label .humanfilter-reason').inner_text().startswith('AI label detected')
+    page.close()
+    browser.close()
+print('Post-root platform AI disclosure test passed')

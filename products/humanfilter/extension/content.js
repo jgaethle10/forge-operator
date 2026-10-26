@@ -21,7 +21,7 @@
     // Restrict platform labels to short, visible-like metadata elements.
     const labels = [];
     const items = element.querySelectorAll('[aria-label], [data-testid*="label"], [data-testid*="flair"], [title]');
-    for (const el of Array.from(items).slice(0, 70)) {
+    for (const el of [element, ...Array.from(items).slice(0, 70)]) {
       for (const value of [el.getAttribute("aria-label"), el.getAttribute("title")]) {
         if (value && value.length < 100) labels.push(value);
       }

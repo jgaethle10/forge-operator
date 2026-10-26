@@ -1,44 +1,11 @@
-# Evercraft HumanFilter v0.1.3 | Verification report
+# HumanFilter v0.1.4 QA report | 2026-10-26
 
-**Date:** October 25, 2026
-**Release status:** Local beta candidate; not cleared for broad public claims or Chrome Web Store publication.
+Local code and DOM fixture checks:
+- 11/11 deterministic rule tests passed.
+- Facebook, Reddit, YouTube simulated feeds passed hide/reveal/rescan/settings/virtualization.
+- Native root-of-post AI disclosure label test passed.
+- 300-card stress, 100 rapid changes, popup settings and recycled-card reveal tests passed.
 
-## Verified with runnable checks
+Not yet claimed as passed for this exact build: GitHub Actions fresh runner integration / live platform checks. Real v0.1.3 YouTube native card title mutation was tested successfully on October 26, 2026, but that does not establish that unlabeled media is detected. Reddit public page was HTTP 403 from the QA IP and Facebook displayed a login-restricted public page. Real users and production social feeds remain a release gate.
 
-| Check | Result | Evidence / qualification |
-| --- | --- | --- |
-| Deterministic filtering rules | PASS, 7/7 | `node --test tests/rules.test.cjs` |
-| Facebook, Reddit, YouTube simulated-feed flows | PASS, 3/3 | `python tests/browser_smoke.py`; inert fixtures in Chromium, with the production content script inserted using a site-name override |
-| Reveal / dynamic recycled feed-card regression | PASS | `python tests/reveal_recycle.py`; virtualized cards cannot inherit a prior post's “Show once” action |
-| 300-post dynamic feed stress | PASS | `python tests/feed_stress.py`; 100 content replacements; expected 83 filters; pause removes every overlay |
-| Popup/settings interaction | PASS | `python tests/popup_smoke.py`; Chromium popup markup with mocked storage |
-| Browser manifest and beta ZIP | PASS | `manifest.json` is at root of installer ZIP; expected scripts and icons present; JSON parsed |
-
-## Open gate: real-world testing
-
-**Not verified:** A user installing the extension in a normal desktop Chrome session and browsing actual logged-in or public Facebook, Reddit, and YouTube pages. Network navigation is blocked in this testing container (`net::ERR_BLOCKED_BY_ADMINISTRATOR`), including localhost and file/data navigation. A test attempting to route live domain URLs to fixtures failed at navigation before content scripts could execute. No tool currently available in this session can trigger Evercraft Saban compute jobs; Evercraft's connected capability directory is discovery-only. **Do not treat passing in-memory browser tests as proof of live-site compatibility.**
-
-## High-priority deployment decisions
-
-1. Run an independent external computer test in desktop Chrome. On each supported site, verify installation, real labeled content filtering, normal human posts left alone, Strict mode, site switch, Show once, and page scrolling. Capture screenshots and issues.
-2. Validate current DOM selectors and accessible labels against real pages for logged-in users and public views.
-3. Review Chrome Web Store developer enrollment, app privacy claims, screenshots, and publishing approval. Publish only after actual testing.
-4. Keep description narrow: opt-in label/phrase filter, not an AI-authorship detector. This is not a mobile Facebook/Reddit/YouTube app filter.
-
-## Reproduction commands
-
-From the source archive root, with Node.js, Python, Chromium, and Playwright installed:
-
-```bash
-node --test tests/rules.test.cjs
-python tests/browser_smoke.py
-python tests/reveal_recycle.py
-python tests/feed_stress.py
-python tests/popup_smoke.py
-```
-
-The optional `tests/extension_e2e.py` uses real public host URLs with intercepted fixture responses and may fail in restricted environments. It has **not** passed in the current sandbox.
-
-## v0.1.3 local checks on 2026-10-26
-
-8/8 deterministic rules, 3 mocked feeds, Shorts card and AI-info leaf-label regression, reveal/card recycling, 300-post stress, popup all passed. Additional public Chrome test (v0.1.2): actual YouTube loaded but synthetic probe failed; Reddit HTTP 403; Facebook login wall; not a verified live-media detection result. Full live-site gate remains OPEN.
+Known limitations: this is a local, text-and-label-based filter. The original broad AI image/video detection vision is NOT fulfilled. A public beta may be distributed only with precise claims and a conspicuous limitation notice.
