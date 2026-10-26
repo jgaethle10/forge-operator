@@ -42,3 +42,16 @@ jobs:
       - name: Actual unpacked-extension injection on intercepted fixtures
         working-directory: products/humanfilter
         run: python tests/extension_e2e.py
+
+      - name: Public social-site diagnostics (non-gating; no login)
+        id: public_live
+        continue-on-error: true
+        working-directory: products/humanfilter
+        run: python tests/public_site_diagnostic.py
+      - name: Upload public-site evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-public-site-evidence
+          path: products/humanfilter/public-site-evidence/
+          if-no-files-found: warn
