@@ -4,6 +4,10 @@ on:
     paths:
       - "systemia/media-studio/timeline.ts"
       - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/commercial-captions.mjs"
+      - "systemia/media-studio/commercial-captions.test.mjs"
+      - "systemia/media-studio/commercial-caption-render.test.mjs"
+      - "systemia/media-studio/commercial-assembly.mjs"
       - "systemia/media-studio/timeline-export.test.ts"
       - "systemia/media-studio/commercial-variants.mjs"
       - "systemia/media-studio/commercial-review-desk.mjs"
@@ -31,6 +35,8 @@ jobs:
           fi
       - name: Test bounded focal crop and timeline geometry
         run: node --import tsx --test systemia/media-studio/timeline-export.test.ts
+      - name: Preflight commercial captions and inspect actual FFmpeg subtitle pixels
+        run: node --import tsx --test systemia/media-studio/commercial-captions.test.mjs systemia/media-studio/commercial-caption-render.test.mjs
       - name: Render three formats, verify digest-bound media, build offline review page and reject tampering
         env:
           FALLEN_VARIANT_CI_PROOF_DIR: artifacts/fallen-commercial-variant-proof
