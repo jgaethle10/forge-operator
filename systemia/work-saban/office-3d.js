@@ -166,6 +166,28 @@
     }
     select(selected);
   }
+  const preceding={analyst:'director',writer:'analyst',designer:'writer',auditor:'designer',coordinator:'auditor'};
+  function observedHandoff(toId){
+    if(!enabled||!world)return;
+    const fromId=preceding[toId],from=roster.find(x=>x.id===fromId),to=roster.find(x=>x.id===toId);
+    if(!from||!to||!['verified','admitted'].includes(state[fromId]))return;
+    const packet=make('span','spatial-evidence-packet');
+    packet.setAttribute('aria-hidden','true');
+    packet.title='Observed assignment handoff, not physical worker movement';
+    place(packet,from.x+78,from.y+84);
+    world.append(packet);
+    if(typeof packet.animate!=='function'
+       ||typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      packet.remove();return;
+    }
+    const animation=packet.animate([
+      {transform:'translate3d(0,0,90px) scale(.6)',opacity:0},
+      {transform:'translate3d('+((to.x-from.x)*0.5)+'px,'+((to.y-from.y)*0.5)+'px,140px) scale(1.3)',opacity:1,offset:0.5},
+      {transform:'translate3d('+(to.x-from.x)+'px,'+(to.y-from.y)+'px,90px) scale(.6)',opacity:0}
+    ],{duration:750,easing:'ease-in-out'});
+    animation.onfinish=()=>packet.remove();
+    animation.oncancel=()=>packet.remove();
+  }
   function consume(e){
     if(!e)return;
     if(e.type==='accepted'){
@@ -173,6 +195,7 @@
       state.director='admitted';Object.keys(receipts).forEach(id=>delete receipts[id]);
     }else if(e.type==='stage_started'){
       if(!agents.has(e.role))return;
+      observedHandoff(e.role);
       state[e.role]='running';select(e.role);
     }else if(e.type==='stage_verified'){
       if(!agents.has(e.role)||e.receipt?.quality_status!=='pass')return;
