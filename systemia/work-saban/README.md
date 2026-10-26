@@ -82,3 +82,15 @@ Launch the existing local preview with \`node systemia/work-saban/server.mjs\`, 
 ### Future 3D/agent-world graduation
 
 Do not animate agents as if they are doing live model reasoning without a supported model/session trace. Next stages are (1) true agent/model session-to-avatar identity mapping, (2) attested distributed NodeSeed events, (3) semantically meaningful avatar locomotion/interaction events backed by work handoff receipts, (4) saved consented session playback with workspace isolation and retention, and (5) a more freely navigable cinematic 3D view once the real telemetry data model can justify it.
+
+## Navigable visual workplace (3D preview)
+
+The local Work Floor now defaults to an actual CSS 3D scene rather than a flat agent-status dashboard. Six work rooms and character-like desks represent Mission Director, Analyst, Communications, Designer, Auditor and Delivery Coordinator. The classic isometric SVG remains available using the **2D floorplan** control, particularly for older or low-power devices.
+
+**Controls:** Drag in an empty part of the floor to orbit. Hold Shift while dragging to pan. Mouse wheel or +/− buttons zoom; Q/E rotate. Focus the 3D viewport and use arrows or WASD to pan. The scene accepts touch dragging on phones, and the camera has safety clamps to avoid flying infinitely out of view. Click any workstation to inspect its role and real receipt state.
+
+**Evidence boundary:** Agent characters and animated handoff packets are visual metaphors. Only observed `stage_started` and `stage_verified` events from the local Saban registered-worker execution may set workers to running or verified. The office does not claim that the AI personally walks around a building, that LLM calls have happened, or that a proposal implies autonomous work. When no real worker event exists, desks remain idle or proposed. Verified event replay remains accessible in the inspector; no arbitrary simulated progress runs in the background.
+
+**Verification:** `node systemia/work-saban/office-3d.proof.mjs` exercises the actual browser office controller in a dependency-free DOM harness, including six spatial workstations, proposal versus execution state, 2D/3D switching and navigation bounds. `node systemia/work-saban/preview.proof.mjs` checks local resource delivery and authorized streamed worker execution. Real-device visual and accessibility acceptance is a **separate** step; CI cannot prove scene aesthetics, FPS on iPhone hardware, or 3D accessibility.
+
+**Scope warning:** This is navigable spatial CSS 3D, not yet a WebGL walking simulator with physics, independent employee navigation, agent conversations, or arbitrary agent mobility. Nothing is publicly hosted, tenant-isolated, or payment-verified merely because the local preview serves these assets.
