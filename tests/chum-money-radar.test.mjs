@@ -260,6 +260,8 @@ test('Money Radar counts buyer sessions once across repeated funnel events', asy
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
   const { receipt } = await buildMoneyRadar({
     root,
+    // Fixed observation clock keeps September fixture events inside 30d even after October.
+    generatedAt: '2026-09-28T12:00:00.000Z',
     sourceUrl: '',
     publicSourceUrl: '',
     publicSourceEvents: [
