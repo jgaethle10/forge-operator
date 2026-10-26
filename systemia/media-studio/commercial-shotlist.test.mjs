@@ -110,3 +110,13 @@ test('generated Saban inventory executes role-specific council notes without inv
   assert.equal(reconciled.blueprints[0].status,'ready_for_asset_or_provider_routing');
   assert.equal(reconciled.execution_boundary.assets_generated,0);
 });
+
+test('EPS cinematic admission cannot silently omit Relay-floor quality standard',t=>{
+  const {brief}=fixture(t);
+  brief.brand='Evercraft Property Services';
+  assert.throws(()=>planSourceFirstCommercial(brief),/eps_relay_floor_required/);
+  brief.brand='EPS';
+  assert.throws(()=>planSourceFirstCommercial(brief),/eps_relay_floor_required/);
+  brief.creativeStandard='relay-floor-v1';
+  assert.throws(()=>planSourceFirstCommercial(brief),/relay_floor_minimum_five_moving_shots/);
+});
