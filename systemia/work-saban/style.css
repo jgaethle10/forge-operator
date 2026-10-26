@@ -187,3 +187,13 @@ main{max-width:1420px;padding-top:34px}
 @media(prefers-reduced-motion:reduce){
  .spatial-world{transition:none}
 }
+
+/* A transient assignment packet appears only when a registered worker starts after its predecessor's receipt. */
+.spatial-evidence-packet{position:absolute;display:block;width:26px;height:21px;pointer-events:none;
+ border-radius:5px;border:2px solid #95f6e5;background:linear-gradient(125deg,#64d7e2,#4489d9);
+ box-shadow:0 0 19px #55e1e7,0 0 38px #55bfff88;z-index:20;transform:translateZ(90px)}
+.spatial-evidence-packet::after{content:"";position:absolute;top:6px;left:5px;width:12px;height:2px;background:#e0fffa;box-shadow:0 5px #e0fffa}
+.office-scene-title{flex-wrap:wrap}
+.spatial-agent[data-state="running"] .spatial-agent-glow{animation:live-desk-glow 1.5s ease-in-out infinite}
+@keyframes live-desk-glow{50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.spatial-agent[data-state="running"] .spatial-agent-glow{animation:none}}
