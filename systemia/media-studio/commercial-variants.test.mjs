@@ -123,11 +123,6 @@ test('render three actual encoded videos, independently check sound, and extract
       assert.equal(frame.status,'needs_human_picture_review');
     }
   }
-  const ci=process.env.FALLEN_VARIANT_CI_PROOF_DIR;
-  if(ci){
-    fs.mkdirSync(ci,{recursive:true});
-    fs.cpSync(root,path.join(ci,'synthetic-test-variants'),{recursive:true});
-  }
   const packPath=path.join(root,'variant-review-pack.json');
   const verified=verifyCommercialReviewPack(packPath);
   assert.equal(verified.status,'media_integrity_verified');
@@ -142,6 +137,13 @@ test('render three actual encoded videos, independently check sound, and extract
   assert.equal((page.match(/<img loading=/g)||[]).length,9);
   assert.match(page,/Locally verified technical media only/);
   assert.doesNotMatch(page,/<button/);
+  // Archive the playable review gallery along with the clean, synthetic outputs.
+  const ci=process.env.FALLEN_VARIANT_CI_PROOF_DIR;
+  if(ci){
+    fs.mkdirSync(ci,{recursive:true});
+    fs.cpSync(root,path.join(ci,'synthetic-test-variants'),{recursive:true});
+  }
+
   const decision={schema:'evercraft.fallen.commercial-human-review-decision.v1',
     reviewerId:'synthetic-ci-reviewer',reviewedAt:'2026-10-25T20:00:00Z',
     packDigest:verified.packDigest,
@@ -164,5 +166,5 @@ test('render three actual encoded videos, independently check sound, and extract
   assert.equal(evidence.publicationAuthorityGranted,false);
   fs.appendFileSync(proof.variants[0].reviewFrames[0].path,'tamper');
   assert.throws(()=>verifyCommercialReviewPack(packPath),/digest_mismatch/);
-    assert.throws(()=>renderCommercialVariantBatch(payload,root),/output_exists/);
+  assert.throws(()=>renderCommercialVariantBatch(payload,root),/output_exists/);
 });
