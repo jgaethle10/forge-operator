@@ -46,7 +46,7 @@ test('rejects broken SRT ordering, unsanitized markup, too many lines and change
 });
 test('three format policy is more restrictive for portrait without changing the SRT file',t=>{
   const f=source(t,healthy.replace('Home should feel like home.',
-    'A caption that fits on landscape view.'));
+    'Only a landscape caption fits this.'));
   assert.equal(preflightCommercialCaptions({filePath:f,aspectRatio:'16:9',durationSec:3}).status,
     'text_and_timing_preflight_accepted');
   assert.throws(()=>preflightCommercialCaptions({filePath:f,aspectRatio:'9:16',durationSec:3}),/line_too_long/);
