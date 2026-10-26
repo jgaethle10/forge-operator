@@ -341,6 +341,14 @@ export function renderOffers(capabilities=[]){
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
     '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    // Scope-reviewed human services remain separate from native checkout-authorized offerings.
+    '<section class="offer-panel" aria-label="Commercial Studio introductory creative service">',
+    '<div class="eyebrow">Commercial Studio · human-reviewed introductory service</div>',
+    '<h2>Need a 30-second video for your small business?</h2>',
+    '<p>For suitable briefs, Evercraft || Fallen Studios offers a $50 introductory social commercial from footage or photos you are authorized to provide. One concept, one format, one revision; filming and advertising spend are not included.</p>',
+    '<p>We review the brief, production fit, rights and capacity before proposing payment. This inquiry does not place an order or promise delivery.</p>',
+    '<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/commercial-studio/" rel="noopener noreferrer">Request the $50 commercial brief</a></div>',
+    '</section>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
