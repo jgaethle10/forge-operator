@@ -10,6 +10,7 @@
     {id:'auditor',name:'Quality Auditor',room:'VERIFICATION',x:488,y:478,mark:'Q'},
     {id:'coordinator',name:'Delivery Coordinator',room:'DELIVERY',x:834,y:478,mark:'R'},
   ];
+  const known=new Set(roster.map(r=>r.id));
   const state=Object.fromEntries(roster.map(r=>[r.id,'idle']));
   const receipts={};
   const scene=$('office-scene');
@@ -194,11 +195,11 @@
       for(const role of roster)state[role.id]='idle';
       state.director='admitted';Object.keys(receipts).forEach(id=>delete receipts[id]);
     }else if(e.type==='stage_started'){
-      if(!agents.has(e.role))return;
+      if(!known.has(e.role))return;
       observedHandoff(e.role);
       state[e.role]='running';select(e.role);
     }else if(e.type==='stage_verified'){
-      if(!agents.has(e.role)||e.receipt?.quality_status!=='pass')return;
+      if(!known.has(e.role)||e.receipt?.quality_status!=='pass')return;
       state[e.role]='verified';receipts[e.role]='Verified receipt '+String(e.receipt.result_sha256||'').slice(0,20);select(e.role);
     }else if(e.type==='completed'){
       state.director='verified';select('coordinator');
@@ -209,7 +210,7 @@
   }
   function proposed(mission){
     for(const role of roster)state[role.id]='idle';
-    for(const member of mission?.team||[])if(agents.has(member.id))state[member.id]='proposed';
+    for(const member of mission?.team||[])if(known.has(member.id))state[member.id]='proposed';
     Object.keys(receipts).forEach(id=>delete receipts[id]);
     paint();
   }
