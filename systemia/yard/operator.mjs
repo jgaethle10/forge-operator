@@ -75,8 +75,12 @@ async function request(url, options = {}) {
 }
 
 export class YardOperator {
-  constructor({ stateDir } = {}) {
+  constructor({ stateDir, remoteDeviceApprovalVerifier = null } = {}) {
     if (!stateDir) throw new Error('stateDir is required');
+    if (remoteDeviceApprovalVerifier !== null && typeof remoteDeviceApprovalVerifier !== 'function') {
+      throw new Error('remote_device_approval_verifier_invalid');
+    }
+    this.remoteDeviceApprovalVerifier = remoteDeviceApprovalVerifier;
     this.stateDir = path.resolve(stateDir);
     this.deployments = new Map();
     this.leaseKeepers = new Map();
@@ -1894,6 +1898,39 @@ export class YardOperator {
     const approval = String(approvalRef || '').trim();
     if (!approval || approval.length > 512) {
       throw new Error('explicit approval reference is required');
+    }
+
+    // An approval_ref string is metadata, NEVER an authority grant. The
+    // verifier must be server-side, independently trusted and atomically
+    // consume a ONE-TIME approval bound to exactly this broker/action/device.
+    // No default, environment-variable or local proof bypass exists here.
+    if (typeof this.remoteDeviceApprovalVerifier !== 'function') {
+      throw new Error('remote_device_independent_approval_verifier_required');
+    }
+    const payloadHash = sha({
+      deployment_id: deploymentId,
+      action: normalizedAction,
+      device_fingerprint: fingerprint,
+      node_id: id,
+      approval_ref: approval,
+    });
+    const decisionProof = await this.remoteDeviceApprovalVerifier({
+      deployment_id: deploymentId,
+      action: normalizedAction,
+      device_fingerprint: fingerprint,
+      node_id: id,
+      approval_ref: approval,
+      payload_sha256: payloadHash,
+    });
+    if (!decisionProof || decisionProof.approved !== true ||
+        decisionProof.one_time_consumed !== true ||
+        decisionProof.deployment_id !== deploymentId ||
+        decisionProof.action !== normalizedAction ||
+        decisionProof.device_fingerprint !== fingerprint ||
+        decisionProof.node_id !== id ||
+        decisionProof.approval_ref !== approval ||
+        decisionProof.payload_sha256 !== payloadHash) {
+      throw new Error('remote_device_independent_approval_denied');
     }
 
     const managed = await request(

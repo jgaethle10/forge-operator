@@ -345,6 +345,11 @@ export async function startOutboundNodeAgent({
           continue;
         }
         if (polled.status === 204) {
+          // A successful empty poll is still a successful authenticated
+          // broker exchange. Clear any transient transport error; otherwise
+          // RemoteAdmissionKeeper keeps a healthy, recovered node marked
+          // disconnected until a real job arrives.
+          lastError = null;
           backoff = pollBackoffMs;
           continue;
         }

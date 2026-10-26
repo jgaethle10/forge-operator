@@ -1,4 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
+import { createRemoteOperatorPassportVerifier } from './passport-approval-verifier.mjs';
 
 function jsonRpc(id, result) {
   return { jsonrpc: '2.0', id: id ?? null, result };
@@ -176,11 +177,20 @@ export class RemoteOperatorGateway {
     capacityEndpoint,
     controlToken,
     clientToken,
+    approvalVerifier = null,
     fetchImpl = fetch,
   } = {}) {
     this.capacityEndpoint = safeEndpoint(capacityEndpoint);
+    // Node scope comes solely from the gateway's server-side capacity
+    // endpoint, never from MCP arguments supplied by the tool caller.
+    const target = new URL(this.capacityEndpoint);
+    const parts = target.pathname.match(/^\/nodes\/([a-zA-Z0-9._-]{1,128})$/);
+    this.nodeId = parts ? parts[1] : null;
     this.controlToken = String(controlToken || '').trim();
     this.clientToken = String(clientToken || '').trim();
+    // Must come from an independently trusted Systemia owner-approval ledger.
+    // An MCP client cannot supply this verifier or approve itself.
+    this.approvalVerifier = approvalVerifier;
     if (this.controlToken.length < 20) throw new Error('remote_operator_control_token_required');
     if (this.clientToken.length < 24) throw new Error('remote_operator_client_token_required');
     if (typeof fetchImpl !== 'function') throw new Error('remote_operator_fetch_required');
@@ -190,6 +200,27 @@ export class RemoteOperatorGateway {
   authenticate(authorization) {
     const presented = bearer(authorization);
     return Boolean(presented && equalToken(presented, this.clientToken));
+  }
+
+  async verifyMutationApproval(action, args) {
+    if (typeof this.approvalVerifier !== 'function')
+      throw new Error('remote_operator_scoped_approval_verifier_not_configured');
+    const approvalRef = String(args?.approval_ref || '').trim();
+    if (!approvalRef || approvalRef.length > 512)
+      throw new Error('remote_operator_explicit_approval_required');
+    const root = String(args?.root_key || 'home');
+    const digest = createHash('sha256').update(JSON.stringify(args)).digest('hex');
+    // Verification callback must atomically consume a one-time independently
+    // authorized approval for the exact request, action, and root.
+    const bound = await this.approvalVerifier({
+      action, root_key:root, node_id:this.nodeId,
+      approval_ref:approvalRef, payload_sha256:digest,
+    });
+    if (!bound || bound.approved !== true || bound.one_time_consumed !== true ||
+        bound.action !== action || bound.root_key !== root ||
+        !this.nodeId || bound.node_id !== this.nodeId ||
+        bound.approval_ref !== approvalRef || bound.payload_sha256 !== digest)
+      throw new Error('remote_operator_scoped_approval_denied');
   }
 
   async invoke(route, { method = 'POST', body } = {}) {
@@ -227,7 +258,7 @@ export async function executeRemoteOperatorMcpRpc({
       capabilities: { tools: {} },
       serverInfo: { name: 'evercraft-remote-operator', version: '0.2.0' },
       instructions:
-        'Evercraft Remote Operator reaches only explicitly authorized Evercraft nodes. Read operations require the client credential. File writes and program execution additionally require an explicit approval_ref and remain constrained by the node-side operator policy.',
+        'Evercraft Remote Operator reaches only explicitly authorized Evercraft nodes. Read operations require the client credential. Mutation tools fail closed unless the gateway has an independently trusted server-side, one-time scoped approval verifier that matches and consumes the exact operation payload and reference. An approval_ref string alone never grants authority.',
     });
   }
 
@@ -269,9 +300,11 @@ export async function executeRemoteOperatorMcpRpc({
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/fs/read', { body: args })));
     }
     if (name === 'remote_write_file') {
+      await gateway.verifyMutationApproval(name, args);
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/fs/write', { body: args })));
     }
     if (name === 'remote_exec') {
+      await gateway.verifyMutationApproval(name, args);
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/exec', { body: args })));
     }
     return jsonRpcError(id, -32602, 'Unknown Remote Operator tool.');
@@ -301,11 +334,22 @@ function configuredGateway(options = {}) {
 
   if (!capacityEndpoint || !controlToken || !clientToken) return null;
 
+  // The default public server has no Passport owner authority: all writes
+  // and exec remain disabled until a trusted deployment explicitly injects
+  // a protected Passport adapter and owner subject. No permit minting here.
+  const verifiedOwnerApproval = options.approvalVerifier ||
+    (options.passport && options.ownerSubjectRef
+      ? createRemoteOperatorPassportVerifier({
+          passport: options.passport,
+          ownerSubjectRef: options.ownerSubjectRef,
+        })
+      : null);
   return new RemoteOperatorGateway({
     capacityEndpoint,
     controlToken,
     clientToken,
     fetchImpl: options.fetchImpl,
+    approvalVerifier: verifiedOwnerApproval,
   });
 }
 

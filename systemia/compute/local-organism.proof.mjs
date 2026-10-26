@@ -2,7 +2,30 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { startLocalOrganism } from './local-organism.mjs';
+
+// Service startups are asynchronous under heavily loaded shared CI runners.
+ // Wait for *actual* route health instead of equating immediate startup with
+ // readiness; permanently degraded services still fail this proof.
+async function waitForLocalHealth(organism, stage) {
+  const deadline = Date.now() + 25_000;
+  let observed;
+  do {
+    observed = await organism.health();
+    if (observed.ok) return observed;
+    await sleep(300);
+  } while (Date.now() < deadline);
+  console.error(JSON.stringify({
+    schema: 'evercraft.local-organism.health-proof-diagnostic.v1',
+    stage,
+    kaidance_ok: observed?.kaidance?.ok === true,
+    core_ok: observed?.systemia_core?.ok === true,
+    fabric_ok: observed?.fabric?.ok === true,
+  }));
+  assert.equal(observed?.ok, true, 'local organism must become healthy within 25s');
+  return observed;
+}
 
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
@@ -49,7 +72,7 @@ try {
   assert.equal(first.pulse.state, 'healthy');
   assert.equal(first.pulse.field_attestation.state, 'not_verified');
 
-  const firstHealth = await first.health();
+  const firstHealth = await waitForLocalHealth(first, 'first_start');
   assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.systemia_core.ok, true);
@@ -57,7 +80,21 @@ try {
   assert.equal(first.core.result.raven_inference_gateway_configured, true);
   assert.equal(first.core.result.raven_inference_provider, 'ollama');
   assert.equal(first.core.result.raven_inference_model, 'proof-local-model');
-  const firstCoreRoute = await first.yard.verifyRoute('systemia-core-local-resident');
+  // The Core health route can briefly be unreachable after the earlier
+  // aggregate health probe on a loaded runner. Require an actual detailed
+  // healthy response, never infer Raven service state from missing data.
+  let firstCoreRoute;
+  const coreRouteDeadline = Date.now() + 20_000;
+  do {
+    firstCoreRoute = await first.yard.verifyRoute('systemia-core-local-resident');
+    if (firstCoreRoute?.ok === true && Array.isArray(firstCoreRoute?.health?.services))
+      break;
+    await sleep(250);
+  } while (Date.now() < coreRouteDeadline);
+  assert.ok(
+    firstCoreRoute?.ok === true && Array.isArray(firstCoreRoute?.health?.services),
+    'Core detailed health must remain available with services within 20 seconds'
+  );
   const firstRavenPrivate = firstCoreRoute.health.services.find(
     (service) => service.service_key === 'raven-private-runtime'
   );
@@ -111,7 +148,7 @@ try {
   assert.notEqual(second.kaidance.receipt.receipt_hash, firstKaidanceReceipt);
   assert.notEqual(second.core.receipt.receipt_hash, firstCoreReceipt);
 
-  const secondHealth = await second.health();
+  const secondHealth = await waitForLocalHealth(second, 'restart');
   assert.equal(secondHealth.ok, true);
 
   const allocatorSecret = fs.readFileSync(

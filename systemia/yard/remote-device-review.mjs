@@ -2,6 +2,8 @@
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { YardOperator } from './operator.mjs';
+import { EvercraftPassport } from '../passport/passport.mjs';
+import { createRemoteDevicePassportVerifier } from './remote-device-passport-verifier.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -129,12 +131,30 @@ if (invokedDirectly) {
 
   if (!yardState || !brokerDeploymentId) {
     console.error(
-      'usage: remote-device-review.mjs <list|authorize> --yard-state <private-dir> --broker-deployment <id> [authorization args]'
+      'usage: remote-device-review.mjs <list|authorize> --yard-state <private-dir> --broker-deployment <id> [--candidate <candidate-ref> --confirm-candidate <same-ref> --approval-ref <existing-Passport-permit-id> --passport-state <private-dir> --owner-subject <verified-owner-subject>]'
     );
     process.exit(2);
   }
 
-  const yard = new YardOperator({ stateDir: path.resolve(yardState) });
+  // Approval authority is separate from the command that requests device
+  // enrollment. A pre-existing, owner-authenticated Passport permit is
+  // required for authorize. This CLI never issues grants or mints permits.
+  const passportDir = arg('--passport-state');
+  const ownerSubject = arg('--owner-subject');
+  if (command === 'authorize' && (!passportDir || !ownerSubject)) {
+    console.error('authorize requires a private Passport state and exact owner subject.');
+    process.exit(3);
+  }
+  const verifier = command === 'authorize'
+    ? createRemoteDevicePassportVerifier({
+        passport: new EvercraftPassport({ stateDir: path.resolve(passportDir) }),
+        ownerSubjectRef: ownerSubject,
+      })
+    : null;
+  const yard = new YardOperator({
+    stateDir: path.resolve(yardState),
+    remoteDeviceApprovalVerifier: verifier,
+  });
 
   if (command === 'list') {
     const result = await listPendingRemoteDeviceReviews({

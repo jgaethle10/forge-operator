@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
+import { createHash, randomUUID } from 'node:crypto';
+import { EvercraftPassport } from '../passport/passport.mjs';
+import { createRemoteDevicePassportVerifier } from './remote-device-passport-verifier.mjs';
 
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { RemoteAdmissionKeeper } from '../compute/remote-admission-keeper.mjs';
@@ -56,7 +59,28 @@ const remoteSeed = await startNodeSeed({
   announce: false,
 });
 
-const yard = new YardOperator({ stateDir: yardState });
+// The real Passport ledger is local to this integration proof. The grant is a
+// synthetic CI fixture, NOT an authenticated production owner login.
+const owner = 'owner:remote-trust-loop-fixture';
+const passport = new EvercraftPassport({ stateDir: path.join(root, 'passport') });
+const grant = passport.issueGrant({
+  idempotency_key: randomUUID(),
+  subject_ref: owner,
+  issuer_ref: 'synthetic-ci-authority',
+  product: 'evercraft.remote-device-trust',
+  scopes: ['remote_device.authorize'],
+  authority_state: 'manual_authorized',
+  authority_receipt_ref: 'ci-fixture:synthetic-owner-approval',
+  starts_at: new Date(Date.now() - 1000).toISOString(),
+  ends_at: new Date(Date.now() + 600000).toISOString(),
+}).grant;
+const yard = new YardOperator({
+  stateDir: yardState,
+  remoteDeviceApprovalVerifier: createRemoteDevicePassportVerifier({
+    passport,
+    ownerSubjectRef: owner,
+  }),
+});
 let keeper = null;
 
 try {
@@ -173,20 +197,53 @@ try {
   assert.equal(brokerHealthBefore.authorized_devices, 0);
   assert.equal(brokerHealthBefore.registered_nodes, 0);
 
+  // Owner synthetic CI fixture issues an EXACT one-use Passport permit for
+  // this already-observed pending candidate. No device can self-mint a grant.
+  const approvalRef = 'permit_' + randomUUID();
+  const request = {
+    deployment_id: brokerDeploymentId,
+    action: 'authorize',
+    device_fingerprint: remoteSeed.device_fingerprint,
+    node_id: remoteSeed.node_id,
+    approval_ref: approvalRef,
+  };
+  const requestDigest = createHash('sha256')
+    .update(JSON.stringify(request)).digest('hex');
+  passport.mintActionPermit({
+    grant_id: grant.grant_id,
+    actor_ref: owner,
+    scope: 'remote_device.authorize',
+    resource_ref: 'broker:' + brokerDeploymentId +
+      '/node:' + remoteSeed.node_id +
+      '/fingerprint:' + remoteSeed.device_fingerprint,
+    request_fingerprint: 'sha256:' + requestDigest,
+    permit_id: approvalRef,
+    idempotency_key: randomUUID(),
+    ttl_seconds: 90,
+  });
+  assert.equal(passport.getActionPermitState(approvalRef).active, true);
   const decision = await authorizePendingRemoteDevice({
     yard,
     brokerDeploymentId,
     candidateRef: candidate.candidate_ref,
     confirmCandidateRef: candidate.candidate_ref,
-    approvalRef: 'approval:proof:trust-loop-exact-candidate',
+    approvalRef,
   });
+  assert.equal(passport.getActionPermitState(approvalRef).consumed, true);
 
   assert.equal(decision.action, 'authorize');
   assert.equal(decision.candidate_ref, candidate.candidate_ref);
   assert.equal(decision.node_id, remoteSeed.node_id);
-  assert.equal(
-    decision.approval_ref,
-    'approval:proof:trust-loop-exact-candidate'
+  assert.equal(decision.approval_ref, approvalRef);
+  // Replaying the same approval never reauthorizes the already-admitted
+  // device, even if the requester resubmits the prior identical candidate.
+  await assert.rejects(
+    yard.authorizeRemoteDevice(brokerDeploymentId, {
+      deviceFingerprint: remoteSeed.device_fingerprint,
+      nodeId: remoteSeed.node_id,
+      approvalRef,
+    }),
+    /remote_device_passport_permit_denied/
   );
   assert.ok(!JSON.stringify(decision).includes(remoteSeed.device_fingerprint));
 
@@ -246,6 +303,8 @@ try {
     raw_identity_redacted_from_pulse: true,
     exact_candidate_confirmation_used: true,
     explicit_approval_reference_used: true,
+    real_passport_permit_consumed_once: true,
+    same_permit_replay_rejected: true,
     device_connected_after_approval: connected.connected,
     pending_inbox_cleared_after_approval: true,
     kaidance_hold_cleared_after_approval: pulseAfter.safe_holds.length === 0,

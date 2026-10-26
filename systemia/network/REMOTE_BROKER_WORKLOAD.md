@@ -51,7 +51,9 @@ A remote NodeSeed is allowed to complete the broker challenge only after Systemi
 - device-key fingerprint,
 - NodeSeed node ID.
 
-Authorization and revocation are broker-management actions behind the broker's active Evercraft Compute lease. Both require an explicit approval reference and both produce persisted receipts.
+Authorization and revocation are broker-management actions behind the broker's active Evercraft Compute lease. Both require an explicit approval reference **and an independently trusted, server-side one-time approval verifier** injected into the Yard operator. The verifier must atomically consume a decision bound to the exact broker deployment, action, fingerprint, node ID, reference, and payload digest. Merely supplying an `approval_ref`, even alongside a matching candidate selection, **never** grants device authority. Yard fails closed if the verifier is absent or returns mismatched evidence. Both actions produce persisted receipts after the verifier accepts them.
+
+Isolated broker integration proofs inject an explicit fixture verifier that consumes synthetic test approvals. That test fixture is not a production owner-consent service. The CLI remote device review command will refuse actual authorization until its Yard instance is wired to an authenticated owner-approval ledger.
 
 A local organism's `remote-admission-request.json` is therefore an enrollment request only. Discovery, possession of the request file, or successful reachability to the broker never grants trust.
 

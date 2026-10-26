@@ -44,6 +44,11 @@ const gateway = new RemoteOperatorGateway({
   controlToken,
   clientToken,
   fetchImpl: fakeFetch,
+  // Test-only trusted approval ledger stub. No production verifier is wired.
+  approvalVerifier: async req => ({
+    ...req, approved: req.approval_ref === 'proof:user-approved',
+    one_time_consumed: req.approval_ref === 'proof:user-approved',
+  }),
 });
 
 const initialized = await executeRemoteOperatorMcpRpc({
@@ -135,6 +140,63 @@ const exec = await executeRemoteOperatorMcpRpc({
 });
 assert.equal(exec.result.structuredContent.ok, true);
 assert.equal(seen.at(-1).body.approval_ref, 'proof:user-approved');
+
+
+const withoutVerifier = new RemoteOperatorGateway({
+  capacityEndpoint: 'http://127.0.0.1:43210/nodes/proof-node',
+  controlToken, clientToken, fetchImpl: fakeFetch,
+});
+const beforeDenied = seen.length;
+const deniedMutation = await executeRemoteOperatorMcpRpc({
+  rpc: { jsonrpc:'2.0', id:61, method:'tools/call',
+    params:{name:'remote_exec',arguments:{root_key:'home',program:'git',
+      args:['--version'],approval_ref:'anything:even-if-present'}} },
+  gateway: withoutVerifier, authorization:'Bearer '+clientToken,
+});
+assert.equal(deniedMutation.error.message,'remote_operator_scoped_approval_verifier_not_configured');
+assert.equal(seen.length,beforeDenied);
+
+const forgedApproval = await executeRemoteOperatorMcpRpc({
+  rpc: { jsonrpc:'2.0',id:62,method:'tools/call',
+    params:{name:'remote_write_file',arguments:{root_key:'home',path:'notes.txt',
+      content:'changed',approval_ref:'unverified:fake-owner'}} },
+  gateway,authorization:'Bearer '+clientToken,
+});
+assert.equal(forgedApproval.error.message,'remote_operator_scoped_approval_denied');
+assert.equal(seen.length,beforeDenied);
+
+const mismatchedVerifier = new RemoteOperatorGateway({
+  capacityEndpoint:'http://127.0.0.1:43210/nodes/proof-node',
+  controlToken,clientToken,fetchImpl:fakeFetch,
+  approvalVerifier:async req=>({...req,approved:true,one_time_consumed:true,
+    root_key:'different-root'}),
+});
+const wrongNodeVerifier = new RemoteOperatorGateway({
+  capacityEndpoint:'http://127.0.0.1:43210/nodes/proof-node',
+  controlToken,clientToken,fetchImpl:fakeFetch,
+  approvalVerifier:async req=>({
+    ...req,approved:true,one_time_consumed:true,
+    node_id:'some-other-authorized-node',
+  }),
+});
+const beforeWrongNode = seen.length;
+const wrongNode = await executeRemoteOperatorMcpRpc({
+  rpc:{jsonrpc:'2.0',id:64,method:'tools/call',
+    params:{name:'remote_exec',arguments:{root_key:'home',program:'git',
+      args:['--version'],approval_ref:'proof:owner-approved'}}},
+  gateway:wrongNodeVerifier,authorization:'Bearer '+clientToken,
+});
+assert.equal(wrongNode.error.message,'remote_operator_scoped_approval_denied');
+assert.equal(seen.length,beforeWrongNode);
+
+const scopeMismatch = await executeRemoteOperatorMcpRpc({
+  rpc:{jsonrpc:'2.0',id:63,method:'tools/call',
+    params:{name:'remote_exec',arguments:{root_key:'home',program:'git',
+      args:['--version'],approval_ref:'proof:owner-approved'}}},
+  gateway:mismatchedVerifier,authorization:'Bearer '+clientToken,
+});
+assert.equal(scopeMismatch.error.message,'remote_operator_scoped_approval_denied');
+assert.equal(seen.length,beforeDenied);
 
 for (const entry of seen) {
   assert.notEqual(entry.authorization, 'Bearer ' + clientToken);

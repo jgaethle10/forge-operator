@@ -7,6 +7,8 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/remote-device-enrollment.proof.mjs'
+      - 'systemia/yard/remote-device-passport-verifier.mjs'
+      - 'systemia/yard/remote-device-passport-verifier.test.mjs'
       - 'systemia/network/remote-broker.evercraft.compute.json'
       - 'systemia/network/REMOTE_BROKER_WORKLOAD.md'
       - '.github/workflows/remote-device-enrollment.yml'
@@ -18,6 +20,8 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/remote-device-enrollment.proof.mjs'
+      - 'systemia/yard/remote-device-passport-verifier.mjs'
+      - 'systemia/yard/remote-device-passport-verifier.test.mjs'
       - 'systemia/network/remote-broker.evercraft.compute.json'
       - 'systemia/network/REMOTE_BROKER_WORKLOAD.md'
       - '.github/workflows/remote-device-enrollment.yml'
@@ -31,5 +35,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove authoritative Passport single-use device admission permits
+        run: node --test systemia/yard/remote-device-passport-verifier.test.mjs
       - name: Prove explicit remote device authorize and revoke lifecycle
         run: node systemia/yard/remote-device-enrollment.proof.mjs

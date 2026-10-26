@@ -43,6 +43,44 @@ The client bearer and node control grant must be different values.
 
 Read operations still require the client credential. File writes and program execution also require an explicit `approval_ref`, and the node enforces its own filesystem/program policy after the gateway authenticates.
 
+## Owner Passport approval for mutations
+
+A client bearer credential is authentication for **read-only** inspection; it
+is not owner approval for writes or execution. A caller-supplied
+`approval_ref` cannot approve itself.
+
+`registerRemoteOperatorMcp(app, options)` has an optional, trusted server-only
+`options.passport` and `options.ownerSubjectRef` configuration. Those must
+be supplied by the authenticated Systemia owner-control plane from its
+protected durable Passport state. When provided, the gateway internally
+binds exact one-time Passport action permits to the node ID parsed from
+its **server-owned** `/nodes/<node-id>` capacity endpoint. It does not
+accept a node identity from MCP arguments.
+
+The permit must be minted through an independently authenticated owner
+workflow, with product `evercraft.remote-operator`, scope
+`remote_operator.remote_exec` or `remote_operator.remote_write_file`,
+resource `node:<node-id>/root:<root-key>`, and request fingerprint
+`sha256:` plus SHA-256 of the **exact JSON request argument payload**.
+Its ID must be a `permit_...` reference. Exact content, command args,
+named filesystem root, and approval reference are all included in that
+digest. Passport checks grant state/expiry, cancels, exact scope and
+actor; then atomically consumes that permit **before** any remote call.
+A second attempt requires a fresh independently approved permit.
+
+The default `registerRemoteOperatorMcp(app)` used by `server.ts` injects
+**no owner Passport authority**. It therefore permits authenticated
+reads when separately configured but **fails closed for both mutations**.
+Installing this plugin, adding environment bearer tokens, or deploying
+a broker does not activate writes/exec on its own.
+
+Do not expose the Passport state directory, mint/grant operations, owner
+subject management, or server-only approval injection to MCP clients. The
+synthetic proof permits in CI are not production owner authentication.
+Until the HTTPS broker, Yard exact-device trust, authenticated Passport
+issuer and independently connected Remote Operator are verifiably live,
+the physical NextGen HP remains local-only.
+
 ## Trust boundary
 
 Installing this plugin does not authorize a device. The node must separately be admitted through the Evercraft remote-device trust loop. Revoking that device invalidates its live session and remote control grant.

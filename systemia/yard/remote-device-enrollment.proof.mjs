@@ -38,7 +38,21 @@ const remoteSeed = await startNodeSeed({
   announce: false,
 });
 
-const yard = new YardOperator({ stateDir: yardState });
+// Isolated CI approval authority. Production must inject an independently
+// authenticated one-time owner-approval ledger, not a callback that trusts
+// whatever action the caller supplies.
+const proofConsumedApprovals = new Set();
+const proofApprovalVerifier = async (request) => {
+  if (proofConsumedApprovals.has(request.approval_ref)) {
+    return { approved: false, one_time_consumed: false };
+  }
+  proofConsumedApprovals.add(request.approval_ref);
+  return { ...request, approved: true, one_time_consumed: true };
+};
+const yard = new YardOperator({
+  stateDir: yardState,
+  remoteDeviceApprovalVerifier: proofApprovalVerifier,
+});
 let agent = null;
 
 async function deployBroker() {
@@ -94,6 +108,32 @@ try {
     }),
     /approval reference/
   );
+
+  // A reference string alone cannot grant device trust.
+  yard.remoteDeviceApprovalVerifier = null;
+  await assert.rejects(
+    yard.authorizeRemoteDevice('remote-enrollment-broker', {
+      deviceFingerprint: remoteSeed.device_fingerprint,
+      nodeId: remoteSeed.node_id,
+      approvalRef: 'approval:proof:unverified-string',
+    }),
+    /remote_device_independent_approval_verifier_required/
+  );
+  yard.remoteDeviceApprovalVerifier = async request => ({
+    ...request, approved: true, one_time_consumed: true,
+    node_id: 'unexpected-node',
+  });
+  await assert.rejects(
+    yard.authorizeRemoteDevice('remote-enrollment-broker', {
+      deviceFingerprint: remoteSeed.device_fingerprint,
+      nodeId: remoteSeed.node_id,
+      approvalRef: 'approval:proof:wrong-target',
+    }),
+    /remote_device_independent_approval_denied/
+  );
+  yard.remoteDeviceApprovalVerifier = proofApprovalVerifier;
+  const stillUnknown = await challengeStatus(broker.result.local_url);
+  assert.equal(stillUnknown.status, 403);
 
   const authorized = await yard.authorizeRemoteDevice(
     'remote-enrollment-broker',
