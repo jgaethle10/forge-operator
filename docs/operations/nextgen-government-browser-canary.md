@@ -35,6 +35,22 @@ The --run action requires Linux hostname NextGen. The target is hard-coded to ht
 - Setup is optional and uses existing native runtime's user-space npm/Playwright dependency flow, with no sudo/system package manager. Missing WSL Chromium libraries yield a fail-closed result.
 - Local receipt is not production lease proof, agency registration or DSHS application. Statewide HRSN applicant form cannot be saved partway through; gather prerequisites before a human submission.
 
+## Real physical WSL2 launch failure, 2026-10-26
+
+The first physical NextGen `--install` reached Playwright's browser startup but returned `browserType.launch: Target page, context or browser has been closed`. The previous launcher truncated Chromium's actionable stderr, and automatically re-running `--install` is **not** a justified repair. `--run` then failed closed before browsing. The resident Node002 agent remains shadow, `remote_jobs_enabled:false`, and HTTP 402 telemetry remains independent.
+
+**One safe next command, run from the already cloned checkout:**
+
+~~~bash
+cd "$HOME/evercraft-qa/nextgen-browser-commission" || exit 1
+git pull --ff-only
+node scripts/nextgen-browser-diagnose.mjs
+~~~
+
+Only paste these actual commands, **not** the Ubuntu welcome banner, previous shell prompts (`coach@NextGen:...`), or JSON output back into Bash.
+
+The read-only diagnostic checks the **already downloaded** pinned headless shell and missing runtime `.so` libraries with `ldd`, then attempts just one local `about:blank` Chromium startup using `DEBUG=pw:browser`. It publishes a bounded **redacted** stderr-tail, missing shared-library names and failure class. It cannot install packages, change services, submit forms, enable remote control or run on other hosts. Share this bounded JSON diagnostic; then choose a minimal, evidence-backed repair, possibly OS-provided dependencies if **confirmed**, before any further `--install` attempt. Do not blindly run `sudo npx playwright install-deps`.
+
 ## Canonical progression after receipt
 
 1. Validate device identity and local receipt privately against existing Node002 / Passport enrollment records.
