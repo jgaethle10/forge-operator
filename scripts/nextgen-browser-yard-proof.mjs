@@ -13,7 +13,7 @@ import {fileURLToPath} from 'node:url';
 import {startNodeSeed} from '../systemia/compute/node-seed.mjs';
 import {YardOperator} from '../systemia/yard/operator.mjs';
 import {prepareNativeBrowserRuntime} from '../systemia/evercraft-web/browser-worker/native-runtime.mjs';
-import {requireNextGenLocal,verifyPublicBrowserEvidence,sanitizeNode002AgentStatus} from './nextgen-browser-commission.mjs';
+import {requireNextGenLocal,verifyPublicBrowserEvidence} from './nextgen-browser-commission.mjs';
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const STATE=path.join(os.homedir(),'.local/state/evercraft-nextgen-yard-browser-proof');
