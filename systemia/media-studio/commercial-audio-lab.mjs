@@ -11,6 +11,8 @@ export const STANDARD = Object.freeze({
   maxTruePeakDbtp: -1,
   masteringPeakDbtp: -1.5,
   targetLra: 9,
+  // Disabled by default. EPS Relay-floor production opts into minimum dynamics.
+  minLraLu: 0,
   maxSilentRunSec: 1.25,
   maxSilenceRatio: 0.4,
 });
@@ -31,6 +33,7 @@ function standardFor(overrides={}) {
   if (p.maxTruePeakDbtp > -.1 || p.maxTruePeakDbtp < -6 ||
       p.masteringPeakDbtp > p.maxTruePeakDbtp || p.masteringPeakDbtp < -6) throw new Error('audio_peak_policy_invalid');
   if (p.targetLra < 1 || p.targetLra > 20) throw new Error('audio_lra_invalid');
+  if(p.minLraLu < 0 || p.minLraLu > 20) throw new Error('audio_min_lra_invalid');
   if (p.maxSilentRunSec < 0 || p.maxSilenceRatio < 0 || p.maxSilenceRatio > 1) throw new Error('audio_silence_policy_invalid');
   return p;
 }
@@ -101,6 +104,8 @@ export function auditCommercialAudio({input,expectedSha256,standard={}}) {
     else {
       if(Math.abs(measured.integratedLufs-p.targetLufs)>p.toleranceLu) reasons.push('integrated_loudness_out_of_range');
       if(measured.truePeakDbtp>p.maxTruePeakDbtp) reasons.push('true_peak_above_ceiling');
+      if(p.minLraLu>0 && (measured.loudnessRangeLu===null || measured.loudnessRangeLu<p.minLraLu))
+        reasons.push('loudness_range_below_cinematic_floor');
     }
     if(measured.silenceRatio>p.maxSilenceRatio) reasons.push('silence_ratio_excessive');
     if(measured.maxSilentRunSec>p.maxSilentRunSec) reasons.push('long_silent_gap');
