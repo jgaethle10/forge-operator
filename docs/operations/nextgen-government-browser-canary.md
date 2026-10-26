@@ -51,6 +51,39 @@ Only paste these actual commands, **not** the Ubuntu welcome banner, previous sh
 
 The read-only diagnostic checks the **already downloaded** pinned headless shell and missing runtime `.so` libraries with `ldd`, then attempts just one local `about:blank` Chromium startup using `DEBUG=pw:browser`. It publishes a bounded **redacted** stderr-tail, missing shared-library names and failure class. It cannot install packages, change services, submit forms, enable remote control or run on other hosts. Share this bounded JSON diagnostic; then choose a minimal, evidence-backed repair, possibly OS-provided dependencies if **confirmed**, before any further `--install` attempt. Do not blindly run `sudo npx playwright install-deps`.
 
+## Oct 26: physical NextGen missing-library root cause confirmed
+
+Physical HP owner-provided read-only diagnosis (2026-10-26 19:15:27 UTC), Ubuntu 26.04 / Playwright 1.63.0:
+- `binary_found: true`
+- `chromium_launch_state: blocked_missing_shared_libraries`
+- `libnspr4.so`, `libnss3.so`, `libnssutil3.so`, `libsmime3.so`, `libasound.so.2` absent.
+- None of this proves public-browser execution, a government portal session, or remote agent dispatch.
+
+Verified Ubuntu 26.04 package mapping: `libnss3` supplies `libnss3.so`, `libnssutil3.so`, `libsmime3.so` and depends on `libnspr4` (for `libnspr4.so`). `libasound2t64` supplies `libasound.so.2`.
+
+This is a **real OS package installation** and cannot be done by the read-only GitHub agent. The device owner/admin should review the apt simulation before consenting to a limited install.
+
+```bash
+# On physical HP NextGen Ubuntu terminal (do not copy any old terminal transcript)
+sudo apt-get update
+apt-get -s install --no-install-recommends libnspr4 libnss3 libasound2t64
+
+# Review apt's proposed changes; only if expected:
+sudo apt-get install --no-install-recommends libnspr4 libnss3 libasound2t64
+
+cd "$HOME/evercraft-qa/nextgen-browser-commission" || exit 1
+node scripts/nextgen-browser-diagnose.mjs
+node scripts/nextgen-browser-commission.mjs --preflight
+
+# ONLY after preflight reports ready:true, test the public DSHS GET:
+node scripts/nextgen-browser-commission.mjs --run
+node scripts/nextgen-browser-commission.mjs --status
+```
+
+Do not rerun `--install`, reclone source, globally upgrade all packages, alter Playwright's pinned version, or change device shadow/telemetry settings. A successful dependency diagnosis is not a browser result; `--run` and its independently verifiable local receipt are still required. If apt proposes unrelated package removals or a significant upgrade, stop and inspect. If the browser still fails, report the **new** redacted diagnostic rather than guessing.
+
+Official Ubuntu package references: https://packages.ubuntu.com/resolute/libnss3 ; https://packages.ubuntu.com/resolute/libasound2t64 ; https://packages.ubuntu.com/resolute/libnspr4 .
+
 ## Canonical progression after receipt
 
 1. Validate device identity and local receipt privately against existing Node002 / Passport enrollment records.
