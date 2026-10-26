@@ -2,7 +2,7 @@ name: HumanFilter beta QA
 
 on:
   push:
-    branches: ["humanfilter/**"]
+    branches: ["humanfilter/**", "humanfilter-beta-*"]
     paths:
       - "products/humanfilter/**"
       - ".github/workflows/humanfilter-beta-qa.yml"
@@ -31,7 +31,9 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - name: Run deterministic rules
         working-directory: products/humanfilter
-        run: |\n          node --test tests/rules.test.cjs\n          node tests/disclosure_benchmark.cjs
+        run: |
+          node --test tests/rules.test.cjs
+          node tests/disclosure_benchmark.cjs
       - name: Browser isolation and regression suite
         working-directory: products/humanfilter
         run: |
