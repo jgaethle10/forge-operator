@@ -1,0 +1,22 @@
+name: Money Radar Fixture Clock
+on:
+  pull_request:
+    paths:
+      - "tests/chum-money-radar.test.mjs"
+      - ".github/workflows/chum-money-radar-fixture-clock.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tests/chum-money-radar.test.mjs"
+jobs:
+  rolling-window-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --test tests/chum-money-radar.test.mjs
