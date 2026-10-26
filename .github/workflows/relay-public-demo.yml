@@ -1,0 +1,19 @@
+name: Relay public walkthrough
+on:
+  pull_request:
+    paths:
+      - 'public/relay/pilot/**'
+      - 'tests/relay-public-demo.test.mjs'
+      - '.github/workflows/relay-public-demo.yml'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/relay-public-demo.test.mjs
