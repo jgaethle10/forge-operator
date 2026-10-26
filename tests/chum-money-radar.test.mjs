@@ -260,6 +260,9 @@ test('Money Radar counts buyer sessions once across repeated funnel events', asy
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
   const { receipt } = await buildMoneyRadar({
     root,
+    // Fixture events are dated 2026-09-26. Freeze this rolling-window test
+    // shortly afterward so real calendar time cannot expire the 30d cohort.
+    generatedAt: '2026-09-27T05:00:00.000Z',
     sourceUrl: '',
     publicSourceUrl: '',
     publicSourceEvents: [
