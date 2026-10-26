@@ -40,6 +40,7 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -418,7 +419,9 @@ export async function startFabricLocalRuntime({
   // resident mirrors, not whatever marker a later updater writes on disk.
   const sourceReleaseRef=readSourceReleaseRef(resolvedReleaseRefFile);
   let deploymentReceiptRef='';
-  const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir});
+  const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
+  const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
+    onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
     const now=Date.now();
@@ -1582,6 +1585,11 @@ export async function startFabricLocalRuntime({
     server.listen(port,host,resolve);
   });
 
+  if(studioAlertDispatcher.enabled){
+    studioAlertDispatcher.start();
+    void studioAlertDispatcher.dispatch().catch(()=>{});
+  }
+
   const address=server.address();
   const actualPort=typeof address==='object'&&address?address.port:port;
   const url=`http://${host}:${actualPort}`;
@@ -1601,6 +1609,7 @@ export async function startFabricLocalRuntime({
       return health();
     },
     close:async()=>{
+      studioAlertDispatcher.stop();
       await faieSurface?.close();
       await new Promise((resolve,reject)=>
         server.close((error)=>error?reject(error):resolve())
