@@ -189,6 +189,12 @@ jobs:
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
           test -f _public_pages/eps/index.html
           test -f _public_pages/havenly/index.html
+          # Protect the studio's buyer-facing offer and inquiry choice in release artifacts.
+          test -s _public_pages/commercial-studio/index.html
+          grep -Fq 'id="intro-offer"' _public_pages/commercial-studio/index.html
+          grep -Fq '$50 introductory 30-second social commercial' _public_pages/commercial-studio/index.html
+          grep -Fq '<option>$50 launch-week 30-second social commercial pilot</option>' _public_pages/commercial-studio/index.html
+          grep -Fq 'id="studio-request"' _public_pages/commercial-studio/index.html
           grep -q 'eps-continuity-20261017' _public_pages/eps/index.html
           grep -q 'havenly-continuity-20261017' _public_pages/havenly/index.html
           test -f _public_pages/sunshine-spotless/index.html
@@ -240,6 +246,14 @@ jobs:
           havenly="${base%/}/havenly/"
           havenly_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$havenly")"
           printf '%s' "$havenly_body" | grep -q 'havenly-continuity-20261017'
+          # Live customer-path proof after GitHub Pages reports deployment.
+          studio="${base%/}/commercial-studio/"
+          studio_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$studio")"
+          [[ "$studio_body" == *'id="intro-offer"'* ]]
+          [[ "$studio_body" == *'$50 introductory 30-second social commercial'* ]]
+          [[ "$studio_body" == *'<option>$50 launch-week 30-second social commercial pilot</option>'* ]]
+          [[ "$studio_body" == *'id="studio-request"'* ]]
+          echo 'EVERCRAFT_STUDIO_LIVE_PILOT_HTTP_VERIFIED'
           sunshine="${base%/}/sunshine-spotless/"
           sunshine_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$sunshine")"
           printf '%s' "$sunshine_body" | grep -q 'sunshine-spotless-continuity-20261018'
