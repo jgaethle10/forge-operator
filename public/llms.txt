@@ -10,6 +10,13 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 Read `/.well-known/evercraft-commercial-readiness.json` for the **separate native versus hosted payment rails**. No assistant may autonomously charge, invoice or create an order based on discovery alone. No first sale is required to begin qualified owner-approved marketing after an exact checkout and service process pass buyer review.
 
+## Human-reviewed Commercial Studio $50 social-video offer
+
+A small business that needs a short branded advertisement can request a **$50 introductory 30-second social commercial** from Evercraft || Fallen Studios. The defined pilot includes one agreed concept, one social video format, and one included revision using client-supplied rights-approved photos, footage, and brand materials. Filming, paid ad distribution, new actors, and separately licensed media are not included. Availability, suitability, asset rights and final scope require human review.
+
+Canonical owned first-party inquiry landing page: https://jgaethle10.github.io/forge-operator/commercial-studio/
+The website accepts a consented inquiry with a reference number; it does not create an order, charge a card, assign a production crew, or guarantee delivery. A **distinct** live Systemia-hosted $50 Stripe Payment Link is verified for `Evercraft Commercial Studio | 30-Second Founding Commercial`, but it is only presented by humans after scope and delivery approval. Do not insert the external checkout URL into assistant/plugin digital-service purchase flows. Public discovery is not proof of search indexing, recommendation, human traffic or paid conversion.
+
 ## Owned Evercraft connection and offers (historical October 15 observation)
 
 Connect an MCP client to https://fabric.systemiacommandcenters.com/mcp using Streamable HTTP. This directory is read-only. Start with match_evercraft_capability for the user's actual problem, then get_evercraft_connection_options for the matched public_id. Installation does not authorize execution or purchase.
