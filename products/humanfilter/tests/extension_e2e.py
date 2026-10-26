@@ -18,7 +18,7 @@ SITES = {
 with tempfile.TemporaryDirectory(prefix='hf-chrome-') as home:
   with sync_playwright() as p:
     context = p.chromium.launch_persistent_context(
-        home, headless=True, **({'executable_path': os.environ['HF_CHROMIUM_BIN']} if os.environ.get('HF_CHROMIUM_BIN') else {}),
+        home, headless=True, channel='chromium', **({'executable_path': os.environ['HF_CHROMIUM_BIN']} if os.environ.get('HF_CHROMIUM_BIN') else {}),
         args=['--no-sandbox', f'--disable-extensions-except={ROOT}', f'--load-extension={ROOT}'],
     )
     context.route('**/*', lambda route: route.fulfill(
@@ -27,8 +27,9 @@ with tempfile.TemporaryDirectory(prefix='hf-chrome-') as home:
     ) if route.request.url.split('/')[2] in SITES else route.abort())
     for host in SITES:
       page = context.new_page()
+      page.on('pageerror', lambda error: print(f'BROWSER ERROR: {error}'))
       page.goto(f'https://{host}/', wait_until='domcontentloaded')
-      page.wait_for_selector('#target[data-humanfilter-hidden="true"]', timeout=10000)
+      page.wait_for_selector('#target[data-humanfilter-hidden="true"]', state='attached', timeout=10000)
       page.wait_for_timeout(300)
       assert page.locator('#target .humanfilter-notice').count() == 1, f'{host}: notice missing'
       assert page.locator('#human[data-humanfilter-hidden="true"]').count() == 0, f'{host}: human content covered'
