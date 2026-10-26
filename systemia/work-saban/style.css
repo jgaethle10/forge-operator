@@ -82,3 +82,108 @@ main{max-width:1420px;padding-top:34px}
 #floor-connections path.is-handoff{stroke:#7ad6ef;stroke-opacity:.85;stroke-width:4;stroke-dasharray:10 8;animation:handoff-flow 2.2s linear infinite;filter:drop-shadow(0 0 5px #56d3efaa)}
 @keyframes handoff-flow{to{stroke-dashoffset:-72}}
 @media(prefers-reduced-motion:reduce){#floor-connections path.is-handoff{animation:none!important}}
+
+
+/* Work Saban 3D workspace: client-side CSS geometry, no simulated worker telemetry. */
+.office-view-toggle{margin:0 0 0 12px;padding:8px 12px;font-size:10px;letter-spacing:.03em;background:#243a57;color:#d7e8ff;border:1px solid #476a92;white-space:nowrap}
+.office-view-toggle[aria-pressed="true"]{background:#1e4e62;border-color:#64c1c0;color:#bbfcfa}
+.office-scene.has-spatial-view{min-height:570px}
+.office-floor-hidden{display:none!important}
+.spatial-viewport{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab;background:
+ radial-gradient(ellipse at 52% 45%,#25456b55,transparent 62%),
+ linear-gradient(155deg,#0a1323,#132845 70%,#081321)}
+.spatial-viewport[hidden]{display:none!important}
+.spatial-viewport.is-dragging{cursor:grabbing}
+.spatial-viewport:focus-visible{outline:2px solid #85d2fa;outline-offset:-3px}
+.spatial-stage{position:absolute;inset:0;perspective:1250px;perspective-origin:50% 40%;transform-style:preserve-3d}
+.spatial-world{position:absolute;left:50%;top:50%;margin-left:-530px;margin-top:-340px;
+ width:1060px;height:680px;transform-origin:50% 50%;transform-style:preserve-3d;
+ transition:filter .2s ease;will-change:transform}
+.spatial-floor{position:absolute;inset:0;border-radius:16px;background:
+ repeating-linear-gradient(0deg,transparent 0 69px,#9bd0ff0c 70px),
+ repeating-linear-gradient(90deg,transparent 0 69px,#9bd0ff0b 70px),
+ linear-gradient(135deg,#223c5b,#10223b 63%,#0b192c);
+ border:5px solid #587d9b;box-shadow:0 0 0 17px #0a172a,0 32px 85px #020713bb, inset 0 0 90px #0e1d32aa;
+ transform:translateZ(-8px)}
+.spatial-room{position:absolute;width:330px;height:305px;transform-style:preserve-3d;
+ border:2px solid #628eaf7e;box-shadow:inset 0 0 18px #6397b719;background:#203a580d;border-radius:5px}
+.spatial-room:nth-of-type(2n){background:#42749b10}
+.spatial-rug{position:absolute;inset:14px;background:linear-gradient(130deg,#2b57702c,#5889c908);
+ border:1px solid #77abc442;border-radius:8px}
+.spatial-room-name{position:absolute;top:16px;left:16px;font:750 14px system-ui,sans-serif;
+ letter-spacing:.14em;color:#a2c9ee;text-shadow:0 2px 10px #081522}
+.spatial-room-wall{position:absolute;left:0;top:0;width:100%;height:95px;
+ transform-origin:top center;transform:rotateX(-90deg);border:2px solid #5d8baf66;
+ background:linear-gradient(90deg,#1c41639c,#2b557a61 35%,#193b5fa3 55%,#1e446485);
+ box-shadow:inset 0 0 21px #8ee3ff14}
+.spatial-room-window{position:absolute;left:105px;top:0;width:118px;height:70px;
+ transform-origin:top center;transform:rotateX(-90deg) translateZ(2px);
+ border:4px solid #66a6ca8c;background:linear-gradient(30deg,#38739777,#69badb12);
+ box-shadow:inset 0 0 15px #72c3e532}
+.spatial-agent{position:absolute;width:200px;height:175px;padding:0;background:transparent;
+ border:0;outline:0;margin:0;cursor:pointer;transform-style:preserve-3d;color:#fff}
+.spatial-agent:hover{background:transparent}
+.spatial-agent:focus-visible .spatial-desk-top{outline:3px solid #b1dfff}
+.spatial-agent-glow{position:absolute;inset:5px 15px 50px;border-radius:50%;
+ background:radial-gradient(ellipse,#4588b748,transparent 68%);transform:translateZ(-1px)}
+.spatial-desk-top{position:absolute;top:52px;left:22px;width:158px;height:93px;
+ border:3px solid #7195b8;transform:translateZ(39px);border-radius:5px;
+ background:linear-gradient(115deg,#395f82,#223955);box-shadow:0 0 30px #0007}
+.spatial-desk-front{position:absolute;left:25px;top:136px;width:155px;height:29px;
+ transform:rotateX(-90deg);transform-origin:top center;background:#14263c;border:2px solid #385777}
+.spatial-computer{position:absolute;left:83px;top:58px;width:67px;height:52px;
+ transform:translateZ(63px) rotateX(-70deg);transform-origin:bottom;
+ border:5px solid #11253f;border-radius:5px;background:#215078;box-shadow:0 0 12px #56aaf94b}
+.spatial-screen{display:block;margin:7px 6px;height:4px;background:#7dd6e9;box-shadow:0 12px #6aa3bc,0 24px #539ac0}
+.spatial-person{position:absolute;left:24px;top:38px;width:68px;height:102px;
+ transform:translateZ(57px) rotateX(-58deg);transform-origin:bottom center;
+ transform-style:preserve-3d}
+.spatial-person-body{position:absolute;bottom:4px;left:7px;width:53px;height:62px;
+ border-radius:24px 24px 16px 16px;border:2px solid #add8f066;
+ background:linear-gradient(135deg,#6e8ec1,#344d85);
+ box-shadow:0 0 17px #152c4c}
+.spatial-person-head{position:absolute;top:0;left:17px;width:34px;height:37px;
+ border-radius:44% 44% 50% 50%;border:2px solid #96c7dca1;
+ background:radial-gradient(circle at 40% 36%,#efd4bf,#b49787 86%);
+ box-shadow:0 -10px 0 -4px #233d5a}
+.spatial-desk-label{position:absolute;left:17px;top:140px;width:170px;min-height:38px;
+ transform:translateZ(72px) rotateX(-58deg);transform-origin:top center;
+ border-radius:9px;border:1px solid #608ab0;background:#0a1d32ee;
+ box-shadow:0 6px 13px #0012;padding:6px 7px;
+ display:flex;flex-direction:column;align-items:center;gap:2px}
+.spatial-desk-label strong{font-size:12px;font-weight:750;line-height:1.15}
+.spatial-desk-label small{font-size:9px;letter-spacing:.12em;color:#a4b4d5}
+.spatial-agent-diode{position:absolute;left:150px;top:35px;width:13px;height:13px;
+ border-radius:50%;background:#8ba2ba;transform:translateZ(86px);
+ box-shadow:0 0 9px #7099b57a}
+.spatial-agent.is-selected .spatial-desk-top{border-color:#9ce4fa;box-shadow:0 0 24px #78bfe784}
+.spatial-agent.is-selected .spatial-desk-label{border-color:#a6eafa;background:#16405a}
+.spatial-agent[data-state="running"] .spatial-agent-diode{background:#68b8ff;box-shadow:0 0 19px #66baff}
+.spatial-agent[data-state="running"] .spatial-computer{box-shadow:0 0 27px #58b9ff80}
+.spatial-agent[data-state="verified"] .spatial-agent-diode{background:#54e4af;box-shadow:0 0 19px #54dfb099}
+.spatial-agent[data-state="verified"] small{color:#70e9b8}
+.spatial-agent[data-state="failed"] .spatial-agent-diode{background:#ee766c;box-shadow:0 0 18px #ed8078}
+.spatial-agent[data-state="proposed"] .spatial-agent-diode{background:#d9bb82}
+.spatial-agent[data-state="admitted"] .spatial-agent-diode{background:#60b4ef}
+.spatial-agent[data-agent="analyst"] .spatial-person-body{background:linear-gradient(145deg,#7bcacc,#227f9b)}
+.spatial-agent[data-agent="writer"] .spatial-person-body{background:linear-gradient(145deg,#b09bef,#6251a7)}
+.spatial-agent[data-agent="designer"] .spatial-person-body{background:linear-gradient(145deg,#e2b77a,#936b35)}
+.spatial-agent[data-agent="auditor"] .spatial-person-body{background:linear-gradient(145deg,#9bddba,#3d876d)}
+.spatial-agent[data-agent="coordinator"] .spatial-person-body{background:linear-gradient(145deg,#a8bedc,#4b6a97)}
+.spatial-corridor{position:absolute;top:320px;left:0;width:100%;height:31px;display:flex;align-items:center;justify-content:center;
+ border-block:1px dashed #72aece88;color:#91b5cf;font-size:11px;font-weight:750;letter-spacing:.25em}
+.spatial-overlay{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:16px;gap:12px}
+.spatial-orbit-label{align-self:start;max-width:70%;font-size:10px;font-weight:750;letter-spacing:.08em;color:#a7bed9;
+ background:#0b192dbf;border:1px solid #38597d;border-radius:8px;padding:9px 11px}
+.spatial-controls{align-self:end;display:flex;gap:7px;pointer-events:auto}
+.spatial-control{border:1px solid #456789;border-radius:8px;background:#132a42cc;color:#e4efff;
+ font-size:19px;font-weight:650;min-width:37px;padding:5px 8px;margin:0}
+.spatial-control:hover{background:#2b5478}
+@media(max-width:650px){
+ .office-scene.has-spatial-view{min-height:445px}
+ .spatial-orbit-label{font-size:8px;max-width:88%}
+ .office-view-toggle{margin:8px 0 0}
+}
+@media(prefers-reduced-motion:reduce){
+ .spatial-world{transition:none}
+}
