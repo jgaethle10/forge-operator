@@ -78,6 +78,13 @@ with tempfile.TemporaryDirectory(prefix="humanfilter-public-sites-") as user_dir
                 except Exception as e:
                     item["probe_error"] = str(e)[:250]
                 item["extension_loaded"] = bool(item["synthetic_probe_filtered"])
+                item["probe_dom"] = page.evaluate("""() => {
+                    let a=document.querySelector('#hf-ai-probe'), b=document.querySelector('#hf-control-probe');
+                    return {ai_exists:!!a,ai_outer:a?.outerHTML.slice(0,380)||'',
+                            control_exists:!!b, ai_hidden:a?.getAttribute('data-humanfilter-hidden')||null,
+                            notice_count:document.querySelectorAll('.humanfilter-notice').length,
+                            selector_count:document.querySelectorAll("ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-reel-item-renderer").length};
+                }""")
                 item["page_errors"] = errors[:3]
                 page.screenshot(path=str(REPORTS / (name + ".png")), full_page=False, timeout=8000)
             except Exception as e:
