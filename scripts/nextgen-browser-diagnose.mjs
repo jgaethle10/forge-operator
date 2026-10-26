@@ -75,6 +75,8 @@ async function diagnose(){
     const id=osrel.match(/^ID=([^\n]+)/m)?.[1]?.replaceAll('"','')||'unknown';
     const version=osrel.match(/^VERSION_ID=([^\n]+)/m)?.[1]?.replaceAll('"','')||'unknown';
     out.os_release=id+' '+version;
+    // Playwright resolves executable paths using this process environment at import time.
+    process.env.PLAYWRIGHT_BROWSERS_PATH=BROWSERS;
     const pw=requireFromWorker('playwright');
     out.installed_playwright_version=requireFromWorker('playwright/package.json').version;
     const executable=pw.chromium.executablePath();
