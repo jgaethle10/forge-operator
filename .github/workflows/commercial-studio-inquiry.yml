@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/commercial-studio-inquiry.mjs'
+      - 'systemia/mcp/studio-lead-relay.mjs'
+      - 'tests/fabric-commercial-studio-relay-alerts.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'public/commercial-studio/index.html'
       - 'tests/fabric-commercial-studio-inquiry.test.mjs'
@@ -30,5 +32,6 @@ jobs:
       - name: Verify runtime module syntax and end-to-end customer inquiry
         run: |
           node --check systemia/mcp/commercial-studio-inquiry.mjs
+          node --check systemia/mcp/studio-lead-relay.mjs
           node --check systemia/mcp/fabric-local-runtime.mjs
-          node --test tests/fabric-commercial-studio-inquiry.test.mjs
+          node --test tests/fabric-commercial-studio-inquiry.test.mjs tests/fabric-commercial-studio-relay-alerts.test.mjs
