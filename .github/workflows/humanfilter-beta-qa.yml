@@ -31,7 +31,7 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - name: Run deterministic rules
         working-directory: products/humanfilter
-        run: node --test tests/rules.test.cjs
+        run: |\n          node --test tests/rules.test.cjs\n          node tests/disclosure_benchmark.cjs
       - name: Browser isolation and regression suite
         working-directory: products/humanfilter
         run: |

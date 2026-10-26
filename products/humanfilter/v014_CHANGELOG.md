@@ -7,3 +7,4 @@
 - Keeps the v0.1.3 YouTube Shorts support, Facebook/Reddit/YouTube feed tests and reveal/virtualization safety checks.
 - This is **not** AI media provenance, image recognition, or guaranteed detection of unlabeled synthetic media.
 - Real public YouTube controlled-title manipulation passed previously on v0.1.3; 0.1.4 must pass CI and independent verification before claiming that status.
+- Regression corpus uncovered a Balanced-mode false positive for neutral questions mentioning "AI-generated content". Tightened caption-style disclosure matching and added a 41-case curated, synthetic benchmark to CI. This synthetic corpus is *not* evidence of real-world classifier accuracy.

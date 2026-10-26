@@ -32,3 +32,4 @@ Playwright browser fixtures are local simulations. GitHub Actions also runs a Ch
 
 ## Privacy and safety
 See `store/privacy-policy.md`. All code is local. Publishing or billing requires separate owner approval and verified readiness. The project is in a dedicated GitHub beta branch, without changes to Evercraft production operator.
+- `node tests/disclosure_benchmark.cjs` (41 curated synthetic cases, not a field accuracy statistic)

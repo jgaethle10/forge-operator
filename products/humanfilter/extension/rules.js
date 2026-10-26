@@ -13,7 +13,7 @@
   const selfDeclaration = [
     /\b(?:i (?:made|created|generated) (?:this|it)|made (?:this|it)|created (?:this|it)) (?:with|using) (?:generative )?ai\b/i,
     /\b(?:made|created|generated|produced) (?:with|using|by) (?:chatgpt|midjourney|dall[ -]?e|stable diffusion|sora|ideogram|flux(?:\s+ai)?)\b/i,
-    /\b(?:ai[- ]generated|synthetic) (?:image|video|art|picture|footage|illustration|portrait|media|content)\b/i,
+    /^(?:an?\s+)?(?:ai[- ]generated|synthetic) (?:image|video|art|picture|footage|illustration|portrait|media|content)(?:\s*[:.\-–!]|\s*$)/i,
     /\b(?:made|created|generated|produced|rendered|animated|illustrated) (?:entirely |partly )?(?:with|using|by) (?:an? )?(?:generative )?ai\b/i,
     /\b(?:image|photo|picture|video|artwork|portrait|music|song|animation|illustration|footage) (?:is|was) (?:entirely )?(?:ai[- ]generated|made by ai)\b/i,
     /(?:^|\s)#(?:aigenerated|aiartwork|aigeneratedart|madewithai|generativeaiart|aivideo|aiimage|aianimation)(?=\b|$)/i
