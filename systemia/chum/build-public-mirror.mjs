@@ -660,6 +660,9 @@ const sitemapStatic = [
 ];
 const sitemapUrls = Array.from(new Set([
   ...sitemapStatic,
+  // First-party scope-reviewed Studio inquiry is an independently verified public page.
+  // Do not classify it as a paid machine SKU or an autonomous checkout.
+  'https://jgaethle10.github.io/forge-operator/commercial-studio/',
   ...(forensiscopeEditorialIndex.articles || []).flatMap((article) => [article.url, `${article.url}llms.txt`]),
   ...(machineCatalog.offers || [])
     .filter((offer) => offer?.public_id)
