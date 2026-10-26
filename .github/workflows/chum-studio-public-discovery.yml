@@ -1,0 +1,29 @@
+name: Studio canonical discovery coverage
+on:
+  pull_request:
+    paths:
+      - 'public/llms.txt'
+      - 'public/sitemap.xml'
+      - 'systemia/chum/build-public-mirror.mjs'
+      - 'tests/chum-studio-public-discovery.test.mjs'
+      - '.github/workflows/chum-studio-public-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/llms.txt'
+      - 'public/sitemap.xml'
+      - 'systemia/chum/build-public-mirror.mjs'
+      - 'tests/chum-studio-public-discovery.test.mjs'
+      - '.github/workflows/chum-studio-public-discovery.yml'
+permissions:
+  contents: read
+jobs:
+  canonical-intent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/chum/build-public-mirror.mjs
+      - run: node --test tests/chum-studio-public-discovery.test.mjs
