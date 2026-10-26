@@ -61,7 +61,8 @@ export async function inspectYardBrokerDeployments({
     const st=fs.lstatSync(yardState);
     if(!st.isDirectory() || st.isSymbolicLink())throw new Error('yard_state_directory_invalid');
     filenames=fs.readdirSync(yardState,{withFileTypes:true})
-      .filter(x=>x.isFile() && /^[a-zA-Z0-9._-]{1,128}\\.json$/.test(x.name))
+      .filter(x=>x.isFile() && x.name.endsWith('.json') &&
+        /^[a-zA-Z0-9._-]{1,128}$/.test(x.name.slice(0,-5)))
       .map(x=>x.name).slice(0,200);
   }catch(e){
     if(e.message==='yard_state_directory_invalid')throw e;
