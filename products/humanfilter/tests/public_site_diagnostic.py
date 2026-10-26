@@ -77,7 +77,29 @@ with tempfile.TemporaryDirectory(prefix="humanfilter-public-sites-") as user_dir
                     item["synthetic_probe_filtered"] = page.locator("#hf-control-probe[data-humanfilter-hidden='true']").count() == 0
                 except Exception as e:
                     item["probe_error"] = str(e)[:250]
-                item["extension_loaded"] = bool(item["synthetic_probe_filtered"])
+                # YouTube Polymer hydrates freshly appended custom elements and can
+                # erase the synthetic test's text. Exercise an actual existing
+                # search result card instead, with temporary local title mutation.
+                if name == "youtube" and item["real_post_cards"] > 0:
+                    item["live_dom_title_probe"] = False
+                    try:
+                        mutated = page.evaluate("""() => {
+                            const card = document.querySelector('ytd-video-renderer');
+                            if (!card) return {ok:false, reason:'no long-form card'};
+                            const title = card.querySelector('#video-title') ||
+                                          card.querySelector('yt-formatted-string');
+                            if (!title) return {ok:false,reason:'no accessible title'};
+                            card.setAttribute('data-hf-live-qa','true');
+                            title.textContent = 'I created this with AI';
+                            return {ok:true,titleTag:title.tagName};
+                        }""")
+                        item["live_dom_mutation"] = mutated
+                        if mutated.get("ok"):
+                            page.locator("ytd-video-renderer[data-hf-live-qa='true'][data-humanfilter-hidden='true']").wait_for(state="attached",timeout=8000)
+                            item["live_dom_title_probe"] = True
+                    except Exception as e:
+                        item["live_dom_error"] = str(e)[:260]
+                item["extension_loaded"] = bool(item["synthetic_probe_filtered"] or item.get("live_dom_title_probe",False))
                 item["probe_dom"] = page.evaluate("""() => {
                     let a=document.querySelector('#hf-ai-probe'), b=document.querySelector('#hf-control-probe');
                     return {ai_exists:!!a,ai_outer:a?.outerHTML.slice(0,380)||'',
