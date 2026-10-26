@@ -84,6 +84,29 @@ Do not rerun `--install`, reclone source, globally upgrade all packages, alter P
 
 Official Ubuntu package references: https://packages.ubuntu.com/resolute/libnss3 ; https://packages.ubuntu.com/resolute/libasound2t64 ; https://packages.ubuntu.com/resolute/libnspr4 .
 
+## Next milestone: real local NodeSeed / Yard / Browser Worker lease proof
+
+The founder's **physical HP** produced a successful first-party public DSHS Chromium browser run on 2026-10-26 19:31:17Z through 19:31:21Z, with HTTP 200, exact SHA-256 hashes for text/screenshot/browser evidence, private-target rejection `true`, and local unsigned receipt `sha256:6e0acd8b3b00fb19ad469bfe9e3288c77113b25fabd11c0de33a8b073d014a39`. This local browser success is **not** NodeSeed/Yard execution or cross-node dispatch.
+
+To test the **existing** Compute and Yard layers (rather than another homemade runner), a separate, manually fired script `scripts/nextgen-browser-yard-proof.mjs` runs an isolated ephemeral `startNodeSeed`, `YardOperator.deployRelease`, `yard.verifyRoute`, `yard.attestDeployment` and `yard.invokeBrowser` for **one** read-only public DSHS browser job. It confirms a bounded lease, browser evidence hashes and a blocked private destination; then stops the Yard deployment and closes NodeSeed.
+
+It uses a new **ephemeral, untrusted software key**, a separate local proof NodeSeed ID, `127.0.0.1` only, no network capacity beacon, no Remote Operator, and does not touch the resident shadow agent. It deletes temporary session private keys and lease secrets after the run. Its final summary is local and explicitly **not a production signed receipt or registered hardware device identity**.
+
+Run on the HP, in the **same existing checkout**:
+
+```bash
+cd "$HOME/evercraft-qa/nextgen-browser-commission" || exit 1
+git pull --ff-only
+node --test tests/nextgen-browser-yard-proof.test.mjs
+node scripts/nextgen-browser-yard-proof.mjs --status
+node scripts/nextgen-browser-yard-proof.mjs --run
+node scripts/nextgen-browser-yard-proof.mjs --status
+```
+
+Expected pass state: `passed_local_compute_yard_browser`, `local_nodeseed_lease_verified:true`, `local_yard_health_receipt_bound:true`, `software_key_attestation_verified:true`, `lease_stopped:true`, `private_target_rejection_verified:true`. This establishes a **local** Compute lease and Yard invocation, **not** remote Systemia/Saban authorization. If any gate fails, the runner fails closed, attempts cleanup and reports a sanitized reason. No external form submission is possible.
+
+The independent next gate after a local Yard pass is the *existing* broker and Passport-device-grant commissioning in issue #1332. No ad hoc SSH, public HP listener, remote job toggle, GitHub-provisioned control token, new machine or third-party browser is authorized by this local script.
+
 ## Canonical progression after receipt
 
 1. Validate device identity and local receipt privately against existing Node002 / Passport enrollment records.
