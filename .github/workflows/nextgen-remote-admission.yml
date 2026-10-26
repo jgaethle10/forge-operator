@@ -10,6 +10,8 @@ on:
       - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/network/remote-broker-public-preflight.mjs'
       - 'systemia/network/remote-broker-public-preflight.test.mjs'
+      - 'scripts/nextgen/broker-deployment-doctor.mjs'
+      - 'scripts/nextgen/broker-deployment-doctor.test.mjs'
       - 'systemia/yard/remote-device-passport-verifier.mjs'
       - 'systemia/yard/remote-device-passport-verifier.test.mjs'
       - 'scripts/nextgen/**'
@@ -48,6 +50,8 @@ jobs:
         run: node systemia/network/outbound-node-agent-recovery.proof.mjs
       - name: Prove exact HTTPS broker public-health and Yard receipt comparison fails closed
         run: node --test systemia/network/remote-broker-public-preflight.test.mjs
+      - name: Discover only verified-format Yard broker candidates without secrets or self-granted trust
+        run: node --test scripts/nextgen/broker-deployment-doctor.test.mjs
       - name: Prove durable Passport owner permit rejects device replays
         run: node --test systemia/yard/remote-device-passport-verifier.test.mjs
       - name: Prove actual remote admission keeper's unavailable broker and reconnection
