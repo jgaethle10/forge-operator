@@ -217,6 +217,9 @@ function main() {
     }
     const request = readJson<StudioDeliveryRequest>(input);
     const receipt = finalizeStudioDelivery({ request, outputDir: output });
+    const receiptPath = path.join(receipt.outputDir, path.basename(receipt.videoPath, '.mp4') + '.studio-delivery-receipt.json');
+    writeJson(receiptPath, receipt);
+    console.log(`Studio delivery receipt: ${receiptPath}`);
     console.log(`Studio delivery ready: ${receipt.videoPath}`);
     console.log(`Clip intake manifest: ${receipt.clipManifestPath}`);
     console.log(`SHA-256: ${receipt.mediaSha256}`);
