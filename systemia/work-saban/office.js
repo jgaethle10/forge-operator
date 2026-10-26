@@ -29,6 +29,7 @@
     $('office-agent-state').textContent=state[chosen].replaceAll('_',' ').toUpperCase();
     $('office-agent-proof').textContent=proofs[chosen]||(state[chosen]==='proposed'?'Proposal only, not executing':'No execution yet');
     svg?.querySelectorAll('[data-agent]').forEach(g=>g.classList.toggle('is-selected',g.getAttribute('data-agent')===chosen));
+    window.WorkSaban3D?.select(chosen);
   }
   const handoffPairs={
     analyst:'director-analyst',
@@ -66,6 +67,7 @@
     $('office-replay').textContent='Replay trace';
   }
   function reset(kind='idle') {
+    window.WorkSaban3D?.reset();
     stopReplay();events=[];replayIndex=-1;running=false;
     roles.forEach(r=>{state[r.id]=kind;delete proofs[r.id];});
     svg?.querySelectorAll('#floor-connections path').forEach(p=>p.classList.remove('is-handoff'));
@@ -96,6 +98,7 @@
   }
   function consume(event) {
     if(!event||typeof event.type!=='string')throw new Error('invalid_work_event');
+    window.WorkSaban3D?.consume(event);
     if(event.type==='accepted') {
       reset('idle');
       running=true;
@@ -150,6 +153,7 @@
   }
   function proposed(mission) {
     reset('idle');
+    window.WorkSaban3D?.proposed(mission);
     for(const role of mission?.team||[]) if(byId[role.id])state[role.id]='proposed';
     append('proposed','director','Team proposed, no workers dispatched');
     $('office-current').textContent='Proposed formation only';
@@ -201,7 +205,14 @@
         } else replayAt(replayIndex+1);
       },800);
     });
+    $('office-3d-toggle').addEventListener('click',()=>{
+      const pressed=$('office-3d-toggle').getAttribute('aria-pressed')==='true';
+      window.WorkSaban3D?.setEnabled(!pressed);
+      scene.classList.toggle('has-spatial-view',!pressed);
+    });
     reset();select('director');
+    window.WorkSaban3D?.setEnabled(true);
+    scene.classList.add('has-spatial-view');
   }
   const ready=fetch('/office-floor.svg').then(async r=>{
     if(!r.ok)throw new Error('office_floor_asset_missing');
@@ -215,5 +226,6 @@
     consume:event=>ready.then(()=>consume(event)),
     proposed:mission=>ready.then(()=>proposed(mission)),
     reset:()=>ready.then(()=>reset()),
+    select:id=>ready.then(()=>select(id)),
   };
 })();
