@@ -13,7 +13,7 @@
   const state=Object.fromEntries(roster.map(r=>[r.id,'idle']));
   const receipts={};
   const scene=$('office-scene');
-  let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:0.72,panX:0,panY:0};
+  let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};
   let world=null,drag=null;
   const rooms=[
     {name:'MISSION CONTROL',x:16,y:16},
@@ -149,7 +149,7 @@
     applyCamera();
   }
   function zoom(delta){position.zoom=clamp(Math.round((position.zoom+delta)*100)/100,0.35,1.42);applyCamera();}
-  function resetCamera(){position={yaw:-14,pitch:58,zoom:0.72,panX:0,panY:0};applyCamera();}
+  function resetCamera(){position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};applyCamera();}
   function select(id){
     if(!agents.has(id))return;
     selected=id;
@@ -167,7 +167,7 @@
     select(selected);
   }
   function consume(e){
-    if(!enabled||!e)return;
+    if(!e)return;
     if(e.type==='accepted'){
       for(const role of roster)state[role.id]='idle';
       state.director='admitted';Object.keys(receipts).forEach(id=>delete receipts[id]);
@@ -185,7 +185,6 @@
     paint();
   }
   function proposed(mission){
-    if(!enabled)return;
     for(const role of roster)state[role.id]='idle';
     for(const member of mission?.team||[])if(agents.has(member.id))state[member.id]='proposed';
     Object.keys(receipts).forEach(id=>delete receipts[id]);
