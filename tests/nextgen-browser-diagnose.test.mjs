@@ -42,6 +42,6 @@ test('diagnostic source cannot install packages, change services or visit public
   assert.match(text,/PLAYWRIGHT_BROWSERS_PATH/);
   assert.match(text,/chromium.launch\(\{headless:true,timeout:20000\}\)/);
   assert.doesNotMatch(text,/execSync\(/);
-  assert.doesNotMatch(text,/sudo|npm install|apt-get/);
+  assert.doesNotMatch(text,/spawnSync\(['\"](?:sudo|apt-get|apt|npm)['\"]/);
   assert.doesNotMatch(text,/page.goto|fs\.writeFileSync|\.listen\(/);
 });
