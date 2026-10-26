@@ -20,6 +20,25 @@ function command(bin,args){
   if(proc.status!==0)throw Error(bin+'_failed:'+String(proc.stderr||'').slice(-700));
   return String(proc.stdout||'');
 }
+
+export function sampleEmptyGrayCanvasFraction(mp4,second=2){
+  // Chromium video tracks CSS pixels, not device-pixel-sized screenshots.
+  // The old 360x640 capture in a 1080x1920 recorder produced ~89% gray padding.
+  const run=spawnSync('ffmpeg',['-hide_banner','-loglevel','error','-ss',String(second),
+    '-i',mp4,'-frames:v','1','-f','rawvideo','-pix_fmt','rgb24','pipe:1'],
+    {encoding:null,maxBuffer:8*1024*1024,timeout:20000});
+  if(run.status!==0||!Buffer.isBuffer(run.stdout)||run.stdout.length!==1080*1920*3)
+    throw new Error('visual_frame_probe_unavailable');
+  let neutral=0;
+  const buf=run.stdout;
+  for(let i=0;i<buf.length;i+=3){
+    if(Math.abs(buf[i]-128)<=5&&Math.abs(buf[i+1]-128)<=5&&
+       Math.abs(buf[i+2]-128)<=5&&
+       Math.max(buf[i],buf[i+1],buf[i+2])-Math.min(buf[i],buf[i+1],buf[i+2])<=3)neutral++;
+  }
+  return neutral/(1080*1920);
+}
+
 async function glide(page,selector,holdMs=1700){
   const y=await page.locator(selector).evaluate(el=>Math.max(0,el.getBoundingClientRect().top+window.scrollY-115));
   await page.evaluate(y=>window.scrollTo({top:y,behavior:'smooth'}),y);
@@ -41,7 +60,7 @@ async function run(){
       viewport:{width:360,height:640},
       deviceScaleFactor:3,locale:'en-US',
       colorScheme:'dark',reducedMotion:'no-preference',
-      recordVideo:{dir:capture,size:{width:1080,height:1920}},
+      recordVideo:{dir:capture,size:{width:360,height:640}},
     });
     const page=await context.newPage();
     const response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
@@ -66,16 +85,21 @@ async function run(){
     const raw=await video.path();
     const mp4=path.join(output,'evercraft-studio-actual-site-visual-source_1080x1920.mp4');
     command('ffmpeg',['-hide_banner','-loglevel','error','-y','-i',raw,
-      '-vf','fps=30,format=yuv420p','-c:v','libx264','-preset','medium','-crf','18',
+      '-vf','fps=30,scale=1080:1920:flags=lanczos,format=yuv420p','-c:v','libx264','-preset','medium','-crf','18',
       '-movflags','+faststart','-an',mp4]);
     const probe=JSON.parse(command('ffprobe',['-v','error','-show_format','-show_streams','-of','json',mp4]));
     const videoStream=(probe.streams||[]).find(x=>x.codec_type==='video');
     const duration=Number(probe.format?.duration||0);
     if(!videoStream||videoStream.width!==1080||videoStream.height!==1920||
        duration<12||duration>32)throw Error('site_capture_encoding_or_duration_invalid');
+    const emptyGrayCanvasFraction=sampleEmptyGrayCanvasFraction(mp4,2);
+    if(emptyGrayCanvasFraction>0.10)throw Error('visually_invalid_large_blank_gray_canvas');
+
     const receipt={schema:'evercraft.fallen.real-public-ui-source.v1',...source,
       path:mp4,sha256:sha(mp4),duration_seconds:duration,width:videoStream.width,height:videoStream.height,
       silent:true,source_type:'real_browser_pixels',scene_count:4,
+      source_capture_css_pixels:[360,640],output_upscale_method:'lanczos_3x',
+      empty_gray_canvas_fraction_2s:emptyGrayCanvasFraction,
       screenshots:['01_hero.png','02_scoped_pilot.png','03_our_own_product_proof.png','04_consent_inquiry.png']
         .map(name=>({name,sha256:sha(path.join(output,name))})),
       release_state:'REJECTED_FOR_PAID_PORTFOLIO_UNTIL_OWNER_CREATIVE_REVIEW',
@@ -86,4 +110,6 @@ async function run(){
       duration,sha256:receipt.sha256,source:URL,release:receipt.release_state}));
   }finally{await context?.close().catch(()=>{});await browser.close();}
 }
-run().catch(e=>{console.error(String(e?.message||e));process.exitCode=1;});
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+  run().catch(e=>{console.error(String(e?.message||e));process.exitCode=1;});
+}
