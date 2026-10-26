@@ -1,0 +1,44 @@
+name: HumanFilter beta QA
+
+on:
+  push:
+    branches: ["humanfilter/**"]
+    paths:
+      - "products/humanfilter/**"
+      - ".github/workflows/humanfilter-beta-qa.yml"
+  pull_request:
+    paths:
+      - "products/humanfilter/**"
+      - ".github/workflows/humanfilter-beta-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-and-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'playwright==1.55.0'
+      - run: python -m playwright install --with-deps chromium
+      - name: Run deterministic rules
+        working-directory: products/humanfilter
+        run: node --test tests/rules.test.cjs
+      - name: Browser isolation and regression suite
+        working-directory: products/humanfilter
+        run: |
+          python tests/browser_smoke.py
+          python tests/reveal_recycle.py
+          python tests/feed_stress.py
+          python tests/popup_smoke.py
+      - name: Actual unpacked-extension injection on intercepted fixtures
+        working-directory: products/humanfilter
+        run: python tests/extension_e2e.py
