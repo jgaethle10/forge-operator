@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import test from 'node:test';
 import {compileCommercialVariantBatch,renderCommercialVariantBatch} from './commercial-variants.mjs';
+import {verifyCommercialReviewPack,writeReadOnlyCommercialReviewDesk,recordCommercialReviewEvidence,REVIEW_CHECKS} from './commercial-review-desk.mjs';
 
 function ffmpeg(args){
   const r=spawnSync('ffmpeg',['-nostdin','-hide_banner','-v','error',...args],{encoding:'utf8',maxBuffer:2*1024*1024});
@@ -122,10 +123,48 @@ test('render three actual encoded videos, independently check sound, and extract
       assert.equal(frame.status,'needs_human_picture_review');
     }
   }
+  const packPath=path.join(root,'variant-review-pack.json');
+  const verified=verifyCommercialReviewPack(packPath);
+  assert.equal(verified.status,'media_integrity_verified');
+  assert.equal(verified.variants.length,3);
+  assert.equal(verified.humanApproved,false);
+  const gallery=writeReadOnlyCommercialReviewDesk(packPath,path.join(root,'review-desk.html'));
+  assert.equal(gallery.status,'read_only_gallery_created');
+  assert.equal(gallery.mediaCount,3);
+  assert.equal(gallery.framesCount,9);
+  const page=fs.readFileSync(gallery.path,'utf8');
+  assert.equal((page.match(/<video controls/g)||[]).length,3);
+  assert.equal((page.match(/<img loading=/g)||[]).length,9);
+  assert.match(page,/Locally verified technical media only/);
+  assert.doesNotMatch(page,/<button/);
+  // Archive the playable review gallery along with the clean, synthetic outputs.
   const ci=process.env.FALLEN_VARIANT_CI_PROOF_DIR;
   if(ci){
     fs.mkdirSync(ci,{recursive:true});
     fs.cpSync(root,path.join(ci,'synthetic-test-variants'),{recursive:true});
   }
+
+  const decision={schema:'evercraft.fallen.commercial-human-review-decision.v1',
+    reviewerId:'synthetic-ci-reviewer',reviewedAt:'2026-10-25T20:00:00Z',
+    packDigest:verified.packDigest,
+    acknowledgement:'I personally reviewed all three final encoded videos and their evidence frames.',
+    reviewedMedia:proof.variants.map(x=>({format:x.format,sha256:x.sha256})),
+    checks:Object.fromEntries(REVIEW_CHECKS.map(x=>[x,true]))};
+  const evidencePath=path.join(root,'synthetic-review-attestation.json');
+  assert.throws(()=>recordCommercialReviewEvidence(packPath,{
+    ...decision,packDigest:'0'.repeat(64)},evidencePath),/proof_digest_mismatch/);
+  assert.throws(()=>recordCommercialReviewEvidence(packPath,{
+    ...decision,checks:{...decision.checks,approve_final_client_delivery:false}
+  },evidencePath),/human_checks_incomplete/);
+  assert.throws(()=>recordCommercialReviewEvidence(packPath,{
+    ...decision,reviewedMedia:decision.reviewedMedia.map((r,i)=>i===0?{...r,sha256:'f'.repeat(64)}:r)
+  },evidencePath),/attested_video_mismatch/);
+  const evidence=recordCommercialReviewEvidence(packPath,decision,evidencePath);
+  assert.equal(evidence.status,'self_attested_human_review_recorded');
+  assert.equal(evidence.humanApprovalAuthenticityVerified,false);
+  assert.equal(evidence.platformReleaseGranted,false);
+  assert.equal(evidence.publicationAuthorityGranted,false);
+  fs.appendFileSync(proof.variants[0].reviewFrames[0].path,'tamper');
+  assert.throws(()=>verifyCommercialReviewPack(packPath),/digest_mismatch/);
   assert.throws(()=>renderCommercialVariantBatch(payload,root),/output_exists/);
 });

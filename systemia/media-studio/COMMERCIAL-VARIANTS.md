@@ -43,3 +43,34 @@ Automatically center-cropping horizontal source footage to a vertical frame can 
 CI uses synthetic FFmpeg color/test-image movies and oscillator audio to exercise **actual MP4 encoding and exact final-file QC** across all three formats. The CI artifact is engineering evidence only; it is not a commercial, no service quality is depicted, the generated tones are not human voice, and no customer approval occurred.
 
 No paid media generation, third-party API, transfer of private customer footage, automatic Clip publishing, payment or release is authorized by this lane.
+
+
+## Offline customer review desk and independent integrity verification
+
+After a three-format render, use the actual local proof bundle, not a reconstructed upload or unverified links:
+
+    node systemia/media-studio/commercial-review-desk.mjs verify ./artifacts/spot-render/variant-review-pack.json
+    node systemia/media-studio/commercial-review-desk.mjs gallery ./artifacts/spot-render/variant-review-pack.json ./artifacts/spot-render/review-desk.html
+
+Open the resulting review-desk.html from the same local directory containing the video folders. It has native full-playback video controls for all three formats and all actual JPEG review captures, plus the human evaluation checklist. No JavaScript, network calls, publishing action, or AI-generated substitute is required.
+
+The verification gate checks:
+- Exact SHA-256 of all three encoded H264/AAC MP4s and each captured JPEG
+- Frame JPEG type, each shot-to-framing identity and the complete three-format set
+- Actual video/audio codec, dimensions and expected duration via FFprobe
+- The exact final MP4 hash and path bound to Clip media intake, audio QC and the two-pass mastering receipt
+- Explicit continued blocking of release and Clip publication authority
+
+It does not detect whether a client looks good, whether the captions are visually safe, whether the narration sounds natural, or whether the supplied review/rights references are genuine. Those need human verification.
+
+A separately collected human decision may be recorded, without conferring publishing authority, using:
+
+    node systemia/media-studio/commercial-review-desk.mjs attest ./artifacts/spot-render/variant-review-pack.json ./artifacts/spot-render/human-review-evidence.json ./human-review-decision.json
+
+The decision is a JSON object with schema evercraft.fallen.commercial-human-review-decision.v1. It includes a nonblank reviewerId, a reviewedAt ISO time, the exact packDigest from verify, and three entries in reviewedMedia of the shape { "format": "16:9", "sha256": "..." } (same for 1:1 and 9:16). The checks object sets each of the six named humanReviewRequirements from the pack to true, and the acknowledgement value must be exactly:
+
+    I personally reviewed all three final encoded videos and their evidence frames.
+
+The tool records the self-attestation and validates that the specifically named bytes still exist unchanged. It does not authenticate the reviewer's identity, independently observe the review or authorize customer delivery, platform publication or payment. A separately authorized real-world release process remains mandatory. An invalid, missing, stale or mismatched acknowledgment is rejected.
+
+CI warning: The automated synthetic fixture test exercises this viewing and integrity machinery with oscillator audio. The test's synthetic reviewer declaration is test data, not a human review or license certification. Only actual paid-client or owner-approved media can be used to demonstrate creative quality.

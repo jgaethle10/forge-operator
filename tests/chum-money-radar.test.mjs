@@ -260,6 +260,9 @@ test('Money Radar counts buyer sessions once across repeated funnel events', asy
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
   const { receipt } = await buildMoneyRadar({
     root,
+    // Fix the evaluation clock: the September 26 fixture must remain inside
+    // the 30-day attribution window after the real calendar advances.
+    generatedAt: '2026-09-28T12:00:00.000Z',
     sourceUrl: '',
     publicSourceUrl: '',
     publicSourceEvents: [
