@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {enqueueStudioAlert} from './studio-lead-relay.mjs';
 
 // Untrusted web inquiries remain DATA, never executable missions or payment authority.
 const TRUSTED_ORIGINS=new Set(['https://jgaethle10.github.io','https://fabric.systemiacommandcenters.com']);
@@ -40,7 +41,7 @@ export function validateStudioInquiry(input){
   if(input.consent!==true)return {error:'consent_required'};
   return {value:{name,email,company,project,goal,consent:true}};
 }
-export function createStudioInquiryHandler({storeDir='',now=Date.now}={}){
+export function createStudioInquiryHandler({storeDir='',now=Date.now,onAlertQueued=()=>{},alertEnqueue=enqueueStudioAlert}={}){
   const folder=storeDir||process.env.EVERCRAFT_STUDIO_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','studio-leads');
   const counts=new Map();
   return async function handle(req,res){
@@ -80,6 +81,16 @@ export function createStudioInquiryHandler({storeDir='',now=Date.now}={}){
       fs.appendFileSync(file,JSON.stringify(record)+'\n',{encoding:'utf8',mode:0o600,flag:'a'});
       fs.chmodSync(file,0o600);
     }catch{return send(res,503,{ok:false,error:'intake_unavailable'},origin);}
+    // The buyer's inquiry is already durably stored; notification failure is never
+    // misrepresented as lost customer data. Relay gets only non-PII metadata.
+    let alertQueued=false;
+    try{
+      alertEnqueue({folder,reference:id,project:record.project,received_at:record.received_at});
+      alertQueued=true;
+    }catch{
+      console.error('commercial_studio_alert_outbox_unavailable');
+    }
+    if(alertQueued)try{onAlertQueued();}catch{console.error('commercial_studio_alert_dispatch_schedule_failed');}
     counts.set(key,[...recent,current]);
     return send(res,201,{ok:true,received:true,reference:id,
       message:'Inquiry received for human review. No payment, work order or delivery promise created.'},origin);
