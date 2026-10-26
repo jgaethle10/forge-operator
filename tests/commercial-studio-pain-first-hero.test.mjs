@@ -16,7 +16,7 @@ test('proof is not invented, and buying is still manual scope reviewed',()=>{
  assert.match(html,/creativ[e]? review/i);
  assert.match(html,/No payment at inquiry/);
  assert.match(html,/Source materials/i);
- assert.match(html,/rights and client approval/i);
+ assert.match(html,/asset-rights review and client approval/i);
  assert.doesNotMatch(html,/guaranteed sale|guaranteed leads|100% ROI|We have delivered 100/);
 });
 test('working first-party lead submission remains present',()=>{
