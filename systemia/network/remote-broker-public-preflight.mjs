@@ -1,3 +1,5 @@
+import { isIP } from 'node:net';
+
 // Read-only public-health comparison against a Yard broker-route receipt.
 // This helper cannot authorize a NodeSeed, mint broker grants, enable Remote
 // Operator, or determine whether the supplied Yard receipt was authenticated.
@@ -13,7 +15,7 @@ function origin(value) {
       url.search || url.hash || url.pathname !== '/' ||
       !host || host === 'localhost' || host.endsWith('.localhost') ||
       host.endsWith('.local') || host.endsWith('.internal') ||
-      /^\\d{1,3}(?:\\.\\d{1,3}){3}$/.test(host) ||
+      isIP(host) !== 0 ||
       host.includes(':')) {
     throw new Error('broker_public_origin_invalid');
   }
