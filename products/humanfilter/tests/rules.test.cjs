@@ -30,3 +30,10 @@ test('custom keywords match case-insensitively', () => {
 test('malicious regex-looking keywords are literal, not executable', () => {
   assert.equal(make('Hello world', 'facebook', {customKeywords:['(a+)+$']}), null);
 });
+
+
+test('Strict matches standalone uppercase AI, not arbitrary lowercase word fragments', () => {
+  const strict = { ...DEFAULTS, mode: 'strict' };
+  assert.equal(classify({site:'youtube', text:'Amazing AI film'}, strict)?.kind, 'topic');
+  assert.equal(classify({site:'youtube', text:'I said hello'}, strict), null);
+});

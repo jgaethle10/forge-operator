@@ -8,7 +8,7 @@
   const selectors = {
     facebook: 'div[role="article"]',
     reddit: 'shreddit-post, [data-testid="post-container"], article[data-post-id]',
-    youtube: 'ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer'
+    youtube: 'ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-reel-item-renderer'
   };
   let settings = DEFAULTS;
   let queued = false;
@@ -29,6 +29,17 @@
         const value = el.textContent?.trim();
         if (value && value.length < 100) labels.push(value);
       }
+    }
+    // On some platforms an AI disclosure is rendered as short visible text
+    // rather than an ARIA label. Trust only exact short leaf labels, never
+    // arbitrary mention of AI inside a paragraph or unrelated discussion.
+    const exact = /^(?:ai info|made with ai|ai-generated|generated with ai|synthetic media|altered or synthetic content)$/i;
+    let checked = 0;
+    for (const el of element.querySelectorAll('span, small, label, yt-formatted-string, div')) {
+      if (++checked > 350) break;
+      if (el.childElementCount !== 0) continue;
+      const value = el.textContent?.trim();
+      if (value && value.length <= 45 && exact.test(value)) labels.push(value);
     }
     return labels;
   }

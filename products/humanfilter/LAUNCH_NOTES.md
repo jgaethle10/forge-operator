@@ -1,4 +1,4 @@
-# HumanFilter 0.1.2: launch verification / outstanding gates
+# HumanFilter 0.1.3: launch verification / outstanding gates
 
 Build date: 2026-10-25
 
@@ -25,6 +25,6 @@ Build date: 2026-10-25
 - Free beta, no checkout or revenue receipts.
 
 ## Build integrity
-- Installer: `Evercraft-HumanFilter-v0.1.2.zip`. For manual Chrome Developer Mode load, extract and select `extension/` from the extracted top-level directory if using original repo files. For the installer zip with manifest at root, select the unzipped root itself.
-- `Evercraft-HumanFilter-source-v0.1.2.zip`: readable source, docs, tests.
-- `Evercraft-HumanFilter-Launch-Site-v0.1.2.zip`: static website root with download assets.
+- Installer: `Evercraft-HumanFilter-v0.1.3.zip`. For manual Chrome Developer Mode load, extract and select `extension/` from the extracted top-level directory if using original repo files. For the installer zip with manifest at root, select the unzipped root itself.
+- `Evercraft-HumanFilter-source-v0.1.3.zip`: readable source, docs, tests.
+- `Evercraft-HumanFilter-Launch-Site-v0.1.3.zip`: static website root with download assets.

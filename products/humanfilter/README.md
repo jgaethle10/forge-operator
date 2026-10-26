@@ -1,4 +1,4 @@
-# Evercraft HumanFilter · v0.1.2
+# Evercraft HumanFilter · v0.1.3
 
 An intentionally simple, **local-only browser extension** to soften posts explicitly labeled or disclosed as AI-generated, or posts matching terms the user chooses. Developed as a limited beta candidate on October 25, 2026.
 
@@ -17,7 +17,7 @@ No image classification, neural detector, C2PA validation, blanket blocking of A
 
 ## Install for beta testing (desktop Chrome)
 
-1. Download and unzip `Evercraft-HumanFilter-v0.1.2.zip`.
+1. Download and unzip `Evercraft-HumanFilter-v0.1.3.zip`.
 2. In desktop Chrome open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the unpacked folder containing `manifest.json`.
 4. Open a supported social feed, then click the HumanFilter extension icon to configure it.
@@ -48,4 +48,4 @@ See `extension/options.html` and `store/privacy-policy.md`. No post content leav
 
 ## Self-hosted beta download page
 
-`launch-site/` is a deployable static HTML/CSS directory with the actual extension ZIP, source ZIP, privacy page, and a settings-panel screenshot. Serve over HTTPS on your own site after checking hostname and hosting privacy practices. The `Evercraft-HumanFilter-Launch-Site-v0.1.2.zip` archive contains this directory at its root. No hosting has been configured here.
+`launch-site/` is a deployable static HTML/CSS directory with the actual extension ZIP, source ZIP, privacy page, and a settings-panel screenshot. Serve over HTTPS on your own site after checking hostname and hosting privacy practices. The `Evercraft-HumanFilter-Launch-Site-v0.1.3.zip` archive contains this directory at its root. No hosting has been configured here.

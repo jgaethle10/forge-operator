@@ -55,5 +55,23 @@ with sync_playwright() as p:
         assert not errors, f'{site}: {errors}'
         page.close()
         print(f'{site}: filter, stable rescan, reveal, pause, resume, replacement passed')
+    # Native metadata disclosure can be a short visible label without ARIA.
+    page = browser.new_page()
+    page.set_content('<div role="article" id="label"><span>AI info</span><p>Portrait image</p></div>')
+    page.evaluate("""() => { window.chrome={storage:{local:{get:async()=>({})},onChanged:{addListener:()=>{}}}} }""")
+    page.add_style_tag(path=str(ROOT/'content.css'))
+    page.add_script_tag(path=str(ROOT/'rules.js'))
+    page.add_script_tag(content=(ROOT/'content.js').read_text().replace('const host = location.hostname;', 'const host = "www.facebook.com";'))
+    page.wait_for_selector('#label[data-humanfilter-hidden="true"] .humanfilter-notice')
+    page.close()
+    # YouTube Shorts cards now participate in Strict mode.
+    page = browser.new_page()
+    page.set_content('<ytd-reel-item-renderer id="short"><p>New AI short film</p></ytd-reel-item-renderer>')
+    page.evaluate("""() => { window.chrome={storage:{local:{get:async()=>({settings:{mode:'strict'}})},onChanged:{addListener:()=>{}}}} }""")
+    page.add_style_tag(path=str(ROOT/'content.css'))
+    page.add_script_tag(path=str(ROOT/'rules.js'))
+    page.add_script_tag(content=(ROOT/'content.js').read_text().replace('const host = location.hostname;', 'const host = "www.youtube.com";'))
+    page.wait_for_selector('#short[data-humanfilter-hidden="true"] .humanfilter-notice')
+    page.close()
     browser.close()
 print('3 mocked site fixtures passed')

@@ -1,4 +1,4 @@
-# Evercraft HumanFilter v0.1.2 | Verification report
+# Evercraft HumanFilter v0.1.3 | Verification report
 
 **Date:** October 25, 2026
 **Release status:** Local beta candidate; not cleared for broad public claims or Chrome Web Store publication.
@@ -38,3 +38,7 @@ python tests/popup_smoke.py
 ```
 
 The optional `tests/extension_e2e.py` uses real public host URLs with intercepted fixture responses and may fail in restricted environments. It has **not** passed in the current sandbox.
+
+## v0.1.3 local checks on 2026-10-26
+
+8/8 deterministic rules, 3 mocked feeds, Shorts card and AI-info leaf-label regression, reveal/card recycling, 300-post stress, popup all passed. Additional public Chrome test (v0.1.2): actual YouTube loaded but synthetic probe failed; Reddit HTTP 403; Facebook login wall; not a verified live-media detection result. Full live-site gate remains OPEN.

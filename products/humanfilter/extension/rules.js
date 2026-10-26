@@ -39,7 +39,10 @@
     }
     const matchTopics = settings.mode === "strict" || settings.filterTopics === true;
     const folded = normal(str);
-    if (matchTopics && topicTerms.some(t => folded.includes(t))) {
+    // Strict is explicitly about AI TOPICS, not proof of authorship.
+    // A standalone uppercase "AI" is a common title/hashtag on video feeds;
+    // avoid lowercase substrings that would match ordinary words like "said".
+    if (matchTopics && (topicTerms.some(t => folded.includes(t)) || /\b(?:AI|GenAI)\b/.test(str))) {
       return { kind: "topic", reason: "AI topic keyword" };
     }
     const terms = Array.isArray(settings.customKeywords) ? settings.customKeywords : [];
