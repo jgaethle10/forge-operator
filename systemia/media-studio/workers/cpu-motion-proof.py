@@ -23,19 +23,19 @@ def main():
         p.error("output must be .mp4")
     if not shutil.which("ffmpeg"):
         raise SystemExit("ffmpeg is required; no installation attempted")
-    # Five independently moving luminous bars, camera-like parallax and light sweeps.
-    # Draw expressions use FFmpeg's frame number n; no external assets.
+    # Five luminous bars with whole-field scrolling to create continuous motion.
+    # FFmpeg drawbox coordinates are static; the scroll filter animates the field.
     bars = [
-        ("120+n*5", "270+n*3", 240, 10, "0x42D9FF@0.75"),
-        ("600-n*4", "370+n*2", 190, 8, "0xA38CFF@0.70"),
-        ("240+n*3", "800-n*2", 270, 12, "0xE8F5FF@0.80"),
-        ("520-n*3", "990-n*3", 210, 8, "0x42D9FF@0.65"),
-        ("80+n*4", "1140-n*2", 300, 6, "0xA38CFF@0.65"),
+        ("120", "270", 240, 10, "0x42D9FF@0.75"),
+        ("600", "370", 190, 8, "0xA38CFF@0.70"),
+        ("240", "800", 270, 12, "0xE8F5FF@0.80"),
+        ("520", "990", 210, 8, "0x42D9FF@0.65"),
+        ("80", "1140", 300, 6, "0xA38CFF@0.65"),
     ]
     vf = "format=rgb24"
     for x,y,w,h,color in bars:
         vf += f",drawbox=x='{x}':y='{y}':w={w}:h={h}:color={color}:t=fill"
-    vf += ",gblur=sigma=1.5,eq=contrast=1.12:saturation=1.2,format=yuv420p"
+    vf += ",gblur=sigma=1.5,scroll=horizontal=0.025:vertical=0.012,eq=contrast=1.12:saturation=1.2,format=yuv420p"
     command = [
         "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
         "-f", "lavfi", "-i", "color=c=0x070C19:s=720x1280:r=24",
