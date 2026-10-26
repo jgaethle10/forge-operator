@@ -43,6 +43,53 @@ No owner is required to run these probes simply for CI or code completion.
 The physically installed HP remains at its last owner-observed local stage
 until an actual host probe produces a fresh independent receipt.
 
+## Find the actual broker first (read-only)
+
+Evercraft already implements `PublicRelayHostController` to deploy an
+Evercraft Compute resident broker alongside the public-edge workload.
+The existing proof only demonstrates `proof_loopback`; it does **not**
+establish that an externally verified `wildcard_https` deployment is
+running or reachable.
+
+Before deploying a duplicate or selecting a host, inspect the owner-controlled
+Yard deployment state on the machine that could already host the relay:
+
+```bash
+node scripts/nextgen/broker-deployment-doctor.mjs \
+  --yard-state "$HOME/.local/state/evercraft/organism/compute/control/yard"
+```
+
+This default example is the local organism's private Yard state, and a
+different owner-controlled Yard root may be used with `--yard-state`.
+A broker candidate in the JSON output is **not** a live authenticated
+broker. A missing record means only that the inspected path contains no
+ready remote-capacity broker record, not that Evercraft has none anywhere.
+
+When the correct HTTPS broker origin is independently known and explicitly
+approved by the owner, the doctor can check its health with:
+
+```bash
+node scripts/nextgen/broker-deployment-doctor.mjs \
+  --yard-state "$HOME/.local/state/evercraft/organism/compute/control/yard" \
+  --verify-public-health \
+  --allow-origin "https://OWNER_VERIFIED_BROKER_HOSTNAME"
+```
+
+No network request occurs without `--verify-public-health`, and the
+public preflight checks an allowlisted HTTPS origin, rejects redirects
+and compares the broker instance and deployment receipt reference.
+The output never includes raw URLs, control grants, device fingerprints
+or allocator tokens. `--require-local-broker-record` and
+`--require-public-health-consistency` are optional fail-closed checks.
+The source of the local Yard state must still be independently
+authenticated for production use; matching that local claim and public
+health does **not** authorize devices or prove remote MCP control.
+
+Never infer the broker origin from a public website or deploy it on a
+customer's private HP merely because a matching code path exists.
+Production relay deployment requires a real host, provisioned HTTPS
+wildcard edge, authenticated Yard ownership and verified route receipts.
+
 ## Admission order
 
 1. **Independent deployment.** In the actual Systemia Yard deployment state,
