@@ -36,8 +36,10 @@ async function run(){
     paid_campaign_authorized:false,claim:'Public first-party website footage; no paid-client outcome is portrayed.'};
   try{
     context=await browser.newContext({
-      viewport:{width:1080,height:1920},
-      deviceScaleFactor:1,locale:'en-US',
+      // True mobile CSS layout at 360x640, captured at 3x pixel density.
+      // A desktop 1080px CSS viewport creates tiny unreadable vertical footage.
+      viewport:{width:360,height:640},
+      deviceScaleFactor:3,locale:'en-US',
       colorScheme:'dark',reducedMotion:'no-preference',
       recordVideo:{dir:capture,size:{width:1080,height:1920}},
     });
