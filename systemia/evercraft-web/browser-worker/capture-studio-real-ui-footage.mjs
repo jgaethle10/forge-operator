@@ -6,6 +6,7 @@
  * Never sends a form, creates a customer, handles payments or inserts fake footage.
  */
 import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
