@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'systemia/evercraft-web/browser-worker/capture-studio-real-ui-footage.mjs'
+      - 'systemia/evercraft-web/browser-worker/capture-studio-real-ui-footage.test.mjs'
       - '.github/workflows/fallen-real-owned-ui-footage.yml'
   workflow_dispatch:
 
@@ -28,6 +29,9 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           sudo apt-get install -y ffmpeg
+      - name: Run real-frame occupancy regression tests
+        working-directory: systemia/evercraft-web/browser-worker
+        run: node --test capture-studio-real-ui-footage.test.mjs
       - name: Capture actual public Evercraft Studio browser pixels, not mockups
         env:
           FALLEN_SITE_CAPTURE_DIR: ${{ runner.temp }}/fallen-real-ui-source
