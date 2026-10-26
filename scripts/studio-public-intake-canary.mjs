@@ -19,6 +19,15 @@ try{
   const ready=a.status===200&&a.body.includes('Send my commercial brief')&&a.body.includes(endpoint)&&a.body.includes('receipt.received!==true');
   results.push({name:'customer_form',url:site,status:a.status,source_aware:ready});
   if(!ready)findings.push('PUBLIC_CUSTOMER_FORM_NOT_UPDATED');
+  const heroStart=a.body.indexOf('<section class="hero">');
+  const heroEnd=a.body.indexOf('</section>',heroStart);
+  const hero=heroStart>=0&&heroEnd>heroStart?a.body.slice(heroStart,heroEnd):'';
+  const priceFirst=hero.includes('<em>$50 commercial</em>')&&
+    hero.includes('One focused 30-second social video')&&
+    hero.includes('No filming or ad spend included')&&
+    hero.includes('Request my $50 commercial');
+  results.push({name:'price_first_customer_copy',url:site,status:a.status,exact_introductory_offer_visible:priceFirst});
+  if(!priceFirst)findings.push('PUBLIC_PRICE_FIRST_VALUE_PROP_NOT_DEPLOYED');
 }catch{findings.push('PUBLIC_CUSTOMER_FORM_UNOBSERVED');}
 try{
   const a=await observe(endpoint,'OPTIONS',{'origin':'https://jgaethle10.github.io','access-control-request-method':'POST','access-control-request-headers':'content-type'});
