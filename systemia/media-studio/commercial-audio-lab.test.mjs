@@ -59,3 +59,13 @@ test('hash mismatch, same path and nonfinite policy fail closed',t=>{
   assert.throws(()=>masterCommercialAudio({input:file,output:file}),/paths_invalid/);
   assert.throws(()=>auditCommercialAudio({input:file,standard:{targetLufs:Infinity}}),/nonfinite/);
 });
+test('ambiguous multiple soundtracks never pass studio final-master inspection',t=>{
+  const dir=folder(t),source=path.join(dir,'one.mp4'),multi=path.join(dir,'multi.mp4');
+  fixture(source,'1',2);
+  ffmpeg(['-y','-i',source,'-map','0:v:0','-map','0:a:0','-map','0:a:0','-c','copy',multi]);
+  const qc=auditCommercialAudio({input:multi});
+  assert.equal(qc.measurements.audioStreamCount,2);
+  assert.equal(qc.status,'rejected');
+  assert.ok(qc.reasons.includes('multiple_audio_streams_require_review'));
+  assert.throws(()=>masterCommercialAudio({input:multi,output:path.join(dir,'bad-master.mp4')}),/multiple_soundtracks_require_editorial_choice/);
+});
