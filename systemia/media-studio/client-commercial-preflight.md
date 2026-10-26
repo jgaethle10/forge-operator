@@ -51,3 +51,28 @@ The JSON document contains studioDelivery with videoPath, renderReceiptPath, mas
     node systemia/media-studio/customer-commercial-gate.mjs ./private/customer-request.json ./private/customer-preflight.json
 
 The command verifies the three existing receipt paths against the actual video, performs final-audio mastering inspection without altering the video, performs beat-specific final-picture motion inspection, and combines the results with rights, visual-coverage, creative review and customer-approval requirements. It writes an operator-readable JSON decision and exits nonzero when blocked. It **does not** render new content, copy customer media to GitHub, send the preview, request payment, or grant publication authority. A client-approved case still requires explicit operator delivery through governed Evercraft Clip/Shipping.
+
+## Canonical Studio Delivery receipt bridge
+
+The `studio-deliver` CLI now persists an additional `<slug>.studio-delivery-receipt.json` file alongside the MP4, render receipt, master QC receipt, audio QC receipt and Clip manifest. This saves the precise file paths, final-media SHA-256 and Clip manifest SHA-256. The receipt is **not** a client approval or permission to publish.
+
+Prefer a private customer request with a `studioDeliveryReceiptPath` referencing this one receipt file, rather than copying four separate media paths. Retain the rest of the order, storyboard, rights, production-grade visual, creative review and client-approval fields. For example:
+
+    {
+      "schema": "evercraft.fallen.client-commercial-gate-request.v1",
+      "studioDeliveryReceiptPath": "../private-customer-export/ad.studio-delivery-receipt.json",
+      "order": "... actual private scoped order object ...",
+      "storyboard": "... actual review beats ...",
+      "rights": "... verified asset-by-asset evidence ...",
+      "productionGrade": "... accepted per-beat visual proof ...",
+      "creativeReview": "... signed human review ...",
+      "clientApproval": { "status": "pending" }
+    }
+
+These literal explanatory placeholders are **not executable customer records**. The `customer-commercial-gate.mjs` operator accepts `studioDeliveryReceiptPath` or the older `studioDelivery` explicit path object, never both. Canonical receipts must come from a commercial quality-mode delivery with a non-publishing, ready-for-Clip-intake status. It checks the actual video, render receipt, master QC, Clip manifest, and persisted delivery receipt hashes before running audio and picture inspection.
+
+Test against a real encoded disposable video and forged manifest or digest cases:
+
+    node --test systemia/media-studio/customer-commercial-gate.test.mjs
+
+Customer requests and media remain outside GitHub. Passing this bridge proves receipt consistency, not the authenticity of commercial-use licenses or the quality of the human creative work.
