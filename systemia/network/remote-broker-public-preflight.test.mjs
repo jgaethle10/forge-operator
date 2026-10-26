@@ -112,3 +112,15 @@ test('broker network outage and malformed responses never yield verified health'
   assert.equal(malformed.result,'health_mismatch');
   assert.equal(malformed.remote_control_authorized,false);
 });
+
+test('even separately allowlisted numeric IP origins are never valid public broker hostnames', async () => {
+  let calls=0;
+  for(const value of ['https://127.0.0.1','https://192.168.1.5',
+    'https://8.8.8.8','https://[::1]']){
+    await assert.rejects(comparePublicBrokerWithYardReceipt({
+      yardReceipt:{...yard,origin:value},allowedOrigins:[value],
+      fetchImpl:async()=>{calls++;return response(health);},
+    }),/broker_public_origin_invalid/);
+  }
+  assert.equal(calls,0);
+});
