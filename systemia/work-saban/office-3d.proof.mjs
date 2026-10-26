@@ -49,7 +49,7 @@ const scene=new Element('div');scene.id='office-scene';
 const toggle=new Element('button');toggle.id='office-3d-toggle';
 const doc={
   createElement:tag=>new Element(tag),
-  getElementById(id)=>id==='office-scene'?scene:id==='office-3d-toggle'?toggle:scene.querySelector('#'+id)
+  getElementById:(id)=>id==='office-scene'?scene:id==='office-3d-toggle'?toggle:scene.querySelector('#'+id)
 };
 const context={document:doc,window:{innerWidth:1110},requestAnimationFrame:fn=>fn()};
 const source=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'office-3d.js'),'utf8');
