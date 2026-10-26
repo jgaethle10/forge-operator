@@ -58,6 +58,25 @@ function almostEqual(x,y){return Math.abs(Number(x)-Number(y))<0.005;}
 function sameText(x,y){
   return clean(x).replace(/\s+/g,' ').toLowerCase()===clean(y).replace(/\s+/g,' ').toLowerCase();
 }
+// On-camera performance must remain linked to the recorded shot, not silent video
+// decorated with independently generated words. Evidence references require human review.
+export function assertRelayLiveDialogueApproval(input){
+  if(input?.brief?.creativeStandard!=='relay-floor-v1')return;
+  for(const scene of input.brief.scenes||[]){
+    if(!scene.onScreenDialogue)continue;
+    const source=(input.brief.sourceAssets||[]).find(x=>x.id===scene.assetId);
+    const take=(input.approvedAudio?.voices||[]).find(x=>x.sceneId===scene.id);
+    if(!source||!take)throw new Error('relay_floor_live_dialogue_take_missing:'+scene.id);
+    if(!sameText(take.scriptText,scene.onScreenDialogue.text))
+      throw new Error('relay_floor_live_dialogue_script_mismatch:'+scene.id);
+    if(!source.path||!take.path||path.resolve(source.path)!==path.resolve(take.path)||
+       String(take.sha256||'').toLowerCase()!==String(source.sha256||'').toLowerCase())
+      throw new Error('relay_floor_live_dialogue_source_not_bound_to_video:'+scene.id);
+    if(!Array.isArray(take.reviewRefs)||!take.reviewRefs.length)
+      throw new Error('relay_floor_live_dialogue_source_review_missing:'+scene.id);
+  }
+}
+
 export function compileApprovedCommercial(input){
   if(input?.schema!=='evercraft.fallen.commercial-assembly.v1')
     throw new Error('commercial_assembly_schema_invalid');
@@ -70,6 +89,7 @@ export function compileApprovedCommercial(input){
   const approved=input.approvedAudio;
   if(!approved||!Array.isArray(approved.voices)||!Array.isArray(approved.sfx))
     throw new Error('commercial_approved_audio_manifest_missing');
+  assertRelayLiveDialogueApproval(input);
 
   const sources=new Map(input.brief.sourceAssets.map(item=>[item.id,item]));
   const assets=[],pictureClips=[],voiceClips=[],sfxClips=[];

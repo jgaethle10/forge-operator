@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import test from 'node:test';
-import {compileApprovedCommercial,renderApprovedCommercial} from './commercial-assembly.mjs';
+import {compileApprovedCommercial,renderApprovedCommercial,assertRelayLiveDialogueApproval} from './commercial-assembly.mjs';
 
 function ffmpeg(args){
   const r=spawnSync('ffmpeg',['-nostdin','-hide_banner','-v','error',...args],{encoding:'utf8',maxBuffer:2*1024*1024});
@@ -117,4 +117,18 @@ test('renders a playable H264/AAC MP4 and requires encoded commercial audio QC',
   assert.equal(manifest.media.sha256,result.mediaSha256);
   assert.equal(manifest.provenance.commercialAudioQcReceiptPath,result.audioQcReceiptPath);
   assert.equal(manifest.boundaries.publicationAuthorityGranted,false);
+});
+
+test('on-camera speech cannot use an unrelated standalone voice take',t=>{
+  const {input}=specimen(t);
+  input.brief.creativeStandard='relay-floor-v1';
+  input.brief.scenes[0].onScreenDialogue={text:input.brief.scenes[0].voiceLine,
+    syncAudioAssetRef:'v0',performerUseConsentRef:'consenting-performer-fixture'};
+  assert.throws(()=>assertRelayLiveDialogueApproval(input),/source_not_bound_to_video/);
+  input.approvedAudio.voices[0]={...approval(input.brief.sourceAssets[0].path),
+    sceneId:'beat0',scriptText:input.brief.scenes[0].voiceLine,
+    voiceProfileId:'source-performer',durationSec:0.72,offsetSec:0};
+  assert.doesNotThrow(()=>assertRelayLiveDialogueApproval(input));
+  input.approvedAudio.voices[0].scriptText='A different line, not performed on camera';
+  assert.throws(()=>assertRelayLiveDialogueApproval(input),/script_mismatch/);
 });
