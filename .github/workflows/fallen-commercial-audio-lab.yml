@@ -12,6 +12,8 @@ on:
       - 'systemia/media-studio/commercial-visual-qc.test.mjs'
       - 'systemia/media-studio/customer-commercial-gate.mjs'
       - 'systemia/media-studio/customer-commercial-gate.test.mjs'
+      - 'systemia/media-studio/cli.ts'
+      - 'systemia/media-studio/client-commercial-preflight.md'
       - 'systemia/media-studio/commercial-creative-roles.test.mjs'
       - 'systemia/media-studio/creative-council-saban-adapter.mjs'
       - 'systemia/saban/multiplication-registry.json'
