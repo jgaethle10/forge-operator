@@ -56,7 +56,8 @@ async function run(){
     await page.screenshot({path:path.join(output,'02_scoped_pilot.png')});
     await glide(page,'#work',3000);
     await page.screenshot({path:path.join(output,'03_our_own_product_proof.png')});
-    await glide(page,'#inquire',3500);
+    // Frame the real inquiry FORM, not merely the long section headline above it.
+    await glide(page,'#studio-request',3500);
     await page.screenshot({path:path.join(output,'04_consent_inquiry.png')});
     const video=page.video();
     await page.close();
