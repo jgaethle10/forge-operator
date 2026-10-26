@@ -1,3 +1,4 @@
+import {renderOffers} from '../systemia/mcp/fabric-public-site.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -25,4 +26,14 @@ test('LLM discovery routes buyer to consented human inquiry without in-plugin ch
 test('do not advertise a pay-now service outside human scope review',()=>{
  assert.match(landing,/No payment at inquiry/);
  assert.match(landing,/asset-rights review and client approval/);
+});
+
+test('owned /offers directory routes to commercial inquiry without unauthorized checkout',()=>{
+ const html=renderOffers([]);
+ assert.ok(html.includes('Need a 30-second video for your small business?'));
+ assert.ok(html.includes('Request the $50 commercial brief'));
+ assert.ok(html.includes('https://jgaethle10.github.io/forge-operator/commercial-studio/'));
+ assert.ok(html.includes('before proposing payment'));
+ const panel=html.split('aria-label="Commercial Studio introductory creative service"')[1].split('</section>')[0];
+ assert.doesNotMatch(panel,/buy\.stripe\.com|<form|user_confirmed|checkout_started/);
 });
