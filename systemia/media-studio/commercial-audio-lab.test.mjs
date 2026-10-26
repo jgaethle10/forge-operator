@@ -69,3 +69,20 @@ test('ambiguous multiple soundtracks never pass studio final-master inspection',
   assert.ok(qc.reasons.includes('multiple_audio_streams_require_review'));
   assert.throws(()=>masterCommercialAudio({input:multi,output:path.join(dir,'bad-master.mp4')}),/multiple_soundtracks_require_editorial_choice/);
 });
+
+test('Relay-floor audio rejects a flat mix even if its integrated volume is corrected',t=>{
+  const dir=folder(t),source=path.join(dir,'flat-source.mp4'),master=path.join(dir,'flat-master.mp4');
+  fixture(source,'0.05',8);
+  const ordinary=masterCommercialAudio({input:source,output:master});
+  assert.equal(ordinary.status,'accepted');
+  const inspected=auditCommercialAudio({input:master,standard:{minLraLu:4}});
+  assert.ok(inspected.measurements.loudnessRangeLu<4,
+    'stationary tone must remain dynamically flat after loudness normalization');
+  assert.equal(inspected.status,'rejected');
+  assert.ok(inspected.reasons.includes('loudness_range_below_cinematic_floor'));
+  assert.throws(()=>auditCommercialAudio({input:master,standard:{minLraLu:-1}}),/audio_min_lra_invalid/);
+  const rejectedTarget=path.join(dir,'should-not-publish.mp4');
+  assert.throws(()=>masterCommercialAudio({input:source,output:rejectedTarget,
+    standard:{minLraLu:4}}),/audio_master_post_qc_rejected:loudness_range_below_cinematic_floor/);
+  assert.equal(fs.existsSync(rejectedTarget),false);
+});
