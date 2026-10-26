@@ -6,6 +6,8 @@ on:
       - 'scripts/nextgen-browser-commission.mjs'
       - 'tests/nextgen-browser-commission.test.mjs'
       - 'scripts/nextgen-browser-diagnose.mjs'
+      - 'scripts/nextgen-browser-yard-proof.mjs'
+      - 'tests/nextgen-browser-yard-proof.test.mjs'
       - 'tests/nextgen-browser-diagnose.test.mjs'
       - 'systemia/evercraft-web/browser-worker/server.mjs'
       - 'systemia/evercraft-web/browser-worker/native-runtime.mjs'
@@ -28,13 +30,15 @@ jobs:
         run: |
           node --check scripts/nextgen-browser-commission.mjs
           node --check scripts/nextgen-browser-diagnose.mjs
+          node --check scripts/nextgen-browser-yard-proof.mjs
           node --check systemia/evercraft-web/browser-worker/server.mjs
           node --check systemia/evercraft-web/browser-worker/native-runtime.mjs
       - name: Reject non-NextGen execution, unsafe actions and fabricated evidence
-        run: node --test tests/nextgen-browser-commission.test.mjs tests/nextgen-browser-diagnose.test.mjs
+        run: node --test tests/nextgen-browser-commission.test.mjs tests/nextgen-browser-diagnose.test.mjs tests/nextgen-browser-yard-proof.test.mjs
       - name: Enforce no HP remote admission claim from ephemeral CI
         run: |
           node scripts/nextgen-browser-commission.mjs --status
+          node scripts/nextgen-browser-yard-proof.mjs --status
           if node scripts/nextgen-browser-commission.mjs --run; then
             echo "UNSAFE: non-NextGen hosted runner started physical canary"
             exit 1
