@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/nextgen-browser-commission.mjs'
       - 'tests/nextgen-browser-commission.test.mjs'
+      - 'scripts/nextgen-browser-diagnose.mjs'
+      - 'tests/nextgen-browser-diagnose.test.mjs'
       - 'systemia/evercraft-web/browser-worker/server.mjs'
       - 'systemia/evercraft-web/browser-worker/native-runtime.mjs'
       - '.github/workflows/node002-owned-browser-commission.yml'
@@ -25,10 +27,11 @@ jobs:
       - name: Validate NextGen script and existing Browser Worker
         run: |
           node --check scripts/nextgen-browser-commission.mjs
+          node --check scripts/nextgen-browser-diagnose.mjs
           node --check systemia/evercraft-web/browser-worker/server.mjs
           node --check systemia/evercraft-web/browser-worker/native-runtime.mjs
       - name: Reject non-NextGen execution, unsafe actions and fabricated evidence
-        run: node --test tests/nextgen-browser-commission.test.mjs
+        run: node --test tests/nextgen-browser-commission.test.mjs tests/nextgen-browser-diagnose.test.mjs
       - name: Enforce no HP remote admission claim from ephemeral CI
         run: |
           node scripts/nextgen-browser-commission.mjs --status
