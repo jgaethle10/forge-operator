@@ -33,12 +33,12 @@
       "id": "hook-real-scroll",
       "role": "hook",
       "durationSec": 4,
-      "subject": "real desktop browser feed with a visible AI disclosure",
+      "subject": "real person seated at a desktop computer in an actual working environment, seeing the feed",
       "subjectVisibleAtStart": true,
-      "physicalAction": "Camera tracks a real desktop browser showing an actually loaded feed as a visibly AI-labeled post scrolls into the reading area; no fake platform UI",
-      "camera": "Cinematic documentary-style close-in screen plate with shallow physical depth and a single decisive focus shift",
+      "physicalAction": "Open on an original live-action over-the-shoulder shot of a person scrolling a desktop social feed in a real room. Human body, hand, physical monitor and feed are recognizable in the first second. A post with a verifiable AI disclosure must be shown; blur unrelated personal information.",
+      "camera": "Source-first environmental wide revealing the person and monitor; cut into a tight physical over-shoulder shot while preserving display readability",
       "visual": {
-        "prompt": "ACQUIRE NEW owned 4-second clean 16:9/9:16 desktop browser capture from a real session. If a personal account is required, get owner's consent; hide names and private content. AI disclosure must be legible and verified. Start visually, no headline card.",
+        "prompt": "MISSING - acquire newly filmed consented human/desktop plate at real location. No film-ready source exists yet. Desktop rather than phone because the extension is not an iOS Chrome app. Real AI-labeled post must be separately verified.",
         "sourceRefs": [
           "source-required:real-browser-ai-disclosure"
         ]
@@ -59,8 +59,8 @@
       "role": "proof",
       "durationSec": 8,
       "subject": "actual HumanFilter popup and labeled post being softened by installed extension",
-      "physicalAction": "Real user enables Balanced mode in the installed extension, and a genuinely AI-labeled feed item is softened while an adjacent human post remains visible",
-      "camera": "Match cursor move to macro UI view; natural click sound; no manufactured performance metrics",
+      "physicalAction": "From the physical human computer interaction, match-cut to a clean native screen capture. Installed HumanFilter Balanced mode toggles and an actually AI-labeled item softens; adjacent normal post remains unaffected.",
+      "camera": "Physical screen-to-pixel match cut with no fake UI: show a recognizable mouse movement, true popup, then hold one readable before/after result",
       "visual": {
         "prompt": "ACQUIRE NEW verified actual Chromium extension recording using v0.1.4 installed on supported browser; show before, control toggle, filter result and intact adjacent human content. Captured original pixels, not re-painted interface. Do not claim a universal AI detector.",
         "sourceRefs": [
@@ -84,8 +84,8 @@
       "role": "body",
       "durationSec": 7,
       "subject": "authentic HumanFilter Strict toggle and custom keyword controls",
-      "physicalAction": "Real hand moves the pointer to Strict and enters a custom topic term using the actual extension popup, with a meaningful live feed change verified in the recorded browser",
-      "camera": "Tight motivated pan between true UI regions; no counterfeit interface, no floating information wall",
+      "physicalAction": "Cut back to user's hand and physical screen for context, then show a legitimate recording of real Strict and custom-keyword controls. Demonstrate a visibly matched topic, rather than a vague floating feature card.",
+      "camera": "Motivated moving insert of hand on trackpad before a legible native extension popup, one change per shot with breathing room",
       "visual": {
         "prompt": "ACQUIRE NEW real browser capture of actual popup 'Balanced/Strict' and keyword field, with one verified resultant feed change and no fake detections. Preserve original UI legibility at phone size.",
         "sourceRefs": [
@@ -109,8 +109,8 @@
       "role": "body",
       "durationSec": 5,
       "subject": "authentic HumanFilter Show once button restoring a covered item",
-      "physicalAction": "Real cursor clicks Show once on the covered post and that exact post becomes visible while the extension remains enabled",
-      "camera": "One clean unbroken close-up, hold enough to prove the feature; no artificial crash-zoom",
+      "physicalAction": "One real Show once click restores the covered card, followed immediately by a genuine person calmly resuming scrolling. Prove restoration, not disappearance magic.",
+      "camera": "Hold the actual reveal long enough for viewers to understand; match the reveal into a tactile human reaction shot; no theatrical zoom",
       "visual": {
         "prompt": "ACQUIRE NEW actual product video proof of Show once on a real/carefully disclosed controlled sample, legible to a mobile audience. If live site isn't available label as controlled demonstration.",
         "sourceRefs": [
@@ -130,9 +130,9 @@
       "id": "cta-brand",
       "role": "cta",
       "durationSec": 6,
-      "subject": "real HumanFilter browser-extension popup and clear desktop beta call to action",
-      "physicalAction": "A clear stabilized hero frame of actual HumanFilter popup on a desktop browser resolves under a restrained owned Evercraft lockup and free beta invitation",
-      "camera": "Stable lockoff from real recorded screen with subtle motivated parallax; no title-only hero shot",
+      "subject": "human in the physical environment plus actual HumanFilter desktop interface",
+      "physicalAction": "Close on a newly filmed real human at their desktop with a clean, truly rendered HumanFilter interface visible, then a restrained branded CTA. No white text-only screen occupying all six seconds.",
+      "camera": "Real camera holds the human/product hero with clean natural depth; a minimal Evercraft/HumanFilter identity appears only after physical proof.",
       "visual": {
         "prompt": "ACQUIRE NEW 6-sec source-first product hero plate using actual HumanFilter UI plus approved Evercraft logo; keep any additional type below 12 words and legible on 9:16 phone preview.",
         "sourceRefs": [
@@ -169,6 +169,31 @@
       "multi-device full video audition",
       "Fallen commercial audio and shot-quality QC",
       "explicit publish approval"
-    ]
+    ],
+    "referenceBenchmark": {
+      "referenceLengthSec": 30,
+      "format": "vertical",
+      "v17LowActivityFraction": 0.336,
+      "currentControlledFeedLowActivityFraction": 0.838,
+      "currentControlledPopupLowActivityFraction": 0.95,
+      "qualitativeRisk": "RC3 captured product demo is useful proof footage but too static to be the hero commercial",
+      "notAnAutoPassCriterion": true,
+      "minimumNewShoot": "New actual human using desktop: wide/context, hands/interaction, face/reaction, product proof; source files, rights, QA required"
+    }
+  },
+  "referenceStandard": {
+    "source": "Owner-supplied On The Go Mobile Quick Lube V17 Still Vans First Test Review (2)",
+    "privateSourceSha256": "1a30e3ff9103434d6d29b679175e152efc22914a786f7ed13f5e634cebb20255",
+    "referenceOnly": true,
+    "neverEmbedReferenceFootageOrBranding": true,
+    "referenceCharacteristics": [
+      "Open on a tangible environment and immediately establish the human problem, not a title card",
+      "Show a real person, the real product, real work and observable proof in motivated cuts",
+      "Alternate environment, action, product details and human face to avoid a static interface montage",
+      "Reserve the logo/CTA for a clean end card after proving the service",
+      "Make text short and secondary to picture: the image must carry the claim"
+    ],
+    "mediaStatus": "private owner reference - not provided as licensable HumanFilter source",
+    "visualMotionNote": "V17 image-change review is a quality reference, not a universal motion threshold"
   }
 }
