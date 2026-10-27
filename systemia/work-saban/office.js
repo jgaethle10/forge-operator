@@ -14,6 +14,7 @@
   const specialists=new Set(['analyst','writer','designer','auditor','coordinator']);
   const state=Object.fromEntries(roles.map(r=>[r.id,'idle']));
   const proofs={};
+  const receipts={};
   let chosen='director',events=[],replayIndex=-1,replayTimer=null,running=false,svg=null;
   function makeSvg(tag, attrs={}) {
     const el=document.createElementNS(ns,tag);
@@ -28,6 +29,22 @@
     $('office-agent-desc').textContent=role.desc;
     $('office-agent-state').textContent=state[chosen].replaceAll('_',' ').toUpperCase();
     $('office-agent-proof').textContent=proofs[chosen]||(state[chosen]==='proposed'?'Proposal only, not executing':'No execution yet');
+    const evidence=receipts[chosen];
+    $('office-copy-receipt').disabled=!evidence;
+    if(evidence){
+      $('office-agent-evidence').textContent=[
+        'QA: '+evidence.quality_status,
+        'Attempt count: '+String(evidence.attempts ?? 'unknown'),
+        'Worker type: '+String(evidence.worker_receipt_schema || 'unknown'),
+        'Duration: '+String(evidence.measured_duration_ms ?? 'unknown')+' ms',
+        'Result digest: '+String(evidence.result_sha256 || 'unavailable'),
+        'Assignment key: '+String(evidence.idempotency_key || 'unavailable')
+      ].join('\n');
+    }else{
+      $('office-agent-evidence').textContent=state[chosen]==='proposed'
+        ?'Assigned in the proposal. No work has actually run.'
+        :'No independently checked worker receipt for this specialist.';
+    }
     svg?.querySelectorAll('[data-agent]').forEach(g=>g.classList.toggle('is-selected',g.getAttribute('data-agent')===chosen));
     window.WorkSaban3D?.select(chosen);
   }
@@ -69,7 +86,9 @@
   function reset(kind='idle') {
     window.WorkSaban3D?.reset();
     stopReplay();events=[];replayIndex=-1;running=false;
-    roles.forEach(r=>{state[r.id]=kind;delete proofs[r.id];});
+    roles.forEach(r=>{state[r.id]=kind;delete proofs[r.id];delete receipts[r.id];});
+    $('office-trace-integrity').textContent='Not checked';
+    $('office-export-trace').disabled=true;
     svg?.querySelectorAll('#floor-connections path').forEach(p=>p.classList.remove('is-handoff'));
     $('office-events').replaceChildren();
     $('office-event-count').textContent='0 events';
@@ -120,6 +139,7 @@
       }
       state[event.role]='verified';
       proofs[event.role]=String(event.receipt.result_sha256||'Missing receipt hash').slice(0,30)+'…';
+      receipts[event.role]=event.receipt;
       $('office-current').textContent='Verified '+byId[event.role].name;
       append('stage_verified',event.role,'Completed · quality gate passed',event.receipt);
       select(event.role);
@@ -210,6 +230,13 @@
       window.WorkSaban3D?.setEnabled(!pressed);
       scene.classList.toggle('has-spatial-view',!pressed);
     });
+    $('office-copy-receipt').addEventListener('click',async()=>{
+      const receipt=receipts[chosen];
+      if(!receipt)return;
+      try{await navigator.clipboard.writeText(JSON.stringify(receipt,null,2));
+        $('office-copy-receipt').textContent='Copied worker receipt';}
+      catch{$('office-copy-receipt').textContent='Clipboard unavailable';}
+    });
     reset();select('director');
     window.WorkSaban3D?.setEnabled(true);
     scene.classList.add('has-spatial-view');
@@ -227,5 +254,13 @@
     proposed:mission=>ready.then(()=>proposed(mission)),
     reset:()=>ready.then(()=>reset()),
     select:id=>ready.then(()=>select(id)),
+    traceStatus:summary=>{
+      const valid=summary?.status==='completed';
+      const invalid=summary?.status==='invalid'||summary?.status==='failed';
+      $('office-trace-integrity').textContent=valid
+        ?'Locally checked · SHA-256 · unsigned'
+        :invalid?'Failed or incomplete':'Verifying ordered events…';
+      $('office-export-trace').disabled=!valid;
+    },
   };
 })();
