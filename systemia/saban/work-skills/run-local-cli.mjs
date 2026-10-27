@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import path from 'node:path';
+import { renderLocalWorkroom } from './workroom.mjs';
 import { runLocalCommercialBrief } from './run-local.mjs';
 const arg = flag => { const i = process.argv.indexOf(flag); return i < 0 ? '' : (process.argv[i + 1] || ''); };
 try {
@@ -8,7 +10,8 @@ try {
   }
   const brief = JSON.parse(fs.readFileSync(arg('--brief-file'), 'utf8'));
   const receipt = await runLocalCommercialBrief({ task: arg('--task'), brief, outDir: arg('--out') });
-  process.stdout.write(JSON.stringify({ state: receipt.state, role_count: receipt.role_count,
+  fs.writeFileSync(path.join(path.resolve(arg('--out')), 'work-saban-workroom.html'), renderLocalWorkroom(receipt), { mode: 0o600 });
+  process.stdout.write(JSON.stringify({ workroom_file: 'work-saban-workroom.html', state: receipt.state, role_count: receipt.role_count,
     receipt_sha256: receipt.receipt_sha256, external_effects_performed: false,
     receipt_file: 'work-saban-local-receipt.json' }, null, 2) + '\n');
 } catch (error) {
