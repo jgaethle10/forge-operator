@@ -10,6 +10,8 @@ takes=[
  ("brakes_natural","Brake service.",1.0),
  ("brakes_warm","Brake service!",0.96),
  ("paired_flow","Oil changes. Brake service.",1.0),
+ ("brand_full_natural","On The Go Mobile Quick Lube.",1.0),
+ ("brand_full_warm","On The Go Mobile Quick Lube.",0.96),
 ]
 results=[]
 for i,(name,words,speed) in enumerate(takes):
