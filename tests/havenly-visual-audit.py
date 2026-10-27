@@ -31,7 +31,7 @@ with sync_playwright() as p:
             assert page.locator("#textRequest").count() == 1, "Manual inquiry option missing"
             overflow = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
             assert overflow <= 2, f"Horizontal overflow at {width}px: {overflow}px"
-            if width <= 730:
+            if width <= 920:
                 menu = page.locator("details.mobile-menu")
                 assert menu.is_visible(), "Mobile menu absent"
                 menu.locator("summary").click()
