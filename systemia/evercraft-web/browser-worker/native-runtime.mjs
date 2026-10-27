@@ -292,6 +292,7 @@ export async function startNativeBrowserRuntime({
     env:{
       ...process.env,
       PORT:String(port),
+      EVERCRAFT_BROWSER_BIND_HOST:'127.0.0.1',
       EVERCRAFT_BROWSER_WORKER_TOKEN:workerToken,
       EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN:authOperatorToken,
       EVERCRAFT_BROWSER_MAX_CONCURRENCY:String(
