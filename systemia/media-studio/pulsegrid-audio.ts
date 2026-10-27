@@ -181,10 +181,17 @@ export class PulseGridAudioEngine {
     }
     const Offline=globalThis.OfflineAudioContext;
     if(!Offline)return unavailable('This browser does not support OfflineAudioContext.');
-    return renderFoundryPianoOfflineBus({
+    const authority=this.audioAuthoritySignature;
+    const cacheEpoch=this.audioCacheEpoch;
+    const attempt=this.playbackAttempt;
+    const rendered=await renderFoundryPianoOfflineBus({
       voices,tracks:Array.from(snapshots.values()),
       offlineContextFactory:(channels,frames,rate)=>new Offline(channels,frames,rate),
     });
+    if(this.playing||authority!==this.audioAuthoritySignature||
+       cacheEpoch!==this.audioCacheEpoch||attempt!==this.playbackAttempt)
+      return unavailable('Audio authorization or playback state changed during the offline review.');
+    return rendered;
   }
 
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
