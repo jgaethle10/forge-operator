@@ -426,3 +426,55 @@ test('the actual PulseGrid sampler guards abrupt WAV onset instead of treating i
   }finally{await engine.close()}
  });
 });
+
+test('real PulseGrid sample scheduling skips only verified capture pre-roll, not source pitch or rights',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const pcm=new Float32Array(36000),rate=48000,delay=Math.round(rate*.022);
+  for(let i=delay;i<pcm.length;i++)pcm[i]=.18*Math.sin(2*Math.PI*261.626*(i-delay)/rate);
+  class LateAttackContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){
+    const original=await super.decodeAudioData(raw);
+    return {...original,getChannelData:()=>pcm};
+   }
+  }
+  globalThis.AudioContext=LateAttackContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const ctx=SimulatedAudioContext.instances.at(-1);
+   const started=ctx.starts.at(-1);
+   assert.equal(started.args.length,2,'Web Audio source.start must carry authorized sample offset');
+   assert.ok(started.args[1]>=.016&&started.args[1]<=.021,'only operator silence is aligned');
+   assert.equal(engine.status.decoded_preroll_aligned_voices,1);
+   assert.equal(engine.status.decoded_sample_tail_warnings,0);
+   assert.equal(ctx.createdOscillators,0,'no oscillator or other synthesized replacement');
+   assert.equal(session.assets[0].rights,'unknown','recording rights must not be promoted');
+   const buffer=started.source.buffer;
+   assert.equal(buffer.getChannelData(0),pcm,'original decoded PCM remains unchanged');
+  }finally{await engine.close()}
+ });
+});
+test('a soft piano onset stays at source zero, with no speculative trimming',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const pcm=new Float32Array(36000),rate=48000;
+  for(let i=0;i<pcm.length;i++)pcm[i]=.005*Math.sin(2*Math.PI*261.626*i/rate);
+  class SoftAttackContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){
+    const original=await super.decodeAudioData(raw);
+    return {...original,getChannelData:()=>pcm};
+   }
+  }
+  globalThis.AudioContext=SoftAttackContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const source=SimulatedAudioContext.instances.at(-1).starts.at(-1);
+   assert.equal(source.args[1],0);
+   assert.equal(engine.status.decoded_preroll_aligned_voices,0);
+  }finally{await engine.close()}
+ });
+});
