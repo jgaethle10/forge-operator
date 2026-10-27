@@ -9,6 +9,7 @@ import {pathToFileURL} from 'node:url';
 import {planSourceFirstCommercial} from './commercial-shotlist.mjs';
 import {makeTimelineProject} from './timeline.ts';
 import {finalizeStudioDelivery} from './studio-delivery.ts';
+import {preflightCommercialCaptions} from './commercial-captions.mjs';
 
 const DESTINATIONS=new Set(['youtube','facebook','instagram','linkedin','tiktok']);
 const FORMATS=new Set(['9:16','16:9','1:1']);
@@ -153,6 +154,8 @@ export function compileApprovedCommercial(input){
     const cap=approved.captions;
     approvedFile(cap,'captions');
     if(path.extname(cap.path).toLowerCase()!=='.srt')throw new Error('commercial_captions_srt_required');
+    preflightCommercialCaptions({filePath:cap.path,aspectRatio:format,
+      durationSec:plan.durationSec,expectedSha256:cap.sha256});
     assets.push({id:'approved-captions',path:path.resolve(cap.path),digest:cap.sha256,
       kind:'captions',sourceRefs:[...cap.sourceRefs,...cap.reviewRefs.map(x=>'review:'+x)]});
     captionClips.push({id:'caption-track',trackId:'captions',assetId:'approved-captions',
@@ -173,6 +176,7 @@ export function compileApprovedCommercial(input){
     audioMaster:{targetLufs:-16,truePeakDb:-1.5,lra:9,dialogueDucking:true,
       duckThreshold:0.05,duckRatio:8,attackMs:20,releaseMs:350,sampleRate:48000}
   });
+  project.captionStyle='commercial_safe';
   const delivery={
     schema:'evercraft.fallen.studio-delivery-request.v1',id:project.id,
     slug:project.id,project,

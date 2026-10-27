@@ -4,6 +4,10 @@ on:
     paths:
       - "systemia/media-studio/timeline.ts"
       - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/commercial-captions.mjs"
+      - "systemia/media-studio/commercial-captions.test.mjs"
+      - "systemia/media-studio/commercial-caption-render.test.mjs"
+      - "systemia/media-studio/commercial-assembly.mjs"
       - "systemia/media-studio/timeline-export.test.ts"
       - "systemia/media-studio/commercial-variants.mjs"
       - "systemia/media-studio/commercial-review-desk.mjs"
@@ -24,19 +28,22 @@ jobs:
           node-version: '22'
       - name: Prepare FFmpeg and TypeScript toolchain
         run: |
-          npm install --no-audit --no-fund
+          # The 3-format proof needs only the owned source, FFmpeg and the TS runner.
+          # Isolate the small runner to avoid a full monorepo install hanging on CI.
+          npm install --prefix "$RUNNER_TEMP/fallen-media-tooling" --no-save --no-audit --no-fund --ignore-scripts tsx@4.20.6
           if ! command -v ffmpeg >/dev/null 2>&1; then
             sudo apt-get update -qq
             sudo apt-get install -y ffmpeg
           fi
       - name: Test bounded focal crop and timeline geometry
-        run: node --import tsx --test systemia/media-studio/timeline-export.test.ts
+        run: "$RUNNER_TEMP/fallen-media-tooling/node_modules/.bin/tsx" --test systemia/media-studio/timeline-export.test.ts
+      - name: Preflight commercial captions and inspect actual FFmpeg subtitle pixels
+        run: "$RUNNER_TEMP/fallen-media-tooling/node_modules/.bin/tsx" --test systemia/media-studio/commercial-captions.test.mjs systemia/media-studio/commercial-caption-render.test.mjs
       - name: Render three formats, verify digest-bound media, build offline review page and reject tampering
         env:
           FALLEN_VARIANT_CI_PROOF_DIR: artifacts/fallen-commercial-variant-proof
-        run: node --import tsx --test systemia/media-studio/commercial-variants.test.mjs
-      - name: Validate overall repository typing
-        run: npm run lint
+        run: "$RUNNER_TEMP/fallen-media-tooling/node_modules/.bin/tsx" --test systemia/media-studio/commercial-variants.test.mjs
+      # Forge checks runs the full repository typecheck and production build separately.
       - name: Upload synthetic CI proof, not a client advertisement
         if: always()
         uses: actions/upload-artifact@v4

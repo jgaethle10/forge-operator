@@ -74,3 +74,18 @@ The decision is a JSON object with schema evercraft.fallen.commercial-human-revi
 The tool records the self-attestation and validates that the specifically named bytes still exist unchanged. It does not authenticate the reviewer's identity, independently observe the review or authorize customer delivery, platform publication or payment. A separately authorized real-world release process remains mandatory. An invalid, missing, stale or mismatched acknowledgment is rejected.
 
 CI warning: The automated synthetic fixture test exercises this viewing and integrity machinery with oscillator audio. The test's synthetic reviewer declaration is test data, not a human review or license certification. Only actual paid-client or owner-approved media can be used to demonstrate creative quality.
+
+
+## Mobile-first commercial subtitles (source and screen preflight)
+
+For commercial deliveries, approved SRT captions are checked before video assembly for sequence numbers, monotonic cue timing, no overlaps, total runtime, maximum two lines, per-line width, non-markup text and excessive reading speed. The same SRT is preflighted separately for 16:9, 1:1 and 9:16. Portrait text has a stricter width limit, so a horizontal layout that passes does not automatically authorize the phone edition.
+
+The explicitly commercial-only timeline setting captionStyle = commercial_safe applies calibrated FFmpeg/libass subtitle positions. Existing ordinary and narrative-film timeline projects retain their previous subtitle behavior.
+
+At 1080x1920, captions sit about 78-79% down the full frame, leaving a substantial gap above the lower app-interface zone. Square and widescreen get their own calibrated positions. The subtitle font is approximately a 50px actual on-screen glyph at 1080px output width, with white high-contrast lettering and a dark outline. These are internal engineering safe bands, not claims of exact compatibility with every TikTok, Facebook or Instagram UI overlay. Brand fonts and wording still require visual approval.
+
+Test with:
+
+    node --import tsx --test systemia/media-studio/commercial-captions.test.mjs systemia/media-studio/commercial-caption-render.test.mjs
+
+The second test renders actual subtitles against a black video using FFmpeg and asserts the visible caption ink stays within per-format review bounds. Actual commercials still need playback on physical phones and an owner/client viewing decision. The optical test doesn't prove the words are tasteful, the font is the best brand choice, or all future platform UI overlays are clear.

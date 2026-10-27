@@ -10,6 +10,14 @@ import type {
 } from './timeline.js';
 import { buildAudioMasterGraph, type NormalizedAudioMasterPolicy } from './audio-master.js';
 
+// libass SRT styles are in ASS script-resolution units, not output pixels.
+// Calibrated with actual FFmpeg 1080x1920, 1080x1080 and 1920x1080 renders.
+const COMMERCIAL_CAPTION_STYLES = {
+  '9:16': 'Fontname=DejaVu Sans,Fontsize=9,MarginV=58,MarginL=12,MarginR=12,Alignment=2,Outline=1.5,Shadow=0,Bold=1',
+  '1:1': 'Fontname=DejaVu Sans,Fontsize=14,MarginV=36,MarginL=20,MarginR=20,Alignment=2,Outline=1.5,Shadow=0,Bold=1',
+  '16:9': 'Fontname=DejaVu Sans,Fontsize=15,MarginV=28,MarginL=18,MarginR=18,Alignment=2,Outline=1.5,Shadow=0,Bold=1',
+} as const;
+
 const DIMENSIONS = {
   '9:16': { width: 1080, height: 1920 },
   '16:9': { width: 1920, height: 1080 },
@@ -215,7 +223,9 @@ export function buildTimelineExportPlan(input:{
   captionBindings.forEach((binding,index)=>{
     const out=`captioned${index}`;
     const sub=shellSafeSubtitlePath(binding.asset.path);
-    filters.push(`[${currentVideo}]subtitles=filename='${sub}'[${out}];`);
+    const style=project.captionStyle==='commercial_safe'
+      ?`:force_style='${COMMERCIAL_CAPTION_STYLES[project.aspectRatio]}'`:'';
+    filters.push(`[${currentVideo}]subtitles=filename='${sub}'${style}[${out}];`);
     currentVideo=out;
   });
 

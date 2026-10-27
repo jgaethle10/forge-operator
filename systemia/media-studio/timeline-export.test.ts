@@ -139,3 +139,26 @@ test('per-shot focal positions govern framing without silently using center crop
   project.tracks[0].clips[0].focalX=1.3;
   assert.throws(()=>buildTimelineExportPlan({project,outputPath:'/tmp/unapproved-crop.mp4'}),/timeline_visual_focus_invalid/);
 });
+
+
+test('commercial-only captions are explicitly placed inside per-format social safe areas',()=>{
+  const specs=[
+    ['9:16',9,58],
+    ['1:1',14,36],
+    ['16:9',15,28],
+  ] as const;
+  for(const [aspectRatio,fontSize,marginV] of specs){
+    const project=readyProject();
+    project.aspectRatio=aspectRatio;
+    project.captionStyle='commercial_safe';
+    const plan=buildTimelineExportPlan({project,outputPath:'/tmp/social-captions.mp4'});
+    const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+    assert.match(filter,/subtitles=filename='[^']+':force_style='/);
+    assert.ok(filter.includes('Fontsize='+fontSize),aspectRatio+' font size');
+    assert.ok(filter.includes('MarginV='+marginV),aspectRatio+' safe bottom placement');
+    assert.match(filter,/Alignment=2/);
+  }
+  const regular=readyProject();
+  const plan=buildTimelineExportPlan({project:regular,outputPath:'/tmp/ordinary-captions.mp4'});
+  assert.doesNotMatch(plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1],/force_style=/);
+});

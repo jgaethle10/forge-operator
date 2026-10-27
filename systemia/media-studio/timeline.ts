@@ -63,6 +63,8 @@ export interface FallenTimelineProject {
   assets:TimelineAsset[];
   tracks:TimelineTrack[];
   audioMaster?:TimelineAudioMasterSettings;
+  // When selected, subtitles use bounded mobile commercial-safe positioning.
+  captionStyle?:'commercial_safe';
   createdAt:string;
   updatedAt:string;
 }
