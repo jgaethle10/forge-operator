@@ -69,6 +69,19 @@ await assert.rejects(
     receipt:{...receipts[0],attempts:3}})),
   /invalid_worker_attempt_or_assignment_key/
 );
+const absentActionsChain=createLocalEventChain({traceId:'missing-action-ledger'});
+const absentActionsVerifier=client.create();
+for(let i=0;i<events.length-1;i++){
+  await absentActionsVerifier.accept(absentActionsChain.next(
+    (({trace,...body})=>body)(events[i])
+  ));
+}
+const {external_actions:omittedActions,...noLedgerExecution}=execution;
+await assert.rejects(
+  absentActionsVerifier.accept(absentActionsChain.next({
+    type:'completed',execution:noLedgerExecution
+  })),/incomplete_local_delivery/
+);
 const offline=auditWorkSabanTrace(test.export());
 assert.equal(offline.status,'local_trace_integrity_verified');
 assert.equal(offline.event_count,12);
