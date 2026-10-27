@@ -191,3 +191,14 @@ test('PCM chord audit can only run on demand after music stops, with honest pre-
  assert.match(src,/does not measure actual speaker output/);
  assert.match(src,/No automatic compression or gain adjustment is applied/);
 });
+
+test('offline piano track effects report is an explicit stop-only browser audition, not a full-mix proof',()=>{
+ const s=ui();
+ assert.match(s,/Inspect piano effects bus offline/);
+ assert.match(s,/auditRecordedPianoOfflineBus\(\)/);
+ assert.match(s,/disabled=\{playing\|\|recording\|\|offlineBusBusy/);
+ assert.match(s,/OfflineAudioContext rendering/);
+ assert.match(s,/Delay\/feedback may continue beyond/);
+ assert.match(s,/It omits every non-piano track/);
+ assert.match(s,/Source WAVs and master settings remain unchanged/);
+});
