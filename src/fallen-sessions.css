@@ -72,3 +72,8 @@
 .fsPedalActions button:disabled{opacity:.45;cursor:not-allowed}
 .fsPedalActions button:focus-visible{outline:2px solid #a9d8e8;outline-offset:2px}
 @media(max-width:520px){.fsPedalActions button{flex:1 1 calc(50% - 7px)}}
+
+.fsPedalStepLabel{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:#cbd7db;margin:8px 0}
+.fsPedalStepLabel input{width:82px;min-height:40px;border:1px solid #45616c;border-radius:7px;padding:6px;background:#101d25;color:#edf2f6;font-size:14px}
+.fsPedalStepLabel input:focus-visible{outline:2px solid #a9d8e8;outline-offset:2px}
+.fsPedalPending{align-self:center;font-size:11px;color:#9bb4c1}
