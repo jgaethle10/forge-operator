@@ -63,3 +63,12 @@
 .fsArcBar span{font-size:10px;color:#c6d4dc}
 .fsArcBar small{font-size:10px;color:#9bb4c1;overflow-wrap:anywhere}
 .fsArcBar.silent{opacity:.76;background:#0d151b;border-style:dashed}
+
+/* Compact, keyboard-accessible recorded-piano sustain controls. */
+.fsPedalPanel{margin:12px 0;border-top:1px solid #35444a;padding-top:12px}
+.fsPedalPanel summary{cursor:pointer}
+.fsPedalActions{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+.fsPedalActions button{font-size:11px;border:1px solid #354f5a;border-radius:7px;padding:8px 12px;background:#192d38;color:#edf2f6;min-height:38px}
+.fsPedalActions button:disabled{opacity:.45;cursor:not-allowed}
+.fsPedalActions button:focus-visible{outline:2px solid #a9d8e8;outline-offset:2px}
+@media(max-width:520px){.fsPedalActions button{flex:1 1 calc(50% - 7px)}}
