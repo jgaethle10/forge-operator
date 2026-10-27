@@ -30,6 +30,7 @@ jobs:
           node --check systemia/work-saban/office-3d.js
           node --check systemia/work-saban/trace-client.js
           node --check systemia/work-saban/trace-chain.mjs
+          node --check systemia/work-saban/audit-trace.mjs
           node --check systemia/work-saban/trace-chain.proof.mjs
           node --check systemia/work-saban/office-3d.proof.mjs
           node --check systemia/work-saban/office.js
