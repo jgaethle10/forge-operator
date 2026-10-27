@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "evercraft-social-continuity-watch",
+  "mission_key": "evercraft-social-distribution-engine-2026-09",
+  "runtime": "systemia-core-resident-supervisor",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": false,
+  "entrypoint": "systemia/clip/social-continuity-watch.mjs",
+  "runner": "systemia/clip/social-continuity-watch.mjs",
+  "proof": "tests/clip-social-continuity-watch.test.mjs",
+  "inputs": {
+    "review_queue": "distribution/marketing/evercraft-problem-first-20261022.review.json",
+    "provider_receipt_directory": "artifacts/clip/social-publish-receipts",
+    "receipt_directory_override": "SYSTEMIA_CLIP_SOCIAL_RECEIPTS_DIR"
+  },
+  "outputs": {
+    "latest_receipt": "artifacts/clip/social-continuity-watch/latest.json"
+  },
+  "authority": {
+    "source": "review_queue_and_local_clip_provider_receipts",
+    "publication_authority": false,
+    "new_outreach_authority": false,
+    "payment_authority": false,
+    "secret_access": false,
+    "platform_api_visibility_verified": false,
+    "external_post_ids_required_for_receipted_state": true,
+    "preserve_personal_no_contact_states": true
+  },
+  "states": [
+    "approval_hold",
+    "approved_awaiting_delivery",
+    "overdue_approved",
+    "publish_exception",
+    "receipt_source_unavailable",
+    "provider_receipt_recorded"
+  ],
+  "warning": "A local publisher receipt is not a live proof of social-platform visibility; independently verify provider URLs before calling a post publicly visible."
+}

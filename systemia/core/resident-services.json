@@ -18,6 +18,18 @@
       }
     },
     {
+      "service_key": "evercraft-social-continuity-watch",
+      "mode": "cycle",
+      "manifest": "systemia/clip/social-continuity-watch.workflow.json",
+      "executable": "systemia/clip/social-continuity-watch.mjs",
+      "cadence_seconds": 300,
+      "optional_env_args": {
+        "--queue": "SYSTEMIA_EVERCRAFT_SOCIAL_QUEUE",
+        "--receipts-dir": "SYSTEMIA_CLIP_SOCIAL_RECEIPTS_DIR",
+        "--out": "SYSTEMIA_CLIP_SOCIAL_WATCH_RECEIPT"
+      }
+    },
+    {
       "service_key": "eps-social-continuity",
       "mode": "cycle",
       "manifest": "systemia/organism/eps-social-continuity.workflow.json",

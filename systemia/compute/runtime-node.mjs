@@ -2757,6 +2757,12 @@ export async function startEvercraftComputeNode({
                 stale_after_seconds: 900,
               },
               {
+                source_key: 'evercraft-social-continuity-watch',
+                path: 'clip-social-continuity/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
                 source_key: 'portfolio-sentinel',
                 path: 'portfolio-sentinel/mission-snapshot.json',
                 required: false,
@@ -2846,6 +2852,15 @@ export async function startEvercraftComputeNode({
             SYSTEMIA_COMPETITION_SABAN_CAPACITY_RECEIPT:
               path.join(competitionCapacityOut, 'latest.json'),
             SYSTEMIA_COMPETITION_BROWSER_RELEASE_REF: releaseRef,
+            SYSTEMIA_CLIP_SOCIAL_WATCH_RECEIPT: path.join(
+              workspaceRoot,
+              'clip-social-continuity',
+              'latest.json'
+            ),
+            SYSTEMIA_CLIP_SOCIAL_RECEIPTS_DIR: path.join(
+              workspaceRoot,
+              'clip-social-publish-receipts'
+            ),
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
             SYSTEMIA_SENTINEL_REGION_PROFILE: String(
