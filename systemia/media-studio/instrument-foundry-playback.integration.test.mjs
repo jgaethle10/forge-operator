@@ -579,3 +579,73 @@ test('resolver or session authority change revokes decoded PCM audit access',{co
   }finally{await engine.close()}
  });
 });
+
+test('real engine offline sample-piano bus review uses note-on effects and authorized PCM without modifying the song',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const origOffline=globalThis.OfflineAudioContext;
+  class OfflineSim extends SimulatedAudioContext{
+   constructor(channels,length,sampleRate){
+    super();this.targetChannels=channels;this.targetLength=length;this.sampleRate=sampleRate;
+   }
+   async startRendering(){
+    const n=this.targetLength,a=new Float32Array(n).fill(.35),b=new Float32Array(n).fill(-.35);
+    return {numberOfChannels:2,length:n,getChannelData:i=>i?b:a};
+   }
+  }
+  globalThis.OfflineAudioContext=OfflineSim;
+  const pcm=new Float32Array(36000).fill(.5);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare(),before=structuredClone(session);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   assert.equal((await engine.auditRecordedPianoOfflineBus()).status,'unavailable',
+    'offline CPU and DSP must never run against live rendering');
+   engine.stop();
+   const report=await engine.auditRecordedPianoOfflineBus();
+   assert.equal(report.status,'offline_track_bus_pcm_measurement',JSON.stringify(report));
+   assert.equal(report.sample_peak,.35);
+   assert.equal(report.over_full_scale_frames,0);
+   assert.equal(report.analyzed_voices,1);
+   assert.equal(report.complete,true);
+   assert.equal(report.source_kind,'decoded_pcm_only');
+   assert.deepEqual(session,before,'offline render cannot change canonical score or rights');
+   assert.equal(session.assets[0].rights,'unknown');
+   const offline=SimulatedAudioContext.instances.at(-1);
+   assert.equal(offline.createdOscillators,0,'all offline voices must remain recorded samples');
+   assert.equal(offline.starts.length,1);
+  }finally{
+   await engine.close();
+   if(origOffline===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=origOffline;
+  }
+ });
+});
+test('offline piano bus must fail closed if browser offline rendering missing or sample authorization changes',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prior=globalThis.OfflineAudioContext;
+  delete globalThis.OfflineAudioContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);engine.stop();
+   const absent=await engine.auditRecordedPianoOfflineBus();
+   assert.equal(absent.status,'unavailable');
+   assert.match(absent.reason,/OfflineAudioContext/);
+   const changed=structuredClone(session);changed.session_id='different-authority';
+   engine.updateSession(changed);
+   const revoked=await engine.auditRecordedPianoOfflineBus();
+   assert.equal(revoked.status,'unavailable');
+   assert.equal(revoked.sample_peak,null);
+  }finally{
+   await engine.close();
+   if(prior===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prior;
+  }
+ });
+});
