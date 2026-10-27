@@ -1,6 +1,8 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
+import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
+import type {PulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import type {PulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
@@ -83,6 +85,8 @@ export class PulseGridAudioEngine {
   private audioBedOverflow=false;
   private readonly capturedSynthVoices:Array<PulseGridSynthVoice & {autoVolume:number;autoFilter:number}>=[];
   private synthVoiceOverflow=false;
+  private readonly capturedDrumVoices:Array<PulseGridDrumVoice & {track_id:string;autoVolume:number;autoFilter:number}>=[];
+  private drumVoiceOverflow=false;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -131,6 +135,8 @@ export class PulseGridAudioEngine {
     this.audioBedOverflow=false;
     this.capturedSynthVoices.length=0;
     this.synthVoiceOverflow=false;
+    this.capturedDrumVoices.length=0;
+    this.drumVoiceOverflow=false;
     this.emitStatus();
   }
 
@@ -164,7 +170,7 @@ export class PulseGridAudioEngine {
     const voices=this.decodedDryPianoVoices as Array<FoundryDryPcmVoice & FoundryOfflineBusVoice & {
       asset_id?:string;autoVolume?:number;autoFilter?:number;
     }>;
-    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||
+    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||this.drumVoiceOverflow||
        !this.pianoPolyphony.snapshot().observation_complete||
        this.pianoPolyphony.snapshot().observed_voices!==voices.length)
       return unavailable('No complete bounded authorized sampled-piano phrase is available.');
@@ -175,9 +181,9 @@ export class PulseGridAudioEngine {
       return unavailable('The authorized decoded samples are no longer available.');
     if(!this.session)return unavailable('The canonical session is unavailable.');
     const snapshots=new Map<string,FoundryOfflineBusTrack>();
-    for(const v of [...voices,...this.decodedAudioBeds,...this.capturedSynthVoices]){
+    for(const v of [...voices,...this.decodedAudioBeds,...this.capturedSynthVoices,...this.capturedDrumVoices]){
       const track=this.session.tracks.find(t=>t.id===v.track_id);
-      if(!track||!['synth','audio'].includes(track.type)||track.muted||!Number.isFinite(v.autoVolume)||
+      if(!track||!['synth','audio','drums'].includes(track.type)||track.muted||!Number.isFinite(v.autoVolume)||
          !Number.isFinite(v.autoFilter))
         return unavailable('Track or effect automation cannot be reconstructed safely.');
       const snapshot:FoundryOfflineBusTrack={
@@ -199,6 +205,7 @@ export class PulseGridAudioEngine {
     const attempt=this.playbackAttempt;
     const rendered=await renderFoundryPianoOfflineBus({
       voices,audioBeds:this.decodedAudioBeds,synthVoices:this.capturedSynthVoices,
+      drumVoices:this.capturedDrumVoices,
       tracks:Array.from(snapshots.values()),
       offlineContextFactory:(channels,frames,rate)=>new Offline(channels,frames,rate),
     });
@@ -293,6 +300,8 @@ export class PulseGridAudioEngine {
     this.audioBedOverflow=false;
     this.capturedSynthVoices.length=0;
     this.synthVoiceOverflow=false;
+    this.capturedDrumVoices.length=0;
+    this.drumVoiceOverflow=false;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -642,9 +651,9 @@ export class PulseGridAudioEngine {
       const velocity = clip.steps[step] || 0;
       if (track.type === 'drums') {
         if (velocity > 0 && Math.random() <= probability) {
-          if (step % 4 === 0 || velocity > 0.85) this.kick(bus.input, time + microtime, velocity);
+          if (step % 4 === 0 || velocity > 0.85) this.kick(bus.input, time + microtime, velocity,track.id,autoVolume,autoFilter);
           if (step % 2 === 0 || step % 4 === 3) {
-            this.hat(bus.input, time + microtime + 0.004, Math.max(0.12, velocity * 0.34));
+            this.hat(bus.input, time + microtime + 0.004, Math.max(0.12, velocity * 0.34),track.id,autoVolume,autoFilter);
           }
         }
         continue;
@@ -738,39 +747,34 @@ export class PulseGridAudioEngine {
     }
   }
 
-  private kick(destination: AudioNode, time: number, velocity: number) {
-    const context = this.context!;
-    const oscillator = this.trackSource(context.createOscillator());
-    const gain = context.createGain();
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(135, time);
-    oscillator.frequency.exponentialRampToValueAtTime(46, time + 0.12);
-    gain.gain.setValueAtTime(Math.max(0.001, 0.7 * velocity), time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
-    oscillator.connect(gain).connect(destination);
-    oscillator.start(time);
-    oscillator.stop(time + 0.24);
+  private captureDrumVoice(voice:PulseGridDrumVoice,track_id:string,autoVolume:number,autoFilter:number){
+    if(this.capturedDrumVoices.length<16){
+      this.capturedDrumVoices.push({...voice,track_id,autoVolume,autoFilter});
+    }else this.drumVoiceOverflow=true;
   }
 
-  private hat(destination: AudioNode, time: number, velocity: number) {
-    const context = this.context!;
-    if (!this.noiseBuffer) {
-      const buffer = context.createBuffer(1, Math.round(context.sampleRate * 0.09), context.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let index = 0; index < data.length; index += 1) data[index] = Math.random() * 2 - 1;
-      this.noiseBuffer = buffer;
+  private kick(destination:AudioNode,time:number,velocity:number,track_id:string,autoVolume:number,autoFilter:number){
+    const context=this.context!;
+    const performed=schedulePulseGridDrumVoice({
+      context,destination,kind:'kick',time,velocity,
+      createOscillator:()=>this.trackSource(context.createOscillator()),
+    });
+    this.captureDrumVoice(performed,track_id,autoVolume,autoFilter);
+  }
+
+  private hat(destination:AudioNode,time:number,velocity:number,track_id:string,autoVolume:number,autoFilter:number){
+    const context=this.context!;
+    if(!this.noiseBuffer){
+      const buffer=context.createBuffer(1,Math.round(context.sampleRate*.09),context.sampleRate);
+      const data=buffer.getChannelData(0);
+      for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;
+      this.noiseBuffer=buffer;
     }
-    const source = this.trackSource(context.createBufferSource());
-    const highpass = context.createBiquadFilter();
-    const gain = context.createGain();
-    source.buffer = this.noiseBuffer;
-    highpass.type = 'highpass';
-    highpass.frequency.value = 6200;
-    gain.gain.setValueAtTime(Math.max(0.001, 0.18 * velocity), time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.055);
-    source.connect(highpass).connect(gain).connect(destination);
-    source.start(time);
-    source.stop(time + 0.065);
+    const performed=schedulePulseGridDrumVoice({
+      context,destination,kind:'hat',time,velocity,noiseBuffer:this.noiseBuffer,
+      createBufferSource:()=>this.trackSource(context.createBufferSource()),
+    });
+    this.captureDrumVoice(performed,track_id,autoVolume,autoFilter);
   }
 
   private note(
