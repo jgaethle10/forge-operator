@@ -18,6 +18,9 @@ on:
       - 'systemia/media-studio/pulsegrid-synth-voice.mjs'
       - 'systemia/media-studio/pulsegrid-synth-voice.d.mts'
       - 'systemia/media-studio/pulsegrid-synth-voice.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-audition-wav.mjs'
+      - 'systemia/media-studio/instrument-foundry-audition-wav.d.mts'
+      - 'systemia/media-studio/instrument-foundry-audition-wav.test.mjs'
       - 'systemia/media-studio/instrument-foundry-offline-bus.mjs'
       - 'systemia/media-studio/instrument-foundry-offline-bus.d.mts'
       - 'systemia/media-studio/instrument-foundry-offline-bus.test.mjs'
@@ -89,7 +92,7 @@ jobs:
         with:
           node-version: '22'
       - name: Foundry custody and import tests
-        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs systemia/media-studio/instrument-foundry-capture-qa.test.mjs systemia/media-studio/instrument-foundry-capture-audit.test.mjs systemia/media-studio/pulsegrid-note-duration.test.mjs systemia/media-studio/pulsegrid-music-insights.test.mjs systemia/media-studio/pulsegrid-arrangement-arc.test.mjs systemia/media-studio/pulsegrid-counterpoint-evidence.test.mjs systemia/media-studio/pulsegrid-counterpoint-ui.test.mjs systemia/media-studio/instrument-foundry-pedal.test.mjs systemia/media-studio/instrument-foundry-midi-pedal.test.mjs systemia/media-studio/instrument-foundry-tail-audit.test.mjs systemia/media-studio/instrument-foundry-polyphony.test.mjs systemia/media-studio/instrument-foundry-dry-pcm.test.mjs systemia/media-studio/instrument-foundry-offline-bus.test.mjs systemia/media-studio/pulsegrid-synth-voice.test.mjs systemia/media-studio/pulsegrid-drum-voice.test.mjs systemia/media-studio/instrument-foundry-playback.integration.test.mjs systemia/media-studio/pulsegrid-audio-authority.test.mjs
+        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs systemia/media-studio/instrument-foundry-capture-qa.test.mjs systemia/media-studio/instrument-foundry-capture-audit.test.mjs systemia/media-studio/pulsegrid-note-duration.test.mjs systemia/media-studio/pulsegrid-music-insights.test.mjs systemia/media-studio/pulsegrid-arrangement-arc.test.mjs systemia/media-studio/pulsegrid-counterpoint-evidence.test.mjs systemia/media-studio/pulsegrid-counterpoint-ui.test.mjs systemia/media-studio/instrument-foundry-pedal.test.mjs systemia/media-studio/instrument-foundry-midi-pedal.test.mjs systemia/media-studio/instrument-foundry-tail-audit.test.mjs systemia/media-studio/instrument-foundry-polyphony.test.mjs systemia/media-studio/instrument-foundry-dry-pcm.test.mjs systemia/media-studio/instrument-foundry-offline-bus.test.mjs systemia/media-studio/instrument-foundry-audition-wav.test.mjs systemia/media-studio/pulsegrid-synth-voice.test.mjs systemia/media-studio/pulsegrid-drum-voice.test.mjs systemia/media-studio/instrument-foundry-playback.integration.test.mjs systemia/media-studio/pulsegrid-audio-authority.test.mjs
 
   saban-capture-review:
     runs-on: ubuntu-latest
