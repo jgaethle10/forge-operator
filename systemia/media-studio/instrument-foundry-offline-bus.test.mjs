@@ -29,6 +29,7 @@ function fakeContext(peak=.25,broken=false){
   createDelay:()=>node('delay'+parameters.length),
   createBufferSource:()=>node('buffer'+parameters.length),
   createOscillator:()=>node('oscillator'+parameters.length),
+  createBuffer:()=>({duration:.09,getChannelData:()=>new Float32Array(4320)}),
   async startRendering(){
    calls.push(['render']);
    const left=new Float32Array(frames).fill(peak),right=new Float32Array(frames).fill(-peak);
@@ -199,4 +200,40 @@ test('invalid synth notes, missing oscillator support, and excessive voices fail
   offlineContextFactory:()=>({...f.ctx,createOscillator:undefined})});
  assert.equal(unsupported.status,'unavailable');
  assert.equal(unsupported.sample_peak,null);
+});
+
+test('actual performed kick plus originally sampled hat appear in offline piano mix',async()=>{
+ const f=fakeContext(.12),noise={duration:.09,getChannelData:()=>new Float32Array(4320)};
+ const hits=[
+  {track_id:'drums',kind:'kick',time:.1,velocity:.8,stop_time:.34,noiseBuffer:null},
+  {track_id:'drums',kind:'hat',time:.104,velocity:.3,stop_time:.169,noiseBuffer:noise},
+ ];
+ const r=await render({
+  voices:[voice()],drumVoices:hits,
+  tracks:[track,{...track,id:'drums',delayMix:0}],offlineContextFactory:f.make
+ });
+ assert.equal(r.status,'offline_track_bus_pcm_measurement',JSON.stringify(r));
+ assert.equal(r.analyzed_drum_hits,2);
+ assert.equal(r.source_kind,'decoded_pcm_plus_synth');
+ const osc=f.parameters.filter(x=>x.name.startsWith('oscillator'));
+ assert.equal(osc.length,1);
+ assert.equal(osc[0].type,'sine');
+ const hats=f.parameters.filter(x=>x.name.startsWith('buffer'));
+ assert.equal(hats.length,2,'one WAV piano plus original played noise sample');
+ assert.equal(hats[1].buffer,noise,'no new random hat PCM synthesized in offline inspection');
+ assert.ok(f.calls.some(x=>x[0].endsWith('frequency')&&x[1]==='set'&&x[2]===135));
+});
+test('offline drum review fails closed if hat buffer, track or actual hit timing is invalid',async()=>{
+ const f=fakeContext(.1),base={voices:[voice()],tracks:[track,{...track,id:'drums'}],offlineContextFactory:f.make};
+ const valid={track_id:'drums',kind:'hat',time:.1,velocity:.3,stop_time:.165,
+  noiseBuffer:{duration:.09}};
+ for(const drumVoices of [
+  [{...valid,noiseBuffer:null}],[{...valid,track_id:'unknown'}],
+  [{...valid,kind:'snare'}],[{...valid,velocity:0}],
+  Array.from({length:17},()=>valid)
+ ]){
+  const result=await render({...base,drumVoices});
+  assert.equal(result.status,'unavailable');
+  assert.equal(result.sample_peak,null);
+ }
 });
