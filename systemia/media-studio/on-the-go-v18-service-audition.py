@@ -26,6 +26,10 @@ takes=[
  ("v22_opening_ipa_alt","If your day is full, the last thing you need is another stop at the shop. That's why On The Go [Mobile](/mˈoʊbəl/) Quick Lube comes to you.",1.05),
  ("v22_closing_mohbuhl","On The Go [Mobile](/mˈObəl/) Quick Lube.",1.07),
  ("v22_closing_ipa_alt","On The Go [Mobile](/mˈoʊbəl/) Quick Lube.",1.07),
+ ("v23_closing_full_single_a","On The Go [Mobile](/mˈObəl/) Quick Lube. Let us come to you.",1.00),
+ ("v23_closing_full_single_b","On The Go [Mobile](/mˈObəl/) Quick Lube. Let us come to you!",1.07),
+ ("v23_opening_concise","Your day is already full. Why waste it waiting at the shop? On The Go [Mobile](/mˈObəl/) Quick Lube comes to you.",1.00),
+ ("v23_opening_concise_b","Your day is full enough without another stop at the shop. On The Go [Mobile](/mˈObəl/) Quick Lube comes to you.",1.03),
 ]
 results=[]
 for i,(name,words,speed) in enumerate(takes):
