@@ -36,6 +36,8 @@ jobs:
           def number(v):
               try: return round(float(v),3)
               except (TypeError,ValueError): return None
+          MAX_COMPUTE_USD_PER_HOUR=0.75
+          MAX_PLANNED_HOURS=2
           valid=[]
           rejected=0
           for o in offers:
@@ -44,16 +46,17 @@ jobs:
               reliability=number(o.get("reliability2"))
               vram=number(o.get("gpu_ram"))
               ram=number(o.get("cpu_ram"))
-              if not (o.get("gpu_name")=="RTX 4090" and o.get("num_gpus")==1 and o.get("verified") is True and o.get("rentable") is True and price is not None and price>0 and reliability is not None and reliability>=0.95 and vram is not None and vram>=23000 and ram is not None and ram>=32000):
+              if not (o.get("gpu_name")=="RTX 4090" and o.get("num_gpus")==1 and o.get("verified") is True and o.get("rentable") is True and price is not None and 0<price<=MAX_COMPUTE_USD_PER_HOUR and reliability is not None and reliability>=0.95 and vram is not None and vram>=23000 and ram is not None and ram>=32000):
                   rejected+=1
                   continue
               valid.append({"offer_id":o.get("id"),"usd_per_hour":price,"gpu":"RTX 4090","reliability":number(o.get("reliability2")),"vram_mb":o.get("gpu_ram"),"ram_mb":o.get("cpu_ram")})
           valid.sort(key=lambda x:x["usd_per_hour"])
-          report={"mode":"READ_ONLY","rental_started":False,"matching_offers":len(valid),"rejected_offers":rejected,"cheapest":valid[:5]}
+          report={"mode":"READ_ONLY","rental_started":False,"max_compute_usd_per_hour":MAX_COMPUTE_USD_PER_HOUR,"planned_hours":MAX_PLANNED_HOURS,"max_estimated_compute_usd":round(MAX_COMPUTE_USD_PER_HOUR*MAX_PLANNED_HOURS,2),"storage_network_taxes_extra":True,"matching_offers":len(valid),"rejected_offers":rejected,"cheapest":valid[:5]}
           print(json.dumps(report,indent=2))
           with open(os.environ["GITHUB_STEP_SUMMARY"],"a",encoding="utf-8") as summary:
               summary.write("## Fallen Studios GPU discovery\\n\\n")
               summary.write("Read-only search. **No GPU rented.**\\n\\n")
+              summary.write(f"Compute-only planning ceiling: **\u0024{MAX_COMPUTE_USD_PER_HOUR}/hour** for **{MAX_PLANNED_HOURS} hours** (maximum **\u0024{MAX_COMPUTE_USD_PER_HOUR*MAX_PLANNED_HOURS:.2f}** compute). Storage, network and taxes may add charges; this is not a billing cap.\\n\\n")
               summary.write(f"Matching offers: **{len(valid)}**; rejected after validation: **{rejected}**\\n\\n")
               summary.write("| Offer ID | USD/hour | Reliability | VRAM MB | RAM MB |\\n|---|---:|---:|---:|---:|\\n")
               for o in valid[:5]:
