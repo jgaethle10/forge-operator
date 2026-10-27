@@ -12,7 +12,7 @@ export type FoundryOfflineBusResult={
  status:'unavailable'|'offline_track_bus_pcm_measurement';
  scope:'offline_sampled_piano_track_bus_approximation';
  reason?:string;peak_dbfs:number|null;sample_peak:number|null;
- over_full_scale_frames:number|null;complete:boolean;analyzed_voices:number;
+ over_full_scale_frames:number|null;complete:boolean;source_notes_within_window?:boolean;effects_tail_complete?:boolean;analyzed_voices:number;
  rms_dbfs?:number;rendered_frames?:number;window_sec?:number;rate?:number;
  source_kind:'decoded_pcm_only';limitations?:string;
 };
