@@ -1122,7 +1122,7 @@ export default function FallenSessions(){
               ? <p>Offline effects-bus inspection unavailable: {offlineBusAudit.reason}. No clean mixed peak is claimed.</p>
               : <>
                 <p>Offline sampled-piano bus + master sample peak: <strong>{offlineBusAudit.sample_peak?.toFixed(3)}</strong> ({offlineBusAudit.peak_dbfs?.toFixed(2)} dBFS). Frames above full scale: <strong>{offlineBusAudit.over_full_scale_frames}</strong>, over {offlineBusAudit.window_sec?.toFixed(2)} seconds / {offlineBusAudit.analyzed_voices} scheduled voices.</p>
-                <p className="fsMusicInsightCaution">This is an OfflineAudioContext rendering of the recorded-piano track low-pass, delay, feedback, wet/dry and master gain with a frozen note-on automation snapshot. It omits every non-piano track, changes to automation inside the phrase, full-song tail, device output, intersample true peak and human listening. Source WAVs and master settings remain unchanged.</p>
+                <p className="fsMusicInsightCaution">This is an OfflineAudioContext rendering of the recorded-piano track low-pass, delay, feedback, wet/dry and master gain with a frozen note-on automation snapshot. {offlineBusAudit.effects_tail_complete?'The selected effects return is bounded.':'Delay/feedback may continue beyond the 0.8-second window.'} It omits every non-piano track, changes to automation inside the phrase, full-song tail, device output, intersample true peak and human listening. Source WAVs and master settings remain unchanged.</p>
               </>}
           </div>}
           {dryPcmAudit&&<div className="fsDryPeakReport" role="status">
