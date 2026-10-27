@@ -1,0 +1,37 @@
+name: Fallen Studios Vast rental safety tests (no provider spend)
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/fallen-vast-rental-guard.mjs'
+      - 'systemia/media-studio/fallen-vast-rental-guard.test.mjs'
+      - 'systemia/media-studio/run-fallen-vast-preflight.mjs'
+      - 'systemia/media-studio/briefs/fallen-vast-readonly-offer-quote-20261027.json'
+      - '.github/workflows/fallen-vast-rental-safety.yml'
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - 'systemia/media-studio/fallen-vast-rental-guard.mjs'
+      - 'systemia/media-studio/fallen-vast-rental-guard.test.mjs'
+      - 'systemia/media-studio/run-fallen-vast-preflight.mjs'
+      - '.github/workflows/fallen-vast-rental-safety.yml'
+permissions:
+  contents: read
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests for admission and simulation-only lifecycle
+        run: node --test systemia/media-studio/fallen-vast-rental-guard.test.mjs
+      - name: Evaluate historic offer safely (expected HOLD)
+        run: node systemia/media-studio/run-fallen-vast-preflight.mjs
+      - name: Save preflight receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-vast-preflight-hold
+          path: artifacts/fallen-flagship-council/vast-preflight-hold.json
+          if-no-files-found: error
