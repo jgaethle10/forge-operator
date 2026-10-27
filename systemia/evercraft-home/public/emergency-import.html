@@ -25,6 +25,8 @@
 </section>
 </main>
 <script>
+const HOME_PREFIX=window.location.pathname==="/home"||window.location.pathname.startsWith("/home/")?"/home":"";
+const homeFetch=(pathname,init)=>fetch(HOME_PREFIX+pathname,init);
 (() => {
   "use strict";
   const decoder = new TextDecoder();
@@ -45,9 +47,9 @@
   const decodeJson = (value) => JSON.parse(decoder.decode(fromB64u(value)));
 
   async function requireSession() {
-    const response = await fetch("/api/session", { cache: "no-store" });
+    const response = await homeFetch("/api/session", { cache: "no-store" });
     if (!response.ok) {
-      location.replace("/");
+      location.replace(HOME_PREFIX+"/");
       return false;
     }
     return true;
@@ -89,7 +91,7 @@
       recoveryInput.value = "";
       history.replaceState(null, "", location.pathname + location.search);
 
-      const response = await fetch("/api/credentials/providers/alpaca", {
+      const response = await homeFetch("/api/credentials/providers/alpaca", {
         method: "POST",
         headers: { "content-type": "application/json" },
         cache: "no-store",
@@ -114,7 +116,7 @@
     }
   });
 
-  requireSession().catch(() => location.replace("/"));
+  requireSession().catch(() => location.replace(HOME_PREFIX+"/"));
 })();
 </script>
 </body>

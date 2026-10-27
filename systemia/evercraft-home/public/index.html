@@ -45,7 +45,7 @@
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><div class="mark">E</div><div><div class="name">EVERCRAFT</div><div class="sub">Executive Home</div></div></div><div style="display:flex;align-items:center;gap:14px"><div class="private">Private · Evercraft controlled</div><a class="signout" id="apps-link" href="/apps.html">Apps</a><a class="signout" id="lineage-link" href="/lineage">Lineage</a><button class="signout" id="signout" type="button">Sign out</button></div></header>
+<header class="top"><div class="brand"><div class="mark">E</div><div><div class="name">EVERCRAFT</div><div class="sub">Executive Home</div></div></div><div style="display:flex;align-items:center;gap:14px"><div class="private">Private · Evercraft controlled</div><a class="signout" id="credentials-link" href="credentials.html">Providers</a><a class="signout" id="apps-link" href="apps.html">Apps</a><a class="signout" id="lineage-link" href="lineage">Lineage</a><button class="signout" id="signout" type="button">Sign out</button></div></header>
 <section class="auth-screen" id="auth-screen">
   <div class="auth-intro">
     <div>
@@ -235,7 +235,7 @@ function showLogin(message=""){
   appShell.style.display="none";
   appFooter.style.display="none";
   signout.classList.remove("visible");
-  document.getElementById("lineage-link").classList.remove("visible");
+  for(const id of ["lineage-link","apps-link","credentials-link"]) document.getElementById(id).classList.remove("visible");
   document.getElementById("auth-error").textContent=message;
   setTimeout(()=>document.getElementById("login").focus(),0);
 }
@@ -247,7 +247,7 @@ function showClaim(message=""){
   appShell.style.display="none";
   appFooter.style.display="none";
   signout.classList.remove("visible");
-  document.getElementById("lineage-link").classList.remove("visible");
+  for(const id of ["lineage-link","apps-link","credentials-link"]) document.getElementById(id).classList.remove("visible");
   document.getElementById("claim-error").textContent=message;
   setTimeout(()=>document.getElementById("claim-code").focus(),0);
 }
@@ -257,7 +257,7 @@ function showApp(){
   appShell.style.display="";
   appFooter.style.display="";
   signout.classList.add("visible");
-  document.getElementById("lineage-link").classList.add("visible");
+  for(const id of ["lineage-link","apps-link","credentials-link"]) document.getElementById(id).classList.add("visible");
 }
 
 document.getElementById("claim-form").addEventListener("submit",async(event)=>{
