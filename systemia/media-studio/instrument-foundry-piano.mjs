@@ -201,17 +201,21 @@ export function planFoundryPianoPreRoll(buffer){
 export function scheduleFoundryPianoNote({
   context,destination,buffer,pitch,velocity,time,duration,selection,createSource
 }){
-  if(!context||!destination||!buffer||typeof createSource!=='function'||
-     !Number.isFinite(buffer.duration)||buffer.duration<=0 ||
-     !Number.isFinite(time)||time<0||!Number.isFinite(duration)||duration<=0 ||
-     !Number.isFinite(velocity)||velocity<=0||velocity>1 ||
-     !selection||!Number.isFinite(selection.playback_rate)||selection.playback_rate<=0){
+  if(!context||typeof context.createGain!=='function'||!destination||!buffer||
+     typeof createSource!=='function'||!Number.isFinite(buffer.duration)||buffer.duration<=0 ||
+     !Number.isFinite(time)||time<0||!Number.isFinite(duration)||duration<=0||
+     !Number.isInteger(pitch)||pitch<0||pitch>127||
+     !Number.isFinite(velocity)||velocity<=0||velocity>1||
+     !selection||typeof selection.asset_id!=='string'||
+     !Number.isFinite(selection.playback_rate)||
+     selection.playback_rate<.5||selection.playback_rate>2||
+     !Number.isFinite(selection.release_sec)||
+     selection.release_sec<.03||selection.release_sec>1.5){
     throw new Error('Invalid Foundry piano performance schedule');
   }
-  const gain=context.createGain();
-  const source=createSource();
-  source.buffer=buffer;
-  source.playbackRate.setValueAtTime(selection.playback_rate,time);
+  // Validate the complete temporal envelope BEFORE creating any Web Audio
+  // nodes. An invalid or exhausted recording must not leave an unscheduled
+  // source in the engine's active-source registry.
   const preRoll=planFoundryPianoPreRoll(buffer);
   const playable=(buffer.duration-preRoll.offset_sec)/selection.playback_rate;
   // Natural sampler release: never schedule gain automation after the WAV is
@@ -227,6 +231,10 @@ export function scheduleFoundryPianoNote({
   const end=time+sounding;
   const releaseStart=time+Math.max(attackSeconds,Math.min(duration,sounding-releaseSeconds));
   const voiceGain=foundryPianoVoiceGain(velocity,selection);
+  const gain=context.createGain();
+  const source=createSource();
+  source.buffer=buffer;
+  source.playbackRate.setValueAtTime(selection.playback_rate,time);
   gain.gain.setValueAtTime(.0001,time);
   gain.gain.linearRampToValueAtTime(voiceGain,attackEnd);
   gain.gain.setValueAtTime(voiceGain,releaseStart);
