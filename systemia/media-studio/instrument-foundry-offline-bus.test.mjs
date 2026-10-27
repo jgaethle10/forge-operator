@@ -7,6 +7,8 @@ function fakeContext(peak=.25,broken=false){
  const param=name=>({
   setValueAtTime(v,t){calls.push([name,'set',v,t])},
   linearRampToValueAtTime(v,t){calls.push([name,'ramp',v,t])},
+  exponentialRampToValueAtTime(v,t){calls.push([name,'exp',v,t])},
+  setTargetAtTime(v,t,c){calls.push([name,'target',v,t,c])},
  });
  const node=name=>{
   const n={name,
