@@ -55,3 +55,11 @@
 .fsMusicInsightCaution{color:#92a0aa}
 .fsMusicInsightStats{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px;font-size:10px}
 .fsMusicInsightStats span{padding:5px 8px;background:#152027;border-radius:6px}
+
+/* The score timeline is a compact, responsive listening aid, not a performance rating. */
+.fsArcDetails{margin:12px 0;border-top:1px solid #35444a;padding-top:12px}
+.fsArcTimeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:8px;margin:10px 0}
+.fsArcBar{display:flex;flex-direction:column;gap:5px;min-width:0;border:1px solid #344651;border-radius:8px;padding:9px;background:#12212a;font-size:11px}
+.fsArcBar span{font-size:10px;color:#c6d4dc}
+.fsArcBar small{font-size:10px;color:#9bb4c1;overflow-wrap:anywhere}
+.fsArcBar.silent{opacity:.76;background:#0d151b;border-style:dashed}
