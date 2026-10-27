@@ -15,7 +15,8 @@ export const COUNCIL_ROLES = Object.freeze([
   'music_composer', 'voice_performance_director', 'brand_art_director',
   'documentary_truth_guard', 'beauty_judge'
 ]);
-const beats = Object.freeze(['hook', 'body', 'proof', 'cta']);
+const beats = Object.freeze(['opening', 'service', 'trust', 'close']);
+const councilBeats = Object.freeze(['hook', 'body', 'proof', 'cta']);
 const fractions = Object.freeze([0.2, 0.45, 0.2, 0.15]);
 
 export async function runLocalCreativeCouncilPreview({ task, brief, rootDir = ROOT, outDir = null } = {}) {
@@ -45,7 +46,7 @@ export async function runLocalCreativeCouncilPreview({ task, brief, rootDir = RO
       id: shotId,
       sourceType: 'scene',
       sourceId: shotId,
-      beat: beat.beat,
+      beat: councilBeats[i],
       durationSec: Number((duration * fractions[i]).toFixed(3)),
       aspectRatio: '9:16',
       storyPrompt: String(task).slice(0, 6000),
