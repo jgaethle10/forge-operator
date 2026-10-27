@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { composeWorkSabanMission } from './mission.mjs';
 import { executeLocalSalesReport } from './execute-local.mjs';
 import { MAX_CSV_BYTES, parseSalesCsv } from './csv-core.mjs';
+import { createLocalEventChain } from './trace-chain.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -68,8 +69,9 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
         'content-type':'application/x-ndjson; charset=utf-8',
         'cache-control':'no-store','x-content-type-options':'nosniff'
       });
-      const emit=item=>{
-        if (!res.destroyed && !res.writableEnded) res.write(JSON.stringify(item)+'\n');
+      const chain = createLocalEventChain();
+      const emit = item => {
+        if (!res.destroyed && !res.writableEnded) res.write(JSON.stringify(chain.next(item)) + '\n');
       };
       emit({schema:'evercraft.work-saban.local-stream.v1',type:'accepted',source:'synthetic_fixture',status:'running_local'});
       try {
@@ -128,8 +130,9 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
         'cache-control':'no-store',
         'x-content-type-options':'nosniff',
       });
+      const chain = createLocalEventChain();
       const emit = item => {
-        if (!res.destroyed && !res.writableEnded) res.write(JSON.stringify(item) + '\n');
+        if (!res.destroyed && !res.writableEnded) res.write(JSON.stringify(chain.next(item)) + '\n');
       };
       emit({schema:'evercraft.work-saban.local-stream.v1',type:'accepted',status:'running_local'});
       try {
