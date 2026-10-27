@@ -844,7 +844,7 @@ test('real PulseGrid performed kick and original hat noise are replayed in the a
    const offline=SimulatedAudioContext.instances.at(-1);
    assert.equal(offline.createdOscillators,1,'offline kick uses same shared sine/glide scheduler');
    assert.equal(offline.starts.length,2,'offline piano and hi-hat WAV sources both schedule');
-   assert.equal(offline.starts[1].source.buffer,performedNoise,
+   assert.equal(offline.starts.find(x=>x.source.buffer?.duration===.09)?.source.buffer,performedNoise,
     'offline reuses exact random hat sample from performed live hit');
    assert.deepEqual(withBeat,before,'canonical authored MIDI/percussion remains unchanged');
    assert.equal(withBeat.assets[0].rights,'unknown');
