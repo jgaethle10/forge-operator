@@ -1,6 +1,11 @@
 name: On The Go V18 Bella Service Diction Auditions
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feature/onthego-bella-native-voice-20261026
+    paths:
+      - .github/workflows/otg-v18-bella-service.yml
 permissions:
   contents: read
 jobs:
