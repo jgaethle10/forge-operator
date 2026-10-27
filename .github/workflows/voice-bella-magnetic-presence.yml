@@ -1,0 +1,76 @@
+name: Voice Foundry | Bella Magnetic Presence private audition
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-magnetic-presence.py'
+      - 'systemia/media-studio/test_voice_bella_magnetic_presence.py'
+      - '.github/workflows/voice-bella-magnetic-presence.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-magnetic-presence.py'
+      - 'systemia/media-studio/test_voice_bella_magnetic_presence.py'
+      - '.github/workflows/voice-bella-magnetic-presence.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  magnetic-bella:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate dialogue, voice identity and review-boundary tests
+        run: |
+          python systemia/media-studio/voice-bella-magnetic-presence.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_magnetic_presence.py -v
+      - name: Install verified app version and original Bella model runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate actual Bella magnetic-presence audition, no publication
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/voice-bella-magnetic-presence.py bella-magnetic-private
+      - name: Independently verify 4 native sources and 8 WAV/MP3 auditions
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('bella-magnetic-private')
+          data=json.loads((root/'evidence.json').read_text())
+          assert data['voiceId']=='af_bella' and data['originalNativeVoice'] is True
+          assert data['sameSpokenWords'] and len(data['sourceModels'])==4
+          for k in ('phonemeOverrides','pitchShift','voiceCloning','fabricatedBreaths',
+                    'humanPerformanceApproved','productionReleased','voiceRightsIndependentlyCleared',
+                    'actualEmotionalConditioning','modelCheckpointPinned'):
+              assert data[k] is False,k
+          assert len(data['takes'])==8
+          assert len({(x['punctuation'],x['speed'],x['mix']) for x in data['takes']})==8
+          for source in data['sourceModels']:
+              file=root/source['file']
+              assert hashlib.sha256(file.read_bytes()).hexdigest()==source['sha256']
+              with wave.open(str(file),'rb') as f:
+                  assert (f.getframerate(),f.getnchannels(),f.getsampwidth())==(24000,1,2)
+          for item in data['takes']:
+              for f,h in [(item['reviewWav'],item['reviewWavSha256']),
+                          (item['reviewMp3'],item['reviewMp3Sha256'])]:
+                  p=root/f
+                  assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==h
+              with wave.open(str(root/item['reviewWav']),'rb') as f:
+                  assert (f.getframerate(),f.getnchannels(),f.getsampwidth())==(48000,1,2)
+                  assert 12<=f.getnframes()/48000<=40
+          page=(root/'index.html').read_text()
+          assert page.count('<audio controls')==8
+          assert 'productionApproved:false' in page
+          print('PASS: original native Bella, all audio bytes/hashes and review holds')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-magnetic-presence-8-private-auditions
+          path: bella-magnetic-private/
+          retention-days: 7
+          if-no-files-found: error
