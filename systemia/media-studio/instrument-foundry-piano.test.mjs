@@ -373,3 +373,35 @@ test('stereo disagreement and unsupported PCM conservatively leave pre-roll unto
   {duration:1,sampleRate:48000,numberOfChannels:3,getChannelData:()=>new Float32Array(48000)}
  ]) assert.deepEqual(planFoundryPianoPreRoll(invalid),{offset_sec:0,profile:'unaligned_safe'});
 });
+
+test('short recordings are rejected before any gain or source is allocated',()=>{
+ let gainAllocations=0,sourceAllocations=0;
+ const context={createGain(){gainAllocations++;throw Error('should not allocate')}};
+ const selection=selectFoundrySample(patch(),60,.7);
+ assert.throws(()=>scheduleFoundryPianoNote({
+  context,destination:{},buffer:{duration:.003},pitch:60,velocity:.7,
+  time:0,duration:.3,selection,
+  createSource:()=>{sourceAllocations++;throw Error('should not allocate')}
+ }),/too short for click-free/);
+ assert.equal(gainAllocations,0);
+ assert.equal(sourceAllocations,0);
+});
+test('bad release/time/pitch evidence fails before creating a source',()=>{
+ let allocations=0;
+ const context={createGain(){allocations++;return {}}};
+ const selection=selectFoundrySample(patch(),60,.5);
+ for(const changed of [
+  {selection:{...selection,release_sec:NaN}},
+  {selection:{...selection,release_sec:2.5}},
+  {pitch:-1},{pitch:128},{time:-1},
+  {selection:{...selection,playback_rate:3}},
+ ]){
+  assert.throws(()=>scheduleFoundryPianoNote({
+   context,destination:{},buffer:{duration:1},pitch:60,time:0,
+   duration:.3,velocity:.5,selection,
+   createSource:()=>{allocations++;return {}},
+   ...changed
+  }),/Invalid Foundry piano performance schedule/);
+ }
+ assert.equal(allocations,0);
+});
