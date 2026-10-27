@@ -127,6 +127,27 @@ node scripts/nextgen-browser-yard-proof.mjs --status
 
 Do not run `--install`, `git clone`, or change the Node002 resident shadow agent. If another gate fails, preserve the distinct new failure and diagnose rather than repeatedly retrying.
 
+## PHYSICAL LOCAL YARD / COMPUTE PASS and production dispatch inventory, Oct 26
+
+The founder executed the full **physical** NextGen NodeSeed → Evercraft Compute lease → Yard → native Chromium browser proof on 2026-10-27 02:46:09–02:46:13Z at commit `1fec33f08d0e6cfa33dea15cd5863fd997b1603b`.
+
+Observed: **7/7 local regression tests passed; `state:passed_local_compute_yard_browser`**, `local_nodeseed_lease_verified:true`, `local_yard_health_receipt_bound:true`, `software_key_attestation_verified:true`, `private_target_rejection_verified:true`, `lease_stopped:true`, and temporary proof key deleted. The final persisted private local receipt is `sha256:b94045c9db4dd614a0a565051b8fc95f5736edad6d55097900787007e75b886b`. This verifies physical **local** leased execution, **not** broker admission or a device-signed remote job receipt.
+
+The user-visible next goal is to identify exact physical Node002 **production** broker enrollment blockers. The added `scripts/nextgen-dispatch-inventory.mjs` reads only the *existing* local shadow-agent status, user-mode organism service status, and a strictly allowlisted set of private receipt/config **presence flags**. It does not copy broker URLs, print tokens, run remote requests, create identity material, change permissions, configure brokers, write to disk, enable remote jobs, or submit provider applications.
+
+On the actual HP, use the already cloned checkout:
+
+```bash
+cd "$HOME/evercraft-qa/nextgen-browser-commission" || exit 1
+git pull --ff-only
+node --test tests/nextgen-dispatch-inventory.test.mjs
+node scripts/nextgen-dispatch-inventory.mjs --report
+```
+
+This report separates `shadow_telemetry_http_402_observed` from actual outbound broker configuration. **402 shadow ingest is not sufficient evidence that the broker itself is down**. A present broker environment flag is also **not** remote registration, operator permission or attested production execution.
+
+After the result, compare with authenticated, independently sourced broker-control custody under #1332. Never paste private local organism `.env` files or allocator tokens into GitHub, ChatGPT or logs. Do not run the existing `enable-remote-operator-user.sh` installer or any credential mutation solely because a readiness field is missing.
+
 ## Canonical progression after receipt
 
 1. Validate device identity and local receipt privately against existing Node002 / Passport enrollment records.
