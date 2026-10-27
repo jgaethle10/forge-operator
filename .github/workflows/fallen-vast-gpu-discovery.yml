@@ -1,0 +1,42 @@
+name: Fallen Vast GPU offer discovery (read only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Query on-demand RTX 4090 offers (no rental)
+        env:
+          VAST_API_KEY: ${{ secrets.Cloud_Vast_AI_Key }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,sys,urllib.request,urllib.error
+          key=os.getenv("VAST_API_KEY","")
+          if not key: sys.exit("FAIL: Cloud_Vast_AI_Key secret missing; no rental.")
+          query={"verified":{"eq":True},"rentable":{"eq":True},"num_gpus":{"eq":1},"gpu_name":{"in":["RTX 4090"]},"gpu_ram":{"gte":23000},"reliability":{"gte":0.95},"cpu_ram":{"gte":32000},"order":[["dph_total","asc"]],"type":"ondemand","limit":25}
+          req=urllib.request.Request("https://console.vast.ai/api/v0/bundles/",data=json.dumps(query).encode(),headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"},method="POST")
+          try:
+              with urllib.request.urlopen(req,timeout=20) as res: data=json.load(res)
+          except urllib.error.HTTPError as e: sys.exit("FAIL: Vast offer query HTTP "+str(e.code)+"; no rental.")
+          except Exception: sys.exit("FAIL: Vast offer query unavailable; no rental.")
+          if not isinstance(data,dict): sys.exit("FAIL: Unexpected response shape; no rental.")
+          offers=data.get("offers",data.get("instances"))
+          if not isinstance(offers,list): sys.exit("FAIL: No recognized offer list; no rental.")
+          def number(v):
+              try: return round(float(v),3)
+              except (TypeError,ValueError): return None
+          valid=[]
+          for o in offers:
+              if not isinstance(o,dict): continue
+              if o.get("gpu_name")!="RTX 4090" or o.get("num_gpus")!=1 or o.get("verified") is not True: continue
+              price=number(o.get("dph_total"))
+              if price is None or price<=0: continue
+              valid.append({"offer_id":o.get("id"),"usd_per_hour":price,"gpu":"RTX 4090","reliability":number(o.get("reliability2")),"vram_mb":o.get("gpu_ram"),"ram_mb":o.get("cpu_ram")})
+          valid.sort(key=lambda x:x["usd_per_hour"])
+          print(json.dumps({"mode":"READ_ONLY","rental_started":False,"matching_offers":len(valid),"cheapest":valid[:5]},indent=2))
+          PY
