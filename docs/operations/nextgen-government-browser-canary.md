@@ -148,6 +148,23 @@ This report separates `shadow_telemetry_http_402_observed` from actual outbound 
 
 After the result, compare with authenticated, independently sourced broker-control custody under #1332. Never paste private local organism `.env` files or allocator tokens into GitHub, ChatGPT or logs. Do not run the existing `enable-remote-operator-user.sh` installer or any credential mutation solely because a readiness field is missing.
 
+## PHYSICAL production dispatch inventory: actual gating result (Oct 26, 20:32 PDT)
+
+Owner-run NextGen `node scripts/nextgen-dispatch-inventory.mjs --report` at `2026-10-27T03:32:20.974Z` returned:
+- Existing Node002 shadow agent is observable but `mode:shadow`, `remote_jobs_enabled:false`, and shadow telemetry `FAILED_CLOSED:shadow_signed_ingest_rejected_402`.
+- Resident **user-mode organism service active**, resident NodeSeed receipt present and loopback-only, health watch healthy with NodeSeed health true.
+- Prior physical NodeSeed/Yard/browser local lease verified passed.
+- `configured_in_private_user_environment:false` and `configured_in_organism_receipt:false` for the outbound broker URL.
+- `enrollment_request_file_present:true`, but it is **not an authorization**.
+- `operator_opted_in_in_private_environment:false`, `operator_enabled_in_organism_receipt:false`.
+- `production_broker_reachable:not_tested`, `remote_device_authorized:not_tested`, `signed_cross_node_lease_verified:false`, `signed_result_on_production_identity_verified:false`.
+
+**Operational verdict:** Node002's existing production organism is healthy **locally**, and Node002's outbound broker *configuration is missing*. This does not prove whether a broker exists elsewhere or if it is down. We examined GitHub's source-only broker/Yard contracts and the known private Node001 Drive Bridge receipts folder without finding a current, independently verified public broker route and trust grant. Do **not** invent an origin, use the public Fabric host as an assumed broker, rerun HP local browser canaries, or activate Remote Operator by rebuilding the existing organism.
+
+Recovery target: obtain a live **Yard broker deployment/public-route receipt** and independently verify HTTPS `/v1/remote/health` schema, instance ID, deployment receipt and secure envelope. Then independently approve the exact Node002 fingerprint + node ID; only afterward stage narrowly scoped outbound device admission and physical signed cross-node job. Shadow HTTP 402 and GitHub-hosted workflow scoped secret configuration are separate checks.
+
+The recovery workflow's earlier weakness (treating any HTTP 200 + JSON as an operator success) is addressed by `scripts/remote-recovery-status-contract.mjs` and tests. A green status-only probe, even with the valid schema and non-root bounded execution, is **not** production device enrollment or Saban dispatch.
+
 ## Canonical progression after receipt
 
 1. Validate device identity and local receipt privately against existing Node002 / Passport enrollment records.
