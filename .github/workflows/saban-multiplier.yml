@@ -50,6 +50,18 @@ jobs:
       - name: Validate multiplication contracts
         run: npm run check:saban-contracts
 
+      - name: Prove pinned live NodeSeed identity without remote execution authority
+        run: node --test systemia/evercraft-os/field-node-probe.test.mjs
+      - name: Validate twelve OS lanes through Systemia mission policy
+        run: node --test systemia/evercraft-os/parallel-mission-bridge.test.mjs
+      - name: Execute twelve bounded read-only Saban readiness jobs and reconcile
+        run: node --test systemia/saban/evercraft-os-readiness.test.mjs
+      - name: Run bounded Saban OS source audit and persist receipt
+        run: node systemia/saban/evercraft-os-readiness-runner.mjs
+      - name: Prove Evercraft OS parallel lanes preserve Saban admission boundaries
+        run: node systemia/saban/evercraft-os-parallel.proof.mjs
+      - name: Execute OS readiness across two attested localhost NodeSeeds and prove failover
+        run: node systemia/saban/evercraft-os-ephemeral-two-node.proof.mjs
       - name: Prove kernel recovery and sharding
         run: npm run proof:saban-kernel
 
