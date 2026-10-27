@@ -68,7 +68,8 @@
              outcome?.quality?.status!=='verified'||
              !Array.isArray(outcome.specialist_receipts)||
              outcome.specialist_receipts.length!==5||
-             outcome.external_actions?.length!==0||
+             !Array.isArray(outcome.external_actions)||
+             outcome.external_actions.length!==0||
              outcome.model_inference!==false){
             throw new Error('incomplete_local_delivery');
           }
