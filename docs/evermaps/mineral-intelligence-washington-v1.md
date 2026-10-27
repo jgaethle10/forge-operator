@@ -1,40 +1,60 @@
-# EverMaps | Mineral Intelligence: Washington aggregate screening v1
+# EverMaps | Mineral Intelligence | Washington research adapter
 
-**Owner:** Evercraft LLC. **State:** research adapter, not production or a paid service.
+**Owner:** Evercraft LLC. **State:** draft research capability; not a live commercial service, operating-mine tracker, or parcel-level land recommendation.
 
-The first adapter pulls WGS aggregate Resource Areas (polygon layer 11), preserves the publisher's classifications, writes a map-ready GeoJSON, and produces a research-review queue. It does not discover ore or determine which properties can be mined.
+## What has been built
 
-## Official source
+- Resource polygon discovery by county from official WGS FeatureServer layer 11
+- Source classifications preserved without inventing mineral likelihood
+- GeoJSON review queue with complete/partial source warning
+- Four independent evidence feeds: resource polygons (11), material test sites (1), mine-history points (0), and mapped study-area polygons (12)
+- Before/after WGS count reconciliation and duplicate OBJECTID rejection on the evidence packet
+- CI contract tests and a read-only public source-count canary that records a machine-readable receipt
 
-- Washington Geological Survey, Digital Data Series 31, version 3.0, July 2026.
-- Layer: https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Aggregate_Resources/FeatureServer/11
-- Original classes: Demonstrated, Inferred, Speculative, Not a Resource and Not Analyzed.
-- Publisher says the polygons generally should be used at no finer than 1:24,000, not for parcel-specific certainty.
-- Source fields include commodity, reported acreage, thickness class, year and county.
+Datasets: Washington Geological Survey, Digital Data Series 31 v3.0, July 2026.
+Primary source: https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Aggregate_Resources/FeatureServer/11
 
-## Reproduction
+## Run
 
-From the repository root, run:
+Node.js 22+, repository root:
 
-    node --test systemia/evermaps/mineral-intelligence.test.mjs
-    node systemia/evermaps/mineral-intelligence-cli.mjs Yakima ./yakima-aggregate
+    node --test systemia/evermaps/*.test.mjs
+    node systemia/evermaps/wgs-live-canary.mjs
+    node systemia/evermaps/aggregate-evidence-cli.mjs Yakima ./yakima-wgs-evidence
 
-The second command reads the public WGS endpoint and writes yakima-aggregate.screen.json and yakima-aggregate.geojson. It requires network access; no private credentials. A non-complete page count must be treated as an incomplete dataset, never as proof of absence.
+The CLI writes a new JSON evidence packet. It fails rather than overwriting an existing output file. The included material tests and historical mine locations are **independent evidence layers**, NOT attributed to nearby polygons.
 
-## Truth contract
+For the original, narrower single-layer adapter:
 
-- Observed: WGS's published resource polygons, classification, and attributes.
-- Not verified: mineral ownership and claims, legal access, drilling, grade, permit feasibility, road access, environmental approvals, or project economics.
-- Sorting a review queue by WGS classification is **not** a discovery-probability ranking, resource-volume estimate or investment recommendation.
-- Unknown classification, absent geometry, and incomplete source coverage remain explicit. Missing is not zero.
-- Human signoff required before consequential real-world decisions.
+    node systemia/evermaps/mineral-intelligence-cli.mjs Yakima ./yakima-wgs-resource
 
-## Follow-on integration gates
+CI for this draft PR uses non-production contract tests and the source-count canary. Live counts from the canary only establish query availability and record counts. They do not validate feature geometry or site selection.
 
-1. Run a live WGS county ingestion with provenance receipt, completeness and feature-quality audit.
-2. Integrate BLM MLRS mining claims as a **separate legal-history layer**. Carry through its mapping-quality and geocoding caveats: https://nlsdbpubgis.blm.gov/arcgis/rest/services/Mining_Claims/MiningClaims/MapServer
-3. Combine county land-use ordinances, floodplains, protected areas, parcel title research, transport, material testing and demand economics.
-4. Wire EverMaps geospatial UI with Systemia source health and durable provenance.
-5. Pilot with an actual aggregate operator and qualified geologist before paid site screening.
+## Evidence boundaries
 
-No production deployment, customer deliverable, mineral title certification or live viability claim is authorized by this branch.
+1. **Geological observation:** WGS aggregate resource classification means Demonstrated, Inferred, Speculative, Not a Resource or Not Analyzed. Not a mineral discovery score.
+2. **Material tests:** dated point samples, including LA Abrasion and Degradation test readings, are local historical test observations. Never assume they validate every nearby resource polygon.
+3. **Mine history:** labels such as Active or Inactive describe WGS *identification-time* source data. Not independently verified 2026 operating status.
+4. **Study bounds:** study polygons tell us where particular WGS mapping projects occurred. County name matching does not prove full county coverage; a future spatial coverage join is necessary.
+5. **Land rights:** federal MLRS mining claims, title, surface ownership, easements, permits, zoning, protected land and tribal jurisdiction are NOT established by these geology layers.
+6. **Economics:** distance, material quality, drilling, reserve tonnage, recoverability, water impacts, public health, hauling and infrastructure all require independent analysis.
+7. **Spatial scale:** WGS warns these geologic maps should generally not be interpreted more finely than 1:24,000.
+8. **Completeness:** absent records do not imply absent geology; incomplete counts, duplicate IDs or mismatched before/after counts block claims of complete ingestion.
+
+## Data lifecycle and gates
+
+A. **Read source:** ensure all four official WGS endpoints answer the canary. If not, record source unavailable and do not fabricate data.
+
+B. **Ingest polygons and points:** run county scans, count reconciliation, raw record IDs, provenance and version record. If partial, stop at review state.
+
+C. **Geospatial validation:** verify EPSG:4326 results, polygon validity, projected accuracy, study polygon intersection and feature quality. Cannot be inferred from only county names.
+
+D. **Context and exclusion:** add local parcel/zoning/critical areas, road access, environmental restrictions, tribal land and BLM MLRS as distinct observed layers with metadata. Review ownership with competent land-title specialists.
+
+E. **Domain review:** licensed qualified geologist/mining engineer reviews any proposed exploration site, including on-the-ground testing before any investment, prospect or drilling claims.
+
+F. **Commercial readiness:** only after data quality, legal constraints, feasibility and human acceptance are evidenced should EverMaps publish commercial prospect reports.
+
+Relevant independent claims authority: https://www.blm.gov/services/land-records/mlrs
+
+**Not shipped:** production map UI, 3-D deposits, parcel mining suitability, operating mines, tested resource reserves, proof of permits, or paid production fulfillment.
