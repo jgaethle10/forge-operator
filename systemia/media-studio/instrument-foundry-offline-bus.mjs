@@ -128,7 +128,12 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,offlineContext
       status:'offline_track_bus_pcm_measurement',scope:RESULT_SCOPE,
       sample_peak:Number(peak.toFixed(5)),peak_dbfs:db(peak),
       rms_dbfs:db(Math.sqrt(sum/(frames*2))),
-      over_full_scale_frames:over,complete:true,
+      over_full_scale_frames:over,
+      // The finite audition window covers all selected note voices, but a
+      // feedback-delay path may carry a residual tail beyond the window.
+      source_notes_within_window:true,
+      effects_tail_complete:tracks.every(t=>t.delayMix===0),
+      complete:tracks.every(t=>t.delayMix===0),
       analyzed_voices:voices.length,rendered_frames:frames,
       window_sec:WINDOW,rate,
       source_kind:'decoded_pcm_only',
