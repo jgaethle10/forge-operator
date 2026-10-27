@@ -1,0 +1,79 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import { webcrypto } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { createLocalEventChain, verifyLocalEventChain, sha256Text } from './trace-chain.mjs';
+
+const here=path.dirname(fileURLToPath(import.meta.url));
+const script=fs.readFileSync(path.join(here,'trace-client.js'),'utf8');
+const ctx={window:{},crypto:webcrypto,TextEncoder,structuredClone,Uint8Array,Array};
+vm.runInNewContext(script,ctx,{filename:'trace-client.js'});
+const client=ctx.window.WorkSabanTrace;
+assert(client?.create);
+const roles=['analyst','writer','designer','auditor','coordinator'];
+const csv='month,revenue\n2026-08,100.10\n2026-09,90.05';
+const report='# Monthly sales report\nVerified local, synthetic fixture.';
+const receipts=roles.map((role,i)=>({
+  role,status:'completed',quality_status:'pass',attempts:1,
+  result_sha256:sha256Text('role-result-'+role),
+  idempotency_key:sha256Text('assignment-'+i)
+}));
+const execution={
+  run_id:'synthetic-test-run',
+  status:'verified_local',
+  quality:{status:'verified'},
+  source_sha256:sha256Text(csv),
+  report_sha256:sha256Text(report),
+  report_markdown:report,
+  specialist_receipts:receipts,
+  model_inference:false,
+  external_actions:[]
+};
+const chain=createLocalEventChain({traceId:'local-proof-test'});
+const events=[chain.next({type:'accepted',status:'running_local'})];
+for(let i=0;i<roles.length;i++){
+  events.push(chain.next({type:'stage_started',role:roles[i]}));
+  events.push(chain.next({type:'stage_verified',role:roles[i],receipt:receipts[i]}));
+}
+events.push(chain.next({type:'completed',execution}));
+assert.equal(events.length,12);
+assert.equal(verifyLocalEventChain(events).count,12);
+const test=client.create();
+for(const e of events) await test.accept(e);
+assert.equal(test.summary().status,'completed');
+assert.equal(test.summary().event_count,12);
+assert.equal(test.summary().trace_id,'local-proof-test');
+assert.equal(test.export().events.length,12);
+assert.equal(test.summary().tail_digest,chain.summary().tail_digest);
+assert.equal(test.export().authenticity,'local_hash_chain_unsigned');
+
+async function rejectWithTrace(mutator,match){
+  const corrupted=structuredClone(events);
+  mutator(corrupted);
+  const observer=client.create();
+  await assert.rejects(async()=>{
+    for(const event of corrupted) await observer.accept(event);
+  },match);
+}
+await rejectWithTrace(a=>{a[3].receipt.quality_status='fail';},/hash_mismatch/);
+await rejectWithTrace(a=>{a.splice(4,1);},/sequence/);
+await rejectWithTrace(a=>{a[11].execution.report_markdown+=' changed';},/hash_mismatch/);
+await rejectWithTrace(a=>{a[11].trace.previous_digest='sha256:deadbeef';},/sequence/);
+assert.throws(()=>verifyLocalEventChain([...events.slice(0,3),events[4]]),/invalid_trace_link/);
+assert.throws(()=>verifyLocalEventChain([events[0],events[0]]),/invalid_trace_link/);
+
+// Maliciously re-hashed inconsistency must still be caught by end-to-end semantics:
+const bogus={...execution,report_sha256:sha256Text('wrong content')};
+const forged=createLocalEventChain({traceId:'inconsistent-delivery'});
+const forgedEvents=[forged.next({type:'accepted'})];
+for(let i=0;i<roles.length;i++){
+  forgedEvents.push(forged.next({type:'stage_started',role:roles[i]}));
+  forgedEvents.push(forged.next({type:'stage_verified',role:roles[i],receipt:receipts[i]}));
+}
+forgedEvents.push(forged.next({type:'completed',execution:bogus}));
+assert.equal(verifyLocalEventChain(forgedEvents).valid,true,'hash chain alone cannot prove report correctness');
+const bad=client.create();
+await assert.rejects(async()=>{for(const e of forgedEvents)await bad.accept(e);},/report_hash_mismatch/);
+console.log('Work Saban tamper-evident streamed receipt proof: PASS (12 events, browser Web Crypto, tampering, reorder, delivery checks).');
