@@ -76,6 +76,7 @@ export default function FallenSessions(){
   const [dryPcmAudit,setDryPcmAudit]=useState<FoundryDryPcmAudit|null>(null);
   const [offlineBusAudit,setOfflineBusAudit]=useState<FoundryOfflineBusResult|null>(null);
   const [offlineBusBusy,setOfflineBusBusy]=useState(false);
+  const [offlineAuditionUrl,setOfflineAuditionUrl]=useState<string|null>(null);
   const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
@@ -116,7 +117,10 @@ export default function FallenSessions(){
     audioRef.current?.updateSession(session);
   },[session]);
 
-  useEffect(()=>{setDryPcmAudit(null);setOfflineBusAudit(null)},[session,selectedScene]);
+  useEffect(()=>{
+    setDryPcmAudit(null);setOfflineBusAudit(null);setOfflineAuditionUrl(null);
+  },[session,selectedScene]);
+  useEffect(()=>()=>{if(offlineAuditionUrl)URL.revokeObjectURL(offlineAuditionUrl)},[offlineAuditionUrl]);
 
   useEffect(()=>{
     selectedPedalStepRef.current=selectedStepIndex;
@@ -173,6 +177,7 @@ export default function FallenSessions(){
     try{
       setDryPcmAudit(null);
       setOfflineBusAudit(null);
+      setOfflineAuditionUrl(null);
       await audioRef.current?.play(session,selectedScene);
       setPlaying(true);
       setStatus('Playing canonical scene '+(selectedScene+1)+'.');
@@ -1107,6 +1112,7 @@ export default function FallenSessions(){
               onClick={async()=>{
                 setOfflineBusBusy(true);
                 setOfflineBusAudit(null);
+                setOfflineAuditionUrl(null);
                 try{
                   const result=await audioRef.current?.auditRecordedPianoOfflineBus();
                   setOfflineBusAudit(result||null);
@@ -1116,13 +1122,40 @@ export default function FallenSessions(){
               }}>
               {offlineBusBusy?'Rendering piano bus…':'Inspect performed mix offline'}
             </button>
+            <button type="button" disabled={playing||recording||offlineBusBusy||!(audioStatus.sampled_piano_scheduled_voices??0)}
+              onClick={async()=>{
+                setOfflineBusBusy(true);
+                setOfflineBusAudit(null);
+                setOfflineAuditionUrl(null);
+                try{
+                  const result=await audioRef.current?.auditRecordedPianoOfflineBus({
+                    window_sec:8,includeAuditionWav:true,
+                  });
+                  setOfflineBusAudit(result||null);
+                  if(result?.status==='offline_track_bus_pcm_measurement'&&result.audition_wav_bytes){
+                    // Copy into an exact-sized ArrayBuffer for browser BlobPart
+                    // compatibility. Never send the WAV to a server or library.
+                    const payload=new ArrayBuffer(result.audition_wav_bytes.length);
+                    new Uint8Array(payload).set(result.audition_wav_bytes);
+                    setOfflineAuditionUrl(URL.createObjectURL(new Blob([payload],{type:'audio/wav'})));
+                  }
+                }catch(error){
+                  setStatus(error instanceof Error?error.message:'Private offline audio audition failed.');
+                }finally{setOfflineBusBusy(false)}
+              }}>
+              {offlineBusBusy?'Rendering…':'Hear up to eight seconds'}
+            </button>
           </div>
+          {offlineAuditionUrl&&<div className="fsDryPeakReport">
+            <p>Private browser-only offline mix audition. Listen critically. This is not licensed for public distribution or certified as a mastered recording.</p>
+            <audio controls preload="none" src={offlineAuditionUrl} aria-label="Private eight-second PulseGrid offline mix audition" />
+          </div>}
           {offlineBusAudit&&<div className="fsDryPeakReport" role="status">
             {offlineBusAudit.status==='unavailable'
               ? <p>Offline effects-bus inspection unavailable: {offlineBusAudit.reason}. No clean mixed peak is claimed.</p>
               : <>
                 <p>Offline sampled-piano bus + master sample peak: <strong>{offlineBusAudit.sample_peak?.toFixed(3)}</strong> ({offlineBusAudit.peak_dbfs?.toFixed(2)} dBFS). Frames above full scale: <strong>{offlineBusAudit.over_full_scale_frames}</strong>, over {offlineBusAudit.window_sec?.toFixed(2)} seconds / {offlineBusAudit.analyzed_voices} recorded-piano voice{offlineBusAudit.analyzed_voices===1?'':'s'}, {offlineBusAudit.analyzed_audio_beds??0} imported audio bed{(offlineBusAudit.analyzed_audio_beds??0)===1?'':'s'}, and {offlineBusAudit.analyzed_synth_voices??0} actual synth-note event{(offlineBusAudit.analyzed_synth_voices??0)===1?'':'s'}, with {offlineBusAudit.analyzed_drum_hits??0} performed drum hit{(offlineBusAudit.analyzed_drum_hits??0)===1?'':'s'}.</p>
-                <p className="fsMusicInsightCaution">This is an OfflineAudioContext rendering of recorded piano, verified imported audio, and scheduled original PulseGrid synth tones and performed kick/hat events through the low-pass, delay, feedback, wet/dry and master gain with a frozen note-on automation snapshot. {offlineBusAudit.effects_tail_complete?'The selected effects return is bounded.':'Delay/feedback may continue beyond the 0.8-second window.'} Rendered track IDs: {(offlineBusAudit.included_track_ids??[]).join(', ')||'none'}. Outside this review: {(offlineBusAudit.omitted_track_ids??[]).join(', ')||'none explicitly excluded'}. {offlineBusAudit.audio_beds_within_window===false?'At least one imported audio bed continues beyond the preview. ':''} It omits drum events that did not actually fire, any unscheduled instruments, changing automation inside the phrase, full-song tail, device output, intersample true peak and human listening. Source WAVs and master settings remain unchanged.</p>
+                <p className="fsMusicInsightCaution">This is an OfflineAudioContext rendering of recorded piano, verified imported audio, and scheduled original PulseGrid synth tones and performed kick/hat events through the low-pass, delay, feedback, wet/dry and master gain with a frozen note-on automation snapshot. {offlineBusAudit.effects_tail_complete?'The selected effects return is bounded.':'Delay/feedback may continue beyond the selected {offlineBusAudit.window_sec?.toFixed(2)}-second window.'} Rendered track IDs: {(offlineBusAudit.included_track_ids??[]).join(', ')||'none'}. Outside this review: {(offlineBusAudit.omitted_track_ids??[]).join(', ')||'none explicitly excluded'}. {offlineBusAudit.audio_beds_within_window===false?'At least one imported audio bed continues beyond the preview. ':''} {offlineBusAudit.audition_sample_clamped?'The local 16-bit audition clamps above-full-scale PCM; the displayed float peak is measured before clamping. ':''}It omits drum events that did not actually fire, any unscheduled instruments, changing automation inside the phrase, full-song tail, device output, intersample true peak and human listening validation. Source WAVs and master settings remain unchanged.</p>
               </>}
           </div>}
           {dryPcmAudit&&<div className="fsDryPeakReport" role="status">
