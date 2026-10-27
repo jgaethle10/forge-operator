@@ -508,7 +508,7 @@ export function validatePulseGridSession(session: PulseGridSession) {
       }
       if(clip.provenance?.foundry_piano_pedal!==undefined){
         if(track.type!=='synth')errors.push(`${track.id}.${clip.id}.foundry_pedal_track_type`);
-        else try{validateFoundryPedalEvents(clip.provenance.foundry_piano_pedal,clip.steps.length)}
+        else try{validateFoundryPedalEvents(clip.provenance.foundry_piano_pedal as FoundryPedalEvent[],clip.steps.length)}
           catch(error){errors.push(`${track.id}.${clip.id}.foundry_pedal_invalid: ${error instanceof Error?error.message:String(error)}`)}
       }
       if(clip.audio_asset_id){
