@@ -160,7 +160,7 @@ export class PulseGridAudioEngine {
    * Explicit, non-real-time OFFLINE piano-bus render, never a live-stream
    * meter or whole-song mix. The bound WAV cache remains permission-scoped.
    */
-  async auditRecordedPianoOfflineBus():Promise<FoundryOfflineBusResult> {
+  async auditRecordedPianoOfflineBus(options:{window_sec?:0.8|8;includeAuditionWav?:boolean}={}):Promise<FoundryOfflineBusResult> {
     const unavailable=(reason:string):FoundryOfflineBusResult=>({
       status:'unavailable',scope:'offline_sampled_piano_track_bus_approximation',
       reason,peak_dbfs:null,sample_peak:null,over_full_scale_frames:null,
@@ -206,6 +206,8 @@ export class PulseGridAudioEngine {
     const rendered=await renderFoundryPianoOfflineBus({
       voices,audioBeds:this.decodedAudioBeds,synthVoices:this.capturedSynthVoices,
       drumVoices:this.capturedDrumVoices,
+      window_sec:options.window_sec??.8,
+      includeAuditionWav:options.includeAuditionWav??false,
       tracks:Array.from(snapshots.values()),
       offlineContextFactory:(channels,frames,rate)=>new Offline(channels,frames,rate),
     });
