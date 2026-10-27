@@ -4,12 +4,16 @@ on:
     branches: [feature/bella-actor-lab-20261026]
     paths:
       - 'systemia/media-studio/voice-bella-factorial-study.py'
+      - 'systemia/media-studio/voice-bella-mobile-export.py'
+      - 'systemia/media-studio/test_voice_bella_mobile_export.py'
       - 'systemia/media-studio/test_voice_bella_factorial.py'
       - 'systemia/media-studio/voice-bella-actor-lab.py'
       - '.github/workflows/voice-bella-factorial-study.yml'
   pull_request:
     paths:
       - 'systemia/media-studio/voice-bella-factorial-study.py'
+      - 'systemia/media-studio/voice-bella-mobile-export.py'
+      - 'systemia/media-studio/test_voice_bella_mobile_export.py'
       - 'systemia/media-studio/test_voice_bella_factorial.py'
       - 'systemia/media-studio/voice-bella-actor-lab.py'
       - '.github/workflows/voice-bella-factorial-study.yml'
@@ -30,6 +34,7 @@ jobs:
           python systemia/media-studio/voice-bella-factorial-study.py --verify-only
           python -m unittest discover -s systemia/media-studio -p test_voice_bella_factorial.py -v
           python -m unittest discover -s systemia/media-studio -p test_voice_bella_actor_lab.py -v
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_mobile_export.py -v
       - name: Install original Kokoro Bella synthesizer
         run: |
           sudo apt-get update -qq
@@ -64,6 +69,32 @@ jobs:
                       assert audio.getsampwidth()==2 and 10<=audio.getnframes()/24000<=34
           print('PASS: 8 unique original Bella audio files; real PCM/hash/timing evidence; release held')
           PY
+      - name: Export original-take-derived phone reels with verified source hashes
+        run: |
+          python systemia/media-studio/voice-bella-mobile-export.py \
+            --source bella-factorial-audition \
+            --output bella-factorial-mobile-review
+          python - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path('bella-factorial-mobile-review')
+          evidence = json.loads((root/'evidence.json').read_text())
+          assert evidence['voiceId']=='af_bella' and evidence['reviewOnly']
+          assert not evidence['publishReady'] and not evidence['masteringApplied']
+          assert len(evidence['reels'])==2
+          for context in ('brand','story'):
+              r=evidence['reels'][context]
+              assert len(r['takes'])==4 and r['durationSec']>60
+              file=root/r['file']
+              assert file.is_file()
+              assert hashlib.sha256(file.read_bytes()).hexdigest()==r['sha256']
+          print('PASS: 2 verified MP3 reels, 8 source-bound takes, private review only')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-factorial-phone-mp3-review
+          path: bella-factorial-mobile-review/
+          retention-days: 7
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: bella-factorial-eight-takes-blind-review
