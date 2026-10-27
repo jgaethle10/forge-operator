@@ -26,6 +26,7 @@ function fakeContext(peak=.25,broken=false){
   createBiquadFilter:()=>node('filter'+parameters.length),
   createDelay:()=>node('delay'+parameters.length),
   createBufferSource:()=>node('buffer'+parameters.length),
+  createOscillator:()=>node('oscillator'+parameters.length),
   async startRendering(){
    calls.push(['render']);
    const left=new Float32Array(frames).fill(peak),right=new Float32Array(frames).fill(-peak);
@@ -64,7 +65,7 @@ test('offline audition builds existing dry/filter/feedback/delay/wet/master bus 
  assert.equal(result.source_notes_within_window,true);
  assert.equal(result.effects_tail_complete,false);
  assert.equal(result.complete,false);
- assert.match(result.limitations,/Excludes drums, unsampled synths/);
+ assert.match(result.limitations,/Excludes drums, additional unscheduled notes/);
  assert.match(result.limitations,/authorized imported audio beds/);
 });
 test('returned offline PCM is measured, including over-full-scale frames, never inferred from voice count',async()=>{
@@ -157,4 +158,43 @@ test('unknown audio bed track, invalid timing and excessive sources fail before 
  ]){
   assert.equal((await render({...base,audioBeds})).status,'unavailable');
  }
+});
+
+
+test('offline recorded piano plus actual synthesizer uses shared real-time sawtooth oscillator',async()=>{
+ const f=fakeContext(.26);
+ const synthTrack={...track,id:'bass',delayMix:0};
+ const synth={track_id:'bass',pitch:36,velocity:.9,start_time:.1,
+  duration:.22,stop_time:.44};
+ const result=await render({
+  voices:[voice()],synthVoices:[synth],
+  tracks:[track,synthTrack],offlineContextFactory:f.make
+ });
+ assert.equal(result.status,'offline_track_bus_pcm_measurement',JSON.stringify(result));
+ assert.equal(result.analyzed_voices,1);
+ assert.equal(result.analyzed_synth_voices,1);
+ assert.equal(result.source_kind,'decoded_pcm_plus_synth');
+ const oscillators=f.parameters.filter(n=>n.name.startsWith('oscillator'));
+ assert.equal(oscillators.length,1);
+ assert.equal(oscillators[0].type,'sawtooth');
+ assert.ok(Math.abs(oscillators[0].frequency.value-65.406391)<1e-4);
+ assert.equal(f.calls.filter(x=>x[0]==='start').length,2,
+  'one decoded piano and one same-envelope oscillator started');
+});
+test('invalid synth notes, missing oscillator support, and excessive voices fail closed',async()=>{
+ const f=fakeContext(.2),synt={track_id:'bass',pitch:36,velocity:.5,
+  start_time:.1,duration:.15,stop_time:.37};
+ const base={voices:[voice()],tracks:[track,{...track,id:'bass'}],offlineContextFactory:f.make};
+ for(const synthVoices of [
+  [{...synt,pitch:128}],[{...synt,track_id:'forged'}],
+  [{...synt,stop_time:.1}],Array.from({length:17},()=>synt),
+ ]){
+  const r=await render({...base,synthVoices});
+  assert.equal(r.status,'unavailable');
+  assert.equal(r.sample_peak,null);
+ }
+ const unsupported=await render({...base,synthVoices:[synt],
+  offlineContextFactory:()=>({...f.ctx,createOscillator:undefined})});
+ assert.equal(unsupported.status,'unavailable');
+ assert.equal(unsupported.sample_peak,null);
 });
