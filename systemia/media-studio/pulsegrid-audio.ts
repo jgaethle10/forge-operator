@@ -4,6 +4,8 @@ import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
 import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
 import {FoundryPianoPolyphonyLedger} from './instrument-foundry-polyphony.mjs';
+import {analyzeFoundryDecodedPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
+import type {FoundryDryPcmVoice,FoundryDryPcmAudit} from './instrument-foundry-dry-pcm.mjs';
 import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
 import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch, planFoundryPianoPreRoll} from './instrument-foundry-piano.mjs';
@@ -71,6 +73,8 @@ export class PulseGridAudioEngine {
   private decodedCutInGuardVoices = 0;
   private decodedPreRollAlignedVoices = 0;
   private readonly pianoPolyphony=new FoundryPianoPolyphonyLedger();
+  private readonly decodedDryPianoVoices:FoundryDryPcmVoice[]=[];
+  private dryPianoVoiceOverflow=false;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -113,7 +117,26 @@ export class PulseGridAudioEngine {
     this.audioCacheEpoch += 1;
     this.audioBuffers.clear();
     this.pendingAssetLoads.clear();
+    this.decodedDryPianoVoices.length=0;
+    this.dryPianoVoiceOverflow=false;
     this.emitStatus();
+  }
+
+  /**
+   * EXPLICIT stopped-playback PCM-only audit, strictly limited to the
+   * authorized decoded WAVs from this Play. No offline render in the
+   * real-time scheduler, no effects-chain or device-output assertions.
+   */
+  auditRecordedPianoDryPeak():FoundryDryPcmAudit {
+    if(this.playing)return analyzeFoundryDecodedPianoDryPeak({voices:[]});
+    const scheduled=this.pianoPolyphony.snapshot();
+    if(this.dryPianoVoiceOverflow || !scheduled.observation_complete ||
+       scheduled.observed_voices!==this.decodedDryPianoVoices.length)
+      return analyzeFoundryDecodedPianoDryPeak({voices:Array.from({length:17},()=>null) as FoundryDryPcmVoice[]});
+    if(this.decodedDryPianoVoices.some(v=>!this.audioBuffers.has(
+        (v as FoundryDryPcmVoice & {asset_id?:string}).asset_id||'')))
+      return analyzeFoundryDecodedPianoDryPeak({voices:[]});
+    return analyzeFoundryDecodedPianoDryPeak({voices:this.decodedDryPianoVoices});
   }
 
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
@@ -192,6 +215,8 @@ export class PulseGridAudioEngine {
     this.decodedCutInGuardVoices=0;
     this.decodedPreRollAlignedVoices=0;
     this.pianoPolyphony.reset();
+    this.decodedDryPianoVoices.length=0;
+    this.dryPianoVoiceOverflow=false;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -611,6 +636,11 @@ export class PulseGridAudioEngine {
             track_id:track.id,start_time:sampledVoice.start_time,
             stop_time:sampledVoice.stop_time,voice_gain:sampledVoice.voice_gain,
           });
+          if(this.decodedDryPianoVoices.length<16){
+            this.decodedDryPianoVoices.push({
+              ...sampledVoice,buffer,asset_id:selected.asset_id,
+            } as FoundryDryPcmVoice);
+          }else this.dryPianoVoiceOverflow=true;
         }else{
           this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
         }
