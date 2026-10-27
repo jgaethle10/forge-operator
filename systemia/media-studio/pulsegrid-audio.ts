@@ -1,5 +1,7 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
+import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
+import type {PulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
 import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
@@ -79,6 +81,8 @@ export class PulseGridAudioEngine {
   private dryPianoVoiceOverflow=false;
   private readonly decodedAudioBeds:Array<FoundryOfflineAudioBed & {asset_id:string;autoVolume:number;autoFilter:number}>=[];
   private audioBedOverflow=false;
+  private readonly capturedSynthVoices:Array<PulseGridSynthVoice & {autoVolume:number;autoFilter:number}>=[];
+  private synthVoiceOverflow=false;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -125,6 +129,8 @@ export class PulseGridAudioEngine {
     this.dryPianoVoiceOverflow=false;
     this.decodedAudioBeds.length=0;
     this.audioBedOverflow=false;
+    this.capturedSynthVoices.length=0;
+    this.synthVoiceOverflow=false;
     this.emitStatus();
   }
 
@@ -158,7 +164,7 @@ export class PulseGridAudioEngine {
     const voices=this.decodedDryPianoVoices as Array<FoundryDryPcmVoice & FoundryOfflineBusVoice & {
       asset_id?:string;autoVolume?:number;autoFilter?:number;
     }>;
-    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||
+    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||
        !this.pianoPolyphony.snapshot().observation_complete||
        this.pianoPolyphony.snapshot().observed_voices!==voices.length)
       return unavailable('No complete bounded authorized sampled-piano phrase is available.');
@@ -169,7 +175,7 @@ export class PulseGridAudioEngine {
       return unavailable('The authorized decoded samples are no longer available.');
     if(!this.session)return unavailable('The canonical session is unavailable.');
     const snapshots=new Map<string,FoundryOfflineBusTrack>();
-    for(const v of [...voices,...this.decodedAudioBeds]){
+    for(const v of [...voices,...this.decodedAudioBeds,...this.capturedSynthVoices]){
       const track=this.session.tracks.find(t=>t.id===v.track_id);
       if(!track||!['synth','audio'].includes(track.type)||track.muted||!Number.isFinite(v.autoVolume)||
          !Number.isFinite(v.autoFilter))
@@ -192,7 +198,8 @@ export class PulseGridAudioEngine {
     const cacheEpoch=this.audioCacheEpoch;
     const attempt=this.playbackAttempt;
     const rendered=await renderFoundryPianoOfflineBus({
-      voices,audioBeds:this.decodedAudioBeds,tracks:Array.from(snapshots.values()),
+      voices,audioBeds:this.decodedAudioBeds,synthVoices:this.capturedSynthVoices,
+      tracks:Array.from(snapshots.values()),
       offlineContextFactory:(channels,frames,rate)=>new Offline(channels,frames,rate),
     });
     if(this.playing||sessionAtStart!==this.session||authority!==this.audioAuthoritySignature||
@@ -284,6 +291,8 @@ export class PulseGridAudioEngine {
     this.dryPianoVoiceOverflow=false;
     this.decodedAudioBeds.length=0;
     this.audioBedOverflow=false;
+    this.capturedSynthVoices.length=0;
+    this.synthVoiceOverflow=false;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -718,13 +727,13 @@ export class PulseGridAudioEngine {
             } as FoundryDryPcmVoice);
           }else this.dryPianoVoiceOverflow=true;
         }else{
-          this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
+          this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity,autoVolume,autoFilter);
         }
       }
 
       if (!foundryPatch && !noteEvents.length && velocity > 0 && Math.random() <= probability) {
         const pitch = track.id === 'bass' ? 36 : track.id === 'bell' ? 72 : 60;
-        this.note(bus.input, track, pitch, time + microtime, this.stepDuration(step) * 0.85, velocity);
+        this.note(bus.input, track, pitch, time + microtime, this.stepDuration(step) * 0.85, velocity,autoVolume,autoFilter);
       }
     }
   }
@@ -771,17 +780,16 @@ export class PulseGridAudioEngine {
     time: number,
     duration: number,
     velocity: number,
+    autoVolume:number,
+    autoFilter:number,
   ) {
-    const context = this.context!;
-    const oscillator = this.trackSource(context.createOscillator());
-    const gain = context.createGain();
-    oscillator.type = track.id === 'bass' ? 'sawtooth' : track.id === 'bell' ? 'sine' : 'triangle';
-    oscillator.frequency.value = 440 * Math.pow(2, (pitch - 69) / 12);
-    gain.gain.setValueAtTime(0.0001, time);
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.005, velocity * 0.18), time + 0.008);
-    gain.gain.setTargetAtTime(0.0001, time + Math.max(0.03, duration - 0.06), 0.03);
-    oscillator.connect(gain).connect(destination);
-    oscillator.start(time);
-    oscillator.stop(time + duration + 0.12);
+    const context=this.context!;
+    const scheduled=schedulePulseGridSynthVoice({
+      context,destination,track_id:track.id,pitch,velocity,time,duration,
+      createSource:()=>this.trackSource(context.createOscillator()),
+    });
+    if(this.capturedSynthVoices.length<16){
+      this.capturedSynthVoices.push({...scheduled,autoVolume,autoFilter});
+    }else this.synthVoiceOverflow=true;
   }
 }
