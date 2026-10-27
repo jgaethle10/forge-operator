@@ -1,0 +1,36 @@
+name: Evercraft Web real cello on user-liked piano (UNAPPROVED)
+on:
+  pull_request:
+    paths:
+      - 'systemia/clip/evercraft-real-piano-audition.py'
+      - 'systemia/clip/evercraft-web-recorded-cello-audition.py'
+      - 'tests/evercraft-web-recorded-cello-audition.test.py'
+      - '.github/workflows/evercraft-web-recorded-cello-audition.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-real-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-audio processing only
+        run: python -m pip install numpy==2.2.6 scipy==1.15.3 soundfile==0.13.1
+      - name: Require exact liked-piano hash and recorded cello source policy
+        run: python tests/evercraft-web-recorded-cello-audition.test.py
+      - name: Download pinned CC0 samples and render piano/cello listening A-B takes
+        run: python systemia/clip/evercraft-web-recorded-cello-audition.py
+      - name: Upload reference and cello takes, source hashes and license evidence
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-web-piano-cello-real-instruments-UNAPPROVED
+          path: |
+            artifacts/evercraft-web-real-cello-audition/*.wav
+            artifacts/evercraft-web-real-cello-audition/proof.json
+          if-no-files-found: error
+          retention-days: 7
