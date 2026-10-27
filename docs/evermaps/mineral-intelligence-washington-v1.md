@@ -20,15 +20,21 @@ Node.js 22+, repository root:
 
     node --test systemia/evermaps/*.test.mjs
     node systemia/evermaps/wgs-live-canary.mjs
-    node systemia/evermaps/aggregate-evidence-cli.mjs Yakima ./yakima-wgs-evidence
+    node systemia/evermaps/aggregate-evidence-cli.mjs Grant ./grant-wgs-evidence
 
 The CLI writes a new JSON evidence packet. It fails rather than overwriting an existing output file. The included material tests and historical mine locations are **independent evidence layers**, NOT attributed to nearby polygons.
 
 For the original, narrower single-layer adapter:
 
-    node systemia/evermaps/mineral-intelligence-cli.mjs Yakima ./yakima-wgs-resource
+    node systemia/evermaps/mineral-intelligence-cli.mjs Grant ./grant-wgs-resource
 
 CI for this draft PR uses non-production contract tests and the source-count canary. Live counts from the canary only establish query availability and record counts. They do not validate feature geometry or site selection.
+
+## Observed real-source validation (2026-10-27)
+
+The canary reached all four WGS layers and checked 1,161 aggregate resource polygons, 232 test-site point records, 304 historical surface-mine markers, and one study-area polygon with county = Grant. First-record GeoJSON samples passed field and geometry validation. **These are publisher counts, not completed full-geometry ingestion or mineable prospects.**
+
+Yakima County returned zero records in this published dataset; statewide COUNTY values in resource and study layers were Grant, Grays Harbor, Kitsap, Skagit and Spokane. Zero Yakima matches means **coverage unavailable in this specific inventory**, not that Yakima lacks aggregate resources. Pilot defaults to Grant. County-level coverage still requires geometry intersection confirmation.
 
 ## Evidence boundaries
 
