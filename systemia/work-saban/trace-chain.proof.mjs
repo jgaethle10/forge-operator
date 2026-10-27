@@ -67,6 +67,22 @@ assert.equal(offline.independent_identity_attestation,false);
 const mutatedArchive=structuredClone(test.export());
 mutatedArchive.events[11].execution.report_markdown+='tampered';
 assert.throws(()=>auditWorkSabanTrace(mutatedArchive),/invalid_trace_hash/);
+// Recompute the entire unsigned chain to prove semantic checks still matter.
+const invalidReceipt={...receipts[0],result_sha256:'sha256:invalid'};
+const recomputed=createLocalEventChain({traceId:'recomputed-invalid-receipt'});
+const recomputedEvents=[recomputed.next({type:'accepted'})];
+for(let i=0;i<roles.length;i++){
+  recomputedEvents.push(recomputed.next({type:'stage_started',role:roles[i]}));
+  recomputedEvents.push(recomputed.next({type:'stage_verified',role:roles[i],
+    receipt:i===0?invalidReceipt:receipts[i]}));
+}
+recomputedEvents.push(recomputed.next({type:'completed',execution:{
+  ...execution,specialist_receipts:[invalidReceipt,...receipts.slice(1)]
+}}));
+const recomputedArchive={...test.export(),events:recomputedEvents,
+  trace_id:'recomputed-invalid-receipt',tail_digest:recomputed.summary().tail_digest};
+assert.equal(verifyLocalEventChain(recomputedEvents).valid,true);
+assert.throws(()=>auditWorkSabanTrace(recomputedArchive),/worker_receipt_mismatch/);
 const missingArchive=structuredClone(test.export());
 missingArchive.events.splice(2,1);
 assert.throws(()=>auditWorkSabanTrace(missingArchive),/invalid_trace_link/);
