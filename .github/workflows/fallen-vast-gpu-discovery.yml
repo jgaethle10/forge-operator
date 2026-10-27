@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '17 */6 * * *'
   push:
-    branches: [main, creative/fallen-flagship-20261027]
+    branches: [main]
     paths:
       - '.github/workflows/fallen-vast-gpu-discovery.yml'
 permissions:
