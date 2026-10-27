@@ -13,6 +13,8 @@ takes=[
  ("brand_full_natural","On The Go Mobile Quick Lube.",1.0),
  ("brand_full_warm","On The Go Mobile Quick Lube.",0.96),
  ("brand_intro_full","On The Go Mobile Quick Lube comes to you.",0.99),
+ ("brand_intro_clear","On The Go Mobile Quick Lube comes to you.",0.86),
+ ("brand_full_clear","On The Go Mobile Quick Lube.",0.88),
 ]
 results=[]
 for i,(name,words,speed) in enumerate(takes):
