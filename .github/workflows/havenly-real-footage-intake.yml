@@ -18,9 +18,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check FFmpeg/FFprobe available
+      - name: Install local video probe and test encoder
         run: |
-          command -v ffmpeg
-          command -v ffprobe
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -version | head -n 1
+          ffprobe -hide_banner -version | head -n 1
       - name: Exercise original seven-scene source first work order with actual encoded synthetic fixtures
         run: node --test systemia/media-studio/havenly-real-footage-intake.test.mjs
