@@ -179,3 +179,15 @@ test('piano tail audit is explicitly metadata-only and ranks short recorded note
   assert.match(source,/unknown_rights_note_uses/);
   assert.match(source,/not an audible pass or rights clearance/);
 });
+
+test('PCM chord audit can only run on demand after music stops, with honest pre-effects wording',()=>{
+ const src=ui();
+ assert.match(src,/Inspect decoded chord PCM/);
+ assert.match(src,/auditRecordedPianoDryPeak\(\)/);
+ assert.match(src,/disabled=\{playing\|\|recording/);
+ assert.match(src,/sample_peak/);
+ assert.match(src,/over_full_scale_frames/);
+ assert.match(src,/Partial window only/);
+ assert.match(src,/does not measure actual speaker output/);
+ assert.match(src,/No automatic compression or gain adjustment is applied/);
+});
