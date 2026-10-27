@@ -5,6 +5,7 @@ on:
       - 'systemia/evermaps/**'
       - 'docs/evermaps/**'
       - '.github/workflows/evermaps-mineral-intelligence.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -16,5 +17,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test evidence and source-completeness invariants
-        run: node --test systemia/evermaps/mineral-intelligence.test.mjs
+      - name: Check evidence and completeness invariants
+        run: node --test systemia/evermaps/*.test.mjs
+  live-source-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Public WGS read-only count probe
+        id: probe
+        continue-on-error: true
+        run: node systemia/evermaps/wgs-live-canary.mjs
+      - name: Preserve source availability receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evermaps-wgs-source-receipt
+          path: wgs-source-receipt.json
+          if-no-files-found: warn
+          retention-days: 30
