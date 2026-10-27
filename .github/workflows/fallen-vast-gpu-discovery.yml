@@ -60,7 +60,7 @@ jobs:
               checks={
                   "gpu_name":o.get("gpu_name")=="RTX 4090",
                   "gpu_count":o.get("num_gpus")==1,
-                  "verified":o.get("verified") is True,
+                  "verified":o.get("verified") is True or ("verified" not in o and query.get("verified")=={"eq":True}),
                   "rentable":o.get("rentable") is True,
                   "price_ceiling":price is not None and 0<price<=MAX_COMPUTE_USD_PER_HOUR,
                   "reliability":reliability is not None and reliability>=0.95,
@@ -73,7 +73,7 @@ jobs:
                   for reason in failed:
                       rejection_reasons[reason]=rejection_reasons.get(reason,0)+1
                   continue
-              valid.append({"offer_id":o.get("id"),"usd_per_hour":price,"gpu":"RTX 4090","reliability":number(o.get("reliability2")),"vram_mb":o.get("gpu_ram"),"ram_mb":o.get("cpu_ram")})
+              valid.append({"offer_id":o.get("id"),"usd_per_hour":price,"gpu":"RTX 4090","verification_evidence":"vast_filter_only" if "verified" not in o else "explicit_offer_field","rental_approved":False,"reliability":number(o.get("reliability2")),"vram_mb":o.get("gpu_ram"),"ram_mb":o.get("cpu_ram")})
           valid.sort(key=lambda x:x["usd_per_hour"])
           report={"mode":"READ_ONLY","rental_started":False,"max_compute_usd_per_hour":MAX_COMPUTE_USD_PER_HOUR,"planned_hours":MAX_PLANNED_HOURS,"max_estimated_compute_usd":round(MAX_COMPUTE_USD_PER_HOUR*MAX_PLANNED_HOURS,2),"storage_network_taxes_extra":True,"matching_offers":len(valid),"rejected_offers":rejected,"rejection_reasons":rejection_reasons,"verification_shapes":verification_shapes,"cheapest":valid[:5]}
           print(json.dumps(report,indent=2))
