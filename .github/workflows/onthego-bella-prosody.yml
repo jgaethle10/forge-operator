@@ -5,6 +5,10 @@ on:
     paths:
       - 'systemia/media-studio/on-the-go-prosody-v5.py'
       - '.github/workflows/onthego-bella-prosody.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/on-the-go-prosody-v5.py'
+      - '.github/workflows/onthego-bella-prosody.yml'
   workflow_dispatch:
 permissions:
   contents: read
