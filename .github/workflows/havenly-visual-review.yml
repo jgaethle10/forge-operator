@@ -1,0 +1,37 @@
+name: HAVENLY visual mobile review
+on:
+  pull_request:
+    paths:
+      - 'public/havenly/index.html'
+      - 'tests/havenly-visual-audit.py'
+      - '.github/workflows/havenly-visual-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  havenly-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test driver
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Render phone, tablet, desktop and test cleaning plan to inquiry
+        run: python tests/havenly-visual-audit.py
+      - name: Save browser screenshots and QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: havenly-visual-review
+          path: artifacts/havenly-visual-audit/
+          if-no-files-found: warn
+          retention-days: 21
