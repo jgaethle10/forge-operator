@@ -61,6 +61,21 @@ jobs:
               print('CAPTURE_PLATE_VERIFIED',p.name,p.stat().st_size,float(data['format']['duration']))
           print('Real browser recorded with genuine shipped extension; fixtures and limitations explicitly labeled.')
           PY
+      - name: Flag source plates that are too static to carry a finished commercial
+        if: success()
+        run: |
+          python products/humanfilter/commercial/visual_motion_audit.py \
+            artifacts/humanfilter-rc3/captured/authentic-extension-feed.mp4 \
+            artifacts/humanfilter-rc3/captured/authentic-extension-popup.mp4 \
+            --out artifacts/humanfilter-rc3/captured/visual-motion-review.json
+          python - <<'PY'
+          import pathlib,json
+          p=pathlib.Path('artifacts/humanfilter-rc3/captured/visual-motion-review.json')
+          rows=json.loads(p.read_text())['reports']
+          assert len(rows)==2
+          assert all(x['boundaries']['no_publish_authority'] for x in rows)
+          print('Visual motion measured. Flagged footage needs human review; no auto-publish.')
+          PY
       - name: Upload original product footage (NOT finished commercial)
         if: always()
         uses: actions/upload-artifact@v4
