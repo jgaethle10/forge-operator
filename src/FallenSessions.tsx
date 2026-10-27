@@ -20,6 +20,7 @@ import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/med
 import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
 import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
 import {analyzePulseGridArrangementArc} from '../systemia/media-studio/pulsegrid-arrangement-arc.mjs';
+import {analyzeFoundryPianoTailCoverage} from '../systemia/media-studio/instrument-foundry-tail-audit.mjs';
 import {decodeFoundryMidiSustain,mergeFoundryMidiPedalEvent,removeFoundryMidiPedalEvent} from '../systemia/media-studio/instrument-foundry-midi-pedal.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
@@ -942,6 +943,7 @@ export default function FallenSessions(){
   const musicInsights=useMemo(()=>analyzePulseGridMusic(session,selectedScene),[session,selectedScene]);
   const counterpointEvidence=useMemo(()=>analyzePulseGridCounterpoint(session,selectedScene),[session,selectedScene]);
   const arrangementArc=useMemo(()=>analyzePulseGridArrangementArc(session,selectedScene),[session,selectedScene]);
+  const pianoTailAudit=useMemo(()=>analyzeFoundryPianoTailCoverage(session,selectedScene),[session,selectedScene]);
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
   const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
@@ -1076,6 +1078,31 @@ export default function FallenSessions(){
             ? (clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>)
               .map(event=>'step '+(event.step+1)+' '+(event.down?'down':'up')).join(' · ')
             :'none (default pedal up)'}. This is CC64 score capture, not device-audible verification, physical sympathetic resonance, or half-pedal modeling.</p>
+        </details>
+
+        <details className="fsTailPanel">
+          <summary>Recorded Piano Tail Budget · {pianoTailAudit.total_findings} flag{pianoTailAudit.total_findings===1?'':'s'}</summary>
+          <p className="fsMusicInsightCaution">Read-only score-vs-recording-duration estimate. Asset duration is metadata, not yet measured from decoded browser audio. This does not measure true acoustic decay, room sound, loudness, recording rights or human listening quality. Muted and probabilistic written notes are included.</p>
+          <div className="fsTailStats" role="group" aria-label="Recorded piano sample tail estimates">
+            <span><strong>{pianoTailAudit.mapped_notes}/{pianoTailAudit.authored_notes}</strong> mapped MIDI notes</span>
+            <span><strong>{pianoTailAudit.key_hold_shortfalls}</strong> note-hold shortfalls</span>
+            <span><strong>{pianoTailAudit.release_tail_shortfalls}</strong> release-tail shortfalls</span>
+            <span><strong>{pianoTailAudit.unknown_rights_note_uses}</strong> note uses with unknown rights</span>
+          </div>
+          {pianoTailAudit.total_findings===0
+            ? <p>No metadata-duration shortages found in the authored sampled-piano notes of this scene. This is not an audible pass or rights clearance.</p>
+            : <div className="fsTailFindings" role="list" aria-label="Piano sample coverage issues">
+              {pianoTailAudit.findings.map((finding,index)=>(
+                <div key={finding.track_id+'-'+finding.start_step+'-'+finding.pitch+'-'+index} className="fsTailFinding" role="listitem">
+                  <strong>{finding.track_id} · {noteName(finding.pitch)} · step {finding.start_step+1}</strong>
+                  <span>{finding.kind==='key_hold_shortfall'?'Recording cuts off during hold':
+                    finding.kind==='release_tail_shortfall'?'Release recording too short':'Missing mapped recording'}{finding.shortfall_seconds!==null?' · '+finding.shortfall_seconds.toFixed(3)+'s estimated':''}</span>
+                  <small>{finding.note}</small>
+                </div>
+              ))}
+              {pianoTailAudit.total_findings>pianoTailAudit.findings.length&&
+                <p className="fsMusicInsightCaution">Showing first {pianoTailAudit.findings.length} of {pianoTailAudit.total_findings} issues, ranked by potential disruption.</p>}
+            </div>}
         </details>
 
         <details className="fsArcDetails">
