@@ -28,7 +28,7 @@ function gainAt(voice,t){
   const level=p=>.0001+(voice.voice_gain-.0001)*Math.cos(Math.PI*p/2)**2;
   return level(a)+(level(b)-level(a))*part;
 }
-function fail(reason){
+export function unavailableFoundryPianoDryPeak(reason){
   return {status:'unavailable',reason,scope:'decoded_sampled_piano_dry_approximation',
     sample_peak:null,peak_dbfs:null,over_full_scale_frames:null,
     examined_frames:0,analyzed_voices:0,complete:false};
@@ -39,12 +39,12 @@ function fail(reason){
  * Never emit a misleading zero peak for absent/unauthorized/unsupported PCM.
  */
 export function analyzeFoundryDecodedPianoDryPeak({voices,rate=48000,window_sec=.8}={}){
-  if(!Array.isArray(voices)||voices.length===0)return fail('No scheduled sampled-piano voices to inspect.');
-  if(voices.length>MAX_VOICES)return fail('Too many scheduled notes for bounded dry-PCM audit; inspect a shorter phrase.');
+  if(!Array.isArray(voices)||voices.length===0)return unavailableFoundryPianoDryPeak('No scheduled sampled-piano voices to inspect.');
+  if(voices.length>MAX_VOICES)return unavailableFoundryPianoDryPeak('Too many scheduled notes for bounded dry-PCM audit; inspect a shorter phrase.');
   if(![12000,24000,48000].includes(rate)||!Number.isFinite(window_sec)||
-    window_sec<=0||window_sec>.8)return fail('Invalid PCM audit rate/window.');
+    window_sec<=0||window_sec>.8)return unavailableFoundryPianoDryPeak('Invalid PCM audit rate/window.');
   const earliest=Math.min(...voices.map(v=>v.start_time));
-  if(!Number.isFinite(earliest)||earliest<0)return fail('Invalid scheduled note start.');
+  if(!Number.isFinite(earliest)||earliest<0)return unavailableFoundryPianoDryPeak('Invalid scheduled note start.');
   const frames=Math.min(MAX_FRAMES,Math.ceil(rate*window_sec));
   const left=new Float64Array(frames),right=new Float64Array(frames);
   for(const voice of voices){
@@ -56,18 +56,20 @@ export function analyzeFoundryDecodedPianoDryPeak({voices,rate=48000,window_sec=
        voice.attack_sec<=0||voice.attack_sec>=voice.stop_time-voice.start_time||
        voice.voice_gain<=0||voice.voice_gain>1||
        voice.playback_rate<.5||voice.playback_rate>2||
-       voice.source_offset_sec<0)return fail('Invalid scheduled piano envelope.');
+       voice.source_offset_sec<0)return unavailableFoundryPianoDryPeak('Invalid scheduled piano envelope.');
     const b=voice.buffer;
     if(!b||typeof b.getChannelData!=='function'||
        !Number.isFinite(b.duration)||b.duration<=0||
        !Number.isFinite(b.sampleRate)||b.sampleRate<8000||b.sampleRate>192000||
-       ![1,2].includes(b.numberOfChannels))return fail('Decoded PCM is unavailable for at least one sampled voice.');
+       ![1,2].includes(b.numberOfChannels))return unavailableFoundryPianoDryPeak('Decoded PCM is unavailable for at least one sampled voice.');
+    if(voice.source_offset_sec+(voice.stop_time-voice.start_time)*voice.playback_rate>
+       b.duration+.0005)return unavailableFoundryPianoDryPeak('Scheduled voice exceeds available decoded WAV frames.');
     let pcm;
     try{
       pcm=Array.from({length:b.numberOfChannels},(_,i)=>b.getChannelData(i));
-    }catch{return fail('Decoded PCM channel access failed.')}
+    }catch{return unavailableFoundryPianoDryPeak('Decoded PCM channel access failed.')}
     if(pcm.some(ch=>!ch||ch.length<2||ch.length/b.sampleRate<b.duration-.003))
-      return fail('Decoded PCM is incomplete or inconsistent with the audio duration.');
+      return unavailableFoundryPianoDryPeak('Decoded PCM is incomplete or inconsistent with the audio duration.');
     const first=Math.max(0,Math.ceil((voice.start_time-earliest)*rate));
     const last=Math.min(frames,Math.ceil((voice.stop_time-earliest)*rate));
     for(let frame=first;frame<last;frame++){
@@ -77,7 +79,7 @@ export function analyzeFoundryDecodedPianoDryPeak({voices,rate=48000,window_sec=
       if(absolutePosition<0||absolutePosition>=pcm[0].length-1)continue;
       const idx=Math.floor(absolutePosition),frac=absolutePosition-idx;
       const amp=gainAt(voice,t);
-      if(!Number.isFinite(amp))return fail('Invalid interpolated note envelope.');
+      if(!Number.isFinite(amp))return unavailableFoundryPianoDryPeak('Invalid interpolated note envelope.');
       const sample=c=>{
         const v=pcm[c][idx],next=pcm[c][idx+1];
         if(!Number.isFinite(v)||!Number.isFinite(next)||Math.abs(v)>1.01||Math.abs(next)>1.01)
@@ -85,7 +87,7 @@ export function analyzeFoundryDecodedPianoDryPeak({voices,rate=48000,window_sec=
         return (v+(next-v)*frac)*amp;
       };
       const l=sample(0),r=b.numberOfChannels===2?sample(1):l;
-      if(!Number.isFinite(l)||!Number.isFinite(r))return fail('Nonfinite or out-of-range decoded PCM.');
+      if(!Number.isFinite(l)||!Number.isFinite(r))return unavailableFoundryPianoDryPeak('Nonfinite or out-of-range decoded PCM.');
       left[frame]+=l;right[frame]+=r;
     }
   }
