@@ -17,7 +17,7 @@ export function pulseGridAudioAuthoritySignature(session){
       const patch=c.provenance?.foundry_piano_patch||null;
       // A new sampled MIDI note can require a newly authorized asset.
       const expression=patch?c.notes.map(n=>[n.id,n.pitch,n.velocity,n.start,n.length]):null;
-      return [c.audio_asset_id||null,patch,expression];
+      return [c.audio_asset_id||null,patch,expression,patch?(c.provenance?.foundry_piano_pedal||[]):null];
     })
   ]).sort((a,b)=>String(a[0]).localeCompare(String(b[0])));
   return JSON.stringify([session.session_id,assets,clips]);
