@@ -4,7 +4,7 @@ import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
 import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
 import {FoundryPianoPolyphonyLedger} from './instrument-foundry-polyphony.mjs';
-import {analyzeFoundryDecodedPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
+import {analyzeFoundryDecodedPianoDryPeak,unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 import type {FoundryDryPcmVoice,FoundryDryPcmAudit} from './instrument-foundry-dry-pcm.mjs';
 import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
@@ -128,14 +128,13 @@ export class PulseGridAudioEngine {
    * real-time scheduler, no effects-chain or device-output assertions.
    */
   auditRecordedPianoDryPeak():FoundryDryPcmAudit {
-    if(this.playing)return analyzeFoundryDecodedPianoDryPeak({voices:[]});
-    const scheduled=this.pianoPolyphony.snapshot();
-    if(this.dryPianoVoiceOverflow || !scheduled.observation_complete ||
-       scheduled.observed_voices!==this.decodedDryPianoVoices.length)
-      return analyzeFoundryDecodedPianoDryPeak({voices:Array.from({length:17},()=>null) as FoundryDryPcmVoice[]});
+    if(this.playing)return unavailableFoundryPianoDryPeak('Stop playback before inspecting decoded PCM.');
+    if(this.dryPianoVoiceOverflow || !this.pianoPolyphony.snapshot().observation_complete ||
+       this.pianoPolyphony.snapshot().observed_voices!==this.decodedDryPianoVoices.length)
+      return unavailableFoundryPianoDryPeak('Recorded notes exceed the bounded PCM audit. Inspect a shorter phrase.');
     if(this.decodedDryPianoVoices.some(v=>!this.audioBuffers.has(
         (v as FoundryDryPcmVoice & {asset_id?:string}).asset_id||'')))
-      return analyzeFoundryDecodedPianoDryPeak({voices:[]});
+      return unavailableFoundryPianoDryPeak('The recording authority changed; no verified decoded sample is available.');
     return analyzeFoundryDecodedPianoDryPeak({voices:this.decodedDryPianoVoices});
   }
 
