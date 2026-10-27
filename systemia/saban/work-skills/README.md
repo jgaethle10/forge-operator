@@ -59,3 +59,23 @@ The CLI writes a private-permissions receipt containing the four role outputs pl
 The dedicated GitHub workflow \`.github/workflows/work-saban-skills.yml\` tests the skill selector, integrity pinning, direct adapter behavior, and its connection to the existing Saban registered-worker path. No local NodeSeed enrollment or live Fabric control authority is implied.
 
 To advance further: independently test a permission-bounded creative provider adapter, explicitly enroll any execution hardware, add human review and licensed media checks, and require separate Systemia admission for publishing or commercial delivery.
+
+
+## Fallen Creative Council integration (owner-invoked; source-held)
+
+Work Saban can now hand the **actual local four-role commercial draft receipt** to Evercraft's existing, registered \`fallen-creative-council\` worker contract. For four storyboard shots, it invokes fourteen local deterministic role adapters per shot and records **56 registered-worker receipts**. They cover story architecture, cinematography, source evidence, motion graphics, world-building, edit, sound, voice performance, music composition, sound design, mix, brand direction, documentary truth and beauty judgment.
+
+The council's creative-genome output is **direction and rejection rules only**, not autonomous language-model deliberation, generated frames, synthesized voices, mixed audio, or produced video. Every shot carries an explicit *missing source coverage* entry; the preview remains \`creative_direction_generated_source_held\` regardless of downstream model-routing eligibility. Real asset discovery and rights verification cannot be inferred from a council pass.
+
+To create a local proof:
+
+\`\`\`bash
+node systemia/saban/work-skills/run-council-cli.mjs \
+  --task "Create a 30-second narrated commercial for Example Cleaning Co" \
+  --brief-file ./brief.json \
+  --out ./artifacts/work-saban-fallen
+\`\`\`
+
+Output is an auditable JSON receipt plus an offline responsive HTML Workroom containing four worker role outcomes and four Creative Council shot cards with inspectable genomes. Keep receipts private if customer details are included. No public HTTP route is created. The demonstration job in \`.github/workflows/work-saban-skills.yml\` uses only fictional data, and its downloadable artifact is a **test proof**, not a commercial deliverable.
+
+Production next gates: evidence-backed original asset intake, licensed graphics/sound sources, budget-scoped provider invocation on explicitly authorized equipment, creative QC measured against media, and owner-approved final release. A skill instruction or passing test never authorizes payments, publication, account changes, or media delivery.
