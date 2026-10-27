@@ -1,7 +1,7 @@
 import {writeFile} from 'node:fs/promises';
 import {fetchAggregateResources,queueToGeoJSON,screenAggregateResources} from './mineral-intelligence.mjs';
 
-const county=process.argv[2]||'Yakima';
+const county=process.argv[2]||'Grant';
 const prefix=process.argv[3]||'evermaps-aggregate';
 try {
   const data=await fetchAggregateResources({county});
