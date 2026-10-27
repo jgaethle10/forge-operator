@@ -168,3 +168,14 @@ test('manual piano pedal editing removes only one step and CC64 readiness is not
  assert.match(source,/No live acoustic damper response is asserted/);
  assert.match(source,/not device-audible verification/);
 });
+
+test('piano tail audit is explicitly metadata-only and ranks short recorded note holds',()=>{
+  const source=ui();
+  assert.match(source,/analyzeFoundryPianoTailCoverage\(session,selectedScene\)/);
+  assert.match(source,/Recorded Piano Tail Budget/);
+  assert.match(source,/recording-duration estimate/i);
+  assert.match(source,/key_hold_shortfalls/);
+  assert.match(source,/release_tail_shortfalls/);
+  assert.match(source,/unknown_rights_note_uses/);
+  assert.match(source,/not an audible pass or rights clearance/);
+});
