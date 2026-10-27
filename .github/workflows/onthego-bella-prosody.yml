@@ -1,0 +1,53 @@
+name: On The Go Bella Prosody A-B Auditions
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths:
+      - 'systemia/media-studio/on-the-go-prosody-v5.py'
+      - '.github/workflows/onthego-bella-prosody.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify native Bella scripts and pacing
+        run: python systemia/media-studio/on-the-go-prosody-v5.py --verify-only
+      - name: Install Relay voice runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate two connected-paragraph Bella auditions
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/on-the-go-prosody-v5.py bella-prosody-v5
+      - name: Verify two untouched 30-second wave masters
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          p=pathlib.Path("bella-prosody-v5")
+          r=json.loads((p/"evidence.json").read_text())
+          assert r["nativeVoiceId"]=="af_bella"
+          assert r["humanListeningApproved"] is False and r["published"] is False
+          assert len(r["auditions"])==2
+          for audition in r["auditions"]:
+              f=p/audition["audioFile"]
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==audition["masterSha256"]
+              with wave.open(str(f),"rb") as w:
+                  assert w.getframerate()==24000 and w.getnframes()==720000
+              assert len(audition["paragraphs"])==3
+          print("PASS: two voice-locked 30-second native auditions")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onthego-bella-prosody-v5-private
+          path: bella-prosody-v5/
+          retention-days: 7
+          if-no-files-found: error
