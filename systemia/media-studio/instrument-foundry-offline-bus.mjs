@@ -10,6 +10,7 @@
  * No code ever writes back to the canonical session or the original WAV.
  */
 import {scheduleFoundryPianoNote} from './instrument-foundry-piano.mjs';
+import {schedulePulseGridAudioBuffer} from './pulsegrid-audio-scheduler.mjs';
 import {unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 
 const RESULT_SCOPE='offline_sampled_piano_track_bus_approximation';
@@ -23,12 +24,22 @@ const unavailable=reason=>({
 });
 
 function validated(input){
-  const {voices,tracks}=input??{};
+  const {voices,tracks,audioBeds=[]}=input??{};
   if(!Array.isArray(voices)||!voices.length||voices.length>MAX_VOICES||
      !Array.isArray(tracks)||!tracks.length)
     return 'Choose 1–16 authorized recorded-piano voices.';
   const indexed=new Map(tracks.map(t=>[t.id,t]));
   if(indexed.size!==tracks.length)return 'Ambiguous recorded-piano track IDs.';
+  if(!Array.isArray(audioBeds)||audioBeds.length>4)
+    return 'Audio-bed review exceeds the bounded four-source limit.';
+  for(const bed of audioBeds){
+    if(!bed||typeof bed.track_id!=='string'||!indexed.has(bed.track_id)||
+       !bed.buffer||!Number.isFinite(bed.buffer.duration)||bed.buffer.duration<=0||
+       !Number.isFinite(bed.start_time)||bed.start_time<0||
+       !Number.isFinite(bed.duration)||bed.duration<=0||
+       !['loop','one_shot'].includes(bed.mode))
+      return 'Invalid authorized audio-bed source or schedule.';
+  }
   for(const v of voices){
     if(!v||typeof v.track_id!=='string'||!indexed.has(v.track_id)||
       !Number.isInteger(v.pitch)||v.pitch<0||v.pitch>127||
@@ -56,17 +67,19 @@ function validated(input){
  * offline audio rendering explicit and independently testable; it never
  * silently spins up real-time playback or pulls from storage.
  */
-export async function renderFoundryPianoOfflineBus({voices,tracks,offlineContextFactory}={}){
-  const invalid=validated({voices,tracks});
+export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],offlineContextFactory}={}){
+  const invalid=validated({voices,tracks,audioBeds});
   if(invalid)return unavailable(invalid);
   if(typeof offlineContextFactory!=='function')
     return unavailable('OfflineAudioContext is unavailable in this browser.');
-  const earliest=Math.min(...voices.map(v=>v.start_time));
+  const earliest=Math.min(...voices.map(v=>v.start_time),...audioBeds.map(v=>v.start_time));
   const latest=Math.max(...voices.map(v=>v.stop_time));
   // Approximation deliberately bounded; a long song needs a separately
   // approved render route, not a silently truncated "whole mix" certificate.
   if(latest-earliest>WINDOW)
     return unavailable('The piano passage exceeds the 0.8-second offline review window.');
+  if(audioBeds.some(bed=>bed.start_time-earliest>=WINDOW))
+    return unavailable('Audio-bed note-on is outside the bounded offline audition window.');
   if(tracks.length>8)return unavailable('Track bus count exceeds the offline review budget.');
   const frames=Math.ceil(WINDOW*rate);
   let context;
@@ -108,6 +121,17 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,offlineContext
         createSource:()=>context.createBufferSource(),
       });
     }
+    // Use the identical canonical scheduler as the live imported-audio track.
+    // Duration is bounded to this explicit preview, never claimed whole-song.
+    for(const bed of audioBeds){
+      const offset=bed.start_time-earliest;
+      const audible=Math.min(bed.duration,WINDOW-offset);
+      schedulePulseGridAudioBuffer({
+        buffer:bed.buffer,time:offset,duration:audible,mode:bed.mode,
+        destination:buses.get(bed.track_id),
+        createSource:()=>context.createBufferSource(),
+      });
+    }
     const rendered=await context.startRendering();
     if(!rendered||typeof rendered.getChannelData!=='function'||
        rendered.numberOfChannels!==2||rendered.length!==frames)
@@ -133,11 +157,13 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,offlineContext
       // feedback-delay path may carry a residual tail beyond the window.
       source_notes_within_window:true,
       effects_tail_complete:tracks.every(t=>t.delayMix===0),
-      complete:tracks.every(t=>t.delayMix===0),
-      analyzed_voices:voices.length,rendered_frames:frames,
+      audio_beds_within_window:audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
+      complete:tracks.every(t=>t.delayMix===0)&&
+        audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
+      analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,rendered_frames:frames,
       window_sec:WINDOW,rate,
       source_kind:'decoded_pcm_only',
-      limitations:'Recorded-piano voices only. Uses frozen note-on track/filter/delay snapshot plus master .72 and a bounded 0.8s window. Excludes all other tracks and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
+      limitations:'Recorded-piano voices plus authorized imported audio beds only. Uses frozen note-on track/filter/delay snapshots plus master .72 and bounded 0.8s window. Excludes drums, unsampled synths, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
     };
   }catch(error){
     return unavailable('Offline browser track-bus rendering failed: '+(error instanceof Error?error.message:'unsupported audio graph'));
