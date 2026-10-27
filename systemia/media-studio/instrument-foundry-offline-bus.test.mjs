@@ -68,7 +68,7 @@ test('offline audition builds existing dry/filter/feedback/delay/wet/master bus 
  assert.equal(result.source_notes_within_window,true);
  assert.equal(result.effects_tail_complete,false);
  assert.equal(result.complete,false);
- assert.match(result.limitations,/Excludes drums, additional unscheduled notes/);
+ assert.match(result.limitations,/Excludes unperformed\/probabilistically omitted events/);
  assert.match(result.limitations,/authorized imported audio beds/);
 });
 test('returned offline PCM is measured, including over-full-scale frames, never inferred from voice count',async()=>{
