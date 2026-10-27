@@ -77,3 +77,16 @@
 .fsPedalStepLabel input{width:82px;min-height:40px;border:1px solid #45616c;border-radius:7px;padding:6px;background:#101d25;color:#edf2f6;font-size:14px}
 .fsPedalStepLabel input:focus-visible{outline:2px solid #a9d8e8;outline-offset:2px}
 .fsPedalPending{align-self:center;font-size:11px;color:#9bb4c1}
+
+/* Read-only sample-duration diagnostic. Flags describe a score/capture gap, not real acoustic quality. */
+.fsTailPanel{margin:12px 0;border-top:1px solid #35444a;padding-top:12px}
+.fsTailPanel summary{cursor:pointer}
+.fsTailStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:12px 0}
+.fsTailStats span{border:1px solid #364951;border-radius:8px;padding:10px;background:#13222c;font-size:11px;color:#a9bac4}
+.fsTailStats strong{display:block;font-size:20px;color:#e4f2fa}
+.fsTailFindings{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:8px}
+.fsTailFinding{min-width:0;padding:10px;border:1px solid #40545d;border-radius:8px;background:#172b33;display:flex;flex-direction:column;gap:5px;overflow-wrap:anywhere}
+.fsTailFinding strong{font-size:12px}
+.fsTailFinding span{font-size:12px;color:#e8c4ab}
+.fsTailFinding small{font-size:11px;color:#9fb2bc}
+@media(max-width:520px){.fsTailStats{grid-template-columns:repeat(2,minmax(0,1fr))}}
