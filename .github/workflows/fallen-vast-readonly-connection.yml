@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Verify API authentication without logging response or credentials
         env:
-          VAST_API_KEY: ${{ secrets.VAST_API_KEY }}
+          VAST_API_KEY: ${{ secrets.Cloud_Vast_AI_Key }}
         shell: bash
         run: |
           set -euo pipefail
