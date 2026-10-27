@@ -19,6 +19,7 @@ export type FoundryOfflineBusResult={
  over_full_scale_frames:number|null;complete:boolean;source_notes_within_window?:boolean;effects_tail_complete?:boolean;analyzed_voices:number;
  rms_dbfs?:number;rendered_frames?:number;window_sec?:number;rate?:number;
  audio_beds_within_window?:boolean;analyzed_audio_beds?:number;
+ included_track_ids?:string[];omitted_track_ids?:string[];
  source_kind:'decoded_pcm_only';limitations?:string;
 };
 export function renderFoundryPianoOfflineBus(input:{
