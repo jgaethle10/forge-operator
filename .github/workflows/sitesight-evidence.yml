@@ -1,0 +1,59 @@
+name: SiteSight synthetic evidence gate
+
+on:
+  pull_request:
+    paths:
+      - 'pilots/sitesight/**'
+      - '.github/workflows/sitesight-evidence.yml'
+  push:
+    paths:
+      - 'pilots/sitesight/**'
+      - '.github/workflows/sitesight-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  site-sight-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Human-review synthetic evidence contract tests
+        run: node --test pilots/sitesight/*.test.mjs
+  site-sight-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser test tooling
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.55.0
+          python -m playwright install ffmpeg
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "SITESIGHT_BROWSER_EXECUTABLE=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          else
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Exercise browser review, export, validator and occlusion gates
+        env:
+          SITESIGHT_ARTIFACT_DIR: sitesight-artifacts
+        run: python pilots/sitesight/browser-e2e.py
+      - name: Preserve synthetic browser QA receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitesight-synthetic-browser-receipts
+          path: sitesight-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
