@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/payments/stripe-connection-registry.mjs'
+      - 'systemia/payments/stripe-connection-registry.test.mjs'
+      - 'scripts/systemia-stripe-connection.mjs'
+      - 'systemia/payments/README.md'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
       - 'tests/fabric-approved-buyer-handoffs.test.mjs'
@@ -34,6 +38,10 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/payments/stripe-connection-registry.mjs'
+      - 'systemia/payments/stripe-connection-registry.test.mjs'
+      - 'scripts/systemia-stripe-connection.mjs'
+      - 'systemia/payments/README.md'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
       - 'tests/fabric-approved-buyer-handoffs.test.mjs'
@@ -89,6 +97,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove private Stripe account reference and Raven Nexus authority boundary
+        run: node --test systemia/payments/stripe-connection-registry.test.mjs systemia/payments/payment-routing.test.mjs
+
       - name: Prove Fabric MCP, human offer storefront, and mobile door
         run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
