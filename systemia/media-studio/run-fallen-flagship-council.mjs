@@ -63,7 +63,7 @@ const receipt={
 };
 fs.mkdirSync(path.dirname(out),{recursive:true});
 fs.writeFileSync(out,JSON.stringify(receipt,null,2)+'\n','utf8');
-const summary=`## Evercraft Fallen flagship / Council dry run\n\n| Metric | Result |\n|---|---|\n| Manifest | \${manifest.mission_id} |\n| Duration | \${total}s |\n| Shots | \${manifest.jobs.length} |\n| Deterministic role notes | \${assignments.length} |\n| Creative schema status | \${receipt.status} |\n| Media produced | NO |\n| Vast spend | \$0 |\n| Publication | NOT AUTHORIZED |\n\n**This is deterministic creative-direction validation, not 14 autonomous agents reviewing rendered footage.**\n`;
+const summary=`## Evercraft Fallen flagship / Council dry run\n\n| Metric | Result |\n|---|---|\n| Manifest | ${manifest.mission_id} |\n| Duration | ${total}s |\n| Shots | ${manifest.jobs.length} |\n| Deterministic role notes | ${assignments.length} |\n| Creative schema status | ${receipt.status} |\n| Media produced | NO |\n| Vast spend | $0 |\n| Publication | NOT AUTHORIZED |\n\n**This is deterministic creative-direction validation, not 14 autonomous agents reviewing rendered footage.**\n`;
 if(process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,summary);
 console.log(JSON.stringify({status:receipt.status,shot_count:receipt.shot_count,role_count:receipt.role_count,assignments:receipt.assignment_count,duration_seconds:total,receipt:out,budget_allocation_usd:3,provider_called:false},null,2));
 if(!ready) process.exitCode=1;
