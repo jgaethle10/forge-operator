@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { createShadowTeam } from './shadow-scout-team.mjs';
 
 export const FEED_URL = 'wss://stream.data.alpaca.markets/v2/iex';
 export const MAX_SYMBOLS = 15;
@@ -86,6 +87,8 @@ export async function startObserver({ env = process.env, WebSocketCtor = WebSock
   let stale = 0;
   let discarded = 0;
   const quoteLast = new Map();
+  const shadowTeam = createShadowTeam({ startedAt: now().toISOString() });
+  let shadowHalted = false;
   const append = (kind, extra = {}) => {
     const record = { schema: SCHEMA, kind, at: now().toISOString(), ...extra };
     fs.writeSync(fd, JSON.stringify(record) + '\n');
@@ -96,11 +99,12 @@ export async function startObserver({ env = process.env, WebSocketCtor = WebSock
     stopped = true;
     clearInterval(heartbeat);
     clearTimeout(shutdown);
-    append('observer_stop', { reason, captured, stale, discarded, subscribed });
+    append('observer_stop', { reason, captured, stale, discarded, subscribed, shadow_halted: shadowHalted, shadow_summary: shadowTeam.summary() });
     try { socket?.close(); } catch {}
     fs.closeSync(fd);
   };
   append('observer_start', { mode: 'READ_ONLY', feed: FEED_URL, symbols: cfg.symbols, stop_at: new Date(cfg.stopAt).toISOString(), broker_order_endpoint_present: false });
+  append('shadow_precommit', { precommit: shadowTeam.precommit, live_trade_authority: false });
   const heartbeat = setInterval(() => append('heartbeat', {
     captured, stale, discarded, subscribed, last_valid_source_at: lastValid,
     state: !subscribed ? 'NOT_SUBSCRIBED' : (lastValid && now().getTime() - Date.parse(lastValid) < 90_000 ? 'DATA_RECEIVED' : 'NO_FRESH_EVENTS'),
@@ -162,6 +166,14 @@ export async function startObserver({ env = process.env, WebSocketCtor = WebSock
         if (event.freshness === 'FRESH_FOR_OBSERVATION') lastValid = event.received_at;
         append('market_event', { event });
         captured++;
+        if (!shadowHalted) {
+          try {
+            for (const decision of shadowTeam.ingest(event)) append('shadow_team_decision', { decision });
+          } catch (error) {
+            shadowHalted = true;
+            append('shadow_team_fail_closed', { reason: String(error?.message || 'unknown').slice(0,120) });
+          }
+        }
       }
     });
     ws.addEventListener('error', () => append('socket_error'));
