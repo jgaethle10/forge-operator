@@ -37,6 +37,9 @@ with sync_playwright() as p:
                 menu.locator("summary").click()
                 assert menu.locator('a[href="#plan"]').is_visible(), "Mobile menu cannot reach cleaning builder"
                 menu.locator("summary").click()
+            page.locator('button[data-collection="Deep Haven"]').click()
+            assert page.locator("#summaryCollection").inner_text() == "Deep Haven", "Package selection missing"
+            assert page.locator("#planService").input_value() == "Deep cleaning", "Package service incorrect"
             page.locator("#planService").select_option("Deep cleaning")
             page.locator("#planFrequency").select_option("Bi-weekly")
             page.locator("#planBedrooms").select_option("3")
@@ -47,6 +50,7 @@ with sync_playwright() as p:
             page.locator("#planQuote").click()
             assert page.locator("#service").input_value() == "Deep cleaning", "Service not carried to quote"
             assert page.locator("#frequency").input_value() == "Bi-weekly", "Frequency not carried to quote"
+            assert "Collection interest: Deep Haven" in page.locator("#details").input_value(), "Selected package not carried to quote"
             assert "Bedrooms: 3" in page.locator("#details").input_value()
             assert "Inside oven" in page.locator("#details").input_value()
             page.locator("#planQuote").click()
