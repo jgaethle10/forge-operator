@@ -207,3 +207,17 @@ test('offline piano track effects report is an explicit stop-only browser auditi
  assert.match(s,/audio_beds_within_window/);
  assert.match(s,/Source WAVs and master settings remain unchanged/);
 });
+
+
+test('extended eight-second audition is local-only, revokes blob URL and discloses PCM clipping',()=>{
+ const s=ui();
+ assert.match(s,/Hear up to eight seconds/);
+ assert.match(s,/window_sec:8,includeAuditionWav:true/);
+ assert.match(s,/new Blob\(\[payload\],\{type:'audio\/wav'\}\)/);
+ assert.match(s,/URL\.createObjectURL/);
+ assert.match(s,/URL\.revokeObjectURL/);
+ assert.match(s,/<audio controls preload="none"/);
+ assert.match(s,/audition_sample_clamped/);
+ assert.match(s,/not licensed for public distribution/);
+ assert.match(s,/Delay\/feedback may continue beyond the selected/);
+});
