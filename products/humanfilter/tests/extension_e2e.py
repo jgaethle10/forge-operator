@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[1] / 'extension'
+ROOT = Path(os.environ.get('HF_EXTENSION_DIR', str(Path(__file__).resolve().parents[1] / 'extension'))).resolve()
 SITES = {
     'www.facebook.com': '<div role="article" id="target"><p>I made this with AI today!</p></div><div role="article" id="human">Dogs are good.</div>',
     'www.reddit.com': '<shreddit-post id="target"><p>Made using Midjourney</p></shreddit-post><shreddit-post id="human">Dogs are good.</shreddit-post>',
