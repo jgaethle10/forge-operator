@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample,foundryPianoVoiceGain,planFoundryPianoAttack} from './instrument-foundry-piano.mjs';
+import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample,foundryPianoVoiceGain,planFoundryPianoAttack,planFoundryPianoPreRoll} from './instrument-foundry-piano.mjs';
 import {applyPulseGridTransaction,createPulseGridSession,undoPulseGridReceipt,validatePulseGridSession} from './pulsegrid-session.ts';
 
 const D='a'.repeat(64),id='audio-sha256:'+D;
@@ -310,4 +310,66 @@ test('the adaptive onset never moves any gain ramp after very short valid sample
  assert.ok(receipt.attack_sec<=.013*.15);
  assert.ok(receipt.release_start> .1);
  assert.equal(receipt.commercial_rights_verified,false);
+});
+
+function delayedAttackPcm({delayMs=22,channels=1,duration=.6,rate=48000,preNoise=0,slow=false}={}){
+ const n=Math.floor(duration*rate);
+ const data=Array.from({length:channels},()=>new Float32Array(n));
+ const start=Math.round(rate*delayMs/1000);
+ for(const pcm of data){
+  for(let i=0;i<n;i++){
+   if(i<start){pcm[i]=preNoise===0?0:preNoise*Math.sin(i*.12);continue;}
+   const elapsed=(i-start)/rate;
+   const amplitude=slow?Math.min(.12,.0002+.025*elapsed):.18;
+   pcm[i]=amplitude*Math.sin(2*Math.PI*261.626*elapsed);
+  }
+ }
+ return {duration,sampleRate:rate,numberOfChannels:channels,getChannelData:c=>data[c]};
+}
+test('clearly silent 22ms pre-roll aligns MIDI start without rewriting the recorded PCM',()=>{
+ const wav=delayedAttackPcm(),original=wav.getChannelData(0).slice();
+ const decision=planFoundryPianoPreRoll(wav);
+ assert.equal(decision.profile,'verified_quiet_preroll_aligned');
+ assert.ok(decision.offset_sec>=.016&&decision.offset_sec<=.021,JSON.stringify(decision));
+ assert.deepEqual(planFoundryPianoPreRoll(wav),decision,'pre-roll detector is cached per decoded AudioBuffer');
+ assert.deepEqual(wav.getChannelData(0),original,'WAV sample data is not altered');
+ const m=mockAudio();
+ const selection=selectFoundrySample(patch(),60,.8);
+ const receipt=scheduleFoundryPianoNote({context:m.context,destination:{},buffer:wav,
+  pitch:60,velocity:.8,time:.3,duration:.25,selection,createSource:m.createSource});
+ const source=m.calls.find(c=>c[0]==='start');
+ assert.ok(Math.abs(source[1]-.3)<1e-12);
+ assert.equal(source[2],decision.offset_sec,'Web Audio must use explicit bounded source offset');
+ assert.equal(receipt.source_offset_sec,decision.offset_sec);
+ assert.equal(receipt.pre_roll_profile,'verified_quiet_preroll_aligned');
+ assert.ok(receipt.stop_time<=.3+(.6-decision.offset_sec)+1e-9);
+});
+test('recorded attack near note start is never trimmed',()=>{
+ const wav=delayedAttackPcm({delayMs:2});
+ assert.deepEqual(planFoundryPianoPreRoll(wav),{offset_sec:0,profile:'unaligned_safe'});
+});
+test('genuine pianissimo, soft ramp and constant room noise retain their untrimmed onset',()=>{
+ const quiet=delayedAttackPcm({delayMs:20,slow:true});
+ assert.equal(planFoundryPianoPreRoll(quiet).offset_sec,0);
+ const noisy=delayedAttackPcm({delayMs:22,preNoise:.002});
+ assert.equal(planFoundryPianoPreRoll(noisy).offset_sec,0);
+});
+test('an isolated click followed by silence cannot become a false transient',()=>{
+ const wav=delayedAttackPcm({delayMs:22});
+ const pcm=wav.getChannelData(0);
+ pcm[Math.floor(48000*.013)]=.8;
+ const result=planFoundryPianoPreRoll(wav);
+ assert.ok(result.offset_sec>=.016,'isolated pre-onset click cannot trigger early trim');
+});
+test('stereo disagreement and unsupported PCM conservatively leave pre-roll untouched',()=>{
+ const stereo=delayedAttackPcm({channels:2,delayMs:22});
+ const first=stereo.getChannelData(0);
+ for(let i=0;i<48000*.012;i++)first[i]=.04*Math.sin(i*.11);
+ assert.equal(planFoundryPianoPreRoll(stereo).offset_sec,0);
+ for(const invalid of [
+  {duration:1},
+  {duration:.02,sampleRate:48000,numberOfChannels:1,getChannelData:()=>new Float32Array(960)},
+  {duration:1,sampleRate:48000,numberOfChannels:1,getChannelData:()=>{throw Error('denied')}},
+  {duration:1,sampleRate:48000,numberOfChannels:3,getChannelData:()=>new Float32Array(48000)}
+ ]) assert.deepEqual(planFoundryPianoPreRoll(invalid),{offset_sec:0,profile:'unaligned_safe'});
 });
