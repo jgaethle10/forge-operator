@@ -12,6 +12,7 @@
 import {scheduleFoundryPianoNote} from './instrument-foundry-piano.mjs';
 import {schedulePulseGridAudioBuffer} from './pulsegrid-audio-scheduler.mjs';
 import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
+import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import {unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 
 const RESULT_SCOPE='offline_sampled_piano_track_bus_approximation';
@@ -25,12 +26,24 @@ const unavailable=reason=>({
 });
 
 function validated(input){
-  const {voices,tracks,audioBeds=[],synthVoices=[]}=input??{};
+  const {voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[]}=input??{};
   if(!Array.isArray(voices)||!voices.length||voices.length>MAX_VOICES||
      !Array.isArray(tracks)||!tracks.length)
     return 'Choose 1–16 authorized recorded-piano voices.';
   const indexed=new Map(tracks.map(t=>[t.id,t]));
   if(indexed.size!==tracks.length)return 'Ambiguous recorded-piano track IDs.';
+  if(!Array.isArray(drumVoices)||drumVoices.length>16)
+    return 'Drum review exceeds the bounded 16 actual performed-hit limit.';
+  for(const drum of drumVoices){
+    if(!drum||typeof drum.track_id!=='string'||!indexed.has(drum.track_id)||
+       !['kick','hat'].includes(drum.kind)||
+       !Number.isFinite(drum.time)||drum.time<0||
+       !Number.isFinite(drum.velocity)||drum.velocity<=0||drum.velocity>1||
+       !Number.isFinite(drum.stop_time)||drum.stop_time<=drum.time||
+       (drum.kind==='hat'&&(!drum.noiseBuffer||
+         !Number.isFinite(drum.noiseBuffer.duration)||drum.noiseBuffer.duration<=0)))
+      return 'Invalid performed drum hit or missing original hat-noise buffer.';
+  }
   if(!Array.isArray(synthVoices)||synthVoices.length>16)
     return 'Unsampled synth review exceeds 16 scheduled-note limit.';
   for(const synth of synthVoices){
@@ -79,13 +92,13 @@ function validated(input){
  * offline audio rendering explicit and independently testable; it never
  * silently spins up real-time playback or pulls from storage.
  */
-export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],offlineContextFactory}={}){
-  const invalid=validated({voices,tracks,audioBeds,synthVoices});
+export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[],offlineContextFactory}={}){
+  const invalid=validated({voices,tracks,audioBeds,synthVoices,drumVoices});
   if(invalid)return unavailable(invalid);
   if(typeof offlineContextFactory!=='function')
     return unavailable('OfflineAudioContext is unavailable in this browser.');
-  const earliest=Math.min(...voices.map(v=>v.start_time),...audioBeds.map(v=>v.start_time),...synthVoices.map(v=>v.start_time));
-  const latest=Math.max(...voices.map(v=>v.stop_time),...synthVoices.map(v=>v.stop_time));
+  const earliest=Math.min(...voices.map(v=>v.start_time),...audioBeds.map(v=>v.start_time),...synthVoices.map(v=>v.start_time),...drumVoices.map(v=>v.time));
+  const latest=Math.max(...voices.map(v=>v.stop_time),...synthVoices.map(v=>v.stop_time),...drumVoices.map(v=>v.stop_time));
   // Approximation deliberately bounded; a long song needs a separately
   // approved render route, not a silently truncated "whole mix" certificate.
   if(latest-earliest>WINDOW)
@@ -101,7 +114,7 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       typeof context.createGain!=='function'||typeof context.createDelay!=='function'||
       typeof context.createBiquadFilter!=='function'||
       typeof context.createBufferSource!=='function'||
-      (synthVoices.length>0&&typeof context.createOscillator!=='function'))
+      ((synthVoices.length>0||drumVoices.some(v=>v.kind==='kick'))&&typeof context.createOscillator!=='function'))
       return unavailable('OfflineAudioContext is not supported.');
     const master=context.createGain();
     master.gain.setValueAtTime(.72,0);
@@ -144,6 +157,16 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
         createSource:()=>context.createOscillator(),
       });
     }
+    // Reproduce ONLY events that actually occurred during the original Play.
+    // Hat replay reuses that exact realized noise buffer, not new random PCM.
+    for(const v of drumVoices){
+      schedulePulseGridDrumVoice({
+        context,destination:buses.get(v.track_id),kind:v.kind,
+        time:v.time-earliest,velocity:v.velocity,noiseBuffer:v.noiseBuffer,
+        createOscillator:()=>context.createOscillator(),
+        createBufferSource:()=>context.createBufferSource(),
+      });
+    }
     // Use the identical canonical scheduler as the live imported-audio track.
     // Duration is bounded to this explicit preview, never claimed whole-song.
     for(const bed of audioBeds){
@@ -184,10 +207,11 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       complete:tracks.every(t=>t.delayMix===0)&&
         audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
       analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,
-      analyzed_synth_voices:synthVoices.length,rendered_frames:frames,
+      analyzed_synth_voices:synthVoices.length,
+      analyzed_drum_hits:drumVoices.length,rendered_frames:frames,
       window_sec:WINDOW,rate,
-      source_kind:synthVoices.length?'decoded_pcm_plus_synth':'decoded_pcm_only',
-      limitations:'Recorded-piano voices, authorized imported audio beds and original PulseGrid synth oscillators only. Uses frozen note-on track/filter/delay snapshots plus master .72 and bounded 0.8s window. Excludes drums, additional unscheduled notes, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
+      source_kind:(synthVoices.length||drumVoices.length)?'decoded_pcm_plus_synth':'decoded_pcm_only',
+      limitations:'Recorded-piano voices, authorized imported audio beds plus original PulseGrid synth/drum events only. Uses frozen note-on track/filter/delay snapshots plus master .72 and bounded 0.8s window. Excludes unperformed/probabilistically omitted events, additional unscheduled notes, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
     };
   }catch(error){
     return unavailable('Offline browser track-bus rendering failed: '+(error instanceof Error?error.message:'unsupported audio graph'));
