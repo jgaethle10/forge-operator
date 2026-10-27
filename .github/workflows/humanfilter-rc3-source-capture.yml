@@ -76,6 +76,27 @@ jobs:
           assert all(x['boundaries']['no_publish_authority'] for x in rows)
           print('Visual motion measured. Flagged footage needs human review; no auto-publish.')
           PY
+      - name: Create editorial proof selects from only the verified actual extension pixels
+        if: success()
+        run: |
+          python products/humanfilter/commercial/produce_proof_selects.py \
+            --capture-dir artifacts/humanfilter-rc3/captured \
+            --out artifacts/humanfilter-rc3/captured/shot-selects
+          python - <<'PY'
+          import json,pathlib,hashlib
+          folder=pathlib.Path('artifacts/humanfilter-rc3/captured/shot-selects')
+          r=json.loads((folder/'selects-provenance.json').read_text())
+          assert r['status']=='EDITOR_SELECTS_ONLY_NOT_A_COMMERCIAL'
+          assert r['actual_extension_verified'] and r['samples_are_fictional']
+          assert r['publication_authority'] is False
+          assert len(r['clips'])==6
+          for row in r['clips']:
+              p=folder/row['file']
+              assert p.is_file()
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256']
+              assert row['publish_authority'] is False
+          print('Six cropped authentic editing assets checked. Still no commercial master or publication authority.')
+          PY
       - name: Upload original product footage (NOT finished commercial)
         if: always()
         uses: actions/upload-artifact@v4
