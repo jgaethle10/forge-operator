@@ -7,3 +7,9 @@ test('restoration keeps customer-owned branding and honest inquiry handling',()=
  assert.match(html,/Come home to <em>a haven/);
  assert.doesNotMatch(html,/base44\.app|base44Client|@base44|September Reset/);
 });
+
+test('cleaning builder retains client-controlled, no-price quote handoff',()=>{
+ for(const s of ['id="plan"','id="planService"','id="planBedrooms"','id="planBathrooms"','id="planSize"','id="planFrequency"','name="planAddon"','id="planQuote"','id="planSummary"','No instant price or booking','--- Cleaning brief ---','@media(max-width:480px)'])assert.ok(html.includes(s),'Missing: '+s);
+ assert.match(html,/plan\.addEventListener\('change',updatePlanSummary\)/);
+ assert.match(html,/Nothing is automatically submitted or booked/);
+});
