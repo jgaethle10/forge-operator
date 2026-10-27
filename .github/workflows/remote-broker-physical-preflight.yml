@@ -1,0 +1,31 @@
+name: Physical Remote Broker Preflight Safety
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/remote-broker-physical-preflight.mjs'
+      - 'tests/remote-broker-physical-preflight.test.mjs'
+      - 'docs/operations/node001-node002-remote-broker-physical-staging.md'
+      - '.github/workflows/remote-broker-physical-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  read-only-probe-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: node --check scripts/remote-broker-physical-preflight.mjs
+      - name: Verify trust and production truth boundaries
+        run: node --test tests/remote-broker-physical-preflight.test.mjs
+      - name: Non-production runner cannot claim physical broker readiness
+        run: |
+          node scripts/remote-broker-physical-preflight.mjs > /tmp/broker-preflight.json || true
+          node -e "const r=require('/tmp/broker-preflight.json'); if(r.local_broker_staging_eligible || r.verified_public_broker_https || r.cross_machine_dispatch_verified || r.mutations_performed)process.exit(1)"
