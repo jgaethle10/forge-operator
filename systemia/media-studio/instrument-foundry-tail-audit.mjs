@@ -73,7 +73,7 @@ export function analyzeFoundryPianoTailCoverage(session,scene=0){
         held_seconds:seconds,release_sec:sel.release_sec,
       });
       if(budget.classification==='key_hold_shortfall')shortKeys++;
-      if(budget.classification!=='sufficient_metadata_duration')shortTails++;
+      if(budget.classification==='release_tail_shortfall')shortTails++;
       if(budget.classification!=='sufficient_metadata_duration'){
         findings.push({kind:budget.classification,track_id:track.id,
           pitch:note.pitch,start_step:note.start,asset_id:sel.asset_id,
