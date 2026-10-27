@@ -197,7 +197,10 @@ export class PulseGridAudioEngine {
     if(this.playing||authority!==this.audioAuthoritySignature||
        cacheEpoch!==this.audioCacheEpoch||attempt!==this.playbackAttempt)
       return unavailable('Audio authorization or playback state changed during the offline review.');
-    return rendered;
+    const omittedTrackIds=this.session.tracks.filter(t=>
+      !t.muted&&!snapshots.has(t.id)).map(t=>t.id);
+    return {...rendered,omitted_track_ids:omittedTrackIds,
+      included_track_ids:Array.from(snapshots.keys())};
   }
 
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
