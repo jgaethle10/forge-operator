@@ -1,0 +1,20 @@
+name: EverMaps mineral intelligence test
+on:
+  pull_request:
+    paths:
+      - 'systemia/evermaps/**'
+      - 'docs/evermaps/**'
+      - '.github/workflows/evermaps-mineral-intelligence.yml'
+permissions:
+  contents: read
+jobs:
+  node-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test evidence and source-completeness invariants
+        run: node --test systemia/evermaps/mineral-intelligence.test.mjs
