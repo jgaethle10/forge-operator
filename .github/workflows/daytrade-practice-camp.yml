@@ -11,7 +11,10 @@ on:
       - "systemia/daytrade-lens/**"
       - ".github/workflows/daytrade-practice-camp.yml"
   schedule:
-    - cron: "30 22 * * 1-5"
+    # UTC schedule: repeated historical-only practice, not a live market stream.
+    - cron: "15 14,17,20,23 * * 1-5"
+    # Weekend replay and adversarial review.
+    - cron: "15 17 * * 0,6"
   workflow_dispatch:
 
 permissions:
