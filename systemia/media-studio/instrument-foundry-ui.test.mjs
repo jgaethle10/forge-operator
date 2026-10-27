@@ -194,13 +194,14 @@ test('PCM chord audit can only run on demand after music stops, with honest pre-
 
 test('offline piano track effects report is an explicit stop-only browser audition, not a full-mix proof',()=>{
  const s=ui();
- assert.ok(s.includes('Inspect piano + synth + audio offline'));
+ assert.ok(s.includes('Inspect performed mix offline'));
+ assert.match(s,/analyzed_drum_hits/);
  assert.match(s,/analyzed_synth_voices/);
  assert.match(s,/auditRecordedPianoOfflineBus\(\)/);
  assert.match(s,/disabled=\{playing\|\|recording\|\|offlineBusBusy/);
  assert.match(s,/OfflineAudioContext rendering/);
  assert.match(s,/Delay\/feedback may continue beyond/);
- assert.match(s,/It omits drums, any unscheduled instruments/);
+ assert.match(s,/It omits drum events that did not actually fire/);
  assert.match(s,/omitted_track_ids/);
  assert.match(s,/analyzed_audio_beds/);
  assert.match(s,/audio_beds_within_window/);
