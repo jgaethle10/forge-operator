@@ -19,8 +19,8 @@ jobs:
         with:
           python-version: '3.11'
       - run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq espeak-ng libsndfile1
+          timeout 75s sudo apt-get update -qq || echo 'apt metadata refresh timed out; trying cached package lists'
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
           python -m pip install 'kokoro==0.9.4' 'soundfile>=0.12,<1'
       - run: python systemia/media-studio/on-the-go-v18-service-audition.py
       - uses: actions/upload-artifact@v4
