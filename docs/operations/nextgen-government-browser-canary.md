@@ -107,6 +107,26 @@ Expected pass state: `passed_local_compute_yard_browser`, `local_nodeseed_lease_
 
 The independent next gate after a local Yard pass is the *existing* broker and Passport-device-grant commissioning in issue #1332. No ad hoc SSH, public HP listener, remote job toggle, GitHub-provisioned control token, new machine or third-party browser is authorized by this local script.
 
+### Local Yard routing regression, October 26
+
+Physical HP output from 2026-10-27 02:06:20–02:06:23Z returned `state:failed_closed`, `failure_reason:yard_local_health_receipt_not_bound`, but also `lease_stopped:true` and `transient_key_state:deleted_ephemeral`. This is not a verified Compute/Yard browser result. The old validator incorrectly expected `yard.verifyRoute(...).ok:true`, which **cannot hold for a healthy but unbound private Browser Worker**. The canonical Yard API intentionally returns `{ok:false,state:'public_route_unbound',local_health_ok:true,health:{...}}` to avoid claiming an independently verified public HTTPS route.
+
+The corrected local milestone validator now requires that exact private-unbound state, `local_health_ok:true`, exact browser engine identity, instance match and equality of the private browser health `deployment_receipt_ref` to the Yard deployment receipt. It **explicitly rejects public-route claims**, missing health evidence, and mismatched worker identifiers. Confirmed with regression tests, while local Command/Compute/Yard/browser and external dispatch remain separate gates.
+
+The founder's saved original receipt is `sha256:73968cf32e4763af011c0707cd5c7393cf19cfb1b2d77cca795b465ee3783807` and should be preserved as a failed but correctly cleaned up predecessor, not relabeled green.
+
+After updated branch is fetched, retry **once** from the existing HP checkout:
+
+```bash
+cd "$HOME/evercraft-qa/nextgen-browser-commission" || exit 1
+git pull --ff-only
+node --test tests/nextgen-browser-yard-proof.test.mjs
+node scripts/nextgen-browser-yard-proof.mjs --run
+node scripts/nextgen-browser-yard-proof.mjs --status
+```
+
+Do not run `--install`, `git clone`, or change the Node002 resident shadow agent. If another gate fails, preserve the distinct new failure and diagnose rather than repeatedly retrying.
+
 ## Canonical progression after receipt
 
 1. Validate device identity and local receipt privately against existing Node002 / Passport enrollment records.
