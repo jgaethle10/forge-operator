@@ -15,6 +15,10 @@ takes=[
  ("brand_intro_full","On The Go Mobile Quick Lube comes to you.",0.99),
  ("brand_intro_clear","On The Go Mobile Quick Lube comes to you.",0.86),
  ("brand_full_clear","On The Go Mobile Quick Lube.",0.88),
+ ("v20_opening_complete_a","If your day is already full, the last thing you need is another stop at the shop. That's why On The Go Mobile Quick Lube comes to YOU!",1.10),
+ ("v20_opening_complete_b","If your day is already full, the last thing you need is another stop at the shop. That's why On The Go Mobile Quick Lube comes to you.",1.13),
+ ("v20_closing_complete_a","On The Go Mobile Quick Lube.",1.07),
+ ("v20_closing_complete_b","On The Go Mobile Quick Lube.",1.14),
 ]
 results=[]
 for i,(name,words,speed) in enumerate(takes):
