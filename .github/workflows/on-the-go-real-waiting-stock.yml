@@ -1,0 +1,64 @@
+name: On The Go Waiting Room Real Stock Ingest
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths:
+      - '.github/workflows/on-the-go-real-waiting-stock.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/on-the-go-real-waiting-stock.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  stock-and-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Install video codec dependency
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Download traceable original real footage
+        run: |
+          mkdir -p stock-open stock-clips
+          curl --fail --location --retry 3 --retry-delay 2 --max-time 180 \
+            'https://videos.pexels.com/video-files/9498286/9498286-hd_1920_1080_25fps.mp4' -o stock-open/garage.mp4
+          curl --fail --location --retry 3 --retry-delay 2 --max-time 180 \
+            'https://videos.pexels.com/video-files/13801281/13801281-uhd_2160_3840_24fps.mp4' -o stock-open/person.mp4
+          curl --fail --location --retry 3 --retry-delay 2 --max-time 180 \
+            'https://videos.pexels.com/video-files/7033786/7033786-uhd_3840_2160_25fps.mp4' -o stock-open/clock.mp4
+      - name: Extract actual live-motion stock inserts
+        run: |
+          ffmpeg -hide_banner -loglevel error -y -ss 3 -i stock-open/garage.mp4 -t 2.6 -an \
+            -vf "fps=24,scale=540:960:force_original_aspect_ratio=increase,crop=540:960,setsar=1,format=yuv420p" \
+            -c:v libx264 -preset veryfast -crf 21 -movflags +faststart stock-clips/01_garage_vertical.mp4
+          ffmpeg -hide_banner -loglevel error -y -ss 2 -i stock-open/person.mp4 -t 3.0 -an \
+            -vf "fps=24,scale=540:960:force_original_aspect_ratio=increase,crop=540:960,setsar=1,format=yuv420p" \
+            -c:v libx264 -preset veryfast -crf 21 -movflags +faststart stock-clips/02_customer_waiting_vertical.mp4
+          ffmpeg -hide_banner -loglevel error -y -ss 3 -i stock-open/clock.mp4 -t 2.4 -an \
+            -vf "fps=24,scale=540:960:force_original_aspect_ratio=increase,crop=540:960,setsar=1,format=yuv420p" \
+            -c:v libx264 -preset veryfast -crf 21 -movflags +faststart stock-clips/03_ticking_clock_vertical.mp4
+      - name: Record licensing and verifiable provenance
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,subprocess
+          data=[]
+          mapping=[
+          ("01_garage_vertical.mp4","https://www.pexels.com/video/cars-at-an-auto-repair-shop-9498286/","Shoot With Riyas"),
+          ("02_customer_waiting_vertical.mp4","https://www.pexels.com/video/a-concerned-businessman-looking-at-his-watch-and-shaking-his-head-13801281/","Mizuno K"),
+          ("03_ticking_clock_vertical.mp4","https://www.pexels.com/video/a-ticking-clock-7033786/","Tima Miroshnichenko")]
+          for f,url,creator in mapping:
+           p=pathlib.Path("stock-clips")/f
+           assert p.exists() and p.stat().st_size>5000
+           probe=json.loads(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","json",str(p)]))
+           data.append(dict(file=f,source=url,creator=creator,sha256=hashlib.sha256(p.read_bytes()).hexdigest(),durationSec=float(probe["format"]["duration"])))
+          pathlib.Path("stock-clips/stock_ledger.json").write_text(json.dumps(dict(schema="evercraft.commercial.stock-ingest.v1",clips=data,license="https://www.pexels.com/license/",publicationRightsVerified=False,modelEndorsementNotAssumed=True,clientApproved=False),indent=2)+"\n")
+          print(json.dumps(data,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: on-the-go-verified-real-stock-inserts
+          path: stock-clips/
+          retention-days: 7
+          if-no-files-found: error
