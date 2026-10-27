@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { startWorkSabanPreview } from './server.mjs';
+import { verifyLocalEventChain } from './trace-chain.mjs';
 
 const server = await startWorkSabanPreview();
 try {
@@ -9,7 +10,7 @@ try {
   const health = await (await fetch(`${base}/health`)).json();
   assert.equal(health.ok, true);
   assert.equal(health.live_workers, false);
-  for (const endpoint of ['/', '/app.js', '/style.css', '/office.js', '/office-3d.js', '/office-floor.svg']) {
+  for (const endpoint of ['/', '/app.js', '/style.css', '/office.js', '/office-3d.js', '/trace-client.js', '/office-floor.svg']) {
     const response = await fetch(`${base}${endpoint}`);
     assert.equal(response.status, 200, endpoint);
     assert((await response.text()).length > 100);
@@ -83,6 +84,9 @@ try {
   const live=await stream('/api/run-csv-stream',streamPayload);
   assert.equal(live.status,200);
   assert.equal(live.events[0].type,'accepted');
+  assert.equal(verifyLocalEventChain(live.events).count,12);
+  assert.equal(live.events[0].trace.sequence,1);
+  assert.equal(live.events.at(-1).trace.sequence,12);
   assert.equal(live.events.filter(x=>x.type==='stage_started').length,5);
   assert.equal(live.events.filter(x=>x.type==='stage_verified').length,5);
   assert.deepEqual(live.events.filter(x=>x.type==='stage_verified').map(x=>x.role),
@@ -95,6 +99,8 @@ try {
     'content-type':'application/json','x-work-saban-client':'local-preview'
   });
   assert.equal(demoStream.events.filter(x=>x.type==='stage_verified').length,5);
+  assert.equal(verifyLocalEventChain(demoStream.events).count,12);
+  assert.notEqual(live.events[0].trace.trace_id,demoStream.events[0].trace.trace_id);
   assert.equal(demoStream.events.at(-1).source,'synthetic_fixture');
   assert.equal((await stream('/api/run-csv-stream',chosenFile)).status,403);
   assert.equal((await stream('/api/run-csv-stream',streamPayload,{origin:'https://evil.example'})).status,403);
