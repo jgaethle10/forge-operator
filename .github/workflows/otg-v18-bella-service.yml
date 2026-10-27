@@ -6,6 +6,7 @@ on:
       - feature/onthego-bella-native-voice-20261026
     paths:
       - .github/workflows/otg-v18-bella-service.yml
+      - systemia/media-studio/on-the-go-v18-service-audition.py
 permissions:
   contents: read
 jobs:
