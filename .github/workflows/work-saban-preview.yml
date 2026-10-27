@@ -28,6 +28,9 @@ jobs:
           node --check systemia/work-saban/server.mjs
           node --check systemia/work-saban/app.js
           node --check systemia/work-saban/office-3d.js
+          node --check systemia/work-saban/trace-client.js
+          node --check systemia/work-saban/trace-chain.mjs
+          node --check systemia/work-saban/trace-chain.proof.mjs
           node --check systemia/work-saban/office-3d.proof.mjs
           node --check systemia/work-saban/office.js
           node --check systemia/work-saban/csv-core.mjs
@@ -38,6 +41,8 @@ jobs:
         run: node systemia/work-saban/mission.proof.mjs
       - name: Prove spatial office camera and receipt-driven state
         run: node systemia/work-saban/office-3d.proof.mjs
+      - name: Prove ordered browser and server SHA-256 trace verification
+        run: node systemia/work-saban/trace-chain.proof.mjs
       - name: Prove local preview API
         run: node systemia/work-saban/preview.proof.mjs
       - name: Prove five registered specialist workers, financial audit and delivery
