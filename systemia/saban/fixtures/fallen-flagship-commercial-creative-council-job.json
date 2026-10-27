@@ -2,7 +2,7 @@
   "schema": "evercraft.fallen.flagship.creative-council-handoff.v1",
   "mission_id": "evercraft-fallen-commercial-studio-flagship-20261027",
   "stage": "CREATIVE_REVIEW_ONLY",
-  "owner_approved_gpu_spend": false,
+  "owner_approved_gpu_spend": true,
   "publication_authority": false,
   "source_state": "spec_proposal_not_produced",
   "creative_direction": "THE WORK / THE IMAGE",
@@ -11,7 +11,10 @@
     "currency": "USD",
     "first_canary_total_allocation": 3,
     "provider_enforced_cap": false,
-    "rentable_instance_started": false
+    "rentable_instance_started": false,
+    "owner_authorized_spending_usd": 3,
+    "provisioning_blocked_until_receipts_and_cleanup_verified": true,
+    "provider_spending_cap_confirmed": false
   },
   "roles": [
     "story_architect",
@@ -59,6 +62,9 @@
           },
           {
             "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
           },
           {
             "role": "world_builder"
@@ -121,6 +127,9 @@
           },
           {
             "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
           },
           {
             "role": "world_builder"
@@ -186,6 +195,9 @@
             "role": "visual_evidence_scout"
           },
           {
+            "role": "data_graphics_director"
+          },
+          {
             "role": "world_builder"
           },
           {
@@ -248,6 +260,9 @@
             "role": "visual_evidence_scout"
           },
           {
+            "role": "data_graphics_director"
+          },
+          {
             "role": "world_builder"
           },
           {
@@ -308,6 +323,9 @@
           },
           {
             "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
           },
           {
             "role": "world_builder"
