@@ -865,7 +865,7 @@ test('real PulseGrid extended offline review produces eight-second private WAV w
    async startRendering(){
     const l=new Float32Array(this.frames).fill(.25);
     const r=new Float32Array(this.frames).fill(-.25);
-    return {numberOfChannels:2,length:this.frames,getChannelData:c=>c?r:l};
+    return {numberOfChannels:2,length:this.frames,sampleRate:48000,getChannelData:c=>c?r:l};
    }
   }
   globalThis.OfflineAudioContext=ExtendedOffline;
