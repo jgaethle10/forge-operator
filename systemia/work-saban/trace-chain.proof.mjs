@@ -60,6 +60,15 @@ await assert.rejects(
   /invalid_worker_result_digest/
 );
 
+const retryChain=createLocalEventChain({traceId:'retry-budget-proof'});
+const retryVerifier=client.create();
+await retryVerifier.accept(retryChain.next({type:'accepted'}));
+await retryVerifier.accept(retryChain.next({type:'stage_started',role:'analyst'}));
+await assert.rejects(
+  retryVerifier.accept(retryChain.next({type:'stage_verified',role:'analyst',
+    receipt:{...receipts[0],attempts:3}})),
+  /invalid_worker_attempt_or_assignment_key/
+);
 const offline=auditWorkSabanTrace(test.export());
 assert.equal(offline.status,'local_trace_integrity_verified');
 assert.equal(offline.event_count,12);
