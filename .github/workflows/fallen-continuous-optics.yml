@@ -1,0 +1,57 @@
+name: Fallen Continuous Optical Motion
+on:
+  push:
+    branches: [feat/fallen-pathtraced-glass-canary-20261020]
+    paths:
+      - systemia/media-studio/materials/fallen-cycles-motion.py
+      - .github/workflows/fallen-continuous-optics.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  motion-render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install CPU Cycles
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender
+      - name: Render continuous optical motion with same-camera control
+        run: |
+          blender -b -t 2 --python systemia/media-studio/materials/fallen-cycles-motion.py
+      - name: Validate 60-frame actual image sequence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          base=Path('/tmp/fallen-cycles-motion')
+          receipt=json.loads((base/'receipt.json').read_text())
+          assert receipt['frames']==60
+          assert receipt['pathtraced_transmission'] is True
+          assert receipt['cinematic_release_approved'] is False
+          hashes=[]
+          for row in receipt['frame_receipts']:
+              path=base/('frame_%03d.png'%row['frame'])
+              data=path.read_bytes()
+              assert data[:8]==bytes([137,80,78,71,13,10,26,10])
+              assert hashlib.sha256(data).hexdigest()==row['sha256']
+              hashes.append(row['sha256'])
+          assert len(set(hashes))>=55
+          control=(base/'control_without_glass.png').read_bytes()
+          assert hashlib.sha256(control).hexdigest()==receipt['control_same_final_camera_no_glass_sha256']
+          assert hashlib.sha256(control).hexdigest()!=hashes[-1], 'glass should create actual material-caused pixel changes'
+          print('PASS: continuous Cycles motion, source frames, camera continuity and same-camera no-glass control')
+          PY
+      - name: Publish visual frames and proof receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-continuous-optic-previs
+          path: |
+            /tmp/fallen-cycles-motion/frame_*.png
+            /tmp/fallen-cycles-motion/control_without_glass.png
+            /tmp/fallen-cycles-motion/receipt.json
+          retention-days: 7
+          if-no-files-found: warn
