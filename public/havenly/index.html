@@ -79,6 +79,7 @@ const plan=document.getElementById('carePlan');
 document.querySelectorAll('.mobile-menu-panel a').forEach(a=>a.addEventListener('click',()=>{document.querySelector('.mobile-menu').open=false;}));
 document.querySelectorAll('[data-collection]').forEach(button=>button.addEventListener('click',()=>{
   plan.dataset.collection=button.dataset.collection;
+  plan.dataset.collectionService=button.dataset.service;
   document.getElementById('planService').value=button.dataset.service;
   updatePlanSummary();
   document.getElementById('plan').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
@@ -93,7 +94,7 @@ function updatePlanSummary(){
  document.getElementById('summarySize').textContent=planLabel('planSize');
  document.getElementById('summaryExtras').textContent=planAddons().join(', ')||'None selected';
 }
-plan.addEventListener('change',event=>{if(event.target.id==='planService')delete plan.dataset.collection;updatePlanSummary();});
+plan.addEventListener('change',event=>{if(event.target.id==='planService'&&event.target.value!==plan.dataset.collectionService){delete plan.dataset.collection;delete plan.dataset.collectionService;}updatePlanSummary();});
 document.getElementById('planQuote').addEventListener('click',()=>{
  for(const [from,to] of [['planService','service'],['planFrequency','frequency'],['planSize','homeSize']])document.getElementById(to).value=planValue(from);
  const extras=planAddons().join(', ')||'None selected';
