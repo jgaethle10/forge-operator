@@ -92,6 +92,21 @@ const recomputedArchive={...test.export(),events:recomputedEvents,
   trace_id:'recomputed-invalid-receipt',tail_digest:recomputed.summary().tail_digest};
 assert.equal(verifyLocalEventChain(recomputedEvents).valid,true);
 assert.throws(()=>auditWorkSabanTrace(recomputedArchive),/worker_receipt_mismatch/);
+const exceededReceipt={...receipts[0],attempts:3};
+const retryAuditChain=createLocalEventChain({traceId:'offline-retry-budget'});
+const retryAuditEvents=[retryAuditChain.next({type:'accepted'})];
+for(let i=0;i<roles.length;i++){
+  retryAuditEvents.push(retryAuditChain.next({type:'stage_started',role:roles[i]}));
+  retryAuditEvents.push(retryAuditChain.next({type:'stage_verified',role:roles[i],
+    receipt:i===0?exceededReceipt:receipts[i]}));
+}
+retryAuditEvents.push(retryAuditChain.next({type:'completed',execution:{
+  ...execution,specialist_receipts:[exceededReceipt,...receipts.slice(1)]
+}}));
+assert.throws(()=>auditWorkSabanTrace({
+  ...test.export(),events:retryAuditEvents,trace_id:'offline-retry-budget',
+  tail_digest:retryAuditChain.summary().tail_digest
+}),/worker_receipt_mismatch/);
 const missingArchive=structuredClone(test.export());
 missingArchive.events.splice(2,1);
 assert.throws(()=>auditWorkSabanTrace(missingArchive),/invalid_trace_link/);
