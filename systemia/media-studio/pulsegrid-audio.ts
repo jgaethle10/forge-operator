@@ -5,6 +5,8 @@ import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument
 import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
 import {FoundryPianoPolyphonyLedger} from './instrument-foundry-polyphony.mjs';
 import {analyzeFoundryDecodedPianoDryPeak,unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
+import {renderFoundryPianoOfflineBus} from './instrument-foundry-offline-bus.mjs';
+import type {FoundryOfflineBusResult,FoundryOfflineBusVoice,FoundryOfflineBusTrack} from './instrument-foundry-offline-bus.mjs';
 import type {FoundryDryPcmVoice,FoundryDryPcmAudit} from './instrument-foundry-dry-pcm.mjs';
 import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
@@ -136,6 +138,53 @@ export class PulseGridAudioEngine {
         (v as FoundryDryPcmVoice & {asset_id?:string}).asset_id||'')))
       return unavailableFoundryPianoDryPeak('The recording authority changed; no verified decoded sample is available.');
     return analyzeFoundryDecodedPianoDryPeak({voices:this.decodedDryPianoVoices});
+  }
+
+  /**
+   * Explicit, non-real-time OFFLINE piano-bus render, never a live-stream
+   * meter or whole-song mix. The bound WAV cache remains permission-scoped.
+   */
+  async auditRecordedPianoOfflineBus():Promise<FoundryOfflineBusResult> {
+    const unavailable=(reason:string):FoundryOfflineBusResult=>({
+      status:'unavailable',scope:'offline_sampled_piano_track_bus_approximation',
+      reason,peak_dbfs:null,sample_peak:null,over_full_scale_frames:null,
+      complete:false,analyzed_voices:0,source_kind:'decoded_pcm_only',
+    });
+    if(this.playing)return unavailable('Stop playback before offline effects-bus analysis.');
+    const voices=this.decodedDryPianoVoices as Array<FoundryDryPcmVoice & FoundryOfflineBusVoice & {
+      asset_id?:string;autoVolume?:number;autoFilter?:number;
+    }>;
+    if(!voices.length||this.dryPianoVoiceOverflow||
+       !this.pianoPolyphony.snapshot().observation_complete||
+       this.pianoPolyphony.snapshot().observed_voices!==voices.length)
+      return unavailable('No complete bounded authorized sampled-piano phrase is available.');
+    if(voices.some(v=>!v.asset_id||!this.audioBuffers.has(v.asset_id)||
+       this.audioBuffers.get(v.asset_id)!==v.buffer))
+      return unavailable('The authorized decoded samples are no longer available.');
+    if(!this.session)return unavailable('The canonical session is unavailable.');
+    const snapshots=new Map<string,FoundryOfflineBusTrack>();
+    for(const v of voices){
+      const track=this.session.tracks.find(t=>t.id===v.track_id);
+      if(!track||track.type!=='synth'||track.muted||!Number.isFinite(v.autoVolume)||
+         !Number.isFinite(v.autoFilter))
+        return unavailable('Track or effect automation cannot be reconstructed safely.');
+      const snapshot:FoundryOfflineBusTrack={
+        id:track.id,volume:track.volume,filterHz:track.filterHz,
+        delayMix:track.delayMix,delayTime:track.delayTime,
+        delayFeedback:track.delayFeedback,
+        autoVolume:v.autoVolume!,autoFilter:v.autoFilter!,
+      };
+      const prior=snapshots.get(track.id);
+      if(prior&&JSON.stringify(prior)!==JSON.stringify(snapshot))
+        return unavailable('Track effects changed during the phrase. Inspect a stationary short chord.');
+      snapshots.set(track.id,snapshot);
+    }
+    const Offline=globalThis.OfflineAudioContext;
+    if(!Offline)return unavailable('This browser does not support OfflineAudioContext.');
+    return renderFoundryPianoOfflineBus({
+      voices,tracks:Array.from(snapshots.values()),
+      offlineContextFactory:(channels,frames,rate)=>new Offline(channels,frames,rate),
+    });
   }
 
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
@@ -638,6 +687,9 @@ export class PulseGridAudioEngine {
           if(this.decodedDryPianoVoices.length<16){
             this.decodedDryPianoVoices.push({
               ...sampledVoice,buffer,asset_id:selected.asset_id,
+              track_id:track.id,pitch:note.pitch,velocity:note.velocity,
+              duration:heldDuration,selection:selected,
+              autoVolume,autoFilter,
             } as FoundryDryPcmVoice);
           }else this.dryPianoVoiceOverflow=true;
         }else{
