@@ -33,6 +33,8 @@ export function auditWorkSabanTrace(archive) {
     const final=last.specialist_receipts[i];
     if(worker?.role!==roles[i]||worker.status!=='completed'||worker.quality_status!=='pass'
        ||!/^sha256:[0-9a-f]{64}$/.test(worker.result_sha256||'')
+       ||!Number.isInteger(worker.attempts)||worker.attempts<1||worker.attempts>2
+       ||!/^sha256:[0-9a-f]{64}$/.test(worker.idempotency_key||'')
        ||final?.role!==roles[i]||final.result_sha256!==worker.result_sha256
        ||final.idempotency_key!==worker.idempotency_key)
       throw new Error('worker_receipt_mismatch');
