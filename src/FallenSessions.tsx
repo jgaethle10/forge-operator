@@ -22,6 +22,7 @@ import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-c
 import {analyzePulseGridArrangementArc} from '../systemia/media-studio/pulsegrid-arrangement-arc.mjs';
 import {analyzeFoundryPianoTailCoverage} from '../systemia/media-studio/instrument-foundry-tail-audit.mjs';
 import type {FoundryDryPcmAudit} from '../systemia/media-studio/instrument-foundry-dry-pcm.mjs';
+import type {FoundryOfflineBusResult} from '../systemia/media-studio/instrument-foundry-offline-bus.mjs';
 import {decodeFoundryMidiSustain,mergeFoundryMidiPedalEvent,removeFoundryMidiPedalEvent} from '../systemia/media-studio/instrument-foundry-midi-pedal.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
@@ -73,6 +74,8 @@ export default function FallenSessions(){
   const [midiInputs,setMidiInputs]=useState(0);
   const [pendingPedalCount,setPendingPedalCount]=useState(0);
   const [dryPcmAudit,setDryPcmAudit]=useState<FoundryDryPcmAudit|null>(null);
+  const [offlineBusAudit,setOfflineBusAudit]=useState<FoundryOfflineBusResult|null>(null);
+  const [offlineBusBusy,setOfflineBusBusy]=useState(false);
   const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
@@ -113,7 +116,7 @@ export default function FallenSessions(){
     audioRef.current?.updateSession(session);
   },[session]);
 
-  useEffect(()=>{setDryPcmAudit(null)},[session,selectedScene]);
+  useEffect(()=>{setDryPcmAudit(null);setOfflineBusAudit(null)},[session,selectedScene]);
 
   useEffect(()=>{
     selectedPedalStepRef.current=selectedStepIndex;
@@ -169,6 +172,7 @@ export default function FallenSessions(){
     }
     try{
       setDryPcmAudit(null);
+      setOfflineBusAudit(null);
       await audioRef.current?.play(session,selectedScene);
       setPlaying(true);
       setStatus('Playing canonical scene '+(selectedScene+1)+'.');
@@ -1098,6 +1102,29 @@ export default function FallenSessions(){
               Inspect decoded chord PCM
             </button>
           </div>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||recording||offlineBusBusy||!(audioStatus.sampled_piano_scheduled_voices??0)}
+              onClick={async()=>{
+                setOfflineBusBusy(true);
+                setOfflineBusAudit(null);
+                try{
+                  const result=await audioRef.current?.auditRecordedPianoOfflineBus();
+                  setOfflineBusAudit(result||null);
+                }catch(error){
+                  setStatus(error instanceof Error?error.message:'Offline piano mix review failed.');
+                }finally{setOfflineBusBusy(false)}
+              }}>
+              {offlineBusBusy?'Rendering piano bus…':'Inspect piano effects bus offline'}
+            </button>
+          </div>
+          {offlineBusAudit&&<div className="fsDryPeakReport" role="status">
+            {offlineBusAudit.status==='unavailable'
+              ? <p>Offline effects-bus inspection unavailable: {offlineBusAudit.reason}. No clean mixed peak is claimed.</p>
+              : <>
+                <p>Offline sampled-piano bus + master sample peak: <strong>{offlineBusAudit.sample_peak?.toFixed(3)}</strong> ({offlineBusAudit.peak_dbfs?.toFixed(2)} dBFS). Frames above full scale: <strong>{offlineBusAudit.over_full_scale_frames}</strong>, over {offlineBusAudit.window_sec?.toFixed(2)} seconds / {offlineBusAudit.analyzed_voices} scheduled voices.</p>
+                <p className="fsMusicInsightCaution">This is an OfflineAudioContext rendering of the recorded-piano track low-pass, delay, feedback, wet/dry and master gain with a frozen note-on automation snapshot. It omits every non-piano track, changes to automation inside the phrase, full-song tail, device output, intersample true peak and human listening. Source WAVs and master settings remain unchanged.</p>
+              </>}
+          </div>}
           {dryPcmAudit&&<div className="fsDryPeakReport" role="status">
             {dryPcmAudit.status==='unavailable'
               ? <p>PCM inspection unavailable: {dryPcmAudit.reason}. No clean peak is claimed.</p>
