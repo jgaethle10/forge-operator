@@ -21,12 +21,12 @@ payload = {
     "verified": {"eq": True},
     "rentable": {"eq": True},
     "num_gpus": {"eq": 1},
-    "gpu_name": {"eq": "RTX 4090"},
+    "gpu_name": {"in": ["RTX 4090"]},
     "gpu_ram": {"gte": 23000},
+    "reliability": {"gte": 0.95},
     "cpu_ram": {"gte": 32000},
-    "disk_space": {"gte": 100},
     "order": [["dph_total", "asc"]],
-    "type": "on-demand",
+    "type": "ondemand",
     "limit": 25,
 }
 req = urllib.request.Request(
