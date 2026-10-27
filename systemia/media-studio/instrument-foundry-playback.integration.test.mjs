@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {PulseGridAudioEngine} from './pulsegrid-audio.ts';
-import {createPulseGridSession,applyPulseGridTransaction,undoPulseGridReceipt} from './pulsegrid-session.ts';
+import {createPulseGridSession,applyPulseGridOperation,applyPulseGridTransaction,undoPulseGridReceipt} from './pulsegrid-session.ts';
 import {createFoundryVerifiedResolver} from './instrument-foundry-resolver.mjs';
 
 // An executable integration harness for the REAL PulseGridAudioEngine.
@@ -318,5 +318,54 @@ test('resolver swap cancels a Play still waiting for AudioContext resume',{concu
     assert.equal(engine.status.cached_audio_assets,0);
     assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
   }finally{release();await engine.close()}
+ });
+});
+
+test('actual PulseGrid sampler defers release to pedal lift and clamps to decoded WAV length (simulated output)',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const pedaled=applyPulseGridOperation(session,{
+   type:'clip.set_foundry_piano_pedal',track_id:'keys',scene:0,
+   events:[{step:0,down:true},{step:6,down:false}]
+  },'human').session;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const ctx=SimulatedAudioContext.instances.at(-1);
+   const first=ctx.starts.at(-1).source;
+   const originalStop=first.stops[0][0];
+   assert.equal(ctx.createdOscillators,0);
+   engine.stop();
+   await engine.play(pedaled,0);
+   const second=ctx.starts.at(-1).source;
+   const heldStop=second.stops[0][0];
+   assert.ok(heldStop>originalStop+.15,'pedal must delay WAV note release');
+   assert.ok(heldStop<=ctx.starts.at(-1).args[0]+.75+1e-8,
+    'pedal must not synthesize sample bytes after decoded WAV ends');
+   assert.equal(ctx.createdOscillators,0);
+   assert.equal(pedaled.assets[0].rights,'unknown');
+  }finally{await engine.close()}
+ });
+});
+test('editing piano sustain mid-playback stops stale sampled voices before reauthorization',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const ctx=SimulatedAudioContext.instances.at(-1);
+   const source=ctx.starts.at(-1).source;
+   const edited=applyPulseGridOperation(session,{
+    type:'clip.set_foundry_piano_pedal',track_id:'keys',scene:0,
+    events:[{step:0,down:true}]
+   },'human').session;
+   engine.updateSession(edited);
+   assert.equal(engine.status.playing,false);
+   assert.equal(engine.status.cached_audio_assets,0);
+   assert.ok(source.stops.length>1,'pedal authority edit must stop previously scheduled sample');
+   assert.equal(ctx.createdOscillators,0);
+  }finally{await engine.close()}
  });
 });
