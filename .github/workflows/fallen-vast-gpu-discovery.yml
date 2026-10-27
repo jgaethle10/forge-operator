@@ -1,6 +1,10 @@
 name: Fallen Vast GPU offer discovery (read only)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fallen-vast-gpu-discovery.yml'
 permissions:
   contents: read
 jobs:
