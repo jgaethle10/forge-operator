@@ -1,0 +1,32 @@
+name: Fallen Phone Caption Pixel Proof
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/commercial-captions.mjs"
+      - "systemia/media-studio/commercial-captions.test.mjs"
+      - "systemia/media-studio/commercial-caption-render.test.mjs"
+      - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/timeline-export.test.ts"
+      - ".github/workflows/fallen-phone-captions.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-pixels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install only exact test runner and local FFmpeg
+        run: |
+          npm install --prefix "$RUNNER_TEMP/fallen-media-tooling" --no-save --no-audit --no-fund --ignore-scripts tsx@4.20.6
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Verify real subtitle pixel bands and timing protections
+        run: |
+          "$RUNNER_TEMP/fallen-media-tooling/node_modules/.bin/tsx" --test systemia/media-studio/commercial-captions.test.mjs systemia/media-studio/commercial-caption-render.test.mjs systemia/media-studio/timeline-export.test.ts
