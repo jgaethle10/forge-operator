@@ -611,7 +611,8 @@ test('real engine offline sample-piano bus review uses note-on effects and autho
    assert.equal(report.sample_peak,.35);
    assert.equal(report.over_full_scale_frames,0);
    assert.equal(report.analyzed_voices,1);
-   assert.equal(report.complete,true);
+   assert.equal(report.complete,false,'default piano feedback delay extends beyond finite offline window');
+   assert.equal(report.effects_tail_complete,false);
    assert.equal(report.source_kind,'decoded_pcm_only');
    assert.deepEqual(session,before,'offline render cannot change canonical score or rights');
    assert.equal(session.assets[0].rights,'unknown');
