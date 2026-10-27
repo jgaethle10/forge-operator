@@ -1,10 +1,21 @@
-import math,unittest
+import math, unittest
 from pathlib import Path
 import sys
-sys.path.insert(0,str(Path(__file__).resolve().parent))
-sys.path.insert(0,str(Path(__file__).resolve().parent/'aqua_rc05'))
+
+here=Path(__file__).resolve().parent
+if (here/'seasonal_screen.py').is_file():
+    # Local source-pack structure.
+    sys.path.insert(0,str(here))
+    sys.path.insert(0,str(here/'aqua_rc05'))
+    from noaa_api_screen import parse_csv, QualityHold
+else:
+    # Committed GitHub repo structure: waterfarm_001/tests/ beside seasonal/ and noaa/.
+    root=here.parent
+    sys.path.insert(0,str(root/'seasonal'))
+    sys.path.insert(0,str(root/'noaa'))
+    from api_daily_summaries import parse_csv, QualityHold
+
 from seasonal_screen import Configuration,simulate,break_even_value_usd_m3,year_profiles
-from noaa_api_screen import parse_csv,QualityHold
 from fixture_2024_observations import generate_csv
 synthetic_normalized=generate_csv()
 
