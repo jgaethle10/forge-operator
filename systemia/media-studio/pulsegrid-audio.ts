@@ -5,7 +5,7 @@ import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument
 import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
 import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
-import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
+import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch, planFoundryPianoPreRoll} from './instrument-foundry-piano.mjs';
 import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
@@ -26,6 +26,8 @@ export type PulseGridAudioStatus = {
   /** Per-Play scheduled piano voices using decoded-PCM boundary-aware onset decisions. */
   decoded_fast_attack_voices?: number;
   decoded_cut_in_guard_voices?: number;
+  /** Count of sample voices offset past confidently detected operator silence. */
+  decoded_preroll_aligned_voices?: number;
 };
 
 type PulseGridTrackBus = {
@@ -60,6 +62,7 @@ export class PulseGridAudioEngine {
   private decodedKeyHoldShortfalls = 0;
   private decodedFastAttackVoices = 0;
   private decodedCutInGuardVoices = 0;
+  private decodedPreRollAlignedVoices = 0;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -86,6 +89,7 @@ export class PulseGridAudioEngine {
       decoded_key_hold_shortfalls:this.decodedKeyHoldShortfalls,
       decoded_fast_attack_voices:this.decodedFastAttackVoices,
       decoded_cut_in_guard_voices:this.decodedCutInGuardVoices,
+      decoded_preroll_aligned_voices:this.decodedPreRollAlignedVoices,
     };
   }
 
@@ -172,6 +176,7 @@ export class PulseGridAudioEngine {
     this.decodedKeyHoldShortfalls=0;
     this.decodedFastAttackVoices=0;
     this.decodedCutInGuardVoices=0;
+    this.decodedPreRollAlignedVoices=0;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -568,8 +573,9 @@ export class PulseGridAudioEngine {
           // Unlike the score panel's asset metadata estimate, this checks
           // the actual decoded Web Audio buffer used to schedule this voice.
           // Count scheduled events, not unique score notes across loop cycles.
+          const preRoll=planFoundryPianoPreRoll(buffer);
           const actualTail=foundryPianoSampleTailBudget({
-            sample_duration_sec:buffer.duration,
+            sample_duration_sec:buffer.duration-preRoll.offset_sec,
             playback_rate:selected.playback_rate,
             held_seconds:heldDuration,
             release_sec:selected.release_sec,
@@ -585,6 +591,7 @@ export class PulseGridAudioEngine {
           });
           if(sampledVoice.attack_profile==='zero_aligned_fast_attack')this.decodedFastAttackVoices+=1;
           if(sampledVoice.attack_profile==='cut_in_microfade_guard')this.decodedCutInGuardVoices+=1;
+          if(sampledVoice.pre_roll_profile==='verified_quiet_preroll_aligned')this.decodedPreRollAlignedVoices+=1;
         }else{
           this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
         }
