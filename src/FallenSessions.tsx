@@ -618,7 +618,26 @@ export default function FallenSessions(){
     }
   }
 
+  function editFoundryPedal(down:boolean|null){
+    if(playing || recording){setStatus('Stop playback or recording before editing the piano pedal.');return;}
+    if(track.type!=='synth'){setStatus('Recorded piano pedal events require a pitched instrument track.');return;}
+    const step=Math.max(0,Math.min(clip.steps.length-1,selectedStepIndex??0));
+    const existing=Array.isArray(clip.provenance?.foundry_piano_pedal)
+      ? clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>:[];
+    const updates=existing.filter(event=>event.step!==step);
+    if(down!==null)updates.push({step,down});
+    updates.sort((a,b)=>a.step-b.step);
+    let previous=false;
+    const events=updates.filter(event=>{
+      if(event.down===previous)return false;
+      previous=event.down;return true;
+    });
+    apply({type:'clip.set_foundry_piano_pedal',track_id:track.id,scene:selectedScene,
+      events:down===null?null:events},'human');
+  }
+
   function selectOrCreateNote(pitch:number,step:number){
+    setSelectedStepIndex(step);
     const existing=clip.notes.find((note)=>note.pitch===pitch&&Math.round(note.start)===step);
     if(existing){
       setSelectedNoteId(existing.id);
@@ -908,6 +927,23 @@ export default function FallenSessions(){
         ))}
         <p className="fsMusicInsightCaution">Counterpoint evidence is limited to aligned, unambiguous single-note onsets.
           No voice identity is assumed for chords or overlapping notes. Classical parallel intervals are not universal errors.</p>
+
+        <details className="fsPedalPanel">
+          <summary>Recorded Piano · Sustain Pedal</summary>
+          <p className="fsMusicInsightCaution">Step {Math.min(clip.steps.length,Math.max(1,(selectedStepIndex??0)+1))} selected. Select a piano-roll step to place pedal-down or pedal-up automation. Editing pauses during playback. This delays note release only for recorded piano samples, never beyond the actual WAV or clip boundary.</p>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||recording||track.type!=='synth'}
+              onClick={()=>editFoundryPedal(true)}>Pedal down</button>
+            <button type="button" disabled={playing||recording||track.type!=='synth'}
+              onClick={()=>editFoundryPedal(false)}>Pedal up</button>
+            <button type="button" disabled={playing||recording||track.type!=='synth'}
+              onClick={()=>editFoundryPedal(null)}>Clear pedal</button>
+          </div>
+          <p className="fsMusicInsightCaution">Authored events: {Array.isArray(clip.provenance?.foundry_piano_pedal)&&clip.provenance.foundry_piano_pedal.length
+            ? (clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>)
+              .map(event=>'step '+(event.step+1)+' '+(event.down?'down':'up')).join(' · ')
+            :'none (default pedal up)'}. No physical sympathetic resonance or independent live MIDI CC64 recording is claimed.</p>
+        </details>
 
         <details className="fsArcDetails">
           <summary>Arrangement Arc · {arrangementArc.bar_count} bars</summary>
