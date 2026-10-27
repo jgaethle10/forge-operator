@@ -68,7 +68,7 @@ jobs:
               // node answered, and cannot enroll/authorize any device.
               node002_identity_verified:false,
               production_remote_dispatch_verified:false,
-            },null,2)+'\\n');
+            },null,2)+'\n');
             if(!accepted)process.exitCode=1;
           }catch(error){
             process.stdout.write(JSON.stringify({
