@@ -855,3 +855,48 @@ test('real PulseGrid performed kick and original hat noise are replayed in the a
   }
  });
 });
+
+
+test('real PulseGrid extended offline review produces eight-second private WAV without changing licensed source authority',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prior=globalThis.OfflineAudioContext;
+  class ExtendedOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate;}
+   async startRendering(){
+    const l=new Float32Array(this.frames).fill(.25);
+    const r=new Float32Array(this.frames).fill(-.25);
+    return {numberOfChannels:2,length:this.frames,getChannelData:c=>c?r:l};
+   }
+  }
+  globalThis.OfflineAudioContext=ExtendedOffline;
+  const pcm=new Float32Array(36000).fill(.3);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const before=structuredClone(session);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const during=await engine.auditRecordedPianoOfflineBus({window_sec:8,includeAuditionWav:true});
+   assert.equal(during.status,'unavailable','offline auditioner cannot inspect while live engine is playing');
+   engine.stop();
+   const review=await engine.auditRecordedPianoOfflineBus({window_sec:8,includeAuditionWav:true});
+   assert.equal(review.status,'offline_track_bus_pcm_measurement',JSON.stringify({...review,audition_wav_bytes:null}));
+   assert.equal(review.window_sec,8);
+   assert.equal(review.rendered_frames,384000);
+   assert.equal(review.sample_peak,.25);
+   assert.equal(review.audition_sample_clamped,false);
+   assert.ok(review.audition_wav_bytes instanceof Uint8Array);
+   assert.equal(review.audition_wav_bytes.length,44+384000*4);
+   assert.deepEqual(session,before,'no source rights, score or master parameters edited');
+   assert.equal(session.assets[0].rights,'unknown');
+  }finally{
+   await engine.close();
+   if(prior===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prior;
+  }
+ });
+});
