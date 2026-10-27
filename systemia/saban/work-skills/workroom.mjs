@@ -52,3 +52,41 @@ export function renderLocalWorkroom(receipt) {
     '</main></body></html>'
   ].join('\n');
 }
+
+
+// Extension view: rendered only from finished registered-worker receipts.
+// It does not estimate activity, stream fabricated progress, or grant release authority.
+export function renderFallenCouncilWorkroom(preview) {
+  if (preview?.schema !== 'evercraft.work-saban.fallen-council-preview.v1' ||
+      preview?.local_work?.schema !== 'evercraft.work-saban.local-commercial-run-receipt.v1' ||
+      !Array.isArray(preview.council_reconciliation?.blueprints) ||
+      !Array.isArray(preview.council_worker_receipts) ||
+      preview.generated_media !== false || preview.provider_calls_performed !== 0) {
+    throw Error('work_saban_fallen_workroom_invalid_or_unverified_receipt');
+  }
+  const count = preview.council_worker_receipts.length;
+  const blocks = preview.council_reconciliation.blueprints.map((shot, i) => {
+    const findings = shot.findings || [];
+    const crewCount = preview.council_worker_receipts.filter(r => r?.result?.shot_id === shot.shot_id).length;
+    const directorNotes = shot.creative_genome || {};
+    return '<article class="role"><div class="role-top"><span class="dot held"></span>'+
+      '<h2>Shot '+esc(i+1)+'</h2><span class="status held">Source coverage held</span></div>'+
+      '<p class="role-sub">'+esc(crewCount)+' completed role invocations • '+esc(shot.shot_id)+'</p>'+
+      '<div class="details"><strong>Direction recorded; media not produced</strong><div class="small">'+
+      '<p>Findings: '+esc(findings.length)+'</p><p>Evidence and footage must be independently verified.</p></div></div>'+
+      '<details><summary>Inspect actual creative genome and rejection criteria</summary>'+
+      '<pre>'+esc(JSON.stringify({creative_genome:directorNotes,rejection_contract:shot.rejection_contract,
+        findings},null,2))+'</pre></details></article>';
+  }).join('');
+  const section = '<section aria-label="Fallen Creative Council"><p class="eyebrow">FALLEN / CREATIVE COUNCIL</p>'+
+    '<h2>Four shots. Fourteen disciplines.</h2>'+
+    '<p class="sub">'+esc(count)+' registered council worker receipts. Story, visual evidence, camera, voice, score, edit, mix, brand and beauty direction are recorded. Source coverage held. No model provider or renderer called.</p>'+
+    '<div class="grid">'+blocks+'</div>'+
+    '<p class="foot">Council source state: <strong>Source coverage held</strong>. No usable footage certified; no video, voice or music generated. All creative directions are drafts awaiting evidence, asset rights, and owner review.</p>'+
+    '</section>';
+  const html = renderLocalWorkroom(preview.local_work);
+  if (!html.includes('</main></body></html>')) {
+    throw Error('work_saban_fallen_workroom_template_invalid');
+  }
+  return html.replace('</main></body></html>', section+'</main></body></html>');
+}
