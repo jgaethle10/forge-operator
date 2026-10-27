@@ -1,0 +1,89 @@
+name: Base44 exit — owned-hosting diagnostics
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/base44-owned-hosting-diagnostics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  observe-public-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect GitHub Pages configuration and published service routes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="https://jgaethle10.github.io/forge-operator"
+          STATUS="$(curl --silent --show-error --max-time 15 \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -o /tmp/pages-meta.json \
+            -w '%{http_code}' "https://api.github.com/repos/${REPOSITORY}/pages")"
+          echo "github_pages_api_http=${STATUS}" | tee pages-diagnostics.txt
+          workflow_http="$(curl --silent --show-error --max-time 15 \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -o /tmp/evercraft-pages-runs.json \
+            -w '%{http_code}' \
+            "https://api.github.com/repos/${REPOSITORY}/actions/workflows/evercraft-journal-pages.yml/runs?per_page=4")"
+          echo "pages_workflow_api_http=${workflow_http}" | tee -a pages-diagnostics.txt
+          if [ "$workflow_http" = "200" ]; then
+            node - <<'NODE' >> pages-diagnostics.txt
+          const fs=require('node:fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/evercraft-pages-runs.json','utf8'));
+          for(const run of (data.workflow_runs||[]).slice(0,4)){
+            console.log('pages_run='+[run.id,run.event,run.status,run.conclusion||'none',run.created_at].join('|'));
+          }
+          NODE
+          cat pages-diagnostics.txt
+          fi
+          if [ "$STATUS" = "200" ]; then
+            node - <<'NODE' >> pages-diagnostics.txt
+          const fs = require('node:fs');
+          const raw = JSON.parse(fs.readFileSync('/tmp/pages-meta.json', 'utf8'));
+          const keys = ['html_url','status','build_type','https_enforced'];
+          for (const key of keys) console.log(key+'='+String(raw[key]??'unavailable'));
+          console.log('source_branch='+String(raw.source?.branch??'not_applicable'));
+          NODE
+          fi
+          for route in eps/ havenly/ campaigns/roman/ apps/eps-estimator/; do
+            safe="${route//\//_}"
+            code="$(curl --silent --show-error --max-time 15 --location --max-redirs 3 \
+              -o "/tmp/${safe}.html" -w '%{http_code}' "${ROOT}/${route}" || true)"
+            bytes="$(wc -c < "/tmp/${safe}.html" 2>/dev/null || echo 0)"
+            echo "route=${route} http=${code:-000} bytes=${bytes}" | tee -a pages-diagnostics.txt
+            case "$route" in
+              eps/) marker="Evercraft Property Services" ;;
+              havenly/) marker="HAVENLY" ;;
+              campaigns/roman/) marker="Roman Kilinkaridis" ;;
+              apps/eps-estimator/) marker="EPS Precise Estimator" ;;
+            esac
+            if [ "$code" = "200" ] && grep -q "$marker" "/tmp/${safe}.html"; then
+              echo "content_match=${route}:yes" | tee -a pages-diagnostics.txt
+            else
+              echo "content_match=${route}:no" | tee -a pages-diagnostics.txt
+            fi
+          done
+          {
+            echo "## Read-only Base44 exit public hosting diagnosis"
+            echo
+            echo 'The following are observations by one GitHub Actions runner, not DNS control or a completed migration.'
+            echo
+            echo '~~~'
+            cat pages-diagnostics.txt
+            echo '~~~'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: base44-owned-hosting-advisory
+          path: pages-diagnostics.txt
+          retention-days: 3
