@@ -1,6 +1,8 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
+import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
+import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
 import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
 import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
@@ -227,6 +229,7 @@ export class PulseGridAudioEngine {
         const patch=clip.provenance.foundry_piano_patch as FoundryInstrumentPatch;
         if(track.type!=='synth')throw new Error('Recorded piano patch requires a synth instrument track.');
         validateFoundryPatch(patch,session.assets);
+        validateFoundryPedalEvents((clip.provenance?.foundry_piano_pedal??[]) as FoundryPedalEvent[],clip.steps.length);
         for(const note of clip.notes){
           const selected=selectFoundrySample(patch,note.pitch,note.velocity);
           const asset=session.assets.find(candidate=>candidate.id===selected.asset_id);
@@ -532,12 +535,20 @@ export class PulseGridAudioEngine {
           length_steps:Math.max(0.01,note.length),
         });
         if(foundryPatch){
+          const heldSteps=foundryPedalDurationSteps({
+            events:(clip.provenance?.foundry_piano_pedal??[]) as FoundryPedalEvent[],
+            start_step:step,length_steps:Math.max(0.01,note.length),clip_steps:clip.steps.length,
+          });
+          const heldDuration=pulseGridNoteDurationSeconds({
+            bpm:this.session.transport.bpm,swing:this.session.transport.swing,
+            start_step:step,length_steps:heldSteps,
+          });
           const selected=selectFoundrySample(foundryPatch,note.pitch,note.velocity);
           const buffer=this.audioBuffers.get(selected.asset_id);
           if(!buffer)throw new Error('Verified Foundry piano recording was not prepared: '+selected.asset_id);
           scheduleFoundryPianoNote({
             context:this.context,destination:bus.input,buffer,pitch:note.pitch,
-            velocity:note.velocity,time:noteTime,duration:noteDuration,selection:selected,
+            velocity:note.velocity,time:noteTime,duration:heldDuration,selection:selected,
             createSource:()=>this.trackSource(this.context!.createBufferSource()),
           });
         }else{
