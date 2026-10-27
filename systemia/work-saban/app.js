@@ -87,8 +87,8 @@ async function streamMission(url, payload) {
     events++;
     if(events>32)throw new Error('worker_event_limit_exceeded');
     const verified=await verifier.accept(event);
-    office?.traceStatus(verified);
     await office.consume(event);
+    office?.traceStatus(verified);
     if(event.type==='completed')completed=event.execution;
     if(event.type==='failed_closed')throw new Error('Worker execution failed closed');
   }
