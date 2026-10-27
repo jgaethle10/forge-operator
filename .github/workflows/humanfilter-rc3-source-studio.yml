@@ -48,3 +48,10 @@ jobs:
           assert 'consent_attested' in html and 'owner_creative_approved' in html
           print('OFFLINE_ONLY PASS; PUBLICATION BLOCKED; PRIVATE FOOTAGE NOT UPLOADED')
           PY
+      - name: Retain safe synthetic UI preview for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-source-studio-mobile-ui
+          path: products/humanfilter/commercial/source-studio/mobile-capture-preview.png
+          if-no-files-found: warn
