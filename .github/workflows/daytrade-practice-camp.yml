@@ -34,6 +34,7 @@ jobs:
       - name: Prove simulator and fail-closed gates
         run: |
           node systemia/daytrade-lens/practice-camp.test.mjs
+          node systemia/daytrade-lens/live-market-observer.test.mjs
           node systemia/daytrade-lens/practice-visual-report.test.mjs
           node systemia/daytrade-lens/rockies-edge-fabric.test.mjs
           node systemia/daytrade-lens/rockies-edge-consumer.test.mjs
