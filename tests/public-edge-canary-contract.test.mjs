@@ -72,3 +72,14 @@ test('external canary rejects a specialist edge that still routes through Base44
     'specialist tool canary must reject Base44 handoff URLs'
   );
 });
+
+test('missing specialist origin is a failing external canary with an uploaded hold receipt',()=>{
+  const gate=workflow.split('      - name: Require explicit specialist origin')[1]
+    ?.split('      - name: Prepare receipt')[0] || '';
+  assert.match(gate, /blocked_no_specialist_origin/);
+  assert.match(gate, /"verified": false/);
+  assert.match(gate, /exit 1/);
+  assert.doesNotMatch(gate, /exit 0/);
+  assert.match(workflow, /- name: Upload external canary receipts\n        if: always\(\)/);
+  assert.match(workflow, /if: env.SPECIALIST_ORIGIN != ''/);
+});

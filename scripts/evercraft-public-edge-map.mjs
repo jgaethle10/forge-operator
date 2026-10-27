@@ -3,13 +3,15 @@ import dgram from 'node:dgram';
 import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
+import { assessRouterMappings } from './edge-mapping-control.mjs';
+import {planUpnpMapping,parseUpnpErrorCode,decodeUpnpCdata} from './edge-upnp-mapping-policy.mjs';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) {
   const k = process.argv[i];
   const v = process.argv[i + 1];
   if (!k?.startsWith('--') || v === undefined) {
-    console.error('Usage: node scripts/evercraft-public-edge-map.mjs --gateway 192.168.88.1 --host 192.168.88.3');
+    console.error('Usage: node scripts/evercraft-public-edge-map.mjs --gateway 192.168.88.1 --host 192.168.88.5 [--scope web|dns|all]');
     process.exit(2);
   }
   args.set(k.slice(2), v);
@@ -17,7 +19,12 @@ for (let i = 2; i < process.argv.length; i += 2) {
 
 const gateway = args.get('gateway');
 const host = args.get('host');
-const scope = String(args.get('scope') || 'all').toLowerCase();
+const scope = String(args.get('scope') || 'web').toLowerCase();
+const renewOwned = String(args.get('renew-owned') || '0');
+if(!['0','1'].includes(renewOwned)){
+  console.error('Invalid --renew-owned; expected 0 or 1.');
+  process.exit(2);
+}
 if (!gateway || !host) {
   console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip> [--scope all|web|dns]');
   process.exit(2);
@@ -48,7 +55,11 @@ const out = {
   attempts: [],
   scope,
   mappings,
+  owned_lease_renewal_requested:renewOwned==='1',
   host_forward_preflight: null,
+  // Router acknowledgement is not external connectivity evidence.
+  public_ingress_verified: false,
+  public_ingress_verification_source: 'independent_external_canary_required',
 };
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -179,11 +190,13 @@ async function natPmpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
-    }
+        const report=assessRouterMappings(mappings, result.mappings);
+        result.success=report.production_mapping_control_ok;
+        result.diagnostic_success=report.diagnostic_mapping_control_ok;
+        result.web_mapping_control_ok=report.web_mapping_control_ok;
+        result.dns_mapping_control_ok=report.dns_mapping_control_ok;
+        result.missing_production_mappings=report.missing_production_mappings;
+      }
   } finally {
     socket.close();
   }
@@ -235,7 +248,7 @@ async function discoverUpnp() {
 
 function tagValue(block, localName) {
   const re = new RegExp('<(?:[A-Za-z0-9_.-]+:)?' + localName + '\\b[^>]*>([\\s\\S]*?)<\\/(?:[A-Za-z0-9_.-]+:)?' + localName + '>', 'i');
-  return block.match(re)?.[1]?.trim() || null;
+  return decodeUpnpCdata(block.match(re)?.[1] ?? null);
 }
 
 function extractServices(xml) {
@@ -274,9 +287,16 @@ async function soap(control, serviceType, action, body) {
       'connection': 'close',
     },
     body: envelope,
+    signal: AbortSignal.timeout(8000),
   });
   const text = await res.text();
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 240)}`);
+  if (!res.ok) {
+    // Extract the actual IGD error code instead of truncating the SOAP fault
+    // before its <errorCode>. Never print the router descriptor or raw XML.
+    const error=new Error('upnp_'+action+'_http_'+res.status+'_code_'+(parseUpnpErrorCode(text)||'unknown'));
+    error.upnpCode=parseUpnpErrorCode(text);
+    throw error;
+  }
   return text;
 }
 
@@ -341,22 +361,88 @@ async function upnpMap() {
         });
       }
 
-      const mapped = [];
-      for (const m of mappings) {
-        const b =
-          '<NewRemoteHost></NewRemoteHost>' +
-          `<NewExternalPort>${m.external}</NewExternalPort>` +
-          `<NewProtocol>${m.proto}</NewProtocol>` +
-          `<NewInternalPort>${m.internal}</NewInternalPort>` +
-          `<NewInternalClient>${host}</NewInternalClient>` +
-          '<NewEnabled>1</NewEnabled>' +
-          `<NewPortMappingDescription>${m.desc}</NewPortMappingDescription>` +
-          `<NewLeaseDuration>${Number(m.lifetime || 86400)}</NewLeaseDuration>`;
-        try {
-          await soap(control, service.serviceType, 'AddPortMapping', b);
-          mapped.push({ requested: m, success: true });
-        } catch (e) {
-          mapped.push({ requested: m, success: false, error: e.message });
+      // Preflight every selected entry before doing *any* writes. A router
+      // with an old Evercraft target or a foreign owner needs a deliberate,
+      // confirmed repair. A healthy mapping must not be needlessly re-added.
+      const planned=[];
+      for(const m of mappings){
+        const selector='<NewRemoteHost></NewRemoteHost>'+
+          `<NewExternalPort>${m.external}</NewExternalPort>`+
+          `<NewProtocol>${m.proto}</NewProtocol>`;
+        let existing=null,missing=false,readbackError=null;
+        try{
+          const xml=await soap(control,service.serviceType,'GetSpecificPortMappingEntry',selector);
+          existing={
+            host:tagValue(xml,'NewInternalClient'),
+            internal:Number(tagValue(xml,'NewInternalPort')),
+            description:tagValue(xml,'NewPortMappingDescription'),
+            enabled:tagValue(xml,'NewEnabled'),
+            lease_seconds:tagValue(xml,'NewLeaseDuration')
+          };
+        }catch(error){
+          if(error.upnpCode==='714') missing=true;
+          else readbackError=error.message;
+        }
+        const decision=readbackError
+          ? {action:'hold',state:'readback_failed',ownership_verified:false}
+          : planUpnpMapping(existing,{...m,host},{missing,renewHealthy:renewOwned==='1'});
+        planned.push({requested:m,selector,decision,error:readbackError});
+      }
+
+      if(planned.some(row=>row.decision.action==='hold')){
+        const mapped=planned.map(row=>({
+          requested:row.requested,
+          success:false,
+          error:row.error||row.decision.state,
+          owner_hold:row.decision.action==='hold',
+          observed:row.decision.observed||null
+        }));
+        result.ownership_conflict=true;
+        result.mappings=mapped;
+        result.diagnostics.push({
+          service_type:service.serviceType,control,
+          reason:'upnp_ownership_preflight_hold',
+          mapping_results:mapped
+        });
+        return result;
+      }
+
+      const mapped=[];
+      for(const row of planned){
+        const m=row.requested;
+        if(row.decision.action==='keep'){
+          mapped.push({
+            requested:m,success:true,readback_verified:true,
+            already_correct:true,observed_host:host,observed_port:m.internal
+          });
+          continue;
+        }
+        const b=
+          row.selector+
+          `<NewInternalPort>${m.internal}</NewInternalPort>`+
+          `<NewInternalClient>${host}</NewInternalClient>`+
+          '<NewEnabled>1</NewEnabled>'+
+          `<NewPortMappingDescription>${m.desc}</NewPortMappingDescription>`+
+          `<NewLeaseDuration>${Number(m.lifetime||86400)}</NewLeaseDuration>`;
+        try{
+          await soap(control,service.serviceType,'AddPortMapping',b);
+          const xml=await soap(control,service.serviceType,'GetSpecificPortMappingEntry',row.selector);
+          const observed={
+            host:tagValue(xml,'NewInternalClient'),
+            internal:Number(tagValue(xml,'NewInternalPort')),
+            description:tagValue(xml,'NewPortMappingDescription'),
+            enabled:tagValue(xml,'NewEnabled'),
+            lease_seconds:tagValue(xml,'NewLeaseDuration')
+          };
+          const verified=planUpnpMapping(observed,{...m,host});
+          if(!['keep','renew'].includes(verified.action)) throw new Error('upnp_mapping_readback_mismatch');
+          mapped.push({
+            requested:m,success:true,readback_verified:true,
+            renewed:row.decision.action==='renew',
+            observed_host:observed.host,observed_port:observed.internal
+          });
+        }catch(error){
+          mapped.push({requested:m,success:false,error:error.message});
         }
       }
       result.mappings = mapped;
@@ -367,10 +453,12 @@ async function upnpMap() {
         mapping_results: mapped,
       });
       {
-        const production=mapped.filter(x=>x.requested?.production);
-        const diagnostic=mapped.filter(x=>x.requested?.diagnostic);
-        result.success=production.length>0&&production.every(x=>x.success===true);
-        result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+        const report=assessRouterMappings(mappings, mapped);
+        result.success=report.production_mapping_control_ok;
+        result.diagnostic_success=report.diagnostic_mapping_control_ok;
+        result.web_mapping_control_ok=report.web_mapping_control_ok;
+        result.dns_mapping_control_ok=report.dns_mapping_control_ok;
+        result.missing_production_mappings=report.missing_production_mappings;
       }
       if (result.success) {
         result.location = location;
@@ -463,11 +551,13 @@ async function pcpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
-    }
+        const report=assessRouterMappings(mappings, result.mappings);
+        result.success=report.production_mapping_control_ok;
+        result.diagnostic_success=report.diagnostic_mapping_control_ok;
+        result.web_mapping_control_ok=report.web_mapping_control_ok;
+        result.dns_mapping_control_ok=report.dns_mapping_control_ok;
+        result.missing_production_mappings=report.missing_production_mappings;
+      }
     const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
     if (firstIp) result.external_ip = firstIp;
   } finally {
@@ -491,15 +581,53 @@ async function main() {
 
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));
   out.attempts.push(upnp);
+  // A router readback revealed an occupied, stale or unverified mapping.
+  // Never fall back to NAT-PMP/PCP writes for the same port after an
+  // ownership hold. Recovery requires an operator-confirmed surgical fix.
+  if(upnp.ownership_conflict===true){
+    out.error='upnp_ownership_preflight_hold';
+    out.ownership_conflict=true;
+    const report=assessRouterMappings(mappings,upnp.mappings||[]);
+    out.production_mapping_control_ok=report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok=report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok=report.web_mapping_control_ok;
+    out.dns_mapping_control_ok=report.dns_mapping_control_ok;
+    out.missing_production_mappings=report.missing_production_mappings;
+    console.log(JSON.stringify(out,null,2));
+    process.exitCode=1;
+    return;
+  }
   if (upnp.success) {
     out.ok = true;
     out.method = upnp.method;
     out.external_ip = upnp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = upnp.diagnostic_success === true;
+    const report = assessRouterMappings(mappings, upnp.mappings || []);
+    out.production_mapping_control_ok = report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok = report.web_mapping_control_ok;
+    out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+    out.missing_production_mappings = report.missing_production_mappings;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
+
+  // NAT-PMP and PCP do not provide an ownership-bearing readback equivalent
+  // to UPnP GetSpecificPortMappingEntry on this topology. Crostini's source
+  // address is not the Chromebook's ChromeOS Wi-Fi LAN address. Until a
+  // first-party ownership attestation exists, do NOT send unverified
+  // protocol writes when UPnP is unavailable. Preserve implementation for
+  // future verified adapters, but do not execute it from the resident timer.
+  out.error='verified_upnp_readback_required';
+  out.unverified_fallbacks_skipped=['NAT-PMP','PCP'];
+  const refused=assessRouterMappings(mappings,upnp.mappings||[]);
+  out.production_mapping_control_ok=refused.production_mapping_control_ok;
+  out.diagnostic_mapping_control_ok=refused.diagnostic_mapping_control_ok;
+  out.web_mapping_control_ok=refused.web_mapping_control_ok;
+  out.dns_mapping_control_ok=refused.dns_mapping_control_ok;
+  out.missing_production_mappings=refused.missing_production_mappings;
+  console.log(JSON.stringify(out,null,2));
+  process.exitCode=1;
+  return;
 
   const natpmp = await natPmpMap().catch(e => ({ method: 'NAT-PMP', success: false, error: e.message }));
   out.attempts.push(natpmp);
@@ -507,8 +635,12 @@ async function main() {
     out.ok = true;
     out.method = natpmp.method;
     out.external_ip = natpmp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = natpmp.diagnostic_success === true;
+    const report = assessRouterMappings(mappings, natpmp.mappings || []);
+    out.production_mapping_control_ok = report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok = report.web_mapping_control_ok;
+    out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+    out.missing_production_mappings = report.missing_production_mappings;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -519,20 +651,22 @@ async function main() {
     out.ok = true;
     out.method = pcp.method;
     out.external_ip = pcp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = pcp.diagnostic_success === true;
+    const report = assessRouterMappings(mappings, pcp.mappings || []);
+    out.production_mapping_control_ok = report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok = report.web_mapping_control_ok;
+    out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+    out.missing_production_mappings = report.missing_production_mappings;
   }
 
-  out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
-  out.diagnostic_mapping_control_ok = mappings.filter(m=>m.diagnostic).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
+  // Never synthesize a successful mapping from partial successes across protocols.
+  const acceptedAttempt = out.attempts.find(a=>a.success===true);
+  const report = assessRouterMappings(mappings, (acceptedAttempt || out.attempts.find(a=>a.mappings?.length))?.mappings || []);
+  out.production_mapping_control_ok = report.production_mapping_control_ok;
+  out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+  out.web_mapping_control_ok = report.web_mapping_control_ok;
+  out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+  out.missing_production_mappings = report.missing_production_mappings;
   console.log(JSON.stringify(out, null, 2));
   process.exit(out.ok ? 0 : 1);
 }

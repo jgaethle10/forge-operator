@@ -64,6 +64,7 @@ on:
       - 'tests/specialist-handoff-native-runtime.test.mjs'
       - 'tests/public-edge-native-specialist-invariants.test.mjs'
       - 'tests/public-edge-canary-contract.test.mjs'
+      - '.github/workflows/evercraft-public-edge-canary.yml'
       - 'tests/fabric-edge-doctor-contract.test.mjs'
       - 'tests/fabric-edge-external-canary-contract.test.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
@@ -89,8 +90,62 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Reject green external canary when specialist origin is unconfigured
+        run: node --test tests/public-edge-canary-contract.test.mjs
+      - name: Verify router mapping control cannot fake production ingress
+        run: node --test tests/edge-mapping-control.test.mjs
+      - name: Prove idempotent UPnP mapping ownership and web-only resident refresh
+        run: node --test tests/edge-upnp-mapping-policy.test.mjs
+      - name: Verify read-only Penguin upgrade preflight and strict rollback gates
+        run: node --test tests/router-resident-upgrade.test.mjs
+      - name: Check guarded stale Chromebook UPnP recovery tool
+        run: node --test tests/stale-fabric-upnp-repair.test.mjs
+      - name: Prove Saban Fabric outbound bridge and device attestation
+        run: node systemia/saban/fabric-edge-relay.proof.mjs
       - name: Prove Fabric MCP, human offer storefront, and mobile door
         run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+
+      - name: Independently probe public Fabric HTTPS and MCP initialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          origin="https://fabric.systemiacommandcenters.com"
+          echo "Checking production HTTPS health from GitHub's external runner..."
+          health="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 "$origin/health")"
+          printf '%s' "$health" | jq -e '.ok == true' >/dev/null
+          echo "PUBLIC_FABRIC_HTTPS_HEALTH=verified"
+          echo "Checking public MCP JSON-RPC initialize..."
+          init="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"fabric-recovery-external-smoke","version":"1"}}}' \
+            "$origin/mcp")"
+          printf '%s' "$init" | jq -e '.result.serverInfo.name == "evercraft-fabric"' >/dev/null
+          echo "PUBLIC_FABRIC_MCP_INITIALIZE=verified"
+          echo "Checking tools/list and a read-only capability match..."
+          tools="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            "$origin/mcp")"
+          printf '%s' "$tools" | jq -e '
+            .result.tools | any(.name == "match_evercraft_capability" and .annotations.readOnlyHint == true)
+          ' >/dev/null
+          match="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"match_evercraft_capability","arguments":{"intent":"Find read-only Evercraft software capabilities for a small business","limit":2}}}' \
+            "$origin/mcp")"
+          printf '%s' "$match" | jq -e '
+            .result.isError == false and
+            .result.structuredContent.external_action_taken == false and
+            .result.structuredContent.transactional == false
+          ' >/dev/null
+          echo "PUBLIC_FABRIC_READ_ONLY_MCP=verified"
+          echo "Note: full identity/authorization canary remains a separate required gate."
+
+      - name: Verify complete external Fabric public-edge canary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/fabric-edge-external-canary.mjs --origin https://fabric.systemiacommandcenters.com
 
       - name: Verify deployed EarthWorks hot-read playground
         shell: bash
