@@ -131,3 +131,40 @@ test('recorded piano root is checked against actual WAV waveform before any cano
  assert.ok(fn.indexOf('checkFoundryPianoRootPitch')<fn.indexOf('appendFoundryPianoSample'));
  assert.ok(fn.indexOf('checkFoundryPianoRootPitch')<fn.indexOf('applyPulseGridTransaction'));
 });
+
+test('Web MIDI CC64 is decoded independently of notes and committed as a reversible canonical controller edit',()=>{
+ const source=ui();
+ const midi=source.slice(source.indexOf('function handleMidiMessage'),source.indexOf('async function toggleMidi'));
+ assert.match(source,/decodeFoundryMidiSustain/);
+ assert.match(midi,/decodeFoundryMidiSustain\(data\)/);
+ assert.ok(midi.indexOf('decodeFoundryMidiSustain')<midi.indexOf('const isNoteOn='));
+ assert.match(midi,/mergeFoundryMidiPedalEvent/);
+ assert.match(midi,/controllerKey/);
+ assert.match(midi,/midiPedalSourceRef/);
+ assert.match(midi,/type:'clip.set_foundry_piano_pedal'/);
+ assert.match(midi,/applyPulseGridOperation\(current/);
+ assert.match(midi,/sessionRef\.current=result\.session/);
+});
+test('MIDI CC64 during playback is buffered and requires explicit commit, not a disruptive audio-graph mutation',()=>{
+ const source=ui();
+ const handler=source.slice(source.indexOf('function handleMidiMessage'),source.indexOf('async function toggleMidi'));
+ assert.match(handler,/const playingNow=Boolean\(audioRef\.current\?\.status\.playing\)/);
+ assert.match(handler,/if\(playingNow\|\|pending\)/);
+ assert.match(handler,/midiPedalCaptureRef\.current=pending/);
+ assert.match(source,/function commitCapturedPedal\(\)/);
+ assert.match(source,/function discardCapturedPedal\(\)/);
+ assert.match(source,/Commit Pedal Take/);
+ assert.match(source,/Discard Take/);
+ const commit=source.slice(source.indexOf('function commitCapturedPedal'),source.indexOf('function discardCapturedPedal'));
+ assert.match(commit,/JSON\.stringify\(currentEvents\)!==JSON\.stringify\(captured\.original\)/);
+ assert.match(commit,/captured\.clipId/);
+ assert.match(commit,/applyPulseGridOperation\(current/);
+ assert.doesNotMatch(commit,/rights:'owned'|release_ready:true/);
+});
+test('manual piano pedal editing removes only one step and CC64 readiness is not called verified human listening',()=>{
+ const source=ui();
+ assert.match(source,/removeFoundryMidiPedalEvent/);
+ assert.match(source,/Remove step event/);
+ assert.match(source,/No live acoustic damper response is asserted/);
+ assert.match(source,/not device-audible verification/);
+});
