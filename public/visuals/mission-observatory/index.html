@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#05080e">
+<link rel="icon" href="data:,">
+<meta name="description" content="Evercraft Living Intelligence Mission Observatory. A cinematic, evidence-labeled mission replay prototype.">
+<title>Mission Observatory · Evercraft Living Intelligence</title>
+<style>
+:root{color-scheme:dark;--ink:#eef2f8;--muted:#8896a8;--line:rgba(177,210,248,.14);--glass:rgba(9,16,28,.76);--gold:#f0c67c;--aqua:#83e2e2;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#03070d}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 50% 30%,#111d2b,#03070d 69%);min-height:100dvh}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid #a8eaf1;outline-offset:3px}
+a{color:#b9efff}
+.shell{max-width:1800px;margin:auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+.topbar{height:74px;display:flex;align-items:center;gap:22px;padding:0 30px;border-bottom:1px solid var(--line);background:#060b12;flex:none}
+.brand{display:flex;align-items:center;gap:13px;flex-shrink:0}
+.brand-symbol{display:grid;place-items:center;border:1px solid rgba(240,198,124,.65);height:34px;width:34px;border-radius:50%;font-size:18px;color:var(--gold);box-shadow:0 0 24px #d8a95626}
+.brand strong{letter-spacing:.18em;font-size:13px;font-weight:780}
+.brand small{display:block;color:#98aabb;letter-spacing:.2em;font-size:9px;margin-top:5px}
+.divider{height:26px;border-left:1px solid var(--line)}
+.headline{font-size:12px;color:#cbd4df;letter-spacing:.09em;font-weight:650}
+.mode{margin-left:auto;font-size:10px;font-weight:750;letter-spacing:.14em;color:#f5d59c;border:1px solid #d8a7567a;background:#b78a3623;border-radius:30px;padding:8px 13px;white-space:nowrap}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 300px;flex:1;min-height:580px}
+.theater{position:relative;overflow:hidden;min-height:570px;background:linear-gradient(120deg,rgba(4,8,14,.2),transparent)}
+#universe{display:block;width:100%;height:100%;position:absolute;inset:0}
+.theater:after{content:"";pointer-events:none;position:absolute;inset:0;background:radial-gradient(ellipse at 44% 52%,transparent 25%,#03070d59 76%,#03070dc9);z-index:1}
+.overlay{position:absolute;z-index:2;pointer-events:none}
+.theater-top{top:31px;left:34px;right:34px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.kicker{font-size:10px;letter-spacing:.24em;color:#83e2e2;font-weight:800}
+.theater h1{font-size:clamp(23px,3vw,46px);line-height:1.08;letter-spacing:-.04em;font-weight:620;margin:9px 0 12px;max-width:590px}
+.theater-sub{font-size:12px;line-height:1.65;color:#96a6b5;max-width:440px}
+.phase-name{color:#f0cc94;text-align:right;font-size:10px;letter-spacing:.2em}
+.phase-name strong{display:block;font-size:clamp(14px,2.1vw,26px);letter-spacing:.09em;margin-top:10px;font-weight:580}
+.theater-bottom{left:32px;right:32px;bottom:26px}
+.warning{display:inline-flex;gap:8px;align-items:center;font-size:11px;line-height:1.5;color:#e4c997;border:1px solid #d8aa584e;border-radius:4px;padding:7px 10px;background:#100f0ab8}
+.warning:before{content:"";width:6px;height:6px;background:#f0c67c;border-radius:50%;box-shadow:0 0 12px #f0c67c}
+.orbit-label{position:absolute;z-index:3;font-size:10px;letter-spacing:.19em;font-weight:750;color:#a5c5d2;text-shadow:0 2px 12px #000;pointer-events:none}
+.orbit-label[aria-hidden=true]{display:none}
+.side{border-left:1px solid var(--line);background:linear-gradient(180deg,#0b111abf,#060c13df);padding:26px 23px 18px;position:relative;z-index:4;display:flex;flex-direction:column;gap:20px}
+.side-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.19em;color:#99a8bb}
+.chip{color:#96e5d5;background:#67d8aa1e;border-radius:5px;padding:5px 7px;letter-spacing:.06em}
+.stage-list{display:grid;gap:6px}
+.stage{width:100%;display:flex;align-items:center;gap:13px;padding:13px 10px;border:1px solid transparent;text-align:left;color:#78889a;background:transparent;border-radius:7px;transition:background .2s,border-color .2s}
+.stage.active{background:#12212b90;color:#f1f2f5;border:1px solid #95d4db35}
+.stage.passed{color:#bdcbd2}
+.stage .num{font-size:10px;color:#687787;font-variant-numeric:tabular-nums}
+.stage .line{height:17px;width:3px;border-radius:2px;background:#293640}
+.stage.active .line{background:var(--stage-color);box-shadow:0 0 15px var(--stage-color)}
+.stage-name{font-size:11px;font-weight:750;letter-spacing:.07em}
+.stage small{margin-left:auto;font-size:10px}
+.feed{border-top:1px solid var(--line);padding-top:19px;min-height:145px}
+.feed-label{font-size:10px;color:#8b9aab;letter-spacing:.18em}
+.feed h2{font-size:19px;line-height:1.25;font-weight:560;letter-spacing:-.025em;margin:15px 0 8px;min-height:24px}
+.feed p{color:#9eacb8;line-height:1.65;font-size:12px;margin:0;min-height:52px}
+.source{word-break:break-all;font-size:9px;color:#91afb0;margin-top:11px;line-height:1.4}
+.side-footer{margin-top:auto;border-top:1px solid var(--line);padding-top:17px;display:flex;justify-content:space-between;color:#7f919f;font-size:10px;letter-spacing:.1em}
+.footer{border-top:1px solid var(--line);background:#070b12;display:grid;grid-template-columns:1fr 210px 210px 210px;min-height:142px}
+.controls{padding:18px 28px 24px;min-width:0}
+.controls-head{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.control-name{font-size:10px;color:#b8c3cf;letter-spacing:.2em}
+.actions{display:flex;gap:8px;align-items:center}
+.actions button{background:#14222f;border:1px solid #344856;color:#dce9ed;min-height:34px;padding:6px 12px;border-radius:6px;font-size:11px}
+.actions button.primary{color:#020c10;background:#9be0df;border-color:#9be0df;font-weight:750}
+.timeline{display:flex;gap:16px;align-items:center}
+.timeline input{width:100%;accent-color:#8ce7e2;cursor:pointer}
+.timeline time{color:#9eafb9;white-space:nowrap;font-size:11px;min-width:65px;text-align:right;font-variant-numeric:tabular-nums}
+.step-dots{display:flex;justify-content:space-between;margin-top:12px;font-size:10px;color:#657786;letter-spacing:.09em}
+.stat{padding:22px 19px;border-left:1px solid var(--line)}
+.stat .stat-label{color:#8495a5;font-size:10px;letter-spacing:.18em}
+.stat strong{font-size:34px;font-weight:510;display:block;margin:16px 0 9px;font-variant-numeric:tabular-nums;line-height:1}
+.stat small{color:#7b92a0;font-size:10px;line-height:1.3}
+.bar{height:3px;width:100%;background:#172734;margin-top:12px;border-radius:3px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:#83e2e2;box-shadow:0 0 12px #83e2e2}
+@media(max-width:1050px){.main{grid-template-columns:minmax(0,1fr) 240px}.side{padding:20px 14px}.footer{grid-template-columns:1fr repeat(3,120px)}.stat{padding:22px 12px}.stat strong{font-size:27px}}
+@media(max-width:760px){.topbar{height:63px;padding:0 17px;gap:12px}.divider,.headline{display:none}.brand strong{font-size:11px}.mode{font-size:9px;letter-spacing:.06em;padding:7px}.main{display:flex;flex-direction:column;min-height:0}.theater{min-height:480px;height:59vh;max-height:690px}.theater-top{top:21px;left:19px;right:19px}.theater h1{font-size:29px;max-width:330px}.theater-sub{font-size:11px;max-width:310px}.phase-name{font-size:8px}.phase-name strong{font-size:13px}.theater-bottom{left:18px;right:18px;bottom:20px}.theater-top{padding-bottom:28px;background:linear-gradient(180deg,#030810ee,#030810a8 75%,transparent);z-index:4}.warning{font-size:9px}.side{border-left:0;border-top:1px solid var(--line);padding:17px}.stage-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.stage{gap:6px;padding:11px 5px}.stage-name{font-size:9px}.stage small{display:none}.feed{min-height:0}.feed h2{margin:8px 0;font-size:17px}.feed p{min-height:0}.side-footer{display:none}.footer{grid-template-columns:repeat(3,1fr)}.controls{grid-column:1/-1;padding:15px 18px}.stat{padding:16px}.stat strong{font-size:25px;margin:8px 0}.step-dots{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.stage{transition:none}}
+
+/* Small phones keep the entire command deck within the viewport. */
+@media(max-width:420px){
+  .controls-head{flex-direction:column;align-items:stretch;gap:10px}
+  .actions{justify-content:space-between;min-width:0}
+  .actions button{flex:1;min-width:0;padding:6px 4px}
+  .stage{min-width:0;gap:4px;padding:10px 3px}
+  .stage-name{min-width:0;font-size:8px;letter-spacing:0;overflow-wrap:anywhere}
+  .step-dots{gap:4px}
+  .step-dots span{min-width:0;max-width:20%;overflow-wrap:anywhere}
+  .topbar .brand{min-width:0}
+  .topbar .brand strong{font-size:10px;letter-spacing:.10em}
+  .mode{min-width:0;flex:0 1 104px;white-space:normal;text-align:center;line-height:1.15;letter-spacing:0;font-size:8px;padding:5px 6px}
+  .stat{min-width:0;padding:13px 9px}
+  .stat .stat-label{font-size:9px;letter-spacing:.10em;overflow-wrap:anywhere}
+  .stat small{overflow-wrap:anywhere}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+  <div class="brand"><span class="brand-symbol">✳</span><div><strong>EVERCRAFT</strong><small>LIVING INTELLIGENCE</small></div></div>
+  <span class="divider"></span><span class="headline">MISSION OBSERVATORY / 001</span>
+  <span class="mode">● SYNTHETIC REPLAY</span>
+</header>
+<div class="main">
+  <section class="theater" aria-label="Animated constellation showing example mission event connections">
+    <canvas id="universe" aria-hidden="true"></canvas>
+    <div class="overlay theater-top">
+      <div><div class="kicker">A SYSTEM LEARNING TO MOVE TOGETHER</div><h1>The file that<br>couldn't travel.</h1><div class="theater-sub">A problem enters. A mission forms. Context becomes choreography. Every connection tells part of the story.</div></div>
+      <div class="phase-name">CURRENT PHASE<strong id="phase-title">INTAKE</strong></div>
+    </div>
+    <div class="overlay theater-bottom"><span class="warning">ILLUSTRATIVE EVENTS · NO LIVE AGENTS, TRANSFERS OR PAYMENTS</span></div>
+  </section>
+  <aside class="side" aria-label="Mission timeline and evidence">
+    <div class="side-head"><span>MISSION STAGES</span><span class="chip">DEMO</span></div>
+    <nav id="stages" class="stage-list" aria-label="Jump to mission stage"></nav>
+    <div class="feed" aria-live="polite">
+      <div class="feed-label">LATEST ILLUSTRATIVE EVENT</div>
+      <h2 id="event-title">Awaiting signal</h2>
+      <p id="event-detail">Press play to watch the mission constellation unfold.</p>
+      <div id="event-source" class="source"></div>
+    </div>
+    <div class="side-footer"><span>01 / EVIDENCE-SAFE</span><span>EVERCRAFT VISUAL DESK</span></div>
+  </aside>
+</div>
+<footer class="footer">
+  <div class="controls">
+    <div class="controls-head"><span class="control-name">MISSION REPLAY / PROVENANCE DEMO</span><div class="actions"><button id="reset" type="button" aria-label="Restart replay">↺ RESTART</button><button id="speed" type="button" aria-label="Change playback speed">1×</button><button id="play" class="primary" type="button">Ⅱ PAUSE</button></div></div>
+    <div class="timeline"><input id="scrub" type="range" min="0" max="28" step=".05" value="0" aria-label="Mission replay position"><time id="clock">00:00 / 00:28</time></div>
+    <div class="step-dots"><span>INTAKE</span><span>CHOREOGRAPHY</span><span>EXECUTION</span><span>VERIFICATION</span><span>DELIVERY</span></div>
+  </div>
+  <div class="stat"><span class="stat-label">EVENTS VISIBLE</span><strong id="events-count">00</strong><small>All illustrative</small><div class="bar"><span id="events-bar"></span></div></div>
+  <div class="stat"><span class="stat-label">CONNECTIONS</span><strong id="links-count">00</strong><small>Dependency links</small><div class="bar"><span id="links-bar"></span></div></div>
+  <div class="stat"><span class="stat-label">REVIEW GATES</span><strong id="gates-count">00</strong><small>No operational approval</small><div class="bar"><span id="gates-bar"></span></div></div>
+</footer>
+</div>
+<script type="module">
+import { STAGES, DEMO_EVENTS, DEMO_MISSION, frameAt, validateEventStream } from "./scene.mjs";
+import { constellationCenter, renderConstellations } from "./constellation.mjs";
+validateEventStream(DEMO_EVENTS, { syntheticOnly:true });
+const canvas = document.getElementById("universe");
+const ctx = canvas.getContext("2d", { alpha:false });
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const dom = id => document.getElementById(id);
+const stageNav = dom("stages");
+const scrub = dom("scrub");
+const duration = DEMO_MISSION.duration_seconds;
+const centers = [[.18,.61],[.33,.46],[.47,.61],[.65,.48],[.80,.57],[.88,.34]];
+let current = 0, playing = !reducedMotion, speed = 1, lastTick = 0, viewportWidth = 960, viewportHeight = 600;
+let lastEventId = "", lastStageIndex = -1, pulseAt = 0;
+function rand(seed){ const x = Math.sin(seed*127.1+78.233)*43758.5453;return x-Math.floor(x); }
+function polar(i){const angle = (i*2.3999632297)+1.4;const radius = 21+Math.sqrt(i+1)*15;return [Math.cos(angle)*radius,Math.sin(angle)*radius];}
+const nodes = DEMO_EVENTS.map((event,i)=>{ const s=STAGES.findIndex(stage=>stage.id===event.stage), n=polar(i+3),c=centers[s];return { ...event, index:i, x:c[0], y:c[1], ox:n[0], oy:n[1], stageIndex:s }; });
+const byId = new Map(nodes.map(node=>[node.id,node]));
+const stars = Array.from({length:reducedMotion?100:370},(_,i)=>({x:rand(i*13+1),y:rand(i*17+4),r:.25+rand(i*23+3)*1.3,w:rand(i*31+2)*6.28,tw:.25+rand(i*41+5)*.7}));
+const firstAt=STAGES.map((_,i)=>(nodes.find(n=>n.stageIndex===i)||{seconds:999}).seconds);
+function sizing(){
+  const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+  viewportWidth=Math.max(rect.width,1);viewportHeight=Math.max(rect.height,1);
+  const w=Math.round(viewportWidth*dpr),h=Math.round(viewportHeight*dpr);
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function point(node){
+  const factor=Math.min(viewportWidth/950,1.05);
+  const w=viewportWidth,h=viewportHeight;
+  const paddingX=w<600?.03:.09;
+  const [cx,cy]=constellationCenter(node.stageIndex,centers,w,h);return [cx+node.ox*factor,cy+node.oy*factor];
+}
+function glow(x,y,r,color,alpha){
+  ctx.save();ctx.globalAlpha=alpha;
+  const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,color);g.addColorStop(.34,color+"55");g.addColorStop(1,"transparent");
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
+}
+function draw(now){
+  sizing();const w=viewportWidth,h=viewportHeight;
+  ctx.fillStyle="#030810";ctx.fillRect(0,0,w,h);
+  const t=now/1000;
+  glow(w*.38,h*.53,Math.min(w,h)*.55,"#164e63",.13);
+  glow(w*.77,h*.55,Math.min(w,h)*.5,"#9d6337",.10);
+  glow(w*.20,h*.62,Math.min(w,h)*.31,"#5b2857",.07);
+  for(const s of stars){ const flicker=reducedMotion?1:(.55+.45*Math.sin(t*.55+s.w));ctx.fillStyle="rgba(186,213,231,"+(.14+s.tw*flicker*.65)+")";ctx.fillRect(s.x*w,s.y*h,s.r,s.r); }
+  renderConstellations(ctx,{stages:STAGES,centers,firstAt,w,h,time:t,current,reducedMotion,glow});
+  const currentFrame=frameAt(current),visibleSet=new Set(currentFrame.visible.map(e=>e.id));
+  for(let si=0;si<STAGES.length;si++){
+    const stage=STAGES[si],[px,py]=constellationCenter(si,centers,w,h);
+    const age=Math.max(0,current - (nodes.find(n=>n.stageIndex===si)||{seconds:999}).seconds);
+    if(age<=0)continue;
+    const opacity=Math.min(1,age/1.8);
+    glow(px,py,53,stage.tint,.08*opacity);
+    ctx.strokeStyle=stage.tint+"35";ctx.lineWidth=.5;ctx.beginPath();ctx.arc(px,py,13+(reducedMotion?0:3*Math.sin(t+si)),0,Math.PI*2);ctx.stroke();
+    if(w>=600){ctx.fillStyle=stage.tint;ctx.globalAlpha=.82*opacity;ctx.font="700 11px ui-sans-serif, sans-serif";ctx.textAlign="center";ctx.fillText(stage.label,px,py-74);ctx.globalAlpha=1;}
+  }
+  for(const node of nodes){
+    if(!visibleSet.has(node.id))continue;
+    const [x,y]=point(node),alive=Math.min(1,(current-node.seconds)/.8);
+    for(const parentId of node.parent_ids){
+      const parent=byId.get(parentId);if(!parent||!visibleSet.has(parentId))continue;
+      const [px,py]=point(parent);
+      const midx=(x+px)/2,midy=(y+py)/2-Math.min(35,Math.abs(x-px)*.12);
+      ctx.strokeStyle=STAGES[node.stageIndex].tint+"84";ctx.globalAlpha=.50*alive;ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(px,py);ctx.quadraticCurveTo(midx,midy,x,y);ctx.stroke();ctx.globalAlpha=1;
+      if(!reducedMotion){ const progress=(t*.21+node.index*.13)%1;const ax=(1-progress)*(1-progress)*px+2*(1-progress)*progress*midx+progress*progress*x;const ay=(1-progress)*(1-progress)*py+2*(1-progress)*progress*midy+progress*progress*y;glow(ax,ay,9,STAGES[node.stageIndex].tint,.35); }
+    }
+    glow(x,y,node.id===currentFrame.active?.id?40:19,STAGES[node.stageIndex].tint,node.id===currentFrame.active?.id?.24:.13);
+    ctx.beginPath();ctx.arc(x,y,(node.id===currentFrame.active?.id?5.5:3)*alive,0,Math.PI*2);
+    ctx.fillStyle=STAGES[node.stageIndex].tint;ctx.fill();
+    ctx.strokeStyle="#d7eeff";ctx.lineWidth=.75;ctx.stroke();
+    if(node.id===currentFrame.active?.id){
+      ctx.strokeStyle=STAGES[node.stageIndex].tint+"aa";ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,14+(reducedMotion?0:3*Math.sin(t*3)),0,Math.PI*2);ctx.stroke();
+      if(w>=600){const left=x>w*.68;ctx.textAlign=left?"right":"left";ctx.fillStyle="#eaf7fa";ctx.font="11px ui-sans-serif, sans-serif";ctx.fillText(node.title,x+(left?-18:18),y-12);
+      ctx.font="9px ui-monospace, monospace";ctx.fillStyle="#9fbfc1";ctx.fillText(node.kind.toUpperCase()+" · SYNTHETIC",x+(left?-18:18),y+4);}
+    }
+  }
+  const sweep=ctx.createLinearGradient(0,0,w,0);sweep.addColorStop(0,"transparent");sweep.addColorStop(.5,"#78def00c");sweep.addColorStop(1,"transparent");ctx.fillStyle=sweep;ctx.fillRect(0,h*.5-1,w,1);
+}
+function updateControls(){
+  const frame=frameAt(current),active=frame.active;
+  scrub.value=String(current);
+  dom("clock").textContent="00:"+String(Math.floor(current)).padStart(2,"0")+" / 00:28";
+  dom("phase-title").textContent=frame.stage.label;
+  dom("events-count").textContent=String(frame.visible.length).padStart(2,"0");
+  dom("links-count").textContent=String(frame.links).padStart(2,"0");
+  dom("gates-count").textContent=String(frame.gates).padStart(2,"0");
+  dom("events-bar").style.width=(frame.visible.length/DEMO_EVENTS.length*100)+"%";
+  dom("links-bar").style.width=(frame.links/Math.max(1,DEMO_EVENTS.reduce((n,e)=>n+e.parent_ids.length,0))*100)+"%";
+  dom("gates-bar").style.width=(frame.gates/3*100)+"%";
+  if(active?.id!==lastEventId){
+    dom("event-title").textContent=active?active.title:"Awaiting signal";
+    dom("event-detail").textContent=active?active.detail:"Press play to watch the mission constellation unfold.";
+    dom("event-source").textContent=active?"SOURCE: "+active.source_ref+" · "+active.evidence_state.toUpperCase():"";
+    lastEventId=active?.id||"";
+  }
+  if(frame.stageIndex!==lastStageIndex){
+    for(const b of stageNav.children){
+      const n=Number(b.dataset.stage);
+      b.classList.toggle("active",n===frame.stageIndex);
+      b.classList.toggle("passed",n<frame.stageIndex);
+      b.setAttribute("aria-current",n===frame.stageIndex?"step":"false");
+    }
+    lastStageIndex=frame.stageIndex;
+  }
+  dom("play").textContent=playing?"Ⅱ PAUSE":"▶ PLAY";
+}
+STAGES.forEach((stage,i)=>{
+  const button=document.createElement("button");button.type="button";button.className="stage";button.dataset.stage=String(i);button.style.setProperty("--stage-color",stage.tint);
+  const n=document.createElement("span");n.className="num";n.textContent=String(i+1).padStart(2,"0");
+  const line=document.createElement("span");line.className="line";
+  const name=document.createElement("span");name.className="stage-name";name.textContent=stage.label;
+  const mark=document.createElement("small");mark.textContent="↗";
+  button.append(n,line,name,mark);
+  button.addEventListener("click",()=>{ current=(DEMO_EVENTS.find(e=>e.stage===stage.id)||{seconds:duration}).seconds;playing=false;updateControls();draw(performance.now());});
+  stageNav.append(button);
+});
+scrub.addEventListener("input",()=>{current=Number(scrub.value);playing=false;updateControls();draw(performance.now());});
+dom("play").addEventListener("click",()=>{if(current>=duration)current=0;playing=!playing;updateControls();});
+dom("reset").addEventListener("click",()=>{current=0;playing=true;updateControls();});
+dom("speed").addEventListener("click",()=>{speed=speed===1?1.5:speed===1.5?2:1;dom("speed").textContent=speed+"×";});
+window.addEventListener("keydown",event=>{if(event.code==="Space"&&!["BUTTON","INPUT"].includes(document.activeElement?.tagName)){event.preventDefault();playing=!playing;updateControls();}});
+function tick(time){
+  if(playing && lastTick){ current=Math.min(duration,current+(time-lastTick)/1000*speed);if(current>=duration)playing=false; }
+  lastTick=time;updateControls();draw(time);requestAnimationFrame(tick);
+}
+updateControls();requestAnimationFrame(tick);
+</script>
+</body>
+</html>
