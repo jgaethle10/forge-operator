@@ -6,7 +6,7 @@ This is a private, offline, phone-first capture utility for the missing real hum
 
 Open `mobile-capture.html` in a compatible mobile browser. Choose **Film with camera** or select an existing video for any of the four shot prompts. A partial set is fine. Review your footage, check the permission/consent statement *only if accurate*, then tap **Export private source pack**. The videos and metadata are zipped on your device. **Nothing is uploaded automatically.** Share the ZIP through a private channel only after checking the contents.
 
-The standalone file works without a backend and loads no third-party scripts, fonts, trackers or assets. Some mobile file-viewer apps disable scripts; open it in a normal browser or host the unchanged file on a trusted first-party HTTPS origin. For large clips, keep each under 250 MB and export fewer files per ZIP to avoid mobile browser memory limits.
+The standalone file works without a backend and loads no third-party scripts, fonts, trackers or assets. Some mobile file-viewer apps disable scripts; open it in a normal browser or host the unchanged file on a trusted first-party HTTPS origin. For large clips, keep each under 120 MB and each source pack under 250 MB to avoid mobile browser memory limits. On iPhone, if automatic downloading is blocked, tap the **Save prepared ZIP** link after export.
 
 ## On the Fallen ingest machine
 
