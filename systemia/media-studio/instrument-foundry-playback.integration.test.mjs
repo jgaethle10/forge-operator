@@ -50,7 +50,7 @@ class SimulatedAudioContext {
   createDelay(){return new Node()}
   createBufferSource(){return new Source(this)}
   createOscillator(){this.createdOscillators++;return new SimOscillator(this)}
-  createBuffer(){return {getChannelData:()=>new Float32Array(4800)}}
+  createBuffer(channels=1,length=4800,rate=48000){return {duration:length/rate,numberOfChannels:channels,sampleRate:rate,getChannelData:()=>new Float32Array(length)}}
   async decodeAudioData(raw){
     this.decodeCalls++;
     const b=new Uint8Array(raw);
