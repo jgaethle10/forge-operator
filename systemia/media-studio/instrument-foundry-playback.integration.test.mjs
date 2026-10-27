@@ -746,3 +746,55 @@ test('actual PulseGrid records an authorized audio track beside piano and offlin
   }
  });
 });
+
+test('actual engine preserves live bass oscillator in stopped sampled-piano-plus-bass offline mix',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const priorOffline=globalThis.OfflineAudioContext;
+  class OfflineSynth extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate;}
+   async startRendering(){
+    const p=new Float32Array(this.frames).fill(.15);
+    return {numberOfChannels:2,length:this.frames,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=OfflineSynth;
+  const pcm=new Float32Array(36000).fill(.2);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const bass=session.tracks.find(t=>t.id==='bass');
+  assert.ok(bass,'original PulseGrid bass track must exist');
+  const withBass=applyPulseGridOperation(session,{
+   type:'note.add',track_id:'bass',scene:0,
+   note:{pitch:36,start:0,length:2,velocity:.7,probability:1,microtiming:0}
+  },'human').session;
+  const before=structuredClone(withBass),engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(withBass,0);
+   const live=SimulatedAudioContext.instances.at(-1);
+   assert.equal(live.createdOscillators,1,
+    'bass must use the unchanged real-time oscillator alongside recorded piano');
+   assert.equal(live.starts.length,1,'only the piano is decoded WAV');
+   engine.stop();
+   const result=await engine.auditRecordedPianoOfflineBus();
+   assert.equal(result.status,'offline_track_bus_pcm_measurement',JSON.stringify(result));
+   assert.equal(result.analyzed_voices,1);
+   assert.equal(result.analyzed_synth_voices,1);
+   assert.equal(result.source_kind,'decoded_pcm_plus_synth');
+   assert.ok(result.included_track_ids.includes('bass'));
+   assert.ok(result.included_track_ids.includes('keys'));
+   assert.ok(!result.omitted_track_ids.includes('bass'));
+   const offline=SimulatedAudioContext.instances.at(-1);
+   assert.equal(offline.createdOscillators,1,'offline bass parity uses the actual Web Audio synth node');
+   assert.equal(offline.starts.length,1,'offline piano retains original verified decoded sample');
+   assert.deepEqual(withBass,before,'render does not rewrite song arrangement or sample rights');
+  }finally{
+   await engine.close();
+   if(priorOffline===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=priorOffline;
+  }
+ });
+});
