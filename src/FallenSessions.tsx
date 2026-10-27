@@ -20,6 +20,7 @@ import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/med
 import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
 import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
 import {analyzePulseGridArrangementArc} from '../systemia/media-studio/pulsegrid-arrangement-arc.mjs';
+import {decodeFoundryMidiSustain,mergeFoundryMidiPedalEvent,removeFoundryMidiPedalEvent} from '../systemia/media-studio/instrument-foundry-midi-pedal.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
@@ -29,6 +30,12 @@ const NOTE_NAMES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 function noteName(pitch:number){
   return NOTE_NAMES[pitch%12]+String(Math.floor(pitch/12)-1);
 }
+
+type PedalCapture={
+  trackId:string;scene:number;clipId:string;
+  original:Array<{step:number;down:boolean}>;
+  events:Array<{step:number;down:boolean}>;
+};
 
 type HeldMidiNote={
   trackId:string;
@@ -62,6 +69,7 @@ export default function FallenSessions(){
   const [recording,setRecording]=useState(false);
   const [midiEnabled,setMidiEnabled]=useState(false);
   const [midiInputs,setMidiInputs]=useState(0);
+  const [pendingPedalCount,setPendingPedalCount]=useState(0);
   const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
@@ -71,6 +79,9 @@ export default function FallenSessions(){
   const playheadRef=useRef(0);
   const midiAccessRef=useRef<any>(null);
   const heldMidiNotesRef=useRef(new Map<string,HeldMidiNote>());
+  const midiPedalSourceRef=useRef<string|null>(null);
+  const midiPedalCaptureRef=useRef<PedalCapture|null>(null);
+  const selectedPedalStepRef=useRef<number|null>(null);
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
   const foundryInputRef=useRef<HTMLInputElement|null>(null);
@@ -100,13 +111,19 @@ export default function FallenSessions(){
   },[session]);
 
   useEffect(()=>{
+    selectedPedalStepRef.current=selectedStepIndex;
+  },[selectedStepIndex]);
+
+  useEffect(()=>{
     selectedTrackRef.current=selectedTrackId;
+    midiPedalSourceRef.current=null;
     setSelectedNoteId(null);
     setSelectedStepIndex(null);
   },[selectedTrackId]);
 
   useEffect(()=>{
     selectedSceneRef.current=selectedScene;
+    midiPedalSourceRef.current=null;
     setSelectedNoteId(null);
     setSelectedStepIndex(null);
     const active=Boolean(audioRef.current?.status.playing);
@@ -132,6 +149,8 @@ export default function FallenSessions(){
     }
     midiAccessRef.current=null;
     heldMidiNotesRef.current.clear();
+    midiPedalSourceRef.current=null;
+    midiPedalCaptureRef.current=null;
     if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();}
   },[]);
 
@@ -441,9 +460,104 @@ export default function FallenSessions(){
     setStatus(count?('MIDI ready · '+count+' input'+(count===1?'':'s')):'MIDI enabled · no inputs detected');
   }
 
+  function commitCapturedPedal(){
+    const captured=midiPedalCaptureRef.current;
+    if(!captured)return;
+    if(audioRef.current?.status.playing){
+      setStatus('Stop playback before committing the buffered pedal take.');
+      return;
+    }
+    const current=sessionRef.current;
+    const target=current.tracks.find(candidate=>candidate.id===captured.trackId);
+    const targetClip=target?.clips[captured.scene];
+    const existing=targetClip?.provenance?.foundry_piano_pedal;
+    const currentEvents=Array.isArray(existing)
+      ? existing as Array<{step:number;down:boolean}>:[];
+    if(!targetClip||targetClip.id!==captured.clipId||
+       JSON.stringify(currentEvents)!==JSON.stringify(captured.original)){
+      setStatus('Pedal capture held: the original clip changed. Discard this take or inspect the clip before retrying.');
+      return;
+    }
+    try{
+      if(JSON.stringify(captured.events)!==JSON.stringify(captured.original)){
+        const result=applyPulseGridOperation(current,{
+          type:'clip.set_foundry_piano_pedal',track_id:captured.trackId,
+          scene:captured.scene,events:captured.events
+        },'controller');
+        sessionRef.current=result.session;
+        setSession(result.session);
+        setStatus('CC64 pedal take committed with undo receipt · '+result.receipt.id.slice(0,8));
+      }else{
+        setStatus('CC64 pedal take contained no net change.');
+      }
+      midiPedalCaptureRef.current=null;
+      setPendingPedalCount(0);
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Unable to commit captured pedal events.');
+    }
+  }
+
+  function discardCapturedPedal(){
+    midiPedalCaptureRef.current=null;
+    midiPedalSourceRef.current=null;
+    setPendingPedalCount(0);
+    setStatus('Uncommitted MIDI pedal take discarded; canonical piano clip unchanged.');
+  }
+
   function handleMidiMessage(input:any,event:any){
     const data=Array.from(event?.data||[]) as number[];
     if(data.length<3)return;
+    const sustain=decodeFoundryMidiSustain(data);
+    if(sustain){
+      const controllerKey=String(input?.id||'midi')+':'+sustain.channel;
+      const owner=midiPedalSourceRef.current;
+      // Never fuse conflicting MIDI devices/channels into one sustain take.
+      if(owner&&owner!==controllerKey)return;
+      if(!owner&&!sustain.down)return;
+      const current=sessionRef.current;
+      const trackId=selectedTrackRef.current,scene=selectedSceneRef.current;
+      const target=current.tracks.find(candidate=>candidate.id===trackId);
+      const targetClip=target?.clips[scene];
+      if(!target||target.type!=='synth'||!targetClip){
+        setStatus('CC64 ignored: select a pitched piano track.');
+        return;
+      }
+      const sourceEvents=targetClip.provenance?.foundry_piano_pedal;
+      const original=Array.isArray(sourceEvents)
+        ? sourceEvents as Array<{step:number;down:boolean}>:[];
+      const playingNow=Boolean(audioRef.current?.status.playing);
+      const step=Math.max(0,Math.min(targetClip.steps.length-1,
+        playingNow?Math.floor(playheadRef.current%targetClip.steps.length):
+        (selectedPedalStepRef.current??0)));
+      const pending=midiPedalCaptureRef.current;
+      if(pending&&(pending.trackId!==trackId||pending.scene!==scene||
+          pending.clipId!==targetClip.id)){
+        setStatus('Finish or discard the buffered CC64 take before recording another clip.');
+        return;
+      }
+      try{
+        const before=pending?pending.events:original;
+        const events=mergeFoundryMidiPedalEvent(before,targetClip.steps.length,step,sustain.down);
+        midiPedalSourceRef.current=sustain.down?controllerKey:null;
+        if(playingNow||pending){
+          midiPedalCaptureRef.current=pending
+            ? {...pending,events}
+            : {trackId,scene,clipId:targetClip.id,original:structuredClone(original),events};
+          setPendingPedalCount(events.length);
+          setStatus('CC64 captured at step '+(step+1)+' · staged, not applied during playback. Stop then Commit Pedal Take.');
+        }else if(JSON.stringify(events)!==JSON.stringify(original)){
+          const result=applyPulseGridOperation(current,{
+            type:'clip.set_foundry_piano_pedal',track_id:trackId,scene,events
+          },'controller');
+          sessionRef.current=result.session;
+          setSession(result.session);
+          setStatus('MIDI CC64 '+(sustain.down?'down':'up')+' · step '+(step+1)+' · reversible controller receipt.');
+        }
+      }catch(error){
+        setStatus(error instanceof Error?error.message:'MIDI CC64 pedal event rejected.');
+      }
+      return;
+    }
     const statusByte=Number(data[0])||0;
     const command=statusByte&0xf0;
     const channel=statusByte&0x0f;
@@ -504,6 +618,7 @@ export default function FallenSessions(){
           microtiming:0,
         },
       },'controller');
+      sessionRef.current=result.session;
       setSession(result.session);
       setStatus(
         'MIDI note committed · '+noteName(held.pitch)+' · '+
@@ -523,6 +638,7 @@ export default function FallenSessions(){
       }
       midiAccessRef.current=null;
       heldMidiNotesRef.current.clear();
+      midiPedalSourceRef.current=null;
       setMidiEnabled(false);
       setMidiInputs(0);
       setStatus('MIDI disconnected.');
@@ -619,21 +735,24 @@ export default function FallenSessions(){
   }
 
   function editFoundryPedal(down:boolean|null){
-    if(playing || recording){setStatus('Stop playback or recording before editing the piano pedal.');return;}
+    if(playing||recording){setStatus('Stop playback or recording before editing the piano pedal.');return;}
+    if(midiPedalCaptureRef.current){setStatus('Commit or discard the buffered MIDI pedal take before hand-editing.');return;}
     if(track.type!=='synth'){setStatus('Recorded piano pedal events require a pitched instrument track.');return;}
     const step=Math.max(0,Math.min(clip.steps.length-1,selectedStepIndex??0));
     const existing=Array.isArray(clip.provenance?.foundry_piano_pedal)
       ? clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>:[];
-    const updates=existing.filter(event=>event.step!==step);
-    if(down!==null)updates.push({step,down});
-    updates.sort((a,b)=>a.step-b.step);
-    let previous=false;
-    const events=updates.filter(event=>{
-      if(event.down===previous)return false;
-      previous=event.down;return true;
-    });
-    apply({type:'clip.set_foundry_piano_pedal',track_id:track.id,scene:selectedScene,
-      events:down===null?null:events},'human');
+    try{
+      const events=down===null
+        ? removeFoundryMidiPedalEvent(existing,clip.steps.length,step)
+        : mergeFoundryMidiPedalEvent(existing,clip.steps.length,step,down);
+      if(JSON.stringify(events)===JSON.stringify(existing)){
+        setStatus('No pedal change at selected step.');
+        return;
+      }
+      apply({type:'clip.set_foundry_piano_pedal',track_id:track.id,scene:selectedScene,events},'human');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Piano pedal edit rejected.');
+    }
   }
 
   function selectOrCreateNote(pitch:number,step:number){
@@ -937,12 +1056,20 @@ export default function FallenSessions(){
             <button type="button" disabled={playing||recording||track.type!=='synth'}
               onClick={()=>editFoundryPedal(false)}>Pedal up</button>
             <button type="button" disabled={playing||recording||track.type!=='synth'}
-              onClick={()=>editFoundryPedal(null)}>Clear pedal</button>
+              onClick={()=>editFoundryPedal(null)}>Remove step event</button>
+          </div>
+          <p className="fsMusicInsightCaution">MIDI CC64 (keyboard pedal): 0–63 up, 64–127 down. While playing, events are buffered so edits cannot interrupt authorized sample playback; stop and explicitly commit or discard the take. No live acoustic damper response is asserted.</p>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||!midiPedalCaptureRef.current}
+              onClick={commitCapturedPedal}>Commit Pedal Take</button>
+            <button type="button" disabled={!midiPedalCaptureRef.current}
+              onClick={discardCapturedPedal}>Discard Take</button>
+            <span className="fsPedalPending">{pendingPedalCount} staged transition{pendingPedalCount===1?'':'s'}</span>
           </div>
           <p className="fsMusicInsightCaution">Authored events: {Array.isArray(clip.provenance?.foundry_piano_pedal)&&clip.provenance.foundry_piano_pedal.length
             ? (clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>)
               .map(event=>'step '+(event.step+1)+' '+(event.down?'down':'up')).join(' · ')
-            :'none (default pedal up)'}. No physical sympathetic resonance or independent live MIDI CC64 recording is claimed.</p>
+            :'none (default pedal up)'}. This is CC64 score capture, not device-audible verification, physical sympathetic resonance, or half-pedal modeling.</p>
         </details>
 
         <details className="fsArcDetails">
