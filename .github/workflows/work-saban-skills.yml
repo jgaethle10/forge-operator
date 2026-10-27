@@ -1,0 +1,37 @@
+name: Work Saban Skills local execution contract
+
+on:
+  pull_request:
+    paths:
+      - "systemia/saban/work-skills/**"
+      - "systemia/saban/multiplication-registry.json"
+      - "tests/work-saban-*.test.mjs"
+      - ".github/workflows/work-saban-skills.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/saban/work-skills/**"
+      - "systemia/saban/multiplication-registry.json"
+      - "tests/work-saban-*.test.mjs"
+      - ".github/workflows/work-saban-skills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify pinned skills and registered worker execution
+        run: node --test tests/work-saban-skills.test.mjs tests/work-saban-execution.test.mjs
+      - name: Verify no private or external authority is bundled into pilot
+        run: |
+          node systemia/saban/work-skills/cli.mjs --task "Create a narrated commercial for a cleaning company"
+          node --check systemia/saban/work-skills/run-local-cli.mjs
