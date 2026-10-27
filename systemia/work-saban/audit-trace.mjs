@@ -32,6 +32,7 @@ export function auditWorkSabanTrace(archive) {
     const worker=events[i*2+2]?.receipt;
     const final=last.specialist_receipts[i];
     if(worker?.role!==roles[i]||worker.status!=='completed'||worker.quality_status!=='pass'
+       ||!/^sha256:[0-9a-f]{64}$/.test(worker.result_sha256||'')
        ||final?.role!==roles[i]||final.result_sha256!==worker.result_sha256
        ||final.idempotency_key!==worker.idempotency_key)
       throw new Error('worker_receipt_mismatch');
