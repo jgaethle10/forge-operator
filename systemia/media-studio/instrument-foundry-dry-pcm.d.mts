@@ -13,3 +13,5 @@ export type FoundryDryPcmAudit={
 export function analyzeFoundryDecodedPianoDryPeak(input:{
  voices:FoundryDryPcmVoice[];rate?:12000|24000|48000;window_sec?:number;
 }):FoundryDryPcmAudit;
+
+export function unavailableFoundryPianoDryPeak(reason:string):FoundryDryPcmAudit;
