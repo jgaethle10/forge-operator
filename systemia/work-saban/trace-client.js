@@ -36,6 +36,12 @@
           !/^sha256:[0-9a-f]{64}$/.test(event.receipt.result_sha256||''))) {
           throw new Error('invalid_worker_result_digest');
         }
+        if(sequence>=12)throw new Error('trace_event_limit_exceeded');
+        if(event.type==='stage_verified' && (
+          !Number.isInteger(event.receipt.attempts) ||
+          event.receipt.attempts<1 || event.receipt.attempts>2 ||
+          !/^sha256:[0-9a-f]{64}$/.test(event.receipt.idempotency_key||'')
+        ))throw new Error('invalid_worker_attempt_or_assignment_key');
         if(event.type==='accepted') {
           if(sequence!==0)throw new Error('accepted_not_first');
           status='running';
