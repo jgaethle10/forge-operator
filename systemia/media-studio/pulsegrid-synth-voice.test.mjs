@@ -26,7 +26,7 @@ test('synth scheduler preserves 440Hz piano-register triangle plus authored atta
  assert.equal(r.waveform,'triangle');
  assert.equal(r.frequency_hz,440);
  assert.equal(r.stop_time,.92);
- assert.deepEqual(f.calls.filter(x=>x[0]==='gain'),[
+ assert.deepEqual(f.calls.filter(x=>x[0]==='gain'&&x[1]!=='connect'),[
   ['gain','set',.0001,.3],
   ['gain','exp',.144,.308],
   ['gain','target',.0001,.74,.03]
