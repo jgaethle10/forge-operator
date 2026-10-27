@@ -478,3 +478,51 @@ test('a soft piano onset stays at source zero, with no speculative trimming',{co
   }finally{await engine.close()}
  });
 });
+
+test('real decoded piano chord overlap is reported without compressing or replacing a sample',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const chord=applyPulseGridOperation(session,{
+   type:'note.add',track_id:'keys',scene:0,
+   note:{pitch:62,start:0,length:2,velocity:1,probability:1,microtiming:0},
+  },'human').session;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(chord,0);
+   const ctx=SimulatedAudioContext.instances.at(-1);
+   assert.equal(ctx.createdOscillators,0);
+   assert.equal(ctx.starts.length,2);
+   assert.equal(engine.status.sampled_piano_scheduled_voices,2);
+   assert.equal(engine.status.sampled_piano_max_overlap,2);
+   assert.equal(engine.status.sampled_piano_overlap_review,true);
+   assert.equal(engine.status.sampled_piano_observations_complete,true);
+   assert.ok(engine.status.sampled_piano_gain_sum_proxy>1);
+   assert.equal(ctx.starts[0].source.buffer,ctx.starts[1].source.buffer,
+    'piano notes reuse the same verified recording under permitted semitone transposition');
+   assert.ok(Math.abs(ctx.starts[0].source.playbackRate.value-
+                     ctx.starts[1].source.playbackRate.value)>0.01,
+    'each note preserves its authored pitch instead of mutating source');
+  }finally{await engine.close()}
+ });
+});
+test('a new explicit Play resets previous chord pressure rather than reporting stale events',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const chord=applyPulseGridOperation(session,{
+   type:'note.add',track_id:'keys',scene:0,
+   note:{pitch:62,start:0,length:2,velocity:.8},
+  },'human').session;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(chord,0);
+   assert.equal(engine.status.sampled_piano_max_overlap,2);
+   engine.stop();
+   await engine.play(session,0);
+   assert.equal(engine.status.sampled_piano_scheduled_voices,1);
+   assert.equal(engine.status.sampled_piano_max_overlap,1);
+   assert.equal(engine.status.sampled_piano_overlap_review,false);
+  }finally{await engine.close()}
+ });
+});
