@@ -57,7 +57,7 @@ async function rejectWithTrace(mutator,match){
     for(const event of corrupted) await observer.accept(event);
   },match);
 }
-await rejectWithTrace(a=>{a[3].receipt.quality_status='fail';},/hash_mismatch/);
+await rejectWithTrace(a=>{a[2].receipt.quality_status='fail';},/hash_mismatch/);
 await rejectWithTrace(a=>{a.splice(4,1);},/sequence/);
 await rejectWithTrace(a=>{a[11].execution.report_markdown+=' changed';},/hash_mismatch/);
 await rejectWithTrace(a=>{a[11].trace.previous_digest='sha256:deadbeef';},/sequence/);
