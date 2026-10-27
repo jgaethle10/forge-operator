@@ -1,0 +1,26 @@
+name: Evercraft Owner Studio Creative Truth
+
+on:
+  pull_request:
+    paths:
+      - 'marketing/evercraft-owner-studio/**'
+      - 'tests/evercraft-owner-studio-campaigns.test.mjs'
+      - '.github/workflows/evercraft-owner-studio-creative-truth.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  copy-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test no-silent-drops portfolio and price/merchant/claim authority
+        run: |
+          node --check tests/evercraft-owner-studio-campaigns.test.mjs
+          node --test tests/evercraft-owner-studio-campaigns.test.mjs
