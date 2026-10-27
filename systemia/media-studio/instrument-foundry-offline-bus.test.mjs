@@ -34,7 +34,7 @@ function fakeContext(peak=.25,broken=false){
    calls.push(['render']);
    const left=new Float32Array(frames).fill(peak),right=new Float32Array(frames).fill(-peak);
    if(broken)left[12]=NaN;
-   return {numberOfChannels:2,length:frames,getChannelData:c=>c?right:left};
+   return {numberOfChannels:2,length:frames,sampleRate:48000,getChannelData:c=>c?right:left};
   },
  };
  return {calls,ctx,parameters,make:(ch,f,r)=>{calls.push(['factory',ch,f,r]);frames=f;return ctx}};
