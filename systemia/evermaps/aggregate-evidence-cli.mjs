@@ -1,7 +1,7 @@
 import {writeFile} from 'node:fs/promises';
 import {createWgsEvidencePacket} from './aggregate-evidence.mjs';
 
-const county=process.argv[2]||'Yakima';
+const county=process.argv[2]||'Grant';
 const prefix=process.argv[3]||'evermaps-wgs-evidence';
 try {
   const packet=await createWgsEvidencePacket({county});
