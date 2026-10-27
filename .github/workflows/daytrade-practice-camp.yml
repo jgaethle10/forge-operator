@@ -12,10 +12,14 @@ on:
       - ".github/workflows/daytrade-practice-camp.yml"
   schedule:
     # UTC schedule: repeated historical-only practice, not a live market stream.
-    - cron: "15 14,17,20,23 * * 1-5"
+    - cron: "15 13-23 * * 1-5"
     # Weekend replay and adversarial review.
-    - cron: "15 17 * * 0,6"
+    - cron: "15 0,3,6,9,12,15,18,21 * * 0,6"
   workflow_dispatch:
+
+concurrency:
+  group: daytrade-practice-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
