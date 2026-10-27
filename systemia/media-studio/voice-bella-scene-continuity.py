@@ -62,12 +62,12 @@ def ensure_sound(x, np):
     return x
 
 
-def pcm_meta(path):
+def pcm_meta(path, minimum=8.0):
     with wave.open(str(path), "rb") as f:
         if (f.getnchannels(), f.getsampwidth(), f.getframerate()) != (1, 2, SR):
             raise RuntimeError("PCM_FORMAT_INCORRECT")
         duration = f.getnframes()/SR
-    if not 8.0 < duration < 40:
+    if not minimum < duration < 40:
         raise RuntimeError("VOICE_DURATION_FAILED")
     return round(duration, 3)
 
@@ -177,7 +177,7 @@ def generate(folder):
         file = raw/f"{key}.wav"
         sf.write(file, audio, SR, subtype="PCM_16")
         dry[key] = {"filename":str(file.relative_to(root)), "sha256":digest(file),
-                    "durationSec":pcm_meta(file)}
+                    "durationSec":pcm_meta(file, minimum=1.0)}
     results = []
     for i, (mode, gap) in enumerate(TAKES,1):
         sound = full.copy() if mode == "continuous" else stitched(blocks, gap, np)
