@@ -375,3 +375,54 @@ test('editing piano sustain mid-playback stops stale sampled voices before reaut
   }finally{await engine.close()}
  });
 });
+
+test('the actual PulseGrid sampler uses a near-zero decoded WAV onset without oscillator substitution',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const pcm=new Float32Array(36000);
+  pcm[43]=.4; // first 0.35 ms remains clean; a hammer onset follows later
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){
+    const original=await super.decodeAudioData(raw);
+    return {...original,getChannelData:()=>pcm};
+   }
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const ctx=SimulatedAudioContext.instances.at(-1);
+   assert.equal(ctx.createdOscillators,0);
+   assert.equal(ctx.decodeCalls,1);
+   assert.equal(engine.status.decoded_fast_attack_voices,1);
+   assert.equal(engine.status.decoded_cut_in_guard_voices,0);
+   assert.equal(engine.status.decoded_sample_tail_warnings,0);
+   assert.equal(ctx.starts.length,1);
+  }finally{await engine.close()}
+ });
+});
+test('the actual PulseGrid sampler guards abrupt WAV onset instead of treating it as a zero-aligned take',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const pcm=new Float32Array(36000);
+  pcm[0]=.7;pcm[1]=.6;
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){
+    const original=await super.decodeAudioData(raw);
+    return {...original,getChannelData:()=>pcm};
+   }
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   const ctx=SimulatedAudioContext.instances.at(-1);
+   assert.equal(ctx.createdOscillators,0);
+   assert.equal(engine.status.decoded_fast_attack_voices,0);
+   assert.equal(engine.status.decoded_cut_in_guard_voices,1);
+   assert.equal(ctx.starts.length,1);
+  }finally{await engine.close()}
+ });
+});
