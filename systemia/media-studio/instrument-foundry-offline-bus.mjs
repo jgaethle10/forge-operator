@@ -11,6 +11,7 @@
  */
 import {scheduleFoundryPianoNote} from './instrument-foundry-piano.mjs';
 import {schedulePulseGridAudioBuffer} from './pulsegrid-audio-scheduler.mjs';
+import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 
 const RESULT_SCOPE='offline_sampled_piano_track_bus_approximation';
@@ -24,12 +25,23 @@ const unavailable=reason=>({
 });
 
 function validated(input){
-  const {voices,tracks,audioBeds=[]}=input??{};
+  const {voices,tracks,audioBeds=[],synthVoices=[]}=input??{};
   if(!Array.isArray(voices)||!voices.length||voices.length>MAX_VOICES||
      !Array.isArray(tracks)||!tracks.length)
     return 'Choose 1–16 authorized recorded-piano voices.';
   const indexed=new Map(tracks.map(t=>[t.id,t]));
   if(indexed.size!==tracks.length)return 'Ambiguous recorded-piano track IDs.';
+  if(!Array.isArray(synthVoices)||synthVoices.length>16)
+    return 'Unsampled synth review exceeds 16 scheduled-note limit.';
+  for(const synth of synthVoices){
+    if(!synth||typeof synth.track_id!=='string'||!indexed.has(synth.track_id)||
+       !Number.isInteger(synth.pitch)||synth.pitch<0||synth.pitch>127||
+       !Number.isFinite(synth.velocity)||synth.velocity<=0||synth.velocity>1||
+       !Number.isFinite(synth.start_time)||synth.start_time<0||
+       !Number.isFinite(synth.duration)||synth.duration<=0||synth.duration>30||
+       !Number.isFinite(synth.stop_time)||synth.stop_time<=synth.start_time)
+      return 'Invalid scheduled synth note or unknown bus.';
+  }
   if(!Array.isArray(audioBeds)||audioBeds.length>4)
     return 'Audio-bed review exceeds the bounded four-source limit.';
   for(const bed of audioBeds){
@@ -67,17 +79,17 @@ function validated(input){
  * offline audio rendering explicit and independently testable; it never
  * silently spins up real-time playback or pulls from storage.
  */
-export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],offlineContextFactory}={}){
-  const invalid=validated({voices,tracks,audioBeds});
+export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],offlineContextFactory}={}){
+  const invalid=validated({voices,tracks,audioBeds,synthVoices});
   if(invalid)return unavailable(invalid);
   if(typeof offlineContextFactory!=='function')
     return unavailable('OfflineAudioContext is unavailable in this browser.');
-  const earliest=Math.min(...voices.map(v=>v.start_time),...audioBeds.map(v=>v.start_time));
-  const latest=Math.max(...voices.map(v=>v.stop_time));
+  const earliest=Math.min(...voices.map(v=>v.start_time),...audioBeds.map(v=>v.start_time),...synthVoices.map(v=>v.start_time));
+  const latest=Math.max(...voices.map(v=>v.stop_time),...synthVoices.map(v=>v.stop_time));
   // Approximation deliberately bounded; a long song needs a separately
   // approved render route, not a silently truncated "whole mix" certificate.
   if(latest-earliest>WINDOW)
-    return unavailable('The piano passage exceeds the 0.8-second offline review window.');
+    return unavailable('The selected sampled/synth note passage exceeds the 0.8-second offline review window.');
   if(audioBeds.some(bed=>bed.start_time-earliest>=WINDOW))
     return unavailable('Audio-bed note-on is outside the bounded offline audition window.');
   if(tracks.length>8)return unavailable('Track bus count exceeds the offline review budget.');
@@ -88,7 +100,8 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],o
     if(!context||typeof context.startRendering!=='function'||
       typeof context.createGain!=='function'||typeof context.createDelay!=='function'||
       typeof context.createBiquadFilter!=='function'||
-      typeof context.createBufferSource!=='function')
+      typeof context.createBufferSource!=='function'||
+      (synthVoices.length>0&&typeof context.createOscillator!=='function'))
       return unavailable('OfflineAudioContext is not supported.');
     const master=context.createGain();
     master.gain.setValueAtTime(.72,0);
@@ -119,6 +132,16 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],o
         time:v.start_time-earliest,duration:v.duration,
         selection:v.selection,
         createSource:()=>context.createBufferSource(),
+      });
+    }
+    // Synthesize exact already-played oscillator voices through the identical
+    // real-time PulseGrid scheduler, not a separate offline approximation.
+    for(const v of synthVoices){
+      schedulePulseGridSynthVoice({
+        context,destination:buses.get(v.track_id),track_id:v.track_id,
+        pitch:v.pitch,velocity:v.velocity,
+        time:v.start_time-earliest,duration:v.duration,
+        createSource:()=>context.createOscillator(),
       });
     }
     // Use the identical canonical scheduler as the live imported-audio track.
@@ -160,10 +183,11 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],o
       audio_beds_within_window:audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
       complete:tracks.every(t=>t.delayMix===0)&&
         audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
-      analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,rendered_frames:frames,
+      analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,
+      analyzed_synth_voices:synthVoices.length,rendered_frames:frames,
       window_sec:WINDOW,rate,
-      source_kind:'decoded_pcm_only',
-      limitations:'Recorded-piano voices plus authorized imported audio beds only. Uses frozen note-on track/filter/delay snapshots plus master .72 and bounded 0.8s window. Excludes drums, unsampled synths, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
+      source_kind:synthVoices.length?'decoded_pcm_plus_synth':'decoded_pcm_only',
+      limitations:'Recorded-piano voices, authorized imported audio beds and original PulseGrid synth oscillators only. Uses frozen note-on track/filter/delay snapshots plus master .72 and bounded 0.8s window. Excludes drums, additional unscheduled notes, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
     };
   }catch(error){
     return unavailable('Offline browser track-bus rendering failed: '+(error instanceof Error?error.message:'unsupported audio graph'));
