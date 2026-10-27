@@ -2,7 +2,7 @@
 import {writeFile} from 'node:fs/promises';
 import {wgsEvidenceQuery,WGS_EVIDENCE_LAYERS} from './aggregate-evidence.mjs';
 
-const county=process.env.EVERMAPS_COUNTY||'Yakima';
+const county=process.env.EVERMAPS_COUNTY||'Grant';
 const output=process.env.EVERMAPS_RECEIPT_FILE||'wgs-source-receipt.json';
 const stamp=new Date().toISOString();
 const receipt={
