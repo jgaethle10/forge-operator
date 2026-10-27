@@ -19,6 +19,7 @@ import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foun
 import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
 import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
 import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
+import {analyzePulseGridArrangementArc} from '../systemia/media-studio/pulsegrid-arrangement-arc.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
@@ -802,6 +803,7 @@ export default function FallenSessions(){
 
   const musicInsights=useMemo(()=>analyzePulseGridMusic(session,selectedScene),[session,selectedScene]);
   const counterpointEvidence=useMemo(()=>analyzePulseGridCounterpoint(session,selectedScene),[session,selectedScene]);
+  const arrangementArc=useMemo(()=>analyzePulseGridArrangementArc(session,selectedScene),[session,selectedScene]);
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
   const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
@@ -906,6 +908,25 @@ export default function FallenSessions(){
         ))}
         <p className="fsMusicInsightCaution">Counterpoint evidence is limited to aligned, unambiguous single-note onsets.
           No voice identity is assumed for chords or overlapping notes. Classical parallel intervals are not universal errors.</p>
+
+        <details className="fsArcDetails">
+          <summary>Arrangement Arc · {arrangementArc.bar_count} bars</summary>
+          <p className="fsMusicInsightCaution">Read-only written MIDI evidence, including muted and probabilistic notes. Not measured acoustic loudness, emotion, drums, audio clips or effect tails.</p>
+          <div className="fsArcTimeline" role="list" aria-label="Written MIDI arrangement by bar">
+            {arrangementArc.bars.map(bar=>(
+              <div key={bar.bar} role="listitem" className={'fsArcBar '+(bar.score_silent?'silent':'')}>
+                <strong>Bar {bar.bar}</strong>
+                <span>{bar.midi_onsets} note attacks · {bar.sounding_parts} parts</span>
+                <small>{bar.first_entrances.length?'First entrance: '+bar.first_entrances.join(', '):
+                  bar.reentries.length?'Re-entry: '+bar.reentries.join(', '):
+                  bar.score_silent?'No sounding pitched MIDI':'Mean velocity: '+(bar.mean_onset_velocity===null?'no new attacks':bar.mean_onset_velocity.toFixed(2))}</small>
+              </div>
+            ))}
+          </div>
+          {arrangementArc.observations.map(note=>(
+            <p key={note.kind}><strong>{note.observation}</strong> {note.listening_prompt}</p>
+          ))}
+        </details>
 
       </details>
 
