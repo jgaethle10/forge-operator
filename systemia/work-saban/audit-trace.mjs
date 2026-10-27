@@ -26,7 +26,8 @@ export function auditWorkSabanTrace(archive) {
   const last=events.at(-1).execution;
   if(last?.status!=='verified_local'||last?.quality?.status!=='verified'
      ||last?.model_inference!==false||!Array.isArray(last?.external_actions)
-     ||last.external_actions.length!==0||last?.specialist_receipts?.length!==5)
+     ||last.external_actions.length!==0||last?.specialist_receipts?.length!==5
+     ||!/^sha256:[0-9a-f]{64}$/.test(last?.source_sha256||''))
     throw new Error('unverified_final_delivery');
   for(let i=0;i<5;i++) {
     const worker=events[i*2+2]?.receipt;
