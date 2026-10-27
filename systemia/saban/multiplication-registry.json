@@ -1108,6 +1108,69 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "work-saban-commercial-brief",
+      "name": "Work Saban Commercial Brief",
+      "aliases": [
+        "work-saban-commercial"
+      ],
+      "adapter": "systemia/saban/work-skills/commercial-adapter.mjs",
+      "default_logical_agents": 4,
+      "max_logical_agents": 4,
+      "default_physical_workers": 1,
+      "max_physical_workers": 4,
+      "lease_seconds": 300,
+      "roles": [
+        "research",
+        "creative",
+        "production",
+        "review"
+      ],
+      "work_sources": [],
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": false,
+        "remote_execution": false,
+        "arbitrary_code_execution": false,
+        "automatic_publication": false,
+        "unsolicited_human_outreach": false,
+        "payment_obligation": false,
+        "automatic_checkout": false,
+        "production_asset_render": false
+      },
+      "max_attempts_per_job": 1,
+      "budget": {
+        "max_logical_agents": 4,
+        "max_physical_workers": 4,
+        "max_work_items": 1,
+        "max_attempts_per_job": 1
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 4,
+        "target_logical_per_physical_worker": 1,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      },
+      "execution_scope": "local_deterministic_draft_only",
+      "production_authorized": false
     }
   ]
 }

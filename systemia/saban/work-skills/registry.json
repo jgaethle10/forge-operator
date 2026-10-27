@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.work-saban.skills-registry.v1",
+  "skills": [
+    {
+      "id": "commercial-brief",
+      "version": "0.1.0",
+      "path": "skills/commercial-brief/SKILL.md",
+      "sha256": "cdaeba208d7fc129c5fe6d41b6e466a1829f4f1dc7a9f229fe425de235dfa252",
+      "match": {
+        "all_any": [
+          "commercial",
+          "advertisement",
+          "advertising",
+          "promotional video",
+          "promo video",
+          "video ad"
+        ],
+        "confidence_rule": "explicit_user_video_commercial_intent"
+      },
+      "execution_mode": "plan_only",
+      "roles": [
+        "research",
+        "creative",
+        "production",
+        "review"
+      ],
+      "allowed_capabilities": [
+        "read_user_supplied_brief",
+        "propose_internal_work_plan"
+      ],
+      "approval_gates": [
+        "external_message",
+        "publication",
+        "deployment",
+        "customer_delivery",
+        "payment",
+        "purchase",
+        "credential_use",
+        "private_account_access",
+        "remote_execution"
+      ],
+      "review_criteria": [
+        "claims_supported",
+        "asset_rights_verified",
+        "mobile_safe_framing",
+        "narration_and_caption_plan",
+        "human_approval_before_publication"
+      ]
+    }
+  ]
+}
