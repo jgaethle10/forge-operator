@@ -21,6 +21,7 @@ import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-in
 import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
 import {analyzePulseGridArrangementArc} from '../systemia/media-studio/pulsegrid-arrangement-arc.mjs';
 import {analyzeFoundryPianoTailCoverage} from '../systemia/media-studio/instrument-foundry-tail-audit.mjs';
+import type {FoundryDryPcmAudit} from '../systemia/media-studio/instrument-foundry-dry-pcm.mjs';
 import {decodeFoundryMidiSustain,mergeFoundryMidiPedalEvent,removeFoundryMidiPedalEvent} from '../systemia/media-studio/instrument-foundry-midi-pedal.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
@@ -71,6 +72,7 @@ export default function FallenSessions(){
   const [midiEnabled,setMidiEnabled]=useState(false);
   const [midiInputs,setMidiInputs]=useState(0);
   const [pendingPedalCount,setPendingPedalCount]=useState(0);
+  const [dryPcmAudit,setDryPcmAudit]=useState<FoundryDryPcmAudit|null>(null);
   const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
@@ -110,6 +112,8 @@ export default function FallenSessions(){
     sessionRef.current=session;
     audioRef.current?.updateSession(session);
   },[session]);
+
+  useEffect(()=>{setDryPcmAudit(null)},[session,selectedScene]);
 
   useEffect(()=>{
     selectedPedalStepRef.current=selectedStepIndex;
@@ -164,6 +168,7 @@ export default function FallenSessions(){
       return;
     }
     try{
+      setDryPcmAudit(null);
       await audioRef.current?.play(session,selectedScene);
       setPlaying(true);
       setStatus('Playing canonical scene '+(selectedScene+1)+'.');
@@ -1087,6 +1092,21 @@ export default function FallenSessions(){
           <p className="fsMusicInsightCaution">Decoded-PCM attack decisions this Play: {audioStatus.decoded_fast_attack_voices??0} zero-aligned notes received a fast 0.5 ms onset; {audioStatus.decoded_cut_in_guard_voices??0} abrupt sample starts received a 3 ms protective microfade. Other notes use bounded or uninspected attack guards. This is scheduling evidence, not human-rated sound quality.</p>
           <p className="fsMusicInsightCaution">Pre-roll alignment this Play: {audioStatus.decoded_preroll_aligned_voices??0} recorded-piano voice{(audioStatus.decoded_preroll_aligned_voices??0)===1?'':'s'} began past confidently detected operator silence. Other voices were left at the original WAV boundary. The source PCM is never changed, and a corrected MIDI onset is not an audible quality certificate.</p>
           <p className="fsMusicInsightCaution">Sampled-piano chord overlap this Play: {audioStatus.sampled_piano_max_overlap??0} simultaneous voice{(audioStatus.sampled_piano_max_overlap??0)===1?'':'s'} across {audioStatus.sampled_piano_scheduled_voices??0} recorded-note event{(audioStatus.sampled_piano_scheduled_voices??0)===1?'':'s'}. Pre-effects summed voice-gain proxy: {(audioStatus.sampled_piano_gain_sum_proxy??0).toFixed(2)}. {audioStatus.sampled_piano_observations_complete===false?'Observation limit exceeded, incomplete. ':''}{audioStatus.sampled_piano_overlap_review?'Review dense-chord headroom by listening. ':'No sampled-voice gain-sum threshold triggered. '}These figures do not measure actual PCM peaks, DSP output clipping or perceived loudness; no voice has been compressed or dropped.</p>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||recording||!(audioStatus.sampled_piano_scheduled_voices??0)}
+              onClick={()=>setDryPcmAudit(audioRef.current?.auditRecordedPianoDryPeak()||null)}>
+              Inspect decoded chord PCM
+            </button>
+          </div>
+          {dryPcmAudit&&<div className="fsDryPeakReport" role="status">
+            {dryPcmAudit.status==='unavailable'
+              ? <p>PCM inspection unavailable: {dryPcmAudit.reason}. No clean peak is claimed.</p>
+              : <>
+                <p>Decoded piano-only dry sample peak: <strong>{dryPcmAudit.sample_peak?.toFixed(3)}</strong> ({dryPcmAudit.peak_dbfs?.toFixed(2)} dBFS). Above-full-scale PCM frames in this approximation: <strong>{dryPcmAudit.over_full_scale_frames}</strong>. Analyzed {dryPcmAudit.analyzed_voices} scheduled voices at {dryPcmAudit.rate} Hz for {dryPcmAudit.window_sec?.toFixed(2)} seconds.</p>
+                <p className="fsMusicInsightCaution">{dryPcmAudit.complete?'Selected audition voices fit inside the measured window.':'Partial window only; later notes or releases were not fully covered.'} This reconstructs original decoded sample data and note-gain envelopes before filters, track buses, effects and master gain. It does not measure actual speaker output, intersample true peaks or final-master loudness. No automatic compression or gain adjustment is applied.</p>
+              </>}
+          </div>}
+
           <div className="fsTailStats" role="group" aria-label="Recorded piano sample tail estimates">
             <span><strong>{pianoTailAudit.mapped_notes}/{pianoTailAudit.authored_notes}</strong> mapped MIDI notes</span>
             <span><strong>{pianoTailAudit.key_hold_shortfalls}</strong> note-hold shortfalls</span>
