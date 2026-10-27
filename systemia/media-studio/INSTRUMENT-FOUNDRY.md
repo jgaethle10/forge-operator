@@ -292,3 +292,12 @@ existing verified resolver, `rights:'unknown'` intake and release hold.
 - Musician/founder blind A/B and release-rights audit are still required.
   No general claim of best-in-class or commercial-ready instruments before
   those checks.
+
+
+## Oct 26: Authorable sample-piano sustain pedal, limited to existing recordings
+
+New `instrument-foundry-pedal.mjs` describes a **bounded authored pedal** with alternating down/up events at the 16th-step grid. `clip.set_foundry_piano_pedal` stores and reverses these events inside the canonical PulseGrid clip provenance, with transaction/undo support and clip-resize truncation. The Fallen Sessions Music Theory Lab exposes foldable Pedal Down, Pedal Up and Clear actions on the selected step, without adding bulky controls to the mobile transport toolbar.
+
+`PulseGridAudioEngine` now computes key-off duration for recorded-piano notes using the first pedal lift **only if the pedal is down at note release**; late pedal depression never resurrects a note, and a pedal hold never crosses the clip end. The existing sampler still stops at the **actual decoded WAV exhaustion**, regardless of MIDI pedal length. This does not synthesize sustained sound beyond the recording, create sympathetic resonance, add physical damper or half-pedal modeling, claim continuous CC64 recording, or alter an oscillator track. Pedal timeline edits invalidate current recorded audio authority and stop old scheduled voices pending a fresh authorized Play.
+
+This is an audition-stage expression primitive. No acoustic piano captures, listener-quality verdict, licensed sample ownership, released master, or deployment is established here. Test suite covers malformed/ambiguous event rejection, no late-pedal resurrection, clip/asset boundaries, canonical reversibility, and simulated Web Audio hold vs release; the CI results for this exact commit must be checked independently. Human listening still decides whether the sustain is musically convincing. Original `The Weight of Silence` reference remains immutable.
