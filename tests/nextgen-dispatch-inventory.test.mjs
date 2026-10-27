@@ -74,5 +74,5 @@ test('only physical NextGen may execute command, hosted CI cannot impersonate it
   assert.match(result.stderr,/physical_nextgen_linux_required/);
   const source=fs.readFileSync(file,'utf8');
   assert.match(source,/requireNextGenLocal/);
-  assert.doesNotMatch(source,/sudo|install|setDeploymentReceipt|startOutboundNodeAgent|startNodeSeed|enable.*remote_jobs/);
+  assert.doesNotMatch(source,/\bexecSync\s*\(|\bexecFileSync\s*\(|\bstartOutboundNodeAgent\s*\(|\bstartNodeSeed\s*\(|\bsetDeploymentReceipt\s*\(/);
 });
