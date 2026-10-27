@@ -13,10 +13,11 @@ import {scheduleFoundryPianoNote} from './instrument-foundry-piano.mjs';
 import {schedulePulseGridAudioBuffer} from './pulsegrid-audio-scheduler.mjs';
 import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
+import {encodeFoundryAuditionWav} from './instrument-foundry-audition-wav.mjs';
 import {unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 
 const RESULT_SCOPE='offline_sampled_piano_track_bus_approximation';
-const rate=48000,MAX_VOICES=16,WINDOW=.8;
+const rate=48000,MAX_VOICES=16,MAX_WINDOW=8;
 const bound=(x,a,b)=>Math.max(a,Math.min(b,x));
 const db=x=>x>0?Number((20*Math.log10(x)).toFixed(2)):-180;
 const unavailable=reason=>({
@@ -92,7 +93,9 @@ function validated(input){
  * offline audio rendering explicit and independently testable; it never
  * silently spins up real-time playback or pulls from storage.
  */
-export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[],offlineContextFactory}={}){
+export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[],window_sec=.8,includeAuditionWav=false,offlineContextFactory}={}){
+  if(![.8,8].includes(window_sec)||typeof includeAuditionWav!=='boolean')
+    return unavailable('Review window must be 0.8 or 8 seconds, with an explicit audition request.');
   const invalid=validated({voices,tracks,audioBeds,synthVoices,drumVoices});
   if(invalid)return unavailable(invalid);
   if(typeof offlineContextFactory!=='function')
@@ -101,12 +104,13 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
   const latest=Math.max(...voices.map(v=>v.stop_time),...synthVoices.map(v=>v.stop_time),...drumVoices.map(v=>v.stop_time));
   // Approximation deliberately bounded; a long song needs a separately
   // approved render route, not a silently truncated "whole mix" certificate.
-  if(latest-earliest>WINDOW)
-    return unavailable('The selected sampled/synth note passage exceeds the 0.8-second offline review window.');
-  if(audioBeds.some(bed=>bed.start_time-earliest>=WINDOW))
+  if(latest-earliest>window_sec)
+    return unavailable('Performed note passage exceeds the selected offline audition window.');
+  if(audioBeds.some(bed=>bed.start_time-earliest>=window_sec))
     return unavailable('Audio-bed note-on is outside the bounded offline audition window.');
   if(tracks.length>8)return unavailable('Track bus count exceeds the offline review budget.');
-  const frames=Math.ceil(WINDOW*rate);
+  const frames=Math.ceil(window_sec*rate);
+  if(frames>MAX_WINDOW*rate)return unavailable('Offline render exceeds the mobile-safe frame budget.');
   let context;
   try{
     context=offlineContextFactory(2,frames,rate);
@@ -171,7 +175,7 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
     // Duration is bounded to this explicit preview, never claimed whole-song.
     for(const bed of audioBeds){
       const offset=bed.start_time-earliest;
-      const audible=Math.min(bed.duration,WINDOW-offset);
+      const audible=Math.min(bed.duration,window_sec-offset);
       schedulePulseGridAudioBuffer({
         buffer:bed.buffer,time:offset,duration:audible,mode:bed.mode,
         destination:buses.get(bed.track_id),
@@ -194,6 +198,11 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       if(Math.abs(a)>1||Math.abs(b)>1)over++;
       sum+=a*a+b*b;
     }
+    // Explicit internal audition only: 16-bit WAV clamps sample values above
+    // full scale. The float-PCM peak receipt remains the authoritative
+    // pre-encoding measurement. Never claim preview is a mastered output.
+    const audition_wav_bytes=includeAuditionWav
+      ?encodeFoundryAuditionWav(rendered,{maxSeconds:window_sec}):undefined;
     return {
       status:'offline_track_bus_pcm_measurement',scope:RESULT_SCOPE,
       sample_peak:Number(peak.toFixed(5)),peak_dbfs:db(peak),
@@ -203,15 +212,16 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       // feedback-delay path may carry a residual tail beyond the window.
       source_notes_within_window:true,
       effects_tail_complete:tracks.every(t=>t.delayMix===0),
-      audio_beds_within_window:audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
+      audio_beds_within_window:audioBeds.every(b=>b.start_time+b.duration<=earliest+window_sec+1e-8),
       complete:tracks.every(t=>t.delayMix===0)&&
-        audioBeds.every(b=>b.start_time+b.duration<=earliest+WINDOW+1e-8),
+        audioBeds.every(b=>b.start_time+b.duration<=earliest+window_sec+1e-8),
       analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,
       analyzed_synth_voices:synthVoices.length,
       analyzed_drum_hits:drumVoices.length,rendered_frames:frames,
-      window_sec:WINDOW,rate,
+      window_sec,rate,audition_wav_bytes,
+      audition_sample_clamped:includeAuditionWav&&peak>1,
       source_kind:(synthVoices.length||drumVoices.length)?'decoded_pcm_plus_synth':'decoded_pcm_only',
-      limitations:'Recorded-piano voices, authorized imported audio beds plus original PulseGrid synth/drum events only. Uses frozen note-on track/filter/delay snapshots plus master .72 and bounded 0.8s window. Excludes unperformed/probabilistically omitted events, additional unscheduled notes, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
+      limitations:'Recorded-piano voices, authorized imported audio beds plus original PulseGrid synth/drum events only. Uses frozen note-on track/filter/delay snapshots plus master .72 and selected <=8-second window. Excludes unperformed/probabilistically omitted events, additional unscheduled notes, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
     };
   }catch(error){
     return unavailable('Offline browser track-bus rendering failed: '+(error instanceof Error?error.message:'unsupported audio graph'));
