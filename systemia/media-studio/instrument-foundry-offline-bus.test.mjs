@@ -114,3 +114,46 @@ test('unexpected render return and nonfinite PCM are not confused with a clean w
  assert.equal(r.status,'unavailable');
  assert.match(r.reason,/offline backend unavailable/);
 });
+
+test('offline piano plus imported audio bed uses the SAME canonical one-shot/loop WAV scheduler',async()=>{
+ const f=fakeContext(.4);
+ const bedTrack={...track,id:'audio',delayMix:0};
+ const r=await render({
+  voices:[voice()],
+  audioBeds:[{track_id:'audio',buffer:buffer(),start_time:.1,duration:1.9,mode:'loop'}],
+  tracks:[track,bedTrack],offlineContextFactory:f.make
+ });
+ assert.equal(r.status,'offline_track_bus_pcm_measurement',JSON.stringify(r));
+ assert.equal(r.analyzed_audio_beds,1);
+ assert.equal(r.analyzed_voices,1);
+ assert.equal(r.audio_beds_within_window,false);
+ assert.equal(r.complete,false,'never claim a whole audio bed when only preview length rendered');
+ const sources=f.parameters.filter(x=>x.name.startsWith('buffer'));
+ assert.equal(sources.length,2,'one recorded piano voice and one verified audio track source');
+ assert.equal(sources[1].loop,true,'audio bed uses canonical loop scheduling for short source');
+ assert.ok(f.calls.filter(x=>x[0]==='start').length>=2);
+});
+test('one-shot imported audio bed is not silently looped in the offline bus',async()=>{
+ const f=fakeContext();
+ const r=await render({
+  voices:[voice()],
+  audioBeds:[{track_id:'audio',buffer:buffer(),start_time:.1,duration:.5,mode:'one_shot'}],
+  tracks:[track,{...track,id:'audio',delayMix:0}],offlineContextFactory:f.make
+ });
+ assert.equal(r.status,'offline_track_bus_pcm_measurement');
+ assert.equal(f.parameters.filter(x=>x.name.startsWith('buffer'))[1].loop,false);
+ assert.equal(r.analyzed_audio_beds,1);
+ assert.equal(r.audio_beds_within_window,true);
+});
+test('unknown audio bed track, invalid timing and excessive sources fail before constructing the graph',async()=>{
+ const f=fakeContext();
+ const base={voices:[voice()],tracks:[track],offlineContextFactory:f.make};
+ for(const audioBeds of [
+  [{track_id:'missing',buffer:buffer(),start_time:.1,duration:.5,mode:'loop'}],
+  [{track_id:'keys',buffer:buffer(),start_time:-1,duration:.5,mode:'loop'}],
+  [{track_id:'keys',buffer:buffer(),start_time:.1,duration:.5,mode:'forged'}],
+  Array.from({length:5},()=>({track_id:'keys',buffer:buffer(),start_time:.1,duration:.5,mode:'loop'}))
+ ]){
+  assert.equal((await render({...base,audioBeds})).status,'unavailable');
+ }
+});
