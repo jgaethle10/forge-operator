@@ -833,7 +833,7 @@ test('real PulseGrid performed kick and original hat noise are replayed in the a
    const live=SimulatedAudioContext.instances.at(-1);
    assert.equal(live.createdOscillators,1,'original kick oscillator is played');
    assert.equal(live.starts.length,2,'actual verified piano and stochastic hi-hat sample play');
-   const performedNoise=live.starts[1].source.buffer;
+   const performedNoise=live.starts.find(x=>x.source.buffer?.duration===.09)?.source.buffer;
    assert.ok(performedNoise?.duration>0);
    engine.stop();
    const review=await engine.auditRecordedPianoOfflineBus();
