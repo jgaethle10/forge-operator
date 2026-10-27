@@ -29,3 +29,14 @@ The observer refuses to start without credentials and a future stop time no more
 - Enforce unchanged virtual pilot rails outside this collector: $20 virtual capital, maximum $0.10 risk/trade, $0.20 daily loss, 2 accepted hypothetical trades/day, one position, minimum 1.5:1 reward:risk, no leverage or options. Do not relax for more activity.
 - Test missing credentials, websocket auth failure, stale data, empty bars, disconnect/reconnect, order-endpoint absence, system clock skew, and final stop receipt. Integration tests against a real Alpaca feed **have not been performed** in this PR.
 - At close, run separate existing historical Practice Camp if authorized and data-backed, and report its outcomes labeled HISTORICAL_REPLAY, never as proof this market canary traded live.
+
+## Post-close scorecard (new)
+The observer now precommits and evaluates two **hypothetical-only** scout strategies while it is connected. Decision receipts are appended to the same JSONL file with market observations. The observer is still read-only, not a broker paper trader.
+
+After the shutdown receipt, produce a fail-closed quality report from the evidence journal:
+
+    node systemia/daytrade-lens/market-camp-audit.mjs artifacts/daytrade-market-observer/observer-2026-10-27.jsonl artifacts/daytrade-market-observer/market-camp-2026-10-27.md
+
+The CLI writes Markdown and JSON and returns a nonzero status on risk-rule violations. It requires actual precommit, subscription and source evidence to reach an auditable state. It explicitly counts **zero broker fills** because this pipeline never reaches a broker execution endpoint. One market session is research, not verified alpha.
+
+The source file may be absent if the collector was not installed and started on an owned node. A merged commit or successful CI check alone does not create a market-session journal.
