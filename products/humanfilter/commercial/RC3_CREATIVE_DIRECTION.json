@@ -1,0 +1,174 @@
+{
+  "schema": "evercraft.fallen.client-commercial-direction.v1",
+  "id": "humanfilter-launch-rc3",
+  "brand": {
+    "name": "Evercraft HumanFilter",
+    "sourceRefs": [
+      "products/humanfilter/extension/manifest.json",
+      "products/humanfilter/extension/popup.html"
+    ]
+  },
+  "audience": "desktop social media users who want more control over AI disclosures and optional topics in their feeds",
+  "goal": "Demonstrate actual HumanFilter filtering in a real captured browser before inviting honest free beta testers; no invented platforms, people or AI authorship claims",
+  "offer": {
+    "text": "Free early-access desktop browser beta (v0.1.4)",
+    "confirmed": true,
+    "evidenceRefs": [
+      "products/humanfilter/extension/manifest.json",
+      "github-actions:40440401321"
+    ]
+  },
+  "cta": {
+    "text": "FREE DESKTOP BETA • EARLY TESTERS WANTED",
+    "confirmed": true
+  },
+  "aspectRatio": "9:16",
+  "durationSec": 30,
+  "sourceAssets": [],
+  "music": {
+    "brief": "Original authored score, minimal tactile rhythmic pulse against a controlled tech motif; rhythmic silence during activation, subtle harmonic lift at actual reveal, resolute but not bombastic finish. Must have distinct score and effects stems, proof of rights and owner listening signoff. No reused Relay or Quick Lube score, no stock trailer impacts."
+  },
+  "beats": [
+    {
+      "id": "hook-real-scroll",
+      "role": "hook",
+      "durationSec": 4,
+      "subject": "real desktop browser feed with a visible AI disclosure",
+      "subjectVisibleAtStart": true,
+      "physicalAction": "Camera tracks a real desktop browser showing an actually loaded feed as a visibly AI-labeled post scrolls into the reading area; no fake platform UI",
+      "camera": "Cinematic documentary-style close-in screen plate with shallow physical depth and a single decisive focus shift",
+      "visual": {
+        "prompt": "ACQUIRE NEW owned 4-second clean 16:9/9:16 desktop browser capture from a real session. If a personal account is required, get owner's consent; hide names and private content. AI disclosure must be legible and verified. Start visually, no headline card.",
+        "sourceRefs": [
+          "source-required:real-browser-ai-disclosure"
+        ]
+      },
+      "narration": {
+        "text": "The feed keeps moving. You get a say.",
+        "intention": "Bella: intimate and curious, genuinely noticing a problem, never performative",
+        "emphasis": [
+          "you"
+        ],
+        "pauseAfterMs": 150
+      },
+      "musicIntensity": 0.17,
+      "musicTransition": "Cut on scroll movement; not a title splash"
+    },
+    {
+      "id": "proof-native-filter",
+      "role": "proof",
+      "durationSec": 8,
+      "subject": "actual HumanFilter popup and labeled post being softened by installed extension",
+      "physicalAction": "Real user enables Balanced mode in the installed extension, and a genuinely AI-labeled feed item is softened while an adjacent human post remains visible",
+      "camera": "Match cursor move to macro UI view; natural click sound; no manufactured performance metrics",
+      "visual": {
+        "prompt": "ACQUIRE NEW verified actual Chromium extension recording using v0.1.4 installed on supported browser; show before, control toggle, filter result and intact adjacent human content. Captured original pixels, not re-painted interface. Do not claim a universal AI detector.",
+        "sourceRefs": [
+          "source-required:real-installed-humanfilter-balance-proof",
+          "products/humanfilter/extension/content.js",
+          "github-actions:40440401321"
+        ]
+      },
+      "proofRefs": [
+        "github-actions:40440401321"
+      ],
+      "narration": {
+        "text": "HumanFilter helps soften posts with recognizable AI disclosures, right in your browser.",
+        "intention": "clear, earned confidence, grounded in the visible proof",
+        "pauseBeforeMs": 50
+      },
+      "musicIntensity": 0.38
+    },
+    {
+      "id": "choices-strict",
+      "role": "body",
+      "durationSec": 7,
+      "subject": "authentic HumanFilter Strict toggle and custom keyword controls",
+      "physicalAction": "Real hand moves the pointer to Strict and enters a custom topic term using the actual extension popup, with a meaningful live feed change verified in the recorded browser",
+      "camera": "Tight motivated pan between true UI regions; no counterfeit interface, no floating information wall",
+      "visual": {
+        "prompt": "ACQUIRE NEW real browser capture of actual popup 'Balanced/Strict' and keyword field, with one verified resultant feed change and no fake detections. Preserve original UI legibility at phone size.",
+        "sourceRefs": [
+          "source-required:real-installed-humanfilter-strict-keyword-proof",
+          "products/humanfilter/extension/popup.html"
+        ]
+      },
+      "narration": {
+        "text": "Go stricter. Add your own keywords. Make it yours.",
+        "intention": "slightly more energy with short conversational pauses",
+        "emphasis": [
+          "yours"
+        ],
+        "pauseBeforeMs": 100,
+        "pauseAfterMs": 150
+      },
+      "musicIntensity": 0.62
+    },
+    {
+      "id": "show-once",
+      "role": "body",
+      "durationSec": 5,
+      "subject": "authentic HumanFilter Show once button restoring a covered item",
+      "physicalAction": "Real cursor clicks Show once on the covered post and that exact post becomes visible while the extension remains enabled",
+      "camera": "One clean unbroken close-up, hold enough to prove the feature; no artificial crash-zoom",
+      "visual": {
+        "prompt": "ACQUIRE NEW actual product video proof of Show once on a real/carefully disclosed controlled sample, legible to a mobile audience. If live site isn't available label as controlled demonstration.",
+        "sourceRefs": [
+          "source-required:show-once-authentic-product-capture",
+          "products/humanfilter/extension/content.js"
+        ]
+      },
+      "narration": {
+        "text": "Want it back? One click.",
+        "intention": "warm and lightly playful, let the product action carry the payoff",
+        "pauseAfterMs": 200
+      },
+      "musicIntensity": 0.43,
+      "musicTransition": "Cut on actual card restoration, one small tactile confirmation sound"
+    },
+    {
+      "id": "cta-brand",
+      "role": "cta",
+      "durationSec": 6,
+      "subject": "real HumanFilter browser-extension popup and clear desktop beta call to action",
+      "physicalAction": "A clear stabilized hero frame of actual HumanFilter popup on a desktop browser resolves under a restrained owned Evercraft lockup and free beta invitation",
+      "camera": "Stable lockoff from real recorded screen with subtle motivated parallax; no title-only hero shot",
+      "visual": {
+        "prompt": "ACQUIRE NEW 6-sec source-first product hero plate using actual HumanFilter UI plus approved Evercraft logo; keep any additional type below 12 words and legible on 9:16 phone preview.",
+        "sourceRefs": [
+          "source-required:humanfilter-original-hero-plate",
+          "products/humanfilter/extension/popup.html"
+        ]
+      },
+      "narration": {
+        "text": "HumanFilter. Keep the feed yours.",
+        "intention": "Bella: warm certainty and gentle final smile; land ‘yours’ with confidence",
+        "pauseBeforeMs": 250
+      },
+      "screenText": "FREE DESKTOP BETA • EARLY TESTERS WANTED",
+      "musicIntensity": 0.48,
+      "musicTransition": "Resolved original 4-note motif and clean tail; no generic cinematic boom"
+    }
+  ],
+  "productionPolicy": {
+    "status": "assets_missing_by_design",
+    "rejectedPriorCuts": [
+      "HumanFilter_Evercraft_28s_Narrated_1080x1920.mp4",
+      "HumanFilter_RC2_18s_Cinematic_Review.mp4"
+    ],
+    "forbidden": [
+      "recycled footage from RC1/RC2",
+      "fake Facebook/YouTube/Reddit logos or fabricated real-world AI labeling",
+      "robotic voice",
+      "title-card montage",
+      "unverified claims of AI authorship detection",
+      "automatic publication"
+    ],
+    "humanApprovals": [
+      "owner approves real capture, Bella voice, score and final color",
+      "multi-device full video audition",
+      "Fallen commercial audio and shot-quality QC",
+      "explicit publish approval"
+    ]
+  }
+}
