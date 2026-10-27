@@ -31,6 +31,11 @@
           trace_id:t.trace_id,sequence:t.sequence,previous_digest:t.previous_digest,event
         }));
         if(digest!==t.event_digest)throw new Error('trace_event_hash_mismatch');
+        // Do not let a recomputed hash chain invent a verified worker receipt.
+        if(event.type==='stage_verified' && (!event.receipt ||
+          !/^sha256:[0-9a-f]{64}$/.test(event.receipt.result_sha256||''))) {
+          throw new Error('invalid_worker_result_digest');
+        }
         if(event.type==='accepted') {
           if(sequence!==0)throw new Error('accepted_not_first');
           status='running';
