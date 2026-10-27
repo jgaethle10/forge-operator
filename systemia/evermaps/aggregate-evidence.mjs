@@ -15,7 +15,7 @@ function checkCounty(county) {
 function checkPageSize(pageSize) {
   if (!Number.isInteger(pageSize)||pageSize<1||pageSize>2000) throw new Error('Invalid page size');
 }
-export function wgsEvidenceQuery({kind,county='Yakima',offset=0,pageSize=500,countOnly=false}={}) {
+export function wgsEvidenceQuery({kind,county='Grant',offset=0,pageSize=500,countOnly=false}={}) {
   checkCounty(county);checkPageSize(pageSize);
   if (!Number.isInteger(offset)||offset<0) throw new Error('Invalid offset');
   const layer=WGS_EVIDENCE_LAYERS[kind];
@@ -46,7 +46,7 @@ async function countRecords(kind,county,fetchImpl,signal) {
   return json.count;
 }
 export async function ingestWgsEvidenceLayer({
-  kind,county='Yakima',pageSize=500,maxPages=40,fetchImpl=fetch,
+  kind,county='Grant',pageSize=500,maxPages=40,fetchImpl=fetch,
   now=()=>new Date().toISOString(),signal
 }={}) {
   if (!WGS_EVIDENCE_LAYERS[kind]) throw new Error('Unknown WGS evidence layer');
@@ -88,7 +88,7 @@ export async function ingestWgsEvidenceLayer({
   };
   return {type:'FeatureCollection',features,metadata};
 }
-export async function createWgsEvidencePacket({county='Yakima',pageSize=500,maxPages=40,fetchImpl=fetch,now,signal}={}) {
+export async function createWgsEvidencePacket({county='Grant',pageSize=500,maxPages=40,fetchImpl=fetch,now,signal}={}) {
   const layers={};
   for (const kind of ALL_KEYS) {
     layers[kind]=await ingestWgsEvidenceLayer({kind,county,pageSize,maxPages,fetchImpl,now,signal});
