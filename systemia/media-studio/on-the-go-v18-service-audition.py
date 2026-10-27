@@ -22,14 +22,20 @@ takes=[
  ("v21_opening_natural_a","If your day is full, the last thing you need is another stop at the shop. That's why On The Go Mobile Quick Lube comes to you.",1.05),
  ("v21_opening_natural_b","If your day is already full, the last thing you need is a stop at the shop. That's why On The Go Mobile Quick Lube comes to you.",1.06),
  ("v21_opening_concise","Your day is full enough without another stop at the shop. On The Go Mobile Quick Lube comes to you.",1.00),
+ ("v22_opening_mohbuhl","If your day is full, the last thing you need is another stop at the shop. That's why On The Go [Mobile](/mˈObəl/) Quick Lube comes to you.",1.05),
+ ("v22_opening_ipa_alt","If your day is full, the last thing you need is another stop at the shop. That's why On The Go [Mobile](/mˈoʊbəl/) Quick Lube comes to you.",1.05),
+ ("v22_closing_mohbuhl","On The Go [Mobile](/mˈObəl/) Quick Lube.",1.07),
+ ("v22_closing_ipa_alt","On The Go [Mobile](/mˈoʊbəl/) Quick Lube.",1.07),
 ]
 results=[]
 for i,(name,words,speed) in enumerate(takes):
  torch.manual_seed(1800+i)
- chunks=[np.asarray(c.audio,dtype=np.float32) for c in pipe(words,voice="af_bella",speed=speed)]
+ outputs=list(pipe(words,voice="af_bella",speed=speed))
+ chunks=[np.asarray(c.audio,dtype=np.float32) for c in outputs]
+ phonemes=" ".join(str(getattr(c,"phonemes","")) for c in outputs)
  if not chunks: raise RuntimeError("Empty synthesis: "+name)
  samples=np.concatenate(chunks)
  path=out/(name+".wav");sf.write(path,samples,24000)
- results.append(dict(name=name,words=words,seconds=round(len(samples)/24000,3),sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
+ results.append(dict(name=name,words=words,seconds=round(len(samples)/24000,3),phonemes=phonemes,sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
 (out/"evidence.json").write_text(json.dumps({"status":"private_audition_only","v17_untouched":True,"voice":"af_bella","takes":results},indent=2))
 print(json.dumps(results,indent=2))
