@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample,foundryPianoVoiceGain} from './instrument-foundry-piano.mjs';
+import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample,foundryPianoVoiceGain,planFoundryPianoAttack} from './instrument-foundry-piano.mjs';
 import {applyPulseGridTransaction,createPulseGridSession,undoPulseGridReceipt,validatePulseGridSession} from './pulsegrid-session.ts';
 
 const D='a'.repeat(64),id='audio-sha256:'+D;
@@ -244,4 +244,70 @@ test('piano gain never exceeds calibrated headroom for valid MIDI velocity',()=>
    }
  }
  assert.throws(()=>foundryPianoVoiceGain(1.5,patch().samples[0]),/Invalid piano velocity/);
+});
+
+function decodedPcmFixture({channels=1,duration=1,rate=48000,initial=.0001,firstWindow=.001,hammer=.4}={}){
+  const data=Array.from({length:channels},()=>new Float32Array(Math.floor(rate*duration)));
+  for(let c=0;c<channels;c++){
+    for(let i=0;i<Math.floor(rate*.00035);i++)data[c][i]=i<3?initial:firstWindow;
+    data[c][Math.floor(rate*.0009)]=hammer;
+  }
+  return {duration,sampleRate:rate,numberOfChannels:channels,getChannelData:c=>data[c]};
+}
+test('properly zero-aligned PCM avoids the blanket hammer-onset fade',()=>{
+ const sample=decodedPcmFixture();
+ const decision=planFoundryPianoAttack(sample);
+ assert.deepEqual(decision,{attack_sec:.0005,profile:'zero_aligned_fast_attack'});
+ const m=mockAudio(),receipt=scheduleFoundryPianoNote({context:m.context,destination:{},
+  buffer:sample,pitch:60,velocity:.7,time:.1,duration:.4,
+  selection:selectFoundrySample(patch(),60,.7),createSource:m.createSource});
+ assert.equal(receipt.attack_profile,'zero_aligned_fast_attack');
+ assert.equal(receipt.attack_sec,.0005);
+ const gain=m.calls.filter(x=>x[0]==='gain');
+ assert.ok(Math.abs(gain[1][3]-.1005)<1e-10,'the full hammer transient must arrive 0.5 ms after start');
+ assert.equal(m.calls.filter(x=>x[0]==='start').length,1);
+});
+test('nonzero decoded-PCM cut-ins get a conservative click-guard microfade',()=>{
+ const m=mockAudio(),sample=decodedPcmFixture({initial:.3,firstWindow:.3,hammer:.7});
+ const plan=planFoundryPianoAttack(sample);
+ assert.deepEqual(plan,{attack_sec:.003,profile:'cut_in_microfade_guard'});
+ const receipt=scheduleFoundryPianoNote({context:m.context,destination:{},
+  buffer:sample,pitch:60,velocity:.8,time:.2,duration:.25,
+  selection:selectFoundrySample(patch(),60,.8),createSource:m.createSource});
+ assert.equal(receipt.attack_sec,.003);
+ assert.ok(receipt.release_start<receipt.stop_time);
+});
+test('intermediate boundary energy uses a bounded 1.5ms ramp; stereo guards inspect both channels',()=>{
+ const mid=decodedPcmFixture({initial:.005,firstWindow:.04});
+ assert.deepEqual(planFoundryPianoAttack(mid),
+  {attack_sec:.0015,profile:'bounded_early_onset_guard'});
+ const stereo=decodedPcmFixture({channels:2,initial:.0001,firstWindow:.001});
+ stereo.getChannelData(1)[0]=.2;
+ assert.equal(planFoundryPianoAttack(stereo).profile,'cut_in_microfade_guard');
+});
+test('uninspected, malformed and unsupported PCM cannot disable conservative attack guard',()=>{
+ for(const b of [
+  {duration:1}, {duration:1,sampleRate:48000,numberOfChannels:1},
+  {duration:1,sampleRate:48000,numberOfChannels:3,getChannelData:()=>new Float32Array(80000)},
+  {duration:1,sampleRate:48000,numberOfChannels:1,getChannelData:()=>new Float32Array(1)},
+  {duration:1,sampleRate:48000,numberOfChannels:1,getChannelData:()=>{throw Error('denied')}},
+ ]){
+  assert.deepEqual(planFoundryPianoAttack(b),
+   {attack_sec:.004,profile:'uninspected_legacy_guard'});
+ }
+ const broken=decodedPcmFixture();
+ broken.getChannelData(0)[0]=Number.NaN;
+ assert.equal(planFoundryPianoAttack(broken).profile,'uninspected_legacy_guard');
+});
+test('the adaptive onset never moves any gain ramp after very short valid sample playback',()=>{
+ const m=mockAudio();
+ const short=decodedPcmFixture({duration:.013});
+ const receipt=scheduleFoundryPianoNote({context:m.context,destination:{},
+   buffer:short,pitch:60,velocity:.65,time:.1,duration:.7,
+   selection:selectFoundrySample(patch(),60,.65),createSource:m.createSource});
+ const gain=m.calls.filter(c=>c[0]==='gain');
+ assert.ok(gain.every(x=>x[3]>=.1&&x[3]<=receipt.stop_time+1e-9));
+ assert.ok(receipt.attack_sec<=.013*.15);
+ assert.ok(receipt.release_start> .1);
+ assert.equal(receipt.commercial_rights_verified,false);
 });
