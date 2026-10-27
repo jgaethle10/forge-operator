@@ -650,3 +650,47 @@ test('offline piano bus must fail closed if browser offline rendering missing or
   }
  });
 });
+
+test('in-flight offline piano mix becomes unavailable when playback authority changes before render finishes',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const originalOffline=globalThis.OfflineAudioContext;
+  let resolveRender,notifyEntered;
+  const gate=new Promise(resolve=>{resolveRender=resolve});
+  const entered=new Promise(resolve=>{notifyEntered=resolve});
+  class SuspendedOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate}
+   async startRendering(){
+    notifyEntered();
+    await gate;
+    const p=new Float32Array(this.frames).fill(.3);
+    return {numberOfChannels:2,length:this.frames,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=SuspendedOffline;
+  const pcm=new Float32Array(36000).fill(.3);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);engine.stop();
+   const inspection=engine.auditRecordedPianoOfflineBus();
+   await entered;
+   const changed=structuredClone(session);changed.session_id='new-project-revokes-PCM';
+   engine.updateSession(changed);
+   resolveRender();
+   const result=await inspection;
+   assert.equal(result.status,'unavailable');
+   assert.match(result.reason,/authorization or playback state changed/);
+   assert.equal(result.sample_peak,null);
+  }finally{
+   resolveRender();
+   await engine.close();
+   if(originalOffline===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=originalOffline;
+  }
+ });
+});
