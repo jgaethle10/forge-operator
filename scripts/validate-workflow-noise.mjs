@@ -64,5 +64,44 @@ for (const path of ['.github/workflows/chum-watershed.yml','.github/workflows/ev
   else pass(`${path} cancels superseded runs`);
 }
 
+
+// Nexus fixture validation must not consume a runner on unrelated product,
+// commercial, creative or research PRs. Main and manual checks remain intact.
+{
+  const path = '.github/workflows/nexus-cross-llm-probes.yml';
+  const trigger = onBlock(read(path));
+  const expected = [
+    'nexus-probes/**',
+    'scripts/validate-nexus-cross-llm-probes.mjs',
+    '.github/workflows/nexus-cross-llm-probes.yml',
+    'scripts/validate-workflow-noise.mjs',
+  ];
+  for (const event of ['pull_request', 'push']) {
+    const match = trigger.match(new RegExp('\\n  ' + event + ':\\n([\\s\\S]*?)(?=\\n  [A-Za-z_][\\w-]*:|$)'));
+    const block = match?.[1] || '';
+    for (const entry of expected) {
+      if (!block.includes(entry)) fail(`${path}: ${event} must include ${entry}`);
+    }
+    if (/^\s*- ['"]?systemia\/\*\*/m.test(block) || /^\s*- ['"]?\*\*/m.test(block)) {
+      fail(`${path}: ${event} must not be a repository-wide trigger`);
+    }
+  }
+  if (!/\n  workflow_dispatch:/.test(trigger)) fail(`${path}: manual override required`);
+  else pass(`${path} manual and fixture-scoped`);
+  requireMainOnlyPush(path);
+}
+
+for (const path of [
+  '.github/workflows/nexus-cross-llm-probes.yml',
+  '.github/workflows/base44-runtime-debt-inventory.yml',
+]) {
+  const text = read(path);
+  if (!/concurrency:[\s\S]*?group:[^\n]*github\.ref[^\n]*\n\s*cancel-in-progress:\s*\$\{\{\s*github\.event_name\s*==\s*['"]pull_request['"]\s*\}\}/.test(text)) {
+    fail(`${path} must cancel superseded same-ref PR checks, not main verification`);
+  } else {
+    pass(`${path} uses PR-only cancellation by ref`);
+  }
+}
+
 if (process.exitCode) throw new Error('workflow notification-noise policy violated');
 console.log('WORKFLOW NOISE POLICY PASS');
