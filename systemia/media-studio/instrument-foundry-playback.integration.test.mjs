@@ -526,3 +526,56 @@ test('a new explicit Play resets previous chord pressure rather than reporting s
   }finally{await engine.close()}
  });
 });
+
+test('stopped real PulseGrid engine can inspect a verified two-note PCM chord, without changing playback DSP',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const pcm=new Float32Array(36000).fill(1);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const chord=applyPulseGridOperation(session,{
+   type:'note.add',track_id:'keys',scene:0,
+   note:{pitch:62,start:0,length:2,velocity:1,probability:1,microtiming:0}
+  },'human').session;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(chord,0);
+   const early=engine.auditRecordedPianoDryPeak();
+   assert.equal(early.status,'unavailable','realtime render must not be interrupted by PCM CPU work');
+   engine.stop();
+   const result=engine.auditRecordedPianoDryPeak();
+   assert.equal(result.status,'measured_offline_dry_approximation');
+   assert.ok(result.sample_peak>1,'decoded same-phase sample voices exceed dry 0 dBFS');
+   assert.ok(result.over_full_scale_frames>0);
+   assert.equal(result.complete,true);
+   assert.equal(result.analyzed_voices,2);
+   assert.equal(SimulatedAudioContext.instances.at(-1).createdOscillators,0);
+   assert.equal(chord.assets[0].rights,'unknown');
+  }finally{await engine.close()}
+ });
+});
+test('resolver or session authority change revokes decoded PCM audit access',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const pcm=new Float32Array(36000).fill(.5);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   engine.stop();
+   assert.equal(engine.auditRecordedPianoDryPeak().status,'measured_offline_dry_approximation');
+   const changed=structuredClone(session);changed.session_id='new-authenticated-project';
+   engine.updateSession(changed);
+   assert.equal(engine.auditRecordedPianoDryPeak().status,'unavailable');
+   engine.setAudioAssetResolver(resolverOf(bytes,{authorizeRead:async()=>false}));
+   assert.equal(engine.auditRecordedPianoDryPeak().status,'unavailable');
+  }finally{await engine.close()}
+ });
+});
