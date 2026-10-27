@@ -2,6 +2,7 @@ import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pu
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
+import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
 import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
 import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
@@ -19,6 +20,9 @@ export type PulseGridAudioStatus = {
   track_buses: number;
   latency_ms: number | null;
   cached_audio_assets: number;
+  /** Audible-note scheduling flags based on decoded AudioBuffer duration, not only asset metadata. */
+  decoded_sample_tail_warnings?: number;
+  decoded_key_hold_shortfalls?: number;
 };
 
 type PulseGridTrackBus = {
@@ -49,6 +53,8 @@ export class PulseGridAudioEngine {
   private audioCacheEpoch = 0;
   private playbackAttempt = 0;
   private readonly pendingAssetLoads = new Map<string, Promise<void>>();
+  private decodedSampleTailWarnings = 0;
+  private decodedKeyHoldShortfalls = 0;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -71,6 +77,8 @@ export class PulseGridAudioEngine {
       track_buses: this.trackBuses.size,
       latency_ms: context ? Math.round(latencySeconds * 1000) : null,
       cached_audio_assets: this.audioBuffers.size,
+      decoded_sample_tail_warnings:this.decodedSampleTailWarnings,
+      decoded_key_hold_shortfalls:this.decodedKeyHoldShortfalls,
     };
   }
 
@@ -153,6 +161,8 @@ export class PulseGridAudioEngine {
 
     this.playing=true;
     this.step=0;
+    this.decodedSampleTailWarnings=0;
+    this.decodedKeyHoldShortfalls=0;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -546,6 +556,19 @@ export class PulseGridAudioEngine {
           const selected=selectFoundrySample(foundryPatch,note.pitch,note.velocity);
           const buffer=this.audioBuffers.get(selected.asset_id);
           if(!buffer)throw new Error('Verified Foundry piano recording was not prepared: '+selected.asset_id);
+          // Unlike the score panel's asset metadata estimate, this checks
+          // the actual decoded Web Audio buffer used to schedule this voice.
+          // Count scheduled events, not unique score notes across loop cycles.
+          const actualTail=foundryPianoSampleTailBudget({
+            sample_duration_sec:buffer.duration,
+            playback_rate:selected.playback_rate,
+            held_seconds:heldDuration,
+            release_sec:selected.release_sec,
+          });
+          if(actualTail.classification!=='sufficient_metadata_duration'){
+            this.decodedSampleTailWarnings+=1;
+            if(actualTail.classification==='key_hold_shortfall')this.decodedKeyHoldShortfalls+=1;
+          }
           scheduleFoundryPianoNote({
             context:this.context,destination:bus.input,buffer,pitch:note.pitch,
             velocity:note.velocity,time:noteTime,duration:heldDuration,selection:selected,
