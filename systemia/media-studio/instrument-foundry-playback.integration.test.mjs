@@ -26,6 +26,11 @@ class Source extends Node {
   start(...args){this.starts.push(args);this.ctx.starts.push({type:'buffer',args,source:this})}
   stop(...args){this.stops.push(args)}
 }
+class SimOscillator extends Node {
+  constructor(ctx){super();this.ctx=ctx;this.type='triangle';this.starts=[];this.stops=[]}
+  start(t){this.starts.push(t);this.ctx.oscStarts.push({source:this,time:t})}
+  stop(t){this.stops.push(t)}
+}
 class SimulatedAudioContext {
   static instances=[];
   constructor(){
@@ -37,13 +42,14 @@ class SimulatedAudioContext {
     this.starts=[];
     this.decodeCalls=0;
     this.createdOscillators=0;
+    this.oscStarts=[];
     SimulatedAudioContext.instances.push(this);
   }
   createGain(){return new Node()}
   createBiquadFilter(){return new Node()}
   createDelay(){return new Node()}
   createBufferSource(){return new Source(this)}
-  createOscillator(){this.createdOscillators++;return new Node()}
+  createOscillator(){this.createdOscillators++;return new SimOscillator(this)}
   createBuffer(){return {getChannelData:()=>new Float32Array(4800)}}
   async decodeAudioData(raw){
     this.decodeCalls++;
