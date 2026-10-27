@@ -14,8 +14,12 @@ function fixture(){
     capacity_node_id:node,capacity_device_fingerprint:seed.device_fingerprint,
     workload_class:'systemia.evercraft-web-browser.v1',
     attestation_supported:true,receipt_hash:'sha256:'+lease,
-  }};
-  const route={ok:true,health:{
+  },result:{instance_id:'native-browser-worker-fixture'}};
+  // Yard verifies the resident local service but deliberately DOES NOT claim
+  // a verified public route. This is the actual unbound-route contract.
+  const route={ok:false,state:'public_route_unbound',local_health_ok:true,health:{
+    ok:true,runtime:'Evercraft Compute',mode:'public_read_only',
+    instance_id:deployment.result.instance_id,
     deployment_receipt_ref:deployment.receipt.receipt_hash,
     service:'evercraft-owned-browser-worker',
   }};
@@ -52,6 +56,29 @@ test('requires actual Yard health binding and nonce-verified device attestation'
   assert.throws(()=>verifyLocalYardMilestone(sig),/ephemeral_identity_not_verified/);
   const field=fixture();field.attestation.field_verified=true;
   assert.throws(()=>verifyLocalYardMilestone(field),/ephemeral_identity_not_verified/);
+});
+test('public route is NOT a valid substitute for a private-only Yard milestone',()=>{
+  const incorrectlyPublic=fixture();
+  incorrectlyPublic.route.ok=true;
+  incorrectlyPublic.route.state='public_route_verified';
+  incorrectlyPublic.route.local_health_ok=true;
+  assert.throws(()=>verifyLocalYardMilestone(incorrectlyPublic),/health_receipt_not_bound/);
+
+  const noLocalHealth=fixture();
+  noLocalHealth.route.local_health_ok=false;
+  assert.throws(()=>verifyLocalYardMilestone(noLocalHealth),/health_receipt_not_bound/);
+
+  const unhealthy=fixture();
+  unhealthy.route.health.ok=false;
+  assert.throws(()=>verifyLocalYardMilestone(unhealthy),/health_receipt_not_bound/);
+
+  const mismatchedWorker=fixture();
+  mismatchedWorker.route.health.instance_id='wrong-worker';
+  assert.throws(()=>verifyLocalYardMilestone(mismatchedWorker),/health_receipt_not_bound/);
+
+  const noHealth=fixture();
+  delete noHealth.route.health;
+  assert.throws(()=>verifyLocalYardMilestone(noHealth),/health_receipt_not_bound/);
 });
 test('fails closed on missing Compute receipt, page result or unsafe private target',()=>{
   const receipt=fixture();receipt.invoke.compute_receipt_hash='';
