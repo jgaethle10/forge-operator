@@ -33,8 +33,21 @@ export function verifyLocalYardMilestone({seed,deployment,route,attestation,invo
      deployment?.receipt?.workload_class!==WORKLOAD||
      deployment?.receipt?.attestation_supported!==true||
      !HASH.test(deployment?.receipt?.receipt_hash||''))throw Error('yard_local_deployment_unverified');
-  if(route?.ok!==true||route?.health?.deployment_receipt_ref!==deployment.receipt.receipt_hash||
-     route?.health?.service!=='evercraft-owned-browser-worker')throw Error('yard_local_health_receipt_not_bound');
+  // A local-only browser MUST remain unbound to a public route. Yard's
+  // verifyRoute deliberately returns ok:false for public_route_unbound,
+  // separately reporting the private service's health as local_health_ok.
+  // Do not weaken this into an unverified route or claim a public edge exists.
+  if(route?.state!=='public_route_unbound'||
+     route?.ok!==false||
+     route?.local_health_ok!==true||
+     route?.health?.ok!==true||
+     route?.health?.service!=='evercraft-owned-browser-worker'||
+     route?.health?.runtime!=='Evercraft Compute'||
+     route?.health?.mode!=='public_read_only'||
+     route?.health?.instance_id!==deployment?.result?.instance_id||
+     route?.health?.deployment_receipt_ref!==deployment?.receipt?.receipt_hash){
+    throw Error('yard_local_health_receipt_not_bound');
+  }
   if(attestation?.identity_verified!==true||attestation?.device_fingerprint!==seed.device_fingerprint||
      attestation?.node_id!==NODE||attestation?.field_verified!==false)throw Error('yard_local_ephemeral_identity_not_verified');
   if(invoke?.ok!==true||invoke?.deployment_id!==DEPLOYMENT||
