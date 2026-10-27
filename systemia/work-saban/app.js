@@ -1,6 +1,8 @@
 const $ = id => document.getElementById(id);
 let last = null;
 let deliveredRun = null;
+let lastMissionEvidence = null;
+let missionBusy = false;
 const office = window.WorkSabanOffice;
 
 $('compose').addEventListener('click', async () => {
@@ -79,12 +81,16 @@ async function streamMission(url, payload) {
   const reader=response.body.getReader();
   const decoder=new TextDecoder();
   let pending='',completed=null,events=0;
-  function verify(event){
+  if(!window.WorkSabanTrace)throw new Error('browser_trace_verification_unavailable');
+  const verifier=window.WorkSabanTrace.create();
+  async function verify(event){
     events++;
     if(events>32)throw new Error('worker_event_limit_exceeded');
+    const verified=await verifier.accept(event);
+    office?.traceStatus(verified);
+    await office.consume(event);
     if(event.type==='completed')completed=event.execution;
     if(event.type==='failed_closed')throw new Error('Worker execution failed closed');
-    return office.consume(event);
   }
   while(true){
     const packet=await reader.read();
@@ -99,15 +105,25 @@ async function streamMission(url, payload) {
     if(packet.done)break;
   }
   if(pending.trim())await verify(JSON.parse(pending));
-  if(!completed)throw new Error('Stream ended without verified delivery receipt');
+  if(!completed || verifier.summary().status!=='completed')
+    throw new Error('Stream ended without a cryptographically checked local delivery receipt');
+  lastMissionEvidence=verifier.export();
+  office?.traceStatus(verifier.summary());
   return completed;
 }
 
 async function launch(button,url,payload,source){
+  if(missionBusy)return;
+  missionBusy=true;
+  $('demo').disabled=true;
+  $('csv-run').disabled=true;
+  $('compose').disabled=true;
   $('error').textContent='';
   $('demo-result').hidden=true;
   $('save-report').hidden=true;
   deliveredRun=null;
+  lastMissionEvidence=null;
+  $('office-export-trace').disabled=true;
   button.disabled=true;
   const label=button.textContent;
   button.textContent='Watching local workers…';
@@ -117,17 +133,21 @@ async function launch(button,url,payload,source){
     if(source==='user')$('csv-consent').checked=false;
   } catch(error){
     $('error').textContent=error.message;
+    lastMissionEvidence=null;
+    office?.traceStatus({status:'invalid'});
     await office?.consume({type:'failed_closed'}).catch(()=>{});
   } finally {
     button.textContent=label;
-    if(source==='user')updateCsvButton();
-    else button.disabled=false;
+    missionBusy=false;
+    $('demo').disabled=false;
+    $('compose').disabled=false;
+    updateCsvButton();
   }
 }
 $('demo').addEventListener('click',()=>launch($('demo'),'/api/run-demo-stream',undefined,'synthetic'));
 
 function updateCsvButton(){
-  $('csv-run').disabled=!$('csv-file').files?.length||!$('csv-consent').checked;
+  $('csv-run').disabled=missionBusy||!$('csv-file').files?.length||!$('csv-consent').checked;
 }
 $('csv-file').addEventListener('change',updateCsvButton);
 $('csv-consent').addEventListener('change',updateCsvButton);
@@ -155,6 +175,23 @@ $('save-report').addEventListener('click',()=>{
   const link=document.createElement('a');
   link.href=url;
   link.download='work-saban-audited-sales-report.md';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
+
+// Evidence files are created only on an explicit local user action.
+// The trace includes a full report and must be handled as private business data.
+$('office-export-trace').addEventListener('click',()=>{
+  if(!lastMissionEvidence||lastMissionEvidence.status!=='completed')return;
+  const contents=JSON.stringify(lastMissionEvidence,null,2)+'\n';
+  const blob=new Blob([contents],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download='work-saban-verified-local-trace.json';
   document.body.append(link);
   link.click();
   link.remove();
