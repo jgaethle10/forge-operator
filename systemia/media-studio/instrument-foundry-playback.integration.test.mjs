@@ -804,3 +804,54 @@ test('actual engine preserves live bass oscillator in stopped sampled-piano-plus
   }
  });
 });
+
+test('real PulseGrid performed kick and original hat noise are replayed in the authorized stopped offline mix',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prior=globalThis.OfflineAudioContext;
+  class OfflineDrums extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate}
+   async startRendering(){
+    const p=new Float32Array(this.frames).fill(.17);
+    return {numberOfChannels:2,length:this.frames,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=OfflineDrums;
+  const pcm=new Float32Array(36000).fill(.4);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const withBeat=applyPulseGridOperation(session,{
+   type:'clip.set_step',track_id:'drums',scene:0,step:0,velocity:1,
+  },'human').session;
+  const before=structuredClone(withBeat);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(withBeat,0);
+   const live=SimulatedAudioContext.instances.at(-1);
+   assert.equal(live.createdOscillators,1,'original kick oscillator is played');
+   assert.equal(live.starts.length,2,'actual verified piano and stochastic hi-hat sample play');
+   const performedNoise=live.starts[1].source.buffer;
+   assert.ok(performedNoise?.duration>0);
+   engine.stop();
+   const review=await engine.auditRecordedPianoOfflineBus();
+   assert.equal(review.status,'offline_track_bus_pcm_measurement',JSON.stringify(review));
+   assert.equal(review.analyzed_drum_hits,2);
+   assert.equal(review.analyzed_voices,1);
+   assert.ok(review.included_track_ids.includes('drums'));
+   const offline=SimulatedAudioContext.instances.at(-1);
+   assert.equal(offline.createdOscillators,1,'offline kick uses same shared sine/glide scheduler');
+   assert.equal(offline.starts.length,2,'offline piano and hi-hat WAV sources both schedule');
+   assert.equal(offline.starts[1].source.buffer,performedNoise,
+    'offline reuses exact random hat sample from performed live hit');
+   assert.deepEqual(withBeat,before,'canonical authored MIDI/percussion remains unchanged');
+   assert.equal(withBeat.assets[0].rights,'unknown');
+  }finally{
+   await engine.close();
+   if(prior===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prior;
+  }
+ });
+});
