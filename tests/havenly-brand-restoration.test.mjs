@@ -13,3 +13,10 @@ test('cleaning builder retains client-controlled, no-price quote handoff',()=>{
  assert.match(html,/plan\.addEventListener\('change',updatePlanSummary\)/);
  assert.match(html,/Nothing is automatically submitted or booked/);
 });
+
+test('original Havenly collections are selectable without inventing package prices',()=>{
+ for(const label of ['Welcome Haven','Deep Haven','Haven Reset','id="summaryCollection"','data-collection="Welcome Haven"','data-collection="Deep Haven"','data-collection="Haven Reset"','Collection interest:'])assert.ok(html.includes(label),'Missing '+label);
+ assert.doesNotMatch(html,/Starting at \$\d+|Estimated Starting Range|Instant quote amount/i);
+ assert.match(html,/Descriptions are guides, not fixed inclusions/);
+ assert.match(html,/mobile-menu-panel a/);
+});
