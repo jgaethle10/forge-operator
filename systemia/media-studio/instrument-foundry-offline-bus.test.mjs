@@ -237,3 +237,49 @@ test('offline drum review fails closed if hat buffer, track or actual hit timing
   assert.equal(result.sample_peak,null);
  }
 });
+
+
+test('8-second offline audition spans multiple bars with bounded 48kHz PCM and local WAV preview',async()=>{
+ const f=fakeContext(.28);
+ const early=voice({start_time:.2,stop_time:.65});
+ const late=voice({start_time:3.8,stop_time:4.25});
+ const result=await render({
+  voices:[early,late],tracks:[track],
+  window_sec:8,includeAuditionWav:true,offlineContextFactory:f.make
+ });
+ assert.equal(result.status,'offline_track_bus_pcm_measurement',JSON.stringify(result));
+ assert.deepEqual(f.calls[0],['factory',2,384000,48000]);
+ assert.equal(result.window_sec,8);
+ assert.equal(result.rendered_frames,384000);
+ assert.equal(result.analyzed_voices,2);
+ assert.ok(result.audition_wav_bytes instanceof Uint8Array);
+ assert.equal(result.audition_wav_bytes.length,44+384000*4);
+ assert.equal(result.audition_sample_clamped,false);
+ assert.equal(result.effects_tail_complete,false,'wet feedback still does not certify full tail completion');
+});
+test('long performed phrase cannot accidentally pass the short 0.8-second review',async()=>{
+ const f=fakeContext(),second=voice({start_time:2.1,stop_time:2.45});
+ const short=await render({voices:[voice(),second],tracks:[track],offlineContextFactory:f.make});
+ assert.equal(short.status,'unavailable');
+ assert.match(short.reason,/selected offline audition window/);
+ assert.equal(short.sample_peak,null);
+});
+test('over-full-scale rendered PCM remains measurable while private WAV preview explicitly discloses clamp',async()=>{
+ const f=fakeContext(1.32);
+ const result=await render({voices:[voice()],tracks:[track],
+  includeAuditionWav:true,offlineContextFactory:f.make});
+ assert.equal(result.status,'offline_track_bus_pcm_measurement');
+ assert.equal(result.sample_peak,1.32);
+ assert.equal(result.audition_sample_clamped,true);
+ assert.equal(new DataView(result.audition_wav_bytes.buffer).getInt16(44,true),32767);
+});
+test('unsupported unbounded preview length fails before allocating an OfflineAudioContext',async()=>{
+ const f=fakeContext();
+ for(const window_sec of [-1,0,2,9,Infinity]){
+  const result=await render({voices:[voice()],tracks:[track],window_sec,
+   includeAuditionWav:true,offlineContextFactory:f.make});
+  assert.equal(result.status,'unavailable');
+  assert.equal(result.sample_peak,null);
+ }
+ assert.equal(f.calls.length,0,'invalid preview should allocate zero DSP nodes');
+});
