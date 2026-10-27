@@ -694,3 +694,55 @@ test('in-flight offline piano mix becomes unavailable when playback authority ch
   }
  });
 });
+
+test('actual PulseGrid records an authorized audio track beside piano and offline-renders both sources',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prev=globalThis.OfflineAudioContext;
+  class CombinedOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate;}
+   async startRendering(){
+    const one=new Float32Array(this.frames).fill(.21);
+    return {numberOfChannels:2,length:this.frames,getChannelData:()=>one};
+   }
+  }
+  globalThis.OfflineAudioContext=CombinedOffline;
+  const pcm=new Float32Array(36000).fill(.4);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const audioTrack=session.tracks.find(t=>t.type==='audio');
+  assert.ok(audioTrack,'canonical PulseGrid audio track must exist');
+  const withAudio=applyPulseGridOperation(session,{
+   type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:0,
+   asset_id:session.assets[0].id,
+  },'human').session;
+  const before=structuredClone(withAudio);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(withAudio,0);
+   const live=SimulatedAudioContext.instances.at(-1);
+   assert.equal(live.createdOscillators,0);
+   assert.equal(live.starts.length,2,'recorded piano and attached audio bed both play in canonical engine');
+   engine.stop();
+   const report=await engine.auditRecordedPianoOfflineBus();
+   assert.equal(report.status,'offline_track_bus_pcm_measurement',JSON.stringify(report));
+   assert.equal(report.analyzed_voices,1);
+   assert.equal(report.analyzed_audio_beds,1);
+   assert.equal(report.audio_beds_within_window,false,
+    'two-second canonical audio loop cannot be certified by the .8s offline excerpt');
+   const offline=SimulatedAudioContext.instances.at(-1);
+   assert.equal(offline.createdOscillators,0);
+   assert.equal(offline.starts.length,2,
+    'offline mix must schedule BOTH already-authorized decoded audio tracks');
+   assert.deepEqual(withAudio,before,'offline review must not mutate user sessions or elevate recording rights');
+   assert.equal(withAudio.assets[0].rights,'unknown');
+  }finally{
+   await engine.close();
+   if(prev===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prev;
+  }
+ });
+});
