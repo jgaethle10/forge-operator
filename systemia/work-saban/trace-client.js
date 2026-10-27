@@ -70,7 +70,8 @@
              outcome.specialist_receipts.length!==5||
              !Array.isArray(outcome.external_actions)||
              outcome.external_actions.length!==0||
-             outcome.model_inference!==false){
+             outcome.model_inference!==false||
+             !/^sha256:[0-9a-f]{64}$/.test(outcome.source_sha256||'')){
             throw new Error('incomplete_local_delivery');
           }
           for(let i=0;i<roles.length;i++){
