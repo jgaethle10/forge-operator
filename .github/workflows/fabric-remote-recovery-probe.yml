@@ -53,31 +53,23 @@ jobs:
               signal:controller.signal,
             });
             const body=await response.json().catch(()=>null);
-            if(!response.ok||!body){
-              process.stdout.write(JSON.stringify({
-                schema:'evercraft.fabric.remote-recovery-probe.v1',
-                configured:true,
-                reachable:false,
-                mutation_performed:false,
-                state:'remote_operator_status_failed',
-                http_status:response.status,
-              },null,2)+'\n');
-              process.exitCode=1;
-            }else{
-              process.stdout.write(JSON.stringify({
-                schema:'evercraft.fabric.remote-recovery-probe.v1',
-                configured:true,
-                reachable:true,
-                mutation_performed:false,
-                state:'remote_operator_ready',
-                operator_schema:body.schema||null,
-                instance_id:body.instance_id||null,
-                roots:Array.isArray(body.roots)?body.roots:[],
-                execution_mode:body.execution?.mode||null,
-                programs:Array.isArray(body.execution?.programs)?body.execution.programs:[],
-                root_privilege:body.execution?.root_privilege===true,
-              },null,2)+'\n');
-            }
+            const {assessRemoteOperatorStatus}=await import('./scripts/remote-recovery-status-contract.mjs');
+            const assessment=assessRemoteOperatorStatus(body);
+            const accepted=response.ok && assessment.accepted === true;
+            process.stdout.write(JSON.stringify({
+              schema:'evercraft.fabric.remote-recovery-probe.v1',
+              configured:true,
+              reachable:accepted,
+              mutation_performed:false,
+              state:accepted?'remote_operator_status_contract_verified':'remote_operator_status_not_accepted',
+              http_status:response.status,
+              ...assessment,
+              // A remote status response never alone proves which physical
+              // node answered, and cannot enroll/authorize any device.
+              node002_identity_verified:false,
+              production_remote_dispatch_verified:false,
+            },null,2)+'\\n');
+            if(!accepted)process.exitCode=1;
           }catch(error){
             process.stdout.write(JSON.stringify({
               schema:'evercraft.fabric.remote-recovery-probe.v1',
