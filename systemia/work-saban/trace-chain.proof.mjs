@@ -49,6 +49,17 @@ assert.equal(test.summary().trace_id,'local-proof-test');
 assert.equal(test.export().events.length,12);
 assert.equal(test.summary().tail_digest,chain.summary().tail_digest);
 assert.equal(test.export().authenticity,'local_hash_chain_unsigned');
+// A fully rehashed but malformed specialist digest must still be refused.
+const malformed=createLocalEventChain({traceId:'malformed-digest'});
+const malformedVerifier=client.create();
+await malformedVerifier.accept(malformed.next({type:'accepted'}));
+await malformedVerifier.accept(malformed.next({type:'stage_started',role:'analyst'}));
+await assert.rejects(
+  malformedVerifier.accept(malformed.next({type:'stage_verified',role:'analyst',
+    receipt:{...receipts[0],result_sha256:'sha256:not-a-valid-digest'}})),
+  /invalid_worker_result_digest/
+);
+
 const offline=auditWorkSabanTrace(test.export());
 assert.equal(offline.status,'local_trace_integrity_verified');
 assert.equal(offline.event_count,12);
