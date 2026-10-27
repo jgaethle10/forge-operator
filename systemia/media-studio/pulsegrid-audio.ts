@@ -3,6 +3,7 @@ import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import {foundryPedalDurationSteps,validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
 import {foundryPianoSampleTailBudget} from './instrument-foundry-tail-audit.mjs';
+import {FoundryPianoPolyphonyLedger} from './instrument-foundry-polyphony.mjs';
 import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
 import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch, planFoundryPianoPreRoll} from './instrument-foundry-piano.mjs';
@@ -28,6 +29,12 @@ export type PulseGridAudioStatus = {
   decoded_cut_in_guard_voices?: number;
   /** Count of sample voices offset past confidently detected operator silence. */
   decoded_preroll_aligned_voices?: number;
+  /** Schedule-overlap only. These are NOT actual mix peaks or digital clipping. */
+  sampled_piano_scheduled_voices?: number;
+  sampled_piano_max_overlap?: number;
+  sampled_piano_gain_sum_proxy?: number;
+  sampled_piano_overlap_review?: boolean;
+  sampled_piano_observations_complete?: boolean;
 };
 
 type PulseGridTrackBus = {
@@ -63,6 +70,7 @@ export class PulseGridAudioEngine {
   private decodedFastAttackVoices = 0;
   private decodedCutInGuardVoices = 0;
   private decodedPreRollAlignedVoices = 0;
+  private readonly pianoPolyphony=new FoundryPianoPolyphonyLedger();
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -76,6 +84,7 @@ export class PulseGridAudioEngine {
     const latencySeconds = context
       ? Math.max(0, context.baseLatency || 0) + Math.max(0, context.outputLatency || 0)
       : 0;
+    const overlap=this.pianoPolyphony.snapshot();
     return {
       playing: this.playing,
       scene: this.scene,
@@ -90,6 +99,11 @@ export class PulseGridAudioEngine {
       decoded_fast_attack_voices:this.decodedFastAttackVoices,
       decoded_cut_in_guard_voices:this.decodedCutInGuardVoices,
       decoded_preroll_aligned_voices:this.decodedPreRollAlignedVoices,
+      sampled_piano_scheduled_voices:overlap.observed_voices,
+      sampled_piano_max_overlap:overlap.max_simultaneous_voices,
+      sampled_piano_gain_sum_proxy:overlap.peak_summed_voice_gain,
+      sampled_piano_overlap_review:overlap.review_gain_summation,
+      sampled_piano_observations_complete:overlap.observation_complete,
     };
   }
 
@@ -177,6 +191,7 @@ export class PulseGridAudioEngine {
     this.decodedFastAttackVoices=0;
     this.decodedCutInGuardVoices=0;
     this.decodedPreRollAlignedVoices=0;
+    this.pianoPolyphony.reset();
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -592,6 +607,10 @@ export class PulseGridAudioEngine {
           if(sampledVoice.attack_profile==='zero_aligned_fast_attack')this.decodedFastAttackVoices+=1;
           if(sampledVoice.attack_profile==='cut_in_microfade_guard')this.decodedCutInGuardVoices+=1;
           if(sampledVoice.pre_roll_profile==='verified_quiet_preroll_aligned')this.decodedPreRollAlignedVoices+=1;
+          this.pianoPolyphony.record({
+            track_id:track.id,start_time:sampledVoice.start_time,
+            stop_time:sampledVoice.stop_time,voice_gain:sampledVoice.voice_gain,
+          });
         }else{
           this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
         }
