@@ -187,6 +187,7 @@ export class PulseGridAudioEngine {
     }
     const Offline=globalThis.OfflineAudioContext;
     if(!Offline)return unavailable('This browser does not support OfflineAudioContext.');
+    const sessionAtStart=this.session;
     const authority=this.audioAuthoritySignature;
     const cacheEpoch=this.audioCacheEpoch;
     const attempt=this.playbackAttempt;
@@ -194,7 +195,7 @@ export class PulseGridAudioEngine {
       voices,audioBeds:this.decodedAudioBeds,tracks:Array.from(snapshots.values()),
       offlineContextFactory:(channels,frames,rate)=>new Offline(channels,frames,rate),
     });
-    if(this.playing||authority!==this.audioAuthoritySignature||
+    if(this.playing||sessionAtStart!==this.session||authority!==this.audioAuthoritySignature||
        cacheEpoch!==this.audioCacheEpoch||attempt!==this.playbackAttempt)
       return unavailable('Audio authorization or playback state changed during the offline review.');
     const omittedTrackIds=this.session.tracks.filter(t=>
