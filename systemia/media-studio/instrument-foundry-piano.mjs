@@ -97,6 +97,44 @@ export function foundryPianoVoiceGain(velocity,selection){
   return Math.max(0.0001,0.68*Math.pow(velocity,hasDistinctRecordedLayer?0.82:1));
 }
 
+/**
+ * Decoded-PCM attack guard for acoustic takes. A zero-aligned recording may
+ * bring its own hammer onset; a fixed 4 ms linear fade can erase that detail.
+ * A cut-in at a nonzero waveform needs a longer microfade to avoid a click.
+ * Inspect at most two channels x 1.5 ms, never resample/edit source bytes.
+ *
+ * Evidence is only a sample-boundary heuristic, NOT audible verification.
+ * Host test doubles/unsupported buffers retain the established safe 4 ms.
+ */
+export function planFoundryPianoAttack(buffer){
+  const legacy={attack_sec:.004,profile:'uninspected_legacy_guard'};
+  if(!buffer||typeof buffer.getChannelData!=='function'||
+     !Number.isFinite(buffer.sampleRate)||buffer.sampleRate<8000||
+     !Number.isInteger(buffer.numberOfChannels)||buffer.numberOfChannels<1||
+     buffer.numberOfChannels>2)return legacy;
+  const samples=Math.min(256,Math.ceil(buffer.sampleRate*.0015));
+  const onsetFrames=Math.min(3,samples);
+  const firstThird=Math.min(samples,Math.ceil(buffer.sampleRate*.00035));
+  let onset=0,firstWindow=0;
+  try{
+    for(let channel=0;channel<buffer.numberOfChannels;channel++){
+      const pcm=buffer.getChannelData(channel);
+      if(!pcm||pcm.length<samples)return legacy;
+      for(let i=0;i<samples;i++){
+        const value=Math.abs(pcm[i]);
+        if(!Number.isFinite(value)||value>1.01)return legacy;
+        if(i<onsetFrames)onset=Math.max(onset,value);
+        if(i<firstThird)firstWindow=Math.max(firstWindow,value);
+      }
+    }
+  }catch{return legacy}
+  if(onset<.002&&firstWindow<.08)
+    return {attack_sec:.0005,profile:'zero_aligned_fast_attack'};
+  if(onset<.015)
+    return {attack_sec:.0015,profile:'bounded_early_onset_guard'};
+  return {attack_sec:.003,profile:'cut_in_microfade_guard'};
+}
+
 export function scheduleFoundryPianoNote({
   context,destination,buffer,pitch,velocity,time,duration,selection,createSource
 }){
@@ -118,7 +156,8 @@ export function scheduleFoundryPianoNote({
   // gain ramps, pops or unexpectedly silent notes.
   const sounding=Math.min(playable,duration+selection.release_sec);
   if(sounding<.012)throw new Error('Foundry sample too short for click-free piano release.');
-  const attackSeconds=Math.min(.004,sounding*.15);
+  const attackPlan=planFoundryPianoAttack(buffer);
+  const attackSeconds=Math.min(attackPlan.attack_sec,sounding*.15);
   const releaseSeconds=Math.min(selection.release_sec,sounding*.45);
   const attackEnd=time+attackSeconds;
   const end=time+sounding;
@@ -141,5 +180,7 @@ export function scheduleFoundryPianoNote({
   source.start(time);
   source.stop(end);
   return {asset_id:selection.asset_id,start_time:time,stop_time:end,release_start:releaseStart,
-    playback_rate:selection.playback_rate,voice_gain:voiceGain,release_curve:'cosine_squared_4',commercial_rights_verified:false};
+    playback_rate:selection.playback_rate,voice_gain:voiceGain,
+    attack_sec:attackSeconds,attack_profile:attackPlan.profile,
+    release_curve:'cosine_squared_4',commercial_rights_verified:false};
 }
