@@ -1,0 +1,36 @@
+name: Evercraft Operator CLI preview tests
+on:
+  pull_request:
+    paths:
+      - 'packages/evercraft-cli/**'
+      - '.github/workflows/evercraft-operator-cli.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# PR pushes previously triggered both push and pull_request test runs.
+# Keep only the review path, and cancel superseded runs for the same PR.
+concurrency:
+  group: evercraft-operator-cli-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  local-mcp-conformance:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify CLI syntax
+        run: node --check cli.mjs
+        working-directory: packages/evercraft-cli
+      - name: Test opt-in local MCP contracts
+        run: node --test tests/*.test.mjs
+        working-directory: packages/evercraft-cli

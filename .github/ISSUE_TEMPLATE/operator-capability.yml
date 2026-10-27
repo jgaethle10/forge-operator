@@ -1,0 +1,99 @@
+name: Propose an operator capability (review only)
+description: Suggest an independently maintained tool or integration for future Evercraft Operator Exchange review. This does not install, publish, or sell a capability.
+title: "[Operator candidate] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for building with us. This is a public engineering proposal, not a live marketplace listing, integration approval, or purchase offer.
+
+        **Do not include credentials, private endpoints, customer data, proprietary source, or personal contact details.** Community and collaboration come before commerce. We will treat all links as unverified until independent review.
+  - type: input
+    id: capability
+    attributes:
+      label: Capability name
+      placeholder: Example Data Quality Inspector
+    validations:
+      required: true
+  - type: textarea
+    id: pain
+    attributes:
+      label: What real problem does it solve?
+      description: Describe a repeatable operator problem, the people it helps, and the outcome. Avoid unsupported performance claims.
+      placeholder: "Operators need to..."
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: Public documentation URL
+      description: An HTTPS page another developer can read without credentials.
+      placeholder: https://example.org/docs
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproducible, non-sensitive demonstration
+      description: Provide exact public/test-only inputs and expected output. If there is no independent proof yet, say so explicitly.
+      placeholder: |
+        Platform:
+        Setup steps:
+        Test-only input:
+        Expected output:
+        Independent evidence:
+    validations:
+      required: true
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Integration surface
+      options:
+        - Local MCP stdio
+        - Remote MCP Streamable HTTP
+        - OpenAPI / HTTPS
+        - A2A
+        - Not implemented yet
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: effects
+    attributes:
+      label: Highest possible side effect
+      description: Choose the most consequential behavior the tool can perform, not just its default behavior.
+      options:
+        - Read-only
+        - Writes data
+        - Takes external action
+        - Financial transaction
+        - Unknown / not assessed
+    validations:
+      required: true
+  - type: dropdown
+    id: auth
+    attributes:
+      label: Authentication model
+      options:
+        - No authentication
+        - API key
+        - OAuth
+        - Other or not yet implemented
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: Limitations, provenance, and known safety concerns
+      description: Include source and version, what is unverified, any known user-data boundaries, failure cases, and who controls execution.
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Submission confirmations
+      options:
+        - label: I am authorized to share these public materials and have not included credentials, customer records, or private data.
+          required: true
+        - label: I understand this is a review request, not a promise of publication, endorsement, partner referral, payment, or tool execution.
+          required: true
