@@ -1160,7 +1160,9 @@
       "resources": {
         "minimum_node_cpu_units": 1,
         "minimum_node_memory_mb": 64,
-        "require_capacity_hint": false
+        "require_capacity_hint": false,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 64
       }
     }
   ]
