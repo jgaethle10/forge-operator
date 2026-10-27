@@ -91,3 +91,22 @@ test('real Saban registered-worker path executes four bounded roles and emits re
 test('local execution rejects unrelated request', { skip: !actualWorkerPresent }, async () => {
   await assert.rejects(runLocal({ task: 'Conduct payroll', brief: example }), /not_admitted_to_skill/);
 });
+
+
+test('read-only workroom safely renders actual statuses without script injection', async () => {
+  const { renderLocalWorkroom } = await import('../systemia/saban/work-skills/workroom.mjs');
+  const receipt = {
+    schema:'evercraft.work-saban.local-commercial-run-receipt.v1',
+    state:'drafts_produced_held',role_count:1,receipt_sha256:'abc',
+    worker_receipts:[{role:'research',result:{status:'completed_with_holds',
+      findings:['<img src=x onerror=alert(1)>'],output:{name:'<script>alert(1)</script>'}}}],
+    reconciliation:{findings:['unverified']},next_gate:'owner_review'
+  };
+  const html=renderLocalWorkroom(receipt);
+  assert.match(html,/Research/);
+  assert.match(html,/held/);
+  assert.ok(!html.includes('<script>alert(1)</script>'));
+  assert.ok(!html.includes('<img src=x onerror=alert(1)>'));
+  assert.ok(html.includes('&lt;script&gt;alert(1)&lt;/script&gt;'));
+  assert.ok(!html.includes('running'));
+});
