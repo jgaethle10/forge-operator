@@ -35,3 +35,11 @@ jobs:
         run: |
           node systemia/saban/work-skills/cli.mjs --task "Create a narrated commercial for a cleaning company"
           node --check systemia/saban/work-skills/run-local-cli.mjs
+      - name: Produce an inspectable fictional four-worker receipt and workroom
+        run: node scripts/work-saban-ci-proof.mjs
+      - name: Attach safe demonstration artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-saban-local-ci-proof
+          path: artifacts/work-saban-ci-example/
+          retention-days: 7
