@@ -135,6 +135,69 @@ export function planFoundryPianoAttack(buffer){
   return {attack_sec:.003,profile:'cut_in_microfade_guard'};
 }
 
+/**
+ * Conservative, non-destructive pre-roll alignment for OWN decoded WAV data.
+ * Some captures contain operator silence before the actual struck note,
+ * causing late MIDI articulation. Only align a clear transient following
+ * >=12 ms of very low-level audio. Preserve 4 ms before the detected onset.
+ *
+ * A slow/pianissimo attack, noise, missing PCM, stereo disagreement, or
+ * uncertain onset gets NO trim. Never mutate WAV bytes or create new audio.
+ * Return an audition hypothesis, NOT a listener-approved sample edit.
+ */
+const preRollPlanCache=new WeakMap();
+export function planFoundryPianoPreRoll(buffer){
+  const unaligned={offset_sec:0,profile:'unaligned_safe'};
+  if(!buffer||typeof buffer!=='object')return unaligned;
+  if(preRollPlanCache.has(buffer))return preRollPlanCache.get(buffer);
+  const finish=result=>{preRollPlanCache.set(buffer,result);return result};
+  if(typeof buffer.getChannelData!=='function'||
+     !Number.isFinite(buffer.sampleRate)||buffer.sampleRate<8000||
+     !Number.isInteger(buffer.numberOfChannels)||buffer.numberOfChannels<1||
+     buffer.numberOfChannels>2||
+     !Number.isFinite(buffer.duration)||buffer.duration<.1)return finish(unaligned);
+  const rate=buffer.sampleRate;
+  const windowFrames=Math.max(4,Math.ceil(rate*.001));
+  const maxFrames=Math.min(Math.floor(rate*.055),Math.floor(buffer.duration*rate));
+  if(maxFrames<windowFrames*20)return finish(unaligned);
+  const channelData=[];
+  try{
+    for(let c=0;c<buffer.numberOfChannels;c++){
+      const pcm=buffer.getChannelData(c);
+      if(!pcm||pcm.length<maxFrames)return finish(unaligned);
+      channelData.push(pcm);
+    }
+  }catch{return finish(unaligned)}
+  const levels=[];
+  for(let start=0;start+windowFrames<=maxFrames;start+=windowFrames){
+    let energy=0,count=0;
+    for(const pcm of channelData){
+      for(let i=start;i<start+windowFrames;i++){
+        const v=pcm[i];
+        if(!Number.isFinite(v)||Math.abs(v)>1.01)return finish(unaligned);
+        energy+=v*v;count++;
+      }
+    }
+    levels.push(Math.sqrt(energy/count));
+  }
+  // First 8 ms must actually be quiet, not an early soft attack.
+  const firstEight=Math.min(8,levels.length);
+  if(Math.max(...levels.slice(0,firstEight))>.001)return finish(unaligned);
+  // Need two consecutive 1ms windows with convincing pitched onset energy,
+  // and the four preceding windows quiet, to avoid isolated clicks.
+  for(let i=12;i<levels.length-1;i++){
+    if(levels[i]<.006||levels[i+1]<.006)continue;
+    const previous=levels.slice(i-4,i);
+    if(previous.some(v=>v>.0015))continue;
+    const onsetTime=i*windowFrames/rate;
+    const offset=Math.max(0,onsetTime-.004);
+    if(offset>0&&offset<.052&&offset<buffer.duration-.03)
+      return finish({offset_sec:Number(offset.toFixed(6)),
+        profile:'verified_quiet_preroll_aligned'});
+  }
+  return finish(unaligned);
+}
+
 export function scheduleFoundryPianoNote({
   context,destination,buffer,pitch,velocity,time,duration,selection,createSource
 }){
@@ -149,7 +212,8 @@ export function scheduleFoundryPianoNote({
   const source=createSource();
   source.buffer=buffer;
   source.playbackRate.setValueAtTime(selection.playback_rate,time);
-  const playable=buffer.duration/selection.playback_rate;
+  const preRoll=planFoundryPianoPreRoll(buffer);
+  const playable=(buffer.duration-preRoll.offset_sec)/selection.playback_rate;
   // Natural sampler release: never schedule gain automation after the WAV is
   // exhausted, and always keep attack, key-off and end times ordered. An
   // excessive fade-length on a short sample would otherwise produce invalid
@@ -177,10 +241,11 @@ export function scheduleFoundryPianoNote({
   }
   source.connect(gain);
   gain.connect(destination);
-  source.start(time);
+  source.start(time,preRoll.offset_sec);
   source.stop(end);
   return {asset_id:selection.asset_id,start_time:time,stop_time:end,release_start:releaseStart,
     playback_rate:selection.playback_rate,voice_gain:voiceGain,
     attack_sec:attackSeconds,attack_profile:attackPlan.profile,
+    source_offset_sec:preRoll.offset_sec,pre_roll_profile:preRoll.profile,
     release_curve:'cosine_squared_4',commercial_rights_verified:false};
 }
