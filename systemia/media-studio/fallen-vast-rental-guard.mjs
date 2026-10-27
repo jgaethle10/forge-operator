@@ -86,7 +86,7 @@ export function evaluateRentalPreflight(input,{nowMs=Date.now()}={}){
 export async function simulateLifecycle({client,job,now=()=>new Date().toISOString()}){
   let instanceId=null;
   const events=[];
-  let primaryError=null,cleanupError=null;
+  let primaryError=null,cleanupError=null,possibleOrphan=false;
   try{
     const created=await client.create(job);
     if(!Number.isSafeInteger(created?.id)||created.id<=0)throw Error('instance_identity_missing');
@@ -101,7 +101,8 @@ export async function simulateLifecycle({client,job,now=()=>new Date().toISOStri
     }
   }catch(e){
     primaryError=String(e.message||e);
-    events.push({at:now(),event:'CREATE_OR_ID_FAILED'});
+    possibleOrphan=true;
+    events.push({at:now(),event:'CREATE_OR_ID_FAILED_ORPHAN_AUDIT_REQUIRED'});
   }finally{
     if(instanceId!==null){
       try{
@@ -116,8 +117,8 @@ export async function simulateLifecycle({client,job,now=()=>new Date().toISOStri
     }
   }
   return {
-    status:cleanupError?'CRITICAL_CLEANUP_UNVERIFIED':primaryError?'JOB_FAILED_CLEANLY':'FINISHED_DELETED',
-    instanceId,primaryError,cleanupError,events,
+    status:cleanupError||possibleOrphan?'CRITICAL_RECONCILIATION_REQUIRED':primaryError?'JOB_FAILED_CLEANLY':'FINISHED_DELETED',
+    instanceId,primaryError,cleanupError,possibleOrphan,events,
     providerMockOnly:true
   };
 }
