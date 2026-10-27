@@ -34,6 +34,11 @@ jobs:
         run: |
           node --test tests/rules.test.cjs
           node tests/disclosure_benchmark.cjs
+      - name: Cross-browser package manifest and integrity checks
+        working-directory: products/humanfilter
+        run: |
+          python scripts/build_browser_packages.py --output-dir dist
+          python -c "import zipfile,json,pathlib; r=pathlib.Path('dist'); z=zipfile.ZipFile(next(r.glob('*Firefox*.zip'))); m=json.loads(z.read('manifest.json')); assert m['browser_specific_settings']['gecko']['data_collection_permissions']['required']==['none']; assert m['manifest_version']==3; print('Firefox Gecko manifest and packaging valid')"
       - name: Browser isolation and regression suite
         working-directory: products/humanfilter
         run: |
