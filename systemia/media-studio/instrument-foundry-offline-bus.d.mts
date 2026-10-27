@@ -28,6 +28,7 @@ export type FoundryOfflineBusResult={
  rms_dbfs?:number;rendered_frames?:number;window_sec?:number;rate?:number;
  audio_beds_within_window?:boolean;analyzed_audio_beds?:number;
  analyzed_synth_voices?:number;analyzed_drum_hits?:number;
+ audition_wav_bytes?:Uint8Array;audition_sample_clamped?:boolean;
  included_track_ids?:string[];omitted_track_ids?:string[];
  source_kind:'decoded_pcm_only'|'decoded_pcm_plus_synth';limitations?:string;
 };
@@ -35,5 +36,6 @@ export function renderFoundryPianoOfflineBus(input:{
  voices:FoundryOfflineBusVoice[];tracks:FoundryOfflineBusTrack[];
  audioBeds?:FoundryOfflineAudioBed[];synthVoices?:FoundryOfflineSynthVoice[];
  drumVoices?:FoundryOfflineDrumHit[];
+ window_sec?:0.8|8;includeAuditionWav?:boolean;
  offlineContextFactory?:(channels:number,frames:number,rate:number)=>OfflineAudioContext;
 }):Promise<FoundryOfflineBusResult>;
