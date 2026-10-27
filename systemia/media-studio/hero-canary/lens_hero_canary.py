@@ -5,7 +5,7 @@ Hero canary: precision camera lens, originally modeled procedurally in Blender.
 No third-party model/texture assets. Not customer documentary evidence.
 Blender 4.x Cycles, two-second 9:16 preview at 24 fps.
 
-blender -b -t 6 --python lens_hero_canary.py -- --output /workspace/lens-canary --save-only
+blender -b -t 6 --python lens_hero_canary.py -- --output /workspace/lens-canary --save-only --gpu
 blender -b /workspace/lens-canary.blend -a
 """
 import bpy
@@ -42,6 +42,25 @@ scene.world.color = (0.015, 0.015, 0.016)
 # Render on CPU if GPU devices have not been explicitly provisioned.
 # The remote rendering operator may opt into Cycles GPU only after an observed device preflight.
 scene.cycles.device = "CPU"
+if "--gpu" in sys.argv:
+    prefs = bpy.context.preferences.addons["cycles"].preferences
+    activated = False
+    for backend in ("OPTIX", "CUDA"):
+        try:
+            prefs.compute_device_type = backend
+            prefs.get_devices()
+            gpu_devices = [d for d in prefs.devices if d.type in ("OPTIX", "CUDA")]
+            if not gpu_devices:
+                continue
+            for device in prefs.devices:
+                device.use = device in gpu_devices
+            activated = True
+            scene.cycles.device = "GPU"
+            break
+        except Exception:
+            continue
+    if not activated:
+        raise RuntimeError("no_compatible_cycles_gpu; refusing silent CPU fallback")
 
 def mat(name, base, metallic=0, roughness=0.4, transmission=0):
     m=bpy.data.materials.new(name)
@@ -173,9 +192,6 @@ for frame,location in [(1,(2.4,-3.9,2.5)),(48,(1.48,-3.1,2.9))]:
     cam.rotation_euler=(Vector((0,0,1.05))-cam.location).to_track_quat('-Z','Y').to_euler()
     cam.keyframe_insert(data_path="location",frame=frame)
     cam.keyframe_insert(data_path="rotation_euler",frame=frame)
-for fc in cam.animation_data.action.fcurves:
-    for kp in fc.keyframe_points:kp.interpolation="BEZIER"
-
 # Portable editability proof; no GPU charges and no proprietary source imagery.
 bpy.ops.wm.save_as_mainfile(filepath=str(out)+".blend")
 if not save_only:
