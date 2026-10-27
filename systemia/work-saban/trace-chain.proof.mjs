@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createLocalEventChain, verifyLocalEventChain, sha256Text } from './trace-chain.mjs';
+import { auditWorkSabanTrace } from './audit-trace.mjs';
 
 const here=path.dirname(fileURLToPath(import.meta.url));
 const script=fs.readFileSync(path.join(here,'trace-client.js'),'utf8');
@@ -48,6 +49,17 @@ assert.equal(test.summary().trace_id,'local-proof-test');
 assert.equal(test.export().events.length,12);
 assert.equal(test.summary().tail_digest,chain.summary().tail_digest);
 assert.equal(test.export().authenticity,'local_hash_chain_unsigned');
+const offline=auditWorkSabanTrace(test.export());
+assert.equal(offline.status,'local_trace_integrity_verified');
+assert.equal(offline.event_count,12);
+assert.equal(offline.independent_identity_attestation,false);
+const mutatedArchive=structuredClone(test.export());
+mutatedArchive.events[11].execution.report_markdown+='tampered';
+assert.throws(()=>auditWorkSabanTrace(mutatedArchive),/invalid_trace_hash/);
+const missingArchive=structuredClone(test.export());
+missingArchive.events.splice(2,1);
+assert.throws(()=>auditWorkSabanTrace(missingArchive),/invalid_trace_link/);
+
 
 async function rejectWithTrace(mutator,match){
   const corrupted=structuredClone(events);
