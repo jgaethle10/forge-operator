@@ -1,0 +1,36 @@
+name: Fallen Vast read-only connection check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  vast-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Verify API authentication without logging response or credentials
+        env:
+          VAST_API_KEY: ${{ secrets.VAST_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, sys, urllib.request, urllib.error
+          key=os.environ.get("VAST_API_KEY","")
+          if not key:
+              sys.exit("FAIL: VAST_API_KEY is not available to this workflow.")
+          # GET only: never create, update, rent, terminate or access billing writes.
+          url="https://console.vast.ai/api/v0/users/current/"
+          request=urllib.request.Request(url, headers={"Authorization":"Bearer "+key}, method="GET")
+          try:
+              with urllib.request.urlopen(request, timeout=15) as response:
+                  status=response.status
+          except urllib.error.HTTPError as e:
+              status=e.code
+          except Exception:
+              sys.exit("FAIL: Network or API endpoint unavailable; no account changes made.")
+          if status == 200:
+              print("PASS: Vast read-only authentication accepted. No rental started.")
+          else:
+              sys.exit(f"FAIL: Vast read-only authentication returned HTTP {status}. No rental started.")
+          PY

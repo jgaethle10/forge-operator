@@ -1,0 +1,55 @@
+name: Fallen Owned Video Worker Contract
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/owned-video-adapter.mjs'
+      - 'systemia/media-studio/owned-video-adapter.test.mjs'
+      - 'systemia/media-studio/owned-video-gpu-preflight.mjs'
+      - 'systemia/media-studio/owned-video-gpu-preflight.test.mjs'
+      - 'systemia/media-studio/owned-video-saban-placement.mjs'
+      - 'systemia/media-studio/owned-video-saban-placement.test.mjs'
+      - 'systemia/media-studio/owned-video-execution-gate.mjs'
+      - 'systemia/media-studio/owned-video-execution-gate.test.mjs'
+      - 'systemia/media-studio/owned-video-canary-contract.test.mjs'
+      - 'systemia/media-studio/owned-video-canary-pipeline.test.ts'
+      - 'systemia/media-studio/campaigns/before-the-doors-canary-01.json'
+      - 'systemia/media-studio/campaigns/before-the-doors-canary-bible.json'
+      - 'systemia/media-studio/workers/wan-local-worker.py'
+      - 'systemia/media-studio/workers/make-weights-manifest.py'
+      - 'systemia/media-studio/OWNED-VIDEO-WORKER.md'
+      - '.github/workflows/fallen-owned-video-worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owned-video-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Provision and verify FFmpeg/FFprobe
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Verify owned-video moving-media and fail-closed contracts
+        run: node --test systemia/media-studio/owned-video-adapter.test.mjs systemia/media-studio/owned-video-gpu-preflight.test.mjs systemia/media-studio/owned-video-saban-placement.test.mjs systemia/media-studio/owned-video-execution-gate.test.mjs systemia/media-studio/owned-video-canary-contract.test.mjs
+      - name: Prove canary-to-Fallen-to-Saban integration using the real model router
+        run: |
+          npm install --no-audit --no-fund
+          node --import tsx --test systemia/media-studio/owned-video-canary-pipeline.test.ts
+      - name: Syntax-check offline CUDA worker and immutable model inventory tool
+        run: |
+          python3 -m py_compile systemia/media-studio/workers/wan-local-worker.py
+          python3 -m py_compile systemia/media-studio/workers/make-weights-manifest.py
+      - name: Prove no third-party generation is invoked
+        run: |
+          ! grep -iE 'api\.runwayml|api\.elevenlabs|api\.openai\.com' systemia/media-studio/owned-video-adapter.mjs systemia/media-studio/workers/*.py
+          grep -q 'publicationAuthority:false' systemia/media-studio/owned-video-adapter.mjs
