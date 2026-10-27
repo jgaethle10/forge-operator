@@ -1,0 +1,63 @@
+name: HumanFilter RC3 • Original audio foundry auditions
+
+on:
+  push:
+    branches: ["humanfilter-fallen-rc3-*"]
+    paths:
+      - "products/humanfilter/commercial/build_score.py"
+      - ".github/workflows/humanfilter-rc3-original-audio.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compose-render-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install owned-score dependencies and FFmpeg
+        run: |
+          python -m pip install 'numpy>=2.0,<3'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Render TWO 30-second original score directions and own generated SFX
+        run: |
+          python products/humanfilter/commercial/build_score.py --out artifacts/humanfilter-rc3/original-audio
+      - name: Check independent audio files and exact provenance
+        run: |
+          python - <<'PY'
+          import pathlib,json,hashlib,subprocess
+          root=pathlib.Path('artifacts/humanfilter-rc3/original-audio')
+          info=json.loads((root/'audio_manifest.json').read_text())
+          assert info['schema']=='evercraft.humanfilter.fallen.music-audition.v1'
+          assert info['status']=='ORIGINAL_INSTRUMENTAL_AUDITIONS_NOT_FINAL_MIX'
+          assert len(info['soundtracks'])==2 and info['publication_authority'] is False
+          assert info['bella_voice_present'] is False and info['creative_approval'] is False
+          for x in info['soundtracks']:
+              assert x['duration_seconds']==30
+              for name,record in x['files'].items():
+                  p=root/x['style']/name
+                  assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==record['sha256']
+                  probe=json.loads(subprocess.check_output(['ffprobe','-v','quiet','-print_format','json','-show_format','-show_streams',str(p)]))
+                  duration=float(probe['format']['duration'])
+                  assert abs(duration-30)<0.1,(name,duration)
+                  streams=[s for s in probe['streams'] if s['codec_type']=='audio']
+                  assert len(streams)==1 and streams[0]['sample_rate']=='48000'
+              met=x['files']['audition_review_master.wav']['metering']
+              assert -22 < met['integrated_lufs'] < -15,met
+              assert met['true_peak_dBFS']<=-1,met
+              print('VERIFIED_AUDIO_AUDITION',x['style'],met)
+          print('HOLD: score direction is not owner-approved and does not include Bella.')
+          PY
+      - name: Upload original source stems and review master without publication
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-rc3-original-score-two-auditions
+          path: artifacts/humanfilter-rc3/original-audio/
+          if-no-files-found: warn
