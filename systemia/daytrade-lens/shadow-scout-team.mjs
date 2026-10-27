@@ -31,14 +31,17 @@ function isFresh(event) {
     event?.freshness === 'FRESH_FOR_OBSERVATION' &&
     ['minute_bar', 'updated_minute_bar', 'quote'].includes(event?.type) &&
     Number.isFinite(Date.parse(event?.source_timestamp)) &&
-    Number.isFinite(Date.parse(event?.received_at));
+    Number.isFinite(Date.parse(event?.received_at)) &&
+    Date.parse(event.received_at) - Date.parse(event.source_timestamp) >= -2000 &&
+    Date.parse(event.received_at) - Date.parse(event.source_timestamp) <= (event.type === 'quote' ? 15_000 : 90_000);
 }
 
 function createSymbolState() {
   return { bars: [], barTimes: new Set(), attempts: new Set(), pending: null, firstMinute: null };
 }
 
-export function createShadowTeam({ startedAt, rules = TRAINING_RULES } = {}) {
+export function createShadowTeam({ startedAt } = {}) {
+  const rules = TRAINING_RULES;
   if (!Number.isFinite(Date.parse(startedAt))) throw new Error('precommit_start_timestamp_required');
   const frozen = { schema: 'evercraft.daytrade.shadow-team.precommit.v1', started_at: startedAt,
     strategies: [...rules.allowed_strategy_ids], rules: { ...rules } };
