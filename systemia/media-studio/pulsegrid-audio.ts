@@ -23,6 +23,9 @@ export type PulseGridAudioStatus = {
   /** Audible-note scheduling flags based on decoded AudioBuffer duration, not only asset metadata. */
   decoded_sample_tail_warnings?: number;
   decoded_key_hold_shortfalls?: number;
+  /** Per-Play scheduled piano voices using decoded-PCM boundary-aware onset decisions. */
+  decoded_fast_attack_voices?: number;
+  decoded_cut_in_guard_voices?: number;
 };
 
 type PulseGridTrackBus = {
@@ -55,6 +58,8 @@ export class PulseGridAudioEngine {
   private readonly pendingAssetLoads = new Map<string, Promise<void>>();
   private decodedSampleTailWarnings = 0;
   private decodedKeyHoldShortfalls = 0;
+  private decodedFastAttackVoices = 0;
+  private decodedCutInGuardVoices = 0;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -79,6 +84,8 @@ export class PulseGridAudioEngine {
       cached_audio_assets: this.audioBuffers.size,
       decoded_sample_tail_warnings:this.decodedSampleTailWarnings,
       decoded_key_hold_shortfalls:this.decodedKeyHoldShortfalls,
+      decoded_fast_attack_voices:this.decodedFastAttackVoices,
+      decoded_cut_in_guard_voices:this.decodedCutInGuardVoices,
     };
   }
 
@@ -163,6 +170,8 @@ export class PulseGridAudioEngine {
     this.step=0;
     this.decodedSampleTailWarnings=0;
     this.decodedKeyHoldShortfalls=0;
+    this.decodedFastAttackVoices=0;
+    this.decodedCutInGuardVoices=0;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -569,11 +578,13 @@ export class PulseGridAudioEngine {
             this.decodedSampleTailWarnings+=1;
             if(actualTail.classification==='key_hold_shortfall')this.decodedKeyHoldShortfalls+=1;
           }
-          scheduleFoundryPianoNote({
+          const sampledVoice=scheduleFoundryPianoNote({
             context:this.context,destination:bus.input,buffer,pitch:note.pitch,
             velocity:note.velocity,time:noteTime,duration:heldDuration,selection:selected,
             createSource:()=>this.trackSource(this.context!.createBufferSource()),
           });
+          if(sampledVoice.attack_profile==='zero_aligned_fast_attack')this.decodedFastAttackVoices+=1;
+          if(sampledVoice.attack_profile==='cut_in_microfade_guard')this.decodedCutInGuardVoices+=1;
         }else{
           this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
         }
