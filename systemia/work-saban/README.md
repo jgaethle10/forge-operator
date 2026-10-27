@@ -104,3 +104,13 @@ The NDJSON execution endpoints wrap every ordered event in a per-run SHA-256 cha
 A completed mission unlocks a user-triggered **Download verified mission trace** action. The exported JSON contains all 12 observed events and the full report, so it may include private company figures; handle it as confidential data. The local preview holds it only in the current browser memory and makes no automatic persistent upload. `node systemia/work-saban/trace-chain.proof.mjs` verifies the server/client chain and adversarial cases. `preview.proof.mjs` checks actual localhost worker-stream integrity.
 
 **Security limitation:** This is a local *unsigned* integrity chain, **not** a digitally signed proof of worker identity, independent cryptographic attestation, tamper-proof storage, external audit service, production durable log or permission to access a new source. Anyone controlling the local server could replace the stream and recompute hashes. A future authenticated workspace should bind identity, immutable execution receipts, durable replay and signatures at the Systemia admission boundary before using this as enterprise audit evidence.
+
+### Independently check a downloaded trace
+
+The browser's **Download verified mission trace** control produces `work-saban-verified-local-trace.json`. You can verify its event ordering, role receipts, output integrity and unmodified report without opening the app:
+
+```bash
+node systemia/work-saban/audit-trace.mjs /path/to/work-saban-verified-local-trace.json
+```
+
+This command checks hashes and financial-report delivery invariants, emits only an audit verdict and digests (not the private report body), and exits nonzero on corruption or incomplete runs. Its positive result still cannot authenticate which person or machine generated the unsigned chain. Do not upload sensitive customer traces to public CI logs or third-party issue attachments.
