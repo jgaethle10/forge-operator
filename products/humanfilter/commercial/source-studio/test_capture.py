@@ -11,6 +11,7 @@ try:
   context=browser.new_context(viewport={'width':390,'height':844},accept_downloads=True)
   page=context.new_page()
   page.goto('http://127.0.0.1:8765/mobile-capture.html')
+  page.screenshot(path='mobile-capture-preview.png',full_page=True)
   print('browser loaded',page.title())
   assert page.locator('h1').inner_text()=='Film the real story.'
   assert page.locator('article.shot').count()==4
