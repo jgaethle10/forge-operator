@@ -2,6 +2,10 @@ export type FoundryOfflineBusTrack={
  id:string;volume:number;filterHz:number;delayMix:number;
  delayTime:number;delayFeedback:number;autoVolume:number;autoFilter:number;
 };
+export type FoundryOfflineDrumHit={
+ track_id:string;kind:'kick'|'hat';time:number;velocity:number;
+ stop_time:number;noiseBuffer:AudioBuffer|null;
+};
 export type FoundryOfflineSynthVoice={
  track_id:string;pitch:number;velocity:number;start_time:number;
  duration:number;stop_time:number;
@@ -23,12 +27,13 @@ export type FoundryOfflineBusResult={
  over_full_scale_frames:number|null;complete:boolean;source_notes_within_window?:boolean;effects_tail_complete?:boolean;analyzed_voices:number;
  rms_dbfs?:number;rendered_frames?:number;window_sec?:number;rate?:number;
  audio_beds_within_window?:boolean;analyzed_audio_beds?:number;
- analyzed_synth_voices?:number;
+ analyzed_synth_voices?:number;analyzed_drum_hits?:number;
  included_track_ids?:string[];omitted_track_ids?:string[];
  source_kind:'decoded_pcm_only'|'decoded_pcm_plus_synth';limitations?:string;
 };
 export function renderFoundryPianoOfflineBus(input:{
  voices:FoundryOfflineBusVoice[];tracks:FoundryOfflineBusTrack[];
  audioBeds?:FoundryOfflineAudioBed[];synthVoices?:FoundryOfflineSynthVoice[];
+ drumVoices?:FoundryOfflineDrumHit[];
  offlineContextFactory?:(channels:number,frames:number,rate:number)=>OfflineAudioContext;
 }):Promise<FoundryOfflineBusResult>;
