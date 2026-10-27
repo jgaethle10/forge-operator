@@ -194,7 +194,7 @@ test('PCM chord audit can only run on demand after music stops, with honest pre-
 
 test('offline piano track effects report is an explicit stop-only browser audition, not a full-mix proof',()=>{
  const s=ui();
- assert.match(s,/Inspect piano \\+ audio bus offline/);
+ assert.ok(s.includes('Inspect piano + audio bus offline'));
  assert.match(s,/auditRecordedPianoOfflineBus\(\)/);
  assert.match(s,/disabled=\{playing\|\|recording\|\|offlineBusBusy/);
  assert.match(s,/OfflineAudioContext rendering/);
