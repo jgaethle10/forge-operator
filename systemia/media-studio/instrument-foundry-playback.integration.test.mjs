@@ -336,10 +336,16 @@ test('actual PulseGrid sampler defers release to pedal lift and clamps to decode
    const first=ctx.starts.at(-1).source;
    const originalStop=first.stops[0][0];
    assert.equal(ctx.createdOscillators,0);
+   assert.equal(engine.status.decoded_sample_tail_warnings,0,
+    'decoded .75s buffer covers the dry .25s key + .2s release despite shorter asset metadata');
    engine.stop();
    await engine.play(pedaled,0);
    const second=ctx.starts.at(-1).source;
    const heldStop=second.stops[0][0];
+   assert.equal(engine.status.decoded_sample_tail_warnings,1,
+    'actual decoded .75s sample cannot supply .75s pedal hold PLUS .2s release');
+   assert.equal(engine.status.decoded_key_hold_shortfalls,0,
+    'the decoded WAV covers held keys even though its release is truncated');
    assert.ok(heldStop>originalStop+.15,'pedal must delay WAV note release');
    assert.ok(heldStop<=ctx.starts.at(-1).args[0]+.75+1e-8,
     'pedal must not synthesize sample bytes after decoded WAV ends');
