@@ -1049,7 +1049,13 @@ export default function FallenSessions(){
 
         <details className="fsPedalPanel">
           <summary>Recorded Piano · Sustain Pedal</summary>
-          <p className="fsMusicInsightCaution">Step {Math.min(clip.steps.length,Math.max(1,(selectedStepIndex??0)+1))} selected. Select a piano-roll step to place pedal-down or pedal-up automation. Editing pauses during playback. This delays note release only for recorded piano samples, never beyond the actual WAV or clip boundary.</p>
+          <p className="fsMusicInsightCaution">Choose a pedal step without creating or changing a piano note. The recorded piano can defer key-off only within its actual WAV and clip duration.</p>
+          <label className="fsPedalStepLabel">Pedal step
+            <input aria-label="Piano pedal event step" type="number" min={1} max={clip.steps.length}
+              value={(selectedStepIndex??0)+1}
+              onChange={event=>setSelectedStepIndex(Math.max(0,Math.min(clip.steps.length-1,Math.round(Number(event.target.value)||1)-1)))}/>
+            <span>of {clip.steps.length}</span>
+          </label>
           <div className="fsPedalActions">
             <button type="button" disabled={playing||recording||track.type!=='synth'}
               onClick={()=>editFoundryPedal(true)}>Pedal down</button>
@@ -1064,7 +1070,7 @@ export default function FallenSessions(){
               onClick={commitCapturedPedal}>Commit Pedal Take</button>
             <button type="button" disabled={!midiPedalCaptureRef.current}
               onClick={discardCapturedPedal}>Discard Take</button>
-            <span className="fsPedalPending">{pendingPedalCount} staged transition{pendingPedalCount===1?'':'s'}</span>
+            <span className="fsPedalPending">{pendingPedalCount} proposed timeline transition{pendingPedalCount===1?'':'s'}</span>
           </div>
           <p className="fsMusicInsightCaution">Authored events: {Array.isArray(clip.provenance?.foundry_piano_pedal)&&clip.provenance.foundry_piano_pedal.length
             ? (clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>)
