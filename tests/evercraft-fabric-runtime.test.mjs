@@ -143,6 +143,27 @@ test('Fabric still routes explicit EV charging language after generic-language f
 });
 
 
+test('Fabric routes explicit IBM i AS400 modernization to the IBM i specialist',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'We run an IBM i AS400 legacy system and need migration discovery and repair options.',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'ibmi-rescue-v1');
+  assert.ok(hits[0].match_score>0);
+});
+
+test('Fabric keeps generic legacy rescue for an old broken non-IBM website',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'Our old checkout codebase is broken and our original developer disappeared. Can someone repair the website without rebuilding everything?',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'legacy-rescue-lab-v1');
+});
+
 test('Fabric routes quarry fleet queue and shadow-dispatch language to EarthWorks',()=>{
   const canonical=loadFabricCatalogFromRepository();
   const earthworks=canonical.find((x)=>x.public_id==='earthworks-site-autonomy-study-v1');
