@@ -35,3 +35,11 @@ These measurements show why the genuine product recordings are **proof inserts**
 Fallen Saban Creative Council is preproduction-only. A complete RC3 must pass source authenticity and rights, Visual Observer with frame evidence, Shot Tournament with true visual observations, approved Bella-quality performance, original score/SFX proof, encoded commercial technical QC, phone listening/viewing, and owner's explicit release approval.
 
 **Release status: source acquisition required / NOT ready for publication.**
+
+## Audio and anti-overfitting notes
+
+V17 has AAC 48 kHz stereo audio. An FFmpeg EBU R128 measurement on the uploaded reference is **-17.4 LUFS** integrated and **-0.4 dBFS** true peak. These numbers are **observations, not an approved mix target**; Fallen's commercial audio QC currently targets around -16 LUFS with true peak no greater than -1.0 dBTP. An attractive soundtrack cannot be inferred from loudness meters alone, and this reference music/voice cannot be borrowed.
+
+The two previously rejected HumanFilter cuts show why **a luma/motion pass is not a creative pass**: RC2 has a measured 48.6% low-activity fraction and the 28s cut 64.0%, both below the 75% screening flag, yet the owner rejected them for obviously synthetic interface montage, typography and overall visual quality. The metric is intentionally used to flag slow material for review, never to mark a finished commercial as beautiful or authentic.
+
+Any release checklist must explicitly ask whether every beat depicts authentic people, place, and product action, whether the real interface is legible, whether the camera/edit language advances a story, and whether owners have seen and approved the final master. **Passing this script grants zero creative authority.**
