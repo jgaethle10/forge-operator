@@ -71,6 +71,12 @@ jobs:
           EVERMAPS_COUNTY: Grant
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/wgs-study-spatial-join-cli.mjs
+      - name: Generate provenance-gated WGS research dossiers
+        continue-on-error: true
+        env:
+          EVERMAPS_COUNTY: Grant
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/wgs-research-dossier-cli.mjs
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4
