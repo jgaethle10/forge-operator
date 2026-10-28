@@ -58,7 +58,7 @@ function sanitized(state, now) {
 }
 
 export class SabanFencedAckJournal {
-  constructor({stateDir, integritySecret = '', maxAttempts = 3} = {}) {
+  constructor({stateDir, integritySecret = '', maxAttempts = 3, reviewAuthorizer = null} = {}) {
     if (!stateDir) throw new Error('journal_state_dir_required');
     this.root = path.resolve(stateDir);
     this.secret = String(integritySecret);
@@ -66,6 +66,7 @@ export class SabanFencedAckJournal {
       throw new Error('saban_ack_max_attempts_invalid');
     }
     this.maxAttempts = maxAttempts;
+    this.reviewAuthorizer = reviewAuthorizer;
     fs.mkdirSync(this.root, {recursive:true,mode:0o700});
   }
   filename(jobKey) {
@@ -213,7 +214,7 @@ export class SabanFencedAckJournal {
       return sanitized(next.state,at);
     });
   }
-  reviewRetry({jobKey,approvalRef,evidenceRef,now}={}) {
+  reviewRetry({jobKey,approvalRef,evidenceRef,authorization,now}={}) {
     const key=assertKey(jobKey,'job_key');
     const approval=assertKey(approvalRef,'approval_ref');
     const evidence=assertKey(evidenceRef,'evidence_ref');
@@ -228,8 +229,22 @@ export class SabanFencedAckJournal {
       if(current.attempts >= current.max_attempts) {
         throw new Error('saban_ack_retry_budget_exhausted');
       }
+      if (typeof this.reviewAuthorizer !== 'function') {
+        throw new Error('saban_ack_retry_passport_authority_required');
+      }
+      const decision = this.reviewAuthorizer({
+        job_key:key,work_digest:current.work_digest,
+        attempt_number:current.attempts,approval_ref:approval,
+        evidence_ref:evidence,at:stamp(at),authorization
+      });
+      if (decision?.decision !== 'allow' ||
+          decision?.authority_proven !== true ||
+          !KEY.test(String(decision?.verified_receipt_ref||''))) {
+        throw new Error('saban_ack_retry_passport_authority_denied');
+      }
       const next=this.append(key,'retry_reviewed',{
-        approval_ref:approval,evidence_ref:evidence
+        approval_ref:approval,evidence_ref:evidence,
+        authorization_receipt_ref:decision.verified_receipt_ref
       },at);
       return sanitized(next.state,at);
     });
@@ -282,8 +297,10 @@ function apply(previous,e) {
       if(previous.attempts>=previous.max_attempts)throw new Error('retry_budget_exhausted');
       assertKey(e.approval_ref,'approval_ref');
       assertKey(e.evidence_ref,'evidence_ref');
+      assertKey(e.authorization_receipt_ref,'authorization_receipt_ref');
       return {...previous,state:'queued',lease:null,reason:'retry_review_recorded',
-        retry_approval_ref:e.approval_ref,retry_evidence_ref:e.evidence_ref};
+        retry_approval_ref:e.approval_ref,retry_evidence_ref:e.evidence_ref,
+        retry_authorization_receipt_ref:e.authorization_receipt_ref};
     default: throw new Error('unsupported_journal_event');
   }
 }
