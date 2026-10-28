@@ -1,0 +1,90 @@
+name: Animation Foundry Character Lookdev
+on:
+  push:
+    branches: [feat/animation-foundry-creative-gate-rc11]
+    paths:
+      - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
+      - 'systemia/animation-foundry/character-appeal-v4.py'
+      - '.github/workflows/animation-foundry-lookdev.yml'
+  pull_request:
+    paths:
+      - 'systemia/animation-foundry/build-kennedy-rig-blockout.py'
+      - 'systemia/animation-foundry/character-appeal-v4.py'
+      - '.github/workflows/animation-foundry-lookdev.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  character-lookdev:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install actual Blender headless renderer
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            --no-install-recommends blender ffmpeg xvfb libegl1 libgl1 libopengl0 libgl1-mesa-dri
+      - name: Render four actual 3D look-development poses
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          EVERCRAFT_LOOKDEV_ONLY: '1'
+        run: |
+          mkdir -p /tmp/kennedy-lookdev
+          xvfb-run -a blender -b -t 2 \
+            --python systemia/animation-foundry/build-kennedy-rig-blockout.py \
+            -- /tmp/kennedy-lookdev
+          test "$(find /tmp/kennedy-lookdev/frames -name 'frame_*.png' | wc -l)" -eq 4
+          ffmpeg -v error -y -pattern_type glob \
+            -i '/tmp/kennedy-lookdev/frames/frame_*.png' -filter_complex 'tile=2x2' \
+            -frames:v 1 /tmp/kennedy-lookdev/Lookdev_Four_Poses.jpg
+      - name: Fail closed on character-release readiness
+        run: |
+          set +e
+          xvfb-run -a blender -b /tmp/kennedy-lookdev/Kennedy_Rigged3D_BLOCKOUT.blend \
+            -P systemia/animation-foundry/studio-character-preflight.py \
+            -- /tmp/kennedy-lookdev/art_ready.json
+          rc=$?
+          set -e
+          test "$rc" -eq 10
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/kennedy-lookdev/art_ready.json'))
+          assert p['status']=='HELD'
+          print('FOUNDATION_RIG_HELD_FOR_ART_REVIEW:',p['failures'])
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assert waveform cue and anatomically visible finger snap
+        run: |
+          node --test systemia/animation-foundry/snap-performance-gate.test.mjs
+          xvfb-run -a blender -b /tmp/kennedy-lookdev/Kennedy_Rigged3D_BLOCKOUT.blend \
+            --disable-autoexec -P systemia/animation-foundry/blender-snap-trace.py -- \
+            systemia/animation-foundry/kennedy-blockout-snap-map.json /tmp/kennedy-lookdev/snap_trace.json
+          set +e
+          node systemia/animation-foundry/snap-review-cli.mjs \
+            /tmp/kennedy-lookdev/snap_trace.json /tmp/kennedy-lookdev/snap_review.json
+          code=$?
+          set -e
+          test "$code" -eq 0
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/kennedy-lookdev/snap_review.json'))
+          assert r['status']=='KINEMATIC_CANDIDATE' and not r['creativeApproved'], r
+          assert r['metrics']['minGapMeters'] <= .018
+          assert r['metrics']['relativeMiddleTipTravelMeters'] >= .021
+          print('RIG_CONTACT_AND_FLICK_VERIFIED_BUT_NOT_ART_APPROVED',r['metrics'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kennedy-rc15-character-lookdev-not-approved
+          path: |
+            /tmp/kennedy-lookdev/*.jpg
+            /tmp/kennedy-lookdev/*.png
+            /tmp/kennedy-lookdev/*.json
+            /tmp/kennedy-lookdev/*.blend
+            /tmp/kennedy-lookdev/frames/*.png
+          retention-days: 14
+          if-no-files-found: warn

@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.animation.visual-lock.v1",
+  "productionId": "kennedy-one-snap-away",
+  "status": "founder_preferred_visual_reference_not_publication_approval",
+  "reference": {
+    "asset": "reference/kennedy_freckles_style_reference.png",
+    "sha256": "aa72d5a97b099739f0ae02bb5ded3588a4f3bc8bab58bb89bb5daf7864af503a",
+    "origin": "user-directed concept art, bundled in local reference kit",
+    "scope": "look development reference; not a 3D model or animation rig",
+    "width": 1672, "height": 941
+  },
+  "character": {
+    "hair": "blonde, tousled straight-to-loose-wave",
+    "skin": "very fair", "eyes": "blue",
+    "freckles": "very light on nose and cheeks"
+  },
+  "target": {
+    "stage": "character_animation",
+    "technique": "rigged_3d",
+    "visualStyle": "cinematic_stylized_3d"
+  },
+  "releaseRule": "Only human design review can approve resemblance, appeal, hands, acting, sound, and rights."
+}
