@@ -428,3 +428,14 @@ The original PulseGrid `scheduleStep` records actual bus automation even on *sil
 **Scope remains:** this is a bounded private audition of events scheduled during Play, not a full-song bounce; it does not recreate a performance that never played, dynamically automate controls other than the original track volume/filter steps, guarantee a complete feedback tail, determine intersample true peak, certify commercial recording rights, or establish listener-approved acoustic quality. Physical A/B audition versus the frozen *The Weight of Silence* and an independent full arrangement export remain gates.
 
 The dedicated CI recipe now runs **25 modules** including a new pure automation step timing/rejection suite, a real engine live-to-offline silent-step automation integration case, and UI assertions for incomplete live coverage.
+
+
+## October 27, late: make the eight-second multi-bar audition genuinely usable
+
+The originally safe offline review had a **16-event limit per piano/synth/drum family**, enough for a chord but insufficient for several bars of active playing. This engineering slice centralizes the local mobile graph budgets in `instrument-foundry-review-budget.mjs`: **64 actually scheduled recorded-piano notes, 64 synth notes, 96 performed kick/hat events, four imported audio beds**, a separate **224-node combined source cap**, eight included track buses, 1024 captured bus-automation steps, and at most eight seconds of 48kHz stereo rendering. Both the real PulseGrid live capture and offline graph validator now use that same source limit contract. A four-bar stress fixture with 32 piano + 32 synth + 64 drum events fits (128 sources), while an individually legal 228-source graph fails before allocating the OfflineAudioContext.
+
+The separate **0.8-second decoded dry-piano-only PCM diagnostic deliberately stays at 16 voices** for mobile CPU and memory safety; it reports unavailable when the song contains more than those notes. This does not block the newly expanded full-track offline mix. The private audio-player panel displays the actual reviewed source count and the maximum budget so the operator can see what is within scope.
+
+Actual PulseGrid engine integration also schedules more than 16 piano voices and 44 drum hits in one bounded observed preview, verifies the distinct offline source count, refuses to label a partial observed transport eight seconds as complete, preserves unknown recording-rights metadata and does not mutate the canonical authored session or *The Weight of Silence*.
+
+**Not a release claim:** expanded node budget does not create a complete long-song bounce. Reviews still use actual scheduled performance history with only captured steps and available authorized recordings, keep static delay parameters frozen and cannot certify complete wet-feedback tails, licensing or human auditory quality. The new 26-module CI runner covers the shared budget and live simulated four-bar proof.
