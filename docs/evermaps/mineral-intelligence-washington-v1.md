@@ -36,6 +36,20 @@ The canary reached all four WGS layers and checked 1,161 aggregate resource poly
 
 Yakima County returned zero records in this published dataset; statewide COUNTY values in resource and study layers were Grant, Grays Harbor, Kitsap, Skagit and Spokane. Zero Yakima matches means **coverage unavailable in this specific inventory**, not that Yakima lacks aggregate resources. Pilot defaults to Grant. County-level coverage still requires geometry intersection confirmation.
 
+
+## Full-county research import (review branch only)
+
+Run from a clean output directory, Node 22+:
+
+    node --test systemia/evermaps/*.test.mjs
+    EVERMAPS_COUNTY=Grant EVERMAPS_PAGE_SIZE=100 node systemia/evermaps/wgs-full-grant-import.mjs
+
+The script produces four WGS-source GeoJSON files, a classified map review GeoJSON, a study-envelope broad-phase candidate list, and an import receipt in evermaps-grant-full-evidence/. Source counts are checked before and after pagination, with duplicate IDs rejected. SHA-256 fingerprints cover sorted original feature payloads. Geometry checks cover closed nondegenerate rings, valid coordinates and source IDs; they do not certify every topological or property-boundary condition.
+
+Workflow job full-grant-research-ingest also runs against public WGS, preserves files as a 30-day GitHub Actions artifact, and is intentionally non-production. A workflow success alone must not replace examination of wgs-full-import-receipt.json.
+
+A study bounding-box overlap is a broad-phase screening observation, NOT proof that a resource polygon intersects or lies within a study. Polygon topology, ownership, permitting, ecological restrictions and material economics remain unverified. No publishable mining recommendations come from this artifact.
+
 ## Evidence boundaries
 
 1. **Geological observation:** WGS aggregate resource classification means Demonstrated, Inferred, Speculative, Not a Resource or Not Analyzed. Not a mineral discovery score.
