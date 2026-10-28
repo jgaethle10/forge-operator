@@ -1,3 +1,5 @@
+> **STATUS UPDATE (28 OCT 2026):** This concept remains a historical creative proposal, **not the current production brief**. The real rendered 60s reel was rejected on artistic quality. See [FLAGSHIP-CREATIVE-QUALITY-RESET-20261028.md](FLAGSHIP-CREATIVE-QUALITY-RESET-20261028.md). Current direction is one 6–8s authentic work-first cinematic shot before expanding into a longer film. The generic machined-object hero direction below has been retired. No portfolio publication is approved.
+
 # EVERCRAFT || FALLEN STUDIOS — THE WORK / THE IMAGE
 **Creative working document · 27 Oct 2026 · internal production draft**
 
