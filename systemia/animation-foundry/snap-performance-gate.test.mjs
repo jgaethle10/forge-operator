@@ -35,3 +35,11 @@ test('missing 3D finger coordinate fails closed',()=>{const t=mk();delete t.samp
 test('nonmonotonic time fails',()=>{const t=mk();t.samples[4].timeSec=t.samples[3].timeSec;assert.ok(assess(t).issues.includes('invalid_sample_timing'))});
 test('under-sampled animation held',()=>{const t=mk();t.sampleRateHz=24;assert.ok(assess(t).issues.includes('sampling_too_sparse'))});
 test('unrecognized schema fails',()=>assert.equal(assess({}).status,'HELD'));
+
+test('exaggerated finger splay after contact is rejected despite contact existing',()=>{
+ const t=mk();
+ for(const s of t.samples){
+   if(s.timeSec>.255 && s.timeSec<.34)s.middleTip[0]+=.15;
+ }
+ assert.ok(assess(t).issues.includes('excessive_finger_splay'));
+});
