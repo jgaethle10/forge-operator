@@ -73,15 +73,22 @@ export async function verifyPublisherStudyJoins({county='Grant',sourceIds,fetchI
     }
   }
   if([...within].some(id=>!intersection.has(id))) throw new Error('Within set is not a subset of intersects');
+  const ambiguousWithin=intersection.size>0&&within.size===0;
   return {
     schema:'evercraft.evermaps.wgs-publisher-study-join.v1',
     county,checked_at:new Date().toISOString(),
-    status:'publisher_spatial_relations_verified',
+    status:ambiguousWithin?'publisher_intersections_verified_within_unresolved':'publisher_spatial_relations_verified',
+    containment_validation_state:ambiguousWithin?'needs_independent_spatial_topology_check':'source_within_query_observed',
     method:'WGS ArcGIS server esriSpatialRelIntersects and esriSpatialRelWithin against published study polygon',
     source_layer:RESOURCE,study_layer:STUDY,study_ids:studyIds,
     source_imported_resource_count:sourceIds.length,
     polygon_intersects_study_count:intersection.size,
-    polygon_within_study_count:within.size,
+    polygon_within_study_count:ambiguousWithin?null:within.size,
+    publisher_within_query_reported_count:within.size,
+    within_zero_anomaly:ambiguousWithin,
+    within_query_caveat:ambiguousWithin?
+      'Publisher within query returned zero despite source intersects. Do NOT interpret zero as proof no resource geometry lies fully within the study.':
+      'Publisher spatial relation results are observations; independent geometry review remains advised.',
     polygon_does_not_intersect_study_count:sourceIds.length-intersection.size,
     intersects_resource_ids:[...intersection].sort((a,b)=>a-b),
     within_resource_ids:[...within].sort((a,b)=>a-b),
