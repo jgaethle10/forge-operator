@@ -83,6 +83,11 @@ for frame,scale in ((23,.75),(24,1.)):
         pb.keyframe_insert(data_path='rotation_euler',frame=frame,group=name)
 
 scene.frame_set(25)
+# Hold thumb in the actual contact orientation while finding middle-finger
+# release. Otherwise Blender restores an OLD frame-25 thumb key and every
+# candidate measures against a fingertip that has already moved away.
+arm.pose.bones['thumb_R'].rotation_euler=thumb_pose
+bpy.context.view_layer.update()
 best=None
 # Find a physically animated separation with relative finger movement,
 # rather than letting wrist displacement masquerade as a finger snap.
