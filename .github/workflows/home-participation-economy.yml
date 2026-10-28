@@ -1,0 +1,37 @@
+name: Home Participation Economy v0.1
+on:
+  pull_request:
+    paths:
+      - "systemia/participation-economy/**"
+      - ".github/workflows/home-participation-economy.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/participation-economy/**"
+      - ".github/workflows/home-participation-economy.yml"
+permissions:
+  contents: read
+jobs:
+  simulation-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate simulation engine and pilot source
+        run: |
+          node --check systemia/participation-economy/engine.mjs
+          node --check systemia/participation-economy/pilot.mjs
+      - name: Run economy and fraud-hold tests
+        run: node --test systemia/participation-economy/engine.test.mjs
+      - name: Prove demo remains read-only
+        run: |
+          node systemia/participation-economy/pilot.mjs > /tmp/home-participation-pilot.json
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const x=JSON.parse(fs.readFileSync("/tmp/home-participation-pilot.json","utf8"));
+            if(x.payouts_enabled!==false || x.financial_authority_granted!==false) process.exit(1);
+            if(x.demonstration!=="synthetic_unverified_no_money_movement") process.exit(1);
+            if(x.status!=="simulation_only") process.exit(1);
+          '
