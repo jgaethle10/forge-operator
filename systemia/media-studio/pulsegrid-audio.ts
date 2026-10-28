@@ -237,7 +237,9 @@ export class PulseGridAudioEngine {
     const observed=stepTimes.length>0&&Number.isFinite(bpm)&&bpm>0
       ?Math.max(...stepTimes)-Math.min(...stepTimes)+60/bpm/4:0;
     const requested=options.window_sec??.8;
-    return {...rendered,omitted_track_ids:omittedTrackIds,
+    return {...rendered,
+      complete:rendered.complete&&observed>=requested-1e-4,
+      omitted_track_ids:omittedTrackIds,
       included_track_ids:Array.from(snapshots.keys()),
       performance_coverage_sec:Number(observed.toFixed(3)),
       performance_window_complete:observed>=requested-1e-4};
