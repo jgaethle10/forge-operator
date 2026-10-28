@@ -13,7 +13,14 @@ const digest = char => 'sha256:' + char.repeat(64);
 function makeJournal(secret='bounded-test-secret') {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-fenced-ack-'));
   scratch.push(root);
-  return {root,journal:new SabanFencedAckJournal({stateDir:root,integritySecret:secret})};
+  return {root,journal:new SabanFencedAckJournal({
+    stateDir:root,integritySecret:secret,
+    reviewAuthorizer:({approval_ref,evidence_ref})=>(
+      approval_ref.startsWith('review-') || approval_ref==='founder-reviewed'
+    ) && evidence_ref.startsWith('proof:')
+      ? {decision:'allow',authority_proven:true,verified_receipt_ref:'fixture:local-reviewed'}
+      : {decision:'deny',authority_proven:false}
+  })};
 }
 test.after(()=>{for(const x of scratch) fs.rmSync(x,{recursive:true,force:true});});
 const base = {jobKey:'os-readiness:runtime',workloadClass:'saban.source-readiness.v1',workDigest:digest('a'),now:10000};
@@ -134,7 +141,10 @@ test('unknown job and lock leftovers fail closed, with no filesystem side effect
 test('retry budget is immutable per submitted job and never overruns explicit bounds',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'saban-bounded-retry-'));
   scratch.push(dir);
-  const journal=new SabanFencedAckJournal({stateDir:dir,integritySecret:'retry-test',maxAttempts:2});
+  const journal=new SabanFencedAckJournal({
+    stateDir:dir,integritySecret:'retry-test',maxAttempts:2,
+    reviewAuthorizer:()=>({decision:'allow',authority_proven:true,verified_receipt_ref:'fixture:bounded-review'})
+  });
   journal.submit(base);
   const first=journal.acquire({jobKey:base.jobKey,workerId:'a',now:11000,leaseMs:1000});
   assert.equal(first.attempts,1);
@@ -149,3 +159,14 @@ test('retry budget is immutable per submitted job and never overruns explicit bo
     leaseToken:second.lease_token,reason:'late',now:13004}),/lease_expired_hold/);
 });
 
+
+test('unconfigured review authorizer can never reopen expired or held work',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-unconfigured-review-'));
+  scratch.push(root);
+  const journal=new SabanFencedAckJournal({stateDir:root,integritySecret:'test'});
+  journal.submit(base);
+  journal.acquire({jobKey:base.jobKey,workerId:'a',now:11000,leaseMs:1000});
+  assert.throws(()=>journal.reviewRetry({jobKey:base.jobKey,approvalRef:'fake-approval',
+    evidenceRef:'proof:claimed',now:12001}),/passport_authority_required/);
+  assert.equal(journal.inspect({jobKey:base.jobKey,now:12002}).state,'ambiguous_expired');
+});
