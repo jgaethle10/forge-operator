@@ -23,7 +23,7 @@ button:hover{background:#2a4860}
 #inspector{position:absolute;left:16px;bottom:16px;max-width:380px;padding:14px 18px;background:#0d1b29e8;border:1px solid #3c5669;border-radius:14px;backdrop-filter:blur(10px);font-size:13px}
 #inspector b{color:#a9e9f8}.muted{color:#96aabb}
 #empty{position:absolute;top:42%;width:100%;text-align:center;color:#8fabba;pointer-events:none;font-size:14px}
-@media(max-width:820px){header{padding:12px 14px}main{display:flex;flex-direction:column}aside{max-height:none;border-right:0;border-bottom:1px solid #263749;padding:13px 16px}aside .group{display:none}h1{font-size:16px;margin:0}.canvas-wrap{min-height:58dvh}#inspector{right:12px;left:12px;bottom:12px;font-size:12px}}
+@media(max-width:820px){header{padding:12px 14px}main{display:flex;flex-direction:column}aside{max-height:none;border-right:0;border-bottom:1px solid #263749;padding:13px 16px}aside .group>.layer{display:none}h1{font-size:16px;margin:0}.canvas-wrap{min-height:58dvh}#inspector{right:12px;left:12px;bottom:12px;font-size:12px}}
 </style>
 </head>
 <body>
@@ -44,6 +44,7 @@ button:hover{background:#2a4860}
 <div class="layer"><i class="swatch" style="background:#59d6f2"></i>Material tests</div>
 <div class="layer"><i class="swatch" style="background:#ef9bc2"></i>Historical mine sites</div>
 <div class="layer"><i class="swatch" style="background:#f3f7fb"></i>Study boundary</div>
+<div class="layer"><i class="swatch" style="background:#ffa95b"></i>WA DNR approximate permit location</div>
 </div>
 <h2>Evidence policy</h2>
 <div class="note">Mapped geology is not a mineable resource, land-rights finding, current operating mine, permission to extract, or investment recommendation. The map is intended for regional review, generally not finer than 1:24,000.</div>
@@ -56,9 +57,9 @@ button:hover{background:#2a4860}
 </section></main>
 <script>
 'use strict';
-const kinds={resources:{file:'wgs-resources.geojson',title:'Resource Areas'},tests:{file:'wgs-tests.geojson',title:'Test Sites'},mineHistory:{file:'wgs-mineHistory.geojson',title:'Historic Mine Sites'},studies:{file:'wgs-studies.geojson',title:'Study Areas'}};
+const kinds={resources:{file:'wgs-resources.geojson',title:'Resource Areas'},tests:{file:'wgs-tests.geojson',title:'Test Sites'},mineHistory:{file:'wgs-mineHistory.geojson',title:'Historic Mine Sites'},studies:{file:'wgs-studies.geojson',title:'Study Areas'},permits:{file:'wa-dnr-grant-permit-points.geojson',title:'WA DNR Reclamation Permits (approximate)'}};
 const colors={Demonstrated:'#42bda1',Inferred:'#d9b95b',Speculative:'#d98661'};
-const data={},visible={resources:true,tests:true,mineHistory:true,studies:true};
+const data={},visible={resources:true,tests:true,mineHistory:true,studies:true,permits:true};
 const canvas=document.querySelector('#map'),wrap=document.querySelector('#wrap'),ctx=canvas.getContext('2d');
 const ui=document.querySelector('#toggles'),status=document.querySelector('#status'),inspector=document.querySelector('#inspector');
 let viewport={xmin:-120,ymin:46,xmax:-118,ymax:48},view={center:[-119,47],scale:1},drag=null;
@@ -98,6 +99,7 @@ function redraw(){
  for(const f of visible.studies?(data.studies?.features||[]):[])drawGeo(f.geometry,{stroke:'#f3f7fb',width:2,dash:[7,6]});
  for(const f of visible.mineHistory?(data.mineHistory?.features||[]):[])drawGeo(f.geometry,{fill:'#ef9bc2',stroke:'#ecb8d1',width:1});
  for(const f of visible.tests?(data.tests?.features||[]):[])drawGeo(f.geometry,{fill:'#59d6f2',stroke:'#a7f1ff',width:1});
+ for(const f of visible.permits?(data.permits?.features||[]):[])drawGeo(f.geometry,{fill:'#ffa95b',stroke:'#ffe5c7',width:1.6});
  document.querySelector('#empty').hidden=Object.keys(data).length>0;
 }
 function onStatus(){status.textContent=Object.entries(kinds).map(([k,v])=>v.title+': '+(data[k]?.features.length??'not loaded')).join(' • ');document.querySelector('#empty').hidden=Object.keys(data).length>0;}
@@ -140,12 +142,12 @@ canvas.addEventListener('pointerup',e=>{
  if(!drag)return;const d=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);drag=null;if(d>7)return;
  const box=canvas.getBoundingClientRect(),xy=[e.clientX-box.left,e.clientY-box.top],pt=inverse(xy);
  let hit=null;
- for(const k of ['tests','mineHistory']){if(!visible[k])continue;const features=data[k]?.features||[];let nearest=12;for(const f of features){const q=transform(f.geometry.coordinates);const dist=Math.hypot(q[0]-xy[0],q[1]-xy[1]);if(dist<nearest){hit={kind:k,feature:f};nearest=dist;}}if(hit)break;}
+ for(const k of ['permits','tests','mineHistory']){if(!visible[k])continue;const features=data[k]?.features||[];let nearest=12;for(const f of features){const q=transform(f.geometry.coordinates);const dist=Math.hypot(q[0]-xy[0],q[1]-xy[1]);if(dist<nearest){hit={kind:k,feature:f};nearest=dist;}}if(hit)break;}
  if(!hit&&visible.resources){for(const f of data.resources?.features||[]){if(pointInGeo(pt,f.geometry)){hit={kind:'resources',feature:f};break;}}}
  if(!hit){inspector.hidden=true;return;}
- document.querySelector('#itemTitle').textContent=kinds[hit.kind].title+' • WGS OBJECTID '+hit.feature.properties?.OBJECTID;
+ document.querySelector('#itemTitle').textContent=kinds[hit.kind].title+' • '+(hit.kind==='permits'?'WA DNR':'WGS')+' OBJECTID '+hit.feature.properties?.OBJECTID;
  const p=hit.feature.properties;
- document.querySelector('#itemDetail').textContent=Object.entries(p).filter(([k,v])=>v!==null&&v!==''&&!['Shape__Area','Shape__Length'].includes(k)).slice(0,9).map(([k,v])=>k+': '+v).join(' • ')+'. Geological evidence only. No site approval implied.';
+ document.querySelector('#itemDetail').textContent=Object.entries(p).filter(([k,v])=>v!==null&&v!==''&&!['Shape__Area','Shape__Length'].includes(k)).slice(0,9).map(([k,v])=>k+': '+v).join(' • ')+'. Map evidence only. No current operating status, land rights or extraction permission implied.';
  inspector.hidden=false;
 });
 window.addEventListener('resize',redraw);
