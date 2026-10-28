@@ -30,17 +30,18 @@ async function run(){
       [fabric,broker]=await Promise.all([
         probe('/mcp'),probe('/v1/remote/health'),
       ]);
-      if(fabric.status===200&&broker.status===200)break;
+      if(fabric.status===200&&broker.status===200){lastError=null;break;}
       lastError='unexpected_http_status';
     }catch(e){
       lastError=e?.code||e?.name||'transport_error';
     }
     if(i<3)await sleep(1200);
   }
-  let nodes=null,wrongMethod=null;
+  let nodes=null,actualWorkerRoute=null,wrongMethod=null;
   try{
-    [nodes,wrongMethod]=await Promise.all([
+    [nodes,actualWorkerRoute,wrongMethod]=await Promise.all([
       probe('/nodes/not-enrolled/v1/capacity'),
+      probe('/nodes/evercraft-node002-nextgen/v1/health'),
       probe('/v1/remote/register'),
     ]);
   }catch(e){
@@ -56,10 +57,12 @@ async function run(){
     h?.deployment_receipt_bound===true &&
     h?.deployment_receipt_ref===expectedReceipt &&
     h?.secure_envelope_schema==='evercraft.secure-envelope.v1';
-  const boundaryOk=nodes?.status===404 && wrongMethod?.status===404;
-  const zeroDevices=h?.authorized_devices===0 && h?.registered_nodes===0;
+  const boundaryOk=nodes?.status===404 && actualWorkerRoute?.status===404 && wrongMethod?.status===404;
+  const validDeviceCounts=Number.isInteger(h?.authorized_devices) &&
+    h.authorized_devices>=1 && Number.isInteger(h?.registered_nodes) &&
+    h.registered_nodes>=0;
   const ok=fabric?.status===200 &&
-    broker?.status===200 && bindingOk && boundaryOk && zeroDevices;
+    broker?.status===200 && bindingOk && boundaryOk && validDeviceCounts;
   const result={
     schema:'evercraft.remote-capacity.independent-public-canary.v1',
     checked_at:new Date().toISOString(),
@@ -72,11 +75,14 @@ async function run(){
     deployment_receipt_bound:h?.deployment_receipt_bound===true,
     broker_transport_schema_valid:h?.secure_envelope_schema==='evercraft.secure-envelope.v1',
     unauthenticated_worker_path_denied:nodes?.status===404,
+    authorized_worker_path_denied_publicly:actualWorkerRoute?.status===404,
     wrong_method_denied:wrongMethod?.status===404,
-    enrolled_devices_zero:zeroDevices,
+    authorized_devices_reported:h?.authorized_devices??null,
+    registered_session_count_reported:h?.registered_nodes??null,
+    expected_authorized_device_count_present:validDeviceCounts,
     public_broker_reachable_independently:ok,
     scope:'read_only',
-    remote_compute_enrolled:false,
+    remote_compute_session_registered_at_probe:Number(h?.registered_nodes||0)>0,
     work_dispatch_verified:false,
     error_code:lastError,
   };
