@@ -3,22 +3,25 @@
 No host addresses, labels, environment, API keys or account identifiers are emitted.
 GPU pricing and bandwidth/storage pricing should be treated as host-set live quotes.
 """
-import os, json, urllib.request, datetime, pathlib, sys
+import os, json, urllib.request, urllib.parse, datetime, pathlib, sys
 
-API="https://console.vast.ai/api/v0"
+API="https://console.vast.ai"
 key=os.environ.get("VAST_API_KEY","")
 if not key: raise SystemExit("HOLD: no Vast key (no provider mutation)")
 
 def query(endpoint, payload=None):
     headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"}
-    kwargs={"headers":headers,"timeout":20}
+    kwargs={"headers":headers}
     if payload is not None:
         kwargs["data"]=json.dumps(payload).encode()
         kwargs["method"]="POST"
     else:
         kwargs["method"]="GET"
     with urllib.request.urlopen(urllib.request.Request(API+endpoint,**kwargs),timeout=20) as r:
-        return json.load(r)
+        data=json.load(r)
+    if not isinstance(data,dict) or data.get("success") is False:
+        raise ValueError("provider_response_not_successful")
+    return data
 
 def numeric(x):
     if isinstance(x,bool) or x is None: return None
@@ -27,11 +30,34 @@ def numeric(x):
         return n if n>=0 and n<1e8 else None
     except (TypeError,ValueError): return None
 
+def count_all_instances():
+    """A partial or deprecated listing is UNKNOWN, never zero."""
+    rows=0
+    token=None
+    seen=set()
+    for page in range(100):
+        path="/api/v1/instances/?owner=me"
+        if token is not None:
+            path+="&"+urllib.parse.urlencode({"next_token":token})
+        response=query(path)
+        items=response.get("instances")
+        if not isinstance(items,list):
+            raise ValueError("instance_listing_unknown_shape")
+        rows+=len(items)
+        next_token=response.get("next_token")
+        if next_token is None:
+            expected=response.get("total_instances")
+            if expected is not None and rows!=int(expected):
+                raise ValueError("instance_listing_incomplete")
+            return rows
+        if not isinstance(next_token,str) or not next_token or next_token in seen:
+            raise ValueError("instance_listing_pagination_invalid")
+        seen.add(next_token)
+        token=next_token
+    raise ValueError("instance_listing_page_limit_reached")
+
 try:
-    inventory=query("/instances/")
-    if not isinstance(inventory,dict) or not isinstance(inventory.get("instances"),list):
-        raise ValueError("account_instance_inventory_unknown_shape")
-    num_instances=len(inventory["instances"])
+    num_instances=count_all_instances()
     q={
       "verified":{"eq":True},"rentable":{"eq":True},
       "gpu_name":{"in":["RTX 4090"]},"num_gpus":{"eq":1},
@@ -39,7 +65,7 @@ try:
       "reliability":{"gte":0.95},"disk_space":{"gte":10},
       "type":"ondemand","limit":50,"order":[["dph_total","asc"]]
     }
-    result=query("/bundles/",q)
+    result=query("/api/v0/bundles/",q)
     offers=result.get("offers",result.get("instances",None))
     if not isinstance(offers,list):raise ValueError("offers_response_unknown_shape")
     rows=[]
