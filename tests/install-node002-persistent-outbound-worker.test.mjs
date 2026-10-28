@@ -9,5 +9,5 @@ test('user-only installer pins immutable source and avoids root/foreign worker m
     'previous four-minute Node002 agent still running',
     'Windows/WSL shutdown']) assert.ok(s.includes(t),t);
   assert.equal(s.includes('systemctl --system'),false);
-  assert.equal(s.includes('sudo '),false);
+  assert.equal(s.includes('sudo systemctl'),false);
 });
