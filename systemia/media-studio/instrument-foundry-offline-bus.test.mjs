@@ -298,7 +298,7 @@ test('offline track gain and lowpass honor original played-step automation, incl
  assert.equal(r.performed_bus_automation_events,3);
  assert.ok(f.calls.some(x=>x[0].endsWith('.gain')&&x[1]==='set'&&x[2]===.2&&Math.abs(x[3]-.25)<1e-8));
  assert.ok(f.calls.some(x=>x[0].endsWith('.frequency')&&x[1]==='set'&&x[2]===2400&&Math.abs(x[3]-.25)<1e-8));
- assert.ok(f.calls.some(x=>x[0].endsWith('.gain')&&x[1]==='set'&&x[2]===.6&&Math.abs(x[3]-.45)<1e-8));
+ assert.ok(f.calls.some(x=>x[0].endsWith('.gain')&&x[1]==='set'&&Math.abs(x[2]-.6)<1e-8&&Math.abs(x[3]-.45)<1e-8));
 });
 test('tampered or missing performed track automation fails closed before creating offline browser nodes',async()=>{
  const f=fakeContext(.2),event={track_id:'keys',time:.1,autoVolume:1,autoFilter:1,trackVolume:.8,trackFilterHz:12000};
