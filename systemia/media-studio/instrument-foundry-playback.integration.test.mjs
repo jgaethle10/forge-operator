@@ -951,3 +951,50 @@ test('live silent step automation survives to offline piano bus and eight-second
   }
  });
 });
+
+
+test('real PulseGrid captures more than sixteen repeated piano and stochastic drum hits into a bounded eight-second audition',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const oldOffline=globalThis.OfflineAudioContext;
+  class MultiBarOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate;}
+   async startRendering(){
+    const p=new Float32Array(this.frames).fill(.09);
+    return {numberOfChannels:2,length:this.frames,sampleRate:48000,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=MultiBarOffline;
+  const pcm=new Float32Array(36000).fill(.2);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const beat=applyPulseGridOperation(session,{
+   type:'clip.set_step',track_id:'drums',scene:0,step:0,velocity:1,
+  },'human').session;
+  const original=structuredClone(beat);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(beat,0);
+   for(let i=1;i<22;i++)engine.scheduleStep(0,.08+i*.2);
+   engine.stop();
+   const r=await engine.auditRecordedPianoOfflineBus({window_sec:8});
+   assert.equal(r.status,'offline_track_bus_pcm_measurement',JSON.stringify(r));
+   assert.equal(r.analyzed_voices,22);
+   assert.equal(r.analyzed_drum_hits,44);
+   assert.equal(r.reviewed_source_count,66);
+   assert.equal(r.performance_window_complete,false);
+   assert.equal(r.complete,false);
+   assert.deepEqual(beat,original);
+   assert.equal(beat.assets[0].rights,'unknown');
+   assert.equal(engine.auditRecordedPianoDryPeak().status,'unavailable',
+    'short dry-PCM diagnostic maintains its separate stricter 16-note budget');
+  }finally{
+   await engine.close();
+   if(oldOffline===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=oldOffline;
+  }
+ });
+});
