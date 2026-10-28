@@ -50,6 +50,19 @@ Workflow job full-grant-research-ingest also runs against public WGS, preserves 
 
 A study bounding-box overlap is a broad-phase screening observation, NOT proof that a resource polygon intersects or lies within a study. Polygon topology, ownership, permitting, ecological restrictions and material economics remain unverified. No publishable mining recommendations come from this artifact.
 
+
+## Live complete Grant import and publisher spatial check (2026-10-28 UTC)
+
+GitHub Actions fetched all **1,161** Grant resource polygons, **232** tests, **304** historical mine-site points and **one** study-area polygon. All source counts reconciled; all geometries passed the first-pass ring/coordinate/identifier audit; original ordered features were hashed for each layer. The publisher classified **700** source polygons into the map review queue, with the remainder retained in the original unfiltered source GeoJSON.
+
+The official WGS server-side spatial query returned **1,161 intersections** with the Grant study polygon. The same server returned **zero within** matches. That second result is unexpected and must be held as an unresolved spatial-relation discrepancy rather than interpreted as proof that all resources cross study boundaries. The receipt exposes the zero and the unresolved state independently.
+
+The source JSON, study-spatial join receipt, map-ready classified GeoJSON, and separate unmodified evidence layers are preserved as a 30-day GitHub Actions artifact on the PR. The source-evidence receipt and publisher join are reproducible but NOT a mining proposal.
+
+### Native offline viewer
+
+Open systemia/evermaps/research-viewer.html in a browser and use **Load WGS GeoJSON files** to select the four source GeoJSON files from the evidence artifact. The viewer uses native Canvas, not a third-party map service. It colors published classification and displays reference test/mine points and study bounds. No live basemap or rights layer is implied; the page must not be used to approve extraction.
+
 ## Evidence boundaries
 
 1. **Geological observation:** WGS aggregate resource classification means Demonstrated, Inferred, Speculative, Not a Resource or Not Analyzed. Not a mineral discovery score.
