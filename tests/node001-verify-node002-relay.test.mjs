@@ -5,7 +5,7 @@ const expected={
   node_id:'evercraft-node002-nextgen',
   device_fingerprint:'sha256:'+'a'.repeat(64),
   connected:true,
-  capacity:{node_id:'evercraft-node002-nextgen',device_fingerprint:'sha256:'+'a'.repeat(64)},
+  capacity:{protocol:'evercraft.capacity.v1',runtime:'Evercraft Compute',device_fingerprint:'sha256:'+'a'.repeat(64)},
   secure_envelope_schema:'evercraft.secure-envelope.v1',
 };
 const inventory={
