@@ -20,7 +20,6 @@ export function evaluateMerchantPilot(records = []) {
       failures.push({index: idx, reason: 'duplicate_business'});
       return;
     }
-    distinct.add(business);
     const sourceRef = clean(record?.response_evidence_ref);
     const consent = record?.voluntary_response === true;
     const pain = clean(record?.current_workflow_pain);
@@ -32,6 +31,7 @@ export function evaluateMerchantPilot(records = []) {
       failures.push({index: idx, reason: 'permissioned_response_evidence_incomplete'});
       return;
     }
+    distinct.add(business);
     valid++;
     if (record?.unserved_workflow_confirmed === true) differentiatedWorkflows++;
     if (record?.explicit_pilot_interest === true &&
