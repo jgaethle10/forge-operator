@@ -64,3 +64,21 @@ The branch extends the optional Ollama inference call to accept `max_output_toke
 An approved model-reservation gate is still mandatory for the window model bridge, even when the host model is local. The Raven request ID is a **local Raven authority identifier**, not a provider-issued Ollama transaction identifier. The source adapter is exercised with a **synthetic Ollama HTTP transport** in GitHub CI. It does not prove that an Ollama process is installed or listening on the founder's device.
 
 Operational gate: first independently verify the owned node's Ollama runtime and model inventory, verify authorization and a $0 external-provider-spend reservation, run one bounded local model inference, persist it only to the experimental journal and inspect the redacted observer receipt. Model/source evidence must remain `adapter_reported_not_independently_verified` until independently checked. No automatic public publication, workstation enrollment or external API credentials.
+
+## One-decision owner canary (October 28)
+
+`systemia/society/window-ollama-first-turn.mjs` is an opt-in **local-only** canary for Raven and Mossmere, not a production daemon or an autonomous scheduler.
+
+1. With an existing Ollama model installed and running locally, from the checked-out *draft branch* run the **safe metadata-only** preflight:
+   ```bash
+   node systemia/society/window-ollama-first-turn.mjs --model YOUR_INSTALLED_LOCAL_MODEL
+   ```
+   This reads the local model inventory. It sends **zero prompts**, creates no journal, and performs no hosted provider call.
+2. After explicit owner approval, run exactly one local inference in a new private sandbox:
+   ```bash
+   node systemia/society/window-ollama-first-turn.mjs --model YOUR_INSTALLED_LOCAL_MODEL --state-dir "$HOME/.local/state/evercraft/mossmere-first-turn" --approve-one-local-turn
+   ```
+   Only the local loopback Ollama engine is permitted. The canary creates a **single-use, fsynced, 0600 budget reservation** with `max_cost_micro_usd=0` before inference, checks usage from Raven, persists a held candidate into the same isolated journal, and emits a redacted spectator decision. A failed inference or crash holds the reservation; retry requires independent operator investigation rather than silently issuing a second inference. Private state is not uploaded.
+3. Treat the output as **adapter-reported local model evidence**, not independent certification. Confirm real host process, model inventory, local request and receipt with independent operator observations before making claims. Local computation still uses CPU/RAM/power. Never treat a successful synthetic CI test as that independent receipt.
+
+This is **not activated** by building or merging the PR, and the public site remains the rule-based preview. The owned HP NextGen/Chromebook are not remotely authorized through this script. No machine commands have been executed by ChatGPT on those hosts.
