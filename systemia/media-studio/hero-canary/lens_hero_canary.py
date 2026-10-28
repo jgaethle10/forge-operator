@@ -28,7 +28,7 @@ bpy.ops.object.delete(use_global=False)
 scene = bpy.context.scene
 scene.render.engine = "CYCLES"
 scene.cycles.samples = 48
-scene.cycles.use_denoising = True
+scene.cycles.use_denoising = not preview_still  # packaged Blender lacks OpenImageDenoiser
 if preview_still:
     scene.cycles.samples = 12
 scene.render.resolution_x = 540
