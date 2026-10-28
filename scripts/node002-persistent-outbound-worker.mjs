@@ -135,6 +135,8 @@ async function serve(){
         if(!running)break;
         const status=active.status();
         const hasError=Boolean(status.last_error);
+        const lastPoll=Date.parse(status.last_poll_at||status.registered_at||'');
+        if(!Number.isFinite(lastPoll)||Date.now()-lastPoll>90000)throw Error('agent_poll_not_observed_recently');
         if(hasError&&!errorSince)errorSince=Date.now();
         if(!hasError)errorSince=0;
         if(Date.now()-lastBrokerPoll>=20000){
@@ -146,6 +148,7 @@ async function serve(){
           ready:!hasError,
           registered_at:status.registered_at,
           last_command_at:status.last_command_at,
+          last_poll_at:status.last_poll_at,
           secure_commands_opened:status.secure_commands_opened,
           last_error_code:hasError?cleanErr(status.last_error):null,
         });
@@ -180,7 +183,12 @@ if(direct){
   if(mode==='--status') {
     try{
       const s=JSON.parse(fs.readFileSync(STATE,'utf8'));
-      console.log(JSON.stringify(s,null,2));
+      const age=Date.now()-Date.parse(s.observed_at||'');
+      console.log(JSON.stringify({
+        ...s,
+        status_fresh:Number.isFinite(age)&&age>=0&&age<30000,
+        ready_now:s.ready===true&&Number.isFinite(age)&&age>=0&&age<30000,
+      },null,2));
     }catch(e){console.error(JSON.stringify({state:'unknown',error:'no_worker_status_receipt'}));process.exitCode=1}
   } else if(mode==='--preflight'){
     preflight().then(r=>console.log(JSON.stringify({
