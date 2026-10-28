@@ -11,6 +11,10 @@ on:
       - 'scripts/stage-remote-broker-caddy.mjs'
       - 'scripts/activate-remote-broker-caddy.sh'
       - 'scripts/node002-submit-enrollment-request.mjs'
+      - 'scripts/node002-live-bridge-canary.mjs'
+      - 'scripts/node001-verify-node002-relay.mjs'
+      - 'tests/node002-live-bridge-canary.test.mjs'
+      - 'tests/node001-verify-node002-relay.test.mjs'
       - 'tests/node002-submit-enrollment-request.test.mjs'
       - 'tests/stage-remote-broker-caddy.test.mjs'
       - 'docs/operations/node001-node002-remote-broker-physical-staging.md'
@@ -35,6 +39,8 @@ jobs:
           node --check systemia/yard/remote-broker-resident.mjs
           node --check scripts/stage-remote-broker-caddy.mjs
           node --check scripts/node002-submit-enrollment-request.mjs
+          node --check scripts/node002-live-bridge-canary.mjs
+          node --check scripts/node001-verify-node002-relay.mjs
           bash -n scripts/install-remote-broker-resident.sh
           bash -n scripts/activate-remote-broker-caddy.sh
       - name: Exercise real ephemeral Yard broker and strict route/identity boundaries
