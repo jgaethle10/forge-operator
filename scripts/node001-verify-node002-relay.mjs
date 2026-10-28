@@ -5,7 +5,8 @@
  * is running. It uses a private broker loopback route; public /nodes/* stays 404.
  * No private tokens or fingerprints are reported.
  */
-import {YardOperator} from '../systemia/yard/operator.mjs';
+import fs from 'node:fs';
+import {pathToFileURL} from 'node:url';
 const YARD_ROOT='/var/lib/evercraft/nodeseed/remote-broker-resident/yard';
 const DEPLOYMENT='evercraft-remote-broker-resident';
 const EXPECTED_NODE='evercraft-node002-nextgen';
@@ -51,7 +52,7 @@ export function summarizeRemoteProof({inventory,health,brokerStatus}={}){
       health?.runtime==='Evercraft Compute',
     original_yard_private_management_receipt_present:
       Boolean(inventory?.compute_management_receipt_hash),
-    public_worker_route_opened:false,
+    public_worker_route_opened_by_this_canary:false,
     remote_command:'GET /v1/health',
     job_read_only:true,
     production_worker_persistent:false,
@@ -59,6 +60,13 @@ export function summarizeRemoteProof({inventory,health,brokerStatus}={}){
   };
 }
 export async function run() {
+  // Penguin stages this script in ~/evercraft-broker-stage, while the actual
+  // installed Yard runtime is held in /opt/evercraft/forge-operator.
+  const installed='/opt/evercraft/forge-operator/systemia/yard/operator.mjs';
+  const moduleUrl=fs.existsSync(installed)
+    ? pathToFileURL(installed).href
+    : new URL('../systemia/yard/operator.mjs',import.meta.url).href;
+  const {YardOperator}=await import(moduleUrl);
   const yard=new YardOperator({stateDir:YARD_ROOT});
   const inventory=await yard.listRemoteCapacityNodes(DEPLOYMENT);
   const remote=inventory.nodes.find(x=>x.node_id===EXPECTED_NODE);
