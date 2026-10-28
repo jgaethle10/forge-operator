@@ -97,6 +97,7 @@ export function createEPSRealFilmIntake(manifest,outDir){
  const {brief,ledger,needed}=buildEPSRealFilmBrief(manifest);
  const dest=path.resolve(outDir);
  if(fs.existsSync(dest))throw new Error('eps_source_output_already_exists');
+ fs.mkdirSync(path.dirname(dest),{recursive:true});
  const temp=fs.mkdtempSync(dest+'.tmp-');
  try{
   const plan=writeCommercialPlan(brief,temp);
