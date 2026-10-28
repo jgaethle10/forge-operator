@@ -2,6 +2,7 @@ import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pu
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
+import type {PulseGridCapturedBusStep} from './pulsegrid-bus-automation.mjs';
 import type {PulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import type {PulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
@@ -87,6 +88,8 @@ export class PulseGridAudioEngine {
   private synthVoiceOverflow=false;
   private readonly capturedDrumVoices:Array<PulseGridDrumVoice & {track_id:string;autoVolume:number;autoFilter:number}>=[];
   private drumVoiceOverflow=false;
+  private readonly capturedBusAutomation:PulseGridCapturedBusStep[]=[];
+  private busAutomationOverflow=false;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -137,6 +140,8 @@ export class PulseGridAudioEngine {
     this.synthVoiceOverflow=false;
     this.capturedDrumVoices.length=0;
     this.drumVoiceOverflow=false;
+    this.capturedBusAutomation.length=0;
+    this.busAutomationOverflow=false;
     this.emitStatus();
   }
 
@@ -170,7 +175,7 @@ export class PulseGridAudioEngine {
     const voices=this.decodedDryPianoVoices as Array<FoundryDryPcmVoice & FoundryOfflineBusVoice & {
       asset_id?:string;autoVolume?:number;autoFilter?:number;
     }>;
-    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||this.drumVoiceOverflow||
+    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||this.drumVoiceOverflow||this.busAutomationOverflow||
        !this.pianoPolyphony.snapshot().observation_complete||
        this.pianoPolyphony.snapshot().observed_voices!==voices.length)
       return unavailable('No complete bounded authorized sampled-piano phrase is available.');
@@ -193,8 +198,16 @@ export class PulseGridAudioEngine {
         autoVolume:v.autoVolume!,autoFilter:v.autoFilter!,
       };
       const prior=snapshots.get(track.id);
-      if(prior&&JSON.stringify(prior)!==JSON.stringify(snapshot))
-        return unavailable('Track effects changed during the phrase. Inspect a stationary short chord.');
+      // Dynamic volume/filter are reconstructed from actual scheduled bus
+      // steps below, but static effects must remain consistent.
+      if(prior&&(
+        prior.volume!==snapshot.volume||prior.filterHz!==snapshot.filterHz||
+        prior.delayMix!==snapshot.delayMix||prior.delayTime!==snapshot.delayTime||
+        prior.delayFeedback!==snapshot.delayFeedback))
+        return unavailable('Static track effects changed during performance.');
+      if(prior&&!this.capturedBusAutomation.length&&
+        (prior.autoVolume!==snapshot.autoVolume||prior.autoFilter!==snapshot.autoFilter))
+        return unavailable('Cannot reconstruct automation without scheduled bus steps.');
       snapshots.set(track.id,snapshot);
     }
     const Offline=globalThis.OfflineAudioContext;
@@ -206,6 +219,7 @@ export class PulseGridAudioEngine {
     const rendered=await renderFoundryPianoOfflineBus({
       voices,audioBeds:this.decodedAudioBeds,synthVoices:this.capturedSynthVoices,
       drumVoices:this.capturedDrumVoices,
+      automationEvents:this.capturedBusAutomation,
       window_sec:options.window_sec??.8,
       includeAuditionWav:options.includeAuditionWav??false,
       tracks:Array.from(snapshots.values()),
@@ -216,8 +230,17 @@ export class PulseGridAudioEngine {
       return unavailable('Audio authorization or playback state changed during the offline review.');
     const omittedTrackIds=this.session.tracks.filter(t=>
       !t.muted&&!snapshots.has(t.id)).map(t=>t.id);
+    const stepTimes=this.capturedBusAutomation.map(e=>e.time);
+    const bpm=this.session.transport.bpm;
+    // Conservative count of the observed, actually SCHEDULED transport
+    // horizon, NOT the length of the OfflineAudioContext output buffer.
+    const observed=stepTimes.length>0&&Number.isFinite(bpm)&&bpm>0
+      ?Math.max(...stepTimes)-Math.min(...stepTimes)+60/bpm/4:0;
+    const requested=options.window_sec??.8;
     return {...rendered,omitted_track_ids:omittedTrackIds,
-      included_track_ids:Array.from(snapshots.keys())};
+      included_track_ids:Array.from(snapshots.keys()),
+      performance_coverage_sec:Number(observed.toFixed(3)),
+      performance_window_complete:observed>=requested-1e-4};
   }
 
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
@@ -304,6 +327,8 @@ export class PulseGridAudioEngine {
     this.synthVoiceOverflow=false;
     this.capturedDrumVoices.length=0;
     this.drumVoiceOverflow=false;
+    this.capturedBusAutomation.length=0;
+    this.busAutomationOverflow=false;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -649,6 +674,14 @@ export class PulseGridAudioEngine {
       const autoVolume = clip.automation.volume[step] ?? 1;
       const autoFilter = clip.automation.filter[step] ?? 1;
       this.scheduleBus(bus, track, autoVolume, autoFilter, time);
+      // Capture live scheduled automation even on silent steps. This is what
+      // the offline renderer must replay. Do not infer any future steps.
+      if(this.capturedBusAutomation.length<1024){
+        this.capturedBusAutomation.push({
+          track_id:track.id,time,autoVolume,autoFilter,
+          trackVolume:track.volume,trackFilterHz:track.filterHz,
+        });
+      }else this.busAutomationOverflow=true;
 
       const velocity = clip.steps[step] || 0;
       if (track.type === 'drums') {
