@@ -93,7 +93,7 @@ test('incomplete scope, too many notes or tracks, missing browser, and long phra
  for(const input of [
   {voices:[],tracks:[track]},
   {voices:[voice()],tracks:[track]},
-  {voices:Array.from({length:17},()=>voice()),tracks:[track],offlineContextFactory:f.make},
+  {voices:Array.from({length:65},()=>voice()),tracks:[track],offlineContextFactory:f.make},
   {voices:[voice()],tracks:[],offlineContextFactory:f.make},
   {voices:[voice()],tracks:[track,track],offlineContextFactory:f.make},
   {voices:[voice({stop_time:1.8})],tracks:[track],offlineContextFactory:f.make},
@@ -190,7 +190,7 @@ test('invalid synth notes, missing oscillator support, and excessive voices fail
  const base={voices:[voice()],tracks:[track,{...track,id:'bass'}],offlineContextFactory:f.make};
  for(const synthVoices of [
   [{...synt,pitch:128}],[{...synt,track_id:'forged'}],
-  [{...synt,stop_time:.1}],Array.from({length:17},()=>synt),
+  [{...synt,stop_time:.1}],Array.from({length:65},()=>synt),
  ]){
   const r=await render({...base,synthVoices});
   assert.equal(r.status,'unavailable');
@@ -230,7 +230,7 @@ test('offline drum review fails closed if hat buffer, track or actual hit timing
  for(const drumVoices of [
   [{...valid,noiseBuffer:null}],[{...valid,track_id:'unknown'}],
   [{...valid,kind:'snare'}],[{...valid,velocity:0}],
-  Array.from({length:17},()=>valid)
+  Array.from({length:97},()=>valid)
  ]){
   const result=await render({...base,drumVoices});
   assert.equal(result.status,'unavailable');
@@ -311,5 +311,53 @@ test('tampered or missing performed track automation fails closed before creatin
   assert.equal(r.status,'unavailable');
   assert.equal(r.sample_peak,null);
  }
+ assert.equal(f.calls.length,0);
+});
+
+
+test('dense four-bar performed audio expands past old 16-hit guard, stays under bounded graph budget',async()=>{
+ const f=fakeContext(.3);
+ const piano=Array.from({length:32},(_,i)=>voice({
+   start_time:.1+i*.19,stop_time:.45+i*.19,
+ }));
+ const synth=Array.from({length:32},(_,i)=>({
+   track_id:'bass',pitch:36,velocity:.6,
+   start_time:.1+i*.19,duration:.22,stop_time:.44+i*.19,
+ }));
+ const drumVoices=Array.from({length:64},(_,i)=>({
+   track_id:'drums',kind:'kick',velocity:.6,
+   time:.1+i*.1,stop_time:.34+i*.1,noiseBuffer:null,
+ }));
+ const result=await render({voices:piano,synthVoices:synth,drumVoices,
+   tracks:[track,{...track,id:'bass',delayMix:0},{...track,id:'drums',delayMix:0}],
+   window_sec:8,offlineContextFactory:f.make,
+ });
+ assert.equal(result.status,'offline_track_bus_pcm_measurement',JSON.stringify(result));
+ assert.equal(result.analyzed_voices,32);
+ assert.equal(result.analyzed_synth_voices,32);
+ assert.equal(result.analyzed_drum_hits,64);
+ assert.equal(result.reviewed_source_count,128);
+ assert.equal(result.render_source_limit,224);
+ assert.equal(f.calls.filter(x=>x[0]==='start').length,128);
+});
+test('combined source count refuses an otherwise individually legal 228-node audition',async()=>{
+ const f=fakeContext();
+ const voice0=voice();
+ const synth={track_id:'bass',pitch:36,velocity:.6,start_time:.1,
+  duration:.22,stop_time:.44};
+ const drum={track_id:'drums',kind:'kick',velocity:.6,time:.1,
+  stop_time:.34,noiseBuffer:null};
+ const bed={track_id:'audio',buffer:buffer(),start_time:.1,duration:.5,mode:'one_shot'};
+ const result=await render({
+  voices:Array.from({length:64},()=>voice0),
+  synthVoices:Array.from({length:64},()=>synth),
+  drumVoices:Array.from({length:96},()=>drum),
+  audioBeds:Array.from({length:4},()=>bed),
+  tracks:[track,{...track,id:'bass'},{...track,id:'drums'},{...track,id:'audio'}],
+  window_sec:8,offlineContextFactory:f.make,
+ });
+ assert.equal(result.status,'unavailable');
+ assert.match(result.reason,/Combined sources/);
+ assert.equal(result.sample_peak,null);
  assert.equal(f.calls.length,0);
 });
