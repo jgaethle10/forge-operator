@@ -82,6 +82,10 @@ jobs:
         env:
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/land-context-cli.mjs
+      - name: Fetch official WA DNR permit points and calculate geographic overlay
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/permit-point-overlay-cli.mjs
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4

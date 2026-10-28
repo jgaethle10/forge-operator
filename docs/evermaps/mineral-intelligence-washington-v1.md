@@ -108,3 +108,15 @@ Reproduce after full Grant import:
     node systemia/evermaps/land-context-cli.mjs
 
 Do **not** produce individual property-eligibility rankings or contact lists from this stage.
+
+## Phase 2 point-to-polygon research overlay
+
+Added a complete, read-only Washington DNR reclamation-permit **point** ingestion to the full Grant WGS pilot. The query selects only `OBJECTID`, `MINE_PERMIT_NUMBER`, `COUNTY_NAME` and `COMMODITY_DESC`, explicitly omitting applicant/owner fields. It compares the point location against each WGS geology polygon with a conservative local point-in-polygon test, keeping the interior, boundary-uncertain, and outside counts separate. Polygons can overlap, so point matches are not deduplicated into site or permit decisions.
+
+**Important:** WA DNR describes these locations as approximate locations with active *reclamation permits*. Neither being in a WGS geological polygon nor having a reclamation permit proves an operating mine, recoverable reserves, parcel ownership, permitted extraction or access.
+
+Artifacts: `wa-dnr-grant-permit-points.geojson`, `wa-dnr-permit-point-geology-overlay.json`, and `wa-dnr-permit-point-overlay-receipt.json`. These come from live public WGS and WA DNR queries, require complete source counts and SHA-256 checks, and cannot authorize site recommendations. The full geologic import is a separate source, not automatically validated by a permit-point match.
+
+Run: `node systemia/evermaps/permit-point-overlay-cli.mjs` after the complete Grant WGS import.
+
+Official source: https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0 .
