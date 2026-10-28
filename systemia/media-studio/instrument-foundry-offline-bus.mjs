@@ -15,10 +15,11 @@ import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import {encodeFoundryAuditionWav} from './instrument-foundry-audition-wav.mjs';
 import {planPulseGridBusAutomation} from './pulsegrid-bus-automation.mjs';
+import {FOUNDRY_REVIEW_BUDGET,validateFoundryReviewSourceCounts} from './instrument-foundry-review-budget.mjs';
 import {unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 
 const RESULT_SCOPE='offline_sampled_piano_track_bus_approximation';
-const rate=48000,MAX_VOICES=16,MAX_WINDOW=8;
+const rate=FOUNDRY_REVIEW_BUDGET.sample_rate,MAX_WINDOW=FOUNDRY_REVIEW_BUDGET.render_seconds;
 const bound=(x,a,b)=>Math.max(a,Math.min(b,x));
 const db=x=>x>0?Number((20*Math.log10(x)).toFixed(2)):-180;
 const unavailable=reason=>({
@@ -29,13 +30,18 @@ const unavailable=reason=>({
 
 function validated(input){
   const {voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[]}=input??{};
-  if(!Array.isArray(voices)||!voices.length||voices.length>MAX_VOICES||
+  if(!Array.isArray(voices)||!voices.length||
      !Array.isArray(tracks)||!tracks.length)
-    return 'Choose 1–16 authorized recorded-piano voices.';
+    return 'Choose authorized recorded-piano voices.';
   const indexed=new Map(tracks.map(t=>[t.id,t]));
   if(indexed.size!==tracks.length)return 'Ambiguous recorded-piano track IDs.';
-  if(!Array.isArray(drumVoices)||drumVoices.length>16)
-    return 'Drum review exceeds the bounded 16 actual performed-hit limit.';
+  if(!Array.isArray(synthVoices)||!Array.isArray(drumVoices)||!Array.isArray(audioBeds))
+    return 'Invalid local audition event collections.';
+  const budget=validateFoundryReviewSourceCounts({
+    piano_voices:voices.length,synth_voices:synthVoices.length,
+    drum_hits:drumVoices.length,imported_audio_beds:audioBeds.length,
+  });
+  if(!budget.valid)return budget.reason;
   for(const drum of drumVoices){
     if(!drum||typeof drum.track_id!=='string'||!indexed.has(drum.track_id)||
        !['kick','hat'].includes(drum.kind)||
@@ -46,8 +52,6 @@ function validated(input){
          !Number.isFinite(drum.noiseBuffer.duration)||drum.noiseBuffer.duration<=0)))
       return 'Invalid performed drum hit or missing original hat-noise buffer.';
   }
-  if(!Array.isArray(synthVoices)||synthVoices.length>16)
-    return 'Unsampled synth review exceeds 16 scheduled-note limit.';
   for(const synth of synthVoices){
     if(!synth||typeof synth.track_id!=='string'||!indexed.has(synth.track_id)||
        !Number.isInteger(synth.pitch)||synth.pitch<0||synth.pitch>127||
@@ -57,8 +61,6 @@ function validated(input){
        !Number.isFinite(synth.stop_time)||synth.stop_time<=synth.start_time)
       return 'Invalid scheduled synth note or unknown bus.';
   }
-  if(!Array.isArray(audioBeds)||audioBeds.length>4)
-    return 'Audio-bed review exceeds the bounded four-source limit.';
   for(const bed of audioBeds){
     if(!bed||typeof bed.track_id!=='string'||!indexed.has(bed.track_id)||
        !bed.buffer||!Number.isFinite(bed.buffer.duration)||bed.buffer.duration<=0||
@@ -109,7 +111,7 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
     return unavailable('Performed note passage exceeds the selected offline audition window.');
   if(audioBeds.some(bed=>bed.start_time-earliest>=window_sec))
     return unavailable('Audio-bed note-on is outside the bounded offline audition window.');
-  if(tracks.length>8)return unavailable('Track bus count exceeds the offline review budget.');
+  if(tracks.length>FOUNDRY_REVIEW_BUDGET.track_buses)return unavailable('Track bus count exceeds the offline review budget.');
   // Capture only original scheduled bus steps, never synthesize missing
   // movement from the score. Historical no-automation fixtures preserve
   // their previous frozen note-on behaviour.
@@ -239,7 +241,10 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
         audioBeds.every(b=>b.start_time+b.duration<=earliest+window_sec+1e-8),
       analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,
       analyzed_synth_voices:synthVoices.length,
-      analyzed_drum_hits:drumVoices.length,rendered_frames:frames,
+      analyzed_drum_hits:drumVoices.length,
+      reviewed_source_count:voices.length+synthVoices.length+drumVoices.length+audioBeds.length,
+      render_source_limit:FOUNDRY_REVIEW_BUDGET.combined_sources,
+      rendered_frames:frames,
       performed_bus_automation_events:automationPlan?.recorded_events_in_window??0,
       performed_bus_automation_applied:Boolean(automationPlan),
       later_bus_automation_excluded:automationPlan?.later_recorded_events_excluded??0,
