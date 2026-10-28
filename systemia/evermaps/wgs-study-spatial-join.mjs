@@ -38,7 +38,12 @@ export function spatialRelationPost({county='Grant',geometry,relation}) {
   return {method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:params.toString()};
 }
 function readIds(json) {
-  if(!Array.isArray(json?.objectIds)) throw new Error('WGS did not return ArcGIS objectIds');
+  if (json&&Object.hasOwn(json,'objectIds')&&json.objectIds===null) return [];
+  if(!Array.isArray(json?.objectIds)) {
+    const keys=json&&typeof json==='object'?Object.keys(json).sort().join(','):'non-object';
+    const count=Array.isArray(json?.features)?json.features.length:'n/a';
+    throw new Error('WGS did not return ArcGIS objectIds; response keys='+keys+', features='+count);
+  }
   const ids=json.objectIds;
   if(!ids.every(Number.isSafeInteger)||new Set(ids).size!==ids.length) throw new Error('Bad or repeated WGS objectIds');
   return ids;
