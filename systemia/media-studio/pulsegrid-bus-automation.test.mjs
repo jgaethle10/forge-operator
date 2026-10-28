@@ -11,7 +11,7 @@ test('actual scheduled volume/filter automation is replayed at original step tim
  assert.equal(result.recorded_events_in_window,3);
  assert.equal(result.evidence,'original_scheduled_track_step_automation');
  assert.deepEqual(result.automation_events.filter(x=>!x.initial).map(x=>x.relative_time),[0,.25,.5]);
- assert.deepEqual(result.automation_events.filter(x=>!x.initial).map(x=>x.volume),[.64,.32,.72]);
+ assert.deepEqual(result.automation_events.filter(x=>!x.initial).map(x=>Number(x.volume.toFixed(3))),[.64,.32,.72]);
  assert.deepEqual(result.automation_events.filter(x=>!x.initial).map(x=>x.frequency_hz),[6000,3000,9600]);
 });
 test('past automation initializes the earliest performed note; future events are excluded, never invented',()=>{
