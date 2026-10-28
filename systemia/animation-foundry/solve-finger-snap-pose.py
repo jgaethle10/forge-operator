@@ -115,7 +115,9 @@ if _gap()<.033:
     raise RuntimeError('SNAP_RELEASE_GAP_TOO_SMALL')
 # Frame 26 eases the fingers towards a slightly open position.
 scene.frame_set(26)
-for name,angles in [('thumb_R',thumb_pose*.16),('middle_R',middle_pose*.12)]:
+# Short follow-through should not open the hand to a 30cm gap one frame later.
+for name,angles in [('thumb_R',thumb_pose),
+                    ('middle_R',middle_pose+(best[2]-middle_pose)*.72)]:
     pb=arm.pose.bones[name]
     pb.rotation_euler=angles
     pb.keyframe_insert(data_path='rotation_euler',frame=26,group=name)
