@@ -209,6 +209,12 @@ pose_key(48,head_z=-.08,upper=-.13,forearm=0,hand=0,index=0,thumb=0,smile=.30)
 
 
 
+# Solve actual bone-tip contact and finger flick from joint geometry.
+# If unreachable, fail this prototype rather than faking a snap.
+SOLVER=Path(__file__).resolve().with_name('solve-finger-snap-pose.py')
+if not SOLVER.is_file():raise RuntimeError('SNAP_SOLVER_MISSING')
+exec(compile(SOLVER.read_text(),str(SOLVER),'exec'),globals())
+
 # Finger performance is objective evidence only. The creative gate still
 # requires a human closeup to decide whether the finger SNAP reads.
 right_digts=['thumb_R','index_R','middle_R','ring_R','pinky_R']
@@ -273,6 +279,7 @@ report={'schema':'evercraft.animation.3d-rig-blockout.v1','frames':48,'fps':12,
   'visual_design_approved':False,'performance_approved':False,
   'armature_bones':len(arm.data.bones),'face_shapes':len(head.data.shape_keys.key_blocks)-1,
   'snap_middle_release_radians':round(release_delta,3),
+  'snap_solver':snap_geometry,
   'independent_right_finger_bones':right_digts,
   'snap_creative_approval':False,
   'snap_closeup_stills':['SnapPress_Closeup.png','SnapRelease_Closeup.png'],
