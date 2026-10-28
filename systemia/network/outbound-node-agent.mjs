@@ -36,7 +36,7 @@ async function jsonRequest(url, {
     method,
     headers: requestHeaders,
     body: body === undefined ? undefined : JSON.stringify(body),
-    signal,
+    signal: signal || AbortSignal.timeout(15_000),
   });
 
   let payload = null;
@@ -235,6 +235,7 @@ export async function startOutboundNodeAgent({
   let pollController = null;
   let registeredAt = null;
   let lastCommandAt = null;
+  let lastPollAt = null;
   let lastError = null;
   let loopPromise = null;
 
@@ -402,6 +403,7 @@ export async function startOutboundNodeAgent({
           signal: pollController.signal,
         });
         pollController = null;
+        lastPollAt = new Date().toISOString();
 
         if (!running) break;
 
@@ -498,6 +500,7 @@ export async function startOutboundNodeAgent({
         device_fingerprint: deviceFingerprint,
         registered_at: registeredAt,
         last_command_at: lastCommandAt,
+        last_poll_at: lastPollAt,
         last_error: lastError,
         public_ingress: false,
         local_compute_scope: 'loopback_only',
