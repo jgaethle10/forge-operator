@@ -1,0 +1,23 @@
+name: Home Shared Caddy Preservation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/install-evercraft-home-edge.sh'
+      - 'tests/home-shared-caddy-preservation.test.mjs'
+      - '.github/workflows/home-shared-caddy-preservation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  shared-edge-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: bash -n scripts/install-evercraft-home-edge.sh
+      - run: node --test tests/home-shared-caddy-preservation.test.mjs
