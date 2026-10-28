@@ -82,7 +82,10 @@
             const receipt=outcome.specialist_receipts[i],observed=verified.get(roles[i]);
             if(receipt?.role!==roles[i]||
                receipt.result_sha256!==observed.result_sha256||
-               receipt.idempotency_key!==observed.idempotency_key){
+               receipt.idempotency_key!==observed.idempotency_key||
+               receipt.attempts!==observed.attempts||
+               receipt.status!==observed.status||
+               receipt.quality_status!==observed.quality_status){
               throw new Error('delivery_does_not_match_observed_workers');
             }
           }
