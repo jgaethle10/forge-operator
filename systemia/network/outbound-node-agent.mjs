@@ -209,6 +209,7 @@ export async function startOutboundNodeAgent({
   commandPolicy = 'default',
   expectedNodeId = '',
   preRegisterGuard = null,
+  capacityWorkloadAllowlist = null,
 } = {}) {
   const broker = assertBrokerUrl(brokerUrl);
   if (!['default', 'content-hash-only'].includes(commandPolicy)) throw new Error('unsupported_worker_command_policy');
@@ -237,6 +238,18 @@ export async function startOutboundNodeAgent({
   let lastError = null;
   let loopPromise = null;
 
+  function constrainedCapacity(capacity) {
+    if (capacityWorkloadAllowlist === null) return capacity;
+    if (!Array.isArray(capacityWorkloadAllowlist) ||
+        capacityWorkloadAllowlist.length !== 1 ||
+        capacityWorkloadAllowlist[0] !== 'systemia.content-hash.v1' ||
+        !Array.isArray(capacity?.supported_workloads) ||
+        !capacity.supported_workloads.includes('systemia.content-hash.v1')) {
+      throw new Error('remote_capacity_allowlist_invalid');
+    }
+    return {...capacity,supported_workloads:['systemia.content-hash.v1']};
+  }
+
   async function localRequest(route, {
     method = 'GET',
     body,
@@ -259,7 +272,7 @@ export async function startOutboundNodeAgent({
     if (!capacityResponse.ok) {
       throw new Error(`local_capacity_failed:${capacityResponse.status}`);
     }
-    const capacity = capacityResponse.body;
+    const capacity = constrainedCapacity(capacityResponse.body);
     nodeId = String(capacity.node_id || '');
     deviceFingerprint = String(capacity.device_fingerprint || '');
     if (!nodeId || !deviceFingerprint) {
@@ -378,7 +391,7 @@ export async function startOutboundNodeAgent({
         if (capacityRefreshEveryPoll) {
           const fresh = await localRequest('/v1/capacity');
           if (!fresh.ok) throw new Error(`local_capacity_failed:${fresh.status}`);
-          capacity = fresh.body;
+          capacity = constrainedCapacity(fresh.body);
         }
 
         pollController = new AbortController();
