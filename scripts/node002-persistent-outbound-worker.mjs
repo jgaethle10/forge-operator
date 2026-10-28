@@ -122,6 +122,7 @@ async function serve(){
         localAllocatorToken:token,
         expectedNodeId:NODE_ID,
         commandPolicy:'content-hash-only',
+        capacityWorkloadAllowlist:[WORKLOAD],
         pollBackoffMs:250,
         preRegisterGuard:async()=>{await preflight()},
       });
