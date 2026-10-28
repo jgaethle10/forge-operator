@@ -96,6 +96,15 @@ const {source_sha256:removedSource,...noSourceExecution}=execution;
 await assert.rejects(noSourceVerifier.accept(noSourceChain.next({
   type:'completed',execution:noSourceExecution
 })),/incomplete_local_delivery/);
+const remoteClaimChain=createLocalEventChain({traceId:'contradictory-remote-claim'});
+const remoteClaimVerifier=client.create();
+for(let i=0;i<events.length-1;i++){
+  const {trace,...body}=events[i];
+  await remoteClaimVerifier.accept(remoteClaimChain.next(body));
+}
+await assert.rejects(remoteClaimVerifier.accept(remoteClaimChain.next({
+  type:'completed',execution:{...execution,physically_distributed:true}
+})),/incomplete_local_delivery/);
 const offline=auditWorkSabanTrace(test.export());
 assert.equal(offline.status,'local_trace_integrity_verified');
 assert.equal(offline.event_count,12);
