@@ -21,6 +21,8 @@ def cli(flag, default):
 out = Path(cli("--output", "/tmp/fallen-lens-canary")).resolve()
 save_only = "--save-only" in sys.argv
 preview_still = "--preview-still" in sys.argv
+preview_animation = "--preview-animation" in sys.argv
+preview_mode = preview_still or preview_animation
 out.parent.mkdir(parents=True, exist_ok=True)
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.object.delete(use_global=False)
@@ -28,12 +30,12 @@ bpy.ops.object.delete(use_global=False)
 scene = bpy.context.scene
 scene.render.engine = "CYCLES"
 scene.cycles.samples = 48
-scene.cycles.use_denoising = not preview_still  # packaged Blender lacks OpenImageDenoiser
-if preview_still:
-    scene.cycles.samples = 24
+scene.cycles.use_denoising = not preview_mode  # packaged Blender lacks OpenImageDenoiser
+if preview_mode:
+    scene.cycles.samples = 18 if preview_animation else 24
 scene.render.resolution_x = 540
 scene.render.resolution_y = 960
-scene.render.resolution_percentage = 50 if preview_still else 100
+scene.render.resolution_percentage = 50 if preview_mode else 100
 scene.render.film_transparent = False
 scene.render.image_settings.file_format = "PNG"
 scene.render.filepath = str(out) + "_"
