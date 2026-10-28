@@ -10,7 +10,9 @@ on:
       - 'scripts/install-remote-broker-resident.sh'
       - 'scripts/stage-remote-broker-caddy.mjs'
       - 'scripts/activate-remote-broker-caddy.sh'
-      - 'tests/stage-remote-broker-caddy.test.mjs'
+      - 'scripts/node002-submit-enrollment-request.mjs'
+      - 'tests/node002-submit-enrollment-request.test.mjs'
+      - 'tests/stage-remote-broker-caddy.test.mjs tests/node002-submit-enrollment-request.test.mjs'
       - 'docs/operations/node001-node002-remote-broker-physical-staging.md'
       - '.github/workflows/remote-broker-physical-preflight.yml'
   workflow_dispatch:
@@ -32,6 +34,7 @@ jobs:
           node --check scripts/remote-broker-physical-preflight.mjs
           node --check systemia/yard/remote-broker-resident.mjs
           node --check scripts/stage-remote-broker-caddy.mjs
+          node --check scripts/node002-submit-enrollment-request.mjs
           bash -n scripts/install-remote-broker-resident.sh
           bash -n scripts/activate-remote-broker-caddy.sh
       - name: Exercise real ephemeral Yard broker and strict route/identity boundaries
