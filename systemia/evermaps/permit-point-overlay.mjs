@@ -124,11 +124,14 @@ export function joinPermitPointsToWgs({wgs,receipt,permits,county='Grant'}={}){
     throw new Error('Permit geometry or source hash failed verification');
   }
   const polygons=wgs.features.map(f=>({id:f.properties.OBJECTID,
+    classification:f.properties.CLASSIFICATION??'Unknown',
     geometry:f.geometry,box:bboxForGeometry(f.geometry)}));
+  const CLASSES=['Demonstrated','Inferred','Speculative','Not a Resource','Not Analyzed','Unknown'];
+  const classCounts=Object.fromEntries(CLASSES.map(key=>[key,0]));
   const rows=[];let within=0,boundary=0,outside=0;
   for(const p of permits.features){
     const point=p.geometry.coordinates;
-    const interiorIds=[],boundaryIds=[];
+    const interiorIds=[],boundaryIds=[],classificationMatches=[];
     for(const polygon of polygons){
       const b=polygon.box;
       if(point[0]<b[0]-EPS||point[0]>b[2]+EPS||
@@ -136,6 +139,16 @@ export function joinPermitPointsToWgs({wgs,receipt,permits,county='Grant'}={}){
       const relation=locatePointInPolygon(point,polygon.geometry);
       if(relation==='interior')interiorIds.push(polygon.id);
       else if(relation==='boundary')boundaryIds.push(polygon.id);
+      if(relation==='interior'||relation==='boundary') {
+        classificationMatches.push({
+          resource_object_id:polygon.id,classification:polygon.classification,
+          relation
+        });
+      }
+    }
+    for(const classification of new Set(classificationMatches.filter(
+      row=>row.relation==='interior').map(row=>row.classification))) {
+      classCounts[Object.hasOwn(classCounts,classification)?classification:'Unknown']++;
     }
     if(interiorIds.length)within++;
     else if(boundaryIds.length)boundary++;
@@ -143,6 +156,8 @@ export function joinPermitPointsToWgs({wgs,receipt,permits,county='Grant'}={}){
     rows.push({permit_source_object_id:p.properties.OBJECTID,
       matched_resource_interior_object_ids:interiorIds.sort((a,b)=>a-b),
       boundary_uncertainty_resource_object_ids:boundaryIds.sort((a,b)=>a-b),
+      published_classification_context:classificationMatches.sort(
+        (a,b)=>a.resource_object_id-b.resource_object_id),
       state:interiorIds.length?'approximate_permit_point_inside_geology_polygon':
         boundaryIds.length?'point_on_mapped_boundary_uncertain':'no_polygon_point_match'});
   }
@@ -154,6 +169,8 @@ export function joinPermitPointsToWgs({wgs,receipt,permits,county='Grant'}={}){
     imported_resource_polygons:provenance.source_features,
     imported_approximate_permit_points:permits.features.length,
     point_relation_counts:{interior:within,boundary_uncertain:boundary,outside},
+    point_inside_published_geological_classification_counts:classCounts,
+    classification_counting_note:'Each approximate permit point is counted once per classification it intersects. Counts can overlap. WGS classification is NOT a finding about a permit site.',
     rows,
     legal_title_verified:false,
     operating_mine_status_verified:false,
