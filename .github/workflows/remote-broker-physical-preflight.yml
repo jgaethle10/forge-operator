@@ -9,6 +9,7 @@ on:
       - 'tests/remote-broker-resident.test.mjs'
       - 'scripts/install-remote-broker-resident.sh'
       - 'scripts/stage-remote-broker-caddy.mjs'
+      - 'scripts/activate-remote-broker-caddy.sh'
       - 'tests/stage-remote-broker-caddy.test.mjs'
       - 'docs/operations/node001-node002-remote-broker-physical-staging.md'
       - '.github/workflows/remote-broker-physical-preflight.yml'
@@ -32,6 +33,7 @@ jobs:
           node --check systemia/yard/remote-broker-resident.mjs
           node --check scripts/stage-remote-broker-caddy.mjs
           bash -n scripts/install-remote-broker-resident.sh
+          bash -n scripts/activate-remote-broker-caddy.sh
       - name: Exercise real ephemeral Yard broker and strict route/identity boundaries
         run: node --test tests/remote-broker-physical-preflight.test.mjs tests/remote-broker-resident.test.mjs tests/stage-remote-broker-caddy.test.mjs
       - name: Non-production runner cannot claim physical broker readiness
