@@ -91,3 +91,20 @@ F. **Commercial readiness:** only after data quality, legal constraints, feasibi
 Relevant independent claims authority: https://www.blm.gov/services/land-records/mlrs
 
 **Not shipped:** production map UI, 3-D deposits, parcel mining suitability, operating mines, tested resource reserves, proof of permits, or paid production fulfillment.
+
+## Phase 2: land-source coverage canary (source metadata and coarse counts only)
+
+New adapter `systemia/evermaps/land-context.mjs` consumes *only* a verified, SHA-256-matched full Grant WGS source and creates a read-only receipt:
+
+- **BLM active mapped mining claims**: https://nlsdbpubgis.blm.gov/arcgis/rest/services/Mining_Claims/MiningClaims/MapServer/1 . Uses a coarse envelope enclosing the imported WGS polygons. This envelope may overlap other counties, and BLM's geocoding can omit cases or map at county/section precision. Zero records would **not** establish an unencumbered mining opportunity.
+- **WA DNR active surface mine reclamation permit locations**: https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0 . Queries only county-level point counts. Permit records don't establish that a mine is currently operating or give a third party extraction rights.
+- **Grant County public parcel assessment map**: https://services.arcgis.com/33TOOklri9xpic7U/ArcGIS/rest/services/Grant_County_Interactive_Parcel_Map/FeatureServer/0 . Metadata-only validation, **no ownership query, no owner extraction or commercial mailing list**. The service is for assessment/planning, not a survey, legal boundaries or title. Washington public-records restrictions on commercial lists of individuals must be respected. Parcel-license and access review required before any expanded usage.
+
+All three sources are independently probed. Source unavailable, schema changed, GIS request failed and zero matching count are separate states. A source count cannot unlock any `research-dossiers.mjs` land-rights, eligibility, zoning, or economics gate. The output is `land-source-coverage-receipt.json` in the GitHub Actions 30-day research artifact.
+
+Reproduce after full Grant import:
+
+    node --test systemia/evermaps/*.test.mjs
+    node systemia/evermaps/land-context-cli.mjs
+
+Do **not** produce individual property-eligibility rankings or contact lists from this stage.

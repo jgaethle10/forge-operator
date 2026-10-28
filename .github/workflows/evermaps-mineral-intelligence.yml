@@ -77,6 +77,11 @@ jobs:
           EVERMAPS_COUNTY: Grant
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/wgs-research-dossier-cli.mjs
+      - name: Probe BLM claims, WA reclamation permits and Grant parcel source metadata
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/land-context-cli.mjs
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4
