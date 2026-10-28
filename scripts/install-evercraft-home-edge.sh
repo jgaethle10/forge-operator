@@ -140,6 +140,24 @@ ProtectHome=read-only
 WantedBy=multi-user.target
 EOF
 
+# The owned public edge is shared by Home, Fabric, and the explicitly approved broker.
+# Preserve an already valid shared Caddyfile during Home update convergence.
+# Previously this installer replaced the file unconditionally, removing broker routes.
+CADDY_TEMPLATE_REQUIRED=true
+if [[ -s "$CADDYFILE" ]]; then
+  if grep -Fq 'handle_path /home/*' "$CADDYFILE" &&
+     grep -Fq 'reverse_proxy 127.0.0.1:4310' "$CADDYFILE" &&
+     grep -Fq 'reverse_proxy 127.0.0.1:8787' "$CADDYFILE"; then
+    echo "Evercraft Home: preserving existing shared public Caddy configuration."
+    CADDY_TEMPLATE_REQUIRED=false
+  elif grep -Fq '127.0.0.1:8797' "$CADDYFILE" ||
+       grep -Fq 'handle_path /home/*' "$CADDYFILE"; then
+    echo "HOLD: unknown or partial shared Caddy configuration; refusing destructive replacement." >&2
+    exit 7
+  fi
+fi
+
+if [[ "$CADDY_TEMPLATE_REQUIRED" == true ]]; then
 cat > "$CADDYFILE" <<'EOF'
 {
   http_port 18080
@@ -173,6 +191,7 @@ cat > "$CADDYFILE" <<'EOF'
   }
 }
 EOF
+fi
 
 systemctl daemon-reload
 systemctl enable "$HOME_SERVICE" >/dev/null

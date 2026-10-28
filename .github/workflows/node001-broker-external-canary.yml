@@ -1,0 +1,23 @@
+name: Node001 Broker External HTTPS Canary
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/node001-broker-external-canary.yml'
+      - 'scripts/remote-broker-external-canary.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-public-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe broker HTTPS independently of Node001
+        run: node scripts/remote-broker-external-canary.mjs
