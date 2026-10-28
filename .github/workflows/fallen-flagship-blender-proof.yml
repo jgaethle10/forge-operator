@@ -1,0 +1,38 @@
+name: Fallen Studios Blender real-scene proof (CPU only)
+on:
+  workflow_dispatch:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - '.github/workflows/fallen-flagship-blender-proof.yml'
+      - 'systemia/media-studio/hero-canary/lens_hero_canary.py'
+permissions:
+  contents: read
+jobs:
+  blender-still:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install packaged Blender on GitHub hosted runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender
+          blender -b -noaudio --python-expr "import bpy; print('BLENDER_VERSION', bpy.app.version_string)"
+      - name: Render genuine Cycles camera lens still, no Vast rental
+        run: |
+          mkdir -p artifacts/hero-canary
+          blender -b -t 4 --python systemia/media-studio/hero-canary/lens_hero_canary.py -- --output artifacts/hero-canary/lens-proof --preview-still
+          test -s artifacts/hero-canary/lens-proof_still.png
+          test -s artifacts/hero-canary/lens-proof.blend
+          file artifacts/hero-canary/lens-proof_still.png
+          sha256sum artifacts/hero-canary/lens-proof_still.png artifacts/hero-canary/lens-proof.blend
+      - name: Attach real frame and editable scene
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-lens-cycles-first-frame
+          path: |
+            artifacts/hero-canary/lens-proof_still.png
+            artifacts/hero-canary/lens-proof.blend
+          if-no-files-found: error
+          retention-days: 14
