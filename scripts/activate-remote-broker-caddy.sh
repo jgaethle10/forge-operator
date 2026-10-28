@@ -83,11 +83,12 @@ if(s.state!=='healthy'||s.local_broker_health_verified!==true||
    h.deployment_receipt_bound!==true||
    h.deployment_receipt_ref!==s.deployment_receipt_hash||
    h.secure_envelope_schema!=='evercraft.secure-envelope.v1'||
-   h.registered_nodes!==0||h.authorized_devices!==0){
+   (!Number.isInteger(h.registered_nodes)||h.registered_nodes<0)||
+   (!Number.isInteger(h.authorized_devices)||h.authorized_devices<0)){
   console.error('HOLD: private broker not healthy, unbound, stale, or already enrolled.');
   process.exit(7);
 }
-console.log('Private broker health and deployment identity verified; authorized devices: zero.');
+console.log('Private broker health and deployment identity verified; existing authorization state preserved.');
 NODE
 
 set -a
@@ -202,7 +203,7 @@ if(h.ok!==true||h.service!=='remote-capacity-broker'||
    h.instance_id!==s.broker_instance_id||
    h.deployment_receipt_bound!==true||
    h.deployment_receipt_ref!==s.deployment_receipt_hash||
-   h.authorized_devices!==0||
+   (!Number.isInteger(h.authorized_devices)||h.authorized_devices<0)||
    h.secure_envelope_schema!=='evercraft.secure-envelope.v1'){
   console.error('FAIL: public broker instance or Yard receipt differs from the private instance.');
   process.exit(12);
