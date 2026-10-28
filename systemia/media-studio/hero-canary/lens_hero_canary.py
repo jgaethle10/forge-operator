@@ -30,7 +30,7 @@ scene.render.engine = "CYCLES"
 scene.cycles.samples = 48
 scene.cycles.use_denoising = not preview_still  # packaged Blender lacks OpenImageDenoiser
 if preview_still:
-    scene.cycles.samples = 12
+    scene.cycles.samples = 24
 scene.render.resolution_x = 540
 scene.render.resolution_y = 960
 scene.render.resolution_percentage = 50 if preview_still else 100
@@ -82,7 +82,8 @@ steel=mat("brushed silver chromium",(0.32,0.35,0.39),0.92,0.23)
 warm=mat("subtle warm champagne metal",(0.28,0.19,0.105),0.82,0.29)
 glass=mat("coated optical glass blue-black",(0.005,0.017,0.036),0.12,0.095,0.15)
 innerglass=mat("deep internal optical element",(0.005,0.008,0.012),0.08,0.065,0.20)
-floor=mat("matte graphite studio plinth",(0.045,0.046,0.047),0.09,0.68)
+floor=mat("matte graphite studio plinth",(0.029,0.031,0.033),0.04,0.82)
+pedestal=mat("subtle basalt display pedestal",(0.072,0.073,0.077),0.1,0.49)
 
 def bevel(obj, amount=.015, segments=3):
     mod=obj.modifiers.new("machined edge radius","BEVEL")
@@ -151,6 +152,21 @@ for i in range(8):
     o.name=f"front fastening {i:02d}"
     o.data.materials.append(black)
 
+# A solid physical plinth grounds the product: no floating, no neon tricks.
+cyl("substantial basalt photography plinth",1.08,.11,-.055,pedestal,.026,192)
+ring("machined plinth edge",1.035,.012,-.001,black)
+
+# Fine focal-length index ticks embossed around a lower barrel ring.
+for i in range(36):
+    a=math.pi*(.22 + .56*i/35)
+    bpy.ops.mesh.primitive_cube_add(size=1,location=(.692*math.cos(a),.692*math.sin(a),.709))
+    t=bpy.context.object
+    t.name=f"precision witness mark {i:02d}"
+    t.rotation_euler.z=a
+    t.dimensions=(.006,.022 if i%5 else .046,.011)
+    bpy.ops.object.transform_apply(location=False,rotation=False,scale=True)
+    t.data.materials.append(steel)
+
 # Studio pedestal and environment, no neon lights, random HUDs, or floating geometry.
 bpy.ops.mesh.primitive_cube_add(size=1,location=(0,0,-.13))
 stage=bpy.context.object
@@ -172,14 +188,14 @@ def area(name,location,power,color,size,size_y=None):
     rotation=(Vector((0,0,0.9))-obj.location).to_track_quat('-Z','Y')
     obj.rotation_euler=rotation.to_euler()
 
-area("large creamy softbox upper left",(-3,-2,5),700,(1,.93,.84),3.5,4.5)
-area("long clean rim strip",(2.7,1.2,4.0),470,(0.81,0.88,1.0),1.3,4.4)
-area("subtle front detail fill",(1,-4,2.1),110,(1,1,1),2.7,2)
+area("large creamy softbox upper left",(-3.8,-2.2,5),900,(1,.93,.86),3.5,4.5)
+area("long clean rim strip",(2.6,1.2,3.8),620,(0.86,0.91,1.0),1.0,4.6)
+area("subtle front detail fill",(1,-4,2.1),155,(1,1,1),2.7,2)
 area("glass reflection overhead",(0.4,0.9,4.8),230,(1,1,1),1.7,1.0)
 
 focus=bpy.data.objects.new("focus target",None)
 bpy.context.collection.objects.link(focus)
-focus.location=(0,0,1.2)
+focus.location=(0,0,1.05)
 cam_data=bpy.data.cameras.new("hero cinema camera")
 cam=bpy.data.objects.new("hero cinema camera",cam_data)
 bpy.context.collection.objects.link(cam)
@@ -188,11 +204,11 @@ cam.data.type="PERSP"
 cam.data.lens=85
 cam.data.dof.use_dof=True
 cam.data.dof.focus_object=focus
-cam.data.dof.aperture_fstop=5.6
-cam.data.lens=65
-for frame,location in [(1,(2.4,-3.9,2.5)),(48,(1.48,-3.1,2.9))]:
+cam.data.dof.aperture_fstop=8
+cam.data.lens=70
+for frame,location in [(1,(3.5,-5.5,3.4)),(48,(2.8,-5.0,3.5))]:
     cam.location=location
-    cam.rotation_euler=(Vector((0,0,1.05))-cam.location).to_track_quat('-Z','Y').to_euler()
+    cam.rotation_euler=(Vector((0,0,0.99))-cam.location).to_track_quat('-Z','Y').to_euler()
     cam.keyframe_insert(data_path="location",frame=frame)
     cam.keyframe_insert(data_path="rotation_euler",frame=frame)
 # Portable editability proof; no GPU charges and no proprietary source imagery.
