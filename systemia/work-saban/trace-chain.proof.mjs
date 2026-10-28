@@ -105,6 +105,9 @@ for(let i=0;i<events.length-1;i++){
 await assert.rejects(remoteClaimVerifier.accept(remoteClaimChain.next({
   type:'completed',execution:{...execution,physically_distributed:true}
 })),/incomplete_local_delivery/);
+assert.throws(()=>verifyLocalEventChain(
+  [...events,...events.slice(0,1)]
+),/invalid_trace_length/);
 const offline=auditWorkSabanTrace(test.export());
 assert.equal(offline.status,'local_trace_integrity_verified');
 assert.equal(offline.event_count,12);
