@@ -40,7 +40,9 @@ export function auditWorkSabanTrace(archive) {
        ||!Number.isInteger(worker.attempts)||worker.attempts<1||worker.attempts>2
        ||!/^sha256:[0-9a-f]{64}$/.test(worker.idempotency_key||'')
        ||final?.role!==roles[i]||final.result_sha256!==worker.result_sha256
-       ||final.idempotency_key!==worker.idempotency_key)
+       ||final.idempotency_key!==worker.idempotency_key
+       ||final.attempts!==worker.attempts||final.status!==worker.status
+       ||final.quality_status!==worker.quality_status)
       throw new Error('worker_receipt_mismatch');
   }
   if(typeof last.report_markdown!=='string'
