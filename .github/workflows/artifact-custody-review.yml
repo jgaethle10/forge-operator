@@ -6,11 +6,15 @@ on:
       - 'scripts/artifact-custody.mjs'
       - 'scripts/artifact-roundtrip.mjs'
       - 'scripts/artifact-preservation.mjs'
+      - 'scripts/artifact-google-drive.mjs'
+      - 'scripts/artifact-preserve-drive.mjs'
       - 'tests/artifact-custody.test.mjs'
       - 'tests/artifact-roundtrip.test.mjs'
       - 'tests/artifact-preservation.test.mjs'
+      - 'tests/artifact-google-drive.test.mjs'
       - 'docs/artifact-custody.md'
       - 'docs/artifact-preservation.md'
+      - 'docs/artifact-google-drive.md'
       - '.github/workflows/artifact-custody-review.yml'
   workflow_dispatch:
 
@@ -27,4 +31,4 @@ jobs:
         with:
           node-version: 22
       - name: Validate offline custody and snapshot comparison
-        run: node --test tests/artifact-custody.test.mjs tests/artifact-roundtrip.test.mjs tests/artifact-preservation.test.mjs
+        run: node --test tests/artifact-custody.test.mjs tests/artifact-roundtrip.test.mjs tests/artifact-preservation.test.mjs tests/artifact-google-drive.test.mjs
