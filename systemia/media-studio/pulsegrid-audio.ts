@@ -219,7 +219,7 @@ export class PulseGridAudioEngine {
     const rendered=await renderFoundryPianoOfflineBus({
       voices,audioBeds:this.decodedAudioBeds,synthVoices:this.capturedSynthVoices,
       drumVoices:this.capturedDrumVoices,
-      automationEvents:this.capturedBusAutomation,
+      automationEvents:this.capturedBusAutomation.filter(e=>snapshots.has(e.track_id)),
       window_sec:options.window_sec??.8,
       includeAuditionWav:options.includeAuditionWav??false,
       tracks:Array.from(snapshots.values()),
