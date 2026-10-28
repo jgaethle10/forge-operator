@@ -38,3 +38,10 @@ Independent Playwright checks on 2026-10-16: Chromium desktop (1365x820) and mob
 No pilot shop has accepted, no customer bought anything, no fitting was verified, no public deployment was made, and no Systemia dispatch is demonstrated by this branch. The branch is a review surface to support governed admission and evaluation.
 
 RC02 local validation (2026-10-23): Chromium desktop 1280×800 and phone 390×844, four selectors, clipboard mock checked for human-readable specs, JSON quote export, reset, and zero JavaScript errors. Seven isolated regression cases passed locally in the expanded suite; GitHub Actions verdict must be checked separately. No real buyer, inventory, fitment, or contact implied.
+
+## RC03 | Market evidence, not decorative features (2026-10-28)
+
+- Added `demand-observation.mjs` with five Node tests: founder-provided screenshot becomes one identity-free **reported** observation using the already existing Rockies/Worldstate in-memory context model. Its source remains private and no canonical ingestion or mission admission occurs.
+- Added `merchant-pilot-gate.mjs` with five Node tests: three independently permissioned merchant responses plus a distinct unmet workflow and explicit pilot evidence trigger only **human review**, never sales/release authority. Empty evidence remains blocked.
+- Added [MERCHANT-PILOT.md](MERCHANT-PILOT.md): current competitor reality, candidate research list, gating decisions, and explicit stop conditions. The visualizer market is not novel, and this is **not** a validated paid product.
+- The existing path-scoped, read-only workflow runs all `*.test.mjs` files in this directory. Evaluate actual Actions results separately rather than claiming local unit proof from a committed file.
