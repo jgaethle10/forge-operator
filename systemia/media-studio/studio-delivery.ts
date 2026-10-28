@@ -35,6 +35,8 @@ export interface StudioDeliveryRequest {
   qualityMode?:StudioQualityMode;
   narrativeFilmAdmission?:NarrativeFilmAdmissionReceipt;
   commercialAudioFinishing?:'none'|'two_pass';
+  // Explicit technical dynamics floor; opt-in only for cinematic commercials.
+  commercialAudioMinLraLu?:number;
 }
 
 export interface ClipDeliveryManifest {
@@ -163,6 +165,11 @@ function validateRequest(request:StudioDeliveryRequest){
   if(request.commercialAudioFinishing==='two_pass'&&qualityMode!=='commercial'){
     throw new Error('studio_delivery_commercial_audio_finishing_requires_commercial_mode');
   }
+  if(request.commercialAudioMinLraLu!==undefined &&
+     (qualityMode!=='commercial' || !Number.isFinite(request.commercialAudioMinLraLu) ||
+      request.commercialAudioMinLraLu<0 || request.commercialAudioMinLraLu>20)){
+    throw new Error('studio_delivery_commercial_dynamics_policy_invalid');
+  }
   if(qualityMode==='narrative_film'){
     const validation=validateNarrativeFilmAdmissionForProject({
       project:request.project,
@@ -200,12 +207,19 @@ export function buildClipDeliveryManifest(input:{
     }
     const audioQc=JSON.parse(fs.readFileSync(input.commercialAudioQcReceiptPath,'utf8')) as {
       schema?:string;status?:string;sha256?:string;path?:string;
+      policy?:{minLraLu?:number};measurements?:{loudnessRangeLu?:number|null};
     };
     if(audioQc.schema!=='evercraft.fallen.commercial-audio-qc.v1' ||
        audioQc.status!=='accepted' ||
        audioQc.sha256!==input.renderReceipt.sha256 ||
        path.resolve(String(audioQc.path||''))!==path.resolve(input.renderReceipt.outputPath)){
       throw new Error('studio_delivery_commercial_audio_qc_unbound_or_rejected');
+    }
+    if((input.request.commercialAudioMinLraLu??0)>0 &&
+       (audioQc.policy?.minLraLu!==input.request.commercialAudioMinLraLu ||
+        !Number.isFinite(audioQc.measurements?.loudnessRangeLu) ||
+        Number(audioQc.measurements?.loudnessRangeLu)<input.request.commercialAudioMinLraLu)){
+      throw new Error('studio_delivery_cinematic_audio_dynamics_not_verified');
     }
   }
 
@@ -296,6 +310,7 @@ export function finalizeStudioDelivery(input:{
     try{
       const finish=masterCommercialAudio({
         input:draftVideoPath,output:videoPath,expectedSha256:preliminary.sha256,
+        ...(input.request.commercialAudioMinLraLu===undefined?{}:{standard:{minLraLu:input.request.commercialAudioMinLraLu}}),
       });
       fs.writeFileSync(commercialAudioMasterReceiptPath,JSON.stringify(finish,null,2)+'\n','utf8');
       renderReceipt={
@@ -330,7 +345,8 @@ export function finalizeStudioDelivery(input:{
 
   // Technical audio acceptance is mandatory for the commercial quality mode.
   if(commercialAudioQcReceiptPath){
-    const qc=auditCommercialAudio({input:videoPath,expectedSha256:renderReceipt.sha256});
+    const qc=auditCommercialAudio({input:videoPath,expectedSha256:renderReceipt.sha256,
+      ...(input.request.commercialAudioMinLraLu===undefined?{}:{standard:{minLraLu:input.request.commercialAudioMinLraLu}})});
     fs.writeFileSync(commercialAudioQcReceiptPath,JSON.stringify(qc,null,2)+'\n','utf8');
     if(qc.status!=='accepted'){
       throw new Error('studio_delivery_commercial_audio_qc_rejected:'+qc.reasons.join('|'));

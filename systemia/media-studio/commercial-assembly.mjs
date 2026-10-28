@@ -182,7 +182,8 @@ export function compileApprovedCommercial(input){
       language:clean(input.language)||'en',
       tags:Array.isArray(input.tags)?input.tags:[]},
     qualityMode:'commercial',
-    commercialAudioFinishing:'two_pass'
+    commercialAudioFinishing:'two_pass',
+    ...(input.brief.creativeStandard==='relay-floor-v1'?{commercialAudioMinLraLu:4}:{} )
   };
   return {schema:'evercraft.fallen.approved-commercial-assembly.v1',
     status:'ready_to_render_not_creatively_approved_by_system',
