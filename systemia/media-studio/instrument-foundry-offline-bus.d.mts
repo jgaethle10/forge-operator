@@ -28,6 +28,7 @@ export type FoundryOfflineBusResult={
  rms_dbfs?:number;rendered_frames?:number;window_sec?:number;rate?:number;
  audio_beds_within_window?:boolean;analyzed_audio_beds?:number;
  analyzed_synth_voices?:number;analyzed_drum_hits?:number;
+ reviewed_source_count?:number;render_source_limit?:number;
  performed_bus_automation_events?:number;performed_bus_automation_applied?:boolean;
  later_bus_automation_excluded?:number;performance_coverage_sec?:number;
  performance_window_complete?:boolean;
