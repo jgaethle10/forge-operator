@@ -14,6 +14,7 @@ import {schedulePulseGridAudioBuffer} from './pulsegrid-audio-scheduler.mjs';
 import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import {encodeFoundryAuditionWav} from './instrument-foundry-audition-wav.mjs';
+import {planPulseGridBusAutomation} from './pulsegrid-bus-automation.mjs';
 import {unavailableFoundryPianoDryPeak} from './instrument-foundry-dry-pcm.mjs';
 
 const RESULT_SCOPE='offline_sampled_piano_track_bus_approximation';
@@ -93,7 +94,7 @@ function validated(input){
  * offline audio rendering explicit and independently testable; it never
  * silently spins up real-time playback or pulls from storage.
  */
-export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[],window_sec=.8,includeAuditionWav=false,offlineContextFactory}={}){
+export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],synthVoices=[],drumVoices=[],window_sec=.8,includeAuditionWav=false,automationEvents=[],offlineContextFactory}={}){
   if(![.8,8].includes(window_sec)||typeof includeAuditionWav!=='boolean')
     return unavailable('Review window must be 0.8 or 8 seconds, with an explicit audition request.');
   const invalid=validated({voices,tracks,audioBeds,synthVoices,drumVoices});
@@ -109,6 +110,20 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
   if(audioBeds.some(bed=>bed.start_time-earliest>=window_sec))
     return unavailable('Audio-bed note-on is outside the bounded offline audition window.');
   if(tracks.length>8)return unavailable('Track bus count exceeds the offline review budget.');
+  // Capture only original scheduled bus steps, never synthesize missing
+  // movement from the score. Historical no-automation fixtures preserve
+  // their previous frozen note-on behaviour.
+  let automationPlan=null;
+  if(!Array.isArray(automationEvents))return unavailable('Invalid performed automation receipts.');
+  if(automationEvents.length){
+    try{
+      automationPlan=planPulseGridBusAutomation({
+        events:automationEvents,tracks,origin:earliest,window_sec,
+      });
+    }catch(error){
+      return unavailable(error instanceof Error?error.message:'Unverifiable bus automation');
+    }
+  }
   const frames=Math.ceil(window_sec*rate);
   if(frames>MAX_WINDOW*rate)return unavailable('Offline render exceeds the mobile-safe frame budget.');
   let context;
@@ -139,6 +154,13 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       wet.gain.setValueAtTime(bound(t.delayMix,0,.65),0);
       dry.gain.setValueAtTime(1,0);
       buses.set(t.id,input);
+      if(automationPlan){
+        const changes=automationPlan.automation_events.filter(e=>e.track_id===t.id);
+        for(const change of changes){
+          input.gain.setValueAtTime(change.volume,change.relative_time);
+          filter.frequency.setValueAtTime(change.frequency_hz,change.relative_time);
+        }
+      }
     }
     for(const v of voices){
       // Preserve source bytes and exact note selection; only shift the
@@ -218,10 +240,13 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       analyzed_voices:voices.length,analyzed_audio_beds:audioBeds.length,
       analyzed_synth_voices:synthVoices.length,
       analyzed_drum_hits:drumVoices.length,rendered_frames:frames,
+      performed_bus_automation_events:automationPlan?.recorded_events_in_window??0,
+      performed_bus_automation_applied:Boolean(automationPlan),
+      later_bus_automation_excluded:automationPlan?.later_recorded_events_excluded??0,
       window_sec,rate,audition_wav_bytes,
       audition_sample_clamped:includeAuditionWav&&peak>1,
       source_kind:(synthVoices.length||drumVoices.length)?'decoded_pcm_plus_synth':'decoded_pcm_only',
-      limitations:'Recorded-piano voices, authorized imported audio beds plus original PulseGrid synth/drum events only. Uses frozen note-on track/filter/delay snapshots plus master .72 and selected <=8-second window. Excludes unperformed/probabilistically omitted events, additional unscheduled notes, remaining arrangement and automation changes, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
+      limitations:'Recorded-piano voices, authorized imported audio beds plus original PulseGrid synth/drum events only. Uses actual scheduled step gain/filter automation where available, but frozen static delay/feedback parameters plus master .72 and selected <=8-second window. Excludes unscheduled steps and events, later arrangement, time-varying static effects controls, mastering/true peak and device output. Does not certify audible quality or commercial rights.',
     };
   }catch(error){
     return unavailable('Offline browser track-bus rendering failed: '+(error instanceof Error?error.message:'unsupported audio graph'));
