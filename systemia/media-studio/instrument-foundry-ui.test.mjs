@@ -232,3 +232,11 @@ test('extended audition distinguishes actual scheduled transport from filled WAV
  assert.match(s,/later_bus_automation_excluded/);
  assert.match(s,/Play the passage longer before Stop/);
 });
+
+
+test('longer multi-bar performance reports real source count and shared graph ceiling',()=>{
+ const s=ui();
+ assert.match(s,/reviewed_source_count/);
+ assert.match(s,/render_source_limit/);
+ assert.match(s,/short dry-piano PCM diagnostic retains a separate 16-voice ceiling/);
+});
