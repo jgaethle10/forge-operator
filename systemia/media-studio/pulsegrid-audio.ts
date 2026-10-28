@@ -3,6 +3,7 @@ import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import type {PulseGridCapturedBusStep} from './pulsegrid-bus-automation.mjs';
+import {FOUNDRY_REVIEW_BUDGET} from './instrument-foundry-review-budget.mjs';
 import type {PulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import type {PulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
@@ -175,7 +176,11 @@ export class PulseGridAudioEngine {
     const voices=this.decodedDryPianoVoices as Array<FoundryDryPcmVoice & FoundryOfflineBusVoice & {
       asset_id?:string;autoVolume?:number;autoFilter?:number;
     }>;
-    if(!voices.length||this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||this.drumVoiceOverflow||this.busAutomationOverflow||
+    const sourceCount=voices.length+this.decodedAudioBeds.length+
+      this.capturedSynthVoices.length+this.capturedDrumVoices.length;
+    if(!voices.length||sourceCount>FOUNDRY_REVIEW_BUDGET.combined_sources||
+       this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||
+       this.drumVoiceOverflow||this.busAutomationOverflow||
        !this.pianoPolyphony.snapshot().observation_complete||
        this.pianoPolyphony.snapshot().observed_voices!==voices.length)
       return unavailable('No complete bounded authorized sampled-piano phrase is available.');
@@ -678,7 +683,7 @@ export class PulseGridAudioEngine {
       this.scheduleBus(bus, track, autoVolume, autoFilter, time);
       // Capture live scheduled automation even on silent steps. This is what
       // the offline renderer must replay. Do not infer any future steps.
-      if(this.capturedBusAutomation.length<1024){
+      if(this.capturedBusAutomation.length<FOUNDRY_REVIEW_BUDGET.automation_events){
         this.capturedBusAutomation.push({
           track_id:track.id,time,autoVolume,autoFilter,
           trackVolume:track.volume,trackFilterHz:track.filterHz,
@@ -704,7 +709,7 @@ export class PulseGridAudioEngine {
               .reduce((total,value)=>total+value,0);
             const mode=clip.provenance?.audio_playback_mode==='one_shot'?'one_shot':'loop';
             this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration,mode);
-            if(this.decodedAudioBeds.length<4){
+            if(this.decodedAudioBeds.length<FOUNDRY_REVIEW_BUDGET.imported_audio_beds){
               this.decodedAudioBeds.push({
                 track_id:track.id,buffer:assetBuffer,asset_id:clip.audio_asset_id,
                 start_time:time,duration:sceneDuration,mode,autoVolume,autoFilter,
@@ -764,7 +769,7 @@ export class PulseGridAudioEngine {
             track_id:track.id,start_time:sampledVoice.start_time,
             stop_time:sampledVoice.stop_time,voice_gain:sampledVoice.voice_gain,
           });
-          if(this.decodedDryPianoVoices.length<16){
+          if(this.decodedDryPianoVoices.length<FOUNDRY_REVIEW_BUDGET.piano_voices){
             this.decodedDryPianoVoices.push({
               ...sampledVoice,buffer,asset_id:selected.asset_id,
               track_id:track.id,pitch:note.pitch,velocity:note.velocity,
@@ -785,7 +790,7 @@ export class PulseGridAudioEngine {
   }
 
   private captureDrumVoice(voice:PulseGridDrumVoice,track_id:string,autoVolume:number,autoFilter:number){
-    if(this.capturedDrumVoices.length<16){
+    if(this.capturedDrumVoices.length<FOUNDRY_REVIEW_BUDGET.drum_hits){
       this.capturedDrumVoices.push({...voice,track_id,autoVolume,autoFilter});
     }else this.drumVoiceOverflow=true;
   }
@@ -829,7 +834,7 @@ export class PulseGridAudioEngine {
       context,destination,track_id:track.id,pitch,velocity,time,duration,
       createSource:()=>this.trackSource(context.createOscillator()),
     });
-    if(this.capturedSynthVoices.length<16){
+    if(this.capturedSynthVoices.length<FOUNDRY_REVIEW_BUDGET.synth_voices){
       this.capturedSynthVoices.push({...scheduled,autoVolume,autoFilter});
     }else this.synthVoiceOverflow=true;
   }
