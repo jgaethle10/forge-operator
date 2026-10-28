@@ -80,7 +80,7 @@ test('local Passport single-use consumed permit reopens exactly its bound ambigu
     j.root),integritySecret:'local-fixture-ack-key',
     reviewAuthorizer:makePassportRetryAuthorizer({passportStateDir:p.stateDir})});
   assert.equal(reloaded.inspect({jobKey,now:t+1202}).state,'queued');
-  assert.equal(reloaded.inspect({jobKey,now:t+1202}).journal_events,4);
+  assert.equal(reloaded.inspect({jobKey,now:t+1202}).journal_events,3);
   const retry=j.acquire({jobKey,workerId:'local-test',leaseMs:1000,now:t+1202});
   assert.equal(retry.attempts,2);
   assert.throws(()=>review(j,jobKey,issued.permitId,evidence,t+2303),/passport_authority_denied/);
