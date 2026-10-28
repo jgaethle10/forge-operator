@@ -48,7 +48,7 @@ def validate_design():
     assert CONDITIONS[0]["cfg_weight"] == CONDITIONS[1]["cfg_weight"]
     assert CONDITIONS[1]["exaggeration"] == CONDITIONS[2]["exaggeration"]
     assert len(re.findall(r"\b[\w']+\b", SCRIPT)) >= 45
-    assert not any("[" in SCRIPT or "]" in SCRIPT for _ in [0])
+    assert "[" not in SCRIPT and "]" not in SCRIPT
     print("PASS: 3 matched-script authentic expressive-model test conditions")
 
 
