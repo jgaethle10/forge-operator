@@ -86,24 +86,29 @@ scene.frame_set(25)
 best=None
 # Find a physically animated separation with relative finger movement,
 # rather than letting wrist displacement masquerade as a finger snap.
-for dx in (.7,1.15,-.8,-1.3):
-    for dy in (.3,-.6,.85):
-        pb=arm.pose.bones['middle_R'];pb.rotation_mode='XYZ'
-        pb.rotation_euler=middle_pose+Vector((dx,dy,.15))
-        bpy.context.view_layer.update()
-        gap=_gap()
-        m0=arm.pose.bones['middle_R']
-        travel=(_world_tail('middle_R')-target).length
-        if gap>=.042 and travel>=.030:
-            best=(gap,travel,Vector(pb.rotation_euler))
-            break
-    if best:break
+candidates=[]
+for dx in (-.7,-.55,-.42,-.30,-.18,.18,.30,.42,.55,.7):
+    for dy in (-.4,-.25,-.12,0,.12,.25,.4):
+        for dz in (-.2,0,.2):
+            pb=arm.pose.bones['middle_R'];pb.rotation_mode='XYZ'
+            pb.rotation_euler=middle_pose+Vector((dx,dy,dz))
+            bpy.context.view_layer.update()
+            gap=_gap()
+            travel=(_world_tail('middle_R')-target).length
+            if .038<=gap<=.085 and .027<=travel<=.080:
+                score=abs(gap-.052)+.5*abs(travel-.038)+.004*(abs(dx)+abs(dy)+abs(dz))
+                candidates.append((score,gap,travel,Vector(pb.rotation_euler)))
+if candidates:
+    _,gap,travel,angles=min(candidates,key=lambda c:c[0])
+    best=(gap,travel,angles)
 if not best:
-    raise RuntimeError('SNAP_FINGER_RELEASE_NOT_SOLVED')
+    raise RuntimeError('SNAP_FINGER_RELEASE_NOT_SOLVED_WITH_PLAUSIBLE_AMPLITUDE')
 arm.pose.bones['middle_R'].rotation_euler=best[2]
 arm.pose.bones['middle_R'].keyframe_insert(data_path='rotation_euler',frame=25,group='middle_R')
+# Keep the thumb at the compress pose during the middle-finger flick;
+# simultaneous extreme thumb motion produced a cartoonishly wide release.
 thumb=arm.pose.bones['thumb_R']
-thumb.rotation_euler=thumb_pose+Vector((-.25,.32,-.1))
+thumb.rotation_euler=thumb_pose
 thumb.keyframe_insert(data_path='rotation_euler',frame=25,group='thumb_R')
 bpy.context.view_layer.update()
 if _gap()<.033:
