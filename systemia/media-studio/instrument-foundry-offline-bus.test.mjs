@@ -283,3 +283,33 @@ test('unsupported unbounded preview length fails before allocating an OfflineAud
  }
  assert.equal(f.calls.length,0,'invalid preview should allocate zero DSP nodes');
 });
+
+
+test('offline track gain and lowpass honor original played-step automation, including silence between notes',async()=>{
+ const f=fakeContext(.2);
+ const events=[
+  {track_id:'keys',time:.1,autoVolume:1,autoFilter:1,trackVolume:.8,trackFilterHz:12000},
+  {track_id:'keys',time:.35,autoVolume:.25,autoFilter:.2,trackVolume:.8,trackFilterHz:12000},
+  {track_id:'keys',time:.55,autoVolume:.75,autoFilter:.7,trackVolume:.8,trackFilterHz:12000},
+ ];
+ const r=await render({voices:[voice()],tracks:[track],automationEvents:events,offlineContextFactory:f.make});
+ assert.equal(r.status,'offline_track_bus_pcm_measurement',JSON.stringify(r));
+ assert.equal(r.performed_bus_automation_applied,true);
+ assert.equal(r.performed_bus_automation_events,3);
+ assert.ok(f.calls.some(x=>x[0].endsWith('.gain')&&x[1]==='set'&&x[2]===.2&&Math.abs(x[3]-.25)<1e-8));
+ assert.ok(f.calls.some(x=>x[0].endsWith('.frequency')&&x[1]==='set'&&x[2]===2400&&Math.abs(x[3]-.25)<1e-8));
+ assert.ok(f.calls.some(x=>x[0].endsWith('.gain')&&x[1]==='set'&&x[2]===.6&&Math.abs(x[3]-.45)<1e-8));
+});
+test('tampered or missing performed track automation fails closed before creating offline browser nodes',async()=>{
+ const f=fakeContext(.2),event={track_id:'keys',time:.1,autoVolume:1,autoFilter:1,trackVolume:.8,trackFilterHz:12000};
+ for(const automationEvents of [
+  [{...event,trackVolume:.4}],
+  [{...event,autoFilter:NaN}],
+  [{...event,track_id:'missing'}],
+ ]){
+  const r=await render({voices:[voice()],tracks:[track],automationEvents,offlineContextFactory:f.make});
+  assert.equal(r.status,'unavailable');
+  assert.equal(r.sample_peak,null);
+ }
+ assert.equal(f.calls.length,0);
+});
