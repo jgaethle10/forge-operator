@@ -18,7 +18,12 @@ TAKES=[
   "You've got enough on your plate. That's why On The Go [Mobile](/mˌoʊbəl/) Quick Lube comes to [you](+1).",0.97),
  ("f_simple_with_you",
   "Your day is full enough. That's why On The Go [Mobile](/mˈoʊbəl/) Quick Lube comes to YOU!",0.94),
+ ("g_connected_primary_you",
+  "Your day is busy enough without another stop. That's why On The Go [Mobile](/mˌoʊbəl/) Quick Lube comes to [you](+2)!",0.98),
+ ("h_connected_primary_you",
+  "Your day is busy enough without another stop. That's why On The Go [Mobile](/mˌoʊbəl/) Quick Lube comes to [you](/jˈu/)!",0.97),
 ]
+TAKES=[t for t in TAKES if t[0].startswith(("g_","h_"))]
 pipe=KPipeline(lang_code="a")
 evidence=[]
 for i,(label,words,speed) in enumerate(TAKES):
