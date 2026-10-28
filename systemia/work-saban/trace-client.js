@@ -66,6 +66,10 @@
           if(status!=='running'||verified.size!==5||
              outcome?.status!=='verified_local'||
              outcome?.quality?.status!=='verified'||
+             outcome?.evidence_state!=='actual_registered_worker_local'||
+             outcome?.physically_distributed!==false||
+             outcome?.public_execution!==false||
+             outcome?.human_account_access!==false||
              !Array.isArray(outcome.specialist_receipts)||
              outcome.specialist_receipts.length!==5||
              !Array.isArray(outcome.external_actions)||
