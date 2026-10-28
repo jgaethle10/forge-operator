@@ -10,6 +10,6 @@
   "metersPerBlenderUnit": 1,
   "startFrame": 17,
   "durationSec": 1,
-  "snapAudioTimeSec": 0.75,
-  "note": "RC13 mannequin; expected HELD, not a performed snap"
+  "snapAudioTimeSec": 0.666667,
+  "note": "Solver-produced contact at frame 24 and release at frame 25; still a held art-workprint; scheduled cue only, not rendered waveform"
 }
