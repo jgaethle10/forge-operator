@@ -39,7 +39,7 @@ export function createLocalEventChain({ traceId = randomUUID() } = {}) {
 }
 
 export function verifyLocalEventChain(events) {
-  if (!Array.isArray(events) || !events.length || events.length > 64) {
+  if (!Array.isArray(events) || !events.length || events.length > 12) {
     throw new Error('invalid_trace_length');
   }
   let prior=GENESIS, traceId=null;
