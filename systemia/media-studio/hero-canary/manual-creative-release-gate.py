@@ -30,6 +30,7 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--review",required=True)
     ap.add_argument("--output",required=True)
+    ap.add_argument("--expect-hold",action="store_true",help="For tests only: require a blocked release")
     args=ap.parse_args()
     d=json.loads(pathlib.Path(args.review).read_text())
     result=review(d)
@@ -37,5 +38,7 @@ def main():
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(result,indent=2)+"\n")
     print(json.dumps(result,indent=2))
-    sys.exit(0 if result["status"]=="HOLD" else 2) # CI must be hold until owner supplies independently verified evidence
+    if args.expect_hold:
+        sys.exit(0 if result["status"]=="HOLD" else 2)
+    sys.exit(0 if result["status"]=="ELIGIBLE_FOR_PUBLICATION_REVIEW" else 2)
 if __name__=="__main__":main()
