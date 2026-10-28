@@ -108,6 +108,18 @@ await assert.rejects(remoteClaimVerifier.accept(remoteClaimChain.next({
 assert.throws(()=>verifyLocalEventChain(
   [...events,...events.slice(0,1)]
 ),/invalid_trace_length/);
+const retryMismatchChain=createLocalEventChain({traceId:'final-retry-disagreement'});
+const retryMismatchVerifier=client.create();
+for(let i=0;i<events.length-1;i++){
+  const {trace,...body}=events[i];
+  await retryMismatchVerifier.accept(retryMismatchChain.next(body));
+}
+const contradictoryExecution={...execution,specialist_receipts:[
+  {...receipts[0],attempts:2},...receipts.slice(1)
+]};
+await assert.rejects(retryMismatchVerifier.accept(retryMismatchChain.next({
+  type:'completed',execution:contradictoryExecution
+})),/delivery_does_not_match_observed_workers/);
 const offline=auditWorkSabanTrace(test.export());
 assert.equal(offline.status,'local_trace_integrity_verified');
 assert.equal(offline.event_count,12);
