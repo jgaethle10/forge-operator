@@ -49,3 +49,27 @@ jobs:
             wgs-resource-sample.geojson
           if-no-files-found: warn
           retention-days: 30
+  full-grant-research-ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Full public Grant County WGS read-only import
+        continue-on-error: true
+        env:
+          EVERMAPS_COUNTY: Grant
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+          EVERMAPS_PAGE_SIZE: 100
+          EVERMAPS_MAX_PAGES: 40
+        run: node systemia/evermaps/wgs-full-grant-import.mjs
+      - name: Upload full WGS research evidence with receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evermaps-grant-full-research-evidence
+          path: evermaps-grant-full-evidence/
+          if-no-files-found: warn
+          retention-days: 30
