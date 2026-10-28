@@ -20,6 +20,7 @@ def cli(flag, default):
 
 out = Path(cli("--output", "/tmp/fallen-lens-canary")).resolve()
 save_only = "--save-only" in sys.argv
+preview_still = "--preview-still" in sys.argv
 out.parent.mkdir(parents=True, exist_ok=True)
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.object.delete(use_global=False)
@@ -28,9 +29,11 @@ scene = bpy.context.scene
 scene.render.engine = "CYCLES"
 scene.cycles.samples = 48
 scene.cycles.use_denoising = True
+if preview_still:
+    scene.cycles.samples = 12
 scene.render.resolution_x = 540
 scene.render.resolution_y = 960
-scene.render.resolution_percentage = 100
+scene.render.resolution_percentage = 50 if preview_still else 100
 scene.render.film_transparent = False
 scene.render.image_settings.file_format = "PNG"
 scene.render.filepath = str(out) + "_"
@@ -194,6 +197,10 @@ for frame,location in [(1,(2.4,-3.9,2.5)),(48,(1.48,-3.1,2.9))]:
     cam.keyframe_insert(data_path="rotation_euler",frame=frame)
 # Portable editability proof; no GPU charges and no proprietary source imagery.
 bpy.ops.wm.save_as_mainfile(filepath=str(out)+".blend")
-if not save_only:
+if preview_still:
+    scene.frame_set(24)
+    scene.render.filepath = str(out) + "_still.png"
+    bpy.ops.render.render(write_still=True)
+elif not save_only:
     bpy.ops.render.render(animation=True)
 print("EVERCRAFT_HERO_CANARY_SCENE_SAVED",str(out)+".blend")
