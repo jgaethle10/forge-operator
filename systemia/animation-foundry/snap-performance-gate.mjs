@@ -22,7 +22,7 @@ export function evaluateSnapTrace(trace,options={}) {
   }
   if(issues.length)return held(issues);
   const cfg={contactMeters:.018,preGapMeters:.035,releaseMeters:.033,maxReleaseSeconds:.15,
-    minRelativeTravelMeters:.021,minRelativeTipVelocity:.23,audioToleranceSec:1/24,...options};
+    minRelativeTravelMeters:.021,minRelativeTipVelocity:.23,maxPostContactGapMeters:.105,audioToleranceSec:1/24,...options};
   const gaps=samples.map(s=>dist(s.thumbTip,s.middleTip));
   const contact=gaps.findIndex(d=>d<=cfg.contactMeters);
   if(contact<0)add('no_thumb_middle_contact');
@@ -34,6 +34,8 @@ export function evaluateSnapTrace(trace,options={}) {
     if(release<0)add('no_fast_finger_release');
   }
   if(contact>=0&&release>=0){
+    const earlyWindow=gaps.slice(contact,release+1);
+    if(Math.max(...earlyWindow)>cfg.maxPostContactGapMeters)add('excessive_finger_splay');
     const p=samples[contact],q=samples[release];
     travel=relative(q.middleTip,q.wrist,p.middleTip,p.wrist);
     if(travel<cfg.minRelativeTravelMeters)add('arm_wave_without_finger_flick');
