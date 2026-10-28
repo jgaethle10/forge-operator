@@ -24,7 +24,7 @@ const brokerStatus={
 test('requires actual Yard connected identity plus remote result',()=>{
   const p=summarizeRemoteProof({inventory,health,brokerStatus});
   assert.equal(p.success,true);
-  assert.equal(p.public_worker_route_opened,false);
+  assert.equal(p.public_worker_route_opened_by_this_canary,false);
   assert.equal(p.job_read_only,true);
 });
 test('rejects forged remote health, no connected node, wrong receipt',()=>{
