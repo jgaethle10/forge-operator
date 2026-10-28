@@ -16,8 +16,8 @@ grok plugin install evercraft --trust
 
 The installed plugin connects to:
 
-`https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp`
+`https://fabric.systemiacommandcenters.com/mcp`
 
-This connector is deliberately read-only. It can match user problems to current public Evercraft capabilities and return public interoperability information, but it cannot create checkout, charges, subscriptions, entitlements, purchases, outreach, or publication.
+This installed connector uses Evercraft's universal read-only Fabric MCP. Product-specific legacy tool names are not promised to work on this endpoint. This connector is deliberately read-only. It can match user problems to current public Evercraft capabilities and return public interoperability information, but it cannot create checkout, charges, subscriptions, entitlements, purchases, outreach, or publication.
 
 Evercraft Machine Commerce is a separate MCP surface for hosts and workflows whose policies permit human-confirmed digital-service commerce.
