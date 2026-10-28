@@ -24,6 +24,10 @@ const receipts=roles.map((role,i)=>({
 const execution={
   run_id:'synthetic-test-run',
   status:'verified_local',
+  evidence_state:'actual_registered_worker_local',
+  physically_distributed:false,
+  public_execution:false,
+  human_account_access:false,
   quality:{status:'verified'},
   source_sha256:sha256Text(csv),
   report_sha256:sha256Text(report),
