@@ -5,7 +5,7 @@ import {spatialRelationPost,studyQueryUrl,verifyPublisherStudyJoins} from './wgs
 const nativeStudy={
   rings:[[[-119.6,46.5],[-119.2,46.5],[-119.2,46.9],[-119.6,46.9],[-119.6,46.5]]]
 };
-function mockPublisher({unknown=false,withinOutside=false}={}) {
+function mockPublisher({unknown=false,withinOutside=false,withinEmpty=false}={}) {
   const calls=[];
   const fetchImpl=async(url,init)=>{
     calls.push({url,init});
@@ -16,7 +16,7 @@ function mockPublisher({unknown=false,withinOutside=false}={}) {
     const payload=new URLSearchParams(init.body);
     const relation=payload.get('spatialRel');
     const objectIds=relation==='esriSpatialRelIntersects'?[1,2,unknown?99:3]:
-      withinOutside?[1,4]:[1,2];
+      withinOutside?[1,4]:withinEmpty?null:[1,2];
     return {ok:true,json:async()=>({objectIdFieldName:'OBJECTID',objectIds})};
   };
   return {calls,fetchImpl};
@@ -51,4 +51,13 @@ test('source mismatch and inconsistent server geometry relations fail closed',as
     sourceIds:[1,2,3,4],fetchImpl:mockPublisher({withinOutside:true}).fetchImpl
   }),/subset/);
   await assert.rejects(verifyPublisherStudyJoins({sourceIds:[1,1]}),/unique/);
+});
+
+test('anomalous zero publisher containment is quarantined, not asserted as zero contained',async()=>{
+  const report=await verifyPublisherStudyJoins({sourceIds:[1,2,3,4],fetchImpl:mockPublisher({withinEmpty:true}).fetchImpl});
+  assert.equal(report.polygon_intersects_study_count,3);
+  assert.equal(report.publisher_within_query_reported_count,0);
+  assert.equal(report.polygon_within_study_count,null);
+  assert.equal(report.within_zero_anomaly,true);
+  assert.equal(report.status,'publisher_intersections_verified_within_unresolved');
 });
