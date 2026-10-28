@@ -900,3 +900,54 @@ test('real PulseGrid extended offline review produces eight-second private WAV w
   }
  });
 });
+
+
+test('live silent step automation survives to offline piano bus and eight-second coverage is not fabricated',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prev=globalThis.OfflineAudioContext;
+  class AutomationOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate}
+   async startRendering(){
+    const p=new Float32Array(this.frames).fill(.13);
+    return {numberOfChannels:2,length:this.frames,sampleRate:48000,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=AutomationOffline;
+  const pcm=new Float32Array(36000).fill(.2);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const changed=applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',track_id:'keys',scene:0,
+    parameter:'volume',step:1,value:.25,
+  },'human').session;
+  const authored=applyPulseGridOperation(changed,{
+    type:'clip.set_automation_point',track_id:'keys',scene:0,
+    parameter:'filter',step:1,value:.2,
+  },'human').session;
+  const immutable=structuredClone(authored);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(authored,0);
+   // Simulate the *actual* next step in a clock-driven browser. No
+   // automatic reconstruction or speculative future events.
+   engine.scheduleStep(1,.3);
+   engine.stop();
+   const result=await engine.auditRecordedPianoOfflineBus({window_sec:8});
+   assert.equal(result.status,'offline_track_bus_pcm_measurement',JSON.stringify(result));
+   assert.equal(result.performed_bus_automation_applied,true);
+   assert.equal(result.performed_bus_automation_events,2);
+   assert.ok(result.performance_coverage_sec<8);
+   assert.equal(result.performance_window_complete,false,
+    'eight-second offline buffer must disclose shorter truly scheduled transport');
+   assert.deepEqual(authored,immutable);
+  }finally{
+   await engine.close();
+   if(prev===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prev;
+  }
+ });
+});
