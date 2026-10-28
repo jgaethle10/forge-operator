@@ -21,7 +21,8 @@ export function summarizeRemoteProof({inventory,health,brokerStatus}={}){
     inventory?.broker_deployment_id===DEPLOYMENT &&
     Boolean(inventory.compute_management_receipt_hash) &&
     physical?.connected===true &&
-    physical?.capacity?.node_id===EXPECTED_NODE &&
+    physical?.capacity?.protocol==='evercraft.capacity.v1' &&
+    physical?.capacity?.runtime==='Evercraft Compute' &&
     physical?.capacity?.device_fingerprint===physical?.device_fingerprint &&
     physical?.secure_envelope_schema==='evercraft.secure-envelope.v1' &&
     health?.ok===true &&
