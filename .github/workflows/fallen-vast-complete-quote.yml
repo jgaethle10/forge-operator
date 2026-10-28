@@ -1,0 +1,27 @@
+name: Fallen Vast complete price and active instance inventory (read only)
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - '.github/workflows/fallen-vast-complete-quote.yml'
+      - 'systemia/media-studio/fallen-vast-complete-readonly-quote.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  price-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read prices and instance count only (zero paid mutations)
+        env:
+          VAST_API_KEY: ${{ secrets.Cloud_Vast_AI_Key }}
+        run: |
+          set -euo pipefail
+          python3 systemia/media-studio/fallen-vast-complete-readonly-quote.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-vast-complete-price-receipt
+          path: artifacts/fallen-flagship-council/vast-complete-readonly-quote.json
+          if-no-files-found: error
