@@ -2,6 +2,13 @@ import fs from 'node:fs';
 
 const files = [
   'distribution/machine-commerce-distribution.json',
+  'systemia/distribution/forensiscope-commerce-canary.mjs',
+  'systemia/organism/rivet-session-freshness-runner.mjs',
+  'systemia/organism/rivet-session-freshness.workflow.json',
+  'systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs',
+  'systemia/core/resident-services.json',
+  '.github/workflows/forensiscope-commerce-canary.yml',
+  '.github/workflows/website-commerce-browser-gate.yml',
   '.github/workflows/ci.yml',
   'systemia/yard/public-edge-activator.mjs',
   'systemia/chum/router-recall.mjs',
@@ -51,6 +58,9 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'systemia/distribution/forensiscope-commerce-canary.mjs',
+  'systemia/organism/rivet-session-freshness-runner.mjs',
+  'systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs',
   'systemia/yard/public-edge-activator.mjs',
   'systemia/chum/router-recall.mjs',
   'systemia/chum/direct-door-readiness.mjs',
