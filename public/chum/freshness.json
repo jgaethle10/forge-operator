@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-28T18:31:28.840Z",
+  "updated_at": "2026-10-28T22:39:20.565Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,73 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-28T18:31:28.840Z",
-      "priority": 80
+      "path": "/.well-known/agent-card.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 104
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-28T18:31:28.840Z",
-      "priority": 80
+      "path": "/.well-known/agent.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 102
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-28T18:31:28.840Z",
+      "last_changed": "2026-10-28T22:39:20.565Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-28T18:31:28.840Z",
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/.well-known/agent-card.json",
+      "url": "/.well-known/agent-card.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 104
+    },
+    {
+      "path": "/.well-known/agent.json",
+      "url": "/.well-known/agent.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 102
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-28T22:39:20.565Z",
+      "priority": 80
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -45,33 +91,9 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-28T18:31:28.840Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-28T18:31:28.840Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-28T14:27:47.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-28T14:27:47.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-28T14:27:47.805Z",
       "priority": 80
     },
     {
@@ -505,18 +527,6 @@
       "url": "/schema.jsonld",
       "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 60
-    },
-    {
-      "path": "/.well-known/agent-card.json",
-      "url": "/.well-known/agent-card.json",
-      "last_changed": "2026-10-08T16:24:55.476Z",
-      "priority": 104
-    },
-    {
-      "path": "/.well-known/agent.json",
-      "url": "/.well-known/agent.json",
-      "last_changed": "2026-10-08T16:24:55.476Z",
-      "priority": 102
     },
     {
       "path": "/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316.json",

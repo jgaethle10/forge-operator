@@ -22,16 +22,16 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-17T08:49:39.330Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-28T18:31:28.840Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-28T22:39:20.565Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-28T18:31:28.840Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-28T18:31:28.840Z</lastmod></url>
   <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-28T18:31:28.840Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/index.json</loc><lastmod>2026-10-28T14:27:47.805Z</lastmod></url>
+  <url><loc>/chum/proof/index.json</loc><lastmod>2026-10-28T22:39:20.565Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-10-28T14:27:47.805Z</lastmod></url>
-  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-10-28T14:27:47.805Z</lastmod></url>
+  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-10-28T22:39:20.565Z</lastmod></url>
+  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-10-28T22:39:20.565Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
@@ -128,8 +128,8 @@
   <url><loc>/schema.jsonld</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-10-08T00:51:57.553Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-10-08T16:24:55.476Z</lastmod></url>
-  <url><loc>/.well-known/agent.json</loc><lastmod>2026-10-08T16:24:55.476Z</lastmod></url>
+  <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-10-28T22:39:20.565Z</lastmod></url>
+  <url><loc>/.well-known/agent.json</loc><lastmod>2026-10-28T22:39:20.565Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-10-17T06:06:40.515Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
