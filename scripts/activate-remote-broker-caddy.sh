@@ -25,6 +25,10 @@ ORIGIN="https://fabric.systemiacommandcenters.com"
 for file in "$LIVE" "$CANDIDATE" "$STAGER" "$ENV_FILE" "$STATUS"; do
   [[ -f "$file" ]] || { echo "HOLD: required staged source or private status file missing." >&2; exit 4; }
 done
+if [[ "$(git hash-object "$STAGER")" != "0fe95960581e0021cf30967bf386e81ecad93692" ]]; then
+  echo "HOLD: staging generator hash differs from the reviewed source." >&2
+  exit 4
+fi
 systemctl is-active --quiet evercraft-public-edge.service ||
   { echo "HOLD: public edge service not active." >&2; exit 5; }
 systemctl is-active --quiet evercraft-remote-broker-resident.service ||
