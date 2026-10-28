@@ -1,0 +1,28 @@
+{
+  "schema": "evercraft.fallen.manual-creative-review.v1",
+  "project": "Evercraft THE WORK 60s procedural film",
+  "review_type": "human",
+  "human_reviewer": "Evercraft owner feedback in conversation",
+  "reviewed_at_utc": "2026-10-28T19:39:00Z",
+  "artifact_sha256": null,
+  "actual_preview_inspected": true,
+  "ratings": {
+    "subject_clarity": 1,
+    "image_composition": 2,
+    "motion_believability": 2,
+    "sound_design": 2,
+    "commercial_relevance": 1
+  },
+  "sources_and_rights_verified": false,
+  "approved_brand_assets_used": false,
+  "actual_target_device_playback_confirmed": true,
+  "customer_release_authorized": false,
+  "owner_final_approval": false,
+  "source_evidence_uris": [
+    "internal material review only"
+  ],
+  "media_evidence_uri": "",
+  "review_status": "REJECTED_FOR_FLAGSHIP_RELEASE",
+  "basis": "Owner explicitly disliked the film. No longer promote as flagship, even if encoding and frame checks passed.",
+  "additional_note": "Human review recorded only for negative quality feedback; do not claim rights or user release approval."
+}
