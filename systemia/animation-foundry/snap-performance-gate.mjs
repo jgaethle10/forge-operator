@@ -34,7 +34,7 @@ export function evaluateSnapTrace(trace,options={}) {
     if(release<0)add('no_fast_finger_release');
   }
   if(contact>=0&&release>=0){
-    const earlyWindow=gaps.slice(contact,release+1);
+    const earlyWindow=gaps.filter((_,i)=>i>=contact&&samples[i].timeSec-samples[contact].timeSec<=cfg.maxReleaseSeconds);
     if(Math.max(...earlyWindow)>cfg.maxPostContactGapMeters)add('excessive_finger_splay');
     const p=samples[contact],q=samples[release];
     travel=relative(q.middleTip,q.wrist,p.middleTip,p.wrist);
