@@ -65,6 +65,9 @@ test('matches permit point to geological interior but never rights or operating 
   assert.deepEqual(report.point_relation_counts,{interior:1,boundary_uncertain:1,outside:1});
   assert.equal(report.rows[0].matched_resource_interior_object_ids[0],1);
   assert.equal(report.rows[1].state,'point_on_mapped_boundary_uncertain');
+  assert.equal(report.point_inside_published_geological_classification_counts.Demonstrated,1);
+  assert.equal(report.point_inside_published_geological_classification_counts['Not a Resource'],0);
+  assert.equal(report.rows[0].published_classification_context[0].classification,'Demonstrated');
   assert.equal(report.legal_title_verified,false);
   assert.equal(report.operating_mine_status_verified,false);
 });
