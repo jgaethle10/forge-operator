@@ -1,0 +1,33 @@
+name: Node002 Persistent Outbound Worker Safety
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'scripts/node002-persistent-outbound-worker.mjs'
+      - 'scripts/install-node002-persistent-outbound-worker.sh'
+      - 'tests/node002-persistent-outbound-worker.test.mjs'
+      - 'tests/install-node002-persistent-outbound-worker.test.mjs'
+      - '.github/workflows/node002-persistent-outbound-worker-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-worker-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and nonprivileged installer
+        run: |
+          node --check systemia/network/outbound-node-agent.mjs
+          node --check scripts/node002-persistent-outbound-worker.mjs
+          bash -n scripts/install-node002-persistent-outbound-worker.sh
+      - name: Device-side command allowlist, broker binding, installer fail closed
+        run: |
+          node --test tests/node002-persistent-outbound-worker.test.mjs tests/install-node002-persistent-outbound-worker.test.mjs
