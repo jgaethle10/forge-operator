@@ -221,3 +221,14 @@ test('extended eight-second audition is local-only, revokes blob URL and disclos
  assert.match(s,/not licensed for public distribution/);
  assert.match(s,/Delay\/feedback may continue beyond the selected/);
 });
+
+
+test('extended audition distinguishes actual scheduled transport from filled WAV duration',()=>{
+ const s=ui();
+ assert.match(s,/performance_coverage_sec/);
+ assert.match(s,/performance_window_complete/);
+ assert.match(s,/Partial performance evidence/);
+ assert.match(s,/performed_bus_automation_events/);
+ assert.match(s,/later_bus_automation_excluded/);
+ assert.match(s,/Play the passage longer before Stop/);
+});
