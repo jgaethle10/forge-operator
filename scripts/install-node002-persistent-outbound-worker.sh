@@ -84,7 +84,6 @@ Restart=always
 RestartSec=15
 UMask=0077
 NoNewPrivileges=true
-PrivateTmp=true
 Environment=NODE_ENV=production
 
 [Install]
