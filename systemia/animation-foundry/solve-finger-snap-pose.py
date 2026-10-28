@@ -86,18 +86,22 @@ scene.frame_set(25)
 best=None
 # Find a physically animated separation with relative finger movement,
 # rather than letting wrist displacement masquerade as a finger snap.
+# Sweep continuous joint increments along an already reachable flick
+# direction, rather than sparsely enumerating rotations that can skip the
+# narrow contact-to-release transition.
 candidates=[]
-for dx in (-.7,-.55,-.42,-.30,-.18,.18,.30,.42,.55,.7):
-    for dy in (-.4,-.25,-.12,0,.12,.25,.4):
-        for dz in (-.2,0,.2):
-            pb=arm.pose.bones['middle_R'];pb.rotation_mode='XYZ'
-            pb.rotation_euler=middle_pose+Vector((dx,dy,dz))
-            bpy.context.view_layer.update()
-            gap=_gap()
-            travel=(_world_tail('middle_R')-target).length
-            if .038<=gap<=.085 and .027<=travel<=.080:
-                score=abs(gap-.052)+.5*abs(travel-.038)+.004*(abs(dx)+abs(dy)+abs(dz))
-                candidates.append((score,gap,travel,Vector(pb.rotation_euler)))
+for direction in (Vector((.7,.3,.15)),Vector((.7,-.3,.15)),
+                  Vector((-.7,.3,.15)),Vector((-.7,-.3,.15))):
+    for step in range(1,101):
+        scale=step/100
+        pb=arm.pose.bones['middle_R'];pb.rotation_mode='XYZ'
+        pb.rotation_euler=middle_pose+direction*scale
+        bpy.context.view_layer.update()
+        gap=_gap()
+        travel=(_world_tail('middle_R')-target).length
+        if .038<=gap<=.09 and .025<=travel<=.09:
+            score=abs(gap-.055)+.4*abs(travel-.043)+.001*scale
+            candidates.append((score,gap,travel,Vector(pb.rotation_euler)))
 if candidates:
     _,gap,travel,angles=min(candidates,key=lambda c:c[0])
     best=(gap,travel,angles)
