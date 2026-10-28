@@ -65,3 +65,15 @@ test('claimed pilot interest with no independently checkable reference is exclud
   assert.equal(r.pilot_interest_claims, 0);
   assert.equal(r.state, 'no_distinct_pilot_wedge_yet');
 });
+
+test('a rejected record cannot consume the business identity of a later permissioned response', () => {
+  const r = evaluateMerchantPilot([
+    record('shop-later', { voluntary_response: false }),
+    record('shop-later'),
+    record('shop-two'),
+    record('shop-three')
+  ]);
+  assert.equal(r.permissioned_distinct_responses, 3);
+  assert.equal(r.evidence_incomplete_or_duplicate_count, 1);
+  assert.equal(r.state, 'no_distinct_pilot_wedge_yet');
+});
