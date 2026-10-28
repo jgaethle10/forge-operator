@@ -1,4 +1,5 @@
 /** Regional evidence records, not mining site selection. Fail closed on source uncertainty. */
+import {auditGeojsonCollection} from './spatial-integrity.mjs';
 export const RESEARCH_GATES=Object.freeze({
   mineral_or_material_rights:'unverified',
   surface_ownership_and_access:'unverified',
@@ -23,6 +24,10 @@ export function buildAggregateResearchDossiers({source,receipt,county='Grant'}={
   }
   const sha=receipt.layers.resources.geometry_audit.sha256_source_features;
   if(typeof sha!=='string'||!/^[a-f0-9]{64}$/.test(sha))throw new Error('Missing trusted source fingerprint');
+  const sourceAudit=auditGeojsonCollection(source,{sourceLabel:'dossier-source'});
+  if(!sourceAudit.valid_for_mapping||sourceAudit.sha256_source_features!==sha) {
+    throw new Error('Source geometry is invalid or SHA-256 does not match verified import');
+  }
   const seen=new Set(),dossiers=[];
   for(const feature of source.features) {
     const p=feature?.properties,oid=p?.OBJECTID;
