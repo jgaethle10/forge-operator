@@ -25,6 +25,9 @@ export function auditWorkSabanTrace(archive) {
   }
   const last=events.at(-1).execution;
   if(last?.status!=='verified_local'||last?.quality?.status!=='verified'
+     ||last?.evidence_state!=='actual_registered_worker_local'
+     ||last?.physically_distributed!==false||last?.public_execution!==false
+     ||last?.human_account_access!==false
      ||last?.model_inference!==false||!Array.isArray(last?.external_actions)
      ||last.external_actions.length!==0||last?.specialist_receipts?.length!==5
      ||!/^sha256:[0-9a-f]{64}$/.test(last?.source_sha256||''))
