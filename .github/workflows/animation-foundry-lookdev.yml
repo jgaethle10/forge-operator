@@ -67,13 +67,14 @@ jobs:
             /tmp/kennedy-lookdev/snap_trace.json /tmp/kennedy-lookdev/snap_review.json
           code=$?
           set -e
-          test "$code" -eq 10
+          test "$code" -eq 0
           python3 - <<'PY'
           import json
           r=json.load(open('/tmp/kennedy-lookdev/snap_review.json'))
-          assert r['status']=='HELD' and not r['creativeApproved']
-          assert 'no_thumb_middle_contact' in r['issues'] or 'no_fast_finger_release' in r['issues'] or 'arm_wave_without_finger_flick' in r['issues']
-          print('OLD_RIG_GESTURE_CORRECTLY_REJECTED',r['issues'])
+          assert r['status']=='KINEMATIC_CANDIDATE' and not r['creativeApproved'], r
+          assert r['metrics']['minGapMeters'] <= .018
+          assert r['metrics']['relativeMiddleTipTravelMeters'] >= .021
+          print('RIG_CONTACT_AND_FLICK_VERIFIED_BUT_NOT_ART_APPROVED',r['metrics'])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
