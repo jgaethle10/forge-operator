@@ -10,6 +10,6 @@
   "metersPerBlenderUnit": 1,
   "startFrame": 17,
   "durationSec": 1,
-  "snapAudioTimeSec": 0.666667,
-  "note": "Solver-produced contact at frame 24 and release at frame 25; still a held art-workprint; scheduled cue only, not rendered waveform"
+  "snapAudioTimeSec": 0.625,
+  "note": "Engineering scheduled Foley marker aligned to measured finger separation near frame 24.5. Does not prove a rendered audio waveform or creative quality."
 }
