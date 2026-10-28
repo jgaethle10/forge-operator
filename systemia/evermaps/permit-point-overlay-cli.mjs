@@ -18,6 +18,7 @@ try{
     source:report.source,permit_count:report.imported_approximate_permit_points,
     polygon_count:report.imported_resource_polygons,
     point_relation_counts:report.point_relation_counts,
+    published_classification_counts:report.point_inside_published_geological_classification_counts,
     geologic_source_sha256:report.wgs_source_sha256,
     permit_source_sha256:report.permit_source_sha256,
     land_title_verified:false,site_recommendation_allowed:false};
