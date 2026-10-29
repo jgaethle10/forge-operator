@@ -20,8 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify deterministic simulation and local adapter contracts
-        run: node --test systemia/founders-arena/tests/league.test.mjs
+      - name: Verify deterministic simulation and local model adapters
+        run: node --test systemia/founders-arena/tests/*.test.mjs
       - name: Verify fixture and exported receipt
         run: |
           node systemia/founders-arena/demo.mjs 12 "$RUNNER_TEMP/arena-match.json"
