@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { verifyCommissionedWorkerExecution } from "./worker-evidence.mjs";
 
 const safe = (v) => String(v ?? "").trim();
 const list = (v) => Array.isArray(v) ? v : [];
@@ -79,6 +80,7 @@ export function createCommissionedTeamGate({
   trustedKeys,
   readPreflight,
   readCompletion,
+  readWorkerExecution,
   consumeNonce,
   verifyRoster,
   now = () => new Date(),
@@ -146,6 +148,20 @@ export function createCommissionedTeamGate({
         reviewer_assignments: { ...map },
         registry_snapshot_hash: p.registry_snapshot_hash,
       };
+    },
+
+    async verifyRoleExecution({ request, preflight, reviewerId, inference }) {
+      if (typeof readWorkerExecution !== "function")
+        return { verified: false, reason: "commissioned_worker_attestation_source_not_configured" };
+      let evidence;
+      try {
+        evidence = await readWorkerExecution({ request, preflight, reviewerId, inference });
+      } catch {
+        return { verified: false, reason: "commissioned_worker_receipt_unavailable" };
+      }
+      return verifyCommissionedWorkerExecution({
+        request, preflight, reviewerId, inference, evidence, trustedKeys, now: now(),
+      });
     },
 
     async completion({ request, preflight, reviewers, synthesis }) {
