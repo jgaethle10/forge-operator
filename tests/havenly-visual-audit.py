@@ -29,6 +29,10 @@ with sync_playwright() as p:
             assert page.get_by_role("heading", name="Meet Nikki.").count() == 1, "Founder's story missing"
             assert page.locator("#planService").count() == 1, "Interactive cleaning builder missing"
             assert page.locator("#textRequest").count() == 1, "Manual inquiry option missing"
+            if width <= 390:
+                assert page.locator('a[href="#collections"].btn.light').is_visible(), "Hero options CTA missing"
+                service_columns = page.locator(".service-grid").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns.split(' ').length")
+                assert service_columns == 2, f"Mobile services should be compact 2-column at {width}px: {service_columns}"
             overflow = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
             assert overflow <= 2, f"Horizontal overflow at {width}px: {overflow}px"
             if width <= 920:
