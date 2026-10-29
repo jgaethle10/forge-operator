@@ -111,3 +111,21 @@ bash integrations/ai-evaluation-lab/sovereign-runtime-preflight.sh
 This performs a **read-only** check for the existing `evercraft-ai` diagnostic CLI, `llama-server`/llama.cpp entrypoints, the Node001 installation layout under `/opt/evercraft-ai`, the pinned GGUF, and `evercraft-ai.service`/`evercraft-model.service`. It performs **no installation, network request, runtime activation, or model inference**, and does not modify Node002's shadow-mode agent. Missing on HP would mean **not deployed here yet**, not that the sovereign stack has not been built.
 
 **Next gate:** once we establish which appliance/gateway components are actually installed and their trusted local model API, create a separate adapter for the existing sovereign inference endpoint. Keep the Lab host's synthetic payment effects and signed receipt oracle outside model control, and retain private keys/credentials in the owner runtime. Do not assume the standalone Ollama adapter constitutes a sovereign appliance deployment. Remote job admission, field certification and production side effects remain separate gates.
+
+
+## First real sovereign inference on NextGen (physical acceptance)
+
+Actual physical terminal evidence on HP NextGen (Ubuntu WSL2) verified the original **signed Evercraft Sovereign AI v0.2 Node001 package** in private staging; the pinned Qwen3-4B model file SHA-256 `7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5` returned `OK`; `llama-server` is executable; the appliance's `node001-provision.json` reports **`provisioned-not-certified`**, with exact llama.cpp b10751 archive SHA-256 `a32b9bdc4d664e21558726fee570b712124c624ccb37fa2eea93bb34a5a93591`. These are **installed-model provenance proofs**, not actual inference.
+
+The next user-initiated no-sudo acceptance uses the checked-in [`accept-sovereign-inference.py`](./accept-sovereign-inference.py):
+
+```bash
+cd ~/evercraft-eo001-source
+git pull --ff-only
+python3 integrations/ai-evaluation-lab/accept-sovereign-inference.py \
+  --stage-root "$HOME/.local/state/evercraft/eo001-sovereign-staging/verified-3zjvwku2/stage-root"
+```
+
+The helper checks the pinned file hashes again, allocates **two unused loopback-only ports**, starts the actual pinned llama-server, waits for model readiness, starts the original Evercraft-owned Python gateway using an isolated state DB, sends one synthetic marker prompt through the Evercraft `/v1/chat/completions` endpoint, and records a private result and diagnostic logs. It terminates both child processes after the attempt. It **never invokes sudo/systemd, changes Node002 shadow-mode or existing services, grants tools authority, or initiates payment operations**. The first run is **not yet observed on actual NextGen**; a success is recognized only from its physical `EVERCRAFT_SOVEREIGN_INFERENCE: PASS` stdout and actual `inference-receipt.json` with state `FIRST_INFERENCE_PASS`.
+
+This test uses the original signed **Node001 development appliance binaries** on the HP as an isolated pre-alpha lab exercise, not Node001 field certification. No offline egress-isolation or host-reboot proof is claimed. The current Lab workflow adapter is distinct and needs a reviewed binding to this genuine gateway once physical inference proves successful. If the binary fails to launch, retain logs and the blocked receipt, and inspect host loader/permissions without disabling existing protection or starting background services.
