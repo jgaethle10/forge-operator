@@ -82,7 +82,8 @@ export function createSandboxBankReader({
       connector.sandbox_only !== true || connector.approved !== true ||
       connector.status !== 'active' || connector.read_only !== true ||
       connector.mode !== 'delegated_oauth' ||
-      !Array.isArray(connector.scopes) ||
+      (!Array.isArray(connector.scopes) || connector.scopes.length === 0 ||
+       connector.scopes.some(scope => !['accounts:read', 'balances:read', 'transactions:read'].includes(scope))) ||
       typeof connector.connector_id !== 'string' ||
       typeof connector.api_origin !== 'string' ||
       !Array.isArray(allowedSandboxOrigins) ||
