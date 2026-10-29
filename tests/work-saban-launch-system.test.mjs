@@ -21,10 +21,12 @@ test('simple homepage gets from task to example to pilot with no maze',()=>{
 
 test('the tour is a labeled example, not a fake customer operation',()=>{
   for(const p of ['Illustrative preview','not live customer execution',
-    'synthetic example data','isn\'t a public self-service product yet',
-    'No public CSV uploads','No self-service payment or fulfillment promise',
+    'The figures shown are synthetic.','The public CSV reporter works with your own file',
+    'There is no CSV upload to Evercraft','There is no checkout for expanded Work Saban services',
     'No payment at inquiry','No calls required']) assert.ok(main.includes(p),'missing '+p);
   assert.doesNotMatch(main,/<form\b|<input\b|<script\b|buy\.stripe\.com/i);
+  assert.match(main, /<a class="btn" href="\.\/report\/">Make your sales report<\/a>/);
+  assert.match(main, /href="\.\/plan\/">Try planning your task<\/a>/);
 });
 test('monthly report math comes only from synthetic fixture',()=>{
   const fixture=fs.readFileSync(new URL('../public/work-saban/example-sales.csv',import.meta.url),'utf8');
