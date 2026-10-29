@@ -11,6 +11,8 @@ on:
       - 'scripts/provision-findmypart-owned-intake.mjs'
       - 'tests/findmypart-owned-provision.test.mjs'
       - 'scripts/diagnose-fabric-owned-edge-release.sh'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'tests/findmypart-resident-release-gate.test.mjs'
       - 'tests/findmypart-owned-edge-404-doctor.test.mjs'
       - 'tests/findmypart-public-inquiry.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
@@ -48,6 +50,10 @@ jobs:
         run: |
           bash -n scripts/diagnose-fabric-owned-edge-release.sh
           node --test tests/findmypart-owned-edge-404-doctor.test.mjs
+      - name: Verify resident updater checks actual customer route before release
+        run: |
+          bash -n scripts/update-fabric-owned-edge.sh
+          node --test tests/findmypart-resident-release-gate.test.mjs
       - name: Existing owned service routing regression
         run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Existing native payment offer routing regression

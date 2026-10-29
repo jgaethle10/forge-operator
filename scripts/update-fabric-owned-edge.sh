@@ -495,6 +495,37 @@ verify_current_runtime() {
   grep -F 'Autonomy' <<< "$earthworks_page" >/dev/null || return 14
   grep -F 'STOP ALL' <<< "$earthworks_page" >/dev/null || return 14
 
+  # A Fabric health response and matching release ref are not enough when
+  # the actual buyer door silently serves the old JSON 404 route.
+  # Verify only GET surfaces on resident loopback, never submit buyer data.
+  local findmypart_html="" findmypart_app="" findmypart_readiness=""
+  findmypart_html="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/' 2>/dev/null || true)"
+  if [[ -z "$findmypart_html" ]] ||
+     ! grep -Fq 'id="part-request-form"' <<< "$findmypart_html" ||
+     ! grep -Fq 'Missing part.' <<< "$findmypart_html"; then
+    echo "ERROR: FindMyPart resident buyer page not serving approved route" >&2
+    return 15
+  fi
+  findmypart_app="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/app.mjs' 2>/dev/null || true)"
+  if [[ -z "$findmypart_app" ]] ||
+     ! grep -Fq '/api/findmypart/inquiry' <<< "$findmypart_app" ||
+     ! grep -Fq '/api/findmypart/readiness' <<< "$findmypart_app"; then
+    echo "ERROR: FindMyPart resident customer form script not served" >&2
+    return 16
+  fi
+  findmypart_readiness="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/api/findmypart/readiness' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env FINDMYPART_READINESS_JSON="$findmypart_readiness" node -e "
+    try {
+      const r=JSON.parse(process.env.FINDMYPART_READINESS_JSON||'null');
+      if(r?.schema!=='evercraft.findmypart.intake-readiness.v1') process.exit(2);
+      if(typeof r.intake_available!=='boolean') process.exit(3);
+      if(r.payment_ready!==false || r.payment_verified!==false) process.exit(4);
+    } catch { process.exit(5) }
+  "; then
+    echo "ERROR: FindMyPart resident intake-readiness contract missing or unsafe" >&2
+    return 17
+  fi
+
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do
     set +e
