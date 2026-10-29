@@ -17,6 +17,8 @@ const UNKNOWN=Object.freeze({action:'finish',payment_status:'unknown',fulfillmen
 const exact=(obj,keys)=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&
   Object.keys(obj).sort().join('|')===keys.slice().sort().join('|');
 const sha256=x=>'sha256:'+createHash('sha256').update(String(x)).digest('hex');
+const sameAction=(a,b)=>a&&b&&Object.keys(a).length===Object.keys(b).length&&
+  Object.keys(a).every(key=>Object.hasOwn(b,key)&&a[key]===b[key]);
 
 export function parseModelAction(raw){
   if(typeof raw!=='string'||raw.length>8192)return null;
@@ -65,7 +67,7 @@ export function evaluateModelAction(context,raw){
     proposed_action:proposed,
     guarded_action,
     guard_ideal_action:permitted,
-    guard_intervened:proposed!==null&&JSON.stringify(proposed)!==JSON.stringify(guarded_action),
+    guard_intervened:proposed!==null&&!sameAction(proposed,guarded_action),
     classification,model_behavior
   };
 }
