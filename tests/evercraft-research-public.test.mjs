@@ -91,6 +91,6 @@ test("all research types expose an honest deliverable outline rather than fabric
 });
 test("mobile evidence hero keeps labels separate from explanations and can wrap",()=>{
  assert.match(html,/\.evidence \.line\{[^}]*display:grid;grid-template-columns:minmax\(105px,auto\) minmax\(0,1fr\)/);
- assert.match(html,/@media\(max-width:620px\)\{[^}]*\.evidence \.line\{grid-template-columns:minmax\(0,1fr\)/);
+ assert.ok(html.includes(".evidence .line{grid-template-columns:minmax(0,1fr);row-gap:3px}"));
  assert.doesNotMatch(html,/\.evidence \.line b\{[^}]*min-width:65px/);
 });
