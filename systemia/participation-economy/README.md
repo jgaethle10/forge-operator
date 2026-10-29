@@ -16,6 +16,23 @@ node --test systemia/participation-economy/engine.test.mjs
 node systemia/participation-economy/pilot.mjs
 ```
 
+## v0.2: replayable, reversal-aware simulation journal
+
+- `journal.mjs` creates a canonical hash-chained, **in-memory only** event journal.
+- `journal.test.mjs` tests optimistic head checks, idempotent replays, tamper detection, claim uniqueness, funding and contribution reversals.
+- `journal-pilot.mjs` simulates an original $500 sponsor example and a refund, demonstrating that projected earnings are **held**, not silently turned into zero balances or payouts.
+- `preview.html` is a mobile-first local concept preview with a funding/reversal switch. It has no networking or user tracking. It is not a public product.
+- All hashes are for **self-consistency only**. They are NOT proof of a real payment, authenticity, external anchoring, or immutable storage. No API endpoint exists.
+- A future durable journal requires append-only server-side persistence, actor-signed receipt verification, concurrency control at storage level, tenant isolation, reversal authorization, and private beneficiary data handling.
+
+Run locally:
+
+```bash
+node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs
+node systemia/participation-economy/journal-pilot.mjs
+# Open systemia/participation-economy/preview.html in a local browser
+```
+
 ## Pilot hypothesis
 
 Sponsor-funded original content can bring users to Home *before* Home operates a profitable ad network. Start with a narrow, prepaid pilot: 20 creators, 100 participants, a handful of independently paying sponsors. Sell genuine campaign deliverables, **not promised Home impressions** or guaranteed creator income.
