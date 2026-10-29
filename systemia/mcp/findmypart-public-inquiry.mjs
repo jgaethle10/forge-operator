@@ -134,9 +134,11 @@ export function reconcileFindMyPartInquiryOutbox({
  let restored=0,examined=0;
  for(const name of fs.readdirSync(storeDir).sort()){
   if(!/^FMP-[A-F0-9]{24}\.enc$/.test(name))continue;
-  if(++examined>limit)break;
   const reference=name.slice(0,-4);
   if(fs.existsSync(path.join(outbox,reference+'.json'))||fs.existsSync(path.join(receipts,reference+'.json')))continue;
+  // Count only records needing recovery: large successful histories must not
+  // starve newer orphan leads beyond the first scan page.
+  if(++examined>limit)break;
   let record;
   try{record=readFindMyPartPrivateInquiry({storeDir,key:secret,reference})}catch{continue}
   try{
