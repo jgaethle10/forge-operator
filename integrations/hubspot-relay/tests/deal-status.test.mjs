@@ -72,5 +72,5 @@ test('project config uses non-legacy OAuth app card, no unapproved production UR
  assert.deepEqual(card.config.objectTypes,['DEALS']);
  assert.ok(app.config.permittedUrls.fetch.every(x=>x.includes('.invalid/')));
  assert.match(component,/hubspot\.fetch/);
- assert.doesNotMatch(component,/fetch\s*\(|crm\.objects\.deals\.write|localStorage|window\.fetch/);
+ assert.doesNotMatch(component,/(?<!\.)\bfetch\s*\(|crm\.objects\.deals\.write|localStorage|window\.fetch/);
 });
