@@ -50,7 +50,9 @@ export function compileEvidenceDossier(job,{verifyCaptureReceipt}={}){
   sourceIds.add(sourceId);
   const url=publicURL(entry.url),title=clean(entry.title,220,"source_title");
   const capturedAt=timestamp(entry.captured_at,"source_captured_at");
-  const snapshot=clean(entry.snapshot_text,100000,"source_snapshot_text");
+  const snapshot=String(entry.snapshot_text??"");
+  if(!snapshot||snapshot.length>100000||snapshot.includes("\u0000"))throw Error("source_snapshot_text_invalid");
+  // Preserve exact caller-supplied UTF-8 text when hashing; no trimming or Unicode normalization.
   const actualHash=hash(snapshot);
   if(entry.snapshot_sha256&&String(entry.snapshot_sha256).replace(/^sha256:/,"").toLowerCase()!==actualHash)throw Error("source_hash_mismatch");
   // Source metadata, filenames and flags never establish capture authority.
