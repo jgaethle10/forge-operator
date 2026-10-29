@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
-import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher,readFindMyPartPrivateInquiry} from '../systemia/mcp/findmypart-public-inquiry.mjs';
+import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher,readFindMyPartPrivateInquiry,reconcileFindMyPartInquiryOutbox} from '../systemia/mcp/findmypart-public-inquiry.mjs';
 
 const ORIGIN='https://fabric.systemiacommandcenters.com';
 const brief={
@@ -124,4 +124,64 @@ test('operator notification relay sends only reference, and only counts durable 
   assert.equal(fs.existsSync(path.join(dir,'alert-outbox',reference+'.json')),false);
   assert.equal(fs.existsSync(path.join(dir,'alert-receipts',reference+'.json')),true);
  }finally{relay.stop();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('restart reconciles a missing alert without exposing buyer details or duplicating inbox writes',async()=>{
+ const dir=temp();
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ let reference;
+ try{
+   const response=await post(rt.url,brief);
+   assert.equal(response.status,201);
+   reference=(await response.json()).reference;
+ }finally{await rt.close()}
+ const pending=path.join(dir,'alert-outbox',reference+'.json');
+ fs.unlinkSync(pending); // Simulate power loss after encrypted fsync and before alert write.
+ const repair=reconcileFindMyPartInquiryOutbox({storeDir:dir,key});
+ assert.equal(repair.restored,1);
+ assert.equal(repair.contains_customer_pii,false);
+ const payload=fs.readFileSync(pending,'utf8');
+ assert.doesNotMatch(payload,/customer@example|power selector|Ford 3600/);
+ assert.deepEqual(JSON.parse(payload).reference,reference);
+ assert.equal(reconcileFindMyPartInquiryOutbox({storeDir:dir,key}).restored,0);
+ let messages=0;
+ const dispatcher=createFindMyPartInquiryAlertDispatcher({
+   folder:dir,key,recipient:'evercraft-owner',notify:async()=>{messages++;return {inboxed:1}},
+ });
+ try{
+   const first=await dispatcher.dispatch();
+   assert.equal(first.accepted,1);
+   assert.equal(messages,1);
+   assert.equal(fs.existsSync(pending),false);
+   const receipt=path.join(dir,'alert-receipts',reference+'.json');
+   assert.equal(fs.existsSync(receipt),true);
+   // Simulate power loss between writing successful receipt and deleting outbox.
+   fs.writeFileSync(pending,payload,{mode:0o600});
+   assert.equal((await dispatcher.dispatch()).accepted,1);
+   assert.equal(messages,1,'durable delivery receipt must suppress replay');
+   assert.equal(fs.existsSync(pending),false);
+   assert.equal(reconcileFindMyPartInquiryOutbox({storeDir:dir,key}).restored,0);
+ }finally{dispatcher.stop();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('orphan recovery refuses tampered private records and never invents a lead',async()=>{
+ const dir=temp();
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ let reference;
+ try{
+  assert.equal((await post(rt.url,brief)).status,201);
+  // Extract the generated reference from the unique private file, never PII.
+  reference=fs.readdirSync(dir).find(n=>/^FMP-[A-F0-9]{24}\.enc$/.test(n)).slice(0,-4);
+ }finally{await rt.close()}
+ fs.unlinkSync(path.join(dir,'alert-outbox',reference+'.json'));
+ const record=path.join(dir,reference+'.enc');
+ const encrypted=JSON.parse(fs.readFileSync(record,'utf8'));
+ encrypted.data='not-authentic';
+ fs.writeFileSync(record,JSON.stringify(encrypted),{mode:0o600});
+ try{
+  assert.equal(reconcileFindMyPartInquiryOutbox({storeDir:dir,key}).restored,0);
+  assert.equal(fs.existsSync(path.join(dir,'alert-outbox',reference+'.json')),false);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
