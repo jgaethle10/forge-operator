@@ -80,6 +80,8 @@ async function checkBrowser(browserType,mode,base){
 
     // Clipboard permission differs across browsers. Verify either success or explicit fallback.
     await page.getByRole('button',{name:'Copy report'}).click();
+    // Clipboard writes are async and may resolve after the click's event turn.
+    await page.waitForFunction(()=>/Report copied|Clipboard access blocked/.test(document.querySelector('#status')?.textContent||''));
     const status=(await page.locator('#status').textContent()).trim();
     assert.match(status,/Report copied|Clipboard access blocked/);
     if(status.includes('blocked')){
