@@ -120,8 +120,39 @@ export function createFindMyPartInquiryHandler({
  };
 }
 
+// Repair the small crash window between securely recording a lead and writing
+// its PII-free operator alert. Only authenticated, encrypted records are eligible.
+export function reconcileFindMyPartInquiryOutbox({
+ storeDir=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','findmypart-leads'),
+ key=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
+ limit=100,
+}={}){
+ const secret=encryptionKey(key);
+ safeFolder(storeDir);
+ const outbox=path.join(storeDir,'alert-outbox'),receipts=path.join(storeDir,'alert-receipts');
+ safeFolder(outbox);safeFolder(receipts);
+ let restored=0,examined=0;
+ for(const name of fs.readdirSync(storeDir).sort()){
+  if(!/^FMP-[A-F0-9]{24}\\.enc$/.test(name))continue;
+  if(++examined>limit)break;
+  const reference=name.slice(0,-4);
+  if(fs.existsSync(path.join(outbox,reference+'.json'))||fs.existsSync(path.join(receipts,reference+'.json')))continue;
+  let record;
+  try{record=readFindMyPartPrivateInquiry({storeDir,key:secret,reference})}catch{continue}
+  try{
+   createFile(outbox,reference+'.json',JSON.stringify({
+    schema:'evercraft.findmypart.private-alert.v1',
+    reference,received_at:record.received_at,has_customer_pii:false,
+   })+'\\n');
+   restored++;
+  }catch(error){if(error?.code!=='EEXIST')throw error}
+ }
+ return {examined,restored,contains_customer_pii:false};
+}
+
 export function createFindMyPartInquiryAlertDispatcher({
  folder=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','findmypart-leads'),
+ key=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
  recipient=process.env.EVERCRAFT_FINDMYPART_OWNER_PRINCIPAL,
  baseUrl=process.env.EVERCRAFT_NOTIFICATION_BASE_URL,
  token=process.env.EVERCRAFT_NOTIFICATION_INGEST_TOKEN,
@@ -136,15 +167,24 @@ export function createFindMyPartInquiryAlertDispatcher({
   if(ongoing)return {state:'BUSY'};ongoing=true;
   try{
    const alerts=path.join(folder,'alert-outbox'),receipts=path.join(folder,'alert-receipts');
-   if(!fs.existsSync(alerts))return {accepted:0,failed:0};
-   safeFolder(receipts);
+   safeFolder(folder);safeFolder(alerts);safeFolder(receipts);
+   if(key)reconcileFindMyPartInquiryOutbox({storeDir:folder,key});
    let accepted=0,failed=0;
    const entries=fs.readdirSync(alerts).filter(name=>/^FMP-[A-F0-9]{24}\.json$/.test(name)).sort().slice(0,15);
    for(const filename of entries){
     const target=path.join(alerts,filename);
     try{
      const stat=fs.lstatSync(target);
-     if(!stat.isFile()||stat.isSymbolicLink())throw Error('unsafe_alert_file');
+     if(!stat.isFile()||stat.isSymbolicLink()||(stat.mode&0o077)!==0)throw Error('unsafe_alert_file');
+     const previousReceipt=path.join(receipts,filename);
+     // If the inbox acknowledged it before a crash, never send it twice.
+     if(fs.existsSync(previousReceipt)){
+      const priorStat=fs.lstatSync(previousReceipt);
+      if(!priorStat.isFile()||priorStat.isSymbolicLink()||(priorStat.mode&0o077)!==0)throw Error('unsafe_alert_receipt');
+      const prior=JSON.parse(fs.readFileSync(previousReceipt,'utf8'));
+      if(prior.reference!==filename.slice(0,-5)||prior.relay_inboxed!==true)throw Error('invalid_alert_receipt');
+      fs.unlinkSync(target);accepted++;continue;
+     }
      const data=JSON.parse(fs.readFileSync(target,'utf8'));
      if(data.schema!=='evercraft.findmypart.private-alert.v1'||!REF.test(data.reference)||filename!==data.reference+'.json')throw Error('invalid_alert');
      const response=await sendNotification({
