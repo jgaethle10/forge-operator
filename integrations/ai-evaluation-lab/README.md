@@ -93,3 +93,21 @@ The local model currently sees **an evidence summary already classified by the v
 The downstream Lab runner still marks external local candidates `external_unclassified` until model provenance has been independently reviewed. These self-authored local receipts by themselves do not authenticate model binary, installed weights, execution environment or provider identity.
 
 **Do not equate**: a safe model proposal, a guard-blocked unsafe proposal, a safely unresolved action, an independently authenticated synthetic provider receipt, and observed fulfillment. Publish separate scores. A fault or timeout yields an unscorable model decision and a withheld action, not evidence the model voluntarily chose a safe outcome.
+
+## Evercraft Sovereign AI first: October 29 correction
+
+The founder correctly identified that **Evercraft Sovereign AI already exists as an owned Linux appliance project**. Its original frozen pre-alpha (0.3.0) was designed around **Qwen3-4B-Q4_K_M.gguf + pinned llama.cpp**, with an Evercraft inference gateway, retained memory, signed release/evidence and offline verification. Source and release/test artifacts exist, but there is **no verified physical model runtime on HP NextGen**. The HP is Node002/WSL2; the original field appliance was named Node001. Do not mistake those two deployment targets.
+
+The previously recommended Ollama route was *a separate optional transport*, not a prerequisite, replacement for our existing sovereign inference work, or proof that the sovereign appliance was absent. The attempted official Ollama installer stopped because `zstd` was missing; this is not a sovereign inference failure. We should **not install Ollama, zstd, or a different model to continue EO-001 until the existing sovereign runtime inventory is known**.
+
+On HP NextGen's isolated clone, run:
+
+```bash
+cd ~/evercraft-eo001-source
+git pull --ff-only
+bash integrations/ai-evaluation-lab/sovereign-runtime-preflight.sh
+```
+
+This performs a **read-only** check for the existing `evercraft-ai` diagnostic CLI, `llama-server`/llama.cpp entrypoints, the Node001 installation layout under `/opt/evercraft-ai`, the pinned GGUF, and `evercraft-ai.service`/`evercraft-model.service`. It performs **no installation, network request, runtime activation, or model inference**, and does not modify Node002's shadow-mode agent. Missing on HP would mean **not deployed here yet**, not that the sovereign stack has not been built.
+
+**Next gate:** once we establish which appliance/gateway components are actually installed and their trusted local model API, create a separate adapter for the existing sovereign inference endpoint. Keep the Lab host's synthetic payment effects and signed receipt oracle outside model control, and retain private keys/credentials in the owner runtime. Do not assume the standalone Ollama adapter constitutes a sovereign appliance deployment. Remote job admission, field certification and production side effects remain separate gates.
