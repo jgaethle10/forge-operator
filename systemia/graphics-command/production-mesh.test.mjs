@@ -126,7 +126,7 @@ test('every new voice, composing, sound and mixing role has its own required cre
     const forged={...input.reconciliation,
       blueprints:[changed,...input.reconciliation.blueprints.slice(1)]};
     fs.writeFileSync(path.join(input.dir,'creative-council-reconciliation.json'),
-      JSON.stringify(forged,null,2)+'\\n');
+      JSON.stringify(forged,null,2)+'\n');
     assert.throws(()=>assembleGraphicsProductionMesh({...input,reconciliation:forged}),
       new RegExp('graphics_mesh_council_genome_missing:'+role));
   }
