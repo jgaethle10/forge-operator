@@ -60,5 +60,7 @@ test('every immediate paid offer has a manual human-start path',()=>{
     assert.ok(page.includes('mailto:jessegaethle10@gmail.com?subject='+subject));
   }
   assert.match(page,/never request card or bank credentials by email/i);
-  assert.match(page,/Online checkout availability is not independently verified/i);
+  assert.match(page,/Seven specific Systemia-hosted service checkout forms were independently verified with correct products and amounts on October 25, 2026/i);
+  assert.match(page,/Agree scope and capacity before purchase/i);
+  assert.match(page,/no sale or automated delivery is implied/i);
 });
