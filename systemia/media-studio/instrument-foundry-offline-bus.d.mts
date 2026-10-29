@@ -26,6 +26,9 @@ export type FoundryOfflineBusResult={
  reason?:string;peak_dbfs:number|null;sample_peak:number|null;
  over_full_scale_frames:number|null;complete:boolean;source_notes_within_window?:boolean;effects_tail_complete?:boolean;analyzed_voices:number;
  rms_dbfs?:number;rendered_frames?:number;window_sec?:number;rate?:number;
+ audition_origin_time?:number;performed_step_count?:number;
+ performance_gap_count?:number;first_gap_at_sec?:number|null;
+ performance_evidence?:'observed_scheduled_steps_only';
  audio_beds_within_window?:boolean;analyzed_audio_beds?:number;
  analyzed_synth_voices?:number;analyzed_drum_hits?:number;
  reviewed_source_count?:number;render_source_limit?:number;
