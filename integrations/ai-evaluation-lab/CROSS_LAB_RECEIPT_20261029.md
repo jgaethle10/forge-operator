@@ -36,3 +36,16 @@ The pinned workflow and exact command matrix are in [`.github/workflows/eo001-cr
 **Next engineering gate:** Connect an isolated Systemia decision-making worker as the candidate under a reviewed adapter, authenticate its actual model identity/configuration and run budget, and capture *real decisions* without granting the worker signing keys, live payment authority, or production state. This requires a separate verification and authorization step. Existing Systemia recovery holds deliberately remain blocked after receipt attestation alone.
 
 Related: [Evercraft #1705](https://github.com/jgaethle10/forge-operator/issues/1705), [Evercraft draft PR #1744](https://github.com/jgaethle10/forge-operator/pull/1744), [AI Evaluation Lab PR #30](https://github.com/kaulastudies/ai-evaluation-lab/pull/30).
+
+## Actual Systemia recovery-state cross-check
+
+A subsequent run on **2026-10-29 UTC** ([GitHub Actions run 40916243221](https://github.com/jgaethle10/forge-operator/actions/runs/40916243221)) tested the same four Lab sessions against the **actual owned** `goal-runtime.mjs`, `goal-recovery.mjs`, and `goal-provider-observation.mjs` source (Evercraft branch commit `e9cc88ef2a0f0d9d252f857f1420b909674bc958`). Its step reported:
+
+```text
+CROSS_LAB_PASSED: four synthetic cases. No live agent, provider payment or fulfillment.
+SYSTEMIA_RECOVERY_BOUNDARY_PASS: 4 synthetic Lab sessions; all original Systemia recovery holds remain blocked
+```
+
+For each synthetic case, the cross-check creates an isolated actual Systemia goal, starts a work attempt, and places it into an interrupted-work recovery hold. It then demonstrates that (a) the Lab verdict, even when `VERIFIED_AUTHORIZATION`, does not satisfy `recordGoalOutcome(...complete)` or `...retry` while the native hold exists; (b) a Lab-native signed envelope is not mistakenly accepted as a Systemia-native signed provider observation; (c) the original work remains `blocked`, `effect_state=unknown`, and `auto_replay_allowed=false`. No existing production mission is opened or changed.
+
+The CI artifact now also includes `systemia-recovery-boundary.json` with one assertion record per Lab scenario. This is **source-level integration of real Systemia recovery-state functions**, not a dispatched Saban worker, live autonomous model, real checkout, or a native provider-disposition mechanism. No real provider signing keys or Systemia deployment credentials were supplied.
