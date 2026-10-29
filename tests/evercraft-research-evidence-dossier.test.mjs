@@ -87,3 +87,16 @@ test("does not accept unknown conflict claims or future-dated evidence",()=>{
  job.sources[0].captured_at="2099-02-01T00:00:00Z";
  assert.throws(()=>compileEvidenceDossier(job),/source_captured_at_invalid/);
 });
+
+
+test("snapshot digest preserves exact whitespace and byte representation",()=>{
+ const job=base();
+ job.sources[0].snapshot_text="  First paragraph.\nSecond paragraph. \n";
+ const r=compileEvidenceDossier(job);
+ assert.equal(r.sources[0].snapshot_sha256,sha(job.sources[0].snapshot_text));
+ assert.equal(r.sources[0].excerpt,job.sources[0].snapshot_text.slice(0,500));
+ const modified=structuredClone(job);
+ modified.sources[0].snapshot_sha256=r.sources[0].snapshot_sha256;
+ modified.sources[0].snapshot_text=job.sources[0].snapshot_text.trim();
+ assert.throws(()=>compileEvidenceDossier(modified),/source_hash_mismatch/);
+});
