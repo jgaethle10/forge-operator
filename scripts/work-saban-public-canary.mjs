@@ -9,6 +9,7 @@ const expected=isPullRequest?['Work Saban']:[
   'Request the private pilot by email',
   'No public CSV uploads',
   'Try a real browser example',
+  'Try planning your task',
   'href="./brand/"',
   'Illustrative preview, not live customer execution.',
 ];
@@ -44,13 +45,35 @@ async function main(){
       if(!ok)exampleVerified=false;
     }
   }
-  const verified=response.status===200&&response.url.startsWith('https://')&&missing.length===0&&brandVerified&&exampleVerified;
+  // A public user-task plan must be accessible without pretending workers were dispatched.
+  // These are GET-only existence/contents checks, not browser interaction receipts.
+  const planRoutes=[
+    {path:'plan/',markers:['Plan my team','TEAM PROPOSED · NOT RUNNING','connect-src', './plan.js']},
+    {path:'plan/plan.js',markers:['planTask',"$('task').value",'clipboard']},
+    {path:'plan/engine.mjs',markers:['export function planTask','proposed_not_running','execution_started:false']}
+  ];
+  const planChecks=[];
+  let planVerified=isPullRequest;
+  if(!isPullRequest){
+    planVerified=true;
+    for(const route of planRoutes){
+      const href=new URL(route.path,url).href;
+      const result=await fetch(href,{redirect:'follow',signal:AbortSignal.timeout(15000),cache:'no-store'});
+      const body=await result.text();
+      const missingPlan=route.markers.filter(marker=>!body.includes(marker));
+      const ok=result.status===200&&missingPlan.length===0;
+      planChecks.push({url:href,http_status:result.status,ok,missing_markers:missingPlan});
+      if(!ok)planVerified=false;
+    }
+  }
+  const verified=response.status===200&&response.url.startsWith('https://')&&missing.length===0&&brandVerified&&exampleVerified&&planVerified;
   console.log(JSON.stringify({
     schema:'evercraft.work-saban.pilot-public-canary.v2',
     url,final_url:response.url,http_status:response.status,
     brand_url:brandUrl.href,brand_http_status:brandResponse.status,
     missing_markers:missing,brand_verified:brandVerified,
     example_verified:exampleVerified,example_checks:exampleChecks,
+    plan_verified:planVerified,plan_checks:planChecks,
     source_preview_only:isPullRequest,
     simplified_release_verified:!isPullRequest&&verified,
     public_route_verified:verified,
