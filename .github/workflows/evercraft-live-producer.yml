@@ -1,0 +1,27 @@
+name: Evercraft LIVE local media producer checks
+on:
+  pull_request:
+    paths:
+      - 'public/live/producer.*'
+      - 'tests/evercraft-live-producer.test.mjs'
+      - '.github/workflows/evercraft-live-producer.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/live/producer.*'
+      - 'tests/evercraft-live-producer.test.mjs'
+      - '.github/workflows/evercraft-live-producer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  producer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate local video/image stage and no-upload safety
+        run: node --test tests/evercraft-live-producer.test.mjs

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050a10">
+<meta name="description" content="Evercraft LIVE local-only director for original videos and images. Bring real approved work to the screen before broadcast. No uploads.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; media-src blob:; img-src blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; form-action 'none'; base-uri 'none'">
+<title>Evercraft LIVE | Real Media Producer</title>
+<link rel="stylesheet" href="./producer.css">
+</head><body>
+<div id="app">
+<header class="header">
+  <div class="brand"><span class="mark">✦</span><span>EVERCRAFT <b>/ LIVE PRODUCER</b></span></div>
+  <div class="mode"><span class="status-dot"></span> LOCAL MEDIA · NO UPLOAD · NOT BROADCASTING</div>
+</header>
+<main id="stage" class="stage" aria-label="Real Evercraft original media stage">
+  <div id="picture" class="picture"></div>
+  <div id="empty" class="empty">
+    <span class="eyebrow">THE ACTUAL WORK TAKES THE SCREEN</span>
+    <h1>Bring the real footage.</h1>
+    <p>Add an original Evercraft video or image from this device. This page previews your files locally; it does not upload them or start a livestream.</p>
+    <button id="emptyAdd" type="button" class="button primary">Choose actual footage</button>
+    <span class="hint">Or drag an MP4, WebM, PNG, JPG or WebP here</span>
+  </div>
+  <div id="screenBadge" class="screen-badge" hidden>EVERCRAFT · LOCAL REVIEW OF ORIGINAL WORK</div>
+  <div id="overlay" class="overlay" role="status" aria-live="polite"></div>
+  <button id="exitFilm" class="exit-film" type="button" aria-label="Exit Film Mode">✕ Exit film</button>
+</main>
+<section id="transport" class="transport" aria-label="Producer controls">
+  <div class="now">
+    <span class="eyebrow" id="sceneCount">NO ORIGINAL MEDIA SELECTED</span>
+    <strong id="sceneTitle">Ready for the first scene</strong>
+    <small id="sceneDetail">Files remain on this device. Reopening the page clears the queue.</small>
+  </div>
+  <div class="controls">
+    <button id="add" class="button primary" type="button">+ Add media</button>
+    <button id="prev" class="button" type="button" disabled>‹</button>
+    <button id="pause" class="button" type="button" disabled>Pause</button>
+    <button id="next" class="button" type="button" disabled>›</button>
+    <button id="fit" class="button" type="button" aria-pressed="false">Contain</button>
+    <button id="portrait" class="button" type="button" aria-pressed="false">9:16</button>
+    <button id="sound" class="button" type="button" aria-pressed="false">Muted</button>
+    <button id="film" class="button" type="button" disabled>Film ⛶</button>
+  </div>
+</section>
+<section class="tray" id="tray" aria-label="Private producer queue">
+  <div class="tray-heading"><span>LOCAL SCENE QUEUE</span><span id="queueStatus">No source media loaded</span></div>
+  <div id="queue" class="queue"></div>
+</section>
+<footer class="footer"><span>Preview only. Human rights/privacy review required before public publication. No TikTok transport or Systemia data connection.</span><a href="./">See public engineering receipts ↗</a></footer>
+<input id="mediaPicker" type="file" accept=".mp4,.webm,.png,.jpg,.jpeg,.webp,video/mp4,video/webm,image/png,image/jpeg,image/webp" multiple hidden>
+</div>
+<script type="module" src="./producer.mjs"></script>
+</body></html>
