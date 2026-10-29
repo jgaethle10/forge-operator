@@ -37,7 +37,7 @@ test('no unrelated $19, $49 or PDF product is passed through existing service li
  assert.equal(manifest.canonical_order_reconciliation,'manual_not_automated');
  assert.equal(manifest.payment_received_verified,false);
 });
-test('customer-facing page requires deliberate human confirmation and honest payment facts',()=>{
+test('customer-facing directory provides one-click exact checkout review with clear payment terms',()=>{
  const html=get('checkout-ready/index.html');
  assert.equal((html.match(/class="pay"/g)||[]).length,7);
  assert.match(html,/<title>Evercraft Payments \| Verified Service Checkout<\/title>/);
@@ -45,15 +45,16 @@ test('customer-facing page requires deliberate human confirmation and honest pay
  assert.match(html,/Stripe-hosted payment forms under the Systemia settlement account/);
  assert.match(html,/manual reconciliation into Evercraft Payments/);
  assert.ok(Object.values(expected).every(x=>html.includes(x.url)));
- assert.match(html,/id="accept" type="checkbox"/);
- assert.match(html,/aria-disabled/);
+ assert.match(html,/Ready to review your checkout\?/i);
+ assert.match(html,/confirm project scope and delivery availability/i);
+ assert.doesNotMatch(html,/id="accept" type="checkbox"/);
+ assert.doesNotMatch(html,/aria-disabled/);
+ assert.doesNotMatch(html,/e\.preventDefault\(\)/);
  assert.match(html,/manually reconcile provider-verified receipts/i);
  assert.match(html,/does not itself place an order/i);
  assert.match(html,/no matching reusable payment link/i);
  assert.doesNotMatch(html,/(pornhub|onlyfans|fansly|nsfw)/i);
- const code=html.match(/<script>([\s\S]+?)<\/script>/)?.[1];
- assert.ok(code);
- assert.doesNotThrow(()=>new vm.Script(code));
+ assert.doesNotMatch(html,/<script>/);
 });
 test('agent buyer instructions route through Evercraft Payments while declaring the settlement adapter',()=>{
  const guide=get('checkout-ready/llms.txt');
