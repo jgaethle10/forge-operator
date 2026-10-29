@@ -22,6 +22,8 @@ jobs:
         run: python science/supercon_observational_audit/run.py
       - name: Audit row-split composition leakage
         run: python science/supercon_observational_audit/split_integrity.py
+      - name: Grade real-data reports and reject nine incorrect answers
+        run: python science/supercon_observational_audit/verify_candidate.py --self-test
       - name: Preserve machine-readable evidence
         if: always()
         uses: actions/upload-artifact@v4
