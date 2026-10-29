@@ -9,6 +9,16 @@ test('persistent policy permits liveness, bounded hash workload and release',()=
   assert.equal(allow({method:'POST',route:'/v1/leases',body:{workload_class:'systemia.content-hash.v1',requested_ttl_ms:90000}}),true);
   const input={idempotency_key:'evercraft-node002-hash-1234',payload:{value:{a:1}}};
   assert.equal(allow({method:'POST',route:'/v1/jobs',body:{workload_class:'systemia.content-hash.v1',lease_id:'lease123',token:'token123',idempotency_key:input.idempotency_key,input}}),true);
+  // The real registered NodeSeed worker does not require a second
+  // idempotency_key nested inside input.
+  assert.equal(allow({method:'POST',route:'/v1/jobs',body:{
+    workload_class:'systemia.content-hash.v1',lease_id:'lease123',token:'token123',
+    idempotency_key:input.idempotency_key,input:{payload:{value:{a:1}}}
+  }}),true);
+  assert.equal(allow({method:'POST',route:'/v1/jobs',body:{
+    workload_class:'systemia.content-hash.v1',lease_id:'lease123',token:'token123',
+    idempotency_key:input.idempotency_key,input:{idempotency_key:'different-key',payload:{value:{a:1}}}
+  }}),false);
   assert.equal(allow({method:'POST',route:'/v1/leases/lease123/release',body:{token:'token123'}}),true);
 });
 test('persistent policy blocks arbitrary code, read/write fs, deployments, wide leases and incompatible jobs',()=>{
