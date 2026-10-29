@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
 import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher,readFindMyPartPrivateInquiry,reconcileFindMyPartInquiryOutbox} from '../systemia/mcp/findmypart-public-inquiry.mjs';
 
@@ -184,4 +185,28 @@ test('orphan recovery refuses tampered private records and never invents a lead'
   assert.equal(reconcileFindMyPartInquiryOutbox({storeDir:dir,key}).restored,0);
   assert.equal(fs.existsSync(path.join(dir,'alert-outbox',reference+'.json')),false);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('private owner CLI lists only references, reveals PII only with explicit flag',async()=>{
+ const dir=temp();const env={...process.env,
+  EVERCRAFT_FINDMYPART_LEADS_DIR:dir,EVERCRAFT_FINDMYPART_INTAKE_KEY_B64:key.toString('base64')};
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ const script=path.join(process.cwd(),'scripts/findmypart-owner-inbox.mjs');
+ try{
+  const response=await post(rt.url,brief);
+  const result=await response.json();
+  assert.equal(response.status,201);
+  const listed=JSON.parse(execFileSync(process.execPath,[script,'list'],{env,encoding:'utf8'}));
+  assert.equal(listed.count,1);
+  assert.equal(listed.contains_buyer_pii,false);
+  assert.equal(listed.entries[0].reference,result.reference);
+  assert.doesNotMatch(JSON.stringify(listed),/customer@example|power selector|Ford 3600/);
+  assert.throws(()=>execFileSync(process.execPath,[script,'show',result.reference],{env,stdio:'pipe'}));
+  const shown=JSON.parse(execFileSync(process.execPath,[script,'show',result.reference,'--reveal'],{env,encoding:'utf8'}));
+  assert.equal(shown.reply_email,brief.email);
+  assert.equal(shown.part_description,brief.part_description);
+  assert.equal(shown.payment_created,false);
+  assert.equal(shown.agent_execution_authorized,false);
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
 });
