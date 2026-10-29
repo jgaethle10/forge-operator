@@ -133,7 +133,7 @@ footer a{color:#e4e9ee}
 <p class="kicker">Start your part search</p>
 <h2>What's the part you can't find?</h2>
 <p>Just tell us what you need, what it's for, and where to reply. We'll review it before discussing any payment.</p>
-<form id="part-request-form" class="part-request" novalidate>
+<form id="part-request-form" class="part-request" method="post" action="/api/findmypart/inquiry" novalidate>
 <div class="field"><label for="part-description">What part do you need?</label>
 <textarea id="part-description" name="part_description" required minlength="10" maxlength="1200" rows="3" placeholder="Tell us what's missing or broken" autocomplete="off"></textarea></div>
 <div class="field"><label for="equipment-context">What's it for?</label>
