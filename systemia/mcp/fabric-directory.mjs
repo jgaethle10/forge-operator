@@ -238,10 +238,10 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       const products=JSON.parse(fs.readFileSync(productsPath,'utf8'));
       const boardroom=(Array.isArray(products.products)?products.products:[])
         .find(item=>item.product_key==='ai-boardroom' && item.machine_state==='source_discovery_only');
-      if(boardroom&&!mapped.some(item=>item.public_id==='ai-boardroom-decision-review-v1')){
+      if(boardroom){
         const intents=Array.isArray(boardroom.intents)?boardroom.intents.map(String).slice(0,16):[];
         const aliases=Array.isArray(boardroom.aliases)?boardroom.aliases.map(String).slice(0,8):[];
-        mapped.push({
+        const sourceEntry={
           public_id:'ai-boardroom-decision-review-v1',
           name:'Evercraft AI Boardroom',
           description:'Free private on-device comparison of pasted ChatGPT, Claude, Gemini and other AI answers. Frame a decision and examine stated disagreements and evidence gaps. Optional separate human-scoped decision reviews; no verified automatic multi-LLM debate.',
@@ -259,7 +259,13 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
             {type:'website',label:'Evercraft Boardroom executive chamber',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/',state:'public_https_verified_2026_10_29'},
             ...(boardroom.discovery_url?[{type:'docs',label:'AI Boardroom source-backed product descriptor',url:boardroom.discovery_url,state:'source_backed'}]:[]),
           ]
-        });
+        };
+        const existing=mapped.findIndex(item=>item.public_id==='ai-boardroom-decision-review-v1');
+        if(existing>=0){
+          // Preserve the independently generated record's identity, but keep
+          // truthful no-charge preview and direct public website connections.
+          mapped[existing]={...mapped[existing],...sourceEntry};
+        }else mapped.push(sourceEntry);
       }
     }
   }
