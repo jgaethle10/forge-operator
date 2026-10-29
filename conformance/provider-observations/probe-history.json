@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-29T07:17:52.507Z",
+  "updated_at": "2026-10-29T07:47:00.105Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "d37a05c9277eb430bc6f4cb64e7a75d858f507090e756cb1d4aa3da0fe289394",
-      "observed_at": "2026-10-26T12:53:27.959Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-evidence-timeline-008",
-      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "8f747723439bcfd868dd07ccc4e5a261f8c0e42ec2b71e656cbe0eb0268febf1",
-      "response_sha256": "661bb6cd09c10103646b04c5c2a9ab7a1a6f6845fea25ff3dbca0ea0d1eb3f5d",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "95b6521523500359635810ff52f1b566c53782c1c93eb1cf0589b91e95c0258f",
       "observed_at": "2026-10-26T12:53:29.582Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "8ef0ba6e0ca8d3f1035de1139275f6624eef8ef6c7e8f7bfbe4d3edb753ed697",
       "pickup_observed": false,
       "provider_receipt_sha256": "43504e4f9084de8a1fc821406ae8d04feb897182d3c8a5b4e83fc0a3d9ffaba7",
+      "response_sha256": "3dbcdcc0d569a44474f86f980d22a1e2432421c549075b9f40fffdf4ca8b04d3",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "2dfa9739534a6ed5f18cd155b90031d57335a2b0b87958c1e9499c46fbbc19a7",
+      "observed_at": "2026-10-29T07:47:00.105Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-network",
+      "case_id": "network-device-reconnect-003",
+      "prompt_sha256": "8ef0ba6e0ca8d3f1035de1139275f6624eef8ef6c7e8f7bfbe4d3edb753ed697",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "3283fe7aaa7d3e9ba9914557c6361c59c97c7fcc66b4d50d3a8db0027f1fd7ac",
       "response_sha256": "3dbcdcc0d569a44474f86f980d22a1e2432421c549075b9f40fffdf4ca8b04d3",
       "source": "authorized_provider_probe",
       "privacy": {
