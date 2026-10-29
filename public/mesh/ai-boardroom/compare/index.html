@@ -15,7 +15,7 @@
 <body class="boardroom-heritage comparison"><header><div class="wrap"><a class="brand" href="../">EVERCRAFT <b>/ AI BOARDROOM</b></a><a class="small" href="../">About Boardroom</a></div></header>
 <main class="wrap"><section class="hero"><div class="pill">Free · No account · No upload</div><div class="eyebrow" style="margin-top:14px">The private chamber · Two answers. One decision.</div>
 <h1>Your AIs disagree.<br><span>Find out where.</span></h1>
-<p class="lede">Paste answers from the AI tools you already use. See their stated directions, common words and unanswered questions. This preview runs entirely in your browser.</p></section>
+<p class="lede">Paste answers from the AI tools you already use. See their stated directions, common words and unanswered questions. This preview runs entirely in your browser.</p><div class="actions"><a class="btn primary" href="?demo=1">See a complete example</a><button class="btn neutral" type="button" id="share-guest">Share a free guest pass</button></div><p class="info">Guest-pass links open a fixed public example only. Your pasted questions and answers are never placed in a link.</p></section>
 <section class="panel"><div class="eyebrow">Step one</div><h2>Bring your own AI answers</h2>
 <p class="info">Use two responses; a third is optional. Don't paste confidential or regulated information.</p>
 <form id="compare-form"><div class="field"><label for="question">The decision you're facing</label><textarea id="question" maxlength="500" placeholder="Should we launch our new service next month?" required></textarea></div>
@@ -43,6 +43,15 @@ byId('sample').addEventListener('click',()=>{
  byId('label3').value='Advisor C';byId('answer3').value='Pilot first with a small group. Only if the measured margins and customer results are positive should we expand.';
  byId('result').hidden=true;out('notice','');
 });
+const guestPass=()=>new URL('?demo=1',location.origin+location.pathname).href;
+byId('share-guest').addEventListener('click',async()=>{
+ const link=guestPass();
+ try{
+  if(navigator.share){await navigator.share({title:'Evercraft Boardroom free guest pass',text:'See a sample AI disagreement map, privately in your browser.',url:link});return;}
+  if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(link);out('notice','Guest pass copied. It contains only the public example, never your answers.');return;}
+  window.prompt('Copy this public example link:',link);
+ }catch(error){if(error?.name!=='AbortError')out('notice','Use your browser Share option on the example link.');}
+});
 byId('clear').addEventListener('click',()=>{
  byId('compare-form').reset();byId('question').value='';[1,2,3].forEach(n=>byId('answer'+n).value='');
  latest=null;byId('result').hidden=true;out('notice','');
@@ -69,4 +78,8 @@ byId('compare-form').addEventListener('submit',e=>{
 });
 byId('copy').addEventListener('click',async()=>{if(!latest)return;try{await navigator.clipboard.writeText(latest.reportText);out('notice','Report copied.')}catch{out('notice','Clipboard unavailable; use Download text report.')}});
 byId('download').addEventListener('click',()=>{if(!latest)return;const url=URL.createObjectURL(new Blob([latest.reportText],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='evercraft-boardroom-map.txt';a.click();URL.revokeObjectURL(url)});
+if(new URLSearchParams(location.search).get('demo')==='1'){
+ byId('sample').click();
+ byId('compare-form').requestSubmit();
+}
 </script></body></html>
