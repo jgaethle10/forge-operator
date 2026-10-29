@@ -42,7 +42,9 @@ test('working-customer homepage is genuinely short and action focused',()=>{
   assert.equal(descriptions,3,'only three customer-visible steps');
   assert.doesNotMatch(landing,/STAGE 0[1-6]|six-stage sourcing|SYSTEMIA COMMAND|RAVEN NEXUS/i);
   assert.doesNotMatch(landing,/base44\.app|checkout\.stripe\.com|buy\.stripe\.com/i);
-  assert.doesNotMatch(landing,/<form|<script|<iframe|<input/i);
+  assert.match(landing,/<form id="part-request-form"/);
+  assert.match(landing,/<script type="module" src="\/findmypart\/app\.mjs"><\/script>/);
+  assert.doesNotMatch(landing,/<iframe/i);
   assert.ok(landing.length<16000,'customer page should remain compact');
 });
 
@@ -56,7 +58,9 @@ test('three visible offer prices, simple lead action and no false proof',()=>{
   assert.match(landing,/not guaranteed/);
   assert.match(landing,/href="\/findmypart\/sample-report\/"/);
   assert.match(landing,/mailto:jessegaethle10@gmail\.com\?subject=FindMyPart/);
-  assert.match(landing,/No charge or information submission happens on this page/);
+  for(const field of ['part_description','equipment_context','email','consent'])assert.ok(landing.includes('name="'+field+'"'));
+  assert.match(landing,/type="submit">Send my part request/);
+  assert.match(landing,/No payment needed to send your request/);
   assert.equal((landing.match(/href="mailto:/g)||[]).length,1,'one buyer-controlled message action');
   assert.equal((landing.match(/href="#request"/g)||[]).length,2,'repeated primary action routes to the same destination');
 });
@@ -69,6 +73,7 @@ test('mobile is legible, accessible, inert and explicitly held from indexing',()
   assert.match(landing,/a:focus-visible/);
   assert.match(landing,/<nav .*aria-label="Main navigation"/);
   assert.doesNotMatch(landing,/<img [^>]+src="https?:/i);
+  assert.match(landing,/role="status" aria-live="polite"/);
 });
 
 test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, noindex',async()=>{
@@ -86,6 +91,10 @@ test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, n
    assert.equal(sample.status,200);
    assert.match(await sample.text(),/NOT A REAL HUNT OR SUPPLIER QUOTE/);
    assert.match(sample.headers.get('x-robots-tag')||'',/noindex/);
+   const app=await fetch(runtime.url+'/findmypart/app.mjs');
+   assert.equal(app.status,200);
+   assert.match(app.headers.get('content-type')||'',/text\/javascript/);
+   assert.match(await app.text(),/api\/findmypart\/inquiry/);
    const h=await fetch(runtime.url+'/findmypart/',{method:'HEAD'});
    assert.equal(h.status,200);
    assert.equal((await h.text()).length,0);
