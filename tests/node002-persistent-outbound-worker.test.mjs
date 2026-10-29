@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {narrowContentHashCommandAllowed as allow} from '../systemia/network/outbound-node-agent.mjs';
+import {narrowContentHashCommandAllowed as allow, startOutboundNodeAgent} from '../systemia/network/outbound-node-agent.mjs';
 import {verifyNode002PersistentPreflight as verify} from '../scripts/node002-persistent-outbound-worker.mjs';
 
 test('persistent policy permits liveness, bounded hash workload and release',()=>{
@@ -43,4 +43,64 @@ test('physical preflight requires exact NextGen device + broker and uses loopbac
  assert.throws(()=>verify({receipt:{...receipt,node_id:'unknown'},capacity:cap,health}));
  assert.throws(()=>verify({receipt,capacity:{...cap,device_fingerprint:'sha256:'+'b'.repeat(64)},health}));
  assert.throws(()=>verify({receipt,capacity:{...cap,supported_workloads:[]},health}));
+});
+
+
+test('outbound agent clears transient broker failure after a successful empty poll', async()=>{
+  const originalFetch=globalThis.fetch;
+  let polls=0;
+  let agent=null;
+  const json=(value,status=200)=>new Response(JSON.stringify(value),{
+    status,headers:{'content-type':'application/json'},
+  });
+  const capacity={
+    protocol:'evercraft.capacity.v1',
+    node_id:receipt.node_id,
+    device_fingerprint:receipt.device_fingerprint,
+    supported_workloads:['systemia.content-hash.v1'],
+  };
+  const waitFor=async predicate=>{
+    const deadline=Date.now()+2500;
+    while(Date.now()<deadline){
+      if(predicate())return;
+      await new Promise(resolve=>setTimeout(resolve,5));
+    }
+    throw Error('test_timed_out_waiting_for_expected_poll_state');
+  };
+  try{
+    globalThis.fetch=async url=>{
+      const target=String(url);
+      if(target.endsWith('/v1/capacity'))return json(capacity);
+      if(target.endsWith('/v1/remote/challenge'))return json({nonce:'synthetic-nonce'});
+      if(target.endsWith('/v1/attest'))return json({attestation:{synthetic:true}});
+      if(target.endsWith('/v1/remote/register'))return json({
+        session_token:'synthetic-session-token',
+        transport_key:'synthetic-transport-key',
+      });
+      if(target.endsWith('/v1/remote/agent/poll')){
+        polls++;
+        if(polls===1)return json({error:'synthetic_transient'},500);
+        await new Promise(resolve=>setTimeout(resolve,15));
+        return new Response(null,{status:204});
+      }
+      throw Error('unexpected_network_request_in_offline_test');
+    };
+    agent=await startOutboundNodeAgent({
+      brokerUrl:'https://fabric.example.invalid',
+      localCapacityEndpoint:'http://127.0.0.1:7777',
+      localAllocatorToken:'synthetic-test-only',
+      expectedNodeId:receipt.node_id,
+      commandPolicy:'content-hash-only',
+      capacityWorkloadAllowlist:['systemia.content-hash.v1'],
+      pollBackoffMs:90,
+    });
+    await waitFor(()=>agent.status().last_error==='remote_poll_failed:500');
+    await waitFor(()=>polls>=2&&agent.status().last_error===null);
+    assert.equal(agent.status().running,true);
+    assert.ok(agent.status().last_poll_at);
+    assert.equal(agent.status().last_error,null);
+  } finally {
+    if(agent)await agent.close();
+    globalThis.fetch=originalFetch;
+  }
 });
