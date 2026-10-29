@@ -242,3 +242,10 @@ main{max-width:1420px;padding-top:34px}
 .spatial-agent.is-selected .spatial-person{filter:drop-shadow(0 8px 7px #0006) drop-shadow(0 0 14px #9de8ff)}
 .spatial-agent:hover .spatial-person{translate:0 -7px}
 @media(prefers-reduced-motion:reduce){.spatial-agent:hover .spatial-person{translate:none}}
+
+/* Worker motion reflects observed mission state, not fabricated agent actions. */
+@keyframes saban-working{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+@keyframes saban-celebrate{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-14px) rotate(-7deg)}65%{transform:translateY(-9px) rotate(7deg)}}
+.spatial-agent[data-activity="working"] .spatial-person{animation:saban-working 1.2s ease-in-out infinite}
+.spatial-agent[data-activity="celebrating"] .spatial-person{animation:saban-celebrate 1.5s ease-in-out 2}
+@media(prefers-reduced-motion:reduce){.spatial-agent[data-activity] .spatial-person{animation:none}}
