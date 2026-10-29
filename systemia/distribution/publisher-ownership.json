@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.distribution.publisher-ownership.v1",
-  "reviewed_at": "2026-10-25",
+  "reviewed_at": "2026-10-29",
   "policy": "Evidence required for every positive ownership assertion; no publisher-side writes without authority",
   "entries": [
     {
@@ -215,6 +215,44 @@
         "publisher_account_claim_verified": false
       },
       "next": "Review namespace ownership/publication receipts separately; validate specialist tool function and real user journey before marketing"
+    }
+  ],
+  "search_observations": [
+    {
+      "key": "search-findmypart-home-20261029",
+      "product": "FindMyPart",
+      "status": "LEGACY_INDEXED",
+      "observed_on": "2026-10-29",
+      "query": "site:findmypart.base44.app FindMyPart obsolete parts",
+      "result_url": "https://findmypart.base44.app/",
+      "replacement_url": null,
+      "replacement_proof": null,
+      "evidence": "Public search result observed 2026-10-29; indexed result reports a recent crawl. Index presence does not prove healthy checkout.",
+      "next": "Verify owned FindMyPart canonical public landing with independent release evidence, then request authorized reindexing."
+    },
+    {
+      "key": "search-findmypart-auto-20261029",
+      "product": "FindMyPart",
+      "status": "LEGACY_INDEXED",
+      "observed_on": "2026-10-29",
+      "query": "site:findmypart.base44.app FindMyPart obsolete parts",
+      "result_url": "https://findmypart.base44.app/ObsoleteAutoParts",
+      "replacement_url": null,
+      "replacement_proof": null,
+      "evidence": "Public search result observed 2026-10-29; historical indexed legacy category landing.",
+      "next": "Verify independent owned specialist page before deciding redirect or canonical metadata."
+    },
+    {
+      "key": "search-evercraft-journal-20261029",
+      "product": "Evercraft Journal",
+      "status": "LEGACY_INDEXED",
+      "observed_on": "2026-10-29",
+      "query": "site:evercraftjournal.base44.app Evercraft journal",
+      "result_url": "https://evercraftjournal.base44.app/",
+      "replacement_url": null,
+      "replacement_proof": null,
+      "evidence": "Public search result observed 2026-10-29; indexed content older than the observation. Not a claim of runtime health.",
+      "next": "Identify verified new Journal canonical home, preserve article history and request authorized indexing change."
     }
   ]
 }
