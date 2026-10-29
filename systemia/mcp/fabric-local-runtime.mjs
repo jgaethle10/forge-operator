@@ -40,7 +40,7 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
-import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher } from './findmypart-public-inquiry.mjs';
+import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
@@ -773,6 +773,16 @@ export async function startFabricLocalRuntime({
         });
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
+      }
+
+      // Public-safe availability signal. Hides unconfigured intake before a
+      // buyer tries to submit PII. Never exposes paths, key, identity or volume.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return sendJson(res,200,{schema:'evercraft.findmypart.intake-readiness.v1',
+          ...findMyPartInquiryReadiness({
+            storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
+          }),payment_ready:false,payment_verified:false});
       }
 
       // A separately bounded owned route accepts only consented FindMyPart part briefs.
