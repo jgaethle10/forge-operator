@@ -1063,6 +1063,8 @@ export async function startFabricLocalRuntime({
         ['/findmypart','public/findmypart/index.html'],
         ['/findmypart/','public/findmypart/index.html'],
         ['/findmypart/index.html','public/findmypart/index.html'],
+        ['/findmypart/sample-report','public/findmypart/sample-report/index.html'],
+        ['/findmypart/sample-report/','public/findmypart/sample-report/index.html'],
         ['/findmypart/brand/mark.svg','public/findmypart/brand/mark.svg'],
         ['/findmypart/brand/wordmark.svg','public/findmypart/brand/wordmark.svg'],
         ['/findmypart/brand/launch-landscape.svg','public/findmypart/brand/launch-landscape.svg'],
