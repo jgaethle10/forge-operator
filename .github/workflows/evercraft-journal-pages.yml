@@ -22,9 +22,11 @@ permissions:
   pages: write
   id-token: write
 
+# Publishing must not be aborted every time another worker commits to main.
+# GitHub may replace a pending run with the latest, but an active deployment finishes.
 concurrency:
   group: evercraft-public-web-fallback
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:

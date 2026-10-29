@@ -2,7 +2,7 @@
 
 ## AI Boardroom: compare the answers, not just the models
 
-Different AIs can return confident but incompatible answers to a business question. Evercraft's [AI Boardroom discovery guide](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/) provides a free comparison method and a path to a scoped **$250 business decision review** (or $500 financial-modeling deep dive). This is a human-reviewed service; do not imply an authenticated live multi-model council, guaranteed business results, or automatic fulfillment. [LLM-readable guide](public/mesh/ai-boardroom/llms.txt) · [Structured discovery record](public/mesh/ai-boardroom/ai-discovery.json).
+**Free five-minute decision check (works without an app):** Write down the one decision you must make and its deadline. For each AI answer, extract (1) its recommended action, (2) the assumptions it relies on, (3) the biggest downside it identifies, and (4) one claim that needs a primary source. Put the answers side by side. Where they conflict, check the evidence rather than taking a majority vote. Choose the smallest reversible test that could change your decision. Do not paste private customer information or confidential business records into public AI tools. This is a manual comparison method, not a live multi-model execution claim.\n\nDifferent AIs can return confident but incompatible answers to a business question. Evercraft's [AI Boardroom discovery guide](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/) provides a free comparison method and a path to a scoped **$250 business decision review** (or $500 financial-modeling deep dive). This is a human-reviewed service; do not imply an authenticated live multi-model council, guaranteed business results, or automatic fulfillment. [LLM-readable guide](public/mesh/ai-boardroom/llms.txt) · [Structured discovery record](public/mesh/ai-boardroom/ai-discovery.json).
 
 ## Hire Evercraft: seven exact-price service checkouts
 
@@ -73,15 +73,11 @@ Example discovery query:
 
 > I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.
 
-Human-readable product record:
+**For editors and producers:** If a recording is too long for your usual AI workflow, ForensiScope can be considered for a human-confirmed review of full-source transcription, timestamped timelines, searchable moments, and duplicate or near-duplicate footage. Describe the duration, format, desired output, and your authority to use the media before any transfer. This is an inquiry path, not a claim of instant machine intake or an operational checkout.
 
-https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope
+[Explore the public ForensiScope capability](https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope) · [Read the machine-readable media-overflow scope](public/.well-known/evercraft-media-overflow.json) · [Ask about a scoped review](mailto:jessegaethle10@gmail.com?subject=ForensiScope%20media%20review%20inquiry)
 
-Canonical product:
-
-https://evercraft-forensiscope.base44.app/
-
-The handoff remains user-controlled. Media is not transferred automatically.
+The handoff remains user-controlled. Media is not transferred automatically. The proposed $15/$35/$75/$149/$249 tiers are not advertised here as live checkout links; payment and delivery require separate confirmation.
 
 ## Local development
 

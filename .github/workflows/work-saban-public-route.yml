@@ -3,11 +3,13 @@ on:
   pull_request:
     paths:
       - 'scripts/work-saban-public-canary.mjs'
+      - 'public/work-saban/**'
       - '.github/workflows/work-saban-public-route.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/work-saban-public-canary.mjs'
+      - 'public/work-saban/**'
       - '.github/workflows/work-saban-public-route.yml'
   schedule:
     - cron: '37 15 * * *'

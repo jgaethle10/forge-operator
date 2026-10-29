@@ -1,0 +1,46 @@
+name: Evercraft Worlds browser projection
+on:
+  pull_request:
+    paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs','docs/worlds/**','.github/workflows/evercraft-worlds.yml']
+  push:
+    branches: [main]
+    paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  model-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check browser module
+        run: node --check public/worlds/app.mjs && node --check public/worlds/world-core.mjs && node --check public/worlds/world-bridge.mjs && node --check scripts/probe-evercraft-worlds-browser.mjs
+      - name: World builder, persistence and engine-schema tests
+        run: node --test tests/world-core.test.mjs tests/world-bridge.test.mjs
+      - name: CPU microbenchmark (NOT a browser performance claim)
+        run: node tests/worlds-benchmark.mjs
+  browser-conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: npm install --no-save --no-audit --no-fund playwright@1.55.1
+      - name: Install Chromium and system libraries
+        run: npx playwright install --with-deps chromium
+      - name: Browser scene, movement, editing, reload, mobile layout
+        run: node scripts/probe-evercraft-worlds-browser.mjs
+      - name: Preserve screenshots and measurement receipt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evercraft-worlds-browser-evidence
+          path: artifacts/evercraft-worlds-browser/
+          if-no-files-found: warn

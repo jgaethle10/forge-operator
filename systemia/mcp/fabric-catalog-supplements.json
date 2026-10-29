@@ -36,6 +36,12 @@
       "preferred_agent_route": "human_pilot_inquiry_only",
       "connections": [
         {
+          "type": "mcp",
+          "label": "Evercraft universal read-only capability discovery",
+          "url": "https://fabric.systemiacommandcenters.com/mcp",
+          "state": "fallback_available"
+        },
+        {
           "type": "website",
           "label": "Work Saban founding pilot",
           "url": "https://jgaethle10.github.io/forge-operator/work-saban/",

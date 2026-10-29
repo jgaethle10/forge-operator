@@ -1,0 +1,46 @@
+name: AI Boardroom comparison preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/mesh/ai-boardroom/**'
+      - 'tests/boardroom-landing.test.mjs'
+      - 'tests/boardroom-compare.test.mjs'
+      - '.github/workflows/ai-boardroom-preview.yml'
+  pull_request:
+    paths:
+      - 'public/mesh/ai-boardroom/**'
+      - 'tests/boardroom-landing.test.mjs'
+      - 'tests/boardroom-compare.test.mjs'
+      - '.github/workflows/ai-boardroom-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-privacy-and-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test deterministic comparison and strict input limits
+        run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs tests/boardroom-landing.test.mjs
+      - name: Verify no remote analytics or model calls in free preview
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const root='public/mesh/ai-boardroom/compare/';
+          const html=fs.readFileSync(root+'index.html','utf8');
+          const engine=fs.readFileSync(root+'engine.mjs','utf8');
+          assert.ok(html.includes("import {buildReport} from './engine.mjs'"));
+          assert.ok(html.includes('No data is sent to Evercraft.'));
+          assert.ok(html.includes('not a new AI response'));
+          assert.ok(!/https?:\/\/buy\.stripe\.com\//.test(html),'no mismatched product link');
+          assert.ok(!/fetch\s*\(|XMLHttpRequest|sendBeacon\s*\(|WebSocket\s*\(/.test(html+engine));
+          assert.ok(html.includes('checkout-ready/ai-boardroom-standard/'));
+          assert.ok(html.includes('<\/html>'));
+          console.log('Static privacy, exact premium route, and HTML checks passed.');
+          NODE
