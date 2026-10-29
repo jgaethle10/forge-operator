@@ -8,6 +8,7 @@ The operator must preinstall Kokoro and have its model weights available.
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -21,11 +22,17 @@ VOICES = (
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def plan_digest(plan):
+    canonical = {k: v for k, v in plan.items() if k != "planDigest"}
+    raw = json.dumps(canonical, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
 def render(plan_path, output_dir, voices, speed):
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     if (plan.get("schema") != "evercraft.fallen.voice-audition-plan.v1"
             or plan.get("profile", {}).get("id") != PROFILE_ID
-            or not isinstance(plan.get("planDigest"), str)):
+            or not isinstance(plan.get("planDigest"), str)
+            or plan["planDigest"] != plan_digest(plan)):
         raise ValueError("Invalid or mismatched Voice Foundry audition plan")
     reads = plan.get("reads")
     if not isinstance(reads, list) or len(reads) != 3 or any(
@@ -39,7 +46,10 @@ def render(plan_path, output_dir, voices, speed):
         raise ValueError("Speed must be within natural audition bounds (0.85 to 1.10)")
     if output_dir.exists() and any(output_dir.iterdir()):
         raise FileExistsError("Output directory must be empty to protect existing audition evidence")
-    # No hidden downloader or fallback provider: model setup belongs to the operator.
+    # Force offline loading. Missing cached weights fail rather than being fetched.
+    for name in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_DATASETS_OFFLINE"):
+        os.environ[name] = "1"
+    os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
     try:
         import numpy as np
         import soundfile as sf
