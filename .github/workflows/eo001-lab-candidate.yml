@@ -31,7 +31,8 @@ jobs:
           bash -n integrations/ai-evaluation-lab/sovereign-runtime-preflight.sh
       - name: Validate signed sovereign stage helper
         run: |
-          python3 -m py_compile integrations/ai-evaluation-lab/stage-sovereign-archive.py
+          python3 -m py_compile integrations/ai-evaluation-lab/stage-sovereign-archive.py integrations/ai-evaluation-lab/accept-sovereign-inference.py
+          python3 integrations/ai-evaluation-lab/accept-sovereign-inference.py --help
           python3 integrations/ai-evaluation-lab/stage-sovereign-archive.py --help
       - name: Check Lab-compatible decision policy
         run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs integrations/ai-evaluation-lab/eo001-raven-local-candidate.test.mjs
