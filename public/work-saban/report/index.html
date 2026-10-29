@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Make a checked monthly sales report from your own CSV privately in your browser. No upload or signup.">
+<link rel="icon" href="../brand/work-saban-mark.svg" type="image/svg+xml">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/work-saban/report/">
+<title>My sales report | Work Saban</title>
+<style>
+:root{color-scheme:light;--red:#a4142f;--ink:#171717;--line:#e8e4e3;--sub:#575757}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fff;color:var(--ink);font:16px/1.56 system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--red)}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+[hidden]{display:none!important}
+header{border-bottom:1px solid var(--line)}
+.top{max-width:840px;margin:auto;padding:17px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-size:17px;font-weight:850;letter-spacing:-.055em;color:var(--ink);text-decoration:none}.brand img{width:34px;height:34px;vertical-align:middle;margin-right:10px}
+.top a:last-child{font-size:13px;font-weight:750;text-decoration:none}
+main{max-width:840px;margin:auto;padding:66px 25px 40px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:850;color:var(--red);margin:0 0 18px}
+h1{font-size:clamp(43px,8vw,71px);line-height:1.04;letter-spacing:-.075em;margin:0 0 19px}h1 span{color:var(--red)}
+.lead{font-size:18px;color:var(--sub);max-width:680px;margin:0 0 27px}
+.panel{border:1px solid var(--line);border-radius:16px;padding:27px;box-shadow:0 14px 40px #11040809}
+.field-label{display:block;font-size:15px;font-weight:800;margin-bottom:11px}
+input[type=file]{display:block;width:100%;padding:15px;border:1px dashed #bcaeb1;border-radius:9px;background:#fffafb;font-size:14px}
+.consent{display:flex;gap:10px;align-items:flex-start;margin:20px 0 15px;font-size:13px;color:#444;line-height:1.5}
+.consent input{margin:3px 0 0;flex:none;width:18px;height:18px;accent-color:var(--red)}
+button{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:13px 22px;border:1px solid var(--red);border-radius:9px;background:var(--red);color:white;font:800 14px/1.4 system-ui,sans-serif;cursor:pointer}
+button.secondary{background:white;color:var(--red)}button:hover{background:#7e1026}button.secondary:hover{background:#fff0f2}button:disabled{opacity:.45;cursor:not-allowed}
+.note{font-size:12px;color:#656060;line-height:1.55;margin:13px 0 0}
+#failure{font-size:13px;font-weight:700;color:var(--red);margin-top:16px}
+#result{margin-top:34px;scroll-margin-top:20px}
+.report{padding:27px;border-radius:15px;border:1px solid #eddde1;background:#fffafb}
+.ok{font-size:11px;font-weight:800;letter-spacing:.12em;color:#187145;text-transform:uppercase}
+.report h2{font-size:29px;letter-spacing:-.05em;margin:12px 0 4px}
+.total{font-size:clamp(32px,5vw,47px);font-weight:850;letter-spacing:-.06em}
+#change{font-size:13px;color:#666;margin:0 0 13px}
+table{width:100%;border-collapse:collapse;margin:12px 0 0;font-size:14px}
+th,td{text-align:left;padding:12px 0;border-bottom:1px solid #eae3e3}
+th:last-child,td:last-child{text-align:right}
+.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:23px}
+.actions button{flex:1 1 170px}
+#status{font-size:13px;font-weight:700;color:#71304a;margin:13px 0}
+details{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+summary{cursor:pointer;font-size:14px;font-weight:800}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f3f2;border-radius:8px;padding:15px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+#fallback textarea{width:100%;min-height:160px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;border:1px solid var(--line);border-radius:8px;padding:12px}
+.links{margin:30px 0 0;font-size:13px;color:#555}
+footer{max-width:840px;margin:10px auto 0;border-top:1px solid var(--line);padding:21px 25px 36px;color:#777;font-size:12px}
+@media(max-width:650px){.top{padding:15px 19px}.brand img{width:30px;height:30px}main{padding:48px 19px 30px}.lead{font-size:16px}.panel,.report{padding:20px}button{width:100%}.actions{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body>
+<header><div class="top"><a href="../" class="brand"><img src="../brand/work-saban-mark.svg" alt="">work saban</a><a href="../plan/">Plan a task</a></div></header>
+<main>
+<p class="eyebrow">Real report · processed on your device</p>
+<h1>Your numbers. <span>Finished report.</span></h1>
+<p class="lead">Choose a sales CSV. Work Saban calculates your monthly totals, checks them again, and prepares a report you can save.</p>
+<div class="panel">
+<label class="field-label" for="csv-file">Your sales CSV</label>
+<input type="file" id="csv-file" accept=".csv,text/csv" aria-describedby="csv-help">
+<p class="note" id="csv-help">Include columns named <strong>month</strong> (YYYY-MM) and <strong>revenue</strong> (USD numbers, e.g. 1250.50). Extra columns are allowed. Use at least two distinct months. Up to 2,000 rows or 256 KB. <a href="../example-sales.csv" download>Download a sample CSV</a>.</p>
+<label class="consent"><input type="checkbox" id="consent"><span>I chose this file and authorize this browser to read it for a report. Nothing will be uploaded to Evercraft.</span></label>
+<button type="button" id="run" disabled>Make my report</button>
+<p class="note">No signup, upload, payment or AI model. The file is read locally only when you press the button. Work Saban does not save your CSV to a server. The report stays in this tab until you leave or refresh.</p>
+<p id="failure" role="alert" hidden></p>
+</div>
+<section id="result" hidden aria-live="polite">
+<div class="report">
+<div class="ok">Arithmetic double-checked · Browser-only</div>
+<h2>Your monthly report</h2>
+<div class="total" id="total"></div><p id="change"></p>
+<table aria-label="Monthly sales totals"><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody id="monthly"></tbody></table>
+<div class="actions"><button type="button" id="download" class="secondary">Save report</button><button type="button" id="copy" class="secondary">Copy report</button></div>
+<p id="status" role="status" aria-live="polite" hidden></p>
+<div id="fallback" hidden><p class="note">If the browser blocks copying, select the report text below and copy manually.</p><textarea id="copy-text" readonly aria-label="Report text for manual copying"></textarea></div>
+<details><summary>How were my numbers checked?</summary>
+<p class="note">A separate arithmetic pass compared every monthly total, grand total, and latest-month change against the selected source rows. Hashes identify the source and report bytes; they are not signed attestations or an external audit.</p>
+<pre id="proof"></pre>
+</details></div>
+</section>
+<p class="links">Need more than a sales report? <a href="../plan/">Plan a task with Saban</a>. The broader multi-agent product is still in development.</p>
+</main>
+<footer>Evercraft Work Saban · Narrow, local CSV calculations only. No hosted AI agent execution, financial audit, customer-data upload, or checkout.</footer>
+<script type="module" src="./report.js"></script>
+</body></html>
