@@ -64,6 +64,16 @@
       plant.append(make('span','spatial-pot'),make('span','spatial-leaf leaf-a'),make('span','spatial-leaf leaf-b'),make('span','spatial-leaf leaf-c'));
       place(plant,x,y);world.append(plant);
     }
+    const coffee=make('div','spatial-coffee-corner');
+    coffee.setAttribute('role','img');
+    coffee.setAttribute('aria-label','Cozy office coffee corner with mugs and a coffee machine');
+    coffee.append(make('span','spatial-coffee-counter'),make('span','spatial-coffee-machine'),make('span','spatial-coffee-mug'),make('span','spatial-coffee-mug mug-two'));
+    place(coffee,100,303);world.append(coffee);
+    const lounge=make('div','spatial-lounge');
+    lounge.setAttribute('role','img');
+    lounge.setAttribute('aria-label','Office lounge with a comfy couch and cushions');
+    lounge.append(make('span','spatial-sofa-back'),make('span','spatial-sofa-seat'),make('span','spatial-sofa-pillow pillow-one'),make('span','spatial-sofa-pillow pillow-two'));
+    place(lounge,825,304);world.append(lounge);
     const tank=make('div','spatial-fishtank');
     tank.setAttribute('role','img');
     tank.setAttribute('aria-label','Decorative office aquarium with two little fish and bubbles');
