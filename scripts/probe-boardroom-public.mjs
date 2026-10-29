@@ -20,6 +20,7 @@ async function get(path){
 }
 const paths={
  home:'/mesh/ai-boardroom/',
+ share:'/mesh/ai-boardroom/share/',
  css:'/mesh/ai-boardroom/heritage.css',
  compare:'/mesh/ai-boardroom/compare/',
  guest:'/mesh/ai-boardroom/compare/?demo=1',
@@ -34,6 +35,11 @@ const docs=Object.fromEntries(await Promise.all(Object.entries(paths).map(async(
 assert.ok(docs.home.includes('class="boardroom-heritage"'));
 assert.ok(docs.home.includes('Take your seat.'));
 assert.ok(docs.home.includes('href="./compare/"'));
+assert.ok(docs.share.includes('Your personal launch kit.'));
+assert.ok(docs.share.includes('Copy Facebook post'));
+assert.ok(docs.share.includes('Copy LinkedIn post'));
+assert.ok(docs.share.includes('founder_manual_only') || docs.share.includes('Nothing gets published automatically.'));
+assert.ok(docs.share.includes('/compare/?demo=1'));
 for(const token of ['#10100f','#ccad72','#f2e6cf','#28221b'])assert.ok(docs.css.toLowerCase().includes(token),'Missing heritage CSS token '+token);
 assert.ok(docs.compare.includes('class="boardroom-heritage comparison"'));
 assert.ok(docs.compare.includes('Compare the answers'));
