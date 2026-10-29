@@ -323,6 +323,9 @@ export async function startOutboundNodeAgent({
     commandReplayGuard = new ReplayGuard();
     commandResultCache = new Map();
     registeredAt = new Date().toISOString();
+    // A new session must earn its own successful poll; an old session's
+    // heartbeat must not advertise new-session liveness.
+    lastSuccessfulPollAt = null;
     lastError = null;
     return registration.body;
   }
