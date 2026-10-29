@@ -50,6 +50,13 @@ test('owned buyer page collects real part details and asks for explicit permissi
   for(const field of ['part_description','equipment_context','part_number','sources_tried','scope_confirmed','user_confirmed'])assert.match(html,new RegExp('name="'+field+'"'));
   assert.match(html,/Research/gi);
   assert.match(html,/scope/gi);
+  assert.match(html,/What part do you need/);
+  assert.match(html,/What is it for/);
+  assert.match(html,/Have a part number or past searches/);
+  assert.match(html,/<details class="optional-clues">/);
+  assert.match(html,/name="scope_confirmed" value="true" type="hidden"/);
+  assert.match(html,/name="user_confirmed" value="true" type="checkbox" required/);
+  assert.equal((html.match(/name="user_confirmed" value="true" type="checkbox" required/g)||[]).length,1);
   assert.match(html,/part-deep/);
   assert.match(html,/part-rescue/);
   const held=renderOfferPage(catalog[0],{checkoutConfigured:false});
