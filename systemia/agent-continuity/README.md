@@ -314,3 +314,47 @@ production enrollment. Existing Node002 shadow restrictions remain unchanged.
 A real owned provider must authorize an active exact-scope Passport/Execution
 Gate lease and dispatch enrolled identity-bound workers before any completion
 claim.
+
+## Native Passport and Execution Gate admission verifier (read-only)
+
+`systemia/raven/commissioned-lease-verifier.mjs` now exposes
+`createOwnedCommissionedLeaseVerifier`. It is intended for the receiver's
+`authorizeLease` dependency and consumes **existing**, current Evercraft
+`EvercraftPassport` and `EvercraftExecutionGate` instances. It does not
+mint permits, prepare/start leases, sign any proof or change remote execution.
+
+The independent `resolveBinding` callback must look up a canonical,
+owner-controlled mission record, **not copy fields from the HTTP request**.
+It must yield the exact immutable agent/reviewer ID, preflight ID and signed
+roster digest, mission and work key, inference request ID, SHA-256 of the
+approved input, started lease ID, one-time permit ID, Gate request fingerprint,
+actor, Passport product, scope, resource, specialist slug, and
+`route_mode: "registered_internal"`. Missing/altered fields hold.
+
+The adapter re-reads:
+- `ExecutionGate.getLease(lease_id)`: state `started`,
+  `dispatch_allowed=true`, exact trusted actor/product/scope/resource,
+  request fingerprint, permit and route, plus recent start timestamp
+- `Passport.getActionPermitState(permit_id)`: actually consumed and
+  still backed by an active, unrevoked grant, correct actor/product/
+  scope/resource and exact request fingerprint
+- `Passport.authorize(...)`: fresh `allow` from the **same** grant
+- A separately owned `verifyWorkerEnrollment` source: exact agent ID,
+  fresh observation, worker instance ID and source receipt reference
+
+**Receipt distinction discovered in native integration tests:** Passport
+returns a consumption *record* hash while the Gate stores a distinct
+consumption *acknowledgment* receipt hash. The signed preflight must bind
+the Gate acknowledgment to `passport_receipt_ref`, which is compared to
+the authoritative started lease. The Passport consumption record hash is
+independently required to be present and valid; these two hashes must
+not be incorrectly equated.
+
+This is a local, owner-supplied dependency, not an automatically enabled
+service. No live `resolveBinding`, `verifyWorkerEnrollment`,
+`dispatchWorker`, or registered production leased worker has been
+proven. The positive CI fixture writes actual Passport and Execution Gate
+state into temporary owned test directories with synthetic grants, and is
+**not** an authorized production mission or runtime receipt. Real live
+commissioning still requires release approval, owned enrollment and
+independent canary evidence under #1707.
