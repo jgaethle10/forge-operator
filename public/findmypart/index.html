@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d17">
+<meta name="robots" content="noindex,nofollow">
+<title>FindMyPart | Missing part. Not the end.</title>
+<meta name="description" content="Evidence-first parts research for discontinued, obscure, and impossible-to-find components. One-time Quick, Deep and Rescue Hunts by Evercraft.">
+<style>
+:root{--ink:#080d17;--panel:#121b29;--panel2:#172339;--line:#2a3448;--paper:#f3f4fa;--text:#eef0fa;--sub:#aeb9d0;--purple:#a38cff;--violet:#7358eb;--lime:#caf1ad;--danger:#f3c694;--max:1160px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.52}
+a{color:inherit}a:focus-visible,summary:focus-visible{outline:3px solid var(--lime);outline-offset:5px}
+.container{width:min(var(--max),calc(100% - 40px));margin-inline:auto}
+header{position:relative;z-index:2;border-bottom:1px solid #ffffff16}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:76px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:-.065em;text-decoration:none;font-size:23px}
+.brand em{font-style:normal;color:var(--purple)}.brand-icon{width:42px;height:42px}
+.navlinks{display:flex;align-items:center;gap:24px}.navlinks a:not(.btn){text-decoration:none;color:#d5dded;font-size:14px;font-weight:600}
+.eyebrow{font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:.19em;color:var(--purple);display:flex;align-items:center;gap:11px}
+.eyebrow:before{content:"";width:27px;height:2px;background:var(--purple)}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(56px,9.3vw,119px);max-width:1000px;line-height:.98;letter-spacing:-.079em;margin:25px 0 27px;font-weight:850}
+h1 span{color:var(--purple)}h2{font-size:clamp(35px,5.6vw,66px);font-weight:830;line-height:1.08;letter-spacing:-.065em;margin-bottom:18px}
+h3{font-size:22px;letter-spacing:-.035em}.lead{font-size:clamp(17px,2.1vw,22px);line-height:1.65;color:var(--sub);max-width:700px}
+.hero{position:relative;overflow:hidden;padding:105px 0 80px;background:radial-gradient(ellipse 35% 48% at 89% 23%,#4e3b9d55 0,transparent 84%),radial-gradient(ellipse 45% 38% at -19% 86%,#1e376045 0,transparent 80%)}
+.hero .copy{position:relative;z-index:1}.btn{display:inline-flex;justify-content:center;align-items:center;min-height:51px;padding:12px 21px;border-radius:10px;font-size:14px;font-weight:830;text-decoration:none;border:1px solid #45516a;transition:background .2s,transform .2s;cursor:pointer;text-align:center}
+.btn:hover{transform:translateY(-2px)}.btn.primary{color:#100c25;background:var(--purple);border-color:var(--purple)}.btn.ghost{background:#151d2f;color:var(--text)}.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:30px}
+.track{margin-top:60px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}.track span{border:1px solid #53607875;color:#cbd4e3;font-size:12px;font-weight:680;letter-spacing:.045em;border-radius:30px;padding:9px 13px}
+.hero-art{position:absolute;width:min(43vw,560px);height:auto;right:-125px;top:14px;opacity:.84;pointer-events:none}
+section{padding:87px 0}.light{background:#eeeff5;color:#121929}.light .muted{color:#5b6276}.muted{color:var(--sub)}
+.label{color:var(--purple);font-size:12px;text-transform:uppercase;font-weight:900;letter-spacing:.17em;margin-bottom:14px}.light .label{color:#654ad5}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.panel{border:1px solid var(--line);background:linear-gradient(155deg,#172238,#101825);border-radius:19px;padding:29px;min-width:0}
+.panel p{color:var(--sub);font-size:15px;line-height:1.65}
+.panel-number{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--purple);font-size:14px;letter-spacing:.13em}
+.ladder{margin-top:31px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid #303b51;border-radius:18px;overflow:hidden}
+.ladder .step{padding:22px;border-right:1px solid #303b51;border-bottom:1px solid #303b51;background:#111a29}.ladder .step:nth-child(3n){border-right:none}.ladder .step:nth-child(n+4){border-bottom:none}
+.step b{display:block;margin:10px 0 6px}.step small{color:var(--sub);font-size:13px;line-height:1.55}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:40px}
+.price-card{border-radius:20px;border:1px solid #394458;background:#151e2f;padding:30px;display:flex;flex-direction:column;min-width:0}
+.price-card.featured{border-color:#9c85ff;background:linear-gradient(148deg,#2e2556,#131c30)}
+.price-card .tag{color:var(--purple);text-transform:uppercase;font-weight:900;letter-spacing:.16em;font-size:12px}
+.price-card .price{font-size:61px;letter-spacing:-.07em;line-height:1.1;font-weight:880;margin:17px 0}.price-card .price small{font-size:13px;color:var(--sub);font-weight:600;letter-spacing:0}
+.price-card h3{margin:4px 0 12px}.price-card p{font-size:14px;color:#b9c5da;line-height:1.65;flex:1}
+.price-card ul{padding-left:19px;min-height:130px;color:#ccd6e8;font-size:14px;line-height:1.9}
+.price-card .btn{width:100%;margin-top:14px}.section-lede{max-width:690px;color:var(--sub);font-size:17px}
+.example{margin-top:36px;border-radius:21px;overflow:hidden;border:1px solid #bcc2cf;background:white;color:#182132;display:grid;grid-template-columns:1fr 1fr}
+.example .side{padding:34px}.example .side:first-child{background:#dfe1ea}.example .pill{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6548d3}
+.example b{display:block;font-size:16px;margin:12px 0}.example p{font-size:14px;color:#566175;line-height:1.65}.check{display:flex;gap:11px;align-items:start;margin:13px 0;color:#4c5871;font-size:14px}.check svg{flex-shrink:0;margin-top:2px}
+.shop{background:linear-gradient(110deg,#171f35,#251c48);border-top:1px solid #3f366a;border-bottom:1px solid #3f366a}
+.shop-row{display:grid;grid-template-columns:1.3fr 1fr;gap:50px;align-items:center}.shop .shop-panel{padding:28px;border:1px solid #554881;border-radius:17px;background:#151729ad}
+.shop-panel .line{padding:12px 0;border-bottom:1px solid #51466f;font-size:14px;color:#d0c9e6}.shop-panel .line:last-child{border:0}
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:34px}.faq details{border:1px solid var(--line);border-radius:14px;background:#121b29;padding:20px}.faq summary{font-weight:770;cursor:pointer}.faq p{margin:12px 0 0;color:var(--sub);font-size:14px}
+.cta{padding:76px 0;background:#e9e9f4;color:#19172d}.cta p{color:#576075;max-width:580px}.cta .btn.primary{color:#fff;background:#6248dc}
+footer{padding:30px 0 55px;border-top:1px solid var(--line);font-size:13px;color:var(--sub)}footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+@media(max-width:850px){.grid,.pricing{grid-template-columns:1fr 1fr}.price-card:last-child{grid-column:1/-1}.hero-art{width:62vw;opacity:.42;right:-100px}.shop-row{grid-template-columns:1fr}.example{grid-template-columns:1fr}}
+@media(max-width:570px){.container{width:min(var(--max),calc(100% - 32px))}.hero{padding:68px 0 55px}h1{font-size:clamp(49px,12.4vw,75px)}section{padding:65px 0}.nav{min-height:68px}.navlinks a:not(.btn){display:none}.navlinks .btn{padding:8px 12px;min-height:40px;font-size:12px}.brand{font-size:20px}.brand-icon{width:34px;height:34px}.hero-art{top:20px;right:-175px;width:95vw;opacity:.18}.grid,.pricing,.faq,.ladder{grid-template-columns:1fr}.price-card:last-child{grid-column:auto}.ladder .step{border-right:none!important;border-bottom:1px solid #303b51!important}.ladder .step:last-child{border-bottom:none!important}.track{margin-top:35px}.example .side{padding:24px}.shop-row{gap:22px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}.btn:hover{transform:none}}
+</style>
+</head>
+<body>
+<header><div class="container nav">
+<a class="brand" href="#top" aria-label="FindMyPart home">
+<svg class="brand-icon" viewBox="0 0 80 80" role="img" aria-label="FindMyPart locator symbol"><rect width="80" height="80" rx="19" fill="#7358eb"/><g fill="none" stroke="#f3ecff" stroke-width="4.2" stroke-linecap="round"><path d="M19 28a25 25 0 0 1 40-8M61 48a25 25 0 0 1-40 13M16 48V34"/><path d="M39 23v10m0 12v11m-17-17h11m12 0h12"/></g><path d="m34 34 10-4 7 8-4 10-10 3-7-8z" fill="#c9f4a9"/></svg>
+<span>Find<em>My</em>Part</span></a>
+<nav class="navlinks" aria-label="Main navigation"><a href="#how">How it works</a><a href="#pricing">Research plans</a><a href="#shops">For shops</a><a class="btn primary" href="#request">Start a hunt ↗</a></nav>
+</div></header>
+<main id="top">
+<section class="hero"><div class="container copy">
+<div class="eyebrow">The search continues here</div>
+<h1>Missing part.<br><span>Not the end.</span></h1>
+<p class="lead">A machine shouldn't become a paperweight just because a catalog says discontinued. FindMyPart follows the evidence across exact parts, cross-references, surplus, donor machines and practical recovery paths.</p>
+<div class="actions"><a class="btn primary" href="#request">Bring us the impossible part →</a><a class="btn ghost" href="#how">See how the hunt works</a></div>
+<div class="track"><span>Built for dead-end searches</span><span>Research, not an inventory claim</span><span>By Evercraft</span></div>
+</div>
+<svg class="hero-art" viewBox="0 0 610 610" aria-hidden="true" fill="none">
+<circle cx="303" cy="303" r="239" stroke="#6e65b9" stroke-width="1" stroke-dasharray="5 12"/><circle cx="303" cy="303" r="184" stroke="#9283e4" stroke-width="1.5"/><circle cx="303" cy="303" r="126" stroke="#b8a8fc" stroke-width="3"/><circle cx="303" cy="303" r="68" stroke="#c0afed" stroke-width="2" stroke-dasharray="18 10"/><path d="M303 17v123M303 465v128M17 303h123m325 0h128" stroke="#8273d0" stroke-width="2"/><path d="M268 255l68-19 48 53-19 69-68 18-49-53z" stroke="#d2c5ff" stroke-width="6" fill="#392f71"/><path d="m337 236 47 53-19 69-28-33-36 9-20-29" stroke="#c7efaa" stroke-width="6"/><circle cx="303" cy="303" r="9" fill="#d3f5b4"/><g stroke="#7f6edf" stroke-width="2"><path d="m113 125 85 86M413 394l85 84M447 140l-73 93M180 421l-69 70"/></g></svg>
+</section>
+<section id="how" class="container"><div class="label">01 / The investigation</div><h2>We don't stop at<br>“no longer available.”</h2><p class="section-lede">We trace what's known, identify what's missing and widen the search without pretending a similar-looking component is a verified replacement.</p>
+<div class="grid">
+<article class="panel"><div class="panel-number">01 / IDENTIFY</div><h3>Find the real identity.</h3><p>Start with the equipment, a part number, markings, measurements or the function the broken part served.</p></article>
+<article class="panel"><div class="panel-number">02 / TRACE</div><h3>Follow every useful lead.</h3><p>Investigate OEM sources, supersessions, compatible candidates, surplus and salvage with evidence labels.</p></article>
+<article class="panel"><div class="panel-number">03 / REPORT</div><h3>Get a usable next move.</h3><p>A documented research trail, unresolved questions, and the verification steps required before buying or fitting a replacement.</p></article>
+</div>
+<div class="ladder" aria-label="FindMyPart sourcing escalation ladder">
+<div class="step"><div class="panel-number">STAGE 01</div><b>Exact part</b><small>Original manufacturer and the precise reference.</small></div>
+<div class="step"><div class="panel-number">STAGE 02</div><b>Cross-reference</b><small>Supersessions, revisions and candidate equivalents.</small></div>
+<div class="step"><div class="panel-number">STAGE 03</div><b>Surplus & salvage</b><small>New-old-stock, donor equipment, secondary markets.</small></div>
+<div class="step"><div class="panel-number">STAGE 04</div><b>Documentation</b><small>Manuals, drawings, dimensions and assembly context.</small></div>
+<div class="step"><div class="panel-number">STAGE 05</div><b>Fabrication path</b><small>Where appropriate, a qualified repair or reproduction route.</small></div>
+<div class="step"><div class="panel-number">STAGE 06</div><b>Function-first</b><small>Alternative technical approaches requiring proper validation.</small></div>
+</div></section>
+<section class="light" id="evidence"><div class="container"><div class="label">02 / The deliverable</div><h2>More than a list<br>of search results.</h2><p class="muted section-lede">The outcome is a structured research record. This illustration shows the format, not an actual customer hunt or verified stock.</p>
+<div class="example">
+<div class="side"><div class="pill">ILLUSTRATIVE PART PASSPORT / NOT A LIVE CASE</div><h3 style="font-size:31px;line-height:1.12;margin-top:25px">Obsolete equipment switch</h3><p>Known: equipment family and damaged switch markings. Missing: full model and wiring diagram. No fitment or stock confirmation.</p><div class="check"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#6a4ce8"/><path d="m6 10 3 3 5-6" stroke="#6a4ce8" stroke-width="2"/></svg> Markings recorded, not assumed</div><div class="check"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#6a4ce8"/><path d="m6 10 3 3 5-6" stroke="#6a4ce8" stroke-width="2"/></svg> Missing evidence clearly identified</div></div>
+<div class="side"><div class="pill">SOURCE STATUS / EVIDENCE LABELS</div><b>01 &nbsp; OEM part path</b><p>Exact number: not yet confirmed. Check revision and serial plate.</p><b>02 &nbsp; Salvage path</b><p>Candidate donor equipment family: needs model confirmation.</p><b>03 &nbsp; Next best action</b><p>Get the wiring diagram and three connector photographs before investigating a replacement.</p></div>
+</div></div></section>
+<section id="pricing"><div class="container"><div class="label">03 / Research plans</div><h2>Choose the depth.<br>Keep the control.</h2><p class="section-lede">One-time research services. Prices don't include replacement parts, shipping, or fabrication. We confirm scope and an approved payment route before charging.</p>
+<div class="pricing">
+<article class="price-card"><div class="tag">Quick / 01</div><div class="price">$19 <small>one-time</small></div><h3>Start with the number.</h3><p>When you know what you're looking for, but it's nowhere obvious.</p><ul><li>Exact and superseded references</li><li>Known vendor and surplus leads</li><li>Open questions and next steps</li></ul><a class="btn ghost" href="#request">Request Quick Hunt →</a></article>
+<article class="price-card featured"><div class="tag">Deep / 02</div><div class="price">$49 <small>one-time</small></div><h3>Widen the search.</h3><p>When discontinued or unclear parts need broader cross-referencing and donor research.</p><ul><li>Quick Hunt research scope</li><li>Donor and salvage possibilities</li><li>Manuals, drawings and alternatives</li></ul><a class="btn primary" href="#request">Request Deep Hunt →</a></article>
+<article class="price-card"><div class="tag">Rescue / 03</div><div class="price">$99 <small>one-time</small></div><h3>For the project stopper.</h3><p>A deeper technical investigation when conventional parts sourcing has stalled.</p><ul><li>Deep Hunt research scope</li><li>Fabrication feasibility routes</li><li>Function-first options and review</li></ul><a class="btn ghost" href="#request">Request Rescue Hunt →</a></article>
+</div><p class="muted" style="font-size:13px;margin-top:21px">Each hunt is an investigation, not a guarantee of availability, compatibility, or a successful repair. Safety-critical parts and substitutions require qualified verification.</p></div></section>
+<section class="shop" id="shops"><div class="container shop-row"><div><div class="label">04 / Repair shop backstop</div><h2>Your technician found the problem.<br>We help chase the part.</h2><p class="lead">Keep the hard cases in motion without signing up for another catalog subscription. Send one stalled repair, with whatever evidence you've already gathered.</p><div class="actions"><a class="btn primary" href="#request">Bring us a shop case →</a></div></div><div class="shop-panel"><h3>Good cases to bring</h3><div class="line">Discontinued appliance or small-engine components</div><div class="line">Vintage automotive, marine and farm parts</div><div class="line">Legacy machinery, controls and electronics</div><div class="line">Model numbers, labels, markings and photos welcome</div><p class="muted" style="font-size:13px;margin-top:18px">No monthly Shop Plan is available at this stage. Referral partnerships require separate written terms.</p></div></div></section>
+<section class="container" id="questions"><div class="label">05 / Straight answers</div><h2>Know what you're buying.</h2><div class="faq">
+<details><summary>Are you selling the replacement part?</summary><p>No. A hunt purchases scoped research. If a supplier or compatible part is identified, inventory, condition, fitment and purchasing terms must be verified separately.</p></details>
+<details><summary>What if you don't find a solution?</summary><p>The research report should distinguish completed checks, plausible leads and unresolved gaps. A hunt does not guarantee a source or a successful repair. Scope and applicable terms are confirmed before payment.</p></details>
+<details><summary>Can I start without a part number?</summary><p>Yes. Equipment model, symptoms, measurements, labels and photos can all help. We tell you what missing evidence would narrow the search.</p></details>
+<details><summary>Can a repair shop use it?</summary><p>Yes. The first goal is to handle a real stalled case. Monthly subscriptions, revenue share and affiliate compensation are not being offered automatically.</p></details>
+</div></section>
+<section class="cta" id="request"><div class="container"><div class="label">06 / Start with the part</div><h2>Let's find the<br>next move.</h2><p>Send the machine/model, part details, what you've tried and the hunt tier you're considering. You'll review your message before sending. We'll confirm scope and payment availability rather than taking an unidentified payment.</p>
+<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=FindMyPart%20%7C%20One%20stalled%20part&amp;body=Machine%20%2F%20make%20%2F%20model%3A%0APart%20or%20problem%3A%0APart%20number%20%2F%20markings%3A%0AWhere%20I%20have%20already%20looked%3A%0AHunt%20tier%20%28Quick%20%2419%20%2F%20Deep%20%2449%20%2F%20Rescue%20%2499%20%2F%20unsure%29%3A%0APhotos%20or%20other%20clues%20%28attach%20in%20email%20app%29%3A%0A%0APlease%20confirm%20scope%20and%20the%20approved%20payment%20route%20before%20charging.">Send a part request ↗</a><a class="btn ghost" href="/offers/findmypart">Review the Quick Hunt offer</a></div>
+<p style="font-size:13px;margin-top:19px">The email option does not automatically submit private information to this website or start payment. Your email application opens a draft you can edit. The owned online checkout may be unavailable until release verification is complete.</p></div></section>
+</main>
+<footer><div class="container"><span>© Evercraft LLC · FindMyPart · Missing part. Not the end.</span><span>Evidence over assumptions · No live stock or fitment promises.</span></div></footer>
+</body></html>
