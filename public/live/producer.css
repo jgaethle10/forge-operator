@@ -25,6 +25,9 @@ button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible
 .exit-film{display:none;z-index:5;position:absolute;right:13px;top:13px;background:#09272be5;color:#eafff9;border:1px solid #90e1c6;padding:10px 12px;border-radius:8px}
 #app.film .header,#app.film .transport,#app.film .tray,#app.film .footer{display:none}
 #app.film .exit-film{display:block}
+#app.portrait .stage{width:min(100%,calc((100dvh - 327px)*.5625));margin-inline:auto;border-inline:1px solid #365562}
+#app.portrait.film .stage{width:min(100%,calc(100dvh*.5625));border:0}
+
 #app.film .screen-badge{bottom:15px;left:15px}
 @media(max-width:850px){.header{min-height:53px}.mode{font-size:8px}.transport{align-items:stretch;flex-direction:column;padding:10px}.now strong{font-size:15px}.controls{justify-content:space-between;flex-wrap:nowrap;overflow-x:auto}.button{font-size:11px;padding:9px}.tray{max-height:110px}.footer{font-size:9px}.footer span{max-width:70%}}
 @media(max-width:480px){.brand{font-size:11px;letter-spacing:.1em}.mode{max-width:50%;line-height:1.5}.tray{max-height:106px}.now{display:none}.transport{min-height:54px}.screen-badge{font-size:9px}}
