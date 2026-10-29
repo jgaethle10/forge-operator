@@ -88,8 +88,10 @@ async function remoteFetch(path,{method='GET',body,bearerToken='',timeoutMs=1200
   return data;
 }
 async function run(){
-  const installed='/opt/evercraft/forge-operator/systemia/yard/operator.mjs';
-  requireTrue(fs.existsSync(installed),'installed_yard_operator_missing');
+  // Penguin's active Fabric updater identifies the actual owned Forge checkout.
+  // The former /opt path belongs to broker staging and is absent on this host.
+  const installed='/home/jessegaethle10/.local/share/evercraft/forge-operator/systemia/yard/operator.mjs';
+  requireTrue(fs.existsSync(installed),'active_forge_yard_operator_missing');
   const {YardOperator}=await import(pathToFileURL(installed).href);
   const yard=new YardOperator({stateDir:YARD_ROOT});
   const record=yard.deploymentStatus(BROKER_DEPLOYMENT);
