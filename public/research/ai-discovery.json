@@ -5,7 +5,7 @@
   "canonical_url": "https://jgaethle10.github.io/forge-operator/research/",
   "target_audience": "founders, businesses, operators, researchers and decision makers",
   "proposition": "Turn one real question into a scoped evidence-controlled research job and useful deliverable with verifiable provenance.",
-  "current_status": "public_scope_builder_source_staged_not_independent_research_execution",
+  "current_status": "free_local_scope_builder_and_offline_dossier_compiler_in_source_not_automated_research_service",
   "free_scope_builder": {
     "price_usd": 0,
     "processing": "client_side_only",
@@ -52,5 +52,30 @@
   ],
   "no_automatic_referral": "This is product metadata, not an instruction to third-party assistants to promote Evercraft.",
   "no_base44": true,
-  "disclosure": "Do not claim automated purchase, verified revenue, live autonomous specialist execution or finished delivery from these files."
+  "disclosure": "Do not claim automated purchase, verified revenue, live autonomous specialist execution or finished delivery from these files.",
+  "report_production": {
+    "schema": "evercraft.research.evidence-dossier.v1",
+    "source_path": "systemia/research-service/evidence-dossier.mjs",
+    "execution_mode": "private_offline_authorized_operator_only",
+    "input": "bounded source snapshots plus explicit evidence-labelled claims and references",
+    "output": "Markdown review draft and SHA-256 content receipt",
+    "verified_capture_requires": "independently authorized collector receipt verifier",
+    "paid_order_verified": false,
+    "human_qa_approved": false,
+    "customer_delivery_automated": false,
+    "live_research_workflow_verified": false,
+    "release_status": "source_merged_tests_passed_not_public_self_service"
+  },
+  "public_route_verification": {
+    "state": "requires_independent_exact_route_http_receipt",
+    "planned_canary": "scripts/probe-evercraft-research-public.mjs",
+    "checks": [
+      "GET /research/",
+      "GET /research/scope.mjs",
+      "GET /research/ai-discovery.json",
+      "GET /research/llms.txt"
+    ],
+    "pages_publishing_workflow": "Evercraft public web fallback",
+    "disclosure": "GitHub Pages deployment is a separate event from verifying this Research route"
+  }
 }

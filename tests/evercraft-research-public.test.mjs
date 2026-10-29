@@ -48,6 +48,10 @@ test("public metadata and UI cannot advertise a mismatched paid offer",()=>{
  assert.equal(discovery.paid_engagement.public_fixed_price,null);
  assert.equal(discovery.free_scope_builder.price_usd,0);
  assert.equal(discovery.free_scope_builder.models_contacted,false);
+ assert.equal(discovery.report_production.release_status,"source_merged_tests_passed_not_public_self_service");
+ assert.equal(discovery.report_production.customer_delivery_automated,false);
+ assert.equal(discovery.report_production.paid_order_verified,false);
+ assert.equal(discovery.public_route_verification.state,"requires_independent_exact_route_http_receipt");
  assert.equal(discovery.free_scope_builder.sources_fetched,false);
  assert.ok(discovery.capabilities_reused.some(x=>x.name.includes("TOWI")));
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)];
