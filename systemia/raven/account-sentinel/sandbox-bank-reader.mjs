@@ -19,7 +19,7 @@ const cleanAccount = raw => ({
   currency: currency(raw?.currency),
   account_type: ['checking', 'savings', 'credit'].includes(raw?.account_type)
     ? raw.account_type : null,
-  last4: typeof raw?.last4 === 'string' && /^\\d{4}$/.test(raw.last4)
+  last4: typeof raw?.last4 === 'string' && /^\d{4}$/.test(raw.last4)
     ? raw.last4 : null,
 });
 function project(operation, raw) {
@@ -41,7 +41,7 @@ function project(operation, raw) {
     const transactions = raw.transactions.map(t => {
       if (!t || typeof t !== 'object' || !currency(t.currency) ||
           numeric(t.amount) === null ||
-          typeof t.date !== 'string' || !/^\\d{4}-\\d{2}-\\d{2}$/.test(t.date))
+          typeof t.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(t.date))
         fail();
       return Object.freeze({
         amount: t.amount, currency: t.currency, date: t.date,
@@ -128,7 +128,7 @@ export function createSandboxBankReader({
           environment: 'sandbox',
         });
         if (typeof token !== 'string' || token.length < 8 ||
-            token.length > 4096 || /[\\s\\r\\n]/.test(token)) fail();
+            token.length > 4096 || /[\s\r\n]/.test(token)) fail();
         controller = new AbortController();
         const expiry = new Promise((_, reject) => {
           timer = setTimeout(() => {
