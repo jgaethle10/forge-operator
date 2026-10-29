@@ -341,6 +341,12 @@ export function renderOffers(capabilities=[]){
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
     '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    '<section class="offer-panel" aria-label="ForensiScope long-media review">',
+    '<div class="eyebrow">ForensiScope · human-confirmed media review</div>',
+    '<h2>Too much footage for your usual AI tools?</h2>',
+    '<p>ForensiScope helps organize long authorized video and audio into traceable transcripts, timestamps, and repeated-segment findings. Published tiers start at $15 for up to five minutes of footage; secure intake, scope, availability and payment are confirmed before work begins.</p>',
+    '<div class="actions"><a class="btn primary" href="/forensiscope">See ForensiScope review tiers</a></div>',
+    '</section>',
     // Scope-reviewed human services remain separate from native checkout-authorized offerings.
     '<section class="offer-panel" aria-label="Commercial Studio introductory creative service">',
     '<div class="eyebrow">Commercial Studio · human-reviewed introductory service</div>',
