@@ -1,0 +1,150 @@
+{
+  "schema": "evercraft.signal.incident.v1",
+  "id": "us-sc-savannah-river-laboratory-fire-2026-10-28",
+  "title": "Savannah River National Laboratory fire",
+  "location": {
+    "name": "Savannah River Site",
+    "region": "Aiken County, South Carolina, United States",
+    "precision": "site-level",
+    "coordinates": null
+  },
+  "incident_date": "2026-10-28",
+  "editorial_snapshot_date": "2026-10-29",
+  "monitoring_state": "static_editorial_case_not_live",
+  "official_emergency_status": "terminated",
+  "public_risk_assessment": "No detectable contamination reported in site radiological surveys; independent off-site monitoring completeness not established in this case file.",
+  "verified": [
+    {
+      "claim": "A fire occurred at the Savannah River National Laboratory.",
+      "source_ids": [
+        "srs-2",
+        "srs-3"
+      ]
+    },
+    {
+      "claim": "Site Area Emergency ended at 9:45 p.m. EDT on October 28; protective actions were lifted.",
+      "source_ids": [
+        "srs-3"
+      ]
+    },
+    {
+      "claim": "The site reported radiological surveys showed no detectable levels of contamination.",
+      "source_ids": [
+        "srs-3"
+      ]
+    },
+    {
+      "claim": "During the incident, site authorities restricted rail, river and air traffic.",
+      "source_ids": [
+        "srs-2"
+      ]
+    },
+    {
+      "claim": "One worker was treated for minor injuries, according to a DOE spokesperson quoted by Reuters.",
+      "source_ids": [
+        "reuters-29"
+      ]
+    }
+  ],
+  "reported_not_confirmed": [
+    {
+      "claim": "An emergency dispatch reportedly used the phrase 'unfiltered ground-level radiological release'. This has not been independently established as an off-site exposure or release.",
+      "source_ids": [
+        "wrdw-28"
+      ],
+      "note": "Do not substitute a dispatch report for monitoring measurements."
+    },
+    {
+      "claim": "Public site releases differ on the declaration time: 5:39 p.m. in release #2 and 5:07 p.m. in release #3. The discrepancy is unresolved in this snapshot.",
+      "source_ids": [
+        "srs-2",
+        "srs-3"
+      ]
+    }
+  ],
+  "unknowns": [
+    "Fire cause and originating material, absent a later documented official determination.",
+    "Underlying sampling locations, detection limits and timestamped radiological survey readings.",
+    "Whether the initial dispatch phrase was a precautionary classification, measured emission or documentation error.",
+    "Whether an independent regulator published a complete event-specific sampling assessment."
+  ],
+  "timeline": [
+    {
+      "local_time": "2026-10-28T17:07:00-04:00",
+      "event": "Emergency declaration time later stated in site release #3.",
+      "status": "official_statement_conflicts",
+      "source_ids": [
+        "srs-3"
+      ]
+    },
+    {
+      "local_time": "2026-10-28T17:39:00-04:00",
+      "event": "Emergency declaration time stated in site release #2.",
+      "status": "official_statement_conflicts",
+      "source_ids": [
+        "srs-2"
+      ]
+    },
+    {
+      "local_time": "2026-10-28T19:30:00-04:00",
+      "event": "Site release #2 reports the fire extinguished; restrictions ongoing.",
+      "status": "official_update",
+      "source_ids": [
+        "srs-2"
+      ]
+    },
+    {
+      "local_time": "2026-10-28T21:45:00-04:00",
+      "event": "Site Area Emergency terminated and protective actions lifted.",
+      "status": "official_update",
+      "source_ids": [
+        "srs-3"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "srs-2",
+      "kind": "primary",
+      "organization": "Savannah River Site",
+      "title": "Emergency Response Event: Release #2",
+      "published_date": "2026-10-28",
+      "url": "https://public.srs.gov/2026/10/savannah-river-site-emergency-response-event-2/"
+    },
+    {
+      "id": "srs-3",
+      "kind": "primary",
+      "organization": "Savannah River Site",
+      "title": "Emergency Response Event: Release #3",
+      "published_date": "2026-10-28",
+      "url": "https://public.srs.gov/2026/10/savannah-river-site-emergency-response-event-news-release-3/"
+    },
+    {
+      "id": "wrdw-28",
+      "kind": "reporting",
+      "organization": "WRDW / WAGT",
+      "title": "Reporting on dispatch wording and emergency response",
+      "published_date": "2026-10-28",
+      "url": "https://www.wistv.com/2026/10/29/srs-ends-site-area-emergency-after-lab-fire/"
+    },
+    {
+      "id": "reuters-29",
+      "kind": "reporting",
+      "organization": "Reuters",
+      "title": "One injured in fire; no contamination reported",
+      "published_date": "2026-10-29",
+      "url": "https://www.reuters.com/world/us/one-injured-fire-south-carolina-nuclear-site-no-contamination-reported-2026-10-29/"
+    }
+  ],
+  "methodology": {
+    "principles": [
+      "Missing data is not zero.",
+      "A restriction zone is not a measured contamination zone.",
+      "Official statements are attributed, not asserted as independent sensor readings.",
+      "Reported wording is not proof of release.",
+      "Corroboration requires independent upstream sources, not syndicated repetitions.",
+      "This snapshot is not emergency guidance and is not real-time monitoring."
+    ],
+    "emergency_guidance": "For urgent protective instructions, follow your local emergency management authority."
+  }
+}
