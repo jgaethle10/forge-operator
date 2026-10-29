@@ -23,12 +23,37 @@ export function permitGeojsonQuery({county='Grant',offset=0,pageSize=100,countOn
   return DEF.url+'/query?'+p;
 }
 async function getJSON(url,fetchImpl,signal){
-  const response=await fetchImpl(url,{headers:{accept:'application/json,application/geo+json'},signal});
-  if(!response?.ok)throw new Error('Permit source HTTP '+(response?.status??'unknown'));
-  const body=await response.json();
-  if(body?.error||!body||typeof body!=='object'||Array.isArray(body))
-    throw new Error('Permit source returned invalid JSON');
-  return body;
+  for(let attempt=0;attempt<3;attempt++){
+    try{
+      const response=await fetchImpl(url,{headers:{accept:'application/json,application/geo+json'},signal});
+      if(!response?.ok){
+        const status=response?.status??'unknown';
+        if([429,500,502,503,504].includes(status)&&attempt<2){
+          await new Promise(resolve=>setTimeout(resolve,(attempt+1)*400));
+          continue;
+        }
+        throw new Error('Permit source HTTP '+status);
+      }
+      const body=await response.json();
+      if(body?.error){
+        const code=Number(body.error.code);
+        const detail=String(body.error.message??'unspecified').slice(0,180);
+        if([429,500,502,503,504].includes(code)&&attempt<2){
+          await new Promise(resolve=>setTimeout(resolve,(attempt+1)*400));
+          continue;
+        }
+        throw new Error('WA DNR ArcGIS '+(Number.isFinite(code)?code:'error')+': '+detail);
+      }
+      if(!body||typeof body!=='object'||Array.isArray(body))
+        throw new Error('Permit source returned invalid JSON shape');
+      return body;
+    }catch(error){
+      if(signal?.aborted)throw error;
+      if(attempt>=2||!/fetch failed|network|connection|timeout/i.test(String(error?.message??'')))throw error;
+      await new Promise(resolve=>setTimeout(resolve,(attempt+1)*400));
+    }
+  }
+  throw new Error('Permit source unavailable after bounded read-only retries');
 }
 export async function fetchGrantPermitPoints({fetchImpl=fetch,pageSize=100,
    now=()=>new Date().toISOString(),signal=AbortSignal.timeout(90000)}={}){
