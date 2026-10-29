@@ -143,6 +143,96 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
   .navlinks{display:none}.hero{padding-top:48px}.trust{grid-template-columns:repeat(2,1fr)}
   .grid,.prompts,.capability-grid,.detail-grid{grid-template-columns:1fr}
 }
+/* Website Audit editorial checkout. Localized so other Fabric pages retain their identity. */
+.audit-editorial{isolation:isolate}
+.audit-editorial .audit-first-screen{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(350px,.94fr);align-items:center;gap:clamp(24px,4vw,72px);padding:58px 0 68px}
+.audit-editorial .audit-intro{min-width:0}
+.audit-editorial .audit-overline{font-size:11px;font-weight:750;letter-spacing:.18em;color:#a5ceff;text-transform:uppercase;margin:0;line-height:1.8}
+.audit-editorial .audit-signal{display:inline-block;width:8px;height:8px;margin-right:10px;vertical-align:1px;border-radius:50%;background:#78ffd6;box-shadow:0 0 0 4px rgba(120,255,214,.1)}
+.audit-editorial h1{max-width:730px;font-weight:750;font-size:clamp(48px,5.2vw,74px);letter-spacing:-.058em;line-height:1.045;margin:28px 0 22px;text-wrap:balance}
+.audit-editorial h1 em{font-style:normal;color:#a8ddff}
+.audit-editorial .audit-dek{max-width:540px;font-size:clamp(17px,1.6vw,21px);line-height:1.63;color:#c2d0e1;margin:0}
+.audit-editorial .audit-microfacts{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.audit-editorial .audit-microfacts span{font-size:12px;padding:8px 12px;border:1px solid #345071;border-radius:30px;color:#c7d7e9;white-space:nowrap}
+.audit-editorial .audit-offer-card{position:relative;min-width:0;border:1px solid #34506f;background:linear-gradient(165deg,#111e33 0%,#0a1426 80%);border-radius:22px;padding:clamp(22px,2.7vw,34px);box-shadow:0 20px 90px rgba(0,0,0,.3)}
+.audit-editorial .audit-offer-card:before{content:"";position:absolute;top:0;left:26px;width:100px;height:2px;background:linear-gradient(90deg,#98d7ff,transparent)}
+.audit-editorial .audit-card-heading{display:flex;justify-content:space-between;gap:12px;color:#99adca;font-size:10px;letter-spacing:.13em;font-weight:750}
+.audit-editorial .audit-card-price{display:flex;align-items:baseline;gap:18px;margin:28px 0 12px}
+.audit-editorial .audit-card-price strong{font-size:clamp(50px,5vw,72px);font-weight:750;letter-spacing:-.065em;line-height:1}
+.audit-editorial .audit-card-price div{display:flex;flex-direction:column;gap:5px}
+.audit-editorial .audit-card-price b{font-size:17px;font-weight:700}
+.audit-editorial .audit-card-price span{font-size:12px;color:#adc0d7}
+.audit-editorial .audit-card-description{font-size:14px;line-height:1.56;color:#c4d1e2;margin:0}
+.audit-editorial .audit-checkout{display:grid;gap:9px;margin:22px 0 0}
+.audit-editorial .audit-checkout label{font-size:13px;color:#f0f6ff;font-weight:700;margin-top:4px}
+.audit-editorial .audit-checkout label span{font-size:12px;color:#9cb2ce;font-weight:450;margin-left:8px}
+.audit-editorial .audit-checkout input{display:block;width:100%;min-width:0;min-height:46px;border-radius:11px;border:1px solid #4b6280;background:#080f1d;color:#f7faff;font:inherit;font-size:15px;padding:12px 14px;outline:none}
+.audit-editorial .audit-checkout input::placeholder{color:#8499b4}
+.audit-editorial .audit-checkout input:focus-visible{border-color:#9bd8ff;box-shadow:0 0 0 3px rgba(105,179,242,.2)}
+.audit-editorial .audit-cta{margin-top:13px;min-height:50px;padding:13px 18px;display:flex;justify-content:space-between;gap:12px;width:100%;font-size:14px;background:linear-gradient(110deg,#286cdd,#70bafc);color:#fff;letter-spacing:.005em}
+.audit-editorial .audit-cta:hover{filter:brightness(1.1)}
+.audit-editorial .audit-cta:focus-visible{outline:3px solid #c0edff;outline-offset:3px}
+.audit-editorial .audit-cta span{font-size:19px;line-height:1}
+.audit-editorial .checkout-note{margin:5px 0 0;color:#a4b6cc;font-size:11px;line-height:1.6;max-width:none}
+.audit-editorial .audit-story{position:relative;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(26px,5vw,72px);align-items:center;padding:64px 0 76px;border-top:1px solid #1d314a}
+.audit-editorial h2{font-size:clamp(32px,3.2vw,48px);line-height:1.13;letter-spacing:-.046em;margin:15px 0 16px;text-wrap:balance}
+.audit-editorial .audit-story-copy>p:not(.audit-overline){font-size:16px;color:#b9cce1;line-height:1.8;max-width:430px}
+.audit-editorial .audit-text-link{font-size:13px;color:#b1dfff;font-weight:750;text-decoration:none;display:inline-flex;gap:15px;border-bottom:1px solid #50789e;padding-bottom:7px;margin-top:22px}
+.audit-editorial .audit-text-link:focus-visible{outline:2px solid #9bd8ff;outline-offset:3px}
+.audit-editorial .audit-journey{position:relative;border:1px solid #315072;border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 90% 20%,rgba(72,136,213,.22),transparent 50%),linear-gradient(145deg,#0d1a2e,#07101e);padding:clamp(24px,3vw,40px)}
+.audit-editorial .audit-journey-header{display:flex;justify-content:space-between;gap:10px;letter-spacing:.15em;font-size:10px;font-weight:750;color:#a1bedc}
+.audit-editorial .audit-path{position:relative;display:grid;gap:0;margin:32px 0 18px}
+.audit-editorial .audit-path-line{position:absolute;left:21px;top:22px;bottom:22px;width:1px;background:linear-gradient(180deg,#79d5e5,#5b8bf0)}
+.audit-editorial .audit-path-step{display:flex;gap:23px;align-items:center;position:relative;padding:14px 0}
+.audit-editorial .audit-path-step>b{display:flex;align-items:center;justify-content:center;flex:0 0 44px;height:44px;background:#102742;border:1px solid #6099bc;color:#b9f1ff;border-radius:50%;font-size:11px;letter-spacing:.05em}
+.audit-editorial .audit-path-step div{display:grid;gap:5px}
+.audit-editorial .audit-path-step strong{font-size:22px;letter-spacing:-.025em}
+.audit-editorial .audit-path-step small{font-size:13px;color:#afc5de}
+.audit-editorial .audit-journey-disclaimer{font-size:11px;color:#9aadc4;margin:0;line-height:1.6}
+.audit-editorial .audit-detail{padding:65px 0 90px;border-top:1px solid #1d314a}
+.audit-editorial .audit-detail h2{margin:10px 0 30px}
+.audit-editorial .audit-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.audit-editorial .audit-detail-panel{padding:26px 28px;border:1px solid #29425c;border-radius:15px;background:#0b1525}
+.audit-editorial .audit-detail-number{font-size:11px;letter-spacing:.12em;color:#9bceef}
+.audit-editorial .audit-detail-panel h3{font-size:23px;letter-spacing:-.025em;margin:18px 0 12px}
+.audit-editorial .audit-detail-panel ul{padding-left:20px;margin:0}
+.audit-editorial .audit-detail-panel li{font-size:15px;line-height:1.8;color:#c1d2e4;padding-left:3px}
+.audit-editorial .audit-more-options{margin-top:24px;border:1px solid #2d4967;border-radius:12px;padding:16px 19px;color:#c1d5ea}
+.audit-editorial .audit-more-options summary{cursor:pointer;font-size:14px;font-weight:700}
+.audit-editorial .audit-more-options p{color:#acbed3;line-height:1.7;font-size:13px;margin-bottom:0}
+.audit-editorial .audit-bottom-note{color:#95a9c2;font-size:12px;line-height:1.65;max-width:670px;margin-top:24px}
+@media(max-width:900px){
+  .audit-editorial .audit-first-screen{gap:24px;grid-template-columns:minmax(0,1fr);padding:23px 0 52px}
+  .audit-editorial h1{font-size:clamp(37px,8vw,54px);margin:14px 0 12px;line-height:1.035}
+  .audit-editorial .audit-dek{font-size:16px;line-height:1.55}
+  .audit-editorial .audit-microfacts{margin-top:15px;gap:7px}
+  .audit-editorial .audit-microfacts span{font-size:10px;padding:6px 8px}
+  .audit-editorial .audit-offer-card{padding:20px}
+  .audit-editorial .audit-card-price{margin:14px 0 8px}
+  .audit-editorial .audit-card-price strong{font-size:54px}
+  .audit-editorial .audit-checkout{margin-top:15px;gap:7px}
+  .audit-editorial .audit-checkout input{min-height:44px}
+  .audit-editorial .audit-cta{margin-top:7px}
+  .audit-editorial .audit-story{grid-template-columns:minmax(0,1fr);padding:46px 0;gap:20px}
+  .audit-editorial .audit-detail{padding:45px 0 70px}
+}
+@media(max-width:540px){
+  .audit-editorial .audit-card-heading{font-size:9px}
+  .audit-editorial .audit-first-screen{gap:17px}
+  .audit-editorial h1{font-size:clamp(34px,9.1vw,42px)}
+  .audit-editorial .audit-microfacts{margin-top:11px}
+  .audit-editorial .audit-microfacts span{font-size:10px}
+  .audit-editorial .audit-offer-card{padding:17px}
+  .audit-editorial .audit-card-description{font-size:13px}
+  .audit-editorial .audit-checkout label span{font-size:11px}
+  .audit-editorial .audit-detail-grid{grid-template-columns:1fr}
+  .audit-editorial .audit-journey{padding:22px}
+}
+@media(prefers-reduced-motion:reduce){.audit-editorial *, .audit-editorial *::before{transition:none!important;animation:none!important}}
+.audit-editorial .audit-assisted{display:grid;gap:12px;margin:22px 0 0;padding:0}
+.audit-editorial .audit-assisted h3{margin:0;font-size:19px;letter-spacing:-.02em}
+.audit-editorial .audit-assisted p{margin:0;color:#b7c8da;font-size:13px;line-height:1.65}
+.audit-editorial .audit-assisted .audit-cta{width:100%;text-decoration:none}
 </style>
 </head>
 <body>
@@ -199,8 +289,8 @@ const OFFER_PAGE_COPY={
     slug:'website-audit',
     purchase_key:'website-audit-quick-win',
     eyebrow:'Website Audit',
-    headline:"Your website is getting attention. Why isn't it getting customers?",
-    lede:'We scan the public site and show you the five fixes worth making first.',
+    headline:"See your website through their eyes.",
+    lede:'A focused public website review with five prioritized fixes and clearer next actions.',
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
     heroVisual:'/visuals/website-audit-attention/poster-hero-wide.svg',
     heroVisualMobile:'/visuals/website-audit-attention/poster-feed.svg',
@@ -370,6 +460,78 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const checkoutHeld=!checkoutConfigured;
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
+  const webOffer=copy.slug==='website-audit';
+  if(webOffer){
+    // Dedicated, editorial first-screen for the public Website Audit offer.
+    // Same consent, idempotency and payments POST contract as the generic offer page.
+    const name='Quick Win Audit';
+    return shell('Website Audit · Evercraft',[
+      '<main class="audit-editorial">',
+      '<section class="audit-first-screen" aria-labelledby="audit-title">',
+      '<div class="audit-intro">',
+      '<p class="audit-overline"><span class="audit-signal" aria-hidden="true"></span> SYSTEMIA / EXPERIENCE REVIEW</p>',
+      '<h1 id="audit-title">See your website<br><em>through their eyes.</em></h1>',
+      '<p class="audit-dek">A clearer look at your public website. Find what might confuse visitors and get five prioritized fixes to consider first.</p>',
+      '<div class="audit-microfacts"><span>Public pages only</span><span>Five priority fixes</span><span>Clear next actions</span></div>',
+      '</div>',
+      '<div class="audit-offer-card" aria-label="Quick Win Audit order form">',
+      '<div class="audit-card-heading"><span>THE FIRST STEP</span><span>'+(checkoutHeld?'ONLINE CHECKOUT ON HOLD':'ONE-TIME PURCHASE')+'</span></div>',
+      '<div class="audit-card-price"><strong>'+escapeHtml(price)+'</strong><div><b>'+escapeHtml(name)+'</b><span>No subscription</span></div></div>',
+      '<p class="audit-card-description">A focused public-site review. You get a short, prioritized list rather than a wall of unexplained scores.</p>',
+      ...(checkoutHeld ? [
+      '<section class="audit-assisted" aria-label="Assisted invoice request">',
+      '<h3>Online checkout is temporarily unavailable.</h3>',
+      '<p>The Quick Win Audit is $49, but we cannot open an online checkout until its payment route is verified. Request an approved manual invoice if you would like to continue.</p>',
+      '<a class="btn primary audit-cta" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request an approved invoice <span aria-hidden="true">↗</span></a>',
+      '<p>Email opens in your own mail app for review and sending. We do not create an order, collect money or schedule fulfillment from this page.</p>',
+      '</section>',
+    ] : [
+      '<form class="checkout-form audit-checkout" method="post" action="/api/offers/website-audit/checkout">',
+      '<input type="hidden" name="user_confirmed" value="true">',
+      '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
+      '<label for="offer-customer-email">Your email <span>For your receipt and delivery</span></label>',
+      '<input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@business.com" maxlength="200" required aria-required="true">',
+      '<label for="offer-website-url">Your website <span>Include https://</span></label>',
+      '<input id="offer-website-url" name="website_url" type="url" autocomplete="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true">',
+      '<button class="btn primary audit-cta" type="submit">Continue to checkout · '+escapeHtml(price)+' <span aria-hidden="true">↗</span></button>',
+      '<div class="checkout-note">You are not charged by this form. Evercraft Payments prepares a separate checkout; payment and delivery follow verification.</div>',
+      '</form>',
+    ]),
+      '</div>',
+      '</section>',
+      '<section class="audit-story" aria-label="What the audit examines">',
+      '<div class="audit-story-copy"><p class="audit-overline">LESS GUESSWORK. MORE CLARITY.</p>',
+      '<h2>Look past the homepage.</h2>',
+      '<p>Visitors make dozens of small decisions before they ever reach out. We examine the public experience and explain which fixes are worth considering first. We do not claim access to your private analytics or guarantee more customers.</p>',
+      '<a class="audit-text-link" href="/capabilities/'+encodeURIComponent(item.public_id)+'">Explore the technical capability <span aria-hidden="true">↗</span></a>',
+      '</div>',
+      '<div class="audit-journey" role="img" aria-label="Conceptual three-step process: inspect the public website, prioritize useful fixes, choose next actions">',
+      '<div class="audit-journey-header"><span>THE VISITOR JOURNEY</span><span>ILLUSTRATIVE</span></div>',
+      '<div class="audit-path"><span class="audit-path-line" aria-hidden="true"></span>',
+      '<div class="audit-path-step"><b>01</b><div><strong>Inspect</strong><small>See the public experience</small></div></div>',
+      '<div class="audit-path-step"><b>02</b><div><strong>Prioritize</strong><small>Identify five useful fixes</small></div></div>',
+      '<div class="audit-path-step"><b>03</b><div><strong>Act</strong><small>Choose a clear next step</small></div></div>',
+      '</div>',
+      '<p class="audit-journey-disclaimer">Process illustration. Not a finding about your site.</p>',
+      '</div>',
+      '</section>',
+      '<section class="audit-detail" aria-label="Audit deliverables">',
+      '<div class="audit-detail-intro"><p class="audit-overline">NO MYSTERY DELIVERABLES</p><h2>Know what happens next.</h2></div>',
+      '<div class="audit-detail-grid">',
+      '<article class="audit-detail-panel"><span class="audit-detail-number">01 / THE INPUT</span><h3>What you send</h3><ul>'+send+'</ul></article>',
+      '<article class="audit-detail-panel"><span class="audit-detail-number">02 / THE OUTPUT</span><h3>What you get</h3><ul>'+get+'</ul></article>',
+      '</div>',
+      '<details class="audit-more-options"><summary>Other audit options and pricing</summary><p>'+escapeHtml(String(item.pricing||''))+'</p></details>',
+      '<div class="audit-bottom-note">Evercraft Payments prepares the checkout. No order is treated as paid and no fulfillment is released without verified settlement.</div>',
+      '</section>',
+      '</main>'
+    ].join('\n'),{
+      description:'Review your public website with Evercraft and get five prioritized fixes. One-time Quick Win Audit from '+price+'.',
+      canonical:'/offers/website-audit',ogType:'website',
+      ogImage:'/visuals/website-audit-attention/offer-og-v2.svg',
+    });
+  }
+
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
