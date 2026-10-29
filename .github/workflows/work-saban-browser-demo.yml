@@ -1,0 +1,29 @@
+name: Work Saban public example truth gate
+on:
+  pull_request:
+    paths:
+      - 'public/work-saban/**'
+      - 'tests/work-saban-browser-demo.test.mjs'
+      - '.github/workflows/work-saban-browser-demo.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/work-saban/**'
+      - 'tests/work-saban-browser-demo.test.mjs'
+      - '.github/workflows/work-saban-browser-demo.yml'
+permissions:
+  contents: read
+jobs:
+  true-browser-example:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax and synthetic report math
+        run: |
+          node --check public/work-saban/demo/engine.mjs
+          node --check public/work-saban/demo/demo.js
+          node --test tests/work-saban-browser-demo.test.mjs
