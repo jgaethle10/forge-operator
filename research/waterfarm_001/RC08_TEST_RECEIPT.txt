@@ -1,0 +1,35 @@
+test_13_days_hold (test_field_audit.TestFieldBaseline.test_13_days_hold) ... ok
+test_baseline_does_not_infer_leak_or_saving (test_field_audit.TestFieldBaseline.test_baseline_does_not_infer_leak_or_saving) ... ok
+test_boundary_only_produces_unexplained (test_field_audit.TestFieldBaseline.test_boundary_only_produces_unexplained) ... ok
+test_calibration_ref_required (test_field_audit.TestFieldBaseline.test_calibration_ref_required) ... ok
+test_continuity_hold (test_field_audit.TestFieldBaseline.test_continuity_hold) ... ok
+test_covered_value_negative_large_hold (test_field_audit.TestFieldBaseline.test_covered_value_negative_large_hold) ... ok
+test_documented_bad_input (test_field_audit.TestFieldBaseline.test_documented_bad_input) ... ok
+test_duplicate_hold (test_field_audit.TestFieldBaseline.test_duplicate_hold) ... ok
+test_gap_hold (test_field_audit.TestFieldBaseline.test_gap_hold) ... ok
+test_infinite_hold (test_field_audit.TestFieldBaseline.test_infinite_hold) ... ok
+test_meter_swap_hold (test_field_audit.TestFieldBaseline.test_meter_swap_hold) ... ok
+test_missing_value_not_zero (test_field_audit.TestFieldBaseline.test_missing_value_not_zero) ... ok
+test_negative_hold (test_field_audit.TestFieldBaseline.test_negative_hold) ... ok
+test_partial_boundary_no_imbalance (test_field_audit.TestFieldBaseline.test_partial_boundary_no_imbalance) ... ok
+test_reset_hold (test_field_audit.TestFieldBaseline.test_reset_hold) ... ok
+test_wrong_kind_hold (test_field_audit.TestFieldBaseline.test_wrong_kind_hold) ... ok
+test_zero_volume_energy_intensity_unknown (test_field_audit.TestFieldBaseline.test_zero_volume_energy_intensity_unknown) ... ok
+test_complete_three_year_gate (test_multi_year_gate.TestNoaaMultiyear.test_complete_three_year_gate) ... ok
+test_empty_hold (test_multi_year_gate.TestNoaaMultiyear.test_empty_hold) ... ok
+test_hash_present (test_multi_year_gate.TestNoaaMultiyear.test_hash_present) ... ok
+test_invalid_year_hold (test_multi_year_gate.TestNoaaMultiyear.test_invalid_year_hold) ... ok
+test_missing_2025_prevents_all_clear (test_multi_year_gate.TestNoaaMultiyear.test_missing_2025_prevents_all_clear) ... ok
+test_nonconsecutive_years_fail (test_multi_year_gate.TestNoaaMultiyear.test_nonconsecutive_years_fail) ... ok
+test_offline_fetch_defaults_and_receipt (test_multi_year_gate.TestNoaaMultiyear.test_offline_fetch_defaults_and_receipt) ... ok
+test_offline_missing_input_hold (test_multi_year_gate.TestNoaaMultiyear.test_offline_missing_input_hold) ... ok
+test_quality_flag_hold (test_multi_year_gate.TestNoaaMultiyear.test_quality_flag_hold) ... ok
+test_url_pinned (test_multi_year_gate.TestNoaaMultiyear.test_url_pinned) ... ok
+test_known_station_no_real_2022_data_supplied (test_multi_year_gate.TestObservedChaining.test_known_station_no_real_2022_data_supplied) ... ok
+test_missing_2025_stops_actual_chain (test_multi_year_gate.TestObservedChaining.test_missing_2025_stops_actual_chain) ... ok
+test_three_years_chained_real_dates_with_synthetic_values (test_multi_year_gate.TestObservedChaining.test_three_years_chained_real_dates_with_synthetic_values) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 0.038s
+
+OK
