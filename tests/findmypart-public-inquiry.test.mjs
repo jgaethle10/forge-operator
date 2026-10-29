@@ -210,3 +210,32 @@ test('private owner CLI lists only references, reveals PII only with explicit fl
   assert.equal(shown.agent_execution_authorized,false);
  }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
 });
+
+test('recovery window ignores already delivered history and still finds the next orphan',async()=>{
+ const dir=temp();const rt=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+  findMyPartLeadsDir:dir,findMyPartIntakeKey:key,
+ });
+ try{
+  for(const email of ['first@example.test','second@example.test']){
+   assert.equal((await post(rt.url,{...brief,email})).status,201);
+  }
+ }finally{await rt.close()}
+ const refs=fs.readdirSync(dir).filter(n=>/^FMP-[A-F0-9]{24}\.enc$/.test(n)).sort().map(n=>n.slice(0,-4));
+ assert.equal(refs.length,2);
+ const [delivered,orphan]=refs;
+ const alertDir=path.join(dir,'alert-outbox');
+ fs.unlinkSync(path.join(alertDir,delivered+'.json'));
+ fs.unlinkSync(path.join(alertDir,orphan+'.json'));
+ const receipts=path.join(dir,'alert-receipts');
+ fs.mkdirSync(receipts,{mode:0o700});
+ fs.writeFileSync(path.join(receipts,delivered+'.json'),
+  JSON.stringify({reference:delivered,relay_inboxed:true,human_seen:false})+'\n',{mode:0o600});
+ try{
+  const fixed=reconcileFindMyPartInquiryOutbox({storeDir:dir,key,limit:1});
+  assert.equal(fixed.restored,1);
+  assert.equal(fixed.examined,1);
+  assert.equal(fs.existsSync(path.join(alertDir,orphan+'.json')),true);
+  assert.equal(fs.existsSync(path.join(alertDir,delivered+'.json')),false);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
