@@ -300,6 +300,14 @@ producer/consumer filesystem bridge for the commissioned receiver and Raven:
   `createOwnedCommissionedTeamGate` already reads this same exact filename
   and re-verifies the evidence independently.
 
+The store also supplies `claimWorkerDispatch`, which atomically writes an
+owner-only, fsynced `claimed-worker/<sha256(request_id + ":" + reviewer_id)>.json`
+**before any worker compute**. It binds the claimed role and signed preflight
+ID/roster digest. A retry after an interrupted or completed attempt is held,
+including across service restarts. Clearing a claim to retry would require a
+separately authorized recovery process with independently verified side-effect
+state, not an automatic delete-and-run.
+
 The store is a **private verified transport**, not a worker runner or signer.
 There is no default `authorizeLease`, `dispatchWorker`, or live
 production enrollment. Existing Node002 shadow restrictions remain unchanged.
