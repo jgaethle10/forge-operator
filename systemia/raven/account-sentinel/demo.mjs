@@ -2,6 +2,7 @@ import { generateKeyPairSync, sign } from 'node:crypto';
 import { signedGrantMessage } from './policy.mjs';
 import { createAccountSentinelGateway } from './gateway.mjs';
 import { createDemoAuditLedger } from './ledger.mjs';
+import { createSandboxBankReader } from './sandbox-bank-reader.mjs';
 
 export const DEMO_SCENARIOS = Object.freeze([
   { id: 'authorized', label: 'Authorized balance read', detail: 'Properly signed, narrowly scoped request' },
@@ -58,6 +59,31 @@ export async function runDemoScenario(scenarioId) {
   }
   const audit = createDemoAuditLedger();
   const stats = { provider_reads: 0, identities: 0, grants: 0, connectors: 0, revocations: 0 };
+  // Saban exercises the actual read-only sandbox egress adapter, not a direct
+  // synthetic balance return. Credentials originate from this private fixture.
+  const sandboxReader = createSandboxBankReader({
+    connector: {
+      connector_id: 'demo-bank-oauth', status: 'active', environment: 'sandbox',
+      sandbox_only: true, approved: true, read_only: true, mode: 'delegated_oauth',
+      api_origin: 'https://sandbox.examplebank.test', scopes: ['balances:read'],
+    },
+    allowedSandboxOrigins: ['https://sandbox.examplebank.test'],
+    tokenVault: { getAccessToken: async () => 'SYNTHETIC_DEMO_TOKEN_DO_NOT_USE' },
+    transport: async (url, options) => {
+      stats.provider_reads++;
+      if (scenarioId === 'provider_offline') throw Error('synthetic_provider_unavailable');
+      if (url !== 'https://sandbox.examplebank.test/v1/accounts/demo-checking/balances' ||
+          options.method !== 'GET' || options.redirect !== 'error' ||
+          options.headers.authorization !== 'Bearer SYNTHETIC_DEMO_TOKEN_DO_NOT_USE') {
+        throw Error('synthetic_provider_request_invalid');
+      }
+      return Response.json({
+        account_label: 'Simulated checking', currency: 'USD',
+        available_balance: 2847.22, simulated: true,
+        private_token: 'FAKE_SECRET_MUST_NOT_APPEAR_IN_GATEWAY_RESULTS',
+      });
+    },
+  });
   const gateway = createAccountSentinelGateway({
     trustedPublicKeys: { 'demo-issuer': publicPem }, clock: () => now,
     identity: { resolve: async session => {
@@ -99,17 +125,7 @@ export async function runDemoScenario(scenarioId) {
           ? ['demo-consent-1'] : []),
       };
     } },
-    bankReader: { read: async request => {
-      stats.provider_reads++;
-      if (scenarioId === 'provider_offline') throw new Error('simulated_provider_outage');
-      if (request.operation !== 'balance.read' || request.account_ref !== 'demo-checking') {
-        throw new Error('unsupported_simulated_read');
-      }
-      return {
-        account_label: 'Simulated checking', currency: 'USD',
-        available_balance: 2847.22, simulated: true,
-      };
-    } },
+    bankReader: sandboxReader,
     audit: { append: async event => {
       if (scenarioId === 'audit_offline' ||
           (scenarioId === 'audit_after_read' && event.kind === 'read_completed')) {
