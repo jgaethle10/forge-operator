@@ -5,6 +5,8 @@ on:
     paths:
       - "systemia/competition/**"
       - "systemia/raven/provider-secret-boundary.mjs"
+      - "systemia/raven/custody-courier.mjs"
+      - "systemia/raven/custody-courier.test.mjs"
       - "systemia/evercraft-home/provider-credentials.mjs"
       - "systemia/evercraft-home/provider-credentials.test.mjs"
       - "systemia/organism/competition-provider-scout.workflow.json"
@@ -23,6 +25,8 @@ on:
     paths:
       - "systemia/competition/**"
       - "systemia/raven/provider-secret-boundary.mjs"
+      - "systemia/raven/custody-courier.mjs"
+      - "systemia/raven/custody-courier.test.mjs"
       - "systemia/organism/competition-provider-scout.workflow.json"
       - "systemia/organism/competition-submission-executor.workflow.json"
       - "systemia/organism/competition-control-plane.workflow.json"
@@ -53,7 +57,7 @@ jobs:
         with:
           node-version: "22"
       - name: Prove Raven competition provider runtime
-        run: node --test systemia/competition/authorization-ledger.test.mjs systemia/competition/browser-draft-runtime.test.mjs systemia/competition/control-plane.test.mjs systemia/competition/mission-admission.test.mjs systemia/competition/provider-runtime.test.mjs systemia/competition/submission-runtime.test.mjs systemia/competition/resident-wiring.test.mjs systemia/competition/entries/qloo-commonground/agent.test.mjs systemia/competition/entries/nebius-runbook-zero/agent.test.mjs systemia/competition/entries/nebius-runbook-zero/server.test.mjs systemia/competition/entries/paypal-checkout-black-box/agent.test.mjs tests/competition-saban-capacity.test.mjs tests/yard-private-capacity.test.mjs systemia/raven/provider-secret-boundary.test.mjs systemia/competition/qloo-secret-boundary.test.mjs systemia/competition/nebius-secret-boundary.test.mjs systemia/competition/paypal-secret-boundary.test.mjs systemia/evercraft-home/provider-credentials.test.mjs
+        run: node --test systemia/raven/custody-courier.test.mjs systemia/competition/authorization-ledger.test.mjs systemia/competition/browser-draft-runtime.test.mjs systemia/competition/control-plane.test.mjs systemia/competition/mission-admission.test.mjs systemia/competition/provider-runtime.test.mjs systemia/competition/submission-runtime.test.mjs systemia/competition/resident-wiring.test.mjs systemia/competition/entries/qloo-commonground/agent.test.mjs systemia/competition/entries/nebius-runbook-zero/agent.test.mjs systemia/competition/entries/nebius-runbook-zero/server.test.mjs systemia/competition/entries/paypal-checkout-black-box/agent.test.mjs tests/competition-saban-capacity.test.mjs tests/yard-private-capacity.test.mjs systemia/raven/provider-secret-boundary.test.mjs systemia/competition/qloo-secret-boundary.test.mjs systemia/competition/nebius-secret-boundary.test.mjs systemia/competition/paypal-secret-boundary.test.mjs systemia/evercraft-home/provider-credentials.test.mjs
       - name: Prove fail-closed unconfigured resident scout
         run: |
           rm -rf artifacts/competition-provider

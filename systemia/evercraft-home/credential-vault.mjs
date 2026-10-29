@@ -23,14 +23,22 @@ function atomicWrite(file, value, mode = 0o600) {
 }
 
 export class ProviderCredentialVault {
-  constructor({ stateDir } = {}) {
+  #readOnly = false;
+
+  constructor({ stateDir, readOnly = false } = {}) {
     if (!stateDir) throw new Error("credential_state_dir_required");
+    this.#readOnly = Boolean(readOnly);
     this.stateDir = path.resolve(stateDir);
     this.keyFile = path.join(this.stateDir, ".vault-key");
-    fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
-    fs.chmodSync(this.stateDir, 0o700);
-    if (!fs.existsSync(this.keyFile)) {
-      atomicWrite(this.keyFile, randomBytes(KEY_BYTES), 0o600);
+    if (readOnly) {
+      // A probe must never create a vault key, directory, or chmod existing custody.
+      if (!fs.existsSync(this.keyFile)) throw new Error("credential_vault_uninitialized");
+    } else {
+      fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
+      fs.chmodSync(this.stateDir, 0o700);
+      if (!fs.existsSync(this.keyFile)) {
+        atomicWrite(this.keyFile, randomBytes(KEY_BYTES), 0o600);
+      }
     }
     const key = fs.readFileSync(this.keyFile);
     if (key.length !== KEY_BYTES) throw new Error("credential_vault_key_invalid");
@@ -46,6 +54,7 @@ export class ProviderCredentialVault {
   }
 
   put({ provider, environment = "live", label = "default", apiKeyId, apiSecret, actorRef = "unknown" } = {}) {
+    if (this.#readOnly) throw new Error("credential_vault_read_only");
     const normalizedProvider = safeSegment(provider, "");
     const normalizedEnvironment = safeSegment(environment, "");
     const normalizedLabel = safeSegment(label);
