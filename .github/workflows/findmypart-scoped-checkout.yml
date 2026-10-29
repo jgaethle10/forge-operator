@@ -3,9 +3,13 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/findmypart-intake.mjs'
+      - 'systemia/payments/findmypart-private-intake.mjs'
+      - 'systemia/mcp/payment-return.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'tests/findmypart-scoped-checkout.test.mjs'
+      - 'tests/findmypart-private-intake.test.mjs'
+      - 'tests/findmypart-payment-return.test.mjs'
       - '.github/workflows/findmypart-scoped-checkout.yml'
   workflow_dispatch:
 permissions:
@@ -21,5 +25,9 @@ jobs:
           node-version: '22'
       - name: Validate new exact part intake and payment binding
         run: node --test tests/findmypart-scoped-checkout.test.mjs
+      - name: Verify encrypted intake ledger survives restart and refuses tampering
+        run: node --test tests/findmypart-private-intake.test.mjs
+      - name: Verify every FindMyPart return tier and payment status boundary
+        run: node --test tests/findmypart-payment-return.test.mjs
       - name: Regression test existing other product offer routes
         run: node --test tests/fabric-offer-pages.test.mjs
