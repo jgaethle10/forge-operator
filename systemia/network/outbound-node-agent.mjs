@@ -412,6 +412,10 @@ export async function startOutboundNodeAgent({
           continue;
         }
         if (polled.status === 204) {
+          // A successful empty poll is proof of recovery after a transient
+          // broker/network error. Leaving lastError set makes the persistent
+          // supervisor restart an otherwise healthy outbound session.
+          lastError = null;
           backoff = pollBackoffMs;
           continue;
         }
