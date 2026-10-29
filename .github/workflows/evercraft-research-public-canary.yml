@@ -1,0 +1,35 @@
+name: Evercraft Research public HTTPS canary
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "42 17 * * *"
+permissions:
+  contents: read
+jobs:
+  public-customer-path:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify read-only browser-origin customer surfaces
+        id: verify
+        continue-on-error: true
+        env:
+          EVERCRAFT_RESEARCH_CANARY_RECEIPT: ${{ runner.temp }}/evercraft-research-public.json
+        run: node scripts/probe-evercraft-research-public.mjs --gate
+      - name: Preserve external HTTPS evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-research-public-readback
+          path: ${{ runner.temp }}/evercraft-research-public.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Fail closed when public surfaces are not verified
+        if: steps.verify.outcome == 'failure'
+        run: |
+          echo "External public Research surface not verified. No launch, purchase or fulfillment proof asserted."
+          exit 1
