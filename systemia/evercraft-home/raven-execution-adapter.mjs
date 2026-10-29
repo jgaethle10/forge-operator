@@ -109,7 +109,7 @@ export function createRavenReadOnlyTeamAdapter({
         objective: clean(context?.objective || goal?.objective),
         title: clean(work?.title),
         assigned_agents: safeArray(work?.assigned_agents),
-        requested_team: "commissioned",
+        requested_team: "role_lenses",
         response_contract: {
           verdict_required: true,
           disagreements_required: true,
