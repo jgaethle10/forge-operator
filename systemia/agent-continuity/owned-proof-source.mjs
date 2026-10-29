@@ -148,7 +148,49 @@ export function createOwnedCommissionedWorkerProofStore({
   const folder = path.join(root, "worker-execution");
   if (!fs.existsSync(folder)) fs.mkdirSync(folder, { mode: 0o700 });
   mustDirectory(folder);
+  const claimFolder = path.join(root, "claimed-worker");
+  if (!fs.existsSync(claimFolder)) fs.mkdirSync(claimFolder, { mode: 0o700 });
+  mustDirectory(claimFolder);
   return {
+    async claimWorkerDispatch({ request, reviewerId, agentId, preflight }) {
+      const requestId = String(request?.request_id || "").trim();
+      const role = String(reviewerId || "").trim();
+      const identity = String(agentId || "").trim();
+      if (!requestId || !role || !identity || !preflight?.allowed ||
+          preflight?.reviewer_assignments?.[role] !== identity ||
+          !String(preflight?.preflight_id || "").trim() ||
+          !/^sha256:[a-f0-9]{64}$/.test(String(preflight?.registry_snapshot_hash || "")))
+        return false;
+      const claimFile = evidenceFile(root, "claimed-worker", requestId + ":" + role);
+      let fd;
+      let opened = false;
+      try {
+        fd = fs.openSync(claimFile, "wx", 0o600);
+        opened = true;
+        fs.writeFileSync(fd, JSON.stringify({
+          schema: "evercraft.agent-continuity.worker-dispatch-claim.v1",
+          request_id: requestId,
+          reviewer_id: role,
+          agent_id: identity,
+          preflight_id: preflight.preflight_id,
+          registry_snapshot_hash: preflight.registry_snapshot_hash,
+          claimed_at: now().toISOString(),
+        }) + "\n");
+        fs.fsyncSync(fd);
+        fs.closeSync(fd);
+        fd = undefined;
+        const dirfd = fs.openSync(claimFolder, "r");
+        try { fs.fsyncSync(dirfd); } finally { fs.closeSync(dirfd); }
+        return true;
+      } catch {
+        if (opened) {
+          try { fs.unlinkSync(claimFile); } catch { /* fail closed */ }
+        }
+        return false;
+      } finally {
+        if (fd !== undefined) fs.closeSync(fd);
+      }
+    },
     async readEvidence({ request }) {
       if (!request?.request_id) throw new Error("commissioned_request_id_missing");
       return {
