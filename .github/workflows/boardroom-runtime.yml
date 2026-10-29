@@ -1,0 +1,44 @@
+name: Evercraft Boardroom multi-model runtime
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/boardroom/**'
+      - 'tests/boardroom-runtime.test.mjs'
+      - '.github/workflows/boardroom-runtime.yml'
+  pull_request:
+    paths:
+      - 'systemia/boardroom/**'
+      - 'tests/boardroom-runtime.test.mjs'
+      - '.github/workflows/boardroom-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  council-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check server and model adapters
+        run: |
+          node --check systemia/boardroom/engine.mjs
+          node --check systemia/boardroom/providers.mjs
+          node --check systemia/boardroom/server.mjs
+      - name: Run independent council tests without provider credentials
+        run: node --test tests/boardroom-runtime.test.mjs
+      - name: Assert private runtime boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          import assert from 'node:assert/strict';
+          const server=readFileSync('systemia/boardroom/server.mjs','utf8');
+          assert.match(server,/BOARDROOM_API_ENABLED/);
+          assert.match(server,/BOARDROOM_ACCESS_TOKEN/);
+          assert.match(server,/127\.0\.0\.1/);
+          assert.match(server,/providers\.length<2/);
+          console.log('Private-by-default provider boundary intact.');
+          NODE
