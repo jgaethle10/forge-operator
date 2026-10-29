@@ -31,7 +31,7 @@ jobs:
           fetch "llms.txt" llms.txt
           grep -Fq 'og:image" content="https://jgaethle10.github.io/forge-operator/partners/social-card.png"' "$tmp/index.html"
           file --mime-type "$tmp/social-card.png" | grep -Fq "image/png"
-          python -c 'import struct,sys; p=open(sys.argv[1],"rb").read(24); assert p[:8]==b"\\x89PNG\\r\\n\\x1a\\n"; assert struct.unpack(">II",p[16:24])==(1200,630)' "$tmp/social-card.png"
+          python -c 'import struct,sys; p=open(sys.argv[1],"rb").read(24); assert p[:8]==bytes([137,80,78,71,13,10,26,10]); assert struct.unpack(">II",p[16:24])==(1200,630)' "$tmp/social-card.png"
           grep -Fq "Good work travels" "$tmp/index.html"
           grep -Fq "Founding partner applications now open" "$tmp/index.html"
           grep -Fq 'id="partner-application"' "$tmp/index.html"
