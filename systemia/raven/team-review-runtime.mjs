@@ -57,7 +57,7 @@ function assertRequest(request) {
   const workType = clean(request.work_type, 80).toLowerCase();
   if (!TEAM_REVIEW_WORK_TYPES.includes(workType)) throw new Error("team_review_work_type_not_allowed");
   if (!clean(request.objective, 16000)) throw new Error("team_review_objective_required");
-  if (request.requested_team !== "commissioned") throw new Error("team_review_requested_team_invalid");
+  if (!["role_lenses", "commissioned"].includes(request.requested_team)) throw new Error("team_review_requested_team_invalid");
 
   const required = [
     "internal_analysis_only",
@@ -195,6 +195,7 @@ export function createRavenTeamReviewExecutor({
   inferenceAdapter,
   roles = TEAM_REVIEW_ROLES,
   now = () => new Date(),
+  commissionedGate = null,
 } = {}) {
   if (!inferenceAdapter || typeof inferenceAdapter.infer !== "function") return null;
   const reviewers = roles.filter(Boolean).slice(0, 12);
@@ -202,13 +203,47 @@ export function createRavenTeamReviewExecutor({
   return async function executeTeamReview(request) {
     assertRequest(request);
     const startedAt = now().toISOString();
+    const commissioned = request.requested_team === "commissioned";
+    let preflight = null;
+    if (commissioned) {
+      if (!commissionedGate || typeof commissionedGate.preflight !== "function") {
+        return {
+          status: "blocked",
+          blocked_reason: "commissioned_team_verifier_not_configured",
+          commissioned_identity_verified: false,
+          inference_calls_performed: 0,
+        };
+      }
+      try {
+        preflight = await commissionedGate.preflight(request, {
+          reviewerIds: reviewers.map((role) => role.reviewer_id),
+        });
+      } catch {
+        return {
+          status: "blocked",
+          blocked_reason: "commissioned_team_preflight_unavailable",
+          commissioned_identity_verified: false,
+          inference_calls_performed: 0,
+        };
+      }
+      if (!preflight?.allowed) {
+        return {
+          status: "blocked",
+          blocked_reason: preflight?.reason || "commissioned_team_preflight_denied",
+          commissioned_identity_verified: false,
+          inference_calls_performed: 0,
+        };
+      }
+    }
     const outputs = await Promise.all(reviewers.map(async (role) => {
       const callId = clean(request.request_id, 200) + ":" + role.reviewer_id;
       try {
         const result = await inferenceAdapter.infer({
           request_id: callId,
           role: role.reviewer_id,
-          prompt: rolePrompt(request, role),
+          prompt: rolePrompt(request, role) +
+            (commissioned ? "\nSIGNED COMMISSIONED ROLE ID: " +
+              preflight.reviewer_assignments[role.reviewer_id] : ""),
         });
         return {
           reviewer_id: role.reviewer_id,
@@ -264,8 +299,34 @@ export function createRavenTeamReviewExecutor({
       };
     }
 
+    let completion = null;
+    if (commissioned) {
+      try {
+        completion = await commissionedGate.completion({
+          request, preflight, reviewers: completed, synthesis,
+        });
+      } catch {
+        completion = { allowed: false, reason: "commissioned_team_completion_unavailable" };
+      }
+      if (!completion?.allowed) {
+        return {
+          status: "blocked",
+          blocked_reason: completion?.reason || "commissioned_team_completion_denied",
+          started_at: startedAt,
+          completed_at: now().toISOString(),
+          results: outputs,
+          commissioned_identity_verified: false,
+          inference_calls_performed: outputs.length + 1,
+        };
+      }
+    }
+
     const receiptCore = {
       schema: "evercraft.raven.team-review-receipt.v1",
+      review_mode: request.requested_team,
+      commissioned_identity_verified: commissioned && completion?.allowed === true,
+      actual_all_roster_liveness_verified: false,
+      commissioned_completion_ref: completion?.completion_ref || null,
       request_id: clean(request.request_id, 200),
       mission_key: clean(request.mission_key, 260),
       work_key: clean(request.work_key, 260),
@@ -288,6 +349,8 @@ export function createRavenTeamReviewExecutor({
       started_at: startedAt,
       completed_at: receiptCore.completed_at,
       raven_receipt: { ...receiptCore, receipt_hash: receiptHash },
+      review_mode: request.requested_team,
+      commissioned_identity_verified: commissioned && completion?.allowed === true,
     };
   };
 }
