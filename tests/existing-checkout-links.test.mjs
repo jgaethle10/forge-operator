@@ -63,6 +63,9 @@ test('agent buyer instructions route through Evercraft Payments while declaring 
  assert.match(guide,/2026-10-25/);
  assert.match(guide,/manual reconciliation into Evercraft Payments/i);
  assert.match(guide,/automatic synchronization is NOT yet proven/i);
+ assert.match(guide,/verified human-facing payment-provider page/i);
+ assert.match(guide,/Do not require a first completed paid order/i);
+ assert.match(guide,/never claim revenue or fulfillment from checkout visibility alone/i);
 });
 test('main Evercraft storefront links to the new processor-verified service page',()=>{
  const html=get('index.html');
