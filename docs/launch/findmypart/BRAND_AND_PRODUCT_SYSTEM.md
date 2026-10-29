@@ -71,7 +71,7 @@ The storefront is intentionally `noindex,nofollow` until actual owner-hosted and
 - [ ] Provider-paid *real* customer receipt and secure work delivery pathway
 - [ ] One actual human-reviewed sample report with permission or an illustrative report labeled as such
 - [ ] Consentful partner/shop opportunity; avoid unsolicited outreach when Systemia AMBER
-- [ ] Launch publish through Evercraft Clip after final production and creative acceptance
+- [ ] Publish through an independently verified Evercraft-owned Relay/Clip runtime after final production and creative acceptance. Do not use the retired third-party-hosted publisher.
 - [ ] Real-source traffic, leads, paid orders, net settlement, delivered jobs tracked separately
 
 **Launch status:** **STAGED / DO NOT ANNOUNCE GENERAL AVAILABILITY YET.**
