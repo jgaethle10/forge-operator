@@ -1,0 +1,32 @@
+name: Sim-to-Real Lab (modeled only)
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/sim-to-real/**'
+      - '.github/workflows/sim-to-real-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  modeled-rover-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit and integrity tests
+        run: node --test systemia/world-engine/sim-to-real/rover-lab.test.mjs systemia/world-engine/sim-to-real/rover-challenge.test.mjs
+      - name: Repeatable RC02 challenge (40 paired seeds)
+        run: node systemia/world-engine/sim-to-real/rover-challenge.mjs --seeds 40 --out /tmp/evercraft-rc02-benchmark.json
+      - name: Verify benchmark and episode integrity
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyBenchmark} from './systemia/world-engine/sim-to-real/rover-challenge.mjs';
+          const report=JSON.parse(fs.readFileSync('/tmp/evercraft-rc02-benchmark.json','utf8'));
+          if(!verifyBenchmark(report)) throw Error('rc02_benchmark_integrity_failed');
+          if(report.runs.length!==80) throw Error('rc02_expected_80_runs');
+          console.log('Verified modeled benchmark:',report.sha256);
+          NODE
