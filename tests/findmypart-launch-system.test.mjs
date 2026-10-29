@@ -42,7 +42,7 @@ test('working-customer homepage is genuinely short and action focused',()=>{
   assert.equal(descriptions,3,'only three customer-visible steps');
   assert.doesNotMatch(landing,/STAGE 0[1-6]|six-stage sourcing|SYSTEMIA COMMAND|RAVEN NEXUS/i);
   assert.doesNotMatch(landing,/base44\.app|checkout\.stripe\.com|buy\.stripe\.com/i);
-  assert.match(landing,/<form id="part-request-form"/);
+  assert.match(landing,/<form id="part-request-form"[^>]*method="post" action="\/api\/findmypart\/inquiry"/);
   assert.match(landing,/<script type="module" src="\/findmypart\/app\.mjs"><\/script>/);
   assert.doesNotMatch(landing,/<iframe/i);
   assert.ok(landing.length<16000,'customer page should remain compact');
