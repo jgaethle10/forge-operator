@@ -229,6 +229,40 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       }
     }
   }
+  // Source-derived, read-only product discovery. This deliberately does not
+  // edit the authoritative machine-commerce catalog or grant execution/payment.
+  // The two public pages passed the GitHub Pages independent HTTPS canary on 2026-10-29.
+  if(!catalogPath){
+    const productsPath=path.resolve(moduleDir,'../../public/.well-known/evercraft-products.json');
+    if(fs.existsSync(productsPath)){
+      const products=JSON.parse(fs.readFileSync(productsPath,'utf8'));
+      const boardroom=(Array.isArray(products.products)?products.products:[])
+        .find(item=>item.product_key==='ai-boardroom' && item.machine_state==='source_discovery_only');
+      if(boardroom&&!mapped.some(item=>item.public_id==='ai-boardroom-decision-review-v1')){
+        const intents=Array.isArray(boardroom.intents)?boardroom.intents.map(String).slice(0,16):[];
+        const aliases=Array.isArray(boardroom.aliases)?boardroom.aliases.map(String).slice(0,8):[];
+        mapped.push({
+          public_id:'ai-boardroom-decision-review-v1',
+          name:'Evercraft AI Boardroom',
+          description:'Free private on-device comparison of pasted ChatGPT, Claude, Gemini and other AI answers. Frame a decision and examine stated disagreements and evidence gaps. Optional separate human-scoped decision reviews; no verified automatic multi-LLM debate.',
+          keywords:[...intents,...aliases,'free compare AI answers','ChatGPT Claude disagree','compare AI responses free'],
+          state:'source_discovery_only',
+          commercial_state:'scoped_human_review_offers',
+          pricing:'Free private comparison $0. Human-scoped Standard Review $250 and Financial Deep Dive $500, each requiring agreement on scope and delivery. This discovery directory cannot charge or fulfill.',
+          use_when:intents,
+          entry_paid_offer:null,
+          start_url_state:'free_preview_https_verified_no_payment',
+          preferred_agent_route:'universal_fallback',
+          connections:[
+            ...(universalMcp?[{type:'mcp',label:'Evercraft universal MCP',url:universalMcp,state:'read_only_discovery_only'}]:[]),
+            {type:'website',label:'Free AI answer comparison',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/',state:'public_https_verified_2026_10_29'},
+            {type:'website',label:'Evercraft Boardroom executive chamber',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/',state:'public_https_verified_2026_10_29'},
+            ...(boardroom.discovery_url?[{type:'docs',label:'AI Boardroom source-backed product descriptor',url:boardroom.discovery_url,state:'source_backed'}]:[]),
+          ]
+        });
+      }
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
