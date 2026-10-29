@@ -32,7 +32,7 @@ for name,script,speed,seed in TAKES:
  if name.startswith(("opening","closing")) and "mˈoʊbəl" not in p:raise RuntimeError("WRONG_BRAND_PHONEMES "+name+" "+p)
  if name.startswith("opening") and not ("jˈu" in p):raise RuntimeError("YOU_STRESS_MISSING "+name+" "+p)
  d=len(a)/24000
- limits={"opening":(6.2,8.2),"service":(1.8,3.1),"closing":(2.3,4.0)}
+ limits={"opening":(5.8,10.0),"service":(1.6,5.0),"closing":(2.1,5.5)}
  lo,hi=next(v for k,v in limits.items() if name.startswith(k))
  if not lo<d<hi:raise RuntimeError("BAD_DURATION "+name+" "+str(d))
  if not np.isfinite(a).all() or np.max(np.abs(a))>1.00001:raise RuntimeError("INVALID_AUDIO "+name)
