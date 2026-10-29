@@ -102,3 +102,53 @@ test("missing historical names are reported, without silently renaming or adding
   assert.equal(r.state,"held_historical_identity_baseline_missing");
   assert.equal(r.operational_agents_verified,0);
 });
+
+test("private August 21-name lead file plus October 19-name audit yields 22 candidate names, not 22 proven historic identities",()=>{
+  const p=snapshot();
+  p.role_profiles=p.role_profiles.map((x)=>({...x}));
+  const additional=["Atlas","Solstice","Melody"];
+  for(let i=0;i<3;i++)p.role_profiles[19+i].name=additional[i];
+  const august=HISTORICAL_ROLE_NAME_LEADS.filter((name)=>name!=="Saban").concat(additional);
+  assert.equal(august.length,21);
+  const archive={
+    schema:"evercraft.agent-continuity.historical-name-leads.v1",
+    source:{google_drive_file_id:"private-owner-archive"},
+    august_role_names:august,
+    historical_role_id_baseline_verified:false,
+  };
+  const r=reconcileSignedAgentRoster({
+    rosterEnvelope:signed(p),trustedKeys:trust,now,
+    historicalArchive:archive,
+  });
+  assert.equal(r.state,"held_historical_identity_baseline_missing");
+  assert.equal(r.august_2026_named_role_count,21);
+  assert.equal(r.cross_period_distinct_name_count,22);
+  assert.equal(r.cross_period_name_matches_to_current_signed_registry.length,22);
+  assert.deepEqual(r.august_only_vs_october_names.sort(),additional.map((x)=>x.toLowerCase()).sort());
+  assert.deepEqual(r.october_only_vs_august_names,["saban"]);
+  assert.equal(r.cross_period_name_census_is_id_proof,false);
+  assert.equal(r.historical_immutable_id_baseline_verified,false);
+  assert.equal(r.all_roles_live,false);
+  assert.equal(r.operational_agents_verified,0);
+});
+test("malformed or overclaiming private archival names fail closed even against signed current roster",()=>{
+  const good={
+    schema:"evercraft.agent-continuity.historical-name-leads.v1",
+    source:{google_drive_file_id:"private-owner-archive"},
+    august_role_names:["Systemia","Raven"],
+    historical_role_id_baseline_verified:false,
+  };
+  for(const historicalArchive of [
+    {...good,august_role_names:["Raven","Raven"]},
+    {...good,historical_role_id_baseline_verified:true},
+    {...good,source:{}},
+    {...good,schema:"evercraft.agent-continuity.registry-snapshot.v1"},
+  ]){
+    const r=reconcileSignedAgentRoster({
+      rosterEnvelope:signed(snapshot()),trustedKeys:trust,now,historicalArchive,
+    });
+    assert.equal(r.state,"held_unverified");
+    assert.ok(r.holds.includes("historical_archive_name_leads_invalid_or_overclaimed"));
+    assert.equal(r.operational_agents_verified,0);
+  }
+});
