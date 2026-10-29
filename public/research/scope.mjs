@@ -8,6 +8,13 @@ export const FORMATS=Object.freeze({
  "location-review":"Location and property research",
  "technical-review":"Technical research assessment"
 });
+export const REPORT_SECTIONS=Object.freeze({
+ "decision-brief":Object.freeze(["Decision and scope","Evidence-supported findings","Alternatives, tradeoffs and uncertainties","Source ledger and contradictions","Recommended next validation steps"]),
+ "market-review":Object.freeze(["Market question and target buyers","Competitor and substitute landscape","Evidence-backed demand signals","Opportunity gaps and contradictory signals","Sources, confidence and next actions"]),
+ "claim-check":Object.freeze(["Claim under examination","Original and corroborating sources","Supporting and opposing evidence","Verification limitations and confidence","Conclusion or insufficient-evidence finding"]),
+ "location-review":Object.freeze(["Geographic question and boundaries","Observed local conditions","Constraints, risks and missing data","Comparable locations and uncertainty","Sources and recommended site checks"]),
+ "technical-review":Object.freeze(["Technical question and assumptions","Available specifications and standards","Competing technical approaches","Failure modes, gaps and tradeoffs","Sources and verification experiments"])
+});
 const tidy=(value)=>String(value??"").normalize("NFKC").replace(/\s+/g," ").trim();
 export function prepareResearchScope(input){
  const question=tidy(input?.question);
@@ -38,6 +45,7 @@ export function prepareResearchScope(input){
   "DECISION OR USE CONTEXT",context||"Not provided","",
   "GEOGRAPHIC SCOPE",location||"Not specified","",
   "CUSTOMER-SUPPLIED SOURCES (UNVERIFIED)",...(sources.length?sources.map((x,i)=>(i+1)+". "+x):["None supplied"]),"",
+  "PROPOSED REPORT STRUCTURE (NOT YET RESEARCHED)",...REPORT_SECTIONS[format].map((section,i)=>(i+1)+". "+section),"",
   "EVIDENCE REQUIREMENTS",
   "- Distinguish independently observed facts, user-provided claims, modeling, assumptions, and unknowns.",
   "- Attach a retrievable source and observation date to material factual claims.",
@@ -48,5 +56,5 @@ export function prepareResearchScope(input){
   "Scope, exact price, timeline, secure intake and fulfillment are confirmed before any payment.",
   "Submitting this brief is optional. It does not place an order or authorize access to private data."
  ];
- return Object.freeze({question,context,location,format,formatLabel:FORMATS[format],sources:Object.freeze(sources),sourceStatus:"customer_supplied_unverified",researchPerformed:false,priceQuoted:false,orderCreated:false,reportText:lines.join("\n")});
+ return Object.freeze({question,context,location,format,formatLabel:FORMATS[format],reportSections:REPORT_SECTIONS[format],sources:Object.freeze(sources),sourceStatus:"customer_supplied_unverified",researchPerformed:false,priceQuoted:false,orderCreated:false,reportText:lines.join("\n")});
 }
