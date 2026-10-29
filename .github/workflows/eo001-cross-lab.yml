@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run Evercraft candidate tests
-        run: node --test evercraft/integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs
+        run: node --test evercraft/integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs evercraft/integrations/ai-evaluation-lab/eo001-raven-local-candidate.test.mjs
       - name: Install Lab isolated cryptographic test dependency
         run: python -m pip install -r lab/research/eo001_receipt_audit/durable/requirements.txt
       - name: Evaluate Evercraft policy in four independent provider fault scenarios
