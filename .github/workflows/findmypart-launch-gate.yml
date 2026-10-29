@@ -4,6 +4,9 @@ on:
     paths:
       - 'public/findmypart/**'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
+      - 'systemia/mcp/findmypart-private-quote.mjs'
+      - 'scripts/findmypart-review-inquiry.mjs'
+      - 'tests/findmypart-private-quote.test.mjs'
       - 'scripts/findmypart-owner-inbox.mjs'
       - 'scripts/provision-findmypart-owned-intake.mjs'
       - 'tests/findmypart-owned-provision.test.mjs'
@@ -30,9 +33,13 @@ jobs:
           node --check public/findmypart/app.mjs
           node --check systemia/mcp/findmypart-public-inquiry.mjs
           node --check scripts/findmypart-owner-inbox.mjs
+          node --check scripts/findmypart-review-inquiry.mjs
+          node --check systemia/mcp/findmypart-private-quote.mjs
           node --check scripts/provision-findmypart-owned-intake.mjs
       - name: Owned two-question buyer intake, storage and alert tests
         run: node --test tests/findmypart-public-inquiry.test.mjs
+      - name: Check private inquiry to quote handoff never creates payment
+        run: node --test tests/findmypart-private-quote.test.mjs
       - name: Check private owned-edge setup and rollback configuration
         run: node --test tests/findmypart-owned-provision.test.mjs
       - name: Existing owned service routing regression
