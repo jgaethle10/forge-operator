@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'systemia/distribution/publisher-ownership.json'
+      - 'systemia/distribution/audit-search-result-freshness.mjs'
+      - 'systemia/distribution/audit-search-result-freshness.test.mjs'
       - 'systemia/distribution/audit-publisher-ownership.mjs'
       - 'systemia/distribution/audit-publisher-ownership.test.mjs'
       - 'systemia/distribution/inspect-official-mcp-registry.mjs'
@@ -27,11 +29,16 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/distribution/audit-publisher-ownership.mjs
+      - run: node --check systemia/distribution/audit-search-result-freshness.mjs
       - run: node --check systemia/distribution/inspect-official-mcp-registry.mjs
       - run: node --check systemia/distribution/build-registry-repoint-queue.mjs
       - run: node --check systemia/distribution/inspect-owned-mcp-cold-client.mjs
       - name: Regression tests for publisher evidence states
         run: node --test systemia/distribution/audit-publisher-ownership.test.mjs systemia/distribution/inspect-official-mcp-registry.test.mjs systemia/distribution/build-registry-repoint-queue.test.mjs systemia/distribution/inspect-owned-mcp-cold-client.test.mjs
+      - name: Test historical search observation evidence contract
+        run: node --test systemia/distribution/audit-search-result-freshness.test.mjs
+      - name: Audit observed indexed legacy results (no live SERP claim)
+        run: node systemia/distribution/audit-search-result-freshness.mjs systemia/distribution/publisher-ownership.json "${{ runner.temp }}/search-result-freshness.json"
       - name: Validate evidence states
         env:
           OUTPUT: ${{ runner.temp }}/publisher-audit.json
@@ -56,6 +63,7 @@ jobs:
           name: publisher-ownership-audit
           path: |
             ${{ runner.temp }}/publisher-audit.json
+            ${{ runner.temp }}/search-result-freshness.json
             ${{ runner.temp }}/official-mcp-registry.json
             ${{ runner.temp }}/registry-repoint-queue.json
             ${{ runner.temp }}/owned-mcp-cold-client.json
