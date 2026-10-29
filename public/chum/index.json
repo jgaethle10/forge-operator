@@ -10,6 +10,30 @@
   "universal_mcp": null,
   "products": [
     {
+      "product_key": "ai-boardroom",
+      "name": "Evercraft AI Boardroom",
+      "aliases": [
+        "Systemia AI Boardroom",
+        "AI advisory board",
+        "business decision boardroom"
+      ],
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-conformance.json",
+      "page_url": "/chum/products/ai-boardroom/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null,
+      "human_start_url": null,
+      "buyer_frontage_url": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null,
+      "proof_library": null
+    },
+    {
       "product_key": "aliev",
       "name": "AliEV",
       "aliases": [

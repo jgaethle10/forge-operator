@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T06:11:25.350Z",
-  "url_count": 2996,
+  "updated_at": "2026-10-29T06:13:11.985Z",
+  "url_count": 3020,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "794642417a99128b4292535ed67c50575650e1e79de6243ae85f4497a89bad77",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "5ff9fb3cb0fabdad4a6d846102dac64857c56b2d8be7d26a05ce507098be2674",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "cba84cf17ed491f574580b1a61e8096035a9ac58c300a0bd5a3ffd5e6c369d74",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "475342a7f8c1c7fbc8b04d4fd8511344486793a2be7b91f441077998b3d693b2",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "21cf942166b767e28d655df01b9ae25ecfb3c8bcffecacf6bc4a99ea0d28569d",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "df195cdcb828ab06b985e3efde184d0f27d8a8801d7989eae7e14f61937e9990",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "3b0ffdcc136b0515d2e51a6521f3e9c6b8821559468ed27272aeadf7261de933",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "7da7db07978d2ccc1bb5bb314bafd82e91ef691d34ea5848da65e8700130d277",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "4881993b210a3986338623aea72790bca97a2bdc3470f72598f36440b6cd77e5",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "c953c3fe9964505bb755de510eac3675ee73f1655ea3747e580f8cda78d3b864",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "be6b6ffd83ea3b7fc7c9a12d413a572999122d1dbbcbddf9cffa928ac3ddf861",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "25db1f93704d524ef41926f14bd2cbaad3a991a2ca7a28810edbced4e780dff3",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "1f96a8a31679f25dcf9cb320e020b48b8666142fccd0f17de82fe2be120c25bf",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "2757ceaf383299fc28aacd7880f0f1ef573bac73fd61d31833ecc5a22fd8405f",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "47500df01941753813aca3f79e716bc85419e0737ed9c7732d9c1123ca923044",
-      "last_changed": "2026-10-29T06:11:25.350Z",
+      "content_sha256": "39df984d4be68666ad6d8910c04f5cdbb83d28c1410fd9b3e0058a372b68c29d",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,14 +243,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "24a51114b5fd383f67d487fd1304d43862f532c387f4a18fe0f1e381c6977338",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "6c207938581b2b7d3fef1865436870ac856d4093821408a88e67fef97f041862",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "a426657e9d6ff871a44915a770725c151d8109e83b4553fcaceb419f6a193dd1",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "916754eb8ae647ca3aee9652199aa4ffa8567f5f2cf0ee5ff2237e4af23dfcb7",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "21cf942166b767e28d655df01b9ae25ecfb3c8bcffecacf6bc4a99ea0d28569d",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "df195cdcb828ab06b985e3efde184d0f27d8a8801d7989eae7e14f61937e9990",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "1371ce68c47f93a4530a68090a1335ee372def6129eae040a72e3b51a59f2d66",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "ac0388915235c2de8e48bea4c77abd2ff9c4c57b79304270f46a207f8eae7c87",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -741,8 +741,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "56532f47ecc3e59d110d810d89a41b2d85bfc10826d8190c0072cbe52b2d5f1e",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "382821f96200102cab5ba4e03cfccbbbfbb47f9a2d7b689591e6b910f6af56e8",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "39f1fde3f69119459d6e98243cf2bce35f7689d66fdb86ade47d9a0d03a8f84f",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "5ab4d0ab6a6387ba0c2f8102eb56e4a42a81f2a4505c14be9e37c5e44c67b062",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -795,8 +795,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "ed3b458a9adae6445e17670f9df11c41e8d8a28ad06dcd2555e7ae0abbc18156",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "10edaaea0ca958757091fa4295730d404e51b7dc6b46b80ada54315b269fc691",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -2454,6 +2454,30 @@
       "content_sha256": "0b4d7e275bc25391a3b2f63078f481620886eb5b4fd05d5e220e994d7314d399",
       "last_changed": "2026-10-06T16:41:21.859Z",
       "priority": 96
+    },
+    "/chum/products/ai-boardroom/": {
+      "path": "/chum/products/ai-boardroom/",
+      "content_sha256": "cc271f0e598660865ff6f35378f9bc9bbf217a6076248d30f6e59ef0b62db6ff",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    "/chum/products/ai-boardroom/llms.txt": {
+      "path": "/chum/products/ai-boardroom/llms.txt",
+      "content_sha256": "e3027dc9c766bac8b598696311d60db0685a30d572fe7a17b744c1a921e1eadd",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    "/chum/products/ai-boardroom/ai-discovery.json": {
+      "path": "/chum/products/ai-boardroom/ai-discovery.json",
+      "content_sha256": "44d3a4babc300f006e8731d98a872a1fb4104e3b70cb639c3529f5493cd7d652",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    "/chum/products/ai-boardroom/ai-conformance.json": {
+      "path": "/chum/products/ai-boardroom/ai-conformance.json",
+      "content_sha256": "5986845023c79d3bcec41e88c12bbd64428c7aff1d996a7adfb461ef6c697be8",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
     },
     "/chum/products/aliev/": {
       "path": "/chum/products/aliev/",
@@ -4819,6 +4843,18 @@
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 160
     },
+    "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/": {
+      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/",
+      "content_sha256": "80a941960db100f76447b7d7bc17aaf68ac1e9e49719b4e067833734bc7aca6d",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json": {
+      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
+      "content_sha256": "fa9828a95db4e2670085fe10802e6aa2ed8c3d2a92aff8dd23296d61d2cdff01",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
     "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1/": {
       "path": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1/",
       "content_sha256": "04190f90518b5603ef0d899a29c83184351e1ee5889d4c65de4d084a17c996d7",
@@ -4841,6 +4877,18 @@
       "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
       "content_sha256": "9d8054c317e9dbf14df9d3f870f3a7140a43dadfe8ee45d222409fae57ebd464",
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/": {
+      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/",
+      "content_sha256": "b4d5d8becaef787fe5c3cf9e7f2789ae75ec8355f2bf859b3093ab469338efcc",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json": {
+      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
+      "content_sha256": "f7b68bd9368e64ead8f97796a2a7100c3e6e4d3cafc3b6af8408bbf9352b9a08",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 100
     },
     "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde/": {
@@ -5261,6 +5309,18 @@
       "path": "/chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce.json",
       "content_sha256": "69dd15671ab4827874714c49506d124a91170207b3dea8593a52e1eca425e49e",
       "last_changed": "2026-10-06T14:10:27.346Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/": {
+      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/",
+      "content_sha256": "08af978877b9a1182485791f9555400fb5c61921c6165a455aa90dcc65dd4d13",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json": {
+      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
+      "content_sha256": "39e6de4e17dc8dccf067e7786e77b0cb7c95bc1c929cbb7448ca46c078c06d61",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 100
     },
     "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784/": {
@@ -6595,6 +6655,18 @@
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 100
     },
+    "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/": {
+      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/",
+      "content_sha256": "4f90f4947d750730ced486bc8f889833f13c259f7b4577e959e2eb87e630d8b9",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json": {
+      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
+      "content_sha256": "3d0f172a6482ea505977380ec1c5e72d9be0c2be7abc0d65a7805fd06ae2b1ee",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
     "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/": {
       "path": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/",
       "content_sha256": "9fc111bdc06589d1cb01b7b29c97056919abee7b8636f3f13fc1835a95521ea2",
@@ -6617,6 +6689,18 @@
       "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
       "content_sha256": "0f63aba8a025485cd24e829f9764283bae41e32ddc9b30bd437c4d5935455a22",
       "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/": {
+      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/",
+      "content_sha256": "afb57c4bf8c61204717748d57561638265745eaccfbad67d921f43655553756c",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json": {
+      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
+      "content_sha256": "f1c1bb376dd61539fe4caadc5d17b38e037325cfa32dff9e2df446536741cd52",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 100
     },
     "/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223/": {
@@ -9667,6 +9751,18 @@
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     },
+    "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/": {
+      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/",
+      "content_sha256": "8597adeddc7b1fe2484c13b7bd73d54e98286ec69c889bb9800b89b2f58852c9",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json": {
+      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
+      "content_sha256": "c9aeb92aec5e4ca164e7e1d41b84c6dde2162878c01f928be9b05ba3a387295d",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
     "/chum/answers/doors/headless-browser-f3814bb265/": {
       "path": "/chum/answers/doors/headless-browser-f3814bb265/",
       "content_sha256": "76571ec05ead429fc7cb0978a968653149178a60d4107fb13d41980be456f9d3",
@@ -10481,6 +10577,18 @@
       "path": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json",
       "content_sha256": "4c7bb21cdbc6ee213ec8b8f27f13c7c1714034811682fee86ebae77569c2176c",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/": {
+      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/",
+      "content_sha256": "614c0623cb7f6d335d578dfb4d947ef1be835d9dfc905d0718b78242c4a247e8",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json": {
+      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
+      "content_sha256": "bc713e7edd5e35734d37e014bd75a81672c36b695a032431ac30a985aa1953a8",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 100
     },
     "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17/": {
@@ -12067,6 +12175,18 @@
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 100
     },
+    "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/": {
+      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/",
+      "content_sha256": "b8e3da90f823bae4858fe9bd9e1b92d246295d55e9bb0b8379fbe9416a44f6eb",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json": {
+      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
+      "content_sha256": "fd105a88c1091c19f9ee3ad1779a143f7aef2c9c716c2aa919c08b33a75139d9",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
     "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/": {
       "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/",
       "content_sha256": "7f1992a49a0b033d7f3551fd0fc244f662147223b6c446a91f3d8ec124a47c99",
@@ -12077,6 +12197,18 @@
       "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json",
       "content_sha256": "47fe12ced9bd2018890efdd6905a20a99310a97de7c429419190b0622b0c451d",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/": {
+      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/",
+      "content_sha256": "00d9e0cee34df160f38996964ad2d2204778ab351e398e32c28a6e59eb8eb7fd",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json": {
+      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
+      "content_sha256": "c12556a820715f1ab4dc2381a2697f0c1140fb91ea2fade903ec930a81c3fb1b",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 100
     },
     "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7/": {
@@ -17527,6 +17659,18 @@
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     },
+    "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/": {
+      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/",
+      "content_sha256": "38b035c29a2b24db0580fa41f232a36373219215b47c0a185df6d7fed0284f6a",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json": {
+      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
+      "content_sha256": "31987d2d2b5ae0ed7024726bc0a62d32643d32697d6507a020e7181d026e90b5",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
     "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812/": {
       "path": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812/",
       "content_sha256": "bad9e634eca686a430f2aaff8f3e2b69b5a547fe51a61530483d6fad626d2389",
@@ -17955,14 +18099,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "6e599b8728d3e737c57e16abf126eb4d373d37321062530fedd5db24f6caac1a",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "2a23ddbc1581af54a82cfd3cb41d0435827b121fabd45a1b9ff48a9f4142500c",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "e3903b54db6690bbe90c6584bbe718166957d3d487879e6b8c33e657e3f4bdbb",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "6a74372c366add7063d29b185eeee9c79b0b011662776dee110829de3642d976",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -17973,20 +18117,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "f976e26d4c11023aea513184ce266e2da2eead09f0b6549462e6d7391083ae51",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "2bc1ef6df5f3490904151e578aa8e5e7e78cfc4f78782dcb144bd7a0f29e675d",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "2ac4b61f15eb593121677b484020ca274664b64333affbaa4f2a9fd9b8ba1e6c",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "f848ffed655b4e4477df8fa91231659bd9b809cf0c635d2281bb3a76f4281cf8",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "00e07eddcd1c4999ae45668417354cdfe30acfe8424cd92a025b5d79698e53d2",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "content_sha256": "7396613391f5c2dcd44028da4e1a870e01f30bfd01c60592c1665cca26a59713",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
     }
   }

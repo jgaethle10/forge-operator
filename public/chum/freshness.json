@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T06:11:25.350Z",
+  "updated_at": "2026-10-29T06:13:11.985Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,490 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T06:11:25.350Z",
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/ai-boardroom/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ai-boardroom/ai-conformance.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ai-boardroom/ai-discovery.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ai-boardroom/llms.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "url": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
+      "url": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/",
+      "url": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
+      "url": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/",
+      "url": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
+      "url": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/",
+      "url": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
+      "url": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/",
+      "url": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
+      "url": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/",
+      "url": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
+      "url": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/",
+      "url": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
+      "url": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/",
+      "url": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
+      "url": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/",
+      "url": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
+      "url": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/",
+      "url": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
+      "url": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/",
+      "url": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/ai-boardroom/",
+      "url": "/chum/products/ai-boardroom/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ai-boardroom/ai-conformance.json",
+      "url": "/chum/products/ai-boardroom/ai-conformance.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ai-boardroom/ai-discovery.json",
+      "url": "/chum/products/ai-boardroom/ai-discovery.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ai-boardroom/llms.txt",
+      "url": "/chum/products/ai-boardroom/llms.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T06:11:25.350Z",
+      "last_changed": "2026-10-29T06:13:11.985Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-10-29T06:13:11.985Z",
+      "priority": 60
     },
     {
       "path": "/llms.txt",
@@ -258,18 +731,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "url": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "url": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 108
-    },
-    {
       "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
       "url": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
       "last_changed": "2026-10-14T23:57:09.569Z",
@@ -390,116 +851,14 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 84
-    },
-    {
       "path": "/.well-known/evercraft-discovery.json",
       "url": "/.well-known/evercraft-discovery.json",
       "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 84
     },
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "url": "/chum/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "url": "/chum/syndication/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
       "path": "/ai-discovery.json",
       "url": "/ai-discovery.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
       "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 60
     },
@@ -1372,150 +1731,6 @@
       "url": "/forensiscope/developers/llms.txt",
       "last_changed": "2026-10-07T03:10:56.459Z",
       "priority": 146
-    },
-    {
-      "path": "/forensiscope/long-video-deduplication-transcription/llms.txt",
-      "url": "/forensiscope/long-video-deduplication-transcription/llms.txt",
-      "last_changed": "2026-10-07T03:10:56.459Z",
-      "priority": 86
-    },
-    {
-      "path": "/forensiscope/long-video-deduplication-transcription/",
-      "url": "/forensiscope/long-video-deduplication-transcription/",
-      "last_changed": "2026-10-07T03:10:56.459Z",
-      "priority": 60
-    },
-    {
-      "path": "/chum/commercial/",
-      "url": "/chum/commercial/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/earthworks-site-autonomy-study-v1/",
-      "url": "/chum/commercial/earthworks-site-autonomy-study-v1/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/earthworks-site-autonomy-study-v1/index.json",
-      "url": "/chum/commercial/earthworks-site-autonomy-study-v1/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/earthworks-site-autonomy-study-v1/llms.txt",
-      "url": "/chum/commercial/earthworks-site-autonomy-study-v1/llms.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.json",
-      "url": "/chum/commercial/feed.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.xml",
-      "url": "/chum/commercial/feed.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/index.json",
-      "url": "/chum/commercial/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/llms.txt",
-      "url": "/chum/commercial/llms.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/sitemaps/sell-now.xml",
-      "url": "/chum/sitemaps/sell-now.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde.json",
-      "url": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde/",
-      "url": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70.json",
-      "url": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70/",
-      "url": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34.json",
-      "url": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34/",
-      "url": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5.json",
-      "url": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5/",
-      "url": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34.json",
-      "url": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34/",
-      "url": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072.json",
-      "url": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072/",
-      "url": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
-      "url": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
     }
   ]
 }

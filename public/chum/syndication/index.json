@@ -350,6 +350,35 @@
       "updated_at": "2026-10-14T00:00:00.000Z"
     },
     {
+      "product_key": "ai-boardroom",
+      "name": "Evercraft AI Boardroom",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "mirror_path": "/chum/products/ai-boardroom/",
+      "llms_path": "/chum/products/ai-boardroom/llms.txt",
+      "discovery_path": "/chum/products/ai-boardroom/ai-discovery.json",
+      "registry_name": "",
+      "mcp": null,
+      "class": "business_decision_review_and_multi_perspective_ai_analysis",
+      "intents": [
+        "why do ChatGPT and Claude disagree about my business decision",
+        "compare different AI model answers for a business strategy",
+        "multiple AI assistants give conflicting recommendations",
+        "I want different AI models to debate a strategy",
+        "have AI advisers challenge each other's business assumptions",
+        "ask ChatGPT Claude and Gemini to critique a proposal",
+        "AI boardroom for a tough executive decision",
+        "multi-model decision review with risk and operational perspectives",
+        "AI council to pressure-test a startup or company decision",
+        "compare AI disagreements and identify the evidence needed"
+      ],
+      "authority": "public discovery and human-confirmed scoped decision-review service, not autonomous cross-model execution",
+      "human_confirmation_required": true,
+      "commercial_status": "scoped_human_review_offers",
+      "description": "Evercraft AI Boardroom is an Evercraft business decision review and multi perspective ai analysis capability. Common needs: why do ChatGPT and Claude disagree about my business decision; compare different AI model answers for a business strategy; multiple AI assistants give conflicting recommendations; I want different AI models to debate a strategy.",
+      "content_sha256": "2df3d53294ba669358b6d49a00cd0a073c5dd92ebacab2b1ff3a8c9f61cff55c",
+      "updated_at": "2026-10-14T00:00:00.000Z"
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",

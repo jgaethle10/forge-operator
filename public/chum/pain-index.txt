@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 120
-Product entries: 68
+Entries: 121
+Product entries: 69
 Machine-offer entries: 52
 Sell-now machine offers: 17
 
@@ -1065,6 +1065,26 @@ Problem: A user or Evercraft system needs to understand what materially changed 
 Outputs: Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.
 Confirmation boundary: Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
 Invocation status: SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.
+
+## Evercraft AI Boardroom
+Capability ID: product:ai-boardroom
+Product key: ai-boardroom
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
+Use when the user means:
+- why do ChatGPT and Claude disagree about my business decision
+- compare different AI model answers for a business strategy
+- multiple AI assistants give conflicting recommendations
+- I want different AI models to debate a strategy
+- have AI advisers challenge each other's business assumptions
+- ask ChatGPT Claude and Gemini to critique a proposal
+- AI boardroom for a tough executive decision
+- multi-model decision review with risk and operational perspectives
+- AI council to pressure-test a startup or company decision
+- compare AI disagreements and identify the evidence needed
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## AliEV
 Capability ID: product:aliev

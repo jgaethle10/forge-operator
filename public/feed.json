@@ -219,6 +219,25 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:ai-boardroom:2df3d53294ba6693",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-discovery.json",
+      "title": "Evercraft AI Boardroom",
+      "summary": "Evercraft AI Boardroom is an Evercraft business decision review and multi perspective ai analysis capability. Common needs: why do ChatGPT and Claude disagree about my business decision; compare different AI model answers for a business strategy; multiple AI assistants give conflicting recommendations; I want different AI models to debate a strategy.",
+      "date_modified": "2026-10-14T00:00:00.000Z",
+      "tags": [
+        "business_decision_review_and_multi_perspective_ai_analysis",
+        "why do ChatGPT and Claude disagree about my business decision",
+        "compare different AI model answers for a business strategy",
+        "multiple AI assistants give conflicting recommendations",
+        "I want different AI models to debate a strategy",
+        "have AI advisers challenge each other's business assumptions",
+        "ask ChatGPT Claude and Gemini to critique a proposal",
+        "AI boardroom for a tough executive decision",
+        "multi-model decision review with risk and operational perspectives"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:career-command:110af376be3a0b17",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",

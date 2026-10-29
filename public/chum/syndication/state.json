@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-10-14T23:57:09.438Z",
+  "updated_at": "2026-10-29T06:13:11.818Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
@@ -15,6 +15,7 @@
     "eps-estimate-engine": "c9df175763dfb9ccca23c3f6de69ae4eb0f8e189355bef3832b97d47cec36be7",
     "eventwave": "b1e8908b48d38d79c8dba417027633c8cb7e93ca79deeba176a4b7796b1c7cc7",
     "evercraft-front-door": "e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7",
+    "ai-boardroom": "2df3d53294ba669358b6d49a00cd0a073c5dd92ebacab2b1ff3a8c9f61cff55c",
     "career-command": "110af376be3a0b1784c626b6754df4cf321d6e95bb6b189a66d6f1ebb59665f0",
     "evercraft-circles": "9448e74f03b8c7d1f2a073c87bde08cfc7a624097b6491cd4bd96c13b06a425d",
     "evercraft-clip": "331c9cec41e918c9720b2596588fa09c00d222fdcc576425324410cd7df0679e",

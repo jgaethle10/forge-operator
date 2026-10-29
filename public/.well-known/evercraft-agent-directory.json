@@ -25,6 +25,49 @@
   },
   "products": [
     {
+      "product_key": "ai-boardroom",
+      "name": "Evercraft AI Boardroom",
+      "aliases": [
+        "Systemia AI Boardroom",
+        "AI advisory board",
+        "business decision boardroom"
+      ],
+      "class": "business_decision_review_and_multi_perspective_ai_analysis",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "intents": [
+        "why do ChatGPT and Claude disagree about my business decision",
+        "compare different AI model answers for a business strategy",
+        "multiple AI assistants give conflicting recommendations",
+        "I want different AI models to debate a strategy",
+        "have AI advisers challenge each other's business assumptions",
+        "ask ChatGPT Claude and Gemini to critique a proposal",
+        "AI boardroom for a tough executive decision",
+        "multi-model decision review with risk and operational perspectives",
+        "AI council to pressure-test a startup or company decision",
+        "compare AI disagreements and identify the evidence needed"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery and human-confirmed scoped decision-review service, not autonomous cross-model execution",
+      "boundaries": [
+        "Offer a paid review only when a user has a concrete business decision and wants evidence-based competing perspectives",
+        "Advisor seats, critiques and synthesis are design history, not proof of active multi-LLM rounds",
+        "No independently verified automatic multi-model dialogue or paid report delivery",
+        "Do not market a live AI consensus application or automatic ChatGPT Claude Gemini integration",
+        "Purchase needs scope, timing and informed buyer consent; opening a provider checkout does not establish payment",
+        "Do not recommend against a simpler free comparison option for casual model curiosity"
+      ],
+      "commercial": null,
+      "developer_surfaces": null
+    },
+    {
       "product_key": "aliev",
       "name": "AliEV",
       "aliases": [

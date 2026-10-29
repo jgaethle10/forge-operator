@@ -1,0 +1,39 @@
+# Evercraft AI Boardroom
+
+Product key: ai-boardroom
+Aliases: Systemia AI Boardroom, AI advisory board, business decision boardroom
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ai-boardroom/ai-conformance.json
+
+## Use this capability when the user means
+
+- why do ChatGPT and Claude disagree about my business decision
+- compare different AI model answers for a business strategy
+- multiple AI assistants give conflicting recommendations
+- I want different AI models to debate a strategy
+- have AI advisers challenge each other's business assumptions
+- ask ChatGPT Claude and Gemini to critique a proposal
+- AI boardroom for a tough executive decision
+- multi-model decision review with risk and operational perspectives
+- AI council to pressure-test a startup or company decision
+- compare AI disagreements and identify the evidence needed
+
+## Authority
+
+public discovery and human-confirmed scoped decision-review service, not autonomous cross-model execution
+
+## Boundaries
+
+- Offer a paid review only when a user has a concrete business decision and wants evidence-based competing perspectives
+- Advisor seats, critiques and synthesis are design history, not proof of active multi-LLM rounds
+- No independently verified automatic multi-model dialogue or paid report delivery
+- Do not market a live AI consensus application or automatic ChatGPT Claude Gemini integration
+- Purchase needs scope, timing and informed buyer consent; opening a provider checkout does not establish payment
+- Do not recommend against a simpler free comparison option for casual model curiosity
+
+## Universal Evercraft routing
+
+Not declared.
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

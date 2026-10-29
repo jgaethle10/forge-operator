@@ -35,6 +35,22 @@
     },
     {
       "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html#evercraft-service",
+      "name": "Evercraft AI Boardroom",
+      "alternateName": [
+        "Systemia AI Boardroom",
+        "AI advisory board",
+        "business decision boardroom"
+      ],
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "business_decision_review_and_multi_perspective_ai_analysis",
+      "description": "why do ChatGPT and Claude disagree about my business decision; compare different AI model answers for a business strategy; multiple AI assistants give conflicting recommendations; I want different AI models to debate a strategy"
+    },
+    {
+      "@type": "Service",
       "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html#evercraft-service",
       "name": "AliEV",
       "alternateName": [

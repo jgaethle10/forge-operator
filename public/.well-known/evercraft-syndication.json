@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 68,
+  "product_count": 69,
   "products": [
     {
       "product_key": "aliev",
@@ -169,6 +169,17 @@
       "registry_name": null,
       "mcp": null,
       "content_sha256": "e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7"
+    },
+    {
+      "product_key": "ai-boardroom",
+      "name": "Evercraft AI Boardroom",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "mirror": "/chum/products/ai-boardroom/",
+      "llms": "/chum/products/ai-boardroom/llms.txt",
+      "discovery": "/chum/products/ai-boardroom/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "2df3d53294ba669358b6d49a00cd0a073c5dd92ebacab2b1ff3a8c9f61cff55c"
     },
     {
       "product_key": "career-command",
