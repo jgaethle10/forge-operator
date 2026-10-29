@@ -35,7 +35,7 @@ test('operator file selection, safety, playback and output control',()=>{
   assert.match(js,/\.webm/);
   assert.match(js,/\.png/);
   assert.match(js,/\.jpg/);
-  assert.match(js,/state\.muted=true/);
+  assert.match(js,/muted:true/);
   assert.match(js,/node\.addEventListener\('ended'/);
   assert.match(js,/document\.addEventListener\('keydown'/);
   assert.doesNotThrow(()=>new Script(js));
