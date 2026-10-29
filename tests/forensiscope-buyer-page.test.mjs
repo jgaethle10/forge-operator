@@ -33,8 +33,8 @@ test('ForensiScope public page is available even when payment backend is held',a
   assert.equal(response.status,200);
   assert.ok(response.headers.get('content-type').includes('text/html'));
   const html=await response.text();
-  assert.match(html,/Understand the whole recording/);
-  assert.match(html,/Request review/);
+  assert.match(html,/Long recording/);
+  assert.match(html,/Request a review/);
   assert.doesNotMatch(html,/Continue to checkout/);
   const offers=await fetch(rt.url+'/offers').then(x=>x.text());
   assert.ok(offers.includes('ForensiScope'));
