@@ -5,11 +5,15 @@ const ROOT=new URL('../public/forensiscope/',import.meta.url);
 const page=fs.readFileSync(new URL('index.html',ROOT),'utf8');
 const guide=fs.readFileSync(new URL('llms.txt',ROOT),'utf8');
 const discovery=JSON.parse(fs.readFileSync(new URL('discovery.json',ROOT),'utf8'));
+const status=JSON.parse(fs.readFileSync(new URL('developers/status.json',ROOT),'utf8'));
+
 const buyer='https://jgaethle10.github.io/forge-operator/forensiscope/';
 
 test('ForensiScope AI routing points directly to the one-action buyer page',()=>{
   assert.equal(discovery.canonical_url,buyer);
   assert.equal(discovery.start_url,buyer);
+  assert.equal(status.public_handoff.url,buyer);
+  assert.equal(status.public_handoff.mode,'email_inquiry_no_upload_no_charge');
   assert.match(guide,/Canonical ForensiScope buyer page/);
   assert.ok(guide.includes(buyer));
   assert.ok(page.includes('<link rel="canonical" href="'+buyer+'">'));
