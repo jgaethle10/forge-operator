@@ -68,6 +68,13 @@ try{
     const change=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(change.objects.length,1,profile.name+': adding tree did not persist');
     await page.locator('[data-command="sky sunset"]').click();
+    await page.locator('#qualityMode').selectOption('smooth');
+    await page.waitForFunction(()=>document.querySelector('#world').width<document.querySelector('#world').clientWidth,null,{timeout:5000});
+    const quality=await page.evaluate(()=>({mode:localStorage.getItem('evercraft.worlds.quality.v1'),width:document.querySelector('#world').width,clientWidth:document.querySelector('#world').clientWidth}));
+    assert.equal(quality.mode,'smooth',profile.name+': visual quality preference did not persist');
+    const routines=await page.evaluate(async()=>{const m=await import('/worlds/world-core.mjs');const w=JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1'));return {pip:m.agentActivity(w,'pip').activity,lumi:m.agentActivity(w,'lumi').activity};});
+    assert.match(routines.lumi,/sunset/i);
+    assert.equal(routines.pip,'Planning a secret garden');
     const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(saved.sky,'sunset',profile.name+': sky change not stored');
     await page.locator('#closeEditor').click();
@@ -76,8 +83,9 @@ try{
     const loaded=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(loaded.objects.length,1,profile.name+': world object missing after reload');
     assert.equal(loaded.sky,'sunset',profile.name+': environment edit missing after reload');
+    assert.equal(await page.locator('#qualityMode').inputValue(),'smooth',profile.name+': quality mode did not load after refresh');
     assert.deepEqual(errors,[],profile.name+': browser exceptions');
-    receipt.scenarios.push({profile:profile.name,status:'PASS',elapsed_wall_ms:Date.now()-start,initial_canvas:pre,scene_revision:loaded.revision,objects:loaded.objects.length,saved_document_bytes:JSON.stringify(loaded).length,page_errors:errors,screenshot:profile.name+'.png'});
+    receipt.scenarios.push({profile:profile.name,status:'PASS',elapsed_wall_ms:Date.now()-start,initial_canvas:pre,scene_revision:loaded.revision,objects:loaded.objects.length,saved_document_bytes:JSON.stringify(loaded).length,page_errors:errors,quality,routines,screenshot:profile.name+'.png'});
     await context.close();
   }
   receipt.status='PASS';
