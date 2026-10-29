@@ -34,7 +34,7 @@
     "near-duplicate segment detection",
     "cloud-storage handoff for oversized media"
   ],
-  "canonical_url": null,
+  "canonical_url": "https://jgaethle10.github.io/forge-operator/forensiscope/",
   "registry_name": "io.github.jgaethle10/forensiscope",
   "mcp": null,
   "overflow_contract": "/.well-known/evercraft-media-overflow.json",
@@ -62,7 +62,7 @@
     "agentic video search",
     "long video summarization"
   ],
-  "start_url": null,
+  "start_url": "https://jgaethle10.github.io/forge-operator/forensiscope/",
   "commercial": {
     "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
     "pricing": [
@@ -89,7 +89,10 @@
     ],
     "payment_authority": "Evercraft Payments",
     "checkout_is_payment_proof": false,
-    "paid_state_requires_authoritative_verification": true
+    "paid_state_requires_authoritative_verification": true,
+    "entry_action": "Request a review (prefilled email inquiry)",
+    "automated_checkout_available": false,
+    "media_upload_available": false
   },
   "developer": {
     "hub": "/forensiscope/developers/",

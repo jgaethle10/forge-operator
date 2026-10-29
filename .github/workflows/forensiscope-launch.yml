@@ -8,6 +8,12 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/forensiscope-buyer-page.test.mjs'
       - 'tests/forensiscope-static-page.test.mjs'
+      - 'tests/forensiscope-buyer-discovery.test.mjs'
+      - 'public/forensiscope/llms.txt'
+      - 'public/forensiscope/discovery.json'
+      - 'public/forensiscope/developers/status.json'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'public/forensiscope/index.html'
       - '.github/workflows/evercraft-journal-pages.yml'
       - '.github/workflows/forensiscope-launch.yml'
@@ -24,4 +30,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify pricing and authorized native payment route (no real checkout)
-        run: node --test systemia/payments/payment-routing.test.mjs systemia/forensiscope/commercial-offers.test.mjs tests/forensiscope-buyer-page.test.mjs tests/forensiscope-static-page.test.mjs tests/fabric-checkout-transport-truth.test.mjs
+        run: node --test systemia/payments/payment-routing.test.mjs systemia/forensiscope/commercial-offers.test.mjs tests/forensiscope-buyer-page.test.mjs tests/forensiscope-static-page.test.mjs tests/forensiscope-buyer-discovery.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/fabric-checkout-transport-truth.test.mjs
