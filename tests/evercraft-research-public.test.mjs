@@ -32,6 +32,9 @@ test("generated brief is useful, explicit about uncertainty and does not invent 
  const r=prepareResearchScope({question:"Which publicly documented trends affect the local repair shop market?",context:"Prioritize sources that help a founder decide whether to expand.",format:"market-review",location:"Yakima, WA",sources:"https://example.org/study\nhttps://example.com/data"});
  assert.equal(r.formatLabel,FORMATS["market-review"]);
  assert.equal(r.sources.length,2);
+ assert.equal(r.reportSections.length,5);
+ assert.match(r.reportText,/PROPOSED REPORT STRUCTURE \(NOT YET RESEARCHED\)/);
+ assert.match(r.reportText,/Competitor and substitute landscape/);
  assert.equal(r.researchPerformed,false);
  assert.equal(r.priceQuoted,false);
  assert.equal(r.orderCreated,false);
@@ -69,4 +72,25 @@ test("client-side scope generator does not access research runtime or private ne
  assert.doesNotMatch(s,/\bfetch\s*\(|XMLHttpRequest|https?:\/\/fabric\.|http:\/\/127\.0\.0\.1/);
  assert.ok(s.includes("researchPerformed:false"));
  assert.ok(s.includes("orderCreated:false"));
+});
+
+
+test("all research types expose an honest deliverable outline rather than fabricated results",()=>{
+ const question="Which documented factors should inform our next purchase decision?";
+ for(const format of Object.keys(FORMATS)){
+  const r=prepareResearchScope({question,format});
+  assert.ok(r.reportSections.length>=4,format);
+  assert.ok(r.reportSections.every(x=>typeof x==="string"&&x.length>10));
+  assert.ok(r.reportSections.every(x=>r.reportText.includes(x)));
+  assert.equal(r.researchPerformed,false);
+ }
+ assert.ok(html.includes('id="report-outline"'));
+ assert.ok(html.includes("outline.replaceChildren()"));
+ assert.ok(html.includes("item.textContent=section"));
+ assert.match(html,/These are not findings/);
+});
+test("mobile evidence hero keeps labels separate from explanations and can wrap",()=>{
+ assert.match(html,/\.evidence \.line\{[^}]*display:grid;grid-template-columns:minmax\(105px,auto\) minmax\(0,1fr\)/);
+ assert.match(html,/@media\(max-width:620px\)\{[^}]*\.evidence \.line\{grid-template-columns:minmax\(0,1fr\)/);
+ assert.doesNotMatch(html,/\.evidence \.line b\{[^}]*min-width:65px/);
 });
