@@ -71,6 +71,9 @@ test('real Saban scheduler runs two bounded read-only tasks with durable fenced 
 
 test('read-only adapter failure is held and never automatically retried by ordinary scheduler',async()=>{
   const f=make();
+  // One item makes the no-automatic-replay assertion unambiguous.
+  const keep=Object.keys(f.state.jobs)[0];
+  f.state.jobs={ [keep]: f.state.jobs[keep] };
   let calls=0;
   const adapter={runAssignment:async()=>{
     calls++;throw Error('synthetic-readonly-failure');
