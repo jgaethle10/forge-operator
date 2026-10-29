@@ -103,6 +103,13 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-step strong{display:block;margin-bottom:4px}
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
+.part-brief{display:grid;gap:10px;width:100%;min-width:0;padding:22px;border:1px solid var(--line);border-radius:17px;background:rgba(9,17,32,.66)}
+.part-brief>label:not(.checkout-note){font-weight:750;margin-top:7px}
+.part-brief>input:not([type=checkbox]),.part-brief>textarea{box-sizing:border-box;min-width:0;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);font:inherit;line-height:1.45}
+.part-brief>.checkout-note{display:flex;gap:10px;align-items:flex-start;padding:8px 0;max-width:100%;line-height:1.6}
+.part-brief>.checkout-note input{flex:0 0 auto;margin-top:3px;width:18px;height:18px}
+.part-brief>textarea{resize:vertical}
+@media(max-width:580px){.part-brief{padding:16px}.part-brief>input:not([type=checkbox]),.part-brief>textarea{font-size:16px}}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
@@ -370,6 +377,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
       'Please confirm the exact scope, capacity, secure payment instructions and next steps.'].join('\n')
     : 'I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   const partFields=isPartHunt?[
+    '<section class="part-brief" aria-label="FindMyPart part details and consent">',
     '<div class="checkout-note"><strong>Before paying:</strong> give us enough information to identify the stalled repair. This request is kept with the order only if Evercraft Payments confirms the intake was securely saved.</div>',
     '<label for="fmp-part-description">What part is missing and what has failed? *</label>',
     '<textarea id="fmp-part-description" name="part_description" minlength="20" maxlength="1600" rows="4" required placeholder="Describe the component, why it is needed, and any physical clues." style="width:100%;min-height:104px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit"></textarea>',
@@ -381,6 +389,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     '<textarea id="fmp-sources" name="sources_tried" maxlength="800" rows="2" placeholder="Dealers, catalogs, salvage suppliers, and known dead ends."></textarea>',
     '<label class="checkout-note"><input name="scope_confirmed" value="true" type="checkbox" required> I confirm these details and understand the hunt price covers research, not the replacement part. Availability, fitment and results cannot be guaranteed.</label>',
     '<label class="checkout-note"><input name="user_confirmed" value="true" type="checkbox" required> I authorize preparing a secure checkout for this exact research tier after my brief is safely recorded.</label>',
+    '</section>',
   ].join('\n'):'';
   return shell(copy.headline+' · Evercraft',[
     '<main>',
