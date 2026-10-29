@@ -425,7 +425,7 @@ export async function startFabricLocalRuntime({
   const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
   const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
     onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
-  const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined});
+  const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey});
   const findMyPartInquiry=createFindMyPartInquiryHandler({storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
     onAlertQueued:()=>{if(findMyPartAlertDispatcher.enabled)void findMyPartAlertDispatcher.dispatch().catch(()=>{});}});
   const checkoutHandoffs=new Map();
