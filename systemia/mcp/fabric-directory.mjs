@@ -209,6 +209,26 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       connections,
     };
   });
+  // Supplement the generated machine-catalog projection with explicitly declared
+  // discovery-only pilot doors. Do not add them to custom fixture catalogs.
+  // A generated canonical entry wins if the product later graduates into it.
+  if(!catalogPath){
+    const supplementalPath=path.resolve(moduleDir,'./fabric-catalog-supplements.json');
+    if(fs.existsSync(supplementalPath)){
+      const supplemental=JSON.parse(fs.readFileSync(supplementalPath,'utf8'));
+      if(supplemental?.schema!=='evercraft.fabric.catalog-supplements.v1' ||
+        !Array.isArray(supplemental.capabilities))throw new Error('fabric_catalog_supplements_invalid');
+      const canonicalIds=new Set(mapped.map(item=>item.public_id));
+      for(const item of supplemental.capabilities){
+        if(item?.commercial_state!=='discovery_only' || item?.entry_paid_offer!=null)
+          throw new Error('fabric_supplement_requires_discovery_only');
+        const id=normalizedId(item.public_id);
+        if(canonicalIds.has(id))continue;
+        mapped.push(item);
+        canonicalIds.add(id);
+      }
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
