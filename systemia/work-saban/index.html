@@ -1,9 +1,56 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Work Saban</title><link rel="stylesheet" href="/style.css"></head>
-<body><main>
-<header><small>EVERCRAFT / SABAN</small><h1>Work Saban<span>.</span></h1><p>You bring the work. Saban brings the team.</p></header>
-<section id="office" class="office-shell" aria-label="Live Work Saban visual office">
-<div class="office-heading"><div><span class="office-eyebrow">SABAN / VISUAL OPERATIONS</span><h2>The Work Floor</h2><p>Watch registered specialists work. Every status comes from actual local worker events.</p></div><div class="office-live"><span class="office-beacon"></span><span id="office-mode">AWAITING A MISSION</span></div></div>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Work Saban | Your task. Your team.</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body><main class="customer-workspace">
+<header class="customer-header"><span class="customer-brand"><span class="brand-symbol" aria-hidden="true">S</span> work saban <small>BY EVERCRAFT</small></span><span class="local-label">LOCAL PREVIEW</span></header>
+<section class="mission-hero" aria-labelledby="work-title">
+<p class="customer-eyebrow">YOUR TASK. YOUR TEAM.</p>
+<h1 id="work-title">Give your work <span>a team.</span></h1>
+<p class="customer-intro">Tell Saban what you need. See the specialists who would handle it.</p>
+<div class="input mission-input">
+<label for="task">What needs to get done?</label>
+<textarea id="task" maxlength="4000" placeholder="Analyze last month's sales and prepare a report for my manager."></textarea>
+<div class="mission-actions"><button id="compose" type="button">Plan my team</button><button id="demo" type="button" class="secondary">Try an example report</button></div>
+<p class="muted">Planning does not start work. The example runs a local, synthetic sales report with no outside access.</p>
+</div>
+<p class="error" id="error" role="alert" aria-live="assertive"></p>
+</section>
+<section id="result" class="customer-output" hidden aria-live="polite">
+<div class="result-head"><h2>Suggested team</h2><span id="state"></span></div>
+<p class="muted">This is a proposal, not a running AI team. You approve connected actions separately.</p>
+<div id="roles" class="roles"></div>
+<details class="nested-details"><summary>See the plan and approvals</summary>
+<h3>Work sequence</h3><div id="waves" class="waves"></div>
+<h3>Approvals needed</h3><ul id="gates"></ul><p class="muted" id="next"></p>
+<button id="copy" type="button" class="secondary">Copy mission proposal</button></details>
+</section>
+<section id="demo-result" class="customer-output" hidden aria-live="polite">
+<h2>Example report</h2><p class="muted" id="demo-label">Synthetic fixture only. No account access or external sends.</p>
+<pre id="demo-report"></pre>
+<div class="output-actions"><button id="save-report" type="button" hidden>Save verified report (.md)</button></div>
+<details class="nested-details"><summary>See worker checks and proof</summary><div id="demo-steps" class="roles"></div><p class="muted" id="demo-proof"></p></details>
+</section>
+<section class="secondary-section" aria-label="Additional local options">
+<details id="csv-details" class="customer-details">
+<summary>Use my own CSV (local only)</summary>
+<section class="input" id="csv-intake">
+<h2>Run your own sales report</h2>
+<p class="muted">Choose a CSV with month and revenue columns. This file is read by the local preview on this computer. It is not sent to an AI provider or external service.</p>
+<label for="csv-file">Choose CSV (256 KB maximum)</label>
+<input id="csv-file" type="file" accept=".csv,text/csv">
+<label class="consent"><input id="csv-consent" type="checkbox"> I authorize Work Saban to read this selected file for one local report.</label>
+<button id="csv-run" type="button" disabled>Run my CSV locally</button>
+</section></details>
+<details id="office-details" class="customer-details">
+<summary>View the Work Floor and detailed evidence</summary>
+<p class="muted details-intro">Advanced local inspection. The 3D desks represent registered worker stages, not separately running AI models.</p>
+<section id="office" class="office-shell" aria-label="Work Saban local visual office">
+<div class="office-heading"><div><span class="office-eyebrow">SABAN / VISUAL OPERATIONS</span><h2>The Work Floor</h2><p>Explore the local worker states and receipts. Execution status reflects actual events, never an invented animation.</p></div><div class="office-live"><span class="office-beacon"></span><span id="office-mode">AWAITING A MISSION</span></div></div>
 <div class="office-layout">
 <div class="office-scene-wrap">
   <div class="office-scene-title"><span><span class="floor-dot"></span> FIRST FLOOR <span class="floor-divider">/</span> OPERATIONS STUDIO</span><span id="office-progress">0 / 5 verified</span><button id="office-3d-toggle" type="button" class="office-view-toggle" aria-pressed="false">Explore 3D office</button></div>
@@ -17,8 +64,12 @@
 </aside>
 </div>
 </section>
-<section class="input"><label for="task">What needs to get done?</label><textarea id="task" maxlength="4000" placeholder="Analyze last month's sales and prepare a presentation for my manager."></textarea><button id="compose">Assemble my team</button> <button id="demo" type="button" class="secondary">Run example team (synthetic data)</button><p class="muted">Local formation preview. No file access, live workers, messages, purchases or system changes.</p></section>
-<section class="input" id="csv-intake"><h2>Run your own sales report</h2><p class="muted">Choose one CSV with month and revenue columns. Your file is sent only to the local Work Saban preview on this computer, never to an AI provider or external service.</p><label for="csv-file">Select CSV (256 KB maximum)</label><input id="csv-file" type="file" accept=".csv,text/csv"><label class="consent"><input id="csv-consent" type="checkbox"> I authorize Work Saban to read this selected file for this single local report.</label><button id="csv-run" disabled>Run my CSV locally</button></section>
-<section id="result" hidden aria-live="polite"><div class="result-head"><h2>Your proposed team</h2><span id="state"></span></div><div id="roles" class="roles"></div><h3>Execution waves</h3><div id="waves" class="waves"></div><h3>Actions requiring your approval</h3><ul id="gates"></ul><p class="muted" id="next"></p><button id="copy">Copy mission proposal</button></section>
-<section id="demo-result" hidden aria-live="polite"><h2>Example mission completed</h2><p class="muted" id="demo-label">Synthetic fixture only. No account access or external sends.</p><div id="demo-steps" class="roles"></div><h3>Audited sales report</h3><pre id="demo-report"></pre><p class="muted" id="demo-proof"></p><button id="save-report" hidden>Save verified report (.md)</button></section><p class="error" id="error" role="alert"></p>
-</main><script src="/trace-client.js" defer></script><script src="/office-3d.js" defer></script><script src="/office.js" defer></script><script src="/app.js" defer></script></body></html>
+</details>
+</section>
+<footer class="customer-footer"><span>Work Saban by Evercraft</span><span>Local-only preview · No account access or payments</span></footer>
+</main>
+<script src="/trace-client.js" defer></script>
+<script src="/office-3d.js" defer></script>
+<script src="/office.js" defer></script>
+<script src="/app.js" defer></script>
+</body></html>
