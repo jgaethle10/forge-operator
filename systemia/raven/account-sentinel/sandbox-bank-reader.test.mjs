@@ -20,7 +20,14 @@ const make = (opts={}) => {
   const reader=createSandboxBankReader({
     connector:opts.connector||connector(),
     allowedSandboxOrigins:opts.origins||['https://sandbox.examplebank.test'],
-    tokenVault:{getAccessToken:async()=>{ vaultReads++; return opts.token ?? TOKEN; }},
+    tokenVault:{getAccessToken:async()=>{ vaultReads++; return opts.vaultGrant ?? {
+      schema:'evercraft.account-sentinel.sandbox-token.v1',
+      access_token:opts.token ?? TOKEN, token_type:'Bearer',
+      connector_id:'demo-bank-oauth',environment:'sandbox',
+      audience:'https://sandbox.examplebank.test',
+      scopes:['balances:read','accounts:read','transactions:read'],
+      expires_at:new Date(Date.now()+30*60_000).toISOString(),
+    }; }},
     transport:opts.transport||((url,init)=> {
       calls.push({url,init});
       return response(opts.payload||{
@@ -204,4 +211,34 @@ test('provider response tagged redirected cannot be accepted even on 200',async(
   Object.defineProperty(forged,'redirected',{value:true});
   const p=make({transport:async()=>forged});
   await assert.rejects(p.reader.read(request()),/sandbox_bank_read_rejected/);
+});
+
+test('token vault may not return a bare bearer string',async()=>{
+  const p=make({vaultGrant:TOKEN});
+  await assert.rejects(p.reader.read(request()),/sandbox_bank_read_rejected/);
+  assert.equal(p.calls.length,0);
+});
+
+test('vault metadata requires exact connector, environment, audience, read scope and freshness',async()=>{
+  const valid={
+    schema:'evercraft.account-sentinel.sandbox-token.v1',
+    access_token:TOKEN,token_type:'Bearer',
+    connector_id:'demo-bank-oauth',environment:'sandbox',
+    audience:'https://sandbox.examplebank.test',scopes:['balances:read'],
+    expires_at:new Date(Date.now()+30*60_000).toISOString(),
+  };
+  const tampering=[
+    {connector_id:'another-connector'},{environment:'production'},
+    {audience:'https://evil.invalid'},{token_type:'Basic'},
+    {scopes:[]},{scopes:['accounts:read']},
+    {scopes:['balances:read','transfers:write']},
+    {expires_at:new Date(Date.now()-60_000).toISOString()},
+    {expires_at:new Date(Date.now()+2*24*60*60_000).toISOString()},
+    {schema:'untrusted-schema'},{account_password:'synthetic-injected'},
+  ];
+  for (const override of tampering) {
+    const p=make({vaultGrant:{...valid,...override}});
+    await assert.rejects(p.reader.read(request()),/sandbox_bank_read_rejected/);
+    assert.equal(p.calls.length,0);
+  }
 });
