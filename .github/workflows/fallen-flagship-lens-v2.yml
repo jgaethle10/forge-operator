@@ -1,0 +1,42 @@
+name: Fallen Studios lens V2 optical aperture shot tournament
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - '.github/workflows/fallen-flagship-lens-v2.yml'
+      - 'systemia/media-studio/hero-canary/lens_hero_v2.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 23
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Blender and FFmpeg (no Vast usage)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender ffmpeg
+      - name: Render 540x960 still, new aperture geometry and cinematic studio lighting
+        run: |
+          mkdir -p artifacts/lens-v2
+          blender -b -t 4 --python systemia/media-studio/hero-canary/lens_hero_v2.py -- --output artifacts/lens-v2/v2-still --preview-still
+          test -s artifacts/lens-v2/v2-still_still.png
+      - name: Render and encode full 2 second 24fps CGI shot
+        run: |
+          blender -b -t 4 --python systemia/media-studio/hero-canary/lens_hero_v2.py -- --output artifacts/lens-v2/v2-motion --preview-animation
+          test "$(find artifacts/lens-v2 -name 'v2-motion_*.png' | wc -l)" -eq 48
+          ffmpeg -hide_banner -loglevel error -y -framerate 24 -i artifacts/lens-v2/v2-motion_%04d.png -c:v libx264 -pix_fmt yuv420p -crf 20 -preset medium -movflags +faststart artifacts/lens-v2/lens-v2-aperture.mp4
+          ffmpeg -v error -i artifacts/lens-v2/lens-v2-aperture.mp4 -f null -
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 artifacts/lens-v2/lens-v2-aperture.mp4
+      - name: Upload editable scene and proof files
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-lens-v2-original-cycles-proof
+          path: |
+            artifacts/lens-v2/v2-still_still.png
+            artifacts/lens-v2/lens-v2-aperture.mp4
+            artifacts/lens-v2/v2-motion.blend
+          if-no-files-found: error
+          retention-days: 14
