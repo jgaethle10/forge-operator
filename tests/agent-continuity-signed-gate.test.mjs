@@ -121,6 +121,18 @@ function makeExecutor(gate, counter) {
           provider_receipt: "fake:" + role,
         };
       },
+      async inferCommissioned({role,agent_id,request_id,registry_snapshot_hash,preflight_id}) {
+        assert.equal(agent_id,assigned[role]);
+        assert.equal(request_id,request().request_id + ":" + role);
+        assert.equal(registry_snapshot_hash,preflightPayload().registry_snapshot_hash);
+        assert.equal(preflight_id,preflightPayload().preflight_id);
+        counter.count += 1;
+        return {
+          text: "VERDICT: HOLD. Missing evidence.",
+          provider: "synthetic-identity-aware-transport",
+          provider_receipt: "fake:" + role,
+        };
+      },
     },
   });
 }
@@ -144,6 +156,17 @@ test("unconfigured commissioned team holds before any provider work", async () =
   assert.equal(res.status, "blocked");
   assert.equal(res.blocked_reason, "commissioned_team_verifier_not_configured");
   assert.equal(counter.count, 0);
+});
+
+test("generic inference transport is never silently used for commissioned work", async () => {
+  let count=0;
+  const genericOnly=createRavenTeamReviewExecutor({
+    inferenceAdapter:{infer:async()=>{count+=1;return {text:"fake"};}},
+  });
+  const response=await genericOnly(request());
+  assert.equal(response.status,"blocked");
+  assert.equal(response.blocked_reason,"commissioned_worker_transport_not_configured");
+  assert.equal(count,0);
 });
 
 test("valid mission-bound signed preflight and signed Juniper writeback yield a bounded receipt", async () => {
