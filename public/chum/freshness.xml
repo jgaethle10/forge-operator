@@ -2,12 +2,16 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-29T19:04:44.835Z</updated>
+<updated>2026-10-29T19:07:25.347Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:df0ad4eed50a3c1f94fdb999</id><title>/forensiscope/distribution/llms.txt</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/distribution/llms.txt"/><category term="priority-146"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:14e32faa7c0eba342dbadda4</id><title>/forensiscope/distribution/</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/distribution/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:71d1cf08089397f37c0a552c</id><title>/forensiscope/distribution/reddit-pack.json</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/distribution/reddit-pack.json"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:efa1862f27db9d81d7640b3b</id><title>/forensiscope/editorial/social-pack.json</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/editorial/social-pack.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:7e6f6077ae195faaa58cd246</id><title>/forensiscope/developers/status.json</title><updated>2026-10-29T18:23:14.518Z</updated><link href="/forensiscope/developers/status.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-29T15:21:50.017Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
@@ -101,8 +105,4 @@
 <entry><id>urn:evercraft:chum:74caad6ad427c043894ec960</id><title>/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:08ddb828afa2cd4cd226baa4</id><title>/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:15b21385a974692184ef44a7</id><title>/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:b31679efcc98ecd00dac2128</id><title>/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:488e7b51d38d2f984ad51cdd</id><title>/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:2f1705999d839122dfaa932b</id><title>/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:dc4f2c725f56e8af923235e5</id><title>/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json"/><category term="priority-100"/></entry>
 </feed>

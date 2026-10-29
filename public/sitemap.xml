@@ -22,7 +22,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-29T06:14:03.378Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-29T19:04:44.835Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-29T19:04:44.835Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-29T19:04:44.835Z</lastmod></url>
@@ -94,7 +94,7 @@
   <url><loc>/forensiscope/editorial/index.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/feed.xml</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
-  <url><loc>/forensiscope/editorial/social-pack.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/social-pack.json</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
   <url><loc>/forensiscope/editorial/semantic-neighborhood.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/long-video-ai-tools/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/editorial/forensiscope-vs-twelve-labs/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
@@ -119,9 +119,9 @@
   <url><loc>/forensiscope/mesh/video-evidence-timeline/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/mesh/video-intelligence-platform/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/mesh/semantic-video-indexing/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/forensiscope/distribution/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
+  <url><loc>/forensiscope/distribution/</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
+  <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
+  <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
   <url><loc>/llms.txt</loc><lastmod>2026-10-29T07:16:51.204Z</lastmod></url>
   <url><loc>/llms-full.txt</loc><lastmod>2026-10-29T06:13:11.985Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T19:04:44.835Z",
+  "updated_at": "2026-10-29T19:07:25.347Z",
   "url_count": 3020,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "7d5cdcf2328800568d98a7ca493179ff3a54d58600d0a566063669d2acd9f581",
-      "last_changed": "2026-10-29T19:04:44.835Z",
+      "content_sha256": "8d3df54dd472a55da8ecc80f8abd1b7c0ca46140dd72722b43d0d5e6b8cce663",
+      "last_changed": "2026-10-29T19:07:25.347Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -555,8 +555,8 @@
     },
     "/forensiscope/editorial/social-pack.json": {
       "path": "/forensiscope/editorial/social-pack.json",
-      "content_sha256": "80e1e52bca5fbfa116fe2f66d7615ac75368efcaa519c98eef0808186b4bf7cf",
-      "last_changed": "2026-09-25T23:17:57.077Z",
+      "content_sha256": "b7227e763ef70e93444d573f0da0bb7ccfe9794de3c92368f3ef5dd521e1a9ea",
+      "last_changed": "2026-10-29T19:07:25.347Z",
       "priority": 60
     },
     "/forensiscope/editorial/semantic-neighborhood.json": {
@@ -705,20 +705,20 @@
     },
     "/forensiscope/distribution/": {
       "path": "/forensiscope/distribution/",
-      "content_sha256": "be9002f9ae3c15112714578365981b6377581a860ad48f1cffcf4616a31cb412",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "067b6297e276f158597da52a9a636613a51cb5816d88d4144df203d0b9c43343",
+      "last_changed": "2026-10-29T19:07:25.347Z",
       "priority": 60
     },
     "/forensiscope/distribution/reddit-pack.json": {
       "path": "/forensiscope/distribution/reddit-pack.json",
-      "content_sha256": "e7c0a0212069c4b161a745c59423abf2428d5b21f76f0d456577e7194b9d0452",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "185f0626717d32b90375143e33e156380e0e71103233788ba80a861e6e998198",
+      "last_changed": "2026-10-29T19:07:25.347Z",
       "priority": 60
     },
     "/forensiscope/distribution/llms.txt": {
       "path": "/forensiscope/distribution/llms.txt",
-      "content_sha256": "24aea0bc00c3c3ff720810d97d3e1224d9917e127d0e20a954818ea05b9284b2",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "e853c964414bb54c160fb33dff86d73fe1530f59460c121e62605f286dd71ca7",
+      "last_changed": "2026-10-29T19:07:25.347Z",
       "priority": 146
     },
     "/llms.txt": {
