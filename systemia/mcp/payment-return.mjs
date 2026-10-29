@@ -1,4 +1,5 @@
 import {parseOwnedPaymentUrl} from './owned-payment-transport.mjs';
+import {publicPaymentOffer} from './public-payment-offers.mjs';
 import crypto from 'node:crypto';
 export function buyerOrderKey(slug,idempotencyKey){
   const h=crypto.createHash('sha256').update(JSON.stringify([slug,idempotencyKey])).digest('hex').slice(0,32);
@@ -13,7 +14,9 @@ const NATIVE_OFFERS={
  'site-survive':'evercraft_network.site_survive_rapid_audit_250.v1'
 };
 export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch,ownedOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||''){
- const offerKey=NATIVE_OFFERS[slug];
+ // Native and expanded offers share the exact approved SKU registry.
+ // Never infer entitlement from the amount or an unrelated same-price offer.
+ const offerKey=NATIVE_OFFERS[slug]||publicPaymentOffer(slug)?.offer_key;
  const orderKey=params.get('evercraft_order_key')||'';
  const session=params.get('stripe_session_id')||'';
  if(!offerKey||params.get('offer_key')!==offerKey||!/^cs_(?:live|test)_[A-Za-z0-9]+$/.test(session)||!/^[A-Za-z0-9_-]{8,260}$/.test(orderKey))return {state:'invalid',status:400};
