@@ -1,0 +1,48 @@
+name: FindMyPart brand launch gate
+on:
+  pull_request:
+    paths:
+      - 'public/findmypart/**'
+      - 'systemia/mcp/findmypart-public-inquiry.mjs'
+      - 'systemia/mcp/findmypart-private-quote.mjs'
+      - 'scripts/findmypart-review-inquiry.mjs'
+      - 'tests/findmypart-private-quote.test.mjs'
+      - 'scripts/findmypart-owner-inbox.mjs'
+      - 'scripts/provision-findmypart-owned-intake.mjs'
+      - 'tests/findmypart-owned-provision.test.mjs'
+      - 'tests/findmypart-public-inquiry.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/findmypart-launch-system.test.mjs'
+      - '.github/workflows/findmypart-launch-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-owned-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Brand and owned first-party route acceptance
+        run: node --test tests/findmypart-launch-system.test.mjs
+      - name: Check frontend module and private lead handler syntax
+        run: |
+          node --check public/findmypart/app.mjs
+          node --check systemia/mcp/findmypart-public-inquiry.mjs
+          node --check scripts/findmypart-owner-inbox.mjs
+          node --check scripts/findmypart-review-inquiry.mjs
+          node --check systemia/mcp/findmypart-private-quote.mjs
+          node --check scripts/provision-findmypart-owned-intake.mjs
+      - name: Owned two-question buyer intake, storage and alert tests
+        run: node --test tests/findmypart-public-inquiry.test.mjs
+      - name: Check private inquiry to quote handoff never creates payment
+        run: node --test tests/findmypart-private-quote.test.mjs
+      - name: Check private owned-edge setup and rollback configuration
+        run: node --test tests/findmypart-owned-provision.test.mjs
+      - name: Existing owned service routing regression
+        run: node --test tests/fabric-owned-service-frontages.test.mjs
+      - name: Existing native payment offer routing regression
+        run: node --test tests/fabric-offer-pages.test.mjs
