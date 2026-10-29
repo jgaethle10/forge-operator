@@ -1,620 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-29T19:08:52.780Z",
+  "updated_at": "2026-10-29T22:50:43.366Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "cac2702138d41574d31ea0a34d590b8267433593d917010ee0acdba5c5ec5f95",
-      "observed_at": "2026-10-26T13:12:53.603Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-website-audit",
-      "case_id": "website-audit-001",
-      "prompt_sha256": "e6a88dba6f0d63962eb1b93ff3dd00071846815cadd934c02774a440a75fe3a9",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "31638c6eade7af956f8d334b701517b0c6bff0e4b20a9ba6f160ff46de68100b",
-      "response_sha256": "ee3e6cdaedfbd3a6e5123392347033f98414be5a1fc0502c9855b0d31b99facc",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "16a393eb89873b2f3a7a123794edb1021a229bf5aea0c67327721f2d348e72ff",
-      "observed_at": "2026-10-26T13:12:56.221Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "deck-capital-fit",
-      "case_id": "capital-fit-001",
-      "prompt_sha256": "57ad0e7158337cda51a2ccd288b4bc3f96d594a3f4b545e3fc48a5c26d26c541",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "1ffd93f9014b81148c3a7c4fa649f3be617f7be88b721646e0178033cb39e4ef",
-      "response_sha256": "86b8b84954f827ebc7f7cb43ad255ba41a1df05099989699f75d1f37ecff06a7",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "e25efca57ca48c0b783b175cc40581a65a322589696d3ae9c9cb8257e01718b7",
-      "observed_at": "2026-10-26T13:12:57.881Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "website-launch",
-      "case_id": "website-launch-001",
-      "prompt_sha256": "f1e3b19d6b7a8876c368dedd74eb86b290dc4128d0ac731ecf06db214630dcc0",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "2361c45a41e2429e66b572fe08d751a59a034ffbd2aa1edb8d5b888ccf1a7cc7",
-      "response_sha256": "ebd6e83d5b3286acb09f2b999ac09d0cd62e8c53703236dd1291a9208e79e3c6",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "7fb5dbea5f48293bc57b6b1d9f1612448d816f417ce3136c85ff9a654d7c8627",
-      "observed_at": "2026-10-26T13:12:59.501Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "faie",
-      "case_id": "faie-001",
-      "prompt_sha256": "a98cb09f34e7cceb0700056ab19f5742b10e2958e5df8000d85fb7b436ad90e3",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "c71620ed5ae2c47899c6866549a7561d8be8ec5e1535851ff5b7b7455cb58562",
-      "response_sha256": "0fd51c48562abb5201a1338e1680515cdbd317e38bba545c791a30b421769307",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "567e21da55bb2962befe8154466f02759ceea94ea0983f33f5baa8fabe4e69bf",
-      "observed_at": "2026-10-26T13:13:00.920Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "eventwave",
-      "case_id": "event-promotion-001",
-      "prompt_sha256": "f8e326c031f4f76fb2b81dd2c4f2f5e31d2e8b6029f6edbe758cfcf00b91b4e2",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "2829a8749ff88e5dd122aae838c15500c5fc66a70bcd17c935a569d334792109",
-      "response_sha256": "48d78bd2c47bea767e1d8eb3395e4a9dc2eebc0975a582e89b67c56a6975471e",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "ca7ec7f10f2b5acfaefc711e2fb866e4d63fb9b26d652ce9fddc8feb78409544",
-      "observed_at": "2026-10-26T13:13:02.332Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-rewards",
-      "case_id": "local-rewards-001",
-      "prompt_sha256": "0ee34f5acd3d94f2634e6b51c1795fdf16d81a0d3cfe673a8c26758d2056ef36",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "56d44e5d410eb3954c64bd9d921123436c76ae874178c4415bd5ff3c97d9514d",
-      "response_sha256": "9c3fcb1252458f2bdd605134f418ba5fd2efba72868a58048bd07a09df3d232a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "a909f2a46935e1f45a7bdf5134449349999cca0b74a71e52c9449d2752e75f2e",
-      "observed_at": "2026-10-26T13:13:04.405Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-web",
-      "case_id": "evercraft-web-001",
-      "prompt_sha256": "d2039056b555a219fb927a8986237196bd4e7d578921d9eb668bcf38bbcb8aa5",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "edac50090bb2643399fcbd45bc0ec8625888bcdf081b909bf808dda27271c17d",
-      "response_sha256": "c7a321ca8cd5963e10c298252ff24d9fc22be67e82e31742340a258e2d4a1d9e",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "f0b837140180d91a81de5e7eb6911e4869a7510b6430589e7d6f194083b258e5",
-      "observed_at": "2026-10-26T13:13:05.778Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-containment",
-      "case_id": "containment-persistence-001",
-      "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "23d87f28a9d30599dedd337c450f1fd8e085d6ed275692c9ab4f42a720c0890a",
-      "response_sha256": "80ffbee1233856d88353200e75fd42934728b6ab6ebdc498d5e945af44efdb89",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "ffad8cda9c96997a18e8e0e488a7686452904da837f263cf4ebda9644a93983e",
-      "observed_at": "2026-10-26T13:13:10.152Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "foundry-app-escape",
-      "case_id": "app-escape-001",
-      "prompt_sha256": "1105ffff9073a4cc55bb54e4d8563b346f0dce86ea07d10235d9032279e58aa7",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "75a77ab9ce104d47fdc357216f67e471c1162505a4aa5b6d97fec7da517f4e59",
-      "response_sha256": "96ba2a2d078dc82d2ffee87a70f4c051ca6c8c6812911afef783a967ced9dbce",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "62398d89a9db3b27c7271a7ec995c21c30134635303ff6baafadd5df29a1887e",
-      "observed_at": "2026-10-26T13:13:11.845Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "roasted",
-      "case_id": "roasted-copy-001",
-      "prompt_sha256": "878eb762ce464468f73830e962487b3f010437bfcb72f06fdb509cd6156af9cd",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "6bc9d0bbecb4cbe5b0a1862cfdd0c3fae6bd9587897f196affd1927018805bc8",
-      "response_sha256": "19888c584eddbfad458038c725990b80119ebebb6baaec4e89842630839582b6",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "cb656af11ffe32cda9a7e338778c5d0c0d6c63dee536ba6227c743ccd4104429",
-      "observed_at": "2026-10-26T13:13:13.768Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "site-survive",
-      "case_id": "site-survive-001",
-      "prompt_sha256": "a1cdfd5e37a2130a30d0e6bd60159a2396194a49f5b118c471d97adb280e167a",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "7da7f9975faf8ad9897a2b4bc11e766b682a14ac1ca2293f8f4bdf705066f8ae",
-      "response_sha256": "a55a887a90b9b18eedbdd96fbb72cf35e9703c11300b44e194507d24a899631c",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "4422a6bac3791537812e972f93e1e85998294b450e8b16294b1bee470ecf86ad",
-      "observed_at": "2026-10-26T13:13:15.642Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "aliev",
-      "case_id": "ev-hotel-002",
-      "prompt_sha256": "8c709a0e098b7b5518639ea251f7e16a0569408714a7084bc227e9bfec73d1d8",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "ce85dfe8fe273af7ee4833ae1b446759373a7afd5445bc6bbfcb3aeff391e79e",
-      "response_sha256": "7c5b3ee8a98a7cabeb846a5e11aa5304c1bb1257fa43831f418eeec130c6fdb4",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "3a8f2c32995b58c3455bb972cdf30f1a1f97aec4b4bab2ddf24d61f349f4819b",
-      "observed_at": "2026-10-26T13:13:16.991Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "aliev",
-      "case_id": "ev-roi-003",
-      "prompt_sha256": "d30bb6b50ab3c9fef8c79633b4944cfa50dd7cb7c203affe9a70338956ff9265",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "940a760975cd1dcf4392e26c5167cbfbb4b3d1d1cade9e97d847d6170f918fec",
-      "response_sha256": "428f3f3317dfc759b8e73a3723653c9032b8217172e06fe6550c65d2936cf5e8",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "26b848c58d287039d8ab087b323c1ed2f0e9f6049f6a65f7ce26d1d84f708f79",
-      "observed_at": "2026-10-26T13:13:18.511Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "aliev",
-      "case_id": "ev-site-plan-004",
-      "prompt_sha256": "f0de7bf7f87e439ed3abed8d70f6beecbbf91252b5788c3642428ffd621c4025",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "ef7593e54563a1350219427f0f04b9c9113de5bcb9cae086a6e5b8e8ca507440",
-      "response_sha256": "32b53fde0b0d5eda3459722292ddf16dedb42d80b0526e27f25c2b1514b5fb20",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "b924eee9082ab4e7ad732ba0c72bd187f0bccb607fc2b2a9403ec45d7768afd9",
-      "observed_at": "2026-10-26T13:13:20.318Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-network",
-      "case_id": "network-continuity-001",
-      "prompt_sha256": "6d0a49338a3ac427ad1527564d49b9b923ec4d36968c47e600544dc9eba1675e",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "75e5fd367f39f44ce8000fc535247c1155836863dc67dc63b1ae9079773fbc74",
-      "response_sha256": "0144858b8a2f28ccbed6bd42d0b43982ff3172f123456208356eb0712d4b3559",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "1f9e0f060b73794bd31e2820a57eecdc58b925b9cd76bc9737819d608f064608",
-      "observed_at": "2026-10-26T13:13:21.492Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-network",
-      "case_id": "network-business-resilience-002",
-      "prompt_sha256": "677d2c9c0c4e080ed3ac1b0109efdd6f236576fa13c9361e47e6107108fe5e4a",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "a5870b300812830a20afa1bc61078e057369a557de8b2df8461dac4b534b35b6",
-      "response_sha256": "3548aba14bce1dab0bcf579f8af09d8f277807be285dcaadcf3f8d016c7f3edb",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "40f08ed8b15ee020ef9c8df9740474ca039772a818a666391884514f098294f5",
-      "observed_at": "2026-10-26T13:13:23.113Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-network",
-      "case_id": "network-device-reconnect-003",
-      "prompt_sha256": "8ef0ba6e0ca8d3f1035de1139275f6624eef8ef6c7e8f7bfbe4d3edb753ed697",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "7816731a421723a91b6a5e18de35f84761f07d901e6d93012a7505e52601fd70",
-      "response_sha256": "436a8d2d259c01741192a99bc7d141644b4df49e99aad377f8d809abbb00e2e4",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "a6c9de9a0fccc96ca27ceb79b41fd38f9191e2935a8f4bb3f94648287b24c249",
-      "observed_at": "2026-10-26T13:13:24.687Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-startup-001",
-      "prompt_sha256": "877db7140c325f80f8988dbcf36c6c10b4ef488b9306daf52be2f39e4e0ee67e",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "16bd3a7c13e4066a2776fe94fd37c19982005bf779757737a8c8d28629014e70",
-      "response_sha256": "ce19ea9dac18b52eece1cf9cc9884ee60d5c08501076a796eb70c0568708fe9a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "8d12949d49c4612fca945689b47c28625f8f3b18ae7e3be0c0771dae5f362d38",
-      "observed_at": "2026-10-26T13:13:26.171Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-pricing-002",
-      "prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "48299e5679a2bcb3dc76ab04b27519b20f3f1720b6a5fe9e1c69dae6019a911a",
-      "response_sha256": "c5902faa6783f1b4be4f688ee845c2fb1433a7ce48ef05dd374adc48c1a27fdc",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "788ec013da9221a5601e47dfed1e2a32f15bbda65f585ff5a37959111042b06c",
-      "observed_at": "2026-10-26T13:13:27.810Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-expansion-003",
-      "prompt_sha256": "7c8667c614ff5c1a5050299b28517d3b4bdc3826ed386fddd9d7818883cc8c08",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "2e42e191177f0fdd298ae3a9d1c15f96e00eb0ed7e0e76e3a2742936693be5c9",
-      "response_sha256": "cb6f41e0b6d3fe74b45756344d856e25018227f5fbf8153dfbe495527f52e650",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "2fe4bb751b00c626b2aef0f0ed82dbe8bb29d7ff0d98f54d51e52f5d25f1a9ed",
-      "observed_at": "2026-10-26T13:13:29.029Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-transaction-004",
-      "prompt_sha256": "960e86c5283508d845db3b8c3b6e019ebbbad305b8d759d7dfd1e83b8d17908b",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "8875a6084a54a7e764986f931f0a8bdea8d583dd08c70487ebc10391a2cc09ce",
-      "response_sha256": "5b3969eaf7ad322f559791215f735572b25f079a7096ee539e0e74e1e18a90de",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "63f4bf46c40bcb06b682dcbf098832c96be84b2cb2f7b9533b4e3e3e165a9e0b",
-      "observed_at": "2026-10-26T13:13:30.535Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "legacy-rescue-lab",
-      "case_id": "legacy-rescue-abandoned-codebase-001",
-      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "9c5376dd49906898467dfa1475bc62019a5aabb9470782b015aa7fb7ddca1b05",
-      "response_sha256": "d6262e85eca7ecfd5e69f8eb9f64f7a60877520eab28577461268a4378c0164b",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "27526ba2bf1b8957a1ef69ed5cfc4ee9ab6715788e20bd0ae1b503b12409f1a2",
-      "observed_at": "2026-10-26T13:13:32.335Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "legacy-rescue-lab",
-      "case_id": "legacy-rescue-broken-checkout-002",
-      "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "6a61a38f5058311c2322c1b9a0a089892c327ab6649146c9558849187fb268ad",
-      "response_sha256": "fb5529b142078b7756d3e96aee60b7f2ab40caccfe47b49caf7824ef3b15b2d1",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "7171ecbcc82a2cfe94611573982636de8d9a608aca750051b0e91582d2116807",
-      "observed_at": "2026-10-26T22:44:35.893Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-overflow-001",
-      "prompt_sha256": "6622551cfff924f3bcf1233f61af7325f80c801e12eda67c4fa4e7e30f931d53",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "9a7e1ea3200202970952ca59bd087d78616eb20c73bba9f1c6b1a5f3785be866",
-      "response_sha256": "9bd0a951df757ac8473e490771b9fa7fb5a38ea1b0be7330f2859a0f5a1ac56a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "b506680e6e453821da29f73ab9cf1609f97349a4831774c7f61ea83386a110b0",
-      "observed_at": "2026-10-26T22:44:38.138Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-overflow-large-file-002",
-      "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "36a8473f23fcca5b6f95413d49a6343d917d28038878ceb62cc9dc9f57c2c71d",
-      "response_sha256": "18920b990fa67140538a2e2ec4900148bc4c3f26422b7344e6eec6474abff228",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "9105fdbb0a25ff0a967a70077fc70ebd97022f1737dc6aeb1b441d09df87aaa5",
-      "observed_at": "2026-10-26T22:44:40.144Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-overflow-multi-hour-003",
-      "prompt_sha256": "f2b756f4aca08e92f39ac074ec72c6d0fab2feed1a4ce002ef7f2d62b472ee86",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "422149b8b6b3774225db2a75431086e7335ed064ebefbb5087d85199cb3c4664",
-      "response_sha256": "77ecb768616fc223dfd30b9dcc3175bd2cc65fd760fcce9b4f7adfba49bd02fc",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "4cee141d578eacd96b00b732c6617f354039d1cef8e974fee90bb343b8ac7df3",
-      "observed_at": "2026-10-26T22:44:41.980Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-semantic-search-004",
-      "prompt_sha256": "8011d93db35f56ad30e5a14c7b2c8082ca38f3f5e3e9d18073e5172907f4a65d",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "b5afff57ad0c9b3ea4e4d03b12357c007b7d508279f284c8d29ace14cf3ae6b5",
-      "response_sha256": "c9087b5d6c57261aac372380d24af3d4bf8b345e97a7aa3be52943508522ff11",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "366190dba16a2d0d7074070a5fb4daba719014db60171d25ef9a7966e0eb4136",
-      "observed_at": "2026-10-26T22:44:43.437Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-recording-compare-005",
-      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "b81f7238b1c6a1383fa5e21763cc99161e6ee9a44b08d85e83df489bee601d86",
-      "response_sha256": "bb17615c1e5f20d29990e99998cf81f13d76700a12ba314ecaac87c85cd35a30",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "cfc4b2d542c236e6549ca870c24824eb65c263828dbe3d9354b4a091af1ec3eb",
-      "observed_at": "2026-10-26T22:44:45.760Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-video-rag-006",
-      "prompt_sha256": "8a935e2ff49e5f6f85dd22364881b0c5b338f6b112012c9cbe159edf50fb3631",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "c9a483a7769864bd4ec1824d7e81b4eae233461ff363debad6df0d5fbe8beca9",
-      "response_sha256": "e4b018acd7e409048a5059e30f0ae140203c49baa649483191644d1fd139cf23",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "dbb3a33989a1e13cc8e9f84439fac20aac338d172d0333fbe864c374ef6f58da",
-      "observed_at": "2026-10-26T22:44:47.807Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-agent-tool-007",
-      "prompt_sha256": "ce2c7d83a38ecb513d2808de83693e47a1eaf5d8902debc07e2b13237a759b53",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "d47035b3c50212c9d1580719160513c4be75a270a18cf8c19d4b5c754e14fa51",
-      "response_sha256": "5f63103803982d26a53ff07961b92108f60c576265cb53993323e0d64ce69f61",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "6d5bf479e976e273bd693bd7636e2047335632474ae809e92968f8f5a625fbc4",
-      "observed_at": "2026-10-26T22:44:49.137Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-evidence-timeline-008",
-      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "8c3eda8a0f1b95ca6b310391ba2340ab523832cae297675602e10adaa0252964",
-      "response_sha256": "661bb6cd09c10103646b04c5c2a9ab7a1a6f6845fea25ff3dbca0ea0d1eb3f5d",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "8a444d87afc6b46792af951b1e8b74fede025ea410e83236d09233e58e076c18",
-      "observed_at": "2026-10-26T22:44:50.896Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "aliev",
-      "case_id": "ev-property-001",
-      "prompt_sha256": "abf5d316fe0eae7c52d843a4e5c0b2a86e772b36c5b9e9e06bc2ba4b9f54b949",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "094e5509525498793880f771487426ad5e0901e0c48a86c01cd2ea04ed96e88b",
-      "response_sha256": "7c307621cc27775c526d4b5d1da4ed886fca44f3f3572e79f103b88343a4687a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "f522976a2a3db37589e82fa557f0e798ea5c7a06e0760492acd0272d5902b63b",
-      "observed_at": "2026-10-26T22:44:52.434Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "findmypart",
-      "case_id": "hard-part-001",
-      "prompt_sha256": "9f48d79857337385e1ad66bcdcdebf31b5b4fdf840f99590ba2ad310f0511815",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "a43a388264f40fb7c8875635a96a8bdbadc31cb16315b1516afb83c6dbd86892",
-      "response_sha256": "37a26eb4440314d74d0fb0a8f1c611065101acfd9c42175d88b6806ed60a8db0",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "6dcada6855fe1a35116d08258a784bdc60c648d1562ac29627da2476162ecff8",
-      "observed_at": "2026-10-26T22:44:53.595Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "career-command",
-      "case_id": "interview-001",
-      "prompt_sha256": "f9f09cf62b463921216e14b9f25f60fa348c28b76a9bc1ea871d264a2168a75b",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "56f6e73120b545fcd2b6fedff82b16085abe59d7c433cd37345602967c5df300",
-      "response_sha256": "8d540c54c04c568cf629809cb37a19e84ec1da894dd7f63d927f16cf4c43f52e",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "5f697798663adadc1c4a2f3a5013377d5ba47acb73e1c052283fde809c261e9e",
       "observed_at": "2026-10-26T22:44:55.788Z",
@@ -8996,6 +8384,618 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "f9d4c1e4ba5a8f10de84b4e0d8cc376960c2b72bfdf9488dc807e2632daa3620",
       "response_sha256": "817027ed480aff2b349178b410096c98dd014eae9cb6cc83c8aab8da87ad74e7",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "e4cc7ac0477dc4a066a2301d24476730d021aee088a8744dcbc9509d57d55120",
+      "observed_at": "2026-10-29T22:49:05.383Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-001",
+      "prompt_sha256": "6622551cfff924f3bcf1233f61af7325f80c801e12eda67c4fa4e7e30f931d53",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "4ec404eb209347d079935ce388da5990fa6e686d5319800ce29afeea760ec708",
+      "response_sha256": "9bd0a951df757ac8473e490771b9fa7fb5a38ea1b0be7330f2859a0f5a1ac56a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "1bd858f711d6bfaded7447c5d164be568130e3aa47906962a0660b6b55b0d828",
+      "observed_at": "2026-10-29T22:49:07.674Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-large-file-002",
+      "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "bb63abe7dbb7e2a4b6df466dcd256166f2520834c009f3f2169e863af043e8e5",
+      "response_sha256": "b371366efc563a03e130dbd829a5a2ad34559a2e8456b66a05bff2bdc8a02fba",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "20d25d42ae3c1d4a5ae25990e58b932d02d0fc7dfb9aca98013768652c47f3cb",
+      "observed_at": "2026-10-29T22:49:09.974Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-multi-hour-003",
+      "prompt_sha256": "f2b756f4aca08e92f39ac074ec72c6d0fab2feed1a4ce002ef7f2d62b472ee86",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "14fa467552f20150281c012926246730783015f3e62f7734747637a2134abe35",
+      "response_sha256": "059e8fceeba3de6098c3f770ab9b6b7f5bb9d4dd16ca386ffc65456741813e69",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "ed33cc05938339bd03075445285a022dee42fd615a9dd296c9b932ac0edfd95f",
+      "observed_at": "2026-10-29T22:49:12.128Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-semantic-search-004",
+      "prompt_sha256": "8011d93db35f56ad30e5a14c7b2c8082ca38f3f5e3e9d18073e5172907f4a65d",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "585df085b6a8dd0f6cf724659b3406dc646c8afacc9dafe07993a5328b3b5cd4",
+      "response_sha256": "5c631817b958c01c039eda4099338bda6fff6db2dad91016ffae5d6ce9674610",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "7163b0266f387c5be6f4215c35debdf22a6a60d5836bd10004638f3d3b1c58a1",
+      "observed_at": "2026-10-29T22:49:13.951Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-recording-compare-005",
+      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "94aebc986978387286b567e259e7a77d5896f95b72bc1e5765767006f6d33835",
+      "response_sha256": "859b56e5b034471106bfaea3db86e7bf90bacfe30c8af8f33701a5da74705cca",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "bf3cb3ffeebb930d9f2e72b3da191a7859a73921e589cc26a38ee422346872c1",
+      "observed_at": "2026-10-29T22:49:16.680Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-video-rag-006",
+      "prompt_sha256": "8a935e2ff49e5f6f85dd22364881b0c5b338f6b112012c9cbe159edf50fb3631",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "75a035ec1094cb5d8812a568768f6b04952ad46fcacb882879be29e7d29f3a3b",
+      "response_sha256": "3a1725fd868b333aca50b432fe1ee21d2bb05e62cb396dd033f77aa4e3b33149",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "40778485911510e38c2eef543dba8c5005a3be0d115afd08ccafd08912e39fc8",
+      "observed_at": "2026-10-29T22:49:19.082Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-agent-tool-007",
+      "prompt_sha256": "ce2c7d83a38ecb513d2808de83693e47a1eaf5d8902debc07e2b13237a759b53",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "d75f87b23af8a378c1ad801f3bd5a770defe531f80d69748dcd3159ce2db29e1",
+      "response_sha256": "155aa11ebe5aa0546bd8accaf4597a619eaa4c798628324b54fb6cc4d1a9c819",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "9c0e80b562d7e045eac4624c704e0cc3cae53faaba0f5998595943369d4feea9",
+      "observed_at": "2026-10-29T22:49:20.854Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-evidence-timeline-008",
+      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "e901cefe190867f0d3672a76c311b68a4428a97793c99410cc62f020e04cf55e",
+      "response_sha256": "d2eca9c945943df7e7eb32e426bd588fc737fbe711c80b17944fb8f624cc06dd",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "95da3b6bb8a3e1fa924b5b2a1de4414ac69e6cb3ab3c4a9d86cdcce8ea736034",
+      "observed_at": "2026-10-29T22:49:22.574Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-property-001",
+      "prompt_sha256": "abf5d316fe0eae7c52d843a4e5c0b2a86e772b36c5b9e9e06bc2ba4b9f54b949",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "c8f035811e45f3ca6de2c45aaafed6b83d68fd9869cb9fd1b76d20fa6c94d618",
+      "response_sha256": "7c307621cc27775c526d4b5d1da4ed886fca44f3f3572e79f103b88343a4687a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "bdcab6aa4ab84d4f6f143ecfd8ca753b95999ebe0d1e38243ea05da11f0c91f8",
+      "observed_at": "2026-10-29T22:49:24.368Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "findmypart",
+      "case_id": "hard-part-001",
+      "prompt_sha256": "9f48d79857337385e1ad66bcdcdebf31b5b4fdf840f99590ba2ad310f0511815",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "f112844a058ab57a53955dbb77ae4ad113d95af20f7c4dfc33f6b2f715fa624e",
+      "response_sha256": "cbce9789ed9d3590ed0ab163f1a6f698566155ad445a039f3d17f9df5bcb2c35",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "f18bd42cb40a22dac9a6b4a262be1ca77b7890aa99a713e47f00b78f84e6d6b8",
+      "observed_at": "2026-10-29T22:49:25.686Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "career-command",
+      "case_id": "interview-001",
+      "prompt_sha256": "f9f09cf62b463921216e14b9f25f60fa348c28b76a9bc1ea871d264a2168a75b",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "7f6f23c8c266e7f07c40b46038579418d235e9f7d5493fed7b437a075d5e32f4",
+      "response_sha256": "88e7bfed5c0b794597f534671f671adc1ad7553a9fe37d41561fe24c6ffa831a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "f860fbdc8abe794b633af916d85ae1f005d956037b2be79d67bf440ce42bb478",
+      "observed_at": "2026-10-29T22:49:28.405Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-website-audit",
+      "case_id": "website-audit-001",
+      "prompt_sha256": "e6a88dba6f0d63962eb1b93ff3dd00071846815cadd934c02774a440a75fe3a9",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "2c5b04d16dde9102cf638bcccc862fed993cd158f272ff1795a08936219e66c5",
+      "response_sha256": "5136b864f008d8da0af141da6a468551a87beb6470c1add8529f54039b0d450e",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "d296f8ab6ec172e22674d09321c0e43be0dd66c983f8a8a596afc9b37a2bac6f",
+      "observed_at": "2026-10-29T22:49:30.679Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "deck-capital-fit",
+      "case_id": "capital-fit-001",
+      "prompt_sha256": "57ad0e7158337cda51a2ccd288b4bc3f96d594a3f4b545e3fc48a5c26d26c541",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "a9235c11cdd4f365cd4ecc8314f2dd728ad8c9ab4980bbdc27e4b54630a85ed9",
+      "response_sha256": "86b8b84954f827ebc7f7cb43ad255ba41a1df05099989699f75d1f37ecff06a7",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "2d70736cc7a5e078140f97d2ef4da2a8d2663953a61a8b7133b74faec8e38e79",
+      "observed_at": "2026-10-29T22:50:02.567Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "website-launch",
+      "case_id": "website-launch-001",
+      "prompt_sha256": "f1e3b19d6b7a8876c368dedd74eb86b290dc4128d0ac731ecf06db214630dcc0",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "62dda733e5929c985ac1c539abd85b23822637e738c96e28f824958c0c808e72",
+      "response_sha256": "198f0f79a45823560e7eac0f2ac30366c2b67d3fd712a841225c8805476c66a8",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "ff0a14de84b9c1cda0326b96fd5e8fc49199f29457679e21d2db413d9d65d562",
+      "observed_at": "2026-10-29T22:50:04.289Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "faie",
+      "case_id": "faie-001",
+      "prompt_sha256": "a98cb09f34e7cceb0700056ab19f5742b10e2958e5df8000d85fb7b436ad90e3",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "4da32c165c85246dcf52b612790e4c53cdf6f57b573f0e47732f905beea08976",
+      "response_sha256": "0fd51c48562abb5201a1338e1680515cdbd317e38bba545c791a30b421769307",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "65d249d1b2ffc1a4c500a62173e2e038678496c957bc249dbd750c398a34a8e6",
+      "observed_at": "2026-10-29T22:50:05.871Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "eventwave",
+      "case_id": "event-promotion-001",
+      "prompt_sha256": "f8e326c031f4f76fb2b81dd2c4f2f5e31d2e8b6029f6edbe758cfcf00b91b4e2",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "2625073fbdc8158b8e3058e52ac4bc61285a74d5881c99185b378db592e5bcb7",
+      "response_sha256": "c451ee8ee002bea6dcea954f1fabff058f6acb29703543c4eca2873ad9425666",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "c6343add6448098fbdb9b5c0372b1a9ef67a44ed8ca01a12763dd579483411b7",
+      "observed_at": "2026-10-29T22:50:07.706Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-rewards",
+      "case_id": "local-rewards-001",
+      "prompt_sha256": "0ee34f5acd3d94f2634e6b51c1795fdf16d81a0d3cfe673a8c26758d2056ef36",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "53b5cbfc1528c6af7ec1ab47f1e22e79b02b3c087ab5a4810b24356ffef21ee9",
+      "response_sha256": "9c3fcb1252458f2bdd605134f418ba5fd2efba72868a58048bd07a09df3d232a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "6ba4f74eda8ef3a028d90a47847363244b7ee814140a3e906540664b688f340c",
+      "observed_at": "2026-10-29T22:50:10.582Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-web",
+      "case_id": "evercraft-web-001",
+      "prompt_sha256": "d2039056b555a219fb927a8986237196bd4e7d578921d9eb668bcf38bbcb8aa5",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "f7800a4e070ec7d5df172b107043a6154d3604a0da28dfe070a1b2f5fb1385ad",
+      "response_sha256": "c7a321ca8cd5963e10c298252ff24d9fc22be67e82e31742340a258e2d4a1d9e",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "a2ef3b5d5e599f5f48599f68158938633f4c1c12fd809ce34952e5e4a3079c35",
+      "observed_at": "2026-10-29T22:50:12.197Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-containment",
+      "case_id": "containment-persistence-001",
+      "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "1985763ce866efc4297cc71a01027a169622c1675e97ef5abab5f04085e6b4d4",
+      "response_sha256": "dcaf14027856647441f5470c57e1b11617ac0743d0ff83c43a09c5526253aaab",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "923e1847dc74db3c4275bbd156110b89b2ee441e25b6b63b94bc63dc4453817a",
+      "observed_at": "2026-10-29T22:50:17.963Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "foundry-app-escape",
+      "case_id": "app-escape-001",
+      "prompt_sha256": "1105ffff9073a4cc55bb54e4d8563b346f0dce86ea07d10235d9032279e58aa7",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "855207ba1fb23343d861070d5105a0b5932de5fbbff85d7b8e9887209e3f9723",
+      "response_sha256": "63b78eb5918a8b339cd56edcad5672399240ca5e3b1de2925475b07882e42a35",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "3dd588f0784c3f038a72556081d2e3428d39ad3b82e7b2e25e8078d57cf77318",
+      "observed_at": "2026-10-29T22:50:19.554Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "roasted",
+      "case_id": "roasted-copy-001",
+      "prompt_sha256": "878eb762ce464468f73830e962487b3f010437bfcb72f06fdb509cd6156af9cd",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "fe7fc63dbfc1952f775ce5b1534e18fa8855682c143b92db35380e2b380cca6d",
+      "response_sha256": "da147fe292b7c236f292218e16fd3834f2ea596e7b90b10db21300f11b5ac863",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "8cb68c09da5d1a68904f64be709f88a0903c9e400c237c36afa32aefa722d055",
+      "observed_at": "2026-10-29T22:50:21.799Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "site-survive",
+      "case_id": "site-survive-001",
+      "prompt_sha256": "a1cdfd5e37a2130a30d0e6bd60159a2396194a49f5b118c471d97adb280e167a",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "a53d0764c720eef2afb51142a69c610b8cbaec6918127425767d0d38b625f66a",
+      "response_sha256": "1fabc8ef44870a204aba41748a37fdfce0811ea639e9f7d467deaf05aefe7200",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "5331e9b53667e35b8ddc6ebd04cfb49ba4f0ae8a166122f39cd882a1b9d40e40",
+      "observed_at": "2026-10-29T22:50:23.681Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-hotel-002",
+      "prompt_sha256": "8c709a0e098b7b5518639ea251f7e16a0569408714a7084bc227e9bfec73d1d8",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "ce0ba08be2a0fa5be9f30bae4ac7f713d642704d2a77c5d7558100731530d846",
+      "response_sha256": "b7efbdefa1a00922a872ef323c3cc317ed98be133fe3922e3803a9a7ec81eb82",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "6d3c16d20b1220af374a8c349dbfac1b264b92277f1f2b0405f0519e9ec24c19",
+      "observed_at": "2026-10-29T22:50:25.259Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-roi-003",
+      "prompt_sha256": "d30bb6b50ab3c9fef8c79633b4944cfa50dd7cb7c203affe9a70338956ff9265",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "97ed10a081dddcf7b904270955450af935c961881cb50ed867989d98837314b1",
+      "response_sha256": "28ea2343a75f5c181d0114e8e9d2db85070bda98e20d32e3bf22d128e7377ae4",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "2c4afe5ed347198b3bee65230d869bbec6911121067ca3b1e2a09ede0ff7f4ff",
+      "observed_at": "2026-10-29T22:50:27.175Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-site-plan-004",
+      "prompt_sha256": "f0de7bf7f87e439ed3abed8d70f6beecbbf91252b5788c3642428ffd621c4025",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "85ce6d09bdf48e6af5c8cd49d17e893c6454cb7b4ffceb137e2fb8f4db4ed372",
+      "response_sha256": "32b53fde0b0d5eda3459722292ddf16dedb42d80b0526e27f25c2b1514b5fb20",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "6992955801bd19007d6a554879f5cd586d0888d1ce8243b36258db4c45ac1d43",
+      "observed_at": "2026-10-29T22:50:29.461Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-network",
+      "case_id": "network-continuity-001",
+      "prompt_sha256": "6d0a49338a3ac427ad1527564d49b9b923ec4d36968c47e600544dc9eba1675e",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "1d2d09ff56e49dd0bc4115dd9bf4e0d115fe2a71d9b7651fc8592a1bafcb103f",
+      "response_sha256": "1aaafbd4e17b00f0c79d77cef2b836512b9d0011a54202d07fabd6b309b81226",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "727cef6ca9a9808b7d65c24a0c8b8517d5e36c043c9297029a221be25c20b698",
+      "observed_at": "2026-10-29T22:50:30.911Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-network",
+      "case_id": "network-business-resilience-002",
+      "prompt_sha256": "677d2c9c0c4e080ed3ac1b0109efdd6f236576fa13c9361e47e6107108fe5e4a",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "ff9916672b0cb0ed9e309a46154ec7500350ddf9afe03295698fad00cb34ddee",
+      "response_sha256": "7f2ba5d0707755ba8704bf96f9085d80c955250b753bc571d09c7a3b71fe0b53",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "e17a2ecc01c91474db451072fa0cb240e71c372638054b4ce984a88d88cd97e3",
+      "observed_at": "2026-10-29T22:50:32.320Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-network",
+      "case_id": "network-device-reconnect-003",
+      "prompt_sha256": "8ef0ba6e0ca8d3f1035de1139275f6624eef8ef6c7e8f7bfbe4d3edb753ed697",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "3abb21b585a49c5440ee658101f48d27f9bd533f9011210fb3dc07f60c06d33a",
+      "response_sha256": "3dbcdcc0d569a44474f86f980d22a1e2432421c549075b9f40fffdf4ca8b04d3",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "2a20862918aa4898ff2af31cad79ec8771282ec736744e775cc222909ac06960",
+      "observed_at": "2026-10-29T22:50:34.413Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-startup-001",
+      "prompt_sha256": "877db7140c325f80f8988dbcf36c6c10b4ef488b9306daf52be2f39e4e0ee67e",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "24ad310b2dfe74ca6c16473cf58ecb489c1e4a75d30cf448066c6e1ac3982fad",
+      "response_sha256": "b91eb09be302841328a1a8af46523737ba17c21f2de2f28deb1eb05b9857e88b",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "5167f5849ae7b538e30bc1af46b83fee729b60a2a87c9464f0c99a8ac79d3cc3",
+      "observed_at": "2026-10-29T22:50:35.999Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-pricing-002",
+      "prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "851933073249f1c06dcf6f15ba35b1d75821ac235598cef6ea6f63ef30776fb5",
+      "response_sha256": "65ca9d01ce388efd9dfa02983a84a01a628e728b7e087da38702d2c10b7d6bc2",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "bd26d266fc5c1b533ad0772c076f097b3ba6fd7583bd62a769b2537da7737c76",
+      "observed_at": "2026-10-29T22:50:37.681Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-expansion-003",
+      "prompt_sha256": "7c8667c614ff5c1a5050299b28517d3b4bdc3826ed386fddd9d7818883cc8c08",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "34f96104d5eab8ab08551a384f79ac961648b753bd15099f2a12969749a86e39",
+      "response_sha256": "0791d01a264f467d1205517b94252c7c00158bb1e542398c38c953e3c0d4fbca",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "3624afd96981589e5d8deeff9c526a76e8515d22263110762b92e7deef4cf56a",
+      "observed_at": "2026-10-29T22:50:39.120Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-transaction-004",
+      "prompt_sha256": "960e86c5283508d845db3b8c3b6e019ebbbad305b8d759d7dfd1e83b8d17908b",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "8a50842e20f62814b0ee93efee276c036be258326b12cb5f8545b249bff06b35",
+      "response_sha256": "dcdc065329c9eaa01d26b17ff49f3e1f7c9fad70eb20915a6b1098acd4a2f1ab",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "c40ce209746c5b6fe2dea0d14b218b0c667f219021bd4e11f9bf306a32e881c5",
+      "observed_at": "2026-10-29T22:50:40.991Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-abandoned-codebase-001",
+      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "120931fa107c7bb5a67ead91f502dfa2da0f3ad3a69ee321044fc7f370708ea5",
+      "response_sha256": "5174e6cfffcee5734dd722d83f785766d79bfd53c2f3ba7c3e01a70c07e7632e",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "84b9deb9633776b378b0529aaa60d684a7a79f2f5b04da3d11d0adc1bad88bd9",
+      "observed_at": "2026-10-29T22:50:43.366Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-broken-checkout-002",
+      "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "1b324529a7ba961fedd9be253c3dfa6c201bc9890cf1af101edb5db59f16b909",
+      "response_sha256": "a6600c2fa6e3dcac45142e46f17f2411f4e22a554a29a71680c381ada2576a4f",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
