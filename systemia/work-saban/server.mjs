@@ -7,6 +7,7 @@ import { executeLocalSalesReport } from './execute-local.mjs';
 import { MAX_CSV_BYTES, parseSalesCsv } from './csv-core.mjs';
 import { createLocalEventChain } from './trace-chain.mjs';
 import { capacityView } from './capacity-model.mjs';
+import { executeBoundedTasks } from './bounded-executor.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -48,6 +49,20 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       return reply(res, 403, {ok:false,error:'local_host_required'});
     }
     res.setHeader('content-security-policy', "default-src 'self'; connect-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+    if (req.method === 'POST' && req.url === '/api/executor-smoke') {
+      if (req.headers['x-work-saban-client'] !== 'local-preview'
+          || (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host)) {
+        return reply(res,403,{ok:false,error:'local_preview_required'});
+      }
+      const tasks=Array.from({length:6},(_,i)=>({
+        id:'synthetic-'+i,
+        run:async()=>({index:i,source:'synthetic_fixture'}),
+        verify:value=>value.index===i&&value.source==='synthetic_fixture'
+      }));
+      const events=[];
+      const execution=await executeBoundedTasks(tasks,{concurrency:2,onEvent:e=>events.push(e)});
+      return reply(res,200,{ok:true,source:'synthetic_fixture',live_agents:false,execution,events});
+    }
     if (req.method === 'GET' && req.url === '/api/capacity') return reply(res, 200, {ok:true,source:'local_preview',execution_mode:'synthetic_demo_only',capacity:capacityView(),live_workers:false});
     if (req.method === 'GET' && req.url === '/health') return reply(res, 200, { ok:true, service:'work-saban-preview', live_workers:false, customer_execution:false });
     if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
