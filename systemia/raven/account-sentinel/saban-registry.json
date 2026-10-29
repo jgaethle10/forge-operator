@@ -1,0 +1,77 @@
+{
+  "schema": "evercraft.saban.multiplication-registry.v1",
+  "defaults": {
+    "side_effect_policy": "deny",
+    "max_logical_agents": 72,
+    "max_physical_workers": 4
+  },
+  "software": [
+    {
+      "software_id": "account-sentinel",
+      "name": "Raven Nexus Account Sentinel Adversarial Assurance",
+      "aliases": [
+        "raven-account-sentinel"
+      ],
+      "adapter": "systemia/raven/account-sentinel/saban-adapter.mjs",
+      "default_logical_agents": 72,
+      "max_logical_agents": 72,
+      "default_physical_workers": 4,
+      "max_physical_workers": 4,
+      "lease_seconds": 120,
+      "roles": [
+        "identity_guard",
+        "consent_guard",
+        "provider_gate_guard",
+        "audit_guard"
+      ],
+      "work_sources": [
+        {
+          "file": "systemia/raven/account-sentinel/saban-scenarios.json",
+          "field": "scenarios",
+          "kind": "security_scenario",
+          "key_field": "id"
+        }
+      ],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "external_network": false,
+        "bank_account_access": false,
+        "credential_access": false,
+        "payments": false,
+        "local_generated_files": true,
+        "local_receipts": true,
+        "public_release": false,
+        "automatic_checkout": false
+      },
+      "max_attempts_per_job": 2,
+      "budget": {
+        "max_logical_agents": 72,
+        "max_physical_workers": 4,
+        "max_work_items": 18,
+        "max_attempts_per_job": 2
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "target_logical_per_physical_worker": 12,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "require_capacity_hint": false
+      }
+    }
+  ]
+}
