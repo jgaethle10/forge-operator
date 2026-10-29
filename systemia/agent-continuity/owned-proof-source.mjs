@@ -126,3 +126,62 @@ export function createOwnedCommissionedTeamGate({
   });
   return gate;
 }
+
+/**
+ * First-party verified-evidence writer. The caller MUST independently verify
+ * the worker's pinned Ed25519 signature before invoking this transport.
+ * This writer does not sign evidence or turn a model output into a worker.
+ *
+ * An exclusive durable file claim prevents overwrites/replays; the existing
+ * commissioned gate consumes this same private worker-execution path.
+ */
+export function createOwnedCommissionedWorkerProofStore({ evidenceDir } = {}) {
+  const root = mustDirectory(evidenceDir);
+  const folder = path.join(root, "worker-execution");
+  if (!fs.existsSync(folder)) fs.mkdirSync(folder, { mode: 0o700 });
+  mustDirectory(folder);
+  return {
+    async readEvidence({ request }) {
+      if (!request?.request_id) throw new Error("commissioned_request_id_missing");
+      return {
+        preflightEnvelope: readProof(root, "preflight", request.request_id),
+        rosterEnvelope: readProof(root, "registry", "snapshot"),
+      };
+    },
+    async persistWorkerProof({ request, reviewerId, workerEvidence }) {
+      const requestId = String(request?.request_id || "").trim();
+      const role = String(reviewerId || "").trim();
+      if (!requestId || !role || !workerEvidence ||
+          workerEvidence.kind !== "worker_execution" ||
+          workerEvidence.payload?.request_id !== requestId ||
+          workerEvidence.payload?.reviewer_id !== role) {
+        return false;
+      }
+      const dest = evidenceFile(root, "worker-execution", requestId + ":" + role);
+      let fd;
+      let opened = false;
+      try {
+        fd = fs.openSync(dest, "wx", 0o600);
+        opened = true;
+        fs.writeFileSync(fd, JSON.stringify(workerEvidence) + "\n");
+        fs.fsyncSync(fd);
+        fs.closeSync(fd);
+        fd = undefined;
+        // fsync the containing directory to make the new name durable across
+        // crash/restart where supported by the owned filesystem.
+        const dirfd = fs.openSync(folder, "r");
+        try { fs.fsyncSync(dirfd); } finally { fs.closeSync(dirfd); }
+        return true;
+      } catch {
+        // Failed writes must not leave a partial proof that Raven could read.
+        // Never remove pre-existing entries (including an EEXIST replay).
+        if (opened) {
+          try { fs.unlinkSync(dest); } catch { /* fail closed */ }
+        }
+        return false;
+      } finally {
+        if (fd !== undefined) fs.closeSync(fd);
+      }
+    },
+  };
+}
