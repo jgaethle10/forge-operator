@@ -99,6 +99,7 @@
       face.append(make('span','spatial-eye spatial-eye-left'),make('span','spatial-eye spatial-eye-right'),make('span','spatial-smile'));
       head.append(face);
       figure.append(head);
+      figure.setAttribute('aria-hidden','true');
       const badge=make('span','spatial-desk-label');
       badge.append(make('strong','',role.name),make('small','','IDLE'));
       const diode=make('span','spatial-agent-diode');
