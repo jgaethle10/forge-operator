@@ -1,5 +1,9 @@
 # Forge Operator
 
+## AI Boardroom: compare the answers, not just the models
+
+Different AIs can return confident but incompatible answers to a business question. Evercraft's [AI Boardroom discovery guide](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/) provides a free comparison method and a path to a scoped **$250 business decision review** (or $500 financial-modeling deep dive). This is a human-reviewed service; do not imply an authenticated live multi-model council, guaranteed business results, or automatic fulfillment. [LLM-readable guide](public/mesh/ai-boardroom/llms.txt) · [Structured discovery record](public/mesh/ai-boardroom/ai-discovery.json).
+
 ## Hire Evercraft: seven exact-price service checkouts
 
 Have a digital asset, business workflow, or AI project that needs a practical diagnosis? Evercraft offers scoped services, with public descriptions and exact-price buyer checkouts. **Start with the problem, not the software.**
