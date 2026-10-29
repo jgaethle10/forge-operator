@@ -1,12 +1,12 @@
 # Evercraft Boardroom · public launch kit (October 2026)
 
-## Brand
+## Brand and publishing standard
 
-Customer-facing name: **Evercraft Boardroom** (working identity; trademark/legal clearance still required before asserting exclusivity).
-Brand colors: paper #FCFBF9; white #FFFFFF; ink #1B1D22; crimson #A51B39; blush #FFF0F2.
-Visual mark: four contrasting perspectives meet at one decision point, enclosed in a rounded crimson square.
-Tagline: **Big decision? Bring more perspective.**
-Voice: direct, useful, non-hyped. No fabricated testimonials, expert credentials, metrics, or AI activity.
+Evercraft Boardroom uses obsidian `#10100f`, antique gold `#ccad72`, champagne `#f2e6cf`, and walnut `#28221b`; see `public/mesh/ai-boardroom/BRAND.md`. Never mix in the old crimson brand of another product.
+
+**Social content is an evidence-led field report, not a marketing performance.** It needs coherent, developed paragraphs and substantiated claims about what actually shipped. The personal founder update follows a four-paragraph narrative. Corporate posts use Evercraft's institutional voice; no engagement bait, isolated slogans, generic AI hype, hashtag campaigns, emojis, invented adviser testimonials, or fictional platform releases. Visuals must be genuine reviewed product evidence or original first-party assets rather than fabricated offices or stock imagery.
+
+The previous social copy was rejected by the founder on October 29 for violating these standards. Use the revised editorial source at `distribution/marketing/boardroom-executive-chamber-20261029.md`, not any saved version of the old copy. It is a revision, not a verified social publication or 10/10 final approval.
 
 ## Offer truth
 
@@ -22,29 +22,11 @@ URLs:
 - https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/
 - https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/
 
-## Ready-to-publish customer launch copy
+## Current social drafts and real distribution
 
-### Main announcement
+The revised four-paragraph founder Facebook and LinkedIn drafts, and separate corporate Facebook/LinkedIn field reports, are maintained only in the [October 29 Boardroom release copy](marketing/boardroom-executive-chamber-20261029.md). The personal [share kit](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/share/) reflects those exact founder drafts. Do not use the superseded short promotional copy.
 
-A confident AI answer isn't always a reliable business decision. And when two models disagree, asking a third can add another opinion without explaining what's actually at stake.
-
-Introducing Evercraft Boardroom. Start by framing your decision for free, then compare the AI answers you already have. See what assumptions are doing the heavy lifting, which questions are still open, and what evidence would change the decision.
-
-For consequential business choices, Evercraft also offers individually scoped, human-reviewed decision reports, with clear prices before checkout.
-
-Start here: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/
-
-### Short social caption
-
-One important choice. Three conflicting AI answers. Now what?
-
-Evercraft Boardroom helps expose the assumptions, tradeoffs and unanswered questions behind business decisions. Start with the free private decision brief or compare the AI responses you already have. No account needed to begin.
-
-https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/
-
-### Community reply when directly relevant
-
-If you're trying to reconcile different AI recommendations, we built a free browser-only comparison tool that organizes the opinions you paste in, without sending them to a server. It doesn't pretend to fact-check or run a live council. Might be useful for comparing assumptions and seeing what questions to investigate next: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/
+The guest pass is https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1 . The published browser tool is free and does not execute a live multi-model council. Any social post must be confirmed via a provider-side permalink and publication timestamp.
 
 ## Distribution standards
 
