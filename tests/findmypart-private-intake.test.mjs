@@ -105,3 +105,10 @@ test('encryption key and absolute private root are required',async()=>{
  await assert.rejects(()=>createFindMyPartPrivateIntakeLedger({stateDir:'relative',key}),/private_storage_absolute_directory_required/);
  await assert.rejects(()=>createFindMyPartPrivateIntakeLedger({stateDir:'/tmp/findmypart-unused-guard',key:Buffer.alloc(16)}),/private_storage_32_byte_encryption_key_required/);
 });
+
+test('unsafe shared storage directory is refused before any customer data write',async(t)=>{
+ const stateDir=await fs.mkdtemp(path.join(os.tmpdir(),'fmp-unsafe-root-'));
+ t.after(()=>fs.rm(stateDir,{recursive:true,force:true}));
+ await fs.chmod(stateDir,0o755);
+ await assert.rejects(()=>createFindMyPartPrivateIntakeLedger({stateDir,key}),/private_storage_directory_permissions_invalid/);
+});
