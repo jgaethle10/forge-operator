@@ -80,6 +80,7 @@ export function createCommissionedTeamGate({
   readPreflight,
   readCompletion,
   consumeNonce,
+  verifyRoster,
   now = () => new Date(),
 } = {}) {
   return {
@@ -110,6 +111,22 @@ export function createCommissionedTeamGate({
           new Set(mapped).size !== mapped.length ||
           !map || Object.keys(map).length !== ids.length) {
         return { allowed: false, reason: "commissioned_reviewer_identity_map_invalid" };
+      }
+      if (typeof verifyRoster !== "function") {
+        return { allowed: false, reason: "commissioned_registry_verifier_not_configured" };
+      }
+      let roster;
+      try {
+        roster = await verifyRoster({request, preflightEvidence: evidence});
+      } catch {
+        return { allowed: false, reason: "commissioned_registry_verification_unavailable" };
+      }
+      if (!roster || roster.verified !== true ||
+          roster.digest !== p.registry_snapshot_hash) {
+        return {
+          allowed: false,
+          reason: roster?.reason || "commissioned_registry_digest_mismatch",
+        };
       }
       let consumed = false;
       try {
