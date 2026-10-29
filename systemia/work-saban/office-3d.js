@@ -57,6 +57,18 @@
       block.append(rug,title,wall,windowPane);
       world.append(block);roomElements.push(block);
     });
+    // Cozy office decor is purely visual and never represents agent activity.
+    for(const [x,y] of [[42,255],[375,255],[725,255],[45,590],[390,590],[730,590]]){
+      const plant=make('div','spatial-plant');
+      plant.setAttribute('aria-hidden','true');
+      plant.append(make('span','spatial-pot'),make('span','spatial-leaf leaf-a'),make('span','spatial-leaf leaf-b'),make('span','spatial-leaf leaf-c'));
+      place(plant,x,y);world.append(plant);
+    }
+    const tank=make('div','spatial-fishtank');
+    tank.setAttribute('role','img');
+    tank.setAttribute('aria-label','Decorative office aquarium with two little fish and bubbles');
+    tank.append(make('span','spatial-tank-water'),make('span','spatial-fish fish-one'),make('span','spatial-fish fish-two'),make('span','spatial-bubbles'),make('span','spatial-tank-base'));
+    place(tank,575,282);world.append(tank);
     for(const [i,role] of roster.entries()){
       const desk=make('button','spatial-agent');
       desk.type='button';
