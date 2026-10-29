@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {seedState,validateState,loadState,saveState,applyCommand,addObject,patchObject,agentAt,residents,exportWorld,STORAGE_KEY} from '../public/worlds/state.mjs';
+const storage=()=>{const m=new Map();return {getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,v)}};
+test('canonical browser schema and required landmarks',()=>{let s=seedState();assert.ok(validateState(s));assert.equal(s.objects.filter(o=>o.kind==='portal').length,2);assert.equal(residents.length,3)});
+test('bounded prompt edit persists through a reload',()=>{let s=seedState(),store=storage();const r=applyCommand(s,'add purple flowers near the pond');assert.equal(r.ok,true);assert.equal(r.object.color,'#ad90ff');saveState(store,s);assert.equal(loadState(store).revision,2);assert.equal(loadState(store).objects.length,s.objects.length);assert.ok(store.getItem(STORAGE_KEY))});
+test('lighting and unsupported prompts',()=>{let s=seedState();assert.equal(applyCommand(s,'make the sky sunset').ok,true);assert.equal(s.lighting,'sunset');assert.equal(applyCommand(s,'build a city from this video').ok,false)});
+test('reject invalid patches and object count overflow',()=>{let s=seedState();const id=s.objects[0].id;assert.equal(patchObject(s,id,{x:3}).ok,true);assert.equal(patchObject(s,id,{x:999}).ok,false);while(s.objects.length<150)addObject(s,'rock',1,2);assert.equal(addObject(s,'tree',1,1).ok,false)});
+test('reject corrupt, duplicate-identity world storage',()=>{let store=storage(),s=seedState();store.setItem(STORAGE_KEY,'invalid');assert.ok(validateState(loadState(store)));s.objects.push({...s.objects[0],id:s.objects[1].id});assert.equal(validateState(s),false)});
+test('resident movement is deterministic',()=>{const p=agentAt(residents[0],2);assert.deepEqual(p,agentAt(residents[0],2));assert.notDeepEqual(p,agentAt(residents[0],10))});
+test('JSON scene export disclaims authority',()=>{assert.match(exportWorld(seedState()),/not a canonical authoritative/)});
