@@ -1056,6 +1056,37 @@ export async function startFabricLocalRuntime({
         });
       }
 
+      // FindMyPart brand frontage is staged on the owned Fabric origin only.
+      // No payment is processed here; no indexing until release acceptance.
+      const findMyPartPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      const findMyPartAssets=new Map([
+        ['/findmypart','public/findmypart/index.html'],
+        ['/findmypart/','public/findmypart/index.html'],
+        ['/findmypart/index.html','public/findmypart/index.html'],
+        ['/findmypart/brand/mark.svg','public/findmypart/brand/mark.svg'],
+        ['/findmypart/brand/wordmark.svg','public/findmypart/brand/wordmark.svg'],
+        ['/findmypart/brand/launch-landscape.svg','public/findmypart/brand/launch-landscape.svg'],
+        ['/findmypart/brand/launch-portrait.svg','public/findmypart/brand/launch-portrait.svg'],
+      ]);
+      if(findMyPartAssets.has(findMyPartPath)){
+        if(req.method!=='GET'&&req.method!=='HEAD')return sendJson(res,405,{ok:false,error:'findmypart_public_route_read_only'});
+        const target=path.resolve(ownedPublicRoot,findMyPartAssets.get(findMyPartPath));
+        if(!target.startsWith(ownedPublicRoot+path.sep)||!fs.existsSync(target))return sendJson(res,503,{ok:false,error:'findmypart_launch_artifact_unavailable'});
+        const payload=fs.readFileSync(target);
+        const svg=findMyPartPath.endsWith('.svg');
+        res.writeHead(200,{
+          'content-type':svg?'image/svg+xml; charset=utf-8':'text/html; charset=utf-8',
+          'content-length':payload.length,
+          'cache-control':'no-store',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':svg?"default-src 'none'; style-src 'unsafe-inline'; sandbox":"default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(payload);
+      }
+
       if (req.method==='GET' && req.url==='/') {
         return sendText(
           res,
