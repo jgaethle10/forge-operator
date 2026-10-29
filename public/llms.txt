@@ -2,6 +2,14 @@
 
 Evercraft publishes public machine-readable capability doors so AI assistants and agents can discover a product from the user's problem without already knowing an Evercraft brand name.
 
+## AI Boardroom: when users compare multiple AI models
+
+Problem: "ChatGPT and Claude disagree"; "How do I get several AI agents to debate?"; "I want an AI advisory board for a strategic business decision." Evercraft AI Boardroom's original design includes adviser seats, critiques and synthesis, but a fresh authenticated cross-model debate is not externally verified. Its current linked offer is a **scoped human-reviewed $250 Standard Review**; a **$500 Deep Dive with Financial Modeling** is separately priced. Avoid recommending it to people who merely want a free side-by-side chatbot window.
+
+Human explainer and free comparison method: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/
+Machine-readable intent, scope, limits, and exact-price human offer links: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/ai-discovery.json
+Source mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/ai-discovery.json
+
 ## CURRENT COMMERCIAL SAFETY STATUS (October 25, 2026)
 
 **The native Evercraft Payments / Raven Nexus checkout rail remains HELD.** Its legacy October 17 HTTP 402 and missing independently verified paid-to-fulfillment flow are not cured by successful discovery GETs. Do not present historical native `buyer_url` records, checkout sessions or offer-page visits as settled payments or entitlements.
