@@ -2,11 +2,27 @@
 // Saban bounded browser gauntlet: real public site + MOCKED partner application API.
 // Never sends real contact data, signs partners, charges, or posts to social channels.
 import {chromium} from 'playwright';
+import http from 'node:http';
+import {fileURLToPath} from 'node:url';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
-const url='https://jgaethle10.github.io/forge-operator/partners/';
+const publicUrl='https://jgaethle10.github.io/forge-operator/partners/';
+const frontendDir=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../public/partners');
+const local=http.createServer((req,res)=>{
+ const allowed={'/':'index.html','/index.html':'index.html','/app.mjs':'app.mjs',
+  '/terms.html':'terms.html','/mark.svg':'mark.svg','/social-card.svg':'social-card.svg'};
+ const file=allowed[new URL(req.url,'http://local').pathname];
+ if(!file||!['GET','HEAD'].includes(req.method)){res.writeHead(404);return res.end()}
+ const target=path.join(frontendDir,file);
+ const bytes=fs.readFileSync(target);
+ res.writeHead(200,{'content-type':file.endsWith('.mjs')?'text/javascript':file.endsWith('.svg')?'image/svg+xml':'text/html',
+  'content-length':bytes.length,'cache-control':'no-store'});
+ res.end(req.method==='HEAD'?null:bytes);
+});
+await new Promise(resolve=>local.listen(0,'127.0.0.1',resolve));
+const url='http://127.0.0.1:'+local.address().port+'/';
 const targetDir=path.resolve('artifacts/saban/partners-browser');
 fs.mkdirSync(targetDir,{recursive:true});
 const scenarios=[
@@ -18,10 +34,19 @@ const scenarios=[
 ];
 const receipt={schema:'evercraft.saban.partners-browser-gauntlet.v1',
  verified_at:new Date().toISOString(),
- source:'real public GitHub Pages HTML + controlled synthetic API doubles',
+ source:'exact release-candidate local static HTML + controlled synthetic API doubles; public Pages inspected independently',
  public_applicant_post_attempted:false,real_applicant_created:false,provider_publish_attempted:false,
  tests:[]};
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+try{
+ const p=await fetch(publicUrl,{redirect:'follow',signal:AbortSignal.timeout(15000)});
+ receipt.public_page_status=p.status;
+ if(p.status!==200)throw Error('existing published Partners page returned '+p.status);
+ receipt.public_page_usable=true;
+}catch(error){
+ receipt.public_page_usable=false;
+ receipt.public_page_error=String(error?.message||error).slice(0,160);
+}
 function digest(p){return crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')}
 try{
  for(const scenario of scenarios){
@@ -33,18 +58,22 @@ try{
   page.on('pageerror',e=>errors.push(String(e.message).slice(0,180)));
   await page.route('https://fabric.systemiacommandcenters.com/api/partners/**',async route=>{
    const request=route.request();
+   if(request.method()==='OPTIONS')return route.fulfill({status:204,
+    headers:{'access-control-allow-origin':'*',
+     'access-control-allow-headers':'content-type, accept',
+     'access-control-allow-methods':'GET, POST, OPTIONS'}});
    if(request.url().endsWith('/readiness')){
     return route.fulfill({status:200,contentType:'application/json',
-     headers:{'access-control-allow-origin':'https://jgaethle10.github.io'},
+     headers:{'access-control-allow-origin':'*'},
      body:JSON.stringify({schema:'evercraft.partners.intake-readiness.v1',
       intake_available:scenario.mode!=='offline'})});
    }
    if(request.method()==='POST'&&request.url().endsWith('/inquiry')){
     if(scenario.mode==='rejected')return route.fulfill({status:503,contentType:'application/json',
-      headers:{'access-control-allow-origin':'https://jgaethle10.github.io'},
+      headers:{'access-control-allow-origin':'*'},
       body:JSON.stringify({ok:false,error:'intake_unavailable'})});
     return route.fulfill({status:scenario.mode==='duplicate'?200:201,
-     contentType:'application/json',headers:{'access-control-allow-origin':'https://jgaethle10.github.io'},
+     contentType:'application/json',headers:{'access-control-allow-origin':'*'},
      body:JSON.stringify({ok:true,received:true,reference:'EVP-AABBCCDDEEFF001122334455',
       duplicate:scenario.mode==='duplicate'})});
    }
@@ -89,10 +118,11 @@ try{
   await context.close();
  }
 }finally{await browser.close()}
+await new Promise(resolve=>local.close(resolve));
 receipt.summary={cases:receipt.tests.length,
  passed:receipt.tests.filter(x=>x.http_status===200&&x.errors.length===0&&x.screenshot).length,
  failed:receipt.tests.filter(x=>x.errors.length||x.http_status!==200).map(x=>x.name),
  actual_backend_submission_confirmed:false};
 fs.writeFileSync(path.join(targetDir,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log('SABAN_PARTNERS_BROWSER_RECEIPT '+JSON.stringify(receipt.summary));
-if(receipt.summary.failed.length||receipt.summary.passed!==scenarios.length)process.exitCode=2;
+if(receipt.summary.failed.length||receipt.summary.passed!==scenarios.length||receipt.public_page_usable!==true)process.exitCode=2;
