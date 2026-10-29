@@ -14,7 +14,7 @@ function cube(){const p=[],n=[];const faces=[[[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],
 function sphere(lat=12,lon=18){const p=[],n=[];for(let a=0;a<lat;a++)for(let b=0;b<lon;b++){const verts=[];for(const [i,j]of [[a,b],[a+1,b],[a+1,b+1],[a,b+1]]){const phi=Math.PI*i/lat,theta=2*Math.PI*j/lon;const v=[Math.sin(phi)*Math.cos(theta)*.5,Math.cos(phi)*.5,Math.sin(phi)*Math.sin(theta)*.5];verts.push(v);}for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(...verts[k].map(x=>x*2));}}return mesh(p,n);}
 function cylinder(seg=22){const p=[],n=[];for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const aa=[Math.cos(a)*.5,Math.sin(a)*.5],bb=[Math.cos(b)*.5,Math.sin(b)*.5];for(const [t,vs]of [[0,[[aa[0],-.5,aa[1]],[bb[0],-.5,bb[1]],[bb[0],.5,bb[1]],[aa[0],.5,aa[1]]]],[1,[[0,.5,0],[aa[0],.5,aa[1]],[bb[0],.5,bb[1]]]],[2,[[0,-.5,0],[bb[0],-.5,bb[1]],[aa[0],-.5,aa[1]]]]]){const ids=vs.length===4?[0,1,2,0,2,3]:[0,1,2];for(const k of ids){const v=vs[k];p.push(...v);n.push(...(t===1?[0,1,0]:t===2?[0,-1,0]:[v[0]*2,0,v[2]*2]));}}}return mesh(p,n);}
 function ring(){const p=[],n=[];const rings=38,sides=8,R=.5,r=.068;for(let i=0;i<rings;i++)for(let j=0;j<sides;j++){const at=(a,b)=>{const theta=a*2*Math.PI/rings,phi=b*2*Math.PI/sides;return [(R+r*Math.cos(phi))*Math.cos(theta),(R+r*Math.cos(phi))*Math.sin(theta),r*Math.sin(phi)];};const verts=[at(i,j),at(i+1,j),at(i+1,j+1),at(i,j+1)];for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(verts[k][0],verts[k][1],verts[k][2]);}}return mesh(p,n);}
-const meshes={cube:cube(),sphere:sphere(),cylinder:cylinder(),ring:ring()};
+const meshes={cube:cube(),sphere:sphere(),sphereStatic:sphere(9,14),cylinder:cylinder(),cylinderStatic:cylinder(14),ring:ring()};
 const col=x=>{const z=x.replace('#','');return [0,2,4].map(i=>parseInt(z.slice(i,i+2),16)/255);};
 const M=(x,y,z,sx,sy,sz,rot=0)=>{const c=Math.cos(rot),s=Math.sin(rot);return new Float32Array([c*sx,0,-s*sx,0,0,sy,0,0,s*sz,0,c*sz,0,x,y,z,1]);};
 const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),o=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*o,-1,0,0,2*far*near*o,0]);};
@@ -72,7 +72,7 @@ const staticInstances=[];
 const matrixAttrib=gl.getAttribLocation(program,'instanceMatrix'),colorAttrib=gl.getAttribLocation(program,'instanceColor');
 if(matrixAttrib<0||colorAttrib<0)throw Error('Static instancing shader contract unavailable');
 for(const [kind,items] of opaqueGroups){
- const shape=meshes[kind]||meshes.cube;
+ const shape=kind==='sphere'?meshes.sphereStatic:kind==='cylinder'?meshes.cylinderStatic:(meshes[kind]||meshes.cube);
  const floats=new Float32Array(items.length*19);
  for(let i=0;i<items.length;i++){
   const d=items[i],offset=i*19;
