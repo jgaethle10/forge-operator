@@ -1,0 +1,46 @@
+name: Evercraft Research responsive browser QA
+on:
+  pull_request:
+    paths:
+      - 'public/research/**'
+      - 'systemia/evercraft-web/browser-worker/verify-research-mobile.mjs'
+      - '.github/workflows/evercraft-research-mobile-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/research/**'
+      - 'systemia/evercraft-web/browser-worker/verify-research-mobile.mjs'
+      - '.github/workflows/evercraft-research-mobile-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mobile-and-desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned Browser Worker Chromium
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Inspect eight widths and the actual customer scope interaction
+        env:
+          EVERCRAFT_RESEARCH_MOBILE_SHOTS: ${{ runner.temp }}/evercraft-research-visual
+        run: |
+          python3 -m http.server 8765 --directory public --bind 127.0.0.1 >/tmp/evercraft-research-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node systemia/evercraft-web/browser-worker/verify-research-mobile.mjs
+      - name: Preserve synthetic-only mobile screenshots and QA receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-research-mobile-qa
+          path: ${{ runner.temp }}/evercraft-research-visual
+          if-no-files-found: warn
+          retention-days: 14
