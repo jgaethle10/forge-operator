@@ -40,6 +40,7 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
@@ -408,6 +409,8 @@ export async function startFabricLocalRuntime({
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
   studioLeadsDir='',
+  findMyPartLeadsDir='',
+  findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -422,6 +425,9 @@ export async function startFabricLocalRuntime({
   const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
   const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
     onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
+  const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined});
+  const findMyPartInquiry=createFindMyPartInquiryHandler({storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
+    onAlertQueued:()=>{if(findMyPartAlertDispatcher.enabled)void findMyPartAlertDispatcher.dispatch().catch(()=>{});}});
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
     const now=Date.now();
@@ -769,6 +775,12 @@ export async function startFabricLocalRuntime({
         return res.end(payload);
       }
 
+      // A separately bounded owned route accepts only consented FindMyPart part briefs.
+      // Customer content cannot create a paid order or an executable mission.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/inquiry'){
+        return await findMyPartInquiry(req,res);
+      }
+
       // Only this bounded route accepts untrusted commercial inquiry data.
       // It never invokes agents or checkout, sends email, or exposes stored leads.
       if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/commercial-studio/inquiry'){
@@ -1063,6 +1075,7 @@ export async function startFabricLocalRuntime({
         ['/findmypart','public/findmypart/index.html'],
         ['/findmypart/','public/findmypart/index.html'],
         ['/findmypart/index.html','public/findmypart/index.html'],
+        ['/findmypart/app.mjs','public/findmypart/app.mjs'],
         ['/findmypart/sample-report','public/findmypart/sample-report/index.html'],
         ['/findmypart/sample-report/','public/findmypart/sample-report/index.html'],
         ['/findmypart/brand/mark.svg','public/findmypart/brand/mark.svg'],
@@ -1076,14 +1089,15 @@ export async function startFabricLocalRuntime({
         if(!target.startsWith(ownedPublicRoot+path.sep)||!fs.existsSync(target))return sendJson(res,503,{ok:false,error:'findmypart_launch_artifact_unavailable'});
         const payload=fs.readFileSync(target);
         const svg=findMyPartPath.endsWith('.svg');
+        const script=findMyPartPath.endsWith('.mjs');
         res.writeHead(200,{
-          'content-type':svg?'image/svg+xml; charset=utf-8':'text/html; charset=utf-8',
+          'content-type':svg?'image/svg+xml; charset=utf-8':script?'text/javascript; charset=utf-8':'text/html; charset=utf-8',
           'content-length':payload.length,
           'cache-control':'no-store',
           'x-content-type-options':'nosniff',
           'x-robots-tag':'noindex, nofollow',
           'referrer-policy':'no-referrer',
-          'content-security-policy':svg?"default-src 'none'; style-src 'unsafe-inline'; sandbox":"default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+          'content-security-policy':svg?"default-src 'none'; style-src 'unsafe-inline'; sandbox":"default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'", /* Read-only static assets, front-end JS only. */
         });
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
@@ -1622,6 +1636,10 @@ export async function startFabricLocalRuntime({
     studioAlertDispatcher.start();
     void studioAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(findMyPartAlertDispatcher.enabled){
+    findMyPartAlertDispatcher.start();
+    void findMyPartAlertDispatcher.dispatch().catch(()=>{});
+  }
 
   const address=server.address();
   const actualPort=typeof address==='object'&&address?address.port:port;
@@ -1643,6 +1661,7 @@ export async function startFabricLocalRuntime({
     },
     close:async()=>{
       studioAlertDispatcher.stop();
+      findMyPartAlertDispatcher.stop();
       await faieSurface?.close();
       await new Promise((resolve,reject)=>
         server.close((error)=>error?reject(error):resolve())
