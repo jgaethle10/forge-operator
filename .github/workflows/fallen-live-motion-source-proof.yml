@@ -1,0 +1,51 @@
+name: Fallen Licensed Live-Motion Source Proof
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths: ['.github/workflows/fallen-live-motion-source-proof.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  footage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install decoder and probe human-shot live motion
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg >/dev/null
+          mkdir -p receipts footage
+          python3 - <<'PY'
+          import subprocess,json,pathlib
+          src=[
+            ("maker","https://mixkit.co/free-stock-video/young-engineer-programming-in-his-workshop-seen-up-close-29991/","https://assets.mixkit.co/videos/preview/mixkit-young-engineer-programming-in-his-workshop-seen-up-close-29991-large.mp4"),
+            ("human","https://mixkit.co/free-stock-video/experienced-programmer-working-very-concentrated-41645/","https://assets.mixkit.co/videos/preview/mixkit-experienced-programmer-working-very-concentrated-41645-large.mp4"),
+            ("edit","https://mixkit.co/free-stock-video/cursor-working-on-a-video-editing-software-close-up-shot-50605/","https://assets.mixkit.co/videos/preview/mixkit-cursor-working-on-a-video-editing-software-close-up-shot-50605-large.mp4"),
+            ("hands","https://mixkit.co/free-stock-video/hands-of-a-programmer-working-on-his-computer-41640/","https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-programmer-working-on-his-computer-41640-large.mp4"),
+          ]
+          rows=[]
+          for k,page,url in src:
+              fn="footage/"+k+".mp4"
+              p=subprocess.run(["curl","-L","--retry","2","--connect-timeout","12","--max-time","50","-sS","-w","%{http_code}","-o",fn,url],capture_output=True,text=True)
+              code=p.stdout.strip()
+              size=pathlib.Path(fn).stat().st_size if pathlib.Path(fn).exists() else 0
+              valid=False
+              if code=="200" and size>20000:
+                 f=subprocess.run(["ffprobe","-v","error","-show_entries","stream=codec_name,width,height:format=duration","-of","json",fn],capture_output=True,text=True)
+                 try:
+                    m=json.loads(f.stdout)
+                    valid=any(s.get("codec_name") in ("h264","hevc") for s in m.get("streams",[]))
+                 except: pass
+              rows.append(dict(name=k,source_page=page,url=url,http=code,bytes=size,valid=valid))
+          pathlib.Path("receipts/download-check.json").write_text(json.dumps(rows,indent=2))
+          print(json.dumps(rows,indent=2))
+          if not any(r["valid"] for r in rows): raise SystemExit("No valid licensed source video: FAIL closed")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-licensed-live-motion-candidates
+          path: |
+            receipts/download-check.json
+            footage/*.mp4
+          retention-days: 7
