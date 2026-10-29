@@ -25,6 +25,27 @@ const BROKER_INSTANCE='remote_broker_8a9b5bfcec4231bd15ed375c';
 const DEPLOYMENT_RECEIPT='e5649a6b8317d99d18457053c3987283b5696084cae92089a1823e0b8203ad0c';
 const WORKLOAD='systemia.content-hash.v1';
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const STATUS_TTL_MS=20000;
+const POLL_TTL_MS=35000;
+function freshTimestamp(stamp,nowMs,maxAgeMs){
+  if(typeof stamp!=='string')return false;
+  const when=Date.parse(stamp);
+  return Number.isFinite(when)&&when<=nowMs+5000&&nowMs-when<=maxAgeMs;
+}
+// Local evidence only; independent systemd and Yard verification is still required.
+export function assessNode002PersistentStatus(record,{nowMs=Date.now()}={}){
+  const statusFresh=freshTimestamp(record?.observed_at,nowMs,STATUS_TTL_MS);
+  const pollFresh=freshTimestamp(record?.last_successful_poll_at,nowMs,POLL_TTL_MS);
+  return {
+    status_fresh:statusFresh,
+    successful_poll_fresh:pollFresh,
+    ready_now:statusFresh&&pollFresh&&record?.ready===true&&
+      record?.state==='registered'&&record?.last_error_code==null,
+    systemd_service_independently_verified:false,
+    yard_connected_capacity_independently_verified:false,
+    production_job_verified:false,
+  };
+}
 const cleanErr=e=>String(e?.message||e||'unknown_error')
   .replace(/sha256:[a-f0-9]{64}/gi,'[redacted-sha256]')
   .replace(/https?:\/\/\S+/g,'[redacted-url]')
@@ -129,12 +150,13 @@ async function serve(){
       attempt=0;
       let errorSince=0;
       let lastBrokerPoll=0;
-      writeStatus({state:'registered',ready:true,registered_at:active.status().registered_at});
+      writeStatus({state:'awaiting_healthy_poll',ready:false,registered_at:active.status().registered_at});
       while(running){
         await pause(5000);
         if(!running)break;
         const status=active.status();
         const hasError=Boolean(status.last_error);
+        const pollFresh=freshTimestamp(status.last_successful_poll_at,Date.now(),POLL_TTL_MS);
         const lastPoll=Date.parse(status.last_poll_at||status.registered_at||'');
         if(!Number.isFinite(lastPoll)||Date.now()-lastPoll>90000)throw Error('agent_poll_not_observed_recently');
         if(hasError&&!errorSince)errorSince=Date.now();
@@ -144,11 +166,12 @@ async function serve(){
           lastBrokerPoll=Date.now();
         }
         writeStatus({
-          state:hasError?'recovering':'registered',
-          ready:!hasError,
+          state:hasError?'recovering':(pollFresh?'registered':'awaiting_healthy_poll'),
+          ready:!hasError&&pollFresh,
           registered_at:status.registered_at,
           last_command_at:status.last_command_at,
           last_poll_at:status.last_poll_at,
+          last_successful_poll_at:status.last_successful_poll_at,
           secure_commands_opened:status.secure_commands_opened,
           last_error_code:hasError?cleanErr(status.last_error):null,
         });
@@ -183,12 +206,7 @@ if(direct){
   if(mode==='--status') {
     try{
       const s=JSON.parse(fs.readFileSync(STATE,'utf8'));
-      const age=Date.now()-Date.parse(s.observed_at||'');
-      console.log(JSON.stringify({
-        ...s,
-        status_fresh:Number.isFinite(age)&&age>=0&&age<30000,
-        ready_now:s.ready===true&&Number.isFinite(age)&&age>=0&&age<30000,
-      },null,2));
+      console.log(JSON.stringify({...s,...assessNode002PersistentStatus(s)},null,2));
     }catch(e){console.error(JSON.stringify({state:'unknown',error:'no_worker_status_receipt'}));process.exitCode=1}
   } else if(mode==='--preflight'){
     preflight().then(r=>console.log(JSON.stringify({
