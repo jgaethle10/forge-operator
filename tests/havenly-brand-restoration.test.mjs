@@ -20,3 +20,9 @@ test('original Havenly collections are selectable without inventing package pric
  assert.match(html,/Descriptions are guides, not fixed inclusions/);
  assert.match(html,/mobile-menu-panel a/);
 });
+
+test('direct Havenly contact remains reachable beyond the hero and sticky bar',()=>{
+ assert.match(html,/Prefer texting\? Send Nikki a message/);
+ assert.match(html,/sms:\+15095605190/);
+ assert.match(html,/mailto:havenlycleaning@gmail\.com/);
+});
