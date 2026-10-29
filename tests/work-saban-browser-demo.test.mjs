@@ -55,3 +55,17 @@ test('a real one-click public example is linked without customer upload or check
   assert.doesNotMatch(html,/<input\b|<form\b|buy\.stripe\.com|<iframe\b/i);
   assert.doesNotMatch(client,/\bPOST\b|sendBeacon|localStorage|sessionStorage|fetch\('https?:/i);
 });
+
+test('mobile screen recording follow-up keeps the example in view and makes save outcomes clear',()=>{
+  for(const id of ['id="save-status"','id="copy"','id="report-text"','id="copy-fallback"'])
+    assert.ok(html.includes(id),'missing accessible save feedback '+id);
+  assert.match(client, /\$\('output'\)\.scrollIntoView/);
+  assert.match(client,/prefers-reduced-motion: reduce/);
+  assert.match(client,/Download requested\. If nothing happens on your phone, tap Copy report/);
+  assert.match(client,/navigator\.clipboard\.writeText\(report\)/);
+  assert.match(client,/\$\('report-text'\)\.select\(\)/);
+  assert.match(client,/Report copied\. Paste it wherever you like/);
+  assert.match(html,/role="status" aria-live="polite"/);
+  assert.match(html,/If copying is blocked by your browser/);
+  assert.doesNotMatch(client,/Report saved successfully/);
+});
