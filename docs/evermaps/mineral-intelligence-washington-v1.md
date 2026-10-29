@@ -120,3 +120,13 @@ Artifacts: `wa-dnr-grant-permit-points.geojson`, `wa-dnr-permit-point-geology-ov
 Run: `node systemia/evermaps/permit-point-overlay-cli.mjs` after the complete Grant WGS import.
 
 Official source: https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0 .
+
+## Phase 2 zoning, state lands and protected-land source receipts
+A new read-only metadata and COUNT-ONLY service probe reads three independent official GIS layers:
+- Grant County unincorporated zoning published in 2018, https://services2.arcgis.com/hQZvdtFxRzJpMtdS/ArcGIS/rest/services/Zoning/FeatureServer/0. **Not verified 2026 zoning law**; municipal jurisdictions may differ.
+- WA DNR managed land parcels, https://gis.dnr.wa.gov/site3/rest/services/Public_Boundaries/WADNR_PUBLIC_Cadastre_OpenData/FeatureServer/6, with mixed parcel/easement/lease interests and incomplete subsets.
+- WDFW protected lands, https://geodataservices.wdfw.wa.gov/arcgis/rest/services/ApplicationServices/PHS_PSNERP/MapServer/27, a single mapped layer that is **not** an exhaustive inventory of protected land.
+
+The probe requires WGS source integrity and uses the *regional WGS import bounding envelope*. It returns only source availability and counts of features meeting a bounding-envelope spatial query. This is NOT polygon-level zoning, environmental clearance, title, access or authorization to mine. No parcel owners or contact lists are retrieved. Source error or zero count never unlocks an eligibility gate.
+
+Run after the full WGS import: `node systemia/evermaps/planning-context-cli.mjs`. Output `grant-planning-context-receipt.json` is bundled in GitHub Actions research artifacts (30-day retention).

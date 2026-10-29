@@ -86,6 +86,11 @@ jobs:
         env:
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/permit-point-overlay-cli.mjs
+      - name: Probe Grant zoning, DNR managed land and WDFW protected land
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/planning-context-cli.mjs
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4
