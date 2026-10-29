@@ -140,3 +140,35 @@ For example, an existing generic review request remains `role_lenses` and contin
 ### Acceptance and deployment truth
 
 Tests use synthetic signing keys and artificial role IDs. Passing these tests proves validation behavior, **not** that real agents ran, that the signer exists in production, or that a service was deployed. No data is read from Base44. This PR remains draft pending P0 #1707's authenticated roster, real independent signer, safe live canary, release approval, and field receipts.
+
+### Independent role-registry attestation
+
+A commissioned preflight cannot now claim that an arbitrary list of IDs
+constitutes Evercraft's actual specialist organization. Before inference,
+`signed-roster.mjs` requires a fresh separately signed
+`evercraft.agent-continuity.registry-snapshot.v1` payload from the **owned**
+Raven Nexus registry authority. The signed payload contains:
+
+- `source.system: evercraft-owned-raven-nexus`, a source receipt reference and
+  a recent independent `source.observed_at` timestamp
+- `role_profiles[]` with immutable unique role IDs, names, and active status
+- `dna_protocols[]` with Juniper/Sentinel, both embedded and non-dispatchable
+- `lineups[]` with only existing role IDs, never protocols
+
+The preflight must carry the exact hash of the independently signed registry
+envelope. Dispatch cannot consume its one-use nonce until the requested
+identities are known active and the snapshot is authenticated. Registry and
+dispatch evidence must use *different* pinned Ed25519 public keys.
+
+The private resident now also expects:
+
+```text
+<evidence-dir>/registry/<sha256("snapshot")>.json
+<trust-file>.registry_snapshot.<key_id> = independent registry authority PEM key
+```
+
+This is a **consumer contract** for an authenticated Evercraft-owned registry
+exporter, not evidence that exporter is already deployed. A synthetic fixture
+or handwritten registry file cannot substitute for the real source receipt and
+the independently controlled signer. The live producer, key custody, source
+receipt validation and field observation remain release blockers under #1707.
