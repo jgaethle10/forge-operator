@@ -121,7 +121,7 @@ test('production, disabled, password-based, unapproved and write connectors reje
   const overrides=[
     {environment:'production'},{sandbox_only:false},
     {status:'disabled'},{mode:'password'},{read_only:false},
-    {approved:false},{scopes:[]},
+    {approved:false},{scopes:[]},{scopes:['balances:read','transfers:write']},
   ];
   for(const changes of overrides)assert.throws(()=>createSandboxBankReader({
     connector:{...connector(),...changes},
@@ -176,5 +176,32 @@ test('non-JSON or malformed and oversized responses fail closed',async()=>{
 
 test('transport that never settles is bounded by timeout',async()=>{
   const p=make({timeoutMs:50,transport:()=>new Promise(()=>{})});
+  await assert.rejects(p.reader.read(request()),/sandbox_bank_read_rejected/);
+});
+
+test('a hanging token vault is timed out before any provider call',async()=>{
+  let calls=0;
+  const reader=createSandboxBankReader({
+    connector:connector(),
+    allowedSandboxOrigins:['https://sandbox.examplebank.test'],
+    tokenVault:{getAccessToken:()=>new Promise(()=>{})},
+    transport:async()=>{calls++;return response({simulated:true,currency:'USD',available_balance:1});},
+    timeoutMs:50,
+  });
+  await assert.rejects(reader.read(request()),/sandbox_bank_read_rejected/);
+  assert.equal(calls,0);
+});
+
+test('provider response from an unexpected final URL is rejected',async()=>{
+  const forged=response({simulated:true,currency:'USD',available_balance:1});
+  Object.defineProperty(forged,'url',{value:'https://evil.invalid/steal'});
+  const p=make({transport:async()=>forged});
+  await assert.rejects(p.reader.read(request()),/sandbox_bank_read_rejected/);
+});
+
+test('provider response tagged redirected cannot be accepted even on 200',async()=>{
+  const forged=response({simulated:true,currency:'USD',available_balance:1});
+  Object.defineProperty(forged,'redirected',{value:true});
+  const p=make({transport:async()=>forged});
   await assert.rejects(p.reader.read(request()),/sandbox_bank_read_rejected/);
 });
