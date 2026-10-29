@@ -1,14 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Work Saban founding pilot: Give the work a team">
-<defs><radialGradient id="g"><stop stop-color="#234e51"/><stop offset="1" stop-color="#08111d"/></radialGradient><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#8dc6c2" stroke-opacity=".1"/></pattern></defs>
-<rect width="1200" height="630" fill="url(#g)"/><rect width="1200" height="630" fill="url(#grid)"/>
-<g transform="translate(72 72)"><rect width="88" height="88" rx="18" fill="#a1eece"/><path d="M20 29H69L55 43H33L19 57H69" fill="none" stroke="#08111d" stroke-width="10"/><circle cx="20" cy="29" r="6" fill="#08111d"/><circle cx="69" cy="57" r="6" fill="#08111d"/></g>
-<text x="184" y="123" fill="#f0f8f8" font-size="35" font-family="Arial, sans-serif" font-weight="800" letter-spacing="-1">WORK SABAN</text>
-<text x="186" y="151" fill="#a1eece" font-size="15" font-family="Arial, sans-serif" letter-spacing="3">AN EVERCRAFT PRODUCT</text>
-<text x="72" y="315" fill="#f3f8f5" font-size="94" font-family="Arial, sans-serif" font-weight="800" letter-spacing="-6">Give the work</text>
-<text x="72" y="415" fill="#a1eece" font-size="105" font-family="Arial, sans-serif" font-weight="800" letter-spacing="-7">a team.</text>
-<path d="M690 520H1130" stroke="#a1eece" stroke-opacity=".45" stroke-width="2"/>
-<g fill="#102d3b" stroke="#90c7bd" stroke-width="2"><rect x="725" y="445" width="115" height="75" rx="10"/><rect x="865" y="445" width="115" height="75" rx="10"/><rect x="1005" y="445" width="115" height="75" rx="10"/></g>
-<g fill="#a1eece" font-family="Arial,sans-serif" font-size="17" font-weight="700"><text x="743" y="488">ASSIGN</text><text x="885" y="488">VERIFY</text><text x="1024" y="488">DELIVER</text></g>
-<text x="72" y="572" fill="#bed0d5" font-family="Arial,sans-serif" font-size="24">You bring the work. Saban brings the team.</text>
-<text x="1120" y="580" text-anchor="end" fill="#a1eece" font-family="Arial,sans-serif" font-size="14" letter-spacing="3">FOUNDING PILOT</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Work Saban: Give your work a team</title>
+<desc id="desc">Simple white campaign card with black typography, a crimson headline, and three friendly specialist figures.</desc>
+<rect width="1200" height="630" fill="#FFFFFF"/>
+<path d="M0 0H1200V11H0Z" fill="#A4142F"/>
+<g transform="translate(73 59) scale(.37)">
+<rect width="256" height="256" rx="48" fill="#FFFFFF"/>
+<path d="M56 75H201L157 116H97L56 164H201" fill="none" stroke="#A4142F" stroke-width="28" stroke-linejoin="round" stroke-linecap="square"/>
+<circle cx="56" cy="75" r="15" fill="#171717"/><circle cx="201" cy="164" r="15" fill="#171717"/>
+</g>
+<text x="186" y="118" font-family="Arial,Helvetica,sans-serif" fill="#171717" font-size="40" font-weight="800" letter-spacing="-2">work saban</text>
+<text x="186" y="148" font-family="Arial,Helvetica,sans-serif" fill="#777777" font-size="17" font-weight="700" letter-spacing="2">BY EVERCRAFT</text>
+<text x="74" y="308" font-family="Arial,Helvetica,sans-serif" fill="#171717" font-size="97" font-weight="800" letter-spacing="-6">Give your work</text>
+<text x="74" y="417" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="112" font-weight="800" letter-spacing="-7">a team.</text>
+<text x="76" y="486" font-family="Arial,Helvetica,sans-serif" fill="#555555" font-size="26">You bring the work. Saban brings the team.</text>
+<g transform="translate(851 202)">
+<rect width="252" height="265" rx="23" fill="#F8F8F7" stroke="#E6E4E2"/>
+<circle cx="70" cy="72" r="33" fill="#F6D9DF"/><circle cx="160" cy="72" r="33" fill="#EFEFEE"/><circle cx="115" cy="160" r="33" fill="#F5E1D6"/>
+<g fill="#65182A"><circle cx="60" cy="70" r="3"/><circle cx="80" cy="70" r="3"/><circle cx="150" cy="70" r="3"/><circle cx="170" cy="70" r="3"/><circle cx="105" cy="158" r="3"/><circle cx="125" cy="158" r="3"/></g>
+<g stroke="#65182A" stroke-width="3" fill="none" stroke-linecap="round"><path d="M63 82Q70 88 77 82"/><path d="M153 82Q160 88 167 82"/><path d="M108 171Q115 177 122 171"/></g>
+<text x="126" y="228" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="17" font-weight="700">ONE TASK · A TEAM</text>
+</g>
+<text x="74" y="580" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="18" letter-spacing="2" font-weight="800">PRIVATE PILOT INTEREST</text>
 </svg>
