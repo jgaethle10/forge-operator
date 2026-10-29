@@ -113,7 +113,10 @@ export function narrowContentHashCommandAllowed(command) {
     const key = String(body?.idempotency_key || '');
     if (body?.workload_class !== 'systemia.content-hash.v1' ||
         !/^[a-zA-Z0-9._-]{8,128}$/.test(key) ||
-        String(input?.idempotency_key || '') !== key ||
+        // Canonical NodeSeed /v1/jobs places the idempotency key in the
+        // top-level request. A duplicate input key is optional, but when
+        // provided it must match exactly to prevent divergent job identity.
+        (input?.idempotency_key !== undefined && input.idempotency_key !== key) ||
         !body.lease_id || !body.token ||
         !payload || typeof payload !== 'object' ||
         payload.bytes_base64 !== undefined ||
