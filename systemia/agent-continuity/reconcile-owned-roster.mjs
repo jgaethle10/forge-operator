@@ -29,6 +29,7 @@ export function reconcileSignedAgentRoster({
   trustedKeys,
   now=new Date(),
   historicNames=HISTORICAL_ROLE_NAME_LEADS,
+  historicalArchive=null,
   maxObservationAgeMs=15*60_000,
 }={}){
   const holds=[];
@@ -79,6 +80,18 @@ export function reconcileSignedAgentRoster({
   const leads=arr(historicNames).map(norm);
   if(!leads.length||leads.some((x)=>!x)||new Set(leads).size!==leads.length)
     add("historical_name_leads_invalid");
+  // Optional *private* owner-supplied archive is historical, unsigned and
+  // name-only. It is never a registry, immutable-ID baseline or execution
+  // authorization, regardless of the values it claims in other fields.
+  const august=historicalArchive===null?null:arr(historicalArchive.august_role_names).map(norm);
+  if(historicalArchive!==null && (
+      historicalArchive?.schema!=="evercraft.agent-continuity.historical-name-leads.v1"||
+      !august.length||august.some((x)=>!x)||
+      new Set(august).size!==august.length||
+      !String(historicalArchive?.source?.google_drive_file_id||"").trim()||
+      historicalArchive?.historical_role_id_baseline_verified!==false)) {
+    add("historical_archive_name_leads_invalid_or_overclaimed");
+  }
   if(holds.length){
     return {
       schema:"evercraft.agent-continuity.roster-reconciliation.v1",
@@ -98,6 +111,16 @@ export function reconcileSignedAgentRoster({
   const leadSet=new Set(leads);
   const unmatched=active.filter((x)=>!leadSet.has(norm(x.name)))
     .map((x)=>({name:x.name,current_role_id:x.id,status:"not_in_historical_name_leads"}));
+  const crossPeriod=august ? [...new Set([...leads,...august])] : null;
+  const augustOnly=august?.filter((n)=>!leadSet.has(n)) || null;
+  const octoberOnly=august?leads.filter((n)=>!august.includes(n)):null;
+  // Match names against *signed current* identities, but never confuse a
+  // matching string with the historic immutable ID of an original agent.
+  const crossPeriodMatches=crossPeriod?.filter((n)=>byName.has(n)).map((n)=>({
+    name:byName.get(n).name,
+    current_role_id:byName.get(n).id,
+    historical_immutable_id_verified:false,
+  })) || null;
   return {
     schema:"evercraft.agent-continuity.roster-reconciliation.v1",
     state:"held_historical_identity_baseline_missing",
@@ -113,6 +136,13 @@ export function reconcileSignedAgentRoster({
     candidate_name_matches:matches,
     named_leads_not_in_active_snapshot:absent,
     active_roles_not_in_historical_name_leads:unmatched,
+    august_2026_named_role_count:august?.length??null,
+    august_name_leads_missing_from_active_snapshot:august?.filter((n)=>!byName.has(n))??null,
+    cross_period_distinct_name_count:crossPeriod?.length??null,
+    cross_period_name_matches_to_current_signed_registry:crossPeriodMatches,
+    august_only_vs_october_names:augustOnly,
+    october_only_vs_august_names:octoberOnly,
+    cross_period_name_census_is_id_proof:false,
     historical_immutable_id_baseline_verified:false,
     explanation_of_21_vs_22:"unresolved; no coordinator/subtraction assumptions permitted",
     operational_agents_verified:0,
@@ -136,7 +166,13 @@ if(process.argv[1]&&pathToFileURL(path.resolve(process.argv[1])).href===import.m
   try {
     const evidence=JSON.parse(fs.readFileSync(privateFile(flag("--signed-roster"),"signed_roster"),"utf8"));
     const keys=JSON.parse(fs.readFileSync(privateFile(flag("--trust-keys"),"trust_keys"),"utf8"));
-    const result=reconcileSignedAgentRoster({rosterEnvelope:evidence,trustedKeys:keys});
+    const archiveFile=flag("--historical-leads");
+    const historicalArchive=archiveFile
+      ? JSON.parse(fs.readFileSync(privateFile(archiveFile,"historical_leads"),"utf8"))
+      : null;
+    const result=reconcileSignedAgentRoster({
+      rosterEnvelope:evidence,trustedKeys:keys,historicalArchive,
+    });
     process.stdout.write(JSON.stringify(result,null,2)+"\n");
     // Reconciliation is held until authenticated immutable historic IDs exist.
     process.exitCode=2;
