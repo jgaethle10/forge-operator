@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - "public/research/**"
+      - "systemia/research-service/**"
+      - "tests/evercraft-research-evidence-dossier.test.mjs"
+      - "tests/evercraft-research-compile.test.mjs"
       - "tests/evercraft-research-public.test.mjs"
       - "tests/evercraft-research-public-canary.test.mjs"
       - "scripts/probe-evercraft-research-public.mjs"
@@ -11,6 +14,9 @@ on:
     branches: [main]
     paths:
       - "public/research/**"
+      - "systemia/research-service/**"
+      - "tests/evercraft-research-evidence-dossier.test.mjs"
+      - "tests/evercraft-research-compile.test.mjs"
       - "tests/evercraft-research-public.test.mjs"
       - "tests/evercraft-research-public-canary.test.mjs"
       - "scripts/probe-evercraft-research-public.mjs"
@@ -31,4 +37,6 @@ jobs:
         run: |
           node --check public/research/scope.mjs
           node --check scripts/probe-evercraft-research-public.mjs
-          node --test tests/evercraft-research-public.test.mjs tests/evercraft-research-public-canary.test.mjs
+          node --check systemia/research-service/evidence-dossier.mjs
+          node --check systemia/research-service/compile.mjs
+          node --test tests/evercraft-research-public.test.mjs tests/evercraft-research-public-canary.test.mjs tests/evercraft-research-evidence-dossier.test.mjs tests/evercraft-research-compile.test.mjs
