@@ -47,7 +47,7 @@ try {
       work_key: "proof-work",
       work_type: "analyze",
       objective: "Review the bounded proof mission.",
-      requested_team: "commissioned",
+      requested_team: "role_lenses",
       constraints: {
         internal_analysis_only: true,
         read_only: true,
