@@ -130,3 +130,9 @@ A new read-only metadata and COUNT-ONLY service probe reads three independent of
 The probe requires WGS source integrity and uses the *regional WGS import bounding envelope*. It returns only source availability and counts of features meeting a bounding-envelope spatial query. This is NOT polygon-level zoning, environmental clearance, title, access or authorization to mine. No parcel owners or contact lists are retrieved. Source error or zero count never unlocks an eligibility gate.
 
 Run after the full WGS import: `node systemia/evermaps/planning-context-cli.mjs`. Output `grant-planning-context-receipt.json` is bundled in GitHub Actions research artifacts (30-day retention).
+
+## Evidence refresh integrity manifest
+
+The `research-source-health-cli.mjs` command reads the **current-run** full WGS import, dossier, land-context, planning-context, permit-point overlay and WGS study-spatial receipts. It emits `source-health-manifest.json` with independently labeled statuses. An upstream failed source such as WA DNR ArcGIS `404 Service not found` is a `research_source_dependency_hold` and fails the CI research-import job while still preserving receipts through the unconditional artifact upload. The Node contract tests may remain green independently.
+
+Source-health completion is **never** legal permission, approved mining, mineral reserves or environmental clearance. No previous observed 42-record permit scan is substituted for a missing current service. If a public layer is unavailable, keep its dossier gate unverified and use agency-maintained dataset downloads only after separate source/version/terms checks.

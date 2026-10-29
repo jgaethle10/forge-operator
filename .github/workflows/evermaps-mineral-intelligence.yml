@@ -90,6 +90,10 @@ jobs:
         env:
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/permit-point-overlay-cli.mjs
+      - name: Verify all research evidence receipts and declare source holds
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/research-source-health-cli.mjs
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4
