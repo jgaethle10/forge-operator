@@ -1,0 +1,28 @@
+name: Founders Arena protocol
+on:
+  pull_request:
+    paths:
+      - 'systemia/founders-arena/**'
+      - '.github/workflows/founders-arena.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/founders-arena/**'
+      - '.github/workflows/founders-arena.yml'
+permissions:
+  contents: read
+jobs:
+  protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify deterministic simulation and local adapter contracts
+        run: node --test systemia/founders-arena/tests/league.test.mjs
+      - name: Verify fixture and exported receipt
+        run: |
+          node systemia/founders-arena/demo.mjs 12 "$RUNNER_TEMP/arena-match.json"
+          node systemia/founders-arena/verify.mjs "$RUNNER_TEMP/arena-match.json"
