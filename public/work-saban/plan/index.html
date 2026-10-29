@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Describe an office task and see a proposed Work Saban team. Free browser-only planning, no account or customer data upload.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/work-saban/plan/">
+<link rel="icon" href="../brand/work-saban-mark.svg" type="image/svg+xml">
+<title>Plan a task | Work Saban</title>
+<style>
+:root{color-scheme:light;--red:#a4142f;--black:#171717;--line:#e9e5e4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fff;color:var(--black);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--red)}a:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+[hidden]{display:none!important}
+header{border-bottom:1px solid var(--line);background:#fff}
+.top{max-width:950px;margin:auto;padding:19px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{color:var(--black);text-decoration:none;font-size:17px;font-weight:850;letter-spacing:-.055em;white-space:nowrap}
+.brand img{width:35px;height:35px;margin-right:9px;vertical-align:middle}
+.top a:last-child{font-size:13px;font-weight:750;text-decoration:none}
+main{max-width:790px;margin:0 auto;padding:72px 25px 35px}
+.eyebrow{font-size:11px;font-weight:850;letter-spacing:.15em;color:var(--red);margin:0 0 18px}
+h1{font-size:clamp(46px,8vw,76px);line-height:1.04;letter-spacing:-.075em;margin:0 0 21px}
+h1 span{color:var(--red)}
+.lead{font-size:19px;color:#555;max-width:650px;margin:0 0 32px}
+.field{border:1px solid #e5e1df;border-radius:15px;padding:25px;box-shadow:0 12px 35px #24202009}
+label{display:block;font-size:14px;font-weight:800;margin-bottom:12px}
+textarea{display:block;width:100%;min-height:143px;padding:15px;font:inherit;font-size:16px;line-height:1.55;resize:vertical;border:1px solid #d4d0ce;border-radius:10px;background:white;color:var(--black)}
+.cta{display:flex;gap:15px;align-items:center;flex-wrap:wrap;margin-top:17px}
+button,.button-link{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:white;text-decoration:none;border:1px solid var(--red);border-radius:9px;min-height:50px;padding:13px 20px;font:800 14px/1.4 system-ui,sans-serif;cursor:pointer}
+button:hover,.button-link:hover{background:#780e23}
+button.secondary{background:#fff;color:var(--red)}button.secondary:hover{background:#fff1f3}
+button:disabled{opacity:.65;cursor:not-allowed}
+.tiny{font-size:12px;color:#696969;line-height:1.6;margin:12px 0 0}
+.link{font-size:13px;font-weight:750;text-decoration:none}
+.error{color:var(--red);font-size:13px;font-weight:750;margin:12px 0 0}
+#proposal{margin-top:31px;border:1px solid #e4e0df;border-radius:15px;padding:29px;scroll-margin-top:20px}
+.state{color:var(--red);font-size:11px;letter-spacing:.09em;font-weight:850}
+h2{font-size:28px;letter-spacing:-.05em;margin:9px 0}
+.summary{font-size:13px;color:#696464;margin:0 0 23px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.agent{padding:16px;border:1px solid #e9e5e4;border-radius:11px;background:#faf9f9}
+.agent span{display:block;color:var(--red);font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.agent strong{display:block;font-size:14px}
+.agent p{font-size:12px;color:#666;margin:5px 0 0}
+details{margin-top:23px;border-top:1px solid var(--line);padding-top:17px}
+summary{cursor:pointer;font-size:14px;font-weight:750}
+details h3{font-size:16px;margin:18px 0 8px}
+details p,details li{font-size:13px;color:#5b5555}
+ul{margin:0;padding-left:20px}
+#plan-copy-fallback textarea{min-height:125px;font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}
+.proposal-actions{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
+.proposal-actions button{flex:1 1 175px}
+.pilot-link{border-top:1px solid var(--line);padding:26px 0 14px;margin-top:40px}
+.pilot-link strong{display:block;font-size:17px;margin-bottom:7px}
+.pilot-link p{font-size:13px;color:#666}
+footer{max-width:790px;margin:25px auto 0;padding:22px 25px 38px;border-top:1px solid var(--line);font-size:12px;color:#777}
+@media(max-width:650px){.top{padding:15px 19px}.brand{font-size:16px}.brand img{width:31px;height:31px}main{padding:48px 19px 25px}.lead{font-size:16px}.field,#proposal{padding:21px}.grid{grid-template-columns:1fr}.cta{align-items:stretch}.cta button{width:100%}.proposal-actions{flex-direction:column}.proposal-actions button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body>
+<header><div class="top"><a href="../" class="brand"><img src="../brand/work-saban-mark.svg" alt="">work saban</a><a href="../#pilot">Private pilot</a></div></header>
+<main>
+<p class="eyebrow">TRY YOUR TASK · BROWSER-ONLY PLANNING</p>
+<h1>What needs <span>doing?</span></h1>
+<p class="lead">Tell Saban the task. Get a proposed team and work sequence, without the complicated setup.</p>
+<div class="field">
+<label for="task">Your task</label>
+<textarea id="task" maxlength="4000" placeholder="Analyze our monthly sales spreadsheet and prepare a short report for my manager."></textarea>
+<div class="cta"><button id="plan" type="button">Plan my team</button><a href="../demo/" class="link">See the real sales example</a></div>
+<p class="tiny">Your task is processed on this device. No account, upload, AI service or connected worker is used. Please don't enter passwords, customer details or confidential information.</p>
+<p id="error" class="error" role="alert" hidden></p>
+</div>
+<section id="proposal" hidden aria-live="polite">
+<span class="state">TEAM PROPOSED · NOT RUNNING</span>
+<h2>Here's the proposed team.</h2>
+<p class="summary">This is a planning preview. No AI agents are running and no real work has been started.</p>
+<div class="grid" id="team"></div>
+<details><summary>See work sequence and permissions</summary>
+<h3>Proposed work sequence</h3><ol id="sequence"></ol>
+<h3>Needs your permission first</h3><ul id="approvals"></ul>
+<p>Any actual data access, work execution, spending, publishing or delivery needs a separately authorized service. This browser planner does none of them.</p></details>
+<div class="proposal-actions"><button type="button" id="copy" class="secondary">Copy this plan</button><button type="button" id="reset" class="secondary">Start a new task</button></div>
+<p id="copy-status" role="status" class="tiny" hidden></p>
+<div id="plan-copy-fallback" hidden><p class="tiny">Clipboard blocked? Select and copy this plan manually.</p><textarea id="plan-text" readonly aria-label="Copy the proposed task plan"></textarea></div>
+</section>
+<section class="pilot-link"><strong>Want us to handle an actual report?</strong><p>Work Saban currently has one bounded local, checked sales-report workflow. We're reviewing written private-pilot requests, not selling unrestricted autonomous work.</p>
+<a class="button-link" href="mailto:jessegaethle10@gmail.com?subject=Work%20Saban%20pilot%20inquiry&body=I%20would%20like%20to%20discuss%20a%20Work%20Saban%20reporting%20pilot.%0APlease%20reply%20in%20writing.%0A">Request a private pilot</a>
+<p class="tiny">Email opens only when you tap. Your task text is never inserted into the email automatically. No payment at inquiry.</p></section>
+</main><footer>Work Saban by Evercraft. Local planning only. No task submission, external account access, or checkout.</footer>
+<script type="module" src="./plan.js"></script>
+</body></html>

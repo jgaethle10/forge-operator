@@ -1,0 +1,31 @@
+name: Work Saban public task planner proof
+on:
+  pull_request:
+    paths:
+      - 'public/work-saban/plan/**'
+      - 'public/work-saban/index.html'
+      - 'tests/work-saban-public-planner.test.mjs'
+      - '.github/workflows/work-saban-public-planner.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/work-saban/plan/**'
+      - 'public/work-saban/index.html'
+      - 'tests/work-saban-public-planner.test.mjs'
+      - '.github/workflows/work-saban-public-planner.yml'
+permissions:
+  contents: read
+jobs:
+  formation-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove bounded formation and no data leaving browser
+        run: |
+          node --check public/work-saban/plan/engine.mjs
+          node --check public/work-saban/plan/plan.js
+          node --test tests/work-saban-public-planner.test.mjs
