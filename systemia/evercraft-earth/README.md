@@ -64,6 +64,24 @@ The converter requires valid WGS84 coordinates, explicit numeric values, exact d
 
 Local tests: `node --test systemia/evercraft-earth/*.test.mjs`.
 
+## EPA UCMR 5 tabular evidence ledger
+
+The official UCMR 5 data are **tab-delimited** files with system and sample-point identifiers, analytes, reporting levels, result qualifiers and collection dates. The final dataset was released in August 2026. Source: https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule
+
+1. Download the official **UCMR 5 occurrence data text files by state** ZIP from that EPA page. The archive is split alphabetically, not necessarily one file per state.
+2. Extract the EPA `.txt` file containing Washington records.
+3. Run `node systemia/evercraft-earth/ucmr5-ledger.mjs UCMR5_All_MA_WY.txt yakima-name-matches.json --state WA --analytes PFOA,PFOS --name YAKIMA`.
+4. The script streams the source, validates header names, collects source SHA-256 and row references, preserves numeric values and below-reporting-limit results, and refuses to overwrite an existing output. Invalid matching rows stop the import.
+5. Open **Import GeoJSON or EPA ledger** in the prototype. Quantified readings are displayed separately from `below_reporting_limit`, and no EPA results are plotted on the map without independently verified coordinates.
+
+**Important:** `--name YAKIMA` selects public water systems whose *name contains* that text. It does **not** represent all water systems in Yakima County or Yakima Valley. A search with no matches says nothing about water safety or testing coverage. EPA's UCMR results are entry-point measurements, not household tap measurements.
+
+Source concentrations and reporting levels keep the EPA file's original units, generally µg/L. We do not make hidden conversions or automatically declare regulatory violations. The minimum reporting level is not a health threshold.
+
+Washington DOH separately describes its state PFAS results as public-water source samples taken **after treatment, before distribution**. They must not be mislabeled raw untreated water. Reference: https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/pfas
+
+**Real-data release gate:** acquiring the source archive and passing the importer is not independent validation. Spatial service areas, result qualifiers, sample revisions, source dates and editorial checks remain necessary before publishing contamination findings.
+
 ## Official data entry points verified 2026-10-23
 
 - Washington DOH PFAS dashboard/download: https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/pfas/dashboard
