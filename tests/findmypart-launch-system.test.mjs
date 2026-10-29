@@ -78,3 +78,18 @@ test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, n
    assert.equal((await fetch(runtime.url+'/findmypart/brand/not-found.svg')).status,404);
  }finally{await runtime.close()}
 });
+
+test('Systemia machine launch manifest cannot falsely announce production readiness',()=>{
+ const m=JSON.parse(fs.readFileSync('systemia/launch/findmypart-launch-readiness.json','utf8'));
+ assert.equal(m.launch_permission,false);
+ assert.equal(m.release_phase,'STAGED_NOT_PUBLICLY_RELEASED');
+ assert.equal(m.operational_rules.owned_only,true);
+ assert.equal(m.operational_rules.collect_live_payments,false);
+ assert.equal(m.operational_rules.publish_ads,false);
+ assert.equal(m.offers.length,3);
+ assert.deepEqual(m.offers.map(x=>x.amount_cents),[1900,4900,9900]);
+ assert.ok(m.checks.some(x=>x.id==='settlement'&&x.state==='unverified'));
+ assert.ok(m.checks.some(x=>x.id==='real_fulfillment'&&x.state==='unverified'));
+ assert.ok(m.checks.some(x=>x.id==='distribution_authority'&&x.state==='held'));
+ assert.equal(m.no_live_metrics_claimed,true);
+});
