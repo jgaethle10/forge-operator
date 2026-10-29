@@ -43,6 +43,6 @@ jobs:
       - run: node --check systemia/raven/team-review-runtime.mjs
       - run: node --check systemia/raven/commissioned-worker-receiver.mjs
       - run: node --check systemia/raven/inference-gateway.mjs
-      - run: node --test tests/agent-continuity-roster.test.mjs tests/agent-continuity-routing.test.mjs tests/agent-continuity-signed-gate.test.mjs tests/agent-continuity-owned-source.test.mjs tests/agent-continuity-signed-roster.test.mjs tests/agent-continuity-worker-execution.test.mjs tests/agent-continuity-commissioned-transport.test.mjs tests/agent-continuity-roster-reconciliation.test.mjs tests/agent-continuity-commissioned-receiver.test.mjs
+      - run: node --test tests/agent-continuity-roster.test.mjs tests/agent-continuity-routing.test.mjs tests/agent-continuity-signed-gate.test.mjs tests/agent-continuity-owned-source.test.mjs tests/agent-continuity-signed-roster.test.mjs tests/agent-continuity-worker-execution.test.mjs tests/agent-continuity-commissioned-transport.test.mjs tests/agent-continuity-roster-reconciliation.test.mjs tests/agent-continuity-commissioned-receiver.test.mjs tests/agent-continuity-proof-ledger.test.mjs
       - run: node --test systemia/raven/team-review-runtime.test.mjs systemia/raven/private-runtime.team-review.test.mjs systemia/raven/owned-inference-e2e.test.mjs systemia/evercraft-home/raven-execution-adapter.test.mjs
       - run: node --test systemia/raven/run-tieton-recovery-review.test.mjs
