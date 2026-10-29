@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T04:14:59.746Z",
+  "updated_at": "2026-10-29T04:18:23.066Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-29T04:14:59.746Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-29T04:14:59.746Z",
-      "priority": 80
+      "path": "/llms.txt",
+      "last_changed": "2026-10-29T04:18:23.066Z",
+      "priority": 86
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T04:14:59.746Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-29T04:14:59.746Z",
+      "last_changed": "2026-10-29T04:18:23.066Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/llms.txt",
+      "url": "/llms.txt",
+      "last_changed": "2026-10-29T04:18:23.066Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-29T04:18:23.066Z",
+      "priority": 80
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +43,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-29T04:14:59.746Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-29T04:14:59.746Z",
       "priority": 80
     },
@@ -85,12 +81,6 @@
       "url": "/.well-known/agent.json",
       "last_changed": "2026-10-28T22:39:20.565Z",
       "priority": 102
-    },
-    {
-      "path": "/llms.txt",
-      "url": "/llms.txt",
-      "last_changed": "2026-10-26T03:05:22.002Z",
-      "priority": 86
     },
     {
       "path": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt",
