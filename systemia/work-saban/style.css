@@ -249,3 +249,19 @@ main{max-width:1420px;padding-top:34px}
 .spatial-agent[data-activity="working"] .spatial-person{animation:saban-working 1.2s ease-in-out infinite}
 .spatial-agent[data-activity="celebrating"] .spatial-person{animation:saban-celebrate 1.5s ease-in-out 2}
 @media(prefers-reduced-motion:reduce){.spatial-agent[data-activity] .spatial-person{animation:none}}
+
+/* Cozy, self-contained CSS office decorations. */
+.spatial-plant{position:absolute;width:65px;height:90px;pointer-events:none;transform-style:preserve-3d;transform:translateZ(18px)}
+.spatial-pot{position:absolute;bottom:0;left:18px;width:34px;height:31px;border-radius:5px 5px 12px 12px;background:linear-gradient(100deg,#e7b28d,#a45e4c);box-shadow:inset -8px -3px #0002,0 5px 9px #0003}
+.spatial-leaf{position:absolute;bottom:25px;left:30px;width:20px;height:50px;background:linear-gradient(90deg,#176d59,#56b98b);border-radius:90% 0 90% 0;transform-origin:bottom center}
+.spatial-leaf.leaf-a{transform:rotate(-37deg)}.spatial-leaf.leaf-b{transform:rotate(13deg);height:60px}.spatial-leaf.leaf-c{transform:rotate(51deg);height:44px;background:#379a77}
+.spatial-fishtank{position:absolute;width:116px;height:78px;pointer-events:none;border:6px solid #4a6875;border-top:8px solid #63848d;border-radius:9px;background:linear-gradient(180deg,#87dfe2bb,#197fa5dd);box-shadow:inset 0 0 0 3px #ffffff77,0 12px 18px #0004;transform:translateZ(48px) rotateX(-40deg);overflow:hidden}
+.spatial-tank-water{position:absolute;inset:0;background:radial-gradient(circle at 20% 12%,#fff8,transparent 40%),linear-gradient(0deg,#e2c18e 0 10%,transparent 11%)}
+.spatial-fish{position:absolute;width:19px;height:12px;border-radius:55% 50% 50% 55%;background:#ffb663;top:23px;left:15px;animation:saban-swim 7s ease-in-out infinite alternate}
+.spatial-fish:after{content:'';position:absolute;right:-8px;top:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid #ffb663}
+.spatial-fish.fish-two{top:46px;left:61px;background:#e86f9c;animation-delay:-3s;animation-duration:5s}
+.spatial-fish.fish-two:after{border-left-color:#e86f9c}
+.spatial-bubbles{position:absolute;left:48px;top:17px;width:6px;height:6px;border:1px solid #fff9;border-radius:50%;box-shadow:10px -8px 0 -1px #ffffff88,4px 13px 0 -1px #ffffff88}
+.spatial-tank-base{position:absolute;bottom:0;left:0;right:0;height:5px;background:#304b58}
+@keyframes saban-swim{from{translate:0 0}to{translate:55px -8px}}
+@media(prefers-reduced-motion:reduce){.spatial-fish{animation:none}}
