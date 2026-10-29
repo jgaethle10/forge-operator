@@ -19,6 +19,7 @@ export function createCommissionedWorkerReceiver({
   readEvidence,
   authorizeLease,
   dispatchWorker,
+  claimWorkerDispatch,
   persistWorkerProof,
   now=()=>new Date(),
 }={}){
@@ -43,6 +44,7 @@ export function createCommissionedWorkerReceiver({
          !trustedKeys?.worker_execution||typeof readEvidence!=="function"||
          typeof authorizeLease!=="function"||
          typeof dispatchWorker!=="function"||
+         typeof claimWorkerDispatch!=="function"||
          typeof persistWorkerProof!=="function")
         return reject("commissioned_owned_receiver_not_configured");
       const rootId=callId.slice(0,-suffix.length);
@@ -99,6 +101,15 @@ export function createCommissionedWorkerReceiver({
         registry_snapshot_hash:roster.digest,
         reviewer_assignments:p.reviewer_assignments,
       };
+      // Claim BEFORE dispatch: replayed requests must never make workers
+      // perform duplicate compute, even if proof persistence later fails.
+      let claimed=false;
+      try{
+        claimed=await claimWorkerDispatch({
+          request,reviewerId,agentId,preflight,authorization:authorized,
+        })===true;
+      }catch{/* Durable replay/claim failure must hold. */}
+      if(!claimed)return reject("commissioned_worker_dispatch_claim_replayed_or_unavailable");
       let result;
       try{
         result=await dispatchWorker({
