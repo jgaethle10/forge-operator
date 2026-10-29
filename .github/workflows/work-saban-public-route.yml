@@ -1,0 +1,28 @@
+name: Work Saban public route canary
+on:
+  pull_request:
+    paths:
+      - 'scripts/work-saban-public-canary.mjs'
+      - '.github/workflows/work-saban-public-route.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/work-saban-public-canary.mjs'
+      - '.github/workflows/work-saban-public-route.yml'
+  schedule:
+    - cron: '37 15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-public-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/work-saban-public-canary.mjs
+      - name: Prove public buyer door HTTP and actual page content
+        run: node scripts/work-saban-public-canary.mjs
