@@ -2,7 +2,28 @@
 const form=document.querySelector('#part-request-form');
 const status=document.querySelector('#part-request-status');
 const submit=form?.querySelector('button[type="submit"]');
+const backup=document.querySelector('.request-backup');
+async function checkIntakeReadiness(){
+ let ready=false;
+ try{
+  const response=await fetch('/api/findmypart/readiness',{
+   method:'GET',credentials:'omit',redirect:'error',cache:'no-store',
+   signal:AbortSignal.timeout(7000),
+  });
+  if(response.ok){
+   const state=await response.json();
+   ready=state?.schema==='evercraft.findmypart.intake-readiness.v1'&&state.intake_available===true;
+  }
+ }catch{}
+ if(!ready&&form&&status){
+  form.hidden=true;
+  status.textContent='Online requests are temporarily unavailable. Use the email option below. Nothing has been charged.';
+  status.dataset.state='unconfirmed';
+  backup?.classList.add('request-backup-primary');
+ }
+}
 if(form&&status&&submit){
+ void checkIntakeReadiness();
  form.addEventListener('submit',async(event)=>{
   event.preventDefault();
   if(!form.reportValidity())return;
