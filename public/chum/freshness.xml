@@ -2,17 +2,18 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-29T19:08:55.832Z</updated>
+<updated>2026-10-29T19:13:01.342Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-29T19:08:55.832Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-29T19:13:01.342Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-29T19:13:01.342Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-29T19:13:01.342Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-29T19:13:01.342Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-29T19:13:01.342Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:df0ad4eed50a3c1f94fdb999</id><title>/forensiscope/distribution/llms.txt</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/distribution/llms.txt"/><category term="priority-146"/></entry>
 <entry><id>urn:evercraft:chum:14e32faa7c0eba342dbadda4</id><title>/forensiscope/distribution/</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/distribution/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:71d1cf08089397f37c0a552c</id><title>/forensiscope/distribution/reddit-pack.json</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/distribution/reddit-pack.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:efa1862f27db9d81d7640b3b</id><title>/forensiscope/editorial/social-pack.json</title><updated>2026-10-29T19:07:25.347Z</updated><link href="/forensiscope/editorial/social-pack.json"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-29T19:04:44.835Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:7e6f6077ae195faaa58cd246</id><title>/forensiscope/developers/status.json</title><updated>2026-10-29T18:23:14.518Z</updated><link href="/forensiscope/developers/status.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-29T15:21:50.017Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-29T15:21:50.017Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
@@ -93,7 +94,6 @@
 <entry><id>urn:evercraft:chum:e69e17b4a8ea861ea1b9c8f7</id><title>/chum/agent-commerce.json</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/agent-commerce.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:bc8eacd8da1fea14773793d1</id><title>/chum/agent-commerce.txt</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/agent-commerce.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a0c84085b15e7228ec814ac0</id><title>/chum/sitemap.xml</title><updated>2026-10-17T06:06:40.515Z</updated><link href="/chum/sitemap.xml"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-15T01:35:26.111Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:71caa674727477a01a8776b0</id><title>/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:d959a50a1bc635dab1c4ca6b</id><title>/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:c58178a25b4c4a8b6707e2ab</id><title>/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json"/><category term="priority-100"/></entry>
