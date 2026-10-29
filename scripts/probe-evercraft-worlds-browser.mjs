@@ -47,6 +47,7 @@ try{
     assert.ok(pre.width>100&&pre.height>100,profile.name+': canvas has no framebuffer');
     assert.equal(pre.error,0,profile.name+': WebGL error during scene render');
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
+    await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');

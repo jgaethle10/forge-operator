@@ -1,6 +1,6 @@
 # Evercraft Worlds · Mossmere V0.1
 
-**Status (2026-10-28):** locally generated source; Node model tests pass; WebGL rendering and touch UX **not yet browser-verified** because this execution environment blocks browser navigation. Not deployed. No production user accounts, network synchronization, generative foundation model or multiuser service is represented.
+**Status (2026-10-28 local):** WebGL2 first playable demo passes automated Playwright Chromium desktop and phone emulation scene/navigation/edit/save/reload checks. 8 Node unit tests also pass. **Not deployed to the public; physical-phone GPU testing is still pending.** No production user accounts, network synchronization, generative foundation model or multiuser service is represented.
 
 ## What is implemented
 
@@ -29,7 +29,7 @@ If merging `public/worlds/` into `forge-operator`, Vite/Express static asset rou
 - **Reuse orchestration after admission:** Saban's `systemia/world-engine/saban-adapter.mjs` defines engine, physics, WebGPU, edit, migration and provenance reviewer roles. This first local build does not invoke live Saban jobs.
 - **No Base44/TinyFish/hosted world-generation dependencies.**
 
-## Release gates (not passed)
+## Remaining release gates (not yet passed)
 
 1. Run in native Chrome/Safari on two actual mobile devices; record frame times, initial load, graphics adapter, touch input latency, memory and battery/thermals.
 2. Renderer screenshot/perceptual QA: camera correctness, fish tank/water transparency, responsive controls and text legibility.
@@ -43,3 +43,6 @@ If merging `public/worlds/` into `forge-operator`, Vite/Express static asset rou
 `Systemia admission → Saban review roles → canonical World Engine simulation + Studio edits → owned persistence and session API → browser render adapter → player controls / Worlds builder`. Scene-state projection is per-user until shared spaces have authorization, version control and abuse limits.
 
 Potential initial commercial lane after gameplay QA: free sample world with local save, paid private cloud worlds and workspace previews. Pricing, checkout, buyer demand and sales are **unverified**.
+## Browser CI evidence
+
+Playwright Chromium 140.0.7339.186 against a local PR-branch HTTP server passed WebGL2 context initialization (no observed GL error), keyboard movement, text edits, browser localStorage reload, phone viewport/touch-control visibility and no horizontal overflow. Software rendering measured ~10 fps at 1365×860 desktop and ~16 fps at 390×844 phone emulation in one CI run. These are **limited software-emulation snapshots**, not hardware benchmarks; both are below our premium frame-rate target. Screenshots and the machine receipt are attached as GitHub Actions artifacts under the **Evercraft Worlds browser projection** workflow. Local physical-device QA, better render batching/LOD and production URL verification remain required.

@@ -36,8 +36,8 @@ export function applyCommand(world,text){
  const make=raw.match(/^(?:add|plant|place|create) (?:a |an )?(tree|flower|bench|lamp|rock|mushroom)(?: (?:at|near) (-?\d+(?:\.\d+)?)\s*,?\s*(-?\d+(?:\.\d+)?))?$/);
  if(make){
   if(next.objects.length>=160)return {world,message:'World object limit reached (160).'};
-  const x=make[2]===undefined?clamp(next.player.x+Math.sin(next.player.yaw)*3,-16,16):Number(make[2]);
-  const z=make[3]===undefined?clamp(next.player.z-Math.cos(next.player.yaw)*3,-16,16):Number(make[3]);
+  const x=make[2]===undefined?clamp(next.player.x+Math.sin(next.player.yaw)*7+Math.cos(next.player.yaw)*4,-16,16):Number(make[2]);
+  const z=make[3]===undefined?clamp(next.player.z-Math.cos(next.player.yaw)*7+Math.sin(next.player.yaw)*4,-16,16):Number(make[3]);
   if(Math.abs(x)>16||Math.abs(z)>16)return {world,message:'That spot is outside the buildable world.'};
   const id='made-'+(Math.max(0,...next.objects.map(o=>Number(o.id.split('-').at(-1))||0))+1);
   next.objects.push({id,kind:make[1],x,z});message=`Added ${make[1]} at ${x.toFixed(1)}, ${z.toFixed(1)}.`;
