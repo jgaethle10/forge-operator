@@ -1,0 +1,33 @@
+name: Evercraft Worlds browser-state alpha
+on:
+  pull_request:
+    paths:
+      - 'public/worlds/**'
+      - 'tests/worlds-*'
+      - '.github/workflows/evercraft-worlds-alpha.yml'
+  push:
+    branches:
+      - 'feature/evercraft-worlds-*'
+    paths:
+      - 'public/worlds/**'
+      - 'tests/worlds-*'
+      - '.github/workflows/evercraft-worlds-alpha.yml'
+jobs:
+  world-state:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate modular JavaScript syntax
+        run: |
+          node --check public/worlds/app.mjs
+          node --check public/worlds/state.mjs
+          node --check public/worlds/renderer.mjs
+      - name: Browser-state unit tests
+        run: node --test tests/worlds-state.test.mjs
+      - name: CPU-only waypoint and state microbenchmark
+        run: node tests/worlds-benchmark.mjs
