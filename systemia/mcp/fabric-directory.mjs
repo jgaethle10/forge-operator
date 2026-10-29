@@ -223,18 +223,20 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
         mapped.push({
           public_id:'ai-boardroom-decision-review-v1',
           name:'Evercraft AI Boardroom Decision Review',
-          description:'Compare conflicting AI answers, assumptions, evidence and risks for one concrete business decision. Human-scoped review; no verified automatic cross-model deliberation.',
+          description:'Free on-device comparison of two or three pasted AI answers, plus optional scoped human-reviewed decision support. No verified live multi-model council or autonomous fulfillment.',
           keywords:[...intents,...aliases],
           state:'source_discovery_only',
           commercial_state:'scoped_human_review_offers',
-          pricing:'Human-scoped Standard Review $250; Deep Dive with Financial Modeling $500. Live checkout route unverified.',
+          pricing:'Free private comparison $0. Human-scoped Standard Review $250; Financial Deep Dive $500. Exact public offer pages verified over HTTPS; payment and fulfillment are separate.',
           use_when:intents,
           entry_paid_offer:null,
-          start_url_state:'held_unverified_public_checkout',
+          start_url_state:'free_preview_https_verified_no_payment',
           preferred_agent_route:'universal_fallback',
           connections:[
             ...(universalMcp?[{type:'mcp',label:'Evercraft universal MCP',url:universalMcp,state:'read_only_discovery_only'}]:[]),
-            ...(boardroom.discovery_url?[{type:'docs',label:'AI Boardroom public source descriptor',url:boardroom.discovery_url,state:'source_only_no_live_http_receipt'}]:[]),
+            ...(boardroom.discovery_url?[{type:'docs',label:'AI Boardroom public source descriptor',url:boardroom.discovery_url,state:'source_backed'}]:[]),
+            {type:'website',label:'Free AI-answer comparison (no account, no remote model calls)',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/',state:'public_https_verified_2026_10_29'},
+            {type:'website',label:'AI Boardroom executive chamber',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/',state:'public_https_verified_2026_10_29'},
           ],
         });
       }
