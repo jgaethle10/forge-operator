@@ -48,7 +48,8 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   assert.match(aliev.pricing,/\$299 Preliminary Site Opportunity Report/);
   assert.ok(aliev.use_when.includes('is this property a good EV charging site'));
   assert.equal(aliev.entry_paid_offer?.price,'$250');
-  assert.ok(canonical.every((x)=>x.connections.some((connection)=>connection.type==='mcp')));
+  const missingMcp=canonical.filter((x)=>!x.connections.some((connection)=>connection.type==='mcp'));
+  assert.deepEqual(missingMcp.map((x)=>({public_id:x.public_id,connections:x.connections})),[], 'Every canonical Fabric capability must retain its universal owned MCP option');
   const findMyPart=canonical.find((x)=>x.public_id==='findmypart-paid-hunt-v1');
   assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
 });
