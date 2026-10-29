@@ -40,7 +40,7 @@
     const viewport=make('div','spatial-viewport');
     viewport.id='spatial-viewport';
     viewport.tabIndex=0;
-    viewport.setAttribute('aria-label','3D office. Drag to orbit, Shift drag to pan, wheel to zoom. Arrow keys pan. Q and E rotate. Select an agent desk.');
+    viewport.setAttribute('aria-label','3D office. Drag to orbit, Shift drag to pan, wheel to zoom. Arrow keys pan. Q and E rotate. N visits the next coworker, P the previous. Select an agent desk.');
     const stage=make('div','spatial-stage');
     world=make('div','spatial-world');
     stage.append(world);
@@ -88,7 +88,7 @@
     path.innerHTML='<span>AUTHORIZED WORK ONLY</span>';
     world.append(path);
     const overlay=make('div','spatial-overlay');
-    const orbit=make('div','spatial-orbit-label','DRAG TO ORBIT  ·  SHIFT-DRAG TO PAN  ·  WASD TO EXPLORE  ·  SCROLL TO ZOOM');
+    const orbit=make('div','spatial-orbit-label','DRAG TO ORBIT  ·  SHIFT-DRAG TO PAN  ·  WASD TO PAN  ·  N/P TO VISIT COWORKERS  ·  SCROLL TO ZOOM');
     const controls=make('div','spatial-controls');
     const buttons=[
       ['−','Zoom out',()=>zoom(-0.1)],
@@ -138,6 +138,10 @@
         e.preventDefault();position.panX=clamp(position.panX+panKeys[key][0],-480,480);
         position.panY=clamp(position.panY+panKeys[key][1],-360,360);
         applyCamera();
+      }else if(key==='n'||key==='p'){
+        e.preventDefault();
+        tourIndex=(tourIndex+(key==='n'?0:roster.length-2))%roster.length;
+        tourNext();
       }else if(key==='q'||key==='e'){
         e.preventDefault();orbitCamera(key==='q'?-12:12,0);
       }else if(key==='+'||key==='='){e.preventDefault();zoom(0.08);}
