@@ -56,7 +56,7 @@ h1{font-size:clamp(26px,4vw,43px);line-height:1.06;margin:6px 0}h2{font-size:15p
    </section>
    <section class="panel section"><h2>Evidence controls</h2><div class="stack">
      <button class="action primary" id="demo" type="button">Load synthetic demonstration</button>
-     <button class="action" id="upload" type="button">Import source-linked GeoJSON</button>
+     <button class="action" id="upload" type="button">Import GeoJSON or EPA ledger</button>
      <input class="hidden" id="file" type="file" accept=".json,.geojson,application/json,application/geo+json">
      <button class="action" id="template" type="button">Download example evidence format</button>
      <button class="action" id="clear" type="button">Clear evidence</button>
@@ -84,7 +84,7 @@ h1{font-size:clamp(26px,4vw,43px);line-height:1.06;margin:6px 0}h2{font-size:15p
 const centers={yakima:[46.6021,-120.5059,10],seattle:[47.6062,-122.3321,10],nyc:[40.7128,-74.006,10]};
 const topics={pfas:'Water / PFAS',fire:'Fire activity',land:'Land change',infrastructure:'Infrastructure'};
 const $=id=>document.getElementById(id);
-const state={topic:'pfas',features:[],kind:'empty',map:null,markers:null};
+const state={topic:'pfas',features:[],ledger:[],ledgerSource:null,kind:'empty',map:null,markers:null};
 function elt(tag,cls,value){const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=String(value);return n;}
 function safeLink(url){try{const u=new URL(url);return u.protocol==='https:'?u.href:null;}catch(_){return null;}}
 function norm(f){
@@ -135,13 +135,65 @@ function loadCollection(data,kind){
  state.kind=kind;
  const valid=data.features.map(norm).filter(Boolean);
  if(!valid.length){state.kind=previous;throw Error('No valid observations. Check topic, site_id, metric, numeric value, unit, date, and HTTPS source fields.');}
- state.features=valid;
+ state.features=valid;state.ledger=[];state.ledgerSource=null;
  $('modeFlag').textContent=kind==='synthetic'?'SYNTHETIC DEMONSTRATION':'SOURCE-LINKED / NOT VERIFIED';
  $('overlayMode').textContent=kind==='synthetic'?'SIMULATED DATA · NOT REAL RESULTS':'Imported observations · unverified';
  $('uploadStatus').textContent='Loaded '+valid.length+' valid observations. '+(data.features.length-valid.length)+' rejected. '+(kind==='synthetic'?'These are invented example numbers.':'Check source records before publishing.');
  render();
 }
+function loadLedger(data){
+ if(!data||data.schema!=='evercraft.earth.ucmr5-evidence-ledger.v1'||!Array.isArray(data.records))throw Error('Expected an EPA UCMR 5 evidence ledger.');
+ if(!data.records.length||data.records.length>25000)throw Error('Ledger must contain 1–25,000 observations.');
+ if(!data.source||!/^([a-f0-9]{64})$/.test(data.source.original_file_sha256||''))throw Error('Missing source file fingerprint.');
+ if(data.source.url!=='https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule')throw Error('Unrecognized EPA data source URL.');
+ const records=data.records.map((r,i)=>{
+  if(!r||!['quantified','below_reporting_limit'].includes(r.result_status))throw Error('Bad result state at record '+(i+1));
+  if(r.latitude!==null||r.longitude!==null||r.geolocation_status!=='not_geocoded')throw Error('Unverified geolocation at record '+(i+1));
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(r.observed_at||'')||isNaN(Date.parse(r.observed_at+'T00:00:00Z')))throw Error('Invalid observation date');
+  if(!r.pws_id||!r.pws_name||!r.sample_id||!r.contaminant||!r.sample_point_id)throw Error('Incomplete EPA identifiers at record '+(i+1));
+  if(typeof r.reporting_limit!=='number'||!Number.isFinite(r.reporting_limit)||r.reporting_limit<=0)throw Error('Invalid reporting limit');
+  if(r.result_status==='quantified'&&(!Number.isFinite(r.value)||r.value<r.reporting_limit))throw Error('Invalid quantified value');
+  if(r.result_status==='below_reporting_limit'&&r.value!==null)throw Error('Below-limit result must not contain measured numeric value');
+  if(typeof r.unit!=='string'||!r.unit.trim())throw Error('Missing unit');
+  return {pws_id:String(r.pws_id).slice(0,80),pws_name:String(r.pws_name).slice(0,160),
+    sample_id:String(r.sample_id).slice(0,80),sample_point_id:String(r.sample_point_id).slice(0,80),
+    contaminant:String(r.contaminant).slice(0,60),observed_at:r.observed_at,
+    result_status:r.result_status,value:r.value,reporting_limit:r.reporting_limit,
+    unit:r.unit.slice(0,30),source_row:r.source_row};
+ });
+ state.kind='epa-ledger';state.features=[];state.ledger=records;state.ledgerSource=data.source;
+ $('modeFlag').textContent='EPA EVIDENCE / NOT GEOCODED';
+ $('overlayMode').textContent='EPA tabular data · no verified map positions';
+ $('uploadStatus').textContent='Imported '+records.length+' EPA observations with '+data.source.original_file_sha256.slice(0,12)+'… source fingerprint. No location points inferred.';
+ render();
+}
+function renderLedger(){
+ $('pointCount').textContent='0';$('pairCount').textContent='0';drawMarkers([]);
+ $('mapStatus').textContent='EPA ledger: no verified sample-point coordinates';
+ $('topicBadge').textContent='EPA UCMR 5';
+ const list=$('findings');list.replaceChildren();
+ if($('fromDate').value>$('toDate').value){$('summary').textContent='Earlier snapshot must not be later than the later snapshot.';return;}
+ if(state.topic!=='pfas'){$('summary').textContent='Imported EPA UCMR 5 records cover the PFAS layer only. No evidence loaded for this other layer.';return;}
+ const rows=state.ledger.filter(r=>r.observed_at>=$('fromDate').value&&r.observed_at<=$('toDate').value)
+   .sort((a,b)=>b.observed_at.localeCompare(a.observed_at));
+ const detects=rows.filter(r=>r.result_status==='quantified').length;
+ $('summary').textContent=rows.length+' EPA sample/analyte records in date window: '+detects+' quantified, '+(rows.length-detects)+' below reporting limit. No geolocation, compliance determination, or household-level claim.';
+ if(!rows.length){list.append(elt('div','finding','No imported records in this date window. This is not evidence of no contamination.'));return;}
+ const visible=rows.slice(0,100);
+ for(const r of visible){
+  const box=elt('div','finding');
+  box.append(elt('h3','',r.pws_name+' · '+r.contaminant));
+  box.append(elt('div',r.result_status==='quantified'?'delta':'delta unknown',
+   r.result_status==='quantified'?r.value+' '+r.unit:'Below reporting limit (< '+r.reporting_limit+' '+r.unit+')'));
+  box.append(elt('small','',r.observed_at+' · System '+r.pws_id+' · Entry point '+r.sample_point_id+' · Sample '+r.sample_id));
+  box.append(elt('div','small muted','Not geocoded · Not a tap-water reading · Unverified imported record'));
+  const link=elt('a','small','EPA source dataset ↗');link.href=state.ledgerSource.url;link.target='_blank';link.rel='noopener noreferrer';box.append(link);
+  list.append(box);
+ }
+ if(rows.length>visible.length)list.append(elt('p','small muted','Only the first 100 of '+rows.length+' matching records are shown. Narrow the imported subset or date window for full review.'));
+}
 function render(){
+ if(state.kind==='epa-ledger')return renderLedger();
  const groups=groupData();
  $('topicBadge').textContent=topics[state.topic];
  $('pointCount').textContent=String(groups.filter(g=>g.to).length);
@@ -198,11 +250,11 @@ $('layers').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=
  state.topic=b.dataset.topic;$('layers').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render();
 }));
 $('demo').addEventListener('click',()=>{loadCollection(makeDemo(),'synthetic');$('fromDate').value='2023-01-01';$('toDate').value='2026-10-23';$('place').value='yakima';center();render();});
-$('clear').addEventListener('click',()=>{state.features=[];state.kind='empty';$('modeFlag').textContent='NO VERIFIED DATA LOADED';$('overlayMode').textContent='Coverage unknown ≠ no risk';$('uploadStatus').textContent='All observations cleared from this browser session.';render();});
+$('clear').addEventListener('click',()=>{state.features=[];state.ledger=[];state.ledgerSource=null;state.kind='empty';$('modeFlag').textContent='NO VERIFIED DATA LOADED';$('overlayMode').textContent='Coverage unknown ≠ no risk';$('uploadStatus').textContent='All observations cleared from this browser session.';render();});
 $('upload').addEventListener('click',()=>$('file').click());
 $('file').addEventListener('change',async e=>{
  const file=e.target.files[0];if(!file)return;
- try{if(file.size>5*1024*1024)throw Error('File exceeds 5 MB pilot limit.');loadCollection(JSON.parse(await file.text()),'imported');}catch(err){$('uploadStatus').textContent='Import failed: '+err.message;}finally{e.target.value='';}
+ try{if(file.size>5*1024*1024)throw Error('File exceeds 5 MB pilot limit.');const data=JSON.parse(await file.text());if(data.schema==='evercraft.earth.ucmr5-evidence-ledger.v1')loadLedger(data);else loadCollection(data,'imported');}catch(err){$('uploadStatus').textContent='Import failed: '+err.message;}finally{e.target.value='';}
 });
 $('template').addEventListener('click',saveTemplate);
 if(typeof L==='undefined'){$('mapStatus').textContent='Map library unavailable; evidence list can still be used.';}
