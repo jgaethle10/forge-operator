@@ -61,7 +61,12 @@ export function verifyJobResponse({job,expected,leaseId}={}){
     compute.worker_receipt_hash===worker.receipt_hash,
     'node002_compute_receipt_identity_or_lease_mismatch');
   const {receipt_hash:computeHash,...computeBody}=compute;
-  requireTrue(computeHash===sha(computeBody),'node002_compute_hash_chain_receipt_invalid');
+  // Compute's ReceiptChain.issue() uses bare lowercase hex, unlike the
+  // registered worker receipt's prefixed, stable-key JSON digest.
+  const computeDigest=createHash('sha256')
+    .update(JSON.stringify(computeBody)).digest('hex');
+  requireTrue(/^[a-f0-9]{64}$/.test(String(computeHash||'')) &&
+    computeHash===computeDigest,'node002_compute_hash_chain_receipt_invalid');
   return {
     workload:WORKLOAD,
     remote_node_id:NODE,
@@ -136,6 +141,7 @@ async function run(){
   let lease=null;
   let proof=null;
   let leaseReleased=false;
+  let workError=null;
   try{
     lease=await remoteFetch(base+'/v1/leases',{
       method:'POST',bearerToken:grant.allocator_token,
@@ -171,6 +177,8 @@ async function run(){
       receipt_hash_is_not_digital_signature:true,
       credentials_recorded:false,
     };
+  }catch(error){
+    workError=error;
   }finally{
     if(lease?.lease_id&&lease.token){
       try{
@@ -181,6 +189,19 @@ async function run(){
       }catch{}
     }
   }
+  if(workError){
+    // Always expose lease cleanup outcome even if validation itself failed.
+    // Never expose ephemeral lease ID, control grant or allocator token.
+    console.error(JSON.stringify({
+      schema:'evercraft.remote-capacity.physical-node002-lease-cleanup.v1',
+      lease_was_acquired:Boolean(lease?.lease_id),
+      remote_lease_release_acknowledged:leaseReleased,
+      job_verification_completed:false,
+      secrets_exposed:false,
+    }));
+    throw workError;
+  }
+  requireTrue(Boolean(proof),'remote_job_proof_missing');
   proof.remote_lease_release_acknowledged=leaseReleased;
   requireTrue(leaseReleased,'remote_lease_release_not_confirmed');
   const receipt={...proof,proof_hash:stableSha(proof)};
