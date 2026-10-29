@@ -77,3 +77,35 @@ test('source mismatch and tampered permit bytes fail closed',()=>{
   assert.throws(()=>joinPermitPointsToWgs({wgs,receipt:wgsReceipt,permits:c}),/source hash/);
   assert.throws(()=>joinPermitPointsToWgs({wgs,receipt:{...wgsReceipt,status:'ingest_failed'},permits:permitted([])}),/Complete county evidence/);
 });
+
+test('transient ArcGIS permit errors retry without creating false zero counts',async()=>{
+ const def=LAND_SOURCE_CATALOG.washingtonSurfacePermits;
+ let countAttempts=0;
+ const fetchImpl=async url=>{
+  const u=new URL(url);
+  if(!u.pathname.endsWith('/query'))return {ok:true,json:async()=>({
+   geometryType:def.geometryType,fields:def.fields.map(name=>({name}))
+  })};
+  if(u.searchParams.has('returnCountOnly')){
+   countAttempts++;
+   if(countAttempts===1)return {ok:true,json:async()=>({error:{code:503,message:'Temporary source unavailable'}})};
+   return {ok:true,json:async()=>({count:1})};
+  }
+  return {ok:true,json:async()=>({type:'FeatureCollection',features:[p(6,[-119.6,46.5])]})};
+ };
+ const result=await fetchGrantPermitPoints({fetchImpl});
+ assert.equal(result.features.length,1);
+ assert.equal(result.metadata.source_count_after,1);
+ assert.equal(countAttempts,3);
+});
+test('persistent upstream ArcGIS errors fail closed and remain explicit',async()=>{
+ const def=LAND_SOURCE_CATALOG.washingtonSurfacePermits;
+ const fetchImpl=async url=>{
+  const u=new URL(url);
+  if(!u.pathname.endsWith('/query'))return {ok:true,json:async()=>({
+   geometryType:def.geometryType,fields:def.fields.map(name=>({name}))
+  })};
+  return {ok:true,json:async()=>({error:{code:403,message:'Access denied'}})};
+ };
+ await assert.rejects(fetchGrantPermitPoints({fetchImpl}),/WA DNR ArcGIS 403: Access denied/);
+});
