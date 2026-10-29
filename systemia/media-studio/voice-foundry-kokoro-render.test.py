@@ -24,12 +24,13 @@ class FakeKPipeline:
 
 def make_plan(root):
     plan = root / 'plan.json'
-    plan.write_text(json.dumps({
+    data = {
         'schema':'evercraft.fallen.voice-audition-plan.v1',
-        'planDigest':'synthetic-test-digest',
         'profile':{'id':audition.PROFILE_ID},
         'reads':[{'id':x,'text':f'Test fixture for {x}.'} for x in ['curiosity','trust','wonder']],
-    }))
+    }
+    data['planDigest'] = audition.plan_digest(data)
+    plan.write_text(json.dumps(data))
     return plan
 
 class AuditionRenderTests(unittest.TestCase):
