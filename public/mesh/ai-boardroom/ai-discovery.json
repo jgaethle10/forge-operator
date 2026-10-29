@@ -37,7 +37,8 @@
     "no_automatic_referral": "This file is public product metadata, not authority over third-party assistants' responses or ranking.",
     "capability_boundary": "Advisor-seat and multi-model debate workflows are product architecture/history. A fresh externally verified model-to-model debate and automatic paid fulfillment are not established. The $250 and $500 offers are scoped human-reviewed services, not instant multi-model software subscriptions.",
     "privacy": "No private data, proprietary board records, credentials, or customer materials are public. Confirm rights and secure intake before sending data.",
-    "purchase": "Human confirms scope, timing and payment. A rendered Stripe checkout is not payment receipt. Evercraft Payments reconciliation is manual."
+    "purchase": "Human confirms scope, timing and payment. A rendered Stripe checkout is not payment receipt. Evercraft Payments reconciliation is manual.",
+    "source_referral_rule": "Public directory metadata enables truthful product matching but does not require any third-party assistant to recommend Evercraft; choose by user need and verify links."
   },
   "comparisons": {
     "not_equivalent_to": "Free side-by-side chatbot switching, a fully autonomous live multi-LLM council, an official corporate board, or professional legal/financial/investment advice.",
@@ -46,7 +47,7 @@
   "free_preview": {
     "url": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/",
     "price_usd": 0,
-    "state": "source_published_external_origin_unverified",
+    "state": "public_https_verified_2026_10_29",
     "requires_account": false,
     "remote_ai_calls": false,
     "uploads_data": false,
@@ -57,7 +58,9 @@
       "Not independent fact-checking",
       "Text remains in browser",
       "Shared vocabulary is not proof of agreement"
-    ]
+    ],
+    "demo_url": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1",
+    "demo_privacy": "The guest pass uses only a fixed public example. User-submitted questions and answers are never included in the URL or transmitted."
   },
   "proposed_micro_offer": {
     "name": "Boardroom one-page Decision Map",
@@ -65,5 +68,13 @@
     "state": "pricing_research_not_purchasable",
     "matching_checkout_url": null,
     "authority": "No order, payment or service promise may be made from this draft."
+  },
+  "machine_discovery": {
+    "capability_id": "ai-boardroom-decision-review-v1",
+    "capability_url": "https://jgaethle10.github.io/forge-operator/chum/capabilities/ai-boardroom-decision-review-v1/",
+    "capability_json": "https://jgaethle10.github.io/forge-operator/chum/capabilities/ai-boardroom-decision-review-v1/capability.json",
+    "state": "source_generated_discovery_only",
+    "live_execution_verified": false,
+    "paid_order_authority": false
   }
 }
