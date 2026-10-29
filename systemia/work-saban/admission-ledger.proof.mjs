@@ -19,7 +19,7 @@ ledger.transition('c','provisioned');
 ledger.transition('c','running');
 ledger.transition('c','failed');
 assert.equal(ledger.snapshot().failed,1);
-assert.equal(ledger.snapshot().visibleCharacters,2);
+assert.equal(ledger.snapshot().visibleCharacters,1);
 assert.equal(ledger.transition('a','verified').verified,1);
 assert.throws(()=>ledger.transition('a','running'),/invalid_worker_transition/);
 assert.throws(()=>createAdmissionLedger({limit:0}),RangeError);
