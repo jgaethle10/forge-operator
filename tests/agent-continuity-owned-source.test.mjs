@@ -11,6 +11,8 @@ import { signedRosterDigest } from "../systemia/agent-continuity/signed-roster.m
 const NOW = new Date("2026-10-28T21:02:00Z");
 const dispatchKey = crypto.generateKeyPairSync("ed25519");
 const registryKey = crypto.generateKeyPairSync("ed25519");
+const workerKeyOne = crypto.generateKeyPairSync("ed25519");
+const workerKeyTwo = crypto.generateKeyPairSync("ed25519");
 const publicKey = (pair) => pair.publicKey.export({type:"spki",format:"pem"});
 
 function sign(kind, payload, pair = kind === "registry_snapshot" ? registryKey : dispatchKey) {
@@ -56,6 +58,7 @@ function trust(root,{sameKeys=false}={}) {
     dispatch_preflight:{"owned-operator-key":publicKey(dispatchKey)},
     dispatch_completion:{"owned-operator-key":publicKey(dispatchKey)},
     registry_snapshot:{"independent-registry-key":publicKey(sameKeys ? dispatchKey : registryKey)},
+    worker_execution:{"original-1":publicKey(workerKeyOne),"original-2":publicKey(workerKeyTwo)},
   }),{mode:0o600});
   return file;
 }
