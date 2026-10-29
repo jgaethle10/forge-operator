@@ -101,3 +101,56 @@ features or manufacture customer references.
 authorized operator API over the private read model, provisioning/retention
 controls, and on-host production acceptance. None of these are simulated by
 the product preview.
+
+
+## October 28: private pilot runtime slice (draft branch)
+
+The first real private customer-read workflow is now assembled, but deliberately
+**not publicly deployed**:
+
+- \`customer-sessions.mjs\` issues a 256-bit opaque session cookie only after
+  an independently verified, operator-authorized enrollment decision binding
+  tenant, actor, role, source evidence, and division scopes. The 0600 session
+  store contains only a token hash, never the bearer token. Sessions expire
+  after at most 12 hours, and owner-authorized server-side revocations take
+  effect on the next request. Cookie attributes include \`Secure\`,
+  \`HttpOnly\`, \`SameSite=Strict\` and \`Path=/\`.
+- \`pilot-provision.mjs\` prepares an **empty** operator-approved 0600 private
+  tenant file with exclusive create and append-only hashed audit receipt. It
+  marks the tenant \`pilot_prepared_not_activated\`; it does **not** create a
+  login, import people, grant outreach authority, confirm billing, or expose an
+  onboarding web endpoint. An existing tenant must be reconciled by an
+  operator, never silently overwritten.
+- \`customer-portal/index.html\`, \`portal.css\` and \`portal.js\` implement a
+  mobile-responsive private workspace that reads the authenticated
+  \`/v1/relationship-command/workspace\` endpoint. It shows tenant-scoped
+  contacts, evidence trails, contact holds and due reviews. It has **zero**
+  editing, checkout or message-sending functionality. All dynamic content is
+  written through \`textContent\`, not \`innerHTML\`.
+- \`customer-private-runtime.mjs\` composes the existing read-only customer
+  API with the private session authenticator. It serves the HTML, CSS and JS
+  only after verifying the session and applies strict CSP, no-store cache,
+  and anti-framing headers. It does not start a server, bind HTTPS,
+  or create sessions via HTTP.
+- \`relationship-policy.mjs\` now denies an outbound preflight if a
+  \`no_contact_requested\` event exists for the same subject in *any* Evercraft
+  division, rather than just the requesting division. This is distinct from
+  ordinary per-division review holds. Independent Passport and exact
+  approval checks remain mandatory.
+
+**Authentication limitation:** the session issuer and pilot preparer are
+backend primitives, not complete identity providers or signup. Their
+\`verifyEnrollment\` / \`verifyOwnerApproval\` callbacks must be implemented
+by an existing independently trusted, signed identity and operator authority
+source. They must never accept a customer-supplied \`approved:true\` as
+authorization through an internet-facing API. The backing private filesystem
+and processes must be protected from non-owner writes; backups and session
+revocation across multiple nodes still require deployment evidence.
+
+No real customer has been provisioned by this PR, no live private source volume
+has been mounted, and no commercial checkout has been enabled. To activate:
+install a trusted identity provider and HTTPS route, prove session issuer
+authorization, tenant-safe backup/restore and source retention, run
+cross-tenant tests on the actual compute environment, finish provider-bound
+outreach and payments, and obtain a customer agreement. The public static
+demo stays synthetic and must never read private customer sessions.
