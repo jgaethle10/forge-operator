@@ -121,22 +121,25 @@ export function createSandboxBankReader({
         '/' + READ_PATHS[request.operation];
       const url = origin + path +
         (request.operation === 'transactions.read' ? '?limit=25' : '');
-      let controller;
+      const controller = new AbortController();
       let timer;
       try {
-        const token = await tokenVault.getAccessToken({
-          connector_id: connector.connector_id,
-          environment: 'sandbox',
-        });
-        if (typeof token !== 'string' || token.length < 8 ||
-            token.length > 4096 || /[\s\r\n]/.test(token)) fail();
-        controller = new AbortController();
+        // One deadline covers token retrieval, transport and response parsing.
+        // An unresponsive vault cannot strand an authorized agent request.
         const expiry = new Promise((_, reject) => {
           timer = setTimeout(() => {
             controller.abort();
             reject(new Error('bank_sandbox_timeout'));
           }, timeoutMs);
         });
+        const token = await Promise.race([
+          Promise.resolve().then(() => tokenVault.getAccessToken({
+            connector_id: connector.connector_id, environment: 'sandbox',
+          })),
+          expiry,
+        ]);
+        if (typeof token !== 'string' || token.length < 8 ||
+            token.length > 4096 || /[\s\r\n]/.test(token)) fail();
         const response = await Promise.race([
           Promise.resolve().then(() => transport(url, {
             method: 'GET', redirect: 'error', credentials: 'omit',
@@ -149,6 +152,9 @@ export function createSandboxBankReader({
           })),
           expiry,
         ]);
+        if (response?.redirected === true ||
+            (typeof response?.url === 'string' && response.url !== '' && response.url !== url))
+          fail();
         const raw = await Promise.race([readJsonBounded(response, maxResponseBytes), expiry]);
         return project(request.operation, raw);
       } catch {
