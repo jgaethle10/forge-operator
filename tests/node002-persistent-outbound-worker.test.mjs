@@ -38,13 +38,86 @@ const health={
  authorized_devices:1,
 };
 test('physical preflight requires exact NextGen device + broker and uses loopback',()=>{
- assert.deepEqual(verify({receipt,capacity:cap,health}),{endpoint:'http://127.0.0.1:7777',node_id:receipt.node_id});
+ assert.deepEqual(verify({receipt,capacity:cap,health}),{endpoint:'http://127.0.0.1:7777',node_id:receipt.node_id,device_fingerprint:receipt.device_fingerprint});
  assert.throws(()=>verify({receipt,capacity:cap,health:{...health,instance_id:'other'}}));
  assert.throws(()=>verify({receipt:{...receipt,node_id:'unknown'},capacity:cap,health}));
  assert.throws(()=>verify({receipt,capacity:{...cap,device_fingerprint:'sha256:'+'b'.repeat(64)},health}));
  assert.throws(()=>verify({receipt,capacity:{...cap,supported_workloads:[]},health}));
 });
 
+
+
+test('persistent agent rejects a different fingerprint before issuing any broker challenge',async()=>{
+  const saved=globalThis.fetch;
+  let brokerRequests=0;
+  try{
+    globalThis.fetch=async url=>{
+      const target=String(url);
+      if(target.endsWith('/v1/capacity'))return new Response(JSON.stringify(cap),{
+        status:200,headers:{'content-type':'application/json'},
+      });
+      brokerRequests++;
+      throw Error('unapproved_remote_request');
+    };
+    await assert.rejects(startOutboundNodeAgent({
+      brokerUrl:'https://fabric.example.invalid',
+      localCapacityEndpoint:'http://127.0.0.1:7777',
+      localAllocatorToken:'synthetic-test-only',
+      expectedNodeId:receipt.node_id,
+      expectedDeviceFingerprint:'sha256:'+'f'.repeat(64),
+      commandPolicy:'content-hash-only',
+      capacityWorkloadAllowlist:['systemia.content-hash.v1'],
+    }),/remote_agent_physical_device_fingerprint_mismatch/);
+    assert.equal(brokerRequests,0);
+  }finally{globalThis.fetch=saved}
+});
+
+test('device key rotation after registration fails closed before broker polling',async()=>{
+  const saved=globalThis.fetch;
+  let capacityReads=0,polls=0,agent=null;
+  const json=(v)=>new Response(JSON.stringify(v),{status:200,headers:{'content-type':'application/json'}});
+  const waitFor=async(predicate)=>{
+    const end=Date.now()+2500;
+    while(Date.now()<end){
+      if(predicate())return;
+      await new Promise(resolve=>setTimeout(resolve,10));
+    }
+    throw Error('test_timed_out_waiting_for_fingerprint_mismatch');
+  };
+  try{
+    globalThis.fetch=async url=>{
+      const target=String(url);
+      if(target.endsWith('/v1/capacity')){
+        capacityReads++;
+        return json(capacityReads===1?cap:{...cap,device_fingerprint:'sha256:'+'f'.repeat(64)});
+      }
+      if(target.endsWith('/v1/remote/challenge'))return json({nonce:'test-nonce'});
+      if(target.endsWith('/v1/attest'))return json({attestation:{synthetic:true}});
+      if(target.endsWith('/v1/remote/register'))return json({
+        session_token:'synthetic-session-token',transport_key:'synthetic-transport-key'
+      });
+      if(target.endsWith('/v1/remote/agent/poll')){polls++;return new Response(null,{status:204});}
+      throw Error('unexpected_mock_network_request');
+    };
+    agent=await startOutboundNodeAgent({
+      brokerUrl:'https://fabric.example.invalid',
+      localCapacityEndpoint:'http://127.0.0.1:7777',
+      localAllocatorToken:'synthetic-test-only',
+      expectedNodeId:receipt.node_id,
+      expectedDeviceFingerprint:receipt.device_fingerprint,
+      commandPolicy:'content-hash-only',
+      capacityWorkloadAllowlist:['systemia.content-hash.v1'],
+      pollBackoffMs:100,
+    });
+    await waitFor(()=>agent.status().last_error==='remote_agent_physical_device_fingerprint_mismatch');
+    assert.equal(polls,0);
+    assert.equal(agent.status().last_successful_poll_at,null);
+    assert.equal(agent.status().last_error,'remote_agent_physical_device_fingerprint_mismatch');
+  }finally{
+    if(agent)await agent.close();
+    globalThis.fetch=saved;
+  }
+});
 
 test('outbound agent clears transient broker failure after a successful empty poll', async()=>{
   const originalFetch=globalThis.fetch;
