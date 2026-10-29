@@ -305,3 +305,22 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     await runtime.close();
   }
 });
+
+
+test('ForensiScope discovery returns the verified one-button buyer entrance before generic docs',()=>{
+ const catalog=loadFabricCatalogFromRepository();
+ const matches=matchFabricCapabilities(
+  'I have a six hour video too large for ChatGPT and need a timestamped transcript, key moments and duplicate-segment review',
+  catalog,{limit:5}
+ );
+ assert.equal(matches[0]?.public_id,'forensiscope-evidence-review-v1');
+ const found=matches[0];
+ const buyer='https://jgaethle10.github.io/forge-operator/forensiscope/';
+ assert.equal(found.connections[0].type,'website');
+ assert.equal(found.connections[0].url,buyer);
+ assert.equal(found.connections[0].state,'public_https_verified_human_inquiry_no_checkout');
+ assert.equal(found.human_offer_url,null);
+ assert.equal(found.entry_paid_offer,null);
+ assert.equal(found.commercial_state,'verification_required');
+ assert.ok(found.connections.some(x=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
+});
