@@ -53,12 +53,11 @@ export function classifyCandidate(candidate,sourceHtml,observation,gate=null){
    public_content_identity_verified:identity,public_sha256:sha(body),
    exact_source_readback:same};
  if(!identity) return {...result,state:'PUBLIC_IDENTITY_MISMATCH'};
- if(sourceNoindex||publicNoindex||!launched) {
-   return {...result,state:sourceNoindex||publicNoindex?'OWNED_PAGE_INDEX_HOLD':'OWNED_PAGE_RELEASE_HOLD'};
- }
+ if(sourceNoindex||publicNoindex) return {...result,state:'OWNED_PAGE_INDEX_HOLD'};
  if(candidate.key==='journal'&&/No current live edition|No source-grounded story is inside its live freshness window/i.test(body)) {
    return {...result,state:'OWNED_JOURNAL_ARCHIVE_ONLY'};
  }
+ if(!launched) return {...result,state:'OWNED_PAGE_RELEASE_HOLD'};
  // This is still not a verified search index result or launch authorization for a
  // customer workflow. A separate release and purchase audit must authorize marketing.
  return {...result,state:'OWNED_CANDIDATE_REACHABLE_REVIEW_REQUIRED'};
