@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+<title id="title">Evercraft Boardroom emblem</title><desc id="desc">Crimson rounded square divided into four perspectives around a white central decision point.</desc>
+<rect width="128" height="128" rx="29" fill="#a51b39"/><rect x="22" y="22" width="84" height="84" rx="17" fill="none" stroke="#fff" stroke-width="6"/>
+<path d="M64 23v82M23 64h82" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+<circle cx="64" cy="64" r="14" fill="#fff"/><circle cx="64" cy="64" r="5" fill="#a51b39"/>
+</svg>
