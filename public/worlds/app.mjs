@@ -162,7 +162,16 @@ function persist(){try{state=saveWorld(localStorage,state);}catch(e){console.war
 function runCommand(command){const result=applyCommand(state,command);if(result.world!==state){state=result.world;persist();}notify(result.message);$('command').value='';}
 $('start').onclick=()=>{started=true;$('intro').classList.add('hide');$('hud').classList.remove('hidden');if(matchMedia('(pointer:coarse)').matches){$('joystick').classList.remove('hidden');$('touchhint').classList.remove('hidden');}};
 $('help').onclick=()=>{$('modal').classList.remove('hidden');};$('closeModal').onclick=$('gotIt').onclick=()=>{$('modal').classList.add('hidden');};
-$('buildToggle').onclick=()=>{editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen)$('command').focus();};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');};
+$('buildToggle').onclick=()=>{editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen&&matchMedia('(pointer:fine)').matches)$('command').focus();};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
+function adjustMobileEditorForKeyboard(){
+ const vp=window.visualViewport;
+ if(!vp)return;
+ const covered=Math.max(0,Math.round(window.innerHeight-vp.height-vp.offsetTop));
+ document.documentElement.style.setProperty('--keyboard-bottom',covered+'px');
+}
+window.visualViewport?.addEventListener('resize',adjustMobileEditorForKeyboard);
+window.visualViewport?.addEventListener('scroll',adjustMobileEditorForKeyboard);
+adjustMobileEditorForKeyboard();
 $('interact').onclick=interact;$('save').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();notify('World saved to this browser. Come back whenever you like.');};
 $('commandForm').onsubmit=e=>{e.preventDefault();runCommand($('command').value);};document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('download').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evercraft-worlds-mossmere.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500);};
