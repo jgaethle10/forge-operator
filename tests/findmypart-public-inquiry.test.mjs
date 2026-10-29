@@ -6,7 +6,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
-import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher,readFindMyPartPrivateInquiry,reconcileFindMyPartInquiryOutbox} from '../systemia/mcp/findmypart-public-inquiry.mjs';
+import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher,readFindMyPartPrivateInquiry,reconcileFindMyPartInquiryOutbox,findMyPartInquiryReadiness} from '../systemia/mcp/findmypart-public-inquiry.mjs';
 
 const ORIGIN='https://fabric.systemiacommandcenters.com';
 const brief={
@@ -238,4 +238,35 @@ test('recovery window ignores already delivered history and still finds the next
   assert.equal(fs.existsSync(path.join(alertDir,orphan+'.json')),true);
   assert.equal(fs.existsSync(path.join(alertDir,delivered+'.json')),false);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('public customer availability is fail-closed without key and true only with writable private intake',async()=>{
+ const dir=temp();const edge=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+  findMyPartLeadsDir:dir,findMyPartIntakeKey:key,
+ });
+ try{
+  let r=await fetch(edge.url+'/api/findmypart/readiness');
+  assert.equal(r.status,200);
+  let data=await r.json();
+  assert.equal(data.schema,'evercraft.findmypart.intake-readiness.v1');
+  assert.equal(data.intake_available,false,'unprovisioned alert folder cannot take leads');
+  assert.equal(data.payment_ready,false);
+  assert.equal(data.payment_verified,false);
+  assert.doesNotMatch(JSON.stringify(data),/customer@example|FMP-|key|\/tmp\/|token/i);
+  fs.mkdirSync(path.join(dir,'alert-outbox'),{mode:0o700});
+  assert.equal(findMyPartInquiryReadiness({storeDir:dir,key}).intake_available,true);
+  r=await fetch(edge.url+'/api/findmypart/readiness');
+  assert.equal((await r.json()).intake_available,true);
+  const rejected=await fetch(edge.url+'/api/findmypart/readiness',{method:'POST'});
+  assert.equal(rejected.status,405);
+ }finally{await edge.close();fs.rmSync(dir,{recursive:true,force:true})}
+ const unsafe=temp();
+ try{
+  assert.equal(findMyPartInquiryReadiness({storeDir:unsafe,key}).intake_available,false);
+  fs.mkdirSync(path.join(unsafe,'alert-outbox'),{mode:0o700});
+  fs.chmodSync(unsafe,0o755);
+  assert.equal(findMyPartInquiryReadiness({storeDir:unsafe,key}).intake_available,false);
+  assert.equal(findMyPartInquiryReadiness({storeDir:unsafe,key:Buffer.alloc(16)}).intake_available,false);
+ }finally{fs.rmSync(unsafe,{recursive:true,force:true})}
 });
