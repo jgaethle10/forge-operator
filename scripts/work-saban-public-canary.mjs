@@ -10,6 +10,7 @@ const expected=isPullRequest?['Work Saban']:[
   'No public CSV uploads',
   'Try a real browser example',
   'Try planning your task',
+  'Make a private report from your own CSV',
   'href="./brand/"',
   'Illustrative preview, not live customer execution.',
 ];
@@ -66,7 +67,28 @@ async function main(){
       if(!ok)planVerified=false;
     }
   }
-  const verified=response.status===200&&response.url.startsWith('https://')&&missing.length===0&&brandVerified&&exampleVerified&&planVerified;
+  // Real customer CSV route is private-by-design. External read-only GET checks
+  // prove served HTML/JS, not permissioned file execution or browser privacy.
+  const reportRoutes=[
+    {path:'report/',markers:['Your numbers.','id="csv-file"','id="consent"','connect-src', './report.js']},
+    {path:'report/report.js',markers:['analyzeSalesCsv','file.text()','checkSalesReport(text,result)']},
+    {path:'report/engine.mjs',markers:['export function analyzeSalesCsv','export function checkSalesReport','MAX_CSV_ROWS=2000']}
+  ];
+  const reportChecks=[];
+  let reportVerified=isPullRequest;
+  if(!isPullRequest){
+    reportVerified=true;
+    for(const route of reportRoutes){
+      const href=new URL(route.path,url).href;
+      const result=await fetch(href,{redirect:'follow',signal:AbortSignal.timeout(15000),cache:'no-store'});
+      const body=await result.text();
+      const missingReport=route.markers.filter(marker=>!body.includes(marker));
+      const ok=result.status===200&&missingReport.length===0;
+      reportChecks.push({url:href,http_status:result.status,ok,missing_markers:missingReport});
+      if(!ok)reportVerified=false;
+    }
+  }
+  const verified=response.status===200&&response.url.startsWith('https://')&&missing.length===0&&brandVerified&&exampleVerified&&planVerified&&reportVerified;
   console.log(JSON.stringify({
     schema:'evercraft.work-saban.pilot-public-canary.v2',
     url,final_url:response.url,http_status:response.status,
@@ -74,6 +96,7 @@ async function main(){
     missing_markers:missing,brand_verified:brandVerified,
     example_verified:exampleVerified,example_checks:exampleChecks,
     plan_verified:planVerified,plan_checks:planChecks,
+    report_verified:reportVerified,report_checks:reportChecks,
     source_preview_only:isPullRequest,
     simplified_release_verified:!isPullRequest&&verified,
     public_route_verified:verified,
