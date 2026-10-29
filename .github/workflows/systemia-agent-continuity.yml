@@ -5,6 +5,9 @@ on:
     paths:
       - "systemia/agent-continuity/**"
       - "systemia/control-plane/**"
+      - "systemia/raven/**"
+      - "systemia/evercraft-home/raven-execution-adapter*"
+      - "nexus-work/team-review-contract.json"
       - "tests/agent-continuity-*.test.mjs"
       - ".github/workflows/systemia-agent-continuity.yml"
   push:
@@ -12,6 +15,9 @@ on:
     paths:
       - "systemia/agent-continuity/**"
       - "systemia/control-plane/**"
+      - "systemia/raven/**"
+      - "systemia/evercraft-home/raven-execution-adapter*"
+      - "nexus-work/team-review-contract.json"
       - "tests/agent-continuity-*.test.mjs"
 
 permissions:
@@ -28,4 +34,8 @@ jobs:
           node-version: 22
       - run: node --check systemia/agent-continuity/continuity-gate.mjs
       - run: node --check systemia/control-plane/control-plane.mjs
-      - run: node --test tests/agent-continuity-roster.test.mjs tests/agent-continuity-routing.test.mjs
+      - run: node --check systemia/agent-continuity/signed-evidence.mjs
+      - run: node --check systemia/raven/team-review-runtime.mjs
+      - run: node --test tests/agent-continuity-roster.test.mjs tests/agent-continuity-routing.test.mjs tests/agent-continuity-signed-gate.test.mjs
+      - run: node --test systemia/raven/team-review-runtime.test.mjs systemia/raven/private-runtime.team-review.test.mjs systemia/raven/owned-inference-e2e.test.mjs systemia/evercraft-home/raven-execution-adapter.test.mjs
+      - run: node --test systemia/raven/run-tieton-recovery-review.test.mjs
