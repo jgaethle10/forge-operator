@@ -198,6 +198,12 @@ export function createOwnedCommissionedWorkerProofStore({
         rosterEnvelope: readProof(root, "registry", "snapshot"),
       };
     },
+    async readWorkerExecution({ request, reviewerId }) {
+      const requestId = String(request?.request_id || "").trim();
+      const reviewer = String(reviewerId || "").trim();
+      if(!requestId||!reviewer)throw Error("commissioned_worker_read_identity_required");
+      return readProof(root, "worker-execution", requestId + ":" + reviewer);
+    },
     async persistWorkerProof({ request, reviewerId, workerEvidence }) {
       const requestId = String(request?.request_id || "").trim();
       const role = String(reviewerId || "").trim();
