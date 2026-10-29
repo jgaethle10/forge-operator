@@ -10,7 +10,7 @@ function graphPath(base,version,id,edge=''){
   const u=new URL(clean(base));
   const trusted=new Set(['graph.facebook.com','graph-video.facebook.com','graph.instagram.com']);
   if(u.protocol!=='https:'||!trusted.has(u.hostname.toLowerCase())||u.username||u.password||u.search||u.hash||u.pathname!=='/')fail('graph_origin_untrusted');
-  if(!/^v\\d{1,2}\\.\\d{1,2}$/.test(clean(version)))fail('graph_version_invalid');
+  if(!/^v\d{1,2}\.\d{1,2}$/.test(clean(version)))fail('graph_version_invalid');
   return u.origin+'/'+clean(version)+'/'+encodeURIComponent(id)+(edge?'/'+edge:'');
 }
 async function readResponse(response){
