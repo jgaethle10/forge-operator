@@ -1,0 +1,26 @@
+name: Work Saban pilot buyer door
+on:
+  pull_request:
+    paths:
+      - 'public/work-saban/**'
+      - 'tests/work-saban-pilot-door.test.mjs'
+      - '.github/workflows/work-saban-pilot-door.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/work-saban/**'
+      - 'tests/work-saban-pilot-door.test.mjs'
+      - '.github/workflows/work-saban-pilot-door.yml'
+permissions:
+  contents: read
+jobs:
+  truth-and-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify founding pilot page and non-payment boundary
+        run: node --test tests/work-saban-pilot-door.test.mjs
