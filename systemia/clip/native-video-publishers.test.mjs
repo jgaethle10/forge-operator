@@ -109,3 +109,12 @@ test('Instagram container resumption demands source-bound prior receipt',async()
   await assert.rejects(()=>adapter.publish({...input,resumeContainerId:'container-1'}),/resume_proof_required/);
   assert.equal(calls,0);
 });
+
+test('Meta bearer tokens cannot be sent to an overridden Graph origin',async()=>{
+  let calls=0;
+  const fb=createFacebookPageVideoPublisherAdapter(config({videoGraphBase:'https://example.com',fetchImpl:async()=>{calls++;return json({id:'1'});}}));
+  await assert.rejects(()=>fb.publish(input),/graph_origin_untrusted/);
+  const ig=createInstagramReelPublisherAdapter(config({graphBase:'https://attacker.example',fetchImpl:async()=>{calls++;return json({id:'1'});}}));
+  await assert.rejects(()=>ig.publish(input),/graph_origin_untrusted/);
+  assert.equal(calls,0);
+});
