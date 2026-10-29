@@ -99,6 +99,11 @@ $('pause').onclick=()=>{
 $('fit').onclick=()=>{
  const cover=stage.classList.toggle('cover');$('fit').textContent=cover?'Cover':'Contain';$('fit').setAttribute('aria-pressed',String(cover))
 };
+$('portrait').onclick=()=>{
+ const on=root.classList.toggle('portrait');
+ $('portrait').textContent=on?'16:9':'9:16';
+ $('portrait').setAttribute('aria-pressed',String(on));
+};
 $('sound').onclick=()=>{
  state.muted=!state.muted;
  const v=picture.querySelector('video');if(v)v.muted=state.muted;
