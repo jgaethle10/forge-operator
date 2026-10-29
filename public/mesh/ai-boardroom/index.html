@@ -50,7 +50,7 @@ footer{padding:30px 0 45px;background:#1e2025;color:#edecef;font-size:.83rem}foo
 <div><b>02 / TRADEOFFS</b><p>What will it cost in time, money, and attention? What is the strongest case for choosing differently?</p></div>
 <div><b>03 / PROOF</b><p>What missing fact or affordable experiment could change the decision before you commit?</p></div></div>
 <p class="small">This is a starting framework. It does not consult outside models, verify your facts, or make a recommendation.</p>
-<div class="actions"><a class="button primary" href="./compare/">Compare existing AI answers →</a><a class="button secondary" id="request" href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Boardroom%20review">Request a scoped review</a><button class="button secondary" id="copy-brief" type="button">Copy brief</button></div></section>
+<div class="actions"><a class="button primary" href="./compare/">Compare existing AI answers →</a><a class="button secondary" id="request" href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Boardroom%20review">Request a scoped review</a><button class="button secondary" id="copy-brief" type="button">Copy brief</button><button class="button secondary" id="download-brief" type="button">Download brief</button></div></section>
 </div>
 <div class="band"><div class="wrap"><b>ONE QUESTION. MULTIPLE ANGLES. A MORE DEFENSIBLE NEXT STEP.</b><p>For business owners, founders, and teams who would rather pressure-test than guess.</p></div></div>
 <section class="block wrap" id="how"><div class="section-head"><div class="eyebrow">The method</div><h2>It's not about collecting more answers.</h2><p>It's about uncovering the assumptions hiding behind them. Boardroom helps you structure the choice before the consequences arrive.</p></div>
@@ -73,7 +73,7 @@ footer{padding:30px 0 45px;background:#1e2025;color:#edecef;font-size:.83rem}foo
 <footer><div class="wrap"><div><strong>EVERCRAFT / BOARDROOM</strong><div>Clarity before commitment. © Evercraft LLC</div></div><div><a href="./llms.txt">AI discovery</a> · <a href="./ai-discovery.json">Product record</a> · <a href="../checkout-ready/">All services</a> · <a href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Boardroom">Contact</a></div></div></footer>
 <script>
 (function(){
-const input=document.getElementById("decision"), message=document.getElementById("message"), brief=document.getElementById("brief"), question=document.getElementById("brief-question"), request=document.getElementById("request"), copy=document.getElementById("copy-brief");
+const input=document.getElementById("decision"), message=document.getElementById("message"), brief=document.getElementById("brief"), question=document.getElementById("brief-question"), request=document.getElementById("request"), copy=document.getElementById("copy-brief"), download=document.getElementById("download-brief");
 let current="";
 document.querySelectorAll("[data-example]").forEach(function(b){b.addEventListener("click",function(){input.value=b.getAttribute("data-example");input.focus();message.textContent="";});});
 document.getElementById("build").addEventListener("click",function(){
@@ -85,11 +85,13 @@ const body="I would like to discuss a scoped Boardroom review.%0A%0ANon-sensitiv
 request.href="mailto:jessegaethle10@gmail.com?subject="+encodeURIComponent(mail)+"&body="+body;
 brief.scrollIntoView({behavior:"smooth",block:"start"});
 });
+function makeBriefText(){return "Evercraft Boardroom | Free Decision Brief\n\nDECISION\n"+current+"\n\nOPPORTUNITY\nWhat would have to go right for this to be worthwhile?\n\nTRADEOFFS\nWhat will it cost, and what is the strongest alternative?\n\nEVIDENCE\nWhat missing fact or low-cost test could change the decision?\n\nThis is a question framework, not an AI verdict.";}
 copy.addEventListener("click",function(){
 if(!current)return;
-const txt="Evercraft Boardroom | Free Decision Brief\n\nDECISION\n"+current+"\n\nOPPORTUNITY\nWhat would have to go right for this to be worthwhile?\n\nTRADEOFFS\nWhat will it cost, and what is the strongest alternative?\n\nEVIDENCE\nWhat missing fact or low-cost test could change the decision?\n\nThis is a question framework, not an AI verdict.";
+const txt=makeBriefText();
 if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){copy.textContent="Copied ✓";},function(){copy.textContent="Copy unavailable";});}else{copy.textContent="Copy unavailable";}
 });
+download.addEventListener("click",function(){if(!current)return;const blob=new Blob([makeBriefText()],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="evercraft-boardroom-decision-brief.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},0);});
 })();
 </script>
 </body></html>
