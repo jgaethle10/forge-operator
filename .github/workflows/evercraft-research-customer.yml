@@ -4,12 +4,16 @@ on:
     paths:
       - "public/research/**"
       - "tests/evercraft-research-public.test.mjs"
+      - "tests/evercraft-research-public-canary.test.mjs"
+      - "scripts/probe-evercraft-research-public.mjs"
       - ".github/workflows/evercraft-research-customer.yml"
   push:
     branches: [main]
     paths:
       - "public/research/**"
       - "tests/evercraft-research-public.test.mjs"
+      - "tests/evercraft-research-public-canary.test.mjs"
+      - "scripts/probe-evercraft-research-public.mjs"
       - ".github/workflows/evercraft-research-customer.yml"
   workflow_dispatch:
 permissions:
@@ -26,4 +30,5 @@ jobs:
       - name: Verify scoped customer experience and evidence boundaries
         run: |
           node --check public/research/scope.mjs
-          node --test tests/evercraft-research-public.test.mjs
+          node --check scripts/probe-evercraft-research-public.mjs
+          node --test tests/evercraft-research-public.test.mjs tests/evercraft-research-public-canary.test.mjs
