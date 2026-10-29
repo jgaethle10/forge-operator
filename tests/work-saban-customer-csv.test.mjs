@@ -83,7 +83,8 @@ test('customer page is consent gated, first-party, no external transfers, truthf
   assert.match(page,/connect-src 'none'/);
   assert.match(page,/form-action 'none'/);
   assert.match(page,/No signup, upload, payment or AI model/);
-  assert.match(page,/AI agents or external auditors/);
+  assert.match(page,/No hosted AI agent execution/);
+  assert.match(client,/AI agents or external auditors: NOT USED/);
   assert.match(page,/id="copy"/);
   assert.match(page,/id="fallback" hidden/);
   assert.match(page,/prefers-reduced-motion:reduce/);
