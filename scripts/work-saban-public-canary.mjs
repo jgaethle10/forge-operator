@@ -10,6 +10,8 @@ const expected=isPullRequest?['Work Saban']:[
   'No public CSV uploads',
   'Try a real browser example',
   'Try planning your task',
+  'Make your sales report',
+  'href="./report/"',
   'Make a private report from your own CSV',
   'href="./brand/"',
   'Illustrative preview, not live customer execution.',
