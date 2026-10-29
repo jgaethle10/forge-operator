@@ -43,6 +43,7 @@ import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
+import {createPartnerApplicationHandler,createPartnerApplicationDispatcher} from './partners-public-inquiry.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -412,6 +413,8 @@ export async function startFabricLocalRuntime({
   studioLeadsDir='',
   findMyPartLeadsDir='',
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
+  partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',
+  partnersIntakeKey=process.env.EVERCRAFT_PARTNERS_INTAKE_KEY_B64||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -429,6 +432,13 @@ export async function startFabricLocalRuntime({
   const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey});
   const findMyPartInquiry=createFindMyPartInquiryHandler({storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
     onAlertQueued:()=>{if(findMyPartAlertDispatcher.enabled)void findMyPartAlertDispatcher.dispatch().catch(()=>{});}});
+  const partnerAlertDispatcher=createPartnerApplicationDispatcher({
+    folder:partnersLeadsDir||undefined,key:partnersIntakeKey,
+  });
+  const partnerApplication=createPartnerApplicationHandler({
+    storeDir:partnersLeadsDir||undefined,key:partnersIntakeKey,
+    onAlertQueued:()=>{if(partnerAlertDispatcher.enabled)void partnerAlertDispatcher.dispatch().catch(()=>{});},
+  });
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
     const now=Date.now();
@@ -786,6 +796,18 @@ export async function startFabricLocalRuntime({
           }),payment_ready:false,payment_verified:false});
       }
 
+      // Founding-partner inquiries are encrypted before acknowledging receipt.
+      // A public application never activates an agent, contract, commission or payment.
+      const partnersRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(partnersRoute==='/api/partners/readiness'){
+        if(req.method!=='GET'&&req.method!=='OPTIONS')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return await partnerApplication(req,res);
+      }
+      if(partnersRoute==='/api/partners/inquiry'){
+        if(req.method==='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return await partnerApplication(req,res);
+      }
+
       // A separately bounded owned route accepts only consented FindMyPart part briefs.
       // Customer content cannot create a paid order or an executable mission.
       if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/inquiry'){
@@ -1077,6 +1099,36 @@ export async function startFabricLocalRuntime({
           publicationAuthority:false,
           external_social_publish_performed:false,
         });
+      }
+
+      // A first-party hosted copy uses the same static application as Pages and
+      // posts only to the controlled Partners API, never a payment handler.
+      const partnersPublicPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      const partnerAssets=new Map([
+        ['/partners','public/partners/index.html'],
+        ['/partners/','public/partners/index.html'],
+        ['/partners/index.html','public/partners/index.html'],
+        ['/partners/app.mjs','public/partners/app.mjs'],
+        ['/partners/mark.svg','public/partners/mark.svg'],
+        ['/partners/social-card.svg','public/partners/social-card.svg'],
+        ['/partners/terms.html','public/partners/terms.html'],
+        ['/partners/llms.txt','public/partners/llms.txt'],
+      ]);
+      if(partnerAssets.has(partnersPublicPath)){
+        if(req.method!=='GET'&&req.method!=='HEAD')return sendJson(res,405,{ok:false,error:'partners_public_read_only'});
+        const target=path.resolve(ownedPublicRoot,partnerAssets.get(partnersPublicPath));
+        if(!target.startsWith(ownedPublicRoot+path.sep)||!fs.existsSync(target))return sendJson(res,503,{ok:false,error:'partners_asset_unavailable'});
+        const data=fs.readFileSync(target);
+        const ext=path.extname(target);
+        res.writeHead(200,{
+          'content-type':ext==='.mjs'?'text/javascript; charset=utf-8':journalContentType(target),
+          'content-length':data.length,'cache-control':'no-store','x-content-type-options':'nosniff',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':ext==='.svg'?"default-src 'none'; sandbox":
+            "default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(data);
       }
 
       // FindMyPart brand frontage is staged on the owned Fabric origin only.
@@ -1655,6 +1707,10 @@ export async function startFabricLocalRuntime({
     findMyPartAlertDispatcher.start();
     void findMyPartAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(partnerAlertDispatcher.enabled){
+    partnerAlertDispatcher.start();
+    void partnerAlertDispatcher.dispatch().catch(()=>{});
+  }
 
   const address=server.address();
   const actualPort=typeof address==='object'&&address?address.port:port;
@@ -1677,6 +1733,7 @@ export async function startFabricLocalRuntime({
     close:async()=>{
       studioAlertDispatcher.stop();
       findMyPartAlertDispatcher.stop();
+      partnerAlertDispatcher.stop();
       await faieSurface?.close();
       await new Promise((resolve,reject)=>
         server.close((error)=>error?reject(error):resolve())
