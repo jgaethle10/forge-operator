@@ -9,7 +9,7 @@ test('Worlds browser scene produces a valid authoritative World Engine definitio
  local=applyCommand(local,'add tree').world;
  local=applyCommand(local,'plant flower at 4, 2').world;
  const world=toEngineWorld(local);
- assert.equal(validateWorldDefinition(world),undefined);
+ assert.equal(validateWorldDefinition(world),true);
  assert.equal(world.version,local.revision);
  assert.equal(world.entities.filter(e=>e.tags?.includes('user_created')).length,2);
  assert.ok(world.entities.some(e=>e.id==='scene:portal'));
