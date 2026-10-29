@@ -1,0 +1,570 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "evercraft-research-public-launch-20261029",
+  "product": "evercraft-research",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "campaign_goal": "third-party buyer exposure and qualified research scopes, not synthetic engagement",
+  "founder_direction": "launch and rotate across approved Evercraft channels; personal platform copies prepared separately",
+  "status": "platform_identity_media_and_issuer_authorization_pending",
+  "owner_approval": false,
+  "platform_connections_verified": false,
+  "published_posts_verified": 0,
+  "observed_sales": 0,
+  "launch_url": "https://jgaethle10.github.io/forge-operator/research/",
+  "eligible_brand_keys": [
+    "evercraft"
+  ],
+  "excluded_brand_keys": [
+    "eps",
+    "havenly-cleaning",
+    "rnb-chicken-and-soul"
+  ],
+  "approved_external_media_asset_ids": [],
+  "entries": [
+    {
+      "id": "research-20261029-company-facebook",
+      "product": "evercraft-research",
+      "audience": "evercraft_corporate",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "public early-access invitation",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "A supplier looks promising, a market seems to be growing, and two sources say completely different things. What do you trust when an important decision can't wait for perfect information?\n\nEvercraft Research is now open for early-access inquiries. Start with your question, choose the kind of report you need, and download a free research scope in your browser. We quote full investigations individually, with clear deliverables and an emphasis on traceable sources, contradictions, and unanswered questions.\n\nYou can try the scope builder without an account. The link is in our first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-facebook",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-company-linkedin",
+      "product": "evercraft-research",
+      "audience": "evercraft_corporate",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "decision-grade evidence",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "A polished answer and a defensible business decision are not the same thing.\n\nTeams face questions that cross supplier markets, technical constraints, public records, competitors, and operational economics. The evidence can be incomplete or contradictory, yet the decision still has a deadline. Evercraft Research is opening for custom inquiries with an intentionally simple starting point: describe the question, choose a report type, and download a free research scope.\n\nA completed report is a separate, individually quoted engagement. We're looking for genuine research problems where source-grounded analysis would help someone decide what to do next. https://jgaethle10.github.io/forge-operator/research/",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-linkedin",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-company-instagram",
+      "product": "evercraft-research",
+      "audience": "evercraft_corporate",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "observed challenged unknown",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "The interesting part of research isn't a polished answer. It's the evidence behind it, what contradicts it, and what's missing.\n\nEvercraft Research is open for early-access inquiries. Start with a question and download a free scope outlining what an investigation would cover. Real reports are custom-quoted and reviewed. Research link in our bio. #EvercraftResearch #BusinessResearch",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-instagram",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-company-x",
+      "product": "evercraft-research",
+      "audience": "evercraft_corporate",
+      "platform": "x",
+      "destination": "x-organization",
+      "proposed_channels": [
+        "x-organization"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "public early-access invitation",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "A confident answer isn't proof. Evercraft Research helps you frame a real question around sources, contradictions and unknowns. Our free scope builder is live; custom investigations are quoted individually. https://jgaethle10.github.io/forge-operator/research/",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-x",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-company-tiktok",
+      "product": "evercraft-research",
+      "audience": "evercraft_corporate",
+      "platform": "tiktok",
+      "destination": "tiktok-business",
+      "proposed_channels": [
+        "tiktok-business"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "actual product walkthrough",
+      "creative_state": "real_screen_recording_required",
+      "caption": "A confident answer isn't proof. Here's the actual Evercraft Research site: enter a question, choose a report type, and get a free research scope. A professionally reviewed investigation is a separate custom-quoted service. Find the Research link in our profile. #EvercraftResearch",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-tiktok",
+      "media_instruction": "Capture real Research page, question entry and free report outline. No stock AI footage. Use subtitles; record original narration. Show 'scope only' clearly.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-personal-facebook",
+      "product": "evercraft-research",
+      "audience": "founder_personal",
+      "platform": "facebook",
+      "destination": "facebook-personal",
+      "proposed_channels": [
+        "facebook-personal"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "public early-access invitation",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "I've spent a lot of time building things behind the scenes at Evercraft, and one problem keeps coming back: people have serious questions but don't always have a good way to get useful, properly sourced research.\n\nEvercraft Research now has its own public starting point. You can describe your question, choose the type of investigation, and download a scope for free. Actual research reports are a separately quoted and reviewed service, so we're not pretending the scope is a finished answer.\n\nI'd love to hear what people would have researched if they had a reliable way to ask. I'll put the link in the first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-facebook",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-personal-instagram",
+      "product": "evercraft-research",
+      "audience": "founder_personal",
+      "platform": "instagram",
+      "destination": "instagram-personal",
+      "proposed_channels": [
+        "instagram-personal"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "observed challenged unknown",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "We've been building a lot of technology at Evercraft behind the scenes. Research is one of the areas I wanted to make useful to people who don't care how complicated the machinery is.\n\nNow anyone can frame a tough question and get a downloadable scope for free. An actual investigation is separately reviewed and quoted. I'm excited to see what people need help understanding. Research link in my bio. #EvercraftResearch",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-instagram",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-personal-linkedin",
+      "product": "evercraft-research",
+      "audience": "founder_personal",
+      "platform": "linkedin",
+      "destination": "linkedin-personal",
+      "proposed_channels": [
+        "linkedin-personal"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "decision-grade evidence",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "We're opening Evercraft Research to the public as an early-access research service. The idea came from a recurring problem: teams need evidence they can trace, contradictions they can examine, and a clear account of what's still unknown, not just another fluent summary.\n\nThe first public release lets anyone prepare a research scope, choose the kind of report they'd need, and download the outline without signing up. Behind that experience, we've built evidence-dossier infrastructure, but actual research engagements are reviewed and quoted separately. I'm interested in the hard research questions facing founders and operators. What would you investigate before your next big decision?\n\nhttps://jgaethle10.github.io/forge-operator/research/",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-linkedin",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-personal-x",
+      "product": "evercraft-research",
+      "audience": "founder_personal",
+      "platform": "x",
+      "destination": "x-personal",
+      "proposed_channels": [
+        "x-personal"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "public early-access invitation",
+      "creative_state": "verified_research_ui_screenshot_or_first_party_typography",
+      "caption": "We've opened Evercraft Research. Start with one question, download a free research scope, and request a custom report if you need deeper evidence. No fake instant findings. https://jgaethle10.github.io/forge-operator/research/",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-x",
+      "media_instruction": "Use real Research screenshot from owner-supplied Oct 29 mobile capture or verified first-party Research screen capture, only after visual review.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    },
+    {
+      "id": "research-20261029-personal-tiktok",
+      "product": "evercraft-research",
+      "audience": "founder_personal",
+      "platform": "tiktok",
+      "destination": "tiktok-personal",
+      "proposed_channels": [
+        "tiktok-personal"
+      ],
+      "planned_day": "2026-10-29",
+      "angle": "actual product walkthrough",
+      "creative_state": "real_screen_recording_required",
+      "caption": "I'm showing the actual Research tool we've been building at Evercraft. You can enter a difficult question and download a free scope before committing to anything. Real investigations are reviewed and quoted separately. If there's something you need researched properly, the link's in my profile.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-tiktok",
+      "media_instruction": "Capture real Research page, question entry and free report outline. No stock AI footage. Use subtitles; record original narration. Show 'scope only' clearly.",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "blocked_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul"
+        ],
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      },
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/research/",
+        "expectedText": [
+          "Evercraft Research",
+          "Prepare my research brief"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "evidence_refs": [
+        "https://github.com/jgaethle10/forge-operator/pull/1750",
+        "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
+      ],
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+    }
+  ],
+  "review_gates": [
+    "first_party_real_product_media",
+    "natural_editorial_quality_no_paragraph_quota",
+    "link_format_by_platform",
+    "verified_public_research_page",
+    "scope_only_pricing_truth",
+    "issuer_backed_authorization",
+    "account_identity_and_permissions",
+    "native_provider_post_url_and_id",
+    "dedupe_cadence",
+    "inquiry_and_attribution_receipts"
+  ],
+  "prohibited_actions": [
+    "base44",
+    "metricool",
+    "unapproved_social_post",
+    "unapproved_brand_crosspost",
+    "fictitious_client_testimonials",
+    "fictitious_research_results",
+    "invented_checkout",
+    "bulk_unsolicited_DMs",
+    "duplicate_reposting",
+    "claim_viral_traffic_without_analytics"
+  ]
+}
