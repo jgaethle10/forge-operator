@@ -2,12 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-29T07:48:48.469Z</updated>
+<updated>2026-10-29T07:51:58.640Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-29T07:51:58.640Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:410fe69956b5f62f51e34561</id><title>/forensiscope/</title><updated>2026-10-29T07:51:58.640Z</updated><link href="/forensiscope/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-29T07:48:48.469Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-29T07:48:48.469Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-29T07:48:48.469Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-29T07:48:48.469Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9328632ab0cf39eee2465f</id><title>/chum/capabilities/</title><updated>2026-10-29T07:46:09.417Z</updated><link href="/chum/capabilities/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:c79ba768239ed82ae5d8f574</id><title>/chum/capabilities.json</title><updated>2026-10-29T07:46:09.417Z</updated><link href="/chum/capabilities.json"/><category term="priority-80"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:2f1705999d839122dfaa932b</id><title>/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:dc4f2c725f56e8af923235e5</id><title>/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:7a1d6c2083fd0a236166667b</id><title>/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:37d78a9d9a42ad38d57392e9</id><title>/chum/products/game-fabric/</title><updated>2026-10-14T23:57:09.569Z</updated><link href="/chum/products/game-fabric/"/><category term="priority-94"/></entry>
 </feed>
