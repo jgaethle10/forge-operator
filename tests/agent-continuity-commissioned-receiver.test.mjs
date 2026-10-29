@@ -82,8 +82,8 @@ function workerEvidence(inference){
     worker_instance_id:"synthetic-test-worker-7",
   },issuer.worker,"agent-real-id-7");
 }
-function fixture({missingLease=false,wrongOutput=false,forgedProof=false,readEvidenceError=false}={}){
-  let dispatched=0,stored=0,authorized=0,read=0;
+function fixture({missingLease=false,missingClaim=false,wrongOutput=false,forgedProof=false,readEvidenceError=false}={}){
+  let dispatched=0,stored=0,authorized=0,read=0,claimed=0;
   const receiver=createCommissionedWorkerReceiver({
     trustedKeys:trust,now:()=>NOW,
     async readEvidence(){
@@ -99,6 +99,10 @@ function fixture({missingLease=false,wrongOutput=false,forgedProof=false,readEvi
         execution_gate_verified:!missingLease,
         worker_enrollment_verified:!missingLease,
       };
+    },
+    async claimWorkerDispatch(){
+      claimed++;
+      return !missingClaim;
     },
     async dispatchWorker({agentId,reviewerId}){
       dispatched++;
@@ -119,7 +123,7 @@ function fixture({missingLease=false,wrongOutput=false,forgedProof=false,readEvi
       return true;
     },
   });
-  return {receiver,counts:()=>({dispatched,stored,authorized,read})};
+  return {receiver,counts:()=>({dispatched,stored,authorized,read,claimed})};
 }
 test("receiver checks signed roster, active lease, exact worker signature and persists evidence before returning",async()=>{
   const f=fixture();
@@ -127,7 +131,7 @@ test("receiver checks signed roster, active lease, exact worker signature and pe
   assert.equal(r.status,"completed",r.blocked_reason);
   assert.equal(r.commissioned_worker_verified,true);
   assert.equal(r.worker_run_receipt_ref,"node002:synthetic-run-c1");
-  assert.deepEqual(f.counts(),{read:1,authorized:1,dispatched:1,stored:1});
+  assert.deepEqual(f.counts(),{read:1,authorized:1,dispatched:1,stored:1,claimed:1});
   assert.equal(r.external_side_effects_authorized,false);
 });
 test("identity, mission and scope tampering block before even reading signed evidence",async()=>{
@@ -148,13 +152,22 @@ test("identity, mission and scope tampering block before even reading signed evi
   }
 });
 test("unavailable evidence or missing independent lease/enrollment blocks without worker invocation",async()=>{
-  for(const config of [{readEvidenceError:true},{missingLease:true}]){
+  for(const config of [{readEvidenceError:true},{missingLease:true},{missingClaim:true}]){
     const f=fixture(config);
     const r=await f.receiver.execute(body);
     assert.equal(r.status,"blocked");
     assert.equal(f.counts().dispatched,0);
   }
 });
+test("an unavailable or replayed durable claim stops the commissioned worker before inference",async()=>{
+  const f=fixture({missingClaim:true});
+  const result=await f.receiver.execute(body);
+  assert.equal(result.status,"blocked");
+  assert.equal(result.blocked_reason,"commissioned_worker_dispatch_claim_replayed_or_unavailable");
+  assert.equal(f.counts().claimed,1);
+  assert.equal(f.counts().dispatched,0);
+});
+
 test("forged or mismatched worker proof cannot be persisted or released",async()=>{
   for(const config of [{wrongOutput:true},{forgedProof:true}]){
     const f=fixture(config);
