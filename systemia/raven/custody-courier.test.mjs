@@ -1,3 +1,7 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { ProviderCredentialVault } from "../evercraft-home/credential-vault.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -70,4 +74,51 @@ test("metadata count cannot claim more than six source entries", async () => {
   await assert.rejects(() => receiver.consume({
     ...envelope, field_count: 100,
   }, { now: 1001 }), /custody_envelope_invalid/);
+});
+
+test("synthetic six-field recovery can seal into an owned encrypted vault without plaintext files", async () => {
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "raven-custody-vault-proof-"));
+  try {
+    const session = await createPrivateReceiverSession({ now: 1000, ttlMs: 60000 });
+    const fixture = makeFixture();
+    const envelope = await sealCustodyForReceiver(session.challenge, fixture, { now: 1001 });
+    const unsealed = await session.consume(envelope, { now: 1002 });
+    // This maps fixture fields ONLY. There is no production importer or source-side
+    // adapter; founder identity, source authentication and key mapping remain gates.
+    const vault = new ProviderCredentialVault({ stateDir });
+    const metadata = [];
+    for (const field of LEGACY_RAVEN_FIELDS) {
+      const received = vault.put({
+        provider: "legacy-raven",
+        environment: "live",
+        label: field.toLowerCase(),
+        apiKeyId: field,
+        // Wrap values for the generic vault's 16-byte minimum; no plaintext file.
+        apiSecret: JSON.stringify({ value: unsealed[field] }),
+        actorRef: "synthetic-test-only",
+      });
+      metadata.push(received);
+    }
+    assert.equal(metadata.length, 6);
+    assert.ok(metadata.every(item => item.secret_material_stored === true));
+    assert.ok(metadata.every(item => item.secret_material_echoed === false));
+    const encryptedFiles = fs.readdirSync(stateDir).filter(name => name.endsWith(".json"));
+    assert.equal(encryptedFiles.length, 6);
+    for (const file of encryptedFiles) {
+      const contents = fs.readFileSync(path.join(stateDir, file), "utf8");
+      for (const value of Object.values(fixture)) assert.equal(contents.includes(value), false);
+      assert.equal(fs.statSync(path.join(stateDir, file)).mode & 0o777, 0o600);
+    }
+    const reopened = new ProviderCredentialVault({ stateDir, readOnly: true });
+    for (const row of metadata) {
+      const secret = reopened.readSecret(row.credential_ref);
+      assert.equal(secret.api_key_id.length > 0, true);
+      assert.equal(JSON.parse(secret.api_secret).value, fixture[secret.api_key_id]);
+    }
+    assert.equal(fs.statSync(stateDir).mode & 0o777, 0o700);
+    assert.equal(fs.statSync(path.join(stateDir, ".vault-key")).mode & 0o777, 0o600);
+    await assert.rejects(() => session.consume(envelope, { now: 1003 }), /consumed/);
+  } finally {
+    fs.rmSync(stateDir, { recursive: true, force: true });
+  }
 });
