@@ -195,6 +195,10 @@
       node.title=role.name+' · '+(receipts[role.id]||state[role.id]);
     }
     select(selected);
+    for(const role of roster){
+      const node=agents.get(role.id);
+      if(node)node.dataset.activity=state[role.id]==='running'?'working':state[role.id]==='verified'?'celebrating':'waiting';
+    }
   }
   const preceding={analyst:'director',writer:'analyst',designer:'writer',auditor:'designer',coordinator:'auditor'};
   function observedHandoff(toId){
