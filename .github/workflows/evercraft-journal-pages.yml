@@ -114,6 +114,11 @@ jobs:
           # Native image assets matter: Facebook/LinkedIn preview cards generally
           # require PNG/JPEG rather than SVG-only Open Graph references.
           python -m pip install --quiet --disable-pip-version-check cairosvg==2.8.2
+          # Every future Pages deployment materializes a real crawlable, non-SVG
+          # Evercraft Partners link preview before the artifact is uploaded.
+          test -s _public_pages/partners/social-card.svg
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/partners/social-card.svg", write_to="_public_pages/partners/social-card.png", output_width=1200, output_height=630)'
+          test -s _public_pages/partners/social-card.png
           python systemia/clip/build-audience-social-previews.py \
             --source public/clip/audience-sites \
             --destination _public_pages/clip/audience-sites
