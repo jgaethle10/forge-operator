@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { createCommissionedTeamGate } from "./signed-evidence.mjs";
+import { createCommissionedTeamGate, verifySignedAgentEvidence } from "./signed-evidence.mjs";
 import { verifyCommissionedRoster } from "./signed-roster.mjs";
 
 function mustFile(file, description) {
@@ -135,8 +135,16 @@ export function createOwnedCommissionedTeamGate({
  * An exclusive durable file claim prevents overwrites/replays; the existing
  * commissioned gate consumes this same private worker-execution path.
  */
-export function createOwnedCommissionedWorkerProofStore({ evidenceDir } = {}) {
+export function createOwnedCommissionedWorkerProofStore({
+  evidenceDir,
+  trustKeysFile,
+  now = () => new Date(),
+} = {}) {
   const root = mustDirectory(evidenceDir);
+  const file = mustFile(trustKeysFile, "commissioned_worker_trust_keys");
+  const keys = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (!keys?.worker_execution || !Object.keys(keys.worker_execution).length)
+    throw new Error("commissioned_worker_trust_keys_invalid");
   const folder = path.join(root, "worker-execution");
   if (!fs.existsSync(folder)) fs.mkdirSync(folder, { mode: 0o700 });
   mustDirectory(folder);
@@ -154,7 +162,14 @@ export function createOwnedCommissionedWorkerProofStore({ evidenceDir } = {}) {
       if (!requestId || !role || !workerEvidence ||
           workerEvidence.kind !== "worker_execution" ||
           workerEvidence.payload?.request_id !== requestId ||
-          workerEvidence.payload?.reviewer_id !== role) {
+          workerEvidence.payload?.reviewer_id !== role ||
+          workerEvidence.payload?.agent_id !== workerEvidence.key_id ||
+          !verifySignedAgentEvidence({
+            envelope: workerEvidence,
+            kind: "worker_execution",
+            trustedKeys: keys,
+            now: now(),
+          })) {
         return false;
       }
       const dest = evidenceFile(root, "worker-execution", requestId + ":" + role);
