@@ -7,7 +7,7 @@ const expected=isPullRequest?['Work Saban']:[
   'One task. Three simple steps.',
   'PRIVATE PILOT INTEREST',
   'Request the private pilot by email',
-  'No public CSV uploads',
+  'There is no CSV upload to Evercraft',
   'Try a real browser example',
   'Try planning your task',
   'Make your sales report',
