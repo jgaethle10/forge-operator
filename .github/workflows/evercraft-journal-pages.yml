@@ -10,6 +10,7 @@ on:
       - 'systemia/graphics-command/ranking-poster-renderer.mjs'
       - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
+      - 'scripts/probe-boardroom-public.mjs'
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
