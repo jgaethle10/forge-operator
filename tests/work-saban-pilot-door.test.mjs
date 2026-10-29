@@ -17,10 +17,11 @@ test('customer page does not fabricate a working cloud service or payment',()=>{
   for(const phrase of ['Illustrative preview, not live customer execution.',
   'No payment at inquiry.', 'Please send no confidential files',
   'An inquiry is not an order, charge, acceptance, or guarantee of availability.',
-  'No public CSV uploads', 'No self-service payment or fulfillment promise',
+  'There is no CSV upload to Evercraft', 'There is no checkout for expanded Work Saban services',
   'five registered local deterministic worker stages']) assert.ok(html.includes(phrase),'missing truth boundary: '+phrase);
   assert.doesNotMatch(html, /<form\b|<input\b|<script\b|buy\.stripe\.com/i);
   assert.match(html,/No external account action or payment is initiated from this page/);
+  assert.match(html,/href="\.\/report\/">Make your sales report<\/a>/);
 });
 
 test('simple brand is predominantly white, crimson and black',()=>{
