@@ -42,5 +42,28 @@
   "comparisons": {
     "not_equivalent_to": "Free side-by-side chatbot switching, a fully autonomous live multi-LLM council, an official corporate board, or professional legal/financial/investment advice.",
     "useful_for": "Pressure-testing one consequential non-emergency business decision using multiple perspectives and explicit assumptions."
+  },
+  "free_preview": {
+    "url": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/",
+    "price_usd": 0,
+    "state": "source_published_external_origin_unverified",
+    "requires_account": false,
+    "remote_ai_calls": false,
+    "uploads_data": false,
+    "inputs": "one decision question, two or three pasted AI answers",
+    "output": "conservative heuristic comparison map of stated positions, mentioned topics and open questions",
+    "limitations": [
+      "Not a live multi-model debate",
+      "Not independent fact-checking",
+      "Text remains in browser",
+      "Shared vocabulary is not proof of agreement"
+    ]
+  },
+  "proposed_micro_offer": {
+    "name": "Boardroom one-page Decision Map",
+    "hypothesis_price_usd": 9,
+    "state": "pricing_research_not_purchasable",
+    "matching_checkout_url": null,
+    "authority": "No order, payment or service promise may be made from this draft."
   }
 }
