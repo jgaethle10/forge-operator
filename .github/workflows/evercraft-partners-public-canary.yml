@@ -1,0 +1,49 @@
+name: Evercraft Partners external HTTPS canary
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/evercraft-partners-public-canary.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/partners/**'
+      - '.github/workflows/evercraft-partners-public-canary.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-visitor-path:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read the public partner entry and its actual assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          base="https://jgaethle10.github.io/forge-operator/partners"
+          fetch () {
+            curl --fail --location --silent --show-error --retry 6 --retry-delay 3 --retry-all-errors --max-time 20 "$base/$1" -o "$tmp/$2"
+            test -s "$tmp/$2"
+          }
+          fetch "" index.html
+          fetch "mark.svg" mark.svg
+          fetch "terms.html" terms.html
+          fetch "social-card.svg" social-card.svg
+          fetch "llms.txt" llms.txt
+          grep -Fq "Good work travels" "$tmp/index.html"
+          grep -Fq "Founding partner applications now open" "$tmp/index.html"
+          grep -Fq 'id="partner-application"' "$tmp/index.html"
+          grep -Fq 'mailto:jessegaethle10@gmail.com' "$tmp/index.html"
+          grep -Fq "Nothing is submitted automatically" "$tmp/index.html"
+          grep -Fq "No commission amount" "$tmp/terms.html"
+          grep -Fq "Recruitment alone never earns compensation" "$tmp/terms.html"
+          grep -Fq "<svg" "$tmp/mark.svg"
+          grep -Fq "<svg" "$tmp/social-card.svg"
+          grep -Fq "Founding partner expressions of interest only" "$tmp/llms.txt"
+          if grep -Eiq 'base44[.]app|claim guaranteed returns|guaranteed commission' "$tmp/index.html"; then
+            echo "Found blocked legacy or payout claim in visitor page" >&2
+            exit 1
+          fi
+          echo "Verified exact live Partners HTML, application boundary, mark, social card, terms and LLM disclosure on public HTTPS."
