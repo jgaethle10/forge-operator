@@ -17,7 +17,8 @@ try{
   receipt.browser_version=browser.version();
   for(const profile of [
     {name:'desktop',viewport:{width:1365,height:860},isMobile:false,hasTouch:false},
-    {name:'phone-emulation',viewport:{width:390,height:844},isMobile:true,hasTouch:true}
+    {name:'phone-emulation',viewport:{width:390,height:844},isMobile:true,hasTouch:true},
+    {name:'small-phone-emulation',viewport:{width:320,height:640},isMobile:true,hasTouch:true}
   ]){
     const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile,hasTouch:profile.hasTouch,deviceScaleFactor:1});
     const page=await context.newPage();
@@ -55,6 +56,17 @@ try{
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');
+      // Dispatch genuine Chromium touch input and verify it moves the saved player.
+      const stickBox=await page.locator('#joystick').boundingBox();
+      const touchX=stickBox.x+stickBox.width/2,touchY=stickBox.y+stickBox.height/2;
+      const client=await context.newCDPSession(page);
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:touchX,y:touchY}]});
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:touchX+stickBox.width*.32,y:touchY-stickBox.height*.22}]});
+      await page.waitForTimeout(700);
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      await page.locator('#save').click();
+      const moved=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')).player);
+      assert.ok(Math.hypot(moved.x,moved.z-8)>.04,profile.name+': joystick touch did not move avatar');
     }else{
       await page.keyboard.down('w');
       await page.waitForTimeout(2300);
@@ -64,6 +76,22 @@ try{
       assert.ok(location<7.99,'keyboard movement did not update world position; position='+location+'; frame='+pre.fps);
     }
     await page.locator('#buildToggle').click();
+    if(profile.hasTouch){
+      const builder=await page.evaluate(()=>{
+        const rect=document.querySelector('#editor').getBoundingClientRect();
+        const buttons=[...document.querySelectorAll('.editor .chips button')].map(b=>b.getBoundingClientRect().height);
+        const field=document.querySelector('#command');
+        return {top:rect.top,height:rect.height,viewport:innerHeight,buttonHeights:buttons,inputFontSize:parseFloat(getComputedStyle(field).fontSize),focused:document.activeElement===field};
+      });
+      assert.ok(builder.top>=builder.viewport*.18,profile.name+': builder obscures world preview');
+      assert.ok(builder.height<=builder.viewport*.8,profile.name+': builder too tall');
+      assert.ok(builder.buttonHeights.every(h=>h>=44),profile.name+': tap targets too small');
+      assert.ok(builder.inputFontSize>=16,profile.name+': iOS input zoom risk');
+      assert.equal(builder.focused,false,profile.name+': phone keyboard opened without request');
+      await page.screenshot({path:out+'/'+profile.name+'-builder.png',timeout:10000});
+    }
+    const portal=await page.evaluate(async()=>{const m=await import('/worlds/portal-visual.mjs');return {width:m.PORTAL.frameWidth,height:m.PORTAL.frameHeight,near:m.portalEffect(.4,4).opacity,far:m.portalEffect(5,4).opacity};});
+    assert.ok(portal.width<2.5&&portal.height<4&&portal.near<.05&&portal.far>.9,profile.name+': portal bounds violated');
     await page.locator('[data-command="add tree"]').click();
     const change=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(change.objects.length,1,profile.name+': adding tree did not persist');
