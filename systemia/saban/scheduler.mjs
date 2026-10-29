@@ -1,3 +1,5 @@
+import { runFencedLocalScheduler } from './fenced-local-scheduler.mjs';
+
 import {
   leaseNext,
   complete,
@@ -13,10 +15,18 @@ export async function runScheduler({
   plan,
   contract,
   rootDir = process.cwd(),
-  statePath = null
+  statePath = null,
+  fencedJournal = null
 }) {
   if (!adapter || typeof adapter.runAssignment !== 'function') {
     throw new Error('Scheduler requires an adapter with runAssignment().');
+  }
+
+  if (fencedJournal !== null) {
+    return runFencedLocalScheduler({
+      state, adapter, physicalWorkers, plan, contract, rootDir,
+      statePath, journal: fencedJournal
+    });
   }
 
   const workerCount = Math.max(1, Number.parseInt(String(physicalWorkers || 1), 10) || 1);
