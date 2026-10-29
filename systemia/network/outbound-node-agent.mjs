@@ -236,6 +236,7 @@ export async function startOutboundNodeAgent({
   let registeredAt = null;
   let lastCommandAt = null;
   let lastPollAt = null;
+  let lastSuccessfulPollAt = null;
   let lastError = null;
   let loopPromise = null;
 
@@ -412,9 +413,9 @@ export async function startOutboundNodeAgent({
           continue;
         }
         if (polled.status === 204) {
-          // A successful empty poll is proof of recovery after a transient
-          // broker/network error. Leaving lastError set makes the persistent
-          // supervisor restart an otherwise healthy outbound session.
+          // Empty 204 is a successful round trip. Clear a prior transient
+          // failure, and record proof that the poll loop reached the broker.
+          lastSuccessfulPollAt = new Date().toISOString();
           lastError = null;
           backoff = pollBackoffMs;
           continue;
@@ -472,6 +473,7 @@ export async function startOutboundNodeAgent({
         await sendResult(commandId, result);
 
         lastCommandAt = new Date().toISOString();
+        lastSuccessfulPollAt = lastCommandAt;
         lastError = null;
         backoff = pollBackoffMs;
       } catch (error) {
@@ -505,6 +507,7 @@ export async function startOutboundNodeAgent({
         registered_at: registeredAt,
         last_command_at: lastCommandAt,
         last_poll_at: lastPollAt,
+        last_successful_poll_at: lastSuccessfulPollAt,
         last_error: lastError,
         public_ingress: false,
         local_compute_scope: 'loopback_only',
