@@ -53,7 +53,8 @@ def decode(path):
     return a
 piano={}
 for n in PIANO_NAMES:
-    url=f"https://raw.githubusercontent.com/Tonejs/audio/master/salamander/{n}.mp3"
+    asset_name=n.replace("D#","Ds").replace("F#","Fs")
+    url=f"https://raw.githubusercontent.com/Tonejs/audio/master/salamander/{asset_name}.mp3"
     piano[n]=decode(fetch(url,"piano_"+n.replace("#","sharp")+".mp3"))
 cello={}
 for n in CELLO_NAMES:
