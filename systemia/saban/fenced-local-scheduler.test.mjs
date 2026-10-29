@@ -137,6 +137,21 @@ test('completed result tampering cannot inherit the fenced acknowledgment',async
   assert.equal(calls,0);
 });
 
+test('forged journal object or unsigned journal cannot enable fenced adapter execution',async()=>{
+  const f=make();
+  let calls=0;
+  const adapter={runAssignment:async()=>{calls++;return {ok:true};}};
+  await assert.rejects(runScheduler({...f,adapter,fencedJournal:{
+    submit(){},acquire(){return {lease_token:'forged'};},
+    acknowledge(){},inspect(){}
+  }}),/durable_state_and_journal_required/);
+  const weak=new SabanFencedAckJournal({
+    stateDir:path.join(f.root,'unsigned'),integritySecret:'',maxAttempts:1
+  });
+  await assert.rejects(runScheduler({...f,adapter,fencedJournal:weak}),/durable_state_and_journal_required/);
+  assert.equal(calls,0);
+});
+
 test('stale in-memory state, unknown contract, parallel mode and leftover runner lock are denied',async()=>{
   const f=make(),adapter={runAssignment:async()=>({ok:true})};
   const save=structuredClone(f.state);
