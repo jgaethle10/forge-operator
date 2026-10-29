@@ -65,7 +65,7 @@ export function auditAgentContinuity({
     if (matches.length !== 1 ||
         norm(matches[0]?.status) !== 'active' ||
         matches[0]?.counts_as_agent !== false ||
-        norm(matches[0]?.kind) !== 'embedded') {
+        (matches[0]?.kind != null && norm(matches[0]?.kind) !== 'embedded')) {
       addHold(name + '_embedded_protocol_missing_or_invalid');
     }
   }
