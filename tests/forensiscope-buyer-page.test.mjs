@@ -9,7 +9,7 @@ test('ForensiScope buyer page renders every published duration-price tier withou
   ['Up to 5 minutes',15],['Up to 30 minutes',35],['Up to 2 hours',75],
   ['Up to 6 hours',149],['Up to 12 hours',249]
  ]){
-  assert.match(html,new RegExp(duration.replace(/ /g,'\\s+')));
+  assert.ok(html.includes(duration),'Duration missing: '+duration);
   assert.ok(html.includes('$'+price),'Price missing: '+price);
  }
  assert.equal((html.match(/class="tier"/g)||[]).length,5);
@@ -17,7 +17,7 @@ test('ForensiScope buyer page renders every published duration-price tier withou
  assert.match(html,/Evercraft Payments/);
  assert.match(html,/secure intake/);
  assert.match(html,/do not charge|does not charge/i);
- assert.doesNotMatch(html,/base44\\.app|buy\\.stripe\\.com|checkout\\.stripe\\.com/i);
+ assert.ok(!/base44|buy.stripe|checkout.stripe/i.test(html));
  assert.doesNotMatch(html,/<form|type="file"/i);
 });
 test('ForensiScope public page is available even when payment backend is held',async()=>{
@@ -25,12 +25,12 @@ test('ForensiScope public page is available even when payment backend is held',a
  try{
   const response=await fetch(rt.url+'/forensiscope');
   assert.equal(response.status,200);
-  assert.match(response.headers.get('content-type'),/text\\/html/);
+  assert.ok(response.headers.get('content-type').includes('text/html'));
   const html=await response.text();
   assert.match(html,/Understand the whole recording/);
   assert.match(html,/Request review/);
   assert.doesNotMatch(html,/Continue to checkout/);
   const sitemap=await fetch(rt.url+'/sitemap.xml').then(x=>x.text());
-  assert.match(sitemap,/https:\\/\\/fabric\\.systemiacommandcenters\\.com\\/forensiscope/);
+  assert.ok(sitemap.includes('https://fabric.systemiacommandcenters.com/forensiscope'));
  } finally { await rt.close(); }
 });
