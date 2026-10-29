@@ -11,6 +11,7 @@ on:
       - 'tests/forensiscope-buyer-discovery.test.mjs'
       - 'public/forensiscope/llms.txt'
       - 'public/forensiscope/discovery.json'
+      - 'public/forensiscope/developers/status.json'
       - 'public/forensiscope/index.html'
       - '.github/workflows/evercraft-journal-pages.yml'
       - '.github/workflows/forensiscope-launch.yml'
