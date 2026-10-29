@@ -3,6 +3,7 @@
 // Default is read-only. --apply is an explicit privileged, rollback-safe action.
 // Never prints keys, customer details, or the contents of /etc/evercraft/fabric.env.
 import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {randomBytes} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
@@ -91,6 +92,10 @@ async function main(){
  const uid=Number(run('id',['-u',serviceUser]));
  const gid=Number(run('id',['-g',serviceUser]));
  if(!Number.isSafeInteger(uid)||!Number.isSafeInteger(gid))fail('service_identity_invalid');
+ if(fs.existsSync(settings.store)){
+  const state=fs.statSync(settings.store);
+  if(state.uid!==uid||state.gid!==gid)fail('existing_private_directory_owner_mismatch');
+ }
  fs.mkdirSync(settings.store,{recursive:true,mode:0o700});
  fs.chownSync(settings.store,uid,gid);
  fs.chmodSync(settings.store,0o700);
@@ -120,7 +125,7 @@ async function main(){
   if(installed){
    const restore=settings.env+'.findmypart-rollback-'+process.pid;
    fs.writeFileSync(restore,envSource,{mode:0o600,flag:'wx'});
-   fs.chownSync(restore,0,0);fs.chmodSync(restore,oldMode===0?0o600:oldMode);
+   fs.chownSync(restore,0,0);fs.chmodSync(restore,0o600);
    fs.renameSync(restore,settings.env);
    try{run('systemctl',['restart',settings.service])}catch{}
   }
@@ -129,7 +134,9 @@ async function main(){
   if(fs.existsSync(temp))fs.unlinkSync(temp);
  }
 }
-main().catch(error=>{
- emit({state:'held',error:String(error?.message||'provision_failed'),live_checkout_verified:false});
- process.exitCode=1;
-});
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ main().catch(error=>{
+  emit({state:'held',error:String(error?.message||'provision_failed'),live_checkout_verified:false});
+  process.exitCode=1;
+ });
+}
