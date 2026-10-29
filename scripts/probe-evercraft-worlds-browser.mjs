@@ -37,6 +37,8 @@ try{
         width:canvas.width,height:canvas.height,
         error:gl?.getError(),
         fps:document.querySelector('#metrics')?.textContent||'',
+        draw_calls:Number((document.querySelector('#metrics')?.textContent||'').match(/(\\d+) draws/)?.[1]||0),
+        instanced_count:Number((document.querySelector('#metrics')?.textContent||'').match(/(\\d+) instanced/)?.[1]||0),
         viewport_width:innerWidth,
         document_width:document.documentElement.scrollWidth,
         navigation_ms:performance.getEntriesByType('navigation')[0]?.domContentLoadedEventEnd||null,
@@ -46,6 +48,8 @@ try{
     assert.equal(pre.webgl2,true,profile.name+': no WebGL2 context');
     assert.ok(pre.width>100&&pre.height>100,profile.name+': canvas has no framebuffer');
     assert.equal(pre.error,0,profile.name+': WebGL error during scene render');
+    assert.ok(pre.instanced_count>100,profile.name+': expected real instanced geometry');
+    assert.ok(pre.draw_calls>0&&pre.draw_calls<100,profile.name+': opaque batching failed; draws='+pre.draw_calls);
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
     await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
     if(profile.hasTouch){

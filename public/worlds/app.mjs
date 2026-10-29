@@ -3,12 +3,12 @@ const $=id=>document.getElementById(id), canvas=$('world');
 const gl=canvas.getContext('webgl2',{antialias:true,alpha:false,powerPreference:'high-performance'});
 if(!gl){$('intro').innerHTML='<h1>WebGL 2 is needed.</h1><p>Try a current version of Chrome, Safari, Firefox or Edge with graphics enabled.</p>';throw Error('WebGL2 unavailable');}
 const vs=`#version 300 es
-precision highp float;in vec3 position;in vec3 normal;uniform mat4 projection,view,model;out vec3 vNormal,vWorld;void main(){vec4 p=model*vec4(position,1.);vWorld=p.xyz;vNormal=normalize(mat3(model)*normal);gl_Position=projection*view*p;}`;
+precision highp float;in vec3 position;in vec3 normal;in mat4 instanceMatrix;in vec3 instanceColor;uniform mat4 projection,view,model;uniform vec3 color;uniform float instancing;out vec3 vNormal,vWorld,vColor;void main(){mat4 activeModel=instancing>.5?instanceMatrix:model;vec4 p=activeModel*vec4(position,1.);vWorld=p.xyz;vNormal=normalize(mat3(activeModel)*normal);vColor=instancing>.5?instanceColor:color;gl_Position=projection*view*p;}`;
 const fs=`#version 300 es
-precision highp float;in vec3 vNormal,vWorld;uniform vec3 color,lightColor,fogColor,cameraPos;uniform float opacity,ambient;out vec4 frag;void main(){vec3 n=normalize(vNormal);float sun=max(dot(n,normalize(vec3(-.38,.8,.48))),0.);float fill=max(dot(n,normalize(vec3(.48,.2,-.65))),0.)*.13;float lit=ambient+sun*.54+fill;vec3 c=color*(lit*lightColor+.13);float dist=length(vWorld-cameraPos);float fog=clamp((dist-22.)/34.,0.,.88);c=mix(c,fogColor,fog);frag=vec4(pow(c,vec3(.94)),opacity);}`;
+precision highp float;in vec3 vNormal,vWorld,vColor;uniform vec3 lightColor,fogColor,cameraPos;uniform float opacity,ambient;out vec4 frag;void main(){vec3 n=normalize(vNormal);float sun=max(dot(n,normalize(vec3(-.38,.8,.48))),0.);float fill=max(dot(n,normalize(vec3(.48,.2,-.65))),0.)*.13;float lit=ambient+sun*.54+fill;vec3 c=vColor*(lit*lightColor+.13);float dist=length(vWorld-cameraPos);float fog=clamp((dist-22.)/34.,0.,.88);c=mix(c,fogColor,fog);frag=vec4(pow(c,vec3(.94)),opacity);}`;
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
-const loc={};for(const k of ['projection','view','model','color','lightColor','fogColor','cameraPos','opacity','ambient'])loc[k]=gl.getUniformLocation(program,k);
+const loc={};for(const k of ['projection','view','model','color','lightColor','fogColor','cameraPos','opacity','ambient','instancing'])loc[k]=gl.getUniformLocation(program,k);
 function mesh(p,n){const vao=gl.createVertexArray();gl.bindVertexArray(vao);for(const [attr,data] of [['position',p],['normal',n]]){const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);const i=gl.getAttribLocation(program,attr);gl.enableVertexAttribArray(i);gl.vertexAttribPointer(i,3,gl.FLOAT,false,0,0);}gl.bindVertexArray(null);return {vao,count:p.length/3};}
 function cube(){const p=[],n=[];const faces=[[[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]]],[[0,0,-1],[[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]],[[1,0,0],[[.5,-.5,.5],[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5]]],[[-1,0,0],[[-.5,-.5,-.5],[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5]]],[[0,1,0],[[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5],[-.5,.5,-.5]]],[[0,-1,0],[[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5],[-.5,-.5,.5]]]];for(const [normal,verts]of faces){for(const i of [0,1,2,0,2,3]){p.push(...verts[i]);n.push(...normal);}}return mesh(p,n);}
 function sphere(lat=12,lon=18){const p=[],n=[];for(let a=0;a<lat;a++)for(let b=0;b<lon;b++){const verts=[];for(const [i,j]of [[a,b],[a+1,b],[a+1,b+1],[a,b+1]]){const phi=Math.PI*i/lat,theta=2*Math.PI*j/lon;const v=[Math.sin(phi)*Math.cos(theta)*.5,Math.cos(phi)*.5,Math.sin(phi)*Math.sin(theta)*.5];verts.push(v);}for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(...verts[k].map(x=>x*2));}}return mesh(p,n);}
@@ -65,8 +65,49 @@ for(let i=0;i<60;i++){const x=(random()-.5)*34,z=(random()-.5)*34;if(x>-7&&x<.8&
 box(13,.15,9.5,6,.25,6,'#d7c4a6');box(13,1.3,12,5.5,2.6,.15,'#e4d5b7');box(13,2.8,9.5,6,.16,6,'#8d9a82');box(13,.6,10,1.4,.9,.8,'#92765d');
 // Portal pedestal, permanent glowy portal ring drawn dynamically.
 tube(3,.22,-10.2,3,.45,2,'#b9a98e');box(3,2.5,-10.45,2.9,5,.17,'#6b817c');
-let moving=[],waterDraw=[],lastNearby=null;
-function draw(d){const shape=meshes[d.kind]||meshes.cube;gl.bindVertexArray(shape.vao);gl.uniformMatrix4fv(loc.model,false,M(d.x,d.y,d.z,d.sx,d.sy,d.sz,d.rot||0));gl.uniform3fv(loc.color,col(d.color));gl.uniform1f(loc.opacity,d.alpha??1);gl.drawArrays(gl.TRIANGLES,0,shape.count);}
+// Static mesh transforms/colors are uploaded once as instance attributes, never repeated each frame.
+const opaqueGroups=new Map();
+for(const d of staticDraw){if(d.alpha!==1)continue;const group=opaqueGroups.get(d.kind)||[];group.push(d);opaqueGroups.set(d.kind,group);}
+const staticInstances=[];
+const matrixAttrib=gl.getAttribLocation(program,'instanceMatrix'),colorAttrib=gl.getAttribLocation(program,'instanceColor');
+if(matrixAttrib<0||colorAttrib<0)throw Error('Static instancing shader contract unavailable');
+for(const [kind,items] of opaqueGroups){
+ const shape=meshes[kind]||meshes.cube;
+ const floats=new Float32Array(items.length*19);
+ for(let i=0;i<items.length;i++){
+  const d=items[i],offset=i*19;
+  floats.set(M(d.x,d.y,d.z,d.sx,d.sy,d.sz,d.rot||0),offset);
+  floats.set(col(d.color),offset+16);
+ }
+ gl.bindVertexArray(shape.vao);
+ const buffer=gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+ gl.bufferData(gl.ARRAY_BUFFER,floats,gl.STATIC_DRAW);
+ for(let k=0;k<4;k++){
+  gl.enableVertexAttribArray(matrixAttrib+k);
+  gl.vertexAttribPointer(matrixAttrib+k,4,gl.FLOAT,false,76,k*16);
+  gl.vertexAttribDivisor(matrixAttrib+k,1);
+ }
+ gl.enableVertexAttribArray(colorAttrib);
+ gl.vertexAttribPointer(colorAttrib,3,gl.FLOAT,false,76,64);
+ gl.vertexAttribDivisor(colorAttrib,1);
+ staticInstances.push({kind,vao:shape.vao,vertices:shape.count,count:items.length,buffer});
+}
+gl.bindVertexArray(null);
+const staticDrawCount=staticInstances.reduce((total,b)=>total+b.count,0);
+let frameDrawCalls=0,frameInstanceCount=0,lastNearby=null;
+function drawStaticInstances(){
+ gl.uniform1f(loc.instancing,1);
+ gl.uniform1f(loc.opacity,1);
+ for(const bucket of staticInstances){
+  gl.bindVertexArray(bucket.vao);
+  gl.drawArraysInstanced(gl.TRIANGLES,0,bucket.vertices,bucket.count);
+  frameDrawCalls++;
+  frameInstanceCount+=bucket.count;
+ }
+ gl.uniform1f(loc.instancing,0);
+}
+function draw(d){const shape=meshes[d.kind]||meshes.cube;gl.bindVertexArray(shape.vao);gl.uniformMatrix4fv(loc.model,false,M(d.x,d.y,d.z,d.sx,d.sy,d.sz,d.rot||0));gl.uniform3fv(loc.color,col(d.color));gl.uniform1f(loc.opacity,d.alpha??1);gl.drawArrays(gl.TRIANGLES,0,shape.count);frameDrawCalls++;}
 function drawStyled(d){if((d.alpha??1)<1){gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);}draw(d);if((d.alpha??1)<1){gl.depthMask(true);gl.disable(gl.BLEND);}}
 function agentDraw(a,i){const x=a.renderX,z=a.renderZ,b=a.renderBob,color=a.color;const d=(kind,dx,dy,dz,sx,sy,sz,c)=>draw(colored(kind,x+dx,dy+b,z+dz,sx,sy,sz,c));
  d('sphere',0,.71,0,.87,1,.7,color);d('sphere',0,1.41,0,.98,.93,.84,color);d('sphere',-.3,1.87,0,.33,.64,.3,color);d('sphere',.3,1.87,0,.33,.64,.3,color);
@@ -84,7 +125,7 @@ function extra(kind,x,z){const arr=[];const a=(type,dx,y,dz,sx,sy,sz,color)=>arr
  return arr;
 }
 function resize(){const ratio=Math.min(devicePixelRatio||1,1.65),w=Math.round(canvas.clientWidth*ratio),h=Math.round(canvas.clientHeight*ratio);if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
-function present(time){requestAnimationFrame(present);const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen){
+function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInstanceCount=0;const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen){
  let f=Number(Boolean(keys.KeyW||keys.ArrowUp))-Number(Boolean(keys.KeyS||keys.ArrowDown))-joystick.y,side=Number(Boolean(keys.KeyD||keys.ArrowRight))-Number(Boolean(keys.KeyA||keys.ArrowLeft))+joystick.x;
  const mag=Math.hypot(f,side);if(mag>.02){f/=Math.max(1,mag);side/=Math.max(1,mag);const step=dt*(keys.ShiftLeft?6.6:3.75),s=Math.sin(camera.yaw),c=Math.cos(camera.yaw),x=camera.x+(s*f+c*side)*step,z=camera.z+(-c*f+s*side)*step;if(canWalk(x,camera.z))camera.x=x;if(canWalk(camera.x,z))camera.z=z;}
  camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}
@@ -92,7 +133,7 @@ function present(time){requestAnimationFrame(present);const dt=Math.min((time-pr
  }
  resize();const sky={day:['#bedad2','#e6dbc0',.6],sunset:['#d3a48c','#f6ccae',.43],night:['#314b64','#92a3ad',.36]}[state.sky];const fog=col(sky[0]);gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(program);
  gl.uniformMatrix4fv(loc.projection,false,perspective(65*Math.PI/180,canvas.width/Math.max(1,canvas.height),.07,110));const cy=Math.cos(camera.yaw),sy=Math.sin(camera.yaw),cp=Math.cos(camera.pitch),sp=Math.sin(camera.pitch),eye=[camera.x,camera.y,camera.z];gl.uniformMatrix4fv(loc.view,false,lookAt(eye,[camera.x+sy*cp,camera.y+sp,camera.z-cy*cp]));gl.uniform3fv(loc.cameraPos,eye);gl.uniform3fv(loc.fogColor,fog);gl.uniform3fv(loc.lightColor,col(sky[1]));gl.uniform1f(loc.ambient,sky[2]);
- for(const d of staticDraw){if(d.alpha===1)draw(d);}
+ drawStaticInstances();
  // Water animated surface, reeds and living fish in the glass tank.
  draw(colored('cylinder',7,.146+Math.sin(elapsed*1.4)*.014,-5,7.6,.075,6.3,'#80cacc',0,.84));
  for(let i=0;i<3;i++){const x=-1.38+i*.45,z=-4.75+Math.sin(elapsed*1.5+i)*.19;draw(colored('sphere',x,1.3+Math.sin(elapsed*2+i)*.12,z,.25,.16,.12,['#f6bf85','#edd7a0','#dd9ba9'][i]));draw(colored('sphere',x-.12,1.32+Math.sin(elapsed*2+i)*.12,z-.1,.045,.046,.038,'#333e46'));}
@@ -101,7 +142,7 @@ function present(time){requestAnimationFrame(present);const dt=Math.min((time-pr
  renderAgents=stepAgents(state,dt,elapsed);for(let i=0;i<renderAgents.length;i++)agentDraw(renderAgents[i],i);
  for(const o of state.objects)for(const d of extra(o.kind,o.x,o.z))draw(d);
  if(started){const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
- fpsFrames++;if(time-fpsStart>1200){fps=Math.round(fpsFrames*1000/(time-fpsStart));fpsStart=time;fpsFrames=0;$('metrics').textContent=`${fps} fps · ${canvas.width}×${canvas.height} · scene ${state.revision}`;}
+ fpsFrames++;if(time-fpsStart>1200){fps=Math.round(fpsFrames*1000/(time-fpsStart));fpsStart=time;fpsFrames=0;$('metrics').textContent=`${fps} fps · ${canvas.width}×${canvas.height} · ${frameDrawCalls} draws · ${staticDrawCount} instanced · scene ${state.revision}`;}
 }
 function nearby(){const list=[...renderAgents.map(a=>({id:a.id,x:a.renderX,z:a.renderZ,action:`talk to ${a.name}`,agent:a})),{id:'portal',x:3,z:-10.2,action:'step through the portal'},{id:'tank',x:-.9,z:-4.5,action:'inspect the fish tank'},{id:'workshop',x:-4.9,z:-3.5,action:'inspect the workspace'},{id:'pond',x:7,z:-3.5,action:'admire Glasswater Pond'},{id:'cove',x:13,z:9,action:'return through the cove portal'}];const found=list.map(x=>({...x,d:Math.hypot(camera.x-x.x,camera.z-x.z)})).sort((a,b)=>a.d-b.d)[0];return found&&found.d<3.2?found:null;}
 function notify(msg){$('prompt').textContent=msg;$('result').textContent=msg;}
