@@ -50,6 +50,32 @@ function createFile(folder,filename,contents){
  const target=path.join(folder,filename),fd=fs.openSync(target,'wx',0o600);
  try{fs.writeFileSync(fd,contents);fs.fsyncSync(fd)}finally{fs.closeSync(fd)}
 }
+// Operator-only local reading. Never expose this function through a public HTTP route.
+// An owner must have file permissions AND the encryption secret.
+export function readFindMyPartPrivateInquiry({
+ storeDir=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','findmypart-leads'),
+ key=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
+ reference,
+}={}){
+ if(!REF.test(String(reference||'')))throw Error('findmypart_reference_invalid');
+ const secret=encryptionKey(key);
+ safeFolder(storeDir);
+ const filename=path.join(storeDir,reference+'.enc');
+ const stat=fs.lstatSync(filename);
+ if(!stat.isFile()||stat.isSymbolicLink()||(stat.mode&0o077)!==0)throw Error('findmypart_private_record_unsafe');
+ const doc=JSON.parse(fs.readFileSync(filename,'utf8'));
+ if(doc.v!==1)throw Error('findmypart_private_record_version');
+ const iv=Buffer.from(doc.iv||'','base64'),tag=Buffer.from(doc.tag||'','base64');
+ if(iv.length!==12||tag.length!==16)throw Error('findmypart_private_record_invalid');
+ const decipher=crypto.createDecipheriv('aes-256-gcm',secret,iv);
+ decipher.setAuthTag(tag);
+ const clear=Buffer.concat([decipher.update(Buffer.from(doc.data||'','base64')),decipher.final()]).toString('utf8');
+ const data=JSON.parse(clear);
+ if(data.schema!=='evercraft.findmypart.customer-inquiry.v1'||data.reference!==reference||
+    data.payment_created!==false||data.agent_execution_authorized!==false)throw Error('findmypart_record_integrity_invalid');
+ return data;
+}
+
 export function createFindMyPartInquiryHandler({
  storeDir=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','findmypart-leads'),
  key=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
