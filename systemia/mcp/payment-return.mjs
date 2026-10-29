@@ -11,6 +11,8 @@ const NATIVE_OFFERS={
  'legacy-rescue':'legacy_rescue_scan_299.v1',
  findmypart:'findmypart.quick_hunt_19.v1',
  'part-quick':'findmypart.quick_hunt_19.v1',
+ 'part-deep':'findmypart.deep_hunt_49.v1',
+ 'part-rescue':'findmypart.rescue_hunt_99.v1',
  'site-survive':'evercraft_network.site_survive_rapid_audit_250.v1'
 };
 export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch,ownedOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||''){

@@ -103,6 +103,19 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-step strong{display:block;margin-bottom:4px}
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
+.part-brief{display:grid;gap:10px;width:100%;min-width:0;padding:22px;border:1px solid var(--line);border-radius:17px;background:rgba(9,17,32,.66)}
+.part-brief>label:not(.checkout-note){font-weight:750;margin-top:7px}
+.part-brief>input:not([type=checkbox]),.part-brief>textarea{box-sizing:border-box;min-width:0;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);font:inherit;line-height:1.45}
+.part-brief>.checkout-note{display:flex;gap:10px;align-items:flex-start;padding:8px 0;max-width:100%;line-height:1.6}
+.part-brief>.checkout-note input{flex:0 0 auto;margin-top:3px;width:18px;height:18px}
+.part-brief>textarea{resize:vertical}
+.part-brief .optional-clues{border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.part-brief .optional-clues summary{font-size:14px;font-weight:650;cursor:pointer}
+.part-brief .optional-clues-body{display:grid;gap:8px;padding-top:12px}
+.part-brief .optional-clues-body label{font-size:14px;font-weight:650}
+.part-brief .optional-clues-body input,.part-brief .optional-clues-body textarea{box-sizing:border-box;width:100%;min-width:0;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);font:inherit}
+
+@media(max-width:580px){.part-brief{padding:16px}.part-brief>input:not([type=checkbox]),.part-brief>textarea{font-size:16px}}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
@@ -367,9 +380,35 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const isPartHunt=['findmypart','part-quick','part-deep','part-rescue'].includes(copy.slug);
   const checkoutHeld=!checkoutConfigured;
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
-  const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
+  const supportBody=encodeURIComponent(isPartHunt
+    ? ['I need help sourcing a hard-to-find part. Please review the scope before sending an approved invoice.',
+      '', 'Chosen tier: '+offerName+' ('+price+')', 'Part/problem:', 'Equipment/model/year:',
+      'Part markings or number:', 'Sources already checked:', 'Urgency/location:',
+      'Photos available (attach in email app):', '',
+      'Please confirm the exact scope, capacity, secure payment instructions and next steps.'].join('\n')
+    : 'I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
+  const partFields=isPartHunt?[
+    '<section class="part-brief" aria-label="FindMyPart part request">',
+    '<div class="checkout-note"><strong>Two quick details.</strong> Tell us what you need. We will confirm the research scope before you pay.</div>',
+    '<label for="fmp-part-description">What part do you need? *</label>',
+    '<textarea id="fmp-part-description" name="part_description" minlength="20" maxlength="1600" rows="3" required placeholder="What is missing, damaged or discontinued?"></textarea>',
+    '<label for="fmp-equipment">What is it for? *</label>',
+    '<input id="fmp-equipment" name="equipment_context" minlength="4" maxlength="450" required placeholder="Machine, vehicle, make and model">',
+    '<details class="optional-clues">',
+    '<summary>Have a part number or past searches? (optional)</summary>',
+    '<div class="optional-clues-body">',
+    '<label for="fmp-part-number">Part number or markings</label>',
+    '<input id="fmp-part-number" name="part_number" maxlength="180" placeholder="Stamped, casting or OEM number">',
+    '<label for="fmp-sources">Where have you already looked?</label>',
+    '<textarea id="fmp-sources" name="sources_tried" maxlength="800" rows="2" placeholder="Dealers, sites or suppliers you tried"></textarea>',
+    '</div></details>',
+    '<input name="scope_confirmed" value="true" type="hidden">',
+    '<label class="checkout-note"><input name="user_confirmed" value="true" type="checkbox" required> I confirm these details and understand this is a one-time research charge, not the cost of a replacement part. I authorize preparing a secure checkout for this tier.</label>',
+    '</section>',
+  ].join('\n'):'';
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
@@ -388,14 +427,16 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
       '</section>',
     ] : [
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
-    '<input type="hidden" name="user_confirmed" value="true">',
+    isPartHunt?'':'<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<label for="offer-customer-email">Email for your receipt and delivery</label>',
     '<input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" style="width:min(100%,340px);padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">',
     copy.slug==='website-audit'?'<label for="offer-website-url">Website to audit (include https://)</label><input id="offer-website-url" name="website_url" type="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true" style="display:block;width:100%;max-width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">':'',
+    partFields,
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
+    isPartHunt?'<div class="checkout-note">Not sure which tier? <a href="/offers/findmypart">Quick $19</a> · <a href="/offers/part-deep">Deep $49</a> · <a href="/offers/part-rescue">Rescue $99</a>. Choose just one.</div>':'',
     '</form>',
     ]),
     '</section>',
