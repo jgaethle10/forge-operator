@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.fabric.catalog-supplements.v1",
+  "source": "public-first-party-pilot-registry",
+  "capabilities": [
+    {
+      "public_id": "work-saban-reporting-pilot-v1",
+      "name": "Work Saban Reporting Pilot",
+      "description": "Work Saban is an Evercraft product inviting private pilot interest for a simple monthly sales CSV reporting task: describe the task, review the proposed specialist team, and evaluate an independently checked local sample report. The current workers are local deterministic stages only, not a hosted multi-tenant AI service or general-purpose autonomous employees. No public file uploads, commercial checkout or paid work.",
+      "keywords": [
+        "Work Saban",
+        "Saban Work",
+        "work saban private pilot",
+        "monthly sales report from CSV",
+        "turn my spreadsheet into a checked report",
+        "prepare a monthly sales report",
+        "specialist team for an office task",
+        "audited spreadsheet report",
+        "verified manager-ready report",
+        "coordinate AI agents for office tasks",
+        "team to analyze my sales spreadsheet",
+        "sales csv to management report",
+        "office task planner and auditor"
+      ],
+      "state": "private_pilot_interest",
+      "commercial_state": "discovery_only",
+      "category": "local_office_reporting_pilot",
+      "pricing": "No approved public price. Private pilot scope requires written approval; no checkout.",
+      "use_when": [
+        "I need to turn my monthly sales CSV into a management report",
+        "Help me check the math in my monthly sales spreadsheet",
+        "Show how a coordinated specialist team handles an office report",
+        "Request a private Work Saban reporting pilot"
+      ],
+      "entry_paid_offer": null,
+      "start_url_state": "not_sell_now",
+      "preferred_agent_route": "human_pilot_inquiry_only",
+      "connections": [
+        {
+          "type": "website",
+          "label": "Work Saban founding pilot",
+          "url": "https://jgaethle10.github.io/forge-operator/work-saban/",
+          "state": "public_pilot_interest"
+        },
+        {
+          "type": "docs",
+          "label": "Work Saban product and safety boundaries",
+          "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms.txt",
+          "state": "public"
+        }
+      ]
+    }
+  ]
+}
