@@ -14,6 +14,8 @@ test('Work Saban is included as an honest discovery-only capability',()=>{
   assert.equal(item.entry_paid_offer,null);
   assert.equal(item.human_offer_url,null);
   assert.equal(item.start_url_state,'not_sell_now');
+  assert.ok(item.connections.some(x=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'&&x.state==='fallback_available'));
+  assert.ok(!item.connections.some(x=>x.type==='mcp'&&x.state==='execution_ready'));
   assert.ok(item.connections.some(x=>x.type==='website'&&x.url==='https://jgaethle10.github.io/forge-operator/work-saban/'));
   assert.ok(!item.connections.some(x=>/base44\.app|buy\.stripe\.com/i.test(x.url||'')));
 });
