@@ -43,7 +43,7 @@ test('Saban visitor: public static landing, terms and module delivered by owned 
   for(const [route,type] of [['/partners/','text/html'],['/partners/app.mjs','text/javascript'],['/partners/mark.svg','image/svg+xml'],['/partners/terms.html','text/html']]){
    const res=await fetch(rt.url+route);
    assert.equal(res.status,200,route);
-   assert.match(res.headers.get('content-type'),new RegExp(type));
+   assert.ok(res.headers.get('content-type').includes(type),route);
    assert.ok((await res.text()).length>150);
   }
   const page=await fetch(rt.url+'/partners/');
