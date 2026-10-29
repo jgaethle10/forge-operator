@@ -4,6 +4,7 @@ on:
     paths:
       - 'public/findmypart/**'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
+      - 'scripts/findmypart-owner-inbox.mjs'
       - 'tests/findmypart-public-inquiry.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/findmypart-launch-system.test.mjs'
@@ -26,6 +27,7 @@ jobs:
         run: |
           node --check public/findmypart/app.mjs
           node --check systemia/mcp/findmypart-public-inquiry.mjs
+          node --check scripts/findmypart-owner-inbox.mjs
       - name: Owned two-question buyer intake, storage and alert tests
         run: node --test tests/findmypart-public-inquiry.test.mjs
       - name: Existing owned service routing regression
