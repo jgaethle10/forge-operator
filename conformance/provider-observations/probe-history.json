@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-29T06:11:22.181Z",
+  "updated_at": "2026-10-29T06:14:00.505Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "e3613416d169cf4380eda9076a6c2fb0de7341ec71822824942e033e2749d2b4",
-      "observed_at": "2026-10-26T12:53:20.752Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-semantic-search-004",
-      "prompt_sha256": "8011d93db35f56ad30e5a14c7b2c8082ca38f3f5e3e9d18073e5172907f4a65d",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "0bf04ed64be6cca722bdb951454e1cb1c7677a1b81cc98260c1b6bf7db9d7909",
-      "response_sha256": "c9087b5d6c57261aac372380d24af3d4bf8b345e97a7aa3be52943508522ff11",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "f85f2b93989c6f5128b1cee7f6170e8b16de984972996dbed57a59c678a50971",
       "observed_at": "2026-10-26T12:53:22.332Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "677d2c9c0c4e080ed3ac1b0109efdd6f236576fa13c9361e47e6107108fe5e4a",
       "pickup_observed": false,
       "provider_receipt_sha256": "c74e29c19a4fbff4ffcef96ba59a42e0a448689f66aeb718c708a39a5031a218",
+      "response_sha256": "6b65c12b1052a41ddf5e2aa7ff6d9eef3c434498dc418d34ecf629105da56775",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "22fbb37527a2100af760bf164ed3890348eb6d2a54b9c4262cbb34b592e5b636",
+      "observed_at": "2026-10-29T06:14:00.504Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-network",
+      "case_id": "network-business-resilience-002",
+      "prompt_sha256": "677d2c9c0c4e080ed3ac1b0109efdd6f236576fa13c9361e47e6107108fe5e4a",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "78a1481055f3dc629ba1c875654d38e64872ac5ae623816117cc5f897485aa7e",
       "response_sha256": "6b65c12b1052a41ddf5e2aa7ff6d9eef3c434498dc418d34ecf629105da56775",
       "source": "authorized_provider_probe",
       "privacy": {

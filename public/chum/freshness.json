@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T06:13:11.985Z",
+  "updated_at": "2026-10-29T06:14:03.378Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,227 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/ai-boardroom/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ai-boardroom/ai-conformance.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ai-boardroom/ai-discovery.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ai-boardroom/llms.txt",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-10-29T06:13:11.985Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-29T06:14:03.378Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
+      "last_changed": "2026-10-29T06:14:03.378Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-29T06:14:03.378Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-29T06:14:03.378Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -443,12 +245,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T06:13:11.985Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-10-29T06:13:11.985Z",
@@ -638,12 +434,6 @@
       "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
       "url": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
       "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-17T08:49:39.330Z",
       "priority": 80
     },
     {
