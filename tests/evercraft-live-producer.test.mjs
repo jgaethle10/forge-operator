@@ -27,7 +27,7 @@ test('no remote requests, storage, credentials, external media or publication',(
   assert.match(js,/e\.preventDefault\(\)/);
 });
 test('operator file selection, safety, playback and output control',()=>{
-  for(const id of ['mediaPicker','emptyAdd','add','film','exitFilm','next','prev','pause','sound','fit','queue','stage'])assert.ok(html.includes('id="'+id+'"'),id);
+  for(const id of ['mediaPicker','emptyAdd','add','film','exitFilm','next','prev','pause','sound','fit','portrait','queue','stage'])assert.ok(html.includes('id="'+id+'"'),id);
   assert.match(js,/MAX_ITEMS=24/);
   assert.match(js,/MAX_BYTES=3_000_000_000/);
   assert.match(js,/if\(file\.type&&file\.type!==expected\)return null/);
@@ -47,5 +47,8 @@ test('camera layout responsive and film mode obscures local filename panels',asy
   assert.match(css,/#app\.film \.header,#app\.film \.transport,#app\.film \.tray,#app\.film \.footer/);
   assert.match(css,/object-fit:contain/);
   assert.match(css,/object-fit:cover/);
+  assert.match(css,/#app\.portrait \.stage/);
+  assert.match(css,/#app\.portrait\.film \.stage/);
+  assert.match(js,/root\.classList\.toggle\('portrait'\)/);
   assert.match(html,/Preview only/);
 });
