@@ -16,19 +16,14 @@ jobs:
           python3 - <<'PY'
           import subprocess,json,pathlib,hashlib
           ids=[
-            ("creative","35331911","https://www.pexels.com/video/focused-man-editing-on-computer-at-night-35331911/"),
-            ("creative-alt","34492301","https://www.pexels.com/video/man-working-late-on-computer-editing-video-content-34492301/"),
-            ("creative-vertical","29380115","https://www.pexels.com/video/close-up-of-video-editing-on-computer-29380115/"),
-            ("prototype","7057342","https://www.pexels.com/video/person-fixing-electronics-7057342/"),
-            ("focused","3255157","https://www.pexels.com/video/a-man-busy-working-on-a-computer-3255157/"),
-            ("maker","4709394","https://www.pexels.com/video/a-person-is-working-on-a-circuit-board-4709394/"),
+            ("creative-vertical","29380115","https://www.pexels.com/video/close-up-of-video-editing-on-computer-29380115/",["https://videos.pexels.com/video-files/29380115/12656380_1080_1920_30fps.mp4"]),
+            ("creative-artist","35331911","https://www.pexels.com/video/focused-man-editing-on-computer-at-night-35331911/",["https://videos.pexels.com/video-files/35331911/14970104_1920_1080_25fps.mp4","https://videos.pexels.com/video-files/35331911/14970104_3840_2160_25fps.mp4"]),
+            ("electronics","7057342","https://www.pexels.com/video/person-fixing-electronics-7057342/",["https://videos.pexels.com/video-files/7057342/7057342-hd_1920_1080_24fps.mp4","https://videos.pexels.com/video-files/7057342/7057342-uhd_3840_2160_24fps.mp4"]),
           ]
-          suffixes=["hd_1920_1080_25fps","hd_1920_1080_30fps","hd_1920_1080_50fps","hd_1080_1920_30fps","hd_1080_1920_25fps","hd_1280_720_25fps","hd_1280_720_30fps","sd_640_360_25fps"]
           rows=[]
-          for name,id,page in ids:
+          for name,id,page,urls in ids:
               found=False
-              for suff in suffixes:
-                  url=f"https://videos.pexels.com/video-files/{id}/{id}-{suff}.mp4"
+              for url in urls:
                   p=subprocess.run(["curl","-L","-sS","-I","--max-time","12","-w","\n%{http_code}","-o","/dev/null",url],capture_output=True,text=True)
                   status=p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ""
                   rows.append(dict(name=name,page=page,url=url,http=status))
