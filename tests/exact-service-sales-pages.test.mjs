@@ -44,5 +44,11 @@ test('publisher directory does not silently offer mismatched low-cost PDFs or au
  assert.deepEqual(items.map(x=>x.price*100),manifest.links.slice(0,4).map(x=>x.amount_cents));
  assert.deepEqual(manifest.links.slice(4).map(x=>x.amount_cents),[50000,100000,150000]);
  assert.ok(!items.some(x=>[7,9,19,49].includes(x.price)));
- assert.match(checkout,/checked\?'false':'true'/);
+ assert.match(checkout,/Ready to review your checkout\?/);
+ assert.doesNotMatch(checkout,/checked\?'false':'true'/);
+ assert.doesNotMatch(checkout,/getElementById\('accept'\)/);
+ assert.match(checkout,/confirm project scope and delivery availability/i);
+ assert.match(checkout,/Opening checkout does not itself place an order/i);
+ for(const item of manifest.links) assert.ok(checkout.includes('href="'+item.url+'"'));
+
 });
