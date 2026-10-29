@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test deterministic comparison and strict input limits
-        run: node --test tests/boardroom-compare.test.mjs tests/boardroom-landing.test.mjs
+        run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs tests/boardroom-landing.test.mjs
       - name: Verify no remote analytics or model calls in free preview
         run: |
           node --input-type=module <<'NODE'
