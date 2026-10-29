@@ -15,8 +15,10 @@ on:
       - 'scripts/node001-verify-node002-relay.mjs'
       - 'scripts/node001-node002-productive-canary.mjs'
       - 'tests/node001-node002-productive-canary.test.mjs'
+      - 'scripts/node001-node002-productive-canary.mjs'
+      - 'tests/node001-node002-productive-canary.test.mjs'
       - 'tests/node002-live-bridge-canary.test.mjs'
-      - 'tests/node001-verify-node002-relay.test.mjs'
+      - 'tests/node001-verify-node002-relay.test.mjs tests/node001-node002-productive-canary.test.mjs'
       - 'tests/node002-submit-enrollment-request.test.mjs'
       - 'tests/stage-remote-broker-caddy.test.mjs'
       - 'docs/operations/node001-node002-remote-broker-physical-staging.md'
@@ -43,6 +45,7 @@ jobs:
           node --check scripts/node002-submit-enrollment-request.mjs
           node --check scripts/node002-live-bridge-canary.mjs
           node --check scripts/node001-verify-node002-relay.mjs
+          node --check scripts/node001-node002-productive-canary.mjs
           node --check scripts/node001-node002-productive-canary.mjs
           bash -n scripts/install-remote-broker-resident.sh
           bash -n scripts/activate-remote-broker-caddy.sh
