@@ -6,6 +6,7 @@ import { composeWorkSabanMission } from './mission.mjs';
 import { executeLocalSalesReport } from './execute-local.mjs';
 import { MAX_CSV_BYTES, parseSalesCsv } from './csv-core.mjs';
 import { createLocalEventChain } from './trace-chain.mjs';
+import { capacityView } from './capacity-model.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -47,6 +48,7 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       return reply(res, 403, {ok:false,error:'local_host_required'});
     }
     res.setHeader('content-security-policy', "default-src 'self'; connect-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+    if (req.method === 'GET' && req.url === '/api/capacity') return reply(res, 200, {ok:true,source:'local_preview',execution_mode:'synthetic_demo_only',capacity:capacityView(),live_workers:false});
     if (req.method === 'GET' && req.url === '/health') return reply(res, 200, { ok:true, service:'work-saban-preview', live_workers:false, customer_execution:false });
     if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
