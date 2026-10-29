@@ -84,7 +84,9 @@ function preflight(state,journal) {
       throw new Error('fenced_scheduler_ambiguous_state_hold');
     }
     if (job.state==='completed' && !(journalState.state==='ack_recorded' &&
-        journalState.attempts===job.attempts)) {
+        journalState.attempts===job.attempts &&
+        journalState.result_digest===hash(job.result===undefined?null:job.result) &&
+        journalState.receipt_ref==='local-source-check:'+journalState.result_digest.slice(7,31))) {
       throw new Error('fenced_scheduler_completed_receipt_mismatch');
     }
     if (job.state==='dead_letter' && !['held','ambiguous_expired','ack_recorded','leased'].includes(journalState.state)) {
