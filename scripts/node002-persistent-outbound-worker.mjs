@@ -80,7 +80,7 @@ export function verifyNode002PersistentPreflight({receipt,capacity,health}={}) {
      !Number.isInteger(health.authorized_devices)||
      health.authorized_devices<1)
     throw Error('public_broker_identity_or_owner_authorization_invalid');
-  return {endpoint:'http://127.0.0.1:'+port,node_id:node};
+  return {endpoint:'http://127.0.0.1:'+port,node_id:node,device_fingerprint:receipt.device_fingerprint};
 }
 async function getJson(url) {
   const r=await fetch(url,{headers:{accept:'application/json'},
@@ -142,6 +142,7 @@ async function serve(){
         localCapacityEndpoint:checked.endpoint,
         localAllocatorToken:token,
         expectedNodeId:NODE_ID,
+        expectedDeviceFingerprint:checked.device_fingerprint,
         commandPolicy:'content-hash-only',
         capacityWorkloadAllowlist:[WORKLOAD],
         pollBackoffMs:250,
