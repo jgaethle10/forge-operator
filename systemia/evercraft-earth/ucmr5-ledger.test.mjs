@@ -50,7 +50,7 @@ test('tab-delimited EPA source filters by state and name without guessing county
   assert.equal(ledger.source.original_records_inspected,3);
   assert.match(ledger.source.original_file_sha256,/^[a-f0-9]{64}$/);
   assert.equal(ledger.scope.name_contains,'YAKIMA');
-  assert.ok(ledger.limitations.some(t=>t.includes('not county')));
+  assert.match(ledger.scope.selection_note,/not county/);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
 test('an empty subset cannot be mistaken for zero detections',async()=>{
