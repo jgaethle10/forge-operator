@@ -22,7 +22,7 @@ test('buyer-facing entry remains simple, mobile friendly and accessible',()=>{
  assert.match(page,/id="understand" required/);
  assert.match(page,/form\.reportValidity\(\)/);
  assert.match(page,/aria-live="polite"/);
- assert.match(page,/prefilled email/i);
+ assert.match(page,/This opens your email app with an application ready to send/i);
  assert.match(page,/Nothing is submitted automatically/);
 });
 test('partner compensation and recruitment cannot be presented as active earnings',()=>{
