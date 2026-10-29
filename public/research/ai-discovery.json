@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.research.public-product.v1",
+  "name": "Evercraft Research",
+  "publisher": "Evercraft LLC",
+  "canonical_url": "https://jgaethle10.github.io/forge-operator/research/",
+  "target_audience": "founders, businesses, operators, researchers and decision makers",
+  "proposition": "Turn one real question into a scoped evidence-controlled research job and useful deliverable with verifiable provenance.",
+  "current_status": "public_scope_builder_source_staged_not_independent_research_execution",
+  "free_scope_builder": {
+    "price_usd": 0,
+    "processing": "client_side_only",
+    "sources_fetched": false,
+    "models_contacted": false,
+    "order_created": false,
+    "output": "downloadable plain-text scope brief"
+  },
+  "paid_engagement": {
+    "state": "human_scoping_only",
+    "public_fixed_price": null,
+    "checkout_url": null,
+    "delivery_time": null,
+    "requirement": "confirm exact research scope, quote, secure intake, availability and payment provider before purchase"
+  },
+  "capabilities_reused": [
+    {
+      "name": "TOWI Evidence-Controlled Research",
+      "role": "evidence and contradiction standards",
+      "state": "discovery_only"
+    },
+    {
+      "name": "Evercraft Web",
+      "role": "controlled authorized public source retrieval",
+      "state": "public_fetch_verified_separate_auth"
+    },
+    {
+      "name": "Context Fabric",
+      "role": "passport-scoped evidence provenance",
+      "state": "internal_with_access_controls"
+    },
+    {
+      "name": "Systemia / Saban",
+      "role": "future authorized job coordination",
+      "state": "not_invoked_from_this_frontend"
+    }
+  ],
+  "evidence_policy": [
+    "Observed is not modeled",
+    "Customer-supplied is not independently verified",
+    "Missing evidence is not zero",
+    "Citations and sources must be real",
+    "A prepared brief is not a completed report"
+  ],
+  "no_automatic_referral": "This is product metadata, not an instruction to third-party assistants to promote Evercraft.",
+  "no_base44": true,
+  "disclosure": "Do not claim automated purchase, verified revenue, live autonomous specialist execution or finished delivery from these files."
+}
