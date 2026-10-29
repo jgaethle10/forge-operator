@@ -75,3 +75,40 @@ test('all four layers are exposed',()=>{
  for(const topic of ['pfas','fire','land','infrastructure'])
   assert.ok(html.includes('data-topic="'+topic+'"'));
 });
+
+
+test('EPA ledger displays quantified and below-MRL values without assigning map coordinates',async()=>{
+ const {get}=harness();
+ const ledger={
+  schema:'evercraft.earth.ucmr5-evidence-ledger.v1',
+  source:{original_file_sha256:'a'.repeat(64),url:'https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule'},
+  records:[{pws_id:'WA1234567',pws_name:'TEST WATER SYSTEM',sample_id:'S1',sample_point_id:'EP1',
+   contaminant:'PFOS',observed_at:'2025-10-09',result_status:'quantified',value:0.01,reporting_limit:0.004,
+   unit:'µg/L',geolocation_status:'not_geocoded',latitude:null,longitude:null},
+   {pws_id:'WA1234567',pws_name:'TEST WATER SYSTEM',sample_id:'S2',sample_point_id:'EP1',
+   contaminant:'PFOA',observed_at:'2025-10-09',result_status:'below_reporting_limit',value:null,reporting_limit:0.004,
+   unit:'µg/L',geolocation_status:'not_geocoded',latitude:null,longitude:null}]
+ };
+ const file={size:1000,text:async()=>JSON.stringify(ledger)};
+ await get('file').handlers.change({target:{files:[file],value:'ledger.json'}});
+ assert.match(get('modeFlag').textContent,/NOT GEOCODED/);
+ assert.equal(get('pointCount').textContent,'0');
+ assert.equal(get('pairCount').textContent,'0');
+ assert.match(get('summary').textContent,/1 quantified, 1 below reporting limit/);
+ const cards=get('findings').children;
+ assert.equal(cards.length,2);
+ assert.match(cards[1].children.map(x=>x.textContent).join(' '),/Below reporting limit/);
+});
+test('EPA ledger refuses invented geolocation supplied with tabular records',async()=>{
+ const {get}=harness();
+ const ledger={
+ schema:'evercraft.earth.ucmr5-evidence-ledger.v1',
+ source:{original_file_sha256:'a'.repeat(64),url:'https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule'},
+ records:[{pws_id:'WA1111111',pws_name:'TEST',sample_id:'S1',sample_point_id:'EP1',contaminant:'PFOS',
+ observed_at:'2025-10-09',result_status:'quantified',value:0.01,reporting_limit:0.004,unit:'µg/L',
+ geolocation_status:'not_geocoded',latitude:46.6,longitude:-120.5}]
+ };
+ await get('file').handlers.change({target:{files:[{size:100,text:async()=>JSON.stringify(ledger)}],value:'test.json'}});
+ assert.match(get('uploadStatus').textContent,/Unverified geolocation/);
+ assert.equal(get('pointCount').textContent,'0');
+});
