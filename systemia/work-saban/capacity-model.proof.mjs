@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {capacityView} from './capacity-model.mjs';
+const none=capacityView({requested:10000});
+assert.equal(none.venue,'office');
+assert.equal(none.visibleCharacters,0);
+assert.equal(none.status,'not_provisioned');
+const many=capacityView({requested:10000,admitted:10000,provisioned:10000,running:9980,verified:10,failed:5});
+assert.equal(many.venue,'warehouse');
+assert.equal(many.visibleCharacters,24);
+assert.equal(many.groupedWorkers,9976);
+assert.equal(many.pending,5);
+assert.equal(many.status,'executing');
+assert.equal(capacityView({requested:100,admitted:100,provisioned:100}).venue,'campus');
+assert.throws(()=>capacityView({requested:10,admitted:11}),RangeError);
+assert.throws(()=>capacityView({requested:10,admitted:10,provisioned:2,running:3}),RangeError);
+assert.throws(()=>capacityView({requested:-1}),RangeError);
+console.log('Work Saban capacity model PASS: no fake agents, bounded rendering, office/campus/warehouse tiers.');
