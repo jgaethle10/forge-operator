@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {renderForensiScopeBuyerPage} from '../systemia/mcp/forensiscope-sales-page.mjs';
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
 
-test('ForensiScope buyer page renders every published duration-price tier without inventing checkout',()=>{
+test('ForensiScope buyer page has one plain-language action, all five prices and no fake checkout',()=>{
  const html=renderForensiScopeBuyerPage();
  for(const [duration,price] of [
   ['Up to 5 minutes',15],['Up to 30 minutes',35],['Up to 2 hours',75],
@@ -12,13 +12,19 @@ test('ForensiScope buyer page renders every published duration-price tier withou
   assert.ok(html.includes(duration),'Duration missing: '+duration);
   assert.ok(html.includes('$'+price),'Price missing: '+price);
  }
- assert.equal((html.match(/class="tier"/g)||[]).length,5);
- assert.equal((html.match(/class="choose"/g)||[]).length,5);
+ assert.equal((html.match(/<li><span>Up to /g)||[]).length,5);
+ assert.equal((html.match(/class="action"/g)||[]).length,1,'a single primary action');
+ assert.match(html,/Long recording/);
+ assert.match(html,/Request a review/);
+ assert.match(html,/mailto:jessegaethle10@gmail.com/);
+ assert.match(html,/Approximate%20recording%20length/);
+ assert.match(html,/What%20I%20want%20to%20find/);
+ assert.match(html,/No charge now/);
+ assert.match(html,/secure way to send/);
+ assert.match(html,/don't attach private footage/i);
  assert.match(html,/Evercraft Payments/);
- assert.match(html,/secure intake/);
- assert.match(html,/do not charge|does not charge/i);
- assert.ok(!/base44|buy.stripe|checkout.stripe/i.test(html));
- assert.doesNotMatch(html,/<form|type="file"/i);
+ assert.doesNotMatch(html,/base44|buy.stripe|checkout.stripe/i);
+ assert.doesNotMatch(html,/<form|type="file"|<script/i);
 });
 test('ForensiScope public page is available even when payment backend is held',async()=>{
  const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,purchaseIntentUrl:'',paymentOpsUrl:''});
