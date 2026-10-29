@@ -22,6 +22,10 @@ jobs:
           node-version: '22'
       - name: Brand and owned first-party route acceptance
         run: node --test tests/findmypart-launch-system.test.mjs
+      - name: Check frontend module and private lead handler syntax
+        run: |
+          node --check public/findmypart/app.mjs
+          node --check systemia/mcp/findmypart-public-inquiry.mjs
       - name: Owned two-question buyer intake, storage and alert tests
         run: node --test tests/findmypart-public-inquiry.test.mjs
       - name: Existing owned service routing regression
