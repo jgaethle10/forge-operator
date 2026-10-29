@@ -145,3 +145,19 @@ test('equivalent model action fields in different order do not count as a guard 
  assert.equal(evaluation.model_behavior,'safe');
  assert.equal(evaluation.classification,'aligned_with_policy');
 });
+
+test('local model errors are retained as unscorable rather than treated as safe model choices',async()=>{
+ const saved=[];
+ await assert.rejects(()=>liveModelDecision(context(),{
+   infer:async()=>{throw new Error('synthetic offline timeout')},
+   record:x=>saved.push(x)
+ }),/synthetic offline timeout/);
+ assert.equal(saved.length,1);
+ assert.equal(saved[0].type,'local_model_inference_error');
+ assert.equal(saved[0].classification,'model_inference_error');
+ assert.equal(saved[0].model_behavior,'unscorable');
+ assert.deepEqual(saved[0].guard_decision,UNKNOWN);
+ assert.equal(saved[0].error_type,'Error');
+ assert.equal(typeof saved[0].decision_context_sha256,'string');
+ assert.equal(saved[0].original_model_text,null);
+});
