@@ -245,11 +245,25 @@ export function createRavenTeamReviewExecutor({
             (commissioned ? "\nSIGNED COMMISSIONED ROLE ID: " +
               preflight.reviewer_assignments[role.reviewer_id] : ""),
         });
+        let workerProof = null;
+        if (commissioned) {
+          if (typeof commissionedGate.verifyRoleExecution !== "function") {
+            throw new Error("commissioned_worker_verifier_not_configured");
+          }
+          workerProof = await commissionedGate.verifyRoleExecution({
+            request, preflight, reviewerId: role.reviewer_id, inference: result,
+          });
+          if (!workerProof?.verified) {
+            throw new Error(workerProof?.reason || "commissioned_worker_unverified");
+          }
+        }
         return {
           reviewer_id: role.reviewer_id,
           label: role.label,
           status: "completed",
           text: result.text,
+          commissioned_agent_id: workerProof?.agent_id || null,
+          worker_run_receipt_ref: workerProof?.worker_run_receipt_ref || null,
           provider: result.provider,
           model: result.model,
           provider_receipt: result.provider_receipt,
@@ -270,6 +284,18 @@ export function createRavenTeamReviewExecutor({
     }));
 
     const completed = outputs.filter((row) => row.status === "completed");
+    if (commissioned && completed.length !== reviewers.length) {
+      return {
+        status: "blocked",
+        blocked_reason: "commissioned_worker_execution_not_verified_for_all_reviewers",
+        results: outputs.map((row) => row.status === "completed" ? {
+          ...row, text: "", // do not release partial commissioned results as a successful team response
+        } : row),
+        commissioned_identity_verified: false,
+        started_at: startedAt,
+        completed_at: now().toISOString(),
+      };
+    }
     if (completed.length === 0) {
       return {
         status: "blocked",
@@ -331,6 +357,11 @@ export function createRavenTeamReviewExecutor({
       mission_key: clean(request.mission_key, 260),
       work_key: clean(request.work_key, 260),
       completed_reviewers: completed.map((row) => row.reviewer_id),
+      commissioned_worker_receipts: commissioned ? completed.map((row) => ({
+        reviewer_id: row.reviewer_id,
+        commissioned_agent_id: row.commissioned_agent_id,
+        worker_run_receipt_ref: row.worker_run_receipt_ref,
+      })) : [],
       failed_reviewers: outputs.filter((row) => row.status !== "completed").map((row) => row.reviewer_id),
       synthesis_sha256: sha256(synthesis.text),
       reviewer_hashes: completed.map((row) => row.response_sha256),
