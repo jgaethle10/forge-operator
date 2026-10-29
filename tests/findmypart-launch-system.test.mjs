@@ -43,6 +43,8 @@ test('working-customer homepage is genuinely short and action focused',()=>{
   assert.doesNotMatch(landing,/STAGE 0[1-6]|six-stage sourcing|SYSTEMIA COMMAND|RAVEN NEXUS/i);
   assert.doesNotMatch(landing,/base44\.app|checkout\.stripe\.com|buy\.stripe\.com/i);
   assert.match(landing,/<form id="part-request-form"[^>]*method="post" action="\/api\/findmypart\/inquiry"/);
+  assert.match(landing,/class="request-backup"/);
+  assert.match(landing,/request-backup-primary/);
   assert.match(landing,/<script type="module" src="\/findmypart\/app\.mjs"><\/script>/);
   assert.doesNotMatch(landing,/<iframe/i);
   assert.ok(landing.length<16000,'customer page should remain compact');
@@ -94,7 +96,10 @@ test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, n
    const app=await fetch(runtime.url+'/findmypart/app.mjs');
    assert.equal(app.status,200);
    assert.match(app.headers.get('content-type')||'',/text\/javascript/);
-   assert.match(await app.text(),/api\/findmypart\/inquiry/);
+   const code=await app.text();
+   assert.match(code,/api\/findmypart\/inquiry/);
+   assert.match(code,/api\/findmypart\/readiness/);
+   assert.match(code,/form.hidden=true/);
    const h=await fetch(runtime.url+'/findmypart/',{method:'HEAD'});
    assert.equal(h.status,200);
    assert.equal((await h.text()).length,0);
