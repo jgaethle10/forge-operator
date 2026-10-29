@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
 <title id="title">Work Saban</title>
-<desc id="desc">Signal-mint square with a routed S path connecting two points, symbolizing a task that moves through an organized team.</desc>
-<rect x="0" y="0" width="256" height="256" rx="48" fill="#A1EECE"/>
-<path d="M60 78H200L162 115H95L56 157H200" stroke="#08111D" stroke-width="29" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
-<circle cx="60" cy="78" r="17" fill="#08111D"/>
-<circle cx="200" cy="157" r="17" fill="#08111D"/>
+<desc id="desc">A crisp crimson S-shaped route on white, connecting a task's start and finish.</desc>
+<rect width="256" height="256" rx="47" fill="#FFFFFF"/>
+<rect x="2" y="2" width="252" height="252" rx="45" fill="none" stroke="#E7E4E4" stroke-width="4"/>
+<path d="M56 75H201L157 116H97L56 164H201" fill="none" stroke="#A4142F" stroke-width="28" stroke-linejoin="round" stroke-linecap="square"/>
+<circle cx="56" cy="75" r="15" fill="#171717"/><circle cx="201" cy="164" r="15" fill="#171717"/>
 </svg>

@@ -5,10 +5,14 @@
 **Campaign line:** Give the work a team.
 
 ## 1. What the customer sees
-- Main product experience: `/work-saban/`, an owned-brand editorial page with a visual Work Floor tour, transparent execution evidence, sample synthetic report, present/future boundaries, FAQ and no-call pilot inquiry.
-- Brand kit: `/work-saban/brand/`, including primary routed-S mark, color tokens, copy and 1200x630 SVG campaign artwork.
-- Purchase intent: written inquiry only. No customer upload or payment collected through this page.
-- Product runtime: draft PR #1629 contains the local 3D work office and bounded deterministic CSV workers. Do **not** confuse the tour with actual running agents.
+**Founder direction: keep customer-facing experiences extremely simple, even when Systemia/Saban behind them is sophisticated.**
+
+- Main product page: mostly white, black text, deep crimson actions. One headline, one example, three plain-language steps, one CTA: **Join the private pilot**.
+- The customer should never need to understand admission, DAGs, worker registration, signed receipts, hosted models or internal team construction to decide whether a product will help.
+- The Work Floor on the public page is a small labeled illustrative team card, not a giant dashboard. The real technical/local workstation remains in the separate draft engineering branch; deep trace details are available to operators on request, not forced into the sales funnel.
+- Brand kit: `/work-saban/brand/` with original crimson SVG mark and social campaign vector. The brand is **white-first**.
+- No public customer upload or self-service checkout. The CTA opens a non-confidential, written pilot inquiry.
+- Every new Evercraft product's public design should follow: **one problem, one useful example, one action**.
 
 ## 2. Market, buyer and entry wedge
 **Market reality:** many products already advertise 'AI employees', multi-agent teams and no-code workflow automation. Distinction must be objectively demonstrated, not asserted as superiority: visible work stages, independently recomputed arithmetic, explicit approvals, auditable traces and delivery.
@@ -19,21 +23,24 @@
 
 **Single approved technical wedge:** authorized CSV with month and revenue columns, up to the local preview's documented limits. Work Saban computes month totals, produces a Markdown management report, independently audits arithmetic, and returns local receipts. Future wider workflows are roadmap, not saleable scope.
 
-## 3. Brand identity
+## 3. Brand identity (founder direction, October 28)
+
 | Element | Direction |
 | --- | --- |
-| Name | Evercraft Work Saban |
-| Brand hierarchy | Work Saban is the product; Evercraft is the maker; Systemia/Saban are the controlled runtime |
-| Icon | Routed S connecting ingress and outcome nodes |
-| Palette | Mission Ink #08111D; Signal Mint #A1EECE; Command Blue #7199F8; Cloud White #EDF6F7 |
-| Type | Heavy geometric editorial heading; legible native sans for app and evidence, no unlicensed fonts |
-| Voice | Decisive, approachable, precise, never sci-fi bluff |
-| Visual metaphor | Work Floor with specialist stations; an actual trace determines real activity; illustrative preview visibly labeled |
-| Brand promise | Organize the work and show the receipts |
-| Hero line | Give the work a team. |
-| Support line | You bring the work. Saban brings the team. |
+| Name | Work Saban by Evercraft |
+| Primary colors | White #FFFFFF, Crimson #A4142F, Black #171717 |
+| Supporting surface | Soft white #F8F8F7 |
+| Background ratio | Mostly white; crimson only for emphasis and primary CTA |
+| Logo | Simple crimson routed S with black start/end points on white |
+| Typography | Clear system sans, bold brief headline; no external font dependency |
+| Hero | Give your work a team. |
+| Supporting promise | You bring the work. Saban brings the team. |
+| Public example | Monthly sales CSV becomes a checked report |
+| CTA | Join the private pilot |
+| Tone | Friendly, capable, uncluttered; no backend vocabulary on customer-facing pages |
+| Visual | Three approachable specialist faces and a simple report card, not a dark command center |
 
-Brand usage: no team/avatar may display 'running', 'verified' or 'completed' on a live product surface without a source event/receipt. A design walkthrough uses a conspicuous synthetic tour label. Never imply endorsements by professional coaches or affiliated sports brands.
+White is the main asset. Do not add unnecessary navigation, feature matrices, technobabble, fake prices, or diagrams just to make the product look big. Show at most a few specialist faces at a time on the public homepage. Never show synthetic example progress as a real user event.
 
 ## 4. Launch packaging
 **Offer:** *Work Saban Founding Reporting Pilot*.
@@ -42,36 +49,31 @@ Brand usage: no team/avatar may display 'running', 'verified' or 'completed' on 
 - Guarantee: no arbitrary workflow, recurring schedule, analytics stack connection or general-purpose LLM workforce claim.
 - Next-up features: secure accounts/tenants, model-backed specialist contracts, source integrations, approvals, actual remote worker telemetry, durable signed receipts, and repeatable billing. Mark all as not launched.
 
-## 5. Original 30-second commercial / shoot plan
-**Format:** 30s, 9:16 hero vertical plus 16:9 cut and 1:1 crop. Source graphics should be native capture/vector animation. Original sound and voices only after rights audit. Human voice should sound confident, inviting, intimate without breathy gimmicks. Product capture must not be a fake live task.
+## 5. Original 30-second commercial: simple launch direction
+**Source-only storyboard. No video render or social publication has been completed.** Use real approved product capture and original or properly licensed assets. Avoid decorative AI glows or visual explanations of the orchestration engine.
 
-| Time | Picture | Narration / audio |
+| Time | Visual | Audio / narration |
 | --- | --- | --- |
-| 0–3 | One person alone in a dense forest of spreadsheets and unfinished reports; no generic AI swirls | 'One job. A dozen things to do.' |
-| 3–7 | Browser transforms into a clean Work Saban mission brief, text typed: 'Prepare my monthly sales report' | 'What if the work had a team?' |
-| 7–12 | Camera reveals six branded Work Floor stations, clean spatial movement, no unsupported live claim | 'A director. An analyst. A writer. A designer.' |
-| 12–18 | Local synthetic example math moves through real role and receipt labels; show 'synthetic demo' in frame | 'Each part accounted for.' |
-| 18–23 | Auditor verifies; SHA hash appears briefly; sample report unfolds | 'And an outcome you can check.' |
-| 23–27 | Hero brand card: Work Saban | 'You bring the work. Saban brings the team.' |
-| 27–30 | Static actual URL and 'Private founding pilot interest now open' | 'Explore Work Saban.' |
+| 0–5 | White frame. A crowded spreadsheet tab. The person has one clear task. | “That report again?” |
+| 5–10 | The one-line Work Saban task appears on a clean white screen. | “Give the work a team.” |
+| 10–17 | Three friendly crimson/neutral specialist figures take their positions. Always label as illustrative if no live agent receipts. | “Someone to organize it. Someone to explain it. Someone to check it.” |
+| 17–23 | The synthetic sample sales report comes into view, clearly marked example. | “Then get back a result you can use.” |
+| 23–27 | Bold crimson S logo, white background. | “Work Saban.” |
+| 27–30 | Real first-party URL and private-pilot message. | “You bring the work. Saban brings the team.” |
 
-No generated narration is claimed. Script and storyboard are ready for production, **not a rendered or published video**. Avoid any claim of paid adoption.
+Creative rule: no 3D command center on the customer-facing ad. Product/runtime depth lives behind the screen. Keep voice grounded, concise, natural. No claims of live autonomous AI employees.
 
-## 6. Owner-review campaign assets
-### Brand announcement, founder/company
-'Meet **Work Saban**. Most people don't need another AI tab. They need the work organized, completed and checked. We're developing a visual workspace where a mission assembles its own specialist team. Our first verified slice turns a consented sales CSV into an audited report, with real local worker receipts. The broader vision is still in development. We're opening a limited conversation with teams who repeat this kind of reporting every month. Explore the founding pilot: https://jgaethle10.github.io/forge-operator/work-saban/'
+## 6. Owner-review campaign copy (not published)
 
-### Problem-first operator post
-'If your monthly sales report means exporting a CSV, fixing totals, writing a summary and checking the numbers again, how many steps are you doing by hand? Work Saban is testing a coordinated, auditable reporting workflow rather than another chat window. We are looking for a few real reporting problems to evaluate for a private pilot. No confidential files in the first message. https://jgaethle10.github.io/forge-operator/work-saban/'
+**Launch post:** “One task. A whole team. Meet Work Saban, a simpler way to get work done. We’re starting with monthly sales reports and looking for private pilot partners. See how it works: https://jgaethle10.github.io/forge-operator/work-saban/”
 
-### Partner invite (permissioned context only)
-'We're looking to learn from bookkeeping and operations teams that turn repetitive CSV exports into management reports. Work Saban has a bounded local reporting proof and is seeking a scoped, consented pilot. Would a short written walkthrough of the use case be useful?'
+**Operator post:** “Still turning your sales spreadsheet into a report by hand every month? Work Saban is testing a simpler approach: tell us the task, let a specialist workflow prepare the report, then review the checked result. Private pilot interest is open. No confidential files in your first message.”
 
-### Launch email subject
-'Could your monthly report have its own team?'
+**Short email subject:** “Give your monthly report a team”
 
-### Launch email body
-'We are inviting a small number of operations teams to explore a private Work Saban reporting pilot. The concept is simple: provide one approved sales CSV for a bounded local workflow, watch the stages, inspect the audit, and receive a management-ready report. This is still in private-pilot development, not general-purpose autonomous AI. If the workflow matches a recurring reporting task, reply with the *type of report* and the answers it needs to give. Please do not include any confidential data. We can coordinate entirely by email.'
+**Partner note:** “We’re testing a private pilot for teams that prepare monthly sales reports. Is that a task your team repeats? Happy to compare the workflow in writing.”
+
+Do not publish these via Clip without appropriate approval and provider receipt. The published website is public marketing; the current product remains private-pilot development.
 
 ## 7. Distribution, with actual attribution rather than likes
 1. **Owned discovery:** main Work Saban product page, branch-proven first-party brand page, crawl metadata and verified external launch URL; maintain honest preview-state language.
