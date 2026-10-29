@@ -120,6 +120,23 @@ test('crash after Saban lease persist before journal lease also cannot run adapt
   assert.equal(calls,0);
 });
 
+test('completed result tampering cannot inherit the fenced acknowledgment',async()=>{
+  const f=make();
+  const adapter={runAssignment:async({assignment})=>({
+    schema:'evercraft.proof.readonly.v1',key:assignment.work.key
+  })};
+  await runScheduler({...f,adapter});
+  const changed=loadWorkState(f.statePath);
+  const first=Object.values(changed.jobs)[0];
+  first.result={schema:'forged-result',key:'not-original'};
+  saveWorkState(f.statePath,changed);
+  let calls=0;
+  await assert.rejects(runScheduler({...f,state:changed,adapter:{
+    runAssignment:async()=>{calls++;return {}; }
+  }}),/completed_receipt_mismatch/);
+  assert.equal(calls,0);
+});
+
 test('stale in-memory state, unknown contract, parallel mode and leftover runner lock are denied',async()=>{
   const f=make(),adapter={runAssignment:async()=>({ok:true})};
   const save=structuredClone(f.state);
