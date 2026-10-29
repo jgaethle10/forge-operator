@@ -6,6 +6,10 @@ const expected = [
   'PRIVATE PILOT INTEREST',
   'No public CSV uploads',
   'Request the private pilot by email',
+  'Give the work',
+  'THE PRODUCT EXPERIENCE',
+  'FOUNDING PARTNER PROGRAM',
+  'href="./brand/"',
 ];
 async function main() {
   const response = await fetch(url, {
@@ -15,9 +19,16 @@ async function main() {
   });
   const html = await response.text();
   const missing = expected.filter(s => !html.includes(s));
+  const brandUrl = new URL('brand/', url);
+  const brandResponse = await fetch(brandUrl, { redirect: 'follow', signal: AbortSignal.timeout(15000) });
+  const brandText = await brandResponse.text();
+  const brandVerified = brandResponse.status === 200
+    && brandText.includes('The routed S.')
+    && brandText.includes('Work Saban')
+    && brandText.includes('work-saban-social.svg');
   const passed = response.ok && response.status === 200
     && response.url.startsWith('https://')
-    && missing.length === 0;
+    && missing.length === 0 && brandVerified;
   console.log(JSON.stringify({
     schema: 'evercraft.work-saban.pilot-public-canary.v1',
     url, final_url: response.url,
@@ -25,6 +36,7 @@ async function main() {
     content_type: response.headers.get('content-type'),
     expected_markers_present: missing.length === 0,
     missing_markers: missing,
+    brand_url: brandUrl.href, brand_http_status: brandResponse.status, brand_verified: brandVerified,
     form_submitted: false, payment_attempted: false,
     public_route_verified: passed,
   }, null, 2));

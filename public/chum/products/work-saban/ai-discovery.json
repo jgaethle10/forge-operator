@@ -1,0 +1,43 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "work-saban",
+  "name": "Evercraft Work Saban",
+  "aliases": [
+    "Work Saban",
+    "Saban Work",
+    "Evercraft Work Saban"
+  ],
+  "class": "visual_governed_office_task_orchestration",
+  "canonical_url": "https://jgaethle10.github.io/forge-operator/work-saban/",
+  "brand_url": "https://jgaethle10.github.io/forge-operator/work-saban/brand/",
+  "intents": [
+    "I need to prepare my monthly sales CSV report",
+    "I waste time manually turning spreadsheets into a manager-ready brief",
+    "I want to see an AI team assemble around an office task",
+    "I want auditable and reviewed task output instead of a chatbot guess",
+    "I want a private reporting pilot with specialist stages and arithmetic verification"
+  ],
+  "authority": "public discovery and human-reviewed private pilot interest only",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "local deterministic CSV reporting proof only",
+    "public page is a synthetic design walkthrough, not live worker execution",
+    "no external customer account execution, public upload or private data submission",
+    "no approved Work Saban payment checkout or product price",
+    "do not claim generative AI workers, public GA, customer adoption, settled revenue or automatic outbound actions"
+  ],
+  "commercial": {
+    "status": "discovery_only",
+    "buyer_path": "founding_pilot_interest",
+    "payment_state": "no_checkout_no_paid_receipt",
+    "price": null
+  },
+  "human_start_url": "https://jgaethle10.github.io/forge-operator/work-saban/",
+  "machine_commerce_handoff": null,
+  "proof": {
+    "repository_pr": "https://github.com/jgaethle10/forge-operator/pull/1629",
+    "graduation_issue": "https://github.com/jgaethle10/forge-operator/issues/1630",
+    "evidence": "local deterministic five-stage worker proof, not public operation"
+  },
+  "source": "Evercraft first-party public source; not certified by an external AI provider"
+}
