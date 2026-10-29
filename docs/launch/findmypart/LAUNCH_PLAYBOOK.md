@@ -45,7 +45,7 @@ Never count synthetic QA, a checkout session, an open email app, a social post, 
 Missing part. Not the end.
 
 ### Site one-line
-A documented next move for the part normal suppliers couldn't find.
+Tell us about the part. We'll help figure out the next move.
 
 ### Plain-English explainer
 FindMyPart doesn't keep a warehouse or promise magic stock. We investigate the exact component and its context, follow possible suppliers and cross-references, and document the evidence so you know what to check next. One-time research from $19. Scope confirmed before payment.
@@ -57,10 +57,13 @@ That's the case FindMyPart is built for. Bring the model number, markings and th
 
 The first question isn't "who's buying?" It's "what's the actual part that's holding up the job?"
 
-No direct unsolicited messaging without Systemia's contact approval.
+No direct unsolicited messaging without Systemia's contact approval. Customer-facing pages must remain white-dominant, charcoal for text, orange for the one primary action, and blue for evidence/status. Do not make customers understand Systemia, Raven, Part Passport schemas, six-stage sourcing ladders, or internal orchestration.
 
 ### Consumer opener (organic public post)
 If the label says discontinued, your project still deserves a real answer. FindMyPart researches exact sources, cross-references, salvage and documentation, separating live evidence from guesses. Bring the part, model or even partial markings. We'll establish scope before any paid hunt.
+
+### Homepage conversion rule
+One primary CTA: **Tell us about your part**. The first contact asks only what part and what machine it belongs to. Clarify pricing and verified availability before payment; show the sample research report as secondary proof. All additional data belongs in later, context-aware intake steps. No forced account creation, extra phone calls, AI-agent explanation or six-stage ladder to reach an answer.
 
 ### 30-second commercial script
 **0:00-0:04**: Close-up original geometric component trace. Part appears incomplete, with one precision notch missing. Sound: a single physical metal click, then near-silence. On screen: `DISCONTINUED.`
