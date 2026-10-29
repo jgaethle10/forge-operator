@@ -1,7 +1,7 @@
-# Evercraft Payments | Exact-price service checkout directory
-> Evercraft Payments is the customer-facing offer and canonical order authority. Stripe is the downstream payment processor for seven existing exact-match services. Automated Chromium browser checks on 2026-10-25 confirmed the matching product names, USD amounts and visible checkout forms without placing an order.
+# Evercraft Services | Exact-price service directory
+> Evercraft Services is the customer-facing catalog for seven scoped services, not a payment infrastructure product launch. The products customers buy are the individually named services below. Automated Chromium browser checks on 2026-10-25 confirmed matching product names, USD amounts and visible checkout forms without placing an order.
 Directory: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/
-Payment settlement: Systemia Stripe account. Provider-paid receipts require manual reconciliation into Evercraft Payments; automatic synchronization is NOT yet proven for these seven links.
+Payment infrastructure: Evercraft Payments is the canonical order authority. Stripe is the downstream payment processor under the Systemia settlement account. Provider-paid receipts require manual reconciliation into Evercraft Payments; automatic synchronization is NOT yet proven for these seven links.
 Checkout success is not proof of payment or fulfillment.
 Buyer-release threshold: a verified human-facing payment-provider page showing the correct exact service and USD price. Do not require a first completed paid order before owner-approved, permissioned marketing of that exact service; never claim revenue or fulfillment from checkout visibility alone.
 Offer payment links below must only be used for the exact product and price listed.
