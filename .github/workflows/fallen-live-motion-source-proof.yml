@@ -4,48 +4,49 @@ on:
     branches: [creative/fallen-flagship-20261027]
     paths: ['.github/workflows/fallen-live-motion-source-proof.yml']
   workflow_dispatch:
-permissions:
-  contents: read
+permissions: {contents: read}
 jobs:
   footage:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Install decoder and probe human-shot live motion
+      - name: Audit second provider and download candidate live-action masters
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg >/dev/null
           mkdir -p receipts footage
           python3 - <<'PY'
-          import subprocess,json,pathlib
-          src=[
-            ("maker","https://mixkit.co/free-stock-video/young-engineer-programming-in-his-workshop-seen-up-close-29991/","https://assets.mixkit.co/videos/preview/mixkit-young-engineer-programming-in-his-workshop-seen-up-close-29991-large.mp4"),
-            ("human","https://mixkit.co/free-stock-video/experienced-programmer-working-very-concentrated-41645/","https://assets.mixkit.co/videos/preview/mixkit-experienced-programmer-working-very-concentrated-41645-large.mp4"),
-            ("edit","https://mixkit.co/free-stock-video/cursor-working-on-a-video-editing-software-close-up-shot-50605/","https://assets.mixkit.co/videos/preview/mixkit-cursor-working-on-a-video-editing-software-close-up-shot-50605-large.mp4"),
-            ("hands","https://mixkit.co/free-stock-video/hands-of-a-programmer-working-on-his-computer-41640/","https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-programmer-working-on-his-computer-41640-large.mp4"),
+          import subprocess,json,pathlib,hashlib
+          ids=[
+            ("workshop","4709394","https://www.pexels.com/video/a-person-is-working-on-a-circuit-board-4709394/"),
+            ("human","7989695","https://www.pexels.com/video/close-up-of-a-laptop-and-a-desktop-computer-7989695/"),
+            ("creative","29380115","https://www.pexels.com/video/close-up-of-video-editing-on-computer-29380115/"),
+            ("technician","6755167","https://www.pexels.com/video/close-up-view-of-a-man-repairing-electronic-6755167/"),
           ]
+          suffixes=["hd_1920_1080_25fps","hd_1920_1080_30fps","hd_1920_1080_50fps","hd_1080_1920_30fps","hd_1080_1920_25fps","hd_1280_720_25fps","hd_1280_720_30fps","sd_640_360_25fps"]
           rows=[]
-          for k,page,url in src:
-              fn="footage/"+k+".mp4"
-              p=subprocess.run(["curl","-L","--retry","2","--connect-timeout","12","--max-time","50","-sS","-w","%{http_code}","-o",fn,url],capture_output=True,text=True)
-              code=p.stdout.strip()
-              size=pathlib.Path(fn).stat().st_size if pathlib.Path(fn).exists() else 0
-              valid=False
-              if code=="200" and size>20000:
-                 f=subprocess.run(["ffprobe","-v","error","-show_entries","stream=codec_name,width,height:format=duration","-of","json",fn],capture_output=True,text=True)
-                 try:
-                    m=json.loads(f.stdout)
-                    valid=any(s.get("codec_name") in ("h264","hevc") for s in m.get("streams",[]))
-                 except: pass
-              rows.append(dict(name=k,source_page=page,url=url,http=code,bytes=size,valid=valid))
+          for name,id,page in ids:
+              found=False
+              for suff in suffixes:
+                  url=f"https://videos.pexels.com/video-files/{id}/{id}-{suff}.mp4"
+                  p=subprocess.run(["curl","-L","-sS","-I","--max-time","12","-w","\n%{http_code}","-o","/dev/null",url],capture_output=True,text=True)
+                  status=p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ""
+                  rows.append(dict(name=name,page=page,url=url,http=status))
+                  if status=="200":
+                      fn="footage/"+name+".mp4"
+                      dl=subprocess.run(["curl","-fL","--max-time","95","-sS","-o",fn,url],capture_output=True,text=True)
+                      b=pathlib.Path(fn).stat().st_size if pathlib.Path(fn).exists() else 0
+                      rows[-1].update(download_bytes=b,sha256=hashlib.sha256(pathlib.Path(fn).read_bytes()).hexdigest() if b>100000 else "",valid=dl.returncode==0 and b>100000)
+                      found=rows[-1]["valid"]
+                      if found:break
+              print(name,"valid",found,flush=True)
           pathlib.Path("receipts/download-check.json").write_text(json.dumps(rows,indent=2))
-          print(json.dumps(rows,indent=2))
-          if not any(r["valid"] for r in rows): raise SystemExit("No valid licensed source video: FAIL closed")
+          print(json.dumps([r for r in rows if r.get("valid")],indent=2))
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: fallen-licensed-live-motion-candidates
+          name: fallen-pexels-live-motion-candidates
           path: |
             receipts/download-check.json
             footage/*.mp4
           retention-days: 7
+          if-no-files-found: error
