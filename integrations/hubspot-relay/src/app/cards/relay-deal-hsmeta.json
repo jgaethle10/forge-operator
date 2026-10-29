@@ -1,0 +1,13 @@
+{
+  "uid": "relay-deal-alignment-card",
+  "type": "card",
+  "config": {
+    "name": "Relay decision clarity",
+    "description": "Read-only decision alignment status for this deal.",
+    "entrypoint": "/app/cards/RelayDealCard.jsx",
+    "location": "crm.record.tab",
+    "objectTypes": [
+      "DEALS"
+    ]
+  }
+}
