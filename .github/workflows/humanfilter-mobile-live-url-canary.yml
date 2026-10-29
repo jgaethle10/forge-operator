@@ -1,0 +1,28 @@
+name: HumanFilter owner iPhone capture URL canary
+on:
+  push:
+    branches: ["humanfilter-fallen-rc3-*"]
+    paths: [".github/workflows/humanfilter-mobile-live-url-canary.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-html-phone-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch the exact HTTPS URL deployed by Evercraft's existing Pages fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="https://jgaethle10.github.io/forge-operator/tools/humanfilter-capture/"
+          echo "Checking page route: $URL"
+          curl -fsSL --retry 6 --retry-delay 2 --max-time 30 -D "$RUNNER_TEMP/headers.txt" "$URL" -o "$RUNNER_TEMP/page.html"
+          grep -qi '^content-type:.*text/html' "$RUNNER_TEMP/headers.txt"
+          grep -Fq 'humanfilter-owner-capture-github-pages-20261027' "$RUNNER_TEMP/page.html"
+          grep -Fq 'Export private source pack' "$RUNNER_TEMP/page.html"
+          grep -Fq 'Private by design.' "$RUNNER_TEMP/page.html"
+          grep -Fq "new Blob([...pieces,...central,footer]" "$RUNNER_TEMP/page.html"
+          ! grep -Eqi '<form[^>]*action=|<script[^>]*src=' "$RUNNER_TEMP/page.html"
+          echo "PASS: live HTTPS page contains correct mobile capture UI and client-only export code"
+          curl -sSLI --max-time 30 "$URL" | grep -Ei 'HTTP/|content-type:|cache-control:|strict-transport-security:'

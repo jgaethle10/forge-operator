@@ -1,0 +1,58 @@
+name: HumanFilter RC3 • private mobile source intake proof
+on:
+  push:
+    branches: ["humanfilter-fallen-rc3-*"]
+    paths:
+      - "products/humanfilter/commercial/mobile-capture/**"
+      - ".github/workflows/humanfilter-rc3-mobile-capture-intake.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mobile-to-fallen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Chromium, Playwright and FFmpeg
+        run: |
+          python -m pip install 'playwright==1.55.0'
+          python -m playwright install --only-shell chromium
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          ffprobe -hide_banner -version | head -n 1
+      - name: Create nonhuman synthetic VIDEO FIXTURE strictly for automated tests
+        working-directory: products/humanfilter/commercial/mobile-capture
+        run: |
+          ffmpeg -hide_banner -loglevel error -y -f lavfi -i 'testsrc2=size=480x854:rate=24' \
+            -t 4 -c:v libx264 -preset ultrafast -pix_fmt yuv420p demo-only-testsrc.mp4
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 demo-only-testsrc.mp4
+      - name: Run consent, hash, traversal, and intake regression tests
+        working-directory: products/humanfilter/commercial/mobile-capture
+        run: python -m unittest -v test_intake.py
+      - name: Browser proof - actual mobile UI exports ZIP and Fallen ingests it
+        working-directory: products/humanfilter/commercial/mobile-capture
+        run: |
+          python -u test_capture.py | tee browser-to-ingest-proof.txt
+          grep -q '"browser": "PASS"' browser-to-ingest-proof.txt
+          grep -q '"release": "BLOCKED"' browser-to-ingest-proof.txt
+          grep -q '"frame_evidence": "PASS"' browser-to-ingest-proof.txt
+      - name: Remove synthetic media fixture before artifact retention
+        if: always()
+        run: rm -f products/humanfilter/commercial/mobile-capture/demo-only-testsrc.mp4
+      - name: Retain ONLY proof and private capture tool, never owner footage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-rc3-mobile-capture-private-intake-tests
+          path: |
+            products/humanfilter/commercial/mobile-capture/mobile-capture.html
+            products/humanfilter/commercial/mobile-capture/MOBILE_CAPTURE_README.md
+            products/humanfilter/commercial/mobile-capture/browser-to-ingest-proof.txt
+          if-no-files-found: warn
+          retention-days: 14
