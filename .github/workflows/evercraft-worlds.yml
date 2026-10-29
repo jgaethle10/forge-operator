@@ -1,7 +1,7 @@
 name: Evercraft Worlds browser projection
 on:
   pull_request:
-    paths: ['public/worlds/**','systemia/world-engine/worlds-integration.test.ts','tests/world-core.test.mjs','tests/worlds-quality.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs','docs/worlds/**','.github/workflows/evercraft-worlds.yml']
+    paths: ['public/worlds/**','systemia/world-engine/worlds-integration.test.ts','tests/world-core.test.mjs','tests/worlds-quality.test.mjs','tests/worlds-portal.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs','docs/worlds/**','.github/workflows/evercraft-worlds.yml']
   push:
     branches: [main]
     paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs']
@@ -18,9 +18,9 @@ jobs:
         with:
           node-version: '22'
       - name: Syntax check browser module
-        run: node --check public/worlds/app.mjs && node --check public/worlds/world-core.mjs && node --check public/worlds/world-bridge.mjs && node --check public/worlds/quality.mjs && node --check scripts/probe-evercraft-worlds-browser.mjs
+        run: node --check public/worlds/app.mjs && node --check public/worlds/world-core.mjs && node --check public/worlds/world-bridge.mjs && node --check public/worlds/quality.mjs && node --check public/worlds/portal-visual.mjs && node --check scripts/probe-evercraft-worlds-browser.mjs
       - name: World builder, persistence and engine-schema tests
-        run: node --test tests/world-core.test.mjs tests/worlds-quality.test.mjs tests/world-bridge.test.mjs
+        run: node --test tests/world-core.test.mjs tests/worlds-quality.test.mjs tests/worlds-portal.test.mjs tests/world-bridge.test.mjs
       - name: CPU microbenchmark (NOT a browser performance claim)
         run: node tests/worlds-benchmark.mjs
   engine-integration:
