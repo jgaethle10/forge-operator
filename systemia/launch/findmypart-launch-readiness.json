@@ -64,6 +64,11 @@
       "evidence": null
     },
     {
+      "id": "consented_customer_inquiry",
+      "state": "source_ready_ci_pending_runtime_not_deployed",
+      "evidence": "Two-field part description and equipment, reply email and consent; private encrypted lead storage and no-PII operator notifications. Requires owner-managed encryption key, private state and notification configuration."
+    },
+    {
       "id": "purchase_intake",
       "state": "source_candidate_only",
       "evidence": "PR #1598, owned encrypted intake adapter not integrated in payment ops"
@@ -99,6 +104,13 @@
       "evidence": null
     }
   ],
-  "next_blocker": "Implement and run owned Payments + Raven intake adapter, verify public Fabric DNS/TLS and an authorized real buyer checkout, secure report delivery, then remove noindex and publish campaign.",
-  "no_live_metrics_claimed": true
+  "next_blocker": "Configure owned FindMyPart customer intake key/private volume and operator alert principal, independently verify on-site lead -> operator inbox -> human reply; separately finish owned Payments order-scoped checkout, receipt and fulfillment before general launch.",
+  "no_live_metrics_claimed": true,
+  "operator_configuration_required": {
+    "EVERCRAFT_FINDMYPART_INTAKE_KEY_B64": "operator-managed, random 32-byte AES key (base64); never commit or print",
+    "EVERCRAFT_FINDMYPART_LEADS_DIR": "persistent Evercraft-owned writable directory (0700)",
+    "EVERCRAFT_FINDMYPART_OWNER_PRINCIPAL": "valid owner notification principal",
+    "EVERCRAFT_NOTIFICATION_BASE_URL": "owned notification fabric ingress, if enabled",
+    "EVERCRAFT_NOTIFICATION_INGEST_TOKEN": "secret stored outside public repository"
+  }
 }
