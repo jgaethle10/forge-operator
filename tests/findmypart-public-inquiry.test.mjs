@@ -1,0 +1,119 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
+import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher} from '../systemia/mcp/findmypart-public-inquiry.mjs';
+
+const ORIGIN='https://fabric.systemiacommandcenters.com';
+const brief={
+  part_description:'Broken power selector switch with worn markings, no dealer replacement found',
+  equipment_context:'Ford 3600 tractor, late 1970s',
+  email:'customer@example.test',consent:true,website:'',
+};
+const key=crypto.randomBytes(32);
+const temp=()=>fs.mkdtempSync(path.join(os.tmpdir(),'findmypart-public-test-'));
+const post=(url,data,origin=ORIGIN)=>fetch(url+'/api/findmypart/inquiry',{
+  method:'POST',headers:{origin,'content-type':'application/json'},
+  body:JSON.stringify(data)
+});
+
+test('validator requires only part, equipment, reply email and consent',()=>{
+ assert.ok(validateFindMyPartInquiry(brief).value);
+ assert.equal(validateFindMyPartInquiry({...brief,part_description:'x'}).error,'missing_part_or_contact_details');
+ assert.equal(validateFindMyPartInquiry({...brief,equipment_context:''}).error,'missing_part_or_contact_details');
+ assert.equal(validateFindMyPartInquiry({...brief,email:'not an address'}).error,'missing_part_or_contact_details');
+ assert.equal(validateFindMyPartInquiry({...brief,consent:false}).error,'consent_required');
+ assert.equal(validateFindMyPartInquiry({...brief,website:'honeypot'}).honeypot,true);
+});
+
+test('first-party buyer POST is encrypted, private, durable and not a charge',async()=>{
+ const dir=temp();
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ try{
+  const response=await post(rt.url,brief);
+  assert.equal(response.status,201);
+  assert.equal(response.headers.get('access-control-allow-origin'),ORIGIN);
+  const receipt=await response.json();
+  assert.equal(receipt.received,true);
+  assert.match(receipt.reference,/^FMP-[A-F0-9]{24}$/);
+  assert.match(receipt.message,/No payment or order has been created/);
+  const encryptedFile=path.join(dir,receipt.reference+'.enc');
+  const ciphertext=fs.readFileSync(encryptedFile,'utf8');
+  assert.doesNotMatch(ciphertext,/customer@example\.test|Broken power selector|Ford 3600/);
+  assert.equal(fs.statSync(encryptedFile).mode&0o777,0o600);
+  assert.equal(fs.statSync(dir).mode&0o777,0o700);
+  const alert=JSON.parse(fs.readFileSync(path.join(dir,'alert-outbox',receipt.reference+'.json'),'utf8'));
+  assert.equal(alert.has_customer_pii,false);
+  assert.equal(alert.reference,receipt.reference);
+  assert.doesNotMatch(JSON.stringify(alert),/customer@example|power selector|Ford 3600/);
+  const options=await fetch(rt.url+'/api/findmypart/inquiry',{method:'GET',headers:{origin:ORIGIN}});
+  assert.equal(options.status,405);
+  assert.equal((await options.json()).error,'method_not_allowed');
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('without operator-managed encryption key request fails closed',async()=>{
+ const dir=temp();
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:'invalid'});
+ try{
+  const response=await post(rt.url,brief);
+  assert.equal(response.status,503);
+  assert.equal((await response.json()).error,'intake_unavailable');
+  assert.equal(fs.readdirSync(dir).length,0);
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('off-origin, nonconsenting, spam and oversized requests never create leads',async()=>{
+ const dir=temp();
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ try{
+  assert.equal((await post(rt.url,brief,'https://attacker.example')).status,403);
+  assert.equal((await post(rt.url,{...brief,consent:false})).status,422);
+  const spam=await post(rt.url,{...brief,website:'https://spam.example'});
+  assert.equal(spam.status,202);
+  assert.equal((await spam.json()).received,false);
+  const huge=await post(rt.url,{...brief,part_description:'x'.repeat(6000)});
+  assert.equal(huge.status,413);
+  assert.equal(fs.readdirSync(dir).length,0);
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('rate limits repeated buyer email but keeps successful submissions',async()=>{
+ const dir=temp();
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ try{
+  for(let i=0;i<3;i++)assert.equal((await post(rt.url,{...brief,part_description:brief.part_description+' #'+i})).status,201);
+  const limit=await post(rt.url,brief);
+  assert.equal(limit.status,429);
+  assert.equal((await limit.json()).error,'too_many_requests');
+  assert.equal(fs.readdirSync(dir).filter(x=>x.endsWith('.enc')).length,3);
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('operator notification relay sends only reference, and only counts durable inbox ack',async()=>{
+ const dir=temp();fs.mkdirSync(path.join(dir,'alert-outbox'),{recursive:true,mode:0o700});
+ const reference='FMP-'+crypto.randomBytes(12).toString('hex').toUpperCase();
+ fs.writeFileSync(path.join(dir,'alert-outbox',reference+'.json'),JSON.stringify({
+  schema:'evercraft.findmypart.private-alert.v1',reference,received_at:new Date().toISOString(),has_customer_pii:false,
+ }),{mode:0o600});
+ let notification;
+ const relay=createFindMyPartInquiryAlertDispatcher({
+  folder:dir,recipient:'evercraft-owner',notify:async x=>{notification=x;return {inboxed:1}},
+ });
+ try{
+  const result=await relay.dispatch();
+  assert.equal(result.accepted,1);
+  assert.equal(notification.product,'findmypart');
+  assert.equal(notification.data.contains_customer_pii,false);
+  assert.doesNotMatch(JSON.stringify(notification),/customer@example|power selector/i);
+  assert.equal(fs.existsSync(path.join(dir,'alert-outbox',reference+'.json')),false);
+  assert.equal(fs.existsSync(path.join(dir,'alert-receipts',reference+'.json')),true);
+ }finally{relay.stop();fs.rmSync(dir,{recursive:true,force:true})}
+});
