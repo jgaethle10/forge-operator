@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'public/findmypart/**'
+      - 'systemia/mcp/findmypart-public-inquiry.mjs'
+      - 'tests/findmypart-public-inquiry.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/findmypart-launch-system.test.mjs'
       - '.github/workflows/findmypart-launch-gate.yml'
@@ -20,6 +22,8 @@ jobs:
           node-version: '22'
       - name: Brand and owned first-party route acceptance
         run: node --test tests/findmypart-launch-system.test.mjs
+      - name: Owned two-question buyer intake, storage and alert tests
+        run: node --test tests/findmypart-public-inquiry.test.mjs
       - name: Existing owned service routing regression
         run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Existing native payment offer routing regression
