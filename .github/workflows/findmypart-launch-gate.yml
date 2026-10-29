@@ -1,0 +1,26 @@
+name: FindMyPart brand launch gate
+on:
+  pull_request:
+    paths:
+      - 'public/findmypart/**'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/findmypart-launch-system.test.mjs'
+      - '.github/workflows/findmypart-launch-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-owned-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Brand and owned first-party route acceptance
+        run: node --test tests/findmypart-launch-system.test.mjs
+      - name: Existing owned service routing regression
+        run: node --test tests/fabric-owned-service-frontages.test.mjs
+      - name: Existing native payment offer routing regression
+        run: node --test tests/fabric-offer-pages.test.mjs
