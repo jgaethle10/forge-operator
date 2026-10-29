@@ -9,7 +9,7 @@ const art = fs.readFileSync(new URL('brand/work-saban-social.svg', root), 'utf8'
 const kit = fs.readFileSync(new URL('../docs/commercial/work-saban-launch-system-20261028.md', import.meta.url), 'utf8');
 test('product launch has a real accessible narrative and exact pilot path', () => {
   for(const part of ['Give the work','a team.','You bring the work. Saban brings the team.',
-    'THE PRODUCT EXPERIENCE','THE FIRST REAL JOB','RELEASE REALITY','FOUNDING PARTNER PROGRAM','FAQ',
+    'THE PRODUCT EXPERIENCE','THE FIRST REAL JOB','RELEASE REALITY','FOUNDING PARTNER PROGRAM','id="faq"',
     'Saban brings the team.','PRIVATE PILOT INTEREST','Request the private pilot by email']){
     assert.ok(main.includes(part), 'missing launch message '+part);
   }
@@ -25,7 +25,7 @@ test('public tour is accurately labeled and does not fake production deployment'
     'design preview using synthetic sample data',
     'not a running customer job',
     'VISUAL TOUR, NOT LIVE TELEMETRY',
-    'not a remotely hosted AI workforce',
+    'or a remotely hosted AI workforce',
     'No multi-tenant accounts or live general-purpose AI specialists',
     'No public CSV uploads',
     'No self-service payment or fulfillment promise',
