@@ -29,7 +29,6 @@ jobs:
           node-version: '22'
       - name: Public WGS read-only count probe (Grant pilot)
         id: probe
-        continue-on-error: true
         env:
           EVERMAPS_COUNTY: Grant
         run: node systemia/evermaps/wgs-live-canary.mjs
@@ -58,7 +57,6 @@ jobs:
         with:
           node-version: '22'
       - name: Full public Grant County WGS read-only import
-        continue-on-error: true
         env:
           EVERMAPS_COUNTY: Grant
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
