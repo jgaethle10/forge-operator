@@ -1,0 +1,50 @@
+name: Website Audit Genuine Offer Footage
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/browser-worker/website-audit-public-capture.*'
+      - '.github/workflows/website-audit-public-capture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-audit-footage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check zero-trust website capture guards
+        run: node --test systemia/evercraft-web/browser-worker/website-audit-public-capture.test.mjs
+      - name: Install owned browser dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install Chromium and video encoding
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npx playwright install --with-deps chromium
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+      - name: Capture actual public Website Audit offer without making a purchase
+        run: node systemia/evercraft-web/browser-worker/website-audit-public-capture.mjs artifacts/saban/website-audit-public-capture
+      - name: Preserve source video, screenshot and exact custody receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-audit-public-capture-${{ github.run_id }}
+          path: |
+            artifacts/saban/website-audit-public-capture/*.png
+            artifacts/saban/website-audit-public-capture/*.mp4
+            artifacts/saban/website-audit-public-capture/*.webm
+            artifacts/saban/website-audit-public-capture/receipt.json
+          retention-days: 14
+          if-no-files-found: warn
