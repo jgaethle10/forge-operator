@@ -69,6 +69,17 @@ For an OpenAI-compatible **local** chat completions server, substitute `openai`,
 
 **Proof boundary:** tests exercise mock model servers, **not genuine LLM inference**. Provider metadata is descriptive, not cryptographic provenance. A loopback response does not prove that a neural network performed a computation. Record model version, responses, latency, and provenance separately before making an external claim.
 
+## Offline spectator replay (post-match only)
+
+Generate a mobile-friendly **static**, privacy-reduced after-match viewer from the fully verified fixture. It contains public scores, weather and already-completed decisions, but **not** any private inventories or full referee state:
+
+```bash
+node demo.mjs 12 arena-fixture.json
+node spectator-export.mjs arena-fixture.json arena-fixture.html synthetic-fixture
+```
+
+For a model-driven envelope, use `node spectator-export.mjs local-inference-match.json local-inference-replay.html local-model-unverified`. The label explicitly avoids claiming independently verified model provenance. No live spectator feed, public server, or authenticated outside agent is implied.
+
 ## Rules and proof boundary
 
 - Supports 2-19 configured agents; new matches use a fixed seed.

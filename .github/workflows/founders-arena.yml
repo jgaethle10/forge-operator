@@ -26,3 +26,4 @@ jobs:
         run: |
           node systemia/founders-arena/demo.mjs 12 "$RUNNER_TEMP/arena-match.json"
           node systemia/founders-arena/verify.mjs "$RUNNER_TEMP/arena-match.json"
+          node systemia/founders-arena/spectator-export.mjs "$RUNNER_TEMP/arena-match.json" "$RUNNER_TEMP/arena-replay.html" synthetic-fixture
