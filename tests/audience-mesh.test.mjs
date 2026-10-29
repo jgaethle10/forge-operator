@@ -60,5 +60,6 @@ test('every immediate paid offer has a manual human-start path',()=>{
     assert.ok(page.includes('mailto:jessegaethle10@gmail.com?subject='+subject));
   }
   assert.match(page,/never request card or bank credentials by email/i);
-  assert.match(page,/Online checkout availability is not independently verified/i);
+  assert.match(page,/Seven exact-price Stripe-hosted service forms were independently tested on October 25, 2026/i);
+  assert.match(page,/That does not prove a completed payment, current uptime or an automated fulfillment pipeline/i);
 });
