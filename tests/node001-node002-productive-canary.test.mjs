@@ -27,7 +27,9 @@ const computeBody={
  workload_class:'systemia.content-hash.v1',idempotency_key:idempotencyKey,
  worker_receipt_hash:worker_receipt.receipt_hash,
 };
-const receipt={...computeBody,receipt_hash:hash(computeBody)};
+// Compute ReceiptChain.issue() uses bare SHA256 hex in insertion order.
+const receipt={...computeBody,receipt_hash:createHash('sha256')
+ .update(JSON.stringify(computeBody)).digest('hex')};
 const job={ok:true,node_id:'evercraft-node002-nextgen',workload_class:'systemia.content-hash.v1',
  result,worker_receipt,receipt,deduplicated:false,idempotency_key:idempotencyKey};
 const expected={value,idempotencyKey};
@@ -35,6 +37,8 @@ test('remote productive job validates deterministic result, Node002 receipts and
  const result=verifyJobResponse({job,expected,leaseId});
  assert.equal(result.verified_worker_receipt_integrity,true);
  assert.equal(result.verified_compute_receipt_integrity,true);
+ assert.match(receipt.receipt_hash,/^[a-f0-9]{64}$/);
+ assert.equal(receipt.receipt_hash.startsWith('sha256:'),false);
  assert.equal(result.cryptographic_signature_provided,false);
 });
 test('bad result, wrong node or forged receipt is rejected',()=>{
@@ -42,4 +46,18 @@ test('bad result, wrong node or forged receipt is rejected',()=>{
  assert.throws(()=>verifyJobResponse({job:{...job,node_id:'evercraft-penguin'},expected,leaseId}));
  assert.throws(()=>verifyJobResponse({job:{...job,worker_receipt:{...worker_receipt,receipt_hash:'tampered'}},expected,leaseId}));
  assert.throws(()=>verifyJobResponse({job,expected,leaseId:'wrong'}));
+});
+
+test('rejects prefixed Compute hash, tampered hash and insertion-order mismatch',()=>{
+ assert.throws(()=>verifyJobResponse({job:{
+   ...job,receipt:{...receipt,receipt_hash:'sha256:'+receipt.receipt_hash}
+ },expected,leaseId}),/node002_compute_hash_chain_receipt_invalid/);
+ assert.throws(()=>verifyJobResponse({job:{
+   ...job,receipt:{...receipt,receipt_hash:'0'.repeat(64)}
+ },expected,leaseId}),/node002_compute_hash_chain_receipt_invalid/);
+ const reordered={...receipt,worker_receipt_hash:receipt.worker_receipt_hash};
+ const reversed=Object.fromEntries(Object.entries(reordered).reverse());
+ assert.throws(()=>verifyJobResponse({job:{
+   ...job,receipt:reversed
+ },expected,leaseId}),/node002_compute_hash_chain_receipt_invalid/);
 });
