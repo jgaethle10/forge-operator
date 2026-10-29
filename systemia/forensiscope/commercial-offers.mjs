@@ -18,7 +18,7 @@ export function prepareForensiScopePaymentIntent({durationSeconds, mediaRightsCo
   const offer=FORENSISCOPE_OFFERS.find(tier=>durationSeconds<=tier.max_duration_seconds);
   if(!offer) throw new Error('outside published duration tiers; require human scope review');
   const paymentRoute=buildPaymentRoute({
-    productKey:'forensiscope', offerKey:offer.offer_key, amount:offer.amount_usd, currency:'USD'
+    productKey:'forensiscope', offerKey:offer.offer_key, amount:offer.amount_usd*100, currency:'USD'
   });
   if(!assertEvercraftPaymentRoute(paymentRoute).ok)
     throw new Error('noncanonical Evercraft Payments route');
