@@ -48,15 +48,7 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   assert.match(aliev.pricing,/\$299 Preliminary Site Opportunity Report/);
   assert.ok(aliev.use_when.includes('is this property a good EV charging site'));
   assert.equal(aliev.entry_paid_offer?.price,'$250');
-  // The generated machine catalog has an MCP fallback. Explicit discovery-only
-  // supplements may expose an owned, human-reviewed page without a callable MCP.
-  // Do not fabricate an MCP endpoint for pilots that have not shipped runtime tools.
-  assert.ok(canonical.every((x)=>
-    x.connections.some((connection)=>connection.type==='mcp') ||
-    (x.commercial_state==='discovery_only' && x.entry_paid_offer===null &&
-     x.start_url_state==='not_sell_now' &&
-     x.connections.some((connection)=>connection.type==='website' && connection.url?.startsWith('https://')))
-  ));
+  assert.ok(canonical.every((x)=>x.connections.some((connection)=>connection.type==='mcp')));
   const findMyPart=canonical.find((x)=>x.public_id==='findmypart-paid-hunt-v1');
   assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
 });
