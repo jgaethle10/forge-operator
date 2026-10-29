@@ -15,7 +15,8 @@ Usage:
 Read-only release doctor for the owned Fabric Chromebook/Crostini edge.
 
 Reports release alignment, dirty-path blockers, update timer/service state,
-the non-secret Fabric update receipt, and recent updater HOLD/ERROR lines.
+local FindMyPart GET/readiness responses, the non-secret Fabric update receipt,
+and recent updater HOLD/ERROR lines.
 
 It never prints Fabric environment files, allocator tokens, Visual Desk ingest
 tokens, OpenAI challenge tokens, or other secrets. It performs no fetch,
@@ -130,4 +131,44 @@ if command -v journalctl >/dev/null 2>&1; then
     || true
 fi
 
+# Diagnose the exact customer symptom without requesting customer data.
+# These are loopback GETs only, never an order, payment, or admin action.
+local_probe(){
+  local route="$1"
+  if ! command -v curl >/dev/null 2>&1; then
+    printf 'curl_unavailable'
+    return
+  fi
+  local status
+  status="$(curl --silent --show-error --max-time 5 --output /dev/null --write-out '%{http_code}' "http://127.0.0.1:8787$route" 2>/dev/null || true)"
+  if [[ ! "$status" =~ ^[0-9]{3}$ || "$status" == '000' ]]; then
+    printf 'unreachable'
+  else
+    printf '%s' "$status"
+  fi
+}
+findmypart_source_available=false
+if [[ -f "$REPO_ROOT/public/findmypart/index.html" ]] &&
+   grep -Fq "const findMyPartPath=" "$REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs" 2>/dev/null; then
+  findmypart_source_available=true
+fi
+printf 'findmypart_source_route_available=%s\n' "$findmypart_source_available"
+public_part_status="$(local_probe '/findmypart/')"
+local_part_status="$(local_probe '/findmypart')"
+local_intake_status="$(local_probe '/api/findmypart/readiness')"
+printf 'findmypart_local_slash_http=%s\n' "$public_part_status"
+printf 'findmypart_local_no_slash_http=%s\n' "$local_part_status"
+printf 'findmypart_local_readiness_http=%s\n' "$local_intake_status"
+if [[ "$public_part_status" == '404' && "$findmypart_source_available" == 'true' ]]; then
+  printf 'findmypart_diagnosis=local_runtime_not_serving_merged_route\n'
+  printf 'findmypart_next=inspect_release_ref_updater_hold_and_resident_service_execstart\n'
+elif [[ "$public_part_status" == '200' && "$local_intake_status" != '200' ]]; then
+  printf 'findmypart_diagnosis=frontage_local_but_inquiry_readiness_missing\n'
+elif [[ "$public_part_status" == '200' && "$local_intake_status" == '200' ]]; then
+  printf 'findmypart_diagnosis=local_route_present_check_external_tls_proxy_and_intake_available\n'
+elif [[ "$public_part_status" == 'unreachable' ]]; then
+  printf 'findmypart_diagnosis=local_fabric_unreachable\n'
+else
+  printf 'findmypart_diagnosis=route_not_yet_proven\n'
+fi
 printf 'doctor_mutation_performed=false\n'
