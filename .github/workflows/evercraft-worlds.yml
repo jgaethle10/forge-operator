@@ -1,0 +1,25 @@
+name: Evercraft Worlds browser projection
+on:
+  pull_request:
+    paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','docs/worlds/**','.github/workflows/evercraft-worlds.yml']
+  push:
+    branches: [main]
+    paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  model-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check browser module
+        run: node --check public/worlds/app.mjs && node --check public/worlds/world-core.mjs && node --check public/worlds/world-bridge.mjs
+      - name: World builder, persistence and engine-schema tests
+        run: node --test tests/world-core.test.mjs tests/world-bridge.test.mjs
+      - name: CPU microbenchmark (NOT a browser performance claim)
+        run: node tests/worlds-benchmark.mjs

@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {initialWorld,applyCommand} from '../public/worlds/world-core.mjs';import {toEngineWorld} from '../public/worlds/world-bridge.mjs';
+test('local builder exports existing World Engine V1 schema',()=>{const w=applyCommand(initialWorld(),'add bench').world;const out=toEngineWorld(w);assert.equal(out.schema,'evercraft.world-engine.world.v1');assert.equal(out.version,2);assert.equal(out.tickRateHz,60);assert.equal(out.gravity.y,-9.81);assert.ok(out.entities.some(e=>e.id==='object:made-1'&&e.collider.type==='box'));assert.ok(out.entities.some(e=>e.id==='character:pip'));});
