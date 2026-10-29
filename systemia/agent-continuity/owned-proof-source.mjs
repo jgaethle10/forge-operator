@@ -49,7 +49,7 @@ export function createOwnedCommissionedTeamGate({
   const trustFile = mustFile(trustKeysFile, "commissioned_trust_keys_file");
   const keys = JSON.parse(fs.readFileSync(trustFile, "utf8"));
   if (!keys || typeof keys !== "object" ||
-      !keys.dispatch_preflight || !keys.dispatch_completion || !keys.registry_snapshot)
+      !keys.dispatch_preflight || !keys.dispatch_completion || !keys.registry_snapshot || !keys.worker_execution)
     throw new Error("commissioned_trust_keys_invalid");
   // A roster must be independently authenticated, not signed by the same
   // private authority as a mission dispatch.
@@ -61,15 +61,25 @@ export function createOwnedCommissionedTeamGate({
     );
     const rosterKeys = fingerprints(registryPublicKeys);
     const dispatchKeys = new Set(fingerprints(dispatchPublicKeys));
+    const completionKeys = new Set(fingerprints(Object.values(keys.dispatch_completion)));
+    const workerEntries = Object.entries(keys.worker_execution);
+    const workerKeys = fingerprints(workerEntries.map(([,key]) => key));
     if (!rosterKeys.length || !dispatchKeys.size ||
         rosterKeys.some((key) => dispatchKeys.has(key))) {
       throw new Error("commissioned_registry_and_dispatch_signers_not_independent");
+    }
+    const upstreamKeys = new Set([...rosterKeys, ...dispatchKeys, ...completionKeys]);
+    if (!workerEntries.length ||
+        workerEntries.some(([id]) => !id || ["sentinel","juniper"].includes(id.toLowerCase())) ||
+        workerKeys.some((value) => upstreamKeys.has(value)) ||
+        new Set(workerKeys).size !== workerKeys.length) {
+      throw new Error("commissioned_worker_signers_not_independent");
     }
   } catch (error) {
     throw new Error(error?.message === "commissioned_registry_and_dispatch_signers_not_independent"
       ? error.message : "commissioned_trust_keys_invalid");
   }
-  for (const folder of ["registry", "preflight", "completion", "claimed"]) {
+  for (const folder of ["registry", "preflight", "completion", "worker-execution", "claimed"]) {
     const dir = path.join(root, folder);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { mode: 0o700 });
     mustDirectory(dir);
@@ -82,6 +92,8 @@ export function createOwnedCommissionedTeamGate({
       readProof(root, "preflight", request.request_id),
     readCompletion: async ({request}) =>
       readProof(root, "completion", request.request_id),
+    readWorkerExecution: async ({request, reviewerId}) =>
+      readProof(root, "worker-execution", request.request_id + ":" + reviewerId),
     verifyRoster: async ({request, preflightEvidence}) =>
       verifyCommissionedRoster({
         request,
