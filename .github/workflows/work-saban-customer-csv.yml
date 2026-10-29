@@ -1,0 +1,35 @@
+name: Work Saban customer CSV report proof
+on:
+  pull_request:
+    paths:
+      - 'public/work-saban/report/**'
+      - 'public/work-saban/index.html'
+      - 'public/work-saban/plan/index.html'
+      - 'public/work-saban/demo/index.html'
+      - 'tests/work-saban-customer-csv.test.mjs'
+      - '.github/workflows/work-saban-customer-csv.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/work-saban/report/**'
+      - 'public/work-saban/index.html'
+      - 'public/work-saban/plan/index.html'
+      - 'public/work-saban/demo/index.html'
+      - 'tests/work-saban-customer-csv.test.mjs'
+      - '.github/workflows/work-saban-customer-csv.yml'
+permissions:
+  contents: read
+jobs:
+  private-csv-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate browser-only reporting and adversarial CSV cases
+        run: |
+          node --check public/work-saban/report/engine.mjs
+          node --check public/work-saban/report/report.js
+          node --test tests/work-saban-customer-csv.test.mjs
