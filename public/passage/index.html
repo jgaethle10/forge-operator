@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f9f6">
+<meta name="description" content="Passage is an offline-first reading library for essential, public-interest knowledge. Read, save, and carry a personal copy without an account.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Passage | Knowledge travels">
+<meta property="og:description" content="A quiet place to read, save and carry knowledge. Prototype by Evercraft.">
+<meta property="og:url" content="https://jgaethle10.github.io/forge-operator/passage/">
+<link rel="icon" href="./mark.svg" type="image/svg+xml">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./style.css">
+<title>Passage | Knowledge travels</title>
+<script type="module" src="./app.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="toprail"></div>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="identity" href="./" aria-label="Passage home"><img src="./mark.svg" alt="" width="42" height="42"><span><strong>passage<span class="period">.</span></strong><small>AN EVERCRAFT INITIATIVE</small></span></a>
+    <div class="nav-actions"><span class="prototype">PUBLIC-INTEREST PROTOTYPE</span><a href="#how" class="nav-link">How it works</a></div>
+  </div>
+</header>
+<main id="main">
+  <section id="home" class="wrap">
+    <div class="hero">
+      <div>
+        <p class="eyebrow"><span class="light-dot"></span> KNOWLEDGE SHOULD TRAVEL</p>
+        <h1>Information<br>belongs <em>within reach.</em></h1>
+        <p class="lead">A calm, simple library for knowledge worth keeping. Read now, save for later, or take a copy with you when connection is uncertain.</p>
+        <div class="hero-actions"><a class="button primary" href="#library">Explore the library <span aria-hidden="true">↗</span></a><button class="button outline" id="download-library" type="button">Save an offline copy <span aria-hidden="true">↓</span></button></div>
+        <p class="fineprint">Free to read · No sign-up · No trackers · Prototype content only</p>
+      </div>
+      <div class="feature-card" aria-label="Passage reader features">
+        <div class="feature-header"><span>THE READING ROOM</span><span class="feature-star" aria-hidden="true">✳</span></div>
+        <div class="feature-illustration" aria-hidden="true"><div class="path-outer"><div class="path-inner"><span class="horizon"></span></div></div></div>
+        <div class="feature-bottom"><p>For every curious mind.</p><span>01 / OPEN KNOWLEDGE</span></div>
+      </div>
+    </div>
+    <div class="statusbar"><span id="connection-status" role="status">Checking offline support…</span><span>Local reading · Portable downloads · Clear sources</span></div>
+    <section class="library" id="library" aria-labelledby="library-title">
+      <div class="section-top"><div><p class="eyebrow">THE LIBRARY</p><h2 id="library-title">Start with something useful.</h2></div><div id="library-count" class="count">Loading articles…</div></div>
+      <div class="library-controls"><label class="search"><span aria-hidden="true">⌕</span><span class="sr-only">Search library</span><input type="search" id="search" autocomplete="off" placeholder="Search subjects or titles"></label><div id="filters" class="filters" role="group" aria-label="Filter articles"></div></div>
+      <div id="cards" class="card-grid" aria-live="polite"></div>
+      <div id="empty" class="empty" hidden>No matching articles. Try another search.</div>
+      <noscript><p>JavaScript is needed for the interactive library. The downloadable prototype is also available from the source repository.</p></noscript>
+    </section>
+    <section class="how" id="how"><div><p class="eyebrow">BUILT FOR RESILIENCE</p><h2>Keep reading when the signal fades.</h2></div><div class="steps"><article><span class="step-number">01</span><h3>Read</h3><p>Choose a practical guide. Every example in this prototype is original editorial material with visible provenance.</p></article><article><span class="step-number">02</span><h3>Keep</h3><p>Save an article or download the whole library as one standalone HTML file that opens without internet.</p></article><article><span class="step-number">03</span><h3>Reconnect</h3><p>With a supported browser on HTTPS, the app shell can be cached for later offline visits. Connectivity isn't guaranteed.</p></article></div></section>
+    <section class="mission"><div><p class="eyebrow">WHY WE'RE HERE</p><h2>A useful idea should outlast a broken connection.</h2></div><p>This early Passage prototype is an offline reading experience, not an anonymity tool or censorship-bypass service. It does not send, synchronize, or encrypt your saved content. Public-interest distribution requires verified rights, trustworthy provenance, and a separate safety review.</p></section>
+  </section>
+  <section id="reader" class="reader wrap" hidden aria-labelledby="reader-title">
+    <button id="back" type="button" class="back">← Back to the library</button>
+    <div class="reader-grid"><article class="reader-article"><p class="eyebrow" id="reader-category"></p><h1 id="reader-title"></h1><p class="reader-desc" id="reader-description"></p><div class="article-meta" id="reader-meta"></div><div id="reader-content" class="reader-content"></div><div id="reader-sources" class="reader-sources"></div></article><aside class="reader-tools"><p class="eyebrow">TAKE IT WITH YOU</p><p>Save this article to a text file. It can be opened without a connection.</p><button class="button primary full" type="button" id="download-article">Download article ↓</button><button class="button outline full" type="button" id="bookmark-article">Save to this device</button><small>Bookmarks stay in this browser only. Downloads are ordinary, unencrypted files.</small></aside></div>
+  </section>
+</main>
+<footer><div class="wrap footer-in"><div class="footer-brand"><strong>passage<span class="period">.</span></strong><span>Knowledge travels.</span></div><div class="footer-right"><span>Evercraft LLC · Demonstration prototype</span><span>Independent knowledge deserves careful stewardship.</span></div></div></footer>
+</body></html>

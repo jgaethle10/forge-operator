@@ -1,0 +1,27 @@
+name: Passage offline library checks
+on:
+  pull_request:
+    paths:
+      - 'public/passage/**'
+      - 'tests/passage-library.test.mjs'
+      - 'docs/launch/passage/**'
+      - '.github/workflows/passage-library-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Passage library and portable export
+        run: node --test tests/passage-library.test.mjs
+      - name: Check browser script syntax
+        run: |
+          node --check public/passage/app.mjs
+          node --check public/passage/catalog.mjs
+          node --check public/passage/sw.js
