@@ -228,3 +228,17 @@ main{max-width:1420px;padding-top:34px}
 .spatial-agent.is-selected .spatial-person-head{filter:drop-shadow(0 0 7px #c6edff66)}
 @keyframes saban-focus{50%{translate:0 -3px}}
 @media(prefers-reduced-motion:reduce){.spatial-agent[data-state="running"] .spatial-person-head{animation:none}}
+
+
+/* Character-forward presentation: the people, not the equipment, own the scene. */
+.spatial-person{left:12px;top:8px;width:90px;height:126px;transform:translateZ(92px) rotateX(-58deg) scale(1.45);filter:drop-shadow(0 8px 7px #0006)}
+.spatial-person-body{left:14px;width:58px;height:69px;border-radius:30px 30px 17px 17px}
+.spatial-person-head{left:23px;top:-8px;width:44px;height:47px;border-radius:46% 46% 50% 50%;border:3px solid #fff4;background:radial-gradient(circle at 35% 25%,#ffe6d2,#d3a88d 85%);box-shadow:0 5px 0 #c78f7970,0 -12px 0 -6px #293b58}
+.spatial-person-hair{left:-5px;top:-10px;width:50px;height:24px}
+.spatial-eye{top:19px;width:7px;height:9px;box-shadow:1px 1px 0 #fff9}
+.spatial-eye-left{left:10px}.spatial-eye-right{right:10px}
+.spatial-smile{left:17px;top:32px;width:11px;height:6px}
+.spatial-agent[data-state="verified"] .spatial-person{filter:drop-shadow(0 8px 7px #0006) drop-shadow(0 0 10px #7ce8bb66)}
+.spatial-agent.is-selected .spatial-person{filter:drop-shadow(0 8px 7px #0006) drop-shadow(0 0 14px #9de8ff)}
+.spatial-agent:hover .spatial-person{translate:0 -7px}
+@media(prefers-reduced-motion:reduce){.spatial-agent:hover .spatial-person{translate:none}}
