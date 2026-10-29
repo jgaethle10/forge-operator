@@ -92,7 +92,10 @@ export function issuePrivateCustomerSession({
   division_ids:[...who.division_ids],identity_evidence_ref:who.identity_evidence_ref,now
  });
  if(approval?.then||approval?.approved!==true||approval?.tenant_id!==who.tenant_id||
-    approval?.actor_ref!==who.actor_ref||!valid(approval?.approval_ref)||
+    approval?.actor_ref!==who.actor_ref||approval?.role!==who.role||
+    !Array.isArray(approval.division_ids)||
+    JSON.stringify([...approval.division_ids].sort())!==JSON.stringify([...who.division_ids].sort())||
+    approval.identity_evidence_ref!==who.identity_evidence_ref||!valid(approval?.approval_ref)||
     !valid(approval?.expires_at)||parseDate(approval.expires_at,'approval_expires_at')<=now.getTime())
   throw Error('session_enrollment_not_approved');
  const token=randomBytes(32).toString('hex');
@@ -155,17 +158,22 @@ export function createPrivateCustomerAuthenticator({storeDir='',clock=()=>new Da
  * Never accepts a cookie from an arbitrary public route.
  */
 export function revokePrivateCustomerSession({
- storeDir='',tokenHash='',operatorApproval=null,now=new Date()
+ storeDir='',tokenHash='',actorRef='',verifyRevocation=null,now=new Date()
 }={}){
  if(!/^[a-f0-9]{64}$/.test(tokenHash))throw Error('session_digest_invalid');
- if(operatorApproval?.approved!==true||!valid(operatorApproval.approval_ref))
-  throw Error('session_revocation_approval_required');
+ if(typeof verifyRevocation!=='function'||!valid(actorRef))throw Error('session_revocation_approval_required');
+ const approval=verifyRevocation({token_hash:tokenHash,actor_ref:actorRef,now});
+ if(approval?.then||approval?.approved!==true||
+    approval.token_hash!==tokenHash||approval.actor_ref!==actorRef||
+    !valid(approval.approval_ref)||!valid(approval.expires_at)||
+    parseDate(approval.expires_at,'approval_expires_at')<=now.getTime())
+   throw Error('session_revocation_approval_required');
  return mutate(storeDir,doc=>{
   const row=doc.sessions.find(x=>x.token_hash===tokenHash);
   if(!row)return {write:false,value:{state:'missing'}};
   if(row.revoked_at)return {write:false,value:{state:'already_revoked'}};
   row.revoked_at=now.toISOString();
-  row.revocation_approval_ref=operatorApproval.approval_ref;
+  row.revocation_approval_ref=approval.approval_ref;
   return {write:true,value:{state:'revoked',session_hash:tokenHash}};
  });
 }
