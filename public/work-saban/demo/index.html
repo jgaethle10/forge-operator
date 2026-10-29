@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Try a real Work Saban browser-only arithmetic example using six synthetic sales rows. No account, uploads, or payments.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/work-saban/demo/">
+<title>Try an example | Work Saban</title>
+<style>
+:root{color-scheme:light;--red:#a4142f;--black:#171717;--line:#e9e5e5}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--black);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--red)}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+main{max-width:840px;padding:0 25px;margin:auto}
+header{border-bottom:1px solid var(--line)}
+header .inner{max-width:840px;margin:auto;padding:22px 25px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+header a{text-decoration:none;font-size:14px;font-weight:800}
+header img{width:34px;height:34px;vertical-align:middle;margin-right:10px}
+small,.muted{color:#626262}
+.eyebrow{color:var(--red);font-weight:800;font-size:11px;letter-spacing:.14em;margin:0 0 20px}
+.hero{padding:75px 0 52px}
+h1{font-size:clamp(48px,8vw,75px);letter-spacing:-.079em;line-height:1.03;margin:0 0 25px}
+h1 span{color:var(--red)}
+.lead{font-size:19px;max-width:650px;color:#4f4f4f;margin:0 0 28px}
+button{border:1px solid var(--red);border-radius:9px;min-height:52px;padding:13px 22px;background:var(--red);color:#fff;font-weight:800;font:800 14px/1.4 system-ui,sans-serif;cursor:pointer}
+button:hover{background:#780e23}button:disabled{opacity:.7;cursor:not-allowed}
+button.secondary{background:#fff;color:var(--red)}
+.note{font-size:12px;color:#646464;margin-top:15px;max-width:580px}
+#output{border-top:1px solid var(--line);padding:28px 0 50px}
+[hidden]{display:none!important}
+.result{border:1px solid #eee1e3;border-radius:15px;padding:30px;background:#fffafb}
+.result .pass{font-size:12px;font-weight:800;color:#187248;letter-spacing:.08em}
+.result h2{font-size:27px;line-height:1.1;letter-spacing:-.05em;margin:14px 0}
+.number{font-size:clamp(33px,5vw,48px);font-weight:850;letter-spacing:-.065em}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:17px}
+th,td{padding:13px 0;border-bottom:1px solid var(--line);text-align:left}
+th:last-child,td:last-child{text-align:right}
+.detail{border-top:1px solid var(--line);margin-top:24px;padding-top:17px}
+summary{cursor:pointer;font-weight:750;font-size:14px}
+#proof{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:#404040;background:#f5f5f4;border-radius:8px;padding:15px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+footer{margin-top:38px;padding:25px 0;border-top:1px solid var(--line);font-size:12px;color:#777}
+#fail{color:#a4142f;font-weight:700}
+@media(max-width:600px){header .inner{padding:17px 19px}main{padding:0 19px}.hero{padding:55px 0 45px}.lead{font-size:17px}.result{padding:22px}button{width:100%}.actions{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style></head>
+<body><header><div class="inner"><a href="../"><img src="../brand/work-saban-mark.svg" alt="">work saban</a><a href="../#pilot">Join the private pilot</a></div></header>
+<main><section class="hero">
+<p class="eyebrow">LIVE BROWSER EXAMPLE / SYNTHETIC DATA</p>
+<h1>See a report <span>come together.</span></h1>
+<p class="lead">Six sample sales rows. One click. A calculated report with a second arithmetic check.</p>
+<button type="button" id="run">Run the example</button>
+<p class="note">This is a genuine calculation in your browser, not a video or a pretend AI team. It does not run the five-worker local Work Saban software, process your files, contact an AI service, or send personal data anywhere.</p>
+<p id="fail" role="alert" hidden></p>
+</section>
+<section id="output" hidden aria-live="polite">
+<div class="result">
+<div class="pass" id="pass">CALCULATION CHECKED</div>
+<h2>Monthly sales report</h2>
+<div class="number" id="total"></div>
+<div class="muted" id="movement"></div>
+<table aria-label="Synthetic example monthly revenue"><thead><tr><th>Month</th><th>Sales</th></tr></thead><tbody id="rows"></tbody></table>
+<div class="actions"><button type="button" id="download" class="secondary">Save example report</button></div>
+<details class="detail"><summary>See how the numbers were checked</summary>
+<p class="muted">Two arithmetic passes over the same six synthetic rows. The source and report digests below identify the local example bytes; they are not proof of an independently hosted service or live AI employees.</p>
+<pre id="proof"></pre></details></div>
+<p class="note">Want to see the full Work Saban vision? <a href="../">Explore the product</a>. This sample is intentionally narrow and fully public.</p>
+</section>
+<footer>Work Saban by Evercraft. Public synthetic example only. No checkout, external account access, or customer upload.</footer>
+</main><script type="module" src="./demo.js"></script></body></html>
