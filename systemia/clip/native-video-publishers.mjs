@@ -111,9 +111,16 @@ export function createInstagramReelPublisherAdapter(config={}){
   return {destination:'instagram-reel',verified:config.verified===true,
     async publish(input){
       const data=basePreflight(config,input,igId);
-      const claimRef=await checkDuplicate(config,igId,input);
-      let containerId=clean(input.resumeContainerId);
-      if(containerId && (!clean(input.resumeReceiptRef)||typeof config.verifyResume!=='function'||await config.verifyResume({containerId,receiptRef:input.resumeReceiptRef,accountId:igId,mediaSha256:input.mediaSha256})!==true)) fail('resume_proof_required');
+      let containerId=clean(input.resumeContainerId),claimRef='';
+      if(containerId){
+        // Resume is a readback of an EXISTING claimed container, not a second publish claim.
+        if(!clean(input.resumeReceiptRef)||typeof config.verifyResume!=='function')fail('resume_proof_required');
+        const proof=await config.verifyResume({containerId,receiptRef:input.resumeReceiptRef,accountId:igId,mediaSha256:input.mediaSha256,campaignKey:clean(input.campaignKey)});
+        if(proof?.approved!==true||!clean(proof.claimRef))fail('resume_proof_required');
+        claimRef=clean(proof.claimRef);
+      }else{
+        claimRef=await checkDuplicate(config,igId,input);
+      }
       if(!containerId){
         const created=await requestGraph(fetchImpl,graphPath(base,version,igId,'media'),token,{
           media_type:'REELS',video_url:data.url,caption:data.caption,share_to_feed:'true',
