@@ -93,10 +93,14 @@ export function createOwnedCommissionedLeaseVerifier({
         return held("commissioned_execution_gate_lease_not_current_or_exact");
 
       permit=await passport.getActionPermitState(binding.permit_id,{at:clock.toISOString()});
+      // Native Passport returns the durable consumption *record* hash,
+      // whereas Execution Gate stores the separate consumption
+      // acknowledgment receipt hash. They must both exist, but those
+      // different receipt types are intentionally not equal.
       if(!permit||permit.consumed!==true||
          permit.grant_active!==true||permit.cancelled!==false||
          permit.expired!==false||
-         !eq(permit.consumption_receipt,passportReceiptRef)||
+         !validSha(permit.consumption_receipt)||
          !eq(permit.actor_ref,binding.actor_ref)||
          !eq(permit.product,binding.passport_product)||
          !eq(permit.scope,binding.scope)||
