@@ -171,11 +171,4 @@ elif [[ "$public_part_status" == 'unreachable' ]]; then
 else
   printf 'findmypart_diagnosis=route_not_yet_proven\n'
 fi
-if command -v systemctl >/dev/null 2>&1; then
-  printf 'fabric_resident_execstart='
-  systemctl show -p ExecStart --value "$FABRIC_SERVICE" 2>/dev/null \
-    | sed -E 's/(API_KEY|TOKEN|SECRET|PASSWORD)=[^ ]+/\1=[redacted]/g' \
-    | cut -c 1-350 || true
-fi
-
 printf 'doctor_mutation_performed=false\n'
