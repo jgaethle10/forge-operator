@@ -69,6 +69,7 @@ h3{font-size:19px;letter-spacing:-.025em;margin:9px 0 8px}
 .faq details{border:1px solid var(--line);border-radius:12px;padding:18px 20px}
 .faq summary{cursor:pointer;font-weight:740}
 .faq details p{font-size:14px;color:var(--muted);margin:12px 0 0;line-height:1.65}
+.part-request{max-width:650px;display:grid;gap:17px;margin-top:25px}.part-request .field{display:grid;gap:6px}.part-request .field label{font-weight:700;font-size:14px}.part-request input:not([type="checkbox"]),.part-request textarea{display:block;box-sizing:border-box;width:100%;font:inherit;font-size:16px;line-height:1.45;color:#151c25;background:#fff;border:1px solid #b9c6d3;border-radius:9px;padding:13px 14px;min-height:49px}.part-request textarea{resize:vertical;min-height:98px}.part-request .permission{display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.6;color:#e3e9f1}.part-request .permission input{margin-top:3px;width:18px;height:18px;flex-shrink:0;accent-color:#f16b27}.part-request button{border:none;cursor:pointer;justify-self:start}.part-request button:disabled{opacity:.67;cursor:wait}.part-request[hidden]{display:none}.request-status{font-size:14px;margin:17px 0 6px;min-height:23px}.request-status[data-state="received"]{color:#a8dbf9;font-weight:750}.request-backup{font-size:13px}.request-backup a{color:#b4dbff;text-decoration:underline}.website-trap{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
 .request{background:var(--ink);color:#fff}
 .request .kicker{color:#84b9ee}
 .request p{color:#c4cbd5;max-width:600px;font-size:16px}
@@ -129,11 +130,24 @@ footer a{color:#e4e9ee}
 <details><summary>Why pay if suppliers give free quotes?</summary><p>If a supplier has the part, use their quote. This service is for cases where the usual sourcing routes have failed and you need a wider, documented investigation.</p></details>
 </div></div></section>
 <section class="request" id="request"><div class="wrap">
-<p class="kicker">Let's get started</p><h2>What's the part you can't find?</h2>
-<p>Send the part number or a quick description and what it belongs to. If you have photos, add them in your email. We'll confirm the right research scope and payment option before you pay.</p>
-<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=FindMyPart%20%7C%20Need%20help%20finding%20a%20part&amp;body=What%20part%20do%20you%20need%3F%0A%0AWhat%20is%20it%20for%20%28make%2Fmodel%29%3F%0A%0AAny%20part%20number%20or%20photos%3F%20%28attach%20photos%20if%20available%29%0A%0A">Tell us about your part <span aria-hidden="true">→</span></a>
-<p class="under-cta">Opens a draft in your email app. No charge or information submission happens on this page.</p>
+<p class="kicker">Start your part search</p>
+<h2>What's the part you can't find?</h2>
+<p>Just tell us what you need, what it's for, and where to reply. We'll review it before discussing any payment.</p>
+<form id="part-request-form" class="part-request" novalidate>
+<div class="field"><label for="part-description">What part do you need?</label>
+<textarea id="part-description" name="part_description" required minlength="10" maxlength="1200" rows="3" placeholder="Tell us what's missing or broken" autocomplete="off"></textarea></div>
+<div class="field"><label for="equipment-context">What's it for?</label>
+<input id="equipment-context" name="equipment_context" required minlength="4" maxlength="240" placeholder="Make, model, machine or vehicle" autocomplete="off"></div>
+<div class="field"><label for="request-email">Your email so we can reply</label>
+<input id="request-email" name="email" type="email" required maxlength="200" placeholder="you@example.com" autocomplete="email"></div>
+<div class="website-trap" aria-hidden="true"><label for="site-trap">Website</label><input id="site-trap" name="website" tabindex="-1" autocomplete="off"></div>
+<label class="permission"><input name="consent" type="checkbox" value="yes" required> I agree to Evercraft using these details to review and reply to my parts request.</label>
+<button class="btn primary" type="submit">Send my part request <span aria-hidden="true">→</span></button>
+</form>
+<p id="part-request-status" class="request-status" role="status" aria-live="polite">No payment needed to send your request.</p>
+<p class="request-backup">Having trouble submitting? <a href="mailto:jessegaethle10@gmail.com?subject=FindMyPart%20%7C%20Part%20request">Send it by email instead</a>.</p>
 </div></section>
 </main>
 <footer><div class="wrap"><span>FindMyPart by Evercraft LLC</span><span>Research, not a claim of stock or confirmed fitment.</span></div></footer>
+<script type="module" src="/findmypart/app.mjs"></script>
 </body></html>
