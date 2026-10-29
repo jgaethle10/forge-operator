@@ -10,6 +10,7 @@ for(const [duration,price] of cases){
   test(`ForensiScope ${duration}s uses published $${price} tier and Evercraft Payments`,()=>{
     const order=prepareForensiScopePaymentIntent({durationSeconds:duration,mediaRightsConfirmed:true});
     assert.equal(order.price_usd,price);
+    assert.equal(order.payment_route.amount,price*100,'canonical amount must be USD cents');
     assert.equal(order.payment_route.commerce_layer,'evercraft_payments');
     assert.equal(order.payment_route.provider_boundary,'raven_nexus');
     assert.equal(order.payment_route.order_truth,'evercraft_payments');
