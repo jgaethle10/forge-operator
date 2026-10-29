@@ -3,6 +3,7 @@
 Directory: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/
 Payment settlement: Systemia Stripe account. Provider-paid receipts require manual reconciliation into Evercraft Payments; automatic synchronization is NOT yet proven for these seven links.
 Checkout success is not proof of payment or fulfillment.
+Buyer-release threshold: a verified human-facing payment-provider page showing the correct exact service and USD price. Do not require a first completed paid order before owner-approved, permissioned marketing of that exact service; never claim revenue or fulfillment from checkout visibility alone.
 Offer payment links below must only be used for the exact product and price listed.
 Customers should agree the scope and delivery date before authorizing the charge.
 
