@@ -9,6 +9,9 @@ test('first-party independent branded partner entry exists with accurate discove
  assert.match(page,/public|Founding partner applications now open/);
  assert.match(page,/\.\/mark\.svg/);
  assert.ok(existsSync(new URL('../public/partners/social-card.svg',import.meta.url)));
+ assert.match(page, /og:image" content="https:\\/\\/jgaethle10\\.github\\.io\\/forge-operator\\/partners\\/social-card\\.png"/);
+ assert.match(page, /og:image:width" content="1200"/);
+ assert.match(page, /og:image:height" content="630"/);
  assert.match(load('public/partners/mark.svg'),/<svg/);
  assert.match(load('public/partners/llms.txt'),/Founding partner expressions of interest only/);
 });
