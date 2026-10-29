@@ -69,6 +69,7 @@ test('one vanished commissioned role is detected even when a protocol is counted
   const f = fixture();
   f.snapshot.role_profiles.pop();
   f.snapshot.role_profiles.push({ id: 'sentinel', name: 'Sentinel', status: 'active' });
+  f.snapshot.lineups[0].role_ids.push('sentinel');
   const r = check(f, independentVerifiers);
   assert.ok(r.holds.includes('previous_agent_role_missing'));
   assert.ok(r.holds.includes('dna_protocol_incorrectly_counted_as_agent'));
