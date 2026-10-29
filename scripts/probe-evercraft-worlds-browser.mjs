@@ -96,6 +96,32 @@ try{
     const change=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(change.objects.length,1,profile.name+': adding tree did not persist');
     await page.locator('[data-command="sky sunset"]').click();
+    // Capture a real, privacy-preserving fragment URL instead of invoking native share UI.
+    await page.evaluate(()=>{Object.defineProperty(navigator,'share',{configurable:true,value:async data=>{window.__worldShare=data;}})});
+    await page.locator('#share').click();
+    const sharedUrl=await page.evaluate(()=>window.__worldShare?.url||null);
+    assert.ok(sharedUrl?.includes('#scene='),profile.name+': share link was not constructed');
+    assert.ok(!sharedUrl.includes('memories'),profile.name+': private agent history leaked');
+    const guest=await context.newPage();
+    const guestErrors=[];guest.on('pageerror',err=>guestErrors.push(String(err.message)));
+    const guestResponse=await guest.goto(sharedUrl,{waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(guestResponse?.status(),200,profile.name+': shared scene path unavailable');
+    await guest.locator('#sharedInvite').waitFor({state:'visible'});
+    const originalLocal=await guest.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1'));
+    await guest.locator('#visitShared').click();
+    const preview=await guest.evaluate(async()=>{
+      const app=await import('/worlds/world-core.mjs');
+      const token=new URLSearchParams(location.hash.slice(1)).get('scene');
+      const {decodeSharedScene}=await import('/worlds/share-scene.mjs');
+      const s=decodeSharedScene(token);
+      return {objects:s.objects.length,sky:s.sky,privateMemories:s.agents.some(a=>a.memories.length)};
+    });
+    assert.equal(preview.objects,1,profile.name+': guest world did not reconstruct');
+    assert.equal(preview.sky,'sunset');
+    assert.equal(preview.privateMemories,false);
+    await guest.close();
+    assert.equal(await page.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1')),originalLocal,profile.name+': visiting shared scene overwrote saved world');
+    assert.deepEqual(guestErrors,[],profile.name+': guest browser exceptions');
     await page.locator('#qualityMode').selectOption('smooth');
     await page.waitForFunction(()=>document.querySelector('#world').width<document.querySelector('#world').clientWidth,null,{timeout:5000});
     const quality=await page.evaluate(()=>({mode:localStorage.getItem('evercraft.worlds.quality.v1'),width:document.querySelector('#world').width,clientWidth:document.querySelector('#world').clientWidth}));

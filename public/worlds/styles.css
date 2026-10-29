@@ -28,3 +28,14 @@
  .editor .formrow button{min-width:78px}
  .editor h2{font-size:24px}
 }
+
+/* World link invitation keeps imported scenes read-only until visitors explicitly save. */
+.share-invite{position:fixed;inset:0;z-index:20;background:#071b22b8;display:grid;place-items:center;padding:20px;backdrop-filter:blur(12px)}
+.share-invite-card{width:min(440px,100%);background:#f8f4e9;color:#28443e;border-radius:22px;padding:32px;box-shadow:0 25px 90px #0017}
+.share-invite-card .smallcap{color:#758a7d}
+.share-invite-card h2{font:400 35px/1.1 Georgia,serif;letter-spacing:-.045em;margin:16px 0}
+.share-invite-card p{font-size:13px;line-height:1.8;color:#60736a}
+.share-invite-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.share-invite-actions .primary{margin:0}
+.share-invite-actions .secondary{border:1px solid #cad6c9;background:transparent;color:#28504b;border-radius:9px;padding:17px;font-size:12px;font-weight:700;min-height:48px}
+@media(max-width:700px){.share-invite-card{padding:25px}.share-invite-card h2{font-size:29px}.share-invite-actions{flex-direction:column;align-items:stretch}.share-invite-actions button{width:100%}}
