@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import {leaseNext, complete, fail, saveWorkState, loadWorkState} from './work-state.mjs';
+import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
 
 const hash = value => 'sha256:' + createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
@@ -31,9 +32,10 @@ function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,
     throw new Error('fenced_scheduler_candidate_contract_required');
   }
   if (Number(physicalWorkers) !== 1) throw new Error('fenced_scheduler_requires_one_local_worker');
-  if (typeof statePath !== 'string' || !statePath.trim() || !journal ||
-      typeof journal.submit !== 'function' || typeof journal.acquire !== 'function' ||
-      typeof journal.acknowledge !== 'function' || typeof journal.inspect !== 'function') {
+  if (typeof statePath !== 'string' || !statePath.trim() ||
+      !(journal instanceof SabanFencedAckJournal) ||
+      typeof journal.secret !== 'string' || journal.secret.length < 16 ||
+      journal.maxAttempts !== 1) {
     throw new Error('fenced_scheduler_durable_state_and_journal_required');
   }
   if (Object.keys(state.jobs).length === 0 || Object.keys(state.jobs).length > 32) {
