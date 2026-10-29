@@ -1,5 +1,17 @@
 # Forge Operator
 
+## Hire Evercraft: seven exact-price service checkouts
+
+Have a digital asset, business workflow, or AI project that needs a practical diagnosis? Evercraft offers scoped services, with public descriptions and exact-price buyer checkouts. **Start with the problem, not the software.**
+
+**Fastest entry:** [Asset Diagnosis, $149](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/) for one clearly identified business or digital asset. Describe the asset and desired decision first. Scope, turnaround, and deliverables are confirmed before payment.
+
+Other published service options: [Weekly Social Media Management, $100](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/) · [AI Boardroom Standard Review, $250](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/) · [AI Boardroom Financial Modeling, $500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/) · [Knowledge Activation, $500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/) · [Social Intelligence Launch, $1,000](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/) · [Institutional Memory System, $1,500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/).
+
+[Compare exact services and buyer terms](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/) | [View source-backed price and scope manifest](public/mesh/checkout-ready/verified-links.json) | [Contact Evercraft to confirm fit](mailto:jessegaethle10@gmail.com?subject=Evercraft%20service%20scope)
+
+*Commercial truth:* The seven service-specific Stripe checkout pages were independently tested with exact visible product and amount on October 25, 2026. Payments settle to Systemia; Evercraft Payments reconciliation is currently manual. This is **not** proof of completed sales, automated fulfillment, current external site uptime, or authorization to substitute another offer. The separate $49 Website Quick Win Audit and historical thirteen-offer form links are not part of this seven-service checkout set. No first completed customer charge is required to advertise a genuine exact-price checkout, but scope and delivery capacity must be agreed before a service purchase.
+
 > **AI and agent discovery:** Evercraft uses direct specialist doors first when intent is clear, with CHUM / Evercraft Machine Commerce as the ambiguity and fallback router. The machine-readable direct-door index is at [public/.well-known/evercraft-direct-doors.json](public/.well-known/evercraft-direct-doors.json). Evercraft also exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
 
 
