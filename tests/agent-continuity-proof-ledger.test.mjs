@@ -86,6 +86,48 @@ test("store loads only private owner-maintained preflight and roster files",asyn
     await assert.rejects(()=>f.store.readEvidence({request:{request_id:"unknown"}}));
   }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
+test("durable worker claim prevents replay before compute, including after store restart",async()=>{
+  const f=setup();
+  try{
+    const claim={
+      request:{request_id:"first-owned-mission"},
+      reviewerId:"commercial",
+      agentId:keyId,
+      preflight:{
+        allowed:true,
+        preflight_id:"owned-preflight-100",
+        registry_snapshot_hash:"sha256:"+"f".repeat(64),
+        reviewer_assignments:{commercial:keyId},
+      },
+    };
+    assert.equal(await f.store.claimWorkerDispatch(claim),true);
+    const reopened=createOwnedCommissionedWorkerProofStore({
+      evidenceDir:f.root,trustKeysFile:path.join(f.root,"trust.json"),now:()=>now,
+    });
+    assert.equal(await reopened.claimWorkerDispatch(claim),false);
+    assert.equal(fs.readdirSync(path.join(f.root,"claimed-worker")).length,1);
+    assert.equal(await reopened.claimWorkerDispatch({
+      ...claim,reviewerId:"risk",
+    }),false);
+  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+test("invalid preflight assignment or DNA protocols cannot reserve worker lane",async()=>{
+  const f=setup();
+  try{
+    assert.equal(await f.store.claimWorkerDispatch({
+      request:{request_id:"first-owned-mission"},
+      reviewerId:"commercial",
+      agentId:"sentinel",
+      preflight:{
+        allowed:true,preflight_id:"owned-preflight-100",
+        registry_snapshot_hash:"sha256:"+"f".repeat(64),
+        reviewer_assignments:{commercial:"other-worker"},
+      },
+    }),false);
+    assert.equal(fs.readdirSync(path.join(f.root,"claimed-worker")).length,0);
+  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
 test("store refuses world-readable trust keys at setup",()=>{
   const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-worker-proof-permission-"));
   try{
