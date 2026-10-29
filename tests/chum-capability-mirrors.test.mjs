@@ -7,12 +7,27 @@ const machine=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-c
 const authorizedOffers=withOwnedNativeWorkflowXray(machine.offers||[]);
 const capabilities=JSON.parse(fs.readFileSync('public/chum/capabilities.json','utf8'));
 const sellNow=JSON.parse(fs.readFileSync('public/chum/sell-now.json','utf8'));
+// Boardroom's free explanatory index is intentionally discoverable, not a native
+// machine-commerce offer. Permit only this explicitly known supplemental mirror.
+const discoveryOnlySupplementIds=new Set(['ai-boardroom-decision-review-v1']);
+const validateDiscoveryOnlySupplement=(row)=>{
+  assert.ok(discoveryOnlySupplementIds.has(row.public_id),row.public_id);
+  assert.equal(row.commercial_state,'discovery_only',row.public_id);
+  assert.equal(row.machine_state,'source_discovery_only',row.public_id);
+  assert.equal(row.entry_paid_offer,null,row.public_id);
+  assert.equal(row.start_url,null,row.public_id);
+};
 
 test('every canonical or explicitly authorized native offer has one capability mirror',()=>{
   const expected=authorizedOffers.filter(x=>x?.public_id);
-  assert.equal(capabilities.count,expected.length);
-  assert.equal(capabilities.capabilities.length,expected.length);
+  const expectedIds=new Set(expected.map(x=>x.public_id));
+  const supplements=capabilities.capabilities.filter(x=>!expectedIds.has(x.public_id));
+  assert.deepEqual(supplements.map(x=>x.public_id).sort(),[...discoveryOnlySupplementIds].sort());
+  for(const row of supplements) validateDiscoveryOnlySupplement(row);
+  assert.equal(capabilities.count,expected.length+supplements.length);
+  assert.equal(capabilities.capabilities.length,expected.length+supplements.length);
   const got=new Set(capabilities.capabilities.map(x=>x.public_id));
+  assert.equal(got.size,capabilities.capabilities.length,'duplicate capability mirror');
   for(const offer of expected) assert.equal(got.has(offer.public_id),true,offer.public_id);
 });
 
@@ -42,7 +57,7 @@ test('mirror generation never upgrades commercial or machine state',()=>{
   const live=new Map(authorizedOffers.map(x=>[x.public_id,x]));
   for(const row of capabilities.capabilities){
     const source=live.get(row.public_id);
-    assert.ok(source,row.public_id);
+    if(!source){validateDiscoveryOnlySupplement(row);continue;}
     assert.equal(row.commercial_state,source.commercial_state,row.public_id);
     assert.equal(row.machine_state,source.machine_state,row.public_id);
   }
