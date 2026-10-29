@@ -7,6 +7,8 @@ on:
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
+      - "systemia/clip/native-video-publishers.mjs"
+      - "systemia/clip/native-video-publishers.test.mjs"
       - "systemia/clip/facebook-page-photo-publisher.mjs"
       - "systemia/clip/space-dudz-facebook-publish.mjs"
       - "systemia/clip/space-dudz-publish-authorize.mjs"
@@ -46,6 +48,8 @@ on:
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
+      - "systemia/clip/native-video-publishers.mjs"
+      - "systemia/clip/native-video-publishers.test.mjs"
       - "systemia/clip/facebook-page-photo-publisher.mjs"
       - "systemia/clip/space-dudz-facebook-publish.mjs"
       - "systemia/clip/space-dudz-publish-authorize.mjs"
@@ -96,6 +100,7 @@ jobs:
           node --test \
             systemia/clip/social-publisher-runtime.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs \
+            systemia/clip/native-video-publishers.test.mjs \
             systemia/clip/space-dudz-resident.test.mjs \
             systemia/clip/facebook-page-credential-resolver.test.mjs \
             systemia/evercraft-home/provider-credentials.test.mjs \
