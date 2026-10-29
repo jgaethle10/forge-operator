@@ -67,7 +67,7 @@ function preflightPayload(req = request()) {
     work_key: req.work_key,
     preflight_id: "owned-preflight-once-101",
     role_ids: roles,
-    reviewer_assignments: assigned,
+    reviewer_assignments: { ...assigned },
     registry_snapshot_hash: "sha256:" + "a".repeat(64),
     passport_receipt_ref: "passport:test-101",
     execution_gate_receipt_ref: "execution-gate:test-101",
