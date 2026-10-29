@@ -245,6 +245,7 @@ export async function renderFoundryPianoOfflineBus({voices,tracks,audioBeds=[],s
       reviewed_source_count:voices.length+synthVoices.length+drumVoices.length+audioBeds.length,
       render_source_limit:FOUNDRY_REVIEW_BUDGET.combined_sources,
       rendered_frames:frames,
+      audition_origin_time:earliest,
       performed_bus_automation_events:automationPlan?.recorded_events_in_window??0,
       performed_bus_automation_applied:Boolean(automationPlan),
       later_bus_automation_excluded:automationPlan?.later_recorded_events_excluded??0,
