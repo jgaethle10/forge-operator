@@ -4,6 +4,8 @@ on:
     paths:
       - 'public/work-saban/**'
       - 'tests/work-saban-pilot-door.test.mjs'
+      - 'tests/work-saban-launch-system.test.mjs'
+      - 'docs/commercial/work-saban-launch-system-20261028.md'
       - '.github/workflows/work-saban-pilot-door.yml'
   push:
     branches: [main]
@@ -23,4 +25,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify founding pilot page and non-payment boundary
-        run: node --test tests/work-saban-pilot-door.test.mjs
+        run: node --test tests/work-saban-pilot-door.test.mjs tests/work-saban-launch-system.test.mjs
