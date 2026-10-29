@@ -46,3 +46,32 @@ The Lab's public fixture replay and fresh-process CI remain independently owned 
 - Next: have Chandra independently run the candidate against PR #30 in an isolated host, compare output/evidence verdicts, then agree on an actual Systemia/Saban decision entry point and authorized model/token budget. No unrestricted access or paid scope is assumed.
 
 Related tracking: [Evercraft issue #1705](https://github.com/jgaethle10/forge-operator/issues/1705).
+
+## Local Raven model run on Node002 / HP NextGen (opt-in)
+
+Node002 has a known Ubuntu/WSL2 + Node.js environment, but its last-confirmed agent configuration remains **shadow / remote_jobs_enabled=false**. This is a *local user-initiated* test; it does not enroll compute, change running services, or authorize remote jobs.
+
+1. From an HP Ubuntu/WSL terminal, clone this **draft branch into a separate folder**, not the actively running Evercraft installation:
+
+   ```bash
+   git clone --depth 1 --single-branch --branch research/eo001-independent-workflow-candidate-20261029 \
+     https://github.com/jgaethle10/forge-operator.git ~/evercraft-eo001-source
+   cd ~/evercraft-eo001-source
+   bash integrations/ai-evaluation-lab/run-on-nextgen.sh --probe
+   ```
+
+   The probe is local metadata-only. It reports which Ollama models, if any, are reachable at `127.0.0.1:11434`. It does **not** download models, install services or run inference. No model installation or inference service is assumed.
+
+2. Once an existing local model is confirmed, run:
+
+   ```bash
+   bash integrations/ai-evaluation-lab/run-on-nextgen.sh --model EXACT_INSTALLED_MODEL_ID
+   ```
+
+   The script checks model readiness with Raven's existing `createInferenceEngine({provider:'ollama'})`, clones the externally maintained Lab source at pinned commit `2b97c5b5bd99a28e515b1da320034d495048ee9e`, installs its isolated Python signing dependency in a dedicated `.venv`, then runs four synthetic faults. All results remain under `~/.local/state/evercraft/eo001-laptop-isolated/runs/`, including one local Raven inference-receipt JSON per completed model call. No upstream payment execution is possible. **Review external Lab code before executing on any machine containing sensitive credentials**; its runner is not a hostile-code sandbox.
+
+3. The Lab runner permits at most 15 seconds per decision and starts a fresh candidate process for each step. CPU-based local inference on a small laptop can time out or fail, particularly before warmup. Record those as actual failures rather than inventing success. Do not silently switch to a paid hosted inference provider.
+
+**What this would prove:** A real local model produced bounded decisions on the laptop, with Evercraft's receipt-validation guard and Lab synthetic fault controls. This is *not* live Saban remote dispatch, a production payout, secure hostile-code isolation or an automatic Systemia recovery authorization. Lab `candidate_kind` remains `external_unclassified` unless independent model provenance is reviewed; the local Raven inference receipts help establish that provenance.
+
+**What to do if the probe finds no model:** Stop, retain the inventory result, and make an explicit resource/model choice. Do not use the Node002 agent's shadow-state bypass or a random remote API.
