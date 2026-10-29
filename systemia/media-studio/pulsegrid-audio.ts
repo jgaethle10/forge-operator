@@ -4,6 +4,8 @@ import {schedulePulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import {schedulePulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import type {PulseGridCapturedBusStep} from './pulsegrid-bus-automation.mjs';
 import {FOUNDRY_REVIEW_BUDGET} from './instrument-foundry-review-budget.mjs';
+import {inspectPulseGridPerformedStepCoverage} from './pulsegrid-performance-coverage.mjs';
+import type {PulseGridPerformedTransportStep} from './pulsegrid-performance-coverage.mjs';
 import type {PulseGridDrumVoice} from './pulsegrid-drum-voice.mjs';
 import type {PulseGridSynthVoice} from './pulsegrid-synth-voice.mjs';
 import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
@@ -91,6 +93,8 @@ export class PulseGridAudioEngine {
   private drumVoiceOverflow=false;
   private readonly capturedBusAutomation:PulseGridCapturedBusStep[]=[];
   private busAutomationOverflow=false;
+  private readonly capturedTransportSteps:PulseGridPerformedTransportStep[]=[];
+  private transportStepOverflow=false;
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
   private readonly lookaheadMs = 25;
@@ -143,6 +147,8 @@ export class PulseGridAudioEngine {
     this.drumVoiceOverflow=false;
     this.capturedBusAutomation.length=0;
     this.busAutomationOverflow=false;
+    this.capturedTransportSteps.length=0;
+    this.transportStepOverflow=false;
     this.emitStatus();
   }
 
@@ -180,7 +186,7 @@ export class PulseGridAudioEngine {
       this.capturedSynthVoices.length+this.capturedDrumVoices.length;
     if(!voices.length||sourceCount>FOUNDRY_REVIEW_BUDGET.combined_sources||
        this.dryPianoVoiceOverflow||this.audioBedOverflow||this.synthVoiceOverflow||
-       this.drumVoiceOverflow||this.busAutomationOverflow||
+       this.drumVoiceOverflow||this.busAutomationOverflow||this.transportStepOverflow||
        !this.pianoPolyphony.snapshot().observation_complete||
        this.pianoPolyphony.snapshot().observed_voices!==voices.length)
       return unavailable('No complete bounded authorized sampled-piano phrase is available.');
@@ -235,19 +241,23 @@ export class PulseGridAudioEngine {
       return unavailable('Audio authorization or playback state changed during the offline review.');
     const omittedTrackIds=this.session.tracks.filter(t=>
       !t.muted&&!snapshots.has(t.id)).map(t=>t.id);
-    const stepTimes=this.capturedBusAutomation.map(e=>e.time);
-    const bpm=this.session.transport.bpm;
-    // Conservative count of the observed, actually SCHEDULED transport
-    // horizon, NOT the length of the OfflineAudioContext output buffer.
-    const observed=stepTimes.length>0&&Number.isFinite(bpm)&&bpm>0
-      ?Math.max(...stepTimes)-Math.min(...stepTimes)+60/bpm/4:0;
     const requested=options.window_sec??.8;
+    const proof=inspectPulseGridPerformedStepCoverage({
+      events:this.capturedTransportSteps,
+      origin:rendered.audition_origin_time??-1,
+      window_sec:requested,
+    });
     return {...rendered,
-      complete:rendered.complete&&observed>=requested-1e-4,
+      complete:rendered.complete&&proof.status==='verified_scheduled_step_contiguity'&&
+        proof.performance_window_complete,
       omitted_track_ids:omittedTrackIds,
       included_track_ids:Array.from(snapshots.keys()),
-      performance_coverage_sec:Number(observed.toFixed(3)),
-      performance_window_complete:observed>=requested-1e-4};
+      performance_coverage_sec:proof.performance_coverage_sec,
+      performance_window_complete:proof.performance_window_complete,
+      performed_step_count:proof.performed_step_count,
+      performance_gap_count:proof.performance_gap_count,
+      first_gap_at_sec:proof.first_gap_at_sec,
+      performance_evidence:proof.evidence};
   }
 
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
@@ -336,6 +346,8 @@ export class PulseGridAudioEngine {
     this.drumVoiceOverflow=false;
     this.capturedBusAutomation.length=0;
     this.busAutomationOverflow=false;
+    this.capturedTransportSteps.length=0;
+    this.transportStepOverflow=false;
     const workletReady=await this.ensureWorkletClock();
     if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
@@ -666,6 +678,16 @@ export class PulseGridAudioEngine {
 
   private scheduleStep(globalStep: number, time: number) {
     if (!this.context || !this.master || !this.session) return;
+    // One receipt per scheduler tick, BEFORE per-track automation. Capturing
+    // track buses alone can hide skipped steps or overstate min/max coverage.
+    if(this.capturedTransportSteps.length<FOUNDRY_REVIEW_BUDGET.automation_events&&
+       Number.isInteger(globalStep)&&globalStep>=0&&
+       Number.isFinite(time)&&time>=0){
+      this.capturedTransportSteps.push({
+        step:globalStep%this.loopSteps(),loop_steps:this.loopSteps(),
+        time,duration:this.stepDuration(globalStep),
+      });
+    }else this.transportStepOverflow=true;
     this.ensureTrackBuses();
     const anySolo = this.session.tracks.some((track) => track.solo);
 
