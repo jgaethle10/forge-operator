@@ -1,5 +1,6 @@
 import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,canWalk} from './world-core.mjs';
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
+import {PORTAL,portalEffect} from './portal-visual.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
 const gl=canvas.getContext('webgl2',{antialias:false,alpha:false,powerPreference:'high-performance'});
 if(!gl){$('intro').innerHTML='<h1>WebGL 2 is needed.</h1><p>Try a current version of Chrome, Safari, Firefox or Edge with graphics enabled.</p>';throw Error('WebGL2 unavailable');}
@@ -69,7 +70,7 @@ for(let i=0;i<60;i++){const x=(random()-.5)*34,z=(random()-.5)*34;if(x>-7&&x<.8&
 // Little faraway destination beyond portal.
 box(13,.15,9.5,6,.25,6,'#d7c4a6');box(13,1.3,12,5.5,2.6,.15,'#e4d5b7');box(13,2.8,9.5,6,.16,6,'#8d9a82');box(13,.6,10,1.4,.9,.8,'#92765d');
 // Portal pedestal, permanent glowy portal ring drawn dynamically.
-tube(3,.22,-10.2,3,.45,2,'#b9a98e');box(3,2.5,-10.45,2.9,5,.17,'#6b817c');
+tube(PORTAL.x,.22,PORTAL.z,2.6,.45,1.7,'#b9a98e');box(PORTAL.x,PORTAL.y,-10.45,PORTAL.frameWidth,PORTAL.frameHeight,.15,'#6b817c');
 // Static mesh transforms/colors are uploaded once as instance attributes, never repeated each frame.
 const opaqueGroups=new Map();
 for(const d of staticDraw){if(d.alpha!==1)continue;const group=opaqueGroups.get(d.kind)||[];group.push(d);opaqueGroups.set(d.kind,group);}
@@ -143,7 +144,12 @@ function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInst
  draw(colored('cylinder',7,.146+Math.sin(elapsed*1.4)*.014,-5,7.6,.075,6.3,'#80cacc',0,.84));
  for(let i=0;i<3;i++){const x=-1.38+i*.45,z=-4.75+Math.sin(elapsed*1.5+i)*.19;draw(colored('sphere',x,1.3+Math.sin(elapsed*2+i)*.12,z,.25,.16,.12,['#f6bf85','#edd7a0','#dd9ba9'][i]));draw(colored('sphere',x-.12,1.32+Math.sin(elapsed*2+i)*.12,z-.1,.045,.046,.038,'#333e46'));}
  for(const d of staticDraw){if(d.alpha<1)drawStyled(d);}
- const glow=.87+Math.sin(elapsed*2.6)*.12;draw(colored('ring',3,2.45,-10.23,3.8*glow,4.65*glow,1,'#d0b3ee'));draw(colored('ring',3,2.45,-10.15,3.3,4.1,1,'#97d5c9'));
+ const portalDistance=Math.hypot(camera.x-PORTAL.x,camera.z-PORTAL.z);
+ const portalGlow=portalEffect(portalDistance,elapsed);
+ if(portalGlow.opacity>.01){
+  drawStyled(colored('ring',PORTAL.x,PORTAL.y,-10.23,PORTAL.outerX*portalGlow.pulse,PORTAL.outerY*portalGlow.pulse,1,'#d0b3ee',0,portalGlow.opacity));
+  drawStyled(colored('ring',PORTAL.x,PORTAL.y,-10.15,PORTAL.innerX,PORTAL.innerY,1,'#97d5c9',0,Math.min(1,portalGlow.opacity+.06)));
+ }
  renderAgents=stepAgents(state,dt,elapsed);for(let i=0;i<renderAgents.length;i++)agentDraw(renderAgents[i],i);
  for(const o of state.objects)for(const d of extra(o.kind,o.x,o.z))draw(d);
  if(started){const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
