@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/saban/fenced-ack-journal*'
       - 'systemia/saban/fenced-passport-review*'
+      - 'systemia/saban/fenced-local-scheduler*'
+      - 'systemia/saban/scheduler.mjs'
       - '.github/workflows/saban-fenced-ack-proof.yml'
   push:
     branches: [main]
@@ -33,3 +35,5 @@ jobs:
         run: node --test systemia/saban/fenced-ack-journal.test.mjs
       - name: Prove consumed Passport permits fence exact retry authority
         run: node --test systemia/saban/fenced-passport-review.test.mjs
+      - name: Run real Saban scheduler through strict local fenced candidate and crash windows
+        run: node --test systemia/saban/fenced-local-scheduler.test.mjs
