@@ -11,13 +11,41 @@ MODEL=""
 if [[ "${1:-}" == "--probe" ]]; then
   command -v node >/dev/null || { echo 'Missing node (Node 22+ required)' >&2; exit 2; }
   command -v curl >/dev/null || { echo 'Missing curl for local-only metadata probe' >&2; exit 2; }
-  echo 'Raven local inference probe (no prompts, no network beyond loopback):'
-  if ! curl -fsS --max-time 4 http://127.0.0.1:11434/api/tags | python3 -c 'import json,sys; v=json.load(sys.stdin); print(json.dumps({"models":[x.get("name") for x in v.get("models",[])]},indent=2))'; then
-    echo 'No reachable local Ollama model inventory in this Ubuntu/WSL session.' >&2
-    echo 'Do not turn on remote jobs. Use the existing Raven bootstrap procedure only after reviewing the local model choice.' >&2
+  command -v python3 >/dev/null || { echo 'Missing Python 3 for local-only JSON parsing' >&2; exit 2; }
+  echo 'Evercraft Raven local inference diagnostics (no prompts or installation):'
+  echo "Node: $(node --version)"
+  echo "Python: $(python3 --version 2>&1)"
+  if grep -qi microsoft /proc/sys/kernel/osrelease 2>/dev/null; then
+    echo 'Runtime: WSL Linux (Windows-hosted Ollama may use a different network namespace)'
+  else
+    echo 'Runtime: Linux'
+  fi
+  if command -v ollama >/dev/null 2>&1; then
+    echo "Linux Ollama CLI: $(command -v ollama)"
+  else
+    echo 'Linux Ollama CLI: not found in WSL PATH'
+  fi
+  if command -v powershell.exe >/dev/null 2>&1; then
+    windows_ollama="$(powershell.exe -NoLogo -NoProfile -NonInteractive -Command '$o = Get-Command ollama.exe -ErrorAction SilentlyContinue; if ($o) { "available" } else { "not-in-Windows-PATH" }' 2>/dev/null | tr -d '\r' | head -n 1 || true)"
+    echo "Windows Ollama CLI: ${windows_ollama:-not-determined}"
+  fi
+  awk '/MemTotal:/ {printf "WSL memory limit visible: %.1f GiB\n", $2 / 1048576}' /proc/meminfo
+  if command -v df >/dev/null 2>&1; then df -h "$HOME" | awk 'NR==2 {print "Available disk space on HOME:", $4}'; fi
+  # Never pipe an HTTP failure into JSON parsing. Connection-refused is not proof
+  # that Ollama or a compatible model is uninstalled on either operating system.
+  if inventory="$(curl -fsS --max-time 4 http://127.0.0.1:11434/api/tags 2>/dev/null)"; then
+    if printf '%s' "$inventory" | python3 -c 'import json,sys; v=json.load(sys.stdin); assert isinstance(v.get("models"),list); print("Reachable local model inventory:"); print(json.dumps({"models":[x.get("name") for x in v["models"]]},indent=2))'; then
+      exit 0
+    fi
+    echo 'Local service responded, but model inventory was invalid JSON.' >&2
     exit 2
   fi
-  exit 0
+  echo 'No Ollama HTTP service is listening on 127.0.0.1:11434 inside this WSL session.' >&2
+  echo 'This is a missing or unreachable LOCAL SERVICE, not evidence that no model is installed.' >&2
+  echo 'If the Linux Ollama CLI is installed, start its server locally and re-run --probe.' >&2
+  echo 'If only the Windows Ollama CLI exists, WSL NAT/mirrored network settings may affect localhost reachability.' >&2
+  echo 'Do not change Node002 remote_jobs_enabled or expose a model listener on the LAN.' >&2
+  exit 2
 fi
 if [[ "${1:-}" == "--model" ]]; then MODEL="${2:-}"; fi
 if [[ -z "$MODEL" || ! "$MODEL" =~ ^[A-Za-z0-9_.:/-]+$ ]]; then
