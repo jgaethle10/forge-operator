@@ -172,3 +172,36 @@ exporter, not evidence that exporter is already deployed. A synthetic fixture
 or handwritten registry file cannot substitute for the real source receipt and
 the independently controlled signer. The live producer, key custody, source
 receipt validation and field observation remain release blockers under #1707.
+
+## Per-worker execution attestation
+
+A commissioned reviewer is not established merely by an authenticated roster,
+a signed preflight, a model prompt that names a role, or an inference-provider
+receipt. The Raven completion path now requires one independently signed
+`worker_execution` envelope **per reviewer** before synthesis. The envelope
+must be signed by that commissioned role's pinned Ed25519 worker key, with its
+own distinct public key, and bind:
+
+- Immutable `agent_id`, exact reviewer lane, request ID, mission and work keys
+- The claimed preflight ID and the immutable signed-roster digest
+- The exact inference call ID, provider receipt and SHA-256 of returned text
+- A completed Evercraft-owned commissioned-worker runtime class
+- Nonempty worker run receipt reference and worker instance ID
+
+The owned runtime reads these at
+`<evidence-dir>/worker-execution/<sha256(request_id + ":" + reviewer_id)>.json`.
+Private `trustKeysFile.worker_execution` maps role ID to its own pinned Ed25519
+public key. Worker keys must differ from each other and the registry/dispatch
+signing keys. No operator public signing keys or signed evidence can be supplied
+by the inference request itself.
+
+**Fail-closed behavior:** missing or mismatched independently authenticated
+worker receipt holds the commissioned team before synthesis; fewer than all
+required reviewer receipts cannot claim completed. Even successfully verified
+participants do not prove that all original 21 or 22 roles are active.
+
+**Runtime supply boundary:** this PR adds the *consumer and verifier*; it does
+not create real worker private keys, launch the commissioned specialists, or
+operate the separate trusted receipt writer. That must come from authenticated
+owned compute under pre-existing Passport/Execution Gate authority, with
+separate code-signing and runtime deployment review. No Base44 dependency.
