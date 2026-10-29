@@ -17,6 +17,7 @@ $('run').addEventListener('click',async()=>{
   $('run').disabled=true;
   $('run').textContent='Checking example…';
   $('output').hidden=true;$('fail').hidden=true;
+  $('save-status').hidden=true;$('copy-fallback').hidden=true;
   try {
     const response=await fetch('../example-sales.csv',{method:'GET',credentials:'omit',cache:'no-store'});
     if(!response.ok||response.redirected)throw new Error('The public example dataset is unavailable.');
@@ -39,12 +40,41 @@ $('run').addEventListener('click',async()=>{
       +'AI/registered workers: NOT USED\n'
       +'Customer data uploaded: NONE';
     $('output').hidden=false;
+    // In a phone browser, a result below the hero should never require hunting or extra scrolling.
+    requestAnimationFrame(()=>{
+      const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+      $('output').scrollIntoView({block:'start',behavior:reduced?'auto':'smooth'});
+    });
+    const status=message=>{
+      $('save-status').textContent=message;
+      $('save-status').hidden=false;
+    };
     $('download').onclick=()=>{
-      const blob=new Blob([report],{type:'text/markdown;charset=utf-8'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=url;a.download='work-saban-synthetic-example.md';
-      document.body.append(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      try{
+        const blob=new Blob([report],{type:'text/markdown;charset=utf-8'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');a.href=url;a.download='work-saban-synthetic-example.md';
+        document.body.append(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+        // An in-app browser may ignore downloads; never claim the file was saved.
+        status('Download requested. If nothing happens on your phone, tap Copy report.');
+      }catch{
+        status('This browser did not start the download. Tap Copy report instead.');
+      }
+    };
+    $('copy').onclick=async()=>{
+      try{
+        if(!navigator.clipboard?.writeText)throw new Error('clipboard_unavailable');
+        await navigator.clipboard.writeText(report);
+        $('copy-fallback').hidden=true;
+        status('Report copied. Paste it wherever you like.');
+      }catch{
+        $('report-text').value=report;
+        $('copy-fallback').hidden=false;
+        $('report-text').focus();
+        $('report-text').select();
+        status('Clipboard access is unavailable here. The report text is selected below for manual copying.');
+      }
     };
   } catch(err){
     $('fail').textContent=err?.message||'The example could not be checked.';

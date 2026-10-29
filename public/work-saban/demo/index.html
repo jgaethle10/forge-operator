@@ -38,6 +38,10 @@ th:last-child,td:last-child{text-align:right}
 summary{cursor:pointer;font-weight:750;font-size:14px}
 #proof{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:#404040;background:#f5f5f4;border-radius:8px;padding:15px}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.actions button{flex:1 1 170px}
+#save-status{font-weight:750;color:#71304a;margin-top:13px}
+#copy-fallback textarea{width:100%;min-height:150px;resize:vertical;border:1px solid #d9d2d3;border-radius:8px;padding:12px;background:#fff;color:#171717;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+#output{scroll-margin-top:18px}
 footer{margin-top:38px;padding:25px 0;border-top:1px solid var(--line);font-size:12px;color:#777}
 #fail{color:#a4142f;font-weight:700}
 @media(max-width:600px){header .inner{padding:17px 19px}main{padding:0 19px}.hero{padding:55px 0 45px}.lead{font-size:17px}.result{padding:22px}button{width:100%}.actions{flex-direction:column}}
@@ -59,7 +63,9 @@ footer{margin-top:38px;padding:25px 0;border-top:1px solid var(--line);font-size
 <div class="number" id="total"></div>
 <div class="muted" id="movement"></div>
 <table aria-label="Synthetic example monthly revenue"><thead><tr><th>Month</th><th>Sales</th></tr></thead><tbody id="rows"></tbody></table>
-<div class="actions"><button type="button" id="download" class="secondary">Save example report</button></div>
+<div class="actions"><button type="button" id="download" class="secondary">Save example report</button><button type="button" id="copy" class="secondary">Copy report</button></div>
+<p id="save-status" class="note" role="status" aria-live="polite" hidden></p>
+<div id="copy-fallback" hidden><p class="note">If copying is blocked by your browser, select the report text below and copy it manually.</p><textarea id="report-text" readonly aria-label="Select and copy the example report"></textarea></div>
 <details class="detail"><summary>See how the numbers were checked</summary>
 <p class="muted">Two arithmetic passes over the same six synthetic rows. The source and report digests below identify the local example bytes; they are not proof of an independently hosted service or live AI employees.</p>
 <pre id="proof"></pre></details></div>
