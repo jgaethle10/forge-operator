@@ -5,6 +5,8 @@ on:
     paths:
       - 'public/mesh/ai-boardroom/**'
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/chum/build-capability-mirror.mjs'
+      - 'tests/chum-boardroom-capability.test.mjs'
       - 'tests/fabric-boardroom-discovery.test.mjs'
       - 'public/.well-known/evercraft-products.json'
       - 'tests/boardroom-landing.test.mjs'
@@ -15,6 +17,8 @@ on:
     paths:
       - 'public/mesh/ai-boardroom/**'
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/chum/build-capability-mirror.mjs'
+      - 'tests/chum-boardroom-capability.test.mjs'
       - 'tests/fabric-boardroom-discovery.test.mjs'
       - 'public/.well-known/evercraft-products.json'
       - 'tests/boardroom-landing.test.mjs'
@@ -34,7 +38,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test deterministic comparison and strict input limits
-        run: node --test tests/fabric-boardroom-discovery.test.mjs tests/boardroom-guest-pass.test.mjs tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs tests/boardroom-landing.test.mjs
+        run: node --test tests/chum-boardroom-capability.test.mjs tests/fabric-boardroom-discovery.test.mjs tests/boardroom-guest-pass.test.mjs tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs tests/boardroom-landing.test.mjs
       - name: Verify no remote analytics or model calls in free preview
         run: |
           node --input-type=module <<'NODE'
