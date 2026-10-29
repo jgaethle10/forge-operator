@@ -83,7 +83,7 @@ export function createCommissionedTeamGate({
   now = () => new Date(),
 } = {}) {
   return {
-    async preflight(request) {
+    async preflight(request, { reviewerIds = [] } = {}) {
       if (typeof readPreflight !== "function" || typeof consumeNonce !== "function")
         return { allowed: false, reason: "commissioned_attestation_source_not_configured" };
       let evidence;
@@ -102,6 +102,15 @@ export function createCommissionedTeamGate({
           !nonempty(p.registry_snapshot_hash)) {
         return { allowed: false, reason: "commissioned_preflight_scope_or_dna_invalid" };
       }
+      const map = p.reviewer_assignments;
+      const ids = list(reviewerIds).map(norm);
+      const mapped = ids.map((id) => norm(map?.[id]));
+      if (!ids.length || new Set(ids).size !== ids.length ||
+          mapped.some((id) => !id || !p.role_ids.map(norm).includes(id)) ||
+          new Set(mapped).size !== mapped.length ||
+          !map || Object.keys(map).length !== ids.length) {
+        return { allowed: false, reason: "commissioned_reviewer_identity_map_invalid" };
+      }
       let consumed = false;
       try {
         // Required atomic durable claim; caller cannot merely assert success.
@@ -117,6 +126,7 @@ export function createCommissionedTeamGate({
         allowed: true,
         preflight_id: p.preflight_id,
         role_ids: [...p.role_ids],
+        reviewer_assignments: { ...map },
         registry_snapshot_hash: p.registry_snapshot_hash,
       };
     },
