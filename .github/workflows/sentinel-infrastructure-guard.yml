@@ -1,0 +1,33 @@
+name: Sentinel infrastructure passive guard
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/sentinel/infrastructure-guard.mjs'
+      - 'systemia/sentinel/infrastructure-guard.test.mjs'
+      - 'systemia/sentinel/INFRASTRUCTURE-GUARD.md'
+      - '.github/workflows/sentinel-infrastructure-guard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/sentinel/infrastructure-guard.mjs'
+      - 'systemia/sentinel/infrastructure-guard.test.mjs'
+      - 'systemia/sentinel/INFRASTRUCTURE-GUARD.md'
+      - '.github/workflows/sentinel-infrastructure-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run passive safety and blind-spot tests
+        run: |
+          node --check systemia/sentinel/infrastructure-guard.mjs
+          node --test systemia/sentinel/infrastructure-guard.test.mjs
