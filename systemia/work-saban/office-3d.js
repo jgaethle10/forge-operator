@@ -81,7 +81,7 @@
       badge.append(make('strong','',role.name),make('small','','IDLE'));
       const diode=make('span','spatial-agent-diode');
       desk.append(glow,top,front,computer,figure,badge,diode);
-      desk.addEventListener('click',e=>{e.stopPropagation();select(role.id);window.WorkSabanOffice?.select(role.id);});
+      desk.addEventListener('click',e=>{e.stopPropagation();select(role.id);focusAgent(role.id);window.WorkSabanOffice?.select(role.id);});
       world.append(desk);agents.set(role.id,desk);
     }
     const path=make('div','spatial-corridor');
@@ -95,7 +95,8 @@
       ['+','Zoom in',()=>zoom(0.1)],
       ['⟲','Orbit left',()=>orbitCamera(-15,0)],
       ['⟳','Orbit right',()=>orbitCamera(15,0)],
-      ['⌖','Reset view',()=>resetCamera()]
+      ['⌖','Reset view',()=>resetCamera()],
+      ['◎','Focus selected coworker',()=>focusAgent(selected)]
     ];
     buttons.forEach(([label,title,fn])=>{
       const b=make('button','spatial-control',label);
@@ -157,6 +158,15 @@
   }
   function zoom(delta){position.zoom=clamp(Math.round((position.zoom+delta)*100)/100,0.35,1.42);applyCamera();}
   function resetCamera(){position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};applyCamera();}
+  function focusAgent(id){
+    const role=roster.find(r=>r.id===id);
+    if(!role)return;
+    position.panX=clamp(Math.round((530-(role.x+100))*position.zoom),-480,480);
+    position.panY=clamp(Math.round((340-(role.y+85))*position.zoom),-360,360);
+    position.zoom=Math.max(position.zoom,0.98);
+    position.pitch=52;
+    applyCamera();
+  }
   function select(id){
     if(!agents.has(id))return;
     selected=id;
@@ -236,5 +246,5 @@
     $('office-3d-toggle').setAttribute('aria-pressed',String(enabled));
     if(enabled)requestAnimationFrame(()=>applyCamera());
   }
-  window.WorkSaban3D={setEnabled,consume,proposed,reset,select,getState:()=>({...state}),getCamera:()=>({...position})};
+  window.WorkSaban3D={setEnabled,consume,proposed,reset,select,focusAgent,getState:()=>({...state}),getCamera:()=>({...position})};
 })();
