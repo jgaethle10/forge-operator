@@ -96,7 +96,8 @@
       ['⟲','Orbit left',()=>orbitCamera(-15,0)],
       ['⟳','Orbit right',()=>orbitCamera(15,0)],
       ['⌖','Reset view',()=>resetCamera()],
-      ['◎','Focus selected coworker',()=>focusAgent(selected)]
+      ['◎','Focus selected coworker',()=>focusAgent(selected)],
+      ['→','Visit next coworker',()=>tourNext()]
     ];
     buttons.forEach(([label,title,fn])=>{
       const b=make('button','spatial-control',label);
@@ -166,6 +167,14 @@
     position.zoom=Math.max(position.zoom,0.98);
     position.pitch=52;
     applyCamera();
+  }
+  let tourIndex=0;
+  function tourNext(){
+    const coworker=roster[tourIndex%roster.length];
+    tourIndex+=1;
+    select(coworker.id);
+    focusAgent(coworker.id);
+    window.WorkSabanOffice?.select(coworker.id);
   }
   function select(id){
     if(!agents.has(id))return;
@@ -246,5 +255,5 @@
     $('office-3d-toggle').setAttribute('aria-pressed',String(enabled));
     if(enabled)requestAnimationFrame(()=>applyCamera());
   }
-  window.WorkSaban3D={setEnabled,consume,proposed,reset,select,focusAgent,getState:()=>({...state}),getCamera:()=>({...position})};
+  window.WorkSaban3D={setEnabled,consume,proposed,reset,select,focusAgent,tourNext,getState:()=>({...state}),getCamera:()=>({...position})};
 })();
