@@ -226,6 +226,11 @@ test('extended eight-second audition is local-only, revokes blob URL and disclos
 test('extended audition distinguishes actual scheduled transport from filled WAV duration',()=>{
  const s=ui();
  assert.match(s,/performance_coverage_sec/);
+ assert.match(s,/performed_step_count/);
+ assert.match(s,/performance_gap_count/);
+ assert.match(s,/first_gap_at_sec/);
+ assert.match(s,/Missing or misordered step detected/);
+ assert.match(s,/This does not prove audio reached speakers/);
  assert.match(s,/performance_window_complete/);
  assert.match(s,/Partial performance evidence/);
  assert.match(s,/performed_bus_automation_events/);
