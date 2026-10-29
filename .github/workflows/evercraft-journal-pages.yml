@@ -229,6 +229,9 @@ jobs:
     needs: build
     timeout-minutes: 8
     steps:
+      - name: Checkout release probe source
+        uses: actions/checkout@v4
+
       - name: Deploy Evercraft public directory
         id: deployment
         uses: actions/deploy-pages@v4
