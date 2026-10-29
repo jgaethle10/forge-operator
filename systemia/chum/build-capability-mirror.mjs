@@ -101,7 +101,35 @@ function reconciledInvocationStatus(offer, productConformance){
 }
 const items=[];
 
-for(const offer of withOwnedNativeWorkflowXray(catalog.offers||[])){
+// Additive discovery-only overlay sourced from the public Evercraft product directory.
+// This never mutates the native machine-commerce catalog or authorizes a model call,
+// checkout, instant $9 purchase, or autonomous human-reviewed fulfillment.
+const sourceOffers=withOwnedNativeWorkflowXray(catalog.offers||[]);
+const discoveryDirectory=JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
+const boardroomProduct=(Array.isArray(discoveryDirectory.products)?discoveryDirectory.products:[])
+  .find(p=>p.product_key==='ai-boardroom' && p.machine_state==='source_discovery_only');
+if(boardroomProduct&&!sourceOffers.some(x=>x.public_id==='ai-boardroom-decision-review-v1')){
+  sourceOffers.push({
+    public_id:'ai-boardroom-decision-review-v1',
+    name:'Evercraft AI Boardroom',
+    intent_terms:(boardroomProduct.intents||[]).map(String).slice(0,16),
+    problem:'Two or three AI answers disagree about a business decision. Compare stated positions, assumptions and evidence gaps for free in a private browser tool; deeper scoped human review is available separately.',
+    inputs:'One business decision question and two or three user-pasted AI answers. Do not supply private credentials or regulated information.',
+    outputs:'Free local comparison map and downloadable text report, with explicit uncertainty about unverified facts. Paid scope may be confirmed separately with Evercraft.',
+    commercial_state:'discovery_only',
+    machine_state:'source_discovery_only',
+    pricing:'Free text comparison $0. Separate human-scoped Boardroom Standard Review $250 and Financial Deep Dive $500; no instant $9 paid SKU.',
+    offers:[],
+    human_ui_required:true,
+    confirmation:'Browser preview makes no model API calls and stores no user answers on Evercraft servers. Paid review must have agreed scope and delivery before matching provider checkout.',
+    public_url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/',
+    payment_authority:null,
+    invocation_status:'FREE TEXT-ONLY BROWSER PREVIEW. Source-only public discovery; no verified automatic multi-LLM conversation, paid order or fulfillment.',
+    live_canary_evidence:null,
+    catalog_version:'source_public_product_directory_2026_10_29'
+  });
+}
+for(const offer of sourceOffers){
   const id=String(offer.public_id||'').trim();
   if(!id) continue;
   const productConformance=conformanceByCapabilityId.get(id)||null;
