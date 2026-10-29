@@ -277,3 +277,71 @@ main{max-width:1420px;padding-top:34px}
 .spatial-sofa-seat{position:absolute;left:6px;bottom:7px;width:112px;height:31px;background:#b59bca;border-radius:10px 10px 17px 17px;box-shadow:0 10px 12px #0003}
 .spatial-sofa-pillow{position:absolute;top:31px;width:25px;height:24px;background:#f1c999;border-radius:8px;transform:rotate(-15deg)}
 .spatial-sofa-pillow.pillow-one{left:13px}.spatial-sofa-pillow.pillow-two{right:13px;background:#a5d9ca;transform:rotate(15deg)}
+
+
+/* Customer-first Work Saban v1: mostly white, crimson, black.
+   The complex local worker and evidence interfaces sit behind native disclosures. */
+:root{color-scheme:light;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#fff;color:#171717}
+html{background:#fff}
+body{background:#fff;color:#171717;min-height:100vh}
+[hidden]{display:none!important}
+main.customer-workspace{max-width:1060px;margin:0 auto;padding:0 26px 60px}
+.customer-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:25px 0;border-bottom:1px solid #e8e5e5}
+.customer-header .customer-brand{display:inline-flex;align-items:center;gap:11px;color:#171717;font-size:19px;font-weight:850;letter-spacing:-.05em}
+.customer-header .customer-brand small{font-size:10px;letter-spacing:.08em;color:#737373;border-left:1px solid #e4e4e4;padding-left:12px}
+.brand-symbol{display:inline-grid;place-items:center;width:37px;height:37px;border-radius:9px;background:#a4142f;color:#fff;font-size:21px;font-weight:850}
+.local-label{font-size:10px;font-weight:850;letter-spacing:.11em;color:#a4142f;background:#fff1f3;border:1px solid #f2dce2;padding:8px 11px;border-radius:50px;white-space:nowrap}
+.mission-hero{max-width:790px;margin:0 auto;padding:74px 0 35px}
+.customer-eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;color:#a4142f;margin:0 0 19px}
+.customer-workspace .mission-hero h1{font-size:clamp(48px,7.4vw,82px);letter-spacing:-.076em;line-height:1.04;margin:0 0 23px;color:#171717}
+.customer-workspace .mission-hero h1 span{color:#a4142f}
+.customer-intro{font-size:clamp(17px,2.1vw,20px);max-width:650px;color:#535353;line-height:1.6;margin:0 0 33px}
+.customer-workspace .input,.customer-workspace #result,.customer-workspace #demo-result{background:#fff;border:1px solid #e5e2e2;border-radius:16px;box-shadow:0 8px 30px #17171709;padding:27px;margin-bottom:0}
+.customer-workspace .mission-input{padding:27px}
+.customer-workspace label{font-size:14px;color:#171717;font-weight:750}
+.customer-workspace textarea{background:#fff;color:#171717;border:1px solid #cfcaca;border-radius:9px;min-height:115px;font:inherit;font-size:16px;line-height:1.55;padding:15px}
+.customer-workspace textarea:focus,.customer-workspace #csv-file:focus-visible,.customer-workspace button:focus-visible,.customer-workspace summary:focus-visible{outline:3px solid #a4142f;outline-offset:3px}
+.customer-workspace button{background:#a4142f;color:#fff;border:1px solid #a4142f;border-radius:9px;padding:12px 20px;min-height:47px;margin:0;font:750 14px/1.35 system-ui,sans-serif;cursor:pointer}
+.customer-workspace button:hover{background:#7b0d22}
+.customer-workspace button.secondary,.customer-workspace .secondary{background:#fff;border-color:#ddd8d8;color:#4e4545}
+.customer-workspace button.secondary:hover{background:#f8f7f7}
+.customer-workspace button:disabled{opacity:.55;cursor:not-allowed}
+.mission-actions{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:17px 0 9px}
+.customer-workspace .muted{color:#686464;font-size:12px;line-height:1.55}
+.customer-workspace .mission-input>.muted{margin:8px 0 0}
+.customer-workspace .error{color:#a4142f;font-size:13px;font-weight:700}
+.customer-workspace .customer-output{margin:0 auto 20px;max-width:790px;padding:28px}
+.customer-workspace .customer-output h2{color:#171717;letter-spacing:-.045em;font-size:27px;margin:0 0 10px}
+.customer-workspace .customer-output h3{color:#292929}
+.customer-workspace .result-head{gap:16px;flex-wrap:wrap}
+.customer-workspace #state{color:#a4142f}
+.customer-workspace .role{background:#faf9f9;border:1px solid #e6e1e1;border-radius:10px}
+.customer-workspace .role b{color:#171717}
+.customer-workspace .role span{color:#5a5555}
+.customer-workspace .role small{color:#a4142f}
+.customer-workspace .waves .wave{background:#f7eeee;color:#6b2636}
+.customer-workspace .customer-output #demo-report{white-space:pre-wrap;overflow-wrap:anywhere;background:#f9f9f8;color:#282828;border:1px solid #ebe9e8;border-radius:10px;padding:16px;font-size:13px;line-height:1.55}
+.customer-workspace .nested-details{border-top:1px solid #e9e6e6;margin-top:20px;padding-top:18px}
+.customer-workspace .nested-details summary{font-size:13px;font-weight:750;color:#a4142f;cursor:pointer}
+.customer-workspace .nested-details .roles{margin-top:20px}
+.customer-workspace .customer-output li{color:#565656}
+.customer-workspace .secondary-section{margin:42px auto 0;max-width:790px;border-top:1px solid #e7e5e5}
+.customer-workspace .customer-details{border-bottom:1px solid #e7e5e5;padding:0}
+.customer-workspace .customer-details>summary{cursor:pointer;padding:21px 4px;color:#363434;font-size:14px;font-weight:750;list-style:revert}
+.customer-workspace .customer-details[open]>summary{color:#a4142f}
+.customer-workspace #csv-intake{box-shadow:none;border:0;border-radius:0;padding:8px 4px 28px}
+.customer-workspace #csv-intake h2{font-size:23px;letter-spacing:-.045em;color:#171717}
+.customer-workspace #csv-file{display:block;width:100%;margin:12px 0 17px;background:#fff;color:#171717;border:1px solid #d7d0d0;border-radius:9px;padding:13px;font-size:14px}
+.customer-workspace label.consent{display:flex;gap:10px;color:#4f4b4b;font-size:13px;font-weight:500;margin-bottom:16px}
+.customer-workspace label.consent input{accent-color:#a4142f;flex:none;margin-top:4px}
+.customer-workspace .details-intro{padding:0 4px 8px}
+.customer-workspace #office{margin:6px 0 24px}
+.customer-workspace .office-heading h2{color:#edf2ff}
+.customer-workspace .office-heading p{color:#b7c7dd}
+.customer-workspace .office-inspector h3,.customer-workspace .office-scene-title,.customer-workspace .office-feed h3{color:#eaf1fc}
+.customer-workspace .office-shell button{background:#253c56;color:#eaf4ff;border-color:#42658a}
+.customer-workspace .office-shell button:hover{background:#355270}
+.customer-workspace .office-shell .office-view-toggle[aria-pressed="true"]{background:#643448;border-color:#b7697e;color:#fff}
+.customer-workspace .customer-footer{border-top:1px solid #e9e7e7;color:#777;margin-top:62px;padding-top:20px;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;font-size:12px}
+@media(max-width:700px){main.customer-workspace{padding:0 18px 40px}.customer-header{padding:18px 0}.customer-header .customer-brand{font-size:16px}.customer-header .customer-brand small{font-size:8px;padding-left:8px}.brand-symbol{width:32px;height:32px}.local-label{font-size:8px}.mission-hero{padding:56px 0 20px}.customer-workspace .mission-hero h1{font-size:clamp(44px,12.5vw,65px)}.customer-workspace .input,.customer-workspace .customer-output{padding:20px}.mission-actions{align-items:stretch}.mission-actions button{flex:1 1 150px}.customer-workspace .office-heading{padding:20px}.customer-workspace #office{border-radius:13px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

@@ -40,6 +40,8 @@ jobs:
           node --check systemia/work-saban/csv-worker.mjs
           node --check systemia/work-saban/execute-local.mjs
           node --check systemia/work-saban/execute-local.proof.mjs
+      - name: Prove customer-first task screen and optional evidence controls
+        run: node systemia/work-saban/customer-first.proof.mjs
       - name: Prove model worker permission boundary without live provider
         run: node systemia/work-saban/model-worker.proof.mjs
       - name: Prove formation contract
