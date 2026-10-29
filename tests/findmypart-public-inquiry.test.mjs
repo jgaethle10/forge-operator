@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
-import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher} from '../systemia/mcp/findmypart-public-inquiry.mjs';
+import {validateFindMyPartInquiry,createFindMyPartInquiryAlertDispatcher,readFindMyPartPrivateInquiry} from '../systemia/mcp/findmypart-public-inquiry.mjs';
 
 const ORIGIN='https://fabric.systemiacommandcenters.com';
 const brief={
@@ -45,6 +45,14 @@ test('first-party buyer POST is encrypted, private, durable and not a charge',as
   const ciphertext=fs.readFileSync(encryptedFile,'utf8');
   assert.doesNotMatch(ciphertext,/customer@example\.test|Broken power selector|Ford 3600/);
   assert.equal(fs.statSync(encryptedFile).mode&0o777,0o600);
+  const restored=readFindMyPartPrivateInquiry({storeDir:dir,key,reference:receipt.reference});
+  assert.equal(restored.email,brief.email);
+  assert.equal(restored.part_description,brief.part_description);
+  assert.equal(restored.equipment_context,brief.equipment_context);
+  assert.equal(restored.state,'NEW_HUMAN_REVIEW_REQUIRED');
+  assert.equal(restored.payment_created,false);
+  assert.throws(()=>readFindMyPartPrivateInquiry({storeDir:dir,key:Buffer.alloc(32),reference:receipt.reference}));
+  assert.throws(()=>readFindMyPartPrivateInquiry({storeDir:dir,key,reference:'../invalid'}));
   assert.equal(fs.statSync(dir).mode&0o777,0o700);
   const alert=JSON.parse(fs.readFileSync(path.join(dir,'alert-outbox',receipt.reference+'.json'),'utf8'));
   assert.equal(alert.has_customer_pii,false);
