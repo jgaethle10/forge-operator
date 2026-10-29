@@ -70,7 +70,13 @@
       const screen=make('span','spatial-screen');
       computer.append(screen);
       const figure=make('span','spatial-person');
-      figure.append(make('span','spatial-person-body'),make('span','spatial-person-head'));
+      figure.append(make('span','spatial-person-body'));
+      const head=make('span','spatial-person-head');
+      head.append(make('span','spatial-person-hair'));
+      const face=make('span','spatial-person-face');
+      face.append(make('span','spatial-eye spatial-eye-left'),make('span','spatial-eye spatial-eye-right'),make('span','spatial-smile'));
+      head.append(face);
+      figure.append(head);
       const badge=make('span','spatial-desk-label');
       badge.append(make('strong','',role.name),make('small','','IDLE'));
       const diode=make('span','spatial-agent-diode');
@@ -82,7 +88,7 @@
     path.innerHTML='<span>AUTHORIZED WORK ONLY</span>';
     world.append(path);
     const overlay=make('div','spatial-overlay');
-    const orbit=make('div','spatial-orbit-label','DRAG TO ORBIT  ·  SHIFT-DRAG TO PAN  ·  SCROLL TO ZOOM');
+    const orbit=make('div','spatial-orbit-label','DRAG TO ORBIT  ·  SHIFT-DRAG TO PAN  ·  WASD TO EXPLORE  ·  SCROLL TO ZOOM');
     const controls=make('div','spatial-controls');
     const buttons=[
       ['−','Zoom out',()=>zoom(-0.1)],
