@@ -1,48 +1,40 @@
-// Public, read-only Work Saban pilot page check. No lead submission or private data.
-const url = 'https://jgaethle10.github.io/forge-operator/work-saban/';
-const expected = [
-  'EVERCRAFT / WORK SABAN',
-  'Saban brings the team.',
+// External, read-only public Work Saban check. Never submits an inquiry or payment.
+// Pull requests test the currently published site; merged main tests the new release.
+const url='https://jgaethle10.github.io/forge-operator/work-saban/';
+const isPullRequest=process.env.GITHUB_EVENT_NAME==='pull_request';
+const expected=isPullRequest?['Work Saban']:[
+  'Give your work',
+  'One task. Three simple steps.',
   'PRIVATE PILOT INTEREST',
-  'No public CSV uploads',
   'Request the private pilot by email',
-  'Give the work',
-  'THE PRODUCT EXPERIENCE',
-  'FOUNDING PARTNER PROGRAM',
+  'No public CSV uploads',
   'href="./brand/"',
+  'Illustrative preview, not live customer execution.',
 ];
-async function main() {
-  const response = await fetch(url, {
-    headers: { 'user-agent': 'Evercraft-Work-Saban-Public-Canary/1.0' },
-    redirect: 'follow',
-    signal: AbortSignal.timeout(15000),
-  });
-  const html = await response.text();
-  const missing = expected.filter(s => !html.includes(s));
-  const brandUrl = new URL('brand/', url);
-  const brandResponse = await fetch(brandUrl, { redirect: 'follow', signal: AbortSignal.timeout(15000) });
-  const brandText = await brandResponse.text();
-  const brandVerified = brandResponse.status === 200
-    && brandText.includes('The routed S.')
-    && brandText.includes('Work Saban')
-    && brandText.includes('work-saban-social.svg');
-  const passed = response.ok && response.status === 200
-    && response.url.startsWith('https://')
-    && missing.length === 0 && brandVerified;
+async function main(){
+  const opts={headers:{'user-agent':'Evercraft-Work-Saban-Public-Canary/2.0'},redirect:'follow',signal:AbortSignal.timeout(15000)};
+  const response=await fetch(url,opts);
+  const html=await response.text();
+  const missing=expected.filter(x=>!html.includes(x));
+  const brandUrl=new URL('brand/',url);
+  const brandResponse=await fetch(brandUrl,{redirect:'follow',signal:AbortSignal.timeout(15000)});
+  const brandText=await brandResponse.text();
+  const brandVerified=brandResponse.ok && (isPullRequest?brandText.includes('Work Saban'):
+    brandText.includes('Mostly white.')&&brandText.includes('Confident crimson.')&&brandText.includes('#A4142F')&&brandText.includes('work-saban-social.svg'));
+  const verified=response.status===200&&response.url.startsWith('https://')&&missing.length===0&&brandVerified;
   console.log(JSON.stringify({
-    schema: 'evercraft.work-saban.pilot-public-canary.v1',
-    url, final_url: response.url,
-    http_status: response.status,
-    content_type: response.headers.get('content-type'),
-    expected_markers_present: missing.length === 0,
-    missing_markers: missing,
-    brand_url: brandUrl.href, brand_http_status: brandResponse.status, brand_verified: brandVerified,
-    form_submitted: false, payment_attempted: false,
-    public_route_verified: passed,
-  }, null, 2));
-  if (!passed) process.exitCode = 1;
+    schema:'evercraft.work-saban.pilot-public-canary.v2',
+    url,final_url:response.url,http_status:response.status,
+    brand_url:brandUrl.href,brand_http_status:brandResponse.status,
+    missing_markers:missing,brand_verified:brandVerified,
+    source_preview_only:isPullRequest,
+    simplified_release_verified:!isPullRequest&&verified,
+    public_route_verified:verified,
+    form_submitted:false,payment_attempted:false,
+  },null,2));
+  if(!verified)process.exitCode=1;
 }
-main().catch(error => {
-  console.error(JSON.stringify({schema:'evercraft.work-saban.pilot-public-canary.v1', public_route_verified:false, reason:error.name || 'fetch_failed', form_submitted:false}));
-  process.exitCode = 1;
+main().catch(error=>{console.error(JSON.stringify({schema:'evercraft.work-saban.pilot-public-canary.v2',
+  public_route_verified:false,reason:error.name||'fetch_failed',form_submitted:false,payment_attempted:false}));
+  process.exitCode=1;
 });
