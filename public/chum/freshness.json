@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T19:07:25.347Z",
+  "updated_at": "2026-10-29T19:08:55.832Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,43 +11,23 @@
   },
   "latest_change_batch": [
     {
-      "path": "/forensiscope/distribution/llms.txt",
-      "last_changed": "2026-10-29T19:07:25.347Z",
-      "priority": 146
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T19:07:25.347Z",
+      "last_changed": "2026-10-29T19:08:55.832Z",
       "priority": 80
-    },
-    {
-      "path": "/forensiscope/distribution/",
-      "last_changed": "2026-10-29T19:07:25.347Z",
-      "priority": 60
-    },
-    {
-      "path": "/forensiscope/distribution/reddit-pack.json",
-      "last_changed": "2026-10-29T19:07:25.347Z",
-      "priority": 60
-    },
-    {
-      "path": "/forensiscope/editorial/social-pack.json",
-      "last_changed": "2026-10-29T19:07:25.347Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-29T19:08:55.832Z",
+      "priority": 80
+    },
     {
       "path": "/forensiscope/distribution/llms.txt",
       "url": "/forensiscope/distribution/llms.txt",
       "last_changed": "2026-10-29T19:07:25.347Z",
       "priority": 146
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-29T19:07:25.347Z",
-      "priority": 80
     },
     {
       "path": "/forensiscope/distribution/",
