@@ -209,6 +209,37 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       connections,
     };
   });
+  // Public-product discovery overlay, independent of the authoritative machine-commerce catalog.
+  // This one bounded product is discoverable, not executable or checkout-authorized.
+  if (!catalogPath) {
+    const productDirectoryPath=path.resolve(moduleDir,'../../public/.well-known/evercraft-products.json');
+    if(fs.existsSync(productDirectoryPath)){
+      const directory=JSON.parse(fs.readFileSync(productDirectoryPath,'utf8'));
+      const boardroom=(Array.isArray(directory?.products)?directory.products:[])
+        .find((product)=>product.product_key==='ai-boardroom');
+      if(boardroom&&!mapped.some((item)=>item.public_id==='ai-boardroom-decision-review-v1')){
+        const intents=Array.isArray(boardroom.intents)?boardroom.intents.map(String).slice(0,16):[];
+        const aliases=Array.isArray(boardroom.aliases)?boardroom.aliases.map(String).slice(0,8):[];
+        mapped.push({
+          public_id:'ai-boardroom-decision-review-v1',
+          name:'Evercraft AI Boardroom Decision Review',
+          description:'Compare conflicting AI answers, assumptions, evidence and risks for one concrete business decision. Human-scoped review; no verified automatic cross-model deliberation.',
+          keywords:[...intents,...aliases],
+          state:'source_discovery_only',
+          commercial_state:'scoped_human_review_offers',
+          pricing:'Human-scoped Standard Review $250; Deep Dive with Financial Modeling $500. Live checkout route unverified.',
+          use_when:intents,
+          entry_paid_offer:null,
+          start_url_state:'held_unverified_public_checkout',
+          preferred_agent_route:'universal_fallback',
+          connections:[
+            ...(universalMcp?[{type:'mcp',label:'Evercraft universal MCP',url:universalMcp,state:'read_only_discovery_only'}]:[]),
+            ...(boardroom.discovery_url?[{type:'docs',label:'AI Boardroom public source descriptor',url:boardroom.discovery_url,state:'source_only_no_live_http_receipt'}]:[]),
+          ],
+        });
+      }
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
