@@ -269,6 +269,32 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       }
     }
   }
+  // An externally verified ForensiScope inquiry door is not a paid checkout,
+  // executable MCP endpoint, file uploader, or automated fulfillment system.
+  // Source-based routing makes the first buyer click product-specific rather
+  // than dropping customers on the generic capability directory.
+  if(!catalogPath){
+    const buyerUrl='https://jgaethle10.github.io/forge-operator/forensiscope/';
+    const discoveryPath=path.resolve(moduleDir,'../../public/forensiscope/discovery.json');
+    if(fs.existsSync(discoveryPath)){
+      const discovery=JSON.parse(fs.readFileSync(discoveryPath,'utf8'));
+      const index=mapped.findIndex(item=>item.public_id==='forensiscope-evidence-review-v1');
+      if(index>=0 && discovery?.product_key==='forensiscope' &&
+        discovery.start_url===buyerUrl && discovery.canonical_url===buyerUrl &&
+        discovery.mcp===null && discovery.commercial?.automated_checkout_available===false &&
+        discovery.commercial?.media_upload_available===false){
+        const current=mapped[index];
+        mapped[index]={
+          ...current,
+          connections:[
+            {type:'website',label:'ForensiScope: request a review (no charge)',
+             url:buyerUrl,state:'public_https_verified_human_inquiry_no_checkout'},
+            ...current.connections.filter(c=>c.url!==buyerUrl)
+          ]
+        };
+      }
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
