@@ -110,3 +110,33 @@ adapters, live pre-dispatch enforcement at worker boundary, verified
 all-roster liveness, live workloads, new compute authority or production
 deployment. These are blockers to certification, not reasons to invent
 new specialists.
+
+## Raven commissioned work: proof-backed mode, no fabricated superagents
+
+The owned Raven runtime distinguishes:
+
+- `requested_team: "role_lenses"`: six useful analytic perspectives under a bounded private inference adapter. This **is not** proof that six commissioned AI agents, much less the original full roster, are executing. Home defaults to this honest mode.
+- `requested_team: "commissioned"`: only admitted when a separately configured, independently signed authority chain names the exact immutable role IDs and maps the actual participating commissioned IDs to each selected Raven reviewer lane. This path defaults **held**, before inference, when no genuine proof source is configured.
+
+The phased signed-proof implementation is:
+
+1. `signed-evidence.mjs` verifies short-lived Ed25519 envelopes under **operator-pinned public keys** for `dispatch_preflight` and `dispatch_completion`; the request itself cannot supply a trust root.
+2. A signed preflight must bind `request_id`, `mission_key`, `work_key`, exact commissioned role IDs, one-to-one `reviewer_assignments`, a roster hash, Passport and Execution Gate receipt refs, Juniper's **read-before-action** receipt, and Sentinel's protective guard receipt.
+3. `owned-proof-source.mjs` can pick up the two signed envelopes from a private owned directory, and atomically claims each preflight nonce with an exclusive-create file, persisting replay defense across restarts.
+4. Following inference, a **separate signed completion** must match the exact review-result hash and contain Juniper's **write-after-action** receipt. Missing writeback changes the response to `blocked`, never `completed`.
+5. No provider inference is performed if the commissioned preflight is absent, stale, forged, replayed or identity-mismatched. No external actions are allowed in either mode.
+
+### Local resident configuration (optional, fail closed)
+
+```text
+RAVEN_COMMISSIONED_EVIDENCE_DIR=/var/lib/evercraft/raven/commissioned-evidence
+RAVEN_COMMISSIONED_TRUST_KEYS_FILE=/var/lib/evercraft/raven/commissioned-trust.json
+```
+
+The evidence directory and files must be owned by the service user and inaccessible to group/other users. Subdirectories `preflight/`, `completion/`, and `claimed/` are private. The preflight/completion filename is `sha256(request_id).json`. The trust file contains separate `dispatch_preflight` and `dispatch_completion` signer-key maps (`key_id` to Ed25519 PEM public key). **Never publish the private signing keys** or permit incoming request content to name proof-file paths. The independent signer, real roster exporter, live Juniper memory store and Sentinel adapter are **not yet connected**.
+
+For example, an existing generic review request remains `role_lenses` and continues to be useful. A caller that sends `commissioned` will receive a bounded hold until the owned signer and exact role proofs are available.
+
+### Acceptance and deployment truth
+
+Tests use synthetic signing keys and artificial role IDs. Passing these tests proves validation behavior, **not** that real agents ran, that the signer exists in production, or that a service was deployed. No data is read from Base44. This PR remains draft pending P0 #1707's authenticated roster, real independent signer, safe live canary, release approval, and field receipts.
