@@ -1,0 +1,29 @@
+name: EO-001 synthetic candidate evidence checks
+
+on:
+  push:
+    paths:
+      - 'integrations/ai-evaluation-lab/**'
+      - '.github/workflows/eo001-lab-candidate.yml'
+  pull_request:
+    paths:
+      - 'integrations/ai-evaluation-lab/**'
+      - '.github/workflows/eo001-lab-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-decision-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout owned source
+        uses: actions/checkout@v4
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Lab-compatible decision policy
+        run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs
