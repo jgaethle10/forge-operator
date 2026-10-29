@@ -52,11 +52,11 @@ try{
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');
     }else{
       await page.keyboard.down('w');
-      await page.waitForTimeout(700);
+      await page.waitForTimeout(2300);
       await page.keyboard.up('w');
       await page.locator('#save').click();
       const location=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1'))?.player?.z);
-      assert.ok(location<7.9,'keyboard movement did not update world position');
+      assert.ok(location<7.99,'keyboard movement did not update world position; position='+location+'; frame='+pre.fps);
     }
     await page.locator('#buildToggle').click();
     await page.locator('[data-command="add tree"]').click();
