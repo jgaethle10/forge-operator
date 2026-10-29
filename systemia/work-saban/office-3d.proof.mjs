@@ -80,6 +80,8 @@ const all=documentWalk(scene).filter(x=>x.className==='spatial-agent');
 assert.equal(all.length,6);
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-plant').length,6,'six decorative plants');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-fishtank').length,1,'aquarium rendered');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-coffee-corner').length,1,'coffee corner rendered');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-lounge').length,1,'lounge rendered');
 assert.equal(documentWalk(scene).filter(x=>x.className.includes('spatial-fish ')).length,2,'two aquarium fish');
 for(const agent of all){
   const parts=documentWalk(agent);
