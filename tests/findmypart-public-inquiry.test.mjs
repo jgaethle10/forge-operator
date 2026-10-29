@@ -270,3 +270,34 @@ test('public customer availability is fail-closed without key and true only with
   assert.equal(findMyPartInquiryReadiness({storeDir:unsafe,key:Buffer.alloc(16)}).intake_available,false);
  }finally{fs.rmSync(unsafe,{recursive:true,force:true})}
 });
+
+test('operator can prepare one exact-price unsent quote without creating payment',async()=>{
+ const dir=temp();
+ const env={...process.env,
+  EVERCRAFT_FINDMYPART_LEADS_DIR:dir,EVERCRAFT_FINDMYPART_INTAKE_KEY_B64:key.toString('base64')};
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+  findMyPartLeadsDir:dir,findMyPartIntakeKey:key});
+ const cli=path.join(process.cwd(),'scripts/findmypart-owner-inbox.mjs');
+ const legacy=path.join(process.cwd(),'scripts/findmypart-review-inquiry.mjs');
+ try{
+  const response=await post(rt.url,brief);
+  assert.equal(response.status,201);
+  const {reference}=await response.json();
+  assert.throws(()=>execFileSync(process.execPath,[cli,'quote',reference,'quick'],{env,stdio:'pipe'}));
+  assert.throws(()=>execFileSync(process.execPath,[cli,'quote',reference,'monthly','--reveal'],{env,stdio:'pipe'}));
+  assert.throws(()=>execFileSync(process.execPath,[legacy,reference],{env,stdio:'pipe'}),
+   'older command cannot reveal buyer PII without explicit confirmation');
+  for(const [tier,amount] of [['quick',1900],['deep',4900],['rescue',9900]]){
+   const output=JSON.parse(execFileSync(process.execPath,[cli,'quote',reference,tier,'--reveal'],{env,encoding:'utf8'}));
+   assert.equal(output.reference,reference);
+   assert.equal(output.recipient,brief.email);
+   assert.equal(output.amount_cents,amount);
+   assert.equal(output.quote_status,'DRAFT_NOT_SENT');
+   assert.equal(output.checkout_created,false);
+   assert.equal(output.payment_confirmed,false);
+  }
+  const files=fs.readdirSync(dir);
+  assert.equal(files.filter(name=>name.endsWith('.enc')).length,1);
+  assert.equal(files.filter(name=>name.includes('checkout')||name.includes('payment')).length,0);
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
+});
