@@ -1,80 +1,20 @@
 import { FORENSISCOPE_OFFERS } from '../forensiscope/commercial-offers.mjs';
 
-const TIERS=Object.freeze([
-  {label:'Up to 5 minutes',description:'A short recording with one clear review goal.'},
-  {label:'Up to 30 minutes',description:'A meeting, interview, or focused recording.'},
-  {label:'Up to 2 hours',description:'A longer session, interview, or footage set.'},
-  {label:'Up to 6 hours',description:'A multi-hour timeline or recording review.'},
-  {label:'Up to 12 hours',description:'An extended, scoped media review.'},
-]);
-const EMAIL='jessegaethle10@gmail.com';
-function escapeHtml(value){
- return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function requestUrl(tier){
- const subject='ForensiScope | '+tier.label+' | Request review';
- const body=['I would like to request a ForensiScope review.',
-  'Recording length: '+tier.label,
-  'File type: ',
-  'What I need to find or understand: ',
-  'I have the legal right or authority to submit this material: ',
-  '',
-  'Please confirm scope, secure intake, availability and Evercraft Payments before invoicing.',
-  'I will not email the media file or sensitive evidence.'].join('\n');
- return 'mailto:'+EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+const LENGTHS=Object.freeze(['Up to 5 minutes','Up to 30 minutes','Up to 2 hours','Up to 6 hours','Up to 12 hours']);
+function requestUrl() {
+  const subject='ForensiScope | Review request';
+  const body=['I would like help reviewing a video or audio recording.','',
+    'Approximate recording length: ',
+    'What I want to find or understand: ',
+    'I have permission to share this recording (yes/no): ',
+    '',
+    'Please confirm the exact price and a secure handoff before payment.',
+    'I will not attach the media file to this email.'].join('\n');
+  return 'mailto:jessegaethle10@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 }
 export function renderForensiScopeBuyerPage(){
- const cards=FORENSISCOPE_OFFERS.map((tier,index)=>{
-  const info=TIERS[index];
-  return '<article class="tier"><div class="length">'+escapeHtml(info.label)+'</div>'
-    +'<div class="price">$'+tier.amount_usd+'</div><p>'+escapeHtml(info.description)+'</p>'
-    +'<a class="choose" href="'+escapeHtml(requestUrl(info))+'">Request review</a></article>';
- }).join('');
- return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ForensiScope | Understand the whole recording</title>
-<meta name="description" content="ForensiScope by Evercraft helps turn long authorized video and audio into traceable transcripts, searchable timestamps, and repeat-segment findings. Choose a review tier and request secure intake.">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#080b14">
-<style>
-:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}
-*{box-sizing:border-box}body{background:#080b14;color:#f4f7fb;margin:0}
-main{width:min(1020px,calc(100% - 36px));margin:0 auto}header{padding:25px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #28303c;gap:16px}
-a{color:inherit}header a{text-decoration:none;color:#bacadd;font-size:13px}
-.brand{font-weight:800;letter-spacing:-.045em;font-size:22px}.brand span{color:#62d4d7}
-.hero{max-width:810px;padding:86px 0 46px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;color:#72dadd;font-weight:750;font-size:12px}
-h1{font-size:clamp(44px,8vw,82px);line-height:.99;letter-spacing:-.065em;margin:19px 0 22px}
-.lede{font-size:clamp(18px,2.4vw,23px);line-height:1.55;color:#b6c5d3;max-width:690px}
-.details{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:4px 0 60px}
-.details div,.tier,.note{border:1px solid #273544;border-radius:18px;background:#101724;padding:21px}
-.details strong{display:block;margin-bottom:7px}.details p,.tier p,.note p{color:#b6c5d3;line-height:1.55;font-size:14px;margin:0}
-h2{font-size:clamp(30px,5vw,45px);letter-spacing:-.045em;margin:0 0 9px}
-.sub{color:#b6c5d3;margin:0 0 20px;line-height:1.6}
-.tiers{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.tier{display:flex;flex-direction:column;min-width:0;padding:18px}
-.length{font-size:14px;font-weight:700;color:#c9d7e5}.price{font-size:34px;font-weight:800;letter-spacing:-.04em;margin:14px 0}
-.tier p{flex:1;min-height:83px}.choose{display:block;text-align:center;margin-top:20px;border-radius:11px;background:#59d6d0;color:#07111c;font-weight:750;text-decoration:none;padding:12px 9px;font-size:13px}
-.choose:hover{background:#89f0e8}.note{margin:25px 0 60px}.note strong{display:block;margin-bottom:8px}
-footer{padding:28px 0 38px;color:#8193a7;font-size:13px;border-top:1px solid #273544}
-@media(max-width:880px){.tiers{grid-template-columns:repeat(2,1fr)}.details{grid-template-columns:1fr}.hero{padding-top:60px}}
-@media(max-width:540px){.tiers{grid-template-columns:1fr}.tier p{min-height:auto}.hero{padding-top:45px}h1{font-size:clamp(43px,13vw,70px)}}
-</style></head><body><main>
-<header><div class="brand">Forensi<span>Scope</span></div><a href="/capabilities/forensiscope-evidence-review-v1">Technical details</a></header>
-<section class="hero"><div class="eyebrow">Evercraft · Media intelligence</div>
-<h1>Understand the whole recording.</h1>
-<p class="lede">Long video or audio, organized into a traceable timeline. Find relevant moments, searchable transcript segments, and repeated footage without losing the connection to the original source.</p></section>
-<section class="details" aria-label="Capabilities">
-<div><strong>Find the moments</strong><p>Navigate timestamped findings and recover the source context.</p></div>
-<div><strong>Search the recording</strong><p>Work toward a searchable transcript and structured media review.</p></div>
-<div><strong>Spot repeated footage</strong><p>Compare duplicate and near-duplicate segments for human review.</p></div>
-</section>
-<section aria-label="Pricing"><h2>Choose the footage length.</h2>
-<p class="sub">Published review tiers. Confirm the exact scope, secure transfer method, file capacity and available delivery window before invoicing.</p>
-<div class="tiers">${cards}</div></section>
-<section class="note"><strong>Private footage stays under your control.</strong>
-<p>Do not email media files, sensitive evidence, passwords, or private recordings. Your request opens your own email app with a short description only. We confirm authorization, secure intake and an exact Evercraft Payments invoice before accepting any material. Requesting review does not charge you or guarantee availability. ForensiScope does not identify unknown people or certify legal admissibility.</p>
-</section>
-<footer>ForensiScope by Evercraft LLC · Human-confirmed review · Evercraft Payments is the payment authority</footer>
-</main></body></html>`;
+  const rows=FORENSISCOPE_OFFERS.map((tier,index)=>
+    '<li><span>'+LENGTHS[index]+'</span><strong>$'+tier.amount_usd+'</strong></li>'
+  ).join('');
+  return "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>ForensiScope | Find what matters in your recording</title>\n<meta name=\"description\" content=\"Have a long video or audio recording? ForensiScope helps find key moments, build a searchable transcript, and review repeated footage. Request a scoped review, with no payment required up front.\">\n<meta name=\"robots\" content=\"index,follow\">\n<meta name=\"theme-color\" content=\"#090e17\">\n<link rel=\"canonical\" href=\"https://fabric.systemiacommandcenters.com/forensiscope\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:title\" content=\"ForensiScope | Find what matters in your recording\">\n<meta property=\"og:description\" content=\"Long video or audio? Find key moments, transcripts, and repeated footage. Request a review with one simple step.\">\n<meta property=\"og:url\" content=\"https://fabric.systemiacommandcenters.com/forensiscope\">\n<meta name=\"twitter:card\" content=\"summary\">\n<style>\n:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif}\n*{box-sizing:border-box}\nbody{margin:0;background:radial-gradient(ellipse at 80% 0%,#10232e 0%,#090e17 45%,#070b13 100%);color:#f4f9ff}\nmain{width:min(840px,calc(100% - 36px));margin:0 auto}\nheader{padding:28px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}\n.brand{font-size:23px;letter-spacing:-.055em;font-weight:820}.brand span{color:#77e2d5}\nheader .by{color:#95aab8;font-size:13px;letter-spacing:.03em}\n.hero{padding:90px 0 30px;max-width:800px}\n.eyebrow{font-weight:750;letter-spacing:.15em;text-transform:uppercase;font-size:12px;color:#84e9de}\nh1{font-size:clamp(43px,8.5vw,80px);line-height:1.02;letter-spacing:-.06em;margin:17px 0 24px}\n.lede{color:#c4d4de;font-size:clamp(17px,2.5vw,22px);line-height:1.6;max-width:670px}\n.action{display:inline-block;background:#80ebd8;color:#071b24;text-decoration:none;font-size:17px;font-weight:800;border-radius:15px;padding:17px 26px;margin:23px 0 8px;box-shadow:0 14px 45px rgba(50,216,189,.14)}\n.action:hover,.action:focus-visible{background:#a7fff0;outline-offset:4px}\n.small{font-size:14px;color:#9eb3c1;line-height:1.6;max-width:570px}\n.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:62px 0 80px}\n.feature{border-top:1px solid #314653;padding-top:17px}\n.feature strong{display:block;font-size:16px;margin-bottom:7px}\n.feature p{color:#9eb3c1;font-size:14px;line-height:1.6;margin:0}\n.price-section{border:1px solid #2b404b;background:rgba(16,27,39,.8);padding:32px;border-radius:22px;margin-bottom:38px}\nh2{font-size:clamp(27px,4.6vw,40px);letter-spacing:-.045em;margin:0 0 10px}\n.price-section>p{color:#aebfcb;line-height:1.65;margin:0 0 23px}\n.pricing{padding:0;margin:0;list-style:none;display:grid;gap:0}\n.pricing li{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 0;border-top:1px solid #2b404b;font-size:16px}\n.pricing strong{font-size:19px;letter-spacing:-.03em}\n.note{padding:0 0 52px}\n.note strong{font-size:17px}\n.note p{font-size:14px;line-height:1.75;color:#aabcc8;margin:9px 0}\nfooter{border-top:1px solid #2b404b;color:#8097a5;padding:25px 0 40px;font-size:13px}\n@media(max-width:650px){header{padding:22px 0}.hero{padding:46px 0 12px}h1{max-width:560px}.features{grid-template-columns:1fr;gap:18px;margin:40px 0 54px}.price-section{padding:23px 19px}.action{display:block;text-align:center;width:100%;padding:18px}.pricing li{font-size:15px}.pricing strong{font-size:18px}}\n</style></head><body><main>\n<header><div class=\"brand\">Forensi<span>Scope</span></div><div class=\"by\">by Evercraft</div></header>\n<section class=\"hero\">\n<div class=\"eyebrow\">Video and audio review</div>\n<h1>Long recording?<br>Find what matters.</h1>\n<p class=\"lede\">Tell us roughly how long your recording is and what you need to find. We'll confirm the price and a secure way to send it before you pay.</p>\n<a class=\"action\" href=\""+requestUrl()+"\">Request a review</a>\n<p class=\"small\">Opens your email with three short questions. No charge now. No need to send the file yet.</p>\n</section>\n<section class=\"features\" aria-label=\"What ForensiScope can help with\">\n<div class=\"feature\"><strong>Find key moments</strong><p>Get a timeline of the parts that matter.</p></div>\n<div class=\"feature\"><strong>Search what was said</strong><p>Get a timestamped transcript for review.</p></div>\n<div class=\"feature\"><strong>Spot repeated footage</strong><p>Find repeated or near-matching sections.</p></div>\n</section>\n<section class=\"price-section\" aria-label=\"Review pricing\">\n<h2>Clear prices.</h2>\n<p>One recording review, priced by total footage length. We confirm your specific request and file size before accepting an order.</p>\n<ul class=\"pricing\">"+rows+"</ul>\n</section>\n<section class=\"note\"><strong>Your footage stays yours.</strong>\n<p>Don't attach private footage to the initial email. We'll first confirm you have permission to share it, that we can handle its format and size, and how to transfer it securely. Requesting a review does not place an order or guarantee availability. Analysis supports human review and does not certify legal conclusions.</p>\n</section>\n<footer>ForensiScope by Evercraft LLC · Reviews arranged individually · Payments handled by Evercraft Payments</footer>\n</main></body></html>";
 }
