@@ -45,3 +45,12 @@ RC02 local validation (2026-10-23): Chromium desktop 1280×800 and phone 390×84
 - Added `merchant-pilot-gate.mjs` with five Node tests: three independently permissioned merchant responses plus a distinct unmet workflow and explicit pilot evidence trigger only **human review**, never sales/release authority. Empty evidence remains blocked.
 - Added [MERCHANT-PILOT.md](MERCHANT-PILOT.md): current competitor reality, candidate research list, gating decisions, and explicit stop conditions. The visualizer market is not novel, and this is **not** a validated paid product.
 - The existing path-scoped, read-only workflow runs all `*.test.mjs` files in this directory. Evaluate actual Actions results separately rather than claiming local unit proof from a committed file.
+
+## RC04 | Offline merchant quote desk (2026-10-28)
+
+- Open `merchant-desk.html` in a browser to see a **separate operator-side** quote-workflow demonstration. The prior `index.html` remains the shopper-side appearance proof.
+- Optional CSV import is local-only, bounded at 200 KB and 200 rows. Expected headers: `sku,name,finish,diameter,unit_price_usd`; prices must be positive USD decimal numbers, and SKU duplicates fail closed.
+- Select a SKU, quantity, vehicle note and requested service. The view shows a merchandise-only subtotal and exports an `INTERNAL_DRAFT_UNVERIFIED` JSON review packet. It never sends a message or creates a quote, customer record, lead, invoice, checkout or order. Explicit flags retain `fitment_verified:false`, `price_verified:false`, `inventory_verified:false` and `payment_verified:false` even for uploaded CSVs.
+- `merchant-desk.test.mjs` tests inline JavaScript parsing, quoted CSV fields, blocked spreadsheet formula prices and malformed/oversized catalogs, cent arithmetic, local import, unreleased packet state and no network request mechanisms.
+- The isolated `rockies-wheel-lab.yml` workflow runs this suite along with RC01–RC03. Verified CI run: https://github.com/jgaethle10/forge-operator/actions/runs/40821971672 (**success** on commit `8b7d178a36479159216112856da9c7d1119147c4`). Subsequent commits need their own CI verification.
+- This is still **research software**, not a hosted customer product or offer. No actual merchant consent or catalog license exists. A real shop-side integration must use Systemia admission, verified inventory and fitment, signed quote authorization and proper payment/delivery receipts.
