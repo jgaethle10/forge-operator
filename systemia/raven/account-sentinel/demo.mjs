@@ -68,7 +68,14 @@ export async function runDemoScenario(scenarioId) {
       api_origin: 'https://sandbox.examplebank.test', scopes: ['balances:read'],
     },
     allowedSandboxOrigins: ['https://sandbox.examplebank.test'],
-    tokenVault: { getAccessToken: async () => 'SYNTHETIC_DEMO_TOKEN_DO_NOT_USE' },
+    tokenVault: { getAccessToken: async () => ({
+      schema: 'evercraft.account-sentinel.sandbox-token.v1',
+      access_token: 'SYNTHETIC_DEMO_TOKEN_DO_NOT_USE',
+      token_type: 'Bearer',
+      connector_id: 'demo-bank-oauth', environment: 'sandbox',
+      audience: 'https://sandbox.examplebank.test', scopes: ['balances:read'],
+      expires_at: dateAt(30),
+    }) },
     transport: async (url, options) => {
       stats.provider_reads++;
       if (scenarioId === 'provider_offline') throw Error('synthetic_provider_unavailable');
