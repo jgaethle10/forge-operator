@@ -282,3 +282,27 @@ Passport/Execution Gate references, not a direct independently verifiable
 lease payload. A real receiver's `authorizeLease` must authenticate the
 underlying live issued lease and binding before indicating acceptance.
 Production remains held until this independent integration is present.
+
+## Durable private worker proof ledger
+
+`createOwnedCommissionedWorkerProofStore` in
+`systemia/agent-continuity/owned-proof-source.mjs` now supplies the exact
+producer/consumer filesystem bridge for the commissioned receiver and Raven:
+
+- `readEvidence({request})` reads signed preflight and independently signed
+  registry evidence from existing private `preflight/` and `registry/` files.
+- `persistWorkerProof({request,reviewerId,workerEvidence})` checks the pinned
+  Ed25519 `worker_execution` signer itself before touching disk, then writes
+  `worker-execution/<sha256(request_id + ":" + reviewer_id)>.json` using
+  exclusive creation, owner-only `0600` permissions, and fsync.
+- Duplicate request/reviewer receipt paths, wrong signer, altered evidence or
+  unauthorized permissions are held. The existing
+  `createOwnedCommissionedTeamGate` already reads this same exact filename
+  and re-verifies the evidence independently.
+
+The store is a **private verified transport**, not a worker runner or signer.
+There is no default `authorizeLease`, `dispatchWorker`, or live
+production enrollment. Existing Node002 shadow restrictions remain unchanged.
+A real owned provider must authorize an active exact-scope Passport/Execution
+Gate lease and dispatch enrolled identity-bound workers before any completion
+claim.
