@@ -250,7 +250,7 @@ jobs:
           grep -Fq 'No charge now' "$file"
           grep -Fq 'mailto:jessegaethle10@gmail.com' "$file"
           grep -Fq 'Evercraft Payments' "$file"
-          if grep -Eiq '(base44\\.app|checkout\\.stripe|buy\\.stripe)' "$file"; then
+          if grep -Eiq '(base44[.]app|checkout[.]stripe|buy[.]stripe)' "$file"; then
             echo 'ForensiScope fallback contains an unapproved legacy or provider-first checkout' >&2
             exit 1
           fi
