@@ -1,0 +1,26 @@
+name: Evercraft Partners founding entry release
+on:
+  pull_request:
+    paths:
+      - 'public/partners/**'
+      - 'tests/evercraft-partners-launch.test.mjs'
+      - '.github/workflows/evercraft-partners-launch.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/partners/**'
+      - 'tests/evercraft-partners-launch.test.mjs'
+      - '.github/workflows/evercraft-partners-launch.yml'
+permissions:
+  contents: read
+jobs:
+  static-launch-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test branding, responsive entry, human application, program boundaries
+        run: node --test tests/evercraft-partners-launch.test.mjs
