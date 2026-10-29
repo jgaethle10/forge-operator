@@ -30,7 +30,10 @@ test('ForensiScope public page is available even when payment backend is held',a
   assert.match(html,/Understand the whole recording/);
   assert.match(html,/Request review/);
   assert.doesNotMatch(html,/Continue to checkout/);
-  const sitemap=await fetch(rt.url+'/sitemap.xml').then(x=>x.text());
+  const offers=await fetch(rt.url+'/offers').then(x=>x.text());
+  assert.ok(offers.includes('ForensiScope'));
+  assert.ok(offers.includes('href="/forensiscope"'));
+    const sitemap=await fetch(rt.url+'/sitemap.xml').then(x=>x.text());
   assert.ok(sitemap.includes('https://fabric.systemiacommandcenters.com/forensiscope'));
  } finally { await rt.close(); }
 });
