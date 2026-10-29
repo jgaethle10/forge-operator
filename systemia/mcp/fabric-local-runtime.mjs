@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
+import {renderForensiScopeBuyerPage} from './forensiscope-sales-page.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -1074,6 +1075,10 @@ export async function startFabricLocalRuntime({
         );
       }
 
+      if(req.method==='GET' && (req.url==='/forensiscope'||req.url==='/forensiscope/')) {
+        return sendText(res,200,renderForensiScopeBuyerPage(),{contentType:'text/html; charset=utf-8'});
+      }
+
       if (req.method==='POST' && String(req.url||'').startsWith('/api/offers/')) {
         const parsed=new URL(String(req.url||''),'http://fabric.local');
         const match=parsed.pathname.match(/^\/api\/offers\/([a-z0-9-]+)\/checkout$/i);
@@ -1267,7 +1272,7 @@ export async function startFabricLocalRuntime({
       }
       if(req.method==='GET'&&req.url==='/robots.txt')return sendText(res,200,'User-agent: *\nAllow: /\nSitemap: https://fabric.systemiacommandcenters.com/sitemap.xml\n',{contentType:'text/plain; charset=utf-8'});
       if(req.method==='GET'&&req.url==='/sitemap.xml'){
-        const urls=['https://fabric.systemiacommandcenters.com/','https://fabric.systemiacommandcenters.com/offers',...listHumanOffers(preparedCatalog().capabilities).map(x=>x.url)];
+        const urls=['https://fabric.systemiacommandcenters.com/','https://fabric.systemiacommandcenters.com/offers','https://fabric.systemiacommandcenters.com/forensiscope',...listHumanOffers(preparedCatalog().capabilities).map(x=>x.url)];
         return sendText(res,200,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls.map(url=>'<url><loc>'+url+'</loc></url>').join('')+'</urlset>',{contentType:'application/xml; charset=utf-8'});
       }
 

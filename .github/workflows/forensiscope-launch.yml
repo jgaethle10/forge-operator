@@ -1,0 +1,24 @@
+name: ForensiScope Launch Gate
+on:
+  pull_request:
+    paths:
+      - 'systemia/forensiscope/commercial-offers.mjs'
+      - 'systemia/forensiscope/commercial-offers.test.mjs'
+      - 'systemia/mcp/forensiscope-sales-page.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/forensiscope-buyer-page.test.mjs'
+      - '.github/workflows/forensiscope-launch.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-charge-commercial-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify pricing and authorized native payment route (no real checkout)
+        run: node --test systemia/payments/payment-routing.test.mjs systemia/forensiscope/commercial-offers.test.mjs tests/forensiscope-buyer-page.test.mjs tests/fabric-checkout-transport-truth.test.mjs
