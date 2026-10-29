@@ -2,8 +2,9 @@
   "name": "evercraft-relay-hubspot-card",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@hubspot/ui-extensions": "^0.20.0",
-    "react": "^18.3.1"
+    "@hubspot/ui-extensions": "latest",
+    "react": "^18.2.0"
   }
 }
