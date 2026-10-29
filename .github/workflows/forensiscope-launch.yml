@@ -7,6 +7,9 @@ on:
       - 'systemia/mcp/forensiscope-sales-page.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/forensiscope-buyer-page.test.mjs'
+      - 'tests/forensiscope-static-page.test.mjs'
+      - 'public/forensiscope/index.html'
+      - '.github/workflows/evercraft-journal-pages.yml'
       - '.github/workflows/forensiscope-launch.yml'
   workflow_dispatch:
 permissions:
@@ -21,4 +24,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify pricing and authorized native payment route (no real checkout)
-        run: node --test systemia/payments/payment-routing.test.mjs systemia/forensiscope/commercial-offers.test.mjs tests/forensiscope-buyer-page.test.mjs tests/fabric-checkout-transport-truth.test.mjs
+        run: node --test systemia/payments/payment-routing.test.mjs systemia/forensiscope/commercial-offers.test.mjs tests/forensiscope-buyer-page.test.mjs tests/forensiscope-static-page.test.mjs tests/fabric-checkout-transport-truth.test.mjs
