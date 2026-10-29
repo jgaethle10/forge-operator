@@ -47,7 +47,7 @@ test("Systemia plan can execute through owned Raven bridge and persist a sanitiz
     assert.equal(request.constraints.read_only, true);
     assert.equal(request.constraints.no_external_messages, true);
     assert.equal(request.constraints.no_publication, true);
-    assert.equal(request.requested_team, "commissioned");
+    assert.equal(request.requested_team, "role_lenses");
     return {
       ok: true,
       status: 200,
