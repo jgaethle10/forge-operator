@@ -205,3 +205,42 @@ not create real worker private keys, launch the commissioned specialists, or
 operate the separate trusted receipt writer. That must come from authenticated
 owned compute under pre-existing Passport/Execution Gate authority, with
 separate code-signing and runtime deployment review. No Base44 dependency.
+
+## P0 owned canary transport and name-only roster reconciliation
+
+Commissioned Raven work now **requires** an identity-addressed owned
+`inferCommissioned()` transport, not ordinary `infer()` with an agent name
+in the prompt. The optional owned HTTP gateway sends a bounded packet to
+`POST /v1/commissioned/infer`, with `agent_id`, `reviewer_id`,
+`mission_key`, `work_key`, `preflight_id` and `registry_snapshot_hash`.
+There is no fallback to generic `/v1/infer` if this route is missing or
+returns a hold. An exact, independently signed worker execution receipt is
+**still mandatory** for each reviewer. The owner-controlled gateway endpoint
+and actual commissioned worker runtime must be implemented and verified before
+a real commissioned review can pass. These tests use synthetic transports.
+
+An independent read-only archival census is available:
+
+```sh
+node systemia/agent-continuity/reconcile-owned-roster.mjs \
+  --signed-roster /secure/evidence/registry/snapshot-signed.json \
+  --trust-keys /secure/evidence/commissioned-trust.json
+```
+
+Both inputs must be private 0600 regular files owned by the caller; the trust
+file pins the independent `registry_snapshot` public signing key. The
+command never contacts a provider or launches a worker. It verifies the
+signed, fresh owned registry snapshot before displaying identity leads and
+**intentionally returns exit status 2**. The October 16/17 source audit named
+19 candidates (Systemia, Raven, Lattice, Mnemosyne, Scribe, Talon, Sable,
+Prometheus, Tempo, Forge, Vesper, Archimedes, Aster, Saban, Meridian, Oracle,
+Sage, MAPLE and Haley) among 22 registered role profiles. Those names are
+historical investigation leads, **not immutable ID proofs**, and the remaining
+three historical identity names or IDs have not been independently recovered.
+The founder's "21 superagents" remains unreconciled even if a later signed
+current census has exactly 21 or 22 active role records.
+
+Acceptance still requires an independently authenticated historical
+**stable-ID baseline**, actual current owned registry evidence, production
+worker identity/enrollment, Juniper and Sentinel receipts, and verified worker
+runs. No legacy provider interaction or credential rotation occurs here.
