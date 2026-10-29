@@ -132,14 +132,32 @@ export function createSandboxBankReader({
             reject(new Error('bank_sandbox_timeout'));
           }, timeoutMs);
         });
-        const token = await Promise.race([
+        const vaultGrant = await Promise.race([
           Promise.resolve().then(() => tokenVault.getAccessToken({
             connector_id: connector.connector_id, environment: 'sandbox',
+            required_scope: scope,
           })),
           expiry,
         ]);
-        if (typeof token !== 'string' || token.length < 8 ||
-            token.length > 4096 || /[\s\r\n]/.test(token)) fail();
+        // Trust only the server-side vault's verified provenance and scope.
+        // An arbitrary bearer string is never sufficient to leave the gateway.
+        if (!strictKeys(vaultGrant, ['schema', 'access_token', 'token_type',
+          'connector_id', 'environment', 'audience', 'scopes', 'expires_at']) ||
+          vaultGrant.schema !== 'evercraft.account-sentinel.sandbox-token.v1' ||
+          vaultGrant.token_type !== 'Bearer' ||
+          vaultGrant.connector_id !== connector.connector_id ||
+          vaultGrant.environment !== 'sandbox' || vaultGrant.audience !== origin ||
+          !Array.isArray(vaultGrant.scopes) ||
+          vaultGrant.scopes.length < 1 ||
+          !vaultGrant.scopes.includes(scope) ||
+          vaultGrant.scopes.some(value => !connector.scopes.includes(value)) ||
+          typeof vaultGrant.access_token !== 'string' ||
+          vaultGrant.access_token.length < 8 ||
+          vaultGrant.access_token.length > 4096 ||
+          /[\s\r\n]/.test(vaultGrant.access_token)) fail();
+        const ttl = Date.parse(vaultGrant.expires_at) - Date.now();
+        if (!Number.isFinite(ttl) || ttl < 30_000 || ttl > 24*60*60_000) fail();
+        const token = vaultGrant.access_token;
         const response = await Promise.race([
           Promise.resolve().then(() => transport(url, {
             method: 'GET', redirect: 'error', credentials: 'omit',
