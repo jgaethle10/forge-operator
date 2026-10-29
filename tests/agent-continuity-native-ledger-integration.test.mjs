@@ -80,13 +80,13 @@ function build(){
     request:rootRequest,reviewerId:reviewer,agentId:agent,
     inferenceRequestId:identity.inference_request_id,inputSha256:inputHash,
     executionGateReceiptRef:lease.lease_id,
-    passportReceiptRef:permit.consumption_receipt,
+    passportReceiptRef:lease.permit_consumption_receipt,
     preflightEnvelope:{payload:{
       ...rootRequest,preflight_id:identity.preflight_id,
       registry_snapshot_hash:registryHash,
       reviewer_assignments:{[reviewer]:agent},
       execution_gate_receipt_ref:lease.lease_id,
-      passport_receipt_ref:permit.consumption_receipt,
+      passport_receipt_ref:lease.permit_consumption_receipt,
     }},
   };
   return {root,passport,gate,binding,call};
