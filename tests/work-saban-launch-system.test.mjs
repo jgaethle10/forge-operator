@@ -27,7 +27,7 @@ test('the tour is a labeled example, not a fake customer operation',()=>{
   assert.doesNotMatch(main,/<form\b|<input\b|<script\b|buy\.stripe\.com/i);
 });
 test('monthly report math comes only from synthetic fixture',()=>{
-  const fixture=fs.readFileSync(new URL('../systemia/work-saban/fixtures/monthly-sales-demo.csv',import.meta.url),'utf8');
+  const fixture=fs.readFileSync(new URL('../public/work-saban/example-sales.csv',import.meta.url),'utf8');
   const groups={};
   for(const line of fixture.trim().split(/\r?\n/).slice(1)){
     const [month,price]=line.split(',');
