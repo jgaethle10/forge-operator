@@ -49,5 +49,5 @@ export function verifyFindMyPartCheckoutBinding(result,expectedDigest,expectedRe
   return result?.context_persisted===true &&
     result?.intake_digest===expectedDigest &&
     result?.intake_ref===expectedRef &&
-    result?.fulfillment_release!==true;
+    result?.fulfillment_release===false;
 }
