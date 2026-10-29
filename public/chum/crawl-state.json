@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T07:11:12.283Z",
+  "updated_at": "2026-10-29T07:16:51.818Z",
   "url_count": 3020,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "bdf1bc328efb78dc20487e637ca470d27e4db645ac3554019286e13a711fea4f",
-      "last_changed": "2026-10-29T07:11:12.283Z",
+      "content_sha256": "7c98923a2028dc8b6a23e8492dac44521227bbea7aedbcafe53992b1200fff03",
+      "last_changed": "2026-10-29T07:16:51.818Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "cf8e18478f70cb38ef093690a5e4b735dd829b04203a831cd9779de086e1de07",
-      "last_changed": "2026-10-29T07:06:55.236Z",
+      "content_sha256": "0aa8b7ce2cd68b68421383dca49de1fabac42568abf0d100a6c45c9a328f0ce1",
+      "last_changed": "2026-10-29T07:16:51.818Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "88ec6a8b1fe37bbb98c9d2ad46402fe69fac846bfde12c322fa24b6994fb6318",
-      "last_changed": "2026-10-29T07:06:55.236Z",
+      "content_sha256": "b5e707b9e096cf19d44b9d9789e2a7e0052b8b8eed1bc87294e2966b17b9d38e",
+      "last_changed": "2026-10-29T07:16:51.818Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "259ec6d1b5be4dca52e7cbd155826651c4e73dc553c1af950809a574d19b7497",
-      "last_changed": "2026-10-29T07:06:55.236Z",
+      "content_sha256": "8c1f55dcad4ca09eca8de1996c872c57ec4438aa8d9f7d112d91d7ad76b9bb16",
+      "last_changed": "2026-10-29T07:16:51.818Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -723,8 +723,8 @@
     },
     "/llms.txt": {
       "path": "/llms.txt",
-      "content_sha256": "b44ebce459bd01f0372c36ee3f82abd7d3caeac8ff754250e646992f01f56b7a",
-      "last_changed": "2026-10-29T06:36:59.476Z",
+      "content_sha256": "64ce145bc939654e6d35a22b633a78e860e33e1ab0aff9f57624d7404f96c272",
+      "last_changed": "2026-10-29T07:16:51.204Z",
       "priority": 86
     },
     "/llms-full.txt": {
