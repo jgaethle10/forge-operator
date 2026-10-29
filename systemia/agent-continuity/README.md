@@ -358,3 +358,94 @@ state into temporary owned test directories with synthetic grants, and is
 **not** an authorized production mission or runtime receipt. Real live
 commissioning still requires release approval, owned enrollment and
 independent canary evidence under #1707.
+
+## Historical full-team archive reconciliation, PRIVATE source only
+
+An August 30, 2026 founder-review report contains a historical 21-name
+full-team run (Systemia plus 20 downstream roles) and historical execution
+receipt references. An October 16/17 audit names 19 role candidates among
+22 registered roles. The two historical name lists have **22 distinct names**;
+the August source introduces three additional names and the October list adds
+one not present in the August run. This is a **name-level** reconciliation
+lead, **not** an independently signed identity baseline, proof that the same
+personality/persona still exists, or proof of current live compute.
+
+Keep the founder's private historical receipt-to-name source **outside this
+repository**. The read-only census supports a separate owner-controlled
+`--historical-leads` JSON file with schema
+`evercraft.agent-continuity.historical-name-leads.v1`, a
+`source.google_drive_file_id`, `august_role_names[]`, and
+`historical_role_id_baseline_verified:false`. The private file must be
+owned by the current operating user, a regular non-symlink file and mode 0600.
+
+```sh
+node systemia/agent-continuity/reconcile-owned-roster.mjs \
+  --signed-roster /secure/owned-raven/registry/snapshot.json \
+  --trust-keys /secure/owned-raven/commissioned-trust.json \
+  --historical-leads /secure/owner/historical-name-leads.json
+```
+
+Output separates the 21 August names, 19 October names, 22 candidate
+distinct names, current independently signed role matches and unmatched
+names. It **always** holds until immutable historical IDs and live worker
+evidence are independently authenticated. It does not publish the private
+historical source or query the retired registry.
+
+## First actual owned commissioned worker canary (not a simulation)
+
+A narrowly scoped operator-run command is available at
+`systemia/raven/run-first-commissioned-canary.mjs`. Its request is a
+private owner-only 0600 JSON file:
+
+```json
+{
+  "schema": "evercraft.raven.commissioned-single-worker-canary.v1",
+  "request_id": "<exact-existing-signed-mission-request-id>",
+  "mission_key": "<exact-existing-signed-mission-key>",
+  "work_key": "<exact-existing-signed-work-key>",
+  "reviewer_id": "<signed-reviewer-lane>",
+  "agent_id": "<immutable-active-agent-id-from-signed-registry>",
+  "input": "Examine only the authorized private internal case. Do not contact anyone.",
+  "internal_analysis_only": true,
+  "no_external_actions": true
+}
+```
+
+Preflight **without compute**, on an enrolled, authorized owned node:
+
+```sh
+node systemia/raven/run-first-commissioned-canary.mjs \
+  --request /secure/owner/first-canary.json \
+  --evidence-dir /secure/owned-raven/commissioned-evidence \
+  --trust-keys /secure/owned-raven/commissioned-trust.json
+```
+
+Actual first worker invocation **only once** after the authenticated
+owned receiver and independent active Passport/Execution Gate,
+worker-enrollment, worker-dispatch, and signed worker evidence writers are
+operational:
+
+```sh
+node systemia/raven/run-first-commissioned-canary.mjs \
+  --request /secure/owner/first-canary.json \
+  --evidence-dir /secure/owned-raven/commissioned-evidence \
+  --trust-keys /secure/owned-raven/commissioned-trust.json \
+  --inference-token-file /secure/owned-raven/inference-control-token \
+  --origin http://127.0.0.1:4322 --execute
+```
+
+The canary only calls a **loopback** commissioned endpoint after separately
+signed, fresh roster and preflight validation. The receiving gateway must
+independently verify live authority/enrollment and produce an identity-bound,
+separately signed worker receipt. The command reads that private worker
+receipt back and authenticates exact output hash, role, mission and runtime
+before it can report `verified_single_worker_execution`.
+
+**This is not a completed formation or mission.** A one-lane canary explicitly
+reports `full_team_completed:false` and
+`juniper_writeback_verified:false`. Full team synthesis and real
+Juniper post-run writeback remain separately gated. Missing evidence,
+authentic native worker transport or live enrolled compute returns `held`,
+not a generated receipt. The source and CI tests use synthetic keys; no
+production original worker has been run or signed merely by merging this
+branch. Do **not** enable Node002 remote jobs to make this test pass.
