@@ -142,29 +142,17 @@ export function createHttpInferenceAdapter({
     throw new Error("legacy_provider_not_allowed_for_raven_inference");
   }
 
-  return {
-    adapter_id: "raven.http-inference.v1",
-    async infer({ request_id, role, prompt }) {
+  async function inferRequest({endpoint="/v1/infer", payload}) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
       try {
-        const response = await fetchImpl(base + "/v1/infer", {
+        const response = await fetchImpl(base + endpoint, {
           method: "POST",
           headers: {
             "content-type": "application/json",
             "authorization": "Bearer " + secret,
           },
-          body: JSON.stringify({
-            schema: "evercraft.raven.inference.request.v1",
-            request_id,
-            role,
-            input: prompt,
-            constraints: {
-              internal_analysis_only: true,
-              no_external_actions: true,
-              no_credential_return: true,
-            },
-          }),
+          body: JSON.stringify(payload),
           signal: controller.signal,
         });
         const body = await response.json().catch(() => ({
@@ -187,6 +175,42 @@ export function createHttpInferenceAdapter({
       } finally {
         clearTimeout(timer);
       }
+  }
+  const constraints = {
+    internal_analysis_only: true,
+    no_external_actions: true,
+    no_credential_return: true,
+  };
+  return {
+    adapter_id: "raven.http-inference.v1",
+    async infer({ request_id, role, prompt }) {
+      return inferRequest({
+        endpoint: "/v1/infer",
+        payload: {
+          schema: "evercraft.raven.inference.request.v1",
+          request_id, role, input: prompt, constraints,
+        },
+      });
+    },
+    async inferCommissioned({
+      request_id, role, prompt, agent_id, preflight_id,
+      registry_snapshot_hash, mission_key, work_key,
+    }) {
+      if (!clean(agent_id, 200) || ["sentinel", "juniper"].includes(clean(agent_id).toLowerCase()) ||
+          !clean(preflight_id, 200) ||
+          !/^sha256:[a-f0-9]{64}$/.test(String(registry_snapshot_hash || "")) ||
+          !clean(mission_key, 260) || !clean(work_key, 260)) {
+        throw new Error("raven_commissioned_identity_or_mission_binding_invalid");
+      }
+      return inferRequest({
+        endpoint: "/v1/commissioned/infer",
+        payload: {
+          schema: "evercraft.raven.commissioned-inference.request.v1",
+          request_id, reviewer_id: role, agent_id, mission_key, work_key,
+          preflight_id, registry_snapshot_hash,
+          input: prompt, constraints,
+        },
+      });
     },
   };
 }
@@ -204,6 +228,14 @@ export function createRavenTeamReviewExecutor({
     assertRequest(request);
     const startedAt = now().toISOString();
     const commissioned = request.requested_team === "commissioned";
+    if (commissioned && typeof inferenceAdapter.inferCommissioned !== "function") {
+      return {
+        status: "blocked",
+        blocked_reason: "commissioned_worker_transport_not_configured",
+        commissioned_identity_verified: false,
+        inference_calls_performed: 0,
+      };
+    }
     let preflight = null;
     if (commissioned) {
       if (!commissionedGate || typeof commissionedGate.preflight !== "function") {
@@ -238,13 +270,22 @@ export function createRavenTeamReviewExecutor({
     const outputs = await Promise.all(reviewers.map(async (role) => {
       const callId = clean(request.request_id, 200) + ":" + role.reviewer_id;
       try {
-        const result = await inferenceAdapter.infer({
+        const identity = commissioned ? preflight.reviewer_assignments[role.reviewer_id] : null;
+        const params = {
           request_id: callId,
           role: role.reviewer_id,
-          prompt: rolePrompt(request, role) +
-            (commissioned ? "\nSIGNED COMMISSIONED ROLE ID: " +
-              preflight.reviewer_assignments[role.reviewer_id] : ""),
-        });
+          prompt: rolePrompt(request, role),
+        };
+        const result = commissioned
+          ? await inferenceAdapter.inferCommissioned({
+            ...params,
+            agent_id: identity,
+            preflight_id: preflight.preflight_id,
+            registry_snapshot_hash: preflight.registry_snapshot_hash,
+            mission_key: request.mission_key,
+            work_key: request.work_key,
+          })
+          : await inferenceAdapter.infer(params);
         let workerProof = null;
         if (commissioned) {
           if (typeof commissionedGate.verifyRoleExecution !== "function") {
