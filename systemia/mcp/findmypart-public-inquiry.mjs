@@ -76,6 +76,24 @@ export function readFindMyPartPrivateInquiry({
  return data;
 }
 
+// Publicly safe, non-sensitive intake availability signal. No customer data.
+export function findMyPartInquiryReadiness({
+ storeDir=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','findmypart-leads'),
+ key=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
+}={}){
+ try{
+  encryptionKey(key);
+  const st=fs.lstatSync(storeDir);
+  if(!st.isDirectory()||st.isSymbolicLink()||(st.mode&0o077)!==0)return {intake_available:false};
+  fs.accessSync(storeDir,fs.constants.W_OK);
+  const alertDir=path.join(storeDir,'alert-outbox');
+  const a=fs.lstatSync(alertDir);
+  if(!a.isDirectory()||a.isSymbolicLink()||(a.mode&0o077)!==0)return {intake_available:false};
+  fs.accessSync(alertDir,fs.constants.W_OK);
+  return {intake_available:true};
+ }catch{return {intake_available:false}}
+}
+
 export function createFindMyPartInquiryHandler({
  storeDir=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','findmypart-leads'),
  key=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
