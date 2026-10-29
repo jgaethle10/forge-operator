@@ -1,7 +1,7 @@
 name: Evercraft Worlds browser projection
 on:
   pull_request:
-    paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs','docs/worlds/**','.github/workflows/evercraft-worlds.yml']
+    paths: ['public/worlds/**','systemia/world-engine/worlds-integration.test.ts','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs','docs/worlds/**','.github/workflows/evercraft-worlds.yml']
   push:
     branches: [main]
     paths: ['public/worlds/**','tests/world-core.test.mjs','tests/world-bridge.test.mjs','tests/worlds-benchmark.mjs','scripts/probe-evercraft-worlds-browser.mjs']
@@ -23,6 +23,17 @@ jobs:
         run: node --test tests/world-core.test.mjs tests/world-bridge.test.mjs
       - name: CPU microbenchmark (NOT a browser performance claim)
         run: node tests/worlds-benchmark.mjs
+  engine-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - name: Validate Worlds through authoritative Systemia World Engine
+        run: node --import tsx --test systemia/world-engine/worlds-integration.test.ts
   browser-conformance:
     runs-on: ubuntu-latest
     timeout-minutes: 12
