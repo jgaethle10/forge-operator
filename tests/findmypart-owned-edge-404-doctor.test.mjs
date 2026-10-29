@@ -61,6 +61,6 @@ test('doctor refuses to treat a page as operational intake if readiness is not s
 });
 test('doctor does not mistake an unavailable service for the wrong source',t=>{
  const report=run(t,{slash:'000',noSlash:'000',readiness:'000'});
- assert.match(report,/findmypart_local_slash_http=000/);
- assert.match(report,/findmypart_diagnosis=route_not_yet_proven/);
+ assert.match(report,/findmypart_local_slash_http=unreachable/);
+ assert.match(report,/findmypart_diagnosis=local_fabric_unreachable/);
 });
