@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
+  PULSEGRID_MAX_CLIP_BARS,
   PulseGridAudioEngine,
   PulseGridBrowserAudioAssetVault,
   applyPulseGridOperation,
@@ -13,6 +14,17 @@ import {
   type PulseGridOperation,
   type PulseGridSession,
 } from '../systemia/media-studio/pulsegrid-browser';
+import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
+import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
+import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
+import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
+import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
+import {analyzePulseGridArrangementArc} from '../systemia/media-studio/pulsegrid-arrangement-arc.mjs';
+import {analyzeFoundryPianoTailCoverage} from '../systemia/media-studio/instrument-foundry-tail-audit.mjs';
+import type {FoundryDryPcmAudit} from '../systemia/media-studio/instrument-foundry-dry-pcm.mjs';
+import type {FoundryOfflineBusResult} from '../systemia/media-studio/instrument-foundry-offline-bus.mjs';
+import {decodeFoundryMidiSustain,mergeFoundryMidiPedalEvent,removeFoundryMidiPedalEvent} from '../systemia/media-studio/instrument-foundry-midi-pedal.mjs';
+import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
 const PITCHES=Array.from({length:13},(_,index)=>72-index);
@@ -21,6 +33,12 @@ const NOTE_NAMES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 function noteName(pitch:number){
   return NOTE_NAMES[pitch%12]+String(Math.floor(pitch/12)-1);
 }
+
+type PedalCapture={
+  trackId:string;scene:number;clipId:string;
+  original:Array<{step:number;down:boolean}>;
+  events:Array<{step:number;down:boolean}>;
+};
 
 type HeldMidiNote={
   trackId:string;
@@ -42,6 +60,9 @@ function latestUndoableReceipt(session:PulseGridSession){
 export default function FallenSessions(){
   const [session,setSession]=useState<PulseGridSession>(()=>createPulseGridSession('First Light'));
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
+  const [foundryRootPitch,setFoundryRootPitch]=useState(60);
+  const [foundryVelocityMin,setFoundryVelocityMin]=useState(0);
+  const [foundryVelocityMax,setFoundryVelocityMax]=useState(1);
   const [selectedScene,setSelectedScene]=useState(0);
   const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
   const [selectedStepIndex,setSelectedStepIndex]=useState<number|null>(null);
@@ -51,6 +72,11 @@ export default function FallenSessions(){
   const [recording,setRecording]=useState(false);
   const [midiEnabled,setMidiEnabled]=useState(false);
   const [midiInputs,setMidiInputs]=useState(0);
+  const [pendingPedalCount,setPendingPedalCount]=useState(0);
+  const [dryPcmAudit,setDryPcmAudit]=useState<FoundryDryPcmAudit|null>(null);
+  const [offlineBusAudit,setOfflineBusAudit]=useState<FoundryOfflineBusResult|null>(null);
+  const [offlineBusBusy,setOfflineBusBusy]=useState(false);
+  const [offlineAuditionUrl,setOfflineAuditionUrl]=useState<string|null>(null);
   const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
@@ -60,8 +86,12 @@ export default function FallenSessions(){
   const playheadRef=useRef(0);
   const midiAccessRef=useRef<any>(null);
   const heldMidiNotesRef=useRef(new Map<string,HeldMidiNote>());
+  const midiPedalSourceRef=useRef<string|null>(null);
+  const midiPedalCaptureRef=useRef<PedalCapture|null>(null);
+  const selectedPedalStepRef=useRef<number|null>(null);
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
+  const foundryInputRef=useRef<HTMLInputElement|null>(null);
   const recorderRef=useRef<MediaRecorder|null>(null);
   const recordingStreamRef=useRef<MediaStream|null>(null);
   const recordingSceneRef=useRef(0);
@@ -88,16 +118,29 @@ export default function FallenSessions(){
   },[session]);
 
   useEffect(()=>{
+    setDryPcmAudit(null);setOfflineBusAudit(null);setOfflineAuditionUrl(null);
+  },[session,selectedScene]);
+  useEffect(()=>()=>{if(offlineAuditionUrl)URL.revokeObjectURL(offlineAuditionUrl)},[offlineAuditionUrl]);
+
+  useEffect(()=>{
+    selectedPedalStepRef.current=selectedStepIndex;
+  },[selectedStepIndex]);
+
+  useEffect(()=>{
     selectedTrackRef.current=selectedTrackId;
+    midiPedalSourceRef.current=null;
     setSelectedNoteId(null);
     setSelectedStepIndex(null);
   },[selectedTrackId]);
 
   useEffect(()=>{
     selectedSceneRef.current=selectedScene;
+    midiPedalSourceRef.current=null;
     setSelectedNoteId(null);
     setSelectedStepIndex(null);
+    const active=Boolean(audioRef.current?.status.playing);
     audioRef.current?.setScene(selectedScene);
+    if(active)setStatus('Scene changed · playback paused to verify recordings. Press Play to continue.');
   },[selectedScene]);
 
   useEffect(()=>()=>{ 
@@ -118,6 +161,8 @@ export default function FallenSessions(){
     }
     midiAccessRef.current=null;
     heldMidiNotesRef.current.clear();
+    midiPedalSourceRef.current=null;
+    midiPedalCaptureRef.current=null;
     if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();}
   },[]);
 
@@ -130,6 +175,9 @@ export default function FallenSessions(){
       return;
     }
     try{
+      setDryPcmAudit(null);
+      setOfflineBusAudit(null);
+      setOfflineAuditionUrl(null);
       await audioRef.current?.play(session,selectedScene);
       setPlaying(true);
       setStatus('Playing canonical scene '+(selectedScene+1)+'.');
@@ -187,6 +235,128 @@ export default function FallenSessions(){
       successLabel+' · '+asset.duration_sec.toFixed(2)+'s · '+
       asset.sample_rate+' Hz · '+asset.channels+'ch · rights '+asset.rights
     );
+  }
+
+  async function armFoundryPianoFromTake(){
+    // Only an explicit human audition action may bind a local WAV to the
+    // canonical MIDI notes. Never infer sample copyright from storage.
+    setStatus('Checking sample before arming recorded piano…');
+    try{
+      const current=sessionRef.current;
+      const audioTrack=current.tracks.find(track=>track.type==='audio');
+      const keysTrack=current.tracks.find(track=>track.id==='keys'&&track.type==='synth');
+      if(!audioTrack||!keysTrack)throw new Error('Piano and Audio Take tracks are required.');
+      const assetId=audioTrack.clips[selectedScene]?.audio_asset_id;
+      if(!assetId)throw new Error('Import a verified Foundry WAV into this scene first.');
+      const asset=current.assets.find(candidate=>candidate.id===assetId);
+      if(!asset||asset.mime_type!=='audio/wav'||asset.rights==='restricted'){
+        throw new Error('A permitted canonical WAV is required for piano audition.');
+      }
+      const blob=await vaultRef.current?.getVerifiedBlob(asset);
+      if(!blob)throw new Error('Foundry recording is missing from local verified storage.');
+      const sampleBytes=new Uint8Array(await blob.arrayBuffer());
+      await verifyFoundryWavBytes(asset,sampleBytes);
+      const signalQa=analyzeFoundryPianoWav(sampleBytes);
+      if(signalQa.status!=='technical_signal_pass'){
+        throw new Error('Piano capture held: '+signalQa.blockers.join(', ')+
+          '. Record another take before arming.');
+      }
+      const root=foundryRootPitch;
+      if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
+      const pitchEvidence=checkFoundryPianoRootPitch(sampleBytes,root);
+      if(pitchEvidence.status!=='consistent'){
+        throw new Error('Piano root MIDI '+root+' not confirmed ('+pitchEvidence.reason+
+          (pitchEvidence.cents_error===null?'':', '+pitchEvidence.cents_error+' cents')+
+          '). Keep this WAV for independent musician pitch review or record another take.');
+      }
+      if(!Number.isFinite(foundryVelocityMin)||!Number.isFinite(foundryVelocityMax)||
+         foundryVelocityMin<0||foundryVelocityMax>1||foundryVelocityMin>=foundryVelocityMax){
+        throw new Error('Recorded velocity layer must have a valid min/max range from 0 to 1.');
+      }
+      const existing=keysTrack.clips[selectedScene]?.provenance?.foundry_piano_patch as FoundryInstrumentPatch|undefined;
+      const patch=appendFoundryPianoSample(existing,{
+        asset_id:asset.id,root_pitch:root,velocity_min:foundryVelocityMin,
+        velocity_max:foundryVelocityMax,release_sec:0.22,
+      },current.assets);
+      const result=applyPulseGridTransaction(current,{
+        intent:'Add locally verified recording to one reversible multi-note piano bank; internal audition only.',
+        operations:[
+          // Detach the raw Audio Take clip after assigning the SAME registered
+          // asset to MIDI Keys. Otherwise Play would trigger both at once.
+          // The asset remains in the vault and undo restores this attachment.
+          {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:null},
+          {type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,patch},
+        ],
+      },'human');
+      setSession(result.session);
+      setSelectedTrackId(keysTrack.id);
+      setStatus('Foundry piano bank now has '+patch.samples.length+' verified sample layers; latest MIDI root '+root+' (±2 semitones). Technical signal gate passed (peak '+signalQa.metrics.peak_dbfs+
+        ' dBFS, tail '+signalQa.metrics.tail_rms_dbfs+
+        ' dBFS, pitch '+pitchEvidence.cents_error+
+        ' cents from MIDI '+root+'); raw take detached; musician review and performer rights still unverified.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
+    }
+  }
+
+  async function importFoundryWavFile(file:File){
+    // This is a strictly local, unknown-rights audition path. It cannot certify
+    // a performer, claim sample ownership, or authorize public music release.
+    const vault=vaultRef.current;
+    if(!vault)return;
+    const scene=selectedScene;
+    setStatus('Verifying Foundry WAV for internal audition…');
+    try{
+      if(!/\.wav$/i.test(file.name)||file.size<44||file.size>64*1024*1024){
+        throw new Error('Foundry import requires a WAV file between 44 bytes and 64 MB.');
+      }
+      // Normalize inconsistent browser WAV MIME types without modifying bytes.
+      const wav=new Blob([file],{type:'audio/wav'});
+      const asset=await vault.ingest(wav,{
+        source_name:file.name,
+        source_refs:['local-file:'+file.name],
+        source_state:'imported',
+        rights:'unknown',
+      });
+      const verified=await vault.getVerifiedBlob(asset);
+      if(!verified)throw new Error('The stored Foundry take was not found.');
+      await verifyFoundryWavBytes(asset,new Uint8Array(await verified.arrayBuffer()));
+      const current=sessionRef.current;
+      const audioTrack=current.tracks.find((candidate)=>candidate.type==='audio');
+      if(!audioTrack)throw new Error('No canonical audio track exists.');
+      // This digest proves the locally supplied bytes, not artist/sample ownership.
+      const barDuration=4*60/current.transport.bpm; // 16 canonical 16th-steps per bar
+      const requiredBars=Math.max(1,Math.ceil((asset.duration_sec+0.01)/barDuration));
+      if(requiredBars>PULSEGRID_MAX_CLIP_BARS){
+        throw new Error('Foundry take exceeds the 16-bar audition limit. Use a shorter WAV; long-form masters require a separate arrangement path.');
+      }
+      const candidate={...asset,source_refs:['sha256:'+asset.digest]};
+      const admitted=compileFoundryImport({
+        session:current,assets:[candidate],
+        attachments:[{track_id:audioTrack.id,scene,asset_id:asset.id}],
+        actor:'human',
+      });
+      const currentBars=audioTrack.clips[scene]?.bars||1;
+      const operations=[
+        ...(requiredBars>currentBars
+          ? [{type:'clip.set_bars' as const,track_id:audioTrack.id,scene,bars:requiredBars}]
+          : []),
+        ...admitted.transaction.operations,
+        {type:'clip.set_audio_playback_mode' as const,track_id:audioTrack.id,scene,mode:'one_shot' as const},
+      ];
+      const committed=applyPulseGridTransaction(current,{
+        intent:'Verify, size, and attach Foundry WAV for internal audition.',
+        operations,
+      },admitted.actor);
+      setSession(committed.session);
+      setSelectedTrackId(audioTrack.id);
+      setSelectedScene(scene);
+      setStatus('Foundry WAV verified and attached for local audition · rights UNKNOWN · no commercial release clearance.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Foundry WAV verification failed.');
+    }finally{
+      if(foundryInputRef.current)foundryInputRef.current.value='';
+    }
   }
 
   async function importAudioFile(file:File){
@@ -305,9 +475,104 @@ export default function FallenSessions(){
     setStatus(count?('MIDI ready · '+count+' input'+(count===1?'':'s')):'MIDI enabled · no inputs detected');
   }
 
+  function commitCapturedPedal(){
+    const captured=midiPedalCaptureRef.current;
+    if(!captured)return;
+    if(audioRef.current?.status.playing){
+      setStatus('Stop playback before committing the buffered pedal take.');
+      return;
+    }
+    const current=sessionRef.current;
+    const target=current.tracks.find(candidate=>candidate.id===captured.trackId);
+    const targetClip=target?.clips[captured.scene];
+    const existing=targetClip?.provenance?.foundry_piano_pedal;
+    const currentEvents=Array.isArray(existing)
+      ? existing as Array<{step:number;down:boolean}>:[];
+    if(!targetClip||targetClip.id!==captured.clipId||
+       JSON.stringify(currentEvents)!==JSON.stringify(captured.original)){
+      setStatus('Pedal capture held: the original clip changed. Discard this take or inspect the clip before retrying.');
+      return;
+    }
+    try{
+      if(JSON.stringify(captured.events)!==JSON.stringify(captured.original)){
+        const result=applyPulseGridOperation(current,{
+          type:'clip.set_foundry_piano_pedal',track_id:captured.trackId,
+          scene:captured.scene,events:captured.events
+        },'controller');
+        sessionRef.current=result.session;
+        setSession(result.session);
+        setStatus('CC64 pedal take committed with undo receipt · '+result.receipt.id.slice(0,8));
+      }else{
+        setStatus('CC64 pedal take contained no net change.');
+      }
+      midiPedalCaptureRef.current=null;
+      setPendingPedalCount(0);
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Unable to commit captured pedal events.');
+    }
+  }
+
+  function discardCapturedPedal(){
+    midiPedalCaptureRef.current=null;
+    midiPedalSourceRef.current=null;
+    setPendingPedalCount(0);
+    setStatus('Uncommitted MIDI pedal take discarded; canonical piano clip unchanged.');
+  }
+
   function handleMidiMessage(input:any,event:any){
     const data=Array.from(event?.data||[]) as number[];
     if(data.length<3)return;
+    const sustain=decodeFoundryMidiSustain(data);
+    if(sustain){
+      const controllerKey=String(input?.id||'midi')+':'+sustain.channel;
+      const owner=midiPedalSourceRef.current;
+      // Never fuse conflicting MIDI devices/channels into one sustain take.
+      if(owner&&owner!==controllerKey)return;
+      if(!owner&&!sustain.down)return;
+      const current=sessionRef.current;
+      const trackId=selectedTrackRef.current,scene=selectedSceneRef.current;
+      const target=current.tracks.find(candidate=>candidate.id===trackId);
+      const targetClip=target?.clips[scene];
+      if(!target||target.type!=='synth'||!targetClip){
+        setStatus('CC64 ignored: select a pitched piano track.');
+        return;
+      }
+      const sourceEvents=targetClip.provenance?.foundry_piano_pedal;
+      const original=Array.isArray(sourceEvents)
+        ? sourceEvents as Array<{step:number;down:boolean}>:[];
+      const playingNow=Boolean(audioRef.current?.status.playing);
+      const step=Math.max(0,Math.min(targetClip.steps.length-1,
+        playingNow?Math.floor(playheadRef.current%targetClip.steps.length):
+        (selectedPedalStepRef.current??0)));
+      const pending=midiPedalCaptureRef.current;
+      if(pending&&(pending.trackId!==trackId||pending.scene!==scene||
+          pending.clipId!==targetClip.id)){
+        setStatus('Finish or discard the buffered CC64 take before recording another clip.');
+        return;
+      }
+      try{
+        const before=pending?pending.events:original;
+        const events=mergeFoundryMidiPedalEvent(before,targetClip.steps.length,step,sustain.down);
+        midiPedalSourceRef.current=sustain.down?controllerKey:null;
+        if(playingNow||pending){
+          midiPedalCaptureRef.current=pending
+            ? {...pending,events}
+            : {trackId,scene,clipId:targetClip.id,original:structuredClone(original),events};
+          setPendingPedalCount(events.length);
+          setStatus('CC64 captured at step '+(step+1)+' · staged, not applied during playback. Stop then Commit Pedal Take.');
+        }else if(JSON.stringify(events)!==JSON.stringify(original)){
+          const result=applyPulseGridOperation(current,{
+            type:'clip.set_foundry_piano_pedal',track_id:trackId,scene,events
+          },'controller');
+          sessionRef.current=result.session;
+          setSession(result.session);
+          setStatus('MIDI CC64 '+(sustain.down?'down':'up')+' · step '+(step+1)+' · reversible controller receipt.');
+        }
+      }catch(error){
+        setStatus(error instanceof Error?error.message:'MIDI CC64 pedal event rejected.');
+      }
+      return;
+    }
     const statusByte=Number(data[0])||0;
     const command=statusByte&0xf0;
     const channel=statusByte&0x0f;
@@ -368,6 +633,7 @@ export default function FallenSessions(){
           microtiming:0,
         },
       },'controller');
+      sessionRef.current=result.session;
       setSession(result.session);
       setStatus(
         'MIDI note committed · '+noteName(held.pitch)+' · '+
@@ -387,6 +653,7 @@ export default function FallenSessions(){
       }
       midiAccessRef.current=null;
       heldMidiNotesRef.current.clear();
+      midiPedalSourceRef.current=null;
       setMidiEnabled(false);
       setMidiInputs(0);
       setStatus('MIDI disconnected.');
@@ -482,7 +749,29 @@ export default function FallenSessions(){
     }
   }
 
+  function editFoundryPedal(down:boolean|null){
+    if(playing||recording){setStatus('Stop playback or recording before editing the piano pedal.');return;}
+    if(midiPedalCaptureRef.current){setStatus('Commit or discard the buffered MIDI pedal take before hand-editing.');return;}
+    if(track.type!=='synth'){setStatus('Recorded piano pedal events require a pitched instrument track.');return;}
+    const step=Math.max(0,Math.min(clip.steps.length-1,selectedStepIndex??0));
+    const existing=Array.isArray(clip.provenance?.foundry_piano_pedal)
+      ? clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>:[];
+    try{
+      const events=down===null
+        ? removeFoundryMidiPedalEvent(existing,clip.steps.length,step)
+        : mergeFoundryMidiPedalEvent(existing,clip.steps.length,step,down);
+      if(JSON.stringify(events)===JSON.stringify(existing)){
+        setStatus('No pedal change at selected step.');
+        return;
+      }
+      apply({type:'clip.set_foundry_piano_pedal',track_id:track.id,scene:selectedScene,events},'human');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Piano pedal edit rejected.');
+    }
+  }
+
   function selectOrCreateNote(pitch:number,step:number){
+    setSelectedStepIndex(step);
     const existing=clip.notes.find((note)=>note.pitch===pitch&&Math.round(note.start)===step);
     if(existing){
       setSelectedNoteId(existing.id);
@@ -665,6 +954,10 @@ export default function FallenSessions(){
     setStatus('New canonical session created.');
   }
 
+  const musicInsights=useMemo(()=>analyzePulseGridMusic(session,selectedScene),[session,selectedScene]);
+  const counterpointEvidence=useMemo(()=>analyzePulseGridCounterpoint(session,selectedScene),[session,selectedScene]);
+  const arrangementArc=useMemo(()=>analyzePulseGridArrangementArc(session,selectedScene),[session,selectedScene]);
+  const pianoTailAudit=useMemo(()=>analyzeFoundryPianoTailCoverage(session,selectedScene),[session,selectedScene]);
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
   const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
@@ -697,11 +990,32 @@ export default function FallenSessions(){
         hidden
         onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
       />
+      <input
+        ref={foundryInputRef}
+        type="file"
+        accept=".wav,audio/wav,audio/x-wav,audio/wave"
+        hidden
+        onChange={(event)=>{const file=event.target.files?.[0];if(file)void importFoundryWavFile(file)}}
+      />
       <section className="fsToolbar" aria-label="Session controls">
         <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
         <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
         <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
         <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
+        <button onClick={()=>foundryInputRef.current?.click()} disabled={recording}>Import Foundry WAV</button>
+        <label className="fsFoundryRootLabel">Piano root MIDI
+          <input aria-label="Foundry piano root MIDI note" type="number" min={21} max={108}
+            value={foundryRootPitch} onChange={(event)=>setFoundryRootPitch(Number(event.target.value))}/>
+        </label>
+        <label className="fsFoundryRootLabel">Velocity min
+          <input aria-label="Foundry minimum sample velocity" type="number" min={0} max={1} step={0.05}
+            value={foundryVelocityMin} onChange={(event)=>setFoundryVelocityMin(Number(event.target.value))}/>
+        </label>
+        <label className="fsFoundryRootLabel">Velocity max
+          <input aria-label="Foundry maximum sample velocity" type="number" min={0} max={1} step={0.05}
+            value={foundryVelocityMax} onChange={(event)=>setFoundryVelocityMax(Number(event.target.value))}/>
+        </label>
+        <button onClick={()=>void armFoundryPianoFromTake()} disabled={recording}>Arm Recorded Piano</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
@@ -711,6 +1025,192 @@ export default function FallenSessions(){
       </section>
 
       <div className="fsStatus">{status}</div>
+      <details className="fsMusicInsights">
+        <summary>Music Theory Lab · Scene {selectedScene+1} · {musicInsights.note_count} pitched notes</summary>
+        <p className="fsMusicInsightCaution">Observations for your ears to evaluate. No inferred key,
+          originality score, automatic composition edits or publishing clearance.</p>
+        <div className="fsMusicInsightStats">
+          <span>Parts {musicInsights.pitched_track_count}</span>
+          <span>Prominent MIDI pitch classes {musicInsights.prominent_pitch_classes.map(item=>item.pitch_class).join(' · ')||'none'}</span>
+          <span>Register overlaps {musicInsights.register_proximity_examples}</span>
+          <span>Between-note rests {musicInsights.track_profiles.reduce((sum,part)=>sum+part.rest_gap_count,0)}</span>
+        </div>
+        <p className="fsMusicInsightCaution">Complete chromatic evidence (12 classes, note count / duration-weighted MIDI velocity;
+          zero means absent, not an inferred key): {musicInsights.pitch_class_evidence.map(item=>
+            item.pitch_class+': '+item.note_count+' / '+item.weight.toFixed(3)).join(' · ')}</p>
+        {musicInsights.track_profiles.filter(part=>part.rest_gap_count>0).map(part=>(
+          <p key={'rest-'+part.track_id} className="fsMusicInsightCaution">
+            {part.track_id}: {part.rest_gap_count} measured gaps, longest {part.longest_rest_steps.toFixed(2)} steps.
+            Consider whether they give another voice space or heighten anticipation.
+          </p>
+        ))}
+        {musicInsights.findings.map((finding,index)=>(
+          <p key={finding.kind+'-'+index}><strong>{finding.observation}</strong> {finding.recommendation}</p>
+        ))}
+        <p className="fsMusicInsightCaution">Dynamic arc by quarter: {musicInsights.velocity_arc.map(q=>
+          q.mean_note_velocity.toFixed(2)).join(' · ')}. Velocity is not a loudness measurement.</p>
+        <div className="fsMusicInsightStats" aria-label="Counterpoint and motion analysis">
+          <span>Aligned voice onsets {counterpointEvidence.simultaneous_single_note_onsets}</span>
+          <span>Contrary motions {counterpointEvidence.motion_summary.contrary}</span>
+          <span>Parallel fifths {counterpointEvidence.motion_summary.parallel_fifths}</span>
+          <span>Parallel octaves/unisons {counterpointEvidence.motion_summary.parallel_octaves_or_unisons}</span>
+        </div>
+        {counterpointEvidence.findings.map((finding,index)=>(
+          <p key={'counterpoint-'+finding.kind+'-'+index}>
+            <strong>{finding.observation}</strong> {finding.recommendation}
+          </p>
+        ))}
+        <p className="fsMusicInsightCaution">Counterpoint evidence is limited to aligned, unambiguous single-note onsets.
+          No voice identity is assumed for chords or overlapping notes. Classical parallel intervals are not universal errors.</p>
+
+        <details className="fsPedalPanel">
+          <summary>Recorded Piano · Sustain Pedal</summary>
+          <p className="fsMusicInsightCaution">Choose a pedal step without creating or changing a piano note. The recorded piano can defer key-off only within its actual WAV and clip duration.</p>
+          <label className="fsPedalStepLabel">Pedal step
+            <input aria-label="Piano pedal event step" type="number" min={1} max={clip.steps.length}
+              value={(selectedStepIndex??0)+1}
+              onChange={event=>setSelectedStepIndex(Math.max(0,Math.min(clip.steps.length-1,Math.round(Number(event.target.value)||1)-1)))}/>
+            <span>of {clip.steps.length}</span>
+          </label>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||recording||track.type!=='synth'}
+              onClick={()=>editFoundryPedal(true)}>Pedal down</button>
+            <button type="button" disabled={playing||recording||track.type!=='synth'}
+              onClick={()=>editFoundryPedal(false)}>Pedal up</button>
+            <button type="button" disabled={playing||recording||track.type!=='synth'}
+              onClick={()=>editFoundryPedal(null)}>Remove step event</button>
+          </div>
+          <p className="fsMusicInsightCaution">MIDI CC64 (keyboard pedal): 0–63 up, 64–127 down. While playing, events are buffered so edits cannot interrupt authorized sample playback; stop and explicitly commit or discard the take. No live acoustic damper response is asserted.</p>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||!midiPedalCaptureRef.current}
+              onClick={commitCapturedPedal}>Commit Pedal Take</button>
+            <button type="button" disabled={!midiPedalCaptureRef.current}
+              onClick={discardCapturedPedal}>Discard Take</button>
+            <span className="fsPedalPending">{pendingPedalCount} proposed timeline transition{pendingPedalCount===1?'':'s'}</span>
+          </div>
+          <p className="fsMusicInsightCaution">Authored events: {Array.isArray(clip.provenance?.foundry_piano_pedal)&&clip.provenance.foundry_piano_pedal.length
+            ? (clip.provenance.foundry_piano_pedal as Array<{step:number;down:boolean}>)
+              .map(event=>'step '+(event.step+1)+' '+(event.down?'down':'up')).join(' · ')
+            :'none (default pedal up)'}. This is CC64 score capture, not device-audible verification, physical sympathetic resonance, or half-pedal modeling.</p>
+        </details>
+
+        <details className="fsTailPanel">
+          <summary>Recorded Piano Tail Budget · {pianoTailAudit.total_findings} flag{pianoTailAudit.total_findings===1?'':'s'}</summary>
+          <p className="fsMusicInsightCaution">Read-only score-vs-recording-duration estimate. Asset duration is metadata, not yet measured from decoded browser audio. This does not measure true acoustic decay, room sound, loudness, recording rights or human listening quality. Muted and probabilistic written notes are included.</p>
+          <p className="fsMusicInsightCaution">Actual browser decoded-sample check this Play: {audioStatus.decoded_sample_tail_warnings??0} scheduled recorded-piano voice{(audioStatus.decoded_sample_tail_warnings??0)===1?'':'s'} lacking full hold/release audio, including {audioStatus.decoded_key_hold_shortfalls??0} cut short before key/pedal release. The counts reset at each Play and can repeat when a clip loops; zero is not a listening-quality certificate.</p>
+          <p className="fsMusicInsightCaution">Decoded-PCM attack decisions this Play: {audioStatus.decoded_fast_attack_voices??0} zero-aligned notes received a fast 0.5 ms onset; {audioStatus.decoded_cut_in_guard_voices??0} abrupt sample starts received a 3 ms protective microfade. Other notes use bounded or uninspected attack guards. This is scheduling evidence, not human-rated sound quality.</p>
+          <p className="fsMusicInsightCaution">Pre-roll alignment this Play: {audioStatus.decoded_preroll_aligned_voices??0} recorded-piano voice{(audioStatus.decoded_preroll_aligned_voices??0)===1?'':'s'} began past confidently detected operator silence. Other voices were left at the original WAV boundary. The source PCM is never changed, and a corrected MIDI onset is not an audible quality certificate.</p>
+          <p className="fsMusicInsightCaution">Sampled-piano chord overlap this Play: {audioStatus.sampled_piano_max_overlap??0} simultaneous voice{(audioStatus.sampled_piano_max_overlap??0)===1?'':'s'} across {audioStatus.sampled_piano_scheduled_voices??0} recorded-note event{(audioStatus.sampled_piano_scheduled_voices??0)===1?'':'s'}. Pre-effects summed voice-gain proxy: {(audioStatus.sampled_piano_gain_sum_proxy??0).toFixed(2)}. {audioStatus.sampled_piano_observations_complete===false?'Observation limit exceeded, incomplete. ':''}{audioStatus.sampled_piano_overlap_review?'Review dense-chord headroom by listening. ':'No sampled-voice gain-sum threshold triggered. '}These figures do not measure actual PCM peaks, DSP output clipping or perceived loudness; no voice has been compressed or dropped.</p>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||recording||!(audioStatus.sampled_piano_scheduled_voices??0)}
+              onClick={()=>setDryPcmAudit(audioRef.current?.auditRecordedPianoDryPeak()||null)}>
+              Inspect decoded chord PCM
+            </button>
+          </div>
+          <div className="fsPedalActions">
+            <button type="button" disabled={playing||recording||offlineBusBusy||!(audioStatus.sampled_piano_scheduled_voices??0)}
+              onClick={async()=>{
+                setOfflineBusBusy(true);
+                setOfflineBusAudit(null);
+                setOfflineAuditionUrl(null);
+                try{
+                  const result=await audioRef.current?.auditRecordedPianoOfflineBus();
+                  setOfflineBusAudit(result||null);
+                }catch(error){
+                  setStatus(error instanceof Error?error.message:'Offline piano mix review failed.');
+                }finally{setOfflineBusBusy(false)}
+              }}>
+              {offlineBusBusy?'Rendering piano bus…':'Inspect performed mix offline'}
+            </button>
+            <button type="button" disabled={playing||recording||offlineBusBusy||!(audioStatus.sampled_piano_scheduled_voices??0)}
+              onClick={async()=>{
+                setOfflineBusBusy(true);
+                setOfflineBusAudit(null);
+                setOfflineAuditionUrl(null);
+                try{
+                  const result=await audioRef.current?.auditRecordedPianoOfflineBus({
+                    window_sec:8,includeAuditionWav:true,
+                  });
+                  setOfflineBusAudit(result||null);
+                  if(result?.status==='offline_track_bus_pcm_measurement'&&result.audition_wav_bytes){
+                    // Copy into an exact-sized ArrayBuffer for browser BlobPart
+                    // compatibility. Never send the WAV to a server or library.
+                    const payload=new ArrayBuffer(result.audition_wav_bytes.length);
+                    new Uint8Array(payload).set(result.audition_wav_bytes);
+                    setOfflineAuditionUrl(URL.createObjectURL(new Blob([payload],{type:'audio/wav'})));
+                  }
+                }catch(error){
+                  setStatus(error instanceof Error?error.message:'Private offline audio audition failed.');
+                }finally{setOfflineBusBusy(false)}
+              }}>
+              {offlineBusBusy?'Rendering…':'Hear up to eight seconds'}
+            </button>
+          </div>
+          {offlineAuditionUrl&&<div className="fsDryPeakReport">
+            <p>Private browser-only offline mix audition. Listen critically. This is not licensed for public distribution or certified as a mastered recording.</p>
+            <audio controls preload="none" src={offlineAuditionUrl} aria-label="Private eight-second PulseGrid offline mix audition" />
+          </div>}
+          {offlineBusAudit&&<div className="fsDryPeakReport" role="status">
+            {offlineBusAudit.status==='unavailable'
+              ? <p>Offline effects-bus inspection unavailable: {offlineBusAudit.reason}. No clean mixed peak is claimed.</p>
+              : <>
+                <p>Offline sampled-piano bus + master sample peak: <strong>{offlineBusAudit.sample_peak?.toFixed(3)}</strong> ({offlineBusAudit.peak_dbfs?.toFixed(2)} dBFS). Frames above full scale: <strong>{offlineBusAudit.over_full_scale_frames}</strong>, over {offlineBusAudit.window_sec?.toFixed(2)} seconds / {offlineBusAudit.analyzed_voices} recorded-piano voice{offlineBusAudit.analyzed_voices===1?'':'s'}, {offlineBusAudit.analyzed_audio_beds??0} imported audio bed{(offlineBusAudit.analyzed_audio_beds??0)===1?'':'s'}, and {offlineBusAudit.analyzed_synth_voices??0} actual synth-note event{(offlineBusAudit.analyzed_synth_voices??0)===1?'':'s'}, with {offlineBusAudit.analyzed_drum_hits??0} performed drum hit{(offlineBusAudit.analyzed_drum_hits??0)===1?'':'s'}.</p>
+                <p className="fsMusicInsightCaution">Source budget: <strong>{offlineBusAudit.reviewed_source_count??'unknown'}</strong> of {offlineBusAudit.render_source_limit??'bounded'} maximum local preview voices and audio-bed sources. The short dry-piano PCM diagnostic retains a separate 16-voice ceiling.</p>
+                <p className="fsMusicInsightCaution">Verified contiguous scheduled-step coverage: <strong>{offlineBusAudit.performance_coverage_sec?.toFixed(2)??'unknown'} seconds</strong> within the {offlineBusAudit.window_sec?.toFixed(2)}-second offline render, from <strong>{offlineBusAudit.performed_step_count??0} actual scheduled step receipts</strong>. {offlineBusAudit.performance_window_complete?'The observed scheduled steps cover this window in the expected musical order. This does not prove audio reached speakers.':'Partial performance evidence: the preview may contain silence, an unobserved bar, or missing later music. Play the passage longer before Stop for a more complete audition.'} {(offlineBusAudit.performance_gap_count??0)>0?`Missing or misordered step detected at ${offlineBusAudit.first_gap_at_sec?.toFixed(2)??'unknown'} seconds. Later scheduled notes are not counted as continuous coverage.`:''} {offlineBusAudit.performed_bus_automation_applied?`${offlineBusAudit.performed_bus_automation_events??0} originally scheduled volume/filter step event(s) were replayed; ${offlineBusAudit.later_bus_automation_excluded??0} later event(s) fell outside this preview.`:'Step-by-step automation was not available for this playback and only frozen note-on mix settings are represented.'}</p>
+                <p className="fsMusicInsightCaution">This is an OfflineAudioContext rendering of recorded piano, verified imported audio, and scheduled original PulseGrid synth tones and performed kick/hat events through the low-pass, delay, feedback, wet/dry and master gain with a frozen note-on automation snapshot. {offlineBusAudit.effects_tail_complete?'The selected effects return is bounded.':'Delay/feedback may continue beyond the selected {offlineBusAudit.window_sec?.toFixed(2)}-second window.'} Rendered track IDs: {(offlineBusAudit.included_track_ids??[]).join(', ')||'none'}. Outside this review: {(offlineBusAudit.omitted_track_ids??[]).join(', ')||'none explicitly excluded'}. {offlineBusAudit.audio_beds_within_window===false?'At least one imported audio bed continues beyond the preview. ':''} {offlineBusAudit.audition_sample_clamped?'The local 16-bit audition clamps above-full-scale PCM; the displayed float peak is measured before clamping. ':''}It omits drum events that did not actually fire, any unscheduled instruments, changing automation inside the phrase, full-song tail, device output, intersample true peak and human listening validation. Source WAVs and master settings remain unchanged.</p>
+              </>}
+          </div>}
+          {dryPcmAudit&&<div className="fsDryPeakReport" role="status">
+            {dryPcmAudit.status==='unavailable'
+              ? <p>PCM inspection unavailable: {dryPcmAudit.reason}. No clean peak is claimed.</p>
+              : <>
+                <p>Decoded piano-only dry sample peak: <strong>{dryPcmAudit.sample_peak?.toFixed(3)}</strong> ({dryPcmAudit.peak_dbfs?.toFixed(2)} dBFS). Above-full-scale PCM frames in this approximation: <strong>{dryPcmAudit.over_full_scale_frames}</strong>. Analyzed {dryPcmAudit.analyzed_voices} scheduled voices at {dryPcmAudit.rate} Hz for {dryPcmAudit.window_sec?.toFixed(2)} seconds.</p>
+                <p className="fsMusicInsightCaution">{dryPcmAudit.complete?'Selected audition voices fit inside the measured window.':'Partial window only; later notes or releases were not fully covered.'} This reconstructs original decoded sample data and note-gain envelopes before filters, track buses, effects and master gain. It does not measure actual speaker output, intersample true peaks or final-master loudness. No automatic compression or gain adjustment is applied.</p>
+              </>}
+          </div>}
+
+          <div className="fsTailStats" role="group" aria-label="Recorded piano sample tail estimates">
+            <span><strong>{pianoTailAudit.mapped_notes}/{pianoTailAudit.authored_notes}</strong> mapped MIDI notes</span>
+            <span><strong>{pianoTailAudit.key_hold_shortfalls}</strong> note-hold shortfalls</span>
+            <span><strong>{pianoTailAudit.release_tail_shortfalls}</strong> release-tail shortfalls</span>
+            <span><strong>{pianoTailAudit.unknown_rights_note_uses}</strong> note uses with unknown rights</span>
+          </div>
+          {pianoTailAudit.total_findings===0
+            ? <p>No metadata-duration shortages found in the authored sampled-piano notes of this scene. This is not an audible pass or rights clearance.</p>
+            : <div className="fsTailFindings" role="list" aria-label="Piano sample coverage issues">
+              {pianoTailAudit.findings.map((finding,index)=>(
+                <div key={finding.track_id+'-'+finding.start_step+'-'+finding.pitch+'-'+index} className="fsTailFinding" role="listitem">
+                  <strong>{finding.track_id} · {noteName(finding.pitch)} · step {finding.start_step+1}</strong>
+                  <span>{finding.kind==='key_hold_shortfall'?'Recording cuts off during hold':
+                    finding.kind==='release_tail_shortfall'?'Release recording too short':'Missing mapped recording'}{finding.shortfall_seconds!==null?' · '+finding.shortfall_seconds.toFixed(3)+'s estimated':''}</span>
+                  <small>{finding.note}</small>
+                </div>
+              ))}
+              {pianoTailAudit.total_findings>pianoTailAudit.findings.length&&
+                <p className="fsMusicInsightCaution">Showing first {pianoTailAudit.findings.length} of {pianoTailAudit.total_findings} issues, ranked by potential disruption.</p>}
+            </div>}
+        </details>
+
+        <details className="fsArcDetails">
+          <summary>Arrangement Arc · {arrangementArc.bar_count} bars</summary>
+          <p className="fsMusicInsightCaution">Read-only written MIDI evidence, including muted and probabilistic notes. Not measured acoustic loudness, emotion, drums, audio clips or effect tails.</p>
+          <div className="fsArcTimeline" role="list" aria-label="Written MIDI arrangement by bar">
+            {arrangementArc.bars.map(bar=>(
+              <div key={bar.bar} role="listitem" className={'fsArcBar '+(bar.score_silent?'silent':'')}>
+                <strong>Bar {bar.bar}</strong>
+                <span>{bar.midi_onsets} note attacks · {bar.sounding_parts} parts</span>
+                <small>{bar.first_entrances.length?'First entrance: '+bar.first_entrances.join(', '):
+                  bar.reentries.length?'Re-entry: '+bar.reentries.join(', '):
+                  bar.score_silent?'No sounding pitched MIDI':'Mean velocity: '+(bar.mean_onset_velocity===null?'no new attacks':bar.mean_onset_velocity.toFixed(2))}</small>
+              </div>
+            ))}
+          </div>
+          {arrangementArc.observations.map(note=>(
+            <p key={note.kind}><strong>{note.observation}</strong> {note.listening_prompt}</p>
+          ))}
+        </details>
+
+      </details>
 
       <section className="fsWorkspace">
         <aside className="fsTracks">
