@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { verifySignedAgentEvidence } from "../agent-continuity/signed-evidence.mjs";
 import { verifyCommissionedRoster } from "../agent-continuity/signed-roster.mjs";
 import { verifyCommissionedWorkerExecution } from "../agent-continuity/worker-evidence.mjs";
@@ -88,6 +89,8 @@ export function createCommissionedWorkerReceiver({
           request,reviewerId,agentId,preflightEnvelope,
           rosterEnvelope,passportReceiptRef:p.passport_receipt_ref,
           executionGateReceiptRef:p.execution_gate_receipt_ref,
+          inferenceRequestId:callId,
+          inputSha256:"sha256:"+crypto.createHash("sha256").update(body.input).digest("hex"),
         });
       }catch{return reject("commissioned_execution_lease_verification_unavailable");}
       if(authorized?.allowed!==true||
