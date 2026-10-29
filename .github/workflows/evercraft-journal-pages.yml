@@ -50,6 +50,8 @@ jobs:
           npm run test:chum-public-origin
           npm run test:product-url-fabric
 
+      - name: Verify Boardroom source logic and luxury theme
+        run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs
       - name: Prove owned Journal contracts
         run: npm run journal:test
 
@@ -261,6 +263,11 @@ jobs:
             echo "Read-only, noindex preview; not an emergency map or production cutover."
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Verify Boardroom public customer routes
+        shell: bash
+        env:
+          BOARDROOM_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/probe-boardroom-public.mjs
       - name: Verify customer fallback doors
         shell: bash
         run: |
