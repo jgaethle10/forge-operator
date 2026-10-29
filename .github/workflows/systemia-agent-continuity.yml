@@ -1,0 +1,31 @@
+name: Systemia Agent Continuity Guard
+
+on:
+  pull_request:
+    paths:
+      - "systemia/agent-continuity/**"
+      - "systemia/control-plane/**"
+      - "tests/agent-continuity-*.test.mjs"
+      - ".github/workflows/systemia-agent-continuity.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/agent-continuity/**"
+      - "systemia/control-plane/**"
+      - "tests/agent-continuity-*.test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-roster-and-dna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check systemia/agent-continuity/continuity-gate.mjs
+      - run: node --check systemia/control-plane/control-plane.mjs
+      - run: node --test tests/agent-continuity-roster.test.mjs tests/agent-continuity-routing.test.mjs
