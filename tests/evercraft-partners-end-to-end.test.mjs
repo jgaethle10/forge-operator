@@ -91,6 +91,8 @@ test('Saban recovery: double-click and network retry produce one stored applicat
   assert.equal(refs[0].reference,refs[1].reference);
   assert.equal(fs.readdirSync(folder).filter(x=>x.endsWith('.enc')).length,1);
   assert.equal((await post(rt.url,data)).status,200);
+  // Reusing an ID with edited fields must not claim a new, unrecorded application.
+  assert.equal((await post(rt.url,{...data,audience:'Altered audience'})).status,409);
   assert.equal(fs.readdirSync(path.join(folder,'alert-outbox')).length,1);
  }finally{await rt.close();cleanup(folder)}
 });
