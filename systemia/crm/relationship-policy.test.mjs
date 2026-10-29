@@ -88,3 +88,38 @@ test('completed review disappears only with dated supporting evidence',()=>{
  assert.throws(()=>validateRelationshipRecord(record({next_action_state:'completed'}),{now:new Date('2026-10-21T20:00:00Z')}),/next_action_evidence_ref_invalid/);
  assert.throws(()=>validateRelationshipRecord(record({next_action_state:'completed',next_action_evidence_ref:'internal:resolved'}),{now:new Date('2026-10-21T20:00:00Z')}),/next_action_decided_at_invalid/);
 });
+
+
+test('a no-contact request in any division blocks the same subject from other outbound purposes',()=>{
+ const active=record({outbound_policy:'preflight_eligible',
+   relationship_ref:'rel:home',division_id:'evercraft-home',
+   allowed_purposes:['meeting_scheduling']});
+ const hold=record({relationship_ref:'rel:ops',division_id:'eps',
+   outbound_policy:'paused',allowed_purposes:[],
+   timeline:[{event_ref:'event:optout',type:'no_contact_requested',
+     evidence_ref:'private:reported',occurred_at:'2026-10-01T12:00:00Z'}]});
+ const l=ledger(active,hold);
+ const decision=preflightRelationshipIntent({ledger:l,subjectRef:'private:contact-one',
+   divisionId:'evercraft-home',purpose:'meeting_scheduling',at:now});
+ assert.equal(decision.decision,'deny');
+ assert.ok(decision.reasons.includes('subject_no_contact_hold_across_divisions'));
+ let attempts=0;
+ const guarded=preflightGovernedContact({ledger:l,now,
+  input:{subject_ref:'private:contact-one',division_id:'evercraft-home',
+    purpose:'meeting_scheduling'},
+  interactionLedger:{preflightContact(){attempts++;return {decision:'allow'};}}});
+ assert.equal(guarded.decision,'deny');
+ assert.equal(attempts,0);
+});
+test('other subjects do not inherit unrelated contact holds',()=>{
+ const active=record({outbound_policy:'preflight_eligible',
+    relationship_ref:'rel:home',allowed_purposes:['meeting_scheduling']});
+ const hold=record({subject_ref:'private:other-person',
+    relationship_ref:'rel:other',division_id:'eps',outbound_policy:'paused',
+    timeline:[{event_ref:'event:other-hold',type:'no_contact_requested',
+    evidence_ref:'mail:private',occurred_at:'2026-10-01T12:00:00Z'}]});
+ const allowed=preflightRelationshipIntent({ledger:ledger(active,hold),
+  subjectRef:'private:contact-one',divisionId:'evercraft-home',
+  purpose:'meeting_scheduling',at:now});
+ assert.equal(allowed.decision,'allow_to_existing_preflight');
+});
