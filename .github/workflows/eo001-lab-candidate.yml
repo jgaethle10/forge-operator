@@ -25,5 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validate user-owned laptop runner shell syntax
+        run: bash -n integrations/ai-evaluation-lab/run-on-nextgen.sh
       - name: Check Lab-compatible decision policy
         run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs integrations/ai-evaluation-lab/eo001-raven-local-candidate.test.mjs
