@@ -16,6 +16,16 @@ try{
   assert.equal(body.capacity.visibleCharacters,0);
   assert.equal(body.capacity.venue,'office');
   assert.equal(body.capacity.status,'not_provisioned');
+  const smoke=await fetch(base+'/api/executor-smoke',{method:'POST',headers:{'x-work-saban-client':'local-preview'}});
+  assert.equal(smoke.status,200);
+  const executed=await smoke.json();
+  assert.equal(executed.live_agents,false);
+  assert.equal(executed.execution.capacity.verified,6);
+  assert.equal(executed.execution.capacity.failed,0);
+  assert.equal(executed.execution.results.length,6);
+  assert.equal(executed.events.filter(e=>e.state==='verified').length,6);
+  const denied=await fetch(base+'/api/executor-smoke',{method:'POST'});
+  assert.equal(denied.status,403);
   const bad=await fetch(base+'/api/capacity',{headers:{host:'example.org:1234'}});
   assert.equal(bad.status,403);
   console.log('Work Saban capacity HTTP integration PASS (zero-worker truth and local-host enforcement).');
