@@ -86,6 +86,11 @@ export function preflightRelationshipIntent({ledger,subjectRef,divisionId,purpos
   if(record.not_before&&atMs<ms(record.not_before,'not_before'))reasons.push('relationship_contact_window_not_open');
   if(!record.allowed_purposes.includes(intent))reasons.push('relationship_purpose_not_approved');
   if(record.timeline.some(e=>e.type==='no_contact_requested')&&record.outbound_policy!=='paused')reasons.push('relationship_optout_requires_review');
+  // Do not let another division treat the same party as a new prospect after
+  // a no-contact request was recorded anywhere in this company tenant.
+  if((ledger.records||[]).some(r=>r.subject_ref===subject&&
+      Array.isArray(r.timeline)&&r.timeline.some(e=>e.type==='no_contact_requested')))
+    reasons.push('subject_no_contact_hold_across_divisions');
   return {decision:reasons.length?'deny':'allow_to_existing_preflight',reasons,
     relationship_state:record.stage,relationship_kind:record.kind,
     passport_preflight_required:true,send_performed:false,
