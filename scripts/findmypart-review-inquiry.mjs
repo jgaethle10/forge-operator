@@ -1,21 +1,14 @@
 #!/usr/bin/env node
-// Private operator terminal only. Do not run in CI or copy customer briefs to public logs.
-import {readFindMyPartPrivateInquiry} from '../systemia/mcp/findmypart-public-inquiry.mjs';
-const reference=process.argv[2]||'';
-if(!/^FMP-[A-F0-9]{24}$/.test(reference)){
- console.error('Usage: node scripts/findmypart-review-inquiry.mjs FMP-<24 HEX>');
+// Compatibility entrypoint. Explicit operator permission required.
+// The canonical private workflow is scripts/findmypart-owner-inbox.mjs.
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+const [reference,flag]=process.argv.slice(2);
+if(!/^FMP-[A-F0-9]{24}$/.test(String(reference||''))||flag!=='--reveal'){
+ process.stderr.write('Use: node scripts/findmypart-owner-inbox.mjs show FMP-<24 HEX> --reveal\n');
  process.exitCode=2;
 }else{
- try{
-  const result=readFindMyPartPrivateInquiry({reference});
-  console.log('FindMyPart private inquiry:',result.reference);
-  console.log('Received:',result.received_at);
-  console.log('Equipment:',result.equipment_context);
-  console.log('Part problem:',result.part_description);
-  console.log('Reply email:',result.email);
-  console.log('Status: human review required. No checkout/order/payment created.');
- }catch(error){
-  console.error('Unable to read private inquiry: '+String(error?.code||error?.message||'unavailable'));
-  process.exitCode=1;
- }
+ const script=fileURLToPath(new URL('./findmypart-owner-inbox.mjs',import.meta.url));
+ const result=spawnSync(process.execPath,[script,'show',reference,'--reveal'],{stdio:'inherit',env:process.env});
+ process.exitCode=result.status===null?1:result.status;
 }
