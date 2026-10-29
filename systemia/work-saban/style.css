@@ -208,3 +208,23 @@ main{max-width:1420px;padding-top:34px}
  font-size:11px;background:#203954;border:1px solid #446887;color:#d8edff;text-align:center}
 .office-inspect-button:disabled{opacity:.38;cursor:not-allowed}
 #office-trace-integrity{font-size:10px;max-width:220px;color:#b6d8f4}
+
+
+/* Original miniature coworkers: expressive faces, hair silhouettes, state-driven reactions. */
+.spatial-person-head{overflow:visible;isolation:isolate}
+.spatial-person-hair{position:absolute;left:-4px;top:-8px;width:40px;height:20px;border-radius:65% 65% 35% 35%;background:#382a39;box-shadow:inset 0 4px 0 #ffffff22;z-index:2}
+.spatial-person-face{position:absolute;inset:0;z-index:3}
+.spatial-eye{position:absolute;top:15px;width:5px;height:7px;border-radius:50%;background:#26314b;box-shadow:1px 1px 0 #fff8}
+.spatial-eye-left{left:8px}.spatial-eye-right{right:8px}
+.spatial-smile{position:absolute;left:13px;top:24px;width:9px;height:5px;border-bottom:2px solid #8b4556;border-radius:0 0 90% 90%}
+.spatial-agent[data-agent="director"] .spatial-person-hair{background:#44354e;border-radius:55% 55% 30% 30%}
+.spatial-agent[data-agent="analyst"] .spatial-person-hair{background:#243f50;border-radius:30% 80% 20% 30%;transform:rotate(-8deg)}
+.spatial-agent[data-agent="writer"] .spatial-person-hair{background:#8c5671;width:44px;height:25px;left:-6px;border-radius:65% 45% 30% 45%}
+.spatial-agent[data-agent="designer"] .spatial-person-hair{background:#c18a44;border-radius:75% 30% 50% 20%;transform:rotate(8deg)}
+.spatial-agent[data-agent="auditor"] .spatial-person-hair{background:#353c40;border-radius:35% 45% 20% 20%}
+.spatial-agent[data-agent="coordinator"] .spatial-person-hair{background:#b7a5d9;border-radius:60% 60% 40% 30%}
+.spatial-agent[data-state="running"] .spatial-person-head{animation:saban-focus 1.5s ease-in-out infinite}
+.spatial-agent[data-state="verified"] .spatial-smile{height:7px;border-bottom-width:3px}
+.spatial-agent.is-selected .spatial-person-head{filter:drop-shadow(0 0 7px #c6edff66)}
+@keyframes saban-focus{50%{translate:0 -3px}}
+@media(prefers-reduced-motion:reduce){.spatial-agent[data-state="running"] .spatial-person-head{animation:none}}
