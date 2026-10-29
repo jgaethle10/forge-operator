@@ -208,6 +208,7 @@ export async function startOutboundNodeAgent({
   capacityRefreshEveryPoll = true,
   commandPolicy = 'default',
   expectedNodeId = '',
+  expectedDeviceFingerprint = '',
   preRegisterGuard = null,
   capacityWorkloadAllowlist = null,
 } = {}) {
@@ -282,6 +283,12 @@ export async function startOutboundNodeAgent({
     }
     if (expectedNodeId && nodeId !== expectedNodeId) {
       throw new Error('remote_agent_physical_node_identity_mismatch');
+    }
+    // Bind the live capacity key to the previously owner-reviewed NodeSeed
+    // receipt. A key swap after preflight may not silently enroll under the
+    // same node ID. Existing ephemeral callers without this opt-in are unchanged.
+    if (expectedDeviceFingerprint && deviceFingerprint !== expectedDeviceFingerprint) {
+      throw new Error('remote_agent_physical_device_fingerprint_mismatch');
     }
 
     const challenge = await jsonRequest(`${broker}/v1/remote/challenge`, {
@@ -397,6 +404,16 @@ export async function startOutboundNodeAgent({
           const fresh = await localRequest('/v1/capacity');
           if (!fresh.ok) throw new Error(`local_capacity_failed:${fresh.status}`);
           capacity = constrainedCapacity(fresh.body);
+          // The live NodeSeed can restart between registration and polls.
+          // Never advertise a different device under the previously attested
+          // session token, even if the node ID and workload names still match.
+          if (expectedNodeId && capacity.node_id !== expectedNodeId) {
+            throw new Error('remote_agent_physical_node_identity_mismatch');
+          }
+          if (expectedDeviceFingerprint &&
+              capacity.device_fingerprint !== expectedDeviceFingerprint) {
+            throw new Error('remote_agent_physical_device_fingerprint_mismatch');
+          }
         }
 
         pollController = new AbortController();
