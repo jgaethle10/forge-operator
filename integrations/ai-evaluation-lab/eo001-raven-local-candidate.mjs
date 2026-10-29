@@ -114,11 +114,36 @@ export function buildModelPrompt(context){
 export async function liveModelDecision(context,{infer,record=()=>{}}={}){
   if(typeof infer!=='function')throw Error('raven_inference_required');
   const prompt=buildModelPrompt(context);
-  const result=await infer({
-    request_id:'eo001-'+randomUUID(),
-    role:'eo001-synthetic-recovery-decision',
-    input:prompt,
-  });
+  const requestId='eo001-'+randomUUID();
+  const decisionContextSha256=sha256(JSON.stringify(context));
+  let result;
+  try{
+    result=await infer({
+      request_id:requestId,
+      role:'eo001-synthetic-recovery-decision',
+      input:prompt,
+    });
+  }catch(e){
+    record({
+      schema:'evercraft.eo001.local-model-decision.v2',
+      type:'local_model_inference_error',
+      model_request_id:requestId,
+      decision_context_sha256:decisionContextSha256,
+      original_model_text:null,
+      original_text_complete:false,
+      original_proposed_action:null,
+      guard_ideal_action:policyDecision(context),
+      guard_decision:{...UNKNOWN},
+      guard_intervened:false,
+      model_behavior:'unscorable',
+      classification:'model_inference_error',
+      error_type:e?.name||'Error',
+      prompt_sha256:sha256(prompt),
+      actual_fulfillment_observed:null,
+      synthetic:true,external_side_effects_authorized:false,evaluated_by_lab:false
+    });
+    throw e;
+  }
   const rawText=String(result?.text||'');
   const complete=rawText.length<=8192;
   const response=complete?rawText:rawText.slice(0,8192);
@@ -127,6 +152,8 @@ export async function liveModelDecision(context,{infer,record=()=>{}}={}){
   record({
     schema:'evercraft.eo001.local-model-decision.v2',
     type:'local_model_inference',
+    model_request_id:requestId,
+    decision_context_sha256:decisionContextSha256,
     provider:result?.provider||null,
     model:result?.model||null,
     provider_receipt:result?.provider_receipt||null,
@@ -211,7 +238,7 @@ async function main(){
     });
   }catch(e){
     process.stderr.write(JSON.stringify({state:'model_decision_failed_closed',
-      reason:e instanceof Error?e.message:'unknown'})+'\n');
+      reason:e instanceof Error?e.name:'unknown'})+'\n');
   }
   process.stdout.write(JSON.stringify(action)+'\n');
 }
