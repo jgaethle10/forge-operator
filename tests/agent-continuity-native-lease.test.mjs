@@ -5,16 +5,18 @@ import {createOwnedCommissionedLeaseVerifier} from "../systemia/raven/commission
 const clock=new Date("2026-10-29T18:20:00Z");
 const hash="sha256:"+"a".repeat(64);
 const inputHash="sha256:"+"b".repeat(64);
+const permitAckHash="sha256:"+"d".repeat(64);
+const consumptionRecordHash="sha256:"+"e".repeat(64);
 const request={request_id:"request-7",mission_key:"mission-7",work_key:"work-7"};
 const call={
   request,reviewerId:"commercial",agentId:"agent-7",
   inferenceRequestId:"request-7:commercial",inputSha256:inputHash,
-  passportReceiptRef:"sha256:permitconsumed",
+  passportReceiptRef:permitAckHash,
   executionGateReceiptRef:"lease-owned-7",
   preflightEnvelope:{payload:{
     ...request,preflight_id:"preflight-7",registry_snapshot_hash:hash,
     reviewer_assignments:{commercial:"agent-7"},
-    passport_receipt_ref:"sha256:permitconsumed",
+    passport_receipt_ref:permitAckHash,
     execution_gate_receipt_ref:"lease-owned-7",
   }},
 };
@@ -32,12 +34,12 @@ const lease={
   schema:"evercraft.execution-gate.lease-event.v1",
   state:"started",dispatch_allowed:true,
   ...binding, recorded_at:"2026-10-29T18:19:00Z",
-  permit_consumption_receipt:"sha256:permitconsumed",
+  permit_consumption_receipt:permitAckHash,
 };
 const permit={
   schema:"evercraft.passport.action-permit-state.v1",
   consumed:true,grant_active:true,cancelled:false,expired:false,
-  consumption_receipt:"sha256:permitconsumed",
+  consumption_receipt:consumptionRecordHash,
   actor_ref:binding.actor_ref,product:binding.passport_product,
   scope:binding.scope,resource_ref:binding.resource_ref,
   request_fingerprint:hash,grant_id:"grant-owned-7",
