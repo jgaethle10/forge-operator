@@ -58,7 +58,7 @@ jobs:
           node -e "const fs=require('fs');const b=fs.readFileSync('$asset');const p=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);if(!b.subarray(0,8).equals(p))process.exit(9)"
 
       - name: Prove visual story factory and Radar admission bridge
-        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
+        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/production-mesh.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
@@ -105,6 +105,9 @@ jobs:
           test -f _visual_desk_release/website-audit-attention/motion.html
           test -f _visual_desk_release/website-audit-attention/creative-council-reconciliation.json
           test -f _visual_desk_release/website-audit-attention/commercial-build-receipt.json
+          test -f _visual_desk_release/website-audit-attention/production-jobpack.json
+          test -f _visual_desk_release/website-audit-attention/production-mesh-receipt.json
+          node --input-type=module -e "import fs from 'node:fs'; const d='_visual_desk_release/website-audit-attention/'; const m=JSON.parse(fs.readFileSync(d+'production-mesh-receipt.json')); const p=JSON.parse(fs.readFileSync(d+'production-jobpack.json')); if(m.status!=='preproduction_verified_downstream_blocked'||m.publicationAuthority!==false||m.customerReady!==false||p.frameCount!==360||p.departments.voiceFoundryAndScore.state!=='not_executed'||p.capabilityRegistry.status!=='scoped_source_identity_only_runtime_unverified') process.exit(31);"
           grep -q '__evercraftRenderAt' _visual_desk_release/washington-active-volcanoes/motion.html
           grep -q '__evercraftRenderAt' _visual_desk_release/website-audit-attention/motion.html
           grep -q 'TRAFFIC UP' _visual_desk_release/website-audit-attention/poster-feed.svg
