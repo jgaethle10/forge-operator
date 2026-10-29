@@ -1,0 +1,24 @@
+name: HAVENLY private quote intake boundary
+on:
+  pull_request:
+    paths:
+      - 'systemia/havenly/**'
+      - '.github/workflows/havenly-private-intake.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/havenly/**'
+      - '.github/workflows/havenly-private-intake.yml'
+permissions:
+  contents: read
+jobs:
+  quote-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove trusted-adapter boundary and no false customer receipt
+        run: node --test systemia/havenly/public-quote-intake.test.mjs
