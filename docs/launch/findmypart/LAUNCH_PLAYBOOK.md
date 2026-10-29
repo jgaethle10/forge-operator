@@ -20,7 +20,7 @@ Date: 2026-10-28 · Stage: prelaunch, no outbound/send authority from this docum
 ### P1: First focused, consent-based distribution
 **B2B referral lane**: make a shop-facing landing variation and a partner FAQ; offer the free referral kit only once an owned public signup and attribution path exists. Do not pretend the old test link is the current product. No commissions until signed terms.
 **Buyer content**: publish one documented "why this part search stalls" case per week. Show identifiable problem and researched routes; do not claim inventory or substitute fit.
-**Channel use**: Evercraft Clip for owned posts after review. Trade associations, repair-shop communities and specialist forums only where rules allow sharing, with useful researched answers before any link. Never DM a scraped list or bypass CRM contact suppression.
+**Channel use**: Evercraft-owned Relay/Clip publishing only if independent runtime and provider receipts verify that no retired hosted platform is being used. Otherwise stage content and hold automated publishing. Trade associations, repair-shop communities and specialist forums only where rules allow sharing, with useful researched answers before any link. Never DM a scraped list or bypass CRM contact suppression.
 **Partner lane**: allow opt-in outreach to independent restorers, salvage vendors, remanufacturers and shops with verified individual permission and active outbound authorization. Keep relationships in Systemia CRM.
 
 ### P2: Measure first repeatable unit
