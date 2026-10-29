@@ -45,3 +45,24 @@ No paid TTS generation, provider registration, automatic voice locking, credenti
 node --test systemia/media-studio/voice-foundry-audition.test.mjs
 
 Tests use deliberate **non-speech sine-wave fixtures** to prove gate operation, including tampered audio rejection, missing rights, identity mismatch and underperforming listener cohorts. Passing these tests never means an actual voice was synthesized or artistically approved.
+
+
+## Local Kokoro render bridge (V2)
+
+The first owned/local rendering adapter is `voice-foundry-kokoro-render.py`. It requests candidate voices directly from an **existing locally installed** Kokoro engine and writes independent dry WAV stems plus SHA-256 evidence and `REVIEW-INCOMPLETE.json` into a private output directory. It makes no paid-provider requests, forces Hugging Face/Transformers offline flags, and does not fetch missing model weights.
+
+On an authorized machine with the Kokoro package and weights already installed/cached, create the audition plan with:
+
+```bash
+node systemia/media-studio/voice-foundry-audition.mjs plan /tmp/evercraft-male-audition-plan.json
+python3 systemia/media-studio/voice-foundry-kokoro-render.py \
+  --plan /tmp/evercraft-male-audition-plan.json \
+  --out "$HOME/evercraft-private/voice-male-audition-01" \
+  --voices am_michael am_fenrir bm_fable
+```
+
+The adapter intentionally defaults to `commercialUseVerified:false`, `consentedToVoiceUse:false` and an empty ratings panel even after successful audio rendering. It does not establish legal or model rights for a recording. An authorized operator must inspect rights evidence and verify voice-use authorization; listeners must independently score actual clips before the separate voice-admission review can advance.
+
+Use `python3 systemia/media-studio/voice-foundry-kokoro-render.test.py` to check the adapter's **mock wave** receipts without a model or external API. CI runs these contract tests but **cannot prove the quality of a real voice**.
+
+This first casting panel deliberately spans American conversational and grounded voices and British storytelling delivery. All identities remain provisional. Do not create a production lock or present any voice as Evercraft's male narrator until real listening and founder creative approval are recorded.
