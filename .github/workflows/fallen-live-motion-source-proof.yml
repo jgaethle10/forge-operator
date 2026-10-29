@@ -16,10 +16,12 @@ jobs:
           python3 - <<'PY'
           import subprocess,json,pathlib,hashlib
           ids=[
-            ("workshop","4709394","https://www.pexels.com/video/a-person-is-working-on-a-circuit-board-4709394/"),
-            ("human","7989695","https://www.pexels.com/video/close-up-of-a-laptop-and-a-desktop-computer-7989695/"),
-            ("creative","29380115","https://www.pexels.com/video/close-up-of-video-editing-on-computer-29380115/"),
-            ("technician","6755167","https://www.pexels.com/video/close-up-view-of-a-man-repairing-electronic-6755167/"),
+            ("creative","35331911","https://www.pexels.com/video/focused-man-editing-on-computer-at-night-35331911/"),
+            ("creative-alt","34492301","https://www.pexels.com/video/man-working-late-on-computer-editing-video-content-34492301/"),
+            ("creative-vertical","29380115","https://www.pexels.com/video/close-up-of-video-editing-on-computer-29380115/"),
+            ("prototype","7057342","https://www.pexels.com/video/person-fixing-electronics-7057342/"),
+            ("focused","3255157","https://www.pexels.com/video/a-man-busy-working-on-a-computer-3255157/"),
+            ("maker","4709394","https://www.pexels.com/video/a-person-is-working-on-a-circuit-board-4709394/"),
           ]
           suffixes=["hd_1920_1080_25fps","hd_1920_1080_30fps","hd_1920_1080_50fps","hd_1080_1920_30fps","hd_1080_1920_25fps","hd_1280_720_25fps","hd_1280_720_30fps","sd_640_360_25fps"]
           rows=[]
