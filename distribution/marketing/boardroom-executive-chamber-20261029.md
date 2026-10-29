@@ -1,7 +1,7 @@
 # EVERCRAFT BOARDROOM | THE EXECUTIVE CHAMBER
 ## Organic launch campaign | October 29, 2026
-Owner: Evercraft LLC | Studio: Evercraft Clip | Status: source-backed copy prepared, publisher not authorized/verified.
-Identity: legacy obsidian, antique gold, champagne, walnut. Not Work Saban's crimson branding.
+Owner: Evercraft LLC | Studio: Evercraft Clip | Status: revised source-backed editorial drafts, not published; founder rejected earlier version for failing Evercraft publishing standards.
+Identity: legacy obsidian, antique gold, champagne, walnut. Not Work Saban's crimson branding. Editorial rule: cohesive evidence-led field reporting, not hype, chopped-up lines, hashtags, or engagement bait.
 
 ### Verified destinations
 - Primary customer entry: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/
@@ -14,99 +14,55 @@ Verification provenance: GitHub Pages HTTPS Boardroom customer routes passed run
 
 ### Personal Facebook, for founder to share manually
 
-I've been working on something pretty cool with Evercraft.
+One challenge keeps coming up as we've been building Evercraft: what do you do when two AI systems give convincing but conflicting advice about the same business decision? Both answers can sound certain, but their recommendations often depend on different assumptions. I've wanted a better way to see those differences before relying on either one.
 
-One thing I've noticed with AI is that you can ask ChatGPT one question, ask another AI the same question, and get two completely different recommendations.
+We've released the first public piece of Evercraft Boardroom. You can enter a decision, paste two or three AI answers, and compare their stated recommendations, recurring subjects, and questions that still need evidence. The tool runs in your browser, doesn't require an account, and lets you save the comparison. It organizes the text you provide; it doesn't independently verify the answers.
 
-So which one do you trust?
+The larger Boardroom we're building is meant to go further, with distinct AI advisers challenging assumptions and producing a traceable decision record. That automated deliberation isn't a verified customer feature yet. For now, I'm sharing the working comparison tool because it's something people can actually evaluate rather than another promise about what AI might do.
 
-That's part of what we're building Evercraft Boardroom to solve.
-
-We just opened up a free way to compare AI answers side by side, see where their recommendations conflict, and figure out what questions still need real evidence.
-
-No account. No payment. Just something useful you can actually try.
-
-The bigger vision is an entire AI boardroom where different advisers challenge each other's thinking before a decision gets made. We're still building toward that, but I wanted to start sharing what we've actually finished.
-
-Here's a free example you can open and play with:
-
-https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
-
-If you try it, I'd genuinely love to hear what you think.
+Here's a completed example you can open without setting anything up: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. If you're using AI to think through a consequential decision, I'd value specific feedback on what the comparison clarifies and what it still misses. That's the kind of input that will help us build the next part well.
 
 ### Personal LinkedIn, for founder to share manually
 
-I've been thinking about a problem with the way people use AI to make business decisions.
+In building Evercraft, we've repeatedly encountered a practical limitation of AI-assisted decision-making: several systems can return persuasive recommendations to the same question while depending on different, often unstated assumptions. Comparing the confidence of their writing doesn't tell us which claims are supported or what evidence would actually change the decision.
 
-More answers don't automatically lead to better decisions. When ChatGPT, Claude, or Gemini recommend different things, the interesting part is figuring out which assumptions, evidence, and tradeoffs caused the difference.
+We've now released the first public component of Evercraft Boardroom, a free browser-based comparison tool. A user brings one decision question and two or three existing AI responses. The tool organizes stated directions, shared subjects, and unresolved evidence questions into a report that can be copied or saved. It does not call external models or transmit the pasted text to an Evercraft backend.
 
-We've been building Evercraft Boardroom around that problem.
+The broader aim is a genuine deliberation system in which distinct advisers critique one another's reasoning and produce an accountable decision record. That functionality remains under development and isn't being presented as commercially operational. The current release is deliberately narrower: it provides a useful way to examine what the supplied responses say and where further investigation is needed.
 
-Today the free experience is simple: paste two or three AI answers, compare their stated recommendations, surface the questions worth investigating, and export the result. It runs in your browser, without an account or paid model calls.
-
-The long-term goal is a genuine multi-adviser decision process. We're not claiming that entire platform is finished yet.
-
-You can open a prefilled example here:
-https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
-
-I'm interested in useful feedback from operators, founders, and anyone making consequential decisions with AI.
+A completed example is available here: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. Feedback from operators and founders on the actual comparison output, particularly missed context or misleading agreement, would be useful as we refine the product.
 
 ### Evercraft Facebook Page (company owned, brand-authorized only)
 
-Two AIs. Two confident answers. Two completely different recommendations.
+Evercraft has released the first public comparison tool within AI Boardroom. The work addresses a specific decision-making problem: two or more AI systems can produce confident but conflicting advice from the same question, while the assumptions behind those recommendations remain difficult to compare.
 
-That's where Evercraft Boardroom begins.
+The free tool accepts one decision question and two or three AI responses supplied by the user. It organizes explicitly stated recommendations, shared topics, and questions that still require supporting evidence. The comparison can be copied or downloaded, and the supplied text is processed locally in the browser without an account.
 
-Paste the AI answers you already have and get a private, one-page comparison showing the stated directions, shared topics, and questions to investigate before making a business decision.
+This release is a text-comparison preview, not a live debate among AI models or an independent fact-checking service. The proposed multi-adviser deliberation system is still in development. For decisions requiring deeper examination, Evercraft separately offers scoped, human-reviewed reports with scope and delivery agreed before purchase.
 
-Free. No account. No data upload. No pretend AI debate.
-
-Try a ready-made example:
-https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
-
-Evercraft Boardroom | Think beyond the first answer.
+A completed public example is available at https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. It can be examined immediately, without supplying private business information.
 
 ### Evercraft LinkedIn Page (company owned, brand-authorized only)
 
-Multiple AI recommendations can create false confidence, especially when they share assumptions or contradict one another.
+Evercraft has released a public preview of the AI Boardroom comparison tool. It is designed for a recurring problem in AI-assisted decision-making: models can recommend different actions from the same inputs, and the strength of their wording is not evidence that a recommendation is sound.
 
-Evercraft Boardroom is building a different path: identify disagreements, expose what remains unverified, and make the next decision more defensible.
+The free browser-based experience accepts a decision question and two or three user-supplied AI answers. It organizes stated recommendations and shared topics, identifies some explicit opposing directions, and produces evidence questions for further investigation. The user can save the resulting report without creating an account or sending the pasted responses to an Evercraft server.
 
-Our first public tool is a free, private browser-based comparison for two or three existing AI responses. It organizes stated recommendations and follow-up questions. It doesn't call external models or claim to fact-check them.
+The current tool does not make live model calls, verify source claims, or operate as an automated panel of advisers. Those capabilities belong to the longer-term Boardroom development roadmap, not this release. Higher-stakes decisions may instead be submitted for a separately scoped human-reviewed assessment.
 
-See a complete example in one tap:
-https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
-
-For higher-stakes business choices, separately scoped human-reviewed services are available through the Boardroom site.
+The released experience can be inspected through a completed public example: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1.
 
 ### Evercraft Instagram (company account, only if brand and media authorized)
 
-When two AIs disagree, don't take a vote. 🥂
+Evercraft AI Boardroom now has a public browser-based comparison preview. It allows users to inspect the stated recommendations and unanswered evidence questions in two or three AI responses to the same business decision.
 
-Compare the actual recommendations. Find the evidence gaps. Decide what to test next.
+The free tool processes pasted text locally, requires no account, and lets the user save the comparison. It does not independently verify facts or convene a live multi-model council.
 
-Evercraft Boardroom has a free private comparison tool. The guest pass opens a prefilled example without signup.
+View the completed example through the verified Boardroom link on the Evercraft profile. Instagram publication requires an original, reviewed visual and a working profile or Story link.
 
-Link: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
+### Visual and release material
 
-For Instagram Feed, make the link accessible through an actual approved profile link or separate authorized Story link sticker, not an invented clickable caption.
-
-### Short story/reel overlay (requires original approved visual asset)
-CARD 1: TWO AIs. ONE DECISION.
-CARD 2: WHAT IF THEY DISAGREE?
-CARD 3: DON'T COUNT VOTES. CHECK THE ASSUMPTIONS.
-CARD 4: ENTER THE BOARDROOM. FREE TO TRY.
-Link sticker destination: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
-
-No unverified "live multi-model debate", unearned customer testimonials, invented conversion counts, guaranteed results, or 5-star ratings. Original music/media rights required for a reel.
-
-### Relevant community reply (only where replying is allowed and helps someone)
-
-If you're comparing contradictory AI advice, we built a free browser-only tool that puts two or three pasted AI answers side by side and organizes their stated recommendations. It's not another AI model or a fact-checker. Here's a worked example, if it helps: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1
-
-### Founder or corporate comment after posting
-
-The free example is already filled in, so you can see the result in one tap. The tool compares text in your browser; it doesn't send your answers to us.
+No generic four-card motivational sequence or empty animated teaser. Use an authentic product screen capture of the shipped comparison output, or an independently reviewed original Boardroom visual with the obsidian, champagne, and antique brass palette. No stock executive-office imagery, invented AI participants, unverified customer quotes, stickers, emoji or hashtag campaigns. Each released company caption should read as an operational field report, not a social engagement contest. Personal founder posts must use four connected, developed paragraphs without manufactured standalone lines.
 
 ### Channels and sequence
 1. Evercraft flagship Facebook Page, if page token, ID, and explicit brand authority are verified in the owned Clip vault. Target a real organic post and record provider permalink.
