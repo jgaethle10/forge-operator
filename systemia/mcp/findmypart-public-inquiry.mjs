@@ -133,7 +133,7 @@ export function reconcileFindMyPartInquiryOutbox({
  safeFolder(outbox);safeFolder(receipts);
  let restored=0,examined=0;
  for(const name of fs.readdirSync(storeDir).sort()){
-  if(!/^FMP-[A-F0-9]{24}\\.enc$/.test(name))continue;
+  if(!/^FMP-[A-F0-9]{24}\.enc$/.test(name))continue;
   if(++examined>limit)break;
   const reference=name.slice(0,-4);
   if(fs.existsSync(path.join(outbox,reference+'.json'))||fs.existsSync(path.join(receipts,reference+'.json')))continue;
@@ -143,7 +143,7 @@ export function reconcileFindMyPartInquiryOutbox({
    createFile(outbox,reference+'.json',JSON.stringify({
     schema:'evercraft.findmypart.private-alert.v1',
     reference,received_at:record.received_at,has_customer_pii:false,
-   })+'\\n');
+   })+'\n');
    restored++;
   }catch(error){if(error?.code!=='EEXIST')throw error}
  }
