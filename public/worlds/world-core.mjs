@@ -25,6 +25,8 @@ export function validateWorld(world){
  if(!['day','sunset','night'].includes(world.sky))throw Error('Invalid sky');
  if(!world.player||!Number.isFinite(world.player.x)||!Number.isFinite(world.player.z)||!Number.isFinite(world.player.yaw))throw Error('Invalid player');
  if(!Array.isArray(world.agents)||world.agents.length!==3)throw Error('Invalid agents');
+ const expected=['pip','momo','lumi'];
+ for(let i=0;i<3;i++){const a=world.agents[i];if(!a||a.id!==expected[i]||typeof a.name!=='string'||a.name.length>40||!Array.isArray(a.memories)||a.memories.length>8||a.memories.some(m=>typeof m!=='string'||m.length>160))throw Error('Invalid inhabitant data');}
  return world;
 }
 export function loadWorld(storage){try{const item=storage.getItem(STORAGE_KEY);return item?validateWorld(JSON.parse(item)):initialWorld();}catch{return initialWorld();}}
@@ -50,12 +52,43 @@ export function applyCommand(world,text){
  }else{return {world,message:'Try “add tree”, “plant flower at 4, 2”, “sky sunset”, or “remove last”.'};}
  next.revision+=1;return {world:next,message};
 }
+export function agentActivity(world,id){
+ validateWorld(world);
+ if(id==='pip'){
+  const flowers=world.objects.filter(o=>o.kind==='flower');
+  const last=flowers.at(-1);
+  return last?{activity:'Visiting your new flowers',dialogue:'I noticed the new flowers! The garden is waking up.',target:{x:last.x,z:last.z}}:
+   {activity:'Planning a secret garden',dialogue:'I have a secret garden in mind. Would you plant a flower for me?',target:{x:2,z:1}};
+ }
+ if(id==='momo'){
+  const inventions=world.objects.filter(o=>o.kind==='lamp'||o.kind==='bench');
+  const last=inventions.at(-1);
+  return last?{activity:'Inspecting a new creation',dialogue:'Someone built something! I am going to inspect every little detail.',target:{x:last.x,z:last.z}}:
+   {activity:'Dreaming up workshop inventions',dialogue:'Every great workshop needs one more little invention.',target:{x:-1,z:-6}};
+ }
+ if(id==='lumi'){
+  return world.sky==='night'?
+   {activity:'Watching the night sky',dialogue:'Look up. Every star has a story no one has told yet.',target:{x:6,z:-3}}:
+   world.sky==='sunset'?
+   {activity:'Watching the sunset glow',dialogue:'The whole pond is turning gold. I think it likes the evening.',target:{x:6,z:-3}}:
+   {activity:'Watching the pond',dialogue:'The fish think the clouds are upside-down rivers.',target:{x:6,z:-3}};
+ }
+ throw Error('Unknown inhabitant');
+}
 export function stepAgents(world,dt,elapsed){
- // Bounded local behavior projection only. No claim of independently-running AI agents.
+ // Reactive, deterministic local scripted behavior, NOT running LLM agents.
+ // Movement responds to planted flowers, inventions and environment changes.
+ const homes=[[2,1],[-1,-6],[6,-3]];
  return world.agents.map((agent,i)=>{
-  const phase=elapsed*.21+i*2.09;
-  const anchors=[[2,1],[-1,-6],[6,-3]];
-  return {...agent,renderX:anchors[i][0]+Math.cos(phase)*1.05,renderZ:anchors[i][1]+Math.sin(phase*.85)*.75,renderBob:Math.sin(elapsed*2.5+i*2)*.065};
+  const task=agentActivity(world,agent.id),home=homes[i];
+  const phase=elapsed*.24+i*2.09;
+  const travel=(.5-.5*Math.cos(elapsed*.25+i))*.7;
+  const targetX=home[0]+(task.target.x-home[0])*travel;
+  const targetZ=home[1]+(task.target.z-home[1])*travel;
+  return {...agent,activity:task.activity,dialogue:task.dialogue,
+   renderX:Math.max(-16.5,Math.min(16.5,targetX+Math.cos(phase)*.58)),
+   renderZ:Math.max(-16.5,Math.min(16.5,targetZ+Math.sin(phase*.85)*.5)),
+   renderBob:Math.sin(elapsed*2.5+i*2)*.065};
  });
 }
 export function canWalk(x,z){
