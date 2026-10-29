@@ -5,6 +5,7 @@ on:
       - 'systemia/clip/social-continuity-watch.mjs'
       - 'systemia/clip/social-continuity-watch.workflow.json'
       - 'tests/clip-social-continuity-watch.test.mjs'
+      - 'tests/boardroom-social-campaign.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -16,6 +17,7 @@ on:
       - 'systemia/clip/social-continuity-watch.mjs'
       - 'systemia/clip/social-continuity-watch.workflow.json'
       - 'tests/clip-social-continuity-watch.test.mjs'
+      - 'tests/boardroom-social-campaign.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -36,7 +38,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test publication reconciliation
-        run: node --test tests/clip-social-continuity-watch.test.mjs
+        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs
       - name: Write review queue coverage snapshot (read-only)
         run: |
           node systemia/clip/social-continuity-watch.mjs \
