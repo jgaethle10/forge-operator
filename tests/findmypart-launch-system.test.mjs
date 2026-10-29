@@ -9,44 +9,63 @@ const art=fs.readFileSync('public/findmypart/brand/launch-landscape.svg','utf8')
 const story=fs.readFileSync('public/findmypart/brand/launch-portrait.svg','utf8');
 const wordmark=fs.readFileSync('public/findmypart/brand/wordmark.svg','utf8');
 
-test('original FindMyPart identity and all four vector artifacts are release-controlled',()=>{
-  assert.match(landing,/<title>FindMyPart \| Missing part\. Not the end\.<\/title>/);
-  assert.match(landing,/Missing part\./);
-  assert.match(landing,/Not the end\./);
-  assert.match(landing,/#7358eb|--violet:#7358eb/);
+test('practical orange blue black identity is consistent across customer surfaces',()=>{
+  assert.match(landing,/<title>FindMyPart \\| Missing part\\. Not the end\\.<\\/title>/);
+  assert.match(landing,/--ink:#151c25/);
+  assert.match(landing,/--orange:#f16b27/);
+  assert.match(landing,/--blue:#2565a3/);
+  assert.match(landing,/--paper:#fff/);
   for(const asset of [mark,art,story,wordmark]){
     assert.match(asset,/^<svg /);
     assert.match(asset,/role="img"/);
     assert.match(asset,/<title/);
-    assert.doesNotMatch(asset,/<script|<foreignObject|(?:href|xlink:href)=["']https?:\/\//i);
+    assert.doesNotMatch(asset,/<script|<foreignObject|(?:href|xlink:href)=["']https?:\\/\\//i);
+    assert.doesNotMatch(asset,/#7358eb|#a38cff|#caf1ad/i,'obsolete brand colors should not reappear');
   }
   assert.match(mark,/viewBox="0 0 256 256"/);
   assert.match(art,/viewBox="0 0 1200 628"/);
   assert.match(story,/viewBox="0 0 1080 1350"/);
 });
 
-test('offer ladder, scope disclaimers and legitimate inquiry action are understandable without hidden payment',()=>{
-  for(const price of ['$19','$49','$99'])assert.ok(landing.includes(price),price);
-  for(const word of ['Quick Hunt','Deep Hunt','Rescue Hunt','sourcing','Equipment','Part Passport']){
-    // Part Passport is an illustrative internal product name, not necessarily in main landing
-    if(word==='Part Passport')continue;
-    assert.match(landing,new RegExp(word,'i'));
-  }
-  assert.match(landing,/One-time research services/);
-  assert.match(landing,/not a guarantee of availability, compatibility/);
-  assert.match(landing,/illustration shows the format, not an actual customer hunt/);
-  assert.match(landing,/mailto:jessegaethle10@gmail.com\?subject=FindMyPart/);
-  assert.match(landing,/href="\/offers\/findmypart"/);
-  assert.match(landing,/confirm scope and payment availability rather than taking an unidentified payment/);
-  assert.doesNotMatch(landing,/(?:base44\.app|buy\.stripe\.com|checkout\.stripe\.com)/i);
+test('working-customer homepage is genuinely short and action focused',()=>{
+  assert.match(landing,/For the part nobody can find/);
+  assert.match(landing,/Missing part\\./);
+  assert.match(landing,/Not the end\\./);
+  assert.match(landing,/Tell us about your part/);
+  assert.match(landing,/How it works/);
+  assert.match(landing,/A simpler way past the dead end/);
+  assert.match(landing,/We dig into it/);
+  assert.match(landing,/Get a clear next step/);
+  assert.match(landing,/Not sure which hunt fits\\?/);
+  assert.match(landing,/No subscription/);
+  const descriptions=(landing.match(/<article class="step">/g)||[]).length;
+  assert.equal(descriptions,3,'only three customer-visible steps');
+  assert.doesNotMatch(landing,/STAGE 0[1-6]|six-stage sourcing|SYSTEMIA COMMAND|RAVEN NEXUS/i);
+  assert.doesNotMatch(landing,/base44\\.app|checkout\\.stripe\\.com|buy\\.stripe\\.com/i);
   assert.doesNotMatch(landing,/<form|<script|<iframe|<input/i);
+  assert.ok(landing.length<16000,'customer page should remain compact');
 });
 
-test('pre-release HTML is inert, responsive and explicitly held from search engines',()=>{
+test('three visible offer prices, simple lead action and no false proof',()=>{
+  for(const price of ['$19','$49','$99'])assert.ok(landing.includes(price),price);
+  for(const name of ['Quick Hunt','Deep Hunt','Rescue Hunt'])assert.ok(landing.includes(name));
+  assert.equal((landing.match(/class="price-card/g)||[]).length,3);
+  const priceSection=landing.slice(landing.indexOf('<section id="pricing">'),landing.indexOf('</section>',landing.indexOf('<section id="pricing">')));
+  assert.doesNotMatch(priceSection,/class="btn primary"|href="\\/api\\/offers/,'No checkout button in each tier before customer scope');
+  assert.match(landing,/research, not a replacement part/i);
+  assert.match(landing,/not guaranteed/);
+  assert.match(landing,/href="\\/findmypart\\/sample-report\\/"/);
+  assert.match(landing,/mailto:jessegaethle10@gmail\\.com\\?subject=FindMyPart/);
+  assert.match(landing,/No charge or information submission happens on this page/);
+  assert.equal((landing.match(/href="mailto:/g)||[]).length,1,'one buyer-controlled message action');
+  assert.equal((landing.match(/href="#request"/g)||[]).length,2,'repeated primary action routes to the same destination');
+});
+
+test('mobile is legible, accessible, inert and explicitly held from indexing',()=>{
   assert.match(landing,/<meta name="robots" content="noindex,nofollow">/);
   assert.match(landing,/<meta name="viewport" content="width=device-width, initial-scale=1">/);
-  assert.match(landing,/@media\(max-width:570px\)/);
-  assert.match(landing,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.match(landing,/@media\\(max-width:600px\\)/);
+  assert.match(landing,/@media\\(prefers-reduced-motion:reduce\\)/);
   assert.match(landing,/a:focus-visible/);
   assert.match(landing,/<nav .*aria-label="Main navigation"/);
   assert.doesNotMatch(landing,/<img [^>]+src="https?:/i);
