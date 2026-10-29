@@ -1,0 +1,51 @@
+name: Fallen Studios sampled piano and cello score (zero GPU rental)
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - 'systemia/media-studio/music/sampled_signature_cue_v1.py'
+      - '.github/workflows/fallen-sampled-score.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sampled-score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free local audio processing dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy scipy soundfile
+          ffmpeg -version | head -n 1
+      - name: Render from originally recorded, commercially reusable instrument samples
+        run: |
+          python systemia/media-studio/music/sampled_signature_cue_v1.py
+          ffmpeg -v error -i artifacts/fallen-sampled-score/Evercraft_At_First_Light_Piano_Cello_16s.m4a -f null -
+          ffmpeg -v error -i artifacts/fallen-sampled-score/Evercraft_At_First_Light_Piano_Only_16s.m4a -f null -
+          python - <<'PY'
+          import soundfile as sf, pathlib, json
+          p=pathlib.Path("artifacts/fallen-sampled-score")
+          for name in ["Evercraft_At_First_Light_Piano_Cello_16s.wav","Evercraft_At_First_Light_Piano_Only_16s.wav"]:
+              info=sf.info(p/name)
+              assert info.duration == 16.0, (name,info.duration)
+              print(name, info.duration, info.samplerate)
+          ledger=json.loads((p/"SOURCES_AND_LICENSES.json").read_text())
+          assert ledger["status"]=="PRIVATE_AUDITION_NOT_OWNER_APPROVED"
+          assert len(ledger["recorded_sample_sources"])>=14
+          print("Original instrument samples attributed and both compositions decoded")
+          PY
+      - name: Upload audio auditions, source ledger and stems (not raw instrument recordings)
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-at-first-light-recorded-instruments
+          path: |
+            artifacts/fallen-sampled-score/*.m4a
+            artifacts/fallen-sampled-score/*.wav
+            artifacts/fallen-sampled-score/SOURCES_AND_LICENSES.json
+            artifacts/fallen-sampled-score/ATTRIBUTION.txt
+          retention-days: 30
+          if-no-files-found: error
