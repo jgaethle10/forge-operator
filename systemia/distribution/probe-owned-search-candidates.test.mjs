@@ -26,7 +26,7 @@ test('a 200 shell with wrong identity is explicitly rejected',()=>{
 });
 test('Journal archive-only source is not a current edition or automatic indexing release',()=>{
  const p=classifyCandidate(j,'Evercraft Journal',ok(j.url,'Evercraft Journal No current live edition'));
- assert.equal(p.state,'OWNED_PAGE_RELEASE_HOLD');
+ assert.equal(p.state,'OWNED_JOURNAL_ARCHIVE_ONLY');
  assert.equal(p.current_edition_verified,false);assert.equal(p.safe_for_reindex,false);
 });
 test('network errors remain unknown, never false outage or success',()=>{
