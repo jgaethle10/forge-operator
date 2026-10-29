@@ -118,6 +118,7 @@ test("valid mission-bound signed preflight and signed Juniper writeback yield a 
   const gate = createCommissionedTeamGate({
     trustedKeys,
     now,
+    verifyRoster: async ({preflightEvidence}) => ({verified:true,digest:preflightEvidence.payload.registry_snapshot_hash}),
     readPreflight: async () => sign("dispatch_preflight", preflightPayload()),
     consumeNonce: async ({preflight_id}) => {
       if (seen.has(preflight_id)) return false;
@@ -158,6 +159,7 @@ test("missing Juniper/Sentinel or identity map holds before inference", async ()
     tamper(payload);
     const gate = createCommissionedTeamGate({
       trustedKeys, now,
+      verifyRoster: async ({preflightEvidence}) => ({verified:true,digest:preflightEvidence.payload.registry_snapshot_hash}),
       readPreflight: async () => sign("dispatch_preflight", payload),
       consumeNonce: async () => true,
     });
@@ -171,6 +173,7 @@ test("missing Juniper/Sentinel or identity map holds before inference", async ()
 test("completion without signed Juniper writeback cannot report success", async () => {
   const gate = createCommissionedTeamGate({
     trustedKeys, now,
+    verifyRoster: async ({preflightEvidence}) => ({verified:true,digest:preflightEvidence.payload.registry_snapshot_hash}),
     readPreflight: async () => sign("dispatch_preflight", preflightPayload()),
     consumeNonce: async () => true,
     readCompletion: async ({request:r,preflight,review_result_hash}) =>
