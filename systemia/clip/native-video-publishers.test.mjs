@@ -10,7 +10,7 @@ const input={approved:true,authorizationRef:'owner:2026-10-23-relay',
 function config(overrides={}){
   return {verified:true,allowPublish:true,allowedAccountIds:['123'],pageId:'123',igUserId:'123',
     accessToken:'secret-kept-out-of-results',allowedMediaHosts:['owned-media.example.test'],mediaHostOwnershipVerified:true,mediaOwnershipReceiptRef:'fixture:owned-media:proof',
-    assertNotDuplicate:async()=>true,claimPublish:async()=>({status:'claimed',receiptRef:'fixture:durable-claim'}),verifyResume:async()=>true,...overrides};
+    assertNotDuplicate:async()=>true,claimPublish:async()=>({status:'claimed',receiptRef:'fixture:durable-claim'}),verifyResume:async()=>({approved:true,claimRef:'fixture:durable-claim'}),...overrides};
 }
 function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json'}});}
 
@@ -70,7 +70,7 @@ test('Instagram Reel waits until container finishes and can be resumed',async()=
   assert.equal(out.state,'pending_processing');assert.equal(out.containerId,'container-42');
   assert.equal(calls.length,2);assert.match(calls[0].init.body,/media_type=REELS/);
   const resumeCalls=[];
-  const resume=createInstagramReelPublisherAdapter(config({fetchImpl:async(url,init)=>{
+  const resume=createInstagramReelPublisherAdapter(config({claimPublish:async()=>{throw new Error('resume_must_not_claim_again');},fetchImpl:async(url,init)=>{
     resumeCalls.push({url,init});
     if(resumeCalls.length===1)return json({status_code:'FINISHED'});
     if(resumeCalls.length===2)return json({id:'media-77'});
