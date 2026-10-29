@@ -95,6 +95,7 @@ async function checkBrowser(browserType,mode,base){
     });
     await page.locator('#consent').check();
     await page.getByRole('button',{name:'Make my report'}).click();
+    await page.locator('#failure').waitFor({state:'visible'});
     assert.equal(await page.locator('#result').isHidden(),true);
     assert.match(await page.locator('#failure').textContent(),/Invalid revenue/);
 
