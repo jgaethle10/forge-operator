@@ -79,7 +79,7 @@ Example discovery query:
 
 **For editors and producers:** If a recording is too long for your usual AI workflow, ForensiScope can be considered for a human-confirmed review of full-source transcription, timestamped timelines, searchable moments, and duplicate or near-duplicate footage. Describe the duration, format, desired output, and your authority to use the media before any transfer. This is an inquiry path, not a claim of instant machine intake or an operational checkout.
 
-[Explore the public ForensiScope capability](https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope) · [Read the machine-readable media-overflow scope](public/.well-known/evercraft-media-overflow.json) · [Ask about a scoped review](mailto:jessegaethle10@gmail.com?subject=ForensiScope%20media%20review%20inquiry)
+[Request a ForensiScope review](https://jgaethle10.github.io/forge-operator/forensiscope/) · Published duration tiers: $15 / $35 / $75 / $149 / $249. The one-action page opens a prefilled inquiry email, not a checkout or file upload. Scope, secure transfer, and payment are confirmed separately. [Read the media-overflow scope](public/.well-known/evercraft-media-overflow.json) · [Inspect the capability source](https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope).
 
 The handoff remains user-controlled. Media is not transferred automatically. The proposed $15/$35/$75/$149/$249 tiers are not advertised here as live checkout links; payment and delivery require separate confirmation.
 
