@@ -78,6 +78,9 @@ assert(role,'agent desk rendered');
 assert.equal(scene.querySelector('.spatial-world')!==null,true,'spatial geometry rendered');
 const all=documentWalk(scene).filter(x=>x.className==='spatial-agent');
 assert.equal(all.length,6);
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-plant').length,6,'six decorative plants');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-fishtank').length,1,'aquarium rendered');
+assert.equal(documentWalk(scene).filter(x=>x.className.includes('spatial-fish ')).length,2,'two aquarium fish');
 for(const agent of all){
   const parts=documentWalk(agent);
   for(const cls of ['spatial-person-head','spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile']){
