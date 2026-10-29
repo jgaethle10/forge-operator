@@ -40,6 +40,10 @@ test('no unrelated $19, $49 or PDF product is passed through existing service li
 test('customer-facing page requires deliberate human confirmation and honest payment facts',()=>{
  const html=get('checkout-ready/index.html');
  assert.equal((html.match(/class="pay"/g)||[]).length,7);
+ assert.match(html,/<title>Evercraft Payments \| Verified Service Checkout<\/title>/);
+ assert.match(html,/Evercraft Payments is the canonical order authority/);
+ assert.match(html,/Stripe-hosted payment forms under the Systemia settlement account/);
+ assert.match(html,/manual reconciliation into Evercraft Payments/);
  assert.ok(Object.values(expected).every(x=>html.includes(x.url)));
  assert.match(html,/id="accept" type="checkbox"/);
  assert.match(html,/aria-disabled/);
