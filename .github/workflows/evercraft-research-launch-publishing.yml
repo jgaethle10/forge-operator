@@ -1,0 +1,34 @@
+name: Evercraft Research launch publishing QA
+on:
+  pull_request:
+    paths:
+      - 'distribution/marketing/evercraft-research-20261029.review.json'
+      - 'distribution/marketing/evercraft-research-launch-20261029.md'
+      - 'tests/evercraft-research-launch-campaign.test.mjs'
+      - '.github/workflows/evercraft-research-launch-publishing.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'distribution/marketing/evercraft-research-20261029.review.json'
+      - 'distribution/marketing/evercraft-research-launch-20261029.md'
+      - 'tests/evercraft-research-launch-campaign.test.mjs'
+      - '.github/workflows/evercraft-research-launch-publishing.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  editorial-and-publisher-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source-backed launch copy and honest Clip state
+        run: node --test tests/evercraft-research-launch-campaign.test.mjs
+      - name: Preserve preparation status
+        run: |
+          echo 'Evercraft Research launch creative prepared and validated.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'CI success does NOT mean a social platform published these posts.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Evercraft Clip requires its own authorized provider receipt for each post.' >> "$GITHUB_STEP_SUMMARY"
