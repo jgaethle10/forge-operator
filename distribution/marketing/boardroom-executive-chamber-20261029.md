@@ -30,7 +30,7 @@ We've now released the first public component of Evercraft Boardroom, a free bro
 
 The broader aim is a genuine deliberation system in which distinct advisers critique one another's reasoning and produce an accountable decision record. That functionality remains under development and isn't being presented as commercially operational. The current release is deliberately narrower: it provides a useful way to examine what the supplied responses say and where further investigation is needed.
 
-A completed example is available here: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. Feedback from operators and founders on the actual comparison output, particularly missed context or misleading agreement, would be useful as we refine the product.
+A completed example is available here: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. I would especially value feedback about cases where the tool overstates a disagreement or misses an important limitation in an answer. Those are the failures we need to understand before expanding the experience. I'd rather improve a real result than make claims about a system we haven't yet delivered.
 
 ### Evercraft Facebook Page (company owned, brand-authorized only)
 
@@ -40,7 +40,7 @@ The free tool accepts one decision question and two or three AI responses suppli
 
 This release is a text-comparison preview, not a live debate among AI models or an independent fact-checking service. The proposed multi-adviser deliberation system is still in development. For decisions requiring deeper examination, Evercraft separately offers scoped, human-reviewed reports with scope and delivery agreed before purchase.
 
-A completed public example is available at https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. It can be examined immediately, without supplying private business information.
+A completed public example is available at https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. It uses a sample decision rather than customer information, allowing the output and its limitations to be inspected before anyone enters their own question. The comparison is a starting point for evidence review, not a substitute for independent verification or professional judgment.
 
 ### Evercraft LinkedIn Page (company owned, brand-authorized only)
 
@@ -50,7 +50,7 @@ The free browser-based experience accepts a decision question and two or three u
 
 The current tool does not make live model calls, verify source claims, or operate as an automated panel of advisers. Those capabilities belong to the longer-term Boardroom development roadmap, not this release. Higher-stakes decisions may instead be submitted for a separately scoped human-reviewed assessment.
 
-The released experience can be inspected through a completed public example: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1.
+The released experience can be inspected through a completed public example: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1. The example is prefilled so the output and its limitations can be examined without entering business information. This release establishes a working public preview, not evidence of decision accuracy, automated deliberation, or customer outcomes.
 
 ### Evercraft Instagram (company account, only if brand and media authorized)
 
