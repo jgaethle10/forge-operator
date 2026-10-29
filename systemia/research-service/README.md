@@ -16,7 +16,7 @@ No duplicate research fetcher or customer-facing dashboard is introduced here.
 
 JSON document: `job_id`, `question`, `as_of`, `sources`, `claims`, `conflicts`, `next_steps`.
 
-Each source includes a declared ID, public URL, title, capture timestamp, source snapshot text and optional original SHA-256 digest. The compiler **recalculates** the snapshot hash. User-supplied source records remain `supplied_snapshot_unverified`, even when a purported receipt exists.
+Each source includes a declared ID, public URL, title, capture timestamp, source snapshot text and optional original SHA-256 digest. The compiler **recalculates** SHA-256 over the exact supplied UTF-8 snapshot text, without trimming or Unicode normalization. If a collector hashes different byte content, the receipt must not be accepted. User-supplied source records remain `supplied_snapshot_unverified`, even when a purported receipt exists.
 
 An authorized caller may inject a `verifyCaptureReceipt` function that independently checks an owned collection receipt against the exact URL, timestamp and content digest. Only that strict callback can change a source to `collector_receipt_verified`. A verified capture confirms **which bytes were captured**, not that the content is correct.
 
