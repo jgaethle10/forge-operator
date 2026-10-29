@@ -78,6 +78,17 @@ assert(role,'agent desk rendered');
 assert.equal(scene.querySelector('.spatial-world')!==null,true,'spatial geometry rendered');
 const all=documentWalk(scene).filter(x=>x.className==='spatial-agent');
 assert.equal(all.length,6);
+for(const agent of all){
+  const parts=documentWalk(agent);
+  for(const cls of ['spatial-person-head','spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile']){
+    assert(parts.some(node=>node.className.split(' ').includes(cls)),
+      agent.dataset.agent+' missing visible character feature '+cls);
+  }
+}
+const style=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'style.css'),'utf8');
+for(const cls of ['spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile']){
+  assert(style.includes('.'+cls+'{'), 'missing rendered CSS for '+cls);
+}
 assert.equal(all.find(x=>x.dataset.agent==='analyst').dataset.state,'verified');
 const originalZoom=ui.getCamera().zoom;
 const keydown=viewport.listeners.keydown[0];
@@ -96,7 +107,7 @@ assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.state,'verified','2
 ui.reset();
 assert.equal(ui.getState().writer,'idle');
 assert.equal(originalZoom,0.72);
-console.log('Work Saban CSS3D spatial office: PASS (six rooms, 3D geometry, observer states, mode persistence and camera constraints).');
+console.log('Work Saban CSS3D spatial office: PASS (six character faces, rooms, observer states, mode persistence and camera constraints).');
 
 function documentWalk(node){
   return [node,...node.children.flatMap(documentWalk)];
