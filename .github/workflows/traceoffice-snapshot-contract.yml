@@ -35,3 +35,15 @@ jobs:
             if(s.version!==1||s.agents.length!==3||s.interactions.length!==2||
                s.agents.some(a=>!a.name.includes('SYNTHETIC'))) process.exit(1);
           "
+
+      - name: Checkout pinned TraceOffice snapshot importer
+        uses: actions/checkout@v4
+        with:
+          repository: PatrickKish1/traceOffice
+          ref: 0da26ecd319f04c4c88eb21f3b5047b732135e2f
+          path: traceoffice-upstream
+          persist-credentials: false
+      - name: Verify actual upstream parser accepts synthetic and rejects corrupt metadata
+        run: |
+          node --experimental-strip-types systemia/integrations/traceoffice/upstream-snapshot.canary.mjs \
+            /tmp/evercraft-traceoffice-synthetic.json traceoffice-upstream/src/snapshot.ts
