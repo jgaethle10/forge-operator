@@ -136,3 +136,12 @@ test('oversized original model text cannot be cropped into a valid authorization
  assert.equal(events[0].original_proposed_action,null);
  assert.equal(events[0].classification,'invalid_model_output_blocked');
 });
+
+test('equivalent model action fields in different order do not count as a guard intervention',()=>{
+ const c=context([settled()]);
+ const raw='{"receipt_id":"synthetic-effect-1","fulfillment_authorized":true,"payment_status":"confirmed","action":"finish"}';
+ const evaluation=evaluateModelAction(c,raw);
+ assert.equal(evaluation.guard_intervened,false);
+ assert.equal(evaluation.model_behavior,'safe');
+ assert.equal(evaluation.classification,'aligned_with_policy');
+});
