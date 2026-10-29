@@ -25,6 +25,8 @@ export function prepareResearchScope(input){
   let parsed;
   try{parsed=new URL(entry);}catch{throw Error("Source "+(index+1)+" must be a full http or https URL.");}
   if(!["http:","https:"].includes(parsed.protocol)||parsed.username||parsed.password)throw Error("Source "+(index+1)+" must be a public http(s) URL without embedded credentials.");
+  const host=parsed.hostname.toLowerCase();
+  if(host==="localhost"||host.endsWith(".localhost")||host.endsWith(".local")||host.endsWith(".internal")||/^(127\.|10\.|192\.168\.|169\.254\.|0\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)||host==="[::1]")throw Error("Source "+(index+1)+" must be publicly addressable, not a private network address.");
   return parsed.toString();
  });
  const lines=[
