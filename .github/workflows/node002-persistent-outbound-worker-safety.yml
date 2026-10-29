@@ -8,6 +8,7 @@ on:
       - 'scripts/install-node002-persistent-outbound-worker.sh'
       - 'tests/node002-persistent-outbound-worker.test.mjs'
       - 'tests/node002-persistent-outbound-e2e.test.mjs'
+      - 'docs/operations/node002-persistent-outbound-worker.md'
       - 'tests/install-node002-persistent-outbound-worker.test.mjs'
       - '.github/workflows/node002-persistent-outbound-worker-safety.yml'
   workflow_dispatch:
