@@ -91,6 +91,12 @@ for(const cls of ['spatial-person-hair','spatial-person-face','spatial-eye-left'
 }
 assert.equal(all.find(x=>x.dataset.agent==='analyst').dataset.state,'verified');
 const originalZoom=ui.getCamera().zoom;
+ui.focusAgent('writer');
+assert(ui.getCamera().zoom>=0.98);
+assert.notEqual(ui.getCamera().panX,0);
+ui.tourNext();
+assert(ui.getCamera().zoom>=0.98);
+
 const keydown=viewport.listeners.keydown[0];
 for(let i=0;i<30;i++)keydown({key:'+',preventDefault(){}});
 assert.equal(ui.getCamera().zoom,1.42,'upper zoom bound');
