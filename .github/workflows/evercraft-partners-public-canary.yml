@@ -1,18 +1,14 @@
 name: Evercraft Partners external HTTPS canary
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/evercraft-partners-public-canary.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'public/partners/**'
-      - '.github/workflows/evercraft-partners-public-canary.yml'
+  workflow_run:
+    workflows: ["Evercraft public web fallback"]
+    types: [completed]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   verify-visitor-path:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -31,7 +27,11 @@ jobs:
           fetch "mark.svg" mark.svg
           fetch "terms.html" terms.html
           fetch "social-card.svg" social-card.svg
+          fetch "social-card.png" social-card.png
           fetch "llms.txt" llms.txt
+          grep -Fq 'og:image" content="https://jgaethle10.github.io/forge-operator/partners/social-card.png"' "$tmp/index.html"
+          file --mime-type "$tmp/social-card.png" | grep -Fq "image/png"
+          python -c 'import struct,sys; p=open(sys.argv[1],"rb").read(24); assert p[:8]==b"\\x89PNG\\r\\n\\x1a\\n"; assert struct.unpack(">II",p[16:24])==(1200,630)' "$tmp/social-card.png"
           grep -Fq "Good work travels" "$tmp/index.html"
           grep -Fq "Founding partner applications now open" "$tmp/index.html"
           grep -Fq 'id="partner-application"' "$tmp/index.html"
@@ -46,4 +46,4 @@ jobs:
             echo "Found blocked legacy or payout claim in visitor page" >&2
             exit 1
           fi
-          echo "Verified exact live Partners HTML, application boundary, mark, social card, terms and LLM disclosure on public HTTPS."
+          echo "Verified exact live Partners HTML, application boundary, original SVG, 1200x630 PNG preview, terms and LLM disclosure on public HTTPS."
