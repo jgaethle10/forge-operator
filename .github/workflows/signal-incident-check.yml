@@ -1,0 +1,36 @@
+name: Evercraft Signal evidence-publication checks
+
+on:
+  push:
+    branches:
+      - main
+      - product/evercraft-signal-case-20261029
+    paths:
+      - 'public/signal/**'
+      - 'tests/signal-incident-public.test.mjs'
+      - '.github/workflows/signal-incident-check.yml'
+  pull_request:
+    paths:
+      - 'public/signal/**'
+      - 'tests/signal-incident-public.test.mjs'
+      - '.github/workflows/signal-incident-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate release claims, provenance and accessibility markers
+        run: node --test tests/signal-incident-public.test.mjs
+      - name: Verify no additional runtime is needed for public Pages
+        run: |
+          test -s public/signal/index.html
+          test -s public/signal/incidents/savannah-river-20261028.json
