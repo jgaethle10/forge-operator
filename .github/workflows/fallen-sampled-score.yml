@@ -19,6 +19,8 @@ jobs:
           python-version: '3.11'
       - name: Install free local audio processing dependencies
         run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
           python -m pip install --disable-pip-version-check numpy scipy soundfile
           ffmpeg -version | head -n 1
       - name: Render from originally recorded, commercially reusable instrument samples
