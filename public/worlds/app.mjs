@@ -85,7 +85,7 @@ function extra(kind,x,z){const arr=[];const a=(type,dx,y,dz,sx,sy,sz,color)=>arr
 }
 function resize(){const ratio=Math.min(devicePixelRatio||1,1.65),w=Math.round(canvas.clientWidth*ratio),h=Math.round(canvas.clientHeight*ratio);if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
 function present(time){requestAnimationFrame(present);const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen){
- let f=Number(keys.KeyW||keys.ArrowUp)-Number(keys.KeyS||keys.ArrowDown)-joystick.y,side=Number(keys.KeyD||keys.ArrowRight)-Number(keys.KeyA||keys.ArrowLeft)+joystick.x;
+ let f=Number(Boolean(keys.KeyW||keys.ArrowUp))-Number(Boolean(keys.KeyS||keys.ArrowDown))-joystick.y,side=Number(Boolean(keys.KeyD||keys.ArrowRight))-Number(Boolean(keys.KeyA||keys.ArrowLeft))+joystick.x;
  const mag=Math.hypot(f,side);if(mag>.02){f/=Math.max(1,mag);side/=Math.max(1,mag);const step=dt*(keys.ShiftLeft?6.6:3.75),s=Math.sin(camera.yaw),c=Math.cos(camera.yaw),x=camera.x+(s*f+c*side)*step,z=camera.z+(-c*f+s*side)*step;if(canWalk(x,camera.z))camera.x=x;if(canWalk(camera.x,z))camera.z=z;}
  camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}
  if(time-lastSave>6500){state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();lastSave=time;}
