@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T07:46:03.923Z",
+  "updated_at": "2026-10-29T07:46:09.417Z",
   "url_count": 3020,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -33,14 +33,14 @@
     },
     "/chum/capabilities/": {
       "path": "/chum/capabilities/",
-      "content_sha256": "f3b474bf7671136b04f32e7c51eb8dde3f33da4d28b55bd3d8f6175248a5c301",
-      "last_changed": "2026-10-17T06:06:40.515Z",
+      "content_sha256": "5880475cfdb63b3eaca2b6c18ea6801cbc22cb3487725713a1a486f14e7f67eb",
+      "last_changed": "2026-10-29T07:46:09.417Z",
       "priority": 96
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "08035b1032907b0df527de4739f54b9cda9f5f5ecc6545d74d375b1f8c82c7fa",
-      "last_changed": "2026-10-17T06:06:40.515Z",
+      "content_sha256": "78418808098b5116055f097655d15a0ea55dc34e220a3c73652855a3346f8f83",
+      "last_changed": "2026-10-29T07:46:09.417Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "bf12007e5d99550580cad481c8d56ffad6fec20f1773f37a42e63ec456955211",
-      "last_changed": "2026-10-29T07:46:03.923Z",
+      "content_sha256": "fc5fc9bc2d8746d9fd3cee29503dc32847577584bfc35a4d9d4f4b7b6c58a74d",
+      "last_changed": "2026-10-29T07:46:09.417Z",
       "priority": 80
     },
     "/chum/strike/": {

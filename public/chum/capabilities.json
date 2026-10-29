@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
   "updated_at": "2026-10-07T20:12:09.198Z",
-  "count": 53,
+  "count": 54,
   "sell_now_count": 18,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
@@ -29,6 +29,37 @@
         "prove agent reliability",
         "agent benchmark mission",
         "AI worker competency test"
+      ]
+    },
+    {
+      "public_id": "ai-boardroom-decision-review-v1",
+      "name": "Evercraft AI Boardroom",
+      "commercial_state": "discovery_only",
+      "machine_state": "source_discovery_only",
+      "pricing": "Free text comparison $0. Separate human-scoped Boardroom Standard Review $250 and Financial Deep Dive $500; no instant $9 paid SKU.",
+      "public_url": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/",
+      "page_url": "/chum/capabilities/ai-boardroom-decision-review-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-boardroom-decision-review-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-boardroom-decision-review-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-boardroom-decision-review-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "start_blocker": null,
+      "machine_review_url": null,
+      "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "why do ChatGPT and Claude disagree about my business decision",
+        "compare different AI model answers for a business strategy",
+        "multiple AI assistants give conflicting recommendations",
+        "I want different AI models to debate a strategy",
+        "have AI advisers challenge each other's business assumptions",
+        "ask ChatGPT Claude and Gemini to critique a proposal",
+        "AI boardroom for a tough executive decision",
+        "multi-model decision review with risk and operational perspectives",
+        "AI council to pressure-test a startup or company decision",
+        "compare AI disagreements and identify the evidence needed"
       ]
     },
     {
