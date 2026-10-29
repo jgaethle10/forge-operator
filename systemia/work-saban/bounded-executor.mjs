@@ -9,7 +9,7 @@ export async function executeBoundedTasks(tasks,{concurrency=2,onEvent=()=>{}}={
   if(typeof onEvent!=='function')throw new TypeError('invalid_event_handler');
   const ids=new Set();
   for(const task of tasks){
-    if(!task||typeof task.id!=='string'||!task.id.trim()||task.id.length>160||typeof task.run!=='function'||ids.has(task.id))
+    if(!task||typeof task.id!=='string'||!task.id.trim()||task.id.length>160||typeof task.run!=='function'||typeof task.verify!=='function'||ids.has(task.id))
       throw new TypeError('invalid_or_duplicate_task');
     ids.add(task.id);
   }
@@ -27,6 +27,8 @@ export async function executeBoundedTasks(tasks,{concurrency=2,onEvent=()=>{}}={
       publish(task.id,'running');
       try{
         const value=await task.run();
+        const accepted=await task.verify(value);
+        if(accepted!==true)throw new Error('task_result_not_verified');
         results[index]={id:task.id,ok:true,value};
         publish(task.id,'verified');
       }catch(error){
