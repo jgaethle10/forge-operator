@@ -14,12 +14,17 @@ import {
 const now = () => new Date("2026-10-28T21:02:00Z");
 const roles = TEAM_REVIEW_ROLES.map((x, i) => "original-agent-" + (i + 1));
 const assigned = Object.fromEntries(TEAM_REVIEW_ROLES.map((x, i) => [x.reviewer_id, roles[i]]));
+const workerKeys = Object.fromEntries(roles.map((id) => [id, crypto.generateKeyPairSync("ed25519")]));
+const WORKER_TEXT = "VERDICT: HOLD. Missing evidence.";
 const keyPair = crypto.generateKeyPairSync("ed25519");
 const other = crypto.generateKeyPairSync("ed25519");
 const publicPem = keyPair.publicKey.export({ type: "spki", format: "pem" });
 const trustedKeys = {
   dispatch_preflight: { "owned-preflight-key": publicPem },
   dispatch_completion: { "owned-completion-key": publicPem },
+  worker_execution: Object.fromEntries(roles.map((id) => [
+    id, workerKeys[id].publicKey.export({type:"spki",format:"pem"}),
+  ])),
 };
 
 function sign(kind, payload, key = keyPair.privateKey, keyId = kind === "dispatch_preflight" ? "owned-preflight-key" : "owned-completion-key") {
@@ -37,6 +42,34 @@ function sign(kind, payload, key = keyPair.privateKey, keyId = kind === "dispatc
   };
 }
 
+function signedWorkerResult({ request: r = request(), preflight = preflightPayload(), reviewerId, inference }) {
+  const agentId = preflight.reviewer_assignments[reviewerId];
+  const envelope = {
+    schema: "evercraft.agent-continuity.signed-evidence.v1",
+    kind: "worker_execution",
+    key_id: agentId,
+    issued_at: "2026-10-28T21:01:00Z",
+    expires_at: "2026-10-28T21:04:00Z",
+    payload: {
+      request_id: r.request_id, mission_key: r.mission_key, work_key: r.work_key,
+      preflight_id: preflight.preflight_id,
+      registry_snapshot_hash: preflight.registry_snapshot_hash,
+      reviewer_id: reviewerId, agent_id: agentId,
+      inference_request_id: r.request_id + ":" + reviewerId,
+      result_sha256: "sha256:" + crypto.createHash("sha256").update(inference.text).digest("hex"),
+      provider_receipt: inference.provider_receipt,
+      result_state: "completed",
+      runtime_class: "evercraft-owned-commissioned-worker",
+      worker_run_receipt_ref: "test-owned-worker:" + reviewerId,
+      worker_instance_id: "test-node:" + agentId,
+    },
+  };
+  return {
+    ...envelope,
+    signature: crypto.sign(null, signedAgentEvidenceMessage(envelope), workerKeys[agentId].privateKey)
+      .toString("base64"),
+  };
+}
 function request() {
   return {
     schema: "evercraft.nexus.team-review.request.v1",
@@ -120,6 +153,8 @@ test("valid mission-bound signed preflight and signed Juniper writeback yield a 
     now,
     verifyRoster: async ({preflightEvidence}) => ({verified:true,digest:preflightEvidence.payload.registry_snapshot_hash}),
     readPreflight: async () => sign("dispatch_preflight", preflightPayload()),
+    readWorkerExecution: async ({request:r,preflight,reviewerId,inference}) =>
+      signedWorkerResult({request:r,preflight:preflightPayload(),reviewerId,inference}),
     consumeNonce: async ({preflight_id}) => {
       if (seen.has(preflight_id)) return false;
       seen.add(preflight_id);
@@ -176,6 +211,8 @@ test("completion without signed Juniper writeback cannot report success", async 
     verifyRoster: async ({preflightEvidence}) => ({verified:true,digest:preflightEvidence.payload.registry_snapshot_hash}),
     readPreflight: async () => sign("dispatch_preflight", preflightPayload()),
     consumeNonce: async () => true,
+    readWorkerExecution: async ({request:r,preflight,reviewerId,inference}) =>
+      signedWorkerResult({request:r,preflight:preflightPayload(),reviewerId,inference}),
     readCompletion: async ({request:r,preflight,review_result_hash}) =>
       sign("dispatch_completion", {
         request_id:r.request_id, mission_key:r.mission_key, work_key:r.work_key,
@@ -189,6 +226,23 @@ test("completion without signed Juniper writeback cannot report success", async 
   assert.equal(result.status, "blocked");
   assert.equal(result.blocked_reason, "commissioned_completion_binding_or_writeback_invalid");
   assert.equal(counter.count,7);
+});
+
+test("committed roster without independent worker receipts is blocked before synthesis", async () => {
+  const gate = createCommissionedTeamGate({
+    trustedKeys, now,
+    verifyRoster: async ({preflightEvidence}) => ({
+      verified:true,digest:preflightEvidence.payload.registry_snapshot_hash,
+    }),
+    readPreflight: async () => sign("dispatch_preflight",preflightPayload()),
+    consumeNonce: async () => true,
+  });
+  const counter={count:0};
+  const outcome=await makeExecutor(gate,counter)(request());
+  assert.equal(outcome.status,"blocked");
+  assert.equal(outcome.blocked_reason,"commissioned_worker_execution_not_verified_for_all_reviewers");
+  assert.equal(outcome.commissioned_identity_verified,false);
+  assert.equal(counter.count,TEAM_REVIEW_ROLES.length);
 });
 
 test("role lenses remain useful without pretending to be commissioned identities", async () => {
