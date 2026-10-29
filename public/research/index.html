@@ -68,7 +68,7 @@ byId("scope-form").addEventListener("submit",event=>{
  }catch(error){latest=null;byId("result").hidden=true;byId("notice").textContent=error.message||"Check your research question.";}
 });
 byId("copy").addEventListener("click",async()=>{if(!latest)return;try{await navigator.clipboard.writeText(latest.reportText);byId("action-status").textContent="Scope brief copied.";}catch{byId("action-status").textContent="Clipboard unavailable. Use Download brief.";}});
-byId("download").addEventListener("click",()=>{if(!latest)return;const blob=new Blob([latest.reportText],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="evercraft-research-scope.txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);byId("action-status").textContent="Scope brief download prepared.";});
+byId("download").addEventListener("click",()=>{if(!latest)return;const blob=new Blob([latest.reportText],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="evercraft-research-scope.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0);byId("action-status").textContent="Scope brief download prepared.";});
 </script>
 </body>
 </html>
