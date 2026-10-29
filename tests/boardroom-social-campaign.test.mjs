@@ -79,3 +79,11 @@ test('drafts state capability and payments limits, not invented sales or provide
  assert.match(copy,/publisher not authorized\/verified|not published|not submitted/i);
  assert.ok(!/hundreds of customers|100% accurate|AI models actively debated|we automatically post/i.test(copy));
 });
+
+test('superseded general launch kit points to the corrected editorial source',()=>{
+ const kit=fs.readFileSync('distribution/boardroom-public-launch-kit.md','utf8');
+ assert.ok(kit.includes('marketing/boardroom-executive-chamber-20261029.md'));
+ assert.ok(kit.includes('field report'));
+ assert.ok(kit.includes('four-paragraph'));
+ assert.doesNotMatch(kit,/I've been working on something pretty cool|Big decision\? Bring more perspective/);
+});
