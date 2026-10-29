@@ -12,5 +12,5 @@ export function toEngineWorld(scene){
   ...scene.objects.map(o=>({id:`object:${o.id}`,name:o.kind,transform:{position:pos(o.x,0,o.z)},collider:{type:'box',halfExtents:pos(...dims[o.kind])},tags:['worlds','user_created',o.kind],properties:{source:'local_browser_builder'}})),
   ...scene.agents.map(a=>({id:`character:${a.id}`,name:a.name,transform:{position:pos(a.x,0,a.z)},tags:['worlds','character','local_scripted_behavior'],properties:{mood:a.mood,goal:a.goal}}))
  ];
- return {schema:'evercraft.world-engine.world.v1',id:'worlds-mossmere-v1',version:scene.revision,tickRateHz:60,gravity:pos(0,-9.81,0),ground:{enabled:true,height:0},entities,metadata:{producer:'evercraft-worlds-browser-prototype',sourceSchema:scene.schema,productionAuthoritative:false,collaborationEnabled:false}};
+ return {schema:/** @type {const} */ ('evercraft.world-engine.world.v1'),id:'worlds-mossmere-v1',version:scene.revision,tickRateHz:60,gravity:pos(0,-9.81,0),ground:{enabled:true,height:0},entities,metadata:{producer:'evercraft-worlds-browser-prototype',sourceSchema:scene.schema,productionAuthoritative:false,collaborationEnabled:false}};
 }
