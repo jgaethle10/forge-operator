@@ -4,6 +4,7 @@ let active=0,peak=0;
 const events=[];
 const tasks=Array.from({length:40},(_,i)=>({
  id:'job-'+i,
+ verify:value=>value===i*2 && i!==8,
  async run(){
    active++;peak=Math.max(peak,active);
    await new Promise(resolve=>setImmediate(resolve));
@@ -16,11 +17,12 @@ const output=await executeBoundedTasks(tasks,{concurrency:3,onEvent:e=>events.pu
 assert.equal(output.results.length,40);
 assert.equal(output.results[7].ok,false);
 assert.equal(output.results[39].value,78);
+assert.equal(output.results[8].ok,false,'rejected verification fails closed');
 assert.equal(output.capacity.requested,40);
 assert.equal(output.capacity.admitted,40);
 assert.equal(output.capacity.provisioned,40);
-assert.equal(output.capacity.verified,39);
-assert.equal(output.capacity.failed,1);
+assert.equal(output.capacity.verified,38);
+assert.equal(output.capacity.failed,2);
 assert.equal(output.capacity.running,0);
 assert(peak<=3);
 assert.equal(events.filter(e=>e.state==='provisioned').length,40);
