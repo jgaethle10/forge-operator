@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-29T18:20:43.343Z",
+  "updated_at": "2026-10-29T18:23:14.873Z",
   "url_count": 3020,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "eff2a64e567c54d431f11d2d42ca0f9ee639dd6c2bbd2a3868f1f0619098b83d",
-      "last_changed": "2026-10-29T18:20:43.343Z",
+      "content_sha256": "2d9de43fa84fe1b6cf54b5a52348dd4ea32398242eadeaa45160f1647ff87b87",
+      "last_changed": "2026-10-29T18:23:14.873Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "8ec77655baafcfb8f3a0ff0f606dc5e5ef529847d66edaeba5bb1704defd34f9",
-      "last_changed": "2026-10-29T18:20:43.343Z",
+      "content_sha256": "98cd8aaec22f06ba4e05a316c2b69e85ebe7ed9fceef0efefbdf8d462eaa1f84",
+      "last_changed": "2026-10-29T18:23:14.873Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "dfad3481904a1f64a8787ebdaa6a20a9f1b0b2e46ad34717f09a984da1a841e7",
-      "last_changed": "2026-10-29T18:20:43.343Z",
+      "content_sha256": "51ab2cfc0708a5fa51960a25c742d83a60114559bd7252090ed46cb06bd572fb",
+      "last_changed": "2026-10-29T18:23:14.873Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "16115f35bd8d167b84b07853383b1ab9f50cfe0d40bd64cca5fae94bd154b6de",
-      "last_changed": "2026-10-29T18:20:43.343Z",
+      "content_sha256": "91881ca64dcbdc8b3d531182967a01cc38c024cf71ff4808429acc8794ce1fe0",
+      "last_changed": "2026-10-29T18:23:14.873Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -465,8 +465,8 @@
     },
     "/forensiscope/developers/status.json": {
       "path": "/forensiscope/developers/status.json",
-      "content_sha256": "3a2646369bb379f896f0e582d172ae94bade91065bd17bf14fd263155cb3b581",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "fb0ea5b1a8683785bb7dc57aad1e83c77f64c9424717c2ea4168381af05705de",
+      "last_changed": "2026-10-29T18:23:14.518Z",
       "priority": 60
     },
     "/forensiscope/developers/examples.json": {
