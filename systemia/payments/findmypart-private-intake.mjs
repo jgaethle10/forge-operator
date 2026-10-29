@@ -48,6 +48,9 @@ export async function createFindMyPartPrivateIntakeLedger({
   if(!Number.isSafeInteger(ttlMs)||ttlMs<60_000||ttlMs>30*86400_000)throw fail('private_storage_ttl_out_of_range');
   await fs.mkdir(stateDir,{recursive:true,mode:0o700});
   const root=await fs.realpath(stateDir);
+  const rootStat=await fs.stat(root);
+  if(!rootStat.isDirectory()||(rootStat.mode&0o077)!==0)
+    throw fail('private_storage_directory_permissions_invalid');
   const target=(orderKey)=>path.join(root,keyOf(orderKey));
   async function read(orderKey){
     const folder=target(orderKey);
