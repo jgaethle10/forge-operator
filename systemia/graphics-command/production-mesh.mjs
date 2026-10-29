@@ -50,10 +50,13 @@ function verifyCouncil(plan, reconciliation) {
       story_architect:'story', cinematography_director:'camera',
       visual_evidence_scout:'coverage', data_graphics_director:'graphics',
       world_builder:'world', edit_rhythm_director:'edit', sound_director:'sound',
+      voice_performance_director:'voice_performance', music_composer:'music',
+      sound_design_engineer:'sound_design', mixing_engineer:'mix',
       brand_art_director:'art_direction', documentary_truth_guard:'truth',
       beauty_judge:'beauty'
     };
-    assert((plan.council.roles || []).length === 10, 'council_role_set_incomplete');
+    assert((plan.council.roles || []).length === 14 && new Set(plan.council.roles).size === 14, 'council_role_set_incomplete');
+    assert(Object.keys(categories).every(role=>plan.council.roles.includes(role)), 'council_role_set_incomplete');
     for (const role of plan.council.roles) {
       const category = categories[role];
       const proposal = category && blueprint.creative_genome?.[category];
