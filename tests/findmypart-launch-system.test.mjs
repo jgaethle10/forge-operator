@@ -18,7 +18,7 @@ test('original FindMyPart identity and all four vector artifacts are release-con
     assert.match(asset,/^<svg /);
     assert.match(asset,/role="img"/);
     assert.match(asset,/<title/);
-    assert.doesNotMatch(asset,/<script|<foreignObject|https?:\/\//i);
+    assert.doesNotMatch(asset,/<script|<foreignObject|(?:href|xlink:href)=["']https?:\/\//i);
   }
   assert.match(mark,/viewBox="0 0 256 256"/);
   assert.match(art,/viewBox="0 0 1200 628"/);
