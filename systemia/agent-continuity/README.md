@@ -244,3 +244,41 @@ Acceptance still requires an independently authenticated historical
 **stable-ID baseline**, actual current owned registry evidence, production
 worker identity/enrollment, Juniper and Sentinel receipts, and verified worker
 runs. No legacy provider interaction or credential rotation occurs here.
+
+## Owned receiver gate (P0, not production-enrolled)
+
+The loopback Raven inference gateway now has an opt-in
+`POST /v1/commissioned/infer` endpoint. **Default is held (HTTP 409)**
+because the live `commissionedReceiver` is not configured. Generic
+`/v1/infer` never serves a commissioned fallback.
+
+`systemia/raven/commissioned-worker-receiver.mjs` provides the **receiver
+verification contract**, not a deployed worker:
+
+1. Authenticated HTTP bearer required by the existing loopback gateway;
+   enforce exact commissioned request schema and no-side-effect limits.
+2. Read signed preflight and registry from a separately trusted owned source,
+   never evidence or keys supplied by the HTTP caller.
+3. Verify pinned Ed25519 dispatch and independent roster signatures, freshness,
+   immutable role ID, exact reviewer mapping, mission, work, roster digest,
+   Juniper memory read and Sentinel protective guard evidence.
+4. Independently verify *active* Passport and Execution Gate admission and
+   worker enrollment through an owned authority callback; signed receipt
+   reference strings alone do not grant authority.
+5. Route exclusively through an enrolled `dispatchWorker` implementation,
+   **not** the generic provider engine; verify the worker's separately pinned
+   Ed25519 execution signature bound to the actual output and provider receipt.
+6. Require a successful durable `persistWorkerProof` operation before
+   releasing completed output for Raven's separate per-role verification and
+   Juniper post-run memory writeback.
+
+All four owned producer/admission/dispatcher/persistence adapters must be
+supplied under production security review. No default callback, local worker
+signer, key generator, or synthetic approval is installed for production.
+The tests use generated temporary identities and no real deployment.
+
+**Important runtime limitation:** current signed preflight receipts include
+Passport/Execution Gate references, not a direct independently verifiable
+lease payload. A real receiver's `authorizeLease` must authenticate the
+underlying live issued lease and binding before indicating acceptance.
+Production remains held until this independent integration is present.
