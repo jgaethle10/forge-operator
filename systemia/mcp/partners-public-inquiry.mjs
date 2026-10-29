@@ -141,7 +141,10 @@ export function createPartnerApplicationHandler({
   if(fs.existsSync(file)){
    try{
     const prior=readRecord({dir:storeDir,key:secret,reference});
-    if(prior.email!==email||prior.request_id!==request_id)return emit(res,409,{ok:false,error:'request_conflict'},origin);
+    if(prior.email!==email||prior.request_id!==request_id||
+       prior.name!==checked.value.name||prior.audience!==checked.value.audience||
+       prior.region!==checked.value.region||prior.profile!==checked.value.profile)
+       return emit(res,409,{ok:false,error:'request_conflict'},origin);
     ensurePartnerAlert(storeDir,reference,prior.received_at);
     return emit(res,200,{ok:true,received:true,reference,duplicate:true,
       message:'Your application is already recorded. No account or payment was created.'},origin);
@@ -164,7 +167,9 @@ export function createPartnerApplicationHandler({
    if(error?.code==='EEXIST'){
     try{
      const prior=readRecord({dir:storeDir,key:secret,reference});
-     if(prior.email===email&&prior.request_id===request_id){
+     if(prior.email===email&&prior.request_id===request_id&&
+         prior.name===checked.value.name&&prior.audience===checked.value.audience&&
+         prior.region===checked.value.region&&prior.profile===checked.value.profile){
       ensurePartnerAlert(storeDir,reference,prior.received_at);
       return emit(res,200,{ok:true,received:true,reference,duplicate:true},origin);
      }
