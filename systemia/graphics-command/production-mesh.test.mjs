@@ -108,3 +108,26 @@ test('Megazord rejects a seemingly reconciled council with no sound-director gen
   assert.throws(()=>assembleGraphicsProductionMesh({...input,reconciliation:forged}),
     /graphics_mesh_council_genome_missing:sound_director/);
 });
+
+test('every new voice, composing, sound and mixing role has its own required creative genome',async(t)=>{
+  const input=await fixture(t);
+  assert.equal(input.plan.council.roles.length,14);
+  const categories={
+    voice_performance_director:'voice_performance',
+    music_composer:'music',
+    sound_design_engineer:'sound_design',
+    mixing_engineer:'mix',
+  };
+  for(const [role,category] of Object.entries(categories)){
+    assert.ok(input.plan.council.roles.includes(role));
+    const changed={...input.reconciliation.blueprints[0],
+      creative_genome:{...input.reconciliation.blueprints[0].creative_genome}};
+    delete changed.creative_genome[category];
+    const forged={...input.reconciliation,
+      blueprints:[changed,...input.reconciliation.blueprints.slice(1)]};
+    fs.writeFileSync(path.join(input.dir,'creative-council-reconciliation.json'),
+      JSON.stringify(forged,null,2)+'\\n');
+    assert.throws(()=>assembleGraphicsProductionMesh({...input,reconciliation:forged}),
+      new RegExp('graphics_mesh_council_genome_missing:'+role));
+  }
+});
