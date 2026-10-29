@@ -6,7 +6,12 @@ const clean=value=>String(value??'').trim();
 
 function fail(message){ throw new Error('clip_native_video_'+message); }
 function graphPath(base,version,id,edge=''){
-  return clean(base).replace(/\/+$/,'')+'/'+clean(version).replace(/^\/+|\/+$/g,'')+'/'+encodeURIComponent(id)+(edge?'/'+edge:'');
+  // Never transmit a Meta bearer token to an override or redirect-shaped origin.
+  const u=new URL(clean(base));
+  const trusted=new Set(['graph.facebook.com','graph-video.facebook.com','graph.instagram.com']);
+  if(u.protocol!=='https:'||!trusted.has(u.hostname.toLowerCase())||u.username||u.password||u.search||u.hash||u.pathname!=='/')fail('graph_origin_untrusted');
+  if(!/^v\\d{1,2}\\.\\d{1,2}$/.test(clean(version)))fail('graph_version_invalid');
+  return u.origin+'/'+clean(version)+'/'+encodeURIComponent(id)+(edge?'/'+edge:'');
 }
 async function readResponse(response){
   const raw=await response.text();
