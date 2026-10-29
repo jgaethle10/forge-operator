@@ -40,17 +40,21 @@ test('no unrelated $19, $49 or PDF product is passed through existing service li
 test('customer-facing directory provides one-click exact checkout review with clear payment terms',()=>{
  const html=get('checkout-ready/index.html');
  assert.equal((html.match(/class="pay"/g)||[]).length,7);
- assert.match(html,/<title>Evercraft Payments \| Verified Service Checkout<\/title>/);
- assert.match(html,/Evercraft Payments is the canonical order authority/);
- assert.match(html,/Stripe-hosted payment forms under the Systemia settlement account/);
- assert.match(html,/manual reconciliation into Evercraft Payments/);
+ assert.equal((html.match(/Evercraft service · Secure checkout/g)||[]).length,7);
+ assert.doesNotMatch(html,/EVERCRAFT PAYMENTS · VERIFIED OFFERS/);
+ assert.match(html,/EVERCRAFT \/ SERVICES/);
+ assert.match(html,/Payments infrastructure: Evercraft Payments/);
+ assert.match(html,/<title>Evercraft Services \| Explore Services & Pricing<\/title>/);
+ assert.match(html,/Evercraft Services · Practical help, clear pricing/);
+ assert.match(html,/Stripe processes payment under the Systemia settlement account/);
+ assert.match(html,/underlying Evercraft Payments ledger is reconciled manually/);
  assert.ok(Object.values(expected).every(x=>html.includes(x.url)));
  assert.match(html,/Ready to review your checkout\?/i);
  assert.match(html,/confirm project scope and delivery availability/i);
  assert.doesNotMatch(html,/id="accept" type="checkbox"/);
  assert.doesNotMatch(html,/aria-disabled/);
  assert.doesNotMatch(html,/e\.preventDefault\(\)/);
- assert.match(html,/manually reconcile provider-verified receipts/i);
+ assert.match(html,/provider-verified receipts/i);
  assert.match(html,/does not itself place an order/i);
  assert.match(html,/no matching reusable payment link/i);
  assert.doesNotMatch(html,/(pornhub|onlyfans|fansly|nsfw)/i);
@@ -58,8 +62,8 @@ test('customer-facing directory provides one-click exact checkout review with cl
 });
 test('agent buyer instructions route through Evercraft Payments while declaring the settlement adapter',()=>{
  const guide=get('checkout-ready/llms.txt');
- assert.match(guide,/^# Evercraft Payments \|/);
- assert.match(guide,/canonical order authority/i);
+ assert.match(guide,/^# Evercraft Services \|/);
+ assert.match(guide,/Payment infrastructure: Evercraft Payments is the canonical order authority/i);
  assert.match(guide,/Stripe is the downstream payment processor/i);
  assert.match(guide,/2026-10-25/);
  assert.match(guide,/manual reconciliation into Evercraft Payments/i);
