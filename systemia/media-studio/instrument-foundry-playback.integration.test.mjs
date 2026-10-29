@@ -998,3 +998,87 @@ test('real PulseGrid captures more than sixteen repeated piano and stochastic dr
   }
  });
 });
+
+
+test('real engine proves 64 contiguous live scheduled steps across four bars, not merely an 8-second WAV',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prior=globalThis.OfflineAudioContext;
+  class FourBarOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate;}
+   async startRendering(){
+    const p=new Float32Array(this.frames).fill(.08);
+    return {numberOfChannels:2,length:this.frames,sampleRate:48000,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=FourBarOffline;
+  const pcm=new Float32Array(36000).fill(.3);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare(),before=structuredClone(session);
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   for(let i=1;i<64;i++)engine.scheduleStep(i%16,.06+i*.125);
+   engine.stop();
+   const proof=await engine.auditRecordedPianoOfflineBus({window_sec:8});
+   assert.equal(proof.status,'offline_track_bus_pcm_measurement',JSON.stringify(proof));
+   assert.equal(proof.performed_step_count,64);
+   assert.equal(proof.performance_gap_count,0);
+   assert.equal(proof.first_gap_at_sec,null);
+   assert.equal(proof.performance_coverage_sec,8);
+   assert.equal(proof.performance_window_complete,true);
+   assert.equal(proof.performance_evidence,'observed_scheduled_steps_only');
+   assert.equal(proof.analyzed_voices,4,'each recorded piano hit remains the actual approved sample');
+   assert.equal(proof.complete,false,
+     'continuous scheduled steps do not certify the full delay tail');
+   assert.deepEqual(session,before);
+  }finally{
+   await engine.close();
+   if(prior===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prior;
+  }
+ });
+});
+test('real engine detects one missing middle bar step even though earliest/latest are eight seconds apart',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const prior=globalThis.OfflineAudioContext;
+  class MissingStepOffline extends SimulatedAudioContext{
+   constructor(ch,frames,rate){super();this.frames=frames;this.sampleRate=rate}
+   async startRendering(){
+    const p=new Float32Array(this.frames).fill(.07);
+    return {numberOfChannels:2,length:this.frames,sampleRate:48000,getChannelData:()=>p};
+   }
+  }
+  globalThis.OfflineAudioContext=MissingStepOffline;
+  const pcm=new Float32Array(36000).fill(.2);
+  class PCMContext extends SimulatedAudioContext{
+   async decodeAudioData(raw){return {...await super.decodeAudioData(raw),getChannelData:()=>pcm}}
+  }
+  globalThis.AudioContext=PCMContext;
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+   await engine.play(session,0);
+   for(let i=1;i<64;i++){
+    if(i!==32)engine.scheduleStep(i%16,.06+i*.125);
+   }
+   engine.stop();
+   const proof=await engine.auditRecordedPianoOfflineBus({window_sec:8});
+   assert.equal(proof.status,'offline_track_bus_pcm_measurement',JSON.stringify(proof));
+   assert.equal(proof.performed_step_count,63);
+   assert.equal(proof.performance_gap_count,1);
+   assert.equal(proof.first_gap_at_sec,4);
+   assert.equal(proof.performance_coverage_sec,4);
+   assert.equal(proof.performance_window_complete,false);
+   assert.equal(proof.complete,false);
+  }finally{
+   await engine.close();
+   if(prior===undefined)delete globalThis.OfflineAudioContext;
+   else globalThis.OfflineAudioContext=prior;
+  }
+ });
+});
