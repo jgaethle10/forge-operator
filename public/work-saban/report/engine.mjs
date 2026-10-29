@@ -117,6 +117,6 @@ export function salesMarkdown(summary,sourceDigest){
     'Arithmetic check: PASSED (second pass over the same source rows).',
     'Rows: '+summary.rowCount,
     'Source digest: '+sourceDigest,
-    'No file content was uploaded or retained by Work Saban.',''
+    'No file content was uploaded to Work Saban servers. Close the tab to clear the in-page result.',''
   ].join('\n');
 }
