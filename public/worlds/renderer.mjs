@@ -76,7 +76,7 @@ export function drawEnvironment(r,s,t,residentPositions){
    if(k==='rock'){S(x,y+.24*f,z,.95*f,.47*f,.8*f,c)}
    if(k==='table'){B(x,y+.8*f,z,1.5*f,.18*f,1.2*f,c);for(const dx of [-.55,.55])for(const dz of [-.42,.42])B(x+dx*f,y+.37*f,z+dz*f,.11*f,.7*f,.11*f,'#977e89')}
    if(k==='crystal'){sh('cone',x,y+.58*f,z,.75*f,1.15*f,.75*f,c,{glow:.7});S(x,y+.06*f,z,.8*f,.15*f,.8*f,'#c3b4ca')}
-   if(k==='portal'){T(x,y+1.7*f,z,2.4*f,3.25*f,.6*f,c,{glow:.85});S(x,y+1.7*f,z,.1*f,3*f,2.1*f,c,{alpha:.30,glow:.45});C(x,y+.12*f,z,1.9*f,.22*f,1*f,'#d5bcd5')}
+   if(k==='portal'){T(x,y+1.7*f,z,2.4*f,3.25*f,.6*f,c,{glow:.85});S(x,y+1.7*f,z,2.1*f,3*f,.1*f,c,{alpha:.30,glow:.45});C(x,y+.12*f,z,1.9*f,.22*f,1*f,'#d5bcd5')}
  }
  // Animated residents are procedural beings, not remote LLM agents.
  for(const a of residentPositions){let {x,y,z}=a.pos;S(x,.04,z,.68,.08,.6,'#51756c',{alpha:.20});S(x,y+.23,z,.73,.78,.64,a.color);S(x,y+.58,z,.68,.6,.61,a.color);for(const dx of [-.19,.19]){S(x+dx,y+.62,z-.30,.125,.17,.10,'#fff8f2');S(x+dx,y+.64,z-.39,.06,.09,.04,'#34334e')}S(x,y+.44,z-.335,.10,.07,.09,'#f6c4b3');S(x-.32,y+.05,z,.17,.21,.2,a.color);S(x+.32,y+.05,z,.17,.21,.2,a.color);S(x-.26,y+.94,z,.18,.35,.18,a.color);S(x+.24,y+.98,z,.18,.33,.18,a.color);}
