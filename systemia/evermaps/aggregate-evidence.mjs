@@ -33,12 +33,30 @@ export function wgsEvidenceQuery({kind,county='Grant',offset=0,pageSize=500,coun
   return BASE+'/'+layer.id+'/query?'+params;
 }
 async function requestJson(url,fetchImpl,signal) {
-  const response=await fetchImpl(url,{headers:{accept:'application/json,application/geo+json'},signal});
-  if (!response?.ok) throw new Error('WGS unavailable: HTTP '+(response?.status??'unknown'));
-  const json=await response.json();
-  if (!json||typeof json!=='object'||Array.isArray(json)) throw new Error('Invalid WGS JSON response');
-  if (json.error) throw new Error('WGS ArcGIS error: '+String(json.error.message??'unknown'));
-  return json;
+  // Read-only, idempotent upstream calls. A limited retry helps transient network faults,
+  // but never fabricates a successful response or records missing geography as zero.
+  for (let attempt=0;attempt<3;attempt++) {
+    try {
+      const response=await fetchImpl(url,{headers:{accept:'application/json,application/geo+json'},signal});
+      if (!response?.ok) {
+        const status=response?.status??'unknown';
+        if ([429,500,502,503,504].includes(status) && attempt<2) {
+          await new Promise(resolve=>setTimeout(resolve,(attempt+1)*500));
+          continue;
+        }
+        throw new Error('WGS unavailable: HTTP '+status);
+      }
+      const json=await response.json();
+      if (!json||typeof json!=='object'||Array.isArray(json)) throw new Error('Invalid WGS JSON response');
+      if (json.error) throw new Error('WGS ArcGIS error: '+String(json.error.message??'unknown'));
+      return json;
+    } catch(error) {
+      if (signal?.aborted) throw error;
+      if (attempt>=2 || !(/fetch failed|network|connection|timeout/i.test(String(error?.message??'')))) throw error;
+      await new Promise(resolve=>setTimeout(resolve,(attempt+1)*500));
+    }
+  }
+  throw new Error('WGS source still unavailable after bounded retries');
 }
 async function countRecords(kind,county,fetchImpl,signal) {
   const json=await requestJson(wgsEvidenceQuery({kind,county,countOnly:true}),fetchImpl,signal);
