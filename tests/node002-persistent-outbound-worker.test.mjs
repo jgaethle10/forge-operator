@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {narrowContentHashCommandAllowed as allow, startOutboundNodeAgent} from '../systemia/network/outbound-node-agent.mjs';
-import {verifyNode002PersistentPreflight as verify} from '../scripts/node002-persistent-outbound-worker.mjs';
+import {verifyNode002PersistentPreflight as verify, assessNode002PersistentStatus as assess} from '../scripts/node002-persistent-outbound-worker.mjs';
 
 test('persistent policy permits liveness, bounded hash workload and release',()=>{
   assert.equal(allow({method:'GET',route:'/v1/health'}),true);
@@ -103,4 +103,33 @@ test('outbound agent clears transient broker failure after a successful empty po
     if(agent)await agent.close();
     globalThis.fetch=originalFetch;
   }
+});
+
+test('worker readiness requires a fresh status AND a recent successful poll',()=>{
+  const nowMs=Date.parse('2026-10-28T23:00:00.000Z');
+  const stamp=ms=>new Date(nowMs-ms).toISOString();
+  const healthy={
+    observed_at:stamp(1000),
+    last_successful_poll_at:stamp(2000),
+    state:'registered',
+    ready:true,
+    last_error_code:null,
+  };
+  const result=assess(healthy,{nowMs});
+  assert.equal(result.status_fresh,true);
+  assert.equal(result.successful_poll_fresh,true);
+  assert.equal(result.ready_now,true);
+  assert.equal(result.systemd_service_independently_verified,false);
+  assert.equal(result.yard_connected_capacity_independently_verified,false);
+  assert.equal(result.production_job_verified,false);
+  for(const bad of [
+    {...healthy,observed_at:stamp(22000)},
+    {...healthy,last_successful_poll_at:stamp(40000)},
+    {...healthy,last_successful_poll_at:null},
+    {...healthy,last_successful_poll_at:new Date(nowMs+100000).toISOString()},
+    {...healthy,observed_at:new Date(nowMs+100000).toISOString()},
+    {...healthy,state:'awaiting_healthy_poll'},
+    {...healthy,ready:false},
+    {...healthy,last_error_code:'remote_poll_failed:500'},
+  ])assert.equal(assess(bad,{nowMs}).ready_now,false);
 });
