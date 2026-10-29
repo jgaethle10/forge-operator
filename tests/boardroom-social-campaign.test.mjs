@@ -32,8 +32,50 @@ test('founder personal accounts are human-shared only',()=>{
  assert.ok(copy.includes('Personal Facebook, for founder to share manually'));
  assert.ok(copy.includes('Personal LinkedIn, for founder to share manually'));
 });
-test('copy sells free real function with no unsupported multi-AI, telemetry or revenue claims',()=>{
- for(const marker of ['No account. No payment.','No data upload.','The bigger vision is an entire AI boardroom','still building toward that','human-reviewed']) assert.ok(copy.includes(marker),marker);
+function section(start,end){
+ const i=copy.indexOf(start),j=copy.indexOf(end);
+ assert.ok(i>=0&&j>i,'missing editorial section '+start);
+ return copy.slice(i+start.length,j).trim();
+}
+const founderFB=section('### Personal Facebook, for founder to share manually','### Personal LinkedIn, for founder to share manually');
+const founderLI=section('### Personal LinkedIn, for founder to share manually','### Evercraft Facebook Page (company owned, brand-authorized only)');
+const companyFB=section('### Evercraft Facebook Page (company owned, brand-authorized only)','### Evercraft LinkedIn Page (company owned, brand-authorized only)');
+const companyLI=section('### Evercraft LinkedIn Page (company owned, brand-authorized only)','### Evercraft Instagram (company account, only if brand and media authorized)');
+const share=fs.readFileSync('public/mesh/ai-boardroom/share/index.html','utf8');
+
+test('founder posts follow four developed paragraphs with sincere field-report voice',()=>{
+ for(const [name,draft] of [['Facebook',founderFB],['LinkedIn',founderLI]]){
+  const paragraphs=draft.split(/\n\s*\n/);
+  assert.equal(paragraphs.length,4,name+' founder editorial standard');
+  assert.ok(paragraphs.every(p=>p.trim().split(/\s+/).length>=48),'No punchy one-line fragments');
+  assert.ok(draft.includes(campaign.sample_url));
+  assert.doesNotMatch(draft,/I've been working on something pretty cool|So which one do you trust\?|No account\. No payment\.|🔥|🙌|#\w+/);
+ }
+});
+test('corporate release copy documents shipped work without engagement theater',()=>{
+ for(const draft of [companyFB,companyLI]){
+  assert.equal(draft.split(/\n\s*\n/).length,4);
+  assert.match(draft,/Evercraft/);
+  assert.match(draft,/free|public|browser/);
+  assert.match(draft,/does not|doesn't|not a live|not an automated|not a verified/);
+  assert.doesNotMatch(draft,/🔥|🥂|#\w+|What if|So which one do you trust|Join the revolution|10\/10|guaranteed|AI advisors have debated/i);
+  assert.ok(draft.includes(campaign.sample_url));
+ }
+});
+test('owner share kit contains exact reviewed founder drafts, not superseded promo text',()=>{
+ const extract=id=>{
+  const start='<div class="post" id="'+id+'">';
+  const i=share.indexOf(start),j=share.indexOf('</div>',i);
+  assert.ok(i>=0&&j>i);
+  return share.slice(i+start.length,j);
+ };
+ assert.equal(extract('fb-content'),founderFB);
+ assert.equal(extract('li-content'),founderLI);
+ assert.ok(share.includes('Nothing gets published automatically.'));
+});
+test('drafts state capability and payments limits, not invented sales or provider receipts',()=>{
+ assert.match(copy,/human-reviewed/i);
+ assert.match(copy,/not a live debate|isn't a verified customer feature|does not make live model calls/i);
+ assert.match(copy,/publisher not authorized\/verified|not published|not submitted/i);
  assert.ok(!/hundreds of customers|100% accurate|AI models actively debated|we automatically post/i.test(copy));
- assert.ok(copy.includes(campaign.sample_url));
 });
