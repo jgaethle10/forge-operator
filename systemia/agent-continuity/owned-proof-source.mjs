@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { createCommissionedTeamGate } from "./signed-evidence.mjs";
+import { verifyCommissionedRoster } from "./signed-roster.mjs";
 
 function mustFile(file, description) {
   const resolved = path.resolve(String(file || "").trim());
@@ -48,9 +49,27 @@ export function createOwnedCommissionedTeamGate({
   const trustFile = mustFile(trustKeysFile, "commissioned_trust_keys_file");
   const keys = JSON.parse(fs.readFileSync(trustFile, "utf8"));
   if (!keys || typeof keys !== "object" ||
-      !keys.dispatch_preflight || !keys.dispatch_completion)
+      !keys.dispatch_preflight || !keys.dispatch_completion || !keys.registry_snapshot)
     throw new Error("commissioned_trust_keys_invalid");
-  for (const folder of ["preflight", "completion", "claimed"]) {
+  // A roster must be independently authenticated, not signed by the same
+  // private authority as a mission dispatch.
+  const registryPublicKeys = Object.values(keys.registry_snapshot);
+  const dispatchPublicKeys = Object.values(keys.dispatch_preflight);
+  try {
+    const fingerprints = (values) => values.map((value) =>
+      crypto.createPublicKey(value).export({ type: "spki", format: "der" }).toString("hex")
+    );
+    const rosterKeys = fingerprints(registryPublicKeys);
+    const dispatchKeys = new Set(fingerprints(dispatchPublicKeys));
+    if (!rosterKeys.length || !dispatchKeys.size ||
+        rosterKeys.some((key) => dispatchKeys.has(key))) {
+      throw new Error("commissioned_registry_and_dispatch_signers_not_independent");
+    }
+  } catch (error) {
+    throw new Error(error?.message === "commissioned_registry_and_dispatch_signers_not_independent"
+      ? error.message : "commissioned_trust_keys_invalid");
+  }
+  for (const folder of ["registry", "preflight", "completion", "claimed"]) {
     const dir = path.join(root, folder);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { mode: 0o700 });
     mustDirectory(dir);
@@ -63,6 +82,14 @@ export function createOwnedCommissionedTeamGate({
       readProof(root, "preflight", request.request_id),
     readCompletion: async ({request}) =>
       readProof(root, "completion", request.request_id),
+    verifyRoster: async ({request, preflightEvidence}) =>
+      verifyCommissionedRoster({
+        request,
+        preflightEvidence,
+        rosterEnvelope: readProof(root, "registry", "snapshot"),
+        trustedKeys: keys,
+        now: now(),
+      }),
     consumeNonce: async ({preflight_id, request_id, mission_key, expires_at}) => {
       const canonical = crypto.createHash("sha256")
         .update(JSON.stringify({preflight_id, request_id, mission_key})).digest("hex");
