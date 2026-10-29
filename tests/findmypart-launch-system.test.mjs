@@ -63,6 +63,10 @@ test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, n
      assert.match(res.headers.get('content-security-policy')||'',/form-action 'none'/);
      assert.match(await res.text(),/Missing part\./);
    }
+   const sample=await fetch(runtime.url+'/findmypart/sample-report/');
+   assert.equal(sample.status,200);
+   assert.match(await sample.text(),/NOT A REAL HUNT OR SUPPLIER QUOTE/);
+   assert.match(sample.headers.get('x-robots-tag')||'',/noindex/);
    const h=await fetch(runtime.url+'/findmypart/',{method:'HEAD'});
    assert.equal(h.status,200);
    assert.equal((await h.text()).length,0);
