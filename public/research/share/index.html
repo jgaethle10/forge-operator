@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft Research | Launch Share Kit</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f7fafb">
+<style>
+:root{--deep:#163745;--teal:#117c83;--ink:#142b35;--cream:#f7fafb;--line:#dae6e7;--muted:#576d75}*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:var(--teal)}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #46b7ac;outline-offset:3px}
+header{border-bottom:1px solid var(--line);background:#fff}.top{width:min(1100px,calc(100% - 32px));min-height:70px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:860;letter-spacing:-.045em;text-decoration:none;color:var(--deep)}.brand small{display:block;text-transform:uppercase;letter-spacing:.19em;font-weight:850;font-size:.62rem;color:var(--teal)}
+main{width:min(1100px,calc(100% - 32px));margin:auto;padding:44px 0 70px}.eyebrow{font-size:.72rem;letter-spacing:.17em;text-transform:uppercase;color:var(--teal);font-weight:850}h1{font-size:clamp(2.35rem,6vw,4.8rem);letter-spacing:-.066em;line-height:1.05;margin:10px 0 14px}h2{font-size:1.45rem;letter-spacing:-.04em;margin:0 0 10px}.intro{color:var(--muted);max-width:740px;margin:0 0 30px}p{margin:0 0 16px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}.panel{background:#fff;padding:25px;border:1px solid var(--line);border-radius:19px;min-width:0}.panel p{color:var(--muted);font-size:.89rem}.panel label{display:block;font-size:.84rem;font-weight:800;margin:14px 0 7px}.field{width:100%;padding:13px 12px;border:1px solid #c6d8d9;background:#fff;border-radius:10px;color:var(--deep)}.preview{border:1px solid #c7d9d9;border-radius:12px;overflow:hidden;background:#dbe9e8;display:grid;place-items:center;padding:8px;margin-top:18px}.preview canvas{display:block;width:100%;height:auto;max-height:570px;object-fit:contain}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.btn{border:1px solid #b7d0d0;padding:11px 14px;border-radius:10px;background:#f5faf9;color:var(--deep);font-weight:750;font-size:.88rem;min-height:46px}.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.btn:disabled{opacity:.45;cursor:not-allowed}.status{min-height:25px;color:#1f6569;font-size:.83rem;margin:12px 0 0!important;font-weight:720}.copy{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f7f7;border:1px solid #d6e3e3;padding:17px;border-radius:11px;line-height:1.6;font-size:.89rem;max-height:370px;overflow:auto;color:#1b3440}.note{font-size:.77rem!important;color:var(--muted);margin:15px 0 0!important}.small{color:var(--muted);font-size:.85rem}.bottom{margin-top:24px;border:1px solid var(--line);background:#e8f3f2;border-radius:17px;padding:18px 22px}.bottom p{font-size:.9rem;color:#46606a}.bottom strong{color:#173945}
+@media(max-width:820px){.layout{grid-template-columns:1fr}main{padding:31px 0 50px}.panel{padding:19px}.preview canvas{max-height:530px}}@media(max-width:450px){h1{font-size:2.45rem}.actions .btn{flex:1 1 100%}.top{min-height:64px}}
+</style>
+</head>
+<body>
+<header><div class="top"><a class="brand" href="../"><small>Evercraft</small>Research</a><a href="../">View the product</a></div></header>
+<main>
+<div class="eyebrow">Owned media · Founder and company launch</div>
+<h1>Put Research in front of people.</h1>
+<p class="intro">One real product, ten platform-specific captions, and an original branded graphic you can save in the right format. Everything happens locally in your browser. Nothing here publishes, connects to a social account, or invents customer research results.</p>
+<div class="layout">
+<section class="panel" aria-labelledby="graphic-title">
+ <div class="eyebrow">01 / Real product, real offer</div><h2 id="graphic-title">Choose your launch image.</h2>
+ <p>The graphic explains the verified public offer. It's original typographic artwork, not a fake screenshot or completed research report.</p>
+ <label for="format">Image size</label><select class="field" id="format">
+  <option value="portrait">Instagram / LinkedIn portrait · 1080 × 1350</option>
+  <option value="story">Story / TikTok cover · 1080 × 1920</option>
+  <option value="square">Square feed · 1080 × 1080</option>
+  <option value="wide">Landscape link card · 1200 × 630</option>
+ </select>
+ <div class="preview"><canvas id="poster" width="1080" height="1350" role="img" aria-label="Evercraft Research original typographic launch card"></canvas></div>
+ <div class="actions"><button type="button" id="download" class="btn primary">Download PNG</button><button type="button" id="native-share" class="btn">Share image with an app</button></div>
+ <p class="status" id="media-status" role="status" aria-live="polite"></p>
+ <p class="note">For video-first TikTok or Reels, use a real screen recording of the product. This image is an honest cover or feed visual, not a video demo.</p>
+</section>
+<section class="panel" aria-labelledby="copy-title">
+ <div class="eyebrow">02 / Platform-ready copy</div><h2 id="copy-title">Choose where to post.</h2>
+ <p>Natural language, no paragraph quota. Founder captions remain yours to post. Corporate drafts must go through Evercraft Clip with verified permissions and real provider receipts.</p>
+ <label for="account">Account type</label><select id="account" class="field"><option value="personal">Personal account</option><option value="company">Evercraft company account</option></select>
+ <label for="channel">Platform</label><select id="channel" class="field"><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="linkedin">LinkedIn</option><option value="x">X</option><option value="tiktok">TikTok</option></select>
+ <div id="caption" class="copy" aria-live="polite"></div>
+ <div class="actions"><button type="button" class="btn primary" id="copy-caption">Copy caption</button><button type="button" class="btn" id="copy-link">Copy tracked link</button><button type="button" class="btn" id="copy-comment" hidden>Copy Facebook first comment</button></div>
+ <p class="status" id="copy-status" role="status" aria-live="polite"></p>
+ <p class="note" id="link-note">For Facebook, put the link in your first comment after publishing the feed post. Instagram and TikTok normally require a profile link or suitable Story link.</p>
+ <div class="actions"><a id="open-product" class="btn" href="../">Open live Research</a><a class="btn" id="open-platform" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Open platform</a></div>
+</section>
+</div>
+<section class="bottom"><strong>What we're launching today</strong><p>A free research-scope builder that's publicly accessible, plus individually quoted, reviewed research inquiries. The offline evidence-dossier compiler exists, but instant self-service research and a Research-specific payment checkout are not established. Social engagement, submitted leads, paid orders and delivered reports only count when there's real supporting evidence.</p><span class="small">Manual launch assistant. No logins, uploads, server tracking, analytics or automatic publishing are performed by this page.</span></section>
+</main>
+<script type="module">
+const byId=id=>document.getElementById(id);
+let captions=[],chosen=null;
+const WEBSITE="https://jgaethle10.github.io/forge-operator/research/";
+const SIZES={portrait:[1080,1350],story:[1080,1920],square:[1080,1080],wide:[1200,630]};
+const canv=byId("poster");
+const ctx=canv.getContext("2d");
+function rounded(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();}
+function wrap(text,x,y,maxWidth,lineHeight,maxLines=12){
+ const words=text.split(" "),lines=[];let line="";
+ for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}
+ if(line)lines.push(line);
+ lines.slice(0,maxLines).forEach((s,i)=>ctx.fillText(s,x,y+i*lineHeight));
+ return lines.slice(0,maxLines).length*lineHeight;
+}
+function render(){
+ const [w,h]=SIZES[byId("format").value];canv.width=w;canv.height=h;const wide=w/h>1.2;
+ const bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,"#143543");bg.addColorStop(1,"#23616a");ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+ ctx.strokeStyle="rgba(189,232,223,.16)";ctx.lineWidth=4;
+ for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(w*.96,h*.07,(i+1)*Math.min(w,h)*.2,0,Math.PI*2);ctx.stroke();}
+ const pad=wide?78:80;
+ ctx.textBaseline="alphabetic";
+ ctx.fillStyle="#abede4";ctx.font="800 "+(wide?25:29)+"px system-ui";ctx.fillText("EVERCRAFT  /  RESEARCH",pad,pad+12);
+ rounded(w-pad-190,pad-25,190,44,22,"rgba(189,232,223,.16)");ctx.fillStyle="#c6ede8";ctx.font="700 21px system-ui";ctx.fillText("EARLY ACCESS",w-pad-170,pad+5);
+ let headY=wide?210:h*.29;ctx.fillStyle="#ffffff";ctx.font="800 "+(wide?75:96)+"px system-ui";const delta=wrap("A confident answer isn't enough.",pad,headY,w-2*pad,wide?83:113,4);
+ ctx.fillStyle="#a7eee5";ctx.font="800 "+(wide?73:88)+"px system-ui";ctx.fillText("Show the evidence.",pad,headY+delta+(wide?9:30));
+ const bottom=wide?h-150:h-270;
+ ctx.fillStyle="rgba(255,255,255,.16)";rounded(pad,bottom,w-2*pad,4,2,"rgba(189,232,223,.6)");
+ ctx.fillStyle="#e2f4f1";ctx.font="600 "+(wide?29:35)+"px system-ui";wrap("Free scope builder. Custom-quoted research.",pad,bottom+61,w-2*pad,45,3);
+ ctx.fillStyle="#a7e4de";ctx.font="600 "+(wide?23:27)+"px system-ui";ctx.fillText("jgaethle10.github.io/forge-operator/research/",pad,h-pad*.78);
+}
+function current(){return captions.find(x=>x.account===byId("account").value&&x.channel===byId("channel").value)}
+function setCopy(){chosen=current();byId("caption").textContent=chosen?.copy||"Launch caption not available.";byId("copy-comment").hidden=byId("channel").value!=="facebook";const platform=byId("channel").value;
+ const domains={facebook:"https://www.facebook.com/",instagram:"https://www.instagram.com/",linkedin:"https://www.linkedin.com/feed/",x:"https://x.com/home",tiktok:"https://www.tiktok.com/"};
+ byId("open-platform").href=domains[platform];byId("open-platform").textContent="Open "+(platform==="x"?"X":platform[0].toUpperCase()+platform.slice(1));
+ byId("link-note").textContent=platform==="facebook"?"Publish the caption without a URL. Then add the separate first comment containing the link. A comment isn't live until its actual platform receipt exists.":["instagram","tiktok"].includes(platform)?"Use the verified product URL in your profile or an eligible Story link. A caption URL may not be clickable.":"Use the tracked Research link in the caption where appropriate.";
+}
+async function copy(s){try{await navigator.clipboard.writeText(s);byId("copy-status").textContent="Copied. Paste it into the platform you're using.";}catch{byId("copy-status").textContent="Clipboard unavailable. Long-press the caption and copy manually.";}}
+function toBlob(){return new Promise((resolve,reject)=>canv.toBlob(b=>b?resolve(b):reject(new Error("Image export failed")),"image/png"))}
+function saveBlob(blob){const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="evercraft-research-"+byId("format").value+".png";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+byId("format").addEventListener("change",render);
+byId("account").addEventListener("change",setCopy);byId("channel").addEventListener("change",setCopy);
+byId("copy-caption").addEventListener("click",()=>chosen&&copy(chosen.copy));
+byId("copy-link").addEventListener("click",()=>chosen&&copy(chosen.tracked_url));
+byId("copy-comment").addEventListener("click",()=>copy("Evercraft Research: "+WEBSITE+"?utm_source=facebook&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=first_comment"));
+byId("download").addEventListener("click",async()=>{try{saveBlob(await toBlob());byId("media-status").textContent="PNG generated locally. Save it to Photos or Files to post.";}catch(e){byId("media-status").textContent="This browser couldn't export the image: "+e.message}});
+byId("native-share").addEventListener("click",async()=>{
+ try{const blob=await toBlob(),file=new File([blob],"evercraft-research-"+byId("format").value+".png",{type:"image/png"});
+  if(!navigator.canShare?.({files:[file]})||!navigator.share){byId("media-status").textContent="Native sharing unavailable. Use Download PNG instead.";return}
+  await navigator.share({files:[file],title:"Evercraft Research",text:"Free research scope builder: "+WEBSITE});byId("media-status").textContent="Share sheet closed. Publication must be confirmed inside the destination app.";
+ }catch(e){byId("media-status").textContent=e.name==="AbortError"?"Share cancelled.":"Sharing unavailable; use Download PNG."; }
+});
+(async()=>{try{const response=await fetch("./captions.json",{cache:"no-store"});if(!response.ok)throw Error("Launch copy unavailable");const data=await response.json();if(data.schema!=="evercraft.research.share-kit.v1"||!Array.isArray(data.captions))throw Error("Unexpected campaign format");captions=data.captions;setCopy();}catch{byId("caption").textContent="Launch captions couldn't be loaded. Open the product and share the link directly.";byId("copy-status").textContent="Caption feed unavailable."}})();
+render();
+</script>
+</body></html>
