@@ -4,7 +4,7 @@ a{color:#096f69}a:hover{text-decoration-thickness:2px}.skip{position:absolute;le
 .shell{max-width:1180px;padding:0 30px;margin:0 auto}
 .topbar{min-height:95px;display:flex;justify-content:space-between;align-items:center;gap:22px;border-bottom:1px solid #edf1f1}
 .identity{display:flex;align-items:center;gap:12px;color:var(--navy);text-decoration:none;line-height:1;font-weight:830}
-.symbol{display:grid;place-content:center;width:46px;height:46px;border-radius:14px;color:white;background:var(--navy);letter-spacing:-.17em;padding-right:4px;font-size:19px}.symbol span{color:var(--mint)}
+.brand-mark{display:block;flex:none;width:46px;height:52px;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(9,72,67,.09))}
 .wordmark{font-size:24px;letter-spacing:-.055em}.mint{color:var(--teal)}.wordmark small{display:block;margin-top:6px;color:#789197;font-size:9px;letter-spacing:.22em;font-weight:800}
 .topbar nav{display:flex;gap:26px;align-items:center;flex-wrap:wrap}.topbar nav a{font-weight:650;font-size:13px;color:var(--muted);text-decoration:none}.topbar nav a:hover{color:var(--teal)}
 .hero{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr);align-items:center;gap:58px;padding-top:76px;padding-bottom:94px;min-height:690px}
@@ -45,3 +45,7 @@ code{background:#ebf5f2;color:#066960;padding:2px 6px;border-radius:5px;overflow
 @media(max-width:850px){.hero{gap:28px;grid-template-columns:1fr .8fr}.hero h1{font-size:clamp(55px,7vw,80px)}.features{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.shell{padding-left:21px;padding-right:21px}.topbar{min-height:82px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px}.wordmark{font-size:20px}.topbar nav{gap:17px}.topbar nav a{font-size:12px}.hero{grid-template-columns:1fr;padding-top:44px;padding-bottom:65px;gap:48px;min-height:0}.hero h1{font-size:clamp(56px,12vw,77px);letter-spacing:-.075em}.intro{font-size:17px}.hero-actions{align-items:stretch;flex-direction:column}.hero-actions a{width:100%}.secondary{justify-content:center}.preview{justify-self:center;transform:none;max-width:295px}.soft-section,.browser-area,.how{padding-top:65px;padding-bottom:68px}h2{font-size:clamp(36px,8vw,46px)}.steps,.browsers,.truth-grid{grid-template-columns:1fr}.steps{gap:17px}.steps li{padding-top:12px}.browser-title{align-items:flex-start}.truth{padding:63px 0}.truth-grid{gap:14px}.closing{padding-top:73px;padding-bottom:80px}.footer{display:block}.footer span{display:block;margin-bottom:12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.primary{transition:none}}
+
+/* HumanFilter legal page inherits the same consumer identity and typography. */
+.legal{max-width:900px;padding-top:68px;padding-bottom:95px}.legal h1{font-size:clamp(36px,5vw,56px);letter-spacing:-.06em;line-height:1.13;margin:15px 0 24px;color:var(--navy)}.legal h2{font-size:clamp(22px,3vw,28px);letter-spacing:-.035em;margin:36px 0 12px}.legal p{color:#526b77;line-height:1.76}.legal a{font-weight:650}
+@media(max-width:680px){.brand-mark{width:42px;height:46px}.legal{padding-top:44px;padding-bottom:70px}}
