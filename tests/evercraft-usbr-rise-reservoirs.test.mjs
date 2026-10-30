@@ -73,7 +73,7 @@ test('reservoir inventory is never summed until reporting days, completeness, an
   });
   assert.equal(snap.observations.length,5);
   assert.equal(snap.current_station_count,5);
-  assert.equal(snap.status,'current_five_station_observations');
+  assert.equal(snap.status,'recent_five_station_observations_needing_time_zone_review');
   assert.equal(snap.total_storage_af,null);
   assert.equal(snap.publication_authorized,false);
   assert.deepEqual(snap.failures,[]);
@@ -92,5 +92,25 @@ test('upstream 204 or failure yields partial coverage without silently summing m
   assert.equal(snap.status,'partial');
   assert.equal(snap.current_station_count,3);
   assert.equal(snap.failures.length,1);
+  assert.equal(snap.total_storage_af,null);
+});
+
+test('zone-free RISE timestamps are preserved, not secretly converted into UTC', async () => {
+  const zoneFree={
+    ...fixture,
+    domain:{axes:{t:{values:['2026-10-29T06:00:00','2026-10-28T06:00:00']}}},
+    parameters:{},
+    ranges:{'3':{axisNames:['t'],values:[950,920]}}
+  };
+  const rows=parseRiseReservoirCoverage(zoneFree,'BUM',{beginDate:'2026-10-27',endDate:'2026-10-29'});
+  assert.equal(rows[0].time,'2026-10-29T06:00:00');
+  assert.equal(rows[0].source_day_reported,'2026-10-29');
+  assert.equal(rows[0].source_time_zone,'unspecified');
+  const snap=await collectRiseYakimaReservoirs({
+    asOf:'2026-10-30T18:00:00Z',
+    fetchImpl:async()=>({ok:true,status:200,json:async()=>zoneFree})
+  });
+  assert.equal(snap.time_zone_unresolved_count,5);
+  assert.equal(snap.observations[0].freshness,'recent_daily_time_zone_unresolved');
   assert.equal(snap.total_storage_af,null);
 });
