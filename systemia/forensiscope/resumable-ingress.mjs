@@ -289,7 +289,7 @@ export function createForensiScopeResumableIngress({
      await verifyPurchase(state.order_key,subject);
      const body=await boundedJson(req);
      const wanted=body.source_sha256;
-     if(!SHA.test(wanted))throw error('source_sha256_required',422);
+     if(wanted!==undefined&&!SHA.test(wanted))throw error('source_sha256_invalid',422);
      const temp=path.join(dir,'assembled.tmp');
      const final=path.join(dir,'source'+state.extension);
      const hash=crypto.createHash('sha256');
@@ -305,7 +305,7 @@ export function createForensiScopeResumableIngress({
       }
       if(total!==state.total_bytes)throw error('assembled_size_mismatch',422);
       const observed='sha256:'+hash.digest('hex');
-      if(!safeEquals(observed,wanted))throw error('source_checksum_mismatch',422);
+      if(wanted&&!safeEquals(observed,wanted))throw error('source_checksum_mismatch',422);
       fs.fsyncSync(fd);fs.closeSync(fd);fd=null;
       fs.renameSync(temp,final);
       state.source_sha256=observed;
