@@ -1,0 +1,81 @@
+name: Evercraft Signal official-source watch
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/signal-publication/**'
+      - 'tests/signal-official-watch.test.mjs'
+      - 'tests/signal-fabric-bridge.test.mjs'
+      - '.github/workflows/signal-official-watch.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/signal-publication/**'
+      - 'tests/signal-official-watch.test.mjs'
+      - 'tests/signal-fabric-bridge.test.mjs'
+      - '.github/workflows/signal-official-watch.yml'
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signal-official-source-watch
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/signal-official-watch.test.mjs tests/signal-fabric-bridge.test.mjs tests/signal-incident-public.test.mjs
+
+  read-only-source-watch:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check only allowlisted official releases and archive
+        id: observe
+        continue-on-error: true
+        run: node systemia/signal-publication/official-watch.mjs --out artifacts/signal-official-watch/latest.json
+      - name: Write source health and review candidates to run summary
+        if: always()
+        run: |
+          if [ -s artifacts/signal-official-watch/latest.json ]; then
+            node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const d=JSON.parse(fs.readFileSync('artifacts/signal-official-watch/latest.json','utf8'));
+          const lines=['## Evercraft Signal / official-source watch',
+            '- Mode: **read-only** (no public publication, customer alerts, or hazard determination)',
+            '- Source coverage: **'+d.source_coverage+'**',
+            '- Review candidates: **'+d.review_reasons.length+'**',
+            ...d.sources.map(s=>'- '+s.source_id+': '+s.coverage_state+' / '+s.assertion_state),
+            ...d.review_reasons.map(s=>'- Review: '+s)];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,lines.join('\n')+'\n');
+          NODE
+          else
+            echo 'Source watch did not produce a receipt.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve source receipts privately in Actions artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signal-official-watch-receipt
+          path: artifacts/signal-official-watch/latest.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Fail closed when source watch was unavailable
+        if: steps.observe.outcome != 'success'
+        run: exit 1
