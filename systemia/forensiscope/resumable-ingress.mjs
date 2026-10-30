@@ -9,6 +9,14 @@ const ID=/^[a-f0-9]{32}$/;
 const JSON_LIMIT=2048;
 const MAX_CHUNKS=8192;
 const digest=(buf)=>'sha256:'+crypto.createHash('sha256').update(buf).digest('hex');
+function writeAll(fd,buffer){
+ let offset=0;
+ while(offset<buffer.length){
+  const written=fs.writeSync(fd,buffer,offset,buffer.length-offset);
+  if(written<=0)throw error('upload_disk_write_failed',503);
+  offset+=written;
+ }
+}
 const safeEquals=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.length===b.length&&
   crypto.timingSafeEqual(Buffer.from(a),Buffer.from(b));
 const asInt=(value)=>Number.isSafeInteger(value)&&value>0;
@@ -184,8 +192,13 @@ export function createForensiScopeResumableIngress({
       if(!ID.test(id))continue;
       let existing;try{existing=readSession(root,id).state}catch{continue}
       if(existing.order_key===orderKey&&existing.subject===subject&&
-         existing.expires_at_ms>now())
+         existing.expires_at_ms>now()){
+       if(existing.total_bytes!==quote.file_size_bytes ||
+          existing.extension!==quote.media_extension ||
+          existing.offer_key!==quote.offer_key)
+        throw error('existing_order_media_mismatch',409);
        return respond(200,{ok:true,...publicStatus(existing),resumed:true});
+      }
      }
      const id=crypto.randomBytes(16).toString('hex');
      const dir=path.join(root,id);
@@ -211,7 +224,8 @@ export function createForensiScopeResumableIngress({
    }
    if(req.method==='DELETE'&&operation===null){
     return await locked(id,async()=>{
-     const {dir}=get();
+     const {dir,state}=readSession(root,id);
+     if(state.subject!==subject)throw error('upload_not_authorized',403);
      fs.rmSync(dir,{recursive:true,force:true});
      return respond(200,{ok:true,state:'deleted',deletion_requested:true,
        media_deleted_from_ingress:true});
@@ -245,7 +259,7 @@ export function createForensiScopeResumableIngress({
       for await(const piece of req){
        bytes+=piece.length;
        if(bytes>expectedSize)throw error('chunk_too_large',413);
-       hash.update(piece);fs.writeSync(fd,piece);
+       hash.update(piece);writeAll(fd,piece);
       }
       if(bytes!==expectedSize)throw error('chunk_incomplete',422);
       const observed='sha256:'+hash.digest('hex');
@@ -286,7 +300,7 @@ export function createForensiScopeResumableIngress({
        const source=path.join(dir,'chunk-'+i);
        for await(const part of fs.createReadStream(source)){
         total+=part.length;hash.update(part);
-        fs.writeSync(fd,part);
+        writeAll(fd,part);
        }
       }
       if(total!==state.total_bytes)throw error('assembled_size_mismatch',422);
@@ -314,6 +328,17 @@ export function createForensiScopeResumableIngress({
    return respond(e?.status||503,{ok:false,error:e?.status?e.message:'ingress_unavailable'});
   }
  };
+ const purgeExpiredSessions=()=>{
+  let removed=0;
+  for(const id of fs.readdirSync(root)){
+   if(!ID.test(id)||locks.has(id))continue;
+   let entry;try{entry=readSession(root,id)}catch{continue}
+   if(entry.state.expires_at_ms>now())continue;
+   fs.rmSync(entry.dir,{recursive:true,force:true});
+   removed++;
+  }
+  return {expired_sessions_removed:removed};
+ };
  const uploadedSourceForWorker=({uploadId,subject}={})=>{
   const {dir,state}=readSession(root,uploadId);
   checkOwner(state,subject,now);
@@ -327,5 +352,5 @@ export function createForensiScopeResumableIngress({
    state:'uploaded_unprocessed'
   });
  };
- return Object.freeze({handler,uploadedSourceForWorker});
+ return Object.freeze({handler,uploadedSourceForWorker,purgeExpiredSessions});
 }
