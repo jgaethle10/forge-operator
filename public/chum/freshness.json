@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-30T23:37:25.101Z",
+  "updated_at": "2026-10-30T23:40:11.326Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,27 @@
   },
   "latest_change_batch": [
     {
+      "path": "/llms.txt",
+      "last_changed": "2026-10-30T23:40:11.326Z",
+      "priority": 86
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-30T23:37:25.101Z",
+      "last_changed": "2026-10-30T23:40:11.326Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/llms.txt",
+      "url": "/llms.txt",
+      "last_changed": "2026-10-30T23:40:11.326Z",
+      "priority": 86
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-30T23:37:25.101Z",
+      "last_changed": "2026-10-30T23:40:11.326Z",
       "priority": 80
     },
     {
@@ -112,12 +123,6 @@
       "url": "/chum/capabilities.json",
       "last_changed": "2026-10-29T07:46:09.417Z",
       "priority": 80
-    },
-    {
-      "path": "/llms.txt",
-      "url": "/llms.txt",
-      "last_changed": "2026-10-29T07:16:51.204Z",
-      "priority": 86
     },
     {
       "path": "/chum/hot/",
