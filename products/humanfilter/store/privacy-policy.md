@@ -1,7 +1,7 @@
 # Evercraft HumanFilter Privacy Policy
 
 **Effective date:** October 25, 2026  
-**Product:** Evercraft HumanFilter browser extension, version 0.1.2  
+**Product:** Evercraft HumanFilter browser extension, version 0.1.4  
 **Operator:** Evercraft LLC
 
 ## What the extension accesses
