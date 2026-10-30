@@ -29,6 +29,7 @@ jobs:
           fetch "social-card.svg" social-card.svg
           fetch "social-card.png" social-card.png
           fetch "llms.txt" llms.txt
+          fetch "app.mjs" app.mjs
           grep -Fq 'og:image" content="https://jgaethle10.github.io/forge-operator/partners/social-card.png"' "$tmp/index.html"
           file --mime-type "$tmp/social-card.png" | grep -Fq "image/png"
           python -c 'import struct,sys; p=open(sys.argv[1],"rb").read(24); assert p[:8]==bytes([137,80,78,71,13,10,26,10]); assert struct.unpack(">II",p[16:24])==(1200,630)' "$tmp/social-card.png"
@@ -36,7 +37,13 @@ jobs:
           grep -Fq "Founding partner applications now open" "$tmp/index.html"
           grep -Fq 'id="partner-application"' "$tmp/index.html"
           grep -Fq 'mailto:jessegaethle10@gmail.com' "$tmp/index.html"
-          grep -Fq "Nothing is submitted automatically" "$tmp/index.html"
+          grep -Fq 'src="./app.mjs"' "$tmp/index.html"
+          grep -Fq "Checking secure application availability" "$tmp/index.html"
+          grep -Fq "form.reportValidity()" "$tmp/app.mjs"
+          grep -Fq "/api/partners" "$tmp/app.mjs"
+          grep -Fq "received!==true" "$tmp/app.mjs"
+          grep -Fq "Press Send there to complete the application" "$tmp/app.mjs"
+          grep -Fq "The form checks whether Evercraft" "$tmp/terms.html"
           grep -Fq "No commission amount" "$tmp/terms.html"
           grep -Fq "Recruitment alone never earns compensation" "$tmp/terms.html"
           grep -Fq "<svg" "$tmp/mark.svg"
