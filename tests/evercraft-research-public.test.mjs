@@ -94,3 +94,13 @@ test("mobile evidence hero keeps labels separate from explanations and can wrap"
  assert.ok(html.includes(".evidence .line{grid-template-columns:minmax(0,1fr);row-gap:3px}"));
  assert.doesNotMatch(html,/\.evidence \.line b\{[^}]*min-width:65px/);
 });
+
+test("public Research visitors can share a verified link without an account or covert tracking",()=>{
+ assert.ok(html.includes('id="share-research"'));
+ assert.ok(html.includes('id="share-status"'));
+ assert.match(html,/navigator\.share/);
+ assert.match(html,/navigator\.clipboard\.writeText\(url\)/);
+ assert.match(html,/customer_referral/);
+ assert.match(html,/Share sheet closed\. Any publication is managed by the chosen app/);
+ assert.doesNotMatch(html,/\bnavigator\.sendBeacon\b|\bXMLHttpRequest\b/);
+});
