@@ -1,16 +1,16 @@
 # Chrome Web Store listing draft
 
-**Name:** Evercraft HumanFilter
+**Name:** HumanFilter by Evercraft
 
 **Summary:** Filter AI-labeled posts and unwanted AI topics from supported social feeds. Local controls, easy reveal.
 
-**Category:** Productivity or Social & Communication
+**Category:** Productivity (publisher to confirm before submission)
 
 **Description:**
 
 Take back some control of your social feeds with Evercraft HumanFilter, a privacy-first browser extension that filters posts according to *your* preferences.
 
-- Supports selected pages on Facebook, Reddit, and YouTube.
+- Filters supported Facebook, Reddit, and YouTube desktop web feeds; site markup can change.
 - Balanced mode softens posts containing recognized AI-generation labels or disclosures.
 - Strict mode also hides posts discussing AI topics, even if human-written.
 - Customize keywords and supported sites.
@@ -25,4 +25,4 @@ Take back some control of your social feeds with Evercraft HumanFilter, a privac
 
 **Privacy disclosures:** No user data collected/transferred/sold or tracked by Evercraft. Rendering text is processed locally and not retained. Local preferences only.
 
-**Required before submission:** Confirm rights to brand and assets, screenshots showing the real extension, test on each named site, host the privacy policy at a public stable HTTPS URL, complete publisher account registration and privacy disclosures, upload ZIP of extension folder, and submit for store review.
+**Store status:** No Chrome Web Store listing or approval established. Public beta is currently a manual desktop ZIP download, not a one-click store install.\n\n**Required before submission:** Confirm rights to brand and assets, screenshots showing the real extension, test on each named site, host the privacy policy at a public stable HTTPS URL, complete publisher account registration and privacy disclosures, upload ZIP of extension folder, and submit for store review.
