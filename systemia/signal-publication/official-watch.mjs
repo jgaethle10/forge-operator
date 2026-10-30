@@ -23,14 +23,14 @@ const MAX_HTML_BYTES = 1_000_000;
 
 function cleanHtml(html) {
   return String(html)
-    .replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi, ' ')
-    .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/gi, ' ')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
     .replace(/<!--[^]*?-->/g, ' ')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;|&#160;/gi, ' ')
     .replace(/&amp;/gi, '&')
     .replace(/&(?:rsquo|#8217);/gi, '’')
-    .replace(/\\s+/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -49,19 +49,19 @@ async function fetchOfficialHtml(url, fetchImpl) {
   if (!(response.headers.get('content-type') || '').toLowerCase().includes('text/html')) throw new Error('NON_HTML_RESPONSE');
   const html = await response.text();
   if (Buffer.byteLength(html, 'utf8') > MAX_HTML_BYTES) throw new Error('RESPONSE_TOO_LARGE');
-  if (!html || !/<(?:html|article|main)\\b/i.test(html)) throw new Error('UNRECOGNIZED_HTML');
+  if (!html || !/<(?:html|article|main)\b/i.test(html)) throw new Error('UNRECOGNIZED_HTML');
   return html;
 }
 
 export function findUntrackedReleaseLinks(html) {
-  const hrefRegex = /\\bhref\\s*=\\s*["']([^"']+)["']/gi;
+  const hrefRegex = /\bhref\s*=\s*["']([^"']+)["']/gi;
   const discovered = new Set();
   let match;
   while ((match = hrefRegex.exec(html))) {
     try {
       const url = new URL(match[1].replace(/&amp;/g, '&'), ARCHIVE_URL);
       if (url.protocol !== 'https:' || url.hostname !== 'public.srs.gov') continue;
-      if (!/^\\/2026\\/10\\/savannah-river-site-emergency-response-event(?:[-\\w]*)?\\/$/.test(url.pathname)) continue;
+      if (!/^\/2026\/10\/savannah-river-site-emergency-response-event(?:[-\w]*)?\/$/.test(url.pathname)) continue;
       if (!KNOWN_RELEASE_PATHS.has(url.pathname)) discovered.add(url.href);
     } catch { /* invalid archive links are not publishable */ }
   }
@@ -147,7 +147,7 @@ if (process.argv[1] && import.meta.url === new URL('file://' + path.resolve(proc
   const outPath = outIndex > -1 ? process.argv[outIndex + 1] : null;
   if (outIndex > -1 && (!outPath || outPath.startsWith('--'))) throw new Error('--out requires a path');
   const result = await runOfficialWatch();
-  const data = JSON.stringify(result, null, 2) + '\\n';
+  const data = JSON.stringify(result, null, 2) + '\n';
   if (outPath) {
     fs.mkdirSync(path.dirname(path.resolve(outPath)), { recursive: true });
     fs.writeFileSync(outPath, data, { mode: 0o600 });
