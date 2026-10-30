@@ -49,6 +49,28 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       return reply(res, 403, {ok:false,error:'local_host_required'});
     }
     res.setHeader('content-security-policy', "default-src 'self'; connect-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+    if (req.method === 'POST' && req.url === '/api/executor-smoke-stream') {
+      if (req.headers['x-work-saban-client'] !== 'local-preview'
+          || (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host))
+        return reply(res,403,{ok:false,error:'local_preview_required'});
+      res.writeHead(200,{'content-type':'application/x-ndjson; charset=utf-8',
+        'cache-control':'no-store','x-content-type-options':'nosniff'});
+      const emit=event=>{if(!res.destroyed&&!res.writableEnded)res.write(JSON.stringify(event)+'\\n');};
+      emit({type:'started',source:'synthetic_fixture',live_agents:false});
+      const tasks=Array.from({length:6},(_,i)=>({
+        id:'synthetic-'+i,
+        run:async()=>({index:i,source:'synthetic_fixture'}),
+        verify:value=>value.index===i&&value.source==='synthetic_fixture'
+      }));
+      try{
+        const execution=await executeBoundedTasks(tasks,{concurrency:2,
+          onEvent:event=>emit({type:'worker',...event})});
+        emit({type:'completed',source:'synthetic_fixture',live_agents:false,capacity:execution.capacity});
+      }catch{
+        emit({type:'failed_closed',source:'synthetic_fixture'});
+      }finally{res.end();}
+      return;
+    }
     if (req.method === 'POST' && req.url === '/api/executor-smoke') {
       if (req.headers['x-work-saban-client'] !== 'local-preview'
           || (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host)) {
