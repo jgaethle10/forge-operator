@@ -126,3 +126,21 @@ test('old records explicitly become stale', () => {
   assert.equal(snapshot.snow[0].freshness, 'stale');
   assert.ok(snapshot.holds.includes('snow_water_equivalent_missing_or_stale'));
 });
+
+test('verified Yakima profile is scoped and CLI profile mode does not poll', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { spawnSync } = await import('node:child_process');
+  const profile = JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json', import.meta.url), 'utf8'));
+  assert.equal(profile.profile_id, 'yakima-basin-wa');
+  assert.equal(profile.snow_stations.length, 6);
+  assert.equal(new Set(profile.snow_stations.map(row => row.triplet)).size, 6);
+  assert.ok(profile.snow_stations.every(row => row.triplet.endsWith(':WA:SNTL') && row.huc8.startsWith('170300')));
+  assert.equal(profile.river_location_ids.length, 4);
+  const run = spawnSync(process.execPath, ['systemia/research-service/watershed-snapshot-cli.mjs', '--profile'], {
+    cwd: new URL('..', import.meta.url), encoding: 'utf8', timeout: 5000
+  });
+  assert.equal(run.status, 0, run.stderr);
+  const result = JSON.parse(run.stdout);
+  assert.equal(result.live_collection, false);
+  assert.equal(result.publication_authorized, false);
+});
