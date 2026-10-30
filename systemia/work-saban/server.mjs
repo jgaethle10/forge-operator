@@ -55,7 +55,7 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
         return reply(res,403,{ok:false,error:'local_preview_required'});
       res.writeHead(200,{'content-type':'application/x-ndjson; charset=utf-8',
         'cache-control':'no-store','x-content-type-options':'nosniff'});
-      const emit=event=>{if(!res.destroyed&&!res.writableEnded)res.write(JSON.stringify(event)+'\\n');};
+      const emit=event=>{if(!res.destroyed&&!res.writableEnded)res.write(JSON.stringify(event)+'\n');};
       emit({type:'started',source:'synthetic_fixture',live_agents:false});
       const tasks=Array.from({length:6},(_,i)=>({
         id:'synthetic-'+i,
