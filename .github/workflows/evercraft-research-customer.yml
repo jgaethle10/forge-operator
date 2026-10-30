@@ -5,7 +5,7 @@ on:
       - "public/research/**"
       - "systemia/research-service/**"
       - "tests/evercraft-research-evidence-dossier.test.mjs"
-      - "tests/evercraft-research-compile.test.mjs tests/evercraft-research-share-kit.test.mjs"
+      - "tests/evercraft-research-compile.test.mjs"
       - "tests/evercraft-research-public.test.mjs"
       - "tests/evercraft-research-share-kit.test.mjs"
       - "tests/evercraft-research-public-canary.test.mjs"
@@ -41,4 +41,4 @@ jobs:
           node --check scripts/probe-evercraft-research-public.mjs
           node --check systemia/research-service/evidence-dossier.mjs
           node --check systemia/research-service/compile.mjs
-          node --test tests/evercraft-research-public.test.mjs tests/evercraft-research-public-canary.test.mjs tests/evercraft-research-evidence-dossier.test.mjs tests/evercraft-research-compile.test.mjs
+          node --test tests/evercraft-research-public.test.mjs tests/evercraft-research-public-canary.test.mjs tests/evercraft-research-evidence-dossier.test.mjs tests/evercraft-research-compile.test.mjs tests/evercraft-research-share-kit.test.mjs
