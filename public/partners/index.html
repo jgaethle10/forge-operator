@@ -62,37 +62,24 @@ footer{background:#e9eee4;border-top:1px solid var(--line);padding:35px 0}.foote
 <article class="program"><span class="category">For production teams</span><h3>Video & audio review</h3><p>Connect editors and producers with a scoped way to find useful moments in long recordings.</p><a href="../forensiscope/">Explore ForensiScope ↗</a></article>
 </div></section>
 <section class="founding" id="apply"><div class="wrap founding-grid"><div><div class="eyebrow" style="color:var(--electric)">Founding applications</div><h2>Build the reach.<br>Share the upside.</h2><p>We're inviting our first independent distribution partners. If you already help clients, manage a community, or know an industry well, we'd like to hear from you.</p><ul class="promise-list"><li><span>✓</span> No fee to express interest or join</li><li><span>✓</span> No requirement to recruit other people</li><li><span>✓</span> No need to buy or carry inventory</li><li><span>✓</span> Clear written terms before any compensated activity</li></ul><p style="font-size:13px">Applications are expressions of interest, not partner acceptance, a promise of commission, or authorization to represent Evercraft yet.</p></div>
-<div class="application"><h3>Apply to be a founding partner</h3><p class="hint">A few details so we can see where you fit.</p><form id="partner-application" autocomplete="on">
+<div class="application"><h3>Apply to be a founding partner</h3><p class="hint">A few details so we can see where you fit. No account or payment required.</p><form id="partner-application" autocomplete="on">
 <div class="fields"><div class="field"><label for="full-name">Your name *</label><input id="full-name" name="full-name" autocomplete="name" required maxlength="120" placeholder="Your name"></div>
 <div class="field"><label for="email">Email address *</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="200" placeholder="you@example.com"></div>
 <div class="field full"><label for="audience">Who do you usually work with? *</label><select id="audience" name="audience" required><option value="" disabled selected>Choose your area</option><option>Business owners & executives</option><option>Agencies & consultants</option><option>Media & production teams</option><option>Repair shops & trades</option><option>Creators & communities</option><option>Technology & software buyers</option><option>Other</option></select></div>
-<div class="field"><label for="region">Country or region *</label><input id="region" name="region" autocomplete="country-name" required maxlength="100" placeholder="Where you're based"></div><div class="field"><label for="website">Website or profile (optional)</label><input id="website" name="website" maxlength="250" placeholder="https://..."></div></div>
-<label class="choice"><input type="checkbox" id="understand" required><span>I understand this is an application, not an active partner agreement. I can review the <a href="./terms.html" target="_blank" rel="noopener">program outline</a> before sending.</span></label>
-<button type="submit" class="button dark">Prepare my application <span aria-hidden="true">&nbsp;↗</span></button><p class="note" id="send-note" role="status" aria-live="polite">This opens your email app with an application ready to send. Please press Send there to complete your inquiry. Nothing is submitted automatically.</p>
+<div class="field"><label for="region">Country or region *</label><input id="region" name="region" autocomplete="country-name" required maxlength="100" placeholder="Where you're based"></div><div class="field"><label for="website">Website or profile (optional)</label><input id="website" name="website" type="url" maxlength="250" placeholder="https://..." pattern="https://.*"></div></div>
+<div aria-hidden="true" style="position:absolute;left:-10000px;opacity:0;height:1px;overflow:hidden"><label for="website-honey">Leave this empty</label><input id="website-honey" name="website_honey" tabindex="-1" autocomplete="off"></div>
+<label class="choice"><input type="checkbox" id="understand" required><span>I consent to Evercraft using my details to review and respond to this application. I understand this is not an active partner agreement. I can review the <a href="./terms.html" target="_blank" rel="noopener">program outline</a> before sending.</span></label>
+<button type="submit" class="button dark" disabled>Checking application…</button><p class="note" id="send-note" role="status" aria-live="polite">Checking secure application availability. A receipt is shown only after a successful saved submission. Email is available as a fallback, never sent automatically.</p>
 </form><div class="fallback">Prefer to write directly? <a href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Partners%20%7C%20Founding%20interest">Email Evercraft</a>. No calls required.</div><noscript><p class="note">JavaScript is off. Please use the direct email link above to apply.</p></noscript></div></div></section>
 <section class="section wrap"><div class="faq"><div><div class="eyebrow">The essentials</div><h2>Questions, answered plainly.</h2></div><div>
 <details class="qa"><summary>Is there a fee to become a partner?</summary><p>No application fee. We do not require inventory purchases or payments for recruiting.</p></details>
 <details class="qa"><summary>How much can I earn?</summary><p>There is no advertised rate or earnings promise at this stage. Rates, attribution, refunds, eligibility, tax matters, and payout timing must be set out in a written agreement for any approved program.</p></details>
 <details class="qa"><summary>Do I have to recruit other people?</summary><p>No. The model is built around genuine customer needs and qualifying sales, not recruitment-based earnings.</p></details>
 <details class="qa"><summary>Can I apply from outside the United States?</summary><p>Yes, international expressions of interest are welcome. Whether a partner can be activated depends on applicable requirements and the services available in their market.</p></details>
-<details class="qa"><summary>What happens after I apply?</summary><p>You send an introductory email. Evercraft reviews the fit and may respond with product information and next steps. There is no guaranteed acceptance or response time.</p></details>
+<details class="qa"><summary>What happens after I apply?</summary><p>You submit a secure application and receive a reference when intake is available, or send an introductory email. Evercraft reviews the fit and may respond with product information and next steps. There is no guaranteed acceptance or response time.</p></details>
 </div></div></section>
 </main>
 <footer><div class="wrap footer-content"><div class="identity" style="color:var(--ink)"><img src="./mark.svg" alt=""><span><b>EVERCRAFT</b><small style="color:#52733d">PARTNERS</small></span></div><p>Evercraft Partners is a proposed independent distribution program by Evercraft LLC.<br>© 2026 Evercraft LLC. Founding-interest intake, not an active income opportunity.</p><nav aria-label="Footer"><a href="./terms.html">Program outline</a><a href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Partners%20question">Contact</a></nav></div></footer>
-<script>
-(function(){
-const form=document.getElementById('partner-application');
-form.addEventListener('submit',function(event){
- event.preventDefault();
- if(!form.reportValidity())return;
- const val=id=>document.getElementById(id).value.trim().replace(/[\r\n]+/g,' ');
- const lines=['Hello Evercraft Partners,','', 'I am interested in becoming a founding distribution partner.','', 'Name: '+val('full-name'),'Email: '+val('email'),'Area: '+val('audience'),'Country / region: '+val('region'),'Website / profile: '+(val('website')||'Not provided'),'', 'I understand this is an expression of interest, not partner acceptance or a compensation agreement.','', 'Please share the next steps.'];
- const body=encodeURIComponent(lines.join('\n'));
- const subject=encodeURIComponent('Evercraft Partners | Founding partner interest');
- document.getElementById('send-note').textContent='Your email app should open now. Press Send in your email app to submit your application. If it does not open, use the direct email link below.';
- window.location.href='mailto:jessegaethle10@gmail.com?subject='+subject+'&body='+body;
-});
-})();
-</script>
+<script type="module" src="./app.mjs"></script>
 </body>
 </html>

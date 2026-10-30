@@ -1,0 +1,62 @@
+name: Saban Evercraft Partners end-to-end release gate
+on:
+  pull_request:
+    paths:
+      - 'public/partners/**'
+      - 'systemia/mcp/partners-public-inquiry.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'scripts/partners-owner-inbox.mjs'
+      - 'tests/evercraft-partners-*'
+      - 'systemia/customer-gauntlet/saban-partners-browser.mjs'
+      - '.github/workflows/saban-partners-end-to-end.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/partners/**'
+      - 'systemia/mcp/partners-public-inquiry.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'scripts/partners-owner-inbox.mjs'
+      - 'tests/evercraft-partners-*'
+      - 'systemia/customer-gauntlet/saban-partners-browser.mjs'
+      - '.github/workflows/saban-partners-end-to-end.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  private-contract-and-adversarial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Saban durable private application and failure gauntlet
+        run: node --test tests/evercraft-partners-launch.test.mjs tests/evercraft-partners-end-to-end.test.mjs
+      - name: Existing customer FindMyPart isolation regression
+        run: node --test tests/findmypart-public-inquiry.test.mjs
+
+  browser-mobile-desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install isolated Chromium and Playwright
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Saban public browser simulations without applicant POST
+        run: node systemia/customer-gauntlet/saban-partners-browser.mjs
+      - name: Preserve screenshots and scenario receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-partners-browser-gauntlet
+          path: artifacts/saban/partners-browser
+          if-no-files-found: warn
+          retention-days: 30
