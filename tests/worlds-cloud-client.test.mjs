@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {startWorldsVault} from '../systemia/worlds/worlds-vault-runtime.mjs';
+import {initialWorld,applyCommand} from '../public/worlds/world-core.mjs';
+import {vaultAvailable,publishWorld,fetchPublishedWorld,validateOwner,publishedWorldUrl} from '../public/worlds/cloud-client.mjs';
+test('cloud client can create, edit, and fetch an owned scene end-to-end',async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'evercraft-worlds-client-'));
+ t.after(()=>fs.rm(root,{recursive:true,force:true}));
+ const s=await startWorldsVault({dataRoot:path.join(root,'vault'),publicRoot:path.resolve('public')});
+ t.after(()=>s.close());
+ const remote=(url,opts)=>fetch(new URL(url,s.url),opts);
+ assert.equal(await vaultAvailable(remote),true);
+ let w=applyCommand(initialWorld(),'add bench').world;
+ const owner=await publishWorld(w,null,remote);
+ assert.equal(validateOwner(owner).id,owner.id);
+ assert.equal(owner.version,1);
+ let loaded=await fetchPublishedWorld(owner.id,remote);
+ assert.equal(loaded.objects[0].kind,'bench');
+ w=applyCommand(w,'sky sunset').world;
+ const updated=await publishWorld(w,owner,remote);
+ assert.equal(updated.version,2);
+ loaded=await fetchPublishedWorld(owner.id,remote);
+ assert.equal(loaded.sky,'sunset');
+ assert.match(publishedWorldUrl(s.url+'/worlds/',owner.id),/#world=[a-f0-9]{32}$/);
+ await assert.rejects(()=>publishWorld(w,owner,remote),/world_version_conflict/);
+ assert.equal(await vaultAvailable(async()=>({ok:true,json:async()=>({schema:'wrong'})})),false);
+});
+test('malformed client capability and id are never sent as privileged requests',async()=>{
+ assert.equal(validateOwner({id:'x',edit_token:'not-a-key',version:1}),null);
+ assert.throws(()=>publishedWorldUrl('https://example.org/worlds/','..'),/Invalid/);
+ await assert.rejects(()=>fetchPublishedWorld('..',()=>{throw Error('should not call');}),/Invalid/);
+});
