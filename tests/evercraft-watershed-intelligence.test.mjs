@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   parseAwdbDaily, fetchAwdbDaily, compileWatershedSnapshot,
-  collectYakimaWatershed, NRCS_AWDB_DATA_URL, WATERSHED_SCHEMA
+  collectYakimaWatershed, evaluateWatershedCoverage, NRCS_AWDB_DATA_URL, WATERSHED_SCHEMA
 } from '../systemia/research-service/watershed-intelligence.mjs';
 
 const station = '123:WA:SNTL'; // synthetic test station, NOT a verified live station
@@ -143,4 +143,23 @@ test('verified Yakima profile is scoped and CLI profile mode does not poll', asy
   const result = JSON.parse(run.stdout);
   assert.equal(result.live_collection, false);
   assert.equal(result.publication_authorized, false);
+});
+
+test('canary coverage is explicitly minimum sensor connectivity, never basin readiness', () => {
+  const partial = compileWatershedSnapshot({ asOf, snowStationIds: [station], riverLocationIds: [usgsId] });
+  const broken = evaluateWatershedCoverage({ ...partial, failures: [{ source: 'nrcs' }] });
+  assert.equal(broken.status, 'degraded');
+  assert.deepEqual(broken.source_failures, ['nrcs']);
+  const connected = evaluateWatershedCoverage({
+    ...partial, failures: [],
+    snow: [{ station_id: station, kind: 'WTEQ', freshness: 'current', value: 0 }],
+    river: [{ station_id: usgsId, kind: 'stream_discharge', freshness: 'current', value: 2200 }]
+  });
+  assert.equal(connected.status, 'connected_minimum');
+  assert.equal(connected.snow_station_count, 1);
+  assert.equal(connected.usgs_discharge_location_count, 1);
+  assert.equal(connected.suitable_for_publication, false);
+  assert.equal(connected.basin_representation_verified, false);
+  assert.equal(connected.reservoir_connected, false);
+  assert.throws(() => evaluateWatershedCoverage({ schema: 'wrong' }), /schema mismatch/);
 });
