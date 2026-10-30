@@ -37,15 +37,6 @@ jobs:
         run: |
           mkdir -p artifacts/watershed-canary
           node systemia/research-service/watershed-snapshot-cli.mjs --canary > artifacts/watershed-canary/latest.json
-      - name: Compile a non-publishing, source-traceable review brief
-        if: always()
-        shell: bash
-        run: |
-          if [ -s artifacts/watershed-canary/latest.json ]; then
-            node systemia/research-service/watershed-review-brief.mjs \
-              --input artifacts/watershed-canary/latest.json \
-              --out artifacts/watershed-canary/review-draft.md
-          fi
       - name: Probe USBR RISE five-reservoir storage sources
         if: always()
         id: reservoir
@@ -54,6 +45,22 @@ jobs:
         run: |
           mkdir -p artifacts/watershed-canary
           node systemia/research-service/usbr-reservoir-probe.mjs --probe > artifacts/watershed-canary/reservoir-source-probe.json
+      - name: Compile a non-publishing, source-traceable review brief
+        if: always()
+        shell: bash
+        run: |
+          if [ -s artifacts/watershed-canary/latest.json ]; then
+            if [ -s artifacts/watershed-canary/reservoir-source-probe.json ]; then
+              node systemia/research-service/watershed-review-brief.mjs \
+                --input artifacts/watershed-canary/latest.json \
+                --out artifacts/watershed-canary/review-draft.md \
+                --reservoir-input artifacts/watershed-canary/reservoir-source-probe.json
+            else
+              node systemia/research-service/watershed-review-brief.mjs \
+                --input artifacts/watershed-canary/latest.json \
+                --out artifacts/watershed-canary/review-draft.md
+            fi
+          fi
       - name: Preserve source observations and coverage receipts
         if: always()
         uses: actions/upload-artifact@v4
