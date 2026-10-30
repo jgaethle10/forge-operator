@@ -22,8 +22,12 @@ try{
   const response=await page.goto(url,{waitUntil:"networkidle",timeout:30000});
   assert.equal(response?.status(),200,"Research page HTTP");
   await page.locator(".evidence .line").first().waitFor();
-  await page.waitForFunction(()=>{const mark=document.querySelector('header .logo .symbol');return mark?.tagName==="IMG"&&mark.complete&&mark.naturalWidth>0;});
-  assert.equal(await page.locator('header .logo .symbol').getAttribute('src'),'./assets/research-mark.svg');
+  await page.locator('header .logo .logo-name').waitFor();
+  assert.equal(await page.locator('header .logo .logo-name').textContent(),'Research.');
+  assert.equal(await page.locator('header .logo .logo-lines i').count(),3);
+  assert.equal(await page.locator('link[rel="icon"]').getAttribute('href'),'./assets/research-mark.svg');
+  const headerBounds=await page.evaluate(()=>{const name=document.querySelector('.logo').getBoundingClientRect(),cta=document.querySelector('.navlinks .cta').getBoundingClientRect();return {nonOverlap:name.right+2<=cta.left,headerFits:Math.max(name.right,cta.right)<=innerWidth+1}});
+  assert.ok(headerBounds.nonOverlap&&headerBounds.headerFits,"wordmark and CTA clash at "+width+": "+JSON.stringify(headerBounds));
   const layout=await page.evaluate(()=>{
    const rows=[...document.querySelectorAll(".evidence .line")].map(el=>{
     const label=el.querySelector("b")?.getBoundingClientRect();
