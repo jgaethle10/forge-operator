@@ -33,11 +33,12 @@ test("image export has user interactions and no synthetic publication claims",()
  assert.match(source,/noindex,nofollow/);
 });
 
-test("share kit uses the same actual vector brand asset in navigation and generated media",()=>{
+test("share kit carries the editorial wordmark and matching evidence bars",()=>{
  const logo=fs.readFileSync("public/research/assets/research-mark.svg","utf8");
  assert.ok(logo.includes('viewBox="0 0 72 72"'));
- assert.match(source,/src="\.\.\/assets\/research-mark\.svg"/);
+ assert.match(source,/class="brand-lockup"/);
+ assert.match(source,/class="brand-bars" aria-hidden="true"/);
  assert.match(source,/href="\.\.\/assets\/research-mark\.svg"/);
- assert.match(source,/productMark\.src="\.\.\/assets\/research-mark\.svg"/);
- assert.match(source,/ctx\.drawImage\(productMark/);
+ assert.match(source,/ctx\.fillRect\(pad,pad\+29,105,5\)/);
+ assert.doesNotMatch(source,/class="brand-icon"/);
 });
