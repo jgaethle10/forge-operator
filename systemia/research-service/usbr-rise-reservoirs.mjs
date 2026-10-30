@@ -28,9 +28,19 @@ function boundedWindow(beginDate,endDate) {
   return {a,b};
 }
 function timestamp(value) {
-  if (typeof value !== 'string' || !/[TZ+-]\d/.test(value) && !value.endsWith('Z')) return null;
-  const n=Date.parse(value);
-  return Number.isFinite(n)?new Date(n).toISOString():null;
+  // RISE EDR can provide wall-clock timestamps with no zone. Do not invent UTC.
+  if (typeof value !== 'string' || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d/.test(value)) return null;
+  const day=value.slice(0,10);
+  try { dateOnly(day); } catch { return null; }
+  const offset=/([Zz]|[+-]\d\d:\d\d)$/.test(value);
+  if (offset) {
+    const n=Date.parse(value);
+    return Number.isFinite(n)?{time:new Date(n).toISOString(),day,timezone:'explicit_offset'}:null;
+  }
+  // Preserve source local clock as a string and explicitly quarantine timezone ambiguity.
+  if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?$/.test(value)) return null;
+  if (!Number.isFinite(Date.parse(value+'Z'))) return null;
+  return {time:value,day,timezone:'unspecified'};
 }
 function parseValues(payload, site, {beginDate,endDate}) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new TypeError('RISE CoverageJSON object required');
@@ -59,12 +69,13 @@ function parseValues(payload, site, {beginDate,endDate}) {
   for (let i=0;i<times.length;i++) {
     const time=timestamp(times[i]);
     if (!time) throw new TypeError('RISE response contains invalid timestamps');
-    const day=time.slice(0,10);
+    const day=time.day;
     // Allow one day on either edge to tolerate hydromet local-day UTC representation,
     // but preserve timestamp and do not claim local-day reconciliation.
     const min=Date.parse(beginDate+'T00:00:00Z')-86400000;
     const max=Date.parse(endDate+'T23:59:59Z')+86400000;
-    if (Date.parse(time) < min || Date.parse(time)>max) throw new TypeError('RISE observation outside bounded window');
+    const nominal=Date.parse(day+'T00:00:00Z');
+    if (nominal < min || nominal>max) throw new TypeError('RISE observation outside bounded window');
     const v=range.values[i];
     const value=v === null || v === undefined || v === '' ? null : Number(v);
     if (value !== null && (!Number.isFinite(value) || value < 0)) throw new TypeError('RISE reservoir value invalid');
@@ -72,8 +83,9 @@ function parseValues(payload, site, {beginDate,endDate}) {
       station_id:site.code,
       station_name:site.name,
       kind:'reservoir_storage',
-      time,
-      source_day_utc:day,
+      time:time.time,
+      source_day_reported:day,
+      source_time_zone:time.timezone,
       value,
       unit:'af',
       state:value === null ? 'missing' : 'provisional_observed',
@@ -102,7 +114,8 @@ export async function fetchRiseReservoirStorage({
   const url=new URL('/api/ogc/collections/rise/locations/'+site.location_id,USBR_RISE_EDR_ORIGIN);
   url.searchParams.set('f','json');
   url.searchParams.set('parameter-name',USBR_RISE_RESERVOIR_PARAMETER);
-  url.searchParams.set('datetime',a+'T00:00:00Z/'+b+'T23:59:59Z');
+  // Official RISE EDR usage documents calendar-day intervals.
+  url.searchParams.set('datetime',a+'/'+b);
   const res=await fetchImpl(url,{
     headers:{Accept:'application/json','User-Agent':'Evercraft-Watershed-Research/0.2 (https://github.com/jgaethle10/forge-operator)'}
   });
@@ -133,11 +146,13 @@ export async function collectRiseYakimaReservoirs({
     const record=ordered.find(r=>r.value!==null) || ordered[0];
     if(record) latest.push({
       ...record,
-      freshness:record.value===null ? 'missing' : Date.parse(record.time)>now.getTime()+3600000 ? 'invalid_future' :
-        now.getTime()-Date.parse(record.time)>72*3600000 ? 'stale' : 'current'
+      freshness:record.value===null ? 'missing' :
+        (Date.parse(record.source_day_reported+'T00:00:00Z')-Date.parse(now.toISOString().slice(0,10)+'T00:00:00Z'))>86400000 ? 'invalid_future' :
+        (Date.parse(now.toISOString().slice(0,10)+'T00:00:00Z')-Date.parse(record.source_day_reported+'T00:00:00Z'))>3*86400000 ? 'stale' :
+        record.source_time_zone==='unspecified' ? 'recent_daily_time_zone_unresolved' : 'current'
     });
   }
-  const current=latest.filter(r=>r.freshness==='current');
+  const current=latest.filter(r=>['current','recent_daily_time_zone_unresolved'].includes(r.freshness));
   return {
     source_id:'usbr-rise-edr-reservoir-storage',
     source_family:'usbr-rise',
@@ -145,9 +160,10 @@ export async function collectRiseYakimaReservoirs({
     requested_stations:wanted,
     observed_stations:latest.map(r=>r.station_id),
     current_station_count:current.length,
+    time_zone_unresolved_count:current.filter(r=>r.source_time_zone==='unspecified').length,
     observations:latest,
     failures,
-    status:failures.length || current.length!==wanted.length ? 'partial' : 'current_five_station_observations',
+    status:failures.length || current.length!==wanted.length ? 'partial' : 'recent_five_station_observations_needing_time_zone_review',
     unit:'af',
     // The five source timestamps must be reconciled to a single hydrologic reporting day
     // before a total is offered. No basin fill/capacity ratio inferred here.
