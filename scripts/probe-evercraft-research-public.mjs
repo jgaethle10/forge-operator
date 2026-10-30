@@ -10,7 +10,9 @@ export const ASSETS=Object.freeze([
  {path:"",name:"customer_website",expected:["Evercraft Research","Prepare my research brief","scope.mjs"]},
  {path:"scope.mjs",name:"scope_engine",expected:["prepareResearchScope","researchPerformed:false","orderCreated:false"]},
  {path:"ai-discovery.json",name:"discovery",expected:["evercraft.research.public-product.v1","human_scoping_only","checkout_url"]},
- {path:"llms.txt",name:"llm_discovery",expected:["Evercraft Research","No purchase or charge"]}
+ {path:"llms.txt",name:"llm_discovery",expected:["Evercraft Research","No purchase or charge"]},
+ {path:"share/",name:"founder_share_kit",expected:["Evercraft Research | Launch Share Kit","Download PNG","Copy caption","captions.json"]},
+ {path:"share/captions.json",name:"share_copy",expected:["evercraft.research.share-kit.v1","personal","company","prepared_not_published"]}
 ]);
 export function evaluatePublicAsset({status,final_url,content_type,body},asset){
  const findings=[];
