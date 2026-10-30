@@ -40,13 +40,26 @@ test('public site and social preview share the same clear launch promise',()=>{
  assert.match(page,/Apply to be a founding partner/);
  assert.match(page,/Free to apply/);
  assert.match(page,/No recruiting requirement/);
- assert.match(page,/max-height:360px/);
+ assert.match(page,/class="journey-shell"/);
+ assert.match(page,/THE IDEA IN THREE STEPS/);
+ assert.match(page,/You know the need\./);
+ assert.match(page,/You make the connection\./);
+ assert.match(page,/Evercraft handles the work\./);
+ assert.match(page,/Introductions begin after partner approval and agreed terms/);
+ assert.match(page,/class="journey-steps"/);
+ assert.doesNotMatch(page,/class="network"/);
+ assert.doesNotMatch(page,/class="diagram-caption"/);
  assert.match(page,/\.hero-benefits/);
  assert.match(social,/You bring the/);
  assert.match(social,/connection\./);
  assert.match(social,/We bring the/);
  assert.match(social,/capability\./);
  assert.match(social,/Founding partner applications open/i);
+ assert.match(social,/HOW IT WORKS/);
+ assert.match(social,/Know the need/);
+ assert.match(social,/Make the connection/);
+ assert.match(social,/Evercraft delivers/);
+ assert.doesNotMatch(social,/circle cx="954" cy="317"/);
 });
 
 test('partner compensation and recruitment cannot be presented as active earnings',()=>{
