@@ -31,6 +31,24 @@ test('buyer-facing entry remains simple, mobile friendly and accessible',()=>{
  assert.match(app,/Secure applications are available/);
  assert.match(app,/Press Send there to complete the application/);
 });
+test('public site and social preview share the same clear launch promise',()=>{
+ const page=load('public/partners/index.html');
+ const social=load('public/partners/social-card.svg');
+ assert.match(page,/You bring the <em>connection\.<\/em>/);
+ assert.match(page,/We bring the <em>capability\.<\/em>/);
+ assert.match(page,/Good work travels farther together/);
+ assert.match(page,/Apply to be a founding partner/);
+ assert.match(page,/Free to apply/);
+ assert.match(page,/No recruiting requirement/);
+ assert.match(page,/max-height:360px/);
+ assert.match(page,/\.hero-benefits/);
+ assert.match(social,/You bring the/);
+ assert.match(social,/connection\./);
+ assert.match(social,/We bring the/);
+ assert.match(social,/capability\./);
+ assert.match(social,/Founding partner applications open/i);
+});
+
 test('partner compensation and recruitment cannot be presented as active earnings',()=>{
  const page=load('public/partners/index.html');
  const terms=load('public/partners/terms.html');
