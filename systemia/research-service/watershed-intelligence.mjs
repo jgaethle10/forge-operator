@@ -170,3 +170,26 @@ export async function collectYakimaWatershed({
   });
   return { ...snapshot, failures, status: failures.length ? 'partial' : snapshot.status };
 }
+
+/**
+ * Data-source coverage gate, not a hazard assessment or customer release gate.
+ * A single fresh sensor only proves minimum connectivity, not basin representation.
+ */
+export function evaluateWatershedCoverage(snapshot = {}) {
+  if (snapshot.schema !== WATERSHED_SCHEMA) throw new TypeError('watershed snapshot schema mismatch');
+  const currentSwe = (snapshot.snow || []).filter(row => row.kind === 'WTEQ' && row.freshness === 'current' && Number.isFinite(row.value));
+  const currentDischarge = (snapshot.river || []).filter(row => row.kind === 'stream_discharge' && row.freshness === 'current' && Number.isFinite(row.value));
+  const failures = Array.isArray(snapshot.failures) ? snapshot.failures : [];
+  const snowConnected = currentSwe.length > 0;
+  const riverConnected = currentDischarge.length > 0;
+  return Object.freeze({
+    status: snowConnected && riverConnected && !failures.length ? 'connected_minimum' : 'degraded',
+    snow_station_count: new Set(currentSwe.map(row => row.station_id)).size,
+    usgs_discharge_location_count: new Set(currentDischarge.map(row => row.station_id)).size,
+    source_failures: failures.map(row => row.source),
+    basin_representation_verified: false,
+    reservoir_connected: false,
+    water_supply_forecast_verified: false,
+    suitable_for_publication: false
+  });
+}
