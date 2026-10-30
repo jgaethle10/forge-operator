@@ -24,7 +24,7 @@ test("all five founder and company channel copy packages are ready and truthful"
 test("image export has user interactions and no synthetic publication claims",()=>{
  for(const id of ["poster","format","download","native-share","copy-caption","copy-link","copy-comment","account","channel","caption"])assert.ok(source.includes('id="'+id+'"'),id);
  for(const size of ["1080,1350","1080,1920","1080,1080","1200,630"])assert.ok(source.includes(size),size);
- assert.match(source,/canvas\.toBlob/);
+ assert.match(source,/canv\.toBlob/);
  assert.match(source,/navigator\.share/);
  assert.match(source,/Share sheet closed\. Publication must be confirmed inside the destination app/);
  assert.match(source,/No logins, uploads, server tracking/);
