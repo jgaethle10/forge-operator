@@ -1,5 +1,11 @@
 # Forge Operator
 
+## Evercraft Research and founding partners
+
+**Have a research question that needs defensible sources?** [Try Evercraft Research's free scope builder](https://jgaethle10.github.io/forge-operator/research/). Describe the decision and download a research outline in your browser. Full investigations are separately quoted, human-reviewed engagements, not instant paid reports.
+
+**Want to introduce clients to useful Evercraft services?** [Explore Evercraft Partners](https://jgaethle10.github.io/forge-operator/partners/). The public founding-interest page explains the independent-partner approach and how to express interest. It is not a signed partner agreement or an active commission/payout promise. Applicants may need to send the prefilled inquiry from their own email client if the secure online form is unavailable.
+
 ## AI Boardroom: compare the answers, not just the models
 
 **Try the free Boardroom comparison:** [Paste two or three AI answers → see the disagreement map](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/). No sign-up or payment. The comparison runs locally in your browser and lets you save a short report. It identifies explicitly opposing recommendation language, shared terms and evidence questions. It is **not** live AI-to-AI debate or independent fact checking.
