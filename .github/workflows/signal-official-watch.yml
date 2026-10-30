@@ -5,12 +5,14 @@ on:
     paths:
       - 'systemia/signal-publication/**'
       - 'tests/signal-official-watch.test.mjs'
+      - 'tests/signal-fabric-bridge.test.mjs'
       - '.github/workflows/signal-official-watch.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/signal-publication/**'
       - 'tests/signal-official-watch.test.mjs'
+      - 'tests/signal-fabric-bridge.test.mjs'
       - '.github/workflows/signal-official-watch.yml'
   schedule:
     - cron: '17 */6 * * *'
@@ -32,7 +34,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/signal-official-watch.test.mjs tests/signal-incident-public.test.mjs
+      - run: node --test tests/signal-official-watch.test.mjs tests/signal-fabric-bridge.test.mjs tests/signal-incident-public.test.mjs
 
   read-only-source-watch:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
