@@ -32,3 +32,6 @@ Passage is currently a public-interest *demo reader*, not a secure communication
 6. Independent validation before any signed packages or authorized peer-delivery transports; no source bundled with untrusted credentials may authorize itself.
 
 Go/no-go: No public recommendation for readers at heightened risk until all applicable gates are met. The current draft may be used only for internal QA and editorial evaluation.
+
+## Signed package limitations (v0.2)
+The Ed25519 signature authenticates bytes against a public key the recipient already independently trusts. A bundled public key never establishes trust, a publisher name in metadata is merely a claim, and a SHA-256 digest alone does not authenticate a publisher. Each package has an explicit short validity period, plain-text rights label, content digest, and strict size/format boundaries. Expired or altered packages are rejected by the local verifier. Files remain unencrypted and openly inspectable on the device. Offline verification depends on reasonably accurate device clocks and **cannot check revocations, publisher compromises, correction notices, or current claims**. Do not use the sample material for real high-risk distribution until independent review.

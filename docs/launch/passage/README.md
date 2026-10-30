@@ -40,3 +40,6 @@ Read systemia/network/OFFLINE-CONTINUITY.md and systemia/network/COMMUNITY-RADIO
 
 ## Threat model
 See THREAT-MODEL.md for security boundaries, privacy limits, content governance and no-go release gates.
+
+## Signed demonstration packages (v0.2)
+See SIGNED-PACKAGES.md for the signed text package contract, out-of-band trusted-key procedure, local verifier UI and Node CLI. This is **not** encrypted transport or anonymous publishing. Real reader/device and independent crypto-security reviews are still required.

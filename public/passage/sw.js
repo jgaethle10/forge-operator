@@ -1,6 +1,6 @@
 // Passage caches only public demo assets; local files are not encrypted.
-const CACHE="passage-shell-v2";
-const SHELL=["./","./index.html","./style.css","./app.mjs","./catalog.mjs","./catalog.json","./mark.svg","./manifest.webmanifest"];
+const CACHE="passage-shell-v3";
+const SHELL=["./","./index.html","./style.css","./app.mjs","./catalog.mjs","./article-text.mjs","./package-verifier.mjs","./package-ui.mjs","./catalog.json","./mark.svg","./manifest.webmanifest"];
 const allowed=new Set(SHELL.map(path=>new URL(path,self.registration.scope).pathname));
 self.addEventListener("install",event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));

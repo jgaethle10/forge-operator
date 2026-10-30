@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="./style.css">
 <title>Passage | Knowledge travels</title>
 <script type="module" src="./app.mjs"></script>
+<script type="module" src="./package-ui.mjs"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -51,6 +52,24 @@
       <div id="cards" class="card-grid" aria-live="polite"></div>
       <div id="empty" class="empty" hidden>No matching articles. Try another search.</div>
       <noscript><p>JavaScript is needed for the interactive library. The downloadable prototype is also available from the source repository.</p></noscript>
+    </section>
+    <section class="package-check" id="verify" aria-labelledby="verify-title">
+      <div class="package-intro">
+        <p class="eyebrow">THE TRUST CHECK</p>
+        <h2 id="verify-title">Verify a carried file.</h2>
+        <p>Have a Passage package and a publisher key you received through a separate trusted channel? Check both files here, entirely in your browser. Nothing is uploaded. A matching signature is not a fact-check or proof of redistribution rights.</p>
+      </div>
+      <div class="package-form">
+        <label for="package-file">Passage package (.json)</label>
+        <input id="package-file" type="file" accept=".json,application/json">
+        <label for="trusted-key-file">Independently trusted public key (.pem)</label>
+        <input id="trusted-key-file" type="file" accept=".pem,text/plain">
+        <button id="verify-package" class="button primary" type="button">Verify locally ↗</button>
+        <p id="verification-status" role="status" aria-live="polite">No file has been verified.</p>
+        <div id="verification-details" hidden></div>
+        <button id="save-verified-file" class="button outline" type="button" hidden>Save verified text ↓</button>
+        <p class="package-warning">Never assume a key supplied inside the same package is trustworthy. Files and downloads are not encrypted; this tool cannot conceal your activity or authenticate an unknown publisher.</p>
+      </div>
     </section>
     <section class="how" id="how"><div><p class="eyebrow">BUILT FOR RESILIENCE</p><h2>Keep reading when the signal fades.</h2></div><div class="steps"><article><span class="step-number">01</span><h3>Read</h3><p>Choose a practical guide. Every example in this prototype is original editorial material with visible provenance.</p></article><article><span class="step-number">02</span><h3>Keep</h3><p>Save an article or download the whole library as one standalone HTML file that opens without internet.</p></article><article><span class="step-number">03</span><h3>Reconnect</h3><p>With a supported browser on HTTPS, the app shell can be cached for later offline visits. Connectivity isn't guaranteed.</p></article></div></section>
     <section class="mission"><div><p class="eyebrow">WHY WE'RE HERE</p><h2>A useful idea should outlast a broken connection.</h2></div><p>This early Passage prototype is an offline reading experience, not an anonymity tool or censorship-bypass service. It does not send, synchronize, or encrypt your saved content. Public-interest distribution requires verified rights, trustworthy provenance, and a separate safety review.</p></section>

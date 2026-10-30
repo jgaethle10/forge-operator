@@ -30,3 +30,16 @@ footer{background:#133b36;color:#d1e7df;padding:32px 0}.footer-in{display:flex;j
 @media(max-width:970px){.hero{grid-template-columns:1fr .8fr;gap:25px}.feature-card{min-height:390px}.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.how{grid-template-columns:1fr}.reader-grid{gap:25px}}
 @media(max-width:720px){.wrap{width:calc(100% - 36px)}.nav{min-height:70px}.nav-actions .prototype{display:none}.hero{display:flex;flex-direction:column;align-items:stretch;padding:65px 0 42px;min-height:0}.hero h1{font-size:clamp(3.3rem,12vw,5rem)}.hero .lead{font-size:1rem}.feature-card{min-height:320px}.feature-illustration{min-height:215px}.statusbar{align-items:start;flex-direction:column;gap:6px}.library{padding:70px 0}.section-top{display:block}.count{margin-top:14px}.library-controls{display:block}.search{max-width:none}.filters{margin-top:14px}.card-grid{grid-template-columns:1fr}.article-card{min-height:240px}.how{padding:33px 26px}.steps{grid-template-columns:1fr}.mission{grid-template-columns:1fr;gap:15px;padding:75px 0}.reader-grid{display:flex;flex-direction:column}.reader-tools{position:static;width:100%}.footer-in{align-items:start;flex-direction:column}.footer-right{text-align:left}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.article-card:hover{transform:none}}
+/* Internal offline verification, intentionally separate from the reading flow. */
+.package-check{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;padding:53px 55px;margin:30px 0 85px;border:1px solid #cfe4d9;background:#eff6f0;border-radius:22px}
+.package-check h2{font-size:clamp(2.1rem,4vw,3.8rem);line-height:1.1;letter-spacing:-.06em;margin:0 0 20px}
+.package-intro p:last-child{font-size:.96rem;color:#506e64;line-height:1.78}
+.package-form{padding:24px;background:white;border:1px solid #d7e8dd;border-radius:16px;display:flex;flex-direction:column;gap:12px}
+.package-form label{font-weight:850;font-size:.8rem;color:#31584d}
+.package-form input{max-width:100%;padding:12px;border:1px solid #d4e0d7;border-radius:9px;background:#fcfdfb}
+.package-form .button{align-self:flex-start}
+#verification-status{font-size:.84rem;color:#315d54;line-height:1.65;margin:6px 0}
+#verification-details{overflow-wrap:anywhere;border-top:1px solid #dce8e0;padding-top:10px;font-size:.77rem}
+#verification-details p{margin:7px 0}
+.package-warning{font-size:.74rem;color:#697d74;line-height:1.7;margin:9px 0 0}
+@media(max-width:720px){.package-check{grid-template-columns:1fr;gap:17px;padding:28px 20px;margin:0 0 70px}}

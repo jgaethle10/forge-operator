@@ -5,6 +5,8 @@ import {readFile,mkdir} from "node:fs/promises";
 import {dirname,join,resolve,extname} from "node:path";
 import {fileURLToPath} from "node:url";
 import {chromium,devices} from "playwright";
+import {generateKeyPairSync} from "node:crypto";
+import {issuePackage} from "../scripts/passage-signed-package.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"../public");
 const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".mjs":"text/javascript; charset=utf-8",".js":"text/javascript; charset=utf-8",".json":"application/json; charset=utf-8",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"};
 async function serve(){
@@ -77,6 +79,29 @@ test("Passage Chrome browser acceptance: online, offline and mobile",async t=>{
    try{let networkRequests=0;filePage.on("request",()=>networkRequests++);await filePage.setContent(exported,{waitUntil:"load"});assert.match(await filePage.locator("h1").innerText(),/passage/i);assert.equal(await filePage.locator("article").count(),5);assert.equal(networkRequests,0,"offline HTML has no external resource requests")}
    finally{await fileContext.close()}
    assert.deepEqual(pageErrors,[],"no application JavaScript errors");
+  }finally{await context.close()}
+ });
+ await t.test("trusted local signature check accepts matching key and rejects tampering",async()=>{
+  const context=await browser.newContext({acceptDownloads:true});
+  try{
+   const page=await context.newPage();await page.goto(base);await waitForLibrary(page);
+   const catalog=JSON.parse(await readFile(join(root,"passage/catalog.json"),"utf8"));
+   const {privateKey,publicKey}=generateKeyPairSync("ed25519");
+   const privatePem=privateKey.export({type:"pkcs8",format:"pem"}).toString();
+   const trustedPem=publicKey.export({type:"spki",format:"pem"}).toString();
+   const signed=issuePackage({article:catalog.articles[0],privateKeyPem:privatePem,issuedAt:new Date(),ttlDays:2});
+   await page.locator("#package-file").setInputFiles({name:"demo.json",mimeType:"application/json",buffer:Buffer.from(signed)});
+   await page.locator("#trusted-key-file").setInputFiles({name:"trusted.pem",mimeType:"text/plain",buffer:Buffer.from(trustedPem)});
+   await page.locator("#verify-package").click();
+   await page.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("Signature and content match"));
+   assert.equal(await page.locator("#save-verified-file").isVisible(),true);
+   const received=page.waitForEvent("download");await page.locator("#save-verified-file").click();
+   assert.match((await received).suggestedFilename(),/passage-check-a-claim/);
+   const fake=JSON.parse(signed);fake.content_base64=Buffer.from("tampered").toString("base64");
+   await page.locator("#package-file").setInputFiles({name:"altered.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(fake))});
+   await page.locator("#verify-package").click();
+   await page.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("NOT VERIFIED"));
+   assert.equal(await page.locator("#save-verified-file").isVisible(),false);
   }finally{await context.close()}
  });
  await t.test("mobile-sized screen and accessible article focus",async()=>{

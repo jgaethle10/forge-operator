@@ -1,4 +1,5 @@
 import {validateCatalog,filterArticles,portableHTML} from "./catalog.mjs";
+import {articleText} from "./article-text.mjs";
 const $=id=>document.getElementById(id);
 const state={data:null,category:"All",query:"",current:null};
 const favoriteKey="evercraft.passage.bookmarks.v1";
@@ -50,12 +51,6 @@ function openArticle(id,{updateHistory=true,focus=true}={}){
  document.title=a.title+" | Passage";
  if(updateHistory&&location.hash!=="#read="+encodeURIComponent(a.id))history.pushState(null,"","#read="+encodeURIComponent(a.id));
  window.scrollTo(0,0);if(focus)$("reader-title").focus({preventScroll:true});return true;
-}
-function articleText(a){
- return a.title+"\n"+a.description+"\n\n"+a.category+" · Guide edition "+a.edition+"\n\n"+
- a.sections.map(s=>s.heading+"\n\n"+s.paragraphs.join("\n\n")).join("\n\n")+
- "\n\nRights: "+a.rights+"\nReferences for independent reading:\n"+
- a.sources.map(s=>s.label+": "+s.url).join("\n")+"\n\nPassage demonstration material. This file is not encrypted.\n";
 }
 function connectionStatus(){
  const status=navigator.onLine?"Connection reported online.":"Device appears offline. Cached material may be outdated.";
