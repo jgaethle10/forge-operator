@@ -118,3 +118,29 @@ For a model-driven envelope, use `node spectator-export.mjs local-inference-matc
 5. Validate isolated deployment and public readback before announcing availability.
 
 **No Base44 services were queried or used.**
+
+
+## Node002/NextGen sovereign llama.cpp trial (manual opt-in, no new hosting)
+
+If the approved existing `llama-server` executable and GGUF are available
+locally on NextGen, use the explicit opt-in helper below. **Supply verified,
+existing paths** from the sovereign inference staging receipt; the script does
+not discover models, download binaries, contact third-party services, or start a
+persistent background service.
+
+```bash
+bash run-owned-llama-match.sh /absolute/path/to/llama-server /absolute/path/to/model.gguf 2
+```
+
+It hashes the actual selected executable and model, refuses an occupied local
+port, starts a temporary loopback-only server, runs two arena turns through
+`live-model-match.mjs`, independently checks all decision/evidence links,
+then stops the server. Output is a private match envelope in the current
+working directory. It must remain private until competitive-information
+redaction and model identity provenance are independently verified.
+
+**Do not treat a successful JSON response or local SHA-256 alone as model
+attestation.** Compare the runtime/model digests and process receipt against
+the approved Node002 sovereign inference evidence before calling it a real
+model match. This helper has not been executed on Node002 in this development
+session.
