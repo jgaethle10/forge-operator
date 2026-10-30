@@ -8,7 +8,7 @@ import { resolve } from 'node:path';
 const origin='http://127.0.0.1:8766';
 const out=resolve('artifacts/evercraft-worlds-browser');
 await mkdir(out,{recursive:true});
-const server=spawn('python3',['-m','http.server','8766','--bind','127.0.0.1','--directory','public'],{stdio:'ignore'});
+const server=spawn(process.execPath,['systemia/worlds/worlds-vault-runtime.mjs','--port','8766','--public-root','public','--data-root','artifacts/evercraft-worlds-browser/private-vault'],{stdio:'ignore'});
 const receipt={schema:'evercraft.worlds.browser-qa.v1',observed_at_utc:new Date().toISOString(),origin,source:'local PR branch',browser:'Playwright Chromium, phone emulation is NOT physical device',real_world_data:false,hardware_gpu_verified:false,production_deployed:false,scenarios:[]};
 let browser;
 try{
@@ -76,6 +76,8 @@ try{
       assert.ok(location<7.99,'keyboard movement did not update world position; position='+location+'; frame='+pre.fps);
     }
     await page.locator('#buildToggle').click();
+    await page.locator('#publishOnline').waitFor({state:'visible',timeout:8000});
+    await page.evaluate(()=>{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__lastOnlineLink=text;}}})});
     if(profile.hasTouch){
       const builder=await page.evaluate(()=>{
         const rect=document.querySelector('#editor').getBoundingClientRect();
@@ -129,6 +131,32 @@ try{
     const routines=await page.evaluate(async()=>{const m=await import('/worlds/world-core.mjs');const w=JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1'));return {pip:m.agentActivity(w,'pip').activity,lumi:m.agentActivity(w,'lumi').activity};});
     assert.match(routines.lumi,/sunset/i);
     assert.equal(routines.pip,'Planning a secret garden');
+    await page.locator('#publishOnline').click();
+    await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Online revision 1'),null,{timeout:10000});
+    const owner=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.owner-capability.v1')));
+    assert.match(owner.id,/^[a-f0-9]{32}$/,profile.name+': online world ID missing');
+    assert.match(owner.edit_token,/^[a-f0-9]{64}$/,profile.name+': owner capability missing');
+    const onlineUrl=await page.evaluate(()=>window.__lastOnlineLink);
+    assert.ok(onlineUrl?.includes('#world='+owner.id),profile.name+': online share URL not prepared');
+    assert.ok(!onlineUrl.includes(owner.edit_token),profile.name+': edit capability leaked into sharing URL');
+    const visitorContext=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile,hasTouch:profile.hasTouch,deviceScaleFactor:1});
+    const second=await visitorContext.newPage();
+    const secondResponse=await second.goto(onlineUrl,{waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(secondResponse?.status(),200,profile.name+': online guest route unavailable');
+    await second.locator('#sharedInvite').waitFor({state:'visible',timeout:10000});
+    await second.locator('#visitShared').click();
+    await second.locator('#start').click();
+    await second.locator('#buildToggle').click();
+    await second.locator('[data-command="sky night"]').click();
+    const beforeCopy=await second.evaluate(()=>({world:localStorage.getItem('evercraft.worlds.mossmere.v1'),owner:localStorage.getItem('evercraft.worlds.owner-capability.v1')}));
+    assert.equal(beforeCopy.world,null,profile.name+': online guest wrote local world without consent');
+    assert.equal(beforeCopy.owner,null,profile.name+': online guest received owner edit capability');
+    await visitorContext.close();
+    await page.locator('#publishOnline').click();
+    await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Online revision 2'),null,{timeout:10000});
+    const persisted=await page.evaluate(async id=>
+      (await (await fetch('/worlds/api/worlds/'+id)).json()),owner.id);
+    assert.equal(persisted.version,2,profile.name+': published revision did not advance');
     const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(saved.sky,'sunset',profile.name+': sky change not stored');
     await page.locator('#closeEditor').click();
