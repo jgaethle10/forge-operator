@@ -9,6 +9,7 @@
 import {createServer} from 'node:http';
 import {ACTIONS} from './league.mjs';
 import {requireLocalEndpoint} from './local-agent-runner.mjs';
+import {hashEvidenceValue} from './inference-evidence.mjs';
 
 const REQUEST_SCHEMA='evercraft.founders-arena.request.v1';
 const MAX_REQUEST_BYTES=16384;
@@ -80,7 +81,7 @@ async function readRequest(req,limit){
   return Buffer.concat(parts).toString('utf8');
 }
 
-export function createLocalModelDecider({provider,endpoint,model,modelByAgent={},timeoutMs=8000,fetchImpl=fetch}={}){
+export function createLocalModelDecider({provider,endpoint,model,modelByAgent={},timeoutMs=8000,fetchImpl=fetch,onDecisionEvidence=null}={}){
   if(!FORMATS.has(provider))throw Error('Provider must be ollama or openai');
   const url=requireLocalEndpoint(endpoint);
   const defaultModel=assertModelName(model);
@@ -94,6 +95,7 @@ export function createLocalModelDecider({provider,endpoint,model,modelByAgent={}
     assertObservation(observation);
     const chosen=namedModels[observation.self.id]??defaultModel;
     const messages=makeModelPrompt(observation);
+    const started=performance.now();
     const payload=provider==='ollama'
       ? {model:chosen,messages,stream:false,format:'json',options:{temperature:0}}
       : {model:chosen,messages,stream:false,temperature:0,response_format:{type:'json_object'}};
@@ -106,6 +108,14 @@ export function createLocalModelDecider({provider,endpoint,model,modelByAgent={}
       let data;try{data=JSON.parse(body)}catch{throw Error('Local model provider returned malformed JSON')}
       const content=provider==='ollama'?data?.message?.content:data?.choices?.[0]?.message?.content;
       const answer=parseModelDecision(content,observation);
+      if(onDecisionEvidence){
+        onDecisionEvidence({turn:observation.turn,agent_id:observation.self.id,provider,
+          requested_model:chosen,reported_model:typeof data?.model==='string'?data.model:null,
+          prompt_digest:hashEvidenceValue(payload),response_digest:hashEvidenceValue(data),
+          decision:answer,elapsed_ms:performance.now()-started,
+          reported_token_count:Number.isSafeInteger(data?.eval_count)?data.eval_count:
+            Number.isSafeInteger(data?.usage?.completion_tokens)?data.usage.completion_tokens:null});
+      }
       metrics.completions++;
       return answer;
     }catch(err){metrics.rejections++;throw err;}

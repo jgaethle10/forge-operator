@@ -58,7 +58,7 @@ For an already running Ollama server and installed model, from this directory:
 node live-model-match.mjs ollama http://127.0.0.1:11434/api/chat llama3.2 3 local-inference-match.json
 ```
 
-`live-model-match.mjs` writes an envelope `{match,provider,standings}`. To independently replay the embedded match:
+`live-model-match.mjs` writes an envelope `{match,evidence,provider,standings}`. To independently replay the embedded match:
 
 ```bash
 node -e "const f=require('node:fs');f.writeFileSync('receipt.json',JSON.stringify(JSON.parse(f.readFileSync('local-inference-match.json')).match))"
@@ -66,6 +66,25 @@ node verify.mjs receipt.json
 ```
 
 For an OpenAI-compatible **local** chat completions server, substitute `openai`, an explicit local URL such as `http://127.0.0.1:8000/v1/chat/completions`, and your model ID. This does not send data to OpenAI or any cloud service; it implements the message format only. Different models can be selected programmatically using `runLiveLocalModelMatch({modelByAgent:{Systemia:'model-a',Forge:'model-b'},...})`. By default all players use the same chosen model with independent private observations.
+
+### Inspect private model-response evidence
+
+The experimental runner emits a separate **private inference ledger**. It links each
+(agent, turn, decision) to a SHA-256 hash of the submitted provider payload and
+returned JSON, the requested model, any self-reported provider model/token counts,
+and an observed request duration. A hash chain and match digest detect altered,
+missing, reordered, or reassigned records. It does **not** include raw private
+prompts, full private state, or the model's response text.
+
+```bash
+node verify-inference.mjs local-inference-match.json
+```
+
+The verifier checks internal data integrity and alignment with the deterministic
+match, **not** the model's identity, weights, or whether genuine neural inference
+occurred. Provider metadata and timings are local process observations or
+self-reports, not independent attestations. Keep full match envelopes private;
+only the privacy-reduced spectator export is intended for audiences.
 
 **Proof boundary:** tests exercise mock model servers, **not genuine LLM inference**. Provider metadata is descriptive, not cryptographic provenance. A loopback response does not prove that a neural network performed a computation. Record model version, responses, latency, and provenance separately before making an external claim.
 

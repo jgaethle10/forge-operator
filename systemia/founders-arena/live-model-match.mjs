@@ -3,13 +3,17 @@ import {writeFileSync} from 'node:fs';
 import {startLocalModelBridge} from './local-model-bridge.mjs';
 import {playWithLocalAgent} from './local-agent-runner.mjs';
 import {verifyMatch,standings} from './league.mjs';
+import {createInferenceEvidence,verifyInferenceEvidence} from './inference-evidence.mjs';
 
 export async function runLiveLocalModelMatch({provider,endpoint,model,modelByAgent,rounds=3,seed=42,roster,timeoutMs=8000}={}){
-  const bridge=await startLocalModelBridge({provider,endpoint,model,modelByAgent,timeoutMs});
+  const audit=createInferenceEvidence();
+  const bridge=await startLocalModelBridge({provider,endpoint,model,modelByAgent,timeoutMs,onDecisionEvidence:audit.observe});
   try {
     const match=await playWithLocalAgent({endpoint:bridge.address,rounds,seed,roster,timeoutMs:Math.min(30000,timeoutMs+1000)});
     verifyMatch(match);
-    return {match,provider:{kind:provider,model,models:modelByAgent??{},
+    const evidence=audit.exportLedger(match);
+    verifyInferenceEvidence(match,evidence);
+    return {match,evidence,provider:{kind:provider,model,models:modelByAgent??{},
       request_count:bridge.metrics.requests,completion_count:bridge.metrics.completions,
       note:'Loopback provider responses observed; not an independent attestation of actual model computation.'},
       standings:standings(match.final)};
