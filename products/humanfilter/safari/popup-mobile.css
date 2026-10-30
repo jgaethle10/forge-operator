@@ -1,0 +1,11 @@
+/* Safari-only improvements: touch targets and narrow extension popovers. */
+html{max-width:100%;overflow-x:hidden}
+body{width:min(350px,100vw);max-width:100%;min-width:280px}
+main{padding:clamp(13px,4vw,19px)}
+.safari-mark{width:46px;height:46px;object-fit:contain;background:transparent;border:0;border-radius:0}
+input[type=checkbox],input[type=radio],textarea{touch-action:manipulation}
+.feeds label{min-height:44px}
+.modes label span{min-height:58px}
+.modes span,.feeds label,.switch{touch-action:manipulation}
+footer{flex-wrap:wrap;line-height:1.6}
+@media(max-width:340px){h1{font-size:25px}.modes{gap:6px}.modes span{padding:9px 7px}}

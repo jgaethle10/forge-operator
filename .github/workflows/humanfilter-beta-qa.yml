@@ -18,7 +18,7 @@ permissions:
 jobs:
   browser-and-rules:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,8 +27,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install 'playwright==1.55.0'
-      - run: python -m playwright install --with-deps chromium
+      - run: python -m pip install 'playwright==1.55.0' 'cairosvg==2.8.2'
+      - run: python -m playwright install --with-deps chromium webkit
       - name: Run deterministic rules
         working-directory: products/humanfilter
         run: |
@@ -39,6 +39,19 @@ jobs:
         run: |
           python scripts/build_browser_packages.py --output-dir dist
           python -c "import zipfile,json,pathlib; r=pathlib.Path('dist'); z=zipfile.ZipFile(next(r.glob('*Firefox*.zip'))); m=json.loads(z.read('manifest.json')); assert m['browser_specific_settings']['gecko']['data_collection_permissions']['required']==['none']; assert m['manifest_version']==3; print('Firefox Gecko manifest and packaging valid')"
+      - name: Validate Safari source ZIP, scoped permissions, and new shield icons
+        working-directory: products/humanfilter
+        run: python safari/test_safari_package.py dist/Evercraft-HumanFilter-Safari-Submission-Source-v0.1.4.zip
+      - name: Exercise mobile Safari-like WebKit card/reveal/pause fixtures
+        working-directory: products/humanfilter
+        run: python tests/safari_mobile_smoke.py
+      - name: Preserve Safari packager upload source for App Store Connect
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-safari-app-store-connect-source-v0.1.4
+          path: products/humanfilter/dist/Evercraft-HumanFilter-Safari-Submission-Source-v0.1.4.zip
+          if-no-files-found: error
+          retention-days: 90
       - name: Real packaged Chromium and Edge extension installation tests
         working-directory: products/humanfilter
         run: |
