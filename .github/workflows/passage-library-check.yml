@@ -4,6 +4,7 @@ on:
     paths:
       - 'public/passage/**'
       - 'tests/passage-library.test.mjs'
+      - 'tests/passage-browser.test.mjs'
       - 'docs/launch/passage/**'
       - '.github/workflows/passage-library-check.yml'
   workflow_dispatch:
@@ -12,16 +13,29 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate Passage library and portable export
-        run: node --test tests/passage-library.test.mjs
-      - name: Check browser script syntax
+      - name: Check library logic and browser scripts
         run: |
+          node --test tests/passage-library.test.mjs
           node --check public/passage/app.mjs
           node --check public/passage/catalog.mjs
           node --check public/passage/sw.js
+      - name: Install ephemeral browser test dependency
+        run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+      - name: Exercise Chrome online and offline
+        env:
+          PASSAGE_ARTIFACT_DIR: /tmp/passage-qa
+        run: node --test tests/passage-browser.test.mjs
+      - name: Preserve simulated mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: passage-browser-qa
+          path: /tmp/passage-qa/
+          if-no-files-found: ignore
+          retention-days: 14
