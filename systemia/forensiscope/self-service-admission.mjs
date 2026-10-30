@@ -10,7 +10,7 @@ const hexHash=(x)=>typeof x==='string'&&/^sha256:[0-9a-f]{64}$/.test(x);
 
 /**
  * Nontransactional, deterministic quote for a recording inspected locally
- * in a browser. No media bytes, secret URLs, user identity or PII accepted.
+ * in a browser. No media bytes, secret URLs, or identities are returned. A caller may supply a\n * private filename for extension validation, but it is discarded immediately.
  *
  * The quoted price is NOT permission to charge or upload anything.
  */
@@ -34,7 +34,7 @@ export function quoteForensiScopeSelfService({
   });
   return Object.freeze({
     schema:'evercraft.forensiscope.self-service-quote.v1',
-    file_name:name,
+    media_extension:ext,
     file_size_bytes:fileSizeBytes,
     duration_seconds:durationSeconds,
     offer_key:intent.offer_key,
