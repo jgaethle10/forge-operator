@@ -118,6 +118,17 @@ def main():
     library=root/'opt/evercraft-ai/current/lib'
     if not executable.is_file() or not os.access(executable,os.X_OK):
         raise RuntimeError('llama_server_not_executable')
+    # A signed binary can still lack host shared-library dependencies.
+    # Inspect before hashing ~2.5 GiB or trying to launch it.
+    dependencies=subprocess.run(['ldd',str(executable)],capture_output=True,
+                                text=True,timeout=15,check=False)
+    if dependencies.returncode!=0:
+        raise RuntimeError('llama_dependency_inspection_failed')
+    missing=[line.split('=>',1)[0].strip() for line in dependencies.stdout.splitlines()
+             if '=> not found' in line]
+    if missing:
+        hint=' (Ubuntu package: libgomp1)' if 'libgomp.so.1' in missing else ''
+        raise RuntimeError('llama_missing_shared_libraries: '+', '.join(missing)+hint)
     if not (library/'evercraft_ai/cli.py').is_file():
         raise RuntimeError('evercraft_gateway_missing')
     print('Checking model and runtime SHA-256...',flush=True)
