@@ -11,6 +11,21 @@ export const VAULT_SCHEMA='evercraft.worlds.vault.v1';
 const WORLD_ID=/^[a-f0-9]{32}$/;
 const MAX_BODY=12000;
 const MAX_WORLDS=2000;
+function checkedPublicOrigin(value){
+ if(!value)return null;
+ let url;try{url=new URL(String(value));}catch{throw Error('worlds_vault_public_origin_invalid');}
+ if(url.protocol!=='https:'||url.pathname!=='/'||url.search||url.hash||url.username||url.password||url.origin!==String(value).replace(/\/$/,''))throw Error('worlds_vault_public_origin_invalid');
+ return url.origin;
+}
+function assertWriteOrigin(req,publicOrigin){
+ const supplied=req.headers.origin;
+ if(!supplied)return;
+ let origin;try{origin=new URL(supplied);if(origin.origin!==supplied)throw Error('not_exact_origin');}
+ catch{throw new VaultError(403,'cross_origin_write_denied');}
+ const expected=publicOrigin||'http://'+req.headers.host;
+ if(supplied!==expected)throw new VaultError(403,'cross_origin_write_denied');
+}
+
 const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8'};
 class VaultError extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const digest=s=>createHash('sha256').update(s).digest('hex');
@@ -40,7 +55,9 @@ function within(root,target){
  const rel=path.relative(root,target);
  return !rel.startsWith('..')&&!path.isAbsolute(rel);
 }
-export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.resolve('public'),dataRoot='',maxWorlds=MAX_WORLDS}={}){
+export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.resolve('public'),dataRoot='',maxWorlds=MAX_WORLDS,publicOrigin=''}={}){
+ if(!['127.0.0.1','::1','localhost'].includes(host))throw Error('worlds_vault_must_bind_loopback');
+ const expectedOrigin=checkedPublicOrigin(publicOrigin);
  if(!dataRoot)throw Error('worlds_vault_data_root_required');
  const assetRoot=await fs.realpath(publicRoot);
  await fs.mkdir(dataRoot,{recursive:true,mode:0o700});
@@ -100,7 +117,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
    const pathname=decodeURIComponent(url.pathname);
    if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true});
    if(pathname==='/worlds/api/worlds'&&method==='POST'){
-    if(req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)throw new VaultError(403,'cross_origin_write_denied');
+    assertWriteOrigin(req,expectedOrigin);
     const source=req.socket.remoteAddress||'unknown',now=Date.now();
     const old=(createWindows.get(source)||[]).filter(t=>now-t<600000);
     if(old.length>=10)throw new VaultError(429,'creation_rate_limited');
@@ -114,7 +131,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
     return send(res,200,{schema:VAULT_SCHEMA,world_id:row.id,version:row.version,scene_token:row.scene_token,updated_at:row.updated_at},{etag:'"'+row.version+'"'});
    }
    if(match&&method==='PUT'){
-    if(req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)throw new VaultError(403,'cross_origin_write_denied');
+    assertWriteOrigin(req,expectedOrigin);
     const token=String(req.headers.authorization||'').replace(/^Bearer /,'');
     if(!/^[a-f0-9]{64}$/.test(token))throw new VaultError(401,'edit_capability_required');
     const body=await readBody(req),scene=validScene(body);
@@ -141,7 +158,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const arg=name=>{const i=process.argv.indexOf('--'+name);return i<0?'':process.argv[i+1]||'';};
  const config={host:arg('host')||'127.0.0.1',port:Number(arg('port')||8788),
-  publicRoot:arg('public-root')||path.resolve('public'),dataRoot:arg('data-root')};
+  publicRoot:arg('public-root')||path.resolve('public'),dataRoot:arg('data-root'),publicOrigin:arg('public-origin')};
  startWorldsVault(config).then(s=>{process.stdout.write(JSON.stringify({status:'listening',url:s.url})+'\n');})
  .catch(e=>{process.stderr.write(String(e.message)+'\n');process.exitCode=1;});
 }
