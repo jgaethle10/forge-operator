@@ -197,3 +197,24 @@ $('office-export-trace').addEventListener('click',()=>{
   link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
+
+
+// Explicit opt-in synthetic executor inspection; never implies AI agent provisioning.
+$('executor-smoke').addEventListener('click',async()=>{
+  const button=$('executor-smoke'),status=$('executor-status');
+  button.disabled=true;
+  status.textContent='Running six local verification tasks…';
+  try{
+    const response=await fetch('/api/executor-smoke',{method:'POST',headers:{'x-work-saban-client':'local-preview'}});
+    const data=await response.json();
+    if(!response.ok||data.ok!==true||data.source!=='synthetic_fixture'||data.live_agents!==false)
+      throw new Error('Local executor verification unavailable');
+    for(const event of data.events||[])window.WorkSaban3D?.consumeExecutorEvent(event);
+    const capacity=data.execution?.capacity;
+    if(!capacity||capacity.verified!==6||capacity.failed!==0)
+      throw new Error('Execution verification incomplete');
+    status.textContent='6 of 6 synthetic local tasks verified. No AI agents provisioned.';
+  }catch(error){
+    status.textContent='Executor test failed: '+error.message;
+  }finally{button.disabled=false;}
+});
