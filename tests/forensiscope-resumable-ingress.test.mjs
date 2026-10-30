@@ -9,6 +9,7 @@ import {
  quoteForensiScopeSelfService,evaluateForensiScopeCheckoutGate
 } from '../systemia/forensiscope/self-service-admission.mjs';
 import { createForensiScopeResumableIngress } from '../systemia/forensiscope/resumable-ingress.mjs';
+import {uploadForensiScopePaidRecording} from '../public/forensiscope/self-service/uploader.mjs';
 
 const sha=buf=>'sha256:'+crypto.createHash('sha256').update(buf).digest('hex');
 const source=Buffer.from('real-test-media-bytes-but-not-a-real-video');
@@ -213,5 +214,38 @@ test('entry rejects missing trusted callbacks, insecure storage, expired session
   clock=5000;
   assert.equal(f.service.purgeExpiredSessions().expired_sessions_removed,1);
   assert.equal((await f.request(base,'/v1/forensiscope/uploads/'+another)).status,404);
+ }finally{await f.close()}
+});
+
+
+test('browser client uploads a Blob in chunks, reads receipt and reuses completed order without duplication',async()=>{
+ const f=createFixture();
+ const base=await f.start();
+ try{
+  const progress=[];
+  const options={
+   baseUrl:base,accessToken:token,orderKey,
+   file:new Blob([source],{type:'video/mp4'}),
+   mediaExtension:'.mp4',
+   onProgress:step=>progress.push(step)
+  };
+  const result=await uploadForensiScopePaidRecording(options);
+  assert.equal(result.state,'uploaded_unprocessed');
+  assert.equal(result.source_sha256,sha(source));
+  assert.equal(result.processing_started,false);
+  assert.equal(result.private_result_ready,false);
+  assert.ok(progress.length>1);
+  assert.equal(progress.at(-1).completed,true);
+  assert.equal(progress.at(-1).uploadedBytes,source.length);
+  const replay=await uploadForensiScopePaidRecording(options);
+  assert.equal(replay.state,'uploaded_unprocessed');
+  assert.equal(replay.resumed,true);
+  assert.deepEqual(fs.readFileSync(
+   f.service.uploadedSourceForWorker({uploadId:result.upload_id,subject:'buyer-1'}).source_path
+  ),source);
+  await assert.rejects(
+   uploadForensiScopePaidRecording({...options,baseUrl:'https://attacker.example'}),
+   /unapproved_upload_origin/
+  );
  }finally{await f.close()}
 });
