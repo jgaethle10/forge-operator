@@ -1,0 +1,101 @@
+{
+  "schema": "evercraft.research.share-kit.v1",
+  "product": "Evercraft Research",
+  "canonical_url": "https://jgaethle10.github.io/forge-operator/research/",
+  "offer": "Free local scope builder; optional custom-quoted research engagements. No instant automated research or checkout.",
+  "live_social_posts_verified": 0,
+  "export_mode": "manual_user_action_only",
+  "first_comment": "Evercraft Research: https://jgaethle10.github.io/forge-operator/research/?utm_source=facebook&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=first_comment",
+  "captions": [
+    {
+      "id": "research-20261029-company-facebook",
+      "channel": "facebook",
+      "account": "company",
+      "copy": "A supplier looks promising, a market seems to be growing, and two sources say completely different things. What do you trust when an important decision can't wait for perfect information?\n\nEvercraft Research is now open for early-access inquiries. Start with your question, choose the kind of report you need, and download a free research scope in your browser. We quote full investigations individually, with clear deliverables and an emphasis on traceable sources, contradictions, and unanswered questions.\n\nYou can try the scope builder without an account. The link is in our first comment.",
+      "cta_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-facebook",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-company-linkedin",
+      "channel": "linkedin",
+      "account": "company",
+      "copy": "A polished answer and a defensible business decision are not the same thing.\n\nTeams face questions that cross supplier markets, technical constraints, public records, competitors, and operational economics. The evidence can be incomplete or contradictory, yet the decision still has a deadline. Evercraft Research is opening for custom inquiries with an intentionally simple starting point: describe the question, choose a report type, and download a free research scope.\n\nA completed report is a separate, individually quoted engagement. We're looking for genuine research problems where source-grounded analysis would help someone decide what to do next. https://jgaethle10.github.io/forge-operator/research/",
+      "cta_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-linkedin",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-company-instagram",
+      "channel": "instagram",
+      "account": "company",
+      "copy": "The interesting part of research isn't a polished answer. It's the evidence behind it, what contradicts it, and what's missing.\n\nEvercraft Research is open for early-access inquiries. Start with a question and download a free scope outlining what an investigation would cover. Real reports are custom-quoted and reviewed. Research link in our bio. #EvercraftResearch #BusinessResearch",
+      "cta_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-instagram",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-company-x",
+      "channel": "x",
+      "account": "company",
+      "copy": "A confident answer isn't proof. Evercraft Research helps you frame a real question around sources, contradictions and unknowns. Our free scope builder is live; custom investigations are quoted individually. https://jgaethle10.github.io/forge-operator/research/",
+      "cta_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-x",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-company-tiktok",
+      "channel": "tiktok",
+      "account": "company",
+      "copy": "A confident answer isn't proof. Here's the actual Evercraft Research site: enter a question, choose a report type, and get a free research scope. A professionally reviewed investigation is a separate custom-quoted service. Find the Research link in our profile. #EvercraftResearch",
+      "cta_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=company-tiktok",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-personal-facebook",
+      "channel": "facebook",
+      "account": "personal",
+      "copy": "I've spent a lot of time building things behind the scenes at Evercraft, and one problem keeps coming back: people have serious questions but don't always have a good way to get useful, properly sourced research.\n\nEvercraft Research now has its own public starting point. You can describe your question, choose the type of investigation, and download a scope for free. Actual research reports are a separately quoted and reviewed service, so we're not pretending the scope is a finished answer.\n\nI'd love to hear what people would have researched if they had a reliable way to ask. I'll put the link in the first comment.",
+      "cta_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-facebook",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-personal-instagram",
+      "channel": "instagram",
+      "account": "personal",
+      "copy": "We've been building a lot of technology at Evercraft behind the scenes. Research is one of the areas I wanted to make useful to people who don't care how complicated the machinery is.\n\nNow anyone can frame a tough question and get a downloadable scope for free. An actual investigation is separately reviewed and quoted. I'm excited to see what people need help understanding. Research link in my bio. #EvercraftResearch",
+      "cta_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-instagram",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-personal-linkedin",
+      "channel": "linkedin",
+      "account": "personal",
+      "copy": "We're opening Evercraft Research to the public as an early-access research service. The idea came from a recurring problem: teams need evidence they can trace, contradictions they can examine, and a clear account of what's still unknown, not just another fluent summary.\n\nThe first public release lets anyone prepare a research scope, choose the kind of report they'd need, and download the outline without signing up. Behind that experience, we've built evidence-dossier infrastructure, but actual research engagements are reviewed and quoted separately. I'm interested in the hard research questions facing founders and operators. What would you investigate before your next big decision?\n\nhttps://jgaethle10.github.io/forge-operator/research/",
+      "cta_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-linkedin",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-personal-x",
+      "channel": "x",
+      "account": "personal",
+      "copy": "We've opened Evercraft Research. Start with one question, download a free research scope, and request a custom report if you need deeper evidence. No fake instant findings. https://jgaethle10.github.io/forge-operator/research/",
+      "cta_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-x",
+      "post_status": "prepared_not_published"
+    },
+    {
+      "id": "research-20261029-personal-tiktok",
+      "channel": "tiktok",
+      "account": "personal",
+      "copy": "I'm showing the actual Research tool we've been building at Evercraft. You can enter a difficult question and download a free scope before committing to anything. Real investigations are reviewed and quoted separately. If there's something you need researched properly, the link's in my profile.",
+      "cta_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/research/?utm_source=founder&utm_medium=organic_social&utm_campaign=research_launch_20261029&utm_content=personal-tiktok",
+      "post_status": "prepared_not_published"
+    }
+  ]
+}
