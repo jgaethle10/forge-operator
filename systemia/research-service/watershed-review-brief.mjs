@@ -67,6 +67,21 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
       throw new TypeError('invalid USBR reservoir source receipt');
     }
     const byReservoir = new Map(reservoirSnapshot.observations.map(row => [row.station_id, row]));
+    const comparableRows = YAKIMA_RESERVOIR_SITES.map(site => {
+      const row = byReservoir.get(site.code);
+      return row?.catalog_item_id===site.catalog_item_id && row.unit==='af' &&
+        Number.isFinite(row.value) && row.value>=0 &&
+        ['current','recent_daily_time_zone_unresolved'].includes(row.freshness) &&
+        /^\d{4}-\d\d-\d\d$/.test(row.source_day_reported||'') ? row : null;
+    });
+    const sameDay = comparableRows.every(Boolean) &&
+      new Set(comparableRows.map(row=>row.source_day_reported)).size===1;
+    const recomputedSum = sameDay ? comparableRows.reduce((sum,row)=>sum+row.value,0) : null;
+    if (Number.isFinite(reservoirSnapshot.derived_provisional_sum_af) &&
+        (recomputedSum===null || reservoirSnapshot.derived_provisional_sum_af!==recomputedSum ||
+          reservoirSnapshot.derived_sum_source_reported_day!==comparableRows[0].source_day_reported)) {
+      throw new TypeError('RISE five-reservoir arithmetic receipt mismatch');
+    }
     lines.push('**RISE source state:** ' + safe(reservoirSnapshot.status),
       '**Fresh sites:** ' + safe(reservoirSnapshot.current_station_count) + '/5',
       '**Upstream failures:** ' + safe(reservoirSnapshot.failures?.length ?? 'not assessed'),
@@ -83,9 +98,9 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
         safe(reading?.freshness || 'missing') + ' |');
     }
     lines.push('', '**Provisional five-reservoir arithmetic sum:** ' +
-      (Number.isFinite(reservoirSnapshot.derived_provisional_sum_af)
-        ? safe(reservoirSnapshot.derived_provisional_sum_af) + ' acre-feet, source-reported ' +
-          safe(reservoirSnapshot.derived_sum_source_reported_day)
+      (recomputedSum !== null
+        ? safe(recomputedSum) + ' acre-feet, source-reported ' +
+          safe(comparableRows[0].source_day_reported)
         : 'not computed; source coverage or date comparability incomplete') + '.',
       'This is an arithmetic sum of provisional observed volumes, NOT percent full, official operational storage or a water-supply forecast.',
       'Source-reported timestamps may omit timezone. Reporting day reconciliation and human review remain required.',
