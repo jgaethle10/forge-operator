@@ -39,6 +39,33 @@ def check_digest(path, expected):
         raise RuntimeError('CHECKSUM_MISMATCH: ' + str(path))
 
 
+def missing_shared_libraries(ldd_output):
+    """Parse GNU ld.so diagnostics without mistaking known libraries for missing."""
+    results = []
+    for line in ldd_output.splitlines():
+        part = line.strip().split()
+        if len(part) >= 4 and part[1:4] == ['=>', 'not', 'found']:
+            results.append(part[0])
+    return results
+
+
+def preflight_runtime_linker(executable):
+    """Read-only ABI dependency check; no host packages are installed here."""
+    try:
+        result = subprocess.run(['ldd', str(executable)], capture_output=True,
+                                text=True, timeout=12,
+                                env={'PATH': '/usr/bin:/bin', 'LC_ALL': 'C'})
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError('runtime_dependency_probe_failed: ' + str(exc)) from exc
+    missing = missing_shared_libraries(result.stdout + '\n' + result.stderr)
+    if missing:
+        hint = ' (Ubuntu: sudo apt-get install libgomp1)' if 'libgomp.so.1' in missing else ''
+        raise RuntimeError('missing_runtime_libraries: ' + ', '.join(missing) + hint)
+    if result.returncode != 0 or 'not a dynamic executable' in result.stdout.lower():
+        raise RuntimeError('runtime_loader_unverified: ldd_exit=' + str(result.returncode))
+    return True
+
+
 def free_port():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(('127.0.0.1', 0))
@@ -166,6 +193,8 @@ def main():
     try:
         log1=open(folder/'model.log','w')
         log2=open(folder/'gateway.log','w')
+        preflight_runtime_linker(executable)
+        print('SOVEREIGN_RUNTIME_LINKER: PASS',flush=True)
         print('Starting signed llama.cpp model on loopback...',flush=True)
         model_process=subprocess.Popen([
             str(executable),'--host','127.0.0.1','--port',str(model_port),
