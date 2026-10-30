@@ -22,7 +22,7 @@ test("a 404, wrong host, or generic HTML fails without a false launch receipt",(
 });
 
 test("canary only looks at public surfaces and contains no payment path",()=>{
- assert.deepEqual(ASSETS.map(x=>x.path),["","scope.mjs","ai-discovery.json","llms.txt","share/","share/captions.json"]);
+ assert.deepEqual(ASSETS.map(x=>x.path),["","scope.mjs","ai-discovery.json","llms.txt","share/","share/captions.json","assets/research-mark.svg"]);
  for(const a of ASSETS)assert.ok(a.expected.length>=2);
  assert.match(ORIGIN,/^https:\/\//);
 });
