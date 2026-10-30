@@ -10,6 +10,8 @@ on:
       - "systemia/research-service/watershed-yakima-profile.json"
       - "systemia/research-service/watershed-intelligence.mjs"
       - "tests/evercraft-watershed-intelligence.test.mjs"
+      - "tests/evercraft-usbr-rise-reservoirs.test.mjs"
+      - "systemia/research-service/usbr-*.mjs"
       - ".github/workflows/watershed-intelligence-canary.yml"
 
 permissions:
@@ -29,7 +31,7 @@ jobs:
         with:
           node-version: "22"
       - name: Prove parsing, failure and source authority boundaries
-        run: node --test tests/evercraft-watershed-intelligence.test.mjs
+        run: node --test tests/evercraft-watershed-intelligence.test.mjs tests/evercraft-usbr-rise-reservoirs.test.mjs
       - name: Collect official observations, fail when minimum live source coverage is absent
         shell: bash
         run: |
@@ -44,6 +46,14 @@ jobs:
               --input artifacts/watershed-canary/latest.json \
               --out artifacts/watershed-canary/review-draft.md
           fi
+      - name: Probe USBR RISE five-reservoir storage sources
+        if: always()
+        id: reservoir
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p artifacts/watershed-canary
+          node systemia/research-service/usbr-reservoir-probe.mjs --probe > artifacts/watershed-canary/reservoir-source-probe.json
       - name: Preserve source observations and coverage receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,6 +62,7 @@ jobs:
           path: |
             artifacts/watershed-canary/latest.json
             artifacts/watershed-canary/review-draft.md
+            artifacts/watershed-canary/reservoir-source-probe.json
           if-no-files-found: warn
           retention-days: 14
       - name: Summarize evidence boundary
@@ -63,6 +74,7 @@ jobs:
             echo
             echo "Public NRCS/USGS sensor reachability and minimum freshness only."
             echo "No basin-wide SWE percentage, reservoir verification, forecast, hazard declaration, flight authority, payment, or customer delivery."
+            echo "USBR RISE diagnostic outcome: ${{ steps.reservoir.outcome }} (source-only, held until verified)"
             echo
             if [ -s artifacts/watershed-canary/latest.json ]; then
               node --input-type=module -e '
