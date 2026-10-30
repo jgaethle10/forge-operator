@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.forensiscope.self-service-tier-snapshot.v1",
+  "source": "systemia/forensiscope/commercial-offers.mjs",
+  "price_status": "quote_only_not_checkout",
+  "tiers": [
+    {
+      "duration_seconds": 300,
+      "amount_cents": 1500,
+      "offer_key": "forensiscope.media_review_5m.v1"
+    },
+    {
+      "duration_seconds": 1800,
+      "amount_cents": 3500,
+      "offer_key": "forensiscope.media_review_30m.v1"
+    },
+    {
+      "duration_seconds": 7200,
+      "amount_cents": 7500,
+      "offer_key": "forensiscope.media_review_2h.v1"
+    },
+    {
+      "duration_seconds": 21600,
+      "amount_cents": 14900,
+      "offer_key": "forensiscope.media_review_6h.v1"
+    },
+    {
+      "duration_seconds": 43200,
+      "amount_cents": 24900,
+      "offer_key": "forensiscope.media_review_12h.v1"
+    }
+  ]
+}
