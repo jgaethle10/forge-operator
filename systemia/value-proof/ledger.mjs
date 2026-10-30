@@ -117,7 +117,7 @@ export function eventClaimDigest(raw) {
 export async function buildValueProofScorecard(rawEvents, {verifyEvidence} = {}) {
   if (!Array.isArray(rawEvents)) fail('events_must_be_array');
   if (typeof verifyEvidence !== 'function') fail('trusted_verifier_required');
-  const seen = new Map(), verified = [], held = [];
+  const seen = new Map(), usedReceipts = new Set(), verified = [], held = [];
   for (const raw of rawEvents) {
     const event = normalizeValueProofEvent(raw);
     const canonical = JSON.stringify(event);
@@ -135,6 +135,12 @@ export async function buildValueProofScorecard(rawEvents, {verifyEvidence} = {})
       held.push({event_id:event.event_id,reason:'independent_evidence_unverified'});
       continue;
     }
+    const receiptKey = event.evidence.source + ':' + event.evidence.ref;
+    if (usedReceipts.has(receiptKey)) {
+      held.push({event_id:event.event_id,reason:'receipt_reused_across_events'});
+      continue;
+    }
+    usedReceipts.add(receiptKey);
     verified.push(event);
   }
   const products = new Map();
