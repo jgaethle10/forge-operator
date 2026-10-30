@@ -75,6 +75,8 @@ test('reservoir inventory is never summed until reporting days, completeness, an
   assert.equal(snap.current_station_count,5);
   assert.equal(snap.status,'recent_five_station_observations_needing_time_zone_review');
   assert.equal(snap.total_storage_af,null);
+  assert.equal(snap.derived_provisional_sum_af,0);
+  assert.equal(snap.derived_sum_status,'five_site_arithmetic_same_source_reported_day');
   assert.equal(snap.publication_authorized,false);
   assert.deepEqual(snap.failures,[]);
 });
@@ -93,6 +95,7 @@ test('upstream 204 or failure yields partial coverage without silently summing m
   assert.equal(snap.current_station_count,3);
   assert.equal(snap.failures.length,1);
   assert.equal(snap.total_storage_af,null);
+  assert.equal(snap.derived_provisional_sum_af,null);
 });
 
 test('zone-free RISE timestamps are preserved, not secretly converted into UTC', async () => {
@@ -113,4 +116,24 @@ test('zone-free RISE timestamps are preserved, not secretly converted into UTC',
   assert.equal(snap.time_zone_unresolved_count,5);
   assert.equal(snap.observations[0].freshness,'recent_daily_time_zone_unresolved');
   assert.equal(snap.total_storage_af,null);
+  assert.equal(snap.derived_provisional_sum_af,4750);
+});
+
+test('mixed source-reported reservoir dates do not yield an artificial five-site sum', async () => {
+  let seq=0;
+  const mixed=await collectRiseYakimaReservoirs({
+    asOf:'2026-10-30T18:00:00Z',
+    fetchImpl:async()=>{
+      seq+=1;
+      const day=seq===1?'2026-10-28T06:00:00':'2026-10-29T06:00:00';
+      return {ok:true,status:200,json:async()=>({
+        ...fixture,
+        domain:{axes:{t:{values:[day]}}},
+        ranges:{'3':{axisNames:['t'],values:[100]}}
+      })};
+    }
+  });
+  assert.equal(mixed.observations.length,5);
+  assert.equal(mixed.derived_provisional_sum_af,null);
+  assert.equal(mixed.derived_sum_status,'held_incomplete_or_nonmatching_source_days');
 });
