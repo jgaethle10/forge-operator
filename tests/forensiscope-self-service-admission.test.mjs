@@ -50,6 +50,8 @@ test('exact price brackets and strict media preflight',()=>{
   const q=quote({...opts,durationSeconds:seconds});
   assert.equal(q.amount_cents,cents,String(seconds));
   assert.equal(q.state,'quote_only');
+  assert.equal(q.file_name,undefined,'Do not return potentially private filenames');
+  assert.equal(q.media_extension,'.mp4');
   assert.equal(q.checkout_created,false);
   assert.equal(q.upload_authorized,false);
   assert.equal(q.private_result_available,false);
