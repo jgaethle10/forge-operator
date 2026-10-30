@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { buildSignalFabricCandidates } from './signal-fabric-bridge.mjs';
 
 export const OFFICIAL_SOURCES = Object.freeze([
   {
@@ -147,6 +148,7 @@ if (process.argv[1] && import.meta.url === new URL('file://' + path.resolve(proc
   const outPath = outIndex > -1 ? process.argv[outIndex + 1] : null;
   if (outIndex > -1 && (!outPath || outPath.startsWith('--'))) throw new Error('--out requires a path');
   const result = await runOfficialWatch();
+  result.operator_signal_candidates = buildSignalFabricCandidates(result);
   const data = JSON.stringify(result, null, 2) + '\n';
   if (outPath) {
     fs.mkdirSync(path.dirname(path.resolve(outPath)), { recursive: true });
