@@ -96,3 +96,12 @@ test('a receipt ref alone cannot verify a changed amount or job', async () => {
   assert.equal(score.products.length,0);
   assert.equal(score.held_events[0].reason,'independent_evidence_unverified');
 });
+
+test('one upstream payment receipt cannot be counted for two jobs', async () => {
+  const a=event('payment_confirmed','same','work-saban','job-1',{amount_cents:1200});
+  const b={...event('payment_confirmed','second','work-saban','job-2',{amount_cents:1200}),evidence:a.evidence};
+  const score=await buildValueProofScorecard([a,b],{verifyEvidence:fakeTrustedAdapter});
+  assert.equal(score.verified_event_count,1);
+  assert.equal(score.products[0].provider_paid_jobs,1);
+  assert.equal(score.held_events[0].reason,'receipt_reused_across_events');
+});
