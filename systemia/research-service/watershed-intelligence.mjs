@@ -107,7 +107,8 @@ export function compileWatershedSnapshot({
     .map(row => ({
       station_id: row.metric_metadata.monitoring_location_id,
       kind: row.kind,
-      time: row.timestamp,
+      // Normalized Sentinel observations expose created_at, not raw timestamp.
+      time: row.created_at,
       value: finiteOrNull(row.metric_value),
       unit: row.metric_metadata.unit_of_measure,
       state: row.evidence_state,
