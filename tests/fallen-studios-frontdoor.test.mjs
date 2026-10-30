@@ -20,7 +20,7 @@ test("customer inquiry routes to the already owned commercial studio intake, no 
 });
 test("Fallen front door never invents hosted video, checkout, client testimonials or auto-delivery",()=>{
  assert.match(landing,/A publicly hosted video preview is not yet part of this page/);
- assert.match(landing,/no automatic purchase or guaranteed production slot/i);
+ assert.match(landing,/not an automatic purchase or guaranteed production slot/i);
  assert.match(landing,/checkout, if offered, follows written approval/i);
  assert.doesNotMatch(landing,/buy\.stripe\.com|<video[^>]+src=|verified client results|thousands of clients|auto[- ]deliver/i);
  assert.match(landing,/Evercraft Research/);
