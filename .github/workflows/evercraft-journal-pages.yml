@@ -334,6 +334,35 @@ jobs:
         env:
           BOARDROOM_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
         run: node scripts/probe-boardroom-public.mjs
+      - name: Verify HumanFilter beta page, privacy, and real browser ZIPs over HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/humanfilter-beta/"
+          dir="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}" -o "$dir/index.html"
+          grep -Fq 'Your feed.' "$dir/index.html"
+          grep -Fq 'Not an AI lie detector.' "$dir/index.html"
+          grep -Fq 'does not install into iPhone, Android' "$dir/index.html"
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}privacy.html" -o "$dir/privacy.html"
+          grep -Fq 'HumanFilter Extension Privacy Policy' "$dir/privacy.html"
+          for variant in Chromium-Desktop Edge-Beta Firefox-Temporary-Beta; do
+            file="Evercraft-HumanFilter-${variant}-v0.1.4.zip"
+            curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}download/${file}" -o "$dir/$file"
+            test "$(wc -c < "$dir/$file")" -gt 5000
+            unzip -tq "$dir/$file" >/dev/null
+          done
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}assets/popup.png" -o "$dir/popup.png"
+          test "$(head -c 8 "$dir/popup.png" | od -An -tx1 | tr -d ' \n')" = '89504e470d0a1a0a'
+          {
+            echo "## HumanFilter desktop beta HTTPS verified"
+            echo
+            echo "Landing page: $target"
+            echo "Privacy page, actual popup screenshot, Chromium/Edge/Firefox ZIPs passed remote download and archive integrity checks."
+            echo "Store review and real logged-in social-feed compatibility are independent gates."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Verify customer fallback doors
         shell: bash
         run: |
