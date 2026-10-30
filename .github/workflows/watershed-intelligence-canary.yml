@@ -35,12 +35,23 @@ jobs:
         run: |
           mkdir -p artifacts/watershed-canary
           node systemia/research-service/watershed-snapshot-cli.mjs --canary > artifacts/watershed-canary/latest.json
+      - name: Compile a non-publishing, source-traceable review brief
+        if: always()
+        shell: bash
+        run: |
+          if [ -s artifacts/watershed-canary/latest.json ]; then
+            node systemia/research-service/watershed-review-brief.mjs \
+              --input artifacts/watershed-canary/latest.json \
+              --out artifacts/watershed-canary/review-draft.md
+          fi
       - name: Preserve source observations and coverage receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: yakima-watershed-official-source-readback
-          path: artifacts/watershed-canary/latest.json
+          path: |
+            artifacts/watershed-canary/latest.json
+            artifacts/watershed-canary/review-draft.md
           if-no-files-found: warn
           retention-days: 14
       - name: Summarize evidence boundary
