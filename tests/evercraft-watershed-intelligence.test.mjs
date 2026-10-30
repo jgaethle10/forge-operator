@@ -212,4 +212,5 @@ test('review brief admits five provisional USBR readings only with source identi
   assert.ok(!text.includes('150% of normal'));
   assert.ok(!text.includes('Yakima reservoir storage: **not connected**'));
   assert.throws(()=>formatWatershedReviewBrief(snapshot,profile,null,{source_id:'malformed',observations:[]}),/invalid USBR/);
+  assert.throws(()=>formatWatershedReviewBrief(snapshot,profile,null,{...rise,derived_provisional_sum_af:999999}),/arithmetic receipt mismatch/);
 });
