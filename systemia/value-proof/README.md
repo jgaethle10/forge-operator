@@ -4,13 +4,13 @@ This is an internal, dependency-free Systemia module for evaluating **observed c
 
 ## What it records
 
-The reusable event envelope contains an opaque event ID, product key, job key, event type, UTC occurrence time, source type and opaque upstream receipt reference. Only event-specific whole-number values are accepted. Never place customer PII, messages, private input, or provider credentials in IDs or refs.
+The reusable event envelope contains an opaque event ID, product key, job key, event type, UTC occurrence time, source type and opaque upstream receipt reference. Only event-specific whole-number values are accepted. Financial entries require explicit `currency: 'USD'` in v1; other currencies are held at validation until a currency-aware rollup exists. Never place customer PII, messages, private input, or provider credentials in IDs or refs.
 
 Supported events: authorized inquiry; provider-confirmed payment and refund; delivery; customer acceptance; customer-attested before/after effort; and finalized direct-cost entry. Example targets: Work Saban (accepted task / saved effort); Evercraft Research (accepted evidence report); AI Boardroom (accepted decision review); ForensiScope (accepted processed media).
 
 ## Non-negotiable truth boundary
 
-`buildValueProofScorecard(events,{verifyEvidence})` **requires an independently implemented trusted verifier**. The adapter must confirm the *actual upstream receipt* and return `{verified:true,source:event.evidence.source,ref:event.evidence.ref}` only when it has independently verified the source. Source/ref matching alone is necessary but **not sufficient** to establish provider truth; it is the caller's responsibility to build a real authenticated source-specific adapter. The test verifier is an explicitly mocked double, not production authority.
+`buildValueProofScorecard(events,{verifyEvidence})` **requires an independently implemented trusted verifier**. The adapter must confirm the *actual upstream receipt* and return `{verified:true,source:event.evidence.source,ref:event.evidence.ref,claim_sha256:eventClaimDigest(event)}` only when it has independently fetched the authoritative receipt and checked **every claim field** (including job identity, currency, amount, timestamp and product) against that source. Simply hashing user-provided fields or confirming the reference exists is never verification. Source/ref/digest matching is necessary but **not sufficient** to establish provider truth; it is the caller's responsibility to build a real authenticated source-specific adapter. The test verifier is an explicitly mocked double, not production authority.
 
 No verifier means no scorecard. Unknown, failed, missing or mismatched proofs are held, not promoted. Exact event retries are idempotent; conflicting event IDs fail. Multiple payment events or revised cost/value claims for the same product/job are held for reconciliation. The code does not initiate or verify a bank settlement, create an order, make a payment, publish content, dispatch agents, or authorize customer delivery.
 
