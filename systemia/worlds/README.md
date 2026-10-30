@@ -37,3 +37,57 @@ The vault serves `/worlds/` and `/worlds/api/` on the same origin. On a static-o
 5. Introduce durable backup and operational abuse/recovery controls before offering paid storage.
 
 No GitHub Actions test here asserts that production ingress, DNS, TLS, device-specific Safari performance or real customers are live.
+
+
+## Owned hardware release operations
+
+**Merging this code does NOT activate public online saves.** The existing Evercraft public-edge runtime uses hostname leases. Give Worlds a dedicated, owned HTTPS hostname. Do not replace the Fabric, Journal or Saban routes, change shared Caddy settings, or expose port 8788 on the WAN.
+
+### Resident service preflight and activation
+
+On the intended owned Linux machine after updating its repository checkout:
+
+~~~bash
+# Dry-run: no filesystem/service changes
+node scripts/install-evercraft-worlds-vault-user.mjs --public-origin https://YOUR-OWNED-WORLDS-HOST
+
+# Opt in only after owned DNS, TLS and edge hostname routing are prepared
+node scripts/install-evercraft-worlds-vault-user.mjs --public-origin https://YOUR-OWNED-WORLDS-HOST --activate
+systemctl --user status evercraft-worlds-vault.service --no-pager
+~~~
+
+The Node 22+ user service binds only 127.0.0.1, uses private per-user state, and never edits DNS or shared ingress. The pinned HTTPS public origin fixes browser write-origin checks behind the edge's internal rewritten Host. Use the exact customer-facing hostname.
+
+### Private backup and restore drill
+
+~~~bash
+node systemia/worlds/worlds-vault-backup.mjs backup \
+  "$HOME/.local/state/evercraft/worlds-vault" \
+  "$HOME/.local/state/evercraft/worlds-private-backups"
+
+node systemia/worlds/worlds-vault-backup.mjs verify \
+  "$HOME/.local/state/evercraft/worlds-private-backups/<backup-folder>"
+
+# Offline only, to a NEW directory that must not exist
+node systemia/worlds/worlds-vault-backup.mjs restore \
+  "$HOME/.local/state/evercraft/worlds-private-backups/<backup-folder>" \
+  "$HOME/.local/state/evercraft/worlds-vault-restored"
+~~~
+
+Backups include **hashed private editing capabilities** and unlisted IDs. Never share them in public files, web routes or GitHub artifacts. SHA-256 manifest checks help detect accidental corruption but are **not** signatures, authentication or encryption. Off-device encrypted backups, retention and key handling remain separate operational requirements. Restore refuses to overwrite an existing vault.
+
+### External canary and deployment receipt
+
+After activating a controlled HTTPS hostname lease:
+
+~~~bash
+node scripts/probe-worlds-public.mjs https://YOUR-OWNED-WORLDS-HOST
+~~~
+
+The external probe is read-only. It proves the public TLS URL serves the expected vault health, customer page, and client module. A GitHub Actions manual gate also accepts the repository variable EVERCRAFT_WORLDS_PUBLIC_ORIGIN. This is **not** sufficient for release: perform an authenticated create/update, a restart, and a separate physical-device read, then retain an operational deployment receipt.
+
+### Explicit blockers before broad/paid public storage
+
+- The current creation limiter keys on the TCP peer. Visitors behind the same edge proxy share a 10-per-ten-minute quota; implement a trusted, spoof-resistant gateway identity/rate design for general release.
+- The initial store is limited to 2,000 scenes of 40 objects; no account recovery, automated backup rotation, customer deletion, moderation, distributed locking, or multi-node persistence exists yet.
+- Passing source tests or a read-only canary does not establish paid customers, reachable DNS, working write permissions on the public edge, or real iOS Safari performance.
