@@ -1,0 +1,113 @@
+name: HumanFilter beta QA
+
+on:
+  push:
+    branches: ["humanfilter/**", "humanfilter-beta-*"]
+    paths:
+      - "products/humanfilter/**"
+      - ".github/workflows/humanfilter-beta-qa.yml"
+  pull_request:
+    paths:
+      - "products/humanfilter/**"
+      - ".github/workflows/humanfilter-beta-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-and-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'playwright==1.55.0'
+      - run: python -m playwright install --with-deps chromium
+      - name: Run deterministic rules
+        working-directory: products/humanfilter
+        run: |
+          node --test tests/rules.test.cjs
+          node tests/disclosure_benchmark.cjs
+      - name: Cross-browser package manifest and integrity checks
+        working-directory: products/humanfilter
+        run: |
+          python scripts/build_browser_packages.py --output-dir dist
+          python -c "import zipfile,json,pathlib; r=pathlib.Path('dist'); z=zipfile.ZipFile(next(r.glob('*Firefox*.zip'))); m=json.loads(z.read('manifest.json')); assert m['browser_specific_settings']['gecko']['data_collection_permissions']['required']==['none']; assert m['manifest_version']==3; print('Firefox Gecko manifest and packaging valid')"
+      - name: Real packaged Chromium and Edge extension installation tests
+        working-directory: products/humanfilter
+        run: |
+          python - <<'PY'
+          import zipfile, pathlib, subprocess, os
+          for variant in ('Chromium-Desktop', 'Edge-Beta'):
+              zpath = pathlib.Path('dist') / ('Evercraft-HumanFilter-' + variant + '-v0.1.4.zip')
+              dest = pathlib.Path('dist') / ('installed-' + variant)
+              dest.mkdir(parents=True, exist_ok=True)
+              with zipfile.ZipFile(zpath) as zipf:
+                  assert zipf.testzip() is None
+                  zipf.extractall(dest)
+              env = dict(os.environ, HF_EXTENSION_DIR=str(dest.resolve()))
+              print('Testing installed package:', variant, flush=True)
+              subprocess.run(['python', 'tests/extension_e2e.py'], check=True, env=env)
+          PY
+      - name: Firefox add-on independent Mozilla lint
+        working-directory: products/humanfilter
+        run: |
+          mkdir -p dist/firefox-validation
+          unzip -q dist/Evercraft-HumanFilter-Firefox-Temporary-Beta-v0.1.4.zip -d dist/firefox-validation
+          npx --yes web-ext@10.8.0 lint --source-dir dist/firefox-validation --self-hosted --output=json --pretty > dist/firefox-lint-report.json
+          cat dist/firefox-lint-report.json
+      - name: Validate consumer page links, ZIP headers and product claims
+        working-directory: products/humanfilter
+        run: node --test tests/release_surface.test.cjs
+      - name: GitHub public beta URL and file integrity checks
+        working-directory: products/humanfilter
+        run: |
+          python - <<'PY'
+          import hashlib, urllib.request, pathlib, os
+          remote = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/' + os.environ['GITHUB_SHA'] + '/public/humanfilter-beta/download/'
+          names = [
+              'Evercraft-HumanFilter-v0.1.4.zip',
+              'Evercraft-HumanFilter-Chromium-Desktop-v0.1.4.zip',
+              'Evercraft-HumanFilter-Edge-Beta-v0.1.4.zip',
+              'Evercraft-HumanFilter-Firefox-Temporary-Beta-v0.1.4.zip',
+              'Evercraft-HumanFilter-Safari-Submission-Source-v0.1.4.zip',
+              'Evercraft-HumanFilter-Browser-Release-Kit-v0.1.4.zip'
+          ]
+          for name in names:
+              with urllib.request.urlopen(remote+name, timeout=25) as response:
+                  data = response.read()
+                  assert response.status == 200 and len(data)>5000, name
+              local = pathlib.Path('../../public/humanfilter-beta/download')/name
+              assert local.is_file(), local
+              assert hashlib.sha256(data).digest()==hashlib.sha256(local.read_bytes()).digest(), name
+              print('Public download verified:', name, len(data), flush=True)
+          PY
+      - name: Browser isolation and regression suite
+        working-directory: products/humanfilter
+        run: |
+          python tests/browser_smoke.py
+          python tests/reveal_recycle.py
+          python tests/feed_stress.py
+          python tests/popup_smoke.py
+      - name: Actual unpacked-extension injection on intercepted fixtures
+        working-directory: products/humanfilter
+        run: python tests/extension_e2e.py
+
+      - name: Public social-site diagnostics (non-gating; no login)
+        id: public_live
+        continue-on-error: true
+        working-directory: products/humanfilter
+        run: python tests/public_site_diagnostic.py
+      - name: Upload public-site evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-public-site-evidence
+          path: products/humanfilter/public-site-evidence/
+          if-no-files-found: warn
