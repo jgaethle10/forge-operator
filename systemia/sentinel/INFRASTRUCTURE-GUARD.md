@@ -1,7 +1,7 @@
 # Sentinel Infrastructure Guard | defense-first extension
 
-**Status:** Proposed passive evaluation kernel, not deployed monitoring and not
-a certification of Evercraft host security or cold-chain safety.
+**Status:** Proposed passive evaluation kernel plus a read-only Linux node-audit CLI.
+Neither is deployed monitoring, host hardening, or certification of safety.
 
 Systemia Sentinel already owns life-safety anomaly correlation. This extension
 accepts small, authenticated, *authorized* observation receipts and makes a
@@ -40,6 +40,42 @@ Existing Edge rules governing signed DNS zone snapshots, no public recursion,
 and verified replica promotion remain mandatory. An active unit, CI pass, or
 GitHub green check is never proof of external network protection.
 
+## Read-only local assessment for Node001 and Node002
+
+From a checkout that contains this PR branch, run as the ordinary, non-root
+operator on each **owned Linux environment** (Debian and Ubuntu WSL):
+
+```bash
+node scripts/evercraft-node-security-audit.mjs
+```
+
+The CLI reads `ss -H -ltn`, `systemctl is-active` for common SSH units,
+`sshd -T` for selected effective SSH defaults, and `ufw status` where
+available. It executes commands without a shell, and makes **no network
+connections, configuration changes, or privilege escalation attempts**.
+
+The printed JSON includes only counts and classifications: no raw IP
+addresses, listening ports, hostname, credentials, router topology, or
+complete SSH/firewall rules. Keep even sanitized operational receipts private.
+
+- Wildcard TCP bind is an **indicator for review**, not proof of public access.
+- `sshd -T` with no connection context cannot establish every `Match` block
+  or real access policy; its results are leads for operator validation.
+- `ufw active` is **not** sufficient evidence of firewall enforcement.
+  `ufw inactive` does not exclude nftables or upstream filtering.
+- A service shown inactive does not exclude socket activation, containers,
+  alternate init systems, or other remote access paths.
+- No UDP audit, router port-forward inspection, patch-freshness assessment,
+  real backup-restoration drill, external reachability test, or live threat
+  detection is included.
+- Run on the host whose security is in question; running on a CI runner or
+  an assistant sandbox **does not** assess Evercraft-owned machines.
+
+Use each report to form a prioritized, operator-approved remediation plan.
+Avoid changing remote SSH or firewall rules without a known-good access path,
+backups, and a verified rollback plan. Never expose a sensitive host report
+through a public repository or application.
+
 ## Cold-chain and other physical infrastructure pilots
 
 Only connect to equipment **owned by Evercraft or explicitly authorized in
@@ -77,17 +113,18 @@ and explicitly separates a *reported* safety alarm from confirmed danger.
 
 Offline proof:
 ```bash
-node --test systemia/sentinel/infrastructure-guard.test.mjs
+node --test systemia/sentinel/infrastructure-guard.test.mjs systemia/sentinel/node-security-posture.test.mjs
 ```
 
-The tests cover quiet healthy observations, false independence, anomalous
-controller signals, independently corroborated deviations, safety-review
-escalation, stale/missing/error input, and future-dated telemetry.
+Tests cover independent anomaly signals, misleading same-controller witness
+counts, reported safety alarms, stale/missing/error sources, future-dated
+telemetry, SSH authentication findings, listeners, firewall evidence limits,
+and privacy-minimizing outputs.
 
-**Not yet accomplished:** installed sensors, live adapters, node hardening,
-WAN/firewall review, alert delivery, recovery drills, SOC operation, real-world
-sensitivity/false-positive measurement, customer agreements, or safety/OT
-certification.
+**Not yet accomplished:** installed sensors, live adapters, production node
+audits, host hardening, WAN/firewall review, alert delivery, recovery drills,
+real-world sensitivity/false-positive measurement, customer agreements, or
+safety/OT certification.
 
 No live roll-out or production declaration until those have independent
 receipts. No autonomous changes to physical equipment.
