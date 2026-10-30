@@ -53,7 +53,7 @@ function createFixture(overrides={}){
    method,headers:{...(auth?{authorization:'Bearer '+auth}:{}),...headers},
    ...(body!==undefined?{body:Buffer.isBuffer(body)?body:JSON.stringify(body)}:{})
   });
-  return {status:result.status,headers:result.headers,body:await result.json()};
+  const raw=await result.text();return {status:result.status,headers:result.headers,body:raw?JSON.parse(raw):null};
  };
  const create=async(base)=>request(base,'/v1/forensiscope/uploads',{
   method:'POST',body:{order_key:orderKey,file_size_bytes:source.length,media_extension:'.mp4'},
