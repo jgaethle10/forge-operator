@@ -61,3 +61,21 @@ The Markdown output has explicit claim-level evidence, source ledger, content ha
 **Operator commands:** `node systemia/research-service/watershed-snapshot-cli.mjs --profile` inspects source identities with **no network access**. `node systemia/research-service/watershed-snapshot-cli.mjs --live` makes bounded requests to official NRCS and USGS hosts, prints a JSON snapshot to stdout, and returns an error status when one source fails. Neither command schedules monitoring or publishes customer content.
 
 **Next independent release gates:** Run and receipt a live AWDB fetch; validate USBR daily reservoir data and its units/time semantics; add matched official SWE normals and denominator-stability handling; independently verify the claims in a human-reviewed brief before any public claims or commercial offering. The autonomous drone-navigation research lane remains separate and has no flight authorization in this module.
+
+### USBR five-reservoir source discovery (October 30, 2026)
+
+The official [RISE catalog](https://data.usbr.gov/) identifies five **observed, daily-instant storage** series with units `af` (acre-feet). Identifiers are source metadata, not proof of live reading freshness:
+
+| Yakima reservoir | Hydromet code | RISE location ID | RISE catalog item |
+| --- | --- | ---: | ---: |
+| Keechelus | KEE | 7187 | [131246](https://data.usbr.gov/catalog/8304/item/131246) |
+| Kachess | KAC | 7186 | [131227](https://data.usbr.gov/catalog/8303/item/131227) |
+| Cle Elum | CLE | 7170 | [129798](https://data.usbr.gov/catalog/8199/item/129798) |
+| Bumping | BUM | 3647 | [129605](https://data.usbr.gov/catalog/8187/item/129605) |
+| Rimrock | RIM | 7196 | [132729](https://data.usbr.gov/catalog/8410/item/132729) |
+
+**Prototype adapter:** `usbr-rise-reservoirs.mjs` uses the first-party RISE OGC EDR `/api/ogc/collections/rise/locations/{id}` route with parameter `3` (storage, not reservoir elevation), a bounded interval, fixed HTTPS host, and strict CoverageJSON decoding. Exact series availability and live response shape still require the independent API canary. A 204 or an ambiguous/mismatched result produces an explicit hold; zero storage remains a valid numeric zero. USBR states measurements are **provisional and subject to revision**.
+
+**Manual diagnostic:** `node systemia/research-service/usbr-reservoir-probe.mjs --probe` requests five observed daily-storage locations, emits status and evidence references, and exits nonzero if all five do not supply recent values. The dedicated watershed canary includes this step under `continue-on-error` solely to preserve diagnostic evidence without falsely making the earlier USGS/NRCS pipeline appear degraded. Do not call the RISE lane integrated, operational or verified until live results corroborate the API contract. The daily workflow is only active after merging to main. No basin storage total or percent full is calculated until all five source dates and reporting cutoffs are reconciled.
+
+**Public communications:** Do not extrapolate a water-supply forecast from October SWE. Separate sensor status, official forecasts, independent reviewed interpretation, and customer-approved delivery.
