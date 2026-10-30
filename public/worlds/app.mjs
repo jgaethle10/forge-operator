@@ -2,7 +2,17 @@ import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,c
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
+import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
+let cloudOwner=null;
+try{cloudOwner=validateOwner(JSON.parse(localStorage.getItem(CLOUD_KEY)||'null'));}catch{}
+function forgetCloudOwner(){cloudOwner=null;try{localStorage.removeItem(CLOUD_KEY);}catch{}}
+vaultAvailable().then(available=>{
+ if(!available)return;
+ $('publishOnline').classList.remove('hidden');
+ $('cloudStatus').textContent='Owned online saves available. Your shared scenes are unlisted.';
+}).catch(()=>{});
+
 const gl=canvas.getContext('webgl2',{antialias:false,alpha:false,powerPreference:'high-performance'});
 if(!gl){$('intro').innerHTML='<h1>WebGL 2 is needed.</h1><p>Try a current version of Chrome, Safari, Firefox or Edge with graphics enabled.</p>';throw Error('WebGL2 unavailable');}
 const vs=`#version 300 es
@@ -177,6 +187,7 @@ $('interact').onclick=interact;$('save').onclick=()=>{
  if(visitingShared){
   if(!window.confirm('Save a copy of this shared world? This will replace your existing local Mossmere save.'))return;
   visitingShared=false;
+  forgetCloudOwner();
   $('save').textContent='Save';
  }
  state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();
@@ -193,13 +204,17 @@ $('share').onclick=async()=>{
   window.prompt('Copy this world link:',url);
  }catch(err){notify('Could not prepare link: '+err.message);}
 };
-function readSharedInvitation(){
- const token=new URLSearchParams(location.hash.replace(/^#/,'')).get('scene');
- if(!token)return;
+async function readSharedInvitation(){
+ const params=new URLSearchParams(location.hash.replace(/^#/,''));
+ const token=params.get('scene'),worldId=params.get('world');
+ if(!token&&!worldId)return;
  try{
-  pendingShared=decodeSharedScene(token);
+  pendingShared=token?decodeSharedScene(token):await fetchPublishedWorld(worldId);
   $('sharedInvite').classList.remove('hidden');
- }catch(err){console.warn('Shared scene rejected:',err.message);}
+ }catch(err){
+  console.warn('World invitation unavailable:',err.message);
+  $('intro').querySelector('p').textContent='This shared world could not load. You can still explore your own Mossmere world.';
+ }
 }
 $('visitShared').onclick=()=>{
  if(!pendingShared)return;
@@ -214,9 +229,24 @@ $('keepLocal').onclick=()=>{
  history.replaceState(null,'',location.pathname+location.search);
 };
 readSharedInvitation();
+$('publishOnline').onclick=async()=>{
+ if(visitingShared){notify('Save a local copy before publishing this visited scene.');return;}
+ const button=$('publishOnline');button.disabled=true;button.textContent='Saving…';
+ try{
+  cloudOwner=await publishWorld(state,cloudOwner);
+  localStorage.setItem(CLOUD_KEY,JSON.stringify(cloudOwner));
+  const url=publishedWorldUrl(location.href,cloudOwner.id);
+  $('cloudStatus').textContent='Online revision '+cloudOwner.version+' · unlisted link ready';
+  if(navigator.clipboard?.writeText){
+   try{await navigator.clipboard.writeText(url);notify('World saved online. Its visit link was copied!');}
+   catch{window.prompt('Your online world visit link:',url);notify('World saved online.');}
+  }else{window.prompt('Your online world visit link:',url);notify('World saved online.');}
+ }catch(err){notify('Online save did not complete: '+err.message);}
+ finally{button.disabled=false;button.textContent='Save online';}
+};
 $('commandForm').onsubmit=e=>{e.preventDefault();runCommand($('command').value);};document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('download').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evercraft-worlds-mossmere.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500);};
-$('upload').onchange=async e=>{try{const file=e.target.files?.[0];if(!file||file.size>200000)throw Error('Choose a world JSON under 200 KB');const w=validateWorld(JSON.parse(await file.text()));state=w;camera.x=w.player.x;camera.z=w.player.z;camera.yaw=w.player.yaw;visitingShared=false;$('save').textContent='Save';persist();notify('World imported successfully.');}catch(err){notify(`Import rejected: ${err.message}`);}e.target.value='';};
+$('upload').onchange=async e=>{try{const file=e.target.files?.[0];if(!file||file.size>200000)throw Error('Choose a world JSON under 200 KB');const w=validateWorld(JSON.parse(await file.text()));state=w;camera.x=w.player.x;camera.z=w.player.z;camera.yaw=w.player.yaw;visitingShared=false;forgetCloudOwner();$('save').textContent='Save';persist();notify('World imported successfully.');}catch(err){notify(`Import rejected: ${err.message}`);}e.target.value='';};
 addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
 let pointer=null;canvas.addEventListener('pointerdown',e=>{if(!started||editorOpen||!$('modal').classList.contains('hidden'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;camera.yaw+=dx*.004;camera.pitch=Math.max(-1.18,Math.min(1.18,camera.pitch-dy*.0034));pointer.x=e.clientX;pointer.y=e.clientY;});canvas.addEventListener('pointerup',()=>{pointer=null;});
 let stickPointer=null;const stick=$('joystick'),thumb=$('joystickThumb');function stickMove(e){const r=stick.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),rad=Math.max(25,r.width*.4),scale=Math.min(1,rad/(Math.hypot(x,y)||1));joystick={x:x*scale/rad,y:y*scale/rad};thumb.style.transform=`translate(${joystick.x*rad}px,${joystick.y*rad}px)`;}stick.addEventListener('pointerdown',e=>{stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);stickMove(e);});stick.addEventListener('pointermove',e=>{if(stickPointer===e.pointerId)stickMove(e);});function releaseStick(){stickPointer=null;joystick={x:0,y:0};thumb.style.transform='translate(0,0)';}stick.addEventListener('pointerup',releaseStick);stick.addEventListener('pointercancel',releaseStick);
