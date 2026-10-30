@@ -44,3 +44,18 @@ The Markdown output has explicit claim-level evidence, source ledger, content ha
 7. Audited unit costs, approved pricing, approved Research SKU, and measurable buyer demand.
 
 **No sale, independent research run, payment or customer fulfillment is claimed by this source release.**
+
+
+## Watershed Intelligence | Yakima Basin research slice
+
+`watershed-intelligence.mjs` is a bounded **research-only** reader and snapshot compiler. It does not create Sentinel incidents, operate drones, publish customer reports, initiate payments, or activate a resident scheduler. Reuses Sentinel's existing USGS Water Data observation adapter but keeps basin intelligence outside its life-safety event engine.
+
+**Data sources:** NRCS AWDB `/services/v1/data` for requested Washington SNOTEL/SNOLITE daily WTEQ (snow-water equivalent) and SNWD (snow depth); USGS modern Water Data latest-continuous via the existing Sentinel adapter for river discharge and gage height. Station IDs must be independently verified from official station directories before live runs. The supplied `yakima-basin-wa` Sentinel profile already records four USGS river locations; **no SNOTEL station is asserted as verified by this change**.
+
+**Collector entry point:** `collectYakimaWatershed({ asOf, snowStationIds, riverLocationIds })`. Explicit lists are mandatory for the relevant source to be queried. Returns a source-scoped, non-publishing snapshot with records, freshness flags, holds and failure receipts. `fetchImpl` can be injected for fixture tests. The collector uses bounded date windows and fixed official HTTPS hosts. No ambient environment secrets or customer input are sent to data providers.
+
+**Truth rules:** Missing is never zero. USGS provisional observations remain `observed` rather than `verified`. Late readings become `stale`. No percent-of-normal is calculated without same-date official climatological normals and a documented basin aggregation method, especially in October when normal SWE is small. Reservoir data remains `not_verified` until a separate USBR ingestion/validation adapter exists. No seasonal supply forecast is inferred. Source failures return explicit `partial` results, never healthy readings.
+
+**Fixture gate:** `npm run test:watershed-intelligence`, also included in `npm run check`. Fixture passes do not prove live NRCS reachability, continuous deployment or customer suitability.
+
+**Next independent release gates:** Verify an actual Yakima NRCS station set; run and receipt a live AWDB fetch; validate USBR daily reservoir data and its units/time semantics; add matched official SWE normals and denominator-stability handling; independently verify the claims in a human-reviewed brief before any public claims or commercial offering. The autonomous drone-navigation research lane remains separate and has no flight authorization in this module.
