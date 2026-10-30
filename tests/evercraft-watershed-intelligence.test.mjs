@@ -183,3 +183,33 @@ test('review brief labels provenance and never invents percent-normal or reservo
   assert.ok(!brief.includes('150% of normal'));
   assert.throws(() => formatWatershedReviewBrief({ schema: 'wrong' }, profile), /schema/);
 });
+
+test('review brief admits five provisional USBR readings only with source identity and explicit derivation', async () => {
+  const {readFileSync}=await import('node:fs');
+  const profile=JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json',import.meta.url),'utf8'));
+  const snapshot=compileWatershedSnapshot({asOf});
+  const items=[
+    ['KEE',131246,9485],['KAC',131227,57215],['CLE',129798,23150],['BUM',129605,4244],['RIM',132729,55127]
+  ];
+  const rise={
+    source_id:'usbr-rise-edr-reservoir-storage',
+    status:'recent_five_station_observations_needing_time_zone_review',
+    current_station_count:5,
+    failures:[],
+    observations:items.map(([code,id,value])=>({
+      station_id:code,catalog_item_id:id,value,unit:'af',
+      source_day_reported:'2026-10-29',freshness:'recent_daily_time_zone_unresolved'
+    })),
+    derived_provisional_sum_af:149221,
+    derived_sum_source_reported_day:'2026-10-29'
+  };
+  const text=formatWatershedReviewBrief(snapshot,profile,'a'.repeat(64),rise,'b'.repeat(64));
+  assert.match(text,/Bureau of Reclamation reservoir observations/);
+  assert.match(text,/149221 acre-feet/);
+  assert.match(text,/provisional observed volumes/);
+  assert.match(text,/not percent full/i);
+  assert.match(text,/human review required/);
+  assert.ok(!text.includes('150% of normal'));
+  assert.ok(!text.includes('Yakima reservoir storage: **not connected**'));
+  assert.throws(()=>formatWatershedReviewBrief(snapshot,profile,null,{source_id:'malformed',observations:[]}),/invalid USBR/);
+});
