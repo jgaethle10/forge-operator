@@ -1,3 +1,5 @@
+import {createHash} from 'node:crypto';
+
 // Evercraft Systemia value-proof ledger, v1.
 // A proof-filtered scorecard, not a payment processor or production telemetry source.
 export const VALUE_PROOF_SCHEMA = 'evercraft.systemia.value-proof.v1';
@@ -19,7 +21,7 @@ const MONEY_FIELD = Object.freeze({
 const TEXT = /^[a-z0-9][a-z0-9._:-]{0,119}$/i;
 const EVENT_KEYS = new Set([
   'event_id','product_key','job_key','kind','occurred_at','evidence',
-  'amount_cents','cost_cents','baseline_minutes','actual_minutes'
+  'amount_cents','cost_cents','currency','baseline_minutes','actual_minutes'
 ]);
 const EVIDENCE_KEYS = new Set(['source','ref']);
 
@@ -63,6 +65,8 @@ export function normalizeValueProofEvent(raw) {
   if (MONEY_FIELD[kind]) {
     const field = MONEY_FIELD[kind];
     event[field] = cents(raw[field], field);
+    if (raw.currency !== 'USD') fail('currency_unsupported_v1');
+    event.currency = 'USD';
     if (kind !== 'cost_finalized' && event[field] === 0) fail('payment_amount_zero');
   }
   if (kind === 'value_confirmed') {
@@ -70,7 +74,10 @@ export function normalizeValueProofEvent(raw) {
     event.actual_minutes = minutes(raw.actual_minutes, 'actual_minutes');
   }
   const permitted = new Set(['event_id','product_key','job_key','kind','occurred_at','evidence']);
-  if (MONEY_FIELD[kind]) permitted.add(MONEY_FIELD[kind]);
+  if (MONEY_FIELD[kind]) {
+    permitted.add(MONEY_FIELD[kind]);
+    permitted.add('currency');
+  }
   if (kind === 'value_confirmed') {
     permitted.add('baseline_minutes');
     permitted.add('actual_minutes');
@@ -104,6 +111,9 @@ function outcomeSummary(key, jobs) {
     confidence: 'verified_submitted_receipts_only_not_complete_market_or_bank_coverage'
   };
 }
+export function eventClaimDigest(raw) {
+  return createHash('sha256').update(JSON.stringify(normalizeValueProofEvent(raw)),'utf8').digest('hex');
+}
 export async function buildValueProofScorecard(rawEvents, {verifyEvidence} = {}) {
   if (!Array.isArray(rawEvents)) fail('events_must_be_array');
   if (typeof verifyEvidence !== 'function') fail('trusted_verifier_required');
@@ -120,7 +130,8 @@ export async function buildValueProofScorecard(rawEvents, {verifyEvidence} = {})
     try { proof = await verifyEvidence(event); } catch { proof = null; }
     // Never accept a caller-supplied verified flag, a checkout URL, or a bare receipt ref.
     if (!proof || proof.verified !== true ||
-        proof.source !== event.evidence.source || proof.ref !== event.evidence.ref) {
+        proof.source !== event.evidence.source || proof.ref !== event.evidence.ref ||
+        proof.claim_sha256 !== eventClaimDigest(event)) {
       held.push({event_id:event.event_id,reason:'independent_evidence_unverified'});
       continue;
     }
