@@ -117,6 +117,15 @@ ui.setEnabled(true);
 assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.state,'verified','2D and 3D retain state consistency');
 ui.reset();
 assert.equal(ui.getState().writer,'idle');
+ui.consumeExecutorEvent({id:'synthetic-2',state:'running'});
+assert.equal(ui.getState().writer,'running');
+ui.consumeExecutorEvent({id:'synthetic-2',state:'verified'});
+assert.equal(ui.getState().writer,'verified');
+ui.consumeExecutorEvent({id:'synthetic-4',state:'failed'});
+assert.equal(ui.getState().auditor,'failed');
+ui.consumeExecutorEvent({id:'synthetic-999',state:'running'});
+assert.equal(Object.keys(ui.getState()).length,6);
+ui.reset();
 assert.equal(originalZoom,0.72);
 console.log('Work Saban CSS3D spatial office: PASS (six character faces, rooms, observer states, mode persistence and camera constraints).');
 
