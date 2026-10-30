@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildValueProofScorecard,normalizeValueProofEvent,VALUE_PROOF_SCHEMA} from '../systemia/value-proof/ledger.mjs';
+import {buildValueProofScorecard,normalizeValueProofEvent,VALUE_PROOF_SCHEMA,eventClaimDigest} from '../systemia/value-proof/ledger.mjs';
 
 const at = '2026-10-29T23:00:00.000Z';
 const sources = {
@@ -12,11 +12,13 @@ const sources = {
 function event(kind, suffix, product_key='work-saban', job_key='job-1', extra={}) {
   return {
     event_id:'evt-' + suffix, product_key, job_key, kind, occurred_at:at,
-    evidence:{source:sources[kind],ref:'receipt-' + suffix}, ...extra
+    evidence:{source:sources[kind],ref:'receipt-' + suffix},
+    ...( ['payment_confirmed','refund_confirmed','cost_finalized'].includes(kind) ? {currency:'USD'} : {} ),
+    ...extra
   };
 }
 const fakeTrustedAdapter = async e => ({
-  verified:true,source:e.evidence.source,ref:e.evidence.ref
+  verified:true,source:e.evidence.source,ref:e.evidence.ref,claim_sha256:eventClaimDigest(e)
 }); // Test double ONLY: production requires authoritative provider-specific adapters.
 
 test('fail closed without independent evidence verification', async () => {
@@ -77,7 +79,20 @@ test('verified refunds do not become bank settlement or business profit', async 
 });
 test('reject mismatched evidence source and invented economic values', () => {
   assert.throws(()=>normalizeValueProofEvent(event('payment_confirmed','bad','work-saban','x',{amount_cents:-1})),/amount_cents_invalid/);
+  assert.throws(()=>normalizeValueProofEvent(event('payment_confirmed','currency','work-saban','x',{amount_cents:100,currency:'EUR'})),/currency_unsupported_v1/);
+  assert.throws(()=>normalizeValueProofEvent({...event('payment_confirmed','missing','work-saban','x',{amount_cents:100}),currency:undefined}),/currency_unsupported_v1/);
   assert.throws(()=>normalizeValueProofEvent(event('value_confirmed','bad','work-saban','x',{baseline_minutes:12,actual_minutes:1.2})),/actual_minutes_invalid/);
   assert.throws(()=>normalizeValueProofEvent({...event('delivered','bad'),evidence:{source:'payment_provider',ref:'fake'}}),/evidence_source_mismatch/);
   assert.throws(()=>normalizeValueProofEvent({...event('delivered','bad'),actual_minutes:1}),/field_not_allowed_for_kind/);
+});
+
+test('a receipt ref alone cannot verify a changed amount or job', async () => {
+  const payment=event('payment_confirmed','bind','work-saban','job-a',{amount_cents:100});
+  const claimedDigest=eventClaimDigest(payment);
+  const tampered={...payment,amount_cents:900};
+  const score=await buildValueProofScorecard([tampered],{verifyEvidence:async e=>({
+    verified:true,source:e.evidence.source,ref:e.evidence.ref,claim_sha256:claimedDigest
+  })});
+  assert.equal(score.products.length,0);
+  assert.equal(score.held_events[0].reason,'independent_evidence_unverified');
 });
