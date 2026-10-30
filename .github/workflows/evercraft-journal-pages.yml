@@ -276,6 +276,29 @@ jobs:
             echo "The request email is an inquiry, not checkout, payment or completed delivery."
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Verify ForensiScope local-file preflight preview over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/forensiscope/self-service/"
+          dir="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "$target" -o "$dir/index.html"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "${target}app.mjs" -o "$dir/app.mjs"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "${target}tiers.json" -o "$dir/tiers.json"
+          grep -Fq '<meta name="robots" content="noindex,nofollow">' "$dir/index.html"
+          grep -Fq '<input id="file" type="file"' "$dir/index.html"
+          grep -Fq 'Secure upload, self-service checkout, processing, and private result delivery are not yet available' "$dir/index.html"
+          grep -Fq 'URL.createObjectURL(file)' "$dir/app.mjs"
+          grep -Fq 'quote_only_not_checkout' "$dir/tiers.json"
+          echo "FORENSISCOPE_LOCAL_PREFLIGHT_PREVIEW_HTTPS_VERIFIED=${target}"
+          {
+            echo "## ForensiScope preview static files verified"
+            echo
+            echo "Live HTTPS preview assets: $target"
+            echo "Local-file metadata and price display only; NO intake, paid checkout or delivery release."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Verify owned EverMaps staging over deployed HTTPS
         shell: bash
         run: |
