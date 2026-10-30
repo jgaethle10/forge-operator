@@ -1,3 +1,4 @@
+import { formatWatershedReviewBrief } from '../systemia/research-service/watershed-review-brief.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -162,4 +163,23 @@ test('canary coverage is explicitly minimum sensor connectivity, never basin rea
   assert.equal(connected.basin_representation_verified, false);
   assert.equal(connected.reservoir_connected, false);
   assert.throws(() => evaluateWatershedCoverage({ schema: 'wrong' }), /schema mismatch/);
+});
+
+test('review brief labels provenance and never invents percent-normal or reservoir storage', async () => {
+  const { readFileSync } = await import('node:fs');
+  const profile = JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json', import.meta.url), 'utf8'));
+  const snapshot = compileWatershedSnapshot({
+    asOf, snowStationIds: [station], riverLocationIds: [usgsId],
+    snowReadings: [{ station_id: station, kind: 'WTEQ', time: '2026-10-29', value: 0.8, unit: 'in', state: 'observed' }]
+  });
+  const brief = formatWatershedReviewBrief(snapshot, profile, 'a'.repeat(64));
+  assert.ok(brief.includes('REVIEW DRAFT'));
+  assert.ok(brief.includes('Bumping Ridge'));
+  assert.ok(brief.includes('not available')); // station or gauge coverage is incomplete
+  assert.ok(brief.includes('Percentage of normal: **not calculated**'));
+  assert.ok(brief.includes('Yakima reservoir storage: **not connected**'));
+  assert.ok(brief.includes('Exact canary JSON SHA-256: ' + 'a'.repeat(64)));
+  assert.ok(brief.includes('payment_verified=false'));
+  assert.ok(!brief.includes('150% of normal'));
+  assert.throws(() => formatWatershedReviewBrief({ schema: 'wrong' }, profile), /schema/);
 });
