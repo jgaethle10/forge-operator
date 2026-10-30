@@ -139,7 +139,8 @@ try{
     const onlineUrl=await page.evaluate(()=>window.__lastOnlineLink);
     assert.ok(onlineUrl?.includes('#world='+owner.id),profile.name+': online share URL not prepared');
     assert.ok(!onlineUrl.includes(owner.edit_token),profile.name+': edit capability leaked into sharing URL');
-    const second=await context.newPage();
+    const visitorContext=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile,hasTouch:profile.hasTouch,deviceScaleFactor:1});
+    const second=await visitorContext.newPage();
     const secondResponse=await second.goto(onlineUrl,{waitUntil:'domcontentloaded',timeout:20000});
     assert.equal(secondResponse?.status(),200,profile.name+': online guest route unavailable');
     await second.locator('#sharedInvite').waitFor({state:'visible',timeout:10000});
@@ -147,10 +148,10 @@ try{
     await second.locator('#start').click();
     await second.locator('#buildToggle').click();
     await second.locator('[data-command="sky night"]').click();
-    const beforeCopy=await second.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1'));
-    const originalSaved=await page.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1'));
-    assert.equal(beforeCopy,originalSaved,profile.name+': online guest preview mutated saved local world');
-    await second.close();
+    const beforeCopy=await second.evaluate(()=>({world:localStorage.getItem('evercraft.worlds.mossmere.v1'),owner:localStorage.getItem('evercraft.worlds.owner-capability.v1')}));
+    assert.equal(beforeCopy.world,null,profile.name+': online guest wrote local world without consent');
+    assert.equal(beforeCopy.owner,null,profile.name+': online guest received owner edit capability');
+    await visitorContext.close();
     await page.locator('#publishOnline').click();
     await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Online revision 2'),null,{timeout:10000});
     const persisted=await page.evaluate(async id=>
