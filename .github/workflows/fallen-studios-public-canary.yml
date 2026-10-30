@@ -1,0 +1,39 @@
+name: Fallen Studios public HTTPS readback
+on:
+  workflow_run:
+    workflows: ["Evercraft public web fallback"]
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fallen-studios-public-readback
+  cancel-in-progress: true
+jobs:
+  studio-door:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check exact customer-facing studio and existing inquiry pages
+        id: verify
+        continue-on-error: true
+        env:
+          FALLEN_STUDIOS_PUBLIC_RECEIPT: ${{ runner.temp }}/fallen-studios-public-canary.json
+        run: node scripts/probe-fallen-studios-public.mjs --gate
+      - name: Preserve read-only receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-studios-public-https-proof
+          path: ${{ runner.temp }}/fallen-studios-public-canary.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Fail if customer page cannot be verified
+        if: steps.verify.outcome == 'failure'
+        run: |
+          echo "Owned Fallen Studios route not independently verified." >&2
+          exit 1

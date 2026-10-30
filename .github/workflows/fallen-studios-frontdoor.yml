@@ -1,0 +1,30 @@
+name: Fallen Studios customer front door
+on:
+  pull_request:
+    paths:
+      - 'public/fallen-studios/**'
+      - 'tests/fallen-studios-frontdoor.test.mjs'
+      - 'tests/fallen-studios-public-canary.test.mjs'
+      - 'scripts/probe-fallen-studios-public.mjs'
+      - '.github/workflows/fallen-studios-frontdoor.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/fallen-studios/**'
+      - 'tests/fallen-studios-frontdoor.test.mjs'
+      - 'tests/fallen-studios-public-canary.test.mjs'
+      - 'scripts/probe-fallen-studios-public.mjs'
+      - '.github/workflows/fallen-studios-frontdoor.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/fallen-studios-frontdoor.test.mjs tests/fallen-studios-public-canary.test.mjs
