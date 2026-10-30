@@ -19,20 +19,21 @@ A publisher with an Ed25519 private key can sign one original Passage demonstrat
 
 Run from the root of a local checkout:
 
-    mkdir -m 700 ./passage-local-lab
-    openssl genpkey -algorithm Ed25519 -out ./passage-local-lab/editor-private.pem
-    chmod 600 ./passage-local-lab/editor-private.pem
-    openssl pkey -in ./passage-local-lab/editor-private.pem -pubout -out ./passage-local-lab/editor-public.pem
+    export PASSAGE_LAB="$(mktemp -d)"
+    chmod 700 "$PASSAGE_LAB"
+    openssl genpkey -algorithm Ed25519 -out "$PASSAGE_LAB/editor-private.pem"
+    chmod 600 "$PASSAGE_LAB/editor-private.pem"
+    openssl pkey -in "$PASSAGE_LAB/editor-private.pem" -pubout -out "$PASSAGE_LAB/editor-public.pem"
 
 Issue one package from the original demo catalog:
 
-    node scripts/passage-signed-package.mjs issue --article=check-a-claim --key=./passage-local-lab/editor-private.pem --out=./passage-local-lab/demo-package.json --ttl-days=7
+    node scripts/passage-signed-package.mjs issue --article=check-a-claim --key="$PASSAGE_LAB/editor-private.pem" --out="$PASSAGE_LAB/demo-package.json" --ttl-days=7
 
 On a receiving device with the package and **separately trusted** public key, verify:
 
-    node scripts/passage-signed-package.mjs verify --file=./passage-local-lab/demo-package.json --trusted-key=./passage-local-lab/editor-public.pem --out=./passage-local-lab/verified-guide.txt
+    node scripts/passage-signed-package.mjs verify --file="$PASSAGE_LAB/demo-package.json" --trusted-key="$PASSAGE_LAB/editor-public.pem" --out="$PASSAGE_LAB/verified-guide.txt"
 
-Never share the private key; delete demo private keys after testing. Keys remain out of the web build and all CI artifacts. The web UI's "Verify a carried file" area accepts the package JSON and public PEM and checks them locally. It only reveals the save button after signature, content digest, expiry, type and size checks succeed.
+The temporary folder intentionally sits **outside the repository** to reduce the risk of accidentally committing a private key. Never share the private key; delete demo private keys after testing. Keys remain out of the web build and all CI artifacts. The web UI's "Verify a carried file" area accepts the package JSON and public PEM and checks them locally. It only reveals the save button after signature, content digest, expiry, type and size checks succeed.
 
 ## Signed envelope contract
 
