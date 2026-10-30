@@ -78,12 +78,12 @@ jobs:
               const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/work-saban/latest.json'));
               const n=d.counts;
               fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-                '## Work Saban Clip launch (read-only)\\n'+
-                'Campaign: '+d.campaign_id+'\\nState: '+d.status+'\\n'+
-                'Unapproved / held: '+n.approval_hold+'\\n'+
-                'Provider receipts observed: '+n.provider_receipt_recorded+'\\n'+
-                'Provider receipt source available: '+d.receipt_source_available+'\\n'+
-                'No action was posted or payment taken in this check.\\n');
+                '## Work Saban Clip launch (read-only)\n'+
+                'Campaign: '+d.campaign_id+'\nState: '+d.status+'\n'+
+                'Unapproved / held: '+n.approval_hold+'\n'+
+                'Provider receipts observed: '+n.provider_receipt_recorded+'\n'+
+                'Provider receipt source available: '+d.receipt_source_available+'\n'+
+                'No action was posted or payment taken in this check.\n');
             "
           else
             echo "Work Saban Clip watch missing. Check actual queue and runner." >> "$GITHUB_STEP_SUMMARY"
