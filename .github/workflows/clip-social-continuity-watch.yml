@@ -6,6 +6,7 @@ on:
       - 'systemia/clip/social-continuity-watch.workflow.json'
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'tests/boardroom-social-campaign.test.mjs'
+      - 'tests/work-saban-clip-watch.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -18,6 +19,7 @@ on:
       - 'systemia/clip/social-continuity-watch.workflow.json'
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'tests/boardroom-social-campaign.test.mjs'
+      - 'tests/work-saban-clip-watch.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -38,13 +40,19 @@ jobs:
         with:
           node-version: '22'
       - name: Test publication reconciliation
-        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs
+        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs
       - name: Write review queue coverage snapshot (read-only)
         run: |
           node systemia/clip/social-continuity-watch.mjs \
             --queue distribution/marketing/evercraft-problem-first-20261022.review.json \
             --receipts-dir artifacts/clip/social-publish-receipts \
             --out artifacts/clip/social-continuity-watch/latest.json
+      - name: Work Saban launch receipt watch (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/work-saban-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/work-saban/latest.json
       - name: Surface blockers in workflow summary
         if: always()
         run: |
@@ -61,11 +69,33 @@ jobs:
           else
             echo "No Clip coverage report produced. Investigate test/runner failure." >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Surface Work Saban delivery truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/work-saban/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/work-saban/latest.json'));
+              const n=d.counts;
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Work Saban Clip launch (read-only)\n'+
+                'Campaign: '+d.campaign_id+'\nState: '+d.status+'\n'+
+                'Unapproved / held: '+n.approval_hold+'\n'+
+                'Provider receipts observed: '+n.provider_receipt_recorded+'\n'+
+                'Provider receipt source available: '+d.receipt_source_available+'\n'+
+                'No action was posted or payment taken in this check.\n');
+            "
+          else
+            echo "Work Saban Clip watch missing. Check actual queue and runner." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Retain publication-gap report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-clip-social-continuity
-          path: artifacts/clip/social-continuity-watch/latest.json
+          path: |
+            artifacts/clip/social-continuity-watch/latest.json
+            artifacts/clip/social-continuity-watch/work-saban/latest.json
+            artifacts/clip/social-continuity-watch/work-saban/mission-snapshot.json
           if-no-files-found: warn
           retention-days: 30
