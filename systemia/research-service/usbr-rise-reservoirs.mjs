@@ -153,6 +153,12 @@ export async function collectRiseYakimaReservoirs({
     });
   }
   const current=latest.filter(r=>['current','recent_daily_time_zone_unresolved'].includes(r.freshness));
+  const commonReportedDay=current.length===5 && new Set(current.map(r=>r.source_day_reported)).size===1
+    ? current[0].source_day_reported : null;
+  const comparable= !failures.length && wanted.length===5 && current.length===5 &&
+    new Set(current.map(r=>r.station_id)).size===5 &&
+    current.every(r=>r.unit==='af' && Number.isFinite(r.value)) && commonReportedDay;
+  const derivedObservedSum=comparable ? current.reduce((sum,row)=>sum+row.value,0) : null;
   return {
     source_id:'usbr-rise-edr-reservoir-storage',
     source_family:'usbr-rise',
@@ -165,6 +171,10 @@ export async function collectRiseYakimaReservoirs({
     failures,
     status:failures.length || current.length!==wanted.length ? 'partial' : 'recent_five_station_observations_needing_time_zone_review',
     unit:'af',
+    // Simple arithmetic for comparable five-site provisional readings, NOT an official basin assessment.
+    derived_provisional_sum_af: derivedObservedSum,
+    derived_sum_source_reported_day: comparable ? commonReportedDay : null,
+    derived_sum_status: comparable ? 'five_site_arithmetic_same_source_reported_day' : 'held_incomplete_or_nonmatching_source_days',
     // The five source timestamps must be reconciled to a single hydrologic reporting day
     // before a total is offered. No basin fill/capacity ratio inferred here.
     total_storage_af:null,
