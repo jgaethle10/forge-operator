@@ -104,3 +104,13 @@ test("public Research visitors can share a verified link without an account or c
  assert.match(html,/Share sheet closed\. Any publication is managed by the chosen app/);
  assert.doesNotMatch(html,/\bnavigator\.sendBeacon\b|\bXMLHttpRequest\b/);
 });
+
+test("Research branding uses the shared original discovery icon instead of the R monogram",()=>{
+ const icon=read("public/research/assets/research-mark.svg");
+ assert.match(icon,/<svg[^>]*viewBox="0 0 72 72"/);
+ assert.match(icon,/<path/);
+ assert.match(icon,/<title id="title">Evercraft Research<\/title>/);
+ assert.match(html,/<img class="symbol" src="\.\/assets\/research-mark\.svg" alt="" aria-hidden="true"/);
+ assert.match(html,/<link rel="icon" type="image\/svg\+xml" href="\.\/assets\/research-mark\.svg">/);
+ assert.doesNotMatch(html,/<span class="symbol"[^>]*>R<\/span>/);
+});
