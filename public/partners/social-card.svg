@@ -1,39 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
 <title id="title">Evercraft Partners founding applications open</title>
-<desc id="desc">You bring the connection. We bring the capability. Free to apply.</desc>
+<desc id="desc">You bring the connection. We bring the capability. Three simple steps: know the need, make an introduction after approval, Evercraft handles the work.</desc>
 <defs>
-  <radialGradient id="a"><stop stop-color="#234d33"/><stop offset="1" stop-color="#101b18"/></radialGradient>
-  <radialGradient id="glow"><stop stop-color="#c7ff77" stop-opacity=".25"/><stop offset="1" stop-color="#c7ff77" stop-opacity="0"/></radialGradient>
-  <linearGradient id="line" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#4e7957"/><stop offset="1" stop-color="#c7ff77"/></linearGradient>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0e2117"/><stop offset="1" stop-color="#193d2a"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#8fea72" stop-opacity=".22"/><stop offset="1" stop-color="#8fea72" stop-opacity="0"/></radialGradient>
 </defs>
-<rect width="1200" height="630" fill="#101b18"/>
-<circle cx="945" cy="330" r="340" fill="url(#a)"/>
-<circle cx="945" cy="330" r="280" fill="url(#glow)"/>
-<path d="M0 628H1200" stroke="#c7ff77" stroke-width="5"/>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<circle cx="1017" cy="322" r="340" fill="url(#halo)"/>
 <g font-family="Arial,Helvetica,sans-serif">
-  <text x="69" y="91" fill="#f6f8ef" font-size="43" font-weight="800" letter-spacing="-1">EVERCRAFT</text>
-  <text x="71" y="126" fill="#c7ff77" font-size="19" font-weight="800" letter-spacing="8">PARTNERS</text>
-  <text x="71" y="184" fill="#d9e6d8" font-size="22" font-weight="700">FOUNDING PARTNER APPLICATIONS OPEN</text>
-  <text x="66" y="281" fill="#f6f8ef" font-size="64" font-weight="800" letter-spacing="-3">You bring the</text>
-  <text x="66" y="355" fill="#c7ff77" font-size="74" font-weight="800" letter-spacing="-4">connection.</text>
-  <text x="66" y="439" fill="#f6f8ef" font-size="64" font-weight="800" letter-spacing="-3">We bring the</text>
-  <text x="66" y="513" fill="#c7ff77" font-size="74" font-weight="800" letter-spacing="-4">capability.</text>
-  <text x="71" y="579" fill="#c8d6c7" font-size="22" font-weight="600">Free to apply  ·  No recruiting requirement</text>
+<text x="67" y="86" fill="#f6f8ef" font-size="41" font-weight="800" letter-spacing="-1">EVERCRAFT</text>
+<text x="69" y="122" fill="#c7ff77" font-size="18" font-weight="800" letter-spacing="8">PARTNERS</text>
+<text x="69" y="186" fill="#e0efdc" font-size="20" font-weight="700">FOUNDING PARTNER APPLICATIONS OPEN</text>
+<text x="66" y="280" fill="#f6f8ef" font-size="61" font-weight="800" letter-spacing="-3">You bring the</text>
+<text x="66" y="356" fill="#c7ff77" font-size="72" font-weight="800" letter-spacing="-4">connection.</text>
+<text x="66" y="441" fill="#f6f8ef" font-size="61" font-weight="800" letter-spacing="-3">We bring the</text>
+<text x="66" y="515" fill="#c7ff77" font-size="72" font-weight="800" letter-spacing="-4">capability.</text>
+<text x="68" y="578" fill="#c8d6c7" font-size="21" font-weight="600">Free to apply  ·  No recruiting requirement</text>
+<rect x="742" y="112" width="412" height="428" rx="25" fill="#1e3729" stroke="#5d8562" stroke-width="2"/>
+<text x="768" y="151" fill="#c7ff77" font-size="17" font-weight="800" letter-spacing="2">HOW IT WORKS</text>
+<g>
+<rect x="765" y="173" width="365" height="90" rx="14" fill="#f6f8ef"/>
+<rect x="780" y="192" width="50" height="50" rx="12" fill="#e3f2d6"/>
+<text x="791" y="225" fill="#294f30" font-size="22" font-weight="800">01</text>
+<text x="847" y="207" fill="#15271a" font-size="25" font-weight="800">Know the need</text>
+<text x="847" y="237" fill="#536653" font-size="16">Someone needs a solution</text>
+<text x="937" y="281" fill="#c7ff77" font-size="27" font-weight="800">↓</text>
+<rect x="765" y="290" width="365" height="90" rx="14" fill="#f6f8ef"/>
+<rect x="780" y="309" width="50" height="50" rx="12" fill="#e3f2d6"/>
+<text x="791" y="342" fill="#294f30" font-size="22" font-weight="800">02</text>
+<text x="847" y="324" fill="#15271a" font-size="24" font-weight="800">Make the connection</text>
+<text x="847" y="354" fill="#536653" font-size="16">After partner approval</text>
+<text x="937" y="398" fill="#c7ff77" font-size="27" font-weight="800">↓</text>
+<rect x="765" y="407" width="365" height="90" rx="14" fill="#c7ff77"/>
+<rect x="780" y="426" width="50" height="50" rx="12" fill="#183623"/>
+<text x="791" y="459" fill="#c7ff77" font-size="22" font-weight="800">03</text>
+<text x="847" y="441" fill="#15271a" font-size="24" font-weight="800">Evercraft delivers</text>
+<text x="847" y="471" fill="#34532a" font-size="16">Our approved services</text>
 </g>
-<g fill="none" stroke="#648968" stroke-width="2" opacity=".65">
-  <circle cx="954" cy="317" r="200" stroke-dasharray="4 13"/>
-  <path d="M954 317 796 157 1059 113 1104 411 964 531 769 446Z"/>
-  <path d="M954 317 1059 113M954 317 769 446M954 317 1104 411"/>
 </g>
-<circle cx="954" cy="317" r="120" fill="url(#glow)"/>
-<g fill="#243f2a" stroke="#71986c" stroke-width="3">
-  <circle cx="796" cy="157" r="32"/><circle cx="1059" cy="113" r="30"/>
-  <circle cx="1104" cy="411" r="33"/><circle cx="964" cy="531" r="25"/>
-  <circle cx="769" cy="446" r="32"/><circle cx="954" cy="317" r="88" fill="#c7ff77" stroke="none"/>
-</g>
-<path d="M954 317 1059 113M954 317 769 446" fill="none" stroke="url(#line)" stroke-width="6" stroke-linecap="round"/>
-<g fill="#d4ff9d"><circle cx="796" cy="157" r="8"/><circle cx="1059" cy="113" r="8"/><circle cx="1104" cy="411" r="8"/><circle cx="964" cy="531" r="8"/><circle cx="769" cy="446" r="8"/></g>
-<g stroke="#10261a" stroke-width="7" stroke-linecap="round"><path d="M913 317h82M954 276v82"/></g>
-<circle cx="954" cy="317" r="22" fill="#112c1c"/>
-<circle cx="954" cy="317" r="9" fill="#c7ff77"/>
+<path d="M0 627h1200" stroke="#c7ff77" stroke-width="6"/>
 </svg>
