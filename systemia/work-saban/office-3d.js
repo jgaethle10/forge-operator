@@ -245,6 +245,25 @@
     animation.onfinish=()=>packet.remove();
     animation.oncancel=()=>packet.remove();
   }
+  // This is a local executor event adapter, not a claim of independent AI workers.
+  function consumeExecutorEvent(event){
+    if(!event||typeof event.id!=='string'||typeof event.state!=='string')return;
+    const role=event.id.startsWith('synthetic-')
+      ? roster[Number(event.id.slice('synthetic-'.length))]?.id
+      : known.has(event.id)?event.id:null;
+    if(!role)return;
+    if(event.state==='requested'||event.state==='admitted'||event.state==='provisioned'){
+      state[role]='proposed';
+    }else if(event.state==='running'){
+      state[role]='running';
+    }else if(event.state==='verified'){
+      state[role]='verified';
+      receipts[role]='Local executor verification';
+    }else if(event.state==='failed'){
+      state[role]='failed';
+    }else return;
+    paint();
+  }
   function consume(e){
     if(!e)return;
     if(e.type==='accepted'){
@@ -286,5 +305,5 @@
     $('office-3d-toggle').setAttribute('aria-pressed',String(enabled));
     if(enabled)requestAnimationFrame(()=>applyCamera());
   }
-  window.WorkSaban3D={setEnabled,consume,proposed,reset,select,focusAgent,tourNext,getState:()=>({...state}),getCamera:()=>({...position})};
+  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,getState:()=>({...state}),getCamera:()=>({...position})};
 })();
