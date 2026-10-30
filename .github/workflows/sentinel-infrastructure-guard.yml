@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/sentinel/infrastructure-guard.mjs'
       - 'systemia/sentinel/infrastructure-guard.test.mjs'
+      - 'systemia/sentinel/node-security-posture.mjs'
+      - 'systemia/sentinel/node-security-posture.test.mjs'
+      - 'scripts/evercraft-node-security-audit.mjs'
       - 'systemia/sentinel/INFRASTRUCTURE-GUARD.md'
       - '.github/workflows/sentinel-infrastructure-guard.yml'
   push:
@@ -12,6 +15,9 @@ on:
     paths:
       - 'systemia/sentinel/infrastructure-guard.mjs'
       - 'systemia/sentinel/infrastructure-guard.test.mjs'
+      - 'systemia/sentinel/node-security-posture.mjs'
+      - 'systemia/sentinel/node-security-posture.test.mjs'
+      - 'scripts/evercraft-node-security-audit.mjs'
       - 'systemia/sentinel/INFRASTRUCTURE-GUARD.md'
       - '.github/workflows/sentinel-infrastructure-guard.yml'
 
@@ -27,7 +33,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run passive safety and blind-spot tests
+      - name: Run passive safety, privacy and blind-spot tests
         run: |
           node --check systemia/sentinel/infrastructure-guard.mjs
-          node --test systemia/sentinel/infrastructure-guard.test.mjs
+          node --check systemia/sentinel/node-security-posture.mjs
+          node --check scripts/evercraft-node-security-audit.mjs
+          node --test systemia/sentinel/infrastructure-guard.test.mjs systemia/sentinel/node-security-posture.test.mjs
