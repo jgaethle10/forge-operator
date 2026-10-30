@@ -74,7 +74,7 @@ test("Passage Chrome browser acceptance: online, offline and mobile",async t=>{
    assert.equal(await page.locator(".article-card").count(),1,"offline reload retains bookmark");
    assert.match(await page.locator("#connection-status").innerText(),/outdated/i);
    const fileContext=await browser.newContext(),filePage=await fileContext.newPage();
-   try{await filePage.goto("file://"+offlinePath);assert.match(await filePage.locator("h1").innerText(),/passage/i);assert.equal(await filePage.locator("article").count(),5)}
+   try{let networkRequests=0;filePage.on("request",()=>networkRequests++);await filePage.setContent(exported,{waitUntil:"load"});assert.match(await filePage.locator("h1").innerText(),/passage/i);assert.equal(await filePage.locator("article").count(),5);assert.equal(networkRequests,0,"offline HTML has no external resource requests")}
    finally{await fileContext.close()}
    assert.deepEqual(pageErrors,[],"no application JavaScript errors");
   }finally{await context.close()}
