@@ -2,7 +2,7 @@
 // Read-only public smoke test. No form submit, card entry, upload, or social action.
 import fs from "node:fs";
 import path from "node:path";
-import {pathToFileURL} from "node:url";
+import {fileURLToPath} from "node:url";
 const ORIGIN="https://jgaethle10.github.io/forge-operator/";
 export const routes=[
  {name:"fallen_studios_public_home",path:"fallen-studios/",markers:["Fallen Studios | Original commercials by Evercraft","Your story deserves","../commercial-studio/#inquire"]},
@@ -31,4 +31,4 @@ async function main(){
  console.log(JSON.stringify(receipt,null,2));
  if(process.argv.includes("--gate")&&receipt.state!=="PUBLIC_STUDIO_AND_INTAKE_VERIFIED")process.exitCode=1;
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===pathToFileURL(import.meta.url).pathname)await main();
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();
