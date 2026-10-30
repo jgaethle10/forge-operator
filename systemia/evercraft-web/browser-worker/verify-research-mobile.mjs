@@ -22,6 +22,8 @@ try{
   const response=await page.goto(url,{waitUntil:"networkidle",timeout:30000});
   assert.equal(response?.status(),200,"Research page HTTP");
   await page.locator(".evidence .line").first().waitFor();
+  await page.waitForFunction(()=>{const mark=document.querySelector('header .logo .symbol');return mark?.tagName==="IMG"&&mark.complete&&mark.naturalWidth>0;});
+  assert.equal(await page.locator('header .logo .symbol').getAttribute('src'),'./assets/research-mark.svg');
   const layout=await page.evaluate(()=>{
    const rows=[...document.querySelectorAll(".evidence .line")].map(el=>{
     const label=el.querySelector("b")?.getBoundingClientRect();

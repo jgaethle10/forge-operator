@@ -17,6 +17,8 @@ try{
   const res=await page.goto(root,{waitUntil:"networkidle",timeout:30000});
   assert.equal(res?.status(),200);
   await page.locator("#caption").waitFor();
+  await page.waitForFunction(()=>{const mark=document.querySelector('.brand-icon');return mark?.complete&&mark.naturalWidth>0&&document.querySelector("#poster")?.width>0;});
+  assert.equal(await page.locator('.brand-icon').getAttribute('src'),'../assets/research-mark.svg');
   await page.waitForFunction(()=>document.querySelector("#caption").textContent.trim().length>100);
   const dimensions=await page.evaluate(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth}));
   assert.ok(dimensions.scroll<=dimensions.viewport+1,"horizontal overflow at "+w);

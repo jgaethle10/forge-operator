@@ -6,10 +6,11 @@
 <title>Evercraft Research | Launch Share Kit</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#f7fafb">
+<link rel="icon" type="image/svg+xml" href="../assets/research-mark.svg">
 <style>
 :root{--deep:#163745;--teal:#117c83;--ink:#142b35;--cream:#f7fafb;--line:#dae6e7;--muted:#576d75}*{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:var(--teal)}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #46b7ac;outline-offset:3px}
-header{border-bottom:1px solid var(--line);background:#fff}.top{width:min(1100px,calc(100% - 32px));min-height:70px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:860;letter-spacing:-.045em;text-decoration:none;color:var(--deep)}.brand small{display:block;text-transform:uppercase;letter-spacing:.19em;font-weight:850;font-size:.62rem;color:var(--teal)}
+header{border-bottom:1px solid var(--line);background:#fff}.top{width:min(1100px,calc(100% - 32px));min-height:70px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:860;letter-spacing:-.045em;text-decoration:none;color:var(--deep)}.brand{display:inline-flex;align-items:center;gap:10px}.brand-icon{width:35px;height:35px;flex:none;border-radius:9px}.brand small{display:block;text-transform:uppercase;letter-spacing:.19em;font-weight:850;font-size:.62rem;color:var(--teal)}
 main{width:min(1100px,calc(100% - 32px));margin:auto;padding:44px 0 70px}.eyebrow{font-size:.72rem;letter-spacing:.17em;text-transform:uppercase;color:var(--teal);font-weight:850}h1{font-size:clamp(2.35rem,6vw,4.8rem);letter-spacing:-.066em;line-height:1.05;margin:10px 0 14px}h2{font-size:1.45rem;letter-spacing:-.04em;margin:0 0 10px}.intro{color:var(--muted);max-width:740px;margin:0 0 30px}p{margin:0 0 16px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}.panel{background:#fff;padding:25px;border:1px solid var(--line);border-radius:19px;min-width:0}.panel p{color:var(--muted);font-size:.89rem}.panel label{display:block;font-size:.84rem;font-weight:800;margin:14px 0 7px}.field{width:100%;padding:13px 12px;border:1px solid #c6d8d9;background:#fff;border-radius:10px;color:var(--deep)}.preview{border:1px solid #c7d9d9;border-radius:12px;overflow:hidden;background:#dbe9e8;display:grid;place-items:center;padding:8px;margin-top:18px}.preview canvas{display:block;width:100%;height:auto;max-height:570px;object-fit:contain}
 .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.btn{border:1px solid #b7d0d0;padding:11px 14px;border-radius:10px;background:#f5faf9;color:var(--deep);font-weight:750;font-size:.88rem;min-height:46px}.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.btn:disabled{opacity:.45;cursor:not-allowed}.status{min-height:25px;color:#1f6569;font-size:.83rem;margin:12px 0 0!important;font-weight:720}.copy{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f7f7;border:1px solid #d6e3e3;padding:17px;border-radius:11px;line-height:1.6;font-size:.89rem;max-height:370px;overflow:auto;color:#1b3440}.note{font-size:.77rem!important;color:var(--muted);margin:15px 0 0!important}.small{color:var(--muted);font-size:.85rem}.bottom{margin-top:24px;border:1px solid var(--line);background:#e8f3f2;border-radius:17px;padding:18px 22px}.bottom p{font-size:.9rem;color:#46606a}.bottom strong{color:#173945}
@@ -17,7 +18,7 @@ main{width:min(1100px,calc(100% - 32px));margin:auto;padding:44px 0 70px}.eyebro
 </style>
 </head>
 <body>
-<header><div class="top"><a class="brand" href="../"><small>Evercraft</small>Research</a><a href="../">View the product</a></div></header>
+<header><div class="top"><a class="brand" href="../"><img class="brand-icon" src="../assets/research-mark.svg" alt="" aria-hidden="true" width="35" height="35"><span><small>Evercraft</small>Research</span></a><a href="../">View the product</a></div></header>
 <main>
 <div class="eyebrow">Owned media · Founder and company launch</div>
 <h1>Put Research in front of people.</h1>
@@ -58,6 +59,9 @@ const WEBSITE="https://jgaethle10.github.io/forge-operator/research/";
 const SIZES={portrait:[1080,1350],story:[1080,1920],square:[1080,1080],wide:[1200,630]};
 const canv=byId("poster");
 const ctx=canv.getContext("2d");
+const productMark=new Image();
+productMark.onload=()=>render();
+productMark.src="../assets/research-mark.svg";
 function rounded(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();}
 function wrap(text,x,y,maxWidth,lineHeight,maxLines=12){
  const words=text.split(" "),lines=[];let line="";
@@ -73,7 +77,8 @@ function render(){
  for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(w*.96,h*.07,(i+1)*Math.min(w,h)*.2,0,Math.PI*2);ctx.stroke();}
  const pad=wide?78:80;
  ctx.textBaseline="alphabetic";
- ctx.fillStyle="#abede4";ctx.font="800 "+(wide?25:29)+"px system-ui";ctx.fillText("EVERCRAFT  /  RESEARCH",pad,pad+12);
+ if(productMark.complete&&productMark.naturalWidth)ctx.drawImage(productMark,pad,pad-38,55,55);
+ ctx.fillStyle="#abede4";ctx.font="800 "+(wide?25:29)+"px system-ui";ctx.fillText("EVERCRAFT  /  RESEARCH",pad+70,pad+12);
  rounded(w-pad-190,pad-25,190,44,22,"rgba(189,232,223,.16)");ctx.fillStyle="#c6ede8";ctx.font="700 21px system-ui";ctx.fillText("EARLY ACCESS",w-pad-170,pad+5);
  let headY=wide?210:h*.29;ctx.fillStyle="#ffffff";ctx.font="800 "+(wide?75:96)+"px system-ui";const delta=wrap("A confident answer isn't enough.",pad,headY,w-2*pad,wide?83:113,4);
  ctx.fillStyle="#a7eee5";ctx.font="800 "+(wide?73:88)+"px system-ui";ctx.fillText("Show the evidence.",pad,headY+delta+(wide?9:30));

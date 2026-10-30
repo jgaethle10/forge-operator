@@ -12,14 +12,15 @@ export const ASSETS=Object.freeze([
  {path:"ai-discovery.json",name:"discovery",expected:["evercraft.research.public-product.v1","human_scoping_only","checkout_url"]},
  {path:"llms.txt",name:"llm_discovery",expected:["Evercraft Research","No purchase or charge"]},
  {path:"share/",name:"founder_share_kit",expected:["Evercraft Research | Launch Share Kit","Download PNG","Copy caption","captions.json"]},
- {path:"share/captions.json",name:"share_copy",expected:["evercraft.research.share-kit.v1","personal","company","prepared_not_published"]}
+ {path:"share/captions.json",name:"share_copy",expected:["evercraft.research.share-kit.v1","personal","company","prepared_not_published"]},
+ {path:"assets/research-mark.svg",name:"research_product_logo",expected:["<svg","Evercraft Research","<path","viewBox"]}
 ]);
 export function evaluatePublicAsset({status,final_url,content_type,body},asset){
  const findings=[];
  let url;try{url=new URL(final_url)}catch{findings.push("INVALID_FINAL_URL");}
  if(!url||url.protocol!=="https:"||url.host!=="jgaethle10.github.io"||!url.pathname.startsWith("/forge-operator/research/"))findings.push("WRONG_PUBLIC_ORIGIN");
  if(status!==200)findings.push("HTTP_NOT_200");
- if(!/(text\/html|text\/plain|text\/javascript|application\/javascript|application\/json|application\/octet-stream)/i.test(String(content_type)))findings.push("CONTENT_TYPE_UNEXPECTED");
+ if(!/(text\/html|text\/plain|text\/javascript|application\/javascript|application\/json|application\/octet-stream|image\/svg\+xml)/i.test(String(content_type)))findings.push("CONTENT_TYPE_UNEXPECTED");
  for(const marker of asset.expected)if(!String(body).includes(marker))findings.push("MISSING_MARKER_"+marker.replace(/[^a-zA-Z0-9]+/g,"_").toUpperCase());
  return {state:findings.length?"UNVERIFIED":"PUBLIC_GET_VERIFIED",findings};
 }
