@@ -1,0 +1,26 @@
+name: Spatial perception V0
+on:
+  pull_request:
+    paths:
+      - 'public/worlds/spatial-perception.mjs'
+      - 'public/worlds/perception-lab/**'
+      - 'tests/spatial-perception.test.mjs'
+      - '.github/workflows/spatial-perception-v0.yml'
+  push:
+    paths:
+      - 'public/worlds/spatial-perception.mjs'
+      - 'public/worlds/perception-lab/**'
+      - 'tests/spatial-perception.test.mjs'
+      - '.github/workflows/spatial-perception-v0.yml'
+jobs:
+  core-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Stereo geometry and consumer boundary tests
+        run: node --test tests/spatial-perception.test.mjs
