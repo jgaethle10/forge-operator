@@ -206,5 +206,12 @@ test('entry rejects missing trusted callbacks, insecure storage, expired session
   clock=3000;
   const expired=await f.request(base,'/v1/forensiscope/uploads/'+id);
   assert.equal(expired.status,410);
+  const deleted=await f.request(base,'/v1/forensiscope/uploads/'+id,{method:'DELETE'});
+  assert.equal(deleted.status,200,'Owner can delete even after session expires');
+  assert.equal((await f.request(base,'/v1/forensiscope/uploads/'+id)).status,404);
+  const another=(await f.create(base)).body.upload_id;
+  clock=5000;
+  assert.equal(f.service.purgeExpiredSessions().expired_sessions_removed,1);
+  assert.equal((await f.request(base,'/v1/forensiscope/uploads/'+another)).status,404);
  }finally{await f.close()}
 });
