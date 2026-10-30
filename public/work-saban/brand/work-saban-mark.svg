@@ -1,8 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-<title id="title">Work Saban</title>
-<desc id="desc">A crisp crimson S-shaped route on white, connecting a task's start and finish.</desc>
-<rect width="256" height="256" rx="47" fill="#FFFFFF"/>
-<rect x="2" y="2" width="252" height="252" rx="45" fill="none" stroke="#E7E4E4" stroke-width="4"/>
-<path d="M56 75H201L157 116H97L56 164H201" fill="none" stroke="#A4142F" stroke-width="28" stroke-linejoin="round" stroke-linecap="square"/>
-<circle cx="56" cy="75" r="15" fill="#171717"/><circle cx="201" cy="164" r="15" fill="#171717"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+<title id="title">Work Saban flow symbol</title>
+<desc id="desc">Two flowing crimson ribbons converge into forward motion, with a separate circular finishing point.</desc>
+<defs>
+  <linearGradient id="saban-flow" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#A4142F"/>
+    <stop offset="1" stop-color="#C12446"/>
+  </linearGradient>
+</defs>
+<g transform="translate(0 13)">
+  <path fill="#A4142F" d="M7 49C3 45 3 40 7 36L14 29C18 25 22 25 26 29L47 49C51 53 55 53 59 49L69 40L89 58L70 78C59 89 46 89 35 80Z"/>
+  <path fill="url(#saban-flow)" d="M43 49L57 34C66 25 78 25 87 34L110 56C114 60 114 65 110 69L103 76C99 80 93 80 89 76L72 60C68 56 64 56 60 60L56 65Z"/>
+  <circle cx="103" cy="20" r="13" fill="#B51A38"/>
+</g>
 </svg>
