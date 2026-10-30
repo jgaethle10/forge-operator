@@ -180,7 +180,7 @@ export async function buildValueProofScorecard(rawEvents, {verifyEvidence} = {})
     coverage: 'Only independently verified submitted events; zero counts are not proof that no other events exist.',
     products: [...products.entries()].sort(([a],[b])=>a.localeCompare(b))
       .map(([key,jobs])=>outcomeSummary(key,jobs)),
-    verified_event_count: verified.length - held.filter(x=>x.reason!=='independent_evidence_unverified').length,
+    verified_event_count: verified.length - held.filter(x=>['multiple_payment_receipts_for_job_need_reconciliation','cost_revision_needs_reconciliation','value_revision_needs_reconciliation'].includes(x.reason)).length,
     held_events: held
   };
 }
