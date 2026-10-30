@@ -1,5 +1,11 @@
 # Forge Operator
 
+## Start with something free
+
+**You do not need to buy anything to experience Evercraft.** [Try three free Evercraft tools](https://jgaethle10.github.io/forge-operator/try/): compare two or three AI answers in your browser, build a private research scope, or run a reproducible sample sales report. No account, credit card or sales call required. Each tool is a bounded existing example, not a claim of live multi-agent automation or completed professional research.
+
+**Share one useful experience, not a storefront full of expensive offers.** The free tools are the natural first introduction; [Evercraft Services](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/) is the next step when a visitor actually needs a scoped paid engagement. Evercraft Payments remains behind the scenes as payment infrastructure.
+
 ## Evercraft Research and founding partners
 
 **Have a research question that needs defensible sources?** [Try Evercraft Research's free scope builder](https://jgaethle10.github.io/forge-operator/research/). Describe the decision and download a research outline in your browser. Full investigations are separately quoted, human-reviewed engagements, not instant paid reports.
