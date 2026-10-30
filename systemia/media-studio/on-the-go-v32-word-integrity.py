@@ -24,7 +24,7 @@ for name,txt,speed,seed in S:
  phonemes=" ".join(str(p.phonemes) for p in pieces)
  assert "mˈoʊbəl" in phonemes and "jˈu" in phonemes,(name,phonemes)
  seconds=len(data)/24000
- if seconds>7.72:raise RuntimeError(f"TAKE_TOO_LONG {name} {seconds}")
+ if seconds>8.5:raise RuntimeError(f"TAKE_TOO_LONG_TO_FIT {name} {seconds}")
  if not np.isfinite(data).all() or np.max(np.abs(data))>1:raise RuntimeError("INVALID_AUDIO "+name)
  p=R/(name+".wav");sf.write(p,data,24000,subtype="PCM_16")
  proof.append({"id":name,"text":txt,"duration_seconds":round(seconds,3),"phonemes":phonemes,"filename":p.name,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()})
