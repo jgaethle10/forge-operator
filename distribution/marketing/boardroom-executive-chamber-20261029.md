@@ -62,7 +62,7 @@ View the completed example through the verified Boardroom link on the Evercraft 
 
 ### Visual and release material
 
-No generic four-card motivational sequence or empty animated teaser. Use an authentic product screen capture of the shipped comparison output, or an independently reviewed original Boardroom visual with the obsidian, champagne, and antique brass palette. No stock executive-office imagery, invented AI participants, unverified customer quotes, stickers, emoji or hashtag campaigns. Each released company caption should read as an operational field report, not a social engagement contest. Personal founder posts must use four connected, developed paragraphs without manufactured standalone lines.
+No generic four-card motivational sequence or empty animated teaser. Use an authentic product screen capture of the shipped comparison output, or an independently reviewed original Boardroom visual with the obsidian, champagne, and antique brass palette. No stock executive-office imagery, invented AI participants, unverified customer quotes, stickers, emoji or hashtag campaigns. Each released company caption should read as an operational field report, not a social engagement contest. Personal founder posts should use naturally connected prose, with as many or as few paragraphs as the subject requires. Do not manufacture stand-alone dramatic lines or enforce a fixed paragraph count.
 
 ### Channels and sequence
 1. Evercraft flagship Facebook Page, if page token, ID, and explicit brand authority are verified in the owned Clip vault. Target a real organic post and record provider permalink.
