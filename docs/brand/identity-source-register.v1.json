@@ -1,0 +1,114 @@
+{
+  "schema": "evercraft.brand-identity.v1",
+  "as_of": "2026-10-31",
+  "purpose": "Evidence-backed identity custody; not a public product launch or auto-publishing roster",
+  "publishing": {
+    "mode": "review_only",
+    "auto_publish": false,
+    "default_included": false,
+    "require_explicit_public_approval": true
+  },
+  "fields_policy": {
+    "development_activity": "independent_of_customer_access",
+    "customer_access": "must_have_current_evidence",
+    "commercial_state": "never_inferred_from_checkout_click",
+    "asset_state": "verified_only_or_parent_fallback",
+    "rights": "must_be_confirmed_for_each_publication"
+  },
+  "brands": [
+    {
+      "key": "evercraft",
+      "name": "Evercraft",
+      "role": "parent",
+      "asset": {
+        "status": "parent_source_validation_pending",
+        "source": null
+      },
+      "publication_approved": false
+    },
+    {
+      "key": "evercraft-research",
+      "name": "Evercraft Research",
+      "role": "customer_product",
+      "asset": {
+        "status": "verified_existing_mark",
+        "source": "public/research/assets/research-mark.svg",
+        "description": "Three-layer dark-teal and teal evidence mark"
+      },
+      "customer_access": "free_scope_builder_and_quoted_report_only",
+      "publication_approved": false
+    },
+    {
+      "key": "humanfilter",
+      "name": "HumanFilter",
+      "role": "customer_product",
+      "asset": {
+        "status": "verified_existing_mark",
+        "source": "public/humanfilter-beta/assets/shield.svg",
+        "description": "Layered teal shield"
+      },
+      "customer_access": "desktop_browser_beta_only",
+      "publication_approved": false
+    },
+    {
+      "key": "work-saban",
+      "name": "Work Saban",
+      "role": "customer_product",
+      "asset": {
+        "status": "verified_existing_mark",
+        "source": "public/work-saban/brand/work-saban-mark.svg",
+        "description": "Crimson ribbon flow mark"
+      },
+      "customer_access": "browser_local_csv_sales_report; broader agent-team workflows under development",
+      "publication_approved": false
+    },
+    {
+      "key": "findmypart",
+      "name": "FindMyPart",
+      "role": "customer_product",
+      "asset": {
+        "status": "verified_existing_mark",
+        "source": "public/findmypart/brand/mark.svg",
+        "description": "White machined F with orange accent on charcoal"
+      },
+      "customer_access": "verify_current_purchase_and_intake_state_before_public_promotion",
+      "publication_approved": false
+    },
+    {
+      "key": "ai-boardroom",
+      "name": "AI Boardroom",
+      "role": "customer_product",
+      "asset": {
+        "status": "verified_existing_mark",
+        "source": "public/mesh/ai-boardroom/crest.svg",
+        "description": "Black-and-gold serif B crest"
+      },
+      "customer_access": "pasted-answer_comparison_and_separately_scoped_human_reviews",
+      "publication_approved": false
+    },
+    {
+      "key": "evercraft-network",
+      "name": "Evercraft Network",
+      "role": "platform_product",
+      "asset": {
+        "status": "unique_logo_not_verified",
+        "source": null,
+        "description": "Retain parent endorsement; source dedicated identity before using one"
+      },
+      "customer_access": "registered application continuity product; no ISP or cellular-carrier claim",
+      "publication_approved": false
+    },
+    {
+      "key": "forensiscope",
+      "name": "ForensiScope",
+      "role": "customer_product",
+      "asset": {
+        "status": "unique_logo_not_verified",
+        "source": null,
+        "description": "Source approved branding before adding a dedicated mark"
+      },
+      "customer_access": "long-media_review_scope_requires_current_confirmation; self-service_not_proven",
+      "publication_approved": false
+    }
+  ]
+}
