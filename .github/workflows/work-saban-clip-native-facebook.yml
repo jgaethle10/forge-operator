@@ -6,6 +6,8 @@ on:
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
+      - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
+      - 'systemia/core/resident-services.json'
       - '.github/workflows/work-saban-clip-native-facebook.yml'
   push:
     branches: [main]
@@ -14,6 +16,8 @@ on:
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
+      - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
+      - 'systemia/core/resident-services.json'
       - '.github/workflows/work-saban-clip-native-facebook.yml'
 permissions:
   contents: read
