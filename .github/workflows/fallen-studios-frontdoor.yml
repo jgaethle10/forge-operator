@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'public/fallen-studios/**'
+      - 'systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs'
       - 'tests/fallen-studios-frontdoor.test.mjs'
       - 'tests/fallen-studios-public-canary.test.mjs'
       - 'scripts/probe-fallen-studios-public.mjs'
@@ -11,6 +12,7 @@ on:
     branches: [main]
     paths:
       - 'public/fallen-studios/**'
+      - 'systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs'
       - 'tests/fallen-studios-frontdoor.test.mjs'
       - 'tests/fallen-studios-public-canary.test.mjs'
       - 'scripts/probe-fallen-studios-public.mjs'
@@ -28,3 +30,33 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/fallen-studios-frontdoor.test.mjs tests/fallen-studios-public-canary.test.mjs
+
+  responsive-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browsers using existing owned Evercraft Browser Worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium webkit
+      - name: Check real layout at phone, tablet and desktop widths
+        env:
+          FALLEN_MOBILE_QA_OUTPUT: ${{ runner.temp }}/fallen-mobile-qa
+        run: |
+          python3 -m http.server 8765 --directory public --bind 127.0.0.1 > /tmp/fallen-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          node systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs
+      - name: Preserve actual mobile screenshots and viewport receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-mobile-overflow-qa
+          path: ${{ runner.temp }}/fallen-mobile-qa
+          if-no-files-found: warn
+          retention-days: 14
