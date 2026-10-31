@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="color-scheme" content="dark">
+<title>Wheel Lab | Two-step review</title>
+<style>
+:root{--bg:#090d14;--line:#303c4e;--fg:#f3f5f9;--muted:#acb9ca;--accent:#e4ff80}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1300px;margin:auto;padding:clamp(14px,3vw,30px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--line);padding-bottom:20px;flex-wrap:wrap}
+.brand{font-size:22px;font-weight:900;letter-spacing:-.06em}.eyebrow{color:var(--accent);font-size:11px;letter-spacing:.16em;font-weight:800;text-transform:uppercase}
+.tag{font-size:11px;border:1px solid #6b7c50;border-radius:30px;padding:8px 12px;color:var(--accent);font-weight:800}
+.hero{display:flex;gap:25px;justify-content:space-between;align-items:end;padding:25px 0}
+h1{font-size:clamp(30px,4.4vw,56px);letter-spacing:-.065em;line-height:1.04;margin:9px 0}
+.hero p{color:var(--muted);max-width:720px;line-height:1.6;margin:12px 0 0}
+.steps{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button{font:inherit;cursor:pointer;padding:13px 17px;background:#1a2837;border:1px solid #46546b;color:#fff;border-radius:12px;font-weight:800}
+button[aria-selected=true]{border-color:var(--accent);background:#263322;color:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.stage{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#111b29}
+.stageHead{padding:15px 20px;display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.stageHead b{font-size:17px}.stageHead span{font-size:12px;color:var(--muted)}
+iframe{display:block;width:100%;border:0;height:900px;background:#090d14}
+.instructions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:23px 0}
+.instructions article{padding:17px;border:1px solid var(--line);border-radius:13px;background:#151d27}
+.instructions strong{display:block;color:var(--accent);font-size:19px;margin-bottom:5px}
+.instructions p{font-size:13px;color:var(--muted);line-height:1.55;margin:0}
+.notice{color:#d6c7a5;background:#2a2219;border:1px solid #665038;border-radius:12px;padding:12px 15px;font-size:12px;line-height:1.55}
+.foot{border-top:1px solid var(--line);padding:20px 0;margin-top:24px;color:#8394a9;font-size:12px}
+@media(max-width:750px){.hero{display:block}.instructions{grid-template-columns:1fr}iframe{height:990px}.stageHead{padding:14px}button{flex:1}}
+</style></head>
+<body><main>
+<header class="top"><div><div class="eyebrow">Evercraft · Rockies / Visual commerce research</div><div class="brand">WHEEL LAB <span style="color:#7e8999;font-weight:400">/</span> RC05</div></div><span class="tag">PRIVATE REVIEW PACKAGE · NOT LIVE</span></header>
+<section class="hero"><div><div class="eyebrow">One experience, two sides</div><h1>A wheel shopper meets<br>a shop's quote desk.</h1><p>Start with a visual build. Export the concept packet. Then open the shop desk and import it. The design is only a conversation starter: a mechanic still verifies every wheel, tire and vehicle detail before any sale.</p></div></section>
+<nav class="steps" role="tablist" aria-label="Review step">
+<button id="tab-shopper" role="tab" aria-selected="true" aria-controls="reviewFrame" type="button">1 · Shopper preview</button>
+<button id="tab-merchant" role="tab" aria-selected="false" aria-controls="reviewFrame" type="button">2 · Merchant quote desk</button>
+</nav>
+<div class="stage">
+<div class="stageHead"><b id="stepTitle">Step 1: configure the look</b><span id="stepDescription">Export the JSON concept packet when ready</span></div>
+<iframe id="reviewFrame" title="Wheel Lab shopper preview" src="./index.html" referrerpolicy="no-referrer"></iframe>
+</div>
+<div class="instructions">
+<article><strong>01</strong><p>Change a concept car's wheel style, size, finish and body color. Export the concept JSON without providing personal details.</p></article>
+<article><strong>02</strong><p>Switch to the merchant desk. Import that JSON locally. If desired, load a shop-provided CSV inventory without transmitting the file.</p></article>
+<article><strong>03</strong><p>Prepare an internal review packet. The shop must confirm real fitment, stock, labor, tax, customer consent and the final written quote.</p></article>
+</div>
+<div class="notice"><b>NOT A LIVE MERCHANT SERVICE.</b> This source-level review has no published buyer URL, real catalog, customer account, payment, verified fitment, or authenticated shop workflow. Uploaded files remain in the local browser; no network requests are made by either demo.</div>
+<footer class="foot">Rockies manual research experiment · User-supplied demand clue ≠ verified buying intent · Systemia admission and release review required before public launch.</footer>
+</main>
+<script>
+(function(){'use strict';
+const frame=document.getElementById('reviewFrame'),shopper=document.getElementById('tab-shopper'),merchant=document.getElementById('tab-merchant');
+const title=document.getElementById('stepTitle'),description=document.getElementById('stepDescription');
+function show(which){
+  const isMerchant=which==='merchant';
+  shopper.setAttribute('aria-selected',String(!isMerchant));merchant.setAttribute('aria-selected',String(isMerchant));
+  frame.src=isMerchant?'./merchant-desk.html':'./index.html';
+  frame.title=isMerchant?'Wheel Lab merchant quote desk':'Wheel Lab shopper preview';
+  title.textContent=isMerchant?'Step 2: draft a shop-reviewed estimate':'Step 1: configure the look';
+  description.textContent=isMerchant?'Import the saved JSON; optionally add a local shop CSV':'Export the JSON concept packet when ready';
+}
+shopper.addEventListener('click',()=>show('shopper'));merchant.addEventListener('click',()=>show('merchant'));
+})();
+</script>
+</body></html>
