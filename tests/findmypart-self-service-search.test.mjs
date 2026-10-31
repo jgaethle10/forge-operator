@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {analyzePartQuery,buildSourceSearches,createSavedSearch} from '../public/findmypart/search/engine.mjs';
 test('normalization does not assert match or stock',()=>{
  const a=analyzePartQuery('  Ford 3600  hydraulic  pump  D8NN-600-AA ');
- assert.equal(a.valid,true);assert.deepEqual(a.candidateNumbers,['3600','D8NN-600-AA'].filter(x=>x!=='3600'?true:true));
+ assert.equal(a.valid,true);assert.deepEqual(a.candidateNumbers,['D8NN-600-AA']);
  assert.ok(a.normalizedNumbers.includes('D8NN600AA'));
  const links=buildSourceSearches(a);assert.equal(links.length,4);
  for(const link of links){assert.equal(new URL(link.url).protocol,'https:');assert.ok(link.url.includes('Ford'))}
