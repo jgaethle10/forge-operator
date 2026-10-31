@@ -25,7 +25,7 @@ function median(v){
  */
 export function auditStereoConsistency(depth,left,right,{
  radius=2,minDisparity=1,maxDisparity=16,tolerancePx=1,
- maxPoints=50000
+ maxPoints=50000,maxMeanPatchError=32
 }={}){
  if(depth?.schema!==SPATIAL_SCHEMA || !Number.isInteger(depth.width) ||
   !Number.isInteger(depth.height) || !Array.isArray(depth.points))bad('invalid_depth');
@@ -36,9 +36,10 @@ export function auditStereoConsistency(depth,left,right,{
  number(maxDisparity,minDisparity,256,'invalid_max_disparity');
  number(tolerancePx,0,10,'invalid_tolerance');
  number(maxPoints,1,50000,'invalid_max_points');
+ number(maxMeanPatchError,0,255,'invalid_max_patch_error');
  if(![radius,minDisparity,maxDisparity,maxPoints].every(Number.isInteger))bad('integer_configuration');
  if(points.length>maxPoints)bad('point_budget_exceeded');
- let outOfBounds=0,inconsistent=0;
+ let outOfBounds=0,inconsistent=0,poorPhotometricMatch=0;
  const accepted=[],residuals=[];
  for(const p of points){
   if(!finite(p.x)||!finite(p.y)||!finite(p.disparityPx)||
@@ -59,6 +60,7 @@ export function auditStereoConsistency(depth,left,right,{
    if(sad<best){best=sad;reverseDisparity=d;}
   }
   if(reverseDisparity===null){outOfBounds++;continue;}
+  if(best/((2*radius+1)**2)>maxMeanPatchError){poorPhotometricMatch++;continue;}
   const residual=Math.abs(p.disparityPx-reverseDisparity);
   if(residual>tolerancePx){inconsistent++;continue;}
   accepted.push({...p,leftRightResidualPx:residual});
@@ -71,6 +73,7 @@ export function auditStereoConsistency(depth,left,right,{
    schema:'evercraft.spatial-perception.consistency-audit.v1',
    sourceSamples:total,retainedSamples:accepted.length,
    rejectedOutOfBounds:outOfBounds,rejectedInconsistent:inconsistent,
+   rejectedPoorPhotometricMatch:poorPhotometricMatch,
    retentionRatio:total?rounded(accepted.length/total):null,
    medianResidualPx:residuals.length?rounded(median(residuals)):null,
    metricAccuracyVerified:false
@@ -78,6 +81,7 @@ export function auditStereoConsistency(depth,left,right,{
 }
 /** Independent ground-truth measurements provided by the operator.
  * The sample median is drawn from the target's image bounding box.
+ * Reference targets require camera-axis depth (Z), not slant range.
  * A comparison NEVER changes the evidence classification automatically.
  */
 export function compareRangingTargets(depth,targets,{minimumSamples=3}={}){
@@ -87,7 +91,7 @@ export function compareRangingTargets(depth,targets,{minimumSamples=3}={}){
  if(!Number.isInteger(minimumSamples))bad('integer_min_samples');
  const comparisons=targets.map((t,index)=>{
   if(typeof t?.id!=='string'||!t.id||t.id.length>96)bad('invalid_target_id');
-  number(t.rangeM,0.01,10000,'invalid_reference_range');
+  number(t.cameraAxisDepthM,0.01,10000,'invalid_reference_axial_depth');
   const b=t.box;
   if(!b||!['x','y','width','height'].every(k=>finite(b[k]))||
    b.x<0||b.y<0||b.width<=0||b.height<=0||
@@ -95,10 +99,10 @@ export function compareRangingTargets(depth,targets,{minimumSamples=3}={}){
   const matches=depth.points.filter(p=>p.x>=b.x&&p.x<b.x+b.width&&
    p.y>=b.y&&p.y<b.y+b.height);
   const estimate=matches.length>=minimumSamples?median(matches.map(p=>p.depthM)):null;
-  return {id:t.id,referenceRangeM:t.rangeM,sampleCount:matches.length,
+  return {id:t.id,referenceCameraAxisDepthM:t.cameraAxisDepthM,sampleCount:matches.length,
    estimateM:estimate===null?null:rounded(estimate),
-   absoluteErrorM:estimate===null?null:rounded(Math.abs(estimate-t.rangeM)),
-   absolutePercentError:estimate===null?null:rounded(Math.abs(estimate-t.rangeM)/t.rangeM*100),
+   absoluteErrorM:estimate===null?null:rounded(Math.abs(estimate-t.cameraAxisDepthM)),
+   absolutePercentError:estimate===null?null:rounded(Math.abs(estimate-t.cameraAxisDepthM)/t.cameraAxisDepthM*100),
    result:estimate===null?'insufficient_depth_samples':'comparison_only_not_certified',
    referenceMethod:typeof t.method==='string'&&t.method.length<=80?t.method:'operator_supplied_unknown'};
  });
