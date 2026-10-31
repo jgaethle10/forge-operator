@@ -63,10 +63,10 @@ test('Node002 pinned outbound policy executes a real content hash through the pr
       workload_class:'systemia.content-hash.v1',idempotency_key:key,
       input:{payload:{value}},
     };
-    const submit=()=>json(fetch(grant.capacity_endpoint+'/v1/jobs',{
+    const submit=async()=>json(await fetch(grant.capacity_endpoint+'/v1/jobs',{
       method:'POST',headers:{'content-type':'application/json'},
       body:JSON.stringify(body),
-    }).then(x=>x));
+    }));
     const job=await submit();
     assert.equal(job.status,200,JSON.stringify(job.body));
     assert.equal(job.body.ok,true);
