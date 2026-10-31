@@ -71,3 +71,17 @@ The modeled SHA-256 hashes are deterministic integrity checks only, not signatur
 2. Add occlusion-aware sensors, unknown object tracking, dynamic collision sweeps, localization dropout, and adversarial near-boundary conditions.
 3. Validate stop-distance invariants with delayed commands across a larger held-out seed set and independent oracle checks. Publish failure cases.
 4. Only after separate hardware-safety review, define a fail-closed device adapter with emergency stop, watchdog/expiry, independent physical safety bounds, human enable and observed hardware receipts.
+
+## RC03: Native World Engine trajectory proof (modeled only)
+
+RC03 moves the RC02 trajectory projection from data-only to executable **native Evercraft World Engine playback**, through the existing `EvercraftWorldRuntime`. This is a **teleport-based playback of recorded modeled samples**, not an autonomous robotics controller or a validated physics model.
+
+```sh
+npm install --no-audit --no-fund
+node --import tsx --test systemia/world-engine/sim-to-real/native-engine-proof.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/native-engine-proof.mjs --seeds 4 --out /tmp/evercraft-native-rc03.json
+```
+
+The native runner cross-checks each recorded sample's position and sphere-overlap contacts against a separate geometric oracle, tests native world snapshot integrity, native deterministic replay, checkpoint restoration and input-ledger order invariance. Tampered episode / proof digests are rejected. Output claims are limited to **modeled synthetic data and sampled positions**. Intervening (unrecorded) ticks are not full-fidelity rover motion, and these tests do not establish continuous collision avoidance, emergency stopping, control quality or hardware safety.
+
+Hardware authority remains absent. Future work is to record every simulated tick, then test movement by native dynamic inputs rather than teleports, before considering any physical system.
