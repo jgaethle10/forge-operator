@@ -8,6 +8,13 @@
 <main class="wrap"><h1>Find the part.<br>Get back to work.</h1>
 <p>Search by part number, equipment model, or a plain-language description. Free to explore. No account or email required.</p>
 <form id="search-form"><input id="part-query" type="search" maxlength="180" required minlength="3" autocomplete="off" placeholder="e.g. Ford 3600 hydraulic pump" aria-label="Part or equipment to search"><button type="submit">Search parts</button></form>
+<section class="panel" id="photo-evidence"><h2>Add a photo of the broken part</h2>
+<p>Optional. Select a photo from your phone or computer, then describe anything you know. The preview stays on your device; this version does not recognize images or upload them.</p>
+<label for="part-photo">Part photo</label>
+<input id="part-photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-describedby="photo-status">
+<div id="photo-preview" aria-live="polite"></div><p id="photo-status" class="hint">No photo selected.</p>
+<button type="button" id="clear-photo">Remove photo</button>
+</section>
 <p class="hint">This preview opens independent supplier searches. It does not verify inventory, prices, fitment or supplier identity.</p>
 <section id="results" hidden aria-live="polite"><h2>Search these sources</h2><p id="query-description"></p><div id="source-results" class="sources"></div><p><button type="button" id="save-search" hidden>Save search brief</button></p><p class="hint">Results on external websites are supplier claims, not verified FindMyPart matches. Check exact OEM number, measurements, model year and seller before ordering.</p></section>
 <section class="panel" id="recovery-paths">
