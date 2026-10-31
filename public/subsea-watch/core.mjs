@@ -47,11 +47,14 @@ export function atTime(dive,t){
  while(i<pts.length-2&&pts[i+1].t<time)i++;
  const a=pts[i],b=pts[i+1],dt=b.t-a.t;
  const fraction=dt>0?(time-a.t)/dt:0;
- const depth=a.depth+(b.depth-a.depth)*fraction;
- const canInterpolate=dive.xyAvailable&&dt<=15&&a.position_source===b.position_source;
- return {t:time,depth,x:canInterpolate?a.x+(b.x-a.x)*fraction:null,y:canInterpolate?a.y+(b.y-a.y)*fraction:null,
-  positionState:!dive.xyAvailable?'not_recorded':canInterpolate?'within_recorded_interval':'gap_not_interpolated',
-  source:canInterpolate?a.position_source:null,nearest:i};
+ const exactFix=time===a.t||time===b.t,shortInterval=dt<=15;
+ const hasDepth=shortInterval||exactFix;
+ const depth=hasDepth?a.depth+(b.depth-a.depth)*fraction:null;
+ const hasPosition=dive.xyAvailable&&(shortInterval||exactFix)&&a.position_source===b.position_source;
+ return {t:time,depth,depthState:hasDepth?'measured_or_short_interval':'gap_unobserved',
+  x:hasPosition?a.x+(b.x-a.x)*fraction:null,y:hasPosition?a.y+(b.y-a.y)*fraction:null,
+  positionState:!dive.xyAvailable?'not_recorded':hasPosition?(exactFix?'recorded_fix':'within_recorded_interval'):'gap_not_interpolated',
+  source:hasPosition?a.position_source:null,nearest:i};
 }
 export function segments(dive){
  if(!dive.xyAvailable)return [];
