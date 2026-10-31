@@ -37,3 +37,19 @@ jobs:
         run: node --import tsx --test systemia/world-engine/sim-to-real/native-engine-proof.test.mjs
       - name: Generate native execution / sampled-contact evidence
         run: node --import tsx systemia/world-engine/sim-to-real/native-engine-proof.mjs --seeds 4 --out /tmp/evercraft-native-rc03.json
+
+      - name: RC04 native motion unit and fail-closed evidence tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/native-motion-rc04.test.mjs
+      - name: RC04 paired native dynamics benchmark
+        run: node --import tsx systemia/world-engine/sim-to-real/native-motion-rc04.mjs --seeds 4 --out /tmp/evercraft-native-rc04.json
+      - name: RC04 independently verify batch integrity and no teleports
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyMotionBatch} from './systemia/world-engine/sim-to-real/native-motion-rc04.mjs';
+          const report=JSON.parse(fs.readFileSync('/tmp/evercraft-native-rc04.json','utf8'));
+          if(!verifyMotionBatch(report)) throw Error('rc04_invalid_integrity');
+          if(!report.runs.every(r=>r.physicsDrivenMovement&&r.teleportInputs===false&&r.hardwareExecution===false)) throw Error('rc04_authority_contract_failed');
+          console.log('RC04 paired scores',JSON.stringify(report.scores));
+          console.log('RC04 batch SHA-256',report.sha256);
+          NODE
