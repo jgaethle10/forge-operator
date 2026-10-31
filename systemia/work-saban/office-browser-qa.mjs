@@ -76,22 +76,31 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(loaded.desks,6);
   assert(loaded.shown,'CSS3D office remained hidden');
   await js(send,"document.getElementById('office-scene').scrollIntoView({block:'center'});true");
+  await sleep(350);
+  const overview=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+  const overviewFile=path.join(out,'work-saban-'+label+'-overview.png');
+  await fs.writeFile(overviewFile,Buffer.from(overview.data,'base64'));
+  assert((await fs.stat(overviewFile)).size>8000,'Overview screenshot unexpectedly empty');
   const motion=await js(send,"(async()=>{const ui=window.WorkSaban3D;const initial=ui.getRenderedCamera().panX;ui.focusAgent('writer');const target=ui.getCamera().panX;const before=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,100));const midway=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,1100));return {initial,target,before,midway,after:ui.getRenderedCamera().panX,follow:typeof ui.toggleFollow==='function'};})()");
   assert(motion.follow,'Follow mode missing');
   assert(Math.abs(motion.target-motion.initial)>5,'Focus has no travel');
   assert(Math.abs(motion.midway-motion.target)<Math.abs(motion.before-motion.target),'Camera did not ease');
   assert(Math.abs(motion.after-motion.target)<1,'Camera did not converge');
   if(mobile){
+    const framing=await js(send,'window.WorkSaban3D.getCamera().zoom');
+    assert(framing<=.69,'Phone follow view is excessively zoomed/cropped');
+  }
+  if(mobile){
     const touch=await js(send,"(()=>{const v=document.getElementById('spatial-viewport'),u=window.WorkSaban3D,before=u.getCamera().yaw;const send=(t,id,x,y)=>v.dispatchEvent(new PointerEvent(t,{bubbles:true,pointerType:'touch',pointerId:id,clientX:x,clientY:y,button:0}));send('pointerdown',41,70,180);send('pointermove',41,130,195);send('pointerup',41,130,195);return {before,after:u.getCamera().yaw};})()");
     assert.notEqual(touch.before,touch.after,'Mobile orbit touch did not work');
   }
   await sleep(550);
   const pixels=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
-  const screenshot=path.join(out,'work-saban-'+label+'.png');
+  const screenshot=path.join(out,'work-saban-'+label+'-focus.png');
   await fs.writeFile(screenshot,Buffer.from(pixels.data,'base64'));
-  assert((await fs.stat(screenshot)).size>8000,'Screenshot is unexpectedly empty');
+  assert((await fs.stat(screenshot)).size>8000,'Focus screenshot is unexpectedly empty');
   return {label,width,height,mobile,desks:loaded.desks,follow_control:true,camera_easing:true,
-    touch_orbit:mobile?'passed':'not_applicable',screenshot};
+    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,focus:screenshot}};
 }
 const out=process.env.WORK_SABAN_BROWSER_PROOF_DIR||path.join(os.tmpdir(),'work-saban-browser-qa');
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));
