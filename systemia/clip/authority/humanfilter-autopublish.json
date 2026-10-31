@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.clip.operator-authority.v1",
+  "authorized": true,
+  "authority_state": "manual_authorized",
+  "authority_receipt_ref": "founder:2026-10-30:humanfilter-clip-continuous-corporate-rotation",
+  "issuer_ref": "authority:evercraft-operator",
+  "subject_ref": "system:humanfilter-clip-publisher",
+  "product": "evercraft-home",
+  "scopes": [
+    "home.clip.publish"
+  ],
+  "resource_refs": [
+    "brand:evercraft"
+  ],
+  "excluded_brand_keys": [
+    "eps",
+    "havenly-cleaning",
+    "rnb-chicken-and-soul",
+    "christmaslightsusa"
+  ],
+  "starts_at": "2026-10-30T00:00:00.000Z",
+  "ends_at": "2027-10-30T00:00:00.000Z",
+  "purpose": "Autonomously publish unique, truthful, organic HumanFilter desktop-beta posts through Evercraft Clip on verified Evercraft corporate pages; never personal profiles or unrelated brands.",
+  "campaign_id": "humanfilter-desktop-beta-rotation-20261030",
+  "boundaries": {
+    "channel_scope": "verified_evercraft_corporate_only",
+    "maximum_posts_per_cycle": 1,
+    "minimum_hours_between_posts_per_platform": 72,
+    "max_posts_per_platform_per_7_days": 2,
+    "paid_spend_usd": 0,
+    "first_comment_provider_receipt_required": true,
+    "provider_id_and_readback_required": true,
+    "durable_claim_required": true
+  }
+}
