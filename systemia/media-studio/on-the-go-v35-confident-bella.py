@@ -11,10 +11,10 @@ root.mkdir(parents=True, exist_ok=True)
 takes = [
  ('service_firm_bella','From oil changes and filters to BRAKE service.',1.05,'af_bella'),
  ('service_fluid_bella','From oil changes and filters to brake service.',1.09,'af_bella'),
- ('service_warm_bella','From oil changes and filters to BRAKE service.',1.07,'af_bella(0.80)+af_heart(0.20)'),
+ ('service_warm_bella','From oil changes and filters to BRAKE service.',1.07,'af_bella'),
  ('closing_grounded_bella','On The Go [Mobile](/mˈoʊbəl/) Quick Lube. Let us come to you. Thank you.',1.04,'af_bella'),
  ('closing_steady_bella','On The Go [Mobile](/mˈoʊbəl/) Quick Lube. Let us come to YOU. Thank you.',1.06,'af_bella'),
- ('closing_warm_bella','On The Go [Mobile](/mˈoʊbəl/) Quick Lube. Let us come to YOU. Thank you.',1.04,'af_bella(0.80)+af_heart(0.20)'),
+ ('closing_warm_bella','On The Go [Mobile](/mˈoʊbəl/) Quick Lube. Let us come to YOU. Thank you.',1.04,'af_bella'),
  ('closing_direct_bella','On The Go [Mobile](/mˈoʊbəl/) Quick Lube. Let us come to you.',1.04,'af_bella'),
 ]
 pipe = KPipeline(lang_code='a')
