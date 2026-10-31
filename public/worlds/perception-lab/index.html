@@ -45,17 +45,20 @@ button{background:#185eb1;color:white;border:0;border-radius:10px;padding:12px 1
   </div>
   <div class="stats" style="margin-top:24px">
     <div class="stat"><b id="pointCount">0</b><span>accepted sample points</span></div>
+    <div class="stat"><b id="consistency">N/A</b><span>left/right consistency retention</span></div>
+    <div class="stat"><b id="referenceError">N/A</b><span>synthetic reference error</span></div>
     <div class="stat"><b id="depthMedian">Unknown</b><span>median estimated distance</span></div>
     <div class="stat"><b id="objects">0</b><span>supplied object labels</span></div>
     <div class="stat"><b id="mapPins">0</b><span>verified geographic pins</span></div>
   </div>
-  <p id="detail" style="font-size:.88rem">Estimated values, not calibrated or field-validated measurements.</p>
+  <p id="detail" style="font-size:.88rem">Estimated values, not independently field-validated measurements.</p>
 </div>
 <div class="notice"><b>Real-world limit:</b> Requires two synchronized, lens-corrected, rectified camera views and real camera calibration. An ordinary single-lens dashcam video cannot establish metric stereo distance. Object labels are never automatically inferred by this demo. Do not use for driving, safety warnings, or forensic conclusions.</div>
-<p style="font-size:.8rem">All image processing runs inside this page. Synthetic pixels and manually supplied sample boxes are marked as such. No GPS positions are computed, and no persistent world objects are created.</p>
+<p style="font-size:.8rem">Depth samples are additionally checked for left/right correspondence. A high consistency percentage is not an accuracy certificate. All image processing runs inside this page. Synthetic pixels and manually supplied sample boxes are marked as such. No GPS positions are computed, and no persistent world objects are created.</p>
 </main>
 <script type="module">
 import {estimateStereoDepth,fuseDetections,mappingDraft,worldsProjection,forensiScopeTimeline} from '../spatial-perception.mjs';
+import {auditStereoConsistency,compareRangingTargets} from '../spatial-audit.mjs';
 const byId=id=>document.getElementById(id);
 const set=(id,value)=>byId(id).textContent=String(value);
 const W=160,H=100;
@@ -72,8 +75,12 @@ function renderDepth(depth){
    ctx.fillStyle='hsl('+hue+',80%,58%)';ctx.fillRect(p.x-1,p.y-1,2,2);}
 }
 function process(left,right,width,height,focal,baseline,synthetic){
- const depth=estimateStereoDepth({left,right,width,height,fxPx:focal,baselineM:baseline,
-   minDisparity:1,maxDisparity:Math.min(12,Math.floor(width/5)),stride:3,radius:2,minTexture:8});
+ const maxDisparity=Math.min(12,Math.floor(width/5));
+ const raw=estimateStereoDepth({left,right,width,height,fxPx:focal,baselineM:baseline,
+   minDisparity:1,maxDisparity,stride:3,radius:2,minTexture:8});
+ const depth=auditStereoConsistency(raw,left,right,{minDisparity:1,maxDisparity,radius:2,tolerancePx:1});
+ const reference=synthetic?compareRangingTargets(depth,[{id:'known-disparity-synthetic',rangeM:3.6,
+   method:'generated known disparity',box:{x:58,y:25,width:65,height:45}}]):null;
  const demoBoxes=synthetic?[{label:'hand-marked synthetic object',confidence:1,
     box:{x:58,y:25,width:65,height:45}}]:[];
  const observed=fuseDetections(depth,{frameId:synthetic?'synthetic-scene':'user-local-frame',
@@ -84,7 +91,9 @@ function process(left,right,width,height,focal,baseline,synthetic){
  paint('leftCanvas',left,width,height);paint('rightCanvas',right,width,height);renderDepth(depth);
  const distances=depth.points.map(p=>p.depthM).sort((a,b)=>a-b);
  const median=distances.length?distances[Math.floor(distances.length/2)]:null;
- set('pointCount',depth.points.length);set('depthMedian',median===null?'Unknown':median.toFixed(2)+' m');
+ set('pointCount',depth.points.length);set('consistency',depth.audit.retentionRatio===null?'N/A':Math.round(100*depth.audit.retentionRatio)+'%');
+ set('referenceError',reference?.meanAbsoluteErrorM===null||!reference?'N/A':reference.meanAbsoluteErrorM.toFixed(3)+' m');
+ set('depthMedian',median===null?'Unknown':median.toFixed(2)+' m');
  set('objects',events.length);set('mapPins',records.filter(x=>x.geometry).length);
  set('detail','Camera-relative preview only. '+world.entities.length+' non-colliding Worlds preview entity(s). No automatic object recognition or geographic registration.');
  set('status',synthetic?'Synthetic, pre-rectified pair complete. Expected object distance about 3.6 m.':
