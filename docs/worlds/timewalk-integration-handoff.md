@@ -37,3 +37,15 @@ This is a **proposed data contract** only, not a claim the existing code can alr
 
 ## Review path
 Keep PR #1780 as a draft for the Timewalk historical package. The main Worlds thread integrates **data**, not copied renderer. On integration, retain evidence metadata and replace/delete this standalone renderer in favor of the single canonical Worlds scene experience. Do not merge the standalone as a parallel public engine route.
+
+## 2026-10-30 historical-source and adapter update
+
+**Source inventory:** `public/worlds/timewalk/yakima-1960/evidence.v1.json` now records 11 referenced sources and a five-item research inventory. New evidence candidates are the Washington State Historical Society's *circa-1950 eastward Yakima Avenue photograph between Second and Third* as cataloged by Revisiting Washington, plus the Washington State Library's **1959 and 1961** Yakima directory holdings. These are catalog **descriptions**, not newly ingested photographs, exact 1960 store names, or proof of continuity.
+
+**Use without fork:** `public/worlds/timewalk/historical-evidence.mjs` exports `validateHistoricalEvidence(ledger)`, `sourceCanBeEmbedded(source)` and `makeHistoricalOverlay(ledger, 1960)`. The result is a serializable **evidence overlay**, deliberately with `geometry: null`, `renderer: null`, `movement: null`, `georeferenced: false`, no embedded imagery and an explicit `accurateSceneClaimAllowed: false`. Integrate this only as a source/provenance view within canonical Worlds, never a replacement scene or second renderer.
+
+**Regression file:** `tests/timewalk-overlay.test.mjs` adds eight Node built-in tests (run using `node --test tests/timewalk-overlay.test.mjs`). CI outcome must be checked separately, not assumed from the commit.
+
+**Before citing an actual Yakima 1960 business:** read and document **both** directory entries for the business at its numbered address (if they exist), investigate intervening construction/tenant changes, and retain an inferred/uncertain status until independent 1960 evidence confirms presence. An approximate-1950 photo cannot be projected directly into 1960. An online photo catalog does not itself grant publication rights.
+
+New references: [Revisiting Washington Yakima](https://revisitwa.org/waypoint/yakima/), [Washington State Library city-directory holdings](https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books), [Yakima Central Library local directories](https://www.yvl.org/services/special-collections-and-archive-services/washington-cities-counties/).
