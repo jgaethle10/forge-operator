@@ -36,11 +36,14 @@ export function publicPaymentHealth(health){
     checkoutAcceptanceVerified:false,publicationAuthority:false,
   };
 }
-export function pageEvidence({httpStatus,title,heading,hasEmailField,hasCheckoutButton,
-  hasAssistedInvoice,pageErrorCount,paymentHealth}){
+export function pageEvidence({httpStatus,title,heading,hasQuickWinOffer,hasExactPrice,
+  hasEmailField,hasCheckoutButton,hasAssistedInvoice,pageErrorCount,paymentHealth}){
   const problems=[];
   if(httpStatus!==200)problems.push('offer_http_not_200');
-  if(!/website audit/i.test([title,heading].join(' ')))problems.push('offer_identity_missing');
+  // Actual owned page leads with an audience problem, not product title.
+  // Match the exact $49 Quick Win offer in the page body, not the H1 alone.
+  if(hasQuickWinOffer!==true||hasExactPrice!==true)
+    problems.push('offer_identity_or_exact_price_missing');
   if(pageErrorCount>0)problems.push('browser_runtime_errors');
   const base=problems.length===0;
   const paymentHeld=base && !hasEmailField && !hasCheckoutButton &&
@@ -125,6 +128,9 @@ export async function capture({outDir,chromium}){
       receipt.hasEmailField=await page.locator('input[type="email"]').count()>0;
       receipt.hasCheckoutButton=await page.getByRole('button',{name:/continue to checkout/i}).count()>0;
       receipt.hasAssistedInvoice=(await page.getByText('Online checkout is temporarily unavailable.').count())>0;
+      const bodyText=(await page.locator('body').innerText()).slice(0,12000);
+      receipt.hasQuickWinOffer=/Quick Win Audit/i.test(bodyText);
+      receipt.hasExactPrice=/(^|\s)\$49(?!\d)/m.test(bodyText);
       receipt.httpStatus=httpStatus;
       const screenshot=path.join(dir,'website-audit-public-offer.png');
       await page.screenshot({path:screenshot,fullPage:true,animations:'disabled'});
@@ -156,6 +162,8 @@ export async function capture({outDir,chromium}){
       httpStatus,title:receipt.title,heading:receipt.heading,
       hasEmailField:receipt.hasEmailField,
       hasCheckoutButton:receipt.hasCheckoutButton,
+      hasQuickWinOffer:receipt.hasQuickWinOffer,
+      hasExactPrice:receipt.hasExactPrice,
       hasAssistedInvoice:receipt.hasAssistedInvoice,
       paymentHealth:receipt.paymentHealth,
       pageErrorCount:receipt.errors.length
