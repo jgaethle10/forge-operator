@@ -1,0 +1,27 @@
+name: Evercraft Payments exact Website Audit order acceptance
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/website-audit-payment-guard.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/website-audit-payment-integrity.test.mjs'
+      - '.github/workflows/website-audit-payment-integrity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-order-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test exact $49 USD unpaid native order, held route and payment receipt verification
+        run: |
+          node --test \
+            tests/website-audit-payment-integrity.test.mjs \
+            tests/fabric-offer-pages.test.mjs \
+            tests/fabric-precheckout-hold.test.mjs \
+            tests/payment-return.test.mjs

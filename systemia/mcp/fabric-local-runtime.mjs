@@ -3,6 +3,7 @@ import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
 import {renderForensiScopeBuyerPage} from './forensiscope-sales-page.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
+import {inspectWebsiteAuditCheckoutHandoff} from './website-audit-payment-guard.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -1315,7 +1316,11 @@ export async function startFabricLocalRuntime({
           const candidate=new URL(String(result?.checkout_url||''));
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl||(auditedDomain&&(result?.context_persisted!==true||result?.audited_domain!==auditedDomain))){
+        const auditGuard=slug==='website-audit'
+          ? inspectWebsiteAuditCheckoutHandoff({result,auditedDomain})
+          : null;
+        if(result?.checkout_ready!==true||!checkoutUrl||
+           (slug==='website-audit'&&!auditGuard.accepted)){
           if(isForm){
             return sendText(
               res,
