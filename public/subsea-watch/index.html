@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071c2d">
+<title>Subsea Watch | Dive Replay Lab · Evercraft</title>
+<meta name="description" content="Subsea Watch is a private, evidence-first dive replay prototype. Explore a synthetic 3D dive, inspect a depth profile, or replay your own properly sourced dive telemetry. Not a safety clearance tool.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{color-scheme:dark;--bg:#071722;--surface:#0d2332;--panel:#102c3c;--edge:#294c5c;--text:#edf7f7;--muted:#adc3cd;--aqua:#83e5df;--amber:#ffd18b;--white:#ffffff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #a6f5e4;outline-offset:3px}a{color:#b5eceb}header{height:72px;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:0 clamp(16px,3.4vw,54px);border-bottom:1px solid var(--edge);background:#081d2d}
+.brand{display:flex;align-items:center;gap:13px;color:var(--white);text-decoration:none;font-weight:750;letter-spacing:.12em;font-size:.9rem}.mark{width:38px;height:38px;border:1px solid #63bcbf;display:grid;place-items:center;color:var(--aqua);font-family:Georgia,serif;font-size:25px}.brand span small{display:block;font-size:.57rem;letter-spacing:.25em;color:var(--muted);font-weight:600}
+.header-meta{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:.75rem}.tag{border:1px solid #577b7c;color:#a4efdf;border-radius:20px;padding:6px 11px;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.page{max-width:1700px;margin:auto;padding:clamp(18px,2.7vw,42px)}.intro{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:0 0 24px}.eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.7rem;font-weight:800;color:var(--aqua)}h1{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(2.2rem,4.8vw,4.4rem);line-height:1.13;letter-spacing:-.04em;margin:9px 0 11px}h1 em{color:#88d3d6;font-weight:400}p{margin:0}.intro p{color:var(--muted);max-width:680px;font-size:.93rem}.btn{border:1px solid #567584;background:#133044;color:var(--text);padding:11px 14px;border-radius:8px;font-weight:750;font-size:.79rem;display:inline-flex;gap:9px;align-items:center;justify-content:center;text-decoration:none;transition:background .16s}.btn:hover{background:#235166}.btn.primary{background:#d6ede9;color:#103040;border-color:#d6ede9}.btn.primary:hover{background:#fff}.actionbar{display:flex;gap:9px;flex-wrap:wrap}.small{color:var(--muted);font-size:.78rem}
+.notice{border:1px solid #947246;background:#322b1e;border-radius:8px;padding:12px 17px;color:#ffe2b1;font-size:.8rem;margin-bottom:18px}.notice strong{color:#fff1d6}
+.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.72fr);gap:18px;align-items:start}.panel{border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--surface);min-width:0}.panehead{padding:16px 19px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--edge)}.panehead h2{margin:0;font-size:.94rem;letter-spacing:.02em}.scene{position:relative;min-height:490px;background:radial-gradient(ellipse at 48% 24%,#1e586a 0%,#0a2b3d 40%,#061825 100%);touch-action:pan-y}
+#world{display:block;width:100%;height:500px;touch-action:none;cursor:grab}#world:active{cursor:grabbing}.float{position:absolute;left:16px;top:16px;background:#082334dc;border:1px solid #3a6975;border-radius:8px;padding:12px 14px;max-width:calc(100% - 32px);pointer-events:none}.float strong{display:block;letter-spacing:.12em;font-size:.72rem;text-transform:uppercase;color:#c2f8ef}.float small{color:#b4d2da}.legend{position:absolute;bottom:13px;left:16px;right:16px;display:flex;gap:14px;flex-wrap:wrap;pointer-events:none;color:#d3e5e8;font-size:.68rem}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#77e7dd;margin-right:5px}.amber-dot{background:#e8b66b}.muted-dot{background:#90abb1}
+.camera{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:8px}.camera button{background:#112f40c9;border:1px solid #496c77;border-radius:7px;color:white;width:39px;height:38px;font-size:1.05rem}.empty-track{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:min(410px,85%);padding:18px;border:1px dashed #7298a3;border-radius:10px;background:#051924e8;text-align:center}.empty-track strong{display:block;color:#e4f4f5;margin-bottom:8px}.empty-track p{font-size:.77rem;color:#bfd3d9}
+.transport{padding:16px 18px;border-top:1px solid var(--edge);background:#0d2535}.transport-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap}.time{font-variant-numeric:tabular-nums;font-size:.87rem;font-weight:800;color:#d8f9f5}.progress{width:100%;margin:15px 0 6px;accent-color:#8bede3;cursor:pointer}.transport-foot{display:flex;justify-content:space-between;gap:12px;color:#a3c0c9;font-size:.72rem}
+.right{display:flex;flex-direction:column;gap:18px}.stats{padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.metric small{display:block;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}.metric strong{font-size:clamp(1.1rem,2vw,1.6rem);letter-spacing:-.025em}.metric .value{color:var(--aqua)}.metric .uncertain{color:var(--amber);font-size:.9rem}
+.profile{padding:16px 18px}.chart{width:100%;height:175px;display:block;margin-top:9px;cursor:crosshair}.profile-note{font-size:.75rem;color:var(--muted);margin:7px 0 0}.evidence{padding:16px 18px}.evidence h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.13em;color:#c5e4e4;margin:0 0 12px}.source{display:flex;gap:8px;align-items:flex-start;margin:0 0 13px;font-size:.79rem}.source .status{color:var(--amber);flex:none}.source p{color:#c9dbe0}.source b{color:#eff9fa}.evidence-cta{margin-top:13px;padding:12px;border-radius:8px;background:#1e2b32;border:1px solid #8c764e;color:#ffe5b0;font-size:.76rem}
+.footer{margin:24px 0 0;color:#a6c0ca;font-size:.77rem;line-height:1.65}.footer a{color:#a6e9e4}
+#file-input{display:none}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.right{display:grid;grid-template-columns:1fr 1fr;gap:15px}.right>.panel:last-child{grid-column:1/-1}}
+@media(max-width:630px){header{height:65px;padding:0 16px}.header-meta .screen-only{display:none}.page{padding:18px 13px 38px}.intro{gap:14px}.intro h1{font-size:2.25rem}.actionbar{width:100%;display:grid;grid-template-columns:1fr 1fr}.actionbar .btn{font-size:.72rem;padding:11px 8px}.right{grid-template-columns:1fr}.right>.panel:last-child{grid-column:auto}#world{height:370px}.scene{min-height:370px}.float{top:10px;left:10px;padding:9px}.legend{bottom:9px;left:10px;gap:8px}.panehead{padding:14px}.stats{grid-template-columns:1fr 1fr;padding:16px}.notice{font-size:.75rem}.transport{padding:12px}.transport-top{gap:6px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none!important}}
+</style>
+</head>
+<body>
+<header><a href="./" class="brand"><div class="mark">S</div><span><small>EVERCRAFT</small>SUBSEA WATCH</span></a>
+<div class="header-meta"><span class="screen-only">MISSION REPLAY LAB</span><span class="tag">Prototype · no dive clearance</span></div></header>
+<main class="page">
+<div class="intro"><div><div class="eyebrow">Mission intelligence / Dive Replay 01</div><h1>Revisit the dive.<br><em>Keep the evidence.</em></h1><p>Replay recorded depth and, when real positioning data exists, a 3D track. Examine infrastructure context without turning unknown conditions into false certainty.</p></div>
+<div class="actionbar"><button class="btn primary" id="load-demo" type="button">▶ Explore sample dive</button><button class="btn" type="button" id="import-btn">↑ Import JSON / CSV</button><input id="file-input" type="file" accept=".json,.csv,application/json,text/csv"><button class="btn" type="button" id="export">↓ Evidence brief</button></div></div>
+<div class="notice" role="note"><strong>Prototype, not a safety device.</strong> The included route and pipe are entirely synthetic. Uploaded records are unverified; a missing charted hazard never means a site is safe to dive. Do not use this view for underwater navigation, Delta-P avoidance, isolation decisions or dive clearance.</div>
+<div class="layout">
+<section class="panel" aria-label="Three-dimensional dive replay">
+<div class="panehead"><h2>Spatial replay</h2><span class="small" id="mission-title">Loading synthetic demonstration</span></div>
+<div class="scene"><canvas id="world" role="img" aria-label="Interactive 3D perspective of synthetic underwater dive track and illustrative pipe. Drag to rotate; use plus and minus to zoom."></canvas>
+<div class="float"><strong id="scene-status">SIMULATED TRACK</strong><small id="scene-sub">Not an actual dive or surveyed site</small></div>
+<div class="camera"><button id="zoom-in" type="button" title="Zoom in" aria-label="Zoom in">+</button><button id="zoom-out" type="button" title="Zoom out" aria-label="Zoom out">−</button><button id="reset-camera" type="button" title="Reset camera" aria-label="Reset camera">⟳</button></div>
+<div class="empty-track" id="no-xy" hidden><strong>No horizontal position recorded</strong><p>This file can replay its depth profile, but it cannot support a real 3D diver route. Add independently sourced underwater X/Y positioning to show spatial movement.</p></div>
+<div class="legend"><span><i class="dot"></i>Recorded / synthetic track</span><span><i class="dot amber-dot"></i>Illustrative pipe, operation unknown</span><span><i class="dot muted-dot"></i>Context grid is not a survey</span></div></div>
+<div class="transport"><div class="transport-top"><button class="btn primary" type="button" id="play">▶ Play</button><button class="btn" type="button" id="speed">1× speed</button><strong class="time" id="time">00:00 / 03:00</strong><span class="small" id="state">Synthetic coordinates</span></div>
+<input id="scrub" type="range" min="0" max="180" step=".1" value="0" class="progress" aria-label="Dive replay time"><div class="transport-foot"><span>Drag to move through the recorded timeline</span><span>Rotate scene by dragging · Scroll/pinch to zoom</span></div></div>
+</section>
+<div class="right">
+<section class="panel"><div class="panehead"><h2>Mission readings</h2><span class="small">At cursor</span></div><div class="stats">
+<div class="metric"><small>Recorded depth</small><strong class="value" id="depth">0.0 m</strong></div>
+<div class="metric"><small>Maximum depth</small><strong id="maximum">0.0 m</strong></div>
+<div class="metric"><small>Time elapsed</small><strong id="elapsed">00:00</strong></div>
+<div class="metric"><small>Position evidence</small><strong class="uncertain" id="position">Sample only</strong></div>
+</div></section>
+<section class="panel"><div class="panehead"><h2>Depth profile</h2><span class="small">Time / depth</span></div><div class="profile"><canvas id="profile" class="chart" role="img" aria-label="Depth measurements over the recorded dive duration."></canvas><p class="profile-note">The depth chart is derived from supplied readings. It does not establish horizontal position or proximity to underwater hazards.</p></div></section>
+<section class="panel"><div class="panehead"><h2>Evidence & unknowns</h2><span class="small">No false clearances</span></div><div class="evidence" id="evidence">
+<h3>Data source</h3><div class="source"><span class="status">●</span><p><b id="source-type">Synthetic example</b><br><span id="source-description">No sensor or facility data</span></p></div>
+<h3>Infrastructure</h3><div class="source"><span class="status">●</span><p><b id="pipe-status">Illustrative intake pipe</b><br><span id="pipe-description">Isolation and flow conditions unknown</span></p></div>
+<h3>Interpretation</h3><div class="source"><span class="status">●</span><p><b>Not a reconstruction of unseen terrain</b><br>3D track rendering is not photogrammetry, bathymetry or verified diver localization.</p></div>
+<div class="evidence-cta">Only an operator and qualified dive team can verify site-specific hazards, operating status and isolation. Unknown ≠ safe.</div>
+</div></section>
+</div></div>
+<div class="footer">© Evercraft LLC · Experimental local-first dive replay. No file is uploaded to Evercraft by this prototype. <a href="https://www.osha.gov/commercial-diving" target="_blank" rel="noopener noreferrer">OSHA diving safety</a> · <a href="https://oceanexplorer.noaa.gov/technology/photogrammetry/" target="_blank" rel="noopener noreferrer">NOAA underwater photogrammetry</a> · Original work, not affiliated with Open DroneLog.</div>
+</main>
+<script type="module" src="./viewer.mjs"></script>
+</body>
+</html>
