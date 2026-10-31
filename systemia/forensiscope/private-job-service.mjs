@@ -375,5 +375,49 @@ export function createForensiScopePrivateJobs({
    return respond(e?.status||503,{ok:false,error:e?.status?e.message:'private_job_service_unavailable'});
   }
  };
- return Object.freeze({handler,submit,runOne,readResult,purgeExpiredJobs});
+ const runNextQueued=async()=>{
+  for(const id of fs.readdirSync(root).sort()){
+   if(!ID.test(id)||locks.has(id))continue;
+   let item;
+   try{item=readJob(root,id).job}catch{continue}
+   if(item.state==='queued'&&item.expires_at_ms>now())
+    return runOne({jobId:id});
+  }
+  return null;
+ };
+ return Object.freeze({handler,submit,runOne,runNextQueued,readResult,purgeExpiredJobs});
+}
+
+/**
+ * Owned, private worker loop, with at most one processing job at a time.
+ * Once started by an approved resident supervisor, work needs no human
+ * action for each order. The worker is deliberately not reachable via HTTP.
+ */
+export function startForensiScopePrivateWorker({
+ jobService,intervalMs=5000,onTickError=()=>{}
+}={}){
+ if(!jobService||typeof jobService.runNextQueued!=='function')
+  throw fail('trusted_private_job_service_required');
+ if(!Number.isSafeInteger(intervalMs)||intervalMs<10||intervalMs>60000)
+  throw fail('invalid_worker_interval');
+ if(typeof onTickError!=='function')throw fail('invalid_worker_error_sink');
+ let active=true,timer=null,current=Promise.resolve();
+ const pump=()=>{
+  if(!active)return;
+  current=(async()=>{
+   try{await jobService.runNextQueued()}
+   catch{onTickError({error_code:'private_worker_tick_failed'})}
+  })();
+  current.finally(()=>{
+   if(active)timer=setTimeout(pump,intervalMs);
+  });
+ };
+ queueMicrotask(pump);
+ return Object.freeze({
+  async stop(){
+   active=false;
+   if(timer)clearTimeout(timer);
+   await current;
+  }
+ });
 }
