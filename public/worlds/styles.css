@@ -48,3 +48,5 @@
 .editor .tools button#unpublishOnline{border:1px solid #ba9f96;color:#86514b;background:#fff6f1;font-weight:700}
 .editor .tools button#unpublishOnline:disabled{opacity:.55;cursor:wait}
 @media(max-width:700px){.editor .tools #unpublishOnline{grid-column:span 2;min-height:46px}}
+
+.atlas-link{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:9px 0;color:#f2deb6;text-decoration:none;font-size:12px;font-weight:800;letter-spacing:.02em;text-shadow:0 1px 10px #142e37;position:relative;z-index:1}.atlas-link:hover,.atlas-link:focus-visible{color:#fff4da;text-decoration:underline}.atlas-link span{font-size:15px}.atlas-link:focus-visible{outline:2px solid #ffdb8b;outline-offset:5px;border-radius:3px}
