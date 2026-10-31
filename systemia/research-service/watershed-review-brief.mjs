@@ -67,14 +67,24 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
       '|---|---:|---:|---:|---|');
     for (const station of profile.snow_stations) {
       const entry=comparison.get(station.triplet);
+      const observed=bySnow.get(station.triplet)?.WTEQ;
+      const matched=observed && entry && observed.time===entry.date &&
+        observed.freshness==='current' && String(observed.unit).toLowerCase()==='in' &&
+        Number.isFinite(observed.value) && observed.value>=0 &&
+        Number.isFinite(entry.observed_swe_in) &&
+        Math.abs(observed.value-entry.observed_swe_in)<0.011;
+      const recomputed=matched && Number.isFinite(entry.median_swe_in) && entry.median_swe_in>=1
+        ? Math.round(observed.value/entry.median_swe_in*1000)/10 : null;
       const usable=entry && entry.state==='station_comparison_valid' &&
-        Number.isFinite(entry.ratio_percent) && Number.isFinite(entry.median_swe_in) && entry.median_swe_in>=1 &&
+        Number.isFinite(entry.ratio_percent) && Number.isFinite(recomputed) &&
+        Math.abs(entry.ratio_percent-recomputed)<0.051 &&
         entry.median_period==='1991-2020' && entry.comparison_scope==='single_station_only';
+      const label=entry?.state==='station_comparison_valid' && !usable ? 'comparison_mismatch_withheld' : entry?.state||'not_observed';
       lines.push('| ' + safe(station.name) + ' | ' +
         (Number.isFinite(entry?.observed_swe_in) ? safe(entry.observed_swe_in) + ' in' : 'unknown') + ' | ' +
         (Number.isFinite(entry?.median_swe_in) ? safe(entry.median_swe_in) + ' in' : 'unknown') + ' | ' +
         (usable ? safe(entry.ratio_percent)+'% (station only)' : 'withheld') + ' | ' +
-        safe(entry?.state||'not_observed') + ' |');
+        safe(label) + ' |');
     }
     lines.push('', 'The 1-inch threshold is an Evercraft communication guardrail, not an NRCS scientific standard.',
       'A station percentage must never be presented as the Yakima Basin percentage or a seasonal water-supply forecast.',
