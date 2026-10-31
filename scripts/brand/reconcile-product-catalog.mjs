@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const FILES={
   crosswalk:'docs/brand/catalog-crosswalk.v1.json',
+  identity:'docs/brand/identity-source-register.v1.json',
   workstreams:'docs/brand/review-workstreams.v1.json',
   directory:'public/.well-known/evercraft-products.json',
   index:'registry/public-products.json',
@@ -27,7 +28,7 @@ function keysFrom(source,label){
   return seen;
 }
 
-export function reconcileCatalog({crosswalk,workstreams,directory,index,registry}){
+export function reconcileCatalog({crosswalk,workstreams,identity,directory,index,registry}){
   if(crosswalk?.schema!=='evercraft.brand.catalog-crosswalk.v1'
      ||crosswalk.mode!=='internal_reconciliation_only'
      ||crosswalk.publication_approved!==false
@@ -79,6 +80,10 @@ export function reconcileCatalog({crosswalk,workstreams,directory,index,registry
     };
   }).sort((a,b)=>a.product_key.localeCompare(b.product_key));
 
+  const verifiedUniqueBrandsNotLinked=(identity?.brands??[])
+    .filter(b=>b.role==='customer_product'&&b.asset?.status==='verified_existing_mark'&&!crosswalk.mappings.some(m=>m.workstream_key===b.key&&m.members.length>0))
+    .map(b=>({workstream_key:b.key,name:b.name,verified_asset_source:b.asset.source,reason:'Verified identity exists outside this dated legacy catalog mapping'}));
+
   const drift={
     directory_missing_from_secondary:[...primary.keys()].filter(k=>!secondary.has(k)).sort(),
     secondary_missing_from_directory:[...secondary.keys()].filter(k=>!primary.has(k)).sort(),
@@ -95,9 +100,10 @@ export function reconcileCatalog({crosswalk,workstreams,directory,index,registry
       primary_directory:primary.size,public_product_index:secondary.size,agent_registry:tertiary.size,
       brand_workstreams:familyKeys.size,linked_review:rows.filter(x=>x.review_status==='linked_review').length,
       restricted_hold:rows.filter(x=>x.review_status==='restricted_hold').length,
-      requires_brand_review:reviewNeeded.length
+      requires_brand_review:reviewNeeded.length,
+      verified_unique_brands_not_linked_to_legacy_catalog:verifiedUniqueBrandsNotLinked.length
     },
-    drift,products:rows
+    drift,verified_unique_brands_not_linked_to_legacy_catalog:verifiedUniqueBrandsNotLinked,products:rows
   };
 }
 
@@ -121,6 +127,7 @@ export function markdownReport(report){
     '| Explicitly linked to workstreams | '+c.linked_review+' |',
     '| Restricted hold entries | '+c.restricted_hold+' |',
     '| Not yet mapped to a reviewed brand | '+c.requires_brand_review+' |',
+    '| Verified modern unique-brand marks not linked to old directory | '+c.verified_unique_brands_not_linked_to_legacy_catalog+' |',
     '',
     '## Worklist',
     '',
@@ -129,6 +136,10 @@ export function markdownReport(report){
     '| Catalog key | Recorded name | Status |',
     '|---|---|---|',
     ...report.products.filter(p=>p.review_status==='requires_brand_review').map(p=>'| '+p.product_key+' | '+String(p.name).replaceAll('|','/').replaceAll('\n',' ')+' | Brand review needed |'),
+    '',
+    '## Verified identities outside the old catalog mapping',
+    '',
+    ...report.verified_unique_brands_not_linked_to_legacy_catalog.map(b=>'- '+b.name+' | source logo: '+b.verified_asset_source),
     '',
     '## Data drift',
     '',
