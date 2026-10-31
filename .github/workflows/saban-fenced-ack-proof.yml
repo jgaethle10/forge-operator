@@ -1,0 +1,45 @@
+name: Saban fenced acknowledgment recovery proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/fenced-ack-journal*'
+      - 'systemia/saban/fenced-passport-review*'
+      - 'systemia/saban/fenced-local-scheduler*'
+      - 'systemia/saban/signed-microseed-execution*'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/saban/scheduler.mjs'
+      - '.github/workflows/saban-fenced-ack-proof.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/fenced-ack-journal*'
+      - '.github/workflows/saban-fenced-ack-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check fenced journal syntax
+        run: node --check systemia/saban/fenced-ack-journal.mjs
+      - name: Prove durable duplicate suppression, stale-worker fencing, review-only retry and integrity hold
+        run: node --test systemia/saban/fenced-ack-journal.test.mjs
+      - name: Prove consumed Passport permits fence exact retry authority
+        run: node --test systemia/saban/fenced-passport-review.test.mjs
+      - name: Run real Saban scheduler through strict local fenced candidate and crash windows
+        run: node --test systemia/saban/fenced-local-scheduler.test.mjs
+      - name: Verify fresh signed micro-work result from real localhost NodeSeed
+        run: node --test systemia/saban/signed-microseed-execution.test.mjs
+      - name: Prove signed NodeSeed evidence flows through actual Saban scheduler and rejects tampering
+        run: node --test systemia/saban/fenced-signed-node-scheduler.test.mjs
