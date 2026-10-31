@@ -7,6 +7,7 @@ on:
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'tests/boardroom-social-campaign.test.mjs'
       - 'tests/work-saban-clip-watch.test.mjs'
+      - 'tests/evercraft-partners-clip-distribution.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -21,6 +22,7 @@ on:
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'tests/boardroom-social-campaign.test.mjs'
       - 'tests/work-saban-clip-watch.test.mjs'
+      - 'tests/evercraft-partners-clip-distribution.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -42,7 +44,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test publication reconciliation
-        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs
+        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs tests/evercraft-partners-clip-distribution.test.mjs
       - name: HumanFilter editorial rotation and truth gates
         run: node --test tests/humanfilter-clip-rotation.test.mjs
       - name: Write review queue coverage snapshot (read-only)
@@ -51,6 +53,28 @@ jobs:
             --queue distribution/marketing/evercraft-problem-first-20261022.review.json \
             --receipts-dir artifacts/clip/social-publish-receipts \
             --out artifacts/clip/social-continuity-watch/latest.json
+      - name: Evercraft Partners launch receipt watch (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/evercraft-partners-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/evercraft-partners/latest.json
+      - name: Evercraft Partners provider-receipt truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/evercraft-partners/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/evercraft-partners/latest.json'));
+              const n=d.counts;
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Evercraft Partners Clip distribution\\nCampaign: '+d.campaign_id+
+                '\\nCandidates: '+n.total+
+                '\\nHeld for platform and issuer auth: '+n.approval_hold+
+                '\\nReal provider receipts: '+n.provider_receipt_recorded+
+                '\\nThis watch performs no social publishing.\\n');
+            "
+          fi
       - name: Work Saban launch receipt watch (read-only)
         run: |
           node systemia/clip/social-continuity-watch.mjs \
@@ -124,6 +148,8 @@ jobs:
             artifacts/clip/social-continuity-watch/latest.json
             artifacts/clip/social-continuity-watch/work-saban/latest.json
             artifacts/clip/social-continuity-watch/work-saban/mission-snapshot.json
+            artifacts/clip/social-continuity-watch/evercraft-partners/latest.json
+            artifacts/clip/social-continuity-watch/evercraft-partners/mission-snapshot.json
             artifacts/clip/social-continuity-watch/humanfilter/latest.json
             artifacts/clip/social-continuity-watch/humanfilter/mission-snapshot.json
           if-no-files-found: warn
