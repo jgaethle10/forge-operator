@@ -79,3 +79,17 @@ The official [RISE catalog](https://data.usbr.gov/) identifies five **observed, 
 **Manual diagnostic:** `node systemia/research-service/usbr-reservoir-probe.mjs --probe` requests five observed daily-storage locations, emits status and evidence references, and exits nonzero if all five do not supply recent values. The dedicated watershed canary includes this step under `continue-on-error` solely to preserve diagnostic evidence without falsely making the earlier USGS/NRCS pipeline appear degraded. Do not call the RISE lane integrated, operational or verified until live results corroborate the API contract. The daily workflow is only active after merging to main. No basin storage total or percent full is calculated until all five source dates and reporting cutoffs are reconciled.
 
 **Public communications:** Do not extrapolate a water-supply forecast from October SWE. Separate sensor status, official forecasts, independent reviewed interpretation, and customer-approved delivery.
+
+
+### NRCS 1991-2020 SWE median audit (October 30, 2026)
+
+The official [NRCS AWDB REST OpenAPI](https://wcc.sc.egov.usda.gov/awdbRestApi/v3/api-docs) specifies `GET /services/v1/data` with `centralTendencyType=MEDIAN`, which returns a `median` field alongside each `DataValueDTO.value`. NRCS currently identifies 1991-2020 as its published normal period. This is **not** a separate algorithm inferred from past weather reports.
+
+- `awdb-swe-normals.mjs` fetches only configured WA SNOTEL WTEQ daily observations from the official AWDB host using a bounded two-week date window. Source errors are held.
+- `collectSweMedianAudit(snapshot)` compares identical station, observation date, unit (inches), and measured SWE before admitting **station-level** comparisons.
+- A zero, missing, negative, or under-one-inch median **suppresses the percentage**, even when the underlying daily SWE measurement is real. One inch is an internal communications guardrail, not an NRCS standard. This is particularly important in October when normal snowpack may be zero or very small.
+- Contradictory reported/collected values, stale readings, wrong units, duplicate station/day, or mismatched dates prevent a ratio. The report compiler **independently recomputes** ratios against its original NRCS snow readings and labels mismatch as withheld.
+- The basin-wide percent of 1991-2020 median is **always null** in this initial prototype. An official NRCS basin statistic uses an appropriate geographic/station aggregation method, not a casual average of our six curated sites.
+- The optional `awdb-swe-median-probe.mjs --snapshot artifacts/watershed-canary/latest.json` creates a source-stamped JSON median audit in the existing live canary. The review draft includes it only when the expected artifact is available. The workflow preserves failures and never silently marks missing historical data as normal.
+
+**Release boundaries:** This is an evidence audit, not an irrigation-allocation recommendation, flood warning, seasonal water-supply outlook, paid customer deliverable or live production dashboard. `npm run test:awdb-swe-normals` is included in full Forge checks.
