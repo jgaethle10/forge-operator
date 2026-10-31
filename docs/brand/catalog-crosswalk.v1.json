@@ -1,0 +1,159 @@
+{
+  "schema": "evercraft.brand.catalog-crosswalk.v1",
+  "as_of": "2026-10-31",
+  "sources": [
+    "public/.well-known/evercraft-products.json",
+    "registry/public-products.json",
+    "registry/catalog.json"
+  ],
+  "source_snapshot_note": "Core public product directory says updated 2026-10-14; do not infer newer features, availability, rights or payments.",
+  "mode": "internal_reconciliation_only",
+  "publication_approved": false,
+  "held_catalog_keys": [
+    "skyops-parking",
+    "aliev",
+    "rivet"
+  ],
+  "rule": "Missing from the old public catalog does not mean missing from the company; presence does not grant launch authority.",
+  "mappings": [
+    {
+      "workstream_key": "evercraft",
+      "members": [
+        {
+          "catalog_key": "evercraft-front-door",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "systemia",
+      "members": []
+    },
+    {
+      "workstream_key": "evercraft-research",
+      "members": []
+    },
+    {
+      "workstream_key": "evercraft-network",
+      "members": [
+        {
+          "catalog_key": "evercraft-network",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "humanfilter",
+      "members": []
+    },
+    {
+      "workstream_key": "work-saban",
+      "members": []
+    },
+    {
+      "workstream_key": "forensiscope",
+      "members": [
+        {
+          "catalog_key": "forensiscope",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "findmypart",
+      "members": [
+        {
+          "catalog_key": "findmypart",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "ai-boardroom",
+      "members": [
+        {
+          "catalog_key": "ai-boardroom",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "fallen-studios",
+      "members": []
+    },
+    {
+      "workstream_key": "raven-nexus",
+      "members": [
+        {
+          "catalog_key": "raven-nexus",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "evercraft-worlds",
+      "members": []
+    },
+    {
+      "workstream_key": "eps",
+      "members": [
+        {
+          "catalog_key": "evercraft-property-services",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "evermaps",
+      "members": [
+        {
+          "catalog_key": "evermaps",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "guardian",
+      "members": [
+        {
+          "catalog_key": "guardian",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "evernest",
+      "members": [
+        {
+          "catalog_key": "evernest",
+          "relationship": "canonical_brand"
+        }
+      ]
+    },
+    {
+      "workstream_key": "evercraft-fabric",
+      "members": []
+    },
+    {
+      "workstream_key": "black-box-spider-society",
+      "members": []
+    },
+    {
+      "workstream_key": "file-ferry",
+      "members": []
+    },
+    {
+      "workstream_key": "commercial-families",
+      "members": [
+        {
+          "catalog_key": "career-command",
+          "relationship": "family_member"
+        },
+        {
+          "catalog_key": "buildflow",
+          "relationship": "family_member"
+        }
+      ]
+    }
+  ]
+}
