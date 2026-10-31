@@ -109,3 +109,5 @@ node --test tests/brand-*.test.mjs
 The catalog reconciliation emits a local JSON file and companion Markdown worklist. Neither is sent to a web server. The CLI refuses `--public` and `--publish`; the portfolio renderer also refuses public mode. Even a verified original logo is **not** proof of customer access, payment readiness, product release, or rights to publish the portfolio.
 
 The PR-only [Brand Registry Review workflow](../../.github/workflows/brand-registry-review.yml) exercises the real source-backed tests and produces only temporary internal files in the GitHub runner. It has no deployment, checkout, upload, or public artifact step.
+
+**Reverse-gap safeguard:** Evercraft Research, HumanFilter, and Work Saban have verified standalone source marks but no explicit linked top-level keys in the older 69-entry directory. The reconciliation report calls these out as three **verified identities outside the dated catalog mapping**. That is a mapping gap, not an assertion that the products do not exist or that they should automatically be added to a public directory.
