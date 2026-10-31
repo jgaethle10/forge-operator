@@ -176,7 +176,7 @@ test('review brief labels provenance and never invents percent-normal or reservo
   assert.ok(brief.includes('REVIEW DRAFT'));
   assert.ok(brief.includes('Bumping Ridge'));
   assert.ok(brief.includes('not available')); // station or gauge coverage is incomplete
-  assert.ok(brief.includes('Percentage of normal: **not calculated**'));
+  assert.ok(brief.includes('Basin-wide percentage of median: **not calculated**'));
   assert.ok(brief.includes('Yakima reservoir storage: **not connected**'));
   assert.ok(brief.includes('Exact canary JSON SHA-256: ' + 'a'.repeat(64)));
   assert.ok(brief.includes('payment_verified=false'));
@@ -213,4 +213,26 @@ test('review brief admits five provisional USBR readings only with source identi
   assert.ok(!text.includes('Yakima reservoir storage: **not connected**'));
   assert.throws(()=>formatWatershedReviewBrief(snapshot,profile,null,{source_id:'malformed',observations:[]}),/invalid USBR/);
   assert.throws(()=>formatWatershedReviewBrief(snapshot,profile,null,{...rise,derived_provisional_sum_af:999999}),/arithmetic receipt mismatch/);
+});
+
+test('brief admits only matched station medians and suppresses tiny historical October baselines', async () => {
+  const { readFileSync } = await import('node:fs');
+  const profile=JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json', import.meta.url),'utf8'));
+  const snowSnapshot=compileWatershedSnapshot({asOf,snowStationIds:[station]});
+  const historical={
+    schema:'evercraft.research.swe-median-audit.v1',
+    basin_percent_of_median:null,
+    station_comparisons:[
+      {station_id:'375:WA:SNTL',date:'2026-10-29',state:'small_or_zero_median_suppressed',observed_swe_in:1.0,median_swe_in:0.2,ratio_percent:null,median_period:'1991-2020',comparison_scope:'single_station_only'},
+      {station_id:'478:WA:SNTL',date:'2026-10-29',state:'station_comparison_valid',observed_swe_in:1.5,median_swe_in:1.2,ratio_percent:125,median_period:'1991-2020',comparison_scope:'single_station_only'}
+    ]
+  };
+  const brief=formatWatershedReviewBrief(snowSnapshot,profile,null,null,null,historical,'a'.repeat(64));
+  assert.ok(brief.includes('Same-date snow-water equivalent medians'));
+  assert.ok(brief.includes('125% (station only)'));
+  assert.ok(brief.includes('small_or_zero_median_suppressed'));
+  assert.ok(brief.includes('withheld'));
+  assert.ok(brief.includes('Basin-wide percentage of median: **not calculated**'));
+  assert.ok(!brief.includes('500%'));
+  assert.throws(()=>formatWatershedReviewBrief(snowSnapshot,profile,null,null,null,{...historical,basin_percent_of_median:150}),/audit receipt invalid/);
 });
