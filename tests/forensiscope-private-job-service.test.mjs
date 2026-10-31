@@ -68,7 +68,8 @@ function fixture(){
    transcript_engine_id:'mock-test-engine-not-production',
    transcript_segments:[{
     start_seconds:0,end_seconds:2,text:'synthetic greeting',
-    speaker:null,confidence:0.9
+    speaker:null,confidence:0.9,source_path:'/private/source.mp4',
+    private_token:'must-never-escape'
    }],
    timeline:[{timestamp_seconds:0,kind:'spoken_segment'}],
    duplicate_review:{state:'not_run'}
@@ -179,6 +180,8 @@ test('private HTTP job contract: paid upload -> idempotent job -> worker -> priv
   assert.equal(report.status,200);
   assert.equal(report.body.report.transcript_segments[0].text,'synthetic greeting');
   assert.equal(report.body.report.source_path,undefined);
+  assert.equal(report.body.report.transcript_segments[0].source_path,undefined);
+  assert.equal(report.body.report.transcript_segments[0].private_token,undefined);
   assert.equal(report.body.report.duplicate_review.state,'not_run');
   await f.restart();
   const again=await f.request(f.jobsServer,'/v1/forensiscope/jobs/'+id+'/result');
