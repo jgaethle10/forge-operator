@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { OFFICIAL_SOURCES, findUntrackedReleaseLinks, runOfficialWatch } from '../systemia/signal-publication/official-watch.mjs';
 
 const html = body => '<!doctype html><html><head><title>SRS</title></head><body><main>' + body + '</main></body></html>';
+const release1 = html('<h1>News Release #1</h1><p>An event is in progress. At this time, there is no indication of a consequence beyond the Savannah River Site boundaries.</p>');
 const release2 = html('<h1>News Release #2</h1><p>Site Area Emergency at 5:39 p.m. No contamination has been reported outside the affected facility.</p>');
 const release3 = html('<h1>News Release #3</h1><p>Site Area Emergency at 5:07 p.m. The emergency was terminated at 9:45 p.m. Radiological surveys indicated no detectable levels of contamination.</p>');
 const archive = html('<a href="/2026/10/savannah-river-site-emergency-response-event/">Release 1</a><a href="/2026/10/savannah-river-site-emergency-response-event-2/">Release 2</a><a href="/2026/10/savannah-river-site-emergency-response-event-news-release-3/">Release 3</a>');
@@ -19,7 +20,7 @@ function fixtureFetch(map) {
   };
 }
 const urls = OFFICIAL_SOURCES.map(x => x.url);
-const base = Object.fromEntries([[urls[0], release2], [urls[1],release3], ['https://public.srs.gov/news-release-archive/', archive]]);
+const base = Object.fromEntries([[urls[0], release2], [urls[1],release3], [urls[2],release1], ['https://public.srs.gov/news-release-archive/', archive]]);
 
 test('official read-only check preserves provenance, uncertainty and no-alert boundary', async () => {
   const result = await runOfficialWatch({fetchImpl:fixtureFetch(base),now:'2026-10-30T16:00:00Z'});
@@ -28,9 +29,10 @@ test('official read-only check preserves provenance, uncertainty and no-alert bo
   assert.equal(result.publication_authorized,false);
   assert.equal(result.customer_alerts_sent,false);
   assert.equal(result.radioactive_release_confirmed,null);
-  assert.equal(result.sources.length,2);
+  assert.equal(result.sources.length,3);
   assert.equal(result.sources[0].assertion_state,'known_assertions_present');
   assert.equal(result.sources[1].assertion_state,'known_assertions_present');
+  assert.equal(result.sources[2].assertion_state,'known_assertions_present');
   assert.equal(result.sources[1].content_sha256.length,64);
   assert.equal(result.sources[1].independently_verified_radiation_readings,false);
 });
