@@ -54,3 +54,18 @@ RC02 local validation (2026-10-23): Chromium desktop 1280×800 and phone 390×84
 - `merchant-desk.test.mjs` tests inline JavaScript parsing, quoted CSV fields, blocked spreadsheet formula prices and malformed/oversized catalogs, cent arithmetic, local import, unreleased packet state and no network request mechanisms.
 - The isolated `rockies-wheel-lab.yml` workflow runs this suite along with RC01–RC03. Verified CI run: https://github.com/jgaethle10/forge-operator/actions/runs/40821971672 (**success** on commit `8b7d178a36479159216112856da9c7d1119147c4`). Subsequent commits need their own CI verification.
 - This is still **research software**, not a hosted customer product or offer. No actual merchant consent or catalog license exists. A real shop-side integration must use Systemia admission, verified inventory and fitment, signed quote authorization and proper payment/delivery receipts.
+
+## RC05 | One offline review journey (2026-10-30)
+
+**Open review.html** (locally and from the same directory as index.html and merchant-desk.html). It presents two tabs: shopper design preview and merchant review desk. This is the experience for review, **not a publicly deployed or merchant-signed service**.
+
+1. In **Shopper preview**, change the concept car's wheels and finish. Press **Export shop quote packet** to save wheel-lab-concept-quote.json. There are no accounts, vehicle records or customer identifiers.
+2. Switch to **Merchant quote desk**. Under *Customer's concept*, select that JSON file. The merchant desk validates the RC01 schema, requires all source safety flags to remain false, and displays the customer's desired *appearance*.
+3. The shop may optionally load its own local CSV and choose a merchandise SKU. **No automatic SKU mapping is made**, and the imported concept remains an unverified illustration.
+4. Export the combined **internal draft**. It includes both the visual request and the separate operator-selected SKU, with fitment_verified:false, inventory_verified:false, price_verified:false, merchant_sku_matched_to_concept:false, and payment_verified:false. Only independent human shop review can establish an actual quote.
+
+### How to hand off a demo for review without hosting
+
+The read-only path-scoped .github/workflows/rockies-wheel-lab.yml runs all Node source-contract tests before assembling wheel-lab-rc05-offline-review as a GitHub Actions artifact with review.html, index.html, merchant-desk.html and this README. After a successful run, download the ZIP from that run, extract it preserving the shared folder structure, then open review.html. No npm install, account, API key or backend is needed.
+
+The artifact expires after seven days. It is **not** an Evercraft-owned public URL or a production promotion. A publishable, customer-facing origin requires Systemia admission receipt, scope/permissions, owned hosting and release verification. No third-party hosting fallback is authorized.
