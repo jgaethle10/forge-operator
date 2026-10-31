@@ -150,6 +150,11 @@ async function main(){
   const state=fs.statSync(settings.store);
   if(state.uid!==uid||state.gid!==gid)fail('existing_private_directory_owner_mismatch');
  }
+ // Never silently invent a replacement encryption key for pre-existing
+ // customer records that may have survived an earlier interrupted setup.
+ if(!hasKey&&fs.existsSync(settings.store)&&fs.readdirSync(settings.store).some(
+   filename=>/^FMP-[A-F0-9]{24}\.enc$/.test(filename)))
+  fail('existing_encrypted_inquiries_require_original_key');
  fs.mkdirSync(settings.store,{recursive:true,mode:0o700});
  fs.chownSync(settings.store,uid,gid);
  fs.chmodSync(settings.store,0o700);
@@ -184,6 +189,12 @@ async function main(){
    local_site_verified:true,local_intake_verified:true});
  }catch(error){
   if(installed){
+   // If an inquiry arrived during startup, losing this newly generated key
+   // would make that encrypted customer record unrecoverable. Preserve it in
+   // the root-only env and flag an explicit hold instead of discarding it.
+   if(!hasKey&&fs.readdirSync(settings.store).some(
+    filename=>/^FMP-[A-F0-9]{24}\.enc$/.test(filename)))
+    throw Error('intake_setup_failed_customer_records_exist_key_preserved');
    const restore=settings.env+'.findmypart-rollback-'+process.pid;
    fs.writeFileSync(restore,envSource,{mode:0o600,flag:'wx'});
    fs.chownSync(restore,0,0);fs.chmodSync(restore,0o600);
