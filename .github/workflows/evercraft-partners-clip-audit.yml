@@ -1,0 +1,55 @@
+name: Evercraft Partners Clip Founding Distribution Audit
+on:
+  pull_request:
+    paths:
+      - 'distribution/marketing/evercraft-partners-20261030.review.json'
+      - 'distribution/marketing/evercraft-partners-clip-release-20261030.md'
+      - 'tests/evercraft-partners-clip-distribution.test.mjs'
+      - '.github/workflows/evercraft-partners-clip-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'distribution/marketing/evercraft-partners-20261030.review.json'
+      - 'distribution/marketing/evercraft-partners-clip-release-20261030.md'
+      - 'tests/evercraft-partners-clip-distribution.test.mjs'
+      - '.github/workflows/evercraft-partners-clip-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-identity-and-receipts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove Clip campaign scope and publication truth
+        run: node --test tests/evercraft-partners-clip-distribution.test.mjs
+      - name: Reconcile only real provider receipts
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/evercraft-partners-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/evercraft-partners/latest.json
+      - name: State source-only hold honestly
+        run: |
+          node --input-type=module -e "
+            import fs from 'node:fs';
+            const r=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/evercraft-partners/latest.json'));
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+              '## Evercraft Partners Clip founding distribution\\n' +
+              'Entries: '+r.counts.total+'\\n' +
+              'Approval held: '+r.counts.approval_hold+'\\n' +
+              'Provider receipts: '+r.counts.provider_receipt_recorded+'\\n' +
+              'Private account permissions and actual provider URLs are required. This workflow never posts.\\n');
+          "
+      - name: Save read-only reconciliation receipt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evercraft-partners-clip-readonly-audit
+          path: artifacts/clip/social-continuity-watch/evercraft-partners
+          if-no-files-found: warn
+          retention-days: 30
