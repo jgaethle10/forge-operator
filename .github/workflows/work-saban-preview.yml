@@ -29,6 +29,7 @@ jobs:
           node --check systemia/work-saban/mission.mjs
           node --check systemia/work-saban/server.mjs
           node --check systemia/work-saban/app.js
+          node --check systemia/work-saban/office-camera.js
           node --check systemia/work-saban/office-3d.js
           node --check systemia/work-saban/trace-client.js
           node --check systemia/work-saban/trace-chain.mjs
