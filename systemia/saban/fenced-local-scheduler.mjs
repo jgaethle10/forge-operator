@@ -93,7 +93,7 @@ function preflight(state,journal) {
   for (const job of Object.values(state.jobs)) {
     const journalState=journal.submit({
       jobKey:job.job_id,
-      workloadClass:'saban-fenced-readonly-canary',
+      workloadClass:state.software_id,
       workDigest:workDigest(job)
     });
     if (job.state==='queued' && !(journalState.state==='queued' &&
