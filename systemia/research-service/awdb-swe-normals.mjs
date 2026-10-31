@@ -11,7 +11,7 @@ function stationId(value) {
   return x;
 }
 function day(value) {
-  if(typeof value!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(value))throw new TypeError('invalid daily date');
+  if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))throw new TypeError('invalid daily date');
   const d=new Date(value+'T00:00:00Z');
   if(!Number.isFinite(d.getTime())||d.toISOString().slice(0,10)!==value)throw new TypeError('invalid calendar date');
   return value;
