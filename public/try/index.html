@@ -4,7 +4,7 @@
 <title>Try Evercraft for free | Three real tools, no account</title>
 <meta name="description" content="Try three useful Evercraft experiences for free: compare AI answers, plan a research question, or test a sample sales report. No account, payment or upload required.">
 <meta name="robots" content="index,follow,max-snippet:-1">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#050b12">
 <link rel="canonical" href="https://jgaethle10.github.io/forge-operator/try/">
 <link rel="alternate" type="text/plain" href="./llms.txt" title="Free tools guidance">
 <meta property="og:type" content="website">
@@ -13,29 +13,46 @@
 <meta property="og:url" content="https://jgaethle10.github.io/forge-operator/try/">
 <meta name="twitter:card" content="summary">
 <style>
-:root{color-scheme:light;--bg:#fff;--ink:#171b1e;--muted:#576269;--line:#e1e5e8;--red:#a91638;--soft:#fbf7f8}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
-a{color:var(--red)}a:focus-visible{outline:3px solid var(--red);outline-offset:4px}
+:root{color-scheme:dark;--bg:#050b12;--surface:#0b1824;--surface-high:#102232;--ink:#effbff;--muted:#b3c7d4;--line:#274052;--ice:#8adfff;--ice-strong:#5dcbf8;--shadow:rgba(35,175,237,.13)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:0;overflow-x:clip;background:radial-gradient(ellipse 820px 380px at 74% 3%,rgba(29,115,157,.2),transparent 76%),var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--ice)}
+a:focus-visible{outline:3px solid var(--ice);outline-offset:4px;border-radius:4px}
+::selection{background:var(--ice);color:var(--bg)}
 .wrap{width:min(1020px,calc(100% - 36px));margin:auto}
-header{border-bottom:1px solid var(--line)}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0;flex-wrap:wrap}
-.brand{text-decoration:none;font-size:.86rem;font-weight:950;letter-spacing:.16em;color:var(--ink)}.brand span{color:var(--red)}
-nav{display:flex;gap:18px;flex-wrap:wrap}nav a{text-decoration:none;color:var(--muted);font-size:.9rem}
-.hero{padding:80px 0 48px;max-width:870px}.eyebrow{color:var(--red);text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:850}
-h1{font-size:clamp(2.7rem,7vw,5.4rem);line-height:1.04;letter-spacing:-.065em;margin:14px 0 23px;max-width:880px}
-h1 span{color:var(--red)}.lead{font-size:clamp(1.05rem,2vw,1.24rem);color:var(--muted);max-width:730px;margin:0}
-.trust{display:flex;gap:11px;flex-wrap:wrap;margin:24px 0 0}.trust span{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:650}
+header{border-bottom:1px solid var(--line);background:rgba(5,11,18,.84)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0;flex-wrap:wrap}
+.brand{text-decoration:none;font-size:.86rem;font-weight:950;letter-spacing:.16em;color:var(--ink)}
+.brand span{color:var(--ice)}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--muted);font-size:.9rem}
+nav a:hover,nav a:focus-visible{color:var(--ice)}
+.hero{padding:78px 0 48px;max-width:870px}
+.eyebrow{color:var(--ice);text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:850}
+h1{font-size:clamp(2.7rem,7vw,5.4rem);line-height:1.06;letter-spacing:-.06em;margin:14px 0 23px;max-width:880px}
+h1 span{color:var(--ice)}
+.lead{font-size:clamp(1.05rem,2vw,1.24rem);color:var(--muted);max-width:730px;margin:0}
+.trust{display:flex;gap:11px;flex-wrap:wrap;margin:24px 0 0}
+.trust span{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:650;background:rgba(138,223,255,.035)}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0 0 65px}
-.card{display:flex;flex-direction:column;min-width:0;padding:28px;border:1px solid var(--line);border-radius:18px;background:var(--soft)}
-.number{font:800 .74rem/1.2 system-ui;letter-spacing:.12em;color:var(--red);text-transform:uppercase}
+.card{display:flex;flex-direction:column;min-width:0;padding:28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(155deg,var(--surface-high),var(--surface) 72%);box-shadow:0 18px 48px rgba(0,0,0,.13)}
+.card:hover{border-color:#46809f;box-shadow:0 18px 44px var(--shadow)}
+.number{font:800 .74rem/1.2 system-ui;letter-spacing:.12em;color:var(--ice);text-transform:uppercase}
 h2{font-size:clamp(1.5rem,2.5vw,1.95rem);line-height:1.2;letter-spacing:-.035em;margin:16px 0 12px}
 .card p{color:var(--muted);margin:0 0 16px;flex:1}
 .specific{font-size:.89rem;font-weight:650;color:var(--ink);margin-bottom:21px;min-height:43px}
-.action{display:flex;align-items:center;justify-content:center;min-height:51px;border-radius:10px;background:var(--red);color:white;text-decoration:none;text-align:center;font-weight:850;padding:12px 14px}.action:hover{background:#82132a}
-.note{margin:0 0 68px;padding:27px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff}
-.note h2{font-size:1.5rem;margin:0 0 12px}.note p{color:var(--muted);max-width:840px}
-.next{margin:0 0 58px}.next p{color:var(--muted)}.next a{font-weight:750}
+.action{display:flex;align-items:center;justify-content:center;min-height:51px;border-radius:10px;background:var(--ice);color:#04111a;text-decoration:none;text-align:center;font-weight:850;padding:12px 14px}
+.action:hover{background:#b5ecff;box-shadow:0 0 24px rgba(138,223,255,.16)}
+.note{margin:0 0 68px;padding:27px;border:1px solid var(--line);border-radius:16px;background:rgba(14,31,43,.7)}
+.note h2{font-size:1.5rem;margin:0 0 12px}
+.note p{color:var(--muted);max-width:840px}
+.next{margin:0 0 58px}
+.next p{color:var(--muted)}
+.next a{font-weight:750}
 footer{border-top:1px solid var(--line);color:var(--muted);font-size:.86rem;padding:25px 0 45px}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.hero{padding:55px 0 32px}.card{padding:24px}.specific{min-height:0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style></head><body>
 <header><div class="wrap"><a class="brand" href="../mesh/">EVERCRAFT<span> / TRY</span></a><nav aria-label="Navigation"><a href="#tools">Free tools</a><a href="../mesh/checkout-ready/">Services</a><a href="../partners/">Partners</a></nav></div></header>
 <main class="wrap">
