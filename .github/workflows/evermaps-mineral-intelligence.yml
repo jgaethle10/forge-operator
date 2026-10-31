@@ -99,6 +99,12 @@ jobs:
         env:
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/research-source-health-cli.mjs
+      - name: Bundle offline first-party map viewer and evidence guide
+        if: always()
+        run: |
+          mkdir -p evermaps-grant-full-evidence
+          cp systemia/evermaps/research-viewer.html evermaps-grant-full-evidence/research-viewer.html
+          cp systemia/evermaps/evidence-bundle-README.txt evermaps-grant-full-evidence/README.txt
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4
