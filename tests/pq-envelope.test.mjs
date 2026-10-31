@@ -17,7 +17,7 @@ test('ML-KEM roundtrip, route binding and tamper rejection', {skip:!pqRuntime().
   assert.throws(()=>decryptPqEnvelope({recipientPrivateKey:keys.privateKey,envelope,expectedContext:'systemia.relay.live'}),/rejected/);
   for (const property of ['ciphertext','tag']) {
     const tampered=structuredClone(envelope);
-    tampered[property] = Buffer.from(\`tamper \${property}\`).toString('base64url');
+    tampered[property] = Buffer.from(`tamper ${property}`).toString('base64url');
     assert.throws(()=>decryptPqEnvelope({recipientPrivateKey:keys.privateKey,envelope:tampered,expectedContext:'systemia.relay.lab'}),/rejected/);
   }
   const altered=structuredClone(envelope);
