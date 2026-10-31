@@ -47,7 +47,7 @@ export function assertPublicReleaseDenied(mode,workstreams,identity){
   assertRoster(workstreams,identity);
 }
 function escapeHtml(value){
-  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[ch]));
+  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
 function encodeSvg(s){return 'data:image/svg+xml;base64,'+Buffer.from(s).toString('base64');}
 function checkedAsset(brand,root){
