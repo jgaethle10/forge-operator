@@ -51,7 +51,6 @@ with sync_playwright() as p:
     # Same visible text, but the virtualized card now points at a different post.
     page.evaluate("""() => {
       document.querySelector('#recycled .permalink').setAttribute('href','/r/art/comments/second');
-      document.querySelector('#recycled').append(document.createTextNode(''));
     }""")
     page.wait_for_function("document.querySelector('#recycled').getAttribute('data-humanfilter-hidden') === 'true'")
     assert page.locator('#recycled[data-humanfilter-revealed="true"]').count()==0
