@@ -1,0 +1,493 @@
+{
+  "schema": "evercraft.worlds.timewalk.evidence.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "title": "Yakima · 1960 historical evidence ledger",
+  "sceneYear": 1960,
+  "status": "research-alpha-not-historically-reconstructed",
+  "owners": {
+    "worldRuntime": "Evercraft Worlds / existing Systemia World Engine",
+    "historicalLayer": "Evercraft Timewalk",
+    "note": "This data file is source evidence, not a second rendering, physics, or storage engine."
+  },
+  "location": {
+    "label": "Yakima Avenue between South Second and South Third Streets, Yakima, Washington, USA",
+    "georeferenced": false,
+    "crs": null,
+    "coordinatePrecision": "none",
+    "warning": "The browser prototype uses illustrative local units. Do not project its objects into real lat/lon."
+  },
+  "evidenceStates": {
+    "documented": "A source directly supports the stated claim and period, not necessarily the full 1960 scene.",
+    "intervalInferred": "A plausible 1960 state inferred from independently documented before/after existence; not direct 1960 evidence.",
+    "illustrative": "Artist-authored geometry or atmosphere, not verified historical conditions.",
+    "unresolved": "Conflicting sources, incomplete records, or an unanswered historical question."
+  },
+  "sources": [
+    {
+      "id": "nps-larson",
+      "name": "National Register Information System, A.E. Larson Building",
+      "url": "https://npgallery.nps.gov/AssetDetail/NRIS/84003647",
+      "holder": "US National Park Service",
+      "evidencePeriod": [
+        "1931",
+        "1984"
+      ],
+      "rights": {
+        "status": "metadata_link_only",
+        "reuse": "Source metadata is cited, but photos/plans require individual rights checks"
+      },
+      "notes": "1931 significance year; Art Deco; John W. Maloney; address 6 South 2nd Street."
+    },
+    {
+      "id": "sah-larson",
+      "name": "Society of Architectural Historians, A.E. Larson Building",
+      "url": "https://sah-archipedia.org/buildings/WA-01-077-0039",
+      "holder": "Society of Architectural Historians",
+      "evidencePeriod": [
+        "1931"
+      ],
+      "rights": {
+        "status": "third_party_permission_check",
+        "reuse": "Link and paraphrase only; do not embed copyrighted photos without permission"
+      },
+      "notes": "Identifies 1931 date, Art Deco architecture and address."
+    },
+    {
+      "id": "nps-capitol",
+      "name": "National Register Information System, Capitol Theatre",
+      "url": "https://npgallery.nps.gov/AssetDetail/b7cd6bfe-bf93-41d1-9c10-fc9b17187a06/",
+      "holder": "US National Park Service",
+      "evidencePeriod": [
+        "1920",
+        "1973"
+      ],
+      "rights": {
+        "status": "metadata_link_only",
+        "reuse": "Check photograph and report rights separately"
+      },
+      "notes": "States 19 South Third Street; historic significance 1920."
+    },
+    {
+      "id": "theatre-official",
+      "name": "Capitol Theatre, Historic Main Stage",
+      "url": "https://capitoltheatre.org/venues/historic-theatre/",
+      "holder": "The Capitol Theatre",
+      "evidencePeriod": [
+        "1920",
+        "1978"
+      ],
+      "rights": {
+        "status": "third_party_permission_check",
+        "reuse": "Link and paraphrase; no image embedded"
+      },
+      "notes": "Lists 19 South Third Street. References 1975 fire and 1978 restoration; current interiors are not evidence for 1960 interiors."
+    },
+    {
+      "id": "yakima-city-register",
+      "name": "City of Yakima local historic register",
+      "url": "https://www.yakimawa.gov/services/historic-preservation-commission/yakima-register-of-historic-places/",
+      "holder": "City of Yakima",
+      "evidencePeriod": [
+        "1920"
+      ],
+      "rights": {
+        "status": "metadata_link_only",
+        "reuse": "Cite page; evaluate images individually"
+      },
+      "notes": "Lists the theatre at 9 South Third Street, differing from NPS and theatre's 19 South Third Street."
+    },
+    {
+      "id": "loc-sanborn",
+      "name": "Sanborn Fire Insurance Map, Yakima, 1920–Dec 1950",
+      "url": "https://www.loc.gov/item/sanborn09381_002/",
+      "holder": "Library of Congress",
+      "evidencePeriod": [
+        "1920",
+        "1950"
+      ],
+      "rights": {
+        "status": "public_domain_per_holding_institution",
+        "reuse": "LOC states online Sanborn collection is public domain and reusable with attribution"
+      },
+      "notes": "96 maps; footprint/street baseline, not direct 1960 facades, exact tenants, and not yet georeferenced to this prototype."
+    },
+    {
+      "id": "yakima-library-plats",
+      "name": "Yakima Valley Libraries maps and atlases",
+      "url": "https://www.yvl.org/services/special-collections-and-archive-services/maps-and-atlases/",
+      "holder": "Yakima Valley Libraries",
+      "evidencePeriod": [
+        "1960s",
+        "1970s"
+      ],
+      "rights": {
+        "status": "collection_specific_review",
+        "reuse": "Appointment and rights verification required before digitization or publication"
+      },
+      "notes": "County assessor plat maps principally from the 1960s and 1970s, not automatically valid for Jan 1960 or downtown facades."
+    },
+    {
+      "id": "yakima-memory",
+      "name": "Yakima Memory archive",
+      "url": "https://www.yvl.org/services/special-collections-and-archive-services/yakima-memory/",
+      "holder": "Yakima Valley Libraries and Yakima Valley Museum",
+      "evidencePeriod": [
+        "territorial period",
+        "mid-20th century"
+      ],
+      "rights": {
+        "status": "publication_permission_required",
+        "reuse": "Collection states permission from rights holder needed to publish online; reference only for now"
+      },
+      "notes": "Photographs and newspapers may close 1960 evidence gaps after date and rights review."
+    },
+    {
+      "id": "wshs-yakima-avenue-ca1950",
+      "name": "Revisiting Washington: circa-1950 east-facing Yakima Avenue between 2nd and 3rd",
+      "url": "https://revisitwa.org/waypoint/yakima/",
+      "holder": "Washington State Historical Society, photo cataloged via Revisiting Washington",
+      "evidencePeriod": [
+        "circa 1950"
+      ],
+      "rights": {
+        "status": "third_party_permission_check",
+        "reuse": "Link and cite the catalog. Do not embed, copy, train on, or publish photograph until provenance and rights are cleared."
+      },
+      "notes": "Caption explicitly locates eastward view along Yakima Avenue between 2nd and 3rd streets circa 1950. Useful historical perspective but not direct proof of scene in 1960. Date approximate, item-level accession pending."
+    },
+    {
+      "id": "wa-state-library-directory-catalog",
+      "name": "Washington State Library, City Directories & Telephone Books, Yakima year holdings",
+      "url": "https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books",
+      "holder": "Washington State Library, Washington Secretary of State",
+      "evidencePeriod": [
+        "1959",
+        "1961"
+      ],
+      "rights": {
+        "status": "catalog_metadata_only",
+        "reuse": "Holdings years only. Directory pages, tenants and street addresses have NOT been read; check rights before copying directory content."
+      },
+      "notes": "Catalog lists Yakima directories 1953–1959 and 1961–1962 but not 1960. Actual 1959/1961 pages needed before making occupancy assertions."
+    },
+    {
+      "id": "yvl-local-city-directory-catalog",
+      "name": "Yakima Valley Libraries: local city directory holdings",
+      "url": "https://www.yvl.org/services/special-collections-and-archive-services/washington-cities-counties/",
+      "holder": "Yakima Valley Libraries",
+      "evidencePeriod": [
+        "1904",
+        "present"
+      ],
+      "rights": {
+        "status": "catalog_metadata_only",
+        "reuse": "Holdings description only. Request individual directories and verify rights before using pages or entries."
+      },
+      "notes": "Yakima Central Library holds local city directories beginning 1904; exact 1959/1961 copies and access to be verified."
+    }
+  ],
+  "places": [
+    {
+      "id": "ae-larson",
+      "label": "A.E. Larson Building",
+      "canonicalAddress": "6 S. 2nd St., Yakima, WA",
+      "claims": [
+        {
+          "id": "ae-1931",
+          "assertion": "The A.E. Larson Building was constructed in 1931.",
+          "period": "1931",
+          "evidence": "documented",
+          "sourceIds": [
+            "nps-larson",
+            "sah-larson"
+          ]
+        },
+        {
+          "id": "ae-arch",
+          "assertion": "John W. Maloney designed an Art Deco office building at 6 S. 2nd St.",
+          "period": "1931",
+          "evidence": "documented",
+          "sourceIds": [
+            "nps-larson",
+            "sah-larson"
+          ]
+        },
+        {
+          "id": "ae-1960-existence",
+          "assertion": "The building stood in 1960.",
+          "period": "1960",
+          "evidence": "intervalInferred",
+          "sourceIds": [
+            "nps-larson"
+          ],
+          "reason": "Built 1931 and registered in 1984; specific 1960 survey is not yet attached."
+        },
+        {
+          "id": "ae-1960-facade",
+          "assertion": "The current prototype's facade, signage and dimensions match the 1960 building.",
+          "period": "1960",
+          "evidence": "illustrative",
+          "sourceIds": [],
+          "reason": "No direct 1960 facade source or measurements validated."
+        }
+      ]
+    },
+    {
+      "id": "capitol",
+      "label": "Capitol Theatre",
+      "canonicalAddress": null,
+      "addressDiscrepancy": {
+        "status": "unresolved",
+        "sources": [
+          {
+            "id": "theatre-official",
+            "address": "19 S. 3rd St."
+          },
+          {
+            "id": "nps-capitol",
+            "address": "19 S. 3rd St."
+          },
+          {
+            "id": "yakima-city-register",
+            "address": "9 S. 3rd St."
+          }
+        ],
+        "instruction": "Keep the 19/9 address conflict visible in authoring metadata. No exact geocoding before reconciliation."
+      },
+      "claims": [
+        {
+          "id": "cap-1920",
+          "assertion": "Capitol Theatre opened in 1920.",
+          "period": "1920",
+          "evidence": "documented",
+          "sourceIds": [
+            "nps-capitol",
+            "theatre-official",
+            "yakima-city-register"
+          ]
+        },
+        {
+          "id": "cap-1960-existence",
+          "assertion": "The theatre existed in 1960 before its 1975 fire.",
+          "period": "1960",
+          "evidence": "intervalInferred",
+          "sourceIds": [
+            "theatre-official",
+            "nps-capitol"
+          ],
+          "reason": "1920 opening and 1975 fire bracket the target year; no direct 1960 photo incorporated."
+        },
+        {
+          "id": "cap-facade-1960",
+          "assertion": "The prototype theatre marquee and facade match 1960.",
+          "period": "1960",
+          "evidence": "illustrative",
+          "sourceIds": [],
+          "reason": "Exterior details have not been matched to dated 1960 archival imagery."
+        }
+      ]
+    },
+    {
+      "id": "streetscape",
+      "label": "Yakima Avenue streetscape",
+      "canonicalAddress": null,
+      "claims": [
+        {
+          "id": "pre1960-baseline",
+          "assertion": "Historical Sanborn sheets document earlier streets, building uses and footprints in Yakima.",
+          "period": "1920–1950",
+          "evidence": "documented",
+          "sourceIds": [
+            "loc-sanborn"
+          ]
+        },
+        {
+          "id": "street-layout-1960",
+          "assertion": "The street's rendered width, storefronts, traffic and building footprints reflect exact 1960 Yakima.",
+          "period": "1960",
+          "evidence": "illustrative",
+          "sourceIds": [],
+          "reason": "Schematic walking stage only; streetscape and local units are not georeferenced."
+        }
+      ]
+    }
+  ],
+  "promotionGates": [
+    {
+      "id": "historical-year",
+      "rule": "Do not label a scene element 'verified 1960' based only on a 1920/1950 map or construction date."
+    },
+    {
+      "id": "geometry",
+      "rule": "Do not label massing or geo coordinates exact until a date-valid georeferenced source establishes them."
+    },
+    {
+      "id": "rights",
+      "rule": "Do not embed archival imagery unless item-level publication rights are recorded."
+    },
+    {
+      "id": "address",
+      "rule": "Resolve Capitol Theatre 9 vs 19 South Third address conflict before exact address geocoding."
+    },
+    {
+      "id": "ownership",
+      "rule": "Integrate as metadata into canonical Evercraft Worlds engine; do not fork renderer, movement, save, or physics."
+    },
+    {
+      "id": "display",
+      "rule": "Display documented, interval-inferred, illustrative and unresolved clearly in user-facing provenance."
+    }
+  ],
+  "nextResearch": [
+    {
+      "id": "1960-downtown",
+      "goal": "Find dated 1958–1962 photos or directories of Yakima Avenue, South Second and South Third and match visible shops."
+    },
+    {
+      "id": "1950-baseline",
+      "goal": "Identify Sanborn sheets for the selected block and record original feature geometry and the exact sheet update dates."
+    },
+    {
+      "id": "capitol-address",
+      "goal": "Reconcile 9 vs 19 South Third Street in authoritative address histories."
+    },
+    {
+      "id": "georef",
+      "goal": "Use control points and record uncertainty before transforming maps into GIS or 3D engine coordinates."
+    },
+    {
+      "id": "rights",
+      "goal": "Secure per-item publication rights for Yakima Memory photos before embedding in public worlds."
+    }
+  ],
+  "researchInventory": [
+    {
+      "id": "period-photo-1950",
+      "name": "Yakima Avenue, looking east between 2nd and 3rd",
+      "sourceId": "wshs-yakima-avenue-ca1950",
+      "period": {
+        "display": "circa 1950",
+        "earliest": null,
+        "latest": null,
+        "approximate": true
+      },
+      "spatialMatch": "same-walking-corridor",
+      "itemType": "archival-photo-catalog",
+      "acquisition": "catalog-record-confirmed; original image/item accession unverified",
+      "rights": "clear before embedding",
+      "useFor1960": "historical reference only; no automatic carry-forward of sign, tenant, facade, or vehicle"
+    },
+    {
+      "id": "city-directory-1959",
+      "name": "Yakima 1959 city directory",
+      "sourceId": "wa-state-library-directory-catalog",
+      "period": {
+        "display": "1959",
+        "earliest": 1959,
+        "latest": 1959,
+        "approximate": false
+      },
+      "spatialMatch": "citywide; block pages not examined",
+      "itemType": "directory-holding",
+      "acquisition": "catalog-verified; contents not read",
+      "rights": "verify",
+      "useFor1960": "neighboring-year research candidate only"
+    },
+    {
+      "id": "city-directory-1961",
+      "name": "Yakima 1961 city directory",
+      "sourceId": "wa-state-library-directory-catalog",
+      "period": {
+        "display": "1961",
+        "earliest": 1961,
+        "latest": 1961,
+        "approximate": false
+      },
+      "spatialMatch": "citywide; block pages not examined",
+      "itemType": "directory-holding",
+      "acquisition": "catalog-verified; contents not read",
+      "rights": "verify",
+      "useFor1960": "neighboring-year research candidate only"
+    },
+    {
+      "id": "yakima-central-directories",
+      "name": "Local city directory holdings, Yakima Central Library",
+      "sourceId": "yvl-local-city-directory-catalog",
+      "period": {
+        "display": "1904 onward",
+        "earliest": 1904,
+        "latest": null,
+        "approximate": false
+      },
+      "spatialMatch": "citywide",
+      "itemType": "institutional-collection",
+      "acquisition": "collection described; individual 1959/1961 volume access not verified",
+      "rights": "verify",
+      "useFor1960": "potential access route to city directories"
+    },
+    {
+      "id": "loc-sanborn-1950",
+      "name": "Yakima Sanborn map sheets updated through Dec 1950",
+      "sourceId": "loc-sanborn",
+      "period": {
+        "display": "1920–Dec 1950",
+        "earliest": 1920,
+        "latest": 1950,
+        "approximate": false
+      },
+      "spatialMatch": "citywide; 2nd/3rd block sheet not indexed",
+      "itemType": "fire-insurance-map-set",
+      "acquisition": "digital collection available; target sheet not yet identified",
+      "rights": "collection public domain per Library of Congress",
+      "useFor1960": "earlier baseline; specific 1960 changes unverified"
+    }
+  ],
+  "researchGoals": {
+    "timeTarget": 1960,
+    "methodology": "Never interpolate presence, appearance, dimensions or occupancy as a historical fact simply because sources bracket the target year. Store both adjacent dated observations, possible continuity hypotheses, intervening-change search, and explicit confidence.",
+    "stagedTasks": [
+      {
+        "id": "identify-sanborn-sheets",
+        "dependsOn": [],
+        "deliverable": "Exact sheet identifiers for Yakima Avenue between 2nd and 3rd, with original sheet dates and any correction stamps",
+        "status": "research-needed"
+      },
+      {
+        "id": "resolve-1959-1961-tenants",
+        "dependsOn": [],
+        "deliverable": "Source-backed street addresses and business names from the physical/digitized 1959 and 1961 directory pages, explicitly compared",
+        "status": "catalogs-found; pages-not-read"
+      },
+      {
+        "id": "find-photo-original",
+        "dependsOn": [],
+        "deliverable": "1950 photo accession ID, digitization rights, and visual comparison with mapped block",
+        "status": "caption-found; original-unverified"
+      },
+      {
+        "id": "verify-1960-change",
+        "dependsOn": [
+          "identify-sanborn-sheets",
+          "resolve-1959-1961-tenants"
+        ],
+        "deliverable": "Research 1959–61 permits, demolition records, dated photographs and newspaper ads for any storefront changes",
+        "status": "not-started"
+      },
+      {
+        "id": "reconcile-capitol-address",
+        "dependsOn": [],
+        "deliverable": "Historic address/renumbering evidence resolving 9 vs 19 South Third",
+        "status": "unresolved"
+      },
+      {
+        "id": "geo-and-scene-adapter",
+        "dependsOn": [
+          "identify-sanborn-sheets",
+          "reconcile-capitol-address"
+        ],
+        "deliverable": "Georeferenced GIS geometry with source/uncertainty and a data-only import for canonical Worlds runtime",
+        "status": "blocked"
+      }
+    ]
+  }
+}
