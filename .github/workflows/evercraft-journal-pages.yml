@@ -248,6 +248,10 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Verify Evercraft Signal public HTTPS and structured incident data
+        shell: bash
+        run: node scripts/probe-signal-public.mjs "${{ steps.deployment.outputs.page_url }}"
+
       - name: Verify ForensiScope fallback buyer page over deployed HTTPS
         shell: bash
         run: |
