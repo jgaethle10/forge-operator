@@ -93,6 +93,7 @@ jobs:
         run: |
           python tests/browser_smoke.py
           python tests/reveal_recycle.py
+          python tests/comment_isolation.py
           python tests/feed_stress.py
           python tests/popup_smoke.py
       - name: Actual unpacked-extension injection on intercepted fixtures

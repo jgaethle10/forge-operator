@@ -16,12 +16,24 @@
   // A feed can recycle a card DOM node for a different post.
   // A one-time reveal must never transfer to that replacement post.
   const revealedSignatures = new WeakMap();
+  // Replies and comments may contain AI disclosures about *their own* content.
+  // They must not cause a human-authored parent feed card to be filtered.
+  const NON_POST_CONTEXT = [
+    'shreddit-comment', 'ytd-comment-thread-renderer', 'ytd-comment-view-model',
+    '[role="comment"]', '[data-testid="comment"]',
+    '[data-testid="comment-container"]', '[data-testid="comments"]'
+  ].join(', ');
+  function isNestedContext(element, post) {
+    const closest = element.closest?.(NON_POST_CONTEXT);
+    return Boolean(closest && closest !== post && post.contains(closest));
+  }
 
   function readLabels(element) {
     // Restrict platform labels to short, visible-like metadata elements.
     const labels = [];
     const items = element.querySelectorAll('[aria-label], [data-testid*="label"], [data-testid*="flair"], [title]');
     for (const el of [element, ...Array.from(items).slice(0, 70)]) {
+      if (isNestedContext(el, element) || el.closest?.('.humanfilter-notice')) continue;
       for (const value of [el.getAttribute("aria-label"), el.getAttribute("title")]) {
         if (value && value.length < 100) labels.push(value);
       }
@@ -37,7 +49,7 @@
     let checked = 0;
     for (const el of element.querySelectorAll('span, small, label, yt-formatted-string, div')) {
       if (++checked > 350) break;
-      if (el.childElementCount !== 0) continue;
+      if (el.childElementCount !== 0 || isNestedContext(el, element) || el.closest('.humanfilter-notice')) continue;
       const value = el.textContent?.trim();
       if (value && value.length <= 45 && exact.test(value)) labels.push(value);
     }
@@ -81,32 +93,29 @@
     if (element.getAttribute("data-humanfilter-hidden") !== "true") element.setAttribute("data-humanfilter-hidden", "true");
   }
 
-  function originalText(post) {
-    // Exclude our own injected notice. Including it can create a feedback loop:
-    // its words alter classification, causing flickering and repeated DOM writes.
-    return Array.from(post.childNodes)
-      .filter(node => !(node.nodeType === 1 && node.classList.contains("humanfilter-notice")))
-      .map(node => node.textContent || "")
-      .join(" ")
-      .slice(0, 10000);
-  }
-
-  function postIdentity(post) {
-    return originalText(post).replace(/\s+/g, " ").trim() + "\u0000" + readLabels(post).join("\u0001");
-  }
-
   function postText(post) {
-    // Exclude our own notice: its text otherwise changes classification on rescans.
-    // Put spaces between text nodes so adjacent headings don't merge into terms.
-    let text = "";
+    // Never classify a feed card using the contents of nested replies.
+    // Include real post text, omit our notice and secondary comment context.
+    let text = '';
     const walker = document.createTreeWalker(post, NodeFilter.SHOW_TEXT);
     let node;
     while ((node = walker.nextNode())) {
-      if (node.parentElement?.closest(".humanfilter-notice")) continue;
-      if (node.nodeValue?.trim()) text += node.nodeValue + " ";
+      const parent = node.parentElement;
+      if (!parent || parent.closest('.humanfilter-notice') || isNestedContext(parent, post)) continue;
+      if (node.nodeValue?.trim()) text += node.nodeValue + ' ';
       if (text.length > 10000) break;
     }
     return text.slice(0, 10000);
+  }
+
+  function postIdentity(post) {
+    // The visible text can be identical on two recycled cards.
+    // Include a post-specific permalink when present so Show once does not leak.
+    const links = post.querySelectorAll('a[href*="/comments/"], a[href*="/posts/"], a[href*="/videos/"], a[href*="/watch?"], a[href*="/shorts/"]');
+    const link = Array.from(links).find(candidate => !isNestedContext(candidate, post));
+    const permalink = link?.getAttribute('href') || '';
+    return permalink + '\u0000' + postText(post).replace(/\s+/g, ' ').trim() +
+      '\u0000' + readLabels(post).join('\u0001');
   }
 
   function scan() {
@@ -120,7 +129,7 @@
         revealedSignatures.delete(post);
         clean(post);
       }
-      const result = classify({ site, text: originalText(post), labels: readLabels(post) }, settings);
+      const result = classify({ site, text: postText(post), labels: readLabels(post) }, settings);
       if (result) cover(post, result);
       else if (post.hasAttribute("data-humanfilter-hidden")) clean(post);
     }
@@ -148,7 +157,7 @@
         return true;
       })) schedule();
     });
-    observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true });
+    observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["href", "aria-label", "title"] });
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== "local" || !changes.settings) return;
       const value = changes.settings.newValue || {};
