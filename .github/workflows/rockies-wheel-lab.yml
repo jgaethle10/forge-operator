@@ -32,3 +32,15 @@ jobs:
           node-version: 22
       - name: Verify Wheel Lab boundaries and offline contract
         run: node --test prototypes/rockies-wheel-lab/rc01/*.test.mjs
+
+      - name: Package source-only offline review kit
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-lab-rc05-offline-review
+          path: |
+            prototypes/rockies-wheel-lab/rc01/index.html
+            prototypes/rockies-wheel-lab/rc01/merchant-desk.html
+            prototypes/rockies-wheel-lab/rc01/review.html
+            prototypes/rockies-wheel-lab/rc01/README.md
+          if-no-files-found: error
+          retention-days: 7
