@@ -1,0 +1,73 @@
+name: HumanFilter Mozilla unlisted signing
+
+# Privileged release action. Never run this workflow on pull_request events;
+# forked PRs and ordinary CI must not be able to access AMO API credentials.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_unlisted:
+        description: 'Enter SIGN-TEST-BUILD (unlisted Mozilla signature only, no public listing)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: humanfilter-mozilla-unlisted-signing
+  cancel-in-progress: false
+
+jobs:
+  sign-unlisted:
+    if: inputs.confirm_unlisted == 'SIGN-TEST-BUILD'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: humanfilter-amo-signing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build and validate Firefox Android source
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check cairosvg==2.8.2
+          python products/humanfilter/android-firefox/build.py /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip
+          python products/humanfilter/android-firefox/test_package.py /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip
+          mkdir -p /tmp/humanfilter-addon
+          unzip -q /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip -d /tmp/humanfilter-addon
+          npx --yes web-ext@10.8.0 lint --source-dir=/tmp/humanfilter-addon --self-hosted
+      - name: Check Mozilla credentials (never print)
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${WEB_EXT_API_KEY}" || -z "${WEB_EXT_API_SECRET}" ]]; then
+            echo "::error::Mozilla API credentials are not connected to GitHub Actions yet. Configure AMO_JWT_ISSUER and AMO_JWT_SECRET as environment secrets for humanfilter-amo-signing."
+            exit 1
+          fi
+      - name: Request UNLISTED Mozilla signature for Android tester build
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/humanfilter-signed
+          # Unlisted only: do not create or update the public AMO store listing.
+          npx --yes web-ext@10.8.0 sign --source-dir=/tmp/humanfilter-addon --artifacts-dir=/tmp/humanfilter-signed --channel=unlisted
+          find /tmp/humanfilter-signed -maxdepth 1 -name '*.xpi' -type f -print
+          test "$(find /tmp/humanfilter-signed -maxdepth 1 -name '*.xpi' -type f | wc -l)" -ge 1
+          echo "Mozilla signed an unlisted test build; this is NOT an AMO public listing or real-device verification." >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve signed XPI for Android testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-firefox-android-mozilla-signed-unlisted
+          path: /tmp/humanfilter-signed/*.xpi
+          if-no-files-found: error
+          retention-days: 30
