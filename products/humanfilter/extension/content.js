@@ -157,7 +157,7 @@
         return true;
       })) schedule();
     });
-    observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true });
+    observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["href", "aria-label", "title"] });
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== "local" || !changes.settings) return;
       const value = changes.settings.newValue || {};
