@@ -7,6 +7,7 @@ on:
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'tests/boardroom-social-campaign.test.mjs'
       - 'tests/work-saban-clip-watch.test.mjs'
+      - 'tests/work-saban-clip-evergreen.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -21,6 +22,7 @@ on:
       - 'tests/clip-social-continuity-watch.test.mjs'
       - 'tests/boardroom-social-campaign.test.mjs'
       - 'tests/work-saban-clip-watch.test.mjs'
+      - 'tests/work-saban-clip-evergreen.test.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -42,7 +44,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test publication reconciliation
-        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs
+        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs tests/work-saban-clip-evergreen.test.mjs
       - name: HumanFilter editorial rotation and truth gates
         run: node --test tests/humanfilter-clip-rotation.test.mjs
       - name: Write review queue coverage snapshot (read-only)
@@ -57,6 +59,12 @@ jobs:
             --queue distribution/marketing/work-saban-20261030.review.json \
             --receipts-dir artifacts/clip/social-publish-receipts \
             --out artifacts/clip/social-continuity-watch/work-saban/latest.json
+      - name: Work Saban evergreen rotation receipt watch (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/work-saban-clip-evergreen-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json
       - name: HumanFilter Clip receipt coverage (read-only)
         run: |
           node systemia/clip/social-continuity-watch.mjs \
@@ -115,6 +123,24 @@ jobs:
           else
             echo "Work Saban Clip watch missing. Check actual queue and runner." >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Surface Work Saban evergreen rotation truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json'));
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Work Saban evergreen rotation (read-only)\\n'+
+                'Campaign: '+d.campaign_id+'\\n'+
+                'Status: '+d.status+'\\n'+
+                'Slots: '+d.counts.total+'\\n'+
+                'Held for issuer/account approval: '+d.counts.approval_hold+'\\n'+
+                'Provider receipts: '+d.counts.provider_receipt_recorded+'\\n'+
+                'Receipt source available: '+d.receipt_source_available+'\\n'+
+                'This check did not publish or verify social visibility.\\n');
+            "
+          fi
       - name: Retain publication-gap report
         if: always()
         uses: actions/upload-artifact@v4
@@ -124,6 +150,8 @@ jobs:
             artifacts/clip/social-continuity-watch/latest.json
             artifacts/clip/social-continuity-watch/work-saban/latest.json
             artifacts/clip/social-continuity-watch/work-saban/mission-snapshot.json
+            artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json
+            artifacts/clip/social-continuity-watch/work-saban/rotation/mission-snapshot.json
             artifacts/clip/social-continuity-watch/humanfilter/latest.json
             artifacts/clip/social-continuity-watch/humanfilter/mission-snapshot.json
           if-no-files-found: warn
