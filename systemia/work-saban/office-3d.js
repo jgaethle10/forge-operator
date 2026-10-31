@@ -15,7 +15,9 @@
   const receipts={};
   const scene=$('office-scene');
   let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};
-  let world=null,drag=null;
+  let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null;
+  const touches=new Map();
+  let gesture=null;
   const rooms=[
     {name:'MISSION CONTROL',x:16,y:16},
     {name:'DATA LAB',x:358,y:16},
@@ -120,12 +122,14 @@
       ['⟳','Orbit right',()=>orbitCamera(15,0)],
       ['⌖','Reset view',()=>resetCamera()],
       ['◎','Focus selected coworker',()=>focusAgent(selected)],
+      ['◉','Follow selected coworker',()=>toggleFollow()],
       ['→','Visit next coworker',()=>tourNext()]
     ];
     buttons.forEach(([label,title,fn])=>{
       const b=make('button','spatial-control',label);
       b.type='button';b.title=title;b.setAttribute('aria-label',title);
       b.addEventListener('click',e=>{e.stopPropagation();fn();});
+      if(title==='Follow selected coworker'){followButton=b;b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
     overlay.append(orbit,controls);
@@ -133,26 +137,56 @@
     scene.append(viewport);
     const fallback=$('office-scene')?.querySelector('.workfloor-art');
     if(fallback)fallback.classList.add('office-floor-hidden');
+    function endGesture(e){
+      touches.delete(e.pointerId);
+      gesture=null;
+      if(drag?.id===e.pointerId)drag=null;
+      if(touches.size===0&&!drag)viewport.classList.remove('is-dragging');
+    }
     viewport.addEventListener('pointerdown',e=>{
-      if(e.button!==0||e.target.closest('button'))return;
-      drag={x:e.clientX,y:e.clientY,pan:e.shiftKey,id:e.pointerId};
-      viewport.setPointerCapture(e.pointerId);
+      if(e.target.closest('button'))return;
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      if(e.pointerType==='touch'){
+        touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+        gesture=null;
+      }else drag={x:e.clientX,y:e.clientY,pan:e.shiftKey,id:e.pointerId};
+      try{viewport.setPointerCapture(e.pointerId);}catch{}
       viewport.classList.add('is-dragging');
     });
     viewport.addEventListener('pointermove',e=>{
+      if(touches.has(e.pointerId)){
+        const previous=touches.get(e.pointerId);
+        touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+        if(touches.size>=2){
+          const [a,b]=[...touches.values()];
+          const current={x:(a.x+b.x)/2,y:(a.y+b.y)/2,span:Math.hypot(a.x-b.x,a.y-b.y)};
+          if(gesture){
+            disengageFollow();
+            position.panX=clamp(position.panX+(current.x-gesture.x)*.75,-480,480);
+            position.panY=clamp(position.panY+(current.y-gesture.y)*.75,-360,360);
+            position.zoom=clamp(position.zoom+(current.span-gesture.span)*.0025,.35,1.42);
+            applyCamera();
+          }
+          gesture=current;
+        }else{
+          gesture=null;
+          orbitCamera((e.clientX-previous.x)*.25,(e.clientY-previous.y)*.16);
+        }
+        return;
+      }
       if(!drag||e.pointerId!==drag.id)return;
       const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
       drag.x=e.clientX;drag.y=e.clientY;
-      if(drag.pan){position.panX=clamp(position.panX+dx,-480,480);position.panY=clamp(position.panY+dy,-360,360);}
-      else orbitCamera(dx*0.3,dy*0.17);
-      applyCamera();
+      if(drag.pan){
+        disengageFollow();
+        position.panX=clamp(position.panX+dx,-480,480);
+        position.panY=clamp(position.panY+dy,-360,360);
+        applyCamera();
+      }else orbitCamera(dx*.3,dy*.17);
     });
-    const end=e=>{
-      if(drag?.id===e.pointerId){drag=null;viewport.classList.remove('is-dragging');}
-    };
-    viewport.addEventListener('pointerup',end);
-    viewport.addEventListener('pointercancel',end);
-    viewport.addEventListener('lostpointercapture',()=>{drag=null;viewport.classList.remove('is-dragging');});
+    viewport.addEventListener('pointerup',endGesture);
+    viewport.addEventListener('pointercancel',endGesture);
+    viewport.addEventListener('lostpointercapture',endGesture);
     viewport.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?0.06:-0.06);},{passive:false});
     viewport.addEventListener('keydown',e=>{
       const key=e.key.toLowerCase(),step=e.shiftKey?42:22;
@@ -172,20 +206,40 @@
     });
     applyCamera();paint();
   }
+  function renderCamera(p){
+    if(!world)return;
+    world.style.transform='translate3d('+p.panX+'px,'+p.panY+'px,0) rotateX('+p.pitch+'deg) rotateZ('+p.yaw+'deg) scale('+p.zoom+')';
+    scene.style.setProperty('--office-depth',String(clamp(p.pitch/60,.35,1)));
+  }
   function applyCamera(){
     if(!world)return;
-    const p=position;
-    world.style.transform='translate3d('+p.panX+'px,'+p.panY+'px,0) rotateX('+p.pitch+'deg) rotateZ('+p.yaw+'deg) scale('+p.zoom+')';
-    const pitchScale=clamp(p.pitch/60,0.35,1);
-    scene.style.setProperty('--office-depth',String(pitchScale));
+    if(!cameraRig){
+      const motion=window.EvercraftObserverCamera;
+      if(!motion)throw Error('Owned observer camera runtime was not loaded');
+      cameraRig=motion.create({
+        initial:position,onFrame:renderCamera,
+        reducedMotion:typeof window.matchMedia==='function'&&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      });
+    }else cameraRig.setTarget(position);
+  }
+  function disengageFollow(){
+    if(!followSelected)return;
+    followSelected=false;
+    if(followButton)followButton.setAttribute('aria-pressed','false');
+  }
+  function toggleFollow(){
+    followSelected=!followSelected;
+    if(followButton)followButton.setAttribute('aria-pressed',String(followSelected));
+    if(followSelected)focusAgent(selected);
   }
   function orbitCamera(dx,dy){
     position.yaw=clamp(position.yaw+dx,-170,170);
     position.pitch=clamp(position.pitch+dy,32,74);
     applyCamera();
   }
-  function zoom(delta){position.zoom=clamp(Math.round((position.zoom+delta)*100)/100,0.35,1.42);applyCamera();}
-  function resetCamera(){position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};applyCamera();}
+  function zoom(delta){position.zoom=clamp(position.zoom+delta,0.35,1.42);applyCamera();}
+  function resetCamera(){disengageFollow();position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};applyCamera();}
   function focusAgent(id){
     const role=roster.find(r=>r.id===id);
     if(!role)return;
@@ -207,6 +261,7 @@
     if(!agents.has(id))return;
     selected=id;
     for(const [key,node] of agents)node.classList.toggle('is-selected',key===id);
+    if(followSelected)focusAgent(id);
   }
   function paint(){
     for(const role of roster){
@@ -303,7 +358,9 @@
     if(floor)floor.classList.toggle('office-floor-hidden',enabled);
     $('office-3d-toggle').textContent=enabled?'2D floorplan':'Explore 3D office';
     $('office-3d-toggle').setAttribute('aria-pressed',String(enabled));
-    if(enabled)requestAnimationFrame(()=>applyCamera());
+    if(cameraRig)cameraRig.setSuspended(!enabled);
+    if(enabled)applyCamera();
   }
-  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,getState:()=>({...state}),getCamera:()=>({...position})};
+  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,
+    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected};
 })();
