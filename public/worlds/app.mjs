@@ -2,15 +2,16 @@ import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,c
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
-import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
+import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
 let cloudOwner=null;
 try{cloudOwner=validateOwner(JSON.parse(localStorage.getItem(CLOUD_KEY)||'null'));}catch{}
-function forgetCloudOwner(){cloudOwner=null;try{localStorage.removeItem(CLOUD_KEY);}catch{}}
+function forgetCloudOwner(){cloudOwner=null;try{localStorage.removeItem(CLOUD_KEY);}catch{}$('unpublishOnline').classList.add('hidden');}
 vaultAvailable().then(available=>{
  if(!available)return;
  $('publishOnline').classList.remove('hidden');
- $('cloudStatus').textContent='Owned online saves available. Your shared scenes are unlisted.';
+ $('unpublishOnline').classList.toggle('hidden',!cloudOwner);
+ $('cloudStatus').textContent=cloudOwner?'Your saved online scene is available to visitors holding its link.':'Owned online saves available. Your shared scenes are unlisted.';
 }).catch(()=>{});
 
 const gl=canvas.getContext('webgl2',{antialias:false,alpha:false,powerPreference:'high-performance'});
@@ -235,6 +236,7 @@ $('publishOnline').onclick=async()=>{
  try{
   cloudOwner=await publishWorld(state,cloudOwner);
   localStorage.setItem(CLOUD_KEY,JSON.stringify(cloudOwner));
+  $('unpublishOnline').classList.remove('hidden');
   const url=publishedWorldUrl(location.href,cloudOwner.id);
   $('cloudStatus').textContent='Online revision '+cloudOwner.version+' · unlisted link ready';
   if(navigator.clipboard?.writeText){
@@ -243,6 +245,18 @@ $('publishOnline').onclick=async()=>{
   }else{window.prompt('Your online world visit link:',url);notify('World saved online.');}
  }catch(err){notify('Online save did not complete: '+err.message);}
  finally{button.disabled=false;button.textContent='Save online';}
+};
+$('unpublishOnline').onclick=async()=>{
+ if(visitingShared||!cloudOwner){notify('Only the original world creator can unpublish.');return;}
+ if(!window.confirm('Unpublish this online world? Existing visit links will stop working. Your local world stays saved. Private backups may still retain earlier copies.'))return;
+ const button=$('unpublishOnline');button.disabled=true;
+ try{
+  await unpublishWorld(cloudOwner);
+  forgetCloudOwner();
+  $('cloudStatus').textContent='This world is no longer online. Your local copy is untouched.';
+  notify('Online world unpublished. Its old visit link no longer works.');
+ }catch(err){notify('Unpublish failed. Online world remains available: '+err.message);}
+ finally{button.disabled=false;}
 };
 $('commandForm').onsubmit=e=>{e.preventDefault();runCommand($('command').value);};document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('download').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evercraft-worlds-mossmere.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500);};

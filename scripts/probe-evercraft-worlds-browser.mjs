@@ -157,6 +157,18 @@ try{
     const persisted=await page.evaluate(async id=>
       (await (await fetch('/worlds/api/worlds/'+id)).json()),owner.id);
     assert.equal(persisted.version,2,profile.name+': published revision did not advance');
+    // The creator can revoke the online link without touching the local scene.
+    await page.locator('#unpublishOnline').waitFor({state:'visible'});
+    page.once('dialog',dialog=>dialog.accept());
+    await page.locator('#unpublishOnline').click();
+    await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('no longer online'),null,{timeout:10000});
+    assert.equal(await page.locator('#unpublishOnline').isVisible(),false,profile.name+': unpublish control still visible');
+    const revoked=await page.evaluate(async id=>({
+      status:(await fetch('/worlds/api/worlds/'+id)).status,
+      owner:localStorage.getItem('evercraft.worlds.owner-capability.v1')
+    }),owner.id);
+    assert.equal(revoked.status,404,profile.name+': revoked public link remains accessible');
+    assert.equal(revoked.owner,null,profile.name+': deleted capability remains on device');
     const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(saved.sky,'sunset',profile.name+': sky change not stored');
     await page.locator('#closeEditor').click();

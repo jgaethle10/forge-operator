@@ -91,3 +91,9 @@ The external probe is read-only. It proves the public TLS URL serves the expecte
 - The current creation limiter keys on the TCP peer. Visitors behind the same edge proxy share a 10-per-ten-minute quota; implement a trusted, spoof-resistant gateway identity/rate design for general release.
 - The initial store is limited to 2,000 scenes of 40 objects; no account recovery, automated backup rotation, customer deletion, moderation, distributed locking, or multi-node persistence exists yet.
 - Passing source tests or a read-only canary does not establish paid customers, reachable DNS, working write permissions on the public edge, or real iOS Safari performance.
+
+## Unpublishing a shared world
+
+A creator can now select **Unpublish online** in World Builder after publishing. The vault requires the creator's capability and current revision, then removes the active world record. Public visit links return 404, and the local browser world remains unchanged. A creator must confirm the action. This action does **not** purge previously made private offline backups, screenshots, exported JSON or copies saved by guests. Operator backup-retention and customer data-deletion policies are still necessary for public launch.
+
+World creation is serialized within one process so parallel requests cannot bypass the 2,000-record capacity setting. This does **not** provide distributed multi-process coordination, customer identity, or full public abuse/rate governance.

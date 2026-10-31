@@ -41,6 +41,16 @@ export async function publishWorld(world,owner=null,fetchFn=fetch){
  if(!tokenPattern.test(data.edit_token))throw Error('World vault did not issue an edit capability');
  return {id:data.world_id,edit_token:data.edit_token,version:data.version};
 }
+export async function unpublishWorld(owner,fetchFn=fetch){
+ const c=validateOwner(owner);
+ if(!c)throw Error('World creator capability is missing');
+ const value=await jsonResponse(await fetchFn(apiPath('worlds/'+c.id),{
+  method:'DELETE',credentials:'same-origin',cache:'no-store',
+  headers:{authorization:'Bearer '+c.edit_token,'if-match':'"'+c.version+'"'}
+ }));
+ if(value.world_id!==c.id||value.unpublished!==true)throw Error('World vault did not confirm unpublishing');
+ return true;
+}
 export async function fetchPublishedWorld(id,fetchFn=fetch){
  if(!idPattern.test(id))throw Error('Invalid world ID');
  const value=await jsonResponse(await fetchFn(apiPath('worlds/'+id),{cache:'no-store',credentials:'same-origin'}));
