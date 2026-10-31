@@ -10,21 +10,25 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import {leaseNext, complete, fail, saveWorkState, loadWorkState} from './work-state.mjs';
 import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
+import {verifySignedMicroSeedExecutionReceipt} from './signed-microseed-execution.mjs';
 
 const hash = value => 'sha256:' + createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
-function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,adapter}) {
+function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,adapter,nodeSeedPin}) {
   if (state?.schema !== 'evercraft.saban.work-state.v1' || !state?.jobs ||
       !contract || !plan || !adapter || typeof adapter.runAssignment !== 'function') {
     throw new Error('fenced_scheduler_invalid_kernel_inputs');
   }
   // No automatic enablement for existing production software. This is a
   // separate source-audit-only candidate contract until explicit review.
-  if (contract.software_id !== 'saban-fenced-readonly-canary' ||
+  const signedMicroSeed = contract.software_id === 'saban-fenced-microseed-canary';
+  const sourceOnly = contract.software_id === 'saban-fenced-readonly-canary';
+  if ((!sourceOnly && !signedMicroSeed) ||
       plan.software_id !== contract.software_id ||
       state.software_id !== contract.software_id ||
-      contract.fenced_local_candidate !== 'read_only_no_external_effects' ||
-      contract.side_effects?.external_network !== false ||
+      contract.fenced_local_candidate !== (signedMicroSeed
+        ? 'signed_microseed_localhost' : 'read_only_no_external_effects') ||
+      contract.side_effects?.external_network !== (signedMicroSeed ? 'loopback_only' : false) ||
       contract.side_effects?.payment_obligation !== false ||
       contract.side_effects?.unsolicited_human_outreach !== false ||
       contract.side_effects?.automatic_checkout !== false ||
@@ -49,6 +53,17 @@ function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,
         job.role !== 'source_readiness_auditor') {
       // If a crash left any active lease or mismatch, halt the whole run.
       throw new Error('fenced_scheduler_state_requires_independent_reconciliation');
+    }
+    if (signedMicroSeed) {
+      const pin=nodeSeedPin?.[jobId];
+      if (job.work?.workload_class !== 'systemia.content-hash.v1' ||
+          typeof job.idempotency_key !== 'string' || !job.idempotency_key ||
+          !job.item || !Object.hasOwn(job.item,'payload') ||
+          !/^sha256:[0-9a-f]{64}$/.test(String(pin?.device_fingerprint||'')) ||
+          !pin?.node_id || !pin.lease_id ||
+          !/^[a-zA-Z0-9._:-]{16,256}$/.test(String(pin.nonce||''))) {
+        throw new Error('fenced_scheduler_independent_signed_node_pin_required');
+      }
     }
   }
 }
@@ -105,9 +120,9 @@ function boundedSummary(state) {
 
 export async function runFencedLocalScheduler({
   state,adapter,physicalWorkers,plan,contract,rootDir=process.cwd(),
-  statePath,journal
+  statePath,journal,nodeSeedPin=null
 }={}) {
-  assertCandidate({state,adapter,physicalWorkers,plan,contract,statePath,journal});
+  assertCandidate({state,adapter,physicalWorkers,plan,contract,statePath,journal,nodeSeedPin});
   const target=path.resolve(statePath);
   fs.mkdirSync(path.dirname(target),{recursive:true,mode:0o700});
   const lock=target+'.fenced-run.lock';
@@ -149,8 +164,28 @@ export async function runFencedLocalScheduler({
             role:leased.role,work:leased.work,item:leased.item
           },plan,contract,rootDir
         });
+        // For the strict localhost MicroSeed canary, verify the execution
+        // signature against independent expected key, lease, nonce, request
+        // and original worker-result digest BEFORE recording acknowledgment.
+        if(contract.software_id==='saban-fenced-microseed-canary'){
+          const pin=nodeSeedPin[leased.job_id];
+          const proof=verifySignedMicroSeedExecutionReceipt({
+            signedReceipt:result?.signed_execution,
+            workerReceipt:result?.worker_receipt,
+            expectedNodeId:pin.node_id,
+            expectedFingerprint:pin.device_fingerprint,
+            expectedLeaseId:pin.lease_id,
+            expectedNonce:pin.nonce,
+            expectedWorkloadClass:leased.work.workload_class,
+            expectedIdempotencyKey:leased.idempotency_key,
+            expectedPayload:leased.item.payload
+          });
+          if(proof.ok!==true || hash(result?.result)!==hash(result?.worker_receipt?.result)){
+            throw new Error('fenced_scheduler_signed_nodeseed_result_invalid');
+          }
+        }
         // An acknowledgment is NOT independent verification of external
-        // effects. The path admits only an explicitly read-only canary.
+        // effects. The path admits only explicitly bounded canaries.
         const digest=hash(result===undefined?null:result);
         journal.acknowledge({
           jobKey:leased.job_id,workerId,leaseToken:token,
