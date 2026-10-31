@@ -1,4 +1,4 @@
-// FindMyPart Saban scorecard v1: evidence-based capability assessment, not recovery success claims.
+// FindMyPart Saban scorecard v1: submitted evidence bookkeeping, not independent verification or launch authority.
 export const DIMENSIONS=['identification','sourcing','cad','substitution','safety'];
 const OUTCOMES=['verified','unverified','not_attempted','failed'];
 export function scoreRecoveryTrial(trial){
@@ -18,6 +18,6 @@ export function scoreRecoveryTrial(trial){
  return {schema:'evercraft.findmypart.saban-score.v1',case_id:String(trial.case_id),
   dimensions:rows,verified_count:successes,total:DIMENSIONS.length,
   verification_rate:successes/DIMENSIONS.length,
-  release_eligible:successes===DIMENSIONS.length&&!blocked,
+  release_eligible:false,requires_independent_validation:true,
   safety_hold:blocked,contains_customer_pii:false};
 }
