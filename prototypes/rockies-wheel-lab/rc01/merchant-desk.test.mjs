@@ -11,7 +11,7 @@ const row='W-100,"Spoke, twin",Bronze,19,249.95';
 function launch() {
   const elements=new Map();
   const created=[];
-  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset']){
+  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary']){
     elements.set(id,{
       value: id==='quantity'?'4':id==='service'?'none':'',
       textContent:'', listeners:{}, children:[],
@@ -110,4 +110,63 @@ test('an invalid upload never replaces the last accepted inventory',async()=>{
   await callback({target:{files:[file],value:''}});
   assert.equal(api.packet().inventory_source,'fictional_sample');
   assert.match(elements.get('message').textContent,/Import rejected/);
+});
+
+test('RC05 imports an actual shopper concept format without claiming SKU fitment or consent',async()=>{
+  const {api,elements}=launch();
+  const sample={
+    title:'Wheel Lab concept quote packet',version:'RC01',
+    illustrative_only:true,fitment_verified:false,inventory_verified:false,
+    price_verified:false,shop_contacted:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Turbine',diameter_in:20,wheel_finish:'Warm bronze',paint:'Electric blue'
+  };
+  const event={target:{files:[{name:'concept.json',size:450,async text(){return JSON.stringify(sample)}}],value:''}};
+  await elements.get('conceptFile').listeners.change(event);
+  const packet=api.packet();
+  assert.equal(packet.requested_appearance.wheel_design,'Turbine');
+  assert.equal(packet.requested_appearance.diameter_in,20);
+  assert.equal(packet.requested_appearance.wheel_finish,'Warm bronze');
+  assert.equal(packet.requested_appearance.fitment_verified,false);
+  assert.equal(packet.merchant_sku_matched_to_concept,false);
+  assert.equal(packet.appearance_import_verified,false);
+  assert.equal(packet.inventory_source,'fictional_sample');
+  assert.equal(packet.fitment_verified,false);
+  assert.equal(packet.customer_consent_verified,false);
+  assert.match(elements.get('conceptSummary').textContent,/does not identify a real wheel SKU/);
+});
+
+test('RC05 rejects forged verified assertions, unsupported appearance and overlarge files',async()=>{
+  const {api,elements}=launch();
+  const normal={title:'Wheel Lab concept quote packet',version:'RC01',illustrative_only:true,
+    fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Orbit',diameter_in:19,wheel_finish:'Gloss black',paint:'Torch red'};
+  const rejected=[
+    {...normal,fitment_verified:true},
+    {...normal,shop_contacted:true},
+    {...normal,price_verified:true},
+    {...normal,wheel_design:'Bad Wheel'},
+    {...normal,diameter_in:24},
+    {...normal,vehicle:'Manufacturer-specific real vehicle'}
+  ];
+  for(const item of rejected)assert.throws(()=>api.parseConcept(JSON.stringify(item)));
+  assert.throws(()=>api.parseConcept('not JSON'));
+  assert.throws(()=>api.parseConcept(' '.repeat(20001)));
+  await elements.get('conceptFile').listeners.change({target:{files:[{size:22000,name:'giant.json',text:async()=>JSON.stringify(normal)}],value:''}});
+  assert.equal(api.packet().requested_appearance,null);
+  assert.match(elements.get('message').textContent,/Concept rejected/);
+});
+
+test('RC05 reset clears customer appearance and any imported operator context', async()=>{
+  const {api,elements}=launch();
+  const sample={title:'Wheel Lab concept quote packet',version:'RC01',illustrative_only:true,
+    fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Orbit',diameter_in:19,wheel_finish:'Gloss black',paint:'Torch red'};
+  await elements.get('conceptFile').listeners.change({target:{files:[{size:440,name:'concept.json',text:async()=>JSON.stringify(sample)}],value:''}});
+  assert.ok(api.packet().requested_appearance);
+  elements.get('reset').listeners.click();
+  assert.equal(api.packet().requested_appearance,null);
+  assert.match(elements.get('conceptSummary').textContent,/No shopper concept imported yet/);
 });
