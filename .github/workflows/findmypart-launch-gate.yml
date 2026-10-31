@@ -9,6 +9,7 @@ on:
       - 'tests/findmypart-recovery-engine.test.mjs'
       - 'tests/findmypart-recovery-links.test.mjs'
       - 'tests/findmypart-saban-recovery-gauntlet.test.mjs'
+      - 'tests/findmypart-saban-scorecard.test.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
       - 'scripts/findmypart-review-inquiry.mjs'
@@ -74,7 +75,8 @@ jobs:
               tests/findmypart-candidate-shortlist.test.mjs \
               tests/findmypart-recovery-engine.test.mjs \
               tests/findmypart-recovery-links.test.mjs \
-              tests/findmypart-saban-recovery-gauntlet.test.mjs
+              tests/findmypart-saban-recovery-gauntlet.test.mjs \
+              tests/findmypart-saban-scorecard.test.mjs
             echo "::endgroup::"
           done
       - name: Check browser search modules are syntactically valid
@@ -84,6 +86,7 @@ jobs:
           node --check public/findmypart/search/candidates.mjs
           node --check public/findmypart/search/recovery-links.mjs
           node --check systemia/findmypart/recovery-engine.mjs
+          node --check systemia/findmypart/saban-scorecard.mjs
       - name: Existing owned service routing regression
         run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Existing native payment offer routing regression
