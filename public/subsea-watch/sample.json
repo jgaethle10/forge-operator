@@ -1,0 +1,305 @@
+{
+  "schema": "evercraft.subsea.replay.v1",
+  "title": "Example mission • intake survey concept",
+  "demo": true,
+  "provenance": "Entirely synthetic route and illustrative pipe; no actual diver, facility, sensor, or hazard reading.",
+  "position_source": "SIMULATED",
+  "points": [
+    {
+      "t_s": 0,
+      "depth_m": 1.4,
+      "x_m": -17,
+      "y_m": -3,
+      "position_source": "SIMULATED",
+      "note": "Illustrative descent begins"
+    },
+    {
+      "t_s": 5,
+      "depth_m": 1.98,
+      "x_m": -16,
+      "y_m": -2.2,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 10,
+      "depth_m": 2.55,
+      "x_m": -15,
+      "y_m": -1.43,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 15,
+      "depth_m": 3.12,
+      "x_m": -14,
+      "y_m": -0.7,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 20,
+      "depth_m": 3.69,
+      "x_m": -13,
+      "y_m": -0.04,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 25,
+      "depth_m": 4.25,
+      "x_m": -12,
+      "y_m": 0.52,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 30,
+      "depth_m": 4.8,
+      "x_m": -11,
+      "y_m": 0.98,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 35,
+      "depth_m": 5.34,
+      "x_m": -10,
+      "y_m": 1.32,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 40,
+      "depth_m": 5.88,
+      "x_m": -9,
+      "y_m": 1.53,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 45,
+      "depth_m": 6.39,
+      "x_m": -8,
+      "y_m": 1.6,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 50,
+      "depth_m": 6.9,
+      "x_m": -7,
+      "y_m": 1.53,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 55,
+      "depth_m": 7.39,
+      "x_m": -6,
+      "y_m": 1.32,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 60,
+      "depth_m": 7.86,
+      "x_m": -5,
+      "y_m": 0.98,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 65,
+      "depth_m": 8.32,
+      "x_m": -4,
+      "y_m": 0.52,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 70,
+      "depth_m": 8.75,
+      "x_m": -3,
+      "y_m": -0.04,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 75,
+      "depth_m": 9.17,
+      "x_m": -2,
+      "y_m": -0.7,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 80,
+      "depth_m": 9.56,
+      "x_m": -1,
+      "y_m": -1.43,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 85,
+      "depth_m": 9.93,
+      "x_m": 0,
+      "y_m": -2.2,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 90,
+      "depth_m": 10.28,
+      "x_m": 1,
+      "y_m": -3,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 95,
+      "depth_m": 10.6,
+      "x_m": 2,
+      "y_m": -3.8,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 100,
+      "depth_m": 10.9,
+      "x_m": 3,
+      "y_m": -4.57,
+      "position_source": "SIMULATED",
+      "note": "Illustrative viewing point"
+    },
+    {
+      "t_s": 105,
+      "depth_m": 11.17,
+      "x_m": 4,
+      "y_m": -5.3,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 110,
+      "depth_m": 11.41,
+      "x_m": 5,
+      "y_m": -5.96,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 115,
+      "depth_m": 11.62,
+      "x_m": 6,
+      "y_m": -6.52,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 120,
+      "depth_m": 11.81,
+      "x_m": 7,
+      "y_m": -6.98,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 125,
+      "depth_m": 11.96,
+      "x_m": 8,
+      "y_m": -7.32,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 130,
+      "depth_m": 12.09,
+      "x_m": 9,
+      "y_m": -7.53,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 135,
+      "depth_m": 12.19,
+      "x_m": 10,
+      "y_m": -7.6,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 140,
+      "depth_m": 12.26,
+      "x_m": 11,
+      "y_m": -7.53,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 145,
+      "depth_m": 12.29,
+      "x_m": 12,
+      "y_m": -7.32,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 150,
+      "depth_m": 12.3,
+      "x_m": 13,
+      "y_m": -6.98,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 155,
+      "depth_m": 12.27,
+      "x_m": 14,
+      "y_m": -6.52,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 160,
+      "depth_m": 12.22,
+      "x_m": 15,
+      "y_m": -5.96,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 165,
+      "depth_m": 12.13,
+      "x_m": 16,
+      "y_m": -5.3,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 170,
+      "depth_m": 12.02,
+      "x_m": 17,
+      "y_m": -4.57,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 175,
+      "depth_m": 11.87,
+      "x_m": 18,
+      "y_m": -3.8,
+      "position_source": "SIMULATED",
+      "note": ""
+    },
+    {
+      "t_s": 180,
+      "depth_m": 11.7,
+      "x_m": 19,
+      "y_m": -3,
+      "position_source": "SIMULATED",
+      "note": "Illustrative ascent"
+    }
+  ]
+}
