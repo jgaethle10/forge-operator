@@ -50,6 +50,14 @@ h2{font-size:clamp(1.5rem,2.5vw,1.95rem);line-height:1.2;letter-spacing:-.035em;
 .next{margin:0 0 58px}
 .next p{color:var(--muted)}
 .next a{font-weight:750}
+.share{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:0 0 54px;padding:27px 28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(110deg,rgba(17,50,69,.85),rgba(10,24,35,.88))}
+.share h2{margin:8px 0;font-size:clamp(1.35rem,2.5vw,1.7rem)}
+.share p{margin:0;color:var(--muted)}
+.share-cta{display:flex;flex-direction:column;gap:8px;min-width:min(100%,230px)}
+.share-button{appearance:none;cursor:pointer;border:1px solid var(--ice);background:var(--ice);color:#04111a;min-height:51px;border-radius:10px;font:850 1rem/1.2 system-ui,-apple-system,Segoe UI,sans-serif;padding:13px 22px}
+.share-button:hover{background:#b5ecff}
+.share-button:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
+.share .share-feedback{font-size:.85rem;min-height:1.35em;overflow-wrap:anywhere}
 footer{border-top:1px solid var(--line);color:var(--muted);font-size:.86rem;padding:25px 0 45px}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.hero{padding:55px 0 32px}.card{padding:24px}.specific{min-height:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -73,7 +81,47 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.86rem;padd
 <div class="specific">Sample data only. Not a live multi-agent workplace run.</div>
 <a class="action" href="../work-saban/demo/?utm_source=evercraft_try&utm_medium=free_hub&utm_campaign=work_saban">Try the free report demo</a></article>
 </section>
+<section class="share" aria-label="Share Evercraft free tools">
+  <div><div class="eyebrow">Useful things travel</div><h2>Know someone who could use this?</h2>
+  <p>Send them the free tools. No account or purchase required.</p></div>
+  <div class="share-cta"><button id="share-free-tools" class="share-button" type="button">Share free tools</button>
+  <p id="share-feedback" class="share-feedback" role="status" aria-live="polite"></p></div>
+</section>
 <section class="note"><h2>Real tools. Clear boundaries.</h2><p>These are existing free experiences, not claims of live AI-to-AI debate, autonomous agents or completed professional research. Sample tools and browser-local processing do not establish that a paid service is operating. You do not have to buy anything to use them. Sharing a link can help someone else discover Evercraft, but we do not count shares as verified visits or purchases.</p></section>
 <section class="next"><div class="eyebrow">Like what you see?</div><h2>Explore the full Evercraft services.</h2><p>When a task needs deeper analysis or human review, discover individual services with transparent, existing prices. The checkout system is infrastructure, not the product.</p><p><a href="../mesh/checkout-ready/">See available Evercraft Services</a> · <a href="../partners/">Explore independent partner introductions</a></p></section>
 </main><footer><div class="wrap">Evercraft LLC · <a href="../mesh/">Explore Evercraft</a> · <a href="mailto:jessegaethle10@gmail.com">Contact</a><p>We do not claim tracked traffic or sales until independently observed. Referral parameters label a link source only and are not visitor analytics.</p></div></footer>
+<script>
+(() => {
+  const button = document.getElementById('share-free-tools');
+  const feedback = document.getElementById('share-feedback');
+  const link = document.querySelector('link[rel="canonical"]')?.href ||
+    'https://jgaethle10.github.io/forge-operator/try/';
+  button.addEventListener('click', async () => {
+    feedback.textContent = '';
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({
+          title: 'Try Evercraft for free',
+          text: 'Three practical free tools. No signup, no card, no sales call.',
+          url: link
+        });
+        feedback.textContent = 'Share sheet closed.';
+        return;
+      } catch (error) {
+        if (error?.name === 'AbortError') return;
+      }
+    }
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(link);
+      feedback.textContent = 'Link copied. Share it anywhere.';
+    } catch {
+      const anchor = document.createElement('a');
+      anchor.href = link;
+      anchor.textContent = link;
+      feedback.replaceChildren(document.createTextNode('Copy this link: '), anchor);
+    }
+  });
+})();
+</script>
 </body></html>
