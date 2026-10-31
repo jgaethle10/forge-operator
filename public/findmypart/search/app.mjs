@@ -8,12 +8,15 @@ const results=document.querySelector('#results');
 const description=document.querySelector('#query-description');
 const container=document.querySelector('#source-results');
 let activeBrief=null;
+let photoMeta=null;
+let photoUrl=null;
 function render(raw){
  const analysis=analyzePartQuery(raw);
  if(!analysis.valid){input.setCustomValidity(analysis.error);input.reportValidity();return}
  input.setCustomValidity('');
  const links=buildSourceSearches(analysis);
  activeBrief=createSavedSearch(analysis,links);
+ if(photoMeta)activeBrief.local_photo_evidence={...photoMeta,not_uploaded:true,not_recognized:true};
  container.replaceChildren();
  for(const source of links){
   const box=document.createElement('article');box.className='source';
@@ -82,3 +85,37 @@ candidateForm?.addEventListener('submit',event=>{
   candidateForm.reset();drawCandidates();
  }catch(error){candidateStatus.textContent=error.message||'Could not save candidate.'}
 });
+
+const photoInput=document.querySelector('#part-photo');
+const photoPreview=document.querySelector('#photo-preview');
+const photoStatus=document.querySelector('#photo-status');
+function clearPhoto(){
+ if(photoUrl){URL.revokeObjectURL(photoUrl);photoUrl=null}
+ photoMeta=null;if(photoInput)photoInput.value='';
+ photoPreview?.replaceChildren();
+ if(photoStatus)photoStatus.textContent='No photo selected.';
+ if(activeBrief)delete activeBrief.local_photo_evidence;
+}
+photoInput?.addEventListener('change',()=>{
+ clearPhotoPreviewOnly();
+ const file=photoInput.files?.[0];
+ if(!file)return clearPhoto();
+ const types=new Set(['image/jpeg','image/png','image/webp','image/gif']);
+ if(!types.has(file.type)||file.size>10*1024*1024||file.size===0){
+  clearPhoto();photoStatus.textContent='Use a JPEG, PNG, WebP or GIF under 10 MB.';return;
+ }
+ photoMeta={filename:file.name.slice(0,120),mime_type:file.type,bytes:file.size};
+ photoUrl=URL.createObjectURL(file);
+ const image=document.createElement('img');image.src=photoUrl;image.alt='Your selected part photo';
+ image.style.cssText='max-width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-top:12px';
+ photoPreview.append(image);
+ photoStatus.textContent='Photo selected locally. Image recognition is not available yet.';
+ if(activeBrief)activeBrief.local_photo_evidence={...photoMeta,not_uploaded:true,not_recognized:true};
+});
+function clearPhotoPreviewOnly(){
+ if(photoUrl){URL.revokeObjectURL(photoUrl);photoUrl=null}
+ photoPreview?.replaceChildren();photoMeta=null;
+ if(activeBrief)delete activeBrief.local_photo_evidence;
+}
+document.querySelector('#clear-photo')?.addEventListener('click',clearPhoto);
+window.addEventListener('pagehide',()=>{if(photoUrl)URL.revokeObjectURL(photoUrl)});
