@@ -1108,6 +1108,62 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "work-saban-csv-report-v1",
+      "name": "Work Saban CSV Report",
+      "aliases": [
+        "evercraft-work-saban-csv"
+      ],
+      "adapter": "systemia/work-saban/csv-worker.mjs",
+      "default_logical_agents": 1,
+      "max_logical_agents": 5,
+      "default_physical_workers": 1,
+      "max_physical_workers": 1,
+      "lease_seconds": 30,
+      "roles": [
+        "analyst",
+        "writer",
+        "designer",
+        "auditor",
+        "coordinator"
+      ],
+      "work_sources": [],
+      "side_effects": {
+        "default": "deny",
+        "external_network": false,
+        "outbound_messaging": false,
+        "customer_record_writes": false,
+        "payment_obligation": false,
+        "public_publication": false,
+        "local_generated_files": false
+      },
+      "max_attempts_per_job": 2,
+      "budget": {
+        "max_logical_agents": 5,
+        "max_physical_workers": 1,
+        "max_work_items": 1,
+        "max_attempts_per_job": 2
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 5
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": false,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 64,
+        "require_capacity_hint": false,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 64
+      }
     }
   ]
 }

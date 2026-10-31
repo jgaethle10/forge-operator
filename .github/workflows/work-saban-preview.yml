@@ -1,0 +1,77 @@
+name: Work Saban Preview
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/work-saban/**'
+      - '.github/workflows/work-saban-preview.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/work-saban/**'
+
+permissions:
+  contents: read
+
+jobs:
+  formation-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check systemia/work-saban/model-worker.mjs
+          node --check systemia/work-saban/model-worker.proof.mjs
+          node --check systemia/work-saban/mission.mjs
+          node --check systemia/work-saban/server.mjs
+          node --check systemia/work-saban/app.js
+          node --check systemia/work-saban/office-camera.js
+          node --check systemia/work-saban/office-camera.proof.mjs
+          node --check systemia/work-saban/office-browser-qa.mjs
+          node --check systemia/work-saban/office-3d.js
+          node --check systemia/work-saban/trace-client.js
+          node --check systemia/work-saban/trace-chain.mjs
+          node --check systemia/work-saban/audit-trace.mjs
+          node --check systemia/work-saban/trace-chain.proof.mjs
+          node --check systemia/work-saban/office-3d.proof.mjs
+          node --check systemia/work-saban/office.js
+          node --check systemia/work-saban/csv-core.mjs
+          node --check systemia/work-saban/csv-worker.mjs
+          node --check systemia/work-saban/execute-local.mjs
+          node --check systemia/work-saban/execute-local.proof.mjs
+      - name: Prove customer-first task screen and optional evidence controls
+        run: node systemia/work-saban/customer-first.proof.mjs
+      - name: Prove model worker permission boundary without live provider
+        run: node systemia/work-saban/model-worker.proof.mjs
+      - name: Prove formation contract
+        run: node systemia/work-saban/mission.proof.mjs
+      - name: Prove smooth observer rig, reduced motion, and frame rate independence
+        run: node systemia/work-saban/office-camera.proof.mjs
+      - name: Prove spatial office camera and receipt-driven state
+        run: node systemia/work-saban/office-3d.proof.mjs
+      - name: Inspect real desktop and phone camera in headless Chrome
+        run: |
+          export WORK_SABAN_BROWSER_PROOF_DIR="$RUNNER_TEMP/work-saban-visual"
+          node systemia/work-saban/office-browser-qa.mjs
+      - name: Retain local browser screenshots for manual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-saban-smooth-camera-visual
+          path: ${{ runner.temp }}/work-saban-visual/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Prove ordered browser and server SHA-256 trace verification
+        run: node systemia/work-saban/trace-chain.proof.mjs
+      - name: Prove local preview API
+        run: node systemia/work-saban/preview.proof.mjs
+      - name: Prove five registered specialist workers, financial audit and delivery
+        run: node systemia/work-saban/execute-local.proof.mjs
+      - name: Run approved local-only synthetic report CLI
+        run: |
+          node systemia/work-saban/execute-local.mjs --demo --out "$RUNNER_TEMP/work-saban"
+          test -f "$(find "$RUNNER_TEMP/work-saban" -name '*.receipt.json' | head -n 1)"
