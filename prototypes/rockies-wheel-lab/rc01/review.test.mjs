@@ -15,7 +15,7 @@ test('review portal is a source-only, offline and noindex local composition',()=
   assert.doesNotMatch(html, /<script[^>]+src=/i);
   assert.doesNotMatch(source, /\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon)\s*\(/);
   assert.doesNotMatch(html, /<form\b/i);
-  assert.match(html, /not live/i);
+  assert.match(html, /NOT A LIVE MERCHANT SERVICE/);
   assert.match(html, /Systemia admission/);
 });
 
