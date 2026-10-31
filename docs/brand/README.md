@@ -111,3 +111,5 @@ The catalog reconciliation emits a local JSON file and companion Markdown workli
 The PR-only [Brand Registry Review workflow](../../.github/workflows/brand-registry-review.yml) exercises the real source-backed tests and produces only temporary internal files in the GitHub runner. It has no deployment, checkout, upload, or public artifact step.
 
 **Reverse-gap safeguard:** Evercraft Research, HumanFilter, and Work Saban have verified standalone source marks but no explicit linked top-level keys in the older 69-entry directory. The reconciliation report calls these out as three **verified identities outside the dated catalog mapping**. That is a mapping gap, not an assertion that the products do not exist or that they should automatically be added to a public directory.
+
+For a human-readable working queue rather than raw JSON, see [catalog-triage-2026-10-31.md](./catalog-triage-2026-10-31.md): all 55 legacy records awaiting family classification, the 12 explicit matches, and three newer verified marks outside the dated directory mapping. It is intentionally an internal review document, not a product launch announcement.
