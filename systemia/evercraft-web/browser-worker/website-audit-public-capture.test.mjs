@@ -13,7 +13,7 @@ const held=publicPaymentHealth({
   checkout_operational_state:'held_owned_payment_endpoint_unconfigured',
 });
 const normal={httpStatus:200,title:'Systemia Website Audit',heading:'Website Audit',
-  hasEmailField:true,hasCheckoutButton:true,hasAssistedInvoice:false,
+  hasEmailField:true,hasCheckoutButton:true,hasQuickWinOffer:true,hasExactPrice:true,hasAssistedInvoice:false,
   pageErrorCount:0,paymentHealth:configured};
 
 test('public offer scope permits same-origin reads and refuses transactions, external sites and local files',()=>{
@@ -49,7 +49,7 @@ test('actual Evercraft Payments hold still permits honest video evidence',()=>{
   assert.equal(result.publicationAuthority,false);
 });
 test('unavailable health, unexpected form or broken public offer never receives a positive capture result',()=>{
-  for(const change of [{httpStatus:503},{title:'Missing',heading:'Not found'},
+  for(const change of [{httpStatus:503},{hasQuickWinOffer:false},{hasExactPrice:false},
     {hasEmailField:false},{hasCheckoutButton:false},{pageErrorCount:1},
     {paymentHealth:publicPaymentHealth(null)},
     {hasEmailField:false,hasCheckoutButton:false,hasAssistedInvoice:false,paymentHealth:held}]){
@@ -66,4 +66,16 @@ test('health metadata cannot silently route through a generic Stripe-only checko
     checkout_operational_state:'owned_transport_requires_independent_checkout_canary'});
   assert.equal(wrong.transportConfigured,false);
   assert.equal(pageEvidence({...normal,paymentHealth:wrong}).state,'blocked');
+});
+
+test('problem-led headline with exact Quick Win Audit $49 in body is correctly admitted as a captured offer',()=>{
+  const r=pageEvidence({...normal,
+    title:"Your website is getting attention. Why isn't it getting customers? · Evercraft",
+    heading:"Your website is getting attention. Why isn't it getting customers?",
+    hasCheckoutButton:false,hasEmailField:false,
+    hasAssistedInvoice:true,paymentHealth:held});
+  assert.equal(r.state,'public_offer_captured_payment_held');
+  assert.equal(r.captureSuccessful,true);
+  assert.equal(r.buyerCheckoutAvailable,false);
+  assert.equal(r.checkoutVerified,false);
 });
