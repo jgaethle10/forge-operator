@@ -21,8 +21,10 @@
       "name": "Evercraft",
       "role": "parent",
       "asset": {
-        "status": "parent_source_validation_pending",
-        "source": null
+        "status": "parent_master_vector_missing",
+        "source": null,
+        "manual_reference": "Evercraft Brand Standards Manual v1.0, June 2026 (confidential)",
+        "shape_reference": "Three ascending titanium forms and an open champagne-gold continuity arc; unverified artwork must not be substituted"
       },
       "publication_approved": false
     },
@@ -110,5 +112,6 @@
       "customer_access": "long-media_review_scope_requires_current_confirmation; self-service_not_proven",
       "publication_approved": false
     }
-  ]
+  ],
+  "design_governance": "docs/brand/design-governance.v1.json"
 }
