@@ -25,7 +25,12 @@ main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{
 <label class="label" for="item">Wheel</label><select id="item"></select>
 <div class="two"><div><label class="label" for="quantity">Quantity</label><select id="quantity"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option></select></div>
 <div><label class="label" for="vehicle">Vehicle note</label><input id="vehicle" maxlength="120" placeholder="Year / make / model" autocomplete="off"></div></div>
-<div class="line"></div><h2>2. Shop workflow</h2>
+<div class="line"></div><h2>2. Customer's concept</h2>
+<label class="label" for="conceptFile">Import a Wheel Lab concept JSON</label>
+<input id="conceptFile" type="file" accept=".json,application/json">
+<p class="hint">From the shopper preview's "Export shop quote packet" button. Local to this browser, never transmitted. Maximum 20 KB.</p>
+<div class="box"><strong>Requested appearance (unverified)</strong><p id="conceptSummary">No shopper concept imported yet.</p></div>
+<div class="line"></div><h2>3. Shop workflow</h2>
 <label class="label" for="service">Additional service</label><select id="service"><option value="none">No service selected</option><option value="mount">Mount/balance (manual review)</option><option value="tpms">TPMS service (manual review)</option></select>
 <p class="hint">Service selection is a reminder only. It never adds an invented price.</p>
 <div class="box warning"><strong>FITMENT & PRICE REVIEW REQUIRED</strong><p>Appearance is not a fitment claim. A technician must verify bolt pattern, center bore, offset, brake clearance, tire size and load rating. The shop must confirm inventory, installation costs, tax and final totals.</p></div>
@@ -51,7 +56,7 @@ const SAMPLE=[
 ];
 const MAX_BYTES=200000, MAX_ROWS=200;
 const $=id=>document.getElementById(id);
-let inventory=SAMPLE,source='fictional_sample',inputName='';
+let inventory=SAMPLE,source='fictional_sample',inputName='',importedConcept=null;
 function parseCsv(text) {
   if(typeof text!=='string'||text.length>MAX_BYTES)throw Error('CSV must be text under 200 KB');
   const rows=[],row=[];let field='',quoted=false;
@@ -85,6 +90,26 @@ function parseCsv(text) {
   if(!result.length||result.length>MAX_ROWS)throw Error('Inventory must contain 1–200 valid rows');
   return result;
 }
+function parseConcept(text){
+  if(typeof text!=='string'||text.length>20000)throw Error('Concept JSON must be under 20 KB');
+  let raw;try{raw=JSON.parse(text)}catch{throw Error('Invalid concept JSON')}
+  if(!raw||typeof raw!=='object'||Array.isArray(raw)||
+     raw.title!=='Wheel Lab concept quote packet'||raw.version!=='RC01'||
+     raw.illustrative_only!==true||raw.fitment_verified!==false||
+     raw.inventory_verified!==false||raw.price_verified!==false||
+     raw.shop_contacted!==false)throw Error('Not an unverified Wheel Lab RC01 concept packet');
+  const wheel_design=String(raw.wheel_design||'');
+  const wheel_finish=String(raw.wheel_finish||'');
+  const paint=String(raw.paint||'');
+  if(!['Orbit','Turbine','Mesh','Heritage'].includes(wheel_design)||
+     !['Gloss black','Brushed silver','Warm bronze'].includes(wheel_finish)||
+     !['Torch red','Pearl white','Electric blue','Machine silver','Midnight'].includes(paint)||
+     ![17,18,19,20,21].includes(raw.diameter_in))throw Error('Unrecognized concept appearance');
+  if(raw.vehicle!=='Original concept coupe (not manufacturer-specific)')throw Error('Unsupported concept vehicle');
+  return Object.freeze({source:'wheel-lab-rc01', vehicle:'Illustrative coupe only',
+    wheel_design,wheel_finish,paint,diameter_in:raw.diameter_in,
+    fitment_verified:false, merchant_sku_matched:false});
+}
 function money(cents){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100)}
 function render(){
   const chosen=inventory[Number($('item').value)]||inventory[0];
@@ -111,6 +136,9 @@ function packet(){
     unit_price_cents:item.cents,quantity:qty,merchandise_subtotal_cents:item.cents*qty,
     vehicle_note:$('vehicle').value.trim().slice(0,120)||null,
     service_requested:$('service').value,
+    requested_appearance: importedConcept ? {...importedConcept} : null,
+    appearance_import_verified:false,
+    merchant_sku_matched_to_concept:false,
     tax_included:false,labor_included:false,delivery_included:false,
     fitment_verified:false,price_verified:false,customer_consent_verified:false,
     shop_contacted:false,checkout_created:false,payment_verified:false,
@@ -132,6 +160,17 @@ $('inventoryFile').addEventListener('change',async(e)=>{
   }catch(error){$('message').textContent='Import rejected: '+error.message}
   e.target.value='';
 });
+$('conceptFile').addEventListener('change',async(e)=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{
+    if(file.size>20000)throw Error('Concept file exceeds 20 KB');
+    const parsed=parseConcept(await file.text());
+    importedConcept=parsed;
+    $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.';
+    $('message').textContent='Shopper concept loaded locally; SKU match still requires a person.';
+  }catch(error){$('message').textContent='Concept rejected: '+error.message}
+  e.target.value='';
+});
 $('export').addEventListener('click',()=>{
   const body=JSON.stringify(packet(),null,2);
   const url=URL.createObjectURL(new Blob([body],{type:'application/json'}));
@@ -140,14 +179,15 @@ $('export').addEventListener('click',()=>{
   $('message').textContent='Draft exported locally. No quote or message was sent.';
 });
 $('reset').addEventListener('click',()=>{
-  inventory=SAMPLE;source='fictional_sample';inputName='';
+  inventory=SAMPLE;source='fictional_sample';inputName='';importedConcept=null;
+  $('conceptSummary').textContent='No shopper concept imported yet.';
   for(const id of ['shop','vehicle'])$(id).value='';
   $('quantity').value='4';$('service').value='none';
   $('catalogNote').textContent='Using fictional sample inventory. CSV headers: sku,name,finish,diameter,unit_price_usd. Max 200 rows, 200 KB. All data stays in this browser.';
   $('message').textContent='Local quote desk reset.';populate()
 });
 populate();
-window.__wheelLabMerchantDeskTest={parseCsv,packet};
+window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,packet};
 })();
 </script>
 </body></html>
