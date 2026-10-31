@@ -9,9 +9,11 @@ test('Oct 14 public directory reconciles into review-only categories',()=>{
  assert.equal(r.source_updated_at,'2026-10-14');
  assert.deepEqual(r.counts,{
   primary_directory:69,public_product_index:69,agent_registry:45,
-  brand_workstreams:20,linked_review:12,restricted_hold:2,requires_brand_review:55
+  brand_workstreams:20,linked_review:12,restricted_hold:2,requires_brand_review:55,
+  verified_unique_brands_not_linked_to_legacy_catalog:3
  });
  assert.equal(r.publication_approved,false);
+ assert.deepEqual(r.verified_unique_brands_not_linked_to_legacy_catalog.map(x=>x.workstream_key).sort(),['evercraft-research','humanfilter','work-saban']);
  assert.equal(r.products.every(x=>x.launch_approved===false&&x.payment_verified===false),true);
  assert.equal(r.products.find(x=>x.product_key==='evercraft-network')?.brand_workstream,'evercraft-network');
  assert.equal(r.products.find(x=>x.product_key==='findmypart')?.brand_workstream,'findmypart');
