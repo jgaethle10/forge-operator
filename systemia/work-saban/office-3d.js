@@ -14,7 +14,7 @@
   const state=Object.fromEntries(roster.map(r=>[r.id,'idle']));
   const receipts={};
   const scene=$('office-scene');
-  let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};
+  let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};
   let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null;
   const touches=new Map();
   let gesture=null;
@@ -239,14 +239,21 @@
     applyCamera();
   }
   function zoom(delta){position.zoom=clamp(position.zoom+delta,0.35,1.42);applyCamera();}
-  function resetCamera(){disengageFollow();position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.46:0.72,panX:0,panY:0};applyCamera();}
+  function resetCamera(){disengageFollow();position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};applyCamera();}
   function focusAgent(id){
     const role=roster.find(r=>r.id===id);
     if(!role)return;
+    // A phone has a smaller viewing window: never crop the agent into an
+    // enormous floating face just because the desktop tour zoom is close.
+    const width=scene?.getBoundingClientRect?.().width||window.innerWidth||1000;
+    const compact=width<540;
+    const focusZoom=compact?.56:.98;
+    position.zoom=compact?clamp(position.zoom,.35,.69):Math.max(position.zoom,focusZoom);
+    position.zoom=Math.max(position.zoom,focusZoom);
+    // Calculate centering AFTER target zoom has changed.
     position.panX=clamp(Math.round((530-(role.x+100))*position.zoom),-480,480);
     position.panY=clamp(Math.round((340-(role.y+85))*position.zoom),-360,360);
-    position.zoom=Math.max(position.zoom,0.98);
-    position.pitch=52;
+    position.pitch=compact?59:52;
     applyCamera();
   }
   let tourIndex=0;
