@@ -1,0 +1,36 @@
+name: Subsea Watch replay prototype
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/subsea-watch/**'
+      - 'tests/subsea-watch-replay.test.mjs'
+      - '.github/workflows/subsea-watch-replay.yml'
+  pull_request:
+    paths:
+      - 'public/subsea-watch/**'
+      - 'tests/subsea-watch-replay.test.mjs'
+      - '.github/workflows/subsea-watch-replay.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test dive log evidence and no fabricated tracking
+        run: node --test tests/subsea-watch-replay.test.mjs
+      - name: Validate browser modules
+        run: |
+          node --check public/subsea-watch/core.mjs
+          node --check public/subsea-watch/viewer.mjs
+      - name: Inspect owned static page
+        run: |
+          test -s public/subsea-watch/index.html
+          test -s public/subsea-watch/sample.json
+          grep -q "Prototype, not a safety device" public/subsea-watch/index.html
