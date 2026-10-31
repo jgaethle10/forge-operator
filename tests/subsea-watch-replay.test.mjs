@@ -40,7 +40,10 @@ test('diver position never interpolates across long unobserved gaps',()=>{
  assert.equal(d.xyAvailable,true);
  assert.equal(segments(d).length,0);
  assert.equal(atTime(d,20).x,null);
+ assert.equal(atTime(d,20).depth,null,'long gaps must not invent depth');
+ assert.equal(atTime(d,20).depthState,'gap_unobserved');
  assert.equal(atTime(d,20).positionState,'gap_not_interpolated');
+ assert.equal(atTime(d,40).depth,8,'actual endpoint remains visible');
 });
 test('support simple local CSV without imaginary GPS',()=>{
  const d=parseInput('t_s,depth_m\n0,0\n12,10\n22,7','dive.csv');
