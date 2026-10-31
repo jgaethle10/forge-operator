@@ -1,0 +1,230 @@
+{
+  "schema": "evercraft.brand-workstreams.v1",
+  "as_of": "2026-10-31",
+  "source": "Evercraft family queue, repository discovery and founder review",
+  "review_only": true,
+  "publication_approved": false,
+  "portfolio_records_not_product_count": true,
+  "workstreams": [
+    {
+      "key": "evercraft",
+      "name": "Evercraft",
+      "kind": "parent",
+      "description": "Parent company, master identity and endorsement system",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "systemia",
+      "name": "Systemia",
+      "kind": "platform",
+      "description": "Internal orchestration, mission control and specialist agents",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "evercraft-research",
+      "name": "Evercraft Research",
+      "kind": "product",
+      "description": "Evidence-led research scoping and quoted reports",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "evercraft-network",
+      "name": "Evercraft Network",
+      "kind": "platform",
+      "description": "Application continuity across authorized network changes",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "humanfilter",
+      "name": "HumanFilter",
+      "kind": "product",
+      "description": "User-controlled browser filtering of AI-related posts",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "work-saban",
+      "name": "Work Saban",
+      "kind": "product",
+      "description": "Browser-local monthly CSV reporting; broader agent teamwork in development",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "forensiscope",
+      "name": "ForensiScope",
+      "kind": "product",
+      "description": "Long-form video and audio evidence analysis",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "findmypart",
+      "name": "FindMyPart",
+      "kind": "product",
+      "description": "Hard-to-find replacement-part sourcing research",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "ai-boardroom",
+      "name": "AI Boardroom",
+      "kind": "product",
+      "description": "Compare AI answers and request scoped human-reviewed decisions",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "fallen-studios",
+      "name": "Fallen Studios / Commercial Studio",
+      "kind": "creative",
+      "description": "Original commercial production and creative services",
+      "priority": "now",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "raven-nexus",
+      "name": "Raven Nexus",
+      "kind": "platform-family",
+      "description": "Private home/business assistance and owned-device programs",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "evercraft-worlds",
+      "name": "Evercraft Worlds",
+      "kind": "platform",
+      "description": "Original interactive 3D environments and simulations",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "eps",
+      "name": "Evercraft Property Services",
+      "kind": "service",
+      "description": "Property maintenance and contractor field operations",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "evermaps",
+      "name": "EverMaps / Evidence Atlases",
+      "kind": "family",
+      "description": "Maps, geographic evidence, historical and scientific atlases",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "guardian",
+      "name": "Guardian",
+      "kind": "family",
+      "description": "Privacy-first protection tools",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "evernest",
+      "name": "EverNest",
+      "kind": "family",
+      "description": "Household support and planning experiences",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "evercraft-fabric",
+      "name": "Evercraft Fabric / CHUM",
+      "kind": "infrastructure",
+      "description": "Capability discovery and matched product routing",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "black-box-spider-society",
+      "name": "Black Box / Spider Society",
+      "kind": "engineering",
+      "description": "Agent incident reconstruction and observable agent behavior",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "file-ferry",
+      "name": "File Ferry",
+      "kind": "utility",
+      "description": "Resumable and verifiable large-file transfer handoffs",
+      "priority": "soon",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    },
+    {
+      "key": "commercial-families",
+      "name": "Career Command / BuildFlow / related services",
+      "kind": "family",
+      "description": "Career and business operations tools requiring sub-brand reconciliation",
+      "priority": "later",
+      "approval": "unreviewed",
+      "release_stage": "not_attested",
+      "customer_access": "verify_per_product",
+      "commercial_state": "not_verified"
+    }
+  ]
+}
