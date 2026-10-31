@@ -1,5 +1,6 @@
 import {analyzePartQuery,buildSourceSearches,createSavedSearch} from './engine.mjs';
 import {addCandidate,removeCandidate} from './candidates.mjs';
+import {recoveryResearchLinks} from './recovery-links.mjs';
 // Buyer-initiated links only. No supplier listing data or invented matches.
 const form=document.querySelector('#search-form');
 const input=document.querySelector('#part-query');
@@ -25,6 +26,20 @@ function render(raw){
    (analysis.candidateNumbers.length?' · Possible part number: '+analysis.candidateNumbers.join(', '):'');
  results.hidden=false;
  drawCandidates();
+ const recoveryBox=document.querySelector('#recovery-links');
+ const recoverySummary=document.querySelector('#recovery-summary');
+ if(recoveryBox&&recoverySummary){
+  recoveryBox.replaceChildren();
+  recoverySummary.textContent='Research routes only. No supplier, interchange or fabrication result has been verified.';
+  for(const item of recoveryResearchLinks(analysis.query)){
+   const card=document.createElement('article');card.className='source';
+   const heading=document.createElement('h3');heading.textContent=item.label;
+   const note=document.createElement('p');note.textContent='Explore external sources; results require independent review.';
+   const link=document.createElement('a');link.href=item.url;link.target='_blank';
+   link.rel='noopener noreferrer';link.textContent='Search this route';
+   card.append(heading,note,link);recoveryBox.append(card);
+  }
+ }
  const save=document.querySelector('#save-search');
  if(save)save.hidden=false;
 }
