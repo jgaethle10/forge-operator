@@ -238,14 +238,45 @@ export function createForensiScopePrivateJobs({
      throw fail('worker_report_contract_invalid',422);
     // Accept a narrow, reviewed report schema; never persist arbitrary
     // worker paths, client credentials, transport URLs or raw media.
+    const segments=Array.isArray(report.transcript_segments)
+      ?report.transcript_segments:[];
+    const moments=Array.isArray(report.timeline)?report.timeline:[];
+    if(segments.length>50000||moments.length>50000)
+      throw fail('worker_report_exceeds_segment_limit',413);
+    const numberOrNull=x=>typeof x==='number'&&Number.isFinite(x)?x:null;
+    const safeSegments=segments.map(s=>({
+     start_seconds:numberOrNull(s?.start_seconds),
+     end_seconds:numberOrNull(s?.end_seconds),
+     text:String(s?.text||'').slice(0,5000),
+     confidence:numberOrNull(s?.confidence),
+     speaker:s?.speaker?String(s.speaker).slice(0,120):null
+    }));
+    const safeTimeline=moments.map(m=>({
+     timestamp_seconds:numberOrNull(m?.timestamp_seconds),
+     kind:String(m?.kind||'moment').slice(0,60)
+    }));
+    const states=new Set(['not_run','completed','partial','failed']);
+    const duplicateState=String(report.duplicate_review?.state||'not_run');
+    if(!states.has(duplicateState))throw fail('invalid_duplicate_review_state',422);
+    const duplicates=Array.isArray(report.duplicate_review?.pairs)
+      ?report.duplicate_review.pairs:[];
+    if(duplicates.length>10000)throw fail('too_many_duplicate_findings',413);
     const safe={
      schema:report.schema,source_sha256:report.source_sha256,
-     media_duration_seconds:report.media_duration_seconds??null,
-     transcript_segments:report.transcript_segments??[],
-     transcript_engine_id:report.transcript_engine_id??null,
-     timeline:report.timeline??[],
-     duplicate_review:report.duplicate_review??{state:'not_run'},
-     limitations:report.limitations??null
+     media_duration_seconds:numberOrNull(report.media_duration_seconds),
+     transcript_segments:safeSegments,
+     transcript_engine_id:report.transcript_engine_id
+      ?String(report.transcript_engine_id).slice(0,140):null,
+     timeline:safeTimeline,
+     duplicate_review:{
+      state:duplicateState,
+      pairs:duplicates.map(p=>({
+       first_timestamp_seconds:numberOrNull(p?.first_timestamp_seconds),
+       second_timestamp_seconds:numberOrNull(p?.second_timestamp_seconds),
+       confidence:numberOrNull(p?.confidence)
+      }))
+     },
+     limitations:report.limitations?String(report.limitations).slice(0,500):null
     };
     const bytes=Buffer.from(JSON.stringify(safe));
     if(bytes.length>MAX_REPORT_BYTES)throw fail('worker_report_too_large',413);
