@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // First-party Evercraft Clip HumanFilter resident, with real Passport + vault checks.
 // No raw credentials, test attestation, or release approval stored in repository.
+import fs from 'node:fs';
 import path from 'node:path';
 import { EvercraftPassport } from '../passport/passport.mjs';
+import { installHumanFilterClipGrant } from './humanfilter-publish-authorize.mjs';
 import { resolveFacebookPageCredential } from './facebook-page-credential-resolver.mjs';
 import { runHumanFilterFacebookCycle } from './humanfilter-facebook-resident.mjs';
 
@@ -23,6 +25,8 @@ if(!stateDir||!credentialStateDir||!passportStateDir){
   process.exit(0);
 }
 const passport=new EvercraftPassport({stateDir:path.resolve(passportStateDir)});
+const authorityFile=path.resolve(repoRoot,'systemia/clip/authority/humanfilter-autopublish.json');
+const grant=installHumanFilterClipGrant({passport,receipt:JSON.parse(fs.readFileSync(authorityFile,'utf8'))});
 const result=await runHumanFilterFacebookCycle({
   repoRoot,stateDir:path.resolve(stateDir),expectedPageId,fire,
   credentialResolver:()=>resolveFacebookPageCredential({credentialStateDir:path.resolve(credentialStateDir)}),
@@ -31,6 +35,6 @@ const result=await runHumanFilterFacebookCycle({
     scope,resource_ref,at:new Date().toISOString(),
   })
 });
-process.stdout.write(JSON.stringify(result)+'\n');
+process.stdout.write(JSON.stringify({grant_status:grant.status,...result})+'\n');
 // Fail safely for blocked conditions: resident supervisor can retry at next cycle
 // only BEFORE any claim has been written. An ambiguous provider attempt is held.
