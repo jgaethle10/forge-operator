@@ -45,7 +45,7 @@ test('attested ephemeral NodeSeed executes a bounded registered micro job and si
   assert.equal(verified.ok,true);
   assert.equal(verified.device_fingerprint,seed.device_fingerprint);
   const leased=await json('/v1/leases',{
-    method:'POST',headers:{authorization:'Bearer '+token},
+    expectedStatus:201,method:'POST',headers:{authorization:'Bearer '+token},
     body:JSON.stringify({workload_class:workload,requested_ttl_ms:120000})
   });
   leaseId=leased.lease_id;
