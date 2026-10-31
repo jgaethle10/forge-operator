@@ -1,0 +1,55 @@
+name: Sim-to-Real Lab (modeled only)
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/sim-to-real/**'
+      - '.github/workflows/sim-to-real-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  modeled-rover-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit and integrity tests
+        run: node --test systemia/world-engine/sim-to-real/rover-lab.test.mjs systemia/world-engine/sim-to-real/rover-challenge.test.mjs
+      - name: Repeatable RC02 challenge (40 paired seeds)
+        run: node systemia/world-engine/sim-to-real/rover-challenge.mjs --seeds 40 --out /tmp/evercraft-rc02-benchmark.json
+      - name: Verify benchmark and episode integrity
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyBenchmark} from './systemia/world-engine/sim-to-real/rover-challenge.mjs';
+          const report=JSON.parse(fs.readFileSync('/tmp/evercraft-rc02-benchmark.json','utf8'));
+          if(!verifyBenchmark(report)) throw Error('rc02_benchmark_integrity_failed');
+          if(report.runs.length!==80) throw Error('rc02_expected_80_runs');
+          console.log('Verified modeled benchmark:',report.sha256);
+          NODE
+
+      - name: Install native World Engine TypeScript loader
+        run: npm install --no-audit --no-fund
+      - name: Test RC03 using actual EvercraftWorldRuntime
+        run: node --import tsx --test systemia/world-engine/sim-to-real/native-engine-proof.test.mjs
+      - name: Generate native execution / sampled-contact evidence
+        run: node --import tsx systemia/world-engine/sim-to-real/native-engine-proof.mjs --seeds 4 --out /tmp/evercraft-native-rc03.json
+
+      - name: RC04 native motion unit and fail-closed evidence tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/native-motion-rc04.test.mjs
+      - name: RC04 paired native dynamics benchmark
+        run: node --import tsx systemia/world-engine/sim-to-real/native-motion-rc04.mjs --seeds 4 --out /tmp/evercraft-native-rc04.json
+      - name: RC04 independently verify batch integrity and no teleports
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyMotionBatch} from './systemia/world-engine/sim-to-real/native-motion-rc04.mjs';
+          const report=JSON.parse(fs.readFileSync('/tmp/evercraft-native-rc04.json','utf8'));
+          if(!verifyMotionBatch(report)) throw Error('rc04_invalid_integrity');
+          if(!report.runs.every(r=>r.physicsDrivenMovement&&r.teleportInputs===false&&r.hardwareExecution===false)) throw Error('rc04_authority_contract_failed');
+          console.log('RC04 paired scores',JSON.stringify(report.scores));
+          console.log('RC04 batch SHA-256',report.sha256);
+          NODE
