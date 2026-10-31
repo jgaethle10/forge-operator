@@ -140,6 +140,50 @@
         "reuse": "Collection states permission from rights holder needed to publish online; reference only for now"
       },
       "notes": "Photographs and newspapers may close 1960 evidence gaps after date and rights review."
+    },
+    {
+      "id": "wshs-yakima-avenue-ca1950",
+      "name": "Revisiting Washington: circa-1950 east-facing Yakima Avenue between 2nd and 3rd",
+      "url": "https://revisitwa.org/waypoint/yakima/",
+      "holder": "Washington State Historical Society, photo cataloged via Revisiting Washington",
+      "evidencePeriod": [
+        "circa 1950"
+      ],
+      "rights": {
+        "status": "third_party_permission_check",
+        "reuse": "Link and cite the catalog. Do not embed, copy, train on, or publish photograph until provenance and rights are cleared."
+      },
+      "notes": "Caption explicitly locates eastward view along Yakima Avenue between 2nd and 3rd streets circa 1950. Useful historical perspective but not direct proof of scene in 1960. Date approximate, item-level accession pending."
+    },
+    {
+      "id": "wa-state-library-directory-catalog",
+      "name": "Washington State Library, City Directories & Telephone Books, Yakima year holdings",
+      "url": "https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books",
+      "holder": "Washington State Library, Washington Secretary of State",
+      "evidencePeriod": [
+        "1959",
+        "1961"
+      ],
+      "rights": {
+        "status": "catalog_metadata_only",
+        "reuse": "Holdings years only. Directory pages, tenants and street addresses have NOT been read; check rights before copying directory content."
+      },
+      "notes": "Catalog lists Yakima directories 1953–1959 and 1961–1962 but not 1960. Actual 1959/1961 pages needed before making occupancy assertions."
+    },
+    {
+      "id": "yvl-local-city-directory-catalog",
+      "name": "Yakima Valley Libraries: local city directory holdings",
+      "url": "https://www.yvl.org/services/special-collections-and-archive-services/washington-cities-counties/",
+      "holder": "Yakima Valley Libraries",
+      "evidencePeriod": [
+        "1904",
+        "present"
+      ],
+      "rights": {
+        "status": "catalog_metadata_only",
+        "reuse": "Holdings description only. Request individual directories and verify rights before using pages or entries."
+      },
+      "notes": "Yakima Central Library holds local city directories beginning 1904; exact 1959/1961 copies and access to be verified."
     }
   ],
   "places": [
@@ -315,5 +359,135 @@
       "id": "rights",
       "goal": "Secure per-item publication rights for Yakima Memory photos before embedding in public worlds."
     }
-  ]
+  ],
+  "researchInventory": [
+    {
+      "id": "period-photo-1950",
+      "name": "Yakima Avenue, looking east between 2nd and 3rd",
+      "sourceId": "wshs-yakima-avenue-ca1950",
+      "period": {
+        "display": "circa 1950",
+        "earliest": null,
+        "latest": null,
+        "approximate": true
+      },
+      "spatialMatch": "same-walking-corridor",
+      "itemType": "archival-photo-catalog",
+      "acquisition": "catalog-record-confirmed; original image/item accession unverified",
+      "rights": "clear before embedding",
+      "useFor1960": "historical reference only; no automatic carry-forward of sign, tenant, facade, or vehicle"
+    },
+    {
+      "id": "city-directory-1959",
+      "name": "Yakima 1959 city directory",
+      "sourceId": "wa-state-library-directory-catalog",
+      "period": {
+        "display": "1959",
+        "earliest": 1959,
+        "latest": 1959,
+        "approximate": false
+      },
+      "spatialMatch": "citywide; block pages not examined",
+      "itemType": "directory-holding",
+      "acquisition": "catalog-verified; contents not read",
+      "rights": "verify",
+      "useFor1960": "neighboring-year research candidate only"
+    },
+    {
+      "id": "city-directory-1961",
+      "name": "Yakima 1961 city directory",
+      "sourceId": "wa-state-library-directory-catalog",
+      "period": {
+        "display": "1961",
+        "earliest": 1961,
+        "latest": 1961,
+        "approximate": false
+      },
+      "spatialMatch": "citywide; block pages not examined",
+      "itemType": "directory-holding",
+      "acquisition": "catalog-verified; contents not read",
+      "rights": "verify",
+      "useFor1960": "neighboring-year research candidate only"
+    },
+    {
+      "id": "yakima-central-directories",
+      "name": "Local city directory holdings, Yakima Central Library",
+      "sourceId": "yvl-local-city-directory-catalog",
+      "period": {
+        "display": "1904 onward",
+        "earliest": 1904,
+        "latest": null,
+        "approximate": false
+      },
+      "spatialMatch": "citywide",
+      "itemType": "institutional-collection",
+      "acquisition": "collection described; individual 1959/1961 volume access not verified",
+      "rights": "verify",
+      "useFor1960": "potential access route to city directories"
+    },
+    {
+      "id": "loc-sanborn-1950",
+      "name": "Yakima Sanborn map sheets updated through Dec 1950",
+      "sourceId": "loc-sanborn",
+      "period": {
+        "display": "1920–Dec 1950",
+        "earliest": 1920,
+        "latest": 1950,
+        "approximate": false
+      },
+      "spatialMatch": "citywide; 2nd/3rd block sheet not indexed",
+      "itemType": "fire-insurance-map-set",
+      "acquisition": "digital collection available; target sheet not yet identified",
+      "rights": "collection public domain per Library of Congress",
+      "useFor1960": "earlier baseline; specific 1960 changes unverified"
+    }
+  ],
+  "researchGoals": {
+    "timeTarget": 1960,
+    "methodology": "Never interpolate presence, appearance, dimensions or occupancy as a historical fact simply because sources bracket the target year. Store both adjacent dated observations, possible continuity hypotheses, intervening-change search, and explicit confidence.",
+    "stagedTasks": [
+      {
+        "id": "identify-sanborn-sheets",
+        "dependsOn": [],
+        "deliverable": "Exact sheet identifiers for Yakima Avenue between 2nd and 3rd, with original sheet dates and any correction stamps",
+        "status": "research-needed"
+      },
+      {
+        "id": "resolve-1959-1961-tenants",
+        "dependsOn": [],
+        "deliverable": "Source-backed street addresses and business names from the physical/digitized 1959 and 1961 directory pages, explicitly compared",
+        "status": "catalogs-found; pages-not-read"
+      },
+      {
+        "id": "find-photo-original",
+        "dependsOn": [],
+        "deliverable": "1950 photo accession ID, digitization rights, and visual comparison with mapped block",
+        "status": "caption-found; original-unverified"
+      },
+      {
+        "id": "verify-1960-change",
+        "dependsOn": [
+          "identify-sanborn-sheets",
+          "resolve-1959-1961-tenants"
+        ],
+        "deliverable": "Research 1959–61 permits, demolition records, dated photographs and newspaper ads for any storefront changes",
+        "status": "not-started"
+      },
+      {
+        "id": "reconcile-capitol-address",
+        "dependsOn": [],
+        "deliverable": "Historic address/renumbering evidence resolving 9 vs 19 South Third",
+        "status": "unresolved"
+      },
+      {
+        "id": "geo-and-scene-adapter",
+        "dependsOn": [
+          "identify-sanborn-sheets",
+          "reconcile-capitol-address"
+        ],
+        "deliverable": "Georeferenced GIS geometry with source/uncertainty and a data-only import for canonical Worlds runtime",
+        "status": "blocked"
+      }
+    ]
+  }
 }
