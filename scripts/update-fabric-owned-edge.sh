@@ -597,11 +597,19 @@ as_user git -C "$REPO_ROOT" fetch --prune "$REMOTE" "$BRANCH"
 target="$(as_user git -C "$REPO_ROOT" rev-parse "$REMOTE/$BRANCH")"
 
 expected_count_for_current() {
-  as_user node -e "
-    const fs=require('fs');
-    const x=JSON.parse(fs.readFileSync('$REPO_ROOT/public/chum/capabilities.json','utf8'));
-    process.stdout.write(String((x.capabilities||[]).length));
-  "
+  # The runtime does NOT publish only the raw CHUM manifest. It adds explicit
+  # discovery-only supplemental doors (and can enrich source product metadata).
+  # Compare against the same normalized native-only catalog used by /health.
+  # A mismatch still fails closed; never substitute or guess a count.
+  as_user env REPO_ROOT="$REPO_ROOT" node --input-type=module -e '
+    import {pathToFileURL} from "node:url";
+    const root=process.env.REPO_ROOT;
+    const directory=await import(pathToFileURL(root+"/systemia/mcp/fabric-directory.mjs").href);
+    const runtime=await import(pathToFileURL(root+"/systemia/mcp/fabric-local-runtime.mjs").href);
+    const count=runtime.nativeOnlyCatalog(directory.loadFabricCatalogFromRepository()).capabilities.length;
+    if(!Number.isSafeInteger(count)||count<1)process.exit(2);
+    process.stdout.write(String(count));
+  '
 }
 
 if [[ "$before" == "$target" ]]; then
