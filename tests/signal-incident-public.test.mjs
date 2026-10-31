@@ -32,7 +32,7 @@ test('every evidence assertion and timeline item cites known source IDs', () => 
 test('the first official 6:21 PM release is preserved in the evidence and timeline', () => {
   const first = incident.sources.find(source => source.id === 'srs-1');
   assert.ok(first, 'official release #1 must be cited');
-  assert.match(first.url, /savannah-river-site-emergency-response-event\\//);
+  assert.ok(first.url.endsWith('/savannah-river-site-emergency-response-event/'));
   assert.ok(incident.timeline.some(entry => entry.local_time === '2026-10-28T18:21:00-04:00' && entry.source_ids.includes('srs-1')));
   assert.match(html, /6:21 PM EDT/);
   assert.match(html, /id="source-srs1"/);
