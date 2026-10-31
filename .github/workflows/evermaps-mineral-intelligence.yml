@@ -1,0 +1,115 @@
+name: EverMaps mineral intelligence test
+on:
+  pull_request:
+    paths:
+      - 'systemia/evermaps/**'
+      - 'docs/evermaps/**'
+      - '.github/workflows/evermaps-mineral-intelligence.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  node-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check evidence and completeness invariants
+        run: node --test systemia/evermaps/*.test.mjs
+  live-source-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Public WGS read-only count probe (Grant pilot)
+        id: probe
+        env:
+          EVERMAPS_COUNTY: Grant
+        run: node systemia/evermaps/wgs-live-canary.mjs
+      - name: Validate bounded live GeoJSON sample
+        continue-on-error: true
+        env:
+          EVERMAPS_COUNTY: Grant
+        run: node systemia/evermaps/wgs-live-sample.mjs
+      - name: Preserve sample and source availability receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evermaps-wgs-source-receipt
+          path: |
+            wgs-source-receipt.json
+            wgs-feature-sample-receipt.json
+            wgs-resource-sample.geojson
+          if-no-files-found: warn
+          retention-days: 30
+  full-grant-research-ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Full public Grant County WGS read-only import
+        env:
+          EVERMAPS_COUNTY: Grant
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+          EVERMAPS_PAGE_SIZE: 100
+          EVERMAPS_MAX_PAGES: 40
+        run: node systemia/evermaps/wgs-full-grant-import.mjs
+      - name: Confirm native WGS polygon-vs-study spatial relationships
+        continue-on-error: true
+        env:
+          EVERMAPS_COUNTY: Grant
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/wgs-study-spatial-join-cli.mjs
+      - name: Generate provenance-gated WGS research dossiers
+        continue-on-error: true
+        env:
+          EVERMAPS_COUNTY: Grant
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/wgs-research-dossier-cli.mjs
+      - name: Probe BLM claims, WA reclamation permits and Grant parcel source metadata
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/land-context-cli.mjs
+      - name: Probe Grant zoning, DNR managed land and WDFW protected land
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/planning-context-cli.mjs
+      - name: Bounded real WGS polygon intersection sample (zoning, DNR, PHS)
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/planning-polygon-sample-cli.mjs
+      - name: Fetch official WA DNR permit points and calculate geographic overlay
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/permit-point-overlay-cli.mjs
+      - name: Verify all research evidence receipts and declare source holds
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/research-source-health-cli.mjs
+      - name: Bundle offline first-party map viewer and evidence guide
+        if: always()
+        run: |
+          mkdir -p evermaps-grant-full-evidence
+          cp systemia/evermaps/research-viewer.html evermaps-grant-full-evidence/research-viewer.html
+          cp systemia/evermaps/evidence-bundle-README.txt evermaps-grant-full-evidence/README.txt
+      - name: Upload full WGS research evidence with receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evermaps-grant-full-research-evidence
+          path: evermaps-grant-full-evidence/
+          if-no-files-found: warn
+          retention-days: 30
