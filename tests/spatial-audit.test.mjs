@@ -29,13 +29,13 @@ test('reverse mismatch rejects corrupted right correspondence',()=>{
  const p=pair(),raw=estimateStereoDepth(p);
  const corrupt=new Uint8Array(p.width*p.height);
  const result=auditStereoConsistency(raw,p.left,corrupt,{maxDisparity:9});
- assert.ok(result.sampleCount<raw.sampleCount/2);
- assert.ok(result.audit.rejectedInconsistent>0);
+ assert.ok(result.sampleCount<raw.sampleCount/10);
+ assert.ok(result.audit.rejectedPoorPhotometricMatch>0);
 });
 test('known synthetic 3.6 meter target returns close numeric comparison, not certificate',()=>{
  const p=pair(),raw=estimateStereoDepth(p);
  const audited=auditStereoConsistency(raw,p.left,p.right,{maxDisparity:9});
- const report=compareRangingTargets(audited,[{id:'synthetic-range',rangeM:3.6,box:bbox,method:'known synthetic geometry'}]);
+ const report=compareRangingTargets(audited,[{id:'synthetic-range',cameraAxisDepthM:3.6,box:bbox,method:'known synthetic geometry'}]);
  assert.equal(report.evaluatedTargets,1);
  assert.ok(report.meanAbsoluteErrorM<0.1);
  assert.equal(report.certifiedForSafety,false);
@@ -44,7 +44,7 @@ test('known synthetic 3.6 meter target returns close numeric comparison, not cer
 });
 test('poor target coverage must report unknown rather than zero error',()=>{
  const p=pair(),raw=estimateStereoDepth(p);
- const report=compareRangingTargets(raw,[{id:'empty-region',rangeM:3.6,box:{x:0,y:0,width:5,height:5}}]);
+ const report=compareRangingTargets(raw,[{id:'empty-region',cameraAxisDepthM:3.6,box:{x:0,y:0,width:5,height:5}}]);
  assert.equal(report.evaluatedTargets,0);
  assert.equal(report.meanAbsoluteErrorM,null);
  assert.equal(report.targets[0].estimateM,null);
@@ -53,14 +53,14 @@ test('reject forged/out-of-bounds reference and malformed reverse inputs',()=>{
  const p=pair(),raw=estimateStereoDepth(p);
  assert.throws(()=>auditStereoConsistency(raw,p.left,new Uint8Array(2)),/invalid_right_pixels/);
  assert.throws(()=>auditStereoConsistency(raw,p.left,p.right,{maxDisparity:500}),/invalid_max_disparity/);
- assert.throws(()=>compareRangingTargets(raw,[{id:'bad',rangeM:3,box:{x:-2,y:0,width:20,height:20}}]),/invalid_target_box/);
- assert.throws(()=>compareRangingTargets(raw,[{id:'bad',rangeM:NaN,box:bbox}]),/invalid_reference_range/);
+ assert.throws(()=>compareRangingTargets(raw,[{id:'bad',cameraAxisDepthM:3,box:{x:-2,y:0,width:20,height:20}}]),/invalid_target_box/);
+ assert.throws(()=>compareRangingTargets(raw,[{id:'bad',cameraAxisDepthM:NaN,box:bbox}]),/invalid_reference_axial_depth/);
 });
 test('blank stereo yields undefined retention and no reference estimates',()=>{
  const p=pair();p.left.fill(64);p.right.fill(64);
  const raw=estimateStereoDepth(p),audited=auditStereoConsistency(raw,p.left,p.right,{maxDisparity:9});
  assert.equal(audited.sampleCount,0);
  assert.equal(audited.audit.retentionRatio,null);
- const report=compareRangingTargets(audited,[{id:'blank',rangeM:10,box:bbox}]);
+ const report=compareRangingTargets(audited,[{id:'blank',cameraAxisDepthM:10,box:bbox}]);
  assert.equal(report.targets[0].result,'insufficient_depth_samples');
 });
