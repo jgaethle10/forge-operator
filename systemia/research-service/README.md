@@ -44,3 +44,52 @@ The Markdown output has explicit claim-level evidence, source ledger, content ha
 7. Audited unit costs, approved pricing, approved Research SKU, and measurable buyer demand.
 
 **No sale, independent research run, payment or customer fulfillment is claimed by this source release.**
+
+
+## Watershed Intelligence | Yakima Basin research slice
+
+`watershed-intelligence.mjs` is a bounded **research-only** reader and snapshot compiler. It does not create Sentinel incidents, operate drones, publish customer reports, initiate payments, or activate a resident scheduler. Reuses Sentinel's existing USGS Water Data observation adapter but keeps basin intelligence outside its life-safety event engine.
+
+**Data sources:** NRCS AWDB `/services/v1/data` for requested Washington SNOTEL/SNOLITE daily WTEQ (snow-water equivalent) and SNWD (snow depth); USGS modern Water Data latest-continuous via the existing Sentinel adapter for river discharge and gage height. Station IDs must be independently verified from official station directories before live runs. The supplied `yakima-basin-wa` Sentinel profile already records four USGS river locations; **six SNOTEL station identities and watershed HUCs are catalogued from the official NRCS active-station inventory** in `watershed-yakima-profile.json`; their live WTEQ data availability has not been verified.
+
+**Collector entry point:** `collectYakimaWatershed({ asOf, snowStationIds, riverLocationIds })`. Explicit lists are mandatory for the relevant source to be queried. Returns a source-scoped, non-publishing snapshot with records, freshness flags, holds and failure receipts. `fetchImpl` can be injected for fixture tests. The collector uses bounded date windows and fixed official HTTPS hosts. No ambient environment secrets or customer input are sent to data providers.
+
+**Truth rules:** Missing is never zero. USGS provisional observations remain `observed` rather than `verified`. Late readings become `stale`. No percent-of-normal is calculated without same-date official climatological normals and a documented basin aggregation method, especially in October when normal SWE is small. Reservoir data remains `not_verified` until a separate USBR ingestion/validation adapter exists. No seasonal supply forecast is inferred. Source failures return explicit `partial` results, never healthy readings.
+
+**Fixture gate:** `npm run test:watershed-intelligence`, also included in `npm run check`. Fixture passes do not prove live NRCS reachability, continuous deployment or customer suitability.
+
+**Operator commands:** `node systemia/research-service/watershed-snapshot-cli.mjs --profile` inspects source identities with **no network access**. `node systemia/research-service/watershed-snapshot-cli.mjs --live` makes bounded requests to official NRCS and USGS hosts, prints a JSON snapshot to stdout, and returns an error status when one source fails. Neither command schedules monitoring or publishes customer content.
+
+**Next independent release gates:** Run and receipt a live AWDB fetch; validate USBR daily reservoir data and its units/time semantics; add matched official SWE normals and denominator-stability handling; independently verify the claims in a human-reviewed brief before any public claims or commercial offering. The autonomous drone-navigation research lane remains separate and has no flight authorization in this module.
+
+### USBR five-reservoir source discovery (October 30, 2026)
+
+The official [RISE catalog](https://data.usbr.gov/) identifies five **observed, daily-instant storage** series with units `af` (acre-feet). Identifiers are source metadata, not proof of live reading freshness:
+
+| Yakima reservoir | Hydromet code | RISE location ID | RISE catalog item |
+| --- | --- | ---: | ---: |
+| Keechelus | KEE | 7187 | [131246](https://data.usbr.gov/catalog/8304/item/131246) |
+| Kachess | KAC | 7186 | [131227](https://data.usbr.gov/catalog/8303/item/131227) |
+| Cle Elum | CLE | 7170 | [129798](https://data.usbr.gov/catalog/8199/item/129798) |
+| Bumping | BUM | 3647 | [129605](https://data.usbr.gov/catalog/8187/item/129605) |
+| Rimrock | RIM | 7196 | [132729](https://data.usbr.gov/catalog/8410/item/132729) |
+
+**Prototype adapter:** `usbr-rise-reservoirs.mjs` uses the first-party RISE OGC EDR `/api/ogc/collections/rise/locations/{id}` route with parameter `3` (storage, not reservoir elevation), a bounded interval, fixed HTTPS host, and strict CoverageJSON decoding. Exact series availability and live response shape still require the independent API canary. A 204 or an ambiguous/mismatched result produces an explicit hold; zero storage remains a valid numeric zero. USBR states measurements are **provisional and subject to revision**.
+
+**Manual diagnostic:** `node systemia/research-service/usbr-reservoir-probe.mjs --probe` requests five observed daily-storage locations, emits status and evidence references, and exits nonzero if all five do not supply recent values. The dedicated watershed canary includes this step under `continue-on-error` solely to preserve diagnostic evidence without falsely making the earlier USGS/NRCS pipeline appear degraded. Do not call the RISE lane integrated, operational or verified until live results corroborate the API contract. The daily workflow is only active after merging to main. No basin storage total or percent full is calculated until all five source dates and reporting cutoffs are reconciled.
+
+**Public communications:** Do not extrapolate a water-supply forecast from October SWE. Separate sensor status, official forecasts, independent reviewed interpretation, and customer-approved delivery.
+
+
+### NRCS 1991-2020 SWE median audit (October 30, 2026)
+
+The official [NRCS AWDB REST OpenAPI](https://wcc.sc.egov.usda.gov/awdbRestApi/v3/api-docs) specifies `GET /services/v1/data` with `centralTendencyType=MEDIAN`, which returns a `median` field alongside each `DataValueDTO.value`. NRCS currently identifies 1991-2020 as its published normal period. This is **not** a separate algorithm inferred from past weather reports.
+
+- `awdb-swe-normals.mjs` fetches only configured WA SNOTEL WTEQ daily observations from the official AWDB host using a bounded two-week date window. Source errors are held.
+- `collectSweMedianAudit(snapshot)` compares identical station, observation date, unit (inches), and measured SWE before admitting **station-level** comparisons.
+- A zero, missing, negative, or under-one-inch median **suppresses the percentage**, even when the underlying daily SWE measurement is real. One inch is an internal communications guardrail, not an NRCS standard. This is particularly important in October when normal snowpack may be zero or very small.
+- Contradictory reported/collected values, stale readings, wrong units, duplicate station/day, or mismatched dates prevent a ratio. The report compiler **independently recomputes** ratios against its original NRCS snow readings and labels mismatch as withheld.
+- The basin-wide percent of 1991-2020 median is **always null** in this initial prototype. An official NRCS basin statistic uses an appropriate geographic/station aggregation method, not a casual average of our six curated sites.
+- The optional `awdb-swe-median-probe.mjs --snapshot artifacts/watershed-canary/latest.json` creates a source-stamped JSON median audit in the existing live canary. The review draft includes it only when the expected artifact is available. The workflow preserves failures and never silently marks missing historical data as normal.
+
+**Release boundaries:** This is an evidence audit, not an irrigation-allocation recommendation, flood warning, seasonal water-supply outlook, paid customer deliverable or live production dashboard. `npm run test:awdb-swe-normals` is included in full Forge checks.
