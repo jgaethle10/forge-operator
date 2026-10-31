@@ -13,6 +13,8 @@ const checks=[
    tokens:['/api/findmypart/inquiry','/api/findmypart/readiness']},
  {route:'/findmypart/sample-report/',source:'public/findmypart/sample-report/index.html',type:'text/html',
    tokens:['Part Passport','ILLUSTRATIVE ONLY']},
+ {route:'/findmypart/brand/hero-gear.jpg',source:'public/findmypart/brand/hero-gear.jpg',type:'image/jpeg',
+   tokens:[]},
  {route:'/findmypart/brand/mark.svg',source:'public/findmypart/brand/mark.svg',type:'image/svg+xml',
    tokens:['FindMyPart']},
  {route:'/findmypart/brand/launch-landscape.svg',source:'public/findmypart/brand/launch-landscape.svg',type:'image/svg+xml',
