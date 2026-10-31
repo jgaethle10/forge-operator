@@ -8,6 +8,7 @@ on:
       - 'tests/findmypart-candidate-shortlist.test.mjs'
       - 'tests/findmypart-recovery-engine.test.mjs'
       - 'tests/findmypart-recovery-links.test.mjs'
+      - 'tests/findmypart-saban-recovery-gauntlet.test.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
       - 'scripts/findmypart-review-inquiry.mjs'
@@ -72,7 +73,8 @@ jobs:
               tests/findmypart-self-service-search.test.mjs \
               tests/findmypart-candidate-shortlist.test.mjs \
               tests/findmypart-recovery-engine.test.mjs \
-              tests/findmypart-recovery-links.test.mjs
+              tests/findmypart-recovery-links.test.mjs \
+              tests/findmypart-saban-recovery-gauntlet.test.mjs
             echo "::endgroup::"
           done
       - name: Check browser search modules are syntactically valid
