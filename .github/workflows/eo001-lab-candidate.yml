@@ -34,6 +34,8 @@ jobs:
           python3 -m py_compile integrations/ai-evaluation-lab/stage-sovereign-archive.py integrations/ai-evaluation-lab/accept-sovereign-inference.py
           python3 integrations/ai-evaluation-lab/accept-sovereign-inference.py --help
           python3 integrations/ai-evaluation-lab/accept-sovereign-inference.test.py -v
+          python3 -m py_compile integrations/ai-evaluation-lab/sanitize-sovereign-receipt.py
+          python3 integrations/ai-evaluation-lab/sanitize-sovereign-receipt.test.py -v
           python3 integrations/ai-evaluation-lab/stage-sovereign-archive.py --help
       - name: Check Lab-compatible decision policy
         run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs integrations/ai-evaluation-lab/eo001-raven-local-candidate.test.mjs
