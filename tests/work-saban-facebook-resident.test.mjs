@@ -100,3 +100,21 @@ test('an uncertain provider outcome permanently holds that candidate for reconci
  assert.equal(again.status,'manual_reconciliation_required');
  assert.equal(mock.requests.filter(x=>x.url.endsWith('/123456/feed')).length,1);
 });
+
+test('Systemia resident runs due Work Saban cycles only when all live configuration is present',()=>{
+ const supervisor=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
+ const resident=supervisor.services.find(s=>s.service_key==='work-saban-clip-facebook-company-publisher');
+ assert.ok(resident);
+ assert.equal(resident.mode,'cycle');
+ assert.deepEqual(resident.static_args,['--fire']);
+ assert.equal(resident.optional_when_unconfigured,true);
+ assert.equal(resident.cadence_seconds,3600);
+ assert.equal(resident.env_args['--state-dir'],'SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR');
+ assert.equal(resident.env_args['--credential-state-dir'],'EVERCRAFT_CREDENTIAL_STATE_DIR');
+ assert.equal(resident.env_args['--passport-state-dir'],'EVERCRAFT_PASSPORT_STATE_DIR');
+ assert.equal(resident.env_args['--expected-facebook-page-id'],'EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID');
+ const manifest=JSON.parse(fs.readFileSync(resident.manifest,'utf8'));
+ assert.equal(manifest.safety.issuer_backed_passport_grant_required,true);
+ assert.equal(manifest.safety.personal_accounts_forbidden,true);
+ assert.equal(manifest.safety.durable_claim_before_provider_post,true);
+});
