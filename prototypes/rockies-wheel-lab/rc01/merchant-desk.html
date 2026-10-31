@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b111b">
+<title>Wheel Lab | Merchant Quote Desk RC04</title>
+<style>
+:root{color-scheme:dark;--bg:#090d14;--panel:#131b28;--line:#354358;--ink:#f4f7fb;--muted:#a2b0c3;--lime:#dfff70;--sky:#8edbff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -30%,#25394e,var(--bg) 60%);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{display:flex;justify-content:space-between;gap:14px;align-items:center;padding-bottom:22px;border-bottom:1px solid #ffffff26}.brand strong{font-size:23px;letter-spacing:-.06em}.eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:900;color:var(--sky)}.pill{font-size:11px;border:1px solid #dfff7080;color:var(--lime);padding:7px 11px;border-radius:50px;font-weight:800}h1{font-size:clamp(34px,5vw,58px);letter-spacing:-.07em;line-height:1.02;margin:22px 0 12px}h1 span{color:var(--lime)}p{color:var(--muted)}.intro{max-width:800px}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(295px,.82fr);gap:18px;margin-top:28px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}.panel h2{font-size:19px;margin:0 0 8px;letter-spacing:-.03em}.label{display:block;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#b1c2d7;margin:20px 0 8px}input,select{width:100%;background:#0a111b;border:1px solid #526177;color:#fff;border-radius:9px;min-height:44px;padding:10px;font:inherit}input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--lime);outline-offset:2px}.hint{font-size:12px;color:#a6b7c7;margin:7px 0 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}button{cursor:pointer;font:inherit;background:#253648;border:1px solid #64768a;border-radius:10px;color:#fff;padding:12px 16px;font-weight:800}button.primary{background:var(--lime);color:#11171d;border-color:var(--lime)}button:disabled{opacity:.42;cursor:not-allowed}.line{border-top:1px solid #ffffff1e;margin:24px 0}.money{font-size:clamp(37px,5vw,58px);font-weight:950;letter-spacing:-.06em;color:var(--lime)}.small{font-size:12px;color:var(--muted)}.box{border-radius:12px;background:#0b131e;border:1px solid #354354;padding:14px;margin:15px 0;color:#d7e2ef}.box strong{font-size:13px}.box p{margin:5px 0 0}.warning{border-color:#aa8047;background:#33231555;color:#f5d9ae}.row{display:flex;justify-content:space-between;gap:10px;margin-top:8px}.row span{color:var(--muted)}#message{min-height:24px;color:var(--lime);font-size:13px}#catalogNote{font-size:12px;color:#abc4d8}.footer{border-top:1px solid #ffffff24;padding-top:18px;margin-top:25px;font-size:11px;color:#91a2b7}code{color:#e4ffae}a{color:var(--sky)}@media(max-width:750px){.layout{grid-template-columns:1fr}.brand strong{font-size:19px}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<main>
+<header class="brand"><div><div class="eyebrow">Evercraft / Rockies / Wheel Lab</div><strong>MERCHANT QUOTE DESK</strong></div><div class="pill">RC04 · LOCAL PROOF</div></header>
+<section class="intro"><h1>From wheel idea<br>to <span>review-ready estimate.</span></h1>
+<p>Load a shop's own inventory CSV, select the wheel and quantity, and generate an internal estimate packet for a real technician to verify. No customer records, third-party catalog, login, message sending, or payment integration.</p></section>
+<div class="layout">
+<section class="panel" aria-label="Quote configuration">
+<h2>1. Inventory & selection</h2><p class="hint">Sample items are fictional and priced for UI demonstration only.</p>
+<label class="label" for="shop">Shop label</label><input id="shop" maxlength="90" placeholder="Your shop (optional)" autocomplete="off">
+<label class="label" for="inventoryFile">Load inventory CSV</label>
+<input id="inventoryFile" type="file" accept=".csv,text/csv" aria-describedby="catalogNote">
+<p id="catalogNote">Using fictional sample inventory. CSV headers: <code>sku,name,finish,diameter,unit_price_usd</code>. Max 200 rows, 200 KB. All data stays in this browser.</p>
+<label class="label" for="item">Wheel</label><select id="item"></select>
+<div class="two"><div><label class="label" for="quantity">Quantity</label><select id="quantity"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option></select></div>
+<div><label class="label" for="vehicle">Vehicle note</label><input id="vehicle" maxlength="120" placeholder="Year / make / model" autocomplete="off"></div></div>
+<div class="line"></div><h2>2. Customer's concept</h2>
+<label class="label" for="conceptFile">Import a Wheel Lab concept JSON</label>
+<input id="conceptFile" type="file" accept=".json,application/json">
+<p class="hint">From the shopper preview's "Export shop quote packet" button. Local to this browser, never transmitted. Maximum 20 KB.</p>
+<div class="box"><strong>Requested appearance (unverified)</strong><p id="conceptSummary">No shopper concept imported yet.</p></div>
+<div class="line"></div><h2>3. Shop workflow</h2>
+<label class="label" for="service">Additional service</label><select id="service"><option value="none">No service selected</option><option value="mount">Mount/balance (manual review)</option><option value="tpms">TPMS service (manual review)</option></select>
+<p class="hint">Service selection is a reminder only. It never adds an invented price.</p>
+<div class="box warning"><strong>FITMENT & PRICE REVIEW REQUIRED</strong><p>Appearance is not a fitment claim. A technician must verify bolt pattern, center bore, offset, brake clearance, tire size and load rating. The shop must confirm inventory, installation costs, tax and final totals.</p></div>
+</section>
+<aside class="panel" aria-label="Internal draft estimate">
+<h2>Internal estimate preview</h2>
+<div class="eyebrow" id="dataState">SAMPLE DATA · NOT STOCK</div>
+<div class="box"><div class="row"><span>Chosen wheel</span><strong id="selectedSku"> </strong></div><div class="row"><span>Unit price</span><strong id="unitPrice"> </strong></div><div class="row"><span>Units</span><strong id="selectedQty">4</strong></div></div>
+<div class="small">Illustrative merchandise subtotal</div><div class="money" id="subtotal">$0.00</div>
+<p class="small">Excludes sales tax, labor, TPMS, delivery, discounts and all other adjustments. Nothing has been quoted or charged.</p>
+<div class="box"><strong>Internal review packet</strong><p>One JSON file with the selected SKU, shop-provided source classification, selected vehicle note, a merchandise subtotal, and explicit unverified flags.</p></div>
+<div class="buttons"><button class="primary" id="export" type="button">Export internal packet</button><button id="reset" type="button">Reset</button></div>
+<p id="message" role="status" aria-live="polite"></p>
+</aside></div>
+<footer class="footer">EVERCRAFT WHEEL LAB · SOURCE-CONTROLLED RC04 EXPERIMENT · No external network requests, outreach, storage, checkout, verified fitment, customer acceptance or public release. This page is not affiliated with a wheel manufacturer or dealer.</footer>
+</main>
+<script>
+(function(){'use strict';
+const SAMPLE=[
+{sku:'CONCEPT-ORBIT-19',name:'Orbit concept',finish:'Gloss black',diameter:19,cents:19900},
+{sku:'CONCEPT-MESH-18',name:'Mesh concept',finish:'Brushed silver',diameter:18,cents:17900},
+{sku:'CONCEPT-HERITAGE-20',name:'Heritage concept',finish:'Warm bronze',diameter:20,cents:21900}
+];
+const MAX_BYTES=200000, MAX_ROWS=200;
+const $=id=>document.getElementById(id);
+let inventory=SAMPLE,source='fictional_sample',inputName='',importedConcept=null;
+function parseCsv(text) {
+  if(typeof text!=='string'||text.length>MAX_BYTES)throw Error('CSV must be text under 200 KB');
+  const rows=[],row=[];let field='',quoted=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++}else if(c==='"'){quoted=false}else field+=c}
+    else if(c==='"'&&field==='')quoted=true;
+    else if(c===','){row.push(field);field=''}
+    else if(c==='\n'){row.push(field.replace(/\r$/,''));rows.push([...row]);row.length=0;field=''}
+    else field+=c;
+    if(field.length>400)throw Error('One CSV cell exceeds 400 characters');
+    if(rows.length>MAX_ROWS+1)throw Error('Too many inventory rows');
+  }
+  if(quoted)throw Error('Unclosed CSV quote');
+  if(field||row.length){row.push(field.replace(/\r$/,''));rows.push([...row])}
+  if(rows.length<2)throw Error('CSV needs a header and at least one row');
+  const headers=rows.shift().map(x=>x.trim().toLowerCase().replace(/^\ufeff/,''));
+  const expected=['sku','name','finish','diameter','unit_price_usd'];
+  if(headers.length!==5||headers.some((x,i)=>x!==expected[i]))throw Error('CSV headers must be: '+expected.join(','));
+  const result=[],skuSet=new Set();
+  for(const r of rows){
+    if(r.length===1&&!r[0].trim())continue;
+    if(r.length!==5)throw Error('Every inventory row needs exactly five columns');
+    let [sku,name,finish,diameter,price]=r.map(x=>x.trim());
+    if(!sku||sku.length>60||!/^[a-z0-9][a-z0-9._-]*$/i.test(sku)||skuSet.has(sku.toLowerCase()))throw Error('Invalid or duplicate SKU');
+    if(!name||name.length>120||!finish||finish.length>60||!(/^\d{2}$/.test(diameter)))throw Error('Invalid name, finish or diameter');
+    if(!/^(?:0|[1-9]\d{0,5})(?:\.\d{1,2})?$/.test(price))throw Error('Unit prices must be ordinary USD decimals, no symbols or formulas');
+    const cents=Math.round(Number(price)*100);
+    if(!Number.isSafeInteger(cents)||cents<=0)throw Error('Unit price must be greater than zero');
+    skuSet.add(sku.toLowerCase());result.push({sku,name,finish,diameter:Number(diameter),cents});
+  }
+  if(!result.length||result.length>MAX_ROWS)throw Error('Inventory must contain 1–200 valid rows');
+  return result;
+}
+function parseConcept(text){
+  if(typeof text!=='string'||text.length>20000)throw Error('Concept JSON must be under 20 KB');
+  let raw;try{raw=JSON.parse(text)}catch{throw Error('Invalid concept JSON')}
+  if(!raw||typeof raw!=='object'||Array.isArray(raw)||
+     raw.title!=='Wheel Lab concept quote packet'||raw.version!=='RC01'||
+     raw.illustrative_only!==true||raw.fitment_verified!==false||
+     raw.inventory_verified!==false||raw.price_verified!==false||
+     raw.shop_contacted!==false)throw Error('Not an unverified Wheel Lab RC01 concept packet');
+  const wheel_design=String(raw.wheel_design||'');
+  const wheel_finish=String(raw.wheel_finish||'');
+  const paint=String(raw.paint||'');
+  if(!['Orbit','Turbine','Mesh','Heritage'].includes(wheel_design)||
+     !['Gloss black','Brushed silver','Warm bronze'].includes(wheel_finish)||
+     !['Torch red','Pearl white','Electric blue','Machine silver','Midnight'].includes(paint)||
+     ![17,18,19,20,21].includes(raw.diameter_in))throw Error('Unrecognized concept appearance');
+  if(raw.vehicle!=='Original concept coupe (not manufacturer-specific)')throw Error('Unsupported concept vehicle');
+  return Object.freeze({source:'wheel-lab-rc01', vehicle:'Illustrative coupe only',
+    wheel_design,wheel_finish,paint,diameter_in:raw.diameter_in,
+    fitment_verified:false, merchant_sku_matched:false});
+}
+function money(cents){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100)}
+function render(){
+  const chosen=inventory[Number($('item').value)]||inventory[0];
+  $('selectedSku').textContent=chosen.sku;
+  $('unitPrice').textContent=money(chosen.cents);
+  $('selectedQty').textContent=$('quantity').value;
+  $('subtotal').textContent=money(chosen.cents*Number($('quantity').value));
+  $('dataState').textContent=source==='fictional_sample'?'SAMPLE · NOT REAL INVENTORY':'UPLOADED LOCALLY · NOT VERIFIED';
+}
+function populate(){const sel=$('item');sel.replaceChildren();inventory.forEach((item,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=item.name+' · '+item.diameter+'” · '+item.finish+' · '+item.sku;sel.append(o)});render()}
+function packet(){
+  const item=inventory[Number($('item').value)]||inventory[0];
+  const qty=Number($('quantity').value);
+  return {
+    schema:'evercraft.wheel-lab.merchant-review-packet.v1',
+    status:'INTERNAL_DRAFT_UNVERIFIED',
+    generated_at:new Date().toISOString(),
+    shop_label:$('shop').value.trim().slice(0,90)||null,
+    inventory_source:source,
+    inventory_file_label:source==='operator_uploaded_csv'?inputName:null,
+    inventory_verified:false,
+    source_is_example:source==='fictional_sample',
+    sku:item.sku,description:item.name,finish:item.finish,diameter_in:item.diameter,
+    unit_price_cents:item.cents,quantity:qty,merchandise_subtotal_cents:item.cents*qty,
+    vehicle_note:$('vehicle').value.trim().slice(0,120)||null,
+    service_requested:$('service').value,
+    requested_appearance: importedConcept ? {...importedConcept} : null,
+    appearance_import_verified:false,
+    merchant_sku_matched_to_concept:false,
+    tax_included:false,labor_included:false,delivery_included:false,
+    fitment_verified:false,price_verified:false,customer_consent_verified:false,
+    shop_contacted:false,checkout_created:false,payment_verified:false,
+    verification_required:['vehicle/wheel fitment','SKU/inventory','merchant pricing','tax','labor','installation','quote recipient'],
+    note:'Internal operator draft only. Not a price offer, vehicle fitment certification, customer quote, order or paid receipt.'
+  };
+}
+$('item').addEventListener('change',render);
+$('quantity').addEventListener('change',render);
+$('inventoryFile').addEventListener('change',async(e)=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{
+    if(file.size>MAX_BYTES)throw Error('File exceeds 200 KB');
+    const result=parseCsv(await file.text());
+    inventory=result;source='operator_uploaded_csv';inputName=file.name.slice(0,120);
+    $('catalogNote').textContent=result.length+' item(s) loaded locally from '+inputName+'. No price, stock or fitment verification performed.';
+    $('message').textContent='Inventory imported locally. No data sent.';
+    populate();
+  }catch(error){$('message').textContent='Import rejected: '+error.message}
+  e.target.value='';
+});
+$('conceptFile').addEventListener('change',async(e)=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{
+    if(file.size>20000)throw Error('Concept file exceeds 20 KB');
+    const parsed=parseConcept(await file.text());
+    importedConcept=parsed;
+    $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.';
+    $('message').textContent='Shopper concept loaded locally; SKU match still requires a person.';
+  }catch(error){$('message').textContent='Concept rejected: '+error.message}
+  e.target.value='';
+});
+$('export').addEventListener('click',()=>{
+  const body=JSON.stringify(packet(),null,2);
+  const url=URL.createObjectURL(new Blob([body],{type:'application/json'}));
+  const a=document.createElement('a');a.href=url;a.download='wheel-lab-internal-review.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $('message').textContent='Draft exported locally. No quote or message was sent.';
+});
+$('reset').addEventListener('click',()=>{
+  inventory=SAMPLE;source='fictional_sample';inputName='';importedConcept=null;
+  $('conceptSummary').textContent='No shopper concept imported yet.';
+  for(const id of ['shop','vehicle'])$(id).value='';
+  $('quantity').value='4';$('service').value='none';
+  $('catalogNote').textContent='Using fictional sample inventory. CSV headers: sku,name,finish,diameter,unit_price_usd. Max 200 rows, 200 KB. All data stays in this browser.';
+  $('message').textContent='Local quote desk reset.';populate()
+});
+populate();
+window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,packet};
+})();
+</script>
+</body></html>
