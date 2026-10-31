@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "humanfilter-clip-facebook-publisher",
+  "runtime": "systemia-core-resident",
+  "cadence_seconds": 3600,
+  "entrypoint": "systemia/clip/humanfilter-facebook-resident-runner.mjs",
+  "purpose": "Publish unique approved HumanFilter desktop-beta posts to a separately verified Evercraft Facebook company Page, using the first-party provider vault, Passport scoped grant, durable dedupe, photo and first-comment provider receipts.",
+  "safety": {
+    "brand_scope": "evercraft-only",
+    "verified_page_id_required": true,
+    "verified_page_name_required": true,
+    "max_publishes_per_cycle": 1,
+    "minimum_spacing_hours": 72,
+    "no_identical_reuse": true,
+    "first_comment_required": true,
+    "provider_post_readback_required": true,
+    "return_secret_material": false,
+    "publish_without_credentials": false,
+    "publish_without_passport": false,
+    "personal_profiles_excluded": true,
+    "unrelated_brands_excluded": [
+      "eps",
+      "havenly-cleaning",
+      "rnb-chicken-and-soul",
+      "christmaslightsusa"
+    ],
+    "paid_spend_usd": 0
+  }
+}
