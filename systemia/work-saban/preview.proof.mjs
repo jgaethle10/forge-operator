@@ -10,7 +10,7 @@ try {
   const health = await (await fetch(`${base}/health`)).json();
   assert.equal(health.ok, true);
   assert.equal(health.live_workers, false);
-  for (const endpoint of ['/', '/app.js', '/style.css', '/office.js', '/office-3d.js', '/trace-client.js', '/office-floor.svg']) {
+  for (const endpoint of ['/', '/app.js', '/style.css', '/office.js', '/office-3d.js', '/office-camera.js', '/trace-client.js', '/office-floor.svg']) {
     const response = await fetch(`${base}${endpoint}`);
     assert.equal(response.status, 200, endpoint);
     assert((await response.text()).length > 100);
@@ -109,6 +109,7 @@ try {
   const floorAsset=await (await fetch(base+'/office-floor.svg')).text();
   const office3dAsset=await (await fetch(base+'/office-3d.js')).text();
   assert(office3dAsset.includes('spatial-world'));
+  assert((await (await fetch(base+'/office-camera.js')).text()).includes('EvercraftObserverCamera'));
   assert(office3dAsset.includes('pointermove'));
   assert(office3dAsset.includes('quality_status'));
   assert((await (await fetch(base+'/')).text()).includes('office-3d-toggle'));
