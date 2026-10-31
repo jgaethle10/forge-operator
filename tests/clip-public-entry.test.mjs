@@ -32,7 +32,7 @@ test('public page remains strictly fail closed and discloses absence of live pub
   assert.equal(status.platform_receipts_available_here,false);
   assert.match(status.truth_boundary, /does not publish posts/);
   assert.match(page,/Automatic publishing requires/);
-  assert.match(page,/not a published post/);
+  assert.match(page,/a prepared post is <strong>not<\\/strong> a published post/);
   assert.ok(app.includes("publication_authority:false"));
   assert.ok(app.includes("provider_status:'not_submitted'"));
   assert.ok(app.includes("authorization:{approved:false"));
