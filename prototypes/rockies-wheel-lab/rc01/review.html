@@ -20,7 +20,7 @@ button[aria-selected=true]{border-color:var(--accent);background:#263322;color:v
 button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .stage{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#111b29}
 .stageHead{padding:15px 20px;display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}
-.stageHead b{font-size:17px}.stageHead span{font-size:12px;color:var(--muted)}
+.stageHead b{font-size:17px}.stageHead span{font-size:12px;color:var(--muted)}.openLink{font-size:12px;color:var(--accent);font-weight:800;text-decoration:underline;text-underline-offset:3px}.openLink:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 iframe{display:block;width:100%;border:0;height:900px;background:#090d14}
 .instructions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:23px 0}
 .instructions article{padding:17px;border:1px solid var(--line);border-radius:13px;background:#151d27}
@@ -38,7 +38,7 @@ iframe{display:block;width:100%;border:0;height:900px;background:#090d14}
 <button id="tab-merchant" role="tab" aria-selected="false" aria-controls="reviewFrame" type="button">2 · Merchant quote desk</button>
 </nav>
 <div class="stage">
-<div class="stageHead"><b id="stepTitle">Step 1: configure the look</b><span id="stepDescription">Export the JSON concept packet when ready</span></div>
+<div class="stageHead"><b id="stepTitle">Step 1: configure the look</b><span id="stepDescription">Export the JSON concept packet when ready</span><a class="openLink" id="openFullscreen" href="./index.html">Open full screen</a></div>
 <iframe id="reviewFrame" title="Wheel Lab shopper preview" src="./index.html" referrerpolicy="no-referrer"></iframe>
 </div>
 <div class="instructions">
@@ -52,11 +52,12 @@ iframe{display:block;width:100%;border:0;height:900px;background:#090d14}
 <script>
 (function(){'use strict';
 const frame=document.getElementById('reviewFrame'),shopper=document.getElementById('tab-shopper'),merchant=document.getElementById('tab-merchant');
-const title=document.getElementById('stepTitle'),description=document.getElementById('stepDescription');
+const title=document.getElementById('stepTitle'),description=document.getElementById('stepDescription'),openFullscreen=document.getElementById('openFullscreen');
 function show(which){
   const isMerchant=which==='merchant';
   shopper.setAttribute('aria-selected',String(!isMerchant));merchant.setAttribute('aria-selected',String(isMerchant));
   frame.src=isMerchant?'./merchant-desk.html':'./index.html';
+  openFullscreen.href=frame.src;
   frame.title=isMerchant?'Wheel Lab merchant quote desk':'Wheel Lab shopper preview';
   title.textContent=isMerchant?'Step 2: draft a shop-reviewed estimate':'Step 1: configure the look';
   description.textContent=isMerchant?'Import the saved JSON; optionally add a local shop CSV':'Export the JSON concept packet when ready';
