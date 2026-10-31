@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>FindMyPart | Search for a part</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#17212b;background:#f7f9fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:22px}header{background:white;border-bottom:1px solid #ddd}header a{color:#17212b;font-weight:800;text-decoration:none}h1{font-size:clamp(36px,7vw,62px);letter-spacing:-.05em;margin:65px 0 12px}p{color:#526171;line-height:1.6}form{display:flex;gap:9px;margin:27px 0 12px}input{flex:1;min-width:0;font:inherit;padding:16px;border:1px solid #bbc8d4;border-radius:10px}button,.button{border:0;background:#f16b27;padding:15px 19px;font:inherit;font-weight:750;border-radius:10px;color:#171b1f;cursor:pointer;text-decoration:none}.panel{border:1px solid #dbe2e8;border-radius:15px;padding:21px;background:#fff;margin:20px 0}.sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:14px}.source{border:1px solid #e0e5eb;border-radius:12px;padding:18px;background:white}.source a{color:#165c94;font-weight:700}.hint{font-size:13px}.muted{color:#526171}#results[hidden]{display:none}@media(max-width:550px){form{flex-direction:column}h1{margin-top:36px}}
+</style></head>
+<body><header><div class="wrap"><a href="/findmypart/">FindMyPart</a> <span class="muted"> / Self-service search preview</span></div></header>
+<main class="wrap"><h1>Find the part.<br>Get back to work.</h1>
+<p>Search by part number, equipment model, or a plain-language description. Free to explore. No account or email required.</p>
+<form id="search-form"><input id="part-query" type="search" maxlength="180" required minlength="3" autocomplete="off" placeholder="e.g. Ford 3600 hydraulic pump" aria-label="Part or equipment to search"><button type="submit">Search parts</button></form>
+<p class="hint">This preview opens independent supplier searches. It does not verify inventory, prices, fitment or supplier identity.</p>
+<section id="results" hidden aria-live="polite"><h2>Search these sources</h2><p id="query-description"></p><div id="source-results" class="sources"></div><p class="hint">Results on external websites are supplier claims, not verified FindMyPart matches. Check exact OEM number, measurements, model year and seller before ordering.</p></section>
+<section class="panel"><h2>Still can't find it?</h2><p>We also investigate discontinued and difficult parts. Request help only when you need it.</p><a class="button" href="/findmypart/#request">Ask for help</a></section>
+</main><script type="module" src="/findmypart/search/app.mjs"></script></body></html>
