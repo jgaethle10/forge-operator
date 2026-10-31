@@ -3,6 +3,13 @@ name: Clip Native Facebook Page Publisher
 on:
   pull_request:
     paths:
+      - "systemia/clip/humanfilter-facebook-resident.mjs"
+      - "systemia/clip/humanfilter-facebook-resident-runner.mjs"
+      - "systemia/clip/humanfilter-facebook-resident.test.mjs"
+      - "systemia/clip/humanfilter-publish-authorize.mjs"
+      - "systemia/clip/authority/humanfilter-autopublish.json"
+      - "systemia/organism/humanfilter-clip-facebook.workflow.json"
+      - "distribution/marketing/humanfilter-free-desktop-20261030.review.json"
       - "systemia/clip/social-publisher-runtime.mjs"
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
@@ -44,6 +51,13 @@ on:
   push:
     branches: [main]
     paths:
+      - "systemia/clip/humanfilter-facebook-resident.mjs"
+      - "systemia/clip/humanfilter-facebook-resident-runner.mjs"
+      - "systemia/clip/humanfilter-facebook-resident.test.mjs"
+      - "systemia/clip/humanfilter-publish-authorize.mjs"
+      - "systemia/clip/authority/humanfilter-autopublish.json"
+      - "systemia/organism/humanfilter-clip-facebook.workflow.json"
+      - "distribution/marketing/humanfilter-free-desktop-20261030.review.json"
       - "systemia/clip/social-publisher-runtime.mjs"
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
@@ -99,6 +113,7 @@ jobs:
         run: |
           node --test \
             systemia/clip/social-publisher-runtime.test.mjs \
+            systemia/clip/humanfilter-facebook-resident.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs \
             systemia/clip/native-video-publishers.test.mjs \
             systemia/clip/space-dudz-resident.test.mjs \
