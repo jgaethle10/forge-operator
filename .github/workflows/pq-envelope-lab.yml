@@ -1,0 +1,22 @@
+name: PQ envelope isolated lab
+on:
+  pull_request:
+    paths:
+      - 'systemia/crypto/**'
+      - 'tests/pq-envelope.test.mjs'
+      - '.github/workflows/pq-envelope-lab.yml'
+  workflow_dispatch:
+jobs:
+  pq-envelope:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify ML-KEM availability (fail closed)
+        run: node --input-type=module -e "import {pqRuntime} from './systemia/crypto/pq-envelope.mjs'; if (!pqRuntime().available) process.exit(1)"
+      - name: Run live ML-KEM and tamper tests
+        run: node --test tests/pq-envelope.test.mjs
