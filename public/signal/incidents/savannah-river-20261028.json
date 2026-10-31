@@ -15,6 +15,12 @@
   "public_risk_assessment": "No detectable contamination reported in site radiological surveys; independent off-site monitoring completeness not established in this case file.",
   "verified": [
     {
+      "claim": "At 6:21 p.m. EDT on October 28, the site publicly stated an emergency response was in progress and that there was then no indication of consequences beyond its boundaries.",
+      "source_ids": [
+        "srs-1"
+      ]
+    },
+    {
       "claim": "A fire occurred at the Savannah River National Laboratory.",
       "source_ids": [
         "srs-2",
@@ -86,6 +92,14 @@
       ]
     },
     {
+      "local_time": "2026-10-28T18:21:00-04:00",
+      "event": "First public site news release states an emergency response was in progress and no consequences beyond site boundaries were then indicated.",
+      "status": "official_update",
+      "source_ids": [
+        "srs-1"
+      ]
+    },
+    {
       "local_time": "2026-10-28T19:30:00-04:00",
       "event": "Site release #2 reports the fire extinguished; restrictions ongoing.",
       "status": "official_update",
@@ -103,6 +117,14 @@
     }
   ],
   "sources": [
+    {
+      "id": "srs-1",
+      "kind": "primary",
+      "organization": "Savannah River Site",
+      "title": "Emergency Response Event: Release #1",
+      "published_date": "2026-10-28",
+      "url": "https://public.srs.gov/2026/10/savannah-river-site-emergency-response-event/"
+    },
     {
       "id": "srs-2",
       "kind": "primary",
