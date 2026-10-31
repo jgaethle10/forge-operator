@@ -11,6 +11,8 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/compute/node-seed.mjs'
       - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/edge-router-mapping-evidence.mjs'
+      - 'tests/edge-router-mapping-evidence.test.mjs'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/promote-chromebook-edge-node.sh'
       - 'scripts/make-chromebook-edge-node.sh'
@@ -32,6 +34,8 @@ on:
       - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/edge-router-mapping-evidence.mjs'
+      - 'tests/edge-router-mapping-evidence.test.mjs'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/promote-chromebook-edge-node.sh'
       - 'scripts/make-chromebook-edge-node.sh'
@@ -55,6 +59,7 @@ jobs:
           node --check systemia/compute/runtime-node.mjs
           node --check systemia/compute/node-seed.mjs
           node --check scripts/evercraft-public-edge-map.mjs
+          node --check scripts/edge-router-mapping-evidence.mjs
           node --check systemia/yard/operator.mjs
           bash -n systemia/compute/install-node-seed.sh
           bash -n scripts/install-fabric-router-map-resident.sh
@@ -68,3 +73,4 @@ jobs:
         run: |
           node --test infra/evercraft-edge/test/*.test.mjs
           node --test tests/nodeseed-installed-bundle.test.mjs
+          node --test tests/edge-router-mapping-evidence.test.mjs tests/evercraft-public-edge-map.test.mjs
