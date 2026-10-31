@@ -22,6 +22,10 @@ export function microseedRequestHash({nodeId,workloadClass,idempotencyKey,payloa
 export function microseedWorkerReceiptHash(worker){
   if(!worker||typeof worker!=='object')throw Error('signed_microseed_worker_receipt_required');
   const {receipt_hash,...body}=worker;
+  // NodeSeed can return its previously durable receipt with the *transport*
+  // deduplicated marker toggled. That marker is not part of the original
+  // durable receipt hash and must not invalidate an idempotent replay.
+  if(body.deduplicated===true)body.deduplicated=false;
   if(!DIGEST.test(receipt_hash)||sha(JSON.stringify(stable(body)))!==receipt_hash)
     throw Error('signed_microseed_worker_hash_invalid');
   return receipt_hash;
