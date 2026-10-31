@@ -51,8 +51,23 @@ const doc={
   createElement:tag=>new Element(tag),
   getElementById:(id)=>id==='office-scene'?scene:id==='office-3d-toggle'?toggle:scene.querySelector('#'+id)
 };
-const context={document:doc,window:{innerWidth:1110},requestAnimationFrame:fn=>fn()};
-const source=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'office-3d.js'),'utf8');
+let clock=0,frameId=0;
+const frames=new Map();
+const raf=fn=>{const id=++frameId;frames.set(id,fn);return id;};
+const cancel=id=>frames.delete(id);
+function advanceFrames(count=180){
+  for(let i=0;i<count&&frames.size;i++){
+    clock+=16.6667;
+    const ready=[...frames.entries()];
+    frames.clear();
+    for(const [id,fn] of ready)fn(clock);
+  }
+}
+const context={document:doc,window:{innerWidth:1110,requestAnimationFrame:raf,cancelAnimationFrame:cancel},requestAnimationFrame:raf,cancelAnimationFrame:cancel};
+const directory=path.dirname(fileURLToPath(import.meta.url));
+const cameraSource=fs.readFileSync(path.join(directory,'office-camera.js'),'utf8');
+vm.runInNewContext(cameraSource,context,{filename:'office-camera.js'});
+const source=fs.readFileSync(path.join(directory,'office-3d.js'),'utf8');
 vm.runInNewContext(source,context,{filename:'office-3d.js'});
 const ui=context.window.WorkSaban3D;
 assert(ui);
@@ -98,6 +113,9 @@ assert.equal(all.find(x=>x.dataset.agent==='analyst').dataset.state,'verified');
 const originalZoom=ui.getCamera().zoom;
 ui.focusAgent('writer');
 assert(ui.getCamera().zoom>=0.98);
+assert.notEqual(ui.getRenderedCamera().zoom,ui.getCamera().zoom,'focus eases instead of jumping');
+advanceFrames();
+assert(Math.abs(ui.getRenderedCamera().zoom-ui.getCamera().zoom)<.001,'camera converges after frames');
 assert.notEqual(ui.getCamera().panX,0);
 ui.tourNext();
 assert(ui.getCamera().zoom>=0.98);
@@ -109,6 +127,25 @@ for(let i=0;i<60;i++)keydown({key:'-',preventDefault(){}});
 assert.equal(ui.getCamera().zoom,0.35,'lower zoom bound');
 keydown({key:'q',preventDefault(){}});
 assert(ui.getCamera().yaw<0);
+advanceFrames();
+ui.toggleFollow();
+assert.equal(ui.isFollowing(),true);
+ui.select('auditor');
+const followFocus=ui.getCamera().panX;
+ui.select('director');
+assert.notEqual(ui.getCamera().panX,followFocus,'following tracks changed selected coworker');
+const pointer=()=>({pointerType:'touch',target:{closest:()=>null},button:0});
+const yawBeforeTouch=ui.getCamera().yaw;
+viewport.listeners.pointerdown[0]({...pointer(),pointerId:11,clientX:100,clientY:120});
+viewport.listeners.pointermove[0]({...pointer(),pointerId:11,clientX:145,clientY:135});
+assert.notEqual(ui.getCamera().yaw,yawBeforeTouch,'touch drag rotates');
+viewport.listeners.pointerdown[0]({...pointer(),pointerId:12,clientX:225,clientY:120});
+viewport.listeners.pointermove[0]({...pointer(),pointerId:12,clientX:280,clientY:120});
+viewport.listeners.pointermove[0]({...pointer(),pointerId:12,clientX:310,clientY:120});
+assert(ui.getCamera().zoom>=.35,'pinch zoom bounded');
+assert.equal(ui.isFollowing(),false,'manual pinch pan disengages follow');
+viewport.listeners.pointerup[0]({pointerId:11});
+viewport.listeners.pointerup[0]({pointerId:12});
 ui.setEnabled(false);
 assert.equal(viewport.hidden,true);
 ui.consume({type:'stage_started',role:'writer'});
