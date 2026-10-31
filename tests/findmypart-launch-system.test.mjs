@@ -15,6 +15,10 @@ test('practical orange blue black identity is consistent across customer surface
   assert.match(landing,/--orange:#f16b27/);
   assert.match(landing,/--blue:#2565a3/);
   assert.match(landing,/--paper:#fff/);
+  assert.match(landing,/class="hero-photo"/);
+  assert.match(landing,/brand\/hero-gear.jpg/);
+  assert.doesNotMatch(landing,/class="diagram"|aria-label="FindMyPart locator"/);
+  assert.doesNotMatch(landing,/testimonials?|They found a discontinued controller/i);
   for(const asset of [mark,art,story,wordmark]){
     assert.match(asset,/^<svg /);
     assert.match(asset,/role="img"/);
@@ -103,6 +107,13 @@ test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, n
    const h=await fetch(runtime.url+'/findmypart/',{method:'HEAD'});
    assert.equal(h.status,200);
    assert.equal((await h.text()).length,0);
+   const hero=await fetch(runtime.url+'/findmypart/brand/hero-gear.jpg');
+   assert.equal(hero.status,200);
+   assert.match(hero.headers.get('content-type')||'',/image\/jpeg/);
+   assert.match(hero.headers.get('x-robots-tag')||'',/noindex/);
+   const imageBytes=Buffer.from(await hero.arrayBuffer());
+   assert.equal(imageBytes[0],0xff);
+   assert.equal(imageBytes[1],0xd8);
    for(const name of ['mark.svg','wordmark.svg','launch-landscape.svg','launch-portrait.svg']){
      const r=await fetch(runtime.url+'/findmypart/brand/'+name);
      assert.equal(r.status,200,name);

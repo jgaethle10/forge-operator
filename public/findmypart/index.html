@@ -23,7 +23,7 @@ a{color:inherit}a:focus-visible,summary:focus-visible{outline:3px solid var(--bl
 header{border-bottom:1px solid var(--line);background:#fff}
 .nav{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:74px}
 .brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-size:23px;font-weight:850;letter-spacing:-.055em;white-space:nowrap}
-.brand svg{width:39px;height:39px;flex:none}
+.brand{letter-spacing:-.065em;font-weight:850}
 .brand b{color:var(--orange)}
 .navlinks{display:flex;align-items:center;gap:24px}
 .navlinks a:not(.btn){color:var(--muted);font-size:14px;font-weight:650;text-decoration:none}
@@ -34,14 +34,15 @@ header{border-bottom:1px solid var(--line);background:#fff}
 .btn.outline{border:1px solid #bac5cf;color:var(--ink);background:#fff}
 .btn.small{font-size:13px;min-height:43px;padding:10px 16px}
 .hero{padding:86px 0 74px;overflow:hidden}
-.hero-inner{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,.6fr);align-items:center;gap:36px}
+.hero-inner{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);align-items:center;gap:46px}
 .eyebrow{font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:var(--blue)}
 h1{font-size:clamp(45px,7.2vw,79px);letter-spacing:-.067em;line-height:1.04;margin:20px 0 19px;max-width:690px}
 h1 em{font-style:normal;color:var(--orange-deep)}
 .lead{font-size:clamp(17px,2vw,20px);line-height:1.65;color:#435162;max-width:600px;margin:0 0 26px}
 .under-cta{font-size:13px;color:var(--muted);margin:14px 0 0}
-.diagram{width:100%;aspect-ratio:1/1;border:1px solid #e8edf2;background:radial-gradient(circle at 50% 50%,#eef6fd 0%,#f9fbfd 65%,#fff 80%);border-radius:22px;display:grid;place-items:center}
-.diagram svg{width:90%;max-width:390px;height:auto}
+.hero-photo{margin:0;position:relative;overflow:hidden;border-radius:18px;height:420px;background:#dfe3e4;box-shadow:0 22px 48px rgba(21,28,37,.09)}
+.hero-photo img{width:100%;height:100%;display:block;object-fit:cover;object-position:51% 50%}
+.hero-photo figcaption{position:absolute;right:11px;bottom:11px;padding:4px 8px;font-size:10px;letter-spacing:.04em;border-radius:4px;background:rgba(21,28,37,.8);color:#fff}
 section{padding:65px 0}
 .kicker{font-size:12px;color:var(--blue);font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
 h2{font-size:clamp(30px,4.5vw,45px);letter-spacing:-.05em;line-height:1.15;margin:0 0 15px}
@@ -78,15 +79,14 @@ h3{font-size:19px;letter-spacing:-.025em;margin:9px 0 8px}
 footer{padding:28px 0;background:#10161e;color:#bbc6d1;font-size:13px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 footer a{color:#e4e9ee}
-@media(max-width:800px){.hero-inner{grid-template-columns:1fr}.diagram{display:none}.steps{gap:15px}.prices{gap:10px}.price-card{padding:18px}.price-card.featured{padding:17px}}
-@media(max-width:600px){.wrap{width:calc(100% - 32px)}.nav{min-height:65px}.brand{font-size:20px}.brand svg{width:34px;height:34px}.navlinks>a:not(.btn){display:none}.navlinks .btn{padding:9px 12px;font-size:12px;min-height:39px}.hero{padding:60px 0 57px}h1{font-size:clamp(45px,11.5vw,61px)}.hero .btn{width:100%}section{padding:50px 0}.steps,.prices,.faq-list{grid-template-columns:1fr}.step{display:grid;grid-template-columns:42px 1fr;gap:3px 15px}.step .num{grid-row:span 2}.step h3{margin:0 0 4px}.step p{margin:0}.price-card,.price-card.featured{padding:21px}.proof-inner{display:block}.proof .btn{margin-top:20px;width:100%}.request .btn{width:100%}}
+@media(max-width:800px){.hero-inner{grid-template-columns:1fr}.hero-photo{display:none}.steps{gap:15px}.prices{gap:10px}.price-card{padding:18px}.price-card.featured{padding:17px}}
+@media(max-width:600px){.wrap{width:calc(100% - 32px)}.nav{min-height:65px}.brand{font-size:20px}.navlinks>a:not(.btn){display:none}.navlinks .btn{padding:9px 12px;font-size:12px;min-height:39px}.hero{padding:60px 0 57px}h1{font-size:clamp(45px,11.5vw,61px)}.hero .btn{width:100%}section{padding:50px 0}.steps,.prices,.faq-list{grid-template-columns:1fr}.step{display:grid;grid-template-columns:42px 1fr;gap:3px 15px}.step .num{grid-row:span 2}.step h3{margin:0 0 4px}.step p{margin:0}.price-card,.price-card.featured{padding:21px}.proof-inner{display:block}.proof .btn{margin-top:20px;width:100%}.request .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}.btn:hover{transform:none}}
 </style>
 </head>
 <body>
 <header><div class="wrap nav">
 <a class="brand" href="#top" aria-label="FindMyPart home">
-<svg viewBox="0 0 64 64" role="img" aria-label="FindMyPart locator"><rect width="64" height="64" rx="13" fill="#151c25"/><path d="M15 26A19 19 0 0 1 49 21M49 39A19 19 0 0 1 15 44" fill="none" stroke="#f16b27" stroke-width="5" stroke-linecap="round"/><path d="M32 15v10m0 14v10M15 32h10m14 0h10" stroke="#6fb1e6" stroke-width="3" stroke-linecap="round"/><path d="m28 27 9-3 6 8-4 9-9 3-6-9z" fill="#f16b27"/></svg>
 <span>Find<b>My</b>Part</span>
 </a>
 <nav class="navlinks" aria-label="Main navigation"><a href="#how">How it works</a><a href="#pricing">Pricing</a><a class="btn primary small" href="#request">Find my part</a></nav>
@@ -99,9 +99,10 @@ footer a{color:#e4e9ee}
 <a class="btn primary" href="#request">Tell us about your part <span aria-hidden="true">→</span></a>
 <p class="under-cta">One-time research from $19. No subscription.</p>
 </div>
-<div class="diagram" aria-hidden="true">
-<svg viewBox="0 0 400 400" fill="none"><circle cx="200" cy="200" r="158" stroke="#cee1f0" stroke-width="2"/><circle cx="200" cy="200" r="117" stroke="#2565a3" stroke-width="2.5"/><circle cx="200" cy="200" r="77" stroke="#f16b27" stroke-width="4" stroke-dasharray="14 10"/><path d="M200 12v72m0 232v72M12 200h72m232 0h72" stroke="#9ec5e5" stroke-width="3"/><path d="m170 159 65-19 48 55-18 65-64 20-49-55z" fill="#151c25" stroke="#f16b27" stroke-width="6"/><path d="m191 168 39 37m-1-42-37 67" stroke="#79b6e3" stroke-width="4"/><circle cx="200" cy="200" r="6" fill="#f16b27"/></svg>
-</div></div></section>
+<figure class="hero-photo">
+<img src="/findmypart/brand/hero-gear.jpg" alt="Illustrative machined gears and mechanical replacement components on a workshop bench" width="300" height="340" fetchpriority="high" decoding="async">
+<figcaption>Illustrative imagery</figcaption>
+</figure></div></section>
 <section class="how" id="how"><div class="wrap">
 <p class="kicker">How it works</p><h2>A simpler way past the dead end.</h2>
 <div class="steps">

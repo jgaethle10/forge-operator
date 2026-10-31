@@ -1142,6 +1142,7 @@ export async function startFabricLocalRuntime({
         ['/findmypart/sample-report','public/findmypart/sample-report/index.html'],
         ['/findmypart/sample-report/','public/findmypart/sample-report/index.html'],
         ['/findmypart/brand/mark.svg','public/findmypart/brand/mark.svg'],
+        ['/findmypart/brand/hero-gear.jpg','public/findmypart/brand/hero-gear.jpg'],
         ['/findmypart/brand/wordmark.svg','public/findmypart/brand/wordmark.svg'],
         ['/findmypart/brand/launch-landscape.svg','public/findmypart/brand/launch-landscape.svg'],
         ['/findmypart/brand/launch-portrait.svg','public/findmypart/brand/launch-portrait.svg'],
@@ -1153,14 +1154,15 @@ export async function startFabricLocalRuntime({
         const payload=fs.readFileSync(target);
         const svg=findMyPartPath.endsWith('.svg');
         const script=findMyPartPath.endsWith('.mjs');
+        const photo=findMyPartPath.endsWith('.jpg');
         res.writeHead(200,{
-          'content-type':svg?'image/svg+xml; charset=utf-8':script?'text/javascript; charset=utf-8':'text/html; charset=utf-8',
+          'content-type':svg?'image/svg+xml; charset=utf-8':photo?'image/jpeg':script?'text/javascript; charset=utf-8':'text/html; charset=utf-8',
           'content-length':payload.length,
           'cache-control':'no-store',
           'x-content-type-options':'nosniff',
           'x-robots-tag':'noindex, nofollow',
           'referrer-policy':'no-referrer',
-          'content-security-policy':svg?"default-src 'none'; style-src 'unsafe-inline'; sandbox":"default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'", /* Read-only static assets, front-end JS only. */
+          'content-security-policy':svg||photo?"default-src 'none'; style-src 'unsafe-inline'; sandbox":"default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'", /* Read-only static assets, front-end JS only. */
         });
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
