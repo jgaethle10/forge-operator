@@ -75,18 +75,18 @@ function depthChart(){
  pts.forEach((pt,i)=>{if(i===0||pt.t-pts[i-1].t>15)chart.moveTo(x(pt.t),y(pt.depth));else chart.lineTo(x(pt.t),y(pt.depth));});chart.stroke();
  const snap=atTime(dive,current),px=x(current);
  chart.setLineDash([3,4]);chart.strokeStyle='#ffda96';chart.lineWidth=1.6;chart.beginPath();chart.moveTo(px,top);chart.lineTo(px,bottom);chart.stroke();chart.setLineDash([]);
- chart.beginPath();chart.arc(px,y(snap.depth),4.1,0,Math.PI*2);chart.fillStyle='#f9deb1';chart.fill();
+ if(snap.depth!==null){chart.beginPath();chart.arc(px,y(snap.depth),4.1,0,Math.PI*2);chart.fillStyle='#f9deb1';chart.fill();}
 }
 function update(){
  if(!dive)return;
  const point=atTime(dive,current);
  $('mission-title').textContent=dive.title;$('time').textContent=fmt(current)+' / '+fmt(dive.points.at(-1).t);
- $('depth').textContent=point.depth.toFixed(1)+' m';$('maximum').textContent=dive.maxDepth.toFixed(1)+' m';$('elapsed').textContent=fmt(current);
+ $('depth').textContent=point.depth===null?'No reading':point.depth.toFixed(1)+' m';$('maximum').textContent=dive.maxDepth.toFixed(1)+' m';$('elapsed').textContent=fmt(current);
  $('position').textContent=dive.demo?'Simulated':dive.xyAvailable?'User-declared':'Not available';
  $('position').className=dive.demo||!dive.xyAvailable?'uncertain':'value';
  $('scene-status').textContent=dive.demo?'SYNTHETIC EXAMPLE':dive.xyAvailable?'USER-DECLARED TRACK':'NO XY TRACK';
  $('scene-sub').textContent=dive.demo?'No actual dive, hazard or facility':dive.xyAvailable?'Coordinates are not independently verified':'Depth only, no horizontal route';
- $('state').textContent=point.positionState==='gap_not_interpolated'?'Position gap · not inferred':dive.demo?'Sample position · synthetic':dive.xyAvailable?'Position source: '+dive.positionSource:'Depth only · no XY';
+ $('state').textContent=point.depthState==='gap_unobserved'?'Time gap · depth and position unknown':point.positionState==='gap_not_interpolated'?'Position gap · not inferred':dive.demo?'Sample position · synthetic':dive.xyAvailable?'Position source: '+dive.positionSource:'Depth only · no XY';
  $('no-xy').hidden=dive.xyAvailable;
  $('source-type').textContent=dive.demo?'Synthetic demonstration':dive.xyAvailable?dive.positionSource+' user-declared positioning':'Depth-only imported data';
  $('source-description').textContent=dive.provenance;
