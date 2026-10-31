@@ -1,0 +1,8 @@
+Evercraft Aqua RC09 | local-only QA run, 2026-10-30
+Node 22: 18/18 core unit tests PASS
+Python 3.13: 30/30 prior RC08 baseline + NOAA gate regression tests PASS
+Numerical parity: Python RC08 vs Browser RC09 on synthetic 14-day fixture PASS
+Browser: Chromium headless 1365x850 desktop and 390x844 phone-width PASS
+Checked: demo, reported totals, download actions, no JS errors, no external requests, no phone horizontal overflow
+No real farm water data, field savings or physical engineering tests.
+No original real-camera live-action Aqua film generated.
