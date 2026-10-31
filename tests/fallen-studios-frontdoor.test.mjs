@@ -19,7 +19,7 @@ test("customer inquiry routes to the already owned commercial studio intake, no 
  assert.match(landing,/after the brief, capacity and delivery terms are accepted/);
 });
 test("Fallen front door never invents hosted video, checkout, client testimonials or auto-delivery",()=>{
- assert.match(landing,/A publicly hosted video preview is not yet part of this page/);
+ assert.match(landing,/A playable public video will appear only after the master and distribution rights pass review/);
  assert.match(landing,/not an automatic purchase or guaranteed production slot/i);
  assert.match(landing,/checkout, if offered, follows written approval/i);
  assert.doesNotMatch(landing,/buy\.stripe\.com|<video[^>]+src=|verified client results|thousands of clients|auto[- ]deliver/i);
@@ -30,10 +30,18 @@ test("accessible mobile layout, OG metadata, source honesty",()=>{
  assert.match(landing,/@media\(max-width:440px\)/);
  assert.match(landing,/prefers-reduced-motion/);
  assert.match(landing,/aria-label="Fallen Studios home"/);
- assert.match(landing,/role="img" aria-label="Original typographic preview artwork/);
+ assert.match(landing,/role="img" aria-label="Dark and gold editorial title card/);
  const match=landing.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
  assert.ok(match);
  const schema=JSON.parse(match[1]);
  assert.equal(schema.name,"Fallen Studios by Evercraft");
  assert.equal(schema.parentOrganization.name,"Evercraft LLC");
+});
+
+test("Fallen showcase uses the studio dark-and-gold palette, not a competing blue Research promotional panel",()=>{
+ assert.match(landing,/\.poster\{[^}]*linear-gradient\(145deg,#27221c,#11151b/);
+ assert.match(landing,/CUT 02 UNDER REVIEW/);
+ assert.match(landing,/FALLEN STUDIOS \/ FILM STUDY 001/);
+ assert.doesNotMatch(landing,/#102c38,#1b5b62|#307a80|#d5fffb25/);
+ assert.match(landing,/This dark editorial study is not the commercial itself/);
 });
