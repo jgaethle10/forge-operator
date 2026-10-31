@@ -30,3 +30,10 @@ jobs:
           if(report.runs.length!==80) throw Error('rc02_expected_80_runs');
           console.log('Verified modeled benchmark:',report.sha256);
           NODE
+
+      - name: Install native World Engine TypeScript loader
+        run: npm install --no-audit --no-fund
+      - name: Test RC03 using actual EvercraftWorldRuntime
+        run: node --import tsx --test systemia/world-engine/sim-to-real/native-engine-proof.test.mjs
+      - name: Generate native execution / sampled-contact evidence
+        run: node --import tsx systemia/world-engine/sim-to-real/native-engine-proof.mjs --seeds 4 --out /tmp/evercraft-native-rc03.json
