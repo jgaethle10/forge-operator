@@ -18,14 +18,44 @@ export function admitRequest(url,method){
   if(parsed.protocol!=='https:'||parsed.origin!==ORIGIN)return {allowed:false,reason:'off_origin_asset'};
   return {allowed:true,reason:'same_origin_read'};
 }
-export function pageEvidence({httpStatus,title,heading,hasEmailField,hasCheckoutButton,pageErrorCount}){
+export function publicPaymentHealth(health){
+  const owned=health?.payment_authority==='Evercraft Payments' &&
+    health?.payment_router==='Raven Nexus';
+  const purchaseIntentConfigured=health?.checkout_purchase_intent_configured===true;
+  const paymentOpsConfigured=health?.checkout_direct_offer_ops_configured===true;
+  const transportConfigured=owned&&purchaseIntentConfigured&&paymentOpsConfigured;
+  const operationalState=typeof health?.checkout_operational_state==='string'
+    ? health.checkout_operational_state.slice(0,90):'unavailable';
+  return {
+    authority:'Evercraft Payments',settlementBoundary:'Raven Nexus',
+    healthObserved:owned,
+    purchaseIntentConfigured,paymentOpsConfigured,
+    transportConfigured,
+    operationalState,
+    paymentVerified:false,fulfillmentVerified:false,
+    checkoutAcceptanceVerified:false,publicationAuthority:false,
+  };
+}
+export function pageEvidence({httpStatus,title,heading,hasEmailField,hasCheckoutButton,
+  hasAssistedInvoice,pageErrorCount,paymentHealth}){
   const problems=[];
   if(httpStatus!==200)problems.push('offer_http_not_200');
   if(!/website audit/i.test([title,heading].join(' ')))problems.push('offer_identity_missing');
-  if(!hasEmailField)problems.push('buyer_email_field_missing');
-  if(!hasCheckoutButton)problems.push('checkout_cta_missing');
   if(pageErrorCount>0)problems.push('browser_runtime_errors');
-  return {state:problems.length?'blocked':'public_offer_observed',problems,
+  const base=problems.length===0;
+  const paymentHeld=base && !hasEmailField && !hasCheckoutButton &&
+    hasAssistedInvoice===true &&
+    paymentHealth?.operationalState==='held_owned_payment_endpoint_unconfigured';
+  const availableToBegin=base && hasEmailField===true && hasCheckoutButton===true &&
+    paymentHealth?.transportConfigured===true;
+  if(base&&!paymentHeld&&!availableToBegin)problems.push('checkout_ui_health_disagreement_or_unknown');
+  return {
+    state:problems.length?'blocked':paymentHeld?'public_offer_captured_payment_held':
+      'public_offer_captured_checkout_unverified',
+    problems,
+    captureSuccessful:problems.length===0,
+    buyerCheckoutAvailable:availableToBegin,
+    ownedPaymentRouteConfigured:Boolean(paymentHealth?.transportConfigured),
     checkoutVerified:false,checkoutActionPerformed:false,
     paymentVerified:false,fulfillmentVerified:false,actualAuditWorkflowCaptured:false,
     capturedScope:'anonymous_public_offer_page_only',publicationAuthority:false};
@@ -75,6 +105,16 @@ export async function capture({outDir,chromium}){
       }
       await route.continue();
     });
+    // Health is a known public read-only endpoint. Copy only non-secret readiness flags.
+    try{
+      const response=await context.request.get(ORIGIN+'/health',{timeout:14000});
+      const health=response.ok()?await response.json().catch(()=>null):null;
+      receipt.paymentHealth=publicPaymentHealth(health);
+      receipt.paymentHealthHttpStatus=response.status();
+    }catch{
+      receipt.paymentHealth=publicPaymentHealth(null);
+      receipt.paymentHealthHttpStatus=0;
+    }
     let httpStatus=0;
     try{
       const response=await page.goto(ORIGIN+OFFER_PATH,{waitUntil:'domcontentloaded',timeout:25000});
@@ -84,6 +124,7 @@ export async function capture({outDir,chromium}){
       receipt.heading=(await page.locator('h1').first().textContent().catch(()=>'')||'').trim().slice(0,180);
       receipt.hasEmailField=await page.locator('input[type="email"]').count()>0;
       receipt.hasCheckoutButton=await page.getByRole('button',{name:/continue to checkout/i}).count()>0;
+      receipt.hasAssistedInvoice=(await page.getByText('Online checkout is temporarily unavailable.').count())>0;
       receipt.httpStatus=httpStatus;
       const screenshot=path.join(dir,'website-audit-public-offer.png');
       await page.screenshot({path:screenshot,fullPage:true,animations:'disabled'});
@@ -115,6 +156,8 @@ export async function capture({outDir,chromium}){
       httpStatus,title:receipt.title,heading:receipt.heading,
       hasEmailField:receipt.hasEmailField,
       hasCheckoutButton:receipt.hasCheckoutButton,
+      hasAssistedInvoice:receipt.hasAssistedInvoice,
+      paymentHealth:receipt.paymentHealth,
       pageErrorCount:receipt.errors.length
     });
     Object.assign(receipt,result);
@@ -132,8 +175,9 @@ async function main(){
   const result=await capture({outDir:dir,chromium});
   console.log(JSON.stringify({state:result.state,status:result.httpStatus,
     video:result.files.previewMp4,blockedRequests:result.requestsDenied,
+    paymentHealth:result.paymentHealth,buyerCheckoutAvailable:result.buyerCheckoutAvailable,
     evidence:result.capturedScope,errors:result.errors,publicationAuthority:false},null,2));
-  if(result.state!=='public_offer_observed')process.exitCode=2;
+  if(!result.captureSuccessful||!result.files.previewMp4)process.exitCode=2;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
   main().catch(error=>{console.error('website_audit_public_capture_failed:'+String(error.message||error));
