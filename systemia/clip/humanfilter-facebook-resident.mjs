@@ -115,7 +115,7 @@ export async function runHumanFilterFacebookCycle({
     form.set('source',new Blob([image],{type:'image/png'}),'humanfilter-real-popup.png');
     form.set('caption',entry.caption);
     form.set('published','true');
-    const response=await fetchImpl(graphUrl(graphBase,graphVersion,pageId+'/photos'),{method:'POST',headers:{Authorization:'Bearer '+pageAccessToken},body:form});
+    const response=await fetchImpl(graphUrl(graphBase,graphVersion,pageId)+'/photos',{method:'POST',headers:{Authorization:'Bearer '+pageAccessToken},body:form});
     const created=await providerJson(response,'photo_publish');
     // A photo ID is not necessarily the post ID. Do not write comments to an inferred target.
     const postId=clean(created.post_id);
@@ -123,7 +123,7 @@ export async function runHumanFilterFacebookCycle({
     // Persist provider ID before attempting comment: a comment failure MUST NOT republish the image.
     jsonWrite(sample.file,{...attempt,status:'post_confirmed_comment_pending',provider_post_id:postId,provider_photo_id:clean(created.id)||null});
     const commentBody=new URLSearchParams({message:entry.first_comment_copy});
-    const commentResponse=await fetchImpl(graphUrl(graphBase,graphVersion,postId+'/comments'),{
+    const commentResponse=await fetchImpl(graphUrl(graphBase,graphVersion,postId)+'/comments',{
       method:'POST',headers:{Authorization:'Bearer '+pageAccessToken,'Content-Type':'application/x-www-form-urlencoded'},body:commentBody.toString()
     });
     const commented=await providerJson(commentResponse,'first_comment');
