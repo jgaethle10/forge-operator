@@ -21,7 +21,7 @@ export function assertRoster(workstreams,identity){
   const keys=new Set();
   for(const row of workstreams.workstreams){
     if(!row?.key||!row?.name||!row?.description||!row?.kind)throw Error('Incomplete workstream');
-    if(BLOCKED.test(row.key)||BLOCKED.test(row.name))throw Error('Restricted project in marketing candidate roster: '+row.key);
+    if([row.key,row.name,row.description,...(Array.isArray(row.aliases)?row.aliases:[])].some(value=>BLOCKED.test(String(value))))throw Error('Restricted project in marketing candidate roster: '+row.key);
     if(keys.has(row.key))throw Error('Duplicate workstream key: '+row.key);
     keys.add(row.key);
     if(!SAFE_KINDS.has(row.kind)||!SAFE_PRIORITY.has(row.priority))throw Error('Invalid workstream kind or priority: '+row.key);
