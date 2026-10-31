@@ -12,6 +12,7 @@ on:
       - 'tests/findmypart-owned-provision.test.mjs'
       - 'scripts/diagnose-fabric-owned-edge-release.sh'
       - 'scripts/update-fabric-owned-edge.sh'
+      - 'tests/fabric-derived-capability-count.test.mjs'
       - 'tests/findmypart-resident-release-gate.test.mjs'
       - 'tests/findmypart-owned-edge-404-doctor.test.mjs'
       - 'tests/findmypart-public-inquiry.test.mjs'
@@ -54,6 +55,8 @@ jobs:
         run: |
           bash -n scripts/update-fabric-owned-edge.sh
           node --test tests/findmypart-resident-release-gate.test.mjs
+      - name: Check derived Fabric catalog count against actual runtime catalog
+        run: node --test tests/fabric-derived-capability-count.test.mjs
       - name: Existing owned service routing regression
         run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Existing native payment offer routing regression
