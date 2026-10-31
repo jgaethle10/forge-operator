@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {generateKeyPairSync} from 'node:crypto';
+import {generateKeyPairSync,createHash,createPublicKey} from 'node:crypto';
 import {issuePackage,checkPackage} from '../scripts/passage-signed-package.mjs';
 import {verifySignedPackage,MAX_TEXT_BYTES,confirmPublisherFingerprint} from '../public/passage/package-verifier.mjs';
 const article={id:'demo-article',title:'Original educational demonstration',edition:'2026-10-30',category:'Media literacy',
@@ -8,11 +8,12 @@ const article={id:'demo-article',title:'Original educational demonstration',edit
  sections:[{heading:'Read carefully',paragraphs:['A small fact.','Never mistake a signature for a truth guarantee.']}],sources:[]};
 const pemPair=()=>{const {privateKey,publicKey}=generateKeyPairSync('ed25519');return {privatePem:privateKey.export({type:'pkcs8',format:'pem'}).toString(),publicPem:publicKey.export({type:'spki',format:'pem'}).toString()}};
 const now='2026-10-30T21:00:00.000Z',keys=pemPair();
+const fingerprint=createHash('sha256').update(createPublicKey(keys.publicPem).export({type:'spki',format:'der'})).digest('hex');
 const issue=()=>issuePackage({article,privateKeyPem:keys.privatePem,issuedAt:new Date(now),ttlDays:2});
 test('trusted Ed25519 package verifies with Node and browser-compatible code',async()=>{
  const p=issue(),object=JSON.parse(p);
  assert.equal(Object.hasOwn(object,'public_key'),false,'a received file cannot self-authorize its signing key');
- const v=await checkPackage({packageJson:p,trustedPublicKeyPem:keys.publicPem,now:new Date('2026-10-31T00:00:00Z')});
+ const v=await checkPackage({packageJson:p,trustedPublicKeyPem:keys.publicPem,expectedFingerprint:fingerprint,now:new Date('2026-10-31T00:00:00Z')});
  assert.equal(v.metadata.article_id,'demo-article');assert.match(v.text,/A small fact/);
  const browser=await verifySignedPackage(p,keys.publicPem,Date.parse('2026-10-31T00:00:00Z'));assert.deepEqual(v,browser);
 });
@@ -55,4 +56,12 @@ test('trust anchor must independently match a known publisher fingerprint',async
  assert.equal(confirmPublisherFingerprint(checked,checked.fingerprint_sha256),checked);
  assert.throws(()=>confirmPublisherFingerprint(checked,'f'.repeat(64)),/does not match/);
  assert.throws(()=>confirmPublisherFingerprint(checked,''),/64-character/);
+});
+
+test('Node verifier refuses missing or untrusted fingerprint',async()=>{
+ const params={packageJson:issue(),trustedPublicKeyPem:keys.publicPem,now:new Date('2026-10-31T00:00:00Z')};
+ await assert.rejects(()=>checkPackage(params),/Independent publisher fingerprint is required/);
+ await assert.rejects(()=>checkPackage({...params,expectedFingerprint:'0'.repeat(64)}),/does not match/);
+ const good=await checkPackage({...params,expectedFingerprint:fingerprint});
+ assert.equal(good.fingerprint_sha256,fingerprint);
 });

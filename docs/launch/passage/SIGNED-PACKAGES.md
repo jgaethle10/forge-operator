@@ -11,7 +11,7 @@ A publisher with an Ed25519 private key can sign one original Passage demonstrat
 - Each signed item is bounded, UTF-8 plain text with a SHA-256 digest, edition date, short expiry (maximum 30 days) and original rights notice.
 - No third-party copyrighted information is ingested; only original demonstration guides in the local catalog may be signed by the CLI.
 - Browsers that do not support WebCrypto Ed25519 fail closed. The Node 22 CLI verifier is an alternative.
-- A trusted key must be obtained **separately**, e.g., securely exchanged and fingerprint-checked with a known publishing organization. A key delivered with the package is insufficient evidence of identity.
+- A trusted key and its expected fingerprint must be obtained through a separately authenticated publisher channel; the browser and CLI now both require the expected SHA-256 fingerprint before releasing verified text. A key delivered with the package is insufficient evidence of identity.
 - No revocation mechanism exists offline; trusted keys may later be compromised or withdrawn, and previously saved plain text cannot be recalled. Recipient device clocks must be reliable.
 - The phrase "SIGNATURE AND CONTENT VALID" refers only to a cryptographic check against the supplied trust anchor, not the publisher's actual identity or journalistic reliability.
 
@@ -29,11 +29,12 @@ Issue one package from the original demo catalog:
 
     node scripts/passage-signed-package.mjs issue --article=check-a-claim --key="$PASSAGE_LAB/editor-private.pem" --out="$PASSAGE_LAB/demo-package.json" --ttl-days=7
 
-On a receiving device with the package and **separately trusted** public key, verify:
+On a receiving device with a **separately trusted** public key and expected fingerprint, verify. In this local demonstration only, derive the expected fingerprint for comparison, but actual production verification must obtain the trusted fingerprint independently:
 
-    node scripts/passage-signed-package.mjs verify --file="$PASSAGE_LAB/demo-package.json" --trusted-key="$PASSAGE_LAB/editor-public.pem" --out="$PASSAGE_LAB/verified-guide.txt"
+    export PASSAGE_EXPECTED_FINGERPRINT="$(openssl pkey -pubin -in "$PASSAGE_LAB/editor-public.pem" -outform DER | openssl dgst -sha256 | awk '{print $NF}')"
+    node scripts/passage-signed-package.mjs verify --file="$PASSAGE_LAB/demo-package.json" --trusted-key="$PASSAGE_LAB/editor-public.pem" --expected-fingerprint="$PASSAGE_EXPECTED_FINGERPRINT" --out="$PASSAGE_LAB/verified-guide.txt"
 
-The temporary folder intentionally sits **outside the repository** to reduce the risk of accidentally committing a private key. Never share the private key; delete demo private keys after testing. Keys remain out of the web build and all CI artifacts. The web UI's "Verify a carried file" area accepts the package JSON and public PEM and checks them locally. It only reveals the save button after signature, content digest, expiry, type and size checks succeed.
+The temporary folder intentionally sits **outside the repository** to reduce the risk of accidentally committing a private key. Never share the private key; delete demo private keys after testing. Keys remain out of the web build and all CI artifacts. The web UI's "Verify a carried file" area accepts the package JSON and public PEM and checks them locally. It only reveals the save button after signature, content digest, expiry, type, size and an independently supplied key fingerprint match.
 
 ## Signed envelope contract
 

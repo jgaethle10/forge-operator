@@ -5,7 +5,7 @@ import {createPrivateKey,createPublicKey,sign,verify,createHash} from 'node:cryp
 import {pathToFileURL} from 'node:url';
 import {validateCatalog} from '../public/passage/catalog.mjs';
 import {articleText} from '../public/passage/article-text.mjs';
-import {PACKAGE_FORMAT,MAX_TEXT_BYTES,MAX_PACKAGE_BYTES,verifySignedPackage} from '../public/passage/package-verifier.mjs';
+import {PACKAGE_FORMAT,MAX_TEXT_BYTES,MAX_PACKAGE_BYTES,verifySignedPackage,confirmPublisherFingerprint} from '../public/passage/package-verifier.mjs';
 const b64=bytes=>Buffer.from(bytes).toString('base64');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const expect=(ok,message)=>{if(!ok)throw Error(message)};
@@ -26,9 +26,9 @@ export function issuePackage({article,privateKeyPem,issuedAt=new Date(),ttlDays=
  const result=JSON.stringify(envelope,null,2)+'\n';expect(Buffer.byteLength(result)<=MAX_PACKAGE_BYTES,'Package exceeds size limit');
  return result;
 }
-export async function checkPackage({packageJson,trustedPublicKeyPem,now=new Date()}){
+export async function checkPackage({packageJson,trustedPublicKeyPem,expectedFingerprint,now=new Date()}){
  const key=createPublicKey(trustedPublicKeyPem);expect(key.asymmetricKeyType==='ed25519','Only trusted Ed25519 public keys allowed');
- const checked=await verifySignedPackage(packageJson,trustedPublicKeyPem,new Date(now).getTime());
+ const checked=confirmPublisherFingerprint(await verifySignedPackage(packageJson,trustedPublicKeyPem,new Date(now).getTime()),expectedFingerprint);
  const parsed=JSON.parse(packageJson),passed=verify(null,Buffer.from(JSON.stringify(parsed.signed_data),'utf8'),key,Buffer.from(parsed.signature_base64,'base64'));
  expect(passed,'Node signature verification failed');
  return checked;
@@ -43,8 +43,8 @@ async function main(){
   const result=issuePackage({article,privateKeyPem:await readFile(a.key,'utf8'),ttlDays:a['ttl-days']===undefined?7:Number(a['ttl-days'])});
   await writeFile(a.out,result,{flag:'wx',mode:0o600});console.log('Issued signed demonstration package:',a.out);
  }else if(command==='verify'){
-  expect(a.file&&a['trusted-key'],'Usage: verify --file=PACKAGE_JSON --trusted-key=TRUSTED_PUBLIC_PEM [--out=TXT_FILE]');
-  const checked=await checkPackage({packageJson:await readFile(a.file,'utf8'),trustedPublicKeyPem:await readFile(a['trusted-key'],'utf8')});
+  expect(a.file&&a['trusted-key']&&a['expected-fingerprint'],'Usage: verify --file=PACKAGE_JSON --trusted-key=TRUSTED_PUBLIC_PEM --expected-fingerprint=64_HEX_CHARS [--out=TXT_FILE]');
+  const checked=await checkPackage({packageJson:await readFile(a.file,'utf8'),trustedPublicKeyPem:await readFile(a['trusted-key'],'utf8'),expectedFingerprint:a['expected-fingerprint']});
   if(a.out)await writeFile(a.out,checked.text,{flag:'wx',mode:0o600});
   console.log(JSON.stringify({status:'SIGNATURE_AND_CONTENT_VALID_FOR_PROVIDED_TRUST_ANCHOR',article_id:checked.metadata.article_id,
    edition:checked.metadata.edition,expires_at:checked.metadata.expires_at,key_fingerprint_sha256:checked.fingerprint_sha256,
