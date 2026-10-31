@@ -30,6 +30,7 @@ jobs:
           node --check systemia/work-saban/server.mjs
           node --check systemia/work-saban/app.js
           node --check systemia/work-saban/office-camera.js
+          node --check systemia/work-saban/office-camera.proof.mjs
           node --check systemia/work-saban/office-3d.js
           node --check systemia/work-saban/trace-client.js
           node --check systemia/work-saban/trace-chain.mjs
@@ -47,6 +48,8 @@ jobs:
         run: node systemia/work-saban/model-worker.proof.mjs
       - name: Prove formation contract
         run: node systemia/work-saban/mission.proof.mjs
+      - name: Prove smooth observer rig, reduced motion, and frame rate independence
+        run: node systemia/work-saban/office-camera.proof.mjs
       - name: Prove spatial office camera and receipt-driven state
         run: node systemia/work-saban/office-3d.proof.mjs
       - name: Prove ordered browser and server SHA-256 trace verification
