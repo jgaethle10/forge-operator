@@ -1,0 +1,33 @@
+name: Evercraft Clip public entry
+on:
+  pull_request:
+    paths:
+      - "public/clip/index.html"
+      - "public/clip/app.mjs"
+      - "public/clip/status.json"
+      - "public/evercraft-clip/index.html"
+      - "tests/clip-public-entry.test.mjs"
+      - ".github/workflows/clip-public-entry.yml"
+      - ".github/workflows/evercraft-journal-pages.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/clip/index.html"
+      - "public/clip/app.mjs"
+      - "public/clip/status.json"
+      - "public/evercraft-clip/index.html"
+      - "tests/clip-public-entry.test.mjs"
+      - ".github/workflows/clip-public-entry.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  clip-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Prove Clip workbench and fail-closed publishing state
+        run: node --test tests/clip-public-entry.test.mjs
