@@ -39,8 +39,11 @@ A host constructs createForensiScopePrivateJobs with:
 There is no public run route, anonymous result, raw source_path
 in API responses, or browser-controlled arbitrary worker execution.
 A private owned supervised worker may call jobs.runOne({jobId}) to
-perform processing. A pending job WILL NOT start automatically without
-that worker scheduler.
+perform processing. The staged startForensiScopePrivateWorker helper
+polls the queue and picks up paid jobs automatically when started by
+an owner-controlled resident supervisor. The worker is not exposed to
+the customer API. Jobs will not execute unless that owned supervisor
+actually starts and keeps the worker running.
 
 ## Evidence and privacy boundaries
 
