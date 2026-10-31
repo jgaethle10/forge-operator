@@ -10,6 +10,8 @@ on:
       - 'tests/findmypart-recovery-links.test.mjs'
       - 'tests/findmypart-saban-recovery-gauntlet.test.mjs'
       - 'tests/findmypart-saban-scorecard.test.mjs'
+      - 'tests/findmypart-saban-benchmark.test.mjs'
+      - 'scripts/findmypart-saban-benchmark.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
       - 'scripts/findmypart-review-inquiry.mjs'
@@ -76,9 +78,20 @@ jobs:
               tests/findmypart-recovery-engine.test.mjs \
               tests/findmypart-recovery-links.test.mjs \
               tests/findmypart-saban-recovery-gauntlet.test.mjs \
-              tests/findmypart-saban-scorecard.test.mjs
+              tests/findmypart-saban-scorecard.test.mjs \
+              tests/findmypart-saban-benchmark.test.mjs
             echo "::endgroup::"
           done
+      - name: Write Saban reproducible benchmark receipt
+        run: |
+          node scripts/findmypart-saban-benchmark.mjs --out findmypart-saban-benchmark.json
+          node --check scripts/findmypart-saban-benchmark.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: findmypart-saban-benchmark
+          path: findmypart-saban-benchmark.json
+          if-no-files-found: ignore
       - name: Check browser search modules are syntactically valid
         run: |
           node --check public/findmypart/search/app.mjs
