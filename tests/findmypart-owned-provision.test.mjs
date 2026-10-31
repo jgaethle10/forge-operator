@@ -5,7 +5,8 @@ import os from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {normalizeEnv,insertSettings} from '../scripts/provision-findmypart-owned-intake.mjs';
+import {normalizeEnv,insertSettings,waitForFindMyPartService,ensurePrivateIntakeDirectory} from '../scripts/provision-findmypart-owned-intake.mjs';
+import {createServer} from 'node:http';
 
 const script=fileURLToPath(new URL('../scripts/provision-findmypart-owned-intake.mjs',import.meta.url));
 const temp=()=>fs.mkdtempSync(path.join(os.tmpdir(),'fmp-provision-test-'));
@@ -69,4 +70,65 @@ test('operator script rejects unsolicited network target or malformed owner',()=
   const env2={...env,FMP_SETUP_LOCAL_URL:'http://127.0.0.1:8787/findmypart/'};
   assert.throws(()=>execFileSync(process.execPath,[script,'--owner-principal','owner\nINJECT=secret'],{env:env2,stdio:'pipe'}));
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('setup tolerates startup delay but never calls a payment or creates a lead',async(t)=>{
+ let pageCalls=0,readinessCalls=0;
+ const server=createServer((req,res)=>{
+  if(req.url==='/findmypart/'){
+   pageCalls++;
+   if(pageCalls<3){res.writeHead(503);res.end('starting');return}
+   res.writeHead(200,{'content-type':'text/html'});
+   res.end('<title>FindMyPart</title><form id="part-request-form"></form><script src="/findmypart/app.mjs"></script>');
+   return;
+  }
+  if(req.url==='/api/findmypart/readiness'){
+   readinessCalls++;
+   res.writeHead(200,{'content-type':'application/json'});
+   res.end(JSON.stringify({schema:'evercraft.findmypart.intake-readiness.v1',
+    intake_available:true,payment_ready:false,payment_verified:false}));
+   return;
+  }
+  res.writeHead(500);res.end();
+ });
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ t.after(()=>new Promise(resolve=>server.close(resolve)));
+ const url='http://127.0.0.1:'+server.address().port+'/findmypart/';
+ const result=await waitForFindMyPartService(url,{attempts:8,delayMs:5});
+ assert.deepEqual(result,{ok:true,proof:'local_buyer_page_and_private_intake'});
+ assert.equal(pageCalls,3);
+ assert.equal(readinessCalls,1);
+});
+
+test('private intake with no writable/ready notification route fails closed',async(t)=>{
+ const server=createServer((req,res)=>{
+  if(req.url==='/findmypart/'){
+   res.writeHead(200,{'content-type':'text/html'});
+   res.end('<title>FindMyPart</title><form id="part-request-form"></form><script src="/findmypart/app.mjs"></script>');
+  }else{
+   res.writeHead(200,{'content-type':'application/json'});
+   res.end(JSON.stringify({schema:'evercraft.findmypart.intake-readiness.v1',
+    intake_available:false,payment_ready:false,payment_verified:false}));
+  }
+ });
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ t.after(()=>new Promise(resolve=>server.close(resolve)));
+ const url='http://127.0.0.1:'+server.address().port+'/findmypart/';
+ const result=await waitForFindMyPartService(url,{attempts:2,delayMs:5});
+ assert.deepEqual(result,{ok:false,reason:'private_intake_not_ready'});
+ assert.deepEqual(await waitForFindMyPartService(url,{attempts:1,requireIntake:false}),
+  {ok:true,proof:'local_buyer_page'});
+});
+test('private child folder does not alter unsafe existing directories or symbolic links',()=>{
+ const root=temp();const uid=process.getuid(),gid=process.getgid();
+ try{
+  fs.mkdirSync(path.join(root,'alert-outbox'),{mode:0o700});
+  ensurePrivateIntakeDirectory(root,'alert-outbox',uid,gid);
+  assert.equal(fs.statSync(path.join(root,'alert-outbox')).mode&0o077,0);
+  fs.mkdirSync(path.join(root,'alert-receipts'),{mode:0o755});
+  assert.throws(()=>ensurePrivateIntakeDirectory(root,'alert-receipts',uid,gid),
+   /private_child_directory_unsafe/);
+  assert.throws(()=>ensurePrivateIntakeDirectory(root,'../../bad',uid,gid),
+   /invalid_private_child/);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
