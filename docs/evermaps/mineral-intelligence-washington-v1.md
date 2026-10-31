@@ -142,3 +142,10 @@ The older WDFW Protected Lands layer (PHS_PSNERP/MapServer/27) belongs to a Puge
 
 Reference service scope: https://geodataservices.wdfw.wa.gov/arcgis/rest/services/ApplicationServices/PHS_PSNERP/MapServer
 Statewide PHS public service: https://geodataservices.wdfw.wa.gov/arcgis/rest/services/PHSOnTheWeb/PHSOnTheWebPublic/MapServer
+
+## Verified-polygon sample (bounded, **not all resources**)
+The script `systemia/evermaps/planning-polygon-sample-cli.mjs` loads the complete source-hashed Grant WGS import, then deterministically selects **two polygons by smallest source OBJECTID** in each WGS class: Demonstrated, Inferred, Speculative, and Not a Resource. This is a biased engineering validation sample, **not a statistically representative selection, a prospect ranking, or a parcel recommendation**.
+
+The script transforms those eight WGS GeoJSON polygon rings into publisher-native ArcGIS polygon geometry, including ring orientation and holes, then sends a read-only `returnCountOnly=true` ArcGIS POST query to three separate publisher layers per polygon. Queries request *only* source feature counts, never landowner data, PHS species names or original source geometries. Each source independently retains unavailable vs zero vs counted status; large polygons are held rather than silently generalized. The resulting `grant-polygon-planning-sample-receipt.json` is retained in the CI evidence artifact.
+
+A publisher-reported geometry intersection merely establishes that some source shapes overlap the uploaded historical WGS polygon. It **does not establish coverage proportion, current zoning, physical habitat presence, legal exclusion or clearance, operating mines, mineral rights, ownership or economics.** WDFW PHS public geometries may be section- or township-generalized, and unobserved habitat is not absent. Full 1,161-resource screening requires additional independent geometry/legality review.

@@ -85,6 +85,11 @@ jobs:
         env:
           EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
         run: node systemia/evermaps/planning-context-cli.mjs
+      - name: Bounded real WGS polygon intersection sample (zoning, DNR, PHS)
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/planning-polygon-sample-cli.mjs
       - name: Fetch official WA DNR permit points and calculate geographic overlay
         continue-on-error: true
         env:
