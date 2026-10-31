@@ -1,0 +1,33 @@
+name: OTG V32 Opening Speech Word Integrity (private)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/onthego-bella-native-voice-20261026
+    paths:
+      - systemia/media-studio/on-the-go-v32-word-integrity.py
+      - .github/workflows/otg-v32-opening-integrity.yml
+permissions:
+  contents: read
+jobs:
+  synth-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Native Bella and speech recognition tooling
+        run: |
+          timeout 75s sudo apt-get update -qq || echo 'apt metadata timed out'
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install 'kokoro==0.9.4' 'soundfile>=0.12,<1' 'faster-whisper==1.2.1'
+      - name: Full opening take and independent word transcription
+        run: python systemia/media-studio/on-the-go-v32-word-integrity.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otg-v32-bella-opening-complete-word-verified
+          path: v32-opening-word-integrity/
+          retention-days: 7
+          if-no-files-found: error
