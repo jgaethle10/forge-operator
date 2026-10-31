@@ -41,3 +41,5 @@ jobs:
         run: node --test systemia/saban/fenced-local-scheduler.test.mjs
       - name: Verify fresh signed micro-work result from real localhost NodeSeed
         run: node --test systemia/saban/signed-microseed-execution.test.mjs
+      - name: Prove signed NodeSeed evidence flows through actual Saban scheduler and rejects tampering
+        run: node --test systemia/saban/fenced-signed-node-scheduler.test.mjs
