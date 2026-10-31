@@ -7,6 +7,7 @@ on:
       - 'public/worlds/perception-lab/**'
       - 'tests/spatial-perception.test.mjs'
       - 'tests/spatial-audit.test.mjs'
+      - 'tests/spatial-viewport.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
   push:
     paths:
@@ -15,6 +16,7 @@ on:
       - 'public/worlds/perception-lab/**'
       - 'tests/spatial-perception.test.mjs'
       - 'tests/spatial-audit.test.mjs'
+      - 'tests/spatial-viewport.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
 jobs:
   core-tests:
@@ -27,4 +29,4 @@ jobs:
         with:
           node-version: '22'
       - name: Stereo geometry and consumer boundary tests
-        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs
+        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs
