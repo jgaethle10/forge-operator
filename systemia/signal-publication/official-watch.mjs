@@ -14,6 +14,11 @@ export const OFFICIAL_SOURCES = Object.freeze([
     url: 'https://public.srs.gov/2026/10/savannah-river-site-emergency-response-event-news-release-3/',
     assertions: ['Site Area Emergency at 5:07 p.m.', 'terminated at 9:45 p.m.', 'no detectable levels of contamination']
   }
+  ,{
+    id: 'srs-1',
+    url: 'https://public.srs.gov/2026/10/savannah-river-site-emergency-response-event/',
+    assertions: ['An event is in progress', 'no indication of a consequence beyond the Savannah River Site boundaries']
+  }
 ]);
 export const ARCHIVE_URL = 'https://public.srs.gov/news-release-archive/';
 const KNOWN_RELEASE_PATHS = new Set([
