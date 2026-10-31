@@ -73,3 +73,21 @@ The offline HTML uses original SVG files **only when their exact file paths are 
 The renderer rejects SkyOps, RIVET and AliEV promotional entries, duplicate workstream keys, repeated logo file paths across separate brands, missing verified assets, and attempts to set the reviewed list to published. The status labels use plain subdued language rather than colored warning hierarchies; no false color legend is created.
 
 `--public` **deliberately fails**. Public rendering is not supported until an independently checked approval manifest with rights, availability, ownership, and editorial signoff is implemented. No scheduler or existing GitHub publication job is authorized by this file.
+
+## Founding brand standards: source governance
+
+The original **June 2026 Evercraft Brand Standards Manual v1.0** is an internal, confidential visual reference. It specifies an institutional ground of Core Black (#0B0B0B), Titanium (#B7BDC5) and a restrained Champagne Gold (#B79A56), with Electric Ice Blue (#4FB8FF) reserved for technology-facing contexts. The described original mark uses three ascending forms with an open continuity arc. The brochure is not an approved vector asset; its artwork must **not** be traced, hallucinated, restyled, or declared the final mark. These decisions are tracked as machine-readable review rules in [design-governance.v1.json](./design-governance.v1.json).
+
+An unverified identity gets a **textual Evercraft endorsement**, not a fabricated E logo or someone else's product mark. Verified child marks may preserve their individual palettes; the institutional parent palette is not a demand to erase child brand identities.
+
+## Existing discovery exposure: read-only audit
+
+The older discovery surface still contains partner-held names. On October 31, a direct source check found the following string mentions (not distinct products):
+
+| Discovery file | SkyOps Parking | AliEV | RIVET |
+|---|---:|---:|---:|
+| `public/.well-known/evercraft-products.json` | 3 | 7 | 12 |
+| `registry/public-products.json` | 5 | 6 | 0 |
+| `registry/catalog.json` | 3 | 7 | 6 |
+
+These are **source text references**, not evidence of current live website exposure or independent buyers. Do not create new promotional material from those records. Run `node scripts/brand/audit-public-discovery-exposures.mjs` for a broader read-only snapshot; `--strict` flags the still-unresolved legacy references. This draft deliberately does **not** rewrite or delete older public discovery assets without a reviewed generator-level fix and rights check.
