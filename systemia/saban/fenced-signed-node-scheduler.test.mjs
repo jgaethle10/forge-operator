@@ -37,7 +37,7 @@ async function request(route,options){
     },body:JSON.stringify(options.body)
   });
   const body=await response.json();
-  assert.equal(response.status,200,JSON.stringify(body));
+  assert.equal(response.status,route==='/v1/leases'?201:200,JSON.stringify(body));
   return body;
 }
 async function scenario(name,malform=false){
