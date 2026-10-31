@@ -45,3 +45,15 @@ test("Fallen showcase uses the studio dark-and-gold palette, not a competing blu
  assert.doesNotMatch(landing,/#102c38,#1b5b62|#307a80|#d5fffb25/);
  assert.match(landing,/This dark editorial study is not the commercial itself/);
 });
+
+
+test("iPhone-sized layout uses intrinsically shrinkable grid tracks and a bounded poster",()=>{
+ assert.match(landing,/\.two\{[^}]*grid-template-columns:minmax\(0,1\.05fr\) minmax\(0,\.95fr\)/);
+ assert.match(landing,/\.two>\*\{min-width:0;max-width:100%\}/);
+ assert.match(landing,/\.poster\{[^}]*width:100%;max-width:100%;min-width:0/);
+ assert.match(landing,/@media\(max-width:800px\)\{[^}]*\.two\{grid-template-columns:minmax\(0,1fr\)/);
+ assert.match(landing,/\.poster\{aspect-ratio:auto;min-height:285px\}/);
+ assert.match(landing,/\.poster strong\{[^}]*overflow-wrap:break-word/);
+ assert.match(landing,/\.poster span,\.poster small\{overflow-wrap:anywhere/);
+ assert.doesNotMatch(landing,/overflow-x:hidden|overflow-x:clip/); // fix actual sizing, never mask it
+});
