@@ -125,7 +125,7 @@ Official source: https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Activ
 A new read-only metadata and COUNT-ONLY service probe reads three independent official GIS layers:
 - Grant County unincorporated zoning published in 2018, https://services2.arcgis.com/hQZvdtFxRzJpMtdS/ArcGIS/rest/services/Zoning/FeatureServer/0. **Not verified 2026 zoning law**; municipal jurisdictions may differ.
 - WA DNR managed land parcels, https://gis.dnr.wa.gov/site3/rest/services/Public_Boundaries/WADNR_PUBLIC_Cadastre_OpenData/FeatureServer/6, with mixed parcel/easement/lease interests and incomplete subsets.
-- WDFW protected lands, https://geodataservices.wdfw.wa.gov/arcgis/rest/services/ApplicationServices/PHS_PSNERP/MapServer/27, a single mapped layer that is **not** an exhaustive inventory of protected land.
+- WDFW public Priority Habitats and Species polygons, https://geodataservices.wdfw.wa.gov/arcgis/rest/services/PHSOnTheWeb/PHSOnTheWebPublic/MapServer/3. This is public habitat-observation context with generalized locations and incomplete survey coverage, **not** a legal protected-land exclusion, species absence, or clearance. Do not retrieve species-level records in this pilot.
 
 The probe requires WGS source integrity and uses the *regional WGS import bounding envelope*. It returns only source availability and counts of features meeting a bounding-envelope spatial query. This is NOT polygon-level zoning, environmental clearance, title, access or authorization to mine. No parcel owners or contact lists are retrieved. Source error or zero count never unlocks an eligibility gate.
 
@@ -136,3 +136,9 @@ Run after the full WGS import: `node systemia/evermaps/planning-context-cli.mjs`
 The `research-source-health-cli.mjs` command reads the **current-run** full WGS import, dossier, land-context, planning-context, permit-point overlay and WGS study-spatial receipts. It emits `source-health-manifest.json` with independently labeled statuses. An upstream failed source such as WA DNR ArcGIS `404 Service not found` is a `research_source_dependency_hold` and fails the CI research-import job while still preserving receipts through the unconditional artifact upload. The Node contract tests may remain green independently.
 
 Source-health completion is **never** legal permission, approved mining, mineral reserves or environmental clearance. No previous observed 42-record permit scan is substituted for a missing current service. If a public layer is unavailable, keep its dossier gate unverified and use agency-maintained dataset downloads only after separate source/version/terms checks.
+
+## 2026-10-30 source-scope correction
+The older WDFW Protected Lands layer (PHS_PSNERP/MapServer/27) belongs to a Puget Sound **nearshore ecosystem project dating to circa 2006**. Its Grant envelope count of 0 was a **geographically inapplicable source selection**, not evidence of Grant County being free from protected lands. That source is retired from this pilot and replaced by WDFW's statewide public PHS polygons (layer 3). Even a zero result on statewide PHS would never prove no habitat, wetlands, tribal lands or protected areas. This correction supersedes prior mentions of WDFW 'protected land' 0 in the research receipts.
+
+Reference service scope: https://geodataservices.wdfw.wa.gov/arcgis/rest/services/ApplicationServices/PHS_PSNERP/MapServer
+Statewide PHS public service: https://geodataservices.wdfw.wa.gov/arcgis/rest/services/PHSOnTheWeb/PHSOnTheWebPublic/MapServer

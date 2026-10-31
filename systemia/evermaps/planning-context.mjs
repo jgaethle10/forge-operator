@@ -7,9 +7,10 @@ export const SOURCES=Object.freeze({
  dnr:{url:'https://gis.dnr.wa.gov/site3/rest/services/Public_Boundaries/WADNR_PUBLIC_Cadastre_OpenData/FeatureServer/6',
   fields:['OBJECTID','PARCEL_TYPE_CD','PARCEL_SYST_ID'],vintage:'WA DNR live metadata; subsets incomplete',
   authority:'Washington DNR',note:'Mapped DNR interests include ownership, easements, leases and other categories. No permission or title proof.'},
- protected:{url:'https://geodataservices.wdfw.wa.gov/arcgis/rest/services/ApplicationServices/PHS_PSNERP/MapServer/27',
-  fields:['OBJECTID','Id'],vintage:'WDFW public GIS current source check',
-  authority:'Washington DFW',note:'Specific protected-lands layer, not a comprehensive exclusion or land eligibility assessment.'}
+ habitat:{url:'https://geodataservices.wdfw.wa.gov/arcgis/rest/services/PHSOnTheWeb/PHSOnTheWebPublic/MapServer/3',
+  fields:['OBJECTID','Display_Resolution_Desc'],vintage:'WDFW statewide public Priority Habitats and Species public polygons',
+  authority:'Washington Department of Fish and Wildlife',
+  note:'Public PHS habitat observation polygons with variable location generalization and incomplete survey coverage. Not a protected-land boundary, project approval, clearance or absence-of-species result. Do not disclose or collect species-level details.'}
 });
 export function layerMetadataUrl(kind){
  if(!SOURCES[kind])throw Error('Unknown planning layer');

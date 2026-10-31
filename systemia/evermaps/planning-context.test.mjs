@@ -44,11 +44,18 @@ test('coarse counts never confer title or zoning permission',async()=>{
 });
 test('zero count, source errors and source tampering remain non-clearance',async()=>{
  const zero=await probeGrantPlanning({source,receipt,fetchImpl:fake(null,true).fetchImpl});
- assert.equal(zero.results.protected.envelope_matching_features,0);
+ assert.equal(zero.results.habitat.envelope_matching_features,0);
  assert.equal(zero.environmental_clearance_verified,false);
- const err=await probeGrantPlanning({source,receipt,fetchImpl:fake('protected').fetchImpl});
+ const err=await probeGrantPlanning({source,receipt,fetchImpl:fake('habitat').fetchImpl});
  assert.equal(err.state,'coarse_sources_partial');
- assert.equal(err.results.protected.envelope_matching_features,null);
+ assert.equal(err.results.habitat.envelope_matching_features,null);
  const tampered={type:'FeatureCollection',features:[{...source.features[0],properties:{OBJECTID:2}}]};
  await assert.rejects(()=>probeGrantPlanning({source:tampered,receipt,fetchImpl:fake().fetchImpl}),/mismatch/);
+});
+
+test('Grant habitat context uses the statewide PHS public polygons, not the Puget Sound nearshore study',()=>{
+ const src=SOURCES.habitat;
+ assert.match(src.url,/PHSOnTheWeb\/PHSOnTheWebPublic\/MapServer\/3$/);
+ assert.doesNotMatch(src.url,/PSNERP/);
+ assert.match(src.note,/not a protected-land boundary/i);
 });
