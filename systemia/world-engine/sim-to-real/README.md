@@ -85,3 +85,21 @@ node --import tsx systemia/world-engine/sim-to-real/native-engine-proof.mjs --se
 The native runner cross-checks each recorded sample's position and sphere-overlap contacts against a separate geometric oracle, tests native world snapshot integrity, native deterministic replay, checkpoint restoration and input-ledger order invariance. Tampered episode / proof digests are rejected. Output claims are limited to **modeled synthetic data and sampled positions**. Intervening (unrecorded) ticks are not full-fidelity rover motion, and these tests do not establish continuous collision avoidance, emergency stopping, control quality or hardware safety.
 
 Hardware authority remains absent. Future work is to record every simulated tick, then test movement by native dynamic inputs rather than teleports, before considering any physical system.
+
+
+## RC04: native velocity-driven motion, not teleport replay
+
+RC04 uses the **actual** `EvercraftWorldRuntime` to integrate a simple dynamic sphere representing a planar rover proxy. A simulated controller submits bounded tick-bound `set_velocity` inputs. A second moving-obstacle entity receives modeled native velocity inputs. No `teleport` inputs are emitted. Every tick is recorded with the requested command reason, sampled velocity, native contacts, obstacle positions, and an independent relative line-segment sweep of the rover against each obstacle. Native deterministic replay and (when the episode crosses its configured midpoint) snapshot-restoration equivalence are checked against the actual final snapshot digest.
+
+This **does not** model wheels, tire friction, steering dynamics, physical robot actuation, SLAM, independent localization or certified stop behavior. The `known-corridor` controller follows *preselected waypoints* with a synthetic freshness-aware hold. `blind` serves as a deliberately weaker baseline; neither controller is advertised as robust autonomy. The independent sweep is a simple mathematical oracle over two tick endpoints, not a continuous collision-physics solver or guaranteed safety system. The sampled synthetic sensor can fail; queued velocity commands may still move after a hold request.
+
+Run after dependencies are installed:
+
+```sh
+node --import tsx --test systemia/world-engine/sim-to-real/native-motion-rc04.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/native-motion-rc04.mjs --seeds 4 --out /tmp/evercraft-native-rc04.json
+```
+
+A valid `evercraft.sim-to-real.native-motion.rc04` proof includes full-tick frames, exactly ordered native input ledger, known simulated provenance, terminal outcome (arrived / collision / geofence / timeout), native snapshot/replay digests, and a SHA-256 integrity check. Digests are not signatures. For genuine hardware qualification, require a separate physics-model calibration, independent safety controller, command expiration, e-stop, hardware-in-the-loop tests, and separately sourced physical telemetry before considering actuator integration.
+
+**Release:** Review-only draft PR; no production merge, external job dispatch or robot commands.
