@@ -81,8 +81,9 @@ async function viewport(send,{width,height,mobile,label,out}){
   const overviewFile=path.join(out,'work-saban-'+label+'-overview.png');
   await fs.writeFile(overviewFile,Buffer.from(overview.data,'base64'));
   assert((await fs.stat(overviewFile)).size>8000,'Overview screenshot unexpectedly empty');
-  const motion=await js(send,"(async()=>{const ui=window.WorkSaban3D;const initial=ui.getRenderedCamera().panX;ui.focusAgent('writer');const target=ui.getCamera().panX;const before=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,100));const midway=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,1100));return {initial,target,before,midway,after:ui.getRenderedCamera().panX,follow:typeof ui.toggleFollow==='function'};})()");
+  const motion=await js(send,"(async()=>{const ui=window.WorkSaban3D;const initial=ui.getRenderedCamera().panX;document.querySelector('.spatial-agent[data-agent="writer"]').click();const target=ui.getCamera().panX;const before=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,100));const midway=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,1100));return {initial,target,before,midway,after:ui.getRenderedCamera().panX,follow:typeof ui.toggleFollow==='function'};})()");
   assert(motion.follow,'Follow mode missing');
+  assert.equal(await js(send,"document.getElementById('office-agent-name').textContent"),'Communications','visual focus and inspector selection must agree');
   assert(Math.abs(motion.target-motion.initial)>5,'Focus has no travel');
   assert(Math.abs(motion.midway-motion.target)<Math.abs(motion.before-motion.target),'Camera did not ease');
   assert(Math.abs(motion.after-motion.target)<1,'Camera did not converge');
