@@ -10,5 +10,15 @@
 <form id="search-form"><input id="part-query" type="search" maxlength="180" required minlength="3" autocomplete="off" placeholder="e.g. Ford 3600 hydraulic pump" aria-label="Part or equipment to search"><button type="submit">Search parts</button></form>
 <p class="hint">This preview opens independent supplier searches. It does not verify inventory, prices, fitment or supplier identity.</p>
 <section id="results" hidden aria-live="polite"><h2>Search these sources</h2><p id="query-description"></p><div id="source-results" class="sources"></div><p><button type="button" id="save-search" hidden>Save search brief</button></p><p class="hint">Results on external websites are supplier claims, not verified FindMyPart matches. Check exact OEM number, measurements, model year and seller before ordering.</p></section>
+<section class="panel"><h2>Compare possible parts</h2>
+<p>Found a supplier listing? Add it to your shortlist. Entries are buyer supplied and unverified.</p>
+<form id="candidate-form" style="display:grid;gap:10px">
+<input type="url" id="candidate-url" placeholder="Supplier listing URL (https://...)" required aria-label="Listing URL">
+<input id="candidate-part" maxlength="120" placeholder="Advertised part number (optional)" aria-label="Advertised part number">
+<input id="candidate-price" maxlength="80" placeholder="Advertised price (optional)" aria-label="Advertised price">
+<input id="candidate-notes" maxlength="500" placeholder="Compatibility questions or notes" aria-label="Compatibility notes">
+<button type="submit">Save candidate</button></form>
+<p id="candidate-status" role="status" aria-live="polite"></p><div id="candidate-list"></div>
+</section>
 <section class="panel"><h2>Still can't find it?</h2><p>We also investigate discontinued and difficult parts. Request help only when you need it.</p><a class="button" href="/findmypart/#request">Ask for help</a></section>
 </main><script type="module" src="/findmypart/search/app.mjs"></script></body></html>
