@@ -11,6 +11,7 @@ on:
       - 'tests/findmypart-saban-recovery-gauntlet.test.mjs'
       - 'tests/findmypart-saban-scorecard.test.mjs'
       - 'tests/findmypart-saban-benchmark.test.mjs'
+      - 'tests/findmypart-provider-ingest.test.mjs'
       - 'scripts/findmypart-saban-benchmark.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
@@ -79,7 +80,8 @@ jobs:
               tests/findmypart-recovery-links.test.mjs \
               tests/findmypart-saban-recovery-gauntlet.test.mjs \
               tests/findmypart-saban-scorecard.test.mjs \
-              tests/findmypart-saban-benchmark.test.mjs
+              tests/findmypart-saban-benchmark.test.mjs \
+              tests/findmypart-provider-ingest.test.mjs
             echo "::endgroup::"
           done
       - name: Write Saban reproducible benchmark receipt
@@ -100,6 +102,7 @@ jobs:
           node --check public/findmypart/search/recovery-links.mjs
           node --check systemia/findmypart/recovery-engine.mjs
           node --check systemia/findmypart/saban-scorecard.mjs
+          node --check systemia/findmypart/provider-ingest.mjs
       - name: Existing owned service routing regression
         run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Existing native payment offer routing regression
