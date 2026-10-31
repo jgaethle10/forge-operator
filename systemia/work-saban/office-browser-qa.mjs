@@ -71,7 +71,7 @@ async function viewport(send,{width,height,mobile,label,out}){
     if(ready)break;
   }
   assert(ready,'Office scripts did not load');
-  const loaded=await js(send,"(()=>{document.getElementById('office-details').open=true;document.getElementById('office-3d-toggle').click();return {rig:!!window.EvercraftObserverCamera,desks:document.querySelectorAll('.spatial-agent').length,shown:document.getElementById('spatial-viewport').hidden===false};})()");
+  const loaded=await js(send,"(()=>{document.getElementById('office-details').open=true;if(document.getElementById('spatial-viewport')?.hidden===true)document.getElementById('office-3d-toggle').click();return {rig:!!window.EvercraftObserverCamera,desks:document.querySelectorAll('.spatial-agent').length,shown:document.getElementById('spatial-viewport').hidden===false};})()");
   assert(loaded.rig,'Owned camera did not load');
   assert.equal(loaded.desks,6);
   assert(loaded.shown,'CSS3D office remained hidden');
