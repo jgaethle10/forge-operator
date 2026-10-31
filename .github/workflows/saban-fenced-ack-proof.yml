@@ -6,6 +6,8 @@ on:
       - 'systemia/saban/fenced-ack-journal*'
       - 'systemia/saban/fenced-passport-review*'
       - 'systemia/saban/fenced-local-scheduler*'
+      - 'systemia/saban/signed-microseed-execution*'
+      - 'systemia/compute/runtime-node.mjs'
       - 'systemia/saban/scheduler.mjs'
       - '.github/workflows/saban-fenced-ack-proof.yml'
   push:
@@ -37,3 +39,5 @@ jobs:
         run: node --test systemia/saban/fenced-passport-review.test.mjs
       - name: Run real Saban scheduler through strict local fenced candidate and crash windows
         run: node --test systemia/saban/fenced-local-scheduler.test.mjs
+      - name: Verify fresh signed micro-work result from real localhost NodeSeed
+        run: node --test systemia/saban/signed-microseed-execution.test.mjs
