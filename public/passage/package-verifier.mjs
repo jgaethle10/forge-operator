@@ -61,3 +61,11 @@ export async function verifySignedPackage(envelopeJson,trustedPublicKeyPem,nowMs
  const fingerprint=new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',der));
  return {metadata:data,text,fingerprint_sha256:[...fingerprint].map(x=>x.toString(16).padStart(2,'0')).join('')};
 }
+export function confirmPublisherFingerprint(verification,expected){
+ if(typeof expected!=='string')throw Error('Independent publisher fingerprint is required');
+ const cleaned=expected.replace(/[:\s]/g,'').toLowerCase();
+ assert(/^[a-f0-9]{64}$/.test(cleaned),'Enter a 64-character SHA-256 fingerprint obtained separately');
+ assert(verification&&typeof verification.fingerprint_sha256==='string','No successful signature verification');
+ assert(cleaned===verification.fingerprint_sha256,'Independent publisher fingerprint does not match this key');
+ return verification;
+}

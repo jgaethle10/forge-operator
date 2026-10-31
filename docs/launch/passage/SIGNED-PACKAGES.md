@@ -54,3 +54,22 @@ The temporary folder intentionally sits **outside the repository** to reduce the
 The browser test additionally verifies a package in a real Chrome engine using a generated ephemeral key, rejects a tampered package and checks that unverified files cannot be saved. Screenshots and mobile emulation do not substitute for native iOS and Android tests.
 
 No public deployment or safety claims until an independent cryptographic review, editor-key ownership policy, jurisdictional considerations, physical-device offline validation, authorized distribution rights, incident response and correction process are established.
+
+## Two-device simulated handoff acceptance (v0.3 lab)
+
+The browser acceptance test uses **two isolated Chrome browser contexts** (publisher and recipient) with separate storage and service workers. The recipient preloads the offline app shell, disconnects from the network, and then receives original demonstration material through a simulated file carriage event (a local file picker). A separately supplied public key and independent expected fingerprint are required before saving verified text. A wrong fingerprint must fail and disable export.
+
+This is a **simulation, not a test involving two physical devices**. It proves neither key distribution authenticity nor secure transport, resistance to censorship, protection from inspection, or physical device isolation. Both contexts run on the CI host. No private key is sent to the receiving context.
+
+### Physical operator checklist (not yet completed)
+
+1. Use original demo content, non-sensitive devices, and an authorized person at each device.
+2. Preload Passage on the recipient's browser, then disconnect both Wi-Fi and cellular networking. Check that the cached reading room and verification screen still open.
+3. Independently authenticate the publisher's Ed25519 public-key SHA-256 fingerprint through a trusted channel established **before** receiving the package. Never trust the file or a companion note to certify its own publisher key.
+4. Hand-carry the signed JSON file by an ordinary user-approved file-transfer method. Supply the public key. Automatic discovery, LAN hosting, radio, proxies, stealth delivery or device pairing are not implemented.
+5. Enter the independently obtained fingerprint, verify while offline, save the plain-text demo article, and check its contents.
+6. Alter the content, swap the key, enter a different fingerprint, and test expiry. Each should be rejected without releasing verified text.
+7. Retain only technical receipt fields such as browser version, test case and observed result, not identities or document contents.
+8. Repeat on actual iOS Safari and Android Chrome. Document browser support, local file exposure, and offline persistence after a restart.
+
+**No-go for high-risk distribution** until independent safety, legal, editorial, and key-governance reviews are complete.

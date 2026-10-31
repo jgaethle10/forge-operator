@@ -64,6 +64,9 @@
         <input id="package-file" type="file" accept=".json,application/json">
         <label for="trusted-key-file">Independently trusted public key (.pem)</label>
         <input id="trusted-key-file" type="file" accept=".pem,text/plain">
+        <label for="expected-fingerprint">Publisher key fingerprint from a separate trusted channel (SHA-256)</label>
+        <input id="expected-fingerprint" type="text" inputmode="text" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="96" placeholder="64 hexadecimal characters" aria-describedby="fingerprint-help">
+        <p id="fingerprint-help" class="package-warning">Get this fingerprint independently from the publisher. Do not copy a fingerprint supplied alongside the package or an unknown key.</p>
         <button id="verify-package" class="button primary" type="button">Verify locally ↗</button>
         <p id="verification-status" role="status" aria-live="polite">No file has been verified.</p>
         <div id="verification-details" hidden></div>

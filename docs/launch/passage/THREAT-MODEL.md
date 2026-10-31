@@ -35,3 +35,6 @@ Go/no-go: No public recommendation for readers at heightened risk until all appl
 
 ## Signed package limitations (v0.2)
 The Ed25519 signature authenticates bytes against a public key the recipient already independently trusts. A bundled public key never establishes trust, a publisher name in metadata is merely a claim, and a SHA-256 digest alone does not authenticate a publisher. Each package has an explicit short validity period, plain-text rights label, content digest, and strict size/format boundaries. Expired or altered packages are rejected by the local verifier. Files remain unencrypted and openly inspectable on the device. Offline verification depends on reasonably accurate device clocks and **cannot check revocations, publisher compromises, correction notices, or current claims**. Do not use the sample material for real high-risk distribution until independent review.
+
+## v0.3 independent fingerprint requirement
+The browser verifier now requires the 64-hex SHA-256 fingerprint of the selected public key, obtained separately from the package. Signature and digest success alone no longer allows downloading verified text. This cannot prove the user actually used an independent channel, nor does a two-browser-context CI simulation establish real two-device security. No automatic network carriage has been built.

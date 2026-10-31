@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {generateKeyPairSync} from 'node:crypto';
 import {issuePackage,checkPackage} from '../scripts/passage-signed-package.mjs';
-import {verifySignedPackage,MAX_TEXT_BYTES} from '../public/passage/package-verifier.mjs';
+import {verifySignedPackage,MAX_TEXT_BYTES,confirmPublisherFingerprint} from '../public/passage/package-verifier.mjs';
 const article={id:'demo-article',title:'Original educational demonstration',edition:'2026-10-30',category:'Media literacy',
  description:'Example only',rights:'Original Evercraft demonstration text. Broad redistribution rights have not been approved.',
  sections:[{heading:'Read carefully',paragraphs:['A small fact.','Never mistake a signature for a truth guarantee.']}],sources:[]};
@@ -48,4 +48,11 @@ test('size limits and noncanonical base64 are enforced',async()=>{
 test('fake signature fails',async()=>{
  const p=JSON.parse(issue());p.signature_base64=Buffer.alloc(64).toString('base64');
  await assert.rejects(()=>verifySignedPackage(JSON.stringify(p),keys.publicPem,Date.parse(now)),/Signature failed/);
+});
+
+test('trust anchor must independently match a known publisher fingerprint',async()=>{
+ const checked=await verifySignedPackage(issue(),keys.publicPem,Date.parse('2026-10-31T00:00:00Z'));
+ assert.equal(confirmPublisherFingerprint(checked,checked.fingerprint_sha256),checked);
+ assert.throws(()=>confirmPublisherFingerprint(checked,'f'.repeat(64)),/does not match/);
+ assert.throws(()=>confirmPublisherFingerprint(checked,''),/64-character/);
 });

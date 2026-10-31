@@ -104,6 +104,49 @@ test("Passage Chrome browser acceptance: online, offline and mobile",async t=>{
    assert.equal(await page.locator("#save-verified-file").isVisible(),false);
   }finally{await context.close()}
  });
+ await t.test("two isolated device profiles: recipient verifies carried bytes with no network",async()=>{
+  // Browser contexts share no cookies, storage or service workers. The file carriage is simulated.
+  const publisherDevice=await browser.newContext();
+  const readerDevice=await browser.newContext({acceptDownloads:true});
+  try{
+   const publisherPage=await publisherDevice.newPage();
+   const readerPage=await readerDevice.newPage();
+   await publisherPage.goto(base);await readerPage.goto(base);
+   await waitForLibrary(publisherPage);await waitForLibrary(readerPage);
+   await readerPage.evaluate(async()=>{
+    await navigator.serviceWorker.ready;
+    if(!navigator.serviceWorker.controller){
+     await new Promise((resolve,reject)=>{
+      const timeout=setTimeout(()=>reject(Error("Offline recipient service worker did not control page")),10000);
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{clearTimeout(timeout);resolve()},{once:true});
+     });
+    }
+   });
+   const {privateKey,publicKey}=generateKeyPairSync("ed25519");
+   const catalog=JSON.parse(await readFile(join(root,"passage/catalog.json"),"utf8"));
+   const privatePem=privateKey.export({format:"pem",type:"pkcs8"}).toString();
+   const publicPem=publicKey.export({format:"pem",type:"spki"}).toString();
+   const independentFingerprint=createHash("sha256").update(publicKey.export({format:"der",type:"spki"})).digest("hex");
+   const carriedPackage=issuePackage({article:catalog.articles[1],privateKeyPem:privatePem,issuedAt:new Date(),ttlDays:2});
+   await readerDevice.setOffline(true);
+   await readerPage.reload({waitUntil:"domcontentloaded"});await waitForLibrary(readerPage);
+   assert.equal(await readerPage.evaluate(()=>navigator.onLine),false,"reader browser is disconnected");
+   await readerPage.locator("#package-file").setInputFiles({name:"carried-package.json",mimeType:"application/json",buffer:Buffer.from(carriedPackage)});
+   await readerPage.locator("#trusted-key-file").setInputFiles({name:"publisher-key.pem",mimeType:"text/plain",buffer:Buffer.from(publicPem)});
+   await readerPage.locator("#expected-fingerprint").fill(independentFingerprint);
+   await readerPage.locator("#verify-package").click();
+   await readerPage.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("Signature, content and independent fingerprint match"));
+   assert.equal(await readerPage.locator("#save-verified-file").isVisible(),true,"verified text available while disconnected");
+   const download=readerPage.waitForEvent("download");
+   await readerPage.locator("#save-verified-file").click();
+   const item=await download;
+   assert.match(await readFile(await item.path(),"utf8"),/Build a small offline reading shelf/);
+   await readerPage.locator("#expected-fingerprint").fill("a".repeat(64));
+   await readerPage.locator("#verify-package").click();
+   await readerPage.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("NOT VERIFIED"));
+   assert.equal(await readerPage.locator("#save-verified-file").isVisible(),false,"wrong fingerprint disables export");
+  }finally{await readerDevice.close();await publisherDevice.close()}
+ });
  await t.test("mobile-sized screen and accessible article focus",async()=>{
   const context=await browser.newContext({...devices["iPhone 13"],acceptDownloads:true});
   try{

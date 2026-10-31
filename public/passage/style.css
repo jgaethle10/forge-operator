@@ -43,3 +43,5 @@ footer{background:#133b36;color:#d1e7df;padding:32px 0}.footer-in{display:flex;j
 #verification-details p{margin:7px 0}
 .package-warning{font-size:.74rem;color:#697d74;line-height:1.7;margin:9px 0 0}
 @media(max-width:720px){.package-check{grid-template-columns:1fr;gap:17px;padding:28px 20px;margin:0 0 70px}}
+
+#expected-fingerprint{width:100%;font:600 .81rem ui-monospace,monospace;letter-spacing:.015em}
