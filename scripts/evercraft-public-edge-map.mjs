@@ -3,6 +3,7 @@ import dgram from 'node:dgram';
 import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
+import { evaluateRouterMappingEvidence } from './edge-router-mapping-evidence.mjs';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) {
@@ -179,10 +180,9 @@ async function natPmpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+      const evidence = evaluateRouterMappingEvidence(mappings, [{ mappings: result.mappings }]);
+      result.success = evidence.scope_mapping_control_ok;
+      result.diagnostic_success = evidence.diagnostic_mapping_control_ok === true;
     }
   } finally {
     socket.close();
@@ -367,10 +367,9 @@ async function upnpMap() {
         mapping_results: mapped,
       });
       {
-        const production=mapped.filter(x=>x.requested?.production);
-        const diagnostic=mapped.filter(x=>x.requested?.diagnostic);
-        result.success=production.length>0&&production.every(x=>x.success===true);
-        result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+        const evidence = evaluateRouterMappingEvidence(mappings, [{ mappings: mapped }]);
+        result.success = evidence.scope_mapping_control_ok;
+        result.diagnostic_success = evidence.diagnostic_mapping_control_ok === true;
       }
       if (result.success) {
         result.location = location;
@@ -463,10 +462,9 @@ async function pcpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+      const evidence = evaluateRouterMappingEvidence(mappings, [{ mappings: result.mappings }]);
+      result.success = evidence.scope_mapping_control_ok;
+      result.diagnostic_success = evidence.diagnostic_mapping_control_ok === true;
     }
     const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
     if (firstIp) result.external_ip = firstIp;
@@ -495,8 +493,11 @@ async function main() {
     out.ok = true;
     out.method = upnp.method;
     out.external_ip = upnp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = upnp.diagnostic_success === true;
+    const evidence = evaluateRouterMappingEvidence(mappings, out.attempts);
+    out.scope_mapping_control_ok = evidence.scope_mapping_control_ok;
+    out.production_mapping_control_ok = evidence.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = evidence.diagnostic_mapping_control_ok;
+    out.mapping_evidence_state = evidence.mapping_evidence_state;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -507,8 +508,11 @@ async function main() {
     out.ok = true;
     out.method = natpmp.method;
     out.external_ip = natpmp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = natpmp.diagnostic_success === true;
+    const evidence = evaluateRouterMappingEvidence(mappings, out.attempts);
+    out.scope_mapping_control_ok = evidence.scope_mapping_control_ok;
+    out.production_mapping_control_ok = evidence.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = evidence.diagnostic_mapping_control_ok;
+    out.mapping_evidence_state = evidence.mapping_evidence_state;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -519,20 +523,18 @@ async function main() {
     out.ok = true;
     out.method = pcp.method;
     out.external_ip = pcp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = pcp.diagnostic_success === true;
+    const evidence = evaluateRouterMappingEvidence(mappings, out.attempts);
+    out.scope_mapping_control_ok = evidence.scope_mapping_control_ok;
+    out.production_mapping_control_ok = evidence.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = evidence.diagnostic_mapping_control_ok;
+    out.mapping_evidence_state = evidence.mapping_evidence_state;
   }
 
-  out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
-  out.diagnostic_mapping_control_ok = mappings.filter(m=>m.diagnostic).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
+  const evidence = evaluateRouterMappingEvidence(mappings, out.attempts);
+  out.scope_mapping_control_ok = evidence.scope_mapping_control_ok;
+  out.production_mapping_control_ok = evidence.production_mapping_control_ok;
+  out.diagnostic_mapping_control_ok = evidence.diagnostic_mapping_control_ok;
+  out.mapping_evidence_state = evidence.mapping_evidence_state;
   console.log(JSON.stringify(out, null, 2));
   process.exit(out.ok ? 0 : 1);
 }
