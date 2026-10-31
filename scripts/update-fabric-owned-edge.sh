@@ -474,17 +474,28 @@ verify_current_runtime() {
       const h=JSON.parse(process.env.HEALTH_JSON||'{}');
       const expected=Number(process.env.EXPECTED_COUNT||0);
       const expectedRelease=String(process.env.EXPECTED_RELEASE||'').toLowerCase();
-      if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
-      if(Number(h.capability_count)!==expected) process.exit(3);
-      if(String(h.source_release_ref||'').toLowerCase()!==expectedRelease) process.exit(10);
+      // Emit only names of failed checks and safe catalog counts, not health
+      // JSON, API keys, customer details, or resident environment values.
+      const reject=(label,code)=>{
+        console.error('ERROR: Fabric health invariant '+label);
+        process.exit(code);
+      };
+      if(h.ok!==true || h.service!=='evercraft-fabric-local') reject('service_identity',2);
+      if(Number(h.capability_count)!==expected)
+        reject('capability_count_expected_'+expected+'_actual_'+Number(h.capability_count),3);
+      if(String(h.source_release_ref||'').toLowerCase()!==expectedRelease)
+        reject('source_release_ref',10);
       if(process.env.EDGE_ATTESTATION_EXPECTED==='true') {
-        if(h.edge_attestation_supported!==true) process.exit(4);
-        if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(5);
+        if(h.edge_attestation_supported!==true) reject('edge_attestation_supported',4);
+        if(h.edge_attestation_allocator_authority_exposed!==false)
+          reject('edge_attestation_allocator_authority_exposed',5);
       }
-      if(h.visual_desk_ingest_ready!==true) process.exit(6);
-      if(h.visual_desk_ingest_publication_authority!==false) process.exit(7);
-      if(h.earthworks_simulator_path!=='/earthworks') process.exit(8);
-      if(h.earthworks_simulator_authority!=='interactive_software_simulation_only') process.exit(9);
+      if(h.visual_desk_ingest_ready!==true) reject('visual_desk_ingest_ready',6);
+      if(h.visual_desk_ingest_publication_authority!==false)
+        reject('visual_desk_ingest_publication_authority',7);
+      if(h.earthworks_simulator_path!=='/earthworks') reject('earthworks_simulator_path',8);
+      if(h.earthworks_simulator_authority!=='interactive_software_simulation_only')
+        reject('earthworks_simulator_authority',9);
     " || return 9
 
   local earthworks_page=""
