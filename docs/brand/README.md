@@ -55,3 +55,21 @@ The above is a *review taxonomy*, not confirmation that all names are available 
 Source evidence: `public/research/assets/research-mark.svg`, `public/humanfilter-beta/assets/shield.svg`, `public/work-saban/brand/work-saban-mark.svg`, `public/findmypart/brand/mark.svg`, `public/mesh/ai-boardroom/crest.svg`, `registry/evercraft-network/README.md`.
 
 **Maintainer boundary:** This is an additive draft. It changes no public website, deployment, checkout, rights record, or canonical product directory.
+
+
+## Executable internal portfolio preview (October 31)
+
+The source-controlled 20-workstream review manifest lives in `docs/brand/review-workstreams.v1.json`. It is **not** the 255-record historical inventory, and it is **not** an independent inventory of 20 commercial product launches.
+
+From the repository root:
+
+```sh
+node scripts/brand/compile-review-wall.mjs --output tmp/evercraft-brand-review.html
+node --test tests/brand-identity-registry.test.mjs tests/brand-review-wall.test.mjs
+```
+
+The offline HTML uses original SVG files **only when their exact file paths are verified** in `identity-source-register.v1.json`. An identity without a verified logo gets a neutral Evercraft *letter placeholder* rather than an invented child logo. The existing public website is unchanged.
+
+The renderer rejects SkyOps, RIVET and AliEV promotional entries, duplicate workstream keys, repeated logo file paths across separate brands, missing verified assets, and attempts to set the reviewed list to published. The status labels use plain subdued language rather than colored warning hierarchies; no false color legend is created.
+
+`--public` **deliberately fails**. Public rendering is not supported until an independently checked approval manifest with rights, availability, ownership, and editorial signoff is implemented. No scheduler or existing GitHub publication job is authorized by this file.
