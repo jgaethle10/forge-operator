@@ -1,0 +1,1623 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "humanfilter-desktop-beta-rotation-20261030",
+  "product": "humanfilter",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "status": "founder_rotation_direction_received_issuer_and_provider_delivery_pending",
+  "founder_direction": "Use Evercraft Clip to rotate HumanFilter on all verified Evercraft company pages, no spam or repeated identical copy; founder message October 30 2026.",
+  "owner_campaign_direction_received": true,
+  "owner_organic_distribution_approved": true,
+  "owner_authorization_ref": "humanfilter-founder-direction:2026-10-30:clip-constant-rotation",
+  "publication_authority": false,
+  "platform_connections_verified": false,
+  "published_posts_verified": 0,
+  "product_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+  "product_status": "free_desktop_beta_v0.1.4",
+  "forbidden_claims": [
+    "Safari or iPhone app available",
+    "Android app available",
+    "universal AI-generation detection",
+    "works in native social apps",
+    "posted without provider receipts"
+  ],
+  "excluded_brand_keys": [
+    "eps",
+    "havenly-cleaning",
+    "rnb-chicken-and-soul",
+    "christmaslightsusa"
+  ],
+  "policy": {
+    "paid_spend_usd": 0,
+    "only_verified_evercraft_company_accounts": true,
+    "no_personal_automated_posting": true,
+    "max_per_platform_per_week": 2,
+    "minimum_spacing_hours": 72,
+    "never_repost_identical_copy": true,
+    "real_media_and_permissions_required": true,
+    "provider_post_and_first_comment_receipts_required": true,
+    "fail_closed_on_missing_issuer_authority": true,
+    "never_mark_published_without_remote_id_link_and_readback": true
+  },
+  "creative": {
+    "approved_shield": "public/humanfilter-beta/assets/shield.svg",
+    "actual_extension_interface": "public/humanfilter-beta/assets/popup.png",
+    "editorial_png_pack": "HumanFilter-Editorial-Launch-Graphics.zip (ChatGPT conversation, not yet uploaded into owned media storage)",
+    "video_state": "no_approved_real_demo_yet"
+  },
+  "entries": [
+    {
+      "id": "humanfilter-launch-facebook",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. \n\nPeople should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identify every unlabeled AI post.\n\nWe're interested in feedback from people actually using the free desktop beta, including what labels or site layouts it misses. The product link and manual installation instructions are in our first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-facebook",
+      "first_comment_required": true,
+      "first_comment_copy": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-facebook",
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-linkedin",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. \n\nPeople should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identify every unlabeled AI post.\n\nThis is a deliberately narrow first release. Our next improvements will be driven by measurable false positives, recognized label coverage, and feedback from people using the browser extension. The product page explains installation and limitations.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-linkedin",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-instagram",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. People should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identify every unlabeled AI post.\n\nWe're building this around choice rather than promises that aren't technically defensible. The free desktop beta and limitations are linked from the product page.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-instagram",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-x",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "x",
+      "destination": "x",
+      "proposed_channels": [
+        "x"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. People should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site cont",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-x",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-threads",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "threads",
+      "destination": "threads",
+      "proposed_channels": [
+        "threads"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. People should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identify every unlabeled AI post.\n\nWe're building this around choice rather than promises that aren't technically defensible. The launch notes include what HumanFilter does not attempt to detect and where its current desktop coverage stops.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-threads",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-bluesky",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "bluesky",
+      "destination": "bluesky",
+      "proposed_channels": [
+        "bluesky"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. People should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identi",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-bluesky",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-tiktok",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "tiktok",
+      "destination": "tiktok",
+      "proposed_channels": [
+        "tiktok"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. People should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identify every unlabeled AI post. A real browser walkthrough is still being produced; do not present a static graphic as an extension demo.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-tiktok",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-launch-youtube",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "youtube",
+      "destination": "youtube-shorts",
+      "proposed_channels": [
+        "youtube-shorts"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-10-31",
+      "angle": "launch",
+      "caption": "We've launched HumanFilter's free desktop beta. People should be able to decide how much recognized AI-labeled content and which topics they see online. HumanFilter's free desktop beta makes that decision local and reversible, with per-site controls, chosen keywords and Show once. It does not identify every unlabeled AI post. A real recorded walkthrough will follow once its on-screen results have been checked.",
+      "link_mode": "description",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=launch-youtube",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-facebook",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. \n\nHumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its limits.\n\nWe're interested in feedback from people actually using the free desktop beta, including what labels or site layouts it misses. The product link and manual installation instructions are in our first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-facebook",
+      "first_comment_required": true,
+      "first_comment_copy": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-facebook",
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-linkedin",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. \n\nHumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its limits.\n\nThis is a deliberately narrow first release. Our next improvements will be driven by measurable false positives, recognized label coverage, and feedback from people using the browser extension. The product page explains installation and limitations.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-linkedin",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-instagram",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. HumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its limits.\n\nWe're building this around choice rather than promises that aren't technically defensible. The free desktop beta and limitations are linked from the product page.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-instagram",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-x",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "x",
+      "destination": "x",
+      "proposed_channels": [
+        "x"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. HumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-x",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-threads",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "threads",
+      "destination": "threads",
+      "proposed_channels": [
+        "threads"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. HumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its limits.\n\nWe're building this around choice rather than promises that aren't technically defensible. The launch notes include what HumanFilter does not attempt to detect and where its current desktop coverage stops.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-threads",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-bluesky",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "bluesky",
+      "destination": "bluesky",
+      "proposed_channels": [
+        "bluesky"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. HumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-bluesky",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-tiktok",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "tiktok",
+      "destination": "tiktok",
+      "proposed_channels": [
+        "tiktok"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. HumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its limits. A real browser walkthrough is still being produced; do not present a static graphic as an extension demo.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-tiktok",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-privacy-youtube",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "youtube",
+      "destination": "youtube-shorts",
+      "proposed_channels": [
+        "youtube-shorts"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-04",
+      "angle": "privacy",
+      "caption": "Local first. HumanFilter doesn't require a signup or upload your social feed to Evercraft. It evaluates supported website text and recognized AI disclosures locally in your browser, with preferences stored on your own device. Website layouts can change; this is a free desktop beta and we publish its limits. A real recorded walkthrough will follow once its on-screen results have been checked.",
+      "link_mode": "description",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=privacy-youtube",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-facebook",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. \n\nRules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI detection.\n\nWe're interested in feedback from people actually using the free desktop beta, including what labels or site layouts it misses. The product link and manual installation instructions are in our first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-facebook",
+      "first_comment_required": true,
+      "first_comment_copy": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-facebook",
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-linkedin",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. \n\nRules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI detection.\n\nThis is a deliberately narrow first release. Our next improvements will be driven by measurable false positives, recognized label coverage, and feedback from people using the browser extension. The product page explains installation and limitations.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-linkedin",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-instagram",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. Rules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI detection.\n\nWe're building this around choice rather than promises that aren't technically defensible. The free desktop beta and limitations are linked from the product page.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-instagram",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-x",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "x",
+      "destination": "x",
+      "proposed_channels": [
+        "x"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. Rules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with t",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-x",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-threads",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "threads",
+      "destination": "threads",
+      "proposed_channels": [
+        "threads"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. Rules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI detection.\n\nWe're building this around choice rather than promises that aren't technically defensible. The launch notes include what HumanFilter does not attempt to detect and where its current desktop coverage stops.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-threads",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-bluesky",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "bluesky",
+      "destination": "bluesky",
+      "proposed_channels": [
+        "bluesky"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. Rules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI ",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-bluesky",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-tiktok",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "tiktok",
+      "destination": "tiktok",
+      "proposed_channels": [
+        "tiktok"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. Rules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI detection. A real browser walkthrough is still being produced; do not present a static graphic as an extension demo.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-tiktok",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-reversible-youtube",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "youtube",
+      "destination": "youtube-shorts",
+      "proposed_channels": [
+        "youtube-shorts"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-08",
+      "angle": "reversible",
+      "caption": "Show once matters. Rules can make mistakes, so HumanFilter's filtered posts include a Show once action. You can reveal a match, pause filtering, choose different keywords or disable a website. User control means leaving the final decision with the person using the extension, not claiming perfect AI detection. A real recorded walkthrough will follow once its on-screen results have been checked.",
+      "link_mode": "description",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=reversible-youtube",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-facebook",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. \n\nHumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta feedback on missed disclosures, false positives and installation friction.\n\nWe're interested in feedback from people actually using the free desktop beta, including what labels or site layouts it misses. The product link and manual installation instructions are in our first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-facebook",
+      "first_comment_required": true,
+      "first_comment_copy": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-facebook",
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-linkedin",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. \n\nHumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta feedback on missed disclosures, false positives and installation friction.\n\nThis is a deliberately narrow first release. Our next improvements will be driven by measurable false positives, recognized label coverage, and feedback from people using the browser extension. The product page explains installation and limitations.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-linkedin",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-instagram",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. HumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta feedback on missed disclosures, false positives and installation friction.\n\nWe're building this around choice rather than promises that aren't technically defensible. The free desktop beta and limitations are linked from the product page.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-instagram",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-x",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "x",
+      "destination": "x",
+      "proposed_channels": [
+        "x"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. HumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android r",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-x",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-threads",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "threads",
+      "destination": "threads",
+      "proposed_channels": [
+        "threads"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. HumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta feedback on missed disclosures, false positives and installation friction.\n\nWe're building this around choice rather than promises that aren't technically defensible. The launch notes include what HumanFilter does not attempt to detect and where its current desktop coverage stops.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-threads",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-bluesky",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "bluesky",
+      "destination": "bluesky",
+      "proposed_channels": [
+        "bluesky"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. HumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta f",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-bluesky",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "owned_shield_and_real_popup_available_media_rights_review_pending",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "prepared_waiting_verified_clip_publisher_credentials_and_issuer",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-tiktok",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "tiktok",
+      "destination": "tiktok",
+      "proposed_channels": [
+        "tiktok"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. HumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta feedback on missed disclosures, false positives and installation friction. A real browser walkthrough is still being produced; do not present a static graphic as an extension demo.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-tiktok",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    },
+    {
+      "id": "humanfilter-beta-feedback-youtube",
+      "product": "humanfilter",
+      "brand_key": "evercraft",
+      "platform": "youtube",
+      "destination": "youtube-shorts",
+      "proposed_channels": [
+        "youtube-shorts"
+      ],
+      "account_scope": "verified_evercraft_company_channel_only",
+      "planned_day": "2026-11-12",
+      "angle": "beta-feedback",
+      "caption": "Real feedback, not inflated claims. HumanFilter v0.1.4 currently supports selected Facebook, Reddit and YouTube website feeds in desktop browsers. It cannot prove authorship and doesn't run inside native social apps; iPhone, Safari and Android releases aren't available yet. We're seeking real beta feedback on missed disclosures, false positives and installation friction. A real recorded walkthrough will follow once its on-screen results have been checked.",
+      "link_mode": "description",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=humanfilter-desktop-beta-rotation&utm_content=beta-feedback-youtube",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "hold_real_product_demo_video_missing",
+      "creative_sources": [
+        "public/humanfilter-beta/assets/shield.svg",
+        "public/humanfilter-beta/assets/popup.png"
+      ],
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "status": "hold_video_required_and_platform_issuer_unverified",
+      "linkVerification": {
+        "expectedText": [
+          "Your feed.",
+          "Your call."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/humanfilter-beta/",
+        "requireCanonicalSelfMatch": false
+      },
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "minimum_hours_between_same_destination": 72,
+        "require_provider_receipt": true
+      }
+    }
+  ],
+  "personal_pages": {
+    "publication_mode": "founder_personal_only_or_separately_authorized",
+    "status": "not_in_company_clip_queue",
+    "do_not_duplicate_founder_posts": true
+  }
+}
