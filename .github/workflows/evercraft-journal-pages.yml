@@ -11,6 +11,7 @@ on:
       - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'scripts/probe-boardroom-public.mjs'
+      - 'scripts/probe-subsea-watch-public.mjs'
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
@@ -338,6 +339,11 @@ jobs:
         env:
           BOARDROOM_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
         run: node scripts/probe-boardroom-public.mjs
+      - name: Verify Subsea Watch local 3D dive replay over public HTTPS
+        shell: bash
+        env:
+          SUBSEA_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/probe-subsea-watch-public.mjs
       - name: Verify HumanFilter beta page, privacy, and real browser ZIPs over HTTPS
         shell: bash
         run: |
