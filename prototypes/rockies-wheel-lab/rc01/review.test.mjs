@@ -20,7 +20,7 @@ test('review portal is a source-only, offline and noindex local composition',()=
 });
 
 test('review tabs safely switch locally without remote navigation or consumer data transfer',()=>{
-  const ids=['reviewFrame','tab-shopper','tab-merchant','stepTitle','stepDescription'];
+  const ids=['reviewFrame','tab-shopper','tab-merchant','stepTitle','stepDescription','openFullscreen'];
   const els=Object.fromEntries(ids.map(id=>[id,{
     attrs:{},listeners:{},src:'',title:'',textContent:'',
     setAttribute(key,value){this.attrs[key]=value},
@@ -31,9 +31,11 @@ test('review tabs safely switch locally without remote navigation or consumer da
   }}}));
   els['tab-merchant'].listeners.click();
   assert.equal(els.reviewFrame.src,'./merchant-desk.html');
+  assert.equal(els.openFullscreen.href,'./merchant-desk.html');
   assert.equal(els['tab-merchant'].attrs['aria-selected'],'true');
   assert.match(els.stepTitle.textContent,/shop-reviewed estimate/);
   els['tab-shopper'].listeners.click();
   assert.equal(els.reviewFrame.src,'./index.html');
+  assert.equal(els.openFullscreen.href,'./index.html');
   assert.equal(els['tab-shopper'].attrs['aria-selected'],'true');
 });
