@@ -91,3 +91,21 @@ The older discovery surface still contains partner-held names. On October 31, a 
 | `registry/catalog.json` | 3 | 7 | 6 |
 
 These are **source text references**, not evidence of current live website exposure or independent buyers. Do not create new promotional material from those records. Run `node scripts/brand/audit-public-discovery-exposures.mjs` for a broader read-only snapshot; `--strict` flags the still-unresolved legacy references. This draft deliberately does **not** rewrite or delete older public discovery assets without a reviewed generator-level fix and rights check.
+
+## Catalog reconciliation | source-derived, review-only
+
+The legacy machine directory and brand workstream system are separate. The primary older product directory (`public/.well-known/evercraft-products.json`, dated **2026-10-14**) contains 69 product-key records. That is **not** 69 released products. The aligned product index has 69 keys; the agent registry subset has 45.
+
+The [explicit crosswalk](./catalog-crosswalk.v1.json) links **12** of those 69 records to the 20 working brand families, places **2** historical product keys under a partner/restriction hold, and leaves **55** for individual product-brand classification. RIVET appears in older AliEV relationships/aliases rather than as its own top-level product key in that particular 69-record snapshot. These counts are measured against dated source files and can legitimately change as new catalogs are adopted.
+
+For local, internal review only:
+
+```sh
+node scripts/brand/reconcile-product-catalog.mjs --out tmp/evercraft-catalog-review.json
+node scripts/brand/compile-review-wall.mjs --output tmp/evercraft-brand-review.html
+node --test tests/brand-*.test.mjs
+```
+
+The catalog reconciliation emits a local JSON file and companion Markdown worklist. Neither is sent to a web server. The CLI refuses `--public` and `--publish`; the portfolio renderer also refuses public mode. Even a verified original logo is **not** proof of customer access, payment readiness, product release, or rights to publish the portfolio.
+
+The PR-only [Brand Registry Review workflow](../../.github/workflows/brand-registry-review.yml) exercises the real source-backed tests and produces only temporary internal files in the GitHub runner. It has no deployment, checkout, upload, or public artifact step.
