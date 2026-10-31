@@ -10,7 +10,7 @@ import {
  evaluateForensiScopeCheckoutGate as checkout
 } from '../systemia/forensiscope/self-service-admission.mjs';
 import {createForensiScopeResumableIngress} from '../systemia/forensiscope/resumable-ingress.mjs';
-import {createForensiScopePrivateJobs} from '../systemia/forensiscope/private-job-service.mjs';
+import {createForensiScopePrivateJobs,startForensiScopePrivateWorker} from '../systemia/forensiscope/private-job-service.mjs';
 
 const media=Buffer.from('synthetic private paid recording bytes 1234567890');
 const hash=buf=>'sha256:'+crypto.createHash('sha256').update(buf).digest('hex');
@@ -239,4 +239,32 @@ test('service constructor requires trusted auth, payment, access, and processing
   assert.throws(()=>createForensiScopePrivateJobs({storageDir:root}),/trusted_job_dependencies_required/);
   assert.throws(()=>createForensiScopePrivateJobs({storageDir:'relative'}),/private_absolute_storage_required/);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+
+
+test('private resident worker automatically picks up customer jobs without a human-run endpoint',async()=>{
+ const f=fixture();await f.start();
+ let worker;
+ try{
+  const uploaded=await f.createUploaded();
+  const queued=await f.post(f.jobsServer,'/v1/forensiscope/jobs',{upload_id:uploaded});
+  assert.equal(queued.status,201);
+  const jobId=queued.body.job_id;
+  worker=startForensiScopePrivateWorker({jobService:f.jobs,intervalMs:10});
+  let state='';
+  for(let i=0;i<80;i++){
+   const snapshot=await f.request(f.jobsServer,'/v1/forensiscope/jobs/'+jobId);
+   state=snapshot.body.state;
+   if(state==='completed')break;
+   await new Promise(resolve=>setTimeout(resolve,15));
+  }
+  assert.equal(state,'completed');
+  assert.equal(f.executions,1);
+  assert.equal((await f.request(f.jobsServer,'/v1/forensiscope/jobs/'+jobId+'/result')).status,200);
+  assert.equal((await f.post(f.jobsServer,'/v1/forensiscope/jobs/'+jobId+'/run',{})).status,404);
+ }finally{
+  if(worker)await worker.stop();
+  await f.close();
+ }
+ assert.throws(()=>startForensiScopePrivateWorker({}),/trusted_private_job_service_required/);
 });
