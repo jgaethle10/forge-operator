@@ -16,6 +16,7 @@ on:
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/product-url-fabric.test.mjs'
+      - 'tests/clip-public-entry.test.mjs'
       - '.github/workflows/evercraft-journal-pages.yml'
   workflow_dispatch:
 
@@ -51,6 +52,7 @@ jobs:
         run: |
           npm run test:chum-public-origin
           npm run test:product-url-fabric
+          node --test tests/clip-public-entry.test.mjs
 
       - name: Verify Boardroom source logic and luxury theme
         run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs
@@ -133,6 +135,12 @@ jobs:
             test -s "_public_pages/audience-sites/$slug/share.png"
           done
           rm -rf _public_pages/clip/audience-sites
+          # Clip's actual public entry must survive while retired audience properties stay excluded.
+          test -s _public_pages/clip/index.html
+          test -s _public_pages/clip/app.mjs
+          test -s _public_pages/clip/status.json
+          test -s _public_pages/evercraft-clip/index.html
+          test ! -e _public_pages/clip/audience-sites
           rm -f _public_pages/audience-sites/properties.json
           rm -f _public_pages/affiliate-labs/sitemap.xml
           rm -f _public_pages/audience-sites/sitemap.xml
@@ -252,6 +260,30 @@ jobs:
       - name: Verify Evercraft Signal public HTTPS and structured incident data
         shell: bash
         run: node scripts/probe-signal-public.mjs "${{ steps.deployment.outputs.page_url }}"
+
+      - name: Verify repaired Clip entry over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          clip="${base%/}/clip/"
+          alias="${base%/}/evercraft-clip/"
+          dir="$(mktemp -d)"
+          for name in index.html app.mjs status.json; do
+            curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${clip}${name}" -o "${dir}/${name}"
+            test -s "${dir}/${name}"
+          done
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${alias}" -o "${dir}/legacy.html"
+          grep -Fq 'Evercraft Clip | Publishing desk' "${dir}/index.html"
+          grep -Fq 'navigator.share' "${dir}/app.mjs"
+          grep -Fq '"automatic_social_publication_verified": false' "${dir}/status.json"
+          grep -Fq 'url=../clip/' "${dir}/legacy.html"
+          {
+            echo '## Evercraft Clip public entry verified'
+            echo
+            echo "Clip: ${clip} (HTML, JS, status); legacy alias: ${alias}"
+            echo 'Workstation and locally prepared handoffs are available; direct social publishing is not certified.'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Verify ForensiScope fallback buyer page over deployed HTTPS
         shell: bash
