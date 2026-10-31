@@ -7,6 +7,7 @@ on:
       - "systemia/clip/humanfilter-facebook-resident-runner.mjs"
       - "systemia/clip/humanfilter-facebook-resident.test.mjs"
       - "systemia/clip/humanfilter-publish-authorize.mjs"
+      - "systemia/clip/humanfilter-publish-authorize.test.mjs"
       - "systemia/clip/authority/humanfilter-autopublish.json"
       - "systemia/organism/humanfilter-clip-facebook.workflow.json"
       - "distribution/marketing/humanfilter-free-desktop-20261030.review.json"
@@ -55,6 +56,7 @@ on:
       - "systemia/clip/humanfilter-facebook-resident-runner.mjs"
       - "systemia/clip/humanfilter-facebook-resident.test.mjs"
       - "systemia/clip/humanfilter-publish-authorize.mjs"
+      - "systemia/clip/humanfilter-publish-authorize.test.mjs"
       - "systemia/clip/authority/humanfilter-autopublish.json"
       - "systemia/organism/humanfilter-clip-facebook.workflow.json"
       - "distribution/marketing/humanfilter-free-desktop-20261030.review.json"
@@ -114,6 +116,7 @@ jobs:
           node --test \
             systemia/clip/social-publisher-runtime.test.mjs \
             systemia/clip/humanfilter-facebook-resident.test.mjs \
+            systemia/clip/humanfilter-publish-authorize.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs \
             systemia/clip/native-video-publishers.test.mjs \
             systemia/clip/space-dudz-resident.test.mjs \
