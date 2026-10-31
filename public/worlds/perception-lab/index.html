@@ -90,7 +90,7 @@ function process(left,right,width,height,focal,baseline,synthetic){
  const raw=estimateStereoDepth({left,right,width,height,fxPx:focal,baselineM:baseline,
    minDisparity:1,maxDisparity,stride:3,radius:2,minTexture:8});
  const depth=auditStereoConsistency(raw,left,right,{minDisparity:1,maxDisparity,radius:2,tolerancePx:1});
- const reference=synthetic?compareRangingTargets(depth,[{id:'known-disparity-synthetic',rangeM:3.6,
+ const reference=synthetic?compareRangingTargets(depth,[{id:'known-disparity-synthetic',cameraAxisDepthM:3.6,
    method:'generated known disparity',box:{x:58,y:25,width:65,height:45}}]):null;
  const demoBoxes=synthetic?[{label:'hand-marked synthetic object',confidence:1,
     box:{x:58,y:25,width:65,height:45}}]:[];
