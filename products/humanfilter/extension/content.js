@@ -111,7 +111,8 @@
   function postIdentity(post) {
     // The visible text can be identical on two recycled cards.
     // Include a post-specific permalink when present so Show once does not leak.
-    const link = post.querySelector('a[href*="/comments/"], a[href*="/posts/"], a[href*="/videos/"], a[href*="/watch?"], a[href*="/shorts/"]');
+    const links = post.querySelectorAll('a[href*="/comments/"], a[href*="/posts/"], a[href*="/videos/"], a[href*="/watch?"], a[href*="/shorts/"]');
+    const link = Array.from(links).find(candidate => !isNestedContext(candidate, post));
     const permalink = link?.getAttribute('href') || '';
     return permalink + '\u0000' + postText(post).replace(/\s+/g, ' ').trim() +
       '\u0000' + readLabels(post).join('\u0001');
