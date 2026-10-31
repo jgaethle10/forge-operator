@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {startNodeSeed} from '../systemia/compute/node-seed.mjs';
 import {startOutboundCapacityBroker} from '../systemia/network/outbound-capacity-broker.mjs';
 import {startOutboundNodeAgent} from '../systemia/network/outbound-node-agent.mjs';
@@ -57,20 +58,36 @@ test('Node002 pinned outbound policy executes a real content hash through the pr
     const key='node002-test-contenthash-20261028';
     // Deliberately the canonical NodeSeed job shape: input has payload,
     // not a duplicated input.idempotency_key.
-    const job=await json(await fetch(grant.capacity_endpoint+'/v1/jobs',{
+    const body={
+      lease_id:lease.body.lease_id,token:lease.body.token,
+      workload_class:'systemia.content-hash.v1',idempotency_key:key,
+      input:{payload:{value}},
+    };
+    const submit=()=>json(fetch(grant.capacity_endpoint+'/v1/jobs',{
       method:'POST',headers:{'content-type':'application/json'},
-      body:JSON.stringify({
-        lease_id:lease.body.lease_id,
-        token:lease.body.token,
-        workload_class:'systemia.content-hash.v1',
-        idempotency_key:key,
-        input:{payload:{value}},
-      }),
-    }));
+      body:JSON.stringify(body),
+    }).then(x=>x));
+    const job=await submit();
     assert.equal(job.status,200,JSON.stringify(job.body));
     assert.equal(job.body.ok,true);
-    assert.match(job.body.result?.digest||'',/^sha256:[a-f0-9]{64}$/);
+    const expectedDigest='sha256:'+createHash('sha256').update(
+      JSON.stringify({canary:true,saban:'node002-owned-transport'})
+    ).digest('hex');
+    assert.equal(job.body.result?.digest,expectedDigest,
+      'must return the actual digest for the supplied canonical JSON');
     assert.equal(job.body.worker_receipt?.registered_workload_only,true);
+    assert.equal(job.body.deduplicated,false);
+    const repeated=await submit();
+    assert.equal(repeated.status,200,JSON.stringify(repeated.body));
+    assert.equal(repeated.body.result?.digest,expectedDigest);
+    assert.equal(repeated.body.deduplicated,true,
+      'same-key retry must reuse durable NodeSeed job, not execute a second time');
+    const conflict=await json(await fetch(grant.capacity_endpoint+'/v1/jobs',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({...body,input:{payload:{value:{different:true}}}}),
+    }));
+    assert.equal(conflict.status,409,'same-key changed payload must fail closed');
+    assert.equal(conflict.body.error,'nodeseed_registered_worker_idempotency_conflict');
     const agentStatus=agent.status();
     assert.equal(agentStatus.device_fingerprint,seed.device_fingerprint);
     assert.equal(agentStatus.command_policy,'content-hash-only');
@@ -80,10 +97,22 @@ test('Node002 pinned outbound policy executes a real content hash through the pr
     const denied=await json(await fetch(grant.capacity_endpoint+'/v1/operator/status',{
       headers:{authorization:'Bearer '+grant.allocator_token},
     }));
-    assert.notEqual(denied.status,200);
+    assert.equal(denied.status,403,JSON.stringify(denied.body));
+    assert.equal(denied.body.error,'remote_route_not_allowed',
+      'denial must happen at the device command policy, not as broker 404');
+    const release=await json(await fetch(grant.capacity_endpoint+
+      '/v1/leases/'+encodeURIComponent(lease.body.lease_id)+'/release',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({token:lease.body.token}),
+    }));
+    assert.equal(release.status,200,JSON.stringify(release.body));
     console.log(JSON.stringify({
       mode:'ephemeral_ci_only',
       content_hash_completed:true,
+      exact_digest_independently_recomputed:true,
+      same_key_retry_deduplicated:true,
+      conflicting_idempotency_rejected:true,
+      lease_released:true,
       device_fingerprint_bound:true,
       advertised_workloads:['systemia.content-hash.v1'],
       remote_operator_status_denied:true,
