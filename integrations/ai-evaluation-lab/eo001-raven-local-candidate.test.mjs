@@ -59,7 +59,7 @@ test('prompt sends bounded summary not raw signed observation contents',()=>{
  const prompt=buildModelPrompt(c);
  assert.match(prompt,/signed_settlement_verified/);
  assert.doesNotMatch(prompt,/signature/);
- assert.doesNotMatch(prompt,new RegExp(c.observations[0].envelope.signature));
+ assert.equal(prompt.includes(c.observations[0].envelope.signature),false);
 });
 test('real inference adapter result is gated and retains a provenance receipt',async()=>{
  let calls=0,record;
