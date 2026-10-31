@@ -199,22 +199,51 @@ $('office-export-trace').addEventListener('click',()=>{
 });
 
 
-// Explicit opt-in synthetic executor inspection; never implies AI agent provisioning.
+// Explicit opt-in streaming test. No external AI workers are provisioned.
 $('executor-smoke').addEventListener('click',async()=>{
   const button=$('executor-smoke'),status=$('executor-status');
   button.disabled=true;
-  status.textContent='Running six local verification tasks…';
+  status.textContent='Connecting to local execution stream…';
+  let verified=0,completed=false,started=false;
   try{
-    const response=await fetch('/api/executor-smoke',{method:'POST',headers:{'x-work-saban-client':'local-preview'}});
-    const data=await response.json();
-    if(!response.ok||data.ok!==true||data.source!=='synthetic_fixture'||data.live_agents!==false)
-      throw new Error('Local executor verification unavailable');
-    for(const event of data.events||[])window.WorkSaban3D?.consumeExecutorEvent(event);
-    const capacity=data.execution?.capacity;
-    if(!capacity||capacity.verified!==6||capacity.failed!==0)
-      throw new Error('Execution verification incomplete');
-    status.textContent='6 of 6 synthetic local tasks verified. No AI agents provisioned.';
-  }catch(error){
-    status.textContent='Executor test failed: '+error.message;
-  }finally{button.disabled=false;}
+    const response=await fetch('/api/executor-smoke-stream',{
+      method:'POST',headers:{'x-work-saban-client':'local-preview'}
+    });
+    if(!response.ok||!response.body)throw new Error('Execution stream unavailable');
+    const reader=response.body.getReader(),decoder=new TextDecoder();
+    let buffer='';
+    function processLine(line){
+      if(!line.trim())return;
+      const event=JSON.parse(line);
+      if(event.source&&event.source!=='synthetic_fixture')throw new Error('Unexpected execution source');
+      if(event.live_agents===true)throw new Error('Unverified agent claim');
+      if(event.type==='started'){started=true;status.textContent='Running six synthetic local tasks…';}
+      else if(event.type==='worker'){
+        if(!started||completed)throw new Error('Out-of-order worker event');
+        window.WorkSaban3D?.consumeExecutorEvent(event);
+        if(event.state==='verified')verified++;
+        status.textContent=verified+' of 6 synthetic tasks verified…';
+      }else if(event.type==='completed'){
+        if(!started||completed||event.capacity?.verified!==6||event.capacity?.failed!==0||verified!==6)
+          throw new Error('Incomplete execution verification');
+        completed=true;
+      }else throw new Error('Unexpected stream event');
+    }
+    while(true){
+      const {value,done}=await reader.read();
+      if(done)break;
+      buffer+=decoder.decode(value,{stream:true});
+      if(buffer.length>1024*1024)throw new Error('Execution stream exceeded limit');
+      let boundary;
+      while((boundary=buffer.indexOf('\n'))!==-1){
+        processLine(buffer.slice(0,boundary));
+        buffer=buffer.slice(boundary+1);
+      }
+    }
+    buffer+=decoder.decode();
+    if(buffer.trim())processLine(buffer);
+    if(!completed)throw new Error('Execution stream ended without verification');
+    status.textContent='6 of 6 synthetic local tasks verified live. No AI agents provisioned.';
+  }catch(error){status.textContent='Executor stream failed: '+error.message;}
+  finally{button.disabled=false;}
 });
