@@ -1,0 +1,13 @@
+test_2025_full_year_and_conservation (test_noaa_api_screen.Screens.test_2025_full_year_and_conservation) ... ok
+test_bad_station_hold (test_noaa_api_screen.Screens.test_bad_station_hold) ... ok
+test_blank_noaa_row_is_missing_not_zero (test_noaa_api_screen.Screens.test_blank_noaa_row_is_missing_not_zero) ... ok
+test_missing_dates_hold (test_noaa_api_screen.Screens.test_missing_dates_hold) ... ok
+test_no_double_count_trace_water (test_noaa_api_screen.Screens.test_no_double_count_trace_water) ... ok
+test_quality_flag_hold (test_noaa_api_screen.Screens.test_quality_flag_hold) ... ok
+test_rejected_missing_raw_and_units (test_noaa_api_screen.Screens.test_rejected_missing_raw_and_units) ... ok
+test_trace_is_not_missing (test_noaa_api_screen.Screens.test_trace_is_not_missing) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.009s
+
+OK

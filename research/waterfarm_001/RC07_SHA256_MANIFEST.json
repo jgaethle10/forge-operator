@@ -1,0 +1,62 @@
+{
+  "kind": "evercraft-aqua-rc07-local-research-file-receipt-v1",
+  "source_note": "A hash establishes the bytes in this package, NOT independent authenticity of the original NOAA data",
+  "files": {
+    "carryover_model.py": {
+      "sha256": "1c7d7183962f85947fa3894c67a2647c828dc79589407b634700c380b8cd3ef0",
+      "bytes": 7926
+    },
+    "test_carryover_model.py": {
+      "sha256": "6d4ec43623c55b5ed50638dcaa000d7e85ff08fd4f2074147536c977b35d22a6",
+      "bytes": 7393
+    },
+    "seasonal_screen.py": {
+      "sha256": "794cccd77cad58b072ee8bc012110ea95ff3ebda5a5b87b892b820e8ba3e053e",
+      "bytes": 6843
+    },
+    "fixture_2024_observations.py": {
+      "sha256": "b289572a2ddbf7a1da06ed187e3029d2ae39c106d45c64fa92d96bbfee7a2e47",
+      "bytes": 1982
+    },
+    "noaa_api_screen.py": {
+      "sha256": "e6cbb7431e5cee54773ed8254e883e365db1ae5ba76bf3b4d7760c90c43e6b94",
+      "bytes": 8647
+    },
+    "RC07_scenario_results.json": {
+      "sha256": "6d254cda7f82ccb8f7aebc08c8b0fbd85529c09b4c9bde6cc293a02df592abf2",
+      "bytes": 13016
+    },
+    "RC07_ENGINEERING_DECISION.md": {
+      "sha256": "ccb87989c4fc3cbda6545e66c58a61becdfbdadada0558e646b3a74b7105d6a0",
+      "bytes": 7888
+    },
+    "RC07_FIELD_MEASUREMENT_CONTRACT.md": {
+      "sha256": "8b5c06dbcbcfbb52b742e3e27c76bd6396bcdaa1cc5a4945756ee569478127ed",
+      "bytes": 2258
+    },
+    "README.md": {
+      "sha256": "c91bbc9eda58e2123ccf5317528a4a1a92979fa635751d81b8a47d0f664c604d",
+      "bytes": 1430
+    },
+    "plot_carryover.py": {
+      "sha256": "748720e41c6aceedbc21a7f3d85e28ccf58b1a005e355b71c8ea909d37ab7c08",
+      "bytes": 1125
+    },
+    "RC07_CARRYOVER_GRAPH.png": {
+      "sha256": "5445e392a0115fdffad0ca9e5d8380b6ff1d8b36ed9e0ac1af472a744c20fe9e",
+      "bytes": 71767
+    },
+    "rc04_regression.txt": {
+      "sha256": "750a47116a0aa285e13a31de947dde2448ab77b1cbed5c539db7740db9ed9a8c",
+      "bytes": 98
+    },
+    "rc05_regression.txt": {
+      "sha256": "8802288a61c6f8cf5f21318cde6af72a3decaf417da470664ab1a6b924261599",
+      "bytes": 97
+    },
+    "rc06_regression.txt": {
+      "sha256": "4356a089258b3d2b74d7588fa4fb4f6f62da84c85a612d308579f63a78ac6207",
+      "bytes": 98
+    }
+  }
+}

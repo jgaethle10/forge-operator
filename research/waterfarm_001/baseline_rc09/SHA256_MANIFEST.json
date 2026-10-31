@@ -1,0 +1,48 @@
+{
+  "evidence_state": "LOCAL_PROTOTYPE_QA_NOT_FIELD_TRIAL",
+  "created_utc": "2026-10-31T02:29:39.545503+00:00",
+  "test_counts": {
+    "node_rc09": 18,
+    "python_prior_rc08": 30,
+    "browser_widths": 2,
+    "python_js_parity": 1
+  },
+  "files": {
+    "Evercraft_Aqua_Baseline_RC09.html": {
+      "sha256": "9bf8db9e11ac8dc00d276104410fbf6de77731e00c49c15e06512ea55996b3a6",
+      "bytes": 21988
+    },
+    "aqua_rc09/app/core.mjs": {
+      "sha256": "e0caf4d34119767ad4fadfd103e4d34f97f36d518cf171dd0859bf84fc857ba0",
+      "bytes": 7088
+    },
+    "aqua_rc09/app/index.template.html": {
+      "sha256": "09a650ed2810fe3085b51aa0978acab937e29e299f94b1f4cead9b2bfef945fd",
+      "bytes": 14950
+    },
+    "aqua_rc09/build.py": {
+      "sha256": "dd38d81ff445372e2e382c3e78443c8a9c8cd576dbe20a22eb449e5b6e5efa9f",
+      "bytes": 545
+    },
+    "aqua_rc09/tests/aqua-core.test.mjs": {
+      "sha256": "0b93c42aec29e80e8544e37b5158501b8ebfe9c16b2ff546d6bca3431b40ed10",
+      "bytes": 3441
+    },
+    "aqua_rc09/tests/browser_qa.py": {
+      "sha256": "ce439c7e731b299c4bc2bba93672de3b8d7db69b9b804c563677205c00f24810",
+      "bytes": 1949
+    },
+    "aqua_rc09/tests/parity_qa.py": {
+      "sha256": "7ac48befdb61a48adbc760bc1827d5cdaab03dee7464e3d51fcd555f5686234f",
+      "bytes": 1712
+    },
+    "aqua_rc09/RC09_ENGINEERING_DECISION.md": {
+      "sha256": "a15bc0644d72b51e3813d362d4ded60d9ca90d2b45a980cdfecfcdb7673e1f76",
+      "bytes": 5391
+    },
+    "aqua_rc09/README.md": {
+      "sha256": "e6e770ffb6ca34662dd5ece85b660f0f71edc858b8acd79735cefd4990419458",
+      "bytes": 2193
+    }
+  }
+}
