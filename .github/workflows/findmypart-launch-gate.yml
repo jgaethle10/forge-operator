@@ -12,6 +12,7 @@ on:
       - 'tests/findmypart-saban-scorecard.test.mjs'
       - 'tests/findmypart-saban-benchmark.test.mjs'
       - 'tests/findmypart-provider-ingest.test.mjs'
+      - 'tests/findmypart-photo-evidence.test.mjs'
       - 'scripts/findmypart-saban-benchmark.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
@@ -81,7 +82,8 @@ jobs:
               tests/findmypart-saban-recovery-gauntlet.test.mjs \
               tests/findmypart-saban-scorecard.test.mjs \
               tests/findmypart-saban-benchmark.test.mjs \
-              tests/findmypart-provider-ingest.test.mjs
+              tests/findmypart-provider-ingest.test.mjs \
+              tests/findmypart-photo-evidence.test.mjs
             echo "::endgroup::"
           done
       - name: Write Saban reproducible benchmark receipt
