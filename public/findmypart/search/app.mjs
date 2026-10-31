@@ -1,4 +1,5 @@
 import {analyzePartQuery,buildSourceSearches,createSavedSearch} from './engine.mjs';
+import {addCandidate,removeCandidate} from './candidates.mjs';
 // Buyer-initiated links only. No supplier listing data or invented matches.
 const form=document.querySelector('#search-form');
 const input=document.querySelector('#part-query');
@@ -23,6 +24,7 @@ function render(raw){
  description.textContent='Searching for: '+analysis.query+
    (analysis.candidateNumbers.length?' · Possible part number: '+analysis.candidateNumbers.join(', '):'');
  results.hidden=false;
+ drawCandidates();
  const save=document.querySelector('#save-search');
  if(save)save.hidden=false;
 }
@@ -34,4 +36,34 @@ document.querySelector('#save-search')?.addEventListener('click',()=>{
  const url=URL.createObjectURL(blob);
  const a=document.createElement('a');a.href=url;a.download='findmypart-search-brief.json';a.click();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
+const candidateForm=document.querySelector('#candidate-form');
+const candidateList=document.querySelector('#candidate-list');
+const candidateStatus=document.querySelector('#candidate-status');
+function drawCandidates(){
+ if(!candidateList)return;
+ candidateList.replaceChildren();
+ for(const [index,candidate] of (activeBrief?.source_evidence||[]).entries()){
+  const card=document.createElement('article');card.className='source';
+  const heading=document.createElement('h3');heading.textContent=candidate.part_number_claim||candidate.seller_domain;
+  const status=document.createElement('p');status.textContent='Buyer-entered candidate · Fitment, inventory and price unverified';
+  const notes=document.createElement('p');notes.textContent=[candidate.price_claim,candidate.buyer_notes].filter(Boolean).join(' · ');
+  const link=document.createElement('a');link.textContent='Open listing';link.href=candidate.source_url;link.target='_blank';link.rel='noopener noreferrer';
+  const remove=document.createElement('button');remove.type='button';remove.textContent='Remove';remove.addEventListener('click',()=>{activeBrief=removeCandidate(activeBrief,index);drawCandidates()});
+  card.append(heading,status,notes,link,document.createTextNode(' '),remove);candidateList.append(card);
+ }
+}
+candidateForm?.addEventListener('submit',event=>{
+ event.preventDefault();
+ if(!activeBrief){candidateStatus.textContent='Search for a part first.';return}
+ try{
+  activeBrief=addCandidate(activeBrief,{
+   url:document.querySelector('#candidate-url').value,
+   partNumber:document.querySelector('#candidate-part').value,
+   priceText:document.querySelector('#candidate-price').value,
+   notes:document.querySelector('#candidate-notes').value});
+  candidateStatus.textContent='Candidate saved to this search. Download the brief to keep a copy.';
+  candidateForm.reset();drawCandidates();
+ }catch(error){candidateStatus.textContent=error.message||'Could not save candidate.'}
 });
