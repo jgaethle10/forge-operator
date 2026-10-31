@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - 'public/findmypart/**'
+      - 'systemia/findmypart/**'
+      - 'tests/findmypart-self-service-search.test.mjs'
+      - 'tests/findmypart-candidate-shortlist.test.mjs'
+      - 'tests/findmypart-recovery-engine.test.mjs'
+      - 'tests/findmypart-recovery-links.test.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
       - 'scripts/findmypart-review-inquiry.mjs'
@@ -57,6 +62,26 @@ jobs:
           node --test tests/findmypart-resident-release-gate.test.mjs
       - name: Check derived Fabric catalog count against actual runtime catalog
         run: node --test tests/fabric-derived-capability-count.test.mjs
+      - name: Saban FindMyPart repeatable recovery gauntlet (10 rounds)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for round in $(seq 1 10); do
+            echo "::group::Saban recovery round $round/10"
+            node --test \
+              tests/findmypart-self-service-search.test.mjs \
+              tests/findmypart-candidate-shortlist.test.mjs \
+              tests/findmypart-recovery-engine.test.mjs \
+              tests/findmypart-recovery-links.test.mjs
+            echo "::endgroup::"
+          done
+      - name: Check browser search modules are syntactically valid
+        run: |
+          node --check public/findmypart/search/app.mjs
+          node --check public/findmypart/search/engine.mjs
+          node --check public/findmypart/search/candidates.mjs
+          node --check public/findmypart/search/recovery-links.mjs
+          node --check systemia/findmypart/recovery-engine.mjs
       - name: Existing owned service routing regression
         run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Existing native payment offer routing regression
