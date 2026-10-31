@@ -8,11 +8,15 @@ on:
     paths:
       - 'public/signal/**'
       - 'tests/signal-incident-public.test.mjs'
+      - 'tests/signal-public-https.test.mjs'
+      - 'scripts/probe-signal-public.mjs'
       - '.github/workflows/signal-incident-check.yml'
   pull_request:
     paths:
       - 'public/signal/**'
       - 'tests/signal-incident-public.test.mjs'
+      - 'tests/signal-public-https.test.mjs'
+      - 'scripts/probe-signal-public.mjs'
       - '.github/workflows/signal-incident-check.yml'
   workflow_dispatch:
 
@@ -29,7 +33,7 @@ jobs:
         with:
           node-version: '22'
       - name: Validate release claims, provenance and accessibility markers
-        run: node --test tests/signal-incident-public.test.mjs
+        run: node --test tests/signal-incident-public.test.mjs tests/signal-public-https.test.mjs
       - name: Verify no additional runtime is needed for public Pages
         run: |
           test -s public/signal/index.html
