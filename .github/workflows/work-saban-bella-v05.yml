@@ -1,0 +1,38 @@
+name: Work Saban Native Bella V05 (private review)
+on:
+  push:
+    branches:
+      - feature/work-saban-bella-v05-20261030
+    paths:
+      - systemia/media-studio/work-saban-bella-v05.py
+      - .github/workflows/work-saban-bella-v05.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bella:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify script before environment installation
+        run: python systemia/media-studio/work-saban-bella-v05.py --verify-only
+      - name: Install proven owned Bella production runtime
+        run: |
+          timeout 75s sudo apt-get update -qq || echo "Using cached apt lists"
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1'
+      - name: Render original Work Saban narration, native Bella
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/work-saban-bella-v05.py work-saban-bella-private/
+      - name: Preserve private review master and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-saban-bella-native-voice-v05-private
+          path: work-saban-bella-private/
+          retention-days: 7
+          if-no-files-found: error
