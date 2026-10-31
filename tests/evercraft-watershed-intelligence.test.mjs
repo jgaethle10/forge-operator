@@ -218,7 +218,13 @@ test('review brief admits five provisional USBR readings only with source identi
 test('brief admits only matched station medians and suppresses tiny historical October baselines', async () => {
   const { readFileSync } = await import('node:fs');
   const profile=JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json', import.meta.url),'utf8'));
-  const snowSnapshot=compileWatershedSnapshot({asOf,snowStationIds:[station]});
+  const snowSnapshot=compileWatershedSnapshot({
+    asOf, snowStationIds:['375:WA:SNTL','478:WA:SNTL'],
+    snowReadings:[
+      {station_id:'375:WA:SNTL',kind:'WTEQ',time:'2026-10-29',value:1.0,unit:'in',state:'observed'},
+      {station_id:'478:WA:SNTL',kind:'WTEQ',time:'2026-10-29',value:1.5,unit:'in',state:'observed'}
+    ]
+  });
   const historical={
     schema:'evercraft.research.swe-median-audit.v1',
     basin_percent_of_median:null,
@@ -234,5 +240,9 @@ test('brief admits only matched station medians and suppresses tiny historical O
   assert.ok(brief.includes('withheld'));
   assert.ok(brief.includes('Basin-wide percentage of median: **not calculated**'));
   assert.ok(!brief.includes('500%'));
+  const mismatched={...historical,station_comparisons:historical.station_comparisons.map(r=>r.station_id==='478:WA:SNTL'?{...r,ratio_percent:500}:r)};
+  const held=formatWatershedReviewBrief(snowSnapshot,profile,null,null,null,mismatched);
+  assert.ok(held.includes('comparison_mismatch_withheld'));
+  assert.ok(!held.includes('500% (station only)'));
   assert.throws(()=>formatWatershedReviewBrief(snowSnapshot,profile,null,null,null,{...historical,basin_percent_of_median:150}),/audit receipt invalid/);
 });
