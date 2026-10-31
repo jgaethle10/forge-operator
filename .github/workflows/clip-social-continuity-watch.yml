@@ -11,6 +11,7 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'distribution/marketing/**'
+      - 'tests/humanfilter-clip-rotation.test.mjs'
       - '.github/workflows/clip-social-continuity-watch.yml'
   push:
     branches: [main]
@@ -24,6 +25,7 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'distribution/marketing/**'
+      - 'tests/humanfilter-clip-rotation.test.mjs'
       - '.github/workflows/clip-social-continuity-watch.yml'
   workflow_dispatch:
   schedule:
@@ -41,6 +43,8 @@ jobs:
           node-version: '22'
       - name: Test publication reconciliation
         run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs
+      - name: HumanFilter editorial rotation and truth gates
+        run: node --test tests/humanfilter-clip-rotation.test.mjs
       - name: Write review queue coverage snapshot (read-only)
         run: |
           node systemia/clip/social-continuity-watch.mjs \
@@ -53,6 +57,29 @@ jobs:
             --queue distribution/marketing/work-saban-20261030.review.json \
             --receipts-dir artifacts/clip/social-publish-receipts \
             --out artifacts/clip/social-continuity-watch/work-saban/latest.json
+      - name: HumanFilter Clip receipt coverage (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/humanfilter-free-desktop-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/humanfilter/latest.json
+      - name: Surface HumanFilter receipt truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/humanfilter/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/humanfilter/latest.json'));
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## HumanFilter Evercraft Clip rotation\\n'+
+                'Campaign: '+d.campaign_id+'\\n'+
+                'Status: '+d.status+'\\n'+
+                'Provider receipts: '+d.counts.provider_receipt_recorded+'\\n'+
+                'Approval/issuer holds: '+d.counts.approval_hold+'\\n'+
+                'Receipt source available: '+d.receipt_source_available+'\\n'+
+                'No platform submission or publishing is claimed by this CI check.\\n');
+            "
+          fi
       - name: Surface blockers in workflow summary
         if: always()
         run: |
@@ -97,5 +124,7 @@ jobs:
             artifacts/clip/social-continuity-watch/latest.json
             artifacts/clip/social-continuity-watch/work-saban/latest.json
             artifacts/clip/social-continuity-watch/work-saban/mission-snapshot.json
+            artifacts/clip/social-continuity-watch/humanfilter/latest.json
+            artifacts/clip/social-continuity-watch/humanfilter/mission-snapshot.json
           if-no-files-found: warn
           retention-days: 30
