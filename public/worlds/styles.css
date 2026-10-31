@@ -44,3 +44,7 @@
 .editor .tools button#publishOnline{background:#294d44;color:#fff;border-color:#294d44;font-weight:800}
 .editor .tools button#publishOnline:disabled{opacity:.55;cursor:wait}
 @media(max-width:700px){.editor .tools{grid-template-columns:repeat(2,minmax(0,1fr))}.editor .tools #publishOnline{grid-column:span 2}}
+
+.editor .tools button#unpublishOnline{border:1px solid #ba9f96;color:#86514b;background:#fff6f1;font-weight:700}
+.editor .tools button#unpublishOnline:disabled{opacity:.55;cursor:wait}
+@media(max-width:700px){.editor .tools #unpublishOnline{grid-column:span 2;min-height:46px}}

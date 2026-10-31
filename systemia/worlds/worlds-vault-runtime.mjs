@@ -122,7 +122,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
     const old=(createWindows.get(source)||[]).filter(t=>now-t<600000);
     if(old.length>=10)throw new VaultError(429,'creation_rate_limited');
     old.push(now);createWindows.set(source,old);
-    const scene=validScene(await readBody(req)),created=await createWorld(scene);
+    const scene=validScene(await readBody(req)),created=await serialize('__create__',()=>createWorld(scene));
     return send(res,201,{schema:VAULT_SCHEMA,...created},{etag:'"1"'});
    }
    const match=pathname.match(/^\/worlds\/api\/worlds\/([a-f0-9]{32})$/);
@@ -144,6 +144,19 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
       return next;
     });
     return send(res,200,{schema:VAULT_SCHEMA,world_id:updated.id,version:updated.version,updated_at:updated.updated_at},{etag:'"'+updated.version+'"'});
+   }
+   if(match&&method==='DELETE'){
+    assertWriteOrigin(req,expectedOrigin);
+    const token=String(req.headers.authorization||'').replace(/^Bearer /,'');
+    if(!/^[a-f0-9]{64}$/.test(token))throw new VaultError(401,'edit_capability_required');
+    const removed=await serialize(match[1],async()=>{
+      const existing=await readRecord(match[1]);
+      if(!equal(digest(token),existing.edit_hash))throw new VaultError(403,'edit_capability_invalid');
+      if(req.headers['if-match']!=='"'+existing.version+'"')throw new VaultError(409,'world_version_conflict');
+      await fs.unlink(fileFor(match[1]));
+      return existing;
+    });
+    return send(res,200,{schema:VAULT_SCHEMA,world_id:removed.id,unpublished:true});
    }
    if(pathname.startsWith('/worlds/api/'))throw new VaultError(404,'api_route_not_found');
    if(pathname==='/worlds')return void(res.writeHead(308,{location:'/worlds/'}),res.end());
