@@ -1,0 +1,60 @@
+name: Passage offline library checks
+on:
+  pull_request:
+    paths:
+      - 'public/passage/**'
+      - 'tests/passage-library.test.mjs'
+      - 'tests/passage-browser.test.mjs'
+      - 'tests/passage-package.test.mjs'
+      - 'scripts/passage-signed-package.mjs'
+      - 'scripts/export-passage-demo.mjs'
+      - 'docs/launch/passage/**'
+      - '.github/workflows/passage-library-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check library logic and browser scripts
+        run: |
+          node --test tests/passage-library.test.mjs
+          node --test tests/passage-package.test.mjs
+          node --check scripts/passage-signed-package.mjs
+          node --check public/passage/package-verifier.mjs
+          node --check public/passage/package-ui.mjs
+          node --check public/passage/article-text.mjs
+          node --check public/passage/app.mjs
+          node --check public/passage/catalog.mjs
+          node --check public/passage/sw.js
+      - name: Build offline demonstration download
+        env:
+          PASSAGE_EXPORT_DIR: /tmp/passage-export
+        run: node scripts/export-passage-demo.mjs
+      - name: Preserve portable offline demonstration
+        uses: actions/upload-artifact@v4
+        with:
+          name: passage-offline-demonstration
+          path: /tmp/passage-export/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Install ephemeral browser test dependency
+        run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+      - name: Exercise Chrome online and offline
+        env:
+          PASSAGE_ARTIFACT_DIR: /tmp/passage-qa
+        run: node --test tests/passage-browser.test.mjs
+      - name: Preserve simulated mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: passage-browser-qa
+          path: /tmp/passage-qa/
+          if-no-files-found: ignore
+          retention-days: 14
