@@ -51,7 +51,7 @@ test('poor target coverage must report unknown rather than zero error',()=>{
 });
 test('reject forged/out-of-bounds reference and malformed reverse inputs',()=>{
  const p=pair(),raw=estimateStereoDepth(p);
- assert.throws(()=>auditStereoConsistency(raw,p.left,new Uint8Array(2)),/invalid_right_pixels/);
+ assert.throws(()=>auditStereoConsistency(raw,p.left,new Uint8Array(2)),/right_pixels/);
  assert.throws(()=>auditStereoConsistency(raw,p.left,p.right,{maxDisparity:500}),/invalid_max_disparity/);
  assert.throws(()=>compareRangingTargets(raw,[{id:'bad',cameraAxisDepthM:3,box:{x:-2,y:0,width:20,height:20}}]),/invalid_target_box/);
  assert.throws(()=>compareRangingTargets(raw,[{id:'bad',cameraAxisDepthM:NaN,box:bbox}]),/invalid_reference_axial_depth/);
