@@ -31,6 +31,7 @@ jobs:
           node --check systemia/work-saban/app.js
           node --check systemia/work-saban/office-camera.js
           node --check systemia/work-saban/office-camera.proof.mjs
+          node --check systemia/work-saban/office-browser-qa.mjs
           node --check systemia/work-saban/office-3d.js
           node --check systemia/work-saban/trace-client.js
           node --check systemia/work-saban/trace-chain.mjs
@@ -52,6 +53,18 @@ jobs:
         run: node systemia/work-saban/office-camera.proof.mjs
       - name: Prove spatial office camera and receipt-driven state
         run: node systemia/work-saban/office-3d.proof.mjs
+      - name: Inspect real desktop and phone camera in headless Chrome
+        run: |
+          export WORK_SABAN_BROWSER_PROOF_DIR="$RUNNER_TEMP/work-saban-visual"
+          node systemia/work-saban/office-browser-qa.mjs
+      - name: Retain local browser screenshots for manual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-saban-smooth-camera-visual
+          path: ${{ runner.temp }}/work-saban-visual/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Prove ordered browser and server SHA-256 trace verification
         run: node systemia/work-saban/trace-chain.proof.mjs
       - name: Prove local preview API
