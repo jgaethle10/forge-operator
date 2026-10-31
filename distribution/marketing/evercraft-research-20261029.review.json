@@ -6,7 +6,7 @@
   "orchestrator": "systemia",
   "campaign_goal": "third-party buyer exposure and qualified research scopes, not synthetic engagement",
   "founder_direction": "launch and rotate across approved Evercraft channels; personal platform copies prepared separately",
-  "status": "platform_identity_media_and_issuer_authorization_pending",
+  "status": "founder_reported_personal_launch_company_clip_permission_hold",
   "owner_approval": false,
   "platform_connections_verified": false,
   "published_posts_verified": 0,
@@ -303,7 +303,7 @@
         "authorizationRef": null
       },
       "publicationAuthority": false,
-      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "status": "founder_reported_published_not_clip_posted",
       "publisher_state": "not_submitted",
       "provider_post_id": null,
       "provider_post_url": null,
@@ -332,7 +332,13 @@
         "https://github.com/jgaethle10/forge-operator/pull/1750",
         "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
       ],
-      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count",
+      "founder_reported": {
+        "local_date": "2026-10-30",
+        "state": "reported_posted_by_founder_unverified",
+        "source": "founder_conversation",
+        "provided_platform_permalink": null
+      }
     },
     {
       "id": "research-20261029-personal-instagram",
@@ -355,7 +361,7 @@
         "authorizationRef": null
       },
       "publicationAuthority": false,
-      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "status": "founder_reported_published_not_clip_posted",
       "publisher_state": "not_submitted",
       "provider_post_id": null,
       "provider_post_url": null,
@@ -384,7 +390,13 @@
         "https://github.com/jgaethle10/forge-operator/pull/1750",
         "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
       ],
-      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count",
+      "founder_reported": {
+        "local_date": "2026-10-30",
+        "state": "reported_posted_by_founder_unverified",
+        "source": "founder_conversation",
+        "provided_platform_permalink": null
+      }
     },
     {
       "id": "research-20261029-personal-linkedin",
@@ -407,7 +419,7 @@
         "authorizationRef": null
       },
       "publicationAuthority": false,
-      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "status": "founder_reported_published_not_clip_posted",
       "publisher_state": "not_submitted",
       "provider_post_id": null,
       "provider_post_url": null,
@@ -436,7 +448,13 @@
         "https://github.com/jgaethle10/forge-operator/pull/1750",
         "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
       ],
-      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count",
+      "founder_reported": {
+        "local_date": "2026-10-30",
+        "state": "reported_posted_by_founder_unverified",
+        "source": "founder_conversation",
+        "provided_platform_permalink": null
+      }
     },
     {
       "id": "research-20261029-personal-x",
@@ -459,7 +477,7 @@
         "authorizationRef": null
       },
       "publicationAuthority": false,
-      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "status": "founder_reported_published_not_clip_posted",
       "publisher_state": "not_submitted",
       "provider_post_id": null,
       "provider_post_url": null,
@@ -488,7 +506,13 @@
         "https://github.com/jgaethle10/forge-operator/pull/1750",
         "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
       ],
-      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count",
+      "founder_reported": {
+        "local_date": "2026-10-30",
+        "state": "reported_posted_by_founder_unverified",
+        "source": "founder_conversation",
+        "provided_platform_permalink": null
+      }
     },
     {
       "id": "research-20261029-personal-tiktok",
@@ -511,7 +535,7 @@
         "authorizationRef": null
       },
       "publicationAuthority": false,
-      "status": "prepared_held_for_platform_account_and_media_preflight",
+      "status": "founder_reported_published_not_clip_posted",
       "publisher_state": "not_submitted",
       "provider_post_id": null,
       "provider_post_url": null,
@@ -540,7 +564,13 @@
         "https://github.com/jgaethle10/forge-operator/pull/1750",
         "https://github.com/jgaethle10/forge-operator/actions/runs/40924409944"
       ],
-      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count"
+      "editorial_standard": "natural_complete_thoughts_no_forced_paragraph_count",
+      "founder_reported": {
+        "local_date": "2026-10-30",
+        "state": "reported_posted_by_founder_unverified",
+        "source": "founder_conversation",
+        "provided_platform_permalink": null
+      }
     }
   ],
   "review_gates": [
@@ -566,5 +596,32 @@
     "bulk_unsolicited_DMs",
     "duplicate_reposting",
     "claim_viral_traffic_without_analytics"
-  ]
+  ],
+  "founder_launch_report": {
+    "reported_local_date": "2026-10-30",
+    "attestation_source": "founder_confirmed_in_conversation",
+    "statement": "Research launch posted everywhere across founder's intended personal platforms",
+    "platforms_reported": [
+      "facebook",
+      "instagram",
+      "linkedin",
+      "x",
+      "tiktok"
+    ],
+    "recorded_as": "founder_report_not_independent_platform_receipt",
+    "provider_post_urls_supplied": false,
+    "linked_provider_receipts": 0,
+    "do_not_republish_identical_personal_launch": true
+  },
+  "postlaunch_distribution": {
+    "requested": "Use first-party Evercraft Clip for repeat, distinctly useful Research content wherever company accounts are authorized",
+    "launch_post_replay_prohibited": true,
+    "priority": "new corporate-channel posts, sourced case examples and observed evidence explanations, not duplicate founder posts",
+    "exact_hold": "Systemia issuer approval and authenticated account-specific Clip adapters remain unverified; no bypass",
+    "destination_policy": "Evercraft corporate channels only; personal accounts exclude from autonomous posting",
+    "when_available": "publish only unique, approved, rights-reviewed materials and retain provider permalink/ID plus separately verified Facebook link comment",
+    "no_automatic_spend": true,
+    "no_unverified_delivery_claim": true
+  },
+  "editorial_standard": "Natural cohesive prose with no fixed paragraph count; no slam-poetry one-liners"
 }
