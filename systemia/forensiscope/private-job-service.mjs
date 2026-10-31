@@ -406,7 +406,7 @@ export function startForensiScopePrivateWorker({
   if(!active)return;
   current=(async()=>{
    try{await jobService.runNextQueued()}
-   catch{onTickError({error_code:'private_worker_tick_failed'})}
+   catch{try{onTickError({error_code:'private_worker_tick_failed'})}catch{ /* fail closed */ }}
   })();
   current.finally(()=>{
    if(active)timer=setTimeout(pump,intervalMs);
