@@ -1,5 +1,5 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-11-01T18:05:40.677Z
+Generated: 2026-11-01T21:58:11.871Z
 Observed crawler-like requests: 0
 Negative provider pickup receipts: 179
 Strike-now surfaces: 607
@@ -25,8 +25,8 @@ Strike-now surfaces: 607
 19. [strike_now] score=231 /chum/products/forensiscope/ai-conformance.json :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 20. [strike_now] score=231 /chum/products/forensiscope/ai-discovery.json :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 21. [strike_now] score=231 /chum/products/forensiscope/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
-22. [strike_now] score=231 /forensiscope/distribution/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-23. [strike_now] score=223 /forensiscope/developers/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+22. [strike_now] score=223 /forensiscope/developers/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+23. [strike_now] score=223 /forensiscope/distribution/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 24. [strike_now] score=223 /forensiscope/editorial/deduplicate-long-video-segments/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 25. [strike_now] score=223 /forensiscope/editorial/forensiscope-and-assemblyai/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 26. [strike_now] score=223 /forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
