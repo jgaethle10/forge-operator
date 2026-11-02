@@ -24,6 +24,19 @@ Capture timestamp, operator, instrument make/calibration, setup photo/drawing, D
 
 The module validates a *hypothetical or independently measured* steady-state power budget and labels >100% reported efficiency as a **measurement anomaly**, never a validated over-unity result. It does not simulate electromagnetic coupling or substitute for instrument data. No fake measured results.
 
+## Stage 2: DC data gate and research evidence
+- [BENCH_PROTOCOL.md](BENCH_PROTOCOL.md): proposed low-voltage educational trial, safeguards, instruments and review gates. This is NOT permission to energize hardware.
+- [SOURCE_AUDIT.md](SOURCE_AUDIT.md): original patent, MIT paper, independent history and WPC foreign-object heating evidence.
+- [bench-evaluator.mjs](bench-evaluator.mjs): DC-only session evaluator that rejects missing provenance/uncertainty fields on entries claimed to be measured and flags missing controls or apparent >100% accounting.
+- [synthetic-example.json](synthetic-example.json): invented software-only fixture. Its efficiencies are NOT measurements.
+
+```bash
+node --test systemia/research/historical-tech/*.test.mjs
+node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/historical-tech/synthetic-example.json
+```
+
+**Validation note, November 2, 2026:** The ten Node.js unit tests passed in an isolated local reproduction using the branch source copied into a local test directory (Node v22.16.0). This is local validation, not GitHub CI verification or runtime hardware evidence. Re-run tests in an independent repository checkout before merge.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
