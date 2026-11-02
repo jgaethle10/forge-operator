@@ -1,0 +1,35 @@
+name: Clip Owned Data Cutover Contracts
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/clip/owned-campaign-migration.mjs'
+      - 'systemia/clip/owned-campaign-migration.test.mjs'
+      - 'systemia/clip/owned-campaign-migrate-cli.mjs'
+      - 'systemia/migrations/base44-exit/slices/evercraft-clip-owned-cutover.json'
+      - '.github/workflows/clip-owned-base44-exit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/clip/owned-campaign-migration.mjs'
+      - 'systemia/clip/owned-campaign-migration.test.mjs'
+      - 'systemia/clip/owned-campaign-migrate-cli.mjs'
+      - 'systemia/migrations/base44-exit/slices/evercraft-clip-owned-cutover.json'
+      - '.github/workflows/clip-owned-base44-exit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-private-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove private owned Clip staging, hold-only import, no secrets or excluded brands
+        run: node --test systemia/clip/owned-campaign-migration.test.mjs
+      - name: Prevent accidental Base44 runtime regressions
+        run: node scripts/validate-no-base44-hotpath.mjs
