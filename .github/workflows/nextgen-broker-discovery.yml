@@ -1,0 +1,28 @@
+name: NextGen broker discovery fail-closed tests
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/nextgen/broker-deployment-doctor.mjs'
+      - 'scripts/nextgen/broker-deployment-doctor.test.mjs'
+      - 'systemia/network/remote-broker-public-preflight.mjs'
+      - 'systemia/network/remote-broker-public-preflight.test.mjs'
+      - '.github/workflows/nextgen-broker-discovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  broker-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify HTTPS broker receipt matching and fail-closed health
+        run: node --test systemia/network/remote-broker-public-preflight.test.mjs
+      - name: Verify canonical Yard broker records never grant device trust
+        run: node --test scripts/nextgen/broker-deployment-doctor.test.mjs
