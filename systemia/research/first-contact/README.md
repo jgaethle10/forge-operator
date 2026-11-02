@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-10-31.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-02.
 
 ## Mission
 
@@ -38,6 +38,14 @@ Test: `node --test systemia/research/first-contact/kinematics.test.mjs`
 ### Required limitations
 
 This is a mathematical sanity check, **not** an analysis of Go Fast raw frames. The code uses deliberately invented demonstration numbers, not extracted flight telemetry. Real airborne sensor analysis also needs observer position, heading, velocity, pointing/calibration, line-of-sight/range measurements, atmosphere, frame timing and their error bars. No ground-relative object velocity can be inferred from a single simple angular observation without additional constraints.
+
+## Sprint 2, November 2, 2026: measured progress (research branch only)
+
+- **Generic moving-observer geometry:** `platform-geometry.mjs` projects known target range/azimuth/elevation into a local East-North-Up reference using per-frame observing-platform positions and timestamps. It estimates velocity, three-frame acceleration, optional wind-relative velocity, and conditional Gaussian Monte Carlo *sensitivity*. A missing range or timestamp fails closed. The independent-error intervals are assumed, not inferred from video.
+- **Published-number AARO reproduction:** `gofast-appendix-a.mjs` translates AARO's public Appendix A Table I and Eqs. 4-13, including coordinated aircraft turn, into its **different aircraft-fixed** x-forward/y-right/z-down convention. With displayed rounded values, it reproduces approximately 14.76 km turn radius, 9.59-degree turn, and **263 m in 13 s = 20.2 m/s**, consistent with AARO's rounded ~265 m / 20 m/s example. This is a check on *AARO's published arithmetic*, not independently measured motion or wind-compensated speed. The report has a 6297/6279 m t2 range inconsistency; see audit.
+- **Research/source audit:** `source-audit-2026-11-02.md` distinguishes primary observation, government interpretation, reproduced public arithmetic, synthetic simulation, and speculation. It covers Go Fast, Oak Ridge material findings, PR-011 and terrestrial electroaerodynamic flight.
+- **Tests:** 14 targeted new tests passed on local Node v22; repo CI/production execution **not yet verified**. Run `node --test systemia/research/first-contact/*.test.mjs` after checking out the branch. The earlier three baseline tests remain in place.
+- **Boundary:** no autonomous Systemia agents dispatched, no evidence of extraterrestrial recovered craft, no verified full-frame video replication or hardware demonstration.
 
 ## Decision and escalation gates
 
