@@ -1,0 +1,201 @@
+{
+  "type": "FeatureCollection",
+  "name": "evercraft.submerged-heritage-atlas.seed.v1",
+  "metadata": {
+    "research_id": "SUBMERGED-HERITAGE-001",
+    "review_date": "2026-11-02",
+    "status": "seed_not_survey",
+    "coordinate_policy": "Every point is an approximate region-level locator; NOT an excavated feature, dive coordinate, survey result, or navigation aid.",
+    "data_policy": "Publicly cited historical scholarship and high-level region locations only. No sensitive site coordinates or archaeological looting targets.",
+    "source_policy": "Classification applies to the cited interpretation, not authoritativeness of a media headline."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "pavlopetri",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.99,
+          36.51
+        ]
+      },
+      "properties": {
+        "name": "Pavlopetri",
+        "country": "Greece",
+        "region": "Laconia, southern Greece",
+        "classification": "confirmed",
+        "period": "Occupation from at least c. 3500 BCE",
+        "summary": "Submerged town with archaeological surveys, street plan and building remains.",
+        "evidence": "University of Nottingham and Greek Ministry of Culture survey, mapping and targeted excavation.",
+        "interpretation": "Confirmed archaeological settlement.",
+        "cause": "Coastal change and relative sea-level history; avoid a single unverified catastrophe narrative.",
+        "sources": [
+          "https://impact.ref.ac.uk/casestudies/CaseStudy.aspx?Id=28862"
+        ],
+        "coordinate_quality": "approximate_region_only"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "thonis-heracleion",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12,
+          31.31
+        ]
+      },
+      "properties": {
+        "name": "Thonis-Heracleion",
+        "country": "Egypt",
+        "region": "Aboukir Bay, Nile Delta",
+        "classification": "confirmed",
+        "period": "Ancient Egyptian port, active before Alexandria",
+        "summary": "Excavated submerged port-city, with temple, harbor remains, statues and artifacts.",
+        "evidence": "IEASM excavations and Oxford Centre for Maritime Archaeology publications.",
+        "interpretation": "Confirmed ancient port-city.",
+        "cause": "Delta sediment subsidence, sea-level change and localized ground liquefaction.",
+        "sources": [
+          "https://www.ieasm.institute/institute.php?lang=en",
+          "https://www.franckgoddio.org/faqs/",
+          "https://www.arch.ox.ac.uk/ocma"
+        ],
+        "coordinate_quality": "approximate_region_only"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "baiae",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.08,
+          40.82
+        ]
+      },
+      "properties": {
+        "name": "Baiae",
+        "country": "Italy",
+        "region": "Bay of Naples, Campania",
+        "classification": "confirmed",
+        "period": "Roman era",
+        "summary": "Submerged Roman villas, mosaics, port structures and architectural remains.",
+        "evidence": "Italian national environmental research agency's mapping and official tourism archaeological interpretation.",
+        "interpretation": "Confirmed submerged built heritage.",
+        "cause": "Bradyseism and coastal subsidence in the Campi Flegrei volcanic area.",
+        "sources": [
+          "https://www.isprambiente.gov.it/en/news/mer-project-2013-coastal-mapping-exploring-the-submerged-wonders-of-the-baia-archaeological-park",
+          "https://www.italia.it/en/campania/things-to-do/baia-archaeological-parks"
+        ],
+        "coordinate_quality": "approximate_region_only"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "port-royal",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.84,
+          17.94
+        ]
+      },
+      "properties": {
+        "name": "Port Royal",
+        "country": "Jamaica",
+        "region": "Kingston Harbour",
+        "classification": "confirmed",
+        "period": "17th century CE",
+        "summary": "Earthquake-submerged sections of a historically documented port town, with surviving structures and urban plan.",
+        "evidence": "UNESCO World Heritage inscription and archaeological ensemble documentation.",
+        "interpretation": "Confirmed submerged historical settlement.",
+        "cause": "1692 earthquake and related ground failure.",
+        "sources": [
+          "https://whc.unesco.org/en/list/1595/",
+          "https://whc.unesco.org/en/decisions/8966/"
+        ],
+        "coordinate_quality": "approximate_region_only"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "atlit-yam",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.94,
+          32.71
+        ]
+      },
+      "properties": {
+        "name": "Atlit-Yam",
+        "country": "Israel",
+        "region": "Carmel Coast",
+        "classification": "confirmed",
+        "period": "Neolithic, approximately 9,000 years before present",
+        "summary": "Prehistoric submerged settlement with buildings, wells, burials and excavated occupation evidence.",
+        "evidence": "Peer-reviewed excavation, geoarchaeology and Israeli archaeological authority research.",
+        "interpretation": "Confirmed Neolithic settlement.",
+        "cause": "Postglacial sea-level rise and coastal change.",
+        "sources": [
+          "https://whitelevy.fas.harvard.edu/excavations-submerged-neolithic-site-atlit-yam-carmel-coast-israel",
+          "https://www.cambridge.org/core/journals/antiquity/article/deep-stratigraphy-of-submerged-neolithic-sites-a-microgeoarchaeological-approach-to-the-study-of-coastal-settlements-in-the-eastern-mediterranean/610B3CC1699D121ED4C543413EE380A7"
+        ],
+        "coordinate_quality": "approximate_region_only"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "yonaguni",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123,
+          24.45
+        ]
+      },
+      "properties": {
+        "name": "Yonaguni Formation",
+        "country": "Japan",
+        "region": "Off Yonaguni Island, Ryukyu Islands",
+        "classification": "disputed",
+        "period": "Undetermined",
+        "summary": "Submerged terraced rock formation promoted by some as architecture, interpreted by other researchers as geological.",
+        "evidence": "Photographed and dived rock formation; no consensus establishing human construction.",
+        "interpretation": "Physical formation is real; artificial-monument interpretation is disputed.",
+        "cause": "Natural jointed rock and erosion are among proposed explanations.",
+        "sources": [
+          "https://www.nationalgeographic.com/history/article/yonaguni-jima-japan-underwater-city"
+        ],
+        "coordinate_quality": "approximate_region_only"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "cuba-sonar",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6,
+          21.65
+        ]
+      },
+      "properties": {
+        "name": "Western Cuba Sonar Anomaly",
+        "country": "Cuba",
+        "region": "Off western Cuba, broad regional locator",
+        "classification": "disputed",
+        "period": "Undetermined",
+        "summary": "Deep-water sonar and remotely operated vehicle imagery reported geometric rock patterns; a human-built city is unverified.",
+        "evidence": "Early expedition observations publicly reported in 2002; no cited peer-reviewed excavation establishing architecture.",
+        "interpretation": "Anomaly observed; 'lost city' remains unsubstantiated.",
+        "cause": "No demonstrated submergence mechanism for a constructed settlement at reported depths.",
+        "sources": [
+          "https://www.washingtonpost.com/archive/politics/2002/10/10/in-cuban-depths-atlantis-or-anomaly/96b5cd79-9eb8-4fc7-8f18-8a3b3e9b4037/"
+        ],
+        "coordinate_quality": "coarse_region_only_unlocated"
+      }
+    }
+  ]
+}
