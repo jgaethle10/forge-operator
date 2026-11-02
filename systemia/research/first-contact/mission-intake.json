@@ -1,0 +1,90 @@
+{
+  "schema": "evercraft.systemia.research_intake.v1",
+  "mission_id": "FIRST-CONTACT-001",
+  "title": "Evercraft | First Contact: evidence-gated UAP research",
+  "created_at": "2026-10-31",
+  "updated_at": "2026-11-02",
+  "owner": "Evercraft LLC",
+  "routing_priority": "Systemia first",
+  "execution_state": "NOT_DISPATCHED",
+  "agent_assignments_state": "UNASSIGNED",
+  "publication_state": "HOLD_REVIEW",
+  "evidence_status": "NO_VERIFIED_EXTRATERRESTRIAL_TECHNOLOGY",
+  "repository": "jgaethle10/forge-operator",
+  "branch": "research/first-contact-uap-001",
+  "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1832",
+  "deliverables": [
+    {
+      "id": "FC-SENSOR-01",
+      "lane": "sensor_forensics",
+      "status": "RESEARCH_PROTOTYPE",
+      "artifacts": [
+        "platform-geometry.mjs",
+        "platform-geometry.test.mjs",
+        "gofast-appendix-a.mjs",
+        "gofast-appendix-a.test.mjs"
+      ],
+      "completed": "2026-11-02",
+      "validation": "14 new local tests passed; repository CI not checked",
+      "acceptance": "Reconstruct moving-platform synthetic geometry and audit AARO published 13-second math without asserting independent case identity"
+    },
+    {
+      "id": "FC-EVIDENCE-01",
+      "lane": "provenance",
+      "status": "INITIAL_AUDIT",
+      "artifacts": [
+        "cases.json",
+        "source-audit-2026-11-02.md"
+      ],
+      "completed": "2026-11-02",
+      "validation": "Public official source reconciliation; independent editorial review pending",
+      "acceptance": "Primary source and source-data limitations separated from hypotheses"
+    },
+    {
+      "id": "FC-MATERIAL-01",
+      "lane": "materials_photonics",
+      "status": "QUEUED_UNASSIGNED",
+      "dependencies": [
+        "FC-EVIDENCE-01"
+      ],
+      "acceptance": "Compare examined Mg/Zn Bi/Pb bands to crystalline THz waveguide requirements; identify safe known-physics lab research questions"
+    },
+    {
+      "id": "FC-SENSOR-02",
+      "lane": "sensor_forensics",
+      "status": "QUEUED_UNASSIGNED",
+      "dependencies": [
+        "FC-SENSOR-01"
+      ],
+      "acceptance": "Compare AARO all-heading and wind scenarios with sourced assumptions; do not assert unique identity"
+    },
+    {
+      "id": "FC-PROPULSION-01",
+      "lane": "engineering",
+      "status": "QUEUED_UNASSIGNED",
+      "dependencies": [
+        "FC-EVIDENCE-01"
+      ],
+      "acceptance": "Desk-only performance tradeoff for electroaerodynamic flight with power/thrust limitations, no high-voltage build"
+    },
+    {
+      "id": "FC-REVIEW-01",
+      "lane": "independent_red_team",
+      "status": "QUEUED_UNASSIGNED",
+      "dependencies": [
+        "FC-MATERIAL-01",
+        "FC-SENSOR-02",
+        "FC-PROPULSION-01"
+      ],
+      "acceptance": "Document strongest conventional explanations, disconfirming tests, and confidence/uncertainty gates"
+    }
+  ],
+  "hard_constraints": [
+    "Use only lawful public or authorized records",
+    "No promotion of unexplained case to alien-origin proof",
+    "No claim of mission dispatch, agent work, new physical samples, lab success or production readiness without receipts",
+    "No high-voltage or hazardous physical testing without safety approval and qualified controls",
+    "No marketing or external release before evidence and review gate"
+  ],
+  "next_execution_gate": "Locate a verified authorized Systemia writable mission endpoint and capture actual worker run receipts. Read-only public Fabric discovery is insufficient."
+}
