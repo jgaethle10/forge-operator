@@ -1,6 +1,6 @@
 {
   "project": "FIRST-CONTACT-001",
-  "review_date": "2026-10-31",
+  "review_date": "2026-11-02",
   "verified_extraterrestrial_technology": false,
   "records": [
     {
@@ -21,9 +21,13 @@
       ],
       "missing_data": [
         "Raw full sensor video and calibrated metadata for independent reproduction",
-        "Exact observing aircraft state/heading and measurement uncertainties"
+        "Exact observing aircraft state/heading and measurement uncertainties",
+        "AARO report has inconsistent 6297m (Table I and equation) / 6279m (prose) second-frame range; project follows 6297m",
+        "Calibration and per-frame measurements for non-rounded source analysis"
       ],
-      "project_action": "Independent methods audit; not alien propulsion inference"
+      "project_action": "Independent methods audit; not alien propulsion inference",
+      "reproduction_status": "Published AARO Appendix A two-frame arithmetic independently recomputed to ~263m in 13s from published rounded inputs; original sensor data unavailable. This is not a new observed event reconstruction.",
+      "audit_file": "source-audit-2026-11-02.md"
     },
     {
       "id": "MAT-001",
@@ -38,7 +42,8 @@
         "Independently verified chain of custody before testing",
         "Raw lab measurement files for independent reanalysis"
       ],
-      "project_action": "Requirements comparison for real THz waveguides"
+      "project_action": "Requirements comparison for real THz waveguides",
+      "audit_file": "source-audit-2026-11-02.md"
     },
     {
       "id": "UAP-002",
