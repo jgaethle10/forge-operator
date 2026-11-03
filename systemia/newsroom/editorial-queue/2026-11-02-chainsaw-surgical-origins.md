@@ -54,6 +54,8 @@ That history deserves empathy for patients and a careful account of the actual e
 
 The next time someone says chainsaws were invented for childbirth, the most useful response is: partly yes, but the complete story includes bone surgery, several inventors, decades of improvements, and the long history of medicine struggling to become safer.
 
+**Follow-up source check (2026-11-03):** [Independent-link and contradiction review](./2026-11-03-chainsaw-source-verification.md). This cross-check confirms dates against medical-history scholarship and artifacts, records the 1830 versus 1834 secondary-source discrepancy, and explicitly leaves visual and editorial approvals pending.
+
 ## Primary source and claim ledger
 
 1. **Historical peer-reviewed review:** Skippen M., Kirkup J., Maxton R. M., McDonald S. W., “The chain saw—a Scottish invention,” *Scottish Medical Journal* 49(2), 72–75 (2004), PMID 15209147, DOI 10.1177/003693300404900218. https://pubmed.ncbi.nlm.nih.gov/15209147/ . **Evidence:** early linked saw c. 1783–1785; Aitken and symphysiotomy; Jeffray and diseased bone; Aitken's 1785 illustration; Jeffray's later manufacture; later medical history. **State:** published historical review. Do not equate both pioneers' motivations.
