@@ -1,0 +1,35 @@
+name: Living Worlds House 001
+
+on:
+  push:
+    paths:
+      - 'public/living-worlds/**'
+      - 'tests/living-worlds-house.test.mjs'
+      - '.github/workflows/living-worlds-house.yml'
+  pull_request:
+    paths:
+      - 'public/living-worlds/**'
+      - 'tests/living-worlds-house.test.mjs'
+      - '.github/workflows/living-worlds-house.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  house-contract:
+    name: Local house simulation contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax
+        run: |
+          node --check public/living-worlds/house-core.mjs
+          node --check public/living-worlds/app.mjs
+          node --check tests/living-worlds-house.test.mjs
+      - name: Deterministic simulation tests
+        run: node --test tests/living-worlds-house.test.mjs
