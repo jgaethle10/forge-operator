@@ -1,0 +1,34 @@
+name: Evercraft Visual Engine Flyover
+
+on:
+  push:
+    paths:
+      - "systemia/visual-engine/**"
+      - "systemia/world-engine/**"
+      - ".github/workflows/visual-engine-flyover.yml"
+  pull_request:
+    paths:
+      - "systemia/visual-engine/**"
+      - "systemia/world-engine/**"
+      - ".github/workflows/visual-engine-flyover.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aircraft-flyover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Validate procedural geometry and reproducibility
+        run: node --test systemia/visual-engine/flyover.test.mjs
+      - name: Prove World Engine visual and WebGPU plan integration
+        run: node --import tsx --test systemia/visual-engine/world-engine-integration.test.mjs
