@@ -25,10 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-      - name: Install locked dependencies without lifecycle scripts
-        run: npm ci --ignore-scripts
       - name: Validate procedural geometry and reproducibility
         run: node --test systemia/visual-engine/flyover.test.mjs
       - name: Prove World Engine visual and WebGPU plan integration
-        run: node --import tsx --test systemia/visual-engine/world-engine-integration.test.mjs
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/world-engine-integration.test.mjs
