@@ -1,0 +1,46 @@
+# HIST-TECH-001 validation only. No build deploy, secrets, network-dependent dependencies, or hardware control.
+name: Historical Technology Research Tests
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/research/historical-tech/**'
+      - '.github/workflows/historical-tech-research-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Node.js data-gate and accounting tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out proposed source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check research modules
+        run: |
+          node --check systemia/research/historical-tech/power-accounting.mjs
+          node --check systemia/research/historical-tech/bench-evaluator.mjs
+      - name: Run deterministic software unit tests
+        run: node --test systemia/research/historical-tech/power-accounting.test.mjs systemia/research/historical-tech/bench-evaluator.test.mjs
+      - name: Verify synthetic-only example without fabricating measurements
+        run: |
+          node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/historical-tech/synthetic-example.json > /tmp/historical-tech-synthetic-report.json
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const report = JSON.parse(readFileSync("/tmp/historical-tech-synthetic-report.json", "utf8"));
+            if (report.dataKind !== "synthetic" || report.totalTrials !== 5 ||
+                report.alignedMeanEfficiency !== 0.3 || report.experimentalDesignComplete !== true ||
+                !report.publicationGate.includes("synthetic sessions cannot establish")) {
+              throw new Error("Synthetic fixture gate failed");
+            }
+            process.stdout.write("Synthetic fixture gate passed; no physical measurements claimed.\n");
+          '
