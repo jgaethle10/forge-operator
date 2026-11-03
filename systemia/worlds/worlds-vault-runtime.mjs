@@ -99,14 +99,19 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
   return {world_id:id,version:1,edit_token:editToken,created_at:now};
  }
  async function serveStatic(req,res,pathname){
-  if(!pathname.startsWith('/worlds/')||req.method!=='GET')throw new VaultError(404,'route_not_found');
-  const relative=pathname.slice('/worlds/'.length)||'index.html';
+  // Only two explicitly public, read-only Window contracts are required by the Worlds mystery.
+  // Keep the rest of the sibling directory unreachable from the Worlds vault.
+  const sharedModules=new Set(['/the-window/world.mjs','/the-window/mystery.mjs']);
+  const shared=sharedModules.has(pathname);
+  if((!pathname.startsWith('/worlds/')&&!shared)||req.method!=='GET')throw new VaultError(404,'route_not_found');
+  const relative=shared?pathname.slice(1):'worlds/'+(pathname.slice('/worlds/'.length)||'index.html');
   if(relative.split('/').some(x=>x==='.'||x==='..'||x.startsWith('.'))||relative.includes('\\'))throw new VaultError(404,'route_not_found');
-  const target=path.resolve(assetRoot,'worlds',relative);
-  if(!within(path.join(assetRoot,'worlds'),target))throw new VaultError(404,'route_not_found');
+  const publicArea=path.join(assetRoot,shared?'the-window':'worlds');
+  const target=path.resolve(assetRoot,relative);
+  if(!within(publicArea,target))throw new VaultError(404,'route_not_found');
   let real,stat;
   try{real=await fs.realpath(target);stat=await fs.lstat(target);}catch{throw new VaultError(404,'route_not_found');}
-  if(!within(path.join(assetRoot,'worlds'),real)||stat.isSymbolicLink()||!stat.isFile())throw new VaultError(404,'route_not_found');
+  if(!within(publicArea,real)||stat.isSymbolicLink()||!stat.isFile())throw new VaultError(404,'route_not_found');
   const bytes=await fs.readFile(real);
   res.writeHead(200,{'content-type':MIME[path.extname(real)]||'application/octet-stream','content-length':bytes.length,
   'cache-control':'public, max-age=60','x-content-type-options':'nosniff'});res.end(bytes);
