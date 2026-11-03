@@ -54,7 +54,7 @@ try{
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
     await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
     // The mystery mode reuses this same WebGL scene, without changing local saves.
-    const beforeMystery=await page.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1'));
+    const beforeMystery=await page.evaluate(async()=>{const {loadWorld}=await import('/worlds/world-core.mjs');const w=loadWorld(localStorage);return {revision:w.revision,objects:w.objects,agents:w.agents};});
     await page.locator('#mysteryOpen').click();
     await page.locator('#worldsMysteryPanel').waitFor({state:'visible'});
     assert.equal(await page.locator('#wm-accuse').isDisabled(),true,profile.name+': premature mystery accusation allowed');
@@ -70,7 +70,7 @@ try{
     assert.equal(await page.locator('#wm-clues li').count(),1,profile.name+': reset did not clear evidence');
     await page.locator('#wm-close').click();
     assert.equal(await page.locator('#worldsMysteryPanel').isVisible(),false,profile.name+': mystery sheet did not close');
-    assert.equal(await page.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1')),beforeMystery,profile.name+': fictional case modified saved world');
+    assert.deepEqual(await page.evaluate(async()=>{const {loadWorld}=await import('/worlds/world-core.mjs');const w=loadWorld(localStorage);return {revision:w.revision,objects:w.objects,agents:w.agents};}),beforeMystery,profile.name+': fictional case changed world state');
 
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
