@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Before forests, there was surgery: the early medical history of chain saws</title>
+<desc id="desc">Original conceptual editorial infographic showing a flexible manually pulled chain between handles in the late 1700s, the principle of Bernhard Heine's 1830 hand-cranked guided chain osteotome, and a modern logging saw as a clearly separate later use. Schematics are not scale-accurate reconstructions.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101b26"/><stop offset="1" stop-color="#071017"/></linearGradient>
+ <linearGradient id="steel" x2="0" y2="1"><stop stop-color="#d8e6e9"/><stop offset="1" stop-color="#698e9d"/></linearGradient>
+ <pattern id="grain" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M0 44L44 0M-5 5L5 -5M39 49L49 39" stroke="#8fb7bb" stroke-opacity=".08" stroke-width="1"/></pattern>
+ <pattern id="teeth" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M0 22L7 9L13 21L19 8L24 19" fill="none" stroke="#b5c9d0" stroke-width="3"/></pattern>
+</defs>
+<rect width="1280" height="720" fill="url(#bg)"/><rect width="1280" height="720" fill="url(#grain)"/>
+<path d="M58 52H1222" stroke="#7193a4" stroke-opacity=".45"/>
+<text x="62" y="91" fill="#d6b17a" font-family="Arial, sans-serif" font-size="19" letter-spacing="5" font-weight="700">EVERCRAFT JOURNAL   /   HIDDEN HISTORY</text>
+<text x="60" y="166" fill="#f2f1e9" font-family="Georgia, serif" font-size="64" font-weight="700">Before forests,</text>
+<text x="60" y="236" fill="#f2f1e9" font-family="Georgia, serif" font-size="64" font-weight="700">there was surgery.</text>
+<text x="62" y="276" fill="#c4d3d7" font-family="Arial, sans-serif" font-size="20">An engineering idea that began in operating rooms, centuries before the modern power saw.</text>
+<line x1="61" x2="1219" y1="317" y2="317" stroke="#7b9aa9" stroke-opacity=".42"/>
+<!-- Three differentiated conceptual panels -->
+<rect x="60" y="345" width="364" height="285" rx="14" fill="#142533" stroke="#44606f"/>
+<rect x="458" y="345" width="364" height="285" rx="14" fill="#142533" stroke="#44606f"/>
+<rect x="856" y="345" width="364" height="285" rx="14" fill="#142533" stroke="#44606f"/>
+<text x="80" y="382" fill="#e6bc79" font-family="Arial, sans-serif" font-weight="700" font-size="18">1780s  /  FLEXIBLE CHAIN</text>
+<text x="478" y="382" fill="#e6bc79" font-family="Arial, sans-serif" font-weight="700" font-size="18">1830  /  GUIDED CHAIN</text>
+<text x="876" y="382" fill="#e6bc79" font-family="Arial, sans-serif" font-weight="700" font-size="18">LATER  /  POWERED SAW</text>
+<!-- Manual saw concept; no claim of exact period tool geometry -->
+<g transform="translate(91 418)">
+ <path d="M19 23C44 17 51 46 39 61C25 77 1 58 19 23Z" fill="none" stroke="#d5b487" stroke-width="10"/>
+ <path d="M249 23C272 17 284 44 268 61C252 76 231 54 249 23Z" fill="none" stroke="#d5b487" stroke-width="10"/>
+ <path d="M43 53C102 11 199 11 246 53" stroke="#9cb1bc" stroke-width="6" fill="none" stroke-dasharray="3 8"/>
+ <path d="M43 53C102 11 199 11 246 53" stroke="#e7e9e2" stroke-opacity=".5" stroke-width="1.2" fill="none"/>
+ <g fill="#b7cdd0"><circle cx="74" cy="38" r="4"/><circle cx="96" cy="30" r="4"/><circle cx="118" cy="25" r="4"/><circle cx="140" cy="22" r="4"/><circle cx="162" cy="24" r="4"/><circle cx="184" cy="29" r="4"/><circle cx="206" cy="37" r="4"/></g>
+</g>
+<text x="81" y="573" fill="#f1f1e9" font-family="Arial, sans-serif" font-size="20" font-weight="700">Hand-operated cutting chain</text>
+<text x="81" y="600" fill="#bfd0d5" font-family="Arial, sans-serif" font-size="16">Aitken: childbirth-related procedure</text>
+<text x="81" y="620" fill="#bfd0d5" font-family="Arial, sans-serif" font-size="16">Jeffray: diseased-bone surgery</text>
+<!-- Guided crank-driven chain concept -->
+<g transform="translate(487 413)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M104 86L255 55L268 75L105 112Z" fill="#708f9c" stroke="#cedbdc" stroke-width="5"/>
+ <path d="M106 87L254 58L269 74L108 112Z" stroke="#e7e3d8" stroke-width="1.6" stroke-dasharray="6 7"/>
+ <rect x="43" y="81" width="73" height="32" rx="9" fill="#304c59" stroke="#c9dce0" stroke-width="5"/>
+ <circle cx="68" cy="97" r="20" stroke="#e2bd81" stroke-width="8"/>
+ <path d="M69 97L40 56L19 56" stroke="#e2bd81" stroke-width="9"/>
+ <circle cx="16" cy="56" r="10" fill="#e2bd81" stroke="#e2bd81" stroke-width="5"/>
+ <path d="M47 113L25 145L66 146L78 115" fill="#304c59" stroke="#bed1d5" stroke-width="4"/>
+</g>
+<text x="478" y="573" fill="#f1f1e9" font-family="Arial, sans-serif" font-size="20" font-weight="700">Hand-cranked osteotome</text>
+<text x="478" y="600" fill="#bfd0d5" font-family="Arial, sans-serif" font-size="16">Bernhard Heine's bone-surgery tool</text>
+<text x="478" y="620" fill="#bfd0d5" font-family="Arial, sans-serif" font-size="16">Mechanical chain in a guide</text>
+<!-- Modern logging saw conceptual silhouette, not specific brand -->
+<g transform="translate(875 423)" stroke-linejoin="round">
+ <path d="M99 75Q163 48 284 58Q312 63 313 76Q308 90 284 93L106 109Z" fill="#7f9da7" stroke="#b8d0d6" stroke-width="5"/>
+ <path d="M121 73Q204 57 288 70" fill="none" stroke="#d9e0dc" stroke-width="2" stroke-dasharray="6 8"/>
+ <path d="M42 68L128 68Q140 75 131 99L121 124L66 125L32 105Z" fill="#b9935c" stroke="#edca88" stroke-width="5"/>
+ <path d="M55 68V33Q56 17 72 17H111V68" fill="none" stroke="#d4d9d6" stroke-width="9"/>
+ <path d="M46 115L30 139L61 140L70 128" fill="#263e4d" stroke="#d4d9d6" stroke-width="4"/>
+</g>
+<text x="876" y="573" fill="#f1f1e9" font-family="Arial, sans-serif" font-size="20" font-weight="700">A separate industrial evolution</text>
+<text x="876" y="600" fill="#bfd0d5" font-family="Arial, sans-serif" font-size="16">Not an eighteenth-century device</text>
+<text x="876" y="620" fill="#bfd0d5" font-family="Arial, sans-serif" font-size="16">Nor a documented direct product lineage</text>
+<path d="M60 653H1220" stroke="#7193a4" stroke-opacity=".45"/>
+<text x="60" y="680" fill="#b7c6ca" font-family="Arial, sans-serif" font-size="14">Original conceptual illustration. Not a scale-accurate reconstruction or photograph of a historical instrument.</text>
+<text x="1219" y="680" text-anchor="end" fill="#d6b17a" font-family="Arial, sans-serif" font-size="15" font-weight="700">EVERCRAFT</text>
+</svg>
