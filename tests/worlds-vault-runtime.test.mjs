@@ -75,6 +75,11 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  assert.equal((await fetch(base+'/worlds/api/worlds/'+'f'.repeat(32))).status,404);
  assert.equal((await fetch(base+'/worlds/api/worlds/foo')).status,404);
  assert.equal((await fetch(base+'/worlds/world-core.mjs')).status,200);
+ assert.equal((await fetch(base+'/the-window/world.mjs')).status,200,'Mossmere society module must be served for local Worlds mystery');
+ assert.equal((await fetch(base+'/the-window/mystery.mjs')).status,200,'Mystery model must be served for local Worlds puzzle');
+ assert.equal((await fetch(base+'/the-window/index.html')).status,404,'Sibling UI must not be exposed by Worlds vault');
+ assert.equal((await fetch(base+'/the-window/mystery-ui.mjs')).status,404,'Sibling components must not be exposed');
+ assert.equal((await fetch(base+'/the-window/not-allowed.mjs')).status,404,'Undeclared sibling modules must stay denied');
  const records=await fs.readdir(dataRoot);
  assert.equal(records.filter(name=>name.endsWith('.json')).length,0);
 });
