@@ -48,3 +48,30 @@
 .editor .tools button#unpublishOnline{border:1px solid #ba9f96;color:#86514b;background:#fff6f1;font-weight:700}
 .editor .tools button#unpublishOnline:disabled{opacity:.55;cursor:wait}
 @media(max-width:700px){.editor .tools #unpublishOnline{grid-column:span 2;min-height:46px}}
+
+
+/* Optional fictional 3D mystery inside the existing Evercraft Worlds renderer. */
+.mystery-intro-button{display:block;margin-top:10px;padding:12px 17px;border:1px solid #f8ecd2aa;border-radius:9px;background:#1136409c;color:#fef5df;font-weight:750;font-size:12px;backdrop-filter:blur(9px)}
+.mystery-intro-button:hover{background:#234d51d9}
+.worlds-mystery-panel{position:fixed;z-index:16;top:82px;right:22px;bottom:18px;width:min(435px,calc(100vw - 44px));overflow:auto;touch-action:pan-y;overscroll-behavior:contain;background:#f8f5ebf5;color:#243f3a;border:1px solid #fdf0d6;border-radius:17px;padding:22px 23px;box-shadow:0 18px 70px #092429a6;backdrop-filter:blur(20px)}
+.wm-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.wm-head small{color:#53766e;letter-spacing:.18em;font-size:9px;font-weight:800}
+.wm-head h2{font-family:Georgia,serif;font-weight:400;letter-spacing:-.035em;margin:9px 0 0;font-size:31px;line-height:1.14}
+#wm-close{background:#e1e8df;color:#294d45;border:0;border-radius:50%;width:37px;height:37px;flex-shrink:0;font-size:23px}
+.wm-summary{font-size:12px;color:#526e64;line-height:1.7}
+.wm-status{background:#e4eee0;padding:12px;border-radius:10px;color:#35594b;font-size:12px;line-height:1.55;font-weight:650}
+.worlds-mystery-panel h3{font-size:12px;letter-spacing:.07em;border-top:1px solid #d2dcd2;padding-top:17px;margin:19px 0 11px}
+#wm-progress{float:right;color:#617d67}
+#wm-clues{padding-left:18px;margin:0;min-height:55px}
+#wm-clues li{font-size:12px;line-height:1.65;margin-bottom:13px;color:#3f6255}
+#wm-clues li small,.wm-suspect small{display:block;color:#668276;font-size:10px;margin:3px 0}
+.wm-suspect{padding:9px 0;border-bottom:1px solid #d6dfd3;font-size:12px}
+.worlds-mystery-panel label{display:block;margin:17px 0 8px;font-size:11px;font-weight:750}
+#wm-choice{width:100%;padding:12px 10px;border:1px solid #a6bcae;border-radius:8px;background:white;color:#24463c;font-size:13px;touch-action:manipulation}
+#wm-accuse,.wm-foot-actions button{min-height:44px;padding:11px 14px;border:0;border-radius:8px;background:#2c5a4b;color:#fff;font-size:11px;font-weight:800;margin-top:12px}
+#wm-accuse:disabled{opacity:.42;cursor:not-allowed}
+#wm-result{min-height:34px;font-size:12px;line-height:1.6;color:#3f6550}
+.wm-foot-actions{display:flex;gap:9px;flex-wrap:wrap}
+.wm-foot-actions button{background:#e7e9dc;color:#2b5544;border:1px solid #a3b8a6;margin-top:4px}
+.wm-truth{font-size:10px;line-height:1.65;color:#667c70;border-top:1px solid #d2dcd2;padding-top:13px;margin-top:20px}
+@media(max-width:700px){.worlds-mystery-panel{inset:auto 0 0;width:100%;height:min(78dvh,calc(100dvh - 52px));border-radius:20px 20px 0 0;padding:19px 19px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -15px 58px #061f2b88}.wm-head h2{font-size:27px}.mystery-intro-button{font-size:11px;padding:11px 14px}}
