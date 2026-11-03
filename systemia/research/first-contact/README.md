@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-02.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-03.
 
 ## Mission
 
@@ -46,6 +46,15 @@ This is a mathematical sanity check, **not** an analysis of Go Fast raw frames. 
 - **Research/source audit:** `source-audit-2026-11-02.md` distinguishes primary observation, government interpretation, reproduced public arithmetic, synthetic simulation, and speculation. It covers Go Fast, Oak Ridge material findings, PR-011 and terrestrial electroaerodynamic flight.
 - **Tests:** 14 targeted new tests passed on local Node v22; repo CI/production execution **not yet verified**. Run `node --test systemia/research/first-contact/*.test.mjs` after checking out the branch. The earlier three baseline tests remain in place.
 - **Boundary:** no autonomous Systemia agents dispatched, no evidence of extraterrestrial recovered craft, no verified full-frame video replication or hardware demonstration.
+
+## Sprint 3, November 3, 2026: desk feasibility and red-team stage
+
+- **Materials / THz:** `materials-thz-screen-2026-11-03.md` audits the AARO/ORNL findings for the alleged recovered Mg-Bi-Pb specimen. The specific proposed crystalline-bismuth waveguide mechanism is unsupported by its described mixed composition and structure. No material specimen is possessed or independently tested.
+- **Electroaerodynamic propulsion:** `propulsion-feasibility-2026-11-03.md` keeps MIT's established fixed-wing ion-wind demonstration separate from hypothetical parameter extrapolation. `engineering-feasibility.mjs` computes airframe-level drag/thrust/power and battery arithmetic from user-provided assumptions; it cannot predict real hover, scale-up or safe hardware implementation.
+- **THz physical scale:** the new tool computes `lambda=c/f` in free space. Guided-mode wavelength, insertion loss and antigravity claims are **not** determined by this conversion.
+- **Red-team draft:** `red-team-decision-2026-11-03.md` prioritizes falsification, sensor-quality engineering and known-physics modeling, with unresolved claims held pending source data.
+- **Validation:** 7 new pure-math scenario tests passed locally on Node v22 on 2026-11-03; earlier 14 new tests and 3 baseline tests were reported previously but not re-run in this local verification. Repository CI outcomes and independent code review are still required.
+- **Runtime state:** Systemia mission intake statuses updated, but specialist agent slots are still unassigned, and no live autonomous Systemia mission was dispatched.
 
 ## Decision and escalation gates
 
