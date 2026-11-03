@@ -53,6 +53,25 @@ try{
     assert.ok(pre.draw_calls>0&&pre.draw_calls<100,profile.name+': opaque batching failed; draws='+pre.draw_calls);
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
     await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
+    // The mystery mode reuses this same WebGL scene, without changing local saves.
+    const beforeMystery=await page.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1'));
+    await page.locator('#mysteryOpen').click();
+    await page.locator('#worldsMysteryPanel').waitFor({state:'visible'});
+    assert.equal(await page.locator('#wm-accuse').isDisabled(),true,profile.name+': premature mystery accusation allowed');
+    assert.match(await page.locator('#wm-status').textContent(),/Follow the glowing beacon/,profile.name+': no world exploration cue');
+    const evidencePanel=await page.evaluate(()=>{
+      const p=document.querySelector('#worldsMysteryPanel').getBoundingClientRect();
+      return {top:p.top,bottom:p.bottom,width:p.width,viewportWidth:innerWidth,viewportHeight:innerHeight};
+    });
+    assert.ok(evidencePanel.top>=0&&evidencePanel.bottom<=evidencePanel.viewportHeight+2,profile.name+': mystery panel outside viewport');
+    assert.ok(evidencePanel.width<=evidencePanel.viewportWidth,profile.name+': mystery panel exceeds width');
+    await page.screenshot({path:out+'/'+profile.name+'-mystery-board.png',timeout:10000});
+    await page.locator('#wm-reset').click();
+    assert.equal(await page.locator('#wm-clues li').count(),1,profile.name+': reset did not clear evidence');
+    await page.locator('#wm-close').click();
+    assert.equal(await page.locator('#worldsMysteryPanel').isVisible(),false,profile.name+': mystery sheet did not close');
+    assert.equal(await page.evaluate(()=>localStorage.getItem('evercraft.worlds.mossmere.v1')),beforeMystery,profile.name+': fictional case modified saved world');
+
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');
