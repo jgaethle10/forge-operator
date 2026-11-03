@@ -5,7 +5,7 @@
 **Slug:** chainsaw-surgical-origins-childbirth-bone-surgery
 **Historical event period:** c. 1783–1785, followed by 1830s mechanical development
 **Prepared:** 2026-11-02
-**State:** EVIDENCE-SOURCED EDITORIAL DRAFT. Not approved, rendered, built, deployed, posted, or published.
+**State:** EVIDENCE-SOURCED EDITORIAL DRAFT with an original conceptual SVG visual staged. Not editorially approved, built, deployed, posted, or published.
 **Next gates:** claim-reactor; 10/10 independent editorial acceptance; image rights and historical visual QA; Fallen production and motion receipt; Systemia release authority; publisher build; owned HTTPS/canonical/OG/identity verification; Clip distribution authorization and provider receipts.
 
 ## Article
@@ -90,6 +90,12 @@ The next time someone says chainsaws were invented for childbirth, the most usef
 - Return potential 3/5: future history of powered forestry saws and safety innovations.
 Total: **26/30**, preliminary desk score only, not the 10/10 Journal approval.
 
+## Original visual asset | STAGED, NOT RELEASED
+
+[Open the original conceptual schematic](../editorial-assets/chainsaw-surgical-origins-concept.svg). This SVG was authored directly for this Journal story with no third-party photography, licensed art, generative-stock imagery, embedded fonts, or borrowed historical drawings. Its illustrated geometries are explicitly schematic and should not be presented as exact historical reconstructions. Its text and 1780s / 1830 / later timeline were checked against the sources above, but visual QA and a production-grade Fallen receipt remain outstanding. No image-rights claim is made about museum photographs or the published research figures.
+
+**Additional attribution clarification:** Skippen et al. (2004) report that Aitken illustrated his hand chain saw in 1785 and used it in his dissecting room; the historical record quoted there does not establish that the instrument was routinely used in live childbirth operations. Descriptions must retain the more careful phrase “associated with symphysiotomy.” Also, a 2009 *Journal of Medical Biography* commentary by Kirkup prioritizes Aitken's invention claim while Jeffray has also been credited with independent conception; attribution should acknowledge this disagreement rather than assert a single proven inventor. Source: https://stacks.cdc.gov/view/cdc/187870/cdc_187870_DS1.pdf ; doi:10.1258/jmb.2009.009019.
+
 ## Visual provenance and Fallen production brief | HOLD
 **Visual claim:** A verified 1830s surgical osteotome is a hand-cranked instrument with a guided cutting chain. Do not depict a modern powered saw operating on a patient, or invent gore.
 
@@ -135,7 +141,8 @@ Early chain saws were surgical tools. In the 1780s, John Aitken's version was li
 - [x] Visual and Fallen production brief prepared, historical depiction constraints recorded.
 - [x] Platform-specific derivatives drafted, explicitly on HOLD.
 - [ ] Claim Reactor receipt and 10/10 independent editorial review.
-- [ ] Explicitly rights-cleared hero image or original validated illustration.
+- [x] Original self-authored conceptual SVG created and staged on the editorial branch (not a rights-cleared museum photograph).
+- [ ] Independent historical visual QA and production-grade art approval.
 - [ ] Completed Fallen build and QA receipt.
 - [ ] Genuine Systemia publication release; fresh claim/source review.
 - [ ] Approved Journal story.v1 package; successful publisher build receipt.
