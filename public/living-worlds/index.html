@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101c26">
+<meta name="description" content="Evercraft Living Worlds House 001: an editable, simulated house you can watch and influence.">
+<title>House 001 | Evercraft Living Worlds</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;background:#0c1620;color:#edf5f4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 16% 0,#294a50 0,transparent 48%),#0c1620}button{font:inherit;cursor:pointer}
+a{color:#b1f0df}.wrap{max-width:1420px;margin:0 auto;padding:24px clamp(14px,3vw,34px) 45px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.kicker{font-size:11px;letter-spacing:.25em;font-weight:800;color:#a5dcc8}
+h1{font-size:clamp(28px,4.2vw,52px);letter-spacing:-.05em;margin:7px 0 2px;line-height:1.08}
+.sub{color:#b8c5c9;max-width:760px;line-height:1.5;font-size:14px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #406465;background:#1e343b;border-radius:100px;padding:9px 13px;color:#d7efeb;font-size:12px;font-weight:700}
+.dot{background:#81dcad;width:7px;height:7px;border-radius:50%;box-shadow:0 0 9px #81dcad}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,.85fr);gap:18px;align-items:start}
+.panel{background:#14232d;border:1px solid #34505c;border-radius:20px;box-shadow:0 20px 60px #0003;overflow:hidden}
+.head{padding:18px 20px;border-bottom:1px solid #344b55;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.head strong{font-size:16px}.head small{font-size:12px;color:#a8bdc6}
+.controls{display:flex;flex-wrap:wrap;gap:7px}
+.action{border:1px solid #577078;border-radius:10px;color:#dceae8;background:#233844;padding:9px 11px;font-size:12px;min-height:38px;font-weight:700}
+.action:hover,.action:focus-visible{border-color:#b4e5d2}.action.active,.action.primary{background:#b1e9cb;color:#13362d;border-color:#b1e9cb}
+.action:disabled{opacity:.48;cursor:not-allowed}.house-frame{padding:20px;background:linear-gradient(155deg,#172f36,#10242c)}
+.floorplan{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));aspect-ratio:9/6;gap:3px;border:8px solid #e1bf93;background:#e1bf93;border-radius:14px;overflow:hidden;box-shadow:0 8px 0 #796551,0 18px 35px #0510169c}
+.tile{position:relative;border:1px solid #ffffff36;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;color:#18312f;border-radius:3px;transition:filter .15s}
+.tile:hover,.tile:focus-visible{filter:brightness(1.13);outline:2px solid #fff;outline-offset:-2px;z-index:2}
+.tile.living{background:#a4cbb7}.tile.kitchen{background:#e8c5a4}.tile.bedrooms{background:#c9b8d7}.tile.studio{background:#a8bccb}
+.tile.wall-left{box-shadow:inset 4px 0 #f1efdd}.tile.wall-top{box-shadow:inset 0 4px #f1efdd}
+.furnishing{font-size:clamp(14px,2.7vw,34px);filter:drop-shadow(0 3px 2px #25454b42)}
+.occupants{position:absolute;bottom:1px;right:1px;display:flex;max-width:100%;flex-wrap:wrap;justify-content:end;gap:0;line-height:1}
+.occupant{display:inline-grid;place-items:center;font-size:clamp(11px,2vw,25px);background:#ffffffe9;border-radius:50%;border:2px solid #4f766d;width:clamp(17px,2.8vw,34px);height:clamp(17px,2.8vw,34px);box-shadow:0 2px 5px #16273155}
+.occupant.selected{border-color:#ffae47;box-shadow:0 0 0 2px #fff}
+.legend{display:flex;gap:12px 18px;flex-wrap:wrap;padding:14px 20px;color:#b6c9cd;font-size:12px}
+.legend span:before{content:'';display:inline-block;width:9px;height:9px;margin-right:7px;border-radius:2px;background:var(--c)}
+.section{padding:18px 20px;border-top:1px solid #344b55}
+.section h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 13px;color:#c7d8d7}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap}.toolbar .action{padding:9px 10px}
+.hint{margin:12px 0 0;color:#9db8bc;font-size:12px;line-height:1.5}
+.sidebar{display:grid;gap:18px}
+.actors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.actor{border:1px solid #455e66;border-radius:12px;background:#253c44;color:#eaf5f2;padding:11px 3px;font-size:12px;display:flex;align-items:center;flex-direction:column;gap:5px}
+.actor.active{background:#d9efcf;color:#183329;border-color:#d9efcf}
+.avatar{font-size:27px}.stat{margin:11px 0}.stat-line{display:flex;justify-content:space-between;color:#c2d4d6;font-size:12px;margin-bottom:5px}
+.meter{height:7px;background:#2e4750;border-radius:100px;overflow:hidden}.meter div{height:100%;border-radius:100px;background:#a8e9c8;transition:width .25s}
+#profile h3{margin:8px 0 2px;font-size:19px}#profile p{font-size:12px;color:#b8d2d3;margin:4px 0;line-height:1.5}
+.profile-top{display:flex;gap:12px;align-items:center}.profile-emoji{font-size:39px}
+.memories{margin:8px 0 0;padding-left:16px;font-size:12px;color:#bfd3d2;line-height:1.55}
+.events{max-height:280px;overflow:auto;display:grid;gap:8px}
+.event{padding:10px 12px;background:#1d343c;border-radius:10px;border-left:3px solid #8ebeb2}
+.event-time{font-size:10px;color:#9ac9bf;font-weight:800;margin-bottom:4px}.event-text{font-size:12px;color:#e1eae6;line-height:1.4}
+.note{font-size:12px;line-height:1.6;color:#bbcacb;padding:16px 20px;border-top:1px solid #344b55;background:#10212a}
+#message{min-height:18px;color:#e4d39e;margin:10px 0 0;font-size:12px}
+footer{font-size:12px;color:#7f9da7;padding-top:20px;line-height:1.6}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.sidebar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar>.panel:last-child{grid-column:1/-1}}
+@media(max-width:620px){.wrap{padding:16px 10px 30px}.sidebar{grid-template-columns:1fr}.sidebar>.panel:last-child{grid-column:auto}.house-frame{padding:10px}.floorplan{gap:2px;border-width:5px}.head,.section{padding:15px}.chip{font-size:11px}.tile{border-width:0}.occupant{border-width:1px}.legend{padding:12px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+ <div><div class="kicker">EVERCRAFT / LIVING WORLDS</div><h1>House <span style="color:#b1e9cb">001.</span></h1><div class="sub">A tiny home. Four simulated lives. You design the rooms, watch the residents make choices, and occasionally change their day.</div></div>
+ <div class="chip"><span class="dot"></span> LOCAL SIMULATION · NOT LLM-CONNECTED</div>
+</header>
+<div class="layout">
+ <div class="panel">
+  <div class="head"><div><strong>The first little house</strong><br><small id="clock">Day 1 · 08:00</small></div><div class="controls"><button class="action" id="toggle">⏸ Pause</button><button class="action" id="speed">1× speed</button><button class="action" id="export">Export</button></div></div>
+  <div class="house-frame"><div id="house" class="floorplan" role="group" aria-label="Editable floorplan of House 001"></div><div id="message" role="status" aria-live="polite"></div></div>
+  <div class="legend"><span style="--c:#a4cbb7">Living</span><span style="--c:#e8c5a4">Kitchen</span><span style="--c:#c9b8d7">Bedrooms</span><span style="--c:#a8bccb">Studio</span></div>
+  <div class="section"><h2>Design the house</h2><div id="tools" class="toolbar" aria-label="House building tools"></div><p class="hint">Select furniture, then tap an empty tile to place it. Choose “Remove” to clear a tile, or “Inspect” to watch a resident. Your changes influence what residents can do.</p></div>
+  <div class="section"><h2>Influence the day</h2><div class="controls"><button class="action primary" id="gift">🎁 Gift selected resident</button><button class="action" id="party">🎉 Host a party</button><button class="action" id="reset">↺ Reset house</button></div></div>
+  <div class="note">Everything here runs in your browser and saves locally on this device. The residents use transparent, deterministic need-based rules, not live LLMs. This prototype is a design and behavior test, not a multiplayer or continuously hosted simulation.</div>
+ </div>
+ <aside class="sidebar">
+  <section class="panel"><div class="section" style="border:0"><h2>Meet the residents</h2><div id="actors" class="actors"></div><div id="profile"></div></div></section>
+  <section class="panel"><div class="section" style="border:0"><h2>Recent memories</h2><div id="memories"></div></div></section>
+  <section class="panel"><div class="section" style="border:0"><h2>House activity</h2><div id="events" class="events" aria-live="off"></div></div></section>
+ </aside>
+</div>
+<footer>EVERCRAFT · HOUSE 001 / EXPERIMENTAL LOCAL PROTOTYPE · Built for future integration with Evercraft Worlds, The Window and the owned World Engine.</footer>
+</main>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>
