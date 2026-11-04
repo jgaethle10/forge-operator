@@ -1,0 +1,24 @@
+name: Systemia Agent Arena proof
+on:
+  push:
+    paths:
+      - 'systemia/control-plane/agent-arena/**'
+      - '.github/workflows/systemia-agent-arena.yml'
+  pull_request:
+    paths:
+      - 'systemia/control-plane/agent-arena/**'
+      - '.github/workflows/systemia-agent-arena.yml'
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/control-plane/agent-arena/evaluate.mjs
+      - run: node --test systemia/control-plane/agent-arena/evaluate.test.mjs
+      - run: node systemia/control-plane/agent-arena/evaluate.mjs systemia/control-plane/agent-arena/examples/synthetic-trials.json /tmp/systemia-agent-arena-report.json
+      - run: node -e "const f=require('/tmp/systemia-agent-arena-report.json');if(f.review_nomination!=='candidate-b'||f.production_promotion_allowed!==false||f.evidence_status!=='unverified_caller_supplied')process.exit(1)"
