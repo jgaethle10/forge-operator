@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - 'systemia/control-plane/agent-arena/**'
+      - 'systemia/control-plane/visualization/agent-trials.html'
+      - 'systemia/control-plane/visualization/index.html'
       - '.github/workflows/systemia-agent-arena.yml'
   pull_request:
     paths:
@@ -19,6 +21,6 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/control-plane/agent-arena/evaluate.mjs
-      - run: node --test systemia/control-plane/agent-arena/evaluate.test.mjs
+      - run: node --test systemia/control-plane/agent-arena/*.test.mjs
       - run: node systemia/control-plane/agent-arena/evaluate.mjs systemia/control-plane/agent-arena/examples/synthetic-trials.json /tmp/systemia-agent-arena-report.json
       - run: node -e "const f=require('/tmp/systemia-agent-arena-report.json');if(f.review_nomination!=='candidate-b'||f.production_promotion_allowed!==false||f.evidence_status!=='unverified_caller_supplied')process.exit(1)"
