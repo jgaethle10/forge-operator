@@ -55,6 +55,16 @@ The output is `evercraft.one-body.event.v1`. State is `evercraft.one-body.state.
 
 The router intentionally produces instructions and receipts, not unbounded external side effects. Existing adapters and authority gates remain responsible for execution.
 
+### Handoff truth contract
+
+- A one-body event indicates **planned routing**, not that a recipient consumed a message or completed work. `handoff_state=routing_planned_unverified` makes that distinction machine-visible.
+- Inbound `status=paid`, `stage=payment_verified`, `payment_verified=true`, and `fulfillment_ready=true` are **claims to reconcile**. They route to `payment_authority_reconciliation`, not directly to `portfolio_fulfillment_router`. The downstream Evercraft Payments / universal fulfillment authority check must independently establish canonical paid state and scope before execution.
+- Inbound `human_gate_required=false` never overrides consequential action categories. Identity, Passport, signed approvals, Execution Gate, provider reconciliation, and product-specific gates remain separate requirements.
+- Do not render `dead_end=false` as proof of completed delivery. It means the planning router emitted at least one lane; actual lane admission, receipt bridges, runtime freshness, and outcome completion need their own observed evidence.
+
+This avoids green-status theater while tightening circulation between the body’s shared parts.
+
+
 ## Proof
 
 Run:
