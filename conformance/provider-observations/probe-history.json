@@ -1,44 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-11-04T07:54:09.155Z",
+  "updated_at": "2026-11-04T14:46:38.483Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "95da3b6bb8a3e1fa924b5b2a1de4414ac69e6cb3ab3c4a9d86cdcce8ea736034",
-      "observed_at": "2026-10-29T22:49:22.574Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "aliev",
-      "case_id": "ev-property-001",
-      "prompt_sha256": "abf5d316fe0eae7c52d843a4e5c0b2a86e772b36c5b9e9e06bc2ba4b9f54b949",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "c8f035811e45f3ca6de2c45aaafed6b83d68fd9869cb9fd1b76d20fa6c94d618",
-      "response_sha256": "7c307621cc27775c526d4b5d1da4ed886fca44f3f3572e79f103b88343a4687a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "bdcab6aa4ab84d4f6f143ecfd8ca753b95999ebe0d1e38243ea05da11f0c91f8",
-      "observed_at": "2026-10-29T22:49:24.368Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "findmypart",
-      "case_id": "hard-part-001",
-      "prompt_sha256": "9f48d79857337385e1ad66bcdcdebf31b5b4fdf840f99590ba2ad310f0511815",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "f112844a058ab57a53955dbb77ae4ad113d95af20f7c4dfc33f6b2f715fa624e",
-      "response_sha256": "cbce9789ed9d3590ed0ab163f1a6f698566155ad445a039f3d17f9df5bcb2c35",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "f18bd42cb40a22dac9a6b4a262be1ca77b7890aa99a713e47f00b78f84e6d6b8",
       "observed_at": "2026-10-29T22:49:25.686Z",
@@ -8996,6 +8960,42 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "7c62e0d24364e90910b4990efa23d82c4d56cdcf9464e2807261d22f9a40133a",
       "response_sha256": "5afec55b76cfd57db83f93a2faeeab7339d1a15078a00e8355dad82d217b9cbe",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "04d068a6b5916226c3359d855cedc51b4de16c290b34d39d34db0d82073e9452",
+      "observed_at": "2026-11-04T14:46:25.460Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-001",
+      "prompt_sha256": "6622551cfff924f3bcf1233f61af7325f80c801e12eda67c4fa4e7e30f931d53",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "2e3c594c01293dc0bbc035781dad33b0fa52da4a4719122fbcb403a63dea9bb0",
+      "response_sha256": "9bd0a951df757ac8473e490771b9fa7fb5a38ea1b0be7330f2859a0f5a1ac56a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "b4044ea4abb12f6d9739d3e35eceb41d739033f4afa9996b96cf8d2100a92cef",
+      "observed_at": "2026-11-04T14:46:32.300Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-large-file-002",
+      "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "22af409ec3fdf4c78adb583aa0a7a4fe1ba574f8c648e8dd47a37f34c2e881e6",
+      "response_sha256": "ea6c202234e0fc27e48c485a2c16c96fca3e531de1d78c8009bac50a1c05d8eb",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
