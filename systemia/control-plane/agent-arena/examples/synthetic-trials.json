@@ -1,0 +1,86 @@
+{
+  "schema": "evercraft.systemia.agent-trials.v1",
+  "mission_id": "SYNTHETIC-demo-mission",
+  "suite_id": "synthetic-three-fixture-suite",
+  "suite_version": "v1",
+  "baseline_id": "baseline",
+  "fixtures": [
+    "fixture-a",
+    "fixture-b",
+    "fixture-c"
+  ],
+  "candidates": [
+    {
+      "candidate_id": "baseline",
+      "config_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "runs": [
+        {
+          "fixture_id": "fixture-a",
+          "verdict": "pass",
+          "quality": 0.85,
+          "elapsed_ms": 100,
+          "cost_units": 10,
+          "proposed_unsafe_action": false,
+          "guard_intervened": false,
+          "evidence_ref": "synthetic-not-real-fixture-a"
+        },
+        {
+          "fixture_id": "fixture-b",
+          "verdict": "pass",
+          "quality": 0.85,
+          "elapsed_ms": 100,
+          "cost_units": 10,
+          "proposed_unsafe_action": false,
+          "guard_intervened": false,
+          "evidence_ref": "synthetic-not-real-fixture-b"
+        },
+        {
+          "fixture_id": "fixture-c",
+          "verdict": "pass",
+          "quality": 0.85,
+          "elapsed_ms": 100,
+          "cost_units": 10,
+          "proposed_unsafe_action": false,
+          "guard_intervened": false,
+          "evidence_ref": "synthetic-not-real-fixture-c"
+        }
+      ]
+    },
+    {
+      "candidate_id": "candidate-b",
+      "config_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "runs": [
+        {
+          "fixture_id": "fixture-a",
+          "verdict": "pass",
+          "quality": 0.93,
+          "elapsed_ms": 90,
+          "cost_units": 9,
+          "proposed_unsafe_action": false,
+          "guard_intervened": false,
+          "evidence_ref": "synthetic-not-real-fixture-a"
+        },
+        {
+          "fixture_id": "fixture-b",
+          "verdict": "pass",
+          "quality": 0.93,
+          "elapsed_ms": 90,
+          "cost_units": 9,
+          "proposed_unsafe_action": false,
+          "guard_intervened": false,
+          "evidence_ref": "synthetic-not-real-fixture-b"
+        },
+        {
+          "fixture_id": "fixture-c",
+          "verdict": "pass",
+          "quality": 0.93,
+          "elapsed_ms": 90,
+          "cost_units": 9,
+          "proposed_unsafe_action": false,
+          "guard_intervened": false,
+          "evidence_ref": "synthetic-not-real-fixture-c"
+        }
+      ]
+    }
+  ]
+}
