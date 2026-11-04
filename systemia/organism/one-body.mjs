@@ -62,6 +62,9 @@ const HUMAN_GATE_KINDS = new Set([
   'external_publish',
   'external_message',
   'destructive_change',
+  'outreach',
+  'external_purchase',
+  'trust_change',
 ]);
 
 function hash(value, length = 24) {
@@ -242,13 +245,12 @@ export function classifyCommercial(raw, { now = new Date().toISOString(), produc
 }
 
 function needsHumanGate(raw) {
-  if (raw.human_gate_required === true) return true;
-  if (raw.human_gate_required === false) return false;
-  const kind = normalize(raw.action_kind || raw.kind);
-  if (HUMAN_GATE_KINDS.has(kind)) return true;
+  // Inbound "false" is never permission to bypass consequential work gates.
+  if (HUMAN_GATE_KINDS.has(normalize(raw.action_kind)) ||
+      HUMAN_GATE_KINDS.has(normalize(raw.kind))) return true;
   if (raw.external_action_requested === true) return true;
   if (raw.money_movement === true || raw.legal_effect === true || raw.employment_effect === true) return true;
-  return false;
+  return raw.human_gate_required === true;
 }
 
 function missionIntent(raw, commercial) {
@@ -283,12 +285,15 @@ export function routeBodyEvent(raw, {
     lanes.add('revenue_circulation');
     lanes.add('chum_commercial_mesh');
   }
-  if (
+  // Caller-supplied payment flags are leads, not authoritative paid-state receipts.
+  // Reconciliation must independently establish canonical Evercraft Payments authority
+  // before the separate fulfillment gate can admit any work.
+  const claimedPaymentOrFulfillment =
     raw.payment_verified === true ||
     normalize(raw.status) === 'paid' ||
     normalize(raw.stage) === 'payment_verified' ||
-    raw.fulfillment_ready === true
-  ) lanes.add('portfolio_fulfillment_router');
+    raw.fulfillment_ready === true;
+  if (claimedPaymentOrFulfillment) lanes.add('payment_authority_reconciliation');
   if (raw.publish_candidate === true && raw.public_safe === true) {
     lanes.add('media_studio');
     lanes.add('evercraft_clip_distribution');
@@ -313,6 +318,7 @@ export function routeBodyEvent(raw, {
   if (product.product_key === 'unknown') nextMotion.push('resolve_product_or_create_portfolio_admission_candidate');
   if (commercial.state !== 'not_commercial') nextMotion.push(commercial.next_action);
   if (gates.human_required) nextMotion.push('hold_consequential_external_action_until_authorized');
+  if (claimedPaymentOrFulfillment) nextMotion.push('verify_canonical_evercraft_payments_receipt_before_fulfillment');
   if (signal.severity === 'warning' || signal.severity === 'critical') nextMotion.push('open_or_update_operational_incident');
   if (!nextMotion.length) nextMotion.push('receipt_and_keep_available_to_shared_context');
 
@@ -333,6 +339,10 @@ export function routeBodyEvent(raw, {
     gates,
     lanes: [...lanes],
     next_motion: unique(nextMotion),
+    // A planned route is not a delivered signal, verified runtime, or actual outcome.
+    handoff_state: 'routing_planned_unverified',
+    execution_authority_granted: false,
+    fulfillment_authority_granted: false,
     dead_end: false,
   };
 }
