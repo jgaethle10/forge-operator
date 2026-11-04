@@ -1,4 +1,4 @@
-# Systemia Living Graph v0.1
+# Systemia Living Graph v0.2
 
 A read-only, standalone HTML prototype for exploring the Systemia operating architecture and imported operational snapshots.
 
@@ -6,7 +6,7 @@ A read-only, standalone HTML prototype for exploring the Systemia operating arch
 
 - Interactive relationship map drawn from the repository's Unified Control Plane, Saban, and Evercraft OS contracts.
 - Views for overall architecture, memory paths, mission flow, and evidence reconciliation.
-- Node inspector, relationship navigation, filtering, keyboard input, and mobile horizontal graph exploration.
+- Node inspector, relationship navigation, filtering, keyboard input, and responsive mobile overview with optional expanded full-size map.\n- Pre-rendered, inline preview-safe graph image plus initial SVG topology: mobile document viewers that restrict JavaScript still show the architecture, with a clear note that interactions require an actual browser.
 - Offline JSON import with a bounded `evercraft.systemia.visual-snapshot.v1` schema.
 - Imported data visualized as a separate, **unverified snapshot** graph; this prototype never claims any service is currently healthy.
 - No network calls, credentials, work dispatch, arbitrary command execution, financial activity, or mutation APIs.
@@ -41,9 +41,9 @@ No JSON field conveys execution authority. The UI only displays what a snapshot 
 
 ## Local use
 
-Open `index.html` in a modern browser. Click any node for the right-side inspector. Use the **JSON template** button to get the expected import structure, then **Import evidence JSON** to explore a snapshot. File data is parsed in the browser and not uploaded anywhere.
+Open `index.html` in a modern browser. In iPhone document previews that suppress JavaScript, the page still shows a static map; open in Safari or Chrome for interactive selection, search and imported-snapshot graph rendering. Click any node for the right-side inspector. Use the **JSON template** button to get the expected import structure, then **Import evidence JSON** to explore a snapshot. File data is parsed in the browser and not uploaded anywhere.
 
-Source anchors:
+## v0.2 verification (November 4, 2026)\n\n- Headless Chromium at 390 px and 1280 px confirms the 15-node map appears with JavaScript both enabled and disabled.\n- The fallback image is embedded in the HTML; the download remains a single file.\n- Mobile Expand map works without JavaScript via CSS; a true browser provides clickable nodes, memory filtering, and snapshot import.\n- These tests are **browser emulation, not an on-device iPhone Safari test**.\n\nSource anchors:
 
 - `systemia/control-plane/README.md`
 - `systemia/saban/README.md`
