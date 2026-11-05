@@ -58,7 +58,7 @@ export function completeJournalPublishClaim({claim,receipt}={}){
     ...claim.record,state,
     remote_id:safe(receipt?.remoteId)||null,
     provider_post_url:confirmed?safe(receipt?.url)||null:null,
-    provider_may_have_published:confirmed||state==='reconciliation_required'||Boolean(receipt?.providerMayHavePublished),
+    provider_may_have_published:true, // Provider was invoked; fail closed even on a reported failure.
     automatic_retry_allowed:false,
     resolved_at:new Date().toISOString()
   };
