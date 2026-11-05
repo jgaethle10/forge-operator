@@ -296,6 +296,11 @@ def run(args):
         "coordinateFrame": "camera_relative",
         "frames": frames
     }
+    if sha256_file(args.video) != video_digest or sha256_file(args.model) != model_digest:
+        raise ValueError("source_or_model_changed_during_processing")
+    serialized_bytes = len(json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8"))
+    if serialized_bytes > 9_500_000:
+        raise ValueError("output_exceeds_browser_review_limit_reduce_max_frames")
     write_private_json(args.output, payload)
     return {"frames": len(frames), "observations": sum(len(f["observations"]) for f in frames),
             "output": str(args.output), "evidenceStatus": payload["evidenceStatus"]}
