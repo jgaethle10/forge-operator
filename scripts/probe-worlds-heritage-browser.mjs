@@ -77,6 +77,7 @@ try{
     await page.screenshot({path:output+'/'+p.name+'-tour.png',timeout:12000});
     await page.locator('#tour').click();
     assert.equal(await page.locator('#tourprogress').isVisible(),false);
+    assert.equal(await page.evaluate(()=>document.activeElement?.id),'world',p.name+': scene keyboard focus not restored');
     const before=await page.evaluate(()=>window.__heritageTelemetry.viewMatrix);
     if(!p.mobile){
       await page.keyboard.down('w');
