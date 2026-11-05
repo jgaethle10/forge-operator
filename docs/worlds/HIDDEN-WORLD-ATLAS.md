@@ -1,6 +1,6 @@
 # Evercraft Worlds integration branch
 
-Source merged into the main Evercraft Worlds repository with PR #1855. Expected static route: `/worlds/hidden-world/` on an Evercraft-owned host serving `public/`. The source integration **is not evidence of live public deployment**. The package uses a single-file Yakima exhibit (`yakima-standalone.html`) and relative links. A successful HTTPS fetch, iPhone Safari test, and the established Worlds public release gate are required before declaring it live.
+Source merged into the main Evercraft Worlds repository with PR #1855. Expected static route: `/worlds/hidden-world/` on an Evercraft-owned host serving `public/`. The source integration **is not evidence of deployment**. Live public HTTPS reachability and physical-device behavior require separate proof. The package uses a single-file Yakima exhibit (`yakima-standalone.html`) and relative links. A successful HTTPS fetch, iPhone Safari test, and the established Worlds public release gate are required before declaring it live.
 
 ---
 
