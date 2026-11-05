@@ -1,0 +1,115 @@
+{
+  "schema": "evercraft.first_contact.public_case_intake.v1",
+  "date_reviewed": "2026-11-04",
+  "project": "FIRST-CONTACT-001",
+  "assertion": "Secondary descriptions on public agency pages, NOT original-video review or quantitative sensor analysis",
+  "sources": [
+    {
+      "url": "https://www.aaro.mil/Next-AARO-Home-redesign/Next-Parent/Next-AARO-UAP-Imagery-Acc-Table/",
+      "publisher": "AARO",
+      "source_type": "government_case_listing"
+    },
+    {
+      "url": "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/",
+      "publisher": "AARO",
+      "source_type": "government_official_imagery_index"
+    }
+  ],
+  "records": [
+    {
+      "id": "DOW-UAP-PR049",
+      "source_url": "https://www.aaro.mil/Next-AARO-Home-redesign/Next-Parent/Next-AARO-UAP-Imagery-Acc-Table/",
+      "release_date": "2026-05-08",
+      "event_year": 2026,
+      "agency_description": "Army infrared platform video, about 1 min 49 sec; sensor pans to track two areas of contrast and repeatedly changes field of view/zoom, including 01:04–01:08.",
+      "classification": "UNRESOLVED_OFFICIAL_DESCRIPTION",
+      "facts": {
+        "nativeMedia": null,
+        "calibratedBearings": null,
+        "timeCalibration": null,
+        "observerPositions": null,
+        "observerAttitudes": null,
+        "slantRange": null,
+        "syncedIndependentSecondView": null,
+        "independentObserverPositions": null,
+        "rawSensorMetadata": null,
+        "windConditions": null
+      },
+      "scope_note": "No raw imagery or complete calibrated telemetry was downloaded for this research record. Camera zoom can change apparent pixel size; cannot derive object speed, dimension or propulsion from summary.",
+      "method_priority": "zoom_and_tracking_artifact_control"
+    },
+    {
+      "id": "PR-017",
+      "source_url": "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/",
+      "release_date": "2025-12-04",
+      "event_year": 2024,
+      "agency_description": "Thirty-second cellular phone camera video, insufficient for AARO to render a determination.",
+      "classification": "UNRESOLVED_INSUFFICIENT_VIDEO",
+      "facts": {
+        "nativeMedia": null,
+        "calibratedBearings": null,
+        "timeCalibration": null,
+        "observerPositions": null,
+        "observerAttitudes": null,
+        "slantRange": null,
+        "syncedIndependentSecondView": null,
+        "independentObserverPositions": null,
+        "rawSensorMetadata": null,
+        "windConditions": null
+      },
+      "scope_note": "Description explicitly identifies commercially available phone camera, but native file format, calibration and 3D geometry remain unestablished here.",
+      "method_priority": "provenance_and_calibration_limitation"
+    },
+    {
+      "id": "PR-016",
+      "source_url": "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/",
+      "release_date": "2025-12-04",
+      "event_year": 2023,
+      "agency_description": "AARO assesses with high confidence (>95%) that objects are almost certainly birds; observed morphology, relative flight position and IR modulation comport with wingbeats.",
+      "classification": "AGENCY_RESOLVED_AS_BIRDS",
+      "facts": {
+        "nativeMedia": null,
+        "calibratedBearings": null,
+        "timeCalibration": null,
+        "observerPositions": null,
+        "observerAttitudes": null,
+        "slantRange": null,
+        "syncedIndependentSecondView": null,
+        "independentObserverPositions": null,
+        "rawSensorMetadata": null,
+        "windConditions": null
+      },
+      "scope_note": "A resolved case provides a negative-control example. This project's quality gate does not reproduce the agency identification or independently classify the original footage.",
+      "method_priority": "negative_control"
+    },
+    {
+      "id": "PR-011",
+      "source_url": "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/",
+      "release_date": "2026-01-06",
+      "event_year": 2021,
+      "agency_description": "Two-minute-eight-second IR sensor recording from military platform, area of IR contrast, analysis of physical characteristics and performance ongoing per published listing.",
+      "classification": "UNDER_AGENCY_ANALYSIS",
+      "facts": {
+        "nativeMedia": null,
+        "calibratedBearings": null,
+        "timeCalibration": null,
+        "observerPositions": null,
+        "observerAttitudes": null,
+        "slantRange": null,
+        "syncedIndependentSecondView": null,
+        "independentObserverPositions": null,
+        "rawSensorMetadata": null,
+        "windConditions": null
+      },
+      "scope_note": "Description alone does not establish precise trajectory, speed, unusual material properties or non-human origin.",
+      "method_priority": "watch_for_native_metadata"
+    }
+  ],
+  "requirements": [
+    "Keep release date distinct from event date",
+    "Never represent inferred unknowns as confirmed absences",
+    "Do not ingest restricted or classified materials",
+    "Do not claim technical characterization without original data and calibrated geometry",
+    "Source snapshots are not evidence of a live ingest pipeline"
+  ]
+}
