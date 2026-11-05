@@ -11,6 +11,8 @@ on:
       - 'tests/signal-public-https.test.mjs'
       - 'tests/signal-paid-scope.test.mjs'
       - 'tests/signal-owned-payment-route.test.mjs'
+      - 'tests/signal-native-payment-canary.test.mjs'
+      - 'scripts/probe-signal-native-payments.mjs'
       - 'systemia/mcp/public-payment-offers.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
@@ -24,6 +26,8 @@ on:
       - 'tests/signal-public-https.test.mjs'
       - 'tests/signal-paid-scope.test.mjs'
       - 'tests/signal-owned-payment-route.test.mjs'
+      - 'tests/signal-native-payment-canary.test.mjs'
+      - 'scripts/probe-signal-native-payments.mjs'
       - 'systemia/mcp/public-payment-offers.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
@@ -45,7 +49,7 @@ jobs:
         with:
           node-version: '22'
       - name: Validate release claims, provenance and accessibility markers
-        run: node --test tests/signal-incident-public.test.mjs tests/signal-public-https.test.mjs tests/signal-paid-scope.test.mjs tests/signal-owned-payment-route.test.mjs
+        run: node --test tests/signal-incident-public.test.mjs tests/signal-public-https.test.mjs tests/signal-paid-scope.test.mjs tests/signal-owned-payment-route.test.mjs tests/signal-native-payment-canary.test.mjs
       - name: Verify no additional runtime is needed for public Pages
         run: |
           test -s public/signal/index.html
