@@ -4,7 +4,7 @@
  * Case rules come from The Window and are always labeled fictional.
  */
 import {createWorld as createSocietyWorld} from '../the-window/world.mjs';
-import {createMystery,revealNext,suspicionScores,accuse} from '../the-window/mystery.mjs';
+import {createMystery,revealNext,suspicionScores,accuse,readMysteryCheckpoint,writeMysteryCheckpoint} from '../the-window/mystery.mjs';
 import {activeEvidenceStation,nearbyEvidenceStation,evidenceGuidance} from './mystery-bridge.mjs';
 
 export function mountMysteryWalk({openWorld}) {
@@ -40,19 +40,24 @@ export function mountMysteryWalk({openWorld}) {
     <p class="wm-truth">FICTIONAL RULE-BASED PUZZLE. No independent LLM agents or witness testimony. Evidence weights are not guilt probabilities. Your investigation is local and does not modify the shared society, player save, or world engine.</p>`;
   document.body.append(panel);
   const $=id=>panel.querySelector('#'+id);
-  let seed=0, caseFile=null, isPanelOpen=false, selected='';
+  // Load data-only progress without enabling the 3D game before explicit opt-in.
+  const scenarioWorld=createSocietyWorld(0,818);
+  const resumed=readMysteryCheckpoint(localStorage,scenarioWorld);
+  let caseFile=null, isPanelOpen=false, selected='';
+  const persist=()=>writeMysteryCheckpoint(localStorage,caseFile,selected);
   const node=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;return n;};
   function close(){panel.classList.add('hidden');isPanelOpen=false;openButton.focus({preventScroll:true});}
   function show(){panel.classList.remove('hidden');isPanelOpen=true;render();$('wm-close').focus({preventScroll:true});}
   function newCase(){
-    caseFile=createMystery(createSocietyWorld(0,818),seed);
+    caseFile=createMystery(scenarioWorld,caseFile?(caseFile.seed+1)%1_000_001:0);
     selected=caseFile.suspects[0].id;
-    show();
+    persist();show();
   }
   function start(){
     if (!caseFile) {
       openWorld();
-      newCase();
+      if(resumed){caseFile=resumed.state;selected=resumed.choice;show();}
+      else newCase();
     } else if(isPanelOpen) close();
     else show();
   }
@@ -91,9 +96,10 @@ export function mountMysteryWalk({openWorld}) {
   }
   $('wm-close').addEventListener('click',close);
   $('wm-continue').addEventListener('click',close);
-  $('wm-choice').addEventListener('change',e=>{selected=e.target.value;});
-  $('wm-accuse').addEventListener('click',()=>{caseFile=accuse(caseFile,selected);render();});
-  $('wm-reset').addEventListener('click',()=>{seed=(seed+1)%1000000;newCase();});
+  $('wm-choice').addEventListener('change',e=>{selected=e.target.value;persist();});
+  $('wm-accuse').addEventListener('click',()=>{caseFile=accuse(caseFile,selected);persist();render();});
+  $('wm-reset').addEventListener('click',newCase);
+  if(resumed)introButton.textContent='Resume your investigation';
   openButton.addEventListener('click',start);
   introButton.addEventListener('click',start);
   return {
@@ -107,7 +113,7 @@ export function mountMysteryWalk({openWorld}) {
       if(!next)return null;
       const clue=caseFile.clues[caseFile.revealed];
       caseFile=revealNext(caseFile);
-      show();
+      persist();show();
       return clue;
     }
   };
