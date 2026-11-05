@@ -46,7 +46,7 @@ footer{margin-top:38px;padding:25px 0;border-top:1px solid var(--line);font-size
 #fail{color:#a4142f;font-weight:700}
 @media(max-width:600px){header .inner{padding:17px 19px}main{padding:0 19px}.hero{padding:55px 0 45px}.lead{font-size:17px}.result{padding:22px}button{width:100%}.actions{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
-</style></head>
+</style><link rel="stylesheet" href="./visual-replay.css"></head>
 <body><header><div class="inner"><a href="../"><img src="../brand/work-saban-mark.svg?v=flow3" alt="">work <span class="brand-accent">saban</span></a><a href="../#pilot">Join the private pilot</a></div></header>
 <main><section class="hero">
 <p class="eyebrow">LIVE BROWSER EXAMPLE / SYNTHETIC DATA</p>
@@ -57,6 +57,28 @@ footer{margin-top:38px;padding:25px 0;border-top:1px solid var(--line);font-size
 <p id="fail" role="alert" hidden></p>
 </section>
 <section id="output" hidden aria-live="polite">
+<section id="visual-replay" class="visual-replay" aria-label="Visual replay of verified browser calculation" hidden>
+  <div class="vr-top"><span class="vr-brand">WORK SABAN <em>/</em> PROOF VIEW</span><span class="vr-tag">COMPLETED CALCULATION REPLAY · SYNTHETIC DATA</span></div>
+  <div class="vr-scene" data-phase="3" id="vr-scene">
+    <div class="vr-copy">
+      <div class="vr-index">01 <span>/</span> 03 <span class="vr-divider"></span> SOURCE → RESULT → PROOF</div>
+      <h2>See the work.<br><span>Not the theater.</span></h2>
+      <p class="vr-caption">An evidence-bound playback of a real browser calculation. The sequence is a replay, not live agent activity.</p>
+      <ol class="vr-steps" id="vr-steps" aria-label="Three recorded calculation stages">
+        <li data-index="0"><i aria-hidden="true">01</i><div><b>Read source</b><small id="vr-step-0"></small></div><span class="vr-tick" aria-hidden="true">✓</span></li>
+        <li data-index="1"><i aria-hidden="true">02</i><div><b>Calculate totals</b><small id="vr-step-1"></small></div><span class="vr-tick" aria-hidden="true">✓</span></li>
+        <li data-index="2"><i aria-hidden="true">03</i><div><b>Second check</b><small id="vr-step-2"></small></div><span class="vr-tick" aria-hidden="true">✓</span></li>
+      </ol>
+    </div>
+    <div class="vr-data" aria-label="Chart of checked synthetic monthly revenue">
+      <div class="vr-data-head"><span>MONTHLY REVENUE</span><span>USD / SYNTHETIC</span></div>
+      <div class="vr-total" id="vr-total"></div>
+      <div class="vr-chart" id="vr-chart" role="img" aria-label="Checked monthly revenue bar chart"></div>
+      <div class="vr-proof"><span class="vr-proof-icon" aria-hidden="true">✓</span><span>SECOND-PASS ARITHMETIC VERIFIED</span></div>
+    </div>
+  </div>
+  <div class="vr-bottom"><span id="vr-status" role="status" aria-live="polite">All three checks completed in your browser.</span><button id="vr-play" type="button" class="vr-play">Replay the verified steps <span aria-hidden="true">↻</span></button></div>
+</section>
 <div class="result">
 <div class="pass" id="pass">CALCULATION CHECKED</div>
 <h2>Monthly sales report</h2>
