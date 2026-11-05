@@ -71,3 +71,18 @@ The owning local operator must mint and consume that permit through its independ
 CI-only tests deliberately create synthetic local manual grants. These tests do **not** authenticate founder identity, validate Yard custody, authorize Node001 or Node002, or grant production deployment. The candidate remains constrained to localhost registered content hashing and one-attempt execution. Existing unrestricted Saban scheduler callers are unchanged without the explicit fenced journal opt-in.
 
 The signed result, local Passport permit, and HMAC journal represent **three distinct evidence checks**. Systemia durable mission admission, exact Yard field enrollment, external identity authority, physical host confirmation, and verified customer settlement/delivery remain **separate release holds**.
+
+
+## November 4 | Durable Systemia goal checkpoint and signed-job convergence
+
+The signed localhost MicroSeed candidate now requires an independently persisted **existing Systemia Goal Store** file. This is a test-only reliability checkpoint, not authority to execute an arbitrary mission.
+
+For each canary job, its exact one-task Systemia goal must have the expected `mission_key` and `goal_key`, work key matching the Saban job ID, work type `analyze`, provider `saban-fenced-microseed`, and a stable `dedupe_key` equal to `saban-fenced:` plus the full immutable Saban work digest. Its task must be pending, on the ready-work list, without a human gate, dependencies or prior attempts.
+
+The scheduler checks that durable state **before changing its journal or dispatching**. After recording the Saban lease and obtaining the fenced token, it uses the Goal Store's existing revision-fenced `mutateGoalState` and `startGoalWork` to persist the exact Systemia attempt **before the NodeSeed adapter is called**. It continues to verify the stored Passport permit at the execution boundary and verifies the signed NodeSeed result on return. On successful durable acknowledgment, it uses `recordGoalOutcome` to persist the matching signed worker receipt hash in the Systemia goal, then persists Saban's completed state.
+
+Restart preflight checks that a Saban-completed job has the matching Systemia completion receipt. Interrupted or inconsistent cross-store writes are **held for review**, never silently reconciled into another execution. An adapter error leaves the Goal Store's attempt in `executing` as an unresolved outcome and Saban dead-lettered. No auto-retry or independent completion claim is made.
+
+CI tests create synthetic isolated Systemia goal files alongside an ephemeral localhost NodeSeed and private Passport fixture. They assert a recorded Systemia attempt before NodeSeed HTTP, matching completion on successful restart, and reject missing mission identity, mismatched work digests, tampered work state or attempted replay.
+
+**Limit:** The Goal Store persists a mission-bound work attempt, not a cryptographically verified founder approval or a deployed Systemia mission ledger. Live hardware enrollment, operational Yard custody and customer delivery remain separate holds.
