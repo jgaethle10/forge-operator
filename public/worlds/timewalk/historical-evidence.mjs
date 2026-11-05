@@ -35,7 +35,7 @@ export function isDirectTargetYearObservation(claim, ledger, sourceMap = new Map
   const source=sourceMap.get(proof.sourceId);
   if (!source || !sameJurisdiction(source.targetJurisdiction,ledger.location.jurisdiction)) return false;
   if (!Array.isArray(source.evidencePeriod) || !source.evidencePeriod.some(x=>String(x)===(String(ledger.sceneYear)))) return false;
-  if (!/^\\d{4}(?:-\\d{2}-\\d{2})?$/.test(String(proof.observationDate||''))) return false;
+  if (!/^[0-9]{4}(?:-[0-9]{2}-[0-9]{2})?$/.test(String(proof.observationDate||''))) return false;
   if (Number(String(proof.observationDate).slice(0,4))!==ledger.sceneYear) return false;
   return typeof proof.itemLocator==='string' && proof.itemLocator.trim().length>=5 &&
     typeof proof.reviewNote==='string' && proof.reviewNote.trim().length>=12 &&
@@ -47,7 +47,7 @@ export function mediaAssetCanBeEmbedded(source, asset) {
   if (!source || !asset || asset.sourceId !== source.id || typeof asset.itemId !== 'string' ||
       asset.itemId.trim().length < 4 || typeof asset.credit !== 'string' ||
       asset.credit.trim().length < 4 || asset.reviewedForPublication !== true) return false;
-  if (!/^https:\\/\\//.test(asset.originalUrl||'')) return false;
+  if (!String(asset.originalUrl||'').startsWith('https://')) return false;
   if (sourceCanBeEmbedded(source) && asset.itemRights === 'public-domain-verified') return true;
   return asset.itemRights === 'permission-granted' &&
     asset.explicitPermissionRecord === true;
