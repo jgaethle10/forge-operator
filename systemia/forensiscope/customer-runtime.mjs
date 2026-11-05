@@ -50,7 +50,7 @@ function positiveInt(value){
  */
 export function createForensiScopeCustomerRuntime({
  storageDir,authorizeBuyer,resolveOrder,verifyPaidOrder,
- verifyResultAccess,readCapacity,processRecording,
+ verifyResultAccess,readCapacity,processRecording,checkoutBridge=null,
  allowedOrigins=[],maxUploadBytes=256*1024*1024,
  chunkBytes=2*1024*1024,workerIntervalMs=5000,
  now=()=>Date.now()
@@ -60,6 +60,8 @@ export function createForensiScopeCustomerRuntime({
  if([authorizeBuyer,resolveOrder,verifyPaidOrder,verifyResultAccess,readCapacity]
     .some(x=>typeof x!=='function'))
   throw error('trusted_customer_payment_capacity_callbacks_required');
+ if(checkoutBridge!==null&&typeof checkoutBridge?.createCheckout!=='function')
+  throw error('trusted_owned_checkout_bridge_required');
  if(!positiveInt(workerIntervalMs)||workerIntervalMs<10||workerIntervalMs>60000)
   throw error('invalid_worker_interval');
  if(!positiveInt(maxUploadBytes)||!positiveInt(chunkBytes)||chunkBytes>maxUploadBytes)
@@ -94,10 +96,36 @@ export function createForensiScopeCustomerRuntime({
      state:'owned_loopback_only',
      authenticated_customer_integration_required:true,
      public_checkout_enabled:false,
+     private_checkout_adapter_configured:Boolean(checkoutBridge?.readiness?.configured),
      production_settlement_proven:false,
      public_upload_enabled:false,
      private_worker_started:Boolean(worker)
     });
+   }
+   if(route==='/v1/forensiscope/checkout'){
+    if(req.method==='OPTIONS'){
+     if(!allowed)throw error('origin_not_allowed',403);
+     res.writeHead(204,{
+      'access-control-allow-origin':origin,'vary':'Origin',
+      'access-control-allow-methods':'POST,OPTIONS',
+      'access-control-allow-headers':'authorization,content-type',
+      'cache-control':'no-store'
+     });return res.end();
+    }
+    if(req.method!=='POST')throw error('method_not_allowed',405);
+    if(!checkoutBridge)throw error('owned_checkout_bridge_not_available',503);
+    const buyer=await authorizeBuyer(req);
+    if(typeof buyer?.subject!=='string'||!buyer.subject||
+       typeof buyer?.email!=='string'||!buyer.email)
+     throw error('authenticated_buyer_email_required',401);
+    const body=await boundedJson(req);
+    const handoff=await checkoutBridge.createCheckout({
+     orderKey:body.order_key,
+     subject:buyer.subject,
+     buyerEmail:buyer.email,
+     confirmed:body.confirmed===true
+    });
+    return respond(200,{ok:true,...handoff});
    }
    if(route==='/v1/forensiscope/quote'){
     if(req.method==='OPTIONS'){
