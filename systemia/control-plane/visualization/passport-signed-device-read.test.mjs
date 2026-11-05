@@ -1,0 +1,97 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { generateKeyPairSync } from 'node:crypto';
+import { mkdtemp, mkdir, rm, readFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { EvercraftPassport } from '../../passport/passport.mjs';
+import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../../organism/goal-runtime.mjs';
+import { createGoalStateFile } from '../../organism/goal-store.mjs';
+import { signMicroSeedExecutionReceipt } from '../../saban/microseed-receipt-signature.mjs';
+import { readPassportScopedGoalWithDeviceEvidence } from './passport-goal-read.mjs';
+
+const startAt = new Date('2026-11-05T22:51:00.000Z');
+const finishAt = new Date('2026-11-05T22:53:00.000Z');
+const now = new Date('2026-11-05T22:54:00.000Z');
+async function setup({grant=true}={}) {
+  const dir=await mkdtemp(join(tmpdir(),'systemia-signed-passport-'));
+  const passportStateDir=join(dir,'passport'), goalStateDir=join(dir,'goals');
+  await mkdir(goalStateDir);
+  const passport=new EvercraftPassport({stateDir:passportStateDir});
+  if(grant)passport.issueGrant({
+    grant_id:'test-goal-read',idempotency_key:'test-allow-1',
+    subject_ref:'test-operator',issuer_ref:'test-identity-authority',
+    product:'systemia',scopes:['mission.visual.read'],resource_refs:['goal:private-goal'],
+    starts_at:'2026-11-01T00:00:00.000Z',ends_at:'2026-11-07T00:00:00.000Z',
+    authority_state:'verified_identity_authority',
+    authority_receipt_ref:'synthetic-identity-auth',
+  });
+  const initial=createGoalState({goalKey:'private-goal',objective:'PRIVATE customer alpha@example.com',now:startAt});
+  const planned=admitGoalPlan({state:initial,plan:[{work_key:'private-task',work_type:'research'}],now:startAt});
+  const started=startGoalWork({state:planned,workKey:'private-task',now:startAt});
+  const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+  const receipt=signMicroSeedExecutionReceipt({
+    schema:'evercraft.microseed.execution-receipt.v1',
+    device_id:'private-device',workload_class:'systemia.content-hash.v1',
+    idempotency_key:started.tasks[0].attempt_key,
+    request_hash:'sha256:'+'a'.repeat(64),
+    manifest_hash:'sha256:'+'b'.repeat(64),
+    safety_receipt_ref:'sha256:'+'c'.repeat(64),
+    result:{ok:true},execution_location:'device',deduplicated:false,
+    arbitrary_code_execution:false,primary_function_priority:true,
+    external_cash_spend_usd:0,incremental_energy_cost_state:'not_measured',
+    completed_at:'2026-11-05T22:52:00.000Z',
+    receipt_hash:'sha256:'+'d'.repeat(64),
+  },{privateKey,key_id:'test-signer'});
+  const completed=recordGoalOutcome({
+    state:started,workKey:'private-task',expectedAttempt:1,
+    result:'complete',receiptRef:receipt.receipt_hash,now:finishAt,
+  });
+  await createGoalStateFile(join(goalStateDir,'private-goal.json'),completed);
+  const keys={'test-signer':{
+    device_id:'private-device',
+    public_key_pem:publicKey.export({type:'spki',format:'pem'}).toString(),
+    allowed_workload_classes:['systemia.content-hash.v1'],
+  }};
+  const read=(overrides={})=>readPassportScopedGoalWithDeviceEvidence({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,signedReceipts:[receipt],trustedDeviceKeys:keys,
+    ...overrides,
+  });
+  return {dir,passport,goalStateDir,passportStateDir,receipt,keys,read};
+}
+async function withCase(opts,fn){const fixture=await setup(opts);try{await fn(fixture)}finally{await rm(fixture.dir,{recursive:true,force:true})}}
+
+test('signed device receipt appears only after authorized mission access',()=>withCase({},async({read,goalStateDir,passportStateDir})=>{
+  const goalBefore=await readFile(join(goalStateDir,'private-goal.json'),'utf8');
+  const passportBefore=await readFile(join(passportStateDir,'grants.jsonl'),'utf8');
+  const result=await read();
+  assert.equal(result.provenance.passport_authorization_verified,true);
+  assert.equal(result.summary.signed_device_receipts_matched,1);
+  assert.equal(result.provenance.signature_verified,false);
+  assert.equal(result.provenance.independent_effect_verified,false);
+  assert.equal(result.summary.verified_receipts,0);
+  assert.equal(result.nodes[1].status,'reported_complete_unverified');
+  for(const secret of ['private-goal','private-task','private-device','test-signer','alpha@example.com']){
+    assert.ok(!JSON.stringify(result).includes(secret),'private identifier leaked: '+secret);
+  }
+  assert.equal(await readFile(join(goalStateDir,'private-goal.json'),'utf8'),goalBefore);
+  assert.equal(await readFile(join(passportStateDir,'grants.jsonl'),'utf8'),passportBefore);
+}));
+test('denied subject never gets signed evidence or goal data',()=>withCase({grant:false},async({read})=>{
+  await assert.rejects(read(),/visual_access_denied/);
+}));
+test('wrong mission grant or tampered signature cannot be shown',()=>withCase({},async({read,receipt})=>{
+  await assert.rejects(read({verifiedSubjectRef:'untrusted-user'}),/visual_access_denied/);
+  const tampered=structuredClone(receipt);tampered.result={ok:false};
+  await assert.rejects(read({signedReceipts:[tampered]}),/device_signature_rejected/);
+}));
+test('revocation blocks even a previously accepted evidence read',()=>withCase({},async({read,passport})=>{
+  await read();
+  passport.revokeGrant({
+    idempotency_key:'revoke-read',grant_id:'test-goal-read',actor_ref:'test-operator',
+    authority_state:'subject_self_revocation',authority_receipt_ref:'revoke-test',
+    reason:'test',revoked_at:now.toISOString(),
+  });
+  await assert.rejects(read(),/visual_access_denied/);
+}));

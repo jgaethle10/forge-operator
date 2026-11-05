@@ -10,6 +10,7 @@ import { join, resolve } from 'node:path';
 import { EvercraftPassport } from '../../passport/passport.mjs';
 import { readGoalState } from '../../organism/goal-store.mjs';
 import { projectGoalToVisualSnapshot } from './goal-visual-bridge.mjs';
+import { correlateSignedDeviceEvidence } from './signed-device-evidence.mjs';
 
 const SCOPE = 'mission.visual.read';
 const PRODUCT = 'systemia';
@@ -45,7 +46,7 @@ function checkGrant(passport, subjectRef, resourceRef, at) {
  * Call only after the hosting system authenticates a subject.
  * Requires an exact goal:KEY resource and a local KEY.json goal file.
  */
-export async function readPassportScopedGoalVisualSnapshot({
+async function loadAuthorizedGoalState({
   passportStateDir,
   goalStateDir,
   verifiedSubjectRef,
@@ -81,7 +82,10 @@ export async function readPassportScopedGoalVisualSnapshot({
 
   // Recheck revocations before returning any data.
   checkGrant(passport, subjectRef, resourceRef, at);
-  const snapshot = projectGoalToVisualSnapshot(state, { now: instant });
+  return { state, instant, passport, subjectRef, resourceRef, at };
+}
+
+function annotatePassportScope(snapshot) {
   return {
     ...snapshot,
     source: 'systemia.goal-store.passport-scoped-internal-read.v1',
@@ -94,7 +98,38 @@ export async function readPassportScopedGoalVisualSnapshot({
       independent_effect_verified: false,
       execution_authority_granted: false,
       production_promotion_allowed: false,
-      note: 'Passport authorized the subject for this mission. Identity validation is external to this library; no execution or outcome evidence was independently checked.',
+      note: snapshot.provenance.device_receipt_signature_count
+        ? 'Passport authorized an identity-bound mission read and pinned device receipts have verified signatures. Actual mission effects and delivery remain unverified.'
+        : 'Passport authorized the subject for this mission. Identity validation is external to this library; no execution or outcome evidence was independently checked.',
     },
   };
+}
+
+export async function readPassportScopedGoalVisualSnapshot(options = {}) {
+  const { state, instant, passport, subjectRef, resourceRef, at } = await loadAuthorizedGoalState(options);
+  const snapshot = projectGoalToVisualSnapshot(state, { now: instant });
+  checkGrant(passport, subjectRef, resourceRef, at);
+  return annotatePassportScope(snapshot);
+}
+
+/**
+ * Only call from an authenticated, trusted Systemia server process.
+ * signedReceipts must come from an owned, independently scoped receipt store.
+ * trustedDeviceKeys must come from pinned server configuration, NEVER from
+ * receipt payloads, untrusted JSON, client headers or remote request bodies.
+ * The caller's identity proof happens outside this library.
+ */
+export async function readPassportScopedGoalWithDeviceEvidence({
+  signedReceipts = [],
+  trustedDeviceKeys = {},
+  ...options
+} = {}) {
+  const { state, instant, passport, subjectRef, resourceRef, at } = await loadAuthorizedGoalState(options);
+  const snapshot = correlateSignedDeviceEvidence(state, {
+    signedReceipts,
+    trustedDeviceKeys,
+    now: instant,
+  });
+  checkGrant(passport, subjectRef, resourceRef, at);
+  return annotatePassportScope(snapshot);
 }
