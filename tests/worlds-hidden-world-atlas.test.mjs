@@ -16,6 +16,7 @@ test('atlas routes into a self-contained Yakima reconstruction', () => {
   const atlas = read('public/worlds/hidden-world/index.html');
   const yakima = read('public/worlds/hidden-world/yakima-standalone.html');
   assert.match(atlas, /href="yakima-standalone\.html"/);
+  assert.match(atlas, /href="yakima-evidence\.html"/, 'atlas must expose evidence lab');
   assert.doesNotMatch(atlas, /href="yakima\.html"/);
   assert.match(yakima, /scene-ready/);
   assert.match(yakima, /fallback-image/);
@@ -41,4 +42,20 @@ test('atlas maintains 12 sourced location records and clear access caveats', () 
 test('documentation distinguishes staged source from confirmed public deployment', () => {
   const doc = read('docs/worlds/HIDDEN-WORLD-ATLAS.md');
   assert.match(doc, /not evidence of deployment/i);
+});
+
+
+test('Yakima evidence lab is source-backed and functional without JavaScript', () => {
+  const lab = read('public/worlds/hidden-world/yakima-evidence.html');
+  assert.match(lab, /Yakima Evidence Lab/);
+  assert.match(lab, /1898–1899/);
+  assert.match(lab, /1905–1915/);
+  assert.match(lab, /1923–1924/);
+  assert.match(lab, /National Register/);
+  assert.match(lab, /Connected tunnels established by the records reviewed/);
+  assert.match(lab, /0<\/strong><span>Connected tunnels/);
+  assert.match(lab, /name="era"/);
+  assert.match(lab, /id="era-1924"/);
+  assert.match(lab, /href="yakima-standalone\.html"/);
+  assert.doesNotMatch(lab, /<script\b/i, 'historical evidence must remain visible in script-blocking previews');
 });
