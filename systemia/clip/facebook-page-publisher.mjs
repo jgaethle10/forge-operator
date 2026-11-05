@@ -1,5 +1,6 @@
 import { assertEvercraftFamilySocialSafe } from './family-social-safety.mjs';
 import { assertPublicLinkShape } from './public-link-preflight.mjs';
+import { readbackFacebookPagePost } from './facebook-post-readback.mjs';
 
 const DOCS=[
   'https://developers.facebook.com/docs/graph-api/reference/post',
@@ -10,12 +11,6 @@ async function payload(response){
   const text=await response.text();
   if(!text) return {};
   try{return JSON.parse(text);}catch{return {raw:text};}
-}
-
-function pagePostUrl(pageId,remoteId){
-  const parts=String(remoteId).split('_');
-  const postId=parts.length>1?parts.slice(1).join('_'):remoteId;
-  return 'https://www.facebook.com/'+encodeURIComponent(pageId)+'/posts/'+encodeURIComponent(postId);
 }
 
 export function createFacebookPagePublisherAdapter(config){
@@ -68,30 +63,25 @@ export function createFacebookPagePublisherAdapter(config){
       const remoteId=String(result?.id??'').trim();
       if(!remoteId) throw new Error('facebook_post_id_missing');
 
-      let url=pagePostUrl(pageId,remoteId);
-      try{
-        const verify=await fetchImpl(
-          graphBase+'/'+graphVersion+'/'+encodeURIComponent(remoteId)+'?fields=permalink_url',
-          {
-            method:'GET',
-            headers:{Authorization:'Bearer '+pageAccessToken},
-          },
-        );
-        if(verify.status>=200&&verify.status<300){
-          const verifiedPayload=await payload(verify);
-          if(verifiedPayload?.permalink_url) url=String(verifiedPayload.permalink_url);
-        }
-      }catch{
-        // The provider already confirmed creation with an ID.
-        // Keep the deterministic Page post URL rather than downgrading a successful publish.
-      }
+      const readback=await readbackFacebookPagePost({
+        fetchImpl,graphBase,graphVersion,pageAccessToken,remoteId
+      });
+      // The POST may have created a Page post. Never claim publication or blindly retry
+      // until an authenticated GET confirms the remote identity and permalink.
+      if(readback.state!=='confirmed') return {
+        state:'reconciliation_required', remoteId, providerRequestId:remoteId,
+        providerMayHavePublished:true, reason:readback.reason,
+        sourceRefs:['provider:facebook-graph-api-'+graphVersion]
+      };
 
       return {
         state:'published',
         remoteId,
         providerRequestId:remoteId,
-        url,
+        url:readback.url,
+        readbackVerified:true,
         sourceRefs:[
+          'provider:facebook-verified-permalink-readback',
           ...DOCS.map(doc=>'provider-doc:'+doc),
           'provider:facebook-graph-api-'+graphVersion,
           'permission:pages_show_list',

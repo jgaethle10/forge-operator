@@ -230,3 +230,24 @@ test('resident holds before vault or provider access when Passport denies the ex
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+test('resident holds an ambiguous Meta post instead of sending it twice',async()=>{
+  const {root,journalRoot}=journalFixture();
+  try{
+    let calls=0;
+    const authorizeStory=async()=>({decision:'allow',grant_id:'grant-cfb-publish'});
+    const publisher=async()=>{calls++;return {status:'reconciliation_required',remoteId:'123_456',url:null,reason:'post_readback_http_not_ok'};};
+    const first=await runCfbJournalPublishCycle({
+      journalRoot,authorizeStory,publisher,now:()=> '2026-10-07T05:30:00.000Z'
+    });
+    assert.equal(first.snapshot.manual_reconciliation_holds,1);
+    assert.equal(first.snapshot.provider_publishes_this_cycle,0);
+    const second=await runCfbJournalPublishCycle({
+      journalRoot,inputState:first.state,authorizeStory,publisher,
+      now:()=> '2026-10-07T05:35:00.000Z'
+    });
+    assert.equal(calls,1);
+    assert.equal(second.snapshot.events[0].action,'manual_reconciliation_hold');
+    assert.equal(second.snapshot.published,0);
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

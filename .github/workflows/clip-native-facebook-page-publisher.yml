@@ -14,13 +14,16 @@ on:
       - "systemia/clip/social-publisher-runtime.mjs"
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
+      - "systemia/clip/facebook-post-readback.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
       - "systemia/clip/native-video-publishers.mjs"
       - "systemia/clip/native-video-publishers.test.mjs"
       - "systemia/clip/facebook-page-photo-publisher.mjs"
+      - "systemia/clip/facebook-page-photo-publisher.test.mjs"
       - "systemia/clip/space-dudz-facebook-publish.mjs"
       - "systemia/clip/space-dudz-publish-authorize.mjs"
       - "systemia/clip/space-dudz-resident.mjs"
+      - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/space-dudz-resident-runner.mjs"
       - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/campaigns/space-dudz-orbit-one/**"
@@ -63,13 +66,16 @@ on:
       - "systemia/clip/social-publisher-runtime.mjs"
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
+      - "systemia/clip/facebook-post-readback.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
       - "systemia/clip/native-video-publishers.mjs"
       - "systemia/clip/native-video-publishers.test.mjs"
       - "systemia/clip/facebook-page-photo-publisher.mjs"
+      - "systemia/clip/facebook-page-photo-publisher.test.mjs"
       - "systemia/clip/space-dudz-facebook-publish.mjs"
       - "systemia/clip/space-dudz-publish-authorize.mjs"
       - "systemia/clip/space-dudz-resident.mjs"
+      - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/space-dudz-resident-runner.mjs"
       - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/campaigns/space-dudz-orbit-one/**"
@@ -118,6 +124,7 @@ jobs:
             systemia/clip/humanfilter-facebook-resident.test.mjs \
             systemia/clip/humanfilter-publish-authorize.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs \
+            systemia/clip/facebook-page-photo-publisher.test.mjs \
             systemia/clip/native-video-publishers.test.mjs \
             systemia/clip/space-dudz-resident.test.mjs \
             systemia/clip/facebook-page-credential-resolver.test.mjs \
