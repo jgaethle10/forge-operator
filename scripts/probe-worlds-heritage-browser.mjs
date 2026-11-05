@@ -67,6 +67,16 @@ try{
     await page.locator('#toggle').click();
     await page.waitForFunction(()=>window.__heritageTelemetry?.frameDraws===1,null,{timeout:10000});
     assert.equal(await page.locator('#toggle').getAttribute('aria-pressed'),'false');
+    // Guided camera tour must render on the same real WebGL canvas.
+    await page.locator('#tour').click();
+    assert.equal(await page.locator('#tour').getAttribute('aria-pressed'),'true');
+    assert.equal(await page.locator('#tourprogress').isVisible(),true);
+    await page.waitForTimeout(850);
+    assert.ok((await page.locator('#tourchapter').textContent()).length>10);
+    assert.notEqual(await page.locator('#tourfill').evaluate(el=>el.style.transform),'scaleX(0)');
+    await page.screenshot({path:output+'/'+p.name+'-tour.png',timeout:12000});
+    await page.locator('#tour').click();
+    assert.equal(await page.locator('#tourprogress').isVisible(),false);
     const before=await page.evaluate(()=>window.__heritageTelemetry.viewMatrix);
     if(!p.mobile){
       await page.keyboard.down('w');await page.waitForTimeout(850);await page.keyboard.up('w');
@@ -105,7 +115,7 @@ try{
     assert.deepEqual(errors,[],p.name+': uncaught browser exceptions');
     receipt.scenarios.push({profile:p.name,status:'PASS',elapsed_ms:Date.now()-start,
       render:pre,control_movement_schematic_units:Math.round(movement*100)/100,
-      toggle_verified:true,source_links_verified:true,page_errors:errors});
+      toggle_verified:true,guided_tour_verified:true,source_links_verified:true,page_errors:errors});
     await ctx.close();
   }
   // Explicit no-WebGL fallback, tested separately from the real renderer.
