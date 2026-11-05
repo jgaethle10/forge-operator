@@ -58,7 +58,7 @@ export function prepareSignalInquiry(input = {}) {
     '',
     'PURCHASE STATUS',
     'This email is a request, not a paid order or authorization to charge.',
-    'Please confirm exact scope, delivery date, final price and an official matching payment route before I pay.',
+    'Please confirm the bounded scope, delivery date, final price, and the exact Evercraft Payments order for Signal before I pay. No unrelated payment link.',
     '',
     'No passwords, payment cards or sensitive records are included in this request.'
   ].join('\n');

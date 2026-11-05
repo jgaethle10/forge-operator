@@ -23,7 +23,7 @@ test('pilot offer is one incident with no fictitious checkout',()=>{
   assert.equal(request.checkout_available,false);
   assert.ok(request.mailto.startsWith('mailto:jessegaethle10@gmail.com?subject='));
   assert.ok(decodeURIComponent(request.mailto).includes('Savannah River laboratory fire'));
-  assert.ok(request.body.includes('final price and an official matching payment route'));
+  assert.ok(request.body.includes('exact Evercraft Payments order for Signal'));
 });
 
 test('the landing page presents real deliverables, price and an actual editable request',()=>{
@@ -35,7 +35,7 @@ test('the landing page presents real deliverables, price and an actual editable 
   assert.match(html,/type="module"/);
   assert.match(html,/scope-request\.mjs/);
   assert.match(html,/nothing is sent automatically/);
-  assert.match(html,/not an active checkout/);
+  assert.match(html,/Evercraft Payments checkout remains on hold pending verification/);
   assert.ok(!html.includes('Ask about organizational monitoring'));
 });
 

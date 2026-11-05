@@ -1199,6 +1199,23 @@ export async function startFabricLocalRuntime({
         const directOffer=publicPaymentOffer(slug);
         const capabilityKey=offerPurchaseKeyForSlug(slug);
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        // A published Signal SKU does not confer payment authority before scope
+        // approval and exact provider-accepted native checkout evidence.
+        if(directOffer?.native_order_enabled===false){
+          return sendJson(res,409,{
+            ok:false,
+            error:'offer_requires_scope_acceptance',
+            authority:'Evercraft Payments',
+            offer_key:directOffer.offer_key,
+            amount_cents:directOffer.amount_cents,
+            currency:directOffer.currency,
+            checkout_ready:false,
+            order_created:false,
+            fulfillment_release:false,
+            scope_url:'https://jgaethle10.github.io/forge-operator/signal/#request'
+          });
+        }
+
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
