@@ -26,7 +26,7 @@ These are **documented source contracts**, not a claim that every adapter is dep
 ## What Timewalk v0.1 adds
 
 1. Two separate clocks: `known_at` = Context Fabric `record.created_at`, and `valid_at` = explicitly declared effective time or conservatively `observed_at`.
-2. A **server-clock** Passport-authorized snapshot of only visible records. No caller-supplied `authorization_at`; time travel never revives revoked/expired access.
+2. A **server-clock** Passport-authorized snapshot of only visible records, using both namespace read scope **and the fact's entity/record resource reference**. No caller-supplied `authorization_at`; time travel never revives revoked/expired access.
 3. Source refs, evidence labels and hash receipts for each returned claim. SHA-256 here is **tamper evidence**, not a digital signature or proof that the underlying statement is true.
 4. Historical supersession only after a correction was actually recorded; active contradicting claims are shown together.
 5. Retractions recorded after this change have a second clock (`created_at`) separate from the user-provided `retracted_at` event time.
@@ -46,7 +46,7 @@ These are **documented source contracts**, not a claim that every adapter is dep
 | Concurrency consistency | Context store is append-only JSONL and read refreshes are not transactional across all files | Add consistent snapshot/version watermark, stress tests, and immutable cursors |
 | Search scalability | Current Timewalk v0.1 scans authorized history; Context Fabric v1 retrieval is lexical | Introduce indexed/cursor-based bounded queries and measure scale |
 | Decisions and causal provenance | Separate mission, Lineage and execution receipts exist | Build explicit typed edges; do not infer causal approval chains from timestamps |
-| Tenant isolation | Passport scopes exist, but this is not an externally authenticated service | Security review identity binding, namespace/resource scoping, tenant and retention policy |
+| Tenant isolation and resource grants | Timewalk's new snapshot checks each entity/record resource; existing general Context Fabric readers require a separate resource-grant audit | Security review authenticated identity binding, older read paths, tenant and retention policy |
 | Privacy/erasure | Append-only operational history is not an excuse to retain private data indefinitely | Define minimization, redaction, lawful retention and erasure exceptions before ingest expansion |
 | Independent verification | Synthetic tests are useful, not live deployment evidence | Run native Context Fabric + Passport tests, CI and private-machine canaries |
 | External data | No Utopia ingestion, DB creds, production logs, private user/customer data | Keep third-party exploration isolated and synthetic |
@@ -76,6 +76,7 @@ These are **documented source contracts**, not a claim that every adapter is dep
 
 ```bash
 node --test systemia/context-fabric/timewalk/timewalk.test.mjs
+node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
 node --test systemia/context-fabric/fabric.test.mjs
 ```
 
