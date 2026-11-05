@@ -43,6 +43,12 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 - GitHub CI now runs the complete Node research test suite including the stage-3 physics model.
 - The numerical model does **not** predict electrical efficiency, delivered watts, over-unity energy, actual product performance, or support claims of hidden technologies. A successful CI run does not demonstrate a bench result.
 
+## Stage 4: independent mathematical formulation and stronger controls
+- [elliptic-reference.mjs](elliptic-reference.mjs) checks the existing Neumann-angle model against Maxwell's elliptic-integral formulation, with a distinct numerical integration domain and explicit conditioning limits. [elliptic-reference.test.mjs](elliptic-reference.test.mjs) prevents accidental drift between implementations.
+- [negative-controls.test.mjs](negative-controls.test.mjs) checks that receiver-absent output above uncertainty and fake/mismatched misalignment controls fail the experiment-design minimums.
+- [MODEL_VERIFICATION.md](MODEL_VERIFICATION.md) contains source citations, model-only comparison values, and unambiguous evidence boundaries.
+- GitHub CI checks all research tests and explicitly synthetic input data. The model comparison is NOT independent hardware verification, energy efficiency, peer review, or Systemia agent execution.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
