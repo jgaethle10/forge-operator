@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/crypto/**'
       - 'tests/pq-envelope.test.mjs'
+      - 'tests/pq-signed-envelope.test.mjs'
       - '.github/workflows/pq-envelope-lab.yml'
   workflow_dispatch:
 jobs:
@@ -18,5 +19,5 @@ jobs:
           node-version: '24'
       - name: Verify ML-KEM availability (fail closed)
         run: node --input-type=module -e "import {pqRuntime} from './systemia/crypto/pq-envelope.mjs'; if (!pqRuntime().available) process.exit(1)"
-      - name: Run live ML-KEM and tamper tests
-        run: node --test tests/pq-envelope.test.mjs
+      - name: Run ML-KEM and ML-DSA authenticated envelope tests
+        run: node --test tests/pq-envelope.test.mjs tests/pq-signed-envelope.test.mjs
