@@ -9,7 +9,7 @@ import path from 'node:path';
 import {once} from 'node:events';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
-import {buildFlyoverScene} from './flyover.mjs';
+import {buildCinematicFlyoverScene} from './cinematic-flyover.mjs';
 import {EvercraftWorldRuntime} from '../world-engine/engine.ts';
 import {compileVisualFrame} from '../world-engine/visual.ts';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,EVERCRAFT_WEBGPU_WGSL} from '../world-engine/webgpu.ts';
@@ -34,14 +34,14 @@ const PROFILES=[
   ]}
 ];
 function compilePlan(t){
-  const fixture=buildFlyoverScene(t);
+  const fixture=buildCinematicFlyoverScene(t);
   const runtime=new EvercraftWorldRuntime(fixture.world);
   const snapshot=runtime.snapshot();
   const frame=compileVisualFrame(snapshot.worldId,snapshot.tick,snapshot.timeSec,
     runtime.definition.visualScene,snapshot.entities,snapshot.cameraRuntime,runtime.activeEntityIds);
   const plan=compileWebGpuRenderPlan(frame,fixture.geometries,{width:WIDTH,height:HEIGHT});
   assert.equal(verifyWebGpuRenderPlan(plan),true);
-  assert.equal(plan.draws.length,8);
+  assert.ok(plan.draws.length>=20,'cinematic_flyover_draws_missing');
   return {plan,geometry:fixture.geometries};
 }
 async function loopback(){
@@ -268,7 +268,7 @@ export async function runFlyoverPixelProof({
         }
         assert.equal(new Set(captures.map(x=>x.plan_digest)).size,TIMES.length);
         const cls=classifyWebGpuAdapter(captures[0].adapter_info,profile);
-        const core={schema:'evercraft.visual-engine.flyover-pixel-proof.v1',
+        const core={schema:'evercraft.visual-engine.flyover-pixel-proof.v2',
           status:'verified',shader_sha256:sha(EVERCRAFT_WEBGPU_WGSL),
           browser_version:browser.version(),profile:profile.id,
           execution_class:cls.execution_class,
