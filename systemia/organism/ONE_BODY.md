@@ -65,6 +65,26 @@ The router intentionally produces instructions and receipts, not unbounded exter
 This avoids green-status theater while tightening circulation between the body’s shared parts.
 
 
+## Living Graph handoff observability (read-only)
+
+The One-Body snapshot exporter reuses the existing `evercraft.systemia.visual-snapshot.v1` format accepted by the Living Graph. It turns a **persisted event-state file** into a small privacy-filtered map of routes, lane destinations, and unconfirmed handoffs. It never calls a worker or initiates a payment.
+
+```bash
+node systemia/organism/one-body-visibility.mjs ./private/path/to/one-body-state.json > ./one-body-visual-snapshot.json
+```
+
+Import the resulting JSON using the Living Graph's **Import snapshot** control in a browser. This is a local, point-in-time projection, **not a live telemetry feed**; do not publish a private snapshot without an authorized review.
+
+- `planned_unverified`: no accepted consumer acknowledgement; may still be in flight.
+- `unobserved_overdue`: no accepted acknowledgement after a configurable observation window. This does **not** prove failure, delivery, or customer impact.
+- `consumer_receipt_verified`: a trusted adapter's `verifyReceipt(receipt)` callback has accepted a matching, time-valid event + lane receipt. This verifies only the consumer acknowledgement, not execution, payment, or customer delivery.
+- `invalid_event_time`: source event time is absent, invalid, or later than export time.
+- Identities and receipt references are hashed; buyer names, source refs, full source records, and payment/order secrets are omitted.
+- Only a subset of recent events is exported to keep the phone graph legible. The summary includes the full state-event count and warns when sampled.
+- All graph views are read-only and carry explicit `execution_authority_granted:false`, `payment_verified:false`, and `verified_runtime_health:false` summary markers.
+
+**Remaining integration gap:** The current One-Body state stores planned lanes but not verified consumer receipts. A trusted, scoped evidence adapter must validate and supply lane acknowledgements; only then can the graph distinguish proven handoffs from unconfirmed ones. This module does not mint a trust authority, authenticate JSON claims, or imply production deployment.
+
 ## Proof
 
 Run:
