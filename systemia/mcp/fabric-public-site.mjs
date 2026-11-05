@@ -143,6 +143,33 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
   .navlinks{display:none}.hero{padding-top:48px}.trust{grid-template-columns:repeat(2,1fr)}
   .grid,.prompts,.capability-grid,.detail-grid{grid-template-columns:1fr}
 }
+
+/* Website Audit: purchase options before promotional art, with no payment authority change. */
+.website-audit-mobile-fix .offer-hero{max-width:760px;padding:30px 0 34px}
+.website-audit-mobile-fix .offer-hero h1{font-size:clamp(39px,5vw,64px);line-height:1.08;letter-spacing:-.05em;max-width:740px;margin:18px 0 14px}
+.website-audit-mobile-fix .offer-hero .lede{font-size:clamp(17px,1.6vw,21px);line-height:1.55;max-width:640px;margin:0}
+.website-audit-mobile-fix .offer-price{font-size:clamp(43px,5vw,56px);margin:20px 0 4px}
+.website-audit-mobile-fix .offer-price-note{font-size:15px;line-height:1.5;color:#d1dff0;max-width:660px}
+.website-audit-mobile-fix .checkout-form{display:grid;max-width:550px;grid-template-columns:minmax(0,1fr);gap:9px;align-items:stretch;margin-top:22px;padding:22px;border:1px solid #395575;border-radius:18px;background:linear-gradient(160deg,#0c1b31,#091220)}
+.website-audit-mobile-fix .checkout-form label{font-size:14px;font-weight:650}
+.website-audit-mobile-fix .checkout-form input{width:100%!important;max-width:100%!important;min-width:0;min-height:46px;border:1px solid #4e6788!important;border-radius:10px!important}
+.website-audit-mobile-fix .checkout-form .btn{width:100%;min-height:48px;margin-top:8px}
+.website-audit-mobile-fix .checkout-form .checkout-note{font-size:12px;line-height:1.6}
+.website-audit-mobile-fix .offer-hero>.offer-panel{margin-top:20px;padding:22px}
+.website-audit-mobile-fix .offer-hero>.offer-panel .actions{margin-top:18px}
+.website-audit-mobile-fix .audit-more-info{margin-top:22px;border:1px solid #304868;border-radius:14px;padding:15px 18px;color:#c6d7eb}
+.website-audit-mobile-fix .audit-more-info summary{font-size:14px;font-weight:650;cursor:pointer;line-height:1.5}
+.website-audit-mobile-fix .audit-more-info p{font-size:13px;line-height:1.65;color:#adc0d7}
+.website-audit-mobile-fix .audit-more-info .offer-visual{max-width:480px;margin:18px 0}
+.website-audit-mobile-fix .audit-more-info .offer-visual img{width:100%;height:auto}
+@media(max-width:780px){
+  .website-audit-mobile-fix .offer-hero{padding:18px 0 26px}
+  .website-audit-mobile-fix .offer-hero h1{font-size:clamp(35px,9vw,45px);line-height:1.07;margin:16px 0 12px}
+  .website-audit-mobile-fix .offer-hero .lede{font-size:16px;line-height:1.55}
+  .website-audit-mobile-fix .offer-price{font-size:47px;margin:17px 0 4px}
+  .website-audit-mobile-fix .checkout-form{padding:18px;margin-top:18px}
+  .website-audit-mobile-fix .offer-hero>.offer-panel{padding:18px}
+}
 </style>
 </head>
 <body>
@@ -199,8 +226,8 @@ const OFFER_PAGE_COPY={
     slug:'website-audit',
     purchase_key:'website-audit-quick-win',
     eyebrow:'Website Audit',
-    headline:"Your website is getting attention. Why isn't it getting customers?",
-    lede:'We scan the public site and show you the five fixes worth making first.',
+    headline:'See your website through their eyes.',
+    lede:'A focused review of your public website, with five prioritized fixes and clear next steps.',
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
     heroVisual:'/visuals/website-audit-attention/poster-hero-wide.svg',
     heroVisualMobile:'/visuals/website-audit-attention/poster-feed.svg',
@@ -374,17 +401,19 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
   const checkoutHeld=!checkoutConfigured;
+  const websiteOffer=copy.slug==='website-audit';
+  const visualMarkup=copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="Illustrative website audit concept, not an analysis of your website" loading="lazy"></picture></div>':'';
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
-    '<main>',
+    '<main'+(websiteOffer?' class="website-audit-mobile-fix"':'')+'>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
-    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
+    websiteOffer?'':visualMarkup,
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="offer-price-note">'+escapeHtml(websiteOffer?'Quick Win Audit · $49 one-time · five prioritized fixes, no subscription.':offerName+' · '+String(item.pricing||''))+'</div>',
     ...(checkoutHeld ? [
       '<section class="offer-panel" aria-label="Assisted purchase request">',
       '<h2>Online checkout is temporarily unavailable.</h2>',
@@ -404,6 +433,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     ]),
+    websiteOffer?'<details class="audit-more-info"><summary>See the example artwork and other audit options</summary>'+visualMarkup+'<p>'+escapeHtml(String(item.pricing||''))+'</p><p>Artwork is illustrative, not a finding about your website. Payment remains subject to verification.</p></details>':'',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
