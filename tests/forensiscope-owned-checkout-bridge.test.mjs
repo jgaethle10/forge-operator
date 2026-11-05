@@ -114,7 +114,8 @@ test('capacity, price, rights and reservation failures prevent provider call',as
   {readCapacity:async()=>({...capabilities,processing_capacity_verified:false})},
   {loadOrder:async()=>({...readyOrder,quote:{...quote,amount_cents:1}})},
   {loadOrder:async()=>({...readyOrder,media_rights_confirmed:false})},
-  {reserveCapacity:async()=>({ok:true,reservation_id:'not-enough'})}
+  {reserveCapacity:async()=>({ok:true,reservation_id:'not-enough'})},
+  {maxUploadBytes:1000}
  ];
  for(const props of cases){
   const f=fixture(props);
@@ -130,6 +131,7 @@ test('provider 402, bad amount, bad SKU, HTTP failure, URL mismatch and persiste
   {...exactReceipt,offer_key:'other_product'},
   {...exactReceipt,http_status:503,ok:false},
   {...exactReceipt,checkout_url:'http://checkout.invalid/pay'},
+  {...exactReceipt,checkout_url:'https://attacker.example/pay'},
   {...exactReceipt,checkout_url:'https://checkout.stripe.com/pay#secrets'}
  ];
  for(const sample of samples){
@@ -194,4 +196,19 @@ test('private runtime offers customer-bound checkout route only when owned bridg
    'private bridge never means public checkout enabled');
   assert.equal(health.private_checkout_adapter_configured,true);
  }finally{await runtime.stop();fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+
+test('checkout bridge enforces exact upload-capacity agreement with integrated runtime',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'forensi-checkout-capacity-'));
+ try{
+  assert.throws(()=>createForensiScopeCustomerRuntime({
+   storageDir:dir,
+   authorizeBuyer:async()=>({subject,email:buyerEmail}),
+   resolveOrder:async()=>readyOrder,verifyPaidOrder:async()=>null,
+   verifyResultAccess:async()=>({verified:false}),
+   readCapacity:async()=>capabilities,
+   checkoutBridge:fixture({maxUploadBytes:1024}).bridge
+  }),/checkout_upload_capacity_mismatch/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
