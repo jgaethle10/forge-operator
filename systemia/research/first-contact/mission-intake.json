@@ -1,0 +1,163 @@
+{
+  "schema": "evercraft.systemia.research_intake.v1",
+  "mission_id": "FIRST-CONTACT-001",
+  "title": "Evercraft | First Contact: evidence-gated UAP research",
+  "created_at": "2026-10-31",
+  "updated_at": "2026-11-05",
+  "owner": "Evercraft LLC",
+  "routing_priority": "Systemia first",
+  "execution_state": "NOT_DISPATCHED",
+  "agent_assignments_state": "UNASSIGNED",
+  "publication_state": "HOLD_REVIEW",
+  "evidence_status": "NO_VERIFIED_EXTRATERRESTRIAL_TECHNOLOGY",
+  "repository": "jgaethle10/forge-operator",
+  "branch": "research/first-contact-uap-001",
+  "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1832",
+  "deliverables": [
+    {
+      "id": "FC-SENSOR-01",
+      "lane": "sensor_forensics",
+      "status": "RESEARCH_PROTOTYPE",
+      "artifacts": [
+        "platform-geometry.mjs",
+        "platform-geometry.test.mjs",
+        "gofast-appendix-a.mjs",
+        "gofast-appendix-a.test.mjs"
+      ],
+      "completed": "2026-11-02",
+      "validation": "14 new local tests passed; repository CI not checked",
+      "acceptance": "Reconstruct moving-platform synthetic geometry and audit AARO published 13-second math without asserting independent case identity"
+    },
+    {
+      "id": "FC-EVIDENCE-01",
+      "lane": "provenance",
+      "status": "INITIAL_AUDIT",
+      "artifacts": [
+        "cases.json",
+        "source-audit-2026-11-02.md"
+      ],
+      "completed": "2026-11-02",
+      "validation": "Public official source reconciliation; independent editorial review pending",
+      "acceptance": "Primary source and source-data limitations separated from hypotheses"
+    },
+    {
+      "id": "FC-MATERIAL-01",
+      "lane": "materials_photonics",
+      "status": "DESK_SCREEN_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
+      "dependencies": [
+        "FC-EVIDENCE-01"
+      ],
+      "acceptance": "Compare examined Mg/Zn Bi/Pb bands to crystalline THz waveguide requirements; identify safe known-physics lab research questions",
+      "artifacts": [
+        "materials-thz-screen-2026-11-03.md",
+        "engineering-feasibility.mjs",
+        "engineering-feasibility.test.mjs"
+      ],
+      "validation": "Official AARO/ORNL materials assessment and free-space THz wavelength check; no physical sample acquired or characterized; independent review pending",
+      "completed": "2026-11-03"
+    },
+    {
+      "id": "FC-SENSOR-02",
+      "lane": "sensor_forensics",
+      "status": "QUEUED_UNASSIGNED",
+      "dependencies": [
+        "FC-SENSOR-01"
+      ],
+      "acceptance": "Compare AARO all-heading and wind scenarios with sourced assumptions; do not assert unique identity"
+    },
+    {
+      "id": "FC-PROPULSION-01",
+      "lane": "engineering",
+      "status": "DESK_MODEL_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
+      "dependencies": [
+        "FC-EVIDENCE-01"
+      ],
+      "acceptance": "Desk-only performance tradeoff for electroaerodynamic flight with power/thrust limitations, no high-voltage build",
+      "artifacts": [
+        "propulsion-feasibility-2026-11-03.md",
+        "engineering-feasibility.mjs",
+        "engineering-feasibility.test.mjs"
+      ],
+      "validation": "Illustrative steady-flight thrust/power and energy arithmetic with 7 local calculator tests passing; inputs not claimed as measured MIT flight performance",
+      "completed": "2026-11-03"
+    },
+    {
+      "id": "FC-REVIEW-01",
+      "lane": "independent_red_team",
+      "status": "RED_TEAM_DRAFT_AWAITING_INDEPENDENT_REVIEW",
+      "dependencies": [
+        "FC-MATERIAL-01",
+        "FC-SENSOR-02",
+        "FC-PROPULSION-01"
+      ],
+      "acceptance": "Document strongest conventional explanations, disconfirming tests, and confidence/uncertainty gates",
+      "artifacts": [
+        "red-team-decision-2026-11-03.md"
+      ],
+      "validation": "Initial falsification and data gaps written; separate independent reviewer not yet assigned"
+    },
+    {
+      "id": "FC-SENSOR-03",
+      "lane": "sensor_forensics",
+      "status": "SYNTHETIC_MODEL_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
+      "artifacts": [
+        "triangulation.mjs",
+        "triangulation.test.mjs"
+      ],
+      "completed": "2026-11-04",
+      "validation": "9/9 local Node.js tests; exact GitHub file blob hashes matched local tested files. No actual UAP sensor data used.",
+      "acceptance": "Bearing-only dual-observer geometric candidate with near-parallel, behind-observer, inconsistent-ray quality gates and explicit unvalidated output"
+    },
+    {
+      "id": "FC-EVIDENCE-02",
+      "lane": "provenance",
+      "status": "CASE_INTAKE_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
+      "artifacts": [
+        "case-readiness.mjs",
+        "case-readiness.test.mjs",
+        "public-case-intake-2026-11-04.json"
+      ],
+      "completed": "2026-11-04",
+      "validation": "5/5 local Node.js tests; exact JS and test file hashes matched GitHub. Government case-listing metadata only; original media not downloaded.",
+      "acceptance": "Preserve unknown vs absent inputs and prevent extraordinary claims without calibrated source observations"
+    },
+    {
+      "id": "FC-SENSOR-04",
+      "lane": "sensor_forensics",
+      "status": "OFFLINE_TOOL_CI_VERIFIED_AWAITING_CALIBRATED_FIELD_DATA",
+      "completed": "2026-11-05",
+      "artifacts": [
+        "observation-sync.mjs",
+        "observation-sync.test.mjs",
+        "two-view-cli.mjs",
+        "two-view-cli.test.mjs",
+        "fixtures/synthetic-synchronized.json",
+        "fixtures/synthetic-desynchronized.json",
+        "TWO_VIEW_RUNBOOK.md"
+      ],
+      "validation": "GitHub Actions FIRST-CONTACT research verification pass on code/fixture commit be1546bc...; no real video or calibrated live sensor measurements evaluated",
+      "acceptance": "Run an offline, fail-closed two-camera JSON intake and produce a hash-linked candidate or refusal, requiring independent review before physical claims"
+    },
+    {
+      "id": "FC-CI-01",
+      "lane": "quality_assurance",
+      "status": "DEDICATED_RESEARCH_CI_ENABLED",
+      "completed": "2026-11-05",
+      "artifacts": [
+        ".github/workflows/first-contact-research.yml",
+        "validate-research-artifacts.mjs"
+      ],
+      "validation": "Successful dedicated workflow GitHub Actions run 41994861626 and 41995140199; code/fixtures pass; not external sensor proof",
+      "acceptance": "Automatically test FIRST-CONTACT branch changes and fail closed on unsupported mission evidence or dispatch-state claims"
+    }
+  ],
+  "hard_constraints": [
+    "Use only lawful public or authorized records",
+    "No promotion of unexplained case to alien-origin proof",
+    "No claim of mission dispatch, agent work, new physical samples, lab success or production readiness without receipts",
+    "No high-voltage or hazardous physical testing without safety approval and qualified controls",
+    "No marketing or external release before evidence and review gate"
+  ],
+  "next_execution_gate": "First field calibration: two independent surveyed cameras, synchronized calibrated pointing and known stationary target; validate against ground truth with documented uncertainty. Autonomous mission dispatch remains separate and requires authorized Systemia writable route + signed execution receipts; GitHub Actions test pass does not grant it.",
+  "validation_note": "GitHub Actions FIRST-CONTACT research verification succeeded for code commits 9bb5d05e... (run 41994861626) and be1546bc... (run 41995140199), including full FIRST-CONTACT node test glob and offline research-artifact integrity audit. Field sensor calibration/independent scientific review remain unverified."
+}
