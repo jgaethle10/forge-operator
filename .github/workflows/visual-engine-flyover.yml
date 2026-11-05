@@ -29,3 +29,29 @@ jobs:
         run: node --test systemia/visual-engine/flyover.test.mjs
       - name: Prove World Engine visual and WebGPU plan integration
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/world-engine-integration.test.mjs
+      - name: Check native pixel proof syntax
+        run: node --check systemia/visual-engine/flyover-pixel-proof.mjs
+
+  native-flyover-pixels:
+    needs: aircraft-flyover
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install owned browser worker dependencies
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm --prefix systemia/evercraft-web/browser-worker install --no-audit --no-fund
+      - name: Render original flyover with owned World Engine WGSL
+        env:
+          EVERCRAFT_VISUAL_FRAMES_DIR: flyover-pixels
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/flyover-pixel-proof.mjs
+      - name: Publish real frame captures and provenance receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-flyover-webgpu-pixels
+          path: flyover-pixels/
+          if-no-files-found: error
+          retention-days: 14
