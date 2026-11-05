@@ -44,8 +44,11 @@ jobs:
           node-version: '22'
       - name: Install Playwright
         run: npm install --no-save --no-audit --no-fund playwright@1.55.1
-      - name: Install Chromium and system libraries
-        run: npx playwright install --with-deps chromium
+      # GitHub ubuntu runners already supply the required browser libraries.
+      # Avoid Playwright's --with-deps apt-font download: on Nov 5 the Ubuntu
+      # mirror stalled this job until cancellation before any browser QA ran.
+      - name: Install Chromium without apt downloads
+        run: npx playwright install chromium
       - name: Browser scene, movement, editing, reload, mobile layout
         run: node scripts/probe-evercraft-worlds-browser.mjs && node scripts/probe-worlds-heritage-browser.mjs
       - name: Preserve screenshots and measurement receipt
