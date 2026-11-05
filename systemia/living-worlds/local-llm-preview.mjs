@@ -87,22 +87,24 @@ export function createHousePreview({inference=invokeLocalModel}={}){
       if(busy||calls.length>=MAX_CALLS_PER_MINUTE){
         send(res,429,{error:'Local inference rate limit reached'});return;
       }
-      let payload;
+      busy=true;calls.push(now); // Reserve before reading body so overlapping requests cannot bypass the gate.
       try{
-        payload=await readBoundedJson(req);
-        if(!payload||Object.keys(payload).length!==1||!validateDecisionContext(payload.context))
-          throw Error('Invalid context');
-      }catch{
-        send(res,400,{error:'Invalid decision context'});return;
-      }
-      busy=true;calls.push(now);
-      try{
-        const output=await inference(payload.context);
-        const proposal=parseProposalFromContext(payload.context,output);
-        send(res,200,{schema:'evercraft.living-worlds.inference-result.v1',source:'local_llm',
-          proposal});
-      }catch{
-        send(res,503,{error:'Local model unavailable or invalid proposal. Rules-only simulation continues.'});
+        let payload;
+        try{
+          payload=await readBoundedJson(req);
+          if(!payload||Object.keys(payload).length!==1||!validateDecisionContext(payload.context))
+            throw Error('Invalid context');
+        }catch{
+          send(res,400,{error:'Invalid decision context'});return;
+        }
+        try{
+          const output=await inference(payload.context);
+          const proposal=parseProposalFromContext(payload.context,output);
+          send(res,200,{schema:'evercraft.living-worlds.inference-result.v1',source:'local_llm',
+            proposal});
+        }catch{
+          send(res,503,{error:'Local model unavailable or invalid proposal. Rules-only simulation continues.'});
+        }
       }finally{busy=false;}
       return;
     }
