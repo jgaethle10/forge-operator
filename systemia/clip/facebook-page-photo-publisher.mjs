@@ -1,16 +1,11 @@
 import { assertEvercraftFamilySocialSafe } from './family-social-safety.mjs';
+import { readbackFacebookPagePost } from './facebook-post-readback.mjs';
 function clean(value){ return String(value??'').trim(); }
 
 async function payload(response){
   const text=await response.text();
   if(!text) return {};
   try{return JSON.parse(text);}catch{return {raw:text};}
-}
-
-function pagePostUrl(pageId,remoteId){
-  const parts=String(remoteId).split('_');
-  const postId=parts.length>1?parts.slice(1).join('_'):remoteId;
-  return 'https://www.facebook.com/'+encodeURIComponent(pageId)+'/posts/'+encodeURIComponent(postId);
 }
 
 export function createFacebookPagePhotoPublisherAdapter(config={}){
@@ -50,25 +45,24 @@ export function createFacebookPagePhotoPublisherAdapter(config={}){
 
       const remoteId=clean(body.post_id||body.id);
       if(!remoteId) throw new Error('facebook_photo_remote_id_missing');
-      let url=pagePostUrl(pageId,remoteId);
-      try{
-        const verify=await fetchImpl(
-          graphBase+'/'+graphVersion+'/'+encodeURIComponent(remoteId)+'?fields=permalink_url',
-          {method:'GET',headers:{Authorization:'Bearer '+pageAccessToken}},
-        );
-        if(verify.status>=200&&verify.status<300){
-          const verifiedBody=await payload(verify);
-          if(clean(verifiedBody.permalink_url)) url=clean(verifiedBody.permalink_url);
-        }
-      }catch{}
+      const readback=await readbackFacebookPagePost({
+        fetchImpl,graphBase,graphVersion,pageAccessToken,remoteId
+      });
+      if(readback.state!=='confirmed') return {
+        state:'reconciliation_required',remoteId,providerRequestId:remoteId,
+        providerMayHavePublished:true,reason:readback.reason,
+        sourceRefs:['provider:facebook-graph-api-'+graphVersion]
+      };
 
       return {
         state:'published',
         remoteId,
         providerRequestId:remoteId,
-        url,
+        url:readback.url,
+        readbackVerified:true,
         contentDigest:clean(contentDigest)||null,
         sourceRefs:[
+          'provider:facebook-verified-permalink-readback',
           'provider-doc:https://developers.facebook.com/docs/graph-api/reference/page/photos',
           'provider:facebook-graph-api-'+graphVersion,
           'permission:pages_show_list',
