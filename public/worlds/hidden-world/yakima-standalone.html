@@ -36,6 +36,7 @@
 .scene-ready .scene-vignette,.scene-ready .scene-upper,.scene-ready .compass,.scene-ready .scene-help,.scene-ready .northnote,.scene-ready .zoom,.scene-ready .dpad,.scene-ready .eras button,.scene-ready .chapter-control button{visibility:visible}
 @media(max-width:500px){.fallback-tabs label{padding:8px;font-size:10px}.fallback-image{object-position:50% 50%}.fallback-note{left:10px;right:10px;bottom:10px}}
 </style>
+<link rel="stylesheet" href="../world-radio.css" />
 </head>
 <body>
   <div class="shell">
@@ -88,7 +89,8 @@
 /* Evercraft Hidden World Atlas · Yakima Reconstruction 001
    All scene meshes and underground geometry are ORIGINAL INTERPRETIVE ART,
    not a survey, georeferenced property plan, tunnel route, or entrance map.
-   No network requests, trackers, dependencies, or third-party scripts.
+   The standalone scene needs no network; when hosted on HTTP(S), optional
+   World Radio may query external station metadata after a visitor clicks.
 */
 const REFERENCES = {
   postcard:{title:'North Yakima Avenue, c. 1905–1915',category:'Archival image · Spokane Public Library',url:'https://lange.spokanelibrary.org/items/show/5659'},
@@ -179,6 +181,13 @@ for(const b of document.querySelectorAll('[data-move]')){const k=b.dataset.move;
 $('surface-tab').onclick=()=>{changeLevel('surface');showExhibit('street')};$('below-tab').onclick=()=>{changeLevel('below');showExhibit('basement')};$('prev-point').onclick=()=>showRelative(-1);$('next-point').onclick=()=>showRelative(1);document.querySelectorAll('[data-era]').forEach(b=>b.onclick=()=>{if(state.level==='surface')changeEra(Number(b.dataset.era))});$('zoom-in').onclick=()=>state.zoom=clamp(state.zoom*1.19,.63,1.7);$('zoom-out').onclick=()=>state.zoom=clamp(state.zoom/1.19,.63,1.7);$('reset').onclick=()=>{state.playerX=state.cameraX=-2;state.playerZ=state.cameraZ=0;state.yaw=-.22;state.zoom=state.level==='surface'?1:.85};
 if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);resize();changeLevel('surface');showExhibit('street');requestAnimationFrame(tick);document.documentElement.classList.add('scene-ready');
 
+</script>
+<script>
+// Keep the self-contained offline reconstruction working when opened as a file.
+// Live World Radio is an optional, network-enabled layer only on owned HTTP(S).
+if(location.protocol==='https:'||location.protocol==='http:'){
+  import('../world-radio.mjs').catch(()=>{});
+}
 </script>
 </body>
 </html>
