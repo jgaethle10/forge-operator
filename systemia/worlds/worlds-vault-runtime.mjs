@@ -115,7 +115,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
   try{
    const method=req.method||'GET',url=new URL(req.url||'/', 'http://local.invalid');
    const pathname=decodeURIComponent(url.pathname);
-   if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true});
+   if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true,public_origin:expectedOrigin||null});
    if(pathname==='/worlds/api/worlds'&&method==='POST'){
     assertWriteOrigin(req,expectedOrigin);
     const source=req.socket.remoteAddress||'unknown',now=Date.now();

@@ -74,7 +74,15 @@ export async function reconcileWorldsRoute(input={}){
  previousLease.deployment_receipt_hash===deploymentReceiptHash&&
  previousLease.deployment_instance_id===instanceId&&
  LEASE.test(previousLease.lease_id);
- if(previousLease&&!matchPrevious)throw Error('worlds_previous_lease_binding_mismatch');
+ if(previousLease&&!matchPrevious){
+  // A restarted edge has a new instance ID. Permit re-leasing only if the
+  // original deployment identity, target vault and customer origin are unchanged.
+  const identical=previousLease.schema===WORLDS_ROUTE_SCHEMA&&
+   previousLease.public_origin===pre.public_origin&&previousLease.vault_url===pre.vault_url&&
+   previousLease.deployment_receipt_hash===deploymentReceiptHash&&
+   previousLease.deployment_instance_id===instanceId&&LEASE.test(previousLease.lease_id);
+  if(!identical)throw Error('worlds_previous_lease_binding_mismatch');
+ }
  if(matchPrevious){
   try{
    const renewal=await call('/v1/public-route/leases/'+previousLease.lease_id+'/renew',{ttl_ms:3600000});
