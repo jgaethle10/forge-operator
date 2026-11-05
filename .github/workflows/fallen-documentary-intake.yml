@@ -1,0 +1,27 @@
+name: Fallen Documentary Intake Proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/documentary-intake.mjs'
+      - 'systemia/media-studio/documentary-intake.test.mjs'
+      - 'systemia/media-studio/DOCUMENTARY-PILOT.md'
+      - 'systemia/forensiscope/authorized-source.mjs'
+      - '.github/workflows/fallen-documentary-intake.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-first-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify available FFmpeg and FFprobe
+        run: |
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Check real encoded synthetic fixture and fail-closed intake rules
+        run: node --test systemia/media-studio/documentary-intake.test.mjs
