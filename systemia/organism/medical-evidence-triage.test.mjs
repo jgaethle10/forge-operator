@@ -87,7 +87,7 @@ test('rendered HTML escapes untrusted PubMed abstracts; source URL is derived fr
   assert.match(html,/&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.doesNotMatch(html,/<img src=x onerror=alert\(1\)>/);
   assert.match(html,/https:\/\/pubmed.ncbi.nlm.nih.gov\/100\//);
-  assert.match(renderMedicalTriageMarkdown(r.report),/not a clinical/i);
+  assert.match(renderMedicalTriageMarkdown(r.report),/No clinical finding/i);
 });
 
 test('writes standalone dashboard, review queue and persistent state',()=>{
