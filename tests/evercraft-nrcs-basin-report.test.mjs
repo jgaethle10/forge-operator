@@ -1,5 +1,8 @@
 import test from 'node:test';
+import { formatWatershedReviewBrief } from '../systemia/research-service/watershed-review-brief.mjs';
+import {compileWatershedSnapshot} from '../systemia/research-service/watershed-intelligence.mjs';
 import assert from 'node:assert/strict';
+import { readFileSync as readFileSyncLocal } from 'node:fs';
 import {
   NRCS_WA_BASIN_REPORT_URL, parseNrcsWashingtonBasinReport, fetchNrcsWashingtonBasinReport
 } from '../systemia/research-service/nrcs-basin-report.mjs';
@@ -77,3 +80,27 @@ test('official host-only read and HTTP errors',async()=>{
     asOf:options.asOf,fetchImpl:async()=>({ok:true,url:'https://other.example/reports/UpdateReport.html',text:async()=>fixture()})
   }),/outside its official host/);
 });
+
+test('review draft quotes NRCS source, warning stars and never promotes basin indices to seasonal forecasts',()=>{
+  const {readFileSync}=requireDummy();
+  const profile=JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json',import.meta.url),'utf8'));
+  const snap=compileWatershedSnapshot({asOf:'2026-11-04T22:30:00Z'});
+  const source=parseNrcsWashingtonBasinReport(fixture(),options);
+  const report=formatWatershedReviewBrief(snap,profile,null,null,null,null,null,source,'a'.repeat(64));
+  assert.ok(report.includes('Official NRCS Yakima basin indices'));
+  assert.ok(report.includes('136%*'));
+  assert.ok(report.includes('214%*'));
+  assert.ok(report.includes('217%*'));
+  assert.ok(report.includes('NRCS itself cautions') || report.includes('Analysis may not provide a valid measure'));
+  assert.ok(report.includes('not a combined Yakima Basin percentage') || report.includes('combined Yakima Basin percentage'));
+  assert.ok(report.includes('publication_authorized=false'));
+  assert.throws(()=>formatWatershedReviewBrief(snap,profile,null,null,null,null,null,{
+    ...source,all_basins_warned:false
+  }),/inconsistent/);
+  assert.throws(()=>formatWatershedReviewBrief(snap,profile,null,null,null,null,null,{
+    ...source,source_url:'https://example.com'
+  }),/invalid official/);
+  const future=compileWatershedSnapshot({asOf:'2026-11-14T10:00:00Z'});
+  assert.throws(()=>formatWatershedReviewBrief(future,profile,null,null,null,null,null,source),/not comparable/);
+});
+function requireDummy(){return {readFileSync:readFileSyncLocal};}
