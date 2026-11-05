@@ -14,7 +14,12 @@
     "georeferenced": false,
     "crs": null,
     "coordinatePrecision": "none",
-    "warning": "The browser prototype uses illustrative local units. Do not project its objects into real lat/lon."
+    "warning": "The browser prototype uses illustrative local units. Do not project its objects into real lat/lon.",
+    "jurisdiction": {
+      "city": "Yakima",
+      "region": "WA",
+      "country": "US"
+    }
   },
   "evidenceStates": {
     "documented": "A source directly supports the stated claim and period, not necessarily the full 1960 scene.",
@@ -36,7 +41,12 @@
         "status": "metadata_link_only",
         "reuse": "Source metadata is cited, but photos/plans require individual rights checks"
       },
-      "notes": "1931 significance year; Art Deco; John W. Maloney; address 6 South 2nd Street."
+      "notes": "1931 significance year; Art Deco; John W. Maloney; address 6 South 2nd Street.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "sah-larson",
@@ -50,7 +60,12 @@
         "status": "third_party_permission_check",
         "reuse": "Link and paraphrase only; do not embed copyrighted photos without permission"
       },
-      "notes": "Identifies 1931 date, Art Deco architecture and address."
+      "notes": "Identifies 1931 date, Art Deco architecture and address.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "nps-capitol",
@@ -65,7 +80,12 @@
         "status": "metadata_link_only",
         "reuse": "Check photograph and report rights separately"
       },
-      "notes": "States 19 South Third Street; historic significance 1920."
+      "notes": "States 19 South Third Street; historic significance 1920.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "theatre-official",
@@ -80,7 +100,12 @@
         "status": "third_party_permission_check",
         "reuse": "Link and paraphrase; no image embedded"
       },
-      "notes": "Lists 19 South Third Street. References 1975 fire and 1978 restoration; current interiors are not evidence for 1960 interiors."
+      "notes": "Lists 19 South Third Street. References 1975 fire and 1978 restoration; current interiors are not evidence for 1960 interiors.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "yakima-city-register",
@@ -94,7 +119,12 @@
         "status": "metadata_link_only",
         "reuse": "Cite page; evaluate images individually"
       },
-      "notes": "Lists the theatre at 9 South Third Street, differing from NPS and theatre's 19 South Third Street."
+      "notes": "Lists the theatre at 9 South Third Street, differing from NPS and theatre's 19 South Third Street.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "loc-sanborn",
@@ -109,7 +139,12 @@
         "status": "public_domain_per_holding_institution",
         "reuse": "LOC states online Sanborn collection is public domain and reusable with attribution"
       },
-      "notes": "96 maps; footprint/street baseline, not direct 1960 facades, exact tenants, and not yet georeferenced to this prototype."
+      "notes": "96 maps; footprint/street baseline, not direct 1960 facades, exact tenants, and not yet georeferenced to this prototype.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "yakima-library-plats",
@@ -124,7 +159,12 @@
         "status": "collection_specific_review",
         "reuse": "Appointment and rights verification required before digitization or publication"
       },
-      "notes": "County assessor plat maps principally from the 1960s and 1970s, not automatically valid for Jan 1960 or downtown facades."
+      "notes": "County assessor plat maps principally from the 1960s and 1970s, not automatically valid for Jan 1960 or downtown facades.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "yakima-memory",
@@ -139,7 +179,12 @@
         "status": "publication_permission_required",
         "reuse": "Collection states permission from rights holder needed to publish online; reference only for now"
       },
-      "notes": "Photographs and newspapers may close 1960 evidence gaps after date and rights review."
+      "notes": "Photographs and newspapers may close 1960 evidence gaps after date and rights review.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "wshs-yakima-avenue-ca1950",
@@ -153,7 +198,12 @@
         "status": "third_party_permission_check",
         "reuse": "Link and cite the catalog. Do not embed, copy, train on, or publish photograph until provenance and rights are cleared."
       },
-      "notes": "Caption explicitly locates eastward view along Yakima Avenue between 2nd and 3rd streets circa 1950. Useful historical perspective but not direct proof of scene in 1960. Date approximate, item-level accession pending."
+      "notes": "Caption explicitly locates eastward view along Yakima Avenue between 2nd and 3rd streets circa 1950. Useful historical perspective but not direct proof of scene in 1960. Date approximate, item-level accession pending.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "wa-state-library-directory-catalog",
@@ -168,7 +218,12 @@
         "status": "catalog_metadata_only",
         "reuse": "Holdings years only. Directory pages, tenants and street addresses have NOT been read; check rights before copying directory content."
       },
-      "notes": "Catalog lists Yakima directories 1953–1959 and 1961–1962 but not 1960. Actual 1959/1961 pages needed before making occupancy assertions."
+      "notes": "Catalog lists Yakima directories 1953–1959 and 1961–1962 but not 1960. Actual 1959/1961 pages needed before making occupancy assertions.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     },
     {
       "id": "yvl-local-city-directory-catalog",
@@ -183,7 +238,12 @@
         "status": "catalog_metadata_only",
         "reuse": "Holdings description only. Request individual directories and verify rights before using pages or entries."
       },
-      "notes": "Yakima Central Library holds local city directories beginning 1904; exact 1959/1961 copies and access to be verified."
+      "notes": "Yakima Central Library holds local city directories beginning 1904; exact 1959/1961 copies and access to be verified.",
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      }
     }
   ],
   "places": [
@@ -336,6 +396,14 @@
     {
       "id": "display",
       "rule": "Display documented, interval-inferred, illustrative and unresolved clearly in user-facing provenance."
+    },
+    {
+      "id": "jurisdiction",
+      "rule": "A source that merely says 'Yakima Avenue' is inadmissible for Yakima, Washington without verified city, state and country. Reject Seattle and Tacoma Yakima street-name collisions."
+    },
+    {
+      "id": "target-year-proof",
+      "rule": "A documented claim dated 1960 must cite a directly dated, individually identifiable 1960 item matching Yakima, WA; a 1959/1961 pair is still an inference."
     }
   ],
   "nextResearch": [
@@ -487,7 +555,35 @@
         ],
         "deliverable": "Georeferenced GIS geometry with source/uncertainty and a data-only import for canonical Worlds runtime",
         "status": "blocked"
+      },
+      {
+        "id": "source-collision-check",
+        "dependsOn": [],
+        "deliverable": "Validate city-state-country of every retrieved historic image, city directory and map before linking to the Yakima world. Keep a negative-evidence registry.",
+        "status": "active; Seattle false-positive excluded"
       }
     ]
-  }
+  },
+  "excludedSearchResults": [
+    {
+      "id": "seattle-irving-yakima-1960-false-positive",
+      "discoveredTitle": "Phase I Environmental Site Assessment, Irving & Yakima, Seattle, WA; scanned 1960 Yakima Ave directory excerpt",
+      "url": "https://www.seattle.gov/documents/Departments/FAS/RealEstateServices/Property/1594-PhaseI-ESA-Irving-Yakima-pgs-Apd-E-F.pdf",
+      "sourceJurisdiction": {
+        "city": "Seattle",
+        "region": "WA",
+        "country": "US"
+      },
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "whyExcluded": "The Yakima Avenue street in the scanned 1960 directory is in Seattle's Irving & Yakima study area, not in the city of Yakima. The report title and cover identify Seattle, WA 98144. Never infer geography from the word Yakima alone.",
+      "allowedForScene": false,
+      "reviewStatus": "excluded-place-name-collision",
+      "evidenceType": "negative-search-evidence",
+      "publicationRights": "link-only; no original scanned directory pages embedded"
+    }
+  ]
 }
