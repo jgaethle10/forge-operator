@@ -1,4 +1,4 @@
-import {parseOwnedPaymentUrl} from '../mcp/owned-payment-transport.mjs';
+import {parseOwnedPaymentUrl,isEvercraftPaymentHost} from '../mcp/owned-payment-transport.mjs';
 import {FORENSISCOPE_OFFERS} from './commercial-offers.mjs';
 import {evaluateForensiScopeCheckoutGate} from './self-service-admission.mjs';
 
@@ -33,13 +33,15 @@ const exactPrice=(quote)=>{
 export function createForensiScopeOwnedCheckoutBridge({
  paymentOpsUrl='',returnOrigin='https://fabric.systemiacommandcenters.com',
  enabled=false,loadOrder,readCapacity,reserveCapacity,persistCheckout,
- fetchImpl=fetch,timeoutMs=12000
+ fetchImpl=fetch,timeoutMs=12000,maxUploadBytes=256*1024*1024
 }={}){
  const endpoint=parseOwnedPaymentUrl(paymentOpsUrl);
  const returnUrl=parseOwnedPaymentUrl(returnOrigin,{allowMissing:false});
  if(returnUrl.pathname!=='/'||returnUrl.search)throw error('return_origin_must_be_owned_origin');
  if([loadOrder,readCapacity,reserveCapacity,persistCheckout,fetchImpl]
    .some(fn=>typeof fn!=='function'))throw error('trusted_checkout_dependencies_required');
+ if(!Number.isSafeInteger(maxUploadBytes)||maxUploadBytes<=0)
+   throw error('invalid_owned_upload_capacity');
  if(!Number.isSafeInteger(timeoutMs)||timeoutMs<100||timeoutMs>30000)
    throw error('invalid_payment_timeout');
  const createCheckout=async({orderKey,subject,buyerEmail,confirmed}={})=>{
@@ -59,7 +61,13 @@ export function createForensiScopeOwnedCheckoutBridge({
   if(!capacity||typeof capacity!=='object'||Array.isArray(capacity))
    throw error('owned_capacity_unavailable');
   const admission=evaluateForensiScopeCheckoutGate({
-   quote:owned.quote,capabilities:capacity
+   quote:owned.quote,capabilities:{
+    ...capacity,
+    ingress_max_bytes:Math.min(
+     Number.isSafeInteger(capacity.ingress_max_bytes)?capacity.ingress_max_bytes:0,
+     maxUploadBytes
+    )
+   }
   });
   if(!admission.permitted)throw error('checkout_capacity_unavailable',503);
   const reservation=await reserveCapacity({
@@ -111,7 +119,10 @@ export function createForensiScopeOwnedCheckoutBridge({
    checkoutUrl=new URL(String(result?.checkout_url||''));
   }catch{throw error('owned_checkout_url_missing')}
   if(!exact||checkoutUrl.protocol!=='https:'||
-     checkoutUrl.username||checkoutUrl.password||checkoutUrl.hash)
+     checkoutUrl.username||checkoutUrl.password||checkoutUrl.hash||
+     !(isEvercraftPaymentHost(checkoutUrl.hostname)||
+       checkoutUrl.hostname==='stripe.com'||
+       checkoutUrl.hostname.endsWith('.stripe.com')))
    throw error('owned_checkout_receipt_mismatch');
   // Durable order state before exposing the provider's buyer handoff URL.
   // This persistence does not mark an order paid or grant entitlement.
@@ -146,7 +157,8 @@ export function createForensiScopeOwnedCheckoutBridge({
   readiness:Object.freeze({
    configured:Boolean(endpoint),enabled:enabled===true&&Boolean(endpoint),
    payment_authority:'Evercraft Payments',
-   provider_receipt_required:true
+   provider_receipt_required:true,
+   max_upload_bytes:maxUploadBytes
   })
  });
 }
