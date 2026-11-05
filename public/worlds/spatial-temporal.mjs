@@ -38,7 +38,7 @@ function validateFrame(frame, previous, frameIds, total) {
   const ids=new Set();
   for(const o of frame.observations) {
     if(o?.schema!=='evercraft.spatial-perception.observation.v0')fail('invalid_observation_schema');
-    if(o.frameId!==frame.frameId || typeof o.id!=='string'||!o.id||o.id.length>160)
+    if(o.frameId!==frame.frameId || o.timestampMs!==frame.timestampMs || typeof o.id!=='string'||!o.id||o.id.length>160)
       fail('observation_frame_mismatch');
     if(ids.has(o.id))fail('duplicate_observation');
     ids.add(o.id);
@@ -57,6 +57,11 @@ function validateFrame(frame, previous, frameIds, total) {
     if(o.cameraPositionM!==null && o.cameraPositionM!==undefined &&
       (!['x','y','z'].every(k=>finite(o.cameraPositionM[k]))||
        o.cameraPositionM.z<=0))fail('invalid_camera_position');
+    if(o.coordinateFrame!==undefined && o.coordinateFrame!=='camera_relative')
+      fail('invalid_coordinate_frame');
+    if(o.cameraPositionM && finite(o.depthEstimateM) &&
+       Math.abs(o.cameraPositionM.z-o.depthEstimateM)>0.002)
+      fail('inconsistent_camera_depth');
     if(o.georegistered===true || o.safetyCriticalApproved===true)
       fail('authority_escalation_forbidden');
   }
@@ -197,4 +202,54 @@ export function temporalReviewPacket(result) {
       association:e.association,ambiguous:e.ambiguous,
       reviewStatus:'unreviewed'}))),
     warning:'Model output is provisional. No object identity, geographic location, motion speed, or source custody has been verified.'};
+}
+
+// Consumer adapters are projections only. They do not mutate production records.
+function validateReviewTimeline(timeline){
+ if(timeline?.schema!==TEMPORAL_SCHEMA||!Array.isArray(timeline.frames))
+   fail('invalid_timeline');
+}
+export function forensiScopeTemporalEvents(timeline){
+ validateReviewTimeline(timeline);
+ return timeline.frames.flatMap(frame=>frame.events.map(e=>({
+  schema:'evercraft.forensiscope.temporal-spatial-event.v1',
+  trackId:e.trackId,frameId:e.frameId,timestampMs:e.timestampMs,
+  label:e.label,box:{...e.box},depthEstimateM:e.depthEstimateM,
+  sourceSha256:e.sourceSha256,association:e.association,
+  identityVerified:false,reviewStatus:'requires_human_review',
+  chainOfCustodyVerified:false
+ })));
+}
+export function everMapsTemporalDrafts(timeline){
+ validateReviewTimeline(timeline);
+ return timeline.frames.flatMap(frame=>frame.events.map(e=>({
+   schema:'evercraft.evermaps.spatial-temporal-draft.v1',
+   trackId:e.trackId,observationId:e.observationId,frameId:e.frameId,
+   label:e.label,rangeEstimateM:e.depthEstimateM,
+   geometry:null,geolocationStatus:'unlocated_georegistration_required',
+   severity:null,urgency:'not_assessed',reviewStatus:'unreviewed'
+ })));
+}
+export function worldsTemporalPreview(timeline,frameId){
+ validateReviewTimeline(timeline);
+ const frame=timeline.frames.find(f=>f.frameId===frameId);
+ if(!frame)fail('frame_not_found');
+ const slug=frameId.replace(/[^a-zA-Z0-9-]/g,'-').slice(0,80);
+ return {schema:'evercraft.world-engine.world.v1',
+   id:'spatial-temporal-preview-'+slug,version:1,tickRateHz:60,
+   gravity:{x:0,y:-9.81,z:0},ground:{enabled:false,height:0},
+   entities:frame.events.filter(e=>e.cameraPositionM).map(e=>({
+     id:'spatial-preview:'+e.trackId,name:e.label,
+     transform:{position:{...e.cameraPositionM}},
+     tags:['spatial_perception','provisional','non_colliding','frame_relative'],
+     properties:{frameId:e.frameId,timestampMs:e.timestampMs,
+       trackId:e.trackId,observationId:e.observationId,
+       sourceSha256:e.sourceSha256,association:e.association,
+       georegistered:false,identityVerified:false,reviewRequired:true}
+   })),
+   metadata:{source:'evercraft.spatial-perception.temporal-review.v1',
+     cameraRelativeOnly:true,worldReconstructionComplete:false,
+     productionAuthoritative:false,collisionAuthority:false,
+     persistenceAuthorized:false,reviewRequired:true}
+ };
 }
