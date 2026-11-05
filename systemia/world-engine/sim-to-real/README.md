@@ -103,3 +103,22 @@ node --import tsx systemia/world-engine/sim-to-real/native-motion-rc04.mjs --see
 A valid `evercraft.sim-to-real.native-motion.rc04` proof includes full-tick frames, exactly ordered native input ledger, known simulated provenance, terminal outcome (arrived / collision / geofence / timeout), native snapshot/replay digests, and a SHA-256 integrity check. Digests are not signatures. For genuine hardware qualification, require a separate physics-model calibration, independent safety controller, command expiration, e-stop, hardware-in-the-loop tests, and separately sourced physical telemetry before considering actuator integration.
 
 **Release:** Review-only draft PR; no production merge, external job dispatch or robot commands.
+
+
+## RC05: held-out local reactive navigation with explicit uncertainty (modeled only)
+
+RC05 does not modify the canonical World Engine core. It introduces an isolated control/sensor lab that runs a simulated sphere rover through **native `EvercraftWorldRuntime` tick-bound velocity inputs**, plus a synthetic bounded-range proximity sensor, simple angular occlusion, noisy modeled location and heading, deterministic steering candidate search, and fail-closed *requests* when the sensor is stale, localization uncertainty is too high, a geofence margin is threatened, or the local collision/braking budget is inadequate.
+
+RC05 controller inputs include only anonymous range/bearing/radius detections, noisy pose, a goal, geofence bounds and modeled dynamics. The world obstacle coordinates are used by the synthetic **sensor adapter** and verification oracle, not exposed to the controller. This is not SLAM, a learned planner, a real proximity sensor, or a validated robotics stack. The command queue, delay, modeled acceleration/braking and native sphere collision model can defeat a hold request.
+
+The held-out comparison uses matched course seeds 41–48 (outside the earlier 1–4 demonstration fixtures), comparing RC05 reactive decisions against RC04's known-corridor baseline. It is a **small modeled comparison with different controller/sensor contracts**; no success rate should be generalized to different courses, physical hardware or safety guarantees.
+
+```sh
+node --test systemia/world-engine/sim-to-real/controller-rc05.test.mjs
+node --import tsx --test systemia/world-engine/sim-to-real/native-reactive-rc05.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/native-reactive-rc05.mjs --first-seed 41 --seeds 8 --out /tmp/evercraft-native-rc05.json
+```
+
+Open `RC05_replay_viewer.html` in any local modern browser, and choose the generated benchmark JSON to replay **all recorded ticks** for each seed with native and independently swept contacts. The CI workflow uploads the benchmark JSON as `sim-to-real-rc05-modeled` with seven-day retention.
+
+Evidence labels remain `modeled`. SHA-256 digests establish content integrity, not independent attestation. No physical sensors, actuators, external authority or production deployment have been enabled. Independent physical hazard review, real localization, continuously validated stopping distance and emergency-stop/watchdog controls are separate prerequisites for real-robot work.
