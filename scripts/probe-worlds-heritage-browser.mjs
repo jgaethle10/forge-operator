@@ -80,14 +80,26 @@ try{
     assert.equal(await page.evaluate(()=>document.activeElement?.id),'world',p.name+': scene keyboard focus not restored');
     const before=await page.evaluate(()=>window.__heritageTelemetry.viewMatrix);
     if(!p.mobile){
+      const initial=await page.evaluate(()=>window.__evercraftHeritageQA());
+      assert.equal(initial.running,true,p.name+': world not active');
+      assert.equal(initial.tourActive,false,p.name+': tour still owns camera');
       await page.keyboard.down('w');
       try{
-        // SwiftShader frames may arrive slower than a fixed wall-clock sleep.
-        // Require actual observable camera movement while input is held.
+        const keyState=await page.evaluate(()=>window.__evercraftHeritageQA());
+        assert.ok(keyState.keys.includes('w'),p.name+': keyboard event did not reach scene '+JSON.stringify(keyState));
+        // Check actual scene coordinates first, then the GL view transform.
+        // This separates an input/camera bug from a stale WebGL telemetry sample.
+        await page.waitForFunction(previous=>{
+          const now=window.__evercraftHeritageQA?.();
+          return !!now&&Math.hypot(now.x-previous.x,now.z-previous.z)>.15;
+        },initial,{timeout:15000,polling:100});
         await page.waitForFunction(previous=>{
           const view=window.__heritageTelemetry?.viewMatrix;
           return !!view&&Math.hypot(...[12,13,14].map(i=>view[i]-previous[i]))>.15;
         },before,{timeout:15000,polling:100});
+      }catch(err){
+        const diagnostic=await page.evaluate(()=>({scene:window.__evercraftHeritageQA?.(),view:window.__heritageTelemetry?.viewMatrix,draws:window.__heritageTelemetry?.totalDraws}));
+        throw Error(p.name+': camera handoff QA '+JSON.stringify(diagnostic)+'; '+String(err));
       }finally{await page.keyboard.up('w');}
     }else{
       assert.equal(await page.locator('#joystick').isVisible(),true,p.name+': touch stick not visible');
