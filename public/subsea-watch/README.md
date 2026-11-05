@@ -2,6 +2,22 @@
 
 **Customer route (after public HTTPS check):** https://jgaethle10.github.io/forge-operator/subsea-watch/
 
+## Two separate prototype surfaces
+
+- **Telemetry lab:** https://jgaethle10.github.io/forge-operator/subsea-watch/ . Depth profiles and source-checked recorded positions, with strict refusal to fabricate underwater X/Y.
+- **Immersive WebGL concept:** https://jgaethle10.github.io/forge-operator/subsea-watch/immersive/ . A separate original 3D renderer with procedural fictional seafloor, a deliberately simplified diver mesh, illustrative pipe geometry, cinematic orbit/follow camera, pinch-to-zoom and playback scrub. It reads **only the checked synthetic sample**, not real diver data. Do not mistake this rendered scene for sonar reconstruction or safety-grade positioning.
+
+The immersive experiment does not replace the evidence lab. The product requires a trustworthy source-to-scene mapping for real dive logs, video and surveyed site geometry before any reconstructed real missions can be shown. Neither route is authorized for underwater navigation, intake avoidance, or dive clearance.
+
+## Experience quality gates
+
+1. **Believable movement:** A visible diver/ROV and structures, correct viewpoint, fluid mobile camera and uncluttered controls. No tiny moving dot masquerading as a complete dive.
+2. **Data fidelity:** Recorded depth, horizontal positioning (when actually measured), video timecodes, source freshness and uncertainty displayed independently. Missing telemetry stays unknown, never interpolated through long gaps.
+3. **Real site reconstruction:** With permission, import surveyed geometry (sonar/CAD/photogrammetry) with coordinate systems, scale, registration error, timestamps and who verified it. Never use procedural scenery as evidence.
+4. **Mission after-action:** Align camera footage, dive-computer samples, diver/ROV track and operator events, with provenance recorded for every claim.
+5. **Field usability:** Validate mobile performance, daylight readability, accessible controls, offline access and protected site data with practicing dive supervisors and ROV teams. Do not claim safety certification or commercial readiness from a browser render.
+6. **Commercial proof:** Obtain a real, permissioned test dive and a qualified operator evaluation, then package evidence-backed post-dive reviews rather than promising real-time hazard avoidance.
+
 ## What ships in this proof
 
 - A browser-rendered, rotatable **3D trajectory** that only appears when timed depth **and** valid local X/Y coordinates with a declared positioning method are supplied.
