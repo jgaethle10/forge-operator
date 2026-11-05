@@ -438,7 +438,8 @@ export function recordBodyLaneAcknowledgement(state, receipt, {
   if (!receipt || receipt.schema !== 'evercraft.one-body.lane-consumer-receipt.v1') {
     throw new Error('unsupported_lane_receipt_schema');
   }
-  const event = state.events[receipt.event_id];
+  const event = Object.hasOwn(state.events, receipt.event_id)
+    ? state.events[receipt.event_id] : null;
   if (!event || !Array.isArray(event.lanes)) throw new Error('unknown_body_event');
   if (typeof receipt.lane !== 'string' || !event.lanes.includes(receipt.lane)) {
     throw new Error('lane_not_routed');
@@ -476,6 +477,13 @@ export function recordBodyLaneAcknowledgement(state, receipt, {
     lane: receipt.lane,
     receipt_ref: receipt.receipt_ref,
     observed_at: receipt.observed_at,
+    // Signature is inert evidence, not an authority grant. The privileged
+    // read adapter must verify it again against its current trusted keys.
+    ...(typeof receipt.signer_key_id === 'string' &&
+        typeof receipt.signature_base64 === 'string'
+      ? { signer_key_id: receipt.signer_key_id,
+          signature_base64: receipt.signature_base64 }
+      : {}),
   };
   return { state: next, status: 'acknowledgement_recorded_pending_read_reverification', recorded: true };
 }
