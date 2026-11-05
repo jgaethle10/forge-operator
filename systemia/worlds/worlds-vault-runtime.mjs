@@ -26,7 +26,7 @@ function assertWriteOrigin(req,publicOrigin){
  if(supplied!==expected)throw new VaultError(403,'cross_origin_write_denied');
 }
 
-const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.csv':'text/csv; charset=utf-8'};
+const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.csv':'text/csv; charset=utf-8','.json':'application/json; charset=utf-8'};
 class VaultError extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const digest=s=>createHash('sha256').update(s).digest('hex');
 const equal=(a,b)=>{const x=Buffer.from(a,'hex'),y=Buffer.from(b,'hex');return x.length===y.length&&timingSafeEqual(x,y);};
