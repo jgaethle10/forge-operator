@@ -16,17 +16,21 @@ function fact(id, value, created, observed, options = {}) {
   });
 }
 function fakeFabric(records, allowed = new Set(records.map((r) => r.record_id))) {
-  const recordsMap = new Map(records.map((r) => [r.record_id, r]));
   return {
-    records: recordsMap,
-    getRecord(id, { actor_ref, at }) {
-      assert.equal(at, stamp('2026-11-04'));
-      if (actor_ref !== 'agent:auditor' || !allowed.has(id)) return null;
-      return recordsMap.get(id);
+    authorizedTimewalkSnapshot({ actor_ref, namespaces, entity_ref, predicate }) {
+      const ns = namespaces == null ? null : new Set(Array.isArray(namespaces) ? namespaces : [namespaces]);
+      return {
+        schema: 'evercraft.context.authorized-timewalk-snapshot.v1',
+        authorized_at: stamp('2026-11-04'),
+        records: records.filter((r) => actor_ref === 'agent:auditor' && allowed.has(r.record_id) &&
+          (!ns || ns.has(r.namespace)) &&
+          (entity_ref == null || entity_ref === r.entity_ref) &&
+          (predicate == null || predicate === r.predicate)),
+      };
     },
   };
 }
-const args = { actor_ref: 'agent:auditor', authorization_at: stamp('2026-11-04'),
+const args = { actor_ref: 'agent:auditor',
   valid_at: stamp('2026-10-15'), known_at: stamp('2026-10-15') };
 
 test('knowledge-time blocks facts entered after historical cutoff, even if backdated', () => {
@@ -61,10 +65,9 @@ test('supersession only applies when the new fact was already known and effectiv
 
 test('retractions are visible in history but only effective after retraction time', () => {
   const a = fact('a', 'down', '2026-10-10', '2026-10-10');
-  const r = signed({ record_id: 'a', retracted_at: stamp('2026-10-18'), evidence_ref: 'audit:a' });
-  // retraction is returned separately by Context Fabric and does not alter the signed original
-  const fab = fakeFabric([a]);
-  fab.getRecord = (id, opts) => ({ ...fakeFabric([a]).getRecord(id, opts), retraction: r });
+  const r = signed({ record_id: 'a', retracted_at: stamp('2026-10-18'),
+    evidence_ref: 'audit:a', created_at: stamp('2026-10-18') });
+  const fab = fakeFabric([{ ...a, retraction: r }]);
   assert.equal(queryTimewalk(fab, args).facts[0].status, 'active');
   const later = queryTimewalk(fab, { ...args, known_at: stamp('2026-10-20') });
   assert.equal(later.facts[0].status, 'retracted');
@@ -107,12 +110,48 @@ test('retracted correction does not erase the earlier assertion', () => {
   const correction = fact('correction', 'up', '2026-10-12', '2026-10-10', {
     supersedes_record_id: 'original',
   });
-  const retraction = signed({ record_id: 'correction', retracted_at: stamp('2026-10-13'), evidence_ref: 'retraction:correction' });
-  const fab = fakeFabric([original, correction]);
-  const baseGet = fab.getRecord.bind(fab);
-  fab.getRecord = (id, opts) => id === 'correction'
-    ? { ...baseGet(id, opts), retraction }
-    : baseGet(id, opts);
+  const retraction = signed({ record_id: 'correction', retracted_at: stamp('2026-10-13'),
+    evidence_ref: 'retraction:correction', created_at: stamp('2026-10-13') });
+  const fab = fakeFabric([original, { ...correction, retraction }]);
   const response = queryTimewalk(fab, { ...args, known_at: stamp('2026-10-20') });
   assert.deepEqual(response.facts.map((r) => r.status), ['active', 'retracted']);
+});
+test('historical caller cannot override present authorization time', () => {
+  const record = fact('auth', 'private', '2026-10-10', '2026-10-10');
+  const fab = fakeFabric([record]);
+  assert.throws(() => queryTimewalk(fab, {
+    ...args, authorization_at: stamp('2026-10-10'),
+  }), /timewalk_authorization_time_cannot_be_overridden/);
+  assert.equal(queryTimewalk(fab, args).authorization_time_source, 'context_fabric_server_clock');
+});
+
+test('backdated retraction is not known before recorded timestamp', () => {
+  const record = fact('backdated', 'down', '2026-10-10', '2026-10-10');
+  const retraction = signed({
+    record_id: 'backdated', retracted_at: stamp('2026-10-11'),
+    evidence_ref: 'audit:backdated', created_at: stamp('2026-10-20'),
+  });
+  const fab = fakeFabric([{ ...record, retraction }]);
+  assert.equal(queryTimewalk(fab, args).facts[0].status, 'active');
+  assert.equal(queryTimewalk(fab, { ...args, known_at: stamp('2026-10-21') }).facts[0].status, 'retracted');
+});
+
+test('legacy retraction without creation time is explicitly unknowable', () => {
+  const record = fact('legacy', 'down', '2026-10-10', '2026-10-10');
+  const retraction = signed({
+    record_id: 'legacy', retracted_at: stamp('2026-10-12'),
+    evidence_ref: 'audit:legacy',
+  });
+  const result = queryTimewalk(fakeFabric([{ ...record, retraction }]), {
+    ...args, known_at: stamp('2026-10-21'),
+  });
+  assert.equal(result.facts[0].status, 'retraction_time_unverified');
+  assert.equal(result.historical_status_complete, false);
+  assert.equal(result.active_count, 0);
+});
+
+test('invalid authorized snapshot contract fails closed', () => {
+  assert.throws(() => queryTimewalk({
+    authorizedTimewalkSnapshot: () => ({ schema: 'wrong', records: [] }),
+  }, args), /timewalk_authorized_snapshot_invalid/);
 });
