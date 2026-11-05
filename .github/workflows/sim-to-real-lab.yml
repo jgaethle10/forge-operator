@@ -81,3 +81,33 @@ jobs:
           name: sim-to-real-rc05-modeled
           path: /tmp/evercraft-native-rc05.json
           retention-days: 7
+
+      - name: RC05A experimental progress-gate and hold-preservation tests
+        run: node --test systemia/world-engine/sim-to-real/controller-rc05-progress.test.mjs
+      - name: RC05A native A-B runner tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/progress-trial-rc05.test.mjs
+      - name: RC05A original development holdout seeds 41-48
+        run: node --import tsx systemia/world-engine/sim-to-real/progress-trial-rc05.mjs --first-seed 41 --seeds 8 --out /tmp/evercraft-rc05a-41-48.json
+      - name: RC05A new evaluation seeds 49-56
+        run: node --import tsx systemia/world-engine/sim-to-real/progress-trial-rc05.mjs --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05a-49-56.json
+      - name: RC05A verify paired trial evidence without assuming progress
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyProgressTrial} from './systemia/world-engine/sim-to-real/progress-trial-rc05.mjs';
+          for(const name of ['41-48','49-56']){
+            const result=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05a-'+name+'.json','utf8'));
+            if(!verifyProgressTrial(result)||result.seeds!==8) throw Error('rc05a_trial_invalid:'+name);
+            console.log('RC05A RESULT',JSON.stringify({cohort:name,baseline:result.baseline,progress:result.progressGated,
+              paired:result.pairs.map(x=>({seed:x.seed,prior:x.baseline.status,next:x.progress.status,detours:x.progress.detourRequests})),
+              digest:result.sha256}));
+          }
+          NODE
+      - name: Upload RC05A modeled comparisons
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05a-modeled-comparisons
+          path: |
+            /tmp/evercraft-rc05a-41-48.json
+            /tmp/evercraft-rc05a-49-56.json
+          retention-days: 7
