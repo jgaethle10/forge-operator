@@ -107,7 +107,7 @@ export async function reconcileWorldsRoute(input={}){
   throw err;
  }
  return {schema:WORLDS_ROUTE_SCHEMA,action:'created',proof_only:pre.proof_only,
-  lease_id:newLease.lease_id,edge_instance_id:pre.edge_instance_id,
+  lease_id:newLease.lease_id,lease_origin:newLease.origin,edge_instance_id:pre.edge_instance_id,
   public_origin:pre.public_origin,vault_url:pre.vault_url,
   deployment_receipt_hash:deploymentReceiptHash,deployment_instance_id:instanceId,
   expires_at:newLease.expires_at,updated_at:new Date().toISOString(),
