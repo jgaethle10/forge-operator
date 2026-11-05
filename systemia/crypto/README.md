@@ -13,7 +13,7 @@ The first opt-in prototype of quantum-resistant **recipient envelope encryption*
 ## Local verification (Node 24.7+)
 
 ```bash
-node --test tests/pq-envelope.test.mjs tests/pq-signed-envelope.test.mjs tests/pq-replay-sqlite.test.mjs tests/pq-replay-postgres.test.mjs
+node --test tests/pq-envelope.test.mjs tests/pq-signed-envelope.test.mjs tests/pq-replay-sqlite.test.mjs tests/pq-replay-postgres.test.mjs tests/pq-pinned-signers.test.mjs
 ```
 
 For an integration test, import `generatePqRecipient`, `encryptPqEnvelope` and `decryptPqEnvelope` from `systemia/crypto/pq-envelope.mjs`. The recipient's private key must never be serialized to a public surface; publish/pin only the authenticated public-key fingerprint. Never store test secrets in Git. Use a real trust registry, key lifecycle, anti-replay ledger, sender authentication and an audited transport before considering production.
@@ -53,6 +53,13 @@ Its guarantee has important limits:
 - A failover can lose acknowledged inserts if replication is asynchronous; require proof of no acknowledged write loss, durable backups and restore protections before production. Network partitions must cause message rejection.
 - Monitor unbounded insert volume, rate-limits, table growth, backup/retention, database permissions, TLS, audit access, and denial-of-service. Set a vetted expiry cleanup policy using DB clock and an operational retention buffer. Expiry cleanup does not substitute for enforcing signed TTL.
 - These CI clients are simulated workers on GitHub infrastructure, **not a field test proving Node001 and Node002 are connected**. The shared cluster, key trust registry, and actual edge routing remain unprovisioned.
+
+
+## Explicit signer pins and revocation gating (lab)
+
+`pq-pinned-signers.mjs` adds `createPinnedPqSignerRegistry`, an immutable signer-key mapping that does **not** trust public keys in inbound messages. Every entry explicitly binds sender ID, SHA-256 fingerprint of a ML-DSA-65 public key, active/revoked status and validity timestamps. Snapshots are valid for **15 minutes maximum**, after which resolution fails closed. During an approved rotation, old keys may be marked revoked while new, independently vetted keys are pinned. `openPinnedPqMessageAsync` resolves the expected sender from the registry before verifying signatures and awaiting shared replay admission.
+
+**Important:** this module does NOT authenticate, enroll, authorize or distribute a snapshot. That is a separate Systemia control-plane obligation. A forged snapshot passed by a compromised caller defeats the entire registry. An old cached snapshot may still authorize a since-revoked key until its short expiry. No instant revocation can be claimed until a genuinely authenticated, promptly refreshed distribution system and key custody are proven. Loss of refresh causes message rejection, not auto-trust or a fail-open cache.
 
 ## Migration gates
 
