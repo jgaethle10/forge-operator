@@ -78,3 +78,21 @@ node systemia/research/thermal-intelligence/run-profile.mjs systemia/research/th
 ```
 
 **Evidence boundary:** Every example is synthetic. No Systemia runtime dispatch was observed, no node telemetry collected, no verified savings, no deployed heat exchanger, and no claim of imminent commercial readiness.
+
+## Sprint 3 | Offline calorimetry evidence gate (2026-11-05)
+
+- \`measurement-intake.mjs\`: explicitly synthetic/user-unverified hourly instrument input, kg/s × fluid specific heat × temperature drop to estimate heat, wall electricity cross-check, direct-temperature-grade gate, coincident demand cap, and independent-review flags. It does not connect to a computer, meter, heater, pump, or controller.
+- \`measurement-intake.test.mjs\`: 13 regression tests. All 13 exact committed assertions passed in an isolated V8 JavaScript replay on 2026-11-05. **GitHub Actions/Node CI verification remains unobserved.**
+- \`run-measurements.mjs\` and \`sample-synthetic-measurements.json\`: private/offline JSON runner with a four-hour fictional fixture. One usable, one demand-absent, one insufficient-temperature, and one energy-balance-anomalous hour.
+- \`CALORIMETRY-GATE.md\`: calibrated instrumentation, privacy, safety, and physical interpretation gates.
+
+Synthetic fixture output: **0.3344 kWh potentially useful**, **2.3408 kWh uncredited**, **-$0.01057** indicative net for four synthetic hours with invented costs and tariff. **DATA_REVIEW_REQUIRED**, with all four calibration statuses unknown and no field approval. No extrapolation to a year or claim of profitable operation.
+
+Run:
+
+\`\`\`bash
+node --test systemia/research/thermal-intelligence/measurement-intake.test.mjs
+node systemia/research/thermal-intelligence/run-measurements.mjs systemia/research/thermal-intelligence/sample-synthetic-measurements.json
+\`\`\`
+
+**Reminder:** No real node telemetry was captured, no specialized live team was dispatched, no thermal hardware was modified or measured, and these files provide no authority for experiments or production changes.
