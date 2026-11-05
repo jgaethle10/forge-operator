@@ -40,3 +40,29 @@ test('metadata drift and malicious non-official hosts fail safely',async()=>{
  assert.equal(r.state,'no_live_permit_source_verified');
  assert.equal(r.results[0].county_count,null);
 });
+
+test('schema mismatch records only public field-name diagnostics, never applicant fields or values',async()=>{
+ const candidate=WA_PERMIT_SOURCE_CANDIDATES[0];
+ let calls=0;
+ const result=await probeWaPermitSourceCandidates({
+  candidates:[candidate],
+  fetchImpl:async()=>{
+   calls++;
+   return {ok:true,json:async()=>({
+    geometryType:'esriGeometryPoint',
+    fields:['OBJECTID','MINE_PERMIT_NO','COUNTY','COMMODITY',
+     'APPLICANT_NAME','OWNER_ADDRESS'].map(name=>({name}))
+   })};
+  }
+ });
+ assert.equal(calls,1); // mismatch must not query data
+ assert.equal(result.state,'no_live_permit_source_verified');
+ const diagnostic=result.results[0].schema_diagnostic;
+ assert.deepEqual(diagnostic.missing_expected_fields,[
+  'MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'
+ ]);
+ assert.ok(diagnostic.observed_nonpersonal_field_names.includes('MINE_PERMIT_NO'));
+ assert.ok(!diagnostic.observed_nonpersonal_field_names.includes('APPLICANT_NAME'));
+ assert.ok(!JSON.stringify(result).includes('OWNER_ADDRESS'));
+ assert.equal(result.results[0].county_count,null);
+});
