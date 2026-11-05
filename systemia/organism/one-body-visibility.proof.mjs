@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { buildOneBodyVisualSnapshot } from './one-body-visibility.mjs';
+import { recordBodyLaneAcknowledgement } from './one-body.mjs';
 
 const observedAt='2026-11-04T23:00:00Z';
 const privateEventId='customer-personal-private-identifer-123';
@@ -44,6 +45,7 @@ assert.ok(!json.includes(privateReceiptId),'receipt refs must not leak');
 assert.ok(!withoutProof.summary.gap_samples.some(x=>x.event_id===privateEventId));
 
 const receipt={
+  schema:'evercraft.one-body.lane-consumer-receipt.v1',
   event_id:privateEventId, lane:'context_fabric',receipt_ref:privateReceiptId,
   observed_at:'2026-11-04T22:10:00Z',
   verified:true, // The incoming boolean itself provides no authority.
