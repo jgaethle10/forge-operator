@@ -1,0 +1,86 @@
+{
+  "project": "Evercraft Aqua RC11",
+  "evidence_state": "RESEARCH_LOCAL_TESTS_ONLY",
+  "files": {
+    "Evercraft_Aqua_Baseline_RC11.html": {
+      "sha256": "d51ef9416460fe06405f63a17700c6d4e8cba67d05d9ff615ed4f573b7ff15af",
+      "bytes": 27070
+    },
+    "app/core.mjs": {
+      "sha256": "fa9d98599fc0093c2962e8cc6821cfdb19f23e34474045ead9b551d92c5493d2",
+      "bytes": 10906
+    },
+    "app/index.template.html": {
+      "sha256": "6b04fd3eba14dd7e9c6ab9cf15b9da9b8a4c7e9668db140cf91c59e299b0b38a",
+      "bytes": 16221
+    },
+    "build.py": {
+      "sha256": "ef3ebf50d0a150a985fbc5cf366578c1935b357015869babff3188f362b06f98",
+      "bytes": 538
+    },
+    "browser_qa_rc11.py": {
+      "sha256": "1f05a6573a6305a1567f844939f93ff572408ea382cf09b0d83755eb3f4e3869",
+      "bytes": 3709
+    },
+    "tests/aqua-core.test.mjs": {
+      "sha256": "5d2b65f4fae548c24cb20e86ab94aaf41b873c5d4318197ffe03a01dcd4e78a6",
+      "bytes": 6914
+    },
+    "tests/test_pilot_gate.py": {
+      "sha256": "59a273e6ae9d8f858e0660acdf410666007d27da48f112069e94307fb9cf7b43",
+      "bytes": 5278
+    },
+    "pilot/pilot_gate.py": {
+      "sha256": "884072fd87ba3ead0823af807eb4352750b2d20c267c241136e30183a729f037",
+      "bytes": 6600
+    },
+    "pilot/PILOT_MANIFEST_TEMPLATE.json": {
+      "sha256": "cb5d179e9aa41145d4ba65737b20f2cfe1e294887b7b3d0d46d04561538556d0",
+      "bytes": 875
+    },
+    "python/field_audit.py": {
+      "sha256": "45e43770ccd9d317d0d04b9305d7d213a5abbe4134dfa3d2b4834cd0f8d119f8",
+      "bytes": 8291
+    },
+    "python/test_field_audit.py": {
+      "sha256": "6d695eee21d1db33edd312b5d926b42d6a6cb69b1f637fde3657c67296f0c543",
+      "bytes": 5362
+    },
+    "RC11_ENGINEERING_DECISION.md": {
+      "sha256": "bde892253e44683accd8f5679518c29c30ab972b7f0350bc293874951c2b6033",
+      "bytes": 5626
+    },
+    "PILOT_FIELD_INTAKE.md": {
+      "sha256": "ebec8040522559b8526d0389ae3b675025eb71b7fa46cdbe65a27bd62d3ee949",
+      "bytes": 2615
+    },
+    "README.md": {
+      "sha256": "af314f4ed44477a37980c4e1e5d94a34552fec56b4958a9d4883f82388da8a1d",
+      "bytes": 2124
+    },
+    "node_tests.log": {
+      "sha256": "65e38fcd959b2eae173d48948d138eab6e09a1b1948b0d78c0b150744415068e",
+      "bytes": 6002
+    },
+    "pilot_tests.log": {
+      "sha256": "127e7f2d4f184ea4588fbc3447d6a33bbca7bab953f675303728e00e17e85d30",
+      "bytes": 98
+    },
+    "python_tests.log": {
+      "sha256": "b22bfb0790f736503e0067a9232b4c4084caa41e4e0fb56e5ed708ec77102a96",
+      "bytes": 98
+    },
+    "browser_tests.log": {
+      "sha256": "1f5078c1fc81f1d654f8d27cce1de6b30a42476a0be5329991ebabf2987bd70a",
+      "bytes": 303
+    },
+    "mobile_RC11.png": {
+      "sha256": "4aaf334f5407a87cafc85fc43ba1e28410740f706011ae5072474e7a6ba85799",
+      "bytes": 201328
+    },
+    "desktop_RC11.png": {
+      "sha256": "5b538348840d75c08832e2e8f27e7840f48f995ce6fc10ec941e51f9049ef93f",
+      "bytes": 227892
+    }
+  }
+}
