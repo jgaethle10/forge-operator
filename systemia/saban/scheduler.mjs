@@ -17,7 +17,9 @@ export async function runScheduler({
   rootDir = process.cwd(),
   statePath = null,
   fencedJournal = null,
-  fencedNodeSeedPin = null
+  fencedNodeSeedPin = null,
+  fencedPassportStateDir = null,
+  fencedExecutionPermitIds = null
 }) {
   if (!adapter || typeof adapter.runAssignment !== 'function') {
     throw new Error('Scheduler requires an adapter with runAssignment().');
@@ -26,7 +28,9 @@ export async function runScheduler({
   if (fencedJournal !== null) {
     return runFencedLocalScheduler({
       state, adapter, physicalWorkers, plan, contract, rootDir,
-      statePath, journal: fencedJournal, nodeSeedPin: fencedNodeSeedPin
+      statePath, journal: fencedJournal, nodeSeedPin: fencedNodeSeedPin,
+      passportStateDir: fencedPassportStateDir,
+      executionPermitIds: fencedExecutionPermitIds
     });
   }
 
