@@ -116,6 +116,7 @@ function render(){
 async function askLocalModel(residentId){
   if(aiPending)return;
   aiPending=true;
+  const worldAtRequest=state;
   const context=decisionContext(state,residentId);
   aiStatus='Consulting the optional local model for '+residentId+'...';
   render();
@@ -126,7 +127,8 @@ async function askLocalModel(residentId){
     });
     if(!response.ok)throw Error('Model bridge unavailable');
     const result=await response.json();
-    if(result?.source!=='local_llm'||result.schema!=='evercraft.living-worlds.inference-result.v1'||
+    if(state!==worldAtRequest||JSON.stringify(decisionContext(state,residentId))!==JSON.stringify(context)||
+       result?.source!=='local_llm'||result.schema!=='evercraft.living-worlds.inference-result.v1'||
        !applyProposal(state,result.proposal))throw Error('Invalid or stale proposal');
     const actor=state.actors.find(a=>a.id===residentId);
     aiStatus=actor.name+' chose an action using the local model. The simulation validates and executes it.';
