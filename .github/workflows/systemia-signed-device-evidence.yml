@@ -1,0 +1,24 @@
+name: Systemia Signed Device Evidence proof
+on:
+  push:
+    paths:
+      - 'systemia/control-plane/visualization/signed-device-evidence*.mjs'
+      - 'systemia/control-plane/visualization/passport-goal-read*.mjs'
+      - '.github/workflows/systemia-signed-device-evidence.yml'
+  pull_request:
+    paths:
+      - 'systemia/control-plane/visualization/signed-device-evidence*.mjs'
+      - 'systemia/control-plane/visualization/passport-goal-read*.mjs'
+      - '.github/workflows/systemia-signed-device-evidence.yml'
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/control-plane/visualization/signed-device-evidence.mjs
+      - run: node --test systemia/control-plane/visualization/signed-device-evidence.test.mjs systemia/control-plane/visualization/passport-goal-read.test.mjs
