@@ -40,7 +40,7 @@ function reportDate(rows) {
   const found=/first reading of the day[^]*?\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(\d{4})/i.exec(text);
   if(!found) throw new TypeError('NRCS report observation date missing');
   const month=['january','february','march','april','may','june','july','august','september','october','november','december'].indexOf(found[1].toLowerCase())+1;
-  return asDate(found[4]+'-'+String(month).padStart(2,'0')+'-'+found[2].padStart(2,'0'));
+  return asDate(found[3]+'-'+String(month).padStart(2,'0')+'-'+found[2].padStart(2,'0'));
 }
 function indexRow(rows, start, end, label) {
   const reportPart=rows.slice(start+1,end);
