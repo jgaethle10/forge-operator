@@ -34,19 +34,19 @@ function checkGoal(goal,job,plan,phase,workDigest){
     throw Error('fenced_systemia_goal_job_binding_hold');
   }
   if(phase==='ready'){
-    if(task.status!=='pending'||task.attempt!==0||
+    if(goal.status!=='ready'||task.status!=='pending'||task.attempt!==0||
        !goal.next_work_keys.includes(task.work_key)){
       throw Error('fenced_systemia_goal_not_ready');
     }
   } else if(phase==='executing'){
-    if(task.status!=='executing'||task.attempt!==1||
+    if(goal.status!=='executing'||task.status!=='executing'||task.attempt!==1||
        task.attempt_key!==task.dedupe_key+':attempt:1'){
       throw Error('fenced_systemia_attempt_checkpoint_missing');
     }
   } else if(phase==='complete'){
     const expected=goalReceipt(job.result);
     if(!DIGEST.test(String(job.result?.worker_receipt?.receipt_hash||''))||
-       task.status!=='complete'||task.attempt!==1||
+       goal.status!=='complete'||task.status!=='complete'||task.attempt!==1||
        !task.receipt_refs?.includes(expected)){
       throw Error('fenced_systemia_completion_receipt_mismatch');
     }
