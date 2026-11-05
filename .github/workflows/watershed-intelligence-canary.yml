@@ -79,9 +79,12 @@ jobs:
             )
             if [ -s artifacts/watershed-canary/reservoir-source-probe.json ]; then
               REPORT_ARGS+=(--reservoir-input artifacts/watershed-canary/reservoir-source-probe.json)
-              if [ -s artifacts/watershed-canary/swe-median-audit.json ]; then
-                REPORT_ARGS+=(--median-input artifacts/watershed-canary/swe-median-audit.json)
-              fi
+            fi
+            if [ -s artifacts/watershed-canary/swe-median-audit.json ]; then
+              REPORT_ARGS+=(--median-input artifacts/watershed-canary/swe-median-audit.json)
+            fi
+            if [ -s artifacts/watershed-canary/official-basin-report.json ]; then
+              REPORT_ARGS+=(--official-basin-input artifacts/watershed-canary/official-basin-report.json)
             fi
             node systemia/research-service/watershed-review-brief.mjs "${REPORT_ARGS[@]}"
           fi
