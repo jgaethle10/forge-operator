@@ -1,7 +1,10 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const html=fs.readFileSync(require('node:path').join(__dirname,'../Vehicle-Sentinel-QuickCheck.html'),'utf8');
+const path=require('node:path');
+const htmlPath=['Vehicle-Sentinel-QuickCheck.html','quickcheck.html'].map(name=>path.join(__dirname,'..',name)).find(fs.existsSync);
+assert.ok(htmlPath,'QuickCheck HTML should exist');
+const html=fs.readFileSync(htmlPath,'utf8');
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 assert.equal(scripts.length,1,'Single self-contained JS bundle');
 new vm.Script(scripts[0]);
