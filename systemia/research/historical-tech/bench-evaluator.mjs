@@ -55,7 +55,7 @@ export function evaluateBenchSession(session) {
       outputUncertaintyWatts: outUncertainty});
     return { trialId: id, condition: t.condition, distanceMm: t.distanceMm,
       orientationDegrees: t.orientationDegrees, inputWatts: input,
-      outputWatts: output, efficiency: accounting.fractionDelivered,
+      outputWatts: output, outputUncertaintyWatts: outUncertainty, efficiency: accounting.fractionDelivered,
       efficiencyRange: accounting.fractionDeliveredRange,
       classification: accounting.classification };
   });
@@ -66,6 +66,13 @@ export function evaluateBenchSession(session) {
   if (aligned.length < 3) limitations.push('Fewer than three aligned repeat trials');
   if (!misaligned.length) limitations.push('No misaligned control');
   if (!absent.length) limitations.push('No receiver-absent control');
+  if (absent.some(r => r.outputWatts > r.outputUncertaintyWatts)) {
+    limitations.push('Receiver-absent control reports loaded output above measurement uncertainty');
+  }
+  if (misaligned.length && !misaligned.some(m => aligned.some(a =>
+    m.distanceMm === a.distanceMm && Math.abs(m.orientationDegrees - a.orientationDegrees) >= 5))) {
+    limitations.push('No geometrically distinct misaligned control at a matching separation');
+  }
   if (rows.some(r => r.classification !== 'no_reported_energy_gain')) limitations.push('Apparent anomalous readings require independent investigation');
   return {
     sessionId: session.sessionId, dataKind: kind, totalTrials: rows.length,
