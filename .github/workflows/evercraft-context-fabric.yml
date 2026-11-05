@@ -35,3 +35,5 @@ jobs:
           node --test systemia/passport/passport.test.mjs
           node --test systemia/context-fabric/fabric.test.mjs
           node --test systemia/context-fabric/receipt-bridge.test.mjs
+          node --test systemia/context-fabric/timewalk/timewalk.test.mjs
+          node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
