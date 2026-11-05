@@ -43,8 +43,12 @@ function contextValue(value) {
 }
 function headerBytes(header) { return Buffer.from(JSON.stringify(header), 'utf8'); }
 function derivedKey(sharedKey, salt, header) {
+  // HKDF 'info' has a 1024-byte ceiling. ML-KEM ciphertext is 1088 bytes,
+  // so commit to the complete header using SHA-256 rather than raw header bytes.
+  // The same full header is additionally authenticated as AES-GCM AAD.
+  const headerDigest = crypto.createHash('sha256').update(headerBytes(header)).digest();
   return Buffer.from(crypto.hkdfSync('sha256', sharedKey, salt, Buffer.concat([
-    Buffer.from('evercraft/pq-envelope/v1\0'), headerBytes(header)
+    Buffer.from('evercraft/pq-envelope/v1\0'), headerDigest
   ]), 32));
 }
 export function pqRuntime() {
@@ -88,7 +92,7 @@ export function decryptPqEnvelope({recipientPrivateKey, envelope, expectedContex
     if (Object.keys(h).sort().join(',') !== ['schema','algorithm','context','recipient_key_id','kem_ciphertext','salt','iv'].sort().join(',')) throw fail();
     const derivedPublic = crypto.createPublicKey(privateKey);
     if (h.recipient_key_id !== fingerprint(derivedPublic)) throw fail();
-    const kemCiphertext = bytes(h.kem_ciphertext);
+    const kemCiphertext = bytes(h.kem_ciphertext,1088);
     const salt = bytes(h.salt,32);
     const iv = bytes(h.iv,12);
     const tag = bytes(envelope.tag,16);
