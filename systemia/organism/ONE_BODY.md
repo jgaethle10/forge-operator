@@ -73,6 +73,14 @@ The One-Body snapshot exporter reuses the existing `evercraft.systemia.visual-sn
 node systemia/organism/one-body-visibility.mjs ./private/path/to/one-body-state.json > ./one-body-visual-snapshot.json
 ```
 
+When an operator has provisioned **lane-scoped public keys** outside the repository and verified that the consumer private keys are protected, a local export may revalidate signed acknowledgements:
+
+```bash
+node systemia/organism/one-body-visibility.mjs ./private/state.json --trusted-consumers-file ./private/trusted-consumers.json > ./private/snapshot.json
+```
+
+The trust file is a JSON object mapping signer IDs to `{ "lane": "context_fabric", "public_key_pem": "..." }`. It must be securely provisioned by the privileged Systemia operator. Neither the event, an uploaded JSON document, nor the signer may choose or replace this trust registry. If the trust file is absent or the key has been revoked, all such acknowledgements remain **unverified**.
+
 Import the resulting JSON using the Living Graph's **Import snapshot** control in a browser. This is a local, point-in-time projection, **not a live telemetry feed**; do not publish a private snapshot without an authorized review.
 
 - `planned_unverified`: no accepted consumer acknowledgement; may still be in flight.
