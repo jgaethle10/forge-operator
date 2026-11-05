@@ -66,6 +66,8 @@ export function createForensiScopeCustomerRuntime({
   throw error('invalid_worker_interval');
  if(!positiveInt(maxUploadBytes)||!positiveInt(chunkBytes)||chunkBytes>maxUploadBytes)
   throw error('invalid_upload_limits');
+ if(checkoutBridge&&checkoutBridge.readiness?.max_upload_bytes!==maxUploadBytes)
+  throw error('checkout_upload_capacity_mismatch');
  const root=path.resolve(storageDir);
  fs.mkdirSync(root,{recursive:true,mode:0o700});
  const stat=fs.lstatSync(root);
