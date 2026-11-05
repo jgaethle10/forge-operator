@@ -77,3 +77,11 @@ The artifact expires after seven days. It is **not** an Evercraft-owned public U
 - The pure `merchant-pilot-gate.mjs` now **rejects synthetic, sample, fixture, placeholder, fake and test evidence references**, including pilot-interest references. Operator-entered real-looking references are still only unverified claims; an independent human must inspect the actual source. It does not send messages, launch or bill.
 - Before sending any business email, follow `systemia/operator-gates/README.md`: the exact recipient, subject and message body need explicit scoped human approval. No generic 'Push' or drafted copy is treated as approval to contact someone.
 - The next genuine advancement must be a voluntary reply from a real merchant followed by source review, rather than more design controls or screenshots. Do not infer pilot opt-in from a public email address.
+
+### RC06.1 | Existing Proof-First Sales engine reused
+
+`proof-first-bridge.mjs` delegates to the canonical `systemia/proof-first-sales/engine.mjs`. Official source links can ground a **research hypothesis**, not a confirmed merchant pain or a customer relationship. The bridge currently hard-codes `proof_state:repo_only`; even a caller-provided fake proof URL or explicit-approval string cannot bypass the hold. Its preflight always has `send_authority:false`, `contact_permission:false` and `public_publish_permission:false`.
+
+Required next evidence: (1) genuine Systemia admission and release authority, (2) an Evercraft-owned public HTTPS preview verified externally and linked to its exact build, (3) Interaction Ledger contact preflight and explicit opt-out checks, (4) approval bound to the actual recipient and message, and (5) a scoped one-use send permit. Merely having a Gmail **draft** or a business's published contact address authorizes none of these.
+
+No public demo canary, permissioned retailer reply or payment receipt is available for this mission. Do not use the Proof-First Sales positive test fixtures as sales evidence.
