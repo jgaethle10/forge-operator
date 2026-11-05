@@ -23,10 +23,11 @@ const validDate = x => typeof x==='string' && x.length<=40 && Number.isFinite(Da
 const present = x => typeof x==='string' && x.trim().length>0;
 
 function classify({status,ageMs,hasReceipt,gate,providedTimestamp}){
-  if(!providedTimestamp || ageMs< -FUTURE_SKEW_MS)return 'unknown';
+  if(ageMs< -FUTURE_SKEW_MS)return 'unknown';
   if(ageMs>MAX_AGE_MS)return 'stale';
   if(status==='blocked'||gate)return 'held';
   if(status==='complete'&&!hasReceipt)return 'held_missing_receipt';
+  if(!providedTimestamp)return 'unknown';
   if(status==='complete')return 'reported_complete_unverified';
   if(status==='executing')return 'reported_executing_unverified';
   if(status==='ready'||status==='pending')return 'reported_pending_unverified';
