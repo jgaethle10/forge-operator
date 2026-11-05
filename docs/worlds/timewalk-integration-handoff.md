@@ -64,3 +64,17 @@ A public web-search result presenting a **1960** R. L. Polk excerpt with the hea
 **Verification:** [Timewalk evidence Actions workflow](https://github.com/jgaethle10/forge-operator/actions/workflows/timewalk-evidence.yml). Check the head commit's run result; a queued run is not a test pass. Draft PR #1780 remains unmerged.
 
 **Primary research references:** [Seattle environmental report, exclude for Yakima](https://www.seattle.gov/documents/Departments/FAS/RealEstateServices/Property/1594-PhaseI-ESA-Irving-Yakima-pgs-Apd-E-F.pdf) and [Washington State Library Yakima city-directory holdings](https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books). The Washington State Library catalog itself does **not** list a 1960 Yakima city-directory volume; 1959 and 1961 remain acquisition priorities.
+
+## 2026-11-04 map-registration workbench
+
+Timewalk now includes a **data-only projected-map registration workbench** in `public/worlds/timewalk/map-registration.mjs`. Given an **identified and inspected** historical map sheet, at least four independently cited and reviewed non-collinear ground-control points, and a declared projected CRS, it calculates a least-squares affine pixel-to-projected-coordinate fit and reports per-point, RMS and maximum residual errors.
+
+**Crucial safety boundary:** even a perfect numeric fit remains `draft_requires_review`, `geometryAuthorized:false`, `productionAuthoritative:false` and `publicMapTileAuthorized:false`. A fit does not prove that imagery, a building or a street represents 1960, nor does it authorize publication. Only the existing Worlds authoritative engine can import a separately reviewed and authorized scene.
+
+The real Yakima staging record is `public/worlds/timewalk/yakima-1960/map-registration-pending.v1.json`. Its controls array is **empty**, and its selected map sheet URL, image number, update date, CRS and surveyed tie-points are intentionally **null/pending**. The verified public-domain Library of Congress collection at `https://www.loc.gov/item/sanborn09381_002/` contains 96 map sheets, but we have not yet identified the specific sheet for Yakima Avenue between South Second and South Third streets. Do **not** use an arbitrary sheet number or invent GCPs.
+
+Regression file `tests/timewalk-map-registration.test.mjs` contains synthetic coordinate fixtures to check math and fail-closed behavior. The CI gate now runs `node --test tests/timewalk-*.test.mjs` so all historical, jurisdiction, rights and map-draft tests are included.
+
+**Human acquisition steps:** find precise LOC sheet; record sheet image URL and date; select trustworthy street/boundary control features; record image-pixel positions and geodetic survey coordinates with citation; inspect residuals and local distortions; review the 1950-to-1960 changes and image-level rights before historical promotion.
+
+This is **not** a second map engine, GIS authority, or new rendering dependency.
