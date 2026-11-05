@@ -3,7 +3,7 @@
   "mission_id": "FIRST-CONTACT-001",
   "title": "Evercraft | First Contact: evidence-gated UAP research",
   "created_at": "2026-10-31",
-  "updated_at": "2026-11-03",
+  "updated_at": "2026-11-04",
   "owner": "Evercraft LLC",
   "routing_priority": "Systemia first",
   "execution_state": "NOT_DISPATCHED",
@@ -95,6 +95,31 @@
         "red-team-decision-2026-11-03.md"
       ],
       "validation": "Initial falsification and data gaps written; separate independent reviewer not yet assigned"
+    },
+    {
+      "id": "FC-SENSOR-03",
+      "lane": "sensor_forensics",
+      "status": "SYNTHETIC_MODEL_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
+      "artifacts": [
+        "triangulation.mjs",
+        "triangulation.test.mjs"
+      ],
+      "completed": "2026-11-04",
+      "validation": "9/9 local Node.js tests; exact GitHub file blob hashes matched local tested files. No actual UAP sensor data used.",
+      "acceptance": "Bearing-only dual-observer geometric candidate with near-parallel, behind-observer, inconsistent-ray quality gates and explicit unvalidated output"
+    },
+    {
+      "id": "FC-EVIDENCE-02",
+      "lane": "provenance",
+      "status": "CASE_INTAKE_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
+      "artifacts": [
+        "case-readiness.mjs",
+        "case-readiness.test.mjs",
+        "public-case-intake-2026-11-04.json"
+      ],
+      "completed": "2026-11-04",
+      "validation": "5/5 local Node.js tests; exact JS and test file hashes matched GitHub. Government case-listing metadata only; original media not downloaded.",
+      "acceptance": "Preserve unknown vs absent inputs and prevent extraordinary claims without calibrated source observations"
     }
   ],
   "hard_constraints": [
@@ -104,6 +129,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Locate a verified authorized Systemia writable mission endpoint and capture actual worker run receipts. Read-only public Fabric discovery is insufficient.",
-  "validation_note": "2026-11-03: 7 new engineering-feasibility tests passed locally under Node v22. GitHub Actions observed triggered but result not yet established."
+  "next_execution_gate": "Existing repo Systemia docs specify admission => Capability Mesh => Passport/Execution Gate => registered specialist dispatcher => dispatch receipt. Verify an authorized writable integration and actually registered specialist before any mission dispatch; the current plugin exposes only read-only public discovery.",
+  "validation_note": "2026-11-04: 14 new tests passed locally in two modules (9 triangulation + 5 case readiness). Exact files committed in GitHub and blob SHA matches verified. Prior Nov 3 Forge checks succeeded; latest branch-wide test/CI and independent review still pending."
 }
