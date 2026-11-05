@@ -262,6 +262,21 @@ test('revoked grant and already expired consumed permit fail closed before execu
   assert.equal(expired.calls(),0);
 });
 
+test('tampered Systemia completion receipt holds on restart without repeating NodeSeed work',async()=>{
+  const s=await scenario('goal-tampered-completion');
+  await runScheduler(s);
+  const goal=await readGoalState(s.goalStateFile);
+  assert.equal(goal.status,'complete');
+  goal.tasks[0].receipt_refs=['saban-node:sha256:'+'0'.repeat(64)];
+  goal.revision+=1;
+  await writeGoalState(s.goalStateFile,goal,
+    {expectedRevision:goal.revision-1});
+  await assert.rejects(runScheduler({
+    ...s,state:loadWorkState(s.statePath)
+  }),/fenced_systemia_completion_receipt_mismatch/);
+  assert.equal(s.calls(),1);
+});
+
 test('missing or changed Systemia durable mission identity fails before any NodeSeed execution',async()=>{
   const missing=await scenario('goal-missing');
   await assert.rejects(runScheduler({...missing,fencedGoalStateFile:null}),
