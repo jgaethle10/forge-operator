@@ -33,6 +33,8 @@ function enterWorld(){running=true;$('intro').classList.add('hidden');$('hud').c
 function stopTour(){
  if(!tourActive)return;
  tourActive=false;
+ // Restore keyboard control to the scene after the guided camera releases it.
+ if(running&&document.activeElement!==canvas)canvas.focus({preventScroll:true});
  $('tour').setAttribute('aria-pressed','false');
  $('tour').textContent='▶ Guided walk · 60s';
  $('tourprogress').classList.add('hidden');
