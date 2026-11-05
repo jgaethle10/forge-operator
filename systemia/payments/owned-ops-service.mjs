@@ -10,6 +10,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {PUBLIC_PAYMENT_OFFERS} from '../mcp/public-payment-offers.mjs';
+import {processVerifiedStripeWebhook} from './stripe-webhook-verifier.mjs';
 
 const PUBLIC_ORIGIN='https://fabric.systemiacommandcenters.com';
 const ORDER_PATTERN=/^buyer-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -191,7 +192,7 @@ export function createPaymentOperations({provider,journal,allowLive=false}={}){
   };
 }
 
-export async function startOwnedPaymentServer({host='127.0.0.1',port=0,authToken,operate,providerLive=false}={}){
+export async function startOwnedPaymentServer({host='127.0.0.1',port=0,authToken,operate,providerLive=false,webhookSigningSecret=''}={}){
   if(typeof authToken!=='string'||authToken.length<32||typeof operate!=='function')
     throw Error('private_service_token_and_operations_required');
   const server=http.createServer(async(req,res)=>{
@@ -203,6 +204,24 @@ export async function startOwnedPaymentServer({host='127.0.0.1',port=0,authToken
       return write(200,{schema:'evercraft.payments.owned-ops-health.v1',commerce_layer:'evercraft_payments',
         provider_boundary:'raven_nexus',processor:'stripe',processor_livemode:providerLive,
         payment_authority:'private_only',commercial_release_attested:false});
+    }
+    if(req.url==='/api/payments/stripe-webhook'&&req.method==='POST'){
+      if(!/^whsec_[A-Za-z0-9]+$/.test(webhookSigningSecret))return write(503,{received:false,error:'webhook_unconfigured'});
+      const chunks=[];let bytes=0;
+      try{
+        for await(const chunk of req){
+          bytes+=chunk.length;
+          if(bytes>65536)return write(413,{received:false,error:'payload_too_large'});
+          chunks.push(chunk);
+        }
+        const result=await processVerifiedStripeWebhook({
+          rawBody:Buffer.concat(chunks),
+          signatureHeader:String(req.headers['stripe-signature']||''),
+          signingSecret:webhookSigningSecret,
+          operate
+        });
+        return write(result.status,result.body);
+      }catch{return write(503,{received:false,error:'webhook_processing_failed'});}
     }
     if(req.url!=='/api/payments/ops'||req.method!=='POST')return write(404,{ok:false,error:'not_found'});
     const authorization=String(req.headers.authorization||'');
@@ -233,7 +252,8 @@ if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1
     const journal=openPaymentJournal(ledgerPath);
     const operate=createPaymentOperations({provider,journal,allowLive:process.env.EVERCRAFT_PAYMENTS_ENABLE_LIVE==='true'});
     const srv=await startOwnedPaymentServer({port:Number(process.env.EVERCRAFT_PAYMENTS_PORT||36096),
-      authToken:token,operate,providerLive:provider.live});
+      authToken:token,operate,providerLive:provider.live,
+      webhookSigningSecret:process.env.STRIPE_WEBHOOK_SECRET||''});
     console.log(JSON.stringify({state:'private_only_not_released',listening:srv.url,
       processor_mode:provider.live?'live':'test',public_checkout_ready:false}));
   }catch(e){console.error('owned_payments_start_blocked:'+String(e.message).slice(0,80));process.exitCode=1;}
