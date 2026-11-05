@@ -4,7 +4,7 @@ import {createWorld} from '../public/the-window/world.mjs';
 import {createMystery,revealNext,accuse} from '../public/the-window/mystery.mjs';
 import {initialWorld,canWalk} from '../public/worlds/world-core.mjs';
 import {toEngineWorld} from '../public/worlds/world-bridge.mjs';
-import {EVIDENCE_STATIONS,activeEvidenceStation,nearbyEvidenceStation,evidenceWorldEntities} from '../public/worlds/mystery-bridge.mjs';
+import {EVIDENCE_STATIONS,activeEvidenceStation,nearbyEvidenceStation,evidenceWorldEntities,evidenceGuidance} from '../public/worlds/mystery-bridge.mjs';
 const world=createWorld(0,818);
 test('all evidence stations are accessible in the existing physical scene',()=>{
   assert.equal(EVIDENCE_STATIONS.length,4);
@@ -52,4 +52,22 @@ test('reject mismatched scenario and invalid proximity values',()=>{
   assert.throws(()=>evidenceWorldEntities({...caseFile,clues:[...caseFile.clues].reverse()}),/Unsupported fictional/);
   assert.equal(nearbyEvidenceStation(caseFile,NaN,1),null);
   assert.equal(nearbyEvidenceStation(caseFile,1,1,Infinity),null);
+});
+
+
+test('relative clue tracker uses camera heading, world units, and no shared mutation',()=>{
+  const caseFile=createMystery(world,0);
+  const frozen=JSON.stringify(caseFile);
+  const station=activeEvidenceStation(caseFile);
+  assert.equal(evidenceGuidance(caseFile,station.x,station.z+4,0).direction,'Ahead');
+  assert.equal(evidenceGuidance(caseFile,station.x,station.z+4,Math.PI/2).direction,'Left');
+  assert.equal(evidenceGuidance(caseFile,station.x,station.z+4,-Math.PI/2).direction,'Right');
+  assert.equal(evidenceGuidance(caseFile,station.x,station.z+4,Math.PI).direction,'Behind');
+  assert.equal(evidenceGuidance(caseFile,station.x,station.z+2,0).direction,'Within reach');
+  assert.equal(evidenceGuidance(caseFile,station.x,station.z+4,0).distance,4);
+  assert.equal(evidenceGuidance(caseFile,Infinity,0,0),null);
+  assert.equal(evidenceGuidance(caseFile,0,0,NaN),null);
+  let complete=caseFile;for(let i=0;i<4;i++)complete=revealNext(complete);
+  assert.equal(evidenceGuidance(complete,0,0,0),null);
+  assert.equal(JSON.stringify(caseFile),frozen);
 });
