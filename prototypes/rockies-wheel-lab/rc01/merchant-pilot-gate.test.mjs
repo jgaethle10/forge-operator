@@ -4,7 +4,7 @@ import { evaluateMerchantPilot } from './merchant-pilot-gate.mjs';
 
 const record = (key, options = {}) => ({
   business_key: key,
-  response_evidence_ref: 'operator-review:synthetic:' + key,
+  response_evidence_ref: 'reviewed-email:reply:' + key,
   voluntary_response: true,
   current_workflow_pain: 'Customers want wheel previews while comparing quotes',
   existing_alternative: 'Printed catalogs and manual shop estimates',
@@ -42,9 +42,9 @@ test('three permissioned conversations are not enough without unmet workflow and
   assert.equal(r.launch_authority_granted, false);
 });
 
-test('even synthetic opt-in evidence only permits human review, not contact, deployment or payment', () => {
+test('even reviewed operator evidence only permits human review, not contact, deployment or payment', () => {
   const r = evaluateMerchantPilot([
-    record('shop-one', { unserved_workflow_confirmed: true, explicit_pilot_interest: true, pilot_interest_evidence_ref:'operator-review:synthetic:pilot-one' }),
+    record('shop-one', { unserved_workflow_confirmed: true, explicit_pilot_interest: true, pilot_interest_evidence_ref:'reviewed-email:pilot-reply:shop-one' }),
     record('shop-two'),
     record('shop-three')
   ]);
@@ -76,4 +76,30 @@ test('a rejected record cannot consume the business identity of a later permissi
   assert.equal(r.permissioned_distinct_responses, 3);
   assert.equal(r.evidence_incomplete_or_duplicate_count, 1);
   assert.equal(r.state, 'no_distinct_pilot_wedge_yet');
+});
+
+test('synthetic, fixture and placeholder references cannot count as real merchant evidence', () => {
+  const r = evaluateMerchantPilot([
+    record('shop-one', { response_evidence_ref: 'operator-review:synthetic:shop-one', unserved_workflow_confirmed: true }),
+    record('shop-two', { response_evidence_ref: 'research:fixture:shop-two', explicit_pilot_interest: true }),
+    record('shop-three', { response_evidence_ref: 'lead:placeholder:shop-three' })
+  ]);
+  assert.equal(r.permissioned_distinct_responses, 0);
+  assert.equal(r.evidence_incomplete_or_duplicate_count, 3);
+  assert.equal(r.state, 'insufficient_permissioned_evidence');
+});
+
+test('a synthetic pilot-interest reference cannot advance otherwise well-formed responses', () => {
+  const r = evaluateMerchantPilot([
+    record('shop-one', {
+      unserved_workflow_confirmed: true,
+      explicit_pilot_interest: true,
+      pilot_interest_evidence_ref: 'operator-review:synthetic:pilot-one'
+    }),
+    record('shop-two'), record('shop-three')
+  ]);
+  assert.equal(r.permissioned_distinct_responses, 3);
+  assert.equal(r.pilot_interest_claims, 0);
+  assert.equal(r.state, 'no_distinct_pilot_wedge_yet');
+  assert.equal(r.launch_authority_granted, false);
 });
