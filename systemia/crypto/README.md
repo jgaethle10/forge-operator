@@ -13,10 +13,19 @@ The first opt-in prototype of quantum-resistant **recipient envelope encryption*
 ## Local verification (Node 24.7+)
 
 ```bash
-node --test tests/pq-envelope.test.mjs
+node --test tests/pq-envelope.test.mjs tests/pq-signed-envelope.test.mjs
 ```
 
 For an integration test, import `generatePqRecipient`, `encryptPqEnvelope` and `decryptPqEnvelope` from `systemia/crypto/pq-envelope.mjs`. The recipient's private key must never be serialized to a public surface; publish/pin only the authenticated public-key fingerprint. Never store test secrets in Git. Use a real trust registry, key lifecycle, anti-replay ledger, sender authentication and an audited transport before considering production.
+
+
+## Sender-authenticated lab wrapper
+
+`pq-signed-envelope.mjs` adds **ML-DSA-65 signatures (NIST FIPS 204)** covering the entire encrypted envelope and its sender ID, sender public-key fingerprint, issuance/expiry timestamps and 192-bit random nonce. The recipient *must* be supplied with the independently pinned sender public key and expected sender identity; accepting a sender key embedded in the message would defeat authentication.
+
+`openSignedPqMessage` checks a maximum 300-second TTL, 30-second clock skew, exact expected sender/route, ML-DSA signature, ML-KEM ciphertext integrity and an explicit replay guard. The included memory replay guard rejects duplicates and fails closed at capacity **only for single-process tests**. It is not a distributed guarantee: before deploying, implement an atomic insert-if-absent persistent nonce store with retention past expiry, verify key enrollment/rotation/revocation, add a cross-language canonical encoding and independent cryptography review.
+
+Cryptographic authentication does **not** prove delivery, user consent, human acknowledgement or endpoint safety. The signed wrapper is neither attached to notifications nor enabled for live users.
 
 ## Migration gates
 
