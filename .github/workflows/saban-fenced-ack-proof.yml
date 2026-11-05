@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/saban/fenced-ack-journal*'
       - 'systemia/saban/fenced-passport-review*'
+      - 'systemia/saban/fenced-execution-admission*'
       - 'systemia/saban/fenced-local-scheduler*'
       - 'systemia/saban/signed-microseed-execution*'
       - 'systemia/compute/runtime-node.mjs'
@@ -41,5 +42,5 @@ jobs:
         run: node --test systemia/saban/fenced-local-scheduler.test.mjs
       - name: Verify fresh signed micro-work result from real localhost NodeSeed
         run: node --test systemia/saban/signed-microseed-execution.test.mjs
-      - name: Prove signed NodeSeed evidence flows through actual Saban scheduler and rejects tampering
+      - name: Prove consumed Passport execution admission plus signed NodeSeed result through actual scheduler
         run: node --test systemia/saban/fenced-signed-node-scheduler.test.mjs
