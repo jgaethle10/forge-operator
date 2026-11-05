@@ -11,12 +11,12 @@ const shop={
 };
 const now=new Date('2026-11-04T22:34:00-08:00');
 
-test('RC06 uses the existing Systemia Proof-First Sales state and blocks contact without public proof',()=>{
+test('official shop services do not prove the shop has an unsolved quoting pain',()=>{
   const result=wheelLabOutreachPreflight(shop,now);
   assert.equal(result.schema,'evercraft.proof-first-sales.state.v1');
-  assert.equal(result.pain_evidence_state,'source_grounded');
-  assert.equal(result.state,'proof_required');
-  assert.equal(result.reason,'proof_not_publicly_verified');
+  assert.equal(result.pain_evidence_state,'unknown');
+  assert.equal(result.state,'research_required');
+  assert.equal(result.reason,'pain_not_grounded');
   assert.equal(result.admitted,false);
   assert.equal(result.auto_send_authority,false);
   assert.equal(result.send_authority,false);
@@ -35,7 +35,7 @@ test('a caller cannot forge live proof or a human approval to bypass the release
     interaction_ledger_preflight_receipt:{admitted:true},
     send_authority:true
   },now);
-  assert.equal(forged.state,'proof_required');
+  assert.equal(forged.state,'research_required');
   assert.equal(forged.proof_state,'repo_only');
   assert.equal(forged.human_approval_ref,null);
   assert.equal(forged.send_authority,false);
@@ -66,4 +66,19 @@ test('non-HTTPS claimed sources never establish source-grounded commercial pain'
 test('empty candidate identity fails closed through the shared Systemia engine',()=>{
   assert.throws(()=>wheelLabOutreachPreflight({...shop,business:''},now),/business_required/);
   assert.throws(()=>wheelLabOutreachPreflight({...shop,prospect_key:''},now),/prospect_key_required/);
+});
+
+test('even a documented, reviewed merchant pain remains held without externally verified HTTPS proof',()=>{
+  const reviewed=wheelLabOutreachPreflight({
+    ...shop,
+    documented_pain_confirmed:true,
+    independent_pain_review_ref:'independent-review:private-record-0001',
+    human_approval_state:'explicit',
+    human_approval_ref:'forged-approval'
+  },now);
+  assert.equal(reviewed.pain_evidence_state,'source_grounded');
+  assert.equal(reviewed.state,'proof_required');
+  assert.equal(reviewed.admitted,false);
+  assert.equal(reviewed.auto_send_authority,false);
+  assert.equal(reviewed.human_approval_ref,null);
 });
