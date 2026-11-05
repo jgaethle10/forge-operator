@@ -70,6 +70,12 @@ try{
     assert.equal(await page.locator('#wm-clues li').count(),1,profile.name+': reset did not clear evidence');
     await page.locator('#wm-close').click();
     assert.equal(await page.locator('#worldsMysteryPanel').isVisible(),false,profile.name+': mystery sheet did not close');
+
+    await page.locator('#mysteryTrail').waitFor({state:'visible',timeout:8000});
+    assert.match(await page.locator('#mysteryTrail').textContent(),/world units/,profile.name+': missing directional clue-distance tracker');
+    const tracker=await page.locator('#mysteryTrail').boundingBox();
+    assert.ok(tracker&&tracker.x>=0&&tracker.x+tracker.width<=profile.viewport.width+2,profile.name+': clue tracker overflows horizontally');
+
     assert.deepEqual(await page.evaluate(async()=>{const {loadWorld}=await import('/worlds/world-core.mjs');const w=loadWorld(localStorage);return {revision:w.revision,objects:w.objects,agents:w.agents};}),beforeMystery,profile.name+': fictional case changed world state');
 
     if(profile.hasTouch){
