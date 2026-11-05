@@ -38,12 +38,14 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 ## Historical Evidence Lab 004 (November 4, 2026)
 
 - Route: `/worlds/hidden-world/yakima-evidence.html`, linked from the atlas research sidebar.
+- Machine-readable, no-coordinate source ledger: `/worlds/hidden-world/yakima-evidence-ledger.v1.json` (seven sourced records; all real geometry and connected tunnels marked unverified).
 - This is an evidence board and responsive, script-free four-year research lens, **not a measured street model**. Its building silhouettes are deliberately illustrative.
 - The National Register records the Lund Building at 5 N. Front Street, with the late nineteenth-century period of significance (https://npgallery.nps.gov/AssetDetail/NRIS/83004276). Detailed building chronology still requires the nomination form and architectural plans.
 - Spokane Public Library holds a public-domain F. H. Newell view east along Yakima Avenue from the railroad tracks, dated within 1905–1915: https://lange.spokanelibrary.org/items/show/5659.
 - Yakima's municipal historic register dates the Capitol Theatre at 9 S. 3rd Street to 1920 and the Union Pacific Freight Building at 104 W. Yakima Avenue to 1923–1924: https://www.yakimawa.gov/services/historic-preservation-commission/yakima-register-of-historic-places/.
 - The 2018 `Hidden History of Yakima` description mentions underground tunnels, but **no specific connected tunnel alignment has been authenticated** by these sources.
 - Historic Sanborn fire-insurance maps document footprints, construction and use; they do not independently prove passable subterranean tunnels. See https://www.yvl.org/services/special-collections-and-archive-services/maps-and-atlases/.
+- A new read-only `scripts/probe-hidden-world-public.mjs` verifies the owned Worlds runtime identity and five artifacts (atlas, Yakima exhibit, evidence page, CSV, JSON) through the existing manual Worlds public release gate. It does not perform writes or assert physical iPhone validation.
 - The Worlds vault static router was updated to resolve nested directory index requests (`/worlds/hidden-world/`), with read-only regression tests covering the entry route, exhibit and CSV MIME. This source check is separate from a live owned-host probe.
 
 ## Still required before public launch
