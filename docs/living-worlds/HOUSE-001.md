@@ -8,6 +8,7 @@
 - Build and remove furniture by tapping tiles; refrigerators, beds, sofas, desks, plants and tables influence what residents choose to do. An empty house produces a visible no-available-actions state instead of inventing actions.
 - Inspect residents and read their actions, energy, hunger, social needs, mood, coins, strongest bond and recent memories.
 - Pause, resume, accelerate simulation, send gifts, host a party, reset and export a JSON snapshot.
+- Export read-only **World Engine V1 scene data** from the current house. This retains stable furniture/resident entity IDs and projected X/Z positions but does NOT render 3D, validate browser GPU behavior, or make the local browser authoritative.
 - State is persisted in the *same device's browser* using localStorage with a bounded schema validator. Snapshots are not shared between users or uploaded to a server.
 
 ## Run
@@ -51,8 +52,14 @@ No public URL, cloud account, production mutation, autonomous external contact, 
 - public/living-worlds/index.html - responsive 2D house plan, no separate 3D renderer.
 - tests/living-worlds-house.test.mjs - deterministic model and safety tests.
 - public/living-worlds/agent-proposals.mjs - strict model proposal context and allowlist.
+- public/living-worlds/house-world-bridge.mjs - converts House 001 to non-authoritative canonical World Engine V1 scene JSON; excludes resident memories from exported scene data.
+- tests/living-worlds-engine-bridge.test.mjs - stable identity, geometry positioning and schema contract regression tests.
 - systemia/living-worlds/local-llm-preview.mjs - owner-run local preview with optional llama-server adapter.
 - tests/living-worlds-model-gate.test.mjs - proposal and local gateway security tests.
+
+## World Engine scene export
+
+Select **3D scene data** in the House 001 interface to download `evercraft-house-001-world-engine-scene.json`. The adapter uses the exact `evercraft.world-engine.world.v1` schema name, stable `resident:<id>` and `furniture:<id>` entities, 1-meter grid spacing on X/Z, bounded box colliders for furniture, and explicit `projectionOnly=true`/`productionAuthoritative=false` metadata. This is compatible scene-shaped data for further integration. **It is not a running World Engine simulation, a geometry asset, a hosted 3D world, or authoritative navigation/physics.** Native World Engine runtime validation and renderer integration remain gated.
 
 ## Architecture connection and honest boundaries
 
