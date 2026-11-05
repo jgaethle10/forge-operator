@@ -28,12 +28,16 @@ export function showProofReplay(model,{formatCents}){
       'Replaying the completed second arithmetic check.',
       'Playback complete. All values were verified in this browser.'][n];
   };
-  phase(3);$('visual-replay').hidden=false;
-  $('vr-play').onclick=()=>{
+  const replay=()=>{
     for(const timer of proofReplayTimeouts)clearTimeout(timer);
     proofReplayTimeouts=[];
     if(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches){phase(3);return;}
     phase(0);
     [1,2,3].forEach((n,i)=>proofReplayTimeouts.push(setTimeout(()=>phase(n),(i+1)*750)));
   };
+  $('visual-replay').hidden=false;
+  $('vr-play').onclick=replay;
+  // The Run click has already completed the verified browser calculation.
+  // Autoplay illustrates the completed steps; it does NOT claim live execution.
+  replay();
 }
