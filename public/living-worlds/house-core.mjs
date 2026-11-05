@@ -101,13 +101,31 @@ function perform(s,a,f){
   record(s,a.name+' '+action+'.',a.id,'activity');
   a.target=null;
 }
+
+export function selectModelTarget(s,actorId,targetId,reason){
+  if(!validateHouse(s)||typeof reason!=='string'||reason.length<1||reason.length>120||
+     /[\x00-\x1F\x7F]/.test(reason))return false;
+  const actor=s.actors.find(a=>a.id===actorId);
+  if(!actor)return false;
+  const obj=targetId===null?null:s.furniture.find(f=>f.id===targetId);
+  if(targetId!==null&&!obj)return false;
+  actor.target=obj?.id||null;
+  actor.intent_wait_until=obj?null:s.tick+1;
+  actor.action=obj?'Choosing the '+KINDS[obj.kind].label.toLowerCase():'Taking time to think';
+  const choice=obj?'picked the '+KINDS[obj.kind].label.toLowerCase():'chose to wait';
+  record(s,actor.name+' '+choice+' (local model: '+reason.slice(0,83)+')',actor.id,'model_choice');
+  return true;
+}
+
 export function advanceHouse(s){
   s.tick++;s.minute+=15;
   if(s.minute>=1440){s.minute-=1440;s.day++;record(s,'A new day begins at House 001.',null,'day');}
   for(const a of s.actors){
     a.energy=clamp(a.energy-3);a.hunger=clamp(a.hunger-4);a.social=clamp(a.social-2);
-    let target=s.furniture.find(f=>f.id===a.target);
-    if(!target){a.target=null;plan(s,a);target=s.furniture.find(f=>f.id===a.target);}
+    const waiting=a.intent_wait_until===s.tick;
+    if(waiting){a.intent_wait_until=null;a.action='Taking time to think';}
+    let target=waiting?null:s.furniture.find(f=>f.id===a.target);
+    if(!waiting&&!target){a.target=null;plan(s,a);target=s.furniture.find(f=>f.id===a.target);}
     if(target){
       if(a.x!==target.x)a.x+=Math.sign(target.x-a.x);
       else if(a.y!==target.y)a.y+=Math.sign(target.y-a.y);
