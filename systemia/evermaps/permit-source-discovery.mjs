@@ -35,11 +35,20 @@ export async function probeWaPermitSourceCandidates({
 }={}){
  const rows=[];
  for(const c of candidates){
+  let schemaDiagnostic=null;
   try{
    const u=new URL(c.url);
    if(u.protocol!=='https:'||u.hostname!=='gis.dnr.wa.gov')
     throw Error('Source must be official WA DNR HTTPS');
    const meta=await read(c.url+'?f=json',fetchImpl,signal);
+   // Diagnostic exposes public schema names only, never applicant/owner records.
+   const names=Array.isArray(meta.fields)?meta.fields.map(f=>f.name).filter(x=>typeof x==='string'):[];
+   schemaDiagnostic={
+    geometry_type:meta.geometryType??null,
+    missing_expected_fields:FIELDS.filter(name=>!names.includes(name)),
+    observed_nonpersonal_field_names:names.filter(name=>!/name|owner|applicant|address|phone|email|contact|permittee/i.test(name)).slice(0,45),
+    total_metadata_field_count:names.length
+   };
    if(meta.geometryType!=='esriGeometryPoint'||!Array.isArray(meta.fields)||
       !FIELDS.every(name=>meta.fields.some(f=>f.name===name))){
     throw Error('Metadata schema/geometry not compatible with non-owner importer');
@@ -66,7 +75,8 @@ export async function probeWaPermitSourceCandidates({
    });
   }catch(e){
    rows.push({key:c.key,source:c.url,state:'source_unverified',
-    county_count:null,reason:String(e?.message??e),owner_fields_requested:false});
+    county_count:null,reason:String(e?.message??e),
+    schema_diagnostic:schemaDiagnostic,owner_fields_requested:false});
   }
  }
  return {schema:'evercraft.evermaps.wa-permit-source-discovery.v1',observed_at:now(),
