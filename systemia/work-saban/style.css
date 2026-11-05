@@ -347,3 +347,88 @@ main.customer-workspace{max-width:1060px;margin:0 auto;padding:0 26px 60px}
 .customer-workspace .customer-footer{border-top:1px solid #e9e7e7;color:#777;margin-top:62px;padding-top:20px;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;font-size:12px}
 @media(max-width:700px){main.customer-workspace{padding:0 18px 40px}.customer-header{padding:18px 0}.customer-header .customer-brand{font-size:16px}.customer-header .customer-brand small{font-size:8px;padding-left:8px}.brand-symbol{width:32px;height:32px}.local-label{font-size:8px}.mission-hero{padding:56px 0 20px}.customer-workspace .mission-hero h1{font-size:clamp(44px,12.5vw,65px)}.customer-workspace .input,.customer-workspace .customer-output{padding:20px}.mission-actions{align-items:stretch}.mission-actions button{flex:1 1 150px}.customer-workspace .office-heading{padding:20px}.customer-workspace #office{border-radius:13px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+
+/* Immersive observer: one action to experience the existing, receipt-driven office.
+   CSS-only screen lock. No agent animation or worker execution is created here. */
+.customer-workspace .office-visit-entry{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:16px;
+  margin:9px 0 24px;min-height:46px;padding:11px 16px;
+  color:#1f2430;background:#fff;border:1px solid #d8dce2;
+  box-shadow:0 3px 14px #00000010;border-radius:12px;
+  font-size:13px;font-weight:800;letter-spacing:-.015em;
+}
+.customer-workspace .office-visit-entry:hover{
+  color:#a4142f;background:#faf7f7;border-color:#d5a0aa;
+}
+.customer-workspace .office-visit-entry span{font-size:19px;line-height:1}
+.office-heading-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
+.office-observe-open #office{
+  position:fixed!important;inset:0;z-index:2000;
+  width:100%;max-width:none;height:100dvh;margin:0;
+  border:0;border-radius:0;overflow-y:auto;overscroll-behavior:contain;
+  background:#0c1728;box-shadow:0 0 0 100vmax #030814;
+}
+.office-observe-open #office .office-heading{
+  position:sticky;top:0;z-index:35;
+  padding:12px 22px;background:#111f35f2;
+  backdrop-filter:blur(14px);border-bottom:1px solid #31516d;
+}
+.office-observe-open #office .office-heading h2{font-size:24px;margin:3px 0}
+.office-observe-open #office .office-heading p{font-size:11px}
+.office-observe-open #office .office-layout{
+  grid-template-columns:minmax(0,1fr) minmax(280px,330px);
+  align-items:stretch;
+}
+.office-observe-open #office .office-scene-wrap{min-width:0}
+.office-observe-open #office .office-scene.has-spatial-view{
+  height:calc(100dvh - 220px);min-height:440px;
+}
+.office-observe-open #office .office-sidebar{
+  display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr auto;
+}
+.office-observe-open #office .office-inspector{scroll-margin-top:90px}
+.office-observe-open #office .office-jump{margin-left:auto}
+.customer-workspace .office-visit-close:not([hidden]),
+.customer-workspace .office-return:not([hidden]){
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:0;padding:9px 12px;min-height:40px;
+  background:#f7fafb;color:#18283b;border:1px solid #e8eef3;
+  border-radius:8px;font-size:12px;font-weight:800;
+}
+.customer-workspace .office-return:not([hidden]){display:flex;width:max-content;max-width:100%;margin:0 0 15px}
+.office-observe-open #office .office-inspector>.office-eyebrow{display:block}
+.office-observe-open #office .office-visit-close:focus-visible,
+.office-observe-open #office .office-return:focus-visible,
+.customer-workspace .office-visit-entry:focus-visible{
+  outline:3px solid #87dff0;outline-offset:2px;
+}
+@media(max-width:900px){
+  .office-observe-open #office .office-layout{display:block}
+  .office-observe-open #office .office-scene-wrap{border-right:0}
+  .office-observe-open #office .office-scene.has-spatial-view{
+    height:min(64dvh,610px);min-height:410px;
+  }
+  .office-observe-open #office .office-heading{
+    display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;
+    gap:9px;padding:12px max(14px,env(safe-area-inset-right));
+  }
+  .office-observe-open #office .office-heading p{display:none}
+  .office-observe-open #office .office-heading-actions{margin-left:auto;gap:7px}
+  .office-observe-open #office .office-live{padding:8px;font-size:9px}
+  .office-observe-open #office .office-sidebar{display:block;padding-bottom:env(safe-area-inset-bottom)}
+  .office-observe-open #office .office-scene-title{
+    display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px;
+  }
+  .office-observe-open #office .office-jump{
+    margin-left:0;
+  }
+}
+@media(max-width:430px){
+  .office-observe-open #office .office-heading h2{font-size:21px}
+  .office-observe-open #office .office-heading-actions{width:100%;justify-content:space-between}
+  .office-observe-open #office .office-scene.has-spatial-view{min-height:390px;height:59dvh}
+  .office-observe-open #office .office-scene-title>span:first-child{width:100%}
+  .office-observe-open #office .office-bottom{gap:7px}
+}

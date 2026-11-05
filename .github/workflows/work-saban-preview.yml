@@ -29,6 +29,8 @@ jobs:
           node --check systemia/work-saban/mission.mjs
           node --check systemia/work-saban/server.mjs
           node --check systemia/work-saban/app.js
+          node --check systemia/work-saban/office-observe.js
+          node --check systemia/work-saban/office-observe.proof.mjs
           node --check systemia/work-saban/office-camera.js
           node --check systemia/work-saban/office-camera.proof.mjs
           node --check systemia/work-saban/office-browser-qa.mjs
@@ -49,6 +51,8 @@ jobs:
         run: node systemia/work-saban/model-worker.proof.mjs
       - name: Prove formation contract
         run: node systemia/work-saban/mission.proof.mjs
+      - name: Prove immersive observer focus, exit and no unintended execution
+        run: node systemia/work-saban/office-observe.proof.mjs
       - name: Prove smooth observer rig, reduced motion, and frame rate independence
         run: node systemia/work-saban/office-camera.proof.mjs
       - name: Prove spatial office camera and receipt-driven state

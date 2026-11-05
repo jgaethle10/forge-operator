@@ -18,9 +18,11 @@ function chromePath(){
   }
   throw Error('CHROME_UNAVAILABLE: real browser QA not verified');
 }
-async function debuggerPort(dir,child){
-  for(let n=0;n<100;n++){
-    if(child.exitCode!==null)throw Error('Chrome exited before DevTools opened');
+async function debuggerPort(dir,child,getDiagnostics=()=>'',timeoutSteps=180){
+  for(let n=0;n<timeoutSteps;n++){
+    if(child.exitCode!==null||child.signalCode!==null){
+      throw Error('Chrome exited before DevTools opened: '+getDiagnostics().slice(-1400));
+    }
     try{
       const raw=await fs.readFile(path.join(dir,'DevToolsActivePort'),'utf8');
       const port=Number(raw.split('\n')[0]);
@@ -28,7 +30,8 @@ async function debuggerPort(dir,child){
     }catch{}
     await sleep(100);
   }
-  throw Error('Chrome local DevTools connection unavailable');
+  throw Error('Chrome local DevTools unavailable after '+timeoutSteps/10+
+    ' seconds: '+getDiagnostics().slice(-1400));
 }
 async function devtools(url){
   const ws=new WebSocket(url);
@@ -67,7 +70,7 @@ async function viewport(send,{width,height,mobile,label,out}){
   let ready=false;
   for(let i=0;i<60;i++){
     await sleep(100);
-    ready=await js(send,"Boolean(document.readyState==='complete'&&window.WorkSaban3D&&document.getElementById('office-3d-toggle'))");
+    ready=await js(send,"Boolean(document.readyState==='complete'&&window.WorkSaban3D&&window.WorkSabanObserver&&document.getElementById('office-3d-toggle'))");
     if(ready)break;
   }
   assert(ready,'Office scripts did not load');
@@ -100,21 +103,54 @@ async function viewport(send,{width,height,mobile,label,out}){
   const screenshot=path.join(out,'work-saban-'+label+'-focus.png');
   await fs.writeFile(screenshot,Buffer.from(pixels.data,'base64'));
   assert((await fs.stat(screenshot)).size>8000,'Focus screenshot is unexpectedly empty');
+  const beforeState=await js(send,"JSON.stringify(window.WorkSaban3D.getState())");
+  const entered=await js(send,"(()=>{document.getElementById('office-visit-open').click();const x=document.getElementById('office');return {active:window.WorkSabanObserver.isOpen(),modal:x.getAttribute('aria-modal'),role:x.getAttribute('role'),position:getComputedStyle(x).position,wide:x.getBoundingClientRect().width,closeHidden:document.getElementById('office-visit-close').hidden,entryExpanded:document.getElementById('office-visit-open').getAttribute('aria-expanded'),scrollLocked:document.documentElement.classList.contains('office-observe-open')};})()");
+  assert.equal(entered.active,true,'One-tap observer mode did not open');
+  assert.equal(entered.role,'dialog');
+  assert.equal(entered.modal,'true');
+  assert.equal(entered.position,'fixed');
+  assert.equal(entered.entryExpanded,'true');
+  assert.equal(entered.closeHidden,false);
+  assert.equal(entered.scrollLocked,true);
+  assert(entered.wide>=width-2,'Immersive office must fill viewing width');
+  await sleep(350);
+  const immersiveImage=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+  const immersiveFile=path.join(out,'work-saban-'+label+'-immersive.png');
+  await fs.writeFile(immersiveFile,Buffer.from(immersiveImage.data,'base64'));
+  assert((await fs.stat(immersiveFile)).size>8000,'Immersive office screenshot is unexpectedly empty');
+  const inspectorState=await js(send,"(()=>{document.getElementById('office-inspector-jump').click();return {active:window.WorkSabanObserver.isOpen(),focused:document.activeElement.id,selected:document.getElementById('office-agent-name').textContent};})()");
+  assert.equal(inspectorState.focused,'office-agent-name','Inspector jump must focus selected worker evidence');
+  assert.equal(inspectorState.selected,'Communications Specialist');
+  const backToCamera=await js(send,"(()=>{document.getElementById('office-camera-return').click();return document.activeElement.id;})()");
+  assert.equal(backToCamera,'spatial-viewport','Back to camera must restore keyboard navigation');
+  const exitState=await js(send,"(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{bubbles:true,cancelable:true,key:'Escape'}));return {active:window.WorkSabanObserver.isOpen(),expanded:document.getElementById('office-visit-open').getAttribute('aria-expanded'),modal:document.getElementById('office').getAttribute('aria-modal'),scrollLocked:document.documentElement.classList.contains('office-observe-open')};})()");
+  assert.equal(exitState.active,false,'Escape must close immersive view');
+  assert.equal(exitState.expanded,'false');
+  assert.equal(exitState.modal,null);
+  assert.equal(exitState.scrollLocked,false);
+  assert.equal(await js(send,"JSON.stringify(window.WorkSaban3D.getState())"),beforeState,'Camera presentation must not fake worker execution events');
   return {label,width,height,mobile,desks:loaded.desks,follow_control:true,camera_easing:true,
-    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,focus:screenshot}};
+    immersive_observe:'passed',inspection_navigation:'passed',keyboard_exit:'passed',
+    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,focus:screenshot,immersive:immersiveFile}};
 }
 const out=process.env.WORK_SABAN_BROWSER_PROOF_DIR||path.join(os.tmpdir(),'work-saban-browser-qa');
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));
 await fs.mkdir(out,{recursive:true});
 const server=await startWorkSabanPreview({host:'127.0.0.1',port:0});
 let chrome,client;
+let chromeDiagnostics='';
 try{
   chrome=spawn(chromePath(),[
     '--headless=new','--disable-gpu','--no-sandbox','--disable-dev-shm-usage',
+    '--disable-extensions','--no-first-run','--no-default-browser-check',
     '--remote-allow-origins=*','--remote-debugging-port=0',
     '--user-data-dir='+profile,'about:blank'
-  ],{stdio:'ignore'});
-  const port=await debuggerPort(profile,chrome);
+  ],{stdio:['ignore','ignore','pipe']});
+  chrome.on('error',e=>{chromeDiagnostics='Chrome launch error: '+e.message;});
+  chrome.stderr.on('data',chunk=>{
+    chromeDiagnostics=(chromeDiagnostics+String(chunk)).slice(-2800);
+  });
+  const port=await debuggerPort(profile,chrome,()=>chromeDiagnostics);
   const targets=await (await fetch('http://127.0.0.1:'+port+'/json/list')).json();
   const page=targets.find(t=>t.type==='page');
   assert(page?.webSocketDebuggerUrl,'Chrome page target not found');
