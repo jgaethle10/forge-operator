@@ -83,7 +83,7 @@ assert.equal(document.activeElement.id,'office-agent-name');
 assert(panel.scrolled,'Inspect agent must navigate to actual evidence panel');
 fire('office-camera-return');
 assert.equal(document.activeElement.id,'spatial-viewport');
-assert(nodes.get('spatial-viewport').scrolled,'Back to camera scrolls to the scene');
+assert(nodes.get('office-scene').scrolled,'Back to camera scrolls the office scene while focusing its viewport');
 const escape=key('Escape');
 assert(escape.defaultPrevented,'Escape should be consumed inside the modal');
 assert.equal(observer.isOpen(),false);
