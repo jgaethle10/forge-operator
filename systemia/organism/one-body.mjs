@@ -354,6 +354,8 @@ export function emptyBodyState() {
     opportunities: {},
     products: {},
     lane_queues: {},
+    // Acknowledgements remain private evidence pointers, never execution authority.
+    lane_acknowledgements: {},
   };
 }
 
@@ -415,6 +417,67 @@ export function ingestBodyEvent(state, raw, options = {}) {
       repeat_count: (prior?.repeat_count || 0) + 1,
     },
   };
+}
+
+
+/**
+ * Accept a trusted, exact lane-consumer acknowledgement into private One-Body
+ * state. The supplied verifier MUST be an internal source-specific adapter,
+ * not a predicate or flag selected by an event sender.
+ *
+ * This updates a caller-owned state value. The runtime adapter must durably
+ * persist it. On read/export the verifier must revalidate the authoritative
+ * receipt reference; a persisted pointer alone is not proof.
+ */
+export function recordBodyLaneAcknowledgement(state, receipt, {
+  verifyReceipt = null,
+  now = new Date().toISOString(),
+} = {}) {
+  if (state?.schema !== 'evercraft.one-body.state.v1' ||
+      !state.events || typeof state.events !== 'object') throw new Error('invalid_one_body_state');
+  if (!receipt || receipt.schema !== 'evercraft.one-body.lane-consumer-receipt.v1') {
+    throw new Error('unsupported_lane_receipt_schema');
+  }
+  const event = state.events[receipt.event_id];
+  if (!event || !Array.isArray(event.lanes)) throw new Error('unknown_body_event');
+  if (typeof receipt.lane !== 'string' || !event.lanes.includes(receipt.lane)) {
+    throw new Error('lane_not_routed');
+  }
+  if (typeof receipt.receipt_ref !== 'string' ||
+      !receipt.receipt_ref.trim() || receipt.receipt_ref.length > 512) {
+    throw new Error('receipt_reference_required');
+  }
+  const clock = Date.parse(now);
+  const occurred = Date.parse(event.occurred_at);
+  const acknowledged = Date.parse(receipt.observed_at);
+  if (![clock, occurred, acknowledged].every(Number.isFinite) ||
+      acknowledged < occurred || acknowledged > clock) {
+    throw new Error('invalid_lane_receipt_time');
+  }
+  if (typeof verifyReceipt !== 'function' || verifyReceipt(receipt, event) !== true) {
+    throw new Error('lane_receipt_unverified');
+  }
+
+  const key = JSON.stringify([receipt.event_id, receipt.lane]);
+  const prior = state.lane_acknowledgements?.[key] || null;
+  if (prior && prior.receipt_ref === receipt.receipt_ref) {
+    return { state, status: 'duplicate_acknowledgement', recorded: false };
+  }
+  if (prior && Date.parse(prior.observed_at) >= acknowledged) {
+    throw new Error('stale_lane_receipt');
+  }
+  const next = structuredClone(state);
+  next.lane_acknowledgements ||= {};
+  // No free-form content, buyer identity, arbitrary source payload, or
+  // caller-asserted verification boolean is retained.
+  next.lane_acknowledgements[key] = {
+    schema: 'evercraft.one-body.lane-consumer-receipt.v1',
+    event_id: receipt.event_id,
+    lane: receipt.lane,
+    receipt_ref: receipt.receipt_ref,
+    observed_at: receipt.observed_at,
+  };
+  return { state: next, status: 'acknowledgement_recorded_pending_read_reverification', recorded: true };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
