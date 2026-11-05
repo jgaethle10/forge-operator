@@ -59,3 +59,22 @@ Neither positive marginal example constitutes a business case without measuremen
 ## Operational evidence boundary
 
 A GitHub branch, issue or successful unit test is **not** Systemia mission admission, live agent dispatch, installed equipment, collected thermal telemetry, measured profitability or purchased compute service. Public Evercraft Fabric discovery is read-only and its current health may be unavailable; reconcile with private Systemia before asserting any execution. Keep private Plasma Hearth records in their existing protected boundary.
+
+## Sprint 2 | Hourly coincidence screening (2026-11-04)
+
+The original `model.mjs` daily illustration remains available. The separate **offline** `hourly-screen.mjs` now checks whether heat is usable **during the same one-hour interval** and whether the source outlet is at least `approachDeltaC` warmer than the destination's required temperature. Heat rejected for insufficient temperature or absent coincident demand receives no value credit. This is a *direct-exchange screening rule*, not a detailed heat-exchanger rating or heat-pump lift model.
+
+- `hourly-screen.mjs`: UTC hourly continuity, strict finite input and provenance validation, temperature gate, demand cap, comparator heater COP, incremental IT/auxiliary electricity, cooling credits, revenue, capital allocation and O&M.
+- `hourly-screen.test.mjs`: 11 regression tests. All 11 assertions passed in an isolated JavaScript V8 replay against fetched GitHub source on 2026-11-04; **Node test runner and repository CI have not been observed**.
+- `sample-synthetic-profile.json`: deliberately fictional 24-hour 600 W profile, existing computation, assumed 75% capture, 80% delivery, $0.12/kWh tariff, $350 capital, $20 annual O&M, 5-year straight-line allocation and 20 Wh/h auxiliary power. Sample produces 2.85 kWh thermal **usable** and 5.79 kWh **unusable**, with $0.03782 net for that single fictional day after allocations. The apparent positive result is **not a forecast**. It is highly sensitive to the invented heating demand, temperatures and rate; a single day must never be extrapolated to a year.
+- `run-profile.mjs`: offline JSON command-line runner; no device probes, network access, autonomous workloads, plumbing or heater controls.
+- `MEASUREMENT-PLAN.md`: G1 passive metering, calibrated flow/temperature and coincident demand records, safety boundaries and field review.
+
+Run locally from repo root:
+
+```bash
+node --test systemia/research/thermal-intelligence/*.test.mjs
+node systemia/research/thermal-intelligence/run-profile.mjs systemia/research/thermal-intelligence/sample-synthetic-profile.json
+```
+
+**Evidence boundary:** Every example is synthetic. No Systemia runtime dispatch was observed, no node telemetry collected, no verified savings, no deployed heat exchanger, and no claim of imminent commercial readiness.
