@@ -47,5 +47,23 @@
     "provider_paid_receipt_required_before_fulfillment_entitlement": true,
     "no_customer_purchase_evidence_yet": true
   },
-  "revision_date": "2026-11-04"
+  "revision_date": "2026-11-04",
+  "payment_authority": {
+    "system": "Evercraft Payments",
+    "provider_boundary": "Raven Nexus",
+    "settlement_adapter": "Stripe, processor only",
+    "canonical_order_owner": "evercraft_payments",
+    "canonical_entitlement_owner": "evercraft_payments",
+    "product_key": "evercraft-signal",
+    "offer_slug": "signal-brief",
+    "offer_key": "signal.incident_evidence_brief_250.v1",
+    "amount_cents": 25000,
+    "currency": "usd",
+    "owned_offer_page": "https://fabric.systemiacommandcenters.com/offers/signal-brief",
+    "owned_offer_page_status": "source_registered_not_live_verified",
+    "native_order_enabled": false,
+    "checkout_ready": false,
+    "provider_paid_receipt_verified": false,
+    "direct_stripe_link_allowed": false
+  }
 }
