@@ -73,3 +73,32 @@ test('malformed checkout event and wrong signatures cannot start payments',async
  assert.equal(denied.status,400);
  assert.equal(calls,0);
 });
+
+import {startOwnedPaymentServer} from '../systemia/payments/owned-ops-service.mjs';
+
+test('private webhook endpoint accepts signed event only, never requires checkout bearer auth',async()=>{
+  let calls=0;
+  const server=await startOwnedPaymentServer({
+    authToken:'private-auth-token-that-is-not-used-in-webhook',
+    webhookSigningSecret:secret,
+    operate:async()=>{calls++;return {status:200,body:{payment_confirmed:true}};}
+  });
+  try{
+    const good=signed(base,{timestamp:Math.floor(Date.now()/1000)});
+    const ok=await fetch(server.url+'/api/payments/stripe-webhook',{
+      method:'POST',
+      headers:{'Stripe-Signature':good.signatureHeader,'content-type':'application/json'},
+      body:good.rawBody
+    });
+    assert.equal(ok.status,200);
+    assert.equal((await ok.json()).fulfillment_released,false);
+    assert.equal(calls,1);
+    const blocked=await fetch(server.url+'/api/payments/stripe-webhook',{
+      method:'POST',
+      headers:{'Stripe-Signature':'bad','content-type':'application/json'},
+      body:good.rawBody
+    });
+    assert.equal(blocked.status,400);
+    assert.equal(calls,1);
+  }finally{await server.close();}
+});
