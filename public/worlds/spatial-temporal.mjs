@@ -59,6 +59,8 @@ function validateFrame(frame, previous, frameIds, total) {
        o.cameraPositionM.z<=0))fail('invalid_camera_position');
     if(o.coordinateFrame!==undefined && o.coordinateFrame!=='camera_relative')
       fail('invalid_coordinate_frame');
+    if(o.cameraPositionM && !finite(o.depthEstimateM))
+      fail('camera_position_without_depth');
     if(o.cameraPositionM && finite(o.depthEstimateM) &&
        Math.abs(o.cameraPositionM.z-o.depthEstimateM)>0.002)
       fail('inconsistent_camera_depth');
