@@ -85,6 +85,17 @@ test('publishes an approved source-grounded story with receipts and machine surf
   assert.doesNotMatch(html, /Black Friday|shopping assistant/i);
   const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
   assert.match(articleHtml, /https:\/\/journal\.test\.evercraft\.local\/owned-journal-test\//);
+  assert.match(articleHtml, /id="article-body"/);
+  assert.match(articleHtml, /id="story-section-1"/);
+  assert.match(articleHtml, /aria-label="In this article"/);
+  assert.match(articleHtml, /id="play"/);
+  assert.match(articleHtml, /id="pause" disabled/);
+  assert.match(articleHtml, /id="stop" disabled/);
+  assert.match(articleHtml, /id="speed"/);
+  assert.match(articleHtml, /src="\.\.\/assets\/listen\.js"/);
+  assert.match(articleHtml, /min read/);
+  assert.ok(fs.existsSync(path.join(outDir, 'assets', 'listen.js')));
+  assert.match(fs.readFileSync(path.join(outDir, 'assets', 'listen.js'), 'utf8'), /SpeechSynthesisUtterance/);
   const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
   assert.equal(receipt.canonical_url, 'https://journal.test.evercraft.local/owned-journal-test/');
   const index = JSON.parse(fs.readFileSync(path.join(outDir, 'index.json'), 'utf8'));
@@ -335,4 +346,19 @@ test('editorial hero uses only an explicitly rights-verified source photo', () =
   assert.match(indexHtml, /class="feature-photo"/);
   assert.match(indexHtml, /https:\/\/example\.com\/official-field-photo\.jpg/);
   assert.match(indexHtml, /Documented field photograph/);
+});
+
+test('longform article preserves separate paragraphs without letting HTML execute', () => {
+  const fixture=story();
+  fixture.sections[0].body += '\n\nSecond paragraph <script>alert("never");</script> should remain literal and readable.';
+  const outDir=fs.mkdtempSync(path.join(os.tmpdir(), 'journal-longform-'));
+  publishJournalStories([fixture],{
+    outDir,
+    now:new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin:'https://journal.test.evercraft.local'
+  });
+  const article=fs.readFileSync(path.join(outDir,'owned-journal-test','index.html'),'utf8');
+  assert.match(article, /<\/p>\s*<p>Second paragraph/);
+  assert.match(article, /&lt;script&gt;alert/);
+  assert.doesNotMatch(article, /<script>alert\("never"\);<\/script>/);
 });
