@@ -4,7 +4,8 @@
  */
 const FIELDS=['OBJECTID','MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'];
 export const WA_PERMIT_SOURCE_CANDIDATES=Object.freeze([
- {key:'site3_current',url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/0'},
+ {key:'site3_current',url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1'},
+ {key:'site3_feature',url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/FeatureServer/1'},
  {key:'site1_legacy',url:'https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0'}
 ]);
 async function read(url,fetchImpl,signal){

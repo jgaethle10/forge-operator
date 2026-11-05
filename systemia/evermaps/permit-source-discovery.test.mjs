@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {probeWaPermitSourceCandidates,permitReadOnlyQuery,WA_PERMIT_SOURCE_CANDIDATES} from './permit-source-discovery.mjs';
 const FIELDS=['OBJECTID','MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'];
 test('candidate source endpoints remain official DNR only and data queries avoid owner fields',()=>{
- assert.equal(WA_PERMIT_SOURCE_CANDIDATES.length,2);
+ assert.equal(WA_PERMIT_SOURCE_CANDIDATES.length,3);
  for(const c of WA_PERMIT_SOURCE_CANDIDATES){
   const p=new URL(permitReadOnlyQuery(c.url,{type:'sample'})).searchParams;
   assert.equal(p.get('outFields'),FIELDS.join(','));

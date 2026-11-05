@@ -163,3 +163,9 @@ The legacy `gis.dnr.wa.gov/site1/Public_Geology/Active_Surface_Mine_Permit_Sites
 The discovery receipt is **not** a complete county permit import and cannot establish current mining, title, site permission or permit issuance to any user. A candidate gets promoted into the full importer only after a verified compatible live sample and full provenance/count reconciliation. The source is publicly published by WA DNR, but legal and operational limitations remain.
 
 New service: https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer
+
+## 2026-11-04 service routing and dependency isolation
+
+The first alternate WA DNR `site3/.../MapServer/0` returned ArcGIS `404 Layer not found`. The source discovery canary now explicitly probes **MapServer/1**, **FeatureServer/1**, and legacy **site1 MapServer/0**, with county counts and one non-owner geometry sample, before any importer promotion. Do not infer that an authoritative service root makes any specific sublayer available.
+
+The verified-geology packet exporter is now marked `if: always()` with an independent source-hash gate and `continue-on-error` after the full-source-health step, so it can produce the WGS-only HTML/CSV/JSON deliverable even when BLM or DNR ancillary sources cannot refresh. WGS-source absence or bad hashes still blocks packet generation. Full dependency validation retains its own failure status; **separate artifacts do not convert a failed full refresh into a green run**.
