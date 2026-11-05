@@ -37,6 +37,12 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 
 **Validation note, November 2, 2026:** The ten Node.js unit tests passed in an isolated local reproduction using the branch source copied into a local test directory (Node v22.16.0). This is local validation, not GitHub CI verification or runtime hardware evidence. Re-run tests in an independent repository checkout before merge.
 
+## Stage 3: physics model (2026-11-04)
+- [coupling-model.mjs](coupling-model.mjs) implements the ideal-coaxial-circular-filament Neumann integral with numerical convergence checks; [coupling-model.test.mjs](coupling-model.test.mjs) tests reciprocity, distance dependence, turns, far-field behavior and guardrails.
+- [COUPLING_MODEL.md](COUPLING_MODEL.md) documents physical assumptions and explicitly **model-only** coupling-vs-separation predictions.
+- GitHub CI now runs the complete Node research test suite including the stage-3 physics model.
+- The numerical model does **not** predict electrical efficiency, delivered watts, over-unity energy, actual product performance, or support claims of hidden technologies. A successful CI run does not demonstrate a bench result.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
