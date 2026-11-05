@@ -1,42 +1,59 @@
-# Systemia Timewalk | isolated prototype (v0)
+# Systemia Timewalk | bitemporal read-only prototype (v0.1)
 
-This is a **read-only** historical projection over the existing Evercraft Context Fabric. It is not a new operational database, is not an integration with Utopia, and does not enable agent action. It uses existing Passport checks through `fabric.getRecord`, preserving the rule that historical access **never** revives an expired permission.
+**Source audit:** [AUDIT.md](./AUDIT.md) connects this work to the existing documented Evercraft memory, authorization, receipts and version-history architecture.
 
-## What it reconstructs
+This is an **internal-only, read-only** historical projection over Evercraft Context Fabric. It is **not** a new operational database, not Utopia deployment, and not an agent execution interface. Historical records are visible **only if the actor is authorized by Passport now**.
 
-- `known_at`: when the information had entered Context Fabric (`created_at`)
-- `valid_at`: when the fact was effective (`valid_from`/`valid_to` where provided, otherwise the earliest observation)
-- signed sources, evidence states, knowledge corrections, retractions and unresolved conflicts
+## Two independent questions
 
-Because the fallback `observed_at` is **not** proof of when a fact became true, every returned fact states its effective-time basis. This avoids presenting backdated evidence as confirmed historical knowledge.
+- `known_at`: what had actually been **ingested into Context Fabric** by that timestamp, using `record.created_at`. It is not a claim about what any human or system outside Context Fabric knew.
+- `valid_at`: when a claim asserted that it was effective, using `valid_from` / `valid_to` when present. Otherwise `observed_at` is a conservative fallback and **not historical proof**.
+- `authorization_checked_at`: server-clock Passport authorization time. The caller cannot choose it. This is separate from both historical clocks.
 
-## Example
+Example: a fact observed Oct 10 but entered Oct 20 does **not** appear in an answer about what was known Oct 15, even if its effective date is Oct 10.
+
+## API (private code only)
 
 ```js
 import { EvercraftContextFabric } from '../fabric.mjs';
 import { queryTimewalk } from './timewalk.mjs';
+
 const fabric = new EvercraftContextFabric({ stateDir, passportStateDir });
 const snapshot = queryTimewalk(fabric, {
-  actor_ref: 'agent:approved-auditor',
+  actor_ref: 'agent:approved-auditor', // must come from authenticated identity
   known_at: '2026-10-15T00:00:00Z',
   valid_at: '2026-10-15T00:00:00Z',
   namespaces: ['systemia'],
+  entity_ref: 'service:payments', // optional exact-match bound
+  predicate: 'health',           // optional exact-match bound
+  limit: 100,
 });
 ```
 
-The historical read is only allowed if the actor has present-time read authorization for each record. The result includes no document text or hidden metadata for records denied by Passport.
+**Never expose this raw `actor_ref` parameter in a public endpoint.** Identity must bind it to an authenticated actor before Passport authorization. Never pass a historical timestamp into an authorization check. Passing `authorization_at` to Timewalk fails.
+
+## Recorded knowledge and uncertainty
+
+A result preserves source refs, Context Fabric receipt hashes, evidence states, conflicts, corrections, explicit retractions and citations. Record hashes are SHA-256 **tamper indicators**, not cryptographic signatures or validation of external claims.
+
+- Supersession only applies when the replacement was itself already known, effective and not retracted.
+- New Context Fabric retractions record both `retracted_at` (event time) and `created_at` (system-recorded knowledge time).
+- Existing legacy retractions with no system creation clock are labeled `retraction_time_unverified`, and set `historical_status_complete: false`; the query does not fabricate the missing timestamp.
+- Retractions are never removed or silently overwritten. A retraction can invalidate a newer correction without erasing the earlier observation.
+- Unresolved conflicting active claims remain side-by-side with source refs.
+- Data from retrieved content never becomes execution instructions or action authority.
+
+## Performance and security boundaries
+
+The Context Fabric method `authorizedTimewalkSnapshot` filters by **current** Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
+
+**Do not merge or deploy** without native integration tests, resource-scoped actor authentication, transactional snapshot consistency, tenant/privacy review, benchmarks, and a verified release/deployment receipt. This prototype uses no external system, third-party Utopia code, or customer production data.
 
 ## Verification
 
-`node --test systemia/context-fabric/timewalk/timewalk.test.mjs`
+```bash
+node --test systemia/context-fabric/timewalk/timewalk.test.mjs
+node --test systemia/context-fabric/fabric.test.mjs
+```
 
-Synthetic fixtures cover knowledge-time cutoff, validity windows, supersession, retraction, conflict provenance, present-day authorization, integrity failure, and incomplete result indication.
-
-## Deliberate limits
-
-- Pure read projection; no migrations, background ingestion, or production switch
-- No full decision replay or semantic inference
-- No historical snapshots of revoked grants
-- No public API; the kernel should remain private until access hardening, performance review, and on-machine integration tests
-- Prototype consumes the existing Context Fabric `records` map and `getRecord` API; a stable iterator API should replace this before production
-- Utopia may inspire the time model, but no Utopia code, binaries, licenses, or data are embedded
+The first is synthetic; neither suite alone proves production historical accuracy. The PR remains draft pending native integration and CI evidence.
