@@ -44,13 +44,14 @@ test('tampered geology, mislabeled classifications, missing dossier and incorrec
 test('offline HTML filters safely; CSV defends against formula injection',()=>{
  const p=buildEvermapsEvidencePacket({wgs,receipt,dossiers,polygonSample:sample});
  const csv=evidencePacketCsv(p),html=evidencePacketHtml(p);
- assert.match(csv,/"'=2\\+3"/);
- assert.match(csv,/ZONING_COUNT_SAMPLE_ONLY/);
- assert.match(html,/Grant County geological intelligence/);
- assert.doesNotMatch(html,/<script[^>]+src=|fetch\\(/);
- assert.doesNotMatch(html,/<td>=2\\+3<\\/td>/);
- const script=html.match(/<script>([\\s\\S]+?)<\\/script>/)?.[1];
+ assert.ok(csv.includes(String.raw`"'=2+3"`));
+ assert.ok(csv.includes('ZONING_COUNT_SAMPLE_ONLY'));
+ assert.ok(html.includes('Grant County geological intelligence'));
+ assert.equal(html.includes('fetch('),false);
+ assert.equal(html.includes('<script src='),false);
+ assert.equal(html.includes('<td>=2+3</td>'),false);
+ const script=html.split('<script>')[1]?.split('</script>')[0];
  assert.ok(script);
  assert.doesNotThrow(()=>new Script(script));
- assert.equal((html.match(/<tr data-class=/g)||[]).length,3);
+ assert.equal(html.split('<tr data-class=').length-1,3);
 });
