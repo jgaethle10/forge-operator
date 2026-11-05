@@ -17,7 +17,12 @@ function requirePq() {
   }
 }
 function keyObject(key, kind) {
-  const result = kind === 'public' ? crypto.createPublicKey(key) : crypto.createPrivateKey(key);
+  // Node.js createPublicKey() expects a private KeyObject, not a public KeyObject.
+  // Accept existing KeyObjects directly, but reject private keys in public-only positions.
+  const result = key instanceof crypto.KeyObject
+    ? key
+    : kind === 'public' ? crypto.createPublicKey(key) : crypto.createPrivateKey(key);
+  if (result.type !== kind) throw new TypeError(`Expected ${kind} key`);
   if (result.asymmetricKeyType !== 'ml-kem-768') throw new TypeError('ML-KEM-768 key required');
   return result;
 }
