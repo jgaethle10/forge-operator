@@ -46,6 +46,7 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   if(url.endsWith('/yakima-evidence.html'))return response(200,'Connected tunnels established by the records reviewed');
   if(url.endsWith('/yakima-standalone.html'))return response(200,'scene-ready');
   if(url.endsWith('.csv'))return response(200,'id,title\nyakima,example','text/csv');
+  if(url.endsWith('yakima-evidence-ledger.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.evidence-ledger.v1'}),'application/json');
   return response(404,'not found');
  };
  const healthy=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:mock});
