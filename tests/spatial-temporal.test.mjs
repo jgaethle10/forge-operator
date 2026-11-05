@@ -129,3 +129,15 @@ test('adapters reject non-temporal data and unknown frames',()=>{
  assert.throws(()=>everMapsTemporalDrafts({}),/invalid_timeline/);
  assert.throws(()=>worldsTemporalPreview(timeline,'not-found'),/frame_not_found/);
 });
+
+test('a 3D point with unknown depth cannot sneak into Worlds preview',()=>{
+ const a=make('unknown',0,[car(25,{z:null})]);
+ a.observations[0].cameraPositionM={x:0,y:0,z:4};
+ assert.throws(()=>associateSpatialFrames([a]),/camera_position_without_depth/);
+});
+test('association complexity is bounded before combinatorial crowding',()=>{
+ const frames=Array.from({length:100},(_,i)=>
+   make('crowd-'+i,i*20,Array.from({length:200},(_,j)=>
+     car((j%7)*10,{id:'crowd-'+i+':'+j,y:20+(Math.floor(j/7)%5)*7,w:8,h:6}))));
+ assert.throws(()=>associateSpatialFrames(frames),/association_budget_exceeded/);
+});
