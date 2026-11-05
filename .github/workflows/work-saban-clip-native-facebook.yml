@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'systemia/clip/work-saban-publish-authorize.mjs'
+      - 'systemia/clip/authority/work-saban-corporate-rotation.json'
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
