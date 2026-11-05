@@ -3,7 +3,7 @@
   "mission_id": "FIRST-CONTACT-001",
   "title": "Evercraft | First Contact: evidence-gated UAP research",
   "created_at": "2026-10-31",
-  "updated_at": "2026-11-04",
+  "updated_at": "2026-11-05",
   "owner": "Evercraft LLC",
   "routing_priority": "Systemia first",
   "execution_state": "NOT_DISPATCHED",
@@ -120,6 +120,35 @@
       "completed": "2026-11-04",
       "validation": "5/5 local Node.js tests; exact JS and test file hashes matched GitHub. Government case-listing metadata only; original media not downloaded.",
       "acceptance": "Preserve unknown vs absent inputs and prevent extraordinary claims without calibrated source observations"
+    },
+    {
+      "id": "FC-SENSOR-04",
+      "lane": "sensor_forensics",
+      "status": "OFFLINE_TOOL_CI_VERIFIED_AWAITING_CALIBRATED_FIELD_DATA",
+      "completed": "2026-11-05",
+      "artifacts": [
+        "observation-sync.mjs",
+        "observation-sync.test.mjs",
+        "two-view-cli.mjs",
+        "two-view-cli.test.mjs",
+        "fixtures/synthetic-synchronized.json",
+        "fixtures/synthetic-desynchronized.json",
+        "TWO_VIEW_RUNBOOK.md"
+      ],
+      "validation": "GitHub Actions FIRST-CONTACT research verification pass on code/fixture commit be1546bc...; no real video or calibrated live sensor measurements evaluated",
+      "acceptance": "Run an offline, fail-closed two-camera JSON intake and produce a hash-linked candidate or refusal, requiring independent review before physical claims"
+    },
+    {
+      "id": "FC-CI-01",
+      "lane": "quality_assurance",
+      "status": "DEDICATED_RESEARCH_CI_ENABLED",
+      "completed": "2026-11-05",
+      "artifacts": [
+        ".github/workflows/first-contact-research.yml",
+        "validate-research-artifacts.mjs"
+      ],
+      "validation": "Successful dedicated workflow GitHub Actions run 41994861626 and 41995140199; code/fixtures pass; not external sensor proof",
+      "acceptance": "Automatically test FIRST-CONTACT branch changes and fail closed on unsupported mission evidence or dispatch-state claims"
     }
   ],
   "hard_constraints": [
@@ -129,6 +158,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Existing repo Systemia docs specify admission => Capability Mesh => Passport/Execution Gate => registered specialist dispatcher => dispatch receipt. Verify an authorized writable integration and actually registered specialist before any mission dispatch; the current plugin exposes only read-only public discovery.",
-  "validation_note": "2026-11-04: 14 new tests passed locally in two modules (9 triangulation + 5 case readiness). Exact files committed in GitHub and blob SHA matches verified. Prior Nov 3 Forge checks succeeded; latest branch-wide test/CI and independent review still pending."
+  "next_execution_gate": "First field calibration: two independent surveyed cameras, synchronized calibrated pointing and known stationary target; validate against ground truth with documented uncertainty. Autonomous mission dispatch remains separate and requires authorized Systemia writable route + signed execution receipts; GitHub Actions test pass does not grant it.",
+  "validation_note": "GitHub Actions FIRST-CONTACT research verification succeeded for code commits 9bb5d05e... (run 41994861626) and be1546bc... (run 41995140199), including full FIRST-CONTACT node test glob and offline research-artifact integrity audit. Field sensor calibration/independent scientific review remain unverified."
 }
