@@ -105,6 +105,10 @@ jobs:
           mkdir -p evermaps-grant-full-evidence
           cp systemia/evermaps/research-viewer.html evermaps-grant-full-evidence/research-viewer.html
           cp systemia/evermaps/evidence-bundle-README.txt evermaps-grant-full-evidence/README.txt
+      - name: Export independently verified offline geology research packet
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/research-packet-cli.mjs
       - name: Upload full WGS research evidence with receipt
         if: always()
         uses: actions/upload-artifact@v4
