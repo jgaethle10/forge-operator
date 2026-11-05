@@ -34,3 +34,15 @@ No hosted generation, commercial API or private credentials.
 - Evidence source URLs should be rechecked before public release. Scholarly/site rights for any future real mesh must be separately approved.
 - Additional gates: run browser/phone QA on the published route, validate WebGL2 fallback and touch gestures, and verify HTTPS service from a fresh client. CI test file is not proof of running or passing unless the execution receipt is inspected.
 - Prior to a "digital twin" label: survey licensing, raw provenance, georeferencing, survey uncertainty and archaeological review are mandatory.
+
+## Owned-route release contract (November 5, 2026)
+The owned Worlds vault now serves trailing-slash exhibit pages from a directory's `index.html` (rather than returning 404). The dedicated /worlds/ path lease offers these intentionally supported read-only paths:
+
+- `/worlds/heritage/`: WebGL2 page
+- `/worlds/heritage/app.mjs`, `/worlds/heritage/scene.mjs`: browser modules
+- `/worlds/heritage/atlas/`: exact, read-only alias of the canonical `public/submerged-heritage/index.html`
+- `/worlds/heritage/atlas/sites.geojson`: exact, read-only alias of the canonical atlas dataset
+
+The atlas aliases are finite allowlisted paths; the private Worlds vault does not serve `/submerged-heritage/` or arbitrarily expose all of `public/`. Page back-links resolve locally in the same origin. No duplicate research dataset is maintained.
+
+Run `node --test tests/worlds-vault-runtime.test.mjs tests/worlds-heritage-public.test.mjs` to verify the local contract. After the operator sets an authorized, dedicated owned HTTPS origin and leases the route, run `node scripts/probe-worlds-public.mjs https://YOUR-OWNED-WORLDS-HOST` followed by `node scripts/probe-worlds-heritage-public.mjs https://YOUR-OWNED-WORLDS-HOST`. The manual GitHub Actions workflow `evercraft-worlds-public-gate.yml` carries both checks and retains separate receipts. A green local browser suite is not evidence of the public origin; source merge never creates a hostname, TLS certificate, runtime lease or production Systemia mission.
