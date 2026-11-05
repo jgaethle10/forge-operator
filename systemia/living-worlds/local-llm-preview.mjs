@@ -8,7 +8,7 @@ import {proposalMessages,parseProposalFromContext,validateDecisionContext} from 
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../public/living-worlds');
 const MIME=new Map([['index.html','text/html; charset=utf-8'],['app.mjs','text/javascript; charset=utf-8'],
-  ['house-core.mjs','text/javascript; charset=utf-8'],['agent-proposals.mjs','text/javascript; charset=utf-8']]);
+  ['house-core.mjs','text/javascript; charset=utf-8'],['house-world-bridge.mjs','text/javascript; charset=utf-8'],['agent-proposals.mjs','text/javascript; charset=utf-8']]);
 const PREFIX='/living-worlds/';
 const MAX_BODY=12*1024;
 const MAX_CALLS_PER_MINUTE=12;
