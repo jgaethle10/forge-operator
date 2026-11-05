@@ -684,7 +684,9 @@ export async function startFabricLocalRuntime({
     checkout_direct_offer_ops_configured:commerceTransport.direct_offer_ops_configured,
     checkout_operational_state:commerceTransport.fully_configured
       ? 'owned_transport_requires_independent_checkout_canary'
-      : 'held_owned_payment_endpoint_unconfigured',
+      : (commerceTransport.purchase_intent_configured||commerceTransport.direct_offer_ops_configured)
+        ? 'owned_transport_partial_requires_independent_checkout_canary'
+        : 'held_owned_payment_endpoint_unconfigured',
     checkout_provider_paid_verified:false,
     checkout_fulfillment_verified:false,
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
@@ -1250,14 +1252,18 @@ export async function startFabricLocalRuntime({
           return sendJson(res,422,{ok:false,error:'public_https_website_required',checkout_ready:false,fulfillment_release:false});
         }
         let auditedDomain=null;
-        const controller=new AbortController();
-        const timer=setTimeout(()=>controller.abort(),15000);
-        let upstream;
-        // A working public offer page never authorizes a provider fallback.
-        if(!purchaseIntentEndpoint||!directPaymentOpsEndpoint){
+        // Each exact offer needs its own authorized owned route. A missing
+        // unrelated adapter must not block an otherwise configured offer.
+        // Never fall back to a processor URL or a retired provider.
+        const requiredEndpoint=directOffer?directPaymentOpsEndpoint:purchaseIntentEndpoint;
+        if(!requiredEndpoint){
           if(isForm) return sendText(res,503,renderPaymentHoldPage({slug,noAttempt:true}),{contentType:'text/html; charset=utf-8'});
           return sendJson(res,503,{ok:false,error:'owned_evercraft_payments_unavailable',authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false});
         }
+        // Allocate the timeout only for a call that is actually permitted.
+        const controller=new AbortController();
+        const timer=setTimeout(()=>controller.abort(),15000);
+        let upstream;
         try{
           if(slug==='website-audit'){
             // Confirm the downstream runtime can retain the target before purchase.
