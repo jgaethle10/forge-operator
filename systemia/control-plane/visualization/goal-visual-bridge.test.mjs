@@ -170,3 +170,12 @@ test('Living Graph import surface exposes redacted freshness and missing receipt
   assert.match(html,/Completed tasks missing receipt references/);
   assert.match(html,/passport_authorization_verified|Passport authority/);
 });
+
+test('oversized dependency topology cannot silently hide links in the graph',()=>{
+  const state=goal();
+  state.tasks=Array.from({length:40},(_,i)=>({
+    ...state.tasks[0],work_key:'step-'+i,
+    dependency_keys:i>=5?['step-0','step-1','step-2','step-3','step-4']:[]
+  }));
+  assert.throws(()=>show(state),/topology_size/);
+});
