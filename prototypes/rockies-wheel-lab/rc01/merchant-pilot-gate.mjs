@@ -21,13 +21,14 @@ export function evaluateMerchantPilot(records = []) {
       return;
     }
     const sourceRef = clean(record?.response_evidence_ref);
+    const syntheticRef = /(?:^|[:/_.-])(synthetic|sample|fixture|placeholder|fake|test)(?:$|[:/_.-])/i.test(sourceRef);
     const consent = record?.voluntary_response === true;
     const pain = clean(record?.current_workflow_pain);
     const alternative = clean(record?.existing_alternative);
     const date = clean(record?.observed_at);
     const timeValid = /^\d{4}-\d{2}-\d{2}T/.test(date) &&
       Number.isFinite(Date.parse(date));
-    if (!consent || !sourceRef || !pain || !alternative || !timeValid) {
+    if (!consent || !sourceRef || syntheticRef || !pain || !alternative || !timeValid) {
       failures.push({index: idx, reason: 'permissioned_response_evidence_incomplete'});
       return;
     }
@@ -35,7 +36,8 @@ export function evaluateMerchantPilot(records = []) {
     valid++;
     if (record?.unserved_workflow_confirmed === true) differentiatedWorkflows++;
     if (record?.explicit_pilot_interest === true &&
-        clean(record?.pilot_interest_evidence_ref)) optInCandidates++;
+        clean(record?.pilot_interest_evidence_ref) &&
+        !/(?:^|[:/_.-])(synthetic|sample|fixture|placeholder|fake|test)(?:$|[:/_.-])/i.test(clean(record?.pilot_interest_evidence_ref))) optInCandidates++;
   });
 
   let state = 'insufficient_permissioned_evidence';
