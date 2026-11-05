@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-03.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-04.
 
 ## Mission
 
@@ -55,6 +55,16 @@ This is a mathematical sanity check, **not** an analysis of Go Fast raw frames. 
 - **Red-team draft:** `red-team-decision-2026-11-03.md` prioritizes falsification, sensor-quality engineering and known-physics modeling, with unresolved claims held pending source data.
 - **Validation:** 7 new pure-math scenario tests passed locally on Node v22 on 2026-11-03; earlier 14 new tests and 3 baseline tests were reported previously but not re-run in this local verification. Repository CI outcomes and independent code review are still required.
 - **Runtime state:** Systemia mission intake statuses updated, but specialist agent slots are still unassigned, and no live autonomous Systemia mission was dispatched.
+
+## Sprint 4, November 4, 2026: second-view triangulation + recent evidence intake
+
+- **New working synthetic model:** `triangulation.mjs` estimates the closest approach between **two bearing rays** from independently located observers using local ENU. It rejects near-parallel viewing directions, intersections behind either sensor, invalid inputs and cross-ray misses exceeding a user-supplied tolerance. Without a specified tolerance, the result is labeled `CANDIDATE_UNVALIDATED` rather than a confirmed target position. This depends on synchronized observation times and surveyed positions; it is not a UAP measurement.
+- **New quality gate:** `case-readiness.mjs` tracks documented inputs for 3D trajectory reconstruction or second-view ranging; `null` means **not established**, not `false` or missing. No case is automatically upgraded to unusual propulsion or extraterrestrial origin.
+- **Official source intake:** `public-case-intake-2026-11-04.json` records published AARO descriptions of PR-049 (2026 Army IR imagery with zoom changes), PR-017 (2024 phone footage insufficient for agency determination), PR-016 (AARO assessed birds) and PR-011 (2021 IR footage under continued analysis). These are case-listing snapshots, **not** original files, independently interpreted videos, or a live feed.
+- **Validation:** 9 new triangulation and 5 new evidence-gate tests passed together on local Node.js v22. GitHub blob SHA values for all four committed JS/test files matched the exact tested local files: `triangulation.mjs e2fd0526...`, `triangulation.test.mjs 0d6521f5...`, `case-readiness.mjs adcdaa22...`, `case-readiness.test.mjs 5112ea26...`. Previous Forge checks for Nov 3 commit `09afb5f...` completed successfully; this does not establish that all current work passed a branch-specific full suite.
+- **Owned execution pathway inspection:** Repository docs describe Systemia mission admission, Capability Mesh, Passport/Execution Gate and specialist dispatcher receipts. Neither a source-controlled `mission-intake.json` nor public read-only Fabric discovery dispatches a live team. Execution remains `NOT_DISPATCHED`; no specialist was assigned, no permit consumed, and no compute run receipt obtained.
+
+Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch and inspect PR #1838 before any merge. No high-voltage experiments, no unverified sensor fusion claims, no alien-origin assertions, and no public release.
 
 ## Decision and escalation gates
 
