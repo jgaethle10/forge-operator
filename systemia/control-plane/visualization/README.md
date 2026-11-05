@@ -49,3 +49,18 @@ Open `index.html` in a modern browser. In iPhone document previews that suppress
 - `systemia/saban/README.md`
 - `systemia/context-fabric/README.md`
 - `systemia/evercraft-os/README.md`
+
+## v0.3 One-Body handoff snapshot support
+
+The Import snapshot view now displays `summary.counts` and a bounded list of `summary.gap_samples` when included in an `evercraft.systemia.visual-snapshot.v1` import. Handoff edges are distinguished visually:
+
+- `planned_unverified`: no authenticated consumer receipt is currently supplied
+- `unobserved_overdue`: expected observation window passed; this is not evidence of failure
+- `consumer_receipt_verified`: an authoritative backend verifier accepted the consumer acknowledgement (not payment or execution proof)
+- `invalid_event_time`: event time is unusable or in the future
+
+All imported labels and summary details are displayed using text-only DOM APIs rather than parsing source strings as HTML.
+
+The complementary, read-only exporter lives in `systemia/organism/one-body-visibility.mjs` on the separate draft branch [One-Body cohesion PR #1849](https://github.com/jgaethle10/forge-operator/pull/1849). Both changes need review, merging, and real, authorized backend wiring before the UI can be called live.
+
+**Validation (2026-11-04):** local headless Chromium at 390px and 1280px with an explicitly synthetic snapshot: summary visible, unobserved-overdue edge styled, graph nodes rendered, and no JS page errors. No actual iPhone or production runtime was tested.
