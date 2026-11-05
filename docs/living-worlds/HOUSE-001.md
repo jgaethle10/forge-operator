@@ -1,6 +1,6 @@
 # Living Worlds | House 001
 
-**Status:** Source prototype on a feature branch. Not a deployed product. No connected LLM, shared world server, live 24/7 simulation, multiuser sync or production model costs.
+**Status:** Source prototype on a draft PR. Not a deployed product. Rules-only browser operation works without a model. An **optional loopback-only local llama-server inference adapter** is now implemented in source, but a real model connection, native-browser QA and production release have not been demonstrated. No shared world server, 24/7 simulation, multiuser sync or production model costs.
 
 ## What you can actually do
 
@@ -24,12 +24,35 @@ Test the headless deterministic core:
 
 No npm dependencies, API credentials, external hosted assets or provider-specific inference SDK are needed for this prototype. Browser tests, real-device tests, build integration and production deployment still need verification.
 
+## Opt-in local AI brain (experimental)
+
+By default House 001 runs the deterministic simulation and does not send any model requests. The two new spectator controls are **Ask AI to choose** and **AI autopilot**. Autopilot requests one bounded model choice after every five in-browser simulation ticks. If the gateway or model is unavailable, it turns off and residents continue with the default rules.
+
+To enable optional local inference, start a llama.cpp-compatible llama-server on the **same computer** bound to loopback, typically port 8080. It must support POST /v1/chat/completions and JSON-object responses. Then, from the repository root, start the owned preview server:
+
+    EVERCRAFT_LOCAL_MODEL_PORT=8080 node systemia/living-worlds/local-llm-preview.mjs
+
+Open http://127.0.0.1:8777/living-worlds/ on that same computer. The preview listens ONLY on 127.0.0.1. EVERCRAFT_HOUSE_PORT sets its optional HTTP port; EVERCRAFT_LOCAL_MODEL_PORT sets the local inference port. Neither setting permits an arbitrary remote host. A standalone static file server will continue to run the rules-based game, but its model buttons cannot contact the private inference bridge.
+
+**Controls and restrictions:** Only a context containing the selected resident's bounded needs, location, personality and current object inventory is sent to the local model. Model instructions permit two actions: use a currently placed furniture object or wait one tick. The server validates strict JSON and every target, enforces one active request and a 12-requests/minute limit, and does not expose shell execution or arbitrary network tools. The browser independently checks the returned proposal against an unchanged world snapshot and the core validates it once more before setting a target. Model choices are distinguished from ordinary rule actions in the activity log.
+
+Model claims are permitted only when the operator actually starts the local llama-server and sees successful model-choice receipts in the browser. Unit tests with a mocked model are **not proof** of a live inference session.
+
+Run the extended Node checks:
+
+    node --test tests/living-worlds-house.test.mjs tests/living-worlds-model-gate.test.mjs
+
+No public URL, cloud account, production mutation, autonomous external contact, real-world purchases, or third-party world host is part of this integration.
+
 ## Source
 
 - public/living-worlds/house-core.mjs - bounded synthetic world state, action planning, furniture edits, events, interventions and saved-state validation.
 - public/living-worlds/app.mjs - browser-local scheduler, accessible grid controls, spectator UI, local save and JSON export.
 - public/living-worlds/index.html - responsive 2D house plan, no separate 3D renderer.
 - tests/living-worlds-house.test.mjs - deterministic model and safety tests.
+- public/living-worlds/agent-proposals.mjs - strict model proposal context and allowlist.
+- systemia/living-worlds/local-llm-preview.mjs - owner-run local preview with optional llama-server adapter.
+- tests/living-worlds-model-gate.test.mjs - proposal and local gateway security tests.
 
 ## Architecture connection and honest boundaries
 
@@ -41,8 +64,8 @@ Follow-up integration order:
 
 1. Make World Engine entities and validated Studio edits authoritative for house floorplan, object identity and agent movement. Do not maintain a competing physics stack.
 2. Map local House 001 actor traits, bonds, memories, actions and events to versioned Society/Window contracts, without mutating the existing public town or production business systems.
-3. Add an **optional owned server inference planner**, behind per-house session identity, isolation, rate limiting, cost ceilings, cancellation and human-readable receipts. Give LLMs an *action proposal* role, not direct scene mutation or arbitrary filesystem/network access.
-4. Validate proposals through a strict allowlist: move to known object, interact, talk to visible nearby agent, rest, work on in-world task. Missing target, nonresident ID, unsupported commands or malformed JSON fail closed. System determinism, persistence, permissions and replay remain governed by World Engine.
+3. Promote the **implemented local-only experimental inference bridge** to a properly admitted owned server inference planner, with per-house identity, multiuser isolation, durable budgets, cancellation and receipts. The source preview enforces a local request cap but is not a production service.
+4. Extend the initial **use-known-object or wait** proposal allowlist to richer grounded actions such as interaction and nearby conversation, and migrate those operations to canonical World Engine authority. Unsupported commands and malformed JSON must continue failing closed.
 5. Add opt-in spectator interventions, abuse throttling and dedicated audience events. Clearly distinguish scripted world events, model decisions, and human votes in public event logs.
 6. Build 3D interior assets and interactive house construction through the existing Worlds renderer, then check native phone GPU, performance, motion controls, persistence, security and accessibility.
 7. Only after explicit Systemia admission and verified owned hosting: durable server clock, multiplayer spectator sessions, authenticated building permissions, private world boundaries and deployment receipts.
