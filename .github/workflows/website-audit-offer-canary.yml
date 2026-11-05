@@ -1,11 +1,17 @@
-name: Website audit offer canary
+name: Website Audit Evercraft Payments Buyer Gate
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/website-audit-offer-canary.yml'
+      - 'scripts/checkout-fabric-live-canary.mjs'
+      - 'scripts/checkout-fabric-live-canary.test.mjs'
   push:
     branches: [main]
     paths:
       - '.github/workflows/website-audit-offer-canary.yml'
+      - 'scripts/checkout-fabric-live-canary.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
 
@@ -17,20 +23,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify live paid audit offer
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check exact offer and owned payment gating
+        run: node --test scripts/checkout-fabric-live-canary.test.mjs
+      - name: Independently observe five public offers and Evercraft Payments readiness
+        run: |
+          # GET-only, no payment/order creation. Fail if native checkout is held.
+          node scripts/checkout-fabric-live-canary.mjs
+      - name: Preserve safe checkout hold or live-readiness receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-payments-buyer-gate-${{ github.run_id }}
+          path: artifacts/saban/checkout-health/latest.json
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Report independent acceptance boundary
+        if: always()
         shell: bash
         run: |
-          set -euo pipefail
-          url="https://fabric.systemiacommandcenters.com/offers/website-audit"
-          body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
-          printf '%s' "$body" | grep -q "Your website is getting attention"
-          printf '%s' "$body" | grep -q "Quick Win Audit"
-          printf '%s' "$body" | grep -q '\$49'
-          printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
-          printf '%s' "$body" | grep -q "Evercraft Payments"
-          {
-            echo "## Website Audit offer is live"
-            echo
-            echo "URL: $url"
-            echo 'Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary'
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "## Evercraft Payments: HTTP checkout readiness only" >> "$GITHUB_STEP_SUMMARY"
+          echo "This workflow never performs checkout POST, payment, settlement or fulfillment." >> "$GITHUB_STEP_SUMMARY"
+          echo "A healthy offer page is not verified buyer purchase." >> "$GITHUB_STEP_SUMMARY"
+          echo "Receipt: workflow artifact \`artifacts/saban/checkout-health/latest.json\`" >> "$GITHUB_STEP_SUMMARY"
