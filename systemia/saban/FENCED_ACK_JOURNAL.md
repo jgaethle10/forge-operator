@@ -1,0 +1,88 @@
+# Saban Fenced Acknowledgment Journal (candidate)
+
+This is a **non-executing, private local-state recovery component** for the Evercraft OS `events_jobs` and `autonomous_execution` workstreams, coordinated by #1546.
+
+Existing Saban dispatch, NodeSeed jobs, Systemia mission admission and payment flows are **unchanged**.
+
+## What it proves
+
+- Work is addressed by an idempotent logical key plus an immutable workload and payload digest. A conflicting payload for the same key fails closed.
+- Each attempted local lease gets a fresh 256-bit random capability. **Only its SHA-256 digest** is recorded in the private append-only event journal.
+- A successful acknowledgment must supply the active worker, matching capability, a result digest and an opaque local evidence reference. A repeated identical acknowledgment does not create another event.
+- An expired lease is classified as **ambiguous**, not automatically replayed. Reopening requires a registered review authorizer. The first-party adapter independently rereads a **consumed, unexpired, non-revoked Passport action permit** bound to the precise job, immutable work digest, attempt number, and inspection evidence. No arbitrary approval string suffices; the previous worker's capability can never acknowledge the subsequent attempt.
+- Event history is hash-chained, HMAC-bound when an application secret is provided, appended with fsync, and guarded by a bounded single-host exclusive lock. Any truncated or tampered journal prevents new operations. A crash between durable append and acknowledgement response can be reconciled by replay.
+- Two actual Node processes submitting the same logical job under the same state directory produce one durable submission event.
+
+## What it emphatically does not prove
+
+A recorded result digest or evidence reference is not validation of a physical worker result or a customer's delivered product. This module never calls a worker, creates a remote NodeSeed lease, submits a real mission, authorizes Passport actions, sends email, settles a payment or changes production state. The Passport authorizer independently checks consumed local permits, but no external founder identity proof or physical-device job receipt is produced here. No automatic permission is derived from a software proof.
+
+### Passport authorizer integration
+
+The raw journal defaults to **no retry authority configured**. Callers must explicitly install `makePassportRetryAuthorizer({passportStateDir})` from `fenced-passport-review.mjs`, pointing to the **trusted local Passport store**, before an ambiguous retry is even eligible for review.
+
+A trusted operator process separately mints and consumes a single-use Passport permit with product `saban`, scope `job.retry.review`, resource equal to the precise job key, and `request_fingerprint` computed by `fingerprintFencedRetry({jobKey,workDigest,attemptNumber,evidenceRef})`. The journal calls `getActionPermitState` and rejects missing, unconsumed, revoked, expired or mismatched permits. The permit's receipt digest is recorded in the journal, not any bearer secret.
+
+**This is a trust boundary only when the Passport store and its mint/consume endpoints are separately protected.** Test fixtures use synthetic manual grants, not actual founder approvals. No real device or commercial action is authorized by these tests.
+
+The current implementation assumes a single local filesystem with atomic directory creation and append semantics. It is not a multi-host consensus engine, a database transaction coordinator, or a general solution to exactly-once external effects. No crash-time write repair is automated, and no claim of safe reuse of a stale lock is made. Future integration must couple Systemia's actual authorizations, canonical job receipt verifiers and distributed fencing.
+
+## Tests
+
+```bash
+node --test systemia/saban/fenced-ack-journal.test.mjs
+```
+
+Test coverage includes interrupted-response replay, same-worker stale-token rejection after reviewed retry, no implicit retries on expired leases, mismatched digest conflicts, HMAC mismatch, journal truncation/tampering, and independent-process duplicate submission. CI executes the tests without enabling any real deployment.
+
+**Promotion gate:** security review, scoped runtime integration, independent external side-effect evidence, multi-node failure proof, and explicit release authorization.
+
+## Opt-in Saban scheduler integration canary (2026-10-28)
+
+The **existing** `runScheduler` now accepts an optional `fencedJournal` object, defaulting to `null`. Unless explicitly passed, the original scheduling and retry behavior remains intact. Passing a journal branches into `fenced-local-scheduler.mjs`, which only permits a named `saban-fenced-readonly-canary` contract that declares `fenced_local_candidate: read_only_no_external_effects`, no external network/commerce/outreach/public file updates, **one local physical worker**, and exactly one attempt per job.
+
+The fenced path uses the existing Saban `leaseNext`, `complete`, `fail`, and persisted `work-state.mjs` contract. It requires a state path, single-run exclusive filesystem lock, crash-safe journaling, pre-dispatch reconciliation of Saban and journal state, and result-digest comparison for already completed work. It persists the Saban lease **before** obtaining a separate journal lease. A crash in either gap leaves an ambiguous state that fails closed on restart. An adapter exception or missing acknowledgment is marked dead-letter, never automatically reissued. Only local source-check receipts are accepted, not real external-provider acknowledgments.
+
+The test `fenced-local-scheduler.test.mjs` executes the **actual scheduler entrypoint** with two read-only assignments, checks idempotent replay with no repeated adapter call, a deliberate adapter exception, both crash windows, stale state, unapproved contracts, duplicate runner locks, two-worker rejection, and forged completed-result digest rejection. Tests use temporary local state only and cannot contact Node001, Node002, the network, customers or payment providers.
+
+**Unresolved:** this is not yet a live product execution or a distributed NodeSeed integration. The read-only contract is a **test-only candidate**, not an approved Saban commercial worker. Synchronization is local filesystem based and does not provide cross-host consensus, verified customer delivery or authenticated execution authorization. The API must not be promoted to live dispatch until independently authorized result verification, permitted side effects, and an operator-controlled release canary are separately proved.
+
+## October 30 | Signed NodeSeed execution evidence and Saban acceptance
+
+This candidate extends the **existing NodeSeed registered MicroSeed worker path** and the **opt-in Saban fenced scheduler**. It is not a new worker runtime or commercial executor.
+
+- `signed-microseed-execution.mjs` independently checks an Ed25519-signed execution statement from an existing NodeSeed identity key. Signature inputs bind exact node ID, separately pinned device-public-key SHA-256 fingerprint, active lease ID, fresh challenge nonce, supported registered workload, idempotency key, stable input request hash and durable worker receipt hash. The verifier also enforces bounded timestamp freshness and rejects node self-assertions of field or production authority.
+- `systemia/compute/runtime-node.mjs` emits a `signed_execution` field **only when a MicroSeed caller explicitly supplies an execution nonce and a device identity exists**. Legacy users without the nonce retain their ordinary response. The MicroSeed worker itself remains restricted to the existing registered workloads. The original receipt chain is still unsigned and is not represented as a signature.
+- The **real existing** `runScheduler` can accept `fencedNodeSeedPin` alongside `fencedJournal` for an exact `saban-fenced-microseed-canary` contract. Its side-effect metadata must declare **localhost-only HTTP**, no payment/outreach/public updates, one worker, one attempt and a genuine HMAC journal. Only `systemia.content-hash.v1` is admitted by this candidate. Before Saban writes any acknowledgment, it checks the signed NodeSeed response against the independent expected job/lease/nonce/device pin and confirms the returned result agrees with the signed worker body. Invalid or missing proof yields a held job with no automatic retry.
+- `signed-microseed-execution.test.mjs` runs a **real ephemeral localhost NodeSeed**, with an explicit temporary allocator credential, obtains a signed challenge and authenticated lease, executes bounded registered content hashing, validates both first-run and idempotent-reuse signed receipts, and rejects forged fingerprints, signatures, timestamps, job IDs, leases, requests, and receipt hashes.
+- `fenced-signed-node-scheduler.test.mjs` drives the **actual Saban scheduler entrypoint** through a real localhost NodeSeed and checks successful durable acknowledgment, no repeated job on restart, invalid-signature hold, wrong fingerprint hold and missing independent pin denial.
+
+**Important limitations:** tests are GitHub-hosted ephemeral NodeSeeds, **not** actual Node001 or Node002 hardware. An independent fixture pin is not a Yard field certification. This is not OS-enforced sandboxing for arbitrary adapter code and does not prove physical custody, Systemia's durable mission permission, Passport consumption of a job-execution permit, independent commercial delivery, or exactly-once side effects. Existing scheduler callers and physical node shadow restrictions remain unchanged. No deployment or checkout authorization derives from these proofs.
+
+
+## November 4 | Passport execution gate before signed NodeSeed work
+
+The bounded signed-MicroSeed canary now verifies an **existing consumed single-use Passport action permit before any NodeSeed adapter call**, and again immediately before invocation to detect intervening expiry or revocation.
+
+The first-party fenced-execution-admission module reads the independently maintained Evercraft Passport store. An execution permit must have product **saban**, scope **job.execute.readonly**, the exact Saban job ID as its resource, an active non-revoked grant, no cancellation or expiry, and a valid persisted consumption receipt. Its request fingerprint binds the full immutable Saban work digest, exactly one attempt, the separately pinned NodeSeed device fingerprint / node ID, chosen lease ID, and fresh execution nonce.
+
+The owning local operator must mint and consume that permit through its independently trusted Passport flow before running the opt-in scheduler. The scheduler never grants authority to itself, creates/consumes permits, or accepts client-supplied approval booleans. Caller parameters **fencedPassportStateDir** and **fencedExecutionPermitIds[jobId]** are only lookup hints; the stored permit is the authority. If verification fails at preflight, no Saban or NodeSeed work runs. If it fails immediately before the adapter, the existing local journal lease is held and the job becomes non-retryable.
+
+CI-only tests deliberately create synthetic local manual grants. These tests do **not** authenticate founder identity, validate Yard custody, authorize Node001 or Node002, or grant production deployment. The candidate remains constrained to localhost registered content hashing and one-attempt execution. Existing unrestricted Saban scheduler callers are unchanged without the explicit fenced journal opt-in.
+
+The signed result, local Passport permit, and HMAC journal represent **three distinct evidence checks**. Systemia durable mission admission, exact Yard field enrollment, external identity authority, physical host confirmation, and verified customer settlement/delivery remain **separate release holds**.
+
+
+## November 4 | Durable Systemia goal checkpoint and signed-job convergence
+
+The signed localhost MicroSeed candidate now requires an independently persisted **existing Systemia Goal Store** file. This is a test-only reliability checkpoint, not authority to execute an arbitrary mission.
+
+For each canary job, its exact one-task Systemia goal must have the expected `mission_key` and `goal_key`, work key matching the Saban job ID, work type `analyze`, provider `saban-fenced-microseed`, and a stable `dedupe_key` equal to `saban-fenced:` plus the full immutable Saban work digest. Its task must be pending, on the ready-work list, without a human gate, dependencies or prior attempts.
+
+The scheduler checks that durable state **before changing its journal or dispatching**. After recording the Saban lease and obtaining the fenced token, it uses the Goal Store's existing revision-fenced `mutateGoalState` and `startGoalWork` to persist the exact Systemia attempt **before the NodeSeed adapter is called**. It continues to verify the stored Passport permit at the execution boundary and verifies the signed NodeSeed result on return. On successful durable acknowledgment, it uses `recordGoalOutcome` to persist the matching signed worker receipt hash in the Systemia goal, then persists Saban's completed state.
+
+Restart preflight checks that a Saban-completed job has the matching Systemia completion receipt. Interrupted or inconsistent cross-store writes are **held for review**, never silently reconciled into another execution. An adapter error leaves the Goal Store's attempt in `executing` as an unresolved outcome and Saban dead-lettered. No auto-retry or independent completion claim is made.
+
+CI tests create synthetic isolated Systemia goal files alongside an ephemeral localhost NodeSeed and private Passport fixture. They assert a recorded Systemia attempt before NodeSeed HTTP, matching completion on successful restart, and reject missing mission identity, mismatched work digests, tampered work state or attempted replay.
+
+**Limit:** The Goal Store persists a mission-bound work attempt, not a cryptographically verified founder approval or a deployed Systemia mission ledger. Live hardware enrollment, operational Yard custody and customer delivery remain separate holds.
