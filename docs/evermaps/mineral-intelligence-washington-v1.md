@@ -156,3 +156,10 @@ The `research-packet-cli.mjs` exporter builds a searchable `research-brief.html`
 The offline HTML provides filters by WGS published geological class, source OBJECTID, and commodity and shows nonrepresentative polygon-sample zoning, WA DNR and WDFW intersection counts **only where current-run source hashes match**. Unobserved rows show **not sampled**, not zero. No PHS species or private parcel owner fields are exported. CSV publisher-derived values are formula-injection protected. Never call this an eligible mining site list, commercial reserve inventory or excavation recommendation.
 
 Use `research-brief.html` from the downloaded research artifact directly in a browser, no hosting or external libraries required. Source-health and all legal/access/environmental feasibility gates remain separately unknown.
+
+## Alternate official WA DNR permit source discovery
+The legacy `gis.dnr.wa.gov/site1/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0` began responding `404 Service not found`. WA DNR publishes an October 2026 version 4.0 GIS dataset under a *different* official `site3/Geology/Active_Surface_Mine_Permit_Sites/MapServer` root. Before changing the production importer, `permit-source-discovery.mjs` now checks both endpoints with only metadata, read-only Grant County count and a single restricted non-owner GeoJSON point. It validates geometry/schema and outputs `wa-permit-source-discovery-receipt.json` in the independently running source-canary artifact.
+
+The discovery receipt is **not** a complete county permit import and cannot establish current mining, title, site permission or permit issuance to any user. A candidate gets promoted into the full importer only after a verified compatible live sample and full provenance/count reconciliation. The source is publicly published by WA DNR, but legal and operational limitations remain.
+
+New service: https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer

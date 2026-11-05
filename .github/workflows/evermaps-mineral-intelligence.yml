@@ -37,6 +37,9 @@ jobs:
         env:
           EVERMAPS_COUNTY: Grant
         run: node systemia/evermaps/wgs-live-sample.mjs
+      - name: Probe current and legacy WA DNR public permit-point sources
+        continue-on-error: true
+        run: node systemia/evermaps/permit-source-discovery-cli.mjs
       - name: Preserve sample and source availability receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -46,6 +49,7 @@ jobs:
             wgs-source-receipt.json
             wgs-feature-sample-receipt.json
             wgs-resource-sample.geojson
+            wa-permit-source-discovery-receipt.json
           if-no-files-found: warn
           retention-days: 30
   full-grant-research-ingest:
