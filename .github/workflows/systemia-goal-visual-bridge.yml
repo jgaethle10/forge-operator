@@ -1,0 +1,22 @@
+name: Systemia Goal Visual Bridge proof
+on:
+  push:
+    paths:
+      - 'systemia/control-plane/visualization/goal-visual-bridge*.mjs'
+      - '.github/workflows/systemia-goal-visual-bridge.yml'
+  pull_request:
+    paths:
+      - 'systemia/control-plane/visualization/goal-visual-bridge*.mjs'
+      - '.github/workflows/systemia-goal-visual-bridge.yml'
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/control-plane/visualization/goal-visual-bridge.mjs
+      - run: node --test systemia/control-plane/visualization/goal-visual-bridge.test.mjs
