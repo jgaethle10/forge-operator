@@ -63,6 +63,17 @@ An owned policy module returns `eligible` with a narrowly justified route or `he
 }
 ```
 
+## November 4 security hardening notes (candidate source contract)
+The disconnected prototype at `systemia/raven/benchmarks/model-route-policy.candidate.mjs` is more restrictive than the initial draft. A trusted Evercraft adapter must supply the runtime clock and a metadata-validated inventory. **User content must never be able to set the trusted metadata or evaluation time.** Without those trusted bindings the selector holds.
+
+- Allowed provider/runtime mappings are **only `ollama → local`, `openai → cloud`, `gemini → cloud`**, matching the currently documented Raven v1 adapters. A hosted adapter cannot relabel itself as local.
+- Request requires `evaluation_time_ms`, passed by the trusted host clock, and every model entry requires `metadata_checked: true` and `validated_at_ms` within 5 minutes of evaluation. This is *freshness gating*, **not** cryptographic attestation or independent third-party proof.
+- Every model entry requires `configured: true`, `healthy: true`, `cost_estimate_kind: quoted|measured`, finite nonnegative `estimated_cost_usd`, `latency_ms` and capabilities. Hosted models also require `credential_ready: true`, `retention_policy_verified: true`, and explicit task consent. Confidential cloud additionally needs specific approval.
+- The `eligible` verdict only proposes models. The existing Raven gateway is still configured for a single provider/model. The selector does **not** change that gateway, grant work permission, or perform any inference.
+- No provider metadata source is yet wired to this candidate, and the stand-in test inventory is synthetic. Do not describe the model as live or available without separate inventory/runtime receipt.
+
+**Audit distinction:** a local SHA-256 provider receipt confirms internal consistency of recorded bytes; it does not independently authenticate a cloud provider's external work, source accuracy, or a real business outcome. Never call it an independently verified external effect.
+
 ## P0: independent second-opinion receipt
 - Both providers must actually run, each with a unique invocation ID and preserved exact model identity. Capture disagreements, overlap, missing sources, and minority conclusions without pretending that consensus proves correctness.
 - If second run fails or is held, show a one-sided result and `verification_pending`; never manufacture agreement.
