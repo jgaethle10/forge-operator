@@ -1,0 +1,74 @@
+{
+  "sessionId": "SYNTHETIC-SOFTWARE-FIXTURE-001",
+  "dataKind": "synthetic",
+  "purpose": "Software validation only. These numbers were invented and were not measured.",
+  "inputMeasurement": "dc_source_voltage_and_current",
+  "outputMeasurement": "dc_loaded_voltage_and_current",
+  "trials": [
+    {
+      "trialId": "A1",
+      "condition": "aligned",
+      "distanceMm": 20,
+      "orientationDegrees": 0,
+      "inputVolts": 5,
+      "inputAmps": 0.5,
+      "outputVolts": 5,
+      "outputAmps": 0.15,
+      "durationSeconds": 30,
+      "inputUncertaintyWatts": 0.1,
+      "outputUncertaintyWatts": 0.05
+    },
+    {
+      "trialId": "A2",
+      "condition": "aligned",
+      "distanceMm": 20,
+      "orientationDegrees": 0,
+      "inputVolts": 5,
+      "inputAmps": 0.5,
+      "outputVolts": 5,
+      "outputAmps": 0.15,
+      "durationSeconds": 30,
+      "inputUncertaintyWatts": 0.1,
+      "outputUncertaintyWatts": 0.05
+    },
+    {
+      "trialId": "A3",
+      "condition": "aligned",
+      "distanceMm": 20,
+      "orientationDegrees": 0,
+      "inputVolts": 5,
+      "inputAmps": 0.5,
+      "outputVolts": 5,
+      "outputAmps": 0.15,
+      "durationSeconds": 30,
+      "inputUncertaintyWatts": 0.1,
+      "outputUncertaintyWatts": 0.05
+    },
+    {
+      "trialId": "M1",
+      "condition": "misaligned",
+      "distanceMm": 20,
+      "orientationDegrees": 90,
+      "inputVolts": 5,
+      "inputAmps": 0.5,
+      "outputVolts": 5,
+      "outputAmps": 0.03,
+      "durationSeconds": 30,
+      "inputUncertaintyWatts": 0.1,
+      "outputUncertaintyWatts": 0.05
+    },
+    {
+      "trialId": "Z1",
+      "condition": "receiver_absent",
+      "distanceMm": 20,
+      "orientationDegrees": 0,
+      "inputVolts": 5,
+      "inputAmps": 0.5,
+      "outputVolts": 0,
+      "outputAmps": 0,
+      "durationSeconds": 30,
+      "inputUncertaintyWatts": 0.1,
+      "outputUncertaintyWatts": 0.05
+    }
+  ]
+}
