@@ -5,6 +5,7 @@ import { writeFrontierArtifacts } from './frontier-watch.mjs';
 import { runScienceHazardWatch } from './science-hazard-watch.mjs';
 import { writeMedicalEvidenceBrief } from './medical-evidence-brief.mjs';
 import { writeMedicalAbstractEvidence } from './medical-abstract-evidence.mjs';
+import { writeMedicalEvidenceTriage } from './medical-evidence-triage.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 
 const rootDir = process.cwd();
@@ -29,6 +30,17 @@ const medicalBrief = writeMedicalEvidenceBrief({
 const medicalAbstracts = await writeMedicalAbstractEvidence({
   watch: science.report,
   outDir: path.join(artifactRoot, 'medical-abstract-evidence'),
+  now
+});
+
+const triageDir = path.join(artifactRoot, 'medical-evidence-triage');
+let previousTriage = null;
+try { previousTriage = JSON.parse(fs.readFileSync(path.join(triageDir,'state.json'),'utf8')); }
+catch { /* First cycle has no durable triage ledger; output will mark it as first-seen. */ }
+const medicalTriage = writeMedicalEvidenceTriage({
+  abstractReport: medicalAbstracts,
+  previous: previousTriage,
+  outDir: triageDir,
   now
 });
 
@@ -89,6 +101,10 @@ const body = {
     abstract_evidence_status: medicalAbstracts.status,
     abstracts_retrieved: medicalAbstracts.abstracts_retrieved,
     abstract_evidence_receipt: medicalAbstracts.receipt_hash,
+    triage_status: medicalTriage.report.source_status,
+    triage_history_status: medicalTriage.report.history_status,
+    triage_counts: medicalTriage.report.counts,
+    triage_receipt: medicalTriage.report.receipt_hash,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },
