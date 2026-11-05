@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {associateSpatialFrames,temporalReviewPacket} from '../public/worlds/spatial-temporal.mjs';
+import {associateSpatialFrames,temporalReviewPacket,forensiScopeTemporalEvents,everMapsTemporalDrafts,worldsTemporalPreview} from '../public/worlds/spatial-temporal.mjs';
 const make=(frameId,timestampMs,items,width=160,height=100)=>({
   frameId,timestampMs,width,height,
   observations:items.map(({id,label='vehicle',x,y=20,w=28,h=15,z=3.6,confidence=.9},i)=>({
@@ -99,4 +99,33 @@ test('empty frame sequence produces bounded empty review packet',()=>{
  assert.equal(r.tracks.length,0);
  assert.equal(r.frames.length,0);
  assert.equal(temporalReviewPacket(r).events.length,0);
+});
+
+test('three consumers preserve non-authoritative, unlocated, review-required status',()=>{
+ const timeline=associateSpatialFrames([make('sample',0,[car(20)])]);
+ const world=worldsTemporalPreview(timeline,'sample');
+ const events=forensiScopeTemporalEvents(timeline),maps=everMapsTemporalDrafts(timeline);
+ assert.equal(world.schema,'evercraft.world-engine.world.v1');
+ assert.equal(world.entities.length,1);
+ assert.equal(world.entities[0].collider,undefined);
+ assert.equal(world.metadata.productionAuthoritative,false);
+ assert.equal(world.metadata.persistenceAuthorized,false);
+ assert.equal(world.metadata.worldReconstructionComplete,false);
+ assert.equal(events[0].reviewStatus,'requires_human_review');
+ assert.equal(events[0].identityVerified,false);
+ assert.equal(maps[0].geometry,null);
+ assert.equal(maps[0].severity,null);
+ assert.equal(maps[0].urgency,'not_assessed');
+});
+test('timestamp and camera coordinate contradictions fail closed',()=>{
+ const a=make('a',100,[car(30)]);a.observations[0].timestampMs=99;
+ assert.throws(()=>associateSpatialFrames([a]),/observation_frame_mismatch/);
+ const b=make('b',100,[car(30)]);b.observations[0].cameraPositionM.z=100;
+ assert.throws(()=>associateSpatialFrames([b]),/inconsistent_camera_depth/);
+});
+test('adapters reject non-temporal data and unknown frames',()=>{
+ const timeline=associateSpatialFrames([make('a',0,[car(30)])]);
+ assert.throws(()=>forensiScopeTemporalEvents({}),/invalid_timeline/);
+ assert.throws(()=>everMapsTemporalDrafts({}),/invalid_timeline/);
+ assert.throws(()=>worldsTemporalPreview(timeline,'not-found'),/frame_not_found/);
 });
