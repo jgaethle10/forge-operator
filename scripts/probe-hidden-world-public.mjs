@@ -23,14 +23,15 @@ export async function probeHiddenWorldPublic(origin,{fetchFn=fetch}={}){
     ['/worlds/hidden-world/','Hidden World Atlas','text/html','atlas_entry'],
     ['/worlds/hidden-world/yakima-evidence.html','Connected tunnels established by the records reviewed','text/html','yakima_evidence'],
     ['/worlds/hidden-world/yakima-standalone.html','scene-ready','text/html','yakima_exhibit'],
-    ['/worlds/hidden-world/hidden_world_atlas_v1.csv','yakima,','text/csv','research_data']
+    ['/worlds/hidden-world/hidden_world_atlas_v1.csv','yakima,','text/csv','research_data'],
+    ['/worlds/hidden-world/yakima-evidence-ledger.v1.json','evercraft.hidden-world.evidence-ledger.v1','application/json','evidence_ledger']
   ];
   for(const [path,token,mime,id] of checks){
     try{await requireText(fetchFn,safe+path,token,mime);}
     catch{return fail(id+'_not_verified');}
   }
   return {schema:'evercraft.hidden-world.public-release-gate.v1',verified:true,origin:safe,
-    checks:['owned_worlds_health','atlas_entry','yakima_evidence','yakima_exhibit','research_data'],
+    checks:['owned_worlds_health','atlas_entry','yakima_evidence','yakima_exhibit','research_data','evidence_ledger'],
     physical_iphone_verified:false,write_test_performed:false};
 }
 
