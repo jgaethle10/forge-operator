@@ -8,6 +8,7 @@ export async function probeWorldsHeritagePublic(origin,{fetchFn=fetch}={}){
   {path:'/worlds/heritage/',type:'html',must:'EDUCATIONAL SCHEMATIC'},
   {path:'/worlds/heritage/app.mjs',type:'javascript',must:'buildHeritageDrawList'},
   {path:'/worlds/heritage/scene.mjs',type:'javascript',must:'pavlopetri-learning-scene-v1'},
+  {path:'/worlds/heritage/tour.mjs',type:'javascript',must:'heritageTourFrame'},
   {path:'/worlds/heritage/atlas/',type:'html',must:'SUBMERGED HERITAGE ATLAS'},
   {path:'/worlds/heritage/atlas/sites.geojson',type:'geojson'}
  ];
