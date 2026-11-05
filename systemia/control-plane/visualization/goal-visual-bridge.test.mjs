@@ -167,6 +167,7 @@ test('Living Graph import surface exposes redacted freshness and missing receipt
   assert.ok(start>=0&&end>start);
   assert.doesNotThrow(()=>new Script(html.slice(start+8,end)));
   assert.match(html,/UNVERIFIED IMPORT/);
+  assert.match(html,/SYNTHETIC DEMO/);
   assert.match(html,/Completed tasks missing receipt references/);
   assert.match(html,/passport_authorization_verified|Passport authority/);
 });
