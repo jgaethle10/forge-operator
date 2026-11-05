@@ -18,9 +18,11 @@ function chromePath(){
   }
   throw Error('CHROME_UNAVAILABLE: real browser QA not verified');
 }
-async function debuggerPort(dir,child){
-  for(let n=0;n<100;n++){
-    if(child.exitCode!==null)throw Error('Chrome exited before DevTools opened');
+async function debuggerPort(dir,child,getDiagnostics=()=>'',timeoutSteps=180){
+  for(let n=0;n<timeoutSteps;n++){
+    if(child.exitCode!==null||child.signalCode!==null){
+      throw Error('Chrome exited before DevTools opened: '+getDiagnostics().slice(-1400));
+    }
     try{
       const raw=await fs.readFile(path.join(dir,'DevToolsActivePort'),'utf8');
       const port=Number(raw.split('\n')[0]);
@@ -28,7 +30,8 @@ async function debuggerPort(dir,child){
     }catch{}
     await sleep(100);
   }
-  throw Error('Chrome local DevTools connection unavailable');
+  throw Error('Chrome local DevTools unavailable after '+timeoutSteps/10+
+    ' seconds: '+getDiagnostics().slice(-1400));
 }
 async function devtools(url){
   const ws=new WebSocket(url);
@@ -135,13 +138,19 @@ const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));
 await fs.mkdir(out,{recursive:true});
 const server=await startWorkSabanPreview({host:'127.0.0.1',port:0});
 let chrome,client;
+let chromeDiagnostics='';
 try{
   chrome=spawn(chromePath(),[
     '--headless=new','--disable-gpu','--no-sandbox','--disable-dev-shm-usage',
+    '--disable-extensions','--no-first-run','--no-default-browser-check',
     '--remote-allow-origins=*','--remote-debugging-port=0',
     '--user-data-dir='+profile,'about:blank'
-  ],{stdio:'ignore'});
-  const port=await debuggerPort(profile,chrome);
+  ],{stdio:['ignore','ignore','pipe']});
+  chrome.on('error',e=>{chromeDiagnostics='Chrome launch error: '+e.message;});
+  chrome.stderr.on('data',chunk=>{
+    chromeDiagnostics=(chromeDiagnostics+String(chunk)).slice(-2800);
+  });
+  const port=await debuggerPort(profile,chrome,()=>chromeDiagnostics);
   const targets=await (await fetch('http://127.0.0.1:'+port+'/json/list')).json();
   const page=targets.find(t=>t.type==='page');
   assert(page?.webSocketDebuggerUrl,'Chrome page target not found');
