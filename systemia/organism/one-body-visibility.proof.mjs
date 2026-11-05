@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { buildOneBodyVisualSnapshot } from './one-body-visibility.mjs';
 import { recordBodyLaneAcknowledgement } from './one-body.mjs';
+import { generateKeyPairSync, sign } from 'node:crypto';
+import { bodyLaneReceiptSigningMessage, verifySignedBodyLaneReceipt } from './one-body-lane-signature.mjs';
 
 const observedAt='2026-11-04T23:00:00Z';
 const privateEventId='customer-personal-private-identifer-123';
@@ -104,6 +106,48 @@ const afterReverification=buildOneBodyVisualSnapshot({
 assert.equal(afterReverification.summary.counts.consumer_receipt_verified,1);
 assert.equal(afterReverification.summary.private_acknowledgement_refs_seen,1);
 assert.ok(!JSON.stringify(afterReverification).includes(privateReceiptId));
+
+const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+const keyId='owned-context-consumer-1';
+const claims={
+  schema:'evercraft.one-body.lane-consumer-receipt.v1',
+  event_id:privateEventId,
+  lane:'context_fabric',
+  receipt_ref:'private-signed-ack-ref',
+  observed_at:'2026-11-04T22:20:00Z',
+  signer_key_id:keyId,
+};
+const signedReceipt={
+  ...claims,
+  signature_base64:sign(null,bodyLaneReceiptSigningMessage(claims),privateKey).toString('base64')
+};
+const anchors={
+  [keyId]:{
+    lane:'context_fabric',
+    public_key_pem:publicKey.export({type:'spki',format:'pem'}),
+  }
+};
+const trustedVerify=r=>verifySignedBodyLaneReceipt(r,{trustedConsumers:anchors});
+assert.equal(trustedVerify(signedReceipt),true);
+assert.equal(verifySignedBodyLaneReceipt(signedReceipt),false);
+assert.equal(trustedVerify({...signedReceipt,lane:'signal_fabric'}),false);
+assert.equal(trustedVerify({...signedReceipt,receipt_ref:'tampered'}),false);
+assert.equal(trustedVerify({...signedReceipt,signer_key_id:'unknown'}),false);
+const signedState=recordBodyLaneAcknowledgement(state,signedReceipt,{
+  now:observedAt,verifyReceipt:trustedVerify
+});
+assert.equal(signedState.recorded,true);
+const signedBeforeReverify=buildOneBodyVisualSnapshot({...base,state:signedState.state});
+assert.equal(signedBeforeReverify.summary.counts.consumer_receipt_verified,0);
+const signedAfterReverify=buildOneBodyVisualSnapshot({
+  ...base,state:signedState.state,verifyReceipt:trustedVerify
+});
+assert.equal(signedAfterReverify.summary.counts.consumer_receipt_verified,1);
+assert.ok(!JSON.stringify(signedAfterReverify).includes(claims.receipt_ref));
+assert.equal(buildOneBodyVisualSnapshot({
+  ...base,state:signedState.state,verifyReceipt:()=>false
+}).summary.counts.consumer_receipt_verified,0);
+
 assert.throws(()=>buildOneBodyVisualSnapshot({state:{}}),/invalid_one_body_state/);
 assert.throws(()=>buildOneBodyVisualSnapshot({...base,observedAt:'invalid'}),/invalid_observed_at/);
 assert.throws(()=>buildOneBodyVisualSnapshot({...base,maxEvents:100}),/invalid_event_limit/);
