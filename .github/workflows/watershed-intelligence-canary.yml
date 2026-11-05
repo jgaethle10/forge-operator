@@ -13,6 +13,8 @@ on:
       - "tests/evercraft-usbr-rise-reservoirs.test.mjs"
       - "tests/evercraft-awdb-swe-normals.test.mjs"
       - "systemia/research-service/awdb-swe-*.mjs"
+      - "systemia/research-service/nrcs-*.mjs"
+      - "tests/evercraft-nrcs-basin-report.test.mjs"
       - "systemia/research-service/usbr-*.mjs"
       - ".github/workflows/watershed-intelligence-canary.yml"
 
@@ -33,7 +35,7 @@ jobs:
         with:
           node-version: "22"
       - name: Prove parsing, failure and source authority boundaries
-        run: node --test tests/evercraft-watershed-intelligence.test.mjs tests/evercraft-usbr-rise-reservoirs.test.mjs tests/evercraft-awdb-swe-normals.test.mjs
+        run: node --test tests/evercraft-watershed-intelligence.test.mjs tests/evercraft-usbr-rise-reservoirs.test.mjs tests/evercraft-awdb-swe-normals.test.mjs tests/evercraft-nrcs-basin-report.test.mjs
       - name: Collect official observations, fail when minimum live source coverage is absent
         shell: bash
         run: |
@@ -50,6 +52,14 @@ jobs:
               --snapshot artifacts/watershed-canary/latest.json \
               > artifacts/watershed-canary/swe-median-audit.json
           fi
+      - name: Probe official NRCS three-basin update report
+        if: always()
+        id: official_basin
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p artifacts/watershed-canary
+          node systemia/research-service/nrcs-basin-probe.mjs --probe > artifacts/watershed-canary/official-basin-report.json
       - name: Probe USBR RISE five-reservoir storage sources
         if: always()
         id: reservoir
@@ -85,6 +95,7 @@ jobs:
             artifacts/watershed-canary/review-draft.md
             artifacts/watershed-canary/reservoir-source-probe.json
             artifacts/watershed-canary/swe-median-audit.json
+            artifacts/watershed-canary/official-basin-report.json
           if-no-files-found: warn
           retention-days: 14
       - name: Summarize evidence boundary
@@ -98,6 +109,7 @@ jobs:
             echo "No basin-wide SWE percentage, reservoir verification, forecast, hazard declaration, flight authority, payment, or customer delivery."
             echo "USBR RISE diagnostic outcome: ${{ steps.reservoir.outcome }} (source-only, held until verified)"
             echo "NRCS SWE median diagnostic outcome: ${{ steps.median.outcome }} (station comparisons only; denominator suppression)"
+            echo "NRCS official basin index diagnostic outcome: ${{ steps.official_basin.outcome }} (source-only, not a forecast)"
             echo
             if [ -s artifacts/watershed-canary/latest.json ]; then
               node --input-type=module -e '
