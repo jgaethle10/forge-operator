@@ -25,10 +25,11 @@ jobs:
             exit 1
           fi
           node scripts/probe-worlds-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/receipt.json
+          node scripts/probe-worlds-heritage-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/heritage-receipt.json
       - name: Preserve read-only release receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-worlds-public-release-gate
-          path: artifacts/worlds-public-gate/receipt.json
+          path: artifacts/worlds-public-gate/
           if-no-files-found: warn
