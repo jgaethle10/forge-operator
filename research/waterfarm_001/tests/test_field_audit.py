@@ -69,6 +69,16 @@ class TestFieldBaseline(unittest.TestCase):
     def test_covered_value_negative_large_hold(self):
         res=audit_meter_baseline(samples(source_l=100,irrig_l=300),boundary=BoundaryAttestation(True,True,True,True))
         self.assertIn('HOLD',res['imbalance_status'])
+    def test_known_synthetic_marker_refused_even_if_called_actual(self):
+        with self.assertRaises(EvidenceHold):
+            audit_meter_baseline(edit(self.src,col='source_meter_id',value='SYNTHETIC_SOURCE'))
+        with self.assertRaises(EvidenceHold):
+            audit_meter_baseline(edit(self.src,col='calibration_ref',value='FICTIONAL_CERTIFICATE'))
+
+    def test_large_totalizer_fails_conservatively(self):
+        with self.assertRaises(EvidenceHold):
+            audit_meter_baseline(edit(self.src,col='source_open_l',value='9007199254740992'))
+
     def test_documented_bad_input(self):
         with self.assertRaises(EvidenceHold):parse_meter_csv('')
         with self.assertRaises(EvidenceHold):parse_meter_csv('source,volume\na,2')

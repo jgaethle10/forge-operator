@@ -11,7 +11,7 @@ from datetime import date, timedelta
 from math import isfinite
 from pathlib import Path
 from hashlib import sha256
-import csv, io, json
+import csv, io, json, re
 
 class EvidenceHold(ValueError):
     pass
@@ -30,7 +30,7 @@ def finite(name, raw):
         num=float(raw)
     except (ValueError, TypeError):
         raise EvidenceHold(f'{name}: missing or nonnumeric; not zero') from None
-    if not isfinite(num) or num < 0:
+    if not isfinite(num) or num < 0 or num > 9007199254740991:
         raise EvidenceHold(f'{name}: must be finite and nonnegative')
     return num
 
@@ -90,6 +90,11 @@ def parse_meter_csv(text: str) -> tuple[MeterDay,...]:
             raise EvidenceHold('inlet and irrigation meters cannot be same meter: HOLD')
         if row['observation_kind']!='ACTUAL_RECORDED_METER':
             raise EvidenceHold('unobserved meter source: HOLD')
+        # The origin remains UNVERIFIED, but known demonstration labels must never
+        # be silently promoted into a candidate operator-observation baseline.
+        if re.search(r'(?:SYNTHETIC_|FICTIONAL_|DEMO_)', ' '.join(
+                [row['source_meter_id'],row['irrigation_meter_id'],row['calibration_ref']]),re.I):
+            raise EvidenceHold('synthetic/demo identifiers cannot be submitted as field evidence: HOLD')
         kv={key:finite(key,row[key]) for key in (
             'source_open_l','source_close_l','irrigation_open_l','irrigation_close_l',
             'source_uncertainty_l','irrigation_uncertainty_l','pump_kwh')}
