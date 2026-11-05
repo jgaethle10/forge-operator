@@ -50,7 +50,7 @@ async function scenario(type,name,viewport,base,reducedMotion=false){
     const stage=page.locator('#visual-replay');
     await stage.waitFor({state:'visible'});
     await page.waitForFunction(()=>document.querySelector('#vr-scene')?.dataset.phase==='3',
-      {timeout:10000});
+      null,{timeout:10000});
     assert.equal((await page.locator('#vr-total').textContent()).trim(),'$36,301.00');
     assert.deepEqual(await page.locator('.vr-bar-group strong').allTextContents(),expected);
     assert.match(await page.locator('#vr-chart').getAttribute('aria-label'),
@@ -81,7 +81,7 @@ async function scenario(type,name,viewport,base,reducedMotion=false){
     }else{
       assert.equal(await page.locator('#vr-scene').getAttribute('data-phase'),'0');
       await page.waitForFunction(()=>document.querySelector('#vr-scene')?.dataset.phase==='3',
-        {timeout:10000});
+        null,{timeout:10000});
     }
     const stageShot=path.join(artifacts,prefix+'-proof.png');
     const fullShot=path.join(artifacts,prefix+'-page.png');
