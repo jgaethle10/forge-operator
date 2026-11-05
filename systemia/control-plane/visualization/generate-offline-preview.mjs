@@ -11,7 +11,7 @@ import { projectGoalToVisualSnapshot } from './goal-visual-bridge.mjs';
 import { evaluateAgentTrials } from '../agent-arena/evaluate.mjs';
 
 const directory=dirname(fileURLToPath(import.meta.url));
-const now=new Date('2026-11-04T22:30:00.000Z');
+const now=new Date();
 const initial=createGoalState({
   goalKey:'SYNTHETIC-GOAL',
   missionKey:'SYNTHETIC-MISSION',
@@ -34,6 +34,10 @@ state.tasks[1].updated_at=now.toISOString();
 state.tasks[2].updated_at=now.toISOString();
 state.status='blocked';
 const graph=projectGoalToVisualSnapshot(state,{now:new Date(now.getTime()+60*1000)});
+graph.source='SYNTHETIC-offline-preview-only';
+graph.provenance.trust='synthetic_fixture_no_runtime';
+graph.provenance.freshness='unknown';
+graph.provenance.note='SYNTHETIC PREVIEW ONLY. No real Systemia observations or verified effects.';
 const source=await readFile(resolve(directory,'../agent-arena/examples/synthetic-trials.json'),'utf8');
 const trials=evaluateAgentTrials(JSON.parse(source));
 
