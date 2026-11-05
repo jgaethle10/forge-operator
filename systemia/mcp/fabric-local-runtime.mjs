@@ -44,6 +44,7 @@ import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import {createPartnerApplicationHandler,createPartnerApplicationDispatcher} from './partners-public-inquiry.mjs';
+import {createCirclesInterestHandler,createCirclesAlertDispatcher} from '../circles/founding-intake.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -415,6 +416,8 @@ export async function startFabricLocalRuntime({
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
   partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',
   partnersIntakeKey=process.env.EVERCRAFT_PARTNERS_INTAKE_KEY_B64||'',
+  circlesLeadsDir=process.env.EVERCRAFT_CIRCLES_LEADS_DIR||'',
+  circlesIntakeKey=process.env.EVERCRAFT_CIRCLES_INTAKE_KEY_B64||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -438,6 +441,11 @@ export async function startFabricLocalRuntime({
   const partnerApplication=createPartnerApplicationHandler({
     storeDir:partnersLeadsDir||undefined,key:partnersIntakeKey,
     onAlertQueued:()=>{if(partnerAlertDispatcher.enabled)void partnerAlertDispatcher.dispatch().catch(()=>{});},
+  });
+  const circlesAlertDispatcher=createCirclesAlertDispatcher({folder:circlesLeadsDir||undefined});
+  const circlesInterest=createCirclesInterestHandler({storeDir:circlesLeadsDir||undefined,
+    key:circlesIntakeKey,
+    onAlertQueued:()=>{if(circlesAlertDispatcher.enabled)void circlesAlertDispatcher.dispatch().catch(()=>{});},
   });
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
@@ -806,6 +814,18 @@ export async function startFabricLocalRuntime({
       if(partnersRoute==='/api/partners/inquiry'){
         if(req.method==='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
         return await partnerApplication(req,res);
+      }
+
+      // Circles founding-interest intake is separate from partner applications and commerce.
+      // No applicant is automatically enrolled, billed or sent an invitation.
+      const circlesRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(circlesRoute==='/api/circles/readiness'){
+        if(req.method!=='GET'&&req.method!=='OPTIONS')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return await circlesInterest(req,res);
+      }
+      if(circlesRoute==='/api/circles/inquiry'){
+        if(req.method!=='POST'&&req.method!=='OPTIONS')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return await circlesInterest(req,res);
       }
 
       // A separately bounded owned route accepts only consented FindMyPart part briefs.
@@ -1730,6 +1750,10 @@ export async function startFabricLocalRuntime({
     partnerAlertDispatcher.start();
     void partnerAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(circlesAlertDispatcher.enabled){
+    circlesAlertDispatcher.start();
+    void circlesAlertDispatcher.dispatch().catch(()=>{});
+  }
 
   const address=server.address();
   const actualPort=typeof address==='object'&&address?address.port:port;
@@ -1753,6 +1777,7 @@ export async function startFabricLocalRuntime({
       studioAlertDispatcher.stop();
       findMyPartAlertDispatcher.stop();
       partnerAlertDispatcher.stop();
+      circlesAlertDispatcher.stop();
       await faieSurface?.close();
       await new Promise((resolve,reject)=>
         server.close((error)=>error?reject(error):resolve())
