@@ -76,6 +76,12 @@ test('publishes an approved source-grounded story with receipts and machine surf
   assert.ok(fs.existsSync(path.join(outDir, 'production', 'owned-journal-test', 'clip-handoff.json')));
   const html = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
   assert.match(html, /Evercraft Journal/);
+  assert.match(html, /aria-label="Journal sections"/);
+  assert.match(html, /id="lead-title"/);
+  assert.match(html, /id="desk-systems"/);
+  assert.match(html, /href="\.\/owned-journal-test\/"/);
+  assert.match(html, /@media\(max-width:550px\)/);
+  assert.doesNotMatch(html, /No current live edition/);
   assert.doesNotMatch(html, /Black Friday|shopping assistant/i);
   const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
   assert.match(articleHtml, /https:\/\/journal\.test\.evercraft\.local\/owned-journal-test\//);
@@ -131,6 +137,10 @@ test('archives expired durable reporting without presenting it as a live edition
   assert.match(indexHtml, /No current live edition/i);
   assert.doesNotMatch(indexHtml, /Live edition (?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
   assert.match(indexHtml, /Archive/i);
+  assert.match(indexHtml, /Archived reporting, not a live update/);
+  assert.match(indexHtml, /class="archive-intro"/);
+  assert.match(indexHtml, /id="desk-systems"/);
+  assert.doesNotMatch(indexHtml, /href="\.\/feed\.xml">RSS<\/a>/);
 
   const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
   assert.match(articleHtml, /Archived analysis/i);
@@ -304,4 +314,25 @@ test('ranking stories generate feed, square and story visuals and bind them into
 
   const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
   assert.equal(receipt.ranking_visuals.story.ref, 'production/owned-journal-test/ranking-story.svg');
+});
+
+test('editorial hero uses only an explicitly rights-verified source photo', () => {
+  const fixture = story();
+  fixture.hero_visual = {
+    url: 'https://example.com/official-field-photo.jpg',
+    source_ref: 'source:a',
+    rights_state: 'verified',
+    alt: 'Documented field photograph',
+    caption: 'Verified source photograph'
+  };
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-photo-'));
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+  const indexHtml = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
+  assert.match(indexHtml, /class="feature-photo"/);
+  assert.match(indexHtml, /https:\/\/example\.com\/official-field-photo\.jpg/);
+  assert.match(indexHtml, /Documented field photograph/);
 });
