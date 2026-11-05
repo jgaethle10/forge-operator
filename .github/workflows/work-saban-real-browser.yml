@@ -5,6 +5,7 @@ on:
     paths:
       - 'public/work-saban/**'
       - 'tests/work-saban-customer-browser-e2e.cjs'
+      - 'tests/work-saban-proof-visual-e2e.cjs'
       - '.github/workflows/work-saban-real-browser.yml'
   push:
     branches: [main]
@@ -37,3 +38,17 @@ jobs:
         run: |
           node --check tests/work-saban-customer-browser-e2e.cjs
           node tests/work-saban-customer-browser-e2e.cjs
+      - name: Record proof-driven visual playback in Chromium and WebKit
+        env:
+          NODE_PATH: /tmp/work-saban-browser-check/node_modules
+        run: |
+          node --check tests/work-saban-proof-visual-e2e.cjs
+          node tests/work-saban-proof-visual-e2e.cjs
+      - name: Preserve actual visual QA frames and playback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-saban-proof-visual-qa
+          path: artifacts/work-saban-visual-qa/
+          if-no-files-found: warn
+          retention-days: 14
