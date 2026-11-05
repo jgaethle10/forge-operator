@@ -1,44 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-11-05T07:20:07.606Z",
+  "updated_at": "2026-11-05T08:35:56.192Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "5167f5849ae7b538e30bc1af46b83fee729b60a2a87c9464f0c99a8ac79d3cc3",
-      "observed_at": "2026-10-29T22:50:35.999Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-pricing-002",
-      "prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "851933073249f1c06dcf6f15ba35b1d75821ac235598cef6ea6f63ef30776fb5",
-      "response_sha256": "65ca9d01ce388efd9dfa02983a84a01a628e728b7e087da38702d2c10b7d6bc2",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "bd26d266fc5c1b533ad0772c076f097b3ba6fd7583bd62a769b2537da7737c76",
-      "observed_at": "2026-10-29T22:50:37.681Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-expansion-003",
-      "prompt_sha256": "7c8667c614ff5c1a5050299b28517d3b4bdc3826ed386fddd9d7818883cc8c08",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "34f96104d5eab8ab08551a384f79ac961648b753bd15099f2a12969749a86e39",
-      "response_sha256": "0791d01a264f467d1205517b94252c7c00158bb1e542398c38c953e3c0d4fbca",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "3624afd96981589e5d8deeff9c526a76e8515d22263110762b92e7deef4cf56a",
       "observed_at": "2026-10-29T22:50:39.120Z",
@@ -8995,6 +8959,42 @@
       "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
       "pickup_observed": false,
       "provider_receipt_sha256": "ab8587efa83854b6e8a02ae93b7e01e2a37e6e7a1a76dc3368c88967a685ba07",
+      "response_sha256": "ea6c202234e0fc27e48c485a2c16c96fca3e531de1d78c8009bac50a1c05d8eb",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "af97102973b3dbbfb56f25b1bc7eaaafcc6e14b2f523f7150edd6f844691bbf8",
+      "observed_at": "2026-11-05T08:35:44.565Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-001",
+      "prompt_sha256": "6622551cfff924f3bcf1233f61af7325f80c801e12eda67c4fa4e7e30f931d53",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "c4bea43d79c1862d5007ff6779d8f4b46305511c200e2d55d526648361ab4cf7",
+      "response_sha256": "9bd0a951df757ac8473e490771b9fa7fb5a38ea1b0be7330f2859a0f5a1ac56a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "eea0f27b3878ead9c7ac5f749eae06cb088c5fde02fdbd02ab7e6ae4a42c7e0d",
+      "observed_at": "2026-11-05T08:35:49.930Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-large-file-002",
+      "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "92cc81935529b3006c9903e0624d357b65ba746f1e8d55d5ee733b6305c03aca",
       "response_sha256": "ea6c202234e0fc27e48c485a2c16c96fca3e531de1d78c8009bac50a1c05d8eb",
       "source": "authorized_provider_probe",
       "privacy": {
