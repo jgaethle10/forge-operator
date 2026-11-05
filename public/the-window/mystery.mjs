@@ -60,3 +60,53 @@ export function accuse(s, id) {
   if (!s.suspects.some(a=>a.id===id)) throw Error('Unknown suspect');
   return {...s, accusation:{suspectId:id,correct:id===s.answerId,revealedAnswer:s.answerId}};
 }
+
+/**
+ * Small, bounded local checkpoint. This never stores generated witness dialogue,
+ * other residents' memories, user identity, or a copy of the canonical world.
+ * Two same-origin browser views reconstruct the same seed from createWorld(0,818).
+ * Neither this checkpoint nor its restoration establishes live agent execution.
+ */
+export const MYSTERY_SAVE_SCHEMA = 'evercraft.window.mystery-checkpoint.v1';
+export const MYSTERY_SAVE_KEY = 'evercraft.window.mystery-checkpoint.v1';
+export function checkpointMystery(s, choice) {
+  assertCase(s);
+  if(!s.suspects.some(a=>a.id===choice))throw Error('Invalid mystery selection');
+  return {
+    schema:MYSTERY_SAVE_SCHEMA,
+    seed:s.seed,
+    revealed:s.revealed,
+    suspectId:s.accusation?.suspectId??null,
+    choice
+  };
+}
+export function restoreMystery(world, data) {
+  if(!data || typeof data!=='object' || Array.isArray(data) ||
+      data.schema!==MYSTERY_SAVE_SCHEMA ||
+      !Number.isInteger(data.seed) || data.seed<0 || data.seed>1_000_000 ||
+      !Number.isInteger(data.revealed) || data.revealed<0 || data.revealed>4 ||
+      !(data.suspectId===null || typeof data.suspectId==='string') ||
+      typeof data.choice!=='string' ||
+      Object.keys(data).length!==5 ||
+      Object.keys(data).some(k=>!['schema','seed','revealed','suspectId','choice'].includes(k)))
+    throw Error('Invalid local mystery checkpoint');
+  let state=createMystery(world,data.seed);
+  if(!state.suspects.some(s=>s.id===data.choice))throw Error('Unknown saved selection');
+  for(let i=0;i<data.revealed;i++)state=revealNext(state);
+  if(data.suspectId!==null)state=accuse(state,data.suspectId);
+  return {state,choice:data.choice};
+}
+export function readMysteryCheckpoint(storage,world) {
+  try {
+    const raw=storage?.getItem(MYSTERY_SAVE_KEY);
+    if(typeof raw!=='string' || raw.length<2 || raw.length>500)return null;
+    return restoreMystery(world,JSON.parse(raw));
+  }catch{return null;}
+}
+export function writeMysteryCheckpoint(storage,state,choice) {
+  try {
+    if(!storage || typeof storage.setItem!=='function')return false;
+    storage.setItem(MYSTERY_SAVE_KEY,JSON.stringify(checkpointMystery(state,choice)));
+    return true;
+  }catch{return false;}
+}
