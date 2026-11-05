@@ -81,34 +81,70 @@ export function signAndEncryptPqMessage({
  * independent trust registry, not the envelope.
  * consume() MUST be an atomic insert-if-absent for the tuple returned here.
  */
+function verifySignedPqEnvelope({
+  signedMessage, senderPublicKey, expectedSender, recipientPrivateKey,
+  expectedContext, nowMs=Date.now()
+}) {
+  if (!Number.isSafeInteger(nowMs) || nowMs < 0) reject();
+  const k=signingKey(senderPublicKey,'public');
+  const p=signedMessage?.payload;
+  if (!p || Object.keys(p).sort().join(',') !==
+    ['schema','sender_id','sender_key_id','issued_at_ms','expires_at_ms','nonce','envelope'].sort().join(',')) reject();
+  if (p.schema !== SCHEMA || p.sender_id !== senderId(expectedSender) || p.sender_key_id !== keyId(k)) reject();
+  if (!Number.isSafeInteger(p.issued_at_ms) || !Number.isSafeInteger(p.expires_at_ms)) reject();
+  if (p.issued_at_ms > nowMs+CLOCK_SKEW_MS || p.expires_at_ms <= nowMs) reject();
+  if (p.expires_at_ms <= p.issued_at_ms || p.expires_at_ms-p.issued_at_ms > MAX_TTL_MS) reject();
+  if (decode(p.nonce,24).length !== 24) reject();
+  const signature=decode(signedMessage.signature,4096);
+  if (!crypto.verify(null,messageBytes(p),k,signature)) reject();
+
+  // Never release plaintext until the replay admission commits successfully.
+  const plaintext=decryptPqEnvelope({
+    recipientPrivateKey,envelope:p.envelope,expectedContext
+  });
+  return {
+    plaintext,senderId:p.sender_id,senderKeyId:p.sender_key_id,messageNonce:p.nonce,
+    replayToken:{
+      senderId:p.sender_id, senderKeyId:p.sender_key_id, context:expectedContext,
+      nonce:p.nonce, expiresAtMs:p.expires_at_ms+CLOCK_SKEW_MS, nowMs
+    }
+  };
+}
+
+/** Synchronous replay guard: for local single-process and local SQLite labs only. */
 export function openSignedPqMessage({
   signedMessage, senderPublicKey, expectedSender, recipientPrivateKey,
   expectedContext, replayGuard, nowMs=Date.now()
 }) {
   if (!replayGuard || typeof replayGuard.consume !== 'function') reject();
-  if (!Number.isSafeInteger(nowMs) || nowMs < 0) reject();
   try {
-    const k=signingKey(senderPublicKey,'public');
-    const p=signedMessage?.payload;
-    if (!p || Object.keys(p).sort().join(',') !==
-      ['schema','sender_id','sender_key_id','issued_at_ms','expires_at_ms','nonce','envelope'].sort().join(',')) reject();
-    if (p.schema !== SCHEMA || p.sender_id !== senderId(expectedSender) || p.sender_key_id !== keyId(k)) reject();
-    if (!Number.isSafeInteger(p.issued_at_ms) || !Number.isSafeInteger(p.expires_at_ms)) reject();
-    if (p.issued_at_ms > nowMs+CLOCK_SKEW_MS || p.expires_at_ms <= nowMs) reject();
-    if (p.expires_at_ms <= p.issued_at_ms || p.expires_at_ms-p.issued_at_ms > MAX_TTL_MS) reject();
-    if (decode(p.nonce,24).length !== 24) reject();
-    const signature=decode(signedMessage.signature,4096);
-    if (!crypto.verify(null,messageBytes(p),k,signature)) reject();
+    const verified=verifySignedPqEnvelope({
+      signedMessage,senderPublicKey,expectedSender,recipientPrivateKey,expectedContext,nowMs
+    });
+    if (replayGuard.consume(verified.replayToken)!==true) reject();
+    const {replayToken,...result}=verified;
+    return result;
+  } catch { reject(); }
+}
 
-    const plaintext=decryptPqEnvelope({
-      recipientPrivateKey,envelope:p.envelope,expectedContext
+/**
+ * Async admission for a SHARED transactional replay backend.
+ * An awaited, globally committed true is required before plaintext is returned.
+ * Transport and trust registry remain external and disabled in the lab.
+ */
+export async function openSignedPqMessageAsync({
+  signedMessage, senderPublicKey, expectedSender, recipientPrivateKey,
+  expectedContext, replayGuard, nowMs=Date.now()
+}) {
+  if (!replayGuard || typeof replayGuard.consume !== 'function') reject();
+  try {
+    const verified=verifySignedPqEnvelope({
+      signedMessage,senderPublicKey,expectedSender,recipientPrivateKey,expectedContext,nowMs
     });
-    const accepted=replayGuard.consume({
-      senderId:p.sender_id, senderKeyId:p.sender_key_id, context:expectedContext,
-      nonce:p.nonce, expiresAtMs:p.expires_at_ms+CLOCK_SKEW_MS, nowMs
-    });
-    if (accepted !== true) reject();
-    return {plaintext,senderId:p.sender_id,senderKeyId:p.sender_key_id,messageNonce:p.nonce};
+    const admitted=await replayGuard.consume(verified.replayToken);
+    if (admitted!==true) reject();
+    const {replayToken,...result}=verified;
+    return result;
   } catch { reject(); }
 }
 
