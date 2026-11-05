@@ -1,28 +1,32 @@
-name: Spatial perception V2
+name: Spatial perception V3
 on:
   pull_request:
     paths:
       - 'public/worlds/spatial-perception.mjs'
       - 'public/worlds/spatial-audit.mjs'
       - 'public/worlds/spatial-temporal.mjs'
+      - 'systemia/spatial-perception/**'
       - 'public/worlds/perception-lab/**'
       - 'tests/spatial-perception.test.mjs'
       - 'tests/spatial-audit.test.mjs'
       - 'tests/spatial-viewport.test.mjs'
       - 'tests/spatial-temporal.test.mjs'
       - 'tests/spatial-temporal-browser.test.mjs'
+      - 'tests/spatial-offline-bridge.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
   push:
     paths:
       - 'public/worlds/spatial-perception.mjs'
       - 'public/worlds/spatial-audit.mjs'
       - 'public/worlds/spatial-temporal.mjs'
+      - 'systemia/spatial-perception/**'
       - 'public/worlds/perception-lab/**'
       - 'tests/spatial-perception.test.mjs'
       - 'tests/spatial-audit.test.mjs'
       - 'tests/spatial-viewport.test.mjs'
       - 'tests/spatial-temporal.test.mjs'
       - 'tests/spatial-temporal-browser.test.mjs'
+      - 'tests/spatial-offline-bridge.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
 jobs:
   core-tests:
@@ -35,4 +39,17 @@ jobs:
         with:
           node-version: '22'
       - name: Stereo geometry and consumer boundary tests
-        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs
+        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs tests/spatial-offline-bridge.test.mjs
+  offline-detector-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Python offline import contract tests (no model or cloud inference)
+        run: python3 -m unittest discover -s systemia/spatial-perception -p 'test_*.py' -v
+      - name: Syntax-check offline runner
+        run: python3 -m py_compile systemia/spatial-perception/offline_stereo.py

@@ -27,3 +27,15 @@ The static output lives under `public/journal`, which Vite copies into the owned
 npm run journal:test
 npm run journal:build
 ```
+
+## Historical feature preview (not a publication path)
+
+The Curiosity Desk can render the source-grounded chainsaw history candidate with an explicitly public-domain photograph:
+
+```bash
+node systemia/newsroom/editorial-preview.mjs
+```
+
+The output is a local, noindex HTML file in the operating system's temporary directory. For an alternate path, pass the editorial Markdown path, the media manifest, and a **local .html output path**, in that order. The command refuses to write under `public/`, `dist/`, `build/`, `.github/`, or `systemia/newsroom/stories/`. Its output is for editorial review only, not an approved Journal story, live URL, production build, signed Systemia release, or Clip distribution authorization.
+
+Source rights metadata: `editorial-assets/chainsaw-surgical-origins-media.json`. It identifies the public-domain source image, photographer and source URL. Avoid substituting unlicensed museum photography. Run `npm run journal:test` to include the preview gate tests.

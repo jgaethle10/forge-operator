@@ -648,13 +648,21 @@ export async function startEvercraftHomeServer({
           repoRoot,
           slug: body.slug,
           credentialStateDir,
+          stateRoot: process.env.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "",
           authorizationRef: session.grant_id
             ? "passport-grant:" + session.grant_id
             : "local-development:home.clip.publish",
         });
         const published = receipt.state === "published";
-        return json(res, published ? 200 : 502, {
+        const previouslyAttempted = receipt.state === "duplicate_or_reconciliation_hold";
+        const unresolved = previouslyAttempted || receipt.state === "reconciliation_required";
+        const mayHavePublished = receipt.provider_may_have_published === true ||
+          receipt.state === "published_postflight_failed" || unresolved;
+        return json(res, published ? 200 : unresolved ? 409 : 502, {
           ok: published,
+          publication_may_have_occurred: mayHavePublished,
+          manual_reconciliation_required: unresolved,
+          automatic_retry_allowed: false,
           subject: session.subject,
           authorization: {
             scope: "home.clip.publish",
@@ -662,7 +670,8 @@ export async function startEvercraftHomeServer({
             mode: session.mode,
             grant_id: session.grant_id || null,
           },
-          publication_performed: receipt.state === "published" || receipt.state === "published_postflight_failed",
+          publication_performed: published || receipt.state === "published_postflight_failed"
+            ? true : mayHavePublished ? null : false,
           secret_material_returned: false,
           receipt,
         });
