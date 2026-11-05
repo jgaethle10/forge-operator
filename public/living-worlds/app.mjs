@@ -1,4 +1,5 @@
 import {SCHEMA,WIDTH,HEIGHT,KINDS,makeHouse,validateHouse,room,clock,placeFurniture,removeFurniture,gift,party,advanceHouse} from './house-core.mjs';
+import {decisionContext,applyProposal} from './agent-proposals.mjs';
 const $=id=>document.getElementById(id);
 const STORAGE='evercraft.living-worlds.house001.v1';
 function load(){
@@ -7,6 +8,7 @@ function load(){
   return makeHouse();
 }
 let state=load(), selected='mara', tool='inspect', running=true, accelerated=false;
+let aiAuto=false, aiPending=false, aiRoundRobin=0, aiStatus='Model off. Rules-only simulation.';
 let interval=null;
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch{/* optional storage */}}
 function element(tag,css='',text=''){
@@ -102,17 +104,61 @@ function renderEvents(){
 }
 function render(){
   $('clock').textContent='Day '+state.day+' · '+clock(state)+' · '+state.tick+' ticks';
+  $('mode-label').textContent=aiAuto?'LOCAL SIMULATION · MODEL REQUESTS ON':'LOCAL SIMULATION · MODEL OFF';
+  $('ai-auto').textContent=aiAuto?'AI autopilot: On':'AI autopilot: Off';
+  $('ai-auto').setAttribute('aria-pressed',String(aiAuto));
+  $('think').disabled=aiPending;
+  $('ai-status').textContent=aiStatus;
   $('toggle').textContent=running?'⏸ Pause':'▶ Resume';
   $('speed').textContent=accelerated?'4× speed':'1× speed';
   renderHouse();renderTools();renderActors();renderProfile();renderEvents();
 }
+async function askLocalModel(residentId){
+  if(aiPending)return;
+  aiPending=true;
+  const context=decisionContext(state,residentId);
+  aiStatus='Consulting the optional local model for '+residentId+'...';
+  render();
+  try{
+    const response=await fetch('./api/propose',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({context}),signal:AbortSignal.timeout(17000)
+    });
+    if(!response.ok)throw Error('Model bridge unavailable');
+    const result=await response.json();
+    if(result?.source!=='local_llm'||result.schema!=='evercraft.living-worlds.inference-result.v1'||
+       !applyProposal(state,result.proposal))throw Error('Invalid or stale proposal');
+    const actor=state.actors.find(a=>a.id===residentId);
+    aiStatus=actor.name+' chose an action using the local model. The simulation validates and executes it.';
+    message('Model decision accepted for '+actor.name+'.');
+    save();
+  }catch{
+    aiAuto=false;
+    aiStatus='Local model unavailable or decision rejected. Continuing with rules only.';
+    message('Model decision could not be accepted. Rule-based residents continue.');
+  }finally{aiPending=false;render();}
+}
 function schedule(){
   if(interval!==null)clearInterval(interval);
   interval=null;
-  if(running)interval=setInterval(()=>{advanceHouse(state);save();render();},accelerated?330:1200);
+  if(running)interval=setInterval(()=>{
+    if(aiPending)return; // Keep a proposal bound to the exact simulation tick it observed.
+    advanceHouse(state);
+    save();render();
+    if(aiAuto&&state.tick%5===0){
+      const id=state.actors[aiRoundRobin++%state.actors.length].id;
+      void askLocalModel(id);
+    }
+  },accelerated?330:1200);
 }
 $('toggle').addEventListener('click',()=>{running=!running;schedule();render();message(running?'Simulation resumed.':'Simulation paused for decorating.');});
 $('speed').addEventListener('click',()=>{accelerated=!accelerated;schedule();render();});
+$('think').addEventListener('click',()=>{void askLocalModel(selectedActor().id);});
+$('ai-auto').addEventListener('click',()=>{
+  aiAuto=!aiAuto;
+  aiStatus=aiAuto?'AI autopilot armed. The first local model request happens every five simulation ticks.':'AI autopilot stopped. Rules-only simulation continues.';
+  render();
+});
 $('gift').addEventListener('click',()=>{gift(state,selectedActor().id);save();render();message('Gift delivered to '+selectedActor().name+'.');});
 $('party').addEventListener('click',()=>{party(state);save();render();message('Party hosted. Watch the social meters.');});
 $('reset').addEventListener('click',()=>{if(!window.confirm('Reset this local house, furniture and resident memories?'))return;state=makeHouse();selected='mara';tool='inspect';save();render();message('House reset to its original layout.');});
