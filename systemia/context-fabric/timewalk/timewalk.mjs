@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 const sha256 = (body) => 'sha256:' + createHash('sha256').update(JSON.stringify(body)).digest('hex');
 
 function strictInstant(value, field) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T/.test(value)) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(value)) {
     throw new Error(`${field}_required_iso8601`);
   }
   const epoch = Date.parse(value);
@@ -45,21 +45,17 @@ function effectiveStart(record) {
  * Results are only a projection over records already in that fabric; it does not
  * make unsupported inferences or replay agent side effects.
  */
-export function queryTimewalk(fabric, {
-  actor_ref = null,
-  known_at,
-  valid_at,
-  entity_ref = null,
-  predicate = null,
-  namespaces = null,
-  limit = 200,
-} = {}) {
+export function queryTimewalk(fabric, input = {}) {
   if (!fabric || typeof fabric.authorizedTimewalkSnapshot !== 'function') {
     throw new Error('timewalk_authorized_context_snapshot_required');
   }
-  if (Object.prototype.hasOwnProperty.call(arguments[1] || {}, 'authorization_at')) {
+  if (Object.prototype.hasOwnProperty.call(input, 'authorization_at')) {
     throw new Error('timewalk_authorization_time_cannot_be_overridden');
   }
+  const {
+    actor_ref = null, known_at, valid_at, entity_ref = null,
+    predicate = null, namespaces = null, limit = 200,
+  } = input;
   const knownAt = strictInstant(known_at, 'known_at');
   const validAt = strictInstant(valid_at, 'valid_at');
   const maxResults = Number(limit);
