@@ -79,7 +79,15 @@ try{
     assert.equal(await page.locator('#tourprogress').isVisible(),false);
     const before=await page.evaluate(()=>window.__heritageTelemetry.viewMatrix);
     if(!p.mobile){
-      await page.keyboard.down('w');await page.waitForTimeout(850);await page.keyboard.up('w');
+      await page.keyboard.down('w');
+      try{
+        // SwiftShader frames may arrive slower than a fixed wall-clock sleep.
+        // Require actual observable camera movement while input is held.
+        await page.waitForFunction(previous=>{
+          const view=window.__heritageTelemetry?.viewMatrix;
+          return !!view&&Math.hypot(...[12,13,14].map(i=>view[i]-previous[i]))>.15;
+        },before,{timeout:15000,polling:100});
+      }finally{await page.keyboard.up('w');}
     }else{
       assert.equal(await page.locator('#joystick').isVisible(),true,p.name+': touch stick not visible');
       const stick=await page.locator('#joystick').boundingBox();
