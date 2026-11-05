@@ -252,7 +252,7 @@ byId('temporalFrame').addEventListener('input',value=>showTimelineFrame(byId('te
 byId('loadSequence').addEventListener('click',async()=>{
  const file=byId('sequenceFile').files[0];
  if(!file){set('temporalStatus','Choose a local observation JSON file first.');return;}
- if(file.size>600000){set('temporalStatus','File too large: local JSON limit is 600 KB.');return;}
+ if(file.size>10000000){set('temporalStatus','File too large: local JSON limit is 10 MB.');return;}
  try{
   const parsed=JSON.parse(await file.text()),frames=Array.isArray(parsed)?parsed:parsed.frames;
   showTimeline(associateSpatialFrames(frames),'Local observation JSON parsed');
