@@ -12,10 +12,11 @@ import {leaseNext, complete, fail, saveWorkState, loadWorkState} from './work-st
 import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
 import {verifySignedMicroSeedExecutionReceipt} from './signed-microseed-execution.mjs';
 import {verifyFencedMicroSeedExecutionPermit} from './fenced-execution-admission.mjs';
+import {verifyFencedGoalAtPreflight,checkpointFencedGoalAttempt,recordFencedGoalCompletion} from './fenced-systemia-goal.mjs';
 
 const hash = value => 'sha256:' + createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
-function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,adapter,nodeSeedPin}) {
+function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,adapter,nodeSeedPin,goalStateFile}) {
   if (state?.schema !== 'evercraft.saban.work-state.v1' || !state?.jobs ||
       !contract || !plan || !adapter || typeof adapter.runAssignment !== 'function') {
     throw new Error('fenced_scheduler_invalid_kernel_inputs');
@@ -45,6 +46,11 @@ function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,
   }
   if (Object.keys(state.jobs).length === 0 || Object.keys(state.jobs).length > 32) {
     throw new Error('fenced_scheduler_bounded_work_required');
+  }
+  if (signedMicroSeed && (Object.keys(state.jobs).length!==1 ||
+      typeof goalStateFile!=='string' || !goalStateFile.trim() ||
+      !plan.mission_key || !plan.goal_key)) {
+    throw new Error('fenced_scheduler_durable_systemia_goal_required');
   }
   for (const [jobId,job] of Object.entries(state.jobs)) {
     if (jobId !== job.job_id || job.software_id !== contract.software_id ||
@@ -122,9 +128,10 @@ function boundedSummary(state) {
 export async function runFencedLocalScheduler({
   state,adapter,physicalWorkers,plan,contract,rootDir=process.cwd(),
   statePath,journal,nodeSeedPin=null,
-  passportStateDir=null,executionPermitIds=null
+  passportStateDir=null,executionPermitIds=null,
+  goalStateFile=null
 }={}) {
-  assertCandidate({state,adapter,physicalWorkers,plan,contract,statePath,journal,nodeSeedPin});
+  assertCandidate({state,adapter,physicalWorkers,plan,contract,statePath,journal,nodeSeedPin,goalStateFile});
   const target=path.resolve(statePath);
   fs.mkdirSync(path.dirname(target),{recursive:true,mode:0o700});
   const lock=target+'.fenced-run.lock';
@@ -136,6 +143,15 @@ export async function runFencedLocalScheduler({
   }
   try {
     checkPersistentState(target,state);
+    const requireGoal=contract.software_id==='saban-fenced-microseed-canary';
+    if(requireGoal){
+      for(const job of Object.values(state.jobs)){
+        await verifyFencedGoalAtPreflight({
+          filePath:goalStateFile,job,plan,
+          workDigest:fencedSchedulerWorkDigest(job)
+        });
+      }
+    }
     const requirePermit = contract.software_id==='saban-fenced-microseed-canary';
     const verifyAdmission = job => {
       if(!requirePermit) return null;
@@ -183,6 +199,15 @@ export async function runFencedLocalScheduler({
         // must block the external NodeSeed call. The execution itself is
         // still a test-only localhost canary.
         verifyAdmission(leased);
+        // Systemia persists an exact job-bound execution attempt *before*
+        // the NodeSeed adapter is allowed to run. On a crash, a persisted
+        // "executing" attempt is ambiguous and never silently reset.
+        if(requireGoal) {
+          await checkpointFencedGoalAttempt({
+            filePath:goalStateFile,job:leased,plan,
+            workDigest:fencedSchedulerWorkDigest(leased)
+          });
+        }
         const result=await adapter.runAssignment({
           assignment:{
             agent_id:leased.agent_id,idempotency_key:leased.idempotency_key||null,
@@ -217,6 +242,12 @@ export async function runFencedLocalScheduler({
           resultDigest:digest,
           receiptRef:'local-source-check:'+digest.slice(7,31)
         });
+        if(requireGoal){
+          await recordFencedGoalCompletion({
+            filePath:goalStateFile,job:leased,plan,result,
+            workDigest:fencedSchedulerWorkDigest(leased)
+          });
+        }
         complete(state,{jobId:leased.job_id,workerId,result,metrics:{
           duration_ms:Math.max(0,Date.now()-started),worker_id:workerId
         }});
@@ -247,6 +278,7 @@ export async function runFencedLocalScheduler({
       production_dispatch_authorized:false,
       automatic_retries_enabled:false,
       signed_canary_passport_permit_verified:requirePermit && executed>0,
+      systemia_durable_goal_completion_recorded:requireGoal && executed>0,
       live_passport_execution_permits_consumed:false,
       state
     };
