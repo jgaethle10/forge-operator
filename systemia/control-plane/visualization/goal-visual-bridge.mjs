@@ -45,7 +45,6 @@ export function projectGoalToVisualSnapshot(state,{now=new Date()}={}){
   requireValid(Number.isSafeInteger(state.revision)&&state.revision>=1,'revision');
   requireValid(Array.isArray(state.tasks)&&state.tasks.length<=MAX_TASKS,'task_count');
   requireValid(validDate(state.updated_at),'updated_at');
-  requireValid(Object.values(STATES).length>0,'state_config');
   const clock=now instanceof Date?now.getTime():new Date(now).getTime();
   requireValid(Number.isFinite(clock),'clock');
   const recordAge=clock-Date.parse(state.updated_at);
