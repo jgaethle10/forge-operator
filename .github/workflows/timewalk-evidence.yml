@@ -28,4 +28,4 @@ jobs:
         with:
           node-version: 22
       - name: Source, rights, year and engine-ownership invariant tests
-        run: node --test tests/timewalk-evidence.test.mjs tests/timewalk-overlay.test.mjs
+        run: node --test tests/timewalk-*.test.mjs
