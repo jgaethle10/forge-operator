@@ -4,11 +4,13 @@ on:
     paths:
       - 'systemia/control-plane/visualization/goal-visual-bridge*.mjs'
       - 'systemia/control-plane/visualization/index.html'
+      - 'systemia/control-plane/visualization/generate-offline-preview.mjs'
       - '.github/workflows/systemia-goal-visual-bridge.yml'
   pull_request:
     paths:
       - 'systemia/control-plane/visualization/goal-visual-bridge*.mjs'
       - 'systemia/control-plane/visualization/index.html'
+      - 'systemia/control-plane/visualization/generate-offline-preview.mjs'
       - '.github/workflows/systemia-goal-visual-bridge.yml'
 jobs:
   proof:
@@ -22,3 +24,12 @@ jobs:
           node-version: '22'
       - run: node --check systemia/control-plane/visualization/goal-visual-bridge.mjs
       - run: node --test systemia/control-plane/visualization/goal-visual-bridge.test.mjs
+      - run: node --check systemia/control-plane/visualization/generate-offline-preview.mjs
+      - run: node systemia/control-plane/visualization/generate-offline-preview.mjs ./systemia-offline-preview
+      - run: node -e "const fs=require('fs'); const g=JSON.parse(fs.readFileSync('./systemia-offline-preview/SYNTHETIC-goal-snapshot.json')); const a=JSON.parse(fs.readFileSync('./systemia-offline-preview/SYNTHETIC-agent-trial-report.json')); if(!g.source.startsWith('SYNTHETIC-')||g.summary.verified_receipts!==0||a.production_promotion_allowed!==false)process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: systemia-offline-visual-preview
+          path: systemia-offline-preview/
+          if-no-files-found: error
+          retention-days: 30
