@@ -4,7 +4,7 @@ Program outline: https://jgaethle10.github.io/forge-operator/partners/terms.html
 Operator: Evercraft LLC
 State: Founding partner expressions of interest only. Not automatic enrollment or a currently promised commission plan.
 What it does: Collects initial interest from independent creators, agencies, consultants, industry specialists, and other potential distributors who may refer relevant buyers to approved Evercraft products and services.
-Application: The static on-page form constructs a prefilled email. The applicant must explicitly send it from their own mail app. No backend submission or automatic CRM ingestion is established.
+Application: The page checks whether Evercraft's owned encrypted Fabric intake is available. If configured and healthy, the applicant may submit directly and receives a reference only after successful private durable storage. When unavailable, the form prepares an email draft and the applicant must explicitly press Send in their mail app. A drafted email is not an application receipt. Submission never activates a partner agreement or commission. Production backend readiness must be independently verified; source code and CI alone are insufficient.
 Applicant costs: No application fee, inventory purchase requirement, or requirement to recruit others.
 Earnings: No rate, earnings guarantee, payout schedule, or active compensation arrangement is advertised. Written agreements, eligibility, permitted marketing, verifiable customer payments, refunds, and payout conditions are required before compensated partnership.
 Relevant services and their separate readiness:

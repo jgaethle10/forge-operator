@@ -43,18 +43,16 @@ const companyFB=section('### Evercraft Facebook Page (company owned, brand-autho
 const companyLI=section('### Evercraft LinkedIn Page (company owned, brand-authorized only)','### Evercraft Instagram (company account, only if brand and media authorized)');
 const share=fs.readFileSync('public/mesh/ai-boardroom/share/index.html','utf8');
 
-test('founder posts follow four developed paragraphs with sincere field-report voice',()=>{
- for(const [name,draft] of [['Facebook',founderFB],['LinkedIn',founderLI]]){
-  const paragraphs=draft.split(/\n\s*\n/);
-  assert.equal(paragraphs.length,4,name+' founder editorial standard');
-  assert.ok(paragraphs.every(p=>p.trim().split(/\s+/).length>=48),'No punchy one-line fragments');
+test('founder posts follow grounded, coherent prose, without a prescribed paragraph count',()=>{
+ for(const draft of [founderFB,founderLI]){
   assert.ok(draft.includes(campaign.sample_url));
+  assert.match(draft,/Evercraft Boardroom/);
+  assert.match(draft,/browser|account|responses|comparison/i);
   assert.doesNotMatch(draft,/I've been working on something pretty cool|So which one do you trust\?|No account\. No payment\.|🔥|🙌|#\w+/);
  }
 });
 test('corporate release copy documents shipped work without engagement theater',()=>{
  for(const draft of [companyFB,companyLI]){
-  assert.equal(draft.split(/\n\s*\n/).length,4);
   assert.match(draft,/Evercraft/);
   assert.match(draft,/free|public|browser/);
   assert.match(draft,/does not|doesn't|not a live|not an automated|not a verified/);
@@ -84,6 +82,6 @@ test('superseded general launch kit points to the corrected editorial source',()
  const kit=fs.readFileSync('distribution/boardroom-public-launch-kit.md','utf8');
  assert.ok(kit.includes('marketing/boardroom-executive-chamber-20261029.md'));
  assert.ok(kit.includes('field report'));
- assert.ok(kit.includes('four-paragraph'));
+ assert.ok(kit.includes('no required number of paragraphs'));
  assert.doesNotMatch(kit,/I've been working on something pretty cool|Big decision\? Bring more perspective/);
 });

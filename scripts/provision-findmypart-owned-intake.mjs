@@ -48,15 +48,63 @@ export function insertSettings(text,replacements){
   return key+'='+val;
  })].join('\n')+'\n';
 }
-async function localSiteCheck(url){
- const controller=new AbortController();
- const timeout=setTimeout(()=>controller.abort(),5500);
- try{
-  const response=await fetch(url,{signal:controller.signal,redirect:'error',headers:{accept:'text/html'}});
-  const body=await response.text();
-  return response.status===200&&body.includes('FindMyPart')&&body.includes('id="part-request-form"')&&
-   body.includes('/findmypart/app.mjs');
- }catch{return false}finally{clearTimeout(timeout)}
+export async function waitForFindMyPartService(url,{
+ fetchImpl=fetch,
+ attempts=24,
+ delayMs=500,
+ requireIntake=true,
+}={}){
+ // systemctl restart may succeed before Node is listening on loopback.
+ // Bounded polling is needed; neither one HTTP 000 nor a web 200 alone
+ // proves that customer data can be accepted safely.
+ if(!Number.isInteger(attempts)||attempts<1||attempts>60)throw Error('invalid_check_attempts');
+ let reason='local_page_unavailable';
+ for(let n=0;n<attempts;n++){
+  let goodPage=false;
+  try{
+   const page=await fetchImpl(url,{
+    signal:AbortSignal.timeout(3000),redirect:'error',headers:{accept:'text/html'},
+   });
+   if(page.status===200){
+    const text=await page.text();
+    goodPage=text.includes('FindMyPart')&&text.includes('id="part-request-form"')&&
+      text.includes('/findmypart/app.mjs');
+   }
+  }catch{}
+  if(goodPage){
+   if(!requireIntake)return {ok:true,proof:'local_buyer_page'};
+   reason='private_intake_not_ready';
+   try{
+    const readiness=await fetchImpl(new URL('/api/findmypart/readiness',url),{
+      signal:AbortSignal.timeout(3000),redirect:'error',headers:{accept:'application/json'},
+    });
+    if(readiness.status===200){
+     const result=await readiness.json();
+     if(result?.schema==='evercraft.findmypart.intake-readiness.v1'&&
+      result.intake_available===true&&result.payment_ready===false&&
+      result.payment_verified===false)
+      return {ok:true,proof:'local_buyer_page_and_private_intake'};
+    }
+   }catch{}
+  }else{reason='local_page_unavailable'}
+  if(n<attempts-1)await new Promise(resolve=>setTimeout(resolve,delayMs));
+ }
+ return {ok:false,reason};
+}
+export function ensurePrivateIntakeDirectory(root,name,uid,gid){
+ if(!['alert-outbox','alert-receipts'].includes(name))throw Error('invalid_private_child');
+ const dest=path.join(root,name);
+ const exists=fs.existsSync(dest);
+ if(exists){
+  const stat=fs.lstatSync(dest);
+  if(!stat.isDirectory()||stat.isSymbolicLink()||(stat.mode&0o077)!==0||
+    stat.uid!==uid||stat.gid!==gid)
+   throw Error('private_child_directory_unsafe');
+ }else{
+  fs.mkdirSync(dest,{mode:0o700});
+  fs.chownSync(dest,uid,gid);
+  fs.chmodSync(dest,0o700);
+ }
 }
 async function main(){
  if(principal&&!/^[a-zA-Z0-9._:@-]{3,160}$/.test(principal))fail('invalid_owner_principal');
@@ -67,7 +115,13 @@ async function main(){
  if(!fs.existsSync(settings.env))fail('fabric_env_missing_run_owned_edge_install_first');
  const info=fs.lstatSync(settings.env);
  if(!info.isFile()||info.isSymbolicLink())fail('fabric_env_unsafe');
- const envSource=fs.readFileSync(settings.env,'utf8');
+ let envSource;
+ try{envSource=fs.readFileSync(settings.env,'utf8')}
+ catch(error){
+  if(error?.code==='EACCES'&&process.getuid?.()!==0)
+   fail('read_only_inspection_requires_sudo');
+  throw error;
+ }
  const parsed=normalizeEnv(envSource);
  const hasKey=Boolean(parsed.settings.get('EVERCRAFT_FINDMYPART_INTAKE_KEY_B64'));
  if(hasKey&&Buffer.from(parsed.settings.get('EVERCRAFT_FINDMYPART_INTAKE_KEY_B64'),'base64').length!==32)
@@ -96,9 +150,20 @@ async function main(){
   const state=fs.statSync(settings.store);
   if(state.uid!==uid||state.gid!==gid)fail('existing_private_directory_owner_mismatch');
  }
+ // Never silently invent a replacement encryption key for pre-existing
+ // customer records that may have survived an earlier interrupted setup.
+ if(!hasKey&&fs.existsSync(settings.store)&&fs.readdirSync(settings.store).some(
+   filename=>/^FMP-[A-F0-9]{24}\.enc$/.test(filename)))
+  fail('existing_encrypted_inquiries_require_original_key');
  fs.mkdirSync(settings.store,{recursive:true,mode:0o700});
  fs.chownSync(settings.store,uid,gid);
  fs.chmodSync(settings.store,0o700);
+ // Without a writable private outbox the public readiness route returns
+ // false even if the encrypted storage root and key are configured.
+ // Create both child folders before restarting Fabric, preserving any
+ // existing records or delivery receipts.
+ ensurePrivateIntakeDirectory(settings.store,'alert-outbox',uid,gid);
+ ensurePrivateIntakeDirectory(settings.store,'alert-receipts',uid,gid);
  // Preserve existing encrypted inquiries and all unrelated Fabric settings.
  const privateKey=hasKey?parsed.settings.get('EVERCRAFT_FINDMYPART_INTAKE_KEY_B64'):randomBytes(32).toString('base64');
  const values={
@@ -116,18 +181,32 @@ async function main(){
   fs.chownSync(temp,0,0);fs.chmodSync(temp,mode);
   fs.renameSync(temp,settings.env);installed=true;
   run('systemctl',['restart',settings.service]);
-  if(!await localSiteCheck(settings.url))fail('owned_local_part_form_not_verified');
-  emit({...setupState,state:'configured_local_site_verified',key_configured:true,
+  const verified=await waitForFindMyPartService(settings.url);
+  if(!verified.ok)fail('owned_intake_verification_failed_'+verified.reason);
+  emit({...setupState,state:'configured_owned_intake_verified',key_configured:true,
    private_lead_dir_configured:true,owner_notification_configured:principal.length>0||
     Boolean(parsed.settings.get('EVERCRAFT_FINDMYPART_OWNER_PRINCIPAL')),
-   local_site_verified:true});
+   local_site_verified:true,local_intake_verified:true});
  }catch(error){
   if(installed){
+   // If an inquiry arrived during startup, losing this newly generated key
+   // would make that encrypted customer record unrecoverable. Preserve it in
+   // the root-only env and flag an explicit hold instead of discarding it.
+   if(!hasKey&&fs.readdirSync(settings.store).some(
+    filename=>/^FMP-[A-F0-9]{24}\.enc$/.test(filename)))
+    throw Error('intake_setup_failed_customer_records_exist_key_preserved');
    const restore=settings.env+'.findmypart-rollback-'+process.pid;
    fs.writeFileSync(restore,envSource,{mode:0o600,flag:'wx'});
    fs.chownSync(restore,0,0);fs.chmodSync(restore,0o600);
    fs.renameSync(restore,settings.env);
-   try{run('systemctl',['restart',settings.service])}catch{}
+   try{
+    run('systemctl',['restart',settings.service]);
+    const recovered=await waitForFindMyPartService(settings.url,{requireIntake:false});
+    if(!recovered.ok)throw Error('rollback_local_page_not_verified');
+   }catch(restoreError){
+    throw Error('intake_apply_failed_'+String(error?.message||'unknown')+
+      '_rollback_not_verified_'+String(restoreError?.message||'unknown'));
+   }
   }
   throw error;
  }finally{

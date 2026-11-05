@@ -1,0 +1,673 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "evercraft-partners-founding-20261030",
+  "product": "evercraft-partners",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "founder_direction": "Publish founding program across eligible owned Facebook Pages plus Evercraft company social channels via Evercraft Clip; founder authorized Oct 30.",
+  "founder_editorial_approval": true,
+  "owner_approval": true,
+  "issuer_backed_publishing_authorization": false,
+  "status": "platform_identities_permissions_and_provider_publication_unverified",
+  "platform_connections_verified": false,
+  "published_posts_verified": 0,
+  "observed_partner_applications": null,
+  "observed_paid_sales": null,
+  "public_url": "https://jgaethle10.github.io/forge-operator/partners/",
+  "original_media_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+  "page_inventory_state": "historical_eight_candidate_names_not_verified_page_ids_or_current_meta_permissions",
+  "candidate_facebook_page_count": 8,
+  "excluded_pages": [
+    "Evercraft Property Services (EPS): separate referral program",
+    "Havenly Cleaning",
+    "R&B Chicken & Soul",
+    "ChristmasLightsUSA",
+    "unrelated niche properties and legal-held EV/RIVET/AliEV channels"
+  ],
+  "rules": [
+    "Keep founder editorial approval distinct from private issuer-backed account-scoped authorization.",
+    "No provider post or first-comment or preview is live without independent provider permalink readback.",
+    "No direct auto-post through CI or Metricool.",
+    "Never claim earned commissions or partner activations."
+  ],
+  "entries": [
+    {
+      "id": "partners-20261030-evercraft",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Evercraft",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "corporate",
+      "planned_day": "2026-10-30",
+      "caption": "Building something useful is only half the work. People need to find it, understand it, and know who to trust with the job.\n\nToday we're opening founding applications for Evercraft Partners. We're inviting independent professionals and businesses who recognize real customer needs and make relevant introductions. Evercraft handles scoping and delivery for our approved services.\n\nFree to apply, with no sales quotas or recruiting requirement. We review applications individually, and partner activity only starts after approval and written terms.\n\nKnow someone who could help good work reach the right people? Explore the founding program.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-media-tech",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-media-tech",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Evercraft Media & Technologies",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "technology",
+      "planned_day": "2026-10-30",
+      "caption": "Technology doesn't solve a business problem simply because it's powerful. The right person still needs to understand the challenge and connect someone with a capable team.\n\nEvercraft Partners is opening founding applications for people working around business technology, digital services, and creative production. Approved partners can make relevant introductions while Evercraft handles the work.\n\nApplications are free. No quotas or requirement to recruit. Any commercial arrangement follows individual review and agreed terms.\n\nIf you work with people who could use practical tools and services, explore Evercraft Partners.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-media-tech",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-learning",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-learning",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Evercraft Learning Network",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "educators-community",
+      "planned_day": "2026-10-30",
+      "caption": "Some of the best professional connections come from mentorships, learning communities, and colleagues helping each other find the right resources.\n\nEvercraft Partners is opening founding applications for people who understand their communities and recognize when someone needs useful technical or operational support. It's about making introductions, not recruiting a sales tree.\n\nFree to apply; no mandatory sales quotas and no recruiting requirement. Approved partnerships and any compensation need separate agreements before activity.\n\nKnow a community builder who helps others find solutions? Share the opportunity.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-learning",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-newsroom",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-newsroom",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Evercraft Newsroom",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "announcement",
+      "planned_day": "2026-10-30",
+      "caption": "Company announcement: Evercraft is opening founding partner applications for Evercraft Partners, a new independent distribution initiative.\n\nThe model is straightforward. Someone recognizes a genuine need. Following approval, the partner makes an appropriate connection. Evercraft scopes and delivers its own approved services.\n\nNo application fee, recruiting requirement, or mandatory sales quota. Applicants are reviewed individually, and written terms are required before compensated activity begins.\n\nDetails and the founding application are available on the official Evercraft Partners page.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-newsroom",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-systemia",
+      "product": "evercraft-partners",
+      "brand_key": "systemia",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Systemia",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "operations",
+      "planned_day": "2026-10-30",
+      "caption": "Complex systems can do tremendous work behind the scenes. But it still begins when someone notices a real problem that needs solving.\n\nEvercraft Partners is inviting founding applications from independent operators, consultants, and businesses who understand operational bottlenecks and can make relevant introductions. Evercraft handles the agreed service delivery.\n\nThis is not a pay-to-join or recruiting-chain program. Applications are free, with no quotas or recruitment requirement. Partnership activity needs approval and agreed terms.\n\nConnect the right people to the right capability: explore the founding network.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=systemia",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-systemia-university",
+      "product": "evercraft-partners",
+      "brand_key": "systemia-university",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Systemia University",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "professional-skills",
+      "planned_day": "2026-10-30",
+      "caption": "Knowing how to spot a real problem is a skill. Knowing who can actually help solve it is another.\n\nEvercraft Partners is opening founding applications for people with authentic connections across professional communities. Approved partners may make suitable introductions while Evercraft handles its approved services. The goal isn't to sell a course or build recruiting chains.\n\nFree applications. No mandatory quotas or recruiting requirement. Separate agreements govern any future compensated activity.\n\nSee how the founding partner program works.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=systemia-university",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-clip",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-clip",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Evercraft Clip",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "creators",
+      "planned_day": "2026-10-30",
+      "caption": "Creators and agency owners know the difference between reaching everybody and reaching the people who actually need something.\n\nEvercraft Partners is opening founding applications for independent people and businesses who understand their audiences. Once approved, partners can make relevant introductions and Evercraft handles its work.\n\nNo application fee, no quotas, no recruiting requirement. We want real relationships and useful outcomes, with individual terms agreed before partner activity begins.\n\nInterested in helping the right customers discover useful services? Learn about the founding network.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-clip",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-transparency-atlas",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-transparency-atlas",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "candidate_account_label": "Evercraft Transparency Atlas",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "accountable-connections",
+      "planned_day": "2026-10-30",
+      "caption": "A useful business introduction should make responsibilities clearer, not blur them.\n\nEvercraft Partners is opening founding applications for people and organizations who value accountable customer relationships. Following approval, partners can make appropriate introductions; Evercraft remains responsible for scoping and delivering approved work.\n\nIt's free to apply. There are no mandatory quotas or recruiting requirements, and any compensated partnership requires separately agreed terms.\n\nRead the founding partner program details and decide whether it's a fit.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=facebook&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-transparency-atlas",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-company-linkedin",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-company-linkedin",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "candidate_account_label": "Evercraft company LinkedIn (identity unverified)",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "business-development",
+      "planned_day": "2026-10-30",
+      "caption": "We are opening founding applications for Evercraft Partners, a new independent distribution initiative from Evercraft LLC.\n\nDelivering a useful capability and helping the right customer discover it are different jobs. We are inviting consultants, agencies, creators, and independent professionals who recognize relevant opportunities and understand trusted relationships.\n\nApproved partners can introduce suitable work; Evercraft remains accountable for scoping and delivery. Applying is free, with no mandatory quotas or recruiting requirement. Terms for any compensated engagement are agreed separately after review.\n\nExplore the program at the official Evercraft Partners site.",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-company-linkedin",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-instagram",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-instagram",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "candidate_account_label": "Evercraft @evercraft.global (identity unverified)",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "visual",
+      "planned_day": "2026-10-30",
+      "caption": "Someone you know has a problem. Someone else knows how to help. Sometimes the missing piece is one good introduction.\n\nEvercraft Partners founding applications are open. You bring the connection. We bring the capability. Once approved, partners can introduce relevant opportunities and Evercraft handles our approved work.\n\nFree to apply. No sales quotas. No recruiting requirement. Individual written terms apply before any compensated activity.\n\nFind Evercraft Partners through our profile link. #EvercraftPartners #Evercraft #BusinessDevelopment",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=instagram&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-instagram",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    },
+    {
+      "id": "partners-20261030-evercraft-company-x",
+      "product": "evercraft-partners",
+      "brand_key": "evercraft-company-x",
+      "platform": "x",
+      "destination": "x-organization",
+      "proposed_channels": [
+        "x-organization"
+      ],
+      "candidate_account_label": "Evercraft company X (identity unverified)",
+      "account_id": null,
+      "account_identity_verified": false,
+      "platform_permissions_verified": false,
+      "audience": "announcement",
+      "planned_day": "2026-10-30",
+      "caption": "Evercraft Partners founding applications are open. You bring the connection; we bring the capability.\n\nApproved partners make relevant introductions. Evercraft handles its approved work.\n\nFree to apply. No sales quotas or recruiting requirement. Written terms after review.\n\nhttps://jgaethle10.github.io/forge-operator/partners/?utm_source=x&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-company-x",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/partners/?utm_source=x&utm_medium=organic_social&utm_campaign=evercraft-partners-founding-20261030&utm_content=evercraft-company-x",
+      "media_asset_url": "https://jgaethle10.github.io/forge-operator/partners/social-card.png",
+      "media_source_file": "public/partners/social-card.svg",
+      "media_rights": "original_evercraft",
+      "media_upload_verified": false,
+      "creative_state": "original_public_social_card_png_available_provider_upload_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/partners/",
+        "https://github.com/jgaethle10/forge-operator/pull/1790"
+      ],
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/partners/",
+        "expectedText": [
+          "Evercraft Partners",
+          "Founding partner applications now open"
+        ],
+        "requireCanonicalSelfMatch": true
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "status": "held_platform_account_identity_and_issuer_authorization_missing",
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "excluded_brand_keys": [
+          "eps",
+          "havenly-cleaning",
+          "rnb-chicken-and-soul",
+          "christmaslightsusa"
+        ]
+      }
+    }
+  ]
+}

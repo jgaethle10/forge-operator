@@ -94,3 +94,24 @@ test("mobile evidence hero keeps labels separate from explanations and can wrap"
  assert.ok(html.includes(".evidence .line{grid-template-columns:minmax(0,1fr);row-gap:3px}"));
  assert.doesNotMatch(html,/\.evidence \.line b\{[^}]*min-width:65px/);
 });
+
+test("public Research visitors can share a verified link without an account or covert tracking",()=>{
+ assert.ok(html.includes('id="share-research"'));
+ assert.ok(html.includes('id="share-status"'));
+ assert.match(html,/navigator\.share/);
+ assert.match(html,/navigator\.clipboard\.writeText\(url\)/);
+ assert.match(html,/customer_referral/);
+ assert.match(html,/Share sheet closed\. Any publication is managed by the chosen app/);
+ assert.doesNotMatch(html,/\bnavigator\.sendBeacon\b|\bXMLHttpRequest\b/);
+});
+
+test("Research uses bespoke editorial wordmark on actual header and an abstract favicon",()=>{
+ const icon=read("public/research/assets/research-mark.svg");
+ assert.match(icon,/<svg[^>]*viewBox="0 0 72 72"/);
+ assert.match(icon,/<title id="title">Evercraft Research<\/title>/);
+ assert.match(icon,/Three offset evidence layers/);
+ assert.match(html,/<span class="logo-name">Research<em>\.<\/em><\/span>/);
+ assert.match(html,/class="logo-lines" aria-hidden="true"/);
+ assert.match(html,/<link rel="icon" type="image\/svg\+xml" href="\.\/assets\/research-mark\.svg">/);
+ assert.doesNotMatch(html,/<img class="symbol"|<span class="symbol"[^>]*>R<\/span>/);
+});

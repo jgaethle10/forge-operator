@@ -36,6 +36,18 @@ async function main(){
   print({schema:'evercraft.findmypart.private-inbox-list.v1',count:entries.length,contains_buyer_pii:false,entries});
   return;
  }
+ if(command==='status'){
+  const entries=list();
+  const counts={queued:0,owner_inbox_ack:0,recovery_needed:0,unsafe_file:0};
+  for(const entry of entries)counts[entry.notification||entry.state]++;
+  print({schema:'evercraft.findmypart.private-operator-status.v1',
+    total:entries.length,notifications:counts,
+    notification_configured:Boolean(process.env.EVERCRAFT_FINDMYPART_OWNER_PRINCIPAL&&
+      process.env.EVERCRAFT_NOTIFICATION_BASE_URL&&process.env.EVERCRAFT_NOTIFICATION_INGEST_TOKEN),
+    payment_verified:false,contains_buyer_pii:false,
+    note:'Inbox acknowledgement is not proof of human review or customer reply.'});
+  return;
+ }
  if(command==='reconcile'){
   const result=reconcileFindMyPartInquiryOutbox({storeDir:directory,key});
   print({schema:'evercraft.findmypart.private-outbox-recovery.v1',...result});
@@ -63,7 +75,7 @@ async function main(){
   print(prepareFindMyPartQuote(record,arg3));
   return;
  }
- throw Error('usage: node scripts/findmypart-owner-inbox.mjs list|reconcile|show FMP-<id> --reveal|quote FMP-<id> quick|deep|rescue --reveal');
+ throw Error('usage: node scripts/findmypart-owner-inbox.mjs list|status|reconcile|show FMP-<id> --reveal|quote FMP-<id> quick|deep|rescue --reveal');
 }
 main().catch(error=>{
  process.stderr.write('FindMyPart owner inbox: '+String(error?.message||'operation_failed')+'\n');

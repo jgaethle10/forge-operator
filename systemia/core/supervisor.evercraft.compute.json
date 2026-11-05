@@ -43,7 +43,8 @@
     "sentinel-life-safety-watch",
     "cfb-clip-publisher",
     "space-dudz-clip-publisher",
-    "people-layer-edge"
+    "people-layer-edge",
+    "work-saban-clip-facebook-company-publisher"
   ],
   "security": {
     "lease_required": true,
@@ -99,6 +100,7 @@
     "space_dudz_clip_publisher_supervised",
     "people_layer_owned_runtime_resident_supervised",
     "people_layer_base44_runtime_not_required",
-    "clip_social_coverage_watch_read_only_and_receipted"
+    "clip_social_coverage_watch_read_only_and_receipted",
+    "work_saban_clip_facebook_requires_current_passport_grant_and_verified_page_credential"
   ]
 }

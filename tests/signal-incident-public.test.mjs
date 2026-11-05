@@ -29,6 +29,15 @@ test('every evidence assertion and timeline item cites known source IDs', () => 
   }
 });
 
+test('the first official 6:21 PM release is preserved in the evidence and timeline', () => {
+  const first = incident.sources.find(source => source.id === 'srs-1');
+  assert.ok(first, 'official release #1 must be cited');
+  assert.ok(first.url.endsWith('/savannah-river-site-emergency-response-event/'));
+  assert.ok(incident.timeline.some(entry => entry.local_time === '2026-10-28T18:21:00-04:00' && entry.source_ids.includes('srs-1')));
+  assert.match(html, /6:21 PM EDT/);
+  assert.match(html, /id="source-srs1"/);
+});
+
 test('known ambiguity and safety invariants are preserved', () => {
   assert.ok(incident.reported_not_confirmed.some(x => /5:39/.test(x.claim) && /5:07/.test(x.claim)));
   assert.ok(incident.reported_not_confirmed.some(x => /unfiltered/.test(x.claim)));

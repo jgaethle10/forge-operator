@@ -45,7 +45,6 @@ The Markdown output has explicit claim-level evidence, source ledger, content ha
 
 **No sale, independent research run, payment or customer fulfillment is claimed by this source release.**
 
-
 ## Watershed Intelligence | Yakima Basin research slice
 
 `watershed-intelligence.mjs` is a bounded **research-only** reader and snapshot compiler. It does not create Sentinel incidents, operate drones, publish customer reports, initiate payments, or activate a resident scheduler. Reuses Sentinel's existing USGS Water Data observation adapter but keeps basin intelligence outside its life-safety event engine.

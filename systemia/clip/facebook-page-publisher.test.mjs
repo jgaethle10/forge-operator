@@ -6,6 +6,7 @@ function response(status,body={}){
   return {
     status,
     async text(){return JSON.stringify(body);},
+    async json(){return body;},
   };
 }
 
@@ -17,7 +18,7 @@ test('publishes a Facebook Page feed post and verifies its permalink',async()=>{
       return response(200,{id:'123_456'});
     }
     if(init.method==='GET'){
-      return response(200,{permalink_url:'https://www.facebook.com/123/posts/456'});
+      return response(200,{id:'123_456',permalink_url:'https://www.facebook.com/123/posts/456'});
     }
     throw new Error('unexpected request');
   };
@@ -115,4 +116,36 @@ test('Facebook adapter refuses a Base44 link even if the runtime is bypassed',as
     brandKey:'eps',
   }),/clip_public_link_legacy_provider_blocked/);
   assert.equal(called,false);
+});
+
+test('POST without confirmed GET is held with a remote id, never a fabricated URL',async()=>{
+  const adapter=createFacebookPagePublisherAdapter({
+    pageId:'123',pageAccessToken:'token',verified:true,allowPublish:true,
+    fetchImpl:async(url,init)=>{
+      if(init.method==='POST')return response(200,{id:'123_456'});
+      return response(403,{error:'reauthorization required'});
+    }
+  });
+  const result=await adapter.publish({metadata:{message:'A verified post is required.'}});
+  assert.equal(result.state,'reconciliation_required');
+  assert.equal(result.remoteId,'123_456');
+  assert.equal(result.providerMayHavePublished,true);
+  assert.equal('url' in result,false);
+  assert.equal(result.reason,'post_readback_http_not_ok');
+});
+test('a malicious or mismatched permalink cannot count as published',async()=>{
+  for(const readback of [
+    {id:'123_789',permalink_url:'https://www.facebook.com/123/posts/456'},
+    {id:'123_456',permalink_url:'https://other.example/spoof'},
+    {id:'123_456',permalink_url:'http://www.facebook.com/123/posts/456'},
+    {id:'123_456',permalink_url:'https://www.facebook.com/'}
+  ]){
+    const adapter=createFacebookPagePublisherAdapter({
+      pageId:'123',pageAccessToken:'token',verified:true,allowPublish:true,
+      fetchImpl:async(url,init)=>init.method==='POST'?response(200,{id:'123_456'}):response(200,readback)
+    });
+    const result=await adapter.publish({metadata:{message:'Do not fake the post.'}});
+    assert.equal(result.state,'reconciliation_required');
+    assert.equal('url' in result,false);
+  }
 });

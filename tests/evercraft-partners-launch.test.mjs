@@ -23,11 +23,45 @@ test('buyer-facing entry remains simple, mobile friendly and accessible',()=>{
  assert.match(page,/required maxlength="120"/);
  assert.match(page,/type="email" autocomplete="email" required/);
  assert.match(page,/id="understand" required/);
- assert.match(page,/form\.reportValidity\(\)/);
+ const app=load('public/partners/app.mjs');
+ assert.match(app,/form\.reportValidity\(\)/);
  assert.match(page,/aria-live="polite"/);
- assert.match(page,/This opens your email app with an application ready to send/i);
- assert.match(page,/Nothing is submitted automatically/);
+ assert.match(page,/type="module" src="\.\/app\.mjs"/);
+ assert.match(page,/website-honey/);
+ assert.match(app,/Secure applications are available/);
+ assert.match(app,/Press Send there to complete the application/);
 });
+test('public site and social preview share the same clear launch promise',()=>{
+ const page=load('public/partners/index.html');
+ const social=load('public/partners/social-card.svg');
+ assert.match(page,/You bring the <em>connection\.<\/em>/);
+ assert.match(page,/We bring the <em>capability\.<\/em>/);
+ assert.match(page,/Good work travels farther together/);
+ assert.match(page,/Apply to be a founding partner/);
+ assert.match(page,/Free to apply/);
+ assert.match(page,/No recruiting requirement/);
+ assert.match(page,/class="journey-shell"/);
+ assert.match(page,/THE IDEA IN THREE STEPS/);
+ assert.match(page,/You know the need\./);
+ assert.match(page,/You make the connection\./);
+ assert.match(page,/Evercraft handles the work\./);
+ assert.match(page,/Introductions begin after partner approval and agreed terms/);
+ assert.match(page,/class="journey-steps"/);
+ assert.doesNotMatch(page,/class="network"/);
+ assert.doesNotMatch(page,/class="diagram-caption"/);
+ assert.match(page,/\.hero-benefits/);
+ assert.match(social,/You bring the/);
+ assert.match(social,/connection\./);
+ assert.match(social,/We bring the/);
+ assert.match(social,/capability\./);
+ assert.match(social,/Founding partner applications open/i);
+ assert.match(social,/HOW IT WORKS/);
+ assert.match(social,/Know the need/);
+ assert.match(social,/Make the connection/);
+ assert.match(social,/Evercraft delivers/);
+ assert.doesNotMatch(social,/circle cx="954" cy="317"/);
+});
+
 test('partner compensation and recruitment cannot be presented as active earnings',()=>{
  const page=load('public/partners/index.html');
  const terms=load('public/partners/terms.html');
@@ -39,11 +73,15 @@ test('partner compensation and recruitment cannot be presented as active earning
  assert.doesNotMatch(page,/\d+% (?:commission|payout)/i);
  assert.doesNotMatch(page,/guaranteed earnings/i);
 });
-test('application explicitly requires human email send, not phantom server intake',()=>{
+test('secure application requires a true receipt; email fallback requires Send',()=>{
  const page=load('public/partners/index.html');
- assert.match(page,/window\.location\.href='mailto:jessegaethle10@gmail\.com/);
- assert.match(page,/event\.preventDefault\(\)/);
- assert.match(page,/Press Send in your email app/);
+ const app=load('public/partners/app.mjs');
+ assert.match(app,/\/api\/partners/);
+ assert.match(app,/data\.received!==true/);
+ assert.match(app,/data\.reference/);
+ assert.match(app,/do not assume it was submitted/i);
+ assert.match(app,/window\.location\.href=url/);
+ assert.match(app,/Press Send there to complete the application/);
  assert.match(page,/mailto:jessegaethle10@gmail\.com/);
  assert.doesNotMatch(page,/<form[^>]+action="https?:\/\//);
 });

@@ -5,6 +5,10 @@ on:
       - 'systemia/distribution/publisher-ownership.json'
       - 'systemia/distribution/audit-search-result-freshness.mjs'
       - 'systemia/distribution/audit-search-result-freshness.test.mjs'
+      - 'systemia/distribution/probe-owned-search-candidates.mjs'
+      - 'systemia/distribution/probe-owned-search-candidates.test.mjs'
+      - 'systemia/distribution/probe-free-first-public.mjs'
+      - 'systemia/distribution/probe-free-first-public.test.mjs'
       - 'systemia/distribution/audit-publisher-ownership.mjs'
       - 'systemia/distribution/audit-publisher-ownership.test.mjs'
       - 'systemia/distribution/inspect-official-mcp-registry.mjs'
@@ -30,6 +34,8 @@ jobs:
           node-version: '22'
       - run: node --check systemia/distribution/audit-publisher-ownership.mjs
       - run: node --check systemia/distribution/audit-search-result-freshness.mjs
+      - run: node --check systemia/distribution/probe-owned-search-candidates.mjs
+      - run: node --check systemia/distribution/probe-free-first-public.mjs
       - run: node --check systemia/distribution/inspect-official-mcp-registry.mjs
       - run: node --check systemia/distribution/build-registry-repoint-queue.mjs
       - run: node --check systemia/distribution/inspect-owned-mcp-cold-client.mjs
@@ -39,6 +45,18 @@ jobs:
         run: node --test systemia/distribution/audit-search-result-freshness.test.mjs
       - name: Audit observed indexed legacy results (no live SERP claim)
         run: node systemia/distribution/audit-search-result-freshness.mjs systemia/distribution/publisher-ownership.json "${{ runner.temp }}/search-result-freshness.json"
+      - name: Test external owned-search candidate evidence contract
+        run: node --test systemia/distribution/probe-owned-search-candidates.test.mjs
+      - name: Probe owned public candidate pages (GET only, launch holds preserved)
+        run: node systemia/distribution/probe-owned-search-candidates.mjs
+        env:
+          EVERCRAFT_OWNED_SEARCH_CANDIDATES_RECEIPT: ${{ runner.temp }}/owned-search-candidates.json
+      - name: Test free-first static public GET truth contract
+        run: node --test systemia/distribution/probe-free-first-public.test.mjs
+      - name: Observe free-first public paths (GET-only, not buyer activity)
+        env:
+          EVERCRAFT_FREE_FIRST_GET_RECEIPT: ${{ runner.temp }}/free-first-public-get.json
+        run: node systemia/distribution/probe-free-first-public.mjs
       - name: Validate evidence states
         env:
           OUTPUT: ${{ runner.temp }}/publisher-audit.json
@@ -64,6 +82,8 @@ jobs:
           path: |
             ${{ runner.temp }}/publisher-audit.json
             ${{ runner.temp }}/search-result-freshness.json
+            ${{ runner.temp }}/owned-search-candidates.json
+            ${{ runner.temp }}/free-first-public-get.json
             ${{ runner.temp }}/official-mcp-registry.json
             ${{ runner.temp }}/registry-repoint-queue.json
             ${{ runner.temp }}/owned-mcp-cold-client.json

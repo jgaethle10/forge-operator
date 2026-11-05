@@ -4,12 +4,14 @@ on:
     paths:
       - 'public/research/**'
       - 'systemia/evercraft-web/browser-worker/verify-research-mobile.mjs'
+      - 'systemia/evercraft-web/browser-worker/verify-research-share.mjs'
       - '.github/workflows/evercraft-research-mobile-qa.yml'
   push:
     branches: [main]
     paths:
       - 'public/research/**'
       - 'systemia/evercraft-web/browser-worker/verify-research-mobile.mjs'
+      - 'systemia/evercraft-web/browser-worker/verify-research-share.mjs'
       - '.github/workflows/evercraft-research-mobile-qa.yml'
   workflow_dispatch:
 permissions:
@@ -36,6 +38,7 @@ jobs:
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           node systemia/evercraft-web/browser-worker/verify-research-mobile.mjs
+          node systemia/evercraft-web/browser-worker/verify-research-share.mjs
       - name: Preserve synthetic-only mobile screenshots and QA receipt
         if: always()
         uses: actions/upload-artifact@v4

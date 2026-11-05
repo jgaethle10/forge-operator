@@ -1,0 +1,44 @@
+name: Work Saban founder-selected flow branding
+on:
+  pull_request:
+    paths:
+      - 'public/work-saban/brand/**'
+      - 'public/work-saban/index.html'
+      - 'public/work-saban/plan/index.html'
+      - 'public/work-saban/demo/index.html'
+      - 'public/work-saban/report/index.html'
+      - 'tests/work-saban-flow-brand.test.mjs'
+      - '.github/workflows/work-saban-flow-brand.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/work-saban/brand/**'
+      - 'public/work-saban/index.html'
+      - 'public/work-saban/plan/index.html'
+      - 'public/work-saban/demo/index.html'
+      - 'public/work-saban/report/index.html'
+      - 'tests/work-saban-flow-brand.test.mjs'
+      - '.github/workflows/work-saban-flow-brand.yml'
+permissions:
+  contents: read
+jobs:
+  brand-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate flow identity and customer headers
+        run: node --test tests/work-saban-flow-brand.test.mjs tests/work-saban-launch-system.test.mjs
+      - name: Parse shipped SVG assets
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          for file in ('public/work-saban/brand/work-saban-mark.svg',
+                       'public/work-saban/brand/work-saban-social.svg'):
+              root=ET.parse(file).getroot()
+              assert root.tag=='{http://www.w3.org/2000/svg}svg'
+              print('SVG OK:',file)
+          PY

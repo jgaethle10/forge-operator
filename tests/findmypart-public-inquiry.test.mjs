@@ -197,6 +197,12 @@ test('private owner CLI lists only references, reveals PII only with explicit fl
   const response=await post(rt.url,brief);
   const result=await response.json();
   assert.equal(response.status,201);
+  const status=JSON.parse(execFileSync(process.execPath,[script,'status'],{env,encoding:'utf8'}));
+  assert.equal(status.total,1);
+  assert.equal(status.notifications.queued,1);
+  assert.equal(status.contains_buyer_pii,false);
+  assert.equal(status.payment_verified,false);
+  assert.doesNotMatch(JSON.stringify(status),/customer@example|power selector|Ford 3600/);
   const listed=JSON.parse(execFileSync(process.execPath,[script,'list'],{env,encoding:'utf8'}));
   assert.equal(listed.count,1);
   assert.equal(listed.contains_buyer_pii,false);

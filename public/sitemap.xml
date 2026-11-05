@@ -22,16 +22,16 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-29T06:14:03.378Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-30T00:07:19.882Z</lastmod></url>
-  <url><loc>/chum/strike/</loc><lastmod>2026-10-29T19:13:01.342Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-30T00:07:19.882Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-30T00:07:19.882Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-30T00:07:19.882Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-11-05T07:20:10.453Z</lastmod></url>
+  <url><loc>/chum/strike/</loc><lastmod>2026-11-01T21:58:12.106Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-11-05T06:44:49.946Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-11-05T06:44:49.946Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-11-05T06:44:49.946Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/index.json</loc><lastmod>2026-10-29T23:31:51.389Z</lastmod></url>
+  <url><loc>/chum/proof/index.json</loc><lastmod>2026-11-05T07:10:35.903Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-10-29T23:31:51.389Z</lastmod></url>
-  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-10-29T23:31:51.389Z</lastmod></url>
+  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-11-05T07:10:35.903Z</lastmod></url>
+  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-11-05T07:10:35.903Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
@@ -122,7 +122,7 @@
   <url><loc>/forensiscope/distribution/</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-10-29T19:07:25.347Z</lastmod></url>
-  <url><loc>/llms.txt</loc><lastmod>2026-10-29T07:16:51.204Z</lastmod></url>
+  <url><loc>/llms.txt</loc><lastmod>2026-10-30T23:40:11.326Z</lastmod></url>
   <url><loc>/llms-full.txt</loc><lastmod>2026-10-29T06:13:11.985Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/schema.jsonld</loc><lastmod>2026-10-29T06:13:11.985Z</lastmod></url>

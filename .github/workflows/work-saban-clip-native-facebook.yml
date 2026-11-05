@@ -1,0 +1,40 @@
+name: Work Saban Clip Native Facebook Publisher
+on:
+  pull_request:
+    paths:
+      - 'systemia/clip/work-saban-publish-authorize.mjs'
+      - 'systemia/clip/work-saban-facebook-resident.mjs'
+      - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
+      - 'tests/work-saban-facebook-resident.test.mjs'
+      - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
+      - 'systemia/core/resident-services.json'
+      - '.github/workflows/work-saban-clip-native-facebook.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/clip/work-saban-publish-authorize.mjs'
+      - 'systemia/clip/work-saban-facebook-resident.mjs'
+      - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
+      - 'tests/work-saban-facebook-resident.test.mjs'
+      - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
+      - 'systemia/core/resident-services.json'
+      - '.github/workflows/work-saban-clip-native-facebook.yml'
+permissions:
+  contents: read
+jobs:
+  native-publisher-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify first-party Work Saban recipient scope and provider receipts
+        run: node --test tests/work-saban-facebook-resident.test.mjs
+      - name: Read-only dry run for current date
+        run: node systemia/clip/work-saban-facebook-resident-runner.mjs
+      - name: Guarded publisher never auto-fires from CI
+        run: |
+          echo 'This workflow never passes --fire, credentials, issuer grants or provider tokens.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Owned runtime must separately have a current Passport grant and verified Facebook Page credential.' >> "$GITHUB_STEP_SUMMARY"

@@ -359,6 +359,23 @@
         "--campaign": "SYSTEMIA_SPACE_DUDZ_CAMPAIGN",
         "--authority-receipt-file": "SYSTEMIA_SPACE_DUDZ_CLIP_AUTHORITY_RECEIPT_FILE"
       }
+    },
+    {
+      "service_key": "work-saban-clip-facebook-company-publisher",
+      "mode": "cycle",
+      "manifest": "systemia/clip/work-saban-facebook-publisher.workflow.json",
+      "executable": "systemia/clip/work-saban-facebook-resident-runner.mjs",
+      "cadence_seconds": 3600,
+      "static_args": [
+        "--fire"
+      ],
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--state-dir": "SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR",
+        "--credential-state-dir": "EVERCRAFT_CREDENTIAL_STATE_DIR",
+        "--passport-state-dir": "EVERCRAFT_PASSPORT_STATE_DIR",
+        "--expected-facebook-page-id": "EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID"
+      }
     }
   ]
 }

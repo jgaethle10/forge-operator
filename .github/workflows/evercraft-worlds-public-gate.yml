@@ -1,0 +1,34 @@
+name: Evercraft Worlds external release gate
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  external-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      WORLDS_ORIGIN: ${{ vars.EVERCRAFT_WORLDS_PUBLIC_ORIGIN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read-only HTTPS Worlds vault canary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/worlds-public-gate
+          if [ -z "$WORLDS_ORIGIN" ]; then
+            echo '{"schema":"evercraft.worlds.public-release-gate.v1","verified":false,"reason":"origin_not_configured"}' > artifacts/worlds-public-gate/receipt.json
+            cat artifacts/worlds-public-gate/receipt.json
+            exit 1
+          fi
+          node scripts/probe-worlds-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/receipt.json
+      - name: Preserve read-only release receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-worlds-public-release-gate
+          path: artifacts/worlds-public-gate/receipt.json
+          if-no-files-found: warn

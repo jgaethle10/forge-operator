@@ -80,3 +80,25 @@ test("Clip audit reports held drafts rather than phantom posts",()=>{
  assert.equal(a.counts.provider_receipt_recorded,0);
  assert.equal(a.status,"owner_review_required");
 });
+
+
+test("founder-reported launch is saved without forging Evercraft Clip provider publication",()=>{
+ assert.equal(queue.founder_launch_report.attestation_source,"founder_confirmed_in_conversation");
+ assert.equal(queue.founder_launch_report.recorded_as,"founder_report_not_independent_platform_receipt");
+ assert.deepEqual([...queue.founder_launch_report.platforms_reported].sort(),["facebook","instagram","linkedin","tiktok","x"]);
+ assert.equal(queue.founder_launch_report.do_not_republish_identical_personal_launch,true);
+ assert.equal(queue.postlaunch_distribution.launch_post_replay_prohibited,true);
+ assert.equal(queue.postlaunch_distribution.no_automatic_spend,true);
+ assert.equal(queue.published_posts_verified,0);
+ for(const entry of queue.entries){
+  if(entry.audience==="founder_personal"){
+   assert.equal(entry.status,"founder_reported_published_not_clip_posted");
+   assert.equal(entry.founder_reported.state,"reported_posted_by_founder_unverified");
+   assert.equal(entry.founder_reported.provided_platform_permalink,null);
+  }else{
+   assert.equal(entry.authorization.approved,false);
+   assert.equal(entry.publisher_state,"not_submitted");
+  }
+  assert.equal(entry.provider_post_url,null);
+ }
+});

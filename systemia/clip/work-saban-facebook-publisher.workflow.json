@@ -1,0 +1,28 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "work-saban-clip-facebook-company-publisher",
+  "mission_key": "evercraft-social-distribution-engine-2026-09",
+  "runtime": "systemia-core-resident",
+  "cadence_seconds": 3600,
+  "entrypoint": "systemia/clip/work-saban-facebook-resident-runner.mjs",
+  "purpose": "Publish due Work Saban evergreen Facebook company entries via Evercraft Clip only after a current separately issued Passport grant and verified company Page credential. First comment and provider permalink are required.",
+  "safety": {
+    "restricted_campaign_id": "work-saban-clip-evergreen-20261030",
+    "destination": "verified_evercraft_facebook_page_only",
+    "personal_accounts_forbidden": true,
+    "max_publishes_per_cycle": 1,
+    "minimum_hours_between_posts": 72,
+    "paid_spend_usd": 0,
+    "credential_vault_required": true,
+    "issuer_backed_passport_grant_required": true,
+    "passport_subject": "system:work-saban-clip-publisher",
+    "passport_scope": "home.clip.publish",
+    "passport_resource": "brand:evercraft-work-saban",
+    "durable_claim_before_provider_post": true,
+    "first_comment_provider_id_required": true,
+    "permalink_provider_readback_required": true,
+    "ambiguous_provider_attempts_never_auto_retried": true,
+    "public_anonymous_visibility_separate": true,
+    "return_secret_material": false
+  }
+}

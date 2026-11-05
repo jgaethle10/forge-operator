@@ -1,0 +1,26 @@
+{
+  "schema": "evercraft.clip.public-surface-status.v1",
+  "product": "Evercraft Clip",
+  "kind": "public_browser_workbench",
+  "publication_mode": "local_draft_and_explicit_device_share_only",
+  "browser_capabilities": [
+    "text_composition",
+    "local_image_preview",
+    "copy_caption",
+    "download_unsubmitted_handoff",
+    "explicit_native_share_if_supported"
+  ],
+  "media_data_leaves_browser_via_evercraft": false,
+  "hosted_upload_enabled": false,
+  "automatic_social_publication_verified": false,
+  "provider_account_permissions_verified": false,
+  "platform_receipts_available_here": false,
+  "github_repository": "https://github.com/jgaethle10/forge-operator",
+  "publisher_source": "systemia/clip/social-publisher-runtime.mjs",
+  "current_blockers": [
+    "reconcile authenticated first-party provider adapters with real connected Pages/accounts",
+    "establish scoped Systemia authority",
+    "collect and recheck provider post IDs and permalinks"
+  ],
+  "truth_boundary": "The static workbench does not publish posts or prove public provider visibility. Its status is a declared capability contract, not real-time monitoring."
+}
