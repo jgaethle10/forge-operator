@@ -7,6 +7,7 @@ import {startWorldsVault} from '../systemia/worlds/worlds-vault-runtime.mjs';
 import {encodeSharedScene} from '../public/worlds/share-scene.mjs';
 import {initialWorld} from '../public/worlds/world-core.mjs';
 import {checkWorldsOrigin,probeWorldsPublic} from '../scripts/probe-worlds-public.mjs';
+import {probeHiddenWorldPublic} from '../scripts/probe-hidden-world-public.mjs';
 const json=(url,origin)=>fetch(url,{method:'POST',headers:{'content-type':'application/json',...(origin?{origin}:{})},body:JSON.stringify({scene_token:encodeSharedScene(initialWorld())})});
 test('vault accepts configured public origin behind proxy and rejects cross-site writes',async t=>{
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'evercraft-worlds-origin-'));
@@ -34,4 +35,32 @@ test('public probe rejects untrusted URLs and false service status',async()=>{
  assert.equal(healthy.verified,true);assert.equal(healthy.write_test_performed,false);
  const unsafe=await probeWorldsPublic('https://worlds.example.org',{fetchFn:async()=>response(200,'{}',{'access-control-allow-origin':'*'})});
  assert.equal(unsafe.reason,'unsafe_cors');
+});
+
+test('Hidden World public proof requires all four owned-origin artifacts',async()=>{
+ const response=(status,body,type='text/html')=>({status,headers:{get:key=>key==='content-type'?type:null},json:async()=>JSON.parse(body),text:async()=>body});
+ const health=JSON.stringify({schema:'evercraft.worlds.vault.v1',ok:true,mode:'owned-durable-vault'});
+ const mock=async url=>{
+  if(url.endsWith('/api/health'))return response(200,health,'application/json');
+  if(url.endsWith('/hidden-world/'))return response(200,'Hidden World Atlas');
+  if(url.endsWith('/yakima-evidence.html'))return response(200,'Connected tunnels established by the records reviewed');
+  if(url.endsWith('/yakima-standalone.html'))return response(200,'scene-ready');
+  if(url.endsWith('.csv'))return response(200,'id,title\nyakima,example','text/csv');
+  if(url.endsWith('yakima-evidence-ledger.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.evidence-ledger.v1'}),'application/json');
+  return response(404,'not found');
+ };
+ const healthy=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:mock});
+ assert.equal(healthy.verified,true);
+ assert.equal(healthy.physical_iphone_verified,false);
+ assert.equal(healthy.write_test_performed,false);
+ const missing=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('yakima-evidence.html')?response(404,'not deployed'):mock(url)});
+ assert.equal(missing.verified,false);
+ assert.equal(missing.reason,'yakima_evidence_not_verified');
+ const wrongMime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('.csv')?response(200,'yakima,','text/html'):mock(url)});
+ assert.equal(wrongMime.reason,'research_data_not_verified');
+ const wrongRuntime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/api/health')?response(200,JSON.stringify({ok:true,schema:'another.service'}),'application/json'):mock(url)});
+ assert.equal(wrongRuntime.reason,'worlds_runtime_identity_mismatch');
 });

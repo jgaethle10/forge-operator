@@ -26,7 +26,7 @@ function assertWriteOrigin(req,publicOrigin){
  if(supplied!==expected)throw new VaultError(403,'cross_origin_write_denied');
 }
 
-const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8'};
+const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.csv':'text/csv; charset=utf-8','.json':'application/json; charset=utf-8'};
 class VaultError extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const digest=s=>createHash('sha256').update(s).digest('hex');
 const equal=(a,b)=>{const x=Buffer.from(a,'hex'),y=Buffer.from(b,'hex');return x.length===y.length&&timingSafeEqual(x,y);};
@@ -100,7 +100,9 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
  }
  async function serveStatic(req,res,pathname){
   if(!pathname.startsWith('/worlds/')||req.method!=='GET')throw new VaultError(404,'route_not_found');
-  const relative=pathname.slice('/worlds/'.length)||'index.html';
+  let relative=pathname.slice('/worlds/'.length)||'index.html';
+  // Allow nested exhibits to use canonical trailing-slash URLs, without directory listing.
+  if(relative.endsWith('/'))relative+='index.html';
   if(relative.split('/').some(x=>x==='.'||x==='..'||x.startsWith('.'))||relative.includes('\\'))throw new VaultError(404,'route_not_found');
   const target=path.resolve(assetRoot,'worlds',relative);
   if(!within(path.join(assetRoot,'worlds'),target))throw new VaultError(404,'route_not_found');
