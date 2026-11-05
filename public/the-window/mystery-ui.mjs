@@ -1,4 +1,5 @@
-import {createMystery,revealNext,suspicionScores,accuse} from './mystery.mjs';
+import {createMystery,revealNext,suspicionScores,accuse,readMysteryCheckpoint,writeMysteryCheckpoint} from './mystery.mjs';
+import {createWorld as createSocietyWorld} from './world.mjs';
 
 // Optional local experiment under the canonical Window projection. Not another engine.
 export function mountMysteryLab(getWorld) {
@@ -11,12 +12,15 @@ export function mountMysteryLab(getWorld) {
   section.innerHTML=`<div class="mystery-heading"><div><span class="eyebrow">EXPERIMENT 002 / SOCIAL DEDUCTION</span><h2>The Missing Blueprint</h2><p>Someone moved a workshop blueprint. Examine witnesses, separate testimony from records, and decide what the evidence supports.</p></div><span class="mystery-label">FICTIONAL · RULE-BASED</span></div>
     <div class="mystery-columns"><div><h3>Evidence board <span id="mystery-progress"></span></h3><ol id="mystery-clues" aria-label="Revealed evidence"></ol><button type="button" id="mystery-reveal">Examine next clue</button></div>
     <div><h3>Resident files</h3><div id="mystery-suspects"></div><label for="mystery-choice">Who moved the blueprint?</label><select id="mystery-choice" aria-label="Select suspect"></select><button type="button" id="mystery-accuse">Submit theory</button><p id="mystery-result" role="status" aria-live="polite"></p><button type="button" id="mystery-reset">New fictional case</button></div></div>
-    <p class="mystery-disclaimer">A local, deterministic puzzle projected from existing Mossmere residents and relationships. Statements are generated fixtures, not independent AI testimony. Scores are evidence weights, not probabilities. No choice changes the shared world or a real person's record.</p>`;
+    <p class="mystery-disclaimer">Your fictional case progress is saved locally on this device, and reloads can resume it. A deterministic puzzle projected from existing Mossmere residents and relationships. Statements are generated fixtures, not independent AI testimony. Scores are evidence weights, not probabilities. No choice changes the shared world or a real person's record.</p>`;
   parent.insertAdjacentElement('afterend',section);
   const $=id=>section.querySelector('#'+id);
-  let seed=0;
-  let state=createMystery(getWorld(),seed);
-  let choice=state.suspects[0].id;
+  // Both the Window and Worlds reconstruct from the same original fictional town fixture.
+  const scenarioWorld=createSocietyWorld(0,818);
+  const resumed=readMysteryCheckpoint(localStorage,scenarioWorld);
+  let state=resumed?.state??createMystery(scenarioWorld,0);
+  let choice=resumed?.choice??state.suspects[0].id;
+  const persist=()=>writeMysteryCheckpoint(localStorage,state,choice);
   function render(){
     const scores=suspicionScores(state);
     $('mystery-progress').textContent=state.revealed+'/'+state.maxReveals+' examined';
@@ -49,12 +53,12 @@ export function mountMysteryLab(getWorld) {
     }else $('mystery-result').textContent=state.revealed<3?
       'Examine three clues before submitting a theory.':'Submit a theory now, or inspect another clue.';
   }
-  $('mystery-choice').addEventListener('change',e=>{choice=e.target.value;});
-  $('mystery-reveal').addEventListener('click',()=>{state=revealNext(state);render();});
-  $('mystery-accuse').addEventListener('click',()=>{state=accuse(state,choice);render();});
+  $('mystery-choice').addEventListener('change',e=>{choice=e.target.value;persist();});
+  $('mystery-reveal').addEventListener('click',()=>{state=revealNext(state);persist();render();});
+  $('mystery-accuse').addEventListener('click',()=>{state=accuse(state,choice);persist();render();});
   $('mystery-reset').addEventListener('click',()=>{
-    seed=(seed+1)%1_000_001;state=createMystery(getWorld(),seed);
-    choice=state.suspects[0].id;render();
+    state=createMystery(scenarioWorld,(state.seed+1)%1_000_001);
+    choice=state.suspects[0].id;persist();render();
   });
   render();
 }
