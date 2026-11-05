@@ -31,7 +31,7 @@ let move={x:0,y:0},tourActive=false,tourElapsed=0;const keys=new Set(),joy=$('jo
 // Read-only QA snapshot restricted to loopback test servers, never the public release.
 if(['127.0.0.1','localhost'].includes(location.hostname)){
  Object.defineProperty(window,'__evercraftHeritageQA',{value:()=>({
-  running,tourActive,x,z,yaw,pitch,keys:[...keys],frameTime:last,
+  running,tourActive,tourElapsed,x,z,yaw,pitch,move:{...move},keys:[...keys],frameTime:last,
   focused:document.activeElement?.id||null
  }),configurable:false});
 }
