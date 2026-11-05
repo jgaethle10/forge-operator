@@ -1,0 +1,52 @@
+name: PQ envelope isolated lab
+on:
+  pull_request:
+    paths:
+      - 'systemia/crypto/**'
+      - 'tests/pq-envelope.test.mjs'
+      - 'tests/pq-signed-envelope.test.mjs'
+      - 'tests/pq-replay-sqlite.test.mjs'
+      - 'tests/pq-replay-postgres.test.mjs'
+      - 'tests/pq-pinned-signers.test.mjs'
+      - 'tests/pq-postgres-fixture/**'
+      - '.github/workflows/pq-envelope-lab.yml'
+  workflow_dispatch:
+jobs:
+  pq-envelope:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: pq_lab
+          POSTGRES_PASSWORD: pq_lab_ci_only
+          POSTGRES_DB: pq_lab
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pq_lab -d pq_lab"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify ML-KEM availability (fail closed)
+        run: node --input-type=module -e "import {pqRuntime} from './systemia/crypto/pq-envelope.mjs'; if (!pqRuntime().available) process.exit(1)"
+      - name: Install isolated PostgreSQL integration-test driver
+        run: npm install --prefix tests/pq-postgres-fixture --ignore-scripts --no-audit --no-fund --package-lock=false
+      - name: Run ML-KEM, ML-DSA and local/shared replay tests
+        env:
+          PQ_REPLAY_TEST_DATABASE_URL: postgres://pq_lab:pq_lab_ci_only@127.0.0.1:5432/pq_lab
+        run: >-
+          node --test
+          tests/pq-envelope.test.mjs
+          tests/pq-signed-envelope.test.mjs
+          tests/pq-replay-sqlite.test.mjs
+          tests/pq-replay-postgres.test.mjs
+          tests/pq-pinned-signers.test.mjs
+          tests/pq-postgres-fixture/integration.test.mjs
