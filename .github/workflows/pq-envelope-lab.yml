@@ -7,6 +7,7 @@ on:
       - 'tests/pq-signed-envelope.test.mjs'
       - 'tests/pq-replay-sqlite.test.mjs'
       - 'tests/pq-replay-postgres.test.mjs'
+      - 'tests/pq-pinned-signers.test.mjs'
       - 'tests/pq-postgres-fixture/**'
       - '.github/workflows/pq-envelope-lab.yml'
   workflow_dispatch:
@@ -47,4 +48,5 @@ jobs:
           tests/pq-signed-envelope.test.mjs
           tests/pq-replay-sqlite.test.mjs
           tests/pq-replay-postgres.test.mjs
+          tests/pq-pinned-signers.test.mjs
           tests/pq-postgres-fixture/integration.test.mjs
