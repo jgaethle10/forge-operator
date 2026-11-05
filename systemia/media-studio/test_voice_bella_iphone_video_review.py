@@ -98,5 +98,35 @@ class BellaPhoneTests(unittest.TestCase):
                 module.export(archive,output)
 
 
+    @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"),
+                         "ffmpeg required")
+    def test_five_independent_original_dry_pcm_videos(self):
+        try:
+            import PIL
+        except ImportError:
+            self.skipTest("Pillow required")
+        with tempfile.TemporaryDirectory() as td:
+            source=pathlib.Path(td)/"fixture.zip"
+            source_fixture(source)
+            folder=pathlib.Path(td)/"five-take-review"
+            module.export_individual(source,folder)
+            receipt=json.loads((folder/"verification.json").read_text())
+            self.assertEqual([x["take"] for x in receipt["takes"]],list("ABCDE"))
+            self.assertEqual(receipt["voice"],"original_kokoro_af_bella")
+            self.assertTrue(receipt["originalDryMastersVerified"])
+            self.assertTrue(receipt["noNewVoiceSynthesis"])
+            self.assertFalse(receipt["commercialReleaseAuthorized"])
+            for row in receipt["takes"]:
+                clip=folder/row["file"]
+                self.assertTrue(clip.is_file())
+                self.assertGreater(clip.stat().st_size,15000)
+                self.assertAlmostEqual(row["durationSec"],11.0,delta=.35)
+                self.assertEqual(hashlib.sha256(clip.read_bytes()).hexdigest(),
+                                 row["sha256"])
+            with self.assertRaises(FileExistsError):
+                module.export_individual(source,folder)
+
+
+
 if __name__=="__main__":
     unittest.main()
