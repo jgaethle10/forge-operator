@@ -35,6 +35,6 @@ test('device kit is entirely portable, synthetic, checksummed and has no signing
   assert.equal(sha(await readFile(join(kit.directory,match[2]))),match[1]);
  }
  const readme=await readFile(join(kit.directory,'READ-ME-FIRST.txt'),'utf8');
- assert.match(readme,/not independently trusted/i);
+ assert.match(readme,/not an independently trusted publisher identity/i);
  assert.match(readme,/No private signing key is included/i);
 });
