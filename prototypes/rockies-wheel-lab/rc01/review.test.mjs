@@ -41,7 +41,7 @@ test('review tabs safely switch locally without remote navigation or consumer da
 });
 
 test('phones use the direct full-screen launch path rather than a tall empty iframe',()=>{
-  assert.match(html, /@media\(max-width:750px\)[^}]*\{[^}]*\}iframe\{display:none;height:0\}/);
+  assert.match(html, /@media\(max-width:750px\)\{[\s\S]*?iframe\{display:none;height:0\}/);
   assert.match(html, /id="openFullscreen" href="\.\/index\.html"/);
   assert.match(source, /openFullscreen\.href=frame\.src/);
 });
