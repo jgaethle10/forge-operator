@@ -11,13 +11,17 @@ Node002 NextGen v2 external GET at 2026-11-05T22:33:21Z observed public Fabric `
 - Return verification records a provider-backed local paid receipt and leaves fulfillment `awaiting_human_review`; **never** unlocks entitlement or fulfillment automatically.
 - Fabric checkout and return paths can carry `EVERCRAFT_PAYMENT_BACKEND_TOKEN` only on their vetted owned service URLs. No secrets are returned by health.
 - `tests/owned-payment-ops.test.mjs` exercises amount identity, idempotent replay and restart, forged session rejection, unpaid and paid status, default live hold, auth and corrupt journal. CI tests use injected fake processor responses only, not real payments.
+- `systemia/payments/stripe-webhook-verifier.mjs` now validates raw Stripe-signed bodies with HMAC-SHA256, five-minute timestamp tolerance, and constant-time signature comparison. The private service exposes a signature-gated `/api/payments/stripe-webhook` candidate that refetches the exact canonical checkout session before recording paid state. Invalid signatures and unbound sessions fail closed; fulfillment stays held.
+- Refunded/disputed Stripe events currently return `503 reversal_reconciliation_not_implemented` rather than being silently acknowledged. This is an **explicit production-release blocker**, not completed reconciliation. Never expose this webhook publicly until durable, event-id-aware reversal/dispute handling, replay safety, recovery and owner alerts have passed acceptance. Set `STRIPE_WEBHOOK_SECRET` only in private service environment and never paste it into GitHub, issues or chat.
+- Node002 independently observed all **seven historical exact-SKU hosted checkout URLs returned HTTP 200 on 2026-11-05T22:51:33Z**, with 3/3 canary unit tests passing. This verifies HTTP reachability only, **not** Stripe account-active status, displayed product price, payment-form rendering, customer settlement or fulfillment.
+
 
 ## Test on NextGen without credentials or charges
 
 From a detached Git worktree containing this branch:
 
 ```sh
-node --test tests/owned-payment-ops.test.mjs tests/payment-return.test.mjs tests/fabric-checkout-transport-truth.test.mjs tests/nextgen-payments-readiness.test.mjs
+node --test tests/owned-payment-ops.test.mjs tests/payment-return.test.mjs tests/fabric-checkout-transport-truth.test.mjs tests/nextgen-payments-readiness.test.mjs tests/nextgen-hosted-links-canary.test.mjs tests/stripe-webhook-verifier.test.mjs
 ```
 
 Neither these tests nor the public readiness probe charge a customer or contact Stripe.
