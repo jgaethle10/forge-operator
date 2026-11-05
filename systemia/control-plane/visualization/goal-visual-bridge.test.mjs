@@ -158,3 +158,14 @@ test('CLI can export the real goal state without modifying it',async()=>{
     assert.equal(await readFile(input,'utf8'),before);
   }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+test('Living Graph import surface exposes redacted freshness and missing receipt gaps',async()=>{
+  const html=await readFile(new URL('./index.html',import.meta.url),'utf8');
+  const {Script}=await import('node:vm');
+  const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)];
+  assert.equal(scripts.length,1);
+  assert.doesNotThrow(()=>new Script(scripts[0][1]));
+  assert.match(html,/UNVERIFIED IMPORT/);
+  assert.match(html,/Completed tasks missing receipt references/);
+  assert.match(html,/passport_authorization_verified|Passport authority/);
+});
