@@ -6,6 +6,8 @@ import path from 'node:path';
 import {randomBytes} from 'node:crypto';
 import {startNodeSeed} from '../compute/node-seed.mjs';
 import {createWorkState,loadWorkState} from './work-state.mjs';
+import {createGoalState,admitGoalPlan} from '../organism/goal-runtime.mjs';
+import {createGoalStateFile,readGoalState,writeGoalState} from '../organism/goal-store.mjs';
 import {runScheduler} from './scheduler.mjs';
 import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
 import {EvercraftPassport} from '../passport/passport.mjs';
@@ -61,6 +63,22 @@ async function scenario(name,malform=false,{unconsumed=false,expired=false}={}){
   const root=path.join(dir,name);
   fs.mkdirSync(root,{recursive:true});
   const statePath=path.join(root,'state.json');
+  const goalStateFile=path.join(root,'systemia-goal.json');
+  const goalKey='fenced-goal-'+name;
+  const missionKey='fenced-mission-'+name;
+  const goal=admitGoalPlan({
+    state:createGoalState({
+      goalKey,missionKey,
+      objective:'Verify bounded local NodeSeed hashing',
+      now:new Date()
+    }),
+    plan:[{
+      work_key:jobId,work_type:'analyze',
+      provider_key:'saban-fenced-microseed',
+      dedupe_key:'saban-fenced:'+fencedSchedulerWorkDigest(state.jobs[jobId])
+    }]
+  });
+  await createGoalStateFile(goalStateFile,goal);
   const journal=new SabanFencedAckJournal({
     stateDir:path.join(root,'ack'),integritySecret:'local-signed-canary-secret',
     maxAttempts:1
@@ -110,6 +128,10 @@ async function scenario(name,malform=false,{unconsumed=false,expired=false}={}){
   const adapter={
     runAssignment:async({assignment})=>{
       calls++;
+      const persistedGoal=await readGoalState(goalStateFile);
+      assert.equal(persistedGoal.tasks[0].status,'executing',
+        'Systemia must checkpoint the precise attempt before NodeSeed HTTP');
+      assert.equal(persistedGoal.tasks[0].attempt,1);
       const result=await request('/v1/jobs',{
         body:{
           lease_id:lease.lease_id,token:lease.token,
@@ -126,12 +148,14 @@ async function scenario(name,malform=false,{unconsumed=false,expired=false}={}){
     }
   };
   return {
-    state,adapter,contract,plan,physicalWorkers:1,
-    statePath,fencedJournal:journal,fencedNodeSeedPin:{[jobId]:pin},
+    state,adapter,contract,plan:{...plan,mission_key:missionKey,goal_key:goalKey},
+    physicalWorkers:1,statePath,
+    fencedGoalStateFile:goalStateFile,
+    fencedJournal:journal,fencedNodeSeedPin:{[jobId]:pin},
     fencedPassportStateDir:passportDir,
     fencedExecutionPermitIds:{[jobId]:permitId},
     calls:()=>calls,jobId,journal,passport,permitId,
-    grantId:grant.grant.grant_id,requestFingerprint
+    grantId:grant.grant.grant_id,requestFingerprint,goalStateFile
   };
 }
 
@@ -147,6 +171,14 @@ test('the REAL existing Saban scheduler accepts a live independently pinned sign
   const recorded=disk.jobs[s.jobId];
   assert.equal(recorded.state,'completed');
   assert.equal(s.journal.inspect({jobKey:s.jobId}).state,'ack_recorded');
+  const durableGoal=await readGoalState(s.goalStateFile);
+  assert.equal(durableGoal.mission_key,s.plan.mission_key);
+  assert.equal(durableGoal.tasks[0].status,'complete');
+  assert.equal(durableGoal.tasks[0].attempt,1);
+  assert.ok(durableGoal.tasks[0].receipt_refs.includes(
+    'saban-node:'+recorded.result.worker_receipt.receipt_hash
+  ));
+  assert.equal(response.systemia_durable_goal_completion_recorded,true);
   assert.equal(recorded.result.signed_execution.statement.node_id,seed.node_id);
   assert.equal(recorded.result.signed_execution.statement.lease_id,s.fencedNodeSeedPin[s.jobId].lease_id);
   const again=await runScheduler({...s,state:disk});
@@ -161,6 +193,7 @@ test('wrong signed node job evidence dead-letters work and cannot be executed ag
   const disk=loadWorkState(s.statePath);
   assert.equal(disk.jobs[s.jobId].state,'dead_letter');
   assert.equal(s.journal.inspect({jobKey:s.jobId}).state,'held');
+  assert.equal((await readGoalState(s.goalStateFile)).tasks[0].status,'executing');
   const next=await runScheduler({...s,state:disk});
   assert.equal(next.executed_assignments,0);
   assert.equal(s.calls(),1);
@@ -227,4 +260,39 @@ test('revoked grant and already expired consumed permit fail closed before execu
   await assert.rejects(runScheduler(expired),
     /fenced_scheduler_passport_execution_permit_denied/);
   assert.equal(expired.calls(),0);
+});
+
+test('missing or changed Systemia durable mission identity fails before any NodeSeed execution',async()=>{
+  const missing=await scenario('goal-missing');
+  await assert.rejects(runScheduler({...missing,fencedGoalStateFile:null}),
+    /fenced_scheduler_durable_systemia_goal_required/);
+  assert.equal(missing.calls(),0);
+
+  const changed=await scenario('goal-changed');
+  const prior=await readGoalState(changed.goalStateFile);
+  prior.mission_key='other-unauthorized-mission';
+  prior.revision+=1;
+  await writeGoalState(changed.goalStateFile,prior,{expectedRevision:prior.revision-1});
+  await assert.rejects(runScheduler(changed),/fenced_systemia_durable_mission_identity_hold/);
+  assert.equal(changed.calls(),0);
+  assert.equal(changed.journal.inspect({jobKey:changed.jobId}).journal_events,0);
+});
+
+test('Systemia job binding, payload and prior attempt must agree before execution',async()=>{
+  const stateChanged=await scenario('goal-task-binding');
+  const goal=await readGoalState(stateChanged.goalStateFile);
+  goal.tasks[0].dedupe_key='saban-fenced:wrong-digest';
+  goal.revision++;
+  await writeGoalState(stateChanged.goalStateFile,goal,{expectedRevision:goal.revision-1});
+  await assert.rejects(runScheduler(stateChanged),/fenced_systemia_goal_job_binding_hold/);
+  assert.equal(stateChanged.calls(),0);
+
+  const wrongState=await scenario('goal-not-ready');
+  const persisted=await readGoalState(wrongState.goalStateFile);
+  persisted.tasks[0].attempt=1;
+  persisted.revision++;
+  await writeGoalState(wrongState.goalStateFile,persisted,
+    {expectedRevision:persisted.revision-1});
+  await assert.rejects(runScheduler(wrongState),/fenced_systemia_goal_not_ready/);
+  assert.equal(wrongState.calls(),0);
 });
