@@ -83,3 +83,29 @@ footer span:last-child{text-align:right;max-width:570px}
 .zone .symbol{user-select:none}
 #connection{font-variant-numeric:tabular-nums}
 @media(max-width:640px){.transparency{margin:0 0 18px;padding:14px}.transparency div span{font-size:11px}}
+
+
+/* Optional fictional social-deduction experiment in the canonical Window. */
+.mystery-lab{margin-top:20px;padding:26px 28px}
+.mystery-heading{display:flex;justify-content:space-between;gap:22px;align-items:flex-start}
+.mystery-heading h2{font:400 clamp(27px,3.4vw,42px) Georgia,serif;margin:11px 0}
+.mystery-heading p{color:#a8b8b3;font-size:14px;line-height:1.6;max-width:660px}
+.mystery-label{white-space:nowrap;border:1px solid #5e745b;border-radius:6px;padding:10px 12px;color:#d5e6c5;font-size:10px;letter-spacing:.1em}
+.mystery-columns{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,1fr);gap:28px;margin-top:18px}
+.mystery-columns>div{background:#172525;padding:20px;border:1px solid #334941;border-radius:11px;min-width:0}
+.mystery-columns h3{font-size:14px;font-weight:650;margin:0 0 18px}
+.mystery-columns h3 span{float:right;font-size:11px;color:#a8c3ac;font-weight:400}
+#mystery-clues{margin:0 0 14px;padding-left:18px;min-height:175px;color:#b9cbc2}
+#mystery-clues li{padding:0 0 13px;font-size:13px;line-height:1.5}
+#mystery-clues small,.mystery-suspect small{display:block;color:#9db39f;font-size:10px;letter-spacing:.03em;margin:4px 0}
+#mystery-clues p{margin:3px 0}
+.mystery-suspect{border-bottom:1px solid #35483c;padding:9px 0}
+.mystery-suspect strong{font-size:13px;font-weight:550}
+.mystery-columns label{display:block;margin:17px 0 9px;font-size:12px;color:#bed4bd}
+.mystery-columns select{display:block;width:100%;background:#10211d;color:#f4f8ef;border:1px solid #54725e;border-radius:7px;padding:11px 9px;font:inherit;font-size:13px}
+.mystery-columns button{cursor:pointer;background:#b8dbad;color:#13261a;border:0;border-radius:7px;padding:11px 15px;font-weight:700;margin:12px 10px 0 0}
+.mystery-columns button:disabled{opacity:.4;cursor:not-allowed}
+#mystery-result{min-height:44px;color:#d2e1cf;font-size:12px;line-height:1.5}
+#mystery-reset{background:transparent;color:#d2e6c7;border:1px solid #64806a}
+.mystery-disclaimer{color:#8faa9c;font-size:11px;line-height:1.7;margin:22px 0 0}
+@media(max-width:760px){.mystery-lab{padding:17px 14px}.mystery-heading{display:block}.mystery-label{display:inline-block;margin-top:8px}.mystery-columns{grid-template-columns:1fr;gap:13px}.mystery-columns>div{padding:15px}}

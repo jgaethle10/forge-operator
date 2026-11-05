@@ -53,6 +53,31 @@ try{
     assert.ok(pre.draw_calls>0&&pre.draw_calls<100,profile.name+': opaque batching failed; draws='+pre.draw_calls);
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
     await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
+    // The mystery mode reuses this same WebGL scene, without changing local saves.
+    const beforeMystery=await page.evaluate(async()=>{const {loadWorld}=await import('/worlds/world-core.mjs');const w=loadWorld(localStorage);return {revision:w.revision,objects:w.objects,agents:w.agents};});
+    await page.locator('#mysteryOpen').click();
+    await page.locator('#worldsMysteryPanel').waitFor({state:'visible'});
+    assert.equal(await page.locator('#wm-accuse').isDisabled(),true,profile.name+': premature mystery accusation allowed');
+    assert.match(await page.locator('#wm-status').textContent(),/Follow the glowing beacon/,profile.name+': no world exploration cue');
+    const evidencePanel=await page.evaluate(()=>{
+      const p=document.querySelector('#worldsMysteryPanel').getBoundingClientRect();
+      return {top:p.top,bottom:p.bottom,width:p.width,viewportWidth:innerWidth,viewportHeight:innerHeight};
+    });
+    assert.ok(evidencePanel.top>=0&&evidencePanel.bottom<=evidencePanel.viewportHeight+2,profile.name+': mystery panel outside viewport');
+    assert.ok(evidencePanel.width<=evidencePanel.viewportWidth,profile.name+': mystery panel exceeds width');
+    await page.screenshot({path:out+'/'+profile.name+'-mystery-board.png',timeout:10000});
+    await page.locator('#wm-reset').click();
+    assert.equal(await page.locator('#wm-clues li').count(),1,profile.name+': reset did not clear evidence');
+    await page.locator('#wm-close').click();
+    assert.equal(await page.locator('#worldsMysteryPanel').isVisible(),false,profile.name+': mystery sheet did not close');
+
+    await page.locator('#mysteryTrail').waitFor({state:'visible',timeout:8000});
+    assert.match(await page.locator('#mysteryTrail').textContent(),/world units/,profile.name+': missing directional clue-distance tracker');
+    const tracker=await page.locator('#mysteryTrail').boundingBox();
+    assert.ok(tracker&&tracker.x>=0&&tracker.x+tracker.width<=profile.viewport.width+2,profile.name+': clue tracker overflows horizontally');
+
+    assert.deepEqual(await page.evaluate(async()=>{const {loadWorld}=await import('/worlds/world-core.mjs');const w=loadWorld(localStorage);return {revision:w.revision,objects:w.objects,agents:w.agents};}),beforeMystery,profile.name+': fictional case changed world state');
+
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');
@@ -173,11 +198,33 @@ try{
     assert.equal(saved.sky,'sunset',profile.name+': sky change not stored');
     await page.locator('#closeEditor').click();
     await page.screenshot({path:out+'/'+profile.name+'.png',timeout:10000});
+    // Rebuild a two-clue fictional case using the same public contract as real play.
+    // Exercise browser reload and UI restore without touching shared-world data.
+    const checkpoint=await page.evaluate(async()=>{
+      const {createWorld}=await import('/the-window/world.mjs');
+      const {createMystery,revealNext,writeMysteryCheckpoint}=await import('/the-window/mystery.mjs');
+      let caseFile=createMystery(createWorld(0,818),7);
+      caseFile=revealNext(revealNext(caseFile));
+      const choice=caseFile.suspects[2].id;
+      return writeMysteryCheckpoint(localStorage,caseFile,choice)?{choice,seed:caseFile.seed}:null;
+    });
+    assert.ok(checkpoint,profile.name+': failed to persist local fictional checkpoint');
     await page.reload({waitUntil:'domcontentloaded'});
     const loaded=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(loaded.objects.length,1,profile.name+': world object missing after reload');
     assert.equal(loaded.sky,'sunset',profile.name+': environment edit missing after reload');
     assert.equal(await page.locator('#qualityMode').inputValue(),'smooth',profile.name+': quality mode did not load after refresh');
+    assert.equal(await page.getByText('Resume your investigation',{exact:true}).count(),1,profile.name+': saved case did not advertise resume');
+    await page.locator('#start').click();
+    await page.locator('#mysteryOpen').click();
+    await page.locator('#worldsMysteryPanel').waitFor({state:'visible'});
+    assert.equal((await page.locator('#wm-progress').textContent()).trim(),'2 / 4',profile.name+': clue progress lost after refresh');
+    assert.equal(await page.locator('#wm-clues li').count(),2,profile.name+': restored evidence list inconsistent');
+    assert.equal(await page.locator('#wm-choice').inputValue(),checkpoint.choice,profile.name+': saved theory selection was lost');
+    assert.equal(await page.locator('#wm-accuse').isDisabled(),true,profile.name+': early accusation after restore');
+    await page.locator('#wm-reset').click();
+    assert.equal((await page.locator('#wm-progress').textContent()).trim(),'0 / 4',profile.name+': new case did not clear saved progress');
+    await page.locator('#wm-close').click();
     assert.deepEqual(errors,[],profile.name+': browser exceptions');
     receipt.scenarios.push({profile:profile.name,status:'PASS',elapsed_wall_ms:Date.now()-start,initial_canvas:pre,scene_revision:loaded.revision,objects:loaded.objects.length,saved_document_bytes:JSON.stringify(loaded).length,page_errors:errors,quality,routines,screenshot:profile.name+'.png'});
     await context.close();

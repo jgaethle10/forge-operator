@@ -102,6 +102,11 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  assert.equal((await fetch(base+'/worlds/api/worlds/'+'f'.repeat(32))).status,404);
  assert.equal((await fetch(base+'/worlds/api/worlds/foo')).status,404);
  assert.equal((await fetch(base+'/worlds/world-core.mjs')).status,200);
+ assert.equal((await fetch(base+'/the-window/world.mjs')).status,200,'Mossmere model must be visible for the 3D mystery');
+ assert.equal((await fetch(base+'/the-window/mystery.mjs')).status,200,'Mystery rules must be visible for the 3D mystery');
+ assert.equal((await fetch(base+'/the-window/index.html')).status,404,'Sibling UI must not be exposed');
+ assert.equal((await fetch(base+'/the-window/mystery-ui.mjs')).status,404,'Only two read-only Window modules are authorized');
+ assert.equal((await fetch(base+'/the-window/unknown.mjs')).status,404,'Unknown sibling modules must stay blocked');
  const records=await fs.readdir(dataRoot);
  assert.equal(records.filter(name=>name.endsWith('.json')).length,0);
 });

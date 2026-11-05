@@ -99,10 +99,12 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
   return {world_id:id,version:1,edit_token:editToken,created_at:now};
  }
  async function serveStatic(req,res,pathname){
-  if(!pathname.startsWith('/worlds/')||req.method!=='GET')throw new VaultError(404,'route_not_found');
+  // Explicit read-only Window contracts for the local Mystery Walk only.
+  const windowModule=pathname==='/the-window/world.mjs'||pathname==='/the-window/mystery.mjs';
+  if((!pathname.startsWith('/worlds/')&&!windowModule)||req.method!=='GET')throw new VaultError(404,'route_not_found');
   // A directory URL must resolve to its index.html on the OWNED vault too.
   // Local Python static server already did this, hiding a release-only 404 for /worlds/heritage/.
-  let relative=pathname.slice('/worlds/'.length)||'index.html';
+  let relative=windowModule?path.basename(pathname):pathname.slice('/worlds/'.length)||'index.html';
   if(relative.endsWith('/'))relative+='index.html';
   if(relative.split('/').some(x=>x==='.'||x==='..'||x.startsWith('.'))||relative.includes('\\'))throw new VaultError(404,'route_not_found');
   // The atlas lives in a single canonical public source folder. Expose just its two
@@ -112,7 +114,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
    ['heritage/atlas/sites.geojson','submerged-heritage/sites.geojson']
   ]);
   const alias=atlasAliases.get(relative);
-  const safeRoot=alias?assetRoot:path.join(assetRoot,'worlds');
+  const safeRoot=windowModule?path.join(assetRoot,'the-window'):alias?assetRoot:path.join(assetRoot,'worlds');
   const target=path.resolve(safeRoot,alias||relative);
   if(!within(safeRoot,target))throw new VaultError(404,'route_not_found');
   let real,stat;

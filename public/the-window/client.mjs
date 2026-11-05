@@ -1,4 +1,5 @@
 import { replayWorld, advanceWorld, REAL_TICK_MS, PUBLIC_GENESIS_MS, MAX_REPLAY_TICKS } from './world.mjs';
+import {mountMysteryLab} from './mystery-ui.mjs';
 const icons={homes:'🏡',bakery:'🥐',garden:'🌾',workshop:'🛠️',market:'🏪',library:'📖',lake:'🌊'};
 const $=id=>document.getElementById(id);
 let world=null;
@@ -133,6 +134,7 @@ function refresh() {
 }
 try{
   render(replayWorld(Date.now()));
+  mountMysteryLab(()=>world);
   refresh();
   window.setInterval(refresh,5000);
   document.addEventListener('visibilitychange',()=>{
