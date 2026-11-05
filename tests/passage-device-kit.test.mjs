@@ -23,9 +23,10 @@ test('device kit is entirely portable, synthetic, checksummed and has no signing
  const publicPem=await readFile(kit.publicKey,'utf8');
  const calculated=sha(createPublicKey(publicPem).export({format:'der',type:'spki'}));
  assert.equal(kit.fingerprint,calculated);
- const checked=await checkPackage({packageJson:await readFile(kit.package,'utf8'),trustedPublicKeyPem:publicPem,expectedFingerprint:calculated,now:new Date('2026-11-05T10:00:00Z')});
+ const packageJson=await readFile(kit.package,'utf8');
+ const checked=await checkPackage({packageJson,trustedPublicKeyPem:publicPem,expectedFingerprint:calculated,now:new Date('2026-11-05T10:00:00Z')});
  assert.equal(checked.metadata.review_state,'demonstration-unverified');
- await assert.rejects(()=>checkPackage({packageJson:await readFile(kit.package,'utf8'),trustedPublicKeyPem:publicPem,expectedFingerprint:calculated,now:new Date('2026-11-20T12:00:00Z')}),/expired/);
+ await assert.rejects(()=>checkPackage({packageJson,trustedPublicKeyPem:publicPem,expectedFingerprint:calculated,now:new Date('2026-11-20T12:00:00Z')}),/expired/);
  const sums=(await readFile(join(kit.directory,'SHA256SUMS.txt'),'utf8')).trim().split('\n');
  assert.equal(sums.length,5);
  for(const entry of sums){
