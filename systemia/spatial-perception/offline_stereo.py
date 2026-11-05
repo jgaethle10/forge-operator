@@ -83,40 +83,6 @@ def nms(detections, threshold=0.5, limit=MAX_OBJECTS):
     return retained
 
 
-def frame_observation(frame_id, timestamp_ms, index, label, score, box, disparity, fx, baseline, video_digest):
-    """Provide schema accepted by existing browser temporal module."""
-    x, y, w, h = box
-    if w <= 0 or h <= 0:
-        raise ValueError("invalid_detection_box")
-    z = None
-    if disparity is not None and math.isfinite(disparity) and disparity > 1.0:
-        z = round(fx * baseline / disparity, 3)
-    position = None if z is None else {
-        "x": round(((x + w / 2) - frame_observation.frame_center_x) * z / fx, 3),
-        "y": round((frame_observation.frame_center_y - (y + h / 2)) * z / fx, 3),
-        "z": z
-    }
-    return {
-        "schema": FRAME_SCHEMA,
-        "id": frame_id + ":" + str(index),
-        "frameId": frame_id,
-        "timestampMs": timestamp_ms,
-        "label": label,
-        "detectorConfidence": round(float(score), 4),
-        "box": {"x": round(x, 2), "y": round(y, 2),
-                "width": round(w, 2), "height": round(h, 2)},
-        "depthEstimateM": z,
-        "depthStatus": "estimated_not_verified" if z is not None else "unknown",
-        "cameraPositionM": position,
-        "coordinateFrame": "camera_relative",
-        "sourceSha256": video_digest,
-        "georegistered": False,
-        "safetyCriticalApproved": False,
-    }
-
-
-# Frame dimensions are set per frame by the caller, not global model state.
-# We explicitly pass the image center to avoid persistent mutable attributes.
 def observation(frame_id, timestamp_ms, index, label, score, box, disparity, fx, baseline,
                 video_digest, width, height):
     x, y, w, h = box
@@ -241,6 +207,10 @@ def run(args):
         raise ValueError("invalid_max_frames")
     if not isinstance(args.frame_step, int) or not 1 <= args.frame_step <= 120:
         raise ValueError("invalid_frame_step")
+    if args.output.resolve() in {args.video.resolve(),args.model.resolve(),args.manifest.resolve()}:
+        raise ValueError("output_would_overwrite_input")
+    if args.video.stat().st_size > 2_000_000_000 or args.model.stat().st_size > 1_000_000_000:
+        raise ValueError("input_size_limit_exceeded")
     manifest = load_manifest(args.manifest)
     model_digest = sha256_file(args.model)
     if model_digest != manifest["sha256"]:
