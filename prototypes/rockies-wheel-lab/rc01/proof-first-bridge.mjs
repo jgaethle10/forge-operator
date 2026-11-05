@@ -17,7 +17,12 @@ export function wheelLabOutreachPreflight(candidate = {}, now = new Date()) {
   const publicEvidence = Array.isArray(candidate.public_source_refs)
     ? candidate.public_source_refs.filter(ref => typeof ref === 'string' && /^https:\/\//i.test(ref))
     : [];
-  const sourceGrounded = publicEvidence.length > 0 && candidate.public_service_relevance === true;
+  // A shop advertising custom wheels does NOT prove it has a quoting pain.
+  const reviewedPainRef = String(candidate.independent_pain_review_ref || '').trim();
+  const sourceGrounded = publicEvidence.length > 0 &&
+    candidate.public_service_relevance === true &&
+    candidate.documented_pain_confirmed === true &&
+    /^independent-review:[a-z0-9][a-z0-9:/._-]{7,}$/i.test(reviewedPainRef);
 
   const base = admitProofFirstOutreach({
     prospect_key,
