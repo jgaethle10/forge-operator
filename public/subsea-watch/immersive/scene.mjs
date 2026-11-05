@@ -120,7 +120,8 @@ if(!gl){
  }
  const meshes={floor:buffer(terrain),objects:buffer(objects),pipe:buffer(pipe),diver:buffer(diver)};
  let track=null,logs=null,dive=null,current=0,playing=false,last=0;
- let yaw=-.43,pitch=.35,distance=18,following=true,drag=null;
+ let yaw=-.43,pitch=.35,distance=18,following=true,drag=null,pinchDistance=null;
+ const pointers=new Map();
  function route(points){
   const t=[],dots=[];
   for(let i=1;i<points.length;i++)if(points[i].t-points[i-1].t<=15)
@@ -179,9 +180,34 @@ if(!gl){
  $('zoom-out').addEventListener('click',()=>distance=clamp(distance*1.2,5,65));
  $('evidence').addEventListener('click',()=>{$('details').hidden=false;$('evidence').setAttribute('aria-expanded','true');});
  $('close-details').addEventListener('click',()=>{$('details').hidden=true;$('evidence').setAttribute('aria-expanded','false');});
- canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);drag={id:e.pointerId,x:e.clientX,y:e.clientY,yaw,pitch};});
- canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;yaw=drag.yaw+(e.clientX-drag.x)*.008;pitch=clamp(drag.pitch+(e.clientY-drag.y)*.006,-.1,1.18);});
- canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('pointercancel',()=>drag=null);
+ function pinchLength(){
+  if(pointers.size<2)return null;
+  const [a,b]=[...pointers.values()];return Math.hypot(a.x-b.x,a.y-b.y);
+ }
+ canvas.addEventListener('pointerdown',e=>{
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pointers.size===1)drag={id:e.pointerId,x:e.clientX,y:e.clientY,yaw,pitch};
+  else{drag=null;pinchDistance=pinchLength();}
+ });
+ canvas.addEventListener('pointermove',e=>{
+  if(!pointers.has(e.pointerId))return;
+  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pointers.size>=2){
+   const next=pinchLength();
+   if(pinchDistance&&next)distance=clamp(distance*pinchDistance/next,5,65);
+   pinchDistance=next;
+   return;
+  }
+  if(!drag||drag.id!==e.pointerId)return;
+  yaw=drag.yaw+(e.clientX-drag.x)*.008;
+  pitch=clamp(drag.pitch+(e.clientY-drag.y)*.006,-.1,1.18);
+ });
+ function pointerDone(e){
+  pointers.delete(e.pointerId);drag=null;pinchDistance=null;
+ }
+ canvas.addEventListener('pointerup',pointerDone);
+ canvas.addEventListener('pointercancel',pointerDone);
  canvas.addEventListener('wheel',e=>{e.preventDefault();distance=clamp(distance*(e.deltaY>0?1.08:.92),5,65);},{passive:false});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;$('play').textContent='▶ Play';}});
  load().then(()=>requestAnimationFrame(frame));
