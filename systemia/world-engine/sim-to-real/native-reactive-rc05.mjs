@@ -9,6 +9,7 @@ import {EvercraftWorldRuntime,replayWorld,verifyWorldSnapshot} from '../engine.j
 import {createMotionWorld,sweptCircleContact,runMotionEpisode} from './native-motion-rc04.mjs';
 import {makeRng} from './rover-lab.mjs';
 import {scanAnonymous,reactiveCommand} from './controller-rc05.mjs';
+import {reactiveCommandProgress} from './controller-rc05-progress.mjs';
 
 export const RC05_SCHEMA='evercraft.sim-to-real.reactive-native.rc05';
 export const RC05_BENCHMARK='evercraft.sim-to-real.reactive-holdout.rc05';
@@ -20,8 +21,9 @@ const xy=e=>({x:e.transform.position.x,z:e.transform.position.z});
 const length=v=>Math.hypot(v.x,v.z);
 const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
 
-export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null}={}){
+export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline'}={}){
   assert(Number.isSafeInteger(seed)&&seed>0,'rc05_invalid_seed');
+  assert(['baseline','progress-gated'].includes(controllerMode),'rc05_invalid_controller_mode');
   assert(Number.isInteger(maxTicks)&&maxTicks>0&&maxTicks<=650,'rc05_invalid_max_ticks');
   const {course,world}=createMotionWorld(seed);
   const blackout=forcedBlackout??{start:course.params.sensorBlackoutStart,length:course.params.sensorBlackoutLength};
@@ -49,7 +51,8 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null}={}
     const estimate={x:p0.x+(rng()-.5)*course.params.sensorNoiseMeters+uncertainty*.12,
       z:p0.z+(rng()-.5)*course.params.sensorNoiseMeters-uncertainty*.08,
       heading:orientation+(rng()-.5)*.03};
-    const decision=reactiveCommand({estimate,goal:{x:course.goal.x,z:course.goal.y},
+    const decide=controllerMode==='progress-gated'?reactiveCommandProgress:reactiveCommand;
+    const decision=decide({estimate,goal:{x:course.goal.x,z:course.goal.y},
       bounds:course.bounds,scan:lastScan,scanAgeSec:age,velocity:v0,uncertainty,
       delaySeconds:course.params.commandDelaySteps*DT,braking:course.params.braking,
       maxSpeed:.82,robotRadius:course.robotRadius,state:{preferredTurn}});
@@ -114,7 +117,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null}={}
   const core={schema:RC05_SCHEMA,evidence_state:'modeled',nativeWorldEngineExecuted:true,
     hardwareExecution:false,realSensorData:false,autonomousHardwareControl:false,
     noTeleportInputs:true,robotPhysicsCalibrated:false,
-    seed,model:'native planar sphere with velocity commands, synthetic noisy anonymous proximity scans',
+    seed,controllerMode,model:'native planar sphere with velocity commands, synthetic noisy anonymous proximity scans',
     worldDigest:engine.definitionDigest,finalSnapshotDigest:final.digest,
     outcome:{status,ticks:final.tick,holdRequests,holdsWhileMoving,contactTicks,sweepTicks,geofenceTicks,sensorMissTicks},
     proof:{deterministicReplay:true,snapshotRestored:restored,allTicksRecorded:frames.length===final.tick},
