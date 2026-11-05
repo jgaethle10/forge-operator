@@ -9,8 +9,10 @@ const validOrder=value=>typeof value==='string'&&ORDER.test(value);
 const safeEmail=value=>typeof value==='string'&&
   value.length<=200&&EMAIL.test(value)&&!/[<>\r\n]/.test(value);
 const exactPrice=(quote)=>{
- const tier=FORENSISCOPE_OFFERS.find(t=>t.offer_key===quote?.offer_key);
- return tier&&quote?.state==='quote_only'&&
+ const tier=FORENSISCOPE_OFFERS.find(t=>
+  Number.isSafeInteger(quote?.duration_seconds)&&quote.duration_seconds>0&&
+  quote.duration_seconds<=t.max_duration_seconds);
+ return tier&&quote.offer_key===tier.offer_key&&quote.state==='quote_only'&&
   Number.isSafeInteger(quote.duration_seconds)&&quote.duration_seconds>0&&
   quote.duration_seconds<=tier.max_duration_seconds&&
   quote.amount_cents===tier.amount_usd*100&&
