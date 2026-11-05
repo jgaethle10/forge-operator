@@ -30,6 +30,7 @@ jobs:
           node --check systemia/research/historical-tech/power-accounting.mjs
           node --check systemia/research/historical-tech/bench-evaluator.mjs
           node --check systemia/research/historical-tech/coupling-model.mjs
+          node --check systemia/research/historical-tech/elliptic-reference.mjs
       - name: Run deterministic software unit tests
         run: node --test systemia/research/historical-tech/*.test.mjs
       - name: Verify synthetic-only example without fabricating measurements
