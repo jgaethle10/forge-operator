@@ -16,9 +16,9 @@ async function read(name){
  }
  throw Error('Public Subsea asset failed '+url+' : '+error?.message);
 }
-const names=['','core.mjs','viewer.mjs','sample.json','README.md'];
+const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs'];
 const contents=await Promise.all(names.map(read));
-const [html,core,viewer,sampleText,readme]=contents;
+const [html,core,viewer,sampleText,readme,immersive,scene]=contents;
 assert.match(html,/Revisit the dive/);
 assert.match(html,/Prototype, not a safety device/);
 assert.match(html,/id="no-xy"/);
@@ -33,7 +33,15 @@ assert.equal(sample.demo,true);
 assert.equal(sample.position_source,'SIMULATED');
 assert.equal(sample.points.length,37);
 assert.match(readme,/not commercially validated/i);
-console.log('SUBSEA_PUBLIC_HTTPS_SAMPLE_REPLAY_SOURCE_VERIFIED');
+assert.match(immersive,/Enter the <em>deep/);
+assert.match(immersive,/Synthetic demonstration/);
+assert.match(immersive,/NOT DIVE CLEARANCE/);
+assert.match(immersive,/src="\.\/scene\.mjs"/);
+assert.match(scene,/getContext\('webgl'/);
+assert.match(scene,/THIS ENTIRE ENVIRONMENT IS SYNTHETIC/);
+assert.match(scene,/dive\.positionSource!=='SIMULATED'/);
+
+console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_PROTOTYPE_AND_SOURCE_VERIFIED');
 if(process.env.GITHUB_STEP_SUMMARY){
  const fs=await import('node:fs');
  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
