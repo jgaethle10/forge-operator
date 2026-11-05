@@ -82,7 +82,7 @@ test('shared PostgreSQL primary rejects parallel workers and persists ML-DSA rep
       expectedContext:'systemia.lab.shared',replayGuard:guard,nowMs:now
     });
     assert.equal((await open(guardA)).plaintext.toString(),'Systemia shared authority proof');
-    assert.rejects(open(guardB),/rejected/);
+    await assert.rejects(open(guardB),/rejected/);
 
     const denied=createSharedPostgresReplayGuard({client:{query:async()=>{throw new Error('unreachable');}}});
     const newSigned=signAndEncryptPqMessage({
