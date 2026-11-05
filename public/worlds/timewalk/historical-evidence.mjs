@@ -14,6 +14,45 @@ const FORBIDDEN_EMBED_RIGHTS = new Set([
 ]);
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
+// Historical source matches must use administrative identity, never a street-name keyword.
+const normalizedPlace = place => {
+  assert(place && typeof place === 'object', 'Missing source jurisdiction');
+  const city=String(place.city||'').trim().toLowerCase();
+  const region=String(place.region||'').trim().toUpperCase();
+  const country=String(place.country||'').trim().toUpperCase();
+  assert(city && region && country, 'Incomplete source jurisdiction');
+  return {city,region,country};
+};
+const sameJurisdiction = (a,b) => {
+  const aa=normalizedPlace(a),bb=normalizedPlace(b);
+  return aa.city===bb.city && aa.region===bb.region && aa.country===bb.country;
+};
+/** A 1960 claim can be promoted only after attaching individually reviewed dated evidence. */
+export function isDirectTargetYearObservation(claim, ledger, sourceMap = new Map((ledger.sources||[]).map(s=>[s.id,s]))) {
+  if (!claim || claim.period !== String(ledger.sceneYear) || claim.evidence !== 'documented') return false;
+  const proof=claim.targetYearProof;
+  if (!proof || typeof proof !== 'object' || !claim.sourceIds?.includes(proof.sourceId)) return false;
+  const source=sourceMap.get(proof.sourceId);
+  if (!source || !sameJurisdiction(source.targetJurisdiction,ledger.location.jurisdiction)) return false;
+  if (!Array.isArray(source.evidencePeriod) || !source.evidencePeriod.some(x=>String(x)===(String(ledger.sceneYear)))) return false;
+  if (!/^\\d{4}(?:-\\d{2}-\\d{2})?$/.test(String(proof.observationDate||''))) return false;
+  if (Number(String(proof.observationDate).slice(0,4))!==ledger.sceneYear) return false;
+  return typeof proof.itemLocator==='string' && proof.itemLocator.trim().length>=5 &&
+    typeof proof.reviewNote==='string' && proof.reviewNote.trim().length>=12 &&
+    proof.locationChecked === true && proof.originalItemInspected === true;
+}
+
+/** Collection licenses and item-level publication rights are separate checks. */
+export function mediaAssetCanBeEmbedded(source, asset) {
+  if (!source || !asset || asset.sourceId !== source.id || typeof asset.itemId !== 'string' ||
+      asset.itemId.trim().length < 4 || typeof asset.credit !== 'string' ||
+      asset.credit.trim().length < 4 || asset.reviewedForPublication !== true) return false;
+  if (!/^https:\\/\\//.test(asset.originalUrl||'')) return false;
+  if (sourceCanBeEmbedded(source) && asset.itemRights === 'public-domain-verified') return true;
+  return asset.itemRights === 'permission-granted' &&
+    asset.explicitPermissionRecord === true;
+}
+
 export function validateHistoricalEvidence(ledger) {
   assert(ledger && typeof ledger === 'object', 'Evidence must be an object');
   assert(ledger.schema === TIMEWALK_EVIDENCE_SCHEMA, 'Unsupported evidence schema');
@@ -21,6 +60,7 @@ export function validateHistoricalEvidence(ledger) {
   assert(Number.isInteger(ledger.sceneYear), 'Invalid scene year');
   assert(ledger.location?.georeferenced === false && ledger.location?.crs === null,
     'This version must not assert precise georeference');
+  normalizedPlace(ledger.location.jurisdiction);
   assert(Array.isArray(ledger.sources) && ledger.sources.length > 0, 'No sources');
   const sources = new Map();
   for (const source of ledger.sources) {
@@ -28,6 +68,8 @@ export function validateHistoricalEvidence(ledger) {
     assert(/^https:\/\//.test(source.url || ''), 'Source must have HTTPS URL: ' + source.id);
     assert(source.rights && typeof source.rights.status === 'string',
       'Source rights classification missing: ' + source.id);
+    assert(sameJurisdiction(source.targetJurisdiction,ledger.location.jurisdiction),
+      'Source jurisdiction mismatch: ' + source.id);
     sources.set(source.id, source);
   }
   assert(Array.isArray(ledger.places) && ledger.places.length > 0, 'No places');
@@ -51,11 +93,18 @@ export function validateHistoricalEvidence(ledger) {
       if (claim.evidence === 'documented') {
         assert(claim.sourceIds.length > 0, 'Documented claim must cite source: ' + claim.id);
       }
-      if (claim.period === String(ledger.sceneYear)) {
-        assert(claim.evidence !== 'documented',
-          'Do not upgrade the target year without new direct evidence: ' + claim.id);
+      if (claim.period === String(ledger.sceneYear) && claim.evidence === 'documented') {
+        assert(isDirectTargetYearObservation(claim,ledger,sources),
+          'Do not upgrade the target year without inspected, located direct evidence: ' + claim.id);
       }
     }
+  }
+  for (const excluded of ledger.excludedSearchResults || []) {
+    assert(excluded.allowedForScene === false &&
+      !sameJurisdiction(excluded.sourceJurisdiction,ledger.location.jurisdiction),
+      'Excluded source must be explicitly out of jurisdiction: ' + excluded.id);
+    assert(!sources.has(excluded.id),
+      'An excluded source cannot also be a cited source: ' + excluded.id);
   }
   for (const candidate of ledger.researchInventory || []) {
     assert(sources.has(candidate.sourceId), 'Unresolved candidate source ' + candidate.sourceId);
@@ -91,13 +140,18 @@ export function makeHistoricalOverlay(input, requestedYear = input?.sceneYear) {
     claims:place.claims.map(claim => ({
       id:claim.id, description:claim.assertion, evidence:claim.evidence,
       period:claim.period,
-      directTargetYearProof:claim.evidence === 'documented' && claim.period === String(requestedYear),
+      directTargetYearProof:isDirectTargetYearObservation(claim,ledger,bySource),
       // Original sources can be opened, but publishing media needs item-level review.
       citations:claim.sourceIds.map(id => ({
         sourceId:id,title:bySource.get(id).name,url:bySource.get(id).url,
         rights:bySource.get(id).rights.status
       })),
-      uncertainty:claim.reason || null
+      uncertainty:claim.reason || null,
+      directSourceItem:claim.targetYearProof ? {
+        sourceId:claim.targetYearProof.sourceId,
+        itemLocator:claim.targetYearProof.itemLocator,
+        observationDate:claim.targetYearProof.observationDate
+      } : null
     }))
   }));
   return {
@@ -107,6 +161,7 @@ export function makeHistoricalOverlay(input, requestedYear = input?.sceneYear) {
     sceneYear:requestedYear,
     status:ledger.status,
     georeferenced:false,
+    jurisdiction:structuredClone(ledger.location.jurisdiction),
     crs:null,
     geometry:null,
     movement:null,
@@ -114,6 +169,9 @@ export function makeHistoricalOverlay(input, requestedYear = input?.sceneYear) {
     sourcesEmbedded:[],
     accurateSceneClaimAllowed:false,
     places:references,
+    excludedSearchHits:(ledger.excludedSearchResults || []).map(x => ({
+      id:x.id, sourceCity:x.sourceJurisdiction.city, reason:x.whyExcluded
+    })),
     researchCandidates:(ledger.researchInventory || []).map(x => ({
       id:x.id,sourceId:x.sourceId,period:x.period.display,
       acquisition:x.acquisition,accuracyNote:x.useFor1960
@@ -123,6 +181,7 @@ export function makeHistoricalOverlay(input, requestedYear = input?.sceneYear) {
       'Historical claims are not equivalent to verified 1960 3D geometry.',
       '1959 and 1961 directory holdings are cataloged; their contents have not been examined.',
       'Any licensed archival photograph requires item-level rights verification.',
+      'Street-name matches outside the target city are excluded from historical evidence.',
       'This overlay provides data for the original Worlds runtime, not a second engine.'
     ]
   };
