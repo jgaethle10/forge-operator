@@ -198,11 +198,33 @@ try{
     assert.equal(saved.sky,'sunset',profile.name+': sky change not stored');
     await page.locator('#closeEditor').click();
     await page.screenshot({path:out+'/'+profile.name+'.png',timeout:10000});
+    // Rebuild a two-clue fictional case using the same public contract as real play.
+    // Exercise browser reload and UI restore without touching shared-world data.
+    const checkpoint=await page.evaluate(async()=>{
+      const {createWorld}=await import('/the-window/world.mjs');
+      const {createMystery,revealNext,writeMysteryCheckpoint}=await import('/the-window/mystery.mjs');
+      let caseFile=createMystery(createWorld(0,818),7);
+      caseFile=revealNext(revealNext(caseFile));
+      const choice=caseFile.suspects[2].id;
+      return writeMysteryCheckpoint(localStorage,caseFile,choice)?{choice,seed:caseFile.seed}:null;
+    });
+    assert.ok(checkpoint,profile.name+': failed to persist local fictional checkpoint');
     await page.reload({waitUntil:'domcontentloaded'});
     const loaded=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(loaded.objects.length,1,profile.name+': world object missing after reload');
     assert.equal(loaded.sky,'sunset',profile.name+': environment edit missing after reload');
     assert.equal(await page.locator('#qualityMode').inputValue(),'smooth',profile.name+': quality mode did not load after refresh');
+    assert.equal(await page.getByText('Resume your investigation',{exact:true}).count(),1,profile.name+': saved case did not advertise resume');
+    await page.locator('#start').click();
+    await page.locator('#mysteryOpen').click();
+    await page.locator('#worldsMysteryPanel').waitFor({state:'visible'});
+    assert.equal((await page.locator('#wm-progress').textContent()).trim(),'2 / 4',profile.name+': clue progress lost after refresh');
+    assert.equal(await page.locator('#wm-clues li').count(),2,profile.name+': restored evidence list inconsistent');
+    assert.equal(await page.locator('#wm-choice').inputValue(),checkpoint.choice,profile.name+': saved theory selection was lost');
+    assert.equal(await page.locator('#wm-accuse').isDisabled(),true,profile.name+': early accusation after restore');
+    await page.locator('#wm-reset').click();
+    assert.equal((await page.locator('#wm-progress').textContent()).trim(),'0 / 4',profile.name+': new case did not clear saved progress');
+    await page.locator('#wm-close').click();
     assert.deepEqual(errors,[],profile.name+': browser exceptions');
     receipt.scenarios.push({profile:profile.name,status:'PASS',elapsed_wall_ms:Date.now()-start,initial_canvas:pre,scene_revision:loaded.revision,objects:loaded.objects.length,saved_document_bytes:JSON.stringify(loaded).length,page_errors:errors,quality,routines,screenshot:profile.name+'.png'});
     await context.close();
