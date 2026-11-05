@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Test current vs archive-only release gates
+        run: node --test systemia/newsroom/journal-edge-readiness.test.mjs systemia/newsroom/journal-public-canary-workflow.test.mjs
+
       - name: Verify persisted Journal artifact before external probe
         run: node systemia/newsroom/journal-build-verifier.mjs public/journal "$JOURNAL_ORIGIN"
 
