@@ -1,11 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {createServer} from "node:http";
-import {readFile,mkdir} from "node:fs/promises";
+import {readFile,mkdir,mkdtemp,rm} from "node:fs/promises";
 import {dirname,join,resolve,extname} from "node:path";
 import {fileURLToPath} from "node:url";
 import {chromium,devices} from "playwright";
 import {generateKeyPairSync,createHash} from "node:crypto";
+import {tmpdir} from "node:os";
+import {buildDemoKit} from "../scripts/build-passage-device-kit.mjs";
 import {issuePackage} from "../scripts/passage-signed-package.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"../public");
 const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".mjs":"text/javascript; charset=utf-8",".js":"text/javascript; charset=utf-8",".json":"application/json; charset=utf-8",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"};
@@ -148,6 +150,33 @@ test("Passage Chrome browser acceptance: online, offline and mobile",async t=>{
    await readerPage.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("NOT VERIFIED"));
    assert.equal(await readerPage.locator("#save-verified-file").isVisible(),false,"wrong fingerprint disables export");
   }finally{await readerDevice.close();await publisherDevice.close()}
+ });
+ await t.test("standalone file verifier validates an original demo entirely offline",async()=>{
+  const temp=await mkdtemp(join(tmpdir(),"passage-portable-browser-"));
+  const context=await browser.newContext({acceptDownloads:true});
+  try{
+   const kit=await buildDemoKit(join(temp,"kit"));
+   const page=await context.newPage();
+   let externalRequests=0;page.on("request",request=>{if(/^https?:/.test(request.url()))externalRequests++});
+   await context.setOffline(true);
+   await page.goto("file://"+kit.verifier,{waitUntil:"load"});
+   assert.equal(await page.evaluate(()=>window.isSecureContext),true,"local HTML must have a secure WebCrypto context");
+   assert.equal(await page.evaluate(()=>!!crypto.subtle),true,"local browser must support WebCrypto");
+   await page.locator("#package-file").setInputFiles(kit.package);
+   await page.locator("#trusted-key-file").setInputFiles(kit.publicKey);
+   await page.locator("#expected-fingerprint").fill(kit.fingerprint);
+   await page.locator("#verify-package").click();
+   await page.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("Signature, content and independent fingerprint match"));
+   assert.equal(await page.locator("#save-verified-file").isVisible(),true);
+   const downloaded=page.waitForEvent("download");
+   await page.locator("#save-verified-file").click();
+   assert.match((await readFile(await (await downloaded).path(),"utf8")),/How to check a claim/);
+   await page.locator("#expected-fingerprint").fill("f".repeat(64)===kit.fingerprint?"a".repeat(64):"f".repeat(64));
+   await page.locator("#verify-package").click();
+   await page.waitForFunction(()=>document.querySelector("#verification-status")?.textContent.includes("NOT VERIFIED"));
+   assert.equal(await page.locator("#save-verified-file").isVisible(),false);
+   assert.equal(externalRequests,0,"offline standalone file made no external requests");
+  }finally{await context.close();await rm(temp,{recursive:true,force:true})}
  });
  await t.test("mobile-sized screen and accessible article focus",async()=>{
   const context=await browser.newContext({...devices["iPhone 13"],acceptDownloads:true});

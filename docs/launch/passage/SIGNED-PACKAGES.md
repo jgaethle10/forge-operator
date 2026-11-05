@@ -74,3 +74,17 @@ This is a **simulation, not a test involving two physical devices**. It proves n
 8. Repeat on actual iOS Safari and Android Chrome. Document browser support, local file exposure, and offline persistence after a restart.
 
 **No-go for high-risk distribution** until independent safety, legal, editorial, and key-governance reviews are complete.
+
+## v0.4 truly standalone verifier and portable handoff kit
+
+Build with `PASSAGE_KIT_DIR=/path/to/empty/output node scripts/build-passage-device-kit.mjs` (output directory should be OUTSIDE the repository). CI also builds the device-lab artifact. The kit contains:
+
+- `passage-offline-verifier.html`: a single HTML file embedding the existing Passage Ed25519 verifier and file-picker UI with no external assets. A restrictive CSP pins the exact inline script and stylesheet hashes. No network calls, accounts or uploads are made by the verifier.
+- `DEMO-package.json`: the original demonstration text, signed with an ephemeral Ed25519 private key created in memory and never saved.
+- `DEMO-public-key.pem` and `DEMO-fingerprint-UNTRUSTED.txt`: test-only matching public key and fingerprint. **Both come from the same untrusted bundle as the package. They cannot establish independent publisher identity.**
+- `SHA256SUMS.txt`: detects changes to the files only if the checksum itself is obtained from a trusted source. It is **not** an authenticated signature or evidence of trustworthy authorship.
+- `READ-ME-FIRST.txt`: offline test guidance and risks.
+
+Chrome CI directly opens the built HTML using `file://`, turns browser networking off, checks WebCrypto availability, verifies the demo using local file inputs, downloads plain text, and rejects a mismatched fingerprint. A browser that disallows secure-context WebCrypto on local files must **fail closed**; never silently disable signature checks. A passing Chrome file-open test is **not** proof of native iOS Safari file handling or physical device security.
+
+Use the included key/fingerprint together only to demonstrate signature mechanics, never to claim independent trust. Public or high-risk distribution still requires separately provisioned and authenticated issuer keys, a verified delivery chain for the verifier, rights clearance, revocation/correction governance, and physical-device tests.

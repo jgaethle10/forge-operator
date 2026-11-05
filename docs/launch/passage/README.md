@@ -43,3 +43,7 @@ See THREAT-MODEL.md for security boundaries, privacy limits, content governance 
 
 ## Signed demonstration packages (v0.2)
 See SIGNED-PACKAGES.md for the signed text package contract, out-of-band trusted-key procedure, local verifier UI and Node CLI. This is **not** encrypted transport or anonymous publishing. Real reader/device and independent crypto-security reviews are still required.
+
+## v0.4 standalone offline-device kit
+
+Use `node scripts/build-passage-device-kit.mjs` to produce a self-contained HTML verifier plus a **synthetic** signed text demo, demo public key/fingerprint and integrity checksums. The bundle contains no private keys. It is not independently authenticated or safe for high-risk circulation. See SIGNED-PACKAGES.md for limitations. CI tests use Chrome `file://` with networking disabled, not actual physical iOS/Android hardware.
