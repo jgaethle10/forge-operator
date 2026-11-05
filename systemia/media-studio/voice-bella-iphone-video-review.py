@@ -150,9 +150,84 @@ def export(input_archive,output):
         print(json.dumps(receipt,indent=2))
 
 
+def export_individual(input_archive,output_dir):
+    """Encode independently playable, SHA-linked clips for each private audition.
+
+    Uses original dry PCM masters, not stitched reels or compressed derivatives.
+    No output is allowed if any of the five source hashes or review holds fail.
+    """
+    sources=source_audio(input_archive)
+    output_dir=pathlib.Path(output_dir)
+    if output_dir.exists():
+        raise FileExistsError("OUTPUT_ALREADY_EXISTS")
+    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
+        raise RuntimeError("FFMPEG_NOT_INSTALLED")
+    output_dir.mkdir(parents=True,exist_ok=False)
+    results=[]
+    with tempfile.TemporaryDirectory(prefix="bella-five-private-clips-") as tmp:
+        work=pathlib.Path(tmp)
+        for index,letter in enumerate(LETTERS):
+            item=sources[letter]
+            wav=work/f"{letter}.wav"
+            png=work/f"{letter}.png"
+            with wave.open(str(wav),"wb") as out:
+                out.setnchannels(1)
+                out.setsampwidth(2)
+                out.setframerate(RATE)
+                out.writeframes(item["pcm"])
+            card(png,letter,index)
+            video=output_dir/f"Bella_Take_{letter}_iPhone.mp4"
+            cmd=["ffmpeg","-hide_banner","-loglevel","error","-nostdin",
+                 "-loop","1","-framerate","15","-i",str(png),
+                 "-i",str(wav),"-map","0:v:0","-map","1:a:0",
+                 "-c:v","libx264","-preset","veryfast","-tune","stillimage",
+                 "-crf","27","-pix_fmt","yuv420p",
+                 "-c:a","aac","-b:a","128k","-ar","48000",
+                 "-movflags","+faststart","-t",f"{item['seconds']:.3f}",
+                 str(video)]
+            subprocess.run(cmd,check=True,timeout=120,capture_output=True)
+            proc=subprocess.run(
+                ["ffprobe","-v","error","-show_entries",
+                 "format=duration:stream=codec_name,codec_type,width,height",
+                 "-of","json",str(video)],
+                check=True,capture_output=True,text=True)
+            data=json.loads(proc.stdout)
+            v=[x for x in data["streams"] if x["codec_type"]=="video"]
+            a=[x for x in data["streams"] if x["codec_type"]=="audio"]
+            if (len(v)!=1 or len(a)!=1 or v[0]["codec_name"]!="h264"
+                or a[0]["codec_name"]!="aac"
+                or (v[0]["width"],v[0]["height"])!=SIZE
+                or abs(float(data["format"]["duration"])-item["seconds"])>.35):
+                raise RuntimeError("INDIVIDUAL_VIDEO_INVALID_"+letter)
+            results.append({
+                "take":letter,"file":video.name,
+                "sha256":digest(video.read_bytes()),
+                "sourceNativeWavSha256":item["sha256"],
+                "durationSec":round(float(data["format"]["duration"]),3)
+            })
+    receipt={
+        "schema":"evercraft.bella.individual-mobile-video-review.v1",
+        "sourceArchiveSha256":digest(pathlib.Path(input_archive).read_bytes()),
+        "voice":"original_kokoro_af_bella",
+        "originalDryMastersVerified":True,
+        "noNewVoiceSynthesis":True,
+        "humanApproved":False,
+        "commercialReleaseAuthorized":False,
+        "takes":results
+    }
+    (output_dir/"verification.json").write_text(json.dumps(receipt,indent=2)+"\n")
+    print(json.dumps(receipt,indent=2))
+
+
+
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--source-archive",required=True)
-    p.add_argument("--output",required=True)
+    destination=p.add_mutually_exclusive_group(required=True)
+    destination.add_argument("--output")
+    destination.add_argument("--individual-dir")
     args=p.parse_args()
-    export(args.source_archive,args.output)
+    if args.individual_dir:
+        export_individual(args.source_archive,args.individual_dir)
+    else:
+        export(args.source_archive,args.output)
