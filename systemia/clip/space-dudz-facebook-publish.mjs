@@ -64,7 +64,22 @@ export async function publishSpaceDudzCandidateFacebook({
       caption:clean(found.caption),
       contentDigest:'sha256:'+asset.sha256,
     });
-    if(result?.state!=='published'||!clean(result.remoteId)||!clean(result.url)) throw new Error('space_dudz_provider_receipt_invalid');
+    if(result?.state==='reconciliation_required'){
+      return {
+        schema:'evercraft.clip.space-dudz-facebook-receipt.v1',
+        status:'reconciliation_required',
+        campaignId:clean(campaign.campaign_id),candidateId:clean(found.id),
+        destination:'facebook-page',brandKey:'space-dudz',
+        mediaSha256:asset.sha256,
+        remoteId:clean(result.remoteId)||null,url:null,
+        providerMayHavePublished:true,automaticRetryAllowed:false,
+        manualReconciliationRequired:true,
+        reason:clean(result.reason)||'post_readback_unconfirmed',
+        authorizationRef:clean(authorizationRef),
+        startedAt,reconciliationAt:new Date().toISOString(),
+      };
+    }
+    if(result?.state!=='published'||!clean(result.remoteId)||!clean(result.url)||result.readbackVerified!==true) throw new Error('space_dudz_provider_receipt_invalid');
     return {
       schema:'evercraft.clip.space-dudz-facebook-receipt.v1',
       status:'published',
