@@ -165,6 +165,6 @@ async function loadSample(){
  try{const r=await fetch('./sample.json',{cache:'no-store'});if(!r.ok)throw Error('Sample HTTP '+r.status);setDive(await r.json());}
  catch(error){$('mission-title').textContent='Sample unavailable';$('scene-status').textContent='SAMPLE NOT LOADED';$('scene-sub').textContent=error.message;$('no-xy').hidden=false;drawScene();}
 }
-$('load-demo').addEventListener('click',loadSample);
+$('load-demo').addEventListener('click',async()=>{await loadSample();toggleCinema(true);});
 window.addEventListener('resize',()=>{drawScene();depthChart();});
 requestAnimationFrame(tick);loadSample();
