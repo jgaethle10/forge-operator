@@ -106,6 +106,7 @@ export function projectGoalToVisualSnapshot(state,{now=new Date()}={}){
       edges.push({from:taskId,to:taskIds.get(dep),relationship:'depends_on_declared'});
     }
   }
+  requireValid(edges.length<=160,'topology_size');
   return {
     schema:SNAPSHOT_SCHEMA,
     observed_at:state.updated_at,
