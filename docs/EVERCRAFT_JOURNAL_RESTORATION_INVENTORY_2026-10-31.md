@@ -43,3 +43,17 @@ Founder visual/functional standard from previous design work: “New York Times 
 - **Hosting:** owned runtime only; no reinstated Base44 or third-party host dependencies.
 
 This inventory is intentionally honest about incomplete recovery and failed public proof. Continue through issue #1828.
+
+## 2026-11-04: independently recovered owned Drive archive artifacts
+
+**Confirmed through authorized Google Drive readback, SHA-256 verification and ZIP listing, with no legacy-host calls:**
+
+1. `Evercraft_Sovereign_Cutover_Journal_2026-10-10.zip` (Drive file ID `1xt4irZB6fXUn8Qit9sOYWWGEPOp6Tluo`), 34,942 bytes, SHA-256 `52188959f77920918fee5be30f73edc4708b3179b9b1ebc228a07acd7fc06c69`. Contains the complete retrospective source `journal/source/week-in-motion-2026-09-28.md`, article build script, static HTML, CSS, speech controls, and release procedures.
+2. `Evercraft_Journal_Hardened_Release_Candidate_v0.4.zip` (Drive file ID `1LXm-z0JyM1c0sqNGGiHJrPZZpKHcFWjN`), 37,879 bytes, SHA-256 `eacafbbfac832f3805d2dd5e84db277a6709d6a558005034c08784e6f3994b1d`. The content ZIP has 18 members including content manifest, its verifier and tamper tests. Its original article source `journal/source/week-in-motion-2026-09-28.md` is 22,592 bytes, SHA-256 `2eadf65b217d7e8121e5f258f49f23c653f178722b1c56411d222943f9520cf8`.
+3. The v0.4 reader experience includes an actual long-form magazine article, mobile layout, an article section rail, editorial visual mark, and a browser-native Listen/Pause/Stop read-aloud controller with speed selection. This is **owned design/source evidence** worth carrying forward, not a published release or licensed external photo library.
+4. `EVERCRAFT JOURNAL | Hardened Release Candidate v0.4 | Integrity and Indexing QA | 2026-10-10` is a Drive document describing archive integrity gates and explicitly identifying the v0.4 ZIP as **draft, NOT published**. It notes that the custom domain and owned public HTTPS release were not verified at that time.
+5. `Evercraft Journal Editorial Council — Session 1: Founding Meeting` (2026-08-02) is preserved in Drive. Key original editorial identity: publish work readers would voluntarily spend 15 minutes reading; source-grounded independence and falsifiable reasoning; make corrections prominent; respect uncertainty and readers' time. Journal is not product marketing.
+
+**Critical boundary:** These recovered ZIPs preserve one substantial Week in Motion editorial release candidate and its assets, **not proof of a full 100-story archive**. Do not promote draft candidate as published, copy old canonical metadata unchanged, turn on indexing, or skip fresh editorial/rights approval. The integrity-checking scripts in a recovered ZIP are archival data and should be inspected before use, never executed as trusted instructions automatically.
+
+**Design decision for continued review:** compare the restored homepage against the preserved charcoal/mint/gold Journal visual identity and long-form reading controls before declaring visual QA complete. Copy the reader-first features into the owned publisher as reviewed code, not as a replacement hosted runtime.
