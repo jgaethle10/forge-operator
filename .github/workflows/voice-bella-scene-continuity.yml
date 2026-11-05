@@ -1,0 +1,72 @@
+name: Voice Foundry | Bella Scene Continuity (private review)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-scene-continuity.py'
+      - 'systemia/media-studio/test_voice_bella_scene_continuity.py'
+      - '.github/workflows/voice-bella-scene-continuity.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-scene-continuity.py'
+      - 'systemia/media-studio/test_voice_bella_scene_continuity.py'
+      - '.github/workflows/voice-bella-scene-continuity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-continuity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test locked dialogue and review-only behavior
+        run: |
+          python systemia/media-studio/voice-bella-scene-continuity.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_scene_continuity.py -v
+      - name: Install original Bella synthesis and MP3 renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate Bella uninterrupted and scene-beat recordings
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python systemia/media-studio/voice-bella-scene-continuity.py bella-scene-continuity-review
+      - name: Independently validate dry original sources and audition audio
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('bella-scene-continuity-review')
+          receipt=json.loads((root/'evidence.json').read_text())
+          assert receipt['schema']=='evercraft.voice.bella.scene-continuity.v1'
+          assert receipt['voiceId']=='af_bella' and receipt['version']=='0.9.4'
+          for k in ('emotionalConditioningVerified','phonemeOverrides','voiceCloning','pitchEffects','fabricatedBreaths','humanListeningApproved','commercialRightsVerified','productionReady'):
+              assert receipt[k] is False,k
+          assert receipt['sameSpokenWords'] is True
+          assert len(receipt['originalDry'])==4 and len(receipt['takes'])==3
+          for source in receipt['originalDry'].values():
+              f=root/source['filename']
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==source['sha256']
+              with wave.open(str(f),'rb') as wav:
+                  assert (wav.getframerate(),wav.getnchannels(),wav.getsampwidth())==(24000,1,2)
+          for take in receipt['takes']:
+              for n,h in ((take['wav'],take['wavSha256']),(take['mp3'],take['mp3Sha256'])):
+                  f=root/n
+                  assert f.is_file() and hashlib.sha256(f.read_bytes()).hexdigest()==h
+              with wave.open(str(root/take['wav']),'rb') as wav:
+                  assert (wav.getframerate(),wav.getnchannels(),wav.getsampwidth())==(24000,1,2)
+                  assert 8.0<wav.getnframes()/24000<40
+          assert (root/'index.html').read_text().count('<audio controls')==3
+          print('PASS: 4 untouched native speech sources; 3 verified scene auditions; release held')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-scene-continuity-three-native-takes-private
+          path: bella-scene-continuity-review/
+          retention-days: 7
+          if-no-files-found: error
