@@ -397,7 +397,8 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
   background:#f7fafb;color:#18283b;border:1px solid #e8eef3;
   border-radius:8px;font-size:12px;font-weight:800;
 }
-.customer-workspace .office-return:not([hidden]){margin:0 0 15px}
+.customer-workspace .office-return:not([hidden]){display:flex;width:max-content;max-width:100%;margin:0 0 15px}
+.office-observe-open #office .office-inspector>.office-eyebrow{display:block}
 .office-observe-open #office .office-visit-close:focus-visible,
 .office-observe-open #office .office-return:focus-visible,
 .customer-workspace .office-visit-entry:focus-visible{
