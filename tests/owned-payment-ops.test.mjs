@@ -56,7 +56,9 @@ test('session creation is exact-priced, durable and idempotent across engine res
     ops=createPaymentOperations({provider,journal});
     assert.equal((await ops(args)).body.checkout_url,sessionUrl);
     assert.equal(provider.state.creates,1);
-    const mismatch=await ops({...args,offer_key:'browser_fabric_workflow_diagnosis_149'});
+    const mismatch=await ops({...args,offer_key:'browser_fabric_workflow_diagnosis_149',
+      success_path:'/offers/browser-diagnosis?payment=processing',
+      cancel_path:'/offers/browser-diagnosis?payment=cancelled'});
     assert.equal(mismatch.status,409);
     journal.close();
     const ledger=fs.readFileSync(journalPath,'utf8');
@@ -106,7 +108,7 @@ test('mismatch, live-mode default hold and service authorization fail closed',as
       assert.equal(unauthorized.status,401);
       const authorized=await fetch(server.url+'/api/payments/ops',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+'a'.repeat(40)},body:JSON.stringify(args)});
       assert.equal(authorized.status,200);
-      assert.equal((await authorized.json()).body?.checkout_ready,undefined); // JSON response is the payload itself.
+      assert.equal((await authorized.json()).checkout_ready,true); // Authenticated local order preparation.
       const health=await fetch(server.url+'/health').then(r=>r.json());
       assert.equal(health.commercial_release_attested,false);
     }finally{await server.close();}
