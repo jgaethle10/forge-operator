@@ -41,6 +41,7 @@ test('an Evercraft Signal offer is never processor-first and never a paid claim'
 test('native page explains the priced Signal service and correctly holds checkout',()=>{
   const item=offerCapabilityForSlug('signal-brief',[]);
   assert.ok(item);
+  assert.equal(item.commercial_state,'scope_first');
   const page=renderOfferPage(item,{checkoutConfigured:true});
   assert.match(page,/Know what happened/);
   assert.match(page,/Evercraft Payments/);
