@@ -269,11 +269,12 @@ test('missing or changed Systemia durable mission identity fails before any Node
   assert.equal(missing.calls(),0);
 
   const changed=await scenario('goal-changed');
-  const prior=await readGoalState(changed.goalStateFile);
-  prior.mission_key='other-unauthorized-mission';
-  prior.revision+=1;
-  await writeGoalState(changed.goalStateFile,prior,{expectedRevision:prior.revision-1});
-  await assert.rejects(runScheduler(changed),/fenced_systemia_durable_mission_identity_hold/);
+  // Goal Store itself refuses changing an existing mission identity. Test a
+  // mismatched caller plan rather than weakening the store to forge it.
+  await assert.rejects(runScheduler({
+    ...changed,
+    plan:{...changed.plan,mission_key:'other-unauthorized-mission'}
+  }),/fenced_systemia_durable_mission_identity_hold/);
   assert.equal(changed.calls(),0);
   assert.equal(changed.journal.inspect({jobKey:changed.jobId}).journal_events,0);
 });
