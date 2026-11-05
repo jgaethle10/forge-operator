@@ -38,6 +38,10 @@ export function buildOneBodyVisualSnapshot({
   if (!Number.isSafeInteger(overdueAfterMs) || overdueAfterMs < 1) throw new Error('invalid_overdue_threshold');
   if (!Number.isSafeInteger(maxEvents) || maxEvents < 1 || maxEvents > 12) throw new Error('invalid_event_limit');
   if (!Array.isArray(receiptObservations)) throw new Error('invalid_receipt_observations');
+  if (state.lane_acknowledgements != null &&
+      (typeof state.lane_acknowledgements !== 'object' || Array.isArray(state.lane_acknowledgements))) {
+    throw new Error('invalid_lane_acknowledgement_state');
+  }
 
   const events = Object.values(state.events)
     .filter(e => e && typeof e.event_id === 'string' &&
@@ -47,8 +51,14 @@ export function buildOneBodyVisualSnapshot({
   const selected = events.slice(0, maxEvents);
   const selectedById = new Map(selected.map(e => [e.event_id, e]));
   const eligibleReceipts = new Map();
-  for (const receipt of receiptObservations) {
-    if (!receipt || typeof receipt !== 'object') continue;
+  const candidates = [
+    ...Object.values(state.lane_acknowledgements || {}),
+    ...receiptObservations,
+  ];
+  // Persisted references must be checked AGAIN by a trusted source adapter.
+  for (const receipt of candidates) {
+    if (!receipt || typeof receipt !== 'object' ||
+        receipt.schema !== 'evercraft.one-body.lane-consumer-receipt.v1') continue;
     const event = selectedById.get(receipt.event_id);
     if (!event || typeof receipt.lane !== 'string' || !event.lanes.includes(receipt.lane)) continue;
     if (typeof receipt.receipt_ref !== 'string' || !receipt.receipt_ref.trim()) continue;
@@ -119,6 +129,7 @@ export function buildOneBodyVisualSnapshot({
       sampled_events:selected.length,
       sampled_lanes:lanes.size,
       counts,gap_samples:gapSamples,
+      private_acknowledgement_refs_seen:Object.keys(state.lane_acknowledgements || {}).length,
       sample_truncated:events.length>selected.length,
       overdue_threshold_ms:overdueAfterMs,
       verified_runtime_health:false,
