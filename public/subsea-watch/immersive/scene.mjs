@@ -136,6 +136,7 @@ if(!gl){
    dive=normalizeDive(await r.json());
    if(!dive.demo||!dive.xyAvailable||dive.positionSource!=='SIMULATED')throw Error('Example missing synthetic provenance');
    route(dive.points);current=dive.points[0].t;
+   document.documentElement.dataset.subseaSample='synthetic-loaded';
    $('timeline').max=dive.points.at(-1).t;
   }catch(e){$('caption').textContent='Example unavailable: '+e.message;$('play').disabled=true;}
  }
@@ -166,6 +167,7 @@ if(!gl){
    $('time').textContent=fmt(current)+' / '+fmt(dive.points.at(-1).t);
    $('timeline').value=current;
   }
+  if(gl.getError()===gl.NO_ERROR)document.documentElement.dataset.subseaRenderer='webgl-drawn';
   requestAnimationFrame(frame);
  }
  $('play').addEventListener('click',()=>{
