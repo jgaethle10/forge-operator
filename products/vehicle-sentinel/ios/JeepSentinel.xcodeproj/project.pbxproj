@@ -1,0 +1,123 @@
+// !$*UTF8*$!
+{
+ archiveVersion = 1;
+ classes = {};
+ objectVersion = 56;
+ objects = {
+/* Begin PBXBuildFile section */
+ A00000000000000000000001 /* JeepSentinelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* JeepSentinelApp.swift */; };
+ A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* ContentView.swift */; };
+ A00000000000000000000003 /* BluetoothScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000003 /* BluetoothScanner.swift */; };
+ A00000000000000000000004 /* SweepStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000004 /* SweepStore.swift */; };
+ A00000000000000000000005 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000005 /* Models.swift */; };
+ A00000000000000000000006 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000006 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+/* Begin PBXFileReference section */
+ B00000000000000000000001 /* JeepSentinelApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JeepSentinelApp.swift; sourceTree = "<group>"; };
+ B00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+ B00000000000000000000003 /* BluetoothScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothScanner.swift; sourceTree = "<group>"; };
+ B00000000000000000000004 /* SweepStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepStore.swift; sourceTree = "<group>"; };
+ B00000000000000000000005 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+ B00000000000000000000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+ C00000000000000000000001 /* JeepSentinel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JeepSentinel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+/* Begin PBXFrameworksBuildPhase section */
+ D00000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+/* Begin PBXGroup section */
+ E00000000000000000000001 = {isa = PBXGroup; children = (E00000000000000000000002, E00000000000000000000003); sourceTree = "<group>"; };
+ E00000000000000000000002 /* JeepSentinel */ = {isa = PBXGroup; children = (B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006); path = JeepSentinel; sourceTree = "<group>"; };
+ E00000000000000000000003 /* Products */ = {isa = PBXGroup; children = (C00000000000000000000001); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+/* Begin PBXNativeTarget section */
+ F00000000000000000000001 /* JeepSentinel */ = {
+  isa = PBXNativeTarget;
+  buildConfigurationList = 100000000000000000000001;
+  buildPhases = (D00000000000000000000002, D00000000000000000000001, D00000000000000000000003);
+  buildRules = ();
+  dependencies = ();
+  name = JeepSentinel;
+  productName = JeepSentinel;
+  productReference = C00000000000000000000001;
+  productType = "com.apple.product-type.application";
+ };
+/* End PBXNativeTarget section */
+/* Begin PBXProject section */
+ 200000000000000000000001 /* Project object */ = {
+  isa = PBXProject;
+  attributes = { BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 1600; TargetAttributes = { F00000000000000000000001 = { CreatedOnToolsVersion = 16.0; }; }; };
+  buildConfigurationList = 100000000000000000000002;
+  compatibilityVersion = "Xcode 14.0";
+  developmentRegion = en;
+  hasScannedForEncodings = 0;
+  knownRegions = (en, Base);
+  mainGroup = E00000000000000000000001;
+  productRefGroup = E00000000000000000000003;
+  projectDirPath = "";
+  projectRoot = "";
+  targets = (F00000000000000000000001);
+ };
+/* End PBXProject section */
+/* Begin PBXResourcesBuildPhase section */
+ D00000000000000000000003 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000006); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+/* Begin PBXSourcesBuildPhase section */
+ D00000000000000000000002 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004, A00000000000000000000005); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+/* Begin XCBuildConfiguration section */
+ 300000000000000000000001 /* App Debug */ = {
+  isa = XCBuildConfiguration;
+  buildSettings = {
+   ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+   CLANG_ENABLE_MODULES = YES;
+   CODE_SIGN_STYLE = Automatic;
+   CURRENT_PROJECT_VERSION = 1;
+   GENERATE_INFOPLIST_FILE = YES;
+   INFOPLIST_KEY_CFBundleDisplayName = "Vehicle Sentinel";
+   INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Jeep Sentinel uses Bluetooth to show nearby signals during a user-started vehicle sweep. It cannot identify all trackers.";
+   INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+   IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+   MARKETING_VERSION = 0.2.0;
+   PRODUCT_BUNDLE_IDENTIFIER = com.evercraft.jeepsentinel;
+   PRODUCT_NAME = "$(TARGET_NAME)";
+   SDKROOT = iphoneos;
+   SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+   SWIFT_EMIT_LOC_STRINGS = YES;
+   SWIFT_VERSION = 5.0;
+   TARGETED_DEVICE_FAMILY = 1;
+  };
+  name = Debug;
+ };
+ 300000000000000000000002 /* App Release */ = {
+  isa = XCBuildConfiguration;
+  buildSettings = {
+   ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+   CLANG_ENABLE_MODULES = YES;
+   CODE_SIGN_STYLE = Automatic;
+   CURRENT_PROJECT_VERSION = 1;
+   GENERATE_INFOPLIST_FILE = YES;
+   INFOPLIST_KEY_CFBundleDisplayName = "Vehicle Sentinel";
+   INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Jeep Sentinel uses Bluetooth to show nearby signals during a user-started vehicle sweep. It cannot identify all trackers.";
+   INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+   IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+   MARKETING_VERSION = 0.2.0;
+   PRODUCT_BUNDLE_IDENTIFIER = com.evercraft.jeepsentinel;
+   PRODUCT_NAME = "$(TARGET_NAME)";
+   SDKROOT = iphoneos;
+   SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+   SWIFT_EMIT_LOC_STRINGS = YES;
+   SWIFT_VERSION = 5.0;
+   TARGETED_DEVICE_FAMILY = 1;
+  };
+  name = Release;
+ };
+ 300000000000000000000003 /* Project Debug */ = {isa = XCBuildConfiguration; buildSettings = { ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CODE_SIGN_STYLE = Automatic; GCC_C_LANGUAGE_STANDARD = gnu17; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Debug; };
+ 300000000000000000000004 /* Project Release */ = {isa = XCBuildConfiguration; buildSettings = { ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CODE_SIGN_STYLE = Automatic; GCC_C_LANGUAGE_STANDARD = gnu17; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Release; };
+/* End XCBuildConfiguration section */
+/* Begin XCConfigurationList section */
+ 100000000000000000000001 /* Target configs */ = {isa = XCConfigurationList; buildConfigurations = (300000000000000000000001, 300000000000000000000002); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+ 100000000000000000000002 /* Project configs */ = {isa = XCConfigurationList; buildConfigurations = (300000000000000000000003, 300000000000000000000004); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+ };
+ rootObject = 200000000000000000000001;
+}
