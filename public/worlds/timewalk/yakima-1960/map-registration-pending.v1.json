@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.timewalk.map-registration-draft.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "sheetId": "yakima-sanborn-1950-target-block-pending",
+  "mapEditionYear": 1950,
+  "sceneTargetYear": 1960,
+  "jurisdiction": {
+    "city": "Yakima",
+    "region": "WA",
+    "country": "US"
+  },
+  "collectionUrl": "https://www.loc.gov/item/sanborn09381_002/",
+  "sheetUrl": null,
+  "sheetIndexVerified": false,
+  "sheetInspected": false,
+  "projectedCrs": null,
+  "controls": [],
+  "publicationRightsReviewed": true,
+  "baselineRights": {
+    "claim": "LOC online Sanborn collection public domain",
+    "source": "https://www.loc.gov/item/sanborn09381_002/",
+    "attribution": "Library of Congress, Geography and Map Division, Sanborn Maps Collection"
+  },
+  "cautions": [
+    "Collection-level 1920–1950 title does not establish which specific sheet covers the South 2nd/3rd block.",
+    "Exact selected map sheet URL, sheet effective correction date and independently referenced ground control points are missing.",
+    "All 1960 building storefronts, footprint continuities and geographic coordinates remain unsupported.",
+    "Do not insert placeholder pixel or geographic coordinates to make a map look finished."
+  ],
+  "nextChecks": [
+    "Open the LOC 1950 collection sheet index and identify the exact downtown block sheet.",
+    "Record its image index, sheet number, visible revision dates and published sheet URL.",
+    "Gather at least four noncollinear, independently surveyed tie points and identify an appropriate projected CRS.",
+    "Validate affine residuals and map distortions; demand human visual QC before exporting geometry.",
+    "Match historic year and permissions separately before any timewalk accurate-geometry claim."
+  ]
+}
