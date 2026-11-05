@@ -58,3 +58,16 @@ This candidate extends the **existing NodeSeed registered MicroSeed worker path*
 - `fenced-signed-node-scheduler.test.mjs` drives the **actual Saban scheduler entrypoint** through a real localhost NodeSeed and checks successful durable acknowledgment, no repeated job on restart, invalid-signature hold, wrong fingerprint hold and missing independent pin denial.
 
 **Important limitations:** tests are GitHub-hosted ephemeral NodeSeeds, **not** actual Node001 or Node002 hardware. An independent fixture pin is not a Yard field certification. This is not OS-enforced sandboxing for arbitrary adapter code and does not prove physical custody, Systemia's durable mission permission, Passport consumption of a job-execution permit, independent commercial delivery, or exactly-once side effects. Existing scheduler callers and physical node shadow restrictions remain unchanged. No deployment or checkout authorization derives from these proofs.
+
+
+## November 4 | Passport execution gate before signed NodeSeed work
+
+The bounded signed-MicroSeed canary now verifies an **existing consumed single-use Passport action permit before any NodeSeed adapter call**, and again immediately before invocation to detect intervening expiry or revocation.
+
+The first-party fenced-execution-admission module reads the independently maintained Evercraft Passport store. An execution permit must have product **saban**, scope **job.execute.readonly**, the exact Saban job ID as its resource, an active non-revoked grant, no cancellation or expiry, and a valid persisted consumption receipt. Its request fingerprint binds the full immutable Saban work digest, exactly one attempt, the separately pinned NodeSeed device fingerprint / node ID, chosen lease ID, and fresh execution nonce.
+
+The owning local operator must mint and consume that permit through its independently trusted Passport flow before running the opt-in scheduler. The scheduler never grants authority to itself, creates/consumes permits, or accepts client-supplied approval booleans. Caller parameters **fencedPassportStateDir** and **fencedExecutionPermitIds[jobId]** are only lookup hints; the stored permit is the authority. If verification fails at preflight, no Saban or NodeSeed work runs. If it fails immediately before the adapter, the existing local journal lease is held and the job becomes non-retryable.
+
+CI-only tests deliberately create synthetic local manual grants. These tests do **not** authenticate founder identity, validate Yard custody, authorize Node001 or Node002, or grant production deployment. The candidate remains constrained to localhost registered content hashing and one-attempt execution. Existing unrestricted Saban scheduler callers are unchanged without the explicit fenced journal opt-in.
+
+The signed result, local Passport permit, and HMAC journal represent **three distinct evidence checks**. Systemia durable mission admission, exact Yard field enrollment, external identity authority, physical host confirmation, and verified customer settlement/delivery remain **separate release holds**.
