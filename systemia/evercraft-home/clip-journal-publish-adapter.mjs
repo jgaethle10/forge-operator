@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { publishCfbJournalToFacebook } from '../newsroom/cfb-clip-facebook-publish.mjs';
 import { resolveFacebookPageCredential } from '../clip/facebook-page-credential-resolver.mjs';
+import {claimJournalPublish,completeJournalPublishClaim} from './clip-journal-claim.mjs';
 
 function clean(value){ return String(value??'').trim(); }
 
@@ -42,6 +43,7 @@ export async function publishJournalStoryFacebookFromHome({
   repoRoot,
   slug,
   credentialStateDir,
+  stateRoot=process.env.EVERCRAFT_CLIP_JOURNAL_STATE_DIR||'',
   authorizationRef,
   fetchImpl=globalThis.fetch,
   publisher=publishCfbJournalToFacebook,
@@ -50,12 +52,34 @@ export async function publishJournalStoryFacebookFromHome({
   const {file,handoff}=readJournalClipHandoff(repoRoot,slug);
   if(!clean(credentialStateDir)) throw new Error('home_clip_credential_vault_not_configured');
 
-  const receipt=await publisher({
-    handoff,
-    authorizationRef:clean(authorizationRef)||'policy:evercraft-journal-autopublish-v1',
-    fetchImpl,
-    resolveCredential:()=>resolveFacebookPageCredential({credentialStateDir}),
-  });
+  const claim=claimJournalPublish({repoRoot,stateRoot,slug:normalizeJournalStorySlug(slug),handoff});
+  if(claim.state==='duplicate_hold') return {
+    schema:'evercraft.home.clip-journal-publish-receipt.v1',
+    state:'duplicate_or_reconciliation_hold',
+    slug:normalizeJournalStorySlug(slug),story_id:clean(handoff.story_id),
+    resource_ref:resourceRef,destination:'facebook-page',
+    provider_remote_id:claim.prior_remote_id,
+    provider_post_url:claim.prior_provider_post_url,
+    previous_state:claim.prior_state,
+    provider_may_have_published:true,
+    manual_reconciliation_required:true,
+    automatic_retry_allowed:false,
+    secret_material_returned:false,
+  };
+  let receipt;
+  try{
+    receipt=await publisher({
+      handoff,
+      authorizationRef:clean(authorizationRef)||'policy:evercraft-journal-autopublish-v1',
+      fetchImpl,
+      resolveCredential:()=>resolveFacebookPageCredential({credentialStateDir}),
+    });
+  }catch{
+    // A provider timeout can occur after its POST. Never erase the attempt claim.
+    receipt={status:'reconciliation_required',providerMayHavePublished:true,
+      error:'provider_attempt_unresolved'};
+  }
+  const stored=completeJournalPublishClaim({claim,receipt});
 
   return {
     schema:'evercraft.home.clip-journal-publish-receipt.v1',
@@ -68,6 +92,10 @@ export async function publishJournalStoryFacebookFromHome({
     canonical_url:clean(handoff.canonical_url),
     provider_post_url:clean(receipt.url)||null,
     provider_remote_id:clean(receipt.remoteId)||null,
+    provider_may_have_published:stored.provider_may_have_published,
+    automatic_retry_allowed:false,
+    manual_reconciliation_required:receipt.status==='reconciliation_required',
+    durable_claim_recorded:true,
     authorization_ref:clean(receipt.authorizationRef)||clean(authorizationRef)||null,
     public_link_preflight:receipt.publicLinkPreflight||null,
     canonical_postflight:receipt.canonicalPostflight||null,
