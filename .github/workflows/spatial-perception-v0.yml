@@ -1,22 +1,28 @@
-name: Spatial perception V0
+name: Spatial perception V2
 on:
   pull_request:
     paths:
       - 'public/worlds/spatial-perception.mjs'
       - 'public/worlds/spatial-audit.mjs'
+      - 'public/worlds/spatial-temporal.mjs'
       - 'public/worlds/perception-lab/**'
       - 'tests/spatial-perception.test.mjs'
       - 'tests/spatial-audit.test.mjs'
       - 'tests/spatial-viewport.test.mjs'
+      - 'tests/spatial-temporal.test.mjs'
+      - 'tests/spatial-temporal-browser.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
   push:
     paths:
       - 'public/worlds/spatial-perception.mjs'
       - 'public/worlds/spatial-audit.mjs'
+      - 'public/worlds/spatial-temporal.mjs'
       - 'public/worlds/perception-lab/**'
       - 'tests/spatial-perception.test.mjs'
       - 'tests/spatial-audit.test.mjs'
       - 'tests/spatial-viewport.test.mjs'
+      - 'tests/spatial-temporal.test.mjs'
+      - 'tests/spatial-temporal-browser.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
 jobs:
   core-tests:
@@ -29,4 +35,4 @@ jobs:
         with:
           node-version: '22'
       - name: Stereo geometry and consumer boundary tests
-        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs
+        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs

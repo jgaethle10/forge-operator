@@ -73,3 +73,19 @@ test('customer page is an interactive local-first prototype with non-clearance d
  assert.match(viewer,/parseInput/);
  assert.doesNotMatch(viewer,/https?:\/\/|XMLHttpRequest|sendBeacon|localStorage|sessionStorage/);
 });
+
+test('cinema mode keeps synthetic disclosure, replay controls and a close path on iOS',()=>{
+ for(const id of ['focus-view','cinema-controls','cinema-play','cinema-scrub','cinema-time'])assert.ok(rawHtml.includes('id="'+id+'"'),id);
+ assert.match(rawHtml,/scene\.scene-focused\{position:fixed/);
+ assert.match(rawHtml,/100dvh/);
+ assert.match(rawHtml,/scene\.scene-focused \.float/);
+ assert.match(rawHtml,/scene\.scene-focused \.legend/);
+ assert.match(rawHtml,/aria-label="Expand 3D replay"/);
+ assert.match(viewer,/\$\('cinema-scrub'\)\.value=current/);
+ assert.match(viewer,/\$\('cinema-play'\)\.textContent=playing/);
+ assert.match(viewer,/toggleCinema\(false\)/);
+ assert.match(viewer,/if\(w>=650\)/);
+ assert.match(viewer,/zoom:1\.3/);
+ assert.match(rawHtml,/Enter the 3D dive/);
+ assert.match(viewer,/loadSample\(\);toggleCinema\(true\)/);
+});
