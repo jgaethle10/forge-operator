@@ -57,5 +57,13 @@ test('Yakima evidence lab is source-backed and functional without JavaScript', (
   assert.match(lab, /name="era"/);
   assert.match(lab, /id="era-1924"/);
   assert.match(lab, /href="yakima-standalone\.html"/);
+  assert.match(lab, /yakima-evidence-ledger\.v1\.json/);
+  const ledger = JSON.parse(read('public/worlds/hidden-world/yakima-evidence-ledger.v1.json'));
+  assert.equal(ledger.schema,'evercraft.hidden-world.evidence-ledger.v1');
+  assert.equal(ledger.records.length,7);
+  assert.ok(ledger.records.every(r=>r.source_url.startsWith('https://')));
+  assert.ok(ledger.records.every(r=>r.geometry_verified===false&&r.connected_tunnel_verified===false));
+  assert.ok(ledger.records.every(r=>r.recorded_coordinates===null));
+
   assert.doesNotMatch(lab, /<script\b/i, 'historical evidence must remain visible in script-blocking previews');
 });
