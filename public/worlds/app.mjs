@@ -38,6 +38,12 @@ const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1]
 let state=loadWorld(localStorage),visitingShared=false,pendingShared=null,started=false,editorOpen=false,previous=performance.now(),elapsed=0,fpsFrames=0,fpsStart=performance.now(),fps=0,lastSave=0;
 let camera={x:state.player.x,y:1.72,z:state.player.z,yaw:state.player.yaw,pitch:-.06,vy:0},keys={},joystick={x:0,y:0},renderAgents=[];
 const mysteryWalk=mountMysteryWalk({openWorld:()=>{if(!started)$('start').click();}});
+const mysteryTrail=document.createElement('div');
+mysteryTrail.id='mysteryTrail';
+mysteryTrail.className='mystery-trail hidden';
+mysteryTrail.setAttribute('aria-live','off');
+mysteryTrail.setAttribute('aria-label','Direction to next fictional clue');
+$('hud').append(mysteryTrail);
 let qualityMode='auto',quality={...DEFAULT_QUALITY};
 try{qualityMode=validQualityMode(localStorage.getItem(QUALITY_KEY));}catch{}
 $('qualityMode').value=qualityMode;
@@ -172,7 +178,15 @@ function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInst
  }
  renderAgents=stepAgents(state,dt,elapsed);for(let i=0;i<renderAgents.length;i++)agentDraw(renderAgents[i],i);
  for(const o of state.objects)for(const d of extra(o.kind,o.x,o.z))draw(d);
- if(started){const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
+ if(started){
+  const guidance=mysteryWalk.guidance(camera.x,camera.z,camera.yaw);
+  const tracking=Boolean(guidance)&&!mysteryWalk.isOpen();
+  mysteryTrail.classList.toggle('hidden',!tracking);
+  if(tracking){
+    const label=guidance.label+' · '+guidance.distance.toFixed(1)+' world units · '+guidance.direction;
+    if(mysteryTrail.textContent!==label)mysteryTrail.textContent=label;
+  }
+  const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
  fpsFrames++;if(time-fpsStart>1200){fps=Math.round(fpsFrames*1000/(time-fpsStart));fpsStart=time;fpsFrames=0;if(started&&qualityMode==='auto'&&!document.hidden)quality=tuneQuality(quality,fps);$('metrics').textContent=`${fps} fps · ${canvas.width}×${canvas.height} · ${frameDrawCalls} draws · ${staticDrawCount} instanced · ${qualityMode} ${modeScale(qualityMode,quality).toFixed(2)}× · scene ${state.revision}`;}
 }
 function nearby(){const station=mysteryWalk.stationNear(camera.x,camera.z);if(station)return {id:'mystery-evidence',x:station.x,z:station.z,action:'inspect '+station.label};const list=[...renderAgents.map(a=>({id:a.id,x:a.renderX,z:a.renderZ,action:`talk to ${a.name}`,agent:a})),{id:'portal',x:3,z:-10.2,action:'step through the portal'},{id:'tank',x:-.9,z:-4.5,action:'inspect the fish tank'},{id:'workshop',x:-4.9,z:-3.5,action:'inspect the workspace'},{id:'pond',x:7,z:-3.5,action:'admire Glasswater Pond'},{id:'cove',x:13,z:9,action:'return through the cove portal'}];const found=list.map(x=>({...x,d:Math.hypot(camera.x-x.x,camera.z-x.z)})).sort((a,b)=>a.d-b.d)[0];return found&&found.d<3.2?found:null;}
