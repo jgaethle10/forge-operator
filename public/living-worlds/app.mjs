@@ -1,5 +1,6 @@
 import {SCHEMA,WIDTH,HEIGHT,KINDS,makeHouse,validateHouse,room,clock,placeFurniture,removeFurniture,gift,party,advanceHouse} from './house-core.mjs';
 import {decisionContext,applyProposal} from './agent-proposals.mjs';
+import {toHouseEngineWorld} from './house-world-bridge.mjs';
 const $=id=>document.getElementById(id);
 const STORAGE='evercraft.living-worlds.house001.v1';
 function load(){
@@ -170,6 +171,17 @@ $('export').addEventListener('click',()=>{
   const link=document.createElement('a');link.href=url;link.download='evercraft-house-001-day-'+state.day+'.json';
   document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   message('A copy of the local house snapshot was exported.');
+});
+$('export-engine').addEventListener('click',()=>{
+  if(!validateHouse(state)){message('3D scene export blocked: invalid local state.');return;}
+  const world=toHouseEngineWorld(state);
+  const blob=new Blob([JSON.stringify(world,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;link.download='evercraft-house-001-world-engine-scene.json';
+  document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  message('World Engine scene data exported. Geometry and 3D runtime are not yet connected.');
 });
 if(state.schema!==SCHEMA)state=makeHouse();
 render();schedule();
