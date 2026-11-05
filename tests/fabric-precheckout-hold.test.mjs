@@ -53,7 +53,7 @@ test('one configured owned endpoint is not sufficient to publish a checkout CTA'
     const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[offer],faieSurfaceEnabled:false,...config});
     try{
       const health=await fetch(runtime.url+'/health').then(r=>r.json());
-      assert.equal(health.checkout_operational_state,'held_owned_payment_endpoint_unconfigured');
+      assert.equal(health.checkout_operational_state,'owned_transport_partial_requires_independent_checkout_canary');
       assert.equal(health.human_offer_checkout_enabled,false);
       const response=await fetch(runtime.url+'/offers/website-audit');
       assert.equal(response.status,200);
