@@ -113,6 +113,8 @@ test('capacity, price, rights and reservation failures prevent provider call',as
  const cases=[
   {readCapacity:async()=>({...capabilities,processing_capacity_verified:false})},
   {loadOrder:async()=>({...readyOrder,quote:{...quote,amount_cents:1}})},
+  {loadOrder:async()=>({...readyOrder,quote:{...quote,
+   offer_key:'forensiscope.media_review_30m.v1',amount_cents:3500}})},
   {loadOrder:async()=>({...readyOrder,media_rights_confirmed:false})},
   {reserveCapacity:async()=>({ok:true,reservation_id:'not-enough'})},
   {maxUploadBytes:1000}
