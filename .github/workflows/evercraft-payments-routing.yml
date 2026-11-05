@@ -4,6 +4,11 @@ on:
   pull_request:
     paths:
       - 'systemia/payments/**'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/signal-publication/payment-offer.mjs'
+      - 'tests/signal-owned-payment-route.test.mjs'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
       - '.github/workflows/evercraft-payments-routing.yml'
@@ -11,6 +16,11 @@ on:
     branches: [main]
     paths:
       - 'systemia/payments/**'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/signal-publication/payment-offer.mjs'
+      - 'tests/signal-owned-payment-route.test.mjs'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
       - '.github/workflows/evercraft-payments-routing.yml'
@@ -28,7 +38,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Evercraft-owned payment routing
-        run: node --test systemia/payments/*.test.mjs
+        run: node --test systemia/payments/*.test.mjs tests/signal-owned-payment-route.test.mjs
       - name: Reject Stripe-first EarthWorks commerce metadata
         run: |
           node -e "const x=require('./public/apps/earthworks-autonomy/capability.json'); if(x.commerce?.layer!=='evercraft_payments'||x.commerce?.provider_boundary!=='raven_nexus'||x.commerce?.direct_provider_checkout!==false) process.exit(1)"
