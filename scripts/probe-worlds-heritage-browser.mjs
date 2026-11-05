@@ -83,6 +83,8 @@ try{
       const initial=await page.evaluate(()=>window.__evercraftHeritageQA());
       assert.equal(initial.running,true,p.name+': world not active');
       assert.equal(initial.tourActive,false,p.name+': tour still owns camera');
+      assert.ok([initial.x,initial.z,initial.yaw,initial.pitch,initial.move.x,initial.move.y].every(Number.isFinite),
+        p.name+': nonfinite tour handoff state '+JSON.stringify(initial));
       await page.keyboard.down('w');
       try{
         const keyState=await page.evaluate(()=>window.__evercraftHeritageQA());
