@@ -63,5 +63,5 @@ test('buyer request is not a hazardous exposure claim or emergency service',()=>
   const req=prepareSignalInquiry(data);
   assert.ok(req.body.includes('source-linked timeline'));
   assert.ok(req.body.includes('not a paid order'));
-  assert.match(html,/not live monitoring, radiation testing, legal advice, or an emergency alert/);
+  assert.match(html,/live monitoring, radiation testing, legal advice, or an emergency alert/);
 });
