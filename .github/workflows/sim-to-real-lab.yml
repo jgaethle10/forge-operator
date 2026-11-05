@@ -103,6 +103,21 @@ jobs:
               digest:result.sha256}));
           }
           NODE
+      - name: RC05A promotion gate unit tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/promotion-gate-rc05a.test.mjs
+      - name: RC05A evidence-only policy gate
+        run: |
+          node --import tsx systemia/world-engine/sim-to-real/promotion-gate-rc05a.mjs \
+            --development /tmp/evercraft-rc05a-41-48.json \
+            --evaluation /tmp/evercraft-rc05a-49-56.json \
+            --out /tmp/evercraft-rc05a-review-gate.json
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyProgressGate} from './systemia/world-engine/sim-to-real/promotion-gate-rc05a.mjs';
+          const gate=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05a-review-gate.json','utf8'));
+          if(!verifyProgressGate(gate)||gate.releaseAuthorized||gate.hardwareAuthority) throw Error('rc05a_gate_authority_or_integrity_failed');
+          console.log('RC05A REVIEW GATE',JSON.stringify({candidateEligible:gate.candidateEligible,reasons:gate.reasons}));
+          NODE
       - name: Upload RC05A modeled comparisons
         uses: actions/upload-artifact@v4
         with:
@@ -110,4 +125,5 @@ jobs:
           path: |
             /tmp/evercraft-rc05a-41-48.json
             /tmp/evercraft-rc05a-49-56.json
+            /tmp/evercraft-rc05a-review-gate.json
           retention-days: 7
