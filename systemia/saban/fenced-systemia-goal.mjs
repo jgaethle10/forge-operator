@@ -5,12 +5,11 @@
  */
 import {readGoalState,mutateGoalState} from '../organism/goal-store.mjs';
 import {startGoalWork,recordGoalOutcome} from '../organism/goal-runtime.mjs';
-import {fencedSchedulerWorkDigest} from './fenced-local-scheduler.mjs';
 
 const DIGEST=/^sha256:[0-9a-f]{64}$/;
 const goalReceipt=result=>'saban-node:'+result?.worker_receipt?.receipt_hash;
 
-function checkGoal(goal,job,plan,phase){
+function checkGoal(goal,job,plan,phase,workDigest){
   if(goal?.schema!=='evercraft.goal.state.v1'||
       !plan?.mission_key||!plan?.goal_key||
       goal.mission_key!==plan.mission_key||goal.goal_key!==plan.goal_key||
@@ -19,7 +18,8 @@ function checkGoal(goal,job,plan,phase){
     throw Error('fenced_systemia_durable_mission_identity_hold');
   }
   const task=goal.tasks[0];
-  const digest=fencedSchedulerWorkDigest(job);
+  const digest=workDigest;
+  if(!DIGEST.test(String(digest||'')))throw Error('fenced_systemia_work_digest_required');
   if(task.work_key!==job.job_id ||
      task.work_type!=='analyze' ||
      task.provider_key!=='saban-fenced-microseed' ||
@@ -54,39 +54,39 @@ function checkGoal(goal,job,plan,phase){
   return task;
 }
 
-export async function verifyFencedGoalAtPreflight({filePath,job,plan}={}){
+export async function verifyFencedGoalAtPreflight({filePath,job,plan,workDigest}={}){
   if(typeof filePath!=='string'||!filePath.trim())throw Error('fenced_systemia_durable_goal_file_required');
   const stored=await readGoalState(filePath);
   // A completed Saban job must agree with Systemia's durable outcome.
   // Held Saban jobs must NEVER be reset or dispatched by this integration.
-  if(job?.state==='queued')checkGoal(stored,job,plan,'ready');
-  else if(job?.state==='completed')checkGoal(stored,job,plan,'complete');
+  if(job?.state==='queued')checkGoal(stored,job,plan,'ready',workDigest);
+  else if(job?.state==='completed')checkGoal(stored,job,plan,'complete',workDigest);
   else if(job?.state==='dead_letter'){
-    checkGoal(stored,job,plan,'executing');
+    checkGoal(stored,job,plan,'executing',workDigest);
   } else throw Error('fenced_systemia_unknown_saban_state');
   return {goal_key:stored.goal_key,mission_key:stored.mission_key,
     revision:stored.revision,durable_store_checked:true,
     production_execution_authorized:false};
 }
 
-export async function checkpointFencedGoalAttempt({filePath,job,plan,now=new Date()}={}){
+export async function checkpointFencedGoalAttempt({filePath,job,plan,workDigest,now=new Date()}={}){
   const {state,receipt}=await mutateGoalState(filePath,current=>{
-    checkGoal(current,job,plan,'ready');
+    checkGoal(current,job,plan,'ready',workDigest);
     return startGoalWork({state:current,workKey:job.job_id,now});
   },{now});
-  checkGoal(state,job,plan,'executing');
+  checkGoal(state,job,plan,'executing',workDigest);
   return {revision:receipt.revision,attempt:1,
     checkpoint_persisted:true,production_execution_authorized:false};
 }
 
 export async function recordFencedGoalCompletion({
-  filePath,job,plan,result,now=new Date()
+  filePath,job,plan,workDigest,result,now=new Date()
 }={}){
   const resultHash=result?.worker_receipt?.receipt_hash;
   if(!DIGEST.test(String(resultHash||'')))throw Error('fenced_systemia_signed_result_required');
   const receiptRef=goalReceipt({result});
   const {state,receipt}=await mutateGoalState(filePath,current=>{
-    checkGoal(current,job,plan,'executing');
+    checkGoal(current,job,plan,'executing',workDigest);
     return recordGoalOutcome({
       state:current,workKey:job.job_id,expectedAttempt:1,
       result:'complete',receiptRef,
@@ -94,7 +94,7 @@ export async function recordFencedGoalCompletion({
     });
   },{now});
   const finished={...job,result,state:'completed'};
-  checkGoal(state,finished,plan,'complete');
+  checkGoal(state,finished,plan,'complete',workDigest);
   return {revision:receipt.revision,receipt_ref:receiptRef,
     systemia_durable_goal_completed:true,
     physical_field_authority:false,customer_delivery_verified:false};
