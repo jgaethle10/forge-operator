@@ -78,7 +78,7 @@ if(running&&$('panel').classList.contains('hidden')){
  if(tourActive){
   tourElapsed=Math.min(HERITAGE_TOUR_SECONDS,tourElapsed+dt);
   const shot=heritageTourFrame(tourElapsed,scene);
-  x=shot.x;z=shot.z;yaw=shot.y;pitch=shot.pitch;
+  x=shot.x;z=shot.z;yaw=shot.yaw;pitch=shot.pitch;
   $('location').textContent=shot.markerTitle;
   $('distance').textContent=shot.evidenceBoundary;
   $('tourchapter').textContent=shot.markerTitle+' · '+Math.ceil(HERITAGE_TOUR_SECONDS-shot.elapsed)+'s remaining';
