@@ -28,6 +28,13 @@ function lookAt(eye,target){const z=norm([eye[0]-target[0],eye[1]-target[1],eye[
 function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),v=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*v,-1,0,0,2*far*near*v,0]);}
 let running=false,interpretive=false,x=0,z=17,yaw=0,pitch=-.13,last=performance.now(),lastMarker=null,lastDist=Infinity,lookPointer=null,joyPointer=null,dragX=0,dragY=0;
 let move={x:0,y:0},tourActive=false,tourElapsed=0;const keys=new Set(),joy=$('joystick');
+// Read-only QA snapshot restricted to loopback test servers, never the public release.
+if(['127.0.0.1','localhost'].includes(location.hostname)){
+ Object.defineProperty(window,'__evercraftHeritageQA',{value:()=>({
+  running,tourActive,x,z,yaw,pitch,keys:[...keys],frameTime:last,
+  focused:document.activeElement?.id||null
+ }),configurable:false});
+}
 function resize(){const dpr=Math.min(devicePixelRatio||1,matchMedia('(max-width:690px)').matches?1.1:1.5);const w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;}gl.viewport(0,0,canvas.width,canvas.height);}
 function enterWorld(){running=true;$('intro').classList.add('hidden');$('hud').classList.remove('hidden');last=performance.now();}
 function stopTour(){
