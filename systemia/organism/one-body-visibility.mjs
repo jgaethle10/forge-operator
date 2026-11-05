@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { verifySignedBodyLaneReceipt } from './one-body-lane-signature.mjs';
 
 const hash = (value) => createHash('sha256').update(String(value)).digest('hex').slice(0, 16);
 const timestamp = (value) => {
@@ -141,11 +142,22 @@ export function buildOneBodyVisualSnapshot({
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const input = process.argv[2];
-  if (!input || process.argv.length !== 3) {
-    console.error('Usage: node systemia/organism/one-body-visibility.mjs <persisted-one-body-state.json>');
+  const trust = process.argv[3] === '--trusted-consumers-file' ? process.argv[4] : null;
+  if (!input || (process.argv.length !== 3 && (process.argv.length !== 5 || !trust))) {
+    console.error('Usage: node one-body-visibility.mjs <state.json> [--trusted-consumers-file <operator-pinned-keys.json>]');
     process.exitCode = 2;
   } else {
-    const state = JSON.parse(readFileSync(input,'utf8'));
-    process.stdout.write(JSON.stringify(buildOneBodyVisualSnapshot({state}),null,2)+'\n');
+    const state = JSON.parse(readFileSync(input, 'utf8'));
+    // Only an operator-provisioned private config is an eligible trust anchor.
+    const keys = trust ? JSON.parse(readFileSync(trust, 'utf8')) : null;
+    if (keys && (typeof keys !== 'object' || Array.isArray(keys))) {
+      throw new Error('invalid_trusted_consumer_registry');
+    }
+    const verifyReceipt = keys
+      ? r => verifySignedBodyLaneReceipt(r, {trustedConsumers:keys})
+      : null;
+    process.stdout.write(JSON.stringify(buildOneBodyVisualSnapshot({
+      state,verifyReceipt,
+    }),null,2)+'\n');
   }
 }
