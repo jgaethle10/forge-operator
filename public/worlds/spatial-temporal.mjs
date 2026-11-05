@@ -100,12 +100,14 @@ export function associateSpatialFrames(frames,{
     fail('invalid_box_scale');
   if(!finite(ambiguityMargin)||ambiguityMargin<0||ambiguityMargin>1)
     fail('invalid_ambiguity_margin');
-  let previous=null,total=0,nextId=1;
+  let previous=null,total=0,nextId=1,candidateBudget=0;
   const frameIds=new Set(),tracks=[],timeline=[];
   for(const frame of frames) {
     validateFrame(frame,previous,frameIds,total);
     total+=frame.observations.length;
     const available=tracks.filter(t=>frame.timestampMs-t.lastSeenMs<=maxGapMs);
+    candidateBudget+=available.length*frame.observations.length;
+    if(candidateBudget>300000)fail('association_budget_exceeded');
     const candidates=[];
     for(const track of available)for(const observation of frame.observations) {
       const c=candidate(track,observation,frame,cfg);
