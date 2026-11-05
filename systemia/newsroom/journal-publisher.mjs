@@ -574,6 +574,7 @@ export function publishJournalStories(inputStories, {
     schema: 'evercraft.journal.index.v1',
     generated_at: now.toISOString(),
     live_edition: stories.length > 0,
+    reader_assets: [{ relative_path: 'assets/listen.js', sha256: sha256(fs.readFileSync(path.join(outDir, 'assets', 'listen.js'))) }],
     stories: stories.map((story) => ({
       story_id: story.story_id,
       slug: story.slug,
