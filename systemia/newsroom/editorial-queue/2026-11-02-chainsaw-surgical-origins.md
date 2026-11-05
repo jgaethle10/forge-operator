@@ -98,6 +98,12 @@ Total: **26/30**, preliminary desk score only, not the 10/10 Journal approval.
 
 **Additional attribution clarification:** Skippen et al. (2004) report that Aitken illustrated his hand chain saw in 1785 and used it in his dissecting room; the historical record quoted there does not establish that the instrument was routinely used in live childbirth operations. Descriptions must retain the more careful phrase “associated with symphysiotomy.” Also, a 2009 *Journal of Medical Biography* commentary by Kirkup prioritizes Aitken's invention claim while Jeffray has also been credited with independent conception; attribution should acknowledge this disagreement rather than assert a single proven inventor. Source: https://stacks.cdc.gov/view/cdc/187870/cdc_187870_DS1.pdf ; doi:10.1258/jmb.2009.009019.
 
+## Verified public-domain historical photograph | HERO CANDIDATE
+
+A photograph of a surviving Bernhard Heine osteotome is available at [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bernhard_Heine%27s_Osteotome.jpg). The Commons file identifies **Sabine Salfer** as the photographer and declares that the author dedicated the photo to the **public domain worldwide**, with an archived permission ticket (#2007070510005121). This establishes a usable historical-artifact image without borrowing protected museum photography. The file is the image of a **Heine osteotome**, *not* the original 1785 Aitken chain saw.
+
+**Media rights record:** [chainsaw-surgical-origins-media.json](../editorial-assets/chainsaw-surgical-origins-media.json). A reproducible `editorial-preview.mjs` script renders the complete article with this credited photo to a noindex HTML preview **outside** the publication tree. Historical visual QA and Fallen production acceptance remain pending. No live Journal or Clip release is asserted.
+
 ## Visual provenance and Fallen production brief | HOLD
 **Visual claim:** A verified 1830s surgical osteotome is a hand-cranked instrument with a guided cutting chain. Do not depict a modern powered saw operating on a patient, or invent gore.
 
@@ -144,6 +150,7 @@ Early chain saws were surgical tools. In the 1780s, John Aitken's version was li
 - [x] Platform-specific derivatives drafted, explicitly on HOLD.
 - [ ] Claim Reactor receipt and 10/10 independent editorial review.
 - [x] Original self-authored conceptual SVG created and staged on the editorial branch (not a rights-cleared museum photograph).
+- [x] Public-domain historical-artifact photo provenance documented, correctly labeled as Heine's later osteotome.
 - [ ] Independent historical visual QA and production-grade art approval.
 - [ ] Completed Fallen build and QA receipt.
 - [ ] Genuine Systemia publication release; fresh claim/source review.
