@@ -82,7 +82,7 @@ async function loadAuthorizedGoalState({
 
   // Recheck revocations before returning any data.
   checkGrant(passport, subjectRef, resourceRef, at);
-  return { state, instant };
+  return { state, instant, passport, subjectRef, resourceRef, at };
 }
 
 function annotatePassportScope(snapshot) {
@@ -106,8 +106,10 @@ function annotatePassportScope(snapshot) {
 }
 
 export async function readPassportScopedGoalVisualSnapshot(options = {}) {
-  const { state, instant } = await loadAuthorizedGoalState(options);
-  return annotatePassportScope(projectGoalToVisualSnapshot(state, { now: instant }));
+  const { state, instant, passport, subjectRef, resourceRef, at } = await loadAuthorizedGoalState(options);
+  const snapshot = projectGoalToVisualSnapshot(state, { now: instant });
+  checkGrant(passport, subjectRef, resourceRef, at);
+  return annotatePassportScope(snapshot);
 }
 
 /**
@@ -122,11 +124,12 @@ export async function readPassportScopedGoalWithDeviceEvidence({
   trustedDeviceKeys = {},
   ...options
 } = {}) {
-  const { state, instant } = await loadAuthorizedGoalState(options);
+  const { state, instant, passport, subjectRef, resourceRef, at } = await loadAuthorizedGoalState(options);
   const snapshot = correlateSignedDeviceEvidence(state, {
     signedReceipts,
     trustedDeviceKeys,
     now: instant,
   });
+  checkGrant(passport, subjectRef, resourceRef, at);
   return annotatePassportScope(snapshot);
 }
