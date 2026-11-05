@@ -37,11 +37,11 @@ export function validateDecisionContext(context){
     Number.isSafeInteger(r.coins)&&r.coins>=0&&
     r.personality===TRAITS[r.id]&&
     Array.isArray(objects)&&objects.length<=35&&
-    new Set(objects.map(o=>o.id)).size===objects.length&&
-    new Set(objects.map(o=>o.x+','+o.y)).size===objects.length&&
     objects.every(o=>o&&typeof o.id==='string'&&/^f[1-9]\d*$/.test(o.id)&&
       Object.hasOwn(KINDS,o.kind)&&Number.isInteger(o.x)&&o.x>=0&&o.x<9&&
-      Number.isInteger(o.y)&&o.y>=0&&o.y<6));
+      Number.isInteger(o.y)&&o.y>=0&&o.y<6)&&
+    new Set(objects.map(o=>o.id)).size===objects.length&&
+    new Set(objects.map(o=>o.x+','+o.y)).size===objects.length);
 }
 export function proposalMessages(context){
   if(!validateDecisionContext(context))throw Error('Invalid context schema');
