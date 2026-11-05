@@ -41,6 +41,8 @@ test('guided tour UI keeps visible schematic disclosure and can stop for free ex
  assert.match(html,/NOT AN EXACT RECONSTRUCTION/);
  assert.match(app,/heritageTourFrame/);
  assert.match(app,/stopTour/);
+ assert.match(app,/yaw=shot\.yaw;pitch=shot\.pitch;/);
+ assert.doesNotMatch(app,/yaw=shot\.y;pitch=shot\.pitch;/);
  assert.match(app,/pointerdown/);
  assert.doesNotMatch(html+app,/base44\.app|tinyfish/i);
 });
