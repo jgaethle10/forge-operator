@@ -9,6 +9,7 @@ on:
       - 'systemia/organism/frontier-watch.mjs'
       - 'systemia/organism/science-hazard-watch.mjs'
       - 'systemia/organism/medical-evidence-brief*.mjs'
+      - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
@@ -63,6 +64,9 @@ jobs:
       - name: Prove medical source-bound reports and visuals
         run: node systemia/organism/medical-evidence-brief.test.mjs
 
+      - name: Prove source-linked PubMed abstract evidence
+        run: node systemia/organism/medical-abstract-evidence.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -90,6 +94,9 @@ jobs:
             artifacts/medical-evidence-radar/report.md
             artifacts/medical-evidence-radar/research-radar.svg
             artifacts/medical-evidence-radar/index.html
+            artifacts/medical-abstract-evidence/latest.json
+            artifacts/medical-abstract-evidence/abstract-review.md
+            artifacts/medical-abstract-evidence/index.html
           if-no-files-found: warn
           retention-days: 14
 
