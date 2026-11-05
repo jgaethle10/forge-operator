@@ -36,7 +36,7 @@ if(fire){
   }catch(error){
     const safe=String(error?.message||'issuer_unavailable').slice(0,150);
     process.stdout.write(JSON.stringify({status:'blocked_issuer_receipt',reason:safe,
-      fire,post_submitted:false,secret_material_returned:false})+'\\n');
+      fire,post_submitted:false,secret_material_returned:false})+'\n');
     process.exit(0);
   }
 }
