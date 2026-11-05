@@ -53,3 +53,31 @@ jobs:
           console.log('RC04 paired scores',JSON.stringify(report.scores));
           console.log('RC04 batch SHA-256',report.sha256);
           NODE
+
+      - name: RC05 reactive controller geometry and fail-closed tests
+        run: node --test systemia/world-engine/sim-to-real/controller-rc05.test.mjs
+      - name: RC05 real native-runtime integration tests (synthetic observations)
+        run: node --import tsx --test systemia/world-engine/sim-to-real/native-reactive-rc05.test.mjs
+      - name: RC05 held-out 8-seed paired benchmark, outside RC01-RC04 development seeds
+        run: node --import tsx systemia/world-engine/sim-to-real/native-reactive-rc05.mjs --first-seed 41 --seeds 8 --out /tmp/evercraft-native-rc05.json
+      - name: RC05 verify integrity and explicitly deny hardware authority
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyHeldOut} from './systemia/world-engine/sim-to-real/native-reactive-rc05.mjs';
+          const report=JSON.parse(fs.readFileSync('/tmp/evercraft-native-rc05.json','utf8'));
+          if(!verifyHeldOut(report)) throw Error('rc05_invalid_benchmark_digest');
+          if(!report.runs.every(r=>r.hardwareExecution===false && r.realSensorData===false &&
+              r.noTeleportInputs===true && r.inputs.every(i=>i.kind==='set_velocity'))) throw Error('rc05_authority_boundary');
+          for(const s of [report.reactive,report.priorKnownCorridor]){
+            if(s.total!==s.arrived+s.collisions+s.geofence+s.timeouts) throw Error('rc05_outcome_accounting');
+          }
+          console.log('RC05 RECEIPT',JSON.stringify({firstSeed:report.firstSeed,seeds:report.seeds,
+            reactive:report.reactive,priorKnownCorridor:report.priorKnownCorridor,digest:report.sha256}));
+          NODE
+      - name: Upload RC05 modeled evidence (not hardware)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05-modeled
+          path: /tmp/evercraft-native-rc05.json
+          retention-days: 7
