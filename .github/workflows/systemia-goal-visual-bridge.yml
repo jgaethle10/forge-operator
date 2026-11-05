@@ -3,10 +3,12 @@ on:
   push:
     paths:
       - 'systemia/control-plane/visualization/goal-visual-bridge*.mjs'
+      - 'systemia/control-plane/visualization/index.html'
       - '.github/workflows/systemia-goal-visual-bridge.yml'
   pull_request:
     paths:
       - 'systemia/control-plane/visualization/goal-visual-bridge*.mjs'
+      - 'systemia/control-plane/visualization/index.html'
       - '.github/workflows/systemia-goal-visual-bridge.yml'
 jobs:
   proof:
