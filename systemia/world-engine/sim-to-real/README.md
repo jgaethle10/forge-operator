@@ -122,3 +122,20 @@ node --import tsx systemia/world-engine/sim-to-real/native-reactive-rc05.mjs --f
 Open `RC05_replay_viewer.html` in any local modern browser, and choose the generated benchmark JSON to replay **all recorded ticks** for each seed with native and independently swept contacts. The CI workflow uploads the benchmark JSON as `sim-to-real-rc05-modeled` with seven-day retention.
 
 Evidence labels remain `modeled`. SHA-256 digests establish content integrity, not independent attestation. No physical sensors, actuators, external authority or production deployment have been enabled. Independent physical hazard review, real localization, continuously validated stopping distance and emergency-stop/watchdog controls are separate prerequisites for real-robot work.
+
+
+## RC05A: progress-gated deadlock experiment, opt-in
+
+RC05's initial 8-seed modeled heldout (41–48) passed CI with **2 arrivals, 0 collisions, and 6 timeouts**. The RC04 known-corridor comparison had **5 arrivals, 2 collisions and 1 timeout**. Frame-level inspection found a deadlock: RC05 sometimes reports the reactive heading reason while commanding 0 m/s at obstacle approaches for hundreds of ticks.
+
+RC05A is a **separate opt-in controller**. The baseline remains the default. Only when a nominal reactive heading produces less than 0.10 m/s does the experimental controller search for feasible alternate headings, apply a capped-speed gate, and return an explicit progress-detour command. Stale-sensor, uncertainty, geofence, goal and genuine hazard holds from the original controller are never overridden. If no viable heading exists, RC05A requests a zero-speed hold. This can trade progress for additional modeled collision risk and is **not** safety-certified recovery.
+
+The isolated CI job performs paired native World Engine runs for seeds **41–48** (prior observations) and **49–56** (new evaluation cohort). Every outcome (arrival, collision, geofence, timeout) is retained. Report digests and per-seed episode digests provide integrity evidence, not external attestation. New collisions or a failed trial must remain visible. Do not promote this variant without inspecting both cohorts.
+
+Run from the repository root after installing its dependencies:
+
+    node --test systemia/world-engine/sim-to-real/controller-rc05-progress.test.mjs
+    node --import tsx --test systemia/world-engine/sim-to-real/progress-trial-rc05.test.mjs
+    node --import tsx systemia/world-engine/sim-to-real/progress-trial-rc05.mjs --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05a-49-56.json
+
+**No hardware or production execution is authorized.**
