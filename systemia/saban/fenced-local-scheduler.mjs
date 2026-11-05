@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto';
 import {leaseNext, complete, fail, saveWorkState, loadWorkState} from './work-state.mjs';
 import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
 import {verifySignedMicroSeedExecutionReceipt} from './signed-microseed-execution.mjs';
+import {verifyFencedMicroSeedExecutionPermit} from './fenced-execution-admission.mjs';
 
 const hash = value => 'sha256:' + createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
@@ -68,7 +69,7 @@ function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,
   }
 }
 
-function workDigest(job) {
+export function fencedSchedulerWorkDigest(job) {
   return hash({
     schema:'evercraft.saban.fenced-scheduler-work.v1',
     job_id:job.job_id,
@@ -94,7 +95,7 @@ function preflight(state,journal) {
     const journalState=journal.submit({
       jobKey:job.job_id,
       workloadClass:state.software_id,
-      workDigest:workDigest(job)
+      workDigest:fencedSchedulerWorkDigest(job)
     });
     if (job.state==='queued' && !(journalState.state==='queued' &&
         journalState.attempts===job.attempts)) {
@@ -120,7 +121,8 @@ function boundedSummary(state) {
 
 export async function runFencedLocalScheduler({
   state,adapter,physicalWorkers,plan,contract,rootDir=process.cwd(),
-  statePath,journal,nodeSeedPin=null
+  statePath,journal,nodeSeedPin=null,
+  passportStateDir=null,executionPermitIds=null
 }={}) {
   assertCandidate({state,adapter,physicalWorkers,plan,contract,statePath,journal,nodeSeedPin});
   const target=path.resolve(statePath);
@@ -134,6 +136,25 @@ export async function runFencedLocalScheduler({
   }
   try {
     checkPersistentState(target,state);
+    const requirePermit = contract.software_id==='saban-fenced-microseed-canary';
+    const verifyAdmission = job => {
+      if(!requirePermit) return null;
+      const decision=verifyFencedMicroSeedExecutionPermit({
+        passportStateDir,
+        permitId:executionPermitIds?.[job.job_id],
+        jobKey:job.job_id,
+        workDigest:fencedSchedulerWorkDigest(job),
+        nodePin:nodeSeedPin[job.job_id]
+      });
+      if(decision.decision!=='allow'||decision.passport_permit_verified!==true){
+        throw new Error('fenced_scheduler_passport_execution_permit_denied');
+      }
+      return decision;
+    };
+    // Check every queued job before a single receipt or lease is modified.
+    for(const job of Object.values(state.jobs)){
+      if(job.state==='queued') verifyAdmission(job);
+    }
     preflight(state,journal);
     if(!fs.existsSync(target))saveWorkState(target,state);
     const workerId='worker-001';
@@ -158,6 +179,10 @@ export async function runFencedLocalScheduler({
       }
       const started=Date.now();
       try{
+        // A revocation or permit expiry between preflight and this instant
+        // must block the external NodeSeed call. The execution itself is
+        // still a test-only localhost canary.
+        verifyAdmission(leased);
         const result=await adapter.runAssignment({
           assignment:{
             agent_id:leased.agent_id,idempotency_key:leased.idempotency_key||null,
@@ -221,6 +246,7 @@ export async function runFencedLocalScheduler({
       physical_devices_used:false,
       production_dispatch_authorized:false,
       automatic_retries_enabled:false,
+      signed_canary_passport_permit_verified:requirePermit && executed>0,
       live_passport_execution_permits_consumed:false,
       state
     };
