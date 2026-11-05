@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.aqua.pilot-preflight.v1",
+  "site_alias": "SITE_EXAMPLE_NOT_REAL",
+  "purpose": "passive_water_energy_baseline_only",
+  "permission": {
+    "operator_consent_attested": false,
+    "consent_document_sha256": "",
+    "expires_on": ""
+  },
+  "records": {
+    "meter_csv_sha256": "",
+    "start": "",
+    "end": ""
+  },
+  "boundary": {
+    "diagram_sha256": "",
+    "independent_review_receipt_sha256": "",
+    "all_known_uses_declared": false
+  },
+  "instruments": {
+    "source": {
+      "meter_id": "",
+      "calibration_document_sha256": "",
+      "calibration_valid_through": ""
+    },
+    "irrigation": {
+      "meter_id": "",
+      "calibration_document_sha256": "",
+      "calibration_valid_through": ""
+    },
+    "pump_energy": {
+      "meter_id": "",
+      "calibration_document_sha256": "",
+      "calibration_valid_through": ""
+    }
+  }
+}
