@@ -5,6 +5,8 @@ on:
     paths:
       - 'public/living-worlds/**'
       - 'tests/living-worlds-house.test.mjs'
+      - 'tests/living-worlds-model-gate.test.mjs'
+      - 'systemia/living-worlds/**'
       - '.github/workflows/living-worlds-house.yml'
   pull_request:
     paths:
@@ -30,6 +32,9 @@ jobs:
         run: |
           node --check public/living-worlds/house-core.mjs
           node --check public/living-worlds/app.mjs
+          node --check public/living-worlds/agent-proposals.mjs
+          node --check systemia/living-worlds/local-llm-preview.mjs
           node --check tests/living-worlds-house.test.mjs
+          node --check tests/living-worlds-model-gate.test.mjs
       - name: Deterministic simulation tests
-        run: node --test tests/living-worlds-house.test.mjs
+        run: node --test tests/living-worlds-house.test.mjs tests/living-worlds-model-gate.test.mjs
