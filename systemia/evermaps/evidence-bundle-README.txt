@@ -2,7 +2,7 @@ EVERCRAFT EVERMAPS | GRANT COUNTY MINERAL INTELLIGENCE RESEARCH BUNDLE
 READ-ONLY REGIONAL GEOLOGICAL EVIDENCE. NOT LAND-USE, ENVIRONMENTAL OR EXTRACTION APPROVAL.
 
 HOW TO VIEW
-0. Open research-brief.html first for the searchable 700-record geology evidence index (when current WGS import verifies). The CSV and JSON are companion data, not a mining prospect list.
+0. Open research-map-preloaded.html for a ready-to-explore, standalone WGS map (when the full current WGS import verified). Open research-brief.html first for the searchable 700-record geology evidence index (when current WGS import verifies). The CSV and JSON are companion data, not a mining prospect list.
 1. Download and extract the GitHub Actions artifact named "evermaps-grant-full-research-evidence".
 2. Open research-viewer.html in a modern browser.
 3. Use "Load WGS GeoJSON files" to select available files from the extracted folder:

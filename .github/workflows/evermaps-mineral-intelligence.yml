@@ -109,6 +109,12 @@ jobs:
           mkdir -p evermaps-grant-full-evidence
           cp systemia/evermaps/research-viewer.html evermaps-grant-full-evidence/research-viewer.html
           cp systemia/evermaps/evidence-bundle-README.txt evermaps-grant-full-evidence/README.txt
+      - name: Package source-verified WGS layers inside one standalone offline map
+        if: always()
+        continue-on-error: true
+        env:
+          EVERMAPS_OUTPUT_DIR: evermaps-grant-full-evidence
+        run: node systemia/evermaps/preloaded-viewer-cli.mjs
       - name: Export independently verified offline geology research packet
         if: always()
         continue-on-error: true
