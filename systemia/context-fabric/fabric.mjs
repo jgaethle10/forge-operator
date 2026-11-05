@@ -649,10 +649,18 @@ export class EvercraftContextFabric {
       if (record.visibility !== 'public') {
         if (!actorRef) continue;
         const scope = record.required_scope;
-        if (!permissionCache.has(scope)) {
-          permissionCache.set(scope, this.#canRead(record, actorRef, authAt));
+        // Resource-limited grants must not become namespace-wide reads.
+        // Entity-scoped facts use their entity; unscoped facts use their record ID.
+        const resourceRef = record.entity_ref || 'context-record:' + record.record_id;
+        const cacheKey = JSON.stringify([scope, resourceRef]);
+        if (!permissionCache.has(cacheKey)) {
+          const result = this.passport.authorize({
+            subject_ref: actorRef, product: 'evercraft-context',
+            scope, resource_ref: resourceRef, at: authAt,
+          });
+          permissionCache.set(cacheKey, result.decision === 'allow');
         }
-        if (!permissionCache.get(scope)) continue;
+        if (!permissionCache.get(cacheKey)) continue;
       }
       records.push({ ...record, retraction: this.retractions.get(record.record_id) || null });
       if (records.length > maxAuthorizedRecords) {
