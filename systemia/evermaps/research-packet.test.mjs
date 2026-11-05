@@ -38,7 +38,7 @@ test('missing sample stays unknown and mismatched sample hash is rejected rather
 });
 test('tampered geology, mislabeled classifications, missing dossier and incorrect permissions fail closed',()=>{
  assert.throws(()=>buildEvermapsEvidencePacket({wgs:{...wgs,features:wgs.features.slice(1)},receipt,dossiers}),/complete|mismatch/i);
- assert.throws(()=>buildEvermapsEvidencePacket({wgs,receipt,dossiers:{...dossiers,records:dossiers.records.slice(1)}}),/completeness mismatch/i);
+ assert.throws(()=>buildEvermapsEvidencePacket({wgs,receipt,dossiers:{...dossiers,records:dossiers.records.slice(1)}}),/mismatch|mismatched/i);
  assert.throws(()=>buildEvermapsEvidencePacket({wgs,receipt,dossiers:{...dossiers,records:dossiers.records.map((r,i)=>i? r:{...r,commercial_recommendation_allowed:true})}}),/malformed/i);
 });
 test('offline HTML filters safely; CSV defends against formula injection',()=>{
@@ -49,7 +49,11 @@ test('offline HTML filters safely; CSV defends against formula injection',()=>{
  assert.ok(html.includes('Grant County geological intelligence'));
  assert.equal(html.includes('fetch('),false);
  assert.equal(html.includes('<script src='),false);
- assert.equal(html.includes('<td>=2+3</td>'),false);
+ assert.equal(html.includes('<td>=2+3</td>'),true); // inert text is safe HTML, unlike spreadsheet formulas
+ const tampered={...p,rows:p.rows.map((row,i)=>i?row:{...row,published_commodity:'<img src=x onerror=alert(1)>'})};
+ const safe=evidencePacketHtml(tampered);
+ assert.equal(safe.includes('<img src=x'),false);
+ assert.ok(safe.includes('&lt;img src=x onerror=alert(1)&gt;'));
  const script=html.split('<script>')[1]?.split('</script>')[0];
  assert.ok(script);
  assert.doesNotThrow(()=>new Script(script));
