@@ -162,9 +162,10 @@ test('CLI can export the real goal state without modifying it',async()=>{
 test('Living Graph import surface exposes redacted freshness and missing receipt gaps',async()=>{
   const html=await readFile(new URL('./index.html',import.meta.url),'utf8');
   const {Script}=await import('node:vm');
-  const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)];
-  assert.equal(scripts.length,1);
-  assert.doesNotThrow(()=>new Script(scripts[0][1]));
+  const start=html.indexOf('<script>');
+  const end=html.lastIndexOf('</script>');
+  assert.ok(start>=0&&end>start);
+  assert.doesNotThrow(()=>new Script(html.slice(start+8,end)));
   assert.match(html,/UNVERIFIED IMPORT/);
   assert.match(html,/Completed tasks missing receipt references/);
   assert.match(html,/passport_authorization_verified|Passport authority/);
