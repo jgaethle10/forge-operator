@@ -12,6 +12,7 @@
 <p class="customer-eyebrow">YOUR TASK. YOUR TEAM.</p>
 <h1 id="work-title">Give your work <span>a team.</span></h1>
 <p class="customer-intro">Tell Saban what you need. See the specialists who would handle it.</p>
+<button id="office-visit-open" class="office-visit-entry" type="button" aria-controls="office" aria-expanded="false">Explore the 3D work floor <span aria-hidden="true">↗</span></button>
 <div class="input mission-input">
 <label for="task">What needs to get done?</label>
 <textarea id="task" maxlength="4000" placeholder="Analyze last month's sales and prepare a report for my manager."></textarea>
@@ -51,15 +52,15 @@
 <summary>View the Work Floor and detailed evidence</summary>
 <p class="muted details-intro">Advanced local inspection. The 3D desks represent registered worker stages, not separately running AI models.</p>
 <section id="office" class="office-shell" aria-label="Work Saban local visual office">
-<div class="office-heading"><div><span class="office-eyebrow">SABAN / VISUAL OPERATIONS</span><h2>The Work Floor</h2><p>Explore the local worker states and receipts. Execution status reflects actual events, never an invented animation.</p></div><div class="office-live"><span class="office-beacon"></span><span id="office-mode">AWAITING A MISSION</span></div></div>
+<div class="office-heading"><div><span class="office-eyebrow">SABAN / VISUAL OPERATIONS</span><h2>The Work Floor</h2><p>Explore the local worker states and receipts. Execution status reflects actual events, never an invented animation.</p></div><div class="office-heading-actions"><div class="office-live"><span class="office-beacon"></span><span id="office-mode">AWAITING A MISSION</span></div><button id="office-visit-close" class="office-visit-close" type="button" hidden aria-label="Close immersive office and return to your task">Exit office</button></div></div>
 <div class="office-layout">
 <div class="office-scene-wrap">
-  <div class="office-scene-title"><span><span class="floor-dot"></span> FIRST FLOOR <span class="floor-divider">/</span> OPERATIONS STUDIO</span><span id="office-progress">0 / 5 verified</span><button id="office-3d-toggle" type="button" class="office-view-toggle" aria-pressed="false">Explore 3D office</button></div>
+  <div class="office-scene-title"><span><span class="floor-dot"></span> FIRST FLOOR <span class="floor-divider">/</span> OPERATIONS STUDIO</span><span id="office-progress">0 / 5 verified</span><button id="office-3d-toggle" type="button" class="office-view-toggle" aria-pressed="false">Explore 3D office</button><button id="office-inspector-jump" type="button" class="office-view-toggle office-jump" hidden>Inspect agent</button></div>
   <div id="office-scene" class="office-scene" aria-label="Navigable 3D office and isometric fallback floor with six inspectable agent desks"></div>
   <div class="office-bottom"><span>Local workers only</span><span>Click a desk to inspect its work</span><span id="office-current">No active assignment</span></div>
 </div>
 <aside class="office-sidebar">
- <div class="office-inspector"><span class="office-eyebrow">SELECTED SPECIALIST</span><h3 id="office-agent-name">Mission Director</h3><p id="office-agent-desc">Coordinates the mission and reports real worker events.</p><div class="office-stat"><span>WORK STATE</span><strong id="office-agent-state">AWAITING</strong></div><div class="office-stat"><span>RECEIPT</span><strong id="office-agent-proof">No execution yet</strong></div><div id="office-agent-evidence" class="office-agent-evidence" aria-live="polite">Select a specialist to inspect its verified work receipt.</div><button id="office-copy-receipt" type="button" class="office-inspect-button" disabled>Copy selected receipt</button></div>
+ <div class="office-inspector"><button id="office-camera-return" type="button" class="office-return" hidden>Back to camera</button><span class="office-eyebrow">SELECTED SPECIALIST</span><h3 id="office-agent-name">Mission Director</h3><p id="office-agent-desc">Coordinates the mission and reports real worker events.</p><div class="office-stat"><span>WORK STATE</span><strong id="office-agent-state">AWAITING</strong></div><div class="office-stat"><span>RECEIPT</span><strong id="office-agent-proof">No execution yet</strong></div><div id="office-agent-evidence" class="office-agent-evidence" aria-live="polite">Select a specialist to inspect its verified work receipt.</div><button id="office-copy-receipt" type="button" class="office-inspect-button" disabled>Copy selected receipt</button></div>
  <div class="office-feed"><div class="office-feed-head"><span class="office-eyebrow">MISSION TRACE</span><span id="office-event-count">0 events</span></div><ol id="office-events" aria-live="polite"><li>Submit a task or run the example team to populate this timeline.</li></ol></div>
  <div class="office-replay"><span class="office-eyebrow">VERIFIED REPLAY</span><div class="office-stat"><span>CHAIN INTEGRITY</span><strong id="office-trace-integrity">Not checked</strong></div><button id="office-export-trace" type="button" class="office-inspect-button" disabled>Download verified mission trace</button><div class="replay-controls"><button id="office-back" type="button" disabled aria-label="Previous verified event">‹</button><button id="office-replay" type="button" disabled>Replay trace</button><button id="office-next" type="button" disabled aria-label="Next verified event">›</button></div><p id="office-replay-caption">Only recorded events. No simulated progress.</p></div>
 </aside>
@@ -73,5 +74,6 @@
 <script src="/office-camera.js" defer></script>
 <script src="/office-3d.js" defer></script>
 <script src="/office.js" defer></script>
+<script src="/office-observe.js" defer></script>
 <script src="/app.js" defer></script>
 </body></html>
