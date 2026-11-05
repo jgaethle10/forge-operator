@@ -103,6 +103,74 @@ test('native Context Fabric + Passport: current grant, clocks, retraction, and t
     records[0] = JSON.stringify(tampered);
     fs.writeFileSync(file, records.join('\n') + '\n');
     assert.throws(() => query(), /timewalk_receipt_integrity_failure/);
+
+    // Current revocation must remove even the metadata of past authorized facts.
+    passport.revokeGrant({
+      idempotency_key: 'native:revoke-reader',
+      grant_id: 'native:reader',
+      actor_ref: 'test:trusted-identity',
+      authority_state: 'verified_identity_authority',
+      authority_receipt_ref: 'test:revocation-evidence',
+      reason: 'native test',
+    });
+    assert.equal(query().facts.length, 0);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('native Passport resource grants do not leak other entities in the same namespace', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-timewalk-resource-'));
+  try {
+    const passportDir = path.join(root, 'passport');
+    const contextDir = path.join(root, 'context');
+    const passport = new EvercraftPassport({ stateDir: passportDir });
+    const now = Date.now();
+    const grantedAt = iso(now - 3 * 86400000);
+    const expiresAt = iso(now + 3 * 86400000);
+    for (const [id, scopes, resources] of [
+      ['writer', ['context.write.systemia'], []],
+      ['limited', ['context.read.systemia'], ['site:allowed']],
+    ]) {
+      passport.issueGrant({
+        idempotency_key: 'resource:' + id,
+        grant_id: 'resource:' + id,
+        subject_ref: 'agent:' + id,
+        issuer_ref: 'test:identity',
+        product: 'evercraft-context',
+        scopes, resource_refs: resources,
+        starts_at: grantedAt, ends_at: expiresAt,
+        authority_state: 'verified_identity_authority',
+        authority_receipt_ref: 'test:authority',
+      });
+    }
+    const fabric = new EvercraftContextFabric({
+      stateDir: contextDir, passportStateDir: passportDir,
+    });
+    for (const [id, entity] of [['allowed', 'site:allowed'], ['denied', 'site:denied']]) {
+      fabric.ingestRecord({
+        record_id: 'resource_' + id,
+        idempotency_key: 'resource:fact:' + id,
+        actor_ref: 'agent:writer',
+        namespace: 'systemia',
+        kind: 'fact',
+        title: 'Synthetic resource fixture ' + id,
+        text: 'This is an isolated test record.',
+        entity_ref: entity, predicate: 'state', claim_value: id,
+        evidence_state: 'modeled', visibility: 'internal',
+        source_ref: 'fixture:resource:' + id,
+        observed_at: iso(now - 30_000),
+      });
+    }
+    const out = queryTimewalk(fabric, {
+      actor_ref: 'agent:limited',
+      known_at: iso(now + 60_000),
+      valid_at: iso(now),
+      namespaces: ['systemia'],
+    });
+    assert.deepEqual(out.facts.map((fact) => fact.record_id), ['resource_allowed']);
+    assert.equal(out.total_authorized_matching, 1);
+    assert.equal(JSON.stringify(out).includes('site:denied'), false);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
