@@ -4,6 +4,12 @@ import { recordBodyLaneAcknowledgement } from './one-body.mjs';
 import { generateKeyPairSync, sign } from 'node:crypto';
 import { bodyLaneReceiptSigningMessage, verifySignedBodyLaneReceipt } from './one-body-lane-signature.mjs';
 
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync,writeFileSync,rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 const observedAt='2026-11-04T23:00:00Z';
 const privateEventId='customer-personal-private-identifer-123';
 const privateReceiptId='payment-private-receipt-789';
@@ -147,6 +153,28 @@ assert.ok(!JSON.stringify(signedAfterReverify).includes(claims.receipt_ref));
 assert.equal(buildOneBodyVisualSnapshot({
   ...base,state:signedState.state,verifyReceipt:()=>false
 }).summary.counts.consumer_receipt_verified,0);
+
+
+const dir=mkdtempSync(join(tmpdir(),'evercraft-onebody-'));
+try {
+  const statePath=join(dir,'onebody.json'),trustPath=join(dir,'trust.json');
+  writeFileSync(statePath,JSON.stringify(signedState.state));
+  const cli=fileURLToPath(new URL('./one-body-visibility.mjs',import.meta.url));
+  const emptyTrust=JSON.parse(execFileSync(process.execPath,[cli,statePath],{encoding:'utf8'}));
+  assert.equal(emptyTrust.summary.counts.consumer_receipt_verified,0);
+  writeFileSync(trustPath,JSON.stringify(anchors));
+  // CLI export time uses the machine's current date; the synthetic event is in the past.
+  const verifiedCli=JSON.parse(execFileSync(process.execPath,[
+    cli,statePath,'--trusted-consumers-file',trustPath
+  ],{encoding:'utf8'}));
+  assert.equal(verifiedCli.summary.counts.consumer_receipt_verified,1);
+  assert.ok(!JSON.stringify(verifiedCli).includes(claims.receipt_ref));
+  writeFileSync(trustPath,JSON.stringify({}));
+  const revokedCli=JSON.parse(execFileSync(process.execPath,[
+    cli,statePath,'--trusted-consumers-file',trustPath
+  ],{encoding:'utf8'}));
+  assert.equal(revokedCli.summary.counts.consumer_receipt_verified,0);
+} finally { rmSync(dir,{recursive:true,force:true}); }
 
 assert.throws(()=>buildOneBodyVisualSnapshot({state:{}}),/invalid_one_body_state/);
 assert.throws(()=>buildOneBodyVisualSnapshot({...base,observedAt:'invalid'}),/invalid_observed_at/);
