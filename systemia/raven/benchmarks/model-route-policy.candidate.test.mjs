@@ -2,8 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { decideModelRoute, POLICY_SCHEMA } from './model-route-policy.candidate.mjs';
 
+const EVAL_TIME_MS = 1762300000000;
+
 const request = overrides => ({
   task_id: 'SYNTHETIC-001',
+  evaluation_time_ms: EVAL_TIME_MS,
   capabilities: ['text'],
   data_classification: 'public',
   local_only: false,
@@ -13,7 +16,10 @@ const request = overrides => ({
 });
 
 const localModel = overrides => ({
-  provider_id: 'owned-local',
+  provider_id: 'ollama',
+  metadata_checked: true,
+  validated_at_ms: EVAL_TIME_MS,
+  cost_estimate_kind: 'quoted',
   model_id: 'test-small',
   runtime: 'local',
   configured: true,
@@ -25,7 +31,10 @@ const localModel = overrides => ({
 });
 
 const cloudModel = overrides => ({
-  provider_id: 'authorized-cloud',
+  provider_id: 'openai',
+  metadata_checked: true,
+  validated_at_ms: EVAL_TIME_MS,
+  cost_estimate_kind: 'quoted',
   model_id: 'test-cloud',
   runtime: 'cloud',
   configured: true,
@@ -54,7 +63,7 @@ test('confidential local-only work cannot escape to cloud', () => {
 test('local installed model is preferred even when cloud is faster', () => {
   const result = decideModelRoute({request:request({cloud_consent:true}),inventory:[cloudModel(),localModel()]});
   assert.equal(result.status, 'eligible');
-  assert.equal(result.primary.provider_id, 'owned-local');
+  assert.equal(result.primary.provider_id, 'ollama');
   assert.equal(result.schema, POLICY_SCHEMA);
   assert.equal(result.external_effect_authorized, false);
 });
@@ -113,4 +122,29 @@ test('stable lexical tie breaks and provider secrets never appear in receipt', (
 test('max latency policy rejects stale performance candidate', () => {
   const result=decideModelRoute({request:request({max_latency_ms:90}),inventory:[localModel({latency_ms:100})]});
   assert.equal(result.status,'held');
+});
+
+
+test('fake local runtime label on a hosted provider cannot bypass locality policy', () => {
+  const r=decideModelRoute({request:request({local_only:true,cloud_consent:true}),inventory:[cloudModel({runtime:'local'})]});
+  assert.deepEqual(r.reason_codes,['NO_ELIGIBLE_MODEL']);
+});
+
+test('stale, future or unvalidated inventory fails closed', () => {
+  for(const candidate of [localModel({validated_at_ms:EVAL_TIME_MS-301000}),localModel({validated_at_ms:EVAL_TIME_MS+1}),localModel({metadata_checked:false})]) {
+    assert.equal(decideModelRoute({request:request(),inventory:[candidate]}).status,'held');
+  }
+});
+
+test('missing trusted evaluation time holds rather than using a user guess', () => {
+  assert.deepEqual(decideModelRoute({request:request({evaluation_time_ms:undefined}),inventory:[localModel()]}).reason_codes,['TRUSTED_EVALUATION_TIME_REQUIRED']);
+});
+
+test('unknown or forged price provenance blocks routing', () => {
+  assert.equal(decideModelRoute({request:request(),inventory:[localModel({cost_estimate_kind:'unknown'})]}).status,'held');
+});
+
+test('cloud requires effective verified retention policy', () => {
+  const r=decideModelRoute({request:request({cloud_consent:true}),inventory:[cloudModel({retention_policy_verified:false})]});
+  assert.deepEqual(r.reason_codes,['NO_ELIGIBLE_MODEL']);
 });
