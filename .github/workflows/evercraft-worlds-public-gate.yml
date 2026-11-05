@@ -25,10 +25,15 @@ jobs:
             exit 1
           fi
           node scripts/probe-worlds-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/receipt.json
+      - name: Read-only Hidden World pages and source-data proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/probe-hidden-world-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/hidden-world-receipt.json
       - name: Preserve read-only release receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-worlds-public-release-gate
-          path: artifacts/worlds-public-gate/receipt.json
+          path: artifacts/worlds-public-gate/
           if-no-files-found: warn
