@@ -4,6 +4,7 @@ import path from 'node:path';
 import { writeFrontierArtifacts } from './frontier-watch.mjs';
 import { runScienceHazardWatch } from './science-hazard-watch.mjs';
 import { writeMedicalEvidenceBrief } from './medical-evidence-brief.mjs';
+import { writeMedicalAbstractEvidence } from './medical-abstract-evidence.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 
 const rootDir = process.cwd();
@@ -22,6 +23,12 @@ const science = await runScienceHazardWatch({
 const medicalBrief = writeMedicalEvidenceBrief({
   watch: science.report,
   outDir: path.join(artifactRoot, 'medical-evidence-radar'),
+  now
+});
+
+const medicalAbstracts = await writeMedicalAbstractEvidence({
+  watch: science.report,
+  outDir: path.join(artifactRoot, 'medical-abstract-evidence'),
   now
 });
 
@@ -79,6 +86,9 @@ const body = {
   medical_evidence: {
     status: medicalBrief.status,
     sampled_titles: medicalBrief.sampled_titles,
+    abstract_evidence_status: medicalAbstracts.status,
+    abstracts_retrieved: medicalAbstracts.abstracts_retrieved,
+    abstract_evidence_receipt: medicalAbstracts.receipt_hash,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },
