@@ -58,7 +58,7 @@ Load output JSON on the **observation JSON** control in the Spatial Perception L
 
 ## Provenance and uncertainty
 
-- The runner hashes the full local source video and supplied model with SHA-256; each observation carries the video digest. That is source byte provenance, not custody verification or proof of acquisition time.
+- The runner hashes the full local source video and supplied model with SHA-256; each observation carries the video digest. That is source byte provenance, not custody verification or proof of acquisition time. Both files are hashed again after processing; changes during processing fail closed. Export is capped at 9.5 MB to fit the browser's 10 MB local import limit.
 - Frame times are inferred from decoded frame index and the video-reported FPS. Variable-frame-rate clips, dropped or duplicated frames may make these timestamps inaccurate. The source UTC clock is never inferred.
 - Depth is `Z = fx * baseline / disparity`, where disparity comes from SGBM between the two original rectified half frames. Median disparity inside the detection's central box is a crude provisional estimate and can mix object with background.
 - Unknown disparity produces `null` depth and `null` camera position, never zero or a fabricated range.
