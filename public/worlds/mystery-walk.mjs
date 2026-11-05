@@ -5,7 +5,7 @@
  */
 import {createWorld as createSocietyWorld} from '../the-window/world.mjs';
 import {createMystery,revealNext,suspicionScores,accuse} from '../the-window/mystery.mjs';
-import {activeEvidenceStation,nearbyEvidenceStation} from './mystery-bridge.mjs';
+import {activeEvidenceStation,nearbyEvidenceStation,evidenceGuidance} from './mystery-bridge.mjs';
 
 export function mountMysteryWalk({openWorld}) {
   if (typeof openWorld!=='function') throw Error('Missing world opener');
@@ -100,6 +100,7 @@ export function mountMysteryWalk({openWorld}) {
     isOpen:()=>isPanelOpen,
     activeStation:()=>caseFile?activeEvidenceStation(caseFile):null,
     stationNear:(x,z)=>caseFile?nearbyEvidenceStation(caseFile,x,z):null,
+    guidance:(x,z,yaw)=>caseFile?evidenceGuidance(caseFile,x,z,yaw):null,
     inspect:()=>{
       if(!caseFile)return null;
       const next=activeEvidenceStation(caseFile);
