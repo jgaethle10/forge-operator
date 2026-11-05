@@ -45,6 +45,10 @@ for(const spec of [{name:'phone',width:390,height:844},{name:'desktop',width:144
   const overflow=attr('qa-horizontal-overflow');
   const nav=attr('qa-nav-visible');
   const featured=attr('qa-featured');
+  const viewport=Number(attr('qa-viewport'));
+  if(viewport!==spec.width){
+    throw new Error('journal_visual_qa_viewport_not_emulated:'+spec.name+':expected='+spec.width+':got='+viewport);
+  }
   if(overflow!=='false'||nav!=='true'||featured!=='true'){
     throw new Error('journal_visual_qa_failed:'+spec.name+JSON.stringify({overflow,nav,featured,viewport:attr('qa-viewport')}));
   }
