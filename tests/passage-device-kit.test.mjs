@@ -1,0 +1,40 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,readFile,rm,readdir} from 'node:fs/promises';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+import {createHash,createPublicKey} from 'node:crypto';
+import {buildDemoKit} from '../scripts/build-passage-device-kit.mjs';
+import {checkPackage} from '../scripts/passage-signed-package.mjs';
+const sha=data=>createHash('sha256').update(data).digest('hex');
+test('device kit is entirely portable, synthetic, checksummed and has no signing key',async t=>{
+ const dir=await mkdtemp(join(tmpdir(),'passage-device-kit-'));
+ t.after(()=>rm(dir,{recursive:true,force:true}));
+ const kit=await buildDemoKit(join(dir,'bundle'),{issuedAt:'2026-11-04T12:00:00.000Z'});
+ assert.equal((await readdir(kit.directory)).length,6,'expected standalone verifier, demo package, key, fingerprint, README, checksums');
+ const html=await readFile(kit.verifier,'utf8');
+ assert.ok(html.startsWith('<!doctype html>'));
+ assert.equal((html.match(/<script>/g)||[]).length,1,'one inline script, no external JS');
+ assert.equal((html.match(/<style>/g)||[]).length,1,'one inline stylesheet');
+ assert.ok(html.includes('connect-src &#39;none&#39;'),'file cannot fetch resources');
+ assert.ok(html.includes('script-src &#39;sha256-'),'CSP pins the exact embedded code');
+ assert.ok(!/<script[^>]+src=|<link[^>]+href=/i.test(html),'no external code or style assets');
+ assert.ok(!/-----BEGIN PRIVATE KEY-----/.test((await Promise.all((await readdir(kit.directory)).map(f=>readFile(join(kit.directory,f),'utf8')))).join('\n')),'no private key in artifacts');
+ const publicPem=await readFile(kit.publicKey,'utf8');
+ const calculated=sha(createPublicKey(publicPem).export({format:'der',type:'spki'}));
+ assert.equal(kit.fingerprint,calculated);
+ const packageJson=await readFile(kit.package,'utf8');
+ const checked=await checkPackage({packageJson,trustedPublicKeyPem:publicPem,expectedFingerprint:calculated,now:new Date('2026-11-05T10:00:00Z')});
+ assert.equal(checked.metadata.review_state,'demonstration-unverified');
+ await assert.rejects(()=>checkPackage({packageJson,trustedPublicKeyPem:publicPem,expectedFingerprint:calculated,now:new Date('2026-11-20T12:00:00Z')}),/expired/);
+ const sums=(await readFile(join(kit.directory,'SHA256SUMS.txt'),'utf8')).trim().split('\n');
+ assert.equal(sums.length,5);
+ for(const entry of sums){
+  const match=entry.match(/^([a-f0-9]{64})  ([A-Za-z0-9.-]+)$/);
+  assert.ok(match,'each checksum line has predictable syntax');
+  assert.equal(sha(await readFile(join(kit.directory,match[2]))),match[1]);
+ }
+ const readme=await readFile(join(kit.directory,'READ-ME-FIRST.txt'),'utf8');
+ assert.match(readme,/not an independently trusted publisher identity/i);
+ assert.match(readme,/No private signing key is included/i);
+});
