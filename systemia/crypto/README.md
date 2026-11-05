@@ -13,7 +13,7 @@ The first opt-in prototype of quantum-resistant **recipient envelope encryption*
 ## Local verification (Node 24.7+)
 
 ```bash
-node --test tests/pq-envelope.test.mjs tests/pq-signed-envelope.test.mjs
+node --test tests/pq-envelope.test.mjs tests/pq-signed-envelope.test.mjs tests/pq-replay-sqlite.test.mjs
 ```
 
 For an integration test, import `generatePqRecipient`, `encryptPqEnvelope` and `decryptPqEnvelope` from `systemia/crypto/pq-envelope.mjs`. The recipient's private key must never be serialized to a public surface; publish/pin only the authenticated public-key fingerprint. Never store test secrets in Git. Use a real trust registry, key lifecycle, anti-replay ledger, sender authentication and an audited transport before considering production.
@@ -26,6 +26,19 @@ For an integration test, import `generatePqRecipient`, `encryptPqEnvelope` and `
 `openSignedPqMessage` checks a maximum 300-second TTL, 30-second clock skew, exact expected sender/route, ML-DSA signature, ML-KEM ciphertext integrity and an explicit replay guard. The included memory replay guard rejects duplicates and fails closed at capacity **only for single-process tests**. It is not a distributed guarantee: before deploying, implement an atomic insert-if-absent persistent nonce store with retention past expiry, verify key enrollment/rotation/revocation, add a cross-language canonical encoding and independent cryptography review.
 
 Cryptographic authentication does **not** prove delivery, user consent, human acknowledgement or endpoint safety. The signed wrapper is neither attached to notifications nor enabled for live users.
+
+
+## Durable local replay proof (still not production)
+
+`pq-replay-sqlite.mjs` implements the signed wrapper's `consume()` contract with a persistent SQLite file using WAL, FULL synchronous writes, `BEGIN IMMEDIATE`, a unique SHA-256 tuple key, capacity limits, and expiry cleanup. Two processes sharing the **same local file** cannot admit the same tuple twice. The test suite verifies this concurrent admission behavior, persistence over restart, expiry pruning and rejection of a replayed, signed ML-DSA message after a restart.
+
+Its guarantee has important limits:
+- **One host only.** Separate Node001/Node002 databases can independently accept the same replay. A remote/shared transactional database with a global unique constraint is required before multi-node operation.
+- Operators must keep the SQLite file, WAL/SHM and directory private and durable; it is not encrypted at rest. Losing or restoring an old database snapshot can re-admit old messages until their expiration, and disaster recovery needs an explicit policy.
+- A trusted server clock is required. Long clock drift, deliberate rollback and bad timestamps are not solved here.
+- Saturation or inaccessible/corrupt storage returns denial, never a memory fallback.
+- `node:sqlite` API and filesystem behavior must be evaluated against each supported Node/runtime version; the CI tests run on Node 24.
+- This is not integrated with live customer traffic, Relay, or node enrollment.
 
 ## Migration gates
 
