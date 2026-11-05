@@ -97,3 +97,25 @@ The external probe is read-only. It proves the public TLS URL serves the expecte
 A creator can now select **Unpublish online** in World Builder after publishing. The vault requires the creator's capability and current revision, then removes the active world record. Public visit links return 404, and the local browser world remains unchanged. A creator must confirm the action. This action does **not** purge previously made private offline backups, screenshots, exported JSON or copies saved by guests. Operator backup-retention and customer data-deletion policies are still necessary for public launch.
 
 World creation is serialized within one process so parallel requests cannot bypass the 2,000-record capacity setting. This does **not** provide distributed multi-process coordination, customer identity, or full public abuse/rate governance.
+
+## Dedicated owned edge route and renewable Worlds lease
+
+The existing Evercraft public edge is the only intended public ingress for Worlds. The new route client and user timer only manage a Worlds-specific route. Neither changes the shared Fabric routes, DNS, router configuration, Caddy, or certificates. No public service is activated by a merge.
+
+On the owned Linux node, start the private vault with its correct HTTPS public origin first. Then, after the existing edge controller is running, use these commands from the repository checkout:
+
+~~~bash
+# Read-only inspection. No lease is created.
+node scripts/route-worlds-owned-edge.mjs --edge-control http://127.0.0.1:YOUR_EDGE_CONTROL_PORT --vault http://127.0.0.1:8788 --public-origin https://worlds.YOUR_OWNED_BASE_DOMAIN
+
+# An explicitly operator-authorized lease with REAL deployment identity/receipt.
+node scripts/route-worlds-owned-edge.mjs --reconcile --edge-control http://127.0.0.1:YOUR_EDGE_CONTROL_PORT --vault http://127.0.0.1:8788 --public-origin https://worlds.YOUR_OWNED_BASE_DOMAIN --deployment-instance YOUR_ACTUAL_DEPLOYMENT_INSTANCE --deployment-receipt-hash YOUR_ACTUAL_DEPLOYMENT_RECEIPT_HASH
+~~~
+
+The route TTL is one hour. If the edge control requires authorization, provide EVERCRAFT_EDGE_CONTROL_TOKEN as a private environment variable, never a CLI argument or public log. The lease receipt is stored under the user's private state directory and is explicitly marked external_https_verified=false.
+
+A renewable user-systemd timer can be prepared using scripts/install-worlds-edge-keeper.mjs with the same flags. Without --activate the installer is dry-run and changes nothing. With explicit --activate it installs only a Worlds lease-keeper service and a 15-minute timer; it may write a 0600 private environment file for the edge token. Check file permissions and the operator's approval first.
+
+Fail-closed checks require: loopback-only vault and edge control, correct vault-pinned public origin, TLS-admitted wildcard HTTPS edge, a dedicated worlds subdomain of the owned base domain, and real deployment receipt identity. The reconciler renews its own lease, and can recreate it after an edge restart without changing route targets.
+
+These source and local-proxy tests do not prove public DNS, TLS end-to-end, external POST or Safari. An independent external read-only probe using scripts/probe-worlds-public.mjs and an owner-approved authenticated create/update/unpublish drill on a real iPhone remain the next launch gates. Shared reverse-proxy client rate limits, backups, deletion retention, accounts, and recovery remain separate readiness requirements.
