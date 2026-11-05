@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../Vehicle-Sentinel-QuickCheck.html'),'utf8');
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+assert.equal(scripts.length,1,'Single self-contained JS bundle');
+new vm.Script(scripts[0]);
+assert.match(html,/does not scan Bluetooth, detect AirTags, or locate GPS trackers/i);
+assert.match(html,/browser storage isn.t encrypted/i);
+assert.match(html,/Permanently erase local session/i);
+assert.match(html,/Export JSON/i);
+assert.match(html,/Start new inspection/i);
+assert.match(html,/support\.apple\.com\/en-us\/119874/);
+assert.equal(/<script\s+src=/.test(html),false,'No external scripts');
+assert.equal(/(https?:\/\/)(?!support\.apple\.com\/en-us\/119874)[^\s"']+/i.test(html),false,'No external service URL');
+assert.equal((html.match(/data-check=/g)||[]).length,6);
+console.log('PASS: QuickCheck v0.2 syntax, local-only behavior, disclosures and inspection controls');
