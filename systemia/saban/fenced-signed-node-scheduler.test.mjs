@@ -196,6 +196,21 @@ test('missing, forged or unconsumed Passport permit denies execution before any 
   assert.equal(unconsumed.calls(),0);
 });
 
+test('a consumed permit for another job or a modified job payload cannot be replayed',async()=>{
+  const owner=await scenario('permit-owner');
+  const target=await scenario('permit-cross-job');
+  target.fencedPassportStateDir=owner.fencedPassportStateDir;
+  target.fencedExecutionPermitIds[target.jobId]=owner.permitId;
+  await assert.rejects(runScheduler(target),
+    /fenced_scheduler_passport_execution_permit_denied/);
+  assert.equal(target.calls(),0);
+  const changed=await scenario('permit-payload-tamper');
+  changed.state.jobs[changed.jobId].item.payload.value.scenario='altered-payload';
+  await assert.rejects(runScheduler(changed),
+    /fenced_scheduler_passport_execution_permit_denied/);
+  assert.equal(changed.calls(),0);
+});
+
 test('revoked grant and already expired consumed permit fail closed before execution',async()=>{
   const revoked=await scenario('permit-revoked');
   revoked.passport.revokeGrant({
