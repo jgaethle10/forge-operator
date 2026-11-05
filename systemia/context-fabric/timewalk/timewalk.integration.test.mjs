@@ -92,16 +92,16 @@ test('native Context Fabric + Passport: current grant, clocks, retraction, and t
       evidence_ref: 'fixture:audit-retraction',
     });
     assert.equal(retract.state, 'retracted');
-    assert.match(retract.retraction.created_at, /^\\d{4}-/);
+    assert.match(retract.retraction.created_at, /^\d{4}-/);
     assert.equal(query().facts[0].status, 'retracted');
 
     // Rewrites of the on-disk record without a new receipt are rejected.
     const file = path.join(contextDir, 'records.jsonl');
-    const records = fs.readFileSync(file, 'utf8').trimEnd().split('\\n');
+    const records = fs.readFileSync(file, 'utf8').trimEnd().split('\n');
     const tampered = JSON.parse(records[0]);
     tampered.claim_value = 'healthy';
     records[0] = JSON.stringify(tampered);
-    fs.writeFileSync(file, records.join('\\n') + '\\n');
+    fs.writeFileSync(file, records.join('\n') + '\n');
     assert.throws(() => query(), /timewalk_receipt_integrity_failure/);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
