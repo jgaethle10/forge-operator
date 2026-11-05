@@ -69,3 +69,11 @@ RC02 local validation (2026-10-23): Chromium desktop 1280×800 and phone 390×84
 The read-only path-scoped .github/workflows/rockies-wheel-lab.yml runs all Node source-contract tests before assembling wheel-lab-rc05-offline-review as a GitHub Actions artifact with review.html, index.html, merchant-desk.html and this README. After a successful run, download the ZIP from that run, extract it preserving the shared folder structure, then open review.html. No npm install, account, API key or backend is needed.
 
 The artifact expires after seven days. It is **not** an Evercraft-owned public URL or a production promotion. A publishable, customer-facing origin requires Systemia admission receipt, scope/permissions, owned hosting and release verification. No third-party hosting fallback is authorized.
+
+## RC06 | Permissioned merchant research controls (2026-11-04)
+
+- The open PR remains a source-only engineering workbench. The last checked RC05 head completed all six GitHub workflows successfully. **New RC06 changes require their own checks.**
+- Research documents [MERCHANT-DISCOVERY-01.md](MERCHANT-DISCOVERY-01.md) and [MERCHANT-DISCOVERY-02.md](MERCHANT-DISCOVERY-02.md) identify two independent wheel-service businesses using official public sites. These are candidate research subjects, not customers or confirmed needs.
+- The pure `merchant-pilot-gate.mjs` now **rejects synthetic, sample, fixture, placeholder, fake and test evidence references**, including pilot-interest references. Operator-entered real-looking references are still only unverified claims; an independent human must inspect the actual source. It does not send messages, launch or bill.
+- Before sending any business email, follow `systemia/operator-gates/README.md`: the exact recipient, subject and message body need explicit scoped human approval. No generic 'Push' or drafted copy is treated as approval to contact someone.
+- The next genuine advancement must be a voluntary reply from a real merchant followed by source review, rather than more design controls or screenshots. Do not infer pilot opt-in from a public email address.
