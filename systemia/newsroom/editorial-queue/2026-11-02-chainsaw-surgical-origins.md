@@ -56,6 +56,12 @@ The next time someone says chainsaws were invented for childbirth, the most usef
 
 **Follow-up source check (2026-11-03):** [Independent-link and contradiction review](./2026-11-03-chainsaw-source-verification.md). This cross-check confirms dates against medical-history scholarship and artifacts, records the 1830 versus 1834 secondary-source discrepancy, and explicitly leaves visual and editorial approvals pending.
 
+## Evidence-atomized Claim Reactor preflight | CANDIDATE, NOT AN APPROVAL
+
+The core claims have now been mapped to individually named source and evidence records in [the November 5 input packet](./2026-11-05-chainsaw-claim-input.json). The reusable [editorial preflight runner](../editorial-claim-preflight.mjs) feeds those records to Systemia's existing `buildClaimReactorPacket` function, preserving source lineage, uncertainty and unresolved questions. This is not a separate research engine or a duplicate publisher.
+
+Run `node systemia/newsroom/editorial-claim-preflight.mjs` from the repository root to produce a local JSON report on standard output. All source evidence can be considered for independent editorial review *only* if the runner says `evidence_preflight_ready: true`. That flag **does not** establish rights clearance, historical visual QA, a 10/10 editorial acceptance, Fallen media delivery, Systemia authorization, actual Journal publication or social distribution. The script cannot write into production output paths or sign a release.
+
 ## Primary source and claim ledger
 
 1. **Historical peer-reviewed review:** Skippen M., Kirkup J., Maxton R. M., McDonald S. W., “The chain saw—a Scottish invention,” *Scottish Medical Journal* 49(2), 72–75 (2004), PMID 15209147, DOI 10.1177/003693300404900218. https://pubmed.ncbi.nlm.nih.gov/15209147/ . **Evidence:** early linked saw c. 1783–1785; Aitken and symphysiotomy; Jeffray and diseased bone; Aitken's 1785 illustration; Jeffray's later manufacture; later medical history. **State:** published historical review. Do not equate both pioneers' motivations.
@@ -97,6 +103,12 @@ Total: **26/30**, preliminary desk score only, not the 10/10 Journal approval.
 [Open the original conceptual schematic](../editorial-assets/chainsaw-surgical-origins-concept.svg). This SVG was authored directly for this Journal story with no third-party photography, licensed art, generative-stock imagery, embedded fonts, or borrowed historical drawings. Its illustrated geometries are explicitly schematic and should not be presented as exact historical reconstructions. Its text and 1780s / 1830 / later timeline were checked against the sources above, but visual QA and a production-grade Fallen receipt remain outstanding. No image-rights claim is made about museum photographs or the published research figures.
 
 **Additional attribution clarification:** Skippen et al. (2004) report that Aitken illustrated his hand chain saw in 1785 and used it in his dissecting room; the historical record quoted there does not establish that the instrument was routinely used in live childbirth operations. Descriptions must retain the more careful phrase “associated with symphysiotomy.” Also, a 2009 *Journal of Medical Biography* commentary by Kirkup prioritizes Aitken's invention claim while Jeffray has also been credited with independent conception; attribution should acknowledge this disagreement rather than assert a single proven inventor. Source: https://stacks.cdc.gov/view/cdc/187870/cdc_187870_DS1.pdf ; doi:10.1258/jmb.2009.009019.
+
+## Verified public-domain historical photograph | HERO CANDIDATE
+
+A photograph of a surviving Bernhard Heine osteotome is available at [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bernhard_Heine%27s_Osteotome.jpg). The Commons file identifies **Sabine Salfer** as the photographer and declares that the author dedicated the photo to the **public domain worldwide**, with an archived permission ticket (#2007070510005121). This establishes a usable historical-artifact image without borrowing protected museum photography. The file is the image of a **Heine osteotome**, *not* the original 1785 Aitken chain saw.
+
+**Media rights record:** [chainsaw-surgical-origins-media.json](../editorial-assets/chainsaw-surgical-origins-media.json). A reproducible `editorial-preview.mjs` script renders the complete article with this credited photo to a noindex HTML preview **outside** the publication tree. Historical visual QA and Fallen production acceptance remain pending. No live Journal or Clip release is asserted.
 
 ## Visual provenance and Fallen production brief | HOLD
 **Visual claim:** A verified 1830s surgical osteotome is a hand-cranked instrument with a guided cutting chain. Do not depict a modern powered saw operating on a patient, or invent gore.
@@ -142,8 +154,10 @@ Early chain saws were surgical tools. In the 1780s, John Aitken's version was li
 - [x] Evidentiary distinctions and editorial draft assembled.
 - [x] Visual and Fallen production brief prepared, historical depiction constraints recorded.
 - [x] Platform-specific derivatives drafted, explicitly on HOLD.
-- [ ] Claim Reactor receipt and 10/10 independent editorial review.
+- [x] Claim Reactor input and executable fail-closed preflight staged with unit tests (no independent editorial acceptance implied).
+- [ ] Independent 10/10 editorial acceptance and genuine release authorization.
 - [x] Original self-authored conceptual SVG created and staged on the editorial branch (not a rights-cleared museum photograph).
+- [x] Public-domain historical-artifact photo provenance documented, correctly labeled as Heine's later osteotome.
 - [ ] Independent historical visual QA and production-grade art approval.
 - [ ] Completed Fallen build and QA receipt.
 - [ ] Genuine Systemia publication release; fresh claim/source review.

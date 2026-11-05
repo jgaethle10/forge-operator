@@ -283,9 +283,22 @@ const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>
     send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
     get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
     steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
-  return {public_id,name:offer.title,commercial_state:'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
+  return {public_id,name:offer.title,commercial_state:offer.native_order_enabled===false?'scope_first':'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
     entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
 });
+
+const signalOfferCopy=OFFER_PAGE_COPY['payment-offer-signal-brief'];
+if(signalOfferCopy){
+  Object.assign(signalOfferCopy,{
+    eyebrow:'Evercraft Signal / evidence intelligence',
+    headline:'Know what happened. See the evidence.',
+    lede:'A $250 one-time source-linked Incident Evidence Brief for one public incident, prepared for a specific decision or research question.',
+    promise:'One bounded incident investigation, a dated source ledger, timeline, documented contradictions, and the key missing evidence.',
+    send:['The incident or facility to investigate','One decision or research question','Relevant public source links, if available'],
+    get:['A human-reviewed concise written evidence brief','Clear separation of official statements, reports, uncertainty, and unknowns','Source dates, important contradictions, and next questions'],
+    steps:[['1. Scope one incident','Describe the incident and question using Evercraft Signal.'],['2. Confirm the order','Evercraft verifies the scope, price, capacity, and payment readiness.'],['3. Receive the brief','Payment verification precedes fulfillment and source-backed delivery.']]
+  });
+}
 
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
@@ -373,7 +386,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
-  const checkoutHeld=!checkoutConfigured;
+  const checkoutHeld=!checkoutConfigured||PUBLIC_PAYMENT_OFFERS[copy.slug]?.native_order_enabled===false;
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
@@ -387,10 +400,14 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
     ...(checkoutHeld ? [
       '<section class="offer-panel" aria-label="Assisted purchase request">',
-      '<h2>Online checkout is temporarily unavailable.</h2>',
-      '<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
-      '<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
-      '<div class="checkout-note">Email opens in your own mail app for you to review and send. No information is transmitted automatically from this page.</div>',
+      copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
+      copy.slug==='signal-brief'
+        ?'<p>This is an Evercraft Payments offer for $250, not a processor-first link. The specific Signal checkout remains held until the bounded incident scope and native settlement route are accepted. No payment or order is created here yet.</p>'
+        :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
+      copy.slug==='signal-brief'
+        ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/signal/#request">Prepare my incident brief request</a><a class="btn" href="/offers">Explore Evercraft offers</a></div>'
+        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
+      '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
       '</section>',
     ] : [
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',

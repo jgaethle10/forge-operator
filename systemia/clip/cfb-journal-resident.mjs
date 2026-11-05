@@ -49,7 +49,7 @@ export function discoverCfbJournalHandoffs(journalRoot){
 }
 
 function terminal(state){
-  return state==='published'||state==='published_postflight_failed';
+  return state==='published'||state==='published_postflight_failed'||state==='reconciliation_required';
 }
 
 export async function runCfbJournalPublishCycle({
@@ -75,7 +75,7 @@ export async function runCfbJournalPublishCycle({
       events.push({
         story_id:storyId,
         slug:row.slug,
-        action:'skip_terminal',
+        action:previous.state==='reconciliation_required'?'manual_reconciliation_hold':'skip_terminal',
         state:previous.state,
         remote_id:previous.remote_id||null,
       });
@@ -169,7 +169,7 @@ export async function runCfbJournalPublishCycle({
     events.push({
       story_id:storyId,
       slug:row.slug,
-      action:providerPublished?'provider_published':'attempt_failed',
+      action:providerPublished?'provider_published':receiptState==='reconciliation_required'?'manual_reconciliation_hold':'attempt_failed',
       state:receiptState,
       remote_id:clean(receipt?.remoteId)||null,
     });
@@ -190,6 +190,7 @@ export async function runCfbJournalPublishCycle({
       published:values.filter(row=>row.state==='published').length,
       published_postflight_failed:values.filter(row=>row.state==='published_postflight_failed').length,
       retryable_failed:values.filter(row=>row.state==='retryable_failed'||row.state==='failed').length,
+      manual_reconciliation_holds:values.filter(row=>row.state==='reconciliation_required').length,
       authorization_holds:values.filter(row=>row.state==='authorization_hold').length,
       provider_publishes_this_cycle:providerPublishes,
       events,

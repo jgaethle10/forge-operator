@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.journal.editorial-preview-media.v1",
+  "story_id": "journal:2026-11-02:chainsaw-surgical-origins",
+  "reviewed_at": "2026-11-04",
+  "release_state": "editorial_preview_only",
+  "hero": {
+    "kind": "historical_artifact_photograph",
+    "subject": "An example of Bernhard Heine's manually cranked chain osteotome, not Aitken's original 1785 saw",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Bernhard_Heine%27s_Osteotome.jpg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Bernhard_Heine%27s_Osteotome.jpg",
+    "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Bernhard_Heine%27s_Osteotome.jpg",
+    "rights_state": "verified_public_domain",
+    "license_label": "Public domain, author-dedicated",
+    "creator": "Sabine Salfer",
+    "created_at": "2007-07",
+    "permission_evidence": "Commons file information: author released photograph into public domain worldwide; permission correspondence ticket #2007070510005121",
+    "caption": "A surviving hand-cranked chain osteotome associated with Bernhard Heine's 19th-century surgical invention, photographed at Orthopädische Universitätsklinik Frankfurt. Not Aitken's 1785 obstetric saw.",
+    "alt": "Historical hand-cranked surgical osteotome with wooden handle, metal mechanisms and linked cutting chain, on a blue background",
+    "editorial_qa_state": "pending",
+    "fallen_build_state": "not_built"
+  },
+  "sources": [
+    {
+      "label": "The Chain Saw: A Scottish Invention (Skippen et al., 2004)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15209147/",
+      "note": "Peer-reviewed historical study on Aitken and Jeffray"
+    },
+    {
+      "label": "ArtiFacts: Bernhard Heine's Osteotome (Hawk, 2016)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4814401/",
+      "note": "Museum-based medical history of Heine's 1830 invention"
+    },
+    {
+      "label": "University of Würzburg historic surgical collection",
+      "url": "https://www.medizingeschichte.uni-wuerzburg.de/sammlung_heines.html",
+      "note": "1830 osteotomes in an institutional collection; images not reused"
+    },
+    {
+      "label": "Commons: Sabine Salfer photo and public-domain dedication",
+      "url": "https://commons.wikimedia.org/wiki/File:Bernhard_Heine%27s_Osteotome.jpg",
+      "note": "Media rights and original-photo provenance"
+    }
+  ]
+}

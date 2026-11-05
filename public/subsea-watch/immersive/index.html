@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061522"><meta name="robots" content="noindex,nofollow">
+<title>Subsea Watch | Immersive Dive Replay · Evercraft</title>
+<meta name="description" content="A synthetic underwater mission rendered in 3D to explore the next Subsea Watch experience. Not real dive evidence or a safety system.">
+<style>
+:root{color-scheme:dark;--bg:#061522;--line:#366879;--aqua:#9cece2;--white:#e7f6f5;--muted:#bdd1d7}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--white);font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #a9f9ed;outline-offset:3px}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}#view:active{cursor:grabbing}
+.shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(to bottom,#061727c7,transparent 23%,transparent 70%,#03131edc);z-index:1}
+.top{position:fixed;z-index:2;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:calc(env(safe-area-inset-top) + 12px) max(18px,env(safe-area-inset-right)) 12px max(18px,env(safe-area-inset-left));pointer-events:none}
+.brand{font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.13em;display:flex;align-items:center;gap:10px;text-shadow:0 1px 5px #001}.mark{border:1px solid #86dbd9;padding:9px;font:25px/.8 Georgia,serif;color:#c5ffff}.brand small{display:block;font-size:9px;letter-spacing:.2em;color:#c6d7dc;margin-bottom:3px}
+.pill{border:1px solid #dcba78;color:#ffdfb1;background:#2c281bd9;padding:7px 10px;border-radius:50px;font-size:10px;text-transform:uppercase;letter-spacing:.14em;font-weight:800}
+.side{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:9px}
+.tool{background:#082334d8;border:1px solid #6d9fa8;color:#f2ffff;border-radius:9px;width:45px;height:45px;display:grid;place-items:center;font-weight:800;font-size:19px;backdrop-filter:blur(12px)}
+.tool[aria-pressed=true]{background:#d5f3ef;color:#123440}
+.info{position:fixed;z-index:2;top:105px;left:22px;max-width:330px;padding:13px 15px;border-left:2px solid #93e4db;background:#062133ab;backdrop-filter:blur(10px);pointer-events:none}
+.eyebrow{font-size:9px;font-weight:800;letter-spacing:.18em;color:#a5efe8;text-transform:uppercase}
+.info h1{font-family:Georgia,serif;font-size:clamp(26px,3vw,40px);font-weight:400;letter-spacing:-.025em;margin:4px 0 6px}.info h1 em{color:#9fe3df}.info p{font-size:12px;color:#cee4e9;margin:0}
+.dive-data{position:fixed;z-index:2;right:84px;top:110px;text-align:right;pointer-events:none;text-shadow:0 2px 9px #001a24}
+.dive-data span{display:block;font-size:10px;text-transform:uppercase;color:#c4dbe1;letter-spacing:.14em}.dive-data strong{font:400 29px/1.2 Georgia,serif;color:#c9fff7}
+.bottom{position:fixed;z-index:3;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));border:1px solid #407485;border-radius:14px;background:#061e2ef0;box-shadow:0 12px 50px #0008;padding:15px 18px 12px;backdrop-filter:blur(18px);max-width:920px;margin:auto}
+.controls{display:flex;align-items:center;gap:12px}
+.play{height:45px;min-width:106px;border-radius:8px;background:#c5f5ed;border:0;color:#092933;font-weight:800}
+.timeline{flex:1;width:100%;accent-color:#9ceee4;min-width:50px}.time{font-variant-numeric:tabular-nums;white-space:nowrap;color:#e4ffff;font-size:12px;font-weight:700}
+.meta{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #3a6472;padding-top:10px;margin-top:12px;font-size:10px;color:#a7d4db}
+.meta strong{color:#f9d5a2}
+.details{position:fixed;z-index:4;left:16px;top:49%;transform:translateY(-50%);width:min(340px,calc(100vw - 80px));background:#082434ed;backdrop-filter:blur(20px);border:1px solid #649ba9;border-radius:12px;padding:20px;box-shadow:0 18px 75px #0009}
+.details[hidden]{display:none}.details h2{font:400 24px Georgia,serif;margin:0 0 15px}.details p{color:#d1e6ec;line-height:1.55;margin:0 0 11px;font-size:12px}
+.details button,.details a{border:1px solid #84bdc3;background:#13394a;color:white;border-radius:7px;padding:9px 12px;text-decoration:none;font-size:12px;display:inline-flex;margin:6px 5px 0 0}
+.hint{position:fixed;z-index:2;left:22px;bottom:135px;font-size:11px;pointer-events:none;color:#d1e4e7}
+#unsupported{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:30px;text-align:center;background:#061522}
+#unsupported[hidden]{display:none}
+@media(max-width:680px){
+ .top{padding-top:calc(env(safe-area-inset-top) + 10px)}.pill{font-size:8px}
+ .info{top:calc(env(safe-area-inset-top) + 75px);left:12px;max-width:240px;padding:8px 11px}
+ .info h1{font-size:25px;margin:3px 0}.info p{font-size:10px}
+ .dive-data{top:calc(env(safe-area-inset-top) + 191px);left:13px;right:auto;text-align:left}.dive-data strong{font-size:24px}
+ .side{right:11px;top:48%}.tool{width:40px;height:43px}
+ .hint{display:none}.bottom{left:9px;right:9px;bottom:calc(env(safe-area-inset-bottom) + 7px);padding:12px 12px 9px}
+ .controls{gap:7px}.play{min-width:77px;height:42px;font-size:12px}.time{font-size:10px}
+ .meta{font-size:9px;gap:8px}.details{left:10px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="view" aria-label="Interactive three-dimensional synthetic underwater dive scene. Drag to rotate and pinch to zoom."></canvas>
+<div class="shade"></div>
+<header class="top"><div class="brand"><span class="mark">S</span><span><small>EVERCRAFT</small>SUBSEA WATCH</span></div><div class="pill">Synthetic demonstration</div></header>
+<div class="info"><div class="eyebrow">Mission replay / spatial experience concept</div><h1>Enter the <em>deep.</em></h1><p>Explore one fictional dive route in a rendered underwater environment.</p></div>
+<div class="dive-data"><span>Recorded depth · synthetic</span><strong id="depth">1.4 m</strong></div>
+<div class="side" aria-label="Camera and information controls">
+<button class="tool" id="follow" type="button" aria-label="Follow diver camera" aria-pressed="true" title="Follow diver">◎</button>
+<button class="tool" id="rotate" type="button" aria-label="Reset camera" title="Reset camera">⟳</button>
+<button class="tool" id="zoom-in" type="button" aria-label="Zoom in">+</button>
+<button class="tool" id="zoom-out" type="button" aria-label="Zoom out">−</button>
+<button class="tool" id="evidence" type="button" aria-label="Show mission evidence" aria-expanded="false">ⓘ</button>
+</div>
+<p class="hint">Drag to orbit · Pinch or scroll to zoom · Follow the synthetic route</p>
+<section class="details" id="details" aria-label="Replay provenance" hidden>
+<h2>What this scene proves</h2>
+<p>It renders a <strong>fictional</strong> diver, sample trajectory, illustrative underwater pipe and procedural seafloor. No real location, diver, flow, terrain survey or facility is represented.</p>
+<p>Depth and sample coordinates are synthetic. A future real replay must distinguish surveyed features, recorded positions, uncertainty, and missing readings. No map or visualization can clear a dive for safety.</p>
+<p>Operating pressure and pipe isolation are unknown. This scene must not be used for Delta-P avoidance, navigation or dive planning.</p>
+<button id="close-details" type="button">Return to replay</button><a href="../">Open telemetry lab</a>
+</section>
+<footer class="bottom">
+<div class="controls"><button class="play" id="play" type="button">▶ Play</button><input class="timeline" id="timeline" type="range" min="0" max="180" step=".1" value="0" aria-label="Synthetic dive replay timeline"><strong class="time" id="time">00:00 / 03:00</strong></div>
+<div class="meta"><span id="caption">Illustrative diver route and pipe, not a surveyed site</span><span><strong>NOT DIVE CLEARANCE</strong></span></div>
+</footer>
+<div id="unsupported" hidden><div><h2>WebGL isn't available here.</h2><p>This 3D concept needs a browser with WebGL enabled. The existing depth-only replay is still available.</p><p><a href="../">Open the telemetry lab</a></p></div></div>
+<script type="module" src="./scene.mjs"></script>
+</body>
+</html>

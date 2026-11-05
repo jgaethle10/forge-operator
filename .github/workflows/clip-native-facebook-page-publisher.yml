@@ -14,13 +14,16 @@ on:
       - "systemia/clip/social-publisher-runtime.mjs"
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
+      - "systemia/clip/facebook-post-readback.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
       - "systemia/clip/native-video-publishers.mjs"
       - "systemia/clip/native-video-publishers.test.mjs"
       - "systemia/clip/facebook-page-photo-publisher.mjs"
+      - "systemia/clip/facebook-page-photo-publisher.test.mjs"
       - "systemia/clip/space-dudz-facebook-publish.mjs"
       - "systemia/clip/space-dudz-publish-authorize.mjs"
       - "systemia/clip/space-dudz-resident.mjs"
+      - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/space-dudz-resident-runner.mjs"
       - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/campaigns/space-dudz-orbit-one/**"
@@ -40,6 +43,7 @@ on:
       - "systemia/newsroom/cfb-clip-facebook-publish.test.mjs"
       - "systemia/newsroom/journal-clip-bridge.mjs"
       - "systemia/evercraft-home/clip-journal-publish-adapter.mjs"
+      - "systemia/evercraft-home/clip-journal-claim.mjs"
       - "systemia/evercraft-home/clip-journal-publish-adapter.test.mjs"
       - "systemia/evercraft-home/clip-journal-publish-http.test.mjs"
       - "systemia/evercraft-home/identity.mjs"
@@ -63,13 +67,16 @@ on:
       - "systemia/clip/social-publisher-runtime.mjs"
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
+      - "systemia/clip/facebook-post-readback.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
       - "systemia/clip/native-video-publishers.mjs"
       - "systemia/clip/native-video-publishers.test.mjs"
       - "systemia/clip/facebook-page-photo-publisher.mjs"
+      - "systemia/clip/facebook-page-photo-publisher.test.mjs"
       - "systemia/clip/space-dudz-facebook-publish.mjs"
       - "systemia/clip/space-dudz-publish-authorize.mjs"
       - "systemia/clip/space-dudz-resident.mjs"
+      - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/space-dudz-resident-runner.mjs"
       - "systemia/clip/space-dudz-resident.test.mjs"
       - "systemia/clip/campaigns/space-dudz-orbit-one/**"
@@ -89,6 +96,7 @@ on:
       - "systemia/newsroom/cfb-clip-facebook-publish.test.mjs"
       - "systemia/newsroom/journal-clip-bridge.mjs"
       - "systemia/evercraft-home/clip-journal-publish-adapter.mjs"
+      - "systemia/evercraft-home/clip-journal-claim.mjs"
       - "systemia/evercraft-home/clip-journal-publish-adapter.test.mjs"
       - "systemia/evercraft-home/clip-journal-publish-http.test.mjs"
       - "systemia/evercraft-home/identity.mjs"
@@ -118,6 +126,7 @@ jobs:
             systemia/clip/humanfilter-facebook-resident.test.mjs \
             systemia/clip/humanfilter-publish-authorize.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs \
+            systemia/clip/facebook-page-photo-publisher.test.mjs \
             systemia/clip/native-video-publishers.test.mjs \
             systemia/clip/space-dudz-resident.test.mjs \
             systemia/clip/facebook-page-credential-resolver.test.mjs \

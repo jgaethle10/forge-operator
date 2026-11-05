@@ -86,6 +86,8 @@ test('cinema mode keeps synthetic disclosure, replay controls and a close path o
  assert.match(viewer,/toggleCinema\(false\)/);
  assert.match(viewer,/if\(w>=650\)/);
  assert.match(viewer,/zoom:1\.3/);
- assert.match(rawHtml,/Enter the 3D dive/);
+ assert.match(rawHtml,/Explore new 3D scene/);
+ assert.match(rawHtml,/href="\.\/immersive\//);
+ assert.match(rawHtml,/Replay telemetry sample/);
  assert.match(viewer,/loadSample\(\);toggleCinema\(true\)/);
 });

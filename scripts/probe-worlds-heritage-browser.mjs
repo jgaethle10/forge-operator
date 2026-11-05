@@ -11,7 +11,7 @@ const receipt={schema:'evercraft.worlds.heritage-browser-qa.v1',observed_at_utc:
   source:'local checked-out source',site_id:'pavlopetri-learning-scene-v1',url_path:'/worlds/heritage/',
   production_deployed:false,physical_device_tested:false,browser_emulation_only:true,
   observed_public_https:false,scenarios:[]};
-const server=spawn('python3',['-m','http.server','8767','--bind','127.0.0.1','-d','public'],{stdio:'ignore'});
+const server=spawn(process.execPath,['systemia/worlds/worlds-vault-runtime.mjs','--port','8767','--public-root','public','--data-root','artifacts/worlds-heritage-browser/private-vault'],{stdio:'ignore'});
 let browser;
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 try{
@@ -93,6 +93,15 @@ try{
     await page.locator('#guide').click();
     assert.ok(await page.locator('#sources a[href^="https://"]').count()>=3,p.name+': research guide missing citations');
     await page.locator('#close').click();
+    // Actually walk through the same-origin heritage→atlas→heritage navigation
+    // using the owned Worlds vault router, not Python's auto-index behavior.
+    await page.locator('.back').click();
+    await page.waitForURL('**/worlds/heritage/atlas/',{timeout:10000});
+    await page.waitForFunction(()=>document.querySelector('#visible-count')?.textContent?.includes('7 displayed'),null,{timeout:10000});
+    assert.equal(await page.locator('#cards .site').count(),7,p.name+': canonical atlas data not loaded');
+    await page.locator('a[href="../"]').first().click();
+    await page.waitForURL('**/worlds/heritage/',{timeout:10000});
+    assert.equal(await page.locator('#start').isVisible(),true,p.name+': cannot return to heritage scene');
     assert.deepEqual(errors,[],p.name+': uncaught browser exceptions');
     receipt.scenarios.push({profile:p.name,status:'PASS',elapsed_ms:Date.now()-start,
       render:pre,control_movement_schematic_units:Math.round(movement*100)/100,

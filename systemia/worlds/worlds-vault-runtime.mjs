@@ -26,7 +26,7 @@ function assertWriteOrigin(req,publicOrigin){
  if(supplied!==expected)throw new VaultError(403,'cross_origin_write_denied');
 }
 
-const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8'};
+const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.geojson':'application/geo+json; charset=utf-8'};
 class VaultError extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const digest=s=>createHash('sha256').update(s).digest('hex');
 const equal=(a,b)=>{const x=Buffer.from(a,'hex'),y=Buffer.from(b,'hex');return x.length===y.length&&timingSafeEqual(x,y);};
@@ -99,19 +99,27 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
   return {world_id:id,version:1,edit_token:editToken,created_at:now};
  }
  async function serveStatic(req,res,pathname){
-  // Only two explicitly public, read-only Window contracts are required by the Worlds mystery.
-  // Keep the rest of the sibling directory unreachable from the Worlds vault.
-  const sharedModules=new Set(['/the-window/world.mjs','/the-window/mystery.mjs']);
-  const shared=sharedModules.has(pathname);
-  if((!pathname.startsWith('/worlds/')&&!shared)||req.method!=='GET')throw new VaultError(404,'route_not_found');
-  const relative=shared?pathname.slice(1):'worlds/'+(pathname.slice('/worlds/'.length)||'index.html');
+  // Explicit read-only Window contracts for the local Mystery Walk only.
+  const windowModule=pathname==='/the-window/world.mjs'||pathname==='/the-window/mystery.mjs';
+  if((!pathname.startsWith('/worlds/')&&!windowModule)||req.method!=='GET')throw new VaultError(404,'route_not_found');
+  // A directory URL must resolve to its index.html on the OWNED vault too.
+  // Local Python static server already did this, hiding a release-only 404 for /worlds/heritage/.
+  let relative=windowModule?path.basename(pathname):pathname.slice('/worlds/'.length)||'index.html';
+  if(relative.endsWith('/'))relative+='index.html';
   if(relative.split('/').some(x=>x==='.'||x==='..'||x.startsWith('.'))||relative.includes('\\'))throw new VaultError(404,'route_not_found');
-  const publicArea=path.join(assetRoot,shared?'the-window':'worlds');
-  const target=path.resolve(assetRoot,relative);
-  if(!within(publicArea,target))throw new VaultError(404,'route_not_found');
+  // The atlas lives in a single canonical public source folder. Expose just its two
+  // readonly assets under /worlds/heritage/atlas/ without widening the leased /worlds/ edge.
+  const atlasAliases=new Map([
+   ['heritage/atlas/index.html','submerged-heritage/index.html'],
+   ['heritage/atlas/sites.geojson','submerged-heritage/sites.geojson']
+  ]);
+  const alias=atlasAliases.get(relative);
+  const safeRoot=windowModule?path.join(assetRoot,'the-window'):alias?assetRoot:path.join(assetRoot,'worlds');
+  const target=path.resolve(safeRoot,alias||relative);
+  if(!within(safeRoot,target))throw new VaultError(404,'route_not_found');
   let real,stat;
   try{real=await fs.realpath(target);stat=await fs.lstat(target);}catch{throw new VaultError(404,'route_not_found');}
-  if(!within(publicArea,real)||stat.isSymbolicLink()||!stat.isFile())throw new VaultError(404,'route_not_found');
+  if(!within(safeRoot,real)||stat.isSymbolicLink()||!stat.isFile())throw new VaultError(404,'route_not_found');
   const bytes=await fs.readFile(real);
   res.writeHead(200,{'content-type':MIME[path.extname(real)]||'application/octet-stream','content-length':bytes.length,
   'cache-control':'public, max-age=60','x-content-type-options':'nosniff'});res.end(bytes);
@@ -120,7 +128,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
   try{
    const method=req.method||'GET',url=new URL(req.url||'/', 'http://local.invalid');
    const pathname=decodeURIComponent(url.pathname);
-   if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true});
+   if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true,public_origin:expectedOrigin||null});
    if(pathname==='/worlds/api/worlds'&&method==='POST'){
     assertWriteOrigin(req,expectedOrigin);
     const source=req.socket.remoteAddress||'unknown',now=Date.now();

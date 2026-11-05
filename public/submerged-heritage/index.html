@@ -48,6 +48,12 @@ svg{width:100%;height:auto;display:block}.gridline{stroke:#335765;stroke-width:1
 <section class="catalog"><div class="cathead"><h2>Case register</h2><small id="visible-count">7 displayed</small></div><div class="cards" id="cards"></div><p id="empty" class="empty hidden">No cases match this filter. Try a different search.</p></section>
 <footer class="footer"><p><b>Archaeology, not treasure hunting.</b> This atlas publishes coarse public geographic context only. It is not a navigation aid, site access authorization, licensed dive plan, or instruction to disturb protected heritage.</p><p>Research ID: SUBMERGED-HERITAGE-001 · Source links and classifications are versioned. Designed for eventual review by underwater archaeology specialists.</p></footer>
 </main>
+<script>
+// The same canonical atlas HTML also mounts behind the owned Worlds /worlds/ lease.
+if (location.pathname.startsWith('/worlds/heritage/atlas/')) {
+ document.querySelectorAll('a[href="../worlds/heritage/"]').forEach(a=>a.setAttribute('href','../'));
+}
+</script>
 <script type="module">
 const NS='http://www.w3.org/2000/svg'; const state={features:[],filtered:[],selected:null,filter:'all',search:''};
 const grid=document.getElementById('grid'),markers=document.getElementById('markers'),cards=document.getElementById('cards'),detail=document.getElementById('detail');

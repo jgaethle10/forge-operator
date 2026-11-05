@@ -252,3 +252,24 @@ test('Journal-bound posts publish only after canonical, OpenGraph and story iden
   assert.equal(receipt.publicLinkPreflight.identity.storyId,'journal:2026-10-06:cfb-power-rankings-week-6');
   assert.equal(called,true);
 });
+
+test('an ambiguous Meta POST is a reconciliation hold, never a published receipt',async()=>{
+  const receipt=await publishClipSocialPost({
+    request:request(),
+    policy:policy(),
+    adapters:[{
+      destination:'facebook-page',verified:true,
+      async publish(){return {
+        state:'reconciliation_required',remoteId:'123_456',providerMayHavePublished:true,
+        reason:'post_readback_unavailable',
+        sourceRefs:['provider:facebook-graph-api-v26.0']
+      };}
+    }]
+  });
+  assert.equal(receipt.status,'reconciliation_required');
+  assert.equal(receipt.remoteId,'123_456');
+  assert.equal(receipt.url,null);
+  assert.equal(receipt.manualReconciliationRequired,true);
+  assert.equal(receipt.automaticRetryAllowed,false);
+  assert.equal(receipt.providerMayHavePublished,true);
+});
