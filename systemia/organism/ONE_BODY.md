@@ -83,7 +83,15 @@ Import the resulting JSON using the Living Graph's **Import snapshot** control i
 - Only a subset of recent events is exported to keep the phone graph legible. The summary includes the full state-event count and warns when sampled.
 - All graph views are read-only and carry explicit `execution_authority_granted:false`, `payment_verified:false`, and `verified_runtime_health:false` summary markers.
 
-**Remaining integration gap:** The current One-Body state stores planned lanes but not verified consumer receipts. A trusted, scoped evidence adapter must validate and supply lane acknowledgements; only then can the graph distinguish proven handoffs from unconfirmed ones. This module does not mint a trust authority, authenticate JSON claims, or imply production deployment.
+### Privileged consumer acknowledgement (source contract, not deployed)
+
+`recordBodyLaneAcknowledgement(state, receipt, {verifyReceipt, now})` in `one-body.mjs` accepts a **matching event + routed lane**, a past/present receipt timestamp, and an explicitly trusted verifier. It returns a new private One-Body state containing a bounded receipt pointer. A caller-owned runtime adapter must persist that state; the function itself has no storage or network effects. Duplicate acknowledgements are idempotent and older contradictory receipts fail closed.
+
+`one-body-lane-signature.mjs` provides a concrete Ed25519 verifier. The participating consumer signs a fixed-order, domain-separated `evercraft.one-body.lane-consumer-receipt.v1` payload binding event, lane, receipt reference, time, and signer identity. The signer key is checked against a **runtime-provisioned, lane-scoped public-key trust registry**. Keys carried inside the event or receipt are never accepted as trust anchors. The private key is not in the repository.
+
+On every read/export, the trusted verifier runs **again** against persisted acknowledgement pointers. A stored receipt ref, flag named `verified`, or stale signature cannot magically grant a green status. A valid consumer signature only attests which enrolled consumer acknowledged an event; it is **not** payment authority, execution permission, customer delivery evidence, or independent proof that external work completed.
+
+**Remaining integration gaps:** Real consuming adapters must sign their acknowledgements; the privileged Node001/NextGen runtime must provision and rotate lane-scoped trust, durably persist the returned state, expose only Passport-redacted read-only snapshots, and verify actual consumer liveness/freshness. Until deployed and observed, the Living Graph is an offline snapshot explorer, not a live company nervous system.
 
 ## Proof
 
