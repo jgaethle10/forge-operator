@@ -62,7 +62,7 @@ footer{font-size:12px;color:#7f9da7;padding-top:20px;line-height:1.6}
 <main class="wrap">
 <header class="top">
  <div><div class="kicker">EVERCRAFT / LIVING WORLDS</div><h1>House <span style="color:#b1e9cb">001.</span></h1><div class="sub">A tiny home. Four simulated lives. You design the rooms, watch the residents make choices, and occasionally change their day.</div></div>
- <div class="chip"><span class="dot"></span> LOCAL SIMULATION · NOT LLM-CONNECTED</div>
+ <div class="chip"><span class="dot"></span> <span id="mode-label">LOCAL SIMULATION · MODEL OFF</span></div>
 </header>
 <div class="layout">
  <div class="panel">
@@ -71,7 +71,8 @@ footer{font-size:12px;color:#7f9da7;padding-top:20px;line-height:1.6}
   <div class="legend"><span style="--c:#a4cbb7">Living</span><span style="--c:#e8c5a4">Kitchen</span><span style="--c:#c9b8d7">Bedrooms</span><span style="--c:#a8bccb">Studio</span></div>
   <div class="section"><h2>Design the house</h2><div id="tools" class="toolbar" aria-label="House building tools"></div><p class="hint">Select furniture, then tap an empty tile to place it. Choose “Remove” to clear a tile, or “Inspect” to watch a resident. Your changes influence what residents can do.</p></div>
   <div class="section"><h2>Influence the day</h2><div class="controls"><button class="action primary" id="gift">🎁 Gift selected resident</button><button class="action" id="party">🎉 Host a party</button><button class="action" id="reset">↺ Reset house</button></div></div>
-  <div class="note">Everything here runs in your browser and saves locally on this device. The residents use transparent, deterministic need-based rules, not live LLMs. This prototype is a design and behavior test, not a multiplayer or continuously hosted simulation.</div>
+  <div class="section"><h2>Optional local AI brain</h2><div class="controls"><button class="action" id="think">🧠 Ask AI to choose</button><button class="action" id="ai-auto" aria-pressed="false">AI autopilot: Off</button></div><p class="hint" id="ai-status" role="status" aria-live="polite">Off by default. Run the owned local preview with a local llama-server to enable model choices. The house runs on rules when no model is available.</p></div>
+  <div class="note">This house runs in your browser and saves locally on this device. Rule-based behavior is always available. Optional local-model choices require an owner-run inference bridge and are shown in the activity log. Not a multiplayer or continuously hosted simulation.</div>
  </div>
  <aside class="sidebar">
   <section class="panel"><div class="section" style="border:0"><h2>Meet the residents</h2><div id="actors" class="actors"></div><div id="profile"></div></div></section>
