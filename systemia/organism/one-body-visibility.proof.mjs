@@ -71,6 +71,39 @@ assert.equal(accepted.receipts[0].verification,'trusted_adapter_callback');
 assert.ok(accepted.nodes.every(n=>typeof n.id==='string'&&typeof n.name==='string'));
 assert.ok(accepted.edges.every(e=>typeof e.from==='string'&&typeof e.to==='string'));
 
+
+const verifier=r=>r.receipt_ref===privateReceiptId &&
+  r.event_id===privateEventId && r.lane==='context_fabric';
+assert.throws(()=>recordBodyLaneAcknowledgement(state,receipt,{
+  now:observedAt
+}),/lane_receipt_unverified/);
+assert.throws(()=>recordBodyLaneAcknowledgement(state,{...receipt,lane:'unknown'},{
+  now:observedAt,verifyReceipt:()=>true
+}),/lane_not_routed/);
+assert.throws(()=>recordBodyLaneAcknowledgement(state,{...receipt,observed_at:'2026-11-04T23:10:00Z'},{
+  now:observedAt,verifyReceipt:()=>true
+}),/invalid_lane_receipt_time/);
+const stored=recordBodyLaneAcknowledgement(state,receipt,{
+  now:observedAt,verifyReceipt:verifier
+});
+assert.equal(stored.recorded,true);
+assert.equal(state.lane_acknowledgements,undefined);
+assert.equal(Object.keys(stored.state.lane_acknowledgements).length,1);
+assert.ok(!JSON.stringify(stored.state).includes('"verified":true'));
+assert.equal(recordBodyLaneAcknowledgement(stored.state,receipt,{
+  now:observedAt,verifyReceipt:verifier
+}).recorded,false);
+assert.throws(()=>recordBodyLaneAcknowledgement(stored.state,{
+  ...receipt,receipt_ref:'new-ref',observed_at:'2026-11-04T21:10:00Z'
+},{now:observedAt,verifyReceipt:()=>true}),/stale_lane_receipt/);
+const beforeReverification=buildOneBodyVisualSnapshot({...base,state:stored.state});
+assert.equal(beforeReverification.summary.counts.consumer_receipt_verified,0);
+const afterReverification=buildOneBodyVisualSnapshot({
+  ...base,state:stored.state,verifyReceipt:verifier
+});
+assert.equal(afterReverification.summary.counts.consumer_receipt_verified,1);
+assert.equal(afterReverification.summary.private_acknowledgement_refs_seen,1);
+assert.ok(!JSON.stringify(afterReverification).includes(privateReceiptId));
 assert.throws(()=>buildOneBodyVisualSnapshot({state:{}}),/invalid_one_body_state/);
 assert.throws(()=>buildOneBodyVisualSnapshot({...base,observedAt:'invalid'}),/invalid_observed_at/);
 assert.throws(()=>buildOneBodyVisualSnapshot({...base,maxEvents:100}),/invalid_event_limit/);
