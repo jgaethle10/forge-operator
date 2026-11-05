@@ -3,12 +3,16 @@ on:
   push:
     paths:
       - 'systemia/control-plane/visualization/signed-device-evidence*.mjs'
+      - 'systemia/control-plane/visualization/signed-device-ui.test.mjs'
+      - 'systemia/control-plane/visualization/index.html'
       - 'systemia/control-plane/visualization/passport-goal-read*.mjs'
       - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
       - '.github/workflows/systemia-signed-device-evidence.yml'
   pull_request:
     paths:
       - 'systemia/control-plane/visualization/signed-device-evidence*.mjs'
+      - 'systemia/control-plane/visualization/signed-device-ui.test.mjs'
+      - 'systemia/control-plane/visualization/index.html'
       - 'systemia/control-plane/visualization/passport-goal-read*.mjs'
       - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
       - '.github/workflows/systemia-signed-device-evidence.yml'
@@ -23,4 +27,4 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/control-plane/visualization/signed-device-evidence.mjs
-      - run: node --test systemia/control-plane/visualization/signed-device-evidence.test.mjs systemia/control-plane/visualization/passport-signed-device-read.test.mjs systemia/control-plane/visualization/passport-goal-read.test.mjs
+      - run: node --test systemia/control-plane/visualization/signed-device-evidence.test.mjs systemia/control-plane/visualization/passport-signed-device-read.test.mjs systemia/control-plane/visualization/passport-goal-read.test.mjs systemia/control-plane/visualization/signed-device-ui.test.mjs systemia/control-plane/visualization/goal-visual-bridge.test.mjs
