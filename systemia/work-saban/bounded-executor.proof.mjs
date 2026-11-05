@@ -26,5 +26,5 @@ assert.equal(output.capacity.failed,2);
 assert.equal(output.capacity.running,0);
 assert(peak<=3);
 assert.equal(events.filter(e=>e.state==='provisioned').length,40);
-assert.throws(()=>executeBoundedTasks([{id:'x',run:()=>1},{id:'x',run:()=>2}]),/invalid_or_duplicate_task/);
+await assert.rejects(executeBoundedTasks([{id:'x',run:()=>1,verify:()=>true},{id:'x',run:()=>2,verify:()=>true}]),/invalid_or_duplicate_task/);
 console.log('Work Saban bounded execution PASS: 40 real local tasks, three-way concurrency, receipts, failure isolation.');
