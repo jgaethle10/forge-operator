@@ -49,3 +49,18 @@ Keep PR #1780 as a draft for the Timewalk historical package. The main Worlds th
 **Before citing an actual Yakima 1960 business:** read and document **both** directory entries for the business at its numbered address (if they exist), investigate intervening construction/tenant changes, and retain an inferred/uncertain status until independent 1960 evidence confirms presence. An approximate-1950 photo cannot be projected directly into 1960. An online photo catalog does not itself grant publication rights.
 
 New references: [Revisiting Washington Yakima](https://revisitwa.org/waypoint/yakima/), [Washington State Library city-directory holdings](https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books), [Yakima Central Library local directories](https://www.yvl.org/services/special-collections-and-archive-services/washington-cities-counties/).
+
+## 2026-11-04 provenance hardening: reject place-name collisions
+
+A public web-search result presenting a **1960** R. L. Polk excerpt with the heading **Yakima Ave** turned out to be from the *Irving & Yakima* environmental report in **Seattle, Washington 98144**, not from Yakima city. This candidate has been excluded and recorded at `excludedSearchResults` in the Yakima evidence ledger. Do not use Seattle's or Tacoma's Yakima-named streets as evidence for this world.
+
+**Machine-readable gate:**
+- All admitted source records now contain `targetJurisdiction: {city:'Yakima',region:'WA',country:'US'}`, matched against `location.jurisdiction`. Off-city records fail validation even if their filenames or street names contain "Yakima."
+- An explicitly **documented 1960** claim may be accepted in the future only when the source itself is indexed for 1960 and a `targetYearProof` record gives an original item locator, date in 1960, location-check flag and recorded inspection note. This requires actual editorial examination. No current scene claim satisfies this gate.
+- `mediaAssetCanBeEmbedded(source,asset)` additionally requires an item identifier, HTTPS original URL, credit, explicit item-level rights and a publication review. Merely citing a public catalog or permission-limited archive does not authorize public display.
+- `tests/timewalk-jurisdiction.test.mjs` tests the false-positive exclusion, wrong-city failures, rights and positive *synthetic software fixture* for future verified-year ingestion. Synthetic test evidence is not historical evidence and must never be imported as content.
+- Existing Worlds rendering, physics and scene persistence remain outside Timewalk ownership.
+
+**Verification:** [Timewalk evidence Actions workflow](https://github.com/jgaethle10/forge-operator/actions/workflows/timewalk-evidence.yml). Check the head commit's run result; a queued run is not a test pass. Draft PR #1780 remains unmerged.
+
+**Primary research references:** [Seattle environmental report, exclude for Yakima](https://www.seattle.gov/documents/Departments/FAS/RealEstateServices/Property/1594-PhaseI-ESA-Irving-Yakima-pgs-Apd-E-F.pdf) and [Washington State Library Yakima city-directory holdings](https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books). The Washington State Library catalog itself does **not** list a 1960 Yakima city-directory volume; 1959 and 1961 remain acquisition priorities.
