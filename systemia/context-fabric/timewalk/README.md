@@ -45,7 +45,7 @@ A result preserves source refs, Context Fabric receipt hashes, evidence states, 
 
 ## Performance and security boundaries
 
-The Context Fabric method `authorizedTimewalkSnapshot` filters by **current** Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
+The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, entity/record-resource-scoped Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
 
 **Do not merge or deploy** without native integration tests, resource-scoped actor authentication, transactional snapshot consistency, tenant/privacy review, benchmarks, and a verified release/deployment receipt. This prototype uses no external system, third-party Utopia code, or customer production data.
 
@@ -53,7 +53,8 @@ The Context Fabric method `authorizedTimewalkSnapshot` filters by **current** Pa
 
 ```bash
 node --test systemia/context-fabric/timewalk/timewalk.test.mjs
+node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
 node --test systemia/context-fabric/fabric.test.mjs
 ```
 
-The first is synthetic; neither suite alone proves production historical accuracy. The PR remains draft pending native integration and CI evidence.
+The first is synthetic; the second runs real Passport + Context Fabric over temporary synthetic records and tests expired/revoked/resource-limited access. Neither proves production historical accuracy. The PR remains draft pending native integration and CI evidence.
