@@ -82,8 +82,7 @@ test('official host-only read and HTTP errors',async()=>{
 });
 
 test('review draft quotes NRCS source, warning stars and never promotes basin indices to seasonal forecasts',()=>{
-  const {readFileSync}=requireDummy();
-  const profile=JSON.parse(readFileSync(new URL('../systemia/research-service/watershed-yakima-profile.json',import.meta.url),'utf8'));
+  const profile=JSON.parse(readFileSyncLocal(new URL('../systemia/research-service/watershed-yakima-profile.json',import.meta.url),'utf8'));
   const snap=compileWatershedSnapshot({asOf:'2026-11-04T22:30:00Z'});
   const source=parseNrcsWashingtonBasinReport(fixture(),options);
   const report=formatWatershedReviewBrief(snap,profile,null,null,null,null,null,source,'a'.repeat(64));
@@ -103,4 +102,3 @@ test('review draft quotes NRCS source, warning stars and never promotes basin in
   const future=compileWatershedSnapshot({asOf:'2026-11-14T10:00:00Z'});
   assert.throws(()=>formatWatershedReviewBrief(future,profile,null,null,null,null,null,source),/not comparable/);
 });
-function requireDummy(){return {readFileSync:readFileSyncLocal};}
