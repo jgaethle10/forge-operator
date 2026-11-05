@@ -43,6 +43,8 @@ try{
     await page.locator('label[for="era-1924"]').click();
     assert.equal(await page.locator('#era-1924').isChecked(),true,profile.name+': CSS year switch');
     assert.equal(await page.locator('.p1924').isVisible(),true,profile.name+': 1924 content hidden');
+    assert.equal(await page.locator('a[href="yakima-evidence-ledger.v1.json"]').count(),1,
+      profile.name+': research ledger download link missing');
     assert.ok(await page.locator('.event .source a[href^="https://"]').count()>=4,
       profile.name+': missing historical sources');
     assert.ok((await page.locator('body').textContent()).includes('0Connected tunnels established by the records reviewed'),
