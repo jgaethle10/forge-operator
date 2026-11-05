@@ -1,12 +1,12 @@
 # Evercraft Worlds integration branch
 
-Staged static route: `/worlds/hidden-world/` on an Evercraft-owned host serving the repository `public/` directory. This is source staging, **not evidence of deployment**. The package uses a single-file Yakima exhibit (`yakima-standalone.html`) and relative links. A successful HTTPS fetch, iPhone Safari test, and the established Worlds public release gate are required before declaring it live.
+Source merged into the main Evercraft Worlds repository with PR #1855. Expected static route: `/worlds/hidden-world/` on an Evercraft-owned host serving `public/`. The source integration **is not evidence of live public deployment**. The package uses a single-file Yakima exhibit (`yakima-standalone.html`) and relative links. A successful HTTPS fetch, iPhone Safari test, and the established Worlds public release gate are required before declaring it live.
 
 ---
 
 # Evercraft Hidden World Atlas · Field Edition 003
 
-**Status:** Working, local/offline-capable historical exploration prototype. Created October 30, 2026. **Not deployed on Systemia or Evercraft Worlds.**
+**Status (November 4, 2026):** Working historical exploration prototype, merged into the Evercraft Worlds source tree. External HTTPS reachability and physical-iPhone verification remain unconfirmed.
 
 ## Open the exhibit
 - **Fastest:** open `yakima-standalone.html`. It includes static illustrated surface and underground previews with a CSS-only switch if the viewer blocks scripts. To walk the environment, open the file through a normal browser that permits JavaScript or deploy it on Evercraft-owned web infrastructure.
@@ -33,6 +33,25 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 - Yakima Valley Museum, Sundquist Library and Archives holdings: https://yvmuseum.org/news/our-library-archives
 - Yakima Valley Libraries, Sanborn/map access: https://www.yvl.org/services/special-collections-and-archive-services/maps-and-atlases/
 - KATS-FM, “More Haunted Spots Across the Yakima Valley” (2021), local recollection: https://katsfm.com/more-haunted-spots-across-the-yakima-valley/
+
+
+## Historical Evidence Lab 004 (November 4, 2026)
+
+- Route: `/worlds/hidden-world/yakima-evidence.html`, linked from the atlas research sidebar.
+- This is an evidence board and responsive, script-free four-year research lens, **not a measured street model**. Its building silhouettes are deliberately illustrative.
+- The National Register records the Lund Building at 5 N. Front Street, with the late nineteenth-century period of significance (https://npgallery.nps.gov/AssetDetail/NRIS/83004276). Detailed building chronology still requires the nomination form and architectural plans.
+- Spokane Public Library holds a public-domain F. H. Newell view east along Yakima Avenue from the railroad tracks, dated within 1905–1915: https://lange.spokanelibrary.org/items/show/5659.
+- Yakima's municipal historic register dates the Capitol Theatre at 9 S. 3rd Street to 1920 and the Union Pacific Freight Building at 104 W. Yakima Avenue to 1923–1924: https://www.yakimawa.gov/services/historic-preservation-commission/yakima-register-of-historic-places/.
+- The 2018 `Hidden History of Yakima` description mentions underground tunnels, but **no specific connected tunnel alignment has been authenticated** by these sources.
+- Historic Sanborn fire-insurance maps document footprints, construction and use; they do not independently prove passable subterranean tunnels. See https://www.yvl.org/services/special-collections-and-archive-services/maps-and-atlases/.
+- The Worlds vault static router was updated to resolve nested directory index requests (`/worlds/hidden-world/`), with read-only regression tests covering the entry route, exhibit and CSV MIME. This source check is separate from a live owned-host probe.
+
+## Still required before public launch
+
+1. Confirm an Evercraft-owned HTTPS origin actually serves the new directory route and resources with 200 responses.
+2. Perform real iPhone Safari checks, including the fallback with scripts disabled and the interactive page with scripts enabled.
+3. Complete parcel-scale research from fire insurance maps, historical street photographs and authorized archival plans, then label every proposed building or passage by evidence tier.
+4. Obtain explicit permission before entering, filming or documenting privately owned or hazardous underground spaces.
 
 ## Next evidence work
 1. Compare the actual relevant 1920 and 1950 Sanborn sheets against the exact historic street photographs and address directories.
