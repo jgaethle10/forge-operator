@@ -86,7 +86,6 @@ export function buildOneBodyVisualSnapshot({
         lanes.add(lane);
         nodes.push({id:laneId,name:laneName(lane),kind:'lane',status:'runtime_unverified'});
       }
-      edges.push({from:eventId,to:laneId,relationship:'planned_handoff'});
       const proof=eligibleReceipts.get(event.event_id+'\0'+lane);
       let status='planned_unverified';
       if (proof) {
@@ -98,6 +97,7 @@ export function buildOneBodyVisualSnapshot({
       } else if (now-eventTime >= overdueAfterMs) {
         status='unobserved_overdue';
       }
+      edges.push({from:eventId,to:laneId,relationship:status});
       counts.handoffs++;
       if (status==='consumer_receipt_verified') counts.consumer_receipt_verified++;
       else {
