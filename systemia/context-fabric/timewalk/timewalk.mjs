@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 
 // Read-only historical projection over the existing Evercraft Context Fabric.
-// Every record is fetched through Context Fabric's Passport-aware getRecord gate.
+// Context Fabric supplies an authorized snapshot using CURRENT Passport authority.
 // This is an exploratory kernel, not authorization to execute or alter missions.
 const sha256 = (body) => 'sha256:' + createHash('sha256').update(JSON.stringify(body)).digest('hex');
 
@@ -38,7 +38,8 @@ function effectiveStart(record) {
 
 /**
  * Historical reconstruction: world time `valid_at`, knowledge time `known_at`.
- * Authorization uses `authorization_at` (current-time by default), NEVER known_at.
+ * Authorization is always verified against the Context Fabric server clock.
+ * Callers cannot override it with a historical timestamp.
  *
  * `fabric` must be an EvercraftContextFabric instance. This function has no writes.
  * Results are only a projection over records already in that fabric; it does not
@@ -48,43 +49,34 @@ export function queryTimewalk(fabric, {
   actor_ref = null,
   known_at,
   valid_at,
-  authorization_at = new Date().toISOString(),
   entity_ref = null,
   predicate = null,
   namespaces = null,
   limit = 200,
 } = {}) {
-  if (!fabric || !(fabric.records instanceof Map) || typeof fabric.getRecord !== 'function') {
-    throw new Error('timewalk_context_fabric_required');
+  if (!fabric || typeof fabric.authorizedTimewalkSnapshot !== 'function') {
+    throw new Error('timewalk_authorized_context_snapshot_required');
+  }
+  if (Object.prototype.hasOwnProperty.call(arguments[1] || {}, 'authorization_at')) {
+    throw new Error('timewalk_authorization_time_cannot_be_overridden');
   }
   const knownAt = strictInstant(known_at, 'known_at');
   const validAt = strictInstant(valid_at, 'valid_at');
-  const authAt = strictInstant(authorization_at, 'authorization_at');
   const maxResults = Number(limit);
   if (!Number.isSafeInteger(maxResults) || maxResults < 1 || maxResults > 1000) {
     throw new Error('timewalk_limit_invalid');
   }
-  const ns = namespaces == null ? null : new Set(
-    (Array.isArray(namespaces) ? namespaces : [namespaces]).map(String)
-  );
-
-  // IDs are used only as internal lookup keys; getRecord denies unauthorized reads.
-  // A new fabric instance is recommended for a consistent initial on-disk snapshot.
-  // Force Context Fabric to refresh its append-only files before enumerating IDs.
-  fabric.getRecord("__timewalk_refresh__", { actor_ref, at: authAt, include_history: true });
-  const ids = [...fabric.records.keys()];
+  // One authorized read at the server clock, with a hard snapshot cap.
+  const snapshot = fabric.authorizedTimewalkSnapshot({
+    actor_ref, namespaces, entity_ref, predicate,
+  });
+  if (snapshot?.schema !== 'evercraft.context.authorized-timewalk-snapshot.v1' ||
+      !Array.isArray(snapshot.records)) {
+    throw new Error('timewalk_authorized_snapshot_invalid');
+  }
+  const authAt = strictInstant(snapshot.authorized_at, 'authorized_at');
   const all = [];
-  for (const id of ids) {
-    const record = fabric.getRecord(id, {
-      actor_ref,
-      at: authAt,
-      include_history: true,
-    });
-    if (!record) continue;
-    if (ns && !ns.has(record.namespace)) continue;
-    if (entity_ref != null && entity_ref !== record.entity_ref) continue;
-    if (predicate != null && predicate !== record.predicate) continue;
-
+  for (const record of snapshot.records) {
     const { retraction, ...signedRecord } = record;
     verifyReceipt(signedRecord);
     const learnedAt = strictInstant(record.created_at, 'created_at');
@@ -94,9 +86,18 @@ export function queryTimewalk(fabric, {
     if (effective.at > validAt || (validTo && validTo <= validAt)) continue;
 
     let retractedAt = null;
+    let retractionRecordedAt = null;
+    let legacyRetractionTimeUnknown = false;
     if (retraction) {
       verifyReceipt(retraction);
       retractedAt = strictInstant(retraction.retracted_at, 'retracted_at');
+      if (retraction.created_at) {
+        retractionRecordedAt = strictInstant(retraction.created_at, 'retraction_created_at');
+      } else {
+        // Old retractions have no independent system clock. A backdated
+        // event timestamp cannot establish when the system learned it.
+        legacyRetractionTimeUnknown = true;
+      }
     }
 
     all.push({
@@ -119,7 +120,11 @@ export function queryTimewalk(fabric, {
       valid_to: validTo,
       supersedes_record_id: record.supersedes_record_id,
       retracted_at: retractedAt,
+      retraction_recorded_at: retractionRecordedAt,
+      retraction_time_basis: retraction ? (legacyRetractionTimeUnknown ? 'legacy_unverifiable' : 'created_at') : null,
       retraction_evidence_ref: retraction?.evidence_ref ?? null,
+      status: legacyRetractionTimeUnknown ? 'retraction_time_unverified'
+        : retractionRecordedAt && retractionRecordedAt <= knownAt ? 'retracted' : 'active',
       citation: `context:${record.record_id}`,
       content_is_instruction: false,
       source_authority_inherited: false,
@@ -128,13 +133,11 @@ export function queryTimewalk(fabric, {
 
   const eligibleIds = new Set(all.map((r) => r.record_id));
   const replacedIds = new Set(all
-    .filter((r) => !(r.retracted_at && r.retracted_at <= knownAt))
+    .filter((r) => r.status === 'active')
     .map((r) => r.supersedes_record_id)
     .filter((id) => eligibleIds.has(id)));
   for (const row of all) {
-    row.status = row.retracted_at && row.retracted_at <= knownAt
-      ? 'retracted'
-      : replacedIds.has(row.record_id) ? 'superseded' : 'active';
+    if (row.status === 'active' && replacedIds.has(row.record_id)) row.status = 'superseded';
   }
   all.sort((a, b) => a.learned_at.localeCompare(b.learned_at) || a.record_id.localeCompare(b.record_id));
 
@@ -169,14 +172,17 @@ export function queryTimewalk(fabric, {
   }
 
   return {
-    schema: 'evercraft.context.timewalk.v0',
+    schema: 'evercraft.context.timewalk.v0.1',
     mode: 'read_only_projection',
     known_at: knownAt,
     valid_at: validAt,
     authorization_checked_at: authAt,
+    authorization_time_source: 'context_fabric_server_clock',
+    integrity_model: 'sha256_tamper_evidence_not_digital_signature',
     authority_filter_applied: true,
     observed_fallback_is_not_historical_proof: true,
     complete: all.length <= maxResults,
+    historical_status_complete: !all.some((row) => row.status === 'retraction_time_unverified'),
     total_authorized_matching: all.length,
     facts: all.slice(0, maxResults),
     active_count: active.length,
