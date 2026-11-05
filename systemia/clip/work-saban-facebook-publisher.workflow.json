@@ -5,7 +5,7 @@
   "runtime": "systemia-core-resident",
   "cadence_seconds": 3600,
   "entrypoint": "systemia/clip/work-saban-facebook-resident-runner.mjs",
-  "purpose": "Publish due Work Saban evergreen Facebook company entries via Evercraft Clip only after a current separately issued Passport grant and verified company Page credential. First comment and provider permalink are required.",
+  "purpose": "First-party organic company Facebook rotation using current bounded founder authorization, private Passport issuance, sealed page credentials, and verified provider receipts.",
   "safety": {
     "restricted_campaign_id": "work-saban-clip-evergreen-20261030",
     "destination": "verified_evercraft_facebook_page_only",
@@ -23,6 +23,8 @@
     "permalink_provider_readback_required": true,
     "ambiguous_provider_attempts_never_auto_retried": true,
     "public_anonymous_visibility_separate": true,
-    "return_secret_material": false
+    "return_secret_material": false,
+    "bounded_authority_source": "systemia/clip/authority/work-saban-corporate-rotation.json",
+    "authority_expires_at": "2027-01-31T00:00:00.000Z"
   }
 }
