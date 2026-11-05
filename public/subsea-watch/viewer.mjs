@@ -2,7 +2,7 @@ import {normalizeDive,parseInput,atTime,segments,brief} from './core.mjs';
 const $=id=>document.getElementById(id);
 const world=$('world'),profile=$('profile'),ctx=world.getContext('2d'),chart=profile.getContext('2d');
 let dive=null,current=0,playing=false,speed=1,lastFrame=0;
-let camera={yaw:-.47,pitch:.50,zoom:1},drag=null;
+let camera={yaw:-.47,pitch:.50,zoom:1.3},drag=null;
 const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
 const clamp=(x,min,max)=>Math.min(max,Math.max(min,x));
 function dimensions(canvas,context){
@@ -13,7 +13,7 @@ function dimensions(canvas,context){
 }
 function projector(w,h){
  const {yaw,pitch,zoom}=camera,cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);
- const base=Math.min(w/64,h/30)*zoom;
+ const base=Math.min(w/52,h/28)*zoom;
  return (x,y,depth)=>{
   const u=x*cy-y*sy,back=x*sy+y*cy;
   const v=(depth-7.5)*cp+back*sp;
@@ -44,13 +44,19 @@ function drawScene(){
  for(let z=0;z<=16;z+=4){const pt=p(-24,-22,z);txt(z+' m',pt.x-9,pt.y-4,'#b9d6dc',10,'right');}
  line(p,[-24,-22,0],[-24,-22,16],'#79b8c1',1.4);
  const water=p(-23,-18,0),floor=p(-23,-18,16);
- txt('WATER SURFACE / REFERENCE',clamp(water.x,12,w-215),Math.max(22,water.y-11),'#a3d7dd',10);
- txt('ILLUSTRATIVE GRID — NOT BATHYMETRY',clamp(floor.x,12,w-260),Math.min(h-27,floor.y+18),'#8eb6c3',9);
+ // On narrow phone canvases, keep detailed evidence captions in the fixed
+ // HTML legend instead of layering overlapping text over the diver and pipe.
+ if(w>=650){
+  txt('WATER SURFACE / REFERENCE',clamp(water.x,12,w-215),Math.max(22,water.y-11),'#a3d7dd',10);
+  txt('ILLUSTRATIVE GRID — NOT BATHYMETRY',clamp(floor.x,12,w-260),Math.min(h-27,floor.y+18),'#8eb6c3',9);
+ }
  if(!dive||!dive.xyAvailable)return;
  if(dive.infrastructure){
   const pipe=dive.infrastructure,a=[pipe.x-pipe.length/2,pipe.y,pipe.depth],b=[pipe.x+pipe.length/2,pipe.y,pipe.depth];
   line(p,a,b,'#ffba5a63',21);line(p,a,b,'#c8a77c',13);line(p,a,b,'#433e2c',6);
-  const pt=p(pipe.x,pipe.y,pipe.depth);txt('ILLUSTRATIVE PIPE',clamp(pt.x+15,10,w-128),clamp(pt.y-20,25,h-20),'#ffd39d',10);
+  if(w>=650){
+   const pt=p(pipe.x,pipe.y,pipe.depth);txt('ILLUSTRATIVE PIPE',clamp(pt.x+15,10,w-128),clamp(pt.y-20,25,h-20),'#ffd39d',10);
+  }
  }
  for(const s of segments(dive))line(p,[s.a.x,s.a.y,s.a.depth],[s.b.x,s.b.y,s.b.depth],dive.demo?'#74efe5b3':'#76ecf5a9',3.2);
  const pt=atTime(dive,current);
@@ -59,7 +65,7 @@ function drawScene(){
   line(p,[pt.x,pt.y,pt.depth],[pt.x,pt.y,16],'#d0f4ec6a',1.5,[3,5]);
   circle(shadow.x,shadow.y,4,'#b4d2d462');
   circle(d.x,d.y,8,'#80eee5','#f5ffff');circle(d.x-2,d.y-2,2.3,'#e7fcff');
-  txt(dive.demo?'SAMPLE DIVER':'DECLARED TRACK',clamp(d.x+13,7,w-158),clamp(d.y-13,20,h-20),'#e7ffff',11);
+  if(w>=650)txt(dive.demo?'SAMPLE DIVER':'DECLARED TRACK',clamp(d.x+13,7,w-158),clamp(d.y-13,20,h-20),'#e7ffff',11);
  }
 }
 function depthChart(){
@@ -93,9 +99,12 @@ function update(){
  $('pipe-status').textContent=dive.demo?'Illustrative sample pipe':'No mapped infrastructure from this file';
  $('pipe-description').textContent=dive.demo?'Flow, isolation and proximity are unknown. Not a safe-distance illustration.':'This replay cannot confirm any site is free of pipes, intakes or Delta-P hazards.';
  $('scrub').min=dive.points[0].t;$('scrub').max=dive.points.at(-1).t;$('scrub').value=current;
+ $('cinema-scrub').min=dive.points[0].t;$('cinema-scrub').max=dive.points.at(-1).t;$('cinema-scrub').value=current;
+ $('cinema-time').textContent=$('time').textContent;
+ $('cinema-play').textContent=playing?'Ⅱ Pause':'▶ Play';
  drawScene();depthChart();
 }
-function stop(){playing=false;$('play').textContent='▶ Play';}
+function stop(){playing=false;$('play').textContent='▶ Play';$('cinema-play').textContent='▶ Play';}
 function setDive(value){
  dive=normalizeDive(value);stop();current=dive.points[0].t;update();
 }
@@ -112,9 +121,25 @@ $('play').addEventListener('click',()=>{
 });
 $('speed').addEventListener('click',()=>{speed=({1:2,2:4,4:0.5,0.5:1})[speed]||1;$('speed').textContent=speed+'× speed';});
 $('scrub').addEventListener('input',e=>{if(dive){current=Number(e.target.value);update();}});
+$('cinema-play').addEventListener('click',()=>$('play').click());
+$('cinema-scrub').addEventListener('input',e=>{if(dive){current=Number(e.target.value);update();}});
+const scene=world.closest('.scene');
+function toggleCinema(shouldFocus){
+ const active=shouldFocus??!scene.classList.contains('scene-focused');
+ scene.classList.toggle('scene-focused',active);
+ document.body.classList.toggle('scene-focused',active);
+ $('focus-view').setAttribute('aria-pressed',String(active));
+ $('focus-view').setAttribute('aria-label',active?'Exit expanded 3D replay':'Expand 3D replay');
+ $('focus-view').title=active?'Exit expanded 3D replay':'Expand 3D replay';
+ $('focus-view').textContent=active?'✕':'⛶';
+ // iOS Safari requires a paint after CSS-fixed layout transitions.
+ requestAnimationFrame(()=>{drawScene();depthChart();});
+}
+$('focus-view').addEventListener('click',()=>toggleCinema());
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&scene.classList.contains('scene-focused'))toggleCinema(false);});
 $('zoom-in').addEventListener('click',()=>{camera.zoom=clamp(camera.zoom*1.22,.48,2.5);drawScene();});
 $('zoom-out').addEventListener('click',()=>{camera.zoom=clamp(camera.zoom/1.22,.48,2.5);drawScene();});
-$('reset-camera').addEventListener('click',()=>{camera={yaw:-.47,pitch:.5,zoom:1};drawScene();});
+$('reset-camera').addEventListener('click',()=>{camera={yaw:-.47,pitch:.5,zoom:1.3};drawScene();});
 world.addEventListener('pointerdown',e=>{world.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,yaw:camera.yaw,pitch:camera.pitch};});
 world.addEventListener('pointermove',e=>{if(!drag)return;camera.yaw=drag.yaw+(e.clientX-drag.x)*.009;camera.pitch=clamp(drag.pitch+(e.clientY-drag.y)*.008,.15,1.25);drawScene();});
 world.addEventListener('pointerup',()=>drag=null);world.addEventListener('pointercancel',()=>drag=null);
