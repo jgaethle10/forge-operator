@@ -76,7 +76,7 @@ export function parseProposalFromContext(context,text){
       throw Error('Model selected an unknown object');
   }else throw Error('Action is not allowed');
   return Object.freeze({
-    schema:PROPOSAL_SCHEMA,actor_id:residentId,origin_tick:world.tick,
+    schema:PROPOSAL_SCHEMA,actor_id:residentId,origin_tick:context.tick,
     action:value.action,target_id:value.target_id,reason:value.reason.trim()
   });
 }
