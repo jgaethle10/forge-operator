@@ -114,3 +114,10 @@ node systemia/work-saban/audit-trace.mjs /path/to/work-saban-verified-local-trac
 ```
 
 This command checks hashes and financial-report delivery invariants, emits only an audit verdict and digests (not the private report body), and exits nonzero on corruption or incomplete runs. Its positive result still cannot authenticate which person or machine generated the unsigned chain. Do not upload sensitive customer traces to public CI logs or third-party issue attachments.
+
+## Work Floor one-tap immersive observer (draft, November 4)
+A visitor can use **Explore the 3D work floor** from the task screen to enter the existing office without opening advanced details first. The existing verified worker-event view and original CSS3D scene are reused, not duplicated. The overlay shows full-viewport orbit/follow camera navigation, a selected-agent inspector, and an actual execution trace. On phones, **Inspect agent** and **Back to camera** jump between the 3D scene and evidence without mixing source and presentation.
+
+Exit with **Exit office** or Escape. The view restores the prior details and 2D/3D choice, locks background scrolling, traps tab focus inside the dialog, and preserves reduced-motion behavior from the camera rig. It does not call an agent, start a mission, create synthetic worker progress, or alter the task submission flow.
+
+Evidence: `node systemia/work-saban/office-browser-qa.mjs` exercises desktop (1280×900) and emulated phone (390×844) on actual headless Chrome, with screenshots of overview, focused coworker, and immersive mode. It asserts one-tap entry, fullscreen geometry, labeled dialog, selected-agent inspector navigation, Escape restoration, and unchanged worker state. Real iPhone Safari frame-time and touch ergonomics remain **unverified** before production release.
