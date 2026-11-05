@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-04.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-05.
 
 ## Mission
 
@@ -65,6 +65,14 @@ This is a mathematical sanity check, **not** an analysis of Go Fast raw frames. 
 - **Owned execution pathway inspection:** Repository docs describe Systemia mission admission, Capability Mesh, Passport/Execution Gate and specialist dispatcher receipts. Neither a source-controlled `mission-intake.json` nor public read-only Fabric discovery dispatches a live team. Execution remains `NOT_DISPATCHED`; no specialist was assigned, no permit consumed, and no compute run receipt obtained.
 
 Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch and inspect PR #1838 before any merge. No high-voltage experiments, no unverified sensor fusion claims, no alien-origin assertions, and no public release.
+
+## Sprint 5, November 5, 2026: reproducible offline sensor intake
+
+- **New dedicated CI:** `.github/workflows/first-contact-research.yml` runs the branch's complete Node test suite and an offline JSON mission/source-integrity audit on relevant changes. On first instrumented commit `9bb5d05e...`, [FIRST-CONTACT verification](https://github.com/jgaethle10/forge-operator/actions/runs/41994861626) succeeded (both test and source audit stages). On code/fixture commit `be1546bc...`, the same workflow [succeeded again](https://github.com/jgaethle10/forge-operator/actions/runs/41995140199). These CI outcomes do not prove field measurement validity.
+- **Synchronized dual-view preflight:** `observation-sync.mjs` and `observation-sync.test.mjs` require affirmative operator calibration/survey/timebase/identity assertions and **identical timestamps** for unknown moving targets; refuse inconsistent bearings, near-parallel geometry and duplicated sensor identifiers. A passing result is only `CANDIDATE_REQUIRES_INDEPENDENT_REVIEW`; inputs are self-attested, not authenticated proof.
+- **Actual executable intake:** `two-view-cli.mjs` reads one bounded local JSON file, calls the synchronization and 3D geometry checks, and emits a SHA-256 input-hashed result receipt. It never uploads footage, dispatches agents or changes persistent system state. `two-view-cli.test.mjs` and two `fixtures/synthetic-*.json` examples cover a known-target positive control and a desynchronized fail-closed control. The dedicated CI passed with these files committed.
+- **Operator field protocol:** `TWO_VIEW_RUNBOOK.md` provides exact test commands, timestamp/coordinate/calibration prerequisites, privacy boundaries and the next legitimate milestone: two independently surveyed cameras observing a non-sensitive known stationary target.
+- **Evidence boundary:** No new real UAP measurements or specimen data were obtained, no live Systemia agent ran, and no extraterrestrial technology was identified. Do not present self-attested fixture data as real calibrated imagery.
 
 ## Decision and escalation gates
 
