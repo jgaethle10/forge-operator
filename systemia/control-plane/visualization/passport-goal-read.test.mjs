@@ -25,7 +25,7 @@ async function setup({grant=true,resourceRefs=['goal:mission-001'],endsAt='2026-
   if(grant)passport.issueGrant({
     grant_id:'visual_test_grant',idempotency_key:'visual:test-grant',
     subject_ref:'operator:verified',issuer_ref:'test-identity-authority',
-    product:'systemia',scopes:['mission.visual.read'],resource_refs:resourceRefs,
+    product:'systemia',scopes:['mission.visual.read'],...(resourceRefs===null?{}:{resource_refs:resourceRefs}),
     starts_at:'2026-11-01T00:00:00Z',ends_at:endsAt,
     authority_state:'verified_identity_authority',
     authority_receipt_ref:'synthetic-identity-test',
@@ -63,7 +63,7 @@ test('wrong subject and wrong mission resource fail closed',()=>withSetup({},asy
   await assert.rejects(read({verifiedSubjectRef:'operator:other'}),/visual_access_denied/);
   await assert.rejects(read({goalKey:'mission-002'}),/visual_access_denied/);
 }));
-test('no blanket resource scope, even if Passport authorization itself allows it',()=>withSetup({resourceRefs:[]},async({read})=>{
+test('no blanket resource scope, even if Passport authorization itself allows it',()=>withSetup({resourceRefs:null},async({read})=>{
   await assert.rejects(read(),/visual_access_denied/);
 }));
 test('wrong product, missing exact scope, expired grant all deny',async()=>{
