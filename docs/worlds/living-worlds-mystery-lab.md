@@ -37,3 +37,9 @@ Next proof gates:
 - Data-only record: `evercraft.window.mystery-checkpoint.v1` (`seed`, `revealed`, optional `suspectId`, `choice`). It never persists witness text, private world state or user records.
 - Invalid, unsupported, tampered or unavailable saves fail closed to a fresh local case; ordinary play works without storage. A same-origin browser tab can resume; unrelated sites or devices cannot.
 - This is player-local continuity, **not** authoritative server memory or an autonomous-agent persistence claim.
+
+## Try a local private preview
+
+With Node 22 or newer in this repository, run `node scripts/start-worlds-mystery-preview.mjs` from the project root. Copy the printed `http://127.0.0.1:PORT/worlds/` address into a browser on **that same machine**. Choose **Investigate a mystery**, then explore the 3D scene, follow the evidence beacon, and inspect clues. Press Ctrl+C to stop and clean up the disposable private server data. Browser-local case progress is independent of that temporary data directory.
+
+The launcher reuses the owned Worlds Vault, binding only to the local loopback interface and allocating a random port. It does not host a public demo, expose another device on the Internet, deploy another game engine or represent verified autonomous LLM residents. Run `node --test tests/worlds-mystery-preview.test.mjs` to verify the launcher and its restricted module allowlist.
