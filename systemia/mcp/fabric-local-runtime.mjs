@@ -410,6 +410,7 @@ export async function startFabricLocalRuntime({
   purchaseIntentFetch=fetch,
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
+  paymentServiceToken=process.env.EVERCRAFT_PAYMENT_BACKEND_TOKEN||'',
   studioLeadsDir='',
   findMyPartLeadsDir='',
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
@@ -1263,7 +1264,8 @@ export async function startFabricLocalRuntime({
             // Confirm the downstream runtime can retain the target before purchase.
             // This request cannot create a checkout or authorize fulfillment.
             const preflight=await purchaseIntentFetch(purchaseIntentEndpoint,{
-              method:'POST',headers:{'content-type':'application/json','accept':'application/json'},
+              method:'POST',headers:{'content-type':'application/json','accept':'application/json',
+                ...(paymentServiceToken?{authorization:'Bearer '+paymentServiceToken}:{})},
               body:JSON.stringify({action:'website_audit_prepayment_preflight',capability_key:capabilityKey,website_url:websiteUrl}),
               signal:controller.signal,
             });
@@ -1280,6 +1282,7 @@ export async function startFabricLocalRuntime({
               'content-type':'application/json',
               'accept':'application/json',
               'user-agent':'Evercraft-Fabric-Offer-Checkout/1.0',
+              ...(paymentServiceToken?{authorization:'Bearer '+paymentServiceToken}:{}),
             },
             body:JSON.stringify(directOffer?{
               action:'create_checkout',offer_key:directOffer.offer_key,
@@ -1415,7 +1418,7 @@ export async function startFabricLocalRuntime({
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
           if(parsed.searchParams.get('payment')==='processing'){
-            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch,directPaymentOpsEndpoint);
+            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch,directPaymentOpsEndpoint,paymentServiceToken);
             const message=result.state==='paid'?'Payment verified. '+(result.queued?'Your work is queued.':'Delivery status is awaiting confirmation.'):
               result.state==='synthetic'?'QA payment verified. No fulfillment was released.':
               result.state==='invalid'?'Checkout return cannot be verified. Do not pay twice. Contact Evercraft using your checkout email.':
