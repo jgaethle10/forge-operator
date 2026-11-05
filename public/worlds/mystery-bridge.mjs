@@ -48,3 +48,23 @@ export function evidenceWorldEntities(caseFile) {
     }
   }));
 }
+
+/**
+ * Relative navigation hint for the next fictional evidence station.
+ * Coordinates and distances are abstract world units, not real-world meters.
+ * The existing camera faces -Z at zero yaw and rotates toward +X at +PI/2.
+ * This is a read-only projection and never modifies the case or world state.
+ */
+export function evidenceGuidance(caseFile, x, z, yaw) {
+  const station=activeEvidenceStation(caseFile);
+  if (!station || ![x,z,yaw].every(Number.isFinite)) return null;
+  const dx=station.x-x, dz=station.z-z, distance=Math.hypot(dx,dz);
+  if (!Number.isFinite(distance)) return null;
+  const goalYaw=Math.atan2(dx,-dz);
+  const delta=Math.atan2(Math.sin(goalYaw-yaw),Math.cos(goalYaw-yaw));
+  const directions=['Ahead','Ahead right','Right','Behind right','Behind','Behind left','Left','Ahead left'];
+  const sector=(Math.round(delta/(Math.PI/4))+8)%8;
+  return {clueId:station.clueId,label:station.label,
+    distance:Math.round(distance*10)/10,
+    direction:distance<=2.4?'Within reach':directions[sector]};
+}
