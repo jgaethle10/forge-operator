@@ -21,7 +21,7 @@ const unitDir=path.join(process.env.XDG_CONFIG_HOME||path.join(os.homedir(),'.co
 const secretDir=path.join(process.env.XDG_CONFIG_HOME||path.join(os.homedir(),'.config'),'evercraft');
 const secretFile=path.join(secretDir,'worlds-edge-auth.env');
 function safe(value){
- if(!value||/[\s%\u0000-\u001f\\;"'`if(!value||/[\s%\u0000-\u001f\\]/.test(value))throw Error('worlds_keeper_unsafe_service_argument');|<>#]/.test(value))throw Error('worlds_keeper_unsafe_service_argument');
+ if(!value||/[\s%\u0000-\u001f\\;"'`$&|<>#]/.test(value))throw Error('worlds_keeper_unsafe_service_argument');
  return String(value);
 }
 export function renderWorldsKeeperUnits({node,repo,origin,control,vaultOrigin,instance,receipt,secretPath='' }={}){
