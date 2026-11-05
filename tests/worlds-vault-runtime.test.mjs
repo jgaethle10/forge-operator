@@ -75,6 +75,20 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  assert.equal((await fetch(base+'/worlds/api/worlds/'+'f'.repeat(32))).status,404);
  assert.equal((await fetch(base+'/worlds/api/worlds/foo')).status,404);
  assert.equal((await fetch(base+'/worlds/world-core.mjs')).status,200);
+
+ const atlas=await fetch(base+'/worlds/hidden-world/');
+ assert.equal(atlas.status,200,'directory URL should resolve to nested index.html');
+ assert.match(atlas.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await atlas.text(),/Hidden World Atlas/);
+ const exhibit=await fetch(base+'/worlds/hidden-world/yakima-standalone.html');
+ assert.equal(exhibit.status,200,'Yakima exhibit should be served as HTML');
+ assert.match(await exhibit.text(),/scene-ready/);
+ const dataset=await fetch(base+'/worlds/hidden-world/hidden_world_atlas_v1.csv');
+ assert.equal(dataset.status,200,'atlas research CSV should be reachable');
+ assert.match(dataset.headers.get('content-type')||'',/^text\/csv/);
+ assert.match(await dataset.text(),/yakima,/);
+ assert.equal((await fetch(base+'/worlds/hidden-world/.git/')).status,404,'hidden paths must not be disclosed');
+
  const records=await fs.readdir(dataRoot);
  assert.equal(records.filter(name=>name.endsWith('.json')).length,0);
 });
