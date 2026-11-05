@@ -1,0 +1,38 @@
+name: Evercraft Journal Visual QA
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/**'
+      - 'scripts/journal-browser-qa.mjs'
+      - '.github/workflows/journal-visual-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove newsroom source and publishing gates
+        run: npm run journal:test
+      - name: Generate the owned Journal site
+        run: npm run journal:build
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
+      - name: Verify mobile and desktop browser rendering
+        run: node scripts/journal-browser-qa.mjs
+      - name: Preserve independent visual QA screenshots and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: journal-visual-qa
+          path: artifacts/journal-visual-qa
+          if-no-files-found: warn
+          retention-days: 30
