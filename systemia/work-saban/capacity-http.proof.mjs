@@ -26,8 +26,8 @@ try{
   assert.equal(executed.events.filter(e=>e.state==='verified').length,6);
   const streamed=await fetch(base+'/api/executor-smoke-stream',{method:'POST',headers:{'x-work-saban-client':'local-preview'}});
   assert.equal(streamed.status,200);
-  assert.match(streamed.headers.get('content-type'),/application\\/x-ndjson/);
-  const lines=(await streamed.text()).trim().split('\\n').map(line=>JSON.parse(line));
+  assert.match(streamed.headers.get('content-type'),/application\/x-ndjson/);
+  const lines=(await streamed.text()).trim().split('\n').map(line=>JSON.parse(line));
   assert.equal(lines[0].type,'started');
   assert.equal(lines[0].live_agents,false);
   assert.equal(lines.at(-1).type,'completed');
