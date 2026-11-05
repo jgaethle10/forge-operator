@@ -75,3 +75,8 @@
 .wm-foot-actions button{background:#e7e9dc;color:#2b5544;border:1px solid #a3b8a6;margin-top:4px}
 .wm-truth{font-size:10px;line-height:1.65;color:#667c70;border-top:1px solid #d2dcd2;padding-top:13px;margin-top:20px}
 @media(max-width:700px){.worlds-mystery-panel{inset:auto 0 0;width:100%;height:min(78dvh,calc(100dvh - 52px));border-radius:20px 20px 0 0;padding:19px 19px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -15px 58px #061f2b88}.wm-head h2{font-size:27px}.mystery-intro-button{font-size:11px;padding:11px 14px}}
+
+
+/* Directional evidence trail is readable on phones without blocking walking. */
+.mystery-trail{position:absolute;z-index:1;left:50%;top:106px;transform:translateX(-50%);width:max-content;max-width:min(540px,calc(100vw - 145px));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid #d5e6d5a1;border-radius:9px;background:#143c409e;color:#fff9d5;box-shadow:0 6px 28px #071e2880;backdrop-filter:blur(8px);text-align:center;font:700 11px Manrope,system-ui,sans-serif;letter-spacing:.02em;padding:11px 15px;pointer-events:none}
+@media(max-width:700px){.mystery-trail{top:137px;left:50%;max-width:calc(100vw - 32px);font-size:10px;padding:9px 11px}}
