@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { WATERSHED_SCHEMA, evaluateWatershedCoverage } from './watershed-intelligence.mjs';
 import { YAKIMA_RESERVOIR_SITES } from './usbr-rise-reservoirs.mjs';
+import { NRCS_WA_BASINS, NRCS_WA_BASIN_REPORT_URL } from './nrcs-basin-report.mjs';
 
 function safe(value) {
   return String(value ?? 'unknown').replace(/[\x00-\x1f\x7f]/g, ' ').replace(/[\[\]|*<>]/g, '').slice(0, 250);
@@ -13,7 +14,7 @@ function fmt(row) {
   return String(row.value) + ' ' + safe(row.unit || 'units') + ' (' + safe(row.freshness) + ')';
 }
 
-export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null, reservoirSnapshot = null, reservoirSha256 = null, medianAudit = null, medianSha256 = null) {
+export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null, reservoirSnapshot = null, reservoirSha256 = null, medianAudit = null, medianSha256 = null, officialBasin = null, officialSha256 = null) {
   if (!snapshot || snapshot.schema !== WATERSHED_SCHEMA || snapshot.region !== 'yakima-basin-wa') {
     throw new TypeError('verified Yakima snapshot schema is required');
   }
@@ -31,6 +32,50 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
   for (const r of snapshot.river || []) {
     if (r.kind === 'stream_discharge') byRiver.set(r.station_id, r);
   }
+  const officialLines=['', '## Official NRCS Yakima basin indices', ''];
+  if(officialBasin) {
+    if(officialBasin.schema!=='evercraft.research.nrcs-basin-index.v1' ||
+       officialBasin.source_url!==NRCS_WA_BASIN_REPORT_URL ||
+       officialBasin.reference_period!=='1991-2020' ||
+       !Array.isArray(officialBasin.basins) || officialBasin.basins.length!==3 ||
+       officialBasin.not_an_independent_recalculation!==true ||
+       officialBasin.publication_authorized!==false)
+      throw new TypeError('invalid official NRCS basin source receipt');
+    const indices=NRCS_WA_BASINS.map(spec=>{
+      const matches=officialBasin.basins.filter(row=>row.id===spec.id);
+      if(matches.length!==1)throw new TypeError('NRCS basin receipt missing or ambiguous');
+      const b=matches[0];
+      if(!Number.isFinite(b.value_percent)||b.value_percent<0||b.value_percent>10000 ||
+         typeof b.warning_flag!=='boolean'||b.reference_period!=='1991-2020' ||
+         b.observation_date!==officialBasin.observed_date)
+        throw new TypeError('NRCS basin index metadata invalid');
+      return b;
+    });
+    const dayDiff=(Date.parse(snapshot.as_of.slice(0,10)+'T00:00:00Z')-
+      Date.parse(officialBasin.observed_date+'T00:00:00Z'))/86400000;
+    if(!Number.isFinite(dayDiff)||dayDiff>2||dayDiff< -1)throw new TypeError('NRCS basin report date not comparable to sensor snapshot');
+    if(indices.every(b=>b.warning_flag)!==officialBasin.all_basins_warned)
+      throw new TypeError('NRCS source warning receipt inconsistent');
+    officialLines.push(
+      '**Source-reported date:** '+safe(officialBasin.observed_date),
+      '**Statistic:** USDA NRCS 1991-2020 SWE basin index, not independently calculated by Evercraft.',
+      '',
+      '| Official basin | Reported index | NRCS warning |',
+      '|---|---:|---|'
+    );
+    for(const b of indices)officialLines.push(
+      '| '+safe(b.name)+' | '+safe(b.value_percent)+'%'+(b.warning_flag?'*':'')+
+      ' | '+(b.warning_flag?'* Analysis may not provide a valid measure of conditions':'Provisional')+' |'
+    );
+    officialLines.push('',
+      'NRCS calculates each basin index as 100 times summed valid current SWE divided by summed corresponding site medians; it excludes invalid station values.',
+      '**Warning:** * means NRCS itself cautions this analysis may not represent conditions. October/November medians may be tiny.',
+      '**Do not interpret these numbers as an irrigation allocation, flood warning, winter forecast, or a combined Yakima Basin percentage.**',
+      ...(officialSha256?['**Exact official basin source JSON SHA-256:** '+safe(officialSha256)]:[])
+    );
+  } else {
+    officialLines.push('Official basin report unavailable or not admitted. No regional index has been inferred from selected stations.');
+  }
   const lines = [
     '# Evercraft Research | Yakima Watershed Intelligence',
     '',
@@ -40,6 +85,8 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
     '**Sensor connectivity:** ' + safe(coverage.status) + ' (minimum source health, not basin-wide representation)',
     '**Data state:** ' + safe(snapshot.status),
     '**Source failures:** ' + (snapshot.failures?.length ? snapshot.failures.map(x=>safe(x.source)).join(', ') : 'none reported'),
+    '',
+    ...officialLines,
     '',
     '## Snowpack observations',
     '',
@@ -159,6 +206,7 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
     '',
     '## Official source provenance', '',
     '- NRCS AWDB daily WTEQ/SNWD and 1991-2020 medians: https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data',
+    '- NRCS Washington official basin index report: ' + NRCS_WA_BASIN_REPORT_URL,
     '- USGS Water Data continuous observations: https://api.waterdata.usgs.gov/',
     '- USBR RISE observed daily reservoir storage catalog: https://data.usbr.gov/',
     ...(inputSha256 ? ['- Exact canary JSON SHA-256: ' + safe(inputSha256)] : []),
@@ -172,30 +220,45 @@ export function formatWatershedReviewBrief(snapshot, profile, inputSha256 = null
   return lines.join('\n');
 }
 
+
 if (process.argv[1]?.endsWith('watershed-review-brief.mjs') && process.argv.length > 2) {
-  const args = process.argv.slice(2);
-  if (![4,6,8].includes(args.length) || args[0] !== '--input' || args[2] !== '--out' ||
-      (args.length>=6 && args[4] !== '--reservoir-input') ||
-      (args.length===8 && args[6] !== '--median-input')) {
-    process.stderr.write('Usage: node watershed-review-brief.mjs --input SNAPSHOT.json --out BRIEF.md [--reservoir-input RISE.json [--median-input MEDIANS.json]]\n');
-    process.exitCode = 2;
+  const args=process.argv.slice(2);
+  const allowed=new Set(['--input','--out','--reservoir-input','--median-input','--official-basin-input']);
+  const options={};
+  let valid=args.length>=4 && args.length%2===0;
+  if(valid)for(let i=0;i<args.length;i+=2) {
+    if(!allowed.has(args[i])||!args[i+1]||options[args[i]]){valid=false;break;}
+    options[args[i]]=args[i+1];
+  }
+  if(!valid||!options['--input']||!options['--out']) {
+    process.stderr.write('Usage: node watershed-review-brief.mjs --input SNAPSHOT.json --out BRIEF.md [--reservoir-input RISE.json] [--median-input MEDIANS.json] [--official-basin-input NRCS.json]\n');
+    process.exitCode=2;
   } else {
     try {
-      const bytes = readFileSync(args[1]);
-      const snapshot = JSON.parse(bytes.toString('utf8'));
-      const profile = JSON.parse(readFileSync(new URL('./watershed-yakima-profile.json', import.meta.url), 'utf8'));
-      const sha = createHash('sha256').update(bytes).digest('hex');
-      const reservoirBytes = args.length >= 6 ? readFileSync(args[5]) : null;
-      const reservoir = reservoirBytes ? JSON.parse(reservoirBytes.toString('utf8')) : null;
-      const reservoirSha = reservoirBytes ? createHash('sha256').update(reservoirBytes).digest('hex') : null;
-      const medianBytes = args.length === 8 ? readFileSync(args[7]) : null;
-      const medianAudit = medianBytes ? JSON.parse(medianBytes.toString('utf8')) : null;
-      const medianSha = medianBytes ? createHash('sha256').update(medianBytes).digest('hex') : null;
-      const report = formatWatershedReviewBrief(snapshot, profile, sha, reservoir, reservoirSha, medianAudit, medianSha);
-      writeFileSync(args[3], report, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
-    } catch (error) {
-      process.stderr.write('Draft research compilation failed: ' + String(error?.message || error).slice(0, 140) + '\n');
-      process.exitCode = 1;
+      const bytes=readFileSync(options['--input']);
+      const snapshot=JSON.parse(bytes.toString('utf8'));
+      const profile=JSON.parse(readFileSync(new URL('./watershed-yakima-profile.json',import.meta.url),'utf8'));
+      const sha=createHash('sha256').update(bytes).digest('hex');
+      const optional=(key)=>{
+        const path=options[key];
+        if(!path)return {json:null,hash:null};
+        const source=readFileSync(path);
+        return {
+          json:JSON.parse(source.toString('utf8')),
+          hash:createHash('sha256').update(source).digest('hex')
+        };
+      };
+      const reservoir=optional('--reservoir-input');
+      const medians=optional('--median-input');
+      const basin=optional('--official-basin-input');
+      const report=formatWatershedReviewBrief(
+        snapshot,profile,sha,reservoir.json,reservoir.hash,
+        medians.json,medians.hash,basin.json,basin.hash
+      );
+      writeFileSync(options['--out'],report,{encoding:'utf8',flag:'wx',mode:0o600});
+    }catch(error){
+      process.stderr.write('Draft research compilation failed: '+String(error?.message||error).slice(0,140)+'\n');
+      process.exitCode=1;
     }
   }
 }
