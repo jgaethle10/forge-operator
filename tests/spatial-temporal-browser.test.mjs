@@ -21,6 +21,6 @@ test('browser lab imports owned local modules and controls exist',()=>{
 test('UI export is unreviewed and stays entirely on device',()=>{
   assert.match(html,/temporalReviewPacket\(temporalResult\)/);
   assert.match(html,/URL\.createObjectURL\(blob\)/);
-  assert.match(html,/file\.size>600000/);
+  assert.match(html,/file\.size>10000000/);
   assert.doesNotMatch(html,/fetch\(['"]https?:\/\//);
 });
