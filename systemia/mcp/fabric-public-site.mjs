@@ -283,7 +283,7 @@ const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>
     send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
     get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
     steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
-  return {public_id,name:offer.title,commercial_state:offer.native_order_enabled===false?'scope_first':'sell_now',pricing:'
+  return {public_id,name:offer.title,commercial_state:offer.native_order_enabled===false?'scope_first':'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
     entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
 });
 
