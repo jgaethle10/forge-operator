@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-11-06T17:40:07.127Z",
+  "updated_at": "2026-11-06T19:28:21.046Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
