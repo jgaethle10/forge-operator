@@ -7,8 +7,8 @@
   "service": "evercraft-home",
   "authority": "evercraft",
   "auth_mode": "passport",
-  "instance_id": "home_ae45229b-ee81-482a-9ed2-e68fd5904e1f",
-  "source_release_ref": "daf485640b5a65574b1bcc5818647cb9e77a9091",
+  "instance_id": "home_3ae6e055-15f5-4961-bc69-d59cb2cfc48b",
+  "source_release_ref": "e3b58bc5a8993f4bb0f64365fbe80cfa64cda6a0",
   "owner_state": "claim_required",
   "anonymous_session_denied": true,
   "owner_claim_or_login_ready": true,
@@ -17,5 +17,5 @@
   "external_identity_provider_required": false,
   "external_ai_required": false,
   "base44_required": false,
-  "observed_at": "2026-11-06T19:57:26Z"
+  "observed_at": "2026-11-07T00:06:43Z"
 }
