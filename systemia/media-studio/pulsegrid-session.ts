@@ -1,3 +1,8 @@
+import {validateFoundryPatch, selectFoundrySample} from './instrument-foundry-piano.mjs';
+import {validateFoundryPedalEvents} from './instrument-foundry-pedal.mjs';
+import type {FoundryPedalEvent} from './instrument-foundry-pedal.mjs';
+import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
+
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
 export const PULSEGRID_ENGINE_VERSION = '0.14.0';
 export const PULSEGRID_ARRANGEMENT_BARS = 16;
@@ -129,6 +134,9 @@ export type PulseGridOperation =
     }
   | { type: 'arrangement.set_slot'; track_id: string; bar: number; scene: number | null }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
+  | { type: 'clip.set_audio_playback_mode'; track_id: string; scene: number; mode: 'loop' | 'one_shot' }
+  | { type: 'clip.set_foundry_piano_patch'; track_id: string; scene: number; patch: FoundryInstrumentPatch | null }
+  | { type: 'clip.set_foundry_piano_pedal'; track_id: string; scene: number; events: FoundryPedalEvent[] | null }
   | { type: 'asset.register_audio'; asset: PulseGridAudioAssetInput }
   | { type: 'clip.attach_audio_asset'; track_id: string; scene: number; asset_id: string | null }
   | {
@@ -481,11 +489,28 @@ export function validatePulseGridSession(session: PulseGridSession) {
       if (!Number.isInteger(clip.bars) || clip.bars < 1 || clip.bars > PULSEGRID_MAX_CLIP_BARS) errors.push(`${track.id}.${clip.id}.bars`);
       if (clip.steps_per_bar !== PULSEGRID_STEPS_PER_BAR) errors.push(`${track.id}.${clip.id}.steps_per_bar`);
       if (clip.steps.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.steps`);
+      if(clip.provenance?.audio_playback_mode!==undefined &&
+        !['loop','one_shot'].includes(String(clip.provenance.audio_playback_mode))) errors.push(`${track.id}.${clip.id}.audio_playback_mode`);
       if (clip.probabilities.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.probabilities_length`);
       if (clip.microtiming.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.microtiming_length`);
       if (clip.automation.volume.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.volume`);
       if (clip.automation.filter.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.filter`);
       if (clip.probabilities.some((value) => value < 0 || value > 1)) errors.push(`${track.id}.${clip.id}.probabilities`);
+      if(clip.provenance?.foundry_piano_patch){
+        if(track.type!=='synth')errors.push(`${track.id}.${clip.id}.foundry_patch_type`);
+        else{
+          try{
+            const patch=clip.provenance.foundry_piano_patch as FoundryInstrumentPatch;
+            validateFoundryPatch(patch,session.assets);
+            for(const note of clip.notes)selectFoundrySample(patch,note.pitch,note.velocity);
+          }catch(error){errors.push(`${track.id}.${clip.id}.foundry_patch: ${error instanceof Error?error.message:String(error)}`)}
+        }
+      }
+      if(clip.provenance?.foundry_piano_pedal!==undefined){
+        if(track.type!=='synth')errors.push(`${track.id}.${clip.id}.foundry_pedal_track_type`);
+        else try{validateFoundryPedalEvents(clip.provenance.foundry_piano_pedal as FoundryPedalEvent[],clip.steps.length)}
+          catch(error){errors.push(`${track.id}.${clip.id}.foundry_pedal_invalid: ${error instanceof Error?error.message:String(error)}`)}
+      }
       if(clip.audio_asset_id){
         const asset=assetById.get(clip.audio_asset_id);
         if(track.type!=='audio') errors.push(`${track.id}.${clip.id}.audio_asset_track_type`);
@@ -552,6 +577,10 @@ function resizeClip(clip: PulseGridClip, barsInput: number) {
   clip.microtiming = vector(clip.microtiming, 0, length).map((value) => clamp(value, -1000, 1000));
   clip.automation.volume = vector(clip.automation.volume, 1, length).map((value) => clamp(value, 0, 1));
   clip.automation.filter = vector(clip.automation.filter, 1, length).map((value) => clamp(value, 0, 1));
+  if(Array.isArray(clip.provenance?.foundry_piano_pedal)){
+    clip.provenance={...clip.provenance,
+      foundry_piano_pedal:clip.provenance.foundry_piano_pedal.filter((event:any)=>event.step<length)};
+  }
   clip.notes = clip.notes
     .filter((note) => note.start < length)
     .map((note) => ({ ...note, length: clamp(note.length, 0.01, Math.max(0.01, length - note.start)) }));
@@ -686,6 +715,37 @@ export function applyPulseGridOperation(
     track.clips[operation.destination_scene] = fork;
     after = structuredClone(fork);
     targets = [`track:${track.id}.scene:${operation.destination_scene}`];
+  } else if (operation.type === 'clip.set_foundry_piano_patch') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='synth')throw new Error('Foundry piano patches require a synth instrument track.');
+    if(operation.patch!==null){
+      validateFoundryPatch(operation.patch,session.assets);
+      for(const note of clip.notes)selectFoundrySample(operation.patch,note.pitch,note.velocity);
+    }
+    before=structuredClone(clip.provenance?.foundry_piano_patch??null);
+    clip.provenance={...clip.provenance};
+    if(operation.patch===null)delete clip.provenance.foundry_piano_patch;
+    else clip.provenance.foundry_piano_patch=structuredClone(operation.patch);
+    after=structuredClone(operation.patch);
+    targets=[`clip:${clip.id}.foundry_piano_patch`];
+  } else if (operation.type === 'clip.set_foundry_piano_pedal') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='synth')throw new Error('Foundry piano pedal requires a synth track.');
+    if(operation.events!==null)validateFoundryPedalEvents(operation.events,clip.steps.length);
+    before=structuredClone(clip.provenance?.foundry_piano_pedal??null);
+    clip.provenance={...clip.provenance};
+    if(operation.events===null)delete clip.provenance.foundry_piano_pedal;
+    else clip.provenance.foundry_piano_pedal=structuredClone(operation.events);
+    after=structuredClone(operation.events);
+    targets=[`clip:${clip.id}.foundry_piano_pedal`];
+  } else if (operation.type === 'clip.set_audio_playback_mode') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='audio')throw new Error('Audio playback modes apply only to audio tracks.');
+    if(!['loop','one_shot'].includes(operation.mode))throw new Error('Unsupported audio playback mode.');
+    before=clip.provenance?.audio_playback_mode??null;
+    clip.provenance={...clip.provenance,audio_playback_mode:operation.mode};
+    after=operation.mode;
+    targets=[`clip:${clip.id}.audio_playback_mode`];
   } else if (operation.type === 'asset.register_audio') {
     const incoming=normalizeAudioAsset(operation.asset);
     const index=session.assets.findIndex((asset)=>asset.id===incoming.id);
@@ -900,6 +960,26 @@ export function undoPulseGridReceipt(
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.destination_scene]) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));
     track.clips[operation.destination_scene] = structuredClone(originalReceipt.before as PulseGridClip);
+  } else if(operation.type==='clip.set_foundry_piano_patch'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    clip.provenance={...clip.provenance};
+    if(originalReceipt.before===null)delete clip.provenance.foundry_piano_patch;
+    else clip.provenance.foundry_piano_patch=structuredClone(originalReceipt.before);
+  } else if(operation.type==='clip.set_foundry_piano_pedal'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    clip.provenance={...clip.provenance};
+    if(originalReceipt.before===null)delete clip.provenance.foundry_piano_pedal;
+    else clip.provenance.foundry_piano_pedal=structuredClone(originalReceipt.before);
+  } else if(operation.type==='clip.set_audio_playback_mode'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    const oldMode=originalReceipt.before as string|null;
+    if(oldMode===null || oldMode===undefined){
+      const restored={...clip.provenance};
+      delete restored.audio_playback_mode;
+      clip.provenance=restored;
+    }else{
+      clip.provenance={...clip.provenance,audio_playback_mode:oldMode};
+    }
   } else if(operation.type==='asset.register_audio'){
     const registered=originalReceipt.after as PulseGridAudioAsset|null;
     const prior=originalReceipt.before as PulseGridAudioAsset|null;

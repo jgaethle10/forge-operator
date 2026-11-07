@@ -1,0 +1,114 @@
+name: Evercraft Instrument Foundry bridge
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/instrument-foundry-bridge.mjs'
+      - 'systemia/media-studio/instrument-foundry-bridge.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-resolver.mjs'
+      - 'systemia/media-studio/instrument-foundry-resolver.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-ui.test.mjs'
+      - 'systemia/media-studio/pulsegrid-audio-scheduler.mjs'
+      - 'systemia/media-studio/pulsegrid-audio-scheduler.d.mts'
+      - 'systemia/media-studio/pulsegrid-audio-scheduler.test.mjs'
+      - 'systemia/media-studio/pulsegrid-performance-coverage.mjs'
+      - 'systemia/media-studio/pulsegrid-performance-coverage.d.mts'
+      - 'systemia/media-studio/pulsegrid-performance-coverage.test.mjs'
+      - 'systemia/media-studio/pulsegrid-bus-automation.mjs'
+      - 'systemia/media-studio/pulsegrid-bus-automation.d.mts'
+      - 'systemia/media-studio/pulsegrid-bus-automation.test.mjs'
+      - 'systemia/media-studio/pulsegrid-drum-voice.mjs'
+      - 'systemia/media-studio/pulsegrid-drum-voice.d.mts'
+      - 'systemia/media-studio/pulsegrid-drum-voice.test.mjs'
+      - 'systemia/media-studio/pulsegrid-synth-voice.mjs'
+      - 'systemia/media-studio/pulsegrid-synth-voice.d.mts'
+      - 'systemia/media-studio/pulsegrid-synth-voice.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-audition-wav.mjs'
+      - 'systemia/media-studio/instrument-foundry-audition-wav.d.mts'
+      - 'systemia/media-studio/instrument-foundry-audition-wav.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-review-budget.mjs'
+      - 'systemia/media-studio/instrument-foundry-review-budget.d.mts'
+      - 'systemia/media-studio/instrument-foundry-review-budget.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-offline-bus.mjs'
+      - 'systemia/media-studio/instrument-foundry-offline-bus.d.mts'
+      - 'systemia/media-studio/instrument-foundry-offline-bus.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-dry-pcm.mjs'
+      - 'systemia/media-studio/instrument-foundry-dry-pcm.d.mts'
+      - 'systemia/media-studio/instrument-foundry-dry-pcm.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-polyphony.mjs'
+      - 'systemia/media-studio/instrument-foundry-polyphony.d.mts'
+      - 'systemia/media-studio/instrument-foundry-polyphony.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-tail-audit.mjs'
+      - 'systemia/media-studio/instrument-foundry-tail-audit.d.mts'
+      - 'systemia/media-studio/instrument-foundry-tail-audit.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-midi-pedal.mjs'
+      - 'systemia/media-studio/instrument-foundry-midi-pedal.d.mts'
+      - 'systemia/media-studio/instrument-foundry-midi-pedal.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-pedal.mjs'
+      - 'systemia/media-studio/instrument-foundry-pedal.d.mts'
+      - 'systemia/media-studio/instrument-foundry-pedal.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-piano.mjs'
+      - 'systemia/media-studio/instrument-foundry-piano.d.mts'
+      - 'systemia/media-studio/instrument-foundry-piano.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-capture-qa.mjs'
+      - 'systemia/media-studio/instrument-foundry-capture-qa.d.mts'
+      - 'systemia/media-studio/instrument-foundry-capture-qa.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-capture-audit.mjs'
+      - 'systemia/media-studio/instrument-foundry-capture-audit.test.mjs'
+      - 'systemia/media-studio/pulsegrid-note-duration.mjs'
+      - 'systemia/media-studio/pulsegrid-note-duration.d.mts'
+      - 'systemia/media-studio/pulsegrid-note-duration.test.mjs'
+      - 'systemia/media-studio/pulsegrid-music-insights.mjs'
+      - 'systemia/media-studio/pulsegrid-music-insights.d.mts'
+      - 'systemia/media-studio/pulsegrid-music-insights.test.mjs'
+      - 'systemia/media-studio/pulsegrid-arrangement-arc.mjs'
+      - 'systemia/media-studio/pulsegrid-arrangement-arc.d.mts'
+      - 'systemia/media-studio/pulsegrid-arrangement-arc.test.mjs'
+      - 'systemia/media-studio/pulsegrid-counterpoint-evidence.mjs'
+      - 'systemia/media-studio/pulsegrid-counterpoint-evidence.d.mts'
+      - 'systemia/media-studio/pulsegrid-counterpoint-evidence.test.mjs'
+      - 'systemia/media-studio/pulsegrid-counterpoint-ui.test.mjs'
+      - 'src/fallen-sessions.css'
+      - 'systemia/media-studio/MUSIC-SCIENCE-STANDARDS.md'
+      - 'systemia/media-studio/instrument-foundry-playback.integration.test.mjs'
+      - 'systemia/media-studio/pulsegrid-audio-authority.mjs'
+      - 'systemia/media-studio/pulsegrid-audio-authority.d.mts'
+      - 'systemia/media-studio/pulsegrid-audio-authority.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-saban-review.mjs'
+      - 'systemia/media-studio/instrument-foundry-saban-review.test.mjs'
+      - 'systemia/media-studio/saban-adapter.mjs'
+      - 'systemia/media-studio/pulsegrid-session.ts'
+      - 'systemia/media-studio/pulsegrid-audio.ts'
+      - 'systemia/media-studio/instrument-foundry-bridge.d.mts'
+      - 'src/FallenSessions.tsx'
+      - 'systemia/media-studio/INSTRUMENT-FOUNDRY.md'
+      - '.github/workflows/instrument-foundry-bridge.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/media-studio/instrument-foundry-bridge.mjs'
+      - 'systemia/media-studio/instrument-foundry-bridge.test.mjs'
+permissions:
+  contents: read
+jobs:
+  bridge-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Foundry custody and import tests
+        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs systemia/media-studio/instrument-foundry-capture-qa.test.mjs systemia/media-studio/instrument-foundry-capture-audit.test.mjs systemia/media-studio/pulsegrid-note-duration.test.mjs systemia/media-studio/pulsegrid-music-insights.test.mjs systemia/media-studio/pulsegrid-arrangement-arc.test.mjs systemia/media-studio/pulsegrid-counterpoint-evidence.test.mjs systemia/media-studio/pulsegrid-counterpoint-ui.test.mjs systemia/media-studio/instrument-foundry-pedal.test.mjs systemia/media-studio/instrument-foundry-midi-pedal.test.mjs systemia/media-studio/instrument-foundry-tail-audit.test.mjs systemia/media-studio/instrument-foundry-polyphony.test.mjs systemia/media-studio/instrument-foundry-dry-pcm.test.mjs systemia/media-studio/instrument-foundry-offline-bus.test.mjs systemia/media-studio/instrument-foundry-review-budget.test.mjs systemia/media-studio/instrument-foundry-audition-wav.test.mjs systemia/media-studio/pulsegrid-synth-voice.test.mjs systemia/media-studio/pulsegrid-drum-voice.test.mjs systemia/media-studio/pulsegrid-bus-automation.test.mjs systemia/media-studio/pulsegrid-performance-coverage.test.mjs systemia/media-studio/instrument-foundry-playback.integration.test.mjs systemia/media-studio/pulsegrid-audio-authority.test.mjs
+
+  saban-capture-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Saban media-studio capture preflight
+        run: node --test systemia/media-studio/instrument-foundry-saban-review.test.mjs
