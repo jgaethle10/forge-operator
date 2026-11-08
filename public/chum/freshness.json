@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-11-08T15:01:16.277Z",
+  "updated_at": "2026-11-08T16:00:28.871Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,49 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-11-08T16:00:28.871Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-11-08T16:00:28.871Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-11-08T15:01:16.277Z",
+      "last_changed": "2026-11-08T16:00:28.871Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-11-08T16:00:28.871Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-11-08T16:00:28.871Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-11-08T16:00:28.871Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-11-08T15:01:16.277Z",
+      "last_changed": "2026-11-08T16:00:28.871Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-11-08T16:00:28.871Z",
       "priority": 80
     },
     {
@@ -39,24 +72,6 @@
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
       "last_changed": "2026-11-08T14:35:39.227Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-11-08T09:12:10.634Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-11-08T09:12:10.634Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-11-08T09:12:10.634Z",
       "priority": 80
     },
     {
