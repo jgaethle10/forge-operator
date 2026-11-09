@@ -222,12 +222,15 @@ export function evaluateEdgeFamilies(measurements, {
     const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
     const holdoutRows = rows.slice(splitAt);
     const holdoutOrigins = uniq(holdoutRows.map((row) => row.origin_entity_ref));
+    const expectedSign = evaluation.expected_sign || (
+      evaluation.learned_direction === "NEGATIVE_EXCESS_RETURN" ? -1 : 1
+    );
     const byOrigin = new Map();
     for (const row of holdoutRows) {
       if (!row.origin_entity_ref) continue;
       if (!byOrigin.has(row.origin_entity_ref)) byOrigin.set(row.origin_entity_ref, []);
       const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-      const net = excess - Math.sign(excess || 1) * (transaction_cost_bps / 10000);
+      const net = expectedSign * excess - (transaction_cost_bps / 10000);
       byOrigin.get(row.origin_entity_ref).push(net);
     }
     const originMeans = [...byOrigin.values()].map((values) =>
@@ -236,17 +239,14 @@ export function evaluateEdgeFamilies(measurements, {
     const originBalancedHoldoutMean = originMeans.length
       ? originMeans.reduce((a,b) => a + b, 0) / originMeans.length
       : 0;
-    const originBalancedSign = originBalancedHoldoutMean > 0
-      ? 1
-      : originBalancedHoldoutMean < 0 ? -1 : 0;
     const officialAuthority = authorityClasses.length > 0 &&
       authorityClasses.every((value) => String(value).startsWith("official_"));
     const authoritativeMultiOrigin =
       officialAuthority &&
+      evaluation.status === "RESEARCH_CANDIDATE" &&
       originEntities.length >= minimum_authoritative_origins &&
       holdoutOrigins.length >= minimum_holdout_origins &&
-      originBalancedSign !== 0 &&
-      originBalancedSign === evaluation.holdout.sign;
+      originBalancedHoldoutMean > 0;
 
     return {
       schema: "evercraft.daytrade.edge-family-evaluation.v1",
