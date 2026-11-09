@@ -73,9 +73,9 @@ export function getProgress(state, goalId, today = dayKey()) {
   const completedPieces = Math.floor(successes / 7);
   const brushstrokes = successes % 7;
   // A skipped check-in is unknown, not a relapse. Show only consecutive recorded wins.
-  let cursor = records[today] === 'kept' ? today : shiftDay(today, -1);
+  let cursor = records[today] === 'hard' ? null : (records[today] === 'kept' ? today : shiftDay(today, -1));
   let streak = 0;
-  while (records[cursor] === 'kept') {
+  while (cursor && records[cursor] === 'kept') {
     streak += 1;
     cursor = shiftDay(cursor, -1);
   }
