@@ -72,7 +72,7 @@
         <select id="theme"><option value="garden">The wildflower garden</option><option value="constellation">The night sky</option><option value="mosaic">The living mosaic</option></select>
         <h3 style="margin-top:18px">Private by design</h3>
         <p>This prototype saves reflections only in this browser on this device. It has no account, server sync, analytics, or backup service. Clearing site data can erase your progress, so export a copy if it matters to you.</p>
-        <div class="data-actions"><button id="export" type="button">Export my data</button><button class="danger" id="erase" type="button">Erase device data</button></div>
+        <div class="data-actions"><button id="export" type="button">Export my data</button><button id="import" type="button">Restore backup</button><input id="import-file" type="file" accept=".json,application/json" hidden aria-label="Choose your backup JSON file"><button class="danger" id="erase" type="button">Erase device data</button></div>
         <p id="storage-note" style="margin-top:13px"></p>
       </aside>
     </div>
@@ -246,6 +246,21 @@ $('export').addEventListener('click',()=>{
   const url=URL.createObjectURL(blob),link=document.createElement('a');
   link.href=url;link.download='art-of-becoming-private-backup.json';document.body.appendChild(link);link.click();link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+$('import').addEventListener('click',()=>$('import-file').click());
+$('import-file').addEventListener('change',async event=>{
+  const file=event.target.files && event.target.files[0];
+  if (!file) return;
+  try {
+    if (file.size > 1024*1024) throw new Error('Backup exceeds the one megabyte safety limit.');
+    const payload=JSON.parse(await file.text());
+    if (!payload || payload.app !== 'The Art of Becoming' || !payload.data || payload.data.version !== 1) throw new Error('This is not a compatible Art of Becoming backup.');
+    if (!confirm('Restore this backup and replace your current reflections on this device? Export your current data first if you need to keep it.')) return;
+    state=normalizeState(payload.data,today);
+    selectedDay=today;save();render();
+    notify(canStore ? 'Backup restored on this device.' : 'Backup opened for this session, but browser storage is unavailable.');
+  } catch(error) { notify(error.message || 'Unable to restore this backup.'); }
+  finally { event.target.value=''; }
 });
 $('erase').addEventListener('click',()=>{
   if(!confirm('Erase all reflections on this device for every intention? This cannot be undone. Export a backup first if you want to keep them.'))return;
