@@ -23,7 +23,7 @@ Run `node --test tests/art-of-becoming.test.mjs` for the domain and privacy-cont
 - Three procedural styles: garden, constellation, mosaic.
 - Current and completed canvases can be saved locally as portable SVG.
 - Entries use browser `localStorage`; individual goals remain separate.
-- JSON export and explicit full-device-data deletion. No analytics, cloud database, account, tracking beacon, payment link, or external assets.
+- JSON export, validated user-confirmed JSON restore, and explicit full-device-data deletion. No analytics, cloud database, account, tracking beacon, payment link, or external assets.
 
 ## Safety and privacy decisions
 1. A hard day never deletes earlier progress or completed paintings. Streaks are descriptive, not a punishment.
