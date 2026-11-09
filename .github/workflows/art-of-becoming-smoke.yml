@@ -1,0 +1,27 @@
+name: Art of Becoming smoke
+
+on:
+  pull_request:
+    paths:
+      - 'public/art-of-becoming/**'
+      - 'tests/art-of-becoming.test.mjs'
+      - 'docs/art-of-becoming/**'
+      - '.github/workflows/art-of-becoming-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mvp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax validation
+        run: node --check public/art-of-becoming/engine.mjs
+      - name: Streak safety, privacy, and milestone tests
+        run: node --test tests/art-of-becoming.test.mjs
