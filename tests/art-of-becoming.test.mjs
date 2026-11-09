@@ -91,7 +91,7 @@ test('art seeds are stable for the same canvas and different across paintings', 
 
 test('browser prototype is local-first and does not silently contact a service', () => {
   const html=fs.readFileSync(new URL('../public/art-of-becoming/index.html',import.meta.url),'utf8');
-  for (const id of ['goals','kept','hard','clear-day','art-frame','gallery','export','erase','check-date']) {
+  for (const id of ['goals','kept','hard','clear-day','art-frame','gallery','export','import','import-file','erase','check-date']) {
     assert.ok(html.includes(`id="${id}"`),id);
   }
   assert.match(html,/type="module"/);
