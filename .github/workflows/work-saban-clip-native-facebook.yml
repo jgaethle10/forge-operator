@@ -6,6 +6,9 @@ on:
       - 'systemia/clip/authority/work-saban-corporate-rotation.json'
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.workflow.json'
+      - 'tests/work-saban-clip-delivery-watch.test.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
       - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
       - 'systemia/core/resident-services.json'
@@ -20,6 +23,9 @@ on:
       - 'systemia/clip/authority/work-saban-corporate-rotation.json'
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.workflow.json'
+      - 'tests/work-saban-clip-delivery-watch.test.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
       - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
       - 'systemia/core/resident-services.json'
@@ -39,7 +45,7 @@ jobs:
         with:
           node-version: '22'
       - name: Verify first-party Work Saban recipient scope and provider receipts
-        run: node --test tests/work-saban-facebook-resident.test.mjs
+        run: node --test tests/work-saban-facebook-resident.test.mjs tests/work-saban-clip-delivery-watch.test.mjs
       - name: Verify owned Compute launcher syntax
         run: node --check systemia/compute/runtime-node.mjs
       - name: Read-only dry run for current date
