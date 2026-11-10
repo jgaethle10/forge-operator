@@ -66,6 +66,22 @@
   },
   "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
   "design": {
-    "accent": "#9fe6d1"
+    "accent": "#ffad79",
+    "background": "#141d2c",
+    "panel": "#202b3b",
+    "ink": "#fff1e6",
+    "muted": "#cbd4df",
+    "secondary": "#ffddbd",
+    "mark": "rising-signal"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Weekly Signal",
+    "signature_phrase": "Show up. Say something that matters.",
+    "purpose": "Make consistent communication achievable for small teams without forcing an agency retainer.",
+    "narrative_promise": "Consistency is built one honest week at a time.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
   }
 }

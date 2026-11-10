@@ -66,6 +66,22 @@
   },
   "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
   "design": {
-    "accent": "#9edcf4"
+    "accent": "#71c5ed",
+    "background": "#0d202c",
+    "panel": "#142e3c",
+    "ink": "#e9f6fb",
+    "muted": "#b6cdda",
+    "secondary": "#c0e7f6",
+    "mark": "focus-frame"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Second Look",
+    "signature_phrase": "See it clearly before changing it.",
+    "purpose": "Reveal what is actually happening inside one asset before the owner spends on the wrong fix.",
+    "narrative_promise": "Evidence should come before expensive changes.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
   }
 }
