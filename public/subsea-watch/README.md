@@ -17,6 +17,17 @@ The immersive experiment does not replace the evidence lab. It now accepts local
 4. **Reset demo** returns to the fictional environment. Imported data stays in the browser session, is not uploaded by the page, and cannot certify positioning, hazards, visibility, isolation or clearance.
 5. Do not publish the imported data or represent its user-declared positioning source as independently verified. A later real reconstruction needs independently sourced survey geometry, coordinate registration, uncertainty and video timestamps, with independent operator review.
 
+## Local footage / mission clock pairing (experimental)
+
+This next increment adds **local video preview**, **manual clock alignment**, and playback alongside the imported telemetry. It does **not** automatically discover or validate camera start times, derive survey geometry from frames, or produce a synchronized evidence package.
+
+1. In the immersive view, **Import dive JSON / CSV** first. Camera footage is disabled for the built-in fictional mission to avoid implying a real dive happened at the fictional site.
+2. Choose **Camera footage**, then **Choose local video**. The browser uses a temporary `blob:` object URL for the user-selected file, does not transmit the file, and revokes that URL when replacing footage, changing telemetry, resetting the demo, or navigating away. The local video preview is limited to nonempty files under 2 GB; actual playback depends on codec support in the user's browser.
+3. **Video begins at mission second** accepts a signed offset. For example, if the imported mission started at `t=0` and the camera starts 25 seconds into the dive, enter `25`. If the recording started 5 seconds before the first mission reading, enter `-5`. This is a **user-entered alignment**, not a validated clock correlation.
+4. The playback/scrub timeline remains the mission clock. Footage outside its own known duration appears explicitly **unavailable**, before or after the recording. Browser codec, seek accuracy and device playback restrictions can affect synchronization; the indicated time is approximate and must not be described as frame-accurate.
+5. Muted playback is the default; **Sound on** is a voluntary user control. The feature is intended for post-dive review, not real-time monitoring, navigation, dive safety clearance, or automatic hazard recognition.
+6. No uploader, tracking service, remote transcoder, third-party CDN, or cloud video analysis is added. No synchronized export or evidence claim is produced by this preview. A later professionally validated release needs independently verified time bases, sensor calibration, audit trail and protected evidence retention.
+
 ## Experience quality gates
 
 1. **Believable movement:** A visible diver/ROV and structures, correct viewpoint, fluid mobile camera and uncluttered controls. No tiny moving dot masquerading as a complete dive.

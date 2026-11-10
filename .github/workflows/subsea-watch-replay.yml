@@ -6,12 +6,14 @@ on:
       - 'public/subsea-watch/**'
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
+      - 'tests/subsea-watch-video-sync.test.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   pull_request:
     paths:
       - 'public/subsea-watch/**'
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
+      - 'tests/subsea-watch-video-sync.test.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   workflow_dispatch:
 permissions:
@@ -26,12 +28,13 @@ jobs:
         with:
           node-version: '22'
       - name: Test dive log evidence and no fabricated tracking
-        run: node --test tests/subsea-watch-replay.test.mjs tests/subsea-watch-immersive.test.mjs
+        run: node --test tests/subsea-watch-replay.test.mjs tests/subsea-watch-immersive.test.mjs tests/subsea-watch-video-sync.test.mjs
       - name: Validate browser modules
         run: |
           node --check public/subsea-watch/core.mjs
           node --check public/subsea-watch/viewer.mjs
           node --check public/subsea-watch/immersive/scene.mjs
+          node --check public/subsea-watch/immersive/video-sync.mjs
       - name: Inspect owned static page
         run: |
           test -s public/subsea-watch/index.html

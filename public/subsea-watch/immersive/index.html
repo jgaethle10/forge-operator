@@ -32,6 +32,19 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 .import-bar button{border:1px solid #75b8bf;border-radius:8px;background:#113849;color:#e7ffff;font-size:12px;font-weight:700;padding:9px 12px;min-height:42px}
 .import-bar button:first-child{background:#c5f5ed;color:#092933;border-color:#c5f5ed}
 #file-status{flex:1;min-width:180px;font-size:11px;color:#b2d6dd}
+.footage{position:fixed;z-index:4;right:18px;bottom:175px;width:min(355px,calc(100vw - 100px));background:#061e2ff5;border:1px solid #6baeb7;border-radius:13px;padding:13px;box-shadow:0 14px 45px #000b;backdrop-filter:blur(16px)}
+.footage[hidden]{display:none}.footage-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.footage-head strong{font-size:13px;color:#d9ffff}.footage button{border:1px solid #77afb7;color:#ddf8f8;background:#123a49;border-radius:7px;padding:7px 10px}
+.footage #close-footage{padding:5px 9px;font-size:13px}
+.footage video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#01080e;border-radius:8px;border:1px solid #325d69}
+.footage-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:9px}
+.footage label{display:flex;align-items:center;gap:5px;font-size:11px;color:#c8e5e7}
+.footage input[type=number]{width:84px;background:#081e2e;border:1px solid #548b96;color:#e9ffff;padding:7px 6px;border-radius:6px}
+.footage small{display:block;font-size:10px;color:#c0d9df;line-height:1.4;margin-top:8px}
+.footage .clock{font:600 12px/1.35 system-ui,sans-serif;color:#c6fff5;font-variant-numeric:tabular-nums}
+.footage .status{color:#b9d8dc;font-size:10px;line-height:1.4}
+#footage-toggle[aria-expanded=true]{background:#6bc3c1;color:#062635;border-color:#8ff7e5}
+
 .no-position{position:fixed;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:min(390px,calc(100vw - 105px));padding:20px;background:#082538e0;border:1px solid #6bb4b7;border-radius:12px;text-align:center;pointer-events:none}
 .no-position[hidden]{display:none}.no-position strong{display:block;font-size:17px;margin-bottom:7px}.no-position p{margin:0;font-size:12px;line-height:1.55}
 #import-notes[hidden],#synthetic-notes[hidden]{display:none}
@@ -52,6 +65,10 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
  .meta{font-size:9px;gap:8px}.details{left:10px}
  .import-bar{gap:7px;padding-bottom:8px}.import-bar button{font-size:11px;padding:7px 9px;min-height:38px}
  #file-status{flex-basis:100%;font-size:10px}.no-position{top:54%}
+ .footage{right:10px;bottom:205px;width:min(260px,calc(100vw - 95px));padding:10px}
+ .footage-head strong{font-size:12px}.footage small{font-size:9px}.footage-row{gap:6px}
+ .footage label{font-size:10px}.footage input[type=number]{width:72px}
+
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -71,6 +88,14 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 </div>
 <p class="hint">Drag to orbit · Pinch or scroll to zoom · Follow the replay</p>
 <div class="no-position" id="no-position" hidden role="status"><strong>No 3D position available</strong><p>This import has depth readings but no complete, consistently sourced horizontal track. We will not fabricate a diver route. Use the telemetry lab to inspect the depth profile.</p></div>
+<aside class="footage" id="footage-panel" aria-label="Local dive footage aligned to telemetry" hidden>
+<div class="footage-head"><strong>Camera footage · local only</strong><button id="close-footage" type="button" aria-label="Close footage panel">Close</button></div>
+<video id="dive-video" playsinline preload="metadata" muted aria-label="Locally loaded dive video, aligned to the mission by the user"></video>
+<div class="footage-row"><button id="pick-video" type="button" disabled>Choose local video</button><span id="video-clock" class="clock">No footage loaded</span><button id="sound-toggle" type="button" aria-pressed="false">Sound off</button></div>
+<div class="footage-row"><label for="video-offset">Video begins at mission second</label><input type="number" id="video-offset" step="0.1" min="-86400" max="86400" value="0" inputmode="decimal"></div>
+<div class="footage-row"><span id="video-status" class="status" role="status" aria-live="polite">Load a local video to align footage with mission time.</span></div>
+<small>Alignment is manually entered and unverified. No video upload, face analysis, automatic clock sync, or surveyed-site reconstruction. Missing footage remains missing.</small>
+</aside>
 <section class="details" id="details" aria-label="Replay provenance" hidden>
 <h2>Replay evidence &amp; limits</h2>
 <div id="synthetic-notes">
@@ -81,7 +106,7 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 <div id="import-notes" hidden>
 <p id="import-summary">User-provided source; not independently verified.</p>
 <p>Local coordinates and positioning methods are taken from the imported file, not automatically verified. No real seabed, site structures, pipes, obstacles or survey models are reconstructed. Track gaps longer than 15 seconds are not bridged.</p>
-<p>Files stay in this browser session. A displayed track is not a certified position, site survey, hazard analysis, safe route or dive clearance. Site operators and qualified dive supervisors must independently verify hazards and isolation.</p>
+<p>Files stay in this browser session. A displayed track is not a certified position, site survey, hazard analysis, safe route or dive clearance. Any video is paired using a manual timestamp offset, not independent synchronization or calibration. Site operators and qualified dive supervisors must independently verify hazards and isolation.</p>
 </div>
 <button id="close-details" type="button">Return to replay</button><a href="../">Open telemetry lab</a>
 </section>
@@ -90,6 +115,8 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 <button id="import-file" type="button">Import dive JSON / CSV</button>
 <input id="load-file" type="file" accept=".json,.csv,application/json,text/csv" hidden>
 <button id="reset-sample" type="button">Reset demo</button>
+<button id="footage-toggle" type="button" aria-controls="footage-panel" aria-expanded="false">Camera footage</button>
+<input id="load-video" type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
 <span id="file-status" role="status" aria-live="polite">Local files never leave this browser.</span>
 </div>
 <div class="controls"><button class="play" id="play" type="button">▶ Play</button><input class="timeline" id="timeline" type="range" min="0" max="180" step=".1" value="0" aria-label="Synthetic dive replay timeline"><strong class="time" id="time">00:00 / 03:00</strong></div>
