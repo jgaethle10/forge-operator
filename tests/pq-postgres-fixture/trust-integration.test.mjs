@@ -27,6 +27,13 @@ test('one PostgreSQL writer arbitrates concurrent trust revisions and rejects ro
       (i%2?guardA:guardB).admit(data)));
     assert.equal(contenders.filter(Boolean).length,16);
     assert.equal(await guardB.admit({...data,digest:'b'.repeat(64)}),false);
+    // Conflicting same-revision trust snapshots cannot both become canonical.
+    const contested=authority+'.contested';
+    const disputes=await Promise.all([
+      guardA.admit({authority:contested,revision:1,digest:'a'.repeat(64)}),
+      guardB.admit({authority:contested,revision:1,digest:'b'.repeat(64)})
+    ]);
+    assert.equal(disputes.filter(Boolean).length,1);
 
     const root=generateKeyPairSync('ml-dsa-65');
     const signer=generatePqSigner();
