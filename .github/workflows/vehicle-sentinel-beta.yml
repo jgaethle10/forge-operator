@@ -1,0 +1,66 @@
+name: Vehicle Sentinel beta verification
+
+on:
+  push:
+    branches:
+      - feat/vehicle-sentinel-quickcheck-v0-2
+    paths:
+      - 'products/vehicle-sentinel/**'
+      - '.github/workflows/vehicle-sentinel-beta.yml'
+  pull_request:
+    paths:
+      - 'products/vehicle-sentinel/**'
+      - '.github/workflows/vehicle-sentinel-beta.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vehicle-sentinel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-mobile-beta:
+    name: Review-only iOS simulator build and source tests
+    runs-on: macos-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out only the source tree
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Record hosted Xcode environment
+        run: |
+          xcodebuild -version
+          xcrun simctl list devices available | head -n 25
+
+      - name: Validate private, local-only QuickCheck
+        run: node products/vehicle-sentinel/tests/quickcheck-v2.test.js
+
+      - name: Verify proximity analysis regression tests
+        working-directory: products/vehicle-sentinel/ios
+        run: |
+          swiftc JeepSentinel/Models.swift Tests/AnalyzerSmoke.swift -o /tmp/vehicle-sentinel-analyzer-smoke
+          /tmp/vehicle-sentinel-analyzer-smoke
+
+      - name: Compile iPhone app for simulator without signing
+        run: |
+          xcodebuild \
+            -project products/vehicle-sentinel/ios/JeepSentinel.xcodeproj \
+            -scheme JeepSentinel \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "${{ runner.temp }}/vehicle-sentinel-derived" \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: State validation boundary
+        run: |
+          echo "Compilation and source checks are NOT physical iPhone Bluetooth validation."
+          echo "No IPA, deployment, distribution, scanning guarantee or commercial release authorized."
