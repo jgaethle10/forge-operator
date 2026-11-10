@@ -88,7 +88,11 @@ let selectedDay = today;
 let state = emptyState();
 let canStore = true;
 try {
-  state = normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'), today);
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw !== null) {
+    try { state = normalizeState(JSON.parse(raw), today); }
+    catch { $('storage-note').textContent = 'A saved reflection could not be read. You can start fresh or restore a backup.'; }
+  }
   const probe = STORAGE_KEY + '.probe';
   localStorage.setItem(probe, 'ok');
   localStorage.removeItem(probe);
