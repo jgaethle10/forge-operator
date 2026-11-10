@@ -139,3 +139,17 @@ test('scoped founder authority source is valid, expiry bounded, and creates a pr
  assert.equal(forbidden.decision,'deny');
  assert.throws(()=>loadWorkSabanClipAuthority({repoRoot,now:new Date('2027-02-01T00:00:00Z')}),/expired_or_future/);
 });
+
+test('owned Compute passes Work Saban Clip only validated private bindings and no invented Page ID',()=>{
+ const compute=fs.readFileSync('systemia/compute/runtime-node.mjs','utf8');
+ const runner=fs.readFileSync('systemia/clip/work-saban-facebook-resident-runner.mjs','utf8');
+ assert.match(compute,/SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR: path\.join\(/);
+ assert.match(compute,/EVERCRAFT_CREDENTIAL_STATE_DIR: providerCredentialStateRoot/);
+ assert.match(compute,/EVERCRAFT_PASSPORT_STATE_DIR: workSabanPassportRoot/);
+ assert.match(compute,/EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID: workSabanFacebookPageId/);
+ assert.match(compute,/core_clip_passport_state_outside_admitted_root/);
+ assert.match(compute,/core_clip_facebook_page_id_invalid/);
+ assert.match(compute,/core_clip_facebook_credential_ref_invalid/);
+ assert.match(runner,/EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_CREDENTIAL_REF/);
+ assert.doesNotMatch(compute,/EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID:\s*['"]\d/);
+});
