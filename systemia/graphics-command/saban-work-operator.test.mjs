@@ -63,7 +63,11 @@ test('out-of-scope, symlinked, relative and non-JSON inputs fail closed',()=>{
     assert.throws(()=>openOperatorSnapshot({...base,snapshot:path.relative(process.cwd(),s.state)}),/absolute path/);
     assert.throws(()=>openOperatorSnapshot({...base,authorizedRoot:path.parse(s.root).root}),/filesystem/);
     assert.throws(()=>openOperatorSnapshot({...base,filename:'../escape.html'}),/filename/);
-    assert.throws(()=>openOperatorSnapshot({...base,reviewRoot:s.root}),/must not be inside the source root/);
+    const forbiddenReview=path.resolve('public/saban-private-review-must-not-exist');
+    assert.equal(fs.existsSync(forbiddenReview),false);
+    assert.throws(()=>openOperatorSnapshot({...base,reviewRoot:forbiddenReview}),/outside repository and source roots/);
+    assert.equal(fs.existsSync(forbiddenReview),false,'Must fail before making a public directory');
+    assert.throws(()=>openOperatorSnapshot({...base,reviewRoot:s.root}),/outside repository and source roots/);
     const link=path.join(s.root,'alias.json');
     fs.symlinkSync(other,link);
     assert.throws(()=>openOperatorSnapshot({...base,snapshot:link}),/root escape|symlink/);
