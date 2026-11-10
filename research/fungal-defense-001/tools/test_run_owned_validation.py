@@ -34,7 +34,7 @@ class RunnerTests(unittest.TestCase):
             target = self.repo / filename
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text("fixture\n", encoding="utf-8")
-        for name in ("validate_surveillance.py", "check_observatory.py", "release_gate.py"):
+        for name in ("validate_surveillance.py", "check_observatory.py", "check_provisional.py", "release_gate.py"):
             (self.tools / name).write_text("print('PASS: fixture')\n", encoding="utf-8")
         (self.tools / "test_dummy.py").write_text(
             "import unittest\nclass Smoke(unittest.TestCase):\n"
@@ -63,7 +63,7 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(receipt["status"], "pass")
         self.assertTrue(receipt["checkout_admitted"])
         self.assertTrue(receipt["git_worktree_clean"])
-        self.assertEqual(len(receipt["results"]), 6)
+        self.assertEqual(len(receipt["results"]), 7)
         self.assertFalse(receipt["node_hardware_attested"])
         self.assertFalse(receipt["public_release_approved"])
 
