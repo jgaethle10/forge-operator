@@ -24,6 +24,11 @@ test('complete audited WGS GeoJSON embeds in a single offline viewer with no sou
  const template=await readFile(new URL('./research-viewer.html',import.meta.url),'utf8');
  const html=buildPreloadedWgsViewer({template,collections,receipt});
  assert.ok(html.includes('Object.assign(data,'));
+ assert.ok(html.includes('id="mobile-static-preview"'));
+ assert.ok(html.includes('<svg'));
+ assert.ok(html.includes('preview.hidden=true'));
+ assert.ok(html.includes('Static preview.'));
+ assert.ok(html.includes('All verified WGS layers are embedded.'));
  assert.ok(html.includes('resetToggles();onStatus();fit();'));
  assert.equal(html.includes('</script><script>alert(1)'),false);
  assert.ok(html.includes('\\u003c/script'));

@@ -3,6 +3,7 @@
  * before embedding GeoJSON. No external basemap, owner records or source fetch.
  */
 import {auditGeojsonCollection} from './spatial-integrity.mjs';
+import {addNoScriptPreview} from './static-map-fallback.mjs';
 const LAYERS=['resources','tests','mineHistory','studies'];
 const MARKER='resetToggles();redraw();\n</script></body></html>';
 export function buildPreloadedWgsViewer({template,collections,receipt}={}){
@@ -27,5 +28,7 @@ export function buildPreloadedWgsViewer({template,collections,receipt}={}){
     '\u2028':'\\u2028','\u2029':'\\u2029'})[ch]);
  const script='// First-party offline preloaded WGS source data; loaded only after source SHA checks.\n'+
   'Object.assign(data,'+sourceJson+');\nresetToggles();onStatus();fit();\n</script></body></html>';
- return template.replace(MARKER,script);
+ const enhanced=addNoScriptPreview(template,data);
+ const result=enhanced.replace(MARKER,script);
+ return result.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';");
 }
