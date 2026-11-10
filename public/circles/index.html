@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1730">
+<meta name="description" content="Evercraft Circles. Build a trusted professional circle, make introductions with consent, and create real opportunities together. Founding interest.">
+<meta name="robots" content="noindex,follow">
+<title>Evercraft Circles | Relationships that move things forward</title>
+<style>
+:root{color-scheme:light;--night:#0b1730;--mid:#172d52;--ink:#10223e;--muted:#526581;--line:#d7e4f0;--blue:#2463cb;--sky:#b6f4ed;--white:#fff;--paper:#f5f9fc}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:0;width:100%;background:var(--paper);font:16px/1.57 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+a{color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+:is(button,input,select,textarea,a):focus-visible{outline:3px solid #7cc7ec;outline-offset:3px}
+.wrap{width:min(1160px,calc(100% - 36px));margin-inline:auto;min-width:0}
+.top{background:var(--night);color:#fff;border-bottom:1px solid #ffffff20}
+.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.symbol{width:39px;height:39px;flex:none;display:grid;place-items:center;background:#baf2eb;border-radius:13px;color:#102c4b;font-size:24px;font-weight:900}
+.brand b{display:block;letter-spacing:.04em;font-size:14px}.brand small{display:block;font-size:10px;letter-spacing:.2em;color:#b9d7f1}
+.navlink{font-size:.87rem;text-decoration:none;padding:10px 16px;border:1px solid #587394;border-radius:999px;font-weight:750}
+.hero{background:radial-gradient(ellipse at 83% 38%,#244874 0%,transparent 52%),linear-gradient(140deg,#0b1730,#10264a);color:white;overflow:hidden}
+.hero-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding-block:82px 90px}
+.eyebrow{text-transform:uppercase;letter-spacing:.19em;font-size:.78rem;font-weight:800;color:#a4f0e7}
+h1{font-size:clamp(2.7rem,5.6vw,5.2rem);letter-spacing:-.065em;line-height:1.04;margin:17px 0 21px;max-width:690px}
+h1 em{font-style:normal;color:#a4f0e7}
+.hero p{font-size:clamp(1.04rem,1.7vw,1.23rem);color:#d2e3f4;max-width:600px;line-height:1.75}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{min-height:51px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:12px 21px;text-decoration:none;font-weight:800;border:1px solid transparent;max-width:100%}
+.btn.primary{background:#b4f3e9;color:#09253b}.btn.primary:hover{background:#dcfff7}
+.btn.secondary{background:transparent;color:white;border-color:#7d98bb}
+.btn.ink{background:#183761;color:white}.btn.ink:hover{background:#2b5084}
+.caption{font-size:.79rem!important;color:#b2c9df!important;margin-top:14px}
+.map{min-width:0;position:relative;border-radius:28px;border:1px solid #58799c;background:linear-gradient(125deg,#25466e,#132849);padding:24px;box-shadow:0 24px 70px #050c2080}
+.maphead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:#c8e0f6;font-size:.84rem;font-weight:700}
+.live{background:#344f72;color:#d1eaf7;padding:5px 10px;border-radius:99px;font-size:.72rem}
+.orbit{margin-block:26px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.node{display:flex;align-items:center;gap:10px;min-width:0;background:#eaf8ff;color:#193050;border-radius:16px;padding:13px;min-height:76px;box-shadow:0 8px 20px #06132930}
+.node:first-child{grid-column:1/-1;background:#b6f4ed}
+.dot{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:12px;color:#fff;background:#3e71b3;font-size:19px;font-weight:900}
+.node:first-child .dot{background:#12564c}
+.node strong{display:block;line-height:1.25;font-size:.88rem}
+.node small{color:#62728a;font-size:.7rem;display:block}
+.mapfoot{border-top:1px solid #ffffff35;padding-top:16px;color:#e2eeff;font-size:.82rem}
+main{padding-bottom:70px}
+.section{padding-block:68px 10px}
+.section h2{font-size:clamp(2rem,3.7vw,3rem);letter-spacing:-.05em;line-height:1.15;margin:10px 0 14px}
+.section .intro{max-width:750px;color:var(--muted);font-size:1.08rem}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:27px}
+.card{background:white;border:1px solid var(--line);border-radius:19px;padding:25px;min-width:0}
+.card .num{display:inline-flex;border-radius:10px;padding:6px 11px;background:#e7f4ff;color:#2559a1;font-size:.75rem;font-weight:850}
+.card h3{font-size:1.17rem;margin:18px 0 7px;letter-spacing:-.02em}
+.card p{color:var(--muted);margin:0;font-size:.92rem}
+.preview{margin-block:67px 0;border:1px solid #cdddee;border-radius:25px;background:white;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.preview-copy{padding:clamp(23px,4vw,48px)}
+.preview-copy h2{font-size:clamp(1.9rem,3vw,2.8rem);letter-spacing:-.05em;line-height:1.1;margin:9px 0 15px}
+.preview-copy p{color:var(--muted);line-height:1.7}
+.segment{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0 18px}
+.segment button{border:1px solid #bad0e6;color:#234a7a;background:#fff;border-radius:999px;padding:9px 14px;font-weight:750}
+.segment button[aria-pressed=true]{background:#1b4d8e;border-color:#1b4d8e;color:white}
+.demo{background:#e7f1fb;padding:clamp(23px,4vw,42px);min-width:0}
+.demo-board{background:white;border:1px solid #bdd3e7;border-radius:17px;padding:22px;box-shadow:0 15px 34px #0b2f5619}
+.demo-board strong{display:block}.demo-board p{color:var(--muted);font-size:.91rem}
+.mock-row{padding:13px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:center;font-size:.88rem}
+.mock-row span{min-width:0;overflow-wrap:anywhere}
+.mock-label{color:#21559d;background:#e9f3ff;border-radius:8px;padding:5px 9px;font-size:.71rem;font-weight:800;text-align:center}
+.founding{margin-block:64px 0;border-radius:27px;background:#0e2242;color:#fff;padding:clamp(24px,4.5vw,55px)}
+.founding-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:55px;align-items:start}
+.founding h2{font-size:clamp(2.1rem,3.7vw,3.25rem);line-height:1.12;letter-spacing:-.05em;margin:12px 0 18px}
+.founding p{color:#d4e2f3}
+.founding small{display:block;color:#b6cce4}
+.form{background:white;color:var(--ink);border-radius:18px;padding:clamp(20px,3vw,30px);min-width:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form label:not(.check){font-size:.77rem;font-weight:800;color:#294361;display:block;margin-bottom:6px}
+.form input,.form select,.form textarea{display:block;width:100%;min-width:0;border:1px solid #bfcfe0;padding:12px;border-radius:10px;background:#f8fbff;color:var(--ink)}
+.form .field{margin-bottom:15px;min-width:0}
+.form textarea{resize:vertical;min-height:88px}
+.check{display:flex;align-items:start;gap:10px;font-size:.84rem;color:#445874;margin:16px 0}
+.check input{width:18px;height:18px;flex:none;margin-top:2px}
+.form button{width:100%}
+.status{margin:16px 0 0!important;color:#234461!important;font-size:.85rem}
+footer{border-top:1px solid var(--line);padding:24px 0 37px;color:var(--muted);font-size:.84rem}
+footer a{color:#1d539b}
+[hidden]{display:none!important}
+@media(max-width:850px){.hero-layout,.preview,.founding-layout{grid-template-columns:1fr;gap:28px}.hero-layout{padding-block:56px}.map{max-width:560px}.preview{margin-top:45px}.founding{margin-top:46px}}
+@media(max-width:650px){.grid,.form-grid{grid-template-columns:1fr}.section{padding-block:50px 0}.hero-layout{padding-block:42px 54px}.map{padding:15px}.orbit{gap:9px}.node{padding:9px;min-height:66px;gap:8px}.dot{width:32px;height:32px;font-size:16px}.node strong{font-size:.79rem}.node small{font-size:.65rem}.brand b{font-size:13px}.navlink{padding:9px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap nav">
+ <a class="brand" href="#home"><span class="symbol" aria-hidden="true">◎</span><span><b>EVERCRAFT CIRCLES</b><small>YOUR PEOPLE. YOUR POSSIBILITIES.</small></span></a>
+ <a class="navlink" href="#founding">Founding interest</a>
+</div></header>
+<section class="hero" id="home"><div class="wrap hero-layout">
+ <div>
+  <div class="eyebrow">A more intentional kind of network</div>
+  <h1>Know your people.<br><em>Build what’s next.</em></h1>
+  <p>Your strongest network shouldn't be a list of strangers. Build a trusted Home Circle, make introductions people actually agree to, and connect to bigger opportunities as your relationships grow.</p>
+  <div class="actions">
+   <a href="#founding" class="btn primary">Explore a founding Circle</a>
+   <a href="#how" class="btn secondary">See how it works</a>
+  </div>
+  <p class="caption">Owned product preview. Founding interest is not membership approval or a paid subscription.</p>
+ </div>
+ <div class="map" aria-label="Illustrative professional network diagram">
+  <div class="maphead"><span>YOUR HOME CIRCLE</span><span class="live">Illustrative example</span></div>
+  <div class="orbit">
+   <div class="node"><span class="dot">◎</span><span><strong>Your professional circle</strong><small>Built by invitation and consent</small></span></div>
+   <div class="node"><span class="dot">01</span><span><strong>Contractor</strong><small>Trusted connection</small></span></div>
+   <div class="node"><span class="dot">02</span><span><strong>Accountant</strong><small>Trusted connection</small></span></div>
+   <div class="node"><span class="dot">03</span><span><strong>Designer</strong><small>Trusted connection</small></span></div>
+   <div class="node"><span class="dot">04</span><span><strong>Local business</strong><small>Trusted connection</small></span></div>
+  </div>
+  <div class="mapfoot">Home Circle → Regional connections → Specialty groups → Opportunity teams</div>
+ </div>
+</div></section>
+<main class="wrap">
+<section class="section" id="how">
+ <div class="eyebrow" style="color:#2358a6">The Evercraft Circles model</div>
+ <h2>Less noise. More people who show up.</h2>
+ <p class="intro">The point isn't collecting followers. It's creating a useful, consent-driven professional network that can make introductions, solve problems, and build together.</p>
+ <div class="grid">
+  <article class="card"><span class="num">01 · HOME</span><h3>Build your roster</h3><p>Start local. Choose who belongs, keep professional categories intentional, and preserve each member's control over profile visibility.</p></article>
+  <article class="card"><span class="num">02 · TRUST</span><h3>Make warm introductions</h3><p>Ask first. An introduction isn't accepted or a referral delivered until the right people agree. No automatic endorsements.</p></article>
+  <article class="card"><span class="num">03 · GROWTH</span><h3>Form opportunity teams</h3><p>When something bigger appears, bring together the right willing people across regional, specialty, and mentor Circles.</p></article>
+ </div>
+</section>
+<section class="preview" aria-label="Circles workflow preview">
+ <div class="preview-copy">
+  <div class="eyebrow" style="color:#245eac">Product experience preview</div>
+  <h2>Connections with a purpose.</h2>
+  <p>Explore the three moments that make Circles different. This is an illustrative walkthrough, not a live member roster or simulated commercial activity.</p>
+  <div class="segment" role="group" aria-label="Example workflow">
+   <button type="button" data-mode="roster" aria-pressed="true">My roster</button>
+   <button type="button" data-mode="intro" aria-pressed="false">Warm intro</button>
+   <button type="button" data-mode="team" aria-pressed="false">Opportunity team</button>
+  </div>
+  <p id="demo-explainer" aria-live="polite">A private, member-chosen roster begins with an intentional Home Circle.</p>
+ </div>
+ <div class="demo">
+  <div class="demo-board"><strong id="demo-title">Your Home Circle</strong><p id="demo-subtitle">Illustrative roles, not real members</p>
+   <div class="mock-row"><span id="demo-row1">Organizer · your professional network</span><span class="mock-label" id="demo-label1">PRIVATE</span></div>
+   <div class="mock-row"><span id="demo-row2">Electrician · invitation pending</span><span class="mock-label" id="demo-label2">ASK FIRST</span></div>
+   <div class="mock-row"><span id="demo-row3">Accountant · profile opt-in</span><span class="mock-label" id="demo-label3">CONSENT</span></div>
+  </div>
+ </div>
+</section>
+<section class="founding" id="founding">
+ <div class="founding-layout">
+  <div>
+   <div class="eyebrow">Founding network</div>
+   <h2>Help shape the first great Circles.</h2>
+   <p>We're collecting founder and professional interest while the owned member platform and trusted onboarding are completed. Tell us your area and what kind of Circle would actually help you.</p>
+   <small>No application fee is being collected. No memberships are activated from this page. No referral or revenue result is promised.</small>
+  </div>
+  <form class="form" id="circles-interest">
+   <div class="form-grid">
+    <div class="field"><label for="person">Your name</label><input id="person" name="person" autocomplete="name" required maxlength="100"></div>
+    <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="180"></div>
+   </div>
+   <div class="form-grid">
+    <div class="field"><label for="city">City / region</label><input id="city" name="city" autocomplete="address-level2" required maxlength="100"></div>
+    <div class="field"><label for="profession">Profession / category</label><input id="profession" name="profession" required maxlength="80"></div>
+   </div>
+   <div class="field"><label for="interest">I want to</label><select id="interest" name="interest"><option value="found">Help found a Home Circle</option><option value="join">Join a professional Circle</option><option value="mentor">Help mentor a Circle</option><option value="partner">Explore a business partnership</option></select></div>
+   <div class="field"><label for="message">What should your Circle help make possible? (optional)</label><textarea id="message" name="message" maxlength="500"></textarea></div>
+   <label class="check"><input type="checkbox" id="consent" required><span>I agree to send this information to Evercraft for a human response about Circles. I understand this does not join a Circle, create a subscription, or guarantee an invitation.</span></label>
+   <button type="submit" class="btn ink">Prepare my founding-interest email</button>
+   <p id="form-status" class="status" role="status" aria-live="polite">You'll review and send the message in your email app. This page does not transmit or store your details.</p>
+  </form>
+ </div>
+</section>
+</main>
+<footer><div class="wrap">© Evercraft LLC · Owned source preview · Private member data and introductions are not public. No payment or subscription service is active on this page. <a href="#home">Back to top</a></div></footer>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>

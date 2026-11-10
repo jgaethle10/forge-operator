@@ -1,0 +1,41 @@
+name: Evercraft Circles Owned Release Proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/circles/**"
+      - "public/circles/**"
+      - "scripts/circles-owner-inbox.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+      - "tests/evercraft-circles-*.test.mjs"
+      - ".github/workflows/evercraft-circles-owned.yml"
+  push:
+    paths:
+      - "systemia/circles/**"
+      - "public/circles/**"
+      - "scripts/circles-owner-inbox.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+      - "tests/evercraft-circles-*.test.mjs"
+      - ".github/workflows/evercraft-circles-owned.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  circles-owned-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax proof
+        run: |
+          node --check systemia/circles/kernel.mjs
+          node --check systemia/circles/founding-intake.mjs
+          node --check public/circles/app.mjs
+          node --check scripts/circles-owner-inbox.mjs
+          node --check systemia/mcp/fabric-local-runtime.mjs
+      - name: Private membership and founder intake proof
+        run: node --test tests/evercraft-circles-owned.test.mjs tests/evercraft-circles-intake.test.mjs
