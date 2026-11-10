@@ -28,5 +28,9 @@ jobs:
           node --check systemia/raven/benchmarks/model-route-raven-inference.synthetic.test.mjs
           node --check systemia/raven/benchmarks/model-inventory.candidate.mjs
           node --check systemia/raven/benchmarks/model-inventory.candidate.test.mjs
+          node --check systemia/raven/benchmarks/owned-local-model-probe.mjs
+          node --check systemia/raven/benchmarks/owned-local-model-probe.test.mjs
+          node --check systemia/raven/benchmarks/probe-owned-local-model.mjs
+          node --check systemia/raven/benchmarks/probe-owned-local-model.test.mjs
       - name: Test fail-closed policy and synthetic Raven engine boundary
-        run: node --test systemia/raven/benchmarks/model-route-policy.candidate.test.mjs systemia/raven/benchmarks/model-route-raven-inference.synthetic.test.mjs systemia/raven/benchmarks/model-inventory.candidate.test.mjs
+        run: node --test systemia/raven/benchmarks/model-route-policy.candidate.test.mjs systemia/raven/benchmarks/model-route-raven-inference.synthetic.test.mjs systemia/raven/benchmarks/model-inventory.candidate.test.mjs systemia/raven/benchmarks/owned-local-model-probe.test.mjs systemia/raven/benchmarks/probe-owned-local-model.test.mjs
