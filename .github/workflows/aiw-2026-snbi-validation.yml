@@ -1,0 +1,27 @@
+name: AIW 2026 SNBI validation
+on:
+  push:
+    branches:
+      - research/american-infrastructure-watch-v09
+    paths:
+      - 'research/infrastructure-watch/**'
+      - '.github/workflows/aiw-2026-snbi-validation.yml'
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/**'
+      - '.github/workflows/aiw-2026-snbi-validation.yml'
+permissions:
+  contents: read
+jobs:
+  verify-importer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile importer
+        run: python3 -m py_compile research/infrastructure-watch/scripts/fhwa_2026.py
+      - name: Run offline importer checks
+        run: python3 -m unittest discover -s research/infrastructure-watch/tests -v
