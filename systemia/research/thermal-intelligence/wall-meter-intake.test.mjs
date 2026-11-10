@@ -33,7 +33,7 @@ test('Unknown calibration forces data review',()=>{
  assert.equal(r.meterCalibrationUnknown,true);
 });
 test('Unusually high power interval flags review, not an energy saving claim',()=>{
- const r=normalizeWallMeter(profile({expectedMaxWallWatts:450}));
+ const r=normalizeWallMeter(profile({expectedMaxWallWatts:480}));
  assert.equal(r.qualityReviewRequired,true);
  assert.equal(r.flags.length,1);
  assert.equal(r.flags[0].flag,'POWER_ENVELOPE_REVIEW');
