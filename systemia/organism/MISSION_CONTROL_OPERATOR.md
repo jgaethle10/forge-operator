@@ -37,3 +37,23 @@ The watcher produces `evercraft.local-organism-health-watch.v1`, with a SHA-256 
 The public top-row node cards stay **HEALTH UNKNOWN**, because local receipt inspection is not independent authenticated remote status. This does not approve Node002 remote jobs, authorize Yard enrollment, or prove externally reachable infrastructure.
 
 Run tests with `node --test tests/systemia-mission-control-node.test.mjs tests/systemia-mission-control-export.test.mjs tests/systemia-mission-control.test.mjs`. The next step, if operator-authorized, is a separately scoped signed private status read API using existing Passport/NodeSeed/Yard identity anchors; never host that raw feed in public GitHub Pages.
+
+## Build 04: automatic local-only viewing
+
+An operator who has permission to read an existing Systemia goal state or health-watch file can launch the view on that **same machine**. No JSON import is needed; the browser refreshes sanitized summaries from the local read-only server every 30 seconds.
+
+```bash
+node systemia/organism/mission-control-local-server.mjs \
+  --state "/absolute/path/to/private/goal.json" \
+  --node001-watch "$HOME/.local/state/evercraft/organism/health-watch.json" \
+  --node001-id "EXACT-OWNER-VERIFIED-NODESEED-ID" \
+  --port 8766
+```
+
+Open `http://127.0.0.1:8766/mission-control.html` on that same device. To inspect only a goal or only an existing node watcher, omit the other source flags. For NextGen, supply `--node002-watch` and `--node002-id` only when an actual compatible watcher exists. The viewer reads only explicitly selected regular files, never scans directories, never overwrites them and never binds to the LAN. There is no public hostname, startup automation or write/exec endpoint. Its HTTP server allows a fixed list of local UI assets and the sanitized `GET /v1/snapshot` endpoint. Other paths, cross-origin browser requests, unsafe methods and Host-header rebinding are denied. No raw goal files are served.
+
+The local server does **not** authenticate the human sitting at the device: any local account/browser process able to connect to that loopback port can see its limited, privacy-filtered status. Use only with an approved owner-controlled desktop session. Do not port-forward it or place it behind a reverse proxy. Node health is **local self-report**, not an independently signed device attestation. Even a successfully served status does not establish runtime access, customer payment, fulfillment, external routing or an execution grant. A source parse or permission failure returns an explicit held/error state instead of serving cached good data.
+
+The ordinary public GitHub Pages version of Mission Control does not call this local adapter. It continues to show public development receipts and optional manually imported local snapshots. No public website can discover private node files through this addition.
+
+Verification: `node --test tests/systemia-mission-control-local-server.test.mjs`. The new local loopback server is opt-in and is not installed as a service.
