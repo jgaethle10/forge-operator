@@ -55,6 +55,33 @@ test('a hard day changes the current streak but never erases earlier artwork', (
   assert.equal(result.difficultDays,1);
 });
 
+test('a finished painting survives reclassifying the exact seventh successful day', () => {
+  let state = emptyState();
+  for (let i = 6; i >= 0; i--) state = setCheckIn(state, GOAL, shiftDay(TODAY, -i), 'kept', TODAY);
+  assert.equal(getProgress(state, GOAL, TODAY).completedPieces, 1);
+  state = setCheckIn(state, GOAL, TODAY, 'hard', TODAY);
+  const afterCorrection = getProgress(state, GOAL, TODAY);
+  assert.equal(afterCorrection.successes, 6);
+  assert.equal(afterCorrection.artMarks, 7);
+  assert.equal(afterCorrection.completedPieces, 1);
+  assert.equal(afterCorrection.streak, 0);
+  state = setCheckIn(state, GOAL, TODAY, 'kept', TODAY);
+  assert.equal(getProgress(state, GOAL, TODAY).artMarks, 7, 'The same date cannot double award art');
+  state = setCheckIn(state, GOAL, shiftDay(TODAY, -7), 'kept', TODAY);
+  assert.equal(getProgress(state, GOAL, TODAY).brushstrokes, 1);
+  assert.equal(getProgress(state, GOAL, TODAY).completedPieces, 1);
+});
+
+test('old backups migrate art credits, including when entries are missing', () => {
+  const old = { version: 1, goal: GOAL, theme: 'garden', entries: { [GOAL]: {} }};
+  for (let i=6; i>=0; i--) old.entries[GOAL][shiftDay(TODAY,-i)]='kept';
+  let normalized = normalizeState(old, TODAY);
+  assert.equal(normalized.creditedDays[GOAL].length,7);
+  normalized = normalizeState({...normalized,entries:{}},TODAY);
+  assert.equal(getProgress(normalized,GOAL,TODAY).completedPieces,1);
+  assert.equal(getProgress(normalized,GOAL,TODAY).successes,0);
+});
+
 test('missing days are unknown, not assumed relapses', () => {
   let state=setCheckIn(emptyState(),GOAL,'2026-11-07','kept',TODAY);
   let result=getProgress(state,GOAL,TODAY);
