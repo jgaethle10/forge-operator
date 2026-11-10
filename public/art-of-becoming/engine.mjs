@@ -31,7 +31,7 @@ export function shiftDay(key, amount) {
 }
 
 export function emptyState() {
-  return { version: 1, goal: 'alcohol-free', theme: 'garden', entries: {}, creditedDays: {} };
+  return { version: 1, goal: 'alcohol-free', theme: 'garden', entries: {}, creditedDays: {}, canvasThemes: {} };
 }
 
 export function normalizeState(input, today = dayKey()) {
@@ -41,6 +41,7 @@ export function normalizeState(input, today = dayKey()) {
   if (THEMES.includes(input.theme)) result.theme = input.theme;
   const allRecords = input.entries && typeof input.entries === 'object' && !Array.isArray(input.entries) ? input.entries : {};
   const priorCredits = input.creditedDays && typeof input.creditedDays === 'object' && !Array.isArray(input.creditedDays) ? input.creditedDays : {};
+  const priorThemes = input.canvasThemes && typeof input.canvasThemes === 'object' && !Array.isArray(input.canvasThemes) ? input.canvasThemes : {};
   for (const goal of GOALS) {
     const records = allRecords[goal.id];
     if (records && typeof records === 'object' && !Array.isArray(records)) {
@@ -59,6 +60,13 @@ export function normalizeState(input, today = dayKey()) {
       if (status === 'kept') credited.add(date);
     }
     if (credited.size) result.creditedDays[goal.id] = [...credited].sort().slice(-40000);
+    const completed = Math.floor((result.creditedDays[goal.id] || []).length / 7);
+    if (completed) {
+      const snapshots = Array.isArray(priorThemes[goal.id]) ? priorThemes[goal.id] : [];
+      result.canvasThemes[goal.id] = Array.from({length: completed}, (_, index) =>
+        THEMES.includes(snapshots[index]) ? snapshots[index] : result.theme
+      );
+    }
   }
   return result;
 }
@@ -75,8 +83,12 @@ export function setCheckIn(state, goalId, date, status, today = dayKey()) {
   else delete next.entries[goalId];
   if (status === 'kept') {
     const days = new Set(next.creditedDays[goalId] || []);
+    const priorCompleted = Math.floor(days.size / 7);
     days.add(date);
     next.creditedDays[goalId] = [...days].sort();
+    if (Math.floor(days.size / 7) > priorCompleted) {
+      next.canvasThemes[goalId] = [...(next.canvasThemes[goalId] || []), next.theme];
+    }
   }
   return next;
 }
