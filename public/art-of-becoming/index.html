@@ -160,8 +160,8 @@ function artSvg(goal, number, theme, steps) {
   const label = `${steps} of 7 marks on artwork ${number}`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 620" role="img" aria-label="${label}"><title>${label}</title>${body}<rect x="13" y="13" width="514" height="594" rx="3" fill="none" stroke="${theme === 'constellation' ? '#b6cad2' : '#fffdf8'}" stroke-width="1.3" opacity=".43"/></svg>`;
 }
-function downloadArtwork(number, steps) {
-  const blob = new Blob([artSvg(state.goal, number, state.theme, steps)], {type:'image/svg+xml;charset=utf-8'});
+function downloadArtwork(number, steps, theme = state.theme) {
+  const blob = new Blob([artSvg(state.goal, number, theme, steps)], {type:'image/svg+xml;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -176,7 +176,8 @@ function render() {
   const goal = GOALS.find(item => item.id === state.goal) || GOALS[0];
   const progress = getProgress(state, state.goal, today);
   const records = state.entries[state.goal] || {};
-  const isFinished = progress.successes > 0 && progress.brushstrokes === 0;
+  const isFinished = progress.artMarks > 0 && progress.brushstrokes === 0;
+  const finishedTheme = state.canvasThemes?.[state.goal]?.[progress.completedPieces-1] || state.theme;
   const shownNumber = isFinished ? progress.completedPieces : progress.completedPieces + 1;
   const shownCount = isFinished ? 7 : progress.brushstrokes;
   $('goals').innerHTML = GOALS.map(item => `<button class="goal" data-goal="${item.id}" type="button" aria-pressed="${item.id===state.goal}">${item.name}</button>`).join('');
@@ -184,7 +185,7 @@ function render() {
   $('art-kicker').textContent = isFinished ? 'Finished and collected' : 'An original work in progress';
   $('art-title').textContent = `Canvas ${String(shownNumber).padStart(2, '0')}`;
   $('art-status').textContent = `${shownCount} / 7`;
-  $('art-frame').innerHTML = artSvg(state.goal, shownNumber, state.theme, shownCount);
+  $('art-frame').innerHTML = artSvg(state.goal, shownNumber, isFinished ? finishedTheme : state.theme, shownCount);
   $('art-frame').classList.toggle('hard', progress.todayStatus === 'hard');
   $('art-caption').textContent = isFinished ? 'You made something worth keeping.' : progress.todayStatus === 'hard' ? 'The canvas is still yours.' : progress.brushstrokes ? 'One more day, one more detail.' : 'Your next choice is a brushstroke.';
   $('art-detail').textContent = isFinished ? 'Your next completed day begins a new canvas.' : `${progress.nextPieceIn} more completed ${progress.nextPieceIn===1?'day':'days'} for a finished piece.`;
@@ -205,7 +206,7 @@ function render() {
   }
   $('week').innerHTML = week.join('');
   const gallery = [];
-  for (let i=progress.completedPieces; i>=Math.max(1,progress.completedPieces-11); i--) gallery.push(`<div class="gallery-item"><div class="thumb">${artSvg(state.goal,i,state.theme,7)}</div><strong>Canvas ${String(i).padStart(2,'0')}</strong><small>Seven days of intention</small><button class="save-inline" data-download-art="${i}" type="button" aria-label="Save Canvas ${i} as SVG">Save SVG</button></div>`);
+  for (let i=progress.completedPieces; i>=Math.max(1,progress.completedPieces-11); i--) gallery.push(`<div class="gallery-item"><div class="thumb">${artSvg(state.goal,i,state.canvasThemes?.[state.goal]?.[i-1] || state.theme,7)}</div><strong>Canvas ${String(i).padStart(2,'0')}</strong><small>Seven days of intention</small><button class="save-inline" data-download-art="${i}" type="button" aria-label="Save Canvas ${i} as SVG">Save SVG</button></div>`);
   $('gallery').innerHTML = gallery.length ? gallery.join('') : '<div class="empty">Your first completed masterpiece will live here. Seven intentional days, one original piece, and nothing to prove to anyone else.</div>';
 }
 function log(status) {
@@ -231,19 +232,20 @@ $('hard').addEventListener('click',()=>log('hard'));
 $('clear-day').addEventListener('click',()=>log(null));
 $('theme').addEventListener('change',event=>{
   if (!THEMES.includes(event.target.value)) return;
-  state.theme=event.target.value; save(); render(); notify('Your gallery has a new look. The days behind it have not changed.');
+  state.theme=event.target.value; save(); render(); notify('Style selected for your current or next canvas. Finished paintings keep their original style.');
 });
 $('save-art').addEventListener('click',()=>{
   const progress = getProgress(state, state.goal, today);
-  const finished = progress.successes > 0 && progress.brushstrokes === 0;
-  downloadArtwork(finished ? progress.completedPieces : progress.completedPieces + 1, finished ? 7 : progress.brushstrokes);
+  const finished = progress.artMarks > 0 && progress.brushstrokes === 0;
+  const theme = finished ? (state.canvasThemes?.[state.goal]?.[progress.completedPieces-1] || state.theme) : state.theme;
+  downloadArtwork(finished ? progress.completedPieces : progress.completedPieces + 1, finished ? 7 : progress.brushstrokes, theme);
 });
 $('gallery').addEventListener('click', event => {
   const button = event.target.closest('button[data-download-art]');
   if (!button) return;
   const number = Number(button.dataset.downloadArt);
   if (!Number.isSafeInteger(number) || number < 1 || number > getProgress(state,state.goal,today).completedPieces) return;
-  downloadArtwork(number,7);
+  downloadArtwork(number,7,state.canvasThemes?.[state.goal]?.[number-1] || state.theme);
 });
 $('export').addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify({app:'The Art of Becoming',exportedAt:new Date().toISOString(),data:state},null,2)],{type:'application/json'});
