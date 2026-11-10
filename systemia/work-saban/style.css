@@ -432,3 +432,156 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
   .office-observe-open #office .office-scene-title>span:first-child{width:100%}
   .office-observe-open #office .office-bottom{gap:7px}
 }
+
+
+/* THE WORK FLOOR / SHARED STUDIO v0.6
+   Visual furniture and expressive characters, never independent worker telemetry.
+   All agent state changes still originate in the verified local execution feed. */
+.spatial-floor{
+  background:
+    radial-gradient(ellipse at 49% 50%,#6285a928,transparent 46%),
+    repeating-linear-gradient(0deg,transparent 0 41px,#c3ddf00c 42px),
+    repeating-linear-gradient(90deg,transparent 0 41px,#c3ddf00a 42px),
+    linear-gradient(145deg,#344c60 0%,#1a344c 51%,#0d2035 100%);
+  border-color:#7899a5;
+  box-shadow:0 0 0 15px #152a3f,0 34px 90px #000b,
+    inset 0 0 80px #d4e4ff12;
+}
+/* Six functional stations, ONE architectural room. Keep the work roles intact. */
+.spatial-room{
+  border:1px solid #c4deee21;border-radius:16px;
+  background:linear-gradient(140deg,#83b4cc14,#23466007);
+  box-shadow:inset 0 0 22px #8bcce50a;
+}
+.spatial-rug{inset:12px;border:1px solid #9bdce238;border-radius:15px;
+  background:linear-gradient(145deg,#d6ebef10,#86a3c60a);}
+.spatial-room-wall,.spatial-room-window{display:none}
+.spatial-room-name{font-size:12px;letter-spacing:.17em;color:#c6dfefc9;
+  text-shadow:0 3px 11px #07172c}
+/* Three-dimensional outer shell, integrated with rather than enclosing work zones. */
+.spatial-studio-shell{position:absolute;inset:0;transform-style:preserve-3d;
+  pointer-events:none;z-index:0}
+.spatial-studio-back-wall{position:absolute;left:0;top:0;width:100%;height:195px;
+  transform-origin:top center;transform:rotateX(-90deg);
+  border:5px solid #7898ae;
+  border-radius:10px 10px 0 0;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 170px,#9ec6db1a 172px),
+    linear-gradient(170deg,#4e7281,#1e405b 57%,#102c45);
+  box-shadow:inset 0 0 48px #0007,0 0 33px #82d1ff1d}
+.spatial-studio-side-wall{position:absolute;right:0;top:0;width:180px;height:100%;
+  transform-origin:right center;transform:rotateY(90deg);
+  border:5px solid #7894a4;
+  background:linear-gradient(90deg,#244963,#10283d 75%);
+  box-shadow:inset 0 0 45px #0007}
+.spatial-window{position:absolute;top:27px;width:240px;height:100px;
+  border:9px solid #253e56;border-radius:12px;
+  background:linear-gradient(115deg,#d5f5ff9c,#6bbfdb91 27%,#244d6a8c 64%,#abdeeea6);
+  box-shadow:inset 0 0 0 2px #bbf3fa83,0 0 22px #83dbfd44}
+.spatial-window:before{content:'';position:absolute;left:50%;top:0;bottom:0;
+  width:7px;background:#29465c;box-shadow:0 0 0 1px #bbdce566}
+.spatial-window:after{content:'';position:absolute;left:0;right:0;top:50%;
+  height:6px;background:#29465c}
+.spatial-window.window-left{left:125px}
+.spatial-window.window-right{right:125px}
+.spatial-studio-door{position:absolute;right:35px;bottom:30px;width:90px;height:138px;
+  border:6px solid #8eb5c2;border-radius:42px 42px 3px 3px;
+  background:linear-gradient(150deg,#83a8b49c,#1a465e);
+  box-shadow:inset 0 0 0 6px #254860,0 4px 22px #0009}
+.spatial-studio-door:after{content:'';position:absolute;right:9px;top:65px;
+  width:10px;height:10px;border-radius:50%;background:#f2cc83}
+.spatial-studio-ceiling-beam{position:absolute;left:8px;right:8px;top:0;
+  height:12px;background:#b4d2d7aa;transform:translateZ(150px);
+  box-shadow:0 0 27px #afdaf14b}
+.spatial-meeting-hub{position:absolute;width:125px;height:102px;
+  transform:translateZ(9px);pointer-events:none}
+.spatial-meeting-shadow{position:absolute;inset:24px 0 0;
+  border-radius:50%;background:#030d1c77;filter:blur(8px)}
+.spatial-meeting-table{position:absolute;inset:18px 4px 18px;
+  background:linear-gradient(120deg,#bd9a7b,#6e5260 67%,#4b4660);
+  border:5px solid #d2bca9;border-radius:48%;
+  transform:translateZ(45px);
+  box-shadow:0 13px 0 #1a3348,0 19px 20px #030d1c77,
+    inset 0 0 0 3px #f8e2c64b}
+.spatial-meeting-note{position:absolute;left:42px;top:34px;width:39px;height:25px;
+  border:2px solid #6e90a4;transform:translateZ(50px) rotate(12deg);
+  border-radius:3px;background:#e5f5e6;
+  box-shadow:0 5px 9px #10233544}
+.spatial-meeting-lamp{position:absolute;left:56px;top:5px;width:12px;height:12px;
+  transform:translateZ(97px);border-radius:50%;background:#fff0bc;
+  box-shadow:0 0 22px 15px #f6e6c633}
+/* Six tiny people now have body language, sleeves, shoes and expressive faces.
+   These are original CSS geometry, not third-party sprites or stock assets. */
+.spatial-person-body{box-shadow:0 5px 15px #0a172d66,inset -8px -5px 12px #131f433d;
+  border-width:3px;overflow:visible}
+.spatial-person-collar{position:absolute;top:4px;left:18px;width:18px;height:10px;
+  border-radius:0 0 50% 50%;background:#f5e1cd;
+  box-shadow:0 2px 0 #2c536b}
+.spatial-person-arm{position:absolute;top:13px;width:14px;height:44px;
+  border:2px solid #c2e6f88a;border-radius:10px;
+  background:inherit;box-shadow:inset -2px -4px #0002}
+.spatial-person-arm.arm-left{left:-12px;transform:rotate(19deg);transform-origin:top right}
+.spatial-person-arm.arm-right{right:-12px;transform:rotate(-19deg);transform-origin:top left}
+.spatial-person-arm:after{content:'';position:absolute;bottom:-5px;left:1px;
+  width:9px;height:12px;border-radius:44%;background:#e6bea9}
+.spatial-person-leg{position:absolute;bottom:-18px;width:19px;height:26px;
+  border:2px solid #243c57;border-radius:3px 3px 9px 9px;
+  background:#243e5c;box-shadow:inset -2px -3px 0 #14283f}
+.spatial-person-leg:after{content:'';position:absolute;bottom:-4px;left:-3px;
+  height:9px;width:24px;border-radius:9px 6px 5px 5px;background:#14273c}
+.spatial-person-leg.leg-left{left:6px}
+.spatial-person-leg.leg-right{right:6px}
+.spatial-brow{position:absolute;top:15px;width:10px;height:2px;
+  border-radius:3px;background:#80604f}
+.spatial-brow.brow-left{left:8px;transform:rotate(-7deg)}
+.spatial-brow.brow-right{right:8px;transform:rotate(7deg)}
+.spatial-cheek{position:absolute;top:30px;width:8px;height:5px;
+  border-radius:50%;background:#d9848872}
+.spatial-cheek.cheek-left{left:6px}
+.spatial-cheek.cheek-right{right:6px}
+.spatial-agent[data-emotion="focused"] .spatial-brow{top:17px;transform:rotate(0)}
+.spatial-agent[data-emotion="proud"] .spatial-smile{
+  height:9px;width:13px;left:16px;border-bottom:3px solid #874957}
+.spatial-agent[data-emotion="concerned"] .spatial-smile{
+  top:34px;height:4px;border-top:2px solid #8d5260;border-bottom:0;
+  border-radius:65% 65% 0 0}
+.spatial-agent[data-agent="writer"] .spatial-cheek{background:#db7d9b99}
+.spatial-agent[data-agent="auditor"] .spatial-brow{height:3px;background:#34414d}
+.spatial-agent[data-agent="designer"] .spatial-person-collar{background:#fff3cf}
+.spatial-agent[data-agent="director"] .spatial-person-collar{background:#dcf1ff}
+.spatial-motion-disclosure{align-self:start;max-width:74%;
+  padding:7px 10px;border-radius:8px;background:#0a192bc9;
+  border:1px solid #3e6886;color:#a6c7df;font-size:9px;line-height:1.45;
+  font-weight:750;letter-spacing:.055em;pointer-events:none}
+.spatial-overlay{gap:7px}
+.spatial-orbit-label{max-width:80%}
+@keyframes saban-character-blink{
+  0%,93%,98%,100%{scale:1 1}
+  95%{scale:1 .15}
+}
+.spatial-eye{animation:saban-character-blink 8.5s linear infinite;transform-origin:center}
+/* Work is an explicitly event-driven state: one greeting step per transition,
+   not a continuous pretend stroll, conversation or task-execution loop. */
+@keyframes saban-recorded-work-cue{
+  0%{translate:0 0}
+  35%{translate:12px -10px}
+  70%{translate:24px -5px}
+  100%{translate:0 0}
+}
+@keyframes saban-recorded-success-cue{
+  0%,100%{translate:0 0;rotate:0deg}
+  38%{translate:0 -13px;rotate:-5deg}
+  70%{translate:0 -7px;rotate:5deg}
+}
+.spatial-agent[data-activity="working"] .spatial-person{
+  animation:saban-recorded-work-cue 1.05s cubic-bezier(.2,.7,.2,1) 1 both}
+.spatial-agent[data-activity="celebrating"] .spatial-person{
+  animation:saban-recorded-success-cue 1.1s ease-in-out 1 both}
+@media(max-width:650px){
+  .spatial-motion-disclosure{font-size:8px;max-width:94%}
+  .spatial-orbit-label{font-size:8px;max-width:94%}
+}
+@media(prefers-reduced-motion:reduce){
+  .spatial-eye,.spatial-agent[data-activity] .spatial-person{
+    animation:none!important}
+}
