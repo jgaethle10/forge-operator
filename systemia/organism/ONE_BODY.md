@@ -152,6 +152,18 @@ node systemia/organism/one-body-operator.mjs ack \
 
 `one-body-local-consumer.proof.mjs` verifies independent-process inbox acceptance, end-to-end signature admission into the canonical store, idempotent replay, private receipt file mode, lock contention, signing-key permission rejection and revocation-driven loss of verified state. It is part of `npm run proof:one-body`.
 
+## Passport-scoped Living Graph read membrane
+
+`one-body-snapshot-reader.mjs` creates a **host-internal read adapter**. An existing authoritative identity middleware must provide `verifySession` and return a verified opaque subject reference. A request's claimed `subject_ref` is never accepted directly.
+
+For every read, the adapter calls existing Evercraft Passport using product `evercraft-context`, scope `context.read.systemia`, and resource `systemia:one-body`. Without an active grant, the response is a uniform denial with **no graph, event count, filename, receipt information or hint that the private store exists**. Revocation applies on the very next read.
+
+Only after authorization does the adapter open the One-Body private state and generate a redacted snapshot. It re-verifies lane acknowledgements with **operator-pinned** public signing keys. No raw event payloads, private buyer/source refs, or signer private keys are returned. It grants no work execution permission.
+
+**Not an HTTP server.** The adapter must be wired into an owned HTTPS route with session authentication, Passport state provisioning, access logs, request limits, redaction review, and endpoint/host deployment receipts before a real phone/browser can poll it. Do not expose the file store, accept a caller-supplied key registry, or report this API as live from these repository changes.
+
+`one-body-snapshot-reader.proof.mjs` exercises no-grant and wrong-scope denial, a verified subject's scoped read, cross-subject isolation, redaction, and immediate grant revocation. It is included in `npm run proof:one-body`.
+
 ## Proof
 
 Run:
