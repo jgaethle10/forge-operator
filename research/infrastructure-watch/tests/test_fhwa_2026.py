@@ -24,6 +24,16 @@ class FHWA2026Tests(unittest.TestCase):
     def test_duplicate_download_url_rejected(self):
         with self.assertRaisesRegex(ValueError,'duplicate state download links'):
             m.parse_official_index(self.fake_index(dup=True))
+    def test_unaffected_state_can_be_verified_with_unrelated_duplicate(self):
+        data=m.parse_official_index(self.fake_index(dup=True),target_state='U.S. Virgin Islands')
+        self.assertIn('quarantined',data['U.S. Virgin Islands']['source_index_warning'])
+        self.assertEqual(data['U.S. Virgin Islands']['count'],23)
+    def test_ambiguous_target_state_still_rejected(self):
+        with self.assertRaisesRegex(ValueError,'ambiguous'):
+            m.parse_official_index(self.fake_index(dup=True),target_state='Alaska')
+    def test_missing_target_does_not_override_data_quality(self):
+        with self.assertRaisesRegex(ValueError,'Target state missing'):
+            m.parse_official_index(self.fake_index(dup=True),target_state='Fictional State')
     def test_wrong_count_rejected(self):
         with self.assertRaisesRegex(ValueError,'national count mismatch'):
             m.parse_official_index(self.fake_index().replace('8,619','8,620'))
