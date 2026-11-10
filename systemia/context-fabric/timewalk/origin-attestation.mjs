@@ -1,8 +1,8 @@
 import { createHash, createPublicKey, verify } from 'node:crypto';
 
 /**
- * Offline verification of a producer's Ed25519 attestation that it issued
- * exact receipt bytes. An internal operator must pin the trust registry.
+ * Offline verification of a producer's Ed25519 attestation binding its key
+ * to a receipt object's exact JSON.stringify() serialization. An internal operator must pin the trust registry.
  * A valid signature proves key possession and digest binding, NOT receipt
  * truth, historical completeness, or authorization to execute.
  *
