@@ -16,7 +16,15 @@ test('NOAA source ledger is deterministic, provenance-gated and has stable missi
  assert.equal(manifest.mission.alignment_status,'UNVERIFIED_NO_SYNC');
  assert.equal(manifest.mission.record_status,'source_metadata_only');
  assert.equal(new Set(sources.map(x=>x.id)).size,sources.length);
- assert.equal(sources.length,6);
+ assert.equal(sources.length,8);
+ const gebco=byId('gebco-2026-global-grid');
+ assert.equal(gebco.mission_id,null);
+ assert.match(gebco.rights,/commercial reuse/);
+ assert.match(gebco.verified_metadata,/interpolated/);
+ const blue=byId('noaa-bluetopo-bathymetry');
+ assert.equal(blue.mission_id,null);
+ assert.match(blue.verified_metadata,/uncertainty/);
+ assert.match(blue.rights,/contributor source restrictions/);
  for(const entry of sources){
   assert.ok(entry.source_page?.startsWith('https://'),'missing original source');
   assert.ok(entry.verified_metadata?.length>30,'missing evidence limits');
