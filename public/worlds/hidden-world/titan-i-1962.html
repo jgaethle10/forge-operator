@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a141b">
+<meta name="description" content="Evercraft Hidden World: a sourced, conceptual historical exhibit about Washington's underground Titan I missile complexes, 1959–1965.">
+<title>Below the Surface | Titan I, 1962 | Evercraft Hidden World</title>
+<style>
+:root{color-scheme:dark;--bg:#081218;--panel:#10232b;--line:#37505a;--gold:#edcc90;--aqua:#a6e0d9;--text:#f6efe1;--muted:#bfd1d1;--blue:#799fac;--earth:#60594d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:radial-gradient(ellipse at 82% 6%,#25414d,transparent 42%),var(--bg);font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--gold);text-underline-offset:4px}a:hover{color:#fff}a:focus-visible,input:focus-visible+label{outline:2px solid #ffe5a9;outline-offset:4px}h1,h2,h3{font-family:Georgia,serif;font-weight:400;letter-spacing:-.035em}
+.wrap{width:min(1120px,calc(100% - 32px));margin:auto}
+header.nav{padding:20px 0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.nav strong{font-size:12px;letter-spacing:.12em}.nav a{font-size:13px;text-decoration:none;margin-left:14px}
+.hero{padding:clamp(42px,7vw,88px) 0 35px}.eyebrow{color:var(--aqua);font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:clamp(47px,8vw,94px);line-height:.99;margin:13px 0 22px;max-width:960px}h1 em{font-style:italic;color:var(--gold)}
+.lead{max-width:775px;font-size:clamp(17px,2vw,20px);color:#d0ded8}.chips{display:flex;gap:9px;flex-wrap:wrap;margin:23px 0 0}.chips span{border:1px solid #536873;border-radius:25px;padding:5px 11px;font-size:12px;background:#152932;color:#ddede5}
+.exhibit{border:1px solid #49636a;border-radius:18px;overflow:hidden;box-shadow:0 22px 78px #02090caa;background:#12232c}
+.exhibit-head{background:#18313a;padding:16px 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}.exhibit-head strong{font-size:15px}.exhibit-head span{font-size:12px;color:#c4ded9}
+.exhibit>input,.feature>input{position:absolute;width:1px;height:1px;clip-path:inset(50%)}
+.era-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:13px;background:#0e2029}
+.era-tabs label,.feature-tabs label{cursor:pointer;text-align:center;border:1px solid #587581;color:#d9e8e3;background:#18333e;padding:11px 7px;border-radius:8px;font-size:13px;font-weight:800}
+.era-tabs label:hover,.feature-tabs label:hover{border-color:var(--gold)}
+#era1959:checked~.era-tabs label[for=era1959],#era1962:checked~.era-tabs label[for=era1962],#era1965:checked~.era-tabs label[for=era1965],#erapresent:checked~.era-tabs label[for=erapresent]{background:var(--gold);color:#182932;border-color:var(--gold)}
+.scene{background:#1b3039;position:relative;overflow:hidden}.scene svg{display:block;width:100%;height:auto;min-height:210px}
+.scene svg .construction,.scene svg .standing,.scene svg .abandoned{transition:opacity .2s ease}
+#era1959:checked~.scene .standing,#era1959:checked~.scene .abandoned{opacity:0}
+#era1962:checked~.scene .construction,#era1962:checked~.scene .abandoned{opacity:0}
+#era1965:checked~.scene .construction,#era1965:checked~.scene .standing{opacity:0}
+#erapresent:checked~.scene .construction,#erapresent:checked~.scene .standing{opacity:0}
+.phase{display:none;background:#10232c;padding:20px 23px;border-top:1px solid #3d5b64}
+.phase h2{font-size:25px;margin:7px 0}.phase p{max-width:820px;margin:0;color:#c9d8d6}
+#era1959:checked~.phases .phase1959,#era1962:checked~.phases .phase1962,#era1965:checked~.phases .phase1965,#erapresent:checked~.phases .phasepresent{display:block}
+.scene-credit{padding:12px 19px;background:#0d1b23;color:#b4c9ca;font-size:12px;border-top:1px solid #3a5662}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0 65px}.stat{background:#122833;border:1px solid #35515c;border-radius:12px;padding:18px}.stat b{font-size:32px;line-height:1.2;color:var(--gold);display:block}.stat span{font-size:12px;color:#c7d7d8}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin:65px 0}.feature,.source-card,.caution,.timeline{background:#112530;border:1px solid var(--line);border-radius:15px;padding:23px}
+.feature h2,.source-card h2,.caution h2,.timeline h2{font-size:31px;margin:6px 0 12px}.feature-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+#fSilos:checked~.feature-tabs label[for=fSilos],#fControl:checked~.feature-tabs label[for=fControl],#fConnections:checked~.feature-tabs label[for=fConnections]{background:var(--gold);color:#172932;border-color:var(--gold)}
+.feature-text{display:none;min-height:125px}.feature-text p{color:var(--muted);max-width:680px;margin-top:0}.feature-text b{color:#f2d6a1}
+#fSilos:checked~.feature-texts .silos,#fControl:checked~.feature-texts .control,#fConnections:checked~.feature-texts .connections{display:block}
+.source-card p,.caution p,.timeline p{color:var(--muted)}
+.source-card ul,.timeline ul{padding-left:19px;color:#d1dddc}.source-card li,.timeline li{margin:11px 0}
+.timeline{margin:0 0 65px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:19px}.step{padding:17px;background:#1a323d;border:1px solid #43616c;border-radius:10px}.step b{font-size:21px;color:var(--gold);font-family:Georgia,serif}.step p{font-size:13px;margin:7px 0}
+.caution{border-color:#8a785b;background:#222b2a;margin:0 0 68px}.caution h2{color:var(--gold)}.caution strong{color:#f3dcac}
+footer{padding:25px 0 70px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:#b7cecd;font-size:13px}
+@media(max-width:690px){.nav a{margin-left:8px}.stats{grid-template-columns:1fr}.two{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.feature,.source-card,.timeline,.caution{padding:18px}.scene svg{min-height:200px}.era-tabs{gap:4px;padding:9px}.era-tabs label{font-size:12px;padding:10px 3px}.feature-tabs label{font-size:12px;padding:10px 3px}}
+@media(max-width:350px){.steps{grid-template-columns:1fr}.nav a{display:inline-block;margin:5px 7px 0 0}}
+@media(prefers-reduced-motion:reduce){.scene svg .construction,.scene svg .standing,.scene svg .abandoned{transition:none}}
+</style></head>
+<body><div class="wrap">
+<header class="nav"><strong>EVERCRAFT / HIDDEN WORLD</strong><nav><a href="./">Atlas</a><a href="yakima-evidence.html">Yakima research</a><a href="lund-building.html">Lund Building</a></nav></header>
+<section class="hero">
+<div class="eyebrow">COLD WAR FILE 001 · LARSON AIR FORCE BASE REGION</div>
+<h1>The world beneath<br><em>the launch field.</em></h1>
+<p class="lead">Between 1959 and 1965, three vast underground Titan I complexes near Moses Lake brought the Cold War beneath Washington's surface. Explore the history, structural ideas and human work behind them, with the original evidence always one tap away.</p>
+<div class="chips"><span>3 regional complexes</span><span>9 missiles total</span><span>Operational 1962</span><span>All private / closed</span><span>Not a surveyed site plan</span></div>
+</section>
+<section class="exhibit" aria-labelledby="cutaway-title">
+<div class="exhibit-head"><strong id="cutaway-title">Titan I · Interpretive underground section</strong><span>Illustration is not to scale · relative placement invented</span></div>
+<input id="era1959" type="radio" name="titan-era">
+<input id="era1962" type="radio" name="titan-era" checked>
+<input id="era1965" type="radio" name="titan-era">
+<input id="erapresent" type="radio" name="titan-era">
+<div class="era-tabs" aria-label="Explore historical phases"><label for="era1959">1959</label><label for="era1962">1962</label><label for="era1965">1965</label><label for="erapresent">Today</label></div>
+<div class="scene">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 570" role="img" aria-labelledby="titan-svg-title titan-svg-desc">
+<title id="titan-svg-title">Conceptual cutaway of a Titan I underground complex</title>
+<desc id="titan-svg-desc">An artistic, deliberately non-geographic cutaway showing three deep silo-like chambers, an underground personnel room and connecting corridors. The relative positions and proportions are invented and do not describe actual site plans or entrances.</desc>
+<defs>
+<linearGradient id="soil" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#947a59"/><stop offset=".3" stop-color="#675848"/><stop offset="1" stop-color="#33363a"/></linearGradient>
+<linearGradient id="concrete" x1="0" x2="1"><stop stop-color="#96a5a5"/><stop offset=".35" stop-color="#64777e"/><stop offset="1" stop-color="#3e535c"/></linearGradient>
+<pattern id="strata" width="115" height="39" patternUnits="userSpaceOnUse"><path d="M0 10Q60 22 115 10M0 27Q60 13 115 27" fill="none" stroke="#b7a37e" stroke-opacity=".15" stroke-width="2"/></pattern>
+<pattern id="hatch" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M-2 18L18 -2" stroke="#d7c59d" stroke-opacity=".2" stroke-width="3"/></pattern>
+</defs>
+<rect x="0" y="0" width="1120" height="178" fill="#29434c"/>
+<circle cx="955" cy="65" r="48" fill="#e4ce9f" opacity=".88"/>
+<path d="M0 147Q145 134 245 149T505 145T840 145T1120 139V180H0Z" fill="#587067"/>
+<rect x="0" y="178" width="1120" height="392" fill="url(#soil)"/>
+<rect x="0" y="178" width="1120" height="392" fill="url(#strata)"/>
+<path d="M0 179H1120" stroke="#deb77f" stroke-width="5"/>
+<g opacity=".85"><path d="M0 233H1120M0 334H1120M0 480H1120" stroke="#d3bc90" stroke-opacity=".15" stroke-width="4"/></g>
+<!-- Conceptual civil engineering: no measured location, depth scale, or access route -->
+<g fill="url(#concrete)" stroke="#b6c7c3" stroke-width="5">
+<rect x="83" y="213" width="165" height="322" rx="20"/><rect x="467" y="213" width="165" height="322" rx="20"/><rect x="853" y="213" width="165" height="322" rx="20"/>
+<rect x="300" y="384" width="120" height="100" rx="12"/>
+<rect x="674" y="396" width="120" height="88" rx="12"/>
+</g>
+<g fill="#122734" stroke="#4a5e66" stroke-width="7">
+<rect x="103" y="227" width="125" height="292" rx="11"/><rect x="487" y="227" width="125" height="292" rx="11"/><rect x="873" y="227" width="125" height="292" rx="11"/>
+</g>
+<g stroke="#d4e6d9" stroke-opacity=".55" stroke-width="3"><path d="M100 233H228M484 233H612M871 233H998"/></g>
+<!-- Abstract connecting relationship, not a measured corridor path -->
+<g stroke="#92a8a4" stroke-width="29" stroke-linejoin="round" fill="none"><path d="M248 438H300M420 438H468M632 438H674M794 438H853"/></g>
+<g stroke="#293b44" stroke-width="21" stroke-linejoin="round" fill="none"><path d="M248 438H300M420 438H468M632 438H674M794 438H853"/></g>
+<rect x="313" y="397" width="94" height="71" rx="6" fill="#263e46" stroke="#dfca9a" stroke-width="2"/>
+<rect x="686" y="408" width="95" height="63" rx="6" fill="#263e46" stroke="#bcc3ab" stroke-width="2"/>
+<g fill="#f6e8c5" font-family="system-ui,sans-serif" font-size="17" font-weight="700" text-anchor="middle">
+<text x="166" y="555">SILO A</text><text x="550" y="555">SILO B</text><text x="934" y="555">SILO C</text>
+<text x="360" y="426" font-size="13">CREW</text><text x="360" y="444" font-size="13">CONTROL</text>
+<text x="733" y="435" font-size="12">SUPPORT</text><text x="733" y="451" font-size="12">SPACES</text>
+</g>
+<g class="standing">
+<!-- Deliberately generic silhouettes, not missile engineering drawings -->
+<g fill="#d6cabb" stroke="#e8eadc" stroke-width="3">
+<path d="M145 466V309L167 256L187 309V466Z"/><path d="M529 466V309L551 256L571 309V466Z"/><path d="M915 466V309L937 256L957 309V466Z"/>
+</g><g fill="#756d5d"><rect x="145" y="344" width="42" height="21"/><rect x="529" y="344" width="42" height="21"/><rect x="915" y="344" width="42" height="21"/></g>
+<g fill="#a8dfce"><circle cx="339" cy="456" r="4"/><circle cx="356" cy="456" r="4"/><circle cx="372" cy="456" r="4"/></g>
+</g>
+<g class="construction">
+<rect x="0" y="0" width="1120" height="570" fill="#8d7b5e" fill-opacity=".16"/>
+<path d="M50 155H1100" stroke="#d1b583" stroke-width="4" stroke-dasharray="15 12"/>
+<g stroke="#eadab7" stroke-width="7" fill="none" opacity=".9"><path d="M53 155L164 46L164 155M164 46H291"/><path d="M675 155L806 58L806 155M806 58H1010"/></g>
+<g fill="#f7e0a8" font-family="system-ui,sans-serif" font-size="27" font-weight="850"><text x="28" y="53">CONSTRUCTION / NOT TO SCALE</text></g>
+</g>
+<g class="abandoned"><rect x="0" y="0" width="1120" height="570" fill="#121d23" fill-opacity=".34"/>
+<g fill="#e9ccb1" font-family="system-ui,sans-serif" font-size="24" font-weight="800"><text x="30" y="50">RETIRED / NOT OPEN TO THE PUBLIC</text></g>
+<g stroke="#d9a981" stroke-width="9" opacity=".9"><path d="M103 226L227 226M487 226L611 226M872 226L998 226"/></g>
+</g>
+<rect x="18" y="90" width="419" height="38" rx="8" fill="#15252c" opacity=".94"/>
+<text x="33" y="115" fill="#f1e4c4" font-family="system-ui,sans-serif" font-size="17" font-weight="750">CONCEPTUAL RELATIONSHIPS, NOT A SITE PLAN</text>
+</svg>
+</div>
+<div class="phases">
+<section class="phase phase1959"><div class="eyebrow">December 1, 1959 · ground broken</div><h2>The land opened</h2><p>Construction of the three Larson AFB-area Titan I complexes began in late 1959. Contemporary descriptions emphasize the scale of the hardened underground works. The cranes and open excavation depicted here are symbolic, not a reconstruction of a particular Washington worksite.</p></section>
+<section class="phase phase1962"><div class="eyebrow">1962 · operational</div><h2>Three missiles, one buried complex</h2><p>Each of Washington's Titan I complexes housed three missiles in deep reinforced silos, together with an underground control room and associated facilities. This abstract section depicts their relationship but <strong>does not reproduce the location, dimensions or exact plan of a real site</strong>.</p></section>
+<section class="phase phase1965"><div class="eyebrow">January 1, 1965 · stood down</div><h2>An underground era ends</h2><p>The Titan I installations stood down at the start of 1965 and were deactivated in March. Salvage operations removed valuable equipment. The retired complexes entered private ownership; none is presented here as a public place to explore.</p></section>
+<section class="phase phasepresent"><div class="eyebrow">Present · closed and hazardous</div><h2>The structures outlasted their mission</h2><p>These historical facilities survive in altered and potentially hazardous conditions. The Quincy/Royal City complex is reported to be flooded. All site markers in the regional atlas identify <strong>nearby towns only</strong>, not entrances or coordinates of these properties.</p></section>
+</div>
+<div class="scene-credit">Original educational SVG. The three chambers, crew room and support spaces are symbolic. Horizontal connections indicate documented system relationships only. This is not a floor plan, structural survey, underground route or access map.</div>
+</section>
+<section class="stats" aria-label="Documented historical figures"><div class="stat"><b>3</b><span>Separate Titan I complexes in the Larson AFB region</span></div><div class="stat"><b>9</b><span>Missiles in the three Washington complexes combined</span></div><div class="stat"><b>~160 ft</b><span>Approximate silo depth reported by HistoryLink, not a scale for the illustration</span></div></section>
+<div class="two">
+<section class="feature"><div class="eyebrow">INTERACTIVE ENGINEERING NOTES</div><h2>What made it a buried world?</h2>
+<input type="radio" id="fSilos" name="feature" checked><input type="radio" id="fControl" name="feature"><input type="radio" id="fConnections" name="feature">
+<div class="feature-tabs"><label for="fSilos">01 · Silos</label><label for="fControl">02 · People</label><label for="fConnections">03 · Systems</label></div>
+<div class="feature-texts">
+<div class="feature-text silos"><p><b>Hardened chambers.</b> Titan I missiles sat in substantial below-ground silos. At a high level, the historic engineering challenge was sheltering a large launch system and then bringing it to the surface. The diagram is not designed to recreate mechanical operation.</p></div>
+<div class="feature-text control"><p><b>Human presence underground.</b> A buried launch-control room made this more than storage space. Crews worked beneath the ground in a high-pressure Cold War environment. We have not modeled the actual crew quarters, personnel passages or control equipment.</p></div>
+<div class="feature-text connections"><p><b>One interdependent facility.</b> Official historical accounts describe multiple underground spaces linked by tunnels and utility infrastructure. Their existence is documented, but the connections in our graphic are not measured passageways or directions through any complex.</p></div>
+</div></section>
+<aside class="source-card"><div class="eyebrow">EVIDENCE TRAIL</div><h2>Original sources</h2>
+<ul><li><a href="https://www.historylink.org/File/10158" target="_blank" rel="noopener noreferrer">HistoryLink: Washington's ICBM installations</a>, operational dates, Washington locations and closure status.</li>
+<li><a href="https://www.govinfo.gov/content/pkg/GOVPUB-D103-PURL-gpo107257/pdf/GOVPUB-D103-PURL-gpo107257.pdf" target="_blank" rel="noopener noreferrer">U.S. Air Force history, <em>Building Missiles, 1954–1966</em></a>, period engineering context and historic conceptual drawings.</li>
+<li><a href="https://www.losangeles.spaceforce.mil/Portals/16/documents/AFD-060912-023.pdf" target="_blank" rel="noopener noreferrer">Air Force/Space Force historical publication</a>, Titan I silo-lift distinction.</li></ul>
+<p>Source material is linked, not embedded. Dates and broad engineering facts are documented; this illustration's geometry is interpretive.</p>
+</aside></div>
+<section class="timeline"><div class="eyebrow">WASHINGTON · KEY DATES</div><h2>A brief, costly era</h2>
+<div class="steps"><div class="step"><b>1959</b><p>December 1: construction begins on the three Washington Titan I complexes.</p></div>
+<div class="step"><b>1961</b><p>Facilities completed, preceding operational declaration.</p></div>
+<div class="step"><b>1962</b><p>The 568th Strategic Missile Squadron's Washington Titan I complexes become operational.</p></div>
+<div class="step"><b>1965</b><p>January stand-down and March deactivation, followed by salvage and eventual private ownership.</p></div></div></section>
+<section class="caution"><div class="eyebrow">ACCESS / SAFETY / PROVENANCE</div><h2>Explore the history, not the hazard.</h2>
+<p><strong>All three former Washington Titan I complexes are closed to visitors.</strong> One has been reported flooded. No entrance directions, current owner identification, site coordinates, or real passage layout are supplied here. This exhibit does not grant access to any structure.</p>
+<p>We use broad town-center markers in the atlas for geographic context only. The illustrated three-silo group is an educational motif, not a surveyed or measured reconstruction of Odessa, Warden or Quincy/Royal City.</p></section>
+<footer><div><a href="./">Back to Hidden World Atlas</a> · <a href="lund-building.html">Explore the Lund Building</a></div><span>Evercraft Worlds · Cold War File 001 · Historical education / original illustration</span></footer>
+</div></body></html>
