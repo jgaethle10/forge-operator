@@ -8,6 +8,8 @@ on:
       - 'tests/eo001-systemia-owned-qa-mission.test.mjs'
       - 'systemia/organism/eo001-resident-timer.mjs'
       - 'tests/eo001-resident-timer.test.mjs'
+      - 'scripts/nextgen/eo001-resident-field-admission.mjs'
+      - 'tests/eo001-resident-field-admission.test.mjs'
       - '.github/workflows/systemia-eo001-owned-qa.yml'
   pull_request:
     branches:
@@ -17,6 +19,8 @@ on:
       - 'tests/eo001-systemia-owned-qa-mission.test.mjs'
       - 'systemia/organism/eo001-resident-timer.mjs'
       - 'tests/eo001-resident-timer.test.mjs'
+      - 'scripts/nextgen/eo001-resident-field-admission.mjs'
+      - 'tests/eo001-resident-field-admission.test.mjs'
       - '.github/workflows/systemia-eo001-owned-qa.yml'
   workflow_dispatch:
 permissions:
@@ -36,5 +40,7 @@ jobs:
         run: node --test tests/eo001-systemia-owned-qa-mission.test.mjs
       - name: Prove resident QA timer preparation has no service activation or outside authority
         run: node --test tests/eo001-resident-timer.test.mjs
+      - name: Prove source-pin checks, owner consent, and controlled field activation rollback
+        run: node --test tests/eo001-resident-field-admission.test.mjs
       - name: Independent Forge QA negative controls
         run: python3 integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py
