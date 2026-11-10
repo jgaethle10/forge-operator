@@ -47,6 +47,7 @@ def main() -> int:
         [sys.executable, str(TOOLS / "verify_checkout.py")],
         [sys.executable, str(TOOLS / "validate_surveillance.py"), "--self-test"],
         [sys.executable, str(TOOLS / "check_observatory.py")],
+        [sys.executable, str(TOOLS / "check_provisional.py")],
         [sys.executable, "-m", "unittest", "discover", "-s", str(TOOLS), "-p", "test_*.py", "-v"],
         [sys.executable, str(TOOLS / "release_gate.py"), "--self-test"],
         [sys.executable, str(TOOLS / "release_gate.py"), "--stage", "preview"],
