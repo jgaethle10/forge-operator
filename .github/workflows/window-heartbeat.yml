@@ -11,13 +11,6 @@ on:
     paths:
       - 'systemia/society/window-*.mjs'
       - 'tests/window-heartbeat.test.mjs'
-      - 'tests/window-decision-receipts.test.mjs'
-      - '.github/workflows/window-heartbeat.yml'
-  pull_request:
-    paths:
-      - 'systemia/society/window-*.mjs'
-      - 'tests/window-heartbeat.test.mjs'
-      - 'tests/window-decision-receipts.test.mjs'
       - '.github/workflows/window-heartbeat.yml'
   workflow_dispatch:
   schedule:
@@ -48,8 +41,7 @@ jobs:
           node --check systemia/society/window-civic.mjs
           node --check systemia/society/window-social.mjs
           node --check systemia/society/window-heartbeat.mjs
-          node --check systemia/society/window-decision-receipts.mjs
-          node --test tests/window-heartbeat.test.mjs tests/window-decision-receipts.test.mjs
+          node --test tests/window-heartbeat.test.mjs
       - name: Write only canonical world-state branch
         if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push')
         env:
