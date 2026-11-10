@@ -80,6 +80,8 @@
     "purpose": "Show how a business decision changes when costs, demand and other assumptions change.",
     "narrative_promise": "The assumptions are part of the answer.",
     "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/brand.json",
-    "creative_status": "working_brand_direction_not_trademark_cleared"
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
   }
 }
