@@ -25,3 +25,50 @@ jobs:
         run: python3 -m py_compile research/infrastructure-watch/scripts/fhwa_2026.py
       - name: Run offline importer checks
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -v
+  live-2026-small-state-probe:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Import a small real FHWA state dataset
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py sync \
+            --state 'U.S. Virgin Islands' \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-data"
+      - name: Build isolated partial index
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py build \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-data" \
+            --db "$RUNNER_TEMP/aiw-2026-data/bridges2026.sqlite"
+      - name: Validate real state receipt and partial coverage
+        run: |
+          python3 - <<'PY'
+          import json,os,sqlite3
+          from pathlib import Path
+          d=Path(os.environ['RUNNER_TEMP'])/'aiw-2026-data'
+          rec=json.loads((d/'state_78_2026.receipt.json').read_text())
+          assert rec['expected']==rec['indexed']==23 and rec['verified'] is True
+          with sqlite3.connect(d/'bridges2026.sqlite') as con:
+              count=con.execute('SELECT COUNT(*) FROM bridges').fetchone()[0]
+              meta=dict(con.execute('SELECT k,v FROM meta'))
+          assert count==23
+          assert json.loads(meta['partial']) is True
+          assert json.loads(meta['complete_national_import']) is False
+          assert json.loads(meta['states_verified'])==1
+          print(json.dumps({'verified_state':rec['state'],'records':count,'partial':True,'download_sha256':rec['raw_sha256'],'source':rec['source_url']},indent=2))
+          PY
+      - name: Retain inspection receipts and partial index for reviewer
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-virgin-islands-verified-partial-index
+          path: |
+            ${{ runner.temp }}/aiw-2026-data/state_78_2026.receipt.json
+            ${{ runner.temp }}/aiw-2026-data/bridges2026.sqlite
+          retention-days: 7
