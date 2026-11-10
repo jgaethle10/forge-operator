@@ -20,6 +20,12 @@ test('each existing SKU carries one independent purpose, story, tone, palette an
   assert.equal(brand.product_slug,slug);
   assert.equal(brand.governance.trademark_cleared,false);
   assert.equal(brand.governance.paid_sale_claim,false);
+  const emblem=read(slug+'/brand-mark.svg');
+  assert.match(emblem,/<svg xmlns="http:\/\/www.w3.org\/2000\/svg"/);
+  assert.ok(emblem.includes(brand.imprint),'emblem lacks distinct product title');
+  assert.ok(emblem.includes(brand.design_system.accent),'emblem lacks product palette');
+  assert.ok(brand.assets.original_vector_emblem.endsWith('/'+slug+'/brand-mark.svg'));
+  assert.equal(product.identity.mark_svg,brand.assets.original_vector_emblem);
   assert.equal(brand.relationship.parent,'Evercraft OS');
   assert.ok(brand.story.origin_narrative.length>120);
   assert.ok(brand.story.core_belief.length>20);
@@ -65,6 +71,8 @@ test('seven branded pages show their own story and original correct checkout',()
   assert.ok(html.includes('class="brand-intro"'),slug+' story absent');
   assert.ok(html.includes('href="../brand-world.css"'),slug+' theme missing');
   assert.ok(html.includes('href="./brand.json"'),slug+' brand metadata missing');
+  assert.ok(html.includes('<link rel="stylesheet" href="../brand-world.css">'));
+  assert.match(html,/xmlns="http:\/\/www.w3.org\/2000\/svg"|viewBox="0 0 100 100"/);
   assert.ok(html.includes('identity-'+slug),slug+' unique visual CSS not selected');
   assert.ok(html.includes('<meta name="theme-color" content="'+brand.design_system.background+'">'));
   assert.ok(html.includes('<title>'+brand.imprint+' | '));
