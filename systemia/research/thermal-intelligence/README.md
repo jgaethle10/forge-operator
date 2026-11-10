@@ -106,3 +106,14 @@ node systemia/research/thermal-intelligence/run-measurements.mjs systemia/resear
 - `.github/workflows/thermal-intelligence-rnd.yml`: dedicated scoped tests and synthetic-input guardrail assertions on commits and pull requests; no secrets, live devices, checkout, or deployment.
 
 A meter or node's own CPU TDP/temperature telemetry cannot be substituted for real at-wall energy or heat delivered to a sink. Independent physical measurement, site permission, professional review and verified Systemia delegation remain **not yet achieved**.
+
+## Sprint 5 | Node field-readiness probe (2026-11-09)
+
+GitHub dedicated CI completed successfully on Sprint 4 commit `178f1fcb1bb3182c374271c063e1b91cb12e098b`. This validates the **offline tests**, not physical heat recovery or installation.
+
+- `node-readiness.mjs`: single-shot, read-only machine context assessment. It optionally sees Linux sysfs temperature zones, marks WSL virtualization explicitly, and *always* reports `atWallElectricKWh:null`, `usefulRecoveredHeatKWh:null` and `fieldDeploymentApproved:false`.
+- `node-readiness.test.mjs`: synthetic input edge cases for WSL, no sensors, malformed data and no false power proof; independent CI receipt required for this new commit.
+- `run-node-readiness.mjs`: optional local command `node systemia/research/thermal-intelligence/run-node-readiness.mjs` when checked out on an **authorized** node. Running it on GitHub's hosted CI only establishes test behavior on the runner, not that Node002 was probed.
+- `NODE002-FIELD-READINESS.md`: clear owner-consent, safe meter, data custody and calibrated-heat evidence gates.
+
+**Execution truth:** No local run on Node002 has been observed, no external meter readings received, no new compute workload, no heating loop, and no live Systemia mission dispatched. Next physical gate is **passive hardware power metering by appropriate personnel** and separate verified heat-demand/heat-transfer measurement.
