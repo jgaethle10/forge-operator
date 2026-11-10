@@ -103,7 +103,7 @@ function authorizedFabric(records, permittedIds = records.map((x) => x.record_id
       return {
         schema: 'evercraft.context.authorized-timewalk-snapshot.v1',
         authority_filter_applied: true,
-        authorized_at: '2026-11-09T20:00:00.000Z',
+        authorized_at: new Date().toISOString(),
         records: actor_ref === 'agent:auditor'
           ? records.filter((r) => permittedIds.includes(r.record_id)) : [],
       };
