@@ -31,6 +31,8 @@ jobs:
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/world-engine-integration.test.mjs
       - name: Prove cinematic v2 geometry, camera and WebGPU plan
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/cinematic-flyover.test.mjs
+      - name: Prove atmospheric v3 mesh, camera, WebGPU and reproducibility contracts
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/atmospheric-flyover.test.mjs
       - name: Check native pixel proof syntax
         run: node --check systemia/visual-engine/flyover-pixel-proof.mjs
 
