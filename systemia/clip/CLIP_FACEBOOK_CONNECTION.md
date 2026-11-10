@@ -1,6 +1,6 @@
 # Evercraft Clip: Meta Page connection diagnostics
 
-**Surface:** Authenticated Evercraft Home, `/credentials.html` → Facebook Pages → **Check status** → select a sealed Page reference → **Check Clip connection**. The screen uses `POST /api/clip/facebook/diagnose` solely to request read-only provider GETs. It does not submit a post, upload media, grant a Page task, or send raw credentials to the browser.
+**Surface:** Authenticated Evercraft Home at `https://fabric.systemiacommandcenters.com/home/credentials.html` (owned `/home/` mount) → Facebook Pages → **Check status** → select a sealed Page reference → **Check Clip connection**. The screen uses `POST /api/clip/facebook/diagnose` solely to request read-only provider GETs. It does not submit a post, upload media, grant a Page task, or send raw credentials to the browser.
 
 The route requires the existing `home.identity.sessions.manage` authorization, selects only a `facebook-pages` credential from the private owned vault, and checks:
 
@@ -21,3 +21,11 @@ If multiple sealed Page credentials exist, select a specific reference from the 
 | `read_only_verified_write_unverified` | Verify Meta `pages_manage_posts`, related Page role/task, Passport authority, durable attempt store and a real provider publication receipt before enabling writes |
 
 **This diagnostic is not a production-ready signal or a live publish permission check.** CI uses fake Page tokens and simulated Graph responses, never real Meta credentials or posts. A real launch requires a permitted company Page ID, active publisher credentials in the owned vault, signed or scoped Systemia authority, server-side durable idempotency, and verified post ID/permalink readback. Use an eligible new campaign release after reconciliation; never delete an ambiguous claim just to force a retry.
+
+## Owned edge deployment prerequisite
+
+The shared Fabric Caddy configuration uses `handle_path /home/*`, stripping the `/home/` prefix before proxying to the Evercraft Home service. Every credential screen request must use a **relative** `api/` path so it resolves under `/home/api/` on the public edge and under `/api/` when Home runs at the local root. Root-absolute `/api/` calls would incorrectly go to the sibling Fabric service.
+
+The owned Home installer provisions `EVERCRAFT_CLIP_JOURNAL_STATE_DIR=/var/lib/evercraft/home/clip/journal-attempts` with owner-only permissions. Clip Journal publishing fails closed without that durable claim storage, even when Page credentials are present. Reinstall/update the owned Home resident on the actual admitted node; a GitHub merge does not modify private `/etc/evercraft/home.env` or rotate Meta Page grants.
+
+The owned-edge canary checks for the public `Check Clip connection` UI and confirms the anonymous diagnostic endpoint denies a POST with `session_required`. These checks prove HTTP routing and auth gating only, **not** Page token validity or write permission. The owner must finish any pending private Home ownership claim and sign in before using the credential screen. Never enter the one-time owner claim code, Page access token, or session cookie into chat, GitHub or a shared post.
