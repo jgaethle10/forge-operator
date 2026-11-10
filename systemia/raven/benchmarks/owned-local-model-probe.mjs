@@ -5,7 +5,7 @@
  */
 import { createHash } from 'node:crypto';
 
-const MODEL_ID = /^[A-Za-z0-9][A-Za-z0-9._:/@+~-]{0,159}$/;
+const MODEL_ID = /^[A-Za-z0-9./_@+~-][A-Za-z0-9._:/@+~-]{0,255}$/; // llama.cpp may expose a Linux model path as its exact ID
 const PROVIDERS = Object.freeze({
   ollama: { defaultOrigin:'http://127.0.0.1:11434', modelsPath:'/api/tags' },
   'llama-cpp': { defaultOrigin:'http://127.0.0.1:36095', modelsPath:'/v1/models' }
