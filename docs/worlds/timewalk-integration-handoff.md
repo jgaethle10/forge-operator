@@ -98,3 +98,19 @@ The [1984 NRHP nomination for Larson Building](https://npgallery.nps.gov/NRHP/Ge
 **Still blocked:** the exact Library of Congress 1950 Sanborn plate for this downtown block, surveyed georeferencing tie-points, direct 1960 storefront imagery, 1959/1961 directory entries, and a reviewed source-media rights manifest. The standalone alpha HTML is a renderer reference and is **not production-authoritative**, particularly because its schematic arrangement does not accurately encode the whole route.
 
 **Main Worlds integration owner:** only import the history handoff into existing Worlds' scene authoring / provenance UI after schema review. Do not copy standalone Timewalk rendering, movement, save, hosting or physics code.
+
+## 2026-11-09 research discovery: CSUN Yakima 1960 Sanborn atlas holding
+
+The [CSUN Department of Geography's Sanborn collection catalog](https://www.csun.edu/sites/default/files/outside_california.pdf) **lists Yakima, Yakima County with a 1960 edition** (also 1953, 1955, 1956, 1958 and 1959). This is a materially closer candidate than the public-domain [LOC 1920–Dec 1950 collection](https://www.loc.gov/item/sanborn09381_002/). Crucially, CSUN's listing is **collection-level, not the exact downtown plate**. We have **not obtained, visually inspected or licensed a 1960 Sanborn sheet**, and must not claim 1960 footprints or actual original storefront details from the catalog.
+
+**Research-access terms:** The [CSUN archive access page](https://www.csun.edu/social-behavioral-sciences/sanborn-collection/about) gives `sanborn@csun.edu` as the research contact. It lists a **$10 USD volume pull fee** and **$20 USD imaging fee per sheet**, with digital copies described for **non-commercial research or personal use**. Do not initiate charge or scanning order automatically. This is not an authorized quote or public/commercial re-use license. Any derivative/public-world usage and item-level rights must be checked with archivists/rights holders separately. The [Library of Congress rights guidance](https://guides.loc.gov/fire-insurance-maps/copyright) also cautions that *copyright status is not uniform for all Sanborn maps*; the already-public LOC images are public domain but a distinct 1960 physical atlas does not automatically inherit that clearance.
+
+**Committed data and executable acquisition guards:**
+- `public/worlds/timewalk/yakima-1960/csun-1960-acquisition.v1.json` lists original volume/sheet ID, item URL, edition correction stamps, scan hash, image rights, and exact block coverage as **not inspected / null**. Explicit `purchaseAuthorized:false`, `geometryReady:false`, `publicDistributionAllowed:false`.
+- `public/worlds/timewalk/archive-acquisition.mjs` provides `validateArchiveAcquisition`, `acquisitionReadiness`, and `archiveInquiryPacket`. Inquiry is a **draft packet only**, with no external send action or fee permission. The module cannot turn a catalog year into approved 1960 scene geometry.
+- `tests/timewalk-archive-acquisition.test.mjs` adds six no-fee, original-verification, exact-year and city-rights regression cases.
+- `map-registration-pending.v1.json` still contains the unresolved LOC 1950 sheet; a new `preferredTargetYearAcquisition` points to the more period-relevant CSUN 1960 candidate. Both remain unlocated.
+
+**Archive inquiry scope:** 6 S. Second Street A.E. Larson Building, S. Second/E. Yakima intersection, S. Third/E. Yakima intersection, and Capitol Theatre along South Third; ask for atlas volume/sheet IDs, original updates, feasibility of remote viewing, item price, and rights for public/possibly commercial 3D reconstruction. **No inquiry has been sent.**
+
+**Main Worlds** must continue to own rendering, movement, scene persistence, and navigable geometry. Once a specific dated 1960 sheet and rights have been reviewed, Timewalk can supply period-authenticated map features and georeferencing evidence. Until then, 1960 shape/data accuracy is still *unverified*.
