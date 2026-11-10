@@ -37,6 +37,17 @@ try{
   assert.equal(lines.filter(event=>event.type==='worker'&&event.state==='running').length,6);
   const streamDenied=await fetch(base+'/api/executor-smoke-stream',{method:'POST'});
   assert.equal(streamDenied.status,403);
+  const reportStream=await fetch(base+'/api/verified-report-executor-stream',{method:'POST',headers:{'x-work-saban-client':'local-preview'}});
+  assert.equal(reportStream.status,200);
+  const reportEvents=(await reportStream.text()).trim().split('\n').map(line=>JSON.parse(line));
+  assert.equal(reportEvents[0].type,'started');
+  assert.equal(reportEvents[0].model_inference,false);
+  assert.equal(reportEvents.at(-1).type,'completed');
+  assert.equal(reportEvents.at(-1).capacity.verified,1);
+  assert.equal(reportEvents.at(-1).specialist_receipts,5);
+  assert.match(reportEvents.at(-1).report_sha256,/^[a-f0-9]{64}$/);
+  const reportDenied=await fetch(base+'/api/verified-report-executor-stream',{method:'POST'});
+  assert.equal(reportDenied.status,403);
   const denied=await fetch(base+'/api/executor-smoke',{method:'POST'});
   assert.equal(denied.status,403);
   const bad=await fetch(base+'/api/capacity',{headers:{host:'example.org:1234'}});
