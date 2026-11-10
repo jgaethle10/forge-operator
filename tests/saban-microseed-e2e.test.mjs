@@ -9,6 +9,8 @@ import { AmbientDeviceRegistry } from '../systemia/saban/ambient-device-registry
 import { normalizeMicroDeviceManifest } from '../systemia/saban/microseed-device-bridge.mjs';
 import { startMicroSeedNativeAgent } from '../systemia/saban/microseed-native-agent.mjs';
 import { createMicroSeedNativeAgentAdapter } from '../systemia/saban/microseed-native-agent-adapter.mjs';
+import { readSignedMicroSeedReceipt } from '../systemia/saban/microseed-signed-receipt-store.mjs';
+import { verifyMicroSeedExecutionReceipt } from '../systemia/saban/microseed-receipt-signature.mjs';
 import { startMicroSeedGateway } from '../systemia/saban/microseed-gateway.mjs';
 
 test('Saban gateway relays exactly-once work to a real native MicroSeed agent',async()=>{
@@ -175,6 +177,16 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
     assert.match(firstBody.result.remote_signature_payload_sha256,/^sha256:/);
     assert.equal(firstBody.result.credential_exposed,false);
     assert.match(firstBody.result.remote_receipt_hash,/^sha256:/);
+    // The native device must have durably recorded the actual *signed* receipt
+    // before the relay reported success. The prior idempotency cache is unsigned.
+    const persistedSigned=await readSignedMicroSeedReceipt({
+      stateDir:path.join(root,'device-state'),
+      device_id:'phone-e2e-01',idempotency_key:'e2e-job-001',
+    });
+    assert.equal(persistedSigned.receipt_hash,firstBody.result.remote_receipt_hash);
+    assert.equal(verifyMicroSeedExecutionReceipt(persistedSigned,{
+      publicKey,expected_device_id:'phone-e2e-01',
+    }).verified,true);
     assert.ok(telemetryCalls>=2);
     assert.equal(executionTelemetryCalls,executionsAfterConformance+1);
 
