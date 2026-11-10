@@ -139,7 +139,7 @@
     world.append(path);
     const overlay=make('div','spatial-overlay');
     const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · FOLLOW SELECTED');
-    const evidenceNote=make('div','spatial-motion-disclosure','CHARACTER MOTION VISUALIZES RECORDED WORKER STATES. NOT PHYSICAL AGENT MOVEMENT.');
+    const evidenceNote=make('div','spatial-motion-disclosure','MOTION VISUALIZES RECORDED EVENTS · NOT PHYSICAL AGENT TRAVEL');
     evidenceNote.setAttribute('aria-label','Character animations illustrate verified local worker state changes, not physical movement by autonomous AI agents.');
     const controls=make('div','spatial-controls');
     const buttons=[
@@ -267,7 +267,9 @@
     if(roomButton)roomButton.setAttribute('aria-pressed',String(roomLevel));
     const compact=(scene?.getBoundingClientRect?.().width||window.innerWidth||1000)<540;
     position.pitch=roomLevel?34:(compact?59:58);
-    position.zoom=roomLevel?Math.max(position.zoom,compact?.60:.91):position.zoom;
+    // Preserve a room-scale composition on phones instead of cropping the faces.
+    // This is an observational low angle, not actual first-person movement.
+    position.zoom=roomLevel?(compact?.46:.72):position.zoom;
     applyCamera();
   }
   function orbitCamera(dx,dy){
