@@ -9,7 +9,7 @@
 const BASE='https://api.stripe.com';
 const cleanId=(value,prefix)=>typeof value==='string'&&value.startsWith(prefix)&&/^[A-Za-z0-9_]+$/.test(value);
 export function createRavenStripeHostedReader({secretKey,fetchImpl=fetch}={}){
-  if(typeof secretKey!=='string'||!/^sk_live_[A-Za-z0-9]+$/.test(secretKey))
+  if(typeof secretKey!=='string'||!/^(?:sk|rk)_live_[A-Za-z0-9]+$/.test(secretKey))
     throw Error('owner_authorized_live_stripe_read_key_required');
   async function read(pathname,query={}){
     const url=new URL(pathname,BASE);
