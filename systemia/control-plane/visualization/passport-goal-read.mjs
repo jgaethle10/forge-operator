@@ -160,6 +160,20 @@ export async function readPassportScopedGoalFromSignedStore({
       Array.isArray(attemptDeviceMap)) {
     throw new Error('visual_signed_receipt_source_config_invalid');
   }
+  // Check current device approval before reading private signed journals.
+  // Passport has already authorized this exact mission.
+  const activeDevices = [...new Set(state.tasks
+    .filter(task => task.status === 'complete' && task.attempt_key &&
+      Object.hasOwn(attemptDeviceMap, task.attempt_key) &&
+      Object.hasOwn(receiptStateDirsByDevice, attemptDeviceMap[task.attempt_key]))
+    .map(task => attemptDeviceMap[task.attempt_key]))];
+  const effectiveKeys = ambientRegistryRoot === null
+    ? trustedDeviceKeys
+    : activeDevices.length
+      ? await loadActiveAmbientReceiptKeys({
+          ambientRegistryRoot, deviceIds:activeDevices, now:instant,
+        })
+      : {};
   const signedReceipts = [];
   let missingSource = 0;
   for (const task of state.tasks) {
@@ -186,18 +200,6 @@ export async function readPassportScopedGoalFromSignedStore({
       throw error;
     }
   }
-  const activeDevices = [...new Set(state.tasks
-    .filter(task => task.status === 'complete' && task.attempt_key &&
-      Object.hasOwn(attemptDeviceMap, task.attempt_key) &&
-      Object.hasOwn(receiptStateDirsByDevice, attemptDeviceMap[task.attempt_key]))
-    .map(task => attemptDeviceMap[task.attempt_key]))];
-  const effectiveKeys = ambientRegistryRoot === null
-    ? trustedDeviceKeys
-    : activeDevices.length
-      ? await loadActiveAmbientReceiptKeys({
-          ambientRegistryRoot, deviceIds:activeDevices, now:instant,
-        })
-      : {};
   const snapshot = correlateSignedDeviceEvidence(state, {
     signedReceipts, trustedDeviceKeys:effectiveKeys, now:instant,
   });
