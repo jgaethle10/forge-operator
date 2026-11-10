@@ -50,3 +50,17 @@ Do not publish hostnames, private paths, tokens, private prompts, or customer da
 5. Production still needs admission, identity, rate limits, budget, privacy controls and separate external-effect authorization.
 
 This runbook is a preparation artifact, not a live runtime claim.
+
+## Second gate: explicit, synthetic local inference (review branch only)
+
+After the metadata command has returned the *actual* model ID and the operator has reviewed the branch and chosen to spend local compute, there is a separate **non-production, opt-in** canary. It does **not** install or restart any service or enable hosted providers:
+
+```bash
+node systemia/raven/benchmarks/run-owned-local-inference-canary.mjs --model THE_EXACT_ID_FROM_LOCAL_PROBE --origin http://127.0.0.1:36095 --execute-local
+```
+
+Without `--execute-local` the command holds without opening the adapter or submitting a prompt. With the flag, it performs `GET /v1/models` and (only if the ID is present) **one** `POST /v1/chat/completions` with a fixed non-sensitive synthetic request, `max_tokens=96` and `stream=false`. It never accepts a user-supplied prompt, hosted provider, API key, remote URL, or tool invocation. It is a direct same-node probe, **not** Systemia admission.
+
+**Result truth:** `state=observed` means one local response was received and internally hashed; `state=held` with `inference_outcome=not_started` means validation failed before inference; `unknown_after_activation` means the request may have reached the engine but completion cannot be proven. Do not auto-retry an unknown outcome. A receipt is local integrity evidence, not independent verification of correctness, external work or an actual multi-model team.
+
+Production implementation and independent second-opinion operation remain **not authorized / not deployed**. The reviewed Ollama provider in Raven is a separate existing adapter; this llama.cpp path stays disconnected from the production gateway.
