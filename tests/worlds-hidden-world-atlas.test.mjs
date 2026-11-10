@@ -67,3 +67,27 @@ test('Yakima evidence lab is source-backed and functional without JavaScript', (
 
   assert.doesNotMatch(lab, /<script\b/i, 'historical evidence must remain visible in script-blocking previews');
 });
+
+
+test('Lund Building exhibit uses a source-backed period study, not invented tunnel geometry', () => {
+  const page=read('public/worlds/hidden-world/lund-building.html');
+  const lab=read('public/worlds/hidden-world/yakima-evidence.html');
+  const atlas=read('public/worlds/hidden-world/index.html');
+  const ledger=JSON.parse(read('public/worlds/hidden-world/yakima-evidence-ledger.v1.json'));
+  assert.match(lab,/href="lund-building\.html"/);
+  assert.match(atlas,/href="lund-building\.html"/);
+  for(const year of ['1899','1910','1925','1983'])assert.match(page,new RegExp('id="y'+year+'"'));
+  assert.match(page,/National Register nomination PDF/);
+  assert.match(page,/two surrounding buildings by doorways/i);
+  assert.match(page,/does not identify the connecting doorways as underground/i);
+  assert.match(page,/proportions not surveyed/i);
+  assert.doesNotMatch(page,/<script\b/i,'exhibit needs a scriptless visual fallback');
+  const lund=ledger.records.find(r=>r.id==='yk-lund-building');
+  assert.ok(lund?.documented_architecture);
+  assert.equal(lund.recorded_coordinates,null);
+  assert.equal(lund.geometry_verified,false);
+  assert.equal(lund.connected_tunnel_verified,false);
+  assert.equal(lund.documented_architecture.facts.length,7);
+  assert.ok(lund.documented_architecture.inference_limits.some(x=>x.includes('not identified as below ground')));
+  assert.match(lund.documented_architecture.source_url,/npgallery\.nps\.gov/);
+});

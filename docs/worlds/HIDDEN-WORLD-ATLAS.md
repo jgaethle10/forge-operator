@@ -35,6 +35,16 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 - KATS-FM, “More Haunted Spots Across the Yakima Valley” (2021), local recollection: https://katsfm.com/more-haunted-spots-across-the-yakima-valley/
 
 
+## Lund Building architectural study (November 9, 2026)
+
+- New source-driven exhibit: `/worlds/hidden-world/lund-building.html`; linked from the Pacific Northwest atlas and Yakima Evidence Lab.
+- Uses CSS-only year controls and an original **illustrative, not surveyed** SVG elevation for 1899 saloon, circa 1910 storefront, 1920s exterior alterations and the 1983 nomination description. No source images are embedded or assumed licensed.
+- Primary document: 1983 National Register nomination for the Lund Building, pages headed **7. Description** and **8. Significance**, https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa.
+- Documented details: local stone load-bearing walls, a two-story structure with a truncated original corner entrance, the Alfalfa Saloon (completed 1899), circa-1910 plate-glass retail changes, segmentally arched upper windows, an approximately fourteen-foot first-floor ceiling and a metal marquee added in the 1920s. Exact panel/window proportions in the drawing are invented for illustrative purposes and explicitly labeled.
+- **Critical evidence distinction:** The nomination states the Lund interior was connected by doorways to two surrounding buildings, as described by the 1983 author. It does **not** establish that those connections were underground, identify the neighbors or date the individual passageways. This is evidence for historical inter-building circulation only, not a tunnel map or public-access claim.
+- Evidence ledger retains seven primary records with their original geometry/tunnel certainty flags and enriches the Lund entry with seven sourced architectural facts, a primary PDF link and explicit inference limits.
+- Existing owned vault serves the static HTML without new services; source-level tests, browser viewport/JS-off tests and the public HTTPS release gate now also cover the architecture exhibit.
+
 ## Historical Evidence Lab 004 (November 4, 2026)
 
 - Route: `/worlds/hidden-world/yakima-evidence.html`, linked from the atlas research sidebar.

@@ -44,6 +44,7 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   if(url.endsWith('/api/health'))return response(200,health,'application/json');
   if(url.endsWith('/hidden-world/'))return response(200,'Hidden World Atlas');
   if(url.endsWith('/yakima-evidence.html'))return response(200,'Connected tunnels established by the records reviewed');
+  if(url.endsWith('/lund-building.html'))return response(200,'National Register nomination PDF');
   if(url.endsWith('/yakima-standalone.html'))return response(200,'scene-ready');
   if(url.endsWith('.csv'))return response(200,'id,title\nyakima,example','text/csv');
   if(url.endsWith('yakima-evidence-ledger.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.evidence-ledger.v1'}),'application/json');
@@ -57,6 +58,10 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   url.endsWith('yakima-evidence.html')?response(404,'not deployed'):mock(url)});
  assert.equal(missing.verified,false);
  assert.equal(missing.reason,'yakima_evidence_not_verified');
+ const missingLund=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/lund-building.html')?response(404,'not deployed'):mock(url)});
+ assert.equal(missingLund.verified,false);
+ assert.equal(missingLund.reason,'lund_architecture_not_verified');
  const wrongMime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
   url.endsWith('.csv')?response(200,'yakima,','text/html'):mock(url)});
  assert.equal(wrongMime.reason,'research_data_not_verified');
