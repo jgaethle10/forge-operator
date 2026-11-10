@@ -49,6 +49,11 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 - [MODEL_VERIFICATION.md](MODEL_VERIFICATION.md) contains source citations, model-only comparison values, and unambiguous evidence boundaries.
 - GitHub CI checks all research tests and explicitly synthetic input data. The model comparison is NOT independent hardware verification, energy efficiency, peer review, or Systemia agent execution.
 
+## Stage 5: raw evidence intake and metrology gate (2026-11-09)
+- [evidence-package.mjs](evidence-package.mjs) and [evidence-package.test.mjs](evidence-package.test.mjs) check SHA-256 byte integrity, per-trial file binding, path safety, instrument metadata and claimed safety-review chronology. All synthetic fixture data is test-only.
+- [EVIDENCE_INTAKE.md](EVIDENCE_INTAKE.md) describes the proposed data package and NIST TN 1297 uncertainty-reporting requirements. No actual bench data is present in this branch.
+- Passing evidence-intake checks **does not authenticate scientific observations, reviewer signatures, instruments, calibration certificates or actual hardware**. The checker always returns `publicationAllowed: false` and `scientificClaimAuthorized: false`.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
