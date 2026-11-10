@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
+      - 'systemia/control-plane/visualization/signed-device-evidence.mjs'
       - 'systemia/control-plane/visualization/passport-goal-read.mjs'
       - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
       - 'systemia/saban/ambient-device-trust.mjs'
@@ -11,6 +12,7 @@ on:
   pull_request:
     paths:
       - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
+      - 'systemia/control-plane/visualization/signed-device-evidence.mjs'
       - 'systemia/control-plane/visualization/passport-goal-read.mjs'
       - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
       - 'systemia/saban/ambient-device-trust.mjs'
