@@ -284,6 +284,25 @@
         "reuse": "Use as documentary reference; verify any original photos or reproduced archival designs separately."
       },
       "notes": "1984 description records original seven ground-floor shop entrances (four on Second Street, three on Yakima Avenue); three corner storefronts altered in 1963 for a bank; 65 x 130 ft footprint and 188 ft height to flagpole; salmon brick and varied stone/metal finishes. The report is retrospective evidence, not a 1960 photograph."
+    },
+    {
+      "id": "capitol-2022-technical-packet",
+      "name": "Capitol Theatre official 2022–23 technical packet: directions to the main entrance",
+      "url": "https://capitoltheatre.org/site/files/file_manager/page/shared/Capitol_Theatre_Tech_Packet_2022-23.pdf",
+      "holder": "Capitol Theatre Yakima",
+      "evidencePeriod": [
+        "2022"
+      ],
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "rights": {
+        "status": "third_party_permission_check",
+        "reuse": "Link and cite textual directions; do not reproduce attached aerial image without permission."
+      },
+      "notes": "Packet page 4 describes current main entrance on the east side of South Third Street midway along the block south of Yakima Avenue. Not evidence for the entrance's exact 1960 location or facade, and the conflicting 9/19 S Third address is still open."
     }
   ],
   "places": [
@@ -438,6 +457,15 @@
           "evidence": "documented",
           "sourceIds": [
             "yakima-city-walking-tour"
+          ]
+        },
+        {
+          "id": "capitol-modern-entrance-east-side",
+          "assertion": "The Capitol Theatre's official 2022–23 technical packet describes its main entrance midway along the east side of South Third Street south of Yakima Avenue.",
+          "period": "2022",
+          "evidence": "documented",
+          "sourceIds": [
+            "capitol-2022-technical-packet"
           ]
         }
       ]
@@ -635,6 +663,22 @@
       "acquisition": "1984 section 7 full text and scan examined; record retrospectively identifies 1963 corner alteration",
       "rights": "link and cite; inspect attached historic photographs and permissions separately",
       "useFor1960": "Before-1963 corner storefront form is period-inferred with strong dated alteration evidence, not a direct 1960 facade observation"
+    },
+    {
+      "id": "capitol-modern-entrance-reference",
+      "name": "Official 2022 main entrance directions to Capitol Theatre",
+      "sourceId": "capitol-2022-technical-packet",
+      "period": {
+        "display": "2022",
+        "earliest": 2022,
+        "latest": 2022,
+        "approximate": false
+      },
+      "spatialMatch": "South Third Street, east side of block south of Yakima Avenue",
+      "itemType": "current-venue-direction-packet",
+      "acquisition": "Official PDF text and directions page visually examined",
+      "rights": "Textual paraphrase/link only; attached aerial image copyright not cleared",
+      "useFor1960": "Modern entry/orientation only. Historical 1960 entrance/accessibility configuration unknown."
     }
   ],
   "researchGoals": {
