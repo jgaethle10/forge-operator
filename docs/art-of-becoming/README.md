@@ -19,9 +19,9 @@ Run `node --test tests/art-of-becoming.test.mjs` for the domain and privacy-cont
 - Daily reflections for today or any of the previous 30 days, editable/clearable.
 - Self-reported consecutive check-ins and cumulative completed days are separate metrics.
 - Unknown/missing check-ins are **not** called relapses.
-- Seven completed days yield one finished, deterministic canvas; no requirement that they be consecutive.
+- Seven **distinct self-reported followed-through dates** earn a finished, deterministic canvas; no requirement that they be consecutive. Art marks are issued once per distinct date and cannot be earned again by toggling that date.
 - Three procedural styles: garden, constellation, mosaic.
-- Current and completed canvases can be saved locally as portable SVG.
+- Current and completed canvases can be saved locally as portable SVG. Earned art marks are retained separately from the editable reflection records; correcting a previously successful day decreases the current success count but does not revoke a completed canvas.
 - Entries use browser `localStorage`; individual goals remain separate.
 - JSON export, validated user-confirmed JSON restore, and explicit full-device-data deletion. No analytics, cloud database, account, tracking beacon, payment link, or external assets.
 
@@ -39,7 +39,7 @@ Run `node --test tests/art-of-becoming.test.mjs` for the domain and privacy-cont
 - Server-side authorization or validated behavioral claims.
 
 ## Prelaunch gates
-- Exercise the experience in Safari on iPhone and desktop Chromium/Firefox, including offline/blocked storage, download behaviors, keyboard/screen-reader navigation, and reduced-motion support.
+- Run the isolated Playwright Chromium desktop/phone-width smoke (`scripts/probe-art-of-becoming-browser.mjs`) and inspect its screenshots/receipt. Exercise the experience separately in **real Safari on iPhone** and desktop Firefox, including offline/blocked storage, downloads, keyboard/screen-reader navigation, and reduced-motion support.
 - Verify GitHub Pages/build routing and privacy policy, not just source correctness.
 - Add transparent consent and encryption for any future cross-device journal sync. Never silently move local reflections to Systemia or analytics.
 - User-test language and the difficult-day flow with people who have lived experience; seek clinical input for addiction-specific positioning.
