@@ -103,25 +103,25 @@ On every read/export, the trusted verifier runs **again** against persisted ackn
 
 ## Durable One-Body state and consumer receipts (operator-only)
 
-The new \`one-body-store.mjs\` is a **private local file-store adapter**, not a separate mission authority. It persists the existing \`evercraft.one-body.state.v1\` structure inside a revisioned envelope, using a cross-process single-writer directory lock, an atomic file replacement, restrictive file permissions and forward-only event/acknowledgement checks. A crash-held lock requires explicit operator review; it is never automatically cleared by guessing its age.
+The new `one-body-store.mjs` is a **private local file-store adapter**, not a separate mission authority. It persists the existing `evercraft.one-body.state.v1` structure inside a revisioned envelope, using a cross-process single-writer directory lock, an atomic file replacement, restrictive file permissions and forward-only event/acknowledgement checks. A crash-held lock requires explicit operator review; it is never automatically cleared by guessing its age.
 
-The narrow command-line surface \`one-body-operator.mjs\` supports:
+The narrow command-line surface `one-body-operator.mjs` supports:
 
-\`\`\`bash
+```bash
 # Privileged runtime filesystem only; choose an operator-controlled directory.
 node systemia/organism/one-body-operator.mjs init ./private/one-body.json
 node systemia/organism/one-body-operator.mjs ingest ./private/one-body.json ./private/inert-event.json
 node systemia/organism/one-body-operator.mjs ack ./private/one-body.json ./private/signed-consumer-receipt.json ./private/consumer-trust.json
 node systemia/organism/one-body-operator.mjs export ./private/one-body.json ./private/consumer-trust.json > ./private/visual-snapshot.json
-\`\`\`
+```
 
 The trust file must be a **local regular file accessible only to the runtime owner** (0600), pinned by the privileged operator. It contains *public* verification keys scoped to exact receiving lanes; signing private keys remain with the sending consumers. The operator must prevent untrusted actors from choosing or replacing the trust file.
 
-A successful \`ack\` means an enrolled consumer signed an exact event+lane receipt accepted by the operator's configured trust registry, **not** that mission execution, customer fulfillment or payment succeeded. The exporter re-verifies it on every read. If the signer is revoked, the snapshot returns to unverified without rewriting history.
+A successful `ack` means an enrolled consumer signed an exact event+lane receipt accepted by the operator's configured trust registry, **not** that mission execution, customer fulfillment or payment succeeded. The exporter re-verifies it on every read. If the signer is revoked, the snapshot returns to unverified without rewriting history.
 
 An ingest is an inert planning admission; the CLI exposes no execution, messaging, payment, publishing or deployment command. The private state file is not a public API and cannot be safely served raw. A real authenticated, Passport-redacted, rate-bounded control-room endpoint and a deployed consumer adapter are still required for live phone observations.
 
-The deterministic \`one-body-store.proof.mjs\` covers creation, single-writer exclusion, replay, append-only safeguards, signed receipt persistence, restart visibility, unauthorized file permissions, tampering and key revocation. CI runs it as part of \`npm run proof:one-body\`.
+The deterministic `one-body-store.proof.mjs` covers creation, single-writer exclusion, replay, append-only safeguards, signed receipt persistence, restart visibility, unauthorized file permissions, tampering and key revocation. CI runs it as part of `npm run proof:one-body`.
 
 ## Proof
 
