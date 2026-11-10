@@ -270,7 +270,7 @@ function signedOriginFixture(source) {
     key_id: 'test-key-1',
     source_receipt_schema: source.schema,
     source_receipt_hash: source.receipt_hash,
-    source_receipt_bytes_sha256: 'sha256:' + hash(JSON.stringify(source)),
+    source_receipt_bytes_sha256: 'sha256:' + hash(source),
     signed_at: new Date(now - 60000).toISOString(),
     expires_at: new Date(now + 3600000).toISOString(),
   };
