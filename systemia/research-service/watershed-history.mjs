@@ -61,9 +61,10 @@ function verifySensor(sensor){
       throw new TypeError('snow unit, station or observation day mismatch');
   }
   for(const row of sensor.river) {
-    if(!/^USGS-[0-9]{5,16}$/.test(row.station_id) ||
+    if(!/^USGS-[0-9A-Z]{5,20}$/.test(row.station_id) ||
        !['stream_discharge','gage_height'].includes(row.kind) ||
-       !goodTime(row.time) ||
+       (!goodTime(row.time) && !(row.freshness==='invalid_time' &&
+         typeof row.time==='string' && row.time.length<=90)) ||
        (row.kind==='stream_discharge'&&row.unit!=='ft^3/s') ||
        (row.kind==='gage_height'&&row.unit!=='ft') ||
        typeof row.freshness!=='string' || row.freshness.length>45)
