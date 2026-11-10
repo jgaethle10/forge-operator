@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
+import { createHash, generateKeyPairSync, sign } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -7,6 +7,7 @@ import test from 'node:test';
 import { EvercraftPassport } from '../../passport/passport.mjs';
 import { EvercraftContextReceiptBridge } from '../receipt-bridge.mjs';
 import { reconcileTimewalkSourceReceipts } from './source-reconciliation.mjs';
+import { ORIGIN_ATTESTATION_SCHEMA, originAttestationMessage } from './origin-attestation.mjs';
 
 const hash = (body) => createHash('sha256').update(JSON.stringify(body)).digest('hex');
 const signed = (body) => ({ ...body, receipt_hash: 'sha256:' + hash(body) });
@@ -258,4 +259,117 @@ test('native Context Receipt Bridge projection reconciles against source fixture
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+});
+
+function signedOriginFixture(source) {
+  const { publicKey, privateKey } = generateKeyPairSync('ed25519');
+  const now = Date.now();
+  const body = {
+    schema: ORIGIN_ATTESTATION_SCHEMA,
+    issuer_id: 'evercraft:synthetic-test-source',
+    key_id: 'test-key-1',
+    source_receipt_schema: source.schema,
+    source_receipt_hash: source.receipt_hash,
+    source_receipt_bytes_sha256: 'sha256:' + hash(JSON.stringify(source)),
+    signed_at: new Date(now - 60000).toISOString(),
+    expires_at: new Date(now + 3600000).toISOString(),
+  };
+  return {
+    attestation: {
+      ...body,
+      signature_base64: sign(null, Buffer.from(originAttestationMessage(body), 'utf8'),
+        privateKey).toString('base64'),
+    },
+    trusted_keys: [{
+      issuer_id: body.issuer_id, key_id: body.key_id,
+      public_key_pem: publicKey.export({ type: 'spki', format: 'pem' }),
+      allowed_source_schemas: [source.schema],
+      valid_from: new Date(now - 86400000).toISOString(),
+      valid_to: new Date(now + 86400000).toISOString(),
+      revoked: false,
+    }],
+  };
+}
+
+test('optional origin signature checks give independent aggregate counts without promoting receipt truth', () => {
+  const source = sourceFixture('execution');
+  const context = contextFixture(source);
+  const f = signedOriginFixture(source);
+  const out = reconcileTimewalkSourceReceipts(authorizedFabric([context]), {
+    actor_ref: 'agent:auditor',
+    read_source_receipt: () => source,
+    read_source_attestation: () => f.attestation,
+    trusted_origin_keys: f.trusted_keys,
+  });
+  assert.equal(out.digest_and_projection_consistent_count, 1);
+  assert.equal(out.origin_signature_states.signature_valid_for_pinned_key, 1);
+  assert.equal(out.source_origin_authenticated, false);
+  assert.equal(out.trusted_origin_registry_independently_validated, false);
+  assert.equal(out.execution_authority_granted, false);
+  assert.equal(JSON.stringify(out).includes('BEGIN PUBLIC KEY'), false);
+});
+
+test('unsigned, tampered and revoked-key origin attestations never count as verified', () => {
+  const source = sourceFixture('execution');
+  const context = contextFixture(source);
+  const f = signedOriginFixture(source);
+  const params = {
+    actor_ref: 'agent:auditor',
+    read_source_receipt: () => source,
+    trusted_origin_keys: f.trusted_keys,
+  };
+  const unsigned = reconcileTimewalkSourceReceipts(authorizedFabric([context]), {
+    ...params, read_source_attestation: () => null,
+  });
+  assert.equal(unsigned.origin_signature_states.attestation_unavailable, 1);
+  const tampered = reconcileTimewalkSourceReceipts(authorizedFabric([context]), {
+    ...params, read_source_attestation: () => ({
+      ...f.attestation,
+      signature_base64: Buffer.alloc(64).toString('base64'),
+    }),
+  });
+  assert.equal(tampered.origin_signature_states.attestation_rejected, 1);
+  const revoked = reconcileTimewalkSourceReceipts(authorizedFabric([context]), {
+    ...params, trusted_origin_keys: [{ ...f.trusted_keys[0], revoked: true }],
+    read_source_attestation: () => f.attestation,
+  });
+  assert.equal(revoked.origin_signature_states.signature_valid_for_pinned_key, 0);
+  assert.equal(revoked.origin_signature_states.attestation_rejected, 1);
+});
+
+test('source mismatches never gain signature status; attestation reads use digest cache', () => {
+  const source = sourceFixture('execution');
+  const a = contextFixture(source, { record_id: 'same-source-a' });
+  const b = contextFixture(source, { record_id: 'same-source-b' });
+  const mismatched = contextFixture(source, { record_id: 'changed', claim_value: 'not-actually-complete' });
+  const f = signedOriginFixture(source);
+  let sourceCalls = 0;
+  let attestationCalls = 0;
+  const out = reconcileTimewalkSourceReceipts(
+    authorizedFabric([a, b, mismatched]), {
+      actor_ref: 'agent:auditor',
+      read_source_receipt: () => { sourceCalls++; return source; },
+      read_source_attestation: () => { attestationCalls++; return f.attestation; },
+      trusted_origin_keys: f.trusted_keys,
+    });
+  assert.equal(sourceCalls, 1);
+  assert.equal(attestationCalls, 1);
+  assert.equal(out.origin_signature_states.signature_valid_for_pinned_key, 2);
+  assert.equal(out.origin_signature_states.source_not_consistent, 1);
+  assert.equal(out.total_states.source_projection_mismatch, 1);
+});
+
+test('origin verifier requires explicit pinned keys and a separate read-only attestation adapter', () => {
+  const source = sourceFixture('execution');
+  const ctx = authorizedFabric([contextFixture(source)]);
+  assert.throws(() => reconcileTimewalkSourceReceipts(ctx, {
+    actor_ref: 'agent:auditor',
+    read_source_receipt: () => source,
+    read_source_attestation: () => ({}),
+  }), /timewalk_attestation_trust_configuration_required/);
+  assert.throws(() => reconcileTimewalkSourceReceipts(ctx, {
+    actor_ref: 'agent:auditor',
+    read_source_receipt: () => source,
+    trusted_origin_keys: [],
+  }), /timewalk_attestation_reader_required/);
 });
