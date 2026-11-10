@@ -7,16 +7,15 @@ const ENDPOINTS = Object.freeze([
   '/v2/positions',
   '/v2/orders?status=all&limit=500&direction=desc',
 ]);
-const OPEN_ORDER_STATUSES = new Set([
-  'accepted', 'pending_new', 'accepted_for_bidding', 'new',
-  'partially_filled', 'pending_cancel', 'pending_replace',
-  'stopped', 'suspended', 'calculated',
-]);
+// Unknown statuses are considered open until explicitly proven terminal.
+const TERMINAL_ORDER_STATUSES = new Set(['filled', 'canceled', 'expired', 'rejected', 'replaced']);
 
 export function paperPreflightCredentialSource(env = process.env) {
   // Existing Evercraft secret names are accepted FOR THIS READ-ONLY PROBE ONLY.
   // There is no fallthrough to a live API endpoint. A live-only key will fail paper authentication.
+  const partialPaper = Boolean(env.ALPACA_PAPER_KEY_ID || env.ALPACA_PAPER_SECRET_KEY);
   const dedicated = env.ALPACA_PAPER_KEY_ID && env.ALPACA_PAPER_SECRET_KEY;
+  if (partialPaper && !dedicated) return null;
   if (dedicated) {
     return { key: env.ALPACA_PAPER_KEY_ID, secret: env.ALPACA_PAPER_SECRET_KEY, source: 'dedicated_paper_pair' };
   }
@@ -35,7 +34,7 @@ function asNonnegativeMoney(value, label) {
 }
 
 function orderIsOpen(order) {
-  return OPEN_ORDER_STATUSES.has(String(order.status || '').toLowerCase());
+  return !TERMINAL_ORDER_STATUSES.has(String(order.status || '').toLowerCase());
 }
 
 function safeCount(orders) {
