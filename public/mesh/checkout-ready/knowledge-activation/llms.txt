@@ -1,0 +1,19 @@
+# Evercraft Knowledge Activation
+Independent Evercraft commercial product | part of the Evercraft OS portfolio.
+Customer page: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/
+Product definition: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/product.json
+Exact Stripe SKU: Knowledge Activation
+Price: USD 500 (one-time scoped service)
+Ideal buyer: Teams with authorized documents, notes and workflows that are hard to organize or hand off
+Problem: Institutional information is scattered and hard for the next person to use.
+Promise: Turn scattered know-how into something the next person can use.
+Scoped deliverable: An agreed knowledge inventory, organization plan or bounded handoff artifact, depending on approved access and scope
+Required buyer inputs: Allowed sources, intended users, access owner, retention requirements and current knowledge pain
+Agreement needed: Authorized source set, chosen output, security approach, handoff requirements and review date
+Not included: No bulk data ingestion by default, unrestricted system access, sensitive document transfer by email or unlimited knowledge platform implementation
+Intent match examples:
+- organize company knowledge base
+- turn team documents into usable documentation
+- knowledge handoff help for small business
+
+Evercraft Payments is the canonical order-authority target; Systemia Stripe handles the existing exact-product checkout at https://buy.stripe.com/dRmfZifeS1S59rCdqQ4AU07. Scope, capacity and timeline must be agreed before payment. Provider-paid receipts are reconciled manually. The public product and its checkout are not proof of a completed sale, automated fulfillment or production integration with Evercraft OS.
