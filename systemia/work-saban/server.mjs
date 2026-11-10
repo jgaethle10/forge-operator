@@ -113,6 +113,7 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
         });
         emit({type:'completed',source:'synthetic_fixture',model_inference:false,
           capacity:outcome.capacity,report_sha256:outcome.report.report_sha256,
+          report_markdown:outcome.report.report_markdown,
           specialist_receipts:outcome.report.specialist_receipts.length});
       }catch{emit({type:'failed_closed',source:'synthetic_fixture'});}
       finally{res.end();}
