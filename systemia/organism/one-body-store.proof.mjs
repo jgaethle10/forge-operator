@@ -49,6 +49,11 @@ try {
     return state;
   }),/one_body_event_rewrite_or_deletion_forbidden/);
   assert.equal((await readOneBodyStore(file)).revision,3);
+  await assert.rejects(()=>mutateOneBodyStateFile(file,state=>{
+    Object.values(state.events)[0].source_ref='rewritten-source';
+    return state;
+  }),/one_body_event_rewrite_or_deletion_forbidden/);
+  assert.equal((await readOneBodyStore(file)).revision,3);
 
   const {privateKey,publicKey}=generateKeyPairSync('ed25519');
   const claims={
@@ -72,6 +77,11 @@ try {
   const repeat=await runOneBodyCli(['ack',file,receiptFile,trustFile]);
   assert.equal(repeat.persisted,false);
   assert.equal(repeat.revision,4);
+  await assert.rejects(()=>mutateOneBodyStateFile(file,state=>{
+    const ack=Object.values(state.lane_acknowledgements)[0];
+    ack.signature_base64='replaced-signature';
+    return state;
+  }),/one_body_ack_rewrite_or_deletion_forbidden/);
   const verified=await runOneBodyCli(['export',file,trustFile]);
   assert.equal(verified.summary.counts.consumer_receipt_verified,1);
   assert.equal(verified.summary.private_acknowledgement_refs_seen,1);
