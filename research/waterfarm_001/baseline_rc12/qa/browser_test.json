@@ -1,0 +1,20 @@
+[
+  {
+    "mode": "mobile",
+    "width": 390,
+    "errors": [],
+    "external_requests": [],
+    "demo_total_l": 13250,
+    "blank_template_rows": 15,
+    "status": "PASS"
+  },
+  {
+    "mode": "desktop",
+    "width": 1365,
+    "errors": [],
+    "external_requests": [],
+    "demo_total_l": 13250,
+    "blank_template_rows": 15,
+    "status": "PASS"
+  }
+]
