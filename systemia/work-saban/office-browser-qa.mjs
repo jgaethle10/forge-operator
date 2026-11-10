@@ -78,12 +78,30 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert(loaded.rig,'Owned camera did not load');
   assert.equal(loaded.desks,6);
   assert(loaded.shown,'CSS3D office remained hidden');
+  const environment=await js(send,"(()=>{const shell=document.querySelector('.spatial-studio-shell'),meeting=document.querySelector('.spatial-meeting-hub'),people=[...document.querySelectorAll('.spatial-agent')];return {shared:!!shell,meeting:!!meeting,windows:document.querySelectorAll('.spatial-window').length,arms:document.querySelectorAll('.spatial-person-arm').length,legs:document.querySelectorAll('.spatial-person-leg').length,oneRoom:getComputedStyle(document.querySelector('.spatial-room-wall')).display==='none',disclosure:document.querySelector('.spatial-motion-disclosure')?.textContent||'',idle:people.every(x=>x.dataset.activity==='waiting')};})()");
+  assert(environment.shared,'Shared studio shell did not render');
+  assert(environment.meeting,'Central meeting table missing');
+  assert.equal(environment.windows,2,'Studio must have actual window props');
+  assert.equal(environment.arms,12,'All six characters have arms');
+  assert.equal(environment.legs,12,'All six characters have legs');
+  assert(environment.oneRoom,'Former six wall partitions should not enclose the studio');
+  assert(environment.disclosure.includes('RECORDED WORKER STATES'));
+  assert(environment.idle,'Unassigned characters must not simulate work');
   await js(send,"document.getElementById('office-scene').scrollIntoView({block:'center'});true");
   await sleep(350);
   const overview=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
   const overviewFile=path.join(out,'work-saban-'+label+'-overview.png');
   await fs.writeFile(overviewFile,Buffer.from(overview.data,'base64'));
   assert((await fs.stat(overviewFile)).size>8000,'Overview screenshot unexpectedly empty');
+  const roomLevel=await js(send,"(()=>{const u=window.WorkSaban3D;u.toggleRoomLevel();return {selected:u.isRoomLevel(),pitch:u.getCamera().pitch,activity:u.getState()};})()");
+  assert(roomLevel.selected,'Optional room-level viewpoint must toggle');
+  assert.equal(roomLevel.pitch,34);
+  await sleep(750);
+  const groundImage=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+  const groundFile=path.join(out,'work-saban-'+label+'-shared-studio.png');
+  await fs.writeFile(groundFile,Buffer.from(groundImage.data,'base64'));
+  assert((await fs.stat(groundFile)).size>8000,'Studio screenshot unexpectedly empty');
+  await js(send,"window.WorkSaban3D.toggleRoomLevel();true");
   const motion=await js(send,"(async()=>{const ui=window.WorkSaban3D;const initial=ui.getRenderedCamera().panX;document.querySelector('.spatial-agent[data-agent=writer]').click();const target=ui.getCamera().panX;const before=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,100));const midway=ui.getRenderedCamera().panX;await new Promise(r=>setTimeout(r,1100));return {initial,target,before,midway,after:ui.getRenderedCamera().panX,follow:typeof ui.toggleFollow==='function'};})()");
   assert(motion.follow,'Follow mode missing');
   assert.equal(await js(send,"document.getElementById('office-agent-name').textContent"),'Communications Specialist','visual focus and inspector selection must agree');
@@ -131,7 +149,7 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(await js(send,"JSON.stringify(window.WorkSaban3D.getState())"),beforeState,'Camera presentation must not fake worker execution events');
   return {label,width,height,mobile,desks:loaded.desks,follow_control:true,camera_easing:true,
     immersive_observe:'passed',inspection_navigation:'passed',keyboard_exit:'passed',
-    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,focus:screenshot,immersive:immersiveFile}};
+    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile}};
 }
 const out=process.env.WORK_SABAN_BROWSER_PROOF_DIR||path.join(os.tmpdir(),'work-saban-browser-qa');
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));
