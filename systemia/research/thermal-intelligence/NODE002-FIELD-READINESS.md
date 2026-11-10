@@ -1,10 +1,10 @@
 # G1.3 | Node002 / NextGen: safe field-readiness checklist
 
-**State (2026-11-09):** Research software and one-shot passive OS-context probe prepared; **no permissioned physical meter data imported**, no verified Systemia dispatch, no delivered heat measurement. A public GitHub Action runs against GitHub's hosted runner, not against the founder's HP laptop.
+**State (2026-11-09):** Research software and one-shot passive OS-context probe prepared; **no permissioned physical meter data imported**, no verified Systemia dispatch, no delivered heat measurement. A public GitHub Action runs against GitHub's hosted runner, not against the field owner's computer.
 
 ## Goal
 
-Find out whether Node002 (HP Laptop 17, Windows 11 + Ubuntu WSL2) is suitable for a future passive electricity baseline. Do not run a heater experiment. The goal today is a **safe readiness classification**, not demonstration of recovered heat.
+Find out whether an approved Evercraft Windows/WSL2 computing node is suitable for a future passive electricity baseline. Keep exact device make, identifiers and location in private records only. Do not run a heater experiment. The goal today is a **safe readiness classification**, not demonstration of recovered heat.
 
 ## The one-shot authorized step, if the owner chooses to run it locally
 
