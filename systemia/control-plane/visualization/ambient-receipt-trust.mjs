@@ -20,6 +20,9 @@ async function jsonAt(root, section, id) {
   const file = join(dir, id + '.json');
   // Do not follow a symlinked root, registry directory or record.
   need(await realpath(dir) === dir, 'unsafe_directory');
+  const dirInfo = await lstat(dir);
+  need(dirInfo.isDirectory() && !dirInfo.isSymbolicLink() &&
+    (dirInfo.mode & 0o022) === 0, 'unsafe_directory_permissions');
   const stat = await lstat(file);
   need(stat.isFile() && !stat.isSymbolicLink() && stat.size > 0 &&
     stat.size <= MAX_FILE_BYTES && (stat.mode & 0o077) === 0, 'unsafe_record');
@@ -48,6 +51,9 @@ export async function loadActiveAmbientReceiptKeys({
   need(Number.isFinite(clock.getTime()), 'clock_invalid');
   const root = resolve(ambientRegistryRoot);
   need(await realpath(root) === root, 'unsafe_root');
+  const rootInfo = await lstat(root);
+  need(rootInfo.isDirectory() && !rootInfo.isSymbolicLink() &&
+    (rootInfo.mode & 0o022) === 0, 'unsafe_root_permissions');
   const keys = Object.create(null);
   for (const device of deviceIds) {
     need(typeof device === 'string' && DEVICE.test(device) && !device.includes('..'), 'device_id_invalid');
