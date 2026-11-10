@@ -29,7 +29,7 @@ export function validateExactSkuRegistry(products,manifest){
     try{checkout=new URL(link.url)}catch{throw Error('invalid_provider_url')}
     if(checkout.protocol!=='https:'||checkout.hostname!=='buy.stripe.com'||
        checkout.username||checkout.password||checkout.search||checkout.hash||
-       !/^\/[A-Za-z0-9]+$/.test(checkout.pathname)||
+       !(checkout.pathname.startsWith('/') && /^[A-Za-z0-9]+$/.test(checkout.pathname.slice(1)))||
        checkoutUrls.has(link.url))throw Error('unapproved_or_duplicate_checkout_url');
     checkoutUrls.add(link.url);
   }
@@ -85,7 +85,7 @@ export function validateAdditionalExactSkuLinks(additional,{products,manifest}={
       page=new URL(offer.landing_page);
     }catch{throw Error('additional_exact_sku_invalid_url')}
     if(checkout.protocol!=='https:'||checkout.hostname!=='buy.stripe.com'||
-       !/^\\/[A-Za-z0-9]+$/.test(checkout.pathname)||
+       !(checkout.pathname.startsWith('/') && /^[A-Za-z0-9]+$/.test(checkout.pathname.slice(1)))||
        checkout.search||checkout.hash||checkout.username||checkout.password||
        proof.protocol!=='https:'||proof.hostname!=='github.com'||
        !proof.pathname.startsWith('/jgaethle10/forge-operator/actions/runs/')||
