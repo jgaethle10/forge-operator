@@ -56,11 +56,70 @@ function normalizedNamespace(value, fallback = 'systemia') {
     .replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 64);
   return candidate || fallback;
 }
+function projectionNarrative(source) {
+  if (source.schema === 'evercraft.execution-gate.lease-event.v1') {
+    const ns = normalizedNamespace(source.specialist_slug || source.passport_product);
+    const outcome = safeText(source.outcome_state) || 'completed';
+    const routeMode = safeText(source.route?.route?.mode) ||
+      safeText(source.route?.state) || 'unknown';
+    return {
+      title: 'Completed ' + ns + ' execution ' + source.lease_id,
+      text: [
+        'Execution lease ' + source.lease_id + ' completed.',
+        'Outcome state: ' + outcome + '.',
+        'Specialist: ' + source.specialist_slug + '.',
+        'Route mode: ' + routeMode + '.',
+        'Outcome evidence: ' + source.outcome_evidence_ref + '.',
+      ].join(' '),
+    };
+  }
+  if (source.schema === 'evercraft.intake.systemia-admission-packet.v1') {
+    const hints = [...new Set(
+      (source.requested_capability_hints || [])
+        .flatMap((x) => Array.isArray(x) ? x : [x])
+        .map((x) => String(x || '').trim().toLowerCase())
+        .filter(Boolean)
+    )].slice(0, 50);
+    return {
+      title: 'Accepted intake candidate ' + source.candidate_id,
+      text: [
+        'Systemia accepted intake candidate ' + source.candidate_id +
+          ' into mission ' + source.mission_ref + '.',
+        'Source type: ' + source.source_type + '.',
+        'Source trust state: ' + source.source_trust_state + '.',
+        hints.length ? 'Capability hints: ' + hints.join(', ') + '.' : '',
+        'No execution authority or external side-effect authority was granted by intake.',
+      ].filter(Boolean).join(' '),
+    };
+  }
+  if (source.schema === 'evercraft.systemia.mission-admission-receipt.v1') {
+    const state = source.admitted === true ? 'admitted' : 'held';
+    return {
+      title: 'Systemia mission ' + source.mission_key + ' ' + state,
+      text: [
+        'Mission ' + source.mission_key + ' was ' + state + ' by Systemia.',
+        'Task count: ' + source.task_count + '.',
+        'Held count: ' + source.held_count + '.',
+        'Execution-gate-required tasks: ' +
+          (source.execution_gate_required_count ?? 0) + '.',
+        'Relationship-preflight-required tasks: ' +
+          (source.relationship_preflight_required_count ?? 0) + '.',
+        'Mission admission granted execution authority: no.',
+      ].join(' '),
+    };
+  }
+  return null;
+}
+
 function consistentProjection(record, source) {
   if (record.content_is_instruction !== false ||
       record.source_authority_inherited !== false ||
       record.visibility !== 'internal' ||
       record.evidence_state !== 'observed') return false;
+  // A forged or rewritten summary cannot pass by keeping only the IDs intact.
+  const narrative = projectionNarrative(source);
+  if (!narrative || record.title !== narrative.title ||
+      record.text !== narrative.text) return false;
 
   if (source.schema === 'evercraft.execution-gate.lease-event.v1') {
     const ns = normalizedNamespace(source.specialist_slug || source.passport_product);
