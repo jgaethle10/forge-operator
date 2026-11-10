@@ -54,6 +54,12 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 - [EVIDENCE_INTAKE.md](EVIDENCE_INTAKE.md) describes the proposed data package and NIST TN 1297 uncertainty-reporting requirements. No actual bench data is present in this branch.
 - Passing evidence-intake checks **does not authenticate scientific observations, reviewer signatures, instruments, calibration certificates or actual hardware**. The checker always returns `publicationAllowed: false` and `scientificClaimAuthorized: false`.
 
+## Stage 6: synchronized DC energy-series analysis (2026-11-09)
+- [time-series-energy.mjs](time-series-energy.mjs) and [time-series-energy.test.mjs](time-series-energy.test.mjs) add sample-by-sample synchronized DC `V × I` time integration, including explicitly enumerated auxiliary DC input sources, bounded intervals, timestamp-alignment and sampling-gap guards.
+- [TIME_SERIES_PROTOCOL.md](TIME_SERIES_PROTOCOL.md) documents the numeric algorithm, physical sampling limitations, NIST wattmeter references and independent acquisition requirements.
+- This is an **alternative analysis path**, not a replacement for the steady-state trial validator or raw evidence intake. Their schemas differ. It cannot infer lost sources, waveform aliasing, instrument synchronization, true AC/RF power or genuine measured data.
+- Neither the model nor a successful CI run establishes experimental energy efficiency, over-unity energy, instrument calibration or safe hardware operation.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
