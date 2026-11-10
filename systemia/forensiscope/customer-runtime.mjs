@@ -50,7 +50,7 @@ function positiveInt(value){
  */
 export function createForensiScopeCustomerRuntime({
  storageDir,authorizeBuyer,resolveOrder,verifyPaidOrder,
- verifyResultAccess,readCapacity,processRecording,checkoutBridge=null,
+ verifyResultAccess,readCapacity,processRecording,checkoutBridge=null,guestLedger=null,
  allowedOrigins=[],maxUploadBytes=256*1024*1024,
  chunkBytes=2*1024*1024,workerIntervalMs=5000,
  now=()=>Date.now()
@@ -60,6 +60,10 @@ export function createForensiScopeCustomerRuntime({
  if([authorizeBuyer,resolveOrder,verifyPaidOrder,verifyResultAccess,readCapacity]
     .some(x=>typeof x!=='function'))
   throw error('trusted_customer_payment_capacity_callbacks_required');
+ if(guestLedger!==null&&(typeof guestLedger.handler!=='function'||
+  typeof guestLedger.authorizeBuyer!=='function'||
+  typeof guestLedger.resolveOrder!=='function'))
+  throw error('trusted_guest_order_ledger_required');
  if(checkoutBridge!==null&&typeof checkoutBridge?.createCheckout!=='function')
   throw error('trusted_owned_checkout_bridge_required');
  if(!positiveInt(workerIntervalMs)||workerIntervalMs<10||workerIntervalMs>60000)
@@ -99,11 +103,18 @@ export function createForensiScopeCustomerRuntime({
      authenticated_customer_integration_required:true,
      public_checkout_enabled:false,
      private_checkout_adapter_configured:Boolean(checkoutBridge?.readiness?.configured),
+     private_guest_ledger_configured:Boolean(guestLedger),
+     guest_enrollment_enabled:Boolean(guestLedger?.readiness?.guest_enrollment_enabled),
      production_settlement_proven:false,
      public_upload_enabled:false,
      private_worker_started:Boolean(worker)
     });
    }
+   if(guestLedger&&(
+    route==='/v1/forensiscope/guest'||
+    route==='/v1/forensiscope/orders'||
+    /^\/v1\/forensiscope\/orders\/forensiscope-[a-f0-9]{32}$/.test(route)
+   ))return guestLedger.handler(req,res);
    if(route==='/v1/forensiscope/checkout'){
     if(req.method==='OPTIONS'){
      if(!allowed)throw error('origin_not_allowed',403);
