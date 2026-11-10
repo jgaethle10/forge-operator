@@ -92,6 +92,10 @@ test('CLI writes a private noindex output with restrictive permissions',()=>{
     const code=fileURLToPath(new URL('./saban-work-visual.mjs',import.meta.url));
     const r=spawnSync(process.execPath,[code,input,output,'synthetic_test'],{encoding:'utf8'});
     assert.equal(r.status,0,r.stderr);
+    const privateDirect=spawnSync(process.execPath,[code,input,path.join(dir,'blocked-private.html'),'private_operator_snapshot'],{encoding:'utf8'});
+    assert.notEqual(privateDirect.status,0,'Private direct CLI mode must require scoped operator intake');
+    assert.match(privateDirect.stderr,/saban-work-operator\.mjs/);
+    assert.equal(fs.existsSync(path.join(dir,'blocked-private.html')),false);
     const html=fs.readFileSync(output,'utf8');
     assert.match(html,/noindex,nofollow/);
     assert.ok(!html.includes(PRIVATE));
