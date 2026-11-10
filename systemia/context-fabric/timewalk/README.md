@@ -43,6 +43,47 @@ A result preserves source refs, Context Fabric receipt hashes, evidence states, 
 - Unresolved conflicting active claims remain side-by-side with source refs.
 - Data from retrieved content never becomes execution instructions or action authority.
 
+## Evidence coverage inventory (v0.2 research slice)
+
+The read-only `inspectTimewalkEvidenceCoverage(fabric, { actor_ref, namespaces })`
+function in `coverage.mjs` checks **currently Passport-visible Context Fabric
+records**, not the completeness of every Evercraft ledger.
+
+It inventories the three receipt schemas explicitly handled today by
+`context-fabric/receipt-bridge.mjs`: completed Execution Gate leases,
+accepted Intake Fabric admission packets, and Systemia mission admissions.
+
+For each family, the result reports counts of currently visible Context
+records, how many declare an upstream source-receipt hash, evidence states,
+the observation and ingestion date range, and whether no matching records are
+visible. It also lists source contracts with **no implemented Context Receipt
+Bridge handler**: Payments, Shipping, Lineage, Interaction Ledger, and
+Notification Fabric. This is a mapping of source contracts, **not** a statement
+that those domains have no events or no other history implementation.
+
+The summary records an SHA-256 fingerprint of the **authorized snapshot**
+and checks each Context record and retraction's own unkeyed receipt integrity.
+It **does not** fetch original source receipts or independently confirm them.
+Neither a valid Context hash nor a source hash field proves that a real payment,
+customer shipment, deployment or human approval happened.
+
+```js
+import { inspectTimewalkEvidenceCoverage } from './coverage.mjs';
+
+const coverage = inspectTimewalkEvidenceCoverage(fabric, {
+  actor_ref: 'agent:approved-auditor', // verified internal actor only
+  namespaces: ['systemia'],           // optional limited scope
+});
+```
+
+Every output is explicitly labeled `currently_visible_context_records_only`.
+A missing row means **not visible or not ingested to Context Fabric**, never
+"no event happened." The function is not exposed to the web and must not
+accept unauthenticated actor claims. More than 5000 visible records fails
+closed under the snapshot's existing hard cap.
+
+See [AUDIT.md](./AUDIT.md) for the complete source-to-projection gap inventory.
+
 ## Performance and security boundaries
 
 The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, entity/record-resource-scoped Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
@@ -54,6 +95,7 @@ The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, e
 ```bash
 node --test systemia/context-fabric/timewalk/timewalk.test.mjs
 node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
+node --test systemia/context-fabric/timewalk/coverage.test.mjs
 node --test systemia/context-fabric/fabric.test.mjs
 ```
 
