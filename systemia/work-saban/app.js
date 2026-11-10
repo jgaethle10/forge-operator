@@ -43,6 +43,19 @@ $('copy').addEventListener('click',async()=>{
   catch{$('error').textContent='Clipboard unavailable here. Use the CLI for JSON output.';}
 });
 
+async function verifyDeliveredReport(run){
+  if(run?.status!=='verified_local'||run.quality?.status!=='verified'
+      ||run.specialist_receipts?.length!==5
+      ||typeof run.report_markdown!=='string'
+      ||!/^[a-f0-9]{64}$/.test(run.report_sha256||''))
+    throw new Error('Audit receipts incomplete');
+  if(!globalThis.crypto?.subtle)throw new Error('Browser report integrity verification unavailable');
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(run.report_markdown));
+  const hex=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+  if(hex!==run.report_sha256)throw new Error('Delivered report SHA-256 mismatch');
+  return true;
+}
+
 function displayRun(run, source) {
   if(run?.status!=='verified_local'||run.quality?.status!=='verified'
     ||run.specialist_receipts?.length!==5)throw new Error('Audit receipts incomplete');
@@ -129,6 +142,7 @@ async function launch(button,url,payload,source){
   button.textContent='Watching local workers…';
   try{
     const run=await streamMission(url,payload);
+    await verifyDeliveredReport(run);
     displayRun(run,source);
     if(source==='user')$('csv-consent').checked=false;
   } catch(error){
