@@ -35,7 +35,7 @@
   "sourceAccess": {
     "email": "sanborn@csun.edu",
     "sourceUrl": "https://www.csun.edu/social-behavioral-sciences/sanborn-collection/about",
-    "priorInquirySent": false,
+    "priorInquirySent": true,
     "quotedServiceCurrency": "USD",
     "postedVolumePullFee": 10,
     "postedImagingFeePerSheet": 20,
@@ -47,7 +47,13 @@
     "rightsDecision": "unverified",
     "publicDistributionAllowed": false,
     "originalMapImageEmbeddingAllowed": false,
-    "commercialDerivedGeometryAllowed": false
+    "commercialDerivedGeometryAllowed": false,
+    "firstInquiryDateLocal": "2026-11-09",
+    "inquiryStatus": "sent-awaiting-archive-response",
+    "inquiryDeliveryEvidence": "connected Gmail provider returned SENT label, recipient sanborn@csun.edu",
+    "inquiryScope": "No-cost identification of Yakima 1960 sheet(s), update dates, remote access and licensing for public/commercial interactive reconstruction.",
+    "replyReceived": false,
+    "archiveSheetNumbersConfirmed": false
   },
   "searchTargets": [
     {
@@ -71,7 +77,7 @@
       "goal": "Identify actual Capitol Theatre footprint; historic numeric address discrepancy unresolved"
     }
   ],
-  "nextAction": "Send a no-fee research inquiry to CSUN archive requesting 1960 atlas volume/sheet coverage and precise licensing; seek approval before purchasing or publishing scans.",
+  "nextAction": "Await reply from sanborn@csun.edu to Nov 9 no-cost inquiry; reconcile sheet IDs, source dates, item-level rights and fees; do not order/pay/publish without separate authorization.",
   "geometryReady": false,
   "sourceOriginalVerified": false,
   "worldsRuntimeAuthorized": false,
