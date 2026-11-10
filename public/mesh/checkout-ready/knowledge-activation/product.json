@@ -66,6 +66,20 @@
   },
   "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
   "design": {
-    "accent": "#aad6f5"
+    "accent": "#c0d5fb",
+    "background": "#1c2431",
+    "panel": "#2c3949",
+    "ink": "#f8f3e9",
+    "muted": "#d2d7df",
+    "secondary": "#f3d9a2",
+    "mark": "indexed-pages"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Knowledge Desk",
+    "signature_phrase": "Find the knowledge. Put it to work.",
+    "purpose": "Turn authorized scattered know-how into a practical reference the next teammate can actually use.",
+    "narrative_promise": "Useful knowledge is findable, attributable and transferable.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared"
   }
 }
