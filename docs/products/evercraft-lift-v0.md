@@ -62,6 +62,24 @@ Before presenting a funding goal, check the relevant partner directory and known
 
 Seeking help must be free. Avoid deriving revenue from hardship, tips, or claim priority. Potential *future* revenue: transparent optional organizational coordination software with no pay-to-be-seen ranking, enterprise workplace programs, and documented sponsorship services, subject to legal review. No claim of current partnerships or signed donors.
 
+
+## V0.1 human-review and partner workflow engineering
+
+- `systemia/lift/review-workflow.mjs` adds side-effect-free `makeCase`, `transitionCase`, and `casePublicSnapshot`, plus `makePartner`, `transitionPartner`, and `partnerDirectorySnapshot`.
+- Private case intake accepts **only** opaque IDs, a `vault:` evidence reference, a general location/category, amount and data-processing consent. Unexpected fields (including applicant names, addresses, account numbers and raw document URLs) are rejected. **There is no document vault or persistent intake server yet.**
+- Human review has distinct roles: case reviewer validates identity, need, payee and disbursement plan; independent redaction reviewer approves safe public wording; requester consents to a specific preview version; separate publisher marks the case eligible for publication. A consent withdrawal or pause blocks further public snapshots. The demo does not publish live cases.
+- Partner applications are **not** automatically listed: assigned reviewer checks identity, program and contract evidence, independent approver activates the organization, suspension removes it from directory output. Even active directory entries explicitly do **not** confirm capacity or individual eligibility.
+- `systemia/lift/review-workflow.test.mjs` adds regression tests for overposted PII, opaque evidence references, role separation, publication consent invalidation, privacy allowlists, withdrawal, suspension and partner activation.
+- `public/lift/review-demo.html` is a fully fictional, browser-only walkthrough of case and organization lifecycle. It contains no applicant records and has no server connection, authentication, actual approvals or payments.
+
+### Important security distinction
+
+These modules encode proposed *domain rules*. They do **not** provide an authentication boundary, identity-proofing service, encrypted evidence vault, authoritative verification, tamper-evident audit store, database transactions, live revocation or legal compliance. Actor ID/role objects are trusted **only if an authenticated server has already resolved them** and cannot be supplied by clients. Workflows, evidence references, event histories and public snapshots must remain private until server-backed enforcement, consent propagation and purge/deindex checks are independently verified.
+
+### Next execution gate
+
+Integrate with an Evercraft-owned authenticated server and vault; implement persisted, append-only event transitions with optimistic concurrency and a separate audit trail; add secure reviewer UX; document retention and privacy requests; test incident response and partner referrals. Keep public fundraising and payment flow disabled until regulatory and Evercraft Payments reconciliation readiness are established.
+
 ## Release status
 
 **Demo:** ready for local isolated evaluation. **Live assistance:** blocked. **Payments:** blocked. **Verified partners:** none onboarded by this change. **Public deployment:** not authorized by this branch. **Systemia API integration:** pending. The name is provisional pending checks for conflicts.
