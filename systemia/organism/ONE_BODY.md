@@ -123,6 +123,35 @@ An ingest is an inert planning admission; the CLI exposes no execution, messagin
 
 The deterministic `one-body-store.proof.mjs` covers creation, single-writer exclusion, replay, append-only safeguards, signed receipt persistence, restart visibility, unauthorized file permissions, tampering and key revocation. CI runs it as part of `npm run proof:one-body`.
 
+## Local consumer inbox bridge (first real handoff boundary)
+
+`one-body-local-consumer.mjs` and `one-body-consumer-cli.mjs` implement a **local-only** receiving adapter:
+
+1. The consumer reads an already-persisted One-Body event, checks that its exact event ID is routed to its lane, and takes a single-writer lock on the recipient's own inbox.
+2. It records a minimal inbox acceptance in a private, atomically replaced file. It does not execute any assigned work.
+3. Only **after durable inbox acceptance** does it sign a domain-separated Ed25519 receipt binding the event, lane, stable receipt reference, timestamp and consumer identity.
+4. The signed receipt is written create-only to a private file. Systemia's existing `one-body-operator.mjs ack` verifies it against the independently provisioned lane trust registry and persists the reference. The read-only graph exporter verifies the signature again on each read.
+
+Local operator flow with externally provisioned, owner-protected private signer keys and pinned verifier keys:
+
+```bash
+node systemia/organism/one-body-consumer-cli.mjs \
+  ./private/one-body.json \
+  ./private/context-inbox.json \
+  "<event-id-from-canonical-state>" \
+  context_fabric \
+  "<enrolled-consumer-key-id>" \
+  ./private/context-signer-private.pem \
+  ./private/ack-output.json
+
+node systemia/organism/one-body-operator.mjs ack \
+  ./private/one-body.json ./private/ack-output.json ./private/consumer-trust.json
+```
+
+**Truth boundary:** this proves only that an enrolled local inbox accepted an event, not that a specialist executed, memory was updated, a customer received work, or a provider settled a payment. It is not a network adapter and has not been deployed to Node001 or NextGen. A real remote handoff needs authenticated transport, replay-safe dispatch envelopes, a consumer-side permit scoped to its lane, host key provisioning/rotation, and actual specialist acceptance evidence. Do not distribute runtime private signer keys via GitHub or through consumer-uploaded event files. The private signer file must be a regular 0600 file, not a symlink.
+
+`one-body-local-consumer.proof.mjs` verifies independent-process inbox acceptance, end-to-end signature admission into the canonical store, idempotent replay, private receipt file mode, lock contention, signing-key permission rejection and revocation-driven loss of verified state. It is part of `npm run proof:one-body`.
+
 ## Proof
 
 Run:
