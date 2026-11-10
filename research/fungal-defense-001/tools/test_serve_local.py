@@ -16,14 +16,14 @@ class LocalPreviewTests(unittest.TestCase):
     def test_only_versioned_page_is_served(self):
         with TemporaryDirectory() as temp:
             folder = Path(temp)
-            (folder / 'observatory-v0.2.html').write_text('local-only-content',encoding='utf-8')
+            (folder / 'observatory-v0.3.html').write_text('local-only-content',encoding='utf-8')
             (folder / 'private.txt').write_text('private-content', encoding='utf-8')
             handler = partial(PreviewHandler, directory=str(folder))
             with ThreadingHTTPServer(('127.0.0.1',0),handler) as server:
                 worker = threading.Thread(target=server.serve_forever, daemon=True)
                 worker.start()
                 try:
-                    for path, code in [('/',302),('/observatory-v0.2.html',200),('/private.txt',404),('/../../private.txt',404),('/data/cdc-cauris-clinical-annual.json',404)]:
+                    for path, code in [('/',302),('/observatory-v0.3.html',200),('/private.txt',404),('/../../private.txt',404),('/data/cdc-cauris-clinical-annual.json',404)]:
                         conn = http.client.HTTPConnection('127.0.0.1',server.server_port,timeout=2)
                         conn.request('GET',path)
                         res=conn.getresponse()
