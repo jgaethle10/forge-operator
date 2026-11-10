@@ -95,7 +95,8 @@ class RunnerTests(TestCase):
         with tempfile.TemporaryDirectory() as dirname:
             home = Path(dirname)
             self.mkfiles(home)
-            self.mkfiles(home).parent.joinpath("gate0-SECOND").mkdir(mode=0o700)
+            base = home / ".local/state/evercraft/eo001-handoff"
+            (base / "gate0-SECOND").mkdir(mode=0o700)
             (home / ".local/state/evercraft/eo001-handoff/gate0-SECOND/gate0-private-handoff.zip").write_bytes(b"x")
             output = io.StringIO()
             with mock.patch.object(runner.Path, "home", return_value=home), contextlib.redirect_stdout(output):
