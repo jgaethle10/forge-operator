@@ -1,3 +1,4 @@
+import {publicListing} from './lift-core.mjs';
 /**
  * Evercraft Lift: side-effect-free workflow proposal. 
  * WARNING: actor must originate from a separately authenticated, authorized server.
@@ -78,7 +79,13 @@ function transitionCase(record,event,actor){
 function casePublicSnapshot(c){
   if(c?.schema!=="evercraft.lift.case-workflow.v1"||c.status!=="published")refuse("case not publicly approved");
   if(!c.consent.public_listing||c.consent.preview_version!==c.preview_version||CHECKS.some(k=>!c.checks[k]))refuse("expired review or consent");
-  return Object.freeze({id:c.id,title:c.reviewed_public.title,summary:c.reviewed_public.summary,region:c.reviewed_public.region,category:c.category,goal_cents:c.goal_cents,assistance_kind:c.assistance_kind,verification_label:"reviewed_by_lift",payments_available:false});
+  return publicListing({
+    id:c.id,status:'approved',category:c.category,goal_cents:c.goal_cents,assistance_kind:c.assistance_kind,
+    verification:{identity:'verified',need:'verified'},
+    consent:{public_listing:true,data_processing:true},
+    disbursement:{state:'approved',destination:'verified_provider_or_partner'},
+    public:c.reviewed_public
+  });
 }
 function makePartner(input,actor){
   if(!input||Object.keys(input).some(k=>!["id","owner_id","public_name","regions","categories","assistance_kinds"].includes(k)))refuse("invalid partner intake fields");
