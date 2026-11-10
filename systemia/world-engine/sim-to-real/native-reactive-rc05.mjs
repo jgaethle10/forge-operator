@@ -11,6 +11,7 @@ import {makeRng} from './rover-lab.mjs';
 import {scanAnonymous,reactiveCommand} from './controller-rc05.mjs';
 import {reactiveCommandProgress} from './controller-rc05-progress.mjs';
 import {reactiveCommandShielded} from './controller-rc05-shield.mjs';
+import {reactiveCommandEscape} from './controller-rc05-escape.mjs';
 
 export const RC05_SCHEMA='evercraft.sim-to-real.reactive-native.rc05';
 export const RC05_BENCHMARK='evercraft.sim-to-real.reactive-holdout.rc05';
@@ -24,7 +25,7 @@ const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
 
 export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline'}={}){
   assert(Number.isSafeInteger(seed)&&seed>0,'rc05_invalid_seed');
-  assert(['baseline','progress-gated','progress-shielded'].includes(controllerMode),'rc05_invalid_controller_mode');
+  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape'].includes(controllerMode),'rc05_invalid_controller_mode');
   assert(Number.isInteger(maxTicks)&&maxTicks>0&&maxTicks<=650,'rc05_invalid_max_ticks');
   const {course,world}=createMotionWorld(seed);
   const blackout=forcedBlackout??{start:course.params.sensorBlackoutStart,length:course.params.sensorBlackoutLength};
@@ -53,7 +54,8 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       z:p0.z+(rng()-.5)*course.params.sensorNoiseMeters-uncertainty*.08,
       heading:orientation+(rng()-.5)*.03};
     const decide=controllerMode==='progress-gated'?reactiveCommandProgress:
-      controllerMode==='progress-shielded'?reactiveCommandShielded:reactiveCommand;
+      controllerMode==='progress-shielded'?reactiveCommandShielded:
+      controllerMode==='observed-lateral-escape'?reactiveCommandEscape:reactiveCommand;
     const decision=decide({estimate,goal:{x:course.goal.x,z:course.goal.y},
       bounds:course.bounds,scan:lastScan,scanAgeSec:age,velocity:v0,uncertainty,
       delaySeconds:course.params.commandDelaySteps*DT,braking:course.params.braking,
@@ -98,6 +100,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       z:round(roverAfter.rigidBody.velocity.z)},sensorFresh:observed,sensorAge:Number.isFinite(age)?round(age):null,
       uncertainty:round(uncertainty),observedObstacleCount:lastScan.length,requested:decision.reason,
       ...(decision.shield?{shieldDiagnostics:decision.shield}:{}),
+      ...(decision.escape?{escapeDiagnostics:decision.escape}:{}),
       requestedSpeed:round(length(decision.velocity)),appliedSpeed:round(length(applied)),
       nativeContacts:contacts.map(c=>({aId:c.aId,bId:c.bId})),sweptContacts:sweeps,
       obstacles:next.entities.filter(e=>e.id!=='rover').map(e=>({id:e.id,...xy(e),radius:e.collider.radius}))});
