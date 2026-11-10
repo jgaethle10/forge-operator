@@ -81,18 +81,28 @@ node systemia/research/thermal-intelligence/run-profile.mjs systemia/research/th
 
 ## Sprint 3 | Offline calorimetry evidence gate (2026-11-05)
 
-- \`measurement-intake.mjs\`: explicitly synthetic/user-unverified hourly instrument input, kg/s × fluid specific heat × temperature drop to estimate heat, wall electricity cross-check, direct-temperature-grade gate, coincident demand cap, and independent-review flags. It does not connect to a computer, meter, heater, pump, or controller.
-- \`measurement-intake.test.mjs\`: 13 regression tests. All 13 exact committed assertions passed in an isolated V8 JavaScript replay on 2026-11-05. **GitHub Actions/Node CI verification remains unobserved.**
-- \`run-measurements.mjs\` and \`sample-synthetic-measurements.json\`: private/offline JSON runner with a four-hour fictional fixture. One usable, one demand-absent, one insufficient-temperature, and one energy-balance-anomalous hour.
-- \`CALORIMETRY-GATE.md\`: calibrated instrumentation, privacy, safety, and physical interpretation gates.
+- `measurement-intake.mjs`: explicitly synthetic/user-unverified hourly instrument input, kg/s × fluid specific heat × temperature drop to estimate heat, wall electricity cross-check, direct-temperature-grade gate, coincident demand cap, and independent-review flags. It does not connect to a computer, meter, heater, pump, or controller.
+- `measurement-intake.test.mjs`: 13 regression tests. All 13 exact committed assertions passed in an isolated V8 JavaScript replay on 2026-11-05. **GitHub Actions/Node CI verification remains unobserved.**
+- `run-measurements.mjs` and `sample-synthetic-measurements.json`: private/offline JSON runner with a four-hour fictional fixture. One usable, one demand-absent, one insufficient-temperature, and one energy-balance-anomalous hour.
+- `CALORIMETRY-GATE.md`: calibrated instrumentation, privacy, safety, and physical interpretation gates.
 
 Synthetic fixture output: **0.3344 kWh potentially useful**, **2.3408 kWh uncredited**, **-$0.01057** indicative net for four synthetic hours with invented costs and tariff. **DATA_REVIEW_REQUIRED**, with all four calibration statuses unknown and no field approval. No extrapolation to a year or claim of profitable operation.
 
 Run:
 
-\`\`\`bash
+```bash
 node --test systemia/research/thermal-intelligence/measurement-intake.test.mjs
 node systemia/research/thermal-intelligence/run-measurements.mjs systemia/research/thermal-intelligence/sample-synthetic-measurements.json
-\`\`\`
+```
 
 **Reminder:** No real node telemetry was captured, no specialized live team was dispatched, no thermal hardware was modified or measured, and these files provide no authority for experiments or production changes.
+
+## Sprint 4 | Hourly power evidence and dedicated CI (2026-11-09)
+
+- `wall-meter-intake.mjs`: offline cumulative-watt-hour data normalization for strictly whole-system at-wall electrical boundaries; rejects gaps, rollovers, reversed counters and unapproved provenance. Emits hourly electricity, never inferred heat.
+- `wall-meter-intake.test.mjs`: nine exact unit tests passed in an isolated V8 replay against committed GitHub source on 2026-11-09. CI receipt must be verified independently before claiming Node tests passed.
+- `sample-synthetic-wall-meter.json` and `run-wall-meter.mjs`: fictional 3-hour export and local-only parser. Example 0.47 + 0.55 + 0.68 = 1.70 kWh at-wall electricity, calibration unknown and **not** evidence of recoverable heat or profit.
+- `POWER-EVIDENCE-GATE.md`: passive whole-system meter evidence boundary, gaps/resets, private handling, safety gates, and separation from calorimetry.
+- `.github/workflows/thermal-intelligence-rnd.yml`: dedicated scoped tests and synthetic-input guardrail assertions on commits and pull requests; no secrets, live devices, checkout, or deployment.
+
+A meter or node's own CPU TDP/temperature telemetry cannot be substituted for real at-wall energy or heat delivered to a sink. Independent physical measurement, site permission, professional review and verified Systemia delegation remain **not yet achieved**.
