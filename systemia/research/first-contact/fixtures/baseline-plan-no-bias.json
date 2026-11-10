@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.first-contact.synthetic-baseline-plan-input.v1",
+  "synthetic": true,
+  "disclaimer": "Synthetic simulated observations only. Input noise and camera coordinates invented, not measurements.",
+  "parameters": {
+    "targetMeters": {
+      "x": 0,
+      "y": 300,
+      "z": 20
+    },
+    "firstObserverMeters": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "baselineOffsetsMeters": [
+      {
+        "x": 20,
+        "y": 0,
+        "z": 0
+      },
+      {
+        "x": 60,
+        "y": 0,
+        "z": 0
+      },
+      {
+        "x": 100,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "angularStdDegrees": 0.05,
+    "commonAzimuthBiasDegrees": 0,
+    "draws": 600,
+    "seed": 73109,
+    "maxRayMissMeters": 10,
+    "minParallaxDegrees": 1
+  }
+}
