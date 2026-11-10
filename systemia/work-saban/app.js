@@ -249,11 +249,22 @@ $('executor-smoke').addEventListener('click',async()=>{
 });
 
 
+let registeredReportMarkdown=null;
+$('registered-report-download').addEventListener('click',()=>{
+  if(!registeredReportMarkdown)return;
+  const blob=new Blob([registeredReportMarkdown],{type:'text/markdown;charset=utf-8'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='work-saban-verified-registered-report.md';
+  document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 $('registered-report-smoke').addEventListener('click',async()=>{
   const button=$('registered-report-smoke'),status=$('registered-report-status');
   button.disabled=true;
+  registeredReportMarkdown=null;
+  $('registered-report-delivery').hidden=true;
   status.textContent='Starting registered local report pipeline…';
-  let started=false,completed=false,verified=0;
+  let started=false,completed=false,verified=0,delivered=null;
   try{
     const response=await fetch('/api/verified-report-executor-stream',{
       method:'POST',headers:{'x-work-saban-client':'local-preview'}
@@ -285,6 +296,9 @@ $('registered-report-smoke').addEventListener('click',async()=>{
           ||event.capacity?.failed!==0||event.specialist_receipts!==5
           ||!/^[a-f0-9]{64}$/.test(event.report_sha256||''))
           throw new Error('Registered report verification incomplete');
+        if(typeof event.report_markdown!=='string'||!event.report_markdown.length)
+          throw new Error('Verified report body missing');
+        delivered={markdown:event.report_markdown,sha256:event.report_sha256};
         completed=true;
       }else throw new Error('Unexpected report event');
     }
@@ -301,8 +315,15 @@ $('registered-report-smoke').addEventListener('click',async()=>{
     }
     buffer+=decoder.decode();
     if(buffer.trim())processLine(buffer);
-    if(!completed)throw new Error('Stream ended before verified completion');
-    status.textContent='Verified registered report pipeline: 5 specialist receipts, 1 bounded task. Synthetic CSV; no AI agents.';
+    if(!completed||!delivered)throw new Error('Stream ended before verified completion');
+    if(!crypto?.subtle)throw new Error('Local report digest verification unavailable');
+    const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(delivered.markdown));
+    const actual=Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
+    if(actual!==delivered.sha256)throw new Error('Delivered report integrity mismatch');
+    registeredReportMarkdown=delivered.markdown;
+    $('registered-report-content').textContent=registeredReportMarkdown;
+    $('registered-report-delivery').hidden=false;
+    status.textContent='Verified registered report delivered: 5 specialist receipts, SHA-256 checked. Synthetic CSV; no AI agents.';
   }catch(error){status.textContent='Registered pipeline failed: '+error.message;}
   finally{button.disabled=false;}
 });
