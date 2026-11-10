@@ -129,6 +129,8 @@ function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes
   function raster(texIndex,role){
     const tex=gltf.textures?.[texIndex];
     check(tex&&uint(tex.source),'texture_missing:'+texIndex);
+    if(tex.sampler!==undefined)check(uint(tex.sampler)&&
+      gltf.samplers?.[tex.sampler]!==undefined,'texture_sampler_missing:'+texIndex);
     const info=imageSource(gltf,buffers,tex.source);
     const provided=decodedImages?.[tex.source];
     check(provided&&provided.sourceSha256===info.sha256,
@@ -175,7 +177,20 @@ function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes
     textures.push(out);
     return id;
   }
+  function sampler(info){
+    const tex=gltf.textures?.[info.index];
+    check(Boolean(tex),'texture_missing:'+info.index);
+    const raw=tex.sampler===undefined?{}:gltf.samplers?.[tex.sampler];
+    check(raw&&typeof raw==='object','texture_sampler_missing:'+info.index);
+    const mode=(v)=>v===undefined||v===10497?'repeat':v===33071?'clamp-to-edge':
+      v===33648?'mirror-repeat':(check(false,'sampler_address_unsupported'),null);
+    const filter=(v)=>v===undefined||v===9729?'linear':v===9728?'nearest':
+      (check(false,'sampler_filter_unsupported'),null);
+    return {addressModeU:mode(raw.wrapS),addressModeV:mode(raw.wrapT),
+      magFilter:filter(raw.magFilter),minFilter:filter(raw.minFilter)};
+  }
   return {
+    sampler,
     texture(info,role){
       if(!info)return null;
       check(uint(info.index)&&[undefined,0].includes(info.texCoord)&&!info.extensions,
@@ -207,6 +222,14 @@ function makeMaterial(gltf,i,assetId,tex){
   const entries=[
     ['baseColor',p.baseColorTexture],['normal',m.normalTexture],['emissive',m.emissiveTexture]
   ];
+  const textureInfos=[...entries.map(x=>x[1]),p.metallicRoughnessTexture,m.occlusionTexture]
+    .filter(Boolean);
+  const samplers=textureInfos.map(info=>tex.sampler(info));
+  if(samplers.length){
+    const first=JSON.stringify(samplers[0]);
+    check(samplers.every(x=>JSON.stringify(x)===first),'material_sampler_mismatch:'+i);
+    out.sampler=samplers[0];
+  }
   for(const [role,info] of entries){
     if(!info)continue;
     if(role==='normal')check([undefined,1].includes(info.scale),'normal_scale_unsupported');
@@ -257,6 +280,9 @@ export function importGltfAssetPack({
       check(p.attributes&&uint(p.attributes.POSITION)&&uint(p.attributes.NORMAL)&&
         uint(p.attributes.TEXCOORD_0),'required_attributes_missing:'+mi+':'+pi);
       check(!p.targets&&!p.extensions,'morph_or_extension_unsupported:'+mi+':'+pi);
+      check(Object.keys(p.attributes).every(k=>
+        ['POSITION','NORMAL','TEXCOORD_0','TANGENT'].includes(k)),
+        'vertex_attribute_unsupported:'+mi+':'+pi);
       const id=assetId+':mesh-'+mi+'-primitive-'+pi;
       const positions=readAccessor(gltf,binary,p.attributes.POSITION,'VEC3',5126);
       const normals=readAccessor(gltf,binary,p.attributes.NORMAL,'VEC3',5126);
@@ -322,7 +348,8 @@ export function importGltfAssetPack({
 export function selectGltfLod(bundle,distance){
   check(Number.isFinite(distance)&&distance>=0,'lod_select_distance_invalid');
   check(bundle?.receipt?.digest===digest(Object.fromEntries(
-    Object.entries(bundle.receipt).filter(([k])=>k!=='digest'))),
+    Object.entries(bundle.receipt).filter(([k])=>k!=='digest')))&&
+    JSON.stringify(bundle.lods)===JSON.stringify(bundle.receipt.lods),
     'lod_receipt_invalid');
   let selected=bundle.lods[0];
   for(const row of bundle.lods){if(distance>=row.minDistance)selected=row;}
@@ -347,6 +374,8 @@ export function verifyGltfAssetPack(bundle){
         'texture_digest_invalid');
     }
     check(JSON.stringify(bundle.lods)===JSON.stringify(bundle.receipt.lods),'lods_changed');
+    check(bundle.materials.length===bundle.materialDefinitions.length,'materials_count_invalid');
+    check(bundle.textures.length===bundle.textureAssets.length,'textures_count_invalid');
     return true;
   }catch{return false;}
 }
