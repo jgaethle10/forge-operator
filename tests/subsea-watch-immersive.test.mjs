@@ -78,3 +78,23 @@ test('local imports preserve source claims and reject unsourced or synthetic rou
  const unsourced=JSON.stringify({points:[{t_s:0,depth_m:2,x_m:1,y_m:2},{t_s:10,depth_m:3,x_m:2,y_m:3}]});
  assert.throws(()=>parseInput(unsourced,'bad.json'),/declared positioning method/);
 });
+
+
+test('local footage is paired only with user-imported mission data and explicit timing',()=>{
+ for(const id of ['footage-panel','dive-video','video-clock','video-status','video-offset','pick-video','footage-toggle','load-video','sound-toggle','close-footage'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.match(html,/<video id="dive-video" playsinline preload="metadata" muted/);
+ assert.match(html,/Alignment is manually entered and unverified/);
+ assert.match(js,/parseVideoStart\(e\.target\.value\)/);
+ assert.match(js,/videoAtMissionTime\(current,videoStart,videoReady\?video\.duration:NaN\)/);
+ assert.match(js,/if\(mode!=='imported'\)/);
+ assert.match(js,/URL\.createObjectURL\(file\)/);
+ assert.match(js,/URL\.revokeObjectURL\(videoUrl\)/);
+ assert.match(js,/video\.pause\(\)/);
+ assert.match(js,/video\.currentTime=/);
+ assert.match(js,/videoPlayBlocked=true/);
+ assert.match(js,/clearFootage\(\);activate\(next,false\)/);
+ assert.match(js,/clearFootage\(\);load\(\)/);
+ assert.doesNotMatch(js,/fetch\(video|sendBeacon|XMLHttpRequest|WebSocket|MediaRecorder/);
+ assert.doesNotMatch(html,/<video[^>]*controls\b/);
+});
