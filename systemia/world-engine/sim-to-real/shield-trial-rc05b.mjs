@@ -28,7 +28,16 @@ export function runShieldTrial({firstSeed=49,seeds=8,maxTicks=350}={}){
         nativeContacts:episode.outcome.contactTicks,sweptContacts:episode.outcome.sweepTicks,
         shieldedMoves:episode.frames.filter(f=>f.requested==='shielded_progress').length,
         shieldHolds:episode.frames.filter(f=>f.requested?.startsWith('shield_')&&f.requested?.endsWith('_hold')).length,
-        finalPosition:frame?.position,collisionObstacleIds:
+        finalPosition:frame?.position,
+        // Failure-only ground-truth telemetry is diagnostic. The controller NEVER
+        // sees these world positions; it only receives anonymous sensor returns.
+        failureWindow:episode.outcome.status==='collision'||episode.outcome.status==='geofence'
+          ?episode.frames.slice(-24).map(f=>({tick:f.tick,position:f.position,velocity:f.velocity,
+            sensorFresh:f.sensorFresh,sensorAge:f.sensorAge,uncertainty:f.uncertainty,
+            requested:f.requested,requestedSpeed:f.requestedSpeed,appliedSpeed:f.appliedSpeed,
+            nativeContacts:f.nativeContacts,sweptContacts:f.sweptContacts,
+            worldObstaclePositionsForDiagnosisOnly:f.obstacles})) :[],
+        collisionObstacleIds:
           episode.outcome.status==='collision'?[...new Set([
             ...(frame?.nativeContacts??[]).flatMap(c=>[c.aId,c.bId]).filter(id=>id!=='rover'),
             ...(frame?.sweptContacts??[]).map(c=>c.id)])].sort():[],
