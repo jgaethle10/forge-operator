@@ -1,14 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync } from 'node:crypto';
-import { mkdtemp, mkdir, rm, readFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, readFile, readdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { EvercraftPassport } from '../../passport/passport.mjs';
 import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../../organism/goal-runtime.mjs';
 import { createGoalStateFile } from '../../organism/goal-store.mjs';
 import { signMicroSeedExecutionReceipt } from '../../saban/microseed-receipt-signature.mjs';
-import { readPassportScopedGoalWithDeviceEvidence } from './passport-goal-read.mjs';
+import { readPassportScopedGoalWithDeviceEvidence, readPassportScopedGoalFromSignedStore } from './passport-goal-read.mjs';
+import { persistSignedMicroSeedReceipt } from '../../saban/microseed-signed-receipt-store.mjs';
 
 const startAt = new Date('2026-11-05T22:51:00.000Z');
 const finishAt = new Date('2026-11-05T22:53:00.000Z');
@@ -94,4 +95,63 @@ test('revocation blocks even a previously accepted evidence read',()=>withCase({
     reason:'test',revoked_at:now.toISOString(),
   });
   await assert.rejects(read(),/visual_access_denied/);
+}));
+
+test('real signed receipt journal is read only after exact Passport authorization',()=>withCase({},async({dir,read,receipt,keys,passportStateDir,goalStateDir})=>{
+  const stateDir=join(dir,'device-state');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  const snapshot=await readPassportScopedGoalFromSignedStore({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+    trustedDeviceKeys:keys,
+  });
+  assert.equal(snapshot.provenance.passport_authorization_verified,true);
+  assert.equal(snapshot.summary.signed_device_receipts_matched,1);
+  assert.equal(snapshot.summary.signed_receipt_sources_missing,0);
+  assert.equal(snapshot.summary.verified_receipts,0);
+  assert.equal(snapshot.provenance.independent_effect_verified,false);
+  assert.equal(snapshot.nodes[1].device_signature_state,'verified_against_pinned_device_key');
+  for(const secret of ['private-device','private-goal','private-task','test-signer']){
+    assert.equal(JSON.stringify(snapshot).includes(secret),false);
+  }
+}));
+test('missing signed journal remains an explicit evidence gap, not verified work',()=>withCase({},async({dir,receipt,keys,goalStateDir,passportStateDir})=>{
+  const snapshot=await readPassportScopedGoalFromSignedStore({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,
+    receiptStateDirsByDevice:{'private-device':join(dir,'nonexistent-journal')},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+    trustedDeviceKeys:keys,
+  });
+  assert.equal(snapshot.summary.signed_receipt_sources_missing,1);
+  assert.equal(snapshot.summary.signed_device_receipts_matched,0);
+  assert.equal(snapshot.summary.verified_receipts,0);
+  assert.equal(snapshot.nodes[1].status,'reported_complete_unverified');
+}));
+test('no Passport grant denies the signed journal read before file access',()=>withCase({grant:false},async({dir,receipt,keys,goalStateDir,passportStateDir})=>{
+  await assert.rejects(readPassportScopedGoalFromSignedStore({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,
+    receiptStateDirsByDevice:{'private-device':join(dir,'does-not-exist')},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+    trustedDeviceKeys:keys,
+  }),/visual_access_denied/);
+}));
+test('tampering an existing locally signed journal fails the whole read',()=>withCase({},async({dir,receipt,keys,goalStateDir,passportStateDir})=>{
+  const stateDir=join(dir,'device-state');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  const [devFolder]=await readdir(join(stateDir,'signed-receipts','v1'));
+  const folder=join(stateDir,'signed-receipts','v1',devFolder);
+  const [entry]=await readdir(folder);
+  const tampered=structuredClone(receipt);tampered.result={ok:false};
+  await writeFile(join(folder,entry),JSON.stringify(tampered));
+  await assert.rejects(readPassportScopedGoalFromSignedStore({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+    trustedDeviceKeys:keys,
+  }),/device_signature_rejected/);
 }));
