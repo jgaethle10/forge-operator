@@ -15,7 +15,7 @@
   const receipts={};
   const scene=$('office-scene');
   let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};
-  let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null;
+  let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null,roomLevel=false,roomButton=null;
   const touches=new Map();
   let gesture=null;
   const rooms=[
@@ -150,6 +150,7 @@
       ['⌖','Reset view',()=>resetCamera()],
       ['◎','Focus selected coworker',()=>focusAgent(selected)],
       ['◉','Follow selected coworker',()=>toggleFollow()],
+      ['▤','Lower camera to room level',()=>toggleRoomLevel()],
       ['→','Visit next coworker',()=>tourNext()]
     ];
     buttons.forEach(([label,title,fn])=>{
@@ -157,6 +158,7 @@
       b.type='button';b.title=title;b.setAttribute('aria-label',title);
       b.addEventListener('click',e=>{e.stopPropagation();fn();});
       if(title==='Follow selected coworker'){followButton=b;b.setAttribute('aria-pressed','false');}
+      if(title==='Lower camera to room level'){roomButton=b;b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
     overlay.append(orbit,evidenceNote,controls);
@@ -260,13 +262,21 @@
     if(followButton)followButton.setAttribute('aria-pressed',String(followSelected));
     if(followSelected)focusAgent(selected);
   }
+  function toggleRoomLevel(){
+    roomLevel=!roomLevel;
+    if(roomButton)roomButton.setAttribute('aria-pressed',String(roomLevel));
+    const compact=(scene?.getBoundingClientRect?.().width||window.innerWidth||1000)<540;
+    position.pitch=roomLevel?34:(compact?59:58);
+    position.zoom=roomLevel?Math.max(position.zoom,compact?.60:.91):position.zoom;
+    applyCamera();
+  }
   function orbitCamera(dx,dy){
     position.yaw=clamp(position.yaw+dx,-170,170);
     position.pitch=clamp(position.pitch+dy,32,74);
     applyCamera();
   }
   function zoom(delta){position.zoom=clamp(position.zoom+delta,0.35,1.42);applyCamera();}
-  function resetCamera(){disengageFollow();position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};applyCamera();}
+  function resetCamera(){disengageFollow();roomLevel=false;if(roomButton)roomButton.setAttribute('aria-pressed','false');position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};applyCamera();}
   function focusAgent(id){
     const role=roster.find(r=>r.id===id);
     if(!role)return;
@@ -280,7 +290,7 @@
     // Calculate centering AFTER target zoom has changed.
     position.panX=clamp(Math.round((530-(role.x+100))*position.zoom),-480,480);
     position.panY=clamp(Math.round((340-(role.y+85))*position.zoom),-360,360);
-    position.pitch=compact?59:52;
+    position.pitch=roomLevel?34:(compact?59:52);
     applyCamera();
   }
   let tourIndex=0;
@@ -398,6 +408,6 @@
     if(cameraRig)cameraRig.setSuspended(!enabled);
     if(enabled)applyCamera();
   }
-  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,
-    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected};
+  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,
+    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel};
 })();
