@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync } from 'node:crypto';
-import { mkdtemp, mkdir, rm, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, readFile, readdir, writeFile, chmod } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { EvercraftPassport } from '../../passport/passport.mjs';
@@ -332,4 +332,17 @@ test('valid signer against a wrong manifest cannot claim an approved execution',
     receiptStateDirsByDevice:{'private-device':stateDir},
     attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
   }),/device_manifest_binding_invalid/);
+}));
+
+test('writable-by-others Ambient root cannot authorize receipt inspection',()=>withCase({},async({dir,receipt,keys,goalStateDir,passportStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await chmod(registryRoot,0o777);
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/unsafe_root_permissions/);
 }));
