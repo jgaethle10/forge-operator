@@ -98,6 +98,7 @@ try{
       profile.name+': source absent');
     const titanWidths=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
     assert.ok(titanWidths[0]<=titanWidths[1]+4,profile.name+': Titan horizontal overflow '+titanWidths);
+    await page.evaluate(()=>document.querySelector('.exhibit').scrollIntoView({block:'start'}));
     await page.screenshot({path:output+'/'+profile.name+'-titan.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');
     receipt.scenarios.push({name:profile.name,status:'PASS',viewport:[profile.width,profile.height],
