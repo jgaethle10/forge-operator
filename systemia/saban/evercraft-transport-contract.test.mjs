@@ -31,6 +31,10 @@ test('public-facing package is Evercraft and matches its submission version',()=
   assert.equal(pkg.extensions?.['com.openai']?.interface?.displayName,'Evercraft');
   assert.ok(submission.includes('Package version: **'+pkg.version+'**'));
   assert.ok(submission.includes('**not proven**'),'no automatic public directory claim');
+  const submissionMetadata=json('plugins/evercraft-fabric/openai-submission.json');
+  assert.equal(submissionMetadata.compatibility_transport?.active,false);
+  assert.equal(submissionMetadata.compatibility_transport?.mcp,null);
+  assert.equal(JSON.stringify(submissionMetadata).includes('base44.app'),false);
 });
 test('legacy AI Suite is not promoted as a second front door',()=>{
   const docs=read('plugins/evercraft-ai-suite/README.md');
