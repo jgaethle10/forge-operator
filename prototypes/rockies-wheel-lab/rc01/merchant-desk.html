@@ -29,7 +29,7 @@ main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{
 <label class="label" for="conceptFile">Import a Wheel Lab concept JSON</label>
 <input id="conceptFile" type="file" accept=".json,application/json">
 <p class="hint">From the shopper preview's "Export shop quote packet" button. Local to this browser, never transmitted. Maximum 20 KB.</p>
-<div class="box"><strong>Requested appearance (unverified)</strong><p id="conceptSummary">No shopper concept imported yet.</p></div>
+<div class="box"><strong>Requested appearance (unverified)</strong><p id="conceptSummary">No shopper concept imported yet.</p><p class="small">FindMyPart is a separate parts research service. A sourcing-interest note is not permission to contact a customer or proof of compatible stock.</p></div>
 <div class="line"></div><h2>3. Shop workflow</h2>
 <label class="label" for="service">Additional service</label><select id="service"><option value="none">No service selected</option><option value="mount">Mount/balance (manual review)</option><option value="tpms">TPMS service (manual review)</option></select>
 <p class="hint">Service selection is a reminder only. It never adds an invented price.</p>
@@ -106,8 +106,12 @@ function parseConcept(text){
      !['Torch red','Pearl white','Electric blue','Machine silver','Midnight'].includes(paint)||
      ![17,18,19,20,21].includes(raw.diameter_in))throw Error('Unrecognized concept appearance');
   if(raw.vehicle!=='Original concept coupe (not manufacturer-specific)')throw Error('Unsupported concept vehicle');
+  if(raw.findmypart_sourcing_interest_requested!==undefined && typeof raw.findmypart_sourcing_interest_requested!=='boolean')throw Error('Invalid sourcing research interest');
+  if(raw.findmypart_referral_sent!==undefined && raw.findmypart_referral_sent!==false)throw Error('No actual sourcing referral is permitted');
+  if(raw.findmypart_customer_contact_shared!==undefined && raw.findmypart_customer_contact_shared!==false)throw Error('No private contact transfer is permitted');
   return Object.freeze({source:'wheel-lab-rc01', vehicle:'Illustrative coupe only',
     wheel_design,wheel_finish,paint,diameter_in:raw.diameter_in,
+    findmypart_sourcing_interest_requested:raw.findmypart_sourcing_interest_requested===true,
     fitment_verified:false, merchant_sku_matched:false});
 }
 function money(cents){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100)}
@@ -137,6 +141,9 @@ function packet(){
     vehicle_note:$('vehicle').value.trim().slice(0,120)||null,
     service_requested:$('service').value,
     requested_appearance: importedConcept ? {...importedConcept} : null,
+    findmypart_sourcing_interest_requested: importedConcept?.findmypart_sourcing_interest_requested===true,
+    findmypart_referral_sent:false,findmypart_customer_contact_shared:false,
+    findmypart_handoff_state:'UNSENT_LOCAL_NOTE_ONLY',
     appearance_import_verified:false,
     merchant_sku_matched_to_concept:false,
     tax_included:false,labor_included:false,delivery_included:false,
@@ -166,7 +173,7 @@ $('conceptFile').addEventListener('change',async(e)=>{
     if(file.size>20000)throw Error('Concept file exceeds 20 KB');
     const parsed=parseConcept(await file.text());
     importedConcept=parsed;
-    $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.';
+    $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.'+(parsed.findmypart_sourcing_interest_requested?' Separate FindMyPart research interest was included for local review only; no inquiry or referral sent.':'');
     $('message').textContent='Shopper concept loaded locally; SKU match still requires a person.';
   }catch(error){$('message').textContent='Concept rejected: '+error.message}
   e.target.value='';
