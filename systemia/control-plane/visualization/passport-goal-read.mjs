@@ -202,9 +202,20 @@ export async function readPassportScopedGoalFromSignedStore({
     signedReceipts, trustedDeviceKeys:effectiveKeys, now:instant,
   });
   snapshot.summary.signed_receipt_sources_missing = missingSource;
-  snapshot.provenance.ambient_registry_active_trust_checked = ambientRegistryRoot !== null;
+  snapshot.provenance.ambient_registry_active_trust_checked =
+    ambientRegistryRoot !== null && activeDevices.length > 0;
   snapshot.provenance.signed_receipt_source_state = 'owned_local_journal_not_remote_telemetry';
-  // Validate authorization after all local receipt reads and verification.
+  // Re-read current Ambient authority immediately before disclosure.
+  // A revoked device or rotated signer key cannot be allowed mid-read.
+  if (ambientRegistryRoot !== null && activeDevices.length) {
+    const latestKeys = await loadActiveAmbientReceiptKeys({
+      ambientRegistryRoot, deviceIds:activeDevices, now:instant,
+    });
+    if (JSON.stringify(latestKeys) !== JSON.stringify(effectiveKeys)) {
+      throw new Error('visual_ambient_trust_changed_during_read');
+    }
+  }
+  // Validate Passport authorization after all local receipt reads and verification.
   checkGrant(passport, subjectRef, resourceRef, at);
   return annotatePassportScope(snapshot);
 }
