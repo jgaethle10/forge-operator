@@ -78,3 +78,23 @@ Regression file `tests/timewalk-map-registration.test.mjs` contains synthetic co
 **Human acquisition steps:** find precise LOC sheet; record sheet image URL and date; select trustworthy street/boundary control features; record image-pixel positions and geodetic survey coordinates with citation; inspect residuals and local distortions; review the 1950-to-1960 changes and image-level rights before historical promotion.
 
 This is **not** a second map engine, GIS authority, or new rendering dependency.
+
+## November 9 update: first source-qualified walking storyboard and 1960 Larson architecture
+
+We confirmed an important **route correction** from the [City of Yakima's historic walking tour (PDF)](https://www.yakimawa.gov/services/historic-preservation-commission/files/2012/08/Walking-tours.pdf): A.E. Larson Building is **stop 27** near Second Street and Yakima Avenue, while Capitol Theatre is **stop 10** along Third Street farther south. They should **not** be represented as two buildings simply facing each other across the single East Yakima Avenue 2nd–3rd block.
+
+The [official Capitol Theatre 2022–23 packet (p. 4)](https://capitoltheatre.org/site/files/file_manager/page/shared/Capitol_Theatre_Tech_Packet_2022-23.pdf) puts the **modern** main entrance midway along the east side of South Third; this does not establish the same entry configuration in 1960. The 9-vs-19 South Third **address discrepancy remains unresolved** in the historical registry. The walking tour's underlying base map bears 2008 Google/NAVTEQ attribution; link/cite only, never copy that map raster into a released world without a rights check.
+
+The [1984 NRHP nomination for Larson Building](https://npgallery.nps.gov/NRHP/GetAsset/NRHP/84003647_text) is exceptionally useful **retrospective year-specific architectural evidence**. It states that **three original corner storefronts were remodeled in 1963** into a combined commercial-bank unit. Thus a reconstructed 1960 Larson exterior must **not** depict that later bank-glazing layout. The nomination documents original four shop entrances on Second Street and three on Yakima Avenue, and describes a 65-by-130-foot building and a height of 188 feet to the **flagpole**. These are **1984-reported** measurements and descriptions, not a validated 1960 mesh, independently surveyed 1960 dimensions, or an original 1960 photo. Original forms should carry `retrospectively_inferred` status for 1960. Do not assert tenant names without period directories.
+
+### New code and data contracts (no duplicate engine)
+
+- `public/worlds/timewalk/yakima-1960/larson-periods.v1.json`: NPS-linked 1931–1984 architectural chronology; 1932–1962 original storefront state, 1963 modification year unresolved to month, and post-1963 bank alterations. Later than 1984 unverified by this record.
+- `public/worlds/timewalk/architectural-periods.mjs`: validates the above and resolves source-based architectural *appearance cues* for the selected year. Never emits geometry or claims direct 1960 photographic observation.
+- `public/worlds/timewalk/yakima-1960/walk-topology.v1.json`: four graph nodes and three **illustrative** walkway segments. Exact sidewalk routes/crossings/lengths are **not verified for 1960**; all positions and distances are null.
+- `public/worlds/timewalk/walk-topology.mjs`: `makeTimewalkSceneHandoff(evidence,route,architecture)` gives the original Evercraft Worlds runtime a **data-only historical payload** with sourced claims, approximate street-storyboard, and pre-1963 facade cue. It provides no renderer, physics, coordinates, or production scene authority.
+- `tests/timewalk-architecture.test.mjs` and `tests/timewalk-route-handoff.test.mjs`: fail-closed year transitions and route/engine-authority checks. CI command is `node --test tests/timewalk-*.test.mjs`, but confirm successful run before claiming new work passed.
+
+**Still blocked:** the exact Library of Congress 1950 Sanborn plate for this downtown block, surveyed georeferencing tie-points, direct 1960 storefront imagery, 1959/1961 directory entries, and a reviewed source-media rights manifest. The standalone alpha HTML is a renderer reference and is **not production-authoritative**, particularly because its schematic arrangement does not accurately encode the whole route.
+
+**Main Worlds integration owner:** only import the history handoff into existing Worlds' scene authoring / provenance UI after schema review. Do not copy standalone Timewalk rendering, movement, save, hosting or physics code.
