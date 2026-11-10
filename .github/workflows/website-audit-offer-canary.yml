@@ -17,20 +17,35 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify live paid audit offer
+      - name: Observe live audit page without claiming paid checkout
         shell: bash
         run: |
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/offers/website-audit"
           body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
-          printf '%s' "$body" | grep -q "Your website is getting attention"
-          printf '%s' "$body" | grep -q "Quick Win Audit"
-          printf '%s' "$body" | grep -q '\$49'
-          printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
-          printf '%s' "$body" | grep -q "Evercraft Payments"
+          printf '%s' "$body" | grep -Fq "See your website through their eyes."
+          printf '%s' "$body" | grep -Fq 'Quick Win Audit'
+          printf '%s' "$body" | grep -Fq '\$49'
+          printf '%s' "$body" | grep -Fq 'Evercraft Payments'
+          if printf '%s' "$body" | grep -Fq 'Online checkout is temporarily unavailable'; then
+            if printf '%s' "$body" | grep -Fq 'action="/api/offers/website-audit/checkout"'; then
+              echo 'ERROR: held offer still contains a checkout submission form'
+              exit 1
+            fi
+            printf '%s' "$body" | grep -Fq 'Request assisted invoicing'
+            checkout_state='held_assisted_contact'
+          elif printf '%s' "$body" | grep -Fq 'Continue to checkout'; then
+            printf '%s' "$body" | grep -Fq 'action="/api/offers/website-audit/checkout"'
+            checkout_state='html_form_visible_payment_not_verified'
+          else
+            echo 'ERROR: neither a held-state assisted route nor a prepared checkout form was visible'
+            exit 1
+          fi
           {
-            echo "## Website Audit offer is live"
+            echo "## Website Audit public-page readback"
             echo
             echo "URL: $url"
-            echo 'Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary'
+            echo "Observed: exact headline, $49 price, Evercraft Payments identity"
+            echo "Checkout page state: $checkout_state"
+            echo "No checkout POST, paid receipt, provider settlement, or delivery verified by this read-only test."
           } >> "$GITHUB_STEP_SUMMARY"
