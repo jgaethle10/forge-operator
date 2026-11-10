@@ -1,0 +1,108 @@
+{
+  "schema": "evercraft.timewalk.architectural-periods.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "placeId": "ae-larson",
+  "displayName": "A.E. Larson Building",
+  "location": {
+    "city": "Yakima",
+    "region": "WA",
+    "country": "US",
+    "georeferenced": false,
+    "coordinates": null,
+    "address": "6 S. 2nd St., Yakima, Washington",
+    "landmarkSourceIds": [
+      "nps-larson",
+      "nps-larson-1984-nomination"
+    ]
+  },
+  "sourceIds": [
+    "nps-larson-1984-nomination",
+    "sah-larson"
+  ],
+  "evidenceMethod": "1984 retrospective architectural description with a specifically dated 1963 exterior modification",
+  "constructionYear": 1931,
+  "physicalDescription": {
+    "asDocumentedYear": 1984,
+    "widthFeet": 65,
+    "lengthFeet": 130,
+    "heightFeetToFlagpole": 188,
+    "facadeMaterialsReported": [
+      "salmon-colored brick",
+      "bronze detailing",
+      "granite",
+      "travertine",
+      "cast stone",
+      "terra cotta",
+      "copper"
+    ],
+    "originalShopDoorDistribution": {
+      "secondStreet": 4,
+      "yakimaAvenue": 3
+    },
+    "geometryBindingStatus": "NOT_MAPPED_TO_1960_GEOCOORDINATES",
+    "exact1960DimensionsValidated": false,
+    "sourceId": "nps-larson-1984-nomination",
+    "qualification": "Nomination describes footprint, height to flagpole and original entrances retrospectively. It does not include a surveyed 1960 3D mesh."
+  },
+  "historicalAlterations": [
+    {
+      "id": "1963-corner-bank-remodel",
+      "calendarYear": 1963,
+      "changedElements": [
+        "three of seven original corner shop fronts",
+        "granite veneer",
+        "decorative bronze window trim"
+      ],
+      "purpose": "Combined three corner store spaces into one large commercial bank rental unit.",
+      "datePrecision": "year_only",
+      "sourceId": "nps-larson-1984-nomination",
+      "descriptionConfidence": "documented_retrospectively"
+    }
+  ],
+  "evidenceWindows": [
+    {
+      "startYear": 1931,
+      "endYear": 1931,
+      "period": "construction_year",
+      "appearance": "original_form_under_construction_or_completed",
+      "classification": "year_level_uncertain",
+      "note": "Completion in September 1931, so year selection alone does not establish a month."
+    },
+    {
+      "startYear": 1932,
+      "endYear": 1962,
+      "period": "before_1963_remodel",
+      "appearance": "original_corner_shopfront_configuration",
+      "classification": "retrospectively_inferred",
+      "note": "The NPS report says the corner shopfronts were altered in 1963; the pre-1963 appearance is defensible as an inferred state, but precise 1960 window details still require photographs/plans."
+    },
+    {
+      "startYear": 1963,
+      "endYear": 1963,
+      "period": "alteration_year",
+      "appearance": "exact_transition_date_unknown",
+      "classification": "unresolved",
+      "note": "1963 year is established; month/day of shopfront change not established."
+    },
+    {
+      "startYear": 1964,
+      "endYear": 1984,
+      "period": "post_1963_remodel_pre_1984_nomination",
+      "appearance": "bank_combined_shopfront_configuration",
+      "classification": "retrospectively_inferred",
+      "note": "A later 1984 nomination describes the bank alterations; subsequent smaller modifications before the nomination not excluded."
+    }
+  ],
+  "forwardUnknownAfterYear": 1984,
+  "rendererAuthority": "evercraft-worlds",
+  "sceneGeometry": null,
+  "mesh": null,
+  "coordinates": null,
+  "textureRights": "not_acquired",
+  "warnings": [
+    "These are authoring/evidence cues, not exact facade vertices or a 3D model.",
+    "The 1984 nominated building dimensions are not an independently checked 1960 engineering survey.",
+    "Pre-1963 shopfront state is inferred, not directly photographed in 1960 by this source.",
+    "Nothing in this profile authorizes rendering the 1963 bank remodel in a 1960 scene."
+  ]
+}
