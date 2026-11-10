@@ -4,8 +4,9 @@
  * No provider network calls, credentials, logs, or state mutations.
  */
 export const POLICY_SCHEMA = 'evercraft.raven.model-route-decision.v0';
-// Mirrors the ACTUAL Raven v1 adapters, not user-supplied provider declarations.
-const PROVIDER_RUNTIME = Object.freeze({ollama:'local', gemini:'cloud', openai:'cloud'});
+// Includes llama-cpp as a DISCONNECTED candidate; not yet a Raven production adapter.
+// A real model-route inventory still requires trusted, fresh node-side proof.
+const PROVIDER_RUNTIME = Object.freeze({ollama:'local', 'llama-cpp':'local', gemini:'cloud', openai:'cloud'});
 const MAX_INVENTORY_AGE_MS = 5 * 60 * 1000;
 
 const isName = value => typeof value === 'string' && value.length > 0;
