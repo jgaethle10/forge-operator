@@ -263,6 +263,27 @@
         "reuse": "Link and cite tour; item-level rights must be checked before reproducing images/maps; 2008 Google/NAVTEQ base has separate licensing."
       },
       "notes": "Tour map stop 27 is Larson Building near S 2nd & E Yakima Ave; stop 10 is Capitol Theatre along S 3rd St toward E Chestnut Ave. Tour's street depiction is circa 2008, not 1960 or a georeferenced sidewalk survey."
+    },
+    {
+      "id": "nps-larson-1984-nomination",
+      "name": "National Register of Historic Places 1984 nomination: A.E. Larson Building, section 7 architectural description",
+      "url": "https://npgallery.nps.gov/NRHP/GetAsset/NRHP/84003647_text",
+      "holder": "US National Park Service / National Register of Historic Places",
+      "evidencePeriod": [
+        "1931",
+        "1963",
+        "1984"
+      ],
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "rights": {
+        "status": "metadata_link_only",
+        "reuse": "Use as documentary reference; verify any original photos or reproduced archival designs separately."
+      },
+      "notes": "1984 description records original seven ground-floor shop entrances (four on Second Street, three on Yakima Avenue); three corner storefronts altered in 1963 for a bank; 65 x 130 ft footprint and 188 ft height to flagpole; salmon brick and varied stone/metal finishes. The report is retrospective evidence, not a 1960 photograph."
     }
   ],
   "places": [
@@ -316,6 +337,43 @@
           "evidence": "documented",
           "sourceIds": [
             "yakima-city-walking-tour"
+          ]
+        },
+        {
+          "id": "larson-1963-shopfront-change",
+          "assertion": "The Larson Building's corner shop fronts were remodeled in 1963 into one large bank rental unit; the alteration affected three of the seven original shop fronts.",
+          "period": "1963",
+          "evidence": "documented",
+          "sourceIds": [
+            "nps-larson-1984-nomination"
+          ]
+        },
+        {
+          "id": "larson-1960-original-shopfronts",
+          "assertion": "In 1960 the corner shop fronts predated the alterations documented as occurring in 1963, and the original multi-shop arrangement is a defensible historical reconstruction.",
+          "period": "1960",
+          "evidence": "intervalInferred",
+          "sourceIds": [
+            "nps-larson-1984-nomination"
+          ],
+          "reason": "Retrospective 1984 NPS nomination dates alterations to 1963. Exact 1960 storefront occupancy, glazing variations and dimensions have not been directly checked."
+        },
+        {
+          "id": "larson-1984-dimensions",
+          "assertion": "The 1984 NRHP nomination describes the Larson Building as 65 feet by 130 feet, with a height of 188 feet to the top of the flagpole.",
+          "period": "1984",
+          "evidence": "documented",
+          "sourceIds": [
+            "nps-larson-1984-nomination"
+          ]
+        },
+        {
+          "id": "larson-1984-description",
+          "assertion": "The 1984 NRHP nomination describes salmon-colored brick, decorative bronze and stone details, original separate Second Street and Yakima Avenue shop entrances, and surviving Art Deco details.",
+          "period": "1984",
+          "evidence": "documented",
+          "sourceIds": [
+            "nps-larson-1984-nomination"
           ]
         }
       ]
@@ -561,6 +619,22 @@
       "acquisition": "PDF pages and map visually inspected; exact cartographic coordinates not extracted",
       "rights": "Citation/link only; map background bears 2008 NAVTEQ/Google attribution; reproduction needs rights review",
       "useFor1960": "Supports present-day tour stop identifiers and coarse route concept, not uninterrupted 1960 street/sidewalk layout or historic storefronts"
+    },
+    {
+      "id": "larson-nps-1984-architectural-description",
+      "name": "A.E. Larson Building retrospective architectural description and 1963 storefront alteration timeline",
+      "sourceId": "nps-larson-1984-nomination",
+      "period": {
+        "display": "1931–1984",
+        "earliest": 1931,
+        "latest": 1984,
+        "approximate": false
+      },
+      "spatialMatch": "A.E. Larson Building at 6 S 2nd and Yakima Avenue",
+      "itemType": "historic-register-nomination",
+      "acquisition": "1984 section 7 full text and scan examined; record retrospectively identifies 1963 corner alteration",
+      "rights": "link and cite; inspect attached historic photographs and permissions separately",
+      "useFor1960": "Before-1963 corner storefront form is period-inferred with strong dated alteration evidence, not a direct 1960 facade observation"
     }
   ],
   "researchGoals": {
@@ -620,6 +694,12 @@
         "dependsOn": [],
         "deliverable": "Find period street plan/dated photographs showing 1960 sidewalk and crossing configuration along Larson-to-Capitol route; distinguish modern topology from 1960 walkability.",
         "status": "research-needed; historic tour map is circa 2008 only"
+      },
+      {
+        "id": "larson-1960-corner-shopfronts",
+        "dependsOn": [],
+        "deliverable": "Reconstruct 1960 Larson corner shop fronts based on pre-1963 architecture, original 1931 plans and pre-1963 dated photos; do not use post-1963 bank glazing.",
+        "status": "1984 NRHP alteration date found; 1960 imagery and original drawings still needed"
       }
     ]
   },
