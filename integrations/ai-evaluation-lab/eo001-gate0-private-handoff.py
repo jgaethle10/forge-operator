@@ -51,23 +51,31 @@ def unique_object(pairs):
 
 
 def read_private_json(filename: Path):
-    if not filename.is_absolute() or filename.is_symlink():
+    if not filename.is_absolute():
         raise Blocked("PRIVATE_REGULAR_INPUT_REQUIRED")
+    fd = None
     try:
-        st = filename.stat()
+        fd = os.open(filename, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        st = os.fstat(fd)
+        if (not stat.S_ISREG(st.st_mode) or st.st_nlink != 1
+                or st.st_uid != os.getuid() or (st.st_mode & 0o077)
+                or st.st_size > 65536 or st.st_size == 0):
+            raise Blocked("PRIVATE_INPUT_PERMISSION_OR_SIZE")
+        with os.fdopen(fd, "rb") as stream:
+            fd = None
+            data = stream.read(65537)
+        if len(data) > 65536:
+            raise Blocked("PRIVATE_INPUT_PERMISSION_OR_SIZE")
     except OSError:
         raise Blocked("PRIVATE_REGULAR_INPUT_REQUIRED") from None
-    if (not stat.S_ISREG(st.st_mode) or st.st_nlink != 1
-            or st.st_uid != os.getuid() or (st.st_mode & 0o077)
-            or st.st_size > 65536 or st.st_size == 0):
-        raise Blocked("PRIVATE_INPUT_PERMISSION_OR_SIZE")
+    finally:
+        if fd is not None:
+            os.close(fd)
     try:
-        return json.loads(filename.read_text(encoding="utf-8"),
-                          object_pairs_hook=unique_object,
+        return json.loads(data.decode("utf-8"), object_pairs_hook=unique_object,
                           parse_constant=lambda _: (_ for _ in ()).throw(Blocked("NONFINITE_JSON")))
     except (UnicodeError, json.JSONDecodeError):
         raise Blocked("INVALID_JSON") from None
-
 
 def validate_receipt(x):
     if not isinstance(x, dict) or set(x) != RECEIPT_FIELDS:
