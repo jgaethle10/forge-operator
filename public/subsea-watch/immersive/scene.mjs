@@ -160,7 +160,7 @@ if(!gl){
   $('synthetic-notes').hidden=!synthetic;
   $('import-notes').hidden=synthetic;
   $('import-summary').textContent=synthetic?'Synthetic mission only.':
-   dive.title+' · '+dive.positionSource+' (declared, unverified) · '+dive.provenance;
+   dive.title+' · '+(dive.xyAvailable?dive.positionSource+' (declared, unverified)':'horizontal position unavailable')+' · '+dive.provenance;
   $('no-position').hidden=synthetic||dive.xyAvailable;
   $('caption').textContent=synthetic?'Illustrative diver route and pipe, not a surveyed site':
    dive.xyAvailable?'User-declared local track only · no surveyed seabed or structures':
