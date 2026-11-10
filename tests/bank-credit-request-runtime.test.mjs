@@ -69,7 +69,7 @@ test('the bank payment request is its own owned URL and never a paid event',asyn
   assert.equal(replay.status,200);
   assert.equal(replay.data.replayed,true);
   assert.equal(replay.data.payment_request_url,c.payment_request_url);
-  const tampered=pageUrl.pathname.slice(0,-1)+'A';
+  const tampered=pageUrl.pathname.slice(0,-1)+(pageUrl.pathname.endsWith('A')?'B':'A');
   const forged=await fetch(x.rt.url+tampered);
   assert.equal(forged.status,404);
  }finally{await x.dispose()}
