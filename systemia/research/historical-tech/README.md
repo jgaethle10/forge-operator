@@ -60,6 +60,11 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 - This is an **alternative analysis path**, not a replacement for the steady-state trial validator or raw evidence intake. Their schemas differ. It cannot infer lost sources, waveform aliasing, instrument synchronization, true AC/RF power or genuine measured data.
 - Neither the model nor a successful CI run establishes experimental energy efficiency, over-unity energy, instrument calibration or safe hardware operation.
 
+## Stage 7: raw CSV-to-analysis handoff (2026-11-09)
+- [time-series-bundle.mjs](time-series-bundle.mjs) and [time-series-bundle.test.mjs](time-series-bundle.test.mjs) connect exact-schema, hashed raw DC channel CSV files to the Stage 6 synchronized energy analyzer and preserve explicit scientific-authorization denials.
+- [ACQUISITION_HANDOFF.md](ACQUISITION_HANDOFF.md) is the operator-facing, **not-yet-approved** acquisition protocol for a hypothetical future low-voltage demonstration. It describes CSV fields, manifest schema, current safety/metrology limitations and the read-only CLI.
+- This closes a **software interface gap only**. Hash matching, metadata and a computed energy ratio do not authenticate instruments, source completeness, timebase or scientific measurement. No actual data exists in this research branch and no hardware work is implied.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
