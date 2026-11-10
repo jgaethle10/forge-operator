@@ -37,7 +37,12 @@ function write(res,status,body,ctype='text/plain; charset=utf-8'){
 export function createLocalMissionControlServer({stateFiles=[],nodeWatches=[],loadSnapshot=null}={}){
  if(!stateFiles.length&&!nodeWatches.length&&!loadSnapshot)throw Error('explicit local source configuration required');
  const getSnapshot=loadSnapshot||(()=>buildLocalMissionSnapshot({stateFiles,nodeWatches}));
- return http.createServer(async(req,res)=>{
+ const server=http.createServer(async(req,res)=>{
+  // Fail closed even if a future caller binds this reusable listener to a
+  // wildcard/LAN interface instead of the CLI's mandated IPv4 loopback.
+  if(server.address()?.address!=='127.0.0.1'||req.socket.localAddress!=='127.0.0.1'){
+   write(res,403,'Loopback listener required');return;
+  }
   const host=String(req.headers.host||'');
   if(!/^(?:127\.0\.0\.1|localhost):\d{1,5}$/.test(host)){
    write(res,403,'Local-only Host required');return;
@@ -75,6 +80,7 @@ export function createLocalMissionControlServer({stateFiles=[],nodeWatches=[],lo
    write(res,200,req.method==='HEAD'?'':data,match[1]);
   }catch{write(res,503,'Viewer asset unavailable');}
  });
+ return server;
 }
 function args(argv){
  const cfg={stateFiles:[],nodeWatches:[],port:8766};const nodes={node001:{},node002:{}};
