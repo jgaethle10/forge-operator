@@ -48,8 +48,32 @@ export function projectSabanWorkProof(raw,{mode}={}){
   }
   // Job identifiers, agent roles, work keys, lease IDs, payloads, errors and
   // source file paths are NOT projected. Marks describe only measured states.
-  const marks=STATES.flatMap(state=>Array.from({length:Math.min(counts[state],48)},
-    ()=>state)).slice(0,48);
+  // At <=48 jobs each mark is one actual state. At larger sizes, preserve
+  // each nonempty lane and apportion 48 representative marks; totals above
+  // remain authoritative, and marks are never presented as specific workers.
+  const displayCount=Math.min(48,jobs.length);
+  const allocation=Object.fromEntries(STATES.map(state=>[state,0]));
+  if(jobs.length<=48){
+    for(const state of STATES)allocation[state]=counts[state];
+  }else{
+    for(const state of STATES)if(counts[state]>0)allocation[state]=1;
+    let slots=displayCount-STATES.reduce((n,s)=>n+allocation[s],0);
+    const remaining=jobs.length-STATES.reduce((n,s)=>n+allocation[s],0);
+    const fractions=[];
+    for(const state of STATES){
+      const exact=remaining?slots*(counts[state]-allocation[state])/remaining:0;
+      const extra=Math.floor(exact);
+      allocation[state]+=extra;
+      fractions.push({state,fraction:exact-extra});
+    }
+    let left=displayCount-STATES.reduce((n,s)=>n+allocation[s],0);
+    fractions.sort((a,b)=>b.fraction-a.fraction || STATES.indexOf(a.state)-STATES.indexOf(b.state));
+    for(const {state} of fractions){
+      if(left<=0)break;
+      if(allocation[state]<counts[state]){allocation[state]++;left--;}
+    }
+  }
+  const marks=STATES.flatMap(state=>Array.from({length:allocation[state]},()=>state));
   const projection={
     schema:'evercraft.graphics-command.saban-work-proof.v1',
     mode,
@@ -77,6 +101,10 @@ function assertProjection(view){
      !Number.isInteger(view.total_jobs)||view.total_jobs<0||view.total_jobs>MAX_JOBS||
      !view.counts||STATES.some(state=>!Number.isSafeInteger(view.counts[state])||view.counts[state]<0)||
      STATES.reduce((sum,s)=>sum+view.counts[s],0)!==view.total_jobs||
+     !Number.isSafeInteger(view.retried_jobs)||view.retried_jobs<0||view.retried_jobs>view.total_jobs||
+     !Number.isSafeInteger(view.checkpointed_jobs)||view.checkpointed_jobs<0||view.checkpointed_jobs>view.total_jobs||
+     !Array.isArray(view.state_marks)||view.state_marks.length!==Math.min(48,view.total_jobs)||
+     view.state_marks.some(state=>!STATES.includes(state))||
      view.historical_events!==false||view.independently_attested!==false||
      view.publication_authority!==false)throw new Error('Invalid proof-view projection');
 }
@@ -90,7 +118,7 @@ export function renderSabanWorkProof(view){
       '<div class="lane-track"><span class="lane-fill '+state+'" style="width:'+pct(value,view.total_jobs)+'%"></span></div></div>';
   }).join('');
   const marks=view.state_marks.map(state=>'<i class="mark '+state+'" aria-hidden="true"></i>').join('');
-  const markNote=view.marks_truncated?'First 48 of '+view.total_jobs.toLocaleString('en-US')+' states shown':'One mark per reported job';
+  const markNote=view.marks_truncated?'48 representative state marks; the counts at left are exact':'One mark per reported job';
   return '<!doctype html><html lang="en"><head><meta charset="utf-8">'+
     '<meta name="viewport" content="width=device-width,initial-scale=1">'+
     '<meta name="robots" content="noindex,nofollow">'+
@@ -128,11 +156,15 @@ function main(){
   const publicRoot=path.join(projectRoot,'public')+path.sep;
   if(!outputPath.endsWith('.html')||outputPath.startsWith(publicRoot))
     throw new Error('Private proof output must be HTML outside the public tree');
+  const outputDir=path.dirname(outputPath);
+  fs.mkdirSync(outputDir,{recursive:true,mode:0o700});
+  const resolvedTarget=path.join(fs.realpathSync(outputDir),path.basename(outputPath));
+  if(resolvedTarget.startsWith(publicRoot)||fs.existsSync(outputPath))
+    throw new Error('Refusing public or existing output path');
   const bytes=fs.readFileSync(input);
   if(bytes.length>MAX_BYTES)throw new Error('Saban input exceeds 8 MiB');
   const {html,projection}=buildSabanWorkProof(bytes.toString('utf8'),{mode});
-  fs.mkdirSync(path.dirname(outputPath),{recursive:true});
-  fs.writeFileSync(outputPath,html,{mode:0o600,flag:'w'});
+  fs.writeFileSync(outputPath,html,{mode:0o600,flag:'wx'});
   process.stdout.write(JSON.stringify({schema:projection.schema,output:outputPath,
     mode:projection.mode,total_jobs:projection.total_jobs,source_digest:projection.source_digest,
     publication_authority:false})+'\n');
