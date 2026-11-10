@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "institutional-memory-system",
+  "imprint": "The Living Archive",
+  "purpose": "Preserve how a team reached decisions, who owns the next action and where the evidence lives.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. Most organizations preserve files and lose the reasons. The Living Archive is built around the small human question every handoff asks: why did we do it this way?",
+    "core_belief": "Continuity is something a team can design.",
+    "customer_emotion": "continuity"
+  },
+  "signature_phrase": "Keep the reason, not just the record.",
+  "personality": {
+    "tone": "thoughtful, enduring, humane; purposeful without nostalgia",
+    "principles": [
+      "Rights and retention are part of the design",
+      "No unlimited deployment promise",
+      "Document provenance and acceptance before implementation"
+    ]
+  },
+  "design_system": {
+    "background": "#172720",
+    "panel": "#26392e",
+    "ink": "#f3f3e6",
+    "muted": "#c6d9c7",
+    "accent": "#a7d6b7",
+    "secondary": "#dec7a0",
+    "mark": "continuity-rings",
+    "typography": "bookish serif headline with precise metadata typography",
+    "motif": "overlapping rings, archival stamps and provenance threads"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false
+  }
+}
