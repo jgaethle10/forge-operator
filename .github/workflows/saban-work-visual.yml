@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - 'systemia/graphics-command/saban-work-visual*'
+      - 'systemia/graphics-command/saban-work-operator*'
       - '.github/workflows/saban-work-visual.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/graphics-command/saban-work-visual*'
+      - 'systemia/graphics-command/saban-work-operator*'
       - '.github/workflows/saban-work-visual.yml'
 
 permissions:
@@ -26,9 +28,11 @@ jobs:
       - name: Syntax and Saban work-state privacy contract
         run: |
           node --check systemia/graphics-command/saban-work-visual.mjs
+          node --check systemia/graphics-command/saban-work-operator.mjs
           node --check systemia/graphics-command/saban-work-visual.specimen.mjs
           node --check systemia/graphics-command/saban-work-visual-browser.cjs
           node --test systemia/graphics-command/saban-work-visual.test.mjs
+          node --test systemia/graphics-command/saban-work-operator.test.mjs
       - name: Render synthetic Saban source-backed specimen
         run: node systemia/graphics-command/saban-work-visual.specimen.mjs artifacts/saban-work-visual-specimen
       - name: Install isolated Chromium visual reviewer
