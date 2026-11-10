@@ -7,6 +7,7 @@ import http from 'node:http';
 import {createForensiScopeGuestOrderLedger} from '../systemia/forensiscope/guest-order-ledger.mjs';
 import {createForensiScopeOwnedSettlementReader} from '../systemia/forensiscope/owned-settlement-readback.mjs';
 import {createForensiScopeResumableIngress} from '../systemia/forensiscope/resumable-ingress.mjs';
+import {createForensiScopeCustomerRuntime} from '../systemia/forensiscope/customer-runtime.mjs';
 
 const url='https://payments.systemiacommandcenters.com/api/verified-settlement';
 const secret='private-service-authorization-token-001';
@@ -204,6 +205,57 @@ test('paid provider readback gates the EXISTING private HTTP upload without gran
   assert.equal(upload.payment_verified,undefined);
  }finally{
   if(server?.listening)await new Promise(resolve=>server.close(resolve));
+  f.cleanup();
+ }
+});
+
+
+test('private buyer payment status polls only own order and never exposes provider proof',async()=>{
+ const f=await fixture();
+ let runtime;
+ try{
+  runtime=createForensiScopeCustomerRuntime({
+   storageDir:path.join(f.root,'runtime'),
+   authorizeBuyer:f.ledger.authorizeBuyer,
+   resolveOrder:f.ledger.resolveOrder,
+   verifyPaidOrder:f.adapter.verifyPaidOrder,
+   verifyResultAccess:async()=>({verified:false}),
+   readCapacity:async()=>capacity,
+   guestLedger:f.ledger,settlementReader:f.adapter,
+   maxUploadBytes:1024*1024,chunkBytes:1024,workerIntervalMs:1000
+  });
+  const {origin}=await runtime.start();
+  const route='/v1/forensiscope/orders/'+f.order.order_key+'/payment';
+  const read=async(auth=f.headers.authorization)=>{
+   const response=await fetch(origin+route,{
+    headers:auth?{authorization:auth}:{}
+   });
+   return {status:response.status,payload:await response.json()};
+  };
+  const unstarted=await read();
+  assert.equal(unstarted.status,200);
+  assert.equal(unstarted.payload.state,'checkout_not_started');
+  assert.equal(f.upstreamCalls,0);
+  assert.equal((await read('')).status,401);
+  const another=await f.ledger.issueGuest({
+   email:'other@example.test',privacyAccepted:true,request:{}
+  });
+  assert.equal((await read('Bearer '+another.access_token)).status,404);
+  await f.finalize();
+  f.setStatus(402);
+  assert.equal((await read()).payload.state,'pending_provider_verification');
+  f.setStatus(200);f.setResponse(readback(f.order));
+  const verified=await read();
+  assert.equal(verified.payload.state,'verified_paid');
+  assert.equal(verified.payload.provider_paid_verified,true);
+  assert.equal(verified.payload.provider_receipt_id,null);
+  assert.equal(verified.payload.media_upload_authorized,false);
+  assert.equal(verified.payload.external_checkout_url,null);
+  const health=await fetch(origin+'/v1/forensiscope/health').then(r=>r.json());
+  assert.equal(health.private_settlement_reader_configured,true);
+  assert.equal(health.public_checkout_enabled,false);
+ }finally{
+  if(runtime)await runtime.stop();
   f.cleanup();
  }
 });
