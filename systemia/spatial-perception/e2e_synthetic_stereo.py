@@ -166,6 +166,20 @@ console.log(JSON.stringify({
         self.assertTrue(proof["forensicReviewed"])
         self.assertTrue(proof["allUnlocated"])
 
+    def test_textureless_video_produces_unknown_depth_and_no_world_geometry(self):
+        synthetic_stereo_video(self.video, blank=True)
+        done = subprocess.run(self.command, text=True, capture_output=True,
+                              timeout=50, check=False)
+        self.assertEqual(done.returncode, 0, done.stderr)
+        payload = json.loads(self.output.read_text())
+        self.assertEqual(len(payload["frames"]), 4)
+        for frame in payload["frames"]:
+            self.assertEqual(len(frame["observations"]), 1)
+            item = frame["observations"][0]
+            self.assertIsNone(item["depthEstimateM"])
+            self.assertIsNone(item["cameraPositionM"])
+            self.assertEqual(item["depthStatus"], "unknown")
+
     def test_model_sha_tampering_fails_without_creating_output(self):
         manifest = json.loads(self.manifest.read_text())
         manifest["sha256"] = "0" * 64
