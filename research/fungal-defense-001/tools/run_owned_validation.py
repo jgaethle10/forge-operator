@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 import platform
 from pathlib import Path
 import subprocess
@@ -21,7 +22,8 @@ TOOLS = ROOT / "tools"
 def run(args: list[str], timeout: int = 90) -> dict:
     try:
         result = subprocess.run(args, cwd=ROOT, capture_output=True, text=True,
-                                timeout=timeout, check=False)
+                                timeout=timeout, check=False,
+                                env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
         return {"command": args, "exit_code": result.returncode,
                 "passed": result.returncode == 0,
                 "stdout_tail": result.stdout[-4000:], "stderr_tail": result.stderr[-2000:]}
@@ -42,13 +44,17 @@ def main() -> int:
                         help="informational label only; not proof of hardware identity")
     args = parser.parse_args()
     command_sets = [
+        [sys.executable, str(TOOLS / "verify_checkout.py")],
         [sys.executable, str(TOOLS / "validate_surveillance.py"), "--self-test"],
         [sys.executable, str(TOOLS / "check_observatory.py")],
         [sys.executable, "-m", "unittest", "discover", "-s", str(TOOLS), "-p", "test_*.py", "-v"],
         [sys.executable, str(TOOLS / "release_gate.py"), "--self-test"],
         [sys.executable, str(TOOLS / "release_gate.py"), "--stage", "preview"],
     ]
-    results = [run(command) for command in command_sets]
+    preflight = run(command_sets[0])
+    results = [preflight]
+    if preflight["passed"]:
+        results.extend(run(command) for command in command_sets[1:])
     commit = git_value("rev-parse", "HEAD")
     changes = git_value("status", "--porcelain")
     receipt = {
@@ -58,11 +64,13 @@ def main() -> int:
         "node_hardware_attested": False,
         "environment": {"platform": platform.platform(), "python": sys.version.split()[0]},
         "git_commit": commit,
+        "checkout_admitted": preflight["passed"],
         "git_worktree_clean": changes == "" if changes is not None else None,
         "source_network_checks_performed": False,
         "public_deployment_performed": False,
         "results": results,
-        "status": "pass" if all(result["passed"] for result in results) else "fail",
+        "status": "pass" if preflight["passed"] and all(result["passed"] for result in results)
+                            and changes == "" and commit is not None else "fail",
         "public_release_approved": False,
     }
     text = json.dumps(receipt, indent=2) + "\n"
