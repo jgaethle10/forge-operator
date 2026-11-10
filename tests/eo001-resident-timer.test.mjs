@@ -17,7 +17,8 @@ function fixture(t){
   fs.chmodSync(base,0o700);
   fs.writeFileSync(path.join(sourceRoot,'systemia/organism/eo001-owned-qa-mission.mjs'),'// fixture\n');
   fs.writeFileSync(nodeBinary,'node test fixture');
-  return {home,sourceRoot,nodeBinary};
+  fs.writeFileSync(path.join(sourceRoot,'systemia/organism/eo001-source-pin-check.mjs'),'// guard fixture');
+  return {home,sourceRoot,nodeBinary,sourcePin:'a'.repeat(40)};
 }
 test('timer only schedules existing internal local QA, with bounded service permissions',t=>{
   const f=fixture(t);
@@ -26,6 +27,7 @@ test('timer only schedules existing internal local QA, with bounded service perm
   const timer=units['evercraft-eo001-owned-qa.timer'];
   assert.match(service,/ExecStart=.*eo001-owned-qa-mission.mjs/);
   assert.match(service,/NoNewPrivileges=yes/);
+  assert.match(service,/ExecStartPre=.*eo001-source-pin-check.mjs a{40}/);
   assert.match(service,/ProtectSystem=strict/);
   assert.match(service,/ReadWritePaths=.*eo001-handoff/);
   assert.match(service,/RestrictAddressFamilies=AF_UNIX/);
