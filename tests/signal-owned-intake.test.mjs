@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { startFabricLocalRuntime } from '../systemia/mcp/fabric-local-runtime.mjs';
 import {
   validateSignalBuyerInquiry, readSignalPrivateInquiry,
@@ -73,6 +74,38 @@ test('owned native intake stores encrypted buyer data and returns a receipt with
     assert.equal(publicGet.status,405);
   }finally{await runtime.close();fs.rmSync(folder,{recursive:true,force:true})}
 });
+
+test('authorized owner can view references and draft a scoped reply without marking payment',async()=>{
+  const folder=dir(),runtime=await temporaryRuntime(folder);
+  let reference;
+  try{
+    const response=await post(runtime.url,request);
+    assert.equal(response.status,201);
+    reference=(await response.json()).reference;
+  }finally{await runtime.close()}
+  const script=path.join(process.cwd(),'scripts/signal-owner-inbox.mjs');
+  const env={...process.env,EVERCRAFT_SIGNAL_LEADS_DIR:folder,EVERCRAFT_SIGNAL_INTAKE_KEY_B64:key.toString('base64')};
+  const call=(...args)=>JSON.parse(execFileSync(process.execPath,[script,...args],{env,encoding:'utf8'}));
+  try{
+    const status=call('status');
+    assert.equal(status.records,1);
+    assert.equal(status.contains_buyer_pii,false);
+    assert.doesNotMatch(JSON.stringify(status),/analyst@example|Savannah River/);
+    const list=call('list');
+    assert.equal(list.records[0].reference,reference);
+    assert.doesNotMatch(JSON.stringify(list),/analyst@example|Savannah River/);
+    const draft=call('draft',reference,'--reveal');
+    assert.equal(draft.to,request.email);
+    assert.equal(draft.sent,false);
+    assert.equal(draft.order_created,false);
+    assert.equal(draft.payment_verified,false);
+    assert.match(draft.body,/Evercraft Payments/);
+    const revealed=call('show',reference,'--reveal');
+    assert.equal(revealed.email,request.email);
+    assert.equal(revealed.incident,request.incident);
+  }finally{fs.rmSync(folder,{recursive:true,force:true})}
+});
+
 test('unconfigured or missing private key fails closed and never takes customer data',async()=>{
   const folder=dir(),runtime=await temporaryRuntime(folder,'');
   try{
