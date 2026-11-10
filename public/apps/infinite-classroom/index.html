@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08182d">
+  <meta name="description" content="Evercraft Infinite Classroom: an offline-capable, privacy-first guided learning foundation.">
+  <title>Infinite Classroom | Evercraft</title>
+  <style>
+    :root {color-scheme:light;--ink:#132543;--muted:#51637c;--blue:#2459cd;--sky:#edf4ff;--line:#dce6f4;--bg:#f7faff;--white:#fff;}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.52 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,select{font:inherit}
+    button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}
+    button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #72b7ff;outline-offset:3px}
+    a{color:inherit}
+    .container{max-width:1120px;margin:auto;padding-inline:clamp(18px,4vw,36px)}
+    .top{background:#08182d;color:#fff}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:17px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;letter-spacing:.08em;font-size:.78rem;font-weight:850}
+    .mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#b8e8ff;color:#082046;font-size:26px;font-weight:700}
+    .nav .note{font-size:.78rem;color:#c2d2ee}
+    .hero{padding-block:clamp(46px,7vw,86px);background:radial-gradient(ellipse at 85% 10%,#163f84 0,transparent 55%),linear-gradient(135deg,#08182d,#102a58);color:#fff}
+    .eyebrow{text-transform:uppercase;letter-spacing:.19em;font-size:.77rem;font-weight:850;color:#a9dfff}
+    h1{font-size:clamp(2.65rem,6vw,5rem);line-height:1.03;letter-spacing:-.045em;margin:18px 0}
+    .hero p{max-width:630px;color:#d9e6ff;font-size:clamp(1.03rem,1.8vw,1.24rem);line-height:1.6}
+    .pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{border:1px solid #416699;background:#12365e;border-radius:999px;padding:8px 14px;font-size:.81rem;font-weight:650}
+    main{padding-block:28px 70px}
+    .bar{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-block:12px 22px}
+    .bar h2{font-size:1.6rem;margin:0;letter-spacing:-.03em}
+    .bar p{color:var(--muted);margin:3px 0 0}
+    .progress{font-weight:750;color:#1b4a98}
+    .track{height:8px;border-radius:9px;background:#dbe5f4;margin-bottom:24px;overflow:hidden}
+    .fill{width:0;height:100%;background:linear-gradient(90deg,#2767db,#4ec9c6);transition:width .2s}
+    .workspace{display:grid;grid-template-columns:minmax(0,1fr) 265px;gap:22px;align-items:start}
+    .panel{border:1px solid var(--line);background:var(--white);border-radius:22px;box-shadow:0 12px 36px #153d7610}
+    .lesson{padding:clamp(22px,4vw,38px);min-height:460px}
+    .controls{display:flex;gap:14px;flex-wrap:wrap}
+    .field{flex:1 1 185px}
+    .field label{display:block;margin-bottom:7px;color:var(--muted);font-size:.83rem;font-weight:800}
+    select{display:block;width:100%;background:#f6f9ff;border:1px solid #b9cce6;border-radius:11px;color:var(--ink);padding:12px}
+    .line{height:1px;background:var(--line);margin:24px 0}
+    .meta{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:#416ac1;font-weight:850}
+    h3{font-size:clamp(1.5rem,3vw,2rem);letter-spacing:-.035em;line-height:1.2;margin:12px 0}
+    .context{font-size:1.07rem;color:#40516c;max-width:680px}
+    .question{font-weight:800;margin-top:22px}
+    .choices{display:grid;gap:11px;margin-top:13px}
+    .choice{display:block;width:100%;padding:15px 17px;text-align:left;color:var(--ink);background:#f8faff;border:1px solid #cfdbec;border-radius:13px}
+    .choice[aria-pressed="true"]{border-color:#2b63d3;background:#eaf2ff;box-shadow:inset 0 0 0 1px #2b63d3}
+    .choice:hover{border-color:#6b95db}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}
+    .primary,.secondary{border-radius:11px;padding:12px 17px;font-weight:800;border:1px solid transparent}
+    .primary{background:#2459cd;color:white}.primary:hover:not(:disabled){background:#1645ac}
+    .secondary{background:white;border-color:#abc2e8;color:#214b96}.secondary:hover:not(:disabled){background:#f0f6ff}
+    .feedback{border-radius:12px;padding:16px 18px;margin-top:20px;background:#f0f6ff;border:1px solid #c4d8f1}
+    .feedback.good{background:#eafaf5;border-color:#addcca}
+    .feedback strong{display:block;margin-bottom:5px}
+    .side{padding:24px}
+    .side h4{margin:0 0 12px;font-size:1.12rem}
+    .side p{color:var(--muted);margin:0 0 15px;font-size:.93rem}
+    .side .small{font-size:.84rem}
+    .side .chip{display:inline-block;color:#1d5791;background:#e8f4ff;border-radius:8px;padding:5px 9px;margin-bottom:13px;font-weight:750;font-size:.76rem}
+    .footer{border-top:1px solid var(--line);padding-block:20px 36px;font-size:.85rem;color:var(--muted)}
+    .footer a{color:#1b58ab}
+    [hidden]{display:none!important}
+    @media(max-width:800px){.workspace{grid-template-columns:1fr}.side{order:2}.nav .note{max-width:160px;text-align:right}.hero{padding-block:45px 54px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <nav class="container nav" aria-label="Main">
+      <a class="brand" href="#top"><span class="mark" aria-hidden="true">∞</span><span>EVERCRAFT<br>INFINITE CLASSROOM</span></a>
+      <span class="note">Owned learning foundation · Preview</span>
+    </nav>
+  </header>
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="eyebrow">Explore · Question · Understand</div>
+      <h1>Learn past<br>the answer.</h1>
+      <p>A classroom that rewards curiosity, evidence, and deeper thinking. Pick a subject, choose your depth, and work through guided challenges. No sign-in needed for this preview.</p>
+      <div class="pills"><span class="pill">3 depth bands</span><span class="pill">9 original challenges</span><span class="pill">No tracking</span><span class="pill">No provider calls</span></div>
+    </div>
+  </section>
+  <main class="container" id="classroom">
+    <div class="bar">
+      <div><h2>Your learning desk</h2><p>Understand the reasoning, not just the right letter.</p></div>
+      <div class="progress" id="progress-count" aria-live="polite">0 of 9 challenges completed</div>
+    </div>
+    <div class="track" role="progressbar" aria-label="Challenges completed" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0" id="progress-track"><div class="fill" id="progress-fill"></div></div>
+    <div class="workspace">
+      <section class="panel lesson" aria-label="Interactive learning challenge">
+        <div class="controls">
+          <div class="field"><label for="subject">Subject</label><select id="subject"><option>All</option><option>Evidence</option><option>Water Science</option><option>Systems</option></select></div>
+          <div class="field"><label for="band">Depth</label><select id="band"><option>All</option><option>Foundation</option><option>Builder</option><option>Frontier</option></select></div>
+        </div>
+        <div class="line"></div>
+        <div id="challenge">
+          <div class="meta" id="lesson-meta"></div>
+          <h3 id="lesson-title"></h3>
+          <p class="context" id="lesson-context"></p>
+          <p class="question" id="lesson-question"></p>
+          <div class="choices" id="choices" role="group" aria-label="Answer choices"></div>
+          <div class="actions">
+            <button class="primary" type="button" id="check" disabled>Check my thinking</button>
+            <button class="secondary" type="button" id="hint">Give me a hint</button>
+            <button class="secondary" type="button" id="next" hidden>Next challenge</button>
+          </div>
+          <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+        </div>
+        <div id="complete" hidden><h3>Nice work. This path is complete.</h3><p>Choose another subject or depth, or restart the practice set.</p></div>
+      </section>
+      <aside class="panel side">
+        <span class="chip">Learning Preview 0.1</span>
+        <h4>Meet your learning path</h4>
+        <p><strong>Foundation</strong> builds clear ideas. <strong>Builder</strong> asks you to apply them. <strong>Frontier</strong> explores models, uncertainty, and design choices.</p>
+        <p>Inspired by the Evercraft Nepal Deep Learning Academy's three-depth learning structure. These nine challenges are newly authored prototype material, not a restored legacy course catalog.</p>
+        <div class="line"></div>
+        <h4>Your privacy</h4>
+        <p class="small">Progress exists only in this open page's memory and disappears when you close or refresh it. No student accounts, personal profiles, or analytics are collected by this app.</p>
+        <button class="secondary" id="reset" type="button">Restart my practice</button>
+        <div class="line"></div>
+        <p class="small">This preview uses structured, authored feedback, not a live AI tutor. It supplements learning; it does not replace teachers or guarantee outcomes. All infrastructure scenarios are fictional classroom exercises.</p>
+      </aside>
+    </div>
+  </main>
+  <footer class="container footer">© Evercraft · Owned source preview · No Base44 calls, third-party model calls, payments, or student data storage.</footer>
+  <script type="module">
+    import { LESSONS, gradeAnswer, nextLesson, progressSummary } from "./learning-engine.mjs";
+    const $ = id => document.getElementById(id);
+    const completed = new Set();
+    let active = null, selected = null, revealed = false, solved = false;
+    const filters = () => ({ subject:$("subject").value, band:$("band").value });
+    function updateProgress() {
+      const p = progressSummary([...completed]);
+      $("progress-count").textContent = p.completed + " of " + p.total + " challenges completed";
+      $("progress-track").setAttribute("aria-valuenow", String(p.completed));
+      $("progress-fill").style.width = (100 * p.completed / p.total) + "%";
+    }
+    function showFeedback(heading, explanation, success = false) {
+      const box = $("feedback");
+      box.replaceChildren();
+      const title = document.createElement("strong");
+      title.textContent = heading;
+      const description = document.createElement("span");
+      description.textContent = explanation;
+      box.append(title, description);
+      box.classList.toggle("good", success);
+      box.hidden = false;
+    }
+    function showLesson() {
+      active = nextLesson({...filters(), completedIds:[...completed]});
+      selected = null;revealed = false;solved = false;
+      $("feedback").hidden = true;$("next").hidden = true;$("hint").hidden = false;
+      $("check").disabled = true;
+      $("challenge").hidden = !active;
+      $("complete").hidden = !!active;
+      updateProgress();
+      if (!active) return;
+      $("lesson-meta").textContent = active.subject + " · " + active.band;
+      $("lesson-title").textContent = active.title;
+      $("lesson-context").textContent = active.context;
+      $("lesson-question").textContent = active.question;
+      const list = $("choices");
+      list.replaceChildren();
+      active.options.forEach(option => {
+        const button = document.createElement("button");
+        button.type = "button";button.className = "choice";
+        button.textContent = option.label;
+        button.setAttribute("aria-pressed", "false");
+        button.addEventListener("click", () => {
+          if (solved) return;
+          selected = option.id;
+          list.querySelectorAll("button").forEach(item => item.setAttribute("aria-pressed",String(item===button)));
+          $("check").disabled = false;
+        });
+        list.append(button);
+      });
+    }
+    $("check").addEventListener("click", () => {
+      if (!active || !selected || solved) return;
+      const result = gradeAnswer(active.id, selected);
+      if (result.correct) {
+        solved = true;completed.add(active.id);$("check").disabled = true;
+        $("hint").hidden = true;$("next").hidden = false;
+        showFeedback("You got it.", result.explanation, true);
+        updateProgress();
+      } else showFeedback("Try another angle.", result.explanation);
+    });
+    $("hint").addEventListener("click", () => {
+      if (!active || solved) return;
+      revealed = !revealed;
+      $("hint").textContent = revealed ? "Hide hint" : "Give me a hint";
+      if (revealed) showFeedback("A clue for your thinking",active.hint);
+      else $("feedback").hidden = true;
+    });
+    $("next").addEventListener("click", () => { $("hint").textContent = "Give me a hint";showLesson(); });
+    $("subject").addEventListener("change",showLesson);
+    $("band").addEventListener("change",showLesson);
+    $("reset").addEventListener("click", () => {completed.clear();$("hint").textContent = "Give me a hint";showLesson();});
+    if (LESSONS.length !== 9) $("progress-track").setAttribute("aria-valuemax",String(LESSONS.length));
+    showLesson();
+  </script>
+</body>
+</html>
