@@ -13,6 +13,9 @@ const FILES=new Map([
  ['/mission-control.mjs',['mission-control.mjs','text/javascript; charset=utf-8']],
  ['/mission-source.mjs',['mission-source.mjs','text/javascript; charset=utf-8']],
  ['/work-source.mjs',['work-source.mjs','text/javascript; charset=utf-8']],
+ ['/index.html',['index.html','text/html; charset=utf-8']],
+ ['/workroom.css',['workroom.css','text/css; charset=utf-8']],
+ ['/workroom.mjs',['workroom.mjs','text/javascript; charset=utf-8']],
 ]);
 const VIEW_ROOT=new URL('../../public/live/',import.meta.url);
 const CSP="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'";
