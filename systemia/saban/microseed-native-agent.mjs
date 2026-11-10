@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
 import { signMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 import { signMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
+import { persistSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
 
 function clean(v){return String(v??'').trim();}
 function send(res,status,body){
@@ -129,6 +130,11 @@ export async function startMicroSeedNativeAgent({
                 key_id:manifest.attestation?.receipt_key_id||receiptSigningKeyId,
               })
             : receipt;
+          // Journal the *signed* statement before acknowledging success.
+          // The pre-existing idempotency store is unsigned and is not proof.
+          if(receiptSigningPrivateKey){
+            await persistSignedMicroSeedReceipt({stateDir,signedReceipt:signed});
+          }
           return send(res,200,{ok:true,...signed});
         }finally{
           active=Math.max(0,active-1);
@@ -139,6 +145,7 @@ export async function startMicroSeedNativeAgent({
     }catch(error){
       const message=error instanceof Error?error.message:String(error);
       const status=message.includes('safety_hold')?409:
+        message.includes('microseed_signed_receipt_persistence_failed')?503:
         message.includes('too_large')?413:422;
       return send(res,status,{ok:false,error:message});
     }

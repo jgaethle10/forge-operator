@@ -11,6 +11,7 @@ import { EvercraftPassport } from '../../passport/passport.mjs';
 import { readGoalState } from '../../organism/goal-store.mjs';
 import { projectGoalToVisualSnapshot } from './goal-visual-bridge.mjs';
 import { correlateSignedDeviceEvidence } from './signed-device-evidence.mjs';
+import { readSignedMicroSeedReceipt } from '../../saban/microseed-signed-receipt-store.mjs';
 
 const SCOPE = 'mission.visual.read';
 const PRODUCT = 'systemia';
@@ -130,6 +131,65 @@ export async function readPassportScopedGoalWithDeviceEvidence({
     trustedDeviceKeys,
     now: instant,
   });
+  checkGrant(passport, subjectRef, resourceRef, at);
+  return annotatePassportScope(snapshot);
+}
+
+
+/**
+ * Internal owned-state reader. The attempt-to-device binding and device
+ * state roots are injected ONLY by trusted server configuration, never a
+ * browser or user-supplied JSON. No remote fetch, work dispatch or mutation.
+ *
+ * An absent journal entry remains a missing evidence gap, not a success.
+ * A present malformed/unsigned/tampered entry fails the entire read.
+ */
+export async function readPassportScopedGoalFromSignedStore({
+  receiptStateDirsByDevice = {},
+  attemptDeviceMap = {},
+  trustedDeviceKeys = {},
+  ...options
+} = {}) {
+  const {state, instant, passport, subjectRef, resourceRef, at} =
+    await loadAuthorizedGoalState(options);
+  if (!receiptStateDirsByDevice || typeof receiptStateDirsByDevice !== 'object' ||
+      Array.isArray(receiptStateDirsByDevice) ||
+      !attemptDeviceMap || typeof attemptDeviceMap !== 'object' ||
+      Array.isArray(attemptDeviceMap)) {
+    throw new Error('visual_signed_receipt_source_config_invalid');
+  }
+  const signedReceipts = [];
+  let missingSource = 0;
+  for (const task of state.tasks) {
+    if (task.status !== 'complete' || !task.attempt_key ||
+        !Array.isArray(task.receipt_refs) || task.receipt_refs.length === 0) continue;
+    const device = Object.hasOwn(attemptDeviceMap, task.attempt_key)
+      ? attemptDeviceMap[task.attempt_key] : null;
+    const stateDir = typeof device === 'string' &&
+      Object.hasOwn(receiptStateDirsByDevice, device)
+      ? receiptStateDirsByDevice[device] : null;
+    if (typeof device !== 'string' || typeof stateDir !== 'string' || !stateDir) {
+      missingSource++;
+      continue;
+    }
+    try {
+      signedReceipts.push(await readSignedMicroSeedReceipt({
+        stateDir, device_id:device, idempotency_key:task.attempt_key,
+      }));
+    } catch (error) {
+      if (error?.code === 'ENOENT') {
+        missingSource++;
+        continue;
+      }
+      throw error;
+    }
+  }
+  const snapshot = correlateSignedDeviceEvidence(state, {
+    signedReceipts, trustedDeviceKeys, now:instant,
+  });
+  snapshot.summary.signed_receipt_sources_missing = missingSource;
+  snapshot.provenance.signed_receipt_source_state = 'owned_local_journal_not_remote_telemetry';
+  // Validate authorization after all local receipt reads and verification.
   checkGrant(passport, subjectRef, resourceRef, at);
   return annotatePassportScope(snapshot);
 }
