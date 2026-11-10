@@ -63,7 +63,11 @@ export async function persistSignedMicroSeedReceipt({stateDir, signedReceipt} = 
     stateDir, device_id:signedReceipt.device_id,
     idempotency_key:signedReceipt.idempotency_key,
   });
-  await mkdir(join(base(stateDir), name(signedReceipt.device_id)), {recursive:true,mode:0o700});
+  const folder=join(base(stateDir), name(signedReceipt.device_id));
+  await mkdir(folder, {recursive:true,mode:0o700});
+  // A local path redirection must never send signed evidence elsewhere.
+  need(await realpath(base(stateDir)) === resolve(base(stateDir)), 'unsafe_root');
+  need(await realpath(folder) === folder, 'unsafe_directory');
   let handle;
   try {
     handle = await open(file, 'wx', 0o600);
