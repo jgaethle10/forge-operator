@@ -5,7 +5,7 @@ import { createLlamaCppInferenceCandidate } from './local-llama-inference.candid
 // model output, or arbitrary user-supplied specs. No production runtime wiring.
 const ADAPTER_RUNTIME = Object.freeze({ ollama:'local', 'llama-cpp':'local', openai:'cloud', gemini:'cloud' });
 const defaultEngine = opts => opts.provider === 'llama-cpp'
-  ? createLlamaCppInferenceCandidate({model:opts.model,allowLocalInference:false})
+  ? createLlamaCppInferenceCandidate({model:opts.model,origin:opts.llamaCppOrigin || 'http://127.0.0.1:36095',fetchImpl:opts.fetchImpl,allowLocalInference:false})
   : createInferenceEngine(opts);
 const MAX_SPEC_ENTRIES = 32;
 const name = value => typeof value === 'string' && value.trim().length > 0 && value.length <= 300;
@@ -23,6 +23,8 @@ export async function observeRavenInventory({
   createEngine = defaultEngine,
   allowCloudMetadataValidation = false,
   credentialStateDir = '',
+  llamaCppOrigin = 'http://127.0.0.1:36095',
+  fetchImpl = globalThis.fetch,
 } = {}) {
   const evaluated_at_ms = now();
   if (!Number.isSafeInteger(evaluated_at_ms) || evaluated_at_ms < 0) {
@@ -70,7 +72,7 @@ export async function observeRavenInventory({
     let result;
     try {
       // The existing engine validates model visibility; it does not perform inference.
-      const engine = createEngine({ provider: provider_id, model: model_id, credentialStateDir });
+      const engine = createEngine({ provider: provider_id, model: model_id, credentialStateDir, llamaCppOrigin, fetchImpl });
       result = await engine.validate();
     } catch {
       // Do not include arbitrary provider error messages: they may contain secrets.
