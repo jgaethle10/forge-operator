@@ -126,6 +126,8 @@ try {
   assert.equal(await page.locator('#days').innerText(),'0');
   assert.equal(await page.evaluate(key=>localStorage.getItem(key),STORAGE_KEY),null);
   await page.locator('#import-file').setInputFiles(backupPath);
+  // File.text() and confirmation occur asynchronously after the input's change event.
+  await page.waitForFunction(() => document.getElementById('days')?.textContent === '6', {timeout:10000});
   assert.equal(await page.locator('#days').innerText(),'6');
   assert.equal(await page.locator('#pieces').innerText(),'1');
 
