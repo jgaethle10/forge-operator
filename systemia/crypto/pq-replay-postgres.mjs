@@ -18,7 +18,7 @@ const SQL=[
   'RETURNING token_digest'
 ].join('\n');
 
-function validated(input) {
+export function validPqReplayInput(input) {
   if (!input || typeof input!=='object') return false;
   const {senderId,senderKeyId,context,nonce,nowMs,expiresAtMs}=input;
   if (typeof senderId!=='string' || !/^[a-z0-9][a-z0-9._:-]{0,127}$/.test(senderId)) return false;
@@ -32,7 +32,7 @@ function validated(input) {
   return true;
 }
 
-function digest(input) {
+export function digestPqReplayToken(input) {
   // Domain separation prevents accidental collision with single-host SQLite
   // replay records. Store only a digest, not raw names, routes, or nonces.
   return createHash('sha256')
@@ -52,8 +52,8 @@ export function createSharedPostgresReplayGuard({client}={}) {
     schema:SCHEMA,
     durability:'shared-postgres-single-primary',
     async consume(input) {
-      if (!validated(input)) return false;
-      const tokenDigest=digest(input);
+      if (!validPqReplayInput(input)) return false;
+      const tokenDigest=digestPqReplayToken(input);
       try {
         // The unique PK and single SQL statement provide atomic admission
         // across competing sessions/processes, without a SELECT-then-INSERT race.
