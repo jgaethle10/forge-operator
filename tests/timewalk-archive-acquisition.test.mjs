@@ -26,7 +26,7 @@ test('no original or public-world accuracy is inferred from catalog date',()=>{
  assert.equal(r.publicSceneAccuracyVerified,false);
  assert.equal(r.publishOriginalMapAllowed,false);
 });
-test('generates a useful no-cost research inquiry without sending it or charging',()=>{
+test('reflects confirmed inquiry delivery without sending again or charging',()=>{
  const r=archiveInquiryPacket(a,ledger);
  assert.equal(r.recipient,'sanborn@csun.edu');
  assert.match(r.subject,/1960 Yakima Sanborn/);
@@ -36,6 +36,10 @@ test('generates a useful no-cost research inquiry without sending it or charging
  assert.match(r.body,/not authorization for any paid service/);
  assert.equal(r.sendAuthorized,false);
  assert.equal(r.feeApproved,false);
+ assert.equal(r.inquiryAlreadySent,true);
+ assert.equal(r.deliveryStatus,'sent-awaiting-archive-response');
+ assert.ok(r.flags.includes('sent-awaiting-archive-response'));
+ assert.ok(!r.flags.includes('not-sent'));
 });
 test('rejects wrong-city and unrelated historical maps',()=>{
  let b=copy();b.location.city='Seattle';
@@ -74,4 +78,14 @@ test('cannot authorize expense, commercial publication or geometry via the resea
   else b[field]=true;
   assert.throws(()=>validateArchiveAcquisition(b,ledger),/premature_publication_purchase_or_geometry/);
  }
+});
+
+test('never silently changes archive contact status or purchase authority',()=>{
+ let b=copy();b.sourceAccess.inquiryStatus='not-sent';
+ assert.throws(()=>validateArchiveAcquisition(b,ledger),/inconsistent_inquiry_state/);
+ b=copy();b.sourceAccess.replyReceived=true;
+ assert.throws(()=>validateArchiveAcquisition(b,ledger),/inconsistent_inquiry_state/);
+ const status=acquisitionReadiness(a,ledger);
+ assert.match(status.outstanding[0],/Await CSUN response/);
+ assert.equal(a.sourceAccess.purchaseAuthorized,false);
 });
