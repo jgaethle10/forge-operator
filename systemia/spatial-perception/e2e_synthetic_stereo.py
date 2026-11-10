@@ -132,6 +132,39 @@ class SyntheticEndToEnd(unittest.TestCase):
             self.assertLess(o["depthEstimateM"], 5.0)
             self.assertAlmostEqual(o["cameraPositionM"]["z"], o["depthEstimateM"])
         self.assertEqual(self.output.stat().st_mode & 0o777, 0o600)
+        # The generated JSON must also pass the *real* JS temporal tracker.
+        script = """
+import fs from 'node:fs';
+import {associateSpatialFrames,temporalReviewPacket,worldsTemporalPreview,
+ forensiScopeTemporalEvents,everMapsTemporalDrafts}
+ from './public/worlds/spatial-temporal.mjs';
+const frames=JSON.parse(fs.readFileSync(process.argv[1],'utf8')).frames;
+const tracks=associateSpatialFrames(frames);
+const review=temporalReviewPacket(tracks);
+const world=worldsTemporalPreview(tracks,frames[0].frameId);
+const forensic=forensiScopeTemporalEvents(tracks);
+const map=everMapsTemporalDrafts(tracks);
+console.log(JSON.stringify({
+ tracks:tracks.tracks.length,
+ observations:review.events.length,
+ custodyVerified:review.chainOfCustodyVerified,
+ authoritative:world.metadata.productionAuthoritative,
+ collisionAuthority:world.metadata.collisionAuthority,
+ forensicReviewed:forensic.every(x=>x.reviewStatus==='requires_human_review'),
+ allUnlocated:map.every(x=>x.geometry===null && x.severity===null)
+}));
+"""
+        bridge = subprocess.run(["node", "--input-type=module", "-e", script, str(self.output)],
+                                text=True, capture_output=True, timeout=20, check=False)
+        self.assertEqual(bridge.returncode, 0, bridge.stderr)
+        proof = json.loads(bridge.stdout)
+        self.assertEqual(proof["tracks"], 1)
+        self.assertEqual(proof["observations"], 4)
+        self.assertFalse(proof["custodyVerified"])
+        self.assertFalse(proof["authoritative"])
+        self.assertFalse(proof["collisionAuthority"])
+        self.assertTrue(proof["forensicReviewed"])
+        self.assertTrue(proof["allUnlocated"])
 
     def test_model_sha_tampering_fails_without_creating_output(self):
         manifest = json.loads(self.manifest.read_text())
