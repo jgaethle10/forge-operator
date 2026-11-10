@@ -42,3 +42,17 @@ Offline tests use actual Forge QA code and synthetic private handoff artifacts. 
 **Operational acceptance still requires** current owned NextGen checkout+source pin, owner-approved readonly user-unit deployment (or admission into an already-running Systemia resident), actual QA field receipt, authenticated status/receipt export through the existing Yard/Remote Operator control path, independent external-delivery evidence, and a separate original commissioned-agent canary. Maintain #1707 and #1332 as open field blockers until that happens.
 
 Tracking: [draft PR #1937](https://github.com/jgaethle10/forge-operator/pull/1937), [original commissioned roster draft PR #1706](https://github.com/jgaethle10/forge-operator/pull/1706), [Node002 remote authority #1332](https://github.com/jgaethle10/forge-operator/issues/1332), [EO-001 #1705](https://github.com/jgaethle10/forge-operator/issues/1705).
+
+## Physical NextGen owner admission (not yet run)
+
+`scripts/nextgen/eo001-resident-field-admission.mjs` provides the bounded field operator workflow:
+
+1. Existing first-party Git source is fetched into a **new detached, exact SHA-pinned Git worktree**. Do not change the operator's current NextGen checkout or infer an existing branch is safe. Require a maintainer-reviewed pinned commit and a clean checkout.
+2. Default invocation `node scripts/nextgen/eo001-resident-field-admission.mjs --pin <EXACT_REVIEWED_COMMIT_SHA>` checks source SHA, tracked-file cleanliness, user-level systemd availability, and exactly one owner-private Gate 0 bundle plus private sanitized receipt and Lab review. It does not install units, run a model, contact Chandra, or change device authority.
+3. An **explicit owner-run** `--activate --owner-approves-internal-qa-service` operation additionally runs the synthetic mission and evidence tests on NextGen, writes only the previously reviewed user-systemd EO-001 timer/service, starts that timer and one internal QA service run, then verifies the durable Systemia QA state is completed and the consequential external gate remains pending.
+4. Every scheduled service cycle executes an `ExecStartPre` source-pin guard: a changed HEAD or changed tracked code blocks QA before the mission imports. The timer does not update itself to a new checkout. Any future code upgrade requires independent review and deliberate re-admission.
+5. If the internal field run or timer status fails, the operator attempts to stop/disable only the EO-001 units created by that attempt, remove those files and reload user-systemd. It does not delete existing private evidence/mission receipts or touch any other service.
+
+The procedure is restricted to **user systemd**, requires non-root login, a fixed verified Git SHA, and a private handoff directory. No new inbound listener, remote job authority, signer key, role enrollment, production model test or extra SaaS host is introduced. A successful field run certifies only a **deterministic internal QA mission**; it cannot establish any original commissioned role is operating.
+
+The authority blocker for broader owned remote orchestration remains #1332, and original Raven role continuity remains #1707. Do not re-send the Chandra ZIP: manual private delivery already occurred on November 9.
