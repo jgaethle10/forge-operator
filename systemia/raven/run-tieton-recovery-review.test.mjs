@@ -62,7 +62,16 @@ test("live acceptance requires all six Raven lanes and writes durable receipts",
       now:()=>new Date(1760000100000+(tick++)*1000),
     });
 
-    assert.equal(result.ok,true);
+    // Diagnostic only: non-sensitive acceptance flags, not tokens or prompts.
+    // The underlying runtime and provider truth contracts remain unchanged.
+    assert.equal(result.ok,true,JSON.stringify({
+      checks:result.acceptance_receipt?.checks,
+      execution_state:result.execution?.state,
+      execution_blocker:result.execution?.blocker || null,
+      acceptance_state:result.acceptance_receipt?.state,
+      completed_roles:result.acceptance_receipt?.completed_roles,
+      missing_roles:result.acceptance_receipt?.missing_roles
+    }));
     assert.equal(result.state,"passed");
     assert.equal(result.acceptance_receipt.review_lane_count,6);
     assert.deepEqual(
