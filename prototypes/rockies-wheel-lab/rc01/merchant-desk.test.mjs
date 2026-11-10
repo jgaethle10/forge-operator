@@ -170,3 +170,50 @@ test('RC05 reset clears customer appearance and any imported operator context', 
   assert.equal(api.packet().requested_appearance,null);
   assert.match(elements.get('conceptSummary').textContent,/No shopper concept imported yet/);
 });
+
+test('RC08 optional FindMyPart sourcing-interest travels locally through shopper to merchant without contact',async()=>{
+  const {api,elements}=launch();
+  const sample={
+    title:'Wheel Lab concept quote packet',version:'RC01',illustrative_only:true,
+    fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,
+    findmypart_sourcing_interest_requested:true,
+    findmypart_referral_sent:false,findmypart_customer_contact_shared:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Mesh',diameter_in:18,wheel_finish:'Brushed silver',paint:'Pearl white'
+  };
+  await elements.get('conceptFile').listeners.change({target:{files:[{
+    name:'local-concept.json',size:500,async text(){return JSON.stringify(sample)}
+  }],value:''}});
+  const packet=api.packet();
+  assert.equal(packet.findmypart_sourcing_interest_requested,true);
+  assert.equal(packet.requested_appearance.findmypart_sourcing_interest_requested,true);
+  assert.equal(packet.findmypart_handoff_state,'UNSENT_LOCAL_NOTE_ONLY');
+  assert.equal(packet.findmypart_referral_sent,false);
+  assert.equal(packet.findmypart_customer_contact_shared,false);
+  assert.equal(packet.customer_consent_verified,false);
+  assert.equal(packet.fitment_verified,false);
+  assert.equal(packet.payment_verified,false);
+  assert.match(elements.get('conceptSummary').textContent,/FindMyPart research interest/);
+  assert.match(elements.get('conceptSummary').textContent,/no inquiry or referral sent/);
+  elements.get('reset').listeners.click();
+  assert.equal(api.packet().findmypart_sourcing_interest_requested,false);
+});
+
+test('RC08 rejects any claimed referral, contact transfer or nonboolean sourcing intent',()=>{
+  const {api}=launch();
+  const good={
+    title:'Wheel Lab concept quote packet',version:'RC01',illustrative_only:true,
+    fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Orbit',diameter_in:19,wheel_finish:'Gloss black',paint:'Torch red'
+  };
+  for(const bad of [
+    {...good,findmypart_sourcing_interest_requested:'yes'},
+    {...good,findmypart_referral_sent:true},
+    {...good,findmypart_customer_contact_shared:true},
+    {...good,findmypart_sourcing_interest_requested:{role:'buyer'}}
+  ]) assert.throws(()=>api.parseConcept(JSON.stringify(bad)));
+  const old=api.parseConcept(JSON.stringify(good));
+  assert.equal(old.findmypart_sourcing_interest_requested,false,'older RC01 exports remain valid');
+  assert.equal(api.packet().findmypart_referral_sent,false);
+});
