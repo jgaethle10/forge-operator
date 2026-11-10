@@ -210,6 +210,10 @@ jobs:
           test -f _public_pages/chum/index.html
           test -f _public_pages/chum/products/infinite-classroom/index.html
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
+          test -s _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Reading Treehouse' _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Homework Coach · hints, not answers' _public_pages/apps/infinite-classroom/play/index.html
+          test -s _public_pages/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
           test -f _public_pages/eps/index.html
@@ -419,6 +423,10 @@ jobs:
             echo "Privacy page, actual popup screenshot, Chromium/Edge/Firefox ZIPs passed remote download and archive integrity checks."
             echo "Store review and real logged-in social-feed compatibility are independent gates."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Infinite Classroom learning worlds on deployed HTTPS
+        shell: bash
+        run: node scripts/probe-infinite-classroom-public.mjs "${{ steps.deployment.outputs.page_url }}"
 
       - name: Verify customer fallback doors
         shell: bash
