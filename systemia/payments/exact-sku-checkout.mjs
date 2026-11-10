@@ -88,7 +88,11 @@ export function validateAdditionalExactSkuLinks(additional,{products,manifest}={
        !/^\\/[A-Za-z0-9]+$/.test(checkout.pathname)||
        checkout.search||checkout.hash||checkout.username||checkout.password||
        proof.protocol!=='https:'||proof.hostname!=='github.com'||
-       page.protocol!=='https:'||!Number.isFinite(Date.parse(offer.browser_checked_at)))
+       !proof.pathname.startsWith('/jgaethle10/forge-operator/actions/runs/')||
+       page.protocol!=='https:'||
+       !(page.hostname==='fabric.systemiacommandcenters.com'||
+         (page.hostname==='jgaethle10.github.io'&&page.pathname.startsWith('/forge-operator/')))||
+       !Number.isFinite(Date.parse(offer.browser_checked_at)))
        throw Error('additional_exact_sku_unapproved_evidence');
     ids.add(offer.product_id);skus.add(offer.sku_key);links.add(offer.url);
     priceIds.add(offer.stripe_price_id);paymentIds.add(offer.payment_link_id);
@@ -157,7 +161,7 @@ export function commerceCoverage({publicProducts,products,manifest,additional=nu
   return {
     schema:'evercraft.payments.coverage.v1',
     owned_discovery_products:discovery.length,
-    independently_linked_commercial_products:products.products.length,
+    independently_linked_commercial_products:products.products.length+verifiedAdditional.length,
     exact_provider_checkout_links:manifest.links.length+verifiedAdditional.length,
     additional_independently_verified_offers:verifiedAdditional.length,
     other_offers_automatically_reusing_any_of_seven:0,
