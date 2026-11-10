@@ -18,12 +18,14 @@ const timerName='evercraft-eo001-owned-qa.timer';
 const safePath=p=>typeof p==='string'&&p.startsWith('/')&&
   /^\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)*$/.test(p);
 function requirePath(p,label){if(!safePath(p))throw Error(label+'_unsafe_path');return p;}
-export function renderEo001ResidentUnits({home,sourceRoot,nodeBinary}={}){
+export function renderEo001ResidentUnits({home,sourceRoot,nodeBinary,sourcePin}={}){
   requirePath(home,'home');
   requirePath(sourceRoot,'source_root');
   requirePath(nodeBinary,'node_binary');
+  if(!/^[a-f0-9]{40}$/.test(sourcePin||''))throw Error('reviewed_source_pin_required');
   const handoff=path.join(home,'.local/state/evercraft/eo001-handoff');
   const mission=path.join(sourceRoot,'systemia/organism/eo001-owned-qa-mission.mjs');
+  const guard=path.join(sourceRoot,'systemia/organism/eo001-source-pin-check.mjs');
   return {
     [serviceName]: `[Unit]
 Description=Evercraft EO-001 bounded private Forge QA mission
@@ -33,6 +35,7 @@ ConditionPathExists=${handoff}
 [Service]
 Type=oneshot
 WorkingDirectory=${sourceRoot}
+ExecStartPre=${nodeBinary} ${guard} ${sourcePin}
 ExecStart=${nodeBinary} ${mission}
 Environment=HOME=${home}
 NoNewPrivileges=yes
@@ -65,13 +68,15 @@ function safeDirectory(dir,{privateAccess=false}={}){
       (privateAccess&&(s.mode&0o077)!==0))
     throw Error('owned_directory_required');
 }
-export function writeEo001ResidentUnits({home,sourceRoot,nodeBinary,write=false}={}){
-  const units=renderEo001ResidentUnits({home,sourceRoot,nodeBinary});
+export function writeEo001ResidentUnits({home,sourceRoot,nodeBinary,sourcePin,write=false}={}){
+  const units=renderEo001ResidentUnits({home,sourceRoot,nodeBinary,sourcePin});
   const base=path.join(home,'.local/state/evercraft/eo001-handoff');
   safeDirectory(base,{privateAccess:true});
   safeDirectory(sourceRoot);
   const mission=path.join(sourceRoot,'systemia/organism/eo001-owned-qa-mission.mjs');
   if(!fs.existsSync(mission)||!fs.statSync(mission).isFile())throw Error('mission_source_not_present');
+  const guard=path.join(sourceRoot,'systemia/organism/eo001-source-pin-check.mjs');
+  if(!fs.existsSync(guard)||!fs.statSync(guard).isFile())throw Error('source_pin_guard_missing');
   if(!fs.existsSync(nodeBinary)||!fs.statSync(nodeBinary).isFile())throw Error('node_binary_not_present');
   const unitDir=path.join(home,'.config/systemd/user');
   const targets=Object.keys(units).map(name=>path.join(unitDir,name));
@@ -100,6 +105,7 @@ if(import.meta.url===pathToFileURL(path.resolve(process.argv[1]||'')).href){
     const sourceRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
     const result=writeEo001ResidentUnits({
       home,sourceRoot,nodeBinary:process.execPath,
+      sourcePin:process.argv.includes('--pin')?process.argv[process.argv.indexOf('--pin')+1]:null,
       write:process.argv.includes('--write-units')
     });
     process.stdout.write(JSON.stringify(result,null,2)+'\n');
