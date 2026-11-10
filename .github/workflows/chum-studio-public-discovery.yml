@@ -5,6 +5,8 @@ on:
       - 'public/llms.txt'
       - 'public/sitemap.xml'
       - 'systemia/chum/build-public-mirror.mjs'
+      - 'systemia/chum/crawl-accelerator.mjs'
+      - 'tests/chum-studio-sitemap-crawl-retention.test.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'tests/chum-studio-public-discovery.test.mjs'
       - '.github/workflows/chum-studio-public-discovery.yml'
@@ -14,6 +16,8 @@ on:
       - 'public/llms.txt'
       - 'public/sitemap.xml'
       - 'systemia/chum/build-public-mirror.mjs'
+      - 'systemia/chum/crawl-accelerator.mjs'
+      - 'tests/chum-studio-sitemap-crawl-retention.test.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'tests/chum-studio-public-discovery.test.mjs'
       - '.github/workflows/chum-studio-public-discovery.yml'
@@ -28,4 +32,5 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/chum/build-public-mirror.mjs
-      - run: node --test tests/chum-studio-public-discovery.test.mjs
+      - run: node --check systemia/chum/crawl-accelerator.mjs
+      - run: node --test tests/chum-studio-public-discovery.test.mjs tests/chum-studio-sitemap-crawl-retention.test.mjs
