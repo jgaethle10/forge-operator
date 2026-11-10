@@ -12,6 +12,7 @@ const MAX_WINDOW_MS=15*60*1000;
 const MAX_ENTRIES=256;
 const MAX_BYTES=1024*1024;
 const ERROR='PQ trust snapshot rejected';
+const trustedImports=new WeakSet();
 const fields=(v,keys)=>v && typeof v==='object' && !Array.isArray(v) &&
   Object.keys(v).sort().join('\0')===keys.slice().sort().join('\0');
 const safeTime=v=>Number.isSafeInteger(v) && v>=0;
@@ -130,8 +131,16 @@ export async function importSignedPqTrustSnapshot({
     const digest=crypto.createHash('sha256').update(encoded).digest('hex');
     if (await revisionGuard.admit({authority:p.authority,revision:p.revision,digest})!==true)
       throw new Error('Snapshot rollback or revision conflict');
-    return {registry,authority:p.authority,revision:p.revision,digest,validUntilMs:p.valid_until_ms};
+    const imported=Object.freeze({registry,authority:p.authority,revision:p.revision,digest,
+      validFromMs:p.valid_from_ms,validUntilMs:p.valid_until_ms});
+    trustedImports.add(imported);
+    return imported;
   } catch {
     throw new Error(ERROR);
   }
+}
+
+/** Reject caller-constructed trust metadata that bypassed signature verification. */
+export function isVerifiedPqTrustImport(value) {
+  return value!==null && typeof value==='object' && trustedImports.has(value);
 }
