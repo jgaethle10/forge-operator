@@ -95,3 +95,15 @@ No public demo canary, permissioned retailer reply or payment receipt is availab
 - `.github/workflows/rockies-wheel-lab.yml` includes the staged route in trigger paths and uploads `wheel-lab-rc07-staged-route-review` as a ZIP **only after tests pass**. This is a review artifact, not a public deployment.
 - [RELEASE-PREFLIGHT.md](RELEASE-PREFLIGHT.md) lists the exact Systemia admission, release approval, owned-host canary, merchant opt-in, privacy and settlement gates. Do not merge or publish this path until an exact signed release action is authorized; serving a research preview does not authorize actual sales.
 
+
+## RC08 | FindMyPart local-interest handoff, no outbound integration (2026-11-09)
+
+**Purpose:** Wheel Lab and FindMyPart remain distinct commercial identities. A shopper with a hard-to-find component may optionally mark sourcing research interest in Wheel Lab, but this does not turn the prototype into an order, an inquiry, or a claim that any illustrated wheel is available.
+
+- Shopper preview adds an unchecked-by-default **Need help locating a hard-to-find component?** checkbox. Exported concept JSON includes findmypart_sourcing_interest_requested:true|false, findmypart_referral_sent:false, and findmypart_customer_contact_shared:false. Reset clears the checkbox. No identifiers are collected or transmitted.
+- Merchant desk imports this field and retains it in the internal review packet with findmypart_handoff_state:"UNSENT_LOCAL_NOTE_ONLY". Forged claims of a referral/contact transfer or nonboolean intent are rejected; older RC01 packets remain compatible.
+- **This is a local conversation note, NOT permission to contact the buyer or a paid FindMyPart service.** FindMyPart has a separate owned intake and checkout-release contract. It is not a live sourcing referral inside Wheel Lab.
+- Do not activate a clickable cross-product referral until the exact FindMyPart HTTPS endpoint is independently reachable, its source/privacy status verified and the exact outbound URL approved. Any future link must not leak build parameters, contact details, VIN, cookies or quote packets.
+- Systemia Proof-First Sales and Interaction Ledger remain the contact gate. Sourcing interest is not a consented FindMyPart inquiry, merchant validation, verified lead or payment receipt.
+
+The open PR and branch remain under Systemia release hold even if CI passes.
