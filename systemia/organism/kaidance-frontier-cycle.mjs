@@ -6,6 +6,7 @@ import { runScienceHazardWatch } from './science-hazard-watch.mjs';
 import { writeMedicalEvidenceBrief } from './medical-evidence-brief.mjs';
 import { writeMedicalAbstractEvidence } from './medical-abstract-evidence.mjs';
 import { writeMedicalEvidenceTriage } from './medical-evidence-triage.mjs';
+import { writeMedicalReviewPacket } from './medical-review-packet.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 
 const rootDir = process.cwd();
@@ -41,6 +42,13 @@ const medicalTriage = writeMedicalEvidenceTriage({
   abstractReport: medicalAbstracts,
   previous: previousTriage,
   outDir: triageDir,
+  now
+});
+
+const medicalReview = writeMedicalReviewPacket({
+  abstractReport: medicalAbstracts,
+  triageReport: medicalTriage.report,
+  outDir: path.join(artifactRoot, 'medical-review-packets'),
   now
 });
 
@@ -105,6 +113,9 @@ const body = {
     triage_history_status: medicalTriage.report.history_status,
     triage_counts: medicalTriage.report.counts,
     triage_receipt: medicalTriage.report.receipt_hash,
+    review_packet_status: medicalReview.source_status,
+    review_packet_counts: medicalReview.counts,
+    review_packet_receipt: medicalReview.receipt_hash,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },
