@@ -12,6 +12,7 @@ import { readGoalState } from '../../organism/goal-store.mjs';
 import { projectGoalToVisualSnapshot } from './goal-visual-bridge.mjs';
 import { correlateSignedDeviceEvidence } from './signed-device-evidence.mjs';
 import { readSignedMicroSeedReceipt } from '../../saban/microseed-signed-receipt-store.mjs';
+import { loadActiveAmbientReceiptKeys } from './ambient-receipt-trust.mjs';
 
 const SCOPE = 'mission.visual.read';
 const PRODUCT = 'systemia';
@@ -148,6 +149,7 @@ export async function readPassportScopedGoalFromSignedStore({
   receiptStateDirsByDevice = {},
   attemptDeviceMap = {},
   trustedDeviceKeys = {},
+  ambientRegistryRoot = null,
   ...options
 } = {}) {
   const {state, instant, passport, subjectRef, resourceRef, at} =
@@ -184,12 +186,42 @@ export async function readPassportScopedGoalFromSignedStore({
       throw error;
     }
   }
+  const activeDevices = [...new Set(state.tasks
+    .filter(task => task.status === 'complete' && task.attempt_key &&
+      Object.hasOwn(attemptDeviceMap, task.attempt_key) &&
+      Object.hasOwn(receiptStateDirsByDevice, attemptDeviceMap[task.attempt_key]))
+    .map(task => attemptDeviceMap[task.attempt_key]))];
+  const effectiveKeys = ambientRegistryRoot === null
+    ? trustedDeviceKeys
+    : activeDevices.length
+      ? await loadActiveAmbientReceiptKeys({
+          ambientRegistryRoot, deviceIds:activeDevices, now:instant,
+        })
+      : {};
   const snapshot = correlateSignedDeviceEvidence(state, {
-    signedReceipts, trustedDeviceKeys, now:instant,
+    signedReceipts, trustedDeviceKeys:effectiveKeys, now:instant,
   });
   snapshot.summary.signed_receipt_sources_missing = missingSource;
+  snapshot.provenance.ambient_registry_active_trust_checked = ambientRegistryRoot !== null;
   snapshot.provenance.signed_receipt_source_state = 'owned_local_journal_not_remote_telemetry';
   // Validate authorization after all local receipt reads and verification.
   checkGrant(passport, subjectRef, resourceRef, at);
   return annotatePassportScope(snapshot);
+}
+
+/**
+ * Production-intended internal entry point. Requires an approved, fresh
+ * Ambient Device Registry before accepting any signed device evidence.
+ * A revoked, expired, stale or changed device identity fails closed.
+ */
+export async function readPassportScopedGoalFromActiveAmbientRegistry({
+  ambientRegistryRoot,
+  ...options
+} = {}) {
+  required(ambientRegistryRoot, 'ambient_registry_root');
+  return readPassportScopedGoalFromSignedStore({
+    ...options,
+    ambientRegistryRoot,
+    trustedDeviceKeys:{},
+  });
 }
