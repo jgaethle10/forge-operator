@@ -94,3 +94,48 @@ A non-zero exit status signals that the source changed, cannot be verified, or c
 ### Verified test scope and limits
 
 The isolated development container executed `validate_surveillance.py --self-test` successfully (seven mutation checks), `unittest` successfully (six tests), and compiled the Python tools. Git blob hashes match the corresponding GitHub source files. The web browser UI, live online CDC-fetch mode, local Evercraft machines, Systemia integration, and public domain deployment still require separate verification.
+
+
+## November 9, 2026: Owned runtime verification and release gates
+
+[Draft PR #1908](https://github.com/jgaethle10/forge-operator/pull/1908) collects the research branch for review. It is **not** a request to publish or merge without the required reviews.
+
+The approved path remains **GitHub as canonical source, Evercraft-owned Node001/Node002 as runtime, Systemia coordination**, with no external app host. The new tools do not contact cloud APIs or deploy anything.
+
+### Run on an Evercraft-owned node after checking out the branch
+
+From a clean local clone of `jgaethle10/forge-operator`:
+
+```bash
+git fetch origin research/fungal-defense-001
+git switch research/fungal-defense-001
+python3 research/fungal-defense-001/tools/run_owned_validation.py \
+  --node-label evercraft-node002-nextgen \
+  --output "$HOME/.local/state/evercraft/fungal-defense/local-validation.json"
+```
+
+The command runs the exact validation scripts and offline unit tests, records the checked-out Git commit and worktree cleanliness, and creates a receipt. **The node label is an operator-supplied label, not cryptographic proof of node identity.** The command neither fetches live surveillance nor publishes the application. A passing receipt must be obtained on actual Evercraft hardware before claiming a successful owned-runtime execution.
+
+### Check release-readiness without releasing anything
+
+```bash
+python3 research/fungal-defense-001/tools/release_gate.py --self-test
+python3 research/fungal-defense-001/tools/release_gate.py --stage preview
+python3 research/fungal-defense-001/tools/release_gate.py --stage public
+```
+
+- The `preview` stage can report `preview_ready` for internal testing but always sets `can_publish=false`.
+- The `public` stage intentionally fails with exit code 2 and `status=blocked` until all four review records and explicit release approval exist.
+- Scientific, privacy/security, accessibility, and owned-runtime evidence must be recorded in `release-gates.json`, including dated evidence links and a pinned 40-character commit SHA.
+- **Do not self-certify or fabricate approvals.** The script checks manifest completeness, but human review and authenticity verification remain separate requirements.
+- Never run `serve_local.py` on a public interface; it is deliberately bound to 127.0.0.1.
+
+### What was actually exercised on November 9
+
+- `release_gate.py --self-test`: PASS on isolated development machine.
+- `release_gate.py --stage preview`: `preview_ready`, with public publication false.
+- `release_gate.py --stage public`: blocked as expected.
+- `run_owned_validation.py` without its repository checkout files: properly failed and produced a non-green receipt.
+- Checked local file Git hashes matched the committed scripts. **The full suite has not yet been executed on Evercraft Node001/Node002; do not mark that milestone complete.**
+
+The next actual Evercraft-node success receipt is the prerequisite for an internal preview deployment discussion. The public-health claims remain subject to qualified external review.
