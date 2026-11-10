@@ -80,6 +80,8 @@
     "purpose": "Turn authorized scattered know-how into a practical reference the next teammate can actually use.",
     "narrative_promise": "Useful knowledge is findable, attributable and transferable.",
     "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/brand.json",
-    "creative_status": "working_brand_direction_not_trademark_cleared"
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
   }
 }
