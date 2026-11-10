@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8fa">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow">
+<title>Watershed Intelligence | Evercraft Research</title>
+<meta name="description" content="Explore source-dated Yakima Basin snowpack, river flow and reservoir evidence. Archived research preview only; not a live forecast.">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/watershed/">
+<style>
+:root{--ink:#132938;--ink2:#304958;--navy:#102c40;--deep:#0c2539;--teal:#167b98;--blue:#1b698d;--aqua:#bbebed;--muted:#5a707e;--border:#dce5ea;--paper:#f5f8fa;--white:#fff;--cream:#ecf5f8;--warm:#886021;--r:20px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.56 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid #0b8da0;outline-offset:4px}
+.wrap{width:min(1120px,calc(100% - 40px));margin-inline:auto}
+.topline{background:var(--deep);color:#b6d0dc;text-align:center;font-size:.73rem;letter-spacing:.025em;padding:8px 16px}
+header{background:#fff;border-bottom:1px solid var(--border);position:relative;z-index:1}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:70px}
+.wordmark{text-decoration:none;display:flex;align-items:center;gap:10px;line-height:1.15}
+.brand-symbol{width:35px;height:35px;border-radius:11px;background:var(--navy);color:#b8edf0;display:grid;place-items:center;font-weight:850;font-size:1rem;letter-spacing:-.08em}
+.brand-small{display:block;font-size:.62rem;font-weight:900;letter-spacing:.16em;color:#367e91}
+.brand-main{font-size:1.07rem;font-weight:800;letter-spacing:-.045em}
+.nav-actions{display:flex;align-items:center;gap:22px;font-size:.85rem;font-weight:700}
+.nav-actions a{text-decoration:none}
+.nav-actions .outline{border:1px solid #9ab7c4;border-radius:999px;padding:9px 15px}
+.hero{color:#fff;background:radial-gradient(ellipse 47% 98% at 92% 10%,#24667b 0%,transparent 75%),linear-gradient(137deg,#0e293e,#153e53);overflow:hidden;position:relative}
+.hero:before{content:"";position:absolute;pointer-events:none;inset:-80% -15% -80% 40%;opacity:.22;background:repeating-radial-gradient(ellipse at 70% 42%,transparent 0 34px,#8bd5d1 35px 36px,transparent 38px 72px);transform:rotate(-12deg)}
+.hero .wrap{position:relative;padding-top:58px;padding-bottom:65px}
+.eyebrow{font-size:.72rem;letter-spacing:.19em;text-transform:uppercase;font-weight:850;color:#93cbd7}
+.hero h1{font-size:clamp(2.9rem,7vw,5.4rem);letter-spacing:-.07em;line-height:1.04;margin:17px 0 18px;max-width:790px}
+.hero h1 span{color:#a9e5e6}
+.hero p{color:#d2e7ef;font-size:1.04rem;max-width:610px;margin:0}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:27px}
+.btn{appearance:none;min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:12px;padding:11px 17px;border:1px solid #d1eff3;text-decoration:none;font-weight:800;font-size:.86rem}
+.btn.light{background:#f1f9f9;color:var(--navy);border-color:#f1f9f9}
+.btn.ghost{background:transparent;color:#fff;border-color:#638796}
+.report-strip{display:flex;gap:15px;flex-wrap:wrap;align-items:center;margin-top:26px;font-size:.82rem;color:#c8e6ed}
+.report-strip .bullet{height:7px;width:7px;border-radius:50%;background:#9ae7c8;display:inline-block;margin-right:6px}
+.report-strip strong{color:#fff}
+.hero-stat{max-width:910px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#446576;border:1px solid #446576;border-radius:16px;overflow:hidden;margin-top:34px}
+.hero-stat>div{padding:18px 20px;background:rgba(15,45,64,.88)}
+.hero-stat b{display:block;font-size:2rem;letter-spacing:-.07em;line-height:1.15}
+.hero-stat span{display:block;color:#c1d9e5;font-size:.73rem;margin-top:4px}
+.content{padding:45px 0 78px}
+.notice{background:#e8f3f7;border:1px solid #bfdae4;border-radius:14px;padding:17px 19px;color:#284d61;display:flex;align-items:flex-start;gap:14px;margin-bottom:36px}
+.notice svg{flex:none;margin-top:2px}.notice b{display:block;font-size:.91rem;margin-bottom:3px}.notice p{font-size:.84rem;margin:0;line-height:1.6}
+.section{margin-top:38px;scroll-margin-top:25px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:0 0 17px;flex-wrap:wrap}
+.section-kicker{font-size:.69rem;color:var(--teal);font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+.section h2{font-size:clamp(1.55rem,3vw,2.18rem);margin:5px 0;letter-spacing:-.052em;line-height:1.15}
+.section-sub{font-size:.86rem;color:var(--muted);margin:5px 0 0;max-width:730px}
+.source-link{display:inline-flex;align-items:center;gap:4px;font-size:.81rem;font-weight:800;color:var(--blue);white-space:nowrap}
+.basin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.basin{padding:24px;border-radius:var(--r);background:#fff;border:1px solid var(--border);box-shadow:0 6px 24px #0e344808}
+.basin-head{display:flex;gap:6px;align-items:center;justify-content:space-between}
+.basin-head span{font-size:.76rem;font-weight:800;color:#425e6b}
+.caution{color:#845f22;background:#f6efe2;border:1px solid #e8d7ba;padding:4px 9px;border-radius:99px;font-size:.67rem;font-weight:800}
+.basin .value{font-size:clamp(2.4rem,4vw,3.65rem);font-weight:780;letter-spacing:-.09em;margin:13px 0 12px;line-height:1.05;color:var(--navy)}
+.basin .value small{font-size:.58em;vertical-align:top;margin-left:2px;color:#7b622f}
+.track{height:7px;border-radius:100px;background:#e7edf1;overflow:hidden;margin-bottom:15px}.bar{height:100%;background:#579fb2;border-radius:100px;min-width:2px}
+.basin p{font-size:.79rem;color:var(--muted);margin:0}
+.explainer{display:flex;gap:12px;padding:16px 17px;background:#fff;border-left:3px solid #b8d3dd;border-radius:0 10px 10px 0;font-size:.85rem;color:#4c6470;margin-top:15px}
+.data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.data-tile{border:1px solid var(--border);background:#fff;border-radius:15px;padding:18px;min-width:0}
+.data-tile .overline{display:flex;justify-content:space-between;align-items:start;gap:9px;color:#4d6b7a;font-size:.73rem;font-weight:760}
+.data-tile h3{font-size:1.05rem;letter-spacing:-.025em;margin:6px 0 11px}
+.reading{font-size:1.9rem;font-weight:790;letter-spacing:-.07em;line-height:1.12;color:var(--navy)}
+.reading span{font-size:.82rem;font-weight:700;letter-spacing:0;color:#587384}
+.tile-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:13px;padding-top:10px;border-top:1px solid var(--border);font-size:.75rem;color:var(--muted)}
+.tile-meta b{font-weight:800;color:#304b5a}
+.tile-footer{margin-top:10px;color:#506978;font-size:.73rem}
+.tile-footer a{font-weight:750;color:#257491}
+.pill{border-radius:99px;background:#e6f4f3;color:#19676c;padding:3px 9px;font-size:.66rem;font-weight:850;white-space:nowrap}
+.pill.held{background:#f5f0e8;color:#886331}
+.ledger{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ledger article{border:1px solid var(--border);border-radius:14px;background:#fff;padding:19px}
+.ledger b{display:block;font-size:.86rem}
+.ledger p{margin:7px 0;color:var(--muted);font-size:.77rem;line-height:1.5}
+.ledger a{font-size:.77rem;font-weight:780;color:var(--blue)}
+.res-total{background:#e8f3f7;border:1px solid #c9dce4;padding:19px;border-radius:15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.res-total .num{font-size:1.85rem;color:var(--navy);font-weight:800;letter-spacing:-.06em}
+.res-total p{margin:4px 0 0;color:#55717d;font-size:.76rem;max-width:610px}
+.summary-banner{background:#112f43;color:#fff;border-radius:21px;padding:34px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:35px;margin-top:45px}
+.summary-banner h2{font-size:clamp(1.65rem,3.4vw,2.4rem);letter-spacing:-.055em;line-height:1.15;margin:8px 0 12px}
+.summary-banner p{font-size:.87rem;color:#c8dee8;margin:0;max-width:610px}
+.summary-banner .btn{white-space:nowrap}
+.footnotes{padding:26px 0 39px;color:#566e7a;font-size:.77rem}
+.footnotes h2{color:#1c4257;font-size:1rem;margin:0 0 9px}
+.footnotes ul{padding-left:18px;margin:0;display:grid;gap:6px}
+footer{background:#0e293a;color:#c9dbe3;padding:27px 0;font-size:.79rem}
+footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+footer b{color:#fff}footer a{color:#d3e9ed}
+.error{border:1px solid #d9c8ad;color:#694e31;background:#fff4e2;border-radius:14px;padding:20px;margin:22px auto;max-width:730px}
+[hidden]{display:none!important}
+@media(max-width:900px){.basin-grid{gap:11px}.basin{padding:19px}.hero .wrap{padding-top:50px;padding-bottom:52px}}
+@media(max-width:680px){.wrap{width:min(100% - 30px,1120px)}.nav{min-height:63px}.nav-actions{gap:9px}.nav-actions>a:first-child{display:none}.brand-main{font-size:.94rem}.hero .wrap{padding-top:44px;padding-bottom:45px}.hero h1{font-size:clamp(2.8rem,12.5vw,4.2rem)}.hero p{font-size:.94rem}.hero-stat>div{padding:15px 10px}.hero-stat b{font-size:1.7rem}.hero-stat span{font-size:.65rem}.content{padding-top:23px}.notice{margin-bottom:27px}.basin-grid{grid-template-columns:1fr}.basin{padding:20px}.basin .value{font-size:3rem}.data-grid,.ledger{grid-template-columns:1fr}.summary-banner{grid-template-columns:1fr;padding:24px;gap:20px}.summary-banner .btn{width:100%}.section{margin-top:32px}.section-head{align-items:start}}
+@media(min-width:681px) and (max-width:920px){.data-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="topline">EVERCRAFT RESEARCH / SOURCE-TRACEABLE WATER INTELLIGENCE</div>
+<header><nav class="nav wrap" aria-label="Main navigation">
+<a class="wordmark" href="../research/" aria-label="Evercraft Research home">
+<span class="brand-symbol" aria-hidden="true">E<span style="opacity:.55">C</span></span>
+<span><span class="brand-small">EVERCRAFT</span><span class="brand-main">Watershed Intelligence</span></span></a>
+<div class="nav-actions"><a href="#evidence">Evidence</a><a class="outline" href="#request">Request a brief</a></div>
+</nav></header>
+<main>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">Yakima Basin / Washington</div>
+<h1>Water has a story.<br><span>Read the evidence.</span></h1>
+<p>One clear view of snowpack, river flow, and reservoir observations, with the official sources and uncertainty attached. Built for asking better questions, not inventing forecasts.</p>
+<div class="hero-actions"><a class="btn light" href="#basins">Explore the basin</a><a class="btn ghost" href="#evidence">See source receipts</a></div>
+<div class="report-strip"><span><span class="bullet"></span><strong>Archived evidence preview</strong></span><span id="source-age">Source date checking…</span><span id="evidence-date">November 9, 2026</span></div>
+<div class="hero-stat" aria-label="Source coverage">
+<div><b>3</b><span>Official basin indices</span></div><div><b>6</b><span>Snow-monitoring sites</span></div><div><b>5</b><span>Reservoir observations</span></div>
+</div></div></section>
+<div class="wrap content">
+<div id="load-error" class="error" role="alert" hidden>Unable to verify the source snapshot. No measurement is being shown.</div>
+<div id="dashboard" hidden>
+<aside class="notice" role="note" id="status-notice">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v6m0 4h.01"/></svg>
+<div><b>Research preview, not a live water forecast</b><p id="notice-content">Source observations are dated and provisional. Early-season index warnings and missing readings remain visible.</p></div>
+</aside>
+<section class="section" id="basins">
+<div class="section-head"><div><div class="section-kicker">01 / Official NRCS report</div><h2>Three watersheds. Three distinct readings.</h2><p class="section-sub">Percent of the 1991–2020 historical snow-water-equivalent median. The asterisks are part of the original NRCS report.</p></div><a class="source-link" id="basin-source" href="https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&amp;report=Washington" target="_blank" rel="noopener noreferrer">Original NRCS report ↗</a></div>
+<div class="basin-grid" id="basin-cards"></div>
+<div class="explainer"><span aria-hidden="true">ⓘ</span><span id="basin-note">NRCS warning: early-season indices can be misleading when normal snowpack is tiny or site coverage is incomplete. These figures are not a seasonal forecast.</span></div>
+</section>
+<section class="section" id="snow">
+<div class="section-head"><div><div class="section-kicker">02 / Mountain observations</div><h2>What's on the mountain?</h2><p class="section-sub">Measured snow-water equivalent (SWE), snow depth, and same-date NRCS site medians. Individual stations do not represent the entire basin.</p></div><a class="source-link" href="https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data" target="_blank" rel="noopener noreferrer">NRCS station data ↗</a></div>
+<div class="data-grid" id="snow-list"></div>
+<div class="explainer">A site's percentage is withheld when its historical median is below one inch. This is an Evercraft communication safeguard, not an NRCS threshold.</div>
+</section>
+<section class="section" id="river">
+<div class="section-head"><div><div class="section-kicker">03 / River observations</div><h2>The rivers right now? Not quite.</h2><p class="section-sub">These are archived gauge measurements from the recorded collection, not constantly updating river readings. One configured gauge was unavailable.</p></div><a class="source-link" href="https://api.waterdata.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS source ↗</a></div>
+<div class="data-grid" id="river-list"></div>
+</section>
+<section class="section" id="reservoir">
+<div class="section-head"><div><div class="section-kicker">04 / Stored water</div><h2>Five reservoirs. One reported date.</h2><p class="section-sub">Bureau of Reclamation storage values in acre-feet. All measurements are provisional and may be revised.</p></div><a class="source-link" href="https://data.usbr.gov/" target="_blank" rel="noopener noreferrer">USBR RISE source ↗</a></div>
+<div class="res-total"><div><div class="section-kicker">Provisional arithmetic sum</div><div class="num" id="reservoir-total">Not available</div></div><p>Sum of five source-reported readings. Not a Reclamation official system total, not percent full, and not a water-supply forecast. Reporting-day time zones still require reconciliation.</p></div>
+<div class="data-grid" id="reservoir-list"></div>
+</section>
+<section class="section" id="evidence">
+<div class="section-head"><div><div class="section-kicker">05 / Evidence ledger</div><h2>Don't take our word for it.</h2><p class="section-sub">Every source family has an original source and an archived, hash-identified collection receipt.</p></div><a class="source-link" href="./data/yakima-2026-11-09.json" download>Download snapshot JSON ↗</a></div>
+<div class="ledger" id="source-ledger"></div>
+</section>
+<section class="section" id="limitations"><div class="section-head"><div><div class="section-kicker">Interpretation limits</div><h2>What these measurements cannot prove</h2></div></div><div class="footnotes"><ul id="limitations-list"></ul></div></section>
+<section class="summary-banner" id="request"><div><div class="eyebrow">For growers, operators, and research teams</div><h2>Need a clearer answer about your specific watershed?</h2><p>Request a custom, human-reviewed evidence brief through Evercraft Research. Describe the location and question first. Scope, price and delivery are confirmed separately. No instant checkout or automatic report delivery is implied.</p></div><a class="btn light" href="../research/#start">Prepare a research request ↗</a></section>
+</div></div>
+</main>
+<footer><div class="wrap"><div><b>Evercraft Research</b><div>Source-first reporting. Questions before conclusions.</div></div><div><a href="../research/">Research home</a> · <a href="#evidence">Source evidence</a> · <a href="#limitations">Limitations</a></div></div></footer>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>
