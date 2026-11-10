@@ -75,6 +75,23 @@ Its guarantee has important limits:
 - Snapshot JSON is canonically serialized by this Node-specific lab implementation. A production cross-language protocol needs independent verification, bounded parsing, version negotiation, signature-domain separation and security review.
 - A signed registry is not an authorization policy by itself. Systemia must bind its approval decision, tenant/domain and permitted roles to the trust ceremony. No production keys or users have been enrolled.
 
+## Atomic current-trust + replay admission (strict lab path)
+
+A verified trust registry can become **stale before its 15-minute expiry** if the root approves a newer revision that revokes an agent. The earlier \`openPinnedPqMessageAsync\` checks the snapshot's signature-derived key map, but alone does not recheck whether its revision is current.
+
+\`pq-current-trust-replay.mjs\` closes this specific admission gap for the PostgreSQL lab. It accepts only an import produced by \`importSignedPqTrustSnapshot\` (branded in this process after root signature verification), and uses one PostgreSQL statement to:
+
+1. Lock the current authority's high-water row \`FOR SHARE\` and require the **exact revision and digest** of the authenticated snapshot.
+2. Require the **database clock** to fall inside that snapshot's signed validity window and the message's expiration window.
+3. Insert the nonce into the unique, shared replay ledger with \`ON CONFLICT DO NOTHING\`.
+4. Return plaintext only if **exactly one committed nonce admission** is confirmed. An expired, stale, replayed or unverified message is rejected; database/network failure also rejects.
+
+The row lock serializes admission with trust-revision updates on a single authoritative writer. This establishes trust freshness **at the instant of database admission**, not a promise that future revocations undo already-delivered plaintext. It does not replace trusted key enrollment, offline root custody, a hybrid/PQ protocol review, real node deployment, or proven safe PostgreSQL failover.
+
+CI exercises a signed old message before revocation, rotates the trust revision to revoke its signer, and then attempts a **new unused** old-key message through a previously loaded registry. The latter must be denied even though the old snapshot is still within its TTL. It additionally verifies current-key admission, replay denial, forged import denial, and database outage/uncertain acknowledgment denial.
+
+The strict production candidate is \`openCurrentTrustPqMessageAsync\`; the earlier \`openPinnedPqMessageAsync\` remains for isolated legacy lab tests and **MUST NOT** be wired into a revocation-sensitive live route.
+
 ## Migration gates
 
 1. Inventory cryptographic key exchange and signatures in Relay, lineage, agents and customer interfaces; identify stored traffic requiring long-term confidentiality.
