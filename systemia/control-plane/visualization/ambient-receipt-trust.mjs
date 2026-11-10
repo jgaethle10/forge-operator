@@ -5,7 +5,7 @@
  * fetch or proof of execution. Root and requested device IDs must come from
  * fixed, trusted runtime configuration and an authenticated mission binding.
  */
-import { createHash, createPublicKey } from 'node:crypto';
+import { createPublicKey } from 'node:crypto';
 import { lstat, readFile, realpath } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { evaluateAmbientTrust } from '../../saban/ambient-device-trust.mjs';
@@ -15,7 +15,6 @@ const DEVICE = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
 const MAX_DEVICES = 50;
 const MAX_FILE_BYTES = 256 * 1024;
 function need(ok, code) { if (!ok) throw new Error('visual_ambient_trust_' + code); }
-function sha256(text) { return 'sha256:' + createHash('sha256').update(text).digest('hex'); }
 async function jsonAt(root, section, id) {
   const dir = join(root, section);
   const file = join(dir, id + '.json');
@@ -78,14 +77,13 @@ export async function loadActiveAmbientReceiptKeys({
     need(Array.isArray(manifest.supported_workloads) &&
       manifest.supported_workloads.length > 0 &&
       manifest.supported_workloads.length <= 50, 'manifest_workloads_invalid');
-    // Identity fingerprints are checked against the public key material,
-    // but no private key or device credentials are ever loaded here.
+    // Public key material is pinned by the authorized manifest hash.
+    // No private key or device credentials are ever loaded here.
     const anchor = {
       device_id:device,
       public_key_pem:manifest.attestation.receipt_public_key_pem,
       allowed_workload_classes:manifest.supported_workloads,
     };
-    need(sha256(anchor.public_key_pem).startsWith('sha256:'), 'key_fingerprint_invalid');
     keys[keyId] = anchor;
   }
   return keys;
