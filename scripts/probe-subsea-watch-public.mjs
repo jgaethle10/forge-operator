@@ -16,9 +16,9 @@ async function read(name){
  }
  throw Error('Public Subsea asset failed '+url+' : '+error?.message);
 }
-const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs','immersive/video-sync.mjs'];
+const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs','immersive/video-sync.mjs','field-archive/','field-archive/catalog.mjs','field-archive/sources.json'];
 const contents=await Promise.all(names.map(read));
-const [html,core,viewer,sampleText,readme,immersive,scene,videoSync]=contents;
+const [html,core,viewer,sampleText,readme,immersive,scene,videoSync,fieldArchive,fieldScript,fieldSourcesText]=contents;
 assert.match(html,/Revisit the dive/);
 assert.match(html,/Prototype, not a safety device/);
 assert.match(html,/id="no-xy"/);
@@ -52,10 +52,23 @@ assert.match(scene,/if\(mode!=='imported'\)/);
 assert.match(videoSync,/export function parseVideoStart\(/);
 assert.match(videoSync,/export function videoAtMissionTime\(/);
 assert.match(readme,/Local footage \/ mission clock pairing/);
+assert.match(immersive,/href="\.\.\/field-archive\/"/);
+assert.match(fieldArchive,/Kodiak Seep/);
+assert.match(fieldArchive,/NOT synchronized/);
+assert.match(fieldArchive,/id="start-preview"/);
+assert.match(fieldArchive,/noindex,nofollow/);
+assert.match(fieldScript,/fetch\('\.\/sources\.json'/);
+assert.match(fieldScript,/player\.src=videoSource/);
+const fieldSources=JSON.parse(fieldSourcesText);
+assert.equal(fieldSources.schema,'evercraft.subsea.field_sources.v1');
+assert.equal(fieldSources.mission.id,'EX2306_DIVE02');
+assert.equal(fieldSources.mission.reconstruction_status,'NOT_RECONSTRUCTED');
+assert.equal(fieldSources.mission.alignment_status,'UNVERIFIED_NO_SYNC');
+assert.equal(fieldSources.entries.length,6);
 
-console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_AND_LOCAL_FOOTAGE_VERIFIED');
+console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_LOCAL_FOOTAGE_AND_NOAA_ARCHIVE_VERIFIED');
 if(process.env.GITHUB_STEP_SUMMARY){
  const fs=await import('node:fs');
  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
- '\n## Subsea Watch experimental customer replay\n\n- **HTTPS checked**: '+root+'\n- Browser UI, parser, 3D viewer, synthetic sample, local video clock module, footage UI/privacy wiring and safety/readme checks passed.\n- Experimental only: not real diver telemetry, measured pipe geometry, certified hazard detection or safe-dive clearance.\n');
+ '\n## Subsea Watch experimental customer replay\n\n- **HTTPS checked**: '+root+'\n- Browser UI, parser, 3D viewer, synthetic sample, local video clock module, footage UI/privacy wiring, NOAA source registry and evidence-limit checks passed.\n- Experimental only: not real diver telemetry, measured pipe geometry, certified hazard detection or safe-dive clearance.\n');
 }
