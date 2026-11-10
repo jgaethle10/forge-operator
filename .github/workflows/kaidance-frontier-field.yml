@@ -11,6 +11,7 @@ on:
       - 'systemia/organism/medical-evidence-brief*.mjs'
       - 'systemia/organism/medical-evidence-triage*.mjs'
       - 'systemia/organism/medical-review-packet*.mjs'
+      - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
@@ -26,6 +27,7 @@ on:
       - 'systemia/organism/medical-evidence-brief*.mjs'
       - 'systemia/organism/medical-evidence-triage*.mjs'
       - 'systemia/organism/medical-review-packet*.mjs'
+      - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
@@ -78,6 +80,9 @@ jobs:
 
       - name: Prove biomedical source-quoted review packet
         run: node systemia/organism/medical-review-packet.test.mjs
+
+      - name: Prove research memory cache continuity
+        run: node systemia/organism/medical-workflow-continuity.test.mjs
 
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
