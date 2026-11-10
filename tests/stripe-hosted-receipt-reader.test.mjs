@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createRavenStripeHostedReader} from '../systemia/raven/stripe-hosted-receipt-reader.mjs';
 
-const TEST_ONLY_FAKE_SECRET='sk_live_LOCAL_UNIT_TEST_ONLY_FAKE';
+const TEST_ONLY_FAKE_SECRET='sk_live_LOCALUNITTESTONLYFAKE';
 test('Raven reader requires owner-authorized live key, never accepts missing or test credentials',()=>{
  assert.throws(()=>createRavenStripeHostedReader({secretKey:''}),/owner_authorized/);
  assert.throws(()=>createRavenStripeHostedReader({secretKey:'sk_test_not_livemode'}),/owner_authorized/);
