@@ -7,7 +7,7 @@ import test from 'node:test';
 import { EvercraftPassport } from '../../passport/passport.mjs';
 import { EvercraftContextReceiptBridge } from '../receipt-bridge.mjs';
 import { reconcileTimewalkSourceReceipts } from './source-reconciliation.mjs';
-import { ORIGIN_ATTESTATION_SCHEMA, originAttestationMessage } from './origin-attestation.mjs';
+import { ORIGIN_ATTESTATION_SCHEMA, originAttestationMessage, verifyTimewalkOriginAttestation } from './origin-attestation.mjs';
 
 const hash = (body) => createHash('sha256').update(JSON.stringify(body)).digest('hex');
 const signed = (body) => ({ ...body, receipt_hash: 'sha256:' + hash(body) });
@@ -295,6 +295,11 @@ test('optional origin signature checks give independent aggregate counts without
   const source = sourceFixture('execution');
   const context = contextFixture(source);
   const f = signedOriginFixture(source);
+  const directOriginState = verifyTimewalkOriginAttestation({
+    receipt: source, attestation: f.attestation,
+    trusted_keys: f.trusted_keys, verified_at: new Date().toISOString(),
+  });
+  assert.equal(directOriginState, 'signature_valid_for_pinned_key');
   const out = reconcileTimewalkSourceReceipts(authorizedFabric([context]), {
     actor_ref: 'agent:auditor',
     read_source_receipt: () => source,
