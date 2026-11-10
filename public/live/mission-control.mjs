@@ -2,7 +2,8 @@ import {API,normalizePublicActivity,publicUrl} from './work-source.mjs';
 import {LANES,classifyPublicEvidence,parseOperatorSnapshot} from './mission-source.mjs';
 
 const byId=id=>document.getElementById(id);
-const state={publicData:null,operator:null,checking:false};
+const state={publicData:null,operator:null,checking:false,localBusy:false,manualOverride:false};
+const LOCAL_ONLY=['127.0.0.1','localhost'].includes(window.location.hostname);
 const laneEmpty={
   revenue:'No recent eligible public revenue development records. Checkout and actual sales remain unknown.',
   infrastructure:'No recent eligible public infrastructure reviews. Node health remains unknown.',
@@ -155,6 +156,7 @@ byId('snapshotFile').addEventListener('change',async event=>{
     const text=await file.text();
     if(text.length>250000)throw new Error('Snapshot exceeds the import limit.');
     state.operator=parseOperatorSnapshot(JSON.parse(text));
+    state.manualOverride=true;
     status.className='snapshot-status';
     status.textContent='Operator-imported: '+state.operator.missions.length+
       ' reported missions, '+state.operator.nodes.length+' local node watches · exported '+fmtTime(state.operator.exported_at)+
@@ -168,11 +170,13 @@ byId('snapshotFile').addEventListener('change',async event=>{
 });
 byId('clearSnapshot').addEventListener('click',()=>{
   state.operator=null;
+  state.manualOverride=false;
   byId('snapshotFile').value='';
   byId('snapshotStatus').className='snapshot-status';
   byId('snapshotStatus').textContent='Local import cleared. Internal mission status unknown.';
   drawOperator();
   drawLocalNodes();
+  refreshLocal();
 });
 drawOperator();
 drawLocalNodes();
@@ -180,4 +184,37 @@ drawPublic();
 refresh();
 setInterval(()=>{if(!document.hidden)refresh();},600000);
 
+// A loopback viewer can read an explicitly selected, sanitized local snapshot.
+// Public GitHub Pages never attempts private local import or node discovery.
+async function refreshLocal(){
+  if(!LOCAL_ONLY||state.localBusy||state.manualOverride)return;
+  state.localBusy=true;
+  try{
+    const response=await fetch('/v1/snapshot',{
+      method:'GET',cache:'no-store',credentials:'same-origin',
+      headers:{Accept:'application/json'}
+    });
+    if(!response.ok)throw Error('Local read-only source not available');
+    const raw=await response.json();
+    state.operator=parseOperatorSnapshot(raw);
+    const status=byId('snapshotStatus');
+    status.className='snapshot-status';
+    status.textContent='LOCAL READ-ONLY OBSERVER · '+state.operator.missions.length+
+      ' goals · '+state.operator.nodes.length+' node watches · checked '+fmtTime(Date.now())+
+      ' · SELF REPORTED / UNVERIFIED · no remote execution or payment attested';
+  }catch{
+    state.operator=null;
+    const status=byId('snapshotStatus');
+    status.className='snapshot-status error';
+    status.textContent='LOCAL OBSERVER HELD · source missing, invalid or unavailable · current status unknown';
+  }finally{
+    state.localBusy=false;
+    drawOperator();
+    drawLocalNodes();
+  }
+}
+if(LOCAL_ONLY){
+  refreshLocal();
+  setInterval(()=>{if(!document.hidden)refreshLocal();},30000);
+}
 setInterval(drawLocalNodes,60000); // Expire previously imported health reports in-place.
