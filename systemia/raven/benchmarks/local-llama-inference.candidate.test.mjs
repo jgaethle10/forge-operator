@@ -152,3 +152,21 @@ test('HTTP 200 required; malformed responses fail without fake receipt',async()=
     return true;
   });
 });
+
+
+test('llama.cpp path-valued exact model ID is validated, with no model data exposed externally',async()=>{
+  const fullId='/home/owned-node/models/Qwen3-4B-Q4_K_M.gguf';
+  const calls=[];
+  const engine=createLlamaCppInferenceCandidate({
+    model:fullId, now:()=>new Date(T),
+    fetchImpl:async(url,init)=>{
+      calls.push({url,init});
+      return {ok:true,status:200,json:async()=>({data:[{id:fullId}]})};
+    }
+  });
+  const v=await engine.validate();
+  assert.equal(v.model,fullId);
+  assert.equal(v.inference_performed,false);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0].init.method,'GET');
+});
