@@ -6,7 +6,7 @@
 import { createHash } from 'node:crypto';
 import { normalizeOwnedLocalOrigin } from './owned-local-model-probe.mjs';
 
-const MODEL_ID = /^[A-Za-z0-9][A-Za-z0-9._:/@+~-]{0,159}$/;
+const MODEL_ID = /^[A-Za-z0-9./_@+~-][A-Za-z0-9._:/@+~-]{0,255}$/; // llama.cpp may expose a Linux model path as its exact ID
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9._:@-]{0,119}$/;
 const MAX_PROMPT_BYTES = 16000;
 const sha = value => 'sha256:' + createHash('sha256').update(String(value)).digest('hex');
