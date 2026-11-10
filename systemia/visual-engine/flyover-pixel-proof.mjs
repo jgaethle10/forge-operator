@@ -87,6 +87,7 @@ async function execute(page,plan,geometry,shader){
         {binding:5,visibility:2,texture:{sampleType:'float'}}
       ]});
       const pipelineLayout=device.createPipelineLayout({bindGroupLayouts:[frameLayout,objectLayout]});
+      const MSAA_SAMPLES=4;
       const pipelines=new Map();
       const pipelineFor=draw=>{
         const key=draw.doubleSided?'double':'back';
@@ -101,6 +102,7 @@ async function execute(page,plan,geometry,shader){
           ]}]},
           fragment:{module,entryPoint:'fs_main',targets:[{format:'rgba8unorm'}]},
           primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:draw.doubleSided?'none':'back'},
+          multisample:{count:MSAA_SAMPLES},
           depthStencil:{format:'depth24plus',depthWriteEnabled:true,depthCompare:'less'}
         });
         pipelines.set(key,pipeline);return pipeline;
@@ -142,14 +144,17 @@ async function execute(page,plan,geometry,shader){
       const geom=new Map(geometry.map(a=>[a.id,a]));
       const target=track(device.createTexture({size:[plan.width,plan.height,1],format:'rgba8unorm',
         usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC}));
+      const msaaTarget=track(device.createTexture({size:[plan.width,plan.height,1],format:'rgba8unorm',
+        sampleCount:MSAA_SAMPLES,usage:GPUTextureUsage.RENDER_ATTACHMENT}));
       const depth=track(device.createTexture({size:[plan.width,plan.height,1],format:'depth24plus',
-        usage:GPUTextureUsage.RENDER_ATTACHMENT}));
+        sampleCount:MSAA_SAMPLES,usage:GPUTextureUsage.RENDER_ATTACHMENT}));
       const rowBytes=Math.ceil(plan.width*4/256)*256;
       const readback=track(device.createBuffer({size:rowBytes*plan.height,
         usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ}));
       const encoder=device.createCommandEncoder();
       const pass=encoder.beginRenderPass({colorAttachments:[{
-        view:target.createView(),clearValue:{...plan.clearColor,a:1},loadOp:'clear',storeOp:'store'
+        view:msaaTarget.createView(),resolveTarget:target.createView(),
+        clearValue:{...plan.clearColor,a:1},loadOp:'clear',storeOp:'store'
       }],depthStencilAttachment:{
         view:depth.createView(),depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'
       }});
@@ -220,7 +225,7 @@ async function execute(page,plan,geometry,shader){
       const png=surface.toDataURL('image/png').split(',')[1];
       return {png,adapterInfo:info,visiblePixels:visible,darkPixels:dark,brightPixels:bright,
         meanLuminance:colorSum/(plan.width*plan.height),drawCount:plan.draws.length,
-        width:plan.width,height:plan.height};
+        width:plan.width,height:plan.height,sampleCount:MSAA_SAMPLES};
     }finally{
       for(const resource of resources) try{resource.destroy()}catch{}
       if(!destroyed) device.destroy();
@@ -264,13 +269,13 @@ export async function runFlyoverPixelProof({
             plan_digest:plan.digest,draw_count:pixels.drawCount,
             visible_pixels:pixels.visiblePixels,mean_luminance:pixels.meanLuminance,
             dark_pixels:pixels.darkPixels,bright_pixels:pixels.brightPixels,
-            width:pixels.width,height:pixels.height,adapter_info:pixels.adapterInfo});
+            width:pixels.width,height:pixels.height,msaa_samples:pixels.sampleCount,adapter_info:pixels.adapterInfo});
         }
         assert.equal(new Set(captures.map(x=>x.plan_digest)).size,TIMES.length);
         const cls=classifyWebGpuAdapter(captures[0].adapter_info,profile);
         const core={schema:'evercraft.visual-engine.flyover-pixel-proof.v3',
           status:'verified',shader_sha256:sha(EVERCRAFT_WEBGPU_WGSL),
-          browser_version:browser.version(),profile:profile.id,
+          browser_version:browser.version(),profile:profile.id,msaa_samples:4,
           execution_class:cls.execution_class,
           hardware_execution_claim:cls.hardware_execution_claim,
           browser_preflight_receipt_hash:preflight.receipt_hash,
