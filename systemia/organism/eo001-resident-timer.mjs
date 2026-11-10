@@ -58,15 +58,17 @@ WantedBy=timers.target
 `
   };
 }
-function safeDirectory(dir){
+function safeDirectory(dir,{privateAccess=false}={}){
   const s=fs.lstatSync(dir);
-  if(!s.isDirectory()||s.isSymbolicLink()||(typeof process.getuid==='function'&&s.uid!==process.getuid()))
+  if(!s.isDirectory()||s.isSymbolicLink()||
+      (typeof process.getuid==='function'&&s.uid!==process.getuid())||
+      (privateAccess&&(s.mode&0o077)!==0))
     throw Error('owned_directory_required');
 }
 export function writeEo001ResidentUnits({home,sourceRoot,nodeBinary,write=false}={}){
   const units=renderEo001ResidentUnits({home,sourceRoot,nodeBinary});
   const base=path.join(home,'.local/state/evercraft/eo001-handoff');
-  safeDirectory(base);
+  safeDirectory(base,{privateAccess:true});
   safeDirectory(sourceRoot);
   const mission=path.join(sourceRoot,'systemia/organism/eo001-owned-qa-mission.mjs');
   if(!fs.existsSync(mission)||!fs.statSync(mission).isFile())throw Error('mission_source_not_present');
