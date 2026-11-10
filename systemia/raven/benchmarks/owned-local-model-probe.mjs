@@ -74,7 +74,7 @@ export async function probeOwnedLocalModel({
   if (ids.length === 0) return hold('NO_VALID_LOCAL_MODEL_ID');
 
   const matching = !model || ids.includes(model) ||
-    (provider === 'ollama' && ids.includes(model + ':latest'));
+    (provider === 'ollama' && !model.includes(':') && ids.includes(model + ':latest'));
   const timestamp = now();
   if (!(timestamp instanceof Date) || !Number.isFinite(timestamp.getTime())) return hold('LOCAL_CLOCK_INVALID');
 
