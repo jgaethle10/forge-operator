@@ -1741,6 +1741,10 @@ export async function startFabricLocalRuntime({
     studioAlertDispatcher.start();
     void studioAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(signalAlertDispatcher.enabled){
+    signalAlertDispatcher.start();
+    void signalAlertDispatcher.dispatch().catch(()=>{});
+  }
   if(findMyPartAlertDispatcher.enabled){
     findMyPartAlertDispatcher.start();
     void findMyPartAlertDispatcher.dispatch().catch(()=>{});
@@ -1770,6 +1774,7 @@ export async function startFabricLocalRuntime({
     },
     close:async()=>{
       studioAlertDispatcher.stop();
+      signalAlertDispatcher.stop();
       findMyPartAlertDispatcher.stop();
       partnerAlertDispatcher.stop();
       await faieSurface?.close();
