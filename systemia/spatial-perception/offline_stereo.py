@@ -160,8 +160,10 @@ def decode_yolov8(output, labels, width, height, scale, pad_x, pad_y, threshold,
     return nms(candidates)[:MAX_OBJECTS]
 
 
-def box_disparity(disparity, box, np):
-    """Use the central half of an object to reduce background contamination."""
+def box_disparity(disparity, box, np, gray_left):
+    """Conservative center-patch disparity; unknown on weak texture or mixed depth."""
+    if gray_left.shape != disparity.shape:
+        raise ValueError("stereo_gray_disparity_dimensions_mismatch")
     x1, y1, x2, y2 = box
     cx, cy = (x1 + x2) / 2, (y1 + y2) / 2
     w, h = x2 - x1, y2 - y1
@@ -169,11 +171,18 @@ def box_disparity(disparity, box, np):
     y0, yy = max(0, int(cy - h / 4)), min(disparity.shape[0], int(cy + h / 4))
     if xx <= x0 or yy <= y0:
         return None
+    patch = gray_left[y0:yy, x0:xx]
+    if patch.size < 8 or float(np.std(patch)) < 6.0:
+        return None
     values = disparity[y0:yy, x0:xx]
     good = values[np.isfinite(values) & (values > 1.0)]
     if good.size < max(8, int(values.size * 0.2)):
         return None
-    return float(np.median(good))
+    center = float(np.median(good))
+    mad = float(np.median(np.abs(good - center)))
+    if mad > max(2.0, center * 0.20):
+        return None
+    return center
 
 
 def write_private_json(destination: Path, payload: dict):
@@ -270,7 +279,7 @@ def run(args):
             timestamp_ms = round(source_index / fps * 1000)
             observations = []
             for index, (cls, confidence, box) in enumerate(detected):
-                z_disp = box_disparity(disparity, box, np)
+                z_disp = box_disparity(disparity, box, np, gray_l)
                 x1, y1, x2, y2 = box
                 observations.append(observation(
                     frame_id, timestamp_ms, index, manifest["labels"][cls], confidence,

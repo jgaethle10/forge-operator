@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {runWorkSabanFacebookCycle} from '../systemia/clip/work-saban-facebook-resident.mjs';
-import {validateWorkSabanClipAuthority,validateWorkSabanText,WORK_SABAN_CAMPAIGN} from '../systemia/clip/work-saban-publish-authorize.mjs';
+import {validateWorkSabanClipAuthority,validateWorkSabanText,loadWorkSabanClipAuthority,installWorkSabanClipGrant,WORK_SABAN_AUTHORITY_REF,WORK_SABAN_CAMPAIGN} from '../systemia/clip/work-saban-publish-authorize.mjs';
+import {EvercraftPassport} from '../systemia/passport/passport.mjs';
 
 const repoRoot=process.cwd();
 const queue=JSON.parse(fs.readFileSync('distribution/marketing/work-saban-clip-evergreen-20261030.review.json','utf8'));
@@ -38,7 +39,7 @@ test('owner launch copy is valid but cannot mint a publishing grant by itself',(
  assert.ok(validateWorkSabanText(entry));
  const e={schema:'evercraft.clip.operator-authority.v1',authorized:true,authority_state:'manual_authorized',
   campaign_id:WORK_SABAN_CAMPAIGN,subject_ref:'system:work-saban-clip-publisher',product:'evercraft-home',
-  issuer_ref:'authority:verified',authority_receipt_ref:'issuer:receipt:proof',
+  issuer_ref:'authority:evercraft-operator',authority_receipt_ref:WORK_SABAN_AUTHORITY_REF,
   scopes:['home.clip.publish'],resource_refs:['brand:evercraft-work-saban'],
   excluded_brand_keys:['eps','havenly-cleaning','rnb-chicken-and-soul','christmaslightsusa'],
   boundaries:{channel_scope:'verified_evercraft_corporate_only',paid_spend_usd:0,
@@ -117,4 +118,38 @@ test('Systemia resident runs due Work Saban cycles only when all live configurat
  assert.equal(manifest.safety.issuer_backed_passport_grant_required,true);
  assert.equal(manifest.safety.personal_accounts_forbidden,true);
  assert.equal(manifest.safety.durable_claim_before_provider_post,true);
+});
+
+
+test('scoped founder authority source is valid, expiry bounded, and creates a private idempotent Passport grant',()=>{
+ const current=new Date('2026-11-04T22:00:00Z');
+ const approved=loadWorkSabanClipAuthority({repoRoot,now:current});
+ assert.equal(approved.authority_receipt_ref,WORK_SABAN_AUTHORITY_REF);
+ assert.equal(approved.boundaries.channel_scope,'verified_evercraft_corporate_only');
+ assert.equal(approved.boundaries.paid_spend_usd,0);
+ assert.equal(approved.boundaries.no_personal_automated_posting,true);
+ const passport=new EvercraftPassport({stateDir:dir()});
+ const first=installWorkSabanClipGrant({passport,receipt:approved,now:current});
+ assert.equal(first.status,'granted');
+ const second=installWorkSabanClipGrant({passport,receipt:approved,now:current});
+ assert.equal(second.status,'duplicate');
+ const auth=passport.authorize({subject_ref:'system:work-saban-clip-publisher',product:'evercraft-home',scope:'home.clip.publish',resource_ref:'brand:evercraft-work-saban',at:current.toISOString()});
+ assert.equal(auth.decision,'allow');
+ const forbidden=passport.authorize({subject_ref:'system:work-saban-clip-publisher',product:'evercraft-home',scope:'home.clip.publish',resource_ref:'brand:humanfilter',at:current.toISOString()});
+ assert.equal(forbidden.decision,'deny');
+ assert.throws(()=>loadWorkSabanClipAuthority({repoRoot,now:new Date('2027-02-01T00:00:00Z')}),/expired_or_future/);
+});
+
+test('owned Compute passes Work Saban Clip only validated private bindings and no invented Page ID',()=>{
+ const compute=fs.readFileSync('systemia/compute/runtime-node.mjs','utf8');
+ const runner=fs.readFileSync('systemia/clip/work-saban-facebook-resident-runner.mjs','utf8');
+ assert.match(compute,/SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR: path\.join\(/);
+ assert.match(compute,/EVERCRAFT_CREDENTIAL_STATE_DIR: providerCredentialStateRoot/);
+ assert.match(compute,/EVERCRAFT_PASSPORT_STATE_DIR: workSabanPassportRoot/);
+ assert.match(compute,/EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID: workSabanFacebookPageId/);
+ assert.match(compute,/core_clip_passport_state_outside_admitted_root/);
+ assert.match(compute,/core_clip_facebook_page_id_invalid/);
+ assert.match(compute,/core_clip_facebook_credential_ref_invalid/);
+ assert.match(runner,/EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_CREDENTIAL_REF/);
+ assert.doesNotMatch(compute,/EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID:\s*['"]\d/);
 });

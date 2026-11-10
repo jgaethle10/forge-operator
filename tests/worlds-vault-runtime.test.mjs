@@ -62,6 +62,33 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  const ui=await fetch(base+'/worlds/');
  assert.equal(ui.status,200);
  assert.match(await ui.text(),/EVERCRAFT/);
+ // A plain static server accepted these nested index paths, but the owned vault
+ // previously treated them as directories and incorrectly returned 404.
+ const heritage=await fetch(base+'/worlds/heritage/');
+ assert.equal(heritage.status,200,'owned vault must serve the heritage walkthrough');
+ assert.match(await heritage.text(),/EDUCATIONAL SCHEMATIC/);
+ assert.match(heritage.headers.get('content-type')||'',/text\/html/);
+ const app=await fetch(base+'/worlds/heritage/app.mjs');
+ assert.equal(app.status,200);
+ assert.match(app.headers.get('content-type')||'',/text\/javascript/);
+ assert.match(await app.text(),/buildHeritageDrawList/);
+ const scene=await fetch(base+'/worlds/heritage/scene.mjs');
+ assert.equal(scene.status,200);
+ assert.match(await scene.text(),/pavlopetri-learning-scene-v1/);
+ // The external edge leases only /worlds/. Reuse one canonical atlas data
+ // source through an exact two-file same-origin alias, not a second source copy.
+ const atlas=await fetch(base+'/worlds/heritage/atlas/');
+ assert.equal(atlas.status,200,'same-origin atlas route missing');
+ assert.match(await atlas.text(),/SUBMERGED HERITAGE ATLAS/);
+ const sites=await fetch(base+'/worlds/heritage/atlas/sites.geojson');
+ assert.equal(sites.status,200);
+ assert.match(sites.headers.get('content-type')||'',/application\/geo\+json/);
+ const data=await sites.json();
+ assert.equal(data.type,'FeatureCollection');
+ assert.equal(data.features.length,7);
+ assert.equal((await fetch(base+'/worlds/heritage/atlas/nonexistent.json')).status,404);
+ assert.equal((await fetch(base+'/submerged-heritage/')).status,404,'vault must not expose unrelated static directories');
+
  const health=await fetch(base+'/worlds/api/health');
  assert.equal(health.headers.get('access-control-allow-origin'),null);
  assert.equal((await request(base+'/worlds/api/worlds','POST',{scene_token:'garbage'})).status,422);
