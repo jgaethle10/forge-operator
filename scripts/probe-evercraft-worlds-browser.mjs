@@ -53,6 +53,44 @@ try{
     assert.ok(pre.draw_calls>0&&pre.draw_calls<100,profile.name+': opaque batching failed; draws='+pre.draw_calls);
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
     await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
+
+    // A synthetic local observation is displayed read-only inside the existing world.
+    // This fixture is NOT the canonical GitHub society state or live LLM behavior.
+    await page.locator('#societyLedgerOpen').click();
+    await page.locator('#societyLedgerPanel').waitFor({state:'visible'});
+    const observation={
+      schema:'evercraft.window.private-observation.v1',
+      origin:'operator_supplied_local_snapshot_not_authenticated',
+      verified:'internal_world_hash_only',release_status:'held',
+      model_mode:'civic_and_social_policy_no_llm',
+      observation_created_from:{sequence:7,tick:320,heartbeat_at:'2026-10-19T00:00:00.000Z',world_hash:'a'.repeat(64)},
+      historical_limit:'only_retained_bounded_chronicle_not_full_history',
+      residents:Array.from({length:12},(_,i)=>({id:'r'+(i+1),name:'Resident '+(i+1),job:'gardener',zone:'garden',emoji:'🌱'})),
+      decision_projection:{schema:'evercraft.window.policy-decision-receipts.v1',
+        execution_mode:'deterministic_rules_no_llm',attestation:'content_digest_not_signature',
+        coverage:'partial_bounded_ledger',total_events_generated:35,policy_events_available:1,
+        omitted_policy_events:0,receipts:[{
+          event_id:'e320',source:'social_policy_v1',event_type:'promise_made',actor_id:'r2',
+          related_actor_id:'r3',day:4,time:'12:30',description:'Synthetic fictional promise for browser QA.',
+          authority:'window_civic_social_rule_policy',inference:'none',external_actions:false,
+          fictional:true,content_sha256:'b'.repeat(64)}]}
+    };
+    await page.locator('#sl-file').setInputFiles({
+      name:'synthetic-observer.json',mimeType:'application/json',
+      buffer:Buffer.from(JSON.stringify(observation))
+    });
+    await page.locator('#sl-loaded').waitFor({state:'visible'});
+    assert.match(await page.locator('#sl-status').textContent(),/not independently verified/,profile.name+': observation caveat absent');
+    assert.equal(await page.locator('#sl-events li').count(),1,profile.name+': policy evidence did not render');
+    await page.locator('#sl-resident').selectOption('r4');
+    assert.match(await page.locator('#sl-events').textContent(),/No retained policy decisions/,profile.name+': resident filter failed');
+    await page.locator('#sl-resident').selectOption('r2');
+    assert.match(await page.locator('#sl-events').textContent(),/Synthetic fictional promise/,profile.name+': actor evidence missing');
+    const observerBox=await page.locator('#societyLedgerPanel').boundingBox();
+    assert.ok(observerBox&&observerBox.x>=0&&observerBox.x+observerBox.width<=profile.viewport.width+2,profile.name+': society ledger overflows viewport');
+    assert.equal(await page.evaluate(()=>Object.keys(localStorage).some(k=>k.includes('society-ledger'))),false,profile.name+': viewer persisted private evidence');
+    await page.locator('#sl-close').click();
+    assert.equal(await page.locator('#societyLedgerPanel').isVisible(),false,profile.name+': observer panel did not close');
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');
