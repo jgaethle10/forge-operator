@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091522">
+<meta name="description" content="Create a professional contractor job closeout packet in your browser. Add scope, completed work, follow-ups and photos, then print or save a PDF. No account or upload.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/closeout/">
+<title>Evercraft Closeout | Every finished job deserves a proper finish.</title>
+<style>
+:root{color-scheme:dark;--ink:#eef7ff;--sub:#a7bac9;--bg:#091522;--panel:#0f2233;--line:#274153;--aqua:#9ee9f2;--paper:#fff;--dark:#142332}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 84% -2%,#183e51 0,transparent 34%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea{font:inherit}
+button,a{touch-action:manipulation}
+a{color:var(--aqua)}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--aqua);outline-offset:3px}
+.wrap{width:min(1220px,calc(100% - 36px));margin:auto}
+.top{padding:21px 0;border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{font-size:.85rem;letter-spacing:.2em;font-weight:900;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--aqua)}
+.top nav{display:flex;gap:20px;font-size:.87rem}
+.top nav a{text-decoration:none;color:var(--sub)}
+.hero{padding:74px 0 45px}
+.kicker{font-size:.74rem;text-transform:uppercase;letter-spacing:.2em;color:var(--aqua);font-weight:800}
+h1{font-size:clamp(2.8rem,6vw,5.5rem);line-height:1.02;letter-spacing:-.06em;max-width:960px;margin:14px 0 21px}
+h1 em{font-style:normal;color:var(--aqua)}
+.lede{color:var(--sub);max-width:690px;font-size:1.12rem}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.chips span{border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:.83rem;color:#d9e9f2}
+.app{display:grid;grid-template-columns:minmax(300px,.94fr) minmax(0,1.06fr);gap:22px;align-items:start;padding:12px 0 50px}
+.editor{border:1px solid var(--line);background:#102335;border-radius:18px;overflow:hidden}
+.panel-head{padding:21px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.panel-head h2{margin:0;font-size:1.18rem}
+.small{font-size:.84rem;color:var(--sub)}
+.fields{padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{min-width:0}
+.field.wide{grid-column:1/-1}
+.field label,.field legend{display:block;font-size:.82rem;font-weight:760;margin-bottom:7px;color:#dce9f2}
+.field input,.field textarea{border:1px solid #39566a;background:#091b2a;color:var(--ink);border-radius:9px;width:100%;padding:12px;min-height:48px}
+.field textarea{min-height:98px;resize:vertical}
+.field input::placeholder,.field textarea::placeholder{color:#92abbc}
+fieldset{border:0;margin:0;padding:0}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.checks label{display:flex;gap:10px;align-items:center;font-size:.86rem;font-weight:500;margin:0;padding:9px;border:1px solid var(--line);border-radius:8px}
+.checks input{width:19px;height:19px;min-height:auto;accent-color:#9ee9f2}
+.field input[type=file]{font-size:.78rem;padding:9px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;padding:0 24px 22px}
+.btn{min-height:46px;border-radius:9px;border:1px solid var(--line);padding:10px 17px;font-weight:790;cursor:pointer;background:#213d4d;color:var(--ink)}
+.btn.primary{background:var(--aqua);border-color:var(--aqua);color:#081b24}
+.btn:hover{filter:brightness(1.08)}
+.notice{padding:0 24px 24px;color:var(--sub);font-size:.8rem;margin:0}
+.status{margin:0 24px 20px;font-size:.83rem;color:var(--aqua);min-height:1.3em}
+.preview-wrap{position:sticky;top:18px;min-width:0}
+.preview-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+.preview-head strong{font-size:.86rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sub)}
+.sheet{background:var(--paper);color:var(--dark);border-radius:13px;box-shadow:0 20px 70px #0005;min-height:650px;overflow:hidden;padding:clamp(23px,4vw,42px)}
+.sheet-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #122e43;padding-bottom:23px;gap:16px}
+.sheet-title{color:#167f9b;letter-spacing:.14em;font-size:.67rem;text-transform:uppercase;font-weight:850}
+.sheet h2{font-size:clamp(1.35rem,3vw,2.15rem);line-height:1.15;letter-spacing:-.04em;margin:7px 0}
+.doc-number{color:#617685;font-size:.76rem;text-align:right;white-space:nowrap}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:27px 0}
+.k{font-size:.65rem;color:#607583;letter-spacing:.1em;text-transform:uppercase;font-weight:840;margin:0 0 3px}
+.v{font-size:.94rem;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
+.sheet h3{font-size:.83rem;margin:22px 0 10px;letter-spacing:.075em;text-transform:uppercase;padding-bottom:7px;border-bottom:1px solid #dce4e9}
+.body-copy{font-size:.87rem;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;min-height:26px}
+.done{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.done li{display:flex;align-items:center;gap:7px;color:#244454;font-size:.82rem}
+.done li::before{content:"✓";color:#12859c;font-weight:900}
+.photogrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.photo{border:1px solid #d9e4e9;border-radius:7px;overflow:hidden;margin:0}
+.photo img{width:100%;height:155px;object-fit:cover;display:block}
+.photo figcaption{font-size:.7rem;padding:6px;color:#5b6e7b;overflow-wrap:anywhere}
+.doc-foot{margin-top:30px;padding-top:14px;border-top:1px solid #dce4e9;display:flex;justify-content:space-between;gap:12px;color:#7b8993;font-size:.68rem}
+.sales{border-top:1px solid var(--line);padding:50px 0 75px;display:grid;grid-template-columns:1.3fr .7fr;gap:30px}
+.sales h2{font-size:clamp(1.7rem,3vw,2.5rem);letter-spacing:-.04em;line-height:1.15;margin:10px 0}
+.sales p{color:var(--sub);max-width:700px}
+.offer{border:1px solid var(--line);background:#112a39;border-radius:16px;padding:23px;align-self:start}
+.price{font-size:2rem;font-weight:900;color:var(--aqua)}
+.offer a{display:flex;align-items:center;justify-content:center;padding:13px 17px;border-radius:8px;background:var(--aqua);color:#071a23;text-align:center;text-decoration:none;font-weight:850;margin:12px 0}
+footer{border-top:1px solid var(--line);padding:24px 0 44px;color:var(--sub);font-size:.82rem}
+@media(max-width:920px){.app{grid-template-columns:1fr}.preview-wrap{position:static}.sheet{max-width:740px;margin:auto}.sales{grid-template-columns:1fr}}
+@media(max-width:530px){.hero{padding-top:49px}.fields{grid-template-columns:1fr;padding:17px}.field.wide{grid-column:auto}.checks,.done{grid-template-columns:1fr}.panel-head{padding:17px}.sheet{padding:20px}.info{gap:10px}.actions{padding:0 17px 15px}.notice{padding:0 17px 17px}.status{margin:0 17px 15px}}
+@media print{
+@page{size:letter;margin:13mm}
+html,body{background:#fff!important;color:#111}
+.top,.hero,.editor,.preview-head,.sales,footer{display:none!important}
+.wrap{width:100%;margin:0}
+.app{display:block;padding:0}
+.preview-wrap{display:block}
+.sheet{padding:0;box-shadow:none;border-radius:0;min-height:0}
+.sheet h2{font-size:26pt}
+.sheet h3{break-after:avoid}
+.sheet section,.photo{break-inside:avoid}
+.photo img{height:125px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="../mesh/">EVERCRAFT <span>/ CLOSEOUT</span></a><nav aria-label="Navigation"><a href="#builder">Build a packet</a><a href="#service">Done-for-you service</a><a href="../try/">Free tools</a></nav></div></header>
+<main class="wrap">
+<section class="hero"><div class="kicker">Job completion, made presentable</div><h1>The job is finished.<br><em>Make it official.</em></h1><p class="lede">Give every customer a clear record of what was done, what comes next, and the photos worth keeping. Build a clean closeout packet right here, then print or save it as a PDF.</p><div class="chips"><span>Free browser-based builder</span><span>No account</span><span>Private until you choose to share</span></div></section>
+<section class="app" id="builder" aria-label="Closeout packet builder">
+<form class="editor" id="packetForm" autocomplete="off">
+<div class="panel-head"><h2>Build your closeout</h2><span class="small">01 / Details</span></div>
+<div class="fields">
+<div class="field"><label for="company">Company / contractor</label><input id="company" maxlength="100" placeholder="Your company"></div>
+<div class="field"><label for="client">Customer name</label><input id="client" maxlength="100" placeholder="Customer name"></div>
+<div class="field wide"><label for="address">Job address or identifier</label><input id="address" maxlength="180" placeholder="Property address, project number"></div>
+<div class="field"><label for="date">Completion date</label><input id="date" type="date"></div>
+<div class="field"><label for="reference">Job / invoice reference</label><input id="reference" maxlength="70" placeholder="JOB-001"></div>
+<div class="field wide"><label for="summary">Work completed</label><textarea id="summary" maxlength="2500" placeholder="Explain the actual services completed."></textarea></div>
+<div class="field wide"><fieldset><legend>Included in this handoff</legend><div class="checks">
+<label><input type="checkbox" name="done" value="Work inspected"> Work inspected</label>
+<label><input type="checkbox" name="done" value="Site cleaned"> Site cleaned</label>
+<label><input type="checkbox" name="done" value="Materials accounted for"> Materials accounted for</label>
+<label><input type="checkbox" name="done" value="Customer walkthrough"> Customer walkthrough</label>
+<label><input type="checkbox" name="done" value="Photos documented"> Photos documented</label>
+<label><input type="checkbox" name="done" value="Equipment tested"> Equipment tested</label>
+</div></fieldset></div>
+<div class="field wide"><label for="followups">Open items / next steps</label><textarea id="followups" maxlength="1700" placeholder="List pending work explicitly, or say none."></textarea></div>
+<div class="field wide"><label for="warranty">Warranty / care instructions</label><textarea id="warranty" maxlength="1700" placeholder="Only state coverage you actually offer."></textarea></div>
+<div class="field wide"><label for="photos">Job photos (up to 4, 5 MB each)</label><input id="photos" type="file" accept="image/*" multiple><span class="small">Images stay in this browser session. Avoid sensitive faces, documents, or private areas without permission.</span></div>
+</div>
+<div class="actions"><button type="button" class="btn primary" id="printBtn">Print / save PDF</button><button type="button" class="btn" id="sampleBtn">Load sample</button><button type="button" class="btn" id="resetBtn">Clear</button></div>
+<p class="status" id="status" role="status" aria-live="polite"></p><p class="notice">No customer data or images are uploaded by this page. There is no electronic signature, payment verification, or warranty validation. Review accuracy and consent before sharing your packet.</p>
+</form>
+<div class="preview-wrap"><div class="preview-head"><strong>Live document preview</strong><span class="small">02 / Customer handoff</span></div><article class="sheet" id="packet" aria-label="Printable closeout packet">
+<div class="sheet-top"><div><div class="sheet-title">Job completion record</div><h2 id="outCompany">Your company</h2><div class="small" style="color:#546e80">Closeout report · Customer copy</div></div><div class="doc-number"><div id="outDate">Completion date</div><div id="outReference"></div></div></div>
+<div class="info"><div><p class="k">Prepared for</p><p class="v" id="outClient">Customer name</p></div><div><p class="k">Project / location</p><p class="v" id="outAddress">Project address</p></div></div>
+<section><h3>Work completed</h3><p class="body-copy" id="outSummary">A concise description of completed work will appear here.</p></section>
+<section id="doneSection"><h3>Completion checklist</h3><ul class="done" id="outDone"></ul></section>
+<section><h3>Outstanding items / next steps</h3><p class="body-copy" id="outFollowups">Not specified. Verify whether follow-up work remains.</p></section>
+<section><h3>Warranty / care</h3><p class="body-copy" id="outWarranty">No warranty terms specified. Refer to the written agreement.</p></section>
+<section id="photoSection" hidden><h3>Photo documentation</h3><div class="photogrid" id="outPhotos"></div></section>
+<div class="doc-foot"><span>Prepared with Evercraft Closeout</span><span>Contractor-supplied information · Not independently verified</span></div>
+</article></div>
+</section>
+<section class="sales" id="service"><div><div class="kicker">Want us to handle the paperwork?</div><h2>A polished job handoff without the admin work.</h2><p>Our proposed done-for-you Closeout pilot turns authorized job details and photos into a formatted, human-reviewed client handoff packet. Best suited to contractors, cleaning services, maintenance teams and project-based businesses.</p><p class="small">Pilot price is an introductory proposal, not a verified checkout. We confirm scope, availability, secure transfer method, and delivery terms before accepting payment. We do not certify inspections or warranties.</p></div><div class="offer"><div class="kicker">Founding pilot · Scope first</div><div class="price">$49 <span class="small">per packet</span></div><p class="small">One job, up to four photos, one PDF packet, one round of factual corrections.</p><a href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Closeout%20%7C%20%2449%20pilot%20inquiry">Request a Closeout pilot</a><div class="small">No payment is taken here. A verified Evercraft Payments order is required before paid work begins.</div></div></section>
+</main><footer><div class="wrap">Evercraft LLC · <a href="../mesh/">Evercraft services</a> · <a href="../try/">Free experiences</a><p>Browser-local demonstration. Never treat a self-reported checkbox or photograph as a certified inspection, proof of customer acceptance, or proof of payment.</p></div></footer>
+<script>
+(function(){
+'use strict';
+const byId=id=>document.getElementById(id);
+const form=byId('packetForm');
+const defaultText={
+company:'Your company',client:'Customer name',address:'Project address',
+date:'Completion date',summary:'A concise description of completed work will appear here.',
+followups:'Not specified. Verify whether follow-up work remains.',
+warranty:'No warranty terms specified. Refer to the written agreement.'
+};
+const photos=[];
+function textValue(id){return byId(id).value.trim();}
+function setText(id,value){byId(id).textContent=value;}
+function refresh(){
+for(const id of ['company','client','address','summary','followups','warranty']){
+const out='out'+id.charAt(0).toUpperCase()+id.slice(1);
+setText(out,textValue(id)||defaultText[id]);
+}
+setText('outDate',textValue('date')||defaultText.date);
+setText('outReference',textValue('reference')?'Ref: '+textValue('reference'):'');
+const done=Array.from(form.querySelectorAll('input[name="done"]:checked'),c=>c.value);
+const ul=byId('outDone');
+ul.replaceChildren();
+done.forEach(v=>{const li=document.createElement('li');li.textContent=v;ul.append(li);});
+byId('doneSection').hidden=done.length===0;
+const grid=byId('outPhotos');grid.replaceChildren();
+photos.forEach((p,index)=>{
+const fig=document.createElement('figure'),img=document.createElement('img'),cap=document.createElement('figcaption');
+fig.className='photo';img.src=p.data;img.alt='Job photo '+(index+1);cap.textContent=p.name;fig.append(img,cap);grid.append(fig);
+});
+byId('photoSection').hidden=photos.length===0;
+}
+form.addEventListener('input',refresh);
+form.addEventListener('change',refresh);
+byId('photos').addEventListener('change',async function(){
+const files=Array.from(this.files||[]);
+const status=byId('status');
+photos.length=0;
+if(files.length>4){status.textContent='Only the first four images will be used.';}
+else{status.textContent='';}
+for(const f of files.slice(0,4)){
+if(!f.type.startsWith('image/')||f.size>5*1024*1024){status.textContent='Skipped a file that is not an image or exceeds 5 MB.';continue;}
+try{
+const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Unable to read photo'));reader.readAsDataURL(f);});
+photos.push({name:f.name.slice(0,110),data});
+}catch(error){status.textContent='A photo could not be loaded.';}
+}
+refresh();
+});
+byId('sampleBtn').addEventListener('click',()=>{
+form.reset();photos.length=0;byId('status').textContent='Synthetic sample loaded. Replace everything before client use.';
+const sample={company:'Northline Home Services (sample)',client:'Alex Example',address:'123 Example Ave · Demo project',date:new Date().toISOString().slice(0,10),reference:'DEMO-014',summary:'Repaired two damaged fence panels, tightened gate hardware, and removed work debris.',followups:'Customer to schedule fence staining after lumber has cured.',warranty:'Demo text only. Actual coverage must be confirmed by the contractor.'};
+Object.entries(sample).forEach(([id,value])=>{byId(id).value=value;});
+for(const x of ['Work inspected','Site cleaned','Photos documented']){const box=Array.from(form.querySelectorAll('input[name="done"]')).find(c=>c.value===x);if(box)box.checked=true;}
+refresh();
+});
+byId('resetBtn').addEventListener('click',()=>{form.reset();photos.length=0;byId('status').textContent='Cleared. No saved copy remains in this page.';refresh();});
+byId('printBtn').addEventListener('click',()=>{refresh();window.print();});
+refresh();
+})();
+</script>
+</body>
+</html>
