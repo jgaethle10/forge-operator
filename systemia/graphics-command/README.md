@@ -56,22 +56,17 @@ The work-state proof viewer reuses Saban's **existing** `evercraft.saban.work-st
 `evercraft.saban.scheduler-receipt.v1` formats. It does not require a new
 runtime, agent, service, dashboard, provider, or public API.
 
-An authorized local operator can create an **offline**, read-only HTML snapshot
-of a Saban state file they already have permission to inspect:
+An authorized local operator can create an **offline**, read-only HTML
+snapshot through the **scoped operator intake** command documented below.
+The direct `saban-work-visual.mjs` CLI is limited to
+`synthetic_test` fixtures; it refuses private operator mode without the
+explicit source directory scope. Never use a synthetic fixture to claim
+a real customer completed work.
 
-```bash
-node systemia/graphics-command/saban-work-visual.mjs \
-  /private/authorized/saban-work-state.json \
-  /private/review/saban-proof.html \
-  private_operator_snapshot
-```
-
-Choose `synthetic_test` instead for a test fixture. Never use synthetic-test
-mode to claim a real customer completed work. The output location must be new
-and outside `public/`; the command refuses existing output files and public
-directory symlinks. Keep the resulting HTML in a private access-controlled
-working area. The file includes a source SHA-256 digest and state timestamp,
-but **neither is an independent execution attestation**.
+The output must be new and private, outside the repository and public web
+tree. Keep resulting HTML in a local access-controlled working area.
+Its source SHA-256 digest and timestamp are **not independent execution
+attestation**.
 
 The renderer outputs aggregate queued, leased, completed and dead-letter counts,
 checkpoint and retry counts, and anonymous state marks. The original work
