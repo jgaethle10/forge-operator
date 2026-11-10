@@ -169,3 +169,26 @@ try {
   }
   fs.rmSync(root, { recursive: true, force: true });
 }
+
+ 
+// A successful restart receipt is not proof that the resident runtime has
+// released its process resources. In CI, fail explicitly and report bounded
+// handle *classes* if shutdown leaves listeners/children alive. Never force
+// a success exit, and never log raw sockets, process args, paths, or tokens.
+const shutdownWatchdog=setTimeout(()=>{
+  const activeHandles=process._getActiveHandles?.() || [];
+  const classes=activeHandles
+    .filter(handle=>handle!==process.stdout&&handle!==process.stderr&&handle!==process.stdin)
+    .map(handle=>handle?.constructor?.name||'unknown');
+  const resources=typeof process.getActiveResourcesInfo==='function'
+    ?process.getActiveResourcesInfo():[];
+  console.error(JSON.stringify({
+    schema:'evercraft.local-organism.shutdown-diagnostic.v1',
+    state:'shutdown_resources_still_active',
+    active_handle_classes:classes,
+    active_resource_types:resources,
+    authorization_changes:false
+  }));
+  process.exit(1);
+},3000);
+shutdownWatchdog.unref?.();
