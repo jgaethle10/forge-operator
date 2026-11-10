@@ -60,10 +60,8 @@ export function createRavenReadOnlyTeamAdapter({
   return {
     capability_key: "raven.nexus.readonly-team-review.v1",
     work_types: [...READ_ONLY_WORK_TYPES],
-    // The capability runtime requires the machine-readable authority class.
-    // The separately named ownership boundary is descriptive, not a grant.
-    // This adapter only emits bounded internal analysis; any consequential
-    // work is held before this adapter is selected.
+    // Capability runtime admits only explicit read-only adapters on this non-durable path.
+    // Execution still requires an owned Nexus bridge and cannot publish or mutate state.
     authority: "read-only",
     authority_boundary: "systemia+passport+bounded-nexus",
     human_gate_required: false,
