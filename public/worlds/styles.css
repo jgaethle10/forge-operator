@@ -48,3 +48,25 @@
 .editor .tools button#unpublishOnline{border:1px solid #ba9f96;color:#86514b;background:#fff6f1;font-weight:700}
 .editor .tools button#unpublishOnline:disabled{opacity:.55;cursor:wait}
 @media(max-width:700px){.editor .tools #unpublishOnline{grid-column:span 2;min-height:46px}}
+
+
+/* Private, user-file-selected historical Window policy observer. Never a live agent panel. */
+.society-ledger{position:fixed;z-index:14;top:85px;right:18px;bottom:18px;width:min(444px,calc(100vw - 36px));overflow:auto;overscroll-behavior:contain;touch-action:pan-y;background:#f5f4eaf5;color:#27473f;border:1px solid #fff8e2;border-radius:18px;padding:23px;box-shadow:0 20px 72px #071c25a8;backdrop-filter:blur(18px)}
+.sl-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.sl-head .smallcap{color:#64847a}
+.sl-head h2{font:400 31px/1.12 Georgia,serif;letter-spacing:-.045em;margin:9px 0 2px}
+#sl-close{min-height:40px;min-width:40px;border:0;border-radius:50%;background:#dce5df;color:#285146;font-size:25px}
+.sl-lead{font-size:12px;line-height:1.65;color:#48685c;margin:13px 0}
+.sl-import{font-size:11px;font-weight:750;display:block;margin-bottom:8px}
+#sl-file{display:block;width:100%;max-width:100%;border:1px solid #b9cdbb;border-radius:9px;background:#fff;padding:11px;color:#28443c;font-size:11px;touch-action:manipulation}
+.sl-status{padding:12px;border-radius:10px;background:#e5eee4;color:#315848;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
+.sl-meta{display:flex;flex-wrap:wrap;gap:6px;margin:15px 0}
+.sl-meta span{padding:7px 10px;background:#e1e9df;border-radius:7px;color:#38554c;font-size:10px;overflow-wrap:anywhere}
+.society-ledger label[for="sl-resident"]{font-weight:700;font-size:11px;display:block;margin:18px 0 8px}
+#sl-resident{width:100%;min-height:46px;background:white;color:#27473f;border:1px solid #bacbbc;border-radius:8px;padding:10px;font-size:13px;touch-action:manipulation}
+.society-ledger h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;padding-top:17px;border-top:1px solid #cddbd0;margin-top:23px}
+#sl-count{float:right;font-weight:400;color:#667b6c;text-transform:none;letter-spacing:0}
+#sl-events{padding:0 0 0 19px;min-height:42px}
+#sl-events li{font-size:12px;line-height:1.65;padding:5px 0 13px;color:#3f6153}
+#sl-events small{display:block;color:#658275;font-size:10px;margin:0 0 5px;overflow-wrap:anywhere}
+.sl-truth{font-size:10px;color:#61766b;line-height:1.7;border-top:1px solid #cddbd0;padding-top:15px;margin-top:22px}
+@media(max-width:700px){.society-ledger{inset:auto 0 0;width:100%;height:min(78dvh,calc(100dvh - 56px));padding:20px 19px calc(16px + env(safe-area-inset-bottom,0px));border-radius:21px 21px 0 0}.sl-head h2{font-size:28px}#sl-file{font-size:13px}}
