@@ -47,3 +47,14 @@ Source: `systemia/mcp/signal-public-inquiry.mjs`, mounted on the existing owned 
 To configure owned runtime, the operator must provision a fresh key using an authorized secret manager or securely generate a 32-byte random key outside the repository; apply strict filesystem ownership and permissions, configure the server environment, and redeploy/restart the Fabric service on its owned host. **Do not place real customer data or the key in CI.** Before promoting the native form, independently verify the HTTPS readiness route, a consented authorized end-to-end test, private encrypted storage, and owner notification receipts. GitHub merge alone does not deploy the resident Fabric service.
 
 **Commerce boundary:** `signal.incident_evidence_brief_250.v1` remains `native_order_enabled:false`. A securely stored inquiry is not accepted scope, not a verified payment, and not permission to start work. Exact-SKU Evercraft Payments verification remains a separate release gate.
+
+### Owner-only inbox
+
+After the owned runtime has a valid private key and store, the operator can inspect references without exposing customers:
+
+- `node scripts/signal-owner-inbox.mjs status`: private store availability, total encrypted inquiries, queued and acknowledged alerts, **no PII**
+- `node scripts/signal-owner-inbox.mjs list`: opaque inquiry references, **no PII**
+- `node scripts/signal-owner-inbox.mjs show ECS-<reference> --reveal`: owner-authorized local reveal requiring the dedicated key; never use in public logs
+- `node scripts/signal-owner-inbox.mjs draft ECS-<reference> --reveal`: safe reply draft addressed to the buyer, with **no sending, no checkout and no false fulfillment claim**
+
+The browser is not given a private inbox route, decryption key, customer lookup endpoint or payment token. Customer inquiries are not counted as revenue until matching Evercraft Payments settlement and fulfillment receipts exist.
