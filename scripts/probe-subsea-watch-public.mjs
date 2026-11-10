@@ -16,9 +16,9 @@ async function read(name){
  }
  throw Error('Public Subsea asset failed '+url+' : '+error?.message);
 }
-const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs'];
+const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs','immersive/video-sync.mjs'];
 const contents=await Promise.all(names.map(read));
-const [html,core,viewer,sampleText,readme,immersive,scene]=contents;
+const [html,core,viewer,sampleText,readme,immersive,scene,videoSync]=contents;
 assert.match(html,/Revisit the dive/);
 assert.match(html,/Prototype, not a safety device/);
 assert.match(html,/id="no-xy"/);
@@ -39,11 +39,23 @@ assert.match(immersive,/NOT DIVE CLEARANCE/);
 assert.match(immersive,/src="\.\/scene\.mjs"/);
 assert.match(scene,/getContext\('webgl'/);
 assert.match(scene,/THIS ENTIRE ENVIRONMENT IS SYNTHETIC/);
-assert.match(scene,/dive\.positionSource!=='SIMULATED'/);
+assert.match(scene,/sample\.positionSource!=='SIMULATED'/);
+assert.match(immersive,/id="footage-panel"/);
+assert.match(immersive,/id="dive-video"/);
+assert.match(immersive,/id="video-offset"/);
+assert.match(immersive,/id="load-video"/);
+assert.match(immersive,/playsinline preload="metadata" muted/);
+assert.match(scene,/videoAtMissionTime\(current,videoStart/);
+assert.match(scene,/URL\.createObjectURL\(file\)/);
+assert.match(scene,/URL\.revokeObjectURL\(videoUrl\)/);
+assert.match(scene,/if\(mode!=='imported'\)/);
+assert.match(videoSync,/export function parseVideoStart\(/);
+assert.match(videoSync,/export function videoAtMissionTime\(/);
+assert.match(readme,/Local footage \/ mission clock pairing/);
 
-console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_PROTOTYPE_AND_SOURCE_VERIFIED');
+console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_AND_LOCAL_FOOTAGE_VERIFIED');
 if(process.env.GITHUB_STEP_SUMMARY){
  const fs=await import('node:fs');
  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
- '\n## Subsea Watch experimental customer replay\n\n- **HTTPS checked**: '+root+'\n- Browser UI, parser, 3D viewer, synthetic sample and safety/readme checks passed.\n- Experimental only: not real diver telemetry, measured pipe geometry, certified hazard detection or safe-dive clearance.\n');
+ '\n## Subsea Watch experimental customer replay\n\n- **HTTPS checked**: '+root+'\n- Browser UI, parser, 3D viewer, synthetic sample, local video clock module, footage UI/privacy wiring and safety/readme checks passed.\n- Experimental only: not real diver telemetry, measured pipe geometry, certified hazard detection or safe-dive clearance.\n');
 }

@@ -6,6 +6,7 @@ import {normalizeDive,parseInput,atTime} from '../public/subsea-watch/core.mjs';
 const html=fs.readFileSync('public/subsea-watch/immersive/index.html','utf8');
 const js=fs.readFileSync('public/subsea-watch/immersive/scene.mjs','utf8');
 const sample=normalizeDive(JSON.parse(fs.readFileSync('public/subsea-watch/sample.json','utf8')));
+const publicProbe=fs.readFileSync('scripts/probe-subsea-watch-public.mjs','utf8');
 
 test('immersive v2 remains a real 3D WebGL renderer with owned geometry',()=>{
  assert.match(js,/getContext\('webgl'/);
@@ -97,4 +98,13 @@ test('local footage is paired only with user-imported mission data and explicit 
  assert.match(js,/clearFootage\(\);load\(\)/);
  assert.doesNotMatch(js,/fetch\(video|sendBeacon|XMLHttpRequest|WebSocket|MediaRecorder/);
  assert.doesNotMatch(html,/<video[^>]*controls\b/);
+});
+
+test('public HTTPS canary checks the deployed footage controls and clock module',()=>{
+ assert.match(publicProbe,/immersive\/video-sync\.mjs/);
+ assert.match(publicProbe,/id="dive-video"/);
+ assert.match(publicProbe,/id="video-offset"/);
+ assert.match(publicProbe,/SUBSEA_PUBLIC_HTTPS_WEBGL_AND_LOCAL_FOOTAGE_VERIFIED/);
+ assert.match(publicProbe,/sample/);
+ assert.doesNotMatch(publicProbe,/if\(!dive\.demo/);
 });
