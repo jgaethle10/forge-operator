@@ -32,3 +32,18 @@ Source observation command: `node systemia/signal-publication/official-watch.mjs
 ## Next gate
 
 Attach approved receipts to Systemia's persistent incident ledger, replay and acknowledgment system; then build a typed public freshness view with measured source-health evidence. Add new independent source families only after verifying their reliability and time semantics.
+
+## November 9: First-party Signal buyer-intake lane
+
+Source: `systemia/mcp/signal-public-inquiry.mjs`, mounted on the existing owned Fabric runtime:
+
+- `GET /api/signal/readiness`: public-safe readiness only; no customer details, payments or secret material
+- `POST /api/signal/inquiry`: consented single-incident scope request, creates a private encrypted inquiry receipt `ECS-...`, not an order
+- Every accepted request is encrypted at rest with AES-256-GCM using a dedicated 32-byte server-held key `EVERCRAFT_SIGNAL_INTAKE_KEY_B64`. Never commit the key, expose it to a browser or use GitHub Actions to handle customer data
+- Private store defaults to `~/.local/state/evercraft/signal-leads`, configurable via `EVERCRAFT_SIGNAL_LEADS_DIR`; directory must be mode 0700, private files mode 0600, and symbolic links rejected
+- Alert outbox includes only opaque reference/time, not contact details. The owner-notification bridge can run when `EVERCRAFT_SIGNAL_OWNER_PRINCIPAL` and the existing Notification Fabric environment are configured. Outbox reconciliation handles a crash between encrypted write and queued notification
+- Browser only labels the form native-ready when the owned readiness endpoint reports `intake_available:true`. Otherwise it offers a one-click email draft as fallback. A browser email draft is not a received lead
+
+To configure owned runtime, the operator must provision a fresh key using an authorized secret manager or securely generate a 32-byte random key outside the repository; apply strict filesystem ownership and permissions, configure the server environment, and redeploy/restart the Fabric service on its owned host. **Do not place real customer data or the key in CI.** Before promoting the native form, independently verify the HTTPS readiness route, a consented authorized end-to-end test, private encrypted storage, and owner notification receipts. GitHub merge alone does not deploy the resident Fabric service.
+
+**Commerce boundary:** `signal.incident_evidence_brief_250.v1` remains `native_order_enabled:false`. A securely stored inquiry is not accepted scope, not a verified payment, and not permission to start work. Exact-SKU Evercraft Payments verification remains a separate release gate.
