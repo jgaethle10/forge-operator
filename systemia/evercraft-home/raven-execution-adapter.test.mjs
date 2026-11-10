@@ -12,6 +12,11 @@ import { planSystemiaMission } from "./systemia-adapter.mjs";
 
 test("owned Raven execution allowlist is internal and read-only", () => {
   assert.deepEqual(ravenReadOnlyWorkTypes(), ["analyze", "research", "qa"]);
+  const adapter=createRavenReadOnlyTeamAdapter();
+  assert.equal(adapter.authority,"read-only");
+  assert.equal(adapter.human_gate_required,false);
+  assert.equal(adapter.work_types.includes("publish"),false);
+  assert.equal(adapter.work_types.includes("deploy"),false);
 });
 
 test("Raven adapter fails closed without an owned Nexus bridge", async () => {
