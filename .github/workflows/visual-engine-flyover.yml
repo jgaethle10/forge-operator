@@ -52,7 +52,12 @@ jobs:
       - name: Render original flyover with owned World Engine WGSL
         env:
           EVERCRAFT_VISUAL_FRAMES_DIR: flyover-pixels
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: flyover-native-browser
         run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/flyover-pixel-proof.mjs
+      - name: Prove native PNG decode into canonical authored glTF textures
+        env:
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: flyover-native-browser
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/gltf-native-image.proof.mjs | tee flyover-pixels/gltf-native-image-receipt.json
       - name: Publish real frame captures and provenance receipt
         if: success()
         uses: actions/upload-artifact@v4
