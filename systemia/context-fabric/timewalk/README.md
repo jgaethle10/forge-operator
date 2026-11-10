@@ -119,6 +119,8 @@ The reconcilier checks, in order:
 3. The stored Context source hash against that recomputed digest.
 4. Expected projected fields such as entity reference, predicate, claim value,
    source reference, evidence label, and observation timestamp.
+5. The **exact receipt-derived title and summary text** from the existing bridge,
+   so a self-consistently rehashed but rewritten narrative fails as a mismatch.
 
 Each result is an **aggregate status count**, with no returned raw receipts,
 record IDs or source references. The possible states include consistent hash
