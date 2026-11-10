@@ -6,13 +6,13 @@ This initial slice is a pure local inspector. It **does not** enroll a mission i
 
 ## Run the owned local proof
 
-\`\`\`bash
+```bash
 node --test tests/production-continuity.test.mjs
-\`\`\`
+```
 
-Import \`auditProductionLedger\` from \`./ledger.mjs\` in an owned **private** worker. Pass a ledger shaped like:
+Import `auditProductionLedger` from `./ledger.mjs` in an owned **private** worker. Pass a ledger shaped like:
 
-\`\`\`json
+```json
 {
   "schema": "evercraft.production.continuity.v1",
   "projects": [{
@@ -29,7 +29,7 @@ Import \`auditProductionLedger\` from \`./ledger.mjs\` in an owned **private** w
     "review_due": "2026-11-10T21:00:00.000Z"
   }]
 }
-\`\`\`
+```
 
 Use **real owned private storage** for actual artifact pointers, manuscript titles, source claims, reviewer names and plot details. Do not commit them to this public repository or log them to public CI.
 
@@ -38,9 +38,9 @@ Use **real owned private storage** for actual artifact pointers, manuscript titl
 - One durable project ID across Little Red Studio, Fallen, TOWI, Journal and Clip.
 - An actual verified artifact receipt, not an agent plan, resets the liveness clock.
 - No owned next action means the item is orphaned; no valid fresh receipt means stalled.
-- \`WAITING_ON_EVIDENCE\` may propose source review, never invent or publish a conclusion.
-- \`FOUNDER_DECISION\`, canon, rights, publishing, outreach or spending gates always go to an authorized human.
-- \`RELEASED_VERIFIED\` requires verifiable release evidence. \`PARKED_INTENTIONALLY\` requires an explicit approved hold.
+- `WAITING_ON_EVIDENCE` may propose source review, never invent or publish a conclusion.
+- `FOUNDER_DECISION`, canon, rights, publishing, outreach or spending gates always go to an authorized human.
+- `RELEASED_VERIFIED` requires verifiable release evidence. `PARKED_INTENTIONALLY` requires an explicit approved hold.
 - Scanner output consists of IDs, reason codes and proposed work, not unpublished source content.
 
 ## Next engineering gates
