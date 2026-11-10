@@ -111,7 +111,7 @@ export async function activateEo001({pin,home=os.homedir(),root=codeRoot(),
   let wrote=false,enabled=false;
   try{
     const result=writeEo001ResidentUnits({
-      home,sourceRoot:root,nodeBinary:process.execPath,write:true});
+      home,sourceRoot:root,nodeBinary:process.execPath,sourcePin:pin,write:true});
     required(result.state==='UNIT_FILES_WRITTEN_NOT_ACTIVATED',
       'USER_UNIT_INSTALLATION_REJECTED');
     wrote=true;
