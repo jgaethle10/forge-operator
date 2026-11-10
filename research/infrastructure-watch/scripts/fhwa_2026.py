@@ -82,7 +82,8 @@ class StateIndex(HTMLParser):
             if self.row:self.rows.append(self.row)
             self.row=None
 
-def parse_official_index(html):
+def parse_official_index(html, target_state=None):
+    """Full national import rejects duplicate links; safe state import quarantines unrelated duplicates."""
     parser=StateIndex();parser.feed(html)
     parsed={}
     for row in parser.rows:
@@ -99,7 +100,17 @@ def parse_official_index(html):
     if set(parsed)!=set(FIPS):raise ValueError('Incomplete 2026 state index: '+str(sorted(set(FIPS)-set(parsed))))
     if sum(x['count'] for x in parsed.values())!=NATIONAL:raise ValueError('2026 official national count mismatch')
     urls=[x['url'] for x in parsed.values()]
-    if len(set(urls))!=len(urls):raise ValueError('Federal index has duplicate state download links; cannot safely import')
+    if len(set(urls))!=len(urls):
+        if target_state is None:
+            raise ValueError('Federal index has duplicate state download links; cannot safely import')
+        if target_state not in parsed:
+            raise ValueError('Target state missing from official index')
+        if urls.count(parsed[target_state]['url'])!=1:
+            raise ValueError(f'Federal index download URL for {target_state} is ambiguous; do not import')
+        collisions={u:sorted(n for n,x in parsed.items() if x['url']==u)
+                    for u in set(urls) if urls.count(u)>1}
+        parsed[target_state]['source_index_warning'] = ('Unrelated state URL collision(s) quarantined; '
+            + repr(list(collisions.values())) + '; national completeness blocked.')
     return parsed
 
 def load_pinned_counts(csv_path):
@@ -154,6 +165,7 @@ def import_one(out,name,info,data_fetcher=official_get):
         'expected':info['count'],'indexed':len(normalized),'source_url':info['url'],
         'raw_sha256':raw_hash,'normalized_sha256':digest(records),'verified':True,
         'imported_at_utc':utc(),'source_index_url':INDEX,
+        'source_index_warning':info.get('source_index_warning'),
         'notice':'2026 inspection snapshot. Condition is not an imminent threat warning.'})
     return receipt
 
@@ -229,11 +241,14 @@ def main():
     if args.cmd=='query':print(json.dumps(query(args.db,args.state_fips,args.limit),indent=2));return
     pinned=load_pinned_counts(args.counts)
     if args.cmd=='build':print(json.dumps(build_index(args.out,args.db,pinned),indent=2));return
-    official=parse_official_index(official_get(INDEX,max_bytes=2_000_000).decode('utf8'))
+    official=parse_official_index(official_get(INDEX,max_bytes=2_000_000).decode('utf8'),
+        target_state=args.state if not args.all else None)
     for name,info in official.items():
         if info['count']!=pinned[name]:raise ValueError(f'Official 2026 index count changed for {name}; re-review pinned counts')
     targets=sorted(FIPS) if args.all else [args.state]
     for name in targets:
+        if official[name].get('source_index_warning'):
+            print('SOURCE WARNING:',official[name]['source_index_warning'],flush=True)
         receipt=import_one(args.out,name,official[name]);print(name,receipt,flush=True)
     verified=validate_receipts(args.out,pinned)
     print(json.dumps({'verified_state_count':len(verified),
