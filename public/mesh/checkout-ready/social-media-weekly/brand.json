@@ -40,5 +40,10 @@
     "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
     "live_traffic_claim": false,
     "paid_sale_claim": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
   }
 }
