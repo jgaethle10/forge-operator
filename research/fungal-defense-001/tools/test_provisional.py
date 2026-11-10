@@ -37,6 +37,16 @@ class ProvisionalIntegrityTests(unittest.TestCase):
         doc["clinical"]["snapshots"][-1]["source_url"]="https://fakecdc.example/view/cdc/262786"
         self.verify_rejected(doc)
 
+    def test_wrong_official_week_record_fails(self):
+        doc=copy.deepcopy(self.provisional)
+        doc["clinical"]["snapshots"][-1]["source_url"]="https://stacks.cdc.gov/view/cdc/262787"
+        self.verify_rejected(doc)
+
+    def test_wrong_week_ending_fails(self):
+        doc=copy.deepcopy(self.provisional)
+        doc["clinical"]["snapshots"][-1]["week_ending"]="2026-10-30"
+        self.verify_rejected(doc)
+
     def test_auto_publication_fails(self):
         doc=copy.deepcopy(self.provisional)
         doc["publication_policy"]["no_automatic_case_updates"]=False
