@@ -17,9 +17,25 @@ test('every additional approved offer serves its own price and exact payment key
  try{
   for(const [slug,offer] of Object.entries(PUBLIC_PAYMENT_OFFERS)){
    const page=await fetch(runtime.url+'/offers/'+slug);assert.equal(page.status,200);
-   const html=await page.text();assert.ok(html.includes('Continue to checkout'));assert.ok(html.includes('$'+offer.amount_cents/100));
+   const html=await page.text();assert.ok(html.includes('$'+offer.amount_cents/100),slug);
    const send=confirmed=>fetch(runtime.url+'/api/offers/'+slug+'/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({user_confirmed:confirmed,customer_ref:'qa@example.com',idempotency_key:'qa-offer-'+slug})});
-   const count=seen.length;assert.equal((await send(false)).status,409);assert.equal(seen.length,count);
+   const count=seen.length;
+   if(offer.native_order_enabled===false){
+    assert.ok(!html.includes('Continue to checkout'),slug+' is explicitly held');
+    assert.match(html,/checkout on hold|online checkout is temporarily unavailable/i);
+    for(const confirmed of [false,true]){
+     const blocked=await send(confirmed);
+     assert.equal(blocked.status,409,slug);
+     const receipt=await blocked.json();
+     assert.equal(receipt.error,'offer_requires_scope_acceptance',slug);
+     assert.equal(receipt.checkout_ready,false,slug);
+     assert.equal(receipt.order_created,false,slug);
+     assert.equal(receipt.fulfillment_release,false,slug);
+    }
+    assert.equal(seen.length,count,slug+' must not initiate a payment request');
+    continue;
+   }
+   assert.ok(html.includes('Continue to checkout'),slug);assert.equal((await send(false)).status,409);assert.equal(seen.length,count);
    const response=await send(true);assert.equal(response.status,200,slug);const result=await response.json();assert.equal(result.checkout_ready,true);assert.equal(result.fulfillment_release,false);
    assert.equal(seen.at(-1).body.offer_key,offer.offer_key);assert.equal(seen.at(-1).body.return_origin,'https://fabric.systemiacommandcenters.com');assert.equal(seen.at(-1).body.success_path,'/offers/'+slug+'?payment=processing');assert.equal(seen.at(-1).url,'https://fabric.systemiacommandcenters.com/api/payments/ops');
    mismatch=true;assert.equal((await send(true)).status,503,slug);mismatch=false;
