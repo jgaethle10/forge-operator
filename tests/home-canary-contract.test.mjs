@@ -69,3 +69,34 @@ test('owned-edge Home canary persists only verified external proof',()=>{
   assert.equal(ownedEdgeWorkflow.includes('/api/login'),false);
   assert.equal(/EVERCRAFT_IDENTITY_SECRET|EVERCRAFT_OWNER_PASSWORD|claim_code/i.test(ownedEdgeWorkflow),false);
 });
+
+test('Clip credential screen correctly resolves Home-prefixed routes and local root routes',()=>{
+  const html=fs.readFileSync('systemia/evercraft-home/public/credentials.html','utf8');
+  const baseUrls=[
+    ['https://fabric.systemiacommandcenters.com/home/credentials.html','/home/api/'],
+    ['http://127.0.0.1:4310/credentials.html','/api/'],
+  ];
+  const endpoints=[...html.matchAll(/endpoint:"(api\/[^"]+)"/g)].map(match=>match[1]);
+  assert.ok(endpoints.includes('api/credentials/providers/facebook-pages'));
+  assert.ok(html.includes('fetch("api/clip/facebook/diagnose"'));
+  assert.ok(html.includes('fetch("api/session"'));
+  assert.ok(html.includes('href="./"'));
+  assert.ok(html.includes('window.location.replace("./")'));
+  assert.doesNotMatch(html,/endpoint:"\/api\/|fetch\("\/api\/|href="\/"/);
+  for(const [origin,prefix] of baseUrls){
+    for(const endpoint of [...endpoints,'api/clip/facebook/diagnose','api/session']){
+      const target=new URL(endpoint,origin);
+      assert.equal(target.origin,new URL(origin).origin);
+      assert.ok(target.pathname.startsWith(prefix),target.pathname+' does not have '+prefix);
+    }
+  }
+});
+test('owned Home installer allocates persistent claim storage for Clip Journal publishing',()=>{
+  const script=fs.readFileSync('scripts/install-evercraft-home-edge.sh','utf8');
+  assert.ok(script.includes('"$HOME_STATE/clip/journal-attempts"'));
+  assert.ok(script.includes('EVERCRAFT_CLIP_JOURNAL_STATE_DIR=$HOME_STATE/clip/journal-attempts'));
+  assert.ok(script.includes('install -d -o "$RUN_USER" -g "$RUN_USER" -m 0700'));
+  assert.ok(script.includes('handle_path /home/*'));
+  assert.ok(script.includes('EVERCRAFT_HOME_COOKIE_PATH=/home'));
+  assert.ok(!script.includes('BASE44'));
+});
