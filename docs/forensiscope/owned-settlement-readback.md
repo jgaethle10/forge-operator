@@ -59,6 +59,27 @@ evaluateForensiScopePaidUpload then denies media ingress and
 readResult denies buyer results. A checkout URL, paid redirect query,
 or a browser-provided paid flag is never sufficient.
 
+## Private customer payment status
+
+When the unified customer runtime receives an explicit trusted
+settlementReader and the private guest ledger, it additionally exposes:
+
+GET /v1/forensiscope/orders/:order_key/payment
+
+The route authenticates the buyer, verifies the order belongs to that
+buyer, and rechecks the **server-side** payment authority when a
+checkout has been created. It returns one of:
+checkout_not_started, pending_provider_verification, verified_paid.
+
+The response deliberately contains NO provider receipt ID, secret
+checkout URL, or upload authorization. A paid-status response is not
+a bearer credential. The separate upload service still needs its own
+fresh paid provider readback before accepting media.
+
+The endpoint is private and loopback-only until a verified owned TLS
+deployment, real identity provider, rate limiting and payment-readback
+acceptance test are completed.
+
 ## What the tests prove
 
 Run:
