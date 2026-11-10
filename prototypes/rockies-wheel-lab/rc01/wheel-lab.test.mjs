@@ -38,3 +38,14 @@ test('shareable inputs are allowlisted before model updates', () => {
   assert.match(html, /safeParam\(k,u\.searchParams\.get\(k\)\)/);
   assert.match(html, /if\(!safeParam\(k,v\)\)return/);
 });
+
+test('RC08 stages an optional local-only FindMyPart interest note, not an external referral', () => {
+  assert.match(html, /id="sourcingInterest" type="checkbox"/);
+  assert.match(html, /Checking this saves a note in your downloaded concept only/);
+  assert.match(html, /findmypart_sourcing_interest_requested:get\('sourcingInterest'\)\.checked===true/);
+  assert.match(html, /findmypart_referral_sent:false/);
+  assert.match(html, /findmypart_customer_contact_shared:false/);
+  assert.match(html, /get\('sourcingInterest'\)\.checked=false/);
+  assert.doesNotMatch(html,/https:\/\/fabric\.systemiacommandcenters\.com\/findmypart/);
+  assert.doesNotMatch(html, /<a[^>]+href=["']https?:\/\//i);
+});
