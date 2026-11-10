@@ -35,4 +35,5 @@ test('source-bound review packet is tested and archived on successful and failed
   assert.ok(artifact.includes('artifacts/medical-review-packets/'+name));
  }
  assert.ok(source.includes("cron: '*/5 * * * *'"));
+ assert.ok(source.includes('kaidance-frontier-field-${{ github.ref }}'), 'PR and production runs must have separate concurrency groups');
 });
