@@ -52,6 +52,13 @@ export function correlateSignedDeviceEvidence(goalState, {
       typeof anchor.public_key_pem === 'string' && anchor.public_key_pem.length < 8192 &&
       Array.isArray(anchor.allowed_workload_classes) &&
       anchor.allowed_workload_classes.includes(receipt.workload_class), 'device_trust_scope_invalid');
+    // In registry-backed mode a valid signer is not enough. The receipt must
+    // be about the exact currently authorized capability manifest.
+    if (anchor.manifest_hash !== undefined) {
+      assertOk(typeof anchor.manifest_hash === 'string' &&
+        SHA.test(anchor.manifest_hash) &&
+        anchor.manifest_hash === receipt.manifest_hash, 'device_manifest_binding_invalid');
+    }
     const publicKey = createPublicKey(anchor.public_key_pem);
     assertOk(publicKey.asymmetricKeyType === 'ed25519', 'device_key_not_ed25519');
     const signature = verifyMicroSeedExecutionReceipt(receipt, {
