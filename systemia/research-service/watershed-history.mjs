@@ -54,6 +54,21 @@ function verifySensor(sensor){
     throw new TypeError('source sensor receipt is not authorized for history');
   boundedObservations(sensor.snow,80,'snow');
   boundedObservations(sensor.river,80,'river');
+  for(const row of sensor.snow) {
+    if(!/^[0-9A-Z_-]{2,20}:WA:(SNTL|SNOL)$/.test(row.station_id) ||
+       !['WTEQ','SNWD'].includes(row.kind) || !goodDay(row.time) || row.unit!=='in' ||
+       typeof row.freshness!=='string' || row.freshness.length>45)
+      throw new TypeError('snow unit, station or observation day mismatch');
+  }
+  for(const row of sensor.river) {
+    if(!/^USGS-[0-9]{5,16}$/.test(row.station_id) ||
+       !['stream_discharge','gage_height'].includes(row.kind) ||
+       !goodTime(row.time) ||
+       (row.kind==='stream_discharge'&&row.unit!=='ft^3/s') ||
+       (row.kind==='gage_height'&&row.unit!=='ft') ||
+       typeof row.freshness!=='string' || row.freshness.length>45)
+      throw new TypeError('USGS unit, station or timestamp mismatch');
+  }
   if(!Array.isArray(sensor.failures)||sensor.failures.length>16)throw new TypeError('sensor failure inventory invalid');
   if(sensor.source_coverage?.suitable_for_publication!==false)throw new TypeError('source coverage publication flag absent');
   return Object.freeze({
