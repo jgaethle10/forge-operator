@@ -48,7 +48,10 @@ const r=await runWorkSabanFacebookCycle({
    scope,resource_ref,at:new Date().toISOString()
  }):undefined,
  credentialResolver:fire?()=>resolveFacebookPageCredential({
-   credentialStateDir:path.resolve(credentialStateDir)
+   credentialStateDir:path.resolve(credentialStateDir),
+   env:{...env,CLIP_FACEBOOK_CREDENTIAL_REF:String(
+     env.EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_CREDENTIAL_REF || env.CLIP_FACEBOOK_CREDENTIAL_REF || ''
+   ).trim()}
  }):undefined
 });
 process.stdout.write(JSON.stringify({...r,passport_grant_status:grantStatus})+'\n');
