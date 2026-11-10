@@ -76,6 +76,17 @@ test('loopback HTTP serves only finite same-origin assets and a sanitized read-o
   assert.equal((await httpRequest(port,'/v1/snapshot',{headers:{'Sec-Fetch-Site':'cross-site'}})).status,403);
  }finally{await new Promise(resolve=>server.close(resolve));}
 });
+test('a mistakenly wildcard-bound local viewer refuses every request, including loopback',async()=>{
+ const sample={schema:'evercraft.systemia.operator-mission-snapshot.v1',exported_at:new Date().toISOString(),missions:[],nodes:[]};
+ const server=createLocalMissionControlServer({loadSnapshot:async()=>sample});
+ await new Promise((ok,fail)=>server.once('error',fail).listen(0,'0.0.0.0',ok));
+ try{
+  const r=await httpRequest(server.address().port,'/v1/snapshot');
+  assert.equal(r.status,403);
+  assert.match(r.text,/Loopback listener required/);
+  assert.equal(r.headers['access-control-allow-origin'],undefined);
+ }finally{await new Promise(done=>server.close(done));}
+});
 test('unavailable or unsanitized source fails closed without leaking detailed errors',async()=>{
  const server=createLocalMissionControlServer({loadSnapshot:async()=>{throw Error('secret goal path /private/customer-name.json');}});
  const port=await open(server);
