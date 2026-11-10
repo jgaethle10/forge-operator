@@ -11,7 +11,7 @@ const allowedUrl=value=>{
  try{
   const u=new URL(value);
   if(u.protocol!=='https:')return null;
-  if(!/\.(noaa\.gov|msstate\.edu)$/.test(u.hostname))return null;
+  if(!/(^|\.)(noaa\.gov|msstate\.edu|gebco\.net)$/.test(u.hostname))return null;
   return u.href;
  }catch{return null;}
 };
