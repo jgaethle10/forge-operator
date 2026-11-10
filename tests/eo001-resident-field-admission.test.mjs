@@ -20,6 +20,7 @@ function fixture(t){
   fs.mkdirSync(handoff,{recursive:true,mode:0o700});
   fs.chmodSync(base,0o700);fs.chmodSync(handoff,0o700);
   fs.writeFileSync(path.join(root,'systemia/organism/eo001-owned-qa-mission.mjs'),'// test-only fixture\n');
+  fs.writeFileSync(path.join(root,'systemia/organism/eo001-source-pin-check.mjs'),'// test pin guard');
   for(const name of ['gate0-private-handoff.zip','sanitized-receipt.json','independent-review.json']){
     const file=path.join(handoff,name);
     fs.writeFileSync(file,'synthetic fixture',{mode:0o600});
