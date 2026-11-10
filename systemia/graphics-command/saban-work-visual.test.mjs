@@ -65,6 +65,24 @@ test('unverified, malformed and unsupported snapshots fail closed',()=>{
   Object.values(lease.jobs).find(x=>x.state==='leased').lease=null;
   assert.throws(()=>projectSabanWorkProof(JSON.stringify(lease),{mode:'synthetic_test'}),/Unproven job lease/);
   assert.throws(()=>renderSabanWorkProof({...projectSabanWorkProof(JSON.stringify(state),{mode:'synthetic_test'}),independently_attested:true}),/Invalid proof-view/);
+  assert.throws(()=>renderSabanWorkProof({
+    ...projectSabanWorkProof(JSON.stringify(state),{mode:'synthetic_test'}),
+    state_marks:['<script>alert(1)</script>']
+  }),/Invalid proof-view/);
+  assert.throws(()=>renderSabanWorkProof({
+    ...projectSabanWorkProof(JSON.stringify(state),{mode:'synthetic_test'}),
+    retried_jobs:'<img onerror=alert(1)>'
+  }),/Invalid proof-view/);
+  // >48 jobs: rare states remain visible rather than hidden behind a queued wall.
+  const large=createWorkState({softwareId:'big-synthetic',assignments:Array.from({length:100},(_,i)=>({
+    agent_id:'a'+i,role:'r',work:{kind:'test',key:String(i)}
+  })),createdAt:ts});
+  const leased=leaseNext(large,{workerId:'synthetic-w',now:ts+1000});
+  fail(large,{jobId:leased.job_id,workerId:'synthetic-w',retry:false,now:ts+2000});
+  const big=projectSabanWorkProof(JSON.stringify(large),{mode:'synthetic_test'});
+  assert.equal(big.state_marks.length,48);
+  assert.equal(big.state_marks.includes('dead_letter'),true);
+  assert.equal(big.marks_truncated,true);
 });
 test('CLI writes a private noindex output with restrictive permissions',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'saban-visual-'));
@@ -80,5 +98,11 @@ test('CLI writes a private noindex output with restrictive permissions',()=>{
     if(process.platform!=='win32')assert.equal(fs.statSync(output).mode&0o777,0o600);
     const forbidden=spawnSync(process.execPath,[code,input,path.resolve('public/saban-proof-private.html'),'synthetic_test'],{encoding:'utf8'});
     assert.notEqual(forbidden.status,0);
+    if(process.platform!=='win32'){
+      const linked=path.join(dir,'public-alias');
+      fs.symlinkSync(path.resolve('public'),linked,'dir');
+      const viaLink=spawnSync(process.execPath,[code,input,path.join(linked,'forbidden.html'),'synthetic_test'],{encoding:'utf8'});
+      assert.notEqual(viaLink.status,0,'Public directory symlink bypass must fail');
+    }
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
