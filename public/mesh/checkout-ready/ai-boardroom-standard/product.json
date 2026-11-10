@@ -66,6 +66,20 @@
   },
   "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
   "design": {
-    "accent": "#d6bb82"
+    "accent": "#d6b676",
+    "background": "#171613",
+    "panel": "#28241e",
+    "ink": "#f5ead3",
+    "muted": "#c5bba6",
+    "secondary": "#f0dba9",
+    "mark": "chamber-columns"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Chamber",
+    "signature_phrase": "Bring the decision. We'll challenge the assumptions.",
+    "purpose": "Give one consequential decision a serious structured challenge before action is taken.",
+    "narrative_promise": "A better decision survives better questions.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared"
   }
 }
