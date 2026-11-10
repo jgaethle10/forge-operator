@@ -39,3 +39,4 @@ jobs:
           node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
           node --test systemia/context-fabric/timewalk/coverage.test.mjs
           node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
+          node --test systemia/context-fabric/timewalk/origin-attestation.test.mjs
