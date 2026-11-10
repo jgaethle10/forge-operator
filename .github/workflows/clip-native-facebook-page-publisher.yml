@@ -31,11 +31,14 @@ on:
       - "systemia/graphics-command/space-dudz-social-raster.mjs"
       - "systemia/organism/space-dudz-clip-publisher.workflow.json"
       - "systemia/clip/facebook-page-credential-resolver.mjs"
+      - "systemia/clip/facebook-page-connection-diagnostic.mjs"
+      - "systemia/clip/facebook-page-connection-diagnostic.test.mjs"
       - "systemia/clip/facebook-page-credential-resolver.test.mjs"
       - "systemia/evercraft-home/provider-credentials.mjs"
       - "systemia/evercraft-home/provider-credentials.test.mjs"
       - "systemia/evercraft-home/server.mjs"
       - "systemia/evercraft-home/facebook-page-credential-http.test.mjs"
+      - "systemia/evercraft-home/public/credentials.html"
       - "systemia/clip/cfb-journal-resident.mjs"
       - "systemia/clip/cfb-journal-resident.test.mjs"
       - "systemia/clip/cfb-journal-resident-runner.mjs"
@@ -84,11 +87,14 @@ on:
       - "systemia/graphics-command/space-dudz-social-raster.mjs"
       - "systemia/organism/space-dudz-clip-publisher.workflow.json"
       - "systemia/clip/facebook-page-credential-resolver.mjs"
+      - "systemia/clip/facebook-page-connection-diagnostic.mjs"
+      - "systemia/clip/facebook-page-connection-diagnostic.test.mjs"
       - "systemia/clip/facebook-page-credential-resolver.test.mjs"
       - "systemia/evercraft-home/provider-credentials.mjs"
       - "systemia/evercraft-home/provider-credentials.test.mjs"
       - "systemia/evercraft-home/server.mjs"
       - "systemia/evercraft-home/facebook-page-credential-http.test.mjs"
+      - "systemia/evercraft-home/public/credentials.html"
       - "systemia/clip/cfb-journal-resident.mjs"
       - "systemia/clip/cfb-journal-resident.test.mjs"
       - "systemia/clip/cfb-journal-resident-runner.mjs"
@@ -130,6 +136,7 @@ jobs:
             systemia/clip/native-video-publishers.test.mjs \
             systemia/clip/space-dudz-resident.test.mjs \
             systemia/clip/facebook-page-credential-resolver.test.mjs \
+            systemia/clip/facebook-page-connection-diagnostic.test.mjs \
             systemia/evercraft-home/provider-credentials.test.mjs \
             systemia/evercraft-home/facebook-page-credential-http.test.mjs \
             systemia/newsroom/cfb-clip-facebook-publish.test.mjs \
