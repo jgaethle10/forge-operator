@@ -43,3 +43,21 @@ Source: `voice-bella-meaningful-endings.py` and `test_voice_bella_meaningful_end
 - **No automatic commercial publication, voice substitution, phoneme forcing, waveform stretching or final sign-off.**
 
 **Status:** Source timing inspection PASSED. Copy-change auditory superiority NOT yet established.
+
+
+## Deeper original-model phoneme frame inspection (same source run)
+
+The native `pred_dur` vector contains **265** positive frame counts: start and end tokens plus one frame count per character in the verified **263-character G2P phoneme sequence**. The original G2P SHA-256 (`b609c9bb842a59167dd2eb0319d3e9cabfce0ccdc56a060ef71e456581dac70d`) was matched exactly against the real audio run, so this mapping is not a guessed IPA alignment.
+
+| Occurrence | Native phoneme symbols | Model predicted vowel-symbol time | Period-symbol time |
+| --- | --- | ---: | ---: |
+| internal `to` before `make` | `tə` | `ə` 0.025 s | none |
+| terminal `to` after `attention` | `tu.` | `u` 0.225 s | 0.200 s |
+| internal `to` before `come` | `tə` | `ə` 0.025 s | none |
+| final `to` after `back` | `tu.` | `u` 0.225 s | 0.400 s |
+
+**The native model allocates nine times as much duration to the terminal full /u/ symbol as to the interior schwa /ə/.** Importantly, this is *model-internal predicted duration per phoneme symbol*. It is **not an independently measured acoustic vowel length** or proof of a defect. The terminal punctuation also receives duration frames; avoid conflating it with vowel audio.
+
+The review-only tool `voice-bella-native-phoneme-frame-audit.py` implements exact symbol/frame count validation and refuses to fabricate phoneme durations if evidence differs. Synthetic fixture tests are in `test_voice_bella_native_phoneme_frame_audit.py`; `.github/workflows/voice-bella-native-phoneme-frame-audit.yml` checks these without downloading or distributing private Bella speech. Original dry WAV, G2P and frame source receipts remain available in private Drive.
+
+**Engineering decision:** preserve native `af_bella`; prefer revising dangling function-word endings for a narrow comparison. Do not force IPA or shorten vowel waveforms without independent speech review.
