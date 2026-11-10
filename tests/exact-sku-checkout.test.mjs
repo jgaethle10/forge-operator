@@ -109,11 +109,11 @@ test('an additional original SKU can join only through a separate verified ident
     payment_link_id:'plink_SYNTHETIC_FIXTURE',
     stripe_product_id:'prod_SYNTHETIC_FIXTURE',
     stripe_price_id:'price_SYNTHETIC_FIXTURE',
-    landing_page:'https://example.test/fixture/',
+    landing_page:'https://jgaethle10.github.io/forge-operator/fixture/',
     approved_by_owner:true,
     verification_state:'PROVIDER_AND_RENDERED_BUYER_VIEW_VERIFIED',
     browser_checked_at:'2026-11-09T22:00:00Z',
-    independent_browser_receipt:'https://github.com/example/synthetic/actions/runs/1234',
+    independent_browser_receipt:'https://github.com/jgaethle10/forge-operator/actions/runs/1234',
   });
   const result=resolveExactSkuCheckout({
     product_id:'example.synthetic.new-product',
