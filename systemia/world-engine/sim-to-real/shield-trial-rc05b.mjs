@@ -55,6 +55,19 @@ export function runShieldTrial({firstSeed=49,seeds=8,maxTicks=350}={}){
         nativeContacts:episode.outcome.contactTicks,sweptContacts:episode.outcome.sweepTicks,
         shieldedMoves:episode.frames.filter(f=>f.requested==='shielded_progress').length,
         shieldHolds:episode.frames.filter(f=>f.requested?.startsWith('shield_')&&f.requested?.endsWith('_hold')).length,
+        shieldDiagnostics:key==='shield'?{
+          rejectionCounts:episode.frames.reduce((counts,f)=>{
+            if(f.requested?.startsWith('shield_')&&f.requested?.endsWith('_hold')){
+              const label=f.requested+':'+(f.shieldDiagnostics?.direction||'unspecified');
+              counts[label]=(counts[label]||0)+1;
+            }
+            return counts;
+          },{}),
+          firstBlocked:episode.frames.filter(f=>f.shieldDiagnostics?.permitted===false)
+            .slice(0,3).map(f=>({tick:f.tick,reason:f.requested,direction:f.shieldDiagnostics.direction,
+              lookahead:f.shieldDiagnostics.lookahead,minimumClearance:f.shieldDiagnostics.minimumClearance,
+              roverPosition:f.position,appliedSpeed:f.appliedSpeed}))
+        }:undefined,
         finalPosition:frame?.position,
         // Failure-only ground-truth telemetry is diagnostic. The controller NEVER
         // sees these world positions; it only receives anonymous sensor returns.
