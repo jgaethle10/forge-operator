@@ -34,10 +34,28 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Diagnose Virgin Islands published-count mismatch (non-asserting)
+        run: |
+          python3 - <<'PY'
+          import importlib.util, json, os
+          from pathlib import Path
+          mod=Path('research/infrastructure-watch/scripts/fhwa_2026.py')
+          spec=importlib.util.spec_from_file_location('fhwa_2026',mod)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          url=m.PREFIX+'VI26.json'
+          raw=json.loads(m.official_get(url))
+          diagnostic={'state':'U.S. Virgin Islands','published':23,
+                      'observed':len(raw) if isinstance(raw,list) else None,
+                      'payload_type':type(raw).__name__,'source_url':url,
+                      'verified':False,'warning':'Diagnostic only; mismatch blocks verified import'}
+          target=Path(os.environ['RUNNER_TEMP'])/'aiw-vi-diagnostic.json'
+          target.write_text(json.dumps(diagnostic,indent=2)+'\n')
+          print(json.dumps(diagnostic,indent=2))
+          PY
       - name: Import a small real FHWA state dataset
         run: |
           python3 research/infrastructure-watch/scripts/fhwa_2026.py sync \
-            --state 'U.S. Virgin Islands' \
+            --state 'District of Columbia' \
             --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
             --out "$RUNNER_TEMP/aiw-2026-data"
       - name: Build isolated partial index
@@ -52,12 +70,12 @@ jobs:
           import json,os,sqlite3
           from pathlib import Path
           d=Path(os.environ['RUNNER_TEMP'])/'aiw-2026-data'
-          rec=json.loads((d/'state_78_2026.receipt.json').read_text())
-          assert rec['expected']==rec['indexed']==23 and rec['verified'] is True
+          rec=json.loads((d/'state_11_2026.receipt.json').read_text())
+          assert rec['expected']==rec['indexed']==261 and rec['verified'] is True
           with sqlite3.connect(d/'bridges2026.sqlite') as con:
               count=con.execute('SELECT COUNT(*) FROM bridges').fetchone()[0]
               meta=dict(con.execute('SELECT k,v FROM meta'))
-          assert count==23
+          assert count==261
           assert json.loads(meta['partial']) is True
           assert json.loads(meta['complete_national_import']) is False
           assert json.loads(meta['states_verified'])==1
@@ -67,8 +85,9 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: aiw-2026-virgin-islands-verified-partial-index
+          name: aiw-2026-dc-verified-partial-index
           path: |
-            ${{ runner.temp }}/aiw-2026-data/state_78_2026.receipt.json
+            ${{ runner.temp }}/aiw-2026-data/state_11_2026.receipt.json
             ${{ runner.temp }}/aiw-2026-data/bridges2026.sqlite
+            ${{ runner.temp }}/aiw-vi-diagnostic.json
           retention-days: 7
