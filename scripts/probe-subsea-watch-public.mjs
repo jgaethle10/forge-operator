@@ -64,7 +64,9 @@ assert.equal(fieldSources.schema,'evercraft.subsea.field_sources.v1');
 assert.equal(fieldSources.mission.id,'EX2306_DIVE02');
 assert.equal(fieldSources.mission.reconstruction_status,'NOT_RECONSTRUCTED');
 assert.equal(fieldSources.mission.alignment_status,'UNVERIFIED_NO_SYNC');
-assert.equal(fieldSources.entries.length,6);
+assert.equal(fieldSources.entries.length,8);
+assert.ok(fieldSources.entries.some(x=>x.id==='gebco-2026-global-grid'));
+assert.ok(fieldSources.entries.some(x=>x.id==='noaa-bluetopo-bathymetry'));
 
 console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_LOCAL_FOOTAGE_AND_NOAA_ARCHIVE_VERIFIED');
 if(process.env.GITHUB_STEP_SUMMARY){
