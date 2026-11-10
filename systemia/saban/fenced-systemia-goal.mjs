@@ -84,7 +84,7 @@ export async function recordFencedGoalCompletion({
 }={}){
   const resultHash=result?.worker_receipt?.receipt_hash;
   if(!DIGEST.test(String(resultHash||'')))throw Error('fenced_systemia_signed_result_required');
-  const receiptRef=goalReceipt({result});
+  const receiptRef=goalReceipt(result);
   const {state,receipt}=await mutateGoalState(filePath,current=>{
     checkGoal(current,job,plan,'executing',workDigest);
     return recordGoalOutcome({
