@@ -17,6 +17,11 @@ test('real chainsaw article stages as sourced preview, never publication',()=>{
    assert.ok(html.includes(token),'missing '+token);
  }
  assert.doesNotMatch(html,/rel="canonical"|property="og:url"|publication_state="published"/);
+ assert.match(html, /<picture><source media="\(max-width:700px\)" srcset="data:image\/svg\+xml;base64,/);
+ assert.match(html, /<img src="data:image\/svg\+xml;base64,/);
+ assert.doesNotMatch(html, /<img src="https?:/);
+ assert.doesNotMatch(html,/Follow-up source check/);
+ assert.match(html,/Original Evercraft editorial illustration/);
 });
 test('unverified visual rights or missing provenance fail closed',()=>{
  const change=structuredClone(manifest);
@@ -36,4 +41,22 @@ test('preview output paths cannot land in publication or release tree',()=>{
 test('incomplete article cannot be previewed as finished editorial',()=>{
  assert.throws(()=>extractArticle('## Article\n# Short'),/three substantive article sections/);
  assert.throws(()=>extractArticle('No article here'),/distinct ## Article section/);
+});
+
+test('mobile and desktop heroes are self-contained even with network unavailable',()=>{
+ const html=renderEditorialPreview({markdown,manifest});
+ const mobile=html.match(/<source media="\(max-width:700px\)" srcset="data:image\/svg\+xml;base64,([^"]+)"/);
+ const desktop=html.match(/<img src="data:image\/svg\+xml;base64,([^"]+)"/);
+ assert.ok(mobile&&desktop);
+ const m=Buffer.from(mobile[1],'base64').toString('utf8');
+ const d=Buffer.from(desktop[1],'base64').toString('utf8');
+ assert.match(m,/viewBox="0 0 720 900"/);
+ assert.match(d,/viewBox="0 0 1280 720"/);
+ assert.match(m,/not a scale-accurate artifact drawing/);
+ assert.doesNotMatch(html,/src="https:\/\/upload.wikimedia.org/);
+});
+test('embedded editorial visuals reject active or external SVG content',()=>{
+ const img='<svg xmlns="http://www.w3.org/2000/svg"><script>alert("x")</script></svg>';
+ assert.throws(()=>renderEditorialPreview({markdown,manifest,mobileSvg:img}),/unsupported active/);
+ assert.throws(()=>renderEditorialPreview({markdown,manifest,desktopSvg:'bad'}),/missing or malformed/);
 });
