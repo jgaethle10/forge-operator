@@ -96,11 +96,14 @@ try {
   assert.equal(await page.locator('#days').innerText(),'6', 'A corrected day no longer counts as followed through');
   assert.equal(await page.locator('#pieces').innerText(),'1', 'Previously earned art stays in the gallery');
 
-  // Styles should all render without exceptions.
+  // Restyling a new canvas must not silently rewrite an earned masterpiece.
+  const originalFinishedSvg=await page.locator('#gallery .thumb svg').innerHTML();
   for(const theme of ['mosaic','constellation','garden']){
     await page.locator('#theme').selectOption(theme);
+    assert.equal(await page.locator('#theme').inputValue(),theme);
     assert.equal(await page.locator('#art-frame svg').count(),1);
     assert.ok((await page.locator('#art-frame svg').innerHTML()).length>300);
+    assert.equal(await page.locator('#gallery .thumb svg').innerHTML(),originalFinishedSvg);
   }
   await page.screenshot({path:path.join(out,'mobile-390-hard-day.png'),fullPage:true});
   await page.setViewportSize({width:320,height:740});
@@ -117,6 +120,7 @@ try {
   const payload=JSON.parse(await fs.readFile(backupPath,'utf8'));
   assert.equal(payload.app,'The Art of Becoming');
   assert.equal(payload.data.entries['alcohol-free'][today],'hard');
+  assert.equal(payload.data.canvasThemes['alcohol-free'][0],'garden');
   page.on('dialog',dialog=>dialog.accept());
   await page.locator('#erase').click();
   assert.equal(await page.locator('#days').innerText(),'0');
