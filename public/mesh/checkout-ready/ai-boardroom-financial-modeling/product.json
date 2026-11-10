@@ -66,6 +66,20 @@
   },
   "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
   "design": {
-    "accent": "#dcc79b"
+    "accent": "#adcfb6",
+    "background": "#162329",
+    "panel": "#223940",
+    "ink": "#f0f6ec",
+    "muted": "#c6d4cf",
+    "secondary": "#eed7a7",
+    "mark": "scenario-grid"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Scenario Room",
+    "signature_phrase": "Change the assumptions. See what changes.",
+    "purpose": "Show how a business decision changes when costs, demand and other assumptions change.",
+    "narrative_promise": "The assumptions are part of the answer.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared"
   }
 }
