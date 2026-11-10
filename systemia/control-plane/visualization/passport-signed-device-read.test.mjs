@@ -1,14 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync } from 'node:crypto';
-import { mkdtemp, mkdir, rm, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, readFile, readdir, writeFile, chmod } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { EvercraftPassport } from '../../passport/passport.mjs';
 import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../../organism/goal-runtime.mjs';
 import { createGoalStateFile } from '../../organism/goal-store.mjs';
 import { signMicroSeedExecutionReceipt } from '../../saban/microseed-receipt-signature.mjs';
-import { readPassportScopedGoalWithDeviceEvidence, readPassportScopedGoalFromSignedStore } from './passport-goal-read.mjs';
+import { readPassportScopedGoalWithDeviceEvidence, readPassportScopedGoalFromSignedStore, readPassportScopedGoalFromActiveAmbientRegistry } from './passport-goal-read.mjs';
+import { AmbientDeviceRegistry } from '../../saban/ambient-device-registry.mjs';
+import { normalizeMicroDeviceManifest } from '../../saban/microseed-device-bridge.mjs';
 import { persistSignedMicroSeedReceipt } from '../../saban/microseed-signed-receipt-store.mjs';
 
 const startAt = new Date('2026-11-05T22:51:00.000Z');
@@ -59,7 +61,7 @@ async function setup({grant=true}={}) {
     goalKey:'private-goal',now,signedReceipts:[receipt],trustedDeviceKeys:keys,
     ...overrides,
   });
-  return {dir,passport,goalStateDir,passportStateDir,receipt,keys,read};
+  return {dir,passport,goalStateDir,passportStateDir,receipt,keys,privateKey,read};
 }
 async function withCase(opts,fn){const fixture=await setup(opts);try{await fn(fixture)}finally{await rm(fixture.dir,{recursive:true,force:true})}}
 
@@ -154,4 +156,193 @@ test('tampering an existing locally signed journal fails the whole read',()=>wit
     attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
     trustedDeviceKeys:keys,
   }),/device_signature_rejected/);
+}));
+
+function bindReceiptToManifest(receipt,privateKey,manifest) {
+  return signMicroSeedExecutionReceipt({
+    ...receipt,
+    manifest_hash:manifest.manifest_hash,
+  },{privateKey,key_id:'test-signer'});
+}
+async function enrollDevice({dir, keys, authorized = true, heartbeat = true} = {}) {
+  const registryRoot=join(dir,'ambient-registry');
+  const registry=new AmbientDeviceRegistry({root:registryRoot});
+  const manifest=normalizeMicroDeviceManifest({
+    device_id:'private-device',device_class:'phone',bridge_mode:'native_agent',
+    authorization_ref:'test-owner-approval',endpoint:'http://127.0.0.1:1',
+    supported_workloads:['systemia.content-hash.v1'],
+    resources:{cpu_units:1,memory_mb:512,storage_gb:1},
+    attestation:{
+      mode:'device',device_identity:'test-identity',
+      receipt_signing_required:true,receipt_key_id:'test-signer',
+      receipt_public_key_pem:keys['test-signer'].public_key_pem,
+    },
+    observed_at:'2026-11-05T22:50:00.000Z',
+  });
+  registry.observe({device_id:'private-device',observed_at:'2026-11-05T22:50:00.000Z'});
+  registry.candidate({device_id:'private-device',manifest});
+  if(authorized){
+    registry.authorize({
+      device_id:'private-device',approval_ref:'test-approved-owner',
+      expires_at:'2026-11-06T02:00:00.000Z',
+      heartbeat_target_seconds:300,
+      attestation_mode:'device',attestation_identity:'test-identity',
+      authorized_at:'2026-11-05T22:51:00.000Z',
+    });
+    if(heartbeat){
+      registry.heartbeat({
+        device_id:'private-device',
+        capability_manifest_hash:manifest.manifest_hash,
+        attestation_identity:'test-identity',
+        observed_at:'2026-11-05T22:53:00.000Z',
+      });
+    }
+  }
+  return {registryRoot,registry,manifest};
+}
+test('active approved Ambient Registry supplies actual pinned public key behind Passport',()=>withCase({},async({dir,receipt,keys,privateKey,passportStateDir,goalStateDir})=>{
+  const {registryRoot,manifest}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:bindReceiptToManifest(receipt,privateKey,manifest)});
+  const snapshot=await readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  });
+  assert.equal(snapshot.summary.signed_device_receipts_matched,1);
+  assert.equal(snapshot.summary.verified_receipts,0);
+  assert.equal(snapshot.provenance.ambient_registry_active_trust_checked,true);
+  assert.equal(snapshot.provenance.independent_effect_verified,false);
+  for(const secret of ['private-goal','private-device','test-signer','test-owner-approval']){
+    assert.ok(!JSON.stringify(snapshot).includes(secret), 'identifier escaped: '+secret);
+  }
+}));
+test('revocation in Ambient Registry invalidates previously signed evidence read',()=>withCase({},async({dir,receipt,keys,privateKey,passportStateDir,goalStateDir})=>{
+  const {registryRoot,registry,manifest}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:bindReceiptToManifest(receipt,privateKey,manifest)});
+  const opts={
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  };
+  await readPassportScopedGoalFromActiveAmbientRegistry(opts);
+  registry.revoke({device_id:'private-device',
+    approval_ref:'test-revoke-owner',reason:'test',
+    revoked_at:'2026-11-05T22:53:30.000Z',
+  });
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry(opts),/device_not_active/);
+}));
+test('expired or stale Ambient heartbeat cannot authorize signed evidence',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  const opts={
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  };
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    ...opts,now:new Date('2026-11-05T23:10:00.000Z')
+  }),/device_not_active/);
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    ...opts,now:new Date('2026-11-06T02:01:00.000Z')
+  }),/device_not_active/);
+}));
+test('unapproved Ambient candidate is not an authorized signer',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys,authorized:false});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/device_not_active/);
+}));
+test('edited manifest cannot substitute signer key under existing trust approval',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  const manifestFile=join(registryRoot,'manifests','private-device.json');
+  const manifest=JSON.parse(await readFile(manifestFile,'utf8'));
+  manifest.attestation.receipt_key_id='tampered-key';
+  await writeFile(manifestFile,JSON.stringify(manifest),{mode:0o600});
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/manifest_hash_invalid/);
+}));
+test('unauthorized Passport cannot cause Ambient registry disclosure',()=>withCase({grant:false},async({dir,receipt,goalStateDir,passportStateDir})=>{
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:join(dir,'does-not-exist'),
+    receiptStateDirsByDevice:{'private-device':join(dir,'missing')},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/visual_access_denied/);
+}));
+
+test('future-dated heartbeat cannot forge a fresh approved device observation',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot,registry,manifest}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  registry.heartbeat({
+    device_id:'private-device',
+    capability_manifest_hash:manifest.manifest_hash,
+    attestation_identity:'test-identity',
+    observed_at:'2026-11-05T23:15:00.000Z',
+  });
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/device_heartbeat_in_future/);
+}));
+test('Ambient trust attestation identity must match approved device manifest',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  const recordFile=join(registryRoot,'devices','private-device.json');
+  const record=JSON.parse(await readFile(recordFile,'utf8'));
+  record.attestation_identity='some-other-device';
+  await writeFile(recordFile,JSON.stringify(record),{mode:0o600});
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/attestation_binding_invalid/);
+}));
+
+test('valid signer against a wrong manifest cannot claim an approved execution',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  // This receipt is correctly signed with the pinned device key, but its
+  // claimed manifest hash is different from the authorized registry manifest.
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/device_manifest_binding_invalid/);
+}));
+
+test('writable-by-others Ambient root cannot authorize receipt inspection',()=>withCase({},async({dir,receipt,keys,goalStateDir,passportStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await chmod(registryRoot,0o777);
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/unsafe_root_permissions/);
 }));

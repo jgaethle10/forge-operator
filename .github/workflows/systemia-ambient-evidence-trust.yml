@@ -1,0 +1,34 @@
+name: Systemia active ambient evidence trust proof
+on:
+  push:
+    paths:
+      - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
+      - 'systemia/control-plane/visualization/signed-device-evidence.mjs'
+      - 'systemia/control-plane/visualization/passport-goal-read.mjs'
+      - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
+      - 'systemia/saban/ambient-device-trust.mjs'
+      - 'systemia/saban/microseed-device-bridge.mjs'
+      - '.github/workflows/systemia-ambient-evidence-trust.yml'
+  pull_request:
+    paths:
+      - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
+      - 'systemia/control-plane/visualization/signed-device-evidence.mjs'
+      - 'systemia/control-plane/visualization/passport-goal-read.mjs'
+      - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
+      - 'systemia/saban/ambient-device-trust.mjs'
+      - 'systemia/saban/microseed-device-bridge.mjs'
+      - '.github/workflows/systemia-ambient-evidence-trust.yml'
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/control-plane/visualization/ambient-receipt-trust.mjs
+      - run: node --check systemia/control-plane/visualization/passport-goal-read.mjs
+      - run: node --test systemia/control-plane/visualization/passport-signed-device-read.test.mjs systemia/control-plane/visualization/passport-goal-read.test.mjs tests/saban-microseed-signed-receipt-store.test.mjs tests/saban-microseed-e2e.test.mjs
