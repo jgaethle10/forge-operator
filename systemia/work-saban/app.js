@@ -247,3 +247,62 @@ $('executor-smoke').addEventListener('click',async()=>{
   }catch(error){status.textContent='Executor stream failed: '+error.message;}
   finally{button.disabled=false;}
 });
+
+
+$('registered-report-smoke').addEventListener('click',async()=>{
+  const button=$('registered-report-smoke'),status=$('registered-report-status');
+  button.disabled=true;
+  status.textContent='Starting registered local report pipeline…';
+  let started=false,completed=false,verified=0;
+  try{
+    const response=await fetch('/api/verified-report-executor-stream',{
+      method:'POST',headers:{'x-work-saban-client':'local-preview'}
+    });
+    if(!response.ok||!response.body)throw new Error('Registered pipeline unavailable');
+    const reader=response.body.getReader(),decoder=new TextDecoder();
+    let buffer='';
+    function processLine(line){
+      if(!line.trim())return;
+      const event=JSON.parse(line);
+      if(event.source&&event.source!=='synthetic_fixture')throw new Error('Unexpected source');
+      if(event.model_inference===true)throw new Error('Unexpected model inference');
+      if(event.type==='started'){
+        if(started)throw new Error('Duplicate start');
+        started=true;
+        status.textContent='Registered local report processing…';
+      }else if(event.type==='worker'){
+        if(!started||completed||event.id!=='registered-sales-report')
+          throw new Error('Invalid worker event');
+        // One registered pipeline comprises five stages; it is not six independent AI agents.
+        if(event.state==='running')window.WorkSaban3D?.consumeExecutorEvent({id:'analyst',state:'running'});
+        if(event.state==='failed')window.WorkSaban3D?.consumeExecutorEvent({id:'analyst',state:'failed'});
+        if(event.state==='verified'){
+          verified++;
+          window.WorkSaban3D?.consumeExecutorEvent({id:'analyst',state:'verified'});
+        }
+      }else if(event.type==='completed'){
+        if(!started||completed||verified!==1||event.capacity?.verified!==1
+          ||event.capacity?.failed!==0||event.specialist_receipts!==5
+          ||!/^[a-f0-9]{64}$/.test(event.report_sha256||''))
+          throw new Error('Registered report verification incomplete');
+        completed=true;
+      }else throw new Error('Unexpected report event');
+    }
+    while(true){
+      const {value,done}=await reader.read();
+      if(done)break;
+      buffer+=decoder.decode(value,{stream:true});
+      if(buffer.length>1024*1024)throw new Error('Stream size exceeded');
+      let boundary;
+      while((boundary=buffer.indexOf('\n'))!==-1){
+        processLine(buffer.slice(0,boundary));
+        buffer=buffer.slice(boundary+1);
+      }
+    }
+    buffer+=decoder.decode();
+    if(buffer.trim())processLine(buffer);
+    if(!completed)throw new Error('Stream ended before verified completion');
+    status.textContent='Verified registered report pipeline: 5 specialist receipts, 1 bounded task. Synthetic CSV; no AI agents.';
+  }catch(error){status.textContent='Registered pipeline failed: '+error.message;}
+  finally{button.disabled=false;}
+});
