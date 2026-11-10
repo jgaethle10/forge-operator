@@ -82,6 +82,18 @@ test('old backups migrate art credits, including when entries are missing', () =
   assert.equal(getProgress(normalized,GOAL,TODAY).successes,0);
 });
 
+test('finished artwork keeps the visual style that was earned', () => {
+  let state = emptyState();
+  for (let i=6; i>=0; i--) state=setCheckIn(state,GOAL,shiftDay(TODAY,-i),'kept',TODAY);
+  assert.deepEqual(state.canvasThemes[GOAL], ['garden']);
+  state.theme = 'mosaic';
+  state = normalizeState(state,TODAY);
+  assert.deepEqual(state.canvasThemes[GOAL], ['garden']);
+  state=setCheckIn(state,GOAL,shiftDay(TODAY,-7),'kept',TODAY);
+  assert.equal(getProgress(state,GOAL,TODAY).brushstrokes,1);
+  assert.deepEqual(state.canvasThemes[GOAL], ['garden']);
+});
+
 test('missing days are unknown, not assumed relapses', () => {
   let state=setCheckIn(emptyState(),GOAL,'2026-11-07','kept',TODAY);
   let result=getProgress(state,GOAL,TODAY);
