@@ -80,6 +80,8 @@
     "purpose": "Help teams understand real audience patterns before committing effort to a launch.",
     "narrative_promise": "Know the room before raising the volume.",
     "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/brand.json",
-    "creative_status": "working_brand_direction_not_trademark_cleared"
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
   }
 }
