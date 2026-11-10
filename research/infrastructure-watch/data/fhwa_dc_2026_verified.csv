@@ -1,0 +1,262 @@
+bridge_id,name,condition,latitude,longitude,coordinate_status,source_url
+0001,Chain Bridge,G,38.929444,-77.116972,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0002,"Wisconsin Avenue, N.W. over C&O Canal",F,38.904311,-77.062756,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0003,"31st Street, N.W. over C&O Canal",G,38.904336,-77.062789,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0004,"Jefferson Street, N.W. over C&O Canal",G,38.904086,-77.06015,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0005,"30th Street, N.W. over C&O Canal",G,38.904167,-77.059139,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0006,"29th Street, N.W. over C&O Canal",G,38.903958,-77.058078,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0007,"Francis Scott Key Bridge over K Street, N.W.",F,38.904625,-77.068824,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0007(EAST RAMP),Ramp from Key Bridge to Whitehurst Freeway,F,38.903839,-77.068049,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0008,"Oregon Avenue, N.W. over Pinehurst Branch",G,38.976463,-77.052639,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0010,"23rd Street, N.W. over Virginia Avenue",F,38.897233,-77.050122,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0011,"M Street, S.W. over South Capitol Street",F,38.876449,-77.009236,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0012,Anacostia Avenue over Polk Run,G,38.910467,-76.941872,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0017,"27th Street, N.W. over Broad Branch",F,38.956736,-77.057933,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0019,Kenilworth Avenue over Nannie Helen Burroughs Ave.,G,38.902072,-76.944222,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0019-1(HIGH),Kenilworth Avenue over Watts Branch,F,38.901603,-76.944761,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0019-1(LOW),Kenilworth Avenue exit to Burroughs Avenue,G,38.901475,-76.944552,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0020,"Park Road, N.W. over Rock Creek",F,38.939741,-77.051481,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0021,"14th Street, N.W. over Streetcar Terminal",F,38.885752,-77.031944,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0022,"16th Street, N.W. over Piney Branch Parkway",F,38.937855,-77.036447,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0023,"North Capitol Street, N.W. over Irving Street",F,38.931666,-77.006667,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0025,"Park Road, N.W. over Piney Branch Pkwy.",F,38.936161,-77.046139,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0026-1,"Klingle Road, N.W. over Rock Creek & Beach Dr.",F,38.933611,-77.050833,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0026-2,"Porter Street, N.W. over Klingle Road ramp",G,38.933961,-77.051822,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0026-3,Klingle Road Ramp to Beach Drive,F,38.934189,-77.04923,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0027,Connecticut Avenue Bridge over Klingle Valley,F,0.648455,-77.056308,needs_review,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0029,William Howard Taft Memorial Bridge,F,38.921666,-77.050328,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0030,Duke Ellington Memorial Bridge,F,38.923274,-77.047558,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0032,"Whitehurst Freeway over K Street, N.W.",F,38.904494,-77.065,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0032(TO KEY BR),Whitehurst Freeway over C&O Canal,F,38.904842,-77.070216,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0032-2,"EB Ramp from WH Freeway to K Street, N.W.",F,38.902436,-77.058044,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0032-3,"WB Ramp from K Street, N.W, to WH Freeway",F,38.902647,-77.057847,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0034,Lauzun's Legion Memorial Bridge,F,38.909636,-77.050633,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0035,"M Street, N.W. over Rock Creek & Rock Creek Pk",G,38.905256,-77.055864,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0036(N&S Ramps),K Street Ramps to and from Potomac Parkway,F,38.902542,-77.057558,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0036(POT. PKWY),"K Street, N.W. over Rock Creek & Potomac Parkw",F,38.902544,-77.057042,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0036(ROCK CR),"K Street, N.W. over Rock Creek",F,38.902547,-77.0578,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0038,NB Kenilworth Avenue over East Capitol Street,F,38.890436,-76.957978,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0040,"Minnesota Avenue, N.E. over East Capitol Street",F,38.889886,-76.952994,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0040-1,"35th Street, N.E. over East Capitol Street",F,38.889889,-76.955889,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0041,"C Street, N.E. over Pedestrian Walkway",F,38.892655,-76.972883,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0041-1,"C Street, N.E. over Pedestrian Walk",F,38.891891,-76.971666,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0041-2,Independence Ave. over Pedestrian Walkway,F,38.887891,-76.971666,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0042,"Marshall Drive, N.W. over North Capitol Street",G,38.936666,-77.006667,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0044,Malcom X. Avenue over South Capitol Street,F,38.845094,-77.008472,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0045,"Eastern Avenue, N.E. over Kenilworth Avenue",G,38.912278,-76.934139,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0046,"Michigan Avenue, N.E. over Park Place",G,38.928427,-77.017916,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0047,Kenilworth Terrace over Watts Branch,F,38.902539,-76.945177,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0048,Ramp to Kenilworth Avenue over Watts Branch,F,38.901753,-76.944958,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0049,T Street over North Capitol Street,G,38.915578,-77.009,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0050,New York Avenue over North Capitol Street,F,38.907317,-77.008992,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0051,Rhode Island Avenue over North Capitol Street,G,38.916835,-77.008936,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0052,Ethel Kennedy Memorial Bridge over Anacostia R.,G,38.897139,-76.962792,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0054,John Philip Sousa Memorial Bridge,F,38.877891,-76.98003,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0060,"4th Street, S.E. over Oxon Run",F,38.833955,-77.000536,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0061,"Wheeler Road, S.E. over Oxon Run",F,38.837569,-76.993572,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0062,"Atlantic Street, S.E. over Oxon Run",F,38.830985,-77.003983,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0063,"South Capitol Street, S.E. over Oxon Run",F,38.823144,-77.004633,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0064,South Capitol Street over Winkle Doodle Branch,F,38.821236,-77.001314,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0065,"Southern Avenue, S.E. over Oxon Run",F,38.843344,-76.972938,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0070,Southern Avenue over Suitland Parkway,F,38.84945,-76.965131,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0074,"Alabama Avenue, S.E. over Suitland Parkway",F,38.851231,-76.972641,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0075,"Martin Luther King, Jr. Avenue over Suitland Pkwy.",F,38.860728,-76.983163,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0076,"New York Avenue, N.E. over Anacostia River",F,38.91806,-76.943377,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0077,"Benning Road, N.E. over Kingman Lake",G,38.897375,-76.965583,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0078,"Anacostia Avenue, N.E. over Aancostia River Outlet",F,38.898094,-76.960439,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0082,"Minnesota Avenur, N.E. over Watts Branch",G,38.901358,-76.945555,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0084,SB Kenilworth Avenue over East Capitol Street,F,38.88993,-76.958392,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0101(Q STREET),"Q Street, N.W. over Connecticut Avenue",F,38.911089,-77.044475,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0102(22ND ST),"22nd Street, N.W. over K Street",F,38.902589,-77.048744,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0102(24TH ST),"24th Street, N.W. over K Street",F,38.902617,-77.051411,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0103,"Kalmia Road, N.W. over Rock Creek Tributary",G,38.986391,-77.042477,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0104,Ramp from Kenilworth Ave. to Benning Road,F,38.89593,-76.951814,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0104-1,"Ramp from Benning Road, N.E. to Kenilworth Avenue",P,38.895494,-76.9523,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0114,Massachusetts Avenue over Rock Creek,F,38.917308,-77.057661,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0117,Q Street [Dumbarton] Bridge over Rock Creek,F,38.911003,-77.050833,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0118,"Pennsylvania Avenue, N.W. over Rock Creek Pkwy",F,38.904778,-77.056544,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0128,"Hunt Place, N.E. over Watts Branch",G,38.900533,-76.942164,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0129,"44th Street, N.E. over Watts Branch",G,38.898627,-76.939175,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0132,"58th Street, N.E. over Watts Branch",G,0.893019,-76.917752,needs_review,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0133,61st Street N.E. over Watts Branch,G,38.891383,-76.913667,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0169-1,Rochambeau Memorial Bridge over Potomac River,F,38.878997,-77.0383,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0170-1,NB Arland D. Williams Mem. Bridge over Potomac R.,F,38.878072,-77.03743,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0171-1,"14th Street, S.W. over Maine Avenue",F,38.884108,-77.031991,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0171-2,"14th Street, S.W. over Outlet Channel",F,38.883216,-77.032205,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0171-3,"14TH STREET, N.W. OVER OHIO DRIVE",F,38.882091,-77.033083,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0172-1,Jefferson Drive over 12th Street Expressway,F,38.888658,-77.028205,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0173(C ST BR),"C Street, S.W. over 9th Street Expressway",F,38.886322,-77.023916,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0177,"D Street, S.W. over 9th Street Expressway",F,38.884822,-77.023897,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0196,"55th Street, N.E. over Watts Branch",F,38.89493,-76.921677,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0204,Division Avenue over Watts Branch,G,38.8965,-76.926341,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0209,"16th Street, N.W. over Military Road",G,38.962489,-77.036389,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0212,"Tunnel under I Street, N.W. at City Center",G,0.000278,-0.000278,needs_review,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0214,"Tunnel under 10th Street, N.W. @ City Center",G,0.000278,-0.000278,needs_review,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0222,"Gault Place, N.E. over Watts Branch",G,38.899069,-76.940194,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0229,Military Road over Rock Creek and Beach Drive,G,38.961044,-77.044436,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0233,East Capitol Street over Anacostia River,G,38.889805,-76.967924,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0238,Military Road over Joyce Road & Luzon Stream,F,38.963133,-77.039352,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0242,"New York Avenue, N.E. over South Dakota Avenue",F,38.91821,-76.955083,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0250,"L Street, N.W. over Convention Center Exhibit Hall",F,38.904167,-77.023819,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0251,"M Street, N.W. over Convention Center Exhibit Hall",F,38.90565,-77.023813,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0252,"9th Street, N.W. over Washington Convention Center",F,38.906703,-77.023955,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0503(EB),EB Benning Road over Kenilworth Avenue and RR,F,38.8954,-76.950778,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0503(WB),WB Benning Road over Kenilworth Avenue and RR,F,38.895452,-76.950714,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0505,Anacostia Freeway over CSX Yard,F,38.869738,-76.962417,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0515,"12th Street, S.W. over CSXT",F,38.884672,-77.02811,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0516,"12th Street, S.W. over CSXT",F,38.884686,-77.026985,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0517,L'Enfant Plaza Promenade,F,38.885311,-77.025985,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0529,"H Street, N.E. over Washington Terminal Yards",P,38.900217,-77.002936,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0534,New York Avenue Bridge over AMTRAK and WMATA,G,38.909808,-77.00205,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0543,Queens Chapel Road over CSX RR,F,38.921019,-76.973724,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0544,South Dakota Avenue over CSX RR,G,38.926841,-76.96911,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0550,"9th Street, N.E. over CSX RR",F,38.914531,-76.993227,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0556,New Hampshire Avenue over CSX Railroad,F,38.960878,-77.006083,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0563,New York Avenue over Amtrak RR,F,38.917805,-76.955967,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0568,"Monroe Street, N.E. over CSX RR",G,38.932385,-76.994102,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0571,Taylor Street over RR & Puerto Rico Avenue,F,38.940733,-76.998291,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0572,"New Jersey Avenue, S.E. over Virginia Ave. and RR",F,38.880944,-77.005811,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0576,"Eastern Avenue, N.E. over CSX",G,38.931713,-76.958983,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0596,"Michigan Avenue, N.E. over 9th Street and CSX",F,38.933722,-76.993458,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0597,"Franklin Street, N.E. over Railroad",F,38.925574,-76.995483,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0598,"2nd Street, SE over CSX RR",G,38.880566,-77.00375,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+0599,"Rigid Frame bridge NY Ave NE, over abandoned R.R",F,38.910969,-76.998625,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1000,Anacostia Freeway over Pennsylvania Avenue,F,38.875027,-76.974883,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1001,Anacostia Freeway over Nicholson Street,G,38.874735,-76.975858,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1001(RAMP 6),Anacostia Freeway ramp  exit over Nicholson Street,F,38.87453,-76.975808,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1002(RAMP 4),Nicholson Street Ramp to SB Anacostia Freeway,G,38.875091,-76.976397,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1007,"Anacostia Freeway over Good Hope Road, S.E.",F,38.868305,-76.9898,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1008,"Anacostia Freeway over Howard Road, S.E.",G,38.863572,-76.996472,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1008-1,NB Entrance Ramp to I-295 from Suitland Parkway,G,38.863572,-76.996472,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1009,"Anacostia Freeway over Suitland Parkway, S.E.",G,38.862961,-76.999614,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1009-1,WB I-295 Exit Ramp to SB Suitland Pkwy,G,38.863353,-76.99965,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1009-2,SB Anacostia Fwy (I-295) Exit Ramp to WB Suitland,G,38.863658,-76.9995,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1012,Anacostia Freeway over Firth Sterling,G,38.859925,-77.003108,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1014(NB),Anacostia Freeway over Malcom X. Avenue,G,38.845197,-77.007222,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1014(SB),Anacostia Freeway over Malcolm X. Avenue,G,38.845197,-77.007542,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1015,Ramp from SB Anacostia Freeway,F,38.850242,-77.007908,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1016(NB),Anacostia Freeway over South Capitol Street,G,38.838539,-77.008856,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1017(SB),Anacostia Freeway over South Capitol Street,G,38.838916,-77.008978,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1018(NB),"Anacostia Freeway over Chesapeake Street, S.E.",G,38.828472,-77.016383,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1018(SB),SB Anacostia Freeway over Chesapeake Street,G,38.828333,-77.01676,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1019(NB),I-295 over NRL and Shepherd Pkwy access,G,38.822574,-77.016628,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1019(SB),I-295 0ver NRL and Shepherd Pkwy access,G,38.822574,-77.01676,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1026,Anacostia Freeway over Oxon Run Bay,F,38.806917,-77.022527,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1030,I-295 Access Road over Ramp G,G,38.845866,-77.006564,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1031,I-295 Access Road over Malcolm X,G,38.844905,-77.006589,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1033,I-295 Ramp C at MLK Interchange,G,38.845277,-77.007794,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1034,I-295 Access Road over Ramp J,G,38.844208,-77.006803,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1035,I-295 Ramp T at Malcolm X Interchange,G,38.843547,-77.00785,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1036,I-295 Ramp F over Ramp E and South Capitol Street,G,38.838064,-77.008986,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1100,"Southwest Freeway over 4th Street, S.W.",F,38.88243,-77.01778,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1102R(RAMP C),I-395 Ramp C over I-395 Ramp A,F,38.883177,-77.012297,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1103,I-395 over Parking Lot at South Capitol St.,F,38.882447,-77.012928,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1103(RAMP C),Ramp over Parking Lot to EB SE Freeway [I-695],F,38.882013,-77.011233,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1103(RAMP E),EB I-395 exit to SB South Capitol Street,F,38.882138,-77.011939,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1103(RAMP F),EB Ramp from Mall Tunnel to South Capitol Street,F,38.881822,-77.010797,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1103(RAMP G),Ramp from NB South Capitol St. to WB SW Frwy.,F,38.882524,-77.012075,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1104,I-395 over South Capitol Street,F,38.881455,-77.008494,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1104(PED. U.P.),I-395 Ramps to South Capitol Street,F,38.881394,-77.009572,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1104(RAMP C),EB Ramp over South Capitol Street,F,38.881249,-77.008431,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1104(RAMP D),WB Exit Ramp to Mall Tunnel,F,38.881647,-77.008428,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1104(RAMP G),South Capitol Street Ramp to WB I-395,F,38.880869,-77.008867,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1104(RAMP G-D),WB Ramp to WB I-395 and Mall Tunnel,F,38.882024,-77.009667,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1106,"7th Street, S.W. over I-395",G,38.882713,-77.021933,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1107,"9th Street, S.W. over Southeast Freeway",G,38.88288,-77.023974,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1107(RAMP C-1),"9th Street, S.W. Ramp to WB I-395",F,38.882972,-77.024188,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1107(RAMP M),"9th Street, S.W. Ramp to EB I-395",F,38.882824,-77.023963,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1108,"10th Street, S.W. over I-395",F,38.88316,-77.025997,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1109,1109,F,38.881435,-77.008431,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1109-1,WB Southeast Freeway to I-395 N,G,38.881072,-77.003394,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1110,"I-695 over 3rd Street, S.E.",F,38.88056,-77.002222,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1110-1,WB S.E. Freeway Ramp to I-395,G,38.880813,-77.002075,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1111,"Southeast Freeway over 4th Street, S.E.",F,38.879999,-77.000758,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1112,"I-695 over 6th Street, S.E.",F,38.879699,-76.998919,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1113,Francis Case Memorial Bridge I-395,F,38.879991,-77.031605,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1113(RAMP E),I-395 Ramp to 12th Street Tunnel,F,38.880983,-77.029941,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1114,L'Enfant Plaza,F,38.885094,-77.025985,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1133,George Mason Memorial Bridge,F,38.879024,-77.039069,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1134,"14th Street NB over I-395, Lanes C &C1",F,38.879241,-77.036205,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1134(OVER A-1),"14th Street NB over I-395, Lanes A-1",F,38.878994,-77.03633,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1136,"F Street, NW over I-395",G,38.897347,-77.014369,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1137,"G Street, NW over I-395",G,38.898355,-77.014372,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1138,"D Street, NW over Center Leg (I-395)",F,38.894808,-77.014442,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1139,"E Street, NW over Center Leg (I-395)",F,38.896136,-77.013811,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1140,"H Street, N.W. over I-395",F,38.900253,-77.014456,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1140(MASS AVE),Massachusetts Avenue over I-395,F,38.89958,-77.014456,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1142(RAMP 1),Ramp 1 over Ramp 3 Center Leg (395),F,38.88485,-77.012956,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1143-1,K Street over I-395,G,38.902525,-77.014092,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1200(LITTLE R.),Theodore Roosevelt bridge (I-66) over Little River,F,38.891886,-77.062236,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1200(MAIN),Theodore Roosevelt Memorial Bridge,P,38.892052,-77.061178,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1200(RAMP C),Ramp from US 50 to Theodore Roosevelt Bridge,F,38.891764,-77.062181,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1200(RAMP D),Theodore Roosevelt Bridge Ramp to US Route 50,F,38.892264,-77.064539,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1200(RAMP E),Theodore Roosevelt Bridge Ramp tp GW Mem. Parkway,F,38.892214,-77.06445,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1201,Ramp from Const Ave to TR bridge over Poto Parkway,F,38.893755,-77.054419,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1202,Ramp to outbound Theodore Roosevelt Bridge,F,38.894077,-77.053494,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1203,Inbound Ramp over Potomac Prky to E Street Expway,F,38.892814,-77.053789,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1204,T. Roosevelt Bridge (Ramp J) over Inner loop,F,38.892583,-77.053333,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1205,T. R.  Bridge Ramp C over Potom Pkwy and Ramp F,F,38.895833,-77.050389,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1206,T. Roosevelt Bridge (Ramp F) over Inner Loop,F,38.895555,-77.053964,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1208,"23rd Street, N.W. over E Street Expressway",G,38.895983,-77.050114,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1301,Whitehurst Ramp to I-66,F,38.902333,-77.058,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1303(RAMP 1),Ramp from I-66 to Whitehurst Freeway over Potoma P,F,38.903003,-77.055422,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1304,"K Street, NW, over Whitehurst Freeway Ramp",F,38.902528,-77.05595,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1400,"Southeast Freeway over 7th Street, S.E.",F,38.879038,-76.99633,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1401,"Southeast Freeway (I-395) over 8th Street, S.E.",F,38.878905,-76.996052,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1415,"11th Street, S.E. over Anacostia River",G,38.872635,-76.990964,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1416,SB I-695 over Anacostia River,G,38.872763,-76.990475,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1417,NB I-695 over Anacostia River,F,38.872858,-76.990322,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1418,"SB I-295 over 11th Street, 695 ramps & Good Ho",G,38.870416,-76.985922,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1419,"SB I-295 Ramp to 11th Street, S.E. over I-295 NB",G,38.869466,-76.987839,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1420,"11th Street, S.E. over I-295",G,38.869633,-76.988802,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1421,"11th Street, S.E. over Abandoned CSX Railway",G,38.868594,-76.988194,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1424,SB I-695 Exit Ramp to I-295 NB,G,38.870694,-76.988972,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1425,NB I-295 Exit Ramp over Marrion Barry Ave SE,G,38.868141,-76.989547,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1427,SB I-695 over N Street SE,G,38.874694,-76.991208,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1428,NB I-695 over N Street SE,G,38.874749,-76.990975,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1429,"I-695 NB Exit Ramp over N Street, S.E.",G,38.874758,-76.990647,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1430,"Northbound I-695 over O Street, S.E.",G,38.873491,-76.990691,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1431,"Southbound I-695 over O Street, S.E.",G,38.87341,-76.990936,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1432,NB I-695 over 11th Street S.E. and CSX,G,38.877935,-76.991675,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1433,"SB I-695 over M Street, 11th Street and CSXT",G,38.877872,-76.991833,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1436,Ramp to WB I-695 over I-695 Exit Ramp,G,38.878733,-76.993389,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+1450,South Capitol Street over Anacostia River,G,38.86951,-77.007975,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+2180001S0000000,ROCK CREEK BRIDGE #1,G,38.927806,-77.049,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+2180002P0000000,ROCK CREEK BRIDGE #2,F,38.927611,-77.044444,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+2180003P0000000,HARVARD STREET BRIDGE,F,38.927861,-77.044028,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+2202002P0000000,NA-2,G,38.912417,-76.965639,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+2202003P0000000,NA-3,G,38.91175,-76.964611,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+2202004P0000000,NA-4,G,38.909833,-76.961889,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300013P0000000,LITTLE RIVER INLET BRIDGE,F,38.889472,-77.064556,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300014P0000000,ROUTE 50 BRIDGE,F,38.888806,-77.063611,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300015P0000000,MEMORIAL AVENUE BRIDGE,F,38.885417,-77.061056,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300016P0000000,ARLINGTON MEMORIAL BRIDGE,G,38.887333,-77.055417,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300017P0000000,WASHINGTON BOULEVARD BRIDGE,F,38.8823,-77.057617,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300018P0000000,WASHINGTON BLVD - BOUNDARY CHANNEL BRIDGE,F,38.880889,-77.057333,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300019P0000000,NEW BOUNDARY CHANNEL BRIDGE,F,38.882944,-77.057611,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3300020P0000000,HUMPBACK BRIDGE,G,38.875389,-77.047111,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3400030P0000000,WATERGATE PLAZA BRIDGE,F,38.889722,-77.052111,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3400031P0000000,OUTLET BRIDGE,F,38.882764,-77.073044,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3400032P0000000,KUTZ BRIDGE,F,38.886667,-77.039333,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3400033P0000000,INLET BRIDGE,F,38.880028,-77.04,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3400034P0000000,MAINE AVENUE BRIDGE,G,38.887028,-77.035611,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3400036P0000000,NPS STORAGE AREA BRIDGE,F,38.890806,-77.053444,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450001P0000000,L STREET BRIDGE,F,38.90375,-77.056667,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450004P0000000,SHOREHAM HILL BRIDGE,F,38.919833,-77.052833,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450006P0000000,P STREET BRIDGE,F,38.909944,-77.050444,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450008P0000000,BOULDER BRIDGE,F,38.948367,-77.045064,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450009P0000000,BLAGDEN BRIDGE,F,38.943972,-77.049556,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450011P0000000,PINEY BRANCH BRIDGE,F,38.935306,-77.047611,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450012P0000000,ROSS DRIVE BRIDGE,F,38.953483,-77.045903,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450013P0000000,KALMIA BRIDGE,F,38.984056,-77.04275,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450015P0000000,SHERRILL DRIVE BRIDGE,F,38.972836,-77.040086,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450016P0000000,MILKHOUSE FORD BRIDGE,F,38.965306,-77.0475,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450018P0000000,ZOO TUNNEL BRIDGE,F,38.92405,-77.048578,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450022P0000000,JOYCE ROAD BRIDGE AT BEACH DRIVE,F,38.960333,-77.042111,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450027P0000000,JOYCE ROAD BRIDGE AT ROSS DRIVE,F,38.960556,-77.041833,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450028P0000000,GLOVER ROAD BRIDGE,F,38.944806,-77.050167,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450029P0000000,BROAD BRANCH BRIDGE,F,38.9445,-77.050056,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450033P0000000,EDGEWATER STABLE ACCESS BRIDGE,P,38.92175,-77.049639,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450034P0000000,SOUTH WATERSIDE DRIVE BRIDGE,F,38.913758,-77.054989,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450035P0000000,THOMPSON BOAT CENTER BRIDGE,F,38.900917,-77.058333,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
+3450039P0000000,JOYCE ROAD BRIDGE AT MILITARY ROAD,G,38.96338,-77.03886,plausible_dc,https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/DC26.json
