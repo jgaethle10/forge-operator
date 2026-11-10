@@ -5,8 +5,11 @@ import {join,resolve} from 'node:path';
 import {makeHistoryReceipt,buildDailyHistory,HISTORY_SOURCES,HISTORY_MAX_BYTES} from './watershed-history.mjs';
 
 const DAY=/^\d{4}-\d{2}-\d{2}$/;
-const isDay=value=>typeof value==='string'&&DAY.test(value)&&
-  new Date(value+'T00:00:00Z').toISOString().slice(0,10)===value;
+const isDay=value=>{
+  if(typeof value!=='string'||!DAY.test(value))return false;
+  const ms=Date.parse(value+'T00:00:00Z');
+  return Number.isFinite(ms)&&new Date(ms).toISOString().slice(0,10)===value;
+};
 function safeFile(file,maxSize=HISTORY_MAX_BYTES){
   if(!existsSync(file)||!lstatSync(file).isFile()||statSync(file).size>maxSize)
     throw new TypeError('expected regular bounded archive file is missing or unsafe');
