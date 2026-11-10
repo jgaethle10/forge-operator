@@ -85,6 +85,11 @@ test('seven branded pages show their own story and original correct checkout',()
 test('portfolio distinguishes the brands while preserving all real service checks',()=>{
  const page=read('index.html');
  const styles=read('brand-world.css');
+ const brandAtlas=read('brands/index.html');
+ const sitemap=read('sitemap.xml');
+ assert.ok(sitemap.includes('https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brands/'));
+ assert.ok(page.includes('href="./brands/"'));
+ assert.equal((brandAtlas.match(/class="world"/g)||[]).length,7);
  assert.equal((page.match(/class="brand-card"/g)||[]).length,7);
  assert.equal((page.match(/class="product-mark"/g)||[]).length,7);
  assert.equal((page.match(/class="pay"/g)||[]).length,7);
@@ -94,6 +99,9 @@ test('portfolio distinguishes the brands while preserving all real service check
   assert.ok(p.brand_story_url.endsWith('/brand.json'));
   assert.equal(p.creative_name_clearance,'unverified');
   assert.ok(page.includes(p.creative_imprint));
+  assert.ok(brandAtlas.includes(p.creative_imprint));
+  assert.ok(brandAtlas.includes(p.signature_phrase));
+  assert.ok(brandAtlas.includes(p.product_purpose));
   assert.ok(page.includes(p.signature_phrase));
   assert.ok(page.includes(p.brand));
   assert.ok(page.includes(p.checkout_url));
