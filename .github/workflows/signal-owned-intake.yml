@@ -7,6 +7,7 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'public/signal/**'
       - 'tests/signal-owned-intake.test.mjs'
+      - 'scripts/signal-owner-inbox.mjs'
       - 'tests/signal-paid-scope.test.mjs'
       - '.github/workflows/signal-owned-intake.yml'
   push:
@@ -16,6 +17,7 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'public/signal/**'
       - 'tests/signal-owned-intake.test.mjs'
+      - 'scripts/signal-owner-inbox.mjs'
       - 'tests/signal-paid-scope.test.mjs'
       - '.github/workflows/signal-owned-intake.yml'
   workflow_dispatch:
@@ -35,6 +37,7 @@ jobs:
       - name: Test owned encrypted intake, buyer form and existing payment guard
         run: |
           node --check systemia/mcp/signal-public-inquiry.mjs
+          node --check scripts/signal-owner-inbox.mjs
           node --check systemia/mcp/fabric-local-runtime.mjs
           node --test tests/signal-owned-intake.test.mjs tests/signal-paid-scope.test.mjs tests/signal-owned-payment-route.test.mjs
       - name: No raw secrets or processor links in public page
