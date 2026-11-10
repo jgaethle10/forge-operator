@@ -9,6 +9,7 @@ import { once } from 'node:events';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
+import {createSignedMicroSeedExecutionReceipt} from '../saban/signed-microseed-execution.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
@@ -1355,12 +1356,21 @@ export async function startEvercraftComputeNode({
             }
             return send(res, 422, { error: message });
           }
+          const signedExecution = deviceIdentity && body.execution_nonce
+            ? createSignedMicroSeedExecutionReceipt({
+                identity:deviceIdentity,
+                workerReceipt:worker,
+                leaseId:body.lease_id,
+                nonce:body.execution_nonce
+              })
+            : null;
           return send(res, 200, {
             ok: true,
             node_id: nodeId,
             workload_class: workloadClass,
             result: worker.result,
             worker_receipt: worker,
+            signed_execution: signedExecution,
             deduplicated: worker.deduplicated === true,
             idempotency_key: idempotencyKey,
             receipt: chain.issue(
