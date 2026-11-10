@@ -13,7 +13,7 @@
  <div class="top-right"><span class="state-pill" id="sourceState">PUBLIC SOURCE CHECK PENDING</span><a class="nav" href="./index.html">← Live Workroom</a></div>
 </header>
 <section class="intro">
- <div><div class="eyebrow">BUILD 01 / EVIDENCE-FIRST OPERATOR VIEW</div><p>One command surface. Two trust levels. Development receipts are real GitHub records; local mission snapshots are <strong>operator-reported, not independently authenticated</strong>.</p></div>
+ <div><div class="eyebrow">BUILD 03 / EVIDENCE-FIRST OPERATOR VIEW</div><p>One command surface. Two trust levels. Development receipts are real GitHub records; local mission snapshots are <strong>operator-reported, not independently authenticated</strong>.</p></div>
  <div class="refresh-panel"><button type="button" id="refresh">Refresh source</button><span id="checkedAt">Not yet checked</span></div>
 </section>
 <section class="guardrails" aria-label="Operational health boundaries">
@@ -34,6 +34,8 @@
   <div class="import-tools"><label class="file-button" for="snapshotFile">Open local snapshot</label><input type="file" id="snapshotFile" accept="application/json,.json"><button type="button" id="clearSnapshot">Clear import</button></div>
  </div>
  <div id="snapshotStatus" class="snapshot-status" role="status" aria-live="polite">No local Systemia snapshot loaded. Internal mission state is unknown.</div>
+ <div class="local-node-title"><h3>Local node observations</h3><span>Self-reported watcher receipts, never remote attestation</span></div>
+ <div class="local-nodes" id="localNodeCards" aria-label="Imported node observations"><p class="empty">No local node watch imported. Current node health unknown.</p></div>
  <div class="reported-lanes" id="reportedLanes"><p class="empty">Local mission details appear here after an operator export is opened.</p></div>
  <details class="schema-help"><summary>What format can I open?</summary><pre>{
   "schema": "evercraft.systemia.operator-mission-snapshot.v1",
@@ -47,7 +49,7 @@
     "owner": "Systemia",
     "note": "Illustrative schema only"
   }]
-}</pre><p>Export from an approved owned adapter. The example is not live data. Supported lanes: revenue, infrastructure, execution, approvals.</p></details>
+}</pre><p>Export from an approved owned adapter. The example is not live data. Supported lanes: revenue, infrastructure, execution, approvals. Optional local `nodes` observations from health-watch receipts are supported, never automatically authenticated.</p></details>
 </section>
 <footer><span>GitHub public metadata ≠ deployed infrastructure ≠ mission execution ≠ paid revenue.</span><span>Read only. No external write actions. No private mission data transmitted.</span></footer>
 </div>
