@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - 'prototypes/rockies-wheel-lab/**'
+      - 'public/wheel-lab-preview/**'
       - '.github/workflows/rockies-wheel-lab.yml'
   push:
     branches: [main]
     paths:
       - 'prototypes/rockies-wheel-lab/**'
+      - 'public/wheel-lab-preview/**'
       - '.github/workflows/rockies-wheel-lab.yml'
   workflow_dispatch:
 
@@ -42,5 +44,16 @@ jobs:
             prototypes/rockies-wheel-lab/rc01/merchant-desk.html
             prototypes/rockies-wheel-lab/rc01/review.html
             prototypes/rockies-wheel-lab/rc01/README.md
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Package staged Evercraft public-route candidate (not deployed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-lab-rc07-staged-route-review
+          path: |
+            public/wheel-lab-preview/index.html
+            public/wheel-lab-preview/shopper.html
+            public/wheel-lab-preview/merchant-desk.html
           if-no-files-found: error
           retention-days: 7
