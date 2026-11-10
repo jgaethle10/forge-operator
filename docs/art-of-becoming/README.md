@@ -20,7 +20,7 @@ Run `node --test tests/art-of-becoming.test.mjs` for the domain and privacy-cont
 - Self-reported consecutive check-ins and cumulative completed days are separate metrics.
 - Unknown/missing check-ins are **not** called relapses.
 - Seven **distinct self-reported followed-through dates** earn a finished, deterministic canvas; no requirement that they be consecutive. Art marks are issued once per distinct date and cannot be earned again by toggling that date.
-- Three procedural styles: garden, constellation, mosaic.
+- Three procedural styles: garden, constellation, mosaic. Each canvas locks its style when completed so subsequent theme changes do not redraw earned paintings.
 - Current and completed canvases can be saved locally as portable SVG. Earned art marks are retained separately from the editable reflection records; correcting a previously successful day decreases the current success count but does not revoke a completed canvas.
 - Entries use browser `localStorage`; individual goals remain separate.
 - JSON export, validated user-confirmed JSON restore, and explicit full-device-data deletion. No analytics, cloud database, account, tracking beacon, payment link, or external assets.
