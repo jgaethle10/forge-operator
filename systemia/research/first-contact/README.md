@@ -83,6 +83,15 @@ Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch 
 - **Field protocol:** `KNOWN_TARGET_FIELD_PLAN.md` specifies the real next gate: two independently surveyed and synchronized cameras, a known stationary target, predeclared error thresholds, secure local records and independent survey review.
 - **Evidence and dispatch:** GitHub Actions verify source-code tests, not real sensor measurements. No field calibration dataset or qualified independent observation has been provided; Systemia worker dispatch is still `NOT_DISPATCHED` and public release remains held.
 
+## Sprint 7, November 9, 2026: practical two-camera baseline planner
+
+- **New sensitivity engine:** `baseline-sensitivity.mjs` compares up to 16 camera separations for an **invented stationary** target in a local ENU frame. The model applies reproducible seeded independent Gaussian azimuth/elevation error plus optional common systematic azimuth bias. Results explicitly report true synthetic parallax, accepted/rejected ray pairs, rejected fractions and accepted-only position-error quantiles. These are not calibrated sensor confidence intervals.
+- **Synthetic regression controls:** `baseline-sensitivity.test.mjs` adds 10 tests covering noiseless recovery, improved range accuracy under longer lateral baselines with the same assumed noise, systematic-bias error despite agreeing rays, insufficient parallax, strict ray-miss filters, reproducibility and invalid values.
+- **Usable local CLI:** `baseline-planner-cli.mjs`, its 4 tests and two `fixtures/baseline-plan-*.json` examples provide a no-network JSON interface that returns a SHA-256 input-byte receipt. The examples compare identical simulated setups with and without an assumed 0.5-degree shared azimuth bias. No real footage or hardware is used.
+- **Field experiment design:** `BASELINE_PLACEMENT_PLAN.md` documents a feasible **candidate** geometry of 3 meters camera separation and 10 meters to a stationary target (roughly 16.7 degrees parallax), but does not claim such a rig has been placed, surveyed, calibrated or observed. Real field testing requires separate measured camera pointing and ground truth, predeclared thresholds and independent review.
+- **Validation:** the dedicated FIRST-CONTACT GitHub Actions test and integrity workflow **passed** for code/fixture commit `a767c6af...` (run `42760006294`). The full research test glob includes the new 10 simulation tests and 4 CLI tests. Later documentation/mission commits must be checked separately. Neither CI nor simulation is evidence of physical UAP acceleration, recovered technology or actual camera calibration.
+- **Runtime boundary:** autonomous Systemia agents remain unassigned and `NOT_DISPATCHED`; the tool is an offline software planning utility, not an ongoing agent task or deployed service.
+
 ## Decision and escalation gates
 
 - `primary_observation`: original public primary source with reproducible metadata or official release.
