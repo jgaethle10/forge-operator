@@ -76,6 +76,7 @@ function forwardOnly(previous,next) {
     if (!updated || updated.event_id !== old.event_id ||
         updated.product_key !== old.product_key ||
         updated.occurred_at !== old.occurred_at ||
+        updated.source_ref !== old.source_ref ||
         JSON.stringify(updated.lanes)!==JSON.stringify(old.lanes) ||
         Number(updated.repeat_count||0)<Number(old.repeat_count||0)) {
       throw new Error('one_body_event_rewrite_or_deletion_forbidden');
@@ -85,8 +86,9 @@ function forwardOnly(previous,next) {
     const updated=next.lane_acknowledgements[key];
     if(!updated || updated.event_id!==old.event_id ||
        updated.lane!==old.lane ||
-       (updated.receipt_ref!==old.receipt_ref &&
-       !(Date.parse(updated.observed_at)>Date.parse(old.observed_at)))) {
+       (JSON.stringify(updated)!==JSON.stringify(old) &&
+       !(updated.receipt_ref!==old.receipt_ref &&
+         Date.parse(updated.observed_at)>Date.parse(old.observed_at)))) {
       throw new Error('one_body_ack_rewrite_or_deletion_forbidden');
     }
   }
