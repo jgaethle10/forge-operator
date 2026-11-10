@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {normalizeDive} from '../public/subsea-watch/core.mjs';
+import {normalizeDive,parseInput,atTime} from '../public/subsea-watch/core.mjs';
 
 const html=fs.readFileSync('public/subsea-watch/immersive/index.html','utf8');
 const js=fs.readFileSync('public/subsea-watch/immersive/scene.mjs','utf8');
@@ -47,4 +47,34 @@ test('scene only fetches a checked synthetic first-party sample and offers prior
  assert.doesNotMatch(js,/XMLHttpRequest|sendBeacon|localStorage|sessionStorage|https?:\/\//);
  assert.match(html,/href="\.\.\/"/);
  assert.match(html,/src="\.\/scene\.mjs"/);
+});
+
+test('immersive import adds browser-local JSON/CSV with no invented site reconstruction',()=>{
+ for(const id of ['import-file','load-file','reset-sample','file-status','mode-pill','no-position','import-notes','synthetic-notes','import-summary'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.match(js,/parseInput\(await file\.text\(\),file\.name\)/);
+ assert.match(js,/if\(file\.size>2e6\)/);
+ assert.match(js,/next\.demo\|\|next\.positionSource==='SIMULATED'/);
+ assert.match(js,/if\(mode==='synthetic'\)/);
+ assert.match(js,/route\(dive\.xyAvailable\?dive\.points:\[\]\)/);
+ assert.match(js,/gl\.deleteBuffer\(track\.buffer\)/);
+ assert.match(js,/dataset\.subseaMode=mode/);
+ assert.match(html,/Local files never leave this browser/);
+ assert.match(html,/No real seabed, site structures, pipes, obstacles or survey models are reconstructed/);
+});
+test('local imports preserve source claims and reject unsourced or synthetic routes',()=>{
+ const json=JSON.stringify({title:'Operator example',position_source:'USBL',points:[
+  {t_s:0,depth_m:5,x_m:1000,y_m:2000},
+  {t_s:10,depth_m:7,x_m:1001,y_m:2002},
+  {t_s:40,depth_m:8,x_m:1003,y_m:2004}
+ ]});
+ const dive=parseInput(json,'mission.json');
+ assert.equal(dive.xyAvailable,true);
+ assert.equal(dive.demo,false);
+ assert.equal(dive.positionSource,'USBL');
+ assert.equal(atTime(dive,25).x,null,'a long gap must not be interpolated');
+ const depthOnly=parseInput('t_s,depth_m\\n0,2\\n10,7\\n20,5','depth.csv');
+ assert.equal(depthOnly.xyAvailable,false);
+ assert.equal(atTime(depthOnly,10).x,null);
+ const unsourced=JSON.stringify({points:[{t_s:0,depth_m:2,x_m:1,y_m:2},{t_s:10,depth_m:3,x_m:2,y_m:3}]});
+ assert.throws(()=>parseInput(unsourced,'bad.json'),/declared positioning method/);
 });
