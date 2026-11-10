@@ -64,7 +64,7 @@ Context-only view because its global denominator is unknown.
 ## Origin attestations are a NEW signing contract, not recovered history
 
 Timewalk's optional `origin-attestation.mjs` verifier checks Ed25519
-signatures over the **exact receipt bytes/digest** using operator-pinned
+signatures over the receipt object's **JSON.stringify serialization/digest** using operator-pinned
 public keys, issuer ID, schema allowlist, key validity and revocation.
 
 Status tiers must remain separate:
