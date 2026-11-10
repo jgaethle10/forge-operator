@@ -64,8 +64,10 @@
     "marketing_policy": "No first completed sale required before owner-approved qualified traffic to an independently browser-verified matching checkout.",
     "automated_rendered_buyer_form_verified": true,
     "automated_rendered_exact_sku_forms_verified": 7,
-    "automated_browser_checked_at": "2026-10-25T21:35:00Z",
-    "automated_browser_receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40236112575/artifacts/12614991659",
-    "automated_browser_scope": "Headless Chromium confirmed 7/7 Stripe-hosted exact product names, amounts and visible buyer payment forms. No card entry, clicks, submission, purchase, paid receipt or fulfillment."
+    "automated_browser_checked_at": "2026-11-10T00:28:13.556Z",
+    "automated_browser_receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42728476003/artifacts/13723219528",
+    "automated_browser_scope": "read_only_render_exact_sku_title_amount_and_payment_surface",
+    "automated_browser_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42728476003",
+    "automated_browser_receipt_state": "ALL_SEVEN_READ_ONLY_FORMS_VERIFIED"
   }
 }
