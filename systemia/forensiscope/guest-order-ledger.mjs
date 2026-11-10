@@ -112,12 +112,17 @@ function publicOrder(order,admission){
 export function createForensiScopeGuestOrderLedger({
  storageDir,readCapacity,maxUploadBytes=256*1024*1024,
  guestEnrollmentEnabled=false,checkEnrollment=async()=>false,
- allowedOrigins=[],now=()=>Date.now(),
+ emailVerification=null,allowedOrigins=[],now=()=>Date.now(),
  sessionTtlMs=7*24*60*60*1000
 }={}){
  if(!storageDir||!path.isAbsolute(storageDir))throw fail('absolute_private_ledger_required');
  if(typeof readCapacity!=='function'||typeof checkEnrollment!=='function')
   throw fail('trusted_capacity_and_enrollment_checks_required');
+ if(guestEnrollmentEnabled===true&&(
+    typeof emailVerification?.sendChallenge!=='function'||
+    typeof emailVerification?.verifyAndConsume!=='function'||
+    emailVerification.readiness?.enabled!==true))
+  throw fail('trusted_email_verification_required',503);
  if(!Number.isSafeInteger(maxUploadBytes)||maxUploadBytes<=0||
     !Number.isSafeInteger(sessionTtlMs)||sessionTtlMs<=0)
   throw fail('invalid_guest_order_limits');
@@ -146,12 +151,15 @@ export function createForensiScopeGuestOrderLedger({
    expires_at:new Date(session.expires_at_ms).toISOString()
   }):null;
  };
- const issueGuest=async({email,privacyAccepted,request}={})=>{
+ const issueGuest=async({email,privacyAccepted,challengeId,verificationCode,request}={})=>{
   if(guestEnrollmentEnabled!==true)throw fail('guest_enrollment_disabled',503);
   if(privacyAccepted!==true||!validEmail(email))
    throw fail('valid_email_and_privacy_acceptance_required',422);
   if(await checkEnrollment(request)!==true)
    throw fail('guest_enrollment_not_authorized',429);
+  if(await emailVerification.verifyAndConsume({
+   email,challengeId,verificationCode,request
+  })!==true)throw fail('verified_email_challenge_required',403);
   const token='fsg_'+hex(32);
   const subject='buyer-'+hex(16);
   const stamp=now();
@@ -301,10 +309,21 @@ export function createForensiScopeGuestOrderLedger({
      'cache-control':'no-store'
     });return res.end();
    }
+   if(req.method==='POST'&&route==='/v1/forensiscope/guest/challenge'){
+    if(guestEnrollmentEnabled!==true)throw fail('guest_enrollment_disabled',503);
+    const body=await limitedJson(req);
+    if(body.privacy_accepted!==true||!validEmail(body.email))
+     throw fail('valid_email_and_privacy_acceptance_required',422);
+    if(await checkEnrollment(req)!==true)
+     throw fail('guest_enrollment_not_authorized',429);
+    const challenge=await emailVerification.sendChallenge({email:body.email,request:req});
+    return respond(201,{ok:true,...challenge});
+   }
    if(req.method==='POST'&&route==='/v1/forensiscope/guest'){
     const body=await limitedJson(req);
     const access=await issueGuest({
-     email:body.email,privacyAccepted:body.privacy_accepted===true,request:req
+     email:body.email,privacyAccepted:body.privacy_accepted===true,
+     challengeId:body.challenge_id,verificationCode:body.verification_code,request:req
     });
     return respond(201,{ok:true,...access});
    }
@@ -347,6 +366,9 @@ export function createForensiScopeGuestOrderLedger({
   loadTrustedSettlementOrder,persistCheckout,revokeGuest,
   readiness:Object.freeze({
    guest_enrollment_enabled:guestEnrollmentEnabled===true,
+   verified_email_required:true,
+   email_challenge_available:guestEnrollmentEnabled===true&&
+    emailVerification?.readiness?.enabled===true,
    public_identity_provider:false,
    live_checkout_enabled:false,
    payment_authority:'Evercraft Payments',
