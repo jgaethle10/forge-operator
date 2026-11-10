@@ -20,14 +20,16 @@ function normalizeBridgeUrl(value) {
   const raw = clean(value).replace(/\/$/, "");
   if (!raw) return "";
   const url = new URL(raw);
-  const loopback = ["127.0.0.1", "localhost", "::1"].includes(url.hostname);
-  if (url.protocol !== "https:" && !(loopback && url.protocol === "http:")) {
-    throw new Error("raven_nexus_work_url_must_be_https_or_loopback_http");
+  // Raven is a private resident service, not a public inference proxy.
+  // This volatile read-only dispatch is limited to a same-node loopback bridge.
+  // Cross-node transport must use separately authenticated owned infrastructure.
+  const loopback = ["127.0.0.1", "localhost", "[::1]", "::1"].includes(url.hostname);
+  if (!loopback || url.protocol !== "http:" ||
+      url.username || url.password || url.search || url.hash ||
+      (url.pathname !== "/" && url.pathname !== "")) {
+    throw new Error("raven_nexus_work_url_must_be_plain_loopback_http");
   }
-  if (/base44\.(app|com)$/i.test(url.hostname) || url.hostname.includes("base44.app")) {
-    throw new Error("legacy_provider_not_allowed_in_owned_raven_execution_path");
-  }
-  return raw;
+  return url.origin;
 }
 
 function safeArray(value, limit = 50) {
