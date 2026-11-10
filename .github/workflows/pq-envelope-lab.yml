@@ -44,7 +44,7 @@ jobs:
         env:
           PQ_REPLAY_TEST_DATABASE_URL: postgres://pq_lab:pq_lab_ci_only@127.0.0.1:5432/pq_lab
         run: >-
-          node --test
+          node --test --test-concurrency=1
           tests/pq-envelope.test.mjs
           tests/pq-signed-envelope.test.mjs
           tests/pq-replay-sqlite.test.mjs
