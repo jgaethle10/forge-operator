@@ -67,6 +67,9 @@ jobs:
           "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --enable-webgl --enable-unsafe-swiftshader --use-gl=angle --use-angle=swiftshader --virtual-time-budget=6000 --dump-dom 'http://127.0.0.1:18765/subsea-watch/immersive/' >/tmp/subsea-dom.html 2>/tmp/subsea-chrome-dom.log
           grep -q 'data-subsea-sample="synthetic-loaded"' /tmp/subsea-dom.html
           grep -q 'data-subsea-renderer="webgl-drawn"' /tmp/subsea-dom.html
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --virtual-time-budget=6000 --dump-dom 'http://127.0.0.1:18765/subsea-watch/field-archive/' >/tmp/subsea-field-archive-dom.html 2>/tmp/subsea-field-chrome.log
+          grep -q 'data-field-archive="ledger-ready"' /tmp/subsea-field-archive-dom.html
+          grep -q 'NOAA BlueTopo' /tmp/subsea-field-archive-dom.html
           test -s artifacts/subsea/immersive-desktop.png
           echo "IMMERSIVE_WEBGL_BROWSER_SMOKE_PASS: actual synthetic sample + WebGL draw" >> "$GITHUB_STEP_SUMMARY"
       - name: Preserve immersive screenshot when present
