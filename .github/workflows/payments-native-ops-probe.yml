@@ -1,0 +1,33 @@
+name: Evercraft Payments owned operations proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/payments/owned-ops-service.mjs'
+      - 'systemia/payments/stripe-webhook-verifier.mjs'
+      - 'tests/stripe-webhook-verifier.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/payment-return.mjs'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'scripts/nextgen-hosted-links-canary.mjs'
+      - 'tests/nextgen-hosted-links-canary.test.mjs'
+      - 'tests/owned-payment-ops.test.mjs'
+      - 'tests/fabric-checkout-transport-truth.test.mjs'
+      - 'tests/payment-return.test.mjs'
+      - '.github/workflows/payments-native-ops-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-ops-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove exact-SKU, service authentication and receipt boundaries
+        run: node --test tests/owned-payment-ops.test.mjs tests/payment-return.test.mjs tests/fabric-checkout-transport-truth.test.mjs tests/nextgen-payments-readiness.test.mjs tests/nextgen-hosted-links-canary.test.mjs tests/stripe-webhook-verifier.test.mjs

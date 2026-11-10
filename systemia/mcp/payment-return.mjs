@@ -13,7 +13,7 @@ const NATIVE_OFFERS={
  'part-quick':'findmypart.quick_hunt_19.v1',
  'site-survive':'evercraft_network.site_survive_rapid_audit_250.v1'
 };
-export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch,ownedOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||''){
+export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch,ownedOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',serviceToken=process.env.EVERCRAFT_PAYMENT_BACKEND_TOKEN||''){
  // Native and expanded offers share the exact approved SKU registry.
  // Never infer entitlement from the amount or an unrelated same-price offer.
  const offerKey=NATIVE_OFFERS[slug]||publicPaymentOffer(slug)?.offer_key;
@@ -25,7 +25,7 @@ export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch,o
  if(!endpoint)return {state:'pending',status:503};
  try{
   const response=await paymentFetch(endpoint,{
-   method:'POST',headers:{'content-type':'application/json','accept':'application/json','user-agent':'Evercraft-Fabric-Payment-Return/1.0'},
+   method:'POST',headers:{'content-type':'application/json','accept':'application/json','user-agent':'Evercraft-Fabric-Payment-Return/1.0',...(serviceToken?{authorization:'Bearer '+serviceToken}:{})},
    body:JSON.stringify({action:'verify_checkout',offer_key:offerKey,order_key:orderKey,provider_session_id:session}),signal:AbortSignal.timeout(18000)
   });
   const d=await response.json();
