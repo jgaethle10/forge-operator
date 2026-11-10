@@ -10,7 +10,7 @@
     "note": "This data file is source evidence, not a second rendering, physics, or storage engine."
   },
   "location": {
-    "label": "Yakima Avenue between South Second and South Third Streets, Yakima, Washington, USA",
+    "label": "Downtown Yakima walking study: A.E. Larson Building near S 2nd Street & E Yakima Avenue to Capitol Theatre on S 3rd Street, via the downtown street grid; NOT just the single block between S 2nd and S 3rd.",
     "georeferenced": false,
     "crs": null,
     "coordinatePrecision": "none",
@@ -244,6 +244,25 @@
         "region": "WA",
         "country": "US"
       }
+    },
+    {
+      "id": "yakima-city-walking-tour",
+      "name": "City of Yakima / Historic Preservation Commission self-guided historic downtown walking tour",
+      "url": "https://www.yakimawa.gov/services/historic-preservation-commission/files/2012/08/Walking-tours.pdf",
+      "holder": "City of Yakima Historic Preservation Commission / League of Women Voters",
+      "evidencePeriod": [
+        "2008"
+      ],
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "rights": {
+        "status": "municipal-document-review",
+        "reuse": "Link and cite tour; item-level rights must be checked before reproducing images/maps; 2008 Google/NAVTEQ base has separate licensing."
+      },
+      "notes": "Tour map stop 27 is Larson Building near S 2nd & E Yakima Ave; stop 10 is Capitol Theatre along S 3rd St toward E Chestnut Ave. Tour's street depiction is circa 2008, not 1960 or a georeferenced sidewalk survey."
     }
   ],
   "places": [
@@ -289,6 +308,15 @@
           "evidence": "illustrative",
           "sourceIds": [],
           "reason": "No direct 1960 facade source or measurements validated."
+        },
+        {
+          "id": "larson-walk-tour-27",
+          "assertion": "The City of Yakima's self-guided historic downtown walking-tour map numbers Larson Building as stop 27 near South Second Street and Yakima Avenue.",
+          "period": "circa 2008",
+          "evidence": "documented",
+          "sourceIds": [
+            "yakima-city-walking-tour"
+          ]
         }
       ]
     },
@@ -344,6 +372,15 @@
           "evidence": "illustrative",
           "sourceIds": [],
           "reason": "Exterior details have not been matched to dated 1960 archival imagery."
+        },
+        {
+          "id": "capitol-walk-tour-10",
+          "assertion": "The City of Yakima's self-guided historic downtown walking-tour map numbers Capitol Theatre as stop 10 along South Third Street.",
+          "period": "circa 2008",
+          "evidence": "documented",
+          "sourceIds": [
+            "yakima-city-walking-tour"
+          ]
         }
       ]
     },
@@ -508,6 +545,22 @@
       "acquisition": "digital collection available; target sheet not yet identified",
       "rights": "collection public domain per Library of Congress",
       "useFor1960": "earlier baseline; specific 1960 changes unverified"
+    },
+    {
+      "id": "modern-walk-route-reference",
+      "name": "City of Yakima self-guided tour map with landmarks 27 and 10",
+      "sourceId": "yakima-city-walking-tour",
+      "period": {
+        "display": "circa 2008",
+        "earliest": 2008,
+        "latest": 2008,
+        "approximate": true
+      },
+      "spatialMatch": "Larson and Capitol tour stops and intervening downtown street names",
+      "itemType": "modern-historic-tour-street-orientation",
+      "acquisition": "PDF pages and map visually inspected; exact cartographic coordinates not extracted",
+      "rights": "Citation/link only; map background bears 2008 NAVTEQ/Google attribution; reproduction needs rights review",
+      "useFor1960": "Supports present-day tour stop identifiers and coarse route concept, not uninterrupted 1960 street/sidewalk layout or historic storefronts"
     }
   ],
   "researchGoals": {
@@ -561,6 +614,12 @@
         "dependsOn": [],
         "deliverable": "Validate city-state-country of every retrieved historic image, city directory and map before linking to the Yakima world. Keep a negative-evidence registry.",
         "status": "active; Seattle false-positive excluded"
+      },
+      {
+        "id": "verify-1960-pedestrian-route",
+        "dependsOn": [],
+        "deliverable": "Find period street plan/dated photographs showing 1960 sidewalk and crossing configuration along Larson-to-Capitol route; distinguish modern topology from 1960 walkability.",
+        "status": "research-needed; historic tour map is circa 2008 only"
       }
     ]
   },
