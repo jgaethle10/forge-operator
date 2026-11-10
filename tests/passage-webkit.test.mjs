@@ -45,7 +45,8 @@ test('WebKit verification stays functional after disconnection; file-origin supp
   assert.equal(await page.evaluate(()=>navigator.onLine),false,'browser context should report network offline');
   assert.equal(await page.locator('#qa-run').count(),1);
   await page.locator('#qa-run').click();
-  await page.waitForFunction(()=>document.getElementById('qa-status')?.textContent.includes('self-check passed'),undefined,{timeout:15000});
+  await page.waitForFunction(()=>{const status=document.getElementById('qa-status')?.textContent||'';return status.includes('self-check passed')||status.startsWith('UNSUPPORTED OR FAILED')},undefined,{timeout:15000});
+  assert.match(await page.locator('#qa-status').innerText(),/self-check passed/,'WebKit device crypto self-check failed');
   assert.equal(await page.locator('#qa-download').isVisible(),true);
   await page.locator('#package-file').setInputFiles(kit.package);
   await page.locator('#trusted-key-file').setInputFiles(kit.publicKey);
