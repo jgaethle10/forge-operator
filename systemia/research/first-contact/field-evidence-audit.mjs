@@ -47,10 +47,32 @@ function fileInsideRoot(root,relative){
 }
 function hashFileInsideRoot(root,relative){
   const file=fileInsideRoot(root,relative);
-  // Source artifacts deliberately bounded, but parsed JSON packets much smaller.
-  const size=fs.statSync(file).size;
-  if(size===0 || size>64*1024*1024) throw new RangeError("source file must be 1..67108864 bytes");
-  return {digest:sha(fs.readFileSync(file)),sizeBytes:size};
+  // Read bounded media in 1 MiB chunks; avoid loading entire native recordings.
+  // Device/original-file identity must still be verified outside this hash tool.
+  const maxBytes=4*1024*1024*1024;
+  const flags=fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW||0);
+  const descriptor=fs.openSync(file,flags);
+  try{
+    const original=fs.fstatSync(descriptor);
+    if(!original.isFile() || original.size<1 || original.size>maxBytes)
+      throw new RangeError("source file must be 1..4294967296 bytes");
+    const hasher=createHash("sha256");
+    const buffer=Buffer.allocUnsafe(1024*1024);
+    let total=0;
+    while(true){
+      const bytesRead=fs.readSync(descriptor,buffer,0,buffer.length,null);
+      if(bytesRead===0) break;
+      hasher.update(buffer.subarray(0,bytesRead));
+      total+=bytesRead;
+      if(total>maxBytes) throw new RangeError("source file grew beyond permitted maximum");
+    }
+    const latest=fs.fstatSync(descriptor);
+    if(latest.size!==original.size || latest.mtimeMs!==original.mtimeMs ||
+       total!==original.size) throw new RangeError("source changed during verification");
+    return {digest:"sha256:"+hasher.digest("hex"),sizeBytes:total};
+  }finally{
+    fs.closeSync(descriptor);
+  }
 }
 const expectedDigest=(value,name)=>{
   if(typeof value!=="string"||!shaPattern.test(value))
