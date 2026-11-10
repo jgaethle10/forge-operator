@@ -139,7 +139,7 @@
     path.innerHTML='<span>AUTHORIZED WORK ONLY</span>';
     world.append(path);
     const overlay=make('div','spatial-overlay');
-    const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · FOLLOW SELECTED');
+    const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · TOUR: N/P TO VISIT');
     const evidenceNote=make('div','spatial-motion-disclosure','MOTION VISUALIZES RECORDED EVENTS · NOT PHYSICAL AGENT TRAVEL');
     evidenceNote.setAttribute('aria-label','Character animations illustrate verified local worker state changes, not physical movement by autonomous AI agents.');
     tourCaption=make('div','spatial-tour-caption','');
@@ -156,7 +156,8 @@
       ['◉','Follow selected coworker',()=>toggleFollow()],
       ['▤','Lower camera to room level',()=>toggleRoomLevel()],
       ['⌁','Start guided studio visitor tour',()=>toggleStudioTour()],
-      ['→','Visit next coworker',()=>tourNext()]
+      ['←','Visit previous coworker or tour stop',()=>tourPrevious()],
+      ['→','Visit next coworker or tour stop',()=>tourNext()]
     ];
     buttons.forEach(([label,title,fn])=>{
       const b=make('button','spatial-control',label);
@@ -275,7 +276,7 @@
     if(!tourActive)return;
     tourActive=false;
     if(tourCaption)tourCaption.hidden=true;
-    if(tourButton)tourButton.setAttribute('aria-pressed','false');
+    if(tourButton){tourButton.setAttribute('aria-pressed','false');tourButton.setAttribute('aria-label','Start guided studio visitor tour');}
   }
   function visitTour(direction){
     if(!tourActive)return;
@@ -303,11 +304,14 @@
     const tour=window.EvercraftStudioTour;
     if(!tour)throw Error('Owned studio tour module was not loaded');
     tourActive=true;
+    roomLevel=false;
+    if(roomButton)roomButton.setAttribute('aria-pressed','false');
     tourIndex=tour.length-1;
-    if(tourButton)tourButton.setAttribute('aria-pressed','true');
+    if(tourButton){tourButton.setAttribute('aria-pressed','true');tourButton.setAttribute('aria-label','Stop guided studio visitor tour');}
     visitTour(1);
   }
   function toggleRoomLevel(){
+    stopStudioTour();
     roomLevel=!roomLevel;
     if(roomButton)roomButton.setAttribute('aria-pressed',String(roomLevel));
     const compact=(scene?.getBoundingClientRect?.().width||window.innerWidth||1000)<540;
@@ -343,6 +347,11 @@
     applyCamera();
   }
   let tourIndex=0;
+  function tourPrevious(){
+    if(tourActive){visitTour(-1);return;}
+    tourIndex=(tourIndex+roster.length-2)%roster.length;
+    tourNext();
+  }
   function tourNext(){
     if(tourActive){visitTour(1);return;}
     const coworker=roster[tourIndex%roster.length];
@@ -448,6 +457,7 @@
   }
   function setEnabled(next){
     enabled=Boolean(next);
+    if(!enabled)stopStudioTour();
     if(enabled)build();
     const view=$('spatial-viewport');
     if(view)view.hidden=!enabled;
@@ -458,7 +468,7 @@
     if(cameraRig)cameraRig.setSuspended(!enabled);
     if(enabled)applyCamera();
   }
-  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,toggleStudioTour,visitTour,
+  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,toggleStudioTour,visitTour,tourPrevious,
     getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel,
     getStudioTour:()=>({active:tourActive,index:tourIndex,label:tourCaption?.textContent||''})};
 })();
