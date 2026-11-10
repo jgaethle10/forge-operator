@@ -92,6 +92,16 @@ Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch 
 - **Validation:** the dedicated FIRST-CONTACT GitHub Actions test and integrity workflow **passed** for code/fixture commit `a767c6af...` (run `42760006294`). The full research test glob includes the new 10 simulation tests and 4 CLI tests. Later documentation/mission commits must be checked separately. Neither CI nor simulation is evidence of physical UAP acceleration, recovered technology or actual camera calibration.
 - **Runtime boundary:** autonomous Systemia agents remain unassigned and `NOT_DISPATCHED`; the tool is an offline software planning utility, not an ongoing agent task or deployed service.
 
+## Sprint 8, November 9, 2026: field evidence byte-chain
+
+- **New private offline evidence audit:** `field-evidence-audit.mjs` enforces SHA-256 byte checks for the declared pre-registration plan and seven source roles: both original-camera records, both calibration records, target/observer survey, clock synchronization and the exact numeric calibration input. It refuses path traversal, symlinks, duplicate roles, absent files, source tampering and mismatched declared target/quality/acceptance criteria.
+- **Native file handling:** files are read in bounded **1 MiB chunks**, up to 4 GiB per file; the code records whether each source matched the supplied reference digest, without uploading or exposing their contents.
+- **Offline executable:** `field-evidence-cli.mjs` provides local manifest validation, with explicit exit statuses for matched byte chain, HOLD, and invalid input. Unit/CLI tests include real on-disk local test fixtures, tampering, plan/evaluation mismatch, invalid paths and multi-chunk hashing.
+- **Operator protocol:** `FIELD_EVIDENCE_CHAIN.md` describes a private, local evidence folder and why the plan's hash must be independently timestamped **before** capture. Matching a hash to another operator-supplied hash is not independent source authentication or a demonstrated time of capture.
+- **Evidence restriction:** successful byte checks return only `BYTE_CHAIN_MATCHED_REQUIRES_INDEPENDENT_PROOF`. The auditor does not prove camera calibration, survey accuracy, target identity, chronology, source custody, recording authenticity, extraterrestrial origin or independently observed field accuracy.
+- **CI:** dedicated FIRST-CONTACT research checks **passed** for the initial evidence-audit and CLI test commit `1b7a4384...` (run `42771006361`). Subsequent chunked-media enhancement and docs are subject to their own workflow checks; do not infer pass from the older run.
+- **Runtime:** no real camera files acquired; no Systemia specialists dispatched. Experiment and independent review remain the next physical gate.
+
 ## Decision and escalation gates
 
 - `primary_observation`: original public primary source with reproducible metadata or official release.
