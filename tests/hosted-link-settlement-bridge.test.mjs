@@ -129,7 +129,7 @@ test('reconciler dry-run only reads and reports without creating any canonical r
  const provider=fakeProvider(data);
  const result=await reconcileHostedLinks({provider,approvedAccountId:accountId,offers,maxPagesPerLink:1});
  assert.equal(result.ok,undefined);
- assert.equal(result.verified_paid,7);
+ assert.equal(result.verified_paid,1); // one synthetic session belongs to exactly one of seven links
  assert.equal(result.receipts_written,0);
  assert.equal(result.charge_attempts,0);
  assert.equal(result.mode,'dry_run');
@@ -144,7 +144,7 @@ test('scoped write emits a single review receipt; duplicate scan emits none',asy
   const journal=openHostedSettlementJournal(file);
   const first=await reconcileHostedLinks({provider,approvedAccountId:accountId,offers,commit:true,journal});
   assert.equal(first.receipts_written,1); // seven scans see same synthetic session, same account+session identity
-  assert.equal(first.duplicates,6);
+  assert.equal(first.duplicates,0); // mismatched links cannot claim another link's session
   const second=await reconcileHostedLinks({provider,approvedAccountId:accountId,offers,commit:true,journal});
   assert.equal(second.receipts_written,0);
   journal.close();
