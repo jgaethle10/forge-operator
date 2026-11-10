@@ -60,7 +60,47 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
+      - name: Compile real-device iPhone app without signing
+        run: |
+          xcodebuild \
+            -project products/vehicle-sentinel/ios/JeepSentinel.xcodeproj \
+            -scheme JeepSentinel \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "${{ runner.temp }}/vehicle-sentinel-device" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package unsigned arm64 app for owner-side signing on Windows
+        run: |
+          set -euo pipefail
+          APP="${{ runner.temp }}/vehicle-sentinel-device/Build/Products/Release-iphoneos/JeepSentinel.app"
+          test -f "$APP/JeepSentinel"
+          file "$APP/JeepSentinel" | grep -q arm64
+          IDENTIFIER="$(plutil -extract CFBundleIdentifier raw -o - "$APP/Info.plist")"
+          test "$IDENTIFIER" = "com.evercraft.jeepsentinel"
+          mkdir -p "${{ runner.temp }}/vehicle-sentinel-ipa/Payload"
+          ditto "$APP" "${{ runner.temp }}/vehicle-sentinel-ipa/Payload/JeepSentinel.app"
+          (
+            cd "${{ runner.temp }}/vehicle-sentinel-ipa"
+            zip -q -r "${{ runner.temp }}/VehicleSentinel-v0.2-UNSIGNED.ipa" Payload
+          )
+          unzip -t "${{ runner.temp }}/VehicleSentinel-v0.2-UNSIGNED.ipa" | tail -n 1
+          shasum -a 256 "${{ runner.temp }}/VehicleSentinel-v0.2-UNSIGNED.ipa"
+          echo "Unsigned IPA generated. Do not tap-install it; it needs signing on the owner's PC."
+
+      - name: Upload unsigned personal-test IPA (not an App Store release)
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: vehicle-sentinel-v0.2-unsigned-device-ipa
+          path: ${{ runner.temp }}/VehicleSentinel-v0.2-UNSIGNED.ipa
+          if-no-files-found: error
+          retention-days: 7
+
       - name: State validation boundary
         run: |
           echo "Compilation and source checks are NOT physical iPhone Bluetooth validation."
-          echo "No IPA, deployment, distribution, scanning guarantee or commercial release authorized."
+          echo "Unsigned device IPA is a test artifact only, not installed, signed, published, or physically BLE-tested."
