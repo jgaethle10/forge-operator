@@ -1,0 +1,71 @@
+{
+  "schema": "evercraft.commercial-product.v1",
+  "product_id": "evercraft.commerce.institutional-memory-system",
+  "sku_key": "institutional-memory-system",
+  "brand": "Evercraft Institutional Memory",
+  "exact_checkout_product": "Institutional Memory System",
+  "merchant": "Evercraft LLC",
+  "category": "scoped_business_service",
+  "commercial_state": "sell_now_scope_confirmed",
+  "checkout_state": "existing_exact_sku_hosted_stripe",
+  "price_usd": 1500,
+  "currency": "USD",
+  "tagline": "Keep the decisions, not just the files.",
+  "positioning": {
+    "ideal_buyer": "Organizations losing process history, decision rationale and reusable operating knowledge",
+    "buyer_problem": "Decisions and ownership disappear in handoffs, forcing teams to rediscover the same work.",
+    "intended_outcome": "A scoped institutional-memory design or bounded implementation engagement"
+  },
+  "delivery_contract": {
+    "deliverable_to_scope": "An agreed memory workflow, record schema, provenance and retrieval plan, and acceptance test or implementation artifact as contracted",
+    "buyer_inputs": "One workflow or department, data rights, record ownership, security, retention and retrieval needs",
+    "acceptance_criteria_to_agree": "Authorized data boundaries, named workflow, design vs implementation scope, tests and acceptance owner",
+    "exclusions": "No entire-enterprise deployment for a fixed blanket scope, compliance certification, unrestricted private data transfer or guaranteed future AI recall",
+    "scope_and_capacity_approval_required": true
+  },
+  "acquisition": {
+    "discovery_intents": [
+      "institutional memory system for company",
+      "stop losing decisions during employee handoffs",
+      "document why business decisions were made"
+    ],
+    "content_angle": "When the reasons disappear, the same mistakes become new projects.",
+    "approved_example_copy": "Your company should not lose hard-won knowledge every time responsibilities change. Evercraft Institutional Memory is a $1,500 scoped design or implementation engagement, with sources, rights and acceptance criteria agreed first.",
+    "first_party_product_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+    "distribution_rule": "Use owned or authorized channels and qualified, permissioned audiences only. Do not claim posts, leads, conversion or revenue without source receipts.",
+    "external_distribution_verified": false
+  },
+  "checkout": {
+    "url": "https://buy.stripe.com/14AfZid6K54hfQ00E44AU06",
+    "payment_link_id": "plink_1U4QhsK4iDjqpECVXob9B34R",
+    "stripe_product_id": "prod_V4ZrPRWhjZUTzt",
+    "stripe_price_id": "price_1U4QhlK4iDjqpECVidrwxUxU",
+    "evercraft_payments_role": "canonical_order_authority_target",
+    "settlement": "Systemia Stripe account",
+    "reconciliation": "manual_unverified_automated_sync",
+    "provider_paid_receipt_required": true,
+    "fulfillment_human_review": true,
+    "receipt_from_checkout_visit": false
+  },
+  "evercraft_os": {
+    "parent": "Evercraft OS",
+    "relationship": "Independent market-facing product, sharing future Evercraft OS capabilities",
+    "module_context": "Evercraft OS / Mnemosyne & Context (integration requires separate evidence)",
+    "shared_services": [
+      "Evercraft Payments",
+      "Systemia coordination",
+      "Passport permissions",
+      "Evercraft Research/Memory where authorized"
+    ],
+    "runtime_integration_verified": false
+  },
+  "discovery": {
+    "human_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+    "machine_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/product.json",
+    "llms_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/llms.txt"
+  },
+  "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
+  "design": {
+    "accent": "#a5e0c2"
+  }
+}
