@@ -43,7 +43,7 @@ function readablePrivateFile(file){
 function codeRoot(){
   return path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 }
-function preflight({pin,home=os.homedir(),root=codeRoot(),exec=run}={}){
+export function preflight({pin,home=os.homedir(),root=codeRoot(),exec=run}={}){
   required(shaPattern.test(pin),'REVIEWED_SOURCE_PIN_REQUIRED');
   required(typeof process.getuid==='function'&&process.getuid()!==0,
     'USER_SYSTEMD_NONROOT_REQUIRED');
