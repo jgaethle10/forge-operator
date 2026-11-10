@@ -69,9 +69,9 @@ export function auditProductionLedger(ledger, { now = Date.now(), staleAfterHour
     if (typeof id !== 'string' || !/^[a-z0-9][a-z0-9._-]{2,79}$/.test(id)) {
       throw new Error('Invalid or unsafe project ID');
     }
-    if (seen.has(id)) throw new Error(\`Duplicate project ID: \${id}\`);
+    if (seen.has(id)) throw new Error(`Duplicate project ID: ${id}`);
     seen.add(id);
-    if (!STATES.includes(project.current_stage)) throw new Error(\`Unsupported state for \${id}\`);
+    if (!STATES.includes(project.current_stage)) throw new Error(`Unsupported state for ${id}`);
     const status = project.current_stage;
     const receiptTime = verifyReceipt(project.last_verified_receipt, now);
     const hasNext = validNextAction(project.next_action);
@@ -116,7 +116,7 @@ export function auditProductionLedger(ledger, { now = Date.now(), staleAfterHour
       const requestedGate = project.next_action?.requires_gate;
       if (hasNext && PROTECTED_GATES.has(requestedGate)) {
         mark('protected_gate_requires_approval');
-        add(founder_decisions, id, \`authorize_\${requestedGate}\`, 'protected_gate_requires_approval', 'founder');
+        add(founder_decisions, id, `authorize_${requestedGate}`, 'protected_gate_requires_approval', 'founder');
       }
     }
     items.push({
