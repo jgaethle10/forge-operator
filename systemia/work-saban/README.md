@@ -130,3 +130,10 @@ The six existing Saban specialist desks now share a unified architectural room w
 **View:** the lower room-level angle is an optional smooth camera mode, not true first-person collision, spatial navigation, or walking simulation. Orbit/pan/touch, follow-selected camera, immersive inspector and reduced-motion features remain. No image assets, remote packages, model provider, payment, public deployment or customer data were added.
 
 **Proof:** `node systemia/work-saban/office-3d.proof.mjs` checks six expressive characters, central studio objects, observed-event-only activity, concern/celebration expressions and low camera angle. `node systemia/work-saban/office-browser-qa.mjs` checks headless Chrome desktop and iPhone-sized rendering, captures shared studio screenshots and keeps the existing phone observation interaction checks. A screenshot proves appearance, not real on-device Safari smoothness.
+
+## Guided visitor walk-through (draft)
+The 3D office now offers a manually operated **Start guided studio visitor tour** button. Eight authored camera viewpoints include the entrance, each of the six registered specialist desks and the communal table. The current camera eases between them using the same frame-rate independent camera controller. The left/right buttons or N/P step through stops; manual orbit, zoom, keyboard pan, worker focus, hidden 3D mode or Reset exits the tour.
+
+**Interpretation matters:** these are viewpoints along a guided visual tour, not physical pathfinding or a new agent actor. Camera movement does not indicate agent work, communication or actual location. A visible caption says CAMERA ONLY, and the existing inspector is updated for the named desk without inventing worker receipts.
+
+`node systemia/work-saban/office-tour.proof.mjs` checks waypoint data and mobile camera bounds. The office DOM proof checks tour entry, both directions, camera composition and zero task-state change. The real Chrome visual proof verifies the same interactions at desktop and phone-sized viewports, with a guided-tour screenshot artifact. This is not yet a first-person collision engine, and real iPhone Safari testing remains required.
