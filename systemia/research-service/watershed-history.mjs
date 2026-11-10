@@ -71,6 +71,14 @@ function verifySensor(sensor){
       throw new TypeError('USGS unit, station or timestamp mismatch');
   }
   if(!Array.isArray(sensor.failures)||sensor.failures.length>16)throw new TypeError('sensor failure inventory invalid');
+  const sweCount=new Set(sensor.snow.filter(r=>r.kind==='WTEQ'&&r.freshness==='current'&&isNumber(r.value)).map(r=>r.station_id)).size;
+  const riverCount=new Set(sensor.river.filter(r=>r.kind==='stream_discharge'&&r.freshness==='current'&&
+    isNumber(r.value)&&goodTime(r.time)).map(r=>r.station_id)).size;
+  if(!Number.isInteger(sensor.source_coverage?.snow_station_count)||
+     !Number.isInteger(sensor.source_coverage?.usgs_discharge_location_count)||
+     sensor.source_coverage.snow_station_count!==sweCount ||
+     sensor.source_coverage.usgs_discharge_location_count!==riverCount)
+    throw new TypeError('source coverage counts contradict sensor observations');
   if(sensor.source_coverage?.suitable_for_publication!==false)throw new TypeError('source coverage publication flag absent');
   return Object.freeze({
     as_of:sensor.as_of,
@@ -153,7 +161,8 @@ function verifyReservoirs(reservoir){
   if(derived!==null) {
     if(rows.length!==5||rows.some(r=>r.storage_af===null)||
       new Set(rows.map(r=>r.source_day)).size!==1||
-      !isNumber(derived)||Math.abs(rows.reduce((sum,r)=>sum+r.storage_af,0)-derived)>0.011)
+      !isNumber(derived)||Math.abs(rows.reduce((sum,r)=>sum+r.storage_af,0)-derived)>0.011||
+      reservoir.derived_sum_source_reported_day!==rows[0].source_day)
       throw new TypeError('reservoir sum not supported by five matching source days');
   }
   return {readings:rows,derived_provisional_sum_af:derived,provisional:true,
