@@ -3,6 +3,11 @@ name: Evercraft Worlds owned public readiness (read-only)
 # Source CI is not deployment proof. This monitor uses only published HTTPS
 # GET requests. Never mutates customer worlds or configures a route.
 on:
+  pull_request:
+    paths:
+      - 'scripts/audit-worlds-owned-readiness.mjs'
+      - 'tests/worlds-owned-readiness.test.mjs'
+      - '.github/workflows/evercraft-worlds-readiness-watch.yml'
   workflow_dispatch:
   schedule:
     - cron: '37 */6 * * *'
@@ -42,13 +47,14 @@ jobs:
           node --check scripts/audit-worlds-owned-readiness.mjs
           node --test tests/worlds-owned-readiness.test.mjs
       - name: Probe configured owned HTTPS origin (no writes)
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifacts/worlds-readiness
           node scripts/audit-worlds-owned-readiness.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-readiness/read-only.json
       - name: Display clear status without implying customer readiness
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         shell: bash
         run: |
           if [ -s artifacts/worlds-readiness/read-only.json ]; then
@@ -69,7 +75,7 @@ jobs:
             printf '%s\n' '### Evercraft Worlds external readiness' '- Result: **no completed receipt**' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Preserve exact machine-readable release receipt
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-worlds-owned-readiness
