@@ -2839,7 +2839,7 @@ export async function startEvercraftComputeNode({
             body.input?.work_saban_facebook_page_id ||
             process.env.EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID || ''
           ).trim();
-          if (workSabanFacebookPageId && !/^\\d{5,30}$/.test(workSabanFacebookPageId)) {
+          if (workSabanFacebookPageId && !/^\d{5,30}$/.test(workSabanFacebookPageId)) {
             return send(res, 422, { error: 'core_clip_facebook_page_id_invalid' });
           }
           const workSabanCredentialRef = String(
