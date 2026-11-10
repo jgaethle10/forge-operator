@@ -1,0 +1,32 @@
+name: EO-001 sovereign gateway adapter research
+on:
+  push:
+    branches:
+      - research/eo001-sovereign-gateway-adapter-20261109
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate*'
+      - '.github/workflows/eo001-sovereign-gateway-research.yml'
+  pull_request:
+    branches:
+      - research/eo001-independent-workflow-candidate-20261029
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate*'
+      - '.github/workflows/eo001-sovereign-gateway-research.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check adapter syntax
+        run: node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
+      - name: Run isolated mock transport and real policy guard tests
+        run: node --test integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.test.mjs
+      - name: Recheck existing evidence policy
+        run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs
