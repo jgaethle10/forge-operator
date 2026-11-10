@@ -34,6 +34,33 @@ These are **documented source contracts**, not a claim that every adapter is dep
 7. Bounded internal snapshot (5000 authorized matching records) and bounded projection. Overflow fails closed at the snapshot layer; display truncation is disclosed with `complete: false`.
 8. No new database, third-party code, network ingress, agent execution power or production rollout.
 
+## Verified source-to-Context receipt projection inventory
+
+As inspected in `systemia/context-fabric/receipt-bridge.mjs`:
+
+| Receipt family | Explicit existing projection handler | Nature of evidence |
+|---|---|---|
+| `evercraft.execution-gate.lease-event.v1` | `projectExecutionCompletion` | Completed execution lease with outcome evidence reference |
+| `evercraft.intake.systemia-admission-packet.v1` | `projectIntakeAdmission` | Accepted intake packet with no execution authority |
+| `evercraft.systemia.mission-admission-receipt.v1` | `projectMissionAdmission` | Mission admitted or held, not proof of execution |
+
+`coverage.mjs` measures **currently authorized visible Context records** by
+the schemas above. It checks the Context record/retraction SHA-256 hashes,
+but it **does not re-fetch or independently verify** original upstream source
+receipts, nor measure the completeness of those upstream ledgers. The unit
+test reads the actual bridge switch cases to catch source/manifest drift.
+
+These domains have documented evidence contracts but **no handler in this
+particular Context Receipt Bridge** as currently inspected: Payments,
+Shipping, Lineage, Interaction Ledger and Notification Fabric. Their lack
+of a handler is **not a claim that the domain lacks its own historical
+storage, receipts, activity or a separate data route**.
+
+A complete commercial or operational history requires an explicit source
+inventory, bounded retrieval and independent validation of its originating
+receipts. A company-wide coverage ratio **cannot be computed** from this
+Context-only view because its global denominator is unknown.
+
 ## Unresolved gaps worth documenting, not guessing away
 
 | Gap | Present state | Consequence / next evidence gate |
@@ -77,6 +104,7 @@ These are **documented source contracts**, not a claim that every adapter is dep
 ```bash
 node --test systemia/context-fabric/timewalk/timewalk.test.mjs
 node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
+node --test systemia/context-fabric/timewalk/coverage.test.mjs
 node --test systemia/context-fabric/fabric.test.mjs
 ```
 
