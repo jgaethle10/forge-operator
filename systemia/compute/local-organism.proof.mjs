@@ -170,7 +170,6 @@ try {
   fs.rmSync(root, { recursive: true, force: true });
 }
 
- 
 // A successful restart receipt is not proof that the resident runtime has
 // released its process resources. In CI, fail explicitly and report bounded
 // handle *classes* if shutdown leaves listeners/children alive. Never force
