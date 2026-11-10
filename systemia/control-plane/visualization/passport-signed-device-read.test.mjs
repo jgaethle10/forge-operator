@@ -280,3 +280,36 @@ test('unauthorized Passport cannot cause Ambient registry disclosure',()=>withCa
     attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
   }),/visual_access_denied/);
 }));
+
+test('future-dated heartbeat cannot forge a fresh approved device observation',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot,registry,manifest}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  registry.heartbeat({
+    device_id:'private-device',
+    capability_manifest_hash:manifest.manifest_hash,
+    attestation_identity:'test-identity',
+    observed_at:'2026-11-05T23:15:00.000Z',
+  });
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/device_heartbeat_in_future/);
+}));
+test('Ambient trust attestation identity must match approved device manifest',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  const recordFile=join(registryRoot,'devices','private-device.json');
+  const record=JSON.parse(await readFile(recordFile,'utf8'));
+  record.attestation_identity='some-other-device';
+  await writeFile(recordFile,JSON.stringify(record),{mode:0o600});
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/attestation_binding_invalid/);
+}));
