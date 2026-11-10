@@ -44,6 +44,8 @@ test('queries select only public non-owner fields and source geometry',()=>{
 test('read complete WA reclamation permit points with metadata, page and count audit',async()=>{
   const source=LAND_SOURCE_CATALOG.washingtonSurfacePermits;
   const calls=[],points=[p(10,[-119.5,46.5]),p(11,[-118,47])];
+  points[0].properties.APPLICANT='Private Permittee';
+  points[0].properties.OWNER_ADDRESS='Not for export';
   const fetchImpl=async(url)=>{
     const u=new URL(url);calls.push(u);
     if(!u.pathname.endsWith('/query'))return {ok:true,json:async()=>({
@@ -57,6 +59,10 @@ test('read complete WA reclamation permit points with metadata, page and count a
   assert.equal(result.features.length,2);
   assert.equal(result.metadata.complete,true);
   assert.equal(result.metadata.source_count_after,2);
+  assert.deepEqual(Object.keys(result.features[0].properties).sort(),
+    ['OBJECTID','PERMIT_NO','COUNTY','COMMODITY'].sort());
+  assert.equal(JSON.stringify(result.features).includes('Private Permittee'),false);
+  assert.equal(JSON.stringify(result.features).includes('OWNER_ADDRESS'),false);
   assert.match(result.metadata.sha256_source_features,/^[0-9a-f]{64}$/);
   assert.equal(calls.length,5);
 });

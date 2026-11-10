@@ -182,3 +182,8 @@ The retired `site1` reclamation-permit service returns ArcGIS 404. The current W
 These mapped locations describe mines with active **reclamation permits**, not proof of current operation, land title, economic reserves, permission to extract, or site accessibility. Earlier 42-point findings were from a different dataset vintage, not an automatically trusted current count.
 
 Official DNR layer: https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1
+
+### Export privacy invariant
+Regardless of an ArcGIS server's handling of `outFields`, the WA permit-point adapter now constructs a **new** feature with only `OBJECTID`, `PERMIT_NO`, `COUNTY`, `COMMODITY`, and normalized point coordinates. Any unsolicited applicant, address, owner, or other attributes are dropped before hashing, saving, joining, or rendering. Unit tests simulate an upstream server returning applicant and address values and prove the evidence export excludes them.
+
+**Passing November 9 local / November 10 UTC acceptance:** https://github.com/jgaethle10/forge-operator/actions/runs/42738307100 achieved 56/56 unit tests and 3/3 jobs passing; 48 DNR v4 Grant approximate reclamation-permit points, WGS geology polygon import 1,161, material tests 232, historical mine points 304, one study area, 700 research dossiers, and 8 WGS polygon planning sample checks all source-verified. DNR point geography intersects WGS classes: 29 Demonstrated, 6 Inferred, 10 Speculative, 3 Not a Resource, with no legal title/permissions findings. The only remaining publisher-spatial issue is WGS anomalous zero `within`, explicitly unresolved, rather than a newly confirmed map containment fact. No production rollout or mining advice is authorized.

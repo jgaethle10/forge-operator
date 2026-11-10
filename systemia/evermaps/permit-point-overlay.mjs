@@ -78,7 +78,13 @@ export async function fetchGrantPermitPoints({fetchImpl=fetch,pageSize=100,
       if(f?.geometry?.type!=='Point'||!Array.isArray(f.geometry.coordinates)||
          !FIELDS.every(k=>Object.hasOwn(p,k)))throw new Error('Invalid permit point or source fields');
       if(p.COUNTY!=='Grant')throw new Error('Permit point outside requested county field');
-      ids.add(oid);features.push(f);
+      // Keep only approved public fields even if a server ignores outFields.
+      // Never persist permittee, applicant, name, address, or unrequested attributes.
+      const properties=Object.fromEntries(FIELDS.map(name=>[name,p[name]]));
+      const sanitized={type:'Feature',properties,geometry:{
+        type:'Point',coordinates:f.geometry.coordinates.slice(0,2)
+      }};
+      ids.add(oid);features.push(sanitized);
     }
     if(features.length>expected)throw new Error('Permit count exceeded start count');
     pages++;
