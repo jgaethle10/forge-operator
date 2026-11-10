@@ -97,6 +97,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
     frames.push({tick,position:{x:round(p1.x),z:round(p1.z)},velocity:{x:round(roverAfter.rigidBody.velocity.x),
       z:round(roverAfter.rigidBody.velocity.z)},sensorFresh:observed,sensorAge:Number.isFinite(age)?round(age):null,
       uncertainty:round(uncertainty),observedObstacleCount:lastScan.length,requested:decision.reason,
+      ...(decision.shield?{shieldDiagnostics:decision.shield}:{}),
       requestedSpeed:round(length(decision.velocity)),appliedSpeed:round(length(applied)),
       nativeContacts:contacts.map(c=>({aId:c.aId,bId:c.bId})),sweptContacts:sweeps,
       obstacles:next.entities.filter(e=>e.id!=='rover').map(e=>({id:e.id,...xy(e),radius:e.collider.radius}))});
