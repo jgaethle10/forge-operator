@@ -190,3 +190,20 @@ Regardless of an ArcGIS server's handling of `outFields`, the WA permit-point ad
 
 ## iPhone script-disabled map preview (November 9, 2026)
 An iPhone screen recording demonstrated an empty Canvas and a misleading 'No source files loaded' status despite a complete, preloaded 6.9MB HTML file. Some mobile file viewers display HTML/CSS but disable JavaScript. The builder now embeds a zero-JavaScript, source-derived SVG preview of the verified WGS polygons, test sites, historic mines and study boundary. The preview appears above controls on iPhone until JavaScript successfully initializes the interactive Canvas; otherwise it remains visible with a clear label. Publisher data are still checked against all four SHA-256 source receipts before creation. This fallback is a static geographic overview, not a full interactive map. True iPhone pan/zoom requires serving the self-contained map at an HTTPS URL rather than opening a ChatGPT download preview.
+
+## November 9, 2026 | Owned edge browser-hosted staging contract
+
+This draft adds `systemia/evermaps/staging-http.mjs` and a **loopback-only** native Node server `staging-http-cli.mjs`. It reads immutable artifact bytes at startup and rejects a release unless the **complete current-run source health**, WGS SHA-256 evidence, source-hashed research packet and safe iPhone preview are present. No remote map vendor, API key or live AI is needed.
+
+A strict allowlist serves `/evermaps/` (the interactive preloaded map), `/research/` (searchable research index), `/research.csv`, and `/api/health`. All other paths return 404 and non-read methods return 405. Source payloads, permitted-operator records and filesystem paths are not exposed through HTTP. It sets no-store, anti-framing and browser CSP headers.
+
+Local smoke test in CI builds the actual fresh Grant source bundle and boots this service at `127.0.0.1` on an ephemeral port, requests public routes, verifies health and checks inaccessible raw evidence. `release_state=verified_source_bundle_not_publicly_deployed` and `public_https_route_verified=false` remain truthful until Evercraft Edge provisions a real, TLS-verified public route.
+
+Run on an **owned Evercraft Compute node** after the release artifact has been approved and placed in a restricted directory:
+
+```bash
+EVERMAPS_RELEASE_DIR=/var/lib/evercraft/evermaps/releases/<approved-ref> \
+EVERMAPS_STAGING_PORT=4737 node systemia/evermaps/staging-http-cli.mjs
+```
+
+Bind only `127.0.0.1:4737`. Evercraft Edge must supply TLS, the domain, route identity, admission receipts, restart/rollback, and a public HTTPS canary. **Do not** assume the host or domain exists, do not bypass Yard/Systemia authority and do not promote CI-only tests to a public deployment. There is no automatic merge or live site in this research branch.
