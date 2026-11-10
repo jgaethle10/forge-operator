@@ -1,0 +1,51 @@
+name: EPS Havenly owned service rescue with Saban
+on:
+  pull_request:
+    paths:
+      - 'public/eps/**'
+      - 'public/havenly/**'
+      - 'systemia/migrations/base44-exit/eps-havenly-*'
+      - 'tests/eps-havenly-rescue.test.mjs'
+      - '.github/workflows/eps-havenly-rescue.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/eps/**'
+      - 'public/havenly/**'
+      - 'systemia/migrations/base44-exit/eps-havenly-*'
+      - 'tests/eps-havenly-rescue.test.mjs'
+      - '.github/workflows/eps-havenly-rescue.yml'
+permissions:
+  contents: read
+jobs:
+  service-continuity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test customer contact and migration truthfulness
+        run: node --test tests/eps-havenly-rescue.test.mjs systemia/eps/public-quote-intake.test.mjs
+      - name: Execute redacted Saban portfolio archaeology
+        run: node systemia/saban/formation.mjs --request systemia/migrations/base44-exit/eps-havenly-saban-formation.json --execute
+      - name: Require complete Saban receipt without publication
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='artifacts/saban-multiplier/formations/eps-havenly-recovery-intake-20261017/latest.json';
+          const receipt=JSON.parse(fs.readFileSync(p,'utf8'));
+          const s=receipt.summary;
+          if(s.completed!==1 || s.failed!==0 || s.failed_quality!==0 || s.blocked!==0 || s.completed_with_dead_letter!==0) process.exit(1);
+          if(receipt.nodes[0]?.receipt?.reconciliation?.publication_changes_applied!==0) process.exit(1);
+          console.log('Saban rescue archaeology passed, without deployment, payment or publication');
+          NODE
+      - name: Preserve proof receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-havenly-saban-recovery
+          path: artifacts/saban-multiplier/formations/eps-havenly-recovery-intake-20261017/
+          if-no-files-found: warn
+          retention-days: 30

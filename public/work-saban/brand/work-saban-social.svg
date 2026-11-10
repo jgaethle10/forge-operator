@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Work Saban: Give your work a team</title>
+<desc id="desc">White campaign card with the flowing crimson Work Saban symbol, two-tone wordmark, and specialist preview.</desc>
+<rect width="1200" height="630" fill="#FFFFFF"/>
+<path d="M0 0H1200V11H0Z" fill="#A4142F"/>
+<defs><linearGradient id="social-flow" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#A4142F"/><stop offset="1" stop-color="#C12446"/></linearGradient></defs>
+<g transform="translate(73 59) scale(.73)">
+<g transform="translate(0 13)">
+<path fill="#A4142F" d="M7 49C3 45 3 40 7 36L14 29C18 25 22 25 26 29L47 49C51 53 55 53 59 49L69 40L89 58L70 78C59 89 46 89 35 80Z"/>
+<path fill="url(#social-flow)" d="M43 49L57 34C66 25 78 25 87 34L110 56C114 60 114 65 110 69L103 76C99 80 93 80 89 76L72 60C68 56 64 56 60 60L56 65Z"/>
+<circle cx="103" cy="20" r="13" fill="#B51A38"/>
+</g>
+</g>
+<text x="186" y="118" font-family="Arial,Helvetica,sans-serif" fill="#171717" font-size="40" font-weight="800" letter-spacing="-2">work</text>
+<text x="287" y="118" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="40" font-weight="800" letter-spacing="-2">saban</text>
+<text x="186" y="148" font-family="Arial,Helvetica,sans-serif" fill="#777777" font-size="17" font-weight="700" letter-spacing="2">BY EVERCRAFT</text>
+<text x="74" y="308" font-family="Arial,Helvetica,sans-serif" fill="#171717" font-size="97" font-weight="800" letter-spacing="-6">Give your work</text>
+<text x="74" y="417" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="112" font-weight="800" letter-spacing="-7">a team.</text>
+<text x="76" y="486" font-family="Arial,Helvetica,sans-serif" fill="#555555" font-size="26">You bring the work. Saban brings the team.</text>
+<g transform="translate(851 202)">
+<rect width="252" height="265" rx="23" fill="#F8F8F7" stroke="#E6E4E2"/>
+<circle cx="70" cy="72" r="33" fill="#F6D9DF"/><circle cx="160" cy="72" r="33" fill="#EFEFEE"/><circle cx="115" cy="160" r="33" fill="#F5E1D6"/>
+<g fill="#65182A"><circle cx="60" cy="70" r="3"/><circle cx="80" cy="70" r="3"/><circle cx="150" cy="70" r="3"/><circle cx="170" cy="70" r="3"/><circle cx="105" cy="158" r="3"/><circle cx="125" cy="158" r="3"/></g>
+<g stroke="#65182A" stroke-width="3" fill="none" stroke-linecap="round"><path d="M63 82Q70 88 77 82"/><path d="M153 82Q160 88 167 82"/><path d="M108 171Q115 177 122 171"/></g>
+<text x="126" y="228" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="17" font-weight="700">ONE TASK · A TEAM</text>
+</g>
+<text x="74" y="580" font-family="Arial,Helvetica,sans-serif" fill="#A4142F" font-size="18" letter-spacing="2" font-weight="800">PRIVATE PILOT INTEREST</text>
+</svg>

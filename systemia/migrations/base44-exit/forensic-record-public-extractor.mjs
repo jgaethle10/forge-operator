@@ -21,6 +21,19 @@ export const PROTECTED_FORENSIC_ENTITIES=[
 ];
 
 const clean=(v)=>String(v??'').trim();
+// External legacy extraction is frozen. The only supported candidate source
+// during recovery is an explicitly passed, local loopback fixture/service.
+function assertOwnedSnapshotSource(value,label){
+ let u;
+ try{u=new URL(String(value||''))}catch{throw new Error(label+'_missing_or_invalid')}
+ if(u.hostname==='base44.app'||u.hostname.endsWith('.base44.app'))
+  throw new Error('forensic_snapshot_legacy_provider_frozen');
+ if(u.protocol!=='http:'||!['127.0.0.1','localhost','::1'].includes(u.hostname)||
+    u.username||u.password)
+  throw new Error(label+'_owned_loopback_only');
+ return u;
+}
+
 const stable=(v)=>{
   if(Array.isArray(v)) return v.map(stable);
   if(v&&typeof v==='object') return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));
@@ -41,7 +54,7 @@ function atomicWrite(file,bytes,mode=0o600){
 async function fetchText(url,{sourceFetch=fetch,maxBytes=5*1024*1024}={}){
   const response=await sourceFetch(url,{
     headers:{'accept':'text/html,application/javascript,text/javascript,*/*','user-agent':'Evercraft-Forensic-Record-Migration/1.0'},
-    redirect:'follow',
+    redirect:'manual',
   });
   if(!response.ok) throw new Error('forensic_public_source_http_'+response.status+':'+new URL(url).pathname);
   const bytes=Buffer.from(await response.arrayBuffer());
@@ -52,7 +65,7 @@ async function fetchText(url,{sourceFetch=fetch,maxBytes=5*1024*1024}={}){
 async function fetchJson(url,{sourceFetch=fetch}={}){
   const response=await sourceFetch(url,{
     headers:{'accept':'application/json','user-agent':'Evercraft-Forensic-Record-Migration/1.0'},
-    redirect:'follow',
+    redirect:'manual',
   });
   const body=await response.json().catch(()=>null);
   if(!response.ok) throw new Error(body?.error||('forensic_public_api_http_'+response.status));
@@ -81,13 +94,14 @@ function sameOriginAssets(html,siteUrl){
 
 export async function discoverLegacyForensicApp({
   siteUrl='https://filescompanion.com/',
-  apiOrigin='https://base44.app',
+  apiOrigin='',
   sourceFetch=fetch,
 }={}){
+  const api=assertOwnedSnapshotSource(apiOrigin,'forensic_public_api_origin');
   const site=new URL(siteUrl);
+  if(site.hostname==='base44.app'||site.hostname.endsWith('.base44.app'))
+    throw new Error('forensic_snapshot_legacy_provider_frozen');
   if(!['http:','https:'].includes(site.protocol)) throw new Error('forensic_site_url_protocol_invalid');
-  const api=new URL(apiOrigin);
-  if(!['http:','https:'].includes(api.protocol)) throw new Error('forensic_api_origin_protocol_invalid');
 
   const html=await fetchText(site.toString(),{sourceFetch});
   const ids=new Set(candidateIds(html));
@@ -219,13 +233,14 @@ function findingIntegrity(rows){
 
 export async function extractPublicForensicSnapshot({
   siteUrl='https://filescompanion.com/',
-  apiOrigin='https://base44.app',
+  apiOrigin='',
   outDir,
   sourceFetch=fetch,
   entities=PUBLIC_FORENSIC_ENTITIES,
   pageSize=500,
 }={}){
   if(!outDir) throw new Error('forensic_snapshot_out_dir_required');
+  assertOwnedSnapshotSource(apiOrigin,'forensic_public_api_origin');
   const requested=[...new Set((entities||[]).map(clean).filter(Boolean))];
   if(!requested.length) throw new Error('forensic_snapshot_entities_required');
   for(const entity of requested){

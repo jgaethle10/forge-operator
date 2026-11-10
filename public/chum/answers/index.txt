@@ -6,9 +6,9 @@ Machine Commerce MCP: not declared
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 120
-Unique user phrases: 1083
-Candidate edges: 1191
+Pain-index entries: 121
+Unique user phrases: 1093
+Candidate edges: 1201
 Ambiguous phrases: 108
 
 ## 15 GB video analysis
@@ -109,6 +109,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html
 
+## AI boardroom for a tough executive decision
+Answer ID: intent:19a72c01c0
+Human-readable match: /chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
+
 ## AI context limit prevents full media analysis
 Answer ID: intent:11b1153cc1
 Human-readable match: /chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1/
@@ -122,6 +129,13 @@ Human-readable match: /chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json
 Candidates:
 - EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1
+
+## AI council to pressure-test a startup or company decision
+Answer ID: intent:15e02d5509
+Human-readable match: /chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
 
 ## AI dispatch for quarry haul trucks
 Answer ID: intent:81aeebefde
@@ -371,6 +385,13 @@ Human-readable match: /chum/answers/doors/ask-a-matched-partner-if-they-have-cap
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce.json
 Candidates:
 - Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
+## ask ChatGPT Claude and Gemini to critique a proposal
+Answer ID: intent:240110dd63
+Human-readable match: /chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
 
 ## ASL and Deaf culture learning
 Answer ID: intent:960d5b1784
@@ -1159,6 +1180,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## compare AI disagreements and identify the evidence needed
+Answer ID: intent:6fba7a24a5
+Human-readable match: /chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
+
 ## compare business strategy options before choosing one
 Answer ID: intent:400f146650
 Human-readable match: /chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/
@@ -1172,6 +1200,13 @@ Human-readable match: /chum/answers/doors/compare-candidate-food-production-regi
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json
 Candidates:
 - FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
+
+## compare different AI model answers for a business strategy
+Answer ID: intent:77a78cdabf
+Human-readable match: /chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
 
 ## compare electricity mixes between regions
 Answer ID: intent:d49f331223
@@ -2978,6 +3013,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Website Launch Service | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1
 
+## have AI advisers challenge each other's business assumptions
+Answer ID: intent:fb03e8e1fa
+Human-readable match: /chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
+
 ## headless browser
 Answer ID: intent:f3814bb265
 Human-readable match: /chum/answers/doors/headless-browser-f3814bb265/
@@ -3458,6 +3500,13 @@ Human-readable match: /chum/answers/doors/i-want-a-business-simulator-where-i-ca
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
+
+## I want different AI models to debate a strategy
+Answer ID: intent:da777423e2
+Human-readable match: /chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
 
 ## I want to see how this decision could affect staffing sales cash flow and operations
 Answer ID: intent:a51bf4ce17
@@ -4398,12 +4447,26 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - SkyOps Parking | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html
 
+## multi-model decision review with risk and operational perspectives
+Answer ID: intent:838373227f
+Human-readable match: /chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
+
 ## multi-URL public web fetch
 Answer ID: intent:fd424feb3f
 Human-readable match: /chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
+
+## multiple AI assistants give conflicting recommendations
+Answer ID: intent:432065ee04
+Human-readable match: /chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
 
 ## music software where AI edits the actual session graph
 Answer ID: intent:fa9d7900e7
@@ -7629,6 +7692,13 @@ Human-readable match: /chum/answers/doors/why-am-i-not-getting-interviews-ee3d29
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/why-am-i-not-getting-interviews-ee3d2903d5.json
 Candidates:
 - Career Command Resume + Job Fit Audit | kind=machine_offer | commercial=verify | machine=discovery_only | public=https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1
+
+## why do ChatGPT and Claude disagree about my business decision
+Answer ID: intent:f2b4762cd8
+Human-readable match: /chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json
+Candidates:
+- Evercraft AI Boardroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html
 
 ## why is my contractor website not ranking
 Answer ID: intent:e3ae48a812

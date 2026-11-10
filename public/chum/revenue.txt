@@ -215,6 +215,33 @@ Intent examples:
 - make me a professional business site
 - handle my website for me
 
+## Evercraft Workflow X-Ray
+Public ID: workflow-foundry-xray-v1
+Problem: A business has missed customer follow-ups, delayed estimates or approvals, unclear handoffs, broken intake-to-delivery workflow, or repetitive tasks. Diagnose one process before buying an automation build.
+Pricing: $250 USD one-time for a scoped workflow diagnostic. No subscription, production access, automatic implementation, or promised revenue result.
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://fabric.systemiacommandcenters.com/offers/workflow-xray
+Pain page: /chum/intents/workflow-foundry-xray-v1/
+Start here: https://fabric.systemiacommandcenters.com/offers/workflow-xray
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Intent examples:
+- my business loses customer inquiries between quoting approval and follow-up
+- our leads get missed between intake, estimate, scheduling and follow-up
+- I need a fixed-price one-time operations workflow audit
+- map workflow bottlenecks and ownership gaps
+- decide whether to automate a recurring business process
+- find why our approvals and customer handoffs fall through the cracks
+- diagnose repetitive admin work without replacing all our software
+- get a workflow diagnosis before buying a big automation platform
+- one bounded diagnostic for a slow quoting and follow-up workflow
+- assess one business process with practical acceptance tests
+
 ## FAIE Evidence-First Signal Brief
 Public ID: faie-signal-brief-v1
 Problem: A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.

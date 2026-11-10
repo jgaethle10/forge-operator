@@ -7,8 +7,8 @@
   "cadence_seconds": 3600,
   "entrypoint": "systemia/organism/rivet-session-freshness-runner.mjs",
   "authority": {
-    "execute_existing_admitted_session_ingest": "autonomous_with_machine_key",
-    "use_base44_as_temporary_compatibility_bridge": true,
+    "execute_existing_admitted_session_ingest": "held_until_owned_source_verified",
+    "use_base44_as_temporary_compatibility_bridge": false,
     "create_new_provider_accounts": false,
     "acquire_paid_session_data": false,
     "change_partner_controlled_rivet_brand": false,
@@ -16,21 +16,24 @@
     "silent_base44_fallback": false
   },
   "truth_gates": [
-    "exact_verified_compatibility_origin",
-    "systemia_machine_key_present",
     "http_success",
     "fresh_source_scan_receipt",
     "all_dynamic_ingestors_successful",
     "historical_watch_receipt_present",
     "latest_observed_at_never_inferred_from_scan_time",
     "no_inventory_truncation",
-    "no_destructive_cutover"
+    "no_destructive_cutover",
+    "owned_route_attestation_required",
+    "no_legacy_provider_egress",
+    "no_refresh_receipt_claim_without_real_source"
   ],
-  "hold_state": "held_until_verified_runtime_credentials_and_supervisor_cycle",
+  "hold_state": "FROZEN_BY_FOUNDER_2026_10_22_OWNED_SOURCE_AND_RECONCILIATION_REQUIRED",
   "roles": [
     "source_freshness",
     "evidence_integrity",
     "report_data_provenance"
   ],
-  "proof": "tests/rivet-session-freshness-runner.test.mjs"
+  "proof": "tests/rivet-session-freshness-runner.test.mjs",
+  "operational_network_requests_allowed": false,
+  "compatibility_bridge_retired": true
 }

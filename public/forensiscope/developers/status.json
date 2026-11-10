@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.forensiscope.developer-status.v1",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-10-29",
   "provider": "Evercraft LLC",
   "product": "ForensiScope by Evercraft",
   "product_key": "forensiscope",
@@ -17,7 +17,8 @@
   ],
   "public_handoff": {
     "state": "live_human_confirmed",
-    "url": null
+    "url": "https://jgaethle10.github.io/forge-operator/forensiscope/",
+    "mode": "email_inquiry_no_upload_no_charge"
   },
   "mcp": {
     "registry_name": "io.github.jgaethle10/forensiscope",

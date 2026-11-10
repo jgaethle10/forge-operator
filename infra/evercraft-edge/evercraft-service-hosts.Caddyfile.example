@@ -1,0 +1,31 @@
+# Staged example only. DO NOT import this file before domain authority,
+# public ingress, DNS and TLS/rollback gates pass. Fabric uses 127.0.0.1:8787.
+# Existing global options in /etc/evercraft/Caddyfile retain operator ports.
+# Static business sites remain noindex until a separately verified SEO cutover.
+
+evercraftpropertyservices.com, www.evercraftpropertyservices.com {
+  reverse_proxy 127.0.0.1:8787
+  header {
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    -Server
+  }
+}
+
+havenlycleaning.com, www.havenlycleaning.com {
+  reverse_proxy 127.0.0.1:8787
+  header {
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    -Server
+  }
+}
+
+sunshineandspotless.com, www.sunshineandspotless.com {
+  reverse_proxy 127.0.0.1:8787
+  header {
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    -Server
+  }
+}

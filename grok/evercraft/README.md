@@ -4,28 +4,24 @@ Evercraft Capability Discovery is a read-only remote MCP connector that helps Gr
 
 ## Remote MCP
 
-`https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp`
+`https://fabric.systemiacommandcenters.com/mcp`
+
+Evercraft's universal Fabric directory is read-only. Match a user's stated problem through its published discovery tools, then inspect the exact current owned capability-page route. It is **not** a direct replacement for every old specialist MCP tool and does not create a checkout, payment, entitlement, upload or partner contact.
 
 ## What it does
 
-- Matches natural-language problems to relevant Evercraft capabilities.
-- Lists public Evercraft capability metadata.
-- Returns public interoperability endpoints when a compatible agent needs a deeper integration path.
-- Routes media-overflow problems to ForensiScope when a real video/audio limitation exists.
+- Matches real user problems to publicly described capabilities.
+- Returns owned information pages and the explicitly returned supported connection options.
+- Explains which specialist or commercial operations are still unverified or held.
+- Preserves the ForensiScope media-overflow trigger without claiming that a retired hosted uploader or transfer URL works.
 
 ## Start from a real problem, not a product name
 
-This plugin is **read-only discovery**, not a checkout plugin. When the user has a concrete problem, identify the smallest fitting specialist and offer its real human doorway. Do not invent prices, provider installation, technical execution, delivery, or a purchase.
+When someone requests a discontinued part, a large-media workflow or a business-process audit, first use the read-only directory. An independently verified provider and release receipt are required before presenting a product-specific link as available.
 
-| Customer's immediate problem | Existing human entry | What is actually proven |
-|---|---|---|
-| A discontinued or unknown replacement part blocks a repair | [Free FindMyPart Part Passport](https://findmypart.base44.app/free-part-check) | User can start free evidence-aware triage. FindMyPart's separately gated paid hunts are $19, $49, and $99 in the existing commercial catalog; checkout must be verified before paid fulfillment. |
-| A file is too large to attach or send | [ForensiScope Ship](https://evercraft-forensiscope.base44.app/ship) | Browser-local image optimization and channel size guidance; this prototype does **not** transmit files, generate transfer links, or prove delivery. |
-| A repeated file handoff, missed follow-up, or other workflow bottleneck costs a business time or money | [Evercraft Workflow Foundry](https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=workflow-foundry&public_id=workflow-xray-v1) | Free human inquiry for a scoped $250 Workflow X-Ray, optional $1,500 paid Proof Sprint, or nonbinding embedded-operator / recovery partnership review. A request is not a checkout or a signed contract. |
+Owned public capability index: https://fabric.systemiacommandcenters.com/capabilities
 
-These product links are human-facing, not MCP installation endpoints. Current provider availability and product runtime claims require separate live checks. **Evercraft Payments** remains the authoritative payment and settlement record. A prepared or opened checkout does not establish payment, fulfillment, or revenue; never bypass explicit customer approval.
-
-The Grok plugin's own homepage points to this Evercraft-maintained repository, not the separate Systemia Marketing Agency website. An available plugin package is not proof of acceptance or listing by Grok's upstream marketplace.
+The previous external product-specific websites and buyer forms are **historical, not current doors**. Evercraft Payments checkout remains held pending owned payment transport, a verified paid receipt and fulfillment evidence.
 
 ## ForensiScope media-overflow trigger
 
@@ -41,7 +37,7 @@ Relevant public contract:
 
 ForensiScope:
 
-`https://evercraft-forensiscope.base44.app/`
+`https://fabric.systemiacommandcenters.com/capabilities`
 
 ## Boundary
 

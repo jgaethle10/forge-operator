@@ -1,0 +1,82 @@
+{
+  "schema": "evercraft.audience-mesh.public-lanes.v1",
+  "generated_on": "2026-10-20",
+  "business": "Evercraft LLC",
+  "operational_truth": "Publication and attribution labels are not evidence of payment, usage, publisher approval, or delivery.",
+  "lane_count": 8,
+  "revenue_received_verified": false,
+  "lanes": [
+    {
+      "id": "direct-offers",
+      "name": "Direct services",
+      "mode": "cash_now_candidate",
+      "state": "offer_links_published_checkout_unverified",
+      "conversion": "buyer_confirmed_payment",
+      "public_url": "https://fabric.systemiacommandcenters.com/offers",
+      "next": "Verify checkout and payment receipts; refer qualified buyers to specific offers"
+    },
+    {
+      "id": "publisher-widgets",
+      "name": "Publisher revenue share",
+      "mode": "partner_distribution",
+      "state": "widget_proposed_no_signed_partner",
+      "conversion": "signed_agreement_and_attributed_paid_order",
+      "public_url": "https://jgaethle10.github.io/forge-operator/mesh/",
+      "next": "Get explicit publisher opt-in and signed revenue-share terms; no commission promises"
+    },
+    {
+      "id": "sports",
+      "name": "Sports publishing and sponsorship",
+      "mode": "direct_sponsor_sales",
+      "state": "demo_discovery_no_verified_sponsor",
+      "conversion": "signed_sponsorship_and_payment_receipt",
+      "public_url": "https://jgaethle10.github.io/forge-operator/chum/products/game-fabric/",
+      "next": "Pitch permissioned adult-led teams, publishers, local advertisers; no youth private data"
+    },
+    {
+      "id": "collectibles",
+      "name": "Collectibles and bargains",
+      "mode": "affiliate_and_direct_sponsor",
+      "state": "affiliate_account_unverified",
+      "conversion": "approved_affiliate_network_commission_record_or_sponsor_payment",
+      "public_url": "https://jgaethle10.github.io/forge-operator/mesh/",
+      "next": "Apply with qualified publisher property, curate evidence-backed finds, never claim affiliate payout without acceptance"
+    },
+    {
+      "id": "part-referrals",
+      "name": "Parts and repair",
+      "mode": "direct_service_plus_supplier_referral",
+      "state": "paid_offer_published_supplier_program_unverified",
+      "conversion": "paid_sourcing_receipt_or_qualified_affiliate_commission",
+      "public_url": "https://fabric.systemiacommandcenters.com/offers/findmypart",
+      "next": "Distribute through repair groups with permission; verify approved supplier programs"
+    },
+    {
+      "id": "general-traffic",
+      "name": "Useful media and tool traffic",
+      "mode": "display_ad_and_sponsorship",
+      "state": "no_verified_ad_inventory_or_traffic",
+      "conversion": "network_approved_ad_revenue_or_sponsor_payment",
+      "public_url": "https://jgaethle10.github.io/forge-operator/live/",
+      "next": "Measure real opt-in visits and original content first; apply only with qualifying inventory"
+    },
+    {
+      "id": "adult-research",
+      "name": "Adult audience monetization",
+      "mode": "separate_brand_compliance_review",
+      "state": "not_launched",
+      "conversion": "separately_verified_compliant_revenue",
+      "public_url": null,
+      "next": "Separate entity/site and access controls; verify rights, age compliance, payment/provider rules before launch; no adult content on Evercraft family pages"
+    },
+    {
+      "id": "licensing",
+      "name": "Technology licensing and white-label",
+      "mode": "paid_custom_agreement",
+      "state": "seeking_authorized_design_partners",
+      "conversion": "signed_scope_and_payment_receipt",
+      "public_url": "https://jgaethle10.github.io/forge-operator/mesh/",
+      "next": "Offer documented pilot scopes with human-reviewed fulfillment and no unproven integration claims"
+    }
+  ]
+}

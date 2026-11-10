@@ -41,5 +41,18 @@
     "safety_family_and_continuity_products",
     "research_media_atlas_and_long_tail"
   ],
-  "retirement_rule": "Retire a Base44 dependency only after its named replacement is live, independently verified, reconciled and rollback-safe."
+  "retirement_rule": "Retire a Base44 dependency only after its named replacement is live, independently verified, reconciled and rollback-safe.",
+  "execution_freeze_2026_10_22": {
+    "founder_direction": "No further use of the legacy builder as an Evercraft execution, hosting, publishing, payments, tool, data-sync or new-development dependency",
+    "new_provider_operations_allowed": false,
+    "new_provider_builds_allowed": false,
+    "automated_provider_extraction_calls_allowed": false,
+    "legacy_source_reconstruction_as_release_proof_allowed": false,
+    "owned_git_and_runtime_only": true,
+    "previously_stored_private_data_safe_deletion_authorized": false,
+    "retire_or_delete_without_independent_replacement_and_reconciliation_receipts": false,
+    "historic_metadata_can_remain_as_inactive_evidence": true,
+    "legacy_url_is_not_live_evidence": true,
+    "cutover_status": "IN_PROGRESS_DO_NOT_CLAIM_COMPLETION"
+  }
 }

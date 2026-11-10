@@ -2,11 +2,11 @@ name: ForensiScope commercial release canary
 
 on:
   schedule:
-    - cron: '17 */6 * * *' # Read-only recurring drift check, no customer traffic or commerce mutation
+    - cron: '17 */6 * * *' # Owned-only hold receipt, zero external provider requests
   workflow_dispatch:
     inputs:
       strict:
-        description: "Fail run if a public release surface is invalid"
+        description: "Produce a held receipt, never contact a legacy endpoint"
         type: boolean
         default: true
   pull_request:
@@ -37,16 +37,12 @@ jobs:
           node-version: '22'
       - name: Local invariant tests (no network)
         run: node --test systemia/distribution/forensiscope-commerce-canary.test.mjs
-      - name: Read-only public surface and payment quote probes
+      - name: Record held owned-only commercial status without any outbound provider request
         env:
           EVERCRAFT_CANARY_OUT: artifacts/distribution/forensiscope-commerce-canary.json
-          STRICT: ${{ github.event_name == 'workflow_dispatch' && inputs.strict && 'true' || 'false' }}
         run: |
-          if [ "$STRICT" = 'true' ]; then
-            node systemia/distribution/forensiscope-commerce-canary.mjs --strict
-          else
-            node systemia/distribution/forensiscope-commerce-canary.mjs
-          fi
+          node systemia/distribution/forensiscope-commerce-canary.mjs
+          node -e "const r=require('./artifacts/distribution/forensiscope-commerce-canary.json'); if(r.network_requests!==0||r.customer_ready!==false||r.status!=='HELD_LEGACY_PROVIDER_EGRESS_FROZEN')process.exit(1);"
       - name: Save evidence including blocked runs
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,8 +54,8 @@ jobs:
       - name: Release truth
         if: always()
         run: |
-          echo "## ForensiScope read-only commercial release probe" >> "$GITHUB_STEP_SUMMARY"
-          echo "A 200 app shell is not Parcel Desk. A quote is not payment. A matching bundle is not real recipient delivery." >> "$GITHUB_STEP_SUMMARY"
+          echo "## ForensiScope owned-only commercial hold receipt" >> "$GITHUB_STEP_SUMMARY"
+          echo "Legacy provider calls frozen; no buyer readiness or paid delivery claims." >> "$GITHUB_STEP_SUMMARY"
           if [ -f artifacts/distribution/forensiscope-commerce-canary.json ]; then
             node -e "const r=require('./artifacts/distribution/forensiscope-commerce-canary.json'); console.log('Status: '+r.status); console.log('Failures: '+r.failures.join(', '))" >> "$GITHUB_STEP_SUMMARY"
           else

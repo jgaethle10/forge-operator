@@ -1,0 +1,77 @@
+{
+  "schema": "evercraft.signal.pilot-offer.v1",
+  "public_id": "signal-incident-evidence-brief-pilot-v1",
+  "provider": "Evercraft LLC",
+  "name": "Incident Evidence Brief",
+  "product": "Evercraft Signal",
+  "status": "founding_pilot_scope_request",
+  "price": {
+    "amount": 250,
+    "currency": "USD",
+    "billing": "one_time",
+    "state": "proposal_subject_to_accepted_scope"
+  },
+  "deliverable": "Human-reviewed written incident evidence brief",
+  "scope": {
+    "incident_count": 1,
+    "decision_questions": 1,
+    "public_source_links_max": 6,
+    "included": [
+      "Source ledger with publication/observation dates",
+      "Concise incident timeline",
+      "Confirmed, reported, contradicted, and unknown claim register",
+      "Top questions or documents needed to resolve critical gaps"
+    ],
+    "excluded": [
+      "Live environmental sensors or radiation testing",
+      "On-call emergency response",
+      "Legal, medical or emergency advisory opinion",
+      "Automated alerts",
+      "Unbounded or classified records investigation"
+    ],
+    "delivery_date": "confirmed_in_writing_after_scope_acceptance",
+    "revision_policy": "confirmed_in_writing_after_scope_acceptance"
+  },
+  "buyer_action": {
+    "url": "https://jgaethle10.github.io/forge-operator/signal/#request",
+    "mode": "owned_encrypted_inquiry_when_ready_else_local_email_draft",
+    "send_automatically": false,
+    "payment_link": null,
+    "order_created": false,
+    "checkout_available": false,
+    "user_consent_required": true,
+    "email_required_for_reply": true,
+    "native_api": "https://fabric.systemiacommandcenters.com/api/signal/inquiry",
+    "readiness_api": "https://fabric.systemiacommandcenters.com/api/signal/readiness",
+    "native_runtime_deployment_verified": false,
+    "customer_receipt_required": true
+  },
+  "commercial_controls": {
+    "official_checkout_required": true,
+    "scope_and_capacity_approval_before_payment": true,
+    "do_not_substitute_existing_stripe_sku": true,
+    "provider_paid_receipt_required_before_fulfillment_entitlement": true,
+    "no_customer_purchase_evidence_yet": true,
+    "live_native_intake_verified": false,
+    "native_intake_not_purchase": true
+  },
+  "revision_date": "2026-11-04",
+  "payment_authority": {
+    "system": "Evercraft Payments",
+    "provider_boundary": "Raven Nexus",
+    "settlement_adapter": "Stripe, processor only",
+    "canonical_order_owner": "evercraft_payments",
+    "canonical_entitlement_owner": "evercraft_payments",
+    "product_key": "evercraft-signal",
+    "offer_slug": "signal-brief",
+    "offer_key": "signal.incident_evidence_brief_250.v1",
+    "amount_cents": 25000,
+    "currency": "usd",
+    "owned_offer_page": "https://fabric.systemiacommandcenters.com/offers/signal-brief",
+    "owned_offer_page_status": "source_registered_not_live_verified",
+    "native_order_enabled": false,
+    "checkout_ready": false,
+    "provider_paid_receipt_verified": false,
+    "direct_stripe_link_allowed": false
+  }
+}

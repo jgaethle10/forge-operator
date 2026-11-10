@@ -1,0 +1,27 @@
+name: Affiliate Publishing Truth Gate
+on:
+  pull_request:
+    paths:
+      - 'public/affiliate-labs/**'
+      - 'systemia/affiliate-commerce/**'
+      - 'tests/affiliate-publisher.test.mjs'
+      - '.github/workflows/affiliate-publisher.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/affiliate-labs/**'
+      - 'systemia/affiliate-commerce/**'
+      - 'tests/affiliate-publisher.test.mjs'
+      - '.github/workflows/affiliate-publisher.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/affiliate-publisher.test.mjs

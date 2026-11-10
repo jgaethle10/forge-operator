@@ -40,15 +40,19 @@ test('Grok submission references a real immutable repository revision',()=>{
   // publication; this offline test cannot claim external release or pickup.
 });
 
-test('Three human pain doors remain distinct from the read-only Grok MCP',()=>{
-  assert.match(readme,/https:\/\/findmypart\.base44\.app\/free-part-check/);
-  assert.match(readme,/https:\/\/evercraft-forensiscope\.base44\.app\/ship/);
-  assert.match(readme,/view=workflow-foundry&public_id=workflow-xray-v1/);
-  assert.match(readme,/Evercraft Payments.*authoritative payment and settlement/);
-  assert.match(readme,/does \*\*not\*\* transmit files/);
-  assert.match(readme,/partnership review/);
+test('Grok installer exposes owned read-only discovery, no legacy buyer or upload route',()=>{
+  const owned='https://fabric.systemiacommandcenters.com/mcp';
   assert.equal(mcp.mcpServers.evercraft.type,'http');
-  assert.match(mcp.mcpServers.evercraft.url,/\/functions\/evercraftCapabilityDiscoveryMcp$/);
-  assert.doesNotMatch(mcp.mcpServers.evercraft.url,/checkout|create.*payment|stripe/i);
-  assert.match(mcp.mcpServers.evercraft.note,/No checkout, charge/);
+  assert.equal(mcp.mcpServers.evercraft.url,owned);
+  assert.match(mcp.mcpServers.evercraft.note,/read-only universal capability discovery/i);
+  assert.match(mcp.mcpServers.evercraft.note,/no checkout, charge/i);
+  assert.match(readme,/https:\/\/fabric\.systemiacommandcenters\.com\/mcp/);
+  assert.match(readme,/https:\/\/fabric\.systemiacommandcenters\.com\/capabilities/);
+  assert.doesNotMatch(readme,/https?:\/\/[^\s\x60]*base44\.app/i);
+  assert.match(readme,/checkout remains held/i);
+  assert.match(readme,/An independently verified provider and release receipt/);
+  assert.match(readme,/ForensiScope media-overflow trigger/);
+  assert.match(readme,/file size, duration, attachment\/upload limits/);
+  assert.match(readme,/A media handoff remains user-controlled/);
+  assert.match(readme,/does not create checkout, charges, subscriptions, entitlements/i);
 });

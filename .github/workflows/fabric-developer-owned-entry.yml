@@ -1,0 +1,37 @@
+name: Owned Fabric developer recovery gate
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-developer-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-developer-owned-entry.test.mjs'
+      - '.github/workflows/fabric-developer-owned-entry.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/fabric-developer-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-developer-owned-entry.test.mjs'
+      - '.github/workflows/fabric-developer-owned-entry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owned-developer-directory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify owned routes, safe MCP contract, and held specialists
+        run: node --test tests/fabric-developer-owned-entry.test.mjs tests/fabric-local-runtime.test.mjs tests/evercraft-fabric-runtime.test.mjs
+      - name: Preserve production deployment gate
+        run: |
+          echo 'Source proof is not a deployment or signed Yard runtime receipt.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Base44 specialist MCPs currently return HTTP 402 and remain held.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Evercraft Payments must independently prove canonical paid receipt and merchant fee settlement.' >> "$GITHUB_STEP_SUMMARY"

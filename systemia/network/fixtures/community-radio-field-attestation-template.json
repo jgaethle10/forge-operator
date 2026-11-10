@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.radio.operator-attestation-template.v1",
+  "observed_at_utc": null,
+  "source_revision": null,
+  "operator": {
+    "owns_lab_equipment": false,
+    "local_network_approved": false,
+    "consent_receipt": null
+  },
+  "boundary": {
+    "simulated_audio_only": false,
+    "fm_or_eas_equipment_touched": null,
+    "real_station_content_present": null
+  },
+  "host": {
+    "device_reference": null,
+    "private_ip": null
+  },
+  "listener": {
+    "device_reference": null,
+    "private_ip": null,
+    "photo_or_video_ref": null,
+    "audio_played_audibly": false,
+    "playback_witness_ref": null
+  },
+  "lan": {
+    "network_receipt": null
+  },
+  "outage": {
+    "host_upstream_internet_unavailable": false,
+    "listener_upstream_internet_unavailable": false,
+    "measurement_ref": null,
+    "observed_at_utc": null
+  },
+  "audio": {
+    "sha256": null,
+    "signed_bulletin_sha256": null,
+    "byte_range_http_pass": false,
+    "server_receipt": null
+  },
+  "negative": {
+    "tampered_audio_denied": false,
+    "tamper_receipt": null,
+    "expired_bulletin_denied": false,
+    "expiry_receipt": null,
+    "operator_stopped_server": false,
+    "further_access_denied": false,
+    "stop_receipt": null
+  },
+  "power": {
+    "measured_runtime_seconds": null,
+    "battery_only_test": false,
+    "measurement_ref": null
+  }
+}

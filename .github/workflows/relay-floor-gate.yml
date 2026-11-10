@@ -1,0 +1,39 @@
+name: Relay Floor Creative Gate
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/relay-floor-gate.mjs"
+      - "systemia/media-studio/relay-floor-gate.test.mjs"
+      - "systemia/media-studio/relay-source-verify.mjs"
+      - "systemia/media-studio/relay-source-verify.test.mjs"
+      - "systemia/media-studio/commercial-shotlist.mjs"
+      - "systemia/media-studio/commercial-shotlist.test.mjs"
+      - ".github/workflows/relay-floor-gate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/relay-floor-gate.mjs"
+      - "systemia/media-studio/relay-floor-gate.test.mjs"
+      - "systemia/media-studio/relay-source-verify.mjs"
+      - "systemia/media-studio/relay-source-verify.test.mjs"
+      - "systemia/media-studio/commercial-shotlist.mjs"
+      - "systemia/media-studio/commercial-shotlist.test.mjs"
+jobs:
+  creative-floor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Ensure FFmpeg media tools
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+      - name: Human motion and speech regression
+        run: node --test systemia/media-studio/relay-floor-gate.test.mjs systemia/media-studio/relay-source-verify.test.mjs systemia/media-studio/commercial-shotlist.test.mjs

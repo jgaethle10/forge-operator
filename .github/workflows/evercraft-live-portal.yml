@@ -1,0 +1,29 @@
+name: Evercraft LIVE portal source checks
+on:
+  pull_request:
+    paths:
+      - 'public/live/**'
+      - 'tests/evercraft-live-*.test.mjs'
+      - '.github/workflows/evercraft-live-portal.yml'
+  push:
+    branches:
+      - main
+      - feature/evercraft-live-evidence-workroom-rc08
+    paths:
+      - 'public/live/**'
+      - 'tests/evercraft-live-*.test.mjs'
+      - '.github/workflows/evercraft-live-portal.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  portal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source-backed workroom and data honesty
+        run: node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs

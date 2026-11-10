@@ -1,0 +1,39 @@
+name: Work Saban real-browser customer acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'public/work-saban/**'
+      - 'tests/work-saban-customer-browser-e2e.cjs'
+      - '.github/workflows/work-saban-real-browser.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/work-saban/**'
+      - 'tests/work-saban-customer-browser-e2e.cjs'
+      - '.github/workflows/work-saban-real-browser.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  file-to-deliverable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install ephemeral browser acceptance runner
+        run: |
+          npm install --prefix /tmp/work-saban-browser-check \
+            --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+          /tmp/work-saban-browser-check/node_modules/.bin/playwright install --with-deps chromium webkit
+      - name: Run Chromium desktop and WebKit mobile file-to-deliverable journey
+        env:
+          NODE_PATH: /tmp/work-saban-browser-check/node_modules
+        run: |
+          node --check tests/work-saban-customer-browser-e2e.cjs
+          node tests/work-saban-customer-browser-e2e.cjs

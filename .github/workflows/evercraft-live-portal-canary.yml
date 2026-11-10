@@ -1,0 +1,48 @@
+name: Evercraft LIVE verified public workroom canary
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: evercraft-live-portal-public-canary
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Prove public workroom source and retained demos
+        shell: bash
+        env:
+          BASE: https://jgaethle10.github.io/forge-operator
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp)"
+          trap 'rm -f "$tmp"' EXIT
+          check() {
+            curl -L --fail --silent --show-error --max-time 25 --retry 3 --retry-delay 2 "$BASE/$1" -o "$tmp"
+            grep -Fq "$2" "$tmp"
+            echo "PASS $1"
+          }
+          check 'live/' 'Evercraft LIVE | Actual Workroom'
+          grep -Fq 'PUBLIC ENGINEERING RECEIPTS' "$tmp"
+          grep -Fq 'id="held"' "$tmp"
+          grep -Fq 'src="./workroom.mjs"' "$tmp"
+          grep -Fq 'connect-src https://api.github.com' "$tmp"
+          if grep -Eiq 'drive\.google\.com|docs\.google\.com|base44\.app' "$tmp"; then
+            echo "Unsafe origin in public workroom";exit 1
+          fi
+          check 'live/workroom.mjs' "fetch(API+path"
+          check 'live/work-source.mjs' 'normalizePublicActivity'
+          check 'live/workroom.css' '.focus-title'
+          # Original functional artifacts remain available but are not the default 24/7 stage.
+          check 'demos/earthworks-autonomy/?studio=1' 'studioCamera'
+          check 'visuals/washington-active-volcanoes/motion.html' 'WASHINGTON'
+          {
+            echo '## Evercraft LIVE public Workroom'
+            echo "Verified public workroom assets and original demos at $BASE/live/"
+            echo 'This checks static host availability, not actual GitHub REST freshness, streaming uptime, or private mission activity.'
+            echo "Observed: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } >> "$GITHUB_STEP_SUMMARY"

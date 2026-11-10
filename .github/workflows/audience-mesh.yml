@@ -1,0 +1,31 @@
+name: Audience Mesh Truth Gate
+
+on:
+  pull_request:
+    paths:
+      - 'public/mesh/**'
+      - 'tests/audience-mesh.test.mjs'
+      - '.github/workflows/audience-mesh.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/mesh/**'
+      - 'tests/audience-mesh.test.mjs'
+      - '.github/workflows/audience-mesh.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove referral and payment boundaries
+        run: node --test tests/audience-mesh.test.mjs
+      - name: Validate standalone browser JavaScript
+        run: node --check public/mesh/embed.js

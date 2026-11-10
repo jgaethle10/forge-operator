@@ -2,6 +2,13 @@ import fs from 'node:fs';
 
 const files = [
   'distribution/machine-commerce-distribution.json',
+  'systemia/distribution/forensiscope-commerce-canary.mjs',
+  'systemia/organism/rivet-session-freshness-runner.mjs',
+  'systemia/organism/rivet-session-freshness.workflow.json',
+  'systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs',
+  'systemia/core/resident-services.json',
+  '.github/workflows/forensiscope-commerce-canary.yml',
+  '.github/workflows/website-commerce-browser-gate.yml',
   '.github/workflows/ci.yml',
   'systemia/yard/public-edge-activator.mjs',
   'systemia/chum/router-recall.mjs',
@@ -28,6 +35,9 @@ const files = [
   '.github/workflows/revenue-autonomy-heartbeat.yml',
   'systemia/compute/eps-social-yard-canary.mjs',
   'systemia/organism/eps-social-continuity.mjs',
+  'systemia/mcp/fabric-local-runtime.mjs',
+  'systemia/mcp/payment-return.mjs',
+  'systemia/mcp/owned-payment-transport.mjs',
   'systemia/chum/start-corridor.mjs',
   'systemia/chum/sync-public-discovery.mjs',
   'systemia/chum/build-public-mirror.mjs',
@@ -48,6 +58,9 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'systemia/distribution/forensiscope-commerce-canary.mjs',
+  'systemia/organism/rivet-session-freshness-runner.mjs',
+  'systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs',
   'systemia/yard/public-edge-activator.mjs',
   'systemia/chum/router-recall.mjs',
   'systemia/chum/direct-door-readiness.mjs',
@@ -63,6 +76,9 @@ const runtimeFiles = new Set([
   'server.ts',
   'systemia/compute/eps-social-yard-canary.mjs',
   'systemia/organism/eps-social-continuity.mjs',
+  'systemia/mcp/fabric-local-runtime.mjs',
+  'systemia/mcp/payment-return.mjs',
+  'systemia/mcp/owned-payment-transport.mjs',
   'systemia/chum/start-corridor.mjs',
   'systemia/chum/sync-public-discovery.mjs',
   'systemia/chum/build-public-mirror.mjs',

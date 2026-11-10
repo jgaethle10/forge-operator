@@ -1,0 +1,78 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-10-25T16:53:44.775Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "systemia-website-audit",
+  "source": "authorized_provider_probe",
+  "case_id": "website-audit-001",
+  "prompt": "My small-business website gets traffic but does not convert well. I want an AI-assisted audit covering performance, technical SEO, trust, conversion friction, and practical fixes. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Systemia Website Audit capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "615233703479fad4850e760e21e6ddb395f9c66a2fbe116159ab886a77638453",
+  "provider_receipt_sha256": "cf7b67cf2233ada456dd5b6b751eb1f292886aa8d22ac7faf44baae3a22c984a",
+  "response_sha256": "05806dfa249336fe799497c1c37b028c1ea218c9cc8f5338beb3980f015de6f1",
+  "probe_id": "website-audit-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "e6a88dba6f0d63962eb1b93ff3dd00071846815cadd934c02774a440a75fe3a9",
+    "tokens": [
+      "small",
+      "busines",
+      "website",
+      "gets",
+      "traffic",
+      "convert",
+      "well",
+      "ai",
+      "assist",
+      "audit",
+      "cover",
+      "performance",
+      "technical",
+      "seo",
+      "trust",
+      "conversion",
+      "friction",
+      "practical",
+      "fixe",
+      "service"
+    ],
+    "concepts": [
+      "demand",
+      "website",
+      "conversion",
+      "seo",
+      "performance"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "demand",
+        "evidence": "traffic"
+      },
+      {
+        "concept": "website",
+        "evidence": "website"
+      },
+      {
+        "concept": "conversion",
+        "evidence": "conversion"
+      },
+      {
+        "concept": "seo",
+        "evidence": "technical seo"
+      },
+      {
+        "concept": "performance",
+        "evidence": "performance"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

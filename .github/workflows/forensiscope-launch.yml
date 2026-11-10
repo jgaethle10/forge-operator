@@ -1,0 +1,52 @@
+name: ForensiScope Launch Gate
+on:
+  pull_request:
+    paths:
+      - 'systemia/forensiscope/commercial-offers.mjs'
+      - 'systemia/forensiscope/commercial-offers.test.mjs'
+      - 'systemia/mcp/forensiscope-sales-page.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/forensiscope-buyer-page.test.mjs'
+      - 'tests/forensiscope-static-page.test.mjs'
+      - 'tests/forensiscope-buyer-discovery.test.mjs'
+      - 'systemia/forensiscope/self-service-admission.mjs'
+      - 'systemia/forensiscope/resumable-ingress.mjs'
+      - 'tests/forensiscope-resumable-ingress.test.mjs'
+      - 'systemia/forensiscope/private-job-service.mjs'
+      - 'systemia/forensiscope/customer-runtime.mjs'
+      - 'systemia/forensiscope/owned-checkout-bridge.mjs'
+      - 'systemia/forensiscope/guest-order-ledger.mjs'
+      - 'systemia/forensiscope/owned-settlement-readback.mjs'
+      - 'tests/forensiscope-owned-settlement-readback.test.mjs'
+      - 'tests/forensiscope-guest-order-ledger.test.mjs'
+      - 'tests/forensiscope-owned-checkout-bridge.test.mjs'
+      - 'tests/forensiscope-customer-runtime.test.mjs'
+      - 'tests/forensiscope-private-job-service.test.mjs'
+      - 'tests/forensiscope-self-service-admission.test.mjs'
+      - 'tests/forensiscope-self-service-browser.test.mjs'
+      - 'public/forensiscope/self-service/**'
+      - 'tests/forensiscope-distribution-direct.test.mjs'
+      - 'public/forensiscope/distribution/**'
+      - 'public/forensiscope/editorial/social-pack.json'
+      - 'public/forensiscope/llms.txt'
+      - 'public/forensiscope/discovery.json'
+      - 'public/forensiscope/developers/status.json'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'public/forensiscope/index.html'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - '.github/workflows/forensiscope-launch.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-charge-commercial-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify pricing and authorized native payment route (no real checkout)
+        run: node --test systemia/payments/payment-routing.test.mjs systemia/forensiscope/commercial-offers.test.mjs tests/forensiscope-buyer-page.test.mjs tests/forensiscope-static-page.test.mjs tests/forensiscope-buyer-discovery.test.mjs tests/forensiscope-distribution-direct.test.mjs tests/forensiscope-self-service-admission.test.mjs tests/forensiscope-self-service-browser.test.mjs tests/forensiscope-resumable-ingress.test.mjs tests/forensiscope-private-job-service.test.mjs tests/forensiscope-customer-runtime.test.mjs tests/forensiscope-owned-checkout-bridge.test.mjs tests/forensiscope-guest-order-ledger.test.mjs tests/forensiscope-owned-settlement-readback.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/fabric-checkout-transport-truth.test.mjs

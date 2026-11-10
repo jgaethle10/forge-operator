@@ -1,0 +1,85 @@
+{
+  "schema": "evercraft.clip.earned-audience-opportunity.v1",
+  "created_on": "2026-10-20",
+  "goal": "Secure actual paid assignments, publisher embeds and legitimate distribution from existing audiences; never count an indexed website as placement.",
+  "campaign": "evercraft-clip-audience-sites-20261020",
+  "channels": [
+    {
+      "id": "hobbywaves_freelance",
+      "brand": "HobbyWaves",
+      "vertical": "collectibles and original media",
+      "kind": "paid_editorial_possible",
+      "official_url": "https://www.hobbywaves.com/careers",
+      "contact_method": "public editorial email",
+      "address": "hello@hobbywaves.com",
+      "pitch": "Original fee-adjusted card deal math story and/or short educational video with permissioned prototype Value Scout",
+      "status": "gmail_draft_created_not_sent",
+      "evidence": "Publisher publicly invites freelancers and quotes per-story rates in advance",
+      "buyer_approval_required": true,
+      "proven_payment": false,
+      "project_reference": "Value Scout"
+    },
+    {
+      "id": "cfbweekly_editorial",
+      "brand": "CFB Weekly",
+      "vertical": "college football",
+      "kind": "editorial_submission",
+      "official_url": "https://cfbweekly.net/contact",
+      "contact_method": "public website form",
+      "address": null,
+      "pitch": "Turnaround signals before win-loss record, source-backed illustration and interactive football teaching board",
+      "status": "research_complete_submission_not_sent",
+      "evidence": "Public contact form expressly invites article ideas and commercial partnerships; payment not stated",
+      "buyer_approval_required": true,
+      "proven_payment": false,
+      "project_reference": "Playbook Lab"
+    },
+    {
+      "id": "hobbywaves_placements",
+      "brand": "HobbyWaves",
+      "vertical": "collectibles newsletter",
+      "kind": "paid_media_placement_not_affordable_without_quote",
+      "official_url": "https://www.hobbywaves.com/partner",
+      "contact_method": "media kit request",
+      "address": "hello@hobbywaves.com",
+      "pitch": "Free fee-margin widget with optional licensed custom deployment if the publisher wants it",
+      "status": "do_not_purchase_no_budget",
+      "evidence": "Publisher offers branded placements at undisclosed rates; no free placement promised",
+      "buyer_approval_required": true,
+      "proven_payment": false,
+      "project_reference": "Value Scout"
+    },
+    {
+      "id": "repair_cafe_nc",
+      "brand": "Repair Café North Carolina",
+      "vertical": "community repair",
+      "kind": "editorial_relationship_only",
+      "official_url": "https://repaircafenc.org/newsletter",
+      "contact_method": "public newsletter/organizer interest",
+      "address": "info@repaircafenc.org",
+      "pitch": "Noncommercial model-number and measurements checklist as helpful workshop educational material, not unsolicited self-promotion",
+      "status": "research_only_not_sent",
+      "evidence": "Existing repair organizer newsletter; permission not assumed",
+      "buyer_approval_required": true,
+      "proven_payment": false,
+      "project_reference": "PartScout"
+    }
+  ],
+  "exclude_for_commercial_promotion": [
+    {
+      "brand": "iFixit community",
+      "official_rules": "https://www.ifixit.com/Info/Use_Guidelines",
+      "official_spam_rules": "https://about.ifixit.com/Wiki/Spam_Policy",
+      "reason": "Own commercial promotion and external commercial link drops forbidden in repair guides and Answers. Community help may be permitted only without promotion."
+    }
+  ],
+  "rules": {
+    "no_spam": true,
+    "no_auto_contact": true,
+    "no_duplicated_outreach": true,
+    "no_ad_spend": true,
+    "no_sexual_or_suggestive_material_on_evercraft_social": true,
+    "never_reuse_third_party_editorial_without_license": true,
+    "paid_contract_signed_before_promising_commission_or_sponsorship": true
+  }
+}

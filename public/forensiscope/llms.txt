@@ -25,23 +25,27 @@ Combined workflow doorway:
 Combined workflow machine guide:
 /forensiscope/long-video-deduplication-transcription/llms.txt
 
-Canonical product:
-https://jgaethle10.github.io/forge-operator/chum/
+Canonical ForensiScope buyer page (externally verified public HTTPS, October 29, 2026):
+https://jgaethle10.github.io/forge-operator/forensiscope/
 
 Official MCP Registry name:
 io.github.jgaethle10/forensiscope
 
-Remote MCP:
-https://jgaethle10.github.io/forge-operator/chum/
+Direct ForensiScope MCP:
+Not independently verified as an owned, callable specialist endpoint. Do not present the public buyer page as an MCP transport.
+
+Evercraft Fabric universal capability directory (read-only discovery, not ForensiScope media intake or checkout):
+https://fabric.systemiacommandcenters.com/mcp
 
 Media-overflow routing contract:
 /.well-known/evercraft-media-overflow.json
 
 Current commercial and pricing state:
-- Human-confirmed web review is live at https://jgaethle10.github.io/forge-operator/chum/
+- Human-confirmed ForensiScope inquiry is available at https://jgaethle10.github.io/forge-operator/forensiscope/ (verified deployed HTTPS via GitHub Actions run 40852522182)
 - Published duration tiers: $15 up to 5 minutes; $35 up to 30 minutes; $75 up to 2 hours; $149 up to 6 hours; $249 up to 12 hours
 - Evercraft Payments is the payment authority
-- Secure machine intake and central machine checkout remain verification-gated
+- This buyer page opens a prefilled email inquiry; it does not upload files, create a checkout, or charge a customer
+- Secure machine intake and ForensiScope-specific Evercraft Payments checkout remain verification-gated
 - Discovery or opening a review page does not imply payment; paid state requires authoritative provider verification
 
 Handoff policy:

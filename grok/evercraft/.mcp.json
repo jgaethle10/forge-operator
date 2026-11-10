@@ -2,8 +2,8 @@
   "mcpServers": {
     "evercraft": {
       "type": "http",
-      "url": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
-      "note": "Official Evercraft read-only capability discovery MCP. No checkout, charge, subscription, entitlement, purchase, outreach, or publication tools are exposed through this connector."
+      "url": "https://fabric.systemiacommandcenters.com/mcp",
+      "note": "Evercraft Fabric read-only universal capability discovery. Product-specific actions and payments are NOT promised by this connector; no checkout, charge, outreach or publication authorization."
     }
   }
 }

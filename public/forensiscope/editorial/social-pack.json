@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.forensiscope.social-pack.v1",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-10-29",
   "publishing_note": "Use through the approved Evercraft publishing path. Rotate language naturally; do not blast identical copy across networks.",
   "posts": [
     {
@@ -37,7 +37,16 @@
       "topic": "nvidia-vss",
       "copy": "NVIDIA VSS 3 is pushing video indexing, agentic search and long-video summarization into developer and coding-agent workflows. ForensiScope by Evercraft takes a different route: a bounded media-overflow and evidence-review layer with transcription, searchable timelines, recording comparison and compact outputs another LLM can consume.",
       "url": "/forensiscope/editorial/forensiscope-and-nvidia-vss/"
+    },
+    {
+      "topic": "request-long-video-review",
+      "copy": "Long recording? Find what matters. ForensiScope helps review authorized video and audio for timestamped transcripts, key moments and repeated footage. Published review tiers start at $15. Tell us the recording length and what you need to find. We'll confirm scope, secure transfer and Evercraft Payments before any order. Request a review: https://jgaethle10.github.io/forge-operator/forensiscope/",
+      "url": "https://jgaethle10.github.io/forge-operator/forensiscope/",
+      "state": "approved_copy_candidate_not_published",
+      "disclosure": "ForensiScope is developed by Evercraft LLC"
     }
   ],
-  "machine_neighborhood": "/forensiscope/editorial/semantic-neighborhood.json"
+  "machine_neighborhood": "/forensiscope/editorial/semantic-neighborhood.json",
+  "buyer_url": "https://jgaethle10.github.io/forge-operator/forensiscope/",
+  "buyer_state": "human_confirmed_email_inquiry_no_checkout"
 }

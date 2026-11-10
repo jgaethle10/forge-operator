@@ -1,0 +1,67 @@
+name: Evercraft Payments 402 Commercial Safety
+
+on:
+  pull_request:
+    paths:
+      - 'public/.well-known/evercraft-commercial-readiness.json'
+      - 'public/.well-known/evercraft-chum.json'
+      - 'public/llms.txt'
+      - 'scripts/audit-commercial-release-hold.mjs'
+      - 'tests/audit-commercial-release-hold.test.mjs'
+      - 'scripts/validate-no-legacy-provider-urls.mjs'
+      - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
+      - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
+      - '.github/workflows/evercraft-payments-commercial-safety.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/.well-known/evercraft-commercial-readiness.json'
+      - 'public/.well-known/evercraft-chum.json'
+      - 'public/llms.txt'
+      - 'scripts/audit-commercial-release-hold.mjs'
+      - 'tests/audit-commercial-release-hold.test.mjs'
+      - 'scripts/validate-no-legacy-provider-urls.mjs'
+      - '.github/workflows/evercraft-payments-commercial-safety.yml'
+  schedule:
+    - cron: '37 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-payments-402-safety-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  commercial-hold-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source commercial release hold and fail-closed invariants
+        run: node --test tests/audit-commercial-release-hold.test.mjs
+      - name: No public unauthorized Base44 buying route or false live status
+        run: node scripts/validate-no-legacy-provider-urls.mjs
+      - name: Check quarantine and current public read-only MCP contract
+        run: node scripts/audit-commercial-release-hold.mjs > "$RUNNER_TEMP/evercraft-commercial-hold.json"
+      - name: Summarize safety separately from commerce readiness
+        if: always()
+        shell: bash
+        run: |
+          if test -s "$RUNNER_TEMP/evercraft-commercial-hold.json"; then
+            node -e 'const x=require(process.argv[1]); console.log("Quarantine safety:",x.safety_ok,"Checkout ready:",x.commercial_checkout_ready,"Historical public links:",x.historic_public_source_buyer_urls,"Signed deploy receipt independently verified:",x.signed_deployment_receipt_verified);' "$RUNNER_TEMP/evercraft-commercial-hold.json" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve non-sensitive observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-payments-commercial-quarantine
+          path: ${{ runner.temp }}/evercraft-commercial-hold.json
+          if-no-files-found: warn
+          retention-days: 30

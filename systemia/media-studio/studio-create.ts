@@ -14,6 +14,7 @@ export interface StudioDraftScene {
   visual:{
     assetId?:string;
     prompt?:string;
+    trimStartSec?:number;
     sourceRefs:string[];
   };
   narration?:{
@@ -113,6 +114,12 @@ function assertPlan(plan:StudioDraftPlan){
     if(!Number.isFinite(scene.durationSec)||scene.durationSec<=0) throw new Error(`studio_draft_scene_duration_invalid:${scene.id}`);
     if(!scene.visual?.sourceRefs?.length) throw new Error(`studio_draft_visual_source_refs_missing:${scene.id}`);
     if(!scene.visual.assetId&&!scene.visual.prompt?.trim()) throw new Error(`studio_draft_visual_missing:${scene.id}`);
+    if(scene.visual.trimStartSec!==undefined){
+      if(!scene.visual.assetId) throw new Error(`studio_draft_trim_requires_source_asset:${scene.id}`);
+      if(!Number.isFinite(scene.visual.trimStartSec)||scene.visual.trimStartSec<0){
+        throw new Error(`studio_draft_trim_start_invalid:${scene.id}`);
+      }
+    }
     if(scene.narration&&!scene.narration.text?.trim()) throw new Error(`studio_draft_narration_text_missing:${scene.id}`);
   }
 }
@@ -168,6 +175,13 @@ export function compileStudioDraft(plan:StudioDraftPlan):StudioDraftBundle{
       const source=sourceById.get(visualAssetId);
       if(!source) throw new Error(`studio_draft_source_asset_missing:${visualAssetId}`);
       if(source.kind!=='image'&&source.kind!=='video') throw new Error(`studio_draft_source_visual_kind_invalid:${visualAssetId}`);
+      if(scene.visual.trimStartSec!==undefined&&source.kind!=='video'){
+        throw new Error(`studio_draft_trim_requires_video:${scene.id}`);
+      }
+      if(source.durationSec!==undefined&&Number.isFinite(source.durationSec)&&
+         (scene.visual.trimStartSec??0)+scene.durationSec>source.durationSec+.05){
+        throw new Error(`studio_draft_source_segment_exceeds_asset:${scene.id}`);
+      }
     }else{
       const need:ProductionNeed={
         id:`${plan.id}-${scene.id}-visual`,
@@ -191,6 +205,7 @@ export function compileStudioDraft(plan:StudioDraftPlan):StudioDraftBundle{
       assetId:visualAssetId,
       startSec:cursor,
       durationSec:scene.durationSec,
+      ...(scene.visual.trimStartSec!==undefined?{trimStartSec:scene.visual.trimStartSec}:{}),
       label:scene.screenText||scene.id,
     });
 

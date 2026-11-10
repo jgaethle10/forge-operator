@@ -15,6 +15,8 @@ assert.ok(listed.some((row) => row.profile_id === 'yakima-basin-wa'));
 
 const yakima = getSentinelRegionProfile('yakima-basin-wa');
 assert.equal(yakima.sources.nws_area, 'WA');
+assert.ok(yakima.aliases.includes('yakima-wa'));
+assert.ok(yakima.aliases.includes('Yakima Valley'));
 assert.deepEqual(yakima.sources.nwps_gauges, []);
 assert.deepEqual(yakima.sources.usgs_water_locations, [
   'USGS-12484500',
@@ -30,6 +32,8 @@ const resolved = resolveSentinelRegionConfig({
   usgsWaterLocationIds: ['USGS-12500450', 'USGS-99999999']
 });
 assert.equal(resolved.profile.profile_id, 'yakima-basin-wa');
+assert.ok(resolved.region_aliases.includes('yakima-wa'));
+assert.ok(resolved.region_aliases.includes('Yakima River Basin'));
 assert.equal(resolved.nws_area, 'WA');
 assert.equal(resolved.usgs_water_locations.filter((id) => id === 'USGS-12500450').length, 1);
 assert.ok(resolved.usgs_water_locations.includes('USGS-99999999'));

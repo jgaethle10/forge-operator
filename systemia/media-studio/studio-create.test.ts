@@ -114,3 +114,26 @@ test('source media must carry a real digest and lineage',()=>{
   q.sourceAssets[0].sourceRefs=[];
   assert.throws(()=>compileStudioDraft(q),/studio_draft_source_refs_missing:real-opening/);
 });
+
+test('one approved source video supports different real edit in-points across scenes',()=>{
+  const p=plan();
+  p.sourceAssets[0].durationSec=20;
+  p.scenes[0].visual.trimStartSec=2;
+  p.scenes[1].visual={assetId:'real-opening',trimStartSec:8,sourceRefs:['source:real-opening']};
+  const bundle=compileStudioDraft(p);
+  const clips=bundle.project.tracks.find(track=>track.kind==='video')!.clips;
+  assert.equal(clips[0].trimStartSec,2);
+  assert.equal(clips[1].trimStartSec,8);
+  assert.equal(bundle.productionNeeds.filter(item=>item.kind==='video').length,0);
+});
+test('invalid trimmed scenes cannot silently repeat, underrun or exceed source footage',()=>{
+  const p=plan();
+  p.scenes[0].visual.trimStartSec=1;
+  assert.throws(()=>compileStudioDraft(p),/studio_draft_source_segment_exceeds_asset:opening/);
+  const q=plan();
+  q.scenes[1].visual.trimStartSec=2;
+  assert.throws(()=>compileStudioDraft(q),/studio_draft_trim_requires_source_asset:proof/);
+  const r=plan();
+  r.scenes[0].visual.trimStartSec=-1;
+  assert.throws(()=>compileStudioDraft(r),/studio_draft_trim_start_invalid:opening/);
+});

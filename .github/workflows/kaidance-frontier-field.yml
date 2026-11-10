@@ -8,6 +8,11 @@ on:
     paths:
       - 'systemia/organism/frontier-watch.mjs'
       - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/medical-evidence-brief*.mjs'
+      - 'systemia/organism/medical-evidence-triage*.mjs'
+      - 'systemia/organism/medical-review-packet*.mjs'
+      - 'systemia/organism/medical-workflow-continuity.test.mjs'
+      - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
@@ -19,6 +24,11 @@ on:
     paths:
       - 'systemia/organism/frontier-watch.mjs'
       - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/medical-abstract-evidence*.mjs'
+      - 'systemia/organism/medical-evidence-brief*.mjs'
+      - 'systemia/organism/medical-evidence-triage*.mjs'
+      - 'systemia/organism/medical-review-packet*.mjs'
+      - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
@@ -33,7 +43,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: kaidance-frontier-field-main
+  group: kaidance-frontier-field-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -50,7 +60,9 @@ jobs:
       - name: Restore KAIDANCE frontier state
         uses: actions/cache/restore@v4
         with:
-          path: artifacts/kaidance-frontier/runtime/state.json
+          path: |
+            artifacts/kaidance-frontier/runtime/state.json
+            artifacts/medical-evidence-triage/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             kaidance-frontier-state-${{ runner.os }}-
@@ -58,14 +70,31 @@ jobs:
       - name: Prove frontier + science/hazard contracts
         run: node systemia/organism/kaidance-frontier-proof.mjs
 
+      - name: Prove medical source-bound reports and visuals
+        run: node systemia/organism/medical-evidence-brief.test.mjs
+
+      - name: Prove source-linked PubMed abstract evidence
+        run: node systemia/organism/medical-abstract-evidence.test.mjs
+
+      - name: Prove longitudinal biomedical evidence triage
+        run: node systemia/organism/medical-evidence-triage.test.mjs
+
+      - name: Prove biomedical source-quoted review packet
+        run: node systemia/organism/medical-review-packet.test.mjs
+
+      - name: Prove research memory cache continuity
+        run: node systemia/organism/medical-workflow-continuity.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
-      - name: Save KAIDANCE frontier state
+      - name: Save KAIDANCE frontier and medical memory
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: artifacts/kaidance-frontier/runtime/state.json
+          path: |
+            artifacts/kaidance-frontier/runtime/state.json
+            artifacts/medical-evidence-triage/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload KAIDANCE frontier receipts
@@ -81,6 +110,20 @@ jobs:
             artifacts/portfolio-frontier/mission-snapshot.json
             artifacts/science-hazard-watch/latest.json
             artifacts/science-hazard-watch/mission-snapshot.json
+            artifacts/medical-evidence-radar/latest.json
+            artifacts/medical-evidence-radar/report.md
+            artifacts/medical-evidence-radar/research-radar.svg
+            artifacts/medical-evidence-radar/index.html
+            artifacts/medical-abstract-evidence/latest.json
+            artifacts/medical-abstract-evidence/abstract-review.md
+            artifacts/medical-abstract-evidence/index.html
+            artifacts/medical-evidence-triage/latest.json
+            artifacts/medical-evidence-triage/state.json
+            artifacts/medical-evidence-triage/review-queue.md
+            artifacts/medical-evidence-triage/index.html
+            artifacts/medical-review-packets/latest.json
+            artifacts/medical-review-packets/review.md
+            artifacts/medical-review-packets/index.html
           if-no-files-found: warn
           retention-days: 14
 

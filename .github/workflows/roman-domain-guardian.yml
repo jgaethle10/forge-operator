@@ -1,0 +1,49 @@
+name: Roman domain guardian heartbeat
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/domain-shield/roman-domain-guardian.mjs'
+      - 'systemia/domain-shield/roman-domain-guardian.test.mjs'
+      - '.github/workflows/roman-domain-guardian.yml'
+  pull_request:
+    paths:
+      - 'systemia/domain-shield/roman-domain-guardian.mjs'
+      - 'systemia/domain-shield/roman-domain-guardian.test.mjs'
+      - '.github/workflows/roman-domain-guardian.yml'
+  workflow_dispatch:
+  schedule:
+    # Five-minute read-only checks during Oct-Nov 3 campaign period.
+    # CLI itself stops external checks after 2026-11-04; retire this workflow afterwards.
+    - cron: '*/5 * * 10 *'
+    - cron: '*/5 * 1-3 11 *'
+
+permissions:
+  contents: read
+
+jobs:
+  domain-shield:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove guardian states and prohibited mutations
+        run: node --test systemia/domain-shield/roman-domain-guardian.test.mjs
+      - name: Public DNS and HTTPS evidence only
+        run: |
+          mkdir -p artifacts
+          node systemia/domain-shield/roman-domain-guardian.mjs \
+            --receipt artifacts/roman-domain-guardian.json \
+            --summary "$GITHUB_STEP_SUMMARY"
+      - name: Preserve read-only receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roman-domain-guardian
+          path: artifacts/roman-domain-guardian.json
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,0 +1,27 @@
+name: Work Saban truthful discovery
+on:
+  pull_request:
+    paths:
+      - 'public/chum/products/work-saban/**'
+      - 'public/chum/index.html'
+      - 'public/llms.txt'
+      - 'tests/work-saban-discovery.test.mjs'
+      - '.github/workflows/work-saban-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/chum/products/work-saban/**'
+      - 'tests/work-saban-discovery.test.mjs'
+      - '.github/workflows/work-saban-discovery.yml'
+permissions:
+  contents: read
+jobs:
+  discovery-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/work-saban-discovery.test.mjs

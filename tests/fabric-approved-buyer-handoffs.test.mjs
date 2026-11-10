@@ -27,22 +27,25 @@ test('existing public MCP tool set remains read-only and exactly 3 tools',()=>{
  assert.equal(tools.length,3);
  assert.ok(tools.every(t=>t.annotations.readOnlyHint===true));
 });
-test('only four exact approved capabilities receive 6 explicit hosted buyer handoffs',async()=>{
+test('four historically approved offers remain catalog-correct but public MCP checkout is held after HTTP 402',async()=>{
  let total=0;
  for(const [id,slugs,amounts] of selected){
   const p=await run(id);
-  assert.deepEqual(p.human_buyer_options.map(x=>x.offer_slug),slugs);
-  assert.deepEqual(p.human_buyer_options.map(x=>x.price_cents),amounts);
+  assert.deepEqual(p.human_buyer_options,[]);
+  assert.deepEqual(p.owned_human_buyer_options,[]);
+  assert.equal(p.human_offer_url,null);
+  assert.equal(p.buyer_checkout_available,false);
+  assert.equal(p.human_buyer_options_state,'held_provider_http_402_requires_new_payment_receipt');
   assert.equal(p.transactional,false);
   assert.equal(p.external_action_taken,false);
-  assert.ok(p.human_buyer_options.every(x=>
-   x.human_form_url==='https://findmypart.base44.app/functions/evercraftBuy?offer='+x.offer_slug&&
-   x.hosting==='transitional_provider_hosted'&&x.buyer_confirmation_required&&
-   !x.checkout_created&&!x.payment_verified&&!x.fulfillment_verified));
-  total+=p.human_buyer_options.length;
+  const archived=approvedHumanBuyerOptions(id,byId(id));
+  assert.deepEqual(archived.map(x=>x.offer_slug),slugs);
+  assert.deepEqual(archived.map(x=>x.price_cents),amounts);
+  total+=archived.length;
  }
  assert.equal(total,6);
 });
+
 test('RIVET and AliEV protected state plus mismatched IBM i and legacy product stay held',async()=>{
  for(const id of [
   'rivet-site-underwriting-v1','aliev-site-opportunity-snapshot-v1',

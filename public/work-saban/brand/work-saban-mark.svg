@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+<title id="title">Work Saban flow symbol</title>
+<desc id="desc">Two flowing crimson ribbons converge into forward motion, with a separate circular finishing point.</desc>
+<defs>
+  <linearGradient id="saban-flow" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#A4142F"/>
+    <stop offset="1" stop-color="#C12446"/>
+  </linearGradient>
+</defs>
+<g transform="translate(0 13)">
+  <path fill="#A4142F" d="M7 49C3 45 3 40 7 36L14 29C18 25 22 25 26 29L47 49C51 53 55 53 59 49L69 40L89 58L70 78C59 89 46 89 35 80Z"/>
+  <path fill="url(#saban-flow)" d="M43 49L57 34C66 25 78 25 87 34L110 56C114 60 114 65 110 69L103 76C99 80 93 80 89 76L72 60C68 56 64 56 60 60L56 65Z"/>
+  <circle cx="103" cy="20" r="13" fill="#B51A38"/>
+</g>
+</svg>

@@ -474,17 +474,28 @@ verify_current_runtime() {
       const h=JSON.parse(process.env.HEALTH_JSON||'{}');
       const expected=Number(process.env.EXPECTED_COUNT||0);
       const expectedRelease=String(process.env.EXPECTED_RELEASE||'').toLowerCase();
-      if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
-      if(Number(h.capability_count)!==expected) process.exit(3);
-      if(String(h.source_release_ref||'').toLowerCase()!==expectedRelease) process.exit(10);
+      // Emit only names of failed checks and safe catalog counts, not health
+      // JSON, API keys, customer details, or resident environment values.
+      const reject=(label,code)=>{
+        console.error('ERROR: Fabric health invariant '+label);
+        process.exit(code);
+      };
+      if(h.ok!==true || h.service!=='evercraft-fabric-local') reject('service_identity',2);
+      if(Number(h.capability_count)!==expected)
+        reject('capability_count_expected_'+expected+'_actual_'+Number(h.capability_count),3);
+      if(String(h.source_release_ref||'').toLowerCase()!==expectedRelease)
+        reject('source_release_ref',10);
       if(process.env.EDGE_ATTESTATION_EXPECTED==='true') {
-        if(h.edge_attestation_supported!==true) process.exit(4);
-        if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(5);
+        if(h.edge_attestation_supported!==true) reject('edge_attestation_supported',4);
+        if(h.edge_attestation_allocator_authority_exposed!==false)
+          reject('edge_attestation_allocator_authority_exposed',5);
       }
-      if(h.visual_desk_ingest_ready!==true) process.exit(6);
-      if(h.visual_desk_ingest_publication_authority!==false) process.exit(7);
-      if(h.earthworks_simulator_path!=='/earthworks') process.exit(8);
-      if(h.earthworks_simulator_authority!=='interactive_software_simulation_only') process.exit(9);
+      if(h.visual_desk_ingest_ready!==true) reject('visual_desk_ingest_ready',6);
+      if(h.visual_desk_ingest_publication_authority!==false)
+        reject('visual_desk_ingest_publication_authority',7);
+      if(h.earthworks_simulator_path!=='/earthworks') reject('earthworks_simulator_path',8);
+      if(h.earthworks_simulator_authority!=='interactive_software_simulation_only')
+        reject('earthworks_simulator_authority',9);
     " || return 9
 
   local earthworks_page=""
@@ -494,6 +505,37 @@ verify_current_runtime() {
   grep -F 'Shadow' <<< "$earthworks_page" >/dev/null || return 14
   grep -F 'Autonomy' <<< "$earthworks_page" >/dev/null || return 14
   grep -F 'STOP ALL' <<< "$earthworks_page" >/dev/null || return 14
+
+  # A Fabric health response and matching release ref are not enough when
+  # the actual buyer door silently serves the old JSON 404 route.
+  # Verify only GET surfaces on resident loopback, never submit buyer data.
+  local findmypart_html="" findmypart_app="" findmypart_readiness=""
+  findmypart_html="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/' 2>/dev/null || true)"
+  if [[ -z "$findmypart_html" ]] ||
+     ! grep -Fq 'id="part-request-form"' <<< "$findmypart_html" ||
+     ! grep -Fq 'Missing part.' <<< "$findmypart_html"; then
+    echo "ERROR: FindMyPart resident buyer page not serving approved route" >&2
+    return 15
+  fi
+  findmypart_app="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/app.mjs' 2>/dev/null || true)"
+  if [[ -z "$findmypart_app" ]] ||
+     ! grep -Fq '/api/findmypart/inquiry' <<< "$findmypart_app" ||
+     ! grep -Fq '/api/findmypart/readiness' <<< "$findmypart_app"; then
+    echo "ERROR: FindMyPart resident customer form script not served" >&2
+    return 16
+  fi
+  findmypart_readiness="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/api/findmypart/readiness' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env FINDMYPART_READINESS_JSON="$findmypart_readiness" node -e "
+    try {
+      const r=JSON.parse(process.env.FINDMYPART_READINESS_JSON||'null');
+      if(r?.schema!=='evercraft.findmypart.intake-readiness.v1') process.exit(2);
+      if(typeof r.intake_available!=='boolean') process.exit(3);
+      if(r.payment_ready!==false || r.payment_verified!==false) process.exit(4);
+    } catch { process.exit(5) }
+  "; then
+    echo "ERROR: FindMyPart resident intake-readiness contract missing or unsafe" >&2
+    return 17
+  fi
 
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do
@@ -566,11 +608,19 @@ as_user git -C "$REPO_ROOT" fetch --prune "$REMOTE" "$BRANCH"
 target="$(as_user git -C "$REPO_ROOT" rev-parse "$REMOTE/$BRANCH")"
 
 expected_count_for_current() {
-  as_user node -e "
-    const fs=require('fs');
-    const x=JSON.parse(fs.readFileSync('$REPO_ROOT/public/chum/capabilities.json','utf8'));
-    process.stdout.write(String((x.capabilities||[]).length));
-  "
+  # The runtime does NOT publish only the raw CHUM manifest. It adds explicit
+  # discovery-only supplemental doors (and can enrich source product metadata).
+  # Compare against the same normalized native-only catalog used by /health.
+  # A mismatch still fails closed; never substitute or guess a count.
+  as_user env REPO_ROOT="$REPO_ROOT" node --input-type=module -e '
+    import {pathToFileURL} from "node:url";
+    const root=process.env.REPO_ROOT;
+    const directory=await import(pathToFileURL(root+"/systemia/mcp/fabric-directory.mjs").href);
+    const runtime=await import(pathToFileURL(root+"/systemia/mcp/fabric-local-runtime.mjs").href);
+    const count=runtime.nativeOnlyCatalog(directory.loadFabricCatalogFromRepository()).capabilities.length;
+    if(!Number.isSafeInteger(count)||count<1)process.exit(2);
+    process.stdout.write(String(count));
+  '
 }
 
 if [[ "$before" == "$target" ]]; then

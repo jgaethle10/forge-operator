@@ -1,0 +1,64 @@
+name: EverMaps owned staging acceptance
+
+on:
+  pull_request:
+    paths:
+      - "public/evermaps/**"
+      - "systemia/evermaps/**"
+      - "tests/evermaps-owned-*.mjs"
+      - "scripts/probe-evermaps-owned-*.mjs"
+      - "scripts/verify-evermaps-owned-release.mjs"
+      - ".github/workflows/evermaps-owned-staging-acceptance.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/evermaps/**"
+      - "systemia/evermaps/**"
+      - "tests/evermaps-owned-*.mjs"
+      - "scripts/probe-evermaps-owned-*.mjs"
+      - "scripts/verify-evermaps-owned-release.mjs"
+      - ".github/workflows/evermaps-owned-staging-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evermaps-owned-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  owned-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Static browser and release script syntax
+        run: |
+          node --check public/evermaps/app.js
+          node --check public/evermaps/incident-source.mjs
+          node --check systemia/evermaps/http.mjs
+          node --check scripts/probe-evermaps-owned-browser.mjs
+          node --check scripts/probe-evermaps-owned-http.mjs
+          node --check scripts/verify-evermaps-owned-release.mjs
+      - name: Source provenance, Pages asset routing, safety and controls
+        run: node --test tests/evermaps-owned-incident-source.test.mjs tests/evermaps-owned-map-surface.test.mjs
+      - name: Confirm noindex and owned source publication boundary
+        run: |
+          grep -q 'noindex,nofollow' public/evermaps/index.html
+          grep -q 'https://fabric.systemiacommandcenters.com' public/evermaps/index.html || true
+          ! grep -qi 'base44' public/evermaps/app.js
+          ! grep -qi 'base44' public/evermaps/index.html
+          ! grep -qi 'base44' public/evermaps/incident-source.mjs
+          test -s public/evermaps/pnw-land.geojson
+      - name: State acceptance scope without implying live HTTPS
+        if: always()
+        run: |
+          {
+            echo "## EverMaps owned staging acceptance"
+            echo "This is source-level acceptance. Browser and container QA remain separate."
+            echo "Not a public map cutover, no customer data, no real wildfire-flame certification."
+          } >> "$GITHUB_STEP_SUMMARY"

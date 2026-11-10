@@ -209,6 +209,92 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       connections,
     };
   });
+  // Supplement the generated machine-catalog projection with explicitly declared
+  // discovery-only pilot doors. Do not add them to custom fixture catalogs.
+  // A generated canonical entry wins if the product later graduates into it.
+  if(!catalogPath){
+    const supplementalPath=path.resolve(moduleDir,'./fabric-catalog-supplements.json');
+    if(fs.existsSync(supplementalPath)){
+      const supplemental=JSON.parse(fs.readFileSync(supplementalPath,'utf8'));
+      if(supplemental?.schema!=='evercraft.fabric.catalog-supplements.v1' ||
+        !Array.isArray(supplemental.capabilities))throw new Error('fabric_catalog_supplements_invalid');
+      const canonicalIds=new Set(mapped.map(item=>item.public_id));
+      for(const item of supplemental.capabilities){
+        if(item?.commercial_state!=='discovery_only' || item?.entry_paid_offer!=null)
+          throw new Error('fabric_supplement_requires_discovery_only');
+        const id=normalizedId(item.public_id);
+        if(canonicalIds.has(id))continue;
+        mapped.push(item);
+        canonicalIds.add(id);
+      }
+    }
+  }
+  // Source-derived, read-only product discovery. This deliberately does not
+  // edit the authoritative machine-commerce catalog or grant execution/payment.
+  // The two public pages passed the GitHub Pages independent HTTPS canary on 2026-10-29.
+  if(!catalogPath){
+    const productsPath=path.resolve(moduleDir,'../../public/.well-known/evercraft-products.json');
+    if(fs.existsSync(productsPath)){
+      const products=JSON.parse(fs.readFileSync(productsPath,'utf8'));
+      const boardroom=(Array.isArray(products.products)?products.products:[])
+        .find(item=>item.product_key==='ai-boardroom' && item.machine_state==='source_discovery_only');
+      if(boardroom){
+        const intents=Array.isArray(boardroom.intents)?boardroom.intents.map(String).slice(0,16):[];
+        const aliases=Array.isArray(boardroom.aliases)?boardroom.aliases.map(String).slice(0,8):[];
+        const sourceEntry={
+          public_id:'ai-boardroom-decision-review-v1',
+          name:'Evercraft AI Boardroom',
+          description:'Free private on-device comparison of pasted ChatGPT, Claude, Gemini and other AI answers. Frame a decision and examine stated disagreements and evidence gaps. Optional separate human-scoped decision reviews; no verified automatic multi-LLM debate.',
+          keywords:[...intents,...aliases,'free compare AI answers','ChatGPT Claude disagree','compare AI responses free'],
+          state:'source_discovery_only',
+          commercial_state:'scoped_human_review_offers',
+          pricing:'Free private comparison $0. Human-scoped Standard Review $250 and Financial Deep Dive $500, each requiring agreement on scope and delivery. This discovery directory cannot charge or fulfill.',
+          use_when:intents,
+          entry_paid_offer:null,
+          start_url_state:'free_preview_https_verified_no_payment',
+          preferred_agent_route:'universal_fallback',
+          connections:[
+            ...(universalMcp?[{type:'mcp',label:'Evercraft universal MCP',url:universalMcp,state:'read_only_discovery_only'}]:[]),
+            {type:'website',label:'Free AI answer comparison',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/',state:'public_https_verified_2026_10_29'},
+            {type:'website',label:'Evercraft Boardroom executive chamber',url:'https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/',state:'public_https_verified_2026_10_29'},
+            ...(boardroom.discovery_url?[{type:'docs',label:'AI Boardroom source-backed product descriptor',url:boardroom.discovery_url,state:'source_backed'}]:[]),
+          ]
+        };
+        const existing=mapped.findIndex(item=>item.public_id==='ai-boardroom-decision-review-v1');
+        if(existing>=0){
+          // Preserve the independently generated record's identity, but keep
+          // truthful no-charge preview and direct public website connections.
+          mapped[existing]={...mapped[existing],...sourceEntry};
+        }else mapped.push(sourceEntry);
+      }
+    }
+  }
+  // An externally verified ForensiScope inquiry door is not a paid checkout,
+  // executable MCP endpoint, file uploader, or automated fulfillment system.
+  // Source-based routing makes the first buyer click product-specific rather
+  // than dropping customers on the generic capability directory.
+  if(!catalogPath){
+    const buyerUrl='https://jgaethle10.github.io/forge-operator/forensiscope/';
+    const discoveryPath=path.resolve(moduleDir,'../../public/forensiscope/discovery.json');
+    if(fs.existsSync(discoveryPath)){
+      const discovery=JSON.parse(fs.readFileSync(discoveryPath,'utf8'));
+      const index=mapped.findIndex(item=>item.public_id==='forensiscope-evidence-review-v1');
+      if(index>=0 && discovery?.product_key==='forensiscope' &&
+        discovery.start_url===buyerUrl && discovery.canonical_url===buyerUrl &&
+        discovery.mcp===null && discovery.commercial?.automated_checkout_available===false &&
+        discovery.commercial?.media_upload_available===false){
+        const current=mapped[index];
+        mapped[index]={
+          ...current,
+          connections:[
+            {type:'website',label:'ForensiScope: request a review (no charge)',
+             url:buyerUrl,state:'public_https_verified_human_inquiry_no_checkout'},
+            ...current.connections.filter(c=>c.url!==buyerUrl)
+          ]
+        };
+      }
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
@@ -535,10 +621,15 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         name:capability.name,
         state:capability.state,
         connections:capability.connections,
-        human_offer_url:ownedOfferLink(capability)?.human_form_url||null,
-        owned_human_buyer_options:ownedOfferLink(capability)?[ownedOfferLink(capability)]:[],
-        human_buyer_options:approvedHumanBuyerOptions(publicId,capability),
-        human_buyer_options_state:'read_only_exact_price_match_only',
+        // Public buyer URLs are held after independent HTTP 402 findings.
+        // A dated catalog validation does not prove current checkout availability.
+        // Restore only with an explicitly verified provider-to-canonical-receipt gate.
+        human_offer_url:null,
+        owned_human_buyer_options:[],
+        human_buyer_options:[],
+        human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',
+        buyer_checkout_available:false,
+        checkout_suppression_reason:'evercraft_public_commercial_mcp_http402_20261017',
         transactional:false,
         external_action_taken:false,
       }));

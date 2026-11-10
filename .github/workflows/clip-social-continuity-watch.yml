@@ -1,0 +1,158 @@
+name: Evercraft Clip Social Continuity Watch
+on:
+  pull_request:
+    paths:
+      - 'systemia/clip/social-continuity-watch.mjs'
+      - 'systemia/clip/social-continuity-watch.workflow.json'
+      - 'tests/clip-social-continuity-watch.test.mjs'
+      - 'tests/boardroom-social-campaign.test.mjs'
+      - 'tests/work-saban-clip-watch.test.mjs'
+      - 'tests/work-saban-clip-evergreen.test.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/supervisor.evercraft.compute.json'
+      - 'distribution/marketing/**'
+      - 'tests/humanfilter-clip-rotation.test.mjs'
+      - '.github/workflows/clip-social-continuity-watch.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/clip/social-continuity-watch.mjs'
+      - 'systemia/clip/social-continuity-watch.workflow.json'
+      - 'tests/clip-social-continuity-watch.test.mjs'
+      - 'tests/boardroom-social-campaign.test.mjs'
+      - 'tests/work-saban-clip-watch.test.mjs'
+      - 'tests/work-saban-clip-evergreen.test.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/supervisor.evercraft.compute.json'
+      - 'distribution/marketing/**'
+      - 'tests/humanfilter-clip-rotation.test.mjs'
+      - '.github/workflows/clip-social-continuity-watch.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test publication reconciliation
+        run: node --test tests/clip-social-continuity-watch.test.mjs tests/boardroom-social-campaign.test.mjs tests/work-saban-clip-watch.test.mjs tests/work-saban-clip-evergreen.test.mjs
+      - name: HumanFilter editorial rotation and truth gates
+        run: node --test tests/humanfilter-clip-rotation.test.mjs
+      - name: Write review queue coverage snapshot (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/evercraft-problem-first-20261022.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/latest.json
+      - name: Work Saban launch receipt watch (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/work-saban-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/work-saban/latest.json
+      - name: Work Saban evergreen rotation receipt watch (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/work-saban-clip-evergreen-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json
+      - name: HumanFilter Clip receipt coverage (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/humanfilter-free-desktop-20261030.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/humanfilter/latest.json
+      - name: Surface HumanFilter receipt truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/humanfilter/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/humanfilter/latest.json'));
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## HumanFilter Evercraft Clip rotation\\n'+
+                'Campaign: '+d.campaign_id+'\\n'+
+                'Status: '+d.status+'\\n'+
+                'Provider receipts: '+d.counts.provider_receipt_recorded+'\\n'+
+                'Approval/issuer holds: '+d.counts.approval_hold+'\\n'+
+                'Receipt source available: '+d.receipt_source_available+'\\n'+
+                'No platform submission or publishing is claimed by this CI check.\\n');
+            "
+          fi
+      - name: Surface blockers in workflow summary
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/latest.json'));
+              const counts=Object.entries(d.counts).map(([k,v])=>'- '+k+': '+v).join('\n');
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Evercraft Clip coverage (repo-side only)\nStatus: '+d.status+
+                '\nReceipt source present: '+d.receipt_source_available+
+                '\nThis does not verify live social platform visibility.\n'+counts+'\n');
+            "
+          else
+            echo "No Clip coverage report produced. Investigate test/runner failure." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Surface Work Saban delivery truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/work-saban/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/work-saban/latest.json'));
+              const n=d.counts;
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Work Saban Clip launch (read-only)\n'+
+                'Campaign: '+d.campaign_id+'\nState: '+d.status+'\n'+
+                'Unapproved / held: '+n.approval_hold+'\n'+
+                'Provider receipts observed: '+n.provider_receipt_recorded+'\n'+
+                'Provider receipt source available: '+d.receipt_source_available+'\n'+
+                'No action was posted or payment taken in this check.\n');
+            "
+          else
+            echo "Work Saban Clip watch missing. Check actual queue and runner." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Surface Work Saban evergreen rotation truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json'));
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Work Saban evergreen rotation (read-only)\\n'+
+                'Campaign: '+d.campaign_id+'\\n'+
+                'Status: '+d.status+'\\n'+
+                'Slots: '+d.counts.total+'\\n'+
+                'Held for issuer/account approval: '+d.counts.approval_hold+'\\n'+
+                'Provider receipts: '+d.counts.provider_receipt_recorded+'\\n'+
+                'Receipt source available: '+d.receipt_source_available+'\\n'+
+                'This check did not publish or verify social visibility.\\n');
+            "
+          fi
+      - name: Retain publication-gap report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-clip-social-continuity
+          path: |
+            artifacts/clip/social-continuity-watch/latest.json
+            artifacts/clip/social-continuity-watch/work-saban/latest.json
+            artifacts/clip/social-continuity-watch/work-saban/mission-snapshot.json
+            artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json
+            artifacts/clip/social-continuity-watch/work-saban/rotation/mission-snapshot.json
+            artifacts/clip/social-continuity-watch/humanfilter/latest.json
+            artifacts/clip/social-continuity-watch/humanfilter/mission-snapshot.json
+          if-no-files-found: warn
+          retention-days: 30

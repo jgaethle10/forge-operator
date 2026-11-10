@@ -13,6 +13,10 @@ export type CreativeCouncilRole =
   | 'world_builder'
   | 'edit_rhythm_director'
   | 'sound_director'
+  | 'voice_performance_director'
+  | 'music_composer'
+  | 'sound_design_engineer'
+  | 'mixing_engineer'
   | 'brand_art_director'
   | 'documentary_truth_guard'
   | 'beauty_judge';
@@ -111,6 +115,26 @@ export const CREATIVE_COUNCIL_CREW: CreativeCrewBinding[] = [
     role: 'sound_director',
     owner: 'kaidance',
     mission: 'Plan narration space, score, ambience, impacts, transitions and sonic continuity.',
+  },
+  {
+    role: 'voice_performance_director',
+    owner: 'kaidance',
+    mission: 'Direct casting, emotional arc, pronunciation and natural delivery, with explicit first-line performance review.',
+  },
+  {
+    role: 'music_composer',
+    owner: 'kaidance',
+    mission: 'Define a memorable motif, tempo, harmonic tension, arrangement and picture-synced musical payoff.',
+  },
+  {
+    role: 'sound_design_engineer',
+    owner: 'kaidance',
+    mission: 'Plan tactile synchronized effects, environmental layers and transitions without synthetic documentary deception.',
+  },
+  {
+    role: 'mixing_engineer',
+    owner: 'fallen',
+    mission: 'Specify voice-forward mix, score dynamics, controlled low end, final true peak and measured integrated loudness.',
   },
   {
     role: 'brand_art_director',

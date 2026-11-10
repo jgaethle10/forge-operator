@@ -1,0 +1,81 @@
+name: Neatlogs hiring proof (isolated actual collector)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/neatlogs-hiring-proof.yml'
+      - 'integrations/neatroots/**'
+      - 'tests/neatroots-checkout-evidence.test.mjs'
+      - 'tests/builder-origin-evidence.test.mjs'
+      - 'public/case-studies/**'
+      - 'AI_CANDIDATE_EVIDENCE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: neatroots-proof-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CI: '1'
+      NEATROOTS_NO_MODIFY_PATH: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: ''
+      - name: Verify source-side synthetic trace generator and portfolio claims
+        run: |
+          node --test tests/neatroots-checkout-evidence.test.mjs tests/builder-origin-evidence.test.mjs tests/ambiguous-external-effect.test.mjs
+          node integrations/neatroots/checkout-evidence-demo.mjs --output "${{ runner.temp }}/evercraft-synthetic-checkout.jsonl"
+          node -e "const f=require('fs');const a=f.readFileSync(process.argv[1],'utf8').trim().split('\\n').map(JSON.parse);if(a.length!==2||a.some(x=>x.metadata?.synthetic!==true))process.exit(1);console.log('Synthetic fixtures verified:',a.length)" "${{ runner.temp }}/evercraft-synthetic-checkout.jsonl"
+      - name: Install pinned real neatroots release, no models or editor connections
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 2 --max-time 30 \
+            --output "${{ runner.temp }}/install-neatroots.sh" \
+            https://raw.githubusercontent.com/neatlogs/neatroots/9d1c11eb2cd7c7e41f25c74590567b9ccdc4888a/install.sh
+          export NEATROOTS_INSTALL_DIR="${{ runner.temp }}/neatroots"
+          export NEATROOTS_BIN_DIR="${{ runner.temp }}/neatroots-bin"
+          sh "${{ runner.temp }}/install-neatroots.sh" --version v0.2.8 --no-laya --no-connect --no-modify-path
+          "${{ runner.temp }}/neatroots-bin/neatroots" --version
+      - name: Start genuine local neatroots collector, submit both synthetic traces
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NEATROOTS_INSTALL_DIR="${{ runner.temp }}/neatroots"
+          export NEATROOTS_BIN_DIR="${{ runner.temp }}/neatroots-bin"
+          "${{ runner.temp }}/neatroots-bin/neatroots" start --no-laya >"${{ runner.temp }}/neatroots.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true; tail -n 45 "${{ runner.temp }}/neatroots.log" || true' EXIT
+          for i in $(seq 1 45); do
+            if curl --fail --silent --show-error --max-time 2 http://127.0.0.1:4100/ >/dev/null 2>&1; then break; fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then echo 'neatroots exited before readiness'; exit 1; fi
+            sleep 2
+          done
+          curl --fail --silent --show-error --max-time 5 http://127.0.0.1:4100/ >/dev/null
+          node integrations/neatroots/checkout-evidence-demo.mjs --send --endpoint http://127.0.0.1:4100 \
+            | tee "${{ runner.temp }}/collector-acceptance.jsonl"
+          node integrations/neatroots/ambiguous-external-effect.mjs \
+            > "${{ runner.temp }}/synthetic-ack-loss.jsonl"
+          node --input-type=module -e 'import{readFileSync}from "node:fs";for(const line of readFileSync(process.argv[1],"utf8").trim().split("\n")){const trace=JSON.parse(line);const r=await fetch("http://127.0.0.1:4100/v1/trace",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(trace)});console.log("ACK_LOSS_SYNTHETIC",trace.metadata.scenario,r.status);if(!r.ok)process.exitCode=1}' "${{ runner.temp }}/synthetic-ack-loss.jsonl"
+
+          node -e "const f=require('fs');const a=f.readFileSync(process.argv[1],'utf8').trim().split('\\n').map(JSON.parse);if(a.length!==2||a.some(x=>x.status<200||x.status>=300))process.exit(1);console.log('REAL LOCAL NEATROOTS HTTP ACCEPTANCE:',a.map(x=>x.scenario).join(','));console.log('DOES NOT ESTABLISH anomaly detection or model decisions');" "${{ runner.temp }}/collector-acceptance.jsonl"
+      - name: Attest evidence boundary in GitHub job summary
+        if: always()
+        shell: bash
+        run: |
+          echo '## Evercraft × neatroots: bounded smoke test' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Target: neatroots v0.2.8, pinned upstream installer, isolated GitHub Actions runner.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Input: 2 synthetic agent checkout traces, no real orders, no secrets, no cloud keys.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Only if previous step passed: neatroots actual local HTTP collector accepted both payloads.' >> "$GITHUB_STEP_SUMMARY"
+          echo '**Important: an accepted trace is not proof that neatroots detects the contradiction.**' >> "$GITHUB_STEP_SUMMARY"

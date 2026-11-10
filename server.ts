@@ -20,6 +20,7 @@ import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerEvermapsIncidentRoutes } from './systemia/evermaps/http.mjs';
 import { registerFaieRoutes } from './systemia/faie/http.mjs';
 import { registerUniversityBenchmarkRoutes } from './systemia/university/http.mjs';
 import { registerPeopleRoutes } from './systemia/people/http.mjs';
@@ -195,6 +196,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 const radarResident = registerRadarRoutes(app, { isProd });
+registerEvermapsIncidentRoutes(app, { publicLimiter: rateLimit(30, 60 * 1000) });
 registerFaieRoutes(app, {
   isProd,
   radarResident,

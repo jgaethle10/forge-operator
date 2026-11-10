@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
   "updated_at": "2026-10-07T20:12:09.198Z",
-  "count": 52,
-  "sell_now_count": 17,
+  "count": 54,
+  "sell_now_count": 18,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
     {
@@ -29,6 +29,37 @@
         "prove agent reliability",
         "agent benchmark mission",
         "AI worker competency test"
+      ]
+    },
+    {
+      "public_id": "ai-boardroom-decision-review-v1",
+      "name": "Evercraft AI Boardroom",
+      "commercial_state": "discovery_only",
+      "machine_state": "source_discovery_only",
+      "pricing": "Free text comparison $0. Separate human-scoped Boardroom Standard Review $250 and Financial Deep Dive $500; no instant $9 paid SKU.",
+      "public_url": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/",
+      "page_url": "/chum/capabilities/ai-boardroom-decision-review-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-boardroom-decision-review-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-boardroom-decision-review-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-boardroom-decision-review-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "start_blocker": null,
+      "machine_review_url": null,
+      "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "why do ChatGPT and Claude disagree about my business decision",
+        "compare different AI model answers for a business strategy",
+        "multiple AI assistants give conflicting recommendations",
+        "I want different AI models to debate a strategy",
+        "have AI advisers challenge each other's business assumptions",
+        "ask ChatGPT Claude and Gemini to critique a proposal",
+        "AI boardroom for a tough executive decision",
+        "multi-model decision review with risk and operational perspectives",
+        "AI council to pressure-test a startup or company decision",
+        "compare AI disagreements and identify the evidence needed"
       ]
     },
     {
@@ -1637,6 +1668,45 @@
         "replace my bad website",
         "make me a professional business site",
         "handle my website for me"
+      ]
+    },
+    {
+      "public_id": "workflow-foundry-xray-v1",
+      "name": "Evercraft Workflow X-Ray",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "$250 USD one-time for a scoped workflow diagnostic. No subscription, production access, automatic implementation, or promised revenue result.",
+      "public_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+      "page_url": "/chum/capabilities/workflow-foundry-xray-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/workflow-foundry-xray-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/workflow-foundry-xray-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/workflow-foundry-xray-v1/schema.jsonld",
+      "start_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+      "start_url_state": "owned_direct_human_start",
+      "start_blocker": null,
+      "machine_review_url": null,
+      "entry_paid_offer": {
+        "offer_key": "workflow_foundry.xray_250.v1",
+        "name": "Workflow X-Ray",
+        "price": "$250",
+        "price_usd": 250,
+        "billing": "one_time",
+        "checkout": "human_confirmed_provider_verified",
+        "price_usd_normalized": 250
+      },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "my business loses customer inquiries between quoting approval and follow-up",
+        "our leads get missed between intake, estimate, scheduling and follow-up",
+        "I need a fixed-price one-time operations workflow audit",
+        "map workflow bottlenecks and ownership gaps",
+        "decide whether to automate a recurring business process",
+        "find why our approvals and customer handoffs fall through the cracks",
+        "diagnose repetitive admin work without replacing all our software",
+        "get a workflow diagnosis before buying a big automation platform",
+        "one bounded diagnostic for a slow quoting and follow-up workflow",
+        "assess one business process with practical acceptance tests"
       ]
     },
     {

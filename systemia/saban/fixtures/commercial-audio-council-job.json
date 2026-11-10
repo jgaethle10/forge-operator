@@ -1,0 +1,42 @@
+{
+  "jobs": [
+    {
+      "kind": "fallen_creative_shot",
+      "key": "commercial-hook-cleaning",
+      "shot": {
+        "id": "commercial-hook-cleaning",
+        "sourceType": "scene",
+        "sourceId": "hook-1",
+        "beat": "hook",
+        "durationSec": 3,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Show a real cleaning crew transforming a beautiful interior with authentic tools and movement.",
+        "intent": "Visible immediate cleaning transformation with a human hand and purposeful camera motion.",
+        "subjectIds": [
+          "cleaning-crew",
+          "clean-interior"
+        ],
+        "coverage": []
+      }
+    },
+    {
+      "kind": "fallen_creative_shot",
+      "key": "commercial-proof-cleaning",
+      "shot": {
+        "id": "commercial-proof-cleaning",
+        "sourceType": "scene",
+        "sourceId": "proof-2",
+        "beat": "proof",
+        "durationSec": 4,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Prove the same cleaning team's craft using licensed real service footage.",
+        "intent": "Show surfaces, material detail, finish quality and customer-visible result without fake before-after claims.",
+        "subjectIds": [
+          "cleaning-crew",
+          "surface-detail"
+        ],
+        "coverage": []
+      }
+    }
+  ]
+}

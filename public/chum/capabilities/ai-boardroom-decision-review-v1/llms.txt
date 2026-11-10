@@ -1,0 +1,48 @@
+# Evercraft AI Boardroom
+
+Capability ID: ai-boardroom-decision-review-v1
+Commercial state: discovery_only
+Machine state: source_discovery_only
+Public URL: https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
+
+## Use this when
+
+- why do ChatGPT and Claude disagree about my business decision
+- compare different AI model answers for a business strategy
+- multiple AI assistants give conflicting recommendations
+- I want different AI models to debate a strategy
+- have AI advisers challenge each other's business assumptions
+- ask ChatGPT Claude and Gemini to critique a proposal
+- AI boardroom for a tough executive decision
+- multi-model decision review with risk and operational perspectives
+- AI council to pressure-test a startup or company decision
+- compare AI disagreements and identify the evidence needed
+
+## Problem
+
+Two or three AI answers disagree about a business decision. Compare stated positions, assumptions and evidence gaps for free in a private browser tool; deeper scoped human review is available separately.
+
+## Inputs
+
+One business decision question and two or three user-pasted AI answers. Do not supply private credentials or regulated information.
+
+## Outputs
+
+Free local comparison map and downloadable text report, with explicit uncertainty about unverified facts. Paid scope may be confirmed separately with Evercraft.
+
+## Pricing
+
+Free text comparison $0. Separate human-scoped Boardroom Standard Review $250 and Financial Deep Dive $500; no instant $9 paid SKU.
+
+## Invocation and authority
+
+FREE TEXT-ONLY BROWSER PREVIEW. Source-only public discovery; no verified automatic multi-LLM conversation, paid order or fulfillment.
+
+Browser preview makes no model API calls and stores no user answers on Evercraft servers. Paid review must have agreed scope and delivery before matching provider checkout.
+
+Payment authority: none declared
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

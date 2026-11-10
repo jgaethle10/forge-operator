@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft | Spatial Perception Lab</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#162335;background:#f5f8fc}
+*{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid #dce6f0;padding:18px max(20px,calc((100vw - 1100px)/2));display:flex;justify-content:space-between;gap:15px;align-items:center}
+.brand{font-weight:900;letter-spacing:.05em;color:#174a89}.tag{border:1px solid #c8daf0;border-radius:99px;padding:6px 12px;color:#295582;font-size:.75rem}
+main{max-width:1100px;margin:0 auto;padding:38px 18px 70px}h1{font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.045em;line-height:1.07;margin:0 0 15px}
+p{color:#536579;line-height:1.6;max-width:820px}.lead{font-size:1.1rem}.panel{background:#fff;border:1px solid #dce6f0;border-radius:18px;padding:22px;margin-top:20px;box-shadow:0 7px 24px #172e4510}
+.controls{display:flex;gap:16px;flex-wrap:wrap;align-items:end}.controls>label{display:flex;flex-direction:column;gap:7px;font-size:.83rem;color:#3e5268}
+input[type=number]{width:125px;border:1px solid #afc5dc;border-radius:8px;padding:11px;background:#fff;font-size:1rem}
+input[type=file]{max-width:210px;font-size:.8rem}
+button{background:#185eb1;color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:750;cursor:pointer}button.secondary{background:#eaf2fc;color:#19508c}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.scene{min-width:0}.scene canvas{width:100%;aspect-ratio:8/5;image-rendering:pixelated;background:#121e2d;border-radius:10px;display:block}
+.scene h3{font-size:.88rem;font-weight:750;margin:0 0 10px}.stats{display:flex;gap:26px;flex-wrap:wrap}.stat b{display:block;font-size:1.8rem;color:#185eb1}.stat span{font-size:.82rem;color:#5a6f82}
+.notice{border-left:4px solid #e9ac3b;background:#fff9e8;padding:12px 16px;border-radius:0 9px 9px 0;margin-top:20px;color:#674d20;font-size:.9rem}
+#status{font-size:.87rem;color:#315d87;min-height:22px;margin-top:12px}
+@media(max-width:700px){header{align-items:flex-start}.grid{grid-template-columns:1fr}.scene canvas{max-height:260px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header><div class="brand">EVERCRAFT <span style="color:#8a9cad;font-weight:500">/ WORLDS</span></div><div class="tag">SPATIAL PERCEPTION · EXPERIMENTAL V2</div></header>
+<main>
+<h1>Turn pixels into<br>provisional space.</h1>
+<p class="lead">A real, local stereo-matching experiment. Two calibrated camera images can produce estimated depth points. See the geometry, the assumptions, and the missing evidence.</p>
+<div class="panel">
+  <div class="controls">
+    <button id="sample">Run synthetic demo</button>
+    <label>Left image <input id="left" type="file" accept="image/png,image/jpeg,image/webp"></label>
+    <label>Right image <input id="right" type="file" accept="image/png,image/jpeg,image/webp"></label>
+    <label>Focal length (px, original image) <input id="fx" type="number" min="1" max="10000" step="1" value="120"></label>
+    <label>Camera baseline (meters) <input id="baseline" type="number" min="0.001" max="10" step="0.01" value="0.12"></label>
+    <button id="analyze" class="secondary">Analyze my stereo pair</button>
+  </div>
+  <div id="status" role="status" aria-live="polite">Synthetic example is ready. No files are uploaded.</div>
+</div>
+<div class="panel">
+  <div class="grid">
+    <div class="scene"><h3>Left rectified image</h3><canvas id="leftCanvas" width="160" height="100"></canvas></div>
+    <div class="scene"><h3>Right rectified image</h3><canvas id="rightCanvas" width="160" height="100"></canvas></div>
+    <div class="scene"><h3>Estimated depth samples</h3><canvas id="depthCanvas" width="160" height="100"></canvas></div>
+  </div>
+  <div class="stats" style="margin-top:24px">
+    <div class="stat"><b id="pointCount">0</b><span>accepted sample points</span></div>
+    <div class="stat"><b id="consistency">N/A</b><span>left/right consistency retention</span></div>
+    <div class="stat"><b id="referenceError">N/A</b><span>synthetic reference error</span></div>
+    <div class="stat"><b id="depthMedian">Unknown</b><span>median estimated distance</span></div>
+    <div class="stat"><b id="objects">0</b><span>supplied object labels</span></div>
+    <div class="stat"><b id="mapPins">0</b><span>verified geographic pins</span></div>
+  </div>
+  <p id="detail" style="font-size:.88rem">Estimated values, not independently field-validated measurements.</p>
+</div>
+<div class="panel">
+  <h2 style="margin:0 0 7px;font-size:1.35rem;letter-spacing:-.02em">Spatial point-cloud preview</h2>
+  <p style="margin:0 0 15px;font-size:.87rem">Orbit a provisional, camera-relative view derived only from filtered depth samples. Grid lines are reference coordinates, not surveyed roads or terrain.</p>
+  <canvas id="cloudCanvas" width="960" height="440" style="width:100%;max-height:440px;border-radius:12px;display:block;background:#0c1525"></canvas>
+  <div class="controls" style="margin-top:15px">
+    <label>Rotate view <input type="range" min="-90" max="90" value="0" id="yaw" style="width:min(65vw,310px)"></label>
+    <span id="viewAngle" style="color:#536579;font-size:.87rem">0°</span>
+  </div>
+</div>
+<div class="panel" id="temporalLab">
+  <h2 style="margin:0 0 7px;font-size:1.35rem;letter-spacing:-.02em">Tracked observations across frames</h2>
+  <p style="margin:0 0 15px;font-size:.87rem">A reviewable, image-relative timeline. Track IDs are provisional associations, not confirmed object identities. This demo does not infer YOLO boxes from video.</p>
+  <div class="controls">
+    <button id="syntheticSequence">Run five-frame synthetic sequence</button>
+    <label>Load local observation JSON <input id="sequenceFile" type="file" accept=".json,application/json"></label>
+    <button class="secondary" id="loadSequence">Load JSON locally</button>
+    <button class="secondary" id="downloadReview">Export review packet</button>
+  </div>
+  <div id="temporalStatus" role="status" aria-live="polite" style="font-size:.86rem;color:#315d87;margin:12px 0">No video processed. The demo uses generated detection boxes.</div>
+  <canvas id="temporalCanvas" width="960" height="420" style="width:100%;max-height:420px;display:block;background:#0c1525;border-radius:12px"></canvas>
+  <div class="controls" style="margin-top:16px">
+    <label style="flex:1;min-width:200px">Frame position <input type="range" id="temporalFrame" min="0" max="0" value="0" style="width:100%"></label>
+    <div class="stat"><b id="timelineFrame">1 / 1</b><span>selected frame</span></div>
+    <div class="stat"><b id="timelineTracks">0</b><span>provisional tracks</span></div>
+    <div class="stat"><b id="timelineEvents">0</b><span>review-required events</span></div>
+  </div>
+  <p id="consumerStatus" style="font-size:.82rem">Worlds, ForensiScope, and EverMaps adapters preserve review and location boundaries.</p>
+  <p style="font-size:.78rem">JSON input needs <code>frames: [{frameId,timestampMs,width,height,observations:[...] }]</code> (or an array of frames), where each observation follows <code>evercraft.spatial-perception.observation.v0</code>. No images are included in the exported review packet. No data is uploaded.</p>
+</div>
+<div class="notice"><b>Real-world limit:</b> Requires two synchronized, lens-corrected, rectified camera views and real camera calibration. An ordinary single-lens dashcam video cannot establish metric stereo distance. Object labels are never automatically inferred by this demo. Do not use for driving, safety warnings, or forensic conclusions.</div>
+<p style="font-size:.8rem">Depth samples are additionally checked for left/right correspondence. A high consistency percentage is not an accuracy certificate. All image processing runs inside this page. Synthetic pixels and manually supplied sample boxes are marked as such. No GPS positions are computed, and no persistent world objects are created.</p>
+</main>
+<script type="module">
+import {estimateStereoDepth,fuseDetections,mappingDraft,worldsProjection,forensiScopeTimeline} from '../spatial-perception.mjs';
+import {auditStereoConsistency,compareRangingTargets} from '../spatial-audit.mjs';
+import {drawPointCloud} from './scene-viewport.mjs';
+import {associateSpatialFrames,temporalReviewPacket,worldsTemporalPreview,forensiScopeTemporalEvents,everMapsTemporalDrafts} from '../spatial-temporal.mjs';
+const byId=id=>document.getElementById(id);
+const set=(id,value)=>byId(id).textContent=String(value);
+const W=160,H=100;
+let latestDepth=null;
+function paint(id,values,width,height){
+ const c=byId(id);c.width=width;c.height=height;
+ const cx=c.getContext('2d'),img=cx.createImageData(width,height);
+ for(let i=0;i<values.length;i++){const n=i*4;img.data[n]=values[i];img.data[n+1]=values[i];img.data[n+2]=values[i];img.data[n+3]=255;}
+ cx.putImageData(img,0,0);
+}
+function renderDepth(depth){
+ const c=byId('depthCanvas');c.width=depth.width;c.height=depth.height;
+ const ctx=c.getContext('2d');ctx.fillStyle='#11243e';ctx.fillRect(0,0,c.width,c.height);
+ for(const p of depth.points){const hue=Math.round(210-Math.min(p.depthM,30)/30*190);
+   ctx.fillStyle='hsl('+hue+',80%,58%)';ctx.fillRect(p.x-1,p.y-1,2,2);}
+}
+function process(left,right,width,height,focal,baseline,synthetic){
+ const maxDisparity=Math.min(12,Math.floor(width/5));
+ const raw=estimateStereoDepth({left,right,width,height,fxPx:focal,baselineM:baseline,
+   minDisparity:1,maxDisparity,stride:3,radius:2,minTexture:8});
+ const depth=auditStereoConsistency(raw,left,right,{minDisparity:1,maxDisparity,radius:2,tolerancePx:1});
+ const reference=synthetic?compareRangingTargets(depth,[{id:'known-disparity-synthetic',cameraAxisDepthM:3.6,
+   method:'generated known disparity',box:{x:58,y:25,width:65,height:45}}]):null;
+ const demoBoxes=synthetic?[{label:'hand-marked synthetic object',confidence:1,
+    box:{x:58,y:25,width:65,height:45}}]:[];
+ const observed=fuseDetections(depth,{frameId:synthetic?'synthetic-scene':'user-local-frame',
+  detector:synthetic?'human_marked_synthetic':'no_detector',
+  detections:demoBoxes});
+ const world=worldsProjection(observed);
+ const records=mappingDraft(observed),events=forensiScopeTimeline(observed);
+ paint('leftCanvas',left,width,height);paint('rightCanvas',right,width,height);renderDepth(depth);
+ latestDepth=depth;
+ drawPointCloud(byId('cloudCanvas'),latestDepth,{yawDeg:Number(byId('yaw').value)});
+ const distances=depth.points.map(p=>p.depthM).sort((a,b)=>a-b);
+ const median=distances.length?distances[Math.floor(distances.length/2)]:null;
+ set('pointCount',depth.points.length);set('consistency',depth.audit.retentionRatio===null?'N/A':Math.round(100*depth.audit.retentionRatio)+'%');
+ set('referenceError',reference?.meanAbsoluteErrorM===null||!reference?'N/A':reference.meanAbsoluteErrorM.toFixed(3)+' m');
+ set('depthMedian',median===null?'Unknown':median.toFixed(2)+' m');
+ set('objects',events.length);set('mapPins',records.filter(x=>x.geometry).length);
+ set('detail','Camera-relative preview only. '+world.entities.length+' non-colliding Worlds preview entity(s). No automatic object recognition or geographic registration.');
+ set('status',synthetic?'Synthetic, pre-rectified pair complete. Expected object distance about 3.6 m.':
+  'Local pair analyzed. Depth is a preliminary estimate pending calibration and field verification.');
+}
+function sample(){
+ const left=new Uint8Array(W*H),right=new Uint8Array(W*H),disparity=4;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+   const road=y>45?30:95,pattern=(x*71+y*37+(x*y*17)%251)%140;
+   left[y*W+x]=Math.min(255,road+pattern+(x>58&&x<123&&y>25&&y<70?25:0));
+ }
+ for(let y=0;y<H;y++)for(let x=0;x<W-disparity;x++)right[y*W+x]=left[y*W+x+disparity];
+ for(let y=0;y<H;y++)for(let x=W-disparity;x<W;x++)right[y*W+x]=0;
+ process(left,right,W,H,120,0.12,true);
+}
+async function gray(file,width,height){
+ const bmp=await createImageBitmap(file);
+ try{const c=document.createElement('canvas');c.width=width;c.height=height;
+ const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(bmp,0,0,width,height);
+ const pixels=ctx.getImageData(0,0,width,height).data,out=new Uint8Array(width*height);
+ for(let i=0;i<out.length;i++){const j=i*4;out[i]=Math.round(.2126*pixels[j]+.7152*pixels[j+1]+.0722*pixels[j+2]);}
+ return out;}finally{bmp.close();}
+}
+async function upload(){
+ const l=byId('left').files[0],r=byId('right').files[0];
+ if(!l||!r){set('status','Please choose both left and right camera images.');return;}
+ set('status','Processing in your browser...');
+ try{
+  const A=await createImageBitmap(l),B=await createImageBitmap(r);
+  const same=A.width===B.width&&A.height===B.height;
+  const width=A.width,height=A.height;A.close();B.close();
+  if(!same)throw Error('Stereo pair dimensions must match.');
+  const scale=Math.min(1,160/width,100/height),w=Math.max(16,Math.round(width*scale)),h=Math.max(12,Math.round(height*scale));
+  const left=await gray(l,w,h),right=await gray(r,w,h);
+  process(left,right,w,h,Number(byId('fx').value)*(w/width),Number(byId('baseline').value),false);
+ }catch(e){set('status','Cannot analyze this pair: '+e.message);}
+}
+byId('yaw').addEventListener('input',()=>{
+ set('viewAngle',byId('yaw').value+'°');
+ if(latestDepth)drawPointCloud(byId('cloudCanvas'),latestDepth,{yawDeg:Number(byId('yaw').value)});
+});
+byId('sample').addEventListener('click',()=>{try{sample();}catch(e){set('status',e.message);}});
+byId('analyze').addEventListener('click',upload);
+sample();
+
+let temporalResult=null;
+function syntheticTimeline(){
+ const frames=[];
+ for(let i=0;i<5;i++){
+  const frameId='synthetic-'+i,timestampMs=i*100,width=160,height=100;
+  const items=[{label:'car',x:20+i*5,y:30,w:28,h:18,z:3.6}];
+  if(i!==2)items.push({label:'bus',x:110-i*4,y:58,w:34,h:19,z:8.0});
+  frames.push({frameId,timestampMs,width,height,
+    observations:items.map((v,j)=>({
+      schema:'evercraft.spatial-perception.observation.v0',
+      id:frameId+':'+j,frameId,timestampMs,label:v.label,
+      detectorConfidence:1,detector:'synthetic_manual',
+      box:{x:v.x,y:v.y,width:v.w,height:v.h},
+      depthEstimateM:v.z,depthStatus:'estimated_not_verified',
+      cameraPositionM:{x:(v.x+v.w/2-80)*v.z/120,y:(50-v.y-v.h/2)*v.z/120,z:v.z},
+      sourceSha256:null,coordinateFrame:'camera_relative',
+      georegistered:false,safetyCriticalApproved:false
+    }))
+  });
+ }
+ return frames;
+}
+function showTimeline(result,sourceLabel){
+ temporalResult=result;
+ const slider=byId('temporalFrame');
+ slider.max=String(Math.max(0,result.frames.length-1));
+ slider.value='0';
+ set('timelineTracks',result.tracks.length);
+ set('timelineEvents',result.frames.reduce((sum,f)=>sum+f.events.length,0));
+ const forensic=forensiScopeTemporalEvents(result),map=everMapsTemporalDrafts(result);
+ set('consumerStatus',forensic.length+' review-required ForensiScope events · '+map.length+' unlocated EverMaps drafts · no verified geographic pins.');
+ set('temporalStatus',sourceLabel+'. Track identities remain provisional; relative image movement is not physical speed.');
+ showTimelineFrame(0);
+}
+function showTimelineFrame(index){
+ if(!temporalResult)return;
+ const i=Math.min(temporalResult.frames.length-1,Math.max(0,Number(index)||0));
+ const canvas=byId('temporalCanvas'),ctx=canvas.getContext('2d');
+ ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#0c1525';ctx.fillRect(0,0,canvas.width,canvas.height);
+ if(temporalResult.frames.length===0){set('timelineFrame','0 / 0');return;}
+ const f=temporalResult.frames[i];
+ const scaleX=canvas.width/f.width,scaleY=canvas.height/f.height;
+ ctx.save();ctx.scale(scaleX,scaleY);
+ ctx.lineWidth=1/scaleX;ctx.strokeStyle='#253f57';
+ for(let x=0;x<f.width;x+=20){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,f.height);ctx.stroke();}
+ for(let y=0;y<f.height;y+=20){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(f.width,y);ctx.stroke();}
+ const events=temporalResult.frames.slice(0,i+1).flatMap(frame=>frame.events);
+ const trails=new Map();
+ for(const e of events){if(!trails.has(e.trackId))trails.set(e.trackId,[]);trails.get(e.trackId).push(e);}
+ ctx.lineWidth=1.2/scaleX;
+ for(const [track,items] of trails){
+  if(items.length<2)continue;
+  ctx.strokeStyle='#4aaad5';ctx.beginPath();
+  items.forEach((e,j)=>{const x=e.box.x+e.box.width/2,y=e.box.y+e.box.height/2;
+    if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
+ }
+ ctx.font='4px system-ui';ctx.textBaseline='bottom';
+ for(const e of f.events){
+  ctx.strokeStyle=e.ambiguous?'#ffba5a':'#59dcce';ctx.lineWidth=1.3/scaleX;
+  ctx.strokeRect(e.box.x,e.box.y,e.box.width,e.box.height);
+  ctx.fillStyle='#f7fcff';
+  ctx.fillText(e.trackId+' '+e.label,e.box.x,Math.max(5,e.box.y-1));
+ }
+ ctx.restore();
+ set('timelineFrame',(i+1)+' / '+temporalResult.frames.length);
+ try{
+  const world=worldsTemporalPreview(temporalResult,f.frameId);
+  set('temporalStatus','Frame '+f.frameId+' · t='+f.timestampMs+' ms · '+f.events.length+
+    ' observations · '+world.entities.length+' non-colliding Worlds preview object(s). No motion or identity verification.');
+ }catch(e){set('temporalStatus','Cannot project frame: '+e.message);}
+}
+byId('syntheticSequence').addEventListener('click',()=>{
+ try{showTimeline(associateSpatialFrames(syntheticTimeline()),'Generated five-frame sequence');}
+ catch(e){set('temporalStatus','Synthetic sequence error: '+e.message);}
+});
+byId('temporalFrame').addEventListener('input',value=>showTimelineFrame(byId('temporalFrame').value));
+byId('loadSequence').addEventListener('click',async()=>{
+ const file=byId('sequenceFile').files[0];
+ if(!file){set('temporalStatus','Choose a local observation JSON file first.');return;}
+ if(file.size>10000000){set('temporalStatus','File too large: local JSON limit is 10 MB.');return;}
+ try{
+  const parsed=JSON.parse(await file.text()),frames=Array.isArray(parsed)?parsed:parsed.frames;
+  showTimeline(associateSpatialFrames(frames),'Local observation JSON parsed');
+ }catch(e){set('temporalStatus','Rejected observation JSON: '+e.message);}
+});
+byId('downloadReview').addEventListener('click',()=>{
+ if(!temporalResult){set('temporalStatus','No timeline to export.');return;}
+ const packet=temporalReviewPacket(temporalResult);
+ const blob=new Blob([JSON.stringify(packet,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='evercraft-spatial-unreviewed.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+showTimeline(associateSpatialFrames(syntheticTimeline()),'Generated five-frame sequence');
+</script>
+</body></html>

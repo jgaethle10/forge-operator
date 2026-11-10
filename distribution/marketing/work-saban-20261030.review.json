@@ -1,0 +1,354 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "work-saban-free-reporting-launch-20261030",
+  "product": "work-saban",
+  "document": "distribution/marketing/work-saban-clip-launch-20261030.md",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "status": "first_party_product_live_clip_platform_delivery_not_verified",
+  "owner_approval": false,
+  "publication_authority": false,
+  "published_posts_verified": 0,
+  "platform_connections_verified": false,
+  "observed_paid_sales": 0,
+  "goal": "Get independent operators to use the real free on-device CSV reporter, qualify written recurring-reporting pilots, and attribute verified sales only after payment and delivery.",
+  "public_product": {
+    "landing": "https://jgaethle10.github.io/forge-operator/work-saban/",
+    "working_report": "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+    "brand_media": "public/work-saban/brand/work-saban-social.svg",
+    "media_state": "first_party_svg_source_available_not_provider_approved_png_or_video",
+    "receipt_source": "https://github.com/jgaethle10/forge-operator/pull/1793"
+  },
+  "restricted_brand_keys": [
+    "eps",
+    "havenly-cleaning",
+    "rnb-chicken-and-soul",
+    "christmaslightsusa"
+  ],
+  "review_gates": [
+    "verified_target_account_and_brand",
+    "source_truth_and_visual_media_qc",
+    "current_issuer_backed_platform_specific_authorization",
+    "public_link_preflight",
+    "first_party_clip_verified_publisher_adapter",
+    "independent_provider_post_receipt",
+    "independent_first_comment_receipt_if_facebook",
+    "crm_consent_and_real_customer_delivery"
+  ],
+  "entries": [
+    {
+      "id": "work-saban-20261030-company-facebook",
+      "product": "work-saban",
+      "brand_key": "evercraft-work-saban",
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "proposed_channels": [
+        "facebook-page"
+      ],
+      "audience": "verified_evercraft_flagship_page_only",
+      "planned_day": "2026-10-30",
+      "angle": "real_first_party_private_csv_to_checked_report",
+      "caption": "Monthly sales reporting shouldn't eat an afternoon.\n\nToday we're opening Work Saban's first public tool. If you export sales into a CSV, you can use your own numbers to create a monthly report, check the totals, and save the result. The calculation runs in your browser, so the file isn't uploaded to us. No account or payment required.\n\nThis is the first working piece of Work Saban. Our broader multi-agent product is still being built, and we're inviting businesses with recurring reporting needs to talk about private pilots. Try the tool through the link in our first comment.",
+      "link_mode": "first_comment",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=work-saban-free-reporting-launch-20261030&utm_content=company-facebook",
+      "first_comment_required": true,
+      "first_comment_copy": "https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=work-saban-free-reporting-launch-20261030&utm_content=company-facebook",
+      "creative_state": "original_work_saban_social_visual_needs_platform_asset_review",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/work-saban/",
+        "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "https://github.com/jgaethle10/forge-operator/pull/1793"
+      ],
+      "linkVerification": {
+        "expectedText": [
+          "Your numbers.",
+          "Finished report."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "requireCanonicalSelfMatch": true,
+        "requireOpenGraphSelfMatch": false
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "provider_first_comment_url": null,
+      "status": "held_for_brand_account_media_and_publisher_receipt",
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      }
+    },
+    {
+      "id": "work-saban-20261030-company-linkedin",
+      "product": "work-saban",
+      "brand_key": "evercraft-work-saban",
+      "platform": "linkedin",
+      "destination": "linkedin-organization",
+      "proposed_channels": [
+        "linkedin-organization"
+      ],
+      "audience": "verified_evercraft_company_page_only",
+      "planned_day": "2026-10-30",
+      "angle": "real_first_party_private_csv_to_checked_report",
+      "caption": "A monthly sales report should be easier than manually rebuilding the same spreadsheet summary every month.\n\nWork Saban's first public workflow is available now: select a CSV containing month and revenue, authorize a local read, and receive a downloadable report with monthly totals and an independent arithmetic recheck. Nothing in the selected file is uploaded to Evercraft; the processing happens in the browser.\n\nWe're beginning with this deliberately narrow, usable capability. General-purpose autonomous agent teams and hosted business integrations are still in development. Teams with recurring reporting work can also reach us through the private-pilot inquiry on the main product page.\n\nhttps://jgaethle10.github.io/forge-operator/work-saban/report/",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=work-saban-free-reporting-launch-20261030&utm_content=company-linkedin",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "optional_owned_social_svg_requires_platform_qc",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/work-saban/",
+        "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "https://github.com/jgaethle10/forge-operator/pull/1793"
+      ],
+      "linkVerification": {
+        "expectedText": [
+          "Your numbers.",
+          "Finished report."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "requireCanonicalSelfMatch": true,
+        "requireOpenGraphSelfMatch": false
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "provider_first_comment_url": null,
+      "status": "held_for_brand_account_and_clip_publisher_receipt",
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      }
+    },
+    {
+      "id": "work-saban-20261030-company-x",
+      "product": "work-saban",
+      "brand_key": "evercraft-work-saban",
+      "platform": "x",
+      "destination": "x",
+      "proposed_channels": [
+        "x"
+      ],
+      "audience": "verified_evercraft_company_x_only",
+      "planned_day": "2026-10-30",
+      "angle": "real_first_party_private_csv_to_checked_report",
+      "caption": "Work Saban's first public tool is live: turn a sales CSV into a checked monthly report in your browser. No upload, account or payment. Broader AI teams are still in development. Try it: https://jgaethle10.github.io/forge-operator/work-saban/report/",
+      "link_mode": "in_post",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=work-saban-free-reporting-launch-20261030&utm_content=company-x",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "optional_owned_image_pending",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/work-saban/",
+        "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "https://github.com/jgaethle10/forge-operator/pull/1793"
+      ],
+      "linkVerification": {
+        "expectedText": [
+          "Your numbers.",
+          "Finished report."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "requireCanonicalSelfMatch": true,
+        "requireOpenGraphSelfMatch": false
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "provider_first_comment_url": null,
+      "status": "held_for_verified_account_and_clip_adapter",
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      }
+    },
+    {
+      "id": "work-saban-20261030-company-instagram",
+      "product": "work-saban",
+      "brand_key": "evercraft-work-saban",
+      "platform": "instagram",
+      "destination": "instagram-business",
+      "proposed_channels": [
+        "instagram-business"
+      ],
+      "audience": "verified_evercraft_corporate_ig_only",
+      "planned_day": "2026-10-30",
+      "angle": "real_first_party_private_csv_to_checked_report",
+      "caption": "The monthly sales report you keep rebuilding? Work Saban can now help with a real CSV you choose.\n\nCalculate monthly totals, run a second arithmetic check, and save a finished report without uploading your file. The first tool is free. Our broader AI team is still in development. Find the reporting tool through the profile link.",
+      "link_mode": "profile_link",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=work-saban-free-reporting-launch-20261030&utm_content=company-instagram",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "first_party_product_capture_or_approved_original_media_required",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/work-saban/",
+        "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "https://github.com/jgaethle10/forge-operator/pull/1793"
+      ],
+      "linkVerification": {
+        "expectedText": [
+          "Your numbers.",
+          "Finished report."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "requireCanonicalSelfMatch": true,
+        "requireOpenGraphSelfMatch": false
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "provider_first_comment_url": null,
+      "status": "held_for_media_and_verified_clip_adapter",
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      }
+    },
+    {
+      "id": "work-saban-20261030-company-tiktok",
+      "product": "work-saban",
+      "brand_key": "evercraft-work-saban",
+      "platform": "tiktok",
+      "destination": "tiktok",
+      "proposed_channels": [
+        "tiktok"
+      ],
+      "audience": "verified_evercraft_corporate_tiktok_only",
+      "planned_day": "2026-10-30",
+      "angle": "real_first_party_private_csv_to_checked_report",
+      "caption": "That monthly sales spreadsheet again? Our first Work Saban tool turns your own CSV into a checked, downloadable report in your browser. No upload or account. The actual reporting tool is ready to try; broader AI teamwork is still in development. Product link in bio.",
+      "link_mode": "bio_or_story",
+      "tracked_url": "https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=work-saban-free-reporting-launch-20261030&utm_content=company-tiktok",
+      "first_comment_required": false,
+      "first_comment_copy": null,
+      "creative_state": "original_actual_browser_capture_required_no_video_yet",
+      "source_refs": [
+        "https://jgaethle10.github.io/forge-operator/work-saban/",
+        "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "https://github.com/jgaethle10/forge-operator/pull/1793"
+      ],
+      "linkVerification": {
+        "expectedText": [
+          "Your numbers.",
+          "Finished report."
+        ],
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/work-saban/report/",
+        "requireCanonicalSelfMatch": true,
+        "requireOpenGraphSelfMatch": false
+      },
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "provider_first_comment_url": null,
+      "status": "held_for_real_video_media_and_verified_clip_adapter",
+      "distribution": {
+        "engine": "evercraft_clip",
+        "orchestrator": "systemia",
+        "max_identical_reuse": 0,
+        "paid_spend_usd": 0,
+        "paid_offer_not_claimed": true
+      }
+    }
+  ],
+  "personal_share": [
+    {
+      "id": "work-saban-founder-facebook",
+      "platform": "facebook",
+      "account_scope": "founder_personal_manual_only",
+      "copy_source": "distribution/marketing/work-saban-clip-launch-20261030.md#founder-facebook",
+      "link_mode": "first_comment",
+      "post_state": "copy_ready_not_published",
+      "provider_post_url": null
+    },
+    {
+      "id": "work-saban-founder-linkedin",
+      "platform": "linkedin",
+      "account_scope": "founder_personal_manual_only",
+      "copy_source": "distribution/marketing/work-saban-clip-launch-20261030.md#founder-linkedin",
+      "link_mode": "in_post",
+      "post_state": "copy_ready_not_published",
+      "provider_post_url": null
+    },
+    {
+      "id": "work-saban-founder-x",
+      "platform": "x",
+      "account_scope": "founder_personal_manual_only",
+      "copy_source": "distribution/marketing/work-saban-clip-launch-20261030.md#founder-x",
+      "link_mode": "in_post",
+      "post_state": "copy_ready_not_published",
+      "provider_post_url": null
+    },
+    {
+      "id": "work-saban-founder-instagram",
+      "platform": "instagram",
+      "account_scope": "founder_personal_manual_only",
+      "copy_source": "distribution/marketing/work-saban-clip-launch-20261030.md#founder-instagram",
+      "link_mode": "profile_link",
+      "post_state": "media_required_not_published",
+      "provider_post_url": null
+    },
+    {
+      "id": "work-saban-founder-tiktok",
+      "platform": "tiktok",
+      "account_scope": "founder_personal_manual_only",
+      "copy_source": "distribution/marketing/work-saban-clip-launch-20261030.md#short-form-original-demo",
+      "link_mode": "bio_or_story",
+      "post_state": "original_product_video_required_not_published",
+      "provider_post_url": null
+    }
+  ],
+  "prohibited_actions": [
+    "use_metricool_or_unrelated_account",
+    "invent_published_receipt_or_metrics",
+    "reuse_approval_from_another_product",
+    "pretend_live_general_ai_agents",
+    "claim_paid_sale_or_live_checkout",
+    "upload_private_customer_csv",
+    "auto_post_from_personal_account",
+    "post_family_unsafe_or_licensed_media_without_rights",
+    "post_without_source_identity_and_provider_receipt",
+    "unsolicited_bulk_outreach"
+  ]
+}

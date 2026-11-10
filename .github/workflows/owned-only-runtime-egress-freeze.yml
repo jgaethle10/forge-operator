@@ -1,0 +1,62 @@
+name: Owned-only runtime egress freeze
+
+on:
+  pull_request:
+    paths:
+      - "systemia/distribution/forensiscope-commerce-canary*.mjs"
+      - "systemia/organism/rivet-session-freshness*"
+      - "systemia/core/resident-services.json"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/migrations/base44-exit/forensic-record-public-extractor.mjs"
+      - "systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs"
+      - ".github/workflows/forensiscope-commerce-canary.yml"
+      - ".github/workflows/website-commerce-browser-gate.yml"
+      - "scripts/validate-no-base44-hotpath.mjs"
+      - "tests/owned-runtime-egress-freeze.test.mjs"
+      - ".github/workflows/owned-only-runtime-egress-freeze.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/distribution/forensiscope-commerce-canary*.mjs"
+      - "systemia/organism/rivet-session-freshness*"
+      - "systemia/core/resident-services.json"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/migrations/base44-exit/forensic-record-public-extractor.mjs"
+      - "systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs"
+      - ".github/workflows/forensiscope-commerce-canary.yml"
+      - ".github/workflows/website-commerce-browser-gate.yml"
+      - "scripts/validate-no-base44-hotpath.mjs"
+      - "tests/owned-runtime-egress-freeze.test.mjs"
+      - ".github/workflows/owned-only-runtime-egress-freeze.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  assert-zero-provider-egress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify withdrawn jobs cannot send legacy requests
+        run: |
+          set -euo pipefail
+          node --check systemia/distribution/forensiscope-commerce-canary.mjs
+          node --check systemia/organism/rivet-session-freshness-runner.mjs
+          node --check systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs
+          node --test tests/owned-runtime-egress-freeze.test.mjs
+          node --test systemia/distribution/forensiscope-commerce-canary.test.mjs tests/rivet-session-freshness-runner.test.mjs
+          node scripts/validate-no-base44-hotpath.mjs
+      - name: Summarize replacement and rollback boundary
+        if: always()
+        run: |
+          {
+            echo "## Evercraft owned-only egress"
+            echo "Legacy provider jobs in this scope must be HELD with zero network traffic."
+            echo "No source data reconciled, no public domain migrated, no payment verified."
+            echo "The platform-wide exit is not complete merely because these egress paths are frozen."
+          } >> "$GITHUB_STEP_SUMMARY"

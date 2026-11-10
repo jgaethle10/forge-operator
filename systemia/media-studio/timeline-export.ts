@@ -127,7 +127,12 @@ function visualFilter(binding:InputBinding,width:number,height:number,label:stri
     const opacity=Math.max(0,Math.min(1,clip.opacity??1));
     return `[${binding.inputIndex}:v]scale=iw*${scale}:ih*${scale},format=rgba,colorchannelmixer=aa=${opacity},setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
   }
-  return `[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1,setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
+  const focusX=clip.focalX??0.5,focusY=clip.focalY??0.5;
+  if(!Number.isFinite(focusX)||focusX<0||focusX>1||
+     !Number.isFinite(focusY)||focusY<0||focusY>1){
+    throw new Error(`timeline_visual_focus_invalid:${clip.id}`);
+  }
+  return `[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}:x=(iw-ow)*${focusX}:y=(ih-oh)*${focusY},setsar=1,setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
 }
 
 function audioFilter(binding:InputBinding,label:string){

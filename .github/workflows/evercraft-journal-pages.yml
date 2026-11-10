@@ -10,10 +10,13 @@ on:
       - 'systemia/graphics-command/ranking-poster-renderer.mjs'
       - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
+      - 'scripts/probe-boardroom-public.mjs'
+      - 'scripts/probe-subsea-watch-public.mjs'
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/product-url-fabric.test.mjs'
+      - 'tests/clip-public-entry.test.mjs'
       - '.github/workflows/evercraft-journal-pages.yml'
   workflow_dispatch:
 
@@ -22,9 +25,11 @@ permissions:
   pages: write
   id-token: write
 
+# Publishing must not be aborted every time another worker commits to main.
+# GitHub may replace a pending run with the latest, but an active deployment finishes.
 concurrency:
   group: evercraft-public-web-fallback
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -39,11 +44,18 @@ jobs:
         with:
           node-version: 22
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Prove public URL fabric
         run: |
           npm run test:chum-public-origin
           npm run test:product-url-fabric
+          node --test tests/clip-public-entry.test.mjs
 
+      - name: Verify Boardroom source logic and luxury theme
+        run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs
       - name: Prove owned Journal contracts
         run: npm run journal:test
 
@@ -103,6 +115,37 @@ jobs:
           rm -rf _public_pages
           mkdir -p _public_pages
           cp -R public/. _public_pages/
+          # Native image assets matter: Facebook/LinkedIn preview cards generally
+          # require PNG/JPEG rather than SVG-only Open Graph references.
+          python -m pip install --quiet --disable-pip-version-check cairosvg==2.8.2
+          # Every future Pages deployment materializes a real crawlable, non-SVG
+          # Evercraft Partners link preview before the artifact is uploaded.
+          test -s _public_pages/partners/social-card.svg
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/partners/social-card.svg", write_to="_public_pages/partners/social-card.png", output_width=1200, output_height=630)'
+          test -s _public_pages/partners/social-card.png
+          python systemia/clip/build-audience-social-previews.py \
+            --source public/clip/audience-sites \
+            --destination _public_pages/clip/audience-sites
+          test -s _public_pages/clip/audience-sites/partscout/feed.png
+          test -s _public_pages/clip/audience-sites/relay-notes/story.png
+          # White-label revenue properties must never expose the corporate Clip
+          # handoff queue, channel approvals, or private publisher metadata.
+          for slug in partscout valuescout playbook-lab site-rescue creative-studio publisher-lab relay-notes; do
+            cp "_public_pages/clip/audience-sites/$slug/feed.png" "_public_pages/audience-sites/$slug/share.png"
+            test -s "_public_pages/audience-sites/$slug/share.png"
+          done
+          rm -rf _public_pages/clip/audience-sites
+          # Clip's actual public entry must survive while retired audience properties stay excluded.
+          test -s _public_pages/clip/index.html
+          test -s _public_pages/clip/app.mjs
+          test -s _public_pages/clip/status.json
+          test -s _public_pages/evercraft-clip/index.html
+          test ! -e _public_pages/clip/audience-sites
+          rm -f _public_pages/audience-sites/properties.json
+          rm -f _public_pages/affiliate-labs/sitemap.xml
+          rm -f _public_pages/audience-sites/sitemap.xml
+          # The old public creative dashboard must not connect quiet publisher
+          # properties to Evercraft, even via historical URLs.
           rm -rf _public_pages/journal
           if node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _public_pages/journal; then
             echo "Journal included in Pages fallback."
@@ -115,8 +158,7 @@ jobs:
               echo "Product and customer fallback surfaces will still deploy."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
-          EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals \\
-            node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
+          EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
           test -f _public_pages/visuals/index.html
           test -f _public_pages/visuals/index.json
           test -f _public_pages/visuals/washington-active-volcanoes/index.html
@@ -135,6 +177,7 @@ jobs:
           </head>
           <body>
             <p><a href="/forge-operator/chum/">Open Evercraft public directory</a></p>
+            <p><a href="/forge-operator/site-status/roman/">Independent Roman website recovery directory</a></p>
           </body>
           </html>
           HTML
@@ -158,11 +201,43 @@ jobs:
           };
           walk(root);
           NODE
+          # ForensiScope buyer fallback: a real static door, one CTA and no fake checkout.
+          test -s _public_pages/forensiscope/index.html
+          grep -Fq 'Long recording?' _public_pages/forensiscope/index.html
+          grep -Fq 'Request a review' _public_pages/forensiscope/index.html
+          grep -Fq 'No charge now' _public_pages/forensiscope/index.html
+          grep -Fq 'mailto:jessegaethle10@gmail.com' _public_pages/forensiscope/index.html
           test -f _public_pages/chum/index.html
           test -f _public_pages/chum/products/infinite-classroom/index.html
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
+          test -s _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Reading Treehouse' _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Homework Coach · hints, not answers' _public_pages/apps/infinite-classroom/play/index.html
+          test -s _public_pages/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
+          test -f _public_pages/eps/index.html
+          test -f _public_pages/havenly/index.html
+          # Protect the studio's buyer-facing offer and inquiry choice in release artifacts.
+          test -s _public_pages/commercial-studio/index.html
+          grep -Fq 'id="intro-offer"' _public_pages/commercial-studio/index.html
+          grep -Fq '$50 introductory 30-second social commercial' _public_pages/commercial-studio/index.html
+          grep -Fq '<option>$50 launch-week 30-second social commercial pilot</option>' _public_pages/commercial-studio/index.html
+          grep -Fq 'id="studio-request"' _public_pages/commercial-studio/index.html
+          grep -q 'eps-continuity-20261017' _public_pages/eps/index.html
+          grep -q 'havenly-continuity-20261017' _public_pages/havenly/index.html
+          test -f _public_pages/sunshine-spotless/index.html
+          grep -q 'sunshine-spotless-continuity-20261018' _public_pages/sunshine-spotless/index.html
+          test -f _public_pages/site-status/roman/index.html
+          grep -q 'meta name="robots" content="index,follow"' _public_pages/site-status/roman/index.html
+          grep -q 'independently maintained technical recovery directory' _public_pages/site-status/roman/index.html
+          grep -q 'https://fabric.systemiacommandcenters.com/campaigns/roman/' _public_pages/site-status/roman/index.html
+          grep -q 'https://jgaethle10.github.io/forge-operator/campaigns/roman/' _public_pages/site-status/roman/index.html
+          grep -q 'https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/' _public_pages/site-status/roman/index.html
+          grep -q 'meta name="robots" content="noindex,nofollow"' _public_pages/campaigns/roman/index.html
+                    test -f _public_pages/campaigns/roman/index.html
+          grep -q 'Roman Kilinkaridis' _public_pages/campaigns/roman/index.html
+          grep -q 'https://donate.voteroman.com/' _public_pages/campaigns/roman/index.html
 
       - name: Upload Pages artifact
         if: steps.page_state.outputs.enabled == 'true'
@@ -179,9 +254,179 @@ jobs:
     needs: build
     timeout-minutes: 8
     steps:
+      - name: Checkout release probe source
+        uses: actions/checkout@v4
+
       - name: Deploy Evercraft public directory
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify Signal one-time buyer scope assets over public HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/signal/"
+          curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "${target}" -o /tmp/signal-buyer-page.html
+          curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "${target}scope-request.mjs" -o /tmp/signal-buyer-scope.mjs
+          curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "${target}offer.json" -o /tmp/signal-buyer-offer.json
+          grep -Fq 'id="signal-inquiry"' /tmp/signal-buyer-page.html
+          grep -Fq 'Incident Evidence Brief' /tmp/signal-buyer-page.html
+          grep -Fq 'prepareSignalInquiry' /tmp/signal-buyer-scope.mjs
+          node --input-type=module -e "import fs from 'node:fs'; const o=JSON.parse(fs.readFileSync('/tmp/signal-buyer-offer.json')); if(o.price.amount!==250 || o.buyer_action.checkout_available!==false || o.buyer_action.order_created!==false)process.exit(1);"
+          echo "SIGNAL_BUYER_SCOPE_ASSETS_HTTPS_VERIFIED" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Evercraft Signal public HTTPS and structured incident data
+        shell: bash
+        run: node scripts/probe-signal-public.mjs "${{ steps.deployment.outputs.page_url }}"
+
+      - name: Verify repaired Clip entry over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          clip="${base%/}/clip/"
+          alias="${base%/}/evercraft-clip/"
+          dir="$(mktemp -d)"
+          for name in index.html app.mjs status.json; do
+            curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${clip}${name}" -o "${dir}/${name}"
+            test -s "${dir}/${name}"
+          done
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${alias}" -o "${dir}/legacy.html"
+          grep -Fq 'Evercraft Clip | Publishing desk' "${dir}/index.html"
+          grep -Fq 'navigator.share' "${dir}/app.mjs"
+          grep -Fq '"automatic_social_publication_verified": false' "${dir}/status.json"
+          grep -Fq 'url=../clip/' "${dir}/legacy.html"
+          {
+            echo '## Evercraft Clip public entry verified'
+            echo
+            echo "Clip: ${clip} (HTML, JS, status); legacy alias: ${alias}"
+            echo 'Workstation and locally prepared handoffs are available; direct social publishing is not certified.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify ForensiScope fallback buyer page over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/forensiscope/"
+          file="$(mktemp)"
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "$target" -o "$file"
+          grep -Fq 'Long recording?' "$file"
+          grep -Fq 'Request a review' "$file"
+          grep -Fq 'No charge now' "$file"
+          grep -Fq 'mailto:jessegaethle10@gmail.com' "$file"
+          grep -Fq 'Evercraft Payments' "$file"
+          if grep -Eiq '(base44[.]app|checkout[.]stripe|buy[.]stripe)' "$file"; then
+            echo 'ForensiScope fallback contains an unapproved legacy or provider-first checkout' >&2
+            exit 1
+          fi
+          count="$(grep -o 'class="action"' "$file" | wc -l)"
+          test "$count" -eq 1
+          printf 'FORENSISCOPE_SIMPLE_PUBLIC_BUYER_HTTP_VERIFIED=%s\\n' "$target"
+          {
+            echo "## ForensiScope static buyer page externally verified"
+            echo
+            echo "Public HTTPS: $target"
+            echo "Five published tiers, one customer action and no payment claim."
+            echo "The request email is an inquiry, not checkout, payment or completed delivery."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify ForensiScope local-file preflight preview over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/forensiscope/self-service/"
+          dir="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "$target" -o "$dir/index.html"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "${target}app.mjs" -o "$dir/app.mjs"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "${target}tiers.json" -o "$dir/tiers.json"
+          grep -Fq '<meta name="robots" content="noindex,nofollow">' "$dir/index.html"
+          grep -Fq '<input id="file" type="file"' "$dir/index.html"
+          grep -Fq 'Secure upload, self-service checkout, processing, and private result delivery are not yet available' "$dir/index.html"
+          grep -Fq 'URL.createObjectURL(file)' "$dir/app.mjs"
+          grep -Fq 'quote_only_not_checkout' "$dir/tiers.json"
+          echo "FORENSISCOPE_LOCAL_PREFLIGHT_PREVIEW_HTTPS_VERIFIED=${target}"
+          {
+            echo "## ForensiScope preview static files verified"
+            echo
+            echo "Live HTTPS preview assets: $target"
+            echo "Local-file metadata and price display only; NO intake, paid checkout or delivery release."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify owned EverMaps staging over deployed HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/evermaps/"
+          echo "Checking owned EverMaps staging at ${target}"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2             "${target}" -o /tmp/evermaps-hosted-index.html
+          grep -q 'EverMaps | Evercraft Owned Preview' /tmp/evermaps-hosted-index.html
+          grep -q 'noindex,nofollow' /tmp/evermaps-hosted-index.html
+          grep -q './app.js' /tmp/evermaps-hosted-index.html
+          grep -q './style.css' /tmp/evermaps-hosted-index.html
+          for file in app.js style.css pnw-land.geojson incident-source.mjs; do
+            curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2               "${target}${file}" -o "/tmp/evermaps-hosted-${file}"
+            test -s "/tmp/evermaps-hosted-${file}"
+          done
+          grep -q 'NIFC direct staging' /tmp/evermaps-hosted-app.js
+          grep -q 'natural-earth-50m-public-domain' /tmp/evermaps-hosted-app.js
+          grep -q 'public domain' /tmp/evermaps-hosted-pnw-land.geojson
+          if grep -iq 'base44' /tmp/evermaps-hosted-app.js /tmp/evermaps-hosted-incident-source.mjs; then
+            echo "BLOCKED: legacy application-builder reference in staging JS"
+            exit 1
+          fi
+          {
+            echo "## EverMaps owned staging verification"
+            echo
+            echo "HTTPS page and required assets verified: ${target}"
+            echo "Read-only, noindex preview; not an emergency map or production cutover."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Boardroom public customer routes
+        shell: bash
+        env:
+          BOARDROOM_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/probe-boardroom-public.mjs
+      - name: Verify Subsea Watch local 3D dive replay over public HTTPS
+        shell: bash
+        env:
+          SUBSEA_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/probe-subsea-watch-public.mjs
+      - name: Verify HumanFilter beta page, privacy, and real browser ZIPs over HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/humanfilter-beta/"
+          dir="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}" -o "$dir/index.html"
+          grep -Fq 'Your feed.' "$dir/index.html"
+          grep -Fq 'Not an AI lie detector.' "$dir/index.html"
+          grep -Fq 'does not install into iPhone, Android' "$dir/index.html"
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}privacy.html" -o "$dir/privacy.html"
+          grep -Fq 'HumanFilter Extension Privacy Policy' "$dir/privacy.html"
+          for variant in Chromium-Desktop Edge-Beta Firefox-Temporary-Beta; do
+            file="Evercraft-HumanFilter-${variant}-v0.1.4.zip"
+            curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}download/${file}" -o "$dir/$file"
+            test "$(wc -c < "$dir/$file")" -gt 5000
+            unzip -tq "$dir/$file" >/dev/null
+          done
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 "${target}assets/popup.png" -o "$dir/popup.png"
+          test "$(head -c 8 "$dir/popup.png" | od -An -tx1 | tr -d ' \n')" = '89504e470d0a1a0a'
+          {
+            echo "## HumanFilter desktop beta HTTPS verified"
+            echo
+            echo "Landing page: $target"
+            echo "Privacy page, actual popup screenshot, Chromium/Edge/Firefox ZIPs passed remote download and archive integrity checks."
+            echo "Store review and real logged-in social-feed compatibility are independent gates."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Infinite Classroom learning worlds on deployed HTTPS
+        shell: bash
+        run: node scripts/probe-infinite-classroom-public.mjs "${{ steps.deployment.outputs.page_url }}"
 
       - name: Verify customer fallback doors
         shell: bash
@@ -194,6 +439,23 @@ jobs:
           estimator="${base%/}/apps/eps-estimator/"
           estimator_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$estimator")"
           printf '%s' "$estimator_body" | grep -q 'EPS Precise Estimator'
+          eps="${base%/}/eps/"
+          eps_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$eps")"
+          printf '%s' "$eps_body" | grep -q 'eps-continuity-20261017'
+          havenly="${base%/}/havenly/"
+          havenly_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$havenly")"
+          printf '%s' "$havenly_body" | grep -q 'havenly-continuity-20261017'
+          # Live customer-path proof after GitHub Pages reports deployment.
+          studio="${base%/}/commercial-studio/"
+          studio_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$studio")"
+          [[ "$studio_body" == *'id="intro-offer"'* ]]
+          [[ "$studio_body" == *'$50 introductory 30-second social commercial'* ]]
+          [[ "$studio_body" == *'<option>$50 launch-week 30-second social commercial pilot</option>'* ]]
+          [[ "$studio_body" == *'id="studio-request"'* ]]
+          echo 'EVERCRAFT_STUDIO_LIVE_PILOT_HTTP_VERIFIED'
+          sunshine="${base%/}/sunshine-spotless/"
+          sunshine_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$sunshine")"
+          printf '%s' "$sunshine_body" | grep -q 'sunshine-spotless-continuity-20261018'
           earthworks="${base%/}/apps/earthworks-autonomy/"
           earthworks_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$earthworks")"
           printf '%s' "$earthworks_body" | grep -q 'Evercraft EarthWorks Autonomy'
@@ -208,13 +470,51 @@ jobs:
           printf '%s' "$visual_body" | grep -q 'Washington'
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
+          # Confirm real browser-supported social previews exist after deployment.
+          preview="${base%/}/audience-sites/partscout/share.png"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors \
+            --retry-delay 2 "$preview" -o /tmp/evercraft-clip-preview.png
+          python - <<'PY'
+          from pathlib import Path
+          import struct
+          payload=Path('/tmp/evercraft-clip-preview.png').read_bytes()
+          assert payload[:8]==bytes.fromhex('89504e470d0a1a0a'), 'not a real PNG'
+          assert struct.unpack('>II',payload[16:24])==(1080,1350),'wrong size'
+          print('CLIP_SOCIAL_PREVIEW_HTTP_VERIFIED')
+          PY
+          # No exposed white-label-to-corporate publishing control plane.
+          for path in clip/audience-sites/ clip/audience-sites/queue.json audience-sites/properties.json; do
+            code=$(curl --silent --show-error --max-time 10 -o /dev/null -w '%{http_code}' "${base%/}/$path")
+            test "$code" = "404"
+          done
+          rescue="${base%/}/site-status/roman/"
+          rescue_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$rescue")"
+          printf '%s' "$rescue_body" | grep -q 'Copy working link'
+          printf '%s' "$rescue_body" | grep -q 'Open the available information page'
+          printf '%s' "$rescue_body" | grep -q 'https://fabric.systemiacommandcenters.com/go/roman'
+          printf '%s' "$rescue_body" | grep -q 'Typing voteroman.com still follows the original domain'
+          roman="${base%/}/campaigns/roman/"
+          roman_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$roman")"
+          printf '%s' "$roman_body" | grep -q 'Roman Kilinkaridis'
+          printf '%s' "$roman_body" | grep -q 'https://donate.voteroman.com/'
+          # Independent, indexable technical recovery directory, not campaign SEO cutover.
+          recovery_dir="${base%/}/site-status/roman/"
+          recovery_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$recovery_dir")"
+          printf '%s' "$recovery_body" | grep -q 'Roman Kilinkaridis website access'
+          printf '%s' "$recovery_body" | grep -q 'not the voteroman.com website'
+          printf '%s' "$recovery_body" | grep -q 'https://jgaethle10.github.io/forge-operator/campaigns/roman/'
+
           {
             echo "## Evercraft public fallback live"
             echo
             echo "Infinite Classroom: $classroom"
             echo "EPS estimator: $estimator"
+          echo "EPS continuity: $eps"
+          echo "HAVENLY continuity: $havenly"
+          echo "Sunshine & Spotless continuity: $sunshine"
             echo "EarthWorks: $earthworks"
             echo "EarthWorks design partner: $earthworks_partner"
             echo "EarthWorks sample study: $earthworks_sample"
             echo "Visual Desk specimen: $visual"
+            echo "Roman campaign emergency mirror: $roman"
           } >> "$GITHUB_STEP_SUMMARY"

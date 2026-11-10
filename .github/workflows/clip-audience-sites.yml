@@ -1,0 +1,43 @@
+name: Evercraft Clip Audience Campaign Gate
+on:
+  pull_request:
+    paths:
+      - 'public/clip/audience-sites/**'
+      - 'tests/clip-audience-sites.test.mjs'
+      - 'tests/clip-social-share-previews.test.mjs'
+      - 'public/audience-sites/**'
+      - 'systemia/clip/build-audience-social-previews.py'
+      - 'systemia/clip/earned-audience-opportunities-20261020.json'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - 'tests/clip-family-social-safety.test.mjs'
+      - 'systemia/clip/family-social-safety.mjs'
+      - 'systemia/clip/social-publisher-runtime.mjs'
+      - 'systemia/clip/facebook-page-publisher.mjs'
+      - 'systemia/clip/facebook-page-photo-publisher.mjs'
+      - '.github/workflows/clip-audience-sites.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/clip/audience-sites/**'
+      - 'tests/clip-audience-sites.test.mjs'
+      - 'tests/clip-social-share-previews.test.mjs'
+      - 'public/audience-sites/**'
+      - 'systemia/clip/build-audience-social-previews.py'
+      - 'systemia/clip/earned-audience-opportunities-20261020.json'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - '.github/workflows/clip-audience-sites.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify seven Evercraft Clip handoffs and creative assets
+        run: node --test tests/clip-audience-sites.test.mjs tests/clip-family-social-safety.test.mjs systemia/clip/social-publisher-runtime.test.mjs tests/clip-social-share-previews.test.mjs

@@ -1,0 +1,30 @@
+name: Havenly Real Footage Intake Proof
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/havenly-real-footage-intake.mjs"
+      - "systemia/media-studio/havenly-real-footage-intake.test.mjs"
+      - "systemia/media-studio/HAVENLY-LIVE-FOOTAGE.md"
+      - ".github/workflows/havenly-real-footage-intake.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install local video probe and test encoder
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -version | head -n 1
+          ffprobe -hide_banner -version | head -n 1
+      - name: Exercise original seven-scene source first work order with actual encoded synthetic fixtures
+        run: node --test systemia/media-studio/havenly-real-footage-intake.test.mjs

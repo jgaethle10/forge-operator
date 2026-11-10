@@ -16,6 +16,16 @@ if (policy.destinations?.base44 !== 'legacy_extraction_compatibility_only') fail
 if (policy.invariants?.new_base44_apps !== false) fail('new Base44 apps must be frozen');
 if (policy.invariants?.base44_as_new_runtime_target !== false) fail('Base44 cannot be a new runtime target');
 if (policy.invariants?.base44_as_canonical_source !== false) fail('Base44 cannot be canonical source');
+const freeze = policy.execution_freeze_2026_10_22;
+if (!freeze || freeze.new_provider_operations_allowed !== false ||
+    freeze.new_provider_builds_allowed !== false ||
+    freeze.automated_provider_extraction_calls_allowed !== false ||
+    freeze.owned_git_and_runtime_only !== true ||
+    freeze.retire_or_delete_without_independent_replacement_and_reconciliation_receipts !== false ||
+    freeze.legacy_url_is_not_live_evidence !== true ||
+    freeze.cutover_status !== 'IN_PROGRESS_DO_NOT_CLAIM_COMPLETION') {
+  fail('founder owned-only execution freeze missing or loosened');
+}
 
 const required = new Set([
   'source_extracted',

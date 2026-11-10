@@ -1,0 +1,87 @@
+{
+  "schema": "evercraft.commercial-product.v1",
+  "product_id": "evercraft.commerce.social-media-weekly",
+  "sku_key": "weekly-social",
+  "brand": "Evercraft Social | Weekly",
+  "exact_checkout_product": "Social Media Management · Weekly",
+  "merchant": "Evercraft LLC",
+  "category": "scoped_business_service",
+  "commercial_state": "sell_now_scope_confirmed",
+  "checkout_state": "existing_exact_sku_hosted_stripe",
+  "price_usd": 100,
+  "currency": "USD",
+  "tagline": "Keep your channels moving without signing a retainer.",
+  "positioning": {
+    "ideal_buyer": "Small-business owners with authorized social channels who want a bounded week of support",
+    "buyer_problem": "The business is moving, but its public channels keep going quiet.",
+    "intended_outcome": "A practical, agreed week of social media support"
+  },
+  "delivery_contract": {
+    "deliverable_to_scope": "A written one-week support plan and the specifically agreed content-management or publishing deliverables",
+    "buyer_inputs": "Owned social account URLs, audience, approved brand assets, permissions, priorities and proposed start date",
+    "acceptance_criteria_to_agree": "Named channels, number and type of agreed deliverables, owner approval process and the final handoff",
+    "exclusions": "No guaranteed reach, follower growth, paid advertising, account access, or posting without authorization",
+    "scope_and_capacity_approval_required": true
+  },
+  "acquisition": {
+    "discovery_intents": [
+      "weekly social media help for small business",
+      "one week of social content support",
+      "small business social media task help"
+    ],
+    "content_angle": "Social media shouldn't require a long agency contract to get unstuck.",
+    "approved_example_copy": "Need a focused week of help keeping your business channels moving? Evercraft Social | Weekly offers a scoped $100 service. We agree on channels, deliverables and permissions before payment.",
+    "first_party_product_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+    "distribution_rule": "Use owned or authorized channels and qualified, permissioned audiences only. Do not claim posts, leads, conversion or revenue without source receipts.",
+    "external_distribution_verified": false
+  },
+  "checkout": {
+    "url": "https://buy.stripe.com/4gM3cweaOcwJ1Za1I84AU0d",
+    "payment_link_id": "plink_1U4uEXK4iDjqpECV8jfAriJQ",
+    "stripe_product_id": "prod_V4cGNCezEew2dm",
+    "stripe_price_id": "price_1U4T2MK4iDjqpECVqSxLlBn8",
+    "evercraft_payments_role": "canonical_order_authority_target",
+    "settlement": "Systemia Stripe account",
+    "reconciliation": "manual_unverified_automated_sync",
+    "provider_paid_receipt_required": true,
+    "fulfillment_human_review": true,
+    "receipt_from_checkout_visit": false
+  },
+  "evercraft_os": {
+    "parent": "Evercraft OS",
+    "relationship": "Independent market-facing product, sharing future Evercraft OS capabilities",
+    "module_context": "Evercraft OS / Distribution & Clip (integration not yet independently verified)",
+    "shared_services": [
+      "Evercraft Payments",
+      "Systemia coordination",
+      "Passport permissions",
+      "Evercraft Research/Memory where authorized"
+    ],
+    "runtime_integration_verified": false
+  },
+  "discovery": {
+    "human_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+    "machine_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/product.json",
+    "llms_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/llms.txt"
+  },
+  "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
+  "design": {
+    "accent": "#ffad79",
+    "background": "#141d2c",
+    "panel": "#202b3b",
+    "ink": "#fff1e6",
+    "muted": "#cbd4df",
+    "secondary": "#ffddbd",
+    "mark": "rising-signal"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Weekly Signal",
+    "signature_phrase": "Show up. Say something that matters.",
+    "purpose": "Make consistent communication achievable for small teams without forcing an agency retainer.",
+    "narrative_promise": "Consistency is built one honest week at a time.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
+  }
+}

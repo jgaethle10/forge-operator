@@ -9,6 +9,19 @@
   "rule": "Only products already admitted to the public product directory appear here. Inventory existence alone never grants publication.",
   "products": [
     {
+      "product_key": "ai-boardroom",
+      "name": "Evercraft AI Boardroom",
+      "class": "business_decision_review_and_multi_perspective_ai_analysis",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "github_record": "./ai-boardroom/README.md",
+      "llms": "./ai-boardroom/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "aliev",
       "name": "AliEV",
       "class": "ev_infrastructure_opportunity_intelligence",

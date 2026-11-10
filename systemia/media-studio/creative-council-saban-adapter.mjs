@@ -6,6 +6,10 @@ const ROLES = new Set([
   'world_builder',
   'edit_rhythm_director',
   'sound_director',
+  'voice_performance_director',
+  'music_composer',
+  'sound_design_engineer',
+  'mixing_engineer',
   'brand_art_director',
   'documentary_truth_guard',
   'beauty_judge'
@@ -149,6 +153,64 @@ function proposal(role, shot) {
         'Master platform variants consistently instead of normalizing every clip independently.'
       ],
       reject_if: ['music_masks_narration', 'generic_trailer_boom_every_cut', 'unsourced_real_event_audio_presented_as_documentary']
+    };
+  }
+
+  if (role === 'voice_performance_director') {
+    return {
+      category: 'voice_performance',
+      deliverable: 'timed_read_and_casting_notes',
+      directives: [
+        'Audition the first spoken line on its own: the opening must sound curious, intentional and human, never default TTS cadence.',
+        'Mark emphasis, pronunciation, breath, pauses and emotional changes by story beat before selecting a voice.',
+        'Preserve the approved voice identity across revisions; reject sudden timbre or character changes.',
+        'Keep lines intelligible at normal phone-speaker volume; use another take rather than stretching speech beyond natural timing.'
+      ],
+      reject_if: ['robotic_opening', 'flat_emotional_read', 'mispronunciation', 'unapproved_voice_change', 'time_stretched_speech']
+    };
+  }
+
+  if (role === 'music_composer') {
+    return {
+      category: 'music',
+      deliverable: 'score_cue_sheet',
+      directives: [
+        'Define a distinctive four-to-eight-note brand motif with a meaningful harmonic identity rather than generic royalty-free trailer music.',
+        'Establish the energy arc: sparse hook, progression through proof, controlled peak and resolved CTA.',
+        'Time musical transitions to picture edits and narration phrasing; leave frequency and dynamic space for the speaking voice.',
+        'Request clean stems and document the composition/license provenance before the mix can advance.'
+      ],
+      reject_if: ['stock_music_feel', 'loop_without_development', 'music_fights_narration', 'missing_music_rights', 'unmotivated_big_hit']
+    };
+  }
+
+  if (role === 'sound_design_engineer') {
+    return {
+      category: 'sound_design',
+      deliverable: 'sound_spotting_sheet',
+      directives: [
+        'Spot concrete sounds against visible actions, surfaces, materials and spatial transitions.',
+        'Create sonic depth with near, mid and far perspective; effects must remain believable and purposeful.',
+        'Use short sound bridges to join scenes; reserve impacts for real turning points, not every cut.',
+        'Mark synthetic effects as illustrative when real event footage is used; retain SFX asset provenance.'
+      ],
+      reject_if: ['generic_boom_on_every_cut', 'effect_without_cause', 'ambience_masks_important_words', 'unsourced_reality_audio']
+    };
+  }
+
+  if (role === 'mixing_engineer') {
+    return {
+      category: 'mix',
+      deliverable: 'mix_and_master_checklist',
+      targets: {social_target_lufs: -16, max_true_peak_dbtp: -1, format: 'review_per_destination'},
+      directives: [
+        'Protect the intelligibility of every word, especially over music entrances and musical peaks.',
+        'Balance dialogue, music and SFX with dynamic automation, not only one overall loudness control.',
+        'Check the mix on headphones, mono and small speakers for phase, distortion, harshness and voice masking.',
+        'Measure integrated LUFS and true peak from the final encoded file; use the Fallen commercial audio lab as the objective finishing gate.',
+        'Treat technically passing meters as necessary, not as approval of musical or vocal performance.'
+      ],
+      reject_if: ['unintelligible_dialogue', 'music_masks_voice', 'audible_distortion', 'unmeasured_delivery_master', 'not_listened_on_small_speakers']
     };
   }
 

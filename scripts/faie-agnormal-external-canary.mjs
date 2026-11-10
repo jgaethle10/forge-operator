@@ -164,6 +164,21 @@ try{
   if(!Array.isArray(investigation.evidence_acquisition_queue)){
     throw new Error('faie_agnormal_next_proof_queue_missing');
   }
+  if(investigation.findings.length<1){
+    throw new Error('faie_agnormal_water_evidence_missing');
+  }
+  const waterFindings=investigation.findings.filter((finding)=>
+    Array.isArray(finding.dimensions)&&finding.dimensions.includes('water')
+  );
+  if(waterFindings.length<1){
+    throw new Error('faie_agnormal_water_dimension_missing');
+  }
+  if(!waterFindings.some((finding)=>
+    Array.isArray(finding.provenance_refs)&&
+    finding.provenance_refs.some((ref)=>/^https?:\/\//i.test(String(ref||'')))
+  )){
+    throw new Error('faie_agnormal_water_provenance_missing');
+  }
   if(investigation.decision_packet?.framework!=='SENSE_CHALLENGE_DECIDE'){
     throw new Error('faie_agnormal_decision_packet_framework_invalid');
   }
@@ -179,6 +194,9 @@ try{
     schema:investigation.schema,
     status:investigation.status,
     finding_count:investigation.findings.length,
+    water_finding_count:waterFindings.length,
+    water_source_families:[...new Set(waterFindings.map((finding)=>finding.source_family).filter(Boolean))],
+    water_provenance_ref_count:waterFindings.reduce((sum,finding)=>sum+(finding.provenance_refs||[]).length,0),
     unknown_count:investigation.unknowns.length,
     next_proof_count:investigation.evidence_acquisition_queue.length,
     evidence_readiness:investigation.coverage?.decision_readiness||null,

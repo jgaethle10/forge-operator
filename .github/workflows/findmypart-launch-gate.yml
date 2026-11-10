@@ -1,0 +1,111 @@
+name: FindMyPart brand launch gate
+on:
+  pull_request:
+    paths:
+      - 'public/findmypart/**'
+      - 'systemia/findmypart/**'
+      - 'tests/findmypart-self-service-search.test.mjs'
+      - 'tests/findmypart-candidate-shortlist.test.mjs'
+      - 'tests/findmypart-recovery-engine.test.mjs'
+      - 'tests/findmypart-recovery-links.test.mjs'
+      - 'tests/findmypart-saban-recovery-gauntlet.test.mjs'
+      - 'tests/findmypart-saban-scorecard.test.mjs'
+      - 'tests/findmypart-saban-benchmark.test.mjs'
+      - 'tests/findmypart-provider-ingest.test.mjs'
+      - 'tests/findmypart-photo-evidence.test.mjs'
+      - 'scripts/findmypart-saban-benchmark.mjs'
+      - 'systemia/mcp/findmypart-public-inquiry.mjs'
+      - 'systemia/mcp/findmypart-private-quote.mjs'
+      - 'scripts/findmypart-review-inquiry.mjs'
+      - 'tests/findmypart-private-quote.test.mjs'
+      - 'scripts/findmypart-owner-inbox.mjs'
+      - 'scripts/provision-findmypart-owned-intake.mjs'
+      - 'tests/findmypart-owned-provision.test.mjs'
+      - 'scripts/diagnose-fabric-owned-edge-release.sh'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'tests/fabric-derived-capability-count.test.mjs'
+      - 'tests/findmypart-resident-release-gate.test.mjs'
+      - 'tests/findmypart-owned-edge-404-doctor.test.mjs'
+      - 'tests/findmypart-public-inquiry.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/findmypart-launch-system.test.mjs'
+      - '.github/workflows/findmypart-launch-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-owned-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Brand and owned first-party route acceptance
+        run: node --test tests/findmypart-launch-system.test.mjs
+      - name: Check frontend module and private lead handler syntax
+        run: |
+          node --check public/findmypart/app.mjs
+          node --check systemia/mcp/findmypart-public-inquiry.mjs
+          node --check scripts/findmypart-owner-inbox.mjs
+          node --check scripts/findmypart-review-inquiry.mjs
+          node --check systemia/mcp/findmypart-private-quote.mjs
+          node --check scripts/provision-findmypart-owned-intake.mjs
+      - name: Owned two-question buyer intake, storage and alert tests
+        run: node --test tests/findmypart-public-inquiry.test.mjs
+      - name: Check private inquiry to quote handoff never creates payment
+        run: node --test tests/findmypart-private-quote.test.mjs
+      - name: Check private owned-edge setup and rollback configuration
+        run: node --test tests/findmypart-owned-provision.test.mjs
+      - name: Check read-only FindMyPart 404 root-cause separation
+        run: |
+          bash -n scripts/diagnose-fabric-owned-edge-release.sh
+          node --test tests/findmypart-owned-edge-404-doctor.test.mjs
+      - name: Verify resident updater checks actual customer route before release
+        run: |
+          bash -n scripts/update-fabric-owned-edge.sh
+          node --test tests/findmypart-resident-release-gate.test.mjs
+      - name: Check derived Fabric catalog count against actual runtime catalog
+        run: node --test tests/fabric-derived-capability-count.test.mjs
+      - name: Saban FindMyPart repeatable recovery gauntlet (10 rounds)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for round in $(seq 1 10); do
+            echo "::group::Saban recovery round $round/10"
+            node --test \
+              tests/findmypart-self-service-search.test.mjs \
+              tests/findmypart-candidate-shortlist.test.mjs \
+              tests/findmypart-recovery-engine.test.mjs \
+              tests/findmypart-recovery-links.test.mjs \
+              tests/findmypart-saban-recovery-gauntlet.test.mjs \
+              tests/findmypart-saban-scorecard.test.mjs \
+              tests/findmypart-saban-benchmark.test.mjs \
+              tests/findmypart-provider-ingest.test.mjs \
+              tests/findmypart-photo-evidence.test.mjs
+            echo "::endgroup::"
+          done
+      - name: Write Saban reproducible benchmark receipt
+        run: |
+          node scripts/findmypart-saban-benchmark.mjs --out findmypart-saban-benchmark.json
+          node --check scripts/findmypart-saban-benchmark.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: findmypart-saban-benchmark
+          path: findmypart-saban-benchmark.json
+          if-no-files-found: ignore
+      - name: Check browser search modules are syntactically valid
+        run: |
+          node --check public/findmypart/search/app.mjs
+          node --check public/findmypart/search/engine.mjs
+          node --check public/findmypart/search/candidates.mjs
+          node --check public/findmypart/search/recovery-links.mjs
+          node --check systemia/findmypart/recovery-engine.mjs
+          node --check systemia/findmypart/saban-scorecard.mjs
+          node --check systemia/findmypart/provider-ingest.mjs
+      - name: Existing owned service routing regression
+        run: node --test tests/fabric-owned-service-frontages.test.mjs
+      - name: Existing native payment offer routing regression
+        run: node --test tests/fabric-offer-pages.test.mjs

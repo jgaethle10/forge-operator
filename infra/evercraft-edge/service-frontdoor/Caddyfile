@@ -1,0 +1,9 @@
+# Frontdoor TLS configuration for an already authorized Evercraft Yard node.
+# Public DNS A/AAAA for BOTH apex + www must point at THIS host before use.
+# Caddy provisions the real trusted certificates once public DNS and ports
+# 80/443 are ready. Node server listens ONLY at 127.0.0.1:3080.
+# Never target Base44 or proxy to any unverified fallback origin.
+evercraftpropertyservices.com, www.evercraftpropertyservices.com, havenlycleaning.com, www.havenlycleaning.com {
+  encode gzip zstd
+  reverse_proxy 127.0.0.1:3080
+}

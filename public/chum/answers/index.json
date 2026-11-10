@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 120,
-    "unique_user_phrases": 1083,
-    "mapped_candidate_edges": 1191,
+    "pain_index_entries": 121,
+    "unique_user_phrases": 1093,
+    "mapped_candidate_edges": 1201,
     "ambiguous_phrases": 108,
-    "product_candidates": 68,
+    "product_candidates": 69,
     "machine_offer_candidates": 52
   },
   "doors": [
@@ -351,6 +351,29 @@
       ]
     },
     {
+      "answer_id": "intent:19a72c01c0",
+      "user_language": "AI boardroom for a tough executive decision",
+      "normalized": "ai boardroom for a tough executive decision",
+      "relative_json": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
+      "relative_page": "/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-boardroom-for-a-tough-executive-decision-19a72c01c0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:11b1153cc1",
       "user_language": "AI context limit prevents full media analysis",
       "normalized": "ai context limit prevents full media analysis",
@@ -392,6 +415,29 @@
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:15e02d5509",
+      "user_language": "AI council to pressure-test a startup or company decision",
+      "normalized": "ai council to pressure test a startup or company decision",
+      "relative_json": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
+      "relative_page": "/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-council-to-pressure-test-a-startup-or-company-decision-15e02d5509.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
           "registry_name": null
         }
       ]
@@ -1245,6 +1291,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/opportunity-fabric/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:240110dd63",
+      "user_language": "ask ChatGPT Claude and Gemini to critique a proposal",
+      "normalized": "ask chatgpt claude and gemini to critique a proposal",
+      "relative_json": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
+      "relative_page": "/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ask-chatgpt-claude-and-gemini-to-critique-a-proposal-240110dd63.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
           "registry_name": null
         }
       ]
@@ -3923,6 +3992,29 @@
       ]
     },
     {
+      "answer_id": "intent:6fba7a24a5",
+      "user_language": "compare AI disagreements and identify the evidence needed",
+      "normalized": "compare ai disagreements and identify the evidence needed",
+      "relative_json": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
+      "relative_page": "/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-ai-disagreements-and-identify-the-evidence-needed-6fba7a24a5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:400f146650",
       "user_language": "compare business strategy options before choosing one",
       "normalized": "compare business strategy options before choosing one",
@@ -3965,6 +4057,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:77a78cdabf",
+      "user_language": "compare different AI model answers for a business strategy",
+      "normalized": "compare different ai model answers for a business strategy",
+      "relative_json": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
+      "relative_page": "/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-different-ai-model-answers-for-a-business-strategy-77a78cdabf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -10135,6 +10250,29 @@
       ]
     },
     {
+      "answer_id": "intent:fb03e8e1fa",
+      "user_language": "have AI advisers challenge each other's business assumptions",
+      "normalized": "have ai advisers challenge each other s business assumptions",
+      "relative_json": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
+      "relative_page": "/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/have-ai-advisers-challenge-each-other-s-business-assumptions-fb03e8e1fa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:f3814bb265",
       "user_language": "headless browser",
       "normalized": "headless browser",
@@ -11754,6 +11892,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:da777423e2",
+      "user_language": "I want different AI models to debate a strategy",
+      "normalized": "i want different ai models to debate a strategy",
+      "relative_json": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
+      "relative_page": "/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-want-different-ai-models-to-debate-a-strategy-da777423e2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
           "registry_name": null
         }
       ]
@@ -14975,6 +15136,29 @@
       ]
     },
     {
+      "answer_id": "intent:838373227f",
+      "user_language": "multi-model decision review with risk and operational perspectives",
+      "normalized": "multi model decision review with risk and operational perspectives",
+      "relative_json": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
+      "relative_page": "/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-model-decision-review-with-risk-and-operational-perspectives-838373227f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fd424feb3f",
       "user_language": "multi-URL public web fetch",
       "normalized": "multi url public web fetch",
@@ -14994,6 +15178,29 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:432065ee04",
+      "user_language": "multiple AI assistants give conflicting recommendations",
+      "normalized": "multiple ai assistants give conflicting recommendations",
+      "relative_json": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
+      "relative_page": "/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multiple-ai-assistants-give-conflicting-recommendations-432065ee04.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -25999,6 +26206,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f2b4762cd8",
+      "user_language": "why do ChatGPT and Claude disagree about my business decision",
+      "normalized": "why do chatgpt and claude disagree about my business decision",
+      "relative_json": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
+      "relative_page": "/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/why-do-chatgpt-and-claude-disagree-about-my-business-decision-f2b4762cd8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ai-boardroom",
+          "kind": "product",
+          "product_key": "ai-boardroom",
+          "public_id": null,
+          "name": "Evercraft AI Boardroom",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ai-boardroom/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
           "registry_name": null
         }
       ]

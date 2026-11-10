@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-16T18:13:40.800Z",
+  "updated_at": "2026-11-10T05:53:47.131Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -345,13 +345,13 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-10-14T23:57:09.569Z"
+      "last_changed": "2026-10-29T06:13:11.985Z"
     },
     {
       "path": "/chum/sitemaps/products.xml",
       "url": "/chum/sitemaps/products.xml",
       "priority": 108,
-      "last_changed": "2026-10-14T23:57:09.569Z"
+      "last_changed": "2026-10-29T06:13:11.985Z"
     },
     {
       "path": "/chum/sitemaps/sell-now.xml",
@@ -372,46 +372,46 @@
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "priority": 92,
-      "last_changed": "2026-10-07T20:12:10.944Z"
-    },
-    {
       "path": "/chum/sell-now.html",
       "url": "/chum/sell-now.html",
       "priority": 92,
-      "last_changed": "2026-10-07T02:56:26.782Z"
+      "last_changed": "2026-10-17T06:06:40.515Z"
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "priority": 92,
+      "last_changed": "2026-10-17T06:06:40.515Z"
     },
     {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "priority": 92,
-      "last_changed": "2026-10-07T02:56:26.782Z"
+      "last_changed": "2026-10-17T06:06:40.515Z"
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-10-14T23:57:09.569Z"
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-10-07T20:12:10.944Z"
+      "last_changed": "2026-10-29T06:13:11.985Z"
     },
     {
       "path": "/chum/revenue.html",
       "url": "/chum/revenue.html",
       "priority": 90,
-      "last_changed": "2026-10-07T02:56:26.782Z"
+      "last_changed": "2026-10-17T06:06:40.515Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-10-17T06:06:40.515Z"
     },
     {
       "path": "/chum/revenue.txt",
       "url": "/chum/revenue.txt",
       "priority": 90,
-      "last_changed": "2026-10-07T02:56:26.782Z"
+      "last_changed": "2026-10-17T06:06:40.515Z"
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",

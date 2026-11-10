@@ -1,0 +1,91 @@
+{
+  "schema": "evercraft.audience-sites.public-catalog.v1",
+  "generated_on": "2026-10-20",
+  "host_type": "seven microproperties under one GitHub Pages fallback origin",
+  "evercraft_network_product_unmodified": true,
+  "revenue_verified": false,
+  "paid_partners_verified": false,
+  "sites": [
+    {
+      "slug": "partscout",
+      "name": "PartScout",
+      "category": "Parts and repair",
+      "description": "Build a useful part identification dossier",
+      "revenue_route": "Direct sourcing hunts; authorized supplier referrals",
+      "status": "Paid offer published; settlement not verified",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/partscout/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    },
+    {
+      "slug": "valuescout",
+      "name": "Value Scout",
+      "category": "Collectibles",
+      "description": "Screen a deal against resale fees and acquisition costs",
+      "revenue_route": "Approved affiliate programs; sponsorships",
+      "status": "Affiliate approval not verified",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/valuescout/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    },
+    {
+      "slug": "playbook-lab",
+      "name": "Playbook Lab",
+      "category": "Sports education",
+      "description": "Switch between synthetic football concept visualizations",
+      "revenue_route": "Content sponsorship; licensed teaching pilots",
+      "status": "No signed sponsors",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/playbook-lab/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    },
+    {
+      "slug": "site-rescue",
+      "name": "Site Rescue",
+      "category": "Web diagnostics",
+      "description": "Estimate website lead losses using your own assumptions",
+      "revenue_route": "Paid website audit; web fixes",
+      "status": "Published offer; checkout unverified",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/site-rescue/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    },
+    {
+      "slug": "creative-studio",
+      "name": "Ad Story Studio",
+      "category": "Commercials",
+      "description": "Make a practical three-shot marketing brief",
+      "revenue_route": "Creative services; commercial production",
+      "status": "Custom scope and quote required",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/creative-studio/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    },
+    {
+      "slug": "publisher-lab",
+      "name": "Publisher Lab",
+      "category": "Advertising",
+      "description": "Model display ads, affiliate and contracted sponsor income",
+      "revenue_route": "Publisher revenue shares; licensing",
+      "status": "No live ad inventory or commission",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/publisher-lab/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    },
+    {
+      "slug": "relay-notes",
+      "name": "Meeting Relay",
+      "category": "Workflow",
+      "description": "Build an unacknowledged action ledger and clarify responsibilities",
+      "revenue_route": "Licensed team pilots",
+      "status": "No verified subscription",
+      "url": "https://jgaethle10.github.io/forge-operator/audience-sites/relay-notes/",
+      "privacy": "browser_local_calculation_no_tracking_pixels"
+    }
+  ],
+  "adult_distribution": {
+    "separately_branded": false,
+    "not_published": true,
+    "preflight_required": [
+      "rights_and_consent",
+      "age_verification_jurisdictional",
+      "platform_and_host_policy",
+      "payment_processor_approval",
+      "data_privacy_and_safety"
+    ]
+  }
+}

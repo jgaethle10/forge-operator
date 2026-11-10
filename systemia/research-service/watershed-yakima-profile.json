@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.research.watershed-profile.v1",
+  "profile_id": "yakima-basin-wa",
+  "purpose": "research_snapshot_only",
+  "region": "Yakima River Basin, Washington",
+  "provenance": {
+    "nrcs_active_station_inventory": "https://wcc.sc.egov.usda.gov/nwcc/yearcount?counttype=statelist&network=sntl&state=WA",
+    "verified_inventory_date": "2026-10-28",
+    "usgs_source": "systemia/sentinel/profiles/registry.json",
+    "note": "Official station network membership and location verified; live data availability, WTEQ completeness and basin representativeness are not yet verified."
+  },
+  "snow_stations": [
+    {
+      "triplet": "375:WA:SNTL",
+      "name": "Bumping Ridge",
+      "county": "Yakima",
+      "huc8": "17030002"
+    },
+    {
+      "triplet": "478:WA:SNTL",
+      "name": "Fish Lake",
+      "county": "Kittitas",
+      "huc8": "17030001"
+    },
+    {
+      "triplet": "502:WA:SNTL",
+      "name": "Green Lake",
+      "county": "Yakima",
+      "huc8": "17030003"
+    },
+    {
+      "triplet": "642:WA:SNTL",
+      "name": "Morse Lake",
+      "county": "Yakima",
+      "huc8": "17030002"
+    },
+    {
+      "triplet": "734:WA:SNTL",
+      "name": "Sasse Ridge",
+      "county": "Kittitas",
+      "huc8": "17030001"
+    },
+    {
+      "triplet": "863:WA:SNTL",
+      "name": "White Pass E.S.",
+      "county": "Yakima",
+      "huc8": "17030002"
+    }
+  ],
+  "river_location_ids": [
+    "USGS-12484500",
+    "USGS-12498700",
+    "USGS-12500450",
+    "USGS-12510500"
+  ],
+  "basin_aggregation": "not_defined",
+  "official_same_date_climatological_normals": "not_connected",
+  "reservoir_source": "not_connected",
+  "publication_authorized": false,
+  "drone_flight_authorized": false
+}

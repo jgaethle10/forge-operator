@@ -1,0 +1,45 @@
+name: Fallen first-party real UI footage
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/browser-worker/capture-studio-real-ui-footage.mjs'
+      - '.github/workflows/fallen-real-owned-ui-footage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-ui-source-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate capture syntax and install owned Browser Worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npm install --no-audit --no-fund
+          node --check capture-studio-real-ui-footage.mjs
+      - name: Install Chromium and FFmpeg
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npx playwright install --with-deps chromium
+          sudo apt-get install -y ffmpeg
+      - name: Capture actual public Evercraft Studio browser pixels, not mockups
+        env:
+          FALLEN_SITE_CAPTURE_DIR: ${{ runner.temp }}/fallen-real-ui-source
+        run: node systemia/evercraft-web/browser-worker/capture-studio-real-ui-footage.mjs
+      - name: Retain original source video and 4 full-res review frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-internal-original-real-ui-source
+          path: |
+            ${{ runner.temp }}/fallen-real-ui-source/*.mp4
+            ${{ runner.temp }}/fallen-real-ui-source/*.png
+            ${{ runner.temp }}/fallen-real-ui-source/*receipt.json
+          if-no-files-found: warn
+          retention-days: 14

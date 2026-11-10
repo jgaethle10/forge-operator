@@ -77,7 +77,7 @@ This is the foundation for recurring cartoons, serialized films, recurring comme
 
 ## Creative Council
 
-Fallen now has a separate pre-production swarm called the **Fallen Creative Council**. It is registered in Saban as `fallen-creative-council` and fans ten owned creative roles across each planned scene or semantic coverage gap before provider execution.
+Fallen now has a separate pre-production swarm called the **Fallen Creative Council**. It is registered in Saban as `fallen-creative-council` and fans fourteen owned creative roles across each planned scene or semantic coverage gap before provider execution.
 
 The current crew is intentionally cross-system rather than a new isolated team:
 
@@ -86,6 +86,8 @@ The current crew is intentionally cross-system rather than a new isolated team:
 - **Fallen** owns cinematography, data graphics and edit rhythm.
 - **Kaidance** owns sound direction.
 - **Human Experience Sentinel** owns the beauty judgment.
+
+Four additional audio production specialists now complement the original sound director: voice-performance director, music composer, sound-design engineer and mixing engineer. Their output is direction and rejection criteria, not an unverified provider render or a claim that anyone has listened to the final mix.
 
 Each role returns a structured note. Saban reconciles the notes into an `evercraft.fallen.creative-council-reconciliation.v1` receipt with one **creative genome** per shot. The genome contains story, camera, coverage, graphics, world, edit, sound, art-direction, truth and beauty constraints plus a unioned rejection contract. A scene cannot silently pass as "finished" merely because it rendered.
 

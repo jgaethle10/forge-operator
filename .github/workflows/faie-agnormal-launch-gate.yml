@@ -81,7 +81,9 @@ jobs:
             fi
 
             if [ "$stage" = "investigation" ]; then
-              if [ "$error" = "json_post_http_404:/api/faie/investigate" ]; then
+              if [ "$error" = "json_post_http_404:/api/faie/investigate" ] || \
+                 [ "$error" = "faie_agnormal_water_evidence_missing" ] || \
+                 [ "$error" = "faie_agnormal_water_dimension_missing" ]; then
                 retry=true
               fi
             fi

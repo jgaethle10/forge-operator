@@ -1,0 +1,38 @@
+name: Clear exact orphaned Pages deployment
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/recover-stale-pages-042bb.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Cancel old SHA only
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STALE_SHA: 042bb805049bd8c970dd97ee6480aaa056b99acd
+        run: |
+          set -euo pipefail
+          endpoint="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/deployments/${STALE_SHA}"
+          getcode=$(curl -sS --max-time 20 -o /tmp/old.json -w '%{http_code}' -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "${endpoint}")
+          state="unknown"
+          if [ "${getcode}" = 200 ]; then
+            state=$(python3 -c 'import json;print(json.load(open("/tmp/old.json")).get("status","unknown"))')
+          fi
+          echo "Old SHA status: ${getcode}/${state}"
+          if [[ "${state}" == succeed || "${state}" == cancelled ]]; then
+            echo "Old deployment already terminal"
+            exit 0
+          fi
+          code=$(curl -sS --max-time 20 -X POST -o /tmp/cancel.json -w '%{http_code}' -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "${endpoint}/cancel")
+          echo "Old SHA cancel response: ${code}"
+          if [[ "${code}" != 204 && "${code}" != 404 ]]; then
+            cat /tmp/cancel.json
+            exit 1
+          fi

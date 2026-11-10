@@ -1,0 +1,83 @@
+{
+  "schema": "publisher.brand-isolation.policy.v1",
+  "effective_date": "2026-10-20",
+  "directive": "Publisher traffic and affiliate properties must not be associated publicly with Evercraft's corporate brand or socials.",
+  "owner": "Evercraft internal engineering; not an external consumer-facing brand",
+  "properties": [
+    {
+      "current_staging": "/audience-sites/partscout/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/audience-sites/valuescout/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/audience-sites/playbook-lab/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/audience-sites/site-rescue/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/audience-sites/creative-studio/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/audience-sites/publisher-lab/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/audience-sites/relay-notes/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/affiliate-labs/pet-play/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/affiliate-labs/tool-rent-or-buy/",
+      "public_domain": null,
+      "indexable": false
+    },
+    {
+      "current_staging": "/affiliate-labs/auto-fitment/",
+      "public_domain": null,
+      "indexable": false
+    }
+  ],
+  "states": {
+    "html_debranding": "in_progress_until_CI",
+    "isolated_domains": "NOT_PROVISIONED",
+    "isolated_hosting": "NOT_PROVISIONED",
+    "independent_emails": "NOT_PROVISIONED",
+    "merchant_programs": "NOT_APPROVED",
+    "true_anonymity": "NOT_CLAIMED",
+    "paid_traffic": "NOT_AUTHORIZED",
+    "corporate_social_promotion": "PROHIBITED",
+    "adult_site": "NOT_LAUNCHED"
+  },
+  "restriction": "Temporary sites hosted at jgaethle10.github.io/forge-operator remain technically attributable through URL, repository source, and historical references. Removing logos does not create true independent ownership.",
+  "publication_gates": [
+    "separate_trustworthy_domain_per_brand_or_niche",
+    "independent_hosting_and_origin",
+    "no_evercraft_branding_or_backlinks",
+    "publisher_contact_and_legal_disclosures_in_appropriate_place",
+    "affiliate_network_application_per_final_site_and_marketing_method",
+    "proper_cookie_privacy_age_rights_policies_for_each_vertical",
+    "verified_attribution_with_no_cross_brand_profiles",
+    "owner_go_no_go_authority"
+  ],
+  "corporate_media_policy": "No explicit, suggestive, sexual, or adult-affiliate content; no referral to these independent publisher properties from company socials.",
+  "no_deceptive_anonymity": "Affiliate and advertising partners, tax authorities, payment processors, rights holders, and users requiring legally mandated disclosures must receive truthful controlling business identity; white-label public branding is allowed but cannot misrepresent ownership or hide legal responsibility.",
+  "rollback": "Restore noindex and suspend promotions on any consumer page discovered linking to corporate brand before isolated origin migration."
+}

@@ -1,48 +1,43 @@
 # Base44 Exit Program
 
-Status: active
+Status: active. **Owned-only execution and no-provider-contact freeze is mandatory.**
 
-Base44 is legacy infrastructure for Evercraft/Systemia. It is not a destination for new builds.
+## Effective authority
+
+The October 22, 2026 execution freeze and November 4, 2026 founder confirmation override any older text that describes legacy extraction, compatibility, continuity or provider fallback as allowable new operations.
+
+**Do not contact Base44** for any new read, login, CLI operation, extraction, build, deployment, publishing, data sync, authentication, payment, analytics, hosting or runtime operation. Already-preserved historical records and owned local exports may be used as evidence, with privacy and rights checks. Historical URLs are not availability proof.
 
 ## Canonical placement
 
-- GitHub owns canonical source, schemas, tests, release metadata and immutable source history.
-- Systemia owns orchestration, admission, dependency sequencing, authority policy, receipts and migration state.
-- Yard / Evercraft Compute owns runtime, deployment, health checks, route verification and rollback.
-- Base44 is limited to temporary extraction, compatibility and continuity while a bounded slice is still unmigrated.
+- GitHub owns canonical source, schemas, tests, immutable history and release metadata.
+- Systemia owns orchestration, admission, authority policy, receipts and migration state.
+- Yard / Evercraft Compute owns runtime, deployment, health, verification and rollback.
+- Authorized capacity already available through Evercraft infrastructure is preferred. Personal devices are optional capacity, never mandatory production infrastructure.
 
-## Runtime invariant
+## Migration invariant
 
-Evercraft-owned software is the runtime/control fabric. Systemia Core schedules work, Yard admits and deploys it, Evercraft Compute supplies the workload contract, and NodeSeed / outbound capacity transport bind authorized compute when capacity is needed. No named cloud provider is a prerequisite or canonical dependency. Physical compute is replaceable substrate, not the operating system of Evercraft.
+Reconstruct from already-held assets and original Evercraft source where rights permit. Declare unrecovered private state as blocked until authorized recovery is available without provider contact. Do not counterfeit parity or assume an old builder record proves a working service.
 
-The available-hardware-first rule applies during migration: discover and use already-authorized compatible capacity before considering any external infrastructure. A founder device may participate as optional capacity, but no personal device becomes a mandatory production dependency.
+Code in GitHub is a **source milestone**, not migrated production. Completion requires dependency inventory, reconciled authorized data (where applicable), auth/integration parity, tests, immutable release reference, owned Yard deployment, independently verified live route and health, rollback, and observation window.
 
-## Operating rule
+Never silently reroute traffic to a historical provider. Never delete historical source, private data, or external account contents just because a new interface exists.
 
-No new Evercraft/Systemia product begins life in Base44. Existing Base44 apps may receive only continuity, extraction, security, migration or parity work required to complete cutover.
+## Priority
 
-A slice is not migrated because code was copied. Completion requires source extraction, dependency inventory, data reconciliation, auth and integration parity, green tests, an immutable release reference, Yard deployment, live health and route verification, rollback proof and an observation window.
+1. Systemia control/KAIDANCE continuity and release authority.
+2. Shared capability registry and execution receipts.
+3. Owned Evercraft Payments, machine commerce and public discovery.
+4. Shared auth, data and integration primitives.
+5. Revenue-critical products, quote/service paths, supported customer workloads.
+6. Family, guardian, youth and learner apps with stricter consent/privacy.
+7. Research, media, atlases, education and long-tail programs.
+8. Document disposition of each legacy app only when proof exists.
 
-## Migration order
-
-1. Systemia Core / KAIDANCE Collider and mission/receipt fabric.
-2. Shared capability registry, execution checkpoints and first-party routing.
-3. Machine commerce and public AI discovery edges.
-4. Shared auth, data and integration adapters.
-5. Revenue-critical customer products.
-6. Guardian/EverNest-class safety and family products with stricter privacy gates.
-7. Research, media, atlas and long-tail apps.
-8. Retire legacy dependencies only after replacement receipts exist.
+Education migration tracker: GitHub issue #1873. Portfolio-wide no-contact tracker: issue #1876.
 
 ## KAIDANCE acceptance
 
-The migrated Collider must expose a safe health surface that can report at least:
-- last completed cycle,
-- cycle age,
-- heartbeat target,
-- coverage receipt validity,
-- admitted/held work counts,
-- last deployment receipt,
-- degraded/healthy state,
+A safe health surface must report last completed cycle, cycle age, heartbeat target, coverage receipt validity, admitted/held work counts, last deployment receipt, and degraded/healthy status without exposing private mission content or credentials.
 
-without exposing private mission content, credentials, customer data or internal topology.
+**Current portfolio status: migration in progress. Not all owned live routes, data migrations or provider retirement are verified.**

@@ -1,0 +1,62 @@
+name: Evercraft Signal evidence-publication checks
+
+on:
+  push:
+    branches:
+      - main
+      - product/evercraft-signal-case-20261029
+    paths:
+      - 'public/signal/**'
+      - 'tests/signal-incident-public.test.mjs'
+      - 'tests/signal-public-https.test.mjs'
+      - 'tests/signal-paid-scope.test.mjs'
+      - 'tests/signal-owned-intake.test.mjs'
+      - 'systemia/mcp/signal-public-inquiry.mjs'
+      - 'tests/signal-owned-payment-route.test.mjs'
+      - 'tests/signal-native-payment-canary.test.mjs'
+      - 'scripts/probe-signal-native-payments.mjs'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/signal-publication/payment-offer.mjs'
+      - 'scripts/probe-signal-public.mjs'
+      - '.github/workflows/signal-incident-check.yml'
+  pull_request:
+    paths:
+      - 'public/signal/**'
+      - 'tests/signal-incident-public.test.mjs'
+      - 'tests/signal-public-https.test.mjs'
+      - 'tests/signal-paid-scope.test.mjs'
+      - 'tests/signal-owned-intake.test.mjs'
+      - 'systemia/mcp/signal-public-inquiry.mjs'
+      - 'tests/signal-owned-payment-route.test.mjs'
+      - 'tests/signal-native-payment-canary.test.mjs'
+      - 'scripts/probe-signal-native-payments.mjs'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/signal-publication/payment-offer.mjs'
+      - 'scripts/probe-signal-public.mjs'
+      - '.github/workflows/signal-incident-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate release claims, provenance and accessibility markers
+        run: node --test tests/signal-incident-public.test.mjs tests/signal-public-https.test.mjs tests/signal-paid-scope.test.mjs tests/signal-owned-payment-route.test.mjs tests/signal-native-payment-canary.test.mjs tests/signal-owned-intake.test.mjs
+      - name: Verify no additional runtime is needed for public Pages
+        run: |
+          test -s public/signal/index.html
+          test -s public/signal/incidents/savannah-river-20261028.json
+          test -s public/signal/scope-request.mjs
+          test -s public/signal/offer.json

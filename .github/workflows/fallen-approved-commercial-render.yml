@@ -1,0 +1,32 @@
+name: Fallen Approved Commercial Render
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/commercial-assembly.mjs'
+      - 'systemia/media-studio/commercial-assembly.test.mjs'
+      - 'systemia/media-studio/APPROVED-COMMERCIAL-RENDER.md'
+      - '.github/workflows/fallen-approved-commercial-render.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  final-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned media runtime
+        run: |
+          npm install --no-audit --no-fund
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -version | head -n 1
+      - name: Render actual H264/AAC specimen through Fallen and inspect encoded audio QC
+        run: node --import tsx --test systemia/media-studio/commercial-assembly.test.mjs
+      - name: Validate workspace types
+        run: npm run lint

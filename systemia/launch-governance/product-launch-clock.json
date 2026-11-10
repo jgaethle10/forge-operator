@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.systemia.product-launch-clock.v1",
+  "decision_date": "2026-10-22",
+  "owner_rule": "The first public launch announcement for an Evercraft product must occur at a time matching one of the children's birthday clock-face times.",
+  "timezone": "America/Los_Angeles",
+  "allowed_clock_face_times": [
+    "10:28",
+    "02:05",
+    "07:04"
+  ],
+  "clock_format": "12-hour clock; AM/PM not restricted in the founder's instruction and must be specified in each scheduled release",
+  "scope": [
+    "first publicly distributed announcement of a product",
+    "first public distribution of a flagship commercial marketing a new product",
+    "first public introduction of a new commercial service"
+  ],
+  "out_of_scope": [
+    "private review files and production builds",
+    "drafting and QA",
+    "ordinary updates to already publicly launched products",
+    "routine support communications"
+  ],
+  "missed_window_policy": "HOLD. Choose another explicit, founder-approved launch slot. Never publish late to approximate a missed birthdate time.",
+  "preconditions": [
+    "specific founder approval of launch asset/account/payload",
+    "truth and media rights cleared",
+    "actual destination and customer contact tested",
+    "eligible launch clock time"
+  ],
+  "execution_state": "RECORDED_POLICY_NOT_CONNECTED_TO_ALL_PUBLISHERS",
+  "grants_publication_authority": false,
+  "privacy_note": "Policy preserves only three time strings, not children's identities or full birthdates."
+}

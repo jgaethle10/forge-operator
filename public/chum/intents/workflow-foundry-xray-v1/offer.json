@@ -1,0 +1,57 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "workflow-foundry-xray-v1",
+  "name": "Evercraft Workflow X-Ray",
+  "problem": "A business has missed customer follow-ups, delayed estimates or approvals, unclear handoffs, broken intake-to-delivery workflow, or repetitive tasks. Diagnose one process before buying an automation build.",
+  "intent_terms": [
+    "my business loses customer inquiries between quoting approval and follow-up",
+    "our leads get missed between intake, estimate, scheduling and follow-up",
+    "I need a fixed-price one-time operations workflow audit",
+    "map workflow bottlenecks and ownership gaps",
+    "decide whether to automate a recurring business process",
+    "find why our approvals and customer handoffs fall through the cracks",
+    "diagnose repetitive admin work without replacing all our software",
+    "get a workflow diagnosis before buying a big automation platform",
+    "one bounded diagnostic for a slow quoting and follow-up workflow",
+    "assess one business process with practical acceptance tests"
+  ],
+  "pricing": "$250 USD one-time for a scoped workflow diagnostic. No subscription, production access, automatic implementation, or promised revenue result.",
+  "offers": [
+    {
+      "offer_key": "workflow_foundry.xray_250.v1",
+      "name": "Workflow X-Ray",
+      "price": "$250",
+      "price_usd": 250,
+      "billing": "one_time",
+      "checkout": "human_confirmed_provider_verified"
+    }
+  ],
+  "entry_paid_offer": {
+    "offer_key": "workflow_foundry.xray_250.v1",
+    "name": "Workflow X-Ray",
+    "price": "$250",
+    "price_usd": 250,
+    "billing": "one_time",
+    "checkout": "human_confirmed_provider_verified",
+    "price_usd_normalized": 250
+  },
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_ready",
+  "public_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+  "human_ui_required": true,
+  "confirmation": "Exact offer and price require separate buyer confirmation. Opening an offer or preparing checkout is not payment; deliver only after an authoritative provider-paid receipt.",
+  "payment_authority": "Evercraft Payments with Stripe provider verification",
+  "invocation_status": "EXTERNAL BUYER PATH OBSERVED: owned offer page is reachable and founder reached the Stripe-hosted checkout. Live machine matching, settlement and fulfillment require separate verification.",
+  "machine_review_url": null,
+  "machine_offer_url": null,
+  "start_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+  "start_url_state": "owned_direct_human_start",
+  "universal_mcp": null,
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

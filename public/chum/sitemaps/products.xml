@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>/chum/products/ai-boardroom/</loc></url>
+  <url><loc>/chum/products/ai-boardroom/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/ai-boardroom/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/ai-boardroom/llms.txt</loc></url>
   <url><loc>/chum/products/aliev/</loc></url>
   <url><loc>/chum/products/aliev/ai-conformance.json</loc></url>
   <url><loc>/chum/products/aliev/ai-discovery.json</loc></url>

@@ -1,0 +1,95 @@
+{
+  "schema": "evercraft.boardroom.social-launch-queue.v1",
+  "campaign_id": "boardroom-executive-chamber-20261029",
+  "brand_key": "evercraft-boardroom",
+  "publisher": "evercraft_clip",
+  "state": "prepared_not_published",
+  "product_origin": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/",
+  "sample_url": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1",
+  "source": "distribution/marketing/boardroom-executive-chamber-20261029.md",
+  "brand_standard": "public/mesh/ai-boardroom/BRAND.md",
+  "evidence": {
+    "public_pages_https_check": "https://github.com/jgaethle10/forge-operator/actions/runs/40838160737",
+    "public_tool_state": "free_browser_only_deterministic_heuristic",
+    "live_ai_council_verified": false,
+    "provider_post_receipt_observed": false
+  },
+  "entries": [
+    {
+      "id": "BR-ORG-FB-01",
+      "channel": "facebook-page",
+      "brand_key": "evercraft-boardroom",
+      "account_id": null,
+      "content_block": "Evercraft Facebook Page",
+      "link": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "prepared_unsubmitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "media_review_state": "text_only_no_media_attached"
+    },
+    {
+      "id": "BR-ORG-LI-01",
+      "channel": "linkedin-page",
+      "brand_key": "evercraft-boardroom",
+      "account_id": null,
+      "content_block": "Evercraft LinkedIn Page",
+      "link": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "prepared_unsubmitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "media_review_state": "text_only_no_media_attached"
+    },
+    {
+      "id": "BR-ORG-IG-01",
+      "channel": "instagram-business",
+      "brand_key": "evercraft-boardroom",
+      "account_id": null,
+      "content_block": "Evercraft Instagram",
+      "link": "https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/?demo=1",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publisher_state": "prepared_unsubmitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "media_review_state": "not_ready_requires_original_media_and_actual_clickable_profile_or_story_route"
+    }
+  ],
+  "personal_share": [
+    {
+      "id": "BR-FOUNDER-FB-01",
+      "channel": "facebook-personal",
+      "content_block": "Personal Facebook, for founder to share manually",
+      "publisher_state": "founder_manual_only",
+      "provider_post_url": null
+    },
+    {
+      "id": "BR-FOUNDER-LI-01",
+      "channel": "linkedin-personal",
+      "content_block": "Personal LinkedIn, for founder to share manually",
+      "publisher_state": "founder_manual_only",
+      "provider_post_url": null
+    }
+  ],
+  "metrics": {
+    "impressions": null,
+    "unique_visitors": null,
+    "guest_pass_opens": null,
+    "completed_maps": null,
+    "inquiries": null,
+    "verified_paid_orders": null
+  },
+  "no_fictional_publish_receipt": true
+}

@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { preflightPublicLink } from './public-link-preflight.mjs';
+import { assertEvercraftFamilySocialSafe } from './family-social-safety.mjs';
 
 function hash(value){
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -52,6 +53,9 @@ function contentDigestFor(request,metadata,linkVerification){
 export async function publishClipSocialPost({request,adapters,policy}){
   const validated=validateRequest(request);
   let metadata=validated.metadata;
+  // Evercraft corporate/first-party social publishing cannot carry adult or sexual
+  // content or send users to adult pages. It fails before any provider call.
+  assertEvercraftFamilySocialSafe(metadata);
   const linkVerification=validated.linkVerification;
   if(policy?.allowPublishing!==true) throw new Error('clip_social_publish_policy_disabled');
 
@@ -85,6 +89,8 @@ export async function publishClipSocialPost({request,adapters,policy}){
         timeoutMs:linkPolicy.timeoutMs,
       });
       metadata={...metadata,link:linkPreflight.finalUrl};
+      // A safe-looking short URL may redirect to an unsafe final destination.
+      assertEvercraftFamilySocialSafe(metadata);
       contentDigest=contentDigestFor(request,metadata,linkVerification);
     }
 
@@ -96,6 +102,24 @@ export async function publishClipSocialPost({request,adapters,policy}){
       contentDigest,
     });
 
+    // A provider POST may succeed before its authenticated permalink GET fails.
+    // Preserve the remote ID so an operator can reconcile it. No blind second POST.
+    if(result?.state==='reconciliation_required') return {
+      schema:'evercraft.clip.social-publish-receipt.v1',
+      status:'reconciliation_required',
+      requestId:request.id,destination:request.destination,brandKey:request.brandKey,
+      contentDigest,
+      remoteId:result.remoteId||null,
+      url:null,
+      providerMayHavePublished:true,
+      manualReconciliationRequired:true,
+      automaticRetryAllowed:false,
+      reason:result.reason||'provider_readback_unconfirmed',
+      authorizationRef:request.authorization.authorizationRef,
+      publicLinkPreflight:linkPreflight,
+      sourceRefs:Array.isArray(result.sourceRefs)?result.sourceRefs:[],
+      startedAt,reconciliationAt:new Date().toISOString()
+    };
     if(result?.state!=='published') throw new Error('clip_social_publish_adapter_not_published');
     if(!result.remoteId) throw new Error('clip_social_publish_remote_id_missing');
     if(!result.url) throw new Error('clip_social_publish_remote_url_missing');

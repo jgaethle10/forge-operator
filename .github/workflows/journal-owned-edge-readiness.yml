@@ -1,0 +1,65 @@
+name: Journal Owned Edge Readiness
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/journal-edge-readiness.mjs'
+      - 'systemia/newsroom/journal-edge-readiness.test.mjs'
+      - '.github/workflows/journal-owned-edge-readiness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/newsroom/journal-edge-readiness.mjs'
+      - 'systemia/newsroom/journal-edge-readiness.test.mjs'
+      - 'public/journal/**'
+      - '.github/workflows/journal-owned-edge-readiness.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '42 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove separate current, archive-only, and inaccessible edge states
+        run: node --test systemia/newsroom/journal-edge-readiness.test.mjs
+      - name: Probe the owned Journal edge externally
+        id: probe
+        run: |
+          mkdir -p artifacts
+          node systemia/newsroom/journal-edge-readiness.mjs \
+            https://fabric.systemiacommandcenters.com/journal \
+            > artifacts/journal-owned-edge-readiness.json
+          state="$(jq -r .state artifacts/journal-owned-edge-readiness.json)"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Journal owned edge"
+            echo
+            echo "Verified publication state: $state"
+            echo
+            echo "Archive-only is degraded and is NOT a verified current edition."
+            echo
+            cat artifacts/journal-owned-edge-readiness.json
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$state" = archive_only_degraded ]; then
+            echo "::warning::Journal archive reachable and hashed, but there is no current approved edition."
+          elif [ "$state" != current_edition_verified ]; then
+            echo "::error::Journal unavailable or missing approved content, see receipt."
+            exit 1
+          fi
+      - name: Preserve owned-edge readiness and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: journal-owned-edge-readiness
+          path: artifacts/
+          retention-days: 30
+          if-no-files-found: warn

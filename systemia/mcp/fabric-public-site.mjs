@@ -283,9 +283,22 @@ const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>
     send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
     get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
     steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
-  return {public_id,name:offer.title,commercial_state:'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
+  return {public_id,name:offer.title,commercial_state:offer.native_order_enabled===false?'scope_first':'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
     entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
 });
+
+const signalOfferCopy=OFFER_PAGE_COPY['payment-offer-signal-brief'];
+if(signalOfferCopy){
+  Object.assign(signalOfferCopy,{
+    eyebrow:'Evercraft Signal / evidence intelligence',
+    headline:'Know what happened. See the evidence.',
+    lede:'A $250 one-time source-linked Incident Evidence Brief for one public incident, prepared for a specific decision or research question.',
+    promise:'One bounded incident investigation, a dated source ledger, timeline, documented contradictions, and the key missing evidence.',
+    send:['The incident or facility to investigate','One decision or research question','Relevant public source links, if available'],
+    get:['A human-reviewed concise written evidence brief','Clear separation of official statements, reports, uncertainty, and unknowns','Source dates, important contradictions, and next questions'],
+    steps:[['1. Scope one incident','Describe the incident and question using Evercraft Signal.'],['2. Confirm the order','Evercraft verifies the scope, price, capacity, and payment readiness.'],['3. Receive the brief','Payment verification precedes fulfillment and source-backed delivery.']]
+  });
+}
 
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
@@ -341,6 +354,20 @@ export function renderOffers(capabilities=[]){
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
     '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    '<section class="offer-panel" aria-label="ForensiScope long-media review">',
+    '<div class="eyebrow">ForensiScope · human-confirmed media review</div>',
+    '<h2>Too much footage for your usual AI tools?</h2>',
+    '<p>ForensiScope helps organize long authorized video and audio into traceable transcripts, timestamps, and repeated-segment findings. Published tiers start at $15 for up to five minutes of footage; secure intake, scope, availability and payment are confirmed before work begins.</p>',
+    '<div class="actions"><a class="btn primary" href="/forensiscope">See ForensiScope review tiers</a></div>',
+    '</section>',
+    // Scope-reviewed human services remain separate from native checkout-authorized offerings.
+    '<section class="offer-panel" aria-label="Commercial Studio introductory creative service">',
+    '<div class="eyebrow">Commercial Studio · human-reviewed introductory service</div>',
+    '<h2>Need a 30-second video for your small business?</h2>',
+    '<p>For suitable briefs, Evercraft || Fallen Studios offers a $50 introductory social commercial from footage or photos you are authorized to provide. One concept, one format, one revision; filming and advertising spend are not included.</p>',
+    '<p>We review the brief, production fit, rights and capacity before proposing payment. This inquiry does not place an order or promise delivery.</p>',
+    '<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/commercial-studio/" rel="noopener noreferrer">Request the $50 commercial brief</a></div>',
+    '</section>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
@@ -349,7 +376,7 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item){
+export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const copy=OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
@@ -359,15 +386,30 @@ export function renderOfferPage(item){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const checkoutHeld=!checkoutConfigured||PUBLIC_PAYMENT_OFFERS[copy.slug]?.native_order_enabled===false;
+  const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
+  const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    ...(checkoutHeld ? [
+      '<section class="offer-panel" aria-label="Assisted purchase request">',
+      copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
+      copy.slug==='signal-brief'
+        ?'<p>This is an Evercraft Payments offer for $250, not a processor-first link. The specific Signal checkout remains held until the bounded incident scope and native settlement route are accepted. No payment or order is created here yet.</p>'
+        :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
+      copy.slug==='signal-brief'
+        ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/signal/#request">Prepare my incident brief request</a><a class="btn" href="/offers">Explore Evercraft offers</a></div>'
+        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
+      '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
+      '</section>',
+    ] : [
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
@@ -378,6 +420,7 @@ export function renderOfferPage(item){
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
+    ]),
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
@@ -422,29 +465,34 @@ export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',
   });
 }
 
-export function renderPaymentHoldPage({slug='',orderKey=''}={}){
-  const safeSlug=String(slug||'').trim().toLowerCase();
+export function renderPaymentHoldPage({slug='',orderKey='',noAttempt=false}={}){
+  const safeSlug=/^[a-z0-9-]{1,80}$/.test(String(slug||''))?String(slug):'';
   const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
-  const order=String(orderKey||'').trim();
-  return shell('Payment is not ready yet · Evercraft',[
+  const order=String(orderKey||'').trim().slice(0,100);
+  const subject=encodeURIComponent('Evercraft Payments help'+(safeSlug?' | '+safeSlug:''));
+  const message=noAttempt
+    ?'The payment service was not contacted by this request. No order or charge was created by this attempt. You can contact Evercraft to arrange an approved manual invoice.'
+    :'We could not confirm whether a checkout session was created. Do not make a second payment before checking your provider receipt or contacting Evercraft. No paid order or fulfillment is verified here.';
+  return shell('Checkout needs assistance · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
-    '<h1>No charge was made.</h1>',
-    '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
+    '<h1>'+ (noAttempt?'Checkout is temporarily unavailable.':'Checkout could not be confirmed.') +'</h1>',
+    '<p class="lede">'+message+'</p>',
     '<div class="actions">',
-    '<a class="btn primary" href="'+back+'">Return to the offer</a>',
-    '<a class="btn" href="'+back+'">Try again</a>',
+    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Request payment assistance</a>',
+    '<a class="btn" href="'+back+'">Return to the offer</a>',
+    '<a class="btn" href="tel:+15097590440">Call Evercraft</a>',
     '</div>',
-    order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
+    order?'<div class="checkout-note">Reference to mention when contacting support: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',
     '<section class="offer-panel">',
-    '<h2>What happened?</h2>',
-    '<p>Evercraft Payments failed closed instead of sending you into a mismatched or unverified checkout. Your offer, price, and fulfillment scope were not changed.</p>',
+    '<h2>What happens next?</h2>',
+    '<p>Evercraft can review the specific offer and discuss an approved invoice or another accepted payment method. This page does not automatically email you, create an invoice, take a charge, or begin fulfillment.</p>',
     '</section>',
     '</main>'
   ].join('\n'),{
-    description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
+    description:'Evercraft Payments checkout is unavailable or unverified. Request human assistance before paying again.',
     canonical:back,
     ogType:'website',
   });

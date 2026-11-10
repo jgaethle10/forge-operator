@@ -28,10 +28,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 120,
-    "product_entries": 68,
+    "entries": 121,
+    "product_entries": 69,
     "machine_offer_entries": 52,
-    "entries_with_pain_language": 120,
+    "entries_with_pain_language": 121,
     "sell_now_machine_offers": 17,
     "entries_with_declared_mcp": 1,
     "callable_or_routable_entries": 1,
@@ -2541,6 +2541,57 @@
       "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:ai-boardroom",
+      "product_key": "ai-boardroom",
+      "kind": "product",
+      "name": "Evercraft AI Boardroom",
+      "class": "business_decision_review_and_multi_perspective_ai_analysis",
+      "pain_phrases": [
+        "why do ChatGPT and Claude disagree about my business decision",
+        "compare different AI model answers for a business strategy",
+        "multiple AI assistants give conflicting recommendations",
+        "I want different AI models to debate a strategy",
+        "have AI advisers challenge each other's business assumptions",
+        "ask ChatGPT Claude and Gemini to critique a proposal",
+        "AI boardroom for a tough executive decision",
+        "multi-model decision review with risk and operational perspectives",
+        "AI council to pressure-test a startup or company decision",
+        "compare AI disagreements and identify the evidence needed"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/mesh/ai-boardroom/index.html",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and human-confirmed scoped decision-review service, not autonomous cross-model execution",
+      "boundaries": [
+        "Offer a paid review only when a user has a concrete business decision and wants evidence-based competing perspectives",
+        "Advisor seats, critiques and synthesis are design history, not proof of active multi-LLM rounds",
+        "No independently verified automatic multi-model dialogue or paid report delivery",
+        "Do not market a live AI consensus application or automatic ChatGPT Claude Gemini integration",
+        "Purchase needs scope, timing and informed buyer consent; opening a provider checkout does not establish payment",
+        "Do not recommend against a simpler free comparison option for casual model curiosity"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

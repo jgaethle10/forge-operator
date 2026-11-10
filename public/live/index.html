@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050a10">
+<meta name="description" content="An evidence-backed public window into real Evercraft software development: current reviews, recorded commits, and CI runs, without invented activity.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src https://api.github.com; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+<title>Evercraft LIVE | Actual Workroom</title>
+<link rel="stylesheet" href="./workroom.css">
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand"><span class="brandmark" aria-hidden="true">✧</span><span>EVERCRAFT <em>/ WORKROOM</em></span></div>
+  <div class="head-meta"><span id="sourceState"><i class="signal" id="stateLight"></i><span id="stateText">CHECKING PUBLIC SOURCE</span></span><span class="long" id="checkedAt">NOT YET CHECKED</span></div>
+</header>
+<div class="topline">
+  <div class="topline-title">PUBLIC ENGINEERING RECEIPTS / WORK OBSERVED IN GITHUB</div>
+  <div class="topline-stats"><span><strong id="prCount">0</strong>PRs</span><span><strong id="runCount">0</strong>CI</span><span><strong id="commitCount">0</strong>COMMITS</span></div>
+</div>
+<main class="layout">
+  <section class="focus" aria-label="Verified development event">
+    <div class="focus-content">
+      <div class="focus-eyebrow" id="focusCategory">WAITING FOR VERIFIED SOURCE</div>
+      <h1 class="focus-title" id="focusTitle">Connecting to real work…</h1>
+      <div id="eventDetail">Loading public code reviews, commits, and verification records.</div>
+      <div class="focus-grow"></div>
+      <div class="meta-foot">
+        <div class="meta-when"><b id="focusState">UNVERIFIED</b><span id="focusWhen">No source timestamp yet</span></div>
+        <a id="receipt" class="receipt" href="https://github.com/jgaethle10/forge-operator/pulls" target="_blank" rel="noopener noreferrer">OPEN EXACT RECEIPT ↗</a>
+      </div>
+      <div class="proof-bar" aria-hidden="true"><span id="sceneProgress"></span></div>
+    </div>
+    <div class="held show" id="held"><div><h2>Evidence first.</h2><p id="heldMessage">Checking public engineering activity. No simulated work will be displayed.</p><a href="https://github.com/jgaethle10/forge-operator/pulls" target="_blank" rel="noopener noreferrer">Open public Evercraft development ↗</a></div></div>
+  </section>
+  <section class="sidebar" aria-label="Current real development">
+    <div class="panel"><div class="panel-header"><h2>Engineering reviews</h2><small>Recorded public PRs</small></div><div id="recentList" class="cards"></div></div>
+    <div class="panel"><div class="panel-header"><h2>Tests and builds</h2><small>Actual GitHub Actions</small></div><div id="checkList" class="cards"></div></div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="context"><b id="statusText">CONNECTING…</b> · Public repository evidence, replayed in sequence, checked approximately every 10 minutes. Not live Systemia agent telemetry. <a href="https://github.com/jgaethle10/forge-operator" target="_blank" rel="noopener noreferrer">Source ↗</a></div>
+  <div class="toolbar"><button class="btn" id="next">Next receipt ↗</button><button class="btn" id="hold">Hold</button><button class="btn" id="refresh">Refresh</button><button class="btn" id="portrait" aria-pressed="false">9:16</button><button class="btn primary" id="film" aria-pressed="false">Film ⛶</button></div>
+</footer>
+<button id="filmExit" type="button">✕ Exit film</button>
+</div>
+<script type="module" src="./workroom.mjs"></script>
+</body>
+</html>

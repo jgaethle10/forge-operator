@@ -122,44 +122,84 @@ function workflowReferences(text) {
   const npmScripts = [];
   const files = [];
   const lines = String(text || '').split(/\r?\n/);
-  let stepIndent = null;
-  let stepLines = [];
+  const jobs = [];
+  let insideJobs = false;
+  let activeJob = null;
 
-  const flushStep = () => {
-    if (!stepLines.length) return;
-    const stepText = stepLines.join('\n');
-    const workingDirectoryMatch = stepText.match(/^\s*working-directory:\s*["']?([^"'#\n]+?)["']?\s*$/m);
-    const workingDirectory = clean(workingDirectoryMatch?.[1] || '').replaceAll('\\\\', '/');
-
-    for (const match of stepText.matchAll(/\bnpm\s+run\s+([A-Za-z0-9:_-]+)/g)) {
-      npmScripts.push(match[1]);
-    }
-    for (const match of stepText.matchAll(/\b(?:node|tsx)\s+([A-Za-z0-9_./-]+\.(?:mjs|cjs|js|ts|tsx))/g)) {
-      const target = match[1];
-      const resolved = workingDirectory && !workingDirectory.includes('${{') && !path.posix.isAbsolute(target)
-        ? path.posix.normalize(path.posix.join(workingDirectory, target))
-        : target;
-      files.push(resolved);
-    }
-    stepLines = [];
-  };
-
+  // GitHub Actions resolves step commands against a job's defaults.run
+  // working-directory unless a step supplies its own override. Checking all
+  // npm commands against the repository root produces fake high-severity alarms.
   for (const line of lines) {
-    const marker = line.match(/^(\s*)-\s+(?:name|uses|run)\s*:/);
-    if (marker) {
-      const indent = marker[1].length;
-      if (stepIndent === null) stepIndent = indent;
-      if (indent === stepIndent) {
-        flushStep();
-        stepLines.push(line);
-        continue;
-      }
+    if (/^jobs:\s*(?:#.*)?$/.test(line)) {
+      insideJobs = true;
+      continue;
     }
-    if (stepIndent !== null) stepLines.push(line);
+    if (insideJobs && /^\S/.test(line)) {
+      if (activeJob) jobs.push(activeJob);
+      activeJob = null;
+      insideJobs = false;
+    }
+    if (!insideJobs) continue;
+    const jobMarker = line.match(/^  ([A-Za-z0-9_-]+):\s*(?:#.*)?$/);
+    if (jobMarker) {
+      if (activeJob) jobs.push(activeJob);
+      activeJob = { name: jobMarker[1], lines: [] };
+    } else if (activeJob) {
+      activeJob.lines.push(line);
+    }
   }
-  flushStep();
+  if (activeJob) jobs.push(activeJob);
 
-  return { npmScripts: unique(npmScripts), files: unique(files) };
+  // Synthetic tests and small workflow fragments may omit the jobs wrapper.
+  const sections = jobs.length ? jobs.map(job => job.lines) : [lines];
+  for (const section of sections) {
+    const source = section.join('\n');
+    const jobDefaultMatch = source.match(/^    defaults:\s*$\n^      run:\s*$\n^        working-directory:\s*(.*?)\s*$/m);
+    const jobDefault = clean(jobDefaultMatch?.[1] || '').replace(/^['"]|['"]$/g, '');
+    let stepIndent = null;
+    let stepLines = [];
+
+    const flushStep = () => {
+      if (!stepLines.length) return;
+      const stepText = stepLines.join('\n');
+      const override = stepText.match(/^\s*working-directory:\s*["']?([^"'#\n]+?)["']?\s*$/m);
+      const workdir = clean(override?.[1] || jobDefault).replaceAll('\\', '/');
+      // Runtime-computed and absolute directories cannot be verified from git.
+      if (workdir.includes('$' + '{{') || path.posix.isAbsolute(workdir) || workdir.startsWith('..')) {
+        stepLines = [];
+        return;
+      }
+      for (const match of stepText.matchAll(/\bnpm\s+run\s+([A-Za-z0-9:_-]+)/g)) {
+        npmScripts.push({ name: match[1], working_directory: workdir });
+      }
+      for (const match of stepText.matchAll(/\b(?:node|tsx)\s+([A-Za-z0-9_./-]+\.(?:mjs|cjs|js|ts|tsx))/g)) {
+        const target = match[1];
+        files.push(workdir && !path.posix.isAbsolute(target)
+          ? path.posix.normalize(path.posix.join(workdir, target))
+          : target);
+      }
+      stepLines = [];
+    };
+
+    for (const line of section) {
+      const marker = line.match(/^(\s*)-\s+(?:name|uses|run)\s*:/);
+      if (marker) {
+        const indent = marker[1].length;
+        if (stepIndent === null) stepIndent = indent;
+        if (indent === stepIndent) {
+          flushStep();
+          stepLines.push(line);
+          continue;
+        }
+      }
+      if (stepIndent !== null) stepLines.push(line);
+    }
+    flushStep();
+  }
+  return {
+    npmScripts: [...new Map(npmScripts.map(row => [row.working_directory + ':' + row.name, row])).values()],
+    files: unique(files)
+  };
 }
 
 function addFinding(report, finding) {
@@ -585,14 +625,23 @@ export function inspectLocalPortfolio({ rootDir = process.cwd(), capabilityMesh 
   for (const workflow of report.inventory.workflows) {
     const text = fs.readFileSync(path.join(root, workflow), 'utf8');
     const refs = workflowReferences(text);
-    for (const scriptName of refs.npmScripts) {
-      if (!Object.prototype.hasOwnProperty.call(scripts, scriptName)) {
+    for (const scriptRef of refs.npmScripts) {
+      const scriptName = scriptRef.name;
+      const scopedPackage = scriptRef.working_directory
+        ? path.posix.join(scriptRef.working_directory, 'package.json')
+        : 'package.json';
+      const scoped = scopedPackage === 'package.json'
+        ? { ok: true, value: { scripts } }
+        : safeJson(root, scopedPackage);
+      const scopedScripts = scoped.ok && scoped.value?.scripts && typeof scoped.value.scripts === 'object'
+        ? scoped.value.scripts : {};
+      if (!Object.prototype.hasOwnProperty.call(scopedScripts, scriptName)) {
         addFinding(report, makeFinding({
           code: 'workflow_script_missing',
           severity: 'high',
-          subject: `${workflow} -> npm run ${scriptName}`,
-          detail: 'GitHub Actions workflow references an npm script that is absent from package.json.',
-          evidence_refs: [`repo:${workflow}`, 'repo:package.json'],
+          subject: workflow + ' -> npm run ' + scriptName,
+          detail: 'GitHub Actions workflow references an npm script that is absent from ' + scopedPackage + '.',
+          evidence_refs: ['repo:' + workflow, 'repo:' + scopedPackage],
           repair_mode: 'systemia_repair'
         }));
       }

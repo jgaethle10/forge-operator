@@ -1,0 +1,32 @@
+name: AI Boardroom customer release check
+on:
+  pull_request:
+    paths:
+      - 'public/mesh/ai-boardroom/**'
+      - 'public/mesh/checkout-ready/ai-boardroom-*/**'
+      - 'tests/boardroom-public-product.test.mjs'
+      - '.github/workflows/ai-boardroom-customer.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/mesh/ai-boardroom/**'
+      - 'public/mesh/checkout-ready/ai-boardroom-*/**'
+      - 'tests/boardroom-public-product.test.mjs'
+      - '.github/workflows/ai-boardroom-customer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  page-and-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Boardroom product doors and truthful offer metadata
+        run: node --test tests/boardroom-public-product.test.mjs
+      - name: Verify HTML and compare engine syntax
+        run: |
+          node --check public/mesh/ai-boardroom/compare/engine.mjs

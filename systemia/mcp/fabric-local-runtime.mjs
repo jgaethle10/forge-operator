@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
+import {renderForensiScopeBuyerPage} from './forensiscope-sales-page.mjs';
+import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -10,10 +12,12 @@ import { fileURLToPath } from 'node:url';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  matchFabricCapabilities,
   loadFabricCatalogFromRepository,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
+import {ownedDeveloperStatus,renderOwnedDeveloperPage} from './fabric-developer-site.mjs';
 import {
   offerCapabilityForSlug,
   offerPurchaseKeyForSlug,
@@ -35,6 +39,12 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
+import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignalInquiryAlertDispatcher } from './signal-public-inquiry.mjs';
+import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
+import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
+import {createPartnerApplicationHandler,createPartnerApplicationDispatcher} from './partners-public-inquiry.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -399,7 +409,15 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
+  paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
+  studioLeadsDir='',
+  signalLeadsDir=process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'',
+  signalIntakeKey=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||'',
+  findMyPartLeadsDir='',
+  findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
+  partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',
+  partnersIntakeKey=process.env.EVERCRAFT_PARTNERS_INTAKE_KEY_B64||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -411,6 +429,22 @@ export async function startFabricLocalRuntime({
   // resident mirrors, not whatever marker a later updater writes on disk.
   const sourceReleaseRef=readSourceReleaseRef(resolvedReleaseRefFile);
   let deploymentReceiptRef='';
+  const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
+  const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
+    onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
+  const signalAlertDispatcher=createSignalInquiryAlertDispatcher({folder:signalLeadsDir||undefined,key:signalIntakeKey});
+  const signalInquiry=createSignalBuyerInquiryHandler({storeDir:signalLeadsDir||undefined,key:signalIntakeKey,
+    onAlertQueued:()=>{if(signalAlertDispatcher.enabled)void signalAlertDispatcher.dispatch().catch(()=>{});}});
+  const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey});
+  const findMyPartInquiry=createFindMyPartInquiryHandler({storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
+    onAlertQueued:()=>{if(findMyPartAlertDispatcher.enabled)void findMyPartAlertDispatcher.dispatch().catch(()=>{});}});
+  const partnerAlertDispatcher=createPartnerApplicationDispatcher({
+    folder:partnersLeadsDir||undefined,key:partnersIntakeKey,
+  });
+  const partnerApplication=createPartnerApplicationHandler({
+    storeDir:partnersLeadsDir||undefined,key:partnersIntakeKey,
+    onAlertQueued:()=>{if(partnerAlertDispatcher.enabled)void partnerAlertDispatcher.dispatch().catch(()=>{});},
+  });
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
     const now=Date.now();
@@ -436,10 +470,11 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
-  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
-  }
+  const commerceTransport=ownedPaymentTransportConfig({purchaseIntentUrl,paymentOpsUrl});
+  const purchaseIntentEndpoint=commerceTransport.purchaseIntentEndpoint;
+  const directPaymentOpsEndpoint=commerceTransport.paymentOpsEndpoint;
+  // No Base44 fallback. Missing owned endpoints leave paid actions on hold.
+  const checkoutLegacyDependency=false;
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -556,7 +591,35 @@ export async function startFabricLocalRuntime({
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
+  const romanCampaignFile=path.resolve(moduleDir,'../../public/campaigns/roman/index.html');
+  const romanPointerFile=path.resolve(moduleDir,'../../public/campaigns/roman/continuity.json');
+  const romanCampaignPresent=()=>fs.existsSync(romanCampaignFile);
   const demoDir=path.resolve(moduleDir,'../../public/demos');
+  // Emergency service frontages use first-party source, never a hosted app.
+  // These are public presentation routes, not a booking backend or DNS cutover.
+  const ownedServicePages=new Map([
+    ['/eps','public/eps/index.html'],
+    ['/havenly','public/havenly/index.html'],
+    ['/sunshine-spotless','public/sunshine-spotless/index.html'],
+    ['/apps/eps-estimator','public/apps/eps-estimator/index.html'],
+  ]);
+  const ownedServiceHostRoutes=new Map([
+    ['evercraftpropertyservices.com','/eps/'],
+    ['www.evercraftpropertyservices.com','/eps/'],
+    ['havenlycleaning.com','/havenly/'],
+    ['www.havenlycleaning.com','/havenly/'],
+    ['sunshineandspotless.com','/sunshine-spotless/'],
+    ['www.sunshineandspotless.com','/sunshine-spotless/'],
+  ]);
+  const ownedPublicRoot=path.resolve(moduleDir,'../../');
+  const resolveOwnedServicePage=(pathname)=>{
+    const key=String(pathname||'').replace(/\/+$/,'');
+    const relative=ownedServicePages.get(key);
+    if(!relative)return null;
+    const target=path.resolve(ownedPublicRoot,relative);
+    if(!target.startsWith(ownedPublicRoot+path.sep))return null;
+    return fs.existsSync(target)&&fs.statSync(target).isFile()?target:null;
+  };
   const visualStateEphemeral=!String(visualStateDir||'').trim();
   const visualDir=path.resolve(
     visualStateDir||path.join(os.tmpdir(),'evercraft-visual-desk-'+instanceId)
@@ -611,13 +674,25 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     mcp_read_only:true,
-    human_offer_checkout_enabled:true,
+    human_offer_checkout_enabled:commerceTransport.fully_configured,
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
     payment_authority:'Evercraft Payments',
     payment_router:'Raven Nexus',
+    // This legacy field covers read-only MCP connections only, not payment.
     base44_transport_enabled:false,
+    checkout_transport_contract:'Evercraft Payments / Raven Nexus',
+    checkout_purchase_intent_legacy_dependency:false,
+    checkout_direct_offer_legacy_dependency:false,
+    checkout_legacy_dependency:false,
+    checkout_purchase_intent_configured:commerceTransport.purchase_intent_configured,
+    checkout_direct_offer_ops_configured:commerceTransport.direct_offer_ops_configured,
+    checkout_operational_state:commerceTransport.fully_configured
+      ? 'owned_transport_requires_independent_checkout_canary'
+      : 'held_owned_payment_endpoint_unconfigured',
+    checkout_provider_paid_verified:false,
+    checkout_fulfillment_verified:false,
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
     secure_tunnel_compatible:true,
@@ -645,12 +720,26 @@ export async function startFabricLocalRuntime({
     earthworks_simulator_authority:'interactive_software_simulation_only',
     chum_human_review_path_template:'/api/chum/go/{public_id}',
     chum_human_review_authority:'discovery_review_only',
+    roman_emergency_mirror_path:'/campaigns/roman/',
+    roman_owned_funnel_path:'/go/roman',
+    roman_owned_continuity_pointer_path:'/go/roman/links.json',
+    roman_owned_funnel_mode:'local_first_verified_backup_if_local_unavailable',
+    roman_owned_funnel_dns_interception:false,
+    roman_emergency_mirror_ready:romanCampaignPresent(),
+    roman_emergency_mirror_owner_review_required:true,
+    roman_domain_dns_cutover_verified:false,
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'index_follow_canonical_public_origin',
     demo_surface_path:'/demos/',
     demo_surface_ready:fs.existsSync(path.join(demoDir,'hvac-lead-recovery','index.html')),
     demo_surface_authority:'public_static_proof_only',
+    owned_service_frontage_routes:['/eps/','/havenly/','/sunshine-spotless/','/apps/eps-estimator/'],
+    owned_service_frontages_source_ready:[...ownedServicePages.values()].every(p=>fs.existsSync(path.resolve(ownedPublicRoot,p))),
+    owned_service_frontages_backend_intake_verified:false,
+    owned_service_frontages_dns_cutover_verified:false,
+    owned_service_custom_host_routing_source_ready:true,
+    owned_service_custom_domain_tls_verified:false,
     visual_desk_path:'/visuals/',
     visual_desk_ready:visualMirror.ready,
     visual_desk_story_count:visualMirror.count,
@@ -673,6 +762,83 @@ export async function startFabricLocalRuntime({
 
   const server=http.createServer(async(req,res)=>{
     try {
+      // Exact custom domains are standalone public frontages, not aliases
+      // for Fabric's discovery/commerce/internal routes.
+      const publicHost=String(req.headers.host||'').trim().toLowerCase().replace(/:\d+$/,'');
+      const publicServiceHome=ownedServiceHostRoutes.get(publicHost);
+      if(publicServiceHome){
+        const reqPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+        const isHome=(reqPath==='/'||reqPath==='/index.html');
+        const isEpsEstimator=publicServiceHome==='/eps/'&&
+          (reqPath==='/apps/eps-estimator'||reqPath==='/apps/eps-estimator/');
+        if((req.method!=='GET'&&req.method!=='HEAD')||(!isHome&&!isEpsEstimator)){
+          return sendJson(res,404,{ok:false,error:'service_public_path_not_found'});
+        }
+        const asset=resolveOwnedServicePage(isEpsEstimator?'/apps/eps-estimator/':publicServiceHome);
+        if(!asset)return sendJson(res,503,{ok:false,error:'owned_service_frontage_unavailable'});
+        const payload=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':'text/html; charset=utf-8',
+          'content-length':payload.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          // Keep unlaunched domains out of search until DNS, TLS and operator
+          // release evidence exists. This is NOT a verified SEO cutover.
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(payload);
+      }
+
+      // Public-safe availability signal. Hides unconfigured intake before a
+      // buyer tries to submit PII. Never exposes paths, key, identity or volume.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return sendJson(res,200,{schema:'evercraft.findmypart.intake-readiness.v1',
+          ...findMyPartInquiryReadiness({
+            storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
+          }),payment_ready:false,payment_verified:false});
+      }
+
+      // Founding-partner inquiries are encrypted before acknowledging receipt.
+      // A public application never activates an agent, contract, commission or payment.
+      const partnersRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(partnersRoute==='/api/partners/readiness'){
+        if(req.method!=='GET'&&req.method!=='OPTIONS')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return await partnerApplication(req,res);
+      }
+      if(partnersRoute==='/api/partners/inquiry'){
+        if(req.method==='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return await partnerApplication(req,res);
+      }
+
+      // Signal buyer requests are encrypted intake receipts, NOT payment orders.
+      const signalRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(signalRoute==='/api/signal/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        const state=signalBuyerIntakeReadiness({storeDir:signalLeadsDir||undefined,key:signalIntakeKey});
+        const caller=String(req.headers.origin||'');
+        const cors=(caller==='https://jgaethle10.github.io'||caller==='https://fabric.systemiacommandcenters.com')
+          ?{'access-control-allow-origin':caller,'vary':'origin'}:{'vary':'origin'};
+        return sendJson(res,200,{schema:'evercraft.signal.intake-readiness.v1',
+          ...state,payment_ready:false,payment_verified:false},cors);
+      }
+      if(signalRoute==='/api/signal/inquiry')return await signalInquiry(req,res);
+
+      // A separately bounded owned route accepts only consented FindMyPart part briefs.
+      // Customer content cannot create a paid order or an executable mission.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/inquiry'){
+        return await findMyPartInquiry(req,res);
+      }
+
+      // Only this bounded route accepts untrusted commercial inquiry data.
+      // It never invokes agents or checkout, sends email, or exposes stored leads.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/commercial-studio/inquiry'){
+        return await studioInquiry(req,res);
+      }
+
       if (req.method==='OPTIONS') {
         res.writeHead(204,{
           'access-control-allow-origin':'*',
@@ -689,6 +855,115 @@ export async function startFabricLocalRuntime({
 
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
+      }
+
+      // Developer recovery surface on the existing owned Fabric runtime.
+      // Read-only, no forwarding to provider-hosted MCPs returning HTTP 402.
+      if(req.method==='GET'){
+        const developerUrl=new URL(String(req.url||'/'),'http://fabric.local');
+        const pathname=developerUrl.pathname;
+        if(pathname==='/developers.json'){
+          return sendJson(res,200,ownedDeveloperStatus(preparedCatalog().capabilities,{
+            deploymentReceiptBound:health().deployment_receipt_bound===true,
+          }));
+        }
+        if(pathname==='/developers'||pathname==='/developers/'){
+          const capabilities=preparedCatalog().capabilities;
+          const intent=String(developerUrl.searchParams.get('intent')||'').trim().slice(0,200);
+          const matches=intent.length>=3
+            ? matchFabricCapabilities(intent,capabilities,{limit:6})
+            : [];
+          return sendText(res,200,renderOwnedDeveloperPage({
+            capabilities,matches,intent,
+            deploymentReceiptBound:health().deployment_receipt_bound===true,
+          }),{contentType:'text/html; charset=utf-8'});
+        }
+      }
+
+      // Public machine-readable rescue addresses. No original-domain routing change.
+      // Other Evercraft-controlled sites can consume these reviewed static endpoints.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/go/roman/links.json'){
+        if(req.method!=='GET'&&req.method!=='HEAD'){
+          return sendJson(res,405,{error:'method_not_allowed'},{allow:'GET, HEAD'});
+        }
+        try{
+          const bytes=fs.readFileSync(romanPointerFile);
+          const p=JSON.parse(bytes.toString('utf8'));
+          if(p.subject!=='voteroman.com'||
+             p.original_domain_auto_redirect_active!==false||
+             p.primary_evercraft_entry!=='https://fabric.systemiacommandcenters.com/go/roman'||
+             p.existing_donation_website!=='https://donate.voteroman.com/'){
+            return sendJson(res,503,{error:'continuity_pointer_integrity_failed'});
+          }
+          res.writeHead(200,{
+            'content-type':'application/json; charset=utf-8',
+            'content-length':bytes.length,
+            'cache-control':'no-store',
+            'access-control-allow-origin':'*',
+            'x-content-type-options':'nosniff',
+            'x-robots-tag':'noindex, nofollow',
+          });
+          return res.end(req.method==='HEAD'?undefined:bytes);
+        }catch{
+          return sendJson(res,503,{error:'continuity_pointer_unavailable'});
+        }
+      }
+
+      // Public informational continuation route on the Evercraft-controlled origin.
+      // Does NOT receive visits to voteroman.com until lawful DNS/hosting routing changes.
+      // No visitor attribution, URL query forwarding, outbound messages or cookies.
+      if (['/go/roman','/go/roman/'].includes(
+        new URL(String(req.url||'/'),'http://fabric.local').pathname
+      )) {
+        if(req.method!=='GET'&&req.method!=='HEAD'){
+          return sendJson(res,405,{error:'method_not_allowed'},{allow:'GET, HEAD'});
+        }
+        let html='';
+        try { if(romanCampaignPresent())html=fs.readFileSync(romanCampaignFile,'utf8'); }
+        catch { /* local copy may be unavailable; independently verify backup */ }
+        const decision=await resolveRomanContinuity({localHtml:html});
+        if(decision.status===302){
+          res.writeHead(302,{
+            location:decision.location,
+            'cache-control':'no-store',
+            'x-content-type-options':'nosniff',
+            'x-robots-tag':'noindex, nofollow',
+            'referrer-policy':'no-referrer',
+            'x-evercraft-continuity-route':decision.state,
+          });
+          return res.end();
+        }
+        return sendJson(res,503,{
+          state:'independent_campaign_information_unavailable',
+          original_domain_routing_not_modified:true,
+        });
+      }
+
+      // Independent, read-only campaign mirror. This route is *not* an apex-domain cutover.
+      // It cannot modify donation DNS, expose visitor data, or proxy the Base44 outage.
+      if ((req.method==='GET'||req.method==='HEAD') &&
+          ['/campaigns/roman','/campaigns/roman/'].includes(
+            new URL(String(req.url||'/'),'http://fabric.local').pathname
+          )) {
+        if (!romanCampaignPresent()) {
+          return sendJson(res,503,{error:'campaign_mirror_source_unavailable'});
+        }
+        const content=fs.readFileSync(romanCampaignFile,'utf8');
+        if (!content.includes('Roman Kilinkaridis') ||
+            !content.includes('https://donate.voteroman.com/') ||
+            !content.includes('</html>')) {
+          return sendJson(res,503,{error:'campaign_mirror_integrity_failed'});
+        }
+        const body=Buffer.from(content,'utf8');
+        res.writeHead(200,{
+          'content-type':'text/html; charset=utf-8',
+          'content-length':body.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          ...browserSecurityHeaders(),
+          'x-robots-tag':'noindex, nofollow',
+          'x-evercraft-campaign-source':'owned-fabric-static',
+        });
+        return res.end(req.method==='HEAD'?undefined:body);
       }
 
       if (req.method==='GET' && String(req.url||'').startsWith('/checkout/handoff/')) {
@@ -845,6 +1120,73 @@ export async function startFabricLocalRuntime({
         });
       }
 
+      // A first-party hosted copy uses the same static application as Pages and
+      // posts only to the controlled Partners API, never a payment handler.
+      const partnersPublicPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      const partnerAssets=new Map([
+        ['/partners','public/partners/index.html'],
+        ['/partners/','public/partners/index.html'],
+        ['/partners/index.html','public/partners/index.html'],
+        ['/partners/app.mjs','public/partners/app.mjs'],
+        ['/partners/mark.svg','public/partners/mark.svg'],
+        ['/partners/social-card.svg','public/partners/social-card.svg'],
+        ['/partners/terms.html','public/partners/terms.html'],
+        ['/partners/llms.txt','public/partners/llms.txt'],
+      ]);
+      if(partnerAssets.has(partnersPublicPath)){
+        if(req.method!=='GET'&&req.method!=='HEAD')return sendJson(res,405,{ok:false,error:'partners_public_read_only'});
+        const target=path.resolve(ownedPublicRoot,partnerAssets.get(partnersPublicPath));
+        if(!target.startsWith(ownedPublicRoot+path.sep)||!fs.existsSync(target))return sendJson(res,503,{ok:false,error:'partners_asset_unavailable'});
+        const data=fs.readFileSync(target);
+        const ext=path.extname(target);
+        res.writeHead(200,{
+          'content-type':ext==='.mjs'?'text/javascript; charset=utf-8':journalContentType(target),
+          'content-length':data.length,'cache-control':'no-store','x-content-type-options':'nosniff',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':ext==='.svg'?"default-src 'none'; sandbox":
+            "default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(data);
+      }
+
+      // FindMyPart brand frontage is staged on the owned Fabric origin only.
+      // No payment is processed here; no indexing until release acceptance.
+      const findMyPartPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      const findMyPartAssets=new Map([
+        ['/findmypart','public/findmypart/index.html'],
+        ['/findmypart/','public/findmypart/index.html'],
+        ['/findmypart/index.html','public/findmypart/index.html'],
+        ['/findmypart/app.mjs','public/findmypart/app.mjs'],
+        ['/findmypart/sample-report','public/findmypart/sample-report/index.html'],
+        ['/findmypart/sample-report/','public/findmypart/sample-report/index.html'],
+        ['/findmypart/brand/mark.svg','public/findmypart/brand/mark.svg'],
+        ['/findmypart/brand/hero-gear.jpg','public/findmypart/brand/hero-gear.jpg'],
+        ['/findmypart/brand/wordmark.svg','public/findmypart/brand/wordmark.svg'],
+        ['/findmypart/brand/launch-landscape.svg','public/findmypart/brand/launch-landscape.svg'],
+        ['/findmypart/brand/launch-portrait.svg','public/findmypart/brand/launch-portrait.svg'],
+      ]);
+      if(findMyPartAssets.has(findMyPartPath)){
+        if(req.method!=='GET'&&req.method!=='HEAD')return sendJson(res,405,{ok:false,error:'findmypart_public_route_read_only'});
+        const target=path.resolve(ownedPublicRoot,findMyPartAssets.get(findMyPartPath));
+        if(!target.startsWith(ownedPublicRoot+path.sep)||!fs.existsSync(target))return sendJson(res,503,{ok:false,error:'findmypart_launch_artifact_unavailable'});
+        const payload=fs.readFileSync(target);
+        const svg=findMyPartPath.endsWith('.svg');
+        const script=findMyPartPath.endsWith('.mjs');
+        const photo=findMyPartPath.endsWith('.jpg');
+        res.writeHead(200,{
+          'content-type':svg?'image/svg+xml; charset=utf-8':photo?'image/jpeg':script?'text/javascript; charset=utf-8':'text/html; charset=utf-8',
+          'content-length':payload.length,
+          'cache-control':'no-store',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':svg||photo?"default-src 'none'; style-src 'unsafe-inline'; sandbox":"default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'", /* Read-only static assets, front-end JS only. */
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(payload);
+      }
+
       if (req.method==='GET' && req.url==='/') {
         return sendText(
           res,
@@ -863,6 +1205,10 @@ export async function startFabricLocalRuntime({
         );
       }
 
+      if(req.method==='GET' && (req.url==='/forensiscope'||req.url==='/forensiscope/')) {
+        return sendText(res,200,renderForensiScopeBuyerPage(),{contentType:'text/html; charset=utf-8'});
+      }
+
       if (req.method==='POST' && String(req.url||'').startsWith('/api/offers/')) {
         const parsed=new URL(String(req.url||''),'http://fabric.local');
         const match=parsed.pathname.match(/^\/api\/offers\/([a-z0-9-]+)\/checkout$/i);
@@ -872,6 +1218,23 @@ export async function startFabricLocalRuntime({
         const directOffer=publicPaymentOffer(slug);
         const capabilityKey=offerPurchaseKeyForSlug(slug);
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        // A published Signal SKU does not confer payment authority before scope
+        // approval and exact provider-accepted native checkout evidence.
+        if(directOffer?.native_order_enabled===false){
+          return sendJson(res,409,{
+            ok:false,
+            error:'offer_requires_scope_acceptance',
+            authority:'Evercraft Payments',
+            offer_key:directOffer.offer_key,
+            amount_cents:directOffer.amount_cents,
+            currency:directOffer.currency,
+            checkout_ready:false,
+            order_created:false,
+            fulfillment_release:false,
+            scope_url:'https://jgaethle10.github.io/forge-operator/signal/#request'
+          });
+        }
+
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
@@ -909,6 +1272,11 @@ export async function startFabricLocalRuntime({
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),15000);
         let upstream;
+        // A working public offer page never authorizes a provider fallback.
+        if(!purchaseIntentEndpoint||!directPaymentOpsEndpoint){
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug,noAttempt:true}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,503,{ok:false,error:'owned_evercraft_payments_unavailable',authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false});
+        }
         try{
           if(slug==='website-audit'){
             // Confirm the downstream runtime can retain the target before purchase.
@@ -925,7 +1293,7 @@ export async function startFabricLocalRuntime({
             }
             auditedDomain=ready.audited_domain;
           }
-          upstream=await purchaseIntentFetch(directOffer?new URL('https://findmypart.base44.app/functions/evercraftPaymentsOps'):purchaseIntentEndpoint,{
+          upstream=await purchaseIntentFetch(directOffer?directPaymentOpsEndpoint:purchaseIntentEndpoint,{
             method:'POST',
             headers:{
               'content-type':'application/json',
@@ -935,8 +1303,8 @@ export async function startFabricLocalRuntime({
             body:JSON.stringify(directOffer?{
               action:'create_checkout',offer_key:directOffer.offer_key,
               order_key:buyerOrderKey(slug,idempotencyKey),customer_email:customerRef,
-              source_ref:'fabric-native-offer|'+slug,return_origin:'https://findmypart.base44.app',
-              success_path:'/functions/evercraftBuy?payment=processing',cancel_path:'/functions/evercraftBuy?offer='+slug+'&payment=cancelled',
+              source_ref:'fabric-native-offer|'+slug,return_origin:'https://fabric.systemiacommandcenters.com',
+              success_path:'/offers/'+slug+'?payment=processing',cancel_path:'/offers/'+slug+'?payment=cancelled',
             }:{
               user_confirmed:true,
               capability_key:capabilityKey,
@@ -946,6 +1314,11 @@ export async function startFabricLocalRuntime({
             }),
             signal:controller.signal,
           });
+        }catch{
+          // Network, TLS and timeout failures never silently initiate a retry
+          // or claim an order was persisted. Offer owner-assisted recovery.
+          if(isForm)return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,503,{ok:false,error:'owned_evercraft_payments_unreachable',authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false});
         }finally{
           clearTimeout(timer);
         }
@@ -1038,6 +1411,7 @@ export async function startFabricLocalRuntime({
         '/llms.txt':['../../public/llms.txt','text/plain; charset=utf-8'],
         '/llms-full.txt':['../../public/llms-full.txt','text/plain; charset=utf-8'],
         '/.well-known/evercraft-chum.json':['../../public/.well-known/evercraft-chum.json','application/json; charset=utf-8'],
+        '/.well-known/evercraft-commercial-readiness.json':['../../public/.well-known/evercraft-commercial-readiness.json','application/json; charset=utf-8'],
       };
       if(req.method==='GET'&&Object.hasOwn(discoveryFiles,req.url)){
         const [relative,contentType]=discoveryFiles[req.url];
@@ -1045,7 +1419,7 @@ export async function startFabricLocalRuntime({
       }
       if(req.method==='GET'&&req.url==='/robots.txt')return sendText(res,200,'User-agent: *\nAllow: /\nSitemap: https://fabric.systemiacommandcenters.com/sitemap.xml\n',{contentType:'text/plain; charset=utf-8'});
       if(req.method==='GET'&&req.url==='/sitemap.xml'){
-        const urls=['https://fabric.systemiacommandcenters.com/','https://fabric.systemiacommandcenters.com/offers',...listHumanOffers(preparedCatalog().capabilities).map(x=>x.url)];
+        const urls=['https://fabric.systemiacommandcenters.com/','https://fabric.systemiacommandcenters.com/offers','https://fabric.systemiacommandcenters.com/forensiscope',...listHumanOffers(preparedCatalog().capabilities).map(x=>x.url)];
         return sendText(res,200,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls.map(url=>'<url><loc>'+url+'</loc></url>').join('')+'</urlset>',{contentType:'application/xml; charset=utf-8'});
       }
 
@@ -1060,14 +1434,14 @@ export async function startFabricLocalRuntime({
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
           if(parsed.searchParams.get('payment')==='processing'){
-            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch);
+            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch,directPaymentOpsEndpoint);
             const message=result.state==='paid'?'Payment verified. '+(result.queued?'Your work is queued.':'Delivery status is awaiting confirmation.'):
               result.state==='synthetic'?'QA payment verified. No fulfillment was released.':
               result.state==='invalid'?'Checkout return cannot be verified. Do not pay twice. Contact Evercraft using your checkout email.':
               'Payment verification pending. Do not pay again. Refresh this page later or contact Evercraft.';
             return sendText(res,result.status,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Evercraft Payments</title></head><body style="background:#0b1120;color:#ecf1fa;font:18px/1.6 system-ui;padding:32px;max-width:720px;margin:auto"><h1>Evercraft Payments</h1><p>'+message+'</p><a style="color:#9debdc" href="/support">Contact support</a></body></html>',{contentType:'text/html; charset=utf-8'});
           }
-          const page=renderOfferPage(offer);
+          const page=renderOfferPage(offer,{checkoutConfigured:commerceTransport.fully_configured});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
@@ -1227,6 +1601,25 @@ export async function startFabricLocalRuntime({
         }
       }
 
+      if(req.method==='GET'||req.method==='HEAD'){
+        const pathname=new URL(String(req.url||''),'http://fabric.local').pathname;
+        const servicePage=resolveOwnedServicePage(pathname);
+        if(servicePage){
+          const payload=fs.readFileSync(servicePage);
+          res.writeHead(200,{
+            'content-type':'text/html; charset=utf-8',
+            'content-length':payload.length,
+            'cache-control':'public, max-age=60, must-revalidate',
+            'x-content-type-options':'nosniff',
+            'x-robots-tag':'noindex, nofollow',
+            'referrer-policy':'no-referrer',
+            'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+          });
+          if(req.method==='HEAD')return res.end();
+          return res.end(payload);
+        }
+      }
+
       if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/journal')) {
         const asset=resolveJournalAsset(journalDir,String(req.url||''));
         if(!asset) return sendJson(res,404,{error:'journal_asset_not_found'});
@@ -1344,6 +1737,23 @@ export async function startFabricLocalRuntime({
     server.listen(port,host,resolve);
   });
 
+  if(studioAlertDispatcher.enabled){
+    studioAlertDispatcher.start();
+    void studioAlertDispatcher.dispatch().catch(()=>{});
+  }
+  if(signalAlertDispatcher.enabled){
+    signalAlertDispatcher.start();
+    void signalAlertDispatcher.dispatch().catch(()=>{});
+  }
+  if(findMyPartAlertDispatcher.enabled){
+    findMyPartAlertDispatcher.start();
+    void findMyPartAlertDispatcher.dispatch().catch(()=>{});
+  }
+  if(partnerAlertDispatcher.enabled){
+    partnerAlertDispatcher.start();
+    void partnerAlertDispatcher.dispatch().catch(()=>{});
+  }
+
   const address=server.address();
   const actualPort=typeof address==='object'&&address?address.port:port;
   const url=`http://${host}:${actualPort}`;
@@ -1363,6 +1773,10 @@ export async function startFabricLocalRuntime({
       return health();
     },
     close:async()=>{
+      studioAlertDispatcher.stop();
+      signalAlertDispatcher.stop();
+      findMyPartAlertDispatcher.stop();
+      partnerAlertDispatcher.stop();
       await faieSurface?.close();
       await new Promise((resolve,reject)=>
         server.close((error)=>error?reject(error):resolve())

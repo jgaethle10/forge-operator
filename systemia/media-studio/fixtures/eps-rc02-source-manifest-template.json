@@ -1,0 +1,113 @@
+{
+  "schema": "evercraft.eps.real-performance-intake.v1",
+  "productionId": "eps-rc02-real-footage",
+  "actualEPSJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+  "verifiedEstimateUrl": "https://REPLACE_WITH_VERIFIED_EPS_ESTIMATE_URL",
+  "excludedPreviousAssetDigests": [],
+  "clips": [
+    {
+      "sceneId": "site-first-look",
+      "path": "/private/eps-rc02/site-first-look.mp4",
+      "mediaType": "real_recorded_video",
+      "rights": "owned",
+      "motionVerifiedByHuman": false,
+      "commercialUseApproved": false,
+      "epsJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+      "clientJobPermissionRef": "",
+      "propertyFilmingPermissionRef": "",
+      "personConsentRef": "",
+      "sourceRefs": [],
+      "reviewRefs": [],
+      "observedSubjects": [
+        "speaking-human",
+        "visible-human-action"
+      ]
+    },
+    {
+      "sceneId": "crew-response",
+      "path": "/private/eps-rc02/crew-response.mp4",
+      "mediaType": "real_recorded_video",
+      "rights": "owned",
+      "motionVerifiedByHuman": false,
+      "commercialUseApproved": false,
+      "epsJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+      "clientJobPermissionRef": "",
+      "propertyFilmingPermissionRef": "",
+      "personConsentRef": "",
+      "sourceRefs": [],
+      "reviewRefs": [],
+      "observedSubjects": [
+        "speaking-human",
+        "visible-human-action"
+      ]
+    },
+    {
+      "sceneId": "clear-the-space",
+      "path": "/private/eps-rc02/clear-the-space.mp4",
+      "mediaType": "real_recorded_video",
+      "rights": "owned",
+      "motionVerifiedByHuman": false,
+      "commercialUseApproved": false,
+      "epsJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+      "clientJobPermissionRef": "",
+      "propertyFilmingPermissionRef": "",
+      "personConsentRef": "",
+      "sourceRefs": [],
+      "reviewRefs": [],
+      "observedSubjects": [
+        "visible-human-action"
+      ]
+    },
+    {
+      "sceneId": "work-the-detail",
+      "path": "/private/eps-rc02/work-the-detail.mp4",
+      "mediaType": "real_recorded_video",
+      "rights": "owned",
+      "motionVerifiedByHuman": false,
+      "commercialUseApproved": false,
+      "epsJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+      "clientJobPermissionRef": "",
+      "propertyFilmingPermissionRef": "",
+      "personConsentRef": "",
+      "sourceRefs": [],
+      "reviewRefs": [],
+      "observedSubjects": [
+        "visible-human-action"
+      ]
+    },
+    {
+      "sceneId": "reveal-the-work",
+      "path": "/private/eps-rc02/reveal-the-work.mp4",
+      "mediaType": "real_recorded_video",
+      "rights": "owned",
+      "motionVerifiedByHuman": false,
+      "commercialUseApproved": false,
+      "epsJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+      "clientJobPermissionRef": "",
+      "propertyFilmingPermissionRef": "",
+      "personConsentRef": "",
+      "sourceRefs": [],
+      "reviewRefs": [],
+      "observedSubjects": [
+        "visible-human-action"
+      ]
+    },
+    {
+      "sceneId": "moving-signoff",
+      "path": "/private/eps-rc02/moving-signoff.mp4",
+      "mediaType": "real_recorded_video",
+      "rights": "owned",
+      "motionVerifiedByHuman": false,
+      "commercialUseApproved": false,
+      "epsJobRef": "REPLACE_WITH_PRIVATE_SAME_JOB_ID",
+      "clientJobPermissionRef": "",
+      "propertyFilmingPermissionRef": "",
+      "personConsentRef": "",
+      "sourceRefs": [],
+      "reviewRefs": [],
+      "observedSubjects": [
+        "visible-human-action"
+      ]
+    }
+  ]
+}

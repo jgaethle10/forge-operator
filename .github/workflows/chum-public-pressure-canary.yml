@@ -1,0 +1,41 @@
+name: CHUM public pressure canary
+on:
+  pull_request:
+    paths:
+      - 'systemia/chum/public-pressure-canary.mjs'
+      - '.github/workflows/chum-public-pressure-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static syntax validation
+        run: node --check systemia/chum/public-pressure-canary.mjs
+      - name: Probe public discovery and Stripe HTTP reachability
+        id: probe
+        continue-on-error: true
+        env:
+          CHUM_RECEIPT_PATH: ${{ runner.temp }}/chum-public-canary.json
+        run: node systemia/chum/public-pressure-canary.mjs
+      - name: Upload truthful diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-public-pressure-receipt
+          path: ${{ runner.temp }}/chum-public-canary.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Preserve observed failures
+        if: steps.probe.outcome == 'failure'
+        run: |
+          echo 'One or more public routes BLOCKED or UNOBSERVED. No buyer checkout rendering or revenue is proven.'
+          exit 1

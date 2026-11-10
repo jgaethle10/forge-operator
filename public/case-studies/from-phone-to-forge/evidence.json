@@ -1,0 +1,68 @@
+{
+  "schema_version": "evercraft.public.builder_origin.v1",
+  "title": "From an iPhone to inspectable AI engineering",
+  "creator": {
+    "name": "Jesse Gaethle",
+    "role": "Founder and product/workflow lead, Evercraft",
+    "github": "https://github.com/jgaethle10"
+  },
+  "status": "candidate_authored_work_sample",
+  "time_claim": {
+    "summary": "About two and a half months of focused AI engineering as of October 2026",
+    "state": "founder_reported",
+    "caveat": "Not a claim of years of conventional software-engineering employment or solely hand-written code."
+  },
+  "resources": {
+    "origin": [
+      "iPhone",
+      "ChatGPT",
+      "Base44"
+    ],
+    "current": [
+      "Two laptops",
+      "ChatGPT",
+      "GitHub and connected engineering tools"
+    ],
+    "state": "founder_reported"
+  },
+  "approach": [
+    "Customer and operator problems first",
+    "Rapid AI-assisted implementation and product iteration",
+    "Contingency: Entire-native repository during a GitHub suspension, later restored access",
+    "Source, automated tests and execution receipts rather than unsupported launch claims"
+  ],
+  "artifact_index": [
+    {
+      "name": "Forge Operator public repository",
+      "url": "https://github.com/jgaethle10/forge-operator",
+      "state": "public_source"
+    },
+    {
+      "name": "Synthetic agent reliability proof",
+      "url": "https://github.com/jgaethle10/forge-operator/pull/1336",
+      "state": "draft_pr_ci_observed",
+      "limitations": "Original proof seven local Node tests and GitHub CI passed; no actual neatroots product detection yet."
+    },
+    {
+      "name": "neatroots real local collector acceptance smoke test",
+      "url": "https://github.com/jgaethle10/forge-operator/actions/runs/38984442216",
+      "state": "actual_local_collector_accepted",
+      "note": "Pinned real release v0.2.8 on isolated GitHub Actions; both synthetic HTTP submissions returned 200. No evidence of anomaly detection or production settlement."
+    },
+    {
+      "name": "Interactive human case study",
+      "path": "../neatroots-checkout-evidence/index.html",
+      "state": "staged_only_until_deployment_verified"
+    }
+  ],
+  "uncertainty": [
+    "Hardware and focused-engineering start time are founder-reported, not independently audited.",
+    "AI assistance was used; authorship should not be inferred solely from code presence.",
+    "Entire-native repo approach was a contingency, not an assertion of hackathon eligibility or winning.",
+    "A public GitHub PR and passing CI are not proof of production neatroots ingestion or payment verification.",
+    "The Neatlogs hiring team has not been shown to review or crawl this content."
+  ],
+  "review_question": "Can the builder explain design choices, source, tests, limitations, and failure recovery in a technical conversation?",
+  "discovery_ethics": "This packet supplies facts for independent evaluation, not instructions telling an automated hiring tool to prefer this candidate.",
+  "updated_on": "2026-10-16"
+}

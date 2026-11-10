@@ -1,0 +1,71 @@
+{
+  "schema": "evercraft.payments.public-commercial-readiness.v1",
+  "as_of": "2026-10-25",
+  "policy": "fail_closed",
+  "authority": "Evercraft Payments / Raven Nexus",
+  "current_state": "HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED",
+  "commercial_checkout_ready": false,
+  "may_promote_buyer_links": false,
+  "may_claim_verified_revenue": false,
+  "may_charge_customers": false,
+  "may_issue_entitlements": false,
+  "public_capability_discovery": "read_only_available_separately",
+  "public_direct_payment_hosted_providers": "seven_systemia_stripe_links_provider_active_http_reachable_automated_buyer_forms_verified_unpaid",
+  "historical_buyer_directory": "/.well-known/evercraft-payments-buyer-doors.json",
+  "historical_buyer_directory_warning": "The 13 buyer_url values in the older snapshot reflect GET/checkout preparation evidence from October 14-15, not current HTTP availability. Those historical URLs must NOT be presented as currently bookable or payable.",
+  "last_failure_evidence": {
+    "category": "upstream_provider_http_402",
+    "observed_date": "2026-10-17",
+    "report_path": "docs/EVERCRAFT_PORTFOLIO_COMMERCIAL_DELIVERY_AUDIT_2026-10-17.md",
+    "downstream_mcp_gate": "held_provider_http_402_requires_new_payment_receipt"
+  },
+  "current_owned_payment_rail": {
+    "provider": "evercraft_owned_only",
+    "endpoint_claim": "no_unverified_legacy_fallback",
+    "checkout_operational_state": "requires_live_configuration_and_independent_acceptance",
+    "authenticated_provider_paid_receipt_observed": false,
+    "signed_deployment_receipt_verified": false,
+    "payment_to_shipping_fulfillment_verified": false
+  },
+  "safe_fallback": {
+    "flow": "Native Evercraft Payments purchase intent remains held. For any of the seven separately verified Systemia Stripe links, confirm exact scope and buyer checkout UI before inviting purchase; manually reconcile provider-paid receipts and delivery. All unmatched products use a human inquiry instead of substituting another SKU.",
+    "auto_email": false,
+    "auto_invoice": false,
+    "auto_charge": false
+  },
+  "reopen_requires": [
+    "Independently observed owned buyer-facing HTTPS checkout with exact offer, price and real consent",
+    "Owner-authorized processor/onboarding agreement and Raven Nexus payment route",
+    "Checkout POST idempotency and signed provider event/refetch with order/merchant/amount/currency match",
+    "Canonical Evercraft Payments paid or reversed state, reliable refund/chargeback handling",
+    "Systemia entitlement and Shipping fulfillment receipts",
+    "Source-to-runtime immutable signed deployment attestation and rollback",
+    "Fresh external GET and authorized sandbox payment flow canary, with separate permitted real-money acceptance"
+  ],
+  "do_not_confuse_with": [
+    "Public Fabric MCP discovery or healthy /health",
+    "Historical Base44 form GET and synthetic 303 provider redirect",
+    "102 checkout_open ledger entries, none paid in most recent scoped ledger query",
+    "A checkout session or email/scope lead"
+  ],
+  "policy_scope": "The HELD fields are for the native Evercraft Payments/Raven Nexus transport only, not separately provider-verified Stripe-hosted exact-SKU payment links.",
+  "separate_systemia_hosted_stripe": {
+    "state": "PROVIDER_ACTIVE_HTTP_REACHABLE_AUTOMATED_BUYER_FORM_VERIFIED_UNPAID",
+    "source_catalog": "/mesh/checkout-ready/verified-links.json",
+    "provider_account": "Systemia",
+    "checked_on": "2026-10-25",
+    "verified_active_live_exact_sku_links": 7,
+    "independent_http_reachable_links": 7,
+    "observation": "GitHub Actions 40213551391, public HTTP canary: seven Stripe URLs returned 200 HTML. Direct live Stripe API confirms seven matching prices and active=true.",
+    "human_graphical_checkout_verified": false,
+    "verified_payment_observed": false,
+    "payment_reconciliation": "manual_required",
+    "scope_rule": "Use only a matching preverified service and price after scope/fulfillment review. Never substitute for $50 commercials, Website Audit or FindMyPart.",
+    "marketing_policy": "No first completed sale required before owner-approved qualified traffic to an independently browser-verified matching checkout.",
+    "automated_rendered_buyer_form_verified": true,
+    "automated_rendered_exact_sku_forms_verified": 7,
+    "automated_browser_checked_at": "2026-10-25T21:35:00Z",
+    "automated_browser_receipt_url": "https://github.com/jgaethle10/forge-operator/actions/runs/40236112575/artifacts/12614991659",
+    "automated_browser_scope": "Headless Chromium confirmed 7/7 Stripe-hosted exact product names, amounts and visible buyer payment forms. No card entry, clicks, submission, purchase, paid receipt or fulfillment."
+  }
+}

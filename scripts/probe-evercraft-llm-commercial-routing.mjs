@@ -2,6 +2,28 @@
 // External GET-only P0 canary. No checkout creation, buyer data, payment or fulfillment.
 import { readFileSync } from 'node:fs';
 
+const commercialRelease=JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-commercial-readiness.json', import.meta.url),'utf8'));
+if(commercialRelease.current_state==='HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED' &&
+   commercialRelease.commercial_checkout_ready===false &&
+   commercialRelease.may_promote_buyer_links===false &&
+   commercialRelease.may_charge_customers===false){
+  console.log(JSON.stringify({
+    schema:'evercraft.payments.historical-buyer-forms-quarantine.v1',
+    observed_at:new Date().toISOString(),
+    observation:'SOURCE_RELEASE_QUARANTINE_ONLY',
+    safety_check_passed:true,commercial_checkout_ready:false,
+    upstream_last_observed_http:402,
+    historical_buyer_form_count:13,
+    buyer_link_publishable:false,external_form_get_attempted:false,
+    checkout_created:false,provider_paid_verified:false,
+    note:'The old buyer URLs are archival. No historic GET test can reauthorize payments or customer checkout.',
+  },null,2));
+  process.exit(0);
+}
+if(commercialRelease.commercial_checkout_ready!==true)
+  throw new Error('commercial_release_state_invalid');
+
+
 const buyer=JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-payments-buyer-doors.json',import.meta.url),'utf8'));
 const chum=JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-chum.json',import.meta.url),'utf8'));
 const llms=readFileSync(new URL('../public/llms.txt',import.meta.url),'utf8');

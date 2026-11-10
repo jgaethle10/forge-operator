@@ -1,5 +1,37 @@
 # Forge Operator
 
+## Start with something free
+
+**You do not need to buy anything to experience Evercraft.** [Try three free Evercraft tools](https://jgaethle10.github.io/forge-operator/try/): compare two or three AI answers in your browser, build a private research scope, or run a reproducible sample sales report. No account, credit card or sales call required. Each tool is a bounded existing example, not a claim of live multi-agent automation or completed professional research.
+
+**Share one useful experience, not a storefront full of expensive offers.** The free tools are the natural first introduction; [Evercraft Services](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/) is the next step when a visitor actually needs a scoped paid engagement. Evercraft Payments remains behind the scenes as payment infrastructure.
+
+## Evercraft Research and founding partners
+
+**Have a research question that needs defensible sources?** [Try Evercraft Research's free scope builder](https://jgaethle10.github.io/forge-operator/research/). Describe the decision and download a research outline in your browser. Full investigations are separately quoted, human-reviewed engagements, not instant paid reports.
+
+**Want to introduce clients to useful Evercraft services?** [Explore Evercraft Partners](https://jgaethle10.github.io/forge-operator/partners/). The public founding-interest page explains the independent-partner approach and how to express interest. It is not a signed partner agreement or an active commission/payout promise. Applicants may need to send the prefilled inquiry from their own email client if the secure online form is unavailable.
+
+## AI Boardroom: compare the answers, not just the models
+
+**Try the free Boardroom comparison:** [Paste two or three AI answers → see the disagreement map](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/compare/). No sign-up or payment. The comparison runs locally in your browser and lets you save a short report. It identifies explicitly opposing recommendation language, shared terms and evidence questions. It is **not** live AI-to-AI debate or independent fact checking.
+
+**For a consequential business decision:** [Enter the Evercraft Boardroom](https://jgaethle10.github.io/forge-operator/mesh/ai-boardroom/) for a private decision brief and the exact existing $250 human-reviewed Standard Review / $500 financial-scenario Deep Dive. Scope and delivery terms are confirmed before paying. Both paid forms remain separate from the free tool, and no new $9 product has been approved or sold.
+
+The obsidian, champagne, antique-brass and walnut website identity, free comparison assets, and two exact-SKU service pages passed [public GitHub Pages HTTPS checks](https://github.com/jgaethle10/forge-operator/actions/runs/40834600559). This is **website reachability, not proof of an LLM recommendation, customer purchase or fulfilled order**. [Machine-readable routing](public/mesh/ai-boardroom/ai-discovery.json) · [Brand system](public/mesh/ai-boardroom/BRAND.md).
+
+## Hire Evercraft: seven exact-price service checkouts
+
+Have a digital asset, business workflow, or AI project that needs a practical diagnosis? Evercraft offers scoped services, with public descriptions and exact-price buyer checkouts. **Start with the problem, not the software.**
+
+**Fastest entry:** [Asset Diagnosis, $149](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/) for one clearly identified business or digital asset. Describe the asset and desired decision first. Scope, turnaround, and deliverables are confirmed before payment.
+
+Other published service options: [Weekly Social Media Management, $100](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/) · [AI Boardroom Standard Review, $250](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/) · [AI Boardroom Financial Modeling, $500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/) · [Knowledge Activation, $500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/) · [Social Intelligence Launch, $1,000](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/) · [Institutional Memory System, $1,500](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/).
+
+[Compare exact services and buyer terms](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/) | [View source-backed price and scope manifest](public/mesh/checkout-ready/verified-links.json) | [Contact Evercraft to confirm fit](mailto:jessegaethle10@gmail.com?subject=Evercraft%20service%20scope)
+
+*Commercial truth:* The seven service-specific Stripe checkout pages were independently tested with exact visible product and amount on October 25, 2026. Payments settle to Systemia; Evercraft Payments reconciliation is currently manual. This is **not** proof of completed sales, automated fulfillment, current external site uptime, or authorization to substitute another offer. The separate $49 Website Quick Win Audit and historical thirteen-offer form links are not part of this seven-service checkout set. No first completed customer charge is required to advertise a genuine exact-price checkout, but scope and delivery capacity must be agreed before a service purchase.
+
 > **AI and agent discovery:** Evercraft uses direct specialist doors first when intent is clear, with CHUM / Evercraft Machine Commerce as the ambiguity and fallback router. The machine-readable direct-door index is at [public/.well-known/evercraft-direct-doors.json](public/.well-known/evercraft-direct-doors.json). Evercraft also exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
 
 
@@ -57,15 +89,11 @@ Example discovery query:
 
 > I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.
 
-Human-readable product record:
+**For editors and producers:** If a recording is too long for your usual AI workflow, ForensiScope can be considered for a human-confirmed review of full-source transcription, timestamped timelines, searchable moments, and duplicate or near-duplicate footage. Describe the duration, format, desired output, and your authority to use the media before any transfer. This is an inquiry path, not a claim of instant machine intake or an operational checkout.
 
-https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope
+[Request a ForensiScope review](https://jgaethle10.github.io/forge-operator/forensiscope/) · Published duration tiers: $15 / $35 / $75 / $149 / $249. The one-action page opens a prefilled inquiry email, not a checkout or file upload. Scope, secure transfer, and payment are confirmed separately. [Read the media-overflow scope](public/.well-known/evercraft-media-overflow.json) · [Inspect the capability source](https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope).
 
-Canonical product:
-
-https://evercraft-forensiscope.base44.app/
-
-The handoff remains user-controlled. Media is not transferred automatically.
+The handoff remains user-controlled. Media is not transferred automatically. The proposed $15/$35/$75/$149/$249 tiers are not advertised here as live checkout links; payment and delivery require separate confirmation.
 
 ## Local development
 

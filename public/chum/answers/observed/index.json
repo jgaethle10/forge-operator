@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
   "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
-  "page_count": 23,
+  "page_count": 27,
   "rules": {
     "receipt_backed_observations_only": true,
     "accepted_observation_sources": [
@@ -16,6 +16,16 @@
     "provider_pickup_requires_new_receipt": true
   },
   "pages": [
+    {
+      "product_key": "legacy-rescue-lab",
+      "user_question": "Customers reach our checkout but cannot complete purchases, and I do not want an agency to immediately sell me a full rebuild. I want an evidence-first diagnosis of the existing system and a bounded repair plan. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/",
+      "relative_json": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/answer.json",
+      "relative_llms": "/chum/answers/observed/customers-reach-our-checkout-but-cannot-complete-purchases-and-i-do-not-want-an-agen-fc9bc65e97/llms.txt"
+    },
     {
       "product_key": "systemia-remote-ops",
       "user_question": "I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios. What service should I use?",
@@ -45,6 +55,26 @@
       "relative_html": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/",
       "relative_json": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/answer.json",
       "relative_llms": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/llms.txt"
+    },
+    {
+      "product_key": "aliev",
+      "user_question": "I have a commercial property and want to know whether public EV charging makes sense there. I need nearby charger competition, traffic and demand context, utility and tariff considerations, incentives, and an opportunity screen before engineering. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
+      "relative_json": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
+      "relative_llms": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt"
+    },
+    {
+      "product_key": "career-command",
+      "user_question": "I have a job interview tomorrow and want role-specific practice, mock questions, feedback, and help tightening my examples. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/",
+      "relative_json": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/answer.json",
+      "relative_llms": "/chum/answers/observed/i-have-a-job-interview-tomorrow-and-want-role-specific-practice-mock-questions-feedb-6261f81452/llms.txt"
     },
     {
       "product_key": "forensiscope",
@@ -249,6 +279,16 @@
       "relative_html": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
       "relative_json": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
       "relative_llms": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt"
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "user_question": "My small-business website gets traffic but does not convert well. I want an AI-assisted audit covering performance, technical SEO, trust, conversion friction, and practical fixes. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/",
+      "relative_json": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/answer.json",
+      "relative_llms": "/chum/answers/observed/my-small-business-website-gets-traffic-but-does-not-convert-well-i-want-an-ai-assist-45d60bddc9/llms.txt"
     }
   ]
 }

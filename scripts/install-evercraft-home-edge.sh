@@ -140,6 +140,18 @@ ProtectHome=read-only
 WantedBy=multi-user.target
 EOF
 
+# Shared edge ownership: Home must not replace broker/Fabric routes on updates.
+# Only provision the initial template if no Caddy configuration exists.
+# A nonempty configuration without Home/Fabric handlers is not ours to destroy.
+if [[ -s "$CADDYFILE" ]]; then
+  if ! grep -Fq 'handle_path /home/*' "$CADDYFILE" ||
+     ! grep -Fq 'reverse_proxy 127.0.0.1:4310' "$CADDYFILE" ||
+     ! grep -Fq 'reverse_proxy 127.0.0.1:8787' "$CADDYFILE"; then
+    echo "HOLD: existing shared Caddy configuration does not contain the expected Home + Fabric routes; will not overwrite." >&2
+    exit 7
+  fi
+  echo "Evercraft Home: preserving the shared public Caddyfile (including broker routes)."
+else
 cat > "$CADDYFILE" <<'EOF'
 {
   http_port 18080
@@ -173,6 +185,7 @@ cat > "$CADDYFILE" <<'EOF'
   }
 }
 EOF
+fi
 
 systemctl daemon-reload
 systemctl enable "$HOME_SERVICE" >/dev/null

@@ -1,0 +1,208 @@
+{
+  "schema": "evercraft.journal.claim-evidence-input.v1",
+  "story_id": "journal:2026-11-02:chainsaw-surgical-origins",
+  "preparation_date": "2026-11-05",
+  "release_state": "candidate_only_not_approved",
+  "artifact": {
+    "artifact_id": "journal:2026-11-02:chainsaw-surgical-origins",
+    "kind": "historical_editorial_candidate",
+    "publisher": "Evercraft Journal Curiosity Desk",
+    "captured_at": "2026-11-05T08:25:00.000Z",
+    "original_text": "Viral shorthand: Chainsaws were invented for childbirth. More precise: related early hand-operated chain saws were developed for distinct surgical uses, including symphysiotomy and diseased-bone removal."
+  },
+  "sources": [
+    {
+      "source_id": "s:skippen-2004",
+      "publisher": "Scottish Medical Journal",
+      "title": "The chain saw—a Scottish invention",
+      "published_at": "2004",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15209147/",
+      "authority": "peer_reviewed_historical_review",
+      "primary": false,
+      "notes": "Historical scholarly review; not a direct scan of Aitken's original 1785 book."
+    },
+    {
+      "source_id": "s:hawk-2016",
+      "publisher": "Clinical Orthopaedics and Related Research",
+      "title": "ArtiFacts: Bernhard Heine's Osteotome",
+      "published_at": "2016",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4814401/",
+      "authority": "peer_reviewed_artifact_history",
+      "primary": false
+    },
+    {
+      "source_id": "s:wurzburg",
+      "publisher": "University of Würzburg, Institute for History of Medicine",
+      "title": "Historic collection of Heine osteotomes",
+      "url": "https://www.medizingeschichte.uni-wuerzburg.de/sammlung_heines.html",
+      "authority": "university_collection",
+      "primary": true
+    },
+    {
+      "source_id": "s:thackray",
+      "publisher": "Thackray Museum of Medicine",
+      "title": "Heine osteotome, catalog 250715",
+      "url": "https://collections.thackraymuseum.co.uk/object-250715",
+      "authority": "museum_object_catalog",
+      "primary": true
+    },
+    {
+      "source_id": "s:commons",
+      "publisher": "Wikimedia Commons",
+      "title": "Bernhard Heine's Osteotome, Sabine Salfer photograph and rights",
+      "url": "https://commons.wikimedia.org/wiki/File:Bernhard_Heine%27s_Osteotome.jpg",
+      "authority": "file_rights_record",
+      "primary": true
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "e:aitken-context",
+      "summary": "The 2004 historical study places Aitken's linked surgical saw in the context of symphysiotomy and dates the development to the mid-1780s.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "s:skippen-2004"
+      ],
+      "time_period": "circa 1783–1785",
+      "geography": "Scotland",
+      "supports": true,
+      "confidence": 0.88
+    },
+    {
+      "evidence_id": "e:jeffray-purpose",
+      "summary": "The historical review describes Jeffray's independently conceived serrated link saw as intended for diseased-bone removal, with manufacture around 1790.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "s:skippen-2004"
+      ],
+      "time_period": "circa 1783–1790",
+      "geography": "Scotland",
+      "supports": true,
+      "confidence": 0.88
+    },
+    {
+      "evidence_id": "e:aitken-document",
+      "summary": "The review reports Aitken illustrated his chain saw in his 1785 Principles of Midwifery and used it in a dissecting room; routine live obstetric use is not established by that observation.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "s:skippen-2004"
+      ],
+      "time_period": "1785",
+      "supports": true,
+      "confidence": 0.9
+    },
+    {
+      "evidence_id": "e:heine-1830",
+      "summary": "Hawk's medical-history article and the University of Würzburg artifact collection date Heine's hand-cranked guided-chain osteotome to 1830.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "s:hawk-2016",
+        "s:wurzburg"
+      ],
+      "time_period": "1830",
+      "geography": "Germany",
+      "supports": true,
+      "confidence": 0.94
+    },
+    {
+      "evidence_id": "e:thackray-object",
+      "summary": "Thackray Museum catalogs a surviving Heine osteotome dated 1840; the specimen date is not the initial invention date.",
+      "evidence_state": "observed",
+      "source_refs": [
+        "s:thackray"
+      ],
+      "time_period": "1840",
+      "supports": true,
+      "confidence": 0.94
+    },
+    {
+      "evidence_id": "e:photo-rights",
+      "summary": "Wikimedia Commons labels Sabine Salfer's osteotome photograph a worldwide author-dedicated public-domain image; the pictured object is a Heine osteotome, not Aitken's original tool.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "s:commons"
+      ],
+      "time_period": "2007 photo / 19th-century artifact",
+      "supports": true,
+      "confidence": 0.89
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "c:aitken",
+      "claim": "A Scottish historical review associates John Aitken's 1780s serrated linked surgical saw with symphysiotomy.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:aitken-context"
+      ],
+      "open_questions": [
+        "Which original 1785 publication plates can be independently examined?",
+        "Is there any reliable record that this particular tool was used in live deliveries?"
+      ]
+    },
+    {
+      "claim_id": "c:jeffray",
+      "claim": "The same review attributes a related early chain saw to James Jeffray, whose surgical application involved diseased bone rather than childbirth.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:jeffray-purpose"
+      ],
+      "open_questions": [
+        "What original correspondence corroborates the manufacturing timeline?"
+      ]
+    },
+    {
+      "claim_id": "c:aitken-1785",
+      "claim": "The review reports a 1785 illustration by Aitken and use in a dissecting room, not proof of routine use during live births.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:aitken-document"
+      ]
+    },
+    {
+      "claim_id": "c:heine",
+      "claim": "Medical-history research and an institutional artifact collection date Bernhard Heine's hand-cranked chain osteotome to 1830.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:heine-1830"
+      ],
+      "open_questions": [
+        "Some secondary accounts mention 1834 for a later version; distinguish development and variant dates."
+      ]
+    },
+    {
+      "claim_id": "c:thackray",
+      "claim": "Thackray Museum describes an osteotome example dated 1840, distinct from the 1830 development date.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:thackray-object"
+      ]
+    },
+    {
+      "claim_id": "c:photo",
+      "claim": "The identified Wikimedia Commons historical osteotome photograph is credited to Sabine Salfer and marked public-domain through an author dedication.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:photo-rights"
+      ],
+      "open_questions": [
+        "Before release, recheck that the source rights label and file identity remain unchanged."
+      ]
+    }
+  ],
+  "unresolved": [
+    "Direct evidence of routine live childbirth use of Aitken's specific saw has not been established.",
+    "The exact transfer of surgical chain saw designs into powered forestry saw manufacturing is not established by these citations.",
+    "Surgical patients' experiences must not be portrayed with invented outcomes or reconstructed literal scenes presented as documentary evidence.",
+    "Visual license and object identity should be rechecked on release day."
+  ],
+  "required_next_gates": [
+    "independent_editorial_10_of_10",
+    "source_link_freshness_recheck",
+    "fallen_visual_historical_qa",
+    "production_grade_review",
+    "systemia_signed_publication_release",
+    "owned_journal_article_build_and_public_origin_canary",
+    "clip_destination_authorization_and_provider_receipts"
+  ]
+}

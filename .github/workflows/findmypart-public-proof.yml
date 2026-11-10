@@ -1,0 +1,43 @@
+name: FindMyPart independent public-site proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/findmypart/**'
+      - 'systemia/mcp/findmypart-public-inquiry.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'scripts/probe-findmypart-owned-launch.mjs'
+      - '.github/workflows/findmypart-public-proof.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '21 0,6,12,18 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: findmypart-public-proof
+  cancel-in-progress: true
+
+jobs:
+  independent-public-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact owner-hosted buyer surface from GitHub runner
+        run: |
+          mkdir -p artifacts/findmypart-public-proof
+          node scripts/probe-findmypart-owned-launch.mjs > artifacts/findmypart-public-proof/receipt.json
+      - name: Preserve factual public proof even when site is unreachable
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: findmypart-independent-readback
+          path: artifacts/findmypart-public-proof/
+          if-no-files-found: warn
+          retention-days: 30

@@ -21,12 +21,16 @@
     },
     "buyer_frontage": {
       "method": "GET",
-      "url_template": "https://jgaethle10.github.io/forge-operator/chum/"
+      "url_template": "https://fabric.systemiacommandcenters.com/offers",
+      "authority": "owned_Fabric_read_only_human_offer_directory",
+      "checkout_claim": "listing_does_not_create_checkout_or_payment",
+      "verified_as_of": "2026-10-25"
     },
     "public_funnel_export": {
       "method": "GET",
       "url": null,
-      "authority": "acquisition_only_no_payment_authority"
+      "authority": "acquisition_only_no_payment_authority",
+      "note": "Not connected. Do not infer tracked external buyer traffic or qualified leads from page reachability."
     }
   },
   "stages": {

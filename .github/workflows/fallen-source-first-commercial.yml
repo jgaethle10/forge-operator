@@ -1,0 +1,21 @@
+name: Fallen source-first commercial admission
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/commercial-shotlist.mjs'
+      - 'systemia/media-studio/commercial-shotlist.test.mjs'
+      - 'systemia/media-studio/SOURCE-FIRST-COMMERCIAL.md'
+      - '.github/workflows/fallen-source-first-commercial.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source-first ad planning, voice/music/sound cues, and Saban creative compatibility
+        run: node --test systemia/media-studio/commercial-shotlist.test.mjs

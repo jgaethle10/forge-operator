@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {collectCommercialReleaseState} from './audit-commercial-release-hold.mjs';
 
 const ROOT=path.resolve(fileURLToPath(new URL('../',import.meta.url)));
 const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
@@ -102,6 +103,12 @@ async function connection(public_id){
  return p;
 }
 export async function collectLiveAgentBuyerEvidence(){
+ // Preserve the previously tested six-form contract as historical QA only.
+ // If the authoritative source says checkout is quarantined, instead verify
+ // that all four production MCP consumers truly suppress risky buyer links.
+ const release=read('public/.well-known/evercraft-commercial-readiness.json');
+ if(release.current_state==='HELD_PROVIDER_HTTP_402_AND_OWNED_PAYMENT_ENDPOINT_NOT_ATTESTED' &&
+    release.commercial_checkout_ready===false) return collectCommercialReleaseState();
  const buyer=read('public/.well-known/evercraft-payments-buyer-doors.json');
  const crosswalk=read('public/.well-known/evercraft-fabric-human-buyer-handoffs.json');
  const [health,liveResults]=await Promise.all([
@@ -114,7 +121,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  try{
   const r=await collectLiveAgentBuyerEvidence();
   process.stdout.write(JSON.stringify({...r,observed_at:new Date().toISOString()},null,2)+'\n');
-  if(!r.ok)process.exitCode=1;
+  if(!(r.ok===true || (r.safety_ok===true && r.commercial_checkout_ready===false)))
+    process.exitCode=1;
  }catch(e){
   console.error(JSON.stringify({ok:false,error:'agent_human_checkout_canary_failed',reason:String(e?.message||e).slice(0,230)}));
   process.exitCode=1;

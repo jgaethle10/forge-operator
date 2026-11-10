@@ -24,12 +24,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Evercraft Browser Worker and Chromium
-        working-directory: systemia/evercraft-web/browser-worker
-        run: |
-          npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
-      - name: Inspect public buyer forms and approved provider pages (read-only)
+      - name: Emit owned-only commerce hold without remote browser or provider calls
         env:
           EVERCRAFT_CHECKOUT_RECEIPT: artifacts/website-commerce-acceptance.receipt.json
         run: node systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs
@@ -43,9 +38,9 @@ jobs:
           if(!fs.existsSync(p)) {console.error('No buyer browser receipt');process.exit(1);}
           const r=JSON.parse(fs.readFileSync(p,'utf8'));
           const rows=[
-            '## Evercraft website browser-verified sales gate',
+            '## Evercraft website commerce release hold',
             '',
-            '- Native engine: **Evercraft-owned Playwright/Chromium**',
+            '- Engine: **owned source-only hold, zero network requests**',
             '- Public buyer-ready: **'+String(r.buyer_ready)+'**',
             '- New purchase attempted: **no**',
             '- Payment or settlement verified: **no**',
@@ -66,16 +61,16 @@ jobs:
           name: evercraft-website-commerce-browser-receipt
           path: artifacts/website-commerce-acceptance.receipt.json
           if-no-files-found: warn
-      - name: Enforce stop-sell when payment links are not ready
+      - name: Verify stop-sell receipt is held and no legacy provider requests occurred
         if: always()
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const p='artifacts/website-commerce-acceptance.receipt.json';
-          if(!fs.existsSync(p))throw new Error('buyer_acceptance_receipt_missing');
+          if(!fs.existsSync(p))throw new Error('commerce_hold_receipt_missing');
           const r=JSON.parse(fs.readFileSync(p,'utf8'));
-          if(r.buyer_ready!==true){
-            console.error('CHECKOUT_DISTRIBUTION_BLOCKED: '+r.blockers.join(', '));
-            process.exitCode=1;
-          }
+          if(r.buyer_ready!==false||r.legacy_provider_requests!==0||
+             r.provider_checkout_attempts!==0||r.public_promotion_authorized!==false)
+            throw new Error('owned_commerce_hold_violation');
+          console.log('STOP_SELL_SAFE_NO_LEGACY_EGRESS');
           NODE

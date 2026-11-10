@@ -72,6 +72,28 @@ write('package.json', JSON.stringify({
 write('scripts/ok.mjs', 'console.log("ok")\n');
 write('.github/workflows/test.yml', 'name: test\nsteps:\n  - run: npm run absent\n  - run: node scripts/also-missing.mjs\n');
 write('nested/server.mjs', 'console.log("nested")\n');
+write('nested/package.json', JSON.stringify({ scripts: { probe: 'node server.mjs' } }));
+write('.github/workflows/job-default-directory.yml', [
+  'name: job defaults test',
+  'jobs:',
+  '  with-default:',
+  '    runs-on: ubuntu-latest',
+  '    defaults:',
+  '      run:',
+  '        working-directory: nested',
+  '    steps:',
+  '      - name: nested file',
+  '        run: node server.mjs',
+  '      - name: nested npm script',
+  '        run: npm run probe',
+  '  root-job:',
+  '    runs-on: ubuntu-latest',
+  '    steps:',
+  '      - name: repo-root file',
+  '        run: node scripts/ok.mjs',
+  ''
+].join('\n'));
+
 write('.github/workflows/working-directory.yml', [
   'name: working-directory',
   'jobs:',
@@ -114,6 +136,14 @@ assert.equal(
   false,
   'workflow file targets must resolve against their step working-directory'
 );
+assert.equal(
+  scan.findings.some(row =>
+    (row.code === 'workflow_target_missing' || row.code === 'workflow_script_missing') &&
+    row.subject.includes('job-default-directory.yml')),
+  false,
+  'commands under jobs.defaults.run.working-directory must resolve against the correct job package'
+);
+
 assert.ok(codes.has('resident_service_executable_not_found'));
 assert.ok(codes.has('direct_door_contract_missing'));
 assert.ok(codes.has('product_trust_chain_contract_missing'));

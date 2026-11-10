@@ -4,13 +4,13 @@ This folder packages Evercraft's universal Machine Commerce MCP as a reusable AI
 
 ## Purpose
 
-The plugin gives an AI assistant one pain-first Evercraft front door instead of requiring users to know product names. It can discover public capabilities, inspect current public offers, invoke bounded public tools where supported, and prepare human-confirmed commercial continuations.
+The plugin gives an AI assistant one pain-first Evercraft front door instead of requiring users to know product names. It can discover public capabilities, inspect current public offers, return read-only public discovery information and owned capability-page links. Any specialist execution and commerce require separate independently verified routes.
 
 ## MCP
 
 Remote MCP:
 
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+`https://fabric.systemiacommandcenters.com/mcp`
 
 ## Truth boundary
 
@@ -18,7 +18,7 @@ Publishing this package does not mean ChatGPT, Codex, Claude, Gemini, Copilot, P
 
 ## Payment boundary
 
-Discovery creates no payment obligation. Checkout requires explicit human confirmation. Checkout is not payment proof. Paid state requires authoritative provider verification.
+Discovery creates no payment obligation. Checkout is currently held until an independently verified owned payment route exists. Any later purchase requires explicit human confirmation. Checkout is not payment proof. Paid state requires authoritative provider verification.
 
 ## OpenAI public-directory status
 
