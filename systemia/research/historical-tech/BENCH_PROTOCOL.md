@@ -38,6 +38,11 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 
 The evaluator refuses AC/RF input assumptions, requires uncertainty fields, and demands traceability and a recorded safety review for any sample labeled `measured`. A text flag cannot itself confirm real calibration or safety approval. The returned `experimentalDesignComplete` is an automated minimum-control check, **not** certification that the experiment was completed, safe, correct or validated.
 
+## Provenance and independent metrology review
+Before declaring any session to contain physical measurements, follow [EVIDENCE_INTAKE.md](EVIDENCE_INTAKE.md) and preserve original data files. SHA-256 and self-declared calibration/safety references provide a **byte-integrity audit**, not evidence that an instrument actually captured the values or was properly calibrated. NIST TN 1297 requires documenting uncertainty contributions, their evaluation methods and the combined/expanded uncertainty conventions when making scientific measurements; this software's absolute-watt brackets do not satisfy that requirement by themselves.
+
+The separate `evidence-package.mjs` intake rejects obvious data-provenance failures and never authorizes scientific publication. A qualified independent reviewer must inspect real calibration, measurement methods, waveforms or steady-state justification, missing energy inputs and uncertainty before any public performance conclusion.
+
 ## Stage gates
 1. **Paper review:** instrumentation uncertainty accounting and complete DC source/load capture independently checked.
 2. **Hardware approval:** actual BOM, supply limits, supervision, safety and isolation agreed.
