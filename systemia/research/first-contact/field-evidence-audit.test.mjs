@@ -111,3 +111,19 @@ test("invalid session ID and forged digests are rejected",t=>{
   const forged={...manifest,preregistration:{...manifest.preregistration,sha256:"sha256:garbage"}};
   assert.throws(()=>auditFieldEvidence({root,manifest:forged}),/lowercase sha256/);
 });
+
+
+test("multi-megabyte native source hashes in chunks and detects later edits",t=>{
+  const {root,manifest}=sandbox(t);
+  const content=Buffer.alloc(2*1024*1024+37,0x5a);
+  const name="camera_a_native.txt";
+  fs.writeFileSync(path.join(root,name),content);
+  manifest.sources.find(x=>x.role==="camera_a_native").sha256=hash(content);
+  const good=auditFieldEvidence({root,manifest});
+  assert.equal(good.status,"BYTE_CHAIN_MATCHED_REQUIRES_INDEPENDENT_PROOF");
+  assert.equal(good.checkedSources.find(x=>x.role==="camera_a_native").sizeBytes,content.length);
+  fs.appendFileSync(path.join(root,name),"TAMPER");
+  const bad=auditFieldEvidence({root,manifest});
+  assert.equal(bad.status,"HOLD");
+  assert.equal(bad.checkedSources.find(x=>x.role==="camera_a_native").reason,"HASH_MISMATCH");
+});
