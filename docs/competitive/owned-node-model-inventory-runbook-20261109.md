@@ -64,3 +64,7 @@ Without `--execute-local` the command holds without opening the adapter or submi
 **Result truth:** `state=observed` means one local response was received and internally hashed; `state=held` with `inference_outcome=not_started` means validation failed before inference; `unknown_after_activation` means the request may have reached the engine but completion cannot be proven. Do not auto-retry an unknown outcome. A receipt is local integrity evidence, not independent verification of correctness, external work or an actual multi-model team.
 
 Production implementation and independent second-opinion operation remain **not authorized / not deployed**. The reviewed Ollama provider in Raven is a separate existing adapter; this llama.cpp path stays disconnected from the production gateway.
+
+### Model-ID privacy note
+
+Recent llama.cpp documentation allows the `id` in `GET /v1/models` to be an **absolute or relative GGUF file path** unless the operator configures an alias. The local probe and candidate adapter therefore match the exact reported ID, including safe Unix path characters. The ID is only passed as a JSON model identifier to loopback; no file is opened by this candidate. Treat the full CLI observation as **private** because a model path can reveal a user or directory name. Do not paste the unredacted receipt into public GitHub issues or customer support. Prefer an operator-chosen non-sensitive llama.cpp model alias at a separately approved runtime configuration step.
