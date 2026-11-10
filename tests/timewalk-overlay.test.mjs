@@ -12,9 +12,9 @@ const evidence = JSON.parse(readFileSync(
 ));
 const copy = () => structuredClone(evidence);
 
-test('validates research ledger with all 11 source records and no georeference', () => {
+test('validates expanded research ledger with independently sourced periods and no georeference', () => {
   assert.equal(validateHistoricalEvidence(evidence), evidence);
-  assert.equal(evidence.sources.length, 11);
+  assert.ok(evidence.sources.length >= 13);
   assert.equal(evidence.location.georeferenced, false);
 });
 test('provides data-only overlay, never a competing renderer or surveyed 1960 scene', () => {
