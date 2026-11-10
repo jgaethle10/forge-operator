@@ -139,3 +139,22 @@ Run from the repository root after installing its dependencies:
     node --import tsx systemia/world-engine/sim-to-real/progress-trial-rc05.mjs --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05a-49-56.json
 
 **No hardware or production execution is authorized.**
+
+
+## RC05B: observed-path shield and explicit A/B/C review (experimental)
+
+RC05A can escape its zero-speed deadlock but developed *two collisions* in prior evaluation seeds 51 and 56. RC05B keeps RC05A opt-in and adds a second independent **modeled observation-based detour filter**: it checks current motion, requested detour, bounded modeled braking/command delay, anonymous visible sensor obstacles, and a conservative geofence inset. It caps approved detour speed; unsafe or unclear detours are requested holds. Stale scans, localization uncertainty, and original safety holds remain unchanged.
+
+**Important limits:** The shield does NOT see hidden objects, cannot verify actual obstacle speed, assumes modeled braking and modeled sensor geometry, and cannot guarantee an immediate stop while delayed commands remain queued. It does not confer robot safety or hardware authority. Native dynamics still use simple spherical proxy bodies, not a calibrated rover.
+
+Run:
+```sh
+node --test systemia/world-engine/sim-to-real/controller-rc05-shield.test.mjs
+node --import tsx --test systemia/world-engine/sim-to-real/shield-trial-rc05b.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/shield-trial-rc05b.mjs --first-seed 49 --seeds 8
+node --import tsx systemia/world-engine/sim-to-real/shield-trial-rc05b.mjs --first-seed 57 --seeds 8
+```
+
+`runShieldTrial` compares unchanged default RC05, opt-in RC05A, and opt-in RC05B, recording failure status, contact IDs, provenance, per-seed digests and a review flag. **A green CI result only establishes that evidence and tests were produced.** The `reviewEligible` result is evidence-only and is never production release approval; it must remain false if new modeled collisions or geofence exits are seen relative to the default, or if arrivals regress. Repeating known cohorts is a regression check, **not** held-out generalization evidence. Seeds 57–64 constitute one small new modeled evaluation batch only.
+
+The source and GitHub workflow are authored for PR review only. No production merge, autonomous device, e-stop, physical sensor, deployment, or robot actuator access.
