@@ -51,8 +51,10 @@ until TLS, abuse controls, and identity-recovery design are verified.
   owner-only directories are 0700. No file names or raw customer media
   are collected in the ledger.
 - Sessions expire after 7 days by default. Revocation blocks subsequent
-  API access immediately. Token loss currently cannot be recovered from
-  email alone: an authenticated recovery flow is a release blocker.
+  API access immediately. A returning buyer may request a new email challenge and exchange
+  that code for a new bearer token bound to the same customer subject.
+  Previously issued tokens are revoked. This is single-node verified
+  reauthentication, not a deployed public passwordless sign-in service.
 - Token cannot be provided via a URL query string, payment redirect,
   client-supplied buyer ID or unauthenticated email.
 - The server chooses the canonical duration-based offer and amount,
@@ -104,9 +106,10 @@ code for the one-time private session credential.
 
 The email HMAC secret and transactional mail relay must be configured
 server-side. This code does NOT configure any outbound email sender or
-live public identity service. Losing a guest token still requires a
-future verified recovery design; do not enable production enrollment
-without it.
+live public identity service. Returning customers can regain their original order identity through a
+new email challenge, with prior sessions revoked. Production enrollment
+still requires verified owned email delivery, abuse controls, rate limits,
+actual TLS deployment and multi-process session-rotation review.
 
 Tests:
 node --test tests/forensiscope-email-verification.test.mjs
