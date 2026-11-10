@@ -7,6 +7,7 @@ on:
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
       - 'tests/subsea-watch-video-sync.test.mjs'
+      - 'tests/subsea-watch-field-archive.test.mjs'
       - 'scripts/probe-subsea-watch-public.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
       - 'tests/subsea-watch-video-sync.test.mjs'
+      - 'tests/subsea-watch-field-archive.test.mjs'
       - 'scripts/probe-subsea-watch-public.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   workflow_dispatch:
@@ -30,18 +32,21 @@ jobs:
         with:
           node-version: '22'
       - name: Test dive log evidence and no fabricated tracking
-        run: node --test tests/subsea-watch-replay.test.mjs tests/subsea-watch-immersive.test.mjs tests/subsea-watch-video-sync.test.mjs
+        run: node --test tests/subsea-watch-replay.test.mjs tests/subsea-watch-immersive.test.mjs tests/subsea-watch-video-sync.test.mjs tests/subsea-watch-field-archive.test.mjs
       - name: Validate browser modules
         run: |
           node --check public/subsea-watch/core.mjs
           node --check public/subsea-watch/viewer.mjs
           node --check public/subsea-watch/immersive/scene.mjs
           node --check public/subsea-watch/immersive/video-sync.mjs
+          node --check public/subsea-watch/field-archive/catalog.mjs
       - name: Inspect owned static page
         run: |
           test -s public/subsea-watch/index.html
           test -s public/subsea-watch/immersive/index.html
           test -s public/subsea-watch/sample.json
+          test -s public/subsea-watch/field-archive/index.html
+          test -s public/subsea-watch/field-archive/sources.json
           grep -q "Prototype, not a safety device" public/subsea-watch/index.html
 
       - name: Capture immersive WebGL browser smoke
