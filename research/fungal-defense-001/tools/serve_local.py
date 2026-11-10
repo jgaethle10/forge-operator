@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local-only, read-only preview server for Fungal Defense Observatory v0.2.
+"""Local-only, read-only preview server for Fungal Defense Observatory v0.3.
 
 Run from the checked-out branch:
     python3 research/fungal-defense-001/tools/serve_local.py
@@ -16,7 +16,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
-PAGE = "observatory-v0.2.html"
+PAGE = "observatory-v0.3.html"
 
 
 class PreviewHandler(SimpleHTTPRequestHandler):
