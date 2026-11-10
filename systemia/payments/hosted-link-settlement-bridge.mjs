@@ -10,9 +10,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 const id=(v,prefix)=>typeof v==='string'&&v.startsWith(prefix)&&/^[A-Za-z0-9_]+$/.test(v);
-const ref=(v)=>typeof v==='string'?v?.id||v:v;
+const ref=(v)=>typeof v==='string'?v:(v&&typeof v==='object'?v.id:null);
 const held=(reason)=>({state:'held',reason});
-const MONEY=/^[a-z]{3}$/;
 
 export function readHostedOfferRegistry(file='public/mesh/checkout-ready/verified-links.json'){
   const doc=JSON.parse(fs.readFileSync(file,'utf8'));
