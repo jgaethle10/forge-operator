@@ -121,7 +121,22 @@ function imageSource(gltf,buffers,index){
     check(['image/png','image/jpeg'].includes(mime),'image_mime_unsupported:'+index);
     bytes=bytesFromUri(def.uri);
   }else throw new Error('visual_gltf_image_source_missing:'+index);
-  return {sha256:'sha256:'+sha(bytes),bytes};
+  const mimeType=def.bufferView!==undefined?def.mimeType:/^data:([^;,]+)/.exec(def.uri)?.[1];
+  return {sha256:'sha256:'+sha(bytes),bytes,mimeType};
+}
+export function extractGltfEmbeddedImages(gltf,buffers,{maxImages=32,maxEncodedBytes=16*1024*1024}={}){
+  check(uint(maxImages)&&maxImages>0&&uint(maxEncodedBytes)&&maxEncodedBytes>0,
+    'image_intake_limits_invalid');
+  const binary=resolveBuffers(gltf,buffers);
+  const count=gltf.images?.length||0;
+  check(count<=maxImages,'image_count_budget_exceeded');
+  let total=0;
+  return Array.from({length:count},(_,index)=>{
+    const {sha256,bytes,mimeType}=imageSource(gltf,binary,index);
+    total+=bytes.length;
+    check(total<=maxEncodedBytes,'image_encoded_budget_exceeded');
+    return {index,mimeType,sourceSha256:sha256,encodedBase64:bytes.toString('base64')};
+  });
 }
 function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes){
   const cache=new Map(),textures=[],imageEvidence=new Map();
