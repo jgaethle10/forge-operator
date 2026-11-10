@@ -16,6 +16,7 @@
   const scene=$('office-scene');
   let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};
   let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null,roomLevel=false,roomButton=null;
+  let tourActive=false,tourIndex=0,tourButton=null,tourCaption=null;
   const touches=new Map();
   let gesture=null;
   const rooms=[
@@ -141,6 +142,9 @@
     const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · FOLLOW SELECTED');
     const evidenceNote=make('div','spatial-motion-disclosure','MOTION VISUALIZES RECORDED EVENTS · NOT PHYSICAL AGENT TRAVEL');
     evidenceNote.setAttribute('aria-label','Character animations illustrate verified local worker state changes, not physical movement by autonomous AI agents.');
+    tourCaption=make('div','spatial-tour-caption','');
+    tourCaption.hidden=true;
+    tourCaption.setAttribute('aria-live','polite');
     const controls=make('div','spatial-controls');
     const buttons=[
       ['−','Zoom out',()=>zoom(-0.1)],
@@ -151,6 +155,7 @@
       ['◎','Focus selected coworker',()=>focusAgent(selected)],
       ['◉','Follow selected coworker',()=>toggleFollow()],
       ['▤','Lower camera to room level',()=>toggleRoomLevel()],
+      ['⌁','Start guided studio visitor tour',()=>toggleStudioTour()],
       ['→','Visit next coworker',()=>tourNext()]
     ];
     buttons.forEach(([label,title,fn])=>{
@@ -159,9 +164,10 @@
       b.addEventListener('click',e=>{e.stopPropagation();fn();});
       if(title==='Follow selected coworker'){followButton=b;b.setAttribute('aria-pressed','false');}
       if(title==='Lower camera to room level'){roomButton=b;b.setAttribute('aria-pressed','false');}
+      if(title==='Start guided studio visitor tour'){tourButton=b;b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
-    overlay.append(orbit,evidenceNote,controls);
+    overlay.append(orbit,evidenceNote,tourCaption,controls);
     viewport.append(overlay);
     scene.append(viewport);
     const fallback=$('office-scene')?.querySelector('.workfloor-art');
@@ -190,7 +196,7 @@
           const [a,b]=[...touches.values()];
           const current={x:(a.x+b.x)/2,y:(a.y+b.y)/2,span:Math.hypot(a.x-b.x,a.y-b.y)};
           if(gesture){
-            disengageFollow();
+            disengageFollow();stopStudioTour();
             position.panX=clamp(position.panX+(current.x-gesture.x)*.75,-480,480);
             position.panY=clamp(position.panY+(current.y-gesture.y)*.75,-360,360);
             position.zoom=clamp(position.zoom+(current.span-gesture.span)*.0025,.35,1.42);
@@ -207,7 +213,7 @@
       const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
       drag.x=e.clientX;drag.y=e.clientY;
       if(drag.pan){
-        disengageFollow();
+        disengageFollow();stopStudioTour();
         position.panX=clamp(position.panX+dx,-480,480);
         position.panY=clamp(position.panY+dy,-360,360);
         applyCamera();
@@ -221,13 +227,16 @@
       const key=e.key.toLowerCase(),step=e.shiftKey?42:22;
       const panKeys={arrowleft:[step,0],arrowright:[-step,0],arrowup:[0,step],arrowdown:[0,-step],w:[0,step],a:[step,0],s:[0,-step],d:[-step,0]};
       if(key in panKeys){
-        e.preventDefault();disengageFollow();position.panX=clamp(position.panX+panKeys[key][0],-480,480);
+        e.preventDefault();disengageFollow();stopStudioTour();position.panX=clamp(position.panX+panKeys[key][0],-480,480);
         position.panY=clamp(position.panY+panKeys[key][1],-360,360);
         applyCamera();
       }else if(key==='n'||key==='p'){
         e.preventDefault();
-        tourIndex=(tourIndex+(key==='n'?0:roster.length-2))%roster.length;
-        tourNext();
+        if(tourActive)visitTour(key==='n'?1:-1);
+        else {
+          tourIndex=(tourIndex+(key==='n'?0:roster.length-2))%roster.length;
+          tourNext();
+        }
       }else if(key==='q'||key==='e'){
         e.preventDefault();orbitCamera(key==='q'?-12:12,0);
       }else if(key==='+'||key==='='){e.preventDefault();zoom(0.08);}
@@ -262,6 +271,42 @@
     if(followButton)followButton.setAttribute('aria-pressed',String(followSelected));
     if(followSelected)focusAgent(selected);
   }
+  function stopStudioTour(){
+    if(!tourActive)return;
+    tourActive=false;
+    if(tourCaption)tourCaption.hidden=true;
+    if(tourButton)tourButton.setAttribute('aria-pressed','false');
+  }
+  function visitTour(direction){
+    if(!tourActive)return;
+    const tour=window.EvercraftStudioTour;
+    if(!tour)throw Error('Owned studio tour module was not loaded');
+    tourIndex=tour.step(tourIndex,direction);
+    const compact=(scene?.getBoundingClientRect?.().width||window.innerWidth||1000)<540;
+    const target=tour.pose(tourIndex,{compact});
+    // A visual camera movement and selected inspector only. This does not
+    // assert the coworker walked, worked, communicated, or ran a model.
+    disengageFollow();
+    Object.assign(position,target.camera);
+    applyCamera();
+    if(target.agent_id){
+      select(target.agent_id);
+      window.WorkSabanOffice?.select?.(target.agent_id);
+    }
+    if(tourCaption){
+      tourCaption.textContent='VISITOR VIEW '+(tourIndex+1)+' / '+tour.length+' · '+target.label.toUpperCase()+' · CAMERA ONLY';
+      tourCaption.hidden=false;
+    }
+  }
+  function toggleStudioTour(){
+    if(tourActive){stopStudioTour();return;}
+    const tour=window.EvercraftStudioTour;
+    if(!tour)throw Error('Owned studio tour module was not loaded');
+    tourActive=true;
+    tourIndex=tour.length-1;
+    if(tourButton)tourButton.setAttribute('aria-pressed','true');
+    visitTour(1);
+  }
   function toggleRoomLevel(){
     roomLevel=!roomLevel;
     if(roomButton)roomButton.setAttribute('aria-pressed',String(roomLevel));
@@ -273,13 +318,15 @@
     applyCamera();
   }
   function orbitCamera(dx,dy){
+    stopStudioTour();
     position.yaw=clamp(position.yaw+dx,-170,170);
     position.pitch=clamp(position.pitch+dy,32,74);
     applyCamera();
   }
-  function zoom(delta){position.zoom=clamp(position.zoom+delta,0.35,1.42);applyCamera();}
-  function resetCamera(){disengageFollow();roomLevel=false;if(roomButton)roomButton.setAttribute('aria-pressed','false');position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};applyCamera();}
+  function zoom(delta){stopStudioTour();position.zoom=clamp(position.zoom+delta,0.35,1.42);applyCamera();}
+  function resetCamera(){disengageFollow();stopStudioTour();roomLevel=false;if(roomButton)roomButton.setAttribute('aria-pressed','false');position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};applyCamera();}
   function focusAgent(id){
+    stopStudioTour();
     const role=roster.find(r=>r.id===id);
     if(!role)return;
     // A phone has a smaller viewing window: never crop the agent into an
@@ -297,6 +344,7 @@
   }
   let tourIndex=0;
   function tourNext(){
+    if(tourActive){visitTour(1);return;}
     const coworker=roster[tourIndex%roster.length];
     tourIndex+=1;
     select(coworker.id);
@@ -410,6 +458,7 @@
     if(cameraRig)cameraRig.setSuspended(!enabled);
     if(enabled)applyCamera();
   }
-  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,
-    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel};
+  window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,toggleStudioTour,visitTour,
+    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel,
+    getStudioTour:()=>({active:tourActive,index:tourIndex,label:tourCaption?.textContent||''})};
 })();
