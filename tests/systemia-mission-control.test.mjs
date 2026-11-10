@@ -60,7 +60,7 @@ test('mission console is local-only for private snapshots, read-only, and mobile
   assert.match(html,/CHECKOUT UNKNOWN/);
   assert.match(html,/HEALTH UNKNOWN/);
   assert.match(html,/type="module" src="\.\/mission-control\.mjs"/);
-  assert.match(html,/connect-src https:\/\/api\.github\.com/);
+  assert.match(html,/connect-src 'self' https:\/\/api\.github\.com/);
   assert.match(html,/No private mission data transmitted/);
   assert.match(client,/file\.text\(\)/);
   assert.match(client,/parseOperatorSnapshot/);
