@@ -68,3 +68,17 @@ test('unauthenticated and malformed payloads do not certify readiness', async ()
   await assert.rejects(() => inspectPaperBroker({ credentials: { key: 'x', secret: 'x' }, fetchImpl: mockFetch([paperAccount, {}, [], []]) }), /invalid_clock/);
   await assert.rejects(() => inspectPaperBroker({ credentials: { key: 'x', secret: 'x' }, fetchImpl: mockFetch([paperAccount, { is_open: true }, 'not an array', []]) }), /invalid_broker_lists/);
 });
+
+test('partial dedicated paper credentials fail closed even if legacy credentials exist', () => {
+  assert.equal(paperPreflightCredentialSource({
+    ALPACA_PAPER_KEY_ID: 'incomplete', ALPACA_TRADING: 'legacy', ALPACA_TRADING_SECRET: 'legacySecret',
+  }), null);
+});
+test('unknown broker order status is conservatively treated as open', async () => {
+  const result = await inspectPaperBroker({
+    credentials: { key: 'x', secret: 'x' },
+    fetchImpl: mockFetch([paperAccount, { is_open: true }, [], [{ status: 'future_unknown_status' }]]),
+  });
+  assert.equal(result.open_orders_count, 1);
+  assert.equal(result.flat_at_probe, false);
+});
