@@ -165,6 +165,23 @@
       ],
       "validation": "Dedicated FIRST-CONTACT research verification successful for code/fixture commit a9a7569a...; 11 numerical calibration tests and 3 CLI/receipt tests covered by suite. Known target and cameras in the fixture are invented, no actual field survey or independent sensor certificate.",
       "acceptance": "Reproducible sample-level known-target position accuracy under predeclared thresholds; independently verify camera/survey/timebase provenance before any real field claim"
+    },
+    {
+      "id": "FC-CAMERA-PLAN-01",
+      "lane": "sensor_forensics",
+      "status": "SYNTHETIC_PLANNER_CI_VERIFIED_AWAITING_FIELD_MEASUREMENTS",
+      "completed": "2026-11-09",
+      "artifacts": [
+        "baseline-sensitivity.mjs",
+        "baseline-sensitivity.test.mjs",
+        "baseline-planner-cli.mjs",
+        "baseline-planner-cli.test.mjs",
+        "fixtures/baseline-plan-no-bias.json",
+        "fixtures/baseline-plan-shared-bias.json",
+        "BASELINE_PLACEMENT_PLAN.md"
+      ],
+      "validation": "Dedicated FIRST-CONTACT GitHub Actions passed on code/fixture commit a767c6af..., run 42760006294, including 10 seeded baseline stress tests and 4 offline CLI tests; no physical camera data, independent survey, or sensor calibration evaluated",
+      "acceptance": "Compare synthetic camera spacing vs angular uncertainty and systematic alignment bias; preserve rejected fraction and conditional quantile interpretation; independently evaluate a real surveyed known-target dataset before claiming field accuracy"
     }
   ],
   "hard_constraints": [
@@ -174,6 +191,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Run known-target-cli.mjs on a genuinely surveyed non-sensitive known stationary target with two independently synchronized calibrated cameras; compare 3D position to independent survey ground truth using predeclared thresholds and independent reviewer. Systemia execution separate, NOT_DISPATCHED.",
-  "validation_note": "2026-11-09: all eight workflows passed at previous 203bec64... head. Dedicated FIRST-CONTACT research verification passed at new calibration code commit a9a7569a..., including 11 evaluator tests and 3 CLI tests. New subsequent documentation commits may trigger newer runs; independent field calibration and Systemia runtime dispatch remain outstanding."
+  "next_execution_gate": "Use baseline planner to pre-register a practical sensor placement, independently measure camera centers and bearing calibration with a non-sensitive stationary target, and verify real captures against separately surveyed ENU ground truth. Do not equate numeric pass or source-controlled mission intake with validated field measurement or live Systemia work.",
+  "validation_note": "2026-11-09 sprint 7: dedicated FIRST-CONTACT research CI passed on planner code/fixture commit a767c6af... (#42760006294), 10 simulation and 4 offline CLI tests included. Prior head 88e51c0... had 8 successful workflows. Latest docs/ledger head validation must be checked independently. No physical survey data or Systemia live dispatch."
 }
