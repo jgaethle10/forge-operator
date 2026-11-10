@@ -84,6 +84,65 @@ closed under the snapshot's existing hard cap.
 
 See [AUDIT.md](./AUDIT.md) for the complete source-to-projection gap inventory.
 
+## Source receipt reconciliation (v0.3 research slice)
+
+The new `source-reconciliation.mjs` uses a **caller-supplied, synchronous,
+read-only source receipt adapter** to compare the currently Passport-visible
+Context Fabric records against receipt bytes provided by an existing source
+ledger. The module itself never contacts a provider or writes to any ledger.
+
+```js
+import { reconcileTimewalkSourceReceipts } from './source-reconciliation.mjs';
+
+const report = reconcileTimewalkSourceReceipts(fabric, {
+  actor_ref: 'agent:approved-auditor', // bound to a real internal identity
+  namespaces: ['systemia'],          // optional; controls the visible subset
+  read_source_receipt: ({ source_receipt_schema, source_receipt_hash }) =>
+    existingReadOnlyReceiptStore.lookup(source_receipt_schema, source_receipt_hash),
+});
+```
+
+The provided adapter must return the original receipt object or `null`. Only
+Context records already authorized by the existing Context Fabric snapshot
+are queried, and source-lookup arguments include the receipt schema and digest
+but **no raw Context text, customer identity, or historical private metadata**.
+A single source digest is looked up once per invocation. Lookup failures
+remain bounded status counts, not leaked exception messages.
+
+The reconcilier checks, in order:
+
+1. The SHA-256 integrity of **all authorized Context records/retractions**;
+   any tampering fails closed *before* the source adapter is called.
+2. Source receipt schema and the producer's expected digest algorithm
+   (full SHA-256 for execution and intake, 12-character SHA-256 prefix for
+   Systemia mission admission).
+3. The stored Context source hash against that recomputed digest.
+4. Expected projected fields such as entity reference, predicate, claim value,
+   source reference, evidence label, and observation timestamp.
+
+Each result is an **aggregate status count**, with no returned raw receipts,
+record IDs or source references. The possible states include consistent hash
+and projection, missing hash, source unavailable, source adapter failure,
+schema mismatch, digest mismatch, projection mismatch, and unsupported family.
+
+**Critical:** `consistent_digest_and_projection` means only that the bytes
+provided by the read adapter are internally consistent with a Context
+projection. This alone is **NOT independent source-origin authentication**,
+proof of customer payment, verified shipment, released artifact, completed
+mission, or the completeness of company history. A self-consistently
+fabricated source receipt would still need a separate trusted-origin check.
+The report explicitly says `source_origin_authenticated: false`.
+
+No external API endpoint is exposed, no source account connection is made,
+and no privacy/retention policy is bypassed. Before any private deployment,
+the source adapter must be bound to authorized internal services with an
+auditable origin trust chain, stable snapshots, and an independent security
+review.
+
+```bash
+node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
+```
+
 ## Performance and security boundaries
 
 The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, entity/record-resource-scoped Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
@@ -96,6 +155,7 @@ The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, e
 node --test systemia/context-fabric/timewalk/timewalk.test.mjs
 node --test systemia/context-fabric/timewalk/timewalk.integration.test.mjs
 node --test systemia/context-fabric/timewalk/coverage.test.mjs
+node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
 node --test systemia/context-fabric/fabric.test.mjs
 ```
 
