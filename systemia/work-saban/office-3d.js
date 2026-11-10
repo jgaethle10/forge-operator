@@ -155,7 +155,7 @@
       ['◎','Focus selected coworker',()=>focusAgent(selected)],
       ['◉','Follow selected coworker',()=>toggleFollow()],
       ['▤','Lower camera to room level',()=>toggleRoomLevel()],
-      ['⌁','Start guided studio visitor tour',()=>toggleStudioTour()],
+      ['TOUR','Start guided studio visitor tour',()=>toggleStudioTour()],
       ['←','Visit previous coworker or tour stop',()=>tourPrevious()],
       ['→','Visit next coworker or tour stop',()=>tourNext()]
     ];
@@ -165,7 +165,7 @@
       b.addEventListener('click',e=>{e.stopPropagation();fn();});
       if(title==='Follow selected coworker'){followButton=b;b.setAttribute('aria-pressed','false');}
       if(title==='Lower camera to room level'){roomButton=b;b.setAttribute('aria-pressed','false');}
-      if(title==='Start guided studio visitor tour'){tourButton=b;b.setAttribute('aria-pressed','false');}
+      if(title==='Start guided studio visitor tour'){tourButton=b;b.classList.add('spatial-tour-control');b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
     overlay.append(orbit,evidenceNote,tourCaption,controls);
