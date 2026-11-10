@@ -133,11 +133,11 @@ export async function activateEo001({pin,home=os.homedir(),root=codeRoot(),
       remote_jobs_changed:false,external_send_authorized:false,
       other_services_changed:false};
   }catch(e){
-    if(enabled){
+    // A failed enable command may still have partially activated a timer.
+    // Once our unit files exist, always attempt to stop/disable our own units.
+    if(wrote){
       exec('systemctl',['--user','disable','--now',timer]);
       exec('systemctl',['--user','stop',service]);
-    }
-    if(wrote){
       for(const file of [service,timer]){
         const target=path.join(home,'.config/systemd/user',file);
         try{fs.unlinkSync(target);}catch{/* preserve failure status */}
