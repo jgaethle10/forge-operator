@@ -1,0 +1,128 @@
+{
+  "schema": "evercraft.commercial-products.v1",
+  "parent": "Evercraft OS",
+  "model": "Each product is independently discoverable and marketable; Evercraft OS is the underlying long-term platform, not the prerequisite for purchase.",
+  "count": 7,
+  "productization_scope": "Seven original exact-price Stripe services only; additional products require their own approved SKU, buyer contract and checkout proof.",
+  "products": [
+    {
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "sku_key": "weekly-social",
+      "brand": "Evercraft Social | Weekly",
+      "exact_checkout_product": "Social Media Management · Weekly",
+      "price_usd": 100,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/4gM3cweaOcwJ1Za1I84AU0d",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/product.json",
+      "search_intents": [
+        "weekly social media help for small business",
+        "one week of social content support",
+        "small business social media task help"
+      ],
+      "os_parent": "Evercraft OS"
+    },
+    {
+      "product_id": "evercraft.commerce.asset-diagnosis",
+      "sku_key": "asset-diagnosis",
+      "brand": "Evercraft Asset Diagnosis",
+      "exact_checkout_product": "Asset Diagnosis",
+      "price_usd": 149,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/dRm9AU0jYdANdHS72s4AU0a",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/product.json",
+      "search_intents": [
+        "why is my business website not converting",
+        "digital asset audit with recommendations",
+        "diagnose a broken business workflow"
+      ],
+      "os_parent": "Evercraft OS"
+    },
+    {
+      "product_id": "evercraft.commerce.ai-boardroom-standard",
+      "sku_key": "ai-boardroom-standard",
+      "brand": "Evercraft AI Boardroom | Standard",
+      "exact_checkout_product": "AI Boardroom · Standard Review",
+      "price_usd": 250,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/14AdRaaYC68lcDO0E44AU08",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/product.json",
+      "search_intents": [
+        "AI second opinion on business decision",
+        "compare conflicting AI business advice",
+        "decision review for a founder"
+      ],
+      "os_parent": "Evercraft OS"
+    },
+    {
+      "product_id": "evercraft.commerce.ai-boardroom-financial-modeling",
+      "sku_key": "ai-boardroom-financial",
+      "brand": "Evercraft AI Boardroom | Deep Dive",
+      "exact_checkout_product": "AI Boardroom · Deep Dive with Financial Modeling",
+      "price_usd": 500,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/3cIbJ2feSfIVcDO1I84AU09",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/product.json",
+      "search_intents": [
+        "business financial scenario modeling",
+        "sensitivity analysis for a startup decision",
+        "AI Boardroom financial deep dive"
+      ],
+      "os_parent": "Evercraft OS"
+    },
+    {
+      "product_id": "evercraft.commerce.knowledge-activation",
+      "sku_key": "knowledge-activation",
+      "brand": "Evercraft Knowledge Activation",
+      "exact_checkout_product": "Knowledge Activation",
+      "price_usd": 500,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/dRmfZifeS1S59rCdqQ4AU07",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/product.json",
+      "search_intents": [
+        "organize company knowledge base",
+        "turn team documents into usable documentation",
+        "knowledge handoff help for small business"
+      ],
+      "os_parent": "Evercraft OS"
+    },
+    {
+      "product_id": "evercraft.commerce.social-intelligence-launch",
+      "sku_key": "social-intelligence-launch",
+      "brand": "Evercraft Social Intelligence",
+      "exact_checkout_product": "Social Intelligence Launch",
+      "price_usd": 1000,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/8x24gA1o2eER0V672s4AU0b",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/product.json",
+      "search_intents": [
+        "research audience for a product launch",
+        "social intelligence for marketing strategy",
+        "evidence based social campaign plan"
+      ],
+      "os_parent": "Evercraft OS"
+    },
+    {
+      "product_id": "evercraft.commerce.institutional-memory-system",
+      "sku_key": "institutional-memory-system",
+      "brand": "Evercraft Institutional Memory",
+      "exact_checkout_product": "Institutional Memory System",
+      "price_usd": 1500,
+      "commercial_state": "sell_now_scope_confirmed",
+      "checkout_url": "https://buy.stripe.com/14AfZid6K54hfQ00E44AU06",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+      "machine_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/product.json",
+      "search_intents": [
+        "institutional memory system for company",
+        "stop losing decisions during employee handoffs",
+        "document why business decisions were made"
+      ],
+      "os_parent": "Evercraft OS"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "evercraft.commercial-product.v1",
+  "product_id": "evercraft.commerce.social-intelligence-launch",
+  "sku_key": "social-intelligence-launch",
+  "brand": "Evercraft Social Intelligence",
+  "exact_checkout_product": "Social Intelligence Launch",
+  "merchant": "Evercraft LLC",
+  "category": "scoped_business_service",
+  "commercial_state": "sell_now_scope_confirmed",
+  "checkout_state": "existing_exact_sku_hosted_stripe",
+  "price_usd": 1000,
+  "currency": "USD",
+  "tagline": "Understand the audience before buying more attention.",
+  "positioning": {
+    "ideal_buyer": "Teams planning a campaign or market approach that need legitimate audience and content evidence",
+    "buyer_problem": "Content is produced without a clear evidence-backed understanding of the audience.",
+    "intended_outcome": "A scoped audience and campaign intelligence engagement"
+  },
+  "delivery_contract": {
+    "deliverable_to_scope": "A written audience-signal analysis and agreed launch recommendations based on permitted evidence",
+    "buyer_inputs": "Intended audience, legitimate public or authorized sources, current channels, business goal and timing",
+    "acceptance_criteria_to_agree": "Audience scope, allowed sources, planned analysis, report format and timeline",
+    "exclusions": "No scraping private accounts, surveillance, guaranteed engagement, follower growth or campaign ROI",
+    "scope_and_capacity_approval_required": true
+  },
+  "acquisition": {
+    "discovery_intents": [
+      "research audience for a product launch",
+      "social intelligence for marketing strategy",
+      "evidence based social campaign plan"
+    ],
+    "content_angle": "Better audience understanding comes before better posting frequency.",
+    "approved_example_copy": "Launching into an audience you don't really understand? Evercraft Social Intelligence is a $1,000 scoped engagement that turns authorized audience signals into a practical launch brief.",
+    "first_party_product_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+    "distribution_rule": "Use owned or authorized channels and qualified, permissioned audiences only. Do not claim posts, leads, conversion or revenue without source receipts.",
+    "external_distribution_verified": false
+  },
+  "checkout": {
+    "url": "https://buy.stripe.com/8x24gA1o2eER0V672s4AU0b",
+    "payment_link_id": "plink_1U4RelK4iDjqpECVQntZr27T",
+    "stripe_product_id": "prod_V4apG7t9NUJxMk",
+    "stripe_price_id": "price_1U4RdoK4iDjqpECVzhUZ5dmB",
+    "evercraft_payments_role": "canonical_order_authority_target",
+    "settlement": "Systemia Stripe account",
+    "reconciliation": "manual_unverified_automated_sync",
+    "provider_paid_receipt_required": true,
+    "fulfillment_human_review": true,
+    "receipt_from_checkout_visit": false
+  },
+  "evercraft_os": {
+    "parent": "Evercraft OS",
+    "relationship": "Independent market-facing product, sharing future Evercraft OS capabilities",
+    "module_context": "Evercraft OS / Research & Distribution (shared capability goal, not proven automation)",
+    "shared_services": [
+      "Evercraft Payments",
+      "Systemia coordination",
+      "Passport permissions",
+      "Evercraft Research/Memory where authorized"
+    ],
+    "runtime_integration_verified": false
+  },
+  "discovery": {
+    "human_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+    "machine_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/product.json",
+    "llms_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/llms.txt"
+  },
+  "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
+  "design": {
+    "accent": "#b4d2ff"
+  }
+}
