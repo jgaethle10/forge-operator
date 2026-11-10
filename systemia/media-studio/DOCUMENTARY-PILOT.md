@@ -65,3 +65,43 @@ If capture date is known, use "captureDateState":"known" with "capturedAt". Do n
 5. Verify separately scoped price, contract, checkout and secure delivery. The public $50 social commercial does **not** price documentary production. No client assets are reused in public showcases without separate written permission.
 
 **NO-GO for a claimed customer-quality paid documentary teaser until those real-world gates pass.**
+
+## Documentary encoded-master preflight (new)
+
+The second gate reads the **actual encoded MP4**, probes video/audio with FFprobe,
+measures **final AAC** integrated loudness and true peak with FFmpeg EBU R128,
+and binds those measurements to SHA-256 of the exact final master. It requires
+45–90 seconds, H.264/AAC, 24–60 fps, exactly one video and audio stream,
+-18 to -14 LUFS, and true peak at or below -1 dBFS. Internal synthetic proofs
+require a 720px short edge; a genuine authorized client preview requires 1080px.
+
+Place this JSON in a **private** file, with the actual master's SHA-256:
+
+    {
+      "schema":"evercraft.fallen.documentary-master-preflight.v1",
+      "classification":"internal_spec",
+      "declaredSyntheticOrFirstParty":true,
+      "expectedSha256":"REPLACE_WITH_64_HEX_DIGITS"
+    }
+
+Then run:
+
+    node systemia/media-studio/documentary-master-preflight.mjs \
+      ./private/master.mp4 \
+      ./private/master-manifest.json \
+      ./private/master-qc-receipt.json
+
+For an `authorized_client_preview` classification, an independently verified
+`rightsAuthentication`, `privatePreview` client consent, successful private
+`intakeReceipt`, human `editorialReview` and named `creativeReview` full-playback
+evidence are additionally required. Software verifies the presence and shape of
+those declarations, **not their authenticity**. A passing status is only
+`ready_for_client_review`, never an authorization to send, invoice, publish,
+or reuse privately supplied video in the portfolio.
+
+The targeted workflow generates a real 45-second **synthetic FFmpeg test pattern**
+solely to verify encoding, exact-master measurement, positive internal state,
+and fail-closed release checks. The test pattern is **not** field footage,
+an approved demo reel, a polished documentary, or evidence of an owned-node run.
+A separately produced local original motion-graphics spec can inform visual
+direction but cannot close #1619's real-media acceptance criterion.
