@@ -24,6 +24,7 @@ on:
     paths:
       - 'systemia/organism/frontier-watch.mjs'
       - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/medical-evidence-brief*.mjs'
       - 'systemia/organism/medical-evidence-triage*.mjs'
       - 'systemia/organism/medical-review-packet*.mjs'
