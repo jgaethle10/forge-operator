@@ -141,3 +141,50 @@ test('unsafe advertised capabilities cannot be invented by inventory',async()=>{
   assert.equal(observed.inventory.length,0);
   assert.equal(calls.engine_calls,0);
 });
+
+
+test('candidate llama.cpp metadata flows into Raven routing without a prompt or inference call',async()=>{
+  const calls=[];
+  const modelId='Qwen3-4B-Q4_K_M.gguf';
+  const observed=await observeRavenInventory({
+    trustedSpecs:[spec({
+      provider_id:'llama-cpp',
+      model_id:modelId,
+      runtime:'local',
+      cost_evidence_ref:'fixture:owned-node-api-fee',
+      latency_evidence_ref:'fixture:synthetic-latency-not-performance-proof'
+    })],
+    llamaCppOrigin:'http://127.0.0.1:36095',
+    fetchImpl:async (url,init)=>{
+      calls.push({url,method:init.method,body:init.body});
+      assert.equal(init.method,'GET');
+      assert.equal(url,'http://127.0.0.1:36095/v1/models');
+      return {ok:true,status:200,json:async()=>({
+        object:'list',data:[{id:modelId,architecture:{output_modalities:['text']}}]
+      })};
+    },
+    now:()=>t
+  });
+  assert.equal(observed.inventory.length,1);
+  assert.equal(observed.inventory[0].provider_id,'llama-cpp');
+  assert.equal(observed.inventory[0].health_scope,'metadata_only');
+  assert.equal(observed.inference_performed,false);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0].body,undefined);
+  const route=decideModelRoute({
+    request:{
+      task_id:'synthetic-owned-node',
+      evaluation_time_ms:t,
+      capabilities:['text'],
+      data_classification:'confidential',
+      local_only:true,
+      cloud_consent:false,
+      cost_ceiling_usd:0
+    },
+    inventory:observed.inventory
+  });
+  assert.equal(route.status,'eligible');
+  assert.equal(route.primary.provider_id,'llama-cpp');
+  assert.equal(route.inference_performed,false);
+  assert.equal(route.external_effect_authorized,false);
+});
