@@ -47,6 +47,8 @@ export function validateArchiveAcquisition(a,ledger) {
      a.sourceAccess.commercialDerivedGeometryAllowed||
      a.geometryReady||a.sourceOriginalVerified||a.worldsRuntimeAuthorized)
     fail("premature_publication_purchase_or_geometry");
+  if(a.sourceAccess.priorInquirySent === true && (a.sourceAccess.inquiryStatus!=="sent-awaiting-archive-response" || a.sourceAccess.replyReceived!==false))
+    fail("inconsistent_inquiry_state");
   return a;
 }
 
@@ -75,7 +77,9 @@ export function archiveInquiryPacket(acquisition,ledger) {
     sendAuthorized:false,
     feeApproved:false,
     mediaPublicationApproved:false,
-    flags:["not-sent","no-fee-authority","source-exact-sheet-unverified"]
+    deliveryStatus:a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent",
+    inquiryAlreadySent:a.sourceAccess.priorInquirySent===true,
+    flags:[a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent","no-fee-authority","source-exact-sheet-unverified"]
   };
 }
 
@@ -91,7 +95,7 @@ export function acquisitionReadiness(acquisition,ledger) {
     publishOriginalMapAllowed:false,
     publicSceneAccuracyVerified:false,
     outstanding:[
-      "Ask archive for downtown block and 1960 sheet numbers",
+      a.sourceAccess.priorInquirySent ? "Await CSUN response identifying downtown 1960 volume and sheet numbers" : "Ask archive for downtown block and 1960 sheet numbers",
       "Inspect original sheet and individual correction dates",
       "Get written public/commercial reuse permission if applicable",
       "Separate independent survey control-point verification and 1960 timeline review"
