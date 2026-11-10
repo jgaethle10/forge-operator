@@ -19,6 +19,7 @@ SAMPLE_RATE = 24000
 DURATION_FRAMES_PER_SECOND = 40
 SEED = 1701
 SCHEMA = "evercraft.bella.native-duration-study.v1"
+G2P_BASELINE_SHA256 = "b609c9bb842a59167dd2eb0319d3e9cabfce0ccdc56a060ef71e456581dac70d"
 BASE = (
     "You know that moment when everything begins to make sense. "
     "The noise falls away. The next step becomes clear. "
@@ -175,6 +176,8 @@ def render(out):
         if result.graphemes.strip() != script.strip():
             raise ValueError("NATIVE_SCRIPT_DRIFT")
         measurement = inspect_result(result, script)
+        if label == "original" and measurement["nativeInputPhonemeSha256"] != G2P_BASELINE_SHA256:
+            raise ValueError("NATIVE_G2P_REGRESSION_VS_VERIFIED_NOV5_BASELINE")
         values = result.audio.detach().float().cpu().numpy()
         if values.ndim != 1 or not np.all(np.isfinite(values)) or np.max(np.abs(values)) >= 1:
             raise ValueError("INVALID_WAVEFORM")
