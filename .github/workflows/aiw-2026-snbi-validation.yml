@@ -26,7 +26,7 @@ jobs:
       - name: Run offline importer checks
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -v
   live-2026-small-state-probe:
-    if: github.event_name == 'push'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
