@@ -73,16 +73,18 @@ test('unknown identities, duplicated or malformed events fail closed',()=>{
  const fake=invalid(x=>{x.events[0].id='e0';});
  assert.throws(()=>projectDecisionReceipts(fake,1),/Invalid event ID/);
 });
-test('canonical heartbeat includes policy provenance and matching world snapshot hash',()=>{
+test('observer projects existing persisted heartbeat without modifying pinned writer or world',()=>{
  const first=advanceHeartbeat({schema:STATE_SCHEMA,initialized:false,release_status:'held'},PUBLIC_GENESIS_MS+100*REAL_TICK_MS).state;
  const run=advanceHeartbeat(first,PUBLIC_GENESIS_MS+120*REAL_TICK_MS);
  assert.equal(run.changed,true);
  const state=run.state;
- assert.equal(state.decision_receipts.schema,RECEIPT_SCHEMA);
- assert.equal(state.decision_receipts.world_hash,state.world_hash);
- assert.equal(state.decision_receipts.total_events_generated,state.run.new_event_count);
+ assert.equal(state.decision_receipts,undefined,'pinned canonical writer must remain unchanged');
+ const before=JSON.stringify(state);
+ const projected=projectDecisionReceipts(state.world,1);
+ assert.equal(projected.schema,RECEIPT_SCHEMA);
  assert.equal(createHash('sha256').update(JSON.stringify(state.world)).digest('hex'),state.world_hash);
- assert.ok(state.decision_receipts.receipts.length>0);
+ assert.ok(projected.receipts.length>0);
+ assert.equal(JSON.stringify(state),before,'read-only projection cannot alter heartbeat');
  assert.equal(state.model_mode,'civic_and_social_policy_no_llm');
  assert.equal(state.release_status,'held');
 });
