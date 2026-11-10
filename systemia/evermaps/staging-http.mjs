@@ -91,7 +91,9 @@ const ROUTES=Object.freeze({
  '/':['map','text/html; charset=utf-8'],
  '/evermaps/':['map','text/html; charset=utf-8'],
  '/research/':['index','text/html; charset=utf-8'],
- '/research.csv':['csv','text/csv; charset=utf-8']
+ '/research.csv':['csv','text/csv; charset=utf-8'],
+ '/evermaps/research/':['index','text/html; charset=utf-8'],
+ '/evermaps/research.csv':['csv','text/csv; charset=utf-8']
 });
 export async function createEvermapsStagingServer({releaseDirectory}={}){
  const release=await loadVerifiedEvermapsRelease({directory:releaseDirectory});
@@ -101,7 +103,7 @@ export async function createEvermapsStagingServer({releaseDirectory}={}){
    res.writeHead(405,{...REPLY_HEADERS,allow:'GET, HEAD'});res.end();return;
   }
   const pathname=req.url?.split('?')[0];
-  if(pathname==='/api/health'){
+  if(pathname==='/api/health'||pathname==='/evermaps/api/health'){
    const reply=Buffer.from(JSON.stringify({
     ok:true,service:release.summary.service,
     release_state:release.summary.release_state,

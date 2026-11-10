@@ -26,7 +26,7 @@ test('unverified public route is never reported active even with source verifica
  t.after(()=>new Promise(resolve=>server.close(resolve)));
  const origin='http://127.0.0.1:'+server.address().port;
  const [health,map,hidden,post,head]=await Promise.all([
-  fetch(origin+'/api/health'),fetch(origin+'/'),fetch(origin+'/research-packet.json'),
+  fetch(origin+'/evermaps/api/health'),fetch(origin+'/evermaps/'),fetch(origin+'/research-packet.json'),
   fetch(origin+'/',{method:'POST'}),fetch(origin+'/',{method:'HEAD'})
  ]);
  assert.equal((await health.json()).public_https_route_verified,false);
@@ -34,6 +34,9 @@ test('unverified public route is never reported active even with source verifica
  assert.equal(hidden.status,404);
  assert.equal(post.status,405);
  assert.equal(head.status,200);
+ const [index,csv]=await Promise.all([fetch(origin+'/evermaps/research/'),fetch(origin+'/evermaps/research.csv')]);
+ assert.equal(index.status,200);
+ assert.equal(csv.status,200);
  assert.match(map.headers.get('content-security-policy'),/connect-src 'none'/);
 });
 test('staging admission refuses missing source or packet rights gates',async t=>{

@@ -6,8 +6,8 @@ try{
  const address=server.address();
  const origin='http://127.0.0.1:'+address.port;
  const [health,map,research,csv,missing,post,head]=await Promise.all([
-  fetch(origin+'/api/health'),fetch(origin+'/evermaps/'),fetch(origin+'/research/'),
-  fetch(origin+'/research.csv'),fetch(origin+'/wa-dnr-grant-permit-points.geojson'),
+  fetch(origin+'/evermaps/api/health'),fetch(origin+'/evermaps/'),fetch(origin+'/evermaps/research/'),
+  fetch(origin+'/evermaps/research.csv'),fetch(origin+'/wa-dnr-grant-permit-points.geojson'),
   fetch(origin+'/',{method:'POST'}),fetch(origin+'/',{method:'HEAD'})
  ]);
  const healthData=await health.json(),mapHtml=await map.text();

@@ -207,3 +207,14 @@ EVERMAPS_STAGING_PORT=4737 node systemia/evermaps/staging-http-cli.mjs
 ```
 
 Bind only `127.0.0.1:4737`. Evercraft Edge must supply TLS, the domain, route identity, admission receipts, restart/rollback, and a public HTTPS canary. **Do not** assume the host or domain exists, do not bypass Yard/Systemia authority and do not promote CI-only tests to a public deployment. There is no automatic merge or live site in this research branch.
+
+### External HTTPS admission test (never assumed live)
+The new `public-https-canary.mjs` is a separate, non-mutating check for an **explicitly configured** public HTTPS hostname. The staging server now supports collision-free paths `/evermaps/`, `/evermaps/research/`, `/evermaps/research.csv`, and `/evermaps/api/health` on a shared Evercraft domain. The canary GETs all four endpoints, checks the first-party CSP and mobile fallback, and requires the live response's WGS SHA-256 to exactly match the independently verified source receipt. It emits `public_https_verified` only after those conditions pass.
+
+After Systemia/Yard/Edge authorizes and binds TLS, run the following on the owned node or a separate authorized inspector with the verified release receipt:
+```bash
+EVERMAPS_PUBLIC_ORIGIN=https://<actual-evercraft-owned-domain> \
+EVERMAPS_OUTPUT_DIR=/path/to/verified/evermaps-evidence \
+node systemia/evermaps/public-https-canary-cli.mjs
+```
+This step requires the actual domain, not a guessed URL. It never creates a route or deploys code. Do not claim public launch merely because the local `/api/health` is green.
