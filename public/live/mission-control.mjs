@@ -77,6 +77,30 @@ function drawOperator(){
     node.append(container);
   }
 }
+function drawLocalNodes(){
+  const host=byId('localNodeCards');
+  host.replaceChildren();
+  const reports=state.operator?.nodes||[];
+  for(const key of ['node001','node002']){
+    const report=reports.find(n=>n.node_key===key);
+    const card=element('section','reported-lane');
+    card.append(element('h3','',key==='node001'?'Penguin / Node001':'NextGen / Node002'));
+    if(!report){
+      card.append(element('p','empty','NO LOCAL WATCH IMPORTED · CURRENT HEALTH UNKNOWN'));
+    }else{
+      const status=(Date.now()-Date.parse(report.observed_at)>180000)?'stale':report.status;
+      const title=status==='reported_healthy'?'RECENT LOCAL PROBE · SELF REPORTED':
+        status==='reported_degraded'?'DEGRADED · SELF REPORTED':
+        status==='bootstrapping'?'BOOTSTRAPPING · SELF REPORTED':
+        status==='stale'?'STALE RECORD · CURRENT STATE UNKNOWN':'LOCAL STATE UNKNOWN';
+      card.append(element('strong','node-observation-state',title));
+      card.append(element('small','node-observation-detail','Observed '+fmtTime(report.observed_at)));
+      card.append(element('small','node-observation-detail',report.note));
+      card.append(element('small','node-observation-detail','Local hash check ≠ device authentication, external route or execution proof'));
+    }
+    host.append(card);
+  }
+}
 function sourceStatus(label,type){
   const pill=byId('sourceState');
   pill.textContent=label;
@@ -123,7 +147,7 @@ async function refresh(){
 byId('refresh').addEventListener('click',refresh);
 byId('snapshotFile').addEventListener('change',async event=>{
   const file=event.target.files?.[0];
-  state.operator=null;drawOperator();
+  state.operator=null;drawOperator();drawLocalNodes();
   if(!file)return;
   const status=byId('snapshotStatus');
   try{
@@ -133,13 +157,14 @@ byId('snapshotFile').addEventListener('change',async event=>{
     state.operator=parseOperatorSnapshot(JSON.parse(text));
     status.className='snapshot-status';
     status.textContent='Operator-imported: '+state.operator.missions.length+
-      ' reported missions · exported '+fmtTime(state.operator.exported_at)+
+      ' reported missions, '+state.operator.nodes.length+' local node watches · exported '+fmtTime(state.operator.exported_at)+
       ' · NOT AUTHENTICATED · kept only in this browser tab';
   }catch(err){
     status.className='snapshot-status error';
     status.textContent='Import held: '+(err instanceof SyntaxError?'Invalid JSON.':err.message||'Invalid snapshot.');
   }
   drawOperator();
+  drawLocalNodes();
 });
 byId('clearSnapshot').addEventListener('click',()=>{
   state.operator=null;
@@ -147,8 +172,12 @@ byId('clearSnapshot').addEventListener('click',()=>{
   byId('snapshotStatus').className='snapshot-status';
   byId('snapshotStatus').textContent='Local import cleared. Internal mission status unknown.';
   drawOperator();
+  drawLocalNodes();
 });
 drawOperator();
+drawLocalNodes();
 drawPublic();
 refresh();
 setInterval(()=>{if(!document.hidden)refresh();},600000);
+
+setInterval(drawLocalNodes,60000); // Expire previously imported health reports in-place.
