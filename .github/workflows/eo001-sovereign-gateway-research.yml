@@ -7,6 +7,8 @@ on:
       - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate*'
       - 'integrations/ai-evaluation-lab/eo001-gate0-private-handoff.py'
       - 'integrations/ai-evaluation-lab/test_gate0_private_handoff.py'
+      - 'integrations/ai-evaluation-lab/eo001-forge-evidence-qa.py'
+      - 'integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py'
       - '.github/workflows/eo001-sovereign-gateway-research.yml'
   pull_request:
     branches:
@@ -15,6 +17,8 @@ on:
       - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate*'
       - 'integrations/ai-evaluation-lab/eo001-gate0-private-handoff.py'
       - 'integrations/ai-evaluation-lab/test_gate0_private_handoff.py'
+      - 'integrations/ai-evaluation-lab/eo001-forge-evidence-qa.py'
+      - 'integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py'
       - '.github/workflows/eo001-sovereign-gateway-research.yml'
   workflow_dispatch:
 permissions:
@@ -34,5 +38,7 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.test.mjs
       - name: Validate private Gate 0 handoff and negative controls
         run: python3 integrations/ai-evaluation-lab/test_gate0_private_handoff.py
+      - name: Run Forge independent archive and provenance QA negative controls
+        run: python3 integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py
       - name: Recheck existing evidence policy
         run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs
