@@ -5,9 +5,17 @@
 ## Two separate prototype surfaces
 
 - **Telemetry lab:** https://jgaethle10.github.io/forge-operator/subsea-watch/ . Depth profiles and source-checked recorded positions, with strict refusal to fabricate underwater X/Y.
-- **Immersive WebGL concept:** https://jgaethle10.github.io/forge-operator/subsea-watch/immersive/ . A separate original 3D renderer with procedural fictional seafloor, a deliberately simplified diver mesh, illustrative pipe geometry, cinematic orbit/follow camera, pinch-to-zoom and playback scrub. It reads **only the checked synthetic sample**, not real diver data. Do not mistake this rendered scene for sonar reconstruction or safety-grade positioning.
+- **Immersive WebGL concept:** https://jgaethle10.github.io/forge-operator/subsea-watch/immersive/ . A separate original 3D renderer with procedural fictional seafloor, a deliberately simplified diver mesh, illustrative pipe geometry, orbit/follow camera, pinch-to-zoom and playback scrub. The built-in mission remains **synthetic**. The new local JSON/CSV import can replay user-declared timed X/Y/depth telemetry; real imports deliberately hide the fictional seabed, illustrative pipe and debris. Files are read only in the browser and are not sent to Evercraft. A depth-only or partial-position file does **not** render a 3D route. Do not mistake an imported track for sonar reconstruction or safety-grade positioning.
 
-The immersive experiment does not replace the evidence lab. The product requires a trustworthy source-to-scene mapping for real dive logs, video and surveyed site geometry before any reconstructed real missions can be shown. Neither route is authorized for underwater navigation, intake avoidance, or dive clearance.
+The immersive experiment does not replace the evidence lab. It now accepts local replay telemetry, but the product still requires a trustworthy source-to-scene mapping for real dive logs, video and surveyed site geometry before any reconstructed real missions can be shown. Neither route is authorized for underwater navigation, intake avoidance, or dive clearance.
+
+## Replay import boundary (new)
+
+1. In the **immersive view**, select **Import dive JSON / CSV** and choose a local file. Use the same documented schema as the telemetry lab: `t_s,depth_m,x_m,y_m,position_source` for spatial replay, or `t_s,depth_m` for depth only. The UI displays a user-file / unverified status and the claimed positioning method.
+2. When local X/Y/depth and a consistent declared source are all available, the immersive view renders the imported path and a generic marker in an empty 3D coordinate space. The view is **not a reconstruction of a real underwater scene**. All synthetic site elements are hidden; no underwater hazards, pipelines, seabed or scale registration are inferred.
+3. If horizontal positioning is absent, partial or inconsistently attributed, the immersive scene **draws no route or diver** and gives a clear explanation. Gaps over 15 seconds are not bridged. Discontinuous points remain evidence gaps, not safe travel corridors.
+4. **Reset demo** returns to the fictional environment. Imported data stays in the browser session, is not uploaded by the page, and cannot certify positioning, hazards, visibility, isolation or clearance.
+5. Do not publish the imported data or represent its user-declared positioning source as independently verified. A later real reconstruction needs independently sourced survey geometry, coordinate registration, uncertainty and video timestamps, with independent operator review.
 
 ## Experience quality gates
 

@@ -1,4 +1,4 @@
-import {normalizeDive,atTime} from '../core.mjs';
+import {normalizeDive,atTime,parseInput} from '../core.mjs';
 
 const $=id=>document.getElementById(id);
 const canvas=$('view');
@@ -120,24 +120,64 @@ if(!gl){
  }
  const meshes={floor:buffer(terrain),objects:buffer(objects),pipe:buffer(pipe),diver:buffer(diver)};
  let track=null,logs=null,dive=null,current=0,playing=false,last=0;
- let yaw=-.43,pitch=.35,distance=18,following=true,drag=null,pinchDistance=null;
+ let mode='synthetic',origin=[0,0],lastKnown=[-4,-3,-7];
+ let yaw=-.43,pitch=.35,distance=12,following=true,drag=null,pinchDistance=null;
  const pointers=new Map();
+ // User-declared local coordinates are recentered without changing their relative geometry.
+ // The origin is not a geographic fix and must never be interpreted as one.
+ const world=p=>[p.x-origin[0],p.y-origin[1],-p.depth];
  function route(points){
+  if(track)gl.deleteBuffer(track.buffer);
+  if(logs)gl.deleteBuffer(logs.buffer);
+  track=null;logs=null;
+  if(!points.length)return;
   const t=[],dots=[];
   for(let i=1;i<points.length;i++)if(points[i].t-points[i-1].t<=15)
-   tube(t,[points[i-1].x,points[i-1].y,-points[i-1].depth],[points[i].x,points[i].y,-points[i].depth],.065,[.43,.93,.89],6);
-  for(let i=0;i<points.length;i+=3)sphere(dots,[points[i].x,points[i].y,-points[i].depth],[.12,.12,.12],[.47,.87,.85],5,6);
-  track=buffer(t);logs=buffer(dots);
+   tube(t,world(points[i-1]),world(points[i]),.065,[.43,.93,.89],6);
+  for(let i=0;i<points.length;i+=3)sphere(dots,world(points[i]),[.12,.12,.12],[.47,.87,.85],5,6);
+  track=t.length?buffer(t):null;
+  logs=dots.length?buffer(dots):null;
  }
  const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
+ function activate(next,synthetic){
+  dive=next;mode=synthetic?'synthetic':'imported';
+  playing=false;$('play').textContent='▶ Play';$('play').disabled=false;
+  current=dive.points[0].t;
+  origin=dive.xyAvailable?[dive.points[0].x,dive.points[0].y]:[0,0];
+  lastKnown=dive.xyAvailable?world(dive.points[0]):[0,0,-9];
+  route(dive.xyAvailable?dive.points:[]);
+  yaw=-.43;pitch=.35;distance=Math.min(window.innerWidth,window.innerHeight)<700?11:18;
+  following=true;$('follow').setAttribute('aria-pressed','true');
+  $('timeline').min=dive.points[0].t;
+  $('timeline').max=dive.points.at(-1).t;
+  $('timeline').value=current;
+  $('timeline').setAttribute('aria-label',synthetic?'Synthetic dive replay timeline':'Imported dive replay timeline');
+  $('mode-pill').textContent=synthetic?'Synthetic demonstration':'User file · unverified';
+  $('depth-label').textContent=synthetic?'Recorded depth · synthetic':'Depth · user-provided readings';
+  $('scene-intro').textContent=synthetic?
+   'Explore one fictional dive route in a rendered underwater environment.':
+   'Replay user-provided readings. No seafloor, infrastructure or site geometry is inferred.';
+  $('synthetic-notes').hidden=!synthetic;
+  $('import-notes').hidden=synthetic;
+  $('import-summary').textContent=synthetic?'Synthetic mission only.':
+   dive.title+' · '+(dive.xyAvailable?dive.positionSource+' (declared, unverified)':'horizontal position unavailable')+' · '+dive.provenance;
+  $('no-position').hidden=synthetic||dive.xyAvailable;
+  $('caption').textContent=synthetic?'Illustrative diver route and pipe, not a surveyed site':
+   dive.xyAvailable?'User-declared local track only · no surveyed seabed or structures':
+   'Depth-only import · no horizontal route can be drawn';
+  canvas.setAttribute('aria-label',synthetic?
+   'Interactive synthetic underwater dive scene. Drag to rotate and pinch to zoom.':
+   'Three-dimensional visualization of user-declared local positions only, with no reconstructed site.');
+  document.documentElement.dataset.subseaMode=mode;
+ }
  async function load(){
   try{
    const r=await fetch('../sample.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);
-   dive=normalizeDive(await r.json());
-   if(!dive.demo||!dive.xyAvailable||dive.positionSource!=='SIMULATED')throw Error('Example missing synthetic provenance');
-   route(dive.points);current=dive.points[0].t;
+   const sample=normalizeDive(await r.json());
+   if(!sample.demo||!sample.xyAvailable||sample.positionSource!=='SIMULATED')throw Error('Example missing synthetic provenance');
+   activate(sample,true);
    document.documentElement.dataset.subseaSample='synthetic-loaded';
-   $('timeline').max=dive.points.at(-1).t;
+   $('file-status').textContent='Built-in fictional mission. Local files never leave this browser.';
   }catch(e){$('caption').textContent='Example unavailable: '+e.message;$('play').disabled=true;}
  }
  function frame(time){
@@ -150,20 +190,24 @@ if(!gl){
   }
   last=time;
   const pt=dive?atTime(dive,current):null;
-  const pos=pt&&pt.x!==null?[pt.x,pt.y,-pt.depth]:[-4,-3,-7];
-  const target=following?pos:[0,0,-9];
+  const pos=pt&&pt.x!==null&&pt.depth!==null?world(pt):null;
+  if(pos)lastKnown=pos;
+  // Never jump the camera to a fabricated position when recorded fixes are missing.
+  const target=following?lastKnown:[0,0,-9];
   const eye=[target[0]+Math.sin(yaw)*Math.cos(pitch)*distance,target[1]-Math.cos(yaw)*Math.cos(pitch)*distance,target[2]+Math.sin(pitch)*distance];
-  gl.uniformMatrix4fv(uniforms.vp,false,multiply(perspective(57*Math.PI/180,W/H,.2,180),lookAt(eye,target)));
+  gl.uniformMatrix4fv(uniforms.vp,false,multiply(perspective(57*Math.PI/180,W/H,.2,1500),lookAt(eye,target)));
   gl.uniform3fv(uniforms.eye,new Float32Array(eye));gl.uniform1f(uniforms.time,time/1000);
-  const id=eyeMatrix();draw(meshes.floor,id);draw(meshes.objects,id);draw(meshes.pipe,id);
+  const id=eyeMatrix();
+  // Fictional terrain and pipe are NEVER drawn alongside customer telemetry.
+  if(mode==='synthetic'){draw(meshes.floor,id);draw(meshes.objects,id);draw(meshes.pipe,id);}
   if(track)draw(track,id);if(logs)draw(logs,id);
-  if(pt&&pt.x!==null){
+  if(pos){
    let angle=0;const a=dive.points[pt.nearest],b=dive.points[Math.min(pt.nearest+1,dive.points.length-1)];
    if(a!==b)angle=Math.atan2(b.y-a.y,b.x-a.x);
    draw(meshes.diver,move(pos,angle));
   }
   if(dive){
-   $('depth').textContent=pt.depth===null?'Not recorded':pt.depth.toFixed(1)+' m';
+   $('depth').textContent=pt.depth===null?'Data gap':pt.depth.toFixed(1)+' m';
    $('time').textContent=fmt(current)+' / '+fmt(dive.points.at(-1).t);
    $('timeline').value=current;
   }
@@ -177,7 +221,7 @@ if(!gl){
  });
  $('timeline').addEventListener('input',e=>current=Number(e.target.value));
  $('follow').addEventListener('click',()=>{following=!following;$('follow').setAttribute('aria-pressed',String(following));});
- $('rotate').addEventListener('click',()=>{yaw=-.43;pitch=.35;distance=18;following=true;$('follow').setAttribute('aria-pressed','true');});
+ $('rotate').addEventListener('click',()=>{yaw=-.43;pitch=.35;distance=Math.min(window.innerWidth,window.innerHeight)<700?11:18;following=true;$('follow').setAttribute('aria-pressed','true');});
  $('zoom-in').addEventListener('click',()=>distance=clamp(distance*.8,5,65));
  $('zoom-out').addEventListener('click',()=>distance=clamp(distance*1.2,5,65));
  $('evidence').addEventListener('click',()=>{$('details').hidden=false;$('evidence').setAttribute('aria-expanded','true');});
@@ -211,6 +255,23 @@ if(!gl){
  canvas.addEventListener('pointerup',pointerDone);
  canvas.addEventListener('pointercancel',pointerDone);
  canvas.addEventListener('wheel',e=>{e.preventDefault();distance=clamp(distance*(e.deltaY>0?1.08:.92),5,65);},{passive:false});
+ $('import-file').addEventListener('click',()=>$('load-file').click());
+ $('load-file').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];
+  e.target.value='';
+  if(!file)return;
+  try{
+   if(file.size>2e6)throw Error('File exceeds the 2 MB preview limit.');
+   const next=parseInput(await file.text(),file.name);
+   if(next.demo||next.positionSource==='SIMULATED')
+    throw Error('SIMULATED paths belong only in the clearly labeled example mission.');
+   activate(next,false);
+   $('file-status').textContent=next.xyAvailable?
+    'Local file loaded. Coordinates are user-declared, not independently verified. No site model is shown.':
+    'Depth data loaded. Horizontal position is missing or incomplete, so no 3D route is shown.';
+  }catch(err){$('file-status').textContent='Import failed: '+err.message;}
+ });
+ $('reset-sample').addEventListener('click',load);
  document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;$('play').textContent='▶ Play';}});
  load().then(()=>requestAnimationFrame(frame));
 }

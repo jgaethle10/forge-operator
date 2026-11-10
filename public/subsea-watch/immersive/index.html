@@ -28,6 +28,13 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 .timeline{flex:1;width:100%;accent-color:#9ceee4;min-width:50px}.time{font-variant-numeric:tabular-nums;white-space:nowrap;color:#e4ffff;font-size:12px;font-weight:700}
 .meta{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #3a6472;padding-top:10px;margin-top:12px;font-size:10px;color:#a7d4db}
 .meta strong{color:#f9d5a2}
+.import-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:12px}
+.import-bar button{border:1px solid #75b8bf;border-radius:8px;background:#113849;color:#e7ffff;font-size:12px;font-weight:700;padding:9px 12px;min-height:42px}
+.import-bar button:first-child{background:#c5f5ed;color:#092933;border-color:#c5f5ed}
+#file-status{flex:1;min-width:180px;font-size:11px;color:#b2d6dd}
+.no-position{position:fixed;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:min(390px,calc(100vw - 105px));padding:20px;background:#082538e0;border:1px solid #6bb4b7;border-radius:12px;text-align:center;pointer-events:none}
+.no-position[hidden]{display:none}.no-position strong{display:block;font-size:17px;margin-bottom:7px}.no-position p{margin:0;font-size:12px;line-height:1.55}
+#import-notes[hidden],#synthetic-notes[hidden]{display:none}
 .details{position:fixed;z-index:4;left:16px;top:49%;transform:translateY(-50%);width:min(340px,calc(100vw - 80px));background:#082434ed;backdrop-filter:blur(20px);border:1px solid #649ba9;border-radius:12px;padding:20px;box-shadow:0 18px 75px #0009}
 .details[hidden]{display:none}.details h2{font:400 24px Georgia,serif;margin:0 0 15px}.details p{color:#d1e6ec;line-height:1.55;margin:0 0 11px;font-size:12px}
 .details button,.details a{border:1px solid #84bdc3;background:#13394a;color:white;border-radius:7px;padding:9px 12px;text-decoration:none;font-size:12px;display:inline-flex;margin:6px 5px 0 0}
@@ -43,6 +50,8 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
  .hint{display:none}.bottom{left:9px;right:9px;bottom:calc(env(safe-area-inset-bottom) + 7px);padding:12px 12px 9px}
  .controls{gap:7px}.play{min-width:77px;height:42px;font-size:12px}.time{font-size:10px}
  .meta{font-size:9px;gap:8px}.details{left:10px}
+ .import-bar{gap:7px;padding-bottom:8px}.import-bar button{font-size:11px;padding:7px 9px;min-height:38px}
+ #file-status{flex-basis:100%;font-size:10px}.no-position{top:54%}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -50,9 +59,9 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 <body>
 <canvas id="view" aria-label="Interactive three-dimensional synthetic underwater dive scene. Drag to rotate and pinch to zoom."></canvas>
 <div class="shade"></div>
-<header class="top"><div class="brand"><span class="mark">S</span><span><small>EVERCRAFT</small>SUBSEA WATCH</span></div><div class="pill">Synthetic demonstration</div></header>
-<div class="info"><div class="eyebrow">Mission replay / spatial experience concept</div><h1>Enter the <em>deep.</em></h1><p>Explore one fictional dive route in a rendered underwater environment.</p></div>
-<div class="dive-data"><span>Recorded depth · synthetic</span><strong id="depth">1.4 m</strong></div>
+<header class="top"><div class="brand"><span class="mark">S</span><span><small>EVERCRAFT</small>SUBSEA WATCH</span></div><div class="pill" id="mode-pill">Synthetic demonstration</div></header>
+<div class="info"><div class="eyebrow">Mission replay / spatial experience concept</div><h1>Enter the <em>deep.</em></h1><p id="scene-intro">Explore one fictional dive route in a rendered underwater environment.</p></div>
+<div class="dive-data"><span id="depth-label">Recorded depth · synthetic</span><strong id="depth">1.4 m</strong></div>
 <div class="side" aria-label="Camera and information controls">
 <button class="tool" id="follow" type="button" aria-label="Follow diver camera" aria-pressed="true" title="Follow diver">◎</button>
 <button class="tool" id="rotate" type="button" aria-label="Reset camera" title="Reset camera">⟳</button>
@@ -60,15 +69,29 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 <button class="tool" id="zoom-out" type="button" aria-label="Zoom out">−</button>
 <button class="tool" id="evidence" type="button" aria-label="Show mission evidence" aria-expanded="false">ⓘ</button>
 </div>
-<p class="hint">Drag to orbit · Pinch or scroll to zoom · Follow the synthetic route</p>
+<p class="hint">Drag to orbit · Pinch or scroll to zoom · Follow the replay</p>
+<div class="no-position" id="no-position" hidden role="status"><strong>No 3D position available</strong><p>This import has depth readings but no complete, consistently sourced horizontal track. We will not fabricate a diver route. Use the telemetry lab to inspect the depth profile.</p></div>
 <section class="details" id="details" aria-label="Replay provenance" hidden>
-<h2>What this scene proves</h2>
+<h2>Replay evidence &amp; limits</h2>
+<div id="synthetic-notes">
 <p>It renders a <strong>fictional</strong> diver, sample trajectory, illustrative underwater pipe and procedural seafloor. No real location, diver, flow, terrain survey or facility is represented.</p>
 <p>Depth and sample coordinates are synthetic. A future real replay must distinguish surveyed features, recorded positions, uncertainty, and missing readings. No map or visualization can clear a dive for safety.</p>
 <p>Operating pressure and pipe isolation are unknown. This scene must not be used for Delta-P avoidance, navigation or dive planning.</p>
+</div>
+<div id="import-notes" hidden>
+<p id="import-summary">User-provided source; not independently verified.</p>
+<p>Local coordinates and positioning methods are taken from the imported file, not automatically verified. No real seabed, site structures, pipes, obstacles or survey models are reconstructed. Track gaps longer than 15 seconds are not bridged.</p>
+<p>Files stay in this browser session. A displayed track is not a certified position, site survey, hazard analysis, safe route or dive clearance. Site operators and qualified dive supervisors must independently verify hazards and isolation.</p>
+</div>
 <button id="close-details" type="button">Return to replay</button><a href="../">Open telemetry lab</a>
 </section>
 <footer class="bottom">
+<div class="import-bar" aria-label="Local replay source">
+<button id="import-file" type="button">Import dive JSON / CSV</button>
+<input id="load-file" type="file" accept=".json,.csv,application/json,text/csv" hidden>
+<button id="reset-sample" type="button">Reset demo</button>
+<span id="file-status" role="status" aria-live="polite">Local files never leave this browser.</span>
+</div>
 <div class="controls"><button class="play" id="play" type="button">▶ Play</button><input class="timeline" id="timeline" type="range" min="0" max="180" step=".1" value="0" aria-label="Synthetic dive replay timeline"><strong class="time" id="time">00:00 / 03:00</strong></div>
 <div class="meta"><span id="caption">Illustrative diver route and pipe, not a surveyed site</span><span><strong>NOT DIVE CLEARANCE</strong></span></div>
 </footer>
