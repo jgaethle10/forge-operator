@@ -31,7 +31,7 @@ export function shiftDay(key, amount) {
 }
 
 export function emptyState() {
-  return { version: 1, goal: 'alcohol-free', theme: 'garden', entries: {} };
+  return { version: 1, goal: 'alcohol-free', theme: 'garden', entries: {}, creditedDays: {} };
 }
 
 export function normalizeState(input, today = dayKey()) {
@@ -39,15 +39,26 @@ export function normalizeState(input, today = dayKey()) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return result;
   if (GOALS.some(goal => goal.id === input.goal)) result.goal = input.goal;
   if (THEMES.includes(input.theme)) result.theme = input.theme;
-  if (!input.entries || typeof input.entries !== 'object' || Array.isArray(input.entries)) return result;
+  const allRecords = input.entries && typeof input.entries === 'object' && !Array.isArray(input.entries) ? input.entries : {};
+  const priorCredits = input.creditedDays && typeof input.creditedDays === 'object' && !Array.isArray(input.creditedDays) ? input.creditedDays : {};
   for (const goal of GOALS) {
-    const records = input.entries[goal.id];
-    if (!records || typeof records !== 'object' || Array.isArray(records)) continue;
-    const valid = Object.entries(records)
-      .filter(([date, status]) => validDay(date) && date <= today && OUTCOMES.has(status))
-      .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-730);
-    if (valid.length) result.entries[goal.id] = Object.fromEntries(valid);
+    const records = allRecords[goal.id];
+    if (records && typeof records === 'object' && !Array.isArray(records)) {
+      const valid = Object.entries(records)
+        .filter(([date, status]) => validDay(date) && date <= today && OUTCOMES.has(status))
+        .sort(([a], [b]) => a.localeCompare(b))
+        .slice(-730);
+      if (valid.length) result.entries[goal.id] = Object.fromEntries(valid);
+    }
+    // Credits represent artwork *already earned*. Revising a day changes the
+    // self-reported success count, never confiscates previously earned artwork.
+    // Older backups without creditedDays migrate from their kept entries.
+    const historical = Array.isArray(priorCredits[goal.id]) ? priorCredits[goal.id] : [];
+    const credited = new Set(historical.filter(date => validDay(date) && date <= today));
+    for (const [date, status] of Object.entries(result.entries[goal.id] || {})) {
+      if (status === 'kept') credited.add(date);
+    }
+    if (credited.size) result.creditedDays[goal.id] = [...credited].sort().slice(-40000);
   }
   return result;
 }
@@ -62,6 +73,11 @@ export function setCheckIn(state, goalId, date, status, today = dayKey()) {
   else records[date] = status;
   if (Object.keys(records).length) next.entries[goalId] = records;
   else delete next.entries[goalId];
+  if (status === 'kept') {
+    const days = new Set(next.creditedDays[goalId] || []);
+    days.add(date);
+    next.creditedDays[goalId] = [...days].sort();
+  }
   return next;
 }
 
@@ -70,8 +86,9 @@ export function getProgress(state, goalId, today = dayKey()) {
   const records = normalized.entries[goalId] || {};
   const successes = Object.values(records).filter(outcome => outcome === 'kept').length;
   const difficultDays = Object.values(records).filter(outcome => outcome === 'hard').length;
-  const completedPieces = Math.floor(successes / 7);
-  const brushstrokes = successes % 7;
+  const artMarks = (normalized.creditedDays[goalId] || []).length;
+  const completedPieces = Math.floor(artMarks / 7);
+  const brushstrokes = artMarks % 7;
   // A skipped check-in is unknown, not a relapse. Show only consecutive recorded wins.
   let cursor = records[today] === 'hard' ? null : (records[today] === 'kept' ? today : shiftDay(today, -1));
   let streak = 0;
@@ -80,7 +97,7 @@ export function getProgress(state, goalId, today = dayKey()) {
     cursor = shiftDay(cursor, -1);
   }
   return {
-    successes, difficultDays, streak, completedPieces, brushstrokes,
+    successes, difficultDays, streak, artMarks, completedPieces, brushstrokes,
     nextPieceIn: 7 - brushstrokes, todayStatus: records[today] || null,
     milestones: [7, 30, 90, 365].filter(amount => successes >= amount),
   };
