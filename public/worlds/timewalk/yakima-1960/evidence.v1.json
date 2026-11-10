@@ -327,6 +327,27 @@
         "reuse": "Catalog listing grants no permission to copy, embed, digitize, publish, commercially distribute or derive public map tiles from an original sheet. Confirm rights individually with archive and rightsholder."
       },
       "notes": "CSUN current out-of-California Sanborn index lists Yakima, Yakima County, editions 1953 1955 1956 1958 1959 1960. This is a collection-level holdings statement, not proof which sheets cover S 2nd, E Yakima Ave and S 3rd, nor a scanned 1960 original."
+    },
+    {
+      "id": "dahp-yvm-architectural-drawings-index",
+      "name": "Washington DAHP / Yakima Valley Museum catalog of architectural drawings, accession 0096-085",
+      "url": "https://dahp.wa.gov/sites/default/files/Drawings_at_YakimaValleyMuseum.pdf",
+      "holder": "Yakima Valley Museum, Sundquist Research Library & Archives; catalog hosted by Washington Department of Archaeology and Historic Preservation",
+      "evidencePeriod": [
+        "1930",
+        "1962",
+        "1979"
+      ],
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "rights": {
+        "status": "catalog_metadata_only",
+        "reuse": "Drawing entries and shelf locations can be cited; original construction drawings/tracings and reproduced images require item-level copyright/permissions review. No original drawing viewed."
+      },
+      "notes": "Catalog lists July 15 1930 A.E. Larson Building office-building drawings 1–33, E1–E10, S1–S8 (Drawer 7 bottom left), separate linen tracings (5-2 rolled), dated June 27 1930 Fox Capitol Theatre alterations drawings 1–4 (5-1 tube Y-11), and Larson floor plans from 1962–79 (4-1). Catalog does NOT prove as-built 1931 facade, 1960 exterior details or present physical access."
     }
   ],
   "places": [
@@ -719,6 +740,70 @@
       "acquisition": "Catalog listing confirmed; volume, sheet number, block coverage, exact date and original map NOT inspected",
       "rights": "CSUN describes research/personal digital copies only; any publication or paid commercial reuse requires separate rightsholder permissions",
       "useFor1960": "Candidate for 1960 ground-plan evidence only AFTER archive confirms exact original sheet, visual inspection, dating and rights. Never use catalog year to assert exact storefront/geometry."
+    },
+    {
+      "id": "yvm-larson-july1930-plans",
+      "name": "Larson Building original 1930 office building drawing catalog record",
+      "sourceId": "dahp-yvm-architectural-drawings-index",
+      "period": {
+        "display": "July 15, 1930",
+        "earliest": 1930,
+        "latest": 1930,
+        "approximate": false
+      },
+      "spatialMatch": "A.E. Larson Building, Yakima WA; original architectural design set",
+      "itemType": "architectural-drawing-collection-index",
+      "acquisition": "Catalog entry inspected; original drawing sheets and physical storage not inspected or confirmed with archivist. Index says 0096-085, sheets 1–33, E1–E10, S1–S8, Drawer 7 bottom left.",
+      "rights": "No sheet scanned, copyright clearance or derived commercial/public 3D rights determined; archivist contacted.",
+      "useFor1960": "Original design reference candidate only. A 1930 drawing may be proposal or revision and does not prove as-built or unchanged 1960 facade."
+    },
+    {
+      "id": "yvm-larson-july1930-tracings",
+      "name": "Larson Building 1930 linen architectural tracings",
+      "sourceId": "dahp-yvm-architectural-drawings-index",
+      "period": {
+        "display": "July 15, 1930",
+        "earliest": 1930,
+        "latest": 1930,
+        "approximate": false
+      },
+      "spatialMatch": "A.E. Larson Building, Yakima WA",
+      "itemType": "linen-tracing-collection-index",
+      "acquisition": "Catalog entry inspected; original tracings not examined; indexed 5-2 no tube 3-inch roll, S1–S8 A1–A33 E1–E9.",
+      "rights": "Original sheet/tracing rights and publication of derivatives unknown.",
+      "useFor1960": "Potential source for design dimensions, roof, floor plans, elevations; check set revisions and physical as-built separately."
+    },
+    {
+      "id": "yvm-capitol-june1930-alterations",
+      "name": "Fox Capitol Theatre four architectural alteration drawings dated June 27, 1930",
+      "sourceId": "dahp-yvm-architectural-drawings-index",
+      "period": {
+        "display": "June 27, 1930",
+        "earliest": 1930,
+        "latest": 1930,
+        "approximate": false
+      },
+      "spatialMatch": "Fox Capitol Theatre, Yakima WA",
+      "itemType": "architectural-alteration-drawing-collection-index",
+      "acquisition": "Catalog lists accession 0096-085, John W. Maloney, drawings 1–4, storage 5-1 Tube Y-11. Original drawings not seen; museum inquiry sent.",
+      "rights": "No image reuse or independent 3D derivative rights cleared.",
+      "useFor1960": "1930 alterations may inform historically earlier theatre configuration after physical drawings review, but do not alone prove that drawings were built or remained unchanged in 1960."
+    },
+    {
+      "id": "yvm-larson-1962-79-floorplans",
+      "name": "A.E. Larson Building floor plans dated 1962–79",
+      "sourceId": "dahp-yvm-architectural-drawings-index",
+      "period": {
+        "display": "1962–1979",
+        "earliest": 1962,
+        "latest": 1979,
+        "approximate": false
+      },
+      "spatialMatch": "A.E. Larson Building Yakima WA",
+      "itemType": "post-period-building-floorplan-collection-index",
+      "acquisition": "Catalog entry only, Cowan & Paddock, storage 4-1; specific plans not accessed.",
+      "rights": "Originals and publication/derivative permissions unverified.",
+      "useFor1960": "Post-target changes reference only. Must not back-project post-1963 bank storefronts into 1960."
     }
   ],
   "researchGoals": {
@@ -790,6 +875,20 @@
         "dependsOn": [],
         "deliverable": "Archive confirmation of 1960 Yakima atlas volume and precise sheet(s) covering 6 S 2nd St, South Second/Yakima, South Third/Yakima and Capitol Theatre block; report accessible scan/date, quote, commercial reuse permissions before any paid request.",
         "status": "catalog-verified; exact-sheet-and-rights-unverified; no-purchase-authorized"
+      },
+      {
+        "id": "museum-catalogue-plan-examination",
+        "dependsOn": [],
+        "deliverable": "Confirm Yakima Valley Museum has actual original 1930 Larson office-building plans, linen tracings and June 27 1930 Fox Capitol Theatre alteration sheets at indexed shelf locations; obtain no-fee item metadata, sheet index and research access process; rights separately.",
+        "status": "catalog-specific-records-found; archivist-email-sent-2026-11-09; physical-plans-not-inspected"
+      },
+      {
+        "id": "compare-larson-original-vs-1963",
+        "dependsOn": [
+          "museum-catalogue-plan-examination"
+        ],
+        "deliverable": "Check 1930 elevations and floor plans vs 1963 remodel against dated photos/NRHP; original/planned/as-built labels distinct; no direct 1960 certainty without a source.",
+        "status": "blocked-on-original-drawings-and-1960-photos"
       }
     ]
   },
