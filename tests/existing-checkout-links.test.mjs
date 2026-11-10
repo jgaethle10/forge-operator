@@ -45,6 +45,31 @@ test('seven scoped services are marketable now without falsely claiming complete
  assert.match(page,/All seven original service checkouts are available for customer inquiries now/);
  assert.equal((page.match(/secure checkout ↗/g)||[]).length,7);
 });
+test('latest independent browser proof is dated, exact-SKU, and not a paid receipt',()=>{
+ const proof=manifest.latest_independent_buyer_browser_check;
+ assert.equal(proof.observed_at,'2026-11-10T00:28:13.556Z');
+ assert.equal(proof.observed_date_pacific,'2026-11-09');
+ assert.equal(proof.state,'ALL_SEVEN_READ_ONLY_FORMS_VERIFIED');
+ assert.equal(proof.verified_count,7);
+ assert.equal(proof.total,manifest.links.length);
+ assert.equal(proof.payment_attempted,false);
+ assert.equal(proof.form_submitted,false);
+ assert.equal(proof.orders_created,false);
+ assert.equal(proof.payment_received_verified,false);
+ assert.equal(proof.fulfillment_verified,false);
+ assert.equal(proof.manual_reconciliation_required,true);
+ assert.match(proof.run_url,/^https:\/\/github\.com\/jgaethle10\/forge-operator\/actions\/runs\/42728476003$/);
+ const readiness=JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-commercial-readiness.json',import.meta.url),'utf8'));
+ assert.equal(readiness.commercial_checkout_ready,false,'owned rail cannot inherit Stripe proof');
+ assert.equal(readiness.separate_systemia_hosted_stripe.automated_browser_checked_at,proof.observed_at);
+ assert.equal(readiness.separate_systemia_hosted_stripe.automated_browser_receipt_url,proof.receipt_artifact_url);
+ assert.equal(readiness.separate_systemia_hosted_stripe.verified_payment_observed,false);
+ const html=get('checkout-ready/index.html');
+ assert.match(html,/all seven original Stripe checkouts displayed the exact service name/i);
+ assert.ok(html.includes(proof.run_url));
+ assert.match(html,/not a completed order, a customer payment/i);
+});
+
 test('no unrelated $19, $49 or PDF product is passed through existing service links',()=>{
  assert.deepEqual(manifest.forbidden_substitutions,['Garage Field Notes PDF products','FindMyPart Quick Hunt','Website Quick Win Audit']);
  assert.ok(manifest.links.every(x=>![700,900,1900,4900].includes(x.amount_cents)));
