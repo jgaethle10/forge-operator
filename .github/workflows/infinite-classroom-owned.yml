@@ -5,11 +5,15 @@ on:
     paths:
       - "public/apps/infinite-classroom/**"
       - "tests/infinite-classroom-owned.test.mjs"
+      - "tests/infinite-classroom-worlds.test.mjs"
+      - "public/infinite-classroom/**"
       - ".github/workflows/infinite-classroom-owned.yml"
   push:
     paths:
       - "public/apps/infinite-classroom/**"
       - "tests/infinite-classroom-owned.test.mjs"
+      - "tests/infinite-classroom-worlds.test.mjs"
+      - "public/infinite-classroom/**"
       - ".github/workflows/infinite-classroom-owned.yml"
 
 permissions:
@@ -24,4 +28,4 @@ jobs:
       - name: Verify module syntax
         run: node --check public/apps/infinite-classroom/learning-engine.mjs
       - name: Verify lesson behavior and provider-free source
-        run: node --test tests/infinite-classroom-owned.test.mjs
+        run: node --test tests/infinite-classroom-owned.test.mjs tests/infinite-classroom-worlds.test.mjs
