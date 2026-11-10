@@ -37,7 +37,7 @@ The audit requires **seven roles** and one pre-registration plan:
 | \`clock_sync_evidence\` | Hardware/clock synchronization tests and provenance |
 | \`calibration_input\` | Exact JSON input consumed by \`known-target-cli.mjs\` |
 
-The evidence auditor accepts only regular non-symlink files inside the selected folder with 1 to 67,108,864 bytes each, and refuses unsafe relative paths. This first prototype is suitable for small captures and documented excerpts. Longer native recordings must be stored and checked by an approved streaming-file implementation before they can pass this audit. **Do not trim native recordings solely to pass the size cap and then call them originals.**
+The evidence auditor accepts only regular non-symlink files inside the selected folder and reads source files **incrementally in 1 MiB chunks**, up to **4 GiB per file**, without loading an entire native video into memory. It refuses unsafe relative paths, empty sources and files changed while being read. Larger originals need an approved separate streaming-file validator; **do not trim recordings solely to fit the cap and then label the result original footage**. A matching digest still cannot establish that the camera file is genuine.
 
 ## Pre-registration before capture
 
