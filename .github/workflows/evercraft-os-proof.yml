@@ -39,6 +39,14 @@ jobs:
           node-version: "20"
       - name: Prove Evercraft OS composition
         run: node systemia/evercraft-os/runtime.proof.mjs
+      - name: Prove pinned live NodeSeed identity without remote execution authority
+        run: node --test systemia/evercraft-os/field-node-probe.test.mjs
+      - name: Validate twelve OS lanes through Systemia mission policy
+        run: node --test systemia/evercraft-os/parallel-mission-bridge.test.mjs
+      - name: Execute twelve bounded read-only Saban readiness jobs and reconcile
+        run: node --test systemia/saban/evercraft-os-readiness.test.mjs
+      - name: Prove twelve parallel OS readiness lanes and Saban authority boundaries
+        run: node systemia/saban/evercraft-os-parallel.proof.mjs
       - name: Prove device profile contract
         run: node systemia/evercraft-os/device-profile.proof.mjs
       - name: Prove Evercraft OS app package contract
@@ -53,6 +61,22 @@ jobs:
         run: node --test systemia/evercraft-os/systemia-launcher.test.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
+      - name: Prove source-only CI can never grant production release
+        run: node --test systemia/evercraft-os/release-readiness.test.mjs
+      - name: Produce Systemia and Saban source-only completion evidence
+        run: node systemia/saban/evercraft-os-readiness-runner.mjs
+      - name: Emit explicit held physical-release decision and workflow security findings
+        run: node systemia/evercraft-os/release-readiness.mjs
+      - name: Preserve release gate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-os-release-readiness
+          path: |
+            artifacts/evercraft-os/release-readiness.json
+            artifacts/saban-multiplier/os-readiness/latest.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Emit boot envelope
         run: node systemia/evercraft-os/runtime.mjs
       - name: Emit sanitized device profile

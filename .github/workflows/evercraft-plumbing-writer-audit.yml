@@ -53,8 +53,10 @@ jobs:
       - name: Run fail-closed regression tests
         run: node --test tests/workflow-writer-audit.test.mjs tests/audit-evercraft-commercial-topology.test.mjs
       - name: Inspect all workflow-file write and main-push authority
+        if: always()
         run: node scripts/audit-workflow-writers.mjs > "$RUNNER_TEMP/evercraft-workflow-writers.json"
       - name: Capture source-to-commercial-pipe reconciliation
+        if: always()
         run: node scripts/audit-evercraft-commercial-topology.mjs > "$RUNNER_TEMP/evercraft-commercial-topology.json"
       - name: Post workflow audit summary
         if: always()
