@@ -182,6 +182,21 @@
       ],
       "validation": "Dedicated FIRST-CONTACT GitHub Actions passed on code/fixture commit a767c6af..., run 42760006294, including 10 seeded baseline stress tests and 4 offline CLI tests; no physical camera data, independent survey, or sensor calibration evaluated",
       "acceptance": "Compare synthetic camera spacing vs angular uncertainty and systematic alignment bias; preserve rejected fraction and conditional quantile interpretation; independently evaluate a real surveyed known-target dataset before claiming field accuracy"
+    },
+    {
+      "id": "FC-PROVENANCE-03",
+      "lane": "provenance",
+      "status": "OFFLINE_BYTE_AUDIT_CI_BASELINE_PASSED_PENDING_LATEST_HEAD_AND_FIELD_RECORDS",
+      "completed": "2026-11-09",
+      "artifacts": [
+        "field-evidence-audit.mjs",
+        "field-evidence-audit.test.mjs",
+        "field-evidence-cli.mjs",
+        "field-evidence-cli.test.mjs",
+        "FIELD_EVIDENCE_CHAIN.md"
+      ],
+      "validation": "Dedicated research CI succeeded on initial audit/CLI code commit 1b7a4384... run 42771006361; subsequent bounded chunked-media hashing and documentation checks pending separate verification. No real camera sources or independent physical review.",
+      "acceptance": "Locally verify byte-hash binding for seven evidence roles and locked numeric calibration plan; refuse altered/missing/unsafe sources; require independent pre-capture timestamp and survey review before field trust"
     }
   ],
   "hard_constraints": [
@@ -191,6 +206,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Use baseline planner to pre-register a practical sensor placement, independently measure camera centers and bearing calibration with a non-sensitive stationary target, and verify real captures against separately surveyed ENU ground truth. Do not equate numeric pass or source-controlled mission intake with validated field measurement or live Systemia work.",
-  "validation_note": "2026-11-09 sprint 7: dedicated FIRST-CONTACT research CI passed on planner code/fixture commit a767c6af... (#42760006294), 10 simulation and 4 offline CLI tests included. Prior head 88e51c0... had 8 successful workflows. Latest docs/ledger head validation must be checked independently. No physical survey data or Systemia live dispatch."
+  "next_execution_gate": "Obtain authorized known stationary calibration target and two independently surveyed/calibrated synchronized cameras. Preserve original source files locally; preregister thresholds before capture with externally verifiable timestamp; audit SHA-256 source chain; compare numeric position to independent survey; require a separate reviewer. Systemia NOT_DISPATCHED.",
+  "validation_note": "2026-11-09 sprint 8: initial offline field evidence audit/CLI tests passed dedicated research CI at commit 1b7a4384... run 42771006361; native media hashing now uses bounded 1 MiB chunks up to 4 GiB but needs newest head CI. No real field records, independent custody verification, or Systemia live dispatch."
 }
