@@ -51,7 +51,7 @@ export function auditWorkSabanDelivery({queue,privateStateDir,expectedPageId='',
  if(!Number.isFinite(at.getTime()))throw Error('work_saban_delivery_clock_invalid');
  const fb=queue.entries.filter(e=>e.platform==='facebook'&&e.destination==='facebook-page');
  if(fb.length!==4||new Set(fb.map(x=>x.id)).size!==4||
-   fb.some(e=>!/^work-saban-rotation-w[1-4]-facebook$/.test(e.id)||!/^(?:20\\d{2})-\\d{2}-\\d{2}$/.test(e.planned_day)))
+   fb.some(e=>!/^work-saban-rotation-w[1-4]-facebook$/.test(e.id)||!/^(?:20\d{2})-\d{2}-\d{2}$/.test(e.planned_day)))
   throw Error('work_saban_delivery_facebook_slots_invalid');
  const day=pacificDate(at),accountBindingPresent=Boolean(clean(expectedPageId));
  const rows=fb.map(e=>{
