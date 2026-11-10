@@ -6,6 +6,7 @@ import test from 'node:test';
 import { EvercraftPassport } from '../../passport/passport.mjs';
 import { EvercraftContextFabric } from '../fabric.mjs';
 import { queryTimewalk } from './timewalk.mjs';
+import { inspectTimewalkEvidenceCoverage } from './coverage.mjs';
 
 const iso = (millis) => new Date(millis).toISOString();
 
@@ -72,6 +73,17 @@ test('native Context Fabric + Passport: current grant, clocks, retraction, and t
     assert.equal(visible.facts[0].status, 'active');
     assert.equal(visible.execution_authority_granted, false);
     assert.equal(visible.authorization_time_source, 'context_fabric_server_clock');
+    const coverage = inspectTimewalkEvidenceCoverage(fabric, {
+      actor_ref: 'agent:reader', namespaces: ['systemia'],
+    });
+    assert.equal(coverage.available_record_count, 1);
+    assert.equal(coverage.without_declared_source_receipt_schema, 1);
+    assert.equal(coverage.global_completeness_assessed, false);
+    assert.equal(coverage.upstream_receipts_independently_rechecked, false);
+    assert.match(coverage.authorized_snapshot_fingerprint, /^sha256:[a-f0-9]{64}$/);
+    assert.equal(inspectTimewalkEvidenceCoverage(fabric, {
+      actor_ref: 'agent:expired', namespaces: ['systemia'],
+    }).available_record_count, 0);
 
     // Backdating the world-time observation cannot cause the system to claim
     // the fact was already known before it was actually stored.
@@ -114,6 +126,9 @@ test('native Context Fabric + Passport: current grant, clocks, retraction, and t
       reason: 'native test',
     });
     assert.equal(query().facts.length, 0);
+    assert.equal(inspectTimewalkEvidenceCoverage(fabric, {
+      actor_ref: 'agent:reader', namespaces: ['systemia'],
+    }).available_record_count, 0);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
