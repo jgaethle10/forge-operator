@@ -8,6 +8,7 @@ import { MAX_CSV_BYTES, parseSalesCsv } from './csv-core.mjs';
 import { createLocalEventChain } from './trace-chain.mjs';
 import { capacityView } from './capacity-model.mjs';
 import { executeBoundedTasks } from './bounded-executor.mjs';
+import { executeVerifiedReportTask } from './verified-report-adapter.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -96,6 +97,26 @@ export async function startWorkSabanPreview({ host = '127.0.0.1', port = 0 } = {
       const mime=filename.endsWith('.css') ? 'text/css; charset=utf-8' : filename.endsWith('.svg') ? 'image/svg+xml; charset=utf-8' : 'text/javascript; charset=utf-8';
       res.writeHead(200, {'content-type':mime,'cache-control':'no-store','x-content-type-options':'nosniff'});
       return res.end(fs.readFileSync(path.join(root,filename)));
+    }
+    if (req.method === 'POST' && req.url === '/api/verified-report-executor-stream') {
+      if (req.headers['x-work-saban-client'] !== 'local-preview'
+          || (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host))
+        return reply(res,403,{ok:false,error:'local_preview_required'});
+      res.writeHead(200,{'content-type':'application/x-ndjson; charset=utf-8',
+        'cache-control':'no-store','x-content-type-options':'nosniff'});
+      const emit=event=>{if(!res.destroyed&&!res.writableEnded)res.write(JSON.stringify(event)+'\n');};
+      emit({type:'started',source:'synthetic_fixture',registered_workers:true,model_inference:false});
+      try{
+        const outcome=await executeVerifiedReportTask({
+          csvText:syntheticCsv,localFileReadApproved:true,
+          onEvent:event=>emit({type:'worker',...event})
+        });
+        emit({type:'completed',source:'synthetic_fixture',model_inference:false,
+          capacity:outcome.capacity,report_sha256:outcome.report.report_sha256,
+          specialist_receipts:outcome.report.specialist_receipts.length});
+      }catch{emit({type:'failed_closed',source:'synthetic_fixture'});}
+      finally{res.end();}
+      return;
     }
     if (req.method === 'POST' && req.url === '/api/run-demo-stream') {
       if (req.headers['x-work-saban-client'] !== 'local-preview') {
