@@ -81,7 +81,7 @@ def validate(provisional: object, historical: object, html: str) -> list[str]:
             require(expected_record is not None
                     and row.get("week_ending") == expected_record[0]
                     and row.get("source_url") == expected_record[1],
-                    f"{category}: week/date/CD C official record ID mismatch".replace("CD C", "CDC"))
+                    f"{category}: week/date/CDC source record mismatch")
         require(actual == expected, f"{category}: counts or weeks no longer match reviewed CDC snapshot")
 
     caveats = " ".join(provisional.get("caveats", []))
