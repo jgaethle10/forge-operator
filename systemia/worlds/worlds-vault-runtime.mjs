@@ -6,6 +6,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {randomBytes,createHash,timingSafeEqual} from 'node:crypto';
 import {decodeSharedScene,encodeSharedScene} from '../../public/worlds/share-scene.mjs';
+import {createWorldsAdmission} from './worlds-admission.mjs';
 
 export const VAULT_SCHEMA='evercraft.worlds.vault.v1';
 const WORLD_ID=/^[a-f0-9]{32}$/;
@@ -64,7 +65,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
  const vaultRoot=await fs.realpath(dataRoot);
  if(within(assetRoot,vaultRoot)||within(vaultRoot,assetRoot))throw Error('worlds_vault_data_must_be_outside_public');
  if(!Number.isInteger(maxWorlds)||maxWorlds<1||maxWorlds>MAX_WORLDS)throw Error('worlds_vault_capacity_invalid');
- const locks=new Map(),createWindows=new Map();
+ const locks=new Map(),admission=createWorldsAdmission();
  const fileFor=id=>path.join(vaultRoot,id+'.json');
  async function readRecord(id){
   if(!WORLD_ID.test(id))throw new VaultError(404,'world_not_found');
@@ -129,10 +130,8 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
    if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true,public_origin:expectedOrigin||null});
    if(pathname==='/worlds/api/worlds'&&method==='POST'){
     assertWriteOrigin(req,expectedOrigin);
-    const source=req.socket.remoteAddress||'unknown',now=Date.now();
-    const old=(createWindows.get(source)||[]).filter(t=>now-t<600000);
-    if(old.length>=10)throw new VaultError(429,'creation_rate_limited');
-    old.push(now);createWindows.set(source,old);
+    const decision=admission.admit(req,expectedOrigin);
+    if(!decision.allowed)throw new VaultError(429,decision.reason);
     const scene=validScene(await readBody(req)),created=await serialize('__create__',()=>createWorld(scene));
     return send(res,201,{schema:VAULT_SCHEMA,...created},{etag:'"1"'});
    }
