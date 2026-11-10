@@ -25,3 +25,29 @@ jobs:
         run: node --check public/art-of-becoming/engine.mjs
       - name: Streak safety, privacy, and milestone tests
         run: node --test tests/art-of-becoming.test.mjs
+
+  browser:
+    needs: mvp
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Run phone-sized and desktop browser journeys
+        run: |
+          node --check scripts/probe-art-of-becoming-browser.mjs
+          node scripts/probe-art-of-becoming-browser.mjs
+      - name: Preserve screenshots and QA receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: art-of-becoming-browser-qa
+          path: artifacts/art-of-becoming-browser-qa/
+          if-no-files-found: warn
+          retention-days: 21
