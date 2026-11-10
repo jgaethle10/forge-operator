@@ -91,7 +91,8 @@ export function createLlamaCppInferenceCandidate({
         status:'available', provider:'llama-cpp', model:modelId,
         validation_receipt:metadataReceipt,
         inference_performed:false, prompt_sent:false,
-        external_effect_authorized:false
+        external_effect_authorized:false,
+        base44_used:false, raw_credential_returned:false
       };
     },
     async infer({request_id,role,input,prompt} = {}) {
