@@ -61,6 +61,35 @@ inventory, bounded retrieval and independent validation of its originating
 receipts. A company-wide coverage ratio **cannot be computed** from this
 Context-only view because its global denominator is unknown.
 
+## Origin attestations are a NEW signing contract, not recovered history
+
+Timewalk's optional `origin-attestation.mjs` verifier checks Ed25519
+signatures over the **exact receipt bytes/digest** using operator-pinned
+public keys, issuer ID, schema allowlist, key validity and revocation.
+
+Status tiers must remain separate:
+
+1. **Context record hash valid**: stored memory bytes are internally
+   consistent with their recorded digest. No external origin claim.
+2. **Receipt digest and projection consistent**: Context fields and exact
+   summary match receipt bytes returned by a read-only adapter. The
+   adapter's source identity has not been independently authenticated.
+3. **Signed under an operator-pinned key**: a signature is valid for an
+   attestor key in the supplied registry and binds that receipt object.
+   This demonstrates key possession, not independently proven ownership
+   of a legitimate production service or the truth of the receipt.
+4. **Authoritative origin verified**: NOT IMPLEMENTED. Requires
+   separately reviewed service identity, trusted key issuance/custody,
+   rotation/revocation, protected read-only ledgers and production canary.
+5. **Historical event truth and full coverage**: NOT PROVEN even at
+   level 4. Requires independently verified event completion receipts
+   and source-ledger coverage reconciliation.
+
+Historical Context receipts without a separately issued attestation
+remain **unsigned/unattested**. No synthetic backfill or private-key
+material is committed. Unit tests generate ephemeral Ed25519 keys in
+memory using synthetic receipts only.
+
 ## Unresolved gaps worth documenting, not guessing away
 
 | Gap | Present state | Consequence / next evidence gate |
