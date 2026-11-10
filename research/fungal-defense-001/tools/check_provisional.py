@@ -18,6 +18,13 @@ HISTORICAL = ROOT / "data" / "cdc-cauris-clinical-annual.json"
 PAGE = ROOT / "observatory-v0.3.html"
 REQUIRED_CLINICAL = [(41, 6211, 5452), (42, 6379, 5584), (43, 6572, 5733)]
 REQUIRED_SCREENING = [(43, 7202, 6896)]
+REQUIRED_SOURCE_RECORDS = {
+    ("clinical", 41): ("2026-10-17", "https://stacks.cdc.gov/view/cdc/262543"),
+    ("clinical", 42): ("2026-10-24", "https://stacks.cdc.gov/view/cdc/262666"),
+    ("clinical", 43): ("2026-10-31", "https://stacks.cdc.gov/view/cdc/262786"),
+    ("screening", 43): ("2026-10-31", "https://stacks.cdc.gov/view/cdc/262787"),
+}
+
 EMBEDDED_RE = re.compile(r'<script type="application/json" id="([^"]+)">([\s\S]*?)</script>')
 
 
@@ -70,6 +77,11 @@ def validate(provisional: object, historical: object, html: str) -> list[str]:
                     and url.path.startswith("/view/cdc/"), f"{category}: untrusted source URL")
             require(bool(re.fullmatch(r"2026-(?:10|11)-\d{2}", row.get("week_ending") or "")),
                     f"{category}: week-ending date missing")
+            expected_record = REQUIRED_SOURCE_RECORDS.get((category, week))
+            require(expected_record is not None
+                    and row.get("week_ending") == expected_record[0]
+                    and row.get("source_url") == expected_record[1],
+                    f"{category}: week/date/CD C official record ID mismatch".replace("CD C", "CDC"))
         require(actual == expected, f"{category}: counts or weeks no longer match reviewed CDC snapshot")
 
     caveats = " ".join(provisional.get("caveats", []))
