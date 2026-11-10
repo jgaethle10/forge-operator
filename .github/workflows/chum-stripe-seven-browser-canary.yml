@@ -6,9 +6,14 @@ on:
       - 'systemia/evercraft-web/browser-worker/verify-systemia-stripe-seven.test.mjs'
       - 'public/mesh/checkout-ready/verified-links.json'
       - '.github/workflows/chum-stripe-seven-browser-canary.yml'
+      - 'systemia/payments/exact-sku-checkout.mjs'
+      - 'tests/exact-sku-checkout.test.mjs'
+      - 'public/mesh/checkout-ready/products.json'
+      - 'registry/public-products.json'
   workflow_dispatch:
   schedule:
-    - cron: '51 16 * * *'
+    # Every six hours: read-only verification, no checkout POST or card entry.
+    - cron: '17 */6 * * *'
 
 permissions:
   contents: read
@@ -26,6 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove universal Evercraft Payments exact-SKU routing
+        run: node --test tests/exact-sku-checkout.test.mjs
       - name: Validate exact-SKU detection contract
         working-directory: systemia/evercraft-web/browser-worker
         run: |
