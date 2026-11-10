@@ -133,5 +133,22 @@
   "owner_approved_promotion": true,
   "buyer_browser_evidence": "Owner-supplied mobile screenshots of live Stripe-hosted checkout UI for existing exact-price services; does not establish a paid charge.",
   "no_prior_customer_charge_required_for_marketing": true,
-  "scope_confirmation_required_before_customer_payment": true
+  "scope_confirmation_required_before_customer_payment": true,
+  "latest_independent_buyer_browser_check": {
+    "observed_at": "2026-11-10T00:28:13.556Z",
+    "observed_date_pacific": "2026-11-09",
+    "run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42728476003",
+    "receipt_artifact_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42728476003/artifacts/13723219528",
+    "state": "ALL_SEVEN_READ_ONLY_FORMS_VERIFIED",
+    "verified_count": 7,
+    "total": 7,
+    "engine": "Evercraft-owned Browser Worker Playwright Chromium",
+    "scope": "read_only_render_exact_sku_title_amount_and_payment_surface",
+    "payment_attempted": false,
+    "form_submitted": false,
+    "orders_created": false,
+    "payment_received_verified": false,
+    "fulfillment_verified": false,
+    "manual_reconciliation_required": true
+  }
 }
