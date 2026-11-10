@@ -16,6 +16,8 @@ on:
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/product-url-fabric.test.mjs'
+      - 'tests/boardroom-heritage.test.mjs'
+      - 'tests/boardroom-compare.test.mjs'
       - 'tests/clip-public-entry.test.mjs'
       - '.github/workflows/evercraft-journal-pages.yml'
   workflow_dispatch:
