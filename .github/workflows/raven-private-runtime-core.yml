@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "systemia/raven/**"
+      - "systemia/evercraft-home/raven-execution-adapter.mjs"
+      - "systemia/evercraft-home/raven-execution-adapter.test.mjs"
       - "systemia/core/resident-services.json"
       - "systemia/organism/raven-private-runtime.workflow.json"
       - "nexus-work/**"
@@ -41,6 +43,7 @@ jobs:
           node --check systemia/raven/resident-runner.mjs
           node --check systemia/raven/seal-inference-key.mjs
           node --check systemia/raven/run-tieton-recovery-review.mjs
+          node --check systemia/evercraft-home/raven-execution-adapter.mjs
           bash -n systemia/raven/bootstrap-local-inference.sh
       - name: Prove Raven private runtime core
         run: node systemia/raven/private-runtime.proof.mjs
@@ -53,6 +56,7 @@ jobs:
             systemia/raven/owned-inference-e2e.test.mjs \
             systemia/raven/provider-secret-boundary.test.mjs \
             systemia/raven/seal-inference-key.test.mjs \
-            systemia/raven/run-tieton-recovery-review.test.mjs
+            systemia/raven/run-tieton-recovery-review.test.mjs \
+            systemia/evercraft-home/raven-execution-adapter.test.mjs
       - name: Prove Raven resident runtime wiring
         run: node --test systemia/raven/resident-runner.test.mjs
