@@ -1,0 +1,20 @@
+{
+  "status": "LOCAL_TESTED_NOT_DEPLOYED",
+  "files": {
+    "build.py": "57d629c9fb7fa1ae94dde89b70133bb462e9ea7d1a4fe2e9b0c97bec8491d871",
+    "Evercraft_Aqua_Field_Notebook_RC13.html": "242b42e5569b3397d839e5ee132a655efad46cdf5f62da90532f7ea2a7d7a1f8",
+    "README.md": "7c7596381b80bbf6cdb563705cd8bf54eba9da5dce2a26e059c981f1e6e88828",
+    "FIELD_PILOT_PROTOCOL.md": "0f6febd2b0aedb535ae0f8f8afaffdf161029dd018cf083fffa80c82172c0032",
+    "RC13_ENGINEERING_DECISION.md": "54e604e8d297408d4691a552c7be56c469064e28090997f791baef9c20eee4c3",
+    "qa/desktop_screenshot.png": "a0c9e61e9480107d6333abe6cc8acce93674050f5626a07a28bfa0e63d1b453c",
+    "qa/mobile_screenshot.png": "6bc2fe6435b5d44d29836d738af8e4b210e556824e2570af6601fa293b3118c6",
+    "qa/browser_report.json": "8c8a6b40cd7ec60197bd10768c23f8f5cda4f88c26612b7c3319621cbf1e5b77",
+    "app/journal.mjs": "de7c7fab62d4ce2e6bc23b530d0f743057159fd3a1da47a6b2c70f55c8a8a0be",
+    "app/index.template.html": "e4fc6d33db585d5b04206386030d8f7dc5f2b360e58468f3eb28032c8cf18404",
+    "app/core.mjs": "019ea78d73a64cae9f03bafff8fc0415546723a08272a3548b95ac8076a38b5d",
+    "tests/browser_qa.py": "2843552719e2fef2c4854d9656cfc74eed976813a0f793b061977339903a44d8",
+    "tests/test_receipt.txt": "36a525bee83c5f99e7a6df0f7cde9ca1b09dc7b38c5a00fcc5799f4a8ce2ee94",
+    "tests/test_core.mjs": "5e58a6b121218abf84deabc2e83af9205e22fa3d5f5d680074a8163af4356591",
+    "tests/test_journal.mjs": "c5b719a09bf355ddf720e82a1b2ae74e801bfc88dec01fe5d8b4a0a0d16c814d"
+  }
+}
