@@ -62,7 +62,11 @@ export function createRavenReadOnlyTeamAdapter({
   return {
     capability_key: "raven.nexus.readonly-team-review.v1",
     work_types: [...READ_ONLY_WORK_TYPES],
-    // The volatile Systemia executor admits only explicitly read-only adapters.\n    // This bridge has its own strict analyze/research/qa allowlist and\n    // no-external-action request constraints; durable gated work stays held.\n    authority: "read-only",\n    authority_context: "systemia+passport+bounded-nexus",
+    // The volatile Systemia executor admits only explicitly read-only adapters.
+    // This bridge has its own strict analyze/research/qa allowlist and
+    // no-external-action request constraints; durable gated work stays held.
+    authority: "read-only",
+    authority_context: "systemia+passport+bounded-nexus",
     human_gate_required: false,
 
     async execute({ work, goal, context }) {
