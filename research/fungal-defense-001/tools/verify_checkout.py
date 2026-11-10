@@ -21,10 +21,13 @@ ACCEPTED_ORIGINS = frozenset({
 })
 REQUIRED_FILES = (
     "research/fungal-defense-001/observatory-v0.2.html",
+    "research/fungal-defense-001/observatory-v0.3.html",
     "research/fungal-defense-001/data/cdc-cauris-clinical-annual.json",
+    "research/fungal-defense-001/data/cdc-nndss-provisional-2026-w43.json",
     "research/fungal-defense-001/release-gates.json",
     "research/fungal-defense-001/tools/validate_surveillance.py",
     "research/fungal-defense-001/tools/check_observatory.py",
+    "research/fungal-defense-001/tools/check_provisional.py",
 )
 
 
