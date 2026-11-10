@@ -1,0 +1,35 @@
+name: Systemia durable signed evidence proof
+on:
+  push:
+    paths:
+      - 'systemia/saban/microseed-signed-receipt-store.mjs'
+      - 'systemia/saban/microseed-native-agent.mjs'
+      - 'systemia/control-plane/visualization/passport-goal-read.mjs'
+      - 'tests/saban-microseed-e2e.test.mjs'
+      - 'tests/saban-microseed-signed-receipt-store.test.mjs'
+      - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
+      - '.github/workflows/systemia-durable-signed-evidence.yml'
+  pull_request:
+    paths:
+      - 'systemia/saban/microseed-signed-receipt-store.mjs'
+      - 'systemia/saban/microseed-native-agent.mjs'
+      - 'systemia/control-plane/visualization/passport-goal-read.mjs'
+      - 'tests/saban-microseed-e2e.test.mjs'
+      - 'tests/saban-microseed-signed-receipt-store.test.mjs'
+      - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
+      - '.github/workflows/systemia-durable-signed-evidence.yml'
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/saban/microseed-signed-receipt-store.mjs
+      - run: node --check systemia/saban/microseed-native-agent.mjs
+      - run: node --check systemia/control-plane/visualization/passport-goal-read.mjs
+      - run: node --test tests/saban-microseed-signed-receipt-store.test.mjs tests/saban-microseed-e2e.test.mjs systemia/control-plane/visualization/passport-signed-device-read.test.mjs systemia/control-plane/visualization/signed-device-evidence.test.mjs
