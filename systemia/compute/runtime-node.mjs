@@ -2762,6 +2762,12 @@ export async function startEvercraftComputeNode({
                 stale_after_seconds: 900,
               },
               {
+                source_key: 'work-saban-clip-delivery-watch',
+                path: 'work-saban-clip-delivery-watch/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
                 source_key: 'portfolio-sentinel',
                 path: 'portfolio-sentinel/mission-snapshot.json',
                 required: false,
@@ -2888,6 +2894,11 @@ export async function startEvercraftComputeNode({
             SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR: path.join(
               workspaceRoot,
               'work-saban-clip-publisher'
+            ),
+            SYSTEMIA_WORK_SABAN_DELIVERY_WATCH_OUT: path.join(
+              workspaceRoot,
+              'work-saban-clip-delivery-watch',
+              'latest.json'
             ),
             EVERCRAFT_CREDENTIAL_STATE_DIR: providerCredentialStateRoot,
             EVERCRAFT_PASSPORT_STATE_DIR: workSabanPassportRoot,
