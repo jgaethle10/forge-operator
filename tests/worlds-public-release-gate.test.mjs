@@ -45,6 +45,8 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   if(url.endsWith('/hidden-world/'))return response(200,'Hidden World Atlas');
   if(url.endsWith('/yakima-evidence.html'))return response(200,'Connected tunnels established by the records reviewed');
   if(url.endsWith('/lund-building.html'))return response(200,'National Register nomination PDF');
+  if(url.endsWith('/titan-i-1962.html'))return response(200,'Original educational SVG');
+  if(url.endsWith('/titan-i-1962-evidence.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.cold-war-evidence.v1'}),'application/json');
   if(url.endsWith('/yakima-standalone.html'))return response(200,'scene-ready');
   if(url.endsWith('.csv'))return response(200,'id,title\nyakima,example','text/csv');
   if(url.endsWith('yakima-evidence-ledger.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.evidence-ledger.v1'}),'application/json');
@@ -62,6 +64,13 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   url.endsWith('/lund-building.html')?response(404,'not deployed'):mock(url)});
  assert.equal(missingLund.verified,false);
  assert.equal(missingLund.reason,'lund_architecture_not_verified');
+ const missingTitan=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/titan-i-1962.html')?response(404,'not deployed'):mock(url)});
+ assert.equal(missingTitan.reason,'titan_exhibit_not_verified');
+ const missingTitanLedger=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/titan-i-1962-evidence.v1.json')?response(404,'not deployed'):mock(url)});
+ assert.equal(missingTitanLedger.reason,'titan_ledger_not_verified');
+
  const wrongMime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
   url.endsWith('.csv')?response(200,'yakima,','text/html'):mock(url)});
  assert.equal(wrongMime.reason,'research_data_not_verified');
