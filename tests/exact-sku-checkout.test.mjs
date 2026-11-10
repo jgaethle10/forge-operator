@@ -2,13 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {
-  validateExactSkuRegistry,resolveExactSkuCheckout,commerceCoverage,
+  validateExactSkuRegistry,validateAdditionalExactSkuLinks,resolveExactSkuCheckout,commerceCoverage,
 } from '../systemia/payments/exact-sku-checkout.mjs';
 
 const read=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const products=read('../public/mesh/checkout-ready/products.json');
 const manifest=read('../public/mesh/checkout-ready/verified-links.json');
 const discovery=read('../registry/public-products.json');
+const additional=read('../public/.well-known/evercraft-payments-additional-exact-skus.json');
 
 test('seven existing original Stripe SKUs have one exact individual buyer path each',()=>{
   assert.equal(validateExactSkuRegistry(products,manifest),true);
@@ -88,4 +89,46 @@ test('portfolio counts public discovery separately from exact paid products',()=
   assert.equal(c.discovery.length,discovery.products.length);
   assert.equal(c.independently_linked_products.length,7);
   for(const item of c.discovery)assert.equal(item.state,'INVENTORIED_NOT_AUTOMATICALLY_PAYMENT_APPROVED');
+});
+
+test('unmapped catalog starts with no invented extra checkout links',()=>{
+  assert.equal(validateAdditionalExactSkuLinks(additional,{products,manifest}).length,0);
+  assert.equal(additional.offers.length,0);
+  const report=commerceCoverage({publicProducts:discovery,products,manifest,additional});
+  assert.equal(report.exact_provider_checkout_links,7);
+  assert.equal(report.additional_independently_verified_offers,0);
+});
+
+test('an additional original SKU can join only through a separate verified identity',()=>{
+  const fixture=structuredClone(additional);
+  fixture.offers.push({
+    product_id:'example.synthetic.new-product',
+    sku_key:'example-synthetic-one-time',
+    name:'Example Synthetic Service',amount_cents:1900,currency:'usd',
+    url:'https://buy.stripe.com/SYNTHETIC123456',
+    payment_link_id:'plink_SYNTHETIC_FIXTURE',
+    stripe_product_id:'prod_SYNTHETIC_FIXTURE',
+    stripe_price_id:'price_SYNTHETIC_FIXTURE',
+    landing_page:'https://example.test/fixture/',
+    approved_by_owner:true,
+    verification_state:'PROVIDER_AND_RENDERED_BUYER_VIEW_VERIFIED',
+    browser_checked_at:'2026-11-09T22:00:00Z',
+    independent_browser_receipt:'https://github.com/example/synthetic/actions/runs/1234',
+  });
+  const result=resolveExactSkuCheckout({
+    product_id:'example.synthetic.new-product',
+    expected_amount_cents:1900,scope_approved:true,capacity_approved:true,buyer_confirmed:true,
+  },{products,manifest,additional:fixture});
+  assert.equal(result.ok,true);
+  assert.equal(result.checkout_url,fixture.offers[0].url);
+  assert.equal(result.payment_link_id,fixture.offers[0].payment_link_id);
+  assert.equal(result.paid_verified,false);
+  assert.equal(result.fulfillment_release,false);
+
+  const malicious=structuredClone(fixture);
+  malicious.offers[0].url=manifest.links[0].url;
+  assert.throws(()=>validateAdditionalExactSkuLinks(malicious,{products,manifest}),/duplicate_additional_exact_sku/);
+  const missing=structuredClone(fixture);
+  missing.offers[0].approved_by_owner=false;
+  assert.throws(()=>validateAdditionalExactSkuLinks(missing,{products,manifest}),/unverified_additional_exact_sku/);
 });
