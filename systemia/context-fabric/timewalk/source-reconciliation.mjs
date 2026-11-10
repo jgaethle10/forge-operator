@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { BRIDGED_RECEIPT_FAMILIES } from './coverage.mjs';
 import { verifyTimewalkRecordReceipt } from './timewalk.mjs';
+import { verifyTimewalkOriginAttestation } from './origin-attestation.mjs';
 
 // Offline, authorized, read-only reconciliation. The caller supplies an
 // existing trusted *read-only* source adapter. This module never fetches
@@ -171,10 +172,19 @@ function consistentProjection(record, source) {
  */
 export function reconcileTimewalkSourceReceipts(fabric, {
   actor_ref = null, namespaces = null, read_source_receipt = null,
+  read_source_attestation = null, trusted_origin_keys = null,
 } = {}) {
   if (typeof read_source_receipt !== 'function') {
     throw new Error('timewalk_source_read_adapter_required');
   }
+  if (read_source_attestation !== null &&
+      (typeof read_source_attestation !== 'function' || !Array.isArray(trusted_origin_keys))) {
+    throw new Error('timewalk_attestation_trust_configuration_required');
+  }
+  if (read_source_attestation === null && trusted_origin_keys !== null) {
+    throw new Error('timewalk_attestation_reader_required');
+  }
+  const originEnabled = typeof read_source_attestation === 'function';
   if (!fabric || typeof fabric.authorizedTimewalkSnapshot !== 'function') {
     throw new Error('timewalk_source_authorized_snapshot_required');
   }
@@ -192,6 +202,15 @@ export function reconcileTimewalkSourceReceipts(fabric, {
   const unknown = Object.fromEntries(STATES.map((state) => [state, 0]));
   let checked = 0;
   const cache = new Map();
+  const originCache = new Map();
+  const originSignatureStates = {
+    not_configured: 0,
+    source_not_consistent: 0,
+    attestation_unavailable: 0,
+    attestation_lookup_failed: 0,
+    signature_valid_for_pinned_key: 0,
+    attestation_rejected: 0,
+  };
 
   // Validate *all* visible Context records before contacting any source
   // adapter. Tampering fails closed rather than producing partial reporting.
@@ -241,6 +260,50 @@ export function reconcileTimewalkSourceReceipts(fabric, {
       }
     }
     tally[result] += 1;
+    if (result !== 'consistent_digest_and_projection') {
+      originSignatureStates.source_not_consistent += 1;
+    } else if (!originEnabled) {
+      originSignatureStates.not_configured += 1;
+    } else {
+      // These are cryptographically verified under a separately configured
+      // operator-pinned key set, not automatically authenticated origins.
+      const sourceKey = JSON.stringify([schema, record.source_receipt_hash]);
+      const source = cache.get(sourceKey);
+      let attestation;
+      if (originCache.has(sourceKey)) {
+        attestation = originCache.get(sourceKey);
+      } else {
+        try {
+          attestation = read_source_attestation({
+            source_receipt_schema: schema,
+            source_receipt_hash: record.source_receipt_hash,
+          });
+          if (attestation && typeof attestation.then === 'function') {
+            throw new Error('timewalk_attestation_adapter_must_be_synchronous');
+          }
+        } catch {
+          attestation = Symbol.for('evercraft.timewalk.attestation_lookup_failed');
+        }
+        originCache.set(sourceKey, attestation);
+      }
+      if (attestation === Symbol.for('evercraft.timewalk.attestation_lookup_failed')) {
+        originSignatureStates.attestation_lookup_failed += 1;
+      } else if (!attestation) {
+        originSignatureStates.attestation_unavailable += 1;
+      } else {
+        const verification = verifyTimewalkOriginAttestation({
+          receipt: source,
+          attestation,
+          trusted_keys: trusted_origin_keys,
+          verified_at: snapshot.authorized_at,
+        });
+        if (verification === 'signature_valid_for_pinned_key') {
+          originSignatureStates.signature_valid_for_pinned_key += 1;
+        } else {
+          originSignatureStates.attestation_rejected += 1;
+        }
+      }
+    }
   }
   const totals = Object.fromEntries(STATES.map((state) => [state,
     [...counts.values(), unknown].reduce((n, entry) => n + entry[state], 0)
@@ -258,6 +321,12 @@ export function reconcileTimewalkSourceReceipts(fabric, {
     total_states: totals,
     digest_and_projection_consistent_count: checked,
     source_origin_authenticated: false,
+    // Signature verification proves only binding to a pinned key. Trust-root
+    // administration, key compromise checks and source event truth are outside
+    // this local offline adapter's evidence boundary.
+    source_origin_attestation_checked: originEnabled,
+    trusted_origin_registry_independently_validated: false,
+    origin_signature_states: originSignatureStates,
     source_activity_completeness_proven: false,
     stored_context_hashes_verified: true,
     source_receipt_digest_and_projection_checked: true,
