@@ -117,3 +117,16 @@ test('invalid local clock and excessively large model list fail closed',async()=
   const huge=await probeOwnedLocalModel({fetchImpl:fake({data:Array.from({length:501},(_,i)=>({id:'m'+i}))})});
   assert.equal(huge.reason,'LOCAL_METADATA_INVALID');
 });
+
+
+test('llama.cpp default Linux file-path model identity is recognized, but remains local metadata',async()=>{
+  const id='/home/owned-node/models/Qwen3-4B-Q4_K_M.gguf';
+  const r=await probeOwnedLocalModel({
+    provider:'llama-cpp',model:id,
+    fetchImpl:fake({data:[{id}]}),now:fixed
+  });
+  assert.equal(r.status,'observed');
+  assert.equal(r.requested_model_found,true);
+  assert.equal(r.route_eligible,false);
+  assert.equal(r.inference_performed,false);
+});
