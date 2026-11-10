@@ -166,6 +166,56 @@ console.log(JSON.stringify({
         self.assertTrue(proof["forensicReviewed"])
         self.assertTrue(proof["allUnlocated"])
 
+    def test_full_synthetic_video_produces_uncertified_reference_error_report(self):
+        built = subprocess.run(self.command, text=True, capture_output=True,
+                               timeout=50, check=False)
+        self.assertEqual(built.returncode, 0, built.stderr)
+        observations = json.loads(self.output.read_text())
+        root = Path(self.folder.name)
+        calibration = root/"calibration-evidence.txt"
+        calibration.write_text("SYNTHETIC KNOWN-DISPARITY FIXTURE, NOT PHYSICAL CALIBRATION")
+        refs = root/"held-out-synthetic-targets.json"
+        measured = {
+            "schema":"evercraft.spatial-perception.field-targets.v1",
+            "sourceSha256":observations["sourceSha256"],
+            "modelSha256":observations["modelSha256"],
+            "calibrationEvidenceSha256":hashlib.sha256(calibration.read_bytes()).hexdigest(),
+            "rigId":"synthetic-CI-only-not-a-real-rig",
+            "claimedCalibration":{"fxPx":240.0,"baselineM":0.12},
+            "targets":[{
+                "id":"fixed-known-geometry-"+str(i),
+                "frameId":frame["frameId"],"label":"synthetic_proposal",
+                # Predefined directly from the generated constant-ONNX model geometry.
+                # IMPORTANT: NOT derived from detected bounding boxes.
+                "box":{"x":77,"y":26,"width":102,"height":76},
+                "referenceCameraAxisDepthM":3.6,
+                "referenceUncertaintyM":0,
+                "measurementMethod":"synthetic_known_disparity"
+            } for i,frame in enumerate(observations["frames"])]
+        }
+        refs.write_text(json.dumps(measured))
+        report_file = root/"field-report.json"
+        evaluate = [
+            sys.executable, str(Path(__file__).with_name("field_evaluation.py")),
+            "--observations",str(self.output),"--targets",str(refs),
+            "--source-video",str(self.video),"--model",str(self.model),
+            "--calibration-evidence",str(calibration),
+            "--output",str(report_file),
+            "--authorized-source","--independent-references-attested"
+        ]
+        finished = subprocess.run(evaluate,text=True,capture_output=True,timeout=30,check=False)
+        self.assertEqual(finished.returncode,0,finished.stderr)
+        report = json.loads(report_file.read_text())
+        self.assertEqual(report["referenceEvidenceClass"],"synthetic_fixture")
+        self.assertEqual(report["summary"]["referenceTargets"],4)
+        self.assertEqual(report["summary"]["evaluatedTargets"],4)
+        self.assertEqual(report["summary"]["coveragePct"],100)
+        self.assertLess(report["summary"]["meanAbsoluteErrorM"],1.5)
+        self.assertTrue(report["provenance"]["byteIntegrityCheckedLocally"])
+        self.assertFalse(report["provenance"]["calibrationAuthenticityVerified"])
+        self.assertFalse(report["fieldAccuracyCertified"])
+        self.assertFalse(report["worldPersistenceAuthorized"])
+
     def test_textureless_video_produces_unknown_depth_and_no_world_geometry(self):
         synthetic_stereo_video(self.video, blank=True)
         done = subprocess.run(self.command, text=True, capture_output=True,
