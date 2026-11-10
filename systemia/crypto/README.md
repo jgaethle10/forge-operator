@@ -61,6 +61,20 @@ Its guarantee has important limits:
 
 **Important:** this module does NOT authenticate, enroll, authorize or distribute a snapshot. That is a separate Systemia control-plane obligation. A forged snapshot passed by a compromised caller defeats the entire registry. An old cached snapshot may still authorize a since-revoked key until its short expiry. No instant revocation can be claimed until a genuinely authenticated, promptly refreshed distribution system and key custody are proven. Loss of refresh causes message rejection, not auto-trust or a fail-open cache.
 
+## ML-DSA root-signed trust snapshots and rollback prevention (lab only)
+
+\`pq-trust-snapshot.mjs\` adds an explicit root-authorized trust manifest. Each manifest contains an authority domain, a strictly increasing integer revision, a root-key fingerprint, a short validity window (maximum 15 minutes) and the complete allow/revoke list of ML-DSA-65 sender keys. Root signatures authenticate the exact canonicalized manifest. The verifier receives the root public key and expected authority **out-of-band**, checks each sender fingerprint and time window, then calls a mandatory shared revision guard before returning any trusted registry.
+
+\`pq-trust-revision-postgres.mjs\` and \`sql/postgres-trust-highwater-v1.sql\` form an isolated laboratory high-water service. A single PostgreSQL primary atomically accepts a larger revision, reaccepts the **same revision only if its digest matches**, and rejects older revisions or conflicting same-revision content. A database outage returns a denial. CI tests cover invalid roots, edited status, expiry, authority mismatch, rotation, revocation, revision downgrade, split same-revision content and a real PostgreSQL shared writer.
+
+**Boundaries that remain unresolved:**
+- The root private key must be handled offline or by a properly approved hardware/key-management system. **Do not commit or export production root keys to source, CI or browser code.** Only ephemeral CI keys are used by tests.
+- This code does not decide who may approve key enrollment or revocation, distribute snapshots securely, establish a hardware trust anchor, or rotate a compromised root. All require an independent Systemia authorization ceremony and evidence.
+- Existing already-loaded snapshots can authorize a revoked sender **until their expiration**; this is bounded staleness, not instant revocation. To provide stronger guarantees, actively invalidate cached registries and require a live high-water check before each message or implement a justified revocation watch.
+- Rollback protection depends on never restoring an older PostgreSQL high-water record and never permitting multiple independent primaries. An unsafe failover or compromised database authority can defeat the monotonicity proof. Use fail-closed behavior on partitions, and review synchronous replication/failover before deployment.
+- Snapshot JSON is canonically serialized by this Node-specific lab implementation. A production cross-language protocol needs independent verification, bounded parsing, version negotiation, signature-domain separation and security review.
+- A signed registry is not an authorization policy by itself. Systemia must bind its approval decision, tenant/domain and permitted roles to the trust ceremony. No production keys or users have been enrolled.
+
 ## Migration gates
 
 1. Inventory cryptographic key exchange and signatures in Relay, lineage, agents and customer interfaces; identify stored traffic requiring long-term confidentiality.
