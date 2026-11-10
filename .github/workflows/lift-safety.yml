@@ -1,0 +1,24 @@
+name: Evercraft Lift safety checks
+on:
+  pull_request:
+    paths:
+      - 'systemia/lift/**'
+      - 'public/lift/**'
+      - 'docs/products/evercraft-lift-v0.md'
+      - '.github/workflows/lift-safety.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lift-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse Lift policy modules
+        run: node --check systemia/lift/lift-core.mjs && node --check systemia/lift/review-workflow.mjs
+      - name: Verify privacy, workflow and UI invariants
+        run: node --test systemia/lift/*.test.mjs
