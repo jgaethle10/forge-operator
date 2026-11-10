@@ -585,3 +585,18 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
   .spatial-eye,.spatial-agent[data-activity] .spatial-person{
     animation:none!important}
 }
+
+
+/* Snapshot-reviewed proportion and composition adjustments.
+   Keep the forehead connected to the collar in both camera orientations. */
+.spatial-person-head{top:5px}
+.spatial-person-body{bottom:2px}
+.spatial-overlay{justify-content:flex-start}
+.spatial-motion-disclosure{order:1;margin-top:2px;max-width:74%;
+  background:#0a192bae;color:#bfd5e6}
+.spatial-controls{order:2;margin-top:auto}
+@media(max-width:650px){
+  .spatial-motion-disclosure{max-width:95%;font-size:7.5px;letter-spacing:.025em;
+    padding:5px 8px}
+  .spatial-orbit-label{font-size:8px;padding:6px 8px}
+}
