@@ -6,7 +6,7 @@
 (function(root){
   'use strict';
   const STOPS=Object.freeze([
-    {id:'entry',name:'Studio entrance',x:530,y:520,yaw:-14,pitch:43,wideZoom:.62,phoneZoom:.32},
+    {id:'entry',name:'Studio entrance',x:530,y:520,yaw:-14,pitch:43,wideZoom:.62,phoneZoom:.35},
     {id:'mission',name:'Mission control',x:242,y:245,yaw:-18,pitch:39,wideZoom:.85,phoneZoom:.47,agent:'director'},
     {id:'data',name:'Data lab',x:588,y:239,yaw:-4,pitch:36,wideZoom:.88,phoneZoom:.48,agent:'analyst'},
     {id:'comms',name:'Communications',x:934,y:241,yaw:12,pitch:37,wideZoom:.87,phoneZoom:.48,agent:'writer'},
