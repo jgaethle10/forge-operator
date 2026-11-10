@@ -819,8 +819,11 @@ export async function startFabricLocalRuntime({
       if(signalRoute==='/api/signal/readiness'){
         if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
         const state=signalBuyerIntakeReadiness({storeDir:signalLeadsDir||undefined,key:signalIntakeKey});
+        const caller=String(req.headers.origin||'');
+        const cors=(caller==='https://jgaethle10.github.io'||caller==='https://fabric.systemiacommandcenters.com')
+          ?{'access-control-allow-origin':caller,'vary':'origin'}:{'vary':'origin'};
         return sendJson(res,200,{schema:'evercraft.signal.intake-readiness.v1',
-          ...state,payment_ready:false,payment_verified:false});
+          ...state,payment_ready:false,payment_verified:false},cors);
       }
       if(signalRoute==='/api/signal/inquiry')return await signalInquiry(req,res);
 
