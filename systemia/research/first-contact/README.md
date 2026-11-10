@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-05.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-09.
 
 ## Mission
 
@@ -73,6 +73,15 @@ Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch 
 - **Actual executable intake:** `two-view-cli.mjs` reads one bounded local JSON file, calls the synchronization and 3D geometry checks, and emits a SHA-256 input-hashed result receipt. It never uploads footage, dispatches agents or changes persistent system state. `two-view-cli.test.mjs` and two `fixtures/synthetic-*.json` examples cover a known-target positive control and a desynchronized fail-closed control. The dedicated CI passed with these files committed.
 - **Operator field protocol:** `TWO_VIEW_RUNBOOK.md` provides exact test commands, timestamp/coordinate/calibration prerequisites, privacy boundaries and the next legitimate milestone: two independently surveyed cameras observing a non-sensitive known stationary target.
 - **Evidence boundary:** No new real UAP measurements or specimen data were obtained, no live Systemia agent ran, and no extraterrestrial technology was identified. Do not present self-attested fixture data as real calibrated imagery.
+
+## Sprint 6, November 9, 2026: known-target accuracy acceptance
+
+- **Numerical calibration evaluator:** `known-target-calibration.mjs` evaluates 3–500 independent, time-ordered two-camera observations of a **known stationary reference target**, with operator-attested survey and predeclared ray-miss/parallax/error/rejection gates. Reports median, P95 and maximum 3D positional error, minimum accepted parallax, accepted/rejected count. A pass is explicitly `NUMERIC_GATE_MET_REQUIRES_INDEPENDENT_FIELD_VERIFICATION`, never proof of real-world calibrated instruments.
+- **Guardrail tests:** `known-target-calibration.test.mjs` has 11 synthetic acceptance/rejection cases, including a geometrically consistent but positionally **biased target** that must fail known-ground-truth accuracy. The dedicated FIRST-CONTACT GitHub workflow **passed** on commit `a9a7569a...`, including the calibration module and offline CLI tests.
+- **Local operator command:** `known-target-cli.mjs` reads bounded JSON packets without a network call, writes SHA-256-input-hashed results to stdout, and uses nonzero exit codes for holds/errors. `known-target-cli.test.mjs` has 3 command/receipt tests.
+- **Calibration fixture:** `fixtures/known-target-synthetic-session.json` has five invented, exactly consistent observations. It tests software behavior only and must not be described as actual camera accuracy, field observation, independent calibration, or extraterrestrial technology.
+- **Field protocol:** `KNOWN_TARGET_FIELD_PLAN.md` specifies the real next gate: two independently surveyed and synchronized cameras, a known stationary target, predeclared error thresholds, secure local records and independent survey review.
+- **Evidence and dispatch:** GitHub Actions verify source-code tests, not real sensor measurements. No field calibration dataset or qualified independent observation has been provided; Systemia worker dispatch is still `NOT_DISPATCHED` and public release remains held.
 
 ## Decision and escalation gates
 
