@@ -2,9 +2,9 @@
  * Compare PUBLIC WA DNR permit-point endpoints without downloading owner data.
  * Discovery is separate from complete permit import; no automatic source switch.
  */
-const FIELDS=['OBJECTID','MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'];
+const FIELDS=['OBJECTID','PERMIT_NO','COUNTY','COMMODITY'];
 export const WA_PERMIT_SOURCE_CANDIDATES=Object.freeze([
- {key:'site3_current',url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1'},
+ {key:'site3_mapserver_v4',url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1'},
  {key:'site3_feature',url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/FeatureServer/1'},
  {key:'site1_legacy',url:'https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0'}
 ]);
@@ -19,7 +19,7 @@ async function read(url,fetchImpl,signal){
 export function permitReadOnlyQuery(base,{type='count'}={}){
  const params=new URLSearchParams({
   f:type==='sample'?'geojson':'json',
-  where:"COUNTY_NAME='Grant'"
+  where:"COUNTY='Grant'"
  });
  if(type==='sample'){
   params.set('outFields',FIELDS.join(','));params.set('returnGeometry','true');
@@ -61,7 +61,7 @@ export async function probeWaPermitSourceCandidates({
     if(s.type!=='FeatureCollection'||!Array.isArray(s.features)||
        s.features.length!==1||s.features[0]?.geometry?.type!=='Point'||
        !FIELDS.every(name=>Object.hasOwn(s.features[0]?.properties??{},name))||
-       s.features[0].properties.COUNTY_NAME!=='Grant'||
+       s.features[0].properties.COUNTY!=='Grant'||
        !Array.isArray(s.features[0].geometry.coordinates)||
        !s.features[0].geometry.coordinates.slice(0,2).every(Number.isFinite)){
       throw Error('GeoJSON sample not compatible with bounded source importer');

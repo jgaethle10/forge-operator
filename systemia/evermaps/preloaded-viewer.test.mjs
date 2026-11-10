@@ -26,7 +26,7 @@ test('complete audited WGS GeoJSON embeds in a single offline viewer with no sou
  assert.ok(html.includes('Object.assign(data,'));
  assert.ok(html.includes('resetToggles();onStatus();fit();'));
  assert.equal(html.includes('</script><script>alert(1)'),false);
- assert.ok(html.includes(String.raw\`\\u003c/script\`));
+ assert.ok(html.includes('\\u003c/script'));
  assert.equal(html.split('</script>').length-1,1);
  const script=html.split('<script>')[1]?.split('</script>')[0];
  assert.doesNotThrow(()=>new Script(script));

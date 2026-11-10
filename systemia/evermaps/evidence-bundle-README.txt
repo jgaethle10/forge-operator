@@ -47,3 +47,7 @@ water, roads, access, materials tests, geotechnical feasibility, economics, curr
 permit status, and professional qualified geologist/land-use review.
 
 Code and reviews: https://github.com/jgaethle10/forge-operator/pull/1681
+
+2026-11-09: New WA DNR reclamation permit source (v4.0)
+https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1
+Previous site1 permit-point observations must never be substituted for this source.

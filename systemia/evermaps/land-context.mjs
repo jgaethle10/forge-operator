@@ -13,9 +13,9 @@ export const LAND_SOURCE_CATALOG = Object.freeze({
     limitation:'BLM MLRS geocoding may be inaccurate or entirely absent. A mapped claim never verifies title or surface access.'
   },
   washingtonSurfacePermits:{
-    url:'https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Active_Surface_Mine_Permit_Sites/MapServer/0',
+    url:'https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1',
     geometryType:'esriGeometryPoint',
-    fields:['OBJECTID','MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'],
+    fields:['OBJECTID','PERMIT_NO','COUNTY','COMMODITY'],
     kind:'approximate_reclamation_permit_point',
     limitation:'An active reclamation permit point does not establish operating status, extraction permission or proximity to any selected polygon.'
   },
@@ -88,7 +88,7 @@ export function createLandCoverageQuery(key,{county='Grant',bbox}={}){
     p.set('inSR','4326');
     p.set('spatialRel','esriSpatialRelIntersects');
   }else {
-    p.set('where',"COUNTY_NAME='Grant'");
+    p.set('where',"COUNTY='Grant'");
   }
   return LAND_SOURCE_CATALOG[key].url+'/query?'+p;
 }

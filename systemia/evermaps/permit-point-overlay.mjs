@@ -6,14 +6,14 @@ import {LAND_SOURCE_CATALOG,validateLandSourceMetadata,validateWgsProvenance} fr
 import {bboxForGeometry,auditGeojsonCollection} from './spatial-integrity.mjs';
 
 const DEF=LAND_SOURCE_CATALOG.washingtonSurfacePermits;
-const FIELDS=['OBJECTID','MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'];
+const FIELDS=['OBJECTID','PERMIT_NO','COUNTY','COMMODITY'];
 const EPS=1e-10;
 
 export function permitGeojsonQuery({county='Grant',offset=0,pageSize=100,countOnly=false}={}){
   if(county!=='Grant')throw new Error('Grant is the only verified pilot');
   if(!Number.isInteger(pageSize)||pageSize<1||pageSize>1000||
       !Number.isInteger(offset)||offset<0)throw new Error('Invalid paging');
-  const p=new URLSearchParams({f:countOnly?'json':'geojson',where:"COUNTY_NAME='Grant'"});
+  const p=new URLSearchParams({f:countOnly?'json':'geojson',where:"COUNTY='Grant'"});
   if(countOnly)p.set('returnCountOnly','true');
   else {
     p.set('outFields',FIELDS.join(','));p.set('returnGeometry','true');
@@ -77,7 +77,7 @@ export async function fetchGrantPermitPoints({fetchImpl=fetch,pageSize=100,
       if(!Number.isSafeInteger(oid)||ids.has(oid))throw new Error('Missing or duplicated permit OBJECTID');
       if(f?.geometry?.type!=='Point'||!Array.isArray(f.geometry.coordinates)||
          !FIELDS.every(k=>Object.hasOwn(p,k)))throw new Error('Invalid permit point or source fields');
-      if(p.COUNTY_NAME!=='Grant')throw new Error('Permit point outside requested county field');
+      if(p.COUNTY!=='Grant')throw new Error('Permit point outside requested county field');
       ids.add(oid);features.push(f);
     }
     if(features.length>expected)throw new Error('Permit count exceeded start count');

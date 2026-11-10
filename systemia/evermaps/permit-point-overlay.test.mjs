@@ -16,7 +16,7 @@ const wgsReceipt={status:'source_geometry_complete_broad_phase_only',county:'Gra
   layers:{resources:{complete:true,fetched_features:1,
     geometry_audit:{valid_for_mapping:true,sha256_source_features:wgsHash}}}};
 const p=(id,coordinates)=>({type:'Feature',properties:{
-  OBJECTID:id,MINE_PERMIT_NUMBER:1000+id,COUNTY_NAME:'Grant',COMMODITY_DESC:'Sand and Gravel'
+  OBJECTID:id,PERMIT_NO:1000+id,COUNTY:'Grant',COMMODITY:'Sand and Gravel'
 },geometry:{type:'Point',coordinates}});
 const permitted=points=>{const c={type:'FeatureCollection',features:points,metadata:{
   complete:true,source:LAND_SOURCE_CATALOG.washingtonSurfacePermits.url,
@@ -36,8 +36,9 @@ test('queries select only public non-owner fields and source geometry',()=>{
   const u=new URL(permitGeojsonQuery({pageSize:1,offset:1}));
   assert.equal(u.searchParams.get('outSR'),'4326');
   assert.equal(u.searchParams.get('f'),'geojson');
-  assert.equal(u.searchParams.get('outFields'),'OBJECTID,MINE_PERMIT_NUMBER,COUNTY_NAME,COMMODITY_DESC');
+  assert.equal(u.searchParams.get('outFields'),'OBJECTID,PERMIT_NO,COUNTY,COMMODITY');
   assert.equal(u.searchParams.get('resultOffset'),'1');
+  assert.equal(u.searchParams.get('where'),"COUNTY='Grant'");
   assert.throws(()=>permitGeojsonQuery({county:'Yakima'}),/Grant/);
 });
 test('read complete WA reclamation permit points with metadata, page and count audit',async()=>{

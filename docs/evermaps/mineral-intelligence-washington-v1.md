@@ -174,3 +174,11 @@ The verified-geology packet exporter is now marked `if: always()` with an indepe
 `preloaded-viewer-cli.mjs` now generates `research-map-preloaded.html` that can be opened without selecting four source GeoJSON files. The code runs `auditGeojsonCollection` against every complete WGS layer, verifies each layer against the original full import's SHA-256, then embeds only the four public WGS GeoJSON layers inside our own `research-viewer.html` template. No ArcGIS request, external map provider, owner names, permit data, or basemap is required at page open. The browser is still able to select local files if desired. All external attributes are script-escaped to prevent malicious HTML injection.
 
 **No permit point layer is preloaded** when the WA DNR permit source fails current refresh. The offline file is geography research, not mineral-rights or zoning clearance. Source-complete 1,161/232/304/1 layer counts must match the audit for generation.
+
+## 2026-11-09: WA DNR DDS-34 v4.0 schema migration
+
+The retired `site1` reclamation-permit service returns ArcGIS 404. The current WA DNR **October 2026 DDS-34 version 4** public permit-point service is `https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1`. Required schema: `OBJECTID`, `PERMIT_NO`, `COUNTY`, `COMMODITY`. The read-only importer queries only these four attributes and point geometry, restricts to `COUNTY='Grant'`, reconciles before/after county counts, verifies source feature IDs and SHA hashes, and joins approximate locations to the verified WGS geology map. Applicant names are deliberately **not retrieved** even though the publisher's layer contains them.
+
+These mapped locations describe mines with active **reclamation permits**, not proof of current operation, land title, economic reserves, permission to extract, or site accessibility. Earlier 42-point findings were from a different dataset vintage, not an automatically trusted current count.
+
+Official DNR layer: https://gis.dnr.wa.gov/site3/rest/services/Geology/Active_Surface_Mine_Permit_Sites/MapServer/1

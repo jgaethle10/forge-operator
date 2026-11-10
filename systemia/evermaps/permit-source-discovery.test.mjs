@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {probeWaPermitSourceCandidates,permitReadOnlyQuery,WA_PERMIT_SOURCE_CANDIDATES} from './permit-source-discovery.mjs';
-const FIELDS=['OBJECTID','MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'];
+const FIELDS=['OBJECTID','PERMIT_NO','COUNTY','COMMODITY'];
 test('candidate source endpoints remain official DNR only and data queries avoid owner fields',()=>{
  assert.equal(WA_PERMIT_SOURCE_CANDIDATES.length,3);
  for(const c of WA_PERMIT_SOURCE_CANDIDATES){
@@ -21,12 +21,12 @@ test('live-compatible source can be distinguished from stale 404 endpoint',async
   })};
   if(url.includes('returnCountOnly'))return {ok:true,json:async()=>({count:42})};
   return {ok:true,json:async()=>({type:'FeatureCollection',features:[{
-   type:'Feature',properties:{OBJECTID:1,MINE_PERMIT_NUMBER:22,COUNTY_NAME:'Grant',COMMODITY_DESC:'Stone'},
+   type:'Feature',properties:{OBJECTID:1,PERMIT_NO:22,COUNTY:'Grant',COMMODITY:'Stone'},
    geometry:{type:'Point',coordinates:[-119.1,47.1]}
   }]})};
  };
  const r=await probeWaPermitSourceCandidates({fetchImpl});
- assert.equal(r.preferred_source_key,'site3_current');
+ assert.equal(r.preferred_source_key,'site3_mapserver_v4');
  assert.equal(r.results[0].county_count,42);
  assert.equal(r.results[1].state,'source_unverified');
  assert.equal(r.full_county_import_verified,false);
@@ -58,9 +58,7 @@ test('schema mismatch records only public field-name diagnostics, never applican
  assert.equal(calls,1); // mismatch must not query data
  assert.equal(result.state,'no_live_permit_source_verified');
  const diagnostic=result.results[0].schema_diagnostic;
- assert.deepEqual(diagnostic.missing_expected_fields,[
-  'MINE_PERMIT_NUMBER','COUNTY_NAME','COMMODITY_DESC'
- ]);
+ assert.deepEqual(diagnostic.missing_expected_fields,['PERMIT_NO']);
  assert.ok(diagnostic.observed_nonpersonal_field_names.includes('MINE_PERMIT_NO'));
  assert.ok(!diagnostic.observed_nonpersonal_field_names.includes('APPLICANT_NAME'));
  assert.ok(!JSON.stringify(result).includes('OWNER_ADDRESS'));
