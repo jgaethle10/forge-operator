@@ -98,6 +98,9 @@ test('untrusted, inconsistent and privileged source assertions reject archive in
     raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].time='2026-11-09T00:00:00Z';raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].unit='cms';raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].station_id='USGS-NOT_REAL';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].time='invalid';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.source_coverage.usgs_discharge_location_count=8;raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['reservoir-source-probe.json']);x.derived_sum_source_reported_day='2026-11-08';raw['reservoir-source-probe.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['reservoir-source-probe.json']);x.derived_provisional_sum_af=800;raw['reservoir-source-probe.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['official-basin-report.json']);x.all_basins_warned=false;raw['official-basin-report.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['swe-median-audit.json']);x.basin_percent_of_median=150;raw['swe-median-audit.json']=Buffer.from(JSON.stringify(x));}
@@ -109,6 +112,19 @@ test('untrusted, inconsistent and privileged source assertions reject archive in
   assert.throws(()=>build(fixture(),{event:'pull_request'}),/trusted main-branch/);
   assert.throws(()=>build(fixture(),{runId:'../etc'}),/trusted main-branch/);
 });
+test('invalid-time river readings are archived only with an explicit quality hold',()=>{
+  const raw=fixture();
+  const snapshot=JSON.parse(raw['latest.json']);
+  snapshot.river[0].time='not-an-ISO-timestamp';
+  snapshot.river[0].freshness='invalid_time';
+  snapshot.source_coverage.usgs_discharge_location_count=0;
+  raw['latest.json']=Buffer.from(JSON.stringify(snapshot));
+  const rec=build(raw);
+  assert.equal(rec.sensors.river[0].observed_at,'not-an-ISO-timestamp');
+  assert.equal(rec.sensors.river[0].freshness,'invalid_time');
+  assert.equal(rec.sensors.coverage.river_locations,0);
+});
+
 test('immutable on-disk run is idempotent, conflict-safe and retains all four raw byte receipts',()=>{
   const root=mkdtempSync(join(tmpdir(),'evercraft-water-ledger-'));
   const source=join(root,'source'),ledger=join(root,'ledger');
