@@ -17,6 +17,24 @@ The immersive experiment does not replace the evidence lab. It now accepts local
 4. **Reset demo** returns to the fictional environment. Imported data stays in the browser session, is not uploaded by the page, and cannot certify positioning, hazards, visibility, isolation or clearance.
 5. Do not publish the imported data or represent its user-declared positioning source as independently verified. A later real reconstruction needs independently sourced survey geometry, coordinate registration, uncertainty and video timestamps, with independent operator review.
 
+## First real-data source packet: NOAA EX2306 DIVE02 (research preview)
+
+**First-party discovery route:** `/subsea-watch/field-archive/`. It shows a documented NOAA Ocean Exploration video segment from the Kodiak Seep ROV dive, with a user-initiated preview, original NOAA clip citation and direct file download. It also links the original DIVE02 track KML, ROV ancillary ZIP and CTD/sensor ZIP without claiming those bytes have been inspected or synchronized.
+
+The first-party registry is `field-archive/sources.json`, with stable source IDs, original provider links, credit/rights notes, published metadata, access status, and explicit evidence boundaries. The mobile page uses only first-party JavaScript and defers fetching the external NOAA MP4 until the viewer chooses **Preview NOAA footage**.
+
+- **Source verified by metadata:** NOAA EX2306 DIVE02 Kodiak Seep; one 299-second HD camera segment starting 2023-08-25 18:30:00 UTC; original low-res H.264 MP4 URL published in NCEI metadata. NOAA's Ocean Exploration Video Portal describes its video as public domain; credit NOAA Ocean Exploration and preserve the dataset citation.
+- **Published but uninspected archives:** The DIVE02 KML, ancillary ZIP and CTD ZIP are linked by NOAA's expedition page. Download URLs are identified, **not** byte-verified, parsed, datum-resolved or approved for frame-to-track registration.
+- **Future geometry exploration:** NCEI bathymetry catalog and NOAA photogrammetry collection are discovery links only, not surveyed local models for the Kodiak Seep dive. Some photogrammetry is partner-hosted with separate licensing, so do not download/re-host it as an Evercraft asset without permission.
+- **No synthetic contamination:** The real NOAA clip is never mapped onto the fictional diver, pipe or seafloor; there is no imported real XY route unless an actual validated sensor adapter produces one. Public video alone cannot establish depth, camera pose, bathymetry or the location of underwater structures.
+- **Safety and ethics:** No recorded visual is a safe-route claim, clearance to dive or automated hazard detection. Keep exact source, licensing, clock uncertainty and limitations attached in downstream outputs.
+
+**Original records:** https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/ and https://www.ncei.noaa.gov/metadata/granule/geoportal/rest/metadata/item/EX2306_DIVE02_20230825T183000Z_ROVHD/html
+
+### Next adapter gate
+
+Inspect the real DIVE02 ZIP and KML formats before writing a converter. Verify which measurements correspond to the **ROV** versus the camera platform or ship. Explicitly establish time basis, UTC offsets, horizontal measurement method, position validity, coordinate datum, local origin and depth sign/reference. Build a converter that emits `evercraft.subsea.replay.v1` **only for validated fields** and leaves missing XY unknown. Never interpolate unknown positions across long intervals or imply video-frame accuracy without a verified clock alignment.
+
 ## Local footage / mission clock pairing (experimental)
 
 This next increment adds **local video preview**, **manual clock alignment**, and playback alongside the imported telemetry. It does **not** automatically discover or validate camera start times, derive survey geometry from frames, or produce a synchronized evidence package.
