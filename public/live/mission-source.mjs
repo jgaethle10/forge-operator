@@ -55,5 +55,22 @@ export function parseOperatorSnapshot(raw,now=Date.now()){
     return {id,title,lane:m.lane,status:m.status,observed_at:observed,note,owner,
       public_receipt_url:receiptUrl,provenance:'OPERATOR IMPORT · UNVERIFIED'};
   });
-  return {schema:SNAPSHOT_SCHEMA,exported_at:exported,missions,authority:'OPERATOR-REPORTED / UNVERIFIED'};
+  const nodeInputs=raw.nodes??[];
+  if(!Array.isArray(nodeInputs)||nodeInputs.length>2)throw new Error('Expected up to two node observations.');
+  const nodeKeys=new Set();
+  const nodes=nodeInputs.map(n=>{
+    if(!n||typeof n!=='object'||Array.isArray(n))throw new Error('Invalid node observation.');
+    if(!['node001','node002'].includes(n.node_key)||nodeKeys.has(n.node_key))throw new Error('Unknown or duplicate node slot.');
+    if(!['reported_healthy','reported_degraded','stale','bootstrapping','unknown'].includes(n.status))throw new Error('Unknown node observation status.');
+    if(typeof n.source_receipt_hash!=='string'||!/^sha256:[a-f0-9]{64}$/.test(n.source_receipt_hash))throw new Error('Missing or invalid local source digest.');
+    const observed=safeTime(n.observed_at,now);
+    if(!observed||Date.parse(observed)>Date.parse(exported)+300000)throw new Error('Node observation timestamp is invalid.');
+    nodeKeys.add(n.node_key);
+    // Even a once-recent import must not stay green after the watcher has gone stale.
+    const status=now-Date.parse(observed)>180000?'stale':n.status;
+    return {node_key:n.node_key,status,observed_at:observed,
+      note:safeLabel(n.note||'',230),source_receipt_hash:n.source_receipt_hash,
+      provenance:'LOCAL SELF-REPORT · NOT AUTHENTICATED'};
+  });
+  return {schema:SNAPSHOT_SCHEMA,exported_at:exported,missions,nodes,authority:'OPERATOR-REPORTED / UNVERIFIED'};
 }
