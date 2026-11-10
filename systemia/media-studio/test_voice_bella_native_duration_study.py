@@ -29,7 +29,7 @@ def result_fixture(wrong=False, missing=False, secs=.18):
     return types.SimpleNamespace(
         phonemes="abc abc ðˈæt abc",
         pred_dur=Durations([2,4,5,4,3,1]),
-        audio=[0]*int(24000*1.6),tokens=tokens)
+        audio=[0]*int(24000*3.0),tokens=tokens)
 
 
 class BellaDurationTests(unittest.TestCase):
