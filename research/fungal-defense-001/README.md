@@ -1,8 +1,8 @@
 # Evercraft Fungal Defense Observatory
 
 **Research ID:** FUNGAL-DEFENSE-001  
-**Build status:** v0.2 standalone offline prototype, not deployed  
-**Last manual evidence review:** 2026-11-04  
+**Build status:** v0.3 standalone offline prototype with a separate provisional 2026 surveillance lane; not deployed  
+**Last manual evidence review:** Historical CDC data 2026-11-04; provisional CDC NNDSS weekly series 2026-11-09  
 **Mode:** Public aggregate data, static and non-clinical
 
 ## What is actually working
@@ -166,3 +166,36 @@ A label such as `evercraft-node002-nextgen` is **self-reported**. The receipt is
 - Exact local Git blob hashes of `verify_checkout.py`, `test_verify_checkout.py`, `run_owned_validation.py`, `test_run_owned_validation.py` and the handoff shell script were checked against committed branch files.
 
 **Open gates:** actual owned Node001/Node002 receipt, Systemia/Fabric execution route verification, real-device/browser checks, scientific review and explicit public release approval. PR #1908 remains draft; no deployment was performed.
+
+## November 9, 2026 night: Provisional 2026 NNDSS surveillance lane
+
+The historical CDC tracking chart ended in 2024, but the CDC's weekly NNDSS series publishes **provisional** 2026 data, with a like-week 2025 comparison. To avoid misrepresenting newer evidence, the observatory now includes:
+
+- [`observatory-v0.3.html`](https://github.com/jgaethle10/forge-operator/blob/research/fungal-defense-001/research/fungal-defense-001/observatory-v0.3.html): distinct historical (2016–2024) and provisional week 43 (2026) panels, category selector, cumulative-notification table and source links. Still offline and not published.
+- [`data/cdc-nndss-provisional-2026-w43.json`](https://github.com/jgaethle10/forge-operator/blob/research/fungal-defense-001/research/fungal-defense-001/data/cdc-nndss-provisional-2026-w43.json): official CDC NNDSS clinical series (weeks 41–43) and separately labeled screening count (week 43). Data reviewed November 9, 2026.
+- [`tools/check_provisional.py`](https://github.com/jgaethle10/forge-operator/blob/research/fungal-defense-001/research/fungal-defense-001/tools/check_provisional.py) and `tools/test_provisional.py`: separate source-case validation, embedded JSON consistency and safety requirements.
+- `tools/serve_local.py` now serves v0.3, while retaining the loopback-only and single-file allowlist behavior. `tools/verify_checkout.py` and `tools/run_owned_validation.py` require and validate both datasets.
+- The v0.2 snapshot is preserved for historical continuity.
+
+**CDC NNDSS week 43, week ending October 31, 2026, U.S. residents excluding territories:** 6,572 provisional clinical notifications YTD 2026 versus 5,733 at the same week in 2025; screening notifications 7,202 versus 6,896. *Clinical and screening are different categories; never add them or compare these provisional figures directly against the finalized CDC historic annual surveillance series.* Data can be revised, and reporting completeness differs across jurisdictions.
+
+Sources: [CDC clinical NNDSS week 43](https://stacks.cdc.gov/view/cdc/262786) and [CDC screening NNDSS week 43](https://stacks.cdc.gov/view/cdc/262787). Both are official CDC archival records. Neither count is a mortality total or real-time confirmed outbreak estimate.
+
+To validate the v0.3 source lane on a checked-out research branch:
+
+```bash
+python3 research/fungal-defense-001/tools/check_provisional.py
+python3 -m unittest discover -s research/fungal-defense-001/tools -p 'test_*.py' -v
+bash research/fungal-defense-001/tools/validate_on_owned_node.sh evercraft-node002-nextgen
+```
+
+The last command **must be executed on the intended Evercraft-owned node**; its label is self-reported, not hardware attestation. As of this commit, this has not been done. The v0.3 panel has passed source/HTML structural integrity assertions within the connector session, but not a fully instrumented actual-device browser review or owned-node runtime execution.
+
+### Next acceptance milestones
+
+1. Run the full v0.3 Python suite from a clean branch on owned Node002 (or Node001) and preserve the local receipt.
+2. Verify the preview in an actual browser, including category switching, mobile layout and accessibility.
+3. Establish NNDSS update cadence with **manual source-review admission**, not an automatic live outbreak feed. Every future week must be linked to the exact CDC record.
+4. Obtain independent scientific, privacy and accessibility review before any public health-related publication or clinical positioning.
+5. Keep `release-gates.json` unapproved until those checks have genuine, attributable evidence.
+
