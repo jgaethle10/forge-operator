@@ -20,7 +20,7 @@ OBS_SCHEMA = "evercraft.spatial-perception.offline-import.v1"
 TARGET_SCHEMA = "evercraft.spatial-perception.field-targets.v1"
 REPORT_SCHEMA = "evercraft.spatial-perception.field-evaluation.v1"
 MAX_JSON_BYTES = 10_000_000
-METHODS = {"laser_camera_axis", "tape_camera_axis", "surveyed_camera_axis"}
+METHODS = {"laser_camera_axis", "tape_camera_axis", "surveyed_camera_axis", "synthetic_known_disparity"}
 
 
 def reject(message):
@@ -232,6 +232,7 @@ def evaluate(observations, targets, *, min_iou=0.5, ambiguity_margin=0.08):
             "calibrationAuthenticityVerified": False,
             "referenceIndependenceVerified": False
         },
+        "referenceEvidenceClass": ("synthetic_fixture" if any(t["measurementMethod"] == "synthetic_known_disparity" for t in targets["targets"]) else "operator_attested_measurements_unverified"),
         "measurementAxis": "left_camera_optical_z_meters",
         "summary": {
             "referenceTargets": len(outcomes),
