@@ -2,6 +2,7 @@ import {createHash} from 'node:crypto';
 import {advanceWorld,REAL_TICK_MS,replayWorld} from '../../public/the-window/world.mjs';
 import {decideCivic,ensureCivic} from './window-civic.mjs';
 import {decideSocial,ensureSocial} from './window-social.mjs';
+import {projectDecisionReceipts} from './window-decision-receipts.mjs';
 
 export const STATE_SCHEMA='evercraft.window.heartbeat.v1';
 export const STATE_BRANCH='window-society-state';
@@ -57,6 +58,11 @@ export function advanceHeartbeat(previous,now,options={}){
   ensureSocial(w);
   assertWorld(w);
   const pending=Math.max(0,Math.floor((now-w.last_tick_at)/REAL_TICK_MS));
+  const worldHash=digest(w);
+  const receiptProjection=projectDecisionReceipts(w,oldEventId);
+  // The digest binds this *projection* to the persisted simulation snapshot.
+  // It is not a signed execution attestation or a claim of independent LLM inference.
+  receiptProjection.world_hash=worldHash;
   const result={
     schema:STATE_SCHEMA,initialized:true,release_status:'held',
     authority:'github_actions_state_branch',
@@ -70,7 +76,8 @@ export function advanceHeartbeat(previous,now,options={}){
       pending_ticks:pending,new_event_count:Math.max(0,w.next_event_id-oldEventId),
       scheduler:'GitHub Actions best-effort five-minute cron, not guaranteed'
     },
-    world_hash:digest(w), world:w
+    decision_receipts:receiptProjection,
+    world_hash:worldHash, world:w
   };
   if(!first&&steps===0)return {changed:false,state:previous};
   return {changed:true,state:result};
