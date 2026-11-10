@@ -72,6 +72,7 @@ export async function runOwnedLocalInferenceCanary({
     return 3;
   }
 
+  let inferenceStarted=false;
   try {
     const validation=await adapter.validate();
     if(validation.status!=='available' || validation.model!==config.model ||
@@ -79,6 +80,7 @@ export async function runOwnedLocalInferenceCanary({
        validation.external_effect_authorized!==false) {
       throw Error('VALIDATION_INCOMPLETE');
     }
+    inferenceStarted=true;
     const result=await adapter.infer({
       request_id:'local-canary-'+uuid().replaceAll('-',''),
       role:'synthetic-qa',
@@ -107,7 +109,8 @@ export async function runOwnedLocalInferenceCanary({
     // Do not claim that inference did not happen after activation.
     stdout.write(JSON.stringify(summary('held',{
       reason:'LOCAL_CANARY_UNVERIFIED',
-      inference_outcome:'unknown_after_activation',
+      inference_outcome:inferenceStarted ? 'unknown_after_activation' : 'not_started',
+      prompt_sent:inferenceStarted ? 'unknown' : false,
       response_content_exposed:false
     }),null,2)+'\n');
     return 4;
