@@ -258,3 +258,41 @@ test('unified customer runtime accepts guest enrollment + order with checkout he
   await f.close();
  }
 });
+
+
+test('verified returning buyer rotates lost token without losing paid-order ownership',async()=>{
+ const f=fixture();let base=await f.start();
+ try{
+  const first=await f.enroll(base,'buyer@example.test');
+  assert.equal(first.status,201);
+  const firstToken=first.body.access_token;
+  assert.equal(first.body.session_rotated,false);
+  const order=await f.request(base,'/v1/forensiscope/orders',{
+   method:'POST',token:firstToken,body:media
+  });
+  assert.equal(order.status,201);
+  const key=order.body.order_key;
+  f.advance(2000);
+  const recovered=await f.enroll(base,'BUYER@example.test');
+  assert.equal(recovered.status,201);
+  assert.equal(recovered.body.session_rotated,true);
+  assert.notEqual(recovered.body.access_token,firstToken);
+  assert.equal((await f.request(base,'/v1/forensiscope/orders/'+key,{
+   token:firstToken
+  })).status,401,'previous token revoked when user recovers');
+  const restored=await f.request(base,'/v1/forensiscope/orders/'+key,{
+   token:recovered.body.access_token
+  });
+  assert.equal(restored.status,200);
+  assert.equal(restored.body.order_key,key);
+  const active=await f.ledger.authorizeBuyer({
+   headers:{authorization:'Bearer '+recovered.body.access_token}
+  });
+  const loaded=await f.ledger.loadOrder(key,active.subject);
+  assert.equal(loaded.subject,active.subject);
+  base=await f.restart();
+  assert.equal((await f.request(base,'/v1/forensiscope/orders/'+key,{
+   token:recovered.body.access_token
+  })).status,200,'recoverable identity survives process restart');
+ }finally{await f.close()}
+});
