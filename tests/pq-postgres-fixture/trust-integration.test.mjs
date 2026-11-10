@@ -70,3 +70,92 @@ test('one PostgreSQL writer arbitrates concurrent trust revisions and rejects ro
     await Promise.allSettled([a.end(),b.end()]);
   }
 });
+
+
+test('atomic current-trust gate blocks stale signers before nonce admission',
+  {skip:!connectionString},async()=>{
+  const {randomBytes}=await import('node:crypto');
+  const {readFileSync}=await import('node:fs');
+  const {fileURLToPath}=await import('node:url');
+  const {generatePqRecipient}=await import('../../systemia/crypto/pq-envelope.mjs');
+  const {signAndEncryptPqMessage}=await import('../../systemia/crypto/pq-signed-envelope.mjs');
+  const {openCurrentTrustPqMessageAsync,createCurrentTrustReplayGuard}=
+    await import('../../systemia/crypto/pq-current-trust-replay.mjs');
+
+  const poolA=new Pool({connectionString,max:4,connectionTimeoutMillis:3000});
+  const poolB=new Pool({connectionString,max:4,connectionTimeoutMillis:3000});
+  try {
+    const replayMigration=fileURLToPath(new URL('../../systemia/crypto/sql/postgres-replay-v1.sql',import.meta.url));
+    await poolA.query(readFileSync(migration,'utf8'));
+    await poolA.query(readFileSync(replayMigration,'utf8'));
+    const root=generateKeyPairSync('ml-dsa-65');
+    const oldSigner=generatePqSigner();
+    const newSigner=generatePqSigner();
+    const recipient=generatePqRecipient();
+    const now=Date.now();
+    const authority='systemia.trust.current.'+randomBytes(6).toString('hex');
+    const entry=(signer,status)=>({
+      sender:'node001',keyId:signer.senderKeyId,
+      publicKeyPem:signer.publicKey.export({type:'spki',format:'pem'}),
+      status,notBeforeMs:now-30000,notAfterMs:now+120000
+    });
+    const sign=(revision,entries)=>signPqTrustSnapshot({
+      rootPrivateKey:root.privateKey,authority,revision,
+      validFromMs:now-10000,validUntilMs:now+120000,entries
+    });
+    const trustA=createSharedPostgresTrustRevisionGuard({client:poolA});
+    const trustB=createSharedPostgresTrustRevisionGuard({client:poolB});
+    const load=(snapshot,guard)=>importSignedPqTrustSnapshot({
+      signedSnapshot:snapshot,trustedRootPublicKey:root.publicKey,
+      expectedAuthority:authority,revisionGuard:guard,nowMs:now
+    });
+    const oldImported=await load(sign(1,[entry(oldSigner,'active')]),trustA);
+    const send=(signer,text)=>signAndEncryptPqMessage({
+      senderPrivateKey:signer.privateKey,sender:'node001',
+      recipientPublicKey:recipient.publicKey,plaintext:text,
+      context:'systemia.lab.current-trust',nowMs:now,ttlSeconds:90
+    });
+    const open=(client,importedSnapshot,signedMessage)=>openCurrentTrustPqMessageAsync({
+      client,importedSnapshot,signedMessage,expectedSender:'node001',
+      recipientPrivateKey:recipient.privateKey,expectedContext:'systemia.lab.current-trust',nowMs:now
+    });
+    const first=send(oldSigner,'before revocation');
+    assert.equal((await open(poolA,oldImported,first)).plaintext.toString(),'before revocation');
+    await assert.rejects(open(poolB,oldImported,first),/rejected|denied/);
+
+    const revoked=await load(sign(2,[
+      entry(oldSigner,'revoked'),entry(newSigner,'active')
+    ]),trustB);
+    assert.equal(revoked.revision,2);
+
+    // Previously imported and still unexpired old registry is NOT current.
+    const afterRevoke=send(oldSigner,'must be denied');
+    await assert.rejects(open(poolA,oldImported,afterRevoke),/rejected|denied/);
+    assert.equal(revoked.registry.resolve({sender:'node001',keyId:oldSigner.senderKeyId,nowMs:now}),null);
+
+    const fresh=send(newSigner,'now trusted');
+    assert.equal((await open(poolB,revoked,fresh)).plaintext.toString(),'now trusted');
+    await assert.rejects(open(poolA,revoked,fresh),/rejected|denied/);
+
+    // Forged metadata is not a valid signature-verified import.
+    assert.throws(()=>createCurrentTrustReplayGuard({
+      client:poolA,importedSnapshot:{...revoked}
+    }),/verified/);
+
+    // DB outage and dubious confirmation both fail closed.
+    const outage={query:async()=>{throw new Error('network partition');}};
+    await assert.rejects(open(outage,revoked,send(newSigner,'outage')),/rejected|denied/);
+    const uncertain={query:async()=>({rowCount:1,rows:[{token_digest:'wrong'}]})};
+    await assert.rejects(open(uncertain,revoked,send(newSigner,'uncertain')),/rejected|denied/);
+
+    // Authority's database clock, not caller-supplied timestamp, gates expiration.
+    const expired=signPqTrustSnapshot({
+      rootPrivateKey:root.privateKey,authority,revision:3,
+      validFromMs:now-120000,validUntilMs:now-60000,
+      entries:[entry(newSigner,'active')]
+    });
+    await assert.rejects(load(expired,trustA),/rejected/);
+  } finally {
+    await Promise.allSettled([poolA.end(),poolB.end()]);
+  }
+});
