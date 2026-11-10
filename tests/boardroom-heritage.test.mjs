@@ -19,7 +19,11 @@ test('luxury palette is coherent without outside fonts or scripts',()=>{
 for(const x of pages){
  test('heritage stylesheet resolves locally: '+path.relative(process.cwd(),x.file),()=>{
   const content=fs.readFileSync(x.file,'utf8');
-  assert.ok(content.includes('class="'+x.className+'"'));
+  const bodyClasses=(content.match(/<body\\b[^>]*\\bclass="([^"]+)"/i)||[])[1];
+  assert.ok(bodyClasses,'missing body classes');
+  const classTokens=new Set(bodyClasses.trim().split(/\\s+/));
+  for(const required of x.className.split(/\\s+/))
+   assert.ok(classTokens.has(required),'missing required heritage class token '+required);
   assert.ok(content.includes('href="'+x.href+'"'));
   const actual=path.resolve(path.dirname(x.file),x.href);
   assert.equal(actual,path.resolve(root,'heritage.css'));
