@@ -1,0 +1,32 @@
+name: Raven model routing candidate proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/raven/benchmarks/**"
+      - ".github/workflows/raven-model-routing-candidate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (read-only)
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax check (offline)
+        run: |
+          node --check systemia/raven/benchmarks/model-route-policy.candidate.mjs
+          node --check systemia/raven/benchmarks/model-route-policy.candidate.test.mjs
+          node --check systemia/raven/benchmarks/model-route-raven-inference.synthetic.test.mjs
+          node --check systemia/raven/benchmarks/model-inventory.candidate.mjs
+          node --check systemia/raven/benchmarks/model-inventory.candidate.test.mjs
+      - name: Test fail-closed policy and synthetic Raven engine boundary
+        run: node --test systemia/raven/benchmarks/model-route-policy.candidate.test.mjs systemia/raven/benchmarks/model-route-raven-inference.synthetic.test.mjs systemia/raven/benchmarks/model-inventory.candidate.test.mjs

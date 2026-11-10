@@ -12,6 +12,26 @@ import { planSystemiaMission } from "./systemia-adapter.mjs";
 
 test("owned Raven execution allowlist is internal and read-only", () => {
   assert.deepEqual(ravenReadOnlyWorkTypes(), ["analyze", "research", "qa"]);
+  const adapter=createRavenReadOnlyTeamAdapter();
+  assert.equal(adapter.authority,"read-only");
+  assert.equal(adapter.human_gate_required,false);
+  assert.equal(adapter.work_types.includes("publish"),false);
+  assert.equal(adapter.work_types.includes("deploy"),false);
+});
+
+test("Raven private bridge rejects untrusted remote hosts and URL credentials", () => {
+  assert.throws(
+    () => createRavenReadOnlyTeamAdapter({bridgeUrl:"https://nexus.example",bridgeToken:"fake"}),
+    /loopback/
+  );
+  assert.throws(
+    () => createRavenReadOnlyTeamAdapter({bridgeUrl:"http://user:pass@127.0.0.1:4321",bridgeToken:"fake"}),
+    /loopback/
+  );
+  assert.throws(
+    () => createRavenReadOnlyTeamAdapter({bridgeUrl:"http://127.0.0.1:4321/other",bridgeToken:"fake"}),
+    /loopback/
+  );
 });
 
 test("Raven adapter fails closed without an owned Nexus bridge", async () => {
@@ -41,7 +61,7 @@ test("Systemia plan can execute through owned Raven bridge and persist a sanitiz
   let called = 0;
   const fakeFetch = async (url, options) => {
     called += 1;
-    assert.equal(url, "https://nexus.example/v1/team-review");
+    assert.equal(url, "http://127.0.0.1:4321/v1/team-review");
     assert.equal(options.headers.authorization, "Bearer test-secret");
     const request = JSON.parse(options.body);
     assert.equal(request.constraints.read_only, true);
@@ -68,7 +88,7 @@ test("Systemia plan can execute through owned Raven bridge and persist a sanitiz
 
   const result = await executeSystemiaRavenPlan({
     systemiaPlan: planned.plan,
-    bridgeUrl: "https://nexus.example",
+    bridgeUrl: "http://127.0.0.1:4321",
     bridgeToken: "test-secret",
     receiptDir,
     fetchImpl: fakeFetch,
@@ -104,7 +124,7 @@ test("owned Raven execution refuses consequential lanes before provider invocati
   let called = false;
   const result = await executeSystemiaRavenPlan({
     systemiaPlan: planned.plan,
-    bridgeUrl: "https://nexus.example",
+    bridgeUrl: "http://127.0.0.1:4321",
     bridgeToken: "test-secret",
     fetchImpl: async () => {
       called = true;

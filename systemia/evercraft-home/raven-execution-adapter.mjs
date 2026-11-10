@@ -20,14 +20,16 @@ function normalizeBridgeUrl(value) {
   const raw = clean(value).replace(/\/$/, "");
   if (!raw) return "";
   const url = new URL(raw);
-  const loopback = ["127.0.0.1", "localhost", "::1"].includes(url.hostname);
-  if (url.protocol !== "https:" && !(loopback && url.protocol === "http:")) {
-    throw new Error("raven_nexus_work_url_must_be_https_or_loopback_http");
+  // Raven is a private resident service, not a public inference proxy.
+  // This volatile read-only dispatch is limited to a same-node loopback bridge.
+  // Cross-node transport must use separately authenticated owned infrastructure.
+  const loopback = ["127.0.0.1", "localhost", "[::1]", "::1"].includes(url.hostname);
+  if (!loopback || url.protocol !== "http:" ||
+      url.username || url.password || url.search || url.hash ||
+      (url.pathname !== "/" && url.pathname !== "")) {
+    throw new Error("raven_nexus_work_url_must_be_plain_loopback_http");
   }
-  if (/base44\.(app|com)$/i.test(url.hostname) || url.hostname.includes("base44.app")) {
-    throw new Error("legacy_provider_not_allowed_in_owned_raven_execution_path");
-  }
-  return raw;
+  return url.origin;
 }
 
 function safeArray(value, limit = 50) {
@@ -60,7 +62,11 @@ export function createRavenReadOnlyTeamAdapter({
   return {
     capability_key: "raven.nexus.readonly-team-review.v1",
     work_types: [...READ_ONLY_WORK_TYPES],
-    authority: "systemia+passport+bounded-nexus",
+    // The volatile Systemia executor admits only explicitly read-only adapters.
+    // This bridge has its own strict analyze/research/qa allowlist and
+    // no-external-action request constraints; durable gated work stays held.
+    authority: "read-only",
+    authority_context: "systemia+passport+bounded-nexus",
     human_gate_required: false,
 
     async execute({ work, goal, context }) {

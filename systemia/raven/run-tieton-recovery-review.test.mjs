@@ -62,7 +62,27 @@ test("live acceptance requires all six Raven lanes and writes durable receipts",
       now:()=>new Date(1760000100000+(tick++)*1000),
     });
 
-    assert.equal(result.ok,true);
+    // Diagnostic only: non-sensitive acceptance flags, not tokens or prompts.
+    // The underlying runtime and provider truth contracts remain unchanged.
+    assert.equal(result.ok,true,JSON.stringify({
+      checks:result.acceptance_receipt?.checks,
+      execution_state:result.execution?.state,
+      goal_mission_key:result.execution?.mission_key,
+      goal_status:result.execution?.goal_state?.status || null,
+      goal_tasks:(result.execution?.goal_state?.tasks||[]).map(({work_key,work_type,provider_key,human_gate_required,status,state,result,hold})=>({work_key,work_type,provider_key,human_gate_required,status,state,result,hold:typeof hold==='string'?hold.slice(0,100):null})),
+      execution_performed:result.execution?.execution_performed,
+      execution_receipt_present:Boolean(result.execution?.receipt),
+      execution_receipt_result:result.execution?.receipt?.result || null,
+      execution_receipt_authority:result.execution?.receipt?.authority || null,
+      execution_receipt_capability:result.execution?.receipt?.capability_key || null,
+      output_state:result.execution?.output?.state || null,
+      output_blocked_reason:result.execution?.output?.blocked_reason || null,
+      systemia_admission_authority:result.execution?.systemia_authority?.state || null,
+      execution_blocker:result.execution?.blocker || null,
+      acceptance_state:result.acceptance_receipt?.state,
+      completed_roles:result.acceptance_receipt?.completed_roles,
+      missing_roles:result.acceptance_receipt?.missing_roles
+    }));
     assert.equal(result.state,"passed");
     assert.equal(result.acceptance_receipt.review_lane_count,6);
     assert.deepEqual(

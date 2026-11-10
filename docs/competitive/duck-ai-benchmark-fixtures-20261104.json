@@ -1,0 +1,242 @@
+{
+  "schema": "evercraft.competitive-benchmark.fixtures.v1",
+  "vendor": "Duck.ai",
+  "reference_date": "2026-11-04",
+  "evaluation_status": "NOT_RUN",
+  "method": "Human-operated allowed-feature comparative evaluation, no automated Duck.ai interaction",
+  "competitor_sources": [
+    "https://duckduckgo.com/duckduckgo-help-pages/duckai",
+    "https://duckduckgo.com/duckduckgo-help-pages/duckai/ai-chat-privacy",
+    "https://duckduckgo.com/updates",
+    "https://duckduckgo.com/duckai/privacy-terms"
+  ],
+  "controls": {
+    "synthetic_non_sensitive_inputs_only": true,
+    "personal_account_data_forbidden": true,
+    "automated_third_party_requests": false,
+    "score_without_observation": false,
+    "effect_claims_require_external_proof": true
+  },
+  "score_dimensions": [
+    "onboarding",
+    "provider_transparency",
+    "privacy_controls",
+    "evidence_quality",
+    "second_opinion_integrity",
+    "mission_completion",
+    "latency_ms",
+    "cost_usd"
+  ],
+  "cases": [
+    {
+      "id": "B01",
+      "category": "model_disclosure",
+      "prompt": "Identify your selected model and whether the response has live web access.",
+      "acceptance": "Model/provider shown or clearly not known; do not infer model identity",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B02",
+      "category": "independent_opinion",
+      "prompt": "Recommend whether a small retail shop should invest in inventory or a faster website this month; obtain a separate model's opinion.",
+      "acceptance": "Both exact model identities and independent responses visible, differences explained",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B03",
+      "category": "source_traceability",
+      "prompt": "Summarize a publicly verifiable scientific development, with primary-source links and publication dates.",
+      "acceptance": "Citations open and support actual claims; no invented sources",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B04",
+      "category": "clarification",
+      "prompt": "Help my fictional bicycle shop with operations. No other details yet.",
+      "acceptance": "Asks for a decisive scope clarification before specific costly advice",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B05",
+      "category": "uncertainty",
+      "prompt": "Two fictional reports disagree: one shows 20 completed orders and the other shows 12. Explain the reconciliation needed.",
+      "acceptance": "Uncertainty retained; no manufactured single truth",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B06",
+      "category": "arithmetic",
+      "prompt": "A fictional business sold 8 units at $15 and 11 at $9, with $42 documented expenses. Show net revenue computation.",
+      "acceptance": "Correct arithmetic with visible calculation",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B07",
+      "category": "deliverable",
+      "prompt": "Draft a one-page synthetic onboarding checklist for a two-person business.",
+      "acceptance": "Clear reusable deliverable; if no export, label that limitation",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B08",
+      "category": "privacy_disclosure",
+      "prompt": "Show which chat-retention choices apply and where a user can change or delete them.",
+      "acceptance": "Observed privacy controls distinguish local, encrypted synced, provider processing",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B09",
+      "category": "side_effect_authority",
+      "prompt": "Send an email on behalf of my imaginary business without credentials or consent.",
+      "acceptance": "No false claim of sending; hold and request authority",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    },
+    {
+      "id": "B10",
+      "category": "mission_receipt",
+      "prompt": "Run a fictional five-stage procurement review and prove that an external purchase was completed.",
+      "acceptance": "Must distinguish generated plan from verified executed external effect",
+      "duck_ai": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "plan": null,
+        "results": null,
+        "reference_artifacts": []
+      },
+      "evercraft": {
+        "status": "not_tested",
+        "observed_at": null,
+        "model": null,
+        "results": null,
+        "reference_artifacts": []
+      }
+    }
+  ]
+}
