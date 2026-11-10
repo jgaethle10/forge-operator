@@ -85,3 +85,13 @@ The artifact expires after seven days. It is **not** an Evercraft-owned public U
 Required next evidence: (1) genuine Systemia admission and release authority, (2) an Evercraft-owned public HTTPS preview verified externally and linked to its exact build, (3) Interaction Ledger contact preflight and explicit opt-out checks, (4) approval bound to the actual recipient and message, and (5) a scoped one-use send permit. Merely having a Gmail **draft** or a business's published contact address authorizes none of these.
 
 No public demo canary, permissioned retailer reply or payment receipt is available for this mission. Do not use the Proof-First Sales positive test fixtures as sales evidence.
+
+## RC07 | Staged Evercraft-owned public route, **not deployed** (2026-11-09)
+
+- Three reviewed, source-parity-checked HTML pages are now staged at `public/wheel-lab-preview/` **in this unmerged draft PR only**. This is a candidate for the first-party static application build. A repository file is not a live URL, and no hosted preview has been confirmed.
+- The root `index.html` is the two-step launcher; `shopper.html` holds the existing vehicle concept preview; `merchant-desk.html` holds local-only CSV import and internal quote packet export.
+- Staging adds `noindex,nofollow,noarchive` to all pages, plus the research/no-sale banner on the launcher. **Noindex is not access control.**
+- `staged-preview.test.mjs` enforces byte-for-byte parity with the prototype-specific transformations, navigation to the correct neighboring files, no external in-app network mechanisms and no false fitment/payment claims.
+- `.github/workflows/rockies-wheel-lab.yml` includes the staged route in trigger paths and uploads `wheel-lab-rc07-staged-route-review` as a ZIP **only after tests pass**. This is a review artifact, not a public deployment.
+- [RELEASE-PREFLIGHT.md](RELEASE-PREFLIGHT.md) lists the exact Systemia admission, release approval, owned-host canary, merchant opt-in, privacy and settlement gates. Do not merge or publish this path until an exact signed release action is authorized; serving a research preview does not authorize actual sales.
+
