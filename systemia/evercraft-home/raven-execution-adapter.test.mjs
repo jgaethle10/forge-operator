@@ -47,7 +47,7 @@ test("Systemia plan can execute through owned Raven bridge and persist a sanitiz
     assert.equal(request.constraints.read_only, true);
     assert.equal(request.constraints.no_external_messages, true);
     assert.equal(request.constraints.no_publication, true);
-    assert.equal(request.requested_team, "commissioned");
+    assert.equal(request.requested_team, "role_lenses");
     return {
       ok: true,
       status: 200,
@@ -75,7 +75,7 @@ test("Systemia plan can execute through owned Raven bridge and persist a sanitiz
     now: () => new Date("2026-10-06T04:00:00Z"),
   });
 
-  assert.equal(called, 1);
+  assert.equal(called, 1, JSON.stringify({ dispatch: planned.plan.dispatch, goal_tasks: planned.plan.goal?.tasks, result }, null, 2));
   assert.equal(result.ok, true);
   assert.equal(result.executed, true);
   assert.equal(result.reason, "complete");

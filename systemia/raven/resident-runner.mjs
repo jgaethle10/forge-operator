@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { startRavenPrivateRuntime } from "./private-runtime.mjs";
+import { createOwnedCommissionedTeamGate } from "../agent-continuity/owned-proof-source.mjs";
 import {
   createHttpInferenceAdapter,
   createRavenTeamReviewExecutor,
@@ -48,6 +49,8 @@ export async function startRavenResident({
   deploymentReceiptFile = "",
   inferenceOrigin = "",
   inferenceTokenFile = "",
+  commissionedEvidenceDir = "",
+  commissionedTrustKeysFile = "",
   port = 4321,
   repoRoot = process.cwd(),
 } = {}) {
@@ -67,7 +70,15 @@ export async function startRavenResident({
         token: loadInferenceToken(normalizedInferenceTokenFile),
       })
     : null;
-  const teamReviewExecutor = createRavenTeamReviewExecutor({ inferenceAdapter });
+  const evidenceDir = String(commissionedEvidenceDir || "").trim();
+  const trustKeysFile = String(commissionedTrustKeysFile || "").trim();
+  if (Boolean(evidenceDir) !== Boolean(trustKeysFile)) {
+    throw new Error("raven_commissioned_gate_requires_evidence_and_trust_paths");
+  }
+  const commissionedGate = evidenceDir
+    ? createOwnedCommissionedTeamGate({ evidenceDir, trustKeysFile })
+    : null;
+  const teamReviewExecutor = createRavenTeamReviewExecutor({ inferenceAdapter, commissionedGate });
   const runtime = await startRavenPrivateRuntime({
     stateDir: resolvedState,
     repoRoot,
@@ -92,6 +103,8 @@ async function main() {
     deploymentReceiptFile: arg("--deployment-receipt-file", process.env.RAVEN_PRIVATE_DEPLOYMENT_RECEIPT_FILE || ""),
     inferenceOrigin: arg("--inference-origin", process.env.RAVEN_INFERENCE_ORIGIN || ""),
     inferenceTokenFile: arg("--inference-token-file", process.env.RAVEN_INFERENCE_TOKEN_FILE || ""),
+    commissionedEvidenceDir: arg("--commissioned-evidence-dir", process.env.RAVEN_COMMISSIONED_EVIDENCE_DIR || ""),
+    commissionedTrustKeysFile: arg("--commissioned-trust-keys-file", process.env.RAVEN_COMMISSIONED_TRUST_KEYS_FILE || ""),
     port: Number(arg("--port", process.env.RAVEN_PRIVATE_PORT || "4321")),
     repoRoot: process.cwd(),
   });
@@ -109,6 +122,7 @@ async function main() {
     execution_authority_granted: false,
     internal_readonly_team_review_enabled: runtime.health().internal_readonly_team_review_enabled,
     ai_inference_enabled: runtime.health().ai_inference_enabled,
+    commissioned_proof_gate_configured: Boolean(arg("--commissioned-evidence-dir", process.env.RAVEN_COMMISSIONED_EVIDENCE_DIR || "")) && Boolean(arg("--commissioned-trust-keys-file", process.env.RAVEN_COMMISSIONED_TRUST_KEYS_FILE || "")),
     loopback_url: runtime.url,
   }) + "\n");
 

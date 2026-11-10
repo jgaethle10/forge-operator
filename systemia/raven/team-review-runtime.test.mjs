@@ -14,7 +14,7 @@ function request() {
     work_key: "raven-command",
     work_type: "analyze",
     objective: "Review the proposed Tieton Recovery pilot. Challenge margins, capacity, attribution, deal structure, and whether the target should be held.",
-    requested_team: "commissioned",
+    requested_team: "role_lenses",
     constraints: {
       internal_analysis_only: true,
       read_only: true,

@@ -18,7 +18,7 @@
       "constraints"
     ],
     "allowed_work_types": ["analyze", "research", "qa"],
-    "requested_team": ["commissioned"],
+    "requested_team": ["role_lenses", "commissioned"],
     "constraints_required_true": [
       "internal_analysis_only",
       "read_only",

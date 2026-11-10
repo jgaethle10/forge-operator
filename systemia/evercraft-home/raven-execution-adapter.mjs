@@ -60,7 +60,8 @@ export function createRavenReadOnlyTeamAdapter({
   return {
     capability_key: "raven.nexus.readonly-team-review.v1",
     work_types: [...READ_ONLY_WORK_TYPES],
-    authority: "systemia+passport+bounded-nexus",
+    authority: "read-only",
+    authority_chain: "systemia+passport+bounded-nexus",
     human_gate_required: false,
 
     async execute({ work, goal, context }) {
@@ -109,7 +110,7 @@ export function createRavenReadOnlyTeamAdapter({
         objective: clean(context?.objective || goal?.objective),
         title: clean(work?.title),
         assigned_agents: safeArray(work?.assigned_agents),
-        requested_team: "commissioned",
+        requested_team: "role_lenses",
         response_contract: {
           verdict_required: true,
           disagreements_required: true,

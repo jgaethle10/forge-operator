@@ -396,6 +396,7 @@ export async function startRavenInferenceGateway({
   openaiOrigin,
   geminiOrigin,
   fetchImpl = globalThis.fetch,
+  commissionedReceiver = null,
 } = {}) {
   if (!["127.0.0.1", "localhost", "::1"].includes(host)) {
     throw new Error("raven_inference_gateway_must_bind_loopback");
@@ -450,6 +451,40 @@ export async function startRavenInferenceGateway({
           inference_performed: false,
           prompt_sent: false,
           base44_used: false,
+          external_side_effects_authorized: false,
+        });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/v1/commissioned/infer") {
+      // This route is deliberately not a wrapper around engine.infer().
+      // No enrolled owned worker receiver => no commissioned inference.
+      if (!commissionedReceiver || typeof commissionedReceiver.execute !== "function") {
+        return json(res, 409, {
+          status: "blocked",
+          blocked_reason: "commissioned_owned_worker_receiver_not_configured",
+          external_side_effects_authorized: false,
+        });
+      }
+      try {
+        const body = await readBody(req);
+        const result = await commissionedReceiver.execute(body);
+        if (!result || result.status !== "completed" || result.commissioned_worker_verified !== true) {
+          return json(res, 409, {
+            status: "blocked",
+            blocked_reason: clean(result?.blocked_reason || "commissioned_worker_unverified", 2000),
+            external_side_effects_authorized: false,
+          });
+        }
+        return json(res, 200, {
+          ...result,
+          external_side_effects_authorized: false,
+          base44_used: false,
+        });
+      } catch {
+        return json(res, 409, {
+          status: "blocked",
+          blocked_reason: "commissioned_owned_worker_receiver_unavailable",
           external_side_effects_authorized: false,
         });
       }

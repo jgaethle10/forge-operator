@@ -57,7 +57,7 @@ function assertRequest(request) {
   const workType = clean(request.work_type, 80).toLowerCase();
   if (!TEAM_REVIEW_WORK_TYPES.includes(workType)) throw new Error("team_review_work_type_not_allowed");
   if (!clean(request.objective, 16000)) throw new Error("team_review_objective_required");
-  if (request.requested_team !== "commissioned") throw new Error("team_review_requested_team_invalid");
+  if (!["role_lenses", "commissioned"].includes(request.requested_team)) throw new Error("team_review_requested_team_invalid");
 
   const required = [
     "internal_analysis_only",
@@ -142,29 +142,17 @@ export function createHttpInferenceAdapter({
     throw new Error("legacy_provider_not_allowed_for_raven_inference");
   }
 
-  return {
-    adapter_id: "raven.http-inference.v1",
-    async infer({ request_id, role, prompt }) {
+  async function inferRequest({endpoint="/v1/infer", payload}) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
       try {
-        const response = await fetchImpl(base + "/v1/infer", {
+        const response = await fetchImpl(base + endpoint, {
           method: "POST",
           headers: {
             "content-type": "application/json",
             "authorization": "Bearer " + secret,
           },
-          body: JSON.stringify({
-            schema: "evercraft.raven.inference.request.v1",
-            request_id,
-            role,
-            input: prompt,
-            constraints: {
-              internal_analysis_only: true,
-              no_external_actions: true,
-              no_credential_return: true,
-            },
-          }),
+          body: JSON.stringify(payload),
           signal: controller.signal,
         });
         const body = await response.json().catch(() => ({
@@ -187,6 +175,42 @@ export function createHttpInferenceAdapter({
       } finally {
         clearTimeout(timer);
       }
+  }
+  const constraints = {
+    internal_analysis_only: true,
+    no_external_actions: true,
+    no_credential_return: true,
+  };
+  return {
+    adapter_id: "raven.http-inference.v1",
+    async infer({ request_id, role, prompt }) {
+      return inferRequest({
+        endpoint: "/v1/infer",
+        payload: {
+          schema: "evercraft.raven.inference.request.v1",
+          request_id, role, input: prompt, constraints,
+        },
+      });
+    },
+    async inferCommissioned({
+      request_id, role, prompt, agent_id, preflight_id,
+      registry_snapshot_hash, mission_key, work_key,
+    }) {
+      if (!clean(agent_id, 200) || ["sentinel", "juniper"].includes(clean(agent_id).toLowerCase()) ||
+          !clean(preflight_id, 200) ||
+          !/^sha256:[a-f0-9]{64}$/.test(String(registry_snapshot_hash || "")) ||
+          !clean(mission_key, 260) || !clean(work_key, 260)) {
+        throw new Error("raven_commissioned_identity_or_mission_binding_invalid");
+      }
+      return inferRequest({
+        endpoint: "/v1/commissioned/infer",
+        payload: {
+          schema: "evercraft.raven.commissioned-inference.request.v1",
+          request_id, reviewer_id: role, agent_id, mission_key, work_key,
+          preflight_id, registry_snapshot_hash,
+          input: prompt, constraints,
+        },
+      });
     },
   };
 }
@@ -195,6 +219,7 @@ export function createRavenTeamReviewExecutor({
   inferenceAdapter,
   roles = TEAM_REVIEW_ROLES,
   now = () => new Date(),
+  commissionedGate = null,
 } = {}) {
   if (!inferenceAdapter || typeof inferenceAdapter.infer !== "function") return null;
   const reviewers = roles.filter(Boolean).slice(0, 12);
@@ -202,19 +227,84 @@ export function createRavenTeamReviewExecutor({
   return async function executeTeamReview(request) {
     assertRequest(request);
     const startedAt = now().toISOString();
+    const commissioned = request.requested_team === "commissioned";
+    if (commissioned && typeof inferenceAdapter.inferCommissioned !== "function") {
+      return {
+        status: "blocked",
+        blocked_reason: "commissioned_worker_transport_not_configured",
+        commissioned_identity_verified: false,
+        inference_calls_performed: 0,
+      };
+    }
+    let preflight = null;
+    if (commissioned) {
+      if (!commissionedGate || typeof commissionedGate.preflight !== "function") {
+        return {
+          status: "blocked",
+          blocked_reason: "commissioned_team_verifier_not_configured",
+          commissioned_identity_verified: false,
+          inference_calls_performed: 0,
+        };
+      }
+      try {
+        preflight = await commissionedGate.preflight(request, {
+          reviewerIds: reviewers.map((role) => role.reviewer_id),
+        });
+      } catch {
+        return {
+          status: "blocked",
+          blocked_reason: "commissioned_team_preflight_unavailable",
+          commissioned_identity_verified: false,
+          inference_calls_performed: 0,
+        };
+      }
+      if (!preflight?.allowed) {
+        return {
+          status: "blocked",
+          blocked_reason: preflight?.reason || "commissioned_team_preflight_denied",
+          commissioned_identity_verified: false,
+          inference_calls_performed: 0,
+        };
+      }
+    }
     const outputs = await Promise.all(reviewers.map(async (role) => {
       const callId = clean(request.request_id, 200) + ":" + role.reviewer_id;
       try {
-        const result = await inferenceAdapter.infer({
+        const identity = commissioned ? preflight.reviewer_assignments[role.reviewer_id] : null;
+        const params = {
           request_id: callId,
           role: role.reviewer_id,
           prompt: rolePrompt(request, role),
-        });
+        };
+        const result = commissioned
+          ? await inferenceAdapter.inferCommissioned({
+            ...params,
+            agent_id: identity,
+            preflight_id: preflight.preflight_id,
+            registry_snapshot_hash: preflight.registry_snapshot_hash,
+            mission_key: request.mission_key,
+            work_key: request.work_key,
+          })
+          : await inferenceAdapter.infer(params);
+        let workerProof = null;
+        if (commissioned) {
+          if (typeof commissionedGate.verifyRoleExecution !== "function") {
+            throw new Error("commissioned_worker_verifier_not_configured");
+          }
+          workerProof = await commissionedGate.verifyRoleExecution({
+            request, preflight, reviewerId: role.reviewer_id, inference: result,
+          });
+          if (!workerProof?.verified) {
+            throw new Error(workerProof?.reason || "commissioned_worker_unverified");
+          }
+        }
         return {
           reviewer_id: role.reviewer_id,
           label: role.label,
           status: "completed",
           text: result.text,
+          commissioned_agent_id: workerProof?.agent_id || null,
+          worker_run_receipt_ref: workerProof?.worker_run_receipt_ref || null,
           provider: result.provider,
           model: result.model,
           provider_receipt: result.provider_receipt,
@@ -235,6 +325,18 @@ export function createRavenTeamReviewExecutor({
     }));
 
     const completed = outputs.filter((row) => row.status === "completed");
+    if (commissioned && completed.length !== reviewers.length) {
+      return {
+        status: "blocked",
+        blocked_reason: "commissioned_worker_execution_not_verified_for_all_reviewers",
+        results: outputs.map((row) => row.status === "completed" ? {
+          ...row, text: "", // do not release partial commissioned results as a successful team response
+        } : row),
+        commissioned_identity_verified: false,
+        started_at: startedAt,
+        completed_at: now().toISOString(),
+      };
+    }
     if (completed.length === 0) {
       return {
         status: "blocked",
@@ -264,12 +366,43 @@ export function createRavenTeamReviewExecutor({
       };
     }
 
+    let completion = null;
+    if (commissioned) {
+      try {
+        completion = await commissionedGate.completion({
+          request, preflight, reviewers: completed, synthesis,
+        });
+      } catch {
+        completion = { allowed: false, reason: "commissioned_team_completion_unavailable" };
+      }
+      if (!completion?.allowed) {
+        return {
+          status: "blocked",
+          blocked_reason: completion?.reason || "commissioned_team_completion_denied",
+          started_at: startedAt,
+          completed_at: now().toISOString(),
+          results: outputs,
+          commissioned_identity_verified: false,
+          inference_calls_performed: outputs.length + 1,
+        };
+      }
+    }
+
     const receiptCore = {
       schema: "evercraft.raven.team-review-receipt.v1",
+      review_mode: request.requested_team,
+      commissioned_identity_verified: commissioned && completion?.allowed === true,
+      actual_all_roster_liveness_verified: false,
+      commissioned_completion_ref: completion?.completion_ref || null,
       request_id: clean(request.request_id, 200),
       mission_key: clean(request.mission_key, 260),
       work_key: clean(request.work_key, 260),
       completed_reviewers: completed.map((row) => row.reviewer_id),
+      commissioned_worker_receipts: commissioned ? completed.map((row) => ({
+        reviewer_id: row.reviewer_id,
+        commissioned_agent_id: row.commissioned_agent_id,
+        worker_run_receipt_ref: row.worker_run_receipt_ref,
+      })) : [],
       failed_reviewers: outputs.filter((row) => row.status !== "completed").map((row) => row.reviewer_id),
       synthesis_sha256: sha256(synthesis.text),
       reviewer_hashes: completed.map((row) => row.response_sha256),
@@ -288,6 +421,8 @@ export function createRavenTeamReviewExecutor({
       started_at: startedAt,
       completed_at: receiptCore.completed_at,
       raven_receipt: { ...receiptCore, receipt_hash: receiptHash },
+      review_mode: request.requested_team,
+      commissioned_identity_verified: commissioned && completion?.allowed === true,
     };
   };
 }

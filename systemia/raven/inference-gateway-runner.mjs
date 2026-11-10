@@ -28,6 +28,7 @@ export async function startRavenInferenceResident({
   credentialStateDir = "",
   port = 4322,
   ollamaOrigin = "",
+  commissionedReceiver = null,
   repoRoot = process.cwd(),
 } = {}) {
   void repoRoot;
@@ -38,6 +39,9 @@ export async function startRavenInferenceResident({
     credentialStateDir,
     port: Number(port || 4322),
     ollamaOrigin: String(ollamaOrigin || "").trim() || undefined,
+    // A trusted, process-owned admission/worker adapter may be supplied by
+    // the operator's existing runtime bootstrap. The default stays held.
+    commissionedReceiver,
   });
 }
 

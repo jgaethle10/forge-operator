@@ -178,6 +178,10 @@ export function routeTask(task) {
       ? clean(productPolicy.route.specialist_slug)
       : defaultSpecialist;
 
+  const commissionedAgents = unique(task.assigned_agents || [], 50);
+  const agentContinuityPreflightRequired = commissionedAgents.length > 0;
+  const invalidDnaDispatchTarget = commissionedAgents.some((agent) =>
+    ['sentinel', 'juniper'].includes(lower(agent)));
   const parallelRequested = task.parallel === true || Number(task.logical_agents || 0) > 1 || Boolean(softwareId);
   const allowed = sabanSoftwareIds();
   const sabanRequested = parallelRequested && softwareId && allowed.has(softwareId);
@@ -198,13 +202,21 @@ export function routeTask(task) {
     metered ||
     relationshipPreflightRequired ||
     contractGateRequired ||
-    task.execution_gate_required === true;
+    task.execution_gate_required === true ||
+    agentContinuityPreflightRequired;
   const contextAccessRecommended =
     task.context_required === true ||
-    ['research', 'analyze', 'qa', 'security'].includes(workType);
+    ['research', 'analyze', 'qa', 'security'].includes(workType) ||
+    agentContinuityPreflightRequired;
 
   const preDispatchRequirements = [];
   if (consequence.required) preDispatchRequirements.push('human_gate_if_not_already_authorized');
+  if (agentContinuityPreflightRequired) preDispatchRequirements.push(
+    'evercraft-commissioned-role-registry',
+    'evercraft-juniper-memory-preflight',
+    'evercraft-sentinel-protective-preflight',
+    'independently-verified-agent-dispatch-receipt'
+  );
   if (relationshipPreflightRequired) preDispatchRequirements.push('evercraft-interaction-ledger');
   if (executionGateRequired) preDispatchRequirements.push('evercraft-execution-gate');
 
@@ -234,6 +246,10 @@ export function routeTask(task) {
       : null,
     pre_dispatch_gate: executionGateRequired ? 'evercraft-execution-gate' : null,
     pre_dispatch_requirements: preDispatchRequirements,
+    assigned_agents: commissionedAgents,
+    agent_continuity_preflight_required: agentContinuityPreflightRequired,
+    agent_continuity_verified_at_route_selection: false,
+    dna_protocols_are_dispatch_targets: false,
     software_id: softwareId || null,
     target_product_key: productKey || null,
     target_product_name: product ? clean(product.name) : null,
@@ -249,8 +265,10 @@ export function routeTask(task) {
     execution_authority_granted: false,
     route_selection_grants_execution_authority: false,
     inbound_content_grants_execution_authority: false,
-    hold: unsupportedSaban
-      ? 'saban_contract_missing'
+    hold: invalidDnaDispatchTarget
+      ? 'embedded_dna_cannot_be_dispatched_as_agent'
+      : unsupportedSaban
+        ? 'saban_contract_missing'
       : productKey && !product
         ? 'unknown_product'
         : contractHold
