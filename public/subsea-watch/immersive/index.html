@@ -31,6 +31,7 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 .import-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:12px}
 .import-bar button{border:1px solid #75b8bf;border-radius:8px;background:#113849;color:#e7ffff;font-size:12px;font-weight:700;padding:9px 12px;min-height:42px}
 .import-bar button:first-child{background:#c5f5ed;color:#092933;border-color:#c5f5ed}
+.import-bar .source-link{border:1px solid #75b8bf;border-radius:8px;padding:9px 12px;color:#cafaf4;text-decoration:none;font-size:12px;font-weight:700;min-height:42px;display:inline-flex;align-items:center}
 #file-status{flex:1;min-width:180px;font-size:11px;color:#b2d6dd}
 .footage{position:fixed;z-index:4;right:18px;bottom:175px;width:min(355px,calc(100vw - 100px));background:#061e2ff5;border:1px solid #6baeb7;border-radius:13px;padding:13px;box-shadow:0 14px 45px #000b;backdrop-filter:blur(16px)}
 .footage[hidden]{display:none}.footage-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
@@ -64,6 +65,7 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
  .controls{gap:7px}.play{min-width:77px;height:42px;font-size:12px}.time{font-size:10px}
  .meta{font-size:9px;gap:8px}.details{left:10px}
  .import-bar{gap:7px;padding-bottom:8px}.import-bar button{font-size:11px;padding:7px 9px;min-height:38px}
+ .import-bar .source-link{font-size:11px;min-height:38px;padding:7px 9px}
  #file-status{flex-basis:100%;font-size:10px}.no-position{top:54%}
  .footage{right:10px;bottom:205px;width:min(260px,calc(100vw - 95px));padding:10px}
  .footage-head strong{font-size:12px}.footage small{font-size:9px}.footage-row{gap:6px}
@@ -116,6 +118,7 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 <input id="load-file" type="file" accept=".json,.csv,application/json,text/csv" hidden>
 <button id="reset-sample" type="button">Reset demo</button>
 <button id="footage-toggle" type="button" aria-controls="footage-panel" aria-expanded="false">Camera footage</button>
+<a class="source-link" href="../field-archive/" title="Real NOAA expedition footage and source records">Real field archive</a>
 <input id="load-video" type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
 <span id="file-status" role="status" aria-live="polite">Local files never leave this browser.</span>
 </div>
