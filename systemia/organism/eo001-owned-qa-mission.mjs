@@ -12,7 +12,7 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {pathToFileURL} from 'node:url';
+import {pathToFileURL,fileURLToPath} from 'node:url';
 import {createGoalState,admitGoalPlan,startGoalWork,recordGoalOutcome,goalSnapshot}
   from './goal-runtime.mjs';
 import {createGoalStateFile,readGoalState,mutateGoalState} from './goal-store.mjs';
@@ -149,6 +149,11 @@ export async function runEo001OwnedQaMission({home=os.homedir(),qaScript=null,
   const outputFile=path.join(stateDir,'forge-qa-'+bundleHash+'.json');
 
   if(task.status==='complete'){
+    // A completed QA receipt belongs to the *exact* original bundle digest.
+    // Do not look for a new QA filename when the bundle changes.
+    const prior=task.evidence_refs.filter(ref=>/^bundle:sha256:[a-f0-9]{64}$/.test(ref));
+    if(prior.length!==1||prior[0]!=='bundle:sha256:'+bundleHash)
+      throw Error('previous_qa_receipt_or_package_changed');
     const old=privateJson(outputFile);
     if(!qaValid(old,bundleHash)||
         !task.evidence_refs.includes('bundle:sha256:'+bundleHash)||
@@ -165,8 +170,8 @@ export async function runEo001OwnedQaMission({home=os.homedir(),qaScript=null,
   const attempt=state.tasks.find(t=>t.work_key===WORK).attempt;
   // Reconcile a completed, existing QA receipt after a crash BEFORE repeating.
   if(!fs.existsSync(outputFile)){
-    const script=qaScript||path.join(path.dirname(import.meta.url.startsWith('file:')?
-      new URL(import.meta.url).pathname:''),'../../integrations/ai-evaluation-lab/eo001-forge-evidence-qa.py');
+    const script=qaScript||path.resolve(path.dirname(fileURLToPath(import.meta.url)),
+      '../../integrations/ai-evaluation-lab/eo001-forge-evidence-qa.py');
     const argv=[script,'--bundle',inputs.bundle,'--receipt',inputs.receipt,
       '--review',inputs.review,'--output',outputFile];
     const response=spawn('python3',argv,{
