@@ -57,6 +57,9 @@ export async function loadActiveAmbientReceiptKeys({
       record.device_id === device, 'trust_record_identity_invalid');
     const active = evaluateAmbientTrust(record, { now:clock });
     need(active.eligible === true && active.state === 'active', 'device_not_active');
+    const heartbeat = Date.parse(record.last_heartbeat_at);
+    need(Number.isFinite(heartbeat) && heartbeat <= clock.getTime() + 120000,
+      'device_heartbeat_in_future');
     need(manifest.schema === 'evercraft.microseed.device-manifest.v1' &&
       manifest.device_id === device && manifest.bridge_mode === 'native_agent' &&
       manifest.compute_execution_mode === 'native_device', 'manifest_identity_invalid');
@@ -64,6 +67,12 @@ export async function loadActiveAmbientReceiptKeys({
       typeof manifest.attestation.receipt_public_key_pem === 'string' &&
       typeof manifest.attestation.receipt_key_id === 'string' &&
       manifest.attestation.receipt_key_id.length > 0, 'manifest_signer_invalid');
+    need(record.attestation_mode === 'device' &&
+      manifest.attestation.mode === 'device' &&
+      typeof record.attestation_identity === 'string' &&
+      record.attestation_identity.length > 0 &&
+      record.attestation_identity === manifest.attestation.device_identity,
+      'attestation_binding_invalid');
     need(manifest.manifest_hash === record.capability_manifest_hash, 'manifest_not_authorized');
     // A hash recorded alongside a manifest must still match the canonical
     // normalizer's content; an edited manifest cannot keep an old hash.
