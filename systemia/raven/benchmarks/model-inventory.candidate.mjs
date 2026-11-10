@@ -1,8 +1,12 @@
 import { createInferenceEngine } from '../inference-gateway.mjs';
+import { createLlamaCppInferenceCandidate } from './local-llama-inference.candidate.mjs';
 
 // Candidate only. Call with trusted operator inventory, never prompts, web content,
 // model output, or arbitrary user-supplied specs. No production runtime wiring.
-const ADAPTER_RUNTIME = Object.freeze({ ollama:'local', openai:'cloud', gemini:'cloud' });
+const ADAPTER_RUNTIME = Object.freeze({ ollama:'local', 'llama-cpp':'local', openai:'cloud', gemini:'cloud' });
+const defaultEngine = opts => opts.provider === 'llama-cpp'
+  ? createLlamaCppInferenceCandidate({model:opts.model,allowLocalInference:false})
+  : createInferenceEngine(opts);
 const MAX_SPEC_ENTRIES = 32;
 const name = value => typeof value === 'string' && value.trim().length > 0 && value.length <= 300;
 const finitePositiveOrZero = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
@@ -16,7 +20,7 @@ const reason = (provider_id, model_id, code) => ({ provider_id, model_id, code }
 export async function observeRavenInventory({
   trustedSpecs = [],
   now = () => Date.now(),
-  createEngine = createInferenceEngine,
+  createEngine = defaultEngine,
   allowCloudMetadataValidation = false,
   credentialStateDir = '',
 } = {}) {
