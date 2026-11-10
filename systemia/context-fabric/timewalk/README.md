@@ -145,6 +145,62 @@ review.
 node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
 ```
 
+## Cryptographic origin attestation (v0.4 research slice)
+
+Timewalk now has an **optional**, offline Ed25519 producer-attestation check.
+This builds on source digest/projection reconciliation but does not silently
+upgrade any old unsigned receipts. See `origin-attestation.mjs`.
+
+Each **new, separately issued** attestation binds the producer/issuer ID,
+key ID, source receipt schema, receipt hash, SHA-256 of the exact serialized
+receipt object, issuance and expiration times. The signature covers a
+versioned, domain-separated canonical array payload. It is verified only
+against an **operator-pinned Ed25519 public key**, with explicit
+producer/schema allowlist and signing-key validity/revocation checks.
+
+No private signing keys are committed to GitHub. Unit tests generate ephemeral
+keys in memory. This code **does not create attestations for historical records,
+or confer retroactive authenticity on unsigned source receipts**.
+
+A trusted internal integration may inject a separate, synchronous, read-only
+attestation reader and server-owned trust registry:
+
+```js
+const report = reconcileTimewalkSourceReceipts(fabric, {
+  actor_ref: verifiedSession.subject_ref,
+  read_source_receipt: ({ source_receipt_schema, source_receipt_hash }) =>
+    readOnlySourceLedger.get(source_receipt_schema, source_receipt_hash),
+  read_source_attestation: ({ source_receipt_schema, source_receipt_hash }) =>
+    readOnlyAttestationLedger.get(source_receipt_schema, source_receipt_hash),
+  trusted_origin_keys: operatorOwnedPinnedKeys, // never user/source-supplied
+});
+```
+
+Attestation checking is attempted **only after** the original Context record,
+linked source receipt hash and expected projection have already passed.
+Results expose aggregate counters: `signature_valid_for_pinned_key`,
+`attestation_unavailable`, `attestation_lookup_failed`,
+`attestation_rejected`, `source_not_consistent`, and
+`not_configured`. No raw receipt, signature, or private source IDs are
+returned.
+
+**Truth boundary:** a valid signature means the bytes match an attestation
+signed by a key in the supplied trust registry. It is **not automatically**
+proof the key belongs to the live authoritative production service, that the
+signer was uncompromised, that a customer paid, that a shipment arrived, or
+that every historical event is represented. The output deliberately retains
+`source_origin_authenticated: false` and
+`trusted_origin_registry_independently_validated: false` because this
+standalone research module cannot verify how an operator supplied those keys.
+Actual source-origin assurance needs separately audited key issuance,
+secure private-key custody, key rotation/revocation and authoritatively
+approved source integration.
+
+```bash
+node --test systemia/context-fabric/timewalk/origin-attestation.test.mjs
+node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
+```
+
 ## Performance and security boundaries
 
 The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, entity/record-resource-scoped Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
