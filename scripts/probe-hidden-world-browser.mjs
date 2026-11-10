@@ -74,6 +74,32 @@ try{
     const archWidths=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
     assert.ok(archWidths[0]<=archWidths[1]+4,profile.name+': Lund page horizontal overflow '+archWidths);
     await page.screenshot({path:output+'/'+profile.name+'-lund.png',timeout:15000});
+
+    const titanResponse=await page.goto(origin+'/worlds/hidden-world/titan-i-1962.html',
+      {waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(titanResponse?.status(),200,profile.name+': Titan exhibit route');
+    assert.equal(await page.locator('svg[aria-labelledby="titan-svg-title titan-svg-desc"]').count(),1);
+    assert.equal(await page.locator('#era1962').isChecked(),true);
+    assert.equal(await page.locator('.phase1962').isVisible(),true);
+    await page.locator('label[for="era1959"]').click();
+    assert.equal(await page.locator('#era1959').isChecked(),true);
+    assert.equal(await page.locator('.phase1959').isVisible(),true);
+    await page.locator('label[for="era1965"]').click();
+    assert.equal(await page.locator('#era1965').isChecked(),true);
+    assert.equal(await page.locator('.phase1965').isVisible(),true);
+    await page.locator('label[for="erapresent"]').click();
+    assert.equal(await page.locator('.phasepresent').isVisible(),true);
+    await page.locator('label[for="era1962"]').click();
+    await page.locator('label[for="fConnections"]').click();
+    assert.equal(await page.locator('.connections').isVisible(),true);
+    assert.ok((await page.locator('.caution').textContent()).includes('closed to visitors'),
+      profile.name+': Titan restricted-access warning absent');
+    assert.ok((await page.locator('a[href*="historylink.org"]').count())>0,
+      profile.name+': source absent');
+    const titanWidths=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
+    assert.ok(titanWidths[0]<=titanWidths[1]+4,profile.name+': Titan horizontal overflow '+titanWidths);
+    await page.evaluate(()=>document.querySelector('.exhibit').scrollIntoView({block:'start'}));
+    await page.screenshot({path:output+'/'+profile.name+'-titan.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');
     receipt.scenarios.push({name:profile.name,status:'PASS',viewport:[profile.width,profile.height],
       javascript_enabled:profile.scripts,no_horizontal_overflow:true,sources_visible:true});
