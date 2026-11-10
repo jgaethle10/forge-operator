@@ -239,9 +239,13 @@ test('a consumed permit for another job or a modified job payload cannot be repl
   assert.equal(target.calls(),0);
   const changed=await scenario('permit-payload-tamper');
   changed.state.jobs[changed.jobId].item.payload.value.scenario='altered-payload';
+  // A forged work digest is rejected by the durable Systemia goal binding
+  // before Passport has to evaluate its own independent request fingerprint.
+  // The critical invariant is zero adapter and NodeSeed invocations.
   await assert.rejects(runScheduler(changed),
-    /fenced_scheduler_passport_execution_permit_denied/);
+    /fenced_systemia_goal_job_binding_hold/);
   assert.equal(changed.calls(),0);
+  assert.equal(changed.journal.inspect({jobKey:changed.jobId}).journal_events,0);
 });
 
 test('revoked grant and already expired consumed permit fail closed before execution',async()=>{
