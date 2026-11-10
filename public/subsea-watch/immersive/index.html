@@ -91,7 +91,7 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-vis
 <aside class="footage" id="footage-panel" aria-label="Local dive footage aligned to telemetry" hidden>
 <div class="footage-head"><strong>Camera footage · local only</strong><button id="close-footage" type="button" aria-label="Close footage panel">Close</button></div>
 <video id="dive-video" playsinline preload="metadata" muted aria-label="Locally loaded dive video, aligned to the mission by the user"></video>
-<div class="footage-row"><span id="video-clock" class="clock">No footage loaded</span><button id="sound-toggle" type="button" aria-pressed="false">Sound off</button></div>
+<div class="footage-row"><button id="pick-video" type="button" disabled>Choose local video</button><span id="video-clock" class="clock">No footage loaded</span><button id="sound-toggle" type="button" aria-pressed="false">Sound off</button></div>
 <div class="footage-row"><label for="video-offset">Video begins at mission second</label><input type="number" id="video-offset" step="0.1" min="-86400" max="86400" value="0" inputmode="decimal"></div>
 <div class="footage-row"><span id="video-status" class="status" role="status" aria-live="polite">Load a local video to align footage with mission time.</span></div>
 <small>Alignment is manually entered and unverified. No video upload, face analysis, automatic clock sync, or surveyed-site reconstruction. Missing footage remains missing.</small>
