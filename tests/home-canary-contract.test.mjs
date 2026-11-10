@@ -100,3 +100,20 @@ test('owned Home installer allocates persistent claim storage for Clip Journal p
   assert.ok(script.includes('EVERCRAFT_HOME_COOKIE_PATH=/home'));
   assert.ok(!script.includes('BASE44'));
 });
+
+test('owned-edge canary reports real Clip UI and checks that anonymous diagnose is denied',()=>{
+  for(const contract of [
+    'clip_connection_ui_verified:$clip_ui',
+    'clip_diagnostic_anonymous_access_denied:$clip_auth_guard',
+    'clip_auto_publishing_verified:false',
+    'Check Clip connection',
+    'api/clip/facebook/diagnose',
+    'clip_guard_code',
+    'session_required',
+  ]){
+    assert.ok(ownedEdgeWorkflow.includes(contract),'missing Clip edge canary assertion: '+contract);
+  }
+  assert.ok(ownedEdgeWorkflow.includes("--data '{}'"));
+  assert.equal(ownedEdgeWorkflow.includes('page_access_token'),false);
+  assert.equal(ownedEdgeWorkflow.includes('pages_manage_posts'),false);
+});
