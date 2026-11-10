@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.fungal-defense.release-gates.v1",
+  "project": "FUNGAL-DEFENSE-001",
+  "production_is_live": false,
+  "automated_publication": false,
+  "dataset_not_live": true,
+  "reviews": {
+    "scientific": {
+      "approved": false,
+      "reviewer": null,
+      "evidence_url": null,
+      "review_date": null
+    },
+    "privacy_security": {
+      "approved": false,
+      "reviewer": null,
+      "evidence_url": null,
+      "review_date": null
+    },
+    "accessibility": {
+      "approved": false,
+      "reviewer": null,
+      "evidence_url": null,
+      "review_date": null
+    },
+    "owned_runtime": {
+      "approved": false,
+      "reviewer": null,
+      "evidence_url": null,
+      "review_date": null
+    }
+  },
+  "release_approval": false,
+  "approved_commit": null
+}
