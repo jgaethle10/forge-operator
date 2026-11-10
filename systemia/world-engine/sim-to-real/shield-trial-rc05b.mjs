@@ -12,6 +12,33 @@ const summary=items=>({total:items.length,arrived:items.filter(x=>x.status==='ar
   shieldedMoves:items.reduce((s,x)=>s+(x.shieldedMoves||0),0),
   shieldHolds:items.reduce((s,x)=>s+(x.shieldHolds||0),0)});
 
+
+/** Strict, modeled-only screening. Requires measurable progress AND no new harm.
+ * A positive result permits additional research review, NEVER deployment.
+ */
+export function assessShieldEvidence(scores,pairs){
+  if(!scores?.baseline||!scores?.shield||!Array.isArray(pairs)||!pairs.length)
+    throw Error('rc05b_review_evidence_invalid');
+  const {baseline,shield}=scores;
+  const anyNewCollision=pairs.some(p=>p.shield.status==='collision'&&p.baseline.status!=='collision');
+  const anyNewGeofence=pairs.some(p=>p.shield.status==='geofence'&&p.baseline.status!=='geofence');
+  const nonRegression=shield.arrived>=baseline.arrived;
+  const netNewArrivals=shield.arrived-baseline.arrived;
+  const requiredImprovement=Math.max(1,Math.ceil(pairs.length*.25));
+  const meaningfulProgress=netNewArrivals>=requiredImprovement;
+  const usedDetours=shield.shieldedMoves>0;
+  const reviewEligible=!anyNewCollision&&!anyNewGeofence&&nonRegression&&meaningfulProgress&&usedDetours;
+  const reasons=[
+    ...(anyNewCollision?['new_collision_relative_to_default']:[]),
+    ...(anyNewGeofence?['new_geofence_relative_to_default']:[]),
+    ...(!nonRegression?['lower_arrival_count_than_default']:[]),
+    ...(!meaningfulProgress?['no_meaningful_arrival_improvement']:[]),
+    ...(!usedDetours?['no_shielded_progress_commands']:[]),
+    ...(reviewEligible?['simulation_review_only_more_validation_required']:[])];
+  return {reviewEligible,reasons,netNewArrivals,requiredImprovement,shieldedMoves:shield.shieldedMoves,
+    productionAuthorized:false,hardwareAuthorized:false};
+}
+
 export function runShieldTrial({firstSeed=49,seeds=8,maxTicks=350}={}){
   if(!Number.isSafeInteger(firstSeed)||firstSeed<1||!Number.isInteger(seeds)||seeds<1||seeds>16||
     !Number.isInteger(maxTicks)||maxTicks<1||maxTicks>650)throw Error('rc05b_trial_invalid_options');
@@ -46,21 +73,14 @@ export function runShieldTrial({firstSeed=49,seeds=8,maxTicks=350}={}){
     pairs.push({seed,...states});
   }
   const scores=Object.fromEntries(['baseline','progress','shield'].map(key=>[key,summary(pairs.map(p=>p[key]))]));
-  // Review filter only. Never grants production, actuator or autonomous safety authority.
-  const anyNewCollision=pairs.some(p=>p.shield.status==='collision'&&p.baseline.status!=='collision');
-  const anyNewGeofence=pairs.some(p=>p.shield.status==='geofence'&&p.baseline.status!=='geofence');
-  const nonRegression=scores.shield.arrived>=scores.baseline.arrived;
-  const reviewEligible=!anyNewCollision&&!anyNewGeofence&&nonRegression;
-  const reasons=[
-    ...(anyNewCollision?['new_collision_relative_to_default']:[]),
-    ...(anyNewGeofence?['new_geofence_relative_to_default']:[]),
-    ...(!nonRegression?['lower_arrival_count_than_default']:[]),
-    ...(!reviewEligible?[]:['simulation_review_only_more_validation_required'])];
+  // Independent review threshold. Survival by immobility is NOT improvement.
+  const assessment=assessShieldEvidence(scores,pairs);
+  const {reviewEligible,reasons}=assessment;
   const core={schema:RC05B_SCHEMA,evidence_state:'modeled',
     noHardwareAuthority:true,productionAuthorized:false,defaultController:'baseline',
     firstSeed,seeds,maxTicks,source:'native EvercraftWorldRuntime synthetic sensor course',
     comparison:'same modeled course seeds; distinct controller policies; prior cohorts not independent held-out tests',
-    scores,pairs,review:{reviewEligible,productionAuthorized:false,hardwareAuthorized:false,reasons}};
+    scores,pairs,review:{...assessment}};
   return {...core,sha256:digest(core)};
 }
 export function verifyShieldTrial(result){
