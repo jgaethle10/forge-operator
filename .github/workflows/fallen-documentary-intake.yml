@@ -4,6 +4,8 @@ on:
     paths:
       - 'systemia/media-studio/documentary-intake.mjs'
       - 'systemia/media-studio/documentary-intake.test.mjs'
+      - 'systemia/media-studio/documentary-master-preflight.mjs'
+      - 'systemia/media-studio/documentary-master-preflight.test.mjs'
       - 'systemia/media-studio/DOCUMENTARY-PILOT.md'
       - 'systemia/forensiscope/authorized-source.mjs'
       - '.github/workflows/fallen-documentary-intake.yml'
@@ -28,5 +30,7 @@ jobs:
           command -v ffmpeg
           command -v ffprobe
           ffmpeg -version | head -1
-      - name: Check encoded synthetic fixture and fail-closed documentary intake rules
+      - name: Check private documentary intake rights and source hash gates
         run: node --test systemia/media-studio/documentary-intake.test.mjs
+      - name: Render a real 45s encoded fixture and verify documentary master QC and release holds
+        run: node --test systemia/media-studio/documentary-master-preflight.test.mjs
