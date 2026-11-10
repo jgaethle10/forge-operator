@@ -82,8 +82,16 @@ export function openOperatorSnapshot({authorizedRoot,snapshot,reviewRoot,filenam
   if(typeof reviewRoot!=='string'||!path.isAbsolute(reviewRoot))
     throw new Error('Private review root must be an absolute path');
   const targetDir=path.resolve(reviewRoot);
+  // Reject public/repository and source-tree targets BEFORE creating directories.
+  const repoRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
+  if(isPublic(targetDir)||targetDir===repoRoot||within(repoRoot,targetDir)||
+     targetDir===sourceRoot||within(sourceRoot,targetDir)){
+    throw new Error('Review output must be in a separate private directory outside repository and source roots');
+  }
   fs.mkdirSync(targetDir,{recursive:true,mode:0o700});
   const safeOutputRoot=assertScopedRoot('Private review root',reviewRoot);
+  if(safeOutputRoot===repoRoot||within(repoRoot,safeOutputRoot))
+    throw new Error('Review output must remain outside the repository');
   if(safeOutputRoot===sourceRoot||within(sourceRoot,safeOutputRoot))
     throw new Error('Review output must not be inside the source root');
   const output=path.join(safeOutputRoot,filename);
