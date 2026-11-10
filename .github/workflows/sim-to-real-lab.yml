@@ -146,6 +146,15 @@ jobs:
             if(!verifyShieldTrial(r)||r.seeds!==8||r.productionAuthorized!==false||r.review?.hardwareAuthorized!==false)
               throw Error('rc05b_evidence_failed:'+group);
             console.log('RC05B REVIEW',JSON.stringify({cohort:group,scores:r.scores,review:r.review,digest:r.sha256}));
+            const meaningful=r.scores.shield.arrived-r.scores.baseline.arrived>=Math.max(1,Math.ceil(r.seeds*.25));
+            const movement=r.scores.shield.shieldedMoves>0;
+            if(r.review.reviewEligible&&(!movement||!meaningful))
+              throw Error('rc05b_safety_by_immobility_misclassified:'+group);
+            console.log('RC05B SHIELD REJECTION DIAGNOSTICS',JSON.stringify({
+              cohort:group,
+              blocks:r.pairs.map(p=>({seed:p.seed,reasons:p.shield.shieldDiagnostics?.rejectionCounts,
+                first:p.shield.shieldDiagnostics?.firstBlocked})).filter(x=>x.first?.length).slice(0,8)
+            }));
             // A failed experimental candidate means HOLD, not a passing safety claim or deployment.
             if(!r.review.reviewEligible)console.log('RC05B CANDIDATE HELD:',group,r.review.reasons);
           }
