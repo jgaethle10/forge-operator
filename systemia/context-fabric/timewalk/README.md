@@ -152,8 +152,8 @@ This builds on source digest/projection reconciliation but does not silently
 upgrade any old unsigned receipts. See `origin-attestation.mjs`.
 
 Each **new, separately issued** attestation binds the producer/issuer ID,
-key ID, source receipt schema, receipt hash, SHA-256 of the exact serialized
-receipt object, issuance and expiration times. The signature covers a
+key ID, source receipt schema, receipt hash, SHA-256 of the precisely ordered JSON.stringify receipt
+object, issuance and expiration times. The signature covers a
 versioned, domain-separated canonical array payload. It is verified only
 against an **operator-pinned Ed25519 public key**, with explicit
 producer/schema allowlist and signing-key validity/revocation checks.
