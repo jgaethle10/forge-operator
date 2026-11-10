@@ -14,7 +14,7 @@ function strictInstant(value, field) {
   return new Date(epoch).toISOString();
 }
 
-function verifyReceipt(receipt) {
+export function verifyTimewalkRecordReceipt(receipt) {
   if (!receipt || typeof receipt !== 'object') throw new Error('timewalk_receipt_missing');
   const { receipt_hash, ...body } = receipt;
   if (typeof receipt_hash !== 'string' || sha256(body) !== receipt_hash) {
@@ -74,7 +74,7 @@ export function queryTimewalk(fabric, input = {}) {
   const all = [];
   for (const record of snapshot.records) {
     const { retraction, ...signedRecord } = record;
-    verifyReceipt(signedRecord);
+    verifyTimewalkRecordReceipt(signedRecord);
     const learnedAt = strictInstant(record.created_at, 'created_at');
     if (learnedAt > knownAt) continue;
     const effective = effectiveStart(record);
@@ -85,7 +85,7 @@ export function queryTimewalk(fabric, input = {}) {
     let retractionRecordedAt = null;
     let legacyRetractionTimeUnknown = false;
     if (retraction) {
-      verifyReceipt(retraction);
+      verifyTimewalkRecordReceipt(retraction);
       retractedAt = strictInstant(retraction.retracted_at, 'retracted_at');
       if (retraction.created_at) {
         retractionRecordedAt = strictInstant(retraction.created_at, 'retraction_created_at');
