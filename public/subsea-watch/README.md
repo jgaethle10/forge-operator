@@ -25,9 +25,11 @@ The first-party registry is `field-archive/sources.json`, with stable source IDs
 
 - **Source verified by metadata:** NOAA EX2306 DIVE02 Kodiak Seep; one 299-second HD camera segment starting 2023-08-25 18:30:00 UTC; original low-res H.264 MP4 URL published in NCEI metadata. NOAA's Ocean Exploration Video Portal describes its video as public domain; credit NOAA Ocean Exploration and preserve the dataset citation.
 - **Published but uninspected archives:** The DIVE02 KML, ancillary ZIP and CTD ZIP are linked by NOAA's expedition page. Download URLs are identified, **not** byte-verified, parsed, datum-resolved or approved for frame-to-track registration.
-- **Future geometry exploration:** NCEI bathymetry catalog and NOAA photogrammetry collection are discovery links only, not surveyed local models for the Kodiak Seep dive. Some photogrammetry is partner-hosted with separate licensing, so do not download/re-host it as an Evercraft asset without permission.
+- **Future geometry exploration:** NCEI bathymetry, the public-domain GEBCO_2026 global grid (with measured/predicted TID distinctions), NOAA BlueTopo (with uncertainty/contributor layers), and NOAA's photogrammetry collection are discovery links only, not surveyed local models for the Kodiak Seep dive. GEBCO requires attribution and must not be used for safety at sea; BlueTopo source-contributor restrictions and coverage quality must be checked; partner-hosted photogrammetry needs separate license verification before use.
 - **No synthetic contamination:** The real NOAA clip is never mapped onto the fictional diver, pipe or seafloor; there is no imported real XY route unless an actual validated sensor adapter produces one. Public video alone cannot establish depth, camera pose, bathymetry or the location of underwater structures.
 - **Safety and ethics:** No recorded visual is a safe-route claim, clearance to dive or automated hazard detection. Keep exact source, licensing, clock uncertainty and limitations attached in downstream outputs.
+
+**Do not ingest as free commercial footage:** MBARI VARS materials have separate data use restrictions and require permission; discovery does not confer reuse rights.
 
 **Original records:** https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/ and https://www.ncei.noaa.gov/metadata/granule/geoportal/rest/metadata/item/EX2306_DIVE02_20230825T183000Z_ROVHD/html
 
