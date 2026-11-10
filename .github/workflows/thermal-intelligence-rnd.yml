@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test three offline thermal models
+      - name: Test four offline thermal models
         run: node --test systemia/research/thermal-intelligence/*.test.mjs
       - name: Run synthetic hourly screening
         run: |
@@ -37,3 +37,7 @@ jobs:
         run: |
           node systemia/research/thermal-intelligence/run-measurements.mjs systemia/research/thermal-intelligence/sample-synthetic-measurements.json > "$RUNNER_TEMP/calorimetry.json"
           node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="SYNTHETIC_CALORIMETRY"||x.independentlyVerified!==false||x.fieldDeploymentApproved!==false||x.screen!=="DATA_REVIEW_REQUIRED")process.exit(1)' "$RUNNER_TEMP/calorimetry.json"
+      - name: Verify passive wall-meter importer remains unverified
+        run: |
+          node systemia/research/thermal-intelligence/run-wall-meter.mjs systemia/research/thermal-intelligence/sample-synthetic-wall-meter.json > "$RUNNER_TEMP/wall-meter.json"
+          node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="SYNTHETIC_WALL_METER_INPUT"||x.independentlyVerified!==false||x.thermalRecoveryVerified!==false||x.fieldDeploymentApproved!==false||x.intervalCount!==3||x.qualityReviewRequired!==true)process.exit(1)' "$RUNNER_TEMP/wall-meter.json"
