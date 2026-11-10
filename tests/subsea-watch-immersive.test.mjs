@@ -24,7 +24,7 @@ test('scene cannot accidentally present itself as verified or dive clearance',()
  assert.match(html,/Operating pressure and pipe isolation are unknown/);
  assert.match(html,/noindex,nofollow/);
  assert.match(js,/THIS ENTIRE ENVIRONMENT IS SYNTHETIC/);
- assert.match(js,/dive\.positionSource!=='SIMULATED'/);
+ assert.match(js,/sample\.positionSource!=='SIMULATED'/);
  assert.equal(sample.demo,true);
  assert.equal(sample.positionSource,'SIMULATED');
  assert.equal(sample.xyAvailable,true);
@@ -43,7 +43,7 @@ test('replay implements tracking, scrub, mobile pinch and orbit, not a static im
 test('scene only fetches a checked synthetic first-party sample and offers prior evidence lab',()=>{
  assert.match(js,/fetch\('\.\.\/sample\.json'/);
  assert.match(js,/normalizeDive\(await r\.json\(\)\)/);
- assert.match(js,/if\(!dive\.demo\|\|!dive\.xyAvailable/);
+ assert.match(js,/if\(!sample\.demo\|\|!sample\.xyAvailable/);
  assert.doesNotMatch(js,/XMLHttpRequest|sendBeacon|localStorage|sessionStorage|https?:\/\//);
  assert.match(html,/href="\.\.\/"/);
  assert.match(html,/src="\.\/scene\.mjs"/);
@@ -72,7 +72,7 @@ test('local imports preserve source claims and reject unsourced or synthetic rou
  assert.equal(dive.demo,false);
  assert.equal(dive.positionSource,'USBL');
  assert.equal(atTime(dive,25).x,null,'a long gap must not be interpolated');
- const depthOnly=parseInput('t_s,depth_m\\n0,2\\n10,7\\n20,5','depth.csv');
+ const depthOnly=parseInput('t_s,depth_m\n0,2\n10,7\n20,5','depth.csv');
  assert.equal(depthOnly.xyAvailable,false);
  assert.equal(atTime(depthOnly,10).x,null);
  const unsourced=JSON.stringify({points:[{t_s:0,depth_m:2,x_m:1,y_m:2},{t_s:10,depth_m:3,x_m:2,y_m:3}]});
