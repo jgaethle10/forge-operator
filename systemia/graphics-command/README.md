@@ -48,3 +48,54 @@ The tournament report schema is `evercraft.graphics-command.shot-tournament.v1`;
 
 
 Rendering does not grant publication authority.
+
+
+## Private Saban work-state visual proof (review-only)
+
+The work-state proof viewer reuses Saban's **existing** `evercraft.saban.work-state.v1` and
+`evercraft.saban.scheduler-receipt.v1` formats. It does not require a new
+runtime, agent, service, dashboard, provider, or public API.
+
+An authorized local operator can create an **offline**, read-only HTML snapshot
+of a Saban state file they already have permission to inspect:
+
+```bash
+node systemia/graphics-command/saban-work-visual.mjs \
+  /private/authorized/saban-work-state.json \
+  /private/review/saban-proof.html \
+  private_operator_snapshot
+```
+
+Choose `synthetic_test` instead for a test fixture. Never use synthetic-test
+mode to claim a real customer completed work. The output location must be new
+and outside `public/`; the command refuses existing output files and public
+directory symlinks. Keep the resulting HTML in a private access-controlled
+working area. The file includes a source SHA-256 digest and state timestamp,
+but **neither is an independent execution attestation**.
+
+The renderer outputs aggregate queued, leased, completed and dead-letter counts,
+checkpoint and retry counts, and anonymous state marks. The original work
+payloads, role names, agent IDs, worker identities, job IDs, error strings and
+private paths are never included in the HTML. When there are more than 48 jobs,
+the marks represent the state distribution rather than individual jobs; the
+printed counts remain exact.
+
+A work-state file reports the latest known state, not an audit history. The
+viewer does **not** invent event transitions, live status, actual human workers,
+verified signatures, user permissions, or independent customer fulfillment.
+No JavaScript, remote network requests, social distribution or publication
+authority is present in the output.
+
+Run source-contract tests and generate an entirely synthetic test specimen:
+
+```bash
+node --test systemia/graphics-command/saban-work-visual.test.mjs
+node systemia/graphics-command/saban-work-visual.specimen.mjs \
+  artifacts/saban-work-visual-specimen
+```
+
+The CI workflow `saban-work-visual.yml` checks actual 1280px and 390px
+Chromium renders, stores screenshots and an artifact receipt, and preserves
+only deliberately synthetic test specimens. Production use requires separate
+Systemia approval and an authenticated, privacy-reviewed receipt acquisition
+path. **This module does not fetch production data or publish anything.**
