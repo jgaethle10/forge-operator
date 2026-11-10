@@ -25,5 +25,9 @@ jobs:
           node --check research/deepagents-saban-compat/contract-proof.mjs
           node --check research/deepagents-saban-compat/contract-proof.test.mjs
           python3 -m py_compile research/deepagents-saban-compat/experimental_worker.py
+          python3 -m py_compile research/deepagents-saban-compat/trace_gate.py
+          python3 -m py_compile research/deepagents-saban-compat/test_trace_gate.py
       - name: Synthetic capability regression
         run: node research/deepagents-saban-compat/contract-proof.test.mjs
+      - name: Synthetic trace evidence regression
+        run: python3 -m unittest discover -s research/deepagents-saban-compat -p 'test_trace_gate.py' -v
