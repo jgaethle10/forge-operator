@@ -1,0 +1,57 @@
+{
+  "research_stage": "RC14",
+  "files": {
+    "Evercraft_Aqua_Field_Notebook_RC14.html": {
+      "sha256": "582ed9f178a637b1fcda467016e64dc3b06154377f09ffe09837bbd0114548c4",
+      "bytes": 37586
+    },
+    "app/core.mjs": {
+      "sha256": "019ea78d73a64cae9f03bafff8fc0415546723a08272a3548b95ac8076a38b5d",
+      "bytes": 9601
+    },
+    "app/journal.mjs": {
+      "sha256": "fe143a1fa086fe7b475841956f79eca82c3245588cfd4c0089d9f1486bad8a9d",
+      "bytes": 5710
+    },
+    "app/index.template.html": {
+      "sha256": "380f6f5821f4fdf6136ba5e04d80484a6041fe0fbf7918e89884051b36e53118",
+      "bytes": 22519
+    },
+    "build.py": {
+      "sha256": "66b47d3ff4f238ca76e5924e0ef108063572d034b2661d23746fa4f20bb095b2",
+      "bytes": 455
+    },
+    "tests/test_core.mjs": {
+      "sha256": "5e58a6b121218abf84deabc2e83af9205e22fa3d5f5d680074a8163af4356591",
+      "bytes": 4208
+    },
+    "tests/test_journal.mjs": {
+      "sha256": "4d53a5ea39d4462627403192b9c089104bd25e638d0aeaf83776b09636b4be8c",
+      "bytes": 5907
+    },
+    "tests/qa_rc14.py": {
+      "sha256": "111d3dd4ff01a9bdecf6461ae03c09f47313b91ef507de3d986f204a688af8f7",
+      "bytes": 6248
+    },
+    "RC14_ENGINEERING_DECISION.md": {
+      "sha256": "eb4fecd20998d2353627d10ea12f1c271f6457b12482691e8d939f979ca47d4e",
+      "bytes": 4799
+    },
+    "SCREEN_RECORDING_REVIEW.md": {
+      "sha256": "bf89479bd5d26885c7da6b6e71674f7d7a14897e313da2f581eb15a51257d10d",
+      "bytes": 1347
+    },
+    "README.md": {
+      "sha256": "f79043ca65b780aad8a1aa7e652ad394d158714e070f86c603aff148b4777b9a",
+      "bytes": 2588
+    }
+  },
+  "qa": {
+    "node_passed": 51,
+    "browser_chromium_phone": true,
+    "browser_chromium_desktop": true,
+    "browser_webkit_native": false,
+    "external_requests": 0,
+    "field_data": false
+  }
+}
