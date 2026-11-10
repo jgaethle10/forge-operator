@@ -61,7 +61,7 @@ async function setup({grant=true}={}) {
     goalKey:'private-goal',now,signedReceipts:[receipt],trustedDeviceKeys:keys,
     ...overrides,
   });
-  return {dir,passport,goalStateDir,passportStateDir,receipt,keys,read};
+  return {dir,passport,goalStateDir,passportStateDir,receipt,keys,privateKey,read};
 }
 async function withCase(opts,fn){const fixture=await setup(opts);try{await fn(fixture)}finally{await rm(fixture.dir,{recursive:true,force:true})}}
 
@@ -158,6 +158,12 @@ test('tampering an existing locally signed journal fails the whole read',()=>wit
   }),/device_signature_rejected/);
 }));
 
+function bindReceiptToManifest(receipt,privateKey,manifest) {
+  return signMicroSeedExecutionReceipt({
+    ...receipt,
+    manifest_hash:manifest.manifest_hash,
+  },{privateKey,key_id:'test-signer'});
+}
 async function enrollDevice({dir, keys, authorized = true, heartbeat = true} = {}) {
   const registryRoot=join(dir,'ambient-registry');
   const registry=new AmbientDeviceRegistry({root:registryRoot});
@@ -194,10 +200,10 @@ async function enrollDevice({dir, keys, authorized = true, heartbeat = true} = {
   }
   return {registryRoot,registry,manifest};
 }
-test('active approved Ambient Registry supplies actual pinned public key behind Passport',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
-  const {registryRoot}=await enrollDevice({dir,keys});
+test('active approved Ambient Registry supplies actual pinned public key behind Passport',()=>withCase({},async({dir,receipt,keys,privateKey,passportStateDir,goalStateDir})=>{
+  const {registryRoot,manifest}=await enrollDevice({dir,keys});
   const stateDir=join(dir,'signed');
-  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:bindReceiptToManifest(receipt,privateKey,manifest)});
   const snapshot=await readPassportScopedGoalFromActiveAmbientRegistry({
     passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
     goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
@@ -212,10 +218,10 @@ test('active approved Ambient Registry supplies actual pinned public key behind 
     assert.ok(!JSON.stringify(snapshot).includes(secret), 'identifier escaped: '+secret);
   }
 }));
-test('revocation in Ambient Registry invalidates previously signed evidence read',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
-  const {registryRoot,registry}=await enrollDevice({dir,keys});
+test('revocation in Ambient Registry invalidates previously signed evidence read',()=>withCase({},async({dir,receipt,keys,privateKey,passportStateDir,goalStateDir})=>{
+  const {registryRoot,registry,manifest}=await enrollDevice({dir,keys});
   const stateDir=join(dir,'signed');
-  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:bindReceiptToManifest(receipt,privateKey,manifest)});
   const opts={
     passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
     goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
@@ -312,4 +318,18 @@ test('Ambient trust attestation identity must match approved device manifest',()
     receiptStateDirsByDevice:{'private-device':stateDir},
     attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
   }),/attestation_binding_invalid/);
+}));
+
+test('valid signer against a wrong manifest cannot claim an approved execution',()=>withCase({},async({dir,receipt,keys,passportStateDir,goalStateDir})=>{
+  const {registryRoot}=await enrollDevice({dir,keys});
+  const stateDir=join(dir,'signed');
+  // This receipt is correctly signed with the pinned device key, but its
+  // claimed manifest hash is different from the authorized registry manifest.
+  await persistSignedMicroSeedReceipt({stateDir,signedReceipt:receipt});
+  await assert.rejects(readPassportScopedGoalFromActiveAmbientRegistry({
+    passportStateDir,goalStateDir,verifiedSubjectRef:'test-operator',
+    goalKey:'private-goal',now,ambientRegistryRoot:registryRoot,
+    receiptStateDirsByDevice:{'private-device':stateDir},
+    attemptDeviceMap:{[receipt.idempotency_key]:'private-device'},
+  }),/device_manifest_binding_invalid/);
 }));
