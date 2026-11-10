@@ -121,3 +121,12 @@ A visitor can use **Explore the 3D work floor** from the task screen to enter th
 Exit with **Exit office** or Escape. The view restores the prior details and 2D/3D choice, locks background scrolling, traps tab focus inside the dialog, and preserves reduced-motion behavior from the camera rig. It does not call an agent, start a mission, create synthetic worker progress, or alter the task submission flow.
 
 Evidence: `node systemia/work-saban/office-browser-qa.mjs` exercises desktop (1280×900) and emulated phone (390×844) on actual headless Chrome, with screenshots of overview, focused coworker, and immersive mode. It asserts one-tap entry, fullscreen geometry, labeled dialog, selected-agent inspector navigation, Escape restoration, and unchanged worker state. Real iPhone Safari frame-time and touch ergonomics remain **unverified** before production release.
+
+## Shared Studio / Expressive Characters v0.6 (source-only)
+The six existing Saban specialist desks now share a unified architectural room with windows, a meeting table, a lounge, plants, aquarium and six original CSS character bodies with distinct expressions. The work zones and record IDs remain the same; this is a visual presentation change, not a new scheduling topology or a new agent runtime.
+
+**Motion provenance:** a small one-shot character movement is allowed only when an already recognized worker state changes to running or verified. Expressions map deterministically to `idle`, `running`, `verified`, and `failed`. A separate slow blink and aquarium fish are decorative. Nothing in this renderer creates a worker event, claims an agent physically walked through the office, or converts synthetic local fixtures into real AI autonomy.
+
+**View:** the lower room-level angle is an optional smooth camera mode, not true first-person collision, spatial navigation, or walking simulation. Orbit/pan/touch, follow-selected camera, immersive inspector and reduced-motion features remain. No image assets, remote packages, model provider, payment, public deployment or customer data were added.
+
+**Proof:** `node systemia/work-saban/office-3d.proof.mjs` checks six expressive characters, central studio objects, observed-event-only activity, concern/celebration expressions and low camera angle. `node systemia/work-saban/office-browser-qa.mjs` checks headless Chrome desktop and iPhone-sized rendering, captures shared studio screenshots and keeps the existing phone observation interaction checks. A screenshot proves appearance, not real on-device Safari smoothness.

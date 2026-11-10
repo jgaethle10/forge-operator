@@ -95,22 +95,37 @@ const all=documentWalk(scene).filter(x=>x.className==='spatial-agent');
 assert.equal(all.length,6);
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-plant').length,6,'six decorative plants');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-fishtank').length,1,'aquarium rendered');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-studio-shell').length,1,'one shared 3D architectural studio');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-studio-back-wall').length,1,'full shared back wall');
+assert.equal(documentWalk(scene).filter(x=>x.className.includes('spatial-window')).length,2,'real studio has two window props');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-meeting-hub').length,1,'central meeting table');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-motion-disclosure').length,1,'public disclosure accompanies decorative motion');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-coffee-corner').length,1,'coffee corner rendered');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-lounge').length,1,'lounge rendered');
 assert.equal(documentWalk(scene).filter(x=>x.className.includes('spatial-fish ')).length,2,'two aquarium fish');
 for(const agent of all){
   const parts=documentWalk(agent);
-  for(const cls of ['spatial-person-head','spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile']){
+  for(const cls of ['spatial-person-head','spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile','spatial-person-collar','arm-left','arm-right','leg-left','leg-right','brow-left','brow-right','cheek-left','cheek-right']){
     assert(parts.some(node=>node.className.split(' ').includes(cls)),
       agent.dataset.agent+' missing visible character feature '+cls);
   }
 }
 const style=fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'style.css'),'utf8');
-for(const cls of ['spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile']){
+for(const cls of ['spatial-person-hair','spatial-person-face','spatial-eye-left','spatial-eye-right','spatial-smile','spatial-window','spatial-meeting-hub','spatial-person-arm','spatial-person-leg','spatial-brow','spatial-cheek']){
   assert(style.includes('.'+cls+'{'), 'missing rendered CSS for '+cls);
 }
 assert.equal(all.find(x=>x.dataset.agent==='analyst').dataset.state,'verified');
+assert.equal(all.find(x=>x.dataset.agent==='analyst').dataset.emotion,'proud','expression follows observed verified state');
+assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.emotion,'calm','idle character does not pretend to work');
 const originalZoom=ui.getCamera().zoom;
+ui.toggleRoomLevel();
+assert.equal(ui.isRoomLevel(),true,'room-level observer is explicitly selected');
+assert.equal(ui.getCamera().pitch,34,'low angle approaches the shared space');
+ui.focusAgent('writer');
+assert.equal(ui.getCamera().pitch,34,'focusing an agent preserves room-level camera');
+ui.toggleRoomLevel();
+assert.equal(ui.isRoomLevel(),false);
+assert(ui.getCamera().pitch>=52,'exiting room view restores raised camera');
 ui.focusAgent('writer');
 assert(ui.getCamera().zoom>=0.98);
 assert.notEqual(ui.getRenderedCamera().zoom,ui.getCamera().zoom,'focus eases instead of jumping');
@@ -156,14 +171,20 @@ ui.reset();
 assert.equal(ui.getState().writer,'idle');
 ui.consumeExecutorEvent({id:'synthetic-2',state:'running'});
 assert.equal(ui.getState().writer,'running');
+assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.activity,'working','activity is tied to a registered event');
+assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.emotion,'focused','character focuses only on running event');
 ui.consumeExecutorEvent({id:'synthetic-2',state:'verified'});
 assert.equal(ui.getState().writer,'verified');
 ui.consumeExecutorEvent({id:'synthetic-4',state:'failed'});
 assert.equal(ui.getState().auditor,'failed');
+assert.equal(all.find(x=>x.dataset.agent==='auditor').dataset.emotion,'concerned');
 ui.consumeExecutorEvent({id:'synthetic-999',state:'running'});
 assert.equal(Object.keys(ui.getState()).length,6);
 ui.reset();
 assert.equal(originalZoom,0.72);
+assert.equal(ui.getState().writer,'idle');
+assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.activity,'waiting','no synthetic continuing work after reset');
+assert.equal(ui.isRoomLevel(),false);
 console.log('Work Saban CSS3D spatial office: PASS (six character faces, rooms, observer states, mode persistence and camera constraints).');
 
 function documentWalk(node){
