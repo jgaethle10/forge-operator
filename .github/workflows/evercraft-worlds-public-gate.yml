@@ -26,6 +26,7 @@ jobs:
           fi
           node scripts/probe-worlds-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/receipt.json
           node scripts/probe-worlds-heritage-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/heritage-receipt.json
+          node scripts/probe-hidden-world-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/hidden-world-receipt.json
       - name: Preserve read-only release receipt
         if: always()
         uses: actions/upload-artifact@v4

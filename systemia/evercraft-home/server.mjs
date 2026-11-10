@@ -13,6 +13,7 @@ import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.m
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import { inspectClipFacebookConnection } from "../clip/facebook-page-connection-diagnostic.mjs";
 import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
@@ -136,6 +137,7 @@ export async function startEvercraftHomeServer({
   ownerLogin = String(process.env.EVERCRAFT_OWNER_LOGIN || "owner").trim(),
   ownerDisplayName = String(process.env.EVERCRAFT_OWNER_DISPLAY_NAME || "Jesse").trim(),
   sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
+  clipFacebookFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -617,6 +619,39 @@ export async function startEvercraftHomeServer({
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "credential_store_failed" });
       }
+    }
+
+    // Operator-initiated diagnostic. Only authenticated Evercraft Home can ask
+    // the private vault to probe Meta, and every provider operation is GET.
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/diagnose") {
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      if (!credentialVault) return json(res, 503, {
+        ok: false, state: "credential_vault_not_configured",
+        provider_mutation_attempted: false, secret_material_returned: false,
+      });
+      let body;
+      try {
+        body = await readJsonBody(req, 4096);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            (body.credential_ref !== undefined && typeof body.credential_ref !== "string")) {
+          throw new Error("clip_diagnostic_selection_invalid");
+        }
+      } catch {
+        return json(res, 400, {
+          ok: false, state: "clip_diagnostic_selection_invalid",
+          provider_mutation_attempted: false, secret_material_returned: false,
+        });
+      }
+      const diagnostic = await inspectClipFacebookConnection({
+        credentialStateDir,
+        credentialRef: body.credential_ref || "",
+        fetchImpl: clipFacebookFetch,
+      });
+      return json(res, 200, {
+        ok: true, diagnostic,
+        secret_material_returned: false,
+      });
     }
 
     if (req.method === "POST" && url.pathname === "/api/clip/journal/facebook") {
