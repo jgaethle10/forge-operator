@@ -167,3 +167,35 @@ jobs:
             /tmp/evercraft-rc05b-49-56.json
             /tmp/evercraft-rc05b-57-64.json
           retention-days: 7
+
+      - name: RC05C observed lateral escape unit tests
+        run: node --test systemia/world-engine/sim-to-real/controller-rc05-escape.test.mjs
+      - name: RC05C native four-way runner tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/escape-trial-rc05c.test.mjs
+      - name: RC05C known regression cohort seeds 49-56
+        run: node --import tsx systemia/world-engine/sim-to-real/escape-trial-rc05c.mjs --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05c-49-56.json
+      - name: RC05C new evaluation cohort seeds 65-72
+        run: node --import tsx systemia/world-engine/sim-to-real/escape-trial-rc05c.mjs --first-seed 65 --seeds 8 --out /tmp/evercraft-rc05c-65-72.json
+      - name: RC05C verify four-way synthetic outcomes and reject false review approvals
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyEscapeTrial} from './systemia/world-engine/sim-to-real/escape-trial-rc05c.mjs';
+          for(const cohort of ['49-56','65-72']){
+            const report=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05c-'+cohort+'.json','utf8'));
+            if(!verifyEscapeTrial(report)||report.hardwareExecution!==false||report.noProductionAuthority!==true)
+              throw Error('rc05c_evidence_integrity_or_authority_failed:'+cohort);
+            if(report.review.reviewEligible && (report.scores.escape.shieldedMoves===0||
+                report.scores.escape.arrived-report.scores.baseline.arrived<Math.ceil(report.seeds*.25)))
+              throw Error('rc05c_falsely_approved_immobile_candidate:'+cohort);
+            console.log('RC05C REVIEW',JSON.stringify({cohort,scores:report.scores,review:report.review,digest:report.sha256}));
+          }
+          NODE
+      - name: Upload RC05C modeled comparison evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05c-modeled-review
+          path: |
+            /tmp/evercraft-rc05c-49-56.json
+            /tmp/evercraft-rc05c-65-72.json
+          retention-days: 7
