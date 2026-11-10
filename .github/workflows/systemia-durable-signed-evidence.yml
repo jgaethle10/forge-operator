@@ -5,6 +5,8 @@ on:
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/control-plane/visualization/passport-goal-read.mjs'
+      - 'systemia/control-plane/visualization/index.html'
+      - 'systemia/control-plane/visualization/signed-device-ui.test.mjs'
       - 'tests/saban-microseed-e2e.test.mjs'
       - 'tests/saban-microseed-signed-receipt-store.test.mjs'
       - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
@@ -14,6 +16,8 @@ on:
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/control-plane/visualization/passport-goal-read.mjs'
+      - 'systemia/control-plane/visualization/index.html'
+      - 'systemia/control-plane/visualization/signed-device-ui.test.mjs'
       - 'tests/saban-microseed-e2e.test.mjs'
       - 'tests/saban-microseed-signed-receipt-store.test.mjs'
       - 'systemia/control-plane/visualization/passport-signed-device-read.test.mjs'
@@ -32,4 +36,4 @@ jobs:
       - run: node --check systemia/saban/microseed-signed-receipt-store.mjs
       - run: node --check systemia/saban/microseed-native-agent.mjs
       - run: node --check systemia/control-plane/visualization/passport-goal-read.mjs
-      - run: node --test tests/saban-microseed-signed-receipt-store.test.mjs tests/saban-microseed-e2e.test.mjs systemia/control-plane/visualization/passport-signed-device-read.test.mjs systemia/control-plane/visualization/signed-device-evidence.test.mjs
+      - run: node --test tests/saban-microseed-signed-receipt-store.test.mjs tests/saban-microseed-e2e.test.mjs systemia/control-plane/visualization/passport-signed-device-read.test.mjs systemia/control-plane/visualization/signed-device-evidence.test.mjs systemia/control-plane/visualization/signed-device-ui.test.mjs systemia/control-plane/visualization/goal-visual-bridge.test.mjs
