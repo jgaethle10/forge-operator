@@ -51,6 +51,52 @@ export function validateExactSkuRegistry(products,manifest){
 }
 
 /**
+ * Additional offers live in a separate registry so the seven legacy receipts,
+ * original buyer SKUs and seven-checkout canary never need to be overwritten.
+ * Entries are admitted only with an exact owner-approved provider identity
+ * and a dated independent rendered-buyer-view receipt. Evidence URLs are
+ * review inputs, not themselves payment/fulfillment receipts.
+ */
+export function validateAdditionalExactSkuLinks(additional,{products,manifest}={}){
+  validateExactSkuRegistry(products,manifest);
+  if(additional==null)return [];
+  if(additional.schema!=='evercraft.payments.additional-exact-sku-links.v1'||
+    additional.settlement_account!=='Systemia'||additional.settlement_provider!=='Stripe'||
+    !Array.isArray(additional.offers))throw Error('additional_exact_sku_schema_invalid');
+  const ids=new Set(products.products.map(x=>x.product_id));
+  const skus=new Set(manifest.links.map(x=>x.key));
+  const links=new Set(manifest.links.map(x=>x.url));
+  const priceIds=new Set(manifest.links.map(x=>x.stripe_price_id));
+  const paymentIds=new Set(manifest.links.map(x=>x.payment_link_id));
+  for(const offer of additional.offers){
+    if(!offer||typeof offer!=='object'||!offer.product_id||!offer.sku_key||
+      !offer.name||!Number.isSafeInteger(offer.amount_cents)||offer.amount_cents<=0||
+      offer.currency!=='usd'||offer.approved_by_owner!==true||
+      offer.verification_state!=='PROVIDER_AND_RENDERED_BUYER_VIEW_VERIFIED'||
+      !offer.independent_browser_receipt||!offer.browser_checked_at||
+      !offer.landing_page||!offer.payment_link_id||!offer.stripe_product_id||
+      !offer.stripe_price_id||!offer.url)throw Error('unverified_additional_exact_sku');
+    if(ids.has(offer.product_id)||skus.has(offer.sku_key)||
+       links.has(offer.url)||priceIds.has(offer.stripe_price_id)||
+       paymentIds.has(offer.payment_link_id))throw Error('duplicate_additional_exact_sku');
+    let checkout,proof,page;
+    try{
+      checkout=new URL(offer.url);proof=new URL(offer.independent_browser_receipt);
+      page=new URL(offer.landing_page);
+    }catch{throw Error('additional_exact_sku_invalid_url')}
+    if(checkout.protocol!=='https:'||checkout.hostname!=='buy.stripe.com'||
+       !/^\\/[A-Za-z0-9]+$/.test(checkout.pathname)||
+       checkout.search||checkout.hash||checkout.username||checkout.password||
+       proof.protocol!=='https:'||proof.hostname!=='github.com'||
+       page.protocol!=='https:'||!Number.isFinite(Date.parse(offer.browser_checked_at)))
+       throw Error('additional_exact_sku_unapproved_evidence');
+    ids.add(offer.product_id);skus.add(offer.sku_key);links.add(offer.url);
+    priceIds.add(offer.stripe_price_id);paymentIds.add(offer.payment_link_id);
+  }
+  return additional.offers;
+}
+
+/**
  * A caller may request a product identity, not choose a different offer by
  * amount.  Only the exact independently mapped original Stripe SKU is used.
  */
@@ -61,13 +107,16 @@ export function resolveExactSkuCheckout({
   scope_approved=false,
   capacity_approved=false,
   buyer_confirmed=false,
-}={}, {products,manifest}={}){
+}={}, {products,manifest,additional=null}={}){
   validateExactSkuRegistry(products,manifest);
-  const product=products.products.find(p=>p.product_id===product_id);
+  const verifiedAdditional=validateAdditionalExactSkuLinks(additional,{products,manifest});
+  const original=products.products.find(p=>p.product_id===product_id);
+  const added=verifiedAdditional.find(p=>p.product_id===product_id);
+  const product=original||added;
   if(!product)return fail('EXACT_SKU_NOT_PROVISIONED',{
     reason:'This product needs its own approved exact product, price and provider-verified checkout before any paid handoff.',
   });
-  const link=manifest.links.find(l=>l.key===product.sku_key);
+  const link=original?manifest.links.find(l=>l.key===product.sku_key):added;
   if(expected_amount_cents!==null &&
      (!Number.isSafeInteger(expected_amount_cents)||expected_amount_cents!==link.amount_cents))
     return fail('AMOUNT_MISMATCH',{product_id});
@@ -94,8 +143,9 @@ export function resolveExactSkuCheckout({
   };
 }
 
-export function commerceCoverage({publicProducts,products,manifest}={}){
+export function commerceCoverage({publicProducts,products,manifest,additional=null}={}){
   validateExactSkuRegistry(products,manifest);
+  const verifiedAdditional=validateAdditionalExactSkuLinks(additional,{products,manifest});
   if(!Array.isArray(publicProducts?.products))throw Error('public_product_catalog_invalid');
   const productKeys=new Set();
   const discovery=publicProducts.products.map(p=>{
@@ -108,11 +158,15 @@ export function commerceCoverage({publicProducts,products,manifest}={}){
     schema:'evercraft.payments.coverage.v1',
     owned_discovery_products:discovery.length,
     independently_linked_commercial_products:products.products.length,
-    exact_provider_checkout_links:manifest.links.length,
+    exact_provider_checkout_links:manifest.links.length+verifiedAdditional.length,
+    additional_independently_verified_offers:verifiedAdditional.length,
     other_offers_automatically_reusing_any_of_seven:0,
     source_note:'Discovery inventory and independent commercial SKUs are separate dimensions; some products overlap. Counts must not be added to claim total unique products.',
     discovery,
-    independently_linked_products:products.products.map(p=>({product_id:p.product_id,sku_key:p.sku_key,amount_cents:manifest.links.find(l=>l.key===p.sku_key).amount_cents})),
+    independently_linked_products:[
+      ...products.products.map(p=>({product_id:p.product_id,sku_key:p.sku_key,amount_cents:manifest.links.find(l=>l.key===p.sku_key).amount_cents})),
+      ...verifiedAdditional.map(p=>({product_id:p.product_id,sku_key:p.sku_key,amount_cents:p.amount_cents})),
+    ],
     state:'EXACT_SKU_ONBOARDING_REQUIRED_FOR_ADDITIONAL_OFFERS',
   };
 }
