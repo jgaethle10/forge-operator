@@ -93,6 +93,10 @@ test('untrusted, inconsistent and privileged source assertions reject archive in
     raw=>{const x=JSON.parse(raw['latest.json']);x.publication_authorized=true;raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].provenance='https://evil.com';raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].value=-1;raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].unit='mm';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].time='2026-11-09T00:00:00Z';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].unit='cms';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].station_id='USGS-NOT_REAL';raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['reservoir-source-probe.json']);x.derived_provisional_sum_af=800;raw['reservoir-source-probe.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['official-basin-report.json']);x.all_basins_warned=false;raw['official-basin-report.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['swe-median-audit.json']);x.basin_percent_of_median=150;raw['swe-median-audit.json']=Buffer.from(JSON.stringify(x));}
