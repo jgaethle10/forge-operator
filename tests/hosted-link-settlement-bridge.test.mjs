@@ -162,3 +162,47 @@ test('account mismatch denies all scanning, and truncated pagination never claim
  assert.equal(partial.exhaustive,false);
  assert.equal(partial.incomplete_links.length,7);
 });
+
+
+test('all seven independent real-SKU fixtures reconcile exactly once and never cross-charge other offers',async()=>{
+ const bySession=new Map();
+ const byLink=new Map();
+ for(const [i,o] of offers.entries()){
+   const sid='cs_live_distinct'+i;
+   const pid='pi_live_distinct'+i;
+   const cid='ch_live_distinct'+i;
+   const data=sample(o,{
+     session:{id:sid,payment_intent:pid},
+     intent:{id:pid,latest_charge:cid},
+     charge:{id:cid,payment_intent:pid}
+   });
+   bySession.set(sid,data);
+   byLink.set(o.payment_link_id,sid);
+ }
+ const provider={
+   getAccount:async()=>({id:accountId}),
+   listCheckoutSessions:async({paymentLinkId})=>({data:[{id:byLink.get(paymentLinkId)}],has_more:false}),
+   retrieveCheckoutSession:async(id)=>bySession.get(id).session,
+   listSessionLineItems:async(id)=>bySession.get(id).lineItems,
+   retrievePaymentIntent:async(id)=>[...bySession.values()].find(x=>x.intent.id===id).intent,
+   retrieveCharge:async(id)=>[...bySession.values()].find(x=>x.charge.id===id).charge,
+ };
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-seven-link-proof-'));
+ try{
+   const journal=openHostedSettlementJournal(path.join(dir,'receipts.jsonl'));
+   const first=await reconcileHostedLinks({provider,approvedAccountId:accountId,offers,commit:true,journal});
+   assert.equal(first.verified_paid,7);
+   assert.equal(first.receipts_written,7);
+   assert.equal(first.unverified,0);
+   const again=await reconcileHostedLinks({provider,approvedAccountId:accountId,offers,commit:true,journal});
+   assert.equal(again.receipts_written,0);
+   assert.equal(again.duplicates,7);
+   assert.equal(journal.current(
+     evaluateHostedSettlement({offer:offers[6],...bySession.get(byLink.get(offers[6].payment_link_id))}).order_key
+   ),null); // No caller-supplied account pin can be omitted.
+   journal.close();
+   const ledger=fs.readFileSync(path.join(dir,'receipts.jsonl'),'utf8');
+   assert.equal(ledger.split('\n').filter(Boolean).length,7);
+   assert.equal(ledger.includes('customer_email'),false);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
