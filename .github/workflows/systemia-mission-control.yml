@@ -11,6 +11,8 @@ on:
       - "tests/systemia-mission-control-export.test.mjs"
       - "systemia/organism/mission-control-projection.mjs"
       - "systemia/organism/mission-control-export.mjs"
+      - "systemia/organism/mission-control-node-watch.mjs"
+      - "tests/systemia-mission-control-node.test.mjs"
       - ".github/workflows/systemia-mission-control.yml"
   push:
     branches: [main]
@@ -24,6 +26,8 @@ on:
       - "tests/systemia-mission-control-export.test.mjs"
       - "systemia/organism/mission-control-projection.mjs"
       - "systemia/organism/mission-control-export.mjs"
+      - "systemia/organism/mission-control-node-watch.mjs"
+      - "tests/systemia-mission-control-node.test.mjs"
 permissions:
   contents: read
 jobs:
@@ -40,5 +44,6 @@ jobs:
           node --check public/live/mission-control.mjs
           node --check systemia/organism/mission-control-projection.mjs
           node --check systemia/organism/mission-control-export.mjs
+          node --check systemia/organism/mission-control-node-watch.mjs
       - name: Verify mission control and existing workroom boundaries
-        run: node --test tests/systemia-mission-control.test.mjs tests/systemia-mission-control-export.test.mjs tests/evercraft-live-workroom.test.mjs
+        run: node --test tests/systemia-mission-control.test.mjs tests/systemia-mission-control-export.test.mjs tests/systemia-mission-control-node.test.mjs tests/evercraft-live-workroom.test.mjs
