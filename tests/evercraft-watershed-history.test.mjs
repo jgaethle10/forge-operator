@@ -6,6 +6,7 @@ import {join} from 'node:path';
 import {makeHistoryReceipt,buildDailyHistory,sha256,HISTORY_SCHEMA} from
   '../systemia/research-service/watershed-history.mjs';
 import {archiveWatershedRun} from '../systemia/research-service/watershed-history-archive.mjs';
+import {readVerifiedHistory} from '../systemia/research-service/watershed-history-read.mjs';
 
 const sha='a'.repeat(40),runId='42739867324',runTime='2026-11-10T02:00:00.000Z';
 const URLS={
@@ -126,10 +127,20 @@ test('immutable on-disk run is idempotent, conflict-safe and retains all four ra
       assert.equal(stored.source_digests[name],sha256(bytes));
     }
     assert.equal(archiveWatershedRun(opts).action,'already_recorded_unchanged');
+    const verified=readVerifiedHistory(ledger,{asOf:'2026-11-10',windowDays:7});
+    assert.equal(verified.status,'insufficient_history');
+    assert.equal(verified.verified_run_count,1);
+    assert.equal(verified.raw_digests_verified,true);
+    assert.equal(verified.points.at(-1).official_basin_indices[0].warning_flag,true);
+    assert.equal(verified.points.at(-2).provisional_reservoir_sum_af,null);
+    assert.equal(verified.public_release_authorized,false);
+    assert.throws(()=>readVerifiedHistory(ledger,{asOf:'2026-02-31',windowDays:7}),/valid ledger root/);
     const sensor=JSON.parse(raw['latest.json']);sensor.river[0].value+=1;
     writeFileSync(join(source,'latest.json'),JSON.stringify(sensor));
     assert.throws(()=>archiveWatershedRun(opts),/immutable run ID collision/);
     assert.ok(existsSync(join(dir,'receipt.json')),'original evidence untouched');
+    writeFileSync(join(dir,'sources','latest.json'),Buffer.from(JSON.stringify(sensor)));
+    assert.throws(()=>readVerifiedHistory(ledger,{asOf:'2026-11-10',windowDays:7}),/fingerprints|changed|source/);
   }finally{rmSync(root,{recursive:true,force:true})}
 });
 test('7/30/90-day timeline labels missing days, never interpolates or creates fake trends',()=>{
