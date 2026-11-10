@@ -23,8 +23,8 @@ def result_fixture(wrong=False, missing=False, secs=.18):
     for i,w in enumerate(("You","know","that","moment")):
         tokens.append(types.SimpleNamespace(
             text=w,phonemes=("ðˈæt" if i==2 else "abc"),
-            start_ts=None if (missing and i==1) else i*.30,
-            end_ts=None if (missing and i==1) else i*.30+secs))
+            start_ts=None if (missing and i==1) else i*.45,
+            end_ts=None if (missing and i==1) else i*.45+secs))
     if wrong: tokens[2].text="the"
     return types.SimpleNamespace(
         phonemes="abc abc ðˈæt abc",
