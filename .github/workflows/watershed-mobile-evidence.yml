@@ -4,6 +4,9 @@ on:
     paths:
       - 'public/watershed/**'
       - 'tests/evercraft-watershed-dashboard.test.mjs'
+      - 'tests/evercraft-watershed-history.test.mjs'
+      - 'systemia/research-service/watershed-history*.mjs'
+      - '.github/workflows/watershed-ledger-persist.yml'
       - 'systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs'
       - '.github/workflows/watershed-mobile-evidence.yml'
   push:
@@ -11,6 +14,9 @@ on:
     paths:
       - 'public/watershed/**'
       - 'tests/evercraft-watershed-dashboard.test.mjs'
+      - 'tests/evercraft-watershed-history.test.mjs'
+      - 'systemia/research-service/watershed-history*.mjs'
+      - '.github/workflows/watershed-ledger-persist.yml'
       - 'systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs'
       - '.github/workflows/watershed-mobile-evidence.yml'
   workflow_dispatch:
@@ -32,7 +38,9 @@ jobs:
           node --check public/watershed/model.mjs
           node --check public/watershed/app.mjs
           node --check systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs
-          node --test tests/evercraft-watershed-dashboard.test.mjs
+          node --check systemia/research-service/watershed-history.mjs
+          node --check systemia/research-service/watershed-history-archive.mjs
+          node --test tests/evercraft-watershed-dashboard.test.mjs tests/evercraft-watershed-history.test.mjs
 
   phone-and-desktop:
     needs: evidence-truth
