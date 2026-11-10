@@ -92,6 +92,7 @@ export async function loadActiveAmbientReceiptKeys({
       device_id:device,
       public_key_pem:manifest.attestation.receipt_public_key_pem,
       allowed_workload_classes:manifest.supported_workloads,
+      manifest_hash:manifest.manifest_hash,
     };
     keys[keyId] = anchor;
   }
