@@ -49,6 +49,17 @@
     viewport.append(stage);
     const floor=make('div','spatial-floor');
     world.append(floor);
+    // One shared studio shell, with distinct work zones but no six closed cubicles.
+    // Architectural props are decoration, not evidence of physical agent activity.
+    const studio=make('div','spatial-studio-shell');
+    studio.setAttribute('aria-hidden','true');
+    const back=make('div','spatial-studio-back-wall');
+    back.append(make('span','spatial-window window-left'),make('span','spatial-window window-right'));
+    const side=make('div','spatial-studio-side-wall');
+    side.append(make('span','spatial-studio-door'));
+    const beam=make('div','spatial-studio-ceiling-beam');
+    studio.append(back,side,beam);
+    world.append(studio);
     rooms.forEach((room,i)=>{
       const block=make('div','spatial-room');
       place(block,room.x,room.y);
@@ -71,6 +82,11 @@
     coffee.setAttribute('aria-label','Cozy office coffee corner with mugs and a coffee machine');
     coffee.append(make('span','spatial-coffee-counter'),make('span','spatial-coffee-machine'),make('span','spatial-coffee-mug'),make('span','spatial-coffee-mug mug-two'));
     place(coffee,100,303);world.append(coffee);
+    const meeting=make('div','spatial-meeting-hub');
+    meeting.setAttribute('aria-hidden','true');
+    meeting.append(make('span','spatial-meeting-shadow'),make('span','spatial-meeting-table'),
+      make('span','spatial-meeting-note'),make('span','spatial-meeting-lamp'));
+    place(meeting,466,276);world.append(meeting);
     const lounge=make('div','spatial-lounge');
     lounge.setAttribute('role','img');
     lounge.setAttribute('aria-label','Office lounge with a comfy couch and cushions');
@@ -94,11 +110,20 @@
       const screen=make('span','spatial-screen');
       computer.append(screen);
       const figure=make('span','spatial-person');
-      figure.append(make('span','spatial-person-body'));
+      const body=make('span','spatial-person-body');
+      body.append(make('span','spatial-person-collar'),
+        make('span','spatial-person-arm arm-left'),
+        make('span','spatial-person-arm arm-right'),
+        make('span','spatial-person-leg leg-left'),
+        make('span','spatial-person-leg leg-right'));
+      figure.append(body);
       const head=make('span','spatial-person-head');
       head.append(make('span','spatial-person-hair'));
       const face=make('span','spatial-person-face');
-      face.append(make('span','spatial-eye spatial-eye-left'),make('span','spatial-eye spatial-eye-right'),make('span','spatial-smile'));
+      face.append(make('span','spatial-eye spatial-eye-left'),make('span','spatial-eye spatial-eye-right'),
+        make('span','spatial-brow brow-left'),make('span','spatial-brow brow-right'),
+        make('span','spatial-cheek cheek-left'),make('span','spatial-cheek cheek-right'),
+        make('span','spatial-smile'));
       head.append(face);
       figure.append(head);
       figure.setAttribute('aria-hidden','true');
@@ -113,7 +138,9 @@
     path.innerHTML='<span>AUTHORIZED WORK ONLY</span>';
     world.append(path);
     const overlay=make('div','spatial-overlay');
-    const orbit=make('div','spatial-orbit-label','DRAG TO ORBIT  ·  PINCH TO ZOOM  ·  TWO-FINGER PAN  ·  N/P VISIT AGENTS  ·  FOLLOW SELECTED');
+    const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · FOLLOW SELECTED');
+    const evidenceNote=make('div','spatial-motion-disclosure','CHARACTER MOTION VISUALIZES RECORDED WORKER STATES. NOT PHYSICAL AGENT MOVEMENT.');
+    evidenceNote.setAttribute('aria-label','Character animations illustrate verified local worker state changes, not physical movement by autonomous AI agents.');
     const controls=make('div','spatial-controls');
     const buttons=[
       ['−','Zoom out',()=>zoom(-0.1)],
@@ -132,7 +159,7 @@
       if(title==='Follow selected coworker'){followButton=b;b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
-    overlay.append(orbit,controls);
+    overlay.append(orbit,evidenceNote,controls);
     viewport.append(overlay);
     scene.append(viewport);
     const fallback=$('office-scene')?.querySelector('.workfloor-art');
@@ -275,6 +302,9 @@
       const node=agents.get(role.id);
       if(!node)continue;
       node.dataset.state=state[role.id];
+      node.dataset.emotion=state[role.id]==='verified'?'proud':
+        state[role.id]==='failed'?'concerned':
+        state[role.id]==='running'?'focused':'calm';
       node.querySelector('small').textContent=state[role.id].replaceAll('_',' ').toUpperCase();
       node.setAttribute('aria-label',role.name+' at '+role.room+', '+state[role.id]);
       node.title=role.name+' · '+(receipts[role.id]||state[role.id]);
