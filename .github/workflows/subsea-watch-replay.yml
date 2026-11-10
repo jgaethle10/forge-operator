@@ -7,6 +7,7 @@ on:
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
       - 'tests/subsea-watch-video-sync.test.mjs'
+      - 'scripts/probe-subsea-watch-public.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   pull_request:
     paths:
@@ -14,6 +15,7 @@ on:
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
       - 'tests/subsea-watch-video-sync.test.mjs'
+      - 'scripts/probe-subsea-watch-public.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   workflow_dispatch:
 permissions:
