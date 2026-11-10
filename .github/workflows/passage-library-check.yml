@@ -10,6 +10,8 @@ on:
       - 'scripts/export-passage-demo.mjs'
       - 'scripts/build-passage-device-kit.mjs'
       - 'tests/passage-device-kit.test.mjs'
+      - 'tests/passage-device-qa.test.mjs'
+      - 'tests/passage-webkit.test.mjs'
       - 'docs/launch/passage/**'
       - '.github/workflows/passage-library-check.yml'
   workflow_dispatch:
@@ -29,6 +31,8 @@ jobs:
           node --test tests/passage-library.test.mjs
           node --test tests/passage-package.test.mjs
           node --test tests/passage-device-kit.test.mjs
+          node --test tests/passage-device-qa.test.mjs
+          node --check public/passage/device-qa.mjs
           node --check scripts/build-passage-device-kit.mjs
           node --check scripts/passage-signed-package.mjs
           node --check public/passage/package-verifier.mjs
@@ -73,3 +77,18 @@ jobs:
           path: /tmp/passage-qa/
           if-no-files-found: ignore
           retention-days: 14
+  webkit:
+    name: Safari-like WebKit offline lab
+    runs-on: macos-15
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install ephemeral Playwright
+        run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+      - name: Install WebKit browser engine
+        run: npx playwright install webkit
+      - name: Test standalone verifier with offline WebKit engine
+        run: node --test tests/passage-webkit.test.mjs

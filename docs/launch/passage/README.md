@@ -47,3 +47,7 @@ See SIGNED-PACKAGES.md for the signed text package contract, out-of-band trusted
 ## v0.4 standalone offline-device kit
 
 Use `node scripts/build-passage-device-kit.mjs` to produce a self-contained HTML verifier plus a **synthetic** signed text demo, demo public key/fingerprint and integrity checksums. The bundle contains no private keys. It is not independently authenticated or safe for high-risk circulation. See SIGNED-PACKAGES.md for limitations. CI tests use Chrome `file://` with networking disabled, not actual physical iOS/Android hardware.
+
+## v0.5 self-contained compatibility check
+
+The device kit adds local SHA-256/Ed25519 known-answer checks and a manually downloadable non-identifying QA receipt. No network telemetry or device fingerprint is collected. A dedicated macOS Playwright WebKit job checks Safari-like engine compatibility, but it is not an iOS physical-device test. A manually checked offline flag is a user report, not cryptographic network isolation proof.

@@ -15,6 +15,8 @@ test('device kit is entirely portable, synthetic, checksummed and has no signing
  const html=await readFile(kit.verifier,'utf8');
  assert.ok(html.startsWith('<!doctype html>'));
  assert.equal((html.match(/<script>/g)||[]).length,1,'one inline script, no external JS');
+ assert.ok(html.includes('Run local compatibility check'),'local device QA check exists');
+ assert.ok(html.includes('qa-download'),'local QA receipt control exists');
  assert.equal((html.match(/<style>/g)||[]).length,1,'one inline stylesheet');
  assert.ok(html.includes('connect-src &#39;none&#39;'),'file cannot fetch resources');
  assert.ok(html.includes('script-src &#39;sha256-'),'CSP pins the exact embedded code');

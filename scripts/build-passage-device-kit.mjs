@@ -23,21 +23,26 @@ const CSS=[
 'button[hidden],div[hidden]{display:none!important}button:disabled{opacity:.6;cursor:not-allowed}',
 'button.secondary{color:#104f46;background:white}button:focus-visible,input:focus-visible{outline:3px solid #2caa92;outline-offset:3px}',
 '#verification-status{font-weight:750;overflow-wrap:anywhere}#verification-details p{font-size:.83rem;overflow-wrap:anywhere;margin:8px 0}',
+'select{display:block;width:100%;font:inherit;padding:12px;border:1px solid #aac9b8;border-radius:9px;background:white}',
+'.lab-checkbox{display:flex;gap:10px;align-items:flex-start;font-weight:500}.lab-checkbox input{width:auto;flex:0 0 auto;margin:6px 0}',
+'#qa-status{font-size:.86rem;font-weight:700;overflow-wrap:anywhere}',
 '.caution{border-top:1px solid #dce8de;padding-top:18px;font-size:.87rem;color:#667c71}',
 '.status{background:#e7f0ea;border-radius:10px;padding:12px;font-size:.84rem}',
 'footer{font-size:.8rem;color:#5b7568;margin:36px 0 0}@media(max-width:600px){.panel{padding:19px}}'
 ].join('\n');
 export async function buildDemoKit(destination,options={}){
  const dir=resolve(destination);await mkdir(dir,{recursive:true});
- const [verifierSource,uiSource,catalogSource]=await Promise.all([
+ const [verifierSource,uiSource,catalogSource,qaSource]=await Promise.all([
   readFile(join(root,'public/passage/package-verifier.mjs'),'utf8'),
   readFile(join(root,'public/passage/package-ui.mjs'),'utf8'),
-  readFile(join(root,'public/passage/catalog.json'),'utf8')
+  readFile(join(root,'public/passage/catalog.json'),'utf8'),
+  readFile(join(root,'public/passage/device-qa.mjs'),'utf8')
  ]);
  const verifier=verifierSource.replace(/^export /gm,'');
  const ui=uiSource.replace(/^import .*;\r?\n/m,'');
- if(/\b(?:import|export)\s/.test(verifier+'\n'+ui)||/<\/script/i.test(verifier+'\n'+ui))throw Error('Unsafe or unsupported standalone script source');
- const script=verifier+'\n'+ui+'\n';
+ const qa=qaSource.replace(/^export /gm,'');
+ if(/\b(?:import|export)\s/.test(verifier+'\n'+ui+'\n'+qa)||/<\/script/i.test(verifier+'\n'+ui+'\n'+qa))throw Error('Unsafe or unsupported standalone script source');
+ const script=verifier+'\n'+ui+'\n'+qa+'\n';
  const csp="default-src 'none'; script-src 'sha256-"+policyHash(script)+"'; style-src 'sha256-"+policyHash(CSS)+"'; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
  const html=[
  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
@@ -58,6 +63,14 @@ export async function buildDemoKit(destination,options={}){
  '<p id="verification-status" role="status" aria-live="polite">No file has been verified.</p><div id="verification-details" hidden></div>',
  '<button type="button" id="save-verified-file" class="secondary" hidden>Save checked plain text</button>',
  '</section>',
+ '<section class="panel" aria-labelledby="lab-title"><h2 id="lab-title">Test this device</h2>',
+ '<p>Run local SHA-256 and Ed25519 known-answer checks, then save a tiny optional result file. No personal identifiers, key fingerprints or document contents enter the receipt. A passed check is not a security review.</p>',
+ '<label for="qa-platform">Device category (optional)</label><select id="qa-platform"><option value="unspecified">Not specified</option><option value="iphone-ipad">iPhone / iPad</option><option value="android">Android</option><option value="desktop">Desktop</option><option value="other">Other</option></select>',
+ '<label class="lab-checkbox" for="qa-offline"><input id="qa-offline" type="checkbox"> I manually switched off all internet connections for this test</label>',
+ '<button type="button" id="qa-run">Run local compatibility check</button>',
+ '<p role="status" aria-live="polite" id="qa-status">Device has not been tested.</p>',
+ '<button type="button" class="secondary" id="qa-download" hidden>Save local test receipt</button>',
+ '<p class="caution">The offline checkbox is your report, not a network measurement. The receipt is downloaded to this device only. Share it only if you choose to.</p></section>',
  '<h2>Safety boundaries</h2><p class="caution">This does not encrypt files, hide reading activity, verify journalistic truth, certify rights, or protect an inspected device. Offline clocks can be incorrect and revocations cannot be checked. If this browser does not support Ed25519 WebCrypto from local HTML, verification must fail rather than bypass checks.</p>',
  '<footer>Evercraft Passage · laboratory build · no external network dependencies · no production publisher identity</footer>',
  '<script>'+script+'</script></body></html>'
@@ -87,7 +100,8 @@ export async function buildDemoKit(destination,options={}){
  '4. Verify. A PASS proves only that the files and DEMO key match; NOT who produced the key or whether the content is true.',
  '5. Edit a copy of the package, change the fingerprint, or use an expired package and confirm NOT VERIFIED.',
  '6. On a real deployment, independently authenticate the publisher key fingerprint BEFORE receiving the package.',
- '7. If local file WebCrypto or downloads do not work on the device, record UNSUPPORTED. Do not override the failure.',
+ '7. Run the local device compatibility check; optionally save the non-identifying QA receipt. Never claim the manual offline checkbox is independently measured.',
+ '8. If local file WebCrypto or downloads do not work on the device, record UNSUPPORTED. Do not override the failure.',
  '',
  'This is not a release for at-risk readers. Do not place private keys, private documents or real reporter identities in this lab.',
  'No private signing key is included, saved, or published.',
