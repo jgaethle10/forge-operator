@@ -99,3 +99,42 @@ Chromium renders, stores screenshots and an artifact receipt, and preserves
 only deliberately synthetic test specimens. Production use requires separate
 Systemia approval and an authenticated, privacy-reviewed receipt acquisition
 path. **This module does not fetch production data or publish anything.**
+
+### Local operator intake (no server, no upload)
+
+Use the scoped intake wrapper for an already authorized Saban work-state JSON
+file on the machine where it resides:
+
+```bash
+node systemia/graphics-command/saban-work-operator.mjs \
+  --authorized-root "/absolute/private/saban-state-directory" \
+  --snapshot "/absolute/private/saban-state-directory/work-state.json" \
+  --review-root "/absolute/private/graphics-reviews" \
+  --filename "saban-review.html"
+```
+
+The wrapper reads exactly **one** local file inside the explicitly supplied
+source directory using ordinary operating-system permissions. It rejects
+symlinks, paths outside the selected source root, non-files, oversized inputs,
+and attempts to write inside the project/public tree. It creates the private
+HTML review file with exclusive creation and restricted permissions. No
+processes, network calls, customer uploads, auth changes, data transfer,
+worker scheduling, payment, or public publishing occur.
+
+**The directory selection is a local operator scope, not an independent identity
+check or authorization grant.** Only inspect files you already have permission
+to read. Do not copy private source snapshots into GitHub, public Pages, chat,
+or unapproved shared storage.
+
+The generated review shows when it was inspected locally and evaluates the
+**source-reported** Saban `updated_at` timestamp. More than 15 minutes old
+is labeled **OLDER SNAPSHOT**; a source timestamp more than five minutes
+ahead of the local clock is labeled **SOURCE CLOCK WARNING**. A recent-looking
+timestamp is not proof of a fresh agent heartbeat or successful execution,
+and an archived HTML review never becomes a live dashboard.
+
+Verify the wrapper alongside the state projector:
+
+```bash
+node --test systemia/graphics-command/saban-work-operator.test.mjs
+```
