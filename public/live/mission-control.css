@@ -8,3 +8,11 @@
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--line);margin-top:25px;padding-top:16px;color:#86a5b0;font:10px/1.6 ui-monospace,monospace}
 @media(max-width:1120px){.lanes,.reported-lanes{grid-template-columns:repeat(2,minmax(0,1fr))}.guardrails{grid-template-columns:repeat(2,minmax(0,1fr))}.lane-body{min-height:0}.evidence{padding:11px 0}.operator-head{align-items:start}}@media(max-width:640px){.top{align-items:start;padding:20px 0}.top-right{flex-direction:column;align-items:end;gap:9px}.top h1{font-size:26px}.state-pill{font-size:8px;max-width:160px;text-align:center}.intro{align-items:start;flex-direction:column;gap:10px}.refresh-panel{flex-direction:row;align-items:center;width:100%;justify-content:space-between}.guardrails{gap:7px}.guard{padding:12px 10px;gap:9px}.guard strong{font-size:12px}.guard small{font-size:10px}.guard span{font-size:9px}.lanes,.reported-lanes{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.lane-body{min-height:0}.operator{padding:15px}.operator-head{flex-direction:column}.import-tools{width:100%}.file-button,.import-tools button{flex:1;text-align:center}.reported-lanes{gap:7px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.local-node-title{display:flex;gap:12px;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);margin-top:17px;padding:17px 0 10px}
+.local-node-title h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.local-node-title span{color:var(--muted);font:10px ui-monospace,monospace}
+.local-nodes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.node-observation-state{font-size:12px;line-height:1.5;display:block;color:#f4dabb;margin-bottom:7px}
+.node-observation-detail{display:block;font:11px/1.55 ui-monospace,monospace;color:var(--muted);margin-top:5px}
+@media(max-width:640px){.local-nodes{grid-template-columns:1fr}.local-node-title{display:block}.local-node-title span{display:block;margin-top:7px}}
