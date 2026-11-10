@@ -3,7 +3,7 @@
   "mission_id": "FIRST-CONTACT-001",
   "title": "Evercraft | First Contact: evidence-gated UAP research",
   "created_at": "2026-10-31",
-  "updated_at": "2026-11-05",
+  "updated_at": "2026-11-09",
   "owner": "Evercraft LLC",
   "routing_priority": "Systemia first",
   "execution_state": "NOT_DISPATCHED",
@@ -149,6 +149,22 @@
       ],
       "validation": "Successful dedicated workflow GitHub Actions run 41994861626 and 41995140199; code/fixtures pass; not external sensor proof",
       "acceptance": "Automatically test FIRST-CONTACT branch changes and fail closed on unsupported mission evidence or dispatch-state claims"
+    },
+    {
+      "id": "FC-CALIBRATION-01",
+      "lane": "sensor_forensics",
+      "status": "NUMERIC_CALIBRATION_TOOL_CI_VERIFIED_AWAITING_REAL_FIELD_DATA",
+      "completed": "2026-11-09",
+      "artifacts": [
+        "known-target-calibration.mjs",
+        "known-target-calibration.test.mjs",
+        "known-target-cli.mjs",
+        "known-target-cli.test.mjs",
+        "fixtures/known-target-synthetic-session.json",
+        "KNOWN_TARGET_FIELD_PLAN.md"
+      ],
+      "validation": "Dedicated FIRST-CONTACT research verification successful for code/fixture commit a9a7569a...; 11 numerical calibration tests and 3 CLI/receipt tests covered by suite. Known target and cameras in the fixture are invented, no actual field survey or independent sensor certificate.",
+      "acceptance": "Reproducible sample-level known-target position accuracy under predeclared thresholds; independently verify camera/survey/timebase provenance before any real field claim"
     }
   ],
   "hard_constraints": [
@@ -158,6 +174,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "First field calibration: two independent surveyed cameras, synchronized calibrated pointing and known stationary target; validate against ground truth with documented uncertainty. Autonomous mission dispatch remains separate and requires authorized Systemia writable route + signed execution receipts; GitHub Actions test pass does not grant it.",
-  "validation_note": "GitHub Actions FIRST-CONTACT research verification succeeded for code commits 9bb5d05e... (run 41994861626) and be1546bc... (run 41995140199), including full FIRST-CONTACT node test glob and offline research-artifact integrity audit. Field sensor calibration/independent scientific review remain unverified."
+  "next_execution_gate": "Run known-target-cli.mjs on a genuinely surveyed non-sensitive known stationary target with two independently synchronized calibrated cameras; compare 3D position to independent survey ground truth using predeclared thresholds and independent reviewer. Systemia execution separate, NOT_DISPATCHED.",
+  "validation_note": "2026-11-09: all eight workflows passed at previous 203bec64... head. Dedicated FIRST-CONTACT research verification passed at new calibration code commit a9a7569a..., including 11 evaluator tests and 3 CLI tests. New subsequent documentation commits may trigger newer runs; independent field calibration and Systemia runtime dispatch remain outstanding."
 }
