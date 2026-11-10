@@ -13,7 +13,7 @@ This editorial authorization is **not** a Facebook token, an attested account co
 
 ## Live runtime prerequisites (no secrets in source or CI)
 
-The owned resident supervisor must have an admitted deployment with updated main source and the following **private** environment bindings:
+The owned resident supervisor must have an admitted deployment with updated main source and the following **private** environment bindings. The Evercraft Compute launcher now assigns the Work Saban state directory in its admitted workspace and passes explicit, validated operator-provided account fields to the supervisor:
 
 | Variable | Meaning |
 |---|---|
@@ -23,6 +23,10 @@ The owned resident supervisor must have an admitted deployment with updated main
 | `EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID` | Exact approved Evercraft corporate Page ID, validated against provider identity |
 | `CLIP_FACEBOOK_CREDENTIAL_REF` | Optional private resolver reference when vault has multiple Page credentials |
 | `SYSTEMIA_WORKSPACE_ROOT` | Checked-out owned repository root |
+
+### Operator deployment inputs
+
+The existing first-party Yard/Core deployment can supply `passport_state_dir`, `provider_credential_state_dir`, `work_saban_facebook_page_id`, and optionally `work_saban_facebook_credential_ref`. These fields are checked by the owned Compute launcher. The Page ID must be numeric and match the credential's real provider Page identity; it is **not** inferred from a social profile, post caption or product branding. All private state roots must remain within the admitted Compute root.
 
 The runner never echoes bearer tokens. A configured state directory, a loaded source receipt, or a GitHub green check cannot independently establish that the publisher is deployed or active.
 
