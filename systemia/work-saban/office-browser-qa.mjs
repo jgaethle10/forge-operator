@@ -85,7 +85,7 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(environment.arms,12,'All six characters have arms');
   assert.equal(environment.legs,12,'All six characters have legs');
   assert(environment.oneRoom,'Former six wall partitions should not enclose the studio');
-  assert(environment.disclosure.includes('RECORDED WORKER STATES'));
+  assert(environment.disclosure.includes('RECORDED EVENTS'),'Motion disclosure must stay visible and truthful');
   assert(environment.idle,'Unassigned characters must not simulate work');
   await js(send,"document.getElementById('office-scene').scrollIntoView({block:'center'});true");
   await sleep(350);
