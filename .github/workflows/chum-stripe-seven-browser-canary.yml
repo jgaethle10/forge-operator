@@ -9,6 +9,7 @@ on:
       - 'systemia/payments/exact-sku-checkout.mjs'
       - 'tests/exact-sku-checkout.test.mjs'
       - 'public/mesh/checkout-ready/products.json'
+      - 'public/.well-known/evercraft-payments-additional-exact-skus.json'
       - 'registry/public-products.json'
   workflow_dispatch:
   schedule:
