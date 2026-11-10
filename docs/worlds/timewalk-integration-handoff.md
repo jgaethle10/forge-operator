@@ -114,3 +114,18 @@ The [CSUN Department of Geography's Sanborn collection catalog](https://www.csun
 **Archive inquiry scope:** 6 S. Second Street A.E. Larson Building, S. Second/E. Yakima intersection, S. Third/E. Yakima intersection, and Capitol Theatre along South Third; ask for atlas volume/sheet IDs, original updates, feasibility of remote viewing, item price, and rights for public/possibly commercial 3D reconstruction. **No inquiry has been sent.**
 
 **Main Worlds** must continue to own rendering, movement, scene persistence, and navigable geometry. Once a specific dated 1960 sheet and rights have been reviewed, Timewalk can supply period-authenticated map features and georeferencing evidence. Until then, 1960 shape/data accuracy is still *unverified*.
+
+## November 9 archival architectural originals: Yakima Valley Museum catalog found
+
+**Major source lead from Washington State DAHP:** The [Yakima Valley Museum drawing collection index (PDF)](https://dahp.wa.gov/sites/default/files/Drawings_at_YakimaValleyMuseum.pdf) identifies **original A.E. Larson Building office drawings dated July 15, 1930** (drawings 1–33, E1–E10, S1–S8; **Drawer 7 bottom left**), a separate **linen-tracing set** by John W. Maloney dated the same day (A1–A33, E1–E9, S1–S8; **5-2, rolled with no tube**), and **four Fox Capitol Theatre alteration drawings dated June 27, 1930**, by Maloney (**accession 0096-085, 5-1, Tube Y-11**). The index separately lists **1962–79 Larson floor plans** in storage area **4-1**, which must not be back-projected into 1960.
+
+This is **cataloged source metadata**, not physical confirmation, inspection of the plans, proof of actual as-built condition or unchanged exterior in 1960. A proposed 1930 design may have been revised or built differently. Rights for copying the originals and preparing public/commercial 3D derivatives are **not cleared**. Do not invent storefront geometry or assume every indexed sheet is still physically held.
+
+**Research outreach actually executed:** On November 9, 2026, a no-cost inquiry was sent to museum archivist **John Baule** at `john@yvmuseum.org` (address in the museum's 2025 annual report). A follow-up message **in the same Gmail thread** supplied the newly located Larson drawing shelf numbers. No appointment, purchase or scan order was placed. Response tracker: [issue #1972](https://github.com/jgaethle10/forge-operator/issues/1972). The parallel CSUN 1960 Sanborn atlas request remains tracked at [issue #1938](https://github.com/jgaethle10/forge-operator/issues/1938).
+
+**New data contracts:**
+- `public/worlds/timewalk/yakima-1960/yvm-architectural-drawings.v1.json` holds four individually identified cataloged archival records; each carries `inspectionStatus: catalog-only`, `historicallyBuiltAsDrawn: null`, `unchangedBy1960: null` and separate unapproved image and derivative rights.
+- `public/worlds/timewalk/architectural-drawing-intake.mjs` validates the register and returns a bounded source-review queue with `geometry:null`, `renderer:null`, `worldsAuthority:false` and `readyForProduction:false`.
+- `tests/timewalk-architectural-drawing-intake.test.mjs` adds seven regression cases enforcing accession, catalog location, item rights, uninspected status and no independent Worlds runtime authority. Included automatically in `node --test tests/timewalk-*.test.mjs`.
+
+**Acceptance path:** archivist confirms item existence and access; Timewalk examines actual dimensioned plans and their revision/as-built labels; rights are reviewed independently; a dated image / period record cross-checks 1960 continuity; human-reviewed geometry data is submitted through the original Worlds engine. The standalone alpha remains a non-authoritative reference.
