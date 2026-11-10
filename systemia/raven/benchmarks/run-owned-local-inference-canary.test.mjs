@@ -89,7 +89,7 @@ test('metadata validation failure prevents inference and returns held',async()=>
   assert.equal(code,4);
   assert.equal(state.calls,1);
   assert.equal(out.read().includes('PROVIDER_SECRET'),false);
-  assert.equal(JSON.parse(out.read()).inference_outcome,'unknown_after_activation');
+  assert.equal(JSON.parse(out.read()).inference_outcome,'not_started');
 });
 
 test('uncertain inference outcome is never claimed verified or replayed',async()=>{
