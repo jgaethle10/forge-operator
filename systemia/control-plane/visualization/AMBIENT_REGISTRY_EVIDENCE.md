@@ -11,8 +11,8 @@ This function:
 1. Authorizes one current, exact mission-resource read with Passport before opening the local mission record or any device registry file.
 2. Uses a **trusted, fixed** server-side goal-attempt-to-device binding to determine which native MicroSeed devices may be relevant.
 3. Uses the **existing** Ambient Device Registry root to load the currently approved device trust record and the matching native-device manifest.
-4. Refuses revoked, unapproved, expired, stale heartbeat, future-dated heartbeat, non-device attestation, wrong attestation identity, changed manifest hash, unapproved workload or mismatched pinned Ed25519 key.
-5. Reads signed receipts from the already-built private native-agent journal and validates the signed device statement against the approved manifest's public key. The existing task attempt and receipt hash must match.
+4. Refuses revoked, unapproved, expired, stale heartbeat, future-dated heartbeat, non-device attestation, wrong attestation identity, changed manifest hash, group-/world-writable registry authority, unapproved workload or mismatched pinned Ed25519 key.
+5. Verifies current Ambient Registry trust **before opening signed journals**, then reads the signed receipts from the existing private native-agent journal. The signed device statement must match the approved manifest's public key **and manifest hash**, plus the persisted task attempt and receipt reference.
 6. Rechecks the Ambient Registry's current authorization and signer key, then Passport, immediately before disclosing the redacted Living Graph.
 
 The returned graph does not expose the registry's root, raw device identifiers, trust record, manifest keys, private goals, receipt references, or original execution result content.
