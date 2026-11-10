@@ -41,3 +41,7 @@ jobs:
         run: |
           node systemia/research/thermal-intelligence/run-wall-meter.mjs systemia/research/thermal-intelligence/sample-synthetic-wall-meter.json > "$RUNNER_TEMP/wall-meter.json"
           node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="SYNTHETIC_WALL_METER_INPUT"||x.independentlyVerified!==false||x.thermalRecoveryVerified!==false||x.fieldDeploymentApproved!==false||x.intervalCount!==3||x.qualityReviewRequired!==true)process.exit(1)' "$RUNNER_TEMP/wall-meter.json"
+      - name: Verify software node probe cannot claim wall power or recovered heat
+        run: |
+          node systemia/research/thermal-intelligence/run-node-readiness.mjs > "$RUNNER_TEMP/node-readiness.json"
+          node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="LOCAL_SOFTWARE_CONTEXT_ONLY"||x.runtimeContext.atWallElectricKWh!==null||x.runtimeContext.usefulRecoveredHeatKWh!==null||x.independentlyVerified!==false||x.fieldDeploymentApproved!==false)process.exit(1)' "$RUNNER_TEMP/node-readiness.json"
