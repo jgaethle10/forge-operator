@@ -37,9 +37,9 @@ test('Raven reader refuses invalid identifiers before reaching Stripe',async()=>
  const reader=createRavenStripeHostedReader({secretKey:TEST_ONLY_FAKE_SECRET,fetchImpl:async()=>{
    calls++;return Response.json({});
  }});
- await assert.rejects(()=>reader.listCheckoutSessions({paymentLinkId:'https://malicious.test/path'}),/invalid_checkout_session_query/);
- await assert.rejects(()=>reader.retrieveCheckoutSession('cs_../notallowed'),/invalid_session_id/);
- await assert.rejects(()=>reader.retrievePaymentIntent('bad'),/invalid_payment_intent_id/);
+ assert.throws(()=>reader.listCheckoutSessions({paymentLinkId:'https://malicious.test/path'}),/invalid_checkout_session_query/);
+ assert.throws(()=>reader.retrieveCheckoutSession('cs_../notallowed'),/invalid_session_id/);
+ assert.throws(()=>reader.retrievePaymentIntent('bad'),/invalid_payment_intent_id/);
  assert.equal(calls,0);
 });
 
