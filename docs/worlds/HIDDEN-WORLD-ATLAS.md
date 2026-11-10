@@ -35,6 +35,16 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 - KATS-FM, “More Haunted Spots Across the Yakima Valley” (2021), local recollection: https://katsfm.com/more-haunted-spots-across-the-yakima-valley/
 
 
+## Cold War File 001 · Titan I (November 9, 2026)
+
+- New conceptual historical exhibit: `/worlds/hidden-world/titan-i-1962.html` linked from both the atlas sidebar and its earlier 1962 cutaway. The interactive date lenses use CSS-only radio selectors and original, static SVG to remain visible in script-blocking phone previews.
+- Four source-labeled periods: construction beginning December 1, 1959; 1962 operation; January/March 1965 stand-down/deactivation; present-day restrictions. Three educational feature lenses explain silos, crews and connecting infrastructure without supplying operational procedures.
+- Companion structured provenance file: `/worlds/hidden-world/titan-i-1962-evidence.v1.json`. Facts cite named historical sources; Odessa, Warden and Quincy/Royal City are **town context**, not site coordinates, and every listed complex has `open_to_public:false` with null installation coordinates.
+- Primary historical anchors: HistoryLink 10158 at https://www.historylink.org/File/10158; U.S. Air Force historical engineering context at https://www.govinfo.gov/content/pkg/GOVPUB-D103-PURL-gpo107257/pdf/GOVPUB-D103-PURL-gpo107257.pdf; and the federal missile-history report at https://www.losangeles.spaceforce.mil/Portals/16/documents/AFD-060912-023.pdf.
+- Exact Washington complex geometry, orientation, passage layouts and entrance locations are **not** represented. The original illustrated relationship of three silos, control and support spaces is an intentionally non-surveyed artistic schematic. Historical plans refer to period engineering, not a current property or permission to enter.
+- The earlier 12-location atlas includes regional context for the three Titan sites. Source deployment and UI checks (Node contracts, desktop/mobile Chromium including disabled JavaScript, read-only owned HTTPS release probe) now include the Titan file and source manifest.
+- **Release truth:** no source merge, CI test or public-domain image link proves an Evercraft-owned public URL is live. A verified external HTTPS response and native iPhone Safari QA remain separate gates.
+
 ## Lund Building architectural study (November 9, 2026)
 
 - New source-driven exhibit: `/worlds/hidden-world/lund-building.html`; linked from the Pacific Northwest atlas and Yakima Evidence Lab.
