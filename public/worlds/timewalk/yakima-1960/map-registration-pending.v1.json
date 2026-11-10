@@ -25,13 +25,27 @@
     "Collection-level 1920–1950 title does not establish which specific sheet covers the South 2nd/3rd block.",
     "Exact selected map sheet URL, sheet effective correction date and independently referenced ground control points are missing.",
     "All 1960 building storefronts, footprint continuities and geographic coordinates remain unsupported.",
-    "Do not insert placeholder pixel or geographic coordinates to make a map look finished."
+    "Do not insert placeholder pixel or geographic coordinates to make a map look finished.",
+    "A 1960 Yakima atlas holding is catalogued at CSUN, but its exact downtown map sheet, scan, correction dates and rights have not been inspected. The 1950 LOC layer remains a separate older fallback."
   ],
   "nextChecks": [
+    "Confirm the CSUN 1960 Yakima edition contains the target downtown block and request its volume/sheet number (no fee authorization).",
+    "Check sheet dates, original 1960 annotation/revision stamps and public/commercial permissions before any public display.",
     "Open the LOC 1950 collection sheet index and identify the exact downtown block sheet.",
     "Record its image index, sheet number, visible revision dates and published sheet URL.",
     "Gather at least four noncollinear, independently surveyed tie points and identify an appropriate projected CRS.",
     "Validate affine residuals and map distortions; demand human visual QC before exporting geometry.",
     "Match historic year and permissions separately before any timewalk accurate-geometry claim."
-  ]
+  ],
+  "preferredTargetYearAcquisition": {
+    "archiveCandidateId": "csun-yakima-sanborn-1960",
+    "acquisitionRecord": "csun-1960-acquisition.v1.json",
+    "collectionEditionYearListed": 1960,
+    "availableFromCatalog": true,
+    "exactSheetConfirmed": false,
+    "originalSourceInspected": false,
+    "publicationRightsConfirmed": false,
+    "sourceLicensing": "CSUN offers research/personal copies; public/commerce rights to be requested separately",
+    "priority": "Investigate 1960 atlas for block accuracy before promoting 1950-only footprints"
+  }
 }
