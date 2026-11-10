@@ -46,6 +46,9 @@ try{
   assert.equal(reportEvents.at(-1).capacity.verified,1);
   assert.equal(reportEvents.at(-1).specialist_receipts,5);
   assert.match(reportEvents.at(-1).report_sha256,/^[a-f0-9]{64}$/);
+  assert.equal(typeof reportEvents.at(-1).report_markdown,'string');
+  const {createHash}=await import('node:crypto');
+  assert.equal(createHash('sha256').update(reportEvents.at(-1).report_markdown).digest('hex'),reportEvents.at(-1).report_sha256);
   const reportDenied=await fetch(base+'/api/verified-report-executor-stream',{method:'POST'});
   assert.equal(reportDenied.status,403);
   const denied=await fetch(base+'/api/executor-smoke',{method:'POST'});
