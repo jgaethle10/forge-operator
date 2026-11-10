@@ -303,6 +303,30 @@
         "reuse": "Link and cite textual directions; do not reproduce attached aerial image without permission."
       },
       "notes": "Packet page 4 describes current main entrance on the east side of South Third Street midway along the block south of Yakima Avenue. Not evidence for the entrance's exact 1960 location or facade, and the conflicting 9/19 S Third address is still open."
+    },
+    {
+      "id": "csun-sanborn-yakima-1960-catalog",
+      "name": "CSUN Geography & Environmental Studies Sanborn Fire Insurance Atlas Collection, Washington inventory (Yakima 1960 listed)",
+      "url": "https://www.csun.edu/sites/default/files/outside_california.pdf",
+      "holder": "California State University, Northridge / Geography & Environmental Studies Department",
+      "evidencePeriod": [
+        "1953",
+        "1955",
+        "1956",
+        "1958",
+        "1959",
+        "1960"
+      ],
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "rights": {
+        "status": "catalog_metadata_only",
+        "reuse": "Catalog listing grants no permission to copy, embed, digitize, publish, commercially distribute or derive public map tiles from an original sheet. Confirm rights individually with archive and rightsholder."
+      },
+      "notes": "CSUN current out-of-California Sanborn index lists Yakima, Yakima County, editions 1953 1955 1956 1958 1959 1960. This is a collection-level holdings statement, not proof which sheets cover S 2nd, E Yakima Ave and S 3rd, nor a scanned 1960 original."
     }
   ],
   "places": [
@@ -679,6 +703,22 @@
       "acquisition": "Official PDF text and directions page visually examined",
       "rights": "Textual paraphrase/link only; attached aerial image copyright not cleared",
       "useFor1960": "Modern entry/orientation only. Historical 1960 entrance/accessibility configuration unknown."
+    },
+    {
+      "id": "csun-yakima-1960-sanborn-holding",
+      "name": "CSUN Sanborn collection: Yakima listed 1960 map edition",
+      "sourceId": "csun-sanborn-yakima-1960-catalog",
+      "period": {
+        "display": "catalog lists 1960",
+        "earliest": 1960,
+        "latest": 1960,
+        "approximate": false
+      },
+      "spatialMatch": "City of Yakima, WA at catalog level only; exact downtown sheet unverified",
+      "itemType": "physical-atlas-holding-catalog",
+      "acquisition": "Catalog listing confirmed; volume, sheet number, block coverage, exact date and original map NOT inspected",
+      "rights": "CSUN describes research/personal digital copies only; any publication or paid commercial reuse requires separate rightsholder permissions",
+      "useFor1960": "Candidate for 1960 ground-plan evidence only AFTER archive confirms exact original sheet, visual inspection, dating and rights. Never use catalog year to assert exact storefront/geometry."
     }
   ],
   "researchGoals": {
@@ -744,6 +784,12 @@
         "dependsOn": [],
         "deliverable": "Reconstruct 1960 Larson corner shop fronts based on pre-1963 architecture, original 1931 plans and pre-1963 dated photos; do not use post-1963 bank glazing.",
         "status": "1984 NRHP alteration date found; 1960 imagery and original drawings still needed"
+      },
+      {
+        "id": "acquire-csun-yakima-1960-sheet",
+        "dependsOn": [],
+        "deliverable": "Archive confirmation of 1960 Yakima atlas volume and precise sheet(s) covering 6 S 2nd St, South Second/Yakima, South Third/Yakima and Capitol Theatre block; report accessible scan/date, quote, commercial reuse permissions before any paid request.",
+        "status": "catalog-verified; exact-sheet-and-rights-unverified; no-purchase-authorized"
       }
     ]
   },
