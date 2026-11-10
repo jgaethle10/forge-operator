@@ -22,8 +22,32 @@ The customer presentation is locked to `ARCHIVED_EVIDENCE_PREVIEW`, `human_publi
 - USBR: five observed reservoir storage values are provisional and have unresolved local reporting-day timezone; 147,099.23 acre-feet is only a same-source-reported-day arithmetic sum, not percent full or a USBR official system total.
 - Site source links are fixed to official HTTPS hosts and the GitHub readback. If data validation fails, **all measurement cards are withheld**.
 
+## Immutable source history: next release stage
+
+The new research history lane is committed on this branch:
+
+- `systemia/research-service/watershed-history.mjs` turns the existing official NRCS/USGS/USBR JSON receipts into bounded, source-verified history records. Each record preserves the source collection timestamp and the **different observation day per feed**, original file SHA-256 hashes, warning flags, units, and provisional/freshness distinctions. Missing sources remain null, never zero.
+- `systemia/research-service/watershed-history-archive.mjs` stores a record under `evidence/watershed/runs/YYYY/MM/DD/<run_id>/` with `receipt.json` and **unaltered original source files**. The same run ID with the same hashes is a no-op; different bytes under that run ID fail and require reconciliation.
+- `tests/evercraft-watershed-history.test.mjs` tests authentic-zero versus missing, provisional reservoir storage, NRCS warning preservation, idempotency, conflicting run IDs, and 7/30/90-day gaps with no interpolated readings.
+- `.github/workflows/watershed-ledger-persist.yml` observes the completed **main-branch scheduled/manual** Yakima official-source canary only, with strict source repository/head branch/event checks and source artifact read-only download. Its write permission is limited to the dedicated `research/watershed-evidence-ledger` branch.
+- The separate ledger branch is bootstrapped with a README and **no fabricated entries**. These sources and automation are **not live** until the PR is merged and a qualifying main canary run is ingested with a successful push receipt.
+
+### Archive QA and manual operator command
+
+```bash
+node --test tests/evercraft-watershed-history.test.mjs
+node systemia/research-service/watershed-history-archive.mjs \
+  --source-dir /path/to/verified-run-artifact \
+  --ledger-dir /path/to/checked-out-ledger-branch/evidence/watershed \
+  --run-id VERIFIED_MAIN_CANARY_RUN_ID \
+  --head-sha VERIFIED_MAIN_CANARY_SHA \
+  --event schedule
+```
+
+The CLI is not a substitute for the GitHub workflow provenance gate: only the trusted main canary event is eligible for unattended archival. No customer-facing chart, auto-published website snapshot, disaster forecast, or commercial checkout is activated by preserving history.
+
 ## What is NOT shipped
-- No persistent time series yet. One archive is one data point; no 7/30/90-day chart is manufactured.
+- Historical archive code and a storage branch exist, but **no confirmed scheduled-run history has been persisted yet**. One archive is one data point; no 7/30/90-day chart is manufactured.
 - No auto-published new sensor readings. New official-source artifacts require a reviewed promotion process and revision history.
 - No owned runtime deployment proof on this PR. GitHub Pages is existing **fallback** infrastructure; reachability must be independently checked after merge.
 - No completed customer form submission, checkout, paid order or delivered customer work. The CTA opens the existing Evercraft Research **local-only scope builder**, where an inquiry is prepared rather than submitted as a paid order.
