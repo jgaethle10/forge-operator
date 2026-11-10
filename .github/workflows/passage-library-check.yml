@@ -78,7 +78,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
   webkit:
-    name: Safari-like WebKit offline lab
+    name: WebKit compatibility and fail-closed gate
     runs-on: macos-15
     timeout-minutes: 18
     steps:

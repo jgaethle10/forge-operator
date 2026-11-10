@@ -51,3 +51,5 @@ Use `node scripts/build-passage-device-kit.mjs` to produce a self-contained HTML
 ## v0.5 self-contained compatibility check
 
 The device kit adds local SHA-256/Ed25519 known-answer checks and a manually downloadable non-identifying QA receipt. No network telemetry or device fingerprint is collected. A dedicated macOS Playwright WebKit job checks Safari-like engine compatibility, but it is not an iOS physical-device test. A manually checked offline flag is a user report, not cryptographic network isolation proof.
+
+**Important WebKit limitation (2026-11-09):** GitHub Actions Playwright WebKit 26.0 returned an incorrect result for the RFC 8032 Ed25519 known-answer check and produced an internal error on offline local-file reload. Its security test now requires **fail-closed rejection**, and a green job does **not** signify Safari/iPhone support. Use only the Chrome-demonstrated internal lab while we investigate interoperability; no at-risk user deployment.
