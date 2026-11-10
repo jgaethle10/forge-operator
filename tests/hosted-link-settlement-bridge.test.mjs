@@ -197,9 +197,10 @@ test('all seven independent real-SKU fixtures reconcile exactly once and never c
    const again=await reconcileHostedLinks({provider,approvedAccountId:accountId,offers,commit:true,journal});
    assert.equal(again.receipts_written,0);
    assert.equal(again.duplicates,7);
-   assert.equal(journal.current(
-     evaluateHostedSettlement({offer:offers[6],...bySession.get(byLink.get(offers[6].payment_link_id))}).order_key
-   ),null); // No caller-supplied account pin can be omitted.
+   const noPin=evaluateHostedSettlement({
+     ...bySession.get(byLink.get(offers[6].payment_link_id)),approvedAccountId:undefined
+   });
+   assert.equal(noPin.state,'held'); // No approved merchant pin means no paid receipt.
    journal.close();
    const ledger=fs.readFileSync(path.join(dir,'receipts.jsonl'),'utf8');
    assert.equal(ledger.split('\n').filter(Boolean).length,7);
