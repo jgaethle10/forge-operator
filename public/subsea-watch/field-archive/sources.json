@@ -102,6 +102,34 @@
       "download_url": null,
       "observed_download_status": "view_only",
       "can_preview": false
+    },
+    {
+      "id": "gebco-2026-global-grid",
+      "kind": "global_seafloor_grid",
+      "name": "GEBCO 2026 global terrain",
+      "mission_id": null,
+      "verified_metadata": "Global 15 arc-second bathymetry grid with TID source-method classifications; datasets contain measured and modeled/interpolated depths. It is not a survey of EX2306_DIVE02.",
+      "file_format": "NetCDF / GeoTIFF / ASCII geographic subsets",
+      "rights": "GEBCO_2026 grid terms permit commercial reuse with source acknowledgment and disclaimers; not for navigation or safety decisions",
+      "category": "regional_context_model_not_dive_survey",
+      "source_page": "https://www.gebco.net/data-products-gridded-bathymetry-data/gebco2026-grid",
+      "download_url": "https://www.gebco.net/data-products/gridded-bathymetry-data",
+      "observed_download_status": "catalog_not_a_download",
+      "can_preview": false
+    },
+    {
+      "id": "noaa-bluetopo-bathymetry",
+      "kind": "surveyed_coastal_seafloor",
+      "name": "NOAA BlueTopo · U.S. bathymetry",
+      "mission_id": null,
+      "verified_metadata": "NOAA Coast Survey compilation provides elevation, uncertainty and source-contributor layers. Coverage and metadata vary; not tied to EX2306_DIVE02.",
+      "file_format": "GeoTIFF grids and contributor metadata",
+      "rights": "NOAA BlueTopo product is U.S. public domain; inspect contributor source restrictions, coverage flags and attribution before redistribution",
+      "category": "source_aware_bathymetry_catalog",
+      "source_page": "https://nauticalcharts.noaa.gov/data/bluetopo_faq.html",
+      "download_url": null,
+      "observed_download_status": "catalog_not_a_download",
+      "can_preview": false
     }
   ]
 }
