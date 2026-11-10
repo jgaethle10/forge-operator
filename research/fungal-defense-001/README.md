@@ -139,3 +139,30 @@ python3 research/fungal-defense-001/tools/release_gate.py --stage public
 - Checked local file Git hashes matched the committed scripts. **The full suite has not yet been executed on Evercraft Node001/Node002; do not mark that milestone complete.**
 
 The next actual Evercraft-node success receipt is the prerequisite for an internal preview deployment discussion. The public-health claims remain subject to qualified external review.
+
+
+## November 9 continued: Clean-checkout admission and one-command owned-node handoff
+
+A passing validation result now requires **local checkout admission**, in addition to scientific-source and UI integrity checks. The runner invokes `tools/verify_checkout.py` first and stops before the other checks if the branch, Git origin, commit, required files or worktree cleanliness do not match expectations. It fails rather than producing a misleading green receipt.
+
+### One-command handoff to the approved Evercraft Linux node
+
+This **does not run from GitHub or ChatGPT by itself**. Execute from the Evercraft node's approved agent/operator context after fetching the research branch, or provide the command to Systemia once its execution route is confirmed:
+
+```bash
+bash research/fungal-defense-001/tools/validate_on_owned_node.sh evercraft-node002-nextgen
+```
+
+The script uses GitHub **only as canonical source retrieval**, never as an application runtime. It clones `research/fungal-defense-001` into a restricted temporary directory on the node, runs `run_owned_validation.py`, writes a private local receipt at `${XDG_STATE_HOME:-$HOME/.local/state}/evercraft/fungal-defense/latest-node-validation.json`, and removes its own temporary checkout. It does not contact Base44 or other application hosts, modify an existing checkout, use cloud compute, or open a public port.
+
+A label such as `evercraft-node002-nextgen` is **self-reported**. The receipt is **not** cryptographic attestation of which physical machine executed the tests. Verify origin and commit against GitHub, inspect the receipt on the actual node, and record its provenance before changing the issue's owned-runtime status.
+
+### Offline tests actually executed in isolated development environment
+
+- Seven `test_verify_checkout.py` tests: admitted clean canonical Git fixture; rejected dirty tracked file, untracked file, wrong branch, wrong origin, missing file, and non-Git directory.
+- Four `test_run_owned_validation.py` integration tests: green local fixture; fail-closed on dirty checkout and wrong origin; fail-closed on a validator reporting failure.
+- **Total 11 passed (2026-11-09)** using Python 3.13.5 and temporary local Git repositories; this is **not** execution on the actual Evercraft nodes.
+- `validate_on_owned_node.sh` passed `bash -n` and `--help` smoke checks, but its GitHub clone + Evercraft-node run has not been executed.
+- Exact local Git blob hashes of `verify_checkout.py`, `test_verify_checkout.py`, `run_owned_validation.py`, `test_run_owned_validation.py` and the handoff shell script were checked against committed branch files.
+
+**Open gates:** actual owned Node001/Node002 receipt, Systemia/Fabric execution route verification, real-device/browser checks, scientific review and explicit public release approval. PR #1908 remains draft; no deployment was performed.
