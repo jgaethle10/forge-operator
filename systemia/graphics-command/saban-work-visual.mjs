@@ -150,7 +150,10 @@ export function buildSabanWorkProof(raw,options){
 function main(){
   const [input,output,mode]=process.argv.slice(2);
   if(!input||!output||!ALLOWED_MODES.includes(mode)){
-    throw new Error('Usage: node saban-work-visual.mjs <private-state.json> <output.html> <synthetic_test|private_operator_snapshot>');
+    throw new Error('Usage: node saban-work-visual.mjs <test-fixture.json> <output.html> synthetic_test');
+  }
+  if(mode==='private_operator_snapshot'){
+    throw new Error('Private work-state review requires saban-work-operator.mjs with an explicit authorized source root');
   }
   const outputPath=path.resolve(output),projectRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
   const publicRoot=path.join(projectRoot,'public')+path.sep;
