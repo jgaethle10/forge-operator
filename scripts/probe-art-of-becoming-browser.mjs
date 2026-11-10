@@ -93,7 +93,8 @@ try {
   await page.locator('#kept').click();
   assert.equal(await page.locator('#days').innerText(),'1');
   await page.locator('#goals button[data-goal="alcohol-free"]').click();
-  assert.equal(await page.locator('#days').innerText(),'7');
+  assert.equal(await page.locator('#days').innerText(),'6', 'A corrected day no longer counts as followed through');
+  assert.equal(await page.locator('#pieces').innerText(),'1', 'Previously earned art stays in the gallery');
 
   // Styles should all render without exceptions.
   for(const theme of ['mosaic','constellation','garden']){
@@ -121,7 +122,7 @@ try {
   assert.equal(await page.locator('#days').innerText(),'0');
   assert.equal(await page.evaluate(key=>localStorage.getItem(key),STORAGE_KEY),null);
   await page.locator('#import-file').setInputFiles(backupPath);
-  assert.equal(await page.locator('#days').innerText(),'7');
+  assert.equal(await page.locator('#days').innerText(),'6');
   assert.equal(await page.locator('#pieces').innerText(),'1');
 
   // Corrupt browser storage should not permanently disable saving new progress.
