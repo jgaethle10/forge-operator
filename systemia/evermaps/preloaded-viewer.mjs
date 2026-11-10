@@ -29,6 +29,7 @@ export function buildPreloadedWgsViewer({template,collections,receipt}={}){
  const script='// First-party offline preloaded WGS source data; loaded only after source SHA checks.\n'+
   'Object.assign(data,'+sourceJson+');\nresetToggles();onStatus();fit();\n</script></body></html>';
  const enhanced=addNoScriptPreview(template,data);
- const result=enhanced.replace(MARKER,script);
- return result.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';");
+ // Replace inside the generated bootstrap script, not an earlier local-file change handler.
+ const bootstrap=script.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';");
+ return enhanced.replace(MARKER,bootstrap);
 }
