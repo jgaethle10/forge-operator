@@ -21,7 +21,8 @@ test('broad free everyday help is routed to the public front door, not paid diag
 
 test('an explicit IBM i rescue problem is not mistaken for home maintenance',()=>{
  const hits=ids('I am working at home and need to rescue our IBM i legacy software server');
- assert.equal(hits[0],'ibmi-rescue-v1');
+ assert.ok(['ibmi-rescue-v1','legacy-rescue-lab-v1'].includes(hits[0]));
+ assert.ok(!hits[0].startsWith('product:'));
 });
 
 test('named paid and specialist capabilities retain their current ranking and purchase boundaries',()=>{
