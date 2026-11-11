@@ -15,7 +15,7 @@ await fs.mkdir(out,{recursive:true});
 const server=createServer(async (request,response)=>{
   try {
     const url=new URL(request.url,'http://127.0.0.1');
-    const files={'/':'index.html','/index.html':'index.html','/engine.mjs':'engine.mjs'};
+    const files={'/':'index.html','/index.html':'index.html','/engine.mjs':'engine.mjs','/world-engine.mjs':'world-engine.mjs','/worlds.html':'worlds.html'};
     const filename=files[url.pathname];
     if(!filename){response.writeHead(404);response.end('Not found');return;}
     const buffer=await fs.readFile(path.join(root,filename));
@@ -76,6 +76,30 @@ try {
   ]);
   assert.match(await fs.readFile(await galleryDownload.path(),'utf8'),/^<svg /);
 
+  // The same seven-day foundation builds a real, persistent franchise facility.
+  await page.goto(origin+'/worlds.html',{waitUntil:'load'});
+  await assertViewport(page,390);
+  assert.match(await page.title(),/Becoming Worlds/);
+  assert.equal(await page.locator('#earned').innerText(),'7');
+  assert.equal(await page.locator('#scene svg').count(),1);
+  await page.locator('#catalog button[data-kind="training-gym"]').click();
+  await page.locator('#scene [data-lot="1,0"]').first().click();
+  await page.locator('#build').click();
+  assert.equal(await page.locator('#structures').innerText(),'1');
+  assert.equal(await page.locator('#available').innerText(),'2');
+  await page.screenshot({path:path.join(out,'worlds-franchise-mobile.png'),fullPage:true});
+  // Expression packs are different views, not a way to demolish old facilities.
+  await page.locator('#mode-tabs button[data-mode="symphony"]').click();
+  assert.equal(await page.locator('#structures').innerText(),'0');
+  await page.locator('#mode-tabs button[data-mode="franchise"]').click();
+  assert.equal(await page.locator('#structures').innerText(),'1');
+  await page.locator('#demo').click();
+  assert.match(await page.locator('#scene-flag').innerText(),/DEMO/);
+  assert.ok(Number(await page.locator('#structures').innerText())>1);
+  await page.locator('#demo').click();
+  assert.equal(await page.locator('#structures').innerText(),'1');
+  await page.goto(origin+'/index.html',{waitUntil:'load'});
+
   // A difficult day does not destroy the completed work.
   await page.locator('#hard').click();
   assert.equal(await page.locator('#streak').innerText(),'0');
@@ -86,6 +110,9 @@ try {
   assert.equal(await page.locator('#pieces').innerText(),'1');
   assert.equal(await page.locator('#streak').innerText(),'0');
   assert.equal(await page.locator('#art-frame.hard').count(),1);
+  await page.goto(origin+'/worlds.html',{waitUntil:'load'});
+  assert.equal(await page.locator('#structures').innerText(),'1', 'A hard day must not demolish an earned building');
+  await page.goto(origin+'/index.html',{waitUntil:'load'});
 
   // Goals cannot overwrite each other's progress.
   await page.locator('#goals button[data-goal="reading"]').click();
@@ -155,7 +182,7 @@ try {
   await fs.writeFile(path.join(out,'receipt.json'),JSON.stringify({
     schema:'evercraft.art-of-becoming.browser-qa.v1',ok:true,
     viewport_checks:[320,390,1440],
-    checks:['mobile render','check-in progression','completed SVG download','permanent local gallery','difficult-day preservation','reload','multiple goals','theme selection','backup export','erase','validated restore','corrupt storage recovery','no external requests','no runtime exceptions'],
+    checks:['mobile render','lifetime world campus construction','world modes and demo isolation','check-in progression','completed SVG download','permanent local gallery','difficult-day preservation','reload','multiple goals','theme selection','backup export','erase','validated restore','corrupt storage recovery','no external requests','no runtime exceptions'],
     tested_at:new Date().toISOString(),external_requests:externalRequests.length,page_errors:errors.length
   },null,2)+'\n');
   console.log('ART_OF_BECOMING_BROWSER_QA_PASS: all mobile, desktop, privacy and retention checks passed');
