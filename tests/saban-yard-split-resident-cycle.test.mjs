@@ -171,7 +171,7 @@ test('unattended two-account round-trip: fresh capacity, Saban plan, Yard broker
   }
 });
 
-test('stale/future snapshot never authorizes dispatch, but previously received outcomes are still imported',()=>{
+test('stale/future snapshot never authorizes dispatch',async()=>{
   const x=fixture();
   try{
     const capacity={
@@ -191,17 +191,16 @@ test('stale/future snapshot never authorizes dispatch, but previously received o
       idempotency_key:'stale-snapshot-must-hold',
       payload:{value:{stale:true}},
     });
-    return runSabanSplitIdentityCycle({
+    const result=await runSabanSplitIdentityCycle({
       sabanRoot:x.sabanRoot,mailboxRoot:x.mailboxRoot,
       now:new Date(Date.now()+120_000),dispatchQueued:true,
-    }).then(result=>{
-      assert.equal(result.status,'held');
-      assert.equal(result.created_handoffs,0);
-      assert.equal(result.published_requests,0);
-      assert.equal(x.queue.get(job.job_id).state,'queued');
     });
+    assert.equal(result.status,'held');
+    assert.equal(result.created_handoffs,0);
+    assert.equal(result.published_requests,0);
+    assert.equal(x.queue.get(job.job_id).state,'queued');
   }finally{
-    // Cleanup occurs in the .then() below so async assertions can still read.
+    fs.rmSync(x.root,{recursive:true,force:true});
   }
 });
 
