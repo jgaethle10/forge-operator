@@ -18,6 +18,11 @@ const WORKLOAD = 'systemia.content-hash.v1';
 const NODE = 'node-receipt-gate-proof';
 const FINGERPRINT = 'sha256:' + 'a'.repeat(64);
 const sha = value => createHash('sha256').update(value).digest('hex');
+const stable = value => Array.isArray(value)
+  ? value.map(stable)
+  : value && typeof value === 'object'
+    ? Object.fromEntries(Object.keys(value).sort().map(k => [k, stable(value[k])]))
+    : value;
 
 function computeReceipt({ key, workerHash, replay = false }) {
   const body = {
@@ -47,8 +52,8 @@ function fixture({ root, key, payload, replay = false }) {
     node_id: NODE,
     workload_class: WORKLOAD,
     idempotency_key: key,
-    result: worker.result,
-    worker_receipt: worker,
+    result: structuredClone(worker.result),
+    worker_receipt: structuredClone(worker),
     deduplicated: worker.deduplicated === true,
     receipt: computeReceipt({
       key,
@@ -110,14 +115,13 @@ test('Saban verifies NodeSeed identity, payload, digest and both receipts; valid
     forged.result.digest = 'sha256:' + '0'.repeat(64);
     forged.worker_receipt.result.digest = forged.result.digest;
     const { receipt_hash: _oldHash, ...workerBody } = forged.worker_receipt;
-    forged.worker_receipt.receipt_hash = 'sha256:' + sha(JSON.stringify(Object.fromEntries(
-      Object.keys(workerBody).sort().map(k => [k, workerBody[k]])
-    )));
-    // The forged worker hash above may still be invalid due to nested key order.
-    // The test must fail regardless, rather than accept a false computation.
+    forged.worker_receipt.receipt_hash = 'sha256:' + sha(JSON.stringify(stable(workerBody)));
+    forged.receipt.worker_receipt_hash = forged.worker_receipt.receipt_hash;
+    const { receipt_hash: _oldComputeHash, ...computeBody } = forged.receipt;
+    forged.receipt.receipt_hash = sha(JSON.stringify(computeBody));
     assert.throws(
       () => verifyNodeSeedWorkerCompletion({ response: forged, ...original.args }),
-      /nodeseed_receipt_/,
+      /nodeseed_receipt_hash_digest_mismatch/,
     );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
