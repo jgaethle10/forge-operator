@@ -90,8 +90,6 @@ fi
 
 REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
 YARD_STATE_DIR="$(cd "$YARD_STATE_DIR" && pwd)"
-mkdir -p "$SABAN_STATE_DIR"
-SABAN_STATE_DIR="$(cd "$SABAN_STATE_DIR" && pwd)"
 NODE_BIN="$(command -v node || true)"
 [[ -n "$NODE_BIN" ]] || { echo "ERROR: node is required." >&2; exit 2; }
 
@@ -101,11 +99,39 @@ fi
 id "$RUN_USER" >/dev/null 2>&1 || { echo "ERROR: --user is not a local account." >&2; exit 2; }
 RUN_GROUP="$(id -gn "$RUN_USER")"
 
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  [[ -f "$REPO_ROOT/systemia/saban/nodeseed-worker-completion-verifier.mjs" ]] || {
+    echo "ERROR: installed source lacks the verified worker receipt gate." >&2; exit 3;
+  }
+  if [[ -d "$SABAN_STATE_DIR" ]]; then
+    SABAN_OWNER="$(stat -c '%U' "$SABAN_STATE_DIR")"
+    [[ "$SABAN_OWNER" == "$RUN_USER" ]] || {
+      echo "ERROR: Saban state owner differs from Yard runner user; refusing to change ownership." >&2
+      exit 3
+    }
+  fi
+fi
+mkdir -p "$SABAN_STATE_DIR"
+SABAN_STATE_DIR="$(cd "$SABAN_STATE_DIR" && pwd)"
+
 BROKER_RECORD="$YARD_STATE_DIR/$BROKER_DEPLOYMENT_ID.json"
 [[ -s "$BROKER_RECORD" ]] || {
   echo "ERROR: configured broker deployment does not exist in Yard state: $BROKER_RECORD" >&2
   exit 3
 }
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  command -v runuser >/dev/null || { echo "ERROR: runuser required for access preflight." >&2; exit 3; }
+  runuser -u "$RUN_USER" -- test -r "$BROKER_RECORD" || {
+    echo "ERROR: configured Yard user cannot read the broker deployment record." >&2; exit 3;
+  }
+  runuser -u "$RUN_USER" -- test -w "$YARD_STATE_DIR" || {
+    echo "ERROR: configured Yard user cannot persist verified route state." >&2; exit 3;
+  }
+  runuser -u "$RUN_USER" -- test -r "$YARD_STATE_DIR/.lease-secrets/$BROKER_DEPLOYMENT_ID.json" || {
+    echo "ERROR: configured Yard user cannot read private lease authority." >&2; exit 3;
+  }
+fi
+
 node - "$BROKER_RECORD" <<'NODE'
 const fs=require('fs');
 const row=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
@@ -124,7 +150,26 @@ install -d -m 0755 /etc/evercraft
 
 # Prevent competing schedulers from both claiming and mutating a work queue.
 # Only the explicit unified installation changes the existing Saban timer.
+# Restore prior timer state if the replacement service cannot start.
+OLD_SABAN_TIMER_ENABLED="false"
+OLD_YARD_TIMER_ENABLED="false"
+RESTORE_TIMERS_ON_FAILURE="false"
+restore_timers_on_failure() {
+  if [[ "$RESTORE_TIMERS_ON_FAILURE" == "true" ]]; then
+    systemctl disable --now evercraft-yard-saban-intent-drain.timer >/dev/null 2>&1 || true
+    if [[ "$OLD_YARD_TIMER_ENABLED" == "true" ]]; then
+      systemctl enable --now evercraft-yard-saban-intent-drain.timer >/dev/null 2>&1 || true
+    fi
+    if [[ "$OLD_SABAN_TIMER_ENABLED" == "true" ]]; then
+      systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || true
+    fi
+  fi
+}
 if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  systemctl is-enabled --quiet evercraft-saban-dispatch.timer && OLD_SABAN_TIMER_ENABLED="true" || true
+  systemctl is-enabled --quiet evercraft-yard-saban-intent-drain.timer && OLD_YARD_TIMER_ENABLED="true" || true
+  RESTORE_TIMERS_ON_FAILURE="true"
+  trap restore_timers_on_failure EXIT
   systemctl disable --now evercraft-saban-dispatch.timer 2>/dev/null || true
   if systemctl is-active --quiet evercraft-saban-dispatch.timer || \
      systemctl is-active --quiet evercraft-saban-dispatch.service; then
@@ -193,7 +238,15 @@ EOF
 
 systemctl daemon-reload
 systemctl enable --now evercraft-yard-saban-intent-drain.timer
-systemctl start evercraft-yard-saban-intent-drain.service || true
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  # In opt-in unattended mode, installation is not successful until the
+  # first identity-checked, bounded service cycle finishes successfully.
+  systemctl start evercraft-yard-saban-intent-drain.service
+  RESTORE_TIMERS_ON_FAILURE="false"
+  trap - EXIT
+else
+  systemctl start evercraft-yard-saban-intent-drain.service || true
+fi
 
 echo "Yard/Saban NodeSeed intent drainer installed."
 echo "Broker deployment: $BROKER_DEPLOYMENT_ID"
