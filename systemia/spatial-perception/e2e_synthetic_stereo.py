@@ -215,6 +215,30 @@ console.log(JSON.stringify({
         self.assertFalse(report["provenance"]["calibrationAuthenticityVerified"])
         self.assertFalse(report["fieldAccuracyCertified"])
         self.assertFalse(report["worldPersistenceAuthorized"])
+        # Review the ACTUAL locally generated V5 JSON through the V6
+        # browser's pure validation module, not a hand-authored replacement.
+        review_script = """
+import fs from 'node:fs';
+import {inspectFieldReport} from './public/worlds/perception-lab/field-review.mjs';
+const report=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+const reviewed=inspectFieldReport(report);
+console.log(JSON.stringify({
+  scope:reviewed.scope,total:reviewed.total,evaluated:reviewed.evaluated,
+  mae:reviewed.metrics.mae,certified:reviewed.fieldAccuracyCertified,
+  warnings:reviewed.warnings.length
+}));
+"""
+        inspected = subprocess.run(["node","--input-type=module","-e",review_script,
+                                    str(report_file)],text=True,capture_output=True,
+                                   timeout=20,check=False)
+        self.assertEqual(inspected.returncode,0,inspected.stderr)
+        reviewed = json.loads(inspected.stdout)
+        self.assertEqual(reviewed["scope"],"synthetic_fixture")
+        self.assertEqual(reviewed["total"],4)
+        self.assertEqual(reviewed["evaluated"],4)
+        self.assertLess(reviewed["mae"],1.5)
+        self.assertFalse(reviewed["certified"])
+        self.assertGreater(reviewed["warnings"],0)
 
     def test_textureless_video_produces_unknown_depth_and_no_world_geometry(self):
         synthetic_stereo_video(self.video, blank=True)
