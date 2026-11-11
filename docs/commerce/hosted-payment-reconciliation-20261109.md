@@ -10,6 +10,7 @@ Do not rebuild a Payment Link, check HTTP 200 again, invent orders from page vie
 - `systemia/payments/hosted-link-settlement-bridge.mjs`: exact-merchant, exact-SKU reviewer; requires Stripe session, line item, succeeded PaymentIntent, captured paid Charge, refund/dispute state and private account pin before reporting any paid receipt.
 - `systemia/raven/stripe-hosted-receipt-reader.mjs`: GET-only Stripe REST adapter candidate; accepts a private owner-authorized live or restricted-live credential. Calls Stripe `/v1/account`, lists Checkout Sessions by exact `payment_link`, refetches sessions/line items/intents/charges. No mutation API.
 - `scripts/evercraft-payments-hosted-import.mjs`: offline/no-op by default; optional `--scan` dry-run and double-gated `--scan --commit` private receipt writing.
+- `systemia/payments/hosted-fulfillment-review.mjs` and `scripts/evercraft-payments-review-queue.mjs`: **private, non-executing Systemia review proposal** generator. Regenerates a review snapshot from the existing private payment journal. Enforces source-account/offer/order identity and preserves refund/dispute holds. No PII, customer messages, entitlement issuance, shipping jobs, agent dispatch or automatic scope approval.
 - `tests/hosted-link-settlement-bridge.test.mjs`, `tests/stripe-hosted-receipt-reader.test.mjs`: synthetic provider tests, no real Stripe calls.
 - `.github/workflows/evercraft-payments-hosted-settlement.yml`: isolated acceptance tests, no payment-provider credentials.
 
@@ -31,6 +32,7 @@ Run in a detached worktree for this PR:
 ```sh
 node --test tests/hosted-link-settlement-bridge.test.mjs tests/stripe-hosted-receipt-reader.test.mjs
 node scripts/evercraft-payments-hosted-import.mjs
+node scripts/evercraft-payments-review-queue.mjs
 ```
 Without flags, the CLI reports `held_no_provider_reads_attempted` and makes **zero** network calls.
 
