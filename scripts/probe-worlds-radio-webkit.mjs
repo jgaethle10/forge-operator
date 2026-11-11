@@ -66,6 +66,13 @@ try{
   assert.equal(searches,0,'unexpected radio catalog lookup without visitor action');
   assert.equal(await page.locator('#wrMini').isVisible(),false,'mini player opened without station');
   await page.locator('#worldRadioToggle').click();
+  const touchSizes=await page.evaluate(()=>{
+    const get=id=>document.querySelector('#'+id).getBoundingClientRect().height;
+    return {toggle:get('worldRadioToggle'),close:get('wrClose'),select:get('wrPreset'),explore:get('wrExplore')};
+  });
+  for(const [name,height] of Object.entries(touchSizes))
+    assert.ok(height>=44,name+' radio control touch target below 44px: '+height);
+  receipt.touch_targets_px=touchSizes;
   await page.locator('#wrExplore').click();
   await page.locator('#wrStations button').first().waitFor({state:'visible',timeout:15000});
   assert.equal(await page.locator('#wrStations button').count(),1,'radius filter leaked far-away station');
@@ -74,6 +81,9 @@ try{
   assert.equal(await page.evaluate(()=>window.__worldRadioPlayCount),1,'station click did not initiate playback');
   await page.locator('#wrClose').click();
   assert.equal(await page.locator('#wrMini').isVisible(),true,'persistent player missing');
+  const miniTargets=await page.evaluate(()=>['wrMiniPause','wrMiniOpen','wrMiniStop'].map(id=>({id,height:document.querySelector('#'+id).getBoundingClientRect().height})));
+  assert.ok(miniTargets.every(t=>t.height>=44),'mini-player touch target too small');
+  receipt.mini_targets_px=miniTargets;
   await page.locator('#wrMiniOpen').click();
   assert.equal(await page.locator('#worldRadioPanel').isVisible(),true,'station list could not reopen');
   await page.locator('#wrClose').click();
