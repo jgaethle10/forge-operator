@@ -7,6 +7,8 @@ on:
       - 'systemia/society/window-decision-observer.mjs'
       - 'tests/window-decision-receipts.test.mjs'
       - 'tests/window-decision-observer.test.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
+      - 'tests/window-snapshot-fetch.test.mjs'
       - '.github/workflows/window-policy-observer.yml'
   workflow_dispatch:
 
@@ -28,5 +30,6 @@ jobs:
         run: |
           node --check systemia/society/window-decision-receipts.mjs
           node --check systemia/society/window-decision-observer.mjs
-          node --test tests/window-decision-receipts.test.mjs tests/window-decision-observer.test.mjs
+          node --check systemia/society/window-snapshot-fetch.mjs
+          node --test tests/window-decision-receipts.test.mjs tests/window-decision-observer.test.mjs tests/window-snapshot-fetch.test.mjs
           node --test tests/workflow-writer-audit.test.mjs
