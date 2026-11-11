@@ -11,6 +11,7 @@ import datetime as dt
 import hashlib
 import io
 import json
+import math
 import re
 import sys
 import urllib.error
@@ -174,6 +175,29 @@ def inspect_zip(data):
             first = []
             last = None
             rows = 0
+            valid_unix = 0
+            valid_depth = 0
+            valid_lat_lon = 0
+            negative_depth = 0
+            positive_depth = 0
+            zero_depth = 0
+            timestamp_breaks = 0
+            time_min = None
+            time_max = None
+            previous_time = None
+            clip_start = 1692988200.0  # NCEI video UTC start 2023-08-25T18:30:00Z
+            clip_end = 1692988499.0    # NCEI documented inclusive end
+            clip_rows = 0
+            clip_valid_depth = 0
+            clip_valid_position = 0
+            lat_bounds = []
+            lon_bounds = []
+            def number(value):
+                try:
+                    n = float(value)
+                    return n if math.isfinite(n) else None
+                except (ValueError, TypeError):
+                    return None
             for row in reader:
                 rows += 1
                 if rows > 100_000:
@@ -181,10 +205,50 @@ def inspect_zip(data):
                 if rows <= 2:
                     first.append(summarize(row))
                 last = summarize(row)
+                t = number(row.get("UNIXTIME"))
+                depth = number(row.get("DEPTH"))
+                lat = number(row.get("LAT_DD"))
+                lon = number(row.get("LON_DD"))
+                has_position = lat is not None and lon is not None and -90<=lat<=90 and -180<=lon<=180
+                if t is not None:
+                    valid_unix += 1
+                    time_min = t if time_min is None else min(time_min, t)
+                    time_max = t if time_max is None else max(time_max, t)
+                    if previous_time is not None and abs(t-previous_time-1) > 0.51:
+                        timestamp_breaks += 1
+                    previous_time = t
+                if depth is not None:
+                    valid_depth += 1
+                    if depth < 0: negative_depth += 1
+                    elif depth > 0: positive_depth += 1
+                    else: zero_depth += 1
+                if has_position:
+                    valid_lat_lon += 1
+                    lat_bounds.append(lat)
+                    lon_bounds.append(lon)
+                if t is not None and clip_start <= t <= clip_end:
+                    clip_rows += 1
+                    clip_valid_depth += int(depth is not None)
+                    clip_valid_position += int(has_position)
             track_observation = {
                 "member": track.filename[:220],
                 "column_names_observed": [n[:100] for n in names],
                 "row_count_observed": rows,
+                "valid_unix_timestamp_rows": valid_unix,
+                "unix_time_range_observed": [time_min, time_max],
+                "non_one_second_time_steps": timestamp_breaks,
+                "valid_numeric_depth_rows": valid_depth,
+                "negative_depth_rows": negative_depth,
+                "positive_depth_rows": positive_depth,
+                "zero_depth_rows": zero_depth,
+                "valid_lat_lon_rows": valid_lat_lon,
+                "latitude_bounds_observed": [min(lat_bounds), max(lat_bounds)] if lat_bounds else None,
+                "longitude_bounds_observed": [min(lon_bounds), max(lon_bounds)] if lon_bounds else None,
+                "ncei_video_window_utc": ["2023-08-25T18:30:00Z", "2023-08-25T18:34:59Z"],
+                "rows_overlapping_video_window": clip_rows,
+                "video_window_valid_depth_rows": clip_valid_depth,
+                "video_window_valid_position_rows": clip_valid_position,
+                "clock_overlap_is_not_verified_video_sync": True,
                 "first_two_rows_observed": first,
                 "last_row_observed": last,
                 "time_reference": "UNVERIFIED",
@@ -193,10 +257,26 @@ def inspect_zip(data):
                 "video_frame_alignment": "UNVERIFIED",
                 "can_render_real_replay": False,
             }
+        metadata_preview = []
+        for info in files:
+            lower = info.filename.lower()
+            if not (lower.endswith("_rovsensorlist.csv") or lower.endswith("/ex2306_dive02.txt")):
+                continue
+            if info.file_size > 20_000:
+                continue
+            with archive.open(info) as f:
+                raw_meta = f.read(20_001)
+            if len(raw_meta) > 20_000:
+                continue
+            metadata_preview.append({
+                "member": info.filename,
+                "first_35_lines": [line[:210] for line in raw_meta.decode("utf-8-sig", errors="replace").splitlines()[:35]]
+            })
     return {
         "member_count": len(files), "total_declared_uncompressed_bytes": total,
         "member_inventory_first_80": results, "header_hints_first_8": hints,
         "rov_track_1hz_observation": track_observation,
+        "original_sensor_metadata_preview": metadata_preview,
         "files_extracted": False, "schema_verified": False,
         "coordinates_verified": False, "eligible_for_3d_replay": False,
     }
