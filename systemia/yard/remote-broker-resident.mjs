@@ -111,14 +111,19 @@ export async function startPrivateBroker({
       const url='http://127.0.0.1:'+port+'/v1/remote/health';
       health=await getJson(url);
     }catch{}
-    if(health){
-      // A different live process on the reserved port is never adopted.
-      verifyBrokerHealth(health,existing);
-      const renewed=await yard.renewDeploymentLease(DEPLOYMENT,{ttlMs:LEASE_TTL});
-      if(renewed.ok!==true)throw Error('resident_broker_resume_lease_failed');
-      record=existing;
-      mode='resumed';
+    if(!health){
+      // A ready Yard record with no matching live broker is a COLD RECOVERY.
+      // Never replace its instance ID or silently inherit device trust.
+      // A separate operator-approved cutover must establish a new Yard
+      // deployment receipt and re-attest the remote devices.
+      throw Error('resident_broker_cold_recovery_requires_manual_cutover');
     }
+    // A different live process on the reserved port is never adopted.
+    verifyBrokerHealth(health,existing);
+    const renewed=await yard.renewDeploymentLease(DEPLOYMENT,{ttlMs:LEASE_TTL});
+    if(renewed.ok!==true)throw Error('resident_broker_resume_lease_failed');
+    record=existing;
+    mode='resumed';
   }
   if(!record){
     record=await yard.deployRelease({
