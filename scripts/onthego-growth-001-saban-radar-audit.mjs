@@ -5,10 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
-import { createWorkState } from '../../systemia/saban/work-state.mjs';
-import { runScheduler } from '../../systemia/saban/scheduler.mjs';
-import { admitMultiplicationRequest } from '../../systemia/saban/admission.mjs';
-import { emptyRadarState, ingestRadarObservation, compileRadarEdition } from '../../systemia/radar/core.mjs';
+import { createWorkState } from '../systemia/saban/work-state.mjs';
+import { runScheduler } from '../systemia/saban/scheduler.mjs';
+import { admitMultiplicationRequest } from '../systemia/saban/admission.mjs';
+import { emptyRadarState, ingestRadarObservation, compileRadarEdition } from '../systemia/radar/core.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
