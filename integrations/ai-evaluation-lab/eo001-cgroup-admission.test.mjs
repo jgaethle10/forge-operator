@@ -118,7 +118,7 @@ test('untrusted scope names or injected commands cannot be rendered',()=>{
 test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
   const r=inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
-    procCgroup:'0::/user.slice/user-1000.slice/'+UNIT+'\\n',
+    procCgroup:'0::/user.slice/user-1000.slice/'+UNIT,
     readFile:fakeScopeResources
   });
   assert.equal(r.actual_unit_member,true);
@@ -127,12 +127,12 @@ test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
   assert.equal(r.model_inference_executed,false);
   assert.throws(()=>inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
-    procCgroup:'0::/user.slice/'+UNIT+'-fake\\n',
+    procCgroup:'0::/user.slice/'+UNIT+'-fake',
     readFile:fakeScopeResources
   }),/EXACT_LEAF_SCOPE_MEMBERSHIP_REQUIRED/);
   assert.throws(()=>inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
-    procCgroup:'5:cpu:/user.slice/'+UNIT+'\\n',
+    procCgroup:'5:cpu:/user.slice/'+UNIT,
     readFile:fakeScopeResources
   }),/UNIFIED_CGROUP_REQUIRED/);
   assert.throws(()=>inspectScopedChild({
