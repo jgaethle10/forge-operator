@@ -33,8 +33,12 @@ export function assessResidentBrokerRecovery({yardDeployment,brokerHealth}={}){
 
   return {
     schema:'evercraft.yard.resident-broker-recovery-admission.v1',
-    verified_existing_identity:failures.length===0,
-    may_preserve_existing_yard_deployment:failures.length===0,
+    // This is a local field-comparison gate, not an authenticated route
+    // challenge. Never turn an arbitrary health object into authorization.
+    identity_fields_match:failures.length===0,
+    verified_existing_identity:false,
+    may_preserve_existing_yard_deployment:false,
+    live_route_verification_required:true,
     restart_authorized:false,
     new_broker_auto_admission_authorized:false,
     reasons:[...new Set(failures)],
