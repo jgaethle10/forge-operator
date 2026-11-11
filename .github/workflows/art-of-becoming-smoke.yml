@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'public/art-of-becoming/**'
+      - 'scripts/probe-art-of-becoming-browser.mjs'
       - 'tests/art-of-becoming.test.mjs'
       - 'docs/art-of-becoming/**'
       - '.github/workflows/art-of-becoming-smoke.yml'
@@ -26,9 +27,11 @@ jobs:
         with:
           node-version: '22'
       - name: Syntax validation
-        run: node --check public/art-of-becoming/engine.mjs
+        run: |
+          node --check public/art-of-becoming/engine.mjs
+          node --check public/art-of-becoming/world-engine.mjs
       - name: Streak safety, privacy, and milestone tests
-        run: node --test tests/art-of-becoming.test.mjs
+        run: node --test tests/art-of-becoming.test.mjs tests/art-of-becoming-worlds.test.mjs
 
   browser:
     needs: mvp
