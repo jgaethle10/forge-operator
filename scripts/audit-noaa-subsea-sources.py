@@ -6,6 +6,7 @@ runner memory, not in source control or workflow artifacts. No ZIP extraction.
 """
 import argparse
 import collections
+import csv
 import datetime as dt
 import hashlib
 import io
@@ -152,9 +153,50 @@ def inspect_zip(data):
             matches = [key for key in keys if any(key in f for f in fields)]
             hints.append({"member": item.filename[:220], "header_field_hints": matches,
                           "line_count_in_first_4kb": len(line)})
+        # The published 1Hz CSV is the next candidate. Observe its *actual*
+        # columns/rows without converting positions or assuming UTC validity.
+        track = next((i for i in files
+                      if i.filename.lower().endswith("_rovtrack1hz.csv")
+                      and 0 < i.file_size <= 5_000_000), None)
+        track_observation = None
+        if track:
+            with archive.open(track) as stream:
+                raw = stream.read(5_000_001)
+            if len(raw) > 5_000_000:
+                raise ValueError("1Hz track exceeds bounded CSV sample limit")
+            reader = csv.DictReader(io.StringIO(raw.decode("utf-8-sig", errors="replace")))
+            names = reader.fieldnames or []
+            if len(names) > 120:
+                raise ValueError("Too many CSV columns")
+            def summarize(row):
+                return {str(k)[:95]: str(v or "")[:120]
+                        for k, v in list(row.items())[:65]}
+            first = []
+            last = None
+            rows = 0
+            for row in reader:
+                rows += 1
+                if rows > 100_000:
+                    raise ValueError("Too many rows in 1Hz preview")
+                if rows <= 2:
+                    first.append(summarize(row))
+                last = summarize(row)
+            track_observation = {
+                "member": track.filename[:220],
+                "column_names_observed": [n[:100] for n in names],
+                "row_count_observed": rows,
+                "first_two_rows_observed": first,
+                "last_row_observed": last,
+                "time_reference": "UNVERIFIED",
+                "position_source": "UNVERIFIED",
+                "depth_datum": "UNVERIFIED",
+                "video_frame_alignment": "UNVERIFIED",
+                "can_render_real_replay": False,
+            }
     return {
         "member_count": len(files), "total_declared_uncompressed_bytes": total,
         "member_inventory_first_80": results, "header_hints_first_8": hints,
+        "rov_track_1hz_observation": track_observation,
         "files_extracted": False, "schema_verified": False,
         "coordinates_verified": False, "eligible_for_3d_replay": False,
     }
