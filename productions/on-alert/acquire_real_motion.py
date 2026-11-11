@@ -138,12 +138,13 @@ for n,(source_id,start,duration,observed) in enumerate(segments,1):
     label=f"{source_id} USAF/DoD motion film | INTERNAL WORKPRINT - AI-upscaled transfer"
     # Visible provenance watermark. Filmed action is genuine; some film scenes
     # may be staged public-affairs demonstrations, not observational records.
-    vf=("scale=960:540:force_original_aspect_ratio=decrease,"
+    vf=(f"trim=start={start}:duration={duration},setpts=PTS-STARTPTS,"
+        "scale=960:540:force_original_aspect_ratio=decrease,"
         "pad=960:540:(ow-iw)/2:(oh-ih)/2:black,fps=24,"
         "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:"
         "text='"+label+"':fontcolor=white:fontsize=15:box=1:boxcolor=black@0.60:x=12:y=12")
     try:
-        run(["ffmpeg","-y","-v","error","-i",str(src),"-ss",str(start),"-t",str(duration),
+        run(["ffmpeg","-y","-v","error","-i",str(src),
              "-an","-vf",vf,"-c:v","libx264","-preset","veryfast","-crf","20",
              "-pix_fmt","yuv420p",str(clip)],timeout=180)
         clips.append(clip)
