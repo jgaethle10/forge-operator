@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: 14-day example yields clear UNVERIFIED indicators, no savings
+ok 1 - 14-day example yields clear UNVERIFIED indicators, no savings
+  ---
+  duration_ms: 3.485147
+  type: 'test'
+  ...
+# Subtest: operator scope attestation still does not establish physical truth
+ok 2 - operator scope attestation still does not establish physical truth
+  ---
+  duration_ms: 0.878855
+  type: 'test'
+  ...
+# Subtest: 13 days fail
+ok 3 - 13 days fail
+  ---
+  duration_ms: 0.815159
+  type: 'test'
+  ...
+# Subtest: zero volume gives null energy intensity
+ok 4 - zero volume gives null energy intensity
+  ---
+  duration_ms: 1.840691
+  type: 'test'
+  ...
+# Subtest: gap fails
+ok 5 - gap fails
+  ---
+  duration_ms: 0.469497
+  type: 'test'
+  ...
+# Subtest: missing is not zero
+ok 6 - missing is not zero
+  ---
+  duration_ms: 0.905525
+  type: 'test'
+  ...
+# Subtest: NaN/Inf/negative blocked
+ok 7 - NaN/Inf/negative blocked
+  ---
+  duration_ms: 2.807301
+  type: 'test'
+  ...
+# Subtest: negative totalizer delta blocked
+ok 8 - negative totalizer delta blocked
+  ---
+  duration_ms: 1.16191
+  type: 'test'
+  ...
+# Subtest: meter continuity fail
+ok 9 - meter continuity fail
+  ---
+  duration_ms: 0.720229
+  type: 'test'
+  ...
+# Subtest: meter identity changed fail
+ok 10 - meter identity changed fail
+  ---
+  duration_ms: 0.66842
+  type: 'test'
+  ...
+# Subtest: same meter inlet and irrigation fail
+ok 11 - same meter inlet and irrigation fail
+  ---
+  duration_ms: 1.869648
+  type: 'test'
+  ...
+# Subtest: bad observation kind fail
+ok 12 - bad observation kind fail
+  ---
+  duration_ms: 0.569357
+  type: 'test'
+  ...
+# Subtest: invalid date fail
+ok 13 - invalid date fail
+  ---
+  duration_ms: 0.502753
+  type: 'test'
+  ...
+# Subtest: malformed CSV fails
+ok 14 - malformed CSV fails
+  ---
+  duration_ms: 0.539114
+  type: 'test'
+  ...
+# Subtest: uncertainty high -> 0 outside envelope not savings
+ok 15 - uncertainty high -> 0 outside envelope not savings
+  ---
+  duration_ms: 0.671066
+  type: 'test'
+  ...
+# Subtest: can parse quoted calibration with embedded comma
+ok 16 - can parse quoted calibration with embedded comma
+  ---
+  duration_ms: 0.489451
+  type: 'test'
+  ...
+# Subtest: client JSON serializable without readings IDs
+ok 17 - client JSON serializable without readings IDs
+  ---
+  duration_ms: 0.88804
+  type: 'test'
+  ...
+# Subtest: rejects oversize input
+ok 18 - rejects oversize input
+  ---
+  duration_ms: 0.481744
+  type: 'test'
+  ...
+# Subtest: built-in demo is unambiguously synthetic at core and exported audit
+ok 19 - built-in demo is unambiguously synthetic at core and exported audit
+  ---
+  duration_ms: 0.642837
+  type: 'test'
+  ...
+# Subtest: changing built-in demo then forcing demo mode is blocked
+ok 20 - changing built-in demo then forcing demo mode is blocked
+  ---
+  duration_ms: 0.117459
+  type: 'test'
+  ...
+# Subtest: fictional meter labels cannot be re-submitted with real observation flags
+ok 21 - fictional meter labels cannot be re-submitted with real observation flags
+  ---
+  duration_ms: 0.367211
+  type: 'test'
+  ...
+# Subtest: quoted field trailing junk cannot escape CSV scanner
+ok 22 - quoted field trailing junk cannot escape CSV scanner
+  ---
+  duration_ms: 0.122959
+  type: 'test'
+  ...
+# Subtest: unquoted literal quote is rejected
+ok 23 - unquoted literal quote is rejected
+  ---
+  duration_ms: 0.152001
+  type: 'test'
+  ...
+# Subtest: properly escaped quoted calibration text is allowed
+ok 24 - properly escaped quoted calibration text is allowed
+  ---
+  duration_ms: 0.313821
+  type: 'test'
+  ...
+# Subtest: BOM and CRLF exports are accepted
+ok 25 - BOM and CRLF exports are accepted
+  ---
+  duration_ms: 0.942336
+  type: 'test'
+  ...
+# Subtest: unclosed quoted field is blocked
+ok 26 - unclosed quoted field is blocked
+  ---
+  duration_ms: 0.699249
+  type: 'test'
+  ...
+# Subtest: syntheticDemo option must be boolean, not a string
+ok 27 - syntheticDemo option must be boolean, not a string
+  ---
+  duration_ms: 0.174964
+  type: 'test'
+  ...
+# Subtest: bad characters after an escaped quote are rejected
+ok 28 - bad characters after an escaped quote are rejected
+  ---
+  duration_ms: 0.116245
+  type: 'test'
+  ...
+# Subtest: JS unsafe totalizer magnitude is a HOLD, not a precision-loss reading
+ok 29 - JS unsafe totalizer magnitude is a HOLD, not a precision-loss reading
+  ---
+  duration_ms: 1.906187
+  type: 'test'
+  ...
+# Subtest: dates outside supported analysis century are held
+ok 30 - dates outside supported analysis century are held
+  ---
+  duration_ms: 0.372948
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 152.944368

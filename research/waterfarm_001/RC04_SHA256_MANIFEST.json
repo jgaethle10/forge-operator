@@ -1,0 +1,28 @@
+{
+  "status": "LOCAL_SOURCE_ARTIFACTS_NOT_FIELD_VERIFICATION",
+  "tested_python": "3.13",
+  "test_count": 58,
+  "date_utc": "2026-10-26",
+  "files": {
+    "RC04_EVIDENCE.md": "aa2ecb5919d03623352593661079d442eb072e4c44beab21a8dbcc909aa5a0c1",
+    "README.md": "b815db7f8aaf60fe698a8d12faad0501376925ff9d3ba4c1467f67e23b88711a",
+    "RESEARCH_README.md": "377bb37f1e74c4329f49a998345db1523fc040b8f603656dfbefbe8c0444cfef",
+    "SCIENCE_DECISION_RC03.md": "71819b3d90a7c683d76e5a72b36fda874ed7d9ee0c633ae8c45cef4dec5bfa68",
+    "SHA256_MANIFEST.json": "28b8f01659d92c94ab4b62ce5715ba27028571274e6a3e73a054f6bc0bcda748",
+    "film/README.md": "ca80af6c96677b60a798296993c898d010f8285bee566bcb3686cc1651c149e3",
+    "film/build_film.py": "998d264422e5ae077fae532c404dea8ebcbec2efedb7b45431ad049e7442cbd5",
+    "film/manifest.json": "8d516bedefc0fcb1be1369a6b8b2442c83a3046d3092e0747b47ca906026629c",
+    "film/original_score_reference.wav": "066a434dbe9daf353f381c6bbdb0815932d019ef5fc5432e7d93e7ebd3016ad7",
+    "noaa/ghcnd_source.py": "552bca0527c60b04a1b5285606ef08b531dd31c1efcde8eb7784167238c97879",
+    "noaa/water_budget.py": "0b21235799fa39bae1fbbe951847e7114b9fd0f80e4930dede2b161bbc0bd233",
+    "rc04_test_receipt.txt": "5f1319e66c8839d17b48e4887cc087fb4f6ea446045b1a8748996ee2c9450b55",
+    "science/ENGINEERING_GATE_RC02.md": "531a1c9813521f66135df91bd5a67e15e14deede4a15a78bc1bae70e444bfaf4",
+    "science/evidence_gate.py": "9c31f309b18c7bdf0c104fd4e9071f94449abb3e68b6caa1698faaf607356ec3",
+    "science/greenhouse_trial.py": "41d94b63fdce211f180f8d185d945103ade07a5679e6e053b266959b2bafc827",
+    "tests/test_aqua_rc02.py": "bcce5f99936201e570f018299b0b87631679e925e21e9b5df1a62e5c87b5d4e8",
+    "tests/test_evidence_gate.py": "b171a6edfe8ed3f7f1acf6341600bf4c276aee97e19aead67c2bb4542fd58e1e",
+    "tests/test_ghcnd_download.py": "1dc537e7392e5497466002d91a126c7295f2d92b010fc0b672a273107e5d9304",
+    "tests/test_ghcnd_source.py": "fb752693c3ab0d6161193c30ab008411356cf96188f49f7de474b2138236a39a",
+    "tests/test_water_budget.py": "15659830c49d565e7bde620edb31ff83fccc1f83ae6de0179705e9613fbcaf9f"
+  }
+}

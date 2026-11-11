@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Evercraft Aqua | Field Notebook</title>
+<meta name="theme-color" content="#f4f8f7"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'">
+<style>
+:root{color-scheme:light;--navy:#123849;--muted:#5b7180;--teal:#087f80;--line:#dae7e6;--paper:#fff;--bg:#f2f7f6;--soft:#e7f4f1;--red:#a63238}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--navy);background:linear-gradient(145deg,#e5f3ef 0%,#f7faf9 48%,#edf4f2 100%);min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}.shell{max-width:1040px;margin:auto;padding:24px 24px 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #b9d3d0;padding-bottom:20px}.brand{font-size:15px;letter-spacing:.19em;font-weight:900}.tag{border:1px solid #b4d9d1;border-radius:100px;color:#24615f;background:#effaf7;font-size:11px;letter-spacing:.12em;font-weight:800;padding:8px 12px}.hero{padding:44px 0 27px;max-width:790px}.eyebrow{color:#26807c;font-size:12px;font-weight:900;letter-spacing:.17em;text-transform:uppercase}.hero h1{font-size:clamp(38px,6vw,72px);line-height:1.03;letter-spacing:-.058em;margin:13px 0 16px;max-width:760px}.hero p{font-size:18px;line-height:1.55;color:#4b6974;max-width:640px;margin:0}.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(270px,1fr);gap:16px}.panel{border:1px solid var(--line);box-shadow:0 12px 40px #133e4610;background:var(--paper);border-radius:19px;padding:27px}.label{font-size:11px;font-weight:900;letter-spacing:.16em;color:#488381;text-transform:uppercase}.panel h2{margin:9px 0 8px;letter-spacing:-.035em;font-size:27px}.panel p{color:var(--muted);line-height:1.5;font-size:14px}.muted{color:var(--muted)}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:20px 0}.field{display:flex;flex-direction:column;gap:8px;min-width:0}.field.wide{grid-column:span 2}.field label{font-size:13px;font-weight:750}.field input,.field select{border-radius:11px;border:1px solid #bfd6d3;background:#fbfdfc;padding:13px 12px;color:var(--navy);width:100%;min-width:0;outline-color:var(--teal);font-size:16px}.field input:read-only{background:#eff4f3;color:#527077}.btn{display:inline-flex;justify-content:center;align-items:center;text-align:center;min-height:46px;border-radius:11px;border:1px solid var(--teal);background:var(--teal);color:#fff;padding:11px 16px;font-weight:800;font-size:14px}.btn.secondary{background:#f3faf8;color:#156968;border-color:#b9d6d2}.btn.ghost{color:#596e76;border-color:#d7e5e2;background:white}.btn.danger{color:var(--red);background:#fff;border-color:#ebc4c4}.btn.full{width:100%}.btnrow{display:flex;gap:9px;flex-wrap:wrap}.strip{padding:15px 16px;border-radius:12px;background:#edf7f5;border:1px solid #d6ebe6;color:#275e5a;font-size:13px;line-height:1.5}.strip.error{background:#fff4f4;color:#962e35;border-color:#efcece}.strip strong{display:block;margin-bottom:3px}.count{font-size:49px;letter-spacing:-.06em;font-weight:850;margin-top:8px;line-height:1}.count small{font-size:13px;font-weight:700;color:#657c83;letter-spacing:0}.bar{background:#e7efee;border-radius:20px;height:9px;margin:16px 0 9px;overflow:hidden}.bar>div{height:100%;background:linear-gradient(90deg,#0f8583,#80d5bf);width:0%;transition:width .2s}.mini{border-top:1px solid var(--line);margin-top:20px;padding-top:18px;display:grid;gap:12px}.item{display:flex;gap:12px}.num{display:flex;width:25px;height:25px;flex-shrink:0;align-items:center;justify-content:center;font-size:11px;font-weight:900;border-radius:7px;background:#e8f4f0;color:#18706d}.item strong{font-size:13px}.item p{margin:2px 0 0;font-size:12.5px}.summary{border:1px solid var(--line);border-radius:13px;padding:14px;margin:14px 0 17px;background:#f8fbfa}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric strong{display:block;font-size:25px;letter-spacing:-.05em;margin-top:5px}.metric span{font-size:11px;color:#658078}.notice{margin-top:17px;background:#f6f9f8;border-left:3px solid #6caaa3;padding:13px;color:#567076;font-size:12.5px;line-height:1.5}.footer{border-top:1px solid #bcd4d0;margin-top:25px;padding-top:15px;color:#69827e;font-size:12px;display:flex;justify-content:space-between;gap:20px}.smallnote{font-size:12px;color:#667c84;line-height:1.55}hr{border:0;border-top:1px solid var(--line);margin:22px 0}.watermark{font-size:11px;font-weight:900;letter-spacing:.17em;color:#428b82}
+[hidden]{display:none!important}
+@media(max-width:730px){.shell{padding:18px 14px 36px}.hero{padding:35px 0 22px}.hero p{font-size:16px}.layout{grid-template-columns:1fr}.panel{padding:22px 18px}.fields{grid-template-columns:1fr}.field.wide{grid-column:auto}.footer{flex-direction:column;gap:5px}.tag{font-size:9px}.brand{font-size:12px}}
+</style></head><body><main class="shell">
+<header class="top"><div class="brand">EVERCRAFT <span style="color:#188982">/ AQUA</span></div><div class="tag">PRIVATE • DEVICE-ONLY</div></header>
+<section class="hero"><div class="eyebrow">Aqua Field Notebook • RC13 Research</div><h1>Every drop deserves a better record.</h1><p>Record one reading from an existing water meter each day. After 15 readings, get a traceable 14-day withdrawal baseline. No account, cloud upload or equipment connection.</p></section>
+<div class="layout"><section class="panel"><div class="label">01 / Your notebook</div>
+<div id="startPanel"><h2>Start with one meter.</h2><p>Use a short label for an existing water meter. Never enter a site address or personal details in the label.</p>
+<div class="fields"><div class="field"><label for="meterId">Meter label</label><input id="meterId" autocomplete="off" placeholder="e.g. WELL-A" maxlength="60"></div><div class="field"><label for="units">Reading units</label><select id="units"><option value="US_GAL">US gallons</option><option value="L">Liters</option><option value="M3">Cubic meters</option></select></div></div><button id="start" class="btn full">Start a private reading log</button></div>
+<div id="logPanel" hidden><h2 id="meterTitle">Your reading log</h2><p>Read the same meter at approximately the same time each day. A missed day or a reset requires review rather than an invented reading.</p>
+<div class="count" id="progress">0 <small>/ 15 readings</small></div><div class="bar"><div id="progressBar"></div></div><div id="nextHint" class="smallnote"></div>
+<div class="fields"><div class="field"><label for="readDate">Reading date</label><input type="date" id="readDate" required></div><div class="field"><label for="readValue">Meter totalizer reading</label><input id="readValue" inputmode="decimal" type="text" autocomplete="off" placeholder="e.g. 12540.0"></div><div class="field wide"><label for="energyValue">Pump energy since previous reading (kWh, optional)</label><input id="energyValue" inputmode="decimal" type="text" autocomplete="off" placeholder="Leave blank if not metered"><div class="smallnote">For the first reading, leave energy blank. Unknown energy is never treated as zero.</div></div></div><div class="btnrow"><button id="add" class="btn">Save reading to device</button><button id="undo" class="btn ghost">Undo last reading</button></div>
+<div id="lastDetails" class="summary" hidden></div><hr><div class="label">Your data, your copy</div><p>Export a CSV backup after each reading. Browser storage is not encrypted, may be cleared, and may not persist reliably when an HTML file is opened from Files on an iPhone.</p><div class="btnrow"><button id="exportCsv" class="btn secondary">Download meter CSV</button><button id="exportBackup" class="btn secondary">Download notebook backup</button><button id="exportAudit" class="btn" disabled>Download baseline audit</button></div><hr><div class="btnrow"><button id="importBackup" class="btn ghost">Import notebook backup</button><button id="reset" class="btn danger">Clear notebook</button><input type="file" id="backupFile" accept=".json,application/json" hidden></div></div>
+<div id="message" class="strip" style="margin-top:18px" role="status" aria-live="polite"><strong>Research use only</strong>Data are self-reported until a qualified reviewer checks the meter, boundary, calibration and collection context.</div></section>
+<aside class="panel"><div class="label">02 / Why we collect it</div><h2>Measure first.<br>Engineer second.</h2><p>A small, honest baseline can help us understand withdrawals before deciding whether scheduling, repairs, sensors or recovery hardware deserve attention.</p><div class="mini"><div class="item"><div class="num">01</div><div><strong>Fifteen readings</strong><p>One cumulative totalizer each day gives fourteen day-to-day usage intervals.</p></div></div><div class="item"><div class="num">02</div><div><strong>One source of truth</strong><p>CSV export follows the strict RC12 Aqua Baseline format, with source fingerprint and supporting observations.</p></div></div><div class="item"><div class="num">03</div><div><strong>No magic savings claims</strong><p>A single meter cannot prove where water went, what leaked, or how much water was conserved.</p></div></div></div>
+<div class="notice"><strong>Safety and privacy.</strong> This notebook does not control irrigation, authorize experimental water reuse, validate regulatory compliance or authenticate meter data. Keep backups on a device you trust.</div><div id="results" hidden><hr><div class="label">03 / Provisional baseline</div><h2>Reading window complete</h2><div class="metrics"><div class="metric"><span>Withdrawals</span><strong id="total">—</strong></div><div class="metric"><span>Daily average</span><strong id="average">—</strong></div></div><div id="energyStat" class="smallnote" style="margin-top:11px"></div><div class="notice">OBSERVED-INPUT ARITHMETIC ONLY. Site and instrument evidence remain independently unverified.</div></div>
+</aside></div><footer class="footer"><span>Evercraft Aqua • Source-water intelligence before infrastructure.</span><span>RC13 field notebook • no connected hardware • no publication</span></footer></main>
+<script type="module">
+/** Evercraft Aqua RC12: one-meter observational baseline.
+ * Passive, offline screening only. No sensor authentication, leak detection,
+ * irrigation-efficiency calculation, water-savings or ROI inference.
+ */
+const FIELDS = Object.freeze(['date','meter_id','cumulative_reading','units','pump_kwh_since_previous','observation_kind']);
+const UNITS = Object.freeze({L:1,US_GAL:3.785411784,M3:1000});
+const MAX_ROWS = 370;
+class EvidenceHold extends Error { constructor(message){super('HOLD: '+message);this.name='EvidenceHold';} }
+function finiteDecimal(x,name,{optional=false}={}) {
+  if(optional && x==='')return null;
+  if(typeof x!=='string'|| (x!==x.trim() || !/^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(x)))throw new EvidenceHold(name+' is missing, negative or not a nonnegative decimal');
+  const n=Number(x);
+  if(!Number.isFinite(n)||n>Number.MAX_SAFE_INTEGER)throw new EvidenceHold(name+' is not a safe finite number');
+  return n;
+}
+function parseDate(s){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(s))throw new EvidenceHold('date format must be YYYY-MM-DD');
+  const d=new Date(s+'T12:00:00Z');
+  if(!Number.isFinite(d.getTime())||d.toISOString().slice(0,10)!==s)throw new EvidenceHold('invalid calendar date '+s);
+  return d;
+}
+function csvRows(t){
+  if(typeof t!=='string'||t.length>1_000_000||!t.trim())throw new EvidenceHold('CSV missing or too large');
+  t=t.replace(/^\uFEFF/,'');
+  let rows=[],row=[],field='',mode='start';
+  function finish(){row.push(field);if(row.length!==1||row[0]!=='')rows.push(row);row=[];field='';mode='start';}
+  for(let i=0;i<t.length;i++){
+    const c=t[i];
+    if(mode==='quoted'){if(c==='"' && t[i+1]==='"'){field+='"';i++;}else if(c==='"')mode='afterQuote';else field+=c;}
+    else if(c==='"'){if(mode!=='start')throw new EvidenceHold('malformed CSV quotes');mode='quoted';}
+    else if(c===','){row.push(field);field='';mode='start';}
+    else if(c==='\r'||c==='\n'){if(c==='\r'&&t[i+1]==='\n')i++;finish();}
+    else {if(mode==='afterQuote'||c==='\0')throw new EvidenceHold('invalid CSV character');field+=c;mode='plain';}
+  }
+  if(mode==='quoted')throw new EvidenceHold('unterminated quoted field');
+  if(field!==''||row.length)finish();
+  if(!rows.length||rows[0].join('|')!==FIELDS.join('|'))throw new EvidenceHold('CSV headers must match the Aqua single-meter template');
+  if(rows.length-1<15)throw new EvidenceHold('need 15 consecutive daily totalizer readings for a 14-day baseline');
+  if(rows.length-1>MAX_ROWS)throw new EvidenceHold('max 370 daily rows per baseline');
+  return rows.slice(1).map((cells,i)=>{
+    if(cells.length!==FIELDS.length)throw new EvidenceHold('CSV row '+(i+2)+' has wrong number of fields');
+    return Object.fromEntries(FIELDS.map((f,j)=>[f,cells[j]]));
+  });
+}
+function round(n,decimals=3){return Math.round((n+Number.EPSILON)*10**decimals)/10**decimals;}
+function sha256Hex(text){
+  if(typeof text!=='string')throw new EvidenceHold('SHA256 requires text');
+  const raw=new TextEncoder().encode(text);
+  const length=Math.ceil((raw.length+9)/64)*64;
+  const padded=new Uint8Array(length);padded.set(raw);padded[raw.length]=0x80;
+  const view=new DataView(padded.buffer);
+  const bits=raw.length*8;
+  view.setUint32(length-8,Math.floor(bits/0x100000000));
+  view.setUint32(length-4,bits>>>0);
+  const k=new Uint32Array([
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ]);
+  const h=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);
+  const w=new Uint32Array(64),rotr=(n,b)=>((n>>>b)|(n<<(32-b)))>>>0;
+  for(let base=0;base<length;base+=64){
+    for(let i=0;i<16;i++)w[i]=view.getUint32(base+i*4);
+    for(let i=16;i<64;i++){
+      const v=w[i-15],u=w[i-2];
+      const s0=rotr(v,7)^rotr(v,18)^(v>>>3),s1=rotr(u,17)^rotr(u,19)^(u>>>10);
+      w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
+    }
+    let [a,b,c,d,e,f,g,q]=h;
+    for(let i=0;i<64;i++){
+      const s1=rotr(e,6)^rotr(e,11)^rotr(e,25);
+      const ch=(e&f)^(~e&g);
+      const t1=(q+s1+ch+k[i]+w[i])>>>0;
+      const s0=rotr(a,2)^rotr(a,13)^rotr(a,22);
+      const maj=(a&b)^(a&c)^(b&c);
+      const t2=(s0+maj)>>>0;
+      q=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    const next=[a,b,c,d,e,f,g,q];
+    for(let i=0;i<8;i++)h[i]=(h[i]+next[i])>>>0;
+  }
+  return Array.from(h,n=>n.toString(16).padStart(8,'0')).join('');
+}
+
+function analyzeSingleMeter(text,{allowBuiltInDemo=false}={}){
+  const raw=csvRows(text);let prev=null,intervals=[],unknownEnergy=0,totalKwh=0,origin=null,unit=null,id=null;
+  for(const [i,row] of raw.entries()){
+    const dt=parseDate(row.date);
+    if(!row.meter_id?.trim()||row.meter_id.length>60)throw new EvidenceHold('valid meter identifier required');
+    if(!Object.hasOwn(UNITS,row.units))throw new EvidenceHold('units must be L, US_GAL, or M3');
+    if(!['OPERATOR_SUPPLIED_READING','SYNTHETIC_DEMONSTRATION'].includes(row.observation_kind))throw new EvidenceHold('unrecognized observation kind');
+    if(!origin)origin=row.observation_kind;
+    if(row.observation_kind!==origin)throw new EvidenceHold('mixed observation provenance');
+    if(!id)id=row.meter_id;
+    if(!unit)unit=row.units;
+    if(id!==row.meter_id || unit!==row.units)throw new EvidenceHold('meter or units changed during baseline');
+    if(origin==='SYNTHETIC_DEMONSTRATION' && !allowBuiltInDemo)throw new EvidenceHold('demonstration CSV cannot be admitted as site observations');
+    if(origin!=='SYNTHETIC_DEMONSTRATION' && /(?:DEMO|SYNTH|TEST|FICTION)/i.test(id))throw new EvidenceHold('fictional meter identifier in operator observations');
+    const reading=finiteDecimal(row.cumulative_reading,'cumulative meter totalizer');
+    const kwh=finiteDecimal(row.pump_kwh_since_previous,'pump energy',{optional:true});
+    if(i===0 && kwh!==null)throw new EvidenceHold('first row energy must be blank (no prior interval)');
+    if(prev){
+      if(dt.getTime()-prev.date.getTime()!==86400000)throw new EvidenceHold('dates must be consecutive; missing/duplicate day');
+      if(reading<prev.reading)throw new EvidenceHold('totalizer rollover/reset cannot be silently interpreted');
+      const waterL=(reading-prev.reading)*UNITS[unit];
+      if(!Number.isFinite(waterL)||waterL>Number.MAX_SAFE_INTEGER)throw new EvidenceHold('unsafe converted interval volume');
+      if(kwh===null)unknownEnergy++;else totalKwh+=kwh;
+      intervals.push({ending_date:row.date,source_withdrawal_l:round(waterL),pump_kwh:kwh});
+    }
+    prev={date:dt,reading};
+  }
+  const totalL=(Number(raw.at(-1).cumulative_reading)-Number(raw[0].cumulative_reading))*UNITS[unit];
+  if(!Number.isFinite(totalL)||totalL>Number.MAX_SAFE_INTEGER)throw new EvidenceHold('unsafe overall volume');
+  if(unknownEnergy>0)totalKwh=null;
+  return {
+    schema:'evercraft.aqua.single-meter-baseline.v1',
+    source_integrity_sha256:sha256Hex(text),
+    source_integrity_note:'SHA-256 of decoded input text. Integrity only; not proof of site origin or sensor calibration.',
+    evidence_state:origin==='SYNTHETIC_DEMONSTRATION'?'SYNTHETIC_DEMONSTRATION':'OPERATOR_SUPPLIED_UNVERIFIED',
+    physically_verified:false,calibration_verified:false,source_authorized:false,
+    leak_verified:false,water_savings_verified:false,irrigation_efficiency_measured:false,
+    meter_id:id,units:unit,reading_count:raw.length,interval_count:intervals.length,
+    from:raw[0].date,to:raw.at(-1).date,
+    total_source_withdrawal_l:round(totalL),mean_daily_withdrawal_l:round(totalL/intervals.length),
+    pump_energy_kwh:totalKwh===null?null:round(totalKwh),energy_intervals_missing:unknownEnergy,
+    energy_kwh_per_m3:totalKwh===null || totalL===0?null:round(totalKwh/(totalL/1000),4),
+    daily_intervals:intervals,
+    advisory:'SINGLE METER ONLY: this is a source-withdrawal baseline. No downstream usage, losses, leaks, savings, water rights or crop performance can be inferred.',
+    next_proof:'Independently authenticate meter calibration, sampling times, unit, source boundary, operator consent and site context. Compare a separately reviewed treatment vs baseline before any savings claim.'
+  };
+}
+function demoCSV(){
+ const out=[FIELDS.join(',')],start=Date.UTC(2025,0,1);let total=10000;
+ for(let i=0;i<15;i++){
+  if(i>0)total+=(i%4===0?750:1000);
+  out.push([new Date(start+i*86400000).toISOString().slice(0,10),'SYNTHETIC_SOURCE_001',total,'L',i?4.25:'','SYNTHETIC_DEMONSTRATION'].join(','));
+ }
+ return out.join('\n')+'\n';
+}
+function templateCSV(){
+ const out=[FIELDS.join(',')];
+ const today=new Date();today.setHours(12,0,0,0);
+ const start=new Date(today);start.setDate(start.getDate()-14);
+ for(let i=0;i<15;i++){
+   const dt=new Date(start);dt.setDate(start.getDate()+i);
+   const day=[dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-');
+   out.push([day,'','','L','','OPERATOR_SUPPLIED_READING'].join(','));
+ }
+ return out.join('\n')+'\n';
+}
+
+/** Evercraft Aqua RC13 Field Notebook, offline/manual observational workflow.
+ * A browser input is an assertion, never independently verified evidence.
+ * No automated irrigation control, secrets, or outgoing network operations.
+ */
+
+const JOURNAL_SCHEMA='evercraft.aqua.field-notebook.v1';
+const DAY_MS=86400000;
+const STORE_KEY='evercraft-aqua-field-notebook-v1';
+
+function checkDate(s){
+  if(typeof s!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(s))throw new EvidenceHold('date must be YYYY-MM-DD');
+  const n=Date.parse(s+'T12:00:00Z');
+  if(!Number.isFinite(n)||new Date(n).toISOString().slice(0,10)!==s)throw new EvidenceHold('calendar date does not exist');
+  return n;
+}
+function nextDate(s){return new Date(checkDate(s)+DAY_MS).toISOString().slice(0,10);}
+function todayLocal(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+function positiveSafe(raw,name){
+  if(typeof raw!=='string'||raw!==raw.trim()||!/^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(raw))throw new EvidenceHold(`${name} must be a plain nonnegative number`);
+  const x=Number(raw);if(!Number.isFinite(x)||x>Number.MAX_SAFE_INTEGER)throw new EvidenceHold(`${name} outside safe numeric range`);
+  return x;
+}
+function blankJournal(meterId,units){
+  if(typeof meterId!=='string'||!meterId.trim()||meterId.length>60||!/^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(meterId)||/(DEMO|SYNTH|TEST|FICTION)/i.test(meterId))throw new EvidenceHold('Use a real, simple meter label (not a demo label)');
+  if(!Object.hasOwn(UNITS,units))throw new EvidenceHold('Choose L, US_GAL or M3');
+  return {schema:JOURNAL_SCHEMA,meter_id:meterId,units,records:[],evidence_state:'OPERATOR_SUPPLIED_UNVERIFIED'};
+}
+function validateJournal(j){
+  if(!j||Object.getPrototypeOf(j)!==Object.prototype||j.schema!==JOURNAL_SCHEMA||!Array.isArray(j.records)||j.records.length>370)throw new EvidenceHold('Unsupported or damaged field notebook');
+  const clean=blankJournal(j.meter_id,j.units);
+  if(j.evidence_state!=='OPERATOR_SUPPLIED_UNVERIFIED')throw new EvidenceHold('Unsupported journal source classification');
+  for(const r of j.records){
+    if(!r||Object.getPrototypeOf(r)!==Object.prototype||Object.keys(r).sort().join('|')!=='date|pump_kwh_since_previous|reading')throw new EvidenceHold('Unexpected record schema');
+    addReading(clean,{date:r.date,reading:r.reading,pump_kwh_since_previous:r.pump_kwh_since_previous});
+  }
+  return clean;
+}
+function addReading(j,{date,reading,pump_kwh_since_previous=''}){
+  if(!j||j.schema!==JOURNAL_SCHEMA||!Array.isArray(j.records))throw new EvidenceHold('Start a notebook before recording data');
+  if(j.records.length>=370)throw new EvidenceHold('370-reading safety maximum reached; and archive');
+  checkDate(date);
+  const value=positiveSafe(reading,'Meter totalizer');
+  const first=j.records.length===0;
+  const energy=pump_kwh_since_previous===''?'':String(positiveSafe(pump_kwh_since_previous,'Interval pump kWh'));
+  if(first && energy!=='')throw new EvidenceHold('First reading must have no previous-interval kWh');
+  if(!first){
+    const prev=j.records.at(-1);
+    if(date!==nextDate(prev.date))throw new EvidenceHold('Dates must be consecutive; missing reading or duplicate day');
+    if(value<Number(prev.reading))throw new EvidenceHold('Totalizer decreased: possible reset/rollover, STOP and review');
+    if(!Number.isSafeInteger(Math.trunc(value)))throw new EvidenceHold('Unsafe meter totalizer');
+    const volume=(value-Number(prev.reading))*UNITS[j.units];
+    if(!Number.isFinite(volume)||volume>Number.MAX_SAFE_INTEGER)throw new EvidenceHold('Unsafe interval volume');
+  }
+  j.records.push({date,reading:String(value),pump_kwh_since_previous:energy});
+  return j;
+}
+function toMeterCSV(j){
+  const x=validateJournal(j);
+  const rows=[FIELDS.join(',')];
+  for(const r of x.records)rows.push([r.date,x.meter_id,r.reading,x.units,r.pump_kwh_since_previous,'OPERATOR_SUPPLIED_READING'].join(','));
+  return rows.join('\n')+'\n';
+}
+function preview(j){
+  const x=validateJournal(j),count=x.records.length;
+  return {reading_count:count,completed_intervals:Math.max(0,count-1),remaining_readings:Math.max(0,15-count),
+    next_date:count?nextDate(x.records.at(-1).date):todayLocal(),first_date:count?x.records[0].date:null,
+    last_reading:count?x.records.at(-1).reading:null,ready:count>=15};
+}
+function researchAudit(j){
+  const csv=toMeterCSV(j);
+  const p=preview(j);if(!p.ready)throw new EvidenceHold(`Need ${p.remaining_readings} more reading(s) to meet minimum 14-day baseline`);
+  return analyzeSingleMeter(csv);
+}
+function backupJSON(j){
+  const x=validateJournal(j);return JSON.stringify({ ...x,backup_sha256:sha256Hex(toMeterCSV(x))},null,2)+'\n';
+}
+
+const el=id=>document.getElementById(id);let journal=null,persisted=true;
+function message(text,error=false){const box=el('message');box.textContent=text;box.classList.toggle('error',error);}
+function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify(journal));persisted=true;}catch(e){persisted=false;message('Saved in this page only. Browser storage unavailable. Download a CSV backup NOW.',true);}}
+function download(name,text,mime){const url=URL.createObjectURL(new Blob([text],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);}
+function render(){const active=Boolean(journal);el('startPanel').hidden=active;el('logPanel').hidden=!active;el('results').hidden=true;if(!active)return;
+  const p=preview(journal);el('meterTitle').textContent=journal.meter_id+' • '+journal.units;
+  el('progress').innerHTML=p.reading_count+' <small>/ 15 readings</small>';
+  el('progressBar').style.width=Math.min(100,(p.reading_count/15)*100)+'%';
+  el('nextHint').textContent=p.ready?'Minimum baseline complete. You may keep recording, or download the audit.':'Next reading due: '+p.next_date+' • '+p.remaining_readings+' reading(s) until baseline.';
+  el('readDate').value=p.next_date;el('readValue').value='';el('energyValue').value='';
+  el('energyValue').disabled=p.reading_count===0;el('undo').disabled=p.reading_count===0;el('exportAudit').disabled=!p.ready;
+  const details=el('lastDetails');details.hidden=!p.reading_count;
+  if(p.reading_count){details.textContent='Last reading: '+p.last_reading+' '+journal.units+' on '+journal.records.at(-1).date+'. '+p.completed_intervals+' complete day-to-day intervals.';}
+  if(p.ready){try{const audit=researchAudit(journal);el('results').hidden=false;el('total').textContent=audit.total_source_withdrawal_l.toLocaleString()+' L';el('average').textContent=audit.mean_daily_withdrawal_l.toLocaleString()+' L/day';el('energyStat').textContent=audit.energy_kwh_per_m3===null?'Pump energy intensity: unknown':'Pump energy intensity: '+audit.energy_kwh_per_m3+' kWh/m³';}catch(e){message(e.message,true);el('exportAudit').disabled=true;}}
+}
+el('start').addEventListener('click',()=>{try{journal=blankJournal(el('meterId').value,el('units').value);persist();render();message('Notebook started. First reading has no prior-day energy. Export regularly.');}catch(e){message(e.message,true)}});
+el('add').addEventListener('click',()=>{if(!journal)return;try{addReading(journal,{date:el('readDate').value,reading:el('readValue').value,pump_kwh_since_previous:el('energyValue').value});persist();render();message('Reading stored'+(persisted?' on this device.':' in this page only. Download backup NOW.'));}catch(e){message(e.message,true)}});
+el('undo').addEventListener('click',()=>{if(!journal?.records.length)return;if(confirm('Remove the most recent recorded reading?')){journal.records.pop();persist();render();message('Last reading removed.');}});
+el('reset').addEventListener('click',()=>{if(!confirm('Delete the entire on-device notebook? Export a backup first.'))return;try{localStorage.removeItem(STORE_KEY)}catch{}journal=null;render();message('Local notebook cleared. Your previously downloaded backups are not affected.');});
+el('exportCsv').addEventListener('click',()=>{if(!journal)return;try{download('Aqua_meter_readings_'+journal.meter_id+'.csv',toMeterCSV(journal),'text/csv');message('CSV exported. Retain a private backup; partial baselines will remain HOLD in the analyzer.');}catch(e){message(e.message,true)}});
+el('exportBackup').addEventListener('click',()=>{if(!journal)return;try{download('Aqua_notebook_backup_'+journal.meter_id+'.json',backupJSON(journal),'application/json');message('Notebook backup exported. Check your downloads and store securely.');}catch(e){message(e.message,true)}});
+el('exportAudit').addEventListener('click',()=>{if(!journal)return;try{download('Aqua_baseline_unverified_'+journal.meter_id+'.json',JSON.stringify(researchAudit(journal),null,2)+'\n','application/json');message('Provisional baseline audit exported. No savings or leak claim is verified.');}catch(e){message(e.message,true)}});
+el('importBackup').addEventListener('click',()=>el('backupFile').click());
+el('backupFile').addEventListener('change',async()=>{const f=el('backupFile').files?.[0];if(!f||f.size>1000000||!f.name.toLowerCase().endsWith('.json')){message('HOLD: Choose a notebook JSON backup smaller than 1 MB.',true);return;}try{const x=JSON.parse(await f.text()),clean=validateJournal(x);if(x.backup_sha256!==sha256Hex(toMeterCSV(clean)))throw new EvidenceHold('Backup integrity hash differs: HOLD');if(journal&&!confirm('Replace your current notebook with this backup? Export first.'))return;journal=clean;persist();render();message('Backup restored after schema/date/hash checks. Authenticity still unverified.');}catch(e){message('HOLD: '+e.message,true)}finally{el('backupFile').value='';}});
+try{const raw=localStorage.getItem(STORE_KEY);if(raw){journal=validateJournal(JSON.parse(raw));message('Device-only notebook restored. Data authenticity is not independently verified.');}}catch(e){journal=null;message('Cannot load saved notebook: '+e.message+'. Original stored data have not been deleted.',true)}render();
+</script></body></html>

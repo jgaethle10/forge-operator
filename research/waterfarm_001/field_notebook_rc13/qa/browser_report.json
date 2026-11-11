@@ -1,0 +1,16 @@
+{
+  "mobile": {
+    "audited_l": 1750,
+    "complete": true,
+    "no_horizontal_overflow": true,
+    "request_count": 0
+  },
+  "desktop": {
+    "audited_l": 1750,
+    "complete": true,
+    "no_horizontal_overflow": true,
+    "request_count": 0
+  },
+  "offline_requests": [],
+  "errors": []
+}

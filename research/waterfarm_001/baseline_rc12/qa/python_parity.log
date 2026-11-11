@@ -1,0 +1,7 @@
+liters PASS 14000.0 L 70.0 kWh
+gallons PASS 10599.153 L 0.0 kWh
+m3 PASS 14000.0 L None kWh
+missing_date HOLD PASS
+demo HOLD PASS
+blank_energy HOLD PASS
+PYTHON/JS PARITY PASS

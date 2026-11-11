@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: 14-day operator baseline: total volume energy, honest evidence
+ok 1 - 14-day operator baseline: total volume energy, honest evidence
+  ---
+  duration_ms: 3.334335
+  type: 'test'
+  ...
+# Subtest: US gallons converted exactly
+ok 2 - US gallons converted exactly
+  ---
+  duration_ms: 1.510257
+  type: 'test'
+  ...
+# Subtest: M3 converted exactly
+ok 3 - M3 converted exactly
+  ---
+  duration_ms: 0.588263
+  type: 'test'
+  ...
+# Subtest: missing energy means unknown not zero
+ok 4 - missing energy means unknown not zero
+  ---
+  duration_ms: 0.87835
+  type: 'test'
+  ...
+# Subtest: measured zero energy is zero
+ok 5 - measured zero energy is zero
+  ---
+  duration_ms: 0.675532
+  type: 'test'
+  ...
+# Subtest: no flow produces undefined per m3 energy
+ok 6 - no flow produces undefined per m3 energy
+  ---
+  duration_ms: 0.536457
+  type: 'test'
+  ...
+# Subtest: synthetic demo never admitted as operator readings
+ok 7 - synthetic demo never admitted as operator readings
+  ---
+  duration_ms: 1.278717
+  type: 'test'
+  ...
+# Subtest: relabelled synthetic meter still HOLD
+ok 8 - relabelled synthetic meter still HOLD
+  ---
+  duration_ms: 0.254954
+  type: 'test'
+  ...
+# Subtest: reject too few readings
+ok 9 - reject too few readings
+  ---
+  duration_ms: 0.341632
+  type: 'test'
+  ...
+# Subtest: reject missing date
+ok 10 - reject missing date
+  ---
+  duration_ms: 0.469389
+  type: 'test'
+  ...
+# Subtest: reject rollback
+ok 11 - reject rollback
+  ---
+  duration_ms: 0.283096
+  type: 'test'
+  ...
+# Subtest: reject mixed units
+ok 12 - reject mixed units
+  ---
+  duration_ms: 0.261925
+  type: 'test'
+  ...
+# Subtest: reject changed meter
+ok 13 - reject changed meter
+  ---
+  duration_ms: 0.239341
+  type: 'test'
+  ...
+# Subtest: reject negative
+ok 14 - reject negative
+  ---
+  duration_ms: 0.203609
+  type: 'test'
+  ...
+# Subtest: reject unsafe integer
+ok 15 - reject unsafe integer
+  ---
+  duration_ms: 0.199633
+  type: 'test'
+  ...
+# Subtest: reject header changed
+ok 16 - reject header changed
+  ---
+  duration_ms: 0.151873
+  type: 'test'
+  ...
+# Subtest: reject unknown unit
+ok 17 - reject unknown unit
+  ---
+  duration_ms: 0.215486
+  type: 'test'
+  ...
+# Subtest: reject observation kind mix
+ok 18 - reject observation kind mix
+  ---
+  duration_ms: 0.422329
+  type: 'test'
+  ...
+# Subtest: template is blank and cannot be falsely audited
+ok 19 - template is blank and cannot be falsely audited
+  ---
+  duration_ms: 0.311137
+  type: 'test'
+  ...
+# Subtest: valid BOM CRLF CSV
+ok 20 - valid BOM CRLF CSV
+  ---
+  duration_ms: 0.676393
+  type: 'test'
+  ...
+# Subtest: reject malformed quote
+ok 21 - reject malformed quote
+  ---
+  duration_ms: 0.116541
+  type: 'test'
+  ...
+# Subtest: reject huge file
+ok 22 - reject huge file
+  ---
+  duration_ms: 0.124412
+  type: 'test'
+  ...
+# Subtest: SHA-256 source fingerprint matches standard test vector
+ok 23 - SHA-256 source fingerprint matches standard test vector
+  ---
+  duration_ms: 0.101359
+  type: 'test'
+  ...
+# Subtest: report SHA-256 matches core calculation
+ok 24 - report SHA-256 matches core calculation
+  ---
+  duration_ms: 1.018375
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72.655265

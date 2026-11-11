@@ -1,0 +1,45 @@
+{
+  "year": 2025,
+  "expected_days": 365,
+  "rows": 365,
+  "missing_precip_days": [
+    "2025-05-22"
+  ],
+  "absent_calendar_days": [],
+  "flagged_days": [],
+  "trace_days": 54,
+  "nontrace_measured_days": 310,
+  "observed_nontrace_mm": 192,
+  "monthly_mm_lower_bound": [
+    22.4,
+    28.3,
+    25.5,
+    5.1,
+    7.7,
+    0.6,
+    0.6,
+    2.9,
+    3.7,
+    25.7,
+    29.6,
+    39.9
+  ],
+  "rain_days_nontrace": [
+    5,
+    13,
+    10,
+    5,
+    3,
+    2,
+    2,
+    5,
+    5,
+    9,
+    11,
+    10
+  ],
+  "source_url": "https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=USW00024243&startDate=2025-01-01&endDate=2025-12-31&dataTypes=PRCP&units=metric&format=csv&includeAttributes=true",
+  "source_state": "HOLD_INCOMPLETE",
+  "limitation": "Tool-extracted official NOAA Access API CSV; separate raw .dly flags check pending. Trace reported as zero catch lower bound. Station weather is not rooftop catch.",
+  "tank_scenarios_100m2_80pct_1000ld": []
+}

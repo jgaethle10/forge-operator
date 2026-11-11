@@ -1,0 +1,12 @@
+{
+  "name": "Evercraft Aqua | Field Notebook",
+  "short_name": "Aqua Notebook",
+  "description": "Private, read-only field water-meter notebook. No cloud sync or remote actuation.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f7f6",
+  "theme_color": "#087f80",
+  "icons": [ {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"} ]
+}
