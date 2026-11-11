@@ -31,7 +31,10 @@
         "ink": "#fff1e6",
         "secondary": "#ffddbd"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "awaiting_founder_review",
+      "brand_review_packet": "https://github.com/jgaethle10/forge-operator/blob/main/docs/branding/approvals/BR-001-weekly-signal-v1.md"
     },
     {
       "product_id": "evercraft.commerce.asset-diagnosis",
@@ -59,7 +62,10 @@
         "ink": "#e9f6fb",
         "secondary": "#c0e7f6"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "not_reviewed",
+      "brand_review_packet": null
     },
     {
       "product_id": "evercraft.commerce.ai-boardroom-standard",
@@ -87,7 +93,10 @@
         "ink": "#f5ead3",
         "secondary": "#f0dba9"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "not_reviewed",
+      "brand_review_packet": null
     },
     {
       "product_id": "evercraft.commerce.ai-boardroom-financial-modeling",
@@ -115,7 +124,10 @@
         "ink": "#f0f6ec",
         "secondary": "#eed7a7"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "not_reviewed",
+      "brand_review_packet": null
     },
     {
       "product_id": "evercraft.commerce.knowledge-activation",
@@ -143,7 +155,10 @@
         "ink": "#f8f3e9",
         "secondary": "#f3d9a2"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "not_reviewed",
+      "brand_review_packet": null
     },
     {
       "product_id": "evercraft.commerce.social-intelligence-launch",
@@ -171,7 +186,10 @@
         "ink": "#f0efff",
         "secondary": "#86e3d1"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "not_reviewed",
+      "brand_review_packet": null
     },
     {
       "product_id": "evercraft.commerce.institutional-memory-system",
@@ -199,8 +217,18 @@
         "ink": "#f3f3e6",
         "secondary": "#dec7a0"
       },
-      "creative_name_clearance": "unverified"
+      "creative_name_clearance": "unverified",
+      "founder_brand_approval": "not_approved",
+      "founder_review_status": "not_reviewed",
+      "brand_review_packet": null
     }
   ],
-  "brand_architecture": "Seven individually voiced products with separate emotional worlds and visual systems; Evercraft OS is parent endorsement, not their shared face."
+  "brand_architecture": "Seven individually voiced products with separate emotional worlds and visual systems; Evercraft OS is parent endorsement, not their shared face.",
+  "brand_governance": {
+    "state": "per_product_founder_approval_required",
+    "founder_approved_count": 0,
+    "current_review_product_id": "evercraft.commerce.social-media-weekly",
+    "ledger_url": "https://github.com/jgaethle10/forge-operator/blob/main/docs/branding/approvals/ledger.json",
+    "existing_exact_sku_checkout_marketing_unchanged": true
+  }
 }
