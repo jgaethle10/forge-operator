@@ -52,3 +52,50 @@ Use **real owned private storage** for actual artifact pointers, manuscript titl
 5. Build a mobile Systemia view: **Moving / Blocked / Needs Decision**, and test one full story and one evidence-led report.
 
 This is the **canary and detector**, not the still-missing resident worker.
+
+
+## Owned private Saban bridge: second engineering slice
+
+The `receipt-bridge.mjs` module prepares **read-only, deduplicated recovery plans** in the existing Saban assignment shape. It also imports a completed Saban job as a production-evidence receipt **only** if the intended project, responsible agent, action kind, completed-state record, local artifact bytes, and SHA-256 all agree. Old jobs retain their historical timestamp; rereading an old artifact does not make it fresh.
+
+Neither planning nor reconciliation dispatches workers, changes canon, removes draft versions, approves a research claim, or publishes a deliverable. A Saban worker still has to be separately admitted by authenticated owned infrastructure.
+
+Run the synthetic proof without any real manuscript or report data:
+
+```bash
+node --test tests/production-continuity.test.mjs tests/production-receipt-bridge.test.mjs
+```
+
+Private reconstruction-only audit on an owned machine, **with input and output outside the public source repository**:
+
+```bash
+node systemia/production-continuity/run-private.mjs \
+  --ledger "$HOME/.local/share/evercraft/production-continuity/ledger.json" \
+  --out "$HOME/.local/share/evercraft/production-continuity/sweep.json"
+```
+
+When an **actual** locally owned Saban work-state and its private artifact directory exist, optional digest reconciliation can be added:
+
+```bash
+node systemia/production-continuity/run-private.mjs \
+  --ledger "$HOME/.local/share/evercraft/production-continuity/ledger.json" \
+  --saban "$HOME/.local/share/evercraft/production-continuity/saban-work-state.json" \
+  --artifacts "$HOME/.local/share/evercraft/production-continuity/artifacts" \
+  --out "$HOME/.local/share/evercraft/production-continuity/reconciled.json"
+```
+
+Saban completed result contract (synthetic example; real private files never belong in GitHub):
+
+```json
+{
+  "schema": "evercraft.production.artifact-result.v1",
+  "project_id": "synthetic-episode-001",
+  "action_kind": "editorial_qa",
+  "artifact_relpath": "synthetic-review.txt",
+  "artifact_sha256": "<actual SHA-256 of local bytes>"
+}
+```
+
+The completed Saban job must also carry a matching `job_id`, `updated_at`, `agent_id`, `work.key` and `work.kind`; it is not sufficient to write `state: completed`. No standalone private artifact hash establishes editorial quality, canon approval, or published status.
+
+**Still pending:** trusted private mission intake, owned worker authorization, actual reviewer work, resident restart/lease proof, end-to-end agent receipts, mobile dashboard and release QA. **Do not claim unattended production is live on the basis of this source-stage bridge.**
