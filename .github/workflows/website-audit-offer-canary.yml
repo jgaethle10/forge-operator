@@ -28,9 +28,30 @@ jobs:
           printf '%s' "$body" | grep -q '\$49'
           printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
           printf '%s' "$body" | grep -q "Evercraft Payments"
+          # The old 4:5 synthetic poster also had the correct price. Verify the actual fix.
+          if grep -Fq 'poster-feed.svg' <<< "$body"; then
+            echo "Live page still references the oversized feed poster." >&2
+            exit 1
+          fi
+          if ! grep -Fq 'class="audit-preview"' <<< "$body"; then
+            echo "Live page does not include the compact native audit preview yet." >&2
+            exit 1
+          fi
+          if ! grep -Fq 'Illustrative process preview.' <<< "$body"; then
+            echo "Illustration truth label missing." >&2
+            exit 1
+          fi
+          # The real buyer form must appear before any decorative preview.
+          OFFER_HTML="$body" python3 - <<'PY'
+          import os
+          html=os.environ['OFFER_HTML']
+          form=html.find('name="customer_ref"')
+          preview=html.find('class="audit-preview"')
+          assert form>=0 and preview>form, "Live checkout form must precede the illustrative preview"
+          PY
           {
             echo "## Website Audit offer is live"
             echo
             echo "URL: $url"
-            echo 'Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary'
+            echo 'Verified: live compact audit preview, old poster removed, checkout form before illustration, $49 and Evercraft Payments boundary'
           } >> "$GITHUB_STEP_SUMMARY"
