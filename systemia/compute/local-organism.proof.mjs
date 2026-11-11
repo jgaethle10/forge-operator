@@ -29,6 +29,27 @@ function activeLoopbackListenerSummary() {
     });
 }
 
+async function requireStableOrganismHealth(organism,stage) {
+  let last=null;
+  let consecutive=0;
+  for(let attempt=0;attempt<20;attempt++){
+    const health=await organism.health();
+    last=health;
+    if(health.ok===true && health.kaidance?.ok===true &&
+       health.systemia_core?.ok===true && health.fabric?.ok===true) {
+      if(++consecutive>=2)return health;
+    } else consecutive=0;
+    await new Promise(resolve=>setTimeout(resolve,400));
+  }
+  console.error(JSON.stringify({
+    schema:'evercraft.local-organism.proof-health-hold.v1',stage,
+    status:{ok:last?.ok,kaidance:last?.kaidance?.state,
+      systemia_core:last?.systemia_core?.state,
+      fabric:last?.fabric?.state},clean_exit_claimed:false
+  }));
+  assert.fail('resident_services_not_stably_healthy');
+}
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-local-organism-proof-'));
 const releaseRef = 'e293e0d75d1622f12b54249be8d403a06774e4e9';
 
@@ -63,7 +84,7 @@ try {
   assert.equal(first.pulse.state, 'healthy');
   assert.equal(first.pulse.field_attestation.state, 'not_verified');
 
-  const firstHealth = await first.health();
+  const firstHealth = await requireStableOrganismHealth(first,'first_boot');
   assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.systemia_core.ok, true);
@@ -133,7 +154,7 @@ try {
   assert.notEqual(second.kaidance.receipt.receipt_hash, firstKaidanceReceipt);
   assert.notEqual(second.core.receipt.receipt_hash, firstCoreReceipt);
 
-  const secondHealth = await second.health();
+  const secondHealth = await requireStableOrganismHealth(second,'restart');
   assert.equal(secondHealth.ok, true);
 
   const allocatorSecret = fs.readFileSync(
