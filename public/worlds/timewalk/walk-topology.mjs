@@ -4,6 +4,7 @@
  */
 import {makeHistoricalOverlay} from './historical-evidence.mjs';
 import {resolvePeriodAppearance} from './architectural-periods.mjs';
+import {makeMapSheetAnchors} from './map-sheet-anchors.mjs';
 export const WALK_TOPOLOGY_SCHEMA='evercraft.timewalk.walk-topology.v1';
 const fail=(message)=>{throw Error('timewalk_walk_topology_'+message)};
 const matchPlace=(a,b)=>['city','region','country'].every(k=>String(a?.[k]||'').toLowerCase()===String(b?.[k]||'').toLowerCase());
@@ -45,10 +46,11 @@ export function validateWalkTopology(route,ledger){
     fail('route_not_engine_neutral');
   return route;
 }
-export function makeTimewalkSceneHandoff(ledger,route,architecture){
+export function makeTimewalkSceneHandoff(ledger,route,architecture,archiveAcquisition=null){
   validateWalkTopology(route,ledger);
   const evidence=makeHistoricalOverlay(ledger,route.sceneYear);
   const architecturalCue=resolvePeriodAppearance(architecture,ledger,route.sceneYear);
+  const historicalMapAnchors=archiveAcquisition ? makeMapSheetAnchors(archiveAcquisition,ledger) : null;
   return {
     schema:'evercraft.timewalk.scene-handoff.v1',
     worldId:route.worldId,sceneYear:route.sceneYear,mode:'walk',
@@ -56,6 +58,7 @@ export function makeTimewalkSceneHandoff(ledger,route,architecture){
     targetRuntime:'evercraft-worlds',
     historicalEvidence:evidence,
     architecturalCues:[architecturalCue],
+    historicalMapAnchors,
     orderedWaypoints:route.routeNodes.map(n=>({
       id:n.id,placeId:n.placeId,title:n.title,
       streetContext:n.streetContext,position:null,worldPosition:null,
@@ -73,7 +76,7 @@ export function makeTimewalkSceneHandoff(ledger,route,architecture){
       'Street sequence is a research storyboard based on modern route orientation, not verified 1960 sidewalk geometry.',
       'Canonical Worlds must provide all player movement, physics, rendering, placement and persistent scenes.',
       'Building appearance before the 1963 bank remodel is retrospectively inferred, not a 1960 photogrammetric facade.',
-      'Precise Sanborn sheet for this downtown block and georeference are not yet verified.'
+      'Archivist identified Yakima Sanborn sheets 6 and 15 and reports matching 1952/1960 footprints; original 1960 sheets remain uninspected and no georeferenced geometry is approved.'
     ]
   };
 }
