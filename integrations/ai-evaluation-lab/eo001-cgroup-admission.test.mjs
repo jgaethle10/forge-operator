@@ -12,6 +12,13 @@ const HERE=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(HERE,'../..');
 const PIN='a'.repeat(40),ID='b'.repeat(32),NONCE='c'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
+const fakeSessionProbe=()=>({detached_new_session_reported:true,
+  new_session_child_same_cgroup:true,child_exited_and_reaped:true,
+  model_execution_authorized:false});
+const fakeParentWitness={procfs_observed_child_in_same_cgroup:true,
+  child_changed_posix_session:true,parent_cleanup_and_reap_verified:true,
+  source_is_parent_procfs_readback:true,model_execution_authorized:false,
+  systemd_scope_force_kill_proven:false};
 const fakeScopeResources=file=>{
   if(file.endsWith('/memory.max'))return '268435456';
   if(file.endsWith('/pids.max'))return '12';
@@ -119,24 +126,27 @@ test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
   const r=inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
     procCgroup:'0::/user.slice/user-1000.slice/'+UNIT,
-    readFile:fakeScopeResources
+    readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness
   });
   assert.equal(r.actual_unit_member,true);
   assert.equal(r.resource_limits_read_back,true);
   assert.equal(r.cpu_quota_exact,true);
+  assert.equal(r.new_session_child_same_cgroup,true);
+  assert.equal(r.new_session_child_reaped,true);
+  assert.equal(r.parent_procfs_witness_pass,true);
   assert.equal(r.model_inference_executed,false);
   assert.throws(()=>inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
     procCgroup:'0::/user.slice/'+UNIT+'-fake',
-    readFile:fakeScopeResources
+    readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness
   }),/EXACT_LEAF_SCOPE_MEMBERSHIP_REQUIRED/);
   assert.throws(()=>inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
     procCgroup:'5:cpu:/user.slice/'+UNIT,
-    readFile:fakeScopeResources
+    readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness
   }),/UNIFIED_CGROUP_REQUIRED/);
   assert.throws(()=>inspectScopedChild({
-    scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources
+    scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness
   }),/INVALID_SYNTHETIC_SCOPE_INPUT/);
 });
 test('unapproved scope canary does not even run preflight',()=>{
@@ -165,7 +175,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
     const gotUnit=args.find(x=>x.startsWith('--unit=')).slice(7);
     const nonce=args.at(-1);
     const payload=inspectScopedChild({scopeId:gotUnit,nonce,
-      procCgroup:'0::/user.slice/'+gotUnit,readFile:fakeScopeResources});
+      procCgroup:'0::/user.slice/'+gotUnit,readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness});
     return {status:0,stdout:JSON.stringify(payload)+'\n'};
   };
   let k=0;
@@ -182,6 +192,9 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   assert.equal(calls[2].cmd,'systemctl');
   assert.equal(result.state,'ONE_SHOT_SYNTHETIC_CGROUP_RESOURCE_READBACK_REPORTED');
   assert.equal(result.synthetic_child_resource_limits_read_back,true);
+  assert.equal(result.new_session_child_same_cgroup_reported,true);
+  assert.equal(result.new_session_child_reaped_reported,true);
+  assert.equal(result.parent_procfs_witness_reported,true);
   assert.equal(result.scope_collected_after_probe,true);
   assert.equal(result.synthetic_child_reported_member,true);
   assert.equal(result.resource_limits_independently_read_back,false);
@@ -224,11 +237,38 @@ test('uncleared transient scope blocks the report even if child claimed membersh
     const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
     return {status:0,stdout:JSON.stringify(inspectScopedChild({
       scopeId:unit,nonce:ID,procCgroup:'0::/user.slice/'+unit,
-      readFile:fakeScopeResources
+      readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness
     }))};
   };
   assert.throws(()=>runSyntheticCgroupCanary({...base,run}),
     /TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED/);
   assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('kill')),true);
   assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('stop')),true);
+});
+
+test('legacy v3 resource-only report cannot claim new-session evidence',()=>{
+  const run=(cmd,args)=>{
+    if(cmd==='systemctl'){
+      if(args.includes('show'))
+        return {status:0,stdout:'LoadState=not-found\nActiveState=inactive\n'};
+      return {status:0,stdout:''};
+    }
+    const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
+    return {status:0,stdout:JSON.stringify({
+      schema:'evercraft.eo001.gate1.synthetic-scope-child.v3',
+      scope_id:unit,nonce:ID,
+      unified_cgroup_v2:true,actual_unit_member:true,
+      resource_limits_read_back:true,memory_limit_exact:true,
+      pids_limit_exact:true,cpu_quota_exact:true,
+      new_session_child_same_cgroup:true,new_session_child_reaped:true,
+      systemd_descendant_kill_proven:false,
+      model_inference_executed:false,external_actions_authorized:false
+    })};
+  };
+  assert.throws(()=>runSyntheticCgroupCanary({
+    root:ROOT,reviewedPin:PIN,ownerApproved:true,
+    preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
+      scope_test_executed:false}),
+    uuid:()=>ID,run
+  }),/SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN/);
 });

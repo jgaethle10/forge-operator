@@ -6,6 +6,13 @@ import {inspectScopedChild} from './eo001-cgroup-synthetic-child.mjs';
 
 const ID='e'.repeat(32),NONCE='f'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
+const syntheticSession=()=>({detached_new_session_reported:true,
+  new_session_child_same_cgroup:true,child_exited_and_reaped:true,
+  model_execution_authorized:false});
+const fakeParentWitness={procfs_observed_child_in_same_cgroup:true,
+  child_changed_posix_session:true,parent_cleanup_and_reap_verified:true,
+  source_is_parent_procfs_readback:true,model_execution_authorized:false,
+  systemd_scope_force_kill_proven:false};
 const CGROUP='0::/user.slice/user-1000.slice/user@1000.service/app.slice/'+UNIT+'\n';
 const goodValues={
   'memory.max':'268435456\n',
@@ -24,7 +31,7 @@ function reader(overrides={}){
 test('readback only allows the exact leaf scope and reported exact settings',()=>{
   const leaf=ownCgroupMountPath({scopeId:UNIT,procCgroup:CGROUP});
   assert.equal(leaf.endsWith('/'+UNIT),true);
-  const result=verifySyntheticScopeLimits({scopeId:UNIT,procCgroup:CGROUP,readFile:reader()});
+  const result=verifySyntheticScopeLimits({scopeId:UNIT,procCgroup:CGROUP,readFile:reader(),sessionProbe:syntheticSession,parentWitness:fakeParentWitness});
   assert.equal(result.scoped_child_readback_pass,true);
   assert.equal(result.memory_limit_exact,true);
   assert.equal(result.pids_limit_exact,true);
@@ -37,7 +44,7 @@ test('fixed child refuses mismatched memory and cannot produce a successful fiel
   for(const limit of ['max','268435455','536870912','0']){
     assert.throws(()=>inspectScopedChild({
       scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
-      readFile:reader({'memory.max':limit})
+      readFile:reader({'memory.max':limit}),sessionProbe:syntheticSession,parentWitness:fakeParentWitness
     }),/MEMORY_LIMIT_MISMATCH|RESOURCE_VALUE_INVALID/);
   }
 });
@@ -45,7 +52,7 @@ test('fixed child refuses mismatched or unbounded tasks control',()=>{
   for(const limit of ['max','11','24','0']){
     assert.throws(()=>inspectScopedChild({
       scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
-      readFile:reader({'pids.max':limit})
+      readFile:reader({'pids.max':limit}),sessionProbe:syntheticSession,parentWitness:fakeParentWitness
     }),/TASK_LIMIT_MISMATCH|RESOURCE_VALUE_INVALID/);
   }
 });
@@ -55,14 +62,14 @@ test('CPU quota must equal 75 percent as exact integer ratio',()=>{
   for(const bad of ['max 100000','50000 100000','75001 100000','bad','75000 0']){
     assert.throws(()=>inspectScopedChild({
       scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
-      readFile:reader({'cpu.max':bad})
+      readFile:reader({'cpu.max':bad}),sessionProbe:syntheticSession,parentWitness:fakeParentWitness
     }),/CPU_MAX_UNBOUNDED|CPU_LIMIT_MISMATCH|RESOURCE_VALUE_INVALID/);
   }
 });
 test('missing or inaccessible controller files fail closed without fallbacks',()=>{
   for(const name of Object.keys(goodValues)){
     assert.throws(()=>verifySyntheticScopeLimits({
-      scopeId:UNIT,procCgroup:CGROUP,readFile:reader({[name]:undefined})
+      scopeId:UNIT,procCgroup:CGROUP,readFile:reader({[name]:undefined}),sessionProbe:syntheticSession,parentWitness:fakeParentWitness
     }),/RESOURCE_READBACK_UNAVAILABLE/);
   }
 });
@@ -81,21 +88,56 @@ test('scope names cannot be spoofed by substring, parent or traversal',()=>{
 });
 test('fake child report cannot be supplied without exact controls',()=>{
   const value=inspectScopedChild({
-    scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,readFile:reader()
+    scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,readFile:reader(),sessionProbe:syntheticSession,parentWitness:fakeParentWitness
   });
-  assert.equal(value.schema,'evercraft.eo001.gate1.synthetic-scope-child.v2');
+  assert.equal(value.schema,'evercraft.eo001.gate1.synthetic-scope-child.v4');
   assert.equal(value.actual_unit_member,true);
   assert.equal(value.resource_limits_read_back,true);
   assert.equal(value.model_inference_executed,false);
   assert.equal(value.external_actions_authorized,false);
   assert.equal(value.cpu_quota_exact,true);
+  assert.equal(value.new_session_child_same_cgroup,true);
+  assert.equal(value.new_session_child_reaped,true);
+  assert.equal(value.parent_procfs_witness_pass,true);
+  assert.equal(value.parent_witness_child_reaped,true);
+  assert.equal(value.systemd_descendant_kill_proven,false);
   assert.equal(JSON.stringify(value).includes('/sys/fs/cgroup'),false);
 });
 test('readback refuses wrong values even if a fake caller provides a superficially valid scope',()=>{
   const data=CGROUP.replace('/'+UNIT+'\n','/'+UNIT+'\n');
   const result=verifySyntheticScopeLimits({
-    scopeId:UNIT,procCgroup:data,readFile:reader()
+    scopeId:UNIT,procCgroup:data,readFile:reader(),sessionProbe:syntheticSession,parentWitness:fakeParentWitness
   });
   assert.equal(result.escaped_descendant_cleanup_proven,false);
   assert.equal(result.independent_supervisor_readback,false);
+});
+
+test('synthetic scope refuses a session check that did not reap its child',()=>{
+  for(const flipped of ['new_session_child_same_cgroup','child_exited_and_reaped',
+    'detached_new_session_reported','model_execution_authorized']){
+    const ok=syntheticSession();
+    ok[flipped]=flipped==='model_execution_authorized'?true:false;
+    assert.throws(()=>inspectScopedChild({
+      scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
+      readFile:reader(),sessionProbe:()=>ok
+    }),/NEW_SESSION_CONTINUITY_NOT_ESTABLISHED/);
+  }
+});
+
+test('synthetic scope refuses absent or contradicted parent-side procfs witness',()=>{
+  for(const key of [
+    'procfs_observed_child_in_same_cgroup',
+    'child_changed_posix_session','parent_cleanup_and_reap_verified',
+    'source_is_parent_procfs_readback'
+  ]){
+    const witness={...fakeParentWitness,[key]:false};
+    assert.throws(()=>inspectScopedChild({
+      scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
+      readFile:reader(),sessionProbe:syntheticSession,parentWitness:witness
+    }),/PARENT_PROCFS_WITNESS_NOT_VERIFIED/);
+  }
+  assert.throws(()=>inspectScopedChild({
+    scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
+    readFile:reader(),sessionProbe:syntheticSession,parentWitness:null
+  }),/PARENT_PROCFS_WITNESS_NOT_VERIFIED/);
 });
