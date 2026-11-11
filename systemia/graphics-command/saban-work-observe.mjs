@@ -8,7 +8,7 @@ import {openOperatorSnapshot} from './saban-work-operator.mjs';
 const STATUS=['queued','leased','completed','dead_letter'];
 const LABELS={queued:'Waiting',leased:'Assigned',completed:'Completed',dead_letter:'Needs attention'};
 const CLOCKS=['recent_source_timestamp','stale_source_timestamp','future_source_timestamp'];
-const ISO=/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/;
+const ISO=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 const safeIso=value=>typeof value==='string'&&ISO.test(value)&&Number.isFinite(Date.parse(value));
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const numeric=(value,min,max)=>Number.isSafeInteger(value)&&value>=min&&value<=max;
