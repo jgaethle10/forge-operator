@@ -57,7 +57,7 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/property="og:url" content="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/name="twitter:card" content="summary"/);
-  assert.doesNotMatch(page,/poster-feed\\.svg|poster-hero-wide\\.svg|property="og:image"/);
+  assert.doesNotMatch(page,/poster-feed\.svg|poster-hero-wide\.svg|property="og:image"/);
   assert.match(page,/Inside your Quick Win Audit/);
   assert.match(page,/Five prioritized fixes/);
   assert.match(page,/Illustrative process preview/);
