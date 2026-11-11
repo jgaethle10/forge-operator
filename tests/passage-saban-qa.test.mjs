@@ -12,7 +12,7 @@ test('Passage Saban QA only accepts registered fixed suites',()=>{
 test('Registered Saban adapter executes original Passage catalog tests',async()=>{
  const result=await runAssignment({assignment:a('catalog_auditor')});
  assert.equal(result.role,'catalog_auditor');
- assert.equal(result.status,'passed');
+ assert.equal(result.status,'passed',JSON.stringify(result));
  assert.ok(result.test_count>=1);
  assert.equal(result.test_count,result.passed_count);
  assert.match(result.stdout_sha256,/^sha256:[a-f0-9]{64}$/);
