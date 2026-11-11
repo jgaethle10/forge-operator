@@ -272,10 +272,35 @@ function makeMaterial(gltf,i,assetId,tex){
   validateMaterial(out);
   return out;
 }
+function uvDegenerateTriangleCount(uvs,indices,vertexCount){
+  const order=indices||Array.from({length:vertexCount},(_,i)=>i);
+  let degenerate=0;
+  for(let i=0;i<order.length;i+=3){
+    const a=order[i]*2,b=order[i+1]*2,c=order[i+2]*2;
+    const u1=uvs[b]-uvs[a],v1=uvs[b+1]-uvs[a+1],
+      u2=uvs[c]-uvs[a],v2=uvs[c+1]-uvs[a+1];
+    if(Math.abs(u1*v2-u2*v1)<=1e-12)degenerate++;
+  }
+  return degenerate;
+}
+function geometryOnlyTangents(normals){
+  const out=[];
+  for(let i=0;i<normals.length;i+=3){
+    const [nx,ny,nz]=normals.slice(i,i+3),l=Math.hypot(nx,ny,nz);
+    check(Number.isFinite(l)&&l>1e-12,'preview_normal_invalid');
+    const n=[nx/l,ny/l,nz/l],basis=Math.abs(n[0])<.9?[1,0,0]:[0,1,0];
+    const dot=n[0]*basis[0]+n[1]*basis[1]+n[2]*basis[2];
+    const t=basis.map((x,k)=>x-dot*n[k]),length=Math.hypot(...t);
+    check(length>1e-12,'preview_tangent_invalid');
+    out.push(...t.map(x=>x/length),1);
+  }
+  return out;
+}
 export function importGltfAssetPack({
   gltf,buffers,decodedImages={},assetId,provenance,lods=null,
   maxVertices=750000,maxTextureBytes=128*1024*1024,
-  allowBaseLevelMipmapSampling=false
+  allowBaseLevelMipmapSampling=false,
+  allowDegenerateUvNoNormalMapPreview=false
 }){
   safeId(assetId);
   check(gltf?.asset?.version==='2.0','version_unsupported');
@@ -296,7 +321,7 @@ export function importGltfAssetPack({
   const materials=Array.from({length:materialCount+1},
     (_,i)=>makeMaterial(gltf,i===materialCount?-1:i,assetId,tex));
   const fallbackId=materials.at(-1).id;
-  const geometry=[],primitiveBindings=[],imports=[];
+  const geometry=[],primitiveBindings=[],imports=[],tangentFallbacks=[];
   let totalVertices=0,totalTriangles=0;
   for(let mi=0;mi<gltf.meshes.length;mi++){
     const mesh=gltf.meshes[mi];
@@ -320,10 +345,20 @@ export function importGltfAssetPack({
       const idx=p.indices!==undefined?indices(gltf,binary,p.indices):undefined;
       const v=positions.length/3;totalVertices+=v;
       check(totalVertices<=maxVertices,'vertex_budget_exceeded');
+      const degenerateUvTriangles=uvDegenerateTriangleCount(uvs,idx,v);
+      const requiresNormalTexture=Boolean(gltf.materials?.[p.material]?.normalTexture);
+      let previewTangents=tangents;
+      if(degenerateUvTriangles>0&&!tangents&&allowDegenerateUvNoNormalMapPreview){
+        check(!requiresNormalTexture,'degenerate_uv_normal_map_preview_unsupported:'+id);
+        previewTangents=geometryOnlyTangents(normals);
+        tangentFallbacks.push({geometry_id:id,
+          degenerate_uv_triangles:degenerateUvTriangles,
+          policy:'geometric_tangent_basis_base_color_only_preview'});
+      }
       const imported=geometryFromFallenAsset({
         schema:'evercraft.fallen.geometry.v1',id,primitive:'triangles',
         coordinateSystem:'right_handed_y_up',units:'meters',
-        positions,normals,uvs,...(tangents?{tangents}:{}),
+        positions,normals,uvs,...(previewTangents?{tangents:previewTangents}:{}),
         ...(idx?{indices:idx}:{}),provenance
       });
       check(verifyFallenGeometryImportReceipt(imported.receipt),'fallen_receipt_invalid');
@@ -357,7 +392,8 @@ export function importGltfAssetPack({
     buffers:binary.map((b,i)=>({index:i,sha256:'sha256:'+sha(b),bytes:b.length})),
     images:rendered.imageEvidence,
     samplerDowngrades:rendered.samplerDowngrades,
-    qualityStatus:rendered.samplerDowngrades.length?'preview_degraded':'source_sampling_preserved',
+    tangentFallbacks,
+    qualityStatus:(rendered.samplerDowngrades.length||tangentFallbacks.length)?'preview_degraded':'source_sampling_preserved',
     geometry:geometry.map(g=>({id:g.id,digest:geometryAssetDigest(g),
       vertices:g.positions.length/3,triangles:(g.indices?.length||g.positions.length/3)/3})),
     materials:materials.map(m=>({id:m.id,digest:digest(m)})),
