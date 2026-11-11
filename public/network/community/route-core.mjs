@@ -3,12 +3,12 @@ const CATALOG_SCHEMA = 'evercraft.network.community-route-catalog.v0';
 const STATES = new Set(['planned', 'discovery', 'human_intake']);
 const NORMALIZE_LIMIT = 240;
 function phrase(value) {
-  return String(value ?? '').trim().toLowerCase().replace(/\\s+/g, ' ').slice(0, NORMALIZE_LIMIT);
+  return String(value ?? '').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, NORMALIZE_LIMIT);
 }
 function safeHref(href) {
   return typeof href === 'string' &&
-    /^\\/(?!\\/)[a-z0-9/-]*$/.test(href) &&
-    !href.includes('..') && !href.includes('\\\\');
+    /^\/(?!\/)[a-z0-9/-]*$/.test(href) &&
+    !href.includes('..') && !href.includes('\\');
 }
 export function validateCatalog(catalog) {
   if (!catalog || catalog.schema !== CATALOG_SCHEMA) throw Error('catalog_schema_invalid');
@@ -62,7 +62,7 @@ const publicView = node => ({
 export function resolveNetworkNeed(input = {}, catalog) {
   validateCatalog(catalog);
   const raw = phrase(input?.query);
-  if (/\\b(911|life-threatening emergency|immediate danger|suicide attempt)\\b/.test(raw)) {
+  if (/\b(911|life-threatening emergency|immediate danger|suicide attempt)\b/.test(raw)) {
     return {
       schema: 'evercraft.network.community-resolution.v0',
       state: 'outside_directory_emergency',
