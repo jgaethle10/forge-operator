@@ -1,0 +1,251 @@
+{
+  "schema": "evercraft.brand-approval-ledger.v1",
+  "created_on": "2026-11-10",
+  "policy": "Explicit founder review required for identity signoff; no implied approval from merged PR, active checkout, completed tests or discussion enthusiasm.",
+  "scope": "Creative naming/story/mark/palette/voice distinct from existing legitimate scoped service checkout.",
+  "founder_reviews_approved": 0,
+  "current_review_order": 1,
+  "queue_rule": "No subsequent brand marked in_review until current one has an explicit founder approval, revision decision or hold. Do not approve multiple products from one generic push.",
+  "allowed_decision_statuses": [
+    "not_reviewed",
+    "awaiting_founder_review",
+    "changes_requested",
+    "approved_direction",
+    "rejected",
+    "on_hold"
+  ],
+  "documentation_fields_required_for_approval": [
+    "approval_quote",
+    "decision_date",
+    "evidence_reference",
+    "reviewed_by",
+    "accepted_dimensions",
+    "proposal.source_blob_sha"
+  ],
+  "products": [
+    {
+      "order": 1,
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "slug": "social-media-weekly",
+      "working_imprint": "The Weekly Signal",
+      "existing_sku": "Social Media Management · Weekly",
+      "price_usd": 100,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1926",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/social-media-weekly/brand.json",
+        "source_blob_sha": "baf5efe952ba5b36c8bb6ea9a990c6607272b512",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "awaiting_founder_review",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    },
+    {
+      "order": 2,
+      "product_id": "evercraft.commerce.asset-diagnosis",
+      "slug": "asset-diagnosis",
+      "working_imprint": "The Second Look",
+      "existing_sku": "Asset Diagnosis",
+      "price_usd": 149,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1927",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/asset-diagnosis/brand.json",
+        "source_blob_sha": "47ee9106fe59daac6e901db611d4c806e3f20bcf",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "not_reviewed",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    },
+    {
+      "order": 3,
+      "product_id": "evercraft.commerce.ai-boardroom-standard",
+      "slug": "ai-boardroom-standard",
+      "working_imprint": "The Chamber",
+      "existing_sku": "AI Boardroom · Standard Review",
+      "price_usd": 250,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1928",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/ai-boardroom-standard/brand.json",
+        "source_blob_sha": "539877f6b304b51e71749aa45d0e957d499c5618",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "not_reviewed",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    },
+    {
+      "order": 4,
+      "product_id": "evercraft.commerce.ai-boardroom-financial-modeling",
+      "slug": "ai-boardroom-financial-modeling",
+      "working_imprint": "The Scenario Room",
+      "existing_sku": "AI Boardroom · Deep Dive with Financial Modeling",
+      "price_usd": 500,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1929",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/ai-boardroom-financial-modeling/brand.json",
+        "source_blob_sha": "6748157d337305f25a4a40b78af25e3c2a922da7",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "not_reviewed",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    },
+    {
+      "order": 5,
+      "product_id": "evercraft.commerce.knowledge-activation",
+      "slug": "knowledge-activation",
+      "working_imprint": "The Knowledge Desk",
+      "existing_sku": "Knowledge Activation",
+      "price_usd": 500,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1930",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/knowledge-activation/brand.json",
+        "source_blob_sha": "dc5f66cf6f2f854c0b3af8aecf22234b640eec01",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "not_reviewed",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    },
+    {
+      "order": 6,
+      "product_id": "evercraft.commerce.social-intelligence-launch",
+      "slug": "social-intelligence-launch",
+      "working_imprint": "Signal Map",
+      "existing_sku": "Social Intelligence Launch",
+      "price_usd": 1000,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1931",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/social-intelligence-launch/brand.json",
+        "source_blob_sha": "15dd24702064bc473726ffbe0f3ad9f6bfd53234",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "not_reviewed",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    },
+    {
+      "order": 7,
+      "product_id": "evercraft.commerce.institutional-memory-system",
+      "slug": "institutional-memory-system",
+      "working_imprint": "The Living Archive",
+      "existing_sku": "Institutional Memory System",
+      "price_usd": 1500,
+      "tracking_issue": "https://github.com/jgaethle10/forge-operator/issues/1932",
+      "proposal": {
+        "source_path": "public/mesh/checkout-ready/institutional-memory-system/brand.json",
+        "source_blob_sha": "34d609ae7a2582b19511047dd0d0ef771f9b992a",
+        "version": "v1.0-proposal"
+      },
+      "decision": {
+        "status": "not_reviewed",
+        "approved": false,
+        "reviewed_by": null,
+        "approval_quote": null,
+        "decision_date": null,
+        "evidence_reference": null,
+        "decision_commit": null,
+        "accepted_dimensions": [],
+        "changes_requested": [],
+        "reason": null
+      },
+      "release": {
+        "brand_mark_approved": false,
+        "marketing_asset_approved": false,
+        "public_distribution_with_imprint_approved": false,
+        "live_provider_post_id": null
+      }
+    }
+  ]
+}
