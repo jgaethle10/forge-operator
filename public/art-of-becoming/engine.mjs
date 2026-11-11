@@ -1,4 +1,5 @@
 // Art of Becoming MVP. Local-only, self-reported reflections, never treatment or verification.
+import {emptyWorldState, normalizeWorldState} from './world-engine.mjs';
 export const STORAGE_KEY = 'evercraft.art-of-becoming.v1';
 export const GOALS = Object.freeze([
   { id: 'alcohol-free', name: 'Alcohol-free days', prompt: 'A day I chose not to drink' },
@@ -31,7 +32,7 @@ export function shiftDay(key, amount) {
 }
 
 export function emptyState() {
-  return { version: 1, goal: 'alcohol-free', theme: 'garden', entries: {}, creditedDays: {}, canvasThemes: {} };
+  return { version: 1, goal: 'alcohol-free', theme: 'garden', entries: {}, creditedDays: {}, canvasThemes: {}, worldState: emptyWorldState() };
 }
 
 export function normalizeState(input, today = dayKey()) {
@@ -68,6 +69,7 @@ export function normalizeState(input, today = dayKey()) {
       );
     }
   }
+  result.worldState = normalizeWorldState(input.worldState, GOALS.map(goal=>goal.id));
   return result;
 }
 
