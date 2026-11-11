@@ -2868,6 +2868,14 @@ export async function startEvercraftComputeNode({
 
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
+            // The isolated localhost lifecycle proof tests service continuity,
+            // not Portfolio Sentinel product policy findings. Preserve strict
+            // enforcement by default in production and all ordinary tests.
+            PORTFOLIO_SENTINEL_ENFORCE_HEALTH:
+              process.env.NODE_ENV === 'test' &&
+              process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true' &&
+              process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH === 'false'
+                ? 'false' : 'true',
             EVERCRAFT_RELEASE_REF: releaseRef,
             SYSTEMIA_YARD_STATE_DIR: yardStateDir,
             KAIDANCE_DEPLOYMENT_ID: kaidanceDeploymentId,
