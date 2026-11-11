@@ -24,9 +24,12 @@ jobs:
       - name: Check source syntax
         run: |
           node --check integrations/ai-evaluation-lab/eo001-cgroup-session-proof.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.mjs
           node --check integrations/ai-evaluation-lab/eo001-cgroup-synthetic-child.mjs
       - name: Exercise genuine separate Linux process session with no model and reaping
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-session-proof.test.mjs
+      - name: Verify parent-side live procfs witness of detached session
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.test.mjs
       - name: Resource/readback admission regressions
         run: |
           node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
