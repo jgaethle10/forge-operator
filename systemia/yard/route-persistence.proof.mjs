@@ -93,7 +93,8 @@ try {
   // The old implementation overwrote the file with staleYard's cached record
   // here, silently deleting public_route during an ordinary lease renewal.
   const renewed = await staleYard.renewDeploymentLease(deploymentId);
-  assert.equal(renewed.ok, true);
+  assert.equal(renewed.deployment_id, deploymentId);
+  assert.equal(renewed.expires_at, '2030-01-01T00:00:00.000Z');
   const afterRenewal = new YardOperator({ stateDir }).deploymentStatus(deploymentId);
   assert.equal(afterRenewal.lease.expires_at, '2030-01-01T00:00:00.000Z');
   assert.equal(afterRenewal.public_route?.receipt_hash, route.receipt_hash,
