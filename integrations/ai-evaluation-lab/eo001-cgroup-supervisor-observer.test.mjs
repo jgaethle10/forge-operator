@@ -76,7 +76,7 @@ test('systemd properties must be exact, active and from the intended scope',()=>
     PROPERTIES.replace('ControlGroup=','ControlGroupRelative='),
     PROPERTIES+'Unexpected=1\n',
     'LoadState=loaded\nActiveState=active\n'
-  ])assert.throws(()=>inspect({systemdShow:bad}),/SCOPE_|EXACT_|UNIFIED_|CGROUP_/);
+  ])assert.throws(()=>inspect({systemdShow:bad}),/SCOPE_|EXACT_|UNIFIED_|CGROUP_|RESOURCE_/);
 });
 
 test('worker identity must be independently present in procs and /proc membership',()=>{
