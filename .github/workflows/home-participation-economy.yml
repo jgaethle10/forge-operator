@@ -25,8 +25,9 @@ jobs:
           node --check systemia/participation-economy/pilot.mjs
           node --check systemia/participation-economy/journal.mjs
           node --check systemia/participation-economy/journal-pilot.mjs
+          node --check systemia/participation-economy/creator-intake.mjs
       - name: Run economy and fraud-hold tests
-        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs
+        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs
       - name: Prove demo remains read-only
         run: |
           node systemia/participation-economy/pilot.mjs > /tmp/home-participation-pilot.json
