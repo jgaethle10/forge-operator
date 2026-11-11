@@ -107,3 +107,11 @@ No public demo canary, permissioned retailer reply or payment receipt is availab
 - Systemia Proof-First Sales and Interaction Ledger remain the contact gate. Sourcing interest is not a consented FindMyPart inquiry, merchant validation, verified lead or payment receipt.
 
 The open PR and branch remain under Systemia release hold even if CI passes.
+
+## RC09 | Actionable, privacy-minimal FindMyPart note and read-only destination witness (2026-11-10)
+
+Wheel Lab remains the shopper visualizer and merchant review desk; FindMyPart is a **separate** parts-research service. A shop can now click **Download FindMyPart research note** only after importing a shopper concept that explicitly requested optional sourcing help. The plain-text note contains the allowable illustrative wheel style, finish, diameter and paint preference plus verification reminders. It deliberately excludes the shop label, user-entered vehicle note, SKU, prices, buyer identity, contact information and any false inventory/fitment statements. It is **not sent or uploaded**. Reset disables the action again; forged claimed referrals, nonboolean consent and older legacy packets remain fail-closed/compatible as previously tested.
+
+The dedicated Wheel Lab GitHub Actions workflow now includes an **independent, nonblocking read-only FindMyPart destination observation**. It reuses the canonical scripts/probe-findmypart-owned-launch.mjs GET-only source/hash/HTTPS/intake test and uploads a separate wheel-lab-findmypart-referral-readiness artifact (JSON and exit code). A green Wheel Lab source test or a green *probe job* does **not** mean the external URL is ready. Review the artifact's actual public_brand_frontage_verified and public_customer_intake_verified booleans, exit code and URL/content hashes. Any false, missing or stale observation keeps the referral held.
+
+No direct-link referral is activated. A future referral requires independently verified public HTTPS destination, privacy review, explicit release/publishing authorization for the exact URL/asset and a voluntary click with **no query parameters or silent information transfer**. A separate purchase or authenticated form requires its own permissions, verified fulfillment and payment receipts. No customer/merchant order or sourcing result is claimed.
