@@ -5,6 +5,9 @@ import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {probeWorldsPublic,checkWorldsOrigin} from './probe-worlds-public.mjs';
+import {probeWorldsHeritagePublic} from './probe-worlds-heritage-public.mjs';
+import {probeHiddenWorldPublic} from './probe-hidden-world-public.mjs';
+import {auditWorldsReadiness} from './audit-worlds-owned-readiness.mjs';
 import {inspectWorldsEdge,checkedLoopbackUrl} from '../systemia/worlds/worlds-edge-route.mjs';
 import {verifyVaultBackup} from '../systemia/worlds/worlds-vault-backup.mjs';
 
@@ -18,6 +21,7 @@ export async function assessWorldsLaunch({
  publicOrigin='',vaultUrl='http://127.0.0.1:8788',edgeControlUrl='http://127.0.0.1:18081',
  backupRoot=defaultBackupRoot(),controlToken='',fetchFn=fetch,
  edgeInspector=inspectWorldsEdge,publicProbe=probeWorldsPublic,
+ heritageProbe=probeWorldsHeritagePublic,hiddenWorldProbe=probeHiddenWorldPublic,
  backupVerifier=verifyVaultBackup,files=fs
 }={}){
  const checks={
@@ -27,6 +31,8 @@ export async function assessWorldsLaunch({
   owned_edge_admission:skip('not_checked'),
   external_read_only:skip('not_checked')
  };
+ const externalNames=['worlds','heritage','hidden_world'];
+ let externalReadOnlySurfaces=Object.fromEntries(externalNames.map(name=>[name,{verified:false,reason:'not_checked'}]));
  let origin='';
  try{origin=checkWorldsOrigin(publicOrigin);checks.owned_https_origin=pass();}
  catch{checks.owned_https_origin=fail('owned_https_origin_required');}
@@ -66,8 +72,18 @@ export async function assessWorldsLaunch({
  }else checks.owned_edge_admission=skip('requires_pinned_local_vault');
  if(origin){
   try{
-   const r=await publicProbe(origin,{fetchFn});
-   checks.external_read_only=r?.verified===true?pass():fail('external_https_read_only_gate_failed');
+   // A successful vault homepage alone must never qualify the heritage tour
+   // or Hidden World for an external write drill. Reuse the same three
+   // independent HTTPS canaries as the public readiness watcher.
+   const report=await auditWorldsReadiness(origin,{
+    probes:{
+     worlds:value=>publicProbe(value,{fetchFn}),
+     heritage:value=>heritageProbe(value,{fetchFn}),
+     hidden_world:value=>hiddenWorldProbe(value,{fetchFn})
+    }
+   });
+   externalReadOnlySurfaces=report.checks;
+   checks.external_read_only=report.verified===true?pass():fail('external_https_read_only_gate_failed');
   }catch{checks.external_read_only=fail('external_https_read_only_gate_failed');}
  }else checks.external_read_only=skip('requires_owned_https_origin');
  const prerequisiteChecks=Object.values(checks);
@@ -77,7 +93,7 @@ export async function assessWorldsLaunch({
   local_vault:'Start the private Worlds vault on the owning node with its exact --public-origin; verify its loopback health.',
   private_backup:'Create a private Worlds vault backup and verify the latest snapshot before opening public writes.',
   owned_edge_admission:'Verify the owned public-edge controller, dedicated Worlds hostname and renewable lease on the same node.',
-  external_read_only:'Activate the owned HTTPS route, then pass the external read-only Worlds gate from outside the local network.'
+  external_read_only:'Activate the owned HTTPS route, then independently verify the Worlds vault, Heritage tour and Hidden World over the same owned origin.'
  };
  const blocker=Object.entries(checks).find(([,value])=>value.status!=='pass');
  const nextAction=blocker?actions[blocker[0]]:
@@ -86,7 +102,8 @@ export async function assessWorldsLaunch({
   schema:LAUNCH_DIAGNOSTIC_SCHEMA,
   mode:'read_only',
   public_origin:origin||null,
-  checks,ready_for_disposable_write_drill:readyForWriteDrill,
+  checks,external_read_only_surfaces:externalReadOnlySurfaces,
+  ready_for_disposable_write_drill:readyForWriteDrill,
   write_test_performed:false,
   live_iphone_verified:false,
   public_launch_verified:false,
