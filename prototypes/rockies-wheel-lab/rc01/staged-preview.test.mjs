@@ -87,7 +87,7 @@ test('RC09 public-preview referral is exact, user-clicked, private and not in of
     assert.doesNotMatch(source, /class="findmypart-referral"/);
     assert.doesNotMatch(staged, /findmypart\/\?[^\s"'<>]*/);
   }
-  assert.match(read(publicDir,'shopper.html'),/No Wheel Lab choices, notes, files or customer information are transferred/);
+  assert.match(read(publicDir,'shopper.html'),/no Wheel Lab choices, notes, files or customer information are transferred/i);
   assert.match(read(publicDir,'merchant-desk.html'),/No quote, customer details or concept file is transmitted/);
 });
 
