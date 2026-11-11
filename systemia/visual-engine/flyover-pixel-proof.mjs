@@ -54,8 +54,8 @@ async function loopback(){
   return {server,url:'http://127.0.0.1:'+server.address().port+'/'};
 }
 
-async function execute(page,plan,geometry,shader){
-  return page.evaluate(async({plan,geometry,shader})=>{
+export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=[]){
+  return page.evaluate(async({plan,geometry,shader,textures})=>{
     if(!globalThis.isSecureContext) throw new Error('flyover_secure_context_required');
     if(!navigator.gpu) throw new Error('flyover_navigator_gpu_unavailable');
     const adapter=await navigator.gpu.requestAdapter({powerPreference:'high-performance'});
@@ -140,7 +140,19 @@ async function execute(page,plan,geometry,shader){
       const orm=texel([255,255,0,255]);
       const black=texel([0,0,0,255]);
       const normal=texel([128,128,255,255]);
-      const sampler=device.createSampler({magFilter:'linear',minFilter:'linear'});
+      const textureViews=new Map();
+      for(const tex of textures){
+        if(!['rgba8unorm','rgba8unorm-srgb'].includes(tex.format))
+          throw new Error('visual_texture_format_invalid:'+tex.id);
+        if(tex.data.length!==tex.width*tex.height*4)
+          throw new Error('visual_texture_data_length_invalid:'+tex.id);
+        const texture=track(device.createTexture({size:[tex.width,tex.height,1],
+          format:tex.format,usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST}));
+        device.queue.writeTexture({texture},new Uint8Array(tex.data),
+          {bytesPerRow:tex.width*4,rowsPerImage:tex.height},
+          [tex.width,tex.height,1]);
+        textureViews.set(tex.id,texture.createView());
+      }
       const geom=new Map(geometry.map(a=>[a.id,a]));
       const target=track(device.createTexture({size:[plan.width,plan.height,1],format:'rgba8unorm',
         usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC}));
@@ -160,7 +172,10 @@ async function execute(page,plan,geometry,shader){
       }});
       pass.setBindGroup(0,frameGroup);
       for(const draw of plan.draws){
-        if(draw.textureFlags.some(x=>x!==0)) throw new Error('flyover_texture_bindings_not_implemented');
+        for(const id of Object.values(draw.textureRefs)){
+          if(id!==null&&!textureViews.has(id))
+            throw new Error('visual_referenced_texture_missing:'+id);
+        }
         const asset=geom.get(draw.geometryId);
         if(!asset) throw new Error('flyover_geometry_missing:'+draw.geometryId);
         const packed=[];
@@ -168,7 +183,7 @@ async function execute(page,plan,geometry,shader){
           packed.push(...asset.positions.slice(i*3,i*3+3));
           packed.push(...asset.normals.slice(i*3,i*3+3));
           packed.push(asset.uvs?.[i*2]??0,asset.uvs?.[i*2+1]??0);
-          packed.push(1,0,0,1);
+          packed.push(...(asset.tangents?.slice(i*4,i*4+4)||[1,0,0,1]));
         }
         const vb=createBuffer(packed,GPUBufferUsage.VERTEX);
         const objectBuffer=createBuffer([
@@ -176,11 +191,16 @@ async function execute(page,plan,geometry,shader){
           draw.materialModel,draw.metallic,draw.roughness,draw.alphaCutoff,
           ...draw.emissive,draw.emissiveIntensity,...draw.textureFlags
         ],GPUBufferUsage.UNIFORM);
+        const sampler=device.createSampler({addressModeU:draw.sampler.addressModeU,
+          addressModeV:draw.sampler.addressModeV,magFilter:draw.sampler.magFilter,
+          minFilter:draw.sampler.minFilter});
         const objectGroup=device.createBindGroup({layout:objectLayout,entries:[
           {binding:0,resource:{buffer:objectBuffer}},
           {binding:1,resource:sampler},
-          {binding:2,resource:white},{binding:3,resource:orm},
-          {binding:4,resource:black},{binding:5,resource:normal}
+          {binding:2,resource:draw.textureRefs.baseColor?textureViews.get(draw.textureRefs.baseColor):white},
+          {binding:3,resource:draw.textureRefs.orm?textureViews.get(draw.textureRefs.orm):orm},
+          {binding:4,resource:draw.textureRefs.emissive?textureViews.get(draw.textureRefs.emissive):black},
+          {binding:5,resource:draw.textureRefs.normal?textureViews.get(draw.textureRefs.normal):normal}
         ]});
         pass.setPipeline(pipelineFor(draw));
         pass.setBindGroup(1,objectGroup);
@@ -230,7 +250,7 @@ async function execute(page,plan,geometry,shader){
       for(const resource of resources) try{resource.destroy()}catch{}
       if(!destroyed) device.destroy();
     }
-  },{plan,geometry,shader});
+  },{plan,geometry,shader,textures});
 }
 
 export async function runFlyoverPixelProof({
@@ -257,7 +277,7 @@ export async function runFlyoverPixelProof({
         const captures=[];
         for(const t of TIMES){
           const {plan,geometry}=compilePlan(t);
-          const pixels=await execute(page,plan,geometry,EVERCRAFT_WEBGPU_WGSL);
+          const pixels=await renderWebGpuPlanOnPage(page,plan,geometry,EVERCRAFT_WEBGPU_WGSL);
           assert.equal(pixels.drawCount,plan.draws.length);
           assert.ok(pixels.visiblePixels>1000,'flyover_frame_nearly_empty:'+t);
           assert.ok(pixels.meanLuminance>4 && pixels.meanLuminance<252,'flyover_luminance_invalid:'+t);
