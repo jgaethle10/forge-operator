@@ -8,6 +8,7 @@ on:
       - 'systemia/mcp/fabric-public-products.mjs'
       - 'public/.well-known/evercraft-pain-index.json'
       - 'tests/fabric-universal-discovery.test.mjs'
+      - 'tests/fabric-home-first-relevance.test.mjs'
       - 'tests/fabric-customer-journeys.test.mjs'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
@@ -41,6 +42,7 @@ on:
       - 'systemia/mcp/fabric-public-products.mjs'
       - 'public/.well-known/evercraft-pain-index.json'
       - 'tests/fabric-universal-discovery.test.mjs'
+      - 'tests/fabric-home-first-relevance.test.mjs'
       - 'tests/fabric-customer-journeys.test.mjs'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
@@ -98,7 +100,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP, human offer storefront, and mobile door
-        run: node --test tests/fabric-customer-journeys.test.mjs tests/fabric-universal-discovery.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+        run: node --test tests/fabric-home-first-relevance.test.mjs tests/fabric-customer-journeys.test.mjs tests/fabric-universal-discovery.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
       - name: Verify deployed EarthWorks hot-read playground
         shell: bash
