@@ -216,16 +216,27 @@ test('unattended broker dispatch never enables ambient-device gateway or arbitra
       payload: { telemetry: { a: 7 } },
       idempotency_key: 'gateway-must-not-execute',
     });
+    const uncertain = queue.submit({
+      workload_class: 'systemia.telemetry-normalizer.v1',
+      payload: { telemetry: { a: 8 } },
+      idempotency_key: 'gateway-uncertain-manual-hold',
+    });
+    queue.update(uncertain.job_id, {
+      state:'held',
+      last_hold:{reason:'unverified_remote_worker_result'},
+    });
     const cycle = await dispatchAmbientJobsOnce({
       root,
-      maxJobs: 1,
+      maxJobs: 2,
       nodeSeedOnly: true,
       gatewayUrl: 'http://127.0.0.1:1',
       gatewayToken: '',
     });
-    assert.equal(cycle.held, 1);
+    assert.equal(cycle.held, 2);
     assert.equal(cycle.unattended_nodeseed_only, true);
     assert.equal(queue.get(item.job_id).last_hold.reason, 'unattended_workload_not_authorized');
+    assert.equal(queue.get(uncertain.job_id).last_hold.reason, 'unverified_remote_worker_result');
+    assert.equal(cycle.rows.find(row=>row.job_id===uncertain.job_id).manual_review_required,true);
   } finally {
     fs.rmSync(root, { recursive:true, force:true });
   }
