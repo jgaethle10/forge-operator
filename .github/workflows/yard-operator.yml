@@ -22,6 +22,8 @@ on:
       - 'systemia/yard/broker-recovery-admission.mjs'
       - 'tests/broker-cold-restart-identity.test.mjs'
       - 'tests/remote-broker-resident.test.mjs'
+      - 'scripts/preflight-penguin-broker-source-stage.mjs'
+      - 'tests/penguin-broker-source-stage-preflight.test.mjs'
       - 'systemia/saban/split-identity-capacity.mjs'
       - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
@@ -64,6 +66,8 @@ on:
       - 'systemia/yard/broker-recovery-admission.mjs'
       - 'tests/broker-cold-restart-identity.test.mjs'
       - 'tests/remote-broker-resident.test.mjs'
+      - 'scripts/preflight-penguin-broker-source-stage.mjs'
+      - 'tests/penguin-broker-source-stage-preflight.test.mjs'
       - 'systemia/saban/split-identity-capacity.mjs'
       - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
@@ -143,6 +147,8 @@ jobs:
         run: node --test tests/broker-cold-restart-identity.test.mjs
       - name: Prove historic resident launcher holds stale Yard identities in isolated lab
         run: node --test tests/remote-broker-resident.test.mjs
+      - name: Prove pinned broker source-stage preflight is nonmutating
+        run: node --test tests/penguin-broker-source-stage-preflight.test.mjs
       - name: Check role-specific resident cycle syntax
         run: node --check systemia/saban/split-identity-cycle-runner.mjs && node --check systemia/saban/split-identity-capacity.mjs
       - name: Check split-account mailbox provisioning syntax
