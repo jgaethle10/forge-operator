@@ -1,0 +1,44 @@
+name: EO-001 Gate 1 process-group escape negative control
+on:
+  push:
+    branches:
+      - research/eo001-gate1-escaped-session-negative-control-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-process-group-escape-negative*'
+      - '.github/workflows/eo001-gate1-process-escape.yml'
+  pull_request:
+    branches:
+      - research/eo001-gate1-session-containment-proof-20261110
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-linux-negative-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and executable restrictions
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.mjs
+      - name: Verify real Linux escaped session defeats process-group-only cleanup
+        run: node --test integrations/ai-evaluation-lab/eo001-process-group-escape-negative.test.mjs
+      - name: Verify existing independent parent-side cgroup witness
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.test.mjs
+      - name: Scope and resource admission tests remain held
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-session-proof.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
+      - name: Fail closed for non-synthetic invocation
+        run: |
+          set +e
+          node integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs --run-qwen >/tmp/eo001-escape-refusal.out 2>&1
+          R=$?
+          set -e
+          test "$R" -eq 2
+          grep -q 'SYNTHETIC_NEGATIVE_CONTROL_ONLY' /tmp/eo001-escape-refusal.out
