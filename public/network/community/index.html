@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f7faff">
+  <title>Evercraft Network | Community Connections Preview</title>
+  <meta name="description" content="A review-stage Evercraft community connection directory. Find existing product information and identify services still in development without false promises.">
+  <style>
+    :root { color-scheme:light; font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; background:#f7faff; color:#17263e; }
+    * { box-sizing:border-box; }
+    body { margin:0; } main { max-width:1100px; margin:auto; padding:36px 22px 100px; }
+    a { color:#064d98; } button,input { font:inherit; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #0a6cc1; outline-offset:4px; }
+    .top { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; font-size:.86rem; color:#51627b; }
+    .tag { border:1px solid #cddded; background:#fff; padding:7px 11px; border-radius:999px; }
+    .hero { padding:70px 0 35px; max-width:860px; }
+    .eyebrow { font-size:.75rem; font-weight:800; text-transform:uppercase; letter-spacing:.15em; color:#275b96; }
+    h1 { font-size:clamp(2.5rem,7vw,5.9rem); line-height:.99; letter-spacing:-.06em; margin:14px 0 22px; }
+    .lead { color:#485c78; font-size:clamp(1.03rem,2.3vw,1.35rem); line-height:1.55; }
+    h2 { font-size:1.5rem; margin:34px 0 14px; } h3 { font-size:1.1rem; margin-top:28px; }
+    #need-form { background:white; border:1px solid #dae4f0; padding:18px; border-radius:22px; display:flex; flex-wrap:wrap; gap:10px; }
+    #need-input { flex:1; min-width:220px; border:1px solid #b6c9dc; border-radius:12px; padding:15px; }
+    #need-form button { background:#132f56; color:white; border:0; border-radius:12px; padding:15px 20px; cursor:pointer; }
+    #need-form button:disabled { opacity:.55; cursor:not-allowed; }
+    .goals-grid,.results-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(235px,1fr)); gap:12px; }
+    .goal-button,.route-card { text-align:left; display:flex; flex-direction:column; gap:10px; padding:21px; border:1px solid #d6e2ed; border-radius:17px; background:#fff; color:inherit; }
+    .goal-button { cursor:pointer; min-height:118px; }
+    .goal-button:hover { border-color:#4e82b6; background:#f0f7ff; }
+    .goal-button strong { font-size:1.08rem; } .goal-button span,.route-card p { color:#53647b; line-height:1.5; }
+    .route-card h4 { margin:0; font-size:1.15rem; } .route-card p { margin:0; font-size:.93rem; }
+    .route-state { font-size:.73rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:#3166a3; }
+    .route-card .boundary { font-size:.85rem; color:#697488; border-top:1px solid #edf2f7; padding-top:10px; margin-top:auto; }
+    .link { font-weight:750; margin-top:8px; } .held { font-weight:700; }
+    #results { scroll-margin-top:18px; } .explanation { color:#51627b; } footer { border-top:1px solid #d6e2ed; margin-top:48px; padding-top:20px; color:#627087; font-size:.88rem; line-height:1.6; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><span class="eyebrow">Evercraft Network · Community Layer</span><span class="tag">Engineering preview · Not a live marketplace</span></div>
+  <header class="hero">
+    <h1>Start with what you need.</h1>
+    <p class="lead">Work, a home project, local connections, rewards, creative collaboration. Evercraft should make those doors easier to find together. This is an honest preview of existing information and connections still being engineered.</p>
+  </header>
+  <form id="need-form">
+    <label for="need-input" class="eyebrow" style="width:100%">What can we help you find?</label>
+    <input id="need-input" type="search" maxlength="240" autocomplete="off" placeholder="e.g. I need a cleaning job or someone to fix my yard" required>
+    <button type="submit" disabled>Find my connection</button>
+  </form>
+  <p id="load-status" role="status">Loading the public-safe connection catalog…</p>
+  <section aria-label="Explore by goal"><h2>Or choose a starting point</h2><div id="goal-choices"></div></section>
+  <section id="results" hidden aria-live="polite"></section>
+  <footer>
+    Nothing typed here is submitted, stored, sold or shared. This prototype does not create applications, bookings, payments, public profiles, credits or referrals. Any later partner, employer or household interaction requires its own explicit consent and verified operational readiness. Evercraft Network Resilience remains a separate <a href="../">connectivity software product</a>.
+  </footer>
+</main>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>
