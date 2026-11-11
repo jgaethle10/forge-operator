@@ -153,5 +153,8 @@ test('proc stat parser handles parentheses in comm but refuses wrong identity',(
 
 test('source-only contract never activates local scope or Qwen',()=>{
   const source=String(verifySupervisorScopeSnapshot);
-  assert.doesNotMatch(source,/\bspawn\s*\(|\bexec\s*\(|\bsystemd-run\b|/v1/chat/completions/);
+  assert.equal(source.includes('systemd-run'),false);
+  assert.equal(source.includes('chat/completions'),false);
+  assert.equal(source.includes('spawn('),false);
+  assert.equal(source.includes('exec('),false);
 });
