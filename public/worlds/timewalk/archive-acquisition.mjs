@@ -47,8 +47,37 @@ export function validateArchiveAcquisition(a,ledger) {
      a.sourceAccess.commercialDerivedGeometryAllowed||
      a.geometryReady||a.sourceOriginalVerified||a.worldsRuntimeAuthorized)
     fail("premature_publication_purchase_or_geometry");
-  if(a.sourceAccess.priorInquirySent === true && (a.sourceAccess.inquiryStatus!=="sent-awaiting-archive-response" || a.sourceAccess.replyReceived!==false))
-    fail("inconsistent_inquiry_state");
+  if(a.sourceAccess.priorInquirySent===true){
+    if(a.sourceAccess.replyReceived===false) {
+      if(a.sourceAccess.inquiryStatus!=="sent-awaiting-archive-response" ||
+         a.sourceAccess.archiveSheetNumbersConfirmed!==false ||
+         a.curatorConfirmation!==undefined)fail("inconsistent_inquiry_state");
+    }else if(a.sourceAccess.replyReceived===true){
+      if(a.sourceAccess.inquiryStatus!=="archive-sheet-numbers-confirmed-awaiting-original-inspection" ||
+         a.sourceAccess.archiveSheetNumbersConfirmed!==true)fail("inconsistent_archive_reply");
+      const receipt=a.curatorConfirmation;
+      if(!receipt || receipt.confirmationStatus!=="archive_staff_identified_sheets_not_direct_item_review" ||
+         receipt.comparisonConfidence!=="archivist-reported-not-independently-verified" ||
+         !Array.isArray(receipt.confirmedNumbers) ||
+         receipt.confirmedNumbers.length!==2 ||
+         receipt.confirmedNumbers[0]!==6 || receipt.confirmedNumbers[1]!==15 ||
+         receipt.original1960ImagesObtained!==false ||
+         receipt.independentSheetComparisonCompleted!==false ||
+         receipt.exactRevisionStampsRead!==false ||
+         receipt.publicOriginal1960SheetReproductionAllowed!==false ||
+         receipt.coordinates!==null)fail("unsupported_1960_original_claim");
+      if(!Array.isArray(receipt.sheetMatches) || receipt.sheetMatches.length!==2)
+        fail("missing_archivist_sheet_matches");
+      for(const [i,n] of [6,15].entries()){
+        const match=receipt.sheetMatches[i];
+        if(match?.sheetNumber!==n || match.locDigitalEdition!==1952 ||
+           match.locViewerPage!==(n===6?11:20) ||
+           match.original1960ExaminedByUs!==false || match.georeferenced!==false ||
+           !/^https:\/\/www\.loc\.gov\/resource\/g4284ym\.g4284ym_g093811952\/\?/.test(match.locViewerUrl||""))
+          fail("wrong_archive_sheet_or_viewer");
+      }
+    }else fail("inconsistent_archive_reply");
+  }
   return a;
 }
 
@@ -77,9 +106,9 @@ export function archiveInquiryPacket(acquisition,ledger) {
     sendAuthorized:false,
     feeApproved:false,
     mediaPublicationApproved:false,
-    deliveryStatus:a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent",
+    deliveryStatus:a.sourceAccess.replyReceived===true?"archive-replied-do-not-resend":a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent",
     inquiryAlreadySent:a.sourceAccess.priorInquirySent===true,
-    flags:[a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent","no-fee-authority","source-exact-sheet-unverified"]
+    flags:[a.sourceAccess.replyReceived===true?"archive-replied-do-not-resend":a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent","no-fee-authority","1960-original-not-inspected"]
   };
 }
 
@@ -90,12 +119,15 @@ export function acquisitionReadiness(acquisition,ledger) {
     worldId:a.worldId,year:a.selectedYear,
     catalogHoldingConfirmed:true,
     exactSheetConfirmed:false,
+    sheetNumbersIdentifiedByArchivist:a.sourceAccess.archiveSheetNumbersConfirmed===true,
+    identifiedSheetNumbers:a.curatorConfirmation?.confirmedNumbers||[],
+    digital1952ComparisonLinks:(a.curatorConfirmation?.sheetMatches||[]).map(x=>x.locViewerUrl),
     originalItemExamined:false,
     georeferencingAuthorized:false,
     publishOriginalMapAllowed:false,
     publicSceneAccuracyVerified:false,
     outstanding:[
-      a.sourceAccess.priorInquirySent ? "Await CSUN response identifying downtown 1960 volume and sheet numbers" : "Ask archive for downtown block and 1960 sheet numbers",
+      a.sourceAccess.replyReceived===true ? "Inspect or compare CSUN originals for sheets 6/15; log 1960 sheet correction dates and rights" : a.sourceAccess.priorInquirySent ? "Await CSUN response identifying downtown 1960 volume and sheet numbers" : "Ask archive for downtown block and 1960 sheet numbers",
       "Inspect original sheet and individual correction dates",
       "Get written public/commercial reuse permission if applicable",
       "Separate independent survey control-point verification and 1960 timeline review"
