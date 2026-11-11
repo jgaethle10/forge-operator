@@ -15,6 +15,8 @@ on:
       - 'tests/saban-yard-split-identity-mailbox.test.mjs'
       - 'tests/yard-split-identity-consumer.test.mjs'
       - 'tests/saban-yard-split-resident-cycle.test.mjs'
+      - 'tests/yard-split-import-boundary.test.mjs'
+      - 'systemia/saban/split-identity-protocol.mjs'
       - 'systemia/saban/split-identity-capacity.mjs'
       - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
@@ -50,6 +52,8 @@ on:
       - 'tests/saban-yard-split-identity-mailbox.test.mjs'
       - 'tests/yard-split-identity-consumer.test.mjs'
       - 'tests/saban-yard-split-resident-cycle.test.mjs'
+      - 'tests/yard-split-import-boundary.test.mjs'
+      - 'systemia/saban/split-identity-protocol.mjs'
       - 'systemia/saban/split-identity-capacity.mjs'
       - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
@@ -121,6 +125,8 @@ jobs:
         run: node --test tests/yard-split-identity-consumer.test.mjs
       - name: Prove cross-account inventory freshness and full Saban Yard dispatch round-trip
         run: node --test tests/saban-yard-split-resident-cycle.test.mjs
+      - name: Prove Yard import graph does not require Saban private queue modules
+        run: node --test tests/yard-split-import-boundary.test.mjs
       - name: Check role-specific resident cycle syntax
         run: node --check systemia/saban/split-identity-cycle-runner.mjs && node --check systemia/saban/split-identity-capacity.mjs
       - name: Check split-account mailbox provisioning syntax
