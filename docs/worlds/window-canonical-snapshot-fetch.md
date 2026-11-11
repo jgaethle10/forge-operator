@@ -5,10 +5,10 @@ This is a **read-only, operator-initiated** bridge from Evercraft's existing `wi
 From the owned Evercraft repository, with Node.js 24:
 
 ```sh
-node systemia/society/window-snapshot-fetch.mjs > mossmere-observation.json
+node systemia/society/window-snapshot-fetch.mjs > /tmp/mossmere-observation.json
 ```
 
-Choose `mossmere-observation.json` in the private **Society ledger** in [Worlds PR #1960](https://github.com/jgaethle10/forge-operator/pull/1960). The browser does not fetch the branch or upload/store the file. Do not put this observation under `public/`, in a hosted artifact, or in a tracked source folder. Keep the file local and delete it when finished.
+Choose `/tmp/mossmere-observation.json` in the private **Society ledger** in [Worlds PR #1960](https://github.com/jgaethle10/forge-operator/pull/1960). The browser does not fetch the branch or upload/store the file. Do not put this observation under `public/`, in a hosted artifact, or in a tracked source folder. Keep the file local and delete it when finished.
 
 ## Source and authority
 
