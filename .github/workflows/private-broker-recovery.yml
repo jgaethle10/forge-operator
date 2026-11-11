@@ -1,0 +1,33 @@
+name: Private Broker Recovery Proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/yard/remote-broker-resident.mjs'
+      - 'tests/remote-broker-resident.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - '.github/workflows/private-broker-recovery.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/yard/remote-broker-resident.mjs'
+      - 'tests/remote-broker-resident.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - '.github/workflows/private-broker-recovery.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Historical private launcher and fail-closed recovery proof
+        run: node --test tests/remote-broker-resident.test.mjs
+      - name: Cold restart rejects stale Yard broker identity
+        run: node --test tests/broker-cold-restart-identity.test.mjs
