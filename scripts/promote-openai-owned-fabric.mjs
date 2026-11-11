@@ -77,11 +77,13 @@ export function promoteOpenAiOwnedFabric({
   const distribution=readJson(distributionPath);
   const observedPublic=distribution.existing_public_listing?.portal_observed_status==='Listed publicly';
   const originalMcpUrl=String(distribution.mcp?.url||'');
+  const targetVersion=String(distribution.package_version||source.package_version||'unversioned');
+  const previousPublicVersion=String(distribution.existing_public_listing?.portal_observed_version||'unconfirmed');
   if(observedPublic&&originalMcpUrl!==mcpUrl){
     throw new Error('existing_public_listing_origin_change_requires_manual_platform_review');
   }
   source.submission_state=observedPublic
-    ?'existing_public_listing_v1_0_2_observed_source_update_v1_0_6_prepared'
+    ?'existing_public_listing_update_prepared'
     :'owned_fabric_ready_provider_submission_required';
   source.compatibility_transport={
     ...(source.compatibility_transport||{}),
@@ -109,11 +111,11 @@ export function promoteOpenAiOwnedFabric({
     origin_change_requires_new_plugin_submission:true,
   };
   if(observedPublic){
-    distribution.release_notes='Evercraft source release v1.0.6 prepares an in-place update of the portal-observed public Evercraft v1.0.2 listing. Owned MCP unchanged; discovery remains read-only. No provider-side update is performed here.';
+    distribution.release_notes=`Evercraft source release v${targetVersion} prepares an in-place update of the portal-observed public Evercraft v${previousPublicVersion} listing. Owned MCP unchanged; discovery remains read-only. No provider-side update is performed here.`;
     distribution.remaining_platform_prerequisites=[
       'Select the existing Evercraft LLC public plugin listing, not Create New',
-      'Save current public version v1.0.2 metadata and verify the owned MCP origin',
-      'Upload or select the tested v1.0.6 package through the provider update flow',
+      `Save current public version v${previousPublicVersion} metadata and verify the owned MCP origin`,
+      `Upload or select the tested v${targetVersion} package through the provider update flow`,
       'Complete current scan, review, and any required approval/publish action',
       'Capture the provider version receipt and an independent clean-account install and invocation',
     ];
@@ -139,6 +141,8 @@ export function promoteOpenAiOwnedFabric({
     legacy_mcp:null,
     legacy_transport_active:false,
     existing_public_listing_observed:observedPublic,
+    prior_public_version:observedPublic?previousPublicVersion:null,
+    prepared_source_version:targetVersion,
     requires_existing_listing_update:observedPublic,
     openai_origin_change_requires_new_plugin_submission:!observedPublic&&originalMcpUrl!==mcpUrl,
     provider_action_performed:false,
