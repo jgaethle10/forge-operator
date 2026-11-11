@@ -56,5 +56,5 @@ test('No public traffic or learner data submission; only device-local star keys'
  assert.match(play,/localStorage\.setItem/);
  assert.match(play,/localStorage\.getItem/);
  assert.match(play,/Reset stars/);
- assert.match(play,/not saved or transmitted/);
+ assert.match(play,/no question entry or understanding capability/);
 });
