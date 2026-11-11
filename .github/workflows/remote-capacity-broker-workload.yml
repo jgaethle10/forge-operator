@@ -6,6 +6,7 @@ on:
       - 'systemia/network/outbound-capacity-broker.mjs'
       - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/network/distributed-content-hash-ten-job.proof.mjs'
+      - 'scripts/evercraft-physical-ten-job-acceptance.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/remote-capacity-broker-proof.mjs'
@@ -20,6 +21,7 @@ on:
       - 'systemia/network/outbound-capacity-broker.mjs'
       - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/network/distributed-content-hash-ten-job.proof.mjs'
+      - 'scripts/evercraft-physical-ten-job-acceptance.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/remote-capacity-broker-proof.mjs'
@@ -41,5 +43,7 @@ jobs:
         run: node systemia/yard/remote-capacity-broker-proof.mjs
       - name: Prove ten authenticated remote content-hash jobs and replay safety
         run: node systemia/network/distributed-content-hash-ten-job.proof.mjs
+      - name: Syntax-check opt-in physical Penguin-NextGen proof runner
+        run: node --check scripts/evercraft-physical-ten-job-acceptance.mjs
       - name: Prove field edge delegation through outbound broker
         run: node systemia/yard/remote-edge-delegation.proof.mjs
