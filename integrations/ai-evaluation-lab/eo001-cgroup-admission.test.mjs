@@ -239,3 +239,28 @@ test('uncleared transient scope blocks the report even if child claimed membersh
   assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('kill')),true);
   assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('stop')),true);
 });
+
+test('legacy v2 resource-only report cannot claim new-session evidence',()=>{
+  const run=(cmd,args)=>{
+    if(cmd==='systemctl'){
+      if(args.includes('show'))
+        return {status:0,stdout:'LoadState=not-found\\nActiveState=inactive\\n'};
+      return {status:0,stdout:''};
+    }
+    const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
+    return {status:0,stdout:JSON.stringify({
+      schema:'evercraft.eo001.gate1.synthetic-scope-child.v2',
+      scope_id:unit,nonce:ID,
+      unified_cgroup_v2:true,actual_unit_member:true,
+      resource_limits_read_back:true,memory_limit_exact:true,
+      pids_limit_exact:true,cpu_quota_exact:true,
+      model_inference_executed:false,external_actions_authorized:false
+    })};
+  };
+  assert.throws(()=>runSyntheticCgroupCanary({
+    root:ROOT,reviewedPin:PIN,ownerApproved:true,
+    preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
+      scope_test_executed:false}),
+    uuid:()=>ID,run
+  }),/SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN/);
+});
