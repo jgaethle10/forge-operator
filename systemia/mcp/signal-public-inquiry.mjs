@@ -11,8 +11,8 @@ const EMAIL=/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 const REF=/^ECS-[A-F0-9]{24}$/;
 const DEFAULT_DIR=()=>process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'/var/lib/evercraft/signal-intake/leads';
 const KEY_ENV=()=>{
-  if(process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64!==undefined)
-    return process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64;
+  if(process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64?.trim())
+    return process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64.trim();
   const file=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_FILE||'/var/lib/evercraft/signal-intake/key.b64';
   try{
     const stat=fs.lstatSync(file);
