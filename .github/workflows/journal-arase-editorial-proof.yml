@@ -1,0 +1,43 @@
+name: Journal Arase Editorial Proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/arase-editorial-preview.mjs'
+      - 'systemia/newsroom/arase-editorial-preview.test.mjs'
+      - 'systemia/newsroom/editorial-assets/arase-may-2024-storm-media.json'
+      - 'systemia/newsroom/editorial-queue/2026-10-31-arase-radiation-barrier.md'
+      - '.github/workflows/journal-arase-editorial-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  editorial-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify source, visual provenance, escaped copy and release hold
+        run: node --test systemia/newsroom/arase-editorial-preview.test.mjs
+      - name: Render private photo-led editorial candidate
+        run: |
+          mkdir -p "$RUNNER_TEMP/journal-arase-proof"
+          node systemia/newsroom/arase-editorial-preview.mjs "$RUNNER_TEMP/journal-arase-proof/arase-review.html" > "$RUNNER_TEMP/journal-arase-proof/proof-receipt.json"
+      - name: Enforce no public Journal or Clip output changes
+        run: |
+          git diff --exit-code -- public/journal systemia/clip
+          test -s "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
+          grep -Fq 'noindex,nofollow,noarchive' "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
+          grep -Fq 'Editorial proof · Not published' "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
+      - name: Preserve editorial proof for visual review, not publication
+        uses: actions/upload-artifact@v4
+        with:
+          name: journal-arase-editorial-review-only
+          path: ${{ runner.temp }}/journal-arase-proof/
+          if-no-files-found: error
+          retention-days: 30
