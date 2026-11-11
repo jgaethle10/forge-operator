@@ -23,6 +23,8 @@ test('renders NASA photo with provenance, noindex and a prominent release hold',
  assert.match(html,/Editorial proof · Not published/);
  assert.match(html,/NASA\/Mara Johnson-Groh/);
  assert.match(html,/svs\.gsfc\.nasa\.gov\/vis\//);
+ assert.match(html,/<img[^>]+src="\.\/arase-aurora-review\.jpg"/);
+ assert.doesNotMatch(html,/<img[^>]+src="https:\/\//);
  assert.match(html,/not Arase electron measurements/);
  assert.match(html,/Science &amp; Discovery/);
  assert.match(html,/aria-label="Story sections"/);
