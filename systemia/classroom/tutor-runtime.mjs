@@ -89,6 +89,46 @@ export function makeLocalRavenTutor({origin='http://127.0.0.1:4322',token,fetchI
  };
 }
 
+// Direct adapter for the already-built Evercraft NextGen llama-server capacity.
+// This is a private LOCAL bridge, not a general public model proxy.
+export function makeLocalLlamaTutor({origin='http://127.0.0.1:8080',fetchImpl=globalThis.fetch}={}){
+ if(!isLoopback(origin))fail('llama_must_be_loopback');
+ const base=new URL(origin).origin;
+ let model=null;
+ return {
+  async validate(){
+   const response=await fetchImpl(base+'/v1/models',{
+    method:'GET',headers:{accept:'application/json'},
+    signal:AbortSignal.timeout(8000),cache:'no-store'
+   });
+   if(!response.ok)fail('llama_model_validation_failed');
+   const body=await response.json().catch(()=>null);
+   const selected=Array.isArray(body?.data)?body.data.find(m=>typeof m?.id==='string'&&m.id.trim()):null;
+   if(!selected||selected.id.length>300)fail('llama_model_missing');
+   model=selected.id;
+   return {provider:'llama.cpp',model,local_only:true};
+  },
+  async infer({prompt}){
+   if(!model)fail('llama_model_not_validated');
+   const response=await fetchImpl(base+'/v1/chat/completions',{
+    method:'POST',headers:{'content-type':'application/json','accept':'application/json'},
+    body:JSON.stringify({model,messages:[{role:'user',content:prompt}],
+     max_tokens:480,temperature:0.5,stream:false}),
+    signal:AbortSignal.timeout(35000)
+   });
+   if(!response.ok)fail('llama_inference_failed');
+   const body=await response.json().catch(()=>null);
+   const text=body?.choices?.[0]?.message?.content;
+   if(typeof text!=='string'||!text.trim())fail('llama_output_missing');
+   const digest=crypto.createHash('sha256').update(JSON.stringify({
+    backend:'llama.cpp',model,prompt_sha256:crypto.createHash('sha256').update(prompt).digest('hex'),
+    answer_sha256:crypto.createHash('sha256').update(text).digest('hex')
+   })).digest('hex');
+   return {status:'completed',provider:'llama.cpp',model,text,provider_receipt:'sha256:'+digest};
+  }
+ };
+}
+
 export async function startPrivateClassroomPilot({
  host='127.0.0.1',port=8793,accessToken,infer,localModelVerified=false,
  pageFile=new URL('./pilot.html',import.meta.url),now=Date.now
@@ -105,7 +145,7 @@ export async function startPrivateClassroomPilot({
    if(req.method==='GET'&&path==='/health')
     return reply(res,200,{ok:!closed,service:'infinite-classroom-private-pilot',
       exposure:'loopback',public_release_authorized:false,
-      child_safety_certified:false,active_model:'local_ollama'});
+      child_safety_certified:false,active_model:'verified_owned_loopback_model'});
    if(req.method==='GET'&&(path==='/'||path==='/pilot/')){
     return reply(res,200,fs.readFileSync(pageFile,'utf8'),'text/html; charset=utf-8');
    }
@@ -113,7 +153,7 @@ export async function startPrivateClassroomPilot({
    if(!safeEqual(bearer(req),accessToken))return reply(res,401,{ok:false,error:'private_access_required'});
    if(req.method==='GET'&&path==='/api/classroom/status')
     return reply(res,200,{ok:true,mode:'adult_supervised_local_tutor_pilot',
-      model:'owned_local_ollama',safety_verified:false,public_youth_access:false,
+      model:'owned_local_model',safety_verified:false,public_youth_access:false,
       conversation_retention:'volatile_memory_30_minutes',rooms:Object.keys(CLASSROOM_ROOMS),
       ...tutor.status()});
    if(req.method!=='POST')return reply(res,405,{ok:false,error:'method_not_allowed'});
@@ -158,14 +198,21 @@ function arg(name){const i=process.argv.indexOf(name);return i>=0?process.argv[i
 if(process.argv[1]&&fs.realpathSync(process.argv[1])===ownFile){
  try{
   const accessToken=readSecretFile(arg('--access-token-file'));
-  const ravenToken=readSecretFile(arg('--raven-token-file'));
-  const raven=makeLocalRavenTutor({origin:arg('--raven-origin')||'http://127.0.0.1:4322',token:ravenToken});
-  await raven.validate();
+  const llamaOrigin=arg('--llama-origin');
+  if(llamaOrigin && (arg('--raven-origin')||arg('--raven-token-file')))fail('select_one_owned_inference_adapter');
+  let backend;
+  if(llamaOrigin){
+   backend=makeLocalLlamaTutor({origin:llamaOrigin});
+  }else{
+   const ravenToken=readSecretFile(arg('--raven-token-file'));
+   backend=makeLocalRavenTutor({origin:arg('--raven-origin')||'http://127.0.0.1:4322',token:ravenToken});
+  }
+  const modelProof=await backend.validate();
   const port=Number(arg('--port')||8793);
   if(!Number.isInteger(port)||port<1024||port>65535)fail('invalid_port');
-  const service=await startPrivateClassroomPilot({accessToken,infer:raven.infer,localModelVerified:true,port});
+  const service=await startPrivateClassroomPilot({accessToken,infer:backend.infer,localModelVerified:true,port});
   process.stdout.write(JSON.stringify({service:'infinite-classroom-private-pilot',url:service.url,
-   validated_local_model:true,public_youth_release:false,no_child_profile_storage:true})+'\n');
+   validated_local_model:true,backend:modelProof.provider,public_youth_release:false,no_child_profile_storage:true})+'\n');
   const exit=async()=>{await service.close();process.exit(0)};
   process.on('SIGINT',exit);process.on('SIGTERM',exit);
  }catch(error){process.stderr.write('Classroom pilot held: '+String(error?.message||'unavailable')+'\n');process.exitCode=1}
