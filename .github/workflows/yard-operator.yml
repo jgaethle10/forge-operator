@@ -55,6 +55,8 @@ jobs:
           node-version: '22'
       - name: Prove Yard Operator over Evercraft Compute
         run: node systemia/yard/proof.mjs
+      - name: Prove Yard route persistence across stale lease renewal
+        run: node systemia/yard/route-persistence.proof.mjs
       - name: Prove Evercraft Fabric directory routing
         run: npm run test:fabric-directory
       - name: Prove owned Fabric edge updater safety

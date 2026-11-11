@@ -97,11 +97,47 @@ export class YardOperator {
   }
 
   #persist(record) {
-    fs.writeFileSync(
-      path.join(this.stateDir, `${this.#safeId(record.deployment_id)}.json`),
-      JSON.stringify(record, null, 2) + '\n',
-      { mode: 0o600 }
-    );
+    const file = path.join(this.stateDir, `${this.#safeId(record.deployment_id)}.json`);
+
+    // Other Yard instances (for example, a lease keeper) may hold an older
+    // deployment snapshot. Do not let their writes silently erase a newer
+    // identity-bound route receipt for the very same ready deployment.
+    // This is not a substitute for cross-process transactional locking.
+    if (record.state === 'ready' && fs.existsSync(file)) {
+      const current = JSON.parse(fs.readFileSync(file, 'utf8'));
+      const route = current.public_route;
+      const sameAuthority =
+        current.state === 'ready' &&
+        current.deployment_id === record.deployment_id &&
+        current.receipt?.receipt_hash === record.receipt?.receipt_hash &&
+        current.result?.instance_id === record.result?.instance_id;
+      if (sameAuthority && route) {
+        const { receipt_hash: routeHash, ...routeBody } = route;
+        const validRoute =
+          routeHash === sha(routeBody) &&
+          route.deployment_id === record.deployment_id &&
+          route.deployment_receipt_hash === record.receipt?.receipt_hash &&
+          route.instance_id === record.result?.instance_id &&
+          ['public_https', 'loopback_proof'].includes(route.scope) &&
+          route.verified === (route.scope === 'public_https') &&
+          route.verification === 'instance_and_deployment_receipt_match';
+        const incomingTime = Date.parse(record.public_route?.verified_at || '') || 0;
+        const storedTime = Date.parse(route.verified_at || '') || 0;
+        if (validRoute && (!record.public_route || storedTime > incomingTime)) {
+          record.public_route = route;
+        }
+      }
+    }
+
+    // Atomic replacement avoids leaving truncated deployment JSON after
+    // an interrupted write. Writes still need a lock for full concurrency.
+    const tmp = file + '.' + process.pid + '.' + randomBytes(6).toString('hex') + '.tmp';
+    try {
+      fs.writeFileSync(tmp, JSON.stringify(record, null, 2) + '\n', { mode: 0o600 });
+      fs.renameSync(tmp, file);
+    } finally {
+      fs.rmSync(tmp, { force: true });
+    }
   }
 
   #secretFile(deploymentId) {
