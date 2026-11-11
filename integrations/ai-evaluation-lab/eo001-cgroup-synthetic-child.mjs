@@ -1,7 +1,8 @@
 /**
  * EO-001 fixed non-model cgroup membership/resource canary.
- * No descendants, shell or network. Reads only procfs and fixed cgroup
- * controller leaf files and refuses missing/incorrect resource limits.
+ * No network or model. Reads only procfs and fixed cgroup controller leaf
+ * files; starts and reaps one bounded synthetic new-session child to check
+ * that a POSIX session change did not move it outside the assigned cgroup.
  */
 import fs from 'node:fs';
 import process from 'node:process';
@@ -9,22 +10,34 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {verifySyntheticScopeLimits}
   from './eo001-cgroup-resource-proof.mjs';
+import {proveNewSessionRetainsCgroup}
+  from './eo001-cgroup-session-proof.mjs';
 
 const UNIT=/^eo001-g1-synthetic-[a-f0-9]{32}\.scope$/;
 export function inspectScopedChild({
-  scopeId,nonce,procCgroup,readFile=fs.readFileSync
+  scopeId,nonce,procCgroup,readFile=fs.readFileSync,
+  sessionProbe=proveNewSessionRetainsCgroup
 }={}){
   if(!UNIT.test(scopeId)||typeof nonce!=='string'||
     !/^[a-f0-9]{32}$/.test(nonce))throw Error('INVALID_SYNTHETIC_SCOPE_INPUT');
   const limits=verifySyntheticScopeLimits({scopeId,procCgroup,readFile});
+  const session=sessionProbe({procCgroup});
+  if(!session||session.detached_new_session_reported!==true||
+     session.new_session_child_same_cgroup!==true||
+     session.child_exited_and_reaped!==true||
+     session.model_execution_authorized!==false)
+    throw Error('NEW_SESSION_CONTINUITY_NOT_ESTABLISHED');
   return {
-    schema:'evercraft.eo001.gate1.synthetic-scope-child.v2',
+    schema:'evercraft.eo001.gate1.synthetic-scope-child.v3',
     scope_id:scopeId,nonce,
     unified_cgroup_v2:true,actual_unit_member:true,
     resource_limits_read_back:limits.scoped_child_readback_pass,
     memory_limit_exact:limits.memory_limit_exact,
     pids_limit_exact:limits.pids_limit_exact,
     cpu_quota_exact:limits.cpu_quota_exact,
+    new_session_child_same_cgroup:true,
+    new_session_child_reaped:true,
+    systemd_descendant_kill_proven:false,
     model_inference_executed:false,
     external_actions_authorized:false
   };
