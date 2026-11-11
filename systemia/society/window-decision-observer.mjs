@@ -16,6 +16,18 @@ const STATE_SCHEMA='evercraft.window.heartbeat.v1';
 const HEX=/^[0-9a-f]{64}$/;
 const sha256=s=>createHash('sha256').update(s).digest('hex');
 const validId=id=>typeof id==='string'&&/^e[1-9][0-9]{0,12}$/.test(id);
+const countStats=(source,fields)=>{
+  if(source===undefined||source===null)return null;
+  if(!source||typeof source!=='object'||Array.isArray(source))throw Error('Invalid simulated cumulative statistics');
+  const values={};
+  for(const key of fields){
+    const n=source[key];
+    if(!Number.isSafeInteger(n)||n<0||n>1_000_000_000)
+      throw Error('Invalid simulated cumulative statistics');
+    values[key]=n;
+  }
+  return values;
+};
 
 export function observeWindowSnapshot(state){
   if(!state||state.schema!==STATE_SCHEMA||state.initialized!==true||
@@ -48,6 +60,12 @@ export function observeWindowSnapshot(state){
   });
   if(new Set(residents.map(r=>r.id)).size!==residents.length)throw Error('Duplicated resident ID');
   if(state.model_mode!=='civic_and_social_policy_no_llm')throw Error('Unsupported model-mode claim');
+  const civic=countStats(state.world.civic?.stats,['proposed','completed','failed']);
+  const social=countStats(state.world.social?.stats,['promised','kept','broken','declined']);
+  if(civic&&civic.completed+civic.failed>civic.proposed)
+    throw Error('Inconsistent simulated civic counts');
+  if(social&&social.kept+social.broken>social.promised)
+    throw Error('Inconsistent simulated promise counts');
   return {
     schema:OBSERVATION_SCHEMA,
     origin:'operator_supplied_local_snapshot_not_authenticated',
@@ -60,6 +78,7 @@ export function observeWindowSnapshot(state){
       latest_event_id:state.world.next_event_id-1
     },
     historical_limit:'only_retained_bounded_chronicle_not_full_history',
+    snapshot_stats:{civic,social},
     residents,decision_projection:projection
   };
 }
