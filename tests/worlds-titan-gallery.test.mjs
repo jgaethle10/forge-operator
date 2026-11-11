@@ -47,7 +47,10 @@ test('Titan gallery works in owned Worlds with a no-script historical fallback',
  const atlas=read('public/worlds/hidden-world/index.html');
  const historic=read('public/worlds/hidden-world/titan-i-1962.html');
  assert.match(index,/WebGL2/);
- assert.match(index,/<noscript>/);
+ assert.match(index,/<body class="no-js">/);
+ assert.match(index,/id="static-fallback"/);
+ assert.match(index,/Open historical exhibit/);
+ assert.match(app,/classList\.replace\('no-js','js'\)/);
  assert.match(index,/\.\.\/titan-i-1962\.html/);
  assert.match(index,/id="joystick"/);
  assert.match(index,/id="tour"/);
