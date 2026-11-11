@@ -82,9 +82,16 @@ test('source-only product records cannot create transactions through the public 
   const found=response.result.structuredContent;
   assert.equal(found.matches[0].public_id,'product:evercraft-rewards');
   assert.equal(found.matches[0].commercial_state,'discovery_only');
-  assert.equal(found.matches[0].buyer_checkout_available,false);
   assert.equal(found.transactional,false);
   assert.equal(found.external_action_taken,false);
+  const options=await executeFabricDirectoryRpc({
+    jsonrpc:'2.0',id:43,method:'tools/call',
+    params:{name:'get_evercraft_connection_options',
+      arguments:{public_id:'product:evercraft-rewards'}},
+  },catalog);
+  assert.equal(options.result.structuredContent.buyer_checkout_available,false);
+  assert.equal(options.result.structuredContent.human_offer_url,null);
+  assert.equal(options.result.structuredContent.external_action_taken,false);
 });
 
 test('isolated fixture catalogs never acquire the live source product graph',()=>{
