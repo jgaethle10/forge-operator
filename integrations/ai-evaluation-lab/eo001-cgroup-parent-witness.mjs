@@ -33,10 +33,8 @@ export function verifyParentObservedSession({
 }={}){
   if(!isPositive(childPid))fail('CHILD_PID_INVALID');
   if(typeof parentCgroup!=='string'||typeof childCgroup!=='string'||
-    !/^0::\/[^
-]*\n?$/.test(parentCgroup)||
-    !/^0::\/[^
-]*\n?$/.test(childCgroup))
+    !/^0::\/[^\r\n]*\n?$/.test(parentCgroup)||
+    !/^0::\/[^\r\n]*\n?$/.test(childCgroup))
     fail('UNIFIED_CGROUP_REQUIRED');
   const parent=parseObservedProcStat(parentStat);
   const child=parseObservedProcStat(childStat);
