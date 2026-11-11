@@ -46,6 +46,8 @@ on:
       - "systemia/newsroom/cfb-clip-facebook-publish.test.mjs"
       - "systemia/newsroom/journal-clip-bridge.mjs"
       - "systemia/evercraft-home/clip-journal-publish-adapter.mjs"
+      - "systemia/evercraft-home/clip-journal-facebook-general.mjs"
+      - "systemia/evercraft-home/clip-journal-facebook-general.test.mjs"
       - "systemia/evercraft-home/clip-journal-claim.mjs"
       - "systemia/evercraft-home/clip-journal-publish-adapter.test.mjs"
       - "systemia/evercraft-home/clip-journal-publish-http.test.mjs"
@@ -141,6 +143,7 @@ jobs:
             systemia/evercraft-home/facebook-page-credential-http.test.mjs \
             systemia/newsroom/cfb-clip-facebook-publish.test.mjs \
             systemia/clip/cfb-journal-resident.test.mjs \
+            systemia/evercraft-home/clip-journal-facebook-general.test.mjs \
             systemia/evercraft-home/clip-journal-publish-adapter.test.mjs \
             systemia/evercraft-home/clip-journal-publish-http.test.mjs \
             systemia/evercraft-home/session-auth.test.mjs \
