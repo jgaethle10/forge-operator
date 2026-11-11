@@ -12,7 +12,6 @@
 import {spawn} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import {performance} from 'node:perf_hooks';
@@ -24,7 +23,6 @@ const allowed=new Set(['success','crash','stall','ignore-term',
   'late-result','oversize','partial','descendant-stall']);
 const MAX_STREAM_BYTES=16384;
 const hash=value=>createHash('sha256').update(value).digest('hex');
-const safeRef=value=>typeof value==='string'&&/^[0-9a-f]{64}$/.test(value);
 
 function privateDirectory(dir){
   if(typeof dir!=='string'||!path.isAbsolute(dir))throw Error('PRIVATE_ABSOLUTE_DIRECTORY_REQUIRED');
@@ -96,7 +94,6 @@ export async function runSyntheticHardstop({
   const result=await new Promise(resolve=>{
     let child;
     let done=false,timedOut=false,outputLimit=false,forcedKill=false;
-    let timedOutAt=null;
     let stdout=Buffer.alloc(0),stderr=Buffer.alloc(0);
     let hardTimer=null,killTimer=null,exitCode=null,exitSignal=null;
     let spawnFailed=false;
@@ -135,7 +132,8 @@ export async function runSyntheticHardstop({
         good?'SYNTHETIC_CHILD_COMPLETED':'INVALID_CHILD_RESULT_RETAINED';
       resolve({
         state,elapsed_wall_ms:elapsed,deadline_ms:deadlineMs,
-        killed_after_deadline:overrun,
+        deadline_timer_fired:timedOut,
+        termination_signal_attempted:timedOut||outputLimit,
         sigkill_escalation_attempted:forcedKill,
         child_exit_code:exitCode,
         child_exit_signal:exitSignal,
@@ -155,7 +153,6 @@ export async function runSyntheticHardstop({
     }catch{spawnFailed=true;settle();return;}
     hardTimer=setTimeout(()=>{
       timedOut=true;
-      timedOutAt=clock();
       requestStop();
     },deadlineMs);
     child.stdout.on('data',data=>recordChunk('stdout',data));
