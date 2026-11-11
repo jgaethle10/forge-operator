@@ -82,6 +82,17 @@ export async function dispatchAmbientJobsOnce({
   const rows=[];
 
   for(const job of jobs){
+    // Never replace an uncertainty hold with a workload-policy hold.
+    // The operator must reconcile the original remote execution outcome.
+    if(job.state==='held'&&job.last_hold?.reason==='unverified_remote_worker_result'){
+      rows.push({
+        job_id:job.job_id,
+        state:'held',
+        reason:'unverified_remote_worker_result',
+        manual_review_required:true,
+      });
+      continue;
+    }
     if(nodeSeedOnly&&job.workload_class!=='systemia.content-hash.v1'){
       queue.update(job.job_id,{
         state:'held',
@@ -94,17 +105,6 @@ export async function dispatchAmbientJobsOnce({
         job_id:job.job_id,
         state:'held',
         reason:'unattended_workload_not_authorized',
-      });
-      continue;
-    }
-    // Receipt-integrity failures have an uncertain remote outcome.
-    // Never silently replan or redispatch these held jobs.
-    if(job.state==='held'&&job.last_hold?.reason==='unverified_remote_worker_result'){
-      rows.push({
-        job_id:job.job_id,
-        state:'held',
-        reason:'unverified_remote_worker_result',
-        manual_review_required:true,
       });
       continue;
     }
