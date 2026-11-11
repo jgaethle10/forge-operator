@@ -137,6 +137,7 @@ export function createSovereignInfer({port,tokenFile,request=localJsonRequest,re
     const startedAt=new Date().toISOString();
     const health=await request({port,route:'/health',method:'GET',token,timeoutMs:Math.min(1500,timeoutMs),signal});
     validateGatewayHealth(health);
+    if(signal?.aborted)throw blocked('GATEWAY_ABORTED');
     const reply=await request({port,route:'/v1/chat/completions',method:'POST',token,
       body:{model:MODEL_ID,temperature:0,max_tokens:maxTokens,stream:false,
         messages:[{role:'user',content:input}]},timeoutMs,signal});
