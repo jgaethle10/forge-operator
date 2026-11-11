@@ -6,6 +6,33 @@ import {
   creditsForGoal,chooseMode,placeFacility,upgradeFacility,worldSummary,worldPlot,
 } from '../public/art-of-becoming/world-engine.mjs';
 
+import {toEvercraftWorldEngineScene} from '../public/art-of-becoming/worlds-bridge.mjs';
+import {toEngineWorld} from '../public/worlds/world-bridge.mjs';
+import {initialWorld} from '../public/worlds/world-core.mjs';
+
+test('Becoming Worlds exports the existing owned World Engine V1 shape without private recovery data',()=>{
+  let s=emptyState();
+  s=setCheckIn(s,'alcohol-free','2026-11-10','kept','2026-11-10');
+  s.worldState.activeModes['alcohol-free']='franchise';
+  const scene=toEvercraftWorldEngineScene(s,'alcohol-free','franchise');
+  assert.equal(scene.schema,toEngineWorld(initialWorld()).schema);
+  assert.equal(scene.entities.length,1);
+  assert.equal(scene.metadata.allowedDestination,'local_engine_preview_only');
+  assert.equal(scene.metadata.containsCheckInHistory,false);
+  assert.equal(scene.metadata.containsHealthGoals,false);
+  const exported=JSON.stringify(scene);
+  assert.ok(!exported.includes('alcohol-free'));
+  assert.ok(!exported.includes('2026-11-10'));
+  assert.ok(!exported.includes('kept'));
+  s=setCheckIn(s,'alcohol-free','2026-11-09','kept','2026-11-10');
+  s=placeFacility(s,'alcohol-free','franchise','practice-field',1,0);
+  const after=toEvercraftWorldEngineScene(s,'alcohol-free','franchise');
+  const f=after.entities.find(x=>x.id==='facility:build-1');
+  assert.deepEqual(f.transform.position,{x:36,y:0,z:0});
+  assert.ok(f.tags.includes('facility'));
+  assert.equal(f.properties.previewOnly,true);
+});
+
 const TODAY='2026-11-10';
 const GOAL='alcohol-free';
 function earn(days) {
