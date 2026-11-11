@@ -38,5 +38,37 @@ const digest=filename=>crypto.createHash('sha256').update(fs.readFileSync(filena
       console.log(JSON.stringify({width,height:840,rendered_png:name,sha256:digest(target),bytes:fs.statSync(target).size,status:'passed'}));
       await page.close();
     }
+    // Separate, source-bound time-series specimen from canonical synthetic transitions.
+    // It is a finite sequence of sampled states, never fictional real-time telemetry.
+    for(const width of [1280,390]){
+      const page=await browser.newPage({viewport:{width,height:840},deviceScaleFactor:1});
+      const errors=[];
+      page.on('pageerror',e=>errors.push(e.message));
+      page.on('request',request=>{
+        if(!request.url().startsWith('file:'))errors.push('External request: '+request.url());
+      });
+      await page.goto(pathToFileURL(path.join(base,'saban-observations-synthetic.html')).href,{waitUntil:'load'});
+      const metrics=await page.evaluate(()=>({
+        scrollWidth:document.documentElement.scrollWidth,
+        clientWidth:document.documentElement.clientWidth,
+        count:document.querySelectorAll('.observation').length,
+        rows:[...document.querySelectorAll('.observation')].map(e=>e.querySelectorAll('.metric').length),
+        text:document.body.textContent
+      }));
+      assert.ok(metrics.scrollWidth<=metrics.clientWidth+1,
+        'Synthetic observations overflow on '+width+': '+JSON.stringify(metrics));
+      assert.equal(metrics.count,3);
+      assert.deepEqual(metrics.rows,[4,4,4]);
+      assert.match(metrics.text,/SYNTHETIC TEST DATA/);
+      assert.match(metrics.text,/SOURCE BYTES CHANGED/);
+      assert.match(metrics.text,/not proven per-job events/);
+      assert.deepEqual(errors,[],'Observation browser errors or external network requests');
+      const name='saban-observations-'+width+'px.png';
+      const target=path.join(base,name);
+      await page.screenshot({path:target,fullPage:true,animations:'disabled'});
+      console.log(JSON.stringify({width,rendered_png:name,sha256:digest(target),
+        bytes:fs.statSync(target).size,status:'passed',synthetic_test:true}));
+      await page.close();
+    }
   }finally{await browser.close();}
 })().catch(err=>{console.error(err.stack||err);process.exitCode=1;});
