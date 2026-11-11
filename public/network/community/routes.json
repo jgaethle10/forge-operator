@@ -1,0 +1,299 @@
+{
+  "schema": "evercraft.network.community-route-catalog.v0",
+  "version": "0.1.0",
+  "release_state": "review_only_not_live",
+  "scope": "Community discovery and safe handoffs. Does not replace Evercraft Network application-connectivity product.",
+  "execution_authority": false,
+  "money_movement_enabled": false,
+  "personal_data_collected": false,
+  "goals": [
+    {
+      "id": "work",
+      "title": "Find work",
+      "detail": "See honest hiring and opportunity routes.",
+      "keywords": [
+        "looking for a job",
+        "find work",
+        "cleaning job",
+        "contractor jobs",
+        "hiring",
+        "employment",
+        "get hired",
+        "apply for work",
+        "earn income",
+        "make money",
+        "job"
+      ],
+      "nodes": [
+        "havenly-work-interest",
+        "local-job-board",
+        "partner-interest",
+        "circles"
+      ]
+    },
+    {
+      "id": "services",
+      "title": "Get help with a project",
+      "detail": "Explore cleaning, property services and contractor discovery.",
+      "keywords": [
+        "hire a cleaner",
+        "need cleaning",
+        "house cleaning",
+        "cleaning quote",
+        "yard cleanup",
+        "lawn mowing",
+        "property maintenance",
+        "find contractors",
+        "get a quote",
+        "repair my home",
+        "project estimate"
+      ],
+      "nodes": [
+        "havenly-service",
+        "eps-service",
+        "contractor-cloud"
+      ]
+    },
+    {
+      "id": "rewards",
+      "title": "Find local rewards",
+      "detail": "Explore locally available programs and their verification boundaries.",
+      "keywords": [
+        "rewards",
+        "earn points",
+        "loyalty",
+        "local deals",
+        "daily prize",
+        "game wallet"
+      ],
+      "nodes": [
+        "rewards"
+      ]
+    },
+    {
+      "id": "home",
+      "title": "Care for my home",
+      "detail": "Find household and seasonal support without exposing private household records.",
+      "keywords": [
+        "home maintenance",
+        "seasonal checklist",
+        "household",
+        "my home",
+        "move out clean",
+        "home project"
+      ],
+      "nodes": [
+        "home",
+        "havenly-service",
+        "eps-service",
+        "contractor-cloud"
+      ]
+    },
+    {
+      "id": "business",
+      "title": "Grow a business",
+      "detail": "Find discovery routes for partnerships, professional circles and local rewards.",
+      "keywords": [
+        "business partner",
+        "business referrals",
+        "distribution partner",
+        "grow my business",
+        "professional network",
+        "join rewards",
+        "business connections"
+      ],
+      "nodes": [
+        "partners",
+        "circles",
+        "rewards",
+        "contractor-cloud"
+      ]
+    },
+    {
+      "id": "create",
+      "title": "Create and collaborate",
+      "detail": "Explore human-reviewed connections for creators and publishers.",
+      "keywords": [
+        "creator",
+        "content creator",
+        "publisher",
+        "licensing",
+        "collaborate",
+        "revenue share",
+        "share my art",
+        "find a team"
+      ],
+      "nodes": [
+        "partners",
+        "circles",
+        "creator-revenue-share"
+      ]
+    },
+    {
+      "id": "connectivity",
+      "title": "Keep applications connected",
+      "detail": "Visit the separate Evercraft Network resilience and software-continuity product.",
+      "keywords": [
+        "wifi",
+        "cellular handoff",
+        "internet connectivity",
+        "reconnect devices",
+        "application continuity",
+        "network resilience"
+      ],
+      "nodes": [
+        "network-resilience"
+      ]
+    },
+    {
+      "id": "support",
+      "title": "Find community support",
+      "detail": "Surface only substantiated help, without invented aid, eligibility or available funds.",
+      "keywords": [
+        "community support",
+        "need assistance",
+        "help my family",
+        "mutual aid",
+        "help neighbors",
+        "resources near me"
+      ],
+      "nodes": [
+        "community-support",
+        "circles"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "havenly-work-interest",
+      "title": "Havenly work interest",
+      "state": "planned",
+      "href": null,
+      "description": "A dedicated, consent-based interest path for cleaning work needs verified recruiting authority and available openings.",
+      "boundary": "No current vacancy, application submission, interview or employment offer is claimed."
+    },
+    {
+      "id": "local-job-board",
+      "title": "Evercraft local job board",
+      "state": "planned",
+      "href": null,
+      "description": "Local job listings will require employer authorization, source freshness and a real application destination.",
+      "boundary": "No jobs are advertised or scraped by this preview."
+    },
+    {
+      "id": "partner-interest",
+      "title": "Evercraft Partners",
+      "state": "human_intake",
+      "href": "/partners/",
+      "description": "Explore the existing founding distribution-partner interest page.",
+      "boundary": "Partner interest is not an employment application, signed partnership or income guarantee."
+    },
+    {
+      "id": "partners",
+      "title": "Evercraft Partners",
+      "state": "human_intake",
+      "href": "/partners/",
+      "description": "An existing interest page for independent creators, consultants and distribution partners.",
+      "boundary": "A form or email draft is not a signed agreement; application receipt depends on confirmed submission."
+    },
+    {
+      "id": "circles",
+      "title": "Evercraft Circles",
+      "state": "discovery",
+      "href": "/chum/products/evercraft-circles/",
+      "description": "Discover the professional circles and user-directed referral beta.",
+      "boundary": "Discovery does not join a circle, verify members or make introductions."
+    },
+    {
+      "id": "havenly-service",
+      "title": "Havenly Cleaning",
+      "state": "human_intake",
+      "href": "/havenly/",
+      "description": "Explore cleaning services and request a human-reviewed quote.",
+      "boundary": "A quote request is not a confirmed appointment, price, cleaner availability or job application."
+    },
+    {
+      "id": "eps-service",
+      "title": "Evercraft Property Services",
+      "state": "discovery",
+      "href": "/chum/products/evercraft-property-services/",
+      "description": "Explore Central Washington property-maintenance and estimate-intake information.",
+      "boundary": "Scope, location, scheduling and pricing require a separate EPS confirmation."
+    },
+    {
+      "id": "contractor-cloud",
+      "title": "Evercraft Contractor Cloud",
+      "state": "discovery",
+      "href": "/chum/products/contractor-cloud/",
+      "description": "Discover the contractor/project matching concept and its current status.",
+      "boundary": "The transactional service and live matches have not been independently verified."
+    },
+    {
+      "id": "rewards",
+      "title": "Evercraft Rewards",
+      "state": "discovery",
+      "href": "/chum/products/evercraft-rewards/",
+      "description": "Discover local Rewards, eligible earning paths and business programs.",
+      "boundary": "No points, discount, gaming credit or merchant participation is earned or guaranteed by discovery."
+    },
+    {
+      "id": "home",
+      "title": "Evercraft Home",
+      "state": "discovery",
+      "href": "/chum/products/evercraft-home/",
+      "description": "Explore community-memory and household-related product discovery.",
+      "boundary": "Personal rooms, checklists, membership and memories are not exposed by this route."
+    },
+    {
+      "id": "creator-revenue-share",
+      "title": "Creator revenue-sharing marketplace",
+      "state": "planned",
+      "href": null,
+      "description": "Rights, attribution, consent, accounting and signed creator terms are required before earnings can be offered.",
+      "boundary": "No creator payout, automatic distribution or commission is active through this preview."
+    },
+    {
+      "id": "network-resilience",
+      "title": "Evercraft Network Resilience",
+      "state": "discovery",
+      "href": "/network/",
+      "description": "Separate application-continuity and authorized-network-path resilience software.",
+      "boundary": "Not a carrier, SIM, 911 system or guaranteed internet coverage."
+    },
+    {
+      "id": "community-support",
+      "title": "Community assistance network",
+      "state": "planned",
+      "href": null,
+      "description": "Verified organizations, capacity, safe intake and privacy rules must precede referrals.",
+      "boundary": "No aid funding, case admission, approval or emergency service is implied."
+    }
+  ],
+  "relationships": [
+    {
+      "from": "home",
+      "to": "havenly-service",
+      "kind": "optional_household_service_discovery"
+    },
+    {
+      "from": "home",
+      "to": "eps-service",
+      "kind": "optional_household_service_discovery"
+    },
+    {
+      "from": "eps-service",
+      "to": "contractor-cloud",
+      "kind": "broader_project_discovery"
+    },
+    {
+      "from": "rewards",
+      "to": "partners",
+      "kind": "business_participation_interest"
+    },
+    {
+      "from": "circles",
+      "to": "partners",
+      "kind": "optional_distribution_interest"
+    }
+  ]
+}
