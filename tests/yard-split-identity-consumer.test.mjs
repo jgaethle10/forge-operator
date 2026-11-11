@@ -138,6 +138,8 @@ test('Yard consumes Saban-exported request through authenticated outbound broker
     assert.equal(second.considered,0);
     assert.equal(yard.stats().grants,1,'no duplicate network execution');
     assert.equal(yard.stats().verifications,2,'broker identity checked on every cycle');
+    assert.equal(fs.existsSync(path.join(x.journalRoot,'.split-consumer-active')),false,
+      'successful consumer must release its execution lock');
   }finally{
     if(agent)await agent.close();
     if(broker)await broker.close();
@@ -197,5 +199,25 @@ test('grant mismatch after claim creates immutable manual-review hold, not a ret
     const second=await runYardSplitIdentityConsumeOnce(opts(x,origin,yard));
     assert.equal(second.considered,0);
     assert.equal(yard.stats().grants,1);
+  }finally{fs.rmSync(x.root,{recursive:true,force:true});}
+});
+
+
+test('existing consumer lock blocks duplicate processor before any broker call',async()=>{
+  const x=setup();
+  try{
+    const origin='http://127.0.0.1:8797';
+    const seed={device_fingerprint:'sha256:'+'a'.repeat(64)};
+    const yard=fakeYard({origin,seed,grant:{}});
+    fs.mkdirSync(x.journalRoot,{recursive:true,mode:0o700});
+    const lock=path.join(x.journalRoot,'.split-consumer-active');
+    fs.mkdirSync(lock,{mode:0o700});
+    await assert.rejects(runYardSplitIdentityConsumeOnce(opts(x,origin,yard)),
+      /yard_split_cycle_active_or_crashed_requires_review/);
+    assert.equal(yard.stats().verifications,0);
+    assert.equal(yard.stats().grants,0);
+    assert.equal(fs.readdirSync(x.journalRoot).length,1,'lock must not be stolen');
+    assert.equal(fs.existsSync(path.join(x.mailboxRoot,'outcomes',x.intent.intent_id+'.json')),false,
+      'an overlapping invocation cannot forge an early uncertain outcome');
   }finally{fs.rmSync(x.root,{recursive:true,force:true});}
 });
