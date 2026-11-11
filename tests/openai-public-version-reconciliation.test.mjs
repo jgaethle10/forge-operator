@@ -28,7 +28,14 @@ test('prepared v1.0.6 is an in-place upgrade, not a second public listing or com
   assert.equal(submission.existing_public_listing.release_action,'update_existing_listing_not_create_new');
   assert.equal(pluginSubmission.existing_public_listing.upgrade_publication_status,'not_confirmed');
   assert.equal(evidence.release_tracking.update_existing_public_listing,true);
-  assert.equal(evidence.release_tracking.upgrade_state,'not_submitted_or_confirmed');
+  assert.equal(evidence.release_tracking.upgrade_state,'draft_uploaded_attestations_pending');
+  assert.equal(evidence.release_tracking.draft_zip_sha256,'a958d71ab95e579bfa7f1c434071f7d92b1233bae56d2287d42abf61e8f94a9a');
+  assert.equal(evidence.release_tracking.draft_zip_sha256_local_verified,true);
+  assert.equal(evidence.release_tracking.draft_submission_for_review,'not_submitted');
+  assert.equal(evidence.release_tracking.publisher_attestations.required,6);
+  assert.equal(evidence.release_tracking.publisher_attestations.completed,0);
+  assert.equal(submission.existing_public_listing.review_submission_confirmed,false);
+  assert.equal(evidence.release_tracking.mcp_rescan.newer_scan_timestamp_observed,false);
 });
 test('public portal status must not be misreported as independent discovery, sales or provider pickup',()=>{
   assert.equal(submission.public_directory_claim_allowed,false);
