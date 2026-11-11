@@ -78,3 +78,51 @@ test('shutdown drains in-flight browser registration before closing its localhos
     fs.rmSync(dir,{recursive:true,force:true});
   }
 });
+
+
+test('one failing resident close does not skip shutdown of later registered services',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-close-aggregate-'));
+  const token='test-only-compute-close-aggregate';
+  const closed=[];
+  let index=0;
+  const node=await startEvercraftComputeNode({
+    nodeId:'ephemeral-close-all-services',root,host:'127.0.0.1',port:0,
+    allocatorToken:token,
+    browserRuntimeFactory:async()=>{
+      const number=++index;
+      return {
+        instanceId:'fixture-'+number,
+        async health(){return {ok:true};},
+        async browse(){return {ok:true};},
+        async close(){
+          closed.push(number);
+          if(number===1)throw Error('synthetic_first_resident_close_failure');
+        }
+      };
+    }
+  });
+  try{
+    for(let i=0;i<2;i++){
+      const leaseResponse=await fetch(node.endpoint+'/v1/leases',{
+        method:'POST',
+        headers:{authorization:'Bearer '+token,'content-type':'application/json'},
+        body:JSON.stringify({workload_class:'systemia.evercraft-web-browser.v1'})
+      });
+      assert.equal(leaseResponse.status,201);
+      const lease=await leaseResponse.json();
+      const response=await fetch(node.endpoint+'/v1/jobs',{
+        method:'POST',headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          workload_class:'systemia.evercraft-web-browser.v1',
+          lease_id:lease.lease_id,token:lease.token,input:{}
+        })
+      });
+      assert.equal(response.status,200);
+    }
+    await assert.rejects(node.close(),/compute_node_shutdown_incomplete/);
+    assert.deepEqual(closed,[1,2],
+      'second resident must be closed even when the first raises an error');
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
