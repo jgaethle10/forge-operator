@@ -498,6 +498,17 @@ function scoreEntry(intent,entry,{frequency,total}){
     ) score+=30;
   }
 
+  // A source-only product is not a substitute for an already published,
+  // specialist machine capability when the person has NOT named that product.
+  // Keep broad product discoverability, but prioritize verified specialist
+  // handoffs over incidental keyword matches (e.g. ForensiScope, EarthWorks).
+  if(entry.public_id.startsWith('product:')){
+    const name=entry.name.toLowerCase().trim();
+    const named=name!=='evercraft' && name.length>=6 &&
+      clean(intent).toLowerCase().includes(name);
+    if(!named) score*=0.3;
+  }
+
   return Math.max(0,Math.round(score*100)/100);
 }
 
