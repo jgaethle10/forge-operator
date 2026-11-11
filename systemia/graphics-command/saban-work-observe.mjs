@@ -8,6 +8,8 @@ import {openOperatorSnapshot} from './saban-work-operator.mjs';
 const STATUS=['queued','leased','completed','dead_letter'];
 const LABELS={queued:'Waiting',leased:'Assigned',completed:'Completed',dead_letter:'Needs attention'};
 const CLOCKS=['recent_source_timestamp','stale_source_timestamp','future_source_timestamp'];
+const ISO=/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/;
+const safeIso=value=>typeof value==='string'&&ISO.test(value)&&Number.isFinite(Date.parse(value));
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const numeric=(value,min,max)=>Number.isSafeInteger(value)&&value>=min&&value<=max;
 const isRecord=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -15,8 +17,8 @@ const isRecord=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function assertObservation(entry){
   if(!isRecord(entry)||!/^sha256:[a-f0-9]{64}$/.test(entry.source_digest)||
      !isRecord(entry.clock)||!CLOCKS.includes(entry.clock.clock_state)||
-     !Number.isFinite(Date.parse(entry.clock.observed_at))||
-     !Number.isFinite(Date.parse(entry.clock.source_reported_at))||
+     !safeIso(entry.clock.observed_at)||
+     !safeIso(entry.clock.source_reported_at)||
      !numeric(entry.total_jobs,0,10000)||!isRecord(entry.counts)||
      STATUS.some(s=>!numeric(entry.counts[s],0,10000))||
      STATUS.reduce((n,s)=>n+entry.counts[s],0)!==entry.total_jobs||
@@ -24,7 +26,8 @@ function assertObservation(entry){
     throw new Error('Invalid private observation');
 }
 
-export function renderObservedSnapshots(observations){
+export function renderObservedSnapshots(observations,{sourceClass='private_operator_snapshot'}={}){
+  if(!['private_operator_snapshot','synthetic_test'].includes(sourceClass))throw new Error('Invalid observation source class');
   if(!Array.isArray(observations)||observations.length<2||observations.length>12)
     throw new Error('Expected 2 to 12 sampled observations');
   observations.forEach(assertObservation);
@@ -54,7 +57,8 @@ export function renderObservedSnapshots(observations){
     '.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding-top:23px}.metric{border-left:2px solid #a85b70;padding-left:15px;min-width:0}.metric>span,.metric small{display:block;color:#c4b9c2;font-size:11px}.metric strong{font:850 clamp(25px,4vw,42px) system-ui,sans-serif;letter-spacing:-.06em;font-variant-numeric:tabular-nums}.metric small{color:#f0acbc}.obs-tail{font-size:11px;color:#9c939d;overflow-wrap:anywhere;margin-top:23px}.caution{border-top:1px solid #453a44;margin-top:35px;padding-top:19px;font-size:12px;color:#c3b8c1}'+
     '@media(max-width:570px){h1{margin:36px 0 14px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px}.observation{padding:17px}.obs-head{gap:10px}.obs-head time{flex-basis:100%}}'+
     '</style></head><body><main><header class="top"><div class="brand">EVERCRAFT <em>/</em> SABAN</div><div class="tag">PRIVATE / FINITE / OFFLINE</div></header>'+
-    '<h1>See what <span>changed.</span></h1><p class="description">Observations from an explicitly selected local Saban snapshot file. Each reading is a point-in-time aggregate. Differences are <strong>net count changes</strong>, not proven per-job events or a complete execution history.</p>'+
+    '<h1>See what <span>changed.</span></h1><p class="description">'+(sourceClass==='synthetic_test'?'SYNTHETIC TEST DATA. Simulated Saban state-machine transitions rendered for graphics QA. ':'Observations from an explicitly selected local Saban snapshot file. ')+
+    'Each reading is a point-in-time aggregate. Differences are <strong>net count changes</strong>, not proven per-job events or a complete execution history.</p>'+
     rows+'<footer class="caution">Source dates are self-reported and not independently authenticated. Source bytes can change without job progress, and job states can change between samples without being observed. This file is not live, not a customer receipt, and not authorized for public release. No job identifiers, worker names, task payloads, errors, file paths or credentials are embedded.</footer></main></body></html>';
 }
 
@@ -67,12 +71,16 @@ export async function captureLocalSabanObservations({
      !/^[a-z0-9][a-z0-9_-]{0,40}$/.test(prefix))
     throw new Error('Invalid finite observation limits');
   const observations=[];
+  let canonicalOutputRoot=null;
   for(let i=0;i<samples;i++){
     if(i>0)await sleep(intervalMs);
     const receipt=openOperatorSnapshot({
       authorizedRoot,snapshot,reviewRoot,
       filename:prefix+'-'+String(i+1).padStart(2,'0')+'.html',now:now()
     });
+    const thisOutputRoot=path.dirname(receipt.output);
+    if(canonicalOutputRoot===null)canonicalOutputRoot=thisOutputRoot;
+    if(canonicalOutputRoot!==thisOutputRoot)throw new Error('Private output root changed during sampling');
     const safe={
       source_digest:receipt.source_digest,clock:receipt.clock,
       total_jobs:receipt.total_jobs,counts:receipt.counts,
@@ -81,7 +89,9 @@ export async function captureLocalSabanObservations({
     assertObservation(safe);
     observations.push(safe);
   }
-  const target=path.join(path.dirname(path.resolve(reviewRoot, prefix+'-01.html')),prefix+'-observations.html');
+  if(fs.realpathSync(canonicalOutputRoot)!==canonicalOutputRoot)
+    throw new Error('Private output root changed after sampling');
+  const target=path.join(canonicalOutputRoot,prefix+'-observations.html');
   const html=renderObservedSnapshots(observations);
   fs.writeFileSync(target,html,{flag:'wx',mode:0o600});
   const brief={schema:'evercraft.graphics-command.saban-observations.v1',
