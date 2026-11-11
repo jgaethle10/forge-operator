@@ -1,0 +1,51 @@
+/* Evercraft Worlds / Live Radio. Scoped to avoid interfering with the WebGL builder. */
+.world-radio-toggle{appearance:none;min-height:44px;border:1px solid rgba(170,237,230,.45);background:rgba(13,51,65,.8);color:#e9fbf7;border-radius:999px;padding:9px 13px;font:600 13px/1.2 system-ui,sans-serif;cursor:pointer;white-space:nowrap;touch-action:manipulation}
+.world-radio-toggle:hover,.world-radio-toggle:focus-visible{background:#1a6170;outline:2px solid #7ee8dc;outline-offset:2px}
+.world-radio-panel{position:fixed;z-index:110;top:max(80px,env(safe-area-inset-top));right:14px;bottom:max(14px,env(safe-area-inset-bottom));width:min(428px,calc(100vw - 28px));box-sizing:border-box;overflow:auto;overscroll-behavior:contain;padding:18px 18px 24px;border:1px solid rgba(136,216,216,.36);border-radius:22px;background:linear-gradient(155deg,#0a2532,#091521 58%,#09131c);color:#e6f5f7;box-shadow:0 16px 70px rgba(0,0,0,.52);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.world-radio-panel[hidden]{display:none!important}
+.world-radio-panel *{box-sizing:border-box}
+.world-radio-panel button,.world-radio-panel select{font:inherit}
+.wr-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.wr-eyebrow,.wr-controls label{font-size:10px;font-weight:800;letter-spacing:.12em;color:#8bc4c9}
+.wr-head h2{margin:2px 0 0;color:#fff;font-size:26px;letter-spacing:-.035em;line-height:1.15}
+.wr-live{display:inline-block;vertical-align:middle;padding:4px 6px;margin-left:5px;background:#174d46;border:1px solid #3dc7ad;border-radius:6px;font-size:9px;letter-spacing:.12em;color:#b3f9e9}
+.wr-close{min-width:44px;min-height:44px;border:1px solid #466574;background:#153443;color:#e9fbff;border-radius:50%;font-size:21px!important;cursor:pointer}
+.wr-subtitle{margin:10px 0 14px;color:#b1cad2;line-height:1.5}
+.wr-controls{display:grid;gap:5px}
+.wr-controls select{display:block;-webkit-appearance:none;appearance:none;box-sizing:border-box;height:48px!important;min-height:48px!important;font-size:16px!important;width:100%;color:#e8fbff;background:#12394b;border:1px solid #476c7d;border-radius:10px;padding:10px 38px 10px 12px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath d='m2 2 5 5 5-5' fill='none' stroke='%23e8fbff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;background-size:14px 10px}
+.wr-map{display:block;width:100%;height:auto;aspect-ratio:2/1;margin-top:13px;border:1px solid #346176;border-radius:12px;cursor:crosshair;touch-action:manipulation}
+.wr-map:focus-visible{outline:2px solid #83e5dc;outline-offset:2px}
+.wr-map-caption{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:7px;font-size:11px;color:#b9d3d9}
+#wrLocation{font-weight:700;color:#fff}#wrCoords{text-align:right}
+.wr-explore{width:100%;min-height:44px;margin-top:12px;padding:11px;border:1px solid #70c9d1;border-radius:12px;background:#1b6b7f;color:#faffff;font-weight:800!important;cursor:pointer}
+.wr-explore:hover{background:#247f92}
+.wr-status{min-height:37px;margin:12px 0;font-size:12px;color:#b7d5d9}
+.wr-stations{display:grid;gap:8px}
+.wr-station{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:10px;text-align:left;width:100%;padding:11px 12px;border:1px solid #38596a;background:#132f3f;color:#f5feff;border-radius:12px;cursor:pointer}
+.wr-station:hover,.wr-station:focus-visible,.wr-station.wr-active{border-color:#64dbcd;background:#184456}
+.wr-station strong{grid-column:1;font-size:13px;overflow-wrap:anywhere}
+.wr-station small{grid-column:1;color:#a5c2cd;font-size:11px;margin-top:3px}
+.wr-station span{grid-column:2;grid-row:1/3;align-self:center;font-size:16px;color:#8bf1de}
+.wr-player{position:sticky;bottom:-24px;margin:16px -18px 0;padding:12px 18px calc(15px + env(safe-area-inset-bottom));border-top:1px solid #355565;background:#0b2531;z-index:1}
+.wr-playing{margin-bottom:7px;color:#f2fcfc;font-size:12px;font-weight:700;overflow-wrap:anywhere}
+.wr-player audio{display:block;width:100%;max-height:45px}
+.wr-fine{margin:15px 0 0;color:#8faab6;font-size:10px;line-height:1.6}
+.wr-history{border-top:1px solid #355565;padding-top:12px;margin:12px 0 0;color:#a9bdc5;font-size:11px}
+@media(max-width:640px){.world-radio-panel{top:auto;bottom:0;right:0;left:0;width:100%;max-height:min(86dvh,800px);border-radius:23px 23px 0 0;padding:17px 16px 24px}.wr-player{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}.world-radio-toggle{font-size:12px;padding:8px 10px}}
+@media(prefers-reduced-motion:reduce){.world-radio-panel *{scroll-behavior:auto}}
+
+/* Yakima's separate historical walkthrough uses a standalone, present-day radio control. */
+.world-radio-toggle.world-radio-floating{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(86px,env(safe-area-inset-top));z-index:108;background:#103a48;box-shadow:0 5px 24px #0008;max-width:min(220px,80vw)}
+@media(max-width:640px){.world-radio-toggle.world-radio-floating{top:max(64px,env(safe-area-inset-top));right:11px;padding:9px 11px;font-size:11px}}
+
+/* Persistent mini-player: station stays controllable while exploring the world.
+   The UI carries no audio data and does not start playback without a user click. */
+.wr-mini{position:fixed;z-index:105;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:7px;width:min(445px,calc(100vw - 32px));padding:9px 11px;color:#e6fcfa;background:rgba(8,32,45,.96);border:1px solid #70bfbf;border-radius:14px;box-shadow:0 10px 44px #0009;font:12px/1.35 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-sizing:border-box}
+.wr-mini[hidden]{display:none!important}
+.wr-mini-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.wr-mini-copy strong{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wr-mini-copy span{font-size:10px;color:#a7d2d0}
+.wr-mini button{flex:none;min-height:44px;padding:6px 8px;border-radius:9px;border:1px solid #3d6e7c;background:#204b5a;color:#f2ffff;cursor:pointer;font-weight:700;font-size:11px}
+.wr-mini button:hover,.wr-mini button:focus-visible{border-color:#9ce8e2;outline-color:#9ce8e2}
+.wr-mini button:disabled{opacity:.48;cursor:not-allowed}
+@media(max-width:640px){.wr-mini{left:10px;right:10px;bottom:calc(92px + env(safe-area-inset-bottom));width:auto;gap:5px;padding:7px 8px}.wr-mini button{font-size:10px;padding:6px}.wr-mini-copy strong{font-size:11px}}
