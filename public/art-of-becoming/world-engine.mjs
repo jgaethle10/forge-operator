@@ -112,7 +112,7 @@ export function worldSummary(habitState,goal,mode){
 export function chooseMode(habitState,goal,mode){
   if(!MODE_SET.has(mode)||!goal||typeof goal!=='string')throw new Error('Unknown world');
   const next=structuredClone(habitState);
-  next.worldState=normalizeWorldState(next.worldState,[...Object.keys(next.creditedDays||{}),goal]);
+  next.worldState=normalizeWorldState(next.worldState,[...new Set([...Object.keys(next.creditedDays||{}),...Object.keys(next.worldState?.worlds||{}),goal])]);
   next.worldState.activeModes[goal]=mode;
   return next;
 }
