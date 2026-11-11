@@ -53,3 +53,4 @@ jobs:
           tests/pq-trust-snapshot.test.mjs
           tests/pq-postgres-fixture/integration.test.mjs
           tests/pq-postgres-fixture/trust-integration.test.mjs
+          tests/pq-postgres-fixture/node-pair.test.mjs
