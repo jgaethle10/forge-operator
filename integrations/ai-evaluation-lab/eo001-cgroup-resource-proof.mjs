@@ -66,8 +66,8 @@ export function verifySyntheticScopeLimits({scopeId,procCgroup,readFile}={}){
   if(memory!==expected.memory_max_bytes)refuse('MEMORY_LIMIT_MISMATCH');
   if(pids!==expected.pids_max)refuse('TASK_LIMIT_MISMATCH');
   // Integer arithmetic avoids floating-point threshold ambiguity.
-  if(quota*expected.cpu_quota_denominator!==
-    period*expected.cpu_quota_numerator)refuse('CPU_LIMIT_MISMATCH');
+  if(BigInt(quota)*BigInt(expected.cpu_quota_denominator)!==
+    BigInt(period)*BigInt(expected.cpu_quota_numerator))refuse('CPU_LIMIT_MISMATCH');
   return {
     schema:'evercraft.eo001.gate1.synthetic-cgroup-resource-readback.v1',
     scoped_child_readback_pass:true,
