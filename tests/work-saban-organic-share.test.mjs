@@ -46,7 +46,8 @@ test('official first-party image is declared on the landing and reporter, with a
  }
  assert.match(svg,/viewBox="0 0 1200 630"/);
  assert.match(svg,/#A4142F/);
- assert.match(svg,/Give your work a team/i);
+ assert.match(svg,/>Give your work<\/text>/i);
+ assert.match(svg,/>a team\.<\/text>/i);
  assert.match(pages,/cairosvg\.svg2png\(url="_public_pages\/work-saban\/brand\/work-saban-social\.svg"/);
  assert.match(pages,/test -s _public_pages\/work-saban\/brand\/work-saban-social\.png/);
  assert.match(pages,/name: Verify Work Saban free CSV reporter, owned sharing and preview over public HTTPS/);
