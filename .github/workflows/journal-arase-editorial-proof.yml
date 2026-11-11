@@ -39,7 +39,10 @@ jobs:
             const bytes=fs.readFileSync(f);
             if(bytes.length<100000||bytes.length>16000000||bytes[0]!==255||bytes[1]!==216||bytes[2]!==255) throw Error("nasa_photo_content_invalid");
             const media=JSON.parse(fs.readFileSync("systemia/newsroom/editorial-assets/arase-may-2024-storm-media.json","utf8"));
-            const receipt={schema:"evercraft.journal.editorial-photo-review.v1",source_url:media.hero.image_url,credit:media.hero.photographer_credit,bytes:bytes.length,sha256:crypto.createHash("sha256").update(bytes).digest("hex"),rights_state:"candidate_not_approved_for_release",publication_authorized:false};
+            const digest=crypto.createHash("sha256").update(bytes).digest("hex");
+            if(digest!==media.hero.expected_sha256||bytes.length!==media.hero.expected_bytes) throw Error("nasa_photo_source_digest_mismatch");
+            if(media.hero.source_dimensions_px?.join("x")!=="6000x4000") throw Error("nasa_photo_source_dimensions_unverified");
+            const receipt={schema:"evercraft.journal.editorial-photo-review.v1",source_url:media.hero.image_url,credit:media.hero.photographer_credit,bytes:bytes.length,sha256:digest,rights_state:"candidate_not_approved_for_release",publication_authorized:false};
             fs.writeFileSync(process.env.RUNNER_TEMP+"/journal-arase-proof/visual-source-receipt.json",JSON.stringify(receipt,null,2)+"\n");
             process.stdout.write(JSON.stringify(receipt)+"\n");
           '
