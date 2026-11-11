@@ -3,11 +3,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import http from 'node:http';
+import { once } from 'node:events';
 
 import { startEvercraftComputeNode } from '../systemia/compute/runtime-node.mjs';
 import { AmbientWorkQueue } from '../systemia/saban/ambient-work-queue.mjs';
 import { dispatchAmbientJobsOnce } from '../systemia/saban/ambient-job-dispatcher.mjs';
-import { drainNodeSeedExecutionIntents } from '../systemia/saban/nodeseed-intent-executor.mjs';
+import { drainNodeSeedExecutionIntents, executeNodeSeedExecutionIntent } from '../systemia/saban/nodeseed-intent-executor.mjs';
+import { createNodeSeedExecutionIntent, getNodeSeedExecutionIntent } from '../systemia/saban/nodeseed-execution-intent.mjs';
 import { runYardSabanIntentDrain } from '../systemia/yard/saban-intent-drain-runner.mjs';
 
 const NODE = 'evercraft-unified-proof-node';
@@ -225,5 +228,87 @@ test('unattended broker dispatch never enables ambient-device gateway or arbitra
     assert.equal(queue.get(item.job_id).last_hold.reason, 'unattended_workload_not_authorized');
   } finally {
     fs.rmSync(root, { recursive:true, force:true });
+  }
+});
+
+
+test('uncertain broker job submission is held for review, never automatically replayed', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-unified-unknown-'));
+  let jobSubmissions = 0;
+  let leaseReleases = 0;
+  const server = http.createServer((req, res) => {
+    req.resume();
+    res.setHeader('content-type', 'application/json');
+    if (req.method === 'POST' && req.url === '/v1/leases') {
+      res.writeHead(201).end(JSON.stringify({
+        lease_id: 'lease-proof', token: 'local-test-lease', workload_class: 'systemia.content-hash.v1',
+      }));
+    } else if (req.method === 'POST' && req.url === '/v1/jobs') {
+      jobSubmissions++;
+      res.writeHead(504).end(JSON.stringify({ error: 'simulated_network_uncertainty' }));
+    } else if (req.method === 'POST' && req.url === '/v1/leases/lease-proof/release') {
+      leaseReleases++;
+      res.writeHead(200).end(JSON.stringify({ ok: true }));
+    } else {
+      res.writeHead(404).end(JSON.stringify({ error: 'not_found' }));
+    }
+  });
+  try {
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+    const endpoint = 'http://127.0.0.1:' + server.address().port;
+    const queue = new AmbientWorkQueue({root:path.join(root, 'work-queue')});
+    const job = queue.submit({
+      workload_class: 'systemia.content-hash.v1',
+      payload: { value: { mission: 'ambiguous-response' } },
+      idempotency_key: 'unified-unknown-job',
+    });
+    const intent = createNodeSeedExecutionIntent({
+      root, job,
+      task: { schema: 'evercraft.saban.fabric-task.v1', resources_per_execution: job.resources },
+      placement: {market: 'evercraft-nodeseed', provider_id: NODE, unit_id: 'unit-1', offer_id: 'nodeseed:'+NODE},
+      plan: { receipt_hash: 'sha256:ambiguous-response' },
+    });
+    queue.update(job.job_id, {state:'handoff_wait'});
+    const yard = {
+      async listRemoteCapacityNodes() { return {
+        schema: 'evercraft.yard.remote-capacity-nodes.v1',
+        count: 1,
+        nodes: [{
+          node_id:NODE, device_fingerprint:FP, connected:true,
+          capacity:{
+            authorized:true, session_attestation_verified:true, zero_cost:true,
+            supported_workloads:['systemia.content-hash.v1'], device_fingerprint:FP,
+          },
+        }],
+      }; },
+      async remoteCapacityGrant(_broker, nodeId, {allowLoopbackProof}={}) {
+        assert.equal(nodeId,NODE);
+        assert.equal(allowLoopbackProof,true);
+        return {
+          node_id:NODE, device_fingerprint:FP,
+          capacity_endpoint:endpoint, allocator_token:'local-test-control',
+        };
+      },
+    };
+    const outcome = await executeNodeSeedExecutionIntent({
+      root, intentId:intent.intent_id, yard, brokerDeploymentId:BROKER,
+      allowLoopbackProof:true, timeoutMs:2000,
+    });
+    assert.equal(outcome.status,'verification_hold');
+    assert.equal(outcome.reason,'remote_job_outcome_unknown');
+    assert.equal(jobSubmissions,1);
+    assert.equal(leaseReleases,1);
+    assert.equal(queue.get(job.job_id).state,'held');
+    assert.equal(queue.get(job.job_id).attempts,0);
+    assert.equal(queue.get(job.job_id).last_hold.reason,'unverified_remote_worker_result');
+    assert.equal(getNodeSeedExecutionIntent({root,intentId:intent.intent_id}).state,'verification_hold');
+    const next=await dispatchAmbientJobsOnce({root,nodeSeedOnly:true,maxJobs:1});
+    assert.equal(next.held,1);
+    assert.equal(next.rows[0].manual_review_required,true);
+    assert.equal(jobSubmissions,1);
+  } finally {
+    server.close();
+    fs.rmSync(root,{recursive:true,force:true});
   }
 });
