@@ -183,8 +183,8 @@ export function runSyntheticCgroupCanary({
   const readState=()=>run('systemctl',['--user','show',unit,
     '-p','LoadState','-p','ActiveState'],cleanupOptions);
   const isGone=result=>commandOk(result)&&
-    /\\bLoadState=not-found\\b/.test(result.stdout)&&
-    /\\bActiveState=inactive\\b/.test(result.stdout);
+    /\bLoadState=not-found\b/.test(result.stdout)&&
+    /\bActiveState=inactive\b/.test(result.stdout);
   let current=readState();
   if(!isGone(current)){
     run('systemctl',['--user','kill','--kill-whom=all',
