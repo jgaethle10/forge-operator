@@ -12,6 +12,13 @@ const HERE=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(HERE,'../..');
 const PIN='a'.repeat(40),ID='b'.repeat(32),NONCE='c'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
+const fakeScopeResources=file=>{
+  if(file.endsWith('/memory.max'))return '268435456\\n';
+  if(file.endsWith('/pids.max'))return '12\\n';
+  if(file.endsWith('/cpu.max'))return '75000 100000\\n';
+  throw Error('Unexpected cgroup leaf file');
+};
+
 
 function mockRun(calls,overrides={}){
   return (cmd,args,opts)=>{
@@ -146,7 +153,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
     const gotUnit=args.find(x=>x.startsWith('--unit=')).slice(7);
     const nonce=args.at(-1);
     const payload=inspectScopedChild({scopeId:gotUnit,nonce,
-      procCgroup:'0::/user.slice/'+gotUnit});
+      procCgroup:'0::/user.slice/'+gotUnit,readFile:fakeScopeResources});
     return {status:0,stdout:JSON.stringify(payload)+'\n'};
   };
   let k=0;
@@ -161,7 +168,8 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   assert.equal(calls[0].cmd,'systemd-run');
   assert.equal(calls[1].cmd,'systemctl');
   assert.equal(calls[2].cmd,'systemctl');
-  assert.equal(result.state,'ONE_SHOT_SYNTHETIC_CGROUP_SCOPE_MEMBER_REPORTED');
+  assert.equal(result.state,'ONE_SHOT_SYNTHETIC_CGROUP_RESOURCE_READBACK_REPORTED');
+  assert.equal(result.synthetic_child_resource_limits_read_back,true);
   assert.equal(result.scope_collected_after_probe,true);
   assert.equal(result.synthetic_child_reported_member,true);
   assert.equal(result.resource_limits_independently_read_back,false);
@@ -203,7 +211,8 @@ test('uncleared transient scope blocks the report even if child claimed membersh
     }
     const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
     return {status:0,stdout:JSON.stringify(inspectScopedChild({
-      scopeId:unit,nonce:ID,procCgroup:'0::/user.slice/'+unit
+      scopeId:unit,nonce:ID,procCgroup:'0::/user.slice/'+unit,
+      readFile:fakeScopeResources
     }))};
   };
   assert.throws(()=>runSyntheticCgroupCanary({...base,run}),
