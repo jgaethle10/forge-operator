@@ -19,12 +19,12 @@ The immersive experiment does not replace the evidence lab. It now accepts local
 
 ## First real-data source packet: NOAA EX2306 DIVE02 (research preview)
 
-**First-party discovery route:** `/subsea-watch/field-archive/`. It shows a documented NOAA Ocean Exploration video segment from the Kodiak Seep ROV dive, with a user-initiated preview, original NOAA clip citation and direct file download. It also links the original DIVE02 track KML, ROV ancillary ZIP and CTD/sensor ZIP without claiming those bytes have been inspected or synchronized.
+**First-party discovery route:** `/subsea-watch/field-archive/`. It shows a documented NOAA Ocean Exploration video segment from the Kodiak Seep ROV dive, with a user-initiated preview, original NOAA clip citation and direct file download. It also links the original DIVE02 track KML, ROV ancillary ZIP and CTD/sensor ZIP. The first two have now been byte-audited; the CTD ZIP remains uninspected. None is certified for spatial reconstruction or video synchronization.
 
 The first-party registry is `field-archive/sources.json`, with stable source IDs, original provider links, credit/rights notes, published metadata, access status, and explicit evidence boundaries. The mobile page uses only first-party JavaScript and defers fetching the external NOAA MP4 until the viewer chooses **Preview NOAA footage**.
 
 - **Source verified by metadata:** NOAA EX2306 DIVE02 Kodiak Seep; one 299-second HD camera segment starting 2023-08-25 18:30:00 UTC; original low-res H.264 MP4 URL published in NCEI metadata. NOAA's Ocean Exploration Video Portal describes its video as public domain; credit NOAA Ocean Exploration and preserve the dataset citation.
-- **Published but uninspected archives:** The DIVE02 KML, ancillary ZIP and CTD ZIP are linked by NOAA's expedition page. Download URLs are identified, **not** byte-verified, parsed, datum-resolved or approved for frame-to-track registration.
+- **Actual downloaded originals (Nov 10, 2026):** KML 79,769 bytes SHA256 `57b9fcffe9faf8a1a7157ba728a05ae0cff9fb80db2086115ef8a970cc4b3fe2`, one untimed LineString with 1,963 coordinate tokens. Ancillary ZIP 15,727,951 bytes SHA256 `b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61`, seven members including a 26,092-row 1Hz track CSV. The original CTD ZIP remains not byte-verified.
 - **Future geometry exploration:** NCEI bathymetry, the public-domain GEBCO_2026 global grid (with measured/predicted TID distinctions), NOAA BlueTopo (with uncertainty/contributor layers), and NOAA's photogrammetry collection are discovery links only, not surveyed local models for the Kodiak Seep dive. GEBCO requires attribution and must not be used for safety at sea; BlueTopo source-contributor restrictions and coverage quality must be checked; partner-hosted photogrammetry needs separate license verification before use.
 - **No synthetic contamination:** The real NOAA clip is never mapped onto the fictional diver, pipe or seafloor; there is no imported real XY route unless an actual validated sensor adapter produces one. Public video alone cannot establish depth, camera pose, bathymetry or the location of underwater structures.
 - **Safety and ethics:** No recorded visual is a safe-route claim, clearance to dive or automated hazard detection. Keep exact source, licensing, clock uncertainty and limitations attached in downstream outputs.
@@ -35,7 +35,7 @@ The first-party registry is `field-archive/sources.json`, with stable source IDs
 
 ### Source-byte audit contract (engineering gate)
 
-The original EX2306 DIVE02 KML and ROV ancillary ZIP are now targets of the first-party `Subsea NOAA source byte audit` GitHub Actions workflow. The owning script is `scripts/audit-noaa-subsea-sources.py`, with offline guardrail tests in `tests/test_subsea_noaa_audit.py`.
+The original EX2306 DIVE02 KML and ROV ancillary ZIP were successfully audited by the first-party `Subsea NOAA source byte audit` GitHub Actions workflow. The owning script is `scripts/audit-noaa-subsea-sources.py`, with offline guardrail tests in `tests/test_subsea_noaa_audit.py`.
 
 - Fetches **only** two hard-coded NOAA/MS State archive URLs over HTTPS with guarded redirects and bounded reads (KML 500 KB, ancillary ZIP 24 MB).
 - Records actual response metadata, byte count and SHA-256. The KML inspector inventories geometry and timestamp tags but **never converts** KML elevation into diver depth or claims underwater position accuracy.
@@ -47,7 +47,7 @@ This workflow is neither a commercial dive data certification nor approval for l
 
 ### Next adapter gate
 
-Inspect the real DIVE02 ZIP and KML formats before writing a converter. Verify which measurements correspond to the **ROV** versus the camera platform or ship. Explicitly establish time basis, UTC offsets, horizontal measurement method, position validity, coordinate datum, local origin and depth sign/reference. Build a converter that emits `evercraft.subsea.replay.v1` **only for validated fields** and leaves missing XY unknown. Never interpolate unknown positions across long intervals or imply video-frame accuracy without a verified clock alignment.
+The bytes are now audited; next validate schema and measurement provenance before writing a reconstruction converter. Verify which measurements correspond to the **ROV** versus the camera platform or ship. Explicitly establish time basis, UTC offsets, horizontal measurement method, position validity, coordinate datum, local origin and depth sign/reference. Build a converter that emits `evercraft.subsea.replay.v1` **only for validated fields** and leaves missing XY unknown. Never interpolate unknown positions across long intervals or imply video-frame accuracy without a verified clock alignment.
 
 ## Local footage / mission clock pairing (experimental)
 
