@@ -11,7 +11,7 @@ const row='W-100,"Spoke, twin",Bronze,19,249.95';
 function launch() {
   const elements=new Map();
   const created=[];
-  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary']){
+  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary','sourcingBrief']){
     elements.set(id,{
       value: id==='quantity'?'4':id==='service'?'none':'',
       textContent:'', listeners:{}, children:[],
@@ -216,4 +216,58 @@ test('RC08 rejects any claimed referral, contact transfer or nonboolean sourcing
   const old=api.parseConcept(JSON.stringify(good));
   assert.equal(old.findmypart_sourcing_interest_requested,false,'older RC01 exports remain valid');
   assert.equal(api.packet().findmypart_referral_sent,false);
+});
+
+test('RC09 only exports a FindMyPart research note after deliberate shopper interest',async()=>{
+  const {api,elements,created}=launch();
+  assert.equal(elements.get('sourcingBrief').disabled,true);
+  assert.throws(()=>api.sourcingBrief(),/No shopper sourcing interest/);
+  elements.get('sourcingBrief').listeners.click();
+  assert.match(elements.get('message').textContent,/No optional sourcing interest/);
+  assert.equal(created.some(x=>x.download),false);
+
+  const sample={
+    title:'Wheel Lab concept quote packet',version:'RC01',illustrative_only:true,
+    fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,
+    findmypart_sourcing_interest_requested:true,
+    findmypart_referral_sent:false,findmypart_customer_contact_shared:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Turbine',diameter_in:20,wheel_finish:'Warm bronze',paint:'Electric blue'
+  };
+  elements.get('shop').value='PRIVATE SHOP NAME';
+  elements.get('vehicle').value='PRIVATE VEHICLE ID 234';
+  await elements.get('conceptFile').listeners.change({
+    target:{files:[{size:550,name:'example.json',async text(){return JSON.stringify(sample)}}],value:''}
+  });
+  assert.equal(elements.get('sourcingBrief').disabled,false);
+  const brief=api.sourcingBrief();
+  assert.match(brief,/FINDMYPART \| UNSENT RESEARCH PREPARATION/);
+  assert.match(brief,/Turbine, Warm bronze, 20 inch/);
+  assert.match(brief,/NOT SENT TO FINDMYPART/);
+  assert.doesNotMatch(brief,/PRIVATE SHOP NAME|PRIVATE VEHICLE ID 234/);
+  assert.doesNotMatch(brief,/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/);
+  assert.doesNotMatch(brief,/https?:\/\//);
+  elements.get('sourcingBrief').listeners.click();
+  assert.equal(created.find(x=>x.download==='findmypart-unsent-research-note.txt')?.clicked,true);
+  assert.match(elements.get('message').textContent,/Nothing sent or submitted/);
+  elements.get('reset').listeners.click();
+  assert.equal(elements.get('sourcingBrief').disabled,true);
+  assert.throws(()=>api.sourcingBrief(),/No shopper sourcing interest/);
+});
+
+test('RC09 explicitly rejects a false interest and never generates a sourcing file',async()=>{
+  const {api,elements,created}=launch();
+  const sample={
+    title:'Wheel Lab concept quote packet',version:'RC01',illustrative_only:true,
+    fitment_verified:false,inventory_verified:false,price_verified:false,shop_contacted:false,
+    findmypart_sourcing_interest_requested:false,
+    findmypart_referral_sent:false,findmypart_customer_contact_shared:false,
+    vehicle:'Original concept coupe (not manufacturer-specific)',
+    wheel_design:'Orbit',diameter_in:19,wheel_finish:'Gloss black',paint:'Torch red'
+  };
+  await elements.get('conceptFile').listeners.change({target:{files:[{size:500,name:'example.json',async text(){return JSON.stringify(sample)}}],value:''}});
+  assert.equal(elements.get('sourcingBrief').disabled,true);
+  assert.throws(()=>api.sourcingBrief(),/No shopper sourcing interest/);
+  elements.get('sourcingBrief').listeners.click();
+  assert.equal(created.some(x=>x.download==='findmypart-unsent-research-note.txt'),false);
 });
