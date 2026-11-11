@@ -5,12 +5,14 @@ on:
     paths:
       - 'systemia/graphics-command/saban-work-visual*'
       - 'systemia/graphics-command/saban-work-operator*'
+      - 'systemia/graphics-command/saban-work-observe*'
       - '.github/workflows/saban-work-visual.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/graphics-command/saban-work-visual*'
       - 'systemia/graphics-command/saban-work-operator*'
+      - 'systemia/graphics-command/saban-work-observe*'
       - '.github/workflows/saban-work-visual.yml'
 
 permissions:
@@ -29,12 +31,17 @@ jobs:
         run: |
           node --check systemia/graphics-command/saban-work-visual.mjs
           node --check systemia/graphics-command/saban-work-operator.mjs
+          node --check systemia/graphics-command/saban-work-observe.mjs
+          node --check systemia/graphics-command/saban-work-observe.specimen.mjs
           node --check systemia/graphics-command/saban-work-visual.specimen.mjs
           node --check systemia/graphics-command/saban-work-visual-browser.cjs
           node --test systemia/graphics-command/saban-work-visual.test.mjs
           node --test systemia/graphics-command/saban-work-operator.test.mjs
+          node --test systemia/graphics-command/saban-work-observe.test.mjs
       - name: Render synthetic Saban source-backed specimen
         run: node systemia/graphics-command/saban-work-visual.specimen.mjs artifacts/saban-work-visual-specimen
+      - name: Generate sampled synthetic Saban history
+        run: node systemia/graphics-command/saban-work-observe.specimen.mjs artifacts/saban-work-visual-specimen
       - name: Install isolated Chromium visual reviewer
         run: |
           npm install --prefix /tmp/saban-proof-review --no-save --no-package-lock --ignore-scripts playwright@1.56.1
