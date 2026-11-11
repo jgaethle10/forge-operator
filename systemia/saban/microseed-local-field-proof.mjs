@@ -252,7 +252,15 @@ async function main(){
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
   main().catch(e=>{
     const reason=String(e?.message||'unknown');
-    const safe=/^field_proof_[a-z0-9_]+$/.test(reason)?reason:'field_proof_incomplete_or_unavailable';
+    const safe=/^field_proof_[a-z0-9_]+$/.test(reason)
+      ? reason
+      : e?.code==='ENOENT'
+        ? 'field_proof_existing_bootstrap_or_journal_missing'
+        : e?.code==='EACCES'||e?.code==='EPERM'
+          ? 'field_proof_local_file_access_denied'
+          : /fetch failed|ECONNREFUSED|ENETUNREACH|offline/i.test(reason)
+            ? 'field_proof_loopback_agent_unavailable'
+            : 'field_proof_incomplete_or_unavailable';
     process.stdout.write(JSON.stringify({
       schema:SCHEMA,ok:false,state:'held',reason:safe,
       physical_hardware_attested:false,downstream_effect_verified:false,
