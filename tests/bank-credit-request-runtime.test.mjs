@@ -155,3 +155,50 @@ test('each request is privately bound to the verified destination; rotation inva
   await x.dispose();
  }
 });
+
+
+test('private reconciliation endpoint compares bank observations but never issues paid receipts',async()=>{
+ const x=await setup();
+ try{
+  const c=(await issue(x.rt,approved)).data;
+  const saved=JSON.parse(await fs.readFile(path.join(x.dir,c.request_id+'.json'),'utf8'));
+  const route=x.rt.url+'/v1/operator/bank-credit/reconcile';
+  const observations=[{
+   source_type:'merchant_bank_statement_observation',
+   bank_transaction_id:'SYNTHETIC-BANK-POSTING-1',
+   receiving_account_key:saved.receiving_account_key,
+   amount_cents:25000,currency:'usd',direction:'credit',bank_status:'posted',
+   posted_at:'2026-11-11T16:00:00Z',
+   memo:'ACH CREDIT '+c.reference,
+  }];
+  const body={request_ids:[c.request_id],observations};
+  const send=(b,token=opts.operatorToken)=>fetch(route,{
+   method:'POST',headers:{'content-type':'application/json',
+    authorization:'Bearer '+token},body:JSON.stringify(b),
+  });
+  assert.equal((await send(body,'wrong-operator-key')).status,401);
+  const result=await send(body);
+  assert.equal(result.status,200);
+  const report=await result.json();
+  assert.equal(report.candidates,1);
+  assert.equal(report.matches[0].match_state,'RECONCILIATION_CANDIDATE');
+  assert.equal(report.matches[0].paid_verified,false);
+  assert.equal(report.paid_orders_confirmed,0);
+  assert.equal(report.fulfillment_releases,0);
+  assert.equal(report.bank_data_authenticated,false);
+  assert.doesNotMatch(JSON.stringify(report),/SYNTHETIC-BANK-POSTING-1|000012345678|021000021/);
+  const later=await send({...body,observations:[{...observations[0],bank_status:'pending'}]});
+  assert.equal(later.status,200);
+  assert.equal((await later.json()).candidates,0);
+  const dupe=await send({...body,observations:[...observations,...observations]});
+  assert.equal(dupe.status,200);
+  assert.equal((await dupe.json()).candidates,0);
+  const invalid=await send({...body,request_ids:['../../private']});
+  assert.equal(invalid.status,422);
+  const notFound=await send({...body,request_ids:['bpr_'+'9'.repeat(32)]});
+  assert.equal(notFound.status,404);
+  // No request state has changed through any reconciliation diagnostic.
+  const storedAfter=JSON.parse(await fs.readFile(path.join(x.dir,c.request_id+'.json'),'utf8'));
+  assert.deepEqual(storedAfter,saved);
+ }finally{await x.dispose()}
+});
