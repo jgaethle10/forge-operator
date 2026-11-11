@@ -45,6 +45,16 @@ is still required to actually move money.
   amount mismatch, host restriction, escaping, absence of charge calls and
   fulfillment lock.
 
+## Private bank reconciliation workbench (source added November 11)
+
+- The original bank-credit request now carries a private, deterministic, **HMAC-keyed receiving-account fingerprint** in its order record; no routing or account number is stored there or returned by the operator JSON response. A bank-account rotation rejects old link views and idempotent replays rather than silently redirecting buyers to a different beneficiary.
+- `systemia/payments/bank-credit-reconciliation.mjs` accepts *private, read-only* statement observations for a bank-credit candidate match. It checks: one unique request ID, exact transfer reference, one nonduplicated bank transaction ID, bank-posted credit direction/status, exact USD amount, and the receiving-account fingerprint.
+- It flags wrong account, partial/overpayments, missing or extra references, pending/debit transactions and duplicate/multiple credits for manual investigation.
+- **No uploaded or caller-supplied bank statement is treated as authentic.** Its output is `RECONCILIATION_CANDIDATE`, not `paid`. The statement has to be retrieved independently from the authorized merchant's bank or authenticated bank integration and reviewed under a separate approval gate before order settlement and Shipping fulfillment can change state.
+- The workbench does not store bank transactions, transmit funds, ingest bank credentials, change orders, send invoices or publish sensitive data. It does not run as an operator route in this PR; its output is deliberately non-authoritative until the bank integration and approval are ready.
+- `tests/bank-credit-reconciliation.test.mjs` verifies duplicate, missing, ambiguous, wrong account, wrong amount, unsupported evidence and fulfillment-locked outcomes, alongside account-rotation tests on the request server.
+- Merchant-bank posting date may be later than link expiry; the link expiry only prevents new instructions, not accounting review of funds already transferred.
+
 ## Deployment prerequisites (NOT complete in PR)
 1. Confirm Evercraft's *own* receiving business account can accept domestic
    ACH credit transfers, including the actual beneficiary name, routing number,
@@ -69,10 +79,7 @@ is still required to actually move money.
    match the **bank statement** transaction id, credited amount, beneficiary,
    receipt/reference and posting date to the Evercraft Payments order. Until
    the bank actually confirms receipt, status stays unpaid.
-7. Add the separate bank evidence ingestion and human review protocol to the
-   main Payments order ledger, including exceptions, duplicate credits,
-   partial payments, reversals, refunds, disputes and fulfillment release.
-   This source-only v1 deliberately does not implement that authority.
+7. Connect the separately tested statement-matching workbench to a verified, permissioned merchant-bank data source and human review protocol. This PR produces candidates only; canonical paid status, return/refund/chargeback handling, and Shipping fulfillment release are still separate unimplemented gates.
 8. Bank provider/API-enabled customer-approved Pay-by-Bank, RTP/FedNow Request
    for Payment, and supported business Zelle may follow after bank
    eligibility and integration approval. Do not advertise instant payment
