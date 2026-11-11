@@ -29,7 +29,7 @@ function ageMs(iso, nowMs) {
   return age;
 }
 
-export function proposePaperOrder({ broker, signal, now = new Date() } = {}) {
+export function proposePaperOrder({ broker, signal, riskAttestation, now = new Date() } = {}) {
   const reasons = [];
   const nowMs = now instanceof Date ? now.getTime() : NaN;
   if (!Number.isFinite(nowMs)) throw new Error('paper_gate_clock_invalid');
@@ -73,9 +73,19 @@ export function proposePaperOrder({ broker, signal, now = new Date() } = {}) {
     if (projectedRisk > LIMITS.max_stressed_risk_usd + 1e-9 ||
       projectedReward <= 0 || riskReward < LIMITS.minimum_reward_risk) reasons.push('pilot_risk_budget_exceeded');
   }
-  // This pilot does not trust an unverified P&L figure. It requires independent certification.
-  if (signal?.certified_daily_realized_loss_usd !== 0 ||
-    signal?.independent_risk_approval !== true) reasons.push('independent_daily_risk_certification_required');
+  // Strategy input cannot certify its own safety. The risk attestation is separate,
+  // but a cryptographically authenticated authority is still required before execution.
+  const attestationAge = ageMs(riskAttestation?.issued_at, nowMs);
+  if (riskAttestation?.schema !== 'evercraft.daytrade.independent-risk-proof.v1' ||
+    riskAttestation?.reviewer_role !== 'INDEPENDENT_RISK' ||
+    riskAttestation?.approved !== true ||
+    riskAttestation?.signal_id !== signalId ||
+    riskAttestation?.precommit_hash !== strategyHash ||
+    riskAttestation?.broker_snapshot_at !== broker?.observed_at ||
+    riskAttestation?.daily_realized_loss_usd !== 0 ||
+    attestationAge === null || attestationAge > LIMITS.max_preflight_age_ms) {
+    reasons.push('independent_daily_risk_certification_required');
+  }
 
   const admitted = reasons.length === 0;
   const clientOrderId = admitted ? 'ecpaper_' + createHash('sha256')
