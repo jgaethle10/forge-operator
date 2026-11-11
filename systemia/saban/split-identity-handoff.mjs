@@ -128,13 +128,16 @@ export function publishSplitIdentityRequests({sabanRoot,mailboxRoot,maxRequests=
   requireValid(sabanRoot,'saban_root_required');
   const queue=new AmbientWorkQueue({root:path.join(path.resolve(sabanRoot),'work-queue')});
   const rows=[];
+  const limit=Math.min(4,Math.max(1,Number(maxRequests)||4));
   for(const intent of listNodeSeedExecutionIntents({
     root:sabanRoot,states:['awaiting_yard_execution'],
-  }).slice(0,Math.min(4,Math.max(1,Number(maxRequests)||4)))){
+  })){
     const job=queue.get(intent.job_id);
     const req=requestForJob({job,intent});
     const created=immutableJson(file(mailboxRoot,'requests',intent.intent_id),req);
-    rows.push({intent_id:intent.intent_id,job_id:job.job_id,published:created});
+    if(!created)continue;
+    rows.push({intent_id:intent.intent_id,job_id:job.job_id,published:true});
+    if(rows.length>=limit)break;
   }
   return {schema:'evercraft.saban.split-identity-publish.v1',
     published:rows.filter(x=>x.published).length,rows,authority_material_persisted:false};
