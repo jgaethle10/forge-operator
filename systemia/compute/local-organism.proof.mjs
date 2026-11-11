@@ -15,6 +15,27 @@ const nativeBrowserProofPreparer=async()=>({
   browserRuntimeFactory:null,
 });
 
+async function waitForHealthy(organism,label){
+  let last=null;
+  // A resident multi-service deployment may still be becoming reachable
+  // after the deployment receipt has been written. This is bounded and
+  // fail-closed: readiness must become true within ~15 seconds.
+  for(let attempt=0;attempt<15;attempt++){
+    try{last=await organism.health();}
+    catch(error){last={ok:false,reason:String(error?.message||error).slice(0,120)};}
+    if(last?.ok===true)return last;
+    await new Promise(resolve=>setTimeout(resolve,1000));
+  }
+  process.stderr.write(JSON.stringify({
+    schema:'evercraft.local-organism-proof-readiness-failed.v1',
+    label,
+    status:{ok:last?.ok??false,kaidance:last?.kaidance?.ok??null,
+      systemia_core:last?.systemia_core?.ok??null,
+      fabric:last?.fabric?.ok??null,reason:last?.reason||null},
+  })+'\n');
+  return last;
+}
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-local-organism-proof-'));
 const releaseRef = 'e293e0d75d1622f12b54249be8d403a06774e4e9';
 
@@ -49,7 +70,7 @@ try {
   assert.equal(first.pulse.state, 'healthy');
   assert.equal(first.pulse.field_attestation.state, 'not_verified');
 
-  const firstHealth = await first.health();
+  const firstHealth = await waitForHealthy(first,'first_start');
   assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.systemia_core.ok, true);
@@ -111,7 +132,7 @@ try {
   assert.notEqual(second.kaidance.receipt.receipt_hash, firstKaidanceReceipt);
   assert.notEqual(second.core.receipt.receipt_hash, firstCoreReceipt);
 
-  const secondHealth = await second.health();
+  const secondHealth = await waitForHealthy(second,'restart');
   assert.equal(secondHealth.ok, true);
 
   const allocatorSecret = fs.readFileSync(
@@ -169,3 +190,20 @@ try {
   }
   fs.rmSync(root, { recursive: true, force: true });
 }
+
+// A completed proof must also release its Node resources. An unref'd watchdog
+// has no effect on a clean exit; if something leaked, fail explicitly with
+// resource types instead of leaving GitHub Actions hanging until cancellation.
+setTimeout(() => {
+  const resources = process.getActiveResourcesInfo?.() || [];
+  const handleTypes = process._getActiveHandles?.()
+    .map(handle => handle?.constructor?.name || 'unknown') || [];
+  process.stderr.write(JSON.stringify({
+    ok: false,
+    schema: 'evercraft.local-organism-proof-open-handles.v1',
+    reason: 'proof_cleanup_left_active_resources',
+    resource_types: resources,
+    handle_types: handleTypes,
+  }) + '\n');
+  process.exit(13);
+}, 2000).unref();

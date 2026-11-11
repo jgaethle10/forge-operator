@@ -5,7 +5,6 @@ import { allocatorTokenForOffer, discoverEligibleCapacity } from './capacity-res
 import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 import { buildKaidancePulse } from '../collider/pulse.mjs';
 import { createFieldEnrollment, evaluateFieldAttestation } from './field-attestation.mjs';
-import { drainNodeSeedExecutionIntents } from '../saban/nodeseed-intent-executor.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -2255,6 +2254,9 @@ export class YardOperator {
   } = {}) {
     if (!sabanRoot) throw new Error('sabanRoot is required');
     if (!brokerDeploymentId) throw new Error('brokerDeploymentId is required');
+    // The broker-only Yard operator must not require Saban's queue runtime
+    // just to load. Only the legacy same-account drain loads this module.
+    const {drainNodeSeedExecutionIntents}=await import('../saban/nodeseed-intent-executor.mjs');
     return await drainNodeSeedExecutionIntents({
       root: sabanRoot,
       yard: this,

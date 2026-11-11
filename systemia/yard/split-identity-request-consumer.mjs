@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes} from 'node:crypto';
 
 import {YardOperator} from './operator.mjs';
-import {readSplitIdentityRequests,publishSplitIdentityOutcome} from '../saban/split-identity-handoff.mjs';
+import {readSplitIdentityRequests,publishSplitIdentityOutcome} from '../saban/split-identity-protocol.mjs';
 import {verifyNodeSeedWorkerCompletion} from '../saban/nodeseed-worker-completion-verifier.mjs';
 import {publishSplitIdentityCapacity} from '../saban/split-identity-capacity.mjs';
 
