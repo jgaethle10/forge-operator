@@ -145,12 +145,16 @@ export function publishSplitIdentityRequests({sabanRoot,mailboxRoot,maxRequests=
 export function readSplitIdentityRequests({mailboxRoot,maxRequests=4}={}){
   const root=dir(mailboxRoot,'requests');
   const rows=[];
-  for(const name of fs.readdirSync(root).filter(x=>x.endsWith('.json')).sort()
-    .slice(0,Math.min(4,Math.max(1,Number(maxRequests)||4)))){
+  const limit=Math.min(4,Math.max(1,Number(maxRequests)||4));
+  for(const name of fs.readdirSync(root).filter(x=>x.endsWith('.json')).sort()){
     const id=name.slice(0,-5);
+    // Finished requests remain as immutable audit evidence but must never
+    // starve newer requests after the first batch fills up.
+    if(fs.existsSync(file(mailboxRoot,'outcomes',id)))continue;
     const req=verifyRequest(readJsonSafe(file(mailboxRoot,'requests',id)));
     requireValid(req.intent_id===id,'request_filename_mismatch');
     rows.push(req);
+    if(rows.length>=limit)break;
   }
   return rows;
 }
@@ -216,8 +220,8 @@ export function importSplitIdentityOutcomes({sabanRoot,mailboxRoot,maxOutcomes=4
   const root=dir(mailboxRoot,'outcomes');
   const queue=new AmbientWorkQueue({root:path.join(path.resolve(sabanRoot),'work-queue')});
   const rows=[];
-  for(const name of fs.readdirSync(root).filter(x=>x.endsWith('.json')).sort()
-    .slice(0,Math.min(4,Math.max(1,Number(maxOutcomes)||4)))){
+  const limit=Math.min(4,Math.max(1,Number(maxOutcomes)||4));
+  for(const name of fs.readdirSync(root).filter(x=>x.endsWith('.json')).sort()){
     const id=name.slice(0,-5);
     const req=verifyRequest(readJsonSafe(file(mailboxRoot,'requests',id)));
     const outcome=verifyOutcome(req,readJsonSafe(file(mailboxRoot,'outcomes',id)));
@@ -303,6 +307,7 @@ export function importSplitIdentityOutcomes({sabanRoot,mailboxRoot,maxOutcomes=4
       }
     }
     rows.push({intent_id:id,status:outcome.status});
+    if(rows.filter(x=>x.status!=='already_applied').length>=limit)break;
   }
   return {schema:'evercraft.saban.split-identity-import.v1',
     applied:rows.filter(x=>x.status==='completed'||x.status==='verification_hold').length,
