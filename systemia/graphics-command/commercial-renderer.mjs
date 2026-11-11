@@ -129,7 +129,7 @@ function renderWebsiteAuditEditorialPoster(campaign,spec){
   const subtitleY=secondY+(wide?58:68);
   const rowGap=Math.round(panelH*.146);
   const rowStart=panelY+Math.round(panelH*.25);
-  const categories=['MESSAGE CLARITY','MOBILE EXPERIENCE','PAGE PERFORMANCE','TRUST & NAVIGATION','CONTACT JOURNEY'];
+  const categories=['MESSAGE CLARITY','MOBILE EXPERIENCE','PAGE PERFORMANCE','TRUST &amp; NAVIGATION','CONTACT JOURNEY'];
   const rows=categories.map((label,i)=>{
     const y=rowStart+i*rowGap;
     const num=String(i+1).padStart(2,'0');
