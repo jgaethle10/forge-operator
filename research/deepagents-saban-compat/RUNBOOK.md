@@ -36,3 +36,16 @@ The model string is an example, not a validated Evercraft configuration. Install
 ## Source
 
 https://github.com/langchain-ai/deepagents
+
+## Delegation evidence in receipts
+
+The worker now embeds `delegation_observation` and
+`two_subagent_delegation_observed`. These are derived from explicit `task`
+tool calls found in returned LangChain messages. The observer **does not**
+establish subagent completion, independent attestation, or durable recovery.
+If the installed Deep Agents version changes its tool-call schema, the
+observation will fail closed and needs a reviewed adapter update.
+
+The experimental worker still requires an isolated runtime with real tool
+restrictions and a configured model. Never set the sandbox acknowledgement
+in an ordinary production shell merely to bypass the guard.
