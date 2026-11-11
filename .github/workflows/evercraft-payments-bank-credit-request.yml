@@ -5,6 +5,7 @@ on:
       - 'systemia/payments/bank-credit-request-*.mjs'
       - 'tests/bank-credit-request-runtime.test.mjs'
       - 'tests/bank-credit-reconciliation.test.mjs'
+      - 'tests/bank-credit-bootstrap.test.mjs'
       - 'docs/commerce/evercraft-payments-bank-direct-v1.md'
       - '.github/workflows/evercraft-payments-bank-credit-request.yml'
   push:
@@ -13,6 +14,7 @@ on:
       - 'systemia/payments/bank-credit-request-*.mjs'
       - 'tests/bank-credit-request-runtime.test.mjs'
       - 'tests/bank-credit-reconciliation.test.mjs'
+      - 'tests/bank-credit-bootstrap.test.mjs'
       - '.github/workflows/evercraft-payments-bank-credit-request.yml'
   workflow_dispatch:
 permissions:
@@ -30,8 +32,9 @@ jobs:
         run: |
           node --check systemia/payments/bank-credit-request-runtime.mjs
           node --check systemia/payments/bank-credit-reconciliation.mjs
+          node --check systemia/payments/bank-credit-bootstrap.mjs
           node --check systemia/payments/bank-credit-request-runner.mjs
-          node --test tests/bank-credit-request-runtime.test.mjs tests/bank-credit-reconciliation.test.mjs
+          node --test tests/bank-credit-request-runtime.test.mjs tests/bank-credit-reconciliation.test.mjs tests/bank-credit-bootstrap.test.mjs
       - name: No production bank instructions or third-party checkout in source
         run: |
           ! grep -Eiq '(sk_live_|private_key|base44\.app|api\.stripe\.com/v1/charges)' systemia/payments/bank-credit-request-runtime.mjs
