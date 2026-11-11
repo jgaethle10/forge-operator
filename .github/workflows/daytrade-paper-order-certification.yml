@@ -1,0 +1,35 @@
+name: DayTrade PAPER Order Certification
+
+on:
+  pull_request:
+    paths:
+      - "systemia/daytrade-lens/paper-order-gate*"
+      - "systemia/daytrade-lens/paper-order-reconciliation*"
+      - "systemia/daytrade-lens/paper-broker-preflight*"
+      - ".github/workflows/daytrade-paper-order-certification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run-certification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Execute all paper-only dry-run and broker-read tests
+        run: |
+          node --test systemia/daytrade-lens/paper-broker-preflight.test.mjs
+          node --test systemia/daytrade-lens/paper-order-gate.test.mjs
+          node --test systemia/daytrade-lens/paper-order-reconciliation.test.mjs
+      - name: Confirm gate and reconciliation contain no order-writing API
+        run: |
+          if grep -En "method:[[:space:]]*['\"](POST|DELETE|PATCH|PUT)['\"]|https://api\.alpaca\.markets" systemia/daytrade-lens/paper-order-{gate,reconciliation}.mjs; then
+            echo "FORBIDDEN_LIVE_OR_ORDER_WRITE_REFERENCE"
+            exit 1
+          fi
+          echo "PAPER_ONLY_READONLY_CERTIFICATION_SOURCES_PASS"

@@ -92,6 +92,7 @@ export async function inspectPaperBroker({ credentials, fetchImpl = globalThis.f
   const verifiedFlat = positions.length === 0 && openOrders.length === 0;
   return Object.freeze({
     schema: 'evercraft.daytrade.paper-broker-preflight.v1',
+    observed_at: new Date().toISOString(),
     environment: 'ALPACA_PAPER_ONLY',
     mode: 'READ_ONLY_NO_ORDERS',
     verified_paper_auth: true,
