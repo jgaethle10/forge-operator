@@ -101,6 +101,8 @@ try{
     await page.evaluate(()=>document.querySelector('.exhibit').scrollIntoView({block:'start'}));
     await page.screenshot({path:output+'/'+profile.name+'-titan.png',timeout:15000});
 
+    // Force script unavailability as well as disabling JS in emulation; verify the real static fallback.
+    if(!profile.scripts)await page.route('**/worlds/hidden-world/titan-walk/*.mjs',route=>route.abort());
     const walkResponse=await page.goto(origin+'/worlds/hidden-world/titan-walk/',{waitUntil:'domcontentloaded',timeout:20000});
     assert.equal(walkResponse?.status(),200,profile.name+': Titan gallery homepage');
     assert.equal(await page.locator('a[href="../titan-i-1962.html"]').count()>=1,true,
@@ -126,7 +128,8 @@ try{
       await page.locator('#tour').click();
       assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,false);
     }else{
-      assert.equal(await page.locator('body.no-js').count(),1);
+      const currentClass=await page.locator('body').getAttribute('class');
+      assert.equal(currentClass,'no-js',profile.name+': expected static state, got '+currentClass);
       assert.ok((await page.locator('body').textContent()).includes('3D is unavailable without JavaScript'));
       assert.equal(await page.locator('#static-fallback .fallback-link').isVisible(),true,
         profile.name+': historical fallback not visible');
