@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Evercraft | Production Continuity</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#161616;background:#f6f6f5}*{box-sizing:border-box}body{margin:0;min-height:100vh}.wrap{max-width:1100px;margin:0 auto;padding:28px 18px 60px}header{border-bottom:1px solid #dededb;padding-bottom:20px;margin-bottom:24px}.brand{font-size:.72rem;font-weight:800;letter-spacing:.22em;color:#b5212f}h1{font-size:clamp(1.9rem,6vw,3.5rem);margin:10px 0 5px;line-height:1.04;letter-spacing:-.05em}p{color:#5d5d5d;line-height:1.5}.lead{max-width:680px}.panel{border:1px solid #dfdfdb;border-radius:16px;background:white;padding:18px;margin-bottom:16px}.intro{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}.filelabel{display:inline-flex;align-items:center;gap:10px;min-height:46px;border-radius:10px;background:#161616;color:white;font-weight:700;padding:10px 16px;cursor:pointer}.filelabel:focus-within{outline:3px solid #b5212f;outline-offset:2px}#file{max-width:180px;font-size:.75rem}#file::file-selector-button{display:none}small,.small{font-size:.8rem;color:#717171}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}.stat{border:1px solid #dcdcd8;background:white;border-radius:12px;padding:14px;min-height:102px}.num{font-weight:800;font-size:2rem;font-variant-numeric:tabular-nums}.cap{font-size:.76rem;color:#696969;margin-top:4px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin:20px 0 14px}.toolbar input,.toolbar select{min-height:42px;border-radius:9px;border:1px solid #d2d2ce;background:#fff;padding:10px;color:#171717;max-width:100%}.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px}.project{background:white;border:1px solid #ddd;border-radius:13px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:11px}.project h2{font-size:1.1rem;line-height:1.2;overflow-wrap:anywhere;margin:0}.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.pill{font-size:.7rem;border-radius:999px;border:1px solid #ccc;padding:5px 9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.pill.issue{border-color:#b5212f;color:#a21d2a}.pill.good{border-color:#888;color:#4a4a4a}.meta{display:grid;gap:7px;font-size:.82rem}.meta div{display:grid;gap:2px}.meta strong{font-size:.67rem;letter-spacing:.06em;text-transform:uppercase;color:#777}.meta span{overflow-wrap:anywhere}.empty{padding:40px 10px;text-align:center;border:1px dashed #bdbdb9;border-radius:14px}footer{border-top:1px solid #ddd;margin-top:30px;padding-top:18px;color:#777;font-size:.75rem}label.detail{font-size:.8rem;display:flex;align-items:center;gap:5px}.error{color:#b5212f;font-weight:700}@media(min-width:800px){.wrap{padding:44px 36px 70px}.panel{padding:22px}.stat{padding:21px}.projects{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:450px){.stat{padding:12px;min-height:98px}.num{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand">EVERCRAFT / SYSTEMIA</div><h1>Production continuity.</h1><p class="lead">A private, local view of unfinished work. A plan isn't a receipt. A receipt isn't publication.</p></header>
+<main>
+<div class="panel intro"><div><strong>Load a private recovery sweep</strong><div class="small">Choose a ledger JSON or a private-run JSON. Processing stays on this device.</div></div><label class="filelabel">Choose JSON <input id="file" type="file" accept="application/json,.json" aria-label="Choose private production ledger JSON"></label></div>
+<div id="msg" class="small" role="status">No private data loaded.</div>
+<div class="stats" aria-label="Production status counts"><div class="stat"><div id="moving" class="num">–</div><div class="cap">Evidence current</div></div><div class="stat"><div id="blocked" class="num">–</div><div class="cap">Needs recovery / evidence</div></div><div class="stat"><div id="decisions" class="num">–</div><div class="cap">Founder decisions</div></div></div>
+<div class="toolbar"><div class="row"><input id="search" type="search" placeholder="Find a project" aria-label="Search projects"><select id="filter" aria-label="Filter production status"><option value="all">All projects</option><option value="moving">Evidence current</option><option value="blocked">Needs recovery</option><option value="decision">Needs decision</option></select></div><label class="detail"><input id="details" type="checkbox"> Show private blocker details</label></div>
+<div id="projects" class="projects"><div class="empty">Load your private recovery JSON to view projects.</div></div>
+</main><footer>Offline by design. No network requests, analytics, account connection, permanent browser storage, automatic publishing, or agent dispatch. Close this page to clear the loaded data.</footer>
+</div>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const node = (tag, klass, value) => {const el=document.createElement(tag);if(klass)el.className=klass;if(value!==undefined)el.textContent=String(value);return el;};
+let privateRows=[];
+let auditIndex=new Map();
+function visibleClass(p){
+ const gate=['FOUNDER_DECISION','READY_FOR_RELEASE'].includes(p.current_stage)||Boolean(p.next_action?.requires_gate);
+ if(gate)return 'decision';
+ const info=auditIndex.get(p.project_id);
+ const valid=Boolean(p.last_verified_receipt?.verified && p.last_verified_receipt?.verified_at);
+ if(info?.alert==='NONE'&&valid)return 'moving';
+ return 'blocked';
+}
+function metaItem(label,value){const d=node('div','');d.append(node('strong','',label),node('span','',value||'Not verified'));return d;}
+function render(){
+ const all=privateRows.map(p=>({...p,_class:visibleClass(p)}));
+ $('moving').textContent=all.filter(p=>p._class==='moving').length;
+ $('blocked').textContent=all.filter(p=>p._class==='blocked').length;
+ $('decisions').textContent=all.filter(p=>p._class==='decision').length;
+ const needle=$('search').value.trim().toLowerCase(), filter=$('filter').value;
+ const selected=all.filter(p=>(filter==='all'||p._class===filter)&&(`${p.project_id} ${p.next_action?.kind||''}`).toLowerCase().includes(needle));
+ const grid=$('projects');grid.replaceChildren();
+ if(!selected.length){grid.append(node('div','empty',privateRows.length?'No projects match this filter.':'Load a private recovery file first.'));return;}
+ for(const p of selected){
+  const c=node('section','project'); const top=node('div','row');
+  top.append(node('span',`pill ${p._class==='moving'?'good':'issue'}`,p._class==='moving'?'Evidence current':p._class==='decision'?'Decision needed':'Needs recovery'));
+  top.append(node('span','pill',p.current_stage.replaceAll('_',' ')));
+  const h=node('h2','',p.project_id.replaceAll('-',' '));
+  const m=node('div','meta');m.append(metaItem('Next action',p.next_action?.kind?.replaceAll('_',' ')||'No owned next action'),metaItem('Owner',p.next_action?.owner||'Not assigned'),metaItem('Latest verified receipt',p.last_verified_receipt?.verified_at||'Not linked'));
+  const reasons=auditIndex.get(p.project_id)?.reason_codes||[];
+  if(reasons.length)m.append(metaItem('Audit reasons',reasons.join(', ').replaceAll('_',' ')));
+  if($('details').checked&&p.blocker)m.append(metaItem('Private blocker',p.blocker));
+  c.append(top,h,m);grid.append(c);
+ }
+}
+$('file').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>10*1024*1024)throw Error('File is too large for this local viewer');
+  const data=JSON.parse(await file.text()),ledger=data.private_ledger||data.ledger||data;
+  if(ledger?.schema!=='evercraft.production.continuity.v1'||!Array.isArray(ledger.projects))throw Error('This is not an Evercraft private production ledger');
+  privateRows=ledger.projects;auditIndex=new Map((data.audit?.projects||[]).map(row=>[row.project_id,row]));
+  $('msg').textContent=`Loaded ${privateRows.length} project records locally. No file uploaded.`;
+  render();
+ }catch(err){privateRows=[];auditIndex=new Map();$('msg').textContent=`Cannot load file: ${err.message}`;$('msg').className='error';render();}
+});
+for(const id of ['search','filter','details'])$(id).addEventListener('input',render);
+</script>
+</body>
+</html>
