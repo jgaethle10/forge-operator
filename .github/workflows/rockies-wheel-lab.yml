@@ -57,3 +57,38 @@ jobs:
             public/wheel-lab-preview/merchant-desk.html
           if-no-files-found: error
           retention-days: 7
+
+  findmypart-referral-readiness:
+    name: Read-only FindMyPart referral readiness witness (nonblocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout candidate source
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Independently inspect first-party FindMyPart origin (GET only)
+        shell: bash
+        run: |
+          set +e
+          node scripts/probe-findmypart-owned-launch.mjs > findmypart-public-proof.json 2> findmypart-probe-stderr.txt
+          probe_rc=$?
+          set -e
+          printf 'probe_exit_code=%s\n' "$probe_rc" > findmypart-probe-status.txt
+          printf 'this is an observation, not publication or referral authority\n' >> findmypart-probe-status.txt
+          if ! test -s findmypart-public-proof.json; then
+            printf '{"schema":"evercraft.wheel-lab.findmypart-readiness-observation.v1","public_customer_intake_verified":false,"reason":"empty_probe_output"}\n' > findmypart-public-proof.json
+          fi
+          echo "Read-only destination probe returned code $probe_rc. Evidence is in the artifact; no referral was activated."
+      - name: Preserve FindMyPart public witness independently of code checks
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-lab-findmypart-referral-readiness
+          path: |
+            findmypart-public-proof.json
+            findmypart-probe-status.txt
+            findmypart-probe-stderr.txt
+          if-no-files-found: error
+          retention-days: 7
