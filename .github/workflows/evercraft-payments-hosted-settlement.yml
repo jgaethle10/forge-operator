@@ -6,6 +6,7 @@ on:
       - 'systemia/payments/hosted-link-settlement-bridge.mjs'
       - 'systemia/payments/hosted-fulfillment-review.mjs'
       - 'tests/hosted-fulfillment-review.test.mjs'
+      - 'scripts/evercraft-payments-review-queue.mjs'
       - 'systemia/raven/stripe-hosted-receipt-reader.mjs'
       - 'scripts/evercraft-payments-hosted-import.mjs'
       - 'tests/hosted-link-settlement-bridge.test.mjs'
@@ -28,4 +29,4 @@ jobs:
       - name: Test exact hosted Stripe settlement import and fail closed
         run: node --test tests/hosted-link-settlement-bridge.test.mjs tests/stripe-hosted-receipt-reader.test.mjs tests/hosted-fulfillment-review.test.mjs
       - name: Verify CLI is inert with no flags or Stripe credentials
-        run: node scripts/evercraft-payments-hosted-import.mjs
+        run: node scripts/evercraft-payments-hosted-import.mjs && node scripts/evercraft-payments-review-queue.mjs
