@@ -16,13 +16,16 @@ The legacy Base44 compatibility transport is inactive for the OpenAI package. Ev
 
 Evercraft is installed privately in ChatGPT for the owner account and is usable there through the owned Fabric MCP. Private installation is not public-directory publication.
 
-The canonical package version for the next public submission is **v1.0.6**. It includes the owned MCP endpoint, public Evercraft support/privacy/terms surfaces, directory artwork, the problem-first routing skill, exactly five positive and three negative review cases, and the reviewer walkthrough URL.
+The canonical source package for updating the **existing public Evercraft listing** is **v1.0.6**. The founder's OpenAI Platform screenshot on 2026-11-10 shows the Evercraft LLC listing already **Listed publicly**, with **publication version 1.0.2**, a configured owned Fabric MCP and a verified domain. This is an account-portal observation, not a verified fresh-user plugin invocation. The private v1.0.6 installation and the public v1.0.2 listing are separate release states. It includes the owned MCP endpoint, public Evercraft support/privacy/terms surfaces, directory artwork, the problem-first routing skill, exactly five positive and three negative review cases, and the reviewer walkthrough URL.
 
-## Public-directory status
+## Public-directory status and release upgrade
 
-Public-directory state remains **not proven** until the account-side OpenAI Platform flow is completed and the resulting listing is independently observed.
+- **Publisher-portal evidence:** existing Evercraft LLC listing displays `Listed publicly`, publication `1.0.2`, MCP `Configured`, domain verified and no latest-scan findings (founder screenshot dated 2026-11-10).
+- **Source/private package:** `1.0.6`; it has **not** been proven to be the published version.
+- **Independent fresh-account discovery/install/invocation:** not yet verified. An account's own screenshot and an installed private plugin do not prove brand-blind pickup.
+- **Next action:** update the **existing** Evercraft public listing to the reviewed `1.0.6` package in OpenAI Platform; do not create a duplicate. Verify the version after publishing and run fresh-user tests.
 
-The remaining provider-side steps are: upload the canonical ZIP at the OpenAI Platform Plugins page, select the verified Evercraft LLC developer identity, satisfy Apps Management access, complete the portal-generated domain challenge and MCP scan, confirm the imported review materials, submit for review, explicitly publish after approval, and then capture a directory discovery receipt.
+See `distribution/openai-plugin/public-listing-observation-2026-11-10.json` and `plugins/evercraft-fabric/OPENAI-SUBMISSION.md` for the release gate.
 
 ## Why one umbrella plugin
 
@@ -30,4 +33,4 @@ Evercraft already contains many specialist packages. The umbrella plugin prevent
 
 ## Truth boundary
 
-Repository readiness and private installation are not public provider pickup. Do not claim ChatGPT or Codex can discover Evercraft from the public directory until an independent directory observation proves it.
+The founder's Platform screenshot establishes a public-listing state for version 1.0.2, not independent cross-account pickup or an update to version 1.0.6. Do not claim either without provider or external-user evidence.
