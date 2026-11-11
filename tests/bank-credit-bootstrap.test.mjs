@@ -36,8 +36,8 @@ test('private bootstrap creates 0600 held config with distinct secret keys and n
   });
   assert.notEqual(refused.status,0);
   assert.match(refused.stderr,/private_bank_credit_config_not_approved/);
-  assert.doesNotMatch(refused.stderr,cfg.operator_token);
-  assert.doesNotMatch(refused.stderr,cfg.link_signing_key);
+  assert.equal(refused.stderr.includes(cfg.operator_token),false);
+  assert.equal(refused.stderr.includes(cfg.link_signing_key),false);
   await assert.rejects(()=>initializeHeldBankCreditConfig(file,{repoRoot:path.join(base,'different-repo')}),{code:'EEXIST'});
  }finally{await fs.rm(base,{recursive:true,force:true})}
 });
