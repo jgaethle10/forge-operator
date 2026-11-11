@@ -109,7 +109,10 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: evercraft-licensed-aircraft-source-audit
-          path: reference-aircraft/receipt.json
+          name: evercraft-licensed-aircraft-native-turntable
+          path: |
+            reference-aircraft/receipt.json
+            reference-aircraft/authored-pixel-receipt.json
+            reference-aircraft/authored-b737-angle-*.png
           if-no-files-found: error
           retention-days: 14
