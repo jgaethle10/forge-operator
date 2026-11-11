@@ -158,3 +158,25 @@ node --import tsx systemia/world-engine/sim-to-real/shield-trial-rc05b.mjs --fir
 `runShieldTrial` compares unchanged default RC05, opt-in RC05A, and opt-in RC05B, recording failure status, contact IDs, provenance, per-seed digests and a review flag. **A green CI result only establishes that evidence and tests were produced.** The `reviewEligible` result is evidence-only and is never production release approval; it must remain false if new modeled collisions or geofence exits are seen relative to the default, or if arrivals regress. Repeating known cohorts is a regression check, **not** held-out generalization evidence. Seeds 57–64 constitute one small new modeled evaluation batch only.
 
 The source and GitHub workflow are authored for PR review only. No production merge, autonomous device, e-stop, physical sensor, deployment, or robot actuator access.
+
+
+## RC05D: opt-in anonymous motion-watch experiment
+
+**Motivation:** RC05C's synthetic moving-obstacle collision at seed 51 occurred during a normal `reactive_heading` command, well after the experimental escape maneuver finished. The RC05C escape envelope checks escape vectors, not every ordinary cruising command.
+
+RC05D adds a separate **synthetic anonymous motion tracker** that compares noisy range/bearing returns across time using estimated rover poses; no true obstacle IDs, global obstacle coordinates, or moving-object simulation parameters are passed to the controller. The tracker considers measurements separated by 3–12 ticks, caps inferred speeds, and emits a modeled constant-velocity relative-motion warning against proposed commands over up to 2.8 seconds. A warning requests a `moving_hazard_hold` through the **same delayed velocity-command queue** used in prior versions. This is not immediate braking, an independent watchdog, an emergency stop, or a guarantee of collision prevention.
+
+- New opt-in controller mode: `observed-motion-watch`. The `baseline` default is unchanged.
+- New source: `controller-rc05-motion-watch.mjs`, with isolated geometry tests.
+- Native integration: `native-reactive-rc05.mjs` records per-tick motion-watch diagnostics and continues to use real `EvercraftWorldRuntime` dynamic velocity inputs, no teleports.
+- New `motion-watch-trial-rc05d.mjs` compares baseline, RC05C, and RC05D on the same modeled course seeds and retains failure-contact IDs and last-16-tick diagnostics.
+- GitHub CI checks regression cohort 49–56 including the seed 51 moving-obstacle collision, plus fresh synthetic cohort 73–80. The **same world-generator family** is used; calling it a general held-out physics benchmark would be misleading.
+- Review eligibility requires actual observed progress, meaningful arrival improvement, and no new collision or geofence regression. Research review never authorizes production or hardware action.
+
+```sh
+node --test systemia/world-engine/sim-to-real/controller-rc05-motion-watch.test.mjs
+node --import tsx --test systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.mjs --first-seed 49 --seeds 8
+```
+
+**Known limits:** matched synthetic observations are noisy and may associate the wrong anonymous object; occlusion can hide hazards entirely; constant-velocity prediction omits acceleration; request-to-motion latency remains; no calibrated brakes, true sensors, SLAM, wheel model, hardware adapter, live robot, safety certification, or production promotion. A hazard hold is **not** an emergency stop. Outcomes and failed runs must remain in evidence.
