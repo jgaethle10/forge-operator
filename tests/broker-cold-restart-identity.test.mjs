@@ -21,6 +21,8 @@ test('actual local broker cold restart invalidates prior instance and receipt bi
       stateDir,host:'127.0.0.1',port:0,authorizedDevices:{},
     });
     const oldInstance=oldBroker.instance_id;
+    const oldOrigin=oldBroker.endpoint;
+    const originPort=Number(new URL(oldOrigin).port);
     const original=oldBroker.setDeploymentReceipt(RECEIPT);
     assert.equal(original.instance_id,oldInstance);
     assert.equal(original.deployment_receipt_ref,RECEIPT);
@@ -38,8 +40,10 @@ test('actual local broker cold restart invalidates prior instance and receipt bi
     // Same state directory, new process instance. No production host or
     // actual device is contacted. Reusing the directory is NOT enough.
     newBroker=await startOutboundCapacityBroker({
-      stateDir,host:'127.0.0.1',port:0,authorizedDevices:{},
+      stateDir,host:'127.0.0.1',port:originPort,authorizedDevices:{},
     });
+    assert.equal(newBroker.endpoint,oldOrigin,
+      'even the SAME broker address cannot restore the old instance identity');
     assert.notEqual(newBroker.instance_id,oldInstance);
     const unbound=newBroker.health();
     assert.equal(unbound.deployment_receipt_bound,false);
