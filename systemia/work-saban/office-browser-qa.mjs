@@ -60,7 +60,7 @@ async function devtools(url){
 }
 async function js(send,expression){
   const answer=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
-  if(answer.exceptionDetails)throw Error(answer.exceptionDetails.text||'JavaScript exception in browser');
+  if(answer.exceptionDetails)throw Error('Browser expression failed: '+expression.slice(0,180)+' :: '+(answer.exceptionDetails.exception?.description||answer.exceptionDetails.text||'JavaScript exception in browser'));
   return answer.result?.value;
 }
 async function viewport(send,{width,height,mobile,label,out}){
