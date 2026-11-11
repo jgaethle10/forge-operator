@@ -18,6 +18,7 @@ import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
 } from "./clip-journal-publish-adapter.mjs";
+import {publishGeneralJournalFacebookFromHome} from "./clip-journal-facebook-general.mjs";
 import { publishJournalStoryLinkedInFromHome } from "./clip-journal-linkedin-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
@@ -766,15 +767,24 @@ export async function startEvercraftHomeServer({
       }
 
       try {
-        const receipt = await publishJournalStoryFacebookFromHome({
-          repoRoot,
-          slug: body.slug,
-          credentialStateDir,
-          stateRoot: process.env.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "",
-          authorizationRef: session.grant_id
-            ? "passport-grant:" + session.grant_id
-            : "local-development:home.clip.publish",
-        });
+        const scopedAuth = session.grant_id
+          ? "passport-grant:" + session.grant_id
+          : "local-development:home.clip.publish";
+        const stateRoot = serviceOrigins?.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "";
+        const cfbSeries = /^college-football-power-rankings-\d{4}-\d{2}-\d{2}$/.test(body.slug);
+        const receipt = cfbSeries
+          ? await publishJournalStoryFacebookFromHome({
+              repoRoot,slug:body.slug,credentialStateDir,stateRoot,
+              authorizationRef:scopedAuth,
+            })
+          : await publishGeneralJournalFacebookFromHome({
+              repoRoot,slug:body.slug,credentialStateDir,stateRoot,
+              authorizationRef:scopedAuth,
+              expectedPageId:String(serviceOrigins?.CLIP_FACEBOOK_JOURNAL_PAGE_ID || "").trim(),
+              publisherEnabled:serviceOrigins?.CLIP_FACEBOOK_JOURNAL_PUBLISH_ENABLED==="true",
+              writePermissionVerified:serviceOrigins?.CLIP_FACEBOOK_JOURNAL_WRITE_VERIFIED==="true",
+              fetchImpl:clipFacebookFetch,
+            });
         const published = receipt.state === "published";
         const previouslyAttempted = receipt.state === "duplicate_or_reconciliation_hold";
         const unresolved = previouslyAttempted || receipt.state === "reconciliation_required";
@@ -798,9 +808,12 @@ export async function startEvercraftHomeServer({
           receipt,
         });
       } catch (error) {
+        const safeError = String(error?.message || "");
+        const state = /^clip_facebook_general_[a-z_]+$/.test(safeError)
+          ? safeError : "clip_journal_publish_failed";
         return json(res, 400, {
           ok: false,
-          state: error?.message || "clip_journal_publish_failed",
+          state,
           authorization: {
             scope: "home.clip.publish",
             resource_ref: resourceRef,
