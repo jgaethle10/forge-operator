@@ -25,7 +25,7 @@ function redactedScriptPath(value){
   const safe=safeScript(value);
   return safe&&safe.startsWith(SOURCE_ROOT+'/')?safe:null;
 }
-function scriptsFromExecStart(value){
+export function scriptsFromExecStart(value){
   // systemctl show --value -p ExecStart returns a structured property,
   // e.g. "{ path=/usr/bin/node ; argv[]=/usr/bin/node /opt/.../x.mjs ; ... }".
   // We do not echo the property: argv may include tokens.
@@ -35,7 +35,7 @@ function scriptsFromExecStart(value){
   return [...new Set((argv.match(/\/[a-zA-Z0-9_/.-]+\.mjs\b/g)||[])
     .map(redactedScriptPath).filter(Boolean))];
 }
-function scriptFromProcCmdline(raw){
+export function scriptFromProcCmdline(raw){
   // Parse only the probable Node script, redact all other arguments.
   const args=String(raw||'').split('\0').filter(Boolean);
   return args.map(redactedScriptPath).find(Boolean)||null;
@@ -82,6 +82,10 @@ export function analyzeBrokerRestartSafety({unit,proc,configuredScriptState,expe
     issues.push('service_entrypoint_differs_from_expected_legacy_path');
   if(!configuredScriptState?.regular_file)
     issues.push('systemd_launch_source_unavailable');
+  if(config.active_state==='active' &&
+     ['always','on-failure','on-abnormal','on-watchdog','on-abort'].includes(config.restart) &&
+     !configuredScriptState?.regular_file)
+    issues.push('automatic_restart_source_missing');
   if(!expectedScriptState?.regular_file)
     issues.push('legacy_broker_entrypoint_missing');
   if(running.cwd!==SOURCE_ROOT)
