@@ -19,6 +19,8 @@ on:
       - 'tests/saban-yard-split-physical-preflight.test.mjs'
       - 'scripts/inspect-penguin-broker-restart-safety.mjs'
       - 'tests/penguin-broker-restart-safety.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
       - 'systemia/saban/split-identity-capacity.mjs'
       - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
@@ -58,6 +60,8 @@ on:
       - 'tests/saban-yard-split-physical-preflight.test.mjs'
       - 'scripts/inspect-penguin-broker-restart-safety.mjs'
       - 'tests/penguin-broker-restart-safety.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
       - 'systemia/saban/split-identity-capacity.mjs'
       - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
@@ -133,6 +137,8 @@ jobs:
         run: node --test tests/saban-yard-split-physical-preflight.test.mjs
       - name: Prove missing resident broker entrypoint never authorizes restart
         run: node --test tests/penguin-broker-restart-safety.test.mjs
+      - name: Prove cold-started broker cannot inherit prior Yard deployment identity
+        run: node --test tests/broker-cold-restart-identity.test.mjs
       - name: Check role-specific resident cycle syntax
         run: node --check systemia/saban/split-identity-cycle-runner.mjs && node --check systemia/saban/split-identity-capacity.mjs
       - name: Check split-account mailbox provisioning syntax
