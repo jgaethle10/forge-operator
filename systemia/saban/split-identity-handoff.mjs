@@ -44,10 +44,16 @@ function file(root,kind,intentId){
   return path.join(dir(root,kind),intentId+'.json');
 }
 function readJsonSafe(p){
-  const stat=fs.lstatSync(p);
-  requireValid(stat.isFile()&&!stat.isSymbolicLink(),'message_file_invalid');
-  requireValid(stat.size>0&&stat.size<=MAX_BYTES,'message_size_invalid');
-  return JSON.parse(fs.readFileSync(p,'utf8'));
+  // O_NOFOLLOW and fstat on the opened descriptor close a path-swap/symlink
+  // attack where an unprivileged request writer could trick Yard into reading
+  // its own private authority files.
+  const fd=fs.openSync(p,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+  try{
+    const stat=fs.fstatSync(fd);
+    requireValid(stat.isFile()&&stat.nlink===1,'message_file_invalid');
+    requireValid(stat.size>0&&stat.size<=MAX_BYTES,'message_size_invalid');
+    return JSON.parse(fs.readFileSync(fd,'utf8'));
+  }finally{fs.closeSync(fd);}
 }
 function immutableJson(target,data){
   const encoded=JSON.stringify(data,null,2)+'\n';
@@ -60,6 +66,9 @@ function immutableJson(target,data){
   const tmp=target+'.'+process.pid+'.'+randomBytes(6).toString('hex')+'.tmp';
   try{
     fs.writeFileSync(tmp,encoded,{flag:'wx',mode:0o640});
+    // Do not depend on the invoking user's umask: the counterparty must be
+    // able to read the published file through the dedicated setgid directory.
+    fs.chmodSync(tmp,0o640);
     try{
       // Hard-link publish is atomic and never replaces an existing message.
       fs.linkSync(tmp,target);
