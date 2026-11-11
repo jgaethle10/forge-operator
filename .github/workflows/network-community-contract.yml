@@ -1,0 +1,31 @@
+name: Network Community Discovery Contract
+
+on:
+  pull_request:
+    paths:
+      - 'public/network/community/**'
+      - 'systemia/community-network/**'
+      - '.github/workflows/network-community-contract.yml'
+  push:
+    branches:
+      - 'feature/evercraft-network-community-routing-*'
+    paths:
+      - 'public/network/community/**'
+      - 'systemia/community-network/**'
+      - '.github/workflows/network-community-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  route-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test review-only route catalog, authority boundaries and safety
+        run: node --test systemia/community-network/router.test.mjs
