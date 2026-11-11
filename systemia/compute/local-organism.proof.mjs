@@ -56,11 +56,26 @@ async function requireStableOrganismHealth(organism,stage) {
     } else consecutive=0;
     await new Promise(resolve=>setTimeout(resolve,400));
   }
+  let coreServices=null;
+  try {
+    const coreRoute=await organism.yard.verifyRoute('systemia-core-local-resident');
+    coreServices={
+      healthy_count:coreRoute.health?.healthy_count,
+      failed_count:coreRoute.health?.failed_count,
+      held_count:coreRoute.health?.held_count,
+      services:(coreRoute.health?.services||[]).map(service=>({
+        key:service.service_key,
+        status:service.status,
+        hold_reason:service.hold_reason||null,
+        last_exit_code:service.last_exit_code
+      }))
+    };
+  } catch {}
   console.error(JSON.stringify({
     schema:'evercraft.local-organism.proof-health-hold.v1',stage,
     status:{ok:last?.ok,kaidance:last?.kaidance?.state,
       systemia_core:last?.systemia_core?.state,
-      fabric:last?.fabric?.state},clean_exit_claimed:false
+      fabric:last?.fabric?.state},core_services:coreServices,clean_exit_claimed:false
   }));
   assert.fail('resident_services_not_stably_healthy');
 }
