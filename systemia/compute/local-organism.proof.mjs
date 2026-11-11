@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
+import http from 'node:http';
 import path from 'node:path';
 import { startLocalOrganism } from './local-organism.mjs';
 
@@ -15,6 +16,19 @@ const nativeBrowserProofPreparer=async()=>({
   browserRuntimeFactory:null,
 });
 
+// Test-only creation trace: attribute an unclosed listening server to its
+// source module. Records source file names only, never token or request data.
+const serverOriginSites=new WeakMap();
+const createHttpServerOriginal=http.createServer;
+http.createServer=function(...args){
+  const callStack=String(new Error().stack||'');
+  const origin=callStack.match(/systemia\\/[A-Za-z0-9_./-]+\\.mjs(?::[0-9]+){0,2}/g)
+    ?.find(site=>!site.includes('local-organism.proof.mjs'))||'unknown';
+  const server=createHttpServerOriginal.apply(this,args);
+  serverOriginSites.set(server,origin);
+  return server;
+};
+
 function activeLoopbackListenerSummary() {
   return (process._getActiveHandles?.() || [])
     .filter(handle => handle?.constructor?.name === 'Server')
@@ -22,6 +36,7 @@ function activeLoopbackListenerSummary() {
       const address=server.address?.();
       return {
         listening: server.listening === true,
+        source_module:serverOriginSites.get(server)||'unknown',
         // Test-only ephemeral loopback ports, never a remote endpoint or token.
         local_port: address && typeof address === 'object'
           ? address.port : null,
