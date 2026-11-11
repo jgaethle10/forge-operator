@@ -13,6 +13,7 @@ import {EvercraftWorldRuntime} from '../world-engine/engine.ts';
 import {compileVisualFrame} from '../world-engine/visual.ts';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan} from '../world-engine/webgpu.ts';
 import {buildFlyoverScene} from './flyover.mjs';
+import {captureAuthoredTurntable} from './licensed-aircraft-turntable.mjs';
 import {compileGltfScenePlacements,verifyGltfScenePlacements} from './gltf-scene-placements.mjs';
 import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/native-runtime.mjs';
 
@@ -113,6 +114,10 @@ export async function proveLicensedAircraftCanary({
     });
     CHECK(verifyGltfAssetPack(pack),'import_receipt_invalid');
     const plan=renderPlan(pack,gltf);
+    await browser.close();browser=null;
+    const nativeTurntable=await captureAuthoredTurntable({
+      chromium,gltf,pack,outputDir:path.dirname(outputFile||path.join(process.cwd(),'reference-aircraft','receipt.json'))
+    });
     const receipt={
       ...audit,status:'verified',
       imported_geometry_count:pack.geometries.length,
@@ -124,10 +129,14 @@ export async function proveLicensedAircraftCanary({
       sampler_downgrades:pack.samplerDowngrades,
       decoded_texture_bytes:pack.totalTextureBytes,
       world_engine_render_plan:plan,
+      native_turntable_pixel_receipt:nativeTurntable.receipt_hash,
+      native_turntable_frames:nativeTurntable.samples.length,
+      native_execution_class:nativeTurntable.execution_class,
+      native_hardware_execution_claim:nativeTurntable.hardware_execution_claim,
       asset_pack_receipt_digest:pack.receipt.digest,
       browser_version:browser.version(),
       blocking_limitations:[
-        'real_pbr_pixel_render_not_yet_proven',
+        'cinematic_fidelity_not_accepted',
         ...(pack.samplerDowngrades.length?['sampler_mipmaps_downgraded_for_preview']:[]),
         'visual_quality_not_accepted'
       ]
