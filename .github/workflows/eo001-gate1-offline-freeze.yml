@@ -1,0 +1,43 @@
+name: EO-001 Gate 1 protocol freeze (offline only)
+on:
+  push:
+    branches:
+      - research/eo001-gate1-measurement-and-freeze-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-gate1-offline-contract*'
+      - '.github/workflows/eo001-gate1-offline-freeze.yml'
+  pull_request:
+    branches:
+      - research/eo001-sovereign-gateway-adapter-20261109
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-gate1-offline-contract*'
+      - '.github/workflows/eo001-gate1-offline-freeze.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-gate1-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Gate 1 contract syntax
+        run: node --check integrations/ai-evaluation-lab/eo001-gate1-offline-contract.mjs
+      - name: Verify synthetic protocol tests, timeout retention and refusal
+        run: node --test integrations/ai-evaluation-lab/eo001-gate1-offline-contract.test.mjs
+      - name: Verify offline review still refuses physical execution
+        run: |
+          node integrations/ai-evaluation-lab/eo001-gate1-offline-contract.mjs > /tmp/eo001-offline-status.json
+          python3 - <<'PY'
+          import json
+          report=json.load(open('/tmp/eo001-offline-status.json',encoding='utf8'))
+          assert report['physical_run_authorized'] is False
+          assert report['live_model_requests']==0
+          assert report['external_messages_sent']==0
+          assert report['run_plan_review']['state']=='NEEDS_REVIEW'
+          assert report['run_plan_review']['execution_authorized'] is False
+          print('EO001_GATE1_RUN_HELD: PASS')
+          PY
