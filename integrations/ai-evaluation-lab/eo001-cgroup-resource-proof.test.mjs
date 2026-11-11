@@ -105,3 +105,15 @@ test('readback refuses wrong values even if a fake caller provides a superficial
   assert.equal(result.escaped_descendant_cleanup_proven,false);
   assert.equal(result.independent_supervisor_readback,false);
 });
+
+test('synthetic scope refuses a session check that did not reap its child',()=>{
+  for(const flipped of ['new_session_child_same_cgroup','child_exited_and_reaped',
+    'detached_new_session_reported','model_execution_authorized']){
+    const ok=syntheticSession();
+    ok[flipped]=flipped==='model_execution_authorized'?true:false;
+    assert.throws(()=>inspectScopedChild({
+      scopeId:UNIT,nonce:NONCE,procCgroup:CGROUP,
+      readFile:reader(),sessionProbe:()=>ok
+    }),/NEW_SESSION_CONTINUITY_NOT_ESTABLISHED/);
+  }
+});
