@@ -7,6 +7,7 @@
 export const OBSERVATION_SCHEMA='evercraft.window.private-observation.v1';
 export const RECEIPT_SCHEMA='evercraft.window.policy-decision-receipts.v1';
 const allowedSources=new Set(['rule_policy_v1','social_policy_v1']);
+const allowedTypes=new Set(['proposal','pledge','refusal','funded','failure','construction','project_completed','promise_made','promise_kept','promise_broken','invitation_declined']);
 const hex=/^[0-9a-f]{64}$/;
 const eventId=/^e[1-9][0-9]{0,12}$/;
 const residentId=/^r(?:[1-9]|1[0-2])$/;
@@ -56,7 +57,9 @@ export function validateSocietyObservation(data){
   const receipts=data.decision_projection.receipts.map(r=>{
     if(!r||!eventId.test(r.event_id)||seen.has(r.event_id)||
        !ids.has(r.actor_id)||r.related_actor_id!==null&&!ids.has(r.related_actor_id)||
-       !allowedSources.has(r.source)||!bounded(r.event_type,40)||
+       !allowedSources.has(r.source)||!allowedTypes.has(r.event_type)||
+       !Number.isSafeInteger(r.day)||r.day<1||
+       !/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/.test(r.time||'')||
        !bounded(r.description,240)||!hex.test(r.content_sha256||'')||
        r.inference!=='none'||r.external_actions!==false||r.fictional!==true||
        r.authority!=='window_civic_social_rule_policy')
@@ -76,6 +79,30 @@ export function validateSocietyObservation(data){
     sourceFetch:fetchInfo,
     residents,receipts
   };
+}
+
+/**
+ * Recompute every content digest in the browser before presenting any policy
+ * event as an inspectable receipt. This detects tampering in the selected file.
+ * It does NOT authenticate the source file or attest to independent inference.
+ */
+export async function verifySocietyObservationReceipts(data,{subtle=globalThis.crypto?.subtle}={}){
+  const parsed=validateSocietyObservation(data);
+  if(!subtle || typeof subtle.digest!=='function')throw Error('Cryptographic receipt verification unavailable');
+  const encoder=new TextEncoder();
+  for(const r of parsed.receipts){
+    // Key order matches the existing read-only canonical projection.
+    const evidence={
+      event_id:r.event_id,source:r.source,event_type:r.event_type,
+      actor_id:r.actor_id,related_actor_id:r.related_actor_id,
+      day:r.day,time:r.time,description:r.description
+    };
+    const bytes=encoder.encode(JSON.stringify(evidence));
+    const digest=await subtle.digest('SHA-256',bytes);
+    const actual=[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join('');
+    if(actual!==r.content_sha256)throw Error('Decision receipt content digest mismatch');
+  }
+  return parsed;
 }
 
 export function mountSocietyLedger({onOpen=()=>{}}={}){
@@ -148,11 +175,11 @@ export function mountSocietyLedger({onOpen=()=>{}}={}){
     if(file.size<2||file.size>1_000_000){$('sl-status').textContent='File rejected: maximum 1 MB.';return;}
     try{
       const raw=await file.text();
-      observation=validateSocietyObservation(JSON.parse(raw));
+      observation=await verifySocietyObservationReceipts(JSON.parse(raw));
       $('sl-loaded').classList.remove('hidden');
       $('sl-status').textContent=observation.sourceFetch
-        ?'Loaded a file reporting a pinned GitHub state commit. The browser does not independently authenticate the file.'
-        :'Loaded a local, operator-supplied, read-only projection. Source authenticity is not independently verified.';
+        ?'Loaded a file reporting a pinned GitHub state commit. Receipt hashes checked; the browser does not independently authenticate the file.'
+        :'Loaded a local, operator-supplied, read-only projection. Receipt hashes checked; source authenticity is not independently verified.';
       render();
     }catch(err){$('sl-status').textContent='Observation refused: '+err.message;}
     // No browser storage, telemetry, upload or network requests.
