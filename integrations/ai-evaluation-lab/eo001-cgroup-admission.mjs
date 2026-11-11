@@ -165,13 +165,18 @@ export function runSyntheticCgroupCanary({
         ['schema','scope_id','nonce','unified_cgroup_v2',
           'actual_unit_member','resource_limits_read_back',
           'memory_limit_exact','pids_limit_exact','cpu_quota_exact',
+          'new_session_child_same_cgroup','new_session_child_reaped',
+          'systemd_descendant_kill_proven',
           'model_inference_executed','external_actions_authorized'].sort().join('|')&&
-      payload.schema==='evercraft.eo001.gate1.synthetic-scope-child.v2'&&
+      payload.schema==='evercraft.eo001.gate1.synthetic-scope-child.v3'&&
       payload.scope_id===unit&&payload.nonce===nonce&&
       payload.unified_cgroup_v2===true&&payload.actual_unit_member===true&&
       payload.resource_limits_read_back===true&&
       payload.memory_limit_exact===true&&payload.pids_limit_exact===true&&
       payload.cpu_quota_exact===true&&
+      payload.new_session_child_same_cgroup===true&&
+      payload.new_session_child_reaped===true&&
+      payload.systemd_descendant_kill_proven===false&&
       payload.model_inference_executed===false&&
       payload.external_actions_authorized===false,
       'SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN');
@@ -208,6 +213,8 @@ export function runSyntheticCgroupCanary({
     scope_collected_after_probe:true,
     memory_tasks_cpu_limits_requested:true,
     synthetic_child_resource_limits_read_back:true,
+    new_session_child_same_cgroup_reported:true,
+    new_session_child_reaped_reported:true,
     resource_limits_independently_read_back:false,
     escaped_descendant_kill_proven:false,
     cold_boot_persistence_proven:false,
