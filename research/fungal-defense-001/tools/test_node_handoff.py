@@ -43,7 +43,7 @@ while [ "$#" -gt 0 ]; do
   fi
   shift
 done
-exit 0
+exit "${MOCK_PYTHON_RC:-0}"
 ''', encoding="utf-8")
         git_stub.chmod(0o700)
         python_stub.chmod(0o700)
@@ -81,6 +81,24 @@ exit 0
         state = self.root / "state/evercraft/fungal-defense"
         self.assertEqual(list(state.glob("source.*")), [])
         self.assertEqual(list(state.glob("node-validation.*.json")), [])
+
+    def test_failed_validator_never_claims_success(self):
+        env = {**self.env, "MOCK_PYTHON_RC": "7"}
+        result = self.invoke(PIN, "evercraft-node002-nextgen", env=env)
+        self.assertEqual(result.returncode, 7, result.stderr)
+        self.assertTrue(self.runner_marker.exists())
+        self.assertNotIn("OFFLINE VALIDATION PASSED", result.stdout)
+        state = self.root / "state/evercraft/fungal-defense"
+        self.assertEqual(len(list(state.glob("node-validation.*.json"))), 1)
+        self.assertEqual(list(state.glob("source.*")), [])
+
+    def test_subsequent_runs_keep_distinct_receipts(self):
+        self.assertEqual(self.invoke(PIN).returncode, 0)
+        self.assertEqual(self.invoke(PIN).returncode, 0)
+        state = self.root / "state/evercraft/fungal-defense"
+        receipts = list(state.glob("node-validation.*.json"))
+        self.assertEqual(len(receipts), 2)
+        self.assertNotEqual(receipts[0].name, receipts[1].name)
 
     def test_matching_pin_invokes_validator_and_saves_private_receipt(self):
         result = self.invoke(PIN, "evercraft-node002-nextgen")
