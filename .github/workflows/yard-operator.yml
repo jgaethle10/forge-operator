@@ -11,6 +11,8 @@ on:
       - 'tests/saban-yard-intent-drainer.test.mjs'
       - 'tests/saban-nodeseed-automatic-failover.test.mjs'
       - 'tests/saban-nodeseed-receipt-gate.test.mjs'
+      - 'tests/saban-yard-unified-dispatch.test.mjs'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
       - 'systemia/saban/nodeseed-worker-completion-verifier.mjs'
       - 'systemia/saban/ambient-job-dispatcher.mjs'
       - 'systemia/compute/**'
@@ -36,6 +38,8 @@ on:
       - 'tests/saban-yard-intent-drainer.test.mjs'
       - 'tests/saban-nodeseed-automatic-failover.test.mjs'
       - 'tests/saban-nodeseed-receipt-gate.test.mjs'
+      - 'tests/saban-yard-unified-dispatch.test.mjs'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
       - 'systemia/saban/nodeseed-worker-completion-verifier.mjs'
       - 'systemia/saban/ambient-job-dispatcher.mjs'
       - 'systemia/compute/**'
@@ -93,5 +97,9 @@ jobs:
         run: node systemia/yard/field-enrollment-packet.proof.mjs
       - name: Prove Saban remote worker receipt integrity and verification hold
         run: node --test tests/saban-nodeseed-receipt-gate.test.mjs
+      - name: Prove bounded unified Saban to Yard dispatch and loopback fail-close
+        run: node --test tests/saban-yard-unified-dispatch.test.mjs
+      - name: Check unified Saban drainer shell safety and runner syntax
+        run: bash -n scripts/install-yard-saban-intent-drainer.sh && node --check systemia/yard/saban-intent-drain-runner.mjs
       - name: Prove Yard Saban resident execution bridge
         run: node --test tests/saban-yard-intent-drainer.test.mjs tests/saban-nodeseed-automatic-failover.test.mjs
