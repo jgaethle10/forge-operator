@@ -1,0 +1,39 @@
+name: On The Go Growth 001 | Saban + Radar Public Journey
+on:
+  push:
+    branches:
+      - research/onthego-saban-radar-public-journey-20261111
+    paths:
+      - scripts/onthego-growth-001-saban-radar-audit.mjs
+      - .github/workflows/onthego-growth-001-saban-radar.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-readonly:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      NODE_PATH: /tmp/onthego-growth-probe/node_modules
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser probe (no application changes)
+        run: |
+          npm install --prefix /tmp/onthego-growth-probe --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+          /tmp/onthego-growth-probe/node_modules/.bin/playwright install --with-deps chromium
+      - name: Check approved mission source
+        run: node --check scripts/onthego-growth-001-saban-radar-audit.mjs
+      - name: Run supervised Saban browser QA then Radar classification
+        run: node scripts/onthego-growth-001-saban-radar-audit.mjs
+      - name: Preserve source-bound QA receipts and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: onthego-growth-001-saban-radar-receipts
+          path: artifacts/onthego-growth-001/
+          retention-days: 14
+          if-no-files-found: warn
