@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import {extractScienceCandidate,verifyScienceCandidate,renderScienceCandidate,approvedProofPath,createScienceProof} from './arase-editorial-preview.mjs';
+import {extractScienceCandidate,verifyScienceCandidate,renderScienceCandidate,stageScienceCandidatePackage,approvedProofPath,createScienceProof} from './arase-editorial-preview.mjs';
+import {validateJournalStory} from './journal-publisher.mjs';
 
 const markdown=fs.readFileSync(new URL('./editorial-queue/2026-10-31-arase-radiation-barrier.md',import.meta.url),'utf8');
 const manifest=JSON.parse(fs.readFileSync(new URL('./editorial-assets/arase-may-2024-storm-media.json',import.meta.url),'utf8'));
@@ -47,6 +48,18 @@ test('escapes untrusted prose and cannot render executable HTML',()=>{
  assert.ok(output.includes('&lt;script&gt;alert(1)&lt;/script&gt;'));
  assert.doesNotMatch(output,/<script>alert\(1\)<\/script>/);
 });
+test('stages a five-claim, source-bound review packet that cannot be passed to the publisher',()=>{
+ const packet=stageScienceCandidatePackage({markdown,manifest});
+ assert.equal(packet.schema,'evercraft.journal.editorial-candidate.v1');
+ assert.equal(packet.status,'editorial_review_only');
+ assert.equal(packet.publication_authorized,false);
+ assert.equal(packet.editorial_gate.status,'pending');
+ assert.equal(packet.editorial_gate.score,0);
+ assert.equal(packet.hero_visual.rights_state,'candidate_not_approved_for_release');
+ assert.ok(packet.claims.length>=4);
+ assert.ok(packet.claims.every(c=>c.source_refs.every(ref=>packet.sources.some(s=>s.source_id===ref))));
+ assert.throws(()=>validateJournalStory(packet),/Unsupported Journal story schema/);
+});
 test('writes proof outside repository only, without minting release authority',()=>{
  assert.throws(()=>approvedProofPath(path.join(repo,'public/journal/arase.html'),repo),/cannot_enter_repository/);
  assert.throws(()=>approvedProofPath(path.join(repo,'docs/arase.html'),repo),/cannot_enter_repository/);
@@ -57,4 +70,7 @@ test('writes proof outside repository only, without minting release authority',(
  assert.equal(result.publication_state,'editorial_draft_only');
  assert.match(fs.readFileSync(result.output,'utf8'),/No distribution authorization/);
  assert.match(result.html_sha256,/^[a-f0-9]{64}$/);
+ assert.match(result.packet_sha256,/^[a-f0-9]{64}$/);
+ const packet=JSON.parse(fs.readFileSync(result.candidate_packet,'utf8'));
+ assert.equal(packet.status,'editorial_review_only');
 });
