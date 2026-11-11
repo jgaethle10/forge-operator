@@ -24,15 +24,21 @@ body{background:#101a20}.intro{background:linear-gradient(90deg,#101c25f0,#16273
 .static-fallback{display:block;margin-top:8px;font-size:.82rem;color:var(--muted)}
 .fallback-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:9px 12px;border:1px solid var(--edge);border-radius:8px;background:#172b32cc}
 </style>
-<noscript><style>.introactions,.intro footer.small,.intro .pill{display:none!important}.intro{padding-top:65px}.static-fallback{padding:14px 16px;border:1px solid #b9a273;background:#0b2531e8;color:#f5e6c8;border-radius:10px}.fallback-link{background:#edcb92!important;color:#15242b!important;font-weight:850;text-decoration:none}</style></noscript>
-</head><body>
+<style>
+.no-js .introactions,.no-js .intro footer.small,.no-js .intro .pill{display:none!important}
+.js .static-fallback{display:none!important}
+.no-js .intro{padding-top:65px}
+.static-fallback{display:block;padding:14px 16px;border:1px solid #b9a273;background:#0b2531e8;color:#f5e6c8;border-radius:10px}
+.static-fallback .fallback-link{background:#edcb92!important;color:#15242b!important;font-weight:850;text-decoration:none}
+</style>
+</head><body class="no-js">
 <canvas id="world" tabindex="0" aria-label="Fictional walkable Titan I history museum. Three-dimensional geometry is original artistic illustration; no real facility or entrance is mapped."></canvas><div id="shade"></div>
 <header class="top"><a class="brand" href="../">EVERCRAFT <b>WORLDS</b> · HIDDEN WORLD</a><a class="back" href="../titan-i-1962.html">← Titan I source exhibit</a></header>
 <section class="intro" id="intro"><div class="introcontent">
 <div class="eyebrow">Hidden World · Cold War File 001 · Museum Gallery</div>
 <h1>WALK<br><i>BENEATH.</i></h1>
 <p>Enter a fictional underground research gallery inspired by Washington’s Titan I history. Walk past three sculptural chambers, investigate the people who worked below ground, and follow the evidence. Nothing here represents a real facility layout.</p>
-<noscript><div class="static-fallback"><strong>3D is unavailable without JavaScript.</strong> Explore the original source-based cutaway and timeline instead.<br><a class="fallback-link" href="../titan-i-1962.html">Open historical exhibit ↗</a></div></noscript>
+<div class="static-fallback" id="static-fallback" role="region" aria-label="Static historical fallback"><strong>3D is unavailable without JavaScript.</strong> Explore the original source-based cutaway and timeline instead.<a class="fallback-link" href="../titan-i-1962.html">Open historical exhibit ↗</a></div>
 <div class="pill">ORIGINAL ART · NOT A SITE PLAN · NOT AN ACCESS ROUTE</div>
 <div class="introactions"><button class="start" id="start">Enter the 3D gallery ↗</button><button class="tourstart" id="start-tour">▶ Watch a 60-second guided history walk</button></div>
 <footer class="small">Desktop: WASD or arrow keys to walk, drag to look, E to inspect, R to toggle artistic walls. Mobile: joystick and swipe. Historical source links remain available from the static exhibit. No login, geolocation, customer data or real-world access information.</footer>
