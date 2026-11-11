@@ -24,6 +24,25 @@ jobs:
           node-version: 22
       - name: Verify source, visual provenance, escaped copy and release hold
         run: node --test systemia/newsroom/arase-editorial-preview.test.mjs
+      - name: Bundle authentic NASA storm photo into private review artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/journal-arase-proof"
+          URL="https://svs.gsfc.nasa.gov/vis/a010000/a014800/a014835/MaraJohnson-Groh_May2024AuroraPhoto2.jpg"
+          PHOTO="$RUNNER_TEMP/journal-arase-proof/arase-aurora-review.jpg"
+          curl --fail --location --silent --show-error --retry 2 --connect-timeout 15 --max-time 90 "$URL" -o "$PHOTO"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import crypto from "node:crypto";
+            const f=process.env.RUNNER_TEMP+"/journal-arase-proof/arase-aurora-review.jpg";
+            const bytes=fs.readFileSync(f);
+            if(bytes.length<100000||bytes.length>16000000||bytes[0]!==255||bytes[1]!==216||bytes[2]!==255) throw Error("nasa_photo_content_invalid");
+            const media=JSON.parse(fs.readFileSync("systemia/newsroom/editorial-assets/arase-may-2024-storm-media.json","utf8"));
+            const receipt={schema:"evercraft.journal.editorial-photo-review.v1",source_url:media.hero.image_url,credit:media.hero.photographer_credit,bytes:bytes.length,sha256:crypto.createHash("sha256").update(bytes).digest("hex"),rights_state:"candidate_not_approved_for_release",publication_authorized:false};
+            fs.writeFileSync(process.env.RUNNER_TEMP+"/journal-arase-proof/visual-source-receipt.json",JSON.stringify(receipt,null,2)+"\\n");
+            process.stdout.write(JSON.stringify(receipt)+"\\n");
+          '
       - name: Render private photo-led editorial candidate
         run: |
           mkdir -p "$RUNNER_TEMP/journal-arase-proof"
@@ -34,6 +53,8 @@ jobs:
           test -s "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
           grep -Fq 'noindex,nofollow,noarchive' "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
           grep -Fq 'Editorial proof · Not published' "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
+          grep -Fq 'src="./arase-aurora-review.jpg"' "$RUNNER_TEMP/journal-arase-proof/arase-review.html"
+          test -s "$RUNNER_TEMP/journal-arase-proof/arase-aurora-review.jpg"
       - name: Preserve editorial proof for visual review, not publication
         uses: actions/upload-artifact@v4
         with:
