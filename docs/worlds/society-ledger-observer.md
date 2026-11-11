@@ -25,6 +25,7 @@ Open your existing owned/private Worlds preview, choose **Society ledger**, and 
 - No network, account, payment, private world mutation, remote browser request or new service is introduced by the UI.
 - The viewer recomputes SHA-256 for every displayed receipt before rendering it, offers expandable receipt details, and rejects tampering. Event content hashes are integrity metadata, not execution attestations. The displayed report comes from an **operator-selected local file**, not an independently authenticated live server.
 - Only the bounded retained historical event slice is present; omissions must not be described as no activity.
+- Cumulative fictional civic/social totals (promises kept/broken, invitations declined, projects completed) come directly from the saved world snapshot and can outlive the limited event history. They are simulation counters, not evidence of real-world activity.
 - Data belongs to the original fictitious simulation. Do not reuse the inspector for real-person surveillance, identity inferences or guilt assessments.
 
 ## Validation
