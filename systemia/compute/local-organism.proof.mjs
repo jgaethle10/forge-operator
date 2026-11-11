@@ -22,7 +22,7 @@ const serverOriginSites=new WeakMap();
 const createHttpServerOriginal=http.createServer;
 http.createServer=function(...args){
   const callStack=String(new Error().stack||'');
-  const origin=callStack.match(/systemia\\/[A-Za-z0-9_./-]+\\.mjs(?::[0-9]+){0,2}/g)
+  const origin=callStack.match(/systemia\/[A-Za-z0-9_./-]+\.mjs(?::[0-9]+){0,2}/g)
     ?.find(site=>!site.includes('local-organism.proof.mjs'))||'unknown';
   const server=createHttpServerOriginal.apply(this,args);
   serverOriginSites.set(server,origin);
