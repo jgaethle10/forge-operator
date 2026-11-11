@@ -1,0 +1,67 @@
+name: Saban Yard split-account source packs
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-saban-yard-role-packs.mjs'
+      - 'scripts/verify-saban-yard-role-pack.mjs'
+      - '.github/workflows/saban-yard-role-packs.yml'
+      - 'systemia/saban/**'
+      - 'systemia/yard/**'
+      - 'systemia/compute/**'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-saban-yard-role-packs.mjs'
+      - 'scripts/verify-saban-yard-role-pack.mjs'
+      - '.github/workflows/saban-yard-role-packs.yml'
+      - 'systemia/saban/**'
+      - 'systemia/yard/**'
+      - 'systemia/compute/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install source analysis dependency
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Build pinned, SHA-256 manifested source packs
+        run: node scripts/build-saban-yard-role-packs.mjs dist/saban-yard-role-packs
+      - name: Verify extracted role source hashes
+        run: |
+          node scripts/verify-saban-yard-role-pack.mjs dist/saban-yard-role-packs/saban
+          node scripts/verify-saban-yard-role-pack.mjs dist/saban-yard-role-packs/yard
+          node --check dist/saban-yard-role-packs/saban/systemia/saban/split-identity-cycle-runner.mjs
+          node --check dist/saban-yard-role-packs/yard/systemia/yard/split-identity-request-consumer.mjs
+      - name: Check isolated source import graphs without running their entrypoints
+        run: |
+          node --input-type=module -e 'import path from "node:path"; import {pathToFileURL} from "node:url"; await import(pathToFileURL(path.resolve("dist/saban-yard-role-packs/saban/systemia/saban/split-identity-cycle-runner.mjs")).href);'
+          node --input-type=module -e 'import path from "node:path"; import {pathToFileURL} from "node:url"; await import(pathToFileURL(path.resolve("dist/saban-yard-role-packs/yard/systemia/yard/split-identity-request-consumer.mjs")).href);'
+      - name: Prove tampered pack is rejected
+        run: |
+          mkdir -p /tmp/evercraft-pack-tamper
+          cp -a dist/saban-yard-role-packs/saban/. /tmp/evercraft-pack-tamper/
+          printf '\nTAMPERED\n' >> /tmp/evercraft-pack-tamper/systemia/saban/split-identity-cycle-runner.mjs
+          if node scripts/verify-saban-yard-role-pack.mjs /tmp/evercraft-pack-tamper; then
+            echo "ERROR: modified source pack passed verification" >&2
+            exit 1
+          fi
+      - name: Archive role-pinned source packs for operator-controlled review
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-saban-yard-source-packs
+          path: |
+            dist/saban-yard-role-packs/saban-source.tar.gz
+            dist/saban-yard-role-packs/yard-source.tar.gz
+          retention-days: 7
+          if-no-files-found: error
