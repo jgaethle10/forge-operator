@@ -136,9 +136,17 @@ export async function startBankCreditRequestRuntime({
  }
  const payeeReady=validBankCreditPayee(bankPayee);
  const accountKey=payeeReady?receivingAccountKey(linkSigningKey,bankPayee):null;
+ if(!path.isAbsolute(storeDir))throw Error('bank_credit_private_store_absolute_path_required');
  const dir=path.resolve(storeDir);
+ if(dir===path.parse(dir).root)throw Error('bank_credit_private_store_root_forbidden');
  await fs.mkdir(dir,{recursive:true,mode:0o700});
- // Only the application may create private order records.
+ // Reject symlinks and path escapes before any chmod or order writes.
+ // A typo or symlink must never alter unrelated filesystem permissions.
+ const storeStat=await fs.lstat(dir);
+ const realStore=await fs.realpath(dir);
+ if(!storeStat.isDirectory()||storeStat.isSymbolicLink()||realStore!==dir)
+  throw Error('bank_credit_private_store_symlink_forbidden');
+ // Only this process may create or read the private order records.
  await fs.chmod(dir,0o700);
  const server=http.createServer(async(req,res)=>{
   try{
