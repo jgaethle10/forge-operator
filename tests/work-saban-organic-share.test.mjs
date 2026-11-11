@@ -16,7 +16,7 @@ test('customer can share a free public tool from the real CSV reporter',()=>{
  assert.match(page,/Your CSV and report stay on your device/);
  assert.match(script,/\$\('share-tool'\)\.addEventListener\('click',async/);
  assert.match(script,/typeof navigator\.share==='function'/);
- assert.match(script,/navigator\.clipboard\?\.writeText\(toolShareUrl\)/);
+ assert.match(script,/await navigator\.clipboard\.writeText\(toolShareUrl\)/);
  assert.match(script,/feedback\.replaceChildren/);
  assert.match(script,/error\?\.name==='AbortError'/);
 });
