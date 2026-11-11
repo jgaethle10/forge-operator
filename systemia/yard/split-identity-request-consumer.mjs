@@ -39,6 +39,28 @@ function claimDir(journalRoot){
     'journal_directory_must_be_private');
   return root;
 }
+function fsyncDirectory(directory){
+  const fd=fs.openSync(directory,fs.constants.O_RDONLY|fs.constants.O_DIRECTORY);
+  try{fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
+}
+// Atomic inter-process exclusion. If the process is killed, the directory
+// remains and activation is BLOCKED until an operator reconciles journaled
+// requests and explicitly clears the stale lock. Never steal a stale lock.
+function lockCycle(journal){
+  const lock=path.join(journal,'.split-consumer-active');
+  try{
+    fs.mkdirSync(lock,{mode:0o700});
+  }catch(error){
+    if(error.code==='EEXIST')throw new Error('yard_split_cycle_active_or_crashed_requires_review');
+    throw error;
+  }
+  try{fsyncDirectory(journal);}
+  catch(error){fs.rmdirSync(lock);throw error;}
+  return ()=>{
+    fs.rmdirSync(lock);
+    fsyncDirectory(journal);
+  };
+}
 function claimRequest(root,request){
   requireOk(ID.test(request.intent_id),'intent_id_invalid');
   const target=path.join(claimDir(root),request.intent_id+'.json');
@@ -67,6 +89,9 @@ function claimRequest(root,request){
     fs.writeFileSync(fd,JSON.stringify(body)+'\n');
     fs.fsyncSync(fd);
   }finally{fs.closeSync(fd);}
+  // fsyncing only the file is insufficient after power loss: the directory
+  // entry must also be durable before any remote job can be submitted.
+  fsyncDirectory(root);
   return true;
 }
 async function post(url,body,token='',timeoutMs=10000){
@@ -151,6 +176,8 @@ export async function runYardSplitIdentityConsumeOnce({
   requireOk(brokerDeploymentId,'broker_deployment_id_required');
   const origin=boundedPortOrigin(brokerLoopbackOrigin);
   const journal=claimDir(journalRoot);
+  const releaseLock=lockCycle(journal);
+  try{
   const yard=yardOperator||new YardOperator({stateDir:path.resolve(yardStateDir)});
 
   // Every cycle verifies the existing deployment identity, not just a
@@ -215,6 +242,9 @@ export async function runYardSplitIdentityConsumeOnce({
     commercial_spend_usd:0,
     generated_at:new Date().toISOString(),
   };
+  }finally{
+    releaseLock();
+  }
 }
 async function main(){
   const result=await runYardSplitIdentityConsumeOnce({
