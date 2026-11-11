@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {initializeHeldBankCreditConfig} from '../systemia/payments/bank-credit-bootstrap.mjs';
 
 test('private bootstrap creates 0600 held config with distinct secret keys and no bank details',async()=>{
@@ -26,6 +28,16 @@ test('private bootstrap creates 0600 held config with distinct secret keys and n
   assert.ok(cfg.link_signing_key.length>=32);
   assert.notEqual(cfg.operator_token,cfg.link_signing_key);
   assert.equal(cfg.bank_payee?.account_number,undefined);
+  const runner=fileURLToPath(new URL('../systemia/payments/bank-credit-request-runner.mjs',import.meta.url));
+  const refused=spawnSync(process.execPath,[runner],{
+   env:{...process.env,EVERCRAFT_BANK_CREDIT_PRIVATE_CONFIG:file,
+     EVERCRAFT_BANK_CREDIT_PRIVATE_STATE:path.join(base,'private-orders')},
+   encoding:'utf8',timeout:6000,
+  });
+  assert.notEqual(refused.status,0);
+  assert.match(refused.stderr,/private_bank_credit_config_not_approved/);
+  assert.doesNotMatch(refused.stderr,cfg.operator_token);
+  assert.doesNotMatch(refused.stderr,cfg.link_signing_key);
   await assert.rejects(()=>initializeHeldBankCreditConfig(file,{repoRoot:path.join(base,'different-repo')}),{code:'EEXIST'});
  }finally{await fs.rm(base,{recursive:true,force:true})}
 });
