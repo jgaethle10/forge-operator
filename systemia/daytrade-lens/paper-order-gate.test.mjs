@@ -22,10 +22,19 @@ const signal = Object.freeze({
   observed_at: '2026-11-10T18:59:59.000Z',
   notional_usd: 10, reference_price_usd: 100,
   planned_stop_price_usd: 99.5, planned_target_price_usd: 101.5,
-  certified_daily_realized_loss_usd: 0, independent_risk_approval: true,
+ });
+const riskAttestation = Object.freeze({
+  schema: 'evercraft.daytrade.independent-risk-proof.v1',
+  reviewer_role: 'INDEPENDENT_RISK',
+  approved: true,
+  signal_id: signal.signal_id,
+  precommit_hash: signal.precommit_hash,
+  broker_snapshot_at: broker.observed_at,
+  issued_at: '2026-11-10T18:59:59.000Z',
+  daily_realized_loss_usd: 0,
 });
-function propose(b = broker, s = signal) {
-  return proposePaperOrder({ broker: b, signal: s, now });
+function propose(b = broker, s = signal, r = riskAttestation) {
+  return proposePaperOrder({ broker: b, signal: s, riskAttestation: r, now });
 }
 test('clean fresh pilot yields deterministic proposal but no submission', () => {
   const a = propose(), b = propose();
@@ -63,10 +72,14 @@ test('rejects more than $20 notional, stressed risk, and insufficient reward', (
   assert.equal(propose(broker, { ...signal, planned_stop_price_usd: 98 }).admitted, false);
   assert.equal(propose(broker, { ...signal, planned_target_price_usd: 100.2 }).admitted, false);
 });
-test('independent risk certification required, even at zero daily realized loss', () => {
-  assert.equal(propose(broker, { ...signal, independent_risk_approval: false }).admitted, false);
-  assert.equal(propose(broker, { ...signal, certified_daily_realized_loss_usd: -0.01 }).admitted, false);
-  assert.equal(propose(broker, { ...signal, certified_daily_realized_loss_usd: undefined }).admitted, false);
+test('independent risk certification is separate and bound to exact signal and snapshot', () => {
+  assert.equal(propose(broker, signal, undefined).admitted, true);
+  assert.equal(propose(broker, signal, null).admitted, false);
+  assert.equal(propose(broker, signal, { ...riskAttestation, approved: false }).admitted, false);
+  assert.equal(propose(broker, signal, { ...riskAttestation, daily_realized_loss_usd: -0.01 }).admitted, false);
+  assert.equal(propose(broker, signal, { ...riskAttestation, signal_id: 'other' }).admitted, false);
+  assert.equal(propose(broker, signal, { ...riskAttestation, reviewer_role: 'SCOUT' }).admitted, false);
+  assert.equal(propose(broker, signal, { ...riskAttestation, issued_at: '2026-11-10T18:50:00.000Z' }).admitted, false);
 });
 test('fail-closed malformed contract, no crypto/options/short entries', () => {
   for (const altered of [{ side: 'sell' }, { asset_class: 'crypto' }, { symbol: 'BTC/USD' },
@@ -78,4 +91,8 @@ test('fail-closed malformed contract, no crypto/options/short entries', () => {
 test('independent risk control does not accept unknown broker order counts', () => {
   assert.equal(propose({ ...broker, orders_today_utc: undefined }).admitted, false);
   assert.equal(propose({ ...broker, orders_today_utc: 0.5 }).admitted, false);
+});
+
+test('self-certifying strategy can never override missing independent approval', () => {
+  assert.equal(propose(broker, { ...signal, independent_risk_approval: true, certified_daily_realized_loss_usd: 0 }, null).admitted, false);
 });
