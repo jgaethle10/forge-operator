@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { Script } from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import {stageWheelLabMarkup,FINDMYPART_PUBLIC_URL} from './findmypart-referral-stage.mjs';
 
 // Staging source parity. This checks a *draft branch* path, not a deployed URL.
 const prototype = fileURLToPath(new URL('.', import.meta.url));
@@ -12,7 +13,7 @@ const read = (base, name) => readFileSync(path.join(base, name), 'utf8');
 
 const noindex = '<meta name="robots" content="noindex,nofollow,noarchive">';
 function stagedShopperOrDesk(file) {
-  return read(prototype, file).replace('<head>', '<head>\n' + noindex);
+  return stageWheelLabMarkup(file, read(prototype, file));
 }
 function stagedLauncher() {
   return read(prototype, 'review.html')
@@ -72,4 +73,25 @@ test('staging is not a live launch, checkout or contact route', () => {
   assert.ok(launcher.includes('Systemia admission'));
   assert.ok(!launcher.includes('customer-paid'));
   assert.doesNotMatch(launcher,/https:\/\/[^"']+\/checkout/);
+});
+
+test('RC09 public-preview referral is exact, user-clicked, private and not in offline prototypes',()=>{
+  assert.equal(FINDMYPART_PUBLIC_URL,'https://fabric.systemiacommandcenters.com/findmypart/');
+  assert.equal(new URL(FINDMYPART_PUBLIC_URL).search,'');
+  assert.equal(new URL(FINDMYPART_PUBLIC_URL).hash,'');
+  for(const file of ['shopper.html','merchant-desk.html']){
+    const staged=read(publicDir,file);
+    const source=read(prototype,file==='shopper.html'?'index.html':'merchant-desk.html');
+    assert.equal(staged.split(FINDMYPART_PUBLIC_URL).length,2);
+    assert.match(staged, /class="findmypart-referral" href="https:\/\/fabric\.systemiacommandcenters\.com\/findmypart\/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"/);
+    assert.doesNotMatch(source, /class="findmypart-referral"/);
+    assert.doesNotMatch(staged, /findmypart\/\?[^\s"'<>]*/);
+  }
+  assert.match(read(publicDir,'shopper.html'),/No Wheel Lab choices, notes, files or customer information are transferred/);
+  assert.match(read(publicDir,'merchant-desk.html'),/No quote, customer details or concept file is transmitted/);
+});
+
+test('RC09 FindMyPart promotion refuses an unknown source or source shape',()=>{
+  assert.throws(()=>stageWheelLabMarkup('unknown.html','<head></head>'),/Unsupported/);
+  assert.throws(()=>stageWheelLabMarkup('index.html','<body></body>'),/stage anchor mismatch/);
 });
