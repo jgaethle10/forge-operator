@@ -13,6 +13,7 @@ import {EvercraftWorldRuntime} from '../world-engine/engine.ts';
 import {compileVisualFrame} from '../world-engine/visual.ts';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan} from '../world-engine/webgpu.ts';
 import {buildFlyoverScene} from './flyover.mjs';
+import {compileGltfScenePlacements,verifyGltfScenePlacements} from './gltf-scene-placements.mjs';
 import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/native-runtime.mjs';
 
 const MODEL_BLOB='c2c8f8292766a0b682918d4841c6dc4de4b18f1f';
@@ -24,28 +25,22 @@ const requireWorker=createRequire(path.join(WORKER,'package.json'));
 const sha256=b=>'sha256:'+crypto.createHash('sha256').update(b).digest('hex');
 const blobSha=b=>crypto.createHash('sha1').update('blob '+b.length+'\0').update(b).digest('hex');
 const CHECK=(truth,error)=>{if(!truth)throw new Error('licensed_aircraft_'+error);};
-function renderPlan(pack) {
+function renderPlan(pack,gltf) {
   const scene=buildFlyoverScene(0);
   scene.world.visualScene.materials.push(...pack.materialDefinitions);
-  const selected=pack.lods[0];
-  for(let i=0;i<selected.primitives.length;i++) {
-    const primitive=selected.primitives[i];
-    scene.world.entities.push({
-      id:'reference:licensed-b737-mesh-'+i,
-      transform:{position:{x:0,y:15,z:-12},rotationDeg:{x:0,y:0,z:0}},
-      renderable:{geometryRef:primitive.geometryId,
-        materialId:primitive.materialId,layerMask:1}
-    });
-  }
+  const placed=compileGltfScenePlacements({gltf,assetPack:pack});
+  CHECK(verifyGltfScenePlacements(placed,pack),'node_placement_receipt_invalid');
+  scene.world.entities.push(...placed.entities);
   const runtime=new EvercraftWorldRuntime(scene.world),s=runtime.snapshot();
   const frame=compileVisualFrame(s.worldId,s.tick,s.timeSec,
     runtime.definition.visualScene,s.entities,s.cameraRuntime,runtime.activeEntityIds);
   const plan=compileWebGpuRenderPlan(frame,
-    [...scene.geometries,...pack.geometries],{width:1280,height:720},pack.textureAssets);
+    [...scene.geometries,...placed.geometries],{width:1280,height:720},pack.textureAssets);
   CHECK(verifyWebGpuRenderPlan(plan),'render_plan_digest_invalid');
-  const refs=plan.draws.filter(d=>d.entityId.startsWith('reference:licensed-b737-mesh-'));
-  CHECK(refs.length===selected.primitives.length,'missing_draw_commands');
+  const refs=plan.draws.filter(d=>d.entityId.startsWith('gltf:entity-'));
+  CHECK(refs.length===placed.entities.length,'missing_draw_commands');
   return {digest:plan.digest,draws:refs.length,
+    scenePlacementDigest:placed.receipt.digest,
     texturedDraws:refs.filter(x=>x.textureFlags.some(Boolean)).length};
 }
 export async function proveLicensedAircraftCanary({
@@ -113,10 +108,11 @@ export async function proveLicensedAircraftCanary({
         license:'Creative Commons Attribution 4.0 International (CC BY 4.0)',
         attribution:'2026 amvlab'
       },
-      maxTextureBytes:96*1024*1024,maxVertices:750000
+      maxTextureBytes:96*1024*1024,maxVertices:750000,
+      allowBaseLevelMipmapSampling:true
     });
     CHECK(verifyGltfAssetPack(pack),'import_receipt_invalid');
-    const plan=renderPlan(pack);
+    const plan=renderPlan(pack,gltf);
     const receipt={
       ...audit,status:'verified',
       imported_geometry_count:pack.geometries.length,
@@ -124,13 +120,15 @@ export async function proveLicensedAircraftCanary({
       imported_texture_count:pack.textureAssets.length,
       imported_vertices:pack.totalVertices,
       imported_triangles:pack.totalTriangles,
+      imported_sampling_quality:pack.qualityStatus,
+      sampler_downgrades:pack.samplerDowngrades,
       decoded_texture_bytes:pack.totalTextureBytes,
       world_engine_render_plan:plan,
       asset_pack_receipt_digest:pack.receipt.digest,
       browser_version:browser.version(),
       blocking_limitations:[
         'real_pbr_pixel_render_not_yet_proven',
-        'gltf_scene_node_transforms_not_applied',
+        ...(pack.samplerDowngrades.length?['sampler_mipmaps_downgraded_for_preview']:[]),
         'visual_quality_not_accepted'
       ]
     };
