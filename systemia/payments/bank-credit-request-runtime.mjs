@@ -78,6 +78,11 @@ function signature(secret,id){
  return crypto.createHmac('sha256',secret).update('bank-credit-link-v1:'+id).digest('base64url');
 }
 function orderFile(root,id){return path.join(root,id+'.json')}
+function receivingAccountKey(signingKey,payee){
+ return 'recv_'+crypto.createHmac('sha256',signingKey)
+  .update('bank-receiver-v1:'+payee.routing_number+':'+payee.account_number+':'+payee.account_type)
+  .digest('hex').slice(0,48);
+}
 async function readJson(req){
  let parts=[],size=0;
  for await (const c of req){size+=c.length;if(size>8192)throw Error('request_too_large');parts.push(c)}
@@ -129,6 +134,7 @@ export async function startBankCreditRequestRuntime({
   offers.set(offer.offer_key,offer);
  }
  const payeeReady=validBankCreditPayee(bankPayee);
+ const accountKey=payeeReady?receivingAccountKey(linkSigningKey,bankPayee):null;
  const dir=path.resolve(storeDir);
  await fs.mkdir(dir,{recursive:true,mode:0o700});
  // Only the application may create private order records.
@@ -151,7 +157,7 @@ export async function startBankCreditRequestRuntime({
     catch{return json(res,404,{ok:false,error:'request_not_found'})}
     if(order.schema!==SCHEMA||order.request_id!==id||
       order.state!=='awaiting_bank_transfer'||clock()>Date.parse(order.expires_at)||
-      !payeeReady||!offers.has(order.offer_key))
+      !payeeReady||order.receiving_account_key!==accountKey||!offers.has(order.offer_key))
       return json(res,410,{ok:false,error:'request_unavailable_or_expired'});
     const allowed=offers.get(order.offer_key);
     if(order.amount_cents!==allowed.amount_cents||order.offer_name!==allowed.name||
@@ -180,6 +186,7 @@ export async function startBankCreditRequestRuntime({
       schema:SCHEMA,request_id:id,product_key:offer.product_key,offer_key:offer.offer_key,
       offer_name:offer.name,amount_cents:offer.amount_cents,currency:'usd',
       state:'awaiting_bank_transfer',reference:transferReference(key),
+      receiving_account_key:accountKey,
       created_at:created.toISOString(),expires_at:expires.toISOString(),
       idempotency_fingerprint:sha(offer.offer_key+':'+offer.amount_cents),
       payment_verified:false,fulfillment_release:false,
@@ -190,7 +197,8 @@ export async function startBankCreditRequestRuntime({
       if(e?.code!=='EEXIST')throw e;
       const previous=JSON.parse(await fs.readFile(file,'utf8'));
       if(previous.idempotency_fingerprint!==order.idempotency_fingerprint||
-         previous.offer_key!==order.offer_key)
+         previous.offer_key!==order.offer_key||
+         previous.receiving_account_key!==accountKey)
         return json(res,409,{ok:false,error:'idempotency_conflict'});
       if(clock()>Date.parse(previous.expires_at))
         return json(res,410,{ok:false,error:'bank_request_expired'});
