@@ -6,9 +6,10 @@ import {advanceHeartbeat,STATE_SCHEMA} from '../systemia/society/window-heartbea
 import {PUBLIC_GENESIS_MS,REAL_TICK_MS} from '../public/the-window/world.mjs';
 
 const COMMIT='9'.repeat(40),API='https://api.github.com/repos/jgaethle10/forge-operator';
-const original=advanceHeartbeat({
+const initial=advanceHeartbeat({
   schema:STATE_SCHEMA,initialized:false,release_status:'held'
 },PUBLIC_GENESIS_MS+110*REAL_TICK_MS).state;
+const original=advanceHeartbeat(initial,PUBLIC_GENESIS_MS+240*REAL_TICK_MS).state;
 
 function fixture({state=original,sha=null,path='state/window.json',encoding='base64',status=200}={}){
   const bytes=Buffer.from(JSON.stringify(state)+'\n','utf8');
