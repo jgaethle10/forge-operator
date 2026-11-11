@@ -1,0 +1,40 @@
+name: EO-001 Gate 1 synthetic process hard-stop proof
+on:
+  push:
+    branches:
+      - research/eo001-gate1-hardstop-supervisor-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-hardstop-*'
+      - '.github/workflows/eo001-gate1-hardstop-offline.yml'
+  pull_request:
+    branches:
+      - research/eo001-gate1-measurement-and-freeze-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-hardstop-*'
+      - '.github/workflows/eo001-gate1-hardstop-offline.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-worker-supervisor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source syntax
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-hardstop-synthetic-child.mjs
+          node --check integrations/ai-evaluation-lab/eo001-hardstop-offline-supervisor.mjs
+      - name: Prove real child process termination and private failure receipts
+        run: node --test --test-concurrency=1 integrations/ai-evaluation-lab/eo001-hardstop-offline-supervisor.test.mjs
+      - name: Regression guard, abort, and Gate 1 manifest refusal
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-gate1-offline-contract.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-gateway-abort.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-guarded-whole-decision.test.mjs
+      - name: Ensure live Qwen and provider effects remain prohibited
+        run: |
+          node integrations/ai-evaluation-lab/eo001-hardstop-offline-supervisor.mjs --live || test "$?" -eq 2
