@@ -13,6 +13,7 @@ import {EvercraftWorldRuntime} from '../world-engine/engine.ts';
 import {compileVisualFrame} from '../world-engine/visual.ts';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,EVERCRAFT_WEBGPU_WGSL} from '../world-engine/webgpu.ts';
 import {classifyWebGpuAdapter} from '../evercraft-web/browser-worker/webgpu-conformance.mjs';
+import {fitAuthoredCamera} from './authored-camera.mjs';
 
 const sha=v=>'sha256:'+crypto.createHash('sha256').update(v).digest('hex');
 const PROFILES=[
@@ -29,7 +30,7 @@ function cameraRotation(p,t){
   return {x:Math.atan2(dy,h)*180/Math.PI,
     y:Math.atan2(-dx,-dz)*180/Math.PI,z:0};
 }
-function bundleBounds(geometry){
+function legacyBundleBounds(geometry){
   const min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];
   for(const g of geometry)for(let i=0;i<g.positions.length;i+=3){
     for(let j=0;j<3;j++){
@@ -43,11 +44,13 @@ function bundleBounds(geometry){
   assert.ok(Number.isFinite(length)&&length>0,'reference_asset_invalid_world_bounds');
   return {min,max,center:{x:middle[0],y:middle[1],z:middle[2]},length};
 }
-export function buildAuthoredTurntablePlan(gltf,pack,angleRadians){
+export function buildAuthoredTurntablePlan(gltf,pack,angleRadians,{width=1280,height=720,elevationDeg=19}={}){
   assert.ok(Number.isFinite(angleRadians),'turntable_angle_invalid');
   const placed=compileGltfScenePlacements({gltf,assetPack:pack});
   assert.equal(verifyGltfScenePlacements(placed,pack),true);
-  const bounds=bundleBounds(placed.geometries);
+  const fit=fitAuthoredCamera(placed.geometries,{angleRadians,width,height,elevationDeg,
+    fovYDeg:46,maxHorizontalFraction:.76,maxVerticalFraction:.72});
+  const bounds=fit.bounds;
   const world=buildFlyoverScene(0);
   world.world.id='evercraft-licensed-model-turntable-reference';
   for(const entity of world.world.entities){
@@ -56,19 +59,13 @@ export function buildAuthoredTurntablePlan(gltf,pack,angleRadians){
   world.world.entities.push(...placed.entities);
   world.world.visualScene.materials.push(...pack.materialDefinitions);
   world.world.visualScene.clearColor={r:.055,g:.072,b:.105};
-  const distance=Math.max(2,bounds.length*1.8);
-  const target=bounds.center;
-  const position={
-    x:target.x+Math.sin(angleRadians)*distance,
-    y:target.y+bounds.length*.28,
-    z:target.z+Math.cos(angleRadians)*distance
-  };
+  const {position,target,distance}=fit;
   const camera=world.world.entities.find(e=>e.id==='flyover:camera');
   camera.transform.position=position;
   camera.transform.rotationDeg=cameraRotation(position,target);
-  camera.camera.projection={type:'perspective',fovYDeg:46};
-  camera.camera.near=Math.max(.01,bounds.length*.0002);
-  camera.camera.far=Math.max(120,distance*10);
+  camera.camera.projection=fit.projection;
+  camera.camera.near=fit.near;
+  camera.camera.far=fit.far;
   camera.camera.exposure=1.1;
   const ambient=world.world.entities.find(e=>e.id==='flyover:skyfill');
   ambient.light.intensity=.7;
@@ -80,11 +77,11 @@ export function buildAuthoredTurntablePlan(gltf,pack,angleRadians){
   const frame=compileVisualFrame(state.worldId,state.tick,state.timeSec,
     engine.definition.visualScene,state.entities,state.cameraRuntime,engine.activeEntityIds);
   const plan=compileWebGpuRenderPlan(frame,placed.geometries,
-    {width:1280,height:720},pack.textureAssets);
+    {width,height},pack.textureAssets);
   assert.equal(verifyWebGpuRenderPlan(plan),true);
   assert.equal(plan.draws.length,placed.entities.length);
   return {plan,geometry:placed.geometries,textures:pack.textureAssets,bounds,
-    placementReceipt:placed.receipt.digest};
+    cameraFit:fit,placementReceipt:placed.receipt.digest};
 }
 async function pageServer(){
   const server=http.createServer((req,res)=>{
@@ -109,15 +106,33 @@ export async function captureAuthoredTurntable({
         const page=await browser.newPage({viewport:{width:1280,height:720}});
         await page.goto(loopback.url,{waitUntil:'domcontentloaded'});
         const captures=[];
-        for(const [index,angle] of [0,Math.PI/3,Math.PI*2/3].entries()){
-          const {plan,geometry,textures,bounds,placementReceipt}=
-            buildAuthoredTurntablePlan(gltf,pack,angle);
+        const shots=[
+          {angle:0,width:1280,height:720,elevationDeg:19},
+          {angle:Math.PI/3,width:1280,height:720,elevationDeg:22},
+          {angle:Math.PI*2/3,width:1280,height:720,elevationDeg:19},
+          {angle:Math.PI/3,width:720,height:1280,elevationDeg:22,portrait:true}
+        ];
+        for(const [index,shot] of shots.entries()){
+          const angle=shot.angle;
+          const {plan,geometry,textures,bounds,cameraFit,placementReceipt}=
+            buildAuthoredTurntablePlan(gltf,pack,angle,shot);
           const pixels=await renderWebGpuPlanOnPage(
             page,plan,geometry,EVERCRAFT_WEBGPU_WGSL,textures);
-          assert.ok(pixels.visiblePixels>1500,'turntable_model_not_visible:'+index);
+          assert.ok(pixels.visiblePixels>10000,'turntable_model_too_sparse:'+index);
+          assert.ok(pixels.foregroundBounds?.widthFraction>=.33,
+            'turntable_subject_too_small:'+index);
+          assert.ok(pixels.foregroundBounds?.widthFraction<=.92,
+            'turntable_subject_clipped_horizontally:'+index);
+          assert.ok(pixels.foregroundBounds?.heightFraction<=.92,
+            'turntable_subject_clipped_vertically:'+index);
+          assert.ok(pixels.foregroundBounds?.minX>=1&&
+            pixels.foregroundBounds.maxX<plan.width-1&&
+            pixels.foregroundBounds.minY>=1&&
+            pixels.foregroundBounds.maxY<plan.height-1,
+            'turntable_subject_at_frame_boundary:'+index);
           const png=Buffer.from(pixels.png,'base64');
           assert.equal(png.readUInt32BE(0),0x89504e47);
-          const file='authored-b737-angle-'+index+'.png';
+          const file=shot.portrait?'authored-b737-portrait.png':'authored-b737-angle-'+index+'.png';
           fs.writeFileSync(path.join(outputDir,file),png);
           captures.push({
             index,angle_radians:angle,file,sha256:sha(png),
@@ -126,12 +141,15 @@ export async function captureAuthoredTurntable({
             draw_count:pixels.drawCount,plan_digest:plan.digest,
             placement_receipt_digest:placementReceipt,
             bounds:bounds,texture_count:textures.length,
+            camera_distance:cameraFit.distance,camera_projected_bounds:cameraFit.projectedBounds,
+            foreground_bounds:pixels.foregroundBounds,
+            frame_width:plan.width,frame_height:plan.height,
             adapter_info:pixels.adapterInfo
           });
         }
         const cls=classifyWebGpuAdapter(captures[0].adapter_info,profile);
         const core={
-          schema:'evercraft.visual-engine.licensed-aircraft-pixel-proof.v1',
+          schema:'evercraft.visual-engine.licensed-aircraft-pixel-proof.v2',
           status:'verified',
           authored_asset_provenance:pack.provenance,
           source_digest:pack.receipt.digest,
@@ -153,6 +171,7 @@ export async function captureAuthoredTurntable({
         attempts.push({profile:profile.id,error:String(error?.stack||error).slice(0,1400)});
         for(let i=0;i<3;i++)fs.rmSync(
           path.join(outputDir,'authored-b737-angle-'+i+'.png'),{force:true});
+        fs.rmSync(path.join(outputDir,'authored-b737-portrait.png'),{force:true});
       }finally{if(browser)await browser.close().catch(()=>{});}
     }
     throw new Error('authored_reference_no_valid_webgpu_profile:'+JSON.stringify(attempts));
