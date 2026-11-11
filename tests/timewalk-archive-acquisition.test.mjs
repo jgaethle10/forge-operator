@@ -9,24 +9,29 @@ const a=load('csun-1960-acquisition.v1.json');
 const ledger=load('evidence.v1.json');
 const copy=()=>structuredClone(a);
 
-test('the CSUN record is catalog-only, not a historical 1960 sheet',()=>{
+test('the CSUN record has archivist-confirmed sheet numbers, not examined original 1960 sheets',()=>{
  assert.equal(validateArchiveAcquisition(a,ledger),a);
  assert.equal(a.selectedYear,1960);
  assert.equal(a.catalog.holdingYearsListed.includes(1960),true);
  assert.equal(a.catalog.originalSheetInspected,false);
  assert.equal(a.catalog.originalSheetId,null);
+ assert.equal(a.sourceAccess.replyReceived,true);
+ assert.equal(a.sourceAccess.archiveSheetNumbersConfirmed,true);
+ assert.deepEqual(a.curatorConfirmation.confirmedNumbers,[6,15]);
  assert.equal(a.sourceAccess.purchaseAuthorized,false);
 });
 test('no original or public-world accuracy is inferred from catalog date',()=>{
  const r=acquisitionReadiness(a,ledger);
  assert.equal(r.catalogHoldingConfirmed,true);
  assert.equal(r.exactSheetConfirmed,false);
+ assert.equal(r.sheetNumbersIdentifiedByArchivist,true);
+ assert.deepEqual(r.identifiedSheetNumbers,[6,15]);
  assert.equal(r.originalItemExamined,false);
  assert.equal(r.georeferencingAuthorized,false);
  assert.equal(r.publicSceneAccuracyVerified,false);
  assert.equal(r.publishOriginalMapAllowed,false);
 });
-test('reflects confirmed inquiry delivery without sending again or charging',()=>{
+test('reflects confirmed archivist response without sending again or charging',()=>{
  const r=archiveInquiryPacket(a,ledger);
  assert.equal(r.recipient,'sanborn@csun.edu');
  assert.match(r.subject,/1960 Yakima Sanborn/);
@@ -37,8 +42,8 @@ test('reflects confirmed inquiry delivery without sending again or charging',()=
  assert.equal(r.sendAuthorized,false);
  assert.equal(r.feeApproved,false);
  assert.equal(r.inquiryAlreadySent,true);
- assert.equal(r.deliveryStatus,'sent-awaiting-archive-response');
- assert.ok(r.flags.includes('sent-awaiting-archive-response'));
+ assert.equal(r.deliveryStatus,'archive-replied-do-not-resend');
+ assert.ok(r.flags.includes('archive-replied-do-not-resend'));
  assert.ok(!r.flags.includes('not-sent'));
 });
 test('rejects wrong-city and unrelated historical maps',()=>{
@@ -82,10 +87,10 @@ test('cannot authorize expense, commercial publication or geometry via the resea
 
 test('never silently changes archive contact status or purchase authority',()=>{
  let b=copy();b.sourceAccess.inquiryStatus='not-sent';
- assert.throws(()=>validateArchiveAcquisition(b,ledger),/inconsistent_inquiry_state/);
- b=copy();b.sourceAccess.replyReceived=true;
+ assert.throws(()=>validateArchiveAcquisition(b,ledger),/inconsistent_archive_reply/);
+ b=copy();b.sourceAccess.replyReceived=false;
  assert.throws(()=>validateArchiveAcquisition(b,ledger),/inconsistent_inquiry_state/);
  const status=acquisitionReadiness(a,ledger);
- assert.match(status.outstanding[0],/Await CSUN response/);
+ assert.match(status.outstanding[0],/Inspect or compare CSUN originals/);
  assert.equal(a.sourceAccess.purchaseAuthorized,false);
 });
