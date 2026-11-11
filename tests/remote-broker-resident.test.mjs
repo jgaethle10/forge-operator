@@ -65,6 +65,22 @@ test('real private Yard broker deploy / resume / stop uses no public route',asyn
     });
     assert.equal(resumed.mode,'resumed');
     assert.equal(resumed.record.result.instance_id,first.record.result.instance_id);
+
+    // Simulate a cold-recovery attempt without touching the live broker:
+    // port 0 is not the original listener, while Yard still says ready.
+    // The supervisor must HOLD instead of invoking deployRelease and
+    // silently rotating the broker instance or its receipt binding.
+    const before=resumed.yard.deploymentStatus('evercraft-remote-broker-resident');
+    assert.equal(before.state,'ready');
+    await assert.rejects(
+      startPrivateBroker({root,allocatorToken,port:0,requirePhysical:false}),
+      /resident_broker_cold_recovery_requires_manual_cutover/
+    );
+    const after=resumed.yard.deploymentStatus('evercraft-remote-broker-resident');
+    assert.equal(after.state,'ready');
+    assert.equal(after.result.instance_id,before.result.instance_id);
+    assert.equal(after.receipt.receipt_hash,before.receipt.receipt_hash);
+
     await resumed.yard.stopDeployment('evercraft-remote-broker-resident',{reason:'proof_complete'});
     const status=JSON.parse(fs.readFileSync(path.join(root,'remote-broker-resident/status.json'),'utf8'));
     assert.equal(status.public_https_verified,false);
