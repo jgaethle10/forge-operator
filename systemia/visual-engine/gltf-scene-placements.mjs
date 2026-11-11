@@ -132,7 +132,7 @@ export function compileGltfScenePlacements({
         const baked=bake(original,world,id);
         const materialIndex=primitives[pi].material;
         const materialId=assetPack.assetId+':material-'+
-          (materialIndex??(gltf.materials?.length||0));
+          (materialIndex??-1);
         ok(assetPack.materialDefinitions.some(m=>m.id===materialId),
           'material_missing:'+materialId);
         geometries.push(baked);
