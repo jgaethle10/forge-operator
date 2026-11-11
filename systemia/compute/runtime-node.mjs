@@ -4108,12 +4108,15 @@ export async function startEvercraftComputeNode({
     placement_labels: nodePlacementLabels,
     close: async () => {
       clearInterval(leaseMonitor);
-      for (const serviceId of [...services.keys()]) {
-        await stopService(serviceId, 'compute_node_shutdown');
-      }
+      // Drain HTTP handlers before snapshotting resident services. An in-flight
+      // accepted job can register a browser adapter while the old shutdown
+      // order is stopping services, leaving a new listener orphaned.
       await new Promise((resolve, reject) =>
         server.close((error) => error ? reject(error) : resolve())
       );
+      for (const serviceId of [...services.keys()]) {
+        await stopService(serviceId, 'compute_node_shutdown');
+      }
     },
   };
 }
