@@ -7,7 +7,11 @@ A person selects an intention and self-reports days that supported it. Each comp
 This is a prototype, not a launched product, treatment service, or sobriety verification tool.
 
 ## Start
-Static frontend: `public/art-of-becoming/index.html`
+Art-gallery frontend: `public/art-of-becoming/index.html`
+Lifetime Worlds frontend: `public/art-of-becoming/worlds.html` (Franchise, Symphony and Sanctuary)
+Lifetime build model: `public/art-of-becoming/world-engine.mjs`
+Data-only Evercraft World Engine bridge: `public/art-of-becoming/worlds-bridge.mjs`
+Full lifetime design and release gates: [WORLDS.md](./WORLDS.md)
 Pure logic: `public/art-of-becoming/engine.mjs`
 
 Serve from the repository root with any local static server and visit `/public/art-of-becoming/`. Do not use `file://` for a module-based preview.
