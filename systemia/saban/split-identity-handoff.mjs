@@ -226,40 +226,81 @@ export function importSplitIdentityOutcomes({sabanRoot,mailboxRoot,maxOutcomes=4
     requireValid(intent&&job&&intent.node_id===req.node_id &&
       intent.job_id===req.job_id&&job.payload_hash===req.payload_hash &&
       job.payload_hash===sha(job.payload),'local_job_intent_changed');
-    if(intent.state==='completed'&&job.state==='completed'){
-      rows.push({intent_id:id,status:'already_applied'});continue;
-    }
-    requireValid(intent.state==='awaiting_yard_execution'&&job.state==='handoff_wait',
-      'local_job_not_executable');
+    // Applying an outcome requires two local writes. A crash between them
+    // must be recoverable without re-executing remote work or changing an
+    // already-final decision. Independently reverify every success on import.
     if(outcome.status==='completed'){
       const verified=verifyNodeSeedWorkerCompletion({
         response:outcome.response,nodeId:req.node_id,workloadClass:WORKLOAD,
         idempotencyKey:req.idempotency_key,payload:job.payload,
       });
-      updateNodeSeedExecutionIntent({root:sabanRoot,intentId:id,patch:{
-        state:'completed',result_receipt_hash:verified.worker_receipt_hash,
-        compute_receipt_hash:verified.compute_receipt_hash,
-        last_error:null,completed_at:new Date().toISOString(),
-      }});
-      queue.update(job.job_id,{state:'completed',
-        result:outcome.response.result,
-        execution_receipt:{mode:'split_identity_yard_verified',
-          intent_id:id,node_id:req.node_id,
-          worker_receipt_hash:verified.worker_receipt_hash,
+      requireValid(
+        ['awaiting_yard_execution','completed'].includes(intent.state) &&
+        ['handoff_wait','completed'].includes(job.state),
+        'local_job_not_executable',
+      );
+      if(intent.state==='completed'){
+        requireValid(intent.result_receipt_hash===verified.worker_receipt_hash,
+          'completed_intent_receipt_mismatch');
+      }
+      if(job.state==='completed'){
+        requireValid(job.execution_receipt?.intent_id===id &&
+          job.execution_receipt.worker_receipt_hash===verified.worker_receipt_hash,
+          'completed_job_receipt_mismatch');
+      }
+      if(intent.state==='completed'&&job.state==='completed'){
+        rows.push({intent_id:id,status:'already_applied'});continue;
+      }
+      if(intent.state!=='completed'){
+        updateNodeSeedExecutionIntent({root:sabanRoot,intentId:id,patch:{
+          state:'completed',result_receipt_hash:verified.worker_receipt_hash,
           compute_receipt_hash:verified.compute_receipt_hash,
-          worker_receipt_verified:true,
-          content_hash_verified:true,authority_material_persisted:false},
-        last_error:null,last_hold:null,
-      });
+          last_error:null,completed_at:new Date().toISOString(),
+        }});
+      }
+      if(job.state!=='completed'){
+        queue.update(job.job_id,{state:'completed',
+          result:outcome.response.result,
+          execution_receipt:{mode:'split_identity_yard_verified',
+            intent_id:id,node_id:req.node_id,
+            worker_receipt_hash:verified.worker_receipt_hash,
+            compute_receipt_hash:verified.compute_receipt_hash,
+            worker_receipt_verified:true,
+            content_hash_verified:true,authority_material_persisted:false},
+          last_error:null,last_hold:null,
+        });
+      }
     }else{
+      requireValid(
+        ['awaiting_yard_execution','verification_hold'].includes(intent.state) &&
+        ['handoff_wait','held'].includes(job.state),
+        'local_job_not_executable',
+      );
+      if(intent.state==='verification_hold'){
+        requireValid(intent.last_error===outcome.hold_reason,
+          'held_intent_reason_mismatch');
+      }
+      if(job.state==='held'){
+        requireValid(job.last_hold?.intent_id===id &&
+          job.last_hold.reason==='unverified_remote_worker_result' &&
+          job.last_hold.verification_error===outcome.hold_reason,
+          'held_job_reason_mismatch');
+      }
+      if(intent.state==='verification_hold'&&job.state==='held'){
+        rows.push({intent_id:id,status:'already_applied'});continue;
+      }
       // No automatic retry or fallback if Yard may have sent the job.
-      updateNodeSeedExecutionIntent({root:sabanRoot,intentId:id,patch:{
-        state:'verification_hold',last_error:outcome.hold_reason,
-      }});
-      queue.update(job.job_id,{state:'held',
-        last_hold:{reason:'unverified_remote_worker_result',
-          verification_error:outcome.hold_reason,intent_id:id,node_id:req.node_id},
-      });
+      if(intent.state!=='verification_hold'){
+        updateNodeSeedExecutionIntent({root:sabanRoot,intentId:id,patch:{
+          state:'verification_hold',last_error:outcome.hold_reason,
+        }});
+      }
+      if(job.state!=='held'){
+        queue.update(job.job_id,{state:'held',
+          last_hold:{reason:'unverified_remote_worker_result',
+            verification_error:outcome.hold_reason,intent_id:id,node_id:req.node_id},
+        });
+      }
     }
     rows.push({intent_id:id,status:outcome.status});
   }
