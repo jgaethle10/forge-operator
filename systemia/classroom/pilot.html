@@ -68,7 +68,7 @@ h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
 <header><div class="wrap"><div class="brand">∞ INFINITE CLASSROOM<span>EVERCRAFT · LEARNING WORLDS</span></div><span class="pilot">PRIVATE SUPERVISED PILOT</span></div></header>
 <main class="wrap">
 <div class="intro"><div><h1>Welcome, explorer! 👋</h1><p>Where do you want to explore today?</p></div><div class="pill">⭐ Level and XP return after verified mastery is ready</div></div>
-<section class="gate" aria-label="Adult pilot connection"><h2>🔐 Connect your privately hosted tutor</h2><p>This version uses Evercraft's local model only. An adult must supply the private access token. It is held in page memory, never stored. If the model is unavailable, the conversation stops rather than pretending to answer.</p><div class="gaterow"><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Adult pilot access token" aria-label="Private pilot token"><button type="button" class="primary" id="connect">Connect private tutor</button></div><div id="connection" role="status">Not connected. This is not yet cleared for unsupervised child use.</div></section>
+<section class="gate" aria-label="Adult pilot connection"><h2>🔐 Connect your privately hosted tutor</h2><p>This version uses Evercraft's private local inference only. An adult must supply the private access token. It is held in page memory, never stored. If the model is unavailable, the conversation stops rather than pretending to answer.</p><div class="gaterow"><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Adult pilot access token" aria-label="Private pilot token"><button type="button" class="primary" id="connect">Connect private tutor</button></div><div id="connection" role="status">Not connected. This is not yet cleared for unsupervised child use.</div></section>
 <section aria-label="Learning worlds"><h2 class="worldtitle">Choose a learning world</h2><div class="worlds" id="worlds">
 <button type="button" class="world math" data-room="math" aria-pressed="false"><span class="symbol">▦ 🔢</span><strong>Math Cave</strong><small>Numbers, patterns, algebra</small></button>
 <button type="button" class="world reading" data-room="reading" aria-pressed="false"><span class="symbol">▤ 📚</span><strong>Reading Treehouse</strong><small>Stories and mysteries</small></button>
@@ -127,9 +127,9 @@ h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
   busy=true;ready();state('Checking local model readiness…');
   try{
    const info=await api('status',null,value);
-   if(info.model!=='owned_local_ollama'||info.public_youth_access!==false)throw Error('unverified_local_model');
+   if(info.model!=='owned_local_model'||info.public_youth_access!==false)throw Error('unverified_local_model');
    access=value;sessions.clear();logs.clear();current='';$('chat').hidden=true;
-   $('token').value='';state('Connected to verified local Ollama tutor. Adult supervision required.');
+   $('token').value='';state('Connected to verified Evercraft-owned local tutor. Adult supervision required.');
   }catch{access='';state('Private tutor unavailable or access denied. No chat was sent.')}
   finally{busy=false;ready()}
  });
