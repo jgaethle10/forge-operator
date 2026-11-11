@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import { ProviderCredentialVault } from './credential-vault.mjs';
 import { startEvercraftHomeServer } from './server.mjs';
 import { publishJournalStoryLinkedInFromHome } from './clip-journal-linkedin-publish-adapter.mjs';
@@ -34,6 +35,24 @@ function fixture(){
     }
   };
   fs.writeFileSync(path.join(dir,'clip-handoff.json'),JSON.stringify(handoff));
+
+  const articleDir=path.join(repoRoot,'public','journal',SLUG);
+  fs.mkdirSync(articleDir,{recursive:true});
+  const articleHtml=linkHtml();
+  fs.writeFileSync(path.join(articleDir,'index.html'),articleHtml);
+  const receiptDir=path.join(repoRoot,'public','journal','receipts');
+  fs.mkdirSync(receiptDir,{recursive:true});
+  fs.writeFileSync(path.join(receiptDir,SLUG+'.json'),JSON.stringify({
+    schema:'evercraft.journal.publication-receipt.v1',
+    story_id:STORY,slug:SLUG,title:TITLE,canonical_url:CANONICAL,
+    clip_handoff_ref:'production/'+SLUG+'/clip-handoff.json',
+    article_sha256:createHash('sha256').update(articleHtml).digest('hex'),
+    publication_authority:true,publication_state:'live',live_edition_eligible:true,
+    editorial_gate:{status:'accepted',score:10},
+    production_grade:{status:'accepted',text_primary:false},
+    freshness_expires_at:new Date(Date.now()+86400000).toISOString(),
+  }));
+
   const vault=new ProviderCredentialVault({stateDir:credentialStateDir});
   vault.put({provider:'linkedin-organization',environment:'live',label:'evercraft-clip',
     apiKeyId:'urn:li:organization:5515715',
@@ -160,5 +179,17 @@ test('Unverified private organization mismatch stops before publishing',async()=
       ...argumentsFor(f,mockFetch(counter)),organizationId:'99999999'
     }),/clip_linkedin_organization_identity_mismatch/);
     assert.equal(counter.posts,0);
+  }finally{f.close();}
+});
+
+test('Missing or expired Journal publication receipt blocks LinkedIn before provider calls',async()=>{
+  const f=fixture(),counter={posts:0,reads:0,link:0};
+  try{
+    fs.rmSync(path.join(f.repoRoot,'public','journal','receipts',SLUG+'.json'));
+    await assert.rejects(()=>publishJournalStoryLinkedInFromHome(
+      argumentsFor(f,mockFetch(counter))
+    ),/publication_receipt_missing/);
+    assert.equal(counter.posts,0);
+    assert.equal(fs.readdirSync(f.stateRoot).length,0);
   }finally{f.close();}
 });
