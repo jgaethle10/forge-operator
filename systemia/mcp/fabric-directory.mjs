@@ -1,4 +1,5 @@
 import { ownedOfferLink } from './owned-offer-links.mjs';
+import { loadPublicProductDiscovery } from './fabric-public-products.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -295,6 +296,18 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       }
     }
   }
+  // Public products are a distinct read-only source from machine-commerce offers.
+  // Reuse CHUM's canonical Pain Index: historical/public discovery must not
+  // disappear merely because a product has no verified machine checkout.
+  // This enrichment is disabled for custom fixture catalogs.
+  if(!catalogPath){
+    const known=new Set(mapped.map(item=>item.public_id));
+    for(const product of loadPublicProductDiscovery()){
+      if(known.has(product.public_id)) continue;
+      mapped.push(product);
+      known.add(product.public_id);
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
@@ -416,6 +429,14 @@ function scoreEntry(intent,entry,{frequency,total}){
 
   const phrase=clean(intent).toLowerCase();
   if(phrase&&entry.name.toLowerCase().includes(phrase)) score+=20;
+  // Explicit product names outrank coincidental cross-domain keyword overlap.
+  // Only source product records get this priority. An exact brand-name match
+  // still carries discovery-only authority and cannot become a paid offer.
+  if(entry.public_id.startsWith('product:')){
+    const productName=entry.name.toLowerCase().trim();
+    if(productName!=='evercraft' && productName.length>=6 &&
+       phrase.includes(productName)) score+=300;
+  }
 
   // Physical-part routing guardrails. Rare generic words such as "broken" must not
   // let software-health capabilities outrank a specialist when the user is holding
