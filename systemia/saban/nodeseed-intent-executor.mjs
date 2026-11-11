@@ -42,6 +42,7 @@ export async function executeNodeSeedExecutionIntent({
   yard,
   brokerDeploymentId,
   timeoutMs=10000,
+  allowLoopbackProof=false,
   now=new Date(),
 }={}){
   if(!root) throw new Error('nodeseed_intent_executor_root_required');
@@ -104,7 +105,7 @@ export async function executeNodeSeedExecutionIntent({
     };
   }
 
-  const grant=await yard.remoteCapacityGrant(brokerDeploymentId,intent.node_id);
+  const grant=await yard.remoteCapacityGrant(brokerDeploymentId,intent.node_id,{allowLoopbackProof});
   if(
     grant.node_id!==intent.node_id ||
     grant.device_fingerprint!==selected.device_fingerprint ||
@@ -115,6 +116,7 @@ export async function executeNodeSeedExecutionIntent({
   }
 
   let lease=null;
+  let jobSubmissionAttempted=false;
   try{
     lease=await requestJson(grant.capacity_endpoint+'/v1/leases',{
       method:'POST',
@@ -125,6 +127,9 @@ export async function executeNodeSeedExecutionIntent({
       }),
     },timeoutMs);
 
+    // Once a job request is sent, a timeout or transport failure does not
+    // prove it was not executed. Never blindly resubmit to another worker.
+    jobSubmissionAttempted=true;
     const result=await requestJson(grant.capacity_endpoint+'/v1/jobs',{
       method:'POST',
       body:JSON.stringify({
@@ -204,12 +209,15 @@ export async function executeNodeSeedExecutionIntent({
 
     // A response with broken receipt/payload integrity has an uncertain
     // execution outcome. Hold for inspection, never automatically retry it.
-    if(reason.startsWith('nodeseed_receipt_')){
+    if(reason.startsWith('nodeseed_receipt_')||jobSubmissionAttempted){
+      const safeReason=reason.startsWith('nodeseed_receipt_')
+        ? reason
+        : 'remote_job_outcome_unknown';
       updateNodeSeedExecutionIntent({
         root,intentId,
         patch:{
           state:'verification_hold',
-          last_error:reason,
+          last_error:safeReason,
           failed_at:at.toISOString(),
         },
       });
@@ -217,7 +225,7 @@ export async function executeNodeSeedExecutionIntent({
         state:'held',
         last_hold:{
           reason:'unverified_remote_worker_result',
-          verification_error:reason,
+          verification_error:safeReason,
           intent_id:intent.intent_id,
           node_id:intent.node_id,
           observed_at:at.toISOString(),
@@ -229,7 +237,7 @@ export async function executeNodeSeedExecutionIntent({
         intent_id:intent.intent_id,
         job_id:job.job_id,
         node_id:intent.node_id,
-        reason,
+        reason:safeReason,
         authority_material_persisted:false,
       };
     }
@@ -273,6 +281,7 @@ export async function drainNodeSeedExecutionIntents({
   brokerDeploymentId,
   maxIntents=16,
   timeoutMs=10000,
+  allowLoopbackProof=false,
   now=new Date(),
 }={}){
   const intents=listNodeSeedExecutionIntents({
@@ -287,6 +296,7 @@ export async function drainNodeSeedExecutionIntents({
       yard,
       brokerDeploymentId,
       timeoutMs,
+      allowLoopbackProof,
       now,
     }));
   }
