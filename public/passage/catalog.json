@@ -1,0 +1,210 @@
+{
+  "schema": "evercraft.passage.demo-library.v1",
+  "edition": "2026-10-29",
+  "status": "prototype-editorial",
+  "description": "All included prose is original demonstration material. External resources are further reading, not an automated provenance certification. No third-party documents or restricted material are bundled.",
+  "articles": [
+    {
+      "id": "check-a-claim",
+      "category": "Media literacy",
+      "icon": "◎",
+      "minutes": 4,
+      "title": "How to check a claim when sources are scarce",
+      "description": "A small, repeatable method for sorting evidence from uncertainty.",
+      "edition": "2026-10-29",
+      "rights": "Original Evercraft demonstration text. Broad redistribution rights have not been approved.",
+      "sections": [
+        {
+          "heading": "Begin with the exact claim",
+          "paragraphs": [
+            "Write the claim as one sentence. Identify what could be checked: a date, a number, an image, an institution, or a quotation. A vague statement cannot be tested until it becomes specific.",
+            "Separate what you know firsthand from what you heard or inferred. Confidence should follow evidence, not the number of times a claim appears."
+          ]
+        },
+        {
+          "heading": "Follow the trail",
+          "paragraphs": [
+            "Ask where the claim originated, who first recorded it, when it was published, and whether a primary document is available. A screenshot without context is a lead, not verification.",
+            "Look for independent confirmation. Multiple copies of the same original report do not represent multiple independent sources."
+          ]
+        },
+        {
+          "heading": "Name uncertainty plainly",
+          "paragraphs": [
+            "Use clear labels: confirmed, supported but incomplete, disputed, or unknown. If a source cannot be opened, say it is unavailable rather than interpreting silence as a fact.",
+            "Record publication dates. In a disrupted information environment, even accurate information may be outdated by the time it reaches you."
+          ]
+        },
+        {
+          "heading": "Keep your evidence portable",
+          "paragraphs": [
+            "When rights allow, retain an offline copy of the source, a citation, the date accessed, and a note about what it did and did not prove.",
+            "This guide is educational, not an automated fact-checking service."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "UNESCO, Media and Information Literacy",
+          "url": "https://www.unesco.org/en/media-information-literacy"
+        }
+      ]
+    },
+    {
+      "id": "offline-reading",
+      "category": "Offline access",
+      "icon": "▤",
+      "minutes": 3,
+      "title": "Build a small offline reading shelf",
+      "description": "Practical ways to retain useful knowledge before a connection drops.",
+      "edition": "2026-10-29",
+      "rights": "Original Evercraft demonstration text. Broad redistribution rights have not been approved.",
+      "sections": [
+        {
+          "heading": "Choose what matters",
+          "paragraphs": [
+            "Prioritize reference material that remains valuable without live updates, such as language learning, basic scientific explanations, and public-domain educational texts.",
+            "Do not rely on offline pages for information that must be current, including emergency orders, active conflict routes, or medical instructions."
+          ]
+        },
+        {
+          "heading": "Save for reliability",
+          "paragraphs": [
+            "Use openly licensed or public-domain collections where possible. Keep files in familiar formats, with descriptive names, and test opening them while disconnected.",
+            "Carry multiple copies only where appropriate and safe. A downloaded file may be discoverable by anyone with access to the device."
+          ]
+        },
+        {
+          "heading": "Check what you kept",
+          "paragraphs": [
+            "For each item, record title, publisher, version or access date, and permission status. A file checksum can detect accidental change but does not establish that the original publisher was trustworthy.",
+            "Practice a real offline test: turn off Wi-Fi and cellular data, open the file, and confirm text remains readable."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Kiwix, offline knowledge reader",
+          "url": "https://kiwix.org/"
+        }
+      ]
+    },
+    {
+      "id": "connection-disruptions",
+      "category": "Offline access",
+      "icon": "◌",
+      "minutes": 4,
+      "title": "What to do when the internet becomes unreliable",
+      "description": "A clear distinction between degraded service, isolation, and safe local access.",
+      "edition": "2026-10-29",
+      "rights": "Original Evercraft demonstration text. Broad redistribution rights have not been approved.",
+      "sections": [
+        {
+          "heading": "Understand the failure",
+          "paragraphs": [
+            "A site not loading can be caused by device trouble, service outage, filtering, or a wider network shutdown. One symptom does not prove censorship.",
+            "Check whether trusted contacts on different networks observe the same problem, when doing so is safe. Never expose another person's location or identity to confirm a hypothesis."
+          ]
+        },
+        {
+          "heading": "Continue carefully",
+          "paragraphs": [
+            "Offline educational collections and previously saved files remain useful without a connection. Local sharing works only when compatible devices and authorized connectivity exist.",
+            "Do not assume a consumer tool conceals identity, traffic metadata, or device contents. Each transport and jurisdiction introduces its own risks."
+          ]
+        },
+        {
+          "heading": "Keep expectations honest",
+          "paragraphs": [
+            "A locally saved document is not an encrypted message. A cached site is not a communications network. No technology can guarantee connectivity during a deliberate blackout.",
+            "For high-risk environments, seek current advice from qualified digital-safety organizations before deploying new tools."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Access Now, Internet Shutdowns",
+          "url": "https://www.accessnow.org/issue/internet-shutdowns/"
+        }
+      ]
+    },
+    {
+      "id": "reader-privacy",
+      "category": "Digital safety",
+      "icon": "◇",
+      "minutes": 4,
+      "title": "A safer approach to private reading",
+      "description": "What offline storage protects, and what it cannot protect.",
+      "edition": "2026-10-29",
+      "rights": "Original Evercraft demonstration text. Broad redistribution rights have not been approved.",
+      "sections": [
+        {
+          "heading": "Start with the device",
+          "paragraphs": [
+            "Your browsing experience can leave local traces, including downloads, bookmarks, browser cache, or operating-system histories. An offline copy reduces ongoing network requests but does not make the copy invisible.",
+            "Consider whether a shared or confiscated device presents a risk before saving sensitive material. Seek expert guidance if a specific threat is present."
+          ]
+        },
+        {
+          "heading": "Know what Passage does today",
+          "paragraphs": [
+            "This prototype does not require an account or add analytics trackers. Its local bookmarks are stored in your browser. Downloaded files are standard text or HTML, not encrypted storage.",
+            "A device or network operator may still observe access to the hosted page. Passage does not promise anonymous browsing, evasion of monitoring, or confidential distribution."
+          ]
+        },
+        {
+          "heading": "Use established safety guidance",
+          "paragraphs": [
+            "Keep software updated when possible, understand where backups live, and avoid sharing personally identifying information unnecessarily.",
+            "Choose a security strategy based on an actual threat model rather than relying on a tool's marketing."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Electronic Frontier Foundation, Surveillance Self-Defense",
+          "url": "https://ssd.eff.org/"
+        }
+      ]
+    },
+    {
+      "id": "rights-and-provenance",
+      "category": "Media literacy",
+      "icon": "⌁",
+      "minutes": 3,
+      "title": "Share knowledge without losing its source",
+      "description": "A simple chain of attribution, permission, context, and corrections.",
+      "edition": "2026-10-29",
+      "rights": "Original Evercraft demonstration text. Broad redistribution rights have not been approved.",
+      "sections": [
+        {
+          "heading": "Identify the author and the rights",
+          "paragraphs": [
+            "An article being publicly visible does not automatically grant permission to republish it. Prefer permission, public-domain material, or an explicit license that covers your intended use.",
+            "Keep an attribution record with the creator, publisher, title, URL, and license or permission evidence."
+          ]
+        },
+        {
+          "heading": "Preserve context",
+          "paragraphs": [
+            "Keep the publication date and indicate whether a copy was shortened, translated, or adapted. If you cannot validate a claim, do not call it verified.",
+            "Distinguish integrity from truth: an unchanged file can still contain incorrect information. Source reliability needs independent editorial judgment."
+          ]
+        },
+        {
+          "heading": "Make corrections possible",
+          "paragraphs": [
+            "Give every edition a date. Mark superseded material and keep a transparent correction history where safe and appropriate.",
+            "Passage's sample library is only a design and technical demonstration. Automated third-party ingestion, rights certification, and independent source verification are not active."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Creative Commons, About licenses",
+          "url": "https://creativecommons.org/share-your-work/cclicenses/"
+        }
+      ]
+    }
+  ]
+}
