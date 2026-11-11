@@ -1,0 +1,50 @@
+name: EO-001 Gate 1 cgroup capability admission (no systemd activation)
+on:
+  push:
+    branches:
+      - research/eo001-gate1-cgroup-admission-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
+      - '.github/workflows/eo001-gate1-cgroup-admission.yml'
+  pull_request:
+    branches:
+      - research/eo001-gate1-hardstop-supervisor-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
+      - '.github/workflows/eo001-gate1-cgroup-admission.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-cgroup-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax verify admission and fixed child
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-synthetic-child.mjs
+      - name: Test read-only preflight and fixed synthetic-only cgroup contract
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
+      - name: Prove default fails closed without reviewed source pin
+        run: |
+          set +e
+          node integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs > /tmp/eo001-cgroup-refusal.json
+          EXIT=$?
+          set -e
+          test "$EXIT" -eq 2
+          python3 - <<'PY'
+          import json
+          with open('/tmp/eo001-cgroup-refusal.json', encoding='utf-8') as f:
+              x=json.load(f)
+          assert x['state']=='CGROUP_SCOPE_ADMISSION_BLOCKED'
+          assert x['model_inference_executed'] is False
+          assert x['external_actions_authorized'] is False
+          print('EO001_CGROUP_PRECHECK_DEFAULT_REFUSAL: PASS')
+          PY
+      - name: Prove synthetic-only supervisor regressions
+        run: node --test --test-concurrency=1 integrations/ai-evaluation-lab/eo001-hardstop-offline-supervisor.test.mjs
