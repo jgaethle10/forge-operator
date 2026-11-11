@@ -3,7 +3,7 @@
   "mission_id": "FIRST-CONTACT-001",
   "title": "Evercraft | First Contact: evidence-gated UAP research",
   "created_at": "2026-10-31",
-  "updated_at": "2026-11-09",
+  "updated_at": "2026-11-10",
   "owner": "Evercraft LLC",
   "routing_priority": "Systemia first",
   "execution_state": "NOT_DISPATCHED",
@@ -197,6 +197,28 @@
       ],
       "validation": "Dedicated research CI succeeded on initial audit/CLI code commit 1b7a4384... run 42771006361; subsequent bounded chunked-media hashing and documentation checks pending separate verification. No real camera sources or independent physical review.",
       "acceptance": "Locally verify byte-hash binding for seven evidence roles and locked numeric calibration plan; refuse altered/missing/unsafe sources; require independent pre-capture timestamp and survey review before field trust"
+    },
+    {
+      "id": "FC-PIXEL-01",
+      "lane": "sensor_forensics",
+      "status": "RECTIFIED_PIXEL_TO_BEARING_CI_VERIFIED_AWAITING_CAMERA_CALIBRATION",
+      "completed": "2026-11-10",
+      "artifacts": [
+        "pixel-bearing.mjs",
+        "pixel-bearing.test.mjs",
+        "pixel-two-view-cli.mjs",
+        "pixel-two-view-cli.test.mjs",
+        "pixel-calibration-cli.mjs",
+        "pixel-calibration-cli.test.mjs",
+        "fixtures/pixel-pair-synthetic-valid.json",
+        "fixtures/pixel-pair-synthetic-unsynced.json",
+        "fixtures/pixel-known-target-synthetic-session.json",
+        "PIXEL_FIELD_BRIDGE.md",
+        "field-evidence-audit.mjs",
+        "field-evidence-audit.test.mjs"
+      ],
+      "validation": "Dedicated GitHub Actions FIRST-CONTACT research verification passed for synthetic pixel modules/tests on commit ba69801f... (run 42959628711); 12 projection/bearing unit tests, 5 pair-CLI tests, 5 multi-frame CLI tests, and 2 evidence-audit schema tests added. No real camera images, source device, lens calibration, surveyed pose, verified timebase or human independent review.",
+      "acceptance": "Convert manually identified rectified pixel centers with operator-supplied calibrated intrinsics and camera-to-ENU pose into guarded two-view geometry and numeric known-reference accuracy; hold malformed/unrectified/unsynchronized observations and verify source provenance externally."
     }
   ],
   "hard_constraints": [
@@ -206,6 +228,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Obtain authorized known stationary calibration target and two independently surveyed/calibrated synchronized cameras. Preserve original source files locally; preregister thresholds before capture with externally verifiable timestamp; audit SHA-256 source chain; compare numeric position to independent survey; require a separate reviewer. Systemia NOT_DISPATCHED.",
-  "validation_note": "2026-11-09 sprint 8: initial offline field evidence audit/CLI tests passed dedicated research CI at commit 1b7a4384... run 42771006361; native media hashing now uses bounded 1 MiB chunks up to 4 GiB but needs newest head CI. No real field records, independent custody verification, or Systemia live dispatch."
+  "next_execution_gate": "Use two truly independent rectified and calibrated cameras on a lawful known stationary target: measure intrinsics, rotationCameraToEnu and surveyed optical centers, independently verify capture synchronization, pre-register numerical limits, preserve native local media and compare measured pixel-derived 3D position with independent ground truth. Systemia mission dispatch remains NOT_DISPATCHED.",
+  "validation_note": "2026-11-10 sprint 9: dedicated FIRST-CONTACT research workflow passed on commit ba69801f... (run 42959628711) covering synthetic rectified-pixel-to-ENU conversion, two-view intake, multi-frame reference-target accuracy and evidence-source schema linkage. Field calibration and source authenticity remain unverified. No Systemia runtime dispatch."
 }
