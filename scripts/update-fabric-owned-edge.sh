@@ -12,6 +12,7 @@ FABRIC_ENV="/etc/evercraft/fabric.env"
 ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
 VISUAL_INGEST_TOKEN_CREATED=false
+SIGNAL_INTAKE_KEY_CREATED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -209,6 +210,574 @@ write_runtime_release_ref() {
   printf '%s\n' "${release,,}" > "$tmp"
   install -o root -g "$RUN_USER" -m 0640 "$tmp" "$RUNTIME_RELEASE_REF_FILE"
   rm -f "$tmp"
+}
+
+ensure_signal_private_intake() {
+  local provision_script="$REPO_ROOT/scripts/provision-signal-resident-intake.mjs"
+  [[ -f "$provision_script" ]] || {
+    echo "ERROR: Signal private intake provisioner missing" >&2
+    return 1
+  }
+  local output=""
+  if [[ -f "$FABRIC_ENV" ]] && grep -Eq '^EVERCRAFT_SIGNAL_INTAKE_KEY_B64=.{12,}  VISUAL_INGEST_TOKEN_CREATED=false
+  if [[ -s "$VISUAL_INGEST_TOKEN_FILE" ]]; then
+    return 0
+  fi
+
+  install -d -o root -g "$RUN_USER" -m 0750 "$(dirname "$VISUAL_INGEST_TOKEN_FILE")"
+  local tmp
+  tmp="$(mktemp "$STATE_DIR/visual-ingest-token.XXXXXX")"
+  as_user node -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$tmp"
+  install -o "$RUN_USER" -g "$RUN_USER" -m 0600 "$tmp" "$VISUAL_INGEST_TOKEN_FILE"
+  rm -f "$tmp"
+  VISUAL_INGEST_TOKEN_CREATED=true
+  echo "Evercraft update: Visual Desk ingest credential initialized"
+}
+
+reconcile_edge_attestation_env() {
+  EDGE_ATTESTATION_EXPECTED=false
+
+  # The public Fabric edge may exist before the local organism does. In that
+  # state we do not invent identity proof. The external canary remains held.
+  if [[ ! -f "$NODE_RECEIPT" || ! -f "$ALLOCATOR_TOKEN_FILE" ]]; then
+    return 0
+  fi
+
+  EDGE_ATTESTATION_EXPECTED=true
+  mkdir -p "$(dirname "$FABRIC_ENV")"
+  if [[ ! -f "$FABRIC_ENV" ]]; then
+    : > "$FABRIC_ENV"
+    chmod 0600 "$FABRIC_ENV"
+  fi
+
+  local current_node current_token
+  current_node="$(grep '^EVERCRAFT_EDGE_NODE_RECEIPT=' "$FABRIC_ENV" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
+  current_token="$(grep '^EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=' "$FABRIC_ENV" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
+
+  if [[ "$current_node" == "$NODE_RECEIPT" && "$current_token" == "$ALLOCATOR_TOKEN_FILE" ]]; then
+    return 0
+  fi
+
+  ENV_BACKUP="$STATE_DIR/fabric.env.before-attestation"
+  cp "$FABRIC_ENV" "$ENV_BACKUP"
+  chmod 0600 "$ENV_BACKUP"
+
+  local tmp
+  tmp="$(mktemp)"
+  awk -F= '
+    $1 != "EVERCRAFT_EDGE_NODE_RECEIPT" &&
+    $1 != "EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE" { print }
+  ' "$FABRIC_ENV" > "$tmp"
+  printf 'EVERCRAFT_EDGE_NODE_RECEIPT=%s\n' "$NODE_RECEIPT" >> "$tmp"
+  printf 'EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=%s\n' "$ALLOCATOR_TOKEN_FILE" >> "$tmp"
+  install -o root -g root -m 0600 "$tmp" "$FABRIC_ENV"
+  rm -f "$tmp"
+}
+
+restore_edge_attestation_env() {
+  if [[ -n "$ENV_BACKUP" && -f "$ENV_BACKUP" ]]; then
+    install -o root -g root -m 0600 "$ENV_BACKUP" "$FABRIC_ENV"
+  fi
+}
+
+clear_env_backup() {
+  if [[ -n "$ENV_BACKUP" && -f "$ENV_BACKUP" ]]; then
+    rm -f "$ENV_BACKUP"
+  fi
+  ENV_BACKUP=""
+}
+
+ensure_network_observer() {
+  local force="${1:-false}"
+  if [[ "$force" != "true" ]] &&
+     systemctl is-active --quiet evercraft-network-observer.timer 2>/dev/null &&
+     test -s /var/lib/evercraft/network-observer/latest.json; then
+    return 0
+  fi
+  if [[ ! -f "$NETWORK_OBSERVER_INSTALLER" ]]; then
+    echo "ERROR: network observer installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+  bash "$NETWORK_OBSERVER_INSTALLER" \
+    --repo-root "$REPO_ROOT" \
+    --user "$RUN_USER" \
+    --cadence 2min >/dev/null
+  systemctl is-active --quiet evercraft-network-observer.timer
+  test -s /var/lib/evercraft/network-observer/latest.json
+}
+
+write_saban_capacity_receipt() {
+  local state="$1" reason="${2:-}"
+  local release_ref="" observed_at="" resident=false
+  release_ref="$(as_user git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
+  observed_at="$(date -u +%FT%TZ)"
+  [[ "$state" == "ready" ]] && resident=true
+
+  printf '{"schema":"evercraft.fabric-saban-capacity-reconcile.v1","state":"%s","release_ref":"%s","reason":"%s","owned_host":true,"zero_spend_only":true,"public_market_discovery":false,"observed_at":"%s"}\n' \
+    "$state" "$release_ref" "$reason" "$observed_at" \
+    > "$STATE_DIR/saban-capacity.json"
+  chmod 0640 "$STATE_DIR/saban-capacity.json"
+
+  install -d -o root -g "$RUN_USER" -m 0750 "$(dirname "$SABAN_CAPACITY_HEALTH_FILE")"
+  local health_tmp
+  health_tmp="$(mktemp "$STATE_DIR/saban-capacity-health.XXXXXX")"
+  printf '{"schema":"evercraft.fabric-saban-capacity-health.v1","resident":%s,"state":"%s","owned_host":true,"zero_spend_only":true,"public_market_discovery":false,"observed_at":"%s"}\n' \
+    "$resident" "$state" "$observed_at" > "$health_tmp"
+  install -o "$RUN_USER" -g "$RUN_USER" -m 0640 "$health_tmp" "$SABAN_CAPACITY_HEALTH_FILE"
+  rm -f "$health_tmp"
+}
+
+verify_saban_capacity_state() {
+  local capacity_file="$SABAN_CAPACITY_STATE_DIR/capacity-organism-state.json"
+  local expansion_file="$SABAN_CAPACITY_STATE_DIR/resource-field-expansion-state.json"
+
+  systemctl is-active --quiet evercraft-saban-capacity.timer || return 1
+  systemctl is-active --quiet evercraft-saban-resource-expansion.service || return 1
+  systemctl is-active --quiet evercraft-saban-watchdog.timer || return 1
+  [[ -s "$capacity_file" && -s "$expansion_file" ]] || return 1
+
+  as_user env \
+    CAPACITY_FILE="$capacity_file" \
+    EXPANSION_FILE="$expansion_file" \
+    node - <<'NODE'
+const fs=require('fs');
+const capacity=JSON.parse(fs.readFileSync(process.env.CAPACITY_FILE,'utf8'));
+const expansion=JSON.parse(fs.readFileSync(process.env.EXPANSION_FILE,'utf8'));
+
+if(capacity.schema!=='evercraft.saban.capacity-organism-state.v1') process.exit(2);
+if(capacity.commercial_capacity_authorized!==false) process.exit(3);
+if(capacity.observation_never_grants_authority!==true) process.exit(4);
+
+if(expansion.schema!=='evercraft.saban.resource-expansion-cycle.v1') process.exit(5);
+if(expansion.paid_execution_authorized!==false) process.exit(6);
+if(expansion.market_order_created!==false) process.exit(7);
+if(expansion.paid_lease_created!==false) process.exit(8);
+NODE
+}
+
+ensure_saban_capacity_resident() {
+  if verify_saban_capacity_state 2>/dev/null; then
+    write_saban_capacity_receipt "ready" "already_healthy"
+    echo "Evercraft update: Saban Resource Field resident=healthy"
+    return 0
+  fi
+
+  if [[ ! -f "$SABAN_CAPACITY_INSTALLER" ]]; then
+    write_saban_capacity_receipt "held" "installer_missing"
+    echo "ERROR: Saban capacity installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+
+  echo "Evercraft update: converging Saban Resource Field resident"
+  if ! bash "$SABAN_CAPACITY_INSTALLER" \
+      --repo-root "$REPO_ROOT" \
+      --user "$RUN_USER" \
+      --cadence 2min \
+      --state-dir "$SABAN_CAPACITY_STATE_DIR" \
+      --owned-host >/dev/null; then
+    write_saban_capacity_receipt "held" "installer_failed"
+    return 1
+  fi
+
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    if verify_saban_capacity_state 2>/dev/null; then
+      write_saban_capacity_receipt "ready" "installed_or_repaired"
+      echo "Evercraft update: Saban Resource Field resident=ready"
+      return 0
+    fi
+    sleep 1
+  done
+
+  write_saban_capacity_receipt "held" "resident_verification_failed"
+  return 1
+}
+
+ensure_home_edge_resident() {
+  if [[ ! -f "$HOME_EDGE_INSTALLER" ]]; then
+    echo "ERROR: Evercraft Home edge installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+
+  local expected_release current_release
+  expected_release="$(as_user git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
+  current_release=""
+
+  if systemctl is-active --quiet "$HOME_EDGE_SERVICE" 2>/dev/null &&
+     curl -fsS --max-time 5 "$HOME_LOCAL_HEALTH" >/tmp/evercraft-home-update-health.json 2>/dev/null &&
+     grep -Fq 'handle_path /home/*' /etc/evercraft/Caddyfile 2>/dev/null; then
+    current_release="$(as_user node -e "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/evercraft-home-update-health.json','utf8'));process.stdout.write(String(h.source_release_ref||''))" 2>/dev/null || true)"
+    if [[ -n "$expected_release" && "$current_release" == "$expected_release" ]]; then
+      echo "Evercraft update: Personal Home resident=healthy release=$current_release"
+      return 0
+    fi
+    echo "Evercraft update: Personal Home release drift current=${current_release:-unknown} expected=${expected_release:-unknown}"
+  fi
+
+  echo "Evercraft update: converging Personal Home on the owned HTTPS edge"
+  if ! bash "$HOME_EDGE_INSTALLER" --repo-root "$REPO_ROOT" --user "$RUN_USER"; then
+    echo "ERROR: Evercraft Home edge convergence failed" >&2
+    return 1
+  fi
+
+  systemctl is-active --quiet "$HOME_EDGE_SERVICE" &&
+    curl -fsS --max-time 5 "$HOME_LOCAL_HEALTH" >/tmp/evercraft-home-update-health.json
+}
+
+read_health() {
+  curl -fsS --max-time 5 "$HEALTH_URL" 2>/dev/null || true
+}
+
+health_supports_attestation() {
+  local health="$1"
+  runuser -u "$RUN_USER" -- env HEALTH_JSON="$health" node -e "
+    const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+    if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
+    if(h.edge_attestation_supported!==true) process.exit(3);
+    if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(4);
+  "
+}
+
+verify_edge_attestation_local() {
+  if [[ "$EDGE_ATTESTATION_EXPECTED" != "true" ]]; then
+    return 0
+  fi
+
+  local nonce body
+  nonce="edge_local_$(as_user node -e "process.stdout.write(require('crypto').randomBytes(18).toString('hex'))")"
+  body="$(curl -fsS --max-time 5     -H 'content-type: application/json'     --data "{\"nonce\":\"$nonce\"}"     "http://127.0.0.1:8787/.well-known/evercraft-edge-attestation")"
+
+  runuser -u "$RUN_USER" -- env     EDGE_ATTESTATION_JSON="$body"     EDGE_ATTESTATION_NONCE="$nonce"     REPO_ROOT="$REPO_ROOT"     node --input-type=module - <<'NODE'
+import { pathToFileURL } from 'node:url';
+const moduleUrl=pathToFileURL(
+  process.env.REPO_ROOT+'/systemia/compute/device-identity.mjs'
+).href;
+const { verifyNodeAttestation }=await import(moduleUrl);
+const payload=JSON.parse(process.env.EDGE_ATTESTATION_JSON||'{}');
+if(payload.ok!==true || payload.schema!=='evercraft.operator-public-edge.attestation.v1') process.exit(2);
+if(payload.allocator_authority_exposed!==false || payload.allocator_authority_persisted!==false) process.exit(3);
+if(payload.physical_field_claim!==false) process.exit(4);
+const verified=verifyNodeAttestation({
+  attestation:payload.attestation,
+  expectedNonce:process.env.EDGE_ATTESTATION_NONCE,
+  maxAgeMs:60000,
+  now:new Date(),
+});
+if(verified.ok!==true || verified.field_claim!==false) process.exit(5);
+NODE
+}
+
+verify_current_runtime() {
+  local expected_count="$1"
+  local expected_release="$2"
+  local health=""
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    health="$(read_health)"
+    [[ -n "$health" ]] && break
+    sleep 1
+  done
+  [[ -n "$health" ]] || return 8
+
+  runuser -u "$RUN_USER" -- env     HEALTH_JSON="$health"     EXPECTED_COUNT="$expected_count"     EXPECTED_RELEASE="$expected_release"     EDGE_ATTESTATION_EXPECTED="$EDGE_ATTESTATION_EXPECTED"     node -e "
+      const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+      const expected=Number(process.env.EXPECTED_COUNT||0);
+      const expectedRelease=String(process.env.EXPECTED_RELEASE||'').toLowerCase();
+      // Emit only names of failed checks and safe catalog counts, not health
+      // JSON, API keys, customer details, or resident environment values.
+      const reject=(label,code)=>{
+        console.error('ERROR: Fabric health invariant '+label);
+        process.exit(code);
+      };
+      if(h.ok!==true || h.service!=='evercraft-fabric-local') reject('service_identity',2);
+      if(Number(h.capability_count)!==expected)
+        reject('capability_count_expected_'+expected+'_actual_'+Number(h.capability_count),3);
+      if(String(h.source_release_ref||'').toLowerCase()!==expectedRelease)
+        reject('source_release_ref',10);
+      if(process.env.EDGE_ATTESTATION_EXPECTED==='true') {
+        if(h.edge_attestation_supported!==true) reject('edge_attestation_supported',4);
+        if(h.edge_attestation_allocator_authority_exposed!==false)
+          reject('edge_attestation_allocator_authority_exposed',5);
+      }
+      if(h.visual_desk_ingest_ready!==true) reject('visual_desk_ingest_ready',6);
+      if(h.visual_desk_ingest_publication_authority!==false)
+        reject('visual_desk_ingest_publication_authority',7);
+      if(h.earthworks_simulator_path!=='/earthworks') reject('earthworks_simulator_path',8);
+      if(h.earthworks_simulator_authority!=='interactive_software_simulation_only')
+        reject('earthworks_simulator_authority',9);
+    " || return 9
+
+  local earthworks_page=""
+  earthworks_page="$(curl -fsS --max-time 5 "http://127.0.0.1:8787/earthworks" 2>/dev/null || true)"
+  [[ -n "$earthworks_page" ]] || return 14
+  grep -F 'Live Yard 001' <<< "$earthworks_page" >/dev/null || return 14
+  grep -F 'Shadow' <<< "$earthworks_page" >/dev/null || return 14
+  grep -F 'Autonomy' <<< "$earthworks_page" >/dev/null || return 14
+  grep -F 'STOP ALL' <<< "$earthworks_page" >/dev/null || return 14
+
+  # A Fabric health response and matching release ref are not enough when
+  # the actual buyer door silently serves the old JSON 404 route.
+  # Verify only GET surfaces on resident loopback, never submit buyer data.
+  local findmypart_html="" findmypart_app="" findmypart_readiness=""
+  findmypart_html="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/' 2>/dev/null || true)"
+  if [[ -z "$findmypart_html" ]] ||
+     ! grep -Fq 'id="part-request-form"' <<< "$findmypart_html" ||
+     ! grep -Fq 'Missing part.' <<< "$findmypart_html"; then
+    echo "ERROR: FindMyPart resident buyer page not serving approved route" >&2
+    return 15
+  fi
+  findmypart_app="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/app.mjs' 2>/dev/null || true)"
+  if [[ -z "$findmypart_app" ]] ||
+     ! grep -Fq '/api/findmypart/inquiry' <<< "$findmypart_app" ||
+     ! grep -Fq '/api/findmypart/readiness' <<< "$findmypart_app"; then
+    echo "ERROR: FindMyPart resident customer form script not served" >&2
+    return 16
+  fi
+  findmypart_readiness="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/api/findmypart/readiness' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env FINDMYPART_READINESS_JSON="$findmypart_readiness" node -e "
+    try {
+      const r=JSON.parse(process.env.FINDMYPART_READINESS_JSON||'null');
+      if(r?.schema!=='evercraft.findmypart.intake-readiness.v1') process.exit(2);
+      if(typeof r.intake_available!=='boolean') process.exit(3);
+      if(r.payment_ready!==false || r.payment_verified!==false) process.exit(4);
+    } catch { process.exit(5) }
+  "; then
+    echo "ERROR: FindMyPart resident intake-readiness contract missing or unsafe" >&2
+    return 17
+  fi
+
+  local attestation_code=10
+  for attempt in 1 2 3 4 5 6; do
+    set +e
+    verify_edge_attestation_local
+    attestation_code=$?
+    set -e
+    if [[ "$attestation_code" -eq 0 ]]; then
+      return 0
+    fi
+    echo "Evercraft update: edge attestation not ready yet (attempt $attempt/6, code $attestation_code)"
+    sleep 2
+  done
+  return 10
+}
+
+remote_url="$(as_user git -C "$REPO_ROOT" remote get-url "$REMOTE")"
+if [[ ! "$remote_url" =~ ^(https://github\.com/|git@github\.com:)jgaethle10/forge-operator(\.git)?$ ]]; then
+  echo "ERROR: update remote is not the authorized Forge Operator repository" >&2
+  exit 3
+fi
+
+# public/journal is a generated publication mirror. Older checkouts may contain
+# ignored/untracked Journal files from before the mirror became tracked. Those
+# files are intentionally normalized before every verified update so they can
+# never block a fast-forward or resurrect stale canonical metadata.
+if [[ -e "$REPO_ROOT/public/journal" ]]; then
+  echo "Evercraft update: normalizing generated public/journal surface before checkout preflight"
+  as_user git -C "$REPO_ROOT" restore --staged --worktree -- public/journal 2>/dev/null || true
+  as_user git -C "$REPO_ROOT" clean -fdx -- public/journal >/dev/null 2>&1 || true
+fi
+
+dirty_status="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
+DIRT_CLASSIFIER="$REPO_ROOT/scripts/classify-fabric-checkout-dirt.mjs"
+if [[ ! -f "$DIRT_CLASSIFIER" ]]; then
+  echo "HOLD: checkout-drift classifier missing; refusing unattended update" >&2
+  exit 4
+fi
+
+blocking_dirty="$(printf '%s\n' "$dirty_status" | as_user node "$DIRT_CLASSIFIER" --blocking-lines)"
+journal_dirty="$(printf '%s\n' "$dirty_status" | as_user node "$DIRT_CLASSIFIER" --journal-dirty)"
+
+if [[ -n "$blocking_dirty" ]]; then
+  echo "HOLD: Forge checkout has source changes; refusing unattended update" >&2
+  printf '%s\n' "$blocking_dirty" >&2
+  exit 4
+fi
+
+if [[ "$journal_dirty" == "true" ]]; then
+  echo "Evercraft update: reconciling generated public/journal drift to the tracked publication receipt"
+  as_user git -C "$REPO_ROOT" restore --staged --worktree -- public/journal 2>/dev/null || true
+  as_user git -C "$REPO_ROOT" clean -fdx -- public/journal >/dev/null 2>&1 || true
+
+  dirty_status="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
+  blocking_dirty="$(printf '%s\n' "$dirty_status" | as_user node "$DIRT_CLASSIFIER" --blocking-lines)"
+  journal_dirty="$(printf '%s\n' "$dirty_status" | as_user node "$DIRT_CLASSIFIER" --journal-dirty)"
+  if [[ -n "$blocking_dirty" || "$journal_dirty" == "true" ]]; then
+    echo "HOLD: generated Journal reconciliation did not produce a safe checkout" >&2
+    [[ -n "$blocking_dirty" ]] && printf '%s\n' "$blocking_dirty" >&2
+    exit 4
+  fi
+fi
+
+if [[ -n "$dirty_status" ]]; then
+  echo "Evercraft update: ignoring generated artifacts/ entries in checkout preflight"
+fi
+
+before="$(as_user git -C "$REPO_ROOT" rev-parse HEAD)"
+as_user git -C "$REPO_ROOT" fetch --prune "$REMOTE" "$BRANCH"
+target="$(as_user git -C "$REPO_ROOT" rev-parse "$REMOTE/$BRANCH")"
+
+expected_count_for_current() {
+  # The runtime does NOT publish only the raw CHUM manifest. It adds explicit
+  # discovery-only supplemental doors (and can enrich source product metadata).
+  # Compare against the same normalized native-only catalog used by /health.
+  # A mismatch still fails closed; never substitute or guess a count.
+  as_user env REPO_ROOT="$REPO_ROOT" node --input-type=module -e '
+    import {pathToFileURL} from "node:url";
+    const root=process.env.REPO_ROOT;
+    const directory=await import(pathToFileURL(root+"/systemia/mcp/fabric-directory.mjs").href);
+    const runtime=await import(pathToFileURL(root+"/systemia/mcp/fabric-local-runtime.mjs").href);
+    const count=runtime.nativeOnlyCatalog(directory.loadFabricCatalogFromRepository()).capabilities.length;
+    if(!Number.isSafeInteger(count)||count<1)process.exit(2);
+    process.stdout.write(String(count));
+  '
+}
+
+if [[ "$before" == "$target" ]]; then
+  write_runtime_release_ref "$before"
+  ensure_visual_ingest_token
+  reconcile_edge_attestation_env
+  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" ]]; then
+    if ! systemctl restart "$SERVICE"; then
+      restore_edge_attestation_env
+      systemctl restart "$SERVICE" || true
+      echo "ERROR: Fabric restart failed during edge-attestation env reconciliation" >&2
+      exit 7
+    fi
+  fi
+
+  expected_count="$(expected_count_for_current)"
+  set +e
+  verify_current_runtime "$expected_count" "$before"
+  code=$?
+  set -e
+  if [[ "$code" -ne 0 ]]; then
+    echo "Evercraft update: current checkout is aligned but resident Fabric runtime drifted (verification code $code); restarting once"
+    if ! systemctl restart "$SERVICE"; then
+      restore_edge_attestation_env
+      [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
+      echo "ERROR: Fabric restart failed while repairing resident runtime drift" >&2
+      exit 7
+    fi
+    set +e
+    verify_current_runtime "$expected_count" "$before"
+    code=$?
+    set -e
+  fi
+  if [[ "$code" -ne 0 ]]; then
+    restore_edge_attestation_env
+    [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
+    echo "ERROR: current Fabric verification failed after one bounded restart ($code)" >&2
+    exit "$code"
+  fi
+
+  if ! ensure_network_observer false; then
+    echo "ERROR: Fabric is healthy but resident network observer installation failed" >&2
+    exit 11
+  fi
+
+  if ! ensure_home_edge_resident; then
+    echo "ERROR: Fabric is healthy but Personal Home convergence failed; next update cycle will retry" >&2
+    exit 13
+  fi
+
+  # Reassert every owned ingress layer we can control from Crostini.
+  # ChromeOS host port-forward toggles remain outside the guest boundary.
+  reassert_owned_public_ingress
+
+  if ! ensure_saban_capacity_resident; then
+    echo "ERROR: Fabric is healthy but Saban Resource Field resident convergence failed; next update cycle will retry" >&2
+    exit 12
+  fi
+
+  clear_env_backup
+  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
+  chmod 0640 "$STATE_DIR/last-update.json"
+  exit 0
+fi
+
+if ! as_user git -C "$REPO_ROOT" merge-base --is-ancestor "$before" "$target"; then
+  echo "HOLD: remote branch is not a fast-forward from the deployed revision" >&2
+  exit 5
+fi
+
+rollback() {
+  local reason="${1:-update_failed}"
+  as_user git -C "$REPO_ROOT" reset --hard "$before" >/dev/null
+  write_runtime_release_ref "$before" || true
+  restore_edge_attestation_env
+  systemctl restart "$SERVICE" || true
+  printf '{"schema":"evercraft.fabric-update.v1","state":"rolled_back","from_ref":"%s","attempted_ref":"%s","reason":"%s","observed_at":"%s"}\n'     "$before" "$target" "$reason" "$(date -u +%FT%TZ)" > "$STATE_DIR/last-update.json"
+  chmod 0640 "$STATE_DIR/last-update.json"
+}
+
+as_user git -C "$REPO_ROOT" merge --ff-only "$REMOTE/$BRANCH"
+
+if ! (
+  cd "$REPO_ROOT"
+  as_user npm run test:fabric-directory &&
+  as_user npm run test:fabric-local &&
+  as_user npm run test:remote-operator &&
+  as_user node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs &&
+  as_user npm run proof:specialist-handoff-yard
+); then
+  rollback "proof_failed"
+  exit 6
+fi
+
+ensure_visual_ingest_token
+reconcile_edge_attestation_env
+write_runtime_release_ref "$target"
+
+if ! systemctl restart "$SERVICE"; then
+  rollback "service_restart_failed"
+  exit 7
+fi
+
+expected_count="$(expected_count_for_current)"
+set +e
+verify_current_runtime "$expected_count" "$target"
+code=$?
+set -e
+if [[ "$code" -ne 0 ]]; then
+  rollback "runtime_verification_failed_$code"
+  exit "$code"
+fi
+
+if ! ensure_network_observer true; then
+  echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
+  exit 11
+fi
+
+if ! ensure_home_edge_resident; then
+  echo "ERROR: Fabric update accepted but Personal Home convergence failed; next update cycle will retry" >&2
+  exit 13
+fi
+
+# A source update is also an ingress recovery opportunity.
+reassert_owned_public_ingress
+
+# Source and Fabric runtime are already verified at this point. Capacity
+# convergence is retried by the resident update timer rather than rolling back
+# a healthy Fabric revision and leaving newly written systemd units orphaned.
+if ! ensure_saban_capacity_resident; then
+  echo "ERROR: Fabric update accepted but Saban Resource Field resident convergence failed; next update cycle will retry" >&2
+  exit 12
+fi
+
+clear_env_backup
+printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
+chmod 0640 "$STATE_DIR/last-update.json"
+echo "Evercraft Fabric updated to $target with $expected_count capabilities."
+ "$FABRIC_ENV"; then
+    output="$(node "$provision_script" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")" --external-key)" || return 1
+  else
+    output="$(node "$provision_script" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")")" || return 1
+  fi
+  if [[ "$output" == *'"key_state":"created_once"'* ]]; then
+    SIGNAL_INTAKE_KEY_CREATED=true
+    echo "Evercraft update: Signal buyer intake key initialized privately"
+  else
+    SIGNAL_INTAKE_KEY_CREATED=false
+    echo "Evercraft update: Signal buyer intake key preserved"
+  fi
 }
 
 ensure_visual_ingest_token() {
