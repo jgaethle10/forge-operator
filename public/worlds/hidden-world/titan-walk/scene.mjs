@@ -13,7 +13,7 @@ export const TITAN_SCENE=Object.freeze({
   'https://www.losangeles.spaceforce.mil/Portals/16/documents/AFD-060912-023.pdf'
  ],
  markers:[
-  {id:'orientation',x:0,z:13,title:'History, not a site map',source:0,body:'Welcome to an invented educational museum inspired by the Washington Titan I program. This walkable geometry does not correspond to Odessa, Warden, Quincy/Royal City, or any other real installation.'},
+  {id:'orientation',x:-5,z:13,title:'History, not a site map',source:0,body:'Welcome to an invented educational museum inspired by the Washington Titan I program. This walkable geometry does not correspond to Odessa, Warden, Quincy/Royal City, or any other real installation.'},
   {id:'silo-idea',x:-10,z:4,title:'A hardened silo concept',source:0,body:'Washington hosted three Titan I complexes, each with three missiles. HistoryLink describes roughly 160-foot-deep silos. These sculptural chamber walls are not the correct scale or physical design of a historic silo.'},
   {id:'lift-idea',x:10,z:0,title:'Why Titan I had to rise',source:2,body:'Titan I historically used an elevator-style silo-to-surface launch concept. This exhibit illustrates the historical distinction at a high level, without reconstructing mechanics or operation.'},
   {id:'crew',x:6,z:-16,title:'The people underground',source:0,body:'A hardened underground launch-control room housed people conducting Cold War duties. This imagined gallery alcove is not an accurate control room or equipment configuration.'},
