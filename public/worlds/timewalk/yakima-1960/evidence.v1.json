@@ -348,6 +348,25 @@
         "reuse": "Drawing entries and shelf locations can be cited; original construction drawings/tracings and reproduced images require item-level copyright/permissions review. No original drawing viewed."
       },
       "notes": "Catalog lists July 15 1930 A.E. Larson Building office-building drawings 1–33, E1–E10, S1–S8 (Drawer 7 bottom left), separate linen tracings (5-2 rolled), dated June 27 1930 Fox Capitol Theatre alterations drawings 1–4 (5-1 tube Y-11), and Larson floor plans from 1962–79 (4-1). Catalog does NOT prove as-built 1931 facade, 1960 exterior details or present physical access."
+    },
+    {
+      "id": "loc-yakima-1952-sheets-six-fifteen",
+      "name": "Library of Congress Yakima Sanborn digital volume, 1952, sheets 6 and 15",
+      "url": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=11",
+      "holder": "Library of Congress Geography and Map Division, Sanborn Maps Collection",
+      "evidencePeriod": [
+        "1952"
+      ],
+      "targetJurisdiction": {
+        "city": "Yakima",
+        "region": "WA",
+        "country": "US"
+      },
+      "rights": {
+        "status": "public_domain_per_holding_institution",
+        "reuse": "LOC states its online Sanborn Maps Collection is public domain and free to reuse. This classification applies to digital LOC-hosted online images only, not to CSUN's separate physical 1960-corrected volume."
+      },
+      "notes": "CSUN staff pointed to LOC 1952 page 11 for map sheet 6 (Larson) and page 20 for sheet 15 (Capitol). LOC resource URLs are staff-supplied; original digital plates have not yet been pixel-inspected or georeferenced in Evercraft's own processing. Do not call these direct 1960 maps."
     }
   ],
   "places": [
@@ -804,6 +823,22 @@
       "acquisition": "Catalog entry only, Cowan & Paddock, storage 4-1; specific plans not accessed.",
       "rights": "Originals and publication/derivative permissions unverified.",
       "useFor1960": "Post-target changes reference only. Must not back-project post-1963 bank storefronts into 1960."
+    },
+    {
+      "id": "loc-yakima-1952-identified-downtown-sheets",
+      "name": "LOC 1952 digitally available Yakima sheet 6 and sheet 15, identified by CSUN staff",
+      "sourceId": "loc-yakima-1952-sheets-six-fifteen",
+      "period": {
+        "display": "1952",
+        "earliest": 1952,
+        "latest": 1952,
+        "approximate": false
+      },
+      "spatialMatch": "Sheet 6 = A.E. Larson, sheet 15 = Capitol Theatre; map page 11/page 20 in digital viewer",
+      "itemType": "digitized-1952-sanborn-baseline-with-curator-crosswalk",
+      "acquisition": "Direct LOC viewer references received from CSUN archivist Nov 10, 2026; high-resolution originals have not been extracted or reviewed within Evercraft.",
+      "rights": "LOC online Sanborn collection public-domain reuse; verify each desired image is actually LOC-hosted before embedding; CSUN 1960 map rights remain separate.",
+      "useFor1960": "Archival staff reports footprints on 1952 sheets appear identical to a volume corrected through 1960; not independently inspected, georegistered or certified for exact 1960 buildings, shopfronts or streets."
     }
   ],
   "researchGoals": {
@@ -889,6 +924,20 @@
         ],
         "deliverable": "Check 1930 elevations and floor plans vs 1963 remodel against dated photos/NRHP; original/planned/as-built labels distinct; no direct 1960 certainty without a source.",
         "status": "blocked-on-original-drawings-and-1960-photos"
+      },
+      {
+        "id": "inspect-loc-sheets-6-15",
+        "dependsOn": [],
+        "deliverable": "Visually inspect LOC 1952 digital viewer page 11 / sheet 6 and page 20 / sheet 15, review image-specific metadata and note labeled 1952 locations/building outlines. No coordinates or footprints until verified source pixels and independently sourced control points.",
+        "status": "sheet numbers identified by CSUN Nov 10; viewer links obtained; scans not yet reviewed"
+      },
+      {
+        "id": "compare-csun-1960-footprints",
+        "dependsOn": [
+          "inspect-loc-sheets-6-15"
+        ],
+        "deliverable": "Obtain item-specific correction dates or inspected 1960 original for sheets 6/15, compare polygon outlines and document which footprints unchanged, shifted or corrected; do not interpret tenants or facade shapes from footprint equivalence.",
+        "status": "archivist-reported apparently identical footprints; independent 1960 comparison pending"
       }
     ]
   },
