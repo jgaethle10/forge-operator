@@ -25,7 +25,7 @@ export function planSabanRecovery(audit, { maxJobs = 10 } = {}) {
       agent_id: 'continuity-private-evidence-review', role: 'read_only_recovery',
       idempotency_key: `continuity:${id}`,
       work: { kind: 'continuity_evidence_probe', key: id, read_only: true },
-      item: { project_id: action.project_id, reason_code: action.reason, probe_kind: action.kind },
+      item: { project_id: action.project_id, reason_code: 'continuity_attention', probe_kind: action.kind },
     });
     if (assignments.length >= maxJobs) break;
   }
@@ -66,7 +66,8 @@ export function reconcileSabanArtifacts(ledger, saban, { artifactRoot, now = Dat
   const jobs = Object.values(saban.jobs).sort((a, b) => String(a?.updated_at || '').localeCompare(String(b?.updated_at || '')));
   for (const job of jobs) {
     if (job?.state !== 'completed') continue;
-    const id = job?.result?.project_id;
+    const suppliedId = job?.result?.project_id;
+    const id = typeof suppliedId === 'string' && /^[a-z0-9][a-z0-9._-]{2,79}$/.test(suppliedId) ? suppliedId : null;
     const p = projects.get(id);
     const result = job?.result;
     const jobAt = Date.parse(job?.updated_at || '');
