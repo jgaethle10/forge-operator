@@ -1,0 +1,75 @@
+name: Evercraft Watershed mobile evidence QA
+on:
+  pull_request:
+    paths:
+      - 'public/watershed/**'
+      - 'tests/evercraft-watershed-dashboard.test.mjs'
+      - 'tests/evercraft-watershed-history.test.mjs'
+      - 'systemia/research-service/watershed-history*.mjs'
+      - '.github/workflows/watershed-ledger-persist.yml'
+      - 'systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs'
+      - '.github/workflows/watershed-mobile-evidence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/watershed/**'
+      - 'tests/evercraft-watershed-dashboard.test.mjs'
+      - 'tests/evercraft-watershed-history.test.mjs'
+      - 'systemia/research-service/watershed-history*.mjs'
+      - '.github/workflows/watershed-ledger-persist.yml'
+      - 'systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs'
+      - '.github/workflows/watershed-mobile-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source and release-authority boundaries
+        run: |
+          node --check public/watershed/model.mjs
+          node --check public/watershed/app.mjs
+          node --check systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs
+          node --check systemia/research-service/watershed-history.mjs
+          node --check systemia/research-service/watershed-history-archive.mjs
+          node --test tests/evercraft-watershed-dashboard.test.mjs tests/evercraft-watershed-history.test.mjs
+
+  phone-and-desktop:
+    needs: evidence-truth
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Evercraft browser worker and Chromium
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Verify 7 responsive viewports, provenance, and tamper holds
+        env:
+          EVERCRAFT_WATERSHED_SCREENSHOTS: /tmp/evercraft-watershed-mobile-qa
+        shell: bash
+        run: |
+          python3 -m http.server 8765 --directory public --bind 127.0.0.1 >/tmp/evercraft-watershed-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node systemia/evercraft-web/browser-worker/verify-watershed-mobile.mjs
+      - name: Preserve screenshots and independent QA receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: watershed-mobile-qa
+          path: /tmp/evercraft-watershed-mobile-qa
+          if-no-files-found: warn
+          retention-days: 14
