@@ -16,7 +16,11 @@ if(!privateConfig)throw Error('private_bank_credit_config_path_required');
 const file=path.resolve(privateConfig);
 const stat=fs.lstatSync(file);
 if(!stat.isFile()||(stat.mode&0o077)!==0)throw Error('private_bank_credit_config_permissions_invalid');
+if(fs.realpathSync(file)!==file)throw Error('private_bank_credit_config_symlink_forbidden');
 const cfg=JSON.parse(fs.readFileSync(file,'utf8'));
+if(cfg.schema!=='evercraft.payments.bank-credit-private-config.v1'||
+  cfg.current_state!=='BANK_ACCOUNT_AND_TERMS_APPROVED')
+ throw Error('private_bank_credit_config_not_approved');
 const instance=await startBankCreditRequestRuntime({
  host:'127.0.0.1',
  port:Number(process.env.EVERCRAFT_BANK_CREDIT_LOOPBACK_PORT||8795),
