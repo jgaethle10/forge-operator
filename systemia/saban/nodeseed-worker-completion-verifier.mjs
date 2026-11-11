@@ -77,9 +77,23 @@ export function verifyNodeSeedWorkerCompletion({
     digest(worker.result ?? null) === digest(response?.result ?? null),
     'worker_result_mismatch',
   );
+  // Compute's event-chain hash uses the insertion-ordered JSON receipt
+  // body and a bare hex digest, unlike the worker's canonical "sha256:" hash.
+  const computeReceipt = response?.receipt;
+  const { receipt_hash: computeHash, ...computeBody } = computeReceipt || {};
+  requireReceipt(computeReceipt?.schema === 'evercraft.compute.receipt.v1', 'compute_receipt_missing');
+  requireReceipt(computeReceipt?.node_id === node, 'compute_receipt_node_mismatch');
+  requireReceipt(computeReceipt?.workload_class === workload, 'compute_receipt_workload_mismatch');
+  requireReceipt(computeReceipt?.idempotency_key === idempotency, 'compute_receipt_idempotency_mismatch');
+  requireReceipt(computeReceipt?.worker_receipt_hash === receiptHash, 'compute_receipt_worker_mismatch');
   requireReceipt(
-    /^sha256:[a-f0-9]{64}$/.test(String(response?.receipt?.receipt_hash || '')),
-    'compute_receipt_missing',
+    computeReceipt?.type === (reused ? 'registered-workload.reused' : 'registered-workload.executed'),
+    'compute_receipt_replay_state_mismatch',
+  );
+  requireReceipt(
+    /^[a-f0-9]{64}$/.test(String(computeHash || '')) &&
+      computeHash === createHash('sha256').update(JSON.stringify(computeBody)).digest('hex'),
+    'compute_receipt_integrity_mismatch',
   );
 
   // Independently recompute the deterministic SHA-256 workload result.
