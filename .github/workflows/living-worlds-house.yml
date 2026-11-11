@@ -1,0 +1,114 @@
+name: Living Worlds House 001
+
+on:
+  push:
+    paths:
+      - 'public/living-worlds/**'
+      - 'public/worlds/house-visual.mjs'
+      - 'public/worlds/house-mode.mjs'
+      - 'public/worlds/house-mode.bundle.mjs'
+      - 'scripts/build-house-worlds-bundle.mjs'
+      - 'scripts/probe-living-worlds-house-3d.mjs'
+      - 'public/worlds/app.mjs'
+      - 'tests/living-worlds-house.test.mjs'
+      - 'tests/living-worlds-model-gate.test.mjs'
+      - 'tests/living-worlds-engine-bridge.test.mjs'
+      - 'tests/living-worlds-engine-runtime.test.mjs'
+      - 'tests/living-worlds-3d-view.test.mjs'
+      - 'tests/living-worlds-resident-clock.test.mjs'
+      - 'systemia/worlds/worlds-vault-runtime.mjs'
+      - 'systemia/living-worlds/**'
+      - 'systemia/world-engine/**'
+      - '.github/workflows/living-worlds-house.yml'
+  pull_request:
+    paths:
+      - 'public/living-worlds/**'
+      - 'public/worlds/house-visual.mjs'
+      - 'public/worlds/house-mode.mjs'
+      - 'public/worlds/house-mode.bundle.mjs'
+      - 'scripts/build-house-worlds-bundle.mjs'
+      - 'scripts/probe-living-worlds-house-3d.mjs'
+      - 'public/worlds/app.mjs'
+      - 'tests/living-worlds-house.test.mjs'
+      - '.github/workflows/living-worlds-house.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  house-contract:
+    name: Local house simulation contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax
+        run: |
+          node --check public/living-worlds/house-core.mjs
+          node --check public/living-worlds/app.mjs
+          node --check public/living-worlds/agent-proposals.mjs
+          node --check public/living-worlds/house-world-bridge.mjs
+          node --check public/living-worlds/house-engine-inputs.mjs
+          node --check public/worlds/house-visual.mjs
+          node --check public/worlds/house-mode.mjs
+          node --check public/worlds/app.mjs
+          node --check public/worlds/house-mode.bundle.mjs
+          node --check scripts/build-house-worlds-bundle.mjs
+          node --check scripts/probe-living-worlds-house-3d.mjs
+          node --check systemia/living-worlds/local-llm-preview.mjs
+          node --check tests/living-worlds-house.test.mjs
+          node --check tests/living-worlds-model-gate.test.mjs
+          node --check tests/living-worlds-engine-bridge.test.mjs
+          node --check tests/living-worlds-engine-runtime.test.mjs
+          node --check tests/living-worlds-3d-view.test.mjs
+          node --check tests/living-worlds-resident-clock.test.mjs
+          node --check systemia/living-worlds/house-resident-clock.mjs
+          node --check systemia/worlds/worlds-vault-runtime.mjs
+      - name: Confirm Worlds viewer bundle is reproducible
+        run: node scripts/build-house-worlds-bundle.mjs --check
+      - name: Deterministic simulation tests
+        run: node --test tests/living-worlds-house.test.mjs tests/living-worlds-model-gate.test.mjs tests/living-worlds-engine-bridge.test.mjs tests/living-worlds-3d-view.test.mjs tests/living-worlds-resident-clock.test.mjs
+
+  canonical-engine:
+    name: Canonical World Engine execution and replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned engine test toolchain
+        run: npm install --no-audit --no-fund
+      - name: Execute canonical engine proof
+        run: node --import tsx --test tests/living-worlds-engine-runtime.test.mjs
+
+  browser-house:
+    name: Owned Worlds 3D house browser QA
+    needs: [house-contract, canonical-engine]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test tooling
+        run: npm install --no-save --no-audit --no-fund playwright@1.55.1
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Exercise WebGL2 house viewer on desktop and phone emulation
+        run: node scripts/probe-living-worlds-house-3d.mjs
+      - name: Preserve QA receipts and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: living-worlds-house-3d-browser-qa
+          path: |
+            artifacts/living-worlds-house-3d/*.png
+            artifacts/living-worlds-house-3d/receipt.json
+          if-no-files-found: ignore
