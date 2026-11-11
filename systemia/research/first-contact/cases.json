@@ -1,0 +1,80 @@
+{
+  "project": "FIRST-CONTACT-001",
+  "review_date": "2026-11-02",
+  "verified_extraterrestrial_technology": false,
+  "records": [
+    {
+      "id": "UAP-001",
+      "title": "Go Fast",
+      "type": "sensor_video",
+      "observation_date": "2015-01",
+      "assessment_date": "2025-02-06",
+      "status": "agency_assessment",
+      "agency_conclusion": "No anomalous performance; identity not definitively established",
+      "reported_altitude_ft": 13000,
+      "agency_wind_adjusted_speed_mph_range": [
+        5,
+        92
+      ],
+      "sources": [
+        "https://www.aaro.mil/Portals/136/PDFs/case_resolution_reports/AARO_GoFast_Case_Resolution_Card_Methodology_Final.pdf"
+      ],
+      "missing_data": [
+        "Raw full sensor video and calibrated metadata for independent reproduction",
+        "Exact observing aircraft state/heading and measurement uncertainties",
+        "AARO report has inconsistent 6297m (Table I and equation) / 6279m (prose) second-frame range; project follows 6297m",
+        "Calibration and per-frame measurements for non-rounded source analysis"
+      ],
+      "project_action": "Independent methods audit; not alien propulsion inference",
+      "reproduction_status": "Published AARO Appendix A two-frame arithmetic independently recomputed to ~263m in 13s from published rounded inputs; original sensor data unavailable. This is not a new observed event reconstruction.",
+      "audit_file": "source-audit-2026-11-02.md"
+    },
+    {
+      "id": "MAT-001",
+      "title": "Alleged anomalous Mg/Bi/Pb metallic specimen",
+      "type": "material_claim",
+      "status": "agency_assessment",
+      "agency_conclusion": "ORNL and AARO assess terrestrial origin and incompatibility with claimed THz waveguide structure",
+      "sources": [
+        "https://www.aaro.mil/Portals/136/PDFs/Information%20Papers/AAROs_Supplement_to_ORNLs_Analysis_of_a_Metallic_Specimen.pdf"
+      ],
+      "missing_data": [
+        "Independently verified chain of custody before testing",
+        "Raw lab measurement files for independent reanalysis"
+      ],
+      "project_action": "Requirements comparison for real THz waveguides",
+      "audit_file": "source-audit-2026-11-02.md"
+    },
+    {
+      "id": "UAP-002",
+      "title": "PR-011, Europe 2021",
+      "type": "sensor_video",
+      "status": "undergoing_analysis",
+      "agency_conclusion": "IR contrast observed; analysis of physical attributes and performance ongoing according to official listing",
+      "sources": [
+        "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/"
+      ],
+      "missing_data": [
+        "Verified native sensor file and telemetry",
+        "Independent range and track solution"
+      ],
+      "project_action": "Watch source updates; no premature capabilities inference"
+    },
+    {
+      "id": "ENG-001",
+      "title": "Ion-wind solid-state propulsion",
+      "type": "known_physics_engineering",
+      "status": "peer_reviewed_demonstration",
+      "terrestrial": true,
+      "agency_conclusion": "Demonstrated electrically propelled heavier-than-air fixed-wing flight; not a UAP identification",
+      "sources": [
+        "https://www.nature.com/articles/s41586-018-0707-9"
+      ],
+      "missing_data": [
+        "Evercraft lab safety approval",
+        "Feasibility requirements for an original application"
+      ],
+      "project_action": "Paper feasibility and power-to-thrust tradeoff only; no high-voltage build"
+    }
+  ]
+}

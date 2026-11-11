@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.first-contact.two-view-input.v1",
+  "caseId": "SYNTHETIC-CALIBRATION-001",
+  "synthetic": true,
+  "disclaimer": "Invented stationary target and surveyed sensor positions. No real camera or UAP footage.",
+  "first": {
+    "sensorId": "simulated-camera-A",
+    "captureEpochMilliseconds": 1760000000000,
+    "observerMeters": {
+      "x": 0,
+      "y": 0,
+      "z": 5
+    },
+    "azimuthDegrees": 9.462322208025626,
+    "elevationDegrees": 3.76233031232997
+  },
+  "second": {
+    "sensorId": "simulated-camera-B",
+    "captureEpochMilliseconds": 1760000000000,
+    "observerMeters": {
+      "x": 100,
+      "y": 0,
+      "z": 20
+    },
+    "azimuthDegrees": 350.5376777919744,
+    "elevationDegrees": 0.9418519674681363
+  },
+  "evidence": {
+    "calibratedPointing": true,
+    "surveyedObserverPositions": true,
+    "synchronizedClocks": true,
+    "independentSensorIdentities": true,
+    "samePhysicalTarget": true
+  },
+  "quality": {
+    "maxRayMissMeters": 0.005,
+    "minParallaxDegrees": 1
+  }
+}

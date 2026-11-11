@@ -1,0 +1,97 @@
+{
+  "schema": "evercraft.first-contact.rectified-pixel-two-view.v1",
+  "caseId": "SYNTHETIC-RECTIFIED-PIXEL-UNSYNC",
+  "synthetic": true,
+  "disclaimer": "Invented camera calibration, rectification, target and timestamps, NOT physical camera data.",
+  "first": {
+    "camera": {
+      "sensorId": "camera-A",
+      "observerMeters": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "imageWidthPixels": 1280,
+      "imageHeightPixels": 720,
+      "fxPixels": 800,
+      "fyPixels": 800,
+      "cxPixels": 640,
+      "cyPixels": 360,
+      "skewPixels": 0,
+      "rectifiedImage": true,
+      "rotationCameraToEnu": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          -1,
+          0
+        ]
+      ]
+    },
+    "detection": {
+      "uPixels": 640,
+      "vPixels": 280,
+      "captureEpochMilliseconds": 1760000000000
+    }
+  },
+  "second": {
+    "camera": {
+      "sensorId": "camera-B",
+      "observerMeters": {
+        "x": 3,
+        "y": 0,
+        "z": 0
+      },
+      "imageWidthPixels": 1280,
+      "imageHeightPixels": 720,
+      "fxPixels": 800,
+      "fyPixels": 800,
+      "cxPixels": 640,
+      "cyPixels": 360,
+      "skewPixels": 0,
+      "rectifiedImage": true,
+      "rotationCameraToEnu": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          -1,
+          0
+        ]
+      ]
+    },
+    "detection": {
+      "uPixels": 400,
+      "vPixels": 280,
+      "captureEpochMilliseconds": 1760000000001
+    }
+  },
+  "evidence": {
+    "calibratedPointing": true,
+    "surveyedObserverPositions": true,
+    "synchronizedClocks": true,
+    "independentSensorIdentities": true,
+    "samePhysicalTarget": true
+  },
+  "quality": {
+    "maxRayMissMeters": 0.05,
+    "minParallaxDegrees": 1
+  }
+}
