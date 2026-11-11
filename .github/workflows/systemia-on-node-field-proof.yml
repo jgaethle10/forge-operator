@@ -1,0 +1,68 @@
+name: Systemia on-node signed evidence field proof
+
+on:
+  push:
+    paths:
+      - 'systemia/saban/microseed-local-field-proof*.mjs'
+      - 'systemia/saban/microseed-native-agent.mjs'
+      - 'systemia/saban/microseed-signed-receipt-store.mjs'
+      - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
+      - '.github/workflows/systemia-on-node-field-proof.yml'
+  pull_request:
+    paths:
+      - 'systemia/saban/microseed-local-field-proof*.mjs'
+      - 'systemia/saban/microseed-native-agent.mjs'
+      - 'systemia/saban/microseed-signed-receipt-store.mjs'
+      - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
+      - '.github/workflows/systemia-on-node-field-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  synthesize-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and no-execution help check
+        run: |
+          node --check systemia/saban/microseed-local-field-proof.mjs
+          node --check systemia/saban/microseed-local-field-proof.test.mjs
+          node systemia/saban/microseed-local-field-proof.mjs --help
+      - name: Test local synthetic native agent and existing signatures
+        run: |
+          node --test \
+            systemia/saban/microseed-local-field-proof.test.mjs \
+            tests/saban-microseed-signed-receipt-store.test.mjs \
+            tests/saban-microseed-e2e.test.mjs \
+            systemia/control-plane/visualization/passport-signed-device-read.test.mjs
+      - name: Package portable Evercraft-owned field kit
+        run: |
+          mkdir -p dist/evercraft-signed-field-kit
+          cp -a systemia dist/evercraft-signed-field-kit/systemia
+          cat > dist/evercraft-signed-field-kit/README.txt <<'EOF'
+          EVERCRAFT LOCAL SIGNED EVIDENCE FIELD KIT
+          Read-only default:
+            node systemia/saban/microseed-local-field-proof.mjs --root "$HOME/.local/state/evercraft/microseed"
+          Explicitly run ONE local registered content-hash workload and verify the private signed journal:
+            node systemia/saban/microseed-local-field-proof.mjs --root "$HOME/.local/state/evercraft/microseed" --hash-probe
+          Optional trusted Ambient Registry:
+            --ambient-registry-root "/path/to/owned/registry"
+          Requires an existing bootstrapped and running authorized local native agent.
+          Never send secrets, private keys, token files or raw receipt journal contents to chat.
+          This kit is not proof of physical hardware, production deployment, customer delivery or payment.
+          EOF
+          tar -C dist -czf dist/evercraft-signed-field-kit.tgz evercraft-signed-field-kit
+          sha256sum dist/evercraft-signed-field-kit.tgz | tee dist/evercraft-signed-field-kit.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-signed-field-kit
+          path: |
+            dist/evercraft-signed-field-kit.tgz
+            dist/evercraft-signed-field-kit.sha256
+          if-no-files-found: error
+          retention-days: 14
