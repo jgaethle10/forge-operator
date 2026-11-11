@@ -5,7 +5,11 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 
-import {analyzeBrokerRestartSafety} from '../scripts/inspect-penguin-broker-restart-safety.mjs';
+import {
+  analyzeBrokerRestartSafety,
+  scriptsFromExecStart,
+  scriptFromProcCmdline,
+} from '../scripts/inspect-penguin-broker-restart-safety.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const script=path.join(root,'scripts/inspect-penguin-broker-restart-safety.mjs');
@@ -29,7 +33,10 @@ test('active Node process with deleted launcher is a restart blocker, not succes
   assert.equal(r.safe_restart_authorized,false);
   assert.equal(r.must_preserve_running_process,true);
   assert.deepEqual(r.issues.sort(),[
-    'legacy_broker_entrypoint_missing','systemd_launch_source_unavailable'].sort());
+    'legacy_broker_entrypoint_missing',
+    'systemd_launch_source_unavailable',
+    'automatic_restart_source_missing',
+  ].sort());
   assert.equal(r.source_provenance_verified,false);
   assert.equal(r.identity_compatibility_verified,false);
   assert.equal(r.secrets_read,false);
@@ -80,4 +87,23 @@ test('node syntax and no-privilege execution fail-closed',()=>{
     assert.equal(run.status,2);
     assert.match(run.stderr,/read_only_broker_audit_requires_sudo/);
   }
+});
+
+
+test('only an allowlisted local script path is extracted from secret-bearing systemd ExecStart',()=>{
+  const raw='{ path=/usr/bin/node ; argv[]=/usr/bin/node '+
+    '/opt/evercraft/forge-operator/systemia/yard/remote-broker-resident.mjs '+
+    '--allocator-token=PRIVATE_TOKEN_VALUE --other-secret PRIVATE ; ignore_errors=no ; }';
+  assert.deepEqual(scriptsFromExecStart(raw),[expected]);
+  assert.deepEqual(scriptsFromExecStart('argv[]=/usr/bin/node /tmp/evil.mjs ;'),[]);
+  assert.deepEqual(scriptsFromExecStart('argv[]=/usr/bin/node /opt/evercraft/forge-operator/../etc/evil.mjs ;'),[]);
+  assert.deepEqual(scriptsFromExecStart('broken argv[]=/usr/bin/node /opt/evercraft/forge-operator/nope.mjs /opt/evercraft/forge-operator/other.mjs ;'),[
+    '/opt/evercraft/forge-operator/nope.mjs',
+    '/opt/evercraft/forge-operator/other.mjs',
+  ],'multiple script candidates force unresolved launch identity');
+});
+test('process command line parser never returns any secret-bearing arguments',()=>{
+  const raw='/usr/bin/node\0'+expected+'\0--token\0PRIVATE_LEASE_TOKEN\0';
+  assert.equal(scriptFromProcCmdline(raw),expected);
+  assert.equal(scriptFromProcCmdline('/usr/bin/node\0/tmp/evil.mjs\0--token\0PRIVATE\0'),null);
 });
