@@ -1,5 +1,7 @@
 import {TITAN_SCENE as scene,closestGalleryMarker,safeGalleryPosition,buildTitanDrawList} from './scene.mjs';
 import {titanGalleryTourFrame,TITAN_TOUR_SECONDS} from './tour.mjs';
+// Static access remains usable unless the 3D module initializes successfully.
+document.body.classList.replace('no-js','js');
 const $=id=>document.getElementById(id),canvas=$('world');
 const gl=canvas.getContext('webgl2',{alpha:false,antialias:false,depth:true,powerPreference:'high-performance'});
 if(!gl){$('intro').classList.add('hidden');$('unsupported').classList.remove('hidden');}else run();
