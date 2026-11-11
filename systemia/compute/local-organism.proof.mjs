@@ -169,3 +169,20 @@ try {
   }
   fs.rmSync(root, { recursive: true, force: true });
 }
+
+// A completed proof must also release its Node resources. An unref'd watchdog
+// has no effect on a clean exit; if something leaked, fail explicitly with
+// resource types instead of leaving GitHub Actions hanging until cancellation.
+setTimeout(() => {
+  const resources = process.getActiveResourcesInfo?.() || [];
+  const handleTypes = process._getActiveHandles?.()
+    .map(handle => handle?.constructor?.name || 'unknown') || [];
+  process.stderr.write(JSON.stringify({
+    ok: false,
+    schema: 'evercraft.local-organism-proof-open-handles.v1',
+    reason: 'proof_cleanup_left_active_resources',
+    resource_types: resources,
+    handle_types: handleTypes,
+  }) + '\n');
+  process.exit(13);
+}, 2000).unref();
