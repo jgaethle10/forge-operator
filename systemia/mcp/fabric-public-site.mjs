@@ -115,7 +115,7 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .audit-list-item{display:flex;align-items:center;gap:12px;background:#1d3e58aa;border:1px solid #345a71;border-radius:9px;padding:10px 12px;font-size:13px;font-weight:650}
 .audit-list-item em{font-style:normal;color:#80cfff;font-size:11px;font-weight:800}
 .audit-preview-note{font-size:12px!important;color:#b0c7d9!important;line-height:1.5!important;margin:16px 0 0!important}
-@media(max-width:700px){.offer-hero{padding-top:38px}.offer-hero h1{font-size:clamp(36px,9vw,48px);line-height:1.03;margin:20px 0}.offer-hero .lede{font-size:18px;line-height:1.45}.offer-hero .checkout-form{align-items:stretch}.offer-hero .checkout-form label{width:100%}.offer-hero .checkout-form input,.offer-hero .checkout-form button{width:100%!important;max-width:none!important}.audit-preview{padding:15px;border-radius:16px}.audit-preview-grid{grid-template-columns:1fr}.audit-demo-body{min-height:160px;padding:17px}.audit-list{grid-template-columns:1fr 1fr}.audit-list h3{grid-column:1/-1}.audit-list-item{padding:9px;font-size:12px}.audit-list-item:last-child{grid-column:1/-1}}
+@media(max-width:700px){.audit-offer{padding-top:38px}.audit-offer h1{font-size:clamp(36px,9vw,48px);line-height:1.03;margin:20px 0}.audit-offer .lede{font-size:18px;line-height:1.45}.audit-offer .checkout-form{align-items:stretch}.audit-offer .checkout-form label{width:100%}.audit-offer .checkout-form input,.audit-offer .checkout-form button{width:100%!important;max-width:none!important}.audit-preview{padding:15px;border-radius:16px}.audit-preview-grid{grid-template-columns:1fr}.audit-demo-body{min-height:160px;padding:17px}.audit-list{grid-template-columns:1fr 1fr}.audit-list h3{grid-column:1/-1}.audit-list-item{padding:9px;font-size:12px}.audit-list-item:last-child{grid-column:1/-1}}
 .offer-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:18px;padding:24px}
 .offer-panel h2{font-size:25px;margin:0 0 14px}
 .offer-panel p,.offer-panel li{color:#c5d2e4;line-height:1.65}
@@ -430,7 +430,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
     '<main>',
-    '<section class="offer-hero">',
+    '<section class="offer-hero'+(copy.slug==='website-audit'?' audit-offer':'')+'">',
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
