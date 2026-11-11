@@ -28,8 +28,11 @@ jobs:
         run: |
           node --check integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs
           node --check integrations/ai-evaluation-lab/eo001-cgroup-synthetic-child.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.mjs
       - name: Test read-only preflight and fixed synthetic-only cgroup contract
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
+      - name: Prove exact synthetic cgroup controller readback and refusal
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
       - name: Prove default fails closed without reviewed source pin
         run: |
           set +e
