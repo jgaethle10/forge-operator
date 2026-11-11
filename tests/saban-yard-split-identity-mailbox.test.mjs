@@ -175,3 +175,38 @@ test('Yard cannot write successful outcome based only on a self-reported digest'
     assert.equal(fs.existsSync(rawOutcome(x.mailboxRoot,intent.intent_id)),false);
   }finally{fs.rmSync(x.root,{recursive:true,force:true});}
 });
+
+
+test('mailbox progresses beyond four archived requests and already-applied outcomes',()=>{
+  const x=setup();
+  try{
+    for(let i=1;i<=6;i++)queueIntent({...x,key:'six-job-mailbox-'+i});
+    assert.equal(publishSplitIdentityRequests({...x,maxRequests:4}).published,4);
+    assert.equal(publishSplitIdentityRequests({...x,maxRequests:4}).published,2,
+      'second publisher must skip four already exported requests');
+    assert.equal(publishSplitIdentityRequests({...x,maxRequests:4}).published,0);
+    const first=readSplitIdentityRequests({...x,maxRequests:4});
+    assert.equal(first.length,4);
+    for(const request of first){
+      publishSplitIdentityOutcome({
+        mailboxRoot:x.mailboxRoot,request,holdReason:'manual_reconciliation_required',
+      });
+    }
+    const later=readSplitIdentityRequests({...x,maxRequests:4});
+    assert.equal(later.length,2,'archived requests must not starve later work');
+    for(const request of later){
+      publishSplitIdentityOutcome({
+        mailboxRoot:x.mailboxRoot,request,holdReason:'manual_reconciliation_required',
+      });
+    }
+    assert.equal(readSplitIdentityRequests({...x,maxRequests:4}).length,0);
+    for(let i=0;i<3;i++){
+      assert.equal(importSplitIdentityOutcomes({...x,maxOutcomes:2}).applied,2,
+        'importer must progress beyond prior already-applied outcomes');
+    }
+    assert.equal(importSplitIdentityOutcomes({...x,maxOutcomes:2}).applied,0);
+    const held=x.queue.list({states:['held']});
+    assert.equal(held.length,6);
+    assert.ok(held.every(job=>job.last_hold.reason==='unverified_remote_worker_result'));
+  }finally{fs.rmSync(x.root,{recursive:true,force:true});}
+});
