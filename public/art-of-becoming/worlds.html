@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><meta name="robots" content="noindex,nofollow">
+<meta name="description" content="The Art of Becoming Worlds, an Evercraft-owned lifetime campus-builder prototype.">
+<title>Becoming Worlds | Build the place you are becoming</title>
+<style>
+:root{color-scheme:dark;--bg:#101b1b;--panel:#192827;--panel2:#1f3330;--line:#34504a;--cream:#f4ebdb;--muted:#b2c8be;--light:#c6ebc6;--gold:#ebbb7b;--emerald:#86ba94}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--cream);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,select{font:inherit;color:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}button:disabled{opacity:.52;cursor:not-allowed}
+a{color:var(--gold);text-decoration-thickness:1px;text-underline-offset:3px}
+header{min-height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:12px max(24px,calc((100vw - 1380px)/2));gap:14px}
+.mark{font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:.19em;color:var(--gold)}
+.brand{font-family:Georgia,serif;font-weight:400;font-size:25px;letter-spacing:-.05em;line-height:1.15}
+header a{font-size:12px;font-weight:700}
+.shell{max-width:1430px;margin:0 auto;padding:34px 27px 75px}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:24px}
+h1{font:400 clamp(39px,5vw,65px)/1.08 Georgia,serif;letter-spacing:-.044em;margin:6px 0 12px}
+.subtitle{color:var(--muted);font-size:14px;max-width:690px;margin:0}
+.kicker{color:var(--gold);text-transform:uppercase;letter-spacing:.22em;font-size:11px;font-weight:800;margin:0}
+.mode-tabs{display:flex;align-items:center;gap:6px;padding:5px;background:#20342f;border:1px solid var(--line);border-radius:13px;flex-wrap:wrap}
+.mode-tabs button{background:transparent;border:0;color:var(--muted);border-radius:9px;padding:10px 15px;font-size:12px;font-weight:800}
+.mode-tabs button[aria-pressed=true]{background:var(--cream);color:#233f38}
+.app{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(335px,1fr);gap:22px;align-items:start}
+.scene-card{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#152521;box-shadow:0 24px 70px #0002}
+.scene-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:20px;background:#192b28;border-bottom:1px solid var(--line)}
+.scene-head strong{font:400 22px Georgia,serif}.scene-head span{display:block;color:var(--muted);font-size:12px}
+.scene{position:relative;aspect-ratio:1000/730;min-height:400px;overflow:hidden;background:#243d38;user-select:none}
+.scene svg{display:block;width:100%;height:100%;touch-action:manipulation}
+.scene [data-lot]{cursor:pointer}
+.scene [data-lot]:focus{outline:none;filter:drop-shadow(0 0 5px #f7d5a7)}
+.scene .nightstar{animation:twinkle 4s ease-in-out infinite alternate}
+.scene .lightglow{animation:pulse 4s ease-in-out infinite alternate;transform-origin:center}
+@keyframes twinkle{from{opacity:.25}to{opacity:.85}}@keyframes pulse{from{opacity:.45}to{opacity:.8}}
+.scene-bottom{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 19px;background:#192b28}
+.scene-bottom .centered{display:flex;align-items:center;gap:6px}
+.scene-bottom button{border:1px solid var(--line);background:#254137;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:800}
+.scene-bottom .nav{padding:8px 14px}
+.scene-bottom p{color:var(--muted);font-size:11px;margin:0}
+.demo-tag{font-size:11px;color:#f2d8b0;font-weight:800}
+.side{display:grid;gap:15px}.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:20px}
+.card h2{font:400 25px Georgia,serif;margin:0 0 10px;letter-spacing:-.035em}
+.mini-label{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:18px 0}
+.stat{background:#1f3430;text-align:center;padding:15px 7px}
+.stat strong{font:400 29px Georgia,serif;display:block;line-height:1.1}
+.stat span{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+select{width:100%;background:#213b34;border:1px solid #547367;border-radius:9px;padding:10px 12px;font-size:13px}
+.journey{display:flex;gap:9px;margin-top:13px}
+.journey button{flex:1;background:#7faf89;border:1px solid #9fc29d;color:#172a23;font-weight:800;border-radius:9px;padding:12px 8px;font-size:12px}
+.journey button.secondary{background:#30463f;border-color:#507167;color:#e9e4d6}
+.note{color:var(--muted);font-size:12px;margin:11px 0 0}
+.notice{min-height:22px;color:#e6c18e;font-size:12px;font-weight:700;margin:10px 0 0}
+.catalog{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:330px;overflow-y:auto;margin-top:12px;padding:1px}
+.catalog button{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid #385a4f;border-radius:9px;background:#1b302b;padding:11px 10px;min-height:67px}
+.catalog button[aria-pressed=true]{background:#355546;border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.catalog strong{font-size:12px}.catalog small{font-size:11px;color:var(--muted)}
+.detail{padding:13px;background:#20372f;border-radius:10px;margin-top:12px;border:1px solid #426457}
+.detail strong{font-size:13px}.detail p{font-size:12px;color:var(--muted);margin:5px 0}
+.detail button{background:#e6b97b;color:#1c3029;font-size:12px;font-weight:800;border:0;border-radius:8px;padding:10px 13px;margin-top:8px;width:100%}
+.foot{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:25px;margin-top:28px}
+.legend{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.key{display:inline-block;width:12px;height:12px;vertical-align:middle;margin-right:5px;border-radius:2px;background:#6ba284}.key.occupied{background:#dfb37e}.key.locked{background:#455953}
+@media(max-width:1130px){.hero{display:block}.mode-tabs{margin-top:22px;display:inline-flex}.app{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .build-card{grid-column:1/-1}}
+@media(max-width:680px){header{padding:12px 17px}.shell{padding:25px 14px 50px}h1{font-size:42px}.mode-tabs{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.mode-tabs button{padding:10px 4px;font-size:11px}.side{grid-template-columns:1fr}.side .build-card{grid-column:auto}.scene{min-height:275px}.scene-head strong{font-size:19px}.scene-bottom{padding:12px}.scene-bottom p{max-width:100%}.hero{margin-bottom:16px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div><div class="mark">EVERCRAFT / BECOMING</div><div class="brand">A world worth building.</div></div><a href="./index.html">Daily reflections &amp; backups</a></header>
+<main class="shell">
+  <section class="hero">
+    <div><p class="kicker">Worlds / lifetime edition · engineering preview</p><h1>Build more than a streak.<br>Build a lifetime.</h1><p class="subtitle">Your personal choices create construction credits. Design the whole facility, return years later, and continue where you left off. No championship resets and no demolished progress.</p></div>
+    <nav class="mode-tabs" id="mode-tabs" aria-label="Expression world">
+      <button type="button" data-mode="franchise" aria-pressed="true">Franchise</button>
+      <button type="button" data-mode="symphony" aria-pressed="false">Symphony</button>
+      <button type="button" data-mode="sanctuary" aria-pressed="false">Sanctuary</button>
+    </nav>
+  </section>
+  <div class="app">
+    <section class="scene-card" aria-label="Your growing world">
+      <div class="scene-head">
+        <div><strong id="scene-name">Founders Field</strong><span id="scene-description">Your entire franchise begins here.</span></div>
+        <span class="demo-tag" id="scene-flag">Personal world</span>
+      </div>
+      <div class="scene" id="scene" aria-label="Interactive campus map. Select a lot to build." role="region"></div>
+      <div class="scene-bottom">
+        <div class="centered" role="group" aria-label="Pan world camera">
+          <button type="button" class="nav" data-pan="west" aria-label="Move west">←</button>
+          <button type="button" class="nav" data-pan="north" aria-label="Move north">↑</button>
+          <button type="button" class="nav" data-pan="south" aria-label="Move south">↓</button>
+          <button type="button" class="nav" data-pan="east" aria-label="Move east">→</button>
+          <button type="button" id="home" class="nav">Home</button>
+        </div>
+        <p id="lot-info">Choose a highlighted lot on the map to start building.</p>
+      </div>
+    </section>
+    <div class="side">
+      <section class="card">
+        <div class="mini-label">Your world's foundation</div><h2>Your personal progress</h2>
+        <label for="goal" class="mini-label">The intention behind this world</label>
+        <select id="goal"></select>
+        <div class="stats">
+          <div class="stat"><strong id="earned">0</strong><span>Lifetime credits</span></div>
+          <div class="stat"><strong id="available">0</strong><span>Ready to build</span></div>
+          <div class="stat"><strong id="structures">0</strong><span>Facilities built</span></div>
+        </div>
+        <div class="mini-label" id="districts">Founding district · No final season</div>
+        <div class="journey"><button type="button" id="showed-up">I followed through today</button><button type="button" id="difficult" class="secondary">Today was hard</button></div>
+        <p class="note">These are your own reflections, never proof of sobriety. A hard day doesn't erase your facility or your earned credits.</p>
+        <p class="notice" id="notice" role="status" aria-live="polite"></p>
+      </section>
+      <section class="card">
+        <h2>Explore a possible future</h2>
+        <p class="note" style="margin-top:0">Preview an established campus without changing your real-world history or adding fake check-ins.</p>
+        <div class="journey"><button id="demo" type="button" class="secondary">Preview a grown world</button></div>
+      </section>
+      <section class="card build-card">
+        <div class="mini-label">Facilities / lifelong expansions</div><h2>Plan your next addition</h2>
+        <p class="note" style="margin-top:0">Select a facility, then tap a free lot on the map. Select an existing facility to inspect or upgrade it. You can build multiple copies and open more districts as the years accumulate.</p>
+        <div class="catalog" id="catalog" role="group" aria-label="Buildable facilities"></div>
+        <div class="detail" id="detail" aria-live="polite">Choose a facility and an available lot.</div>
+        <p class="note">This is an interactive 2.5D campus-planning prototype. Walk-through 3D, characters, acoustics, and real music performances are later engine work, not shipped features.</p>
+      </section>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="legend"><span><span class="key"></span>Available lot</span><span><span class="key occupied"></span>Your building</span><span><span class="key locked"></span>Future land</span></div>
+    <p>The campus is currently saved only to this browser. Use <a href="./index.html">daily reflections &amp; backups</a> to export a JSON copy. For a truly lifelong product, optional encrypted cross-device backup, ownership, migration, and disaster-recovery systems still need engineering and verification.</p>
+  </div>
+</main>
+<script type="module">
+import {GOALS,STORAGE_KEY,dayKey,shiftDay,emptyState,normalizeState,setCheckIn} from './engine.mjs';
+import {WORLD_MODES,WORLD_CATALOG,DEFAULT_MODE,chooseMode,placeFacility,upgradeFacility,worldPlot,worldSummary} from './world-engine.mjs';
+const $=id=>document.getElementById(id);
+const today=dayKey();
+let state=emptyState(),storageAvailable=true;
+try{state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'),today);}
+catch{storageAvailable=false;}
+let goal=state.goal,mode=state.worldState.activeModes[goal]||DEFAULT_MODE,preview=false,selected={x:1,y:0},camera={x:0,y:0},selectedKind='training-gym',selectedBuilding=null;
+function persist(){
+  if(preview)return;
+  try {state.goal=goal;localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+  catch {storageAvailable=false;$('notice').textContent='Local storage is unavailable. Progress may not survive a reload.';}
+}
+function note(t){$('notice').textContent=t;}
+function demoView(){
+  let sample=emptyState();
+  sample.goal=goal;
+  // Demo-only constructed achievements. Never saved or mixed with personal check-ins.
+  sample.creditedDays[goal]=Array.from({length:320},(_,i)=>shiftDay(today,-i));
+  const positions=[[1,0],[0,1],[-1,0],[0,-1],[2,0],[-2,1],[2,1],[-1,2],[1,-2],[2,-2]];
+  for(let i=0;i<10;i++){
+    const item=WORLD_CATALOG[mode][i];
+    try{sample=placeFacility(sample,goal,mode,item.kind,...positions[i]);}catch{}
+  }
+  return sample;
+}
+const current=()=>preview?demoView():state;
+const coords=(x,y)=>({sx:500+(x-camera.x-(y-camera.y))*58,sy:288+(x-camera.x+(y-camera.y))*29});
+const diamond=(sx,sy,rx=56,ry=28)=>`${sx},${sy-ry} ${sx+rx},${sy} ${sx},${sy+ry} ${sx-rx},${sy}`;
+const palette=()=>mode==='franchise'
+ ? {sky:'#172d31',horizon:'#295a54',ground:'#284a39',tile:'#406d4e',rim:'#244c39',roof:'#b5b6a5',wall:'#668779',accent:'#e4b77e',trim:'#e8ddc1'}
+ : mode==='symphony'
+ ? {sky:'#151f3c',horizon:'#344474',ground:'#252b52',tile:'#4c4d78',rim:'#31345c',roof:'#a99bbf',wall:'#635b8c',accent:'#e8b4d7',trim:'#c1cfee'}
+ : {sky:'#203a38',horizon:'#52766c',ground:'#345943',tile:'#64876a',rim:'#45684b',roof:'#b59b77',wall:'#907b60',accent:'#f0d3a0',trim:'#f5ead1'};
+function facility(x,y,b,c){
+  const height=19+Math.min(b.level*5,45);
+  const sx=x,sy=y;
+  const isField=/field|garden|pond|grove|bridge/.test(b.kind);
+  const isGrand=/stadium|arena|hall|opera|concert|amphitheater|observatory/.test(b.kind);
+  const roof=isGrand?'#d4bf9c':c.roof;
+  let content='';
+  if(isField){
+    content=`<polygon points="${diamond(sx,sy-3,38,18)}" fill="${mode==='franchise'?'#85b775':mode==='symphony'?'#b57aaf':'#74a890'}" stroke="#e3d6b3" stroke-width="2"/>
+      <path d="M${sx-22} ${sy-4} l22 -11 l22 11 l-22 11Z" fill="none" stroke="#f6eac9" stroke-width="2" opacity=".75"/>
+      <circle cx="${sx}" cy="${sy-4}" r="5" fill="none" stroke="#fff1d3" opacity=".8"/>`;
+  }else{
+    content=`<polygon points="${sx-35},${sy-6-height} ${sx},${sy-24-height} ${sx+35},${sy-6-height} ${sx},${sy+12-height*-1}" fill="${roof}" stroke="${c.trim}" stroke-width="1.2"/>
+      <polygon points="${sx-35},${sy-6-height} ${sx},${sy+12-height*-1} ${sx},${sy+12} ${sx-35},${sy-6}" fill="${c.wall}"/>
+      <polygon points="${sx},${sy+12-height*-1} ${sx+35},${sy-6-height} ${sx+35},${sy-6} ${sx},${sy+12}" fill="${c.rim}"/>
+      <path d="M${sx+5} ${sy-13}v10 m8 -14v10 m8 -14v10" stroke="${c.accent}" stroke-width="3" opacity=".8"/>`;
+    if(isGrand)content+=`<ellipse class="lightglow" cx="${sx}" cy="${sy-19-height}" rx="40" ry="16" fill="${c.accent}" opacity=".28"/>`;
+  }
+  const label=WORLD_CATALOG[mode].find(item=>item.kind===b.kind)?.name||'Facility';
+  return `<g data-lot="${b.x},${b.y}" role="button" tabindex="0" aria-label="${label} level ${b.level}, select to upgrade">
+    <ellipse cx="${sx}" cy="${sy+12}" rx="37" ry="12" opacity=".22" fill="#000"/>
+    ${content}
+    <circle cx="${sx+38}" cy="${sy-32-height/3}" r="11" fill="#f0cd97"/><text x="${sx+38}" y="${sy-28-height/3}" text-anchor="middle" font-size="11" fill="#1a3130" font-weight="bold">${b.level}</text>
+    <title>${label}, level ${b.level}</title>
+  </g>`;
+}
+function renderScene(){
+  const plot=worldPlot(current(),goal,mode),p=palette(),items=plot.buildings;
+  const placed=new Map(items.map(b=>[b.x+','+b.y,b]));
+  let tiles=[],buildings=[];
+  for(let sum=-8;sum<=8;sum++)for(let x=-8;x<=8;x++){
+    const y=sum-x;
+    const realX=x+camera.x,realY=y+camera.y;
+    if(Math.abs(realX)>plot.radius||Math.abs(realY)>plot.radius)continue;
+    const {sx,sy}=coords(realX,realY);
+    if(sx<-80||sx>1080||sy<-70||sy>730)continue;
+    const key=realX+','+realY,b=placed.get(key);
+    const isOrigin=realX===0&&realY===0,isSelected=selected.x===realX&&selected.y===realY;
+    const turf=isOrigin?'#7ba88c':(realX+realY)%2===0?p.tile:p.ground;
+    tiles.push(`<g data-lot="${key}" role="button" tabindex="0" aria-label="${isOrigin?'Founding grounds':b?'View facility':'Empty plot'} ${realX}, ${realY}">
+      <polygon points="${diamond(sx,sy+9)}" fill="#122b25" opacity=".9"/>
+      <polygon points="${diamond(sx,sy)}" fill="${turf}" stroke="${isSelected?p.accent:p.rim}" stroke-width="${isSelected?3:1.3}"/>
+      ${!b&&!isOrigin? `<circle cx="${sx}" cy="${sy}" r="${isSelected?7:4}" fill="${isSelected?p.accent:'#9eb59a'}" opacity=".75"/>`:''}
+      <title>Plot ${realX}, ${realY}</title>
+    </g>`);
+    if(isOrigin)buildings.push({depth:sy+1,html:`<g><ellipse cx="${sx}" cy="${sy}" rx="35" ry="15" fill="#152b27" opacity=".35"/><polygon points="${diamond(sx,sy-4,29,15)}" fill="${p.accent}" stroke="#f6e4c9"/><path d="M${sx} ${sy-6}v-27" stroke="#f6ebd7" stroke-width="4"/><circle cx="${sx}" cy="${sy-39}" r="8" fill="#f4deae"/><text x="${sx}" y="${sy+29}" fill="#f0e9d8" font-size="11" text-anchor="middle" font-weight="700">FOUNDERS</text></g>`});
+    if(b)buildings.push({depth:sy,html:facility(sx,sy,b,p)});
+  }
+  buildings.sort((a,b)=>a.depth-b.depth);
+  const stars=Array.from({length:38},(_,i)=>{
+    const x=19+(i*73)%964,y=20+(i*41)%160;
+    return `<circle class="nightstar" cx="${x}" cy="${y}" r="${i%3===0?1.7:.95}" fill="#fbf2d4" opacity=".52" style="animation-delay:${i%7*.4}s"/>`;
+  }).join('');
+  const sky=mode==='symphony'?stars:'';
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 730" role="img" aria-label="${mode} world map with ${items.length} user-built facilities">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="${p.sky}"/><stop offset="1" stop-color="${p.horizon}"/></linearGradient>
+  <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="${p.ground}"/><stop offset="1" stop-color="#112c28"/></linearGradient>
+  <radialGradient id="halo"><stop stop-color="${p.accent}" stop-opacity=".22"/><stop offset="1" stop-color="${p.accent}" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1000" height="730" fill="url(#sky)"/>
+  <circle cx="760" cy="109" r="170" fill="url(#halo)"/>${sky}
+  <path d="M0 290 L170 180 L310 259 L445 163 L620 262 L775 169 L1000 274 V730H0Z" fill="${p.horizon}" opacity=".45"/>
+  <path d="M0 405Q260 310 520 386T1000 362V730H0Z" fill="url(#ground)"/>
+  <ellipse cx="500" cy="480" rx="480" ry="195" fill="#0a2119" opacity=".26"/>
+  ${tiles.join('')}${buildings.map(b=>b.html).join('')}
+  <text x="28" y="685" fill="#f2e8d7" font-size="14" font-weight="700" letter-spacing="2">${mode==='franchise'?'THE FRANCHISE':'THE '+mode.toUpperCase()}</text>
+  <text x="28" y="707" fill="#b3cdc3" font-size="12">${plot.lifetimeCredits} days invested · ${items.length} permanent facilities</text>
+  </svg>`;
+  $('scene').innerHTML=svg;
+}
+function draw(){
+  const view=current(),summary=worldSummary(view,goal,mode),plot=worldPlot(view,goal,mode);
+  $('mode-tabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+  $('scene-name').textContent=plot.origin.name;
+  $('scene-description').textContent=WORLD_MODES.find(m=>m.id===mode).tagline;
+  $('scene-flag').textContent=preview?'DEMO · NOT SAVED':'YOUR WORLD';
+  $('earned').textContent=summary.credits.toLocaleString();
+  $('available').textContent=summary.available.toLocaleString();
+  $('structures').textContent=summary.buildings.length.toLocaleString();
+  $('districts').textContent='Founding district + '+(summary.districts-1)+' legacy districts · Expansion radius '+summary.radius;
+  $('demo').textContent=preview?'Return to my world':'Preview a grown world';
+  $('showed-up').disabled=preview;$('difficult').disabled=preview;
+  $('goal').value=goal;
+  const catalog=WORLD_CATALOG[mode];
+  if(!catalog.some(x=>x.kind===selectedKind))selectedKind=catalog[0].kind;
+  $('catalog').innerHTML=catalog.map(item=>`<button type="button" data-kind="${item.kind}" aria-pressed="${selectedKind===item.kind}"><strong>${item.name}</strong><small>${item.cost} lifetime credits</small></button>`).join('');
+  const building=summary.buildings.find(b=>b.x===selected.x&&b.y===selected.y);
+  selectedBuilding=building||null;
+  const item=WORLD_CATALOG[mode].find(v=>v.kind===(building?.kind||selectedKind));
+  if(building){
+    const upgrades=summary.available;
+    const cost=Math.ceil(item.cost*(.65+(building.level+1)*.45));
+    $('detail').innerHTML=`<strong>${item.name} · Level ${building.level}</strong><p>${item.description} This facility remains yours.</p><p>Next upgrade: ${cost} credits · ${upgrades} available.</p><button type="button" id="upgrade" ${preview||upgrades<cost?'disabled':''}>Improve this facility</button>`;
+  } else {
+    const blocked=preview||summary.available<item.cost||Math.abs(selected.x)>summary.radius||Math.abs(selected.y)>summary.radius||selected.x===0&&selected.y===0;
+    $('detail').innerHTML=`<strong>${item.name}</strong><p>${item.description}</p><p>Lot ${selected.x},${selected.y} · ${item.cost} credits · ${summary.available} available.</p><button type="button" id="build" ${blocked?'disabled':''}>Build on selected lot</button>`;
+  }
+  $('lot-info').textContent=preview?'Preview only. Return to your world to build.':`Lot ${selected.x}, ${selected.y} · ${selectedBuilding?'Facility selected':'Select a building to place here'}`;
+  renderScene();
+}
+function act(action){
+  try{state=action(state);persist();note('Your world has been saved on this device.');draw();}
+  catch(error){note(error.message||'That change could not be made.');}
+}
+$('mode-tabs').addEventListener('click',event=>{
+  const b=event.target.closest('button[data-mode]');if(!b)return;
+  mode=b.dataset.mode;camera={x:0,y:0};selected={x:1,y:0};
+  if(!preview)act(s=>chooseMode(s,goal,mode));else draw();
+});
+$('goal').innerHTML=GOALS.map(g=>`<option value="${g.id}">${g.name}</option>`).join('');
+$('goal').addEventListener('change',event=>{
+  goal=event.target.value;if(!GOALS.some(g=>g.id===goal))return;
+  mode=state.worldState.activeModes[goal]||DEFAULT_MODE;camera={x:0,y:0};selected={x:1,y:0};
+  if(!preview){state.goal=goal;persist();}
+  note('');draw();
+});
+$('catalog').addEventListener('click',event=>{
+  const b=event.target.closest('button[data-kind]');if(!b)return;
+  if(!WORLD_CATALOG[mode].some(item=>item.kind===b.dataset.kind))return;
+  selectedKind=b.dataset.kind;draw();
+});
+$('scene').addEventListener('click',event=>{
+  const b=event.target.closest('[data-lot]');if(!b)return;
+  const [x,y]=b.dataset.lot.split(',').map(Number);if(!Number.isSafeInteger(x)||!Number.isSafeInteger(y))return;
+  selected={x,y};draw();
+});
+$('scene').addEventListener('keydown',event=>{
+  if(event.key!=='Enter'&&event.key!==' ')return;
+  const b=event.target.closest('[data-lot]');if(!b)return;
+  event.preventDefault();const [x,y]=b.dataset.lot.split(',').map(Number);selected={x,y};draw();
+});
+$('detail').addEventListener('click',event=>{
+  if(preview)return;
+  if(event.target.closest('#build'))act(s=>placeFacility(s,goal,mode,selectedKind,selected.x,selected.y));
+  if(event.target.closest('#upgrade')&&selectedBuilding)act(s=>upgradeFacility(s,goal,mode,selectedBuilding.id));
+});
+$('showed-up').addEventListener('click',()=>{if(!preview)act(s=>setCheckIn(s,goal,today,'kept',today));});
+$('difficult').addEventListener('click',()=>{if(!preview)act(s=>setCheckIn(s,goal,today,'hard',today));});
+$('demo').addEventListener('click',()=>{preview=!preview;camera={x:0,y:0};selected={x:1,y:0};note(preview?'Demonstration only. This does not create check-ins or overwrite your world.':'Back in your real world.');draw();});
+document.querySelectorAll('[data-pan]').forEach(button=>button.addEventListener('click',()=>{
+  const dir=button.dataset.pan;camera.x+=dir==='east'?1:dir==='west'?-1:0;camera.y+=dir==='south'?1:dir==='north'?-1:0;
+  const radius=worldSummary(current(),goal,mode).radius;camera.x=Math.min(radius,Math.max(-radius,camera.x));camera.y=Math.min(radius,Math.max(-radius,camera.y));draw();
+}));
+$('home').addEventListener('click',()=>{camera={x:0,y:0};selected={x:1,y:0};draw();});
+if(!storageAvailable)note('Browser storage is unavailable. Your world may not survive leaving this page.');
+draw();
+</script></body></html>
