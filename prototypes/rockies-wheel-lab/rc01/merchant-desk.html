@@ -42,7 +42,7 @@ main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{
 <div class="small">Illustrative merchandise subtotal</div><div class="money" id="subtotal">$0.00</div>
 <p class="small">Excludes sales tax, labor, TPMS, delivery, discounts and all other adjustments. Nothing has been quoted or charged.</p>
 <div class="box"><strong>Internal review packet</strong><p>One JSON file with the selected SKU, shop-provided source classification, selected vehicle note, a merchandise subtotal, and explicit unverified flags.</p></div>
-<div class="buttons"><button class="primary" id="export" type="button">Export internal packet</button><button id="reset" type="button">Reset</button></div>
+<div class="buttons"><button class="primary" id="export" type="button">Export internal packet</button><button id="sourcingBrief" type="button" disabled>Download FindMyPart research note</button><button id="reset" type="button">Reset</button></div><p class="small">The separate sourcing note becomes available only when the shopper explicitly checked sourcing interest. It contains no customer name, contact, VIN, merchant stock, price, or fitment assertion, and is not sent anywhere.</p>
 <p id="message" role="status" aria-live="polite"></p>
 </aside></div>
 <footer class="footer">EVERCRAFT WHEEL LAB · SOURCE-CONTROLLED RC04 EXPERIMENT · No external network requests, outreach, storage, checkout, verified fitment, customer acceptance or public release. This page is not affiliated with a wheel manufacturer or dealer.</footer>
@@ -124,6 +124,23 @@ function render(){
   $('dataState').textContent=source==='fictional_sample'?'SAMPLE · NOT REAL INVENTORY':'UPLOADED LOCALLY · NOT VERIFIED';
 }
 function populate(){const sel=$('item');sel.replaceChildren();inventory.forEach((item,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=item.name+' · '+item.diameter+'” · '+item.finish+' · '+item.sku;sel.append(o)});render()}
+function sourcingBrief(){
+  if(importedConcept?.findmypart_sourcing_interest_requested!==true)throw Error('No shopper sourcing interest was recorded');
+  const c=importedConcept;
+  return [
+    'FINDMYPART | UNSENT RESEARCH PREPARATION',
+    'Origin: Evercraft Wheel Lab illustrative concept only',
+    'Desired wheel look: '+c.wheel_design+', '+c.wheel_finish+', '+c.diameter_in+' inch',
+    'Illustrative car color: '+c.paint,
+    '',
+    'Research question: Is a real component matching this requested appearance identifiable?',
+    'A real part number, manufacturer, fitment and availability must be independently established.',
+    'The illustrated coupe is not a real vehicle record. This is NOT a fitment recommendation.',
+    'No buyer identity, contact information, VIN, shop inventory, merchant price or customer vehicle note is included.',
+    'NOT SENT TO FINDMYPART. This document is not a sourcing order, consent to contact, or payment authorization.'
+  ].join('\n');
+}
+function updateSourcingAction(){$('sourcingBrief').disabled=importedConcept?.findmypart_sourcing_interest_requested!==true}
 function packet(){
   const item=inventory[Number($('item').value)]||inventory[0];
   const qty=Number($('quantity').value);
@@ -174,9 +191,20 @@ $('conceptFile').addEventListener('change',async(e)=>{
     const parsed=parseConcept(await file.text());
     importedConcept=parsed;
     $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.'+(parsed.findmypart_sourcing_interest_requested?' Separate FindMyPart research interest was included for local review only; no inquiry or referral sent.':'');
+    updateSourcingAction();
     $('message').textContent='Shopper concept loaded locally; SKU match still requires a person.';
   }catch(error){$('message').textContent='Concept rejected: '+error.message}
   e.target.value='';
+});
+$('sourcingBrief').addEventListener('click',()=>{
+  if(importedConcept?.findmypart_sourcing_interest_requested!==true){
+    $('message').textContent='No optional sourcing interest was recorded. No note created.';return;
+  }
+  const body=sourcingBrief();
+  const url=URL.createObjectURL(new Blob([body],{type:'text/plain;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='findmypart-unsent-research-note.txt';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $('message').textContent='Local FindMyPart research note downloaded. Nothing sent or submitted.';
 });
 $('export').addEventListener('click',()=>{
   const body=JSON.stringify(packet(),null,2);
@@ -191,10 +219,10 @@ $('reset').addEventListener('click',()=>{
   for(const id of ['shop','vehicle'])$(id).value='';
   $('quantity').value='4';$('service').value='none';
   $('catalogNote').textContent='Using fictional sample inventory. CSV headers: sku,name,finish,diameter,unit_price_usd. Max 200 rows, 200 KB. All data stays in this browser.';
-  $('message').textContent='Local quote desk reset.';populate()
+  $('message').textContent='Local quote desk reset.';populate();updateSourcingAction()
 });
-populate();
-window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,packet};
+populate();updateSourcingAction();
+window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,packet,sourcingBrief};
 })();
 </script>
 </body></html>
