@@ -118,7 +118,7 @@ export function compileGltfScenePlacements({
     stack.add(index);visited.add(index);
     const node=gltf.nodes[index],world=matMul(parent,matForNode(node,index));
     if(node.mesh!==undefined){
-      ok(!node.skin&&!node.weights&&!node.extensions,
+      ok(node.skin===undefined&&node.weights===undefined&&node.extensions===undefined,
         'node_skin_morph_extension_unsupported:'+index);
       ok(Number.isSafeInteger(node.mesh)&&node.mesh>=0&&node.mesh<gltf.meshes.length,
         'node_mesh_invalid:'+index);
