@@ -66,6 +66,31 @@ function sourceReleaseRef() {
   return digest.digest('hex').slice(0, 40);
 }
 
+export async function getKaidanceStartupPulse(
+  yard,deploymentId,{
+    attempts=4,
+    delayMs=300,
+    sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms))
+  }={}
+) {
+  // Only a brief transport/route loss is retried. Health/identity/coverage
+  // failures remain hard holds. Never synthesize a pulse or skip attestation.
+  const count=Math.max(1,Math.min(4,Math.trunc(Number(attempts)||1)));
+  let last;
+  for(let i=0;i<count;i++){
+    try {
+      return await yard.getKaidancePulse(deploymentId);
+    } catch(error){
+      last=error;
+      const reason=String(error?.message||error);
+      if(!/^KAIDANCE route is not healthy: (?:unreachable|local_unreachable)$/.test(reason)
+          ||i===count-1)throw error;
+      await sleep(delayMs);
+    }
+  }
+  throw last;
+}
+
 function nodeIdDefault() {
   return `chromebook-${os.hostname().replace(/[^a-zA-Z0-9._-]/g, '-')}`;
 }
@@ -297,7 +322,7 @@ export async function startLocalOrganism({
       throw new Error('local organism route verification failed');
     }
 
-    const pulse = await yard.getKaidancePulse('kaidance-local-resident');
+    const pulse = await getKaidanceStartupPulse(yard,'kaidance-local-resident');
 
     const enrollmentRequest = {
       schema: 'evercraft.remote-capacity.enrollment-request.v1',
