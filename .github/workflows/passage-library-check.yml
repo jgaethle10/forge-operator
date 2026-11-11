@@ -13,6 +13,9 @@ on:
       - 'tests/passage-device-qa.test.mjs'
       - 'tests/passage-webkit.test.mjs'
       - 'docs/launch/passage/**'
+      - 'systemia/passage/**'
+      - 'systemia/saban/multiplication-registry.json'
+      - 'tests/passage-saban-qa.test.mjs'
       - '.github/workflows/passage-library-check.yml'
   workflow_dispatch:
 permissions:
@@ -92,3 +95,34 @@ jobs:
         run: npx playwright install webkit
       - name: Test standalone verifier with offline WebKit engine
         run: node --test tests/passage-webkit.test.mjs
+
+  saban_qa:
+    name: Saban registered Passage QA mission
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Saban Passage allowlist and execute catalog worker locally
+        run: |
+          node --check systemia/passage/saban-qa-adapter.mjs
+          node --check systemia/passage/saban-qa-mission.mjs
+          node --test tests/passage-saban-qa.test.mjs
+      - name: Install browser acceptance harness
+        run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+      - name: Dispatch five registered Saban QA assignments on ephemeral NodeSeed
+        env:
+          PASSAGE_ARTIFACT_DIR: /tmp/passage-saban-qa/browser
+        run: node systemia/passage/saban-qa-mission.mjs --out=/tmp/passage-saban-qa
+      - name: Preserve independently hashed worker evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: passage-saban-qa-mission
+          path: /tmp/passage-saban-qa/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1108,6 +1108,62 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "passage-qa",
+      "name": "Passage QA",
+      "aliases": [
+        "evercraft-passage-qa",
+        "passage-quality-assurance"
+      ],
+      "adapter": "systemia/passage/saban-qa-adapter.mjs",
+      "default_logical_agents": 5,
+      "max_logical_agents": 5,
+      "default_physical_workers": 3,
+      "max_physical_workers": 5,
+      "lease_seconds": 300,
+      "roles": [
+        "catalog_auditor",
+        "signature_auditor",
+        "device_auditor",
+        "browser_auditor",
+        "regression_reviewer"
+      ],
+      "work_sources": [],
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": false,
+        "local_receipts": true,
+        "local_test_processes": "fixed_allowlist_only",
+        "external_network": false,
+        "loopback_test_server": true,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "private_topology_publication": false
+      },
+      "max_attempts_per_job": 1,
+      "budget": {
+        "max_logical_agents": 5,
+        "max_physical_workers": 5,
+        "max_work_items": 5,
+        "max_attempts_per_job": 1
+      },
+      "assignment_strategy": "role_item_pair",
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
