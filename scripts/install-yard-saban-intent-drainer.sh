@@ -103,6 +103,11 @@ if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
   [[ -f "$REPO_ROOT/systemia/saban/nodeseed-worker-completion-verifier.mjs" ]] || {
     echo "ERROR: installed source lacks the verified worker receipt gate." >&2; exit 3;
   }
+  grep -q 'unified_dispatch_enabled' "$REPO_ROOT/systemia/yard/saban-intent-drain-runner.mjs" && \
+    grep -q 'remote_job_outcome_unknown' "$REPO_ROOT/systemia/saban/nodeseed-intent-executor.mjs" || {
+    echo "ERROR: installed source lacks the unified dispatch and uncertain-result hold implementation." >&2
+    exit 3
+  }
   if [[ -d "$SABAN_STATE_DIR" ]]; then
     SABAN_OWNER="$(stat -c '%U' "$SABAN_STATE_DIR")"
     [[ "$SABAN_OWNER" == "$RUN_USER" ]] || {
@@ -150,13 +155,29 @@ install -d -m 0755 /etc/evercraft
 
 # Prevent competing schedulers from both claiming and mutating a work queue.
 # Only the explicit unified installation changes the existing Saban timer.
-# Restore prior timer state if the replacement service cannot start.
+# Back up any existing unit/environment files so a failed installation can
+# restore the previous service definitions, not merely re-enable stale timers.
 OLD_SABAN_TIMER_ENABLED="false"
 OLD_YARD_TIMER_ENABLED="false"
 RESTORE_TIMERS_ON_FAILURE="false"
+ROLLBACK_DIR=""
+ROLLBACK_PATHS=(
+  /etc/systemd/system/evercraft-yard-saban-intent-drain.service
+  /etc/systemd/system/evercraft-yard-saban-intent-drain.timer
+  /etc/evercraft/yard-saban-intent-drain.env
+)
 restore_timers_on_failure() {
   if [[ "$RESTORE_TIMERS_ON_FAILURE" == "true" ]]; then
     systemctl disable --now evercraft-yard-saban-intent-drain.timer >/dev/null 2>&1 || true
+    for existing in "${ROLLBACK_PATHS[@]}"; do
+      saved="$ROLLBACK_DIR/$(basename "$existing")"
+      if [[ -f "$saved" ]]; then
+        cp -p "$saved" "$existing"
+      else
+        rm -f "$existing"
+      fi
+    done
+    systemctl daemon-reload || true
     if [[ "$OLD_YARD_TIMER_ENABLED" == "true" ]]; then
       systemctl enable --now evercraft-yard-saban-intent-drain.timer >/dev/null 2>&1 || true
     fi
@@ -164,10 +185,20 @@ restore_timers_on_failure() {
       systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || true
     fi
   fi
+  if [[ -n "$ROLLBACK_DIR" ]]; then
+    rm -rf -- "$ROLLBACK_DIR"
+  fi
 }
 if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
   systemctl is-enabled --quiet evercraft-saban-dispatch.timer && OLD_SABAN_TIMER_ENABLED="true" || true
   systemctl is-enabled --quiet evercraft-yard-saban-intent-drain.timer && OLD_YARD_TIMER_ENABLED="true" || true
+  ROLLBACK_DIR="$(mktemp -d /tmp/evercraft-yard-saban-rollback-XXXXXX)"
+  chmod 0700 "$ROLLBACK_DIR"
+  for existing in "${ROLLBACK_PATHS[@]}"; do
+    if [[ -f "$existing" ]]; then
+      cp -p "$existing" "$ROLLBACK_DIR/$(basename "$existing")"
+    fi
+  done
   RESTORE_TIMERS_ON_FAILURE="true"
   trap restore_timers_on_failure EXIT
   systemctl disable --now evercraft-saban-dispatch.timer 2>/dev/null || true
@@ -243,6 +274,7 @@ if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
   # first identity-checked, bounded service cycle finishes successfully.
   systemctl start evercraft-yard-saban-intent-drain.service
   RESTORE_TIMERS_ON_FAILURE="false"
+  restore_timers_on_failure
   trap - EXIT
 else
   systemctl start evercraft-yard-saban-intent-drain.service || true
