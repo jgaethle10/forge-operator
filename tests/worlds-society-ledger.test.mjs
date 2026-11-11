@@ -97,3 +97,19 @@ test('unknown rule-policy event types and invalid fictional clock data fail clos
  source=fixture();source.decision_projection.receipts[0].time='32:66';
  assert.throws(()=>validateSocietyObservation(source),/Malformed fictional/);
 });
+
+test('saved cumulative societal outcome totals survive validation, but impossible totals do not',()=>{
+ const source=fixture();
+ source.snapshot_stats={
+  civic:{proposed:221,completed:220,failed:0},
+  social:{promised:1949,kept:1818,broken:130,declined:234}
+ };
+ const parsed=validateSocietyObservation(source);
+ assert.equal(parsed.stats.civic.completed,220);
+ assert.equal(parsed.stats.social.kept,1818);
+ assert.equal(parsed.stats.social.broken,130);
+ source.snapshot_stats.social.kept=2000;
+ assert.throws(()=>validateSocietyObservation(source),/Inconsistent saved promise totals/);
+ source.snapshot_stats.social.kept=-1;
+ assert.throws(()=>validateSocietyObservation(source),/Invalid saved simulation totals/);
+});
