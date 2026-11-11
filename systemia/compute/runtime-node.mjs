@@ -714,6 +714,7 @@ export async function startEvercraftComputeNode({
   };
   const leases = new Map();
   const services = new Map();
+  let shuttingDown=false;
   const stagedBlobs = new Map();
   const sabanInflight = new Map();
   const leaseArtifactAccess = new Map();
@@ -974,6 +975,7 @@ export async function startEvercraftComputeNode({
 
   const server = http.createServer(async (req, res) => {
     try {
+      if(shuttingDown)return send(res,503,{error:'compute_node_shutting_down'});
       if (
         (req.method === 'GET' && req.url === '/v1/operator/status') ||
         (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(String(req.url || '')))
@@ -2530,6 +2532,13 @@ export async function startEvercraftComputeNode({
             maxConcurrency: Number(body.input?.max_concurrency || 2),
             imageTag: String(body.input?.image_tag || ''),
           });
+          // An accepted request can outlive its socket if the caller aborts
+          // while native/Docker browser startup is underway. If shutdown
+          // began during the factory wait, never register the late listener.
+          if(shuttingDown){
+            await runtime.close();
+            return send(res,503,{error:'compute_node_shutting_down'});
+          }
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           const delegatedDraftAutomationSupported =
@@ -4107,6 +4116,7 @@ export async function startEvercraftComputeNode({
     allowed_root: allowedRoot,
     placement_labels: nodePlacementLabels,
     close: async () => {
+      shuttingDown=true;
       clearInterval(leaseMonitor);
       // Drain HTTP handlers before snapshotting resident services. An in-flight
       // accepted job can register a browser adapter while the old shutdown
