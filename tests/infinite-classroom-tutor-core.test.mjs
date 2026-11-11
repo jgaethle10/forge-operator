@@ -10,7 +10,7 @@ function fixture({reply='Let us explore an example. What would you like to try f
   newId:id,now,
   infer:async payload=>{
    calls.push(payload);
-   return {status:'completed',text:reply,provider:'ollama',provider_receipt:'sha256:proof-test-only'};
+   return {status:'completed',text:reply,provider:'ollama',provider_receipt:'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'};
   }
  });
  return {tutor,calls};
