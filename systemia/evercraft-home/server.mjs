@@ -18,6 +18,7 @@ import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
 } from "./clip-journal-publish-adapter.mjs";
+import { publishJournalStoryLinkedInFromHome } from "./clip-journal-linkedin-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
 import { planEvercraftHomeOsAppInstall, readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
@@ -138,6 +139,7 @@ export async function startEvercraftHomeServer({
   ownerDisplayName = String(process.env.EVERCRAFT_OWNER_DISPLAY_NAME || "Jesse").trim(),
   sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
   clipFacebookFetch = globalThis.fetch,
+  clipLinkedInFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -542,7 +544,7 @@ export async function startEvercraftHomeServer({
     }
 
     const providerCredentialMatch = url.pathname.match(
-      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai|facebook-pages|gemini|openai)(\/status)?$/
+      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai|facebook-pages|linkedin-organization|gemini|openai)(\/status)?$/
     );
     if (providerCredentialMatch && req.method === "GET" && providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
@@ -652,6 +654,86 @@ export async function startEvercraftHomeServer({
         ok: true, diagnostic,
         secret_material_returned: false,
       });
+    }
+
+
+    // Journal-first company LinkedIn. This is a private Home execution surface,
+    // not a public tool or a generic "post arbitrary copy" endpoint.
+    if (req.method === "POST" && url.pathname === "/api/clip/journal/linkedin") {
+      if (authMode !== "passport") return json(res, 403, {
+        ok:false,state:"clip_linkedin_passport_runtime_required",
+        publication_performed:false,secret_material_returned:false,
+      });
+      let body, resourceRef;
+      try {
+        body = await readJsonBody(req, 4096);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            Object.keys(body).length !== 1) throw Error("clip_linkedin_request_invalid");
+        resourceRef = journalStoryResourceRef(body.slug);
+      } catch {
+        return json(res, 400, {ok:false,state:"clip_linkedin_request_invalid",
+          publication_performed:false,secret_material_returned:false});
+      }
+      const session = sessionFor(req, "home.clip.publish", resourceRef);
+      if (!session.ok) return json(res, session.status, session);
+      if (!session.grant_id) return json(res, 403, {
+        ok:false,state:"clip_linkedin_scoped_passport_grant_required",
+        publication_performed:false,secret_material_returned:false,
+      });
+      if (!credentialVault) return json(res, 503, {
+        ok:false,state:"credential_vault_not_configured",
+        publication_performed:false,secret_material_returned:false,
+      });
+      try {
+        const receipt = await publishJournalStoryLinkedInFromHome({
+          repoRoot,slug:body.slug,credentialStateDir,
+          stateRoot:String(serviceOrigins?.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "").trim(),
+          organizationId:String(serviceOrigins?.CLIP_LINKEDIN_ORGANIZATION_ID || "").trim(),
+          credentialRef:String(serviceOrigins?.CLIP_LINKEDIN_CREDENTIAL_REF || "").trim(),
+          authorizationRef:"passport-grant:" + session.grant_id,
+          linkedinVersion:String(serviceOrigins?.CLIP_LINKEDIN_API_VERSION || "").trim(),
+          publisherEnabled:serviceOrigins?.CLIP_LINKEDIN_PUBLISH_ENABLED === "true",
+          orgAccessVerified:serviceOrigins?.CLIP_LINKEDIN_ORG_ACCESS_VERIFIED === "true",
+          writePermissionVerified:serviceOrigins?.CLIP_LINKEDIN_WRITE_VERIFIED === "true",
+          readPermissionVerified:serviceOrigins?.CLIP_LINKEDIN_READ_VERIFIED === "true",
+          fetchImpl:clipLinkedInFetch,
+        });
+        const published=receipt.state === "published";
+        const held=receipt.state === "reconciliation_required" ||
+          receipt.state === "duplicate_or_reconciliation_hold";
+        return json(res,published?200:held?409:502,{
+          ok:published,
+          state:receipt.state,
+          publication_performed:published?true:held?null:false,
+          publication_may_have_occurred:receipt.provider_may_have_published===true,
+          automatic_retry_allowed:false,
+          authorization:{scope:"home.clip.publish",
+            resource_ref:resourceRef,grant_id:session.grant_id,mode:session.mode},
+          secret_material_returned:false,
+          receipt,
+        });
+      } catch (error) {
+        // Safe fixed errors: never return LinkedIn token, HTTP response text,
+        // private claim location, session cookie, or upstream JSON.
+        const known=new Set([
+          "clip_linkedin_passport_grant_required",
+          "clip_linkedin_publisher_disabled",
+          "clip_linkedin_durable_claim_state_required",
+          "clip_linkedin_credential_missing",
+          "clip_linkedin_credential_selection_ambiguous",
+          "clip_linkedin_private_organization_allowlist_missing",
+          "clip_linkedin_organization_identity_mismatch",
+          "clip_linkedin_journal_release_receipt_unverified",
+          "clip_linkedin_journal_derivative_missing",
+          "home_clip_journal_handoff_missing",
+          "home_clip_journal_slug_invalid",
+          "clip_journal_durable_state_root_required",
+        ]);
+        const state=known.has(String(error?.message))?error.message:"clip_linkedin_publish_held";
+        return json(res,503,{ok:false,state,
+          publication_performed:false,automatic_retry_allowed:false,
+          secret_material_returned:false});
+      }
     }
 
     if (req.method === "POST" && url.pathname === "/api/clip/journal/facebook") {
