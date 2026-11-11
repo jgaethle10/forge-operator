@@ -1,0 +1,41 @@
+name: Raven local llama.cpp canary proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/raven/benchmarks/owned-local-model-probe*"
+      - "systemia/raven/benchmarks/probe-owned-local-model*"
+      - "systemia/raven/benchmarks/local-llama-inference.candidate*"
+      - "systemia/raven/benchmarks/run-owned-local-inference-canary*"
+      - ".github/workflows/raven-llamacpp-local-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax check
+        run: |
+          node --check systemia/raven/benchmarks/owned-local-model-probe.mjs
+          node --check systemia/raven/benchmarks/owned-local-model-probe.test.mjs
+          node --check systemia/raven/benchmarks/probe-owned-local-model.mjs
+          node --check systemia/raven/benchmarks/probe-owned-local-model.test.mjs
+          node --check systemia/raven/benchmarks/local-llama-inference.candidate.mjs
+          node --check systemia/raven/benchmarks/local-llama-inference.candidate.test.mjs
+          node --check systemia/raven/benchmarks/run-owned-local-inference-canary.mjs
+          node --check systemia/raven/benchmarks/run-owned-local-inference-canary.test.mjs
+      - name: Prove local-only, disabled-by-default and fail-closed behavior
+        run: |
+          node --test \
+            systemia/raven/benchmarks/owned-local-model-probe.test.mjs \
+            systemia/raven/benchmarks/probe-owned-local-model.test.mjs \
+            systemia/raven/benchmarks/local-llama-inference.candidate.test.mjs \
+            systemia/raven/benchmarks/run-owned-local-inference-canary.test.mjs
