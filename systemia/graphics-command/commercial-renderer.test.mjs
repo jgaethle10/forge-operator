@@ -59,7 +59,7 @@ test('commercial poster makes the conversion leak the visual subject',()=>{
   assert.match(svg,/MOBILE EXPERIENCE/);
   assert.doesNotMatch(svg,/>CONVERT</);
   assert.match(svg,/NOT AN AUDIT RESULT/);
-  assert.match(svg,/SYNTHETIC VISUAL/);
+  assert.match(svg,/ILLUSTRATIVE SERVICE OVERVIEW/);
   assert.doesNotMatch(svg,/health score.*[0-9]/i);
 });
 
