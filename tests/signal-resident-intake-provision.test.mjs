@@ -85,3 +85,13 @@ test('Fabric runtime can use owner-only private key file without a key in its en
     fs.rmSync(parent,{recursive:true,force:true});
   }
 });
+
+test('resident updater actually initializes Signal on both current and new revisions, then verifies readiness',()=>{
+  const updater=fs.readFileSync(new URL('../scripts/update-fabric-owned-edge.sh',import.meta.url),'utf8');
+  assert.match(updater,/ensure_signal_private_intake\(\)/);
+  assert.equal((updater.match(/if ! ensure_signal_private_intake; then/g)||[]).length,2);
+  assert.match(updater,/api\/signal\/readiness/);
+  assert.match(updater,/r\.intake_available!==true/);
+  assert.match(updater,/r\.payment_ready!==false\|\|r\.payment_verified!==false/);
+  assert.match(updater,/SIGNAL_INTAKE_KEY_CREATED/);
+});
