@@ -29,22 +29,26 @@
     {
       "label": "Miyoshi et al. (2026), peer-reviewed Geophysical Research Letters study",
       "url": "https://doi.org/10.1029/2026GL125879",
-      "role": "primary_study"
+      "role": "primary_study",
+      "source_id": "arase-peer-reviewed"
     },
     {
       "label": "JAXA / ISAS Arase research report, October 27, 2026",
       "url": "https://www.isas.jaxa.jp/en/topics/004418.html",
-      "role": "mission_report"
+      "role": "mission_report",
+      "source_id": "jaxa-is-as-2026"
     },
     {
       "label": "Nagoya University study explanation, October 28, 2026",
       "url": "https://en.nagoya-u.ac.jp/news/articles/pr-2024-solar-storm-triggered-ultra-relativistic-electrons-inside-earths-impenetrable-barrier/",
-      "role": "institutional_report"
+      "role": "institutional_report",
+      "source_id": "nagoya-university-2026"
     },
     {
       "label": "Prior independent Arase and MSS-1 satellite observations",
       "url": "https://doi.org/10.1029/2025JA034419",
-      "role": "related_study"
+      "role": "related_study",
+      "source_id": "prior-mss1-arase"
     }
   ],
   "release_holds": [
@@ -55,5 +59,50 @@
     "External canonical and content verification",
     "Evercraft Clip platform-by-platform publication receipts"
   ],
-  "notes": "This manifest is evidence for the private editorial preview. NASA visual contextualizes the May 2024 storm and does not depict the 2026 Arase electron acceleration. JAXA illustrations are NOT copied."
+  "notes": "This manifest is evidence for the private editorial preview. NASA visual contextualizes the May 2024 storm and does not depict the 2026 Arase electron acceleration. JAXA illustrations are NOT copied.",
+  "claims": [
+    {
+      "claim": "Japan's Arase satellite observed a major enhancement of multi-MeV electrons inside the region historically identified as Earth's impenetrable barrier during the May 2024 geomagnetic superstorm.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed",
+        "jaxa-is-as-2026"
+      ]
+    },
+    {
+      "claim": "The study reports electron flux enhancements greater than 5,000 times the pre-storm level for the investigated energy and region.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed"
+      ]
+    },
+    {
+      "claim": "A growing local peak in electron phase space density supports local acceleration; it cannot be explained by inward transport alone.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed",
+        "jaxa-is-as-2026"
+      ]
+    },
+    {
+      "claim": "Whistler-mode chorus waves occurred in the region under unusual plasma conditions; the authors identify a plausible acceleration mechanism but further modeling is needed to apportion processes.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed",
+        "jaxa-is-as-2026"
+      ]
+    },
+    {
+      "claim": "The result concerns hazardous electrons in near-Earth space and spacecraft radiation risk, not a collapse of Earth's atmosphere or magnetic field at ground level.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "jaxa-is-as-2026",
+        "nagoya-university-2026"
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Observations support local acceleration but do not uniquely quantify all respective contributions of chorus-wave acceleration, radial transport and particle losses.",
+    "Aurora photograph is contextual and does not portray the electron measurements or satellite instruments."
+  ]
 }
