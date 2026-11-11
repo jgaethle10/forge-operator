@@ -155,7 +155,7 @@ export async function startPrivateClassroomPilot({
  };
 }
 function arg(name){const i=process.argv.indexOf(name);return i>=0?process.argv[i+1]||'':''}
-if(process.argv[1]&&fileURLToPath(new URL('file://'+process.argv[1]))===ownFile){
+if(process.argv[1]&&fs.realpathSync(process.argv[1])===ownFile){
  try{
   const accessToken=readSecretFile(arg('--access-token-file'));
   const ravenToken=readSecretFile(arg('--raven-token-file'));
