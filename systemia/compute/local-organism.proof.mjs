@@ -15,6 +15,20 @@ const nativeBrowserProofPreparer=async()=>({
   browserRuntimeFactory:null,
 });
 
+function activeLoopbackListenerSummary() {
+  return (process._getActiveHandles?.() || [])
+    .filter(handle => handle?.constructor?.name === 'Server')
+    .map(server => {
+      const address=server.address?.();
+      return {
+        listening: server.listening === true,
+        // Test-only ephemeral loopback ports, never a remote endpoint or token.
+        local_port: address && typeof address === 'object'
+          ? address.port : null,
+      };
+    });
+}
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-local-organism-proof-'));
 const releaseRef = 'e293e0d75d1622f12b54249be8d403a06774e4e9';
 
@@ -89,7 +103,15 @@ try {
     true
   );
 
+  const firstComputePort=Number(new URL(first.seed.endpoint).port);
+  const firstFabricPort=Number(new URL(first.fabric.result.local_url).port);
   await first.close();
+  console.error(JSON.stringify({
+    schema:'evercraft.local-organism.shutdown-boundary.v1',
+    stage:'after_first_close',
+    known_test_ports:{compute:firstComputePort,fabric:firstFabricPort},
+    listeners:activeLoopbackListenerSummary()
+  }));
   first = null;
 
   second = await startLocalOrganism({
@@ -186,6 +208,7 @@ const shutdownWatchdog=setTimeout(()=>{
     state:'shutdown_resources_still_active',
     active_handle_classes:classes,
     active_resource_types:resources,
+    listeners:activeLoopbackListenerSummary(),
     authorization_changes:false
   }));
   process.exit(1);
