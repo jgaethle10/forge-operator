@@ -106,6 +106,25 @@
       "founder_decision": false,
       "evidence": "https://github.com/jgaethle10/forge-operator/issues/1926",
       "notes": "Review request prepared; explicit approval, corrections or rejection not yet received."
+    },
+    {
+      "event_id": "BR-001-E003",
+      "event_type": "preliminary_public_name_use_screen",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "working_imprint": "The Weekly Signal",
+      "proposal_version": "v1.0-proposal",
+      "review_status": "awaiting_founder_review",
+      "founder_decision": false,
+      "evidence": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
+      "source_urls": [
+        "https://mktrintheloop.com/p/introducing-the-weekly-signal",
+        "https://404signal.com/newsletter/",
+        "https://techsignalhq.com/",
+        "https://workforcesignal.com/newsletter"
+      ],
+      "finding": "Exact-name phrase already appears in editorial and newsletter brands, including marketing. Record as risk of weak distinctiveness, not a legal trademark conclusion.",
+      "resolution": "open_pending_founder_review"
     }
   ]
 }
