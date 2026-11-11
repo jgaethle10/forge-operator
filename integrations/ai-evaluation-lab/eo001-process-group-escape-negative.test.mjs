@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import process from 'node:process';
-import {validateEscapedSessionSnapshot,runEscapedSessionNegativeControl}
+import {validateEscapedSessionSnapshot,verifyOwnedDetachedDescendant,runEscapedSessionNegativeControl}
   from './eo001-process-group-escape-negative.mjs';
 
 const stat='200 (bounded worker with spaces) S 1 200 200 0 0 0 0\n';
@@ -50,4 +50,26 @@ test('non-Linux refuses before launching any synthetic child',async()=>{
     platform:'win32',spawnChild:()=>{spawned=true;}
   }),/LINUX_REQUIRED/);
   assert.equal(spawned,false);
+});
+
+test('forged descendant PIDs are rejected before any cleanup authority is gained',()=>{
+  const ownedStat='200 (real bounded child) S 100 200 200 0 0';
+  const proof=verifyOwnedDetachedDescendant({
+    driverPid:100,survivorPid:200,driverCgroup:cgroup,
+    survivorCgroup:cgroup,survivorStat:ownedStat
+  });
+  assert.equal(proof.owner_verified,true);
+  for(const wrong of [
+    {survivorStat:'200 (different parent) S 999 200 200 0 0'},
+    {survivorStat:'200 (different session) S 100 201 201 0 0'},
+    {survivorStat:'201 (different PID) S 100 201 201 0 0'},
+    {survivorStat:'200 (zombie) Z 100 200 200 0 0'},
+    {survivorCgroup:'0::/different.scope'},
+    {survivorPid:100}
+  ]){
+    assert.throws(()=>verifyOwnedDetachedDescendant({
+      driverPid:100,survivorPid:200,driverCgroup:cgroup,
+      survivorCgroup:cgroup,survivorStat:ownedStat,...wrong
+    }),/UNOWNED_DESCENDANT_PID_REJECTED|ESCAPED_CGROUP_MISMATCH|ESCAPE_PID_INVALID/);
+  }
 });
