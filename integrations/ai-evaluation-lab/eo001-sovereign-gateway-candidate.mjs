@@ -57,7 +57,8 @@ export function readPrivateToken(file){
 }
 
 /** No redirects, proxies, hostname resolution, or non-loopback destinations. */
-export function localJsonRequest({port,route,method='GET',token,body=null,timeoutMs=DEFAULT_TIMEOUT_MS}){
+export function localJsonRequest({port,route,method='GET',token,body=null,
+  timeoutMs=DEFAULT_TIMEOUT_MS,signal=null}){
   if(!Number.isInteger(port)||port<1024||port>65535)throw blocked('INVALID_PORT');
   if(!['/health','/v1/chat/completions'].includes(route)||
      !((route==='/health'&&method==='GET')||(route!=='/health'&&method==='POST'))){
@@ -65,17 +66,27 @@ export function localJsonRequest({port,route,method='GET',token,body=null,timeou
   }
   if(typeof token!=='string'||!token)throw blocked('TOKEN_REQUIRED');
   if(!Number.isInteger(timeoutMs)||timeoutMs<100||timeoutMs>14500)throw blocked('INVALID_TIMEOUT');
+  if(signal!==null&&!(signal instanceof AbortSignal))throw blocked('INVALID_ABORT_SIGNAL');
   const payload=body===null?null:JSON.stringify(body);
   if(payload!==null&&Buffer.byteLength(payload)>16384)throw blocked('REQUEST_TOO_LARGE');
+  if(signal?.aborted)return Promise.reject(blocked('GATEWAY_ABORTED'));
   return new Promise((resolve,reject)=>{
     let settled=false;
+    let req=null;
+    let timer=null;
+    const onAbort=()=>{
+      if(settled)return;
+      req?.destroy();
+      finish(blocked('GATEWAY_ABORTED'));
+    };
     const finish=(error,value)=>{
       if(settled)return;
       settled=true;
-      clearTimeout(timer);
+      if(timer!==null)clearTimeout(timer);
+      if(signal)signal.removeEventListener('abort',onAbort);
       if(error)reject(error);else resolve(value);
     };
-    const req=httpRequest({hostname:'127.0.0.1',port,path:route,method,
+    req=httpRequest({hostname:'127.0.0.1',port,path:route,method,
       agent:false,headers:{'accept':'application/json',
         'authorization':'Bearer '+token,
         ...(payload===null?{}:{'content-type':'application/json','content-length':Buffer.byteLength(payload)})}},res=>{
@@ -96,8 +107,12 @@ export function localJsonRequest({port,route,method='GET',token,body=null,timeou
       });
       res.on('error',()=>finish(blocked('GATEWAY_TRANSPORT_FAILURE')));
     });
-    const timer=setTimeout(()=>{req.destroy();finish(blocked('GATEWAY_TIMEOUT'));},timeoutMs);
     req.on('error',()=>finish(blocked('GATEWAY_TRANSPORT_FAILURE')));
+    if(signal){
+      signal.addEventListener('abort',onAbort,{once:true});
+      if(signal.aborted){onAbort();return;}
+    }
+    timer=setTimeout(()=>{req.destroy();finish(blocked('GATEWAY_TIMEOUT'));},timeoutMs);
     req.end(payload??undefined);
   });
 }
@@ -115,15 +130,16 @@ export function createSovereignInfer({port,tokenFile,request=localJsonRequest,re
   if(!Number.isInteger(port)||port<1024||port>65535)throw blocked('INVALID_PORT');
   if(!Number.isInteger(timeoutMs)||timeoutMs<100||timeoutMs>12500)throw blocked('INVALID_TIMEOUT');
   if(!Number.isInteger(maxTokens)||maxTokens<1||maxTokens>512)throw blocked('INVALID_TOKEN_BUDGET');
-  return async ({input})=>{
+  return async ({input,signal=null})=>{
     if(typeof input!=='string'||Buffer.byteLength(input)>8192)throw blocked('PROMPT_INVALID');
+    if(signal?.aborted)throw blocked('GATEWAY_ABORTED');
     const token=readToken(tokenFile);
     const startedAt=new Date().toISOString();
-    const health=await request({port,route:'/health',method:'GET',token,timeoutMs:Math.min(1500,timeoutMs)});
+    const health=await request({port,route:'/health',method:'GET',token,timeoutMs:Math.min(1500,timeoutMs),signal});
     validateGatewayHealth(health);
     const reply=await request({port,route:'/v1/chat/completions',method:'POST',token,
       body:{model:MODEL_ID,temperature:0,max_tokens:maxTokens,stream:false,
-        messages:[{role:'user',content:input}]},timeoutMs});
+        messages:[{role:'user',content:input}]},timeoutMs,signal});
     if(reply.model!==undefined&&reply.model!==MODEL_ID)throw blocked('MODEL_ID_MISMATCH');
     if(!Array.isArray(reply.choices)||reply.choices.length!==1||
        typeof reply.choices[0]?.message?.content!=='string')throw blocked('INFERENCE_INVALID_RESPONSE');
