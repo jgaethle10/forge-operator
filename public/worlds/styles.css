@@ -48,3 +48,14 @@
 .editor .tools button#unpublishOnline{border:1px solid #ba9f96;color:#86514b;background:#fff6f1;font-weight:700}
 .editor .tools button#unpublishOnline:disabled{opacity:.55;cursor:wait}
 @media(max-width:700px){.editor .tools #unpublishOnline{grid-column:span 2;min-height:46px}}
+
+/* House 001 uses the existing Worlds editor sheet and WebGL renderer. */
+#house-editor{padding:14px 20px 25px;color:#f5f3e7}
+#house-editor label{display:block;font-size:12px;font-weight:800;letter-spacing:.06em;margin:7px 0}
+#house-editor select{display:block;width:100%;min-height:44px;border:1px solid #9fbcaf;border-radius:8px;background:#173d42;color:#f6f3e8;padding:10px;font-size:16px}
+#house-editor p{font-size:12px;line-height:1.6;color:#d2e5dd;margin:14px 0}
+#house-grid-scroll{overflow-x:auto;max-width:100%;padding-bottom:6px}
+#house-grid{display:grid;grid-template-columns:repeat(9,minmax(32px,1fr));gap:4px;min-width:315px;max-width:450px;margin:0 auto}
+#house-grid .house-cell{display:grid;place-items:center;min-height:39px;padding:0;border:1px solid #86aab0;background:#597d75;color:#fafaf0;border-radius:6px;font-size:20px;font-weight:800}
+#house-grid .house-cell:hover,#house-grid .house-cell:focus-visible{background:#83a9a1;outline:2px solid #fbe2a7;outline-offset:1px}
+#house-edit-status{font-size:12px;color:#f2d89f}
