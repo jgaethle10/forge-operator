@@ -36,8 +36,12 @@ export function validatePassageQaAssignment(assignment,rootDir=ROOT){
 function runAllowlistedSuite(files,rootDir=ROOT){
  return new Promise((done)=>{
   const command=process.execPath, args=['--test',...files];
+  const childEnv={...process.env,PASSAGE_SABAN_QA_CHILD:'1'};
+  // Node's outer --test runner marks its children to prevent recursive invocation.
+  // Registered QA worker subprocesses are intentional independent test runners.
+  delete childEnv.NODE_TEST_CONTEXT;
   const child=spawn(command,args,{
-   cwd:rootDir,env:{...process.env,PASSAGE_SABAN_QA_CHILD:'1'},
+   cwd:rootDir,env:childEnv,
    stdio:['ignore','pipe','pipe'],shell:false,
   });
   let out='',err='',overflow=false,timedOut=false,settled=false;
