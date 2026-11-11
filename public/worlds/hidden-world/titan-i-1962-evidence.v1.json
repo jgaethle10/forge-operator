@@ -1,0 +1,146 @@
+{
+  "schema": "evercraft.hidden-world.cold-war-evidence.v1",
+  "subject": "Washington Titan I complexes (Larson Air Force Base region)",
+  "scope": "Public historical education; broad county/regional context only, no exact site map, property entrances, personnel routes, operational procedures or active equipment.",
+  "generated_at": "2026-11-09",
+  "chronology": [
+    {
+      "date": "1959-12-01",
+      "event": "Groundbreaking begins for three Larson AFB-region Titan I complexes",
+      "source_id": "historylink-10158",
+      "confidence": "published_historical_account"
+    },
+    {
+      "date": "1961",
+      "event": "Complexes completed",
+      "source_id": "historylink-10158",
+      "confidence": "published_historical_account"
+    },
+    {
+      "date": "1962",
+      "event": "Washington Titan I complexes declared operational",
+      "source_id": "historylink-10158",
+      "confidence": "published_historical_account"
+    },
+    {
+      "date": "1965-01-01",
+      "event": "Titan I sites stand down",
+      "source_id": "historylink-10158",
+      "confidence": "published_historical_account"
+    },
+    {
+      "date": "1965-03",
+      "event": "Deactivation follows",
+      "source_id": "historylink-10158",
+      "confidence": "published_historical_account"
+    }
+  ],
+  "documented_system_facts": [
+    {
+      "id": "titan-clusters",
+      "claim": "Washington's Larson-associated Titan I program used three complexes, with three missiles per complex.",
+      "source_id": "historylink-10158"
+    },
+    {
+      "id": "deep-silos",
+      "claim": "HistoryLink reports silo depth of approximately 160 feet at the Washington sites.",
+      "source_id": "historylink-10158"
+    },
+    {
+      "id": "control-space",
+      "claim": "Historical accounts document a hardened underground launch-control room.",
+      "source_id": "historylink-10158"
+    },
+    {
+      "id": "linked-spaces",
+      "claim": "General Titan I complexes incorporated linked underground support structures.",
+      "source_id": "usaf-building-missiles"
+    },
+    {
+      "id": "lift-system",
+      "claim": "Titan I historically used a silo-to-surface lift rather than underground launch.",
+      "source_id": "spaceforce-history"
+    },
+    {
+      "id": "closure",
+      "claim": "The Washington sites were retired in 1965 and became privately owned and closed to visitors.",
+      "source_id": "historylink-10158"
+    },
+    {
+      "id": "flood-hazard",
+      "claim": "The Quincy/Royal City complex has been reported flooded.",
+      "source_id": "historylink-10158"
+    }
+  ],
+  "broad_regions": [
+    {
+      "id": "odessa-region",
+      "region": "Odessa vicinity, Washington",
+      "source_id": "historylink-10158",
+      "locator_kind": "town_context_only",
+      "actual_complex_coordinates": null,
+      "property_entrance_coordinates": null,
+      "open_to_public": false
+    },
+    {
+      "id": "warden-region",
+      "region": "Warden vicinity, Washington",
+      "source_id": "historylink-10158",
+      "locator_kind": "town_context_only",
+      "actual_complex_coordinates": null,
+      "property_entrance_coordinates": null,
+      "open_to_public": false
+    },
+    {
+      "id": "quincy-region",
+      "region": "Quincy/Royal City vicinity, Washington",
+      "source_id": "historylink-10158",
+      "locator_kind": "town_context_only",
+      "actual_complex_coordinates": null,
+      "property_entrance_coordinates": null,
+      "open_to_public": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "historylink-10158",
+      "title": "ICBM (Intercontinental Ballistic Missiles) in Washington State",
+      "publisher": "HistoryLink",
+      "author": "Duane Colt Denfeld",
+      "published": "2012-07-31",
+      "url": "https://www.historylink.org/File/10158",
+      "scope": "Washington history, deployment, closure, access restrictions"
+    },
+    {
+      "id": "usaf-building-missiles",
+      "title": "Building Missiles, 1954–1966",
+      "publisher": "U.S. Air Force history (govinfo)",
+      "url": "https://www.govinfo.gov/content/pkg/GOVPUB-D103-PURL-gpo107257/pdf/GOVPUB-D103-PURL-gpo107257.pdf",
+      "scope": "Declassified historic Titan I underground architecture; illustrative context not a Washington parcel plan"
+    },
+    {
+      "id": "spaceforce-history",
+      "title": "U.S. Air Force ballistic missile historical publication",
+      "publisher": "U.S. Air Force / Space Force archive",
+      "url": "https://www.losangeles.spaceforce.mil/Portals/16/documents/AFD-060912-023.pdf",
+      "scope": "Historical Titan I lift configuration"
+    }
+  ],
+  "exhibit": {
+    "page": "titan-i-1962.html",
+    "visual_medium": "original conceptual SVG",
+    "precise_survey_geometry": false,
+    "interpretive_silo_positions": true,
+    "real_tunnel_routes": false,
+    "missile_operations_instructions": false,
+    "public_access_authorized": false,
+    "original_source_images_embedded": false,
+    "era_switch_no_javascript_required": true
+  },
+  "next_evidence_gates": [
+    "Review original declassified historic Titan I diagrams for conceptual relationships, retaining their era and site caveats.",
+    "Do not represent historic design drawings as measured plans of surviving Washington properties.",
+    "Add original educational documentation on crew experience and infrastructure service roles.",
+    "Validate hosted public content and physical-device Safari independently of GitHub CI."
+  ]
+}

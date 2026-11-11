@@ -99,6 +99,22 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  const hiddenEvidence=await fetch(base+'/worlds/hidden-world/yakima-evidence.html');
  assert.equal(hiddenEvidence.status,200);
  assert.match(await hiddenEvidence.text(),/Connected tunnels established by the records reviewed/);
+ const lund=await fetch(base+'/worlds/hidden-world/lund-building.html');
+ assert.equal(lund.status,200,'Lund exhibit route should resolve from owned vault');
+ assert.match(lund.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await lund.text(),/National Register nomination PDF/);
+ const titan=await fetch(base+'/worlds/hidden-world/titan-i-1962.html');
+ assert.equal(titan.status,200);
+ assert.match(titan.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await titan.text(),/Original educational SVG/);
+ const titanEvidence=await fetch(base+'/worlds/hidden-world/titan-i-1962-evidence.v1.json');
+ assert.equal(titanEvidence.status,200);
+ assert.match(titanEvidence.headers.get('content-type')||'',/^application\/json/);
+ const titanData=await titanEvidence.json();
+ assert.equal(titanData.schema,'evercraft.hidden-world.cold-war-evidence.v1');
+ assert.equal(titanData.broad_regions.every(x=>x.actual_complex_coordinates===null&&x.open_to_public===false),true);
+
+
  const hiddenCsv=await fetch(base+'/worlds/hidden-world/hidden_world_atlas_v1.csv');
  assert.equal(hiddenCsv.status,200);
  assert.match(hiddenCsv.headers.get('content-type')||'',/^text\/csv/);

@@ -28,7 +28,7 @@ function element(){
 }
 function preview(csv=sample,{clipboardBlocked=false}={}){
   const ids=['csv-file','consent','run','result','failure','status','fallback','total',
-    'change','monthly','proof','download','copy','copy-text'];
+    'change','monthly','proof','download','copy','copy-text','share-tool','share-feedback'];
   const nodes=Object.fromEntries(ids.map(id=>[id,element()]));
   nodes.run.disabled=true;
   nodes.result.hidden=true;
@@ -42,7 +42,8 @@ function preview(csv=sample,{clipboardBlocked=false}={}){
   const document={
     body,
     getElementById:id=>nodes[id]||(()=>{throw Error('unknown_id_'+id);})(),
-    createElement:()=>element()
+    createElement:()=>element(),
+    createTextNode:text=>({textContent:text})
   };
   const context={
     __engine:engine,document,crypto:webcrypto,TextEncoder,Blob,
@@ -130,4 +131,26 @@ test('iPhone clipboard-denied path keeps selectable work in the tab',async()=>{
   assert.equal(a.nodes['copy-text'].selected,true);
   assert.match(a.nodes['copy-text'].value,/Monthly sales report/);
   assert.match(a.nodes.status.textContent,/Clipboard access blocked/);
+});
+
+test('sharing after report creation sends only the fixed public tool URL',async()=>{
+  const a=preview();
+  a.choose();a.authorize();await a.nodes.run.fire('click');
+  assert.equal(a.nodes.result.hidden,false);
+  await a.nodes['share-tool'].fire('click');
+  assert.equal(a.copied.length,1);
+  assert.equal(a.copied[0],'https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=work_saban_tool&utm_medium=organic_share&utm_campaign=work_saban');
+  assert.doesNotMatch(a.copied[0],/36301|sha256|customer|monthly.sales.report/i);
+  assert.match(a.nodes['share-feedback'].textContent,/Free tool link copied/);
+});
+test('when a phone blocks clipboard sharing, link stays selectable without leaking private report text',async()=>{
+  const a=preview(sample,{clipboardBlocked:true});
+  a.choose();a.authorize();await a.nodes.run.fire('click');
+  await a.nodes['share-tool'].fire('click');
+  assert.equal(a.nodes['share-feedback'].children.length,2);
+  const [intro,link]=a.nodes['share-feedback'].children;
+  assert.match(intro.textContent,/Copy this link:/);
+  assert.match(link.href,/work-saban\/report\/\?utm_source=work_saban_tool/);
+  assert.doesNotMatch(link.href,/Source digest|Total sales|36301/);
+  assert.equal(a.copied.length,0);
 });

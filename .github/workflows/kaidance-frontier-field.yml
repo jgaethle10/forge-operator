@@ -10,6 +10,10 @@ on:
       - 'systemia/organism/science-hazard-watch.mjs'
       - 'systemia/organism/medical-evidence-brief*.mjs'
       - 'systemia/organism/medical-evidence-triage*.mjs'
+      - 'systemia/organism/medical-review-packet*.mjs'
+      - 'systemia/organism/medical-registry-crosscheck*.mjs'
+      - 'systemia/organism/medical-registry-source-probe.mjs'
+      - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
@@ -22,8 +26,13 @@ on:
     paths:
       - 'systemia/organism/frontier-watch.mjs'
       - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/medical-evidence-brief*.mjs'
       - 'systemia/organism/medical-evidence-triage*.mjs'
+      - 'systemia/organism/medical-review-packet*.mjs'
+      - 'systemia/organism/medical-registry-crosscheck*.mjs'
+      - 'systemia/organism/medical-registry-source-probe.mjs'
+      - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
@@ -38,7 +47,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: kaidance-frontier-field-main
+  group: kaidance-frontier-field-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -74,14 +83,28 @@ jobs:
       - name: Prove longitudinal biomedical evidence triage
         run: node systemia/organism/medical-evidence-triage.test.mjs
 
+      - name: Prove biomedical source-quoted review packet
+        run: node systemia/organism/medical-review-packet.test.mjs
+
+      - name: Prove research memory cache continuity
+        run: node systemia/organism/medical-workflow-continuity.test.mjs
+
+      - name: Prove ClinicalTrials.gov independent metadata crosscheck
+        run: node systemia/organism/medical-registry-crosscheck.test.mjs
+
+      - name: Probe official ClinicalTrials.gov endpoint (no publication claim)
+        run: node systemia/organism/medical-registry-source-probe.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
-      - name: Save KAIDANCE frontier state
+      - name: Save KAIDANCE frontier and medical memory
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: artifacts/kaidance-frontier/runtime/state.json
+          path: |
+            artifacts/kaidance-frontier/runtime/state.json
+            artifacts/medical-evidence-triage/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload KAIDANCE frontier receipts
@@ -108,6 +131,13 @@ jobs:
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-evidence-triage/review-queue.md
             artifacts/medical-evidence-triage/index.html
+            artifacts/medical-review-packets/latest.json
+            artifacts/medical-review-packets/review.md
+            artifacts/medical-review-packets/index.html
+            artifacts/medical-registry-crosscheck/latest.json
+            artifacts/medical-registry-crosscheck/review.md
+            artifacts/medical-registry-crosscheck/index.html
+            artifacts/medical-registry-crosscheck/source-health.json
           if-no-files-found: warn
           retention-days: 14
 

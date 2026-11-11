@@ -43,6 +43,6 @@ test('The prototype is an owned, local-only experience with no provider dependen
   const engine=readFileSync(new URL('../public/apps/infinite-classroom/learning-engine.mjs',import.meta.url),'utf8');
   assert.match(html,/\.\/learning-engine\.mjs/);
   assert.match(html,/aria-live="polite"/);
-  assert.match(html,/No tracking/);
+  assert.match(html,/No login/);
   assert.doesNotMatch(html + engine, /\bfetch\s*\(|\bXMLHttpRequest\b|\blocalStorage\b|\bsessionStorage\b|https?:\/\/|Core\.InvokeLLM/);
 });

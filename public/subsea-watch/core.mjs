@@ -9,7 +9,7 @@ export function normalizeDive(raw){
  const source=String(raw.position_source||'').toUpperCase();
  const points=raw.points.map((p,i)=>{
   const t=Number(p.t_s??p.time_s),depth=Number(p.depth_m);
-  if(!finite(t)||t<0||!finite(depth)||depth<0||depth>450)throw Error('Invalid time or depth at row '+(i+1));
+  if(!finite(t)||t<0||!finite(depth)||depth<0||depth>12000)throw Error('Invalid time or depth at row '+(i+1));
   const hasX=p.x_m!==undefined&&p.x_m!==null&&p.x_m!=='';
   const hasY=p.y_m!==undefined&&p.y_m!==null&&p.y_m!=='';
   if(hasX!==hasY)throw Error('A horizontal fix needs both x_m and y_m at row '+(i+1));

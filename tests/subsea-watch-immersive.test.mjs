@@ -6,6 +6,7 @@ import {normalizeDive,parseInput,atTime} from '../public/subsea-watch/core.mjs';
 const html=fs.readFileSync('public/subsea-watch/immersive/index.html','utf8');
 const js=fs.readFileSync('public/subsea-watch/immersive/scene.mjs','utf8');
 const sample=normalizeDive(JSON.parse(fs.readFileSync('public/subsea-watch/sample.json','utf8')));
+const publicProbe=fs.readFileSync('scripts/probe-subsea-watch-public.mjs','utf8');
 
 test('immersive v2 remains a real 3D WebGL renderer with owned geometry',()=>{
  assert.match(js,/getContext\('webgl'/);
@@ -77,4 +78,33 @@ test('local imports preserve source claims and reject unsourced or synthetic rou
  assert.equal(atTime(depthOnly,10).x,null);
  const unsourced=JSON.stringify({points:[{t_s:0,depth_m:2,x_m:1,y_m:2},{t_s:10,depth_m:3,x_m:2,y_m:3}]});
  assert.throws(()=>parseInput(unsourced,'bad.json'),/declared positioning method/);
+});
+
+
+test('local footage is paired only with user-imported mission data and explicit timing',()=>{
+ for(const id of ['footage-panel','dive-video','video-clock','video-status','video-offset','pick-video','footage-toggle','load-video','sound-toggle','close-footage'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.match(html,/<video id="dive-video" playsinline preload="metadata" muted/);
+ assert.match(html,/Alignment is manually entered and unverified/);
+ assert.match(js,/parseVideoStart\(e\.target\.value\)/);
+ assert.match(js,/videoAtMissionTime\(current,videoStart,videoReady\?video\.duration:NaN\)/);
+ assert.match(js,/if\(mode!=='imported'\)/);
+ assert.match(js,/URL\.createObjectURL\(file\)/);
+ assert.match(js,/URL\.revokeObjectURL\(videoUrl\)/);
+ assert.match(js,/video\.pause\(\)/);
+ assert.match(js,/video\.currentTime=/);
+ assert.match(js,/videoPlayBlocked=true/);
+ assert.match(js,/clearFootage\(\);activate\(next,false\)/);
+ assert.match(js,/clearFootage\(\);load\(\)/);
+ assert.doesNotMatch(js,/fetch\(video|sendBeacon|XMLHttpRequest|WebSocket|MediaRecorder/);
+ assert.doesNotMatch(html,/<video[^>]*controls\b/);
+});
+
+test('public HTTPS canary checks the deployed footage controls and clock module',()=>{
+ assert.match(publicProbe,/immersive\/video-sync\.mjs/);
+ assert.match(publicProbe,/id="dive-video"/);
+ assert.match(publicProbe,/id="video-offset"/);
+ assert.match(publicProbe,/SUBSEA_PUBLIC_HTTPS_WEBGL_LOCAL_FOOTAGE_AND_NOAA_ARCHIVE_VERIFIED/);
+ assert.match(publicProbe,/sample/);
+ assert.doesNotMatch(publicProbe,/if\(!dive\.demo/);
 });

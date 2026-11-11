@@ -6,6 +6,7 @@ import {join} from 'node:path';
 import {makeHistoryReceipt,buildDailyHistory,sha256,HISTORY_SCHEMA} from
   '../systemia/research-service/watershed-history.mjs';
 import {archiveWatershedRun} from '../systemia/research-service/watershed-history-archive.mjs';
+import {readVerifiedHistory} from '../systemia/research-service/watershed-history-read.mjs';
 
 const sha='a'.repeat(40),runId='42739867324',runTime='2026-11-10T02:00:00.000Z';
 const URLS={
@@ -93,6 +94,13 @@ test('untrusted, inconsistent and privileged source assertions reject archive in
     raw=>{const x=JSON.parse(raw['latest.json']);x.publication_authorized=true;raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].provenance='https://evil.com';raw['latest.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].value=-1;raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].unit='mm';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.snow[0].time='2026-11-09T00:00:00Z';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].unit='cms';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].station_id='USGS-NOT_REAL';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.river[0].time='invalid';raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['latest.json']);x.source_coverage.usgs_discharge_location_count=8;raw['latest.json']=Buffer.from(JSON.stringify(x));},
+    raw=>{const x=JSON.parse(raw['reservoir-source-probe.json']);x.derived_sum_source_reported_day='2026-11-08';raw['reservoir-source-probe.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['reservoir-source-probe.json']);x.derived_provisional_sum_af=800;raw['reservoir-source-probe.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['official-basin-report.json']);x.all_basins_warned=false;raw['official-basin-report.json']=Buffer.from(JSON.stringify(x));},
     raw=>{const x=JSON.parse(raw['swe-median-audit.json']);x.basin_percent_of_median=150;raw['swe-median-audit.json']=Buffer.from(JSON.stringify(x));}
@@ -104,6 +112,19 @@ test('untrusted, inconsistent and privileged source assertions reject archive in
   assert.throws(()=>build(fixture(),{event:'pull_request'}),/trusted main-branch/);
   assert.throws(()=>build(fixture(),{runId:'../etc'}),/trusted main-branch/);
 });
+test('invalid-time river readings are archived only with an explicit quality hold',()=>{
+  const raw=fixture();
+  const snapshot=JSON.parse(raw['latest.json']);
+  snapshot.river[0].time='not-an-ISO-timestamp';
+  snapshot.river[0].freshness='invalid_time';
+  snapshot.source_coverage.usgs_discharge_location_count=0;
+  raw['latest.json']=Buffer.from(JSON.stringify(snapshot));
+  const rec=build(raw);
+  assert.equal(rec.sensors.river[0].observed_at,'not-an-ISO-timestamp');
+  assert.equal(rec.sensors.river[0].freshness,'invalid_time');
+  assert.equal(rec.sensors.coverage.river_locations,0);
+});
+
 test('immutable on-disk run is idempotent, conflict-safe and retains all four raw byte receipts',()=>{
   const root=mkdtempSync(join(tmpdir(),'evercraft-water-ledger-'));
   const source=join(root,'source'),ledger=join(root,'ledger');
@@ -122,10 +143,20 @@ test('immutable on-disk run is idempotent, conflict-safe and retains all four ra
       assert.equal(stored.source_digests[name],sha256(bytes));
     }
     assert.equal(archiveWatershedRun(opts).action,'already_recorded_unchanged');
+    const verified=readVerifiedHistory(ledger,{asOf:'2026-11-10',windowDays:7});
+    assert.equal(verified.status,'insufficient_history');
+    assert.equal(verified.verified_run_count,1);
+    assert.equal(verified.raw_digests_verified,true);
+    assert.equal(verified.points.at(-1).official_basin_indices[0].warning_flag,true);
+    assert.equal(verified.points.at(-2).provisional_reservoir_sum_af,null);
+    assert.equal(verified.public_release_authorized,false);
+    assert.throws(()=>readVerifiedHistory(ledger,{asOf:'2026-02-31',windowDays:7}),/valid ledger root/);
     const sensor=JSON.parse(raw['latest.json']);sensor.river[0].value+=1;
     writeFileSync(join(source,'latest.json'),JSON.stringify(sensor));
     assert.throws(()=>archiveWatershedRun(opts),/immutable run ID collision/);
     assert.ok(existsSync(join(dir,'receipt.json')),'original evidence untouched');
+    writeFileSync(join(dir,'sources','latest.json'),Buffer.from(JSON.stringify(sensor)));
+    assert.throws(()=>readVerifiedHistory(ledger,{asOf:'2026-11-10',windowDays:7}),/fingerprints|changed|source/);
   }finally{rmSync(root,{recursive:true,force:true})}
 });
 test('7/30/90-day timeline labels missing days, never interpolates or creates fake trends',()=>{

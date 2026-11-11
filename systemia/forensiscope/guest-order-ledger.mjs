@@ -197,6 +197,24 @@ export function createForensiScopeGuestOrderLedger({
    }
   });
  };
+ const loadTrustedSettlementOrder=async orderKey=>{
+  if(typeof orderKey!=='string'||!ORDER.test(orderKey))return null;
+  const order=readRecord(orders,orderKey);
+  if(order?.schema!=='evercraft.forensiscope.guest-order.v1'||
+     order.order_key!==orderKey||
+     order.checkout_state!=='created'||
+     order.payment_state!=='unpaid'||
+     order.media_rights_confirmed!==true||
+     !Number.isSafeInteger(order.expires_at_ms)||
+     order.expires_at_ms<=now()||
+     !order.quote||order.quote.state!=='quote_only')return null;
+  // Trusted server-only method: no public API exposing customer identity.
+  return Object.freeze({
+   order_key:orderKey,subject:order.subject,quote:order.quote,
+   checkout_state:order.checkout_state,payment_state:order.payment_state,
+   expires_at_ms:order.expires_at_ms
+  });
+ };
  const resolveOrder=async(orderKey,subject)=>{
   const order=await loadOrder(orderKey,subject);
   if(!order)return null;
@@ -326,7 +344,7 @@ export function createForensiScopeGuestOrderLedger({
  };
  return Object.freeze({
   handler,issueGuest,authorizeBuyer,createOrder,loadOrder,resolveOrder,
-  persistCheckout,revokeGuest,
+  loadTrustedSettlementOrder,persistCheckout,revokeGuest,
   readiness:Object.freeze({
    guest_enrollment_enabled:guestEnrollmentEnabled===true,
    public_identity_provider:false,

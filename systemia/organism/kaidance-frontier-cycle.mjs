@@ -6,6 +6,8 @@ import { runScienceHazardWatch } from './science-hazard-watch.mjs';
 import { writeMedicalEvidenceBrief } from './medical-evidence-brief.mjs';
 import { writeMedicalAbstractEvidence } from './medical-abstract-evidence.mjs';
 import { writeMedicalEvidenceTriage } from './medical-evidence-triage.mjs';
+import { writeMedicalReviewPacket } from './medical-review-packet.mjs';
+import { writeRegistryCrosscheck } from './medical-registry-crosscheck.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 
 const rootDir = process.cwd();
@@ -42,6 +44,20 @@ const medicalTriage = writeMedicalEvidenceTriage({
   previous: previousTriage,
   outDir: triageDir,
   now
+});
+
+const medicalReview = writeMedicalReviewPacket({
+  abstractReport: medicalAbstracts,
+  triageReport: medicalTriage.report,
+  outDir: path.join(artifactRoot, 'medical-review-packets'),
+  now
+});
+
+const registryCrosscheck = await writeRegistryCrosscheck({
+  abstracts: medicalAbstracts,
+  review: medicalReview,
+  now,
+  outDir: path.join(artifactRoot, 'medical-registry-crosscheck')
 });
 
 const cycleRoot = path.join(artifactRoot, 'kaidance-frontier');
@@ -105,6 +121,12 @@ const body = {
     triage_history_status: medicalTriage.report.history_status,
     triage_counts: medicalTriage.report.counts,
     triage_receipt: medicalTriage.report.receipt_hash,
+    review_packet_status: medicalReview.source_status,
+    review_packet_counts: medicalReview.counts,
+    review_packet_receipt: medicalReview.receipt_hash,
+    registry_crosscheck_status: registryCrosscheck.source_status,
+    registry_crosscheck_counts: registryCrosscheck.counts,
+    registry_crosscheck_receipt: registryCrosscheck.receipt_hash,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },

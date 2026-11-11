@@ -3,11 +3,21 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '23 * * * *'
+  pull_request:
+    paths:
+      - 'systemia/saban/discovery-path-probe.mjs'
+      - 'systemia/saban/evercraft-transport-contract.test.mjs'
+      - 'plugins/evercraft-fabric/**'
+      - 'plugins/evercraft-ai-suite/**'
+      - '.github/workflows/saban-discovery-path.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/saban/discovery-path-probe.mjs'
+      - 'systemia/saban/evercraft-transport-contract.test.mjs'
       - 'systemia/mcp/owned-offer-links.mjs'
+      - 'plugins/evercraft-fabric/**'
+      - 'plugins/evercraft-ai-suite/**'
       - '.github/workflows/saban-discovery-path.yml'
 permissions:
   contents: read
@@ -23,7 +33,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node systemia/saban/discovery-path-probe.mjs
+      - name: Validate owned MCP plugin manifests and public-directory truth
+        run: node --test systemia/saban/evercraft-transport-contract.test.mjs
+      - name: Syntax-check cold-client evidence probe
+        run: node --check systemia/saban/discovery-path-probe.mjs
+      - name: Probe owned MCP from cold client and preserve latency / error-stage receipt
+        run: node systemia/saban/discovery-path-probe.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

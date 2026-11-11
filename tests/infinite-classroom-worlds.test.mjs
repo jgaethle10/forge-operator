@@ -41,7 +41,7 @@ test('An accessible, mobile welcome offers direct entry with no login',()=>{
 });
 
 test('Homework Coach provides only scaffolded help, never generates current homework answers',()=>{
- assert.match(play,/Homework Coach · hints, not answers/);
+ assert.match(play,/Offline study steps · generic hints/);
  assert.match(play,/You own the final answer/);
  assert.match(play,/Write your next step yourself/);
  assert.doesNotMatch(play,/Core\.InvokeLLM|https?:\/\/.*(api|base44)/i);
@@ -56,5 +56,5 @@ test('No public traffic or learner data submission; only device-local star keys'
  assert.match(play,/localStorage\.setItem/);
  assert.match(play,/localStorage\.getItem/);
  assert.match(play,/Reset stars/);
- assert.match(play,/not saved or transmitted/);
+ assert.match(play,/no question entry or understanding capability/);
 });

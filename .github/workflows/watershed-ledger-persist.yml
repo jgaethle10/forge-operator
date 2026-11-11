@@ -46,6 +46,7 @@ jobs:
         run: |
           node --check systemia/research-service/watershed-history.mjs
           node --check systemia/research-service/watershed-history-archive.mjs
+          node --check systemia/research-service/watershed-history-read.mjs
           node --test tests/evercraft-watershed-history.test.mjs
       - name: Download ONLY source-run canary receipt
         shell: bash
@@ -73,6 +74,23 @@ jobs:
             --run-id "$SOURCE_RUN_ID" \
             --head-sha "$SOURCE_HEAD_SHA" \
             --event "$SOURCE_EVENT" | tee "$RUNNER_TEMP/watershed-history-operation.json"
+      - name: Verify stored raw hashes and 7-day history readback before push
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_day="$(node -e 'const fs=require("node:fs"); console.log(JSON.parse(fs.readFileSync(process.argv[1],"utf8")).as_of.slice(0,10))' "$RUNNER_TEMP/watershed-source/latest.json")"
+          node systemia/research-service/watershed-history-read.mjs \
+            --ledger-dir "$RUNNER_TEMP/watershed-ledger-worktree/evidence/watershed" \
+            --as-of "$run_day" \
+            --window-days 7 \
+            > "$RUNNER_TEMP/watershed-history-readback.json"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            if(v.raw_digests_verified!==true||v.verified_run_count<1||
+               v.public_release_authorized!==false||v.interpolation_performed!==false)
+              process.exit(1);
+          ' "$RUNNER_TEMP/watershed-history-readback.json"
       - name: Push only source-receipt records to evidence branch
         shell: bash
         run: |
@@ -92,7 +110,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: yakima-immutable-ledger-operation
-          path: ${{ runner.temp }}/watershed-history-operation.json
+          path: |
+            ${{ runner.temp }}/watershed-history-operation.json
+            ${{ runner.temp }}/watershed-history-readback.json
           if-no-files-found: warn
           retention-days: 30
       - name: Record narrow evidence boundary
