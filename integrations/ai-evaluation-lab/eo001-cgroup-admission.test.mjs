@@ -13,9 +13,9 @@ const ROOT=path.resolve(HERE,'../..');
 const PIN='a'.repeat(40),ID='b'.repeat(32),NONCE='c'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
 const fakeScopeResources=file=>{
-  if(file.endsWith('/memory.max'))return '268435456\\n';
-  if(file.endsWith('/pids.max'))return '12\\n';
-  if(file.endsWith('/cpu.max'))return '75000 100000\\n';
+  if(file.endsWith('/memory.max'))return '268435456';
+  if(file.endsWith('/pids.max'))return '12';
+  if(file.endsWith('/cpu.max'))return '75000 100000';
   throw Error('Unexpected cgroup leaf file');
 };
 
@@ -115,17 +115,29 @@ test('untrusted scope names or injected commands cannot be rendered',()=>{
     root:ROOT,unit:UNIT,nonce:'bad'
   }),/INVALID_NONCE/);
 });
-test('synthetic child accepts only exact cgroup path segment, no substring trick',()=>{
-  const r=inspectScopedChild({scopeId:UNIT,nonce:NONCE,
-    procCgroup:'0::/user.slice/user-1000.slice/'+UNIT+'\n'});
+test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
+  const r=inspectScopedChild({
+    scopeId:UNIT,nonce:NONCE,
+    procCgroup:'0::/user.slice/user-1000.slice/'+UNIT+'\\n',
+    readFile:fakeScopeResources
+  });
   assert.equal(r.actual_unit_member,true);
+  assert.equal(r.resource_limits_read_back,true);
+  assert.equal(r.cpu_quota_exact,true);
   assert.equal(r.model_inference_executed,false);
-  assert.equal(inspectScopedChild({scopeId:UNIT,nonce:NONCE,
-    procCgroup:'0::/user.slice/'+UNIT+'-fake\n'}).actual_unit_member,false);
-  assert.equal(inspectScopedChild({scopeId:UNIT,nonce:NONCE,
-    procCgroup:'5:cpu:/user.slice/'+UNIT+'\n'}).unified_cgroup_v2,false);
-  assert.throws(()=>inspectScopedChild({scopeId:'invalid.scope',nonce:NONCE,
-    procCgroup:'0::/'}),/INVALID_SYNTHETIC_SCOPE_INPUT/);
+  assert.throws(()=>inspectScopedChild({
+    scopeId:UNIT,nonce:NONCE,
+    procCgroup:'0::/user.slice/'+UNIT+'-fake\\n',
+    readFile:fakeScopeResources
+  }),/EXACT_LEAF_SCOPE_MEMBERSHIP_REQUIRED/);
+  assert.throws(()=>inspectScopedChild({
+    scopeId:UNIT,nonce:NONCE,
+    procCgroup:'5:cpu:/user.slice/'+UNIT+'\\n',
+    readFile:fakeScopeResources
+  }),/UNIFIED_CGROUP_REQUIRED/);
+  assert.throws(()=>inspectScopedChild({
+    scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources
+  }),/INVALID_SYNTHETIC_SCOPE_INPUT/);
 });
 test('unapproved scope canary does not even run preflight',()=>{
   let called=false;
