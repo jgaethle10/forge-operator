@@ -60,6 +60,8 @@ test('inventory preserves provenance and compatibility references without callin
 
   // These references intentionally remain in source history/guardrails.
   assert.match(read('systemia/saban/capability-promotion-links.json'),/base44\.app/);
-  assert.match(read('scripts/promote-openai-owned-fabric.mjs'),/base44\.app/);
+  // The promotion script intentionally rejects this host via an escaped
+  // regular expression; the guard is evidence, not an active legacy route.
+  assert.match(read('scripts/promote-openai-owned-fabric.mjs'),/base44\\\.app/);
   assert.match(read('systemia/sentinel/architectural-invariants.json'),/base44\.app/);
 });
