@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-09.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-10.
 
 ## Mission
 
@@ -101,6 +101,16 @@ Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch 
 - **Evidence restriction:** successful byte checks return only `BYTE_CHAIN_MATCHED_REQUIRES_INDEPENDENT_PROOF`. The auditor does not prove camera calibration, survey accuracy, target identity, chronology, source custody, recording authenticity, extraterrestrial origin or independently observed field accuracy.
 - **CI:** dedicated FIRST-CONTACT research checks **passed** for the initial evidence-audit and CLI test commit `1b7a4384...` (run `42771006361`). Subsequent chunked-media enhancement and docs are subject to their own workflow checks; do not infer pass from the older run.
 - **Runtime:** no real camera files acquired; no Systemia specialists dispatched. Experiment and independent review remain the next physical gate.
+
+## Sprint 9, November 10, 2026: rectified image pixels into calibrated geometry
+
+- **Pixel-to-world bridge:** `pixel-bearing.mjs` converts operator-supplied rectified image pixel centers, calibrated intrinsics and a validated right-handed camera-to-ENU rotation matrix into local ENU azimuth/elevation. It refuses unrectified imagery, invalid focal/principal points, out-of-frame pixels, invalid timestamp and non-orthonormal/reflection pose matrices. `pixel-bearing.test.mjs` includes 12 synthetic geometry/guardrail tests.
+- **Single-pair offline intake:** `pixel-two-view-cli.mjs` and five tests connect two image detections to the existing synchronized-observation/triangulation quality gates, producing a SHA-256 source-byte receipt and HOLD for desynchronized frames. Includes positive and asynchronous negative-control JSON fixtures.
+- **Multi-frame known-target calibration:** `pixel-calibration-cli.mjs` and five tests convert 3–500 pixel pairs into the existing surveyed-stationary-target numerical accuracy evaluator. The five-frame invented input fixture exercises zero-bias numerical success and tests also verify biased but geometrically consistent inputs fail against ground truth.
+- **Provenance integration:** `field-evidence-audit.mjs` now accepts the rectified-pixel calibration-session input schema in addition to the earlier bearing-based version when comparing **operator-provided** source digests with a claimed pre-registration plan; two added regression tests verify expected input and a modified threshold refusal.
+- **Operator instructions:** `PIXEL_FIELD_BRIDGE.md` describes optical intrinsics, camera-to-ENU axis ordering, transformation prerequisites, strict synchronized capture and independent survey/source requirements. No native video reading, automatic lens rectification, pixel/object detection, clock synchronization service, physical survey or camera control has been implemented.
+- **Validation:** dedicated `FIRST-CONTACT research verification` GitHub Actions succeeded for source/tests commit `b396902d...`, evidence-schema regression `5ba93140...` and field-guide commit `ba69801f...` (run `42959628711`). These are source-code test receipts only, not real camera accuracy measurements or scientific evidence of anomalous technology.
+- **Systemia/publication:** mission is still `NOT_DISPATCHED`; specialists are `UNASSIGNED`; public publication is `HOLD_REVIEW`.
 
 ## Decision and escalation gates
 
