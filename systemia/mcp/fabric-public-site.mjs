@@ -204,7 +204,7 @@ const OFFER_PAGE_COPY={
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
     heroVisual:'/visuals/website-audit-attention/poster-hero-wide.svg',
     heroVisualMobile:'/visuals/website-audit-attention/poster-feed.svg',
-    shareImage:'https://fabric.systemiacommandcenters.com/visuals/website-audit-attention/poster-feed.svg',
+    shareImage:'https://fabric.systemiacommandcenters.com/visuals/website-audit-attention/poster-social-wide.svg',
     send:['Your website URL','What you want the site to produce','Anything you already know is frustrating'],
     get:['Public-web evidence snapshot','Five priority fixes','A clear next move'],
     steps:[
