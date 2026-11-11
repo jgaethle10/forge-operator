@@ -1,0 +1,242 @@
+{
+  "schema": "evercraft.ev-opportunity.official-program-catalog.v1",
+  "observed_date": "2026-11-11",
+  "readiness": "RESEARCH_ONLY",
+  "notes": "Official public notice summaries only. The Port controlling bid package and California Addendum 6 DOCX were not fully inspected; original grant workshop slides may be superseded. No contracts, payment, engineering approval, property availability or data-redistribution rights are established.",
+  "programs": [
+    {
+      "id": "PORT-SEA-MC-0322998",
+      "kind": "construction_procurement",
+      "title": "Electric Vehicle Charging Stations Seaport Unit Price 2027",
+      "buyer": {
+        "name": "Port of Seattle",
+        "url": "https://www.portseattle.org/business/bid-opportunities",
+        "relationship": "none"
+      },
+      "official_url": "https://omwbe.wa.gov/bid-opportunities/electric-vehicle-charging-stations-seaport-unit-price-2027",
+      "deadline": {
+        "at": "2026-12-03T14:00:00-08:00",
+        "official_source": "https://omwbe.wa.gov/bid-opportunities/electric-vehicle-charging-stations-seaport-unit-price-2027"
+      },
+      "prebid": {
+        "at": "2026-11-17T11:00:00-08:00",
+        "format": "virtual",
+        "attendance_requirements_verified": false
+      },
+      "source_revision": "WA OMWBE official public notice checked 2026-11-11; controlling Port bid package, addenda and bid delivery not fully inspected.",
+      "official_documents_access": "listing_only",
+      "submission": {
+        "system": "Port of Seattle VendorConnect",
+        "url": "https://hosting.portseattle.org/sops/",
+        "method_verified": false
+      },
+      "advertised_contract_ceiling_usd": 1000000,
+      "asset_boundary": "independent_new_work_only",
+      "qualified_role": "Potential independent bid research/documentation subcontractor; licensed electrical prime qualifications unverified.",
+      "candidate_paid_scope": [
+        "Requirements extraction and addendum tracking",
+        "Source-backed site and staging context diagrams",
+        "Material schedule and takeoff documentation support subject to expert review",
+        "Preconstruction coordination and technical question log"
+      ],
+      "work_requirements": [
+        {
+          "id": "official_bid_package",
+          "label": "Obtain controlling bid package/project manual for MC-0322998",
+          "applicability": "required",
+          "primary_source": "https://www.portseattle.org/actions/view-current-bid-opportunities-vendorconnect",
+          "notes": ""
+        },
+        {
+          "id": "submission_instructions",
+          "label": "Confirm submission, addenda and planholder rules",
+          "applicability": "required",
+          "primary_source": "https://www.portseattle.org/actions/view-current-bid-opportunities-vendorconnect",
+          "notes": ""
+        },
+        {
+          "id": "prime_license",
+          "label": "Identify and qualify licensed electrical prime",
+          "applicability": "required",
+          "primary_source": "https://www.portseattle.org/page/construction-contracting-information",
+          "notes": ""
+        },
+        {
+          "id": "bonding_and_insurance",
+          "label": "Confirm bonding, insurance, prevailing wage and site access rules",
+          "applicability": "required",
+          "primary_source": "https://www.portseattle.org/page/construction-contracting-information",
+          "notes": ""
+        },
+        {
+          "id": "technical_scope",
+          "label": "Confirm maritime electrical installation, commissioning, staging and equipment scope",
+          "applicability": "required",
+          "primary_source": "https://omwbe.wa.gov/bid-opportunities/electric-vehicle-charging-stations-seaport-unit-price-2027",
+          "notes": ""
+        },
+        {
+          "id": "site_visit",
+          "label": "Confirm any required pre-bid/site visit, 24-hour staffing and response capacity",
+          "applicability": "conditional",
+          "primary_source": "https://omwbe.wa.gov/bid-opportunities/electric-vehicle-charging-stations-seaport-unit-price-2027",
+          "notes": "Specific staffing language requires controlling bid-manual verification."
+        },
+        {
+          "id": "potential_subcontract",
+          "label": "Confirm separately contracted paid support scope with qualified prime",
+          "applicability": "required",
+          "primary_source": "https://www.portseattle.org/page/construction-contracting-information",
+          "notes": ""
+        }
+      ],
+      "next_48h": [
+        "Acquire official solicitation and manual through VendorConnect",
+        "Extract controlling amendment, qualification, submission and licensing requirements",
+        "Prepare private Evercraft bid-support scope and prequalification checklist",
+        "Do not contact, register, submit or spend without explicit founder authorization"
+      ]
+    },
+    {
+      "id": "CEC-GFO-25-603",
+      "kind": "competitive_grant",
+      "title": "California NEVI Solicitation 6 Community Charging",
+      "buyer": {
+        "name": "Eligible applicant/developer, not the CEC as an Evercraft client",
+        "url": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+        "relationship": "none"
+      },
+      "official_url": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+      "deadline": {
+        "at": "2026-12-11T23:59:00-08:00",
+        "official_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula"
+      },
+      "source_revision": "CEC solicitation page lists Addendum 6 as current. Site-plan fields derived from original March 2026 CEC workshop, pending Addendum 6 manual reconciliation.",
+      "official_documents_access": "listing_plus_older_workshop",
+      "submission": {
+        "system": "ECAMS",
+        "url": "https://ecams.energy.ca.gov/",
+        "method_verified": true
+      },
+      "max_grant_pool_usd": 79000000,
+      "asset_boundary": "independent_new_work_only",
+      "applicant": {
+        "eligibility": "unconfirmed"
+      },
+      "qualified_role": "Paid preliminary site and grant-document research services to independently qualified applicant. Grant funding does not automatically pay Evercraft.",
+      "candidate_paid_scope": [
+        "Site/corridor eligibility and prior-award exclusion verification",
+        "Per-station conceptual site plan with mapped ports, ratings, access, ADA, optional lighting/shelter",
+        "Utility and site-control document coordination",
+        "Application-attachment completeness and independent visual QA",
+        "Environmental constraints research without determining legal compliance"
+      ],
+      "work_requirements": [
+        {
+          "id": "current_addenda",
+          "label": "Inspect Addendum 6 controlling manual and revised forms",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "applicant_eligibility",
+          "label": "Confirm applicant eligibility, key partners, match funding",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "eligible_corridor",
+          "label": "Verify site located on eligible NEVI 6 corridor",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/programs-and-topics/programs/federal-ev-infrastructure-programs/californias-national-electric",
+          "notes": ""
+        },
+        {
+          "id": "prior_awards_exclusion",
+          "label": "Exclude existing/planned sites awarded under NEVI rounds 1-3",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/programs-and-topics/programs/federal-ev-infrastructure-programs/californias-national-electric",
+          "notes": ""
+        },
+        {
+          "id": "station_address_map",
+          "label": "Site address and station map for each station",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "existing_ports_ratings",
+          "label": "Map existing charging ports and their power ratings if applicable",
+          "applicability": "conditional",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "proposed_ports_ratings",
+          "label": "Map new charging ports with planned power rating per port",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "ada_access",
+          "label": "Show ADA accessible charging port locations",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "lighting_shelter",
+          "label": "Show lighting and shelter where applicable",
+          "applicability": "conditional",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "ingress_egress",
+          "label": "Show travel path, ingress and egress",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "site_control",
+          "label": "Collect legal access, site-owner permission or lease records",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "utility_form",
+          "label": "Obtain Attachment 8 utility verification for each station",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "environmental_forms",
+          "label": "Review CEQA and NEPA/PES attachment requirements with qualified reviewer",
+          "applicability": "required",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        },
+        {
+          "id": "licensed_design",
+          "label": "Identify engineer/electrical professionals needed for final technical approvals",
+          "applicability": "conditional",
+          "primary_source": "https://www.energy.ca.gov/solicitations/2026-02/gfo-25-603-californias-national-electric-vehicle-infrastructure-formula",
+          "notes": ""
+        }
+      ],
+      "next_48h": [
+        "Inspect official Addendum 6 manual and Attachment 5 and 8; distinguish updates from old workshop",
+        "Create blank independent station-plan QA checklist and per-site evidence register",
+        "Use CEC GIS to rule out previous-round awarded sites before prospective locations",
+        "Prepare a developer-facing service scope for approval; do not contact or apply yet"
+      ]
+    }
+  ]
+}
