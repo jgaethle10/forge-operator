@@ -92,6 +92,14 @@ CI exercises a signed old message before revocation, rotates the trust revision 
 
 The strict production candidate is \`openCurrentTrustPqMessageAsync\`; the earlier \`openPinnedPqMessageAsync\` remains for isolated legacy lab tests and **MUST NOT** be wired into a revocation-sensitive live route.
 
+## Synthetic Node001 / Node002 rehearsal (NOT a physical deployment)
+
+CI's \`tests/pq-postgres-fixture/node-pair.test.mjs\` creates **ephemeral, independent** ML-KEM recipient and ML-DSA sender keys for two logical nodes. It uses two PostgreSQL connection pools pointed at a disposable single primary, and an independently pinned ephemeral root that signs a trusted sender registry.
+
+The test exercises an authenticated encrypted message from synthetic node001 to node002, a reply from node002 to node001, duplicate rejection from a second pool, route substitution rejection, a new root-approved revocation of node001, rejection of a new old-key message both from a current registry and from an **unexpired stale registry**, continued delivery by node002, old-snapshot rollback denial, and plaintext denial when database access is interrupted. A unique trust-domain identifier keeps the rehearsal from modifying existing test authorities. The proof prints a machine-readable marker in the CI logs.
+
+This is an integrated **software canary**, not evidence that actual node001 or node002 hardware has been reached, enrolled, upgraded or configured. Real field proof requires a reviewed root-enrollment ceremony; secured signer/recipient key custody; authorized test-only endpoints on each node; connection to a singular owned, authenticated replay authority; staged rollback; independent human verification of the resulting receipts; and explicit permission to deploy. Never ship private test keys or default to CI database credentials.
+
 ## Migration gates
 
 1. Inventory cryptographic key exchange and signatures in Relay, lineage, agents and customer interfaces; identify stored traffic requiring long-term confidentiality.
