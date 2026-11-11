@@ -7,6 +7,14 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { loadOrCreateDeviceIdentity } from './device-identity.mjs';
 import { startLocalOrganism } from './local-organism.mjs';
 
+// Remote-admission CI proves broker connectivity and recovery, not the
+// public Portfolio Sentinel's product-policy findings. The Sentinel still
+// records findings; only this explicitly marked local fixture excludes
+// policy findings from Core process exit status.
+process.env.NODE_ENV='test';
+process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF='true';
+process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH='false';
+
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
   ready:false,
