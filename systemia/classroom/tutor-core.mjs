@@ -94,7 +94,7 @@ export function createClassroomTutor({infer,now=()=>Date.now(),newId=()=>randomU
    let result;
    try{result=await infer({request_id:'classroom-'+newId(),role:'classroom-private-teaching-pilot',prompt})}
    catch{fail('local_inference_unavailable')}
-   if(!result || result.status!=='completed' || result.provider!=='ollama' || typeof result.text!=='string' || !/^sha256:[a-f0-9]{64}$/.test(String(result.provider_receipt||'')))fail('local_inference_unverified');
+   if(!result || result.status!=='completed' || !['ollama','llama.cpp'].includes(result.provider) || typeof result.text!=='string' || !/^sha256:[a-f0-9]{64}$/.test(String(result.provider_receipt||'')))fail('local_inference_unverified');
    const answer=clean(result.text,bounds.maxOutput);
    if(!answer)fail('local_output_unusable');
    if(homeworkLeak.test(answer) && (homework||/\bhomework|assignment|worksheet|schoolwork|exam|test question\b/i.test(question))){
