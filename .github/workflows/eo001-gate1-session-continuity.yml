@@ -1,0 +1,49 @@
+name: EO-001 Gate 1 detached-session cgroup continuity (offline)
+on:
+  push:
+    branches:
+      - research/eo001-gate1-session-containment-proof-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
+      - '.github/workflows/eo001-gate1-session-continuity.yml'
+  pull_request:
+    branches:
+      - research/eo001-gate1-resource-readback-20261110
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checked-in-synthetic-session-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source syntax
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-session-proof.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-synthetic-child.mjs
+      - name: Exercise genuine separate Linux process session with no model and reaping
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-session-proof.test.mjs
+      - name: Resource/readback admission regressions
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
+      - name: Ensure default cannot start a scope or model
+        run: |
+          set +e
+          node integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs > /tmp/eo001-safety-state.json
+          RC=$?
+          set -e
+          test "$RC" -eq 2
+          python3 - <<'PY'
+          import json
+          with open('/tmp/eo001-safety-state.json', encoding='utf-8') as f:
+              s=json.load(f)
+          assert s['state']=='CGROUP_SCOPE_ADMISSION_BLOCKED'
+          assert s['model_inference_executed'] is False
+          assert s['external_actions_authorized'] is False
+          print('DEFAULT_REFUSAL_PASS')
+          PY
