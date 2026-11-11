@@ -18,6 +18,7 @@ const SPECS={
   square:{width:1080,height:1080,wide:false},
   story:{width:1080,height:1920,wide:false},
   'hero-wide':{width:1600,height:900,wide:true},
+  'social-wide':{width:1200,height:630,wide:true},
 };
 
 function wrap(text,maxChars,maxLines=2){
@@ -112,11 +113,66 @@ function browserSvg(spec){
   };
 }
 
+
+function renderWebsiteAuditEditorialPoster(campaign,spec){
+  // An editorial offer illustration, never a screenshot or a claimed audit finding.
+  // The five categories describe areas to review, not observed problems.
+  const {width:w,height:h,wide}=spec;
+  const margin=wide?Math.round(w*.055):68;
+  const panelX=wide?Math.round(w*.55):68;
+  const panelY=wide?Math.round(h*.12):Math.round(h*.39);
+  const panelW=wide?Math.round(w*.385):w-136;
+  const panelH=wide?Math.round(h*.67):Math.round(h*.435);
+  const titleSize=wide?Math.round(w*.052):Math.round(w*.086);
+  const titleY=wide?Math.round(h*.325):Math.round(h*.16)+30;
+  const secondY=titleY+Math.round(titleSize*1.12);
+  const subtitleY=secondY+(wide?58:68);
+  const rowGap=Math.round(panelH*.146);
+  const rowStart=panelY+Math.round(panelH*.25);
+  const categories=['MESSAGE CLARITY','MOBILE EXPERIENCE','PAGE PERFORMANCE','TRUST &amp; NAVIGATION','CONTACT JOURNEY'];
+  const rows=categories.map((label,i)=>{
+    const y=rowStart+i*rowGap;
+    const num=String(i+1).padStart(2,'0');
+    return '<g>'
+      +'<text x="'+(panelX+32)+'" y="'+y+'" font-size="'+(wide?19:22)+'" font-weight="700" fill="#58B8EA">'+num+'</text>'
+      +'<text x="'+(panelX+(wide?80:90))+'" y="'+y+'" font-size="'+(wide?17:23)+'" font-weight="700" fill="#F7FAFD">'+label+'</text>'
+      +'<line x1="'+(panelX+32)+'" y1="'+(y+20)+'" x2="'+(panelX+panelW-32)+'" y2="'+(y+20)+'" stroke="#284253" stroke-width="1"/>'
+      +'</g>';
+  }).join('');
+  const footerH=wide?Math.round(h*.185):150;
+  const footerY=h-footerH;
+  const taglineY=subtitleY+(wide?40:44);
+  const backgroundGrid=Array.from({length:9},(_,i)=>'<line x1="'+(margin+i*135)+'" y1="0" x2="'+(margin+i*135)+'" y2="'+footerY+'" stroke="#DDE5EC" opacity=".4"/>').join('');
+  return [
+    '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Evercraft Systemia Website Audit, five areas to check, $49 one-time Quick Win Audit" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">',
+    '<rect width="'+w+'" height="'+h+'" fill="#F4F7FA"/>',
+    '<g>'+backgroundGrid+'</g>',
+    '<rect x="'+margin+'" y="'+(wide?54:75)+'" width="13" height="13" rx="2" fill="#1578B5"/>',
+    '<text x="'+(margin+28)+'" y="'+(wide?67:90)+'" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?19:21)+'" letter-spacing="3" font-weight="800" fill="#183046">EVERCRAFT / SYSTEMIA</text>',
+    '<text x="'+margin+'" y="'+titleY+'" font-family="Arial,Helvetica,sans-serif" font-size="'+titleSize+'" letter-spacing="-2" font-weight="900" fill="#0A1F31">TRAFFIC UP.</text>',
+    '<text x="'+margin+'" y="'+secondY+'" font-family="Arial,Helvetica,sans-serif" font-size="'+titleSize+'" letter-spacing="-2" font-weight="900" fill="#0A1F31">CUSTOMERS DOWN?</text>',
+    '<text x="'+margin+'" y="'+subtitleY+'" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?Math.round(w*.019):25)+'" fill="#506779">Look at what may be getting in the way.</text>',
+    wide?'<text x="'+margin+'" y="'+taglineY+'" font-family="Arial,Helvetica,sans-serif" font-size="'+Math.round(w*.017)+'" fill="#506779">A clear starting point. No guesswork.</text>':'',
+    '<rect x="'+panelX+'" y="'+panelY+'" width="'+panelW+'" height="'+panelH+'" rx="22" fill="#0B2234"/>',
+    '<rect x="'+(panelX+28)+'" y="'+(panelY+28)+'" width="10" height="10" rx="5" fill="#58B8EA"/>',
+    '<text x="'+(panelX+50)+'" y="'+(panelY+39)+'" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?15:19)+'" letter-spacing="2" font-weight="800" fill="#C8E5F5">FIVE AREAS WE CHECK</text>',
+    '<line x1="'+(panelX+28)+'" y1="'+(panelY+64)+'" x2="'+(panelX+panelW-28)+'" y2="'+(panelY+64)+'" stroke="#284253"/>',
+    '<g font-family="Arial,Helvetica,sans-serif">'+rows+'</g>',
+    '<rect x="0" y="'+footerY+'" width="'+w+'" height="'+footerH+'" fill="#0A1F31"/>',
+    '<text x="'+margin+'" y="'+(footerY+(wide?Math.round(footerH*.65):83))+'" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?Math.round(w*.045):75)+'" font-weight="900" fill="#F7FAFD">$49</text>',
+    '<text x="'+(margin+(wide?Math.round(w*.14):185))+'" y="'+(footerY+(wide?Math.round(footerH*.60):70))+'" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?Math.round(w*.018):28)+'" font-weight="800" letter-spacing="1" fill="#F7FAFD">QUICK WIN AUDIT</text>',
+    '<text x="'+(margin+(wide?Math.round(w*.14):185))+'" y="'+(footerY+(wide?Math.round(footerH*.81):109))+'" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?Math.round(w*.013):21)+'" fill="#9EB7C9">One-time • Five priority fixes</text>',
+    '<text x="'+(w-margin)+'" y="'+(h-19)+'" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="'+(wide?Math.round(w*.0095):13)+'" fill="#99AFBE">ILLUSTRATIVE SERVICE OVERVIEW • NOT AN AUDIT RESULT</text>',
+    '</svg>'
+  ].join('\n');
+}
+
 export function renderCommercialPoster(campaignInput,planInput,format='feed'){
   const campaign=normalizeCommercialCampaign(campaignInput);
   const plan=planInput||compileCommercialAttention(campaign);
   const spec=SPECS[format];
   if(!spec) throw new Error('commercial_poster_format_invalid');
+  if(campaign.slug==='website-audit-attention') return renderWebsiteAuditEditorialPoster(campaign,spec);
   const {browser,svg:browserMarkup}=browserSvg(spec);
   const p=campaign.creative.palette;
   const wide=spec.wide;
@@ -257,6 +313,7 @@ export function buildCommercialCampaign(input,{outputRoot,origin='https://fabric
     priceUsd:campaign.priceUsd,
     assets:{
       feed:base+'/poster-feed.svg',
+      social:base+'/poster-social-wide.svg',
       square:base+'/poster-square.svg',
       story:base+'/poster-story.svg',
       site:base+'/poster-hero-wide.svg',
