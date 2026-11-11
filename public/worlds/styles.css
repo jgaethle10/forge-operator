@@ -70,3 +70,10 @@
 #sl-events small{display:block;color:#658275;font-size:10px;margin:0 0 5px;overflow-wrap:anywhere}
 .sl-truth{font-size:10px;color:#61766b;line-height:1.7;border-top:1px solid #cddbd0;padding-top:15px;margin-top:22px}
 @media(max-width:700px){.society-ledger{inset:auto 0 0;width:100%;height:min(78dvh,calc(100dvh - 56px));padding:20px 19px calc(16px + env(safe-area-inset-bottom,0px));border-radius:21px 21px 0 0}.sl-head h2{font-size:28px}#sl-file{font-size:13px}}
+
+
+/* Disclosure of rule-policy receipt integrity metadata; no claimed digital signature. */
+.sl-evidence{margin-top:11px;border:1px solid #c9d6ca;border-radius:8px;background:#eef1e9;padding:9px 10px;color:#355b4b}
+.sl-evidence summary{cursor:pointer;font-size:11px;font-weight:760;min-height:24px;touch-action:manipulation}
+.sl-evidence p{margin:7px 0 0;line-height:1.5;font-size:10px}
+.sl-evidence code{display:block;font-size:10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;line-height:1.5;overflow-wrap:anywhere;word-break:break-all;margin-top:6px;padding:7px;border-radius:5px;background:#e1e9dc;color:#26493c}
