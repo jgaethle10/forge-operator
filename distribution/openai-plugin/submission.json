@@ -33,13 +33,11 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "Select the existing Evercraft LLC public listing in the owning OpenAI Platform organization; do not create a second listing",
-    "Compare the current published v1.0.2 metadata, tools, domain and privacy / support URLs to the tested v1.0.6 package",
-    "Upload or select the canonical v1.0.6 update for that existing listing using the provider's supported update flow",
-    "Confirm the same owned Fabric MCP endpoint and verify the domain / scan results on that update",
-    "Review the five positive and three negative tests, documentation and walkthrough for v1.0.6",
-    "Complete any review / approval and explicitly publish the updated version if required by Platform",
-    "Record the actual public version, provider change receipt, and independent uninstalled-account search, installation and read-only invocation"
+    "Publisher personally reads six portal attestations, checks only those they truthfully affirm, and submits the draft for review",
+    "Work records the portal submission receipt, review status and exact findings; no automated legal certifications",
+    "If the MCP rescan timestamp remains old, distinguish stale timestamp from fresh package checks, and follow provider requirements",
+    "After provider approval, Work completes the supported publish action; confirm the public version is 1.0.6",
+    "Independently verify fresh-account search, install, and read-only invocation without private-plugin confusion"
   ],
   "public_directory_claim_allowed": false,
   "package_version": "1.0.6",
@@ -67,11 +65,18 @@
     "portal_observed_status": "Listed publicly",
     "portal_observed_version": "1.0.2",
     "latest_provider_scan": "No findings in the latest MCP scan",
-    "current_account_update_state": "not_observed",
+    "current_account_update_state": "draft_uploaded_attestations_pending",
     "independent_fresh_account_discovery": "not_verified",
     "public_identifier": "not_confirmed",
     "target_version": "1.0.6",
-    "release_action": "update_existing_listing_not_create_new"
+    "release_action": "update_existing_listing_not_create_new",
+    "draft_upload_evidence": "Work mode report supplied by founder 2026-11-10",
+    "draft_zip_sha256": "a958d71ab95e579bfa7f1c434071f7d92b1233bae56d2287d42abf61e8f94a9a",
+    "draft_zip_sha256_verified_against_local_package": true,
+    "publisher_attestations_remaining": 6,
+    "review_submission_confirmed": false,
+    "public_version_after_upload": "1.0.2",
+    "rescan_new_timestamp_confirmed": false
   },
   "public_directory_claim_scope": "independent_public_directory_discovery_not_yet_verified; founder portal reports Listed publicly for existing version 1.0.2"
 }
