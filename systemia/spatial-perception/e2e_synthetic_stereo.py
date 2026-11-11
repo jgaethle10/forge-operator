@@ -220,12 +220,18 @@ console.log(JSON.stringify({
         review_script = """
 import fs from 'node:fs';
 import {inspectFieldReport} from './public/worlds/perception-lab/field-review.mjs';
+import {buildFieldRetestPlan} from './public/worlds/perception-lab/field-retest.mjs';
 const report=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
 const reviewed=inspectFieldReport(report);
+const plan=buildFieldRetestPlan(reviewed,{reviewThresholdM:0});
 console.log(JSON.stringify({
   scope:reviewed.scope,total:reviewed.total,evaluated:reviewed.evaluated,
   mae:reviewed.metrics.mae,certified:reviewed.fieldAccuracyCertified,
-  warnings:reviewed.warnings.length
+  warnings:reviewed.warnings.length,
+  planReferences:plan.totalReferences,
+  planScope:plan.sourceScope,
+  planCertified:plan.fieldAccuracyCertified,
+  planScheduled:plan.realWorldCaptureScheduled
 }));
 """
         inspected = subprocess.run(["node","--input-type=module","-e",review_script,
@@ -239,6 +245,10 @@ console.log(JSON.stringify({
         self.assertLess(reviewed["mae"],1.5)
         self.assertFalse(reviewed["certified"])
         self.assertGreater(reviewed["warnings"],0)
+        self.assertEqual(reviewed["planReferences"],4)
+        self.assertEqual(reviewed["planScope"],"synthetic_fixture")
+        self.assertFalse(reviewed["planCertified"])
+        self.assertFalse(reviewed["planScheduled"])
 
     def test_textureless_video_produces_unknown_depth_and_no_world_geometry(self):
         synthetic_stereo_video(self.video, blank=True)
