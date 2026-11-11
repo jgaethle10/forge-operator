@@ -53,7 +53,9 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
+      "review_packet_version": "BR-001.v1"
     },
     {
       "order": 2,
@@ -85,7 +87,9 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": null,
+      "review_packet_version": null
     },
     {
       "order": 3,
@@ -117,7 +121,9 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": null,
+      "review_packet_version": null
     },
     {
       "order": 4,
@@ -149,7 +155,9 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": null,
+      "review_packet_version": null
     },
     {
       "order": 5,
@@ -181,7 +189,9 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": null,
+      "review_packet_version": null
     },
     {
       "order": 6,
@@ -213,7 +223,9 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": null,
+      "review_packet_version": null
     },
     {
       "order": 7,
@@ -245,7 +257,11 @@
         "marketing_asset_approved": false,
         "public_distribution_with_imprint_approved": false,
         "live_provider_post_id": null
-      }
+      },
+      "review_packet": null,
+      "review_packet_version": null
     }
-  ]
+  ],
+  "event_log": "docs/branding/approvals/events.json",
+  "decision_template": "docs/branding/approvals/DECISION-RESULT-TEMPLATE.md"
 }
