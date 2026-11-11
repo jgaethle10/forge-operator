@@ -69,6 +69,12 @@ jobs:
                 "- Origin: "+(r.origin||"not configured"),
                 "- Independent surfaces: "+Object.entries(r.checks||{}).map(([n,v])=>n+"="+(v.verified?"PASS":v.reason)).join(", ")
               ];
+              // Green means this read-only job ran, not that public release passed.
+              if (!r.verified) {
+                const reason=String(r.reason||r.status||"unverified").replace(/[^a-zA-Z0-9_-]/g,"_");
+                process.stdout.write("::warning title=Evercraft Worlds public release BLOCKED::"+reason+"; see issue #1994 for owned-host activation and public gates\n");
+                lines.push("- Release blocker: https://github.com/jgaethle10/forge-operator/issues/1994");
+              }
               fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,lines.join("\n")+"\n");
             '
           else

@@ -30,3 +30,9 @@ Even after `verified_readonly`, customer writes and a physical iPhone are **not 
 5. Only after the public read-only check passes, use the separate operator-approved `evercraft-worlds-public-gate.yml` release workflow to opt into a disposable create/edit/delete drill. Perform a separate real-device Safari test.
 
 The watcher itself **never** invokes the mutating test or the edge lease reconciler. If the endpoint is not deployed, leave the status blocked until external proof is available. If source CI is green but this external receipt is blocked, release remains blocked.
+
+## Release warning visibility (November 10)
+
+The actual November 10 scheduled readiness receipt reported `blocked_no_origin`. Running the monitor successfully does not mean the runtime is deployed. Every main/scheduled check that returns `verified:false` now emits a **GitHub Actions warning annotation**, adds the actionable blocker to its job summary, and points to [Worlds release issue #1994](https://github.com/jgaethle10/forge-operator/issues/1994).
+
+The scheduled job continues to complete normally when the origin is missing, to avoid a stream of operational test failures. The **release itself stays blocked** until a real owned-host external HTTPS receipt passes. An alert is not a deploy action; the operator still controls DNS, TLS, service activation, edge lease and authenticated drills.

@@ -76,5 +76,8 @@ test('source workflow is non-mutating and saves a named evidence artifact',()=>{
  assert.match(wf,/WORLDS_ORIGIN: \$\{\{ vars\.EVERCRAFT_WORLDS_PUBLIC_ORIGIN \}\}/);
  assert.match(wf,/node scripts\/audit-worlds-owned-readiness\.mjs/);
  assert.match(wf,/actions\/upload-artifact@v4/);
+ assert.match(wf,/::warning title=Evercraft Worlds public release BLOCKED::/);
+ assert.match(wf,/issues\/1994/);
+ assert.match(wf,/if \(!r\.verified\)/);
  assert.doesNotMatch(wf,/--execute|allow_disposable_write|POST |PUT |DELETE /);
 });
