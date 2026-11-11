@@ -5,6 +5,9 @@ on:
       - research/eo001-gate1-measurement-and-freeze-20261110
     paths:
       - 'integrations/ai-evaluation-lab/eo001-gate1-offline-contract*'
+      - 'integrations/ai-evaluation-lab/eo001-gateway-abort.test.mjs'
+      - 'integrations/ai-evaluation-lab/eo001-guarded-whole-decision.test.mjs'
+      - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs'
       - '.github/workflows/eo001-gate1-offline-freeze.yml'
   pull_request:
     branches:
@@ -28,6 +31,12 @@ jobs:
         run: node --check integrations/ai-evaluation-lab/eo001-gate1-offline-contract.mjs
       - name: Verify synthetic protocol tests, timeout retention and refusal
         run: node --test integrations/ai-evaluation-lab/eo001-gate1-offline-contract.test.mjs
+      - name: Test real loopback cancellation and Qwen transport isolation without inference
+        run: node --test integrations/ai-evaluation-lab/eo001-gateway-abort.test.mjs
+      - name: Test whole guard and private receipt end-to-end timing with synthetic fixtures
+        run: node --test integrations/ai-evaluation-lab/eo001-guarded-whole-decision.test.mjs
+      - name: Recheck previously passing sovereign adapter negative controls
+        run: node --test integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.test.mjs
       - name: Verify offline review still refuses physical execution
         run: |
           node integrations/ai-evaluation-lab/eo001-gate1-offline-contract.mjs > /tmp/eo001-offline-status.json
