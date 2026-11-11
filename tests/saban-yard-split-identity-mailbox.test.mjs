@@ -6,7 +6,7 @@ import path from 'node:path';
 
 import {startEvercraftComputeNode} from '../systemia/compute/runtime-node.mjs';
 import {AmbientWorkQueue} from '../systemia/saban/ambient-work-queue.mjs';
-import {createNodeSeedExecutionIntent, getNodeSeedExecutionIntent} from '../systemia/saban/nodeseed-execution-intent.mjs';
+import {createNodeSeedExecutionIntent, getNodeSeedExecutionIntent, updateNodeSeedExecutionIntent} from '../systemia/saban/nodeseed-execution-intent.mjs';
 import {
   publishSplitIdentityRequests, readSplitIdentityRequests,
   publishSplitIdentityOutcome, importSplitIdentityOutcomes,
@@ -97,6 +97,16 @@ test('split-account mailbox accepts one immutable SHA-256 intent and returns ver
     assert.equal(x.queue.get(job.job_id).execution_receipt.content_hash_verified,true);
     assert.equal(getNodeSeedExecutionIntent({root:x.sabanRoot,intentId:intent.intent_id}).state,'completed');
     assert.equal(importSplitIdentityOutcomes(x).applied,0,'do not complete twice');
+
+    // Simulate crash between each of the two independent local state writes.
+    updateNodeSeedExecutionIntent({root:x.sabanRoot,intentId:intent.intent_id,
+      patch:{state:'awaiting_yard_execution'}});
+    assert.equal(importSplitIdentityOutcomes(x).applied,1,
+      'recovers completed queue with pending intent');
+    x.queue.update(job.job_id,{state:'handoff_wait'});
+    assert.equal(importSplitIdentityOutcomes(x).applied,1,
+      'recovers completed intent with pending queue');
+    assert.equal(importSplitIdentityOutcomes(x).applied,0);
     assert.equal(fs.existsSync(path.join(x.yardRoot,'work-queue')),false,
       'Yard never writes Saban private queue');
   }finally{
