@@ -199,3 +199,40 @@ jobs:
             /tmp/evercraft-rc05c-49-56.json
             /tmp/evercraft-rc05c-65-72.json
           retention-days: 7
+
+      - name: RC05D anonymous synthetic motion-watch and fail-closed math tests
+        run: node --test systemia/world-engine/sim-to-real/controller-rc05-motion-watch.test.mjs
+      - name: RC05D native evidence integrity and default-preservation tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.test.mjs
+      - name: RC05D seed 51 known moving-collision cohort (49-56)
+        run: node --import tsx systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.mjs --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05d-49-56.json
+      - name: RC05D fresh synthetic cohort (73-80)
+        run: node --import tsx systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.mjs --first-seed 73 --seeds 8 --out /tmp/evercraft-rc05d-73-80.json
+      - name: RC05D verify documented simulated hazard outcomes and no actuation
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyMotionWatchTrial} from './systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.mjs';
+          for(const cohort of ['49-56','73-80']){
+            const r=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05d-'+cohort+'.json','utf8'));
+            if(!verifyMotionWatchTrial(r)||r.hardwareExecution!==false||r.productionAuthorized!==false)
+              throw Error('rc05d_evidence_or_authority_failed:'+cohort);
+            if(r.review.reviewEligible&&(r.scores.motionWatch.collisions>r.scores.baseline.collisions||
+                r.scores.motionWatch.shieldedMoves===0||
+                r.scores.motionWatch.arrived-r.scores.baseline.arrived<Math.ceil(r.seeds*.25)))
+              throw Error('rc05d_premature_candidate_eligibility:'+cohort);
+            console.log('RC05D VERIFIED',JSON.stringify({cohort,scores:r.scores,review:r.review,
+              perSeed:r.pairs.map(p=>({seed:p.seed,original:p.baseline.status,
+                rc05c:p.escape.status,rc05d:p.motionWatch.status,
+                motionHolds:p.motionWatch.motionHolds,watchedTicks:p.motionWatch.watchedTicks,
+                collisionObstacleIds:p.motionWatch.collisionObstacleIds})),digest:r.sha256}));
+          }
+          NODE
+      - name: Upload RC05D synthetic-only collision and motion-watch evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05d-synthetic-motion-watch
+          path: |
+            /tmp/evercraft-rc05d-49-56.json
+            /tmp/evercraft-rc05d-73-80.json
+          retention-days: 7
