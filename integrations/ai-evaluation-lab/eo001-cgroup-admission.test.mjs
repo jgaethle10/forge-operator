@@ -132,6 +132,12 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   const calls=[];
   const run=(cmd,args,opts)=>{
     calls.push({cmd,args,options:opts});
+    if(cmd==='systemctl'){
+      assert.deepEqual(args.includes('--stop'),false);
+      assert.ok(args.includes(UNIT));
+      if(args.includes('show'))return {status:0,stdout:'LoadState=not-found\\nActiveState=inactive\\n'};
+      return {status:0,stdout:''};
+    }
     assert.equal(cmd,'systemd-run');
     assert.ok(args.includes('--scope'));
     assert.ok(opts.timeout<=6500);
@@ -151,8 +157,12 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
       scope_test_executed:false
     }),run,uuid:()=>[ID,NONCE][k++],node:'/usr/bin/node'
   });
-  assert.equal(calls.length,1);
+  assert.equal(calls.length,3);
+  assert.equal(calls[0].cmd,'systemd-run');
+  assert.equal(calls[1].cmd,'systemctl');
+  assert.equal(calls[2].cmd,'systemctl');
   assert.equal(result.state,'ONE_SHOT_SYNTHETIC_CGROUP_SCOPE_MEMBER_REPORTED');
+  assert.equal(result.scope_collected_after_probe,true);
   assert.equal(result.synthetic_child_reported_member,true);
   assert.equal(result.resource_limits_independently_read_back,false);
   assert.equal(result.escaped_descendant_kill_proven,false);
@@ -163,13 +173,41 @@ test('synthetic scope report that is out-of-scope or malformed cannot be promote
   const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,
     preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false}),uuid:()=>ID};
+  const withCleanup=onRun=>(cmd,args)=>{
+    if(cmd==='systemctl'){
+      if(args.includes('show'))return {status:0,stdout:'LoadState=not-found\\nActiveState=inactive\\n'};
+      return {status:0,stdout:''};
+    }
+    return onRun();
+  };
   assert.throws(()=>runSyntheticCgroupCanary({...base,
-    run:()=>({status:0,stdout:'{"actual_unit_member":true}'})
+    run:withCleanup(()=>({status:0,stdout:'{"actual_unit_member":true}'}))
   }),/SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN/);
   assert.throws(()=>runSyntheticCgroupCanary({...base,
-    run:()=>({status:125,stdout:'systemd refused resource controls'})
+    run:withCleanup(()=>({status:125,stdout:'systemd refused resource controls'}))
   }),/SYNTHETIC_SCOPE_EXECUTION_BLOCKED/);
   assert.throws(()=>runSyntheticCgroupCanary({...base,
-    run:()=>({status:0,stdout:'not-json'})
+    run:withCleanup(()=>({status:0,stdout:'not-json'}))
   }),/SCOPE_RECEIPT_INVALID/);
+});
+test('uncleared transient scope blocks the report even if child claimed membership',()=>{
+  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,
+    preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
+      scope_test_executed:false}),uuid:()=>ID};
+  const calls=[];
+  const run=(cmd,args)=>{
+    calls.push({cmd,args});
+    if(cmd==='systemctl'){
+      if(args.includes('show'))return {status:0,stdout:'LoadState=loaded\\nActiveState=active\\n'};
+      return {status:0,stdout:''};
+    }
+    const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
+    return {status:0,stdout:JSON.stringify(inspectScopedChild({
+      scopeId:unit,nonce:ID,procCgroup:'0::/user.slice/'+unit
+    }))};
+  };
+  assert.throws(()=>runSyntheticCgroupCanary({...base,run}),
+    /TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED/);
+  assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('kill')),true);
+  assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('stop')),true);
 });
