@@ -77,3 +77,9 @@
 .sl-evidence summary{cursor:pointer;font-size:11px;font-weight:760;min-height:24px;touch-action:manipulation}
 .sl-evidence p{margin:7px 0 0;line-height:1.5;font-size:10px}
 .sl-evidence code{display:block;font-size:10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;line-height:1.5;overflow-wrap:anywhere;word-break:break-all;margin-top:6px;padding:7px;border-radius:5px;background:#e1e9dc;color:#26493c}
+
+
+.sl-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 0}
+.sl-stats>div{border:1px solid #cbdacf;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;background:#eef3e9}
+.sl-stats strong{font-size:21px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.04em;color:#274c3e}
+.sl-stats small{font-size:10px;line-height:1.35;color:#577767}
