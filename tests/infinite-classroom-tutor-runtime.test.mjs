@@ -6,7 +6,7 @@ const ACCESS='adult-pilot-authority-test-abc123456789'; // Synthetic test-only.
 const AUTH={authorization:'Bearer '+ACCESS,'content-type':'application/json'};
 const fakeInference=async()=>({
  status:'completed',provider:'ollama',text:'We can explore that together. What example would you like?',
- provider_receipt:'sha256:test-receipt'
+ provider_receipt:'sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 });
 async function service(){
  return startPrivateClassroomPilot({host:'127.0.0.1',port:0,accessToken:ACCESS,
@@ -89,7 +89,7 @@ test('Raven adapter prohibits remote providers, and validates local Ollama befor
    {ok:true,service:'raven-inference-gateway',provider:'ollama',loopback_only:true}:
    path==='/v1/validate'?{status:'available',provider:'ollama',base44_used:false,model:'local-test'}:
    {status:'completed',provider:'ollama',model:'local-test',text:'A gentle guided example',
-    provider_receipt:'sha256:verified-test-only'};
+    provider_receipt:'sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'};
   return {ok:true,status:200,json:async()=>data,headers:{get:()=>null}};
  };
  const adapter=makeLocalRavenTutor({origin:'http://127.0.0.1:4322',
