@@ -50,6 +50,8 @@ function parseCSV(bytes) {
   return lines.slice(1).map((line,i)=>{
     const cells=line.split(',');
     if(cells.length!==4 || cells.some(v=>v.trim()==='')) throw new Error('CSV row must have exactly four numeric fields');
+    const decimal=/^[+-]?(?:(?:\d+(?:\.\d*)?)|(?:\.\d+))(?:[eE][+-]?\d+)?$/;
+    if(cells.some(v=>!decimal.test(v))) throw new Error('Strict decimal CSV numeric fields required');
     const fields=cells.map(v=>Number(v));
     if(fields.some(v=>!Number.isFinite(v))) throw new Error('Nonfinite numeric CSV field');
     return {tSeconds:fields[0],voltageVolts:fields[1],
