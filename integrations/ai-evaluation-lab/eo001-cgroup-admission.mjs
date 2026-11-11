@@ -148,32 +148,60 @@ export function runSyntheticCgroupCanary({
   const nonce=uuid();
   const command=fixedSyntheticScopeCommand({root,unit,nonce,node});
   // Allow only private noncredential environment variables, no inherited tokens.
-  const response=run(command.executable,command.arguments,{
-    timeout:6500,maxBuffer:8192,encoding:'utf8',
-    env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
-      HOME:os.homedir()},stdio:['ignore','pipe','pipe']
-  });
-  requireTrue(commandOk(response),'SYNTHETIC_SCOPE_EXECUTION_BLOCKED');
-  let payload;
-  try{payload=JSON.parse(String(response.stdout).trim());}
-  catch{refuse('SCOPE_RECEIPT_INVALID');}
-  requireTrue(payload&&typeof payload==='object'&&
-    Object.keys(payload).sort().join('|')===
-      ['schema','scope_id','nonce','unified_cgroup_v2',
-        'actual_unit_member','model_inference_executed',
-        'external_actions_authorized'].sort().join('|')&&
-    payload.schema==='evercraft.eo001.gate1.synthetic-scope-child.v1'&&
-    payload.scope_id===unit&&payload.nonce===nonce&&
-    payload.unified_cgroup_v2===true&&payload.actual_unit_member===true&&
-    payload.model_inference_executed===false&&
-    payload.external_actions_authorized===false,
-    'SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN');
+  let receipt=null;
+  let failure=null;
+  try{
+    const response=run(command.executable,command.arguments,{
+      timeout:6500,maxBuffer:8192,encoding:'utf8',
+      env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
+        HOME:os.homedir()},stdio:['ignore','pipe','pipe']
+    });
+    requireTrue(commandOk(response),'SYNTHETIC_SCOPE_EXECUTION_BLOCKED');
+    let payload;
+    try{payload=JSON.parse(String(response.stdout).trim());}
+    catch{refuse('SCOPE_RECEIPT_INVALID');}
+    requireTrue(payload&&typeof payload==='object'&&
+      Object.keys(payload).sort().join('|')===
+        ['schema','scope_id','nonce','unified_cgroup_v2',
+          'actual_unit_member','model_inference_executed',
+          'external_actions_authorized'].sort().join('|')&&
+      payload.schema==='evercraft.eo001.gate1.synthetic-scope-child.v1'&&
+      payload.scope_id===unit&&payload.nonce===nonce&&
+      payload.unified_cgroup_v2===true&&payload.actual_unit_member===true&&
+      payload.model_inference_executed===false&&
+      payload.external_actions_authorized===false,
+      'SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN');
+    receipt=payload;
+  }catch(e){failure=e;}
+  // A timed-out systemd-run invocation may leave a transient user scope.
+  // Attempt cleanup by exact generated ID EVEN WHEN the probe fails; check
+  // the user's systemd unit state rather than equating a kill request with
+  // proof that the cgroup is gone.
+  const cleanupOptions={timeout:3000,maxBuffer:4096,encoding:'utf8',
+    env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',HOME:os.homedir()}};
+  run('systemctl',['--user','stop',unit],cleanupOptions);
+  const readState=()=>run('systemctl',['--user','show',unit,
+    '-p','LoadState','-p','ActiveState'],cleanupOptions);
+  const isGone=result=>commandOk(result)&&
+    /\\bLoadState=not-found\\b/.test(result.stdout)&&
+    /\\bActiveState=inactive\\b/.test(result.stdout);
+  let current=readState();
+  if(!isGone(current)){
+    run('systemctl',['--user','kill','--kill-whom=all',
+      '--signal=SIGKILL',unit],cleanupOptions);
+    run('systemctl',['--user','stop',unit],cleanupOptions);
+    current=readState();
+  }
+  requireTrue(isGone(current),'TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED');
+  if(failure)throw failure;
+  requireTrue(receipt!==null,'SCOPE_RECEIPT_INVALID');
   return {
     schema:'evercraft.eo001.gate1.synthetic-scope-admission.v1',
     state:'ONE_SHOT_SYNTHETIC_CGROUP_SCOPE_MEMBER_REPORTED',
     reviewed_source_commit:reviewedPin,
     local_scope_created:true,synthetic_child_reported_member:true,
     cgroup_unit_identity:unit,
+    scope_collected_after_probe:true,
     memory_tasks_cpu_limits_requested:true,
     resource_limits_independently_read_back:false,
     escaped_descendant_kill_proven:false,
