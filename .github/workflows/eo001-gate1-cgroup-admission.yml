@@ -4,6 +4,7 @@ on:
     branches:
       - research/eo001-gate1-resource-readback-20261110
       - research/eo001-gate1-user-bus-hold-20261110
+      - research/eo001-gate1-supervisor-readback-20261110
     paths:
       - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
       - '.github/workflows/eo001-gate1-cgroup-admission.yml'
@@ -11,6 +12,7 @@ on:
     branches:
       - research/eo001-gate1-cgroup-admission-20261110
       - research/eo001-gate1-resource-readback-20261110
+      - research/eo001-gate1-user-bus-hold-20261110
     paths:
       - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
       - '.github/workflows/eo001-gate1-cgroup-admission.yml'
@@ -35,6 +37,10 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
       - name: Prove exact synthetic cgroup controller readback and refusal
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
+      - name: Check independent-supervisor observation contract syntax
+        run: node --check integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.mjs
+      - name: Prove supervisor-side exact manager and kernel readback refusal (OFFLINE)
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.test.mjs
       - name: Prove default fails closed without reviewed source pin
         run: |
           set +e
