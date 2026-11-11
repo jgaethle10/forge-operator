@@ -33,6 +33,18 @@ The first-party registry is `field-archive/sources.json`, with stable source IDs
 
 **Original records:** https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/ and https://www.ncei.noaa.gov/metadata/granule/geoportal/rest/metadata/item/EX2306_DIVE02_20230825T183000Z_ROVHD/html
 
+### Source-byte audit contract (engineering gate)
+
+The original EX2306 DIVE02 KML and ROV ancillary ZIP are now targets of the first-party `Subsea NOAA source byte audit` GitHub Actions workflow. The owning script is `scripts/audit-noaa-subsea-sources.py`, with offline guardrail tests in `tests/test_subsea_noaa_audit.py`.
+
+- Fetches **only** two hard-coded NOAA/MS State archive URLs over HTTPS with guarded redirects and bounded reads (KML 500 KB, ancillary ZIP 24 MB).
+- Records actual response metadata, byte count and SHA-256. The KML inspector inventories geometry and timestamp tags but **never converts** KML elevation into diver depth or claims underwater position accuracy.
+- The ZIP inspector inventories up to 80 member names, checks path traversal, encryption and declared expansion size, and extracts only bounded textual schema hints from up to eight members. Raw archives are not uploaded or checked into the repository.
+- The workflow saves a sanitized JSON receipt artifact. When downloads fail, its `SOURCE_ACCESS_INCOMPLETE` status and detailed blockers are preserved. An HTTP success alone is **not** a schema validation or a licensed 3D reconstruction.
+- Even when both sources are byte-audited, the receipt says `BYTE_AUDIT_COMPLETE_SCHEMA_UNVERIFIED`. A separate engineering review must establish instrument identification, UTC clock, coordinate datum, depth reference, uncertainty and video alignment before adapting any positions into `evercraft.subsea.replay.v1`.
+
+This workflow is neither a commercial dive data certification nor approval for live navigation. See engineering issue #1982 for the next acceptance steps.
+
 ### Next adapter gate
 
 Inspect the real DIVE02 ZIP and KML formats before writing a converter. Verify which measurements correspond to the **ROV** versus the camera platform or ship. Explicitly establish time basis, UTC offsets, horizontal measurement method, position validity, coordinate datum, local origin and depth sign/reference. Build a converter that emits `evercraft.subsea.replay.v1` **only for validated fields** and leaves missing XY unknown. Never interpolate unknown positions across long intervals or imply video-frame accuracy without a verified clock alignment.
