@@ -2250,6 +2250,7 @@ export class YardOperator {
     brokerDeploymentId,
     maxIntents = 16,
     timeoutMs = 10_000,
+    allowLoopbackProof = false,
     now = new Date(),
   } = {}) {
     if (!sabanRoot) throw new Error('sabanRoot is required');
@@ -2260,6 +2261,7 @@ export class YardOperator {
       brokerDeploymentId,
       maxIntents,
       timeoutMs,
+      allowLoopbackProof,
       now,
     });
   }
