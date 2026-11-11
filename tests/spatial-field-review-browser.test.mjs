@@ -11,7 +11,8 @@ const html=readFileSync(htmlPath,'utf8');
 test('V6 review UI has local import, visible outcomes, and responsive graphs',()=>{
  for(const id of ['file','demo','message','dashboard','coverage','mae','rmse',
   'unresolved','scatter','outcomes','targets','filter','search','sort','detail',
-  'warnings','provenance','reportTitle','classification','rowTotal']){
+  'warnings','provenance','reportTitle','classification','rowTotal',
+  'retestPanel','reviewThreshold','buildRetest','downloadRetest','retestItems','retestSummary']){
   assert.ok(html.includes('id="'+id+'"'),'missing control '+id);
  }
  assert.match(html,/@media\(max-width:830px\)/);
@@ -25,7 +26,7 @@ test('V6 module loads only local code; no external UI runtime or evidence transm
  const script=html.match(/<script type="module">([\s\S]*?)<\/script>/)?.[1];
  assert.ok(script,'missing review script');
  const imports=[...script.matchAll(/^import .* from ['"]([^'"]+)['"];?$/gm)].map(m=>m[1]);
- assert.deepEqual(imports,['./field-review.mjs']);
+ assert.deepEqual(imports,['./field-review.mjs','./field-retest.mjs']);
  assert.ok(existsSync(resolve(dirname(htmlPath),imports[0])));
  assert.doesNotThrow(()=>new Function(script.replace(/^import .*;\n/gm,'')));
  assert.doesNotMatch(script,/\bfetch\s*\(|\bXMLHttpRequest\b|\bsendBeacon\b|\bWebSocket\b|\binnerHTML\s*=/);
@@ -44,4 +45,14 @@ test('V6 report review never calls the camera or uploads source imagery',()=>{
  assert.doesNotMatch(script,/getUserMedia|\.requestDevice|\bFileReader\s*\(|\.writeFile/);
  assert.match(script,/inspectFieldReport\(report\)/);
  assert.match(script,/filterFieldRows\(current/);
+});
+
+test('V7 planner runs only after report validation and never schedules capture',()=>{
+ const script=html.match(/<script type="module">([\s\S]*?)<\/script>/)?.[1];
+ assert.match(script,/buildFieldRetestPlan\(current/);
+ assert.match(script,/latestRetestPlan=plan/);
+ assert.match(script,/URL\.createObjectURL\(blob\)/);
+ assert.match(script,/evercraft-spatial-proposed-retests\.json/);
+ assert.doesNotMatch(script,/\bfetch\s*\(|\bXMLHttpRequest\b|\bsendBeacon\b|\bWebSocket\b/);
+ assert.match(html,/not an accuracy acceptance criterion/);
 });
