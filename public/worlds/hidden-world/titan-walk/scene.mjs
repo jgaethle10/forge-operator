@@ -50,12 +50,22 @@ export function buildTitanDrawList(scene=TITAN_SCENE){
  // A virtual interpretive gallery, physically impossible to confuse with a precise launch-complex floor plan.
  add(0,-.48,-12,69,.96,88,'#4c5658','environment','abstract underground gallery slab');
  add(0,-.01,-10,6,.10,78,'#987f65','environment','symbolic visitor floor ribbon');
+ add(0,7.4,-12,69,.9,88,'#364850','environment','invented enclosed museum ceiling');
+ // Gallery lighting and ceiling beams are scenic art, not components of a real hardened complex.
+ for(let i=0;i<13;i++){
+  const z=14-i*5.1;
+  add(0,6.85,z,56,.48,.65,'#63737a','environment','fictional gallery ceiling rib');
+  add(-3.15,6.35,z,1.4,.18,.85,'#dcc99d','interface','artistic luminous ceiling panel');
+  add(3.15,6.35,z,1.4,.18,.85,'#dcc99d','interface','artistic luminous ceiling panel');
+  add(0,.07,z,4.9,.07,.18,'#d2b98e','environment','interpretive floor graduation');
+ }
+
  add(0,.01,17,10,.16,8,'#b69c78','environment','orientation podium floor');
  // Invented wall-and-light relief, not source engineering or accessibility information.
  for(let i=0;i<18;i++){const z=15-i*3.2;add(-4.0,.10,z,.18,.18,.92,'#d8c18c','environment','museum floor edge');add(4.0,.10,z,.18,.18,.92,'#d8c18c','environment','museum floor edge');}
  for(let i=0;i<11;i++){const z=13-i*5;add(-28,.55,z,.50,1.1,1.75,'#53636b','environment','sculptural strata pillar');add(28,.55,z,.50,1.1,1.75,'#53636b','environment','sculptural strata pillar');}
  // The three rings represent a category of underground structures, not the three real silos' arrangement.
- for(const [i,cx,cz] of [[0,-17,-6],[1,0,-17],[2,17,-6]]){
+ for(const [i,cx,cz] of [[0,-17,-6],[1,17,-6],[2,-17,-30]]){
   const size=6.8;
   for(const sign of [-1,1]){
     add(cx+sign*size,1.58,cz,.85,3.15,size*2,'#8e938b','documented_category','symbolic shaft wall');
