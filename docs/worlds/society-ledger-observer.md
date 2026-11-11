@@ -8,22 +8,22 @@ The existing 3D Worlds HUD now contains **Society ledger**. Selecting it opens a
 
 After PR #1919 is reviewed and available in the checked-out source, an operator can inspect the **canonical state-branch file locally** without giving the browser state branch credentials or allowing a writer to publish it.
 
-Example from the owned repository on a trusted computer:
+On a trusted machine with PR #1919's read-only code available, use the **one-command commit-pinned snapshot reader**:
 
 ```sh
-git fetch origin window-society-state
-git show FETCH_HEAD:state/window.json > /tmp/mossmere-window.json
-node systemia/society/window-decision-observer.mjs /tmp/mossmere-window.json > /tmp/mossmere-observation.json
+node systemia/society/window-snapshot-fetch.mjs > /tmp/mossmere-observation.json
 ```
 
-Open your existing owned/private Worlds preview, choose **Society ledger**, and select `/tmp/mossmere-observation.json`. The browser parses this local artifact; it does **not** upload, synchronize, persist or fetch the source. File max 1 MB, maximum 48 displayed policy receipts, 12 named residents. The observer CLI verifies the internal SHA-256 world-state hash, but **does not authenticate GitHub origin or sign the output**.
+This command makes two read-only GitHub HTTPS requests, verifies the exact branch ref and Git blob identity, and checks the saved world's SHA-256. It needs no write credential and does not alter the protected heartbeat. If a network connection is unavailable, the older manual fetch and offline observer remain valid fallback methods.
+
+Open your existing owned/private Worlds preview, choose **Society ledger**, and select `/tmp/mossmere-observation.json`. The browser parses this local artifact; it does **not** upload, synchronize, persist or fetch the source. Every event's content digest is rechecked with browser WebCrypto before the panel displays it; a mismatch refuses the file. File max 1 MB, maximum 48 displayed policy receipts, 12 named residents. The new fetch CLI pins the commit and checks both the Git blob SHA-1 and the internal SHA-256 world hash. The inspector labels the commit as **file-reported**, because the browser cannot independently authenticate the selected file or verify a digital signature.
 
 ## Authority boundaries
 
 - The current public-facing Worlds scene has three locally scripted inhabitants. The canonical Window state contains twelve different residents, with civic/social policy events and separate persistent heartbeat history. The panel does **not** claim those two scenes are synchronized or project canonical resident coordinates.
 - The state-branch heartbeat is **release held**. The observer accepts only release-held, explicitly `civic_and_social_policy_no_llm` snapshots. It neither unlocks the society nor executes model inference.
 - No network, account, payment, private world mutation, remote browser request or new service is introduced by the UI.
-- Event content hashes are integrity metadata, not execution attestations. The displayed report comes from an **operator-selected local file**, not an independently authenticated live server.
+- The viewer recomputes SHA-256 for every displayed receipt before rendering it, offers expandable receipt details, and rejects tampering. Event content hashes are integrity metadata, not execution attestations. The displayed report comes from an **operator-selected local file**, not an independently authenticated live server.
 - Only the bounded retained historical event slice is present; omissions must not be described as no activity.
 - Data belongs to the original fictitious simulation. Do not reuse the inspector for real-person surveillance, identity inferences or guilt assessments.
 
