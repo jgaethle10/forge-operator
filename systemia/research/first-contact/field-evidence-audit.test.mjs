@@ -127,3 +127,31 @@ test("multi-megabyte native source hashes in chunks and detects later edits",t=>
   assert.equal(bad.status,"HOLD");
   assert.equal(bad.checkedSources.find(x=>x.role==="camera_a_native").reason,"HASH_MISMATCH");
 });
+
+
+test("pixel-native calibration input can be bound to the same pre-registration thresholds",t=>{
+  const {root,manifest}=sandbox(t);
+  const file=path.join(root,"calibration_input.txt");
+  const x=JSON.parse(fs.readFileSync(file,"utf8"));
+  x.schema="evercraft.first-contact.rectified-pixel-calibration-session.v1";
+  const bytes=JSON.stringify(x,null,2)+"\n";
+  fs.writeFileSync(file,bytes);
+  manifest.sources.find(a=>a.role==="calibration_input").sha256=hash(bytes);
+  const receipt=auditFieldEvidence({root,manifest});
+  assert.equal(receipt.status,"BYTE_CHAIN_MATCHED_REQUIRES_INDEPENDENT_PROOF");
+  assert.equal(receipt.preregistrationFieldsMatch,true);
+  assert.equal(receipt.cameraCalibrationIndependentlyVerified,false);
+});
+test("pixel-native calibration cannot silently modify the planned limits",t=>{
+  const {root,manifest}=sandbox(t);
+  const file=path.join(root,"calibration_input.txt");
+  const x=JSON.parse(fs.readFileSync(file,"utf8"));
+  x.schema="evercraft.first-contact.rectified-pixel-calibration-session.v1";
+  x.quality.maxRayMissMeters=999;
+  const bytes=JSON.stringify(x,null,2)+"\n";
+  fs.writeFileSync(file,bytes);
+  manifest.sources.find(a=>a.role==="calibration_input").sha256=hash(bytes);
+  const receipt=auditFieldEvidence({root,manifest});
+  assert.equal(receipt.status,"HOLD");
+  assert.equal(receipt.reason,"PREREGISTRATION_CALIBRATION_CONTRACT_MISMATCH");
+});
