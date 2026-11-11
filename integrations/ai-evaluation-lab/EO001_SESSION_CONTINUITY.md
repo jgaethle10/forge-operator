@@ -17,7 +17,19 @@ The first-party `eo001-cgroup-session-proof.mjs` invokes **only** a fixed, embed
 - The parent verifies that `pid = pgid = sid`, that session differs from the original parent, and that the cgroup string exactly matches the parent's.
 - The child must exit with status 0 and be reaped. No open-ended process or pass-only retry exists in this helper.
 
-The already fixed scope/resource canary now requires this check **after** verifying exact memory, PID/task, and CPU quota values. This changes the admitted child report to schema `evercraft.eo001.gate1.synthetic-scope-child.v3` and makes parent validation refuse old v2 receipts or missing session/reaping evidence.
+The already fixed scope/resource canary now requires this check **after** verifying exact memory, PID/task, and CPU quota values. This first upgraded the synthetic child report from v2 to v3. A subsequent independent parent-witness addition upgrades the admitted report to **`evercraft.eo001.gate1.synthetic-scope-child.v4`**. Parent validation refuses v2/v3 receipts and requires the new procfs witness flags in addition to the original session/reaping evidence.
+
+## Added parent-side procfs witness (v4)
+
+The earlier child was self-reporting its own cgroup. We now also execute a second bounded, fixed synthetic helper `eo001-cgroup-parent-witness.mjs`, which:
+
+- Launches a short-lived **separate POSIX session** and reads the child’s `/proc/<pid>/stat` and `/proc/<pid>/cgroup` **from the parent while the child is still alive**, rather than relying on the child’s own cgroup JSON.
+- Verifies exact observed PID, process group and session fields, the new session versus parent, and unchanged parent/child cgroup.
+- Attempts bounded process-group SIGTERM, escalates to SIGKILL if necessary, and requires successful child reaping before producing its evidence flag.
+- Returns booleans only. The parent-side witness does not publish the procfs path or claim that systemd killed the child.
+- Is required in the synthetic scope canary alongside exact controller readback. The schema changes to `synthetic-scope-child.v4`, so a v3 report cannot be accepted as stronger evidence.
+
+This strengthens **code-level observation and cleanup of our own fixed synthetic child**, but **is not independent Lab hardware attestation** and **does not establish forced systemd termination of a still-running escaped-session process**. That requires a separate physical test with an independently checked empty cgroup.
 
 ## Independent results and limitations
 
@@ -44,3 +56,9 @@ node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
 ```
 
 The above are synthetic tests. Do not run the `--synthetic-canary` path or physical Qwen until the already documented source pin, user-systemd permissions and explicit acceptance steps are satisfied.
+
+## Latest CI
+
+- [Offline CI #42981125031](https://github.com/jgaethle10/forge-operator/actions/runs/42981125031) passed real Linux detached-session tests, parent-observed live procfs tests, resource/controller refusal tests and synthetic scope admission tests.
+- Tested implementation commit: `94604fcbfdfe0b576f16d2caca1b74aafc3e7be8`.
+- No physical NextGen source, services, private handoff data, Qwen, or external action was changed by these GitHub tests.
