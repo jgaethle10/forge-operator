@@ -33,15 +33,13 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "Upload the canonical Evercraft v1.0.6 ZIP in OpenAI Platform Plugins",
-    "Select the verified Evercraft LLC developer identity in the owning organization/project",
-    "Confirm Apps Management Write access if the submitter is not an organization owner",
-    "Complete the portal-generated domain verification challenge for fabric.systemiacommandcenters.com",
-    "Complete the current portal MCP connection and Scan Tools checks",
-    "Confirm the imported five positive and three negative tests plus reviewer walkthrough",
-    "Submit for OpenAI review",
-    "Explicit Publish after approval",
-    "Independent directory discovery receipt after publication"
+    "Select the existing Evercraft LLC public listing in the owning OpenAI Platform organization; do not create a second listing",
+    "Compare the current published v1.0.2 metadata, tools, domain and privacy / support URLs to the tested v1.0.6 package",
+    "Upload or select the canonical v1.0.6 update for that existing listing using the provider's supported update flow",
+    "Confirm the same owned Fabric MCP endpoint and verify the domain / scan results on that update",
+    "Review the five positive and three negative tests, documentation and walkthrough for v1.0.6",
+    "Complete any review / approval and explicitly publish the updated version if required by Platform",
+    "Record the actual public version, provider change receipt, and independent uninstalled-account search, installation and read-only invocation"
   ],
   "public_directory_claim_allowed": false,
   "package_version": "1.0.6",
@@ -61,5 +59,19 @@
       "destructiveHint": "False because the tool cannot change, delete, send, publish, purchase, deploy, or revoke anything.",
       "openWorldHint": "False because it looks up one capability inside the bounded Evercraft catalog; returned public URLs are metadata and are not fetched by the tool."
     }
-  }
+  },
+  "existing_public_listing": {
+    "observation_ref": "distribution/openai-plugin/public-listing-observation-2026-11-10.json",
+    "provider": "OpenAI Platform",
+    "publisher": "Evercraft LLC",
+    "portal_observed_status": "Listed publicly",
+    "portal_observed_version": "1.0.2",
+    "latest_provider_scan": "No findings in the latest MCP scan",
+    "current_account_update_state": "not_observed",
+    "independent_fresh_account_discovery": "not_verified",
+    "public_identifier": "not_confirmed",
+    "target_version": "1.0.6",
+    "release_action": "update_existing_listing_not_create_new"
+  },
+  "public_directory_claim_scope": "independent_public_directory_discovery_not_yet_verified; founder portal reports Listed publicly for existing version 1.0.2"
 }
