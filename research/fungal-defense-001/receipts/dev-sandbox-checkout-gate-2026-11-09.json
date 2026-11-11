@@ -1,0 +1,71 @@
+{
+  "schema": "evercraft.fungal-defense.checkout-admission-receipt.v1",
+  "recorded_at_utc": "2026-11-10T04:57:45Z",
+  "local_date": "2026-11-09",
+  "execution_environment": "isolated assistant development Linux container, Python 3.13.5; not Evercraft-owned node",
+  "canonical_repo": "jgaethle10/forge-operator",
+  "branch": "research/fungal-defense-001",
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python -m unittest -v test_verify_checkout test_run_owned_validation",
+      "status": "PASS",
+      "executed": 11,
+      "passed": 11,
+      "failed": 0,
+      "scope": "temporary local Git fixtures and runner fail-closed behavior"
+    },
+    {
+      "command": "bash -n tools/validate_on_owned_node.sh",
+      "status": "PASS",
+      "scope": "shell syntax only"
+    },
+    {
+      "command": "bash tools/validate_on_owned_node.sh --help",
+      "status": "PASS",
+      "scope": "help path only; source clone/node run not executed"
+    },
+    {
+      "command": "python -m py_compile tools/run_owned_validation.py",
+      "status": "PASS",
+      "scope": "local runner compilation only"
+    }
+  ],
+  "git_blob_hashes_verified": [
+    {
+      "path": "research/fungal-defense-001/tools/verify_checkout.py",
+      "sha": "268a0dd9b3e6ca0e8bdf996b7f3cbf4d20a0a292"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_verify_checkout.py",
+      "sha": "13fec85578b66c334c4abf77dcca38961f0f8cc3"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/run_owned_validation.py",
+      "sha": "c22e0dfe516b4db05368b1d5a2148c2ff4fe478d"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_run_owned_validation.py",
+      "sha": "d89c7684a1c3dea4952717fb8aad8c8101b86d68"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/validate_on_owned_node.sh",
+      "sha": "6642a9a5edd944ab72785e64ccfb41f2e4bf45cf"
+    }
+  ],
+  "verified_behavior": [
+    "Correct clean local Git fixture branch and origin admitted",
+    "Wrong branch, wrong origin, dirty worktree, untracked file, missing project file and non-Git checkout rejected",
+    "Runner invokes admission before downstream validation",
+    "Deliberately failing validator yields nonpassing receipt",
+    "All test-only success receipts explicitly deny real hardware attestation and public release"
+  ],
+  "limitations": [
+    "No actual NextGen or Penguin execution, physical node attestation or Systemia mission dispatch",
+    "One-command source clone was not run because this development container cannot resolve GitHub",
+    "Real-device HTML UI not exercised in this work segment",
+    "Public deployment blocked by incomplete release-gates.json scientific, accessibility, privacy/security and runtime reviews"
+  ],
+  "public_release_approved": false,
+  "checkout_on_owned_node_verified": false,
+  "systemia_route_verified": false
+}

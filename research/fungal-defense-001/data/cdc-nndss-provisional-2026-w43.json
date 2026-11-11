@@ -1,0 +1,82 @@
+{
+  "schema": "evercraft.fungal-defense.nndss-provisional.v1",
+  "reviewed_at": "2026-11-09",
+  "surveillance_system": "CDC National Notifiable Diseases Surveillance System (NNDSS)",
+  "scope": "U.S. Residents, excluding U.S. Territories",
+  "pathogen": "Candida auris",
+  "status": "provisional_not_final",
+  "is_live": false,
+  "kind": "cumulative notifications as of each epidemiological week; not finalized annual cases, incidence, deaths, or infections",
+  "clinical": {
+    "definition": "Clinical case notifications; do not combine with screening-only notifications.",
+    "snapshots": [
+      {
+        "week": 41,
+        "week_ending": "2026-10-17",
+        "cumulative_2026": 6211,
+        "same_week_cumulative_2025": 5452,
+        "current_week_2026": 63,
+        "source_url": "https://stacks.cdc.gov/view/cdc/262543"
+      },
+      {
+        "week": 42,
+        "week_ending": "2026-10-24",
+        "cumulative_2026": 6379,
+        "same_week_cumulative_2025": 5584,
+        "current_week_2026": 78,
+        "source_url": "https://stacks.cdc.gov/view/cdc/262666"
+      },
+      {
+        "week": 43,
+        "week_ending": "2026-10-31",
+        "cumulative_2026": 6572,
+        "same_week_cumulative_2025": 5733,
+        "current_week_2026": 91,
+        "source_url": "https://stacks.cdc.gov/view/cdc/262786"
+      }
+    ]
+  },
+  "screening": {
+    "definition": "Screening case notifications; positive colonization screening is not a clinical case or necessarily infection.",
+    "snapshots": [
+      {
+        "week": 43,
+        "week_ending": "2026-10-31",
+        "cumulative_2026": 7202,
+        "same_week_cumulative_2025": 6896,
+        "current_week_2026": 87,
+        "source_url": "https://stacks.cdc.gov/view/cdc/262787"
+      }
+    ]
+  },
+  "caveats": [
+    "Weekly counts are provisional and may increase or decrease when jurisdictions correct reports.",
+    "The national figure excludes U.S. territories and uses reporting notifications, not a final specimen-year annual tabulation.",
+    "A snapshot is a point-in-time report and is not proof of an active outbreak.",
+    "Do not subtract successive cumulative totals to infer new infections or death counts.",
+    "Not directly comparable with CDC's separate 2016–2024 finalized historical tracking data or its frozen MMWR case-level analysis.",
+    "Incomplete and variable jurisdiction reporting can affect comparisons.",
+    "No 2026 year-end estimate, individual risk score, or forecast is supplied."
+  ],
+  "sources": [
+    {
+      "case_type": "clinical",
+      "document": "CDC NNDSS weekly clinical table week 43",
+      "url": "https://stacks.cdc.gov/view/cdc/262786/cdc_262786_DS1.pdf",
+      "published_on": "2026-10-31"
+    },
+    {
+      "case_type": "screening",
+      "document": "CDC NNDSS weekly screening table week 43",
+      "url": "https://stacks.cdc.gov/view/cdc/262787/cdc_262787_DS1.pdf",
+      "published_on": "2026-10-31"
+    }
+  ],
+  "publication_policy": {
+    "source_changes_require_manual_review": true,
+    "no_automatic_case_updates": true,
+    "no_alarm_generation": true,
+    "public_launch_approval_required": true,
+    "geographic_suppression_not_reconstructed": true
+  }
+}
