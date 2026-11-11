@@ -84,6 +84,11 @@
     "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/brand.json",
     "creative_status": "working_brand_direction_not_trademark_cleared",
     "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/brand-mark.svg",
-    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css"
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_decision_reference": null,
+    "approval_ledger": "https://github.com/jgaethle10/forge-operator/blob/main/docs/branding/approvals/ledger.json",
+    "brand_identity_is_final": false
   }
 }
