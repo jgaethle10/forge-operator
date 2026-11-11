@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
 import { ProviderCredentialVault } from './credential-vault.mjs';
 import { readJournalClipHandoff, normalizeJournalStorySlug } from './clip-journal-publish-adapter.mjs';
 import { claimJournalPublish, completeJournalPublishClaim } from './clip-journal-claim.mjs';
@@ -6,6 +9,38 @@ import { publishClipSocialPost } from '../clip/social-publisher-runtime.mjs';
 import { createLinkedInOrganizationPublisherAdapter } from '../clip/linkedin-organization-publisher.mjs';
 
 const clean = value => String(value ?? '').trim();
+
+function verifyJournalPublicationReceipt(repoRoot,slug,handoff) {
+  const journal=path.resolve(repoRoot,'public','journal');
+  const expectedRef='receipts/'+slug+'.json';
+  if (clean(handoff.publication_receipt_ref)!==expectedRef)
+    throw Error('clip_linkedin_journal_receipt_reference_mismatch');
+  const receiptFile=path.join(journal,'receipts',slug+'.json');
+  const articleFile=path.join(journal,slug,'index.html');
+  if (!fs.existsSync(receiptFile)||!fs.existsSync(articleFile))
+    throw Error('clip_linkedin_journal_publication_receipt_missing');
+  const receipt=JSON.parse(fs.readFileSync(receiptFile,'utf8'));
+  const article=fs.readFileSync(articleFile,'utf8');
+  const digest=createHash('sha256').update(article).digest('hex');
+  if (receipt.schema!=='evercraft.journal.publication-receipt.v1' ||
+      receipt.slug!==slug ||
+      receipt.story_id!==clean(handoff.story_id) ||
+      receipt.title!==clean(handoff.title) ||
+      receipt.canonical_url!==clean(handoff.canonical_url) ||
+      receipt.clip_handoff_ref!=='production/'+slug+'/clip-handoff.json' ||
+      receipt.article_sha256!==digest ||
+      receipt.publication_authority!==true ||
+      receipt.publication_state!=='live' ||
+      receipt.live_edition_eligible!==true ||
+      receipt.editorial_gate?.status!=='accepted' ||
+      Number(receipt.editorial_gate?.score)!==10 ||
+      receipt.production_grade?.status!=='accepted' ||
+      receipt.production_grade?.text_primary===true ||
+      !(Date.parse(receipt.freshness_expires_at)>Date.now()))
+    throw Error('clip_linkedin_journal_publication_receipt_unverified');
+  return receipt;
+}
+
 
 function resolveLinkedInCredential({ credentialStateDir, expectedOrganizationId, credentialRef='' }) {
   if (!clean(credentialStateDir)) throw Error('clip_linkedin_credential_vault_not_configured');
@@ -49,6 +84,7 @@ export async function publishJournalStoryLinkedInFromHome({
       clean(handoff.slug) !== safeSlug ||
       !clean(handoff.publication_receipt_ref))
     throw Error('clip_linkedin_journal_release_receipt_unverified');
+  verifyJournalPublicationReceipt(repoRoot,safeSlug,handoff);
   const derivative=(handoff.derivatives || [])
     .find(row=>clean(row.platform).toLowerCase()==='linkedin');
   if (!clean(derivative?.copy)) throw Error('clip_linkedin_journal_derivative_missing');
