@@ -118,7 +118,7 @@ for item in SOURCES:
 
 # Internal 61-second archival workprint. Every visual frame originates in moving
 # Air Force/DoD historical footage; no static-photo pan/zoom or CGI is inserted.
-# Coarse shot candidates were selected by reviewing timestamped contact sheets;
+# Coarse shot candidates were selected by reviewing timestamped contact sheets. Output seeking is placed after input to decode at the intended presentation time;
 # the workprint still needs fine-grained editorial and historical review.
 segments=[
  ("1962",400,12,"People approach/enter a building in a 1962 film"),
@@ -143,7 +143,7 @@ for n,(source_id,start,duration,observed) in enumerate(segments,1):
         "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:"
         "text='"+label+"':fontcolor=white:fontsize=15:box=1:boxcolor=black@0.60:x=12:y=12")
     try:
-        run(["ffmpeg","-y","-v","error","-ss",str(start),"-i",str(src),"-t",str(duration),
+        run(["ffmpeg","-y","-v","error","-i",str(src),"-ss",str(start),"-t",str(duration),
              "-an","-vf",vf,"-c:v","libx264","-preset","veryfast","-crf","20",
              "-pix_fmt","yuv420p",str(clip)],timeout=180)
         clips.append(clip)
