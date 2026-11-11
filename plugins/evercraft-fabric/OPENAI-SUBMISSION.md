@@ -33,22 +33,21 @@ The OpenAI package now uses the Evercraft-owned Fabric MCP at `fabric.systemiaco
 
 Do not change the submitted MCP origin casually. OpenAI treats MCP configuration as submission metadata, and a server-origin change can require a new submission/update path.
 
-## Account-side publication gates
+## Existing public listing upgrade gates
 
-Source work is no longer the limiting step. Before claiming public ChatGPT availability, complete the authenticated OpenAI Platform flow:
+The founder's OpenAI Platform screenshot dated 2026-11-10 shows **Evercraft LLC / Evercraft** already **Listed publicly** at version **1.0.2**, with its owned Fabric MCP configured, domain verified and no findings in the latest scan. Do not create a replacement public listing, or infer that the private 1.0.6 package has been published. The exact provider listing identifier and independent outside-account discovery receipt were not confirmed by this screenshot.
 
-1. Open `https://platform.openai.com/plugins` and upload the canonical v1.0.6 ZIP.
-2. Select the organization/project that will own the listing and the verified **Evercraft LLC** developer identity.
-3. Confirm the submitter has **Apps Management Write** if the submitter is not already an organization owner.
-4. In MCP setup, connect `https://fabric.systemiacommandcenters.com/mcp`.
-5. Serve the exact portal-generated token at the challenge URL the portal provides and complete domain verification.
-6. Run the portal MCP scan and resolve any findings.
-7. Confirm the package imported exactly five positive and three negative review cases, the walkthrough URL, release notes, artwork, and public policy/support URLs.
-8. Submit for review.
-9. After OpenAI approval, explicitly publish the plugin.
-10. Independently verify exact-name directory discovery and at least one brand-blind problem-first invocation before changing any receipt to `published`.
+Update the **existing** listing using the authenticated OpenAI Platform flow:
 
-Submission is not publication. Approval is not publication. Private installation is not publication.
+1. Open `https://platform.openai.com/plugins` and select the existing **Evercraft** listing belonging to **Evercraft LLC**.
+2. Capture its current v1.0.2 metadata and MCP configuration as the pre-upgrade rollback/reference receipt.
+3. Use the provider-supported **update existing listing** workflow to upload or select the tested v1.0.6 package. Do not submit it as another public plugin.
+4. Confirm the owned `https://fabric.systemiacommandcenters.com/mcp` route, domain verification, MCP scan results and exact tool declarations.
+5. Verify five positive and three negative review cases, the walkthrough, artwork and current policies.
+6. Follow the portal's review/approval path if required, then explicitly publish the update when authorized.
+7. Record the actually published version and provider receipt. Then verify a fresh search, install and read-only routing invocation on an independent account without a privately installed Evercraft plugin.
+
+**Status:** screenshot-observed public v1.0.2; source v1.0.6 ready for upgrade; account-side upgrade and independent consumer test not yet confirmed. This document records no automatic provider action.
 
 ## Publication receipt
 
