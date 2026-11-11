@@ -113,7 +113,7 @@ test('missing raw data column fails before numerical analysis',t=>{
 test('nonfinite CSV measurements are rejected',t=>{
   const f=fixture(t);
   rewrite(f,'dc_source_1',HDR+'0,5,1,0.05\n1,Infinity,1,0.05\n2,5,1,0.05\n');
-  assert.throws(()=>inspectTimeSeriesBundle(f),/Nonfinite numeric/);
+  assert.throws(()=>inspectTimeSeriesBundle(f),/Strict decimal CSV numeric|Nonfinite numeric/);
 });
 test('missing input completeness attestation fails closed',t=>{
   const f=fixture(t);
