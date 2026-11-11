@@ -63,7 +63,8 @@ test('shutdown drains in-flight browser registration before closing its localhos
     const closing=node.close();
     releaseFactory();
     const result=await jobPromise;
-    assert.equal(result.status,200,JSON.stringify(await result.json()));
+    assert.equal(result.status,503);
+    assert.equal((await result.json()).error,'compute_node_shutting_down');
     await closing;
     node=null;
     assert.equal(adapterCloseCalls,1,'late browser public adapter must be closed');
