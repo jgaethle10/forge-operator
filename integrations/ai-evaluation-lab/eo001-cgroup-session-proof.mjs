@@ -10,20 +10,19 @@ import fs from 'node:fs';
 import process from 'node:process';
 import {spawnSync} from 'node:child_process';
 
-const CHILD_SOURCE = String.raw\`
+const CHILD_SOURCE = String.raw`
 const fs = require('node:fs');
 const stat = fs.readFileSync('/proc/self/stat', 'utf8');
 const close = stat.lastIndexOf(') ');
 if (close < 0) process.exit(2);
-const fields = stat.slice(close + 2).trim().split(/\\s+/);
+const fields = stat.slice(close + 2).trim().split(/\s+/);
 process.stdout.write(JSON.stringify({
   cgroup: fs.readFileSync('/proc/self/cgroup', 'utf8'),
   pid: process.pid,
   pgrp: Number(fields[2]),
   session: Number(fields[3])
 }));
-\`.replaceAll('\\\`','\`');
-
+`;
 const failure=code=>{throw Error(code);};
 const isPid=n=>Number.isSafeInteger(n)&&n>0;
 const timeoutMs=2200;
@@ -43,7 +42,7 @@ export function proveNewSessionRetainsCgroup({
 }={}){
   if(platform!=='linux')failure('LINUX_REQUIRED');
   if(typeof procCgroup!=='string'||procCgroup.length>2048||
-     !/^0::\/[^\\r\\n]*\\n?$/.test(procCgroup))
+     !/^0::\/[^\r\n]*\n?$/.test(procCgroup))
     failure('CGROUP_INPUT_INVALID');
   const parent=parseStat(readFile('/proc/self/stat','utf8'));
   const result=spawn(node,['-e',CHILD_SOURCE],{
