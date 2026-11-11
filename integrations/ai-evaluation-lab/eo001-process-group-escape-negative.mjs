@@ -27,9 +27,30 @@ function statSnapshot(raw){
   if(open<1||close<=open)refuse('PROC_STAT_INVALID');
   const pid=Number(raw.slice(0,open));
   const bits=raw.slice(close+2).trim().split(/\s+/);
-  const pgrp=Number(bits[2]),sid=Number(bits[3]);
-  if(!isPid(pid)||!isPid(pgrp)||!isPid(sid))refuse('PROC_STAT_INVALID');
-  return {pid,pgrp,sid,state:bits[0]};
+  const ppid=Number(bits[1]),pgrp=Number(bits[2]),sid=Number(bits[3]);
+  if(!isPid(pid)||!Number.isSafeInteger(ppid)||ppid<0||
+     !isPid(pgrp)||!isPid(sid))refuse('PROC_STAT_INVALID');
+  return {pid,ppid,pgrp,sid,state:bits[0]};
+}
+/**
+ * Require the parent to identify its *actual* newly spawned descendant
+ * through procfs BEFORE trusting the child's claim about a cleanup target.
+ * Never send a process-group signal using a PID from a JSON report alone.
+ */
+export function verifyOwnedDetachedDescendant({
+  driverPid,survivorPid,driverCgroup,survivorCgroup,survivorStat
+}={}){
+  if(!isPid(driverPid)||!isPid(survivorPid)||driverPid===survivorPid)
+    refuse('ESCAPE_PID_INVALID');
+  if(!exactCgroup(driverCgroup)||!exactCgroup(survivorCgroup)||
+     driverCgroup.trim()!==survivorCgroup.trim())
+    refuse('ESCAPED_CGROUP_MISMATCH');
+  const stat=statSnapshot(survivorStat);
+  if(stat.pid!==survivorPid||stat.ppid!==driverPid||
+     stat.pgrp!==survivorPid||stat.sid!==survivorPid||
+     stat.state==='Z'||stat.state==='X')
+    refuse('UNOWNED_DESCENDANT_PID_REJECTED');
+  return {owner_verified:true};
 }
 export function validateEscapedSessionSnapshot({
   driverPid,survivorPid,driverCgroup,survivorCgroup,survivorStat,
@@ -111,6 +132,7 @@ export async function runEscapedSessionNegativeControl({
   // The synthetic survivor is bounded to a four-second process lifetime,
   // even if this parent or CI test exits before finally runs.
   let survivorPid=null,cleanedDriver=false,cleanupAttempted=false;
+  let independentlyOwned=false,driverCgroup=null;
   try{
     const line=await firstLine(driver,1100);
     let message;
@@ -119,7 +141,13 @@ export async function runEscapedSessionNegativeControl({
        message.driver_pid!==driver.pid||!isPid(message.survivor_pid))
       refuse('NEGATIVE_DRIVER_RECEIPT_INVALID');
     survivorPid=message.survivor_pid;
-    const driverCgroup=read('/proc/'+driver.pid+'/cgroup','utf8');
+    driverCgroup=read('/proc/'+driver.pid+'/cgroup','utf8');
+    verifyOwnedDetachedDescendant({
+      driverPid:driver.pid,survivorPid,driverCgroup,
+      survivorCgroup:read('/proc/'+survivorPid+'/cgroup','utf8'),
+      survivorStat:read('/proc/'+survivorPid+'/stat','utf8')
+    });
+    independentlyOwned=true;
     signalGroup(driver.pid,'SIGTERM');
     cleanedDriver=await boundedClose(driver,600);
     if(!cleanedDriver){
@@ -138,11 +166,20 @@ export async function runEscapedSessionNegativeControl({
       survivor_reaping_verified:false};
   }finally{
     signalGroup(driver.pid,'SIGKILL');
-    if(isPid(survivorPid)){
-      cleanupAttempted=signalGroup(survivorPid,'SIGTERM');
-      // Do not misrepresent a signal as verified reaping: this process is
-      // reparented when the driver exits. Its own short lifetime is bounded.
-      if(!cleanupAttempted)signalGroup(survivorPid,'SIGKILL');
+    if(independentlyOwned&&isPid(survivorPid)){
+      // Recheck the same session and cgroup before using a PID as a target.
+      // If the child has exited or its identity changed, never kill by PID.
+      let same=false;
+      try{
+        const stat=statSnapshot(read('/proc/'+survivorPid+'/stat','utf8'));
+        const member=read('/proc/'+survivorPid+'/cgroup','utf8');
+        same=stat.pid===survivorPid&&stat.pgrp===survivorPid&&
+          stat.sid===survivorPid&&stat.state!=='Z'&&stat.state!=='X'&&
+          member===driverCgroup;
+      }catch{/* Child exited or procfs became unavailable; no signal. */}
+      if(same)cleanupAttempted=signalGroup(survivorPid,'SIGTERM');
+      // The survivor self-exits within four seconds regardless of signals.
+      // Do not claim that signaling proves reaping of an orphaned process.
     }
     await boundedClose(driver,300);
   }
