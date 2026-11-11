@@ -699,12 +699,14 @@ export async function startEvercraftHomeServer({
           fetchImpl:clipLinkedInFetch,
         });
         const published=receipt.state === "published";
-        const held=receipt.state === "reconciliation_required" ||
+        const held=receipt.manual_reconciliation_required===true ||
+          receipt.state === "reconciliation_required" ||
           receipt.state === "duplicate_or_reconciliation_hold";
         return json(res,published?200:held?409:502,{
           ok:published,
           state:receipt.state,
-          publication_performed:published?true:held?null:false,
+          publication_performed:published?true:
+            (held || receipt.provider_may_have_published===true)?null:false,
           publication_may_have_occurred:receipt.provider_may_have_published===true,
           automatic_retry_allowed:false,
           authorization:{scope:"home.clip.publish",
@@ -725,6 +727,9 @@ export async function startEvercraftHomeServer({
           "clip_linkedin_organization_identity_mismatch",
           "clip_linkedin_journal_release_receipt_unverified",
           "clip_linkedin_journal_derivative_missing",
+          "clip_linkedin_journal_receipt_reference_mismatch",
+          "clip_linkedin_journal_publication_receipt_missing",
+          "clip_linkedin_journal_publication_receipt_unverified",
           "home_clip_journal_handoff_missing",
           "home_clip_journal_slug_invalid",
           "clip_journal_durable_state_root_required",
