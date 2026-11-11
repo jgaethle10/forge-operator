@@ -30,7 +30,11 @@ test('actual local broker cold restart invalidates prior instance and receipt bi
       yardDeployment:deployment(oldInstance),
       brokerHealth:oldBroker.health(),
     });
-    assert.equal(existing.verified_existing_identity,true);
+    assert.equal(existing.identity_fields_match,true);
+    assert.equal(existing.verified_existing_identity,false,
+      'an unsourced health JSON can never authorize a deployment');
+    assert.equal(existing.may_preserve_existing_yard_deployment,false);
+    assert.equal(existing.live_route_verification_required,true);
     assert.deepEqual(existing.reasons,[]);
     assert.equal(existing.restart_authorized,false,
       'matching live identity never authorizes a restart');
@@ -51,6 +55,7 @@ test('actual local broker cold restart invalidates prior instance and receipt bi
     const rejected=assessResidentBrokerRecovery({
       yardDeployment:deployment(oldInstance),brokerHealth:unbound,
     });
+    assert.equal(rejected.identity_fields_match,false);
     assert.equal(rejected.verified_existing_identity,false);
     assert.equal(rejected.may_preserve_existing_yard_deployment,false);
     assert.ok(rejected.reasons.includes('cold_restart_requires_new_deployment_identity'));
