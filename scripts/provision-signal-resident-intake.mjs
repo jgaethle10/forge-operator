@@ -51,7 +51,7 @@ export function provisionSignalResidentIntake({
   assertDirectory(leads,uid,gid);
   assertDirectory(outbox,uid,gid);
   assertDirectory(receipts,uid,gid);
-  const oldRecords=fs.readdirSync(leads).some(x=>/^ECS-[A-F0-9]{24}\.enc$/.test(x));
+  const oldRecords=fs.readdirSync(leads).some(x=>x.endsWith('.enc'));
   let keyState='preserved';
   if(fs.existsSync(key)){
     validateKey(key,uid);
