@@ -159,7 +159,7 @@ test('invalid or missing POST URN is a reconciliation hold rather than publicati
 test('no Base44 link or unsafe family content can reach LinkedIn',async()=>{
   for(const metadata of [
     {message:MESSAGE,link:'https://legacy.base44.app/demo'},
-    {message:'adult-only explicit promotion',link:LINK},
+    {message:'porn entertainment promotion',link:LINK},
   ]){
     let calls=0;
     const a=createLinkedInOrganizationPublisherAdapter(config({fetchImpl:async()=>{calls++;return created();}}));
