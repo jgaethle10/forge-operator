@@ -110,7 +110,8 @@ export async function proveLicensedAircraftCanary({
         attribution:'2026 amvlab'
       },
       maxTextureBytes:96*1024*1024,maxVertices:750000,
-      allowBaseLevelMipmapSampling:true
+      allowBaseLevelMipmapSampling:true,
+      allowDegenerateUvNoNormalMapPreview:true
     });
     CHECK(verifyGltfAssetPack(pack),'import_receipt_invalid');
     const plan=renderPlan(pack,gltf);
@@ -127,6 +128,7 @@ export async function proveLicensedAircraftCanary({
       imported_triangles:pack.totalTriangles,
       imported_sampling_quality:pack.qualityStatus,
       sampler_downgrades:pack.samplerDowngrades,
+      tangent_fallbacks:pack.tangentFallbacks,
       decoded_texture_bytes:pack.totalTextureBytes,
       world_engine_render_plan:plan,
       native_turntable_pixel_receipt:nativeTurntable.receipt_hash,
@@ -138,6 +140,7 @@ export async function proveLicensedAircraftCanary({
       blocking_limitations:[
         'cinematic_fidelity_not_accepted',
         ...(pack.samplerDowngrades.length?['sampler_mipmaps_downgraded_for_preview']:[]),
+        ...(pack.tangentFallbacks.length?['geometric_preview_tangents_for_degenerate_uvs']:[]),
         'visual_quality_not_accepted'
       ]
     };
