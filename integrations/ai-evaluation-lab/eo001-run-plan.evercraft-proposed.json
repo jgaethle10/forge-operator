@@ -1,0 +1,40 @@
+{
+  "schema": "EO001-RUN-PLAN/0.1.0",
+  "status": "DRAFT_INCOMPLETE_NOT_AUTHORIZED",
+  "lab_adapter_commit": "678829883f6c65e0b4d8dd8fd9dabe346631c7cd",
+  "forge_adapter_commit": "8e7cd405e82ea9b031cd358e6e65f0d350399802",
+  "model_sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+  "runtime_sha256": "a32b9bdc4d664e21558726fee570b712124c624ccb37fa2eea93bb34a5a93591",
+  "prompt_sha256": null,
+  "context_serialization_sha256": null,
+  "warmup_prompt_sha256": null,
+  "context_serialization": null,
+  "host_configuration": null,
+  "output_naming": null,
+  "cleanup_checks": null,
+  "generation_parameters": {
+    "status": "proposed_not_approved",
+    "model_alias": "qwen3-4b-q4-k-m",
+    "temperature": 0,
+    "max_tokens": 128,
+    "adapter_http_request_timeout_ms": 12000,
+    "adapter_health_timeout_ms": 1500
+  },
+  "review_references": {
+    "lab": null,
+    "evercraft": null
+  },
+  "max_output_tokens": 128,
+  "warmup_timeout_seconds": null,
+  "decision_timeout_seconds": 15,
+  "max_decisions_per_case": 6,
+  "warmup_requests": 1,
+  "scenario_order": [
+    "none",
+    "ack_loss",
+    "lookup_outage",
+    "tamper"
+  ],
+  "stop_on_timeout": true,
+  "replace_failed_attempts": false
+}

@@ -1,0 +1,50 @@
+name: EO-001 sovereign gateway adapter research
+on:
+  push:
+    branches:
+      - research/eo001-sovereign-gateway-adapter-20261109
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate*'
+      - 'integrations/ai-evaluation-lab/eo001-gate0-private-handoff.py'
+      - 'integrations/ai-evaluation-lab/test_gate0_private_handoff.py'
+      - 'integrations/ai-evaluation-lab/eo001-forge-evidence-qa.py'
+      - 'integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py'
+      - 'integrations/ai-evaluation-lab/eo001-forge-qa-runner.py'
+      - 'integrations/ai-evaluation-lab/test_eo001_forge_qa_runner.py'
+      - '.github/workflows/eo001-sovereign-gateway-research.yml'
+  pull_request:
+    branches:
+      - research/eo001-independent-workflow-candidate-20261029
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate*'
+      - 'integrations/ai-evaluation-lab/eo001-gate0-private-handoff.py'
+      - 'integrations/ai-evaluation-lab/test_gate0_private_handoff.py'
+      - 'integrations/ai-evaluation-lab/eo001-forge-evidence-qa.py'
+      - 'integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py'
+      - 'integrations/ai-evaluation-lab/eo001-forge-qa-runner.py'
+      - 'integrations/ai-evaluation-lab/test_eo001_forge_qa_runner.py'
+      - '.github/workflows/eo001-sovereign-gateway-research.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check adapter syntax
+        run: node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
+      - name: Run isolated mock transport and real policy guard tests
+        run: node --test integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.test.mjs
+      - name: Validate private Gate 0 handoff and negative controls
+        run: python3 integrations/ai-evaluation-lab/test_gate0_private_handoff.py
+      - name: Run Forge independent archive and provenance QA negative controls
+        run: python3 integrations/ai-evaluation-lab/test_eo001_forge_evidence_qa.py
+      - name: Prove one-command Forge local QA and fail-closed status
+        run: python3 integrations/ai-evaluation-lab/test_eo001_forge_qa_runner.py
+      - name: Recheck existing evidence policy
+        run: node --test integrations/ai-evaluation-lab/eo001-lab-candidate.test.mjs
