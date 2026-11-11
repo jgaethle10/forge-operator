@@ -4,7 +4,6 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
-const LEGACY_BASE44_MCP='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
 const sha256=(value)=>'sha256:'+createHash('sha256').update(value).digest('hex');
 const readJson=(file)=>JSON.parse(fs.readFileSync(file,'utf8'));
 const writeJson=(file,value)=>fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n');
@@ -72,26 +71,33 @@ export function promoteOpenAiOwnedFabric({
 
   const compat=readJson(compatPath);
   compat.mcpServers.evercraft.url=mcpUrl;
-  compat.mcpServers.evercraft.type='http';
+  compat.mcpServers.evercraft.type='streamable-http';
 
   const source=readJson(sourcePath);
-  source.submission_state='owned_fabric_ready_new_plugin_submission_required';
+  const distribution=readJson(distributionPath);
+  const observedPublic=distribution.existing_public_listing?.portal_observed_status==='Listed publicly';
+  const originalMcpUrl=String(distribution.mcp?.url||'');
+  if(observedPublic&&originalMcpUrl!==mcpUrl){
+    throw new Error('existing_public_listing_origin_change_requires_manual_platform_review');
+  }
+  source.submission_state=observedPublic
+    ?'existing_public_listing_v1_0_2_observed_source_update_v1_0_6_prepared'
+    :'owned_fabric_ready_provider_submission_required';
   source.compatibility_transport={
     ...(source.compatibility_transport||{}),
-    mcp:LEGACY_BASE44_MCP,
-    authority:'legacy_compatibility_transport_only',
+    mcp:null,
+    authority:'retired_no_legacy_endpoint',
     active:false,
     owned_fabric_cutover_required:false,
   };
   source.owned_fabric_transport={
+    ...(source.owned_fabric_transport||{}),
     mcp:mcpUrl,
     authority:'owned_public_fabric',
     verified_external_canary:true,
     external_canary_digest:digest,
-    origin_change_requires_new_openai_plugin_submission:true,
+    origin_change_requires_new_openai_plugin_submission:originalMcpUrl!==mcpUrl,
   };
-
-  const distribution=readJson(distributionPath);
   distribution.prepared_at=new Date().toISOString().slice(0,10);
   distribution.mcp={
     ...(distribution.mcp||{}),
@@ -102,15 +108,24 @@ export function promoteOpenAiOwnedFabric({
     external_canary_digest:digest,
     origin_change_requires_new_plugin_submission:true,
   };
-  distribution.release_notes='Evercraft now targets its externally verified Evercraft-owned Fabric MCP. This changes the MCP origin from the legacy compatibility transport, so OpenAI requires a new plugin submission rather than a normal version update. Discovery remains read-only and consequential actions remain separately authorized.';
-  distribution.remaining_platform_prerequisites=[
-    'Create a new OpenAI plugin submission because the MCP origin changed from the compatibility host',
-    'Verify the owned Evercraft MCP domain in the OpenAI submission portal',
-    'Run Scan Tools against the owned Fabric MCP',
-    'Submit the owned-origin plugin for OpenAI review',
-    'Publish the approved owned-origin plugin',
-    'Capture an independent ChatGPT/Codex directory discovery receipt after publication',
-  ];
+  if(observedPublic){
+    distribution.release_notes='Evercraft source release v1.0.6 prepares an in-place update of the portal-observed public Evercraft v1.0.2 listing. Owned MCP unchanged; discovery remains read-only. No provider-side update is performed here.';
+    distribution.remaining_platform_prerequisites=[
+      'Select the existing Evercraft LLC public plugin listing, not Create New',
+      'Save current public version v1.0.2 metadata and verify the owned MCP origin',
+      'Upload or select the tested v1.0.6 package through the provider update flow',
+      'Complete current scan, review, and any required approval/publish action',
+      'Capture the provider version receipt and an independent clean-account install and invocation',
+    ];
+  }else{
+    distribution.release_notes='Evercraft source package targets externally verified owned Fabric MCP; no public provider listing is confirmed by this source-only promotion.';
+    distribution.remaining_platform_prerequisites=[
+      'Confirm whether an existing public listing exists before creating any new submission',
+      'Verify the owned MCP origin and complete current Platform scan/review',
+      'Submit or update through the authenticated provider workflow as appropriate',
+      'Record the published version and independently test directory discovery',
+    ];
+  }
 
   const promotionReceipt={
     schema:'evercraft.openai-owned-fabric-promotion.v1',
@@ -121,9 +136,12 @@ export function promoteOpenAiOwnedFabric({
     source_canary_state:receipt.state,
     source_device_fingerprint:receipt.device_fingerprint||null,
     source_public_edge_admission_receipt_ref:receipt.public_edge_admission_receipt_ref||null,
-    legacy_mcp:LEGACY_BASE44_MCP,
+    legacy_mcp:null,
     legacy_transport_active:false,
-    openai_origin_change_requires_new_plugin_submission:true,
+    existing_public_listing_observed:observedPublic,
+    requires_existing_listing_update:observedPublic,
+    openai_origin_change_requires_new_plugin_submission:!observedPublic&&originalMcpUrl!==mcpUrl,
+    provider_action_performed:false,
   };
 
   if(!dryRun){
