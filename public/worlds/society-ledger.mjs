@@ -39,6 +39,19 @@ export function validateSocietyObservation(data){
     ids.add(x.id);
     return {id:x.id,name:x.name,job:x.job,zone:x.zone,emoji:x.emoji};
   });
+  let fetchInfo=null;
+  if(data.source_fetch!==undefined){
+    const p=data.source_fetch;
+    if(!p||p.kind!=='github_https_commit_pinned_read_only'||
+       p.repo!=='jgaethle10/forge-operator'||p.branch!=='window-society-state'||
+       p.path!=='state/window.json'||
+       !/^[a-f0-9]{40}$/.test(p.commit_sha||'')||
+       !/^[a-f0-9]{40}$/.test(p.blob_sha||'')||
+       !bounded(p.observed_at,60)||!Number.isFinite(Date.parse(p.observed_at))||
+       p.assertion!=='git_blob_and_world_content_consistency_not_signed_attestation')
+       throw Error('Invalid file-supplied source provenance');
+    fetchInfo={commitSha:p.commit_sha,blobSha:p.blob_sha,observedAt:p.observed_at};
+  }
   const seen=new Set();
   const receipts=data.decision_projection.receipts.map(r=>{
     if(!r||!eventId.test(r.event_id)||seen.has(r.event_id)||
@@ -60,6 +73,7 @@ export function validateSocietyObservation(data){
     total:data.decision_projection.total_events_generated,
     policyCount:data.decision_projection.policy_events_available,
     omitted:data.decision_projection.omitted_policy_events,
+    sourceFetch:fetchInfo,
     residents,receipts
   };
 }
@@ -100,7 +114,8 @@ export function mountSocietyLedger({onOpen=()=>{}}={}){
       node('span','Heartbeat #'+observation.sequence),
       node('span','Tick '+observation.tick),
       node('span',observation.coverage==='complete'?'Retained slice complete':'History is partial'),
-      node('span','Snapshot '+observation.heartbeatAt));
+      node('span','Snapshot '+observation.heartbeatAt),
+      ...(observation.sourceFetch?[node('span','GitHub commit '+observation.sourceFetch.commitSha.slice(0,12)+' (file-reported)')]:[]));
     const select=$('sl-resident');select.replaceChildren();
     const all=node('option','All residents');all.value='all';select.append(all);
     for(const r of observation.residents){const opt=node('option',r.emoji+' '+r.name+' · '+r.job);opt.value=r.id;select.append(opt);}
@@ -110,6 +125,13 @@ export function mountSocietyLedger({onOpen=()=>{}}={}){
     const events=rows.map(r=>{
       const li=node('li',r.description);
       li.prepend(node('small',r.event_id+' · '+r.source.replace('_policy_v1',' policy')+' · day '+r.day+' '+r.time));
+      const more=document.createElement('details');more.className='sl-evidence';
+      const summary=node('summary','Inspect source receipt');more.append(summary);
+      const authors=node('p','Actor '+r.actor_id+(r.related_actor_id?' · Related '+r.related_actor_id:''));
+      const method=node('p','Event type '+r.event_type+' · Rules: '+r.source+' · LLM inference: none');
+      const digest=node('code',r.content_sha256);
+      more.append(authors,method,node('p','Content digest (not a signature):'),digest);
+      li.append(more);
       return li;
     });
     $('sl-events').replaceChildren(...(events.length?events:[node('li','No retained policy decisions for this selection.')]));
@@ -128,7 +150,9 @@ export function mountSocietyLedger({onOpen=()=>{}}={}){
       const raw=await file.text();
       observation=validateSocietyObservation(JSON.parse(raw));
       $('sl-loaded').classList.remove('hidden');
-      $('sl-status').textContent='Loaded a local, operator-supplied, read-only projection. Source authenticity is not independently verified.';
+      $('sl-status').textContent=observation.sourceFetch
+        ?'Loaded a file reporting a pinned GitHub state commit. The browser does not independently authenticate the file.'
+        :'Loaded a local, operator-supplied, read-only projection. Source authenticity is not independently verified.';
       render();
     }catch(err){$('sl-status').textContent='Observation refused: '+err.message;}
     // No browser storage, telemetry, upload or network requests.
