@@ -99,3 +99,10 @@ Saban completed result contract (synthetic example; real private files never bel
 The completed Saban job must also carry a matching `job_id`, `updated_at`, `agent_id`, `work.key` and `work.kind`; it is not sufficient to write `state: completed`. No standalone private artifact hash establishes editorial quality, canon approval, or published status.
 
 **Still pending:** trusted private mission intake, owned worker authorization, actual reviewer work, resident restart/lease proof, end-to-end agent receipts, mobile dashboard and release QA. **Do not claim unattended production is live on the basis of this source-stage bridge.**
+
+
+## Offline mobile viewer
+
+Open `systemia/production-continuity/private-view.html` locally on an owned phone or computer. Choose the private JSON produced by `run-private.mjs` (or the original private ledger). It renders three lanes: **Evidence current**, **Needs recovery / evidence**, and **Founder decisions**. A search, status filter and opt-in private-blocker reveal are provided. The file uses no network, cookies, analytics, browser storage, publishing APIs, or agent dispatch.
+
+Only the generic viewer code belongs in this public repository. Keep loaded JSON and all unpublished story/research materials on a private device.
