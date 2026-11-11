@@ -74,6 +74,28 @@ class AuditTests(unittest.TestCase):
         self.assertFalse(observed["can_render_real_replay"])
         self.assertFalse(report["schema_verified"])
 
+    def test_clip_overlap_counts_missing_coordinates_without_fabricating_them(self):
+        output = io.BytesIO()
+        with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as z:
+            z.writestr("EX2306_DIVE02_20230825/EX2306_DIVE02_RovTrack1Hz.csv",
+                       "DATE,TIME,UNIXTIME,DEPTH,ALT,LAT_DD,LON_DD\n"
+                       "08/25/2023,18:29:59,1692988199,-100,2,,\n"
+                       "08/25/2023,18:30:00,1692988200,-100,2,56.9,-149.5\n"
+                       "08/25/2023,18:30:01,1692988201,,2,56.91,-149.51\n")
+            z.writestr("EX2306_DIVE02_20230825/EX2306_DIVE02_RovSensorList.csv", "sensor,units\nROV DEPTH,m\n")
+        report = audit.inspect_zip(output.getvalue())
+        observed = report["rov_track_1hz_observation"]
+        self.assertEqual(observed["row_count_observed"], 3)
+        self.assertEqual(observed["valid_unix_timestamp_rows"], 3)
+        self.assertEqual(observed["negative_depth_rows"], 2)
+        self.assertEqual(observed["valid_lat_lon_rows"], 2)
+        self.assertEqual(observed["rows_overlapping_video_window"], 2)
+        self.assertEqual(observed["video_window_valid_depth_rows"], 1)
+        self.assertEqual(observed["video_window_valid_position_rows"], 2)
+        self.assertTrue(observed["clock_overlap_is_not_verified_video_sync"])
+        self.assertFalse(observed["can_render_real_replay"])
+        self.assertEqual(len(report["original_sensor_metadata_preview"]), 1)
+
     def test_zip_traversal_rejected(self):
         output = io.BytesIO()
         with zipfile.ZipFile(output, "w") as z:
