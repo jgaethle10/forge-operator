@@ -133,3 +133,48 @@ Verify the wrapper alongside the state projector:
 ```bash
 node --test systemia/graphics-command/saban-work-operator.test.mjs
 ```
+
+### Finite local Saban observation strip
+
+To compare more than one **actual local file snapshot** without enabling a
+network listener or private file upload, use the bounded operator observer:
+
+```bash
+node systemia/graphics-command/saban-work-observe.mjs \
+  --authorized-root "/absolute/private/saban-state-directory" \
+  --snapshot "/absolute/private/saban-state-directory/work-state.json" \
+  --review-root "/absolute/private/graphics-reviews/new-review-session" \
+  --samples 3 --interval-ms 1000 --prefix saban-observed
+```
+
+This runs **exactly 3 local reads** at a one-second interval and finishes.
+Supported bounds are 2–12 samples and 500–30,000 ms between reads. This is
+not a daemon, job executor, telemetry endpoint or live agent feed. It produces
+a series of private HTML snapshots and a final
+`saban-observed-observations.html` report, all with exclusive creation and
+restricted file permissions. Choose a new private review directory for each
+session. The file must already exist and be readable with the operator's
+existing operating-system permissions.
+
+The observation strip compares **net aggregate state changes** and
+source-byte digests. It cannot prove that every intermediate Saban lease,
+completion or failure was observed, or that the input file is independently
+attested. An unchanged digest means only that the sampled file bytes were
+unchanged at those reads. Timestamps are still source-reported, and stale
+or future source clock warnings remain visible. No job IDs, assignments,
+roles, customer work, error messages, worker IDs or private source paths
+enter the report.
+
+No data is sent to the network, cloud, GitHub, ChatGPT, or a public page.
+Run this only on an Evercraft node you control and on private state files
+you are authorized to inspect. Do not place any generated operator output
+under `public/` or commit it. An actual Node001/Node002 capture is **not**
+established merely by passing the synthetic CI tests.
+
+```bash
+node --test systemia/graphics-command/saban-work-observe.test.mjs
+```
+
+The GitHub Actions visual QA uses a separate explicitly labeled synthetic
+Saban state-machine specimen at desktop and 390px mobile widths. Synthetic
+screenshots are safe for review; real operator snapshots stay private.
