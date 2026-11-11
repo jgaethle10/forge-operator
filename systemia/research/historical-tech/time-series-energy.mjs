@@ -19,7 +19,7 @@ function nonEmpty(value, name) {
   if (typeof value !== 'string' || !value.trim()) throw new TypeError(name + ' must be nonempty text');
   return value;
 }
-function validateSeries(channel, label, maxGapSeconds, referenceTimes) {
+function validateSeries(channel, label, maxGapSeconds, referenceTimes, measured = false) {
   if (!channel || typeof channel !== 'object' || Array.isArray(channel)) throw new TypeError(label + ' must be an object');
   const id = nonEmpty(channel.id, label + '.id');
   const s = channel.samples;
@@ -34,6 +34,7 @@ function validateSeries(channel, label, maxGapSeconds, referenceTimes) {
     const voltage = finite(point.voltageVolts, label + '.voltageVolts');
     const current = finite(point.currentAmps, label + '.currentAmps');
     const bound = finite(point.absolutePowerBoundWatts, label + '.absolutePowerBoundWatts');
+    if (measured && bound === 0) throw new RangeError(label + ' measured sample cannot claim zero power uncertainty');
     if (i === 0 && t !== 0) throw new RangeError(label + ' must begin at t=0');
     if (i > 0) {
       const gap = t - times[i-1];
@@ -79,16 +80,16 @@ export function analyzeTimeSeriesEnergy(record) {
   if (!Array.isArray(inputSources) || inputSources.length < 1 || inputSources.length > MAX_SOURCES) {
     throw new RangeError('Must enumerate 1..32 DC input energy sources');
   }
-  const first = validateSeries(inputSources[0], 'inputSources[0]', maxGap);
+  const first = validateSeries(inputSources[0], 'inputSources[0]', maxGap, undefined, dataKind === 'measured');
   const sourceResults = [first];
   const ids = new Set([first.id]);
   for (let index=1; index<inputSources.length; index++) {
-    const source = validateSeries(inputSources[index], 'inputSources['+index+']',maxGap,first.times);
+    const source = validateSeries(inputSources[index], 'inputSources['+index+']',maxGap,first.times,dataKind === 'measured');
     if (ids.has(source.id)) throw new Error('Duplicate input source ID: '+source.id);
     ids.add(source.id);
     sourceResults.push(source);
   }
-  const load = validateSeries(loadedOutput, 'loadedOutput', maxGap, first.times);
+  const load = validateSeries(loadedOutput, 'loadedOutput', maxGap, first.times, dataKind === 'measured');
   if (ids.has(load.id)) throw new Error('Loaded-output ID overlaps an input source');
   const inputEnergy = sourceResults.reduce((total,item)=>total+item.energyJoules,0);
   const inputBound = sourceResults.reduce((total,item)=>total+item.absoluteEnergyBoundJoules,0);
