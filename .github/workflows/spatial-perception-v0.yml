@@ -1,4 +1,4 @@
-name: Spatial perception V6
+name: Spatial perception V7
 on:
   pull_request:
     paths:
@@ -15,6 +15,7 @@ on:
       - 'tests/spatial-offline-bridge.test.mjs'
       - 'tests/spatial-field-review.test.mjs'
       - 'tests/spatial-field-review-browser.test.mjs'
+      - 'tests/spatial-field-retest.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
   push:
     paths:
@@ -31,6 +32,7 @@ on:
       - 'tests/spatial-offline-bridge.test.mjs'
       - 'tests/spatial-field-review.test.mjs'
       - 'tests/spatial-field-review-browser.test.mjs'
+      - 'tests/spatial-field-retest.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
 jobs:
   core-tests:
@@ -43,7 +45,7 @@ jobs:
         with:
           node-version: '22'
       - name: Stereo geometry and consumer boundary tests
-        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs tests/spatial-offline-bridge.test.mjs tests/spatial-field-review.test.mjs tests/spatial-field-review-browser.test.mjs
+        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs tests/spatial-offline-bridge.test.mjs tests/spatial-field-review.test.mjs tests/spatial-field-review-browser.test.mjs tests/spatial-field-retest.test.mjs
   offline-detector-contract:
     runs-on: ubuntu-latest
     permissions:
