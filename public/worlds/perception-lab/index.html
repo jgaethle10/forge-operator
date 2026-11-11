@@ -22,7 +22,7 @@ button{background:#185eb1;color:white;border:0;border-radius:10px;padding:12px 1
 </style>
 </head>
 <body>
-<header><div class="brand">EVERCRAFT <span style="color:#8a9cad;font-weight:500">/ WORLDS</span></div><div class="tag">SPATIAL PERCEPTION · EXPERIMENTAL V0</div></header>
+<header><div class="brand">EVERCRAFT <span style="color:#8a9cad;font-weight:500">/ WORLDS</span></div><div class="tag">SPATIAL PERCEPTION · EXPERIMENTAL V2</div></header>
 <main>
 <h1>Turn pixels into<br>provisional space.</h1>
 <p class="lead">A real, local stereo-matching experiment. Two calibrated camera images can produce estimated depth points. See the geometry, the assumptions, and the missing evidence.</p>
@@ -62,6 +62,26 @@ button{background:#185eb1;color:white;border:0;border-radius:10px;padding:12px 1
     <span id="viewAngle" style="color:#536579;font-size:.87rem">0°</span>
   </div>
 </div>
+<div class="panel" id="temporalLab">
+  <h2 style="margin:0 0 7px;font-size:1.35rem;letter-spacing:-.02em">Tracked observations across frames</h2>
+  <p style="margin:0 0 15px;font-size:.87rem">A reviewable, image-relative timeline. Track IDs are provisional associations, not confirmed object identities. This demo does not infer YOLO boxes from video.</p>
+  <div class="controls">
+    <button id="syntheticSequence">Run five-frame synthetic sequence</button>
+    <label>Load local observation JSON <input id="sequenceFile" type="file" accept=".json,application/json"></label>
+    <button class="secondary" id="loadSequence">Load JSON locally</button>
+    <button class="secondary" id="downloadReview">Export review packet</button>
+  </div>
+  <div id="temporalStatus" role="status" aria-live="polite" style="font-size:.86rem;color:#315d87;margin:12px 0">No video processed. The demo uses generated detection boxes.</div>
+  <canvas id="temporalCanvas" width="960" height="420" style="width:100%;max-height:420px;display:block;background:#0c1525;border-radius:12px"></canvas>
+  <div class="controls" style="margin-top:16px">
+    <label style="flex:1;min-width:200px">Frame position <input type="range" id="temporalFrame" min="0" max="0" value="0" style="width:100%"></label>
+    <div class="stat"><b id="timelineFrame">1 / 1</b><span>selected frame</span></div>
+    <div class="stat"><b id="timelineTracks">0</b><span>provisional tracks</span></div>
+    <div class="stat"><b id="timelineEvents">0</b><span>review-required events</span></div>
+  </div>
+  <p id="consumerStatus" style="font-size:.82rem">Worlds, ForensiScope, and EverMaps adapters preserve review and location boundaries.</p>
+  <p style="font-size:.78rem">JSON input needs <code>frames: [{frameId,timestampMs,width,height,observations:[...] }]</code> (or an array of frames), where each observation follows <code>evercraft.spatial-perception.observation.v0</code>. No images are included in the exported review packet. No data is uploaded.</p>
+</div>
 <div class="notice"><b>Real-world limit:</b> Requires two synchronized, lens-corrected, rectified camera views and real camera calibration. An ordinary single-lens dashcam video cannot establish metric stereo distance. Object labels are never automatically inferred by this demo. Do not use for driving, safety warnings, or forensic conclusions.</div>
 <p style="font-size:.8rem">Depth samples are additionally checked for left/right correspondence. A high consistency percentage is not an accuracy certificate. All image processing runs inside this page. Synthetic pixels and manually supplied sample boxes are marked as such. No GPS positions are computed, and no persistent world objects are created.</p>
 </main>
@@ -69,6 +89,7 @@ button{background:#185eb1;color:white;border:0;border-radius:10px;padding:12px 1
 import {estimateStereoDepth,fuseDetections,mappingDraft,worldsProjection,forensiScopeTimeline} from '../spatial-perception.mjs';
 import {auditStereoConsistency,compareRangingTargets} from '../spatial-audit.mjs';
 import {drawPointCloud} from './scene-viewport.mjs';
+import {associateSpatialFrames,temporalReviewPacket,worldsTemporalPreview,forensiScopeTemporalEvents,everMapsTemporalDrafts} from '../spatial-temporal.mjs';
 const byId=id=>document.getElementById(id);
 const set=(id,value)=>byId(id).textContent=String(value);
 const W=160,H=100;
@@ -151,5 +172,100 @@ byId('yaw').addEventListener('input',()=>{
 byId('sample').addEventListener('click',()=>{try{sample();}catch(e){set('status',e.message);}});
 byId('analyze').addEventListener('click',upload);
 sample();
+
+let temporalResult=null;
+function syntheticTimeline(){
+ const frames=[];
+ for(let i=0;i<5;i++){
+  const frameId='synthetic-'+i,timestampMs=i*100,width=160,height=100;
+  const items=[{label:'car',x:20+i*5,y:30,w:28,h:18,z:3.6}];
+  if(i!==2)items.push({label:'bus',x:110-i*4,y:58,w:34,h:19,z:8.0});
+  frames.push({frameId,timestampMs,width,height,
+    observations:items.map((v,j)=>({
+      schema:'evercraft.spatial-perception.observation.v0',
+      id:frameId+':'+j,frameId,timestampMs,label:v.label,
+      detectorConfidence:1,detector:'synthetic_manual',
+      box:{x:v.x,y:v.y,width:v.w,height:v.h},
+      depthEstimateM:v.z,depthStatus:'estimated_not_verified',
+      cameraPositionM:{x:(v.x+v.w/2-80)*v.z/120,y:(50-v.y-v.h/2)*v.z/120,z:v.z},
+      sourceSha256:null,coordinateFrame:'camera_relative',
+      georegistered:false,safetyCriticalApproved:false
+    }))
+  });
+ }
+ return frames;
+}
+function showTimeline(result,sourceLabel){
+ temporalResult=result;
+ const slider=byId('temporalFrame');
+ slider.max=String(Math.max(0,result.frames.length-1));
+ slider.value='0';
+ set('timelineTracks',result.tracks.length);
+ set('timelineEvents',result.frames.reduce((sum,f)=>sum+f.events.length,0));
+ const forensic=forensiScopeTemporalEvents(result),map=everMapsTemporalDrafts(result);
+ set('consumerStatus',forensic.length+' review-required ForensiScope events · '+map.length+' unlocated EverMaps drafts · no verified geographic pins.');
+ set('temporalStatus',sourceLabel+'. Track identities remain provisional; relative image movement is not physical speed.');
+ showTimelineFrame(0);
+}
+function showTimelineFrame(index){
+ if(!temporalResult)return;
+ const i=Math.min(temporalResult.frames.length-1,Math.max(0,Number(index)||0));
+ const canvas=byId('temporalCanvas'),ctx=canvas.getContext('2d');
+ ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#0c1525';ctx.fillRect(0,0,canvas.width,canvas.height);
+ if(temporalResult.frames.length===0){set('timelineFrame','0 / 0');return;}
+ const f=temporalResult.frames[i];
+ const scaleX=canvas.width/f.width,scaleY=canvas.height/f.height;
+ ctx.save();ctx.scale(scaleX,scaleY);
+ ctx.lineWidth=1/scaleX;ctx.strokeStyle='#253f57';
+ for(let x=0;x<f.width;x+=20){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,f.height);ctx.stroke();}
+ for(let y=0;y<f.height;y+=20){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(f.width,y);ctx.stroke();}
+ const events=temporalResult.frames.slice(0,i+1).flatMap(frame=>frame.events);
+ const trails=new Map();
+ for(const e of events){if(!trails.has(e.trackId))trails.set(e.trackId,[]);trails.get(e.trackId).push(e);}
+ ctx.lineWidth=1.2/scaleX;
+ for(const [track,items] of trails){
+  if(items.length<2)continue;
+  ctx.strokeStyle='#4aaad5';ctx.beginPath();
+  items.forEach((e,j)=>{const x=e.box.x+e.box.width/2,y=e.box.y+e.box.height/2;
+    if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
+ }
+ ctx.font='4px system-ui';ctx.textBaseline='bottom';
+ for(const e of f.events){
+  ctx.strokeStyle=e.ambiguous?'#ffba5a':'#59dcce';ctx.lineWidth=1.3/scaleX;
+  ctx.strokeRect(e.box.x,e.box.y,e.box.width,e.box.height);
+  ctx.fillStyle='#f7fcff';
+  ctx.fillText(e.trackId+' '+e.label,e.box.x,Math.max(5,e.box.y-1));
+ }
+ ctx.restore();
+ set('timelineFrame',(i+1)+' / '+temporalResult.frames.length);
+ try{
+  const world=worldsTemporalPreview(temporalResult,f.frameId);
+  set('temporalStatus','Frame '+f.frameId+' · t='+f.timestampMs+' ms · '+f.events.length+
+    ' observations · '+world.entities.length+' non-colliding Worlds preview object(s). No motion or identity verification.');
+ }catch(e){set('temporalStatus','Cannot project frame: '+e.message);}
+}
+byId('syntheticSequence').addEventListener('click',()=>{
+ try{showTimeline(associateSpatialFrames(syntheticTimeline()),'Generated five-frame sequence');}
+ catch(e){set('temporalStatus','Synthetic sequence error: '+e.message);}
+});
+byId('temporalFrame').addEventListener('input',value=>showTimelineFrame(byId('temporalFrame').value));
+byId('loadSequence').addEventListener('click',async()=>{
+ const file=byId('sequenceFile').files[0];
+ if(!file){set('temporalStatus','Choose a local observation JSON file first.');return;}
+ if(file.size>10000000){set('temporalStatus','File too large: local JSON limit is 10 MB.');return;}
+ try{
+  const parsed=JSON.parse(await file.text()),frames=Array.isArray(parsed)?parsed:parsed.frames;
+  showTimeline(associateSpatialFrames(frames),'Local observation JSON parsed');
+ }catch(e){set('temporalStatus','Rejected observation JSON: '+e.message);}
+});
+byId('downloadReview').addEventListener('click',()=>{
+ if(!temporalResult){set('temporalStatus','No timeline to export.');return;}
+ const packet=temporalReviewPacket(temporalResult);
+ const blob=new Blob([JSON.stringify(packet,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='evercraft-spatial-unreviewed.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+showTimeline(associateSpatialFrames(syntheticTimeline()),'Generated five-frame sequence');
 </script>
 </body></html>

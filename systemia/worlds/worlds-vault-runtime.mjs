@@ -6,6 +6,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {randomBytes,createHash,timingSafeEqual} from 'node:crypto';
 import {decodeSharedScene,encodeSharedScene} from '../../public/worlds/share-scene.mjs';
+import {createWorldsAdmission} from './worlds-admission.mjs';
 
 export const VAULT_SCHEMA='evercraft.worlds.vault.v1';
 const WORLD_ID=/^[a-f0-9]{32}$/;
@@ -26,7 +27,7 @@ function assertWriteOrigin(req,publicOrigin){
  if(supplied!==expected)throw new VaultError(403,'cross_origin_write_denied');
 }
 
-const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8'};
+const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.geojson':'application/geo+json; charset=utf-8','.csv':'text/csv; charset=utf-8','.json':'application/json; charset=utf-8'};
 class VaultError extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const digest=s=>createHash('sha256').update(s).digest('hex');
 const equal=(a,b)=>{const x=Buffer.from(a,'hex'),y=Buffer.from(b,'hex');return x.length===y.length&&timingSafeEqual(x,y);};
@@ -64,7 +65,7 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
  const vaultRoot=await fs.realpath(dataRoot);
  if(within(assetRoot,vaultRoot)||within(vaultRoot,assetRoot))throw Error('worlds_vault_data_must_be_outside_public');
  if(!Number.isInteger(maxWorlds)||maxWorlds<1||maxWorlds>MAX_WORLDS)throw Error('worlds_vault_capacity_invalid');
- const locks=new Map(),createWindows=new Map();
+ const locks=new Map(),admission=createWorldsAdmission();
  const fileFor=id=>path.join(vaultRoot,id+'.json');
  async function readRecord(id){
   if(!WORLD_ID.test(id))throw new VaultError(404,'world_not_found');
@@ -100,13 +101,24 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
  }
  async function serveStatic(req,res,pathname){
   if(!pathname.startsWith('/worlds/')||req.method!=='GET')throw new VaultError(404,'route_not_found');
-  const relative=pathname.slice('/worlds/'.length)||'index.html';
+  // A directory URL must resolve to its index.html on the OWNED vault too.
+  // Local Python static server already did this, hiding a release-only 404 for /worlds/heritage/.
+  let relative=pathname.slice('/worlds/'.length)||'index.html';
+  if(relative.endsWith('/'))relative+='index.html';
   if(relative.split('/').some(x=>x==='.'||x==='..'||x.startsWith('.'))||relative.includes('\\'))throw new VaultError(404,'route_not_found');
-  const target=path.resolve(assetRoot,'worlds',relative);
-  if(!within(path.join(assetRoot,'worlds'),target))throw new VaultError(404,'route_not_found');
+  // The atlas lives in a single canonical public source folder. Expose just its two
+  // readonly assets under /worlds/heritage/atlas/ without widening the leased /worlds/ edge.
+  const atlasAliases=new Map([
+   ['heritage/atlas/index.html','submerged-heritage/index.html'],
+   ['heritage/atlas/sites.geojson','submerged-heritage/sites.geojson']
+  ]);
+  const alias=atlasAliases.get(relative);
+  const safeRoot=alias?assetRoot:path.join(assetRoot,'worlds');
+  const target=path.resolve(safeRoot,alias||relative);
+  if(!within(safeRoot,target))throw new VaultError(404,'route_not_found');
   let real,stat;
   try{real=await fs.realpath(target);stat=await fs.lstat(target);}catch{throw new VaultError(404,'route_not_found');}
-  if(!within(path.join(assetRoot,'worlds'),real)||stat.isSymbolicLink()||!stat.isFile())throw new VaultError(404,'route_not_found');
+  if(!within(safeRoot,real)||stat.isSymbolicLink()||!stat.isFile())throw new VaultError(404,'route_not_found');
   const bytes=await fs.readFile(real);
   res.writeHead(200,{'content-type':MIME[path.extname(real)]||'application/octet-stream','content-length':bytes.length,
   'cache-control':'public, max-age=60','x-content-type-options':'nosniff'});res.end(bytes);
@@ -115,13 +127,11 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
   try{
    const method=req.method||'GET',url=new URL(req.url||'/', 'http://local.invalid');
    const pathname=decodeURIComponent(url.pathname);
-   if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true});
+   if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true,public_origin:expectedOrigin||null});
    if(pathname==='/worlds/api/worlds'&&method==='POST'){
     assertWriteOrigin(req,expectedOrigin);
-    const source=req.socket.remoteAddress||'unknown',now=Date.now();
-    const old=(createWindows.get(source)||[]).filter(t=>now-t<600000);
-    if(old.length>=10)throw new VaultError(429,'creation_rate_limited');
-    old.push(now);createWindows.set(source,old);
+    const decision=admission.admit(req,expectedOrigin);
+    if(!decision.allowed)throw new VaultError(429,decision.reason);
     const scene=validScene(await readBody(req)),created=await serialize('__create__',()=>createWorld(scene));
     return send(res,201,{schema:VAULT_SCHEMA,...created},{etag:'"1"'});
    }

@@ -26,6 +26,7 @@ test('verifies receipt, canonical identity, machine evidence and ranking visuals
   const result=verifyJournalBuild({root:outDir,expectedOrigin:origin});
   assert.equal(result.verified,true);
   assert.equal(result.live_story_count,1);
+  assert.equal(result.verified_reader_assets,1);
   assert.match(result.stories[0].ranking_run_id,/^cfbpi:/);
 });
 
@@ -41,4 +42,11 @@ test('fails closed when a ranking visual no longer matches its receipt hash',()=
   const visual=path.join(outDir,'production','college-football-power-rankings-2026-10-06','ranking-square.svg');
   fs.appendFileSync(visual,'<!-- tampered -->');
   assert.throws(()=>verifyJournalBuild({root:outDir,expectedOrigin:origin}),/ranking_visual_hash_mismatch/);
+});
+
+test('rejects a tampered read-aloud asset rather than serving an unsigned script',()=>{
+  const outDir=build();
+  const asset=path.join(outDir,'assets','listen.js');
+  fs.appendFileSync(asset,'/* unapproved change */');
+  assert.throws(()=>verifyJournalBuild({root:outDir,expectedOrigin:origin}),/reader_asset_hash_mismatch/);
 });

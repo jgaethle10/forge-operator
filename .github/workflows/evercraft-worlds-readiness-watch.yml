@@ -1,0 +1,83 @@
+name: Evercraft Worlds owned public readiness (read-only)
+
+# Source CI is not deployment proof. This monitor uses only published HTTPS
+# GET requests. Never mutates customer worlds or configures a route.
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit-worlds-owned-readiness.mjs'
+      - 'tests/worlds-owned-readiness.test.mjs'
+      - '.github/workflows/evercraft-worlds-readiness-watch.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '37 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'public/worlds/heritage/**'
+      - 'public/worlds/hidden-world/**'
+      - 'systemia/worlds/worlds-vault-runtime.mjs'
+      - 'scripts/probe-worlds-public.mjs'
+      - 'scripts/probe-worlds-heritage-public.mjs'
+      - 'scripts/probe-hidden-world-public.mjs'
+      - 'scripts/audit-worlds-owned-readiness.mjs'
+      - 'tests/worlds-owned-readiness.test.mjs'
+      - '.github/workflows/evercraft-worlds-readiness-watch.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-worlds-owned-readiness
+  cancel-in-progress: true
+
+jobs:
+  external-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      WORLDS_ORIGIN: ${{ vars.EVERCRAFT_WORLDS_PUBLIC_ORIGIN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify release receipt and fail-closed status contracts
+        run: |
+          node --check scripts/audit-worlds-owned-readiness.mjs
+          node --test tests/worlds-owned-readiness.test.mjs
+      - name: Probe configured owned HTTPS origin (no writes)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/worlds-readiness
+          node scripts/audit-worlds-owned-readiness.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-readiness/read-only.json
+      - name: Display clear status without implying customer readiness
+        if: always() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          if [ -s artifacts/worlds-readiness/read-only.json ]; then
+            node --input-type=module -e '
+              import fs from "node:fs";
+              const r=JSON.parse(fs.readFileSync("artifacts/worlds-readiness/read-only.json","utf8"));
+              const lines=[
+                "### Evercraft Worlds external readiness",
+                "- Result: **"+r.status+"**",
+                "- Read-only HTTPS checks: **"+(r.verified?"verified":"not verified")+"**",
+                "- Physical iPhone and customer writes: **not verified**",
+                "- Origin: "+(r.origin||"not configured"),
+                "- Independent surfaces: "+Object.entries(r.checks||{}).map(([n,v])=>n+"="+(v.verified?"PASS":v.reason)).join(", ")
+              ];
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,lines.join("\n")+"\n");
+            '
+          else
+            printf '%s\n' '### Evercraft Worlds external readiness' '- Result: **no completed receipt**' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve exact machine-readable release receipt
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-worlds-owned-readiness
+          path: artifacts/worlds-readiness/read-only.json
+          if-no-files-found: warn

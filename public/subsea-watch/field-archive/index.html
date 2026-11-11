@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#061a29"><meta name="robots" content="noindex,nofollow">
+<title>Field Archive | Subsea Watch · Evercraft</title>
+<meta name="description" content="Verified source links for real NOAA Ocean Exploration ROV footage, dive tracks and sensor archives. No invented underwater reconstruction or footage synchronization.">
+<style>
+:root{color-scheme:dark;--base:#061522;--panel:#0b2535;--line:#2b5967;--mint:#a6f5eb;--muted:#afc6cb;--ink:#ebfcfa;--gold:#f4d6a5}
+*{box-sizing:border-box}html{background:var(--base)}body{margin:0;background:radial-gradient(ellipse at 74% 0%,#10374b 0%,#061522 48%);color:var(--ink);font:15px/1.58 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--mint)}a:focus-visible,button:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+a:hover{text-decoration:underline}button{font:inherit;cursor:pointer}
+.shell{max-width:1160px;margin:auto;padding:22px clamp(17px,5vw,56px) 90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.identity{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);font-size:12px;letter-spacing:.13em;font-weight:800}
+.monogram{font:26px/.9 Georgia,serif;border:1px solid #79c2c3;padding:11px;color:var(--mint)}
+.identity small{display:block;font-size:9px;color:var(--muted);letter-spacing:.23em}
+.nav{font-size:12px;color:var(--mint);text-decoration:none;border:1px solid #386878;border-radius:50px;padding:9px 14px}
+.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:11px;font-weight:800;color:var(--mint)}
+.hero{padding:56px 0 31px;border-bottom:1px solid var(--line)}
+h1{font:400 clamp(43px,7vw,82px)/1.05 Georgia,serif;letter-spacing:-.05em;margin:12px 0 16px;max-width:850px}h1 em{font-weight:400;color:var(--mint)}
+.lead{max-width:730px;font-size:clamp(16px,2vw,19px);color:#cfdee0;margin:0 0 20px}
+.ribbon{display:flex;flex-wrap:wrap;gap:10px}.ribbon span{border:1px solid #3b6b76;border-radius:30px;padding:7px 12px;color:#d7eeec;font-size:11px}
+.ribbon span:first-child{border-color:#bfa56a;color:#ffe6ac}
+main{display:grid;grid-template-columns:minmax(0,1.36fr) minmax(280px,.84fr);gap:22px;margin-top:24px}
+.panel{border:1px solid var(--line);border-radius:16px;background:#092334df;overflow:hidden}
+.pad{padding:24px}h2{font:400 29px/1.16 Georgia,serif;margin:8px 0 13px}p{margin:0 0 13px}
+.mission{font-size:12px;color:var(--muted);letter-spacing:.06em;font-weight:700}
+.note{font-size:13px;color:#c3d9da}
+.trace{padding:11px 14px;border-left:2px solid #e8c486;background:#162d38;color:#f5e2bd;font-size:12px;margin:17px 0}
+.viewer{aspect-ratio:16/9;background:linear-gradient(145deg,#06111b,#0b3141 58%,#0c2434);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;place-items:center;position:relative}
+.viewer video{width:100%;height:100%;object-fit:contain;background:#000;display:none}
+.viewer.active video{display:block}.viewer.active .video-start{display:none}
+.video-start{text-align:center;max-width:330px;padding:30px}.video-start .glyph{font:45px/1 Georgia,serif;color:#7fdfd6}
+.video-start p{font-size:13px;color:#d1e5e5;margin-top:12px}
+.cta{border:1px solid #b7f5ed;background:#bdf5e9;color:#082833;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:800;min-height:44px}
+.secondary{display:inline-block;border:1px solid #528d97;background:#123848;color:#e5ffff;text-decoration:none;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+#preview-status{font-size:12px;color:#bdd4d7;margin-top:10px;min-height:20px}
+.instructions{padding:19px 24px}.instructions h3{font-size:15px;margin:0 0 9px}.instructions ol{margin:0;padding-left:20px;color:#bad4d7;font-size:13px}.instructions li{margin-bottom:8px}
+.library{grid-column:1/-1}.library-head{padding:25px 24px 0}.library-head p{color:var(--muted);font-size:13px;max-width:800px}
+.source-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;padding:22px}
+.source{border:1px solid #295463;border-radius:11px;padding:18px;background:#0d2a39;display:flex;flex-direction:column;min-height:245px}
+.source .type{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:#91d7d4;font-weight:800}
+.source h3{font-size:17px;line-height:1.3;margin:9px 0}
+.source p{color:#bbd1d5;font-size:12px;line-height:1.5}
+.source .rights{color:#f5dfbb;font-size:11px;border-top:1px solid #2c5360;padding-top:11px;margin-top:auto}
+.source .links{display:flex;flex-wrap:wrap;gap:13px;margin-top:12px;font-size:12px}
+.source a{text-decoration:underline;text-underline-offset:3px}
+footer{color:var(--muted);font-size:12px;margin-top:28px;max-width:900px}
+@media(max-width:800px){main{grid-template-columns:1fr}.source-list{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding-top:42px}}
+@media(max-width:550px){.source-list{grid-template-columns:1fr}.pad{padding:19px}.instructions{padding:18px}.library-head{padding:20px 19px 0}.source-list{padding:16px}.shell{padding-bottom:55px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+<a class="identity" href="../"><span class="monogram">S</span><span><small>EVERCRAFT</small>SUBSEA WATCH · FIELD ARCHIVE</span></a>
+<a class="nav" href="../immersive/">Open 3D replay</a>
+</header>
+<section class="hero">
+<div class="eyebrow">Verified-source research · archive preview v0.1</div>
+<h1>The real ocean.<br><em>Recorded, not imagined.</em></h1>
+<p class="lead">Begin with actual scientific expedition footage and the original records behind it. This is an evidence library, not a fabricated 3D reconstruction or an automatic video-to-track synchronization system.</p>
+<div class="ribbon"><span>Real NOAA mission</span><span>Source-attributed footage</span><span>Original navigation &amp; sensors</span><span>No unverified site geometry</span></div>
+</section>
+<main>
+<section class="panel" aria-labelledby="mission-heading">
+<div class="pad">
+<div class="mission">EX2306 · DIVE 02 · 25 AUGUST 2023 · GULF OF ALASKA</div>
+<h2 id="mission-heading">Kodiak Seep</h2>
+<p class="note">A NOAA Okeanos Explorer ROV dive. The reference video below is a documented 299-second HD camera segment starting at 18:30:00 UTC. NOAA identifies it as part of the real expedition, not an Evercraft-generated scene.</p>
+<div class="trace"><strong>Evidence boundary:</strong> this real video is NOT synchronized with the downloadable track or sensor files in Subsea Watch. Their clock offsets, coordinate reference and positioning accuracy have not been independently validated.</div>
+</div>
+<div class="viewer" id="viewer">
+<div class="video-start"><div class="glyph" aria-hidden="true">◉</div><p>No video has been loaded. Choose “Preview NOAA footage” to request the public archive MP4 from NOAA.</p><button class="cta" type="button" id="start-preview">Preview NOAA footage</button></div>
+<video id="archive-video" playsinline controls preload="none" aria-label="Original NOAA ROV video segment, EX2306 DIVE02, unsynchronized with any rendered track"></video>
+</div>
+<div class="pad">
+<div class="actions"><a class="secondary" href="https://www.ncei.noaa.gov/metadata/granule/geoportal/rest/metadata/item/EX2306_DIVE02_20230825T183000Z_ROVHD/html" target="_blank" rel="noopener noreferrer">Original NOAA clip record</a><a class="secondary" href="https://www.ncei.noaa.gov/data/oceans/oer/video/EX2306/Video/EX2306_DIVE02_20230825/Compressed/EX2306_VID_20230825T183000Z_ROVHD_Low.mp4" target="_blank" rel="noopener noreferrer">Download original MP4</a></div>
+<p id="preview-status" role="status" aria-live="polite">Preview remains unloaded until requested. Network requests go to NOAA, never an Evercraft media proxy.</p>
+<p class="note">Credit: NOAA Ocean Exploration. The archive record specifies the segment timing and source citation. Browser playback depends on NOAA availability and supported codecs.</p>
+</div>
+</section>
+<aside class="panel">
+<div class="pad">
+<div class="eyebrow">From source to reconstruction</div>
+<h2>Evidence first.<br>Then the world.</h2>
+<p class="note">The archive gives us real material, but no automatic right to invent the parts the instruments never recorded.</p>
+</div>
+<div class="instructions">
+<h3>Next engineering workflow</h3>
+<ol>
+<li>Download this NOAA video segment and its original dive-track and sensor archives.</li>
+<li>Inspect the actual sensor fields, coordinate reference, timestamps, gaps and measurement uncertainty.</li>
+<li>Convert only measured records to the Subsea Watch import schema; keep unknown coordinates unknown.</li>
+<li>Register video against the recorded timeline only after verifying time references.</li>
+<li>Bring in surveyed 3D geometry separately, with scale, survey source, rights and uncertainty documented.</li>
+</ol>
+<div class="actions"><a class="secondary" href="../immersive/">Go to local replay</a><a class="secondary" href="../">Open telemetry lab</a></div>
+</div>
+</aside>
+<section class="panel library" aria-labelledby="sources-heading">
+<div class="library-head"><div class="eyebrow">Public research resources</div><h2 id="sources-heading">The source ledger</h2><p>These are original data-provider links, each labeled by what it actually establishes. A listed archive is not a parsed or certified data feed. Partner-hosted 3D models require separate reuse-rights checks.</p></div>
+<div id="source-list" class="source-list" aria-live="polite"><p>Loading the first-party source registry…</p></div>
+</section>
+</main>
+<footer>Research prototype · Not a live underwater map, hazard monitor, certified diver tracking system, or dive clearance tool. Real footage stays distinct from the fictional WebGL sample. Source rights and mission provenance must remain attached to all later products.</footer>
+</div>
+<script type="module" src="./catalog.mjs"></script>
+</body>
+</html>

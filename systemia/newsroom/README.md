@@ -27,3 +27,32 @@ The static output lives under `public/journal`, which Vite copies into the owned
 npm run journal:test
 npm run journal:build
 ```
+
+## Historical feature preview (not a publication path)
+
+The Curiosity Desk can render the source-grounded chainsaw history candidate with an explicitly public-domain photograph:
+
+```bash
+node systemia/newsroom/editorial-preview.mjs
+```
+
+The output is a local, noindex HTML file in the operating system's temporary directory. For an alternate path, pass the editorial Markdown path, the media manifest, and a **local .html output path**, in that order. The command refuses to write under `public/`, `dist/`, `build/`, `.github/`, or `systemia/newsroom/stories/`. Its output is for editorial review only, not an approved Journal story, live URL, production build, signed Systemia release, or Clip distribution authorization.
+
+Source rights metadata: `editorial-assets/chainsaw-surgical-origins-media.json`. It identifies the public-domain source image, photographer and source URL. Avoid substituting unlicensed museum photography. Run `npm run journal:test` to include the preview gate tests.
+
+## Evidence-level claim preflight (no publishing authority)
+
+For the chainsaw hidden-history feature, `editorial-queue/2026-11-05-chainsaw-claim-input.json` maps six historically bounded statements onto named evidence and source records. Run:
+
+```bash
+node systemia/newsroom/editorial-claim-preflight.mjs
+npm run journal:test
+```
+
+The tool invokes the shared `claim-reactor.mjs` and emits a local JSON **candidate** on stdout. It fails closed on broken source or evidence references, counterfeit approval fields, and unsupported causal bridges. An `evidence_preflight_ready` value of `true` only means a packet can proceed to an **independent editorial reviewer**. It cannot mark a story approved, produce a Systemia release, populate `public/journal`, or authorize Evercraft Clip. Those gates remain separate and require genuine receipts.
+
+### Mobile/offline historical image reliability (November 9)
+
+The chainsaw editorial preview now embeds **two owned SVG illustrations** as `data:image/svg+xml;base64` images, with a portrait version for iPhone and a landscape version for desktop. This avoids the blank hero observed when iOS opened a local HTML attachment that referenced an external Wikimedia JPEG. Both illustrations are **clearly labeled conceptual** artwork, not historical artifact photography. The separate Commons link retains the attributed real osteotome photograph and its public-domain rights documentation.
+
+No browser or phone network access is required to render the preview hero. No remote image is silently presented as an embedded photograph. The renderer rejects SVG script, foreignObject, image and event-handler content, and the newsroom test verifies offline embedding and historical separation. This does not change Journal release authority, publication receipts, or the Clip distribution gate.

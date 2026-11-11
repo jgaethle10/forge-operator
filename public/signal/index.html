@@ -37,6 +37,12 @@ h1{font-size:clamp(2.65rem,5.3vw,4.85rem);line-height:1.06;letter-spacing:-.066e
 @media(max-width:590px){.shell{width:calc(100% - 30px)}.nav{min-height:67px}.navlinks{font-size:.76rem;gap:12px}.brand{font-size:1.07rem}.brandmark{width:33px;height:33px}.hero{padding-top:38px}h1{font-size:clamp(2.6rem,12vw,3.45rem)}.lead{font-size:1.03rem}.split,.sourcegrid{grid-template-columns:1fr}.panel{padding:20px}.event{grid-template-columns:1fr;gap:4px;padding:17px 0}.section{padding-top:57px}.method{padding:24px}.status h2{font-size:1.9rem}.btn{flex-grow:1}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media print{header,.buttons,.request,#copyStatus{display:none!important}.hero{padding:20px 0}.status,.method{print-color-adjust:exact}.section{padding-top:25px}.source{min-height:auto}body{background:#fff}}
+.offer-panel{max-width:890px;margin:29px auto 0;text-align:left;background:#fff;border:1px solid var(--line);border-radius:23px;padding:29px;box-shadow:0 22px 60px #132c3210}
+.offer-header{display:flex;align-items:center;justify-content:space-between;gap:20px}.offer-header h3{font-size:1.8rem;line-height:1.16;letter-spacing:-.05em;margin:8px 0 0}.offer-header .tag{margin:0}.offer-price{color:var(--accent);font-weight:850;letter-spacing:-.045em;font-size:2.45rem;white-space:nowrap}.offer-price small{display:block;font-size:.78rem;letter-spacing:0;font-weight:600;color:var(--sub);text-align:right}
+.offer-lede{max-width:100%!important;margin:17px 0 9px!important;color:var(--ink)!important}.offer-limit{max-width:100%!important;margin:0 0 24px!important;color:var(--sub);font-size:.86rem}
+.offer-form{display:grid;gap:17px}.offer-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.offer-form label{display:block;font-size:.81rem;font-weight:780;margin:0 0 6px;text-align:left}.offer-form label span{color:var(--accent)}.offer-form input,.offer-form textarea{width:100%;background:#fafcfb;color:var(--ink);border:1px solid #c8d9d4;border-radius:10px;padding:13px 14px;font:inherit;font-size:.93rem;line-height:1.5}.offer-form textarea{resize:vertical;min-height:106px}.offer-form input:focus-visible,.offer-form textarea:focus-visible{outline:3px solid #9bd9ca;outline-offset:1px}.offer-actions{display:flex;gap:10px;flex-wrap:wrap}.offer-actions .btn{font-size:.87rem}.offer-feedback{min-height:1.3em;color:#3b706a!important;margin:0!important;max-width:100%!important;text-align:left;font-size:.83rem}.offer-note{font-size:.77rem;color:var(--quiet)!important;line-height:1.63;margin:18px 0 0!important;max-width:100%!important}[hidden]{display:none!important}.offer-honeypot{position:absolute!important;left:-9999px!important;opacity:0;pointer-events:none}.offer-consent{display:flex!important;align-items:flex-start;gap:10px;font-weight:550!important;line-height:1.5;color:var(--sub)!important}.offer-form input[type="checkbox"]{width:19px;height:19px;min-width:19px;margin-top:3px;accent-color:var(--accent)}
+.offer-extra{max-width:850px;margin:20px auto 0;color:var(--sub);font-size:.88rem;line-height:1.7}.offer-extra a{font-weight:750}
+@media(max-width:590px){.offer-panel{padding:20px}.offer-header{align-items:flex-start;flex-direction:column;gap:11px}.offer-fields{grid-template-columns:1fr}.offer-price small{text-align:left}.offer-actions .btn{width:100%}}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Savannah River National Laboratory fire: evidence brief","datePublished":"2026-10-29","dateModified":"2026-10-29","publisher":{"@type":"Organization","name":"Evercraft LLC"},"about":"Savannah River National Laboratory fire on October 28, 2026","isAccessibleForFree":true}</script>
 </head>
@@ -45,7 +51,7 @@ h1{font-size:clamp(2.65rem,5.3vw,4.85rem);line-height:1.06;letter-spacing:-.066e
 <div class="topline"></div>
 <header><div class="shell nav">
 <a href="#top" class="brand"><span class="brandmark" aria-hidden="true">≋</span><span>Evercraft <small>Signal / Independent intelligence</small></span></a>
-<nav class="navlinks" aria-label="Main navigation"><a href="#known">The facts</a><a href="#timeline">Timeline</a><a href="#sources">Sources</a></nav>
+<nav class="navlinks" aria-label="Main navigation"><a href="#known">The facts</a><a href="#timeline">Timeline</a><a href="#sources">Sources</a><a href="#request">Get a brief</a></nav>
 </div></header>
 <main id="main">
 <div id="top" class="shell hero">
@@ -110,7 +116,37 @@ h1{font-size:clamp(2.65rem,5.3vw,4.85rem);line-height:1.06;letter-spacing:-.066e
 <div><div class="section-kicker" style="color:#72e6ca">The Signal standard</div><h2>Clarity, without invented certainty.</h2><p>Evercraft Signal is being built as an independent public incident-intelligence product. This first page is a researched case study, not a deployed autonomous detection network.</p></div>
 <ul><li>Original sources visible on every case.</li><li>Confirmed, reported and unknown are separate states.</li><li>No automatic conversion of restrictions into exposure maps.</li><li>Independent corroboration counts upstream sources.</li><li>Editorial snapshot dates and coverage gaps stay visible.</li></ul>
 </div>
-<section class="shell request"><div class="section-kicker">Monitor what matters</div><h2>One clear picture. When it matters.</h2><p>Signal's planned next release will monitor public incident sources and deliver documented changes to relevant organizations. Automatic alerts and paid subscriptions are not live yet.</p><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Signal%20organizational%20monitoring">Ask about organizational monitoring</a></section>
+<section class="shell request" id="request">
+<div class="section-kicker">Evidence worth acting on</div>
+<h2>Need answers about a specific incident?</h2>
+<p>Commission one bounded, human-reviewed investigation. No mystery subscription, no emergency claims, and no phone call required.</p>
+<div class="offer-panel">
+  <div class="offer-header">
+    <div><span class="tag">Founding pilot · One-time service</span><h3>Incident Evidence Brief</h3></div>
+    <div class="offer-price">$250 <small>USD / incident</small></div>
+  </div>
+  <p class="offer-lede">A concise, source-linked timeline; confirmed versus reported claims; what is missing or contradictory; and the next evidence questions that matter to your decision.</p>
+  <p class="offer-limit">One publicly documented incident and one research question. Up to six public source links can be reviewed. This is <strong>not</strong> live monitoring, radiation testing, legal advice, or an emergency alert.</p>
+  <form id="signal-inquiry" class="offer-form">
+    <div class="offer-fields">
+      <div><label for="signal-incident">Which incident or facility? <span>*</span></label><input id="signal-incident" name="incident" required maxlength="120" placeholder="e.g. Savannah River Site fire" autocomplete="off"></div>
+      <div><label for="signal-location">Location (optional)</label><input id="signal-location" name="location" maxlength="120" placeholder="City, region or country"></div>
+    </div>
+    <div><label for="signal-email">Email for a reply <span>*</span></label><input id="signal-email" name="email" type="email" required maxlength="200" autocomplete="email" inputmode="email" placeholder="you@company.com"></div>
+    <div><label for="signal-question">What exactly do you need to know? <span>*</span></label><textarea id="signal-question" name="question" rows="4" required maxlength="500" placeholder="What happened, which claims are documented, and what evidence is still missing?"></textarea></div>
+    <div class="offer-fields">
+      <div><label for="signal-organization">Organization (optional)</label><input id="signal-organization" name="organization" maxlength="100" placeholder="Company, newsroom or independent"></div>
+      <div><label for="signal-source">One public source link (optional)</label><input id="signal-source" name="source" maxlength="350" placeholder="https://..." inputmode="url"></div>
+    </div>
+    <div class="offer-honeypot" aria-hidden="true"><label for="signal-website">Leave blank</label><input id="signal-website" name="website" tabindex="-1" autocomplete="off"></div>
+    <label class="offer-consent" for="signal-consent"><input id="signal-consent" name="consent" type="checkbox" required> I agree that Evercraft may privately store this request and email me about its scope. No purchase or subscription is created.</label>
+    <div class="offer-actions"><button class="btn primary" type="submit" id="send-signal-request">Request my $250 evidence brief</button><button class="btn" type="button" id="email-request">Use email instead</button><button class="btn" type="button" id="copy-request">Copy request</button></div>
+    <p id="signal-inquiry-status" class="offer-feedback" role="status" aria-live="polite"></p>
+  </form>
+  <p class="offer-note">The main button submits your consented request to Evercraft’s private, encrypted intake when the owned service is available and returns a receipt reference. Your email fallback is prepared locally and only sends if you choose to send it from your email app. Evercraft confirms the exact scope, delivery date and capacity. Only the matching Evercraft Payments order may collect payment, through Raven Nexus, once this Signal offer passes checkout verification. $250 is the proposed price for the bounded pilot; the exact Evercraft Payments checkout remains on hold pending verification. No unrelated Stripe link is substituted.</p>
+</div>
+<div class="offer-extra"><strong>Looking for ongoing monitoring instead?</strong> The subscription platform is not active yet. <a href="mailto:jessegaethle10@gmail.com?subject=Evercraft%20Signal%20monitoring%20pilot&body=Please%20reply%20with%20availability%20for%20a%20scoped%20organizational%20monitoring%20pilot.%0A%0ALocation%20or%20facility%3A%20%0AWhat%20to%20monitor%3A%20%0AHow%20I%20would%20use%20the%20updates%3A%20">Ask about a custom monitoring pilot</a>; no automated alerts or recurring charge is implied.</div>
+</section>
 </main>
 <footer><div class="shell foot"><span>© 2026 Evercraft LLC · Evercraft Signal / Research preview</span><span>Not an emergency alert service · <a href="./incidents/savannah-river-20261028.json">Open machine-readable case file</a></span></div></footer>
 <script>
@@ -123,6 +159,93 @@ h1{font-size:clamp(2.65rem,5.3vw,4.85rem);line-height:1.06;letter-spacing:-.066e
     catch(e){status.textContent='Copy unavailable in this browser. Use your browser share control or the structured case file.';}
   });
 })();
+</script>
+<script type="module">
+import { prepareSignalInquiry } from './scope-request.mjs';
+const form=document.getElementById('signal-inquiry');
+const feedback=document.getElementById('signal-inquiry-status');
+const copy=document.getElementById('copy-request');
+const emailButton=document.getElementById('email-request');
+const submitButton=document.getElementById('send-signal-request');
+const API='https://fabric.systemiacommandcenters.com/api/signal/inquiry';
+const READINESS='https://fabric.systemiacommandcenters.com/api/signal/readiness';
+let nativeReady=false;
+let received=false;
+function showNativeAvailability(available){
+  nativeReady=available;
+  submitButton.textContent=available?'Send my request to Evercraft':'Prepare my request by email';
+  emailButton.hidden=!available;
+}
+async function checkAvailability(){
+  try{
+    const response=await fetch(READINESS,{
+      method:'GET',mode:'cors',credentials:'omit',cache:'no-store',
+      signal:AbortSignal.timeout(4500)
+    });
+    const result=await response.json();
+    showNativeAvailability(response.ok&&result?.intake_available===true);
+  }catch{showNativeAvailability(false);}
+}
+void checkAvailability();
+
+function payload(){
+  const value=Object.fromEntries(new FormData(form).entries());
+  value.consent=document.getElementById('signal-consent').checked;
+  return value;
+}
+function build(){
+  return prepareSignalInquiry(payload());
+}
+function valid(){
+  if(form.reportValidity())return true;
+  feedback.textContent='Please complete the required incident, question, reply email and consent fields.';
+  return false;
+}
+function openEmail(){
+  if(!valid())return;
+  try{
+    const draft=build();
+    feedback.textContent='Opening a prefilled email. Please review and send it yourself. No order or payment exists.';
+    window.location.href=draft.mailto;
+  }catch(error){feedback.textContent=error.message}
+}
+form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(received)return;
+  if(!valid())return;
+  try{build()}catch(error){feedback.textContent=error.message;return;}
+  if(!nativeReady){openEmail();return;}
+  submitButton.disabled=true;
+  feedback.textContent='Submitting securely to Evercraft…';
+  try{
+    const response=await fetch(API,{
+      method:'POST',mode:'cors',credentials:'omit',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify(payload()),
+      signal:AbortSignal.timeout(12000)
+    });
+    const result=await response.json();
+    if(response.status===201&&result?.received===true&&/^ECS-[A-F0-9]{24}$/.test(result.reference||'')){
+      received=true;
+      feedback.textContent='Received by Evercraft. Your reference is '+result.reference+'. We will review scope and reply by email. No order or charge was created.';
+      emailButton.disabled=true;
+      copy.disabled=true;
+      return;
+    }
+    feedback.textContent='Native intake has not confirmed your request ('+(result?.error||'unavailable')+'). You can use the email option. Do not assume an order or payment exists.';
+  }catch(error){
+    feedback.textContent='Could not verify the intake receipt. Use the email backup and mention if you already tried this form. No payment was created.';
+  }finally{submitButton.disabled=received;}
+});
+emailButton.addEventListener('click',openEmail);
+copy.addEventListener('click',async()=>{
+  if(!valid())return;
+  try{
+    const draft=build();
+    await navigator.clipboard.writeText(draft.subject+'\n\n'+draft.body);
+    feedback.textContent='Request copied. Paste it into an email to jessegaethle10@gmail.com.';
+  }catch(error){feedback.textContent=error.message||'Copy unavailable. Use the email backup.'}
+});
 </script>
 </body>
 </html>

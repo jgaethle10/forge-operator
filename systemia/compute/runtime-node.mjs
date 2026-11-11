@@ -2762,6 +2762,12 @@ export async function startEvercraftComputeNode({
                 stale_after_seconds: 900,
               },
               {
+                source_key: 'work-saban-clip-delivery-watch',
+                path: 'work-saban-clip-delivery-watch/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
                 source_key: 'portfolio-sentinel',
                 path: 'portfolio-sentinel/mission-snapshot.json',
                 required: false,
@@ -2825,6 +2831,31 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'core_provider_credential_state_outside_admitted_root' });
           }
 
+          // Work Saban Clip uses private state on the admitted owned Compute root.
+          // Account identity is supplied by the operator, never inferred or hard-coded.
+          const workSabanPassportValue = String(
+            body.input?.passport_state_dir || process.env.EVERCRAFT_PASSPORT_STATE_DIR || ''
+          ).trim();
+          const workSabanPassportRoot = workSabanPassportValue
+            ? path.resolve(workSabanPassportValue) : '';
+          if (workSabanPassportRoot && !isWithin(allowedRoot, workSabanPassportRoot)) {
+            return send(res, 403, { error: 'core_clip_passport_state_outside_admitted_root' });
+          }
+          const workSabanFacebookPageId = String(
+            body.input?.work_saban_facebook_page_id ||
+            process.env.EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID || ''
+          ).trim();
+          if (workSabanFacebookPageId && !/^\d{5,30}$/.test(workSabanFacebookPageId)) {
+            return send(res, 422, { error: 'core_clip_facebook_page_id_invalid' });
+          }
+          const workSabanCredentialRef = String(
+            body.input?.work_saban_facebook_credential_ref ||
+            process.env.EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_CREDENTIAL_REF || ''
+          ).trim();
+          if (workSabanCredentialRef && !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(workSabanCredentialRef)) {
+            return send(res, 422, { error: 'core_clip_facebook_credential_ref_invalid' });
+          }
+
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
             EVERCRAFT_RELEASE_REF: releaseRef,
@@ -2860,6 +2891,19 @@ export async function startEvercraftComputeNode({
               workspaceRoot,
               'clip-social-publish-receipts'
             ),
+            SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR: path.join(
+              workspaceRoot,
+              'work-saban-clip-publisher'
+            ),
+            SYSTEMIA_WORK_SABAN_DELIVERY_WATCH_OUT: path.join(
+              workspaceRoot,
+              'work-saban-clip-delivery-watch',
+              'latest.json'
+            ),
+            EVERCRAFT_CREDENTIAL_STATE_DIR: providerCredentialStateRoot,
+            EVERCRAFT_PASSPORT_STATE_DIR: workSabanPassportRoot,
+            EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID: workSabanFacebookPageId,
+            EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_CREDENTIAL_REF: workSabanCredentialRef,
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
             SYSTEMIA_SENTINEL_REGION_PROFILE: String(

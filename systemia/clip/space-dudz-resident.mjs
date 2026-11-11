@@ -31,6 +31,11 @@ export async function runSpaceDudzPublishCycle({
   for(const candidate of campaign.candidates){
     const id=clean(candidate.id);
     const previous=state.candidates[id]||null;
+    // An ambiguous POST is terminal for automatic submission until separately reconciled.
+    if(previous?.state==='reconciliation_required'){
+      events.push({candidate_id:id,action:'manual_reconciliation_hold',state:'reconciliation_required',remote_id:previous.remote_id||null});
+      continue;
+    }
     if(previous?.state==='published'){
       events.push({candidate_id:id,action:'skip_terminal',state:'published',remote_id:previous.remote_id||null});
       continue;
@@ -81,7 +86,7 @@ export async function runSpaceDudzPublishCycle({
       attempt_count:Number(previous?.attempt_count||0)+1,
       provider_published:published,
     };
-    events.push({candidate_id:id,action:published?'provider_published':'attempt_failed',state:state.candidates[id].state,remote_id:state.candidates[id].remote_id});
+    events.push({candidate_id:id,action:published?'provider_published':receipt?.status==='reconciliation_required'?'manual_reconciliation_hold':'attempt_failed',state:state.candidates[id].state,remote_id:state.candidates[id].remote_id});
   }
 
   state.cycle_count+=1;
@@ -98,6 +103,7 @@ export async function runSpaceDudzPublishCycle({
       candidate_count:campaign.candidates.length,
       published:values.filter(x=>x.state==='published').length,
       failed:values.filter(x=>x.state==='failed').length,
+      manual_reconciliation_holds:values.filter(x=>x.state==='reconciliation_required').length,
       authorization_holds:values.filter(x=>x.state==='authorization_hold').length,
       provider_publishes_this_cycle:providerPublishes,
       events,

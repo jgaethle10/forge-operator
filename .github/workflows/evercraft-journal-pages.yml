@@ -16,6 +16,8 @@ on:
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/product-url-fabric.test.mjs'
+      - 'tests/boardroom-heritage.test.mjs'
+      - 'tests/boardroom-compare.test.mjs'
       - 'tests/clip-public-entry.test.mjs'
       - '.github/workflows/evercraft-journal-pages.yml'
   workflow_dispatch:
@@ -210,6 +212,10 @@ jobs:
           test -f _public_pages/chum/index.html
           test -f _public_pages/chum/products/infinite-classroom/index.html
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
+          test -s _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Reading Treehouse' _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Homework Coach · hints, not answers' _public_pages/apps/infinite-classroom/play/index.html
+          test -s _public_pages/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
           test -f _public_pages/eps/index.html
@@ -256,6 +262,21 @@ jobs:
       - name: Deploy Evercraft public directory
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify Signal one-time buyer scope assets over public HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/signal/"
+          curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "${target}" -o /tmp/signal-buyer-page.html
+          curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "${target}scope-request.mjs" -o /tmp/signal-buyer-scope.mjs
+          curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "${target}offer.json" -o /tmp/signal-buyer-offer.json
+          grep -Fq 'id="signal-inquiry"' /tmp/signal-buyer-page.html
+          grep -Fq 'Incident Evidence Brief' /tmp/signal-buyer-page.html
+          grep -Fq 'prepareSignalInquiry' /tmp/signal-buyer-scope.mjs
+          node --input-type=module -e "import fs from 'node:fs'; const o=JSON.parse(fs.readFileSync('/tmp/signal-buyer-offer.json')); if(o.price.amount!==250 || o.buyer_action.checkout_available!==false || o.buyer_action.order_created!==false)process.exit(1);"
+          echo "SIGNAL_BUYER_SCOPE_ASSETS_HTTPS_VERIFIED" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Verify Evercraft Signal public HTTPS and structured incident data
         shell: bash
@@ -404,6 +425,10 @@ jobs:
             echo "Privacy page, actual popup screenshot, Chromium/Edge/Firefox ZIPs passed remote download and archive integrity checks."
             echo "Store review and real logged-in social-feed compatibility are independent gates."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Infinite Classroom learning worlds on deployed HTTPS
+        shell: bash
+        run: node scripts/probe-infinite-classroom-public.mjs "${{ steps.deployment.outputs.page_url }}"
 
       - name: Verify customer fallback doors
         shell: bash

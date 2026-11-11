@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "evercraft_machine_commerce": {
-      "type": "http",
+      "type": "streamable-http",
       "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   }

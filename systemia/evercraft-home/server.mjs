@@ -14,6 +14,7 @@ import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.m
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import { inspectClipFacebookConnection } from "../clip/facebook-page-connection-diagnostic.mjs";
 import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
@@ -139,6 +140,7 @@ export async function startEvercraftHomeServer({
   sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
   oneBodyStateFile = String(process.env.EVERCRAFT_ONE_BODY_STATE_FILE || "").trim(),
   oneBodyConsumerTrustFile = String(process.env.EVERCRAFT_ONE_BODY_CONSUMER_TRUST_FILE || "").trim(),
+  clipFacebookFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -300,8 +302,8 @@ export async function startEvercraftHomeServer({
     }
   }
 
-  // Authenticated Home is the only supported entry. Local developer mode
-  // cannot expose this internal private-state snapshot even on loopback.
+  // Use existing Evercraft Home Identity and Passport. Developer-local auth
+  // must never expose this private snapshot, even when bound to loopback.
   const oneBodyRoute = authMode === "passport" && oneBodyStateFile
     ? createOneBodyHomeSnapshotRoute({
         passportStateDir, bodyStateFile: oneBodyStateFile,
@@ -645,6 +647,39 @@ export async function startEvercraftHomeServer({
       }
     }
 
+    // Operator-initiated diagnostic. Only authenticated Evercraft Home can ask
+    // the private vault to probe Meta, and every provider operation is GET.
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/diagnose") {
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      if (!credentialVault) return json(res, 503, {
+        ok: false, state: "credential_vault_not_configured",
+        provider_mutation_attempted: false, secret_material_returned: false,
+      });
+      let body;
+      try {
+        body = await readJsonBody(req, 4096);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            (body.credential_ref !== undefined && typeof body.credential_ref !== "string")) {
+          throw new Error("clip_diagnostic_selection_invalid");
+        }
+      } catch {
+        return json(res, 400, {
+          ok: false, state: "clip_diagnostic_selection_invalid",
+          provider_mutation_attempted: false, secret_material_returned: false,
+        });
+      }
+      const diagnostic = await inspectClipFacebookConnection({
+        credentialStateDir,
+        credentialRef: body.credential_ref || "",
+        fetchImpl: clipFacebookFetch,
+      });
+      return json(res, 200, {
+        ok: true, diagnostic,
+        secret_material_returned: false,
+      });
+    }
+
     if (req.method === "POST" && url.pathname === "/api/clip/journal/facebook") {
       let body;
       let resourceRef;
@@ -674,13 +709,21 @@ export async function startEvercraftHomeServer({
           repoRoot,
           slug: body.slug,
           credentialStateDir,
+          stateRoot: process.env.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "",
           authorizationRef: session.grant_id
             ? "passport-grant:" + session.grant_id
             : "local-development:home.clip.publish",
         });
         const published = receipt.state === "published";
-        return json(res, published ? 200 : 502, {
+        const previouslyAttempted = receipt.state === "duplicate_or_reconciliation_hold";
+        const unresolved = previouslyAttempted || receipt.state === "reconciliation_required";
+        const mayHavePublished = receipt.provider_may_have_published === true ||
+          receipt.state === "published_postflight_failed" || unresolved;
+        return json(res, published ? 200 : unresolved ? 409 : 502, {
           ok: published,
+          publication_may_have_occurred: mayHavePublished,
+          manual_reconciliation_required: unresolved,
+          automatic_retry_allowed: false,
           subject: session.subject,
           authorization: {
             scope: "home.clip.publish",
@@ -688,7 +731,8 @@ export async function startEvercraftHomeServer({
             mode: session.mode,
             grant_id: session.grant_id || null,
           },
-          publication_performed: receipt.state === "published" || receipt.state === "published_postflight_failed",
+          publication_performed: published || receipt.state === "published_postflight_failed"
+            ? true : mayHavePublished ? null : false,
           secret_material_returned: false,
           receipt,
         });

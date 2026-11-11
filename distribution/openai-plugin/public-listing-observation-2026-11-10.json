@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.openai.public-listing-observation.v1",
+  "observed_on": "2026-11-10",
+  "evidence_type": "founder_provided_openai_platform_dashboard_screenshot",
+  "provider": "OpenAI Platform",
+  "listing_name": "Evercraft",
+  "publisher": "Evercraft LLC",
+  "portal": {
+    "publication_version": "1.0.2",
+    "directory_listing_label": "Listed publicly",
+    "mcp_configuration_label": "Configured",
+    "domain_verification_label": "Domain verified",
+    "latest_mcp_scan_findings_label": "No findings in the latest MCP scan",
+    "submitted_mcp_origin": "https://fabric.systemiacommandcenters.com/mcp"
+  },
+  "release_tracking": {
+    "source_package": "plugins/evercraft-fabric",
+    "current_source_version": "1.0.6",
+    "private_plugin_version": "1.0.6",
+    "public_version": "1.0.2",
+    "upgrade_target": "1.0.6",
+    "upgrade_state": "not_submitted_or_confirmed",
+    "update_existing_public_listing": true
+  },
+  "independent_observations": {
+    "public_directory_search_result": "not_confirmed_from_this_session",
+    "independent_fresh_account_install": "not_tested",
+    "independent_external_chatgpt_tool_invocation": "not_tested",
+    "public_plugin_identifier": "not_confirmed",
+    "publication_timestamp": "not_confirmed",
+    "customer_conversion": "not_measured"
+  },
+  "boundaries": {
+    "portal_status_is_not_independent_customer_discovery": true,
+    "privately_installed_release_is_not_public_release": true,
+    "do_not_create_duplicate_public_listing": true,
+    "do_not_claim_public_version_updated_without_provider_receipt": true
+  },
+  "next_gate": "Authenticated publisher account updates the existing public Evercraft listing; record review/publish/version and test from an account without a personal Evercraft plugin"
+}

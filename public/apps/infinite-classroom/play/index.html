@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#132753">
+<meta name="description" content="Infinite Classroom: six friendly learning worlds, 18 original missions, guided clues and homework help that never gives away the answer.">
+<title>Infinite Classroom | Explore, wonder, learn</title>
+<style>
+:root{--ink:#19304f;--navy:#152a53;--blue:#2c5dd0;--muted:#536981;--line:#d9e5f2;--cream:#f7faff;--white:#fff;--mint:#e7fff4;--shadow:0 14px 40px #1b467118}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);background:var(--cream);font:16px/1.53 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #2275c7;outline-offset:3px}
+button:disabled{opacity:.5;cursor:not-allowed}
+[hidden]{display:none!important}
+.wrap{max-width:1170px;margin-inline:auto;padding-inline:clamp(17px,4vw,35px)}
+header{background:#0d2147;color:#fff}
+nav{display:flex;justify-content:space-between;align-items:center;min-height:72px;gap:16px}
+.identity{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.logo{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:#b1f1ed;color:#12426b;font-size:28px;font-weight:900}
+.identity b{font-size:.92rem;letter-spacing:.06em;display:block}.identity small{font-size:.65rem;letter-spacing:.1em;color:#cbe9fa;display:block}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nav-actions button{border:1px solid #7293c0;color:white;background:transparent;border-radius:999px;padding:9px 13px;font-size:.81rem;font-weight:750}
+.hero{background:radial-gradient(circle at 79% 30%,#385a91 0,transparent 48%),linear-gradient(130deg,#11264e,#203d70);color:white;padding-block:clamp(35px,6vw,67px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr);align-items:center;gap:25px}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.17em;font-weight:900;color:#b7f4ec}
+h1{font-size:clamp(2.4rem,5.7vw,4.7rem);letter-spacing:-.057em;line-height:1.08;margin:13px 0 17px}
+.hero p{font-size:1.08rem;color:#dfecff;max-width:670px;margin:0}
+.orbit{background:#ffffff17;border:1px solid #a0bfef69;border-radius:23px;padding:22px;box-shadow:0 12px 32px #06152d35;min-width:0}
+.orbit .face{font-size:3.5rem;line-height:1;text-align:center}.orbit strong{display:block;text-align:center;margin:8px 0 5px;font-size:1.16rem}
+.orbit p{font-size:.86rem;text-align:center;color:#d8eafa}
+.orbit .stars{display:flex;gap:7px;justify-content:center;margin-top:15px;color:#ffe29c;font-size:1.2rem}
+main{padding-block:30px 65px}
+.statusbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;background:white;border:1px solid var(--line);border-radius:16px;padding:15px 19px;box-shadow:var(--shadow)}
+.statusbar strong{font-size:1.06rem}.statusbar small{color:var(--muted);display:block}
+.progress-side{min-width:170px;font-size:.88rem;font-weight:800;color:#28529b}
+.track{height:9px;background:#e2ecf7;border-radius:999px;margin-top:6px;overflow:hidden}
+.fill{background:linear-gradient(90deg,#3d79d5,#41cbb4);width:0;height:100%;transition:width .2s}
+.sectionheading{margin:34px 0 17px}.sectionheading h2{font-size:clamp(1.55rem,3vw,2rem);margin:0 0 5px;letter-spacing:-.04em}.sectionheading p{margin:0;color:var(--muted)}
+.rooms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.room{border:1px solid var(--line);border-radius:20px;background:white;box-shadow:var(--shadow);padding:22px;text-align:left;color:var(--ink);min-height:208px;display:flex;flex-direction:column;align-items:flex-start;transition:transform .15s,box-shadow .15s}
+.room:hover{transform:translateY(-3px);box-shadow:0 18px 30px #21518a24}
+.room .emoji{font-size:2.25rem;line-height:1}
+.room .roomname{font-size:1.22rem;font-weight:900;margin-top:15px}
+.room .description{font-size:.89rem;color:var(--muted);margin-top:5px;flex:1}
+.room .count{font-size:.8rem;font-weight:800;color:#2760af;margin-top:13px}
+.room[data-room=math]{background:linear-gradient(155deg,#fff,#eef0ff)}
+.room[data-room=reading]{background:linear-gradient(155deg,#fff,#e7fff0)}
+.room[data-room=science]{background:linear-gradient(155deg,#fff,#e8f7ff)}
+.room[data-room=language]{background:linear-gradient(155deg,#fff,#fff2e6)}
+.room[data-room=creative]{background:linear-gradient(155deg,#fff,#fff0f9)}
+.room[data-room=calm]{background:linear-gradient(155deg,#fff,#ebfff7)}
+.play{margin-top:25px;background:white;border:1px solid #cfdeef;border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.playtop{display:flex;align-items:center;justify-content:space-between;background:#eff5ff;padding:17px clamp(16px,3vw,28px);gap:14px;flex-wrap:wrap}
+.playtop strong{font-size:1.1rem}.playtop span{font-size:.79rem;color:#3b669b;font-weight:800}
+.playbody{padding:clamp(20px,4vw,38px)}
+.pretitle{text-transform:uppercase;letter-spacing:.13em;color:#3569b0;font-size:.77rem;font-weight:900}
+.playbody h2{font-size:clamp(1.65rem,3vw,2.35rem);letter-spacing:-.045em;line-height:1.18;margin:11px 0 13px}
+.story{font-size:1.06rem;line-height:1.7;color:#425974;max-width:800px;margin-block:0 23px}
+.question{font-weight:800;margin:0 0 14px}
+.choices{display:grid;gap:11px}
+.choice{display:block;text-align:left;border:1px solid #c6d7ed;background:#f9fcff;border-radius:12px;padding:15px 16px;width:100%;color:#19304f}
+.choice:hover{border-color:#5c8fd1}.choice[aria-pressed=true]{border-color:#295dc2;background:#eaf2ff;box-shadow:inset 0 0 0 1px #295dc2}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.primary,.secondary{border-radius:11px;padding:12px 19px;font-weight:850;border:1px solid transparent;min-height:46px}
+.primary{background:#275bc1;color:#fff}.primary:hover{background:#194898}
+.secondary{background:white;color:#24539a;border-color:#b8cee9}.secondary:hover{background:#edf6ff}
+.feedback{padding:17px;margin-top:20px;border:1px solid #cbdcf4;border-radius:14px;background:#f1f6ff}
+.feedback.good{background:#e9fff4;border-color:#a5dfcb}
+.feedback strong{display:block;font-size:1.08rem;margin-bottom:5px}
+.coach{margin-top:28px;display:grid;grid-template-columns:1fr .8fr;gap:18px}
+.helper{border-radius:22px;background:#eaf2ff;border:1px solid #cddff3;padding:clamp(19px,3.6vw,30px)}
+.helper h2{margin:0 0 7px;letter-spacing:-.035em;font-size:1.6rem}
+.helper p{color:#526987;margin:5px 0 15px}
+.helper textarea{width:100%;min-height:105px;resize:vertical;border:1px solid #b6c9e0;border-radius:12px;padding:13px;background:white;color:var(--ink)}
+.helper .feedback{background:#fff}
+.promise{background:#152a53;color:white;border-radius:22px;padding:clamp(19px,3.5vw,30px)}
+.promise h2{font-size:1.65rem;line-height:1.2;letter-spacing:-.035em;margin:7px 0 12px}
+.promise p{color:#d9e7f7;font-size:.93rem}
+.promise .line{height:1px;background:#49618d;margin-block:19px}
+.promise .small{font-size:.83rem;color:#bcd4ed}
+footer{border-top:1px solid var(--line);padding:25px 0 40px;color:var(--muted);font-size:.84rem}
+@media(max-width:880px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-grid,.coach{grid-template-columns:1fr}.orbit{max-width:440px}}
+@media(max-width:540px){.rooms{grid-template-columns:1fr}.room{min-height:165px}.hero{padding-block:36px}.orbit{padding:17px}.nav-actions button{font-size:.73rem;padding:8px 10px}.identity b{font-size:.77rem}.identity small{font-size:.57rem}.room .roomname{margin-top:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><nav class="wrap"><a class="identity" href="#top"><span class="logo" aria-hidden="true">∞</span><span><b>INFINITE CLASSROOM</b><small>EVERCRAFT LEARNING WORLDS</small></span></a><div class="nav-actions"><button id="reset" type="button">Reset stars</button><button id="home" type="button">All rooms</button></div></nav></header>
+<section class="hero" id="top"><div class="wrap hero-grid"><div><div class="eyebrow">Six worlds. Endless questions.</div><h1>Curiosity opens<br>every door. ✨</h1><p>Step into Math Cave, climb the Reading Treehouse, launch experiments in Science Sky Lab, and explore three more worlds. Every challenge is a chance to think for yourself.</p></div><div class="orbit" aria-label="Friendly guide"><div class="face" aria-hidden="true">🤖</div><strong>Explore with Luma</strong><p>“I won't do your thinking for you. I'll help you discover your own brilliant ideas.”</p><div class="stars" aria-hidden="true">✦ ✦ ∞ ✦ ✦</div></div></div></section>
+<main class="wrap">
+<div class="statusbar"><div><strong>⭐ Your explorer board</strong><small>No account needed. Stars stay on this device only.</small></div><div class="progress-side"><span id="star-text" aria-live="polite">0 of 18 stars</span><div class="track" role="progressbar" aria-label="Challenges completed" aria-valuemin="0" aria-valuemax="18" aria-valuenow="0" id="progress"><div class="fill" id="fill"></div></div></div></div>
+<section aria-label="Learning worlds"><div class="sectionheading"><h2>Choose a learning world</h2><p>Three missions per world. Try any room, any time.</p></div><div class="rooms" id="rooms">
+<button class="room" data-room="math" type="button"><span class="emoji" aria-hidden="true">🪨</span><span class="roomname">Math Cave</span><span class="description">Patterns, puzzles, and number mysteries</span><span class="count" data-count="math">0 / 3 stars</span></button>
+<button class="room" data-room="reading" type="button"><span class="emoji" aria-hidden="true">🌳</span><span class="roomname">Reading Treehouse</span><span class="description">Stories, clues, and surprising meanings</span><span class="count" data-count="reading">0 / 3 stars</span></button>
+<button class="room" data-room="science" type="button"><span class="emoji" aria-hidden="true">🚀</span><span class="roomname">Science Sky Lab</span><span class="description">Experiments, predictions, and discovery</span><span class="count" data-count="science">0 / 3 stars</span></button>
+<button class="room" data-room="language" type="button"><span class="emoji" aria-hidden="true">🏰</span><span class="roomname">Language Tower</span><span class="description">Words, sentences, and ways to express ideas</span><span class="count" data-count="language">0 / 3 stars</span></button>
+<button class="room" data-room="creative" type="button"><span class="emoji" aria-hidden="true">🎨</span><span class="roomname">Creative Studio</span><span class="description">Characters, twists, and stories you imagine</span><span class="count" data-count="creative">0 / 3 stars</span></button>
+<button class="room" data-room="calm" type="button"><span class="emoji" aria-hidden="true">🌿</span><span class="roomname">Calm Meadow</span><span class="description">Patience, focus, and taking good care of yourself</span><span class="count" data-count="calm">0 / 3 stars</span></button>
+</div></section>
+<section class="play" id="play" hidden aria-label="Learning mission"><div class="playtop"><strong id="room-heading">Learning world</strong><span id="room-count">Mission 1 of 3</span></div><div class="playbody"><div id="mission" role="group" aria-label="Mission challenge"><div class="pretitle" id="depth"></div><h2 id="quest-title"></h2><p class="story" id="quest-story"></p><p class="question" id="quest-question"></p><div class="choices" id="choices" role="group" aria-label="Choose an answer"></div><div class="actions"><button type="button" class="primary" id="check" disabled>Check my thinking</button><button type="button" class="secondary" id="clue">Ask Luma for a clue</button><button type="button" class="secondary" id="next" hidden>Next mission</button></div><div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div></div><div id="finished" hidden><h2>🌟 You explored this whole world!</h2><p>Those stars are yours because you kept thinking. Pick another room, or come back and practice again.</p><button type="button" class="primary" id="explore">Explore another world</button></div></div></section>
+<section class="coach" aria-label="Homework help and learning promises"><div class="helper"><div class="eyebrow" style="color:#275db0">Homework Coach · hints, not answers</div><h2>Stuck on something from school?</h2><p>Bring your question here. Nothing is uploaded, and Luma won't reveal your homework answer. You do the final thinking.</p><label for="homework" style="display:block;font-weight:800;margin-bottom:8px">Write your question (optional)</label><textarea id="homework" placeholder="For example: I don't know how to start my fractions problem."></textarea><div class="actions"><button class="primary" type="button" id="guide">Help me get started</button><button class="secondary" type="button" id="clear">Clear question</button></div><div class="feedback" id="guide-result" role="status" aria-live="polite" hidden></div></div><aside class="promise"><div class="eyebrow">Our promise</div><h2>Real learning. No shortcuts.</h2><p>We help you notice clues, make a plan, try a solution, and explain your reasoning. You won't be given the answer to your schoolwork.</p><div class="line"></div><p class="small">18 original practice challenges. This early version uses authored lessons, not a live AI tutor. Stars are stored only in your browser on this device. Questions typed into Homework Coach are not saved or transmitted.</p><p class="small">Made for exploration. Parents and teachers remain the guides for real-world safety and sensitive questions.</p></aside></section>
+</main>
+<footer><div class="wrap">© Evercraft · Infinite Classroom learning preview · Privacy-first and no sign-in. For authored practice missions, explanations appear after you solve them. For real homework, only hints are provided.</div></footer>
+
+<script type="application/json" id="quest-data">
+[
+{"id":"math-1","room":"math","band":"Foundation","title":"The glowing number trail","story":"On the cave wall, crystals glow in this order: 3, 6, 9, __. The cave opens when you predict the next number.","question":"What number belongs next?","choices":["10","12","15"],"answer":1,"hint":"Look at how much is added each time.","why":"The pattern grows by 3 each time, so 9 + 3 = 12."},
+{"id":"math-2","room":"math","band":"Builder","title":"Supply packs for explorers","story":"Three explorer teams need 8 glow sticks each. Every team gets the same number.","question":"How many glow sticks are needed altogether?","choices":["11","24","32"],"answer":1,"hint":"Make three groups of eight, or use multiplication.","why":"Three groups of eight make 3 × 8 = 24 glow sticks."},
+{"id":"math-3","room":"math","band":"Frontier","title":"The mysterious x-door","story":"A door shows this puzzle: 3 × x + 4 = 19. The number x is hidden.","question":"Which value of x unlocks the door?","choices":["5","7","11"],"answer":0,"hint":"First remove the extra 4. Then split what remains into 3 equal groups.","why":"Subtract 4 from both sides to get 3 × x = 15. Dividing by 3 gives x = 5."},
+{"id":"reading-1","room":"reading","band":"Foundation","title":"The raincoat mystery","story":"Mika saw dark clouds outside, so she tucked a raincoat into her backpack. The sun was still shining when she left.","question":"Why did Mika pack the raincoat?","choices":["She thought rain might come later.","She wanted to keep her backpack heavy.","It was already snowing."],"answer":0,"hint":"What did Mika notice before she packed?","why":"Mika used clues from the clouds to prepare for possible rain."},
+{"id":"reading-2","room":"reading","band":"Builder","title":"The lantern on the bridge","story":"A traveler dropped a lantern on a dark path. Another traveler stopped, picked it up, and returned it, even though it slowed the journey.","question":"Which theme fits this little story?","choices":["Being quickest is always best.","Helping someone matters even when it's inconvenient.","Lanterns can speak."],"answer":1,"hint":"Which choice explains the character's decision?","why":"The traveler chose to help at a personal cost, which supports a theme of kindness."},
+{"id":"reading-3","room":"reading","band":"Frontier","title":"Two versions of a race","story":"Two friends remember yesterday's race differently. Both are certain. A photo shows only the finish line, not the entire race.","question":"What's the best way to understand what happened?","choices":["Assume the louder person is right.","Pretend the picture proves every moment.","Compare accounts and evidence, and say what is still unknown."],"answer":2,"hint":"Think about what the photo actually shows and what it leaves out.","why":"Good readers compare points of view and evidence instead of pretending a partial view tells the entire story."},
+{"id":"science-1","room":"science","band":"Foundation","title":"The humming ruler","story":"A ruler hangs over the edge of a table. When its end is flicked safely, the ruler wiggles and makes a sound.","question":"What creates the sound?","choices":["Vibrations moving through the air.","The color of the ruler.","The ruler reading your mind."],"answer":0,"hint":"What did you see the ruler doing while you heard sound?","why":"Vibrating objects disturb nearby air, producing sound waves."},
+{"id":"science-2","room":"science","band":"Builder","title":"Seeds on two windowsills","story":"Two identical seeds get equal water and soil, but one is placed near a bright window and the other in deep shade.","question":"What is the main variable being changed?","choices":["The seed type.","The amount of light.","The amount of water."],"answer":1,"hint":"Which condition is different between the two seeds?","why":"The two plants differ in light exposure, allowing the learner to compare that factor."},
+{"id":"science-3","room":"science","band":"Frontier","title":"The mystery magnet","story":"You want to test which material a magnet attracts best. You have paper clips, a plastic spoon, and a wooden stick.","question":"Which is the fairest test?","choices":["Change the magnet and distance every time.","Hold the same magnet at the same distance from each material and record what happens.","Only test the object you expect to work."],"answer":1,"hint":"Keep as many things the same as you can while changing the material.","why":"A fair comparison controls the magnet and distance, so the material is the main change."},
+{"id":"language-1","room":"language","band":"Foundation","title":"The action-word door","story":"The tower guardian asks you to find the action word in this sentence: The fox jumps over a log.","question":"Which word tells what the fox does?","choices":["Fox","Jumps","Log"],"answer":1,"hint":"Look for a word showing what happens, rather than a person or thing.","why":"Jumps is the verb, which names the action in the sentence."},
+{"id":"language-2","room":"language","band":"Builder","title":"Punctuation power","story":"A character wants to ask a question: Where did the stars go","question":"Which punctuation ends the question?","choices":["A question mark (?)","A comma (,)","A period (.)"],"answer":0,"hint":"Choose the mark that shows someone is asking, not telling.","why":"Questions normally end with a question mark: Where did the stars go?"},
+{"id":"language-3","room":"language","band":"Frontier","title":"The clearer message","story":"A scientist wrote: It made the thing go fast. The reader cannot tell what it or the thing refers to.","question":"Which revision is most precise?","choices":["It really did the stuff quickly.","The wind pushed the model sailboat across the pond.","Some things moved."],"answer":1,"hint":"Replace vague words with who or what is actually acting.","why":"The revised sentence identifies the wind, the sailboat, and the movement clearly."},
+{"id":"creative-1","room":"creative","band":"Foundation","title":"The little dragon's wish","story":"You're writing a story about a small dragon who lives beside a mountain and dreams of visiting the ocean.","question":"Which detail gives the dragon a goal?","choices":["The dragon wants to see the ocean.","The dragon is small.","The mountain is rocky."],"answer":0,"hint":"A goal is something your character wants to do or become.","why":"Wanting to visit the ocean gives the character a reason to begin an adventure."},
+{"id":"creative-2","room":"creative","band":"Builder","title":"An unexpected door","story":"Your hero reaches a locked library. You've built up a mystery about who owns the key.","question":"Which twist creates a useful new choice?","choices":["Nothing changes and everyone goes home.","The key is found, but the hero must choose whether to share the secret.","The library suddenly disappears with no explanation."],"answer":1,"hint":"A good twist can make a character choose between meaningful possibilities.","why":"A key plus a new decision moves the story forward and creates character development."},
+{"id":"creative-3","room":"creative","band":"Frontier","title":"A stronger ending","story":"A character has spent the story learning to listen to others. In the final scene, a teammate disagrees with the plan.","question":"Which ending best shows the character has changed?","choices":["The character ignores everyone exactly as before.","The character magically knows everything.","The character pauses, listens, and improves the plan together."],"answer":2,"hint":"Show growth through the character's actions, not just a narrator's claim.","why":"The ending proves learning by showing changed behavior in a difficult moment."},
+{"id":"calm-1","room":"calm","band":"Foundation","title":"A frustrating puzzle","story":"You've tried a puzzle several times and feel annoyed. You're safe, but your brain needs a moment.","question":"What's a helpful next step?","choices":["Take a short break, breathe, and return when ready.","Shout at someone nearby.","Decide you'll never learn anything."],"answer":0,"hint":"Choose a response that gives you space to think again.","why":"A short pause can help you feel settled enough to try a different approach."},
+{"id":"calm-2","room":"calm","band":"Builder","title":"The courage to ask","story":"A school task is confusing and you're worried about asking for help.","question":"Which choice supports learning?","choices":["Hide every question forever.","Ask a trusted adult or teacher to explain the first step.","Copy someone else's answer without understanding."],"answer":1,"hint":"You can get support without handing over your thinking.","why":"A trusted helper can clarify a step while you still do the work yourself."},
+{"id":"calm-3","room":"calm","band":"Frontier","title":"One thing at a time","story":"You have a reading assignment, a math worksheet, and a creative project. Doing them all at once feels overwhelming.","question":"Which strategy could help you focus?","choices":["Start three tasks and switch every ten seconds.","Ignore everything forever.","Choose one small next step, finish it, then check what's next."],"answer":2,"hint":"Big projects often become easier after you make one small, clear decision.","why":"Breaking work into manageable steps can make a busy task list feel more workable."}
+]
+</script>
+<script>
+(()=>{
+'use strict';
+const QUESTS=Object.freeze(JSON.parse(document.getElementById('quest-data').textContent));
+const rooms={
+ math:'🪨 Math Cave',reading:'🌳 Reading Treehouse',science:'🚀 Science Sky Lab',
+ language:'🏰 Language Tower',creative:'🎨 Creative Studio',calm:'🌿 Calm Meadow'
+};
+const key='evercraft.infinite-classroom.stars.v1';
+let completed=new Set();
+try{const old=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(old))completed=new Set(old.filter(x=>QUESTS.some(q=>q.id===x)))}catch{}
+let activeRoom=null,activeQuest=null,choice=null,solved=false,guideStep=0;
+const el=id=>document.getElementById(id);
+function update(){
+ el('star-text').textContent=completed.size+' of '+QUESTS.length+' stars';
+ el('progress').setAttribute('aria-valuenow',String(completed.size));
+ el('progress').setAttribute('aria-valuemax',String(QUESTS.length));
+ el('fill').style.width=(100*completed.size/QUESTS.length)+'%';
+ for(const r of Object.keys(rooms))el('rooms').querySelector('[data-count='+r+']').textContent=
+  QUESTS.filter(q=>q.room===r&&completed.has(q.id)).length+' / 3 stars';
+}
+function store(){try{localStorage.setItem(key,JSON.stringify([...completed]))}catch{}}
+function feedback(title,content,good){
+ const node=el('feedback');node.replaceChildren();
+ const b=document.createElement('strong');b.textContent=title;
+ const p=document.createElement('span');p.textContent=content;node.append(b,p);
+ node.hidden=false;node.classList.toggle('good',Boolean(good));
+}
+function lesson(){
+ const all=QUESTS.filter(q=>q.room===activeRoom);
+ activeQuest=all.find(q=>!completed.has(q.id))||null;
+ el('mission').hidden=!activeQuest;el('finished').hidden=!!activeQuest;
+ el('feedback').hidden=true;el('next').hidden=true;el('check').disabled=true;
+ el('clue').hidden=false;choice=null;solved=false;
+ el('room-heading').textContent=rooms[activeRoom];
+ el('room-count').textContent=activeQuest?'Mission '+(all.indexOf(activeQuest)+1)+' of 3':'All 3 missions complete';
+ if(!activeQuest)return;
+ el('depth').textContent=activeQuest.band+' · Explorer challenge';
+ el('quest-title').textContent=activeQuest.title;
+ el('quest-story').textContent=activeQuest.story;
+ el('quest-question').textContent=activeQuest.question;
+ const holder=el('choices');holder.replaceChildren();
+ activeQuest.choices.forEach((option,i)=>{
+  const btn=document.createElement('button');btn.type='button';btn.className='choice';
+  btn.textContent=String.fromCharCode(65+i)+'. '+option;
+  btn.setAttribute('aria-pressed','false');
+  btn.addEventListener('click',()=>{
+   if(solved)return;choice=i;
+   holder.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+   el('check').disabled=false;
+  });
+  holder.append(btn);
+ });
+}
+function openRoom(room){
+ if(!rooms[room])return;
+ activeRoom=room;el('play').hidden=false;
+ lesson();
+ el('play').scrollIntoView({behavior:'smooth',block:'start'});
+}
+el('rooms').querySelectorAll('[data-room]').forEach(btn=>btn.addEventListener('click',()=>openRoom(btn.dataset.room)));
+el('check').addEventListener('click',()=>{
+ if(!activeQuest||choice===null||solved)return;
+ if(choice===activeQuest.answer){
+  solved=true;completed.add(activeQuest.id);store();update();
+  el('check').disabled=true;el('clue').hidden=true;el('next').hidden=false;
+  feedback('⭐ You earned a star!',activeQuest.why,true);
+ }else feedback('Not quite. Keep exploring!',activeQuest.hint,false);
+});
+el('clue').addEventListener('click',()=>{if(activeQuest&&!solved)feedback('💡 Luma’s clue',activeQuest.hint,false)});
+el('next').addEventListener('click',()=>{lesson();el('play').scrollIntoView({behavior:'smooth',block:'start'})});
+el('explore').addEventListener('click',()=>{el('play').hidden=true;el('rooms').scrollIntoView({behavior:'smooth',block:'start'})});
+el('home').addEventListener('click',()=>{el('play').hidden=true;el('rooms').scrollIntoView({behavior:'smooth',block:'start'})});
+el('reset').addEventListener('click',()=>{
+ if(!confirm('Start over and clear the stars saved on this device?'))return;
+ completed.clear();store();update();
+ if(activeRoom)lesson();
+});
+el('guide').addEventListener('click',()=>{
+ const steps=[
+  ['🔎 Find the question','What is the problem actually asking you to figure out? Underline the important words and tell yourself what you already know.'],
+  ['🧩 Make a small plan','Can you draw a picture, list known facts, spot a pattern, or solve a simpler version first? Choose just one approach to try.'],
+  ['🛠️ Try your own step','Write your next step yourself. If it does not work, notice exactly where you got stuck and try a different route.'],
+  ['🧠 Check your reasoning','Does your work make sense? Explain the path you took. You own the final answer. If you need another hint, ask your teacher or trusted adult.']
+ ];
+ const item=steps[guideStep%steps.length];guideStep++;
+ const pane=el('guide-result');pane.replaceChildren();
+ const b=document.createElement('strong');b.textContent=item[0];
+ const p=document.createElement('span');p.textContent=item[1];
+ pane.append(b,p);pane.hidden=false;
+});
+el('clear').addEventListener('click',()=>{el('homework').value='';el('guide-result').hidden=true;guideStep=0});
+update();
+})();
+</script>
+</body>
+</html>

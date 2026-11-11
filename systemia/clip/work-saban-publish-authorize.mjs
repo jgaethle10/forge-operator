@@ -1,6 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import {assertEvercraftFamilySocialSafe} from './family-social-safety.mjs';
 
 export const WORK_SABAN_CAMPAIGN='work-saban-clip-evergreen-20261030';
+export const WORK_SABAN_AUTHORITY_REF='founder-directive:2026-10-30:work-saban-evercraft-clip-company-rotation';
+export const WORK_SABAN_AUTHORITY_PATH='systemia/clip/authority/work-saban-corporate-rotation.json';
 export const WORK_SABAN_SUBJECT='system:work-saban-clip-publisher';
 export const WORK_SABAN_RESOURCE='brand:evercraft-work-saban';
 const SCOPE='home.clip.publish';
@@ -14,7 +18,8 @@ export function validateWorkSabanClipAuthority(receipt,now=new Date()){
     throw Error('work_saban_clip_campaign_or_subject_mismatch');
   if(JSON.stringify(receipt.scopes)!==JSON.stringify([SCOPE])||JSON.stringify(receipt.resource_refs)!==JSON.stringify([WORK_SABAN_RESOURCE]))
     throw Error('work_saban_clip_scope_mismatch');
-  if(!clean(receipt.issuer_ref)||!clean(receipt.authority_receipt_ref))throw Error('work_saban_clip_issuer_receipt_missing');
+  if(clean(receipt.issuer_ref)!=='authority:evercraft-operator'||clean(receipt.authority_receipt_ref)!==WORK_SABAN_AUTHORITY_REF)
+    throw Error('work_saban_clip_issuer_receipt_missing_or_unrecognized');
   if(EXCLUDED.some(b=>!(receipt.excluded_brand_keys||[]).includes(b)))throw Error('work_saban_clip_brand_exclusions_missing');
   const b=receipt.boundaries||{};
   if(b.channel_scope!=='verified_evercraft_corporate_only'||b.paid_spend_usd!==0||
@@ -24,8 +29,17 @@ export function validateWorkSabanClipAuthority(receipt,now=new Date()){
   const start=Date.parse(receipt.starts_at),end=Date.parse(receipt.ends_at),t=now.getTime();
   if(!Number.isFinite(start)||!Number.isFinite(end)||start>=end||t<start||t>=end)
     throw Error('work_saban_clip_authority_expired_or_future');
-  // Editorial authorization is not a credential. Only a current issuer-backed receipt may install a grant.
+  // Founder approval authorizes scoped content, NOT a Facebook credential or provider acceptance.
   return receipt;
+}
+export function loadWorkSabanClipAuthority({repoRoot,now=new Date()}={}){
+  if(!repoRoot)throw Error('work_saban_clip_repo_root_missing');
+  const root=fs.realpathSync(path.resolve(repoRoot));
+  const file=path.resolve(root,WORK_SABAN_AUTHORITY_PATH);
+  if(!file.startsWith(root+path.sep))throw Error('work_saban_clip_authority_path_escape');
+  const actual=fs.realpathSync(file);
+  if(!actual.startsWith(root+path.sep))throw Error('work_saban_clip_authority_symlink_escape');
+  return validateWorkSabanClipAuthority(JSON.parse(fs.readFileSync(actual,'utf8')),now);
 }
 export function installWorkSabanClipGrant({passport,receipt,now=new Date()}={}){
   if(!passport?.issueGrant)throw Error('work_saban_clip_passport_missing');

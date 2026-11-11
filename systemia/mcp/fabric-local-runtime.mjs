@@ -41,6 +41,7 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignalInquiryAlertDispatcher } from './signal-public-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import {createPartnerApplicationHandler,createPartnerApplicationDispatcher} from './partners-public-inquiry.mjs';
@@ -411,6 +412,8 @@ export async function startFabricLocalRuntime({
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
   studioLeadsDir='',
+  signalLeadsDir=process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'',
+  signalIntakeKey=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||'',
   findMyPartLeadsDir='',
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
   partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',
@@ -429,6 +432,9 @@ export async function startFabricLocalRuntime({
   const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
   const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
     onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
+  const signalAlertDispatcher=createSignalInquiryAlertDispatcher({folder:signalLeadsDir||undefined,key:signalIntakeKey});
+  const signalInquiry=createSignalBuyerInquiryHandler({storeDir:signalLeadsDir||undefined,key:signalIntakeKey,
+    onAlertQueued:()=>{if(signalAlertDispatcher.enabled)void signalAlertDispatcher.dispatch().catch(()=>{});}});
   const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey});
   const findMyPartInquiry=createFindMyPartInquiryHandler({storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
     onAlertQueued:()=>{if(findMyPartAlertDispatcher.enabled)void findMyPartAlertDispatcher.dispatch().catch(()=>{});}});
@@ -807,6 +813,19 @@ export async function startFabricLocalRuntime({
         if(req.method==='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
         return await partnerApplication(req,res);
       }
+
+      // Signal buyer requests are encrypted intake receipts, NOT payment orders.
+      const signalRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(signalRoute==='/api/signal/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        const state=signalBuyerIntakeReadiness({storeDir:signalLeadsDir||undefined,key:signalIntakeKey});
+        const caller=String(req.headers.origin||'');
+        const cors=(caller==='https://jgaethle10.github.io'||caller==='https://fabric.systemiacommandcenters.com')
+          ?{'access-control-allow-origin':caller,'vary':'origin'}:{'vary':'origin'};
+        return sendJson(res,200,{schema:'evercraft.signal.intake-readiness.v1',
+          ...state,payment_ready:false,payment_verified:false},cors);
+      }
+      if(signalRoute==='/api/signal/inquiry')return await signalInquiry(req,res);
 
       // A separately bounded owned route accepts only consented FindMyPart part briefs.
       // Customer content cannot create a paid order or an executable mission.
@@ -1199,6 +1218,23 @@ export async function startFabricLocalRuntime({
         const directOffer=publicPaymentOffer(slug);
         const capabilityKey=offerPurchaseKeyForSlug(slug);
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        // A published Signal SKU does not confer payment authority before scope
+        // approval and exact provider-accepted native checkout evidence.
+        if(directOffer?.native_order_enabled===false){
+          return sendJson(res,409,{
+            ok:false,
+            error:'offer_requires_scope_acceptance',
+            authority:'Evercraft Payments',
+            offer_key:directOffer.offer_key,
+            amount_cents:directOffer.amount_cents,
+            currency:directOffer.currency,
+            checkout_ready:false,
+            order_created:false,
+            fulfillment_release:false,
+            scope_url:'https://jgaethle10.github.io/forge-operator/signal/#request'
+          });
+        }
+
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
@@ -1705,6 +1741,10 @@ export async function startFabricLocalRuntime({
     studioAlertDispatcher.start();
     void studioAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(signalAlertDispatcher.enabled){
+    signalAlertDispatcher.start();
+    void signalAlertDispatcher.dispatch().catch(()=>{});
+  }
   if(findMyPartAlertDispatcher.enabled){
     findMyPartAlertDispatcher.start();
     void findMyPartAlertDispatcher.dispatch().catch(()=>{});
@@ -1734,6 +1774,7 @@ export async function startFabricLocalRuntime({
     },
     close:async()=>{
       studioAlertDispatcher.stop();
+      signalAlertDispatcher.stop();
       findMyPartAlertDispatcher.stop();
       partnerAlertDispatcher.stop();
       await faieSurface?.close();

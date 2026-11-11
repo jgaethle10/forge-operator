@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "ai-boardroom-financial-modeling",
+  "imprint": "The Scenario Room",
+  "purpose": "Show how a business decision changes when costs, demand and other assumptions change.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. A forecast can look authoritative until one number moves. The Scenario Room pulls the hidden levers into view so a team can reason in ranges, not illusions.",
+    "core_belief": "The assumptions are part of the answer.",
+    "customer_emotion": "control over uncertainty"
+  },
+  "signature_phrase": "Change the assumptions. See what changes.",
+  "personality": {
+    "tone": "analytical, calm, precise; numbers with interpretation, never certainty theater",
+    "principles": [
+      "Scenarios are not forecasts of guaranteed outcomes",
+      "Data provenance and sensitivity first",
+      "Explicit professional advice limits"
+    ]
+  },
+  "design_system": {
+    "background": "#162329",
+    "panel": "#223940",
+    "ink": "#f0f6ec",
+    "muted": "#c6d4cf",
+    "accent": "#adcfb6",
+    "secondary": "#eed7a7",
+    "mark": "scenario-grid",
+    "typography": "serif decision headlines paired with mono-spaced scenario labels",
+    "motif": "scenario matrix, branching lines and balanced ledger rules"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
+  }
+}

@@ -1,0 +1,19 @@
+# Evercraft AI Boardroom | Deep Dive
+Independent Evercraft commercial product | part of the Evercraft OS portfolio.
+Customer page: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/
+Product definition: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/product.json
+Exact Stripe SKU: AI Boardroom · Deep Dive with Financial Modeling
+Price: USD 500 (one-time scoped service)
+Ideal buyer: Operators comparing business plans whose assumptions materially affect the decision
+Problem: A business choice looks attractive until the assumptions change.
+Promise: See the financial assumptions before they surprise you.
+Scoped deliverable: A written review and agreed scenario table with assumptions, sensitivity discussion and limitations
+Required buyer inputs: Decision, scenario questions, available cost and revenue assumptions and approved source data
+Agreement needed: Scenario variables, number of cases, review boundaries, deliverable and timeline
+Not included: No guaranteed projections, investment returns, valuation certification or licensed financial advice
+Intent match examples:
+- business financial scenario modeling
+- sensitivity analysis for a startup decision
+- AI Boardroom financial deep dive
+
+Evercraft Payments is the canonical order-authority target; Systemia Stripe handles the existing exact-product checkout at https://buy.stripe.com/3cIbJ2feSfIVcDO1I84AU09. Scope, capacity and timeline must be agreed before payment. Provider-paid receipts are reconciled manually. The public product and its checkout are not proof of a completed sale, automated fulfillment or production integration with Evercraft OS.

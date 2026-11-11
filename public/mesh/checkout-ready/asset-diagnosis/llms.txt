@@ -1,0 +1,19 @@
+# Evercraft Asset Diagnosis
+Independent Evercraft commercial product | part of the Evercraft OS portfolio.
+Customer page: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/
+Product definition: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/product.json
+Exact Stripe SKU: Asset Diagnosis
+Price: USD 149 (one-time scoped service)
+Ideal buyer: Owners of an existing website, workflow, app or other digital or operational asset
+Problem: An asset exists but its next useful fix or opportunity is unclear.
+Promise: Before you rebuild it, find out what's actually wrong.
+Scoped deliverable: A written diagnostic summary identifying observed issues, evidence limits and practical next actions for the agreed asset
+Required buyer inputs: One asset URL or description, proof of authorized access, business goal, observed issue and supporting non-sensitive material
+Agreement needed: Named asset, bounded questions, evidence available, written findings and agreed review date
+Not included: No full rebuild, unapproved production access, guaranteed commercial lift or forensic certification
+Intent match examples:
+- why is my business website not converting
+- digital asset audit with recommendations
+- diagnose a broken business workflow
+
+Evercraft Payments is the canonical order-authority target; Systemia Stripe handles the existing exact-product checkout at https://buy.stripe.com/dRm9AU0jYdANdHS72s4AU0a. Scope, capacity and timeline must be agreed before payment. Provider-paid receipts are reconciled manually. The public product and its checkout are not proof of a completed sale, automated fulfillment or production integration with Evercraft OS.

@@ -36,7 +36,7 @@ function loadRows(repoRoot,campaignPath=CAP){
   const q=JSON.parse(fs.readFileSync(file,'utf8'));
   if(q.schema!=='evercraft.marketing.owner-review-queue.v1'||q.campaign_id!==WORK_SABAN_CAMPAIGN||
      q.owner_organic_distribution_approved!==true||q.publication_authority!==false||
-     q.platform_connections_verified!==false)
+     typeof q.platform_connections_verified!=='boolean')
     throw Error('work_saban_campaign_boundary_invalid');
   const rows=q.entries.filter(e=>e.platform==='facebook'&&e.destination==='facebook-page');
   if(rows.length!==4)throw Error('work_saban_four_facebook_slots_required');

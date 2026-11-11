@@ -62,6 +62,73 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  const ui=await fetch(base+'/worlds/');
  assert.equal(ui.status,200);
  assert.match(await ui.text(),/EVERCRAFT/);
+ // A plain static server accepted these nested index paths, but the owned vault
+ // previously treated them as directories and incorrectly returned 404.
+ const heritage=await fetch(base+'/worlds/heritage/');
+ assert.equal(heritage.status,200,'owned vault must serve the heritage walkthrough');
+ assert.match(await heritage.text(),/EDUCATIONAL SCHEMATIC/);
+ assert.match(heritage.headers.get('content-type')||'',/text\/html/);
+ const app=await fetch(base+'/worlds/heritage/app.mjs');
+ assert.equal(app.status,200);
+ assert.match(app.headers.get('content-type')||'',/text\/javascript/);
+ assert.match(await app.text(),/buildHeritageDrawList/);
+ const scene=await fetch(base+'/worlds/heritage/scene.mjs');
+ assert.equal(scene.status,200);
+ assert.match(await scene.text(),/pavlopetri-learning-scene-v1/);
+ // The external edge leases only /worlds/. Reuse one canonical atlas data
+ // source through an exact two-file same-origin alias, not a second source copy.
+ const atlas=await fetch(base+'/worlds/heritage/atlas/');
+ assert.equal(atlas.status,200,'same-origin atlas route missing');
+ assert.match(await atlas.text(),/SUBMERGED HERITAGE ATLAS/);
+ const sites=await fetch(base+'/worlds/heritage/atlas/sites.geojson');
+ assert.equal(sites.status,200);
+ assert.match(sites.headers.get('content-type')||'',/application\/geo\+json/);
+ const data=await sites.json();
+ assert.equal(data.type,'FeatureCollection');
+ assert.equal(data.features.length,7);
+ assert.equal((await fetch(base+'/worlds/heritage/atlas/nonexistent.json')).status,404);
+ assert.equal((await fetch(base+'/submerged-heritage/')).status,404,'vault must not expose unrelated static directories');
+
+ // Hidden World uses the same owned /worlds/ asset boundary, not a second host.
+ const hiddenIndex=await fetch(base+'/worlds/hidden-world/');
+ assert.equal(hiddenIndex.status,200,'Hidden World directory index should resolve');
+ assert.match(await hiddenIndex.text(),/Hidden World Atlas/);
+ const hiddenExhibit=await fetch(base+'/worlds/hidden-world/yakima-standalone.html');
+ assert.equal(hiddenExhibit.status,200);
+ assert.match(await hiddenExhibit.text(),/scene-ready/);
+ const hiddenEvidence=await fetch(base+'/worlds/hidden-world/yakima-evidence.html');
+ assert.equal(hiddenEvidence.status,200);
+ assert.match(await hiddenEvidence.text(),/Connected tunnels established by the records reviewed/);
+ const lund=await fetch(base+'/worlds/hidden-world/lund-building.html');
+ assert.equal(lund.status,200,'Lund exhibit route should resolve from owned vault');
+ assert.match(lund.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await lund.text(),/National Register nomination PDF/);
+ const titan=await fetch(base+'/worlds/hidden-world/titan-i-1962.html');
+ assert.equal(titan.status,200);
+ assert.match(titan.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await titan.text(),/Original educational SVG/);
+ const titanEvidence=await fetch(base+'/worlds/hidden-world/titan-i-1962-evidence.v1.json');
+ assert.equal(titanEvidence.status,200);
+ assert.match(titanEvidence.headers.get('content-type')||'',/^application\/json/);
+ const titanData=await titanEvidence.json();
+ assert.equal(titanData.schema,'evercraft.hidden-world.cold-war-evidence.v1');
+ assert.equal(titanData.broad_regions.every(x=>x.actual_complex_coordinates===null&&x.open_to_public===false),true);
+
+
+ const hiddenCsv=await fetch(base+'/worlds/hidden-world/hidden_world_atlas_v1.csv');
+ assert.equal(hiddenCsv.status,200);
+ assert.match(hiddenCsv.headers.get('content-type')||'',/^text\/csv/);
+ assert.match(await hiddenCsv.text(),/yakima,/);
+ const hiddenLedger=await fetch(base+'/worlds/hidden-world/yakima-evidence-ledger.v1.json');
+ assert.equal(hiddenLedger.status,200);
+ assert.match(hiddenLedger.headers.get('content-type')||'',/^application\/json/);
+ const ledger=await hiddenLedger.json();
+ assert.equal(ledger.schema,'evercraft.hidden-world.evidence-ledger.v1');
+ assert.equal(ledger.records.length,7);
+ assert.equal(ledger.records.every(r=>r.geometry_verified===false&&r.connected_tunnel_verified===false&&r.recorded_coordinates===null),true);
+ assert.equal((await fetch(base+'/worlds/hidden-world/.git/')).status,404);
+
+
  const health=await fetch(base+'/worlds/api/health');
  assert.equal(health.headers.get('access-control-allow-origin'),null);
  assert.equal((await request(base+'/worlds/api/worlds','POST',{scene_token:'garbage'})).status,422);

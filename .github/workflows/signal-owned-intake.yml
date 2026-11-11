@@ -1,0 +1,94 @@
+name: Evercraft Signal owned buyer intake
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/signal-public-inquiry.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'public/signal/**'
+      - 'tests/signal-owned-intake.test.mjs'
+      - 'scripts/signal-owner-inbox.mjs'
+      - 'tests/signal-paid-scope.test.mjs'
+      - '.github/workflows/signal-owned-intake.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/signal-public-inquiry.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'public/signal/**'
+      - 'tests/signal-owned-intake.test.mjs'
+      - 'scripts/signal-owner-inbox.mjs'
+      - 'tests/signal-paid-scope.test.mjs'
+      - '.github/workflows/signal-owned-intake.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  encrypted-intake-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test owned encrypted intake, buyer form and existing payment guard
+        run: |
+          node --check systemia/mcp/signal-public-inquiry.mjs
+          node --check scripts/signal-owner-inbox.mjs
+          node --check systemia/mcp/fabric-local-runtime.mjs
+          node --test tests/signal-owned-intake.test.mjs tests/signal-paid-scope.test.mjs tests/signal-owned-payment-route.test.mjs
+      - name: No raw secrets or processor links in public page
+        run: |
+          test -s public/signal/index.html
+          test -s public/signal/scope-request.mjs
+          ! grep -Eqi 'buy\.stripe\.com|sk_live_|rk_live_' public/signal/index.html
+
+  read-only-runtime-observation:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: encrypted-intake-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Public-safe Signal intake readiness GET only
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const url='https://fabric.systemiacommandcenters.com/api/signal/readiness';
+          let result={schema:'evercraft.signal.intake-public-observation.v1',
+            observed_at:new Date().toISOString(),route:url,
+            http:null,intake_available:false,live_runtime_verified:false,
+            payments_verified:false,orders_created:0};
+          try{
+            const response=await fetch(url,{
+              headers:{accept:'application/json', 'user-agent':'Evercraft-Signal-Readiness-Observation/1.0'},
+              signal:AbortSignal.timeout(12000),redirect:'error'
+            });
+            result.http=response.status;
+            const data=await response.json().catch(()=>null);
+            if(response.ok&&data?.schema==='evercraft.signal.intake-readiness.v1'){
+              result.live_runtime_verified=true;
+              result.intake_available=data.intake_available===true;
+            }
+          }catch(e){result.error='unavailable_or_unverified'}
+          fs.mkdirSync('artifacts/signal-intake',{recursive:true});
+          fs.writeFileSync('artifacts/signal-intake/readiness.json',JSON.stringify(result,null,2)+'\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            '## Signal owned intake readiness\n\n'+
+            'Live route verified: **'+result.live_runtime_verified+'**\n\n'+
+            'Consent form accepting new requests: **'+result.intake_available+'**\n\n'+
+            'Payments verified: **false**\n\n'+
+            'Read-only GET only. No customer data, charge, or test order submitted.\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signal-intake-readiness-receipt
+          path: artifacts/signal-intake/readiness.json
+          if-no-files-found: error
+          retention-days: 14
