@@ -58,12 +58,25 @@ This is proposed creative copy, not a published external ad or guarantee of spec
 - No credentials, client private data, or external account access via casual email.
 - Evercraft OS appears as the parent endorsement; the customer is buying the stand-alone service.
 
+## Preliminary independent name-use screening (November 10, 2026)
+**Result: FLAG FOR FOUNDER REVIEW, NOT A LEGAL CONCLUSION.** A quick public web search found multiple existing uses of the exact phrase **“The Weekly Signal”** as newsletter or editorial brands. One especially adjacent example operates in the marketing-content space. This creates a meaningful risk of the new name being confused with a newsletter rather than clearly communicating a done-for-you weekly social service.
+
+Sources checked:
+- [Marketer in the Loop — Introducing The Weekly Signal (September 13, 2026)](https://mktrintheloop.com/p/introducing-the-weekly-signal): marketing-oriented weekly editorial series.
+- [404 Signal — The Weekly Signal](https://404signal.com/newsletter/): technology and work newsletter.
+- [TechSignal HQ — The Weekly Signal](https://techsignalhq.com/): another weekly newsletter brand.
+- [WorkforceSignal — The Weekly Signal](https://workforcesignal.com/newsletter): weekly tech labor market bulletin.
+
+**Creative assessment:** The *purpose*, one-week customer offer and navy/coral cadence concept are stronger than the candidate name's current distinctiveness. Consider changing the name while preserving or refining the creative story and core promise. The supplied links are public-use signals, **not** trademark database findings, proof of infringement, or a substitute for professional name clearance. No decision on the name has been made for the founder.
+
+**Founder decision to capture:** Keep the working name despite this risk, request a distinctive alternative, or hold name approval while reviewing story/visual direction separately. Never treat approval of the mood board as automatic approval of legal name usage.
+
 ## Review rubric to capture verbatim
 Score each 1–5 or mark **not assessed**. Ratings can be added without implying formal approval.
 
 | Dimension | Question | Score/decision |
 | --- | --- | --- |
-| Identity / name | Is The Weekly Signal distinctive, memorable and appropriate? | Pending |
+| Identity / name | Is The Weekly Signal distinctive, memorable and appropriate given documented public-use overlap? | Pending, preliminary conflict flagged |
 | Story | Does its origin narrative sound credible and worth telling? | Pending |
 | Purpose | Does the one-week service solve a real, clearly stated problem? | Pending |
 | Voice | Is it inviting and professional without sounding generic? | Pending |
