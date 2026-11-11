@@ -12,6 +12,9 @@ const HERE=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(HERE,'../..');
 const PIN='a'.repeat(40),ID='b'.repeat(32),NONCE='c'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
+const fakeSessionProbe=()=>({detached_new_session_reported:true,
+  new_session_child_same_cgroup:true,child_exited_and_reaped:true,
+  model_execution_authorized:false});
 const fakeScopeResources=file=>{
   if(file.endsWith('/memory.max'))return '268435456';
   if(file.endsWith('/pids.max'))return '12';
@@ -119,24 +122,26 @@ test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
   const r=inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
     procCgroup:'0::/user.slice/user-1000.slice/'+UNIT,
-    readFile:fakeScopeResources
+    readFile:fakeScopeResources,sessionProbe:fakeSessionProbe
   });
   assert.equal(r.actual_unit_member,true);
   assert.equal(r.resource_limits_read_back,true);
   assert.equal(r.cpu_quota_exact,true);
+  assert.equal(r.new_session_child_same_cgroup,true);
+  assert.equal(r.new_session_child_reaped,true);
   assert.equal(r.model_inference_executed,false);
   assert.throws(()=>inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
     procCgroup:'0::/user.slice/'+UNIT+'-fake',
-    readFile:fakeScopeResources
+    readFile:fakeScopeResources,sessionProbe:fakeSessionProbe
   }),/EXACT_LEAF_SCOPE_MEMBERSHIP_REQUIRED/);
   assert.throws(()=>inspectScopedChild({
     scopeId:UNIT,nonce:NONCE,
     procCgroup:'5:cpu:/user.slice/'+UNIT,
-    readFile:fakeScopeResources
+    readFile:fakeScopeResources,sessionProbe:fakeSessionProbe
   }),/UNIFIED_CGROUP_REQUIRED/);
   assert.throws(()=>inspectScopedChild({
-    scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources
+    scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources,sessionProbe:fakeSessionProbe
   }),/INVALID_SYNTHETIC_SCOPE_INPUT/);
 });
 test('unapproved scope canary does not even run preflight',()=>{
@@ -165,7 +170,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
     const gotUnit=args.find(x=>x.startsWith('--unit=')).slice(7);
     const nonce=args.at(-1);
     const payload=inspectScopedChild({scopeId:gotUnit,nonce,
-      procCgroup:'0::/user.slice/'+gotUnit,readFile:fakeScopeResources});
+      procCgroup:'0::/user.slice/'+gotUnit,readFile:fakeScopeResources,sessionProbe:fakeSessionProbe});
     return {status:0,stdout:JSON.stringify(payload)+'\n'};
   };
   let k=0;
@@ -182,6 +187,8 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   assert.equal(calls[2].cmd,'systemctl');
   assert.equal(result.state,'ONE_SHOT_SYNTHETIC_CGROUP_RESOURCE_READBACK_REPORTED');
   assert.equal(result.synthetic_child_resource_limits_read_back,true);
+  assert.equal(result.new_session_child_same_cgroup_reported,true);
+  assert.equal(result.new_session_child_reaped_reported,true);
   assert.equal(result.scope_collected_after_probe,true);
   assert.equal(result.synthetic_child_reported_member,true);
   assert.equal(result.resource_limits_independently_read_back,false);
@@ -224,7 +231,7 @@ test('uncleared transient scope blocks the report even if child claimed membersh
     const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
     return {status:0,stdout:JSON.stringify(inspectScopedChild({
       scopeId:unit,nonce:ID,procCgroup:'0::/user.slice/'+unit,
-      readFile:fakeScopeResources
+      readFile:fakeScopeResources,sessionProbe:fakeSessionProbe
     }))};
   };
   assert.throws(()=>runSyntheticCgroupCanary({...base,run}),
