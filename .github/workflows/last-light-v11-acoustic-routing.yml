@@ -1,0 +1,50 @@
+name: Last Light V11 Orchestra Coverage and Control Room
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-v9-conductor.py'
+      - 'systemia/media-studio/last-light-v9-conductor-score.json'
+      - 'systemia/media-studio/instrument-foundry-v10-source-bank.json'
+      - 'systemia/media-studio/last-light-v11-acoustic-routing.py'
+      - 'systemia/media-studio/test_last_light_v11_acoustic_routing.py'
+      - '.github/workflows/last-light-v11-acoustic-routing.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  honest-audio-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source custody, piano identity and unapproved audio gates
+        run: |
+          python -m unittest discover -v -s systemia/media-studio -p 'test_last_light_v11_acoustic_routing.py'
+      - name: Build self-contained interactive source coverage console
+        run: |
+          python systemia/media-studio/last-light-v11-acoustic-routing.py \
+            --score systemia/media-studio/last-light-v9-conductor-score.json \
+            --bank systemia/media-studio/instrument-foundry-v10-source-bank.json \
+            --out /tmp/last-light-v11
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('/tmp/last-light-v11')
+          report=json.loads((p/'orchestra-source-coverage.json').read_text())
+          assert report['sections_total']==14 and report['score_notes_total']==47
+          assert report['catalogued_exact_root_notes']==9 and report['uncovered_score_notes']==38
+          assert report['approved_audio_sections']==0
+          assert not report['source_bytes_verified_this_run']
+          assert not report['midi_synthesis_used']
+          assert not report['piano_audio_imported']
+          assert (p/'orchestra-control-room.html').exists()
+          print('COVERAGE PASS 9/47 exact source-root pitches, 0/14 audio sections approved')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v11-orchestra-source-gap-control-room
+          path: /tmp/last-light-v11/
+          retention-days: 14
