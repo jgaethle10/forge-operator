@@ -51,7 +51,7 @@ is still required to actually move money.
 - `systemia/payments/bank-credit-reconciliation.mjs` accepts *private, read-only* statement observations for a bank-credit candidate match. It checks: one unique request ID, exact transfer reference, one nonduplicated bank transaction ID, bank-posted credit direction/status, exact USD amount, and the receiving-account fingerprint.
 - It flags wrong account, partial/overpayments, missing or extra references, pending/debit transactions and duplicate/multiple credits for manual investigation.
 - **No uploaded or caller-supplied bank statement is treated as authentic.** Its output is `RECONCILIATION_CANDIDATE`, not `paid`. The statement has to be retrieved independently from the authorized merchant's bank or authenticated bank integration and reviewed under a separate approval gate before order settlement and Shipping fulfillment can change state.
-- The workbench does not store bank transactions, transmit funds, ingest bank credentials, change orders, send invoices or publish sensitive data. It does not run as an operator route in this PR; its output is deliberately non-authoritative until the bank integration and approval are ready.
+- The workbench does not store bank transactions, transmit funds, ingest bank credentials, change orders, send invoices or publish sensitive data. A private, authenticated POST `/v1/operator/bank-credit/reconcile` endpoint accepts specific existing request IDs plus merchant-bank observations and computes a diagnostic match report without modifying payment state. The endpoint must never be exposed through the public ingress.
 - `tests/bank-credit-reconciliation.test.mjs` verifies duplicate, missing, ambiguous, wrong account, wrong amount, unsupported evidence and fulfillment-locked outcomes, alongside account-rotation tests on the request server.
 - Merchant-bank posting date may be later than link expiry; the link expiry only prevents new instructions, not accounting review of funds already transferred.
 
@@ -135,6 +135,31 @@ The operator API takes JSON:
 The response returns payment_request_url, reference, exact amount,
 state=awaiting_bank_transfer, paid_verified=false and
 fulfillment_release=false.
+
+Private operator bank reconciliation diagnostic (no paid-status write):
+
+POST /v1/operator/bank-credit/reconcile
+Authorization: Bearer <same private operator token>
+
+{
+ "request_ids":["bpr_<private existing request ID>"],
+ "observations":[{
+   "source_type":"merchant_bank_statement_observation",
+   "bank_transaction_id":"<private bank's posted transaction reference>",
+   "receiving_account_key":"<internal HMAC destination fingerprint from order record>",
+   "amount_cents":25000,
+   "currency":"usd",
+   "direction":"credit",
+   "bank_status":"posted",
+   "posted_at":"2026-11-11T16:00:00Z",
+   "memo":"EC-<exact transfer reference>"
+ }]
+}
+
+The returned report is an **untrusted-source match candidate**, never a
+bank-verified payment. Keep this API on the operator side, not publicly
+reverse-proxied. Read bank records from the authorized merchant account,
+then apply a separate verified economic-event and fulfillment gate.
 
 ## Bank facts / sources
 - Nacha B2B ACH Quick Start: https://www.nacha.org/b2bquickstart
