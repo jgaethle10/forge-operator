@@ -49,11 +49,13 @@
     "originalMapImageEmbeddingAllowed": false,
     "commercialDerivedGeometryAllowed": false,
     "firstInquiryDateLocal": "2026-11-09",
-    "inquiryStatus": "sent-awaiting-archive-response",
+    "inquiryStatus": "archive-sheet-numbers-confirmed-awaiting-original-inspection",
     "inquiryDeliveryEvidence": "connected Gmail provider returned SENT label, recipient sanborn@csun.edu",
     "inquiryScope": "No-cost identification of Yakima 1960 sheet(s), update dates, remote access and licensing for public/commercial interactive reconstruction.",
-    "replyReceived": false,
-    "archiveSheetNumbersConfirmed": false
+    "replyReceived": true,
+    "archiveSheetNumbersConfirmed": true,
+    "replyReceivedLocalDate": "2026-11-10",
+    "replySummary": "CSUN collection staff identified sheets 6 and 15 in a Yakima volume apparently corrected through 1960 and supplied direct LOC 1952 comparisons; actual 1960 scans not obtained."
   },
   "searchTargets": [
     {
@@ -77,9 +79,47 @@
       "goal": "Identify actual Capitol Theatre footprint; historic numeric address discrepancy unresolved"
     }
   ],
-  "nextAction": "Await reply from sanborn@csun.edu to Nov 9 no-cost inquiry; reconcile sheet IDs, source dates, item-level rights and fees; do not order/pay/publish without separate authorization.",
+  "nextAction": "Review LOC 1952 viewer pages 11 and 20, request optional no-cost 1960 sheet correction date/license clarification, and obtain independently controlled map tie points. No purchase or publication of physical CSUN scans.",
   "geometryReady": false,
   "sourceOriginalVerified": false,
   "worldsRuntimeAuthorized": false,
-  "sourceControlStatus": "cannot use 1960 atlas catalog alone to make a mapped 1960 scene"
+  "sourceControlStatus": "curator-identified 1960 Yakima sheets #6/#15, still no original 1960 scan, measured geometry or specific image license",
+  "curatorConfirmation": {
+    "confirmationStatus": "archive_staff_identified_sheets_not_direct_item_review",
+    "receivedLocalDate": "2026-11-10",
+    "originalEditionYearAsDescribed": "The last Yakima bound volume appears to be corrected to 1960; precise correction dates on individual sheets not yet supplied.",
+    "confirmedNumbers": [
+      6,
+      15
+    ],
+    "sheetMatches": [
+      {
+        "sheetNumber": 6,
+        "landmark": "ae-larson",
+        "locDigitalEdition": 1952,
+        "locViewerPage": 11,
+        "locViewerUrl": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=11&r=0.251,0.255,0.496,0.416,0",
+        "original1960ExaminedByUs": false,
+        "georeferenced": false
+      },
+      {
+        "sheetNumber": 15,
+        "landmark": "capitol",
+        "locDigitalEdition": 1952,
+        "locViewerPage": 20,
+        "locViewerUrl": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=20&st=image&r=0.56,0.858,0.345,0.289,0",
+        "original1960ExaminedByUs": false,
+        "georeferenced": false
+      }
+    ],
+    "footprintComparison": "Archive staff report building footprints appear identical on their 1960-corrected volume and LOC digitized 1952 copies.",
+    "comparisonConfidence": "archivist-reported-not-independently-verified",
+    "exactRevisionStampsRead": false,
+    "original1960ImagesObtained": false,
+    "independentSheetComparisonCompleted": false,
+    "rightsDecision1960Original": "not-granted; archive staff's suggestion about LOC online public-domain reuse does not license CSUN physical 1960 sheet",
+    "publicOriginal1960SheetReproductionAllowed": false,
+    "coordinates": null,
+    "note": "Do not silently promote matching building footprints to 1960 facade/tenants or infer validated meter-scale geometry from these viewer URLs."
+  }
 }
