@@ -39,7 +39,7 @@ try {
     ownerSubjectRef:'user:one-body-home-proof',
     ownerLogin:'operator',
     ownerDisplayName:'Operator',
-    oneBodyStateFile,oneBodyConsumerTrustFile:trustFile,
+    oneBodyStateFile:bodyStateFile,oneBodyConsumerTrustFile:trustFile,
     serviceOrigins:{},
   });
   const endpoint=runtime.url+'/api/systemia/one-body/snapshot';
