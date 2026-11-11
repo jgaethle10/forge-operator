@@ -9,7 +9,8 @@ import {createHash} from "node:crypto";
 
 const MANIFEST_SCHEMA="evercraft.first-contact.field-evidence-manifest.v1";
 const PLAN_SCHEMA="evercraft.first-contact.field-preregistration.v1";
-const EVALUATION_SCHEMA="evercraft.first-contact.calibration-session-input.v1";
+const EVALUATION_SCHEMAS=new Set(["evercraft.first-contact.calibration-session-input.v1",
+  "evercraft.first-contact.rectified-pixel-calibration-session.v1"]);
 const REQUIRED_ROLES=[
   "camera_a_native","camera_b_native",
   "camera_a_calibration","camera_b_calibration",
@@ -130,7 +131,7 @@ export function auditFieldEvidence({root,manifest}={}){
       let record;
       try{record=JSON.parse(fs.readFileSync(fileInsideRoot(root,evalRow.file),"utf8"));}
       catch{record=null;}
-      if(plan?.schema===PLAN_SCHEMA && record?.schema===EVALUATION_SCHEMA &&
+      if(plan?.schema===PLAN_SCHEMA && EVALUATION_SCHEMAS.has(record?.schema) &&
          plan.sessionId===m.sessionId && record.sessionId===m.sessionId &&
          JSON.stringify(plan.acceptance)===JSON.stringify(record.acceptance) &&
          JSON.stringify(plan.quality)===JSON.stringify(record.quality) &&
