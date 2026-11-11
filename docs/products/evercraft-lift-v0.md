@@ -80,6 +80,34 @@ These modules encode proposed *domain rules*. They do **not** provide an authent
 
 Integrate with an Evercraft-owned authenticated server and vault; implement persisted, append-only event transitions with optimistic concurrency and a separate audit trail; add secure reviewer UX; document retention and privacy requests; test incident response and partner referrals. Keep public fundraising and payment flow disabled until regulatory and Evercraft Payments reconciliation readiness are established.
 
+## V0.2 synthetic durable-journal lab
+
+**New files:** systemia/lift/lab-journal.mjs and systemia/lift/lab-journal.test.mjs.
+
+This is deliberately a *local development lab*, not a production service. It runs with no real identities, organizations, personally identifying applicant records, or donation transactions.
+
+- The journal is lift-lab-journal.jsonl inside an operator-supplied absolute directory. It requests restrictive local file permissions and a single-writer exclusive lock.
+- Each entry records a monotonic sequence, previous SHA-256 hash, operation ID and request digest, entity/version, and a synthetic state snapshot. Writes are appended and an fsync is requested. This is an integrity/replay aid, not a cryptographic proof of authorship or hardened audit.
+- Restart validates all journal entries and reconstructs case and partner states. A **partially appended final event fails closed**. Ignoring the tail could lose a withdrawal or consent revocation.
+- Updates require an expected entity version, preventing stale reviewers from overwriting one another. Identical operation retries are idempotent; reused IDs with different requests fail. An in-process queue serializes writes and an exclusive file lock blocks a second cooperating writer.
+- The API accepts only synthetic lab_ actor/entity IDs, vault:lab_... evidence placeholders, Lab Region, and fixed fictional public copy and partner names. Never upload real bills to this journal.
+- Lab roles are asserted fixtures, NOT authenticated identities. No HTTP routes expose these methods. All financial activity remains disabled.
+
+Run lab tests: node --test systemia/lift/*.test.mjs
+
+### Important limitations
+
+A crash can leave the lock file and require careful manual inspection before removing it. There is no automatic stale-lock takeover, production encryption, secure vault, network authentication, cross-host consistency, high-availability storage, backup recovery, or legal authorization to handle real funds. Hash-linking detects accidental edits, but a party with full write access to the journal can recompute hashes. No personally identifying data is acceptable.
+
+### Remaining production gates
+
+1. Trusted Evercraft identity/session resolver with strictly server-side roles and object-level authorization. Never accept client-supplied roles.
+2. Encrypted applicant vault, legal retention/deletion policy, secure attachment scanning, and abuse controls.
+3. Real transactional private state store with access audit, backups, concurrency and operator recovery on Evercraft-owned infrastructure.
+4. Tested consent withdrawal, publication revocation, deindexing and partner referral revocation across all caches.
+5. Jurisdiction-specific nonprofit/donation and payment approval. Only then Evercraft Payments -> Raven Nexus -> authorized settlement adapter and verified disbursement.
+
+
 ## Release status
 
 **Demo:** ready for local isolated evaluation. **Live assistance:** blocked. **Payments:** blocked. **Verified partners:** none onboarded by this change. **Public deployment:** not authorized by this branch. **Systemia API integration:** pending. The name is provisional pending checks for conflicts.
