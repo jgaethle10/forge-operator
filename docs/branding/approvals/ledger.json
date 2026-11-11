@@ -55,7 +55,23 @@
         "live_provider_post_id": null
       },
       "review_packet": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
-      "review_packet_version": "BR-001.v1"
+      "review_packet_version": "BR-001.v1",
+      "review_risks": [
+        {
+          "id": "BR-001-RISK-NAME-001",
+          "status": "open",
+          "severity": "needs_review",
+          "type": "public_name_reuse_not_trademark_determination",
+          "finding": "The exact name The Weekly Signal is already used by several active newsletter or editorial properties, including a marketing-focused series. Distinctiveness is weak; founder should explicitly decide whether to retain or rename.",
+          "evidence_urls": [
+            "https://mktrintheloop.com/p/introducing-the-weekly-signal",
+            "https://404signal.com/newsletter/",
+            "https://techsignalhq.com/",
+            "https://workforcesignal.com/newsletter"
+          ],
+          "reviewer_resolution": null
+        }
+      ]
     },
     {
       "order": 2,
