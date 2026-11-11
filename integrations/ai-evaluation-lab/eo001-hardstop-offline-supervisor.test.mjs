@@ -50,7 +50,8 @@ test('non-responsive child is terminated and time-out becomes preserved negative
     mode:'stall',receiptDir:dir,deadlineMs:150,graceMs:80
   });
   assert.equal(state.state,'DEADLINE_EXCEEDED_RETAINED');
-  assert.equal(state.killed_after_deadline,true);
+  assert.equal(state.deadline_timer_fired,true);
+  assert.equal(state.termination_signal_attempted,true);
   assert.equal(state.fixture_result_accepted,false);
   assert.equal(state.no_result_accepted_after_deadline,true);
   verifyReceipt(dir,'stall',state);
