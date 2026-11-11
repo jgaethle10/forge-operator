@@ -244,13 +244,19 @@ try {
     named_cloud_required: false,
   }, null, 2));
 } finally {
+  const cleanupFailures=[];
   if (first) {
-    try { await first.close(); } catch {}
+    try { await first.close(); }
+    catch(error){cleanupFailures.push(new Error('first_organism_close_failed',{cause:error}));}
   }
   if (second) {
-    try { await second.close(); } catch {}
+    try { await second.close(); }
+    catch(error){cleanupFailures.push(new Error('second_organism_close_failed',{cause:error}));}
   }
   fs.rmSync(root, { recursive: true, force: true });
+  if(cleanupFailures.length){
+    throw new AggregateError(cleanupFailures,'local_organism_proof_cleanup_incomplete');
+  }
 }
 
 // A successful restart receipt is not proof that the resident runtime has
