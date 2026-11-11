@@ -4,6 +4,55 @@ import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
 import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
+const HOUSE_MODE=new URLSearchParams(location.search).get('house')==='001';
+const HOUSE_REMOTE=HOUSE_MODE&&new URLSearchParams(location.search).get('clock')==='resident';
+let houseView=null,houseError=false,housePoll=null,housePollBusy=false,remoteConnected=false;
+async function pollResidentHouse(){
+  if(!HOUSE_REMOTE||housePollBusy||!houseView)return;
+  housePollBusy=true;
+  try{
+    const response=await fetch('./api/house-001/snapshot',{
+      cache:'no-store',signal:AbortSignal.timeout(6000)
+    });
+    if(!response.ok)throw Error(response.status===404?'not_enabled':'snapshot_unavailable');
+    const snapshot=await response.json();
+    houseView.accept(snapshot,performance.now());
+    remoteConnected=true;houseError=false;
+    $('start').disabled=false;
+    $('start').textContent='Watch resident clock ↗';
+    $('weather').textContent='Owner-run clock · Rules-only · Day '+snapshot.world.day;
+    if(!started)$('intro').querySelector('p').textContent=
+      'Four synthetic residents keep moving while this owned Worlds service runs, even when nobody is watching. Read-only spectator view; no live LLM.';
+  }catch(err){
+    remoteConnected=false;
+    const notEnabled=err.message==='not_enabled';
+    houseError=notEnabled;
+    $('weather').textContent=notEnabled?'Resident clock not enabled':'Resident clock connection lost';
+    if(notEnabled){
+      $('intro').querySelector('p').textContent=
+        'This owned Worlds server has not enabled its optional House 001 resident clock. Use the local House viewer, or start the owned Vault with --enable-house-001.';
+      $('start').disabled=true;
+      if(housePoll){clearInterval(housePoll);housePoll=null;}
+    }
+  }finally{housePollBusy=false;}
+}
+if(HOUSE_MODE){
+  // Opt-in only. Normal Mossmere never imports Living Worlds.
+  import('./house-mode.bundle.mjs').then(({createHouseSpectator,createResidentHouseSpectator})=>{
+    if(HOUSE_REMOTE){
+      houseView=createResidentHouseSpectator();
+      void pollResidentHouse();
+      housePoll=setInterval(()=>{void pollResidentHouse();},1800);
+    }else{
+      houseView=createHouseSpectator(localStorage,performance.now());
+      $('weather').textContent='Four synthetic residents · Browser-local rules';
+      renderHouseEditor();
+    }
+  }).catch(()=>{
+    houseError=true;
+    $('intro').querySelector('p').textContent='The House 001 viewer is unavailable on this host. The regular Mossmere world still works.';
+  });
+}
 let cloudOwner=null;
 try{cloudOwner=validateOwner(JSON.parse(localStorage.getItem(CLOUD_KEY)||'null'));}catch{}
 function forgetCloudOwner(){cloudOwner=null;try{localStorage.removeItem(CLOUD_KEY);}catch{}$('unpublishOnline').classList.add('hidden');}
@@ -35,7 +84,40 @@ const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),o=1/(near-fa
 function lookAt(eye,target){const z=norm([eye[0]-target[0],eye[1]-target[1],eye[2]-target[2]]),x=norm(cross([0,1,0],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm=v=>{const d=Math.hypot(...v)||1;return v.map(x=>x/d);};
 let state=loadWorld(localStorage),visitingShared=false,pendingShared=null,started=false,editorOpen=false,previous=performance.now(),elapsed=0,fpsFrames=0,fpsStart=performance.now(),fps=0,lastSave=0;
-let camera={x:state.player.x,y:1.72,z:state.player.z,yaw:state.player.yaw,pitch:-.06,vy:0},keys={},joystick={x:0,y:0},renderAgents=[];
+let camera=HOUSE_MODE?{x:0,y:5.8,z:6.7,yaw:0,pitch:-.7,vy:0}:
+  {x:state.player.x,y:1.72,z:state.player.z,yaw:state.player.yaw,pitch:-.06,vy:0};
+let keys={},joystick={x:0,y:0},renderAgents=[];
+if(HOUSE_MODE){
+  $('intro').querySelector('h1').innerHTML='House 001<br><i>Living Worlds.</i>';
+  $('intro').querySelector('p').textContent=HOUSE_REMOTE
+    ?'Connect to the owner-operated House resident clock. The household progresses without an open browser while its service runs. Read-only viewer.'
+    :'Watch four synthetic residents inside a furnished 3D cutaway home. Existing Worlds WebGL rendering, browser-local House rules.';
+  $('start').textContent=HOUSE_REMOTE?'Connecting to resident clock…':'Enter House 001 ↗';
+  $('start').disabled=HOUSE_REMOTE;
+  $('place').textContent='House 001';
+  $('buildToggle').textContent=HOUSE_REMOTE?'Read-only spectator':'✦ Edit House 001';
+  $('buildToggle').disabled=HOUSE_REMOTE;
+  $('save').textContent='Local scene';
+  $('save').disabled=true;
+  const editor=$('editor');
+  editor.querySelector('h2').textContent='Design House 001';
+  for(const child of editor.children)if(!child.classList.contains('editor-head'))child.classList.add('hidden');
+  const panel=document.createElement('section');panel.id='house-editor';
+  const label=document.createElement('label');label.setAttribute('for','house-kind');label.textContent='Choose furniture';
+  const select=document.createElement('select');select.id='house-kind';
+  for(const [kind,title] of [['bed','🛏️ Bed'],['fridge','🧊 Fridge'],['sofa','🛋️ Sofa'],
+      ['desk','💻 Desk'],['plant','🪴 Plant'],['table','🪑 Table'],['remove','⌫ Remove']]){
+    const item=document.createElement('option');item.value=kind;item.textContent=title;select.append(item);
+  }
+  select.value='plant';
+  const instructions=document.createElement('p');
+  instructions.textContent='Tap a tile to add or remove furniture. Edits save to your local House 001.';
+  const scroller=document.createElement('div');scroller.id='house-grid-scroll';
+  const grid=document.createElement('div');grid.id='house-grid';scroller.append(grid);
+  const result=document.createElement('p');result.id='house-edit-status';result.setAttribute('role','status');
+  panel.append(label,select,instructions,scroller,result);editor.append(panel);
+  if(!HOUSE_REMOTE)renderHouseEditor();
+}
 let qualityMode='auto',quality={...DEFAULT_QUALITY};
 try{qualityMode=validQualityMode(localStorage.getItem(QUALITY_KEY));}catch{}
 $('qualityMode').value=qualityMode;
@@ -127,7 +209,7 @@ function drawStaticInstances(){
 }
 function draw(d){const shape=meshes[d.kind]||meshes.cube;gl.bindVertexArray(shape.vao);gl.uniformMatrix4fv(loc.model,false,M(d.x,d.y,d.z,d.sx,d.sy,d.sz,d.rot||0));gl.uniform3fv(loc.color,col(d.color));gl.uniform1f(loc.opacity,d.alpha??1);gl.drawArrays(gl.TRIANGLES,0,shape.count);frameDrawCalls++;}
 function drawStyled(d){if((d.alpha??1)<1){gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);}draw(d);if((d.alpha??1)<1){gl.depthMask(true);gl.disable(gl.BLEND);}}
-function agentDraw(a,i){const x=a.renderX,z=a.renderZ,b=a.renderBob,color=a.color;const d=(kind,dx,dy,dz,sx,sy,sz,c)=>draw(colored(kind,x+dx,dy+b,z+dz,sx,sy,sz,c));
+function agentDraw(a,i){const x=a.renderX,z=a.renderZ,b=a.renderBob,color=a.color,k=a.scale||1;const d=(kind,dx,dy,dz,sx,sy,sz,c)=>draw(colored(kind,x+dx*k,dy*k+b,z+dz*k,sx*k,sy*k,sz*k,c));
  d('sphere',0,.71,0,.87,1,.7,color);d('sphere',0,1.41,0,.98,.93,.84,color);d('sphere',-.3,1.87,0,.33,.64,.3,color);d('sphere',.3,1.87,0,.33,.64,.3,color);
  d('sphere',-.18,1.5,-.42,.12,.14,.09,'#283d42');d('sphere',.18,1.5,-.42,.12,.14,.09,'#283d42');
  d('sphere',-.15,1.55,-.48,.04,.05,.025,'#fdf9e9');d('sphere',.21,1.55,-.48,.04,.05,.025,'#fdf9e9');
@@ -145,12 +227,32 @@ function extra(kind,x,z){const arr=[];const a=(type,dx,y,dz,sx,sy,sz,color)=>arr
 function resize(){const ratio=Math.min(devicePixelRatio||1,1.65)*modeScale(qualityMode,quality),w=Math.max(1,Math.round(canvas.clientWidth*ratio)),h=Math.max(1,Math.round(canvas.clientHeight*ratio));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
 function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInstanceCount=0;const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen){
  let f=Number(Boolean(keys.KeyW||keys.ArrowUp))-Number(Boolean(keys.KeyS||keys.ArrowDown))-joystick.y,side=Number(Boolean(keys.KeyD||keys.ArrowRight))-Number(Boolean(keys.KeyA||keys.ArrowLeft))+joystick.x;
- const mag=Math.hypot(f,side);if(mag>.02){f/=Math.max(1,mag);side/=Math.max(1,mag);const step=dt*(keys.ShiftLeft?6.6:3.75),s=Math.sin(camera.yaw),c=Math.cos(camera.yaw),x=camera.x+(s*f+c*side)*step,z=camera.z+(-c*f+s*side)*step;if(canWalk(x,camera.z))camera.x=x;if(canWalk(camera.x,z))camera.z=z;}
- camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}
- if(time-lastSave>6500){state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();lastSave=time;}
+ const mag=Math.hypot(f,side);if(mag>.02){f/=Math.max(1,mag);side/=Math.max(1,mag);const step=dt*(keys.ShiftLeft?6.6:3.75),s=Math.sin(camera.yaw),c=Math.cos(camera.yaw),x=camera.x+(s*f+c*side)*step,z=camera.z+(-c*f+s*side)*step;if(HOUSE_MODE){
+   if(x>-6.8&&x<6.8)camera.x=x;
+   if(z>-8&&z<9)camera.z=z;
+ }else{
+   if(canWalk(x,camera.z))camera.x=x;
+   if(canWalk(camera.x,z))camera.z=z;
+ }}
+ if(!HOUSE_MODE){camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}}
+ if(!HOUSE_MODE&&time-lastSave>6500){state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();lastSave=time;}
  }
- resize();const sky={day:['#bedad2','#e6dbc0',.6],sunset:['#d3a48c','#f6ccae',.43],night:['#314b64','#92a3ad',.36]}[state.sky];const fog=col(sky[0]);gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(program);
+ resize();const sky=HOUSE_MODE?['#a6c5ce','#f6dcbe',.7]:{day:['#bedad2','#e6dbc0',.6],sunset:['#d3a48c','#f6ccae',.43],night:['#314b64','#92a3ad',.36]}[state.sky];const fog=col(sky[0]);gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(program);
  gl.uniformMatrix4fv(loc.projection,false,perspective(65*Math.PI/180,canvas.width/Math.max(1,canvas.height),.07,110));const cy=Math.cos(camera.yaw),sy=Math.sin(camera.yaw),cp=Math.cos(camera.pitch),sp=Math.sin(camera.pitch),eye=[camera.x,camera.y,camera.z];gl.uniformMatrix4fv(loc.view,false,lookAt(eye,[camera.x+sy*cp,camera.y+sp,camera.z-cy*cp]));gl.uniform3fv(loc.cameraPos,eye);gl.uniform3fv(loc.fogColor,fog);gl.uniform3fv(loc.lightColor,col(sky[1]));gl.uniform1f(loc.ambient,sky[2]);
+ if(HOUSE_MODE){
+  if(started&&!houseError)houseView?.step(time);
+  const houseFrame=houseView?.frame(time);
+  if(houseFrame){
+    for(const primitive of houseFrame.draw)draw(primitive);
+    for(let i=0;i<houseFrame.actors.length;i++)agentDraw(houseFrame.actors[i],i);
+    $('place').textContent='House 001 · Day '+houseFrame.day;
+    $('weather').textContent=houseFrame.time+(HOUSE_REMOTE?' · Owner-run rules clock · Read-only':' · Browser-local rules simulation')+' · 3D preview';
+    if(started&&time-lastSave>2000){
+      $('prompt').textContent='Press E near a resident to inspect · WASD to explore · V to change camera height.';
+      lastSave=time;
+    }
+  }
+ }else{
  drawStaticInstances();
  // Water animated surface, reeds and living fish in the glass tank.
  draw(colored('cylinder',7,.146+Math.sin(elapsed*1.4)*.014,-5,7.6,.075,6.3,'#80cacc',0,.84));
@@ -164,17 +266,43 @@ function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInst
  }
  renderAgents=stepAgents(state,dt,elapsed);for(let i=0;i<renderAgents.length;i++)agentDraw(renderAgents[i],i);
  for(const o of state.objects)for(const d of extra(o.kind,o.x,o.z))draw(d);
- if(started){const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
- fpsFrames++;if(time-fpsStart>1200){fps=Math.round(fpsFrames*1000/(time-fpsStart));fpsStart=time;fpsFrames=0;if(started&&qualityMode==='auto'&&!document.hidden)quality=tuneQuality(quality,fps);$('metrics').textContent=`${fps} fps · ${canvas.width}×${canvas.height} · ${frameDrawCalls} draws · ${staticDrawCount} instanced · ${qualityMode} ${modeScale(qualityMode,quality).toFixed(2)}× · scene ${state.revision}`;}
+ }
+ if(started&&!HOUSE_MODE){const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
+ fpsFrames++;if(time-fpsStart>1200){fps=Math.round(fpsFrames*1000/(time-fpsStart));fpsStart=time;fpsFrames=0;if(started&&qualityMode==='auto'&&!document.hidden)quality=tuneQuality(quality,fps);$('metrics').textContent=`${fps} fps · ${canvas.width}×${canvas.height} · ${frameDrawCalls} draws · ${HOUSE_MODE?0:staticDrawCount} instanced · ${qualityMode} ${modeScale(qualityMode,quality).toFixed(2)}× · scene ${state.revision}`;}
 }
 function nearby(){const list=[...renderAgents.map(a=>({id:a.id,x:a.renderX,z:a.renderZ,action:`talk to ${a.name}`,agent:a})),{id:'portal',x:3,z:-10.2,action:'step through the portal'},{id:'tank',x:-.9,z:-4.5,action:'inspect the fish tank'},{id:'workshop',x:-4.9,z:-3.5,action:'inspect the workspace'},{id:'pond',x:7,z:-3.5,action:'admire Glasswater Pond'},{id:'cove',x:13,z:9,action:'return through the cove portal'}];const found=list.map(x=>({...x,d:Math.hypot(camera.x-x.x,camera.z-x.z)})).sort((a,b)=>a.d-b.d)[0];return found&&found.d<3.2?found:null;}
 function notify(msg){$('prompt').textContent=msg;$('result').textContent=msg;}
-function interact(){const n=nearby();if(!n){notify('Explore closer to a person or an interesting object.');return;}if(n.id==='portal'){camera.x=13;camera.z=9;notify('The portal hums softly. Welcome to the Sunlit Cove.');return;}if(n.id==='cove'){camera.x=2;camera.z=-8;notify('You have returned to Mossmere.');return;}if(n.agent){const a=state.agents.find(x=>x.id===n.id);a.memories=[...a.memories.slice(-7),`Visitor said hello while ${n.agent.activity.toLowerCase()}.`];state.revision++;persist();notify(`${n.agent.name} · ${n.agent.activity}: “${n.agent.dialogue}”`);return;}notify({tank:'Three tiny fish glide through the sunlit tank.',workshop:'A living workspace. The notebook on the desk is waiting for ideas.',pond:'The pond reflects the afternoon light. Little lily pads float across it.'}[n.id]);}
+function renderHouseEditor(){
+  if(!HOUSE_MODE||HOUSE_REMOTE||!houseView||!$('house-grid'))return;
+  const kinds=houseView.kinds(),house=houseView.source(),nodes=[];
+  for(let y=0;y<6;y++)for(let x=0;x<9;x++){
+    const furniture=house.furniture.find(f=>f.x===x&&f.y===y);
+    const tile=document.createElement('button');
+    tile.type='button';tile.className='house-cell';
+    tile.textContent=furniture?kinds[furniture.kind].icon:'·';
+    tile.setAttribute('aria-label','Tile '+(x+1)+','+(y+1)+(furniture?' '+kinds[furniture.kind].label:' empty'));
+    tile.onclick=()=>{
+      const kind=$('house-kind').value,ok=houseView.edit(kind,x,y);
+      const result=ok?(kind==='remove'?'Furniture removed.':'Furniture placed.'):'That tile cannot be changed.';
+      $('house-edit-status').textContent=result;
+      if(ok)renderHouseEditor();
+    };
+    nodes.push(tile);
+  }
+  $('house-grid').replaceChildren(...nodes);
+}
+function interact(){
+ if(HOUSE_MODE){
+  const a=houseView?.near(camera.x,camera.z);
+  notify(a?a.name+': '+a.action+' (synthetic resident; rules-only).' : HOUSE_REMOTE?'Move near a resident. This owner-run clock is read-only.':'Move near a resident, or open the House 001 editor to change their world.');
+  return;
+ }
+ const n=nearby();if(!n){notify('Explore closer to a person or an interesting object.');return;}if(n.id==='portal'){camera.x=13;camera.z=9;notify('The portal hums softly. Welcome to the Sunlit Cove.');return;}if(n.id==='cove'){camera.x=2;camera.z=-8;notify('You have returned to Mossmere.');return;}if(n.agent){const a=state.agents.find(x=>x.id===n.id);a.memories=[...a.memories.slice(-7),`Visitor said hello while ${n.agent.activity.toLowerCase()}.`];state.revision++;persist();notify(`${n.agent.name} · ${n.agent.activity}: “${n.agent.dialogue}”`);return;}notify({tank:'Three tiny fish glide through the sunlit tank.',workshop:'A living workspace. The notebook on the desk is waiting for ideas.',pond:'The pond reflects the afternoon light. Little lily pads float across it.'}[n.id]);}
 function persist(){if(visitingShared)return;try{state=saveWorld(localStorage,state);}catch(e){console.warn('World save unavailable:',e);}}
 function runCommand(command){const result=applyCommand(state,command);if(result.world!==state){state=result.world;persist();}notify(result.message+(visitingShared?' Preview only until you save a copy.':''));$('command').value='';}
 $('start').onclick=()=>{started=true;$('intro').classList.add('hide');$('hud').classList.remove('hidden');if(matchMedia('(pointer:coarse)').matches){$('joystick').classList.remove('hidden');$('touchhint').classList.remove('hidden');}};
 $('help').onclick=()=>{$('modal').classList.remove('hidden');};$('closeModal').onclick=$('gotIt').onclick=()=>{$('modal').classList.add('hidden');};
-$('buildToggle').onclick=()=>{editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen&&matchMedia('(pointer:fine)').matches)$('command').focus();};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
+$('buildToggle').onclick=()=>{if(HOUSE_REMOTE){notify('Owner-run resident clock is read-only. Switch to local House mode to edit your own house.');return;}if(HOUSE_MODE&&!houseView){notify('House scene is not available here.');return;}editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen&&matchMedia('(pointer:fine)').matches)$('command').focus();};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
 function adjustMobileEditorForKeyboard(){
  const vp=window.visualViewport;
  if(!vp)return;
@@ -261,8 +389,8 @@ $('unpublishOnline').onclick=async()=>{
 $('commandForm').onsubmit=e=>{e.preventDefault();runCommand($('command').value);};document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('download').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evercraft-worlds-mossmere.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500);};
 $('upload').onchange=async e=>{try{const file=e.target.files?.[0];if(!file||file.size>200000)throw Error('Choose a world JSON under 200 KB');const w=validateWorld(JSON.parse(await file.text()));state=w;camera.x=w.player.x;camera.z=w.player.z;camera.yaw=w.player.yaw;visitingShared=false;forgetCloudOwner();$('save').textContent='Save';persist();notify('World imported successfully.');}catch(err){notify(`Import rejected: ${err.message}`);}e.target.value='';};
-addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
+addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='KeyV'&&started&&HOUSE_MODE){camera.y=camera.y>3?1.72:5.8;camera.pitch=camera.y>3?-.7:-.15;}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
 let pointer=null;canvas.addEventListener('pointerdown',e=>{if(!started||editorOpen||!$('modal').classList.contains('hidden'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;camera.yaw+=dx*.004;camera.pitch=Math.max(-1.18,Math.min(1.18,camera.pitch-dy*.0034));pointer.x=e.clientX;pointer.y=e.clientY;});canvas.addEventListener('pointerup',()=>{pointer=null;});
 let stickPointer=null;const stick=$('joystick'),thumb=$('joystickThumb');function stickMove(e){const r=stick.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),rad=Math.max(25,r.width*.4),scale=Math.min(1,rad/(Math.hypot(x,y)||1));joystick={x:x*scale/rad,y:y*scale/rad};thumb.style.transform=`translate(${joystick.x*rad}px,${joystick.y*rad}px)`;}stick.addEventListener('pointerdown',e=>{stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);stickMove(e);});stick.addEventListener('pointermove',e=>{if(stickPointer===e.pointerId)stickMove(e);});function releaseStick(){stickPointer=null;joystick={x:0,y:0};thumb.style.transform='translate(0,0)';}stick.addEventListener('pointerup',releaseStick);stick.addEventListener('pointercancel',releaseStick);
-addEventListener('pagehide',()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();});
+addEventListener('pagehide',()=>{if(housePoll)clearInterval(housePoll);if(!HOUSE_MODE){state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();}});
 requestAnimationFrame(present);
