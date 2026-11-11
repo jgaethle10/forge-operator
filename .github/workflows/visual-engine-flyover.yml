@@ -66,3 +66,48 @@ jobs:
           path: flyover-pixels/
           if-no-files-found: error
           retention-days: 14
+
+
+  licensed-aircraft-reference:
+    name: pinned CC-BY authored aircraft intake canary
+    needs: aircraft-flyover
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch pinned licensed aircraft strictly for build-time validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reference-aircraft
+          REV=91d835e8e851b2317fe79af291c9fed6153fd525
+          curl -fL --retry 2 --max-time 60 \
+            "https://raw.githubusercontent.com/amvlab/aircraft-models/$REV/models/B737_nologo.glb" \
+            -o reference-aircraft/B737_nologo.glb
+          curl -fL --retry 2 --max-time 30 \
+            "https://raw.githubusercontent.com/amvlab/aircraft-models/$REV/LICENSE" \
+            -o reference-aircraft/LICENSE
+          test "$(git hash-object reference-aircraft/B737_nologo.glb)" = \
+            c2c8f8292766a0b682918d4841c6dc4de4b18f1f
+          test "$(git hash-object reference-aircraft/LICENSE)" = \
+            0e9cbaaab1db587e91c080908ddf857d9e864eb1
+      - name: Install owned Browser Worker dependencies
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm --prefix systemia/evercraft-web/browser-worker install --no-audit --no-fund
+      - name: Admit licensed authored aircraft through World Engine
+        env:
+          EVERCRAFT_REFERENCE_AIRCRAFT_PATH: reference-aircraft/B737_nologo.glb
+          EVERCRAFT_REFERENCE_AIRCRAFT_LICENSE: reference-aircraft/LICENSE
+          EVERCRAFT_REFERENCE_AIRCRAFT_RECEIPT: reference-aircraft/receipt.json
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: reference-browser-state
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/licensed-aircraft-canary.mjs
+      - name: Publish rights and asset import receipt only
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-licensed-aircraft-source-audit
+          path: reference-aircraft/receipt.json
+          if-no-files-found: error
+          retention-days: 14
