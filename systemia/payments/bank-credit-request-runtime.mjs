@@ -10,6 +10,7 @@ import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {inspectBankCreditMatches} from './bank-credit-reconciliation.mjs';
 
 const SCHEMA='evercraft.payments.bank-credit-request.v1';
 const ORIGINS=new Set(['fabric.systemiacommandcenters.com','pay.systemiacommandcenters.com']);
@@ -164,6 +165,37 @@ export async function startBankCreditRequestRuntime({
       order.product_key!==allowed.product_key)
       return json(res,410,{ok:false,error:'offer_terms_changed'});
     return html(res,200,paymentPage(order,bankPayee));
+   }
+   // Internal, read-only reconciliation diagnostic. Supplied bank observations
+   // are NOT authenticated by this endpoint and can never set paid=true.
+   if(req.method==='POST'&&url.pathname==='/v1/operator/bank-credit/reconcile'){
+     const auth=String(req.headers.authorization||'');
+     if(!auth.startsWith('Bearer ')||!eq(auth.slice(7),operatorToken))
+       return json(res,401,{ok:false,error:'operator_authority_required'});
+     if(!payeeReady)return json(res,503,{ok:false,error:'bank_receiving_account_not_confirmed'});
+     const b=await readJson(req);
+     const ids=b.request_ids;
+     if(!Array.isArray(ids)||ids.length<1||ids.length>25||
+       new Set(ids).size!==ids.length||
+       ids.some(id=>typeof id!=='string'||!/^bpr_[a-f0-9]{32}$/.test(id))||
+       !Array.isArray(b.observations)||b.observations.length>25)
+       return json(res,422,{ok:false,error:'reconciliation_request_invalid'});
+     const orders=[];
+     for(const id of ids){
+       let order;
+       try{order=JSON.parse(await fs.readFile(orderFile(dir,id),'utf8'))}
+       catch{return json(res,404,{ok:false,error:'payment_request_not_found'})}
+       if(order.receiving_account_key!==accountKey)
+         return json(res,409,{ok:false,error:'receiving_bank_account_changed'});
+       orders.push(order);
+     }
+     try{
+       const report=inspectBankCreditMatches({orders,observations:b.observations});
+       return json(res,200,{ok:true,...report});
+     }catch{
+       return json(res,422,{ok:false,error:'bank_reconciliation_evidence_invalid',
+         paid_verified:false,fulfillment_release:false});
+     }
    }
    if(req.method==='POST'&&url.pathname==='/v1/operator/bank-requests'){
     const auth=String(req.headers.authorization||'');
