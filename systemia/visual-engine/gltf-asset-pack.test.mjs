@@ -136,3 +136,26 @@ test('mipmapped sampler is rejected unless explicitly admitted as degraded previ
   }]);
   assert.equal(verifyGltfAssetPack(pack),true);
 });
+
+test('degenerate UVs require explicit preview tangent fallback and cannot serve normal maps',()=>{
+  const f=fixture();
+  const uvAccessor=f.gltf.accessors[2];
+  const view=f.gltf.bufferViews[uvAccessor.bufferView];
+  const bytes=Buffer.from(f.buffers[0]);
+  for(let i=0;i<uvAccessor.count*2;i++)bytes.writeFloatLE(0,view.byteOffset+i*4);
+  f.buffers[0]=bytes;
+  for(const mesh of f.gltf.meshes)delete mesh.primitives[0].attributes.TANGENT;
+  delete f.gltf.materials[0].normalTexture;
+  assert.throws(()=>importGltfAssetPack(f),/fallen_geometry_uv_triangle_degenerate/);
+  const preview=importGltfAssetPack({...f,allowDegenerateUvNoNormalMapPreview:true});
+  assert.equal(preview.qualityStatus,'preview_degraded');
+  assert.equal(preview.tangentFallbacks.length,2);
+  assert.equal(preview.tangentFallbacks[0].policy,
+    'geometric_tangent_basis_base_color_only_preview');
+  assert.equal(verifyGltfAssetPack(preview),true);
+  f.gltf.materials[0].normalTexture={index:0};
+  assert.throws(
+    ()=>importGltfAssetPack({...f,allowDegenerateUvNoNormalMapPreview:true}),
+    /degenerate_uv_normal_map_preview_unsupported/
+  );
+});
