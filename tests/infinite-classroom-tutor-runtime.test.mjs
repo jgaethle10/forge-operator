@@ -75,7 +75,7 @@ test('Cross-origin posting and oversized messages are blocked before inference',
   const over=await request(srv.url,'/api/classroom/session',{method:'POST',
    body:{room:'math',padding:'x'.repeat(6000)}});
   assert.equal(over.status,422);
-  assert.equal(over.body.error,'invalid_json'); // Parser fail closed, no storage.
+  assert.equal(over.body.error,'payload_too_large'); // Parser fails closed, no storage.
  }finally{await srv.close()}
 });
 test('Raven adapter prohibits remote providers, and validates local Ollama before any message',async()=>{
