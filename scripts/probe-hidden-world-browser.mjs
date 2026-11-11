@@ -124,8 +124,12 @@ try{
       await page.locator('#tour').click();
       assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,false);
     }else{
-      assert.equal(await page.locator('noscript').count(),1);
-      assert.ok((await page.locator('body').textContent()).includes('Interactive 3D requires JavaScript'));
+      assert.ok(await page.locator('noscript').count()>=2);
+      assert.ok((await page.locator('body').textContent()).includes('3D is unavailable without JavaScript'));
+      assert.equal(await page.locator('noscript .fallback-link').isVisible(),true,
+        profile.name+': historical fallback not visible');
+      assert.equal(await page.locator('#start').isVisible(),false,
+        profile.name+': inert WebGL button visible with JavaScript disabled');
     }
     await page.screenshot({path:output+'/'+profile.name+'-titan-walk.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');
