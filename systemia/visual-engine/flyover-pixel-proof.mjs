@@ -229,10 +229,16 @@ export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=
       readback.unmap();
       const clear=Object.values(plan.clearColor).map(v=>Math.round(255*v));
       let visible=0;let dark=0;let bright=0;let colorSum=0;
+      let minX=plan.width,minY=plan.height,maxX=-1,maxY=-1;
       for(let i=0;i<rgba.length;i+=4){
         const delta=Math.max(
           Math.abs(rgba[i]-clear[0]),Math.abs(rgba[i+1]-clear[1]),Math.abs(rgba[i+2]-clear[2]));
-        if(delta>16) visible++;
+        if(delta>16){
+          visible++;
+          const pixel=i/4,x=pixel%plan.width,y=Math.floor(pixel/plan.width);
+          minX=Math.min(minX,x);maxX=Math.max(maxX,x);
+          minY=Math.min(minY,y);maxY=Math.max(maxY,y);
+        }
         const lum=(rgba[i]+rgba[i+1]+rgba[i+2])/3;
         if(lum<35) dark++;
         if(lum>215) bright++;
@@ -243,7 +249,17 @@ export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=
       const ctx=surface.getContext('2d',{willReadFrequently:true});
       ctx.putImageData(new ImageData(rgba,plan.width,plan.height),0,0);
       const png=surface.toDataURL('image/png').split(',')[1];
-      return {png,adapterInfo:info,visiblePixels:visible,darkPixels:dark,brightPixels:bright,
+      const foregroundBounds=visible?{
+        minX,minY,maxX,maxY,
+        width:maxX-minX+1,height:maxY-minY+1,
+        widthFraction:(maxX-minX+1)/plan.width,
+        heightFraction:(maxY-minY+1)/plan.height,
+        centerXFraction:(maxX+minX+1)/(2*plan.width),
+        centerYFraction:(maxY+minY+1)/(2*plan.height),
+        pixelFraction:visible/(plan.width*plan.height)
+      }:null;
+      return {png,adapterInfo:info,visiblePixels:visible,foregroundBounds,
+        darkPixels:dark,brightPixels:bright,
         meanLuminance:colorSum/(plan.width*plan.height),drawCount:plan.draws.length,
         width:plan.width,height:plan.height,sampleCount:MSAA_SAMPLES};
     }finally{
