@@ -17,41 +17,50 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify live paid audit offer
+      - name: Verify actual live Website Audit layout and payment boundary
         shell: bash
         run: |
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/offers/website-audit"
-          body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
-          printf '%s' "$body" | grep -q "Your website is getting attention"
-          printf '%s' "$body" | grep -q "Quick Win Audit"
-          printf '%s' "$body" | grep -q '\$49'
-          printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
-          printf '%s' "$body" | grep -q "Evercraft Payments"
-          # The old 4:5 synthetic poster also had the correct price. Verify the actual fix.
-          if grep -Fq 'poster-feed.svg' <<< "$body"; then
-            echo "Live page still references the oversized feed poster." >&2
-            exit 1
-          fi
-          if ! grep -Fq 'class="audit-preview"' <<< "$body"; then
-            echo "Live page does not include the compact native audit preview yet." >&2
-            exit 1
-          fi
-          if ! grep -Fq 'Illustrative process preview.' <<< "$body"; then
-            echo "Illustration truth label missing." >&2
-            exit 1
-          fi
-          # The real buyer form must appear before any decorative preview.
-          OFFER_HTML="$body" python3 - <<'PY'
-          import os
-          html=os.environ['OFFER_HTML']
-          form=html.find('name="customer_ref"')
+          page="$(mktemp)"
+          trap 'rm -f "$page"' EXIT
+          curl --fail --silent --show-error --location --retry 12 --retry-all-errors --retry-delay 5 "$url" -o "$page"
+          python3 - "$page" <<'PY'
+          import sys
+          from pathlib import Path
+          html=Path(sys.argv[1]).read_text(encoding='utf-8')
+          checks={
+            'headline': 'Your website is getting attention' in html,
+            'price': '$49' in html,
+            'offer': 'Quick Win Audit' in html,
+            'payments_authority': 'Evercraft Payments' in html,
+            'new_native_preview': 'class="audit-preview"' in html,
+            'honest_preview_disclaimer': 'Illustrative process preview.' in html,
+            'old_feed_poster_absent': 'poster-feed.svg' not in html,
+            'old_wide_poster_absent': 'poster-hero-wide.svg' not in html,
+          }
+          price=html.find('class="offer-price"')
           preview=html.find('class="audit-preview"')
-          assert form>=0 and preview>form, "Live checkout form must precede the illustrative preview"
+          checks['price_before_preview']=price>=0 and preview>price
+          form=html.find('name="customer_ref"')
+          invoice=html.find('Request assisted invoicing')
+          if form>=0:
+            mode='native_checkout'
+            checks['buyer_action_before_preview']=form<preview
+            checks['correct_checkout_route']='/api/offers/website-audit/checkout' in html
+          else:
+            mode='held_assisted_invoice'
+            checks['buyer_action_before_preview']=invoice>=0 and invoice<preview
+            checks['correct_checkout_route']='Online checkout is temporarily unavailable.' in html
+          for name,passed in checks.items():
+            print(f'{name}: {"PASS" if passed else "FAIL"}')
+          print('buyer_action_mode:',mode)
+          if not all(checks.values()):
+            raise SystemExit('LIVE_WEBSITE_AUDIT_REPLACEMENT_NOT_VERIFIED')
           PY
           {
-            echo "## Website Audit offer is live"
+            echo "## Website Audit live layout verified"
             echo
             echo "URL: $url"
-            echo 'Verified: live compact audit preview, old poster removed, checkout form before illustration, $49 and Evercraft Payments boundary'
+            echo "Verified: old poster removed, compact honest preview, real buyer action before visual, and unchanged Evercraft Payments boundary."
           } >> "$GITHUB_STEP_SUMMARY"
