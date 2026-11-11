@@ -1,0 +1,38 @@
+name: Flight Sentinel - offline research regressions
+on:
+  push:
+    branches: [research/flight-sentinel-v0-2]
+    paths:
+      - "research/flight-sentinel/**"
+      - ".github/workflows/flight-sentinel-research.yml"
+  pull_request:
+    paths:
+      - "research/flight-sentinel/**"
+      - ".github/workflows/flight-sentinel-research.yml"
+permissions:
+  contents: read
+jobs:
+  simulated-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout research sources
+        uses: actions/checkout@v4
+      - name: Run earlier reference tests
+        working-directory: research/flight-sentinel/v0_3
+        run: python3 -m unittest -v test_trajectory_reference
+      - name: Run new virtual-airspace tests
+        working-directory: research/flight-sentinel/v0_4
+        run: python3 -m unittest -v test_v04
+      - name: Regenerate and check synthetic confusion matrix
+        working-directory: research/flight-sentinel/v0_4
+        run: |
+          python3 benchmark_v04.py
+          python3 - <<'PY'
+          import json
+          with open('benchmark_results_v04.json',encoding='utf-8') as f:
+              result=json.load(f)
+          assert result['n']==14
+          assert result['counts']=={'TP':4,'TN':3,'FP':4,'FN':3}
+          assert result['advance_warning']['simulated_lead_time_s']==8
+          PY

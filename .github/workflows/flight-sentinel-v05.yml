@@ -1,0 +1,38 @@
+name: Flight Sentinel v0.5 - offline research
+on:
+  push:
+    branches: [research/flight-sentinel-v0-2]
+    paths:
+      - "research/flight-sentinel/v0_5/**"
+      - ".github/workflows/flight-sentinel-v05.yml"
+  pull_request:
+    paths:
+      - "research/flight-sentinel/v0_5/**"
+      - ".github/workflows/flight-sentinel-v05.yml"
+permissions:
+  contents: read
+jobs:
+  offline-v05:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Test synthetic v0.5 guard
+        working-directory: research/flight-sentinel/v0_5
+        run: python3 -m unittest -v test_v05
+      - name: Reproduce 20-case matched baseline campaign
+        working-directory: research/flight-sentinel/v0_5
+        run: |
+          python3 campaign_v05.py
+          python3 - <<'PY'
+          import json
+          with open('campaign_results_v05.json',encoding='utf-8') as f:
+              result=json.load(f)
+          assert result['case_count']==20
+          assert result['v04_counts_on_same_cases']=={'TP':4,'TN':6,'FP':5,'FN':5}
+          assert result['v05_counts']=={'TP':7,'TN':3,'FP':8,'FN':2}
+          assert sum(c['v05_outcome']=='FN' for c in result['cases'])==2
+          PY

@@ -1,0 +1,46 @@
+name: Flight Sentinel v0.6 - synthetic recovery checks
+on:
+  push:
+    branches: [research/flight-sentinel-v0-2]
+    paths:
+      - "research/flight-sentinel/v0_6/**"
+      - "research/flight-sentinel/v0_5/**"
+      - "research/flight-sentinel/v0_4/**"
+      - ".github/workflows/flight-sentinel-v06.yml"
+  pull_request:
+    paths:
+      - "research/flight-sentinel/v0_6/**"
+      - "research/flight-sentinel/v0_5/**"
+      - "research/flight-sentinel/v0_4/**"
+      - ".github/workflows/flight-sentinel-v06.yml"
+permissions:
+  contents: read
+jobs:
+  offline-recovery-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run toy recovery regression tests
+        working-directory: research/flight-sentinel/v0_6
+        run: python3 -m unittest -v test_recovery_reference
+      - name: Reproduce symbolic handoff-delay matrix
+        working-directory: research/flight-sentinel/v0_6
+        run: |
+          python3 - <<'PY'
+          from recovery_reference import experiment
+          for delay, expected in [
+            (0,(3,6,1,11)),
+            (1,(3,6,1,11)),
+            (2,(3,6,0,12)),
+            (4,(1,8,0,12)),
+            (8,(0,9,0,12))
+          ]:
+            got=experiment(delay)["counts"]
+            actual=tuple(got[k] for k in ("prevented","unprevented","introduced","both_safe"))
+            assert actual==expected,(delay,actual,expected)
+            print(delay,actual)
+          PY
