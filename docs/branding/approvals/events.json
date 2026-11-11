@@ -1,0 +1,130 @@
+{
+  "schema": "evercraft.brand-review-events.v1",
+  "policy": "Append events; never overwrite or delete an earlier decision. Git commits retain evidence. New correction events must point to superseded event IDs.",
+  "founder_decision_events": 0,
+  "entries": [
+    {
+      "event_id": "BR-001-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "working_imprint": "The Weekly Signal",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "baf5efe952ba5b36c8bb6ea9a990c6607272b512",
+      "review_status": "awaiting_founder_review",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-002-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.asset-diagnosis",
+      "working_imprint": "The Second Look",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "47ee9106fe59daac6e901db611d4c806e3f20bcf",
+      "review_status": "not_reviewed",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-003-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.ai-boardroom-standard",
+      "working_imprint": "The Chamber",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "539877f6b304b51e71749aa45d0e957d499c5618",
+      "review_status": "not_reviewed",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-004-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.ai-boardroom-financial-modeling",
+      "working_imprint": "The Scenario Room",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "6748157d337305f25a4a40b78af25e3c2a922da7",
+      "review_status": "not_reviewed",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-005-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.knowledge-activation",
+      "working_imprint": "The Knowledge Desk",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "dc5f66cf6f2f854c0b3af8aecf22234b640eec01",
+      "review_status": "not_reviewed",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-006-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.social-intelligence-launch",
+      "working_imprint": "Signal Map",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "15dd24702064bc473726ffbe0f3ad9f6bfd53234",
+      "review_status": "not_reviewed",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-007-E001",
+      "event_type": "creative_proposal_catalogued",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.institutional-memory-system",
+      "working_imprint": "The Living Archive",
+      "proposal_version": "v1.0-proposal",
+      "source_git_blob_sha": "34d609ae7a2582b19511047dd0d0ef771f9b992a",
+      "review_status": "not_reviewed",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/pull/1967",
+      "notes": "Prior creative proposal captured after production prototype publication. No founder identity approval inferred."
+    },
+    {
+      "event_id": "BR-001-E002",
+      "event_type": "founder_review_packet_opened",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "working_imprint": "The Weekly Signal",
+      "proposal_version": "v1.0-proposal",
+      "review_packet": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
+      "review_status": "awaiting_founder_review",
+      "founder_decision": false,
+      "evidence": "https://github.com/jgaethle10/forge-operator/issues/1926",
+      "notes": "Review request prepared; explicit approval, corrections or rejection not yet received."
+    },
+    {
+      "event_id": "BR-001-E003",
+      "event_type": "preliminary_public_name_use_screen",
+      "date": "2026-11-10",
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "working_imprint": "The Weekly Signal",
+      "proposal_version": "v1.0-proposal",
+      "review_status": "awaiting_founder_review",
+      "founder_decision": false,
+      "evidence": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
+      "source_urls": [
+        "https://mktrintheloop.com/p/introducing-the-weekly-signal",
+        "https://404signal.com/newsletter/",
+        "https://techsignalhq.com/",
+        "https://workforcesignal.com/newsletter"
+      ],
+      "finding": "Exact-name phrase already appears in editorial and newsletter brands, including marketing. Record as risk of weak distinctiveness, not a legal trademark conclusion.",
+      "resolution": "open_pending_founder_review"
+    }
+  ]
+}

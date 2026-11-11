@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 const input = process.argv[2] || 'systemia/distribution/publisher-ownership.json';
 const output = process.argv[3] || '/tmp/evercraft-publisher-audit.json';
-const allowed = new Set(['DISCOVERED','CLAIM_REQUIRED','VERIFICATION_PENDING','CLAIMED','SUBMITTED','APPROVED','PUBLISHED','STALE','REJECTED','POLICY_BLOCKED','UNKNOWN']);
+const allowed = new Set(['DISCOVERED','CLAIM_REQUIRED','VERIFICATION_PENDING','CLAIMED','SUBMITTED','APPROVED','PUBLISHED','STALE','REJECTED','POLICY_BLOCKED','UNKNOWN','PORTAL_LISTED_PUBLICLY_OBSERVED','UNINSTALLED_FROM_CHATGPT']);
 const proofStates = new Set(['CLAIMED','SUBMITTED','APPROVED','PUBLISHED']);
 const ledger = JSON.parse(readFileSync(input, 'utf8'));
 if (ledger.schema !== 'evercraft.distribution.publisher-ownership.v1' || !Array.isArray(ledger.entries)) throw Error('invalid ledger');
@@ -17,7 +17,25 @@ for (const entry of ledger.entries) {
   // record must never be promoted to public ownership simply because it is installed.
   const privateInventory = entry.visibility === 'PRIVATE' && entry.internal_plugin_id
     && entry.evidence?.source && ['DISCOVERED','UNKNOWN'].includes(entry.status);
-  if (entry.status !== 'UNKNOWN' && !entry.public_url && !entry.evidence?.listing_url && !privateInventory) {
+  // Portal screenshots are valuable first-party publication evidence, not independent
+  // outside-account pickup or a proven current package version.
+  const portalEvidence = entry.status === 'PORTAL_LISTED_PUBLICLY_OBSERVED'
+    && entry.visibility === 'PUBLIC_PORTAL'
+    && !!entry.release && !!entry.evidence?.source && !!entry.evidence?.receipt
+    && entry.evidence?.independent_fresh_account_discovery === false;
+  const uninstalledEvidence = entry.status === 'UNINSTALLED_FROM_CHATGPT'
+    && entry.visibility === 'NOT_INSTALLED'
+    && !!entry.internal_plugin_id && !!entry.evidence?.source;
+  if(entry.status === 'PORTAL_LISTED_PUBLICLY_OBSERVED' && !portalEvidence){
+    findings.push({key:entry.key,issue:'PORTAL_OBSERVATION_EVIDENCE_INCOMPLETE'});
+  }
+  if(entry.status === 'UNINSTALLED_FROM_CHATGPT' && !uninstalledEvidence){
+    findings.push({key:entry.key,issue:'UNINSTALL_OBSERVATION_EVIDENCE_INCOMPLETE'});
+  }
+  if(entry.status === 'PORTAL_LISTED_PUBLICLY_OBSERVED' && entry.current_release_verified === true){
+    findings.push({key:entry.key,issue:'PORTAL_SCREENSHOT_NOT_INDEPENDENT_RELEASE_ATTESTATION'});
+  }
+  if (entry.status !== 'UNKNOWN' && !entry.public_url && !entry.evidence?.listing_url && !privateInventory && !portalEvidence && !uninstalledEvidence) {
     findings.push({key:entry.key,issue:'NO_SOURCE_URL_OR_PRIVATE_ID_EVIDENCE'});
   }
   if (entry.visibility === 'PRIVATE' && proofStates.has(entry.status)) {

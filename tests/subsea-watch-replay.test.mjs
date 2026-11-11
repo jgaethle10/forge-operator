@@ -91,3 +91,15 @@ test('cinema mode keeps synthetic disclosure, replay controls and a close path o
  assert.match(rawHtml,/Replay telemetry sample/);
  assert.match(viewer,/loadSample\(\);toggleCinema\(true\)/);
 });
+
+test('evidence core supports real NOAA deep-water profiles without weakening sanity bounds',()=>{
+ const d=normalizeDive({title:'NOAA deep-water test',position_source:'ROV_TRACK',points:[
+  {t_s:0,depth_m:1906.7,x_m:0,y_m:0},
+  {t_s:1,depth_m:2064.8,x_m:1,y_m:0},
+  {t_s:10,depth_m:4261.5,x_m:4,y_m:2}
+ ]});
+ assert.equal(d.maxDepth,4261.5);
+ assert.equal(d.xyAvailable,true);
+ assert.equal(d.positionSource,'ROV_TRACK');
+ assert.throws(()=>normalizeDive({points:[{t_s:0,depth_m:12001},{t_s:1,depth_m:1}]}),/Invalid time or depth/);
+});

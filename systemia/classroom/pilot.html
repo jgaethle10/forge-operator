@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#f2fbff">
+<title>Infinite Classroom | Private conversational tutor pilot</title>
+<style>
+:root{--ink:#15283e;--muted:#5e7190;--bg:#effaff;--line:#d7e7f0;--blue:#225dbe;--white:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}body{margin:0;min-width:0;background:linear-gradient(#eaf8ff,#f8fffa 64%,#fff8ed);color:var(--ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #1e6bd6;outline-offset:3px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.wrap{max-width:1100px;margin:auto;padding-inline:clamp(16px,4vw,34px)}
+header{background:rgba(255,255,255,.78);border-bottom:1px solid #d5e7f3}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:70px}
+.brand{font-weight:900;letter-spacing:.08em;font-size:.85rem}.brand span{display:block;font-weight:600;color:#597d9c;letter-spacing:0;font-size:.67rem}
+.pilot{border:1px solid #bad8f1;background:#e1f2ff;color:#275786;padding:7px 12px;font-size:.7rem;border-radius:999px;font-weight:800}
+main{padding-block:clamp(22px,4vw,50px) 58px}
+.intro{display:flex;justify-content:space-between;gap:16px;align-items:start;flex-wrap:wrap}
+.intro h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;letter-spacing:-.05em;margin:7px 0 10px}
+.intro p{color:var(--muted);font-size:1.04rem;margin:0 0 22px}
+.pill{border:1px solid #f3dca3;background:#fffaf0;border-radius:14px;padding:11px 15px;color:#7c5a24;font-weight:800;font-size:.78rem;max-width:210px}
+.gate{background:#fff;border:1px solid var(--line);box-shadow:0 10px 27px #2449790c;border-radius:19px;padding:17px;margin-bottom:28px}
+.gate h2{font-size:1.05rem;margin:0 0 7px}.gate p{font-size:.86rem;color:var(--muted);margin:0 0 12px}
+.gaterow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.gaterow input{min-width:185px;flex:1;padding:12px 14px;border-radius:10px;border:1px solid #bcd2e5}
+.primary,.secondary{padding:11px 16px;border-radius:11px;font-weight:800;min-height:48px}
+.primary{background:var(--blue);border:1px solid var(--blue);color:white}
+.secondary{background:white;border:1px solid #bad0e3;color:#21569c}
+#connection{margin-top:10px;font-size:.85rem;color:#466780}
+h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
+.worlds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.world{border:0;display:flex;flex-direction:column;text-align:left;padding:clamp(18px,4vw,30px);min-height:175px;border-radius:25px;box-shadow:0 12px 16px #142a4e10;color:white;transition:transform .12s}
+.world:hover{transform:translateY(-2px)}.world[aria-pressed=true]{outline:4px solid #143968;outline-offset:3px}
+.world strong{font-size:clamp(1.13rem,3vw,1.56rem);line-height:1.14;margin-top:auto;text-wrap:balance}
+.world small{font-size:.76rem;opacity:.96;font-weight:700;margin-top:6px}
+.world .symbol{font-size:1.9rem;line-height:1.1;margin-bottom:20px}
+.world.math{background:linear-gradient(140deg,#ffc12c,#ff9635)}
+.world.reading{background:linear-gradient(140deg,#4edd7d,#12b981)}
+.world.science{background:linear-gradient(140deg,#39b9f6,#3187ec)}
+.world.language{background:linear-gradient(140deg,#9e87fa,#b15fea)}
+.world.creative{background:linear-gradient(140deg,#fb68b0,#f13e70)}
+.world.calm{background:linear-gradient(140deg,#25ceae,#00b6c8)}
+.chat{margin-top:24px;border:1px solid var(--line);border-radius:22px;background:#fff;overflow:hidden;box-shadow:0 16px 40px #23477b17}
+.chattop{background:#edf5ff;padding:15px clamp(14px,3vw,23px);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.chattop strong{font-size:1.15rem}.chattop small{font-size:.78rem;color:#566b84;display:block}
+.chatlog{padding:18px clamp(14px,3vw,25px);min-height:180px;max-height:450px;overflow-y:auto;display:flex;flex-direction:column;gap:11px}
+.bubble{padding:12px 15px;border-radius:17px;max-width:min(86%,660px);white-space:pre-wrap;overflow-wrap:anywhere;font-size:.98rem}
+.bubble.guide{background:#eef5ff;color:#1b3454;border-bottom-left-radius:5px;align-self:flex-start}
+.bubble.learner{background:#14ac97;color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.bubble.system{background:#fff7e5;color:#5c4827;border:1px solid #f5dc9a;align-self:stretch;font-size:.88rem}
+.suggestions{display:flex;flex-wrap:wrap;gap:9px;padding:0 15px 14px}
+.suggestions button{border:1px solid #c4d7ea;background:#fff;border-radius:999px;padding:8px 12px;color:#2a5c9a;font-size:.82rem;font-weight:700}
+.form{border-top:1px solid #e0ebf5;padding:16px}
+.form label{display:block;font-size:.84rem;font-weight:800;margin-bottom:8px}
+.form textarea{width:100%;resize:vertical;min-height:88px;padding:13px;border-radius:13px;border:1px solid #bfd0e4;color:#1c3555}
+.inputactions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
+.homework{font-size:.82rem;color:#435c75;display:flex;align-items:center;gap:8px}
+.homework input{width:18px;height:18px}
+.disclaimer{color:#66798f;font-size:.81rem;margin-top:16px;line-height:1.7}
+[hidden]{display:none!important}
+@media(min-width:800px){.worlds{grid-template-columns:repeat(3,minmax(0,1fr))}.world{min-height:210px}}
+@media(max-width:430px){.worlds{gap:11px}.world{padding:17px;min-height:160px;border-radius:21px}.world strong{font-size:1.12rem}.intro .pill{max-width:100%}.bubble{max-width:93%}.chatlog{max-height:370px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head><body>
+<header><div class="wrap"><div class="brand">∞ INFINITE CLASSROOM<span>EVERCRAFT · LEARNING WORLDS</span></div><span class="pilot">PRIVATE SUPERVISED PILOT</span></div></header>
+<main class="wrap">
+<div class="intro"><div><h1>Welcome, explorer! 👋</h1><p>Where do you want to explore today?</p></div><div class="pill">⭐ Level and XP return after verified mastery is ready</div></div>
+<section class="gate" aria-label="Adult pilot connection"><h2>🔐 Connect your privately hosted tutor</h2><p>This version uses Evercraft's private local inference only. An adult must supply the private access token. It is held in page memory, never stored. If the model is unavailable, the conversation stops rather than pretending to answer.</p><div class="gaterow"><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Adult pilot access token" aria-label="Private pilot token"><button type="button" class="primary" id="connect">Connect private tutor</button></div><div id="connection" role="status">Not connected. This is not yet cleared for unsupervised child use.</div></section>
+<section aria-label="Learning worlds"><h2 class="worldtitle">Choose a learning world</h2><div class="worlds" id="worlds">
+<button type="button" class="world math" data-room="math" aria-pressed="false"><span class="symbol">▦ 🔢</span><strong>Math Cave</strong><small>Numbers, patterns, algebra</small></button>
+<button type="button" class="world reading" data-room="reading" aria-pressed="false"><span class="symbol">▤ 📚</span><strong>Reading Treehouse</strong><small>Stories and mysteries</small></button>
+<button type="button" class="world science" data-room="science" aria-pressed="false"><span class="symbol">⚗️ 🔬</span><strong>Science Sky Lab</strong><small>Questions and discoveries</small></button>
+<button type="button" class="world language" data-room="language" aria-pressed="false"><span class="symbol">文 ✍️</span><strong>Language Tower</strong><small>Words and expression</small></button>
+<button type="button" class="world creative" data-room="creative" aria-pressed="false"><span class="symbol">✿ 🎨</span><strong>Creative Studio</strong><small>Make something original</small></button>
+<button type="button" class="world calm" data-room="calm" aria-pressed="false"><span class="symbol">♡ 🌿</span><strong>Calm Meadow</strong><small>Focus and feelings</small></button>
+</div></section>
+<section class="chat" id="chat" hidden aria-label="Tutor conversation">
+<div class="chattop"><div><strong id="room-title">Math Cave</strong><small>Actual local model conversation · no account history</small></div><button type="button" id="new-chat" class="secondary">New conversation</button></div>
+<div class="chatlog" id="chatlog" role="log" aria-live="polite" aria-label="Conversation"><div class="bubble guide">Tell me what you're curious about. There are no wrong questions.</div></div>
+<div class="suggestions" id="suggestions"><button type="button" data-sample="I don't have a problem, I just want to learn.">Teach me something!</button><button type="button" data-sample="Can you tell me an original mystery and let me make choices?">Let's tell a story</button><button type="button" data-sample="Does this really work?">Does this really work?</button></div>
+<div class="form"><label for="message">What are you thinking about?</label><textarea id="message" maxlength="700" placeholder="Ask anything about this world. Try a follow-up question!" disabled></textarea>
+<div class="inputactions"><label class="homework"><input type="checkbox" id="homework" checked> This is active schoolwork. Guide me, don't reveal answers.</label><button class="primary" id="send" type="button" disabled>Send to tutor</button></div><div id="chat-status" role="status" class="disclaimer"></div></div>
+</section>
+<p class="disclaimer">This is a private adult-supervised engineering pilot, not the original production release and not a certified child-safe tutor. It uses a local AI model whose output can still make mistakes. Nothing you type is saved to disk or sent to third-party inference by this application. Room sessions expire after 30 minutes or when the process restarts. Please don't enter personal or sensitive information. The original 18 fixed practice missions remain available separately.</p>
+</main>
+<script>
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const rooms={math:'Math Cave',reading:'Reading Treehouse',science:'Science Sky Lab',language:'Language Tower',creative:'Creative Studio',calm:'Calm Meadow'};
+ const sessions=new Map(),logs=new Map();
+ let access='',current='',busy=false;
+ function add(role,text){
+  if(!logs.has(current))logs.set(current,[]);
+  logs.get(current).push({role,text});
+  const node=document.createElement('div');node.className='bubble '+role;node.textContent=text;
+  $('chatlog').append(node);$('chatlog').scrollTop=$('chatlog').scrollHeight;
+ }
+ function render(room){
+  $('chatlog').replaceChildren();
+  const list=logs.get(room)||[{role:'guide',text:'Welcome to '+rooms[room]+'! What would you like to explore?'}];
+  for(const m of list){
+   const div=document.createElement('div');div.className='bubble '+m.role;div.textContent=m.text;$('chatlog').append(div);
+  }
+  $('chatlog').scrollTop=$('chatlog').scrollHeight;
+ }
+ function state(msg){$('connection').textContent=msg}
+ function ready(){const yes=Boolean(access&&current&&!busy);$('message').disabled=!yes;$('send').disabled=!yes;$('new-chat').disabled=!yes;$('worlds').querySelectorAll('button').forEach(b=>b.disabled=busy)}
+ async function api(endpoint,data,token=access){
+  const response=await fetch('/api/classroom/'+endpoint,{
+   method:data?'POST':'GET',
+   headers:{'authorization':'Bearer '+token,...(data?{'content-type':'application/json'}:{})},
+   ...(data?{body:JSON.stringify(data)}:{}),
+   signal:AbortSignal.timeout(35000),
+   cache:'no-store'
+  });
+  const result=await response.json().catch(()=>({error:'invalid_response'}));
+  if(!response.ok||!result.ok)throw Error(result.error||'private_tutor_unavailable');
+  return result;
+ }
+ $('connect').addEventListener('click',async()=>{
+  const value=$('token').value.trim();
+  if(!value){state('Enter the adult pilot token.');return}
+  busy=true;ready();state('Checking local model readiness…');
+  try{
+   const info=await api('status',null,value);
+   if(info.model!=='owned_local_model'||info.public_youth_access!==false)throw Error('unverified_local_model');
+   access=value;sessions.clear();logs.clear();current='';$('chat').hidden=true;
+   $('token').value='';state('Connected to verified Evercraft-owned local tutor. Adult supervision required.');
+  }catch{access='';state('Private tutor unavailable or access denied. No chat was sent.')}
+  finally{busy=false;ready()}
+ });
+ async function select(room){
+  if(!rooms[room])return;
+  if(!access){state('Connect the adult-supervised tutor first.');$('token').focus();return}
+  busy=true;ready();
+  try{
+   if(!sessions.has(room)){
+    const result=await api('session',{room});
+    sessions.set(room,result.session_id);
+   }
+   current=room;
+   $('worlds').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.room===room)));
+   $('room-title').textContent=rooms[room];$('chat').hidden=false;
+   $('chat-status').textContent='Conversation in memory only. Your words are sent to the owned local model for this reply.';
+   render(room);$('chat').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){state('Could not enter room: '+String(e.message||'unavailable'))}
+  finally{busy=false;ready()}
+ }
+ $('worlds').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>void select(b.dataset.room)));
+ $('suggestions').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{$('message').value=b.dataset.sample;$('message').focus()}));
+ $('new-chat').addEventListener('click',async()=>{
+  if(!current||!access||busy)return;
+  busy=true;ready();
+  try{
+   const prior=sessions.get(current);
+   if(prior)await api('end',{session_id:prior});
+   sessions.delete(current);logs.delete(current);
+   const r=await api('session',{room:current});sessions.set(current,r.session_id);render(current);
+   $('chat-status').textContent='New private conversation. Prior chat erased from the server session.';
+  }catch{$('chat-status').textContent='Could not verify a fresh conversation; refresh and reconnect.'}
+  finally{busy=false;ready()}
+ });
+ async function send(){
+  if(!current||!access||busy)return;
+  const text=$('message').value.trim();
+  if(text.length<2)return;
+  busy=true;ready();$('chat-status').textContent='Thinking through your question…';
+  const target=current,session=sessions.get(target);
+  add('learner',text);$('message').value='';
+  try{
+   const r=await api('message',{session_id:session,message:text,homework:$('homework').checked});
+   if(current===target)add('guide',r.reply);
+   else{if(!logs.has(target))logs.set(target,[]);logs.get(target).push({role:'guide',text:r.reply})}
+   $('chat-status').textContent='Local model response. No mastery or XP awarded.';
+  }catch(e){
+   if(current===target)add('system','No verified answer available: '+String(e.message||'unavailable')+'. Nothing was submitted as mastered.');
+   $('chat-status').textContent='Local model or safety gate held the response. Ask a trusted adult if you need help.';
+  }finally{busy=false;ready()}
+ }
+ $('send').addEventListener('click',()=>void send());
+ $('message').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!busy)void send()}});
+ ready();
+})();
+</script></body></html>

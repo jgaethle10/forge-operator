@@ -91,3 +91,26 @@ test('Lund Building exhibit uses a source-backed period study, not invented tunn
   assert.ok(lund.documented_architecture.inference_limits.some(x=>x.includes('not identified as below ground')));
   assert.match(lund.documented_architecture.source_url,/npgallery\.nps\.gov/);
 });
+
+test('Titan I educational exhibit uses original interpretive cutaway with sourced closed access', () => {
+  const page=read('public/worlds/hidden-world/titan-i-1962.html');
+  const atlas=read('public/worlds/hidden-world/index.html');
+  const data=JSON.parse(read('public/worlds/hidden-world/titan-i-1962-evidence.v1.json'));
+  assert.match(atlas,/href="titan-i-1962\.html"/);
+  for(const id of ['era1959','era1962','era1965','erapresent','fSilos','fControl','fConnections'])
+    assert.match(page,new RegExp('id="'+id+'"'));
+  assert.match(page,/role="img"/);
+  assert.match(page,/Original educational SVG/);
+  assert.match(page,/not to scale/i);
+  assert.match(page,/closed to visitors/);
+  assert.match(page,/www\.historylink\.org\/File\/10158/);
+  assert.match(page,/govinfo\.gov/);
+  assert.doesNotMatch(page,/<script\b/i,'Titan timeline must remain script-free');
+  assert.equal(data.schema,'evercraft.hidden-world.cold-war-evidence.v1');
+  assert.equal(data.documented_system_facts.length,7);
+  assert.equal(data.broad_regions.length,3);
+  assert.ok(data.broad_regions.every(r=>r.actual_complex_coordinates===null&&r.property_entrance_coordinates===null&&r.open_to_public===false));
+  assert.equal(data.exhibit.precise_survey_geometry,false);
+  assert.equal(data.exhibit.real_tunnel_routes,false);
+  assert.ok(data.documented_system_facts.every(x=>data.sources.some(src=>src.id===x.source_id)));
+});

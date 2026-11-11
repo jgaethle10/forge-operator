@@ -21,13 +21,13 @@ The owned Evercraft Fabric MCP is implemented in `systemia/mcp/fabric-directory.
 - current commercial and safety boundaries
 - matching product package under `plugins/evercraft-fabric/`
 
-## External platform steps that remain
+## Public listing observation and next release
 
-OpenAI requires submission through the Platform plugin submission portal, with the appropriate Apps Management permission and a verified developer or business identity. If the portal requests domain verification, it generates the exact token that must be hosted at the specified `/.well-known/openai-apps-challenge` URL.
+The founder's OpenAI Platform screenshot from 2026-11-10 shows the **existing Evercraft LLC listing** marked **Listed publicly** at publication version **1.0.2**; MCP configured and domain verified, with no latest scan findings. That is **portal evidence**, not an independent fresh-account search/install. The current canonical package in this repository is **v1.0.6**, not yet confirmed as the public version.
 
-Do not invent that token ahead of the portal challenge.
+Do not create a second public listing. The next account-side action is an **update to the existing public listing** with the tested v1.0.6 archive. Save the previous version and metadata, inspect the update's scan and review gates, publish only after provider checks, then verify the published version and a fresh external user invocation.
 
-After OpenAI approval, publication is a separate protected action in the portal. After publication, directory pickup must be independently observed before Forge records the plugin as publicly available.
+The source-truth record lives at `public-listing-observation-2026-11-10.json`. Repository readiness, a functioning owned MCP endpoint and a public portal label are different receipts. No customer-install count, organic recommendation or conversion can be inferred from them.
 
 ## Review doctrine
 

@@ -44,6 +44,11 @@ const SPECS = Object.freeze({
     label: 'evercraft-clip',
     environment: 'live',
   }),
+  'linkedin-organization': Object.freeze({
+    provider: 'linkedin-organization',
+    label: 'evercraft-clip',
+    environment: 'live',
+  }),
   gemini: Object.freeze({
     provider: 'gemini',
     label: 'raven-inference',
@@ -170,6 +175,19 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       label: clean(body.label) || spec.label,
       apiKeyId: clean(body.page_id),
       apiSecret: clean(body.page_access_token),
+    };
+  }
+  if (spec.provider === 'linkedin-organization') {
+    const organizationId=clean(body.organization_id);
+    if (!/^[1-9][0-9]{1,19}$/.test(organizationId)) {
+      throw new Error('linkedin_organization_id_invalid');
+    }
+    return {
+      provider: spec.provider,
+      environment: 'live',
+      label: spec.label,
+      apiKeyId: 'urn:li:organization:' + organizationId,
+      apiSecret: clean(body.access_token),
     };
   }
 

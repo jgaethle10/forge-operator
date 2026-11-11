@@ -1,0 +1,17 @@
+# Evercraft Closeout
+Product: browser-local contractor closeout packet creator, with an optional human-reviewed service inquiry.
+Public URL: https://jgaethle10.github.io/forge-operator/closeout/
+Product record: https://jgaethle10.github.io/forge-operator/closeout/product.json
+Merchant: Evercraft LLC
+
+Customers can assemble a closeout PDF from contractor/job details, completed work, selected checklist items, future work, warranty/care text and up to four photos. The free tool runs in the customer's browser and does not transmit input data or photos from this page. Use Print / Save PDF to retain the packet. Local source data is not saved across sessions.
+
+Proposed paid service pilot: USD 49 one-time for one human-reviewed, professionally formatted packet, up to four authorized photos and one round of factual corrections. This is an inquiry-only offer. Price, timing and capacity are agreed before any payment is accepted. No Closeout checkout or paid customer has been verified.
+
+Buyer: independent contractors, cleaners, property-maintenance providers and other project-based service businesses.
+Customer problem: documentation and photos get scattered after work is completed.
+Search intents: contractor closeout packet, completion report generator, job completion PDF, maintenance handoff report, contractor photo report.
+
+Boundaries: Evercraft does not certify that work was performed, a property was inspected, a customer has accepted it or warranties exist. Contractor-supplied facts must be checked by the contractor. No digital signature or verified payment is performed by this browser tool.
+
+Order authority: Evercraft Payments. Provider boundary: Raven Nexus. Stripe is a settlement adapter only. No generic Stripe link is substituted for the unverified Closeout product order.

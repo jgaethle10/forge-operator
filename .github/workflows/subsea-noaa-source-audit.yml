@@ -1,0 +1,67 @@
+name: Subsea NOAA source byte audit
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/audit-noaa-subsea-sources.py
+      - tests/test_subsea_noaa_audit.py
+      - .github/workflows/subsea-noaa-source-audit.yml
+  push:
+    branches: [main]
+    paths:
+      - scripts/audit-noaa-subsea-sources.py
+      - tests/test_subsea_noaa_audit.py
+      - .github/workflows/subsea-noaa-source-audit.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate evidence inspector offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit-noaa-subsea-sources.py tests/test_subsea_noaa_audit.py
+          python3 -m unittest discover -s tests -p 'test_subsea_noaa_audit.py' -v
+      - name: Inspect original NOAA EX2306 DIVE02 KML and ancillary ZIP
+        id: acquisition
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p artifacts/subsea-noaa
+          python3 scripts/audit-noaa-subsea-sources.py --out artifacts/subsea-noaa/ex2306-dive02-byte-receipt.json
+          rc=$?
+          echo "acquisition_rc=$rc" >> "$GITHUB_OUTPUT"
+          if [ "$rc" -ne 0 ]; then
+            echo "::warning::NOAA source bytes could not all be inspected. The JSON receipt explicitly describes blockers. No dive-track reconstruction is approved."
+          fi
+          exit 0
+      - name: Explain source gate without fabricating an inspection
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('artifacts/subsea-noaa/ex2306-dive02-byte-receipt.json').read_text())
+          with open(__import__('os').environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:
+              f.write('## Subsea Watch · NOAA EX2306 DIVE02 actual source audit\n\n')
+              f.write('**Outcome:** '+r['status']+'\n\n')
+              for item in r['entries']:
+                  f.write('- '+item['id']+': '+item['status']+'\n')
+                  if 'transport' in item:
+                      f.write('  - SHA256: '+item['transport']['sha256']+'\n')
+                  if 'blocker' in item:
+                      f.write('  - Blocker: '+item['blocker']+'\n')
+              f.write('\nNo video/track clock registration, underwater position certification, or site reconstruction is implied by this receipt.\n')
+          PY
+      - name: Preserve sanitized audit receipt, never raw NOAA files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: subsea-ex2306-dive02-byte-receipt
+          path: artifacts/subsea-noaa/ex2306-dive02-byte-receipt.json
+          if-no-files-found: ignore
+          retention-days: 14

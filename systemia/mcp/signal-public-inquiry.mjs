@@ -9,8 +9,19 @@ import { createNotificationClient } from '../notification-fabric/client.mjs';
 const ORIGINS=new Set(['https://jgaethle10.github.io','https://fabric.systemiacommandcenters.com']);
 const EMAIL=/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 const REF=/^ECS-[A-F0-9]{24}$/;
-const DEFAULT_DIR=()=>process.env.EVERCRAFT_SIGNAL_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','signal-leads');
-const KEY_ENV=()=>process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||'';
+const DEFAULT_DIR=()=>process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'/var/lib/evercraft/signal-intake/leads';
+const KEY_ENV=()=>{
+  if(process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64?.trim())
+    return process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64.trim();
+  const file=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_FILE||'/var/lib/evercraft/signal-intake/key.b64';
+  try{
+    const stat=fs.lstatSync(file);
+    if(!stat.isFile()||stat.isSymbolicLink()||(stat.mode&0o077)!==0||
+       (process.getuid?.()!==undefined&&stat.uid!==process.getuid()))
+      return '';
+    return fs.readFileSync(file,'utf8').trim();
+  }catch{return ''}
+};
 
 function clean(value,max){
   if(typeof value!=='string'||value.length>max)return null;
