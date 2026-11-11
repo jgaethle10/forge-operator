@@ -115,6 +115,7 @@ export async function proveLicensedAircraftCanary({
     });
     CHECK(verifyGltfAssetPack(pack),'import_receipt_invalid');
     const plan=renderPlan(pack,gltf);
+    const decodeBrowserVersion=browser.version();
     await browser.close();browser=null;
     const nativeTurntable=await captureAuthoredTurntable({
       chromium,gltf,pack,outputDir:path.dirname(outputFile||path.join(process.cwd(),'reference-aircraft','receipt.json'))
@@ -136,7 +137,7 @@ export async function proveLicensedAircraftCanary({
       native_execution_class:nativeTurntable.execution_class,
       native_hardware_execution_claim:nativeTurntable.hardware_execution_claim,
       asset_pack_receipt_digest:pack.receipt.digest,
-      browser_version:browser.version(),
+      browser_version:decodeBrowserVersion,
       blocking_limitations:[
         'cinematic_fidelity_not_accepted',
         ...(pack.samplerDowngrades.length?['sampler_mipmaps_downgraded_for_preview']:[]),
