@@ -27,6 +27,8 @@ test('read-only projection of canonical policy heartbeat has bounded, disclosed 
  assert.equal(projected.historical_limit,'only_retained_bounded_chronicle_not_full_history');
  assert.ok(projected.decision_projection.receipts.length>0);
  assert.equal(projected.decision_projection.attestation,'content_digest_not_signature');
+ assert.deepEqual(projected.snapshot_stats.civic,saved.world.civic.stats);
+ assert.deepEqual(projected.snapshot_stats.social,saved.world.social.stats);
  assert.equal(JSON.stringify(saved),before);
  assert.ok(!JSON.stringify(projected).includes('GITHUB_TOKEN'));
 });
@@ -51,4 +53,20 @@ test('local snapshot reader refuses oversized JSON and accepts a genuine snapsho
    await fs.writeFile(file,'x'.repeat(1_000_001));
    await assert.rejects(()=>readWindowSnapshot(file),/under 1MB/);
  }finally{await fs.rm(dir,{recursive:true,force:true});}
+});
+
+test('long-running aggregate statistics are bounded and cannot contradict saved counters',()=>{
+ const original=sample();
+ const wrong=structuredClone(original);
+ wrong.world.social.stats.kept=wrong.world.social.stats.promised+1;
+ wrong.world_hash=createHash('sha256').update(JSON.stringify(wrong.world)).digest('hex');
+ assert.throws(()=>observeWindowSnapshot(wrong),/Inconsistent simulated promise counts/);
+ const invalid=structuredClone(original);
+ invalid.world.civic.stats.completed=-1;
+ invalid.world_hash=createHash('sha256').update(JSON.stringify(invalid.world)).digest('hex');
+ assert.throws(()=>observeWindowSnapshot(invalid),/Invalid simulated cumulative statistics/);
+ const legacy=structuredClone(original);
+ delete legacy.world.social.stats;
+ legacy.world_hash=createHash('sha256').update(JSON.stringify(legacy.world)).digest('hex');
+ assert.equal(observeWindowSnapshot(legacy).snapshot_stats.social,null);
 });
