@@ -3,12 +3,14 @@ on:
   push:
     branches:
       - research/eo001-gate1-resource-readback-20261110
+      - research/eo001-gate1-user-bus-hold-20261110
     paths:
       - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
       - '.github/workflows/eo001-gate1-cgroup-admission.yml'
   pull_request:
     branches:
       - research/eo001-gate1-cgroup-admission-20261110
+      - research/eo001-gate1-resource-readback-20261110
     paths:
       - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
       - '.github/workflows/eo001-gate1-cgroup-admission.yml'

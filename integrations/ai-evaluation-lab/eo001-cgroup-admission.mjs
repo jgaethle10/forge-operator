@@ -33,6 +33,27 @@ const requireTrue=(condition,code)=>{if(!condition)refuse(code);};
 const rootFromHere=()=>path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const rawRead=p=>fs.readFileSync(p,'utf8');
 
+/**
+ * A user systemd manager needs its per-UID runtime socket. Never copy the
+ * caller's arbitrary environment into the synthetic scope launcher; derive
+ * the standard directory and reject missing, unowned or permissive paths.
+ * This is a local prerequisite, not evidence of cgroup delegation.
+ */
+export function ownedUserManagerEnvironment({
+  uid=process.getuid?.(),inspect=fs.lstatSync,home=os.homedir()
+}={}){
+  requireTrue(Number.isInteger(uid)&&uid>0,'NONROOT_LINUX_REQUIRED');
+  const runtimeDir='/run/user/'+uid;
+  let metadata;
+  try{metadata=inspect(runtimeDir);}catch{refuse('OWNED_USER_RUNTIME_DIR_UNAVAILABLE');}
+  requireTrue(metadata&&typeof metadata.isDirectory==='function'&&
+    metadata.isDirectory()&&metadata.uid===uid&&
+    Number.isInteger(metadata.mode)&&(metadata.mode&0o077)===0,
+    'OWNED_USER_RUNTIME_DIR_UNTRUSTED');
+  return {PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
+    HOME:home,XDG_RUNTIME_DIR:runtimeDir};
+}
+
 export function parseUnifiedCgroup(text){
   if(typeof text!=='string')refuse('CGROUP_FORMAT_INVALID');
   const lines=text.trim().split(/\r?\n/);
@@ -136,7 +157,7 @@ export function runSyntheticCgroupCanary({
   root=rootFromHere(),reviewedPin,ownerApproved=false,
   preflight=preflightCgroupScope,run=execute,
   uuid=()=>randomUUID().replaceAll('-',''),
-  node=process.execPath
+  node=process.execPath,userEnv=ownedUserManagerEnvironment
 }={}){
   requireTrue(ownerApproved===true,'OWNER_SYNTHETIC_CANARY_APPROVAL_REQUIRED');
   const first=preflight({root,reviewedPin});
@@ -147,14 +168,15 @@ export function runSyntheticCgroupCanary({
   const unit='eo001-g1-synthetic-'+id+'.scope';
   const nonce=uuid();
   const command=fixedSyntheticScopeCommand({root,unit,nonce,node});
+  // This must be validated before any user scope is created.
+  const scopedEnv=userEnv();
   // Allow only private noncredential environment variables, no inherited tokens.
   let receipt=null;
   let failure=null;
   try{
     const response=run(command.executable,command.arguments,{
       timeout:6500,maxBuffer:8192,encoding:'utf8',
-      env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
-        HOME:os.homedir()},stdio:['ignore','pipe','pipe']
+      env:scopedEnv,stdio:['ignore','pipe','pipe']
     });
     requireTrue(commandOk(response),'SYNTHETIC_SCOPE_EXECUTION_BLOCKED');
     let payload;
@@ -182,7 +204,7 @@ export function runSyntheticCgroupCanary({
   // the user's systemd unit state rather than equating a kill request with
   // proof that the cgroup is gone.
   const cleanupOptions={timeout:3000,maxBuffer:4096,encoding:'utf8',
-    env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',HOME:os.homedir()}};
+    env:scopedEnv};
   run('systemctl',['--user','stop',unit],cleanupOptions);
   const readState=()=>run('systemctl',['--user','show',unit,
     '-p','LoadState','-p','ActiveState'],cleanupOptions);
@@ -196,7 +218,12 @@ export function runSyntheticCgroupCanary({
     run('systemctl',['--user','stop',unit],cleanupOptions);
     current=readState();
   }
-  requireTrue(isGone(current),'TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED');
+  if(!isGone(current)){
+    const error=new Error('TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED');
+    error.code='TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED';
+    error.scope_id=unit; // Nonsecret exact unit identifier for recovery.
+    throw error;
+  }
   if(failure)throw failure;
   requireTrue(receipt!==null,'SCOPE_RECEIPT_INVALID');
   return {
@@ -233,12 +260,14 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1]
       preflightCgroupScope({reviewedPin});
     process.stdout.write(JSON.stringify(data,null,2)+'\n');
   }catch(error){
-    process.stdout.write(JSON.stringify({
+    const blocked={
       state:'CGROUP_SCOPE_ADMISSION_BLOCKED',
       reason:/^[A-Z_]+$/.test(error?.code||'')?error.code:'UNVERIFIED_PREREQUISITE',
       model_inference_executed:false,
       external_actions_authorized:false
-    })+'\n');
+    };
+    if(UNIT.test(error?.scope_id||''))blocked.synthetic_scope_id=error.scope_id;
+    process.stdout.write(JSON.stringify(blocked)+'\n');
     process.exitCode=2;
   }
 }

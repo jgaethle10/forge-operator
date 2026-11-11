@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {
   parseUnifiedCgroup,cgroupCapabilities,preflightCgroupScope,
-  fixedSyntheticScopeCommand,runSyntheticCgroupCanary
+  fixedSyntheticScopeCommand,runSyntheticCgroupCanary,ownedUserManagerEnvironment
 } from './eo001-cgroup-admission.mjs';
 import {inspectScopedChild} from './eo001-cgroup-synthetic-child.mjs';
 
@@ -12,6 +12,8 @@ const HERE=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(HERE,'../..');
 const PIN='a'.repeat(40),ID='b'.repeat(32),NONCE='c'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
+const fakeUserEnv=()=>({PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
+  HOME:'/home/runner',XDG_RUNTIME_DIR:'/run/user/1000'});
 const fakeScopeResources=file=>{
   if(file.endsWith('/memory.max'))return '268435456';
   if(file.endsWith('/pids.max'))return '12';
@@ -139,6 +141,35 @@ test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
     scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources
   }),/INVALID_SYNTHETIC_SCOPE_INPUT/);
 });
+test('owned user manager bus environment is minimal, verified and derived per UID',()=>{
+  const stats={uid:1000,mode:0o40700,isDirectory:()=>true};
+  const opts={uid:1000,inspect:dir=>{
+    assert.equal(dir,'/run/user/1000');
+    return stats;
+  },home:'/home/verified'};
+  assert.deepEqual(ownedUserManagerEnvironment(opts),{
+    PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
+    HOME:'/home/verified',XDG_RUNTIME_DIR:'/run/user/1000'
+  });
+  assert.equal(ownedUserManagerEnvironment(opts).DBUS_SESSION_BUS_ADDRESS,undefined);
+  assert.equal(ownedUserManagerEnvironment(opts).NODE_OPTIONS,undefined);
+  for(const bad of [
+    {...stats,uid:2000},
+    {...stats,mode:0o40755},
+    {...stats,isDirectory:()=>false},
+  ]){
+    assert.throws(()=>ownedUserManagerEnvironment({
+      uid:1000,inspect:()=>bad
+    }),/OWNED_USER_RUNTIME_DIR_UNTRUSTED/);
+  }
+  assert.throws(()=>ownedUserManagerEnvironment({
+    uid:1000,inspect:()=>{throw Error('missing');}
+  }),/OWNED_USER_RUNTIME_DIR_UNAVAILABLE/);
+  assert.throws(()=>ownedUserManagerEnvironment({
+    uid:0,inspect:()=>stats
+  }),/NONROOT_LINUX_REQUIRED/);
+});
+
 test('unapproved scope canary does not even run preflight',()=>{
   let called=false;
   assert.throws(()=>runSyntheticCgroupCanary({
@@ -151,6 +182,8 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   const calls=[];
   const run=(cmd,args,opts)=>{
     calls.push({cmd,args,options:opts});
+    assert.equal(opts.env.XDG_RUNTIME_DIR,'/run/user/1000');
+    assert.equal(opts.env.NODE_OPTIONS,undefined);
     if(cmd==='systemctl'){
       assert.deepEqual(args.includes('--stop'),false);
       assert.ok(args.includes(UNIT));
@@ -170,7 +203,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   };
   let k=0;
   const result=runSyntheticCgroupCanary({
-    root:ROOT,reviewedPin:PIN,ownerApproved:true,
+    root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({
       state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false
@@ -190,7 +223,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   assert.equal(result.model_inference_executed,false);
 });
 test('synthetic scope report that is out-of-scope or malformed cannot be promoted',()=>{
-  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,
+  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false}),uuid:()=>ID};
   const withCleanup=onRun=>(cmd,args)=>{
@@ -211,7 +244,7 @@ test('synthetic scope report that is out-of-scope or malformed cannot be promote
   }),/SCOPE_RECEIPT_INVALID/);
 });
 test('uncleared transient scope blocks the report even if child claimed membership',()=>{
-  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,
+  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false}),uuid:()=>ID};
   const calls=[];
@@ -227,8 +260,9 @@ test('uncleared transient scope blocks the report even if child claimed membersh
       readFile:fakeScopeResources
     }))};
   };
-  assert.throws(()=>runSyntheticCgroupCanary({...base,run}),
-    /TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED/);
+  assert.throws(()=>runSyntheticCgroupCanary({...base,run}),err=>
+    err.code==='TRANSIENT_SCOPE_CLEANUP_NOT_VERIFIED'&&
+    err.scope_id===UNIT);
   assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('kill')),true);
   assert.equal(calls.some(x=>x.cmd==='systemctl'&&x.args.includes('stop')),true);
 });
