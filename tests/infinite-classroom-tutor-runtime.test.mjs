@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {startPrivateClassroomPilot,makeLocalRavenTutor} from '../systemia/classroom/tutor-runtime.mjs';
+import {startPrivateClassroomPilot,makeLocalRavenTutor,makeLocalLlamaTutor} from '../systemia/classroom/tutor-runtime.mjs';
 
 const ACCESS='adult-pilot-authority-test-abc123456789'; // Synthetic test-only.
 const AUTH={authorization:'Bearer '+ACCESS,'content-type':'application/json'};
@@ -106,4 +106,45 @@ test('Raven adapter prohibits remote providers, and validates local Ollama befor
    ok:true,service:'raven-inference-gateway',provider:'openai',loopback_only:true
   })})});
  await assert.rejects(()=>hostile.validate(),/raven_local_ollama_only_required/);
+});
+
+test('Existing NextGen llama-server can be validated and queried without Raven or any remote host',async()=>{
+ assert.throws(()=>makeLocalLlamaTutor({origin:'https://hosted.example'}),/llama_must_be_loopback/);
+ assert.throws(()=>makeLocalLlamaTutor({origin:'http://127.0.0.1:8080/evil/path'}),/llama_must_be_loopback/);
+ const calls=[];
+ const fetchImpl=async(url,request)=>{
+  calls.push({url,request});
+  const route=new URL(url).pathname;
+  const payload=route==='/v1/models'
+    ?{data:[{id:'nextgen-local-model',object:'model'}]}
+    :{choices:[{message:{role:'assistant',content:'I hear you. Can we try one friendly example?'}}]};
+  return {ok:true,json:async()=>payload};
+ };
+ const backend=makeLocalLlamaTutor({origin:'http://127.0.0.1:8080',fetchImpl});
+ await assert.rejects(()=>backend.infer({prompt:'test'}),/llama_model_not_validated/);
+ const ready=await backend.validate();
+ assert.deepEqual(ready,{provider:'llama.cpp',model:'nextgen-local-model',local_only:true});
+ const r=await backend.infer({prompt:'What is algebra?'});
+ assert.equal(r.status,'completed');
+ assert.equal(r.provider,'llama.cpp');
+ assert.match(r.provider_receipt,/^sha256:[a-f0-9]{64}$/);
+ assert.match(r.text,/friendly example/);
+ assert(calls.every(x=>x.url.startsWith('http://127.0.0.1:8080/')));
+ const data=JSON.parse(calls[1].request.body);
+ assert.equal(data.stream,false);
+ assert.equal(data.model,'nextgen-local-model');
+ assert.equal(data.messages[0].content,'What is algebra?');
+ assert.equal(data.messages[0].role,'user');
+});
+test('llama-server missing model or failed completion holds and never fabricates an answer',async()=>{
+ const missing=makeLocalLlamaTutor({origin:'http://127.0.0.1:8080',fetchImpl:async()=>({ok:true,json:async()=>({data:[]})})});
+ await assert.rejects(()=>missing.validate(),/llama_model_missing/);
+ let count=0;
+ const offline=makeLocalLlamaTutor({origin:'http://127.0.0.1:8080',fetchImpl:async()=>{
+  count++;
+  return count===1?{ok:true,json:async()=>({data:[{id:'local'}]})}:
+   {ok:false,json:async()=>({error:'server unavailable'})};
+ }});
+ await offline.validate();
+ await assert.rejects(()=>offline.infer({prompt:'Can we learn?' }),/llama_inference_failed/);
 });
