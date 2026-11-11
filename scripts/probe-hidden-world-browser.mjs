@@ -100,6 +100,34 @@ try{
     assert.ok(titanWidths[0]<=titanWidths[1]+4,profile.name+': Titan horizontal overflow '+titanWidths);
     await page.evaluate(()=>document.querySelector('.exhibit').scrollIntoView({block:'start'}));
     await page.screenshot({path:output+'/'+profile.name+'-titan.png',timeout:15000});
+
+    const walkResponse=await page.goto(origin+'/worlds/hidden-world/titan-walk/',{waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(walkResponse?.status(),200,profile.name+': Titan gallery homepage');
+    assert.equal(await page.locator('a[href="../titan-i-1962.html"]').count()>=1,true,
+      profile.name+': lost historical evidence fallback');
+    if(profile.scripts){
+      await page.waitForFunction(()=>typeof window.__evercraftTitanQA==='function',{timeout:12000});
+      await page.locator('#start').click();
+      await page.waitForFunction(()=>window.__evercraftTitanQA?.().running===true,{timeout:10000});
+      const before=await page.evaluate(()=>window.__evercraftTitanQA());
+      await page.keyboard.down('w');await page.waitForTimeout(380);await page.keyboard.up('w');
+      const after=await page.evaluate(()=>window.__evercraftTitanQA());
+      assert.ok(after.z<before.z-.1,profile.name+': WASD does not move camera');
+      await page.locator('#guide').click();
+      assert.equal(await page.locator('#panel').isVisible(),true,profile.name+': research panel missing');
+      assert.ok((await page.locator('#panel-copy').textContent()).includes('fictional research museum'));
+      await page.locator('#close').click();
+      await page.locator('#tour').click();
+      await page.waitForTimeout(180);
+      assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,true,
+        profile.name+': guided history tour did not start');
+      await page.locator('#tour').click();
+      assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,false);
+    }else{
+      assert.equal(await page.locator('noscript').count(),1);
+      assert.ok((await page.locator('body').textContent()).includes('Interactive 3D requires JavaScript'));
+    }
+    await page.screenshot({path:output+'/'+profile.name+'-titan-walk.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');
     receipt.scenarios.push({name:profile.name,status:'PASS',viewport:[profile.width,profile.height],
       javascript_enabled:profile.scripts,no_horizontal_overflow:true,sources_visible:true});
