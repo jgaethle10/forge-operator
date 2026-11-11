@@ -6,13 +6,13 @@
 - The original colorful six-room chooser and a real free-form chat interface.
 - In-memory private conversations per room, with actual prior turns supplied to the owned local model.
 - Default-deny API with adult bearer access on loopback; no public host, no external script, no student identity or stored transcripts.
-- Raven inference integration, validated against a local Ollama model only; hosted OpenAI/Gemini configurations rejected.
+- Two owned, private local inference routes: authenticated Raven inference with validated Ollama only, or direct validated NextGen llama.cpp llama-server on loopback. Hosted OpenAI/Gemini and remote origins rejected.
 - Capped sessions and requests; no fabricated XP or mastery. Model failures are visible, not silently replaced with canned answers.
 - Preliminary no-homework-final-answer and urgent safety filtering, explicitly not independently certified.
 - Public offline practice now accurately labels four generic hints as generic, not as question-aware Luma.
 
 ## Local authorized operator setup
-Run only on an Evercraft-controlled node with Node 22+, Raven inference gateway on local loopback 4322, and a verified local Ollama model. Historical NextGen llama-server evidence does not prove Ollama compatibility. Missing backend is a hold, never a provider fallback.
+Run only on an Evercraft-controlled node with Node 22+ and EITHER a verified local Raven/Ollama gateway on loopback 4322 OR the owned NextGen llama-server on loopback port 8080 (adjust to its actual local port). A missing backend is a hold, never a hosted-provider fallback.
 
 Use a dedicated adult pilot access secret:
 
@@ -21,7 +21,11 @@ Use a dedicated adult pilot access secret:
     openssl rand -base64 48 > "$HOME/.local/state/evercraft/classroom/pilot-access.token"
     chmod 600 "$HOME/.local/state/evercraft/classroom/pilot-access.token"
 
-Raven gateway must already be configured with a private token file. Never commit or print either token. Using the intended reviewed repository commit:
+To use the existing NextGen llama-server, no Raven gateway token is required. The llama-server must already provide working /v1/models and /v1/chat/completions on the same machine. Using the intended reviewed repository commit:
+
+    node systemia/classroom/tutor-runtime.mjs --access-token-file "$HOME/.local/state/evercraft/classroom/pilot-access.token" --llama-origin http://127.0.0.1:8080 --port 8793
+
+Alternatively, with the approved Raven/Ollama resident and its separate private authority file:
 
     node systemia/classroom/tutor-runtime.mjs --access-token-file "$HOME/.local/state/evercraft/classroom/pilot-access.token" --raven-token-file "/ABSOLUTE/OWNED/RAVEN/INFERENCE/TOKEN/FILE" --raven-origin http://127.0.0.1:4322 --port 8793
 
