@@ -100,6 +100,22 @@ The test exercises an authenticated encrypted message from synthetic node001 to 
 
 This is an integrated **software canary**, not evidence that actual node001 or node002 hardware has been reached, enrolled, upgraded or configured. Real field proof requires a reviewed root-enrollment ceremony; secured signer/recipient key custody; authorized test-only endpoints on each node; connection to a singular owned, authenticated replay authority; staged rollback; independent human verification of the resulting receipts; and explicit permission to deploy. Never ship private test keys or default to CI database credentials.
 
+## Read-only field capability preflight (Node001 and Node002 not yet tested)
+
+The script \`systemia/crypto/pq-field-preflight.mjs\` can run **on a node directly** without installation, network requests, key-file access, environment-variable access, service control or changes to live Relay routing. It prints JSON containing only runtime versions and capability results. No keys are serialized, generated keys from optional tests are ephemeral, and the result always says \`production_ready=false\`.
+
+\`\`\`bash
+# Observe Node/OpenSSL and whether ML-KEM APIs exist, without key generation:
+node systemia/crypto/pq-field-preflight.mjs
+
+# Optional isolated ephemeral ML-KEM/ML-DSA crypto self-test:
+node systemia/crypto/pq-field-preflight.mjs --self-test --require-pq
+\`\`\`
+
+For Windows PowerShell, \`node .\\systemia\\crypto\\pq-field-preflight.mjs --self-test --require-pq\` works if the checkout is present and a supported Node runtime is available. The strict flag returns a nonzero exit code when runtime crypto prerequisites fail; it **does not** start Relay, reach a database, touch any production identity, or enroll the node.
+
+This is only a host-readiness signal. Never infer that node001/node002 are healthy from a GitHub test runner; actual node results must come from their own execution. A production canary needs verified trust distribution, scoped service credentials, transport/network consent, safe failover, a separate human review and a rollback plan.
+
 ## Migration gates
 
 1. Inventory cryptographic key exchange and signatures in Relay, lineage, agents and customer interfaces; identify stored traffic requiring long-term confidentiality.
