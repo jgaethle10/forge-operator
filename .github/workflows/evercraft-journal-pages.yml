@@ -214,7 +214,7 @@ jobs:
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
           test -s _public_pages/apps/infinite-classroom/play/index.html
           grep -q 'Reading Treehouse' _public_pages/apps/infinite-classroom/play/index.html
-          grep -q 'Homework Coach · hints, not answers' _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Offline study steps · generic hints' _public_pages/apps/infinite-classroom/play/index.html
           test -s _public_pages/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
