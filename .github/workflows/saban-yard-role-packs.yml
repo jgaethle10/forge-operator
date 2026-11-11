@@ -32,9 +32,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-      - name: Install source analysis dependency
-        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install source analysis dependency (repository has no npm lockfile)
+        run: npm install --no-package-lock --ignore-scripts --no-audit --no-fund
       - name: Build pinned, SHA-256 manifested source packs
         run: node scripts/build-saban-yard-role-packs.mjs dist/saban-yard-role-packs
       - name: Verify extracted role source hashes
