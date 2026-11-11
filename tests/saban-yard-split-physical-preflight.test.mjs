@@ -20,7 +20,7 @@ test('physical preflight is a diagnostics-only gate and never silently takes own
   assert.match(source,/existing_saban_dispatch_timer_must_be_coordinated/);
   assert.match(source,/evercraft-yard-split-consumer.timer/);
   assert.match(source,/evercraft-saban-split-dispatch.timer/);
-  assert.match(source,/scripts?\/preflight-saban-yard/);
+  assert.match(source,/buildPhysicalSplitPreflight/);
   assert.doesNotMatch(source,/\b(?:chmodSync|chownSync|writeFileSync|renameSync|mkdirSync|rmSync|unlinkSync|copyFileSync)\s*\(/,
     'preflight must not mutate files');
   assert.doesNotMatch(source,/\b(?:enable|disable|start|restart|stop)\b.{0,75}systemctl/i,
