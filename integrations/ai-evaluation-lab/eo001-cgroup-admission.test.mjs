@@ -244,7 +244,7 @@ test('legacy v2 resource-only report cannot claim new-session evidence',()=>{
   const run=(cmd,args)=>{
     if(cmd==='systemctl'){
       if(args.includes('show'))
-        return {status:0,stdout:'LoadState=not-found\\nActiveState=inactive\\n'};
+        return {status:0,stdout:'LoadState=not-found\nActiveState=inactive\n'};
       return {status:0,stdout:''};
     }
     const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
