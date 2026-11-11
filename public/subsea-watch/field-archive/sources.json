@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.subsea.field_sources.v1",
-  "reviewed_on": "2026-11-09",
+  "reviewed_on": "2026-11-10",
   "program": "NOAA Ocean Exploration / NCEI",
   "mission": {
     "id": "EX2306_DIVE02",
@@ -9,12 +9,12 @@
     "date": "2023-08-25",
     "setting": "Gulf of Alaska, offshore Kodiak",
     "kind": "real_archived_rov_dive",
-    "record_status": "source_metadata_only",
+    "record_status": "source_bytes_audited_schema_unverified",
     "reconstruction_status": "NOT_RECONSTRUCTED",
     "alignment_status": "UNVERIFIED_NO_SYNC",
     "credit": "NOAA Ocean Exploration",
     "official_mission_page": "https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/",
-    "note": "All listed dive resources describe EX2306 DIVE02, but their clocks, track reference systems and common spatial registration have not been verified. They must not be rendered as one synchronized reconstruction."
+    "note": "Original Dive02 KML and ROV ancillary ZIP were downloaded and SHA-256 hashed by an Evercraft GitHub Actions audit. The KML is untimed; the ancillary ZIP contains a 1Hz ROV CSV with 26,092 rows. 300 records overlap the NCEI video UTC window, but instrument position quality, vertical datum and frame-level sync remain UNVERIFIED. No certified reconstruction."
   },
   "entries": [
     {
@@ -38,28 +38,38 @@
       "kind": "dive_track",
       "name": "Dive 02 track · KML",
       "mission_id": "EX2306_DIVE02",
-      "verified_metadata": "NOAA expedition landing page lists a DIVE02 track KML (78 KB). Temporal positions and vertical datum have not been inspected.",
+      "verified_metadata": "Original 79,769-byte KML fetched and hashed. Contains one LineString with 1,963 coordinate tokens and zero embedded timestamps. It cannot by itself produce a timed underwater replay.",
       "file_format": "KML",
       "rights": "NOAA archive; review record-specific credit and use constraints before redistribution",
       "category": "uninspected_navigation_source",
       "source_page": "https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/",
       "download_url": "https://oer.hpc.msstate.edu/okeanos/ex2306/EX2306_DIVE02_Path.kml",
-      "observed_download_status": "published_link_not_byte_verified",
-      "can_preview": false
+      "observed_download_status": "bytes_audited_schema_unverified",
+      "can_preview": false,
+      "sha256": "57b9fcffe9faf8a1a7157ba728a05ae0cff9fb80db2086115ef8a970cc4b3fe2",
+      "audited_bytes": 79769
     },
     {
       "id": "noaa-ex2306-dive02-ancillary",
       "kind": "sensor_and_ancillary",
       "name": "Dive 02 ROV ancillary data",
       "mission_id": "EX2306_DIVE02",
-      "verified_metadata": "NOAA expedition landing page lists a DIVE02 ancillary ZIP (14.9 MB); schema, clocks and positioning fields must be inspected.",
+      "verified_metadata": "Original 15,727,951-byte ZIP fetched and hashed, with seven entries. Includes EX2306_DIVE02_RovTrack1Hz.csv: 26,092 timestamps; 25,518 rows with valid lat/lon and 25,615 numeric negative depths. 300/300 rows in the published video UTC window have both depth and position. Position instrument and depth datum remain unverified.",
       "file_format": "ZIP",
       "rights": "NOAA archive; review archive record metadata and provenance before redistribution",
       "category": "uninspected_sensor_source",
       "source_page": "https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/",
       "download_url": "https://oer.hpc.msstate.edu/okeanos/ex2306/ex2306-DIVE02-ancillary-data.zip",
-      "observed_download_status": "published_link_not_byte_verified",
-      "can_preview": false
+      "observed_download_status": "bytes_audited_schema_unverified",
+      "can_preview": false,
+      "sha256": "b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61",
+      "audited_bytes": 15727951,
+      "clock_window_observed": "2023-08-25T18:30:00Z to 2023-08-25T18:34:59Z",
+      "valid_position_rows_in_window": 300,
+      "valid_depth_rows_in_window": 300,
+      "track_time_rows": 26092,
+      "replay_status": "BLOCKED_PENDING_POSITION_SOLUTION_DATUM_AND_CLOCK_REVIEW",
+      "audit_workflow_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42959837823"
     },
     {
       "id": "noaa-ex2306-dive02-ctd",

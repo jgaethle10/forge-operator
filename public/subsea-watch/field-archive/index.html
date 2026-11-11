@@ -62,7 +62,7 @@ footer{color:var(--muted);font-size:12px;margin-top:28px;max-width:900px}
 <div class="eyebrow">Verified-source research · archive preview v0.1</div>
 <h1>The real ocean.<br><em>Recorded, not imagined.</em></h1>
 <p class="lead">Begin with actual scientific expedition footage and the original records behind it. This is an evidence library, not a fabricated 3D reconstruction or an automatic video-to-track synchronization system.</p>
-<div class="ribbon"><span>Real NOAA mission</span><span>Source-attributed footage</span><span>Original navigation &amp; sensors</span><span>No unverified site geometry</span></div>
+<div class="ribbon"><span>Original files SHA-256 audited</span><span>Real NOAA mission</span><span>Source-attributed footage</span><span>Original navigation &amp; sensors</span><span>No unverified site geometry</span></div>
 </section>
 <main>
 <section class="panel" aria-labelledby="mission-heading">
@@ -91,8 +91,8 @@ footer{color:var(--muted);font-size:12px;margin-top:28px;max-width:900px}
 <div class="instructions">
 <h3>Next engineering workflow</h3>
 <ol>
-<li>Download this NOAA video segment and its original dive-track and sensor archives.</li>
-<li>Inspect the actual sensor fields, coordinate reference, timestamps, gaps and measurement uncertainty.</li>
+<li>Original Dive 02 KML and ROV ancillary ZIP are now downloaded and SHA-256 audited. Their 1Hz CSV has 26,092 rows; 300 timed readings overlap the NOAA video segment, but data registration remains unverified.</li>
+<li>Confirm the actual navigation solution, coordinate reference, depth datum and measurement uncertainty; recorded instruments include USBL, DVL and inertial navigation, but their individual contribution to the export is not established.</li>
 <li>Convert only measured records to the Subsea Watch import schema; keep unknown coordinates unknown.</li>
 <li>Register video against the recorded timeline only after verifying time references.</li>
 <li>Bring in surveyed 3D geometry separately, with scale, survey source, rights and uncertainty documented.</li>
@@ -101,7 +101,7 @@ footer{color:var(--muted);font-size:12px;margin-top:28px;max-width:900px}
 </div>
 </aside>
 <section class="panel library" aria-labelledby="sources-heading">
-<div class="library-head"><div class="eyebrow">Public research resources</div><h2 id="sources-heading">The source ledger</h2><p>These are original data-provider links, each labeled by what it actually establishes. A listed archive is not a parsed or certified data feed. Partner-hosted 3D models require separate reuse-rights checks.</p></div>
+<div class="library-head"><div class="eyebrow">Public research resources</div><h2 id="sources-heading">The source ledger</h2><p>These are original data-provider links, each labeled by what it actually establishes. The KML and ROV ancillary file bytes have been audited, but their columns are not yet approved for an actual reconstruction. The CTD and other catalogs remain uninspected. Partner-hosted 3D models require separate reuse-rights checks.</p></div>
 <div id="source-list" class="source-list" aria-live="polite"><p>Loading the first-party source registry…</p></div>
 </section>
 </main>
