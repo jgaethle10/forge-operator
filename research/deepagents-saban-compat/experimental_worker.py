@@ -8,6 +8,7 @@ import json
 import os
 import sys
 import time
+from delegation_observer import delegation_receipt
 from pathlib import Path
 
 def main():
@@ -52,6 +53,7 @@ def main():
     )
     messages = result.get("messages", [])
     last = messages[-1].content if messages else ""
+    delegation = delegation_receipt(messages)
     receipt = {
         "schema": "evercraft.saban.deepagents-spike.v0",
         "synthetic": True,
@@ -60,13 +62,16 @@ def main():
         "model": model_name,
         "elapsed_seconds": round(time.monotonic() - started, 3),
         "message_count": len(messages),
+        "delegation_observation": delegation,
+        "two_subagent_delegation_observed": delegation["all_subagent_task_calls_observed"],
         "response": last if isinstance(last, str) else str(last),
         "limitations": ["In-memory checkpoint only", "Subagent delegation not independently verified by this receipt",
                         "No Systemia/Fabric integration", "Container isolation must be externally verified"],
     }
     destination = Path("/tmp/evercraft-deepagents-receipt.json")
     destination.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"receipt_path": str(destination), "message_count": len(messages)}))
+    print(json.dumps({"receipt_path": str(destination), "message_count": len(messages),
+                      "two_subagent_delegation_observed": delegation["all_subagent_task_calls_observed"]}))
 
 if __name__ == "__main__":
     main()
