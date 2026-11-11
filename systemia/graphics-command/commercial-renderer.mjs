@@ -313,6 +313,7 @@ export function buildCommercialCampaign(input,{outputRoot,origin='https://fabric
     priceUsd:campaign.priceUsd,
     assets:{
       feed:base+'/poster-feed.svg',
+      social:base+'/poster-social-wide.svg',
       square:base+'/poster-square.svg',
       story:base+'/poster-story.svg',
       site:base+'/poster-hero-wide.svg',
