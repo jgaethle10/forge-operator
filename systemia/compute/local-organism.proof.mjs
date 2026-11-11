@@ -10,6 +10,8 @@ import { startLocalOrganism } from './local-organism.mjs';
 // records real blocking findings, but the fixture must not convert expected
 // unconfigured public-portfolio findings into a Core process failure.
 // Production defaults and the dedicated Sentinel enforcement tests are unchanged.
+process.env.NODE_ENV='test';
+process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF='true';
 process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH='false';
 
 const nativeBrowserProofPreparer=async()=>({
