@@ -128,3 +128,30 @@ test('buyer page escapes merchant-supplied HTML and never embeds customer detail
   assert.match(html,/&lt;script&gt;/);
  }finally{await x.dispose()}
 });
+
+
+test('each request is privately bound to the verified destination; rotation invalidates old instructions',async()=>{
+ const x=await setup();
+ let second=null;
+ try{
+  const c=(await issue(x.rt,approved)).data;
+  assert.equal(c.ok,true);
+  const stored=JSON.parse(await fs.readFile(path.join(x.dir,c.request_id+'.json'),'utf8'));
+  assert.match(stored.receiving_account_key,/^recv_[0-9a-f]{48}$/);
+  assert.doesNotMatch(JSON.stringify(stored),/021000021|000012345678/);
+  second=await startBankCreditRequestRuntime({
+    ...opts,storeDir:x.dir,
+    bankPayee:{...opts.bankPayee,account_number:'000012345679'},
+  });
+  const url=new URL(c.payment_request_url);
+  const old=await fetch(second.url+url.pathname);
+  assert.equal(old.status,410);
+  assert.equal((await old.json()).error,'request_unavailable_or_expired');
+  const replay=await issue(second,approved);
+  assert.equal(replay.status,409);
+  assert.equal(replay.data.error,'idempotency_conflict');
+ }finally{
+  if(second)await second.close();
+  await x.dispose();
+ }
+});
