@@ -4,6 +4,7 @@ import path from "node:path";
 import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { EvercraftPassport } from "../passport/passport.mjs";
+import { createOneBodyHomeSnapshotRoute } from "../organism/one-body-home-route.mjs";
 import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs";
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
@@ -136,6 +137,8 @@ export async function startEvercraftHomeServer({
   ownerLogin = String(process.env.EVERCRAFT_OWNER_LOGIN || "owner").trim(),
   ownerDisplayName = String(process.env.EVERCRAFT_OWNER_DISPLAY_NAME || "Jesse").trim(),
   sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
+  oneBodyStateFile = String(process.env.EVERCRAFT_ONE_BODY_STATE_FILE || "").trim(),
+  oneBodyConsumerTrustFile = String(process.env.EVERCRAFT_ONE_BODY_CONSUMER_TRUST_FILE || "").trim(),
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -153,6 +156,7 @@ export async function startEvercraftHomeServer({
     throw new Error("Passport auth requires signing material, EVERCRAFT_IDENTITY_STATE_DIR and EVERCRAFT_PASSPORT_STATE_DIR.");
   }
 
+  if (oneBodyConsumerTrustFile && !oneBodyStateFile) throw new Error("one_body_state_required_for_consumer_trust");
   const passport = authMode === "passport" ? new EvercraftPassport({ stateDir: passportStateDir }) : null;
   const signingKeys = authMode === "passport"
     ? identityKeyring(identityKeyId, identitySecret, identityPreviousKeysJson)
@@ -295,6 +299,28 @@ export async function startEvercraftHomeServer({
       };
     }
   }
+
+  // Authenticated Home is the only supported entry. Local developer mode
+  // cannot expose this internal private-state snapshot even on loopback.
+  const oneBodyRoute = authMode === "passport" && oneBodyStateFile
+    ? createOneBodyHomeSnapshotRoute({
+        passportStateDir, bodyStateFile: oneBodyStateFile,
+        getHomeSession: req => sessionFor(req, "home.systemia.read"),
+        loadTrustedConsumers: () => {
+          if (!oneBodyConsumerTrustFile) return {};
+          const target = path.resolve(oneBodyConsumerTrustFile);
+          const stat = fs.lstatSync(target);
+          if (!stat.isFile() || stat.isSymbolicLink() || (stat.mode & 0o077) !== 0) {
+            throw new Error("one_body_trust_file_not_private");
+          }
+          const trust = JSON.parse(fs.readFileSync(target, "utf8"));
+          if (!trust || typeof trust !== "object" || Array.isArray(trust)) {
+            throw new Error("one_body_trust_registry_invalid");
+          }
+          return trust;
+        },
+      })
+    : null;
 
   function publicService(service) {
     const origin = String(serviceOrigins?.[service.origin_env] || "").trim();
@@ -817,6 +843,14 @@ export async function startEvercraftHomeServer({
         subject: session.subject,
         ...readEvercraftOsStatus(),
       });
+    }
+
+    if (url.pathname === "/api/systemia/one-body/snapshot") {
+      if (!oneBodyRoute) return json(res, 503, {
+        ok: false, state: "snapshot_unavailable",
+        execution_authority_granted: false,
+      });
+      return oneBodyRoute(req, res);
     }
 
     if (req.method === "GET" && url.pathname === "/api/systemia/inventory") {
