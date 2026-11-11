@@ -103,6 +103,7 @@ test('portal-observed public Evercraft upgrade preserves existing listing and ne
   assert.equal(result.requires_existing_listing_update,true);
   assert.equal(result.openai_origin_change_requires_new_plugin_submission,false);
   assert.equal(result.legacy_mcp,null);
+  assert.equal(result.prior_public_version,'1.0.2');
   assert.equal(result.provider_action_performed,false);
   const after=JSON.parse(fs.readFileSync(input,'utf8'));
   assert.equal(after.existing_public_listing.portal_observed_version,'1.0.2');
@@ -110,7 +111,7 @@ test('portal-observed public Evercraft upgrade preserves existing listing and ne
   const source=JSON.parse(fs.readFileSync(path.join(root,'plugins/evercraft-fabric/openai-submission.json'),'utf8'));
   assert.equal(source.compatibility_transport.mcp,null);
   assert.equal(source.compatibility_transport.active,false);
-  assert.equal(source.submission_state,'existing_public_listing_v1_0_2_observed_source_update_v1_0_6_prepared');
+  assert.equal(source.submission_state,'existing_public_listing_update_prepared');
 });
 
 test('an owned MCP origin change to an existing public listing requires manual review',()=>{
