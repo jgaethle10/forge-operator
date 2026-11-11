@@ -32,7 +32,7 @@ test('3D museum walk and tour are bounded to imaginary gallery units',()=>{
  assert.ok(b.progress>a.progress&&b.progress<c.progress);
  assert.equal(c.finished,true);
  assert.equal(c.progress,1);
- assert.match(c.evidenceBoundary,/not a site map/);
+ assert.match(c.evidenceBoundary,/not a Titan installation plan/);
  assert.throws(()=>titanGalleryTourFrame(Infinity),/Invalid tour time/);
 });
 
