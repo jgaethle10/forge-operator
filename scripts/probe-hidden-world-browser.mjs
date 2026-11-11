@@ -106,6 +106,8 @@ try{
     assert.equal(await page.locator('a[href="../titan-i-1962.html"]').count()>=1,true,
       profile.name+': lost historical evidence fallback');
     if(profile.scripts){
+      await page.waitForFunction(()=>document.body.classList.contains('js'),{timeout:10000});
+      assert.equal(await page.locator('#static-fallback').isVisible(),false);
       await page.waitForFunction(()=>typeof window.__evercraftTitanQA==='function',{timeout:12000});
       await page.locator('#start').click();
       await page.waitForFunction(()=>window.__evercraftTitanQA?.().running===true,{timeout:10000});
@@ -124,9 +126,9 @@ try{
       await page.locator('#tour').click();
       assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,false);
     }else{
-      assert.ok(await page.locator('noscript').count()>=2);
+      assert.equal(await page.locator('body.no-js').count(),1);
       assert.ok((await page.locator('body').textContent()).includes('3D is unavailable without JavaScript'));
-      assert.equal(await page.locator('noscript .fallback-link').isVisible(),true,
+      assert.equal(await page.locator('#static-fallback .fallback-link').isVisible(),true,
         profile.name+': historical fallback not visible');
       assert.equal(await page.locator('#start').isVisible(),false,
         profile.name+': inert WebGL button visible with JavaScript disabled');
