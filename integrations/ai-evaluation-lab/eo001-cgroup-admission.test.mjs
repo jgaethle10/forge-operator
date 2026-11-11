@@ -135,7 +135,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
     if(cmd==='systemctl'){
       assert.deepEqual(args.includes('--stop'),false);
       assert.ok(args.includes(UNIT));
-      if(args.includes('show'))return {status:0,stdout:'LoadState=not-found\\nActiveState=inactive\\n'};
+      if(args.includes('show'))return {status:0,stdout:'LoadState=not-found\nActiveState=inactive\n'};
       return {status:0,stdout:''};
     }
     assert.equal(cmd,'systemd-run');
@@ -175,7 +175,7 @@ test('synthetic scope report that is out-of-scope or malformed cannot be promote
       scope_test_executed:false}),uuid:()=>ID};
   const withCleanup=onRun=>(cmd,args)=>{
     if(cmd==='systemctl'){
-      if(args.includes('show'))return {status:0,stdout:'LoadState=not-found\\nActiveState=inactive\\n'};
+      if(args.includes('show'))return {status:0,stdout:'LoadState=not-found\nActiveState=inactive\n'};
       return {status:0,stdout:''};
     }
     return onRun();
@@ -198,7 +198,7 @@ test('uncleared transient scope blocks the report even if child claimed membersh
   const run=(cmd,args)=>{
     calls.push({cmd,args});
     if(cmd==='systemctl'){
-      if(args.includes('show'))return {status:0,stdout:'LoadState=loaded\\nActiveState=active\\n'};
+      if(args.includes('show'))return {status:0,stdout:'LoadState=loaded\nActiveState=active\n'};
       return {status:0,stdout:''};
     }
     const unit=args.find(x=>x.startsWith('--unit=')).slice(7);
