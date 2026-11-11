@@ -19,6 +19,11 @@ test('Titan 3D gallery has sourced thematic markers but no real facility coordin
  assert.ok(items.some(i=>i.tier==='environment'),'static environment missing');
  assert.ok(items.every(i=>[i.x,i.y,i.z,i.sx,i.sy,i.sz].every(Number.isFinite)));
  assert.ok(items.every(i=>/^#[0-9a-f]{6}$/i.test(i.color)));
+ // The invented museum's central walking aisle must not be blocked by a giant silo sculpture.
+ const blocking=items.filter(i=>i.tier!=='interpretive'&&i.sy>1.4&&i.y-i.sy/2<1.65&&
+   Math.abs(i.x)-i.sx/2<2.5&&Math.abs(i.x)+i.sx/2>0&&i.z>-42&&i.z<18);
+ assert.equal(blocking.length,0,'gallery walking spine obstructed by large exhibit solids');
+
  assert.throws(()=>validateTitanScene({...TITAN_SCENE,geometryStatus:'surveyed_real_facility'}),/unverified_geometry_disclosure_missing/);
 });
 
