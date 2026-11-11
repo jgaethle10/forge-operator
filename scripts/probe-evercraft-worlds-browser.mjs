@@ -66,6 +66,10 @@ try{
       model_mode:'civic_and_social_policy_no_llm',
       observation_created_from:{sequence:7,tick:320,heartbeat_at:'2026-10-19T00:00:00.000Z',world_hash:'a'.repeat(64)},
       historical_limit:'only_retained_bounded_chronicle_not_full_history',
+      snapshot_stats:{
+        civic:{proposed:221,completed:220,failed:0},
+        social:{promised:1949,kept:1818,broken:130,declined:234}
+      },
       residents:Array.from({length:12},(_,i)=>({id:'r'+(i+1),name:'Resident '+(i+1),job:'gardener',zone:'garden',emoji:'🌱'})),
       decision_projection:{schema:'evercraft.window.policy-decision-receipts.v1',
         execution_mode:'deterministic_rules_no_llm',attestation:'content_digest_not_signature',
@@ -98,6 +102,8 @@ try{
     assert.match(await page.locator('#sl-status').textContent(),/does not independently authenticate/,profile.name+': observation caveat absent');
     assert.match(await page.locator('#sl-meta').textContent(),/GitHub commit cccccccccccc \(file-reported\)/,profile.name+': source claim label missing');
     assert.equal(await page.locator('#sl-events li').count(),1,profile.name+': policy evidence did not render');
+    assert.match(await page.locator('#sl-stats').textContent(),/1,818/,profile.name+': cumulative promise count missing');
+    assert.match(await page.locator('#sl-stats').textContent(),/220/,profile.name+': civic project total missing');
     await page.locator('#sl-resident').selectOption('r4');
     assert.match(await page.locator('#sl-events').textContent(),/No retained policy decisions/,profile.name+': resident filter failed');
     await page.locator('#sl-resident').selectOption('r2');
