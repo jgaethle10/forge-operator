@@ -135,6 +135,7 @@ test('browser prototype is local-first and does not silently contact a service',
   }
   assert.match(html,/type="module"/);
   assert.match(html,/localStorage/);
-  assert.match(html,/A hard day doesn't erase what you've created/);
+  assert.match(html,/Every intentional day becomes part of a world you can keep building/);
+  assert.match(html,/href="\.\/worlds\.html"/);
   assert.doesNotMatch(html,/fetch\s*\(|XMLHttpRequest|sendBeacon|buy\.stripe\.com|base44/i);
 });
