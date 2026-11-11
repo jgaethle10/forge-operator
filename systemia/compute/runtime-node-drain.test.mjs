@@ -126,3 +126,74 @@ test('one failing resident close does not skip shutdown of later registered serv
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+
+test('aborted browser-start request cannot register an orphan after Compute shutdown',async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-aborted-browser-start-'));
+  const token='test-only-aborted-browser-start-token';
+  let entered;
+  const inFactory=new Promise(resolve=>{entered=resolve;});
+  let release;
+  const factoryGate=new Promise(resolve=>{release=resolve;});
+  let markClosed;
+  const adapterClosed=new Promise(resolve=>{markClosed=resolve;});
+  let closes=0;
+  const node=await startEvercraftComputeNode({
+    root:dir,nodeId:'ephemeral-aborted-browser-job',
+    host:'127.0.0.1',port:0,allocatorToken:token,
+    browserRuntimeFactory:async()=>{
+      entered();
+      await factoryGate;
+      const browser={
+        instanceId:'aborted-start-fixture',
+        async browse(){return {ok:true};},
+        async health(){return {ok:true,instance_id:'aborted-start-fixture'};}
+      };
+      const adapter=await startBrowserPublicAdapter({runtime:browser,port:0,host:'127.0.0.1'});
+      return {
+        ...browser,
+        localPublicUrl:adapter.url,
+        close:async()=>{closes++;await adapter.close();markClosed();}
+      };
+    }
+  });
+  try{
+    const leaseResponse=await fetch(node.endpoint+'/v1/leases',{
+      method:'POST',
+      headers:{authorization:'Bearer '+token,'content-type':'application/json'},
+      body:JSON.stringify({workload_class:'systemia.evercraft-web-browser.v1'})
+    });
+    assert.equal(leaseResponse.status,201);
+    const lease=await leaseResponse.json();
+    const controller=new AbortController();
+    const abandonedRequest=fetch(node.endpoint+'/v1/jobs',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      signal:controller.signal,
+      body:JSON.stringify({
+        workload_class:'systemia.evercraft-web-browser.v1',
+        lease_id:lease.lease_id,token:lease.token,input:{}
+      })
+    }).catch(error=>error);
+    await inFactory;
+    controller.abort();
+    // The socket can be gone while the factory promise still runs.
+    const closing=node.close();
+    release();
+    await closing;
+    await abandonedRequest;
+    await Promise.race([
+      adapterClosed,
+      new Promise((_,reject)=>setTimeout(
+        ()=>reject(Error('late_browser_adapter_was_not_closed')),2500
+      ))
+    ]);
+    assert.equal(closes,1);
+    assert.equal((process._getActiveHandles?.()||[])
+      .filter(handle=>handle?.constructor?.name==='Server'&&handle.listening===true)
+      .length,0);
+  }finally{
+    release?.();
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
