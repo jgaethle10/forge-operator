@@ -6,6 +6,8 @@ on:
       - 'tests/the-window-public.test.mjs'
       - 'tests/window-decision-receipts.test.mjs'
       - 'tests/window-decision-observer.test.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
+      - 'tests/window-snapshot-fetch.test.mjs'
       - 'systemia/society/window-decision-receipts.mjs'
       - 'systemia/society/window-decision-observer.mjs'
       - '.github/workflows/window-public.yml'
@@ -35,4 +37,4 @@ jobs:
           node --check public/the-window/world.mjs
           node --check public/the-window/client.mjs
       - name: Prove identical world reconstruction and disclosure
-        run: node --test tests/the-window-public.test.mjs tests/window-decision-receipts.test.mjs tests/window-decision-observer.test.mjs
+        run: node --test tests/the-window-public.test.mjs tests/window-decision-receipts.test.mjs tests/window-decision-observer.test.mjs tests/window-snapshot-fetch.test.mjs
