@@ -35,6 +35,8 @@ jobs:
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/atmospheric-flyover.test.mjs
       - name: Validate authored glTF asset packs and rights-gated WebGPU integration
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-asset-pack.test.mjs
+      - name: Validate authored glTF scene-node hierarchies, mirror transform and lineage
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-scene-placements.test.mjs
       - name: Check native pixel proof syntax
         run: node --check systemia/visual-engine/flyover-pixel-proof.mjs
 
