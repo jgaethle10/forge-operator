@@ -59,6 +59,21 @@ class AuditTests(unittest.TestCase):
         self.assertFalse(result["eligible_for_3d_replay"])
         self.assertFalse(result["files_extracted"])
 
+    def test_one_hertz_track_is_observed_but_not_certified(self):
+        output = io.BytesIO()
+        with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as z:
+            z.writestr("EX2306_DIVE02_20230825/EX2306_DIVE02_RovTrack1Hz.csv",
+                       "Date,Time,Lat,Lon,Depth\n2023-08-25,18:30:00,56.9,-149.5,1900\n"
+                       "2023-08-25,18:30:01,56.91,-149.51,1901\n")
+        report = audit.inspect_zip(output.getvalue())
+        observed = report["rov_track_1hz_observation"]
+        self.assertEqual(observed["row_count_observed"], 2)
+        self.assertEqual(observed["column_names_observed"], ["Date", "Time", "Lat", "Lon", "Depth"])
+        self.assertEqual(observed["first_two_rows_observed"][0]["Depth"], "1900")
+        self.assertEqual(observed["depth_datum"], "UNVERIFIED")
+        self.assertFalse(observed["can_render_real_replay"])
+        self.assertFalse(report["schema_verified"])
+
     def test_zip_traversal_rejected(self):
         output = io.BytesIO()
         with zipfile.ZipFile(output, "w") as z:
