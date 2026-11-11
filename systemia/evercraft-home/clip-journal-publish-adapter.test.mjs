@@ -9,6 +9,8 @@ import {
   publishJournalStoryFacebookFromHome,
 } from './clip-journal-publish-adapter.mjs';
 
+const fakeCredential=()=>({safe_status:{facebook:'resolved'},config:{pageId:'123',pageAccessToken:'test-only-page-token'}});
+
 function fixtureRoot(){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'home-clip-journal-'));
   const slug='college-football-power-rankings-2026-10-06';
@@ -42,7 +44,7 @@ test('Journal Clip Home adapter derives a fixed story resource and never accepts
     const receipt=await publishJournalStoryFacebookFromHome({
       repoRoot:root,
       slug,
-      credentialStateDir:path.join(root,'credentials'),
+      credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,
       stateRoot:fs.mkdtempSync(path.join(os.tmpdir(),'clip-journal-claims-')),
       authorizationRef:'policy:test',
       publisher:async(input)=>{
@@ -90,7 +92,7 @@ test('Journal Clip Home adapter refuses a handoff whose embedded slug does not m
     await assert.rejects(()=>publishJournalStoryFacebookFromHome({
       repoRoot:root,
       slug,
-      credentialStateDir:path.join(root,'credentials'),
+      credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,
       publisher:async()=>{throw new Error('must_not_publish');},
     }),/handoff_slug_mismatch/);
   }finally{
@@ -102,7 +104,7 @@ test('a second Home publish call cannot submit the same story twice',async()=>{
   const {root,slug}=fixtureRoot(),stateRoot=fs.mkdtempSync(path.join(os.tmpdir(),'clip-journal-claim-'));
   try{
     let calls=0;
-    const opts={repoRoot:root,slug,credentialStateDir:path.join(root,'credentials'),
+    const opts={repoRoot:root,slug,credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,
       stateRoot,authorizationRef:'passport-grant:test',publisher:async()=>{
         calls++;return {status:'published',remoteId:'123_456',
           url:'https://www.facebook.com/123/posts/456',authorizationRef:'passport-grant:test'};}};
@@ -121,7 +123,7 @@ test('an uncertain provider failure leaves a claim and forbids blind resubmissio
   try{
     let calls=0;
     const opts={repoRoot:root,slug,stateRoot,
-      credentialStateDir:path.join(root,'credentials'),publisher:async()=>{
+      credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,publisher:async()=>{
         calls++;throw Error('provider timeout after POST');}};
     const first=await publishJournalStoryFacebookFromHome(opts);
     const second=await publishJournalStoryFacebookFromHome(opts);
@@ -139,7 +141,7 @@ test('no durable claim directory means no provider POST',async()=>{
   try{
     let calls=0;
     await assert.rejects(publishJournalStoryFacebookFromHome({repoRoot:root,slug,stateRoot:'',
-      credentialStateDir:path.join(root,'credentials'),publisher:async()=>{calls++;}}),
+      credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,publisher:async()=>{calls++;}}),
       /durable_state_root_required/);
     assert.equal(calls,0);
   }finally{fs.rmSync(root,{recursive:true,force:true});}
@@ -148,7 +150,49 @@ test('source repository cannot be used as the durable claim store',async()=>{
   const {root,slug}=fixtureRoot();
   try{
     await assert.rejects(publishJournalStoryFacebookFromHome({repoRoot:root,slug,stateRoot:path.join(root,'clip-attempts'),
-      credentialStateDir:path.join(root,'credentials'),publisher:async()=>{throw Error('must not publish');}}),
+      credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,publisher:async()=>{throw Error('must not publish');}}),
       /outside_repository/);
   }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('missing private Page credentials do not consume a CFB publishing claim',async()=>{
+  const {root,slug}=fixtureRoot();
+  const stateRoot=fs.mkdtempSync(path.join(os.tmpdir(),'clip-cfb-claim-'));
+  let attempts=0;
+  try{
+    await assert.rejects(publishJournalStoryFacebookFromHome({
+      repoRoot:root,slug,stateRoot,
+      credentialStateDir:path.join(root,'credentials'),
+      resolveCredential:()=>({safe_status:{facebook:'credential_missing'},config:{}}),
+      publisher:async()=>{attempts++;throw Error('must_not_contact_provider');},
+    }),/home_clip_facebook_credential_not_ready/);
+    assert.equal(attempts,0);
+    assert.deepEqual(fs.readdirSync(stateRoot),[]);
+    const valid=await publishJournalStoryFacebookFromHome({
+      repoRoot:root,slug,stateRoot,credentialStateDir:path.join(root,'credentials'),
+      resolveCredential:fakeCredential,
+      publisher:async()=>{attempts++;return {status:'published',remoteId:'123_456',url:'https://www.facebook.com/123/posts/456'};},
+    });
+    assert.equal(valid.state,'published');
+    assert.equal(attempts,1);
+    assert.equal(fs.readdirSync(stateRoot).length,1);
+  }finally{fs.rmSync(root,{recursive:true,force:true});fs.rmSync(stateRoot,{recursive:true,force:true});}
+});
+test('invalid CFB derivative does not consume an irreversible claim',async()=>{
+  const {root,slug}=fixtureRoot();
+  const stateRoot=fs.mkdtempSync(path.join(os.tmpdir(),'clip-cfb-claim-'));
+  try{
+    const file=journalClipHandoffPath(root,slug);
+    const handoff=JSON.parse(fs.readFileSync(file,'utf8'));
+    handoff.derivatives=[];
+    fs.writeFileSync(file,JSON.stringify(handoff));
+    let attempts=0;
+    await assert.rejects(publishJournalStoryFacebookFromHome({
+      repoRoot:root,slug,stateRoot,
+      credentialStateDir:path.join(root,'credentials'),resolveCredential:fakeCredential,
+      publisher:async()=>{attempts++;throw Error('must_not_contact_provider');},
+    }),/home_clip_cfb_publish_preflight_failed/);
+    assert.equal(attempts,0);
+    assert.deepEqual(fs.readdirSync(stateRoot),[]);
+  }finally{fs.rmSync(root,{recursive:true,force:true});fs.rmSync(stateRoot,{recursive:true,force:true});}
 });
