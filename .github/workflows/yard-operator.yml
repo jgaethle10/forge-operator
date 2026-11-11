@@ -14,6 +14,9 @@ on:
       - 'tests/saban-yard-unified-dispatch.test.mjs'
       - 'tests/saban-yard-split-identity-mailbox.test.mjs'
       - 'tests/yard-split-identity-consumer.test.mjs'
+      - 'tests/saban-yard-split-resident-cycle.test.mjs'
+      - 'systemia/saban/split-identity-capacity.mjs'
+      - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
       - 'systemia/saban/split-identity-handoff.mjs'
       - 'scripts/prepare-saban-yard-split-mailbox.sh'
@@ -46,6 +49,9 @@ on:
       - 'tests/saban-yard-unified-dispatch.test.mjs'
       - 'tests/saban-yard-split-identity-mailbox.test.mjs'
       - 'tests/yard-split-identity-consumer.test.mjs'
+      - 'tests/saban-yard-split-resident-cycle.test.mjs'
+      - 'systemia/saban/split-identity-capacity.mjs'
+      - 'systemia/saban/split-identity-cycle-runner.mjs'
       - 'systemia/yard/split-identity-request-consumer.mjs'
       - 'systemia/saban/split-identity-handoff.mjs'
       - 'scripts/prepare-saban-yard-split-mailbox.sh'
@@ -113,6 +119,10 @@ jobs:
         run: node --test tests/saban-yard-split-identity-mailbox.test.mjs
       - name: Prove Yard split-account broker execution and crash recovery holds
         run: node --test tests/yard-split-identity-consumer.test.mjs
+      - name: Prove cross-account inventory freshness and full Saban Yard dispatch round-trip
+        run: node --test tests/saban-yard-split-resident-cycle.test.mjs
+      - name: Check role-specific resident cycle syntax
+        run: node --check systemia/saban/split-identity-cycle-runner.mjs && node --check systemia/saban/split-identity-capacity.mjs
       - name: Check split-account mailbox provisioning syntax
         run: bash -n scripts/prepare-saban-yard-split-mailbox.sh && node --check systemia/saban/split-identity-handoff.mjs
       - name: Check unified Saban drainer shell safety and runner syntax
