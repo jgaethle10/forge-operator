@@ -162,7 +162,8 @@ export async function runEscapedSessionNegativeControl({
       driverTerminated:cleanedDriver
     });
     return {...verdict,
-      survivor_cleanup_signal_attempted:true,
+      // A cleanup attempt occurs in finally and is not an attested kill/reap.
+      survivor_cleanup_verified:false,
       survivor_reaping_verified:false};
   }finally{
     signalGroup(driver.pid,'SIGKILL');
