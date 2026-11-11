@@ -37,7 +37,7 @@ test('Private page is served, but API needs adult bearer token',async()=>{
   assert.equal(noAuth.status,401);
   const status=await request(srv.url,'/api/classroom/status');
   assert.equal(status.status,200);
-  assert.equal(status.body.model,'owned_local_ollama');
+  assert.equal(status.body.model,'owned_local_model');
   assert.equal(status.body.child_safety_certified,undefined);
   assert.equal(status.body.public_youth_access,false);
   assert.equal(status.body.model_safety_certified,false);
