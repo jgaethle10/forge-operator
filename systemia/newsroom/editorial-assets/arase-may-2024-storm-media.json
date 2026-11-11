@@ -16,7 +16,14 @@
     "rights_review_status": "candidate_not_approved_for_release",
     "usage_limits": "Editorial context only. Preserve full source credit, verify NASA-specific/third-party rights on this exact asset before release, do not imply NASA endorsement, do not use for commercial promotion.",
     "local_preview_filename": "arase-aurora-review.jpg",
-    "local_preview_state": "fetch_to_private_ci_artifact_only"
+    "local_preview_state": "fetch_to_private_ci_artifact_only",
+    "expected_sha256": "a54bc4786411886eab821f17d89aef6ebb63481264bc3e993d5fa0260d8beaf6",
+    "expected_bytes": 4358678,
+    "source_dimensions_px": [
+      6000,
+      4000
+    ],
+    "hash_pin_state": "source_bytes_verified_in_ci_preview_not_release_rights"
   },
   "sources": [
     {
