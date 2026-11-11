@@ -1149,7 +1149,7 @@
         "max_work_items": 5,
         "max_attempts_per_job": 1
       },
-      "assignment_strategy": "role_item_pair",
+      "assignment_strategy": "role_item_cartesian",
       "quality": {
         "minimum_completion_ratio": 1,
         "dead_letter_allowed": false,
@@ -1163,6 +1163,12 @@
         "cpu_units_per_worker": 1,
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
+      },
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 5,
+        "target_logical_per_physical_worker": 2,
+        "minimum_role_item_passes": 1
       }
     }
   ]
