@@ -12,6 +12,7 @@ import {scanAnonymous,reactiveCommand} from './controller-rc05.mjs';
 import {reactiveCommandProgress} from './controller-rc05-progress.mjs';
 import {reactiveCommandShielded} from './controller-rc05-shield.mjs';
 import {reactiveCommandEscape} from './controller-rc05-escape.mjs';
+import {updateMotionMemory,reactiveCommandMotionWatch} from './controller-rc05-motion-watch.mjs';
 
 export const RC05_SCHEMA='evercraft.sim-to-real.reactive-native.rc05';
 export const RC05_BENCHMARK='evercraft.sim-to-real.reactive-holdout.rc05';
@@ -25,7 +26,7 @@ const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
 
 export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline'}={}){
   assert(Number.isSafeInteger(seed)&&seed>0,'rc05_invalid_seed');
-  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape'].includes(controllerMode),'rc05_invalid_controller_mode');
+  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape','observed-motion-watch'].includes(controllerMode),'rc05_invalid_controller_mode');
   assert(Number.isInteger(maxTicks)&&maxTicks>0&&maxTicks<=650,'rc05_invalid_max_ticks');
   const {course,world}=createMotionWorld(seed);
   const blackout=forcedBlackout??{start:course.params.sensorBlackoutStart,length:course.params.sensorBlackoutLength};
@@ -37,6 +38,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
   let preferredTurn=0,uncertainty=.055,orientation=0,holdRequests=0,holdsWhileMoving=0;
   let contactTicks=0,sweepTicks=0,geofenceTicks=0,sensorMissTicks=0;
   let checkpoint=null;
+  let motionHistory=[];
   for(let tick=1;tick<=maxTicks;tick++){
     const robotBefore=previous.entities.find(e=>e.id==='rover');
     const obstaclesBefore=previous.entities.filter(e=>e.id!=='rover');
@@ -53,13 +55,20 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
     const estimate={x:p0.x+(rng()-.5)*course.params.sensorNoiseMeters+uncertainty*.12,
       z:p0.z+(rng()-.5)*course.params.sensorNoiseMeters-uncertainty*.08,
       heading:orientation+(rng()-.5)*.03};
+    let motionTracks=[];
+    if(controllerMode==='observed-motion-watch'&&observed){
+      const tracking=updateMotionMemory({history:motionHistory,scan:lastScan,estimate,tick,dt:DT});
+      motionHistory=tracking.history;
+      motionTracks=tracking.tracks;
+    }
     const decide=controllerMode==='progress-gated'?reactiveCommandProgress:
       controllerMode==='progress-shielded'?reactiveCommandShielded:
-      controllerMode==='observed-lateral-escape'?reactiveCommandEscape:reactiveCommand;
+      controllerMode==='observed-lateral-escape'?reactiveCommandEscape:
+      controllerMode==='observed-motion-watch'?reactiveCommandMotionWatch:reactiveCommand;
     const decision=decide({estimate,goal:{x:course.goal.x,z:course.goal.y},
       bounds:course.bounds,scan:lastScan,scanAgeSec:age,velocity:v0,uncertainty,
       delaySeconds:course.params.commandDelaySteps*DT,braking:course.params.braking,
-      maxSpeed:.82,robotRadius:course.robotRadius,state:{preferredTurn}});
+      maxSpeed:.82,robotRadius:course.robotRadius,state:{preferredTurn},tracks:motionTracks});
     preferredTurn=decision.state.preferredTurn;
     if(decision.reason.endsWith('_hold')||decision.reason==='goal_hold'){
       holdRequests++;if(length(v0)>.02)holdsWhileMoving++;
@@ -101,6 +110,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       uncertainty:round(uncertainty),observedObstacleCount:lastScan.length,requested:decision.reason,
       ...(decision.shield?{shieldDiagnostics:decision.shield}:{}),
       ...(decision.escape?{escapeDiagnostics:decision.escape}:{}),
+      ...(decision.motionWatch?{motionWatchDiagnostics:decision.motionWatch}:{}),
       requestedSpeed:round(length(decision.velocity)),appliedSpeed:round(length(applied)),
       nativeContacts:contacts.map(c=>({aId:c.aId,bId:c.bId})),sweptContacts:sweeps,
       obstacles:next.entities.filter(e=>e.id!=='rover').map(e=>({id:e.id,...xy(e),radius:e.collider.radius}))});
