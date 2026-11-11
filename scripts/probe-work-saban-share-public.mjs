@@ -23,7 +23,7 @@ const pages=[
   {key:'csv_reporter',route:'work-saban/report/',markers:[
     'Your numbers.','id="csv-file"','id="consent"',
     'id="share-tool"','id="share-feedback"',
-    'No account or file upload','work-saban-social.png',
+    'Nothing will be uploaded to Evercraft.','work-saban-social.png',
     "connect-src 'none'",'./report.js'
   ]},
   {key:'local_report_script',route:'work-saban/report/report.js',markers:[
