@@ -81,6 +81,17 @@ export async function dispatchAmbientJobsOnce({
   const rows=[];
 
   for(const job of jobs){
+    // Receipt-integrity failures have an uncertain remote outcome.
+    // Never silently replan or redispatch these held jobs.
+    if(job.state==='held'&&job.last_hold?.reason==='unverified_remote_worker_result'){
+      rows.push({
+        job_id:job.job_id,
+        state:'held',
+        reason:'unverified_remote_worker_result',
+        manual_review_required:true,
+      });
+      continue;
+    }
     if(job.state==='retry_wait'&&job.next_attempt_at){
       const retryAt=Date.parse(job.next_attempt_at);
       const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
