@@ -11,7 +11,7 @@ import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {performance} from 'node:perf_hooks';
-import {buildModelPrompt} from './eo001-raven-local-candidate.mjs';
+import {buildModelPrompt,liveModelDecision} from './eo001-raven-local-candidate.mjs';
 
 export const BASELINE=Object.freeze({
   schema:'EO001-RUN-PLAN/0.1.0',
@@ -183,6 +183,60 @@ export async function measureSyntheticDecision({
       stop_on_timeout:true,
       replace_failed_attempts:false,
       raw_model_action_delivered:false
+    };
+  }finally{if(timer!==undefined)clearTimer(timer);}
+}
+
+/**
+ * Review-only proposed integration of the FULL bounded decision envelope with
+ * the actual model/guard/receipt code. Timer begins BEFORE buildModelPrompt and
+ * stops AFTER the private receipt writer. The returned action is never passed
+ * to a provider by this module.
+ *
+ * Only an admitted, isolated gateway adapter that obeys AbortSignal should be
+ * bound to this function in a separately reviewed Gate 1 runner. The function
+ * is not a deployable/authorized scenario harness, and it cannot force-stop an
+ * arbitrary non-cooperative in-process model executor.
+ */
+export async function measureGuardedResearchDecision(context,{
+  infer,record,clock=()=>performance.now(),timeoutMs=15000,
+  setTimer=setTimeout,clearTimer=clearTimeout
+}={}){
+  if(typeof infer!=='function'||typeof record!=='function')
+    throw Error('inference_and_private_recorder_required');
+  if(timeoutMs!==15000)throw Error('protocol_budget_drift');
+  const controller=new AbortController();
+  const started=clock();
+  let timer;
+  let receiptCount=0;
+  let result=null,reason=null;
+  try{
+    timer=setTimer(()=>controller.abort(),timeoutMs);
+    try{
+      result=await liveModelDecision(context,{
+        infer:args=>infer({...args,signal:controller.signal}),
+        record:entry=>{record(entry);receiptCount++;}
+      });
+    }catch(e){
+      reason=e?.name||'Error';
+    }
+    const elapsed=clock()-started;
+    const timeout=controller.signal.aborted||elapsed>=timeoutMs;
+    return {
+      schema:'evercraft.eo001.guarded-whole-decision-measurement.v1',
+      state:timeout?'TIMEOUT_RETAINED':reason?'ERROR_RETAINED':'GUARD_RESULT_RECORDED',
+      elapsed_wall_ms:Math.max(0,elapsed),deadline_ms:timeoutMs,
+      private_receipts_recorded:receiptCount,
+      error_kind:reason,
+      // A measurement never bypasses existing policy restrictions.
+      guarded_action:timeout||reason?{
+        action:'finish',payment_status:'unknown',fulfillment_authorized:false,receipt_id:null
+      }:result,
+      external_effects_authorized:false,
+      lab_scoring_completed:false,
+      physical_run_authorized:false,
+      aborted:controller.signal.aborted,
+      replace_failed_attempts:false
     };
   }finally{if(timer!==undefined)clearTimer(timer);}
 }
