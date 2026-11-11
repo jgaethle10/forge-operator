@@ -1,0 +1,121 @@
+name: Evercraft Visual Engine Flyover
+
+on:
+  push:
+    paths:
+      - "systemia/visual-engine/**"
+      - "systemia/world-engine/**"
+      - ".github/workflows/visual-engine-flyover.yml"
+  pull_request:
+    paths:
+      - "systemia/visual-engine/**"
+      - "systemia/world-engine/**"
+      - ".github/workflows/visual-engine-flyover.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aircraft-flyover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate procedural geometry and reproducibility
+        run: node --test systemia/visual-engine/flyover.test.mjs
+      - name: Prove World Engine visual and WebGPU plan integration
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/world-engine-integration.test.mjs
+      - name: Prove cinematic v2 geometry, camera and WebGPU plan
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/cinematic-flyover.test.mjs
+      - name: Prove atmospheric v3 mesh, camera, WebGPU and reproducibility contracts
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/atmospheric-flyover.test.mjs
+      - name: Validate authored glTF asset packs and rights-gated WebGPU integration
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-asset-pack.test.mjs
+      - name: Validate authored glTF scene-node hierarchies, mirror transform and lineage
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-scene-placements.test.mjs
+      - name: Validate fitted authored-model composition at wide and portrait ratios
+        run: node --test systemia/visual-engine/authored-camera.test.mjs
+      - name: Check native pixel proof syntax
+        run: node --check systemia/visual-engine/flyover-pixel-proof.mjs
+
+  native-flyover-pixels:
+    needs: aircraft-flyover
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install owned browser worker dependencies
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm --prefix systemia/evercraft-web/browser-worker install --no-audit --no-fund
+      - name: Render original flyover with owned World Engine WGSL
+        env:
+          EVERCRAFT_VISUAL_FRAMES_DIR: flyover-pixels
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: flyover-native-browser
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/flyover-pixel-proof.mjs
+      - name: Prove native PNG decode into canonical authored glTF textures
+        env:
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: flyover-native-browser
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/gltf-native-image.proof.mjs | tee flyover-pixels/gltf-native-image-receipt.json
+      - name: Publish real frame captures and provenance receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-flyover-webgpu-pixels
+          path: flyover-pixels/
+          if-no-files-found: error
+          retention-days: 14
+
+
+  licensed-aircraft-reference:
+    name: pinned CC-BY authored aircraft intake canary
+    needs: aircraft-flyover
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch pinned licensed aircraft strictly for build-time validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reference-aircraft
+          REV=91d835e8e851b2317fe79af291c9fed6153fd525
+          curl -fL --retry 2 --max-time 60 \
+            "https://raw.githubusercontent.com/amvlab/aircraft-models/$REV/models/B737_nologo.glb" \
+            -o reference-aircraft/B737_nologo.glb
+          curl -fL --retry 2 --max-time 30 \
+            "https://raw.githubusercontent.com/amvlab/aircraft-models/$REV/LICENSE" \
+            -o reference-aircraft/LICENSE
+          test "$(git hash-object reference-aircraft/B737_nologo.glb)" = \
+            c2c8f8292766a0b682918d4841c6dc4de4b18f1f
+          test "$(git hash-object reference-aircraft/LICENSE)" = \
+            0e9cbaaab1db587e91c080908ddf857d9e864eb1
+      - name: Install owned Browser Worker dependencies
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm --prefix systemia/evercraft-web/browser-worker install --no-audit --no-fund
+      - name: Admit licensed authored aircraft through World Engine
+        env:
+          EVERCRAFT_REFERENCE_AIRCRAFT_PATH: reference-aircraft/B737_nologo.glb
+          EVERCRAFT_REFERENCE_AIRCRAFT_LICENSE: reference-aircraft/LICENSE
+          EVERCRAFT_REFERENCE_AIRCRAFT_RECEIPT: reference-aircraft/receipt.json
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: reference-browser-state
+        run: npm exec --yes --package=tsx@4.20.6 -- tsx systemia/visual-engine/licensed-aircraft-canary.mjs
+      - name: Publish rights and asset import receipt only
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-licensed-aircraft-native-turntable
+          path: |
+            reference-aircraft/receipt.json
+            reference-aircraft/authored-pixel-receipt.json
+            reference-aircraft/authored-b737-angle-*.png
+            reference-aircraft/authored-b737-portrait.png
+          if-no-files-found: error
+          retention-days: 14
