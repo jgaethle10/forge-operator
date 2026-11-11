@@ -61,6 +61,12 @@ td strong{color:#243d54}
 [hidden]{display:none!important}
 @media(max-width:830px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.top-inner{padding:16px}.nav .chip{display:none}main{padding:28px 16px 60px}.panel{padding:18px}.chart{height:235px}}
 @media(max-width:450px){.stats{gap:9px}.stat{padding:15px}.actions{align-items:stretch}.actions button,.labelled-upload{justify-content:center}}
+.retest-items{display:grid;gap:10px;margin-top:14px}
+.retest-item{background:#f7fbff;border:1px solid #dce9f4;border-radius:12px;padding:14px 16px}
+.retest-item strong{color:#214d76;font-size:.91rem}
+.retest-item p{color:#62798e;font-size:.8rem;line-height:1.5;margin:7px 0}
+.retest-item ol{margin:8px 0 0 22px;padding:0;font-size:.8rem;color:#526c81;line-height:1.65}
+button:disabled{cursor:not-allowed;opacity:.5}
 </style>
 </head>
 <body>
@@ -95,6 +101,19 @@ td strong{color:#243d54}
 <div class="panel"><div class="header-row"><div><h2>Evidence and limits</h2><p class="subtitle">Source hash prefix, rig declaration and reviewer restrictions</p></div></div>
 <div id="provenance" class="note"></div><div id="warnings"></div>
 </div>
+<div class="panel" id="retestPanel">
+<div class="header-row"><div><h2>Next field-capture tasks</h2>
+<p class="subtitle">Translate missing detections, uncertain matches, null depth and large errors into reviewable retest actions. These are engineering suggestions, never safety priorities.</p></div><span class="status unverified">V7 · UNREVIEWED PLAN</span></div>
+<div class="controls">
+<label for="reviewThreshold" style="font-size:.84rem;color:#4d6379;font-weight:700;display:flex;align-items:center;gap:10px">Operator error-review threshold (meters)
+<input id="reviewThreshold" type="number" min="0" max="1000" step="0.05" value="0.5" style="width:105px"></label>
+<button class="btn alt" type="button" id="buildRetest">Rebuild review plan</button>
+<button class="btn alt" type="button" id="downloadRetest" disabled>Export local plan JSON</button>
+</div>
+<p id="retestSummary" class="note" role="status">Load a report to prepare a proposed retest plan.</p>
+<div id="retestItems" class="retest-items"></div>
+<p id="retestLimits" class="footnote">The threshold is an operator triage setting, not an accuracy acceptance criterion. Export does not schedule a capture, validate evidence, or create any production task.</p>
+</div>
 <div class="panel">
 <div class="header-row"><div><h2>Every reference target</h2><p class="subtitle">Select a row to inspect its exact status, depths and uncertainty.</p></div><span id="rowTotal" class="chip"></span></div>
 <div class="controls">
@@ -123,8 +142,10 @@ td strong{color:#243d54}
 </main>
 <script type="module">
 import {inspectFieldReport,filterFieldRows} from './field-review.mjs';
+import {buildFieldRetestPlan} from './field-retest.mjs';
 const $=id=>document.getElementById(id);
 let current=null;
+let latestRetestPlan=null;
 const text=(id,value)=>{$(id).textContent=String(value)};
 const num=n=>n===null?'Unknown':n.toLocaleString(undefined,{maximumFractionDigits:3});
 const meters=n=>n===null?'Unknown':num(n)+' m';
@@ -207,6 +228,46 @@ function updateRows(){
  text('rowTotal',rows.length+' / '+current.total+' references');
  text('detail',rows.length?'Select a reference above for its evidence details.':'No matching references.');
 }
+
+function updateRetestPlan(){
+ if(!current)return;
+ const input=$('reviewThreshold').value.trim();
+ const threshold=input===''?NaN:Number(input);
+ try{
+  const plan=buildFieldRetestPlan(current,{reviewThresholdM:threshold});
+  latestRetestPlan=plan;
+  $('downloadRetest').disabled=false;
+  text('retestSummary',plan.totalFlagged+' of '+plan.totalReferences+
+    ' reference targets flagged for review. '+plan.interpretationWarning+
+    ' Error threshold '+num(threshold)+' m is for operator triage only.');
+  const wrap=$('retestItems');wrap.replaceChildren();
+  for(const task of plan.tasks.slice(0,12)){
+   const item=document.createElement('article');item.className='retest-item';
+   item.append(make('strong','Priority '+task.engineeringPriority+
+     ' · '+task.title+' · '+task.id));
+   item.append(make('p',task.objective+' (frame '+task.frameId+', '+task.label+')'));
+   const ordered=document.createElement('ol');
+   for(const action of task.actions)ordered.append(make('li',action));
+   item.append(ordered);wrap.append(item);
+  }
+  if(plan.totalFlagged>12)wrap.append(make('p',
+   'Showing 12 of '+plan.totalFlagged+' proposed tasks. Export JSON to review the complete queue.','note'));
+  if(plan.totalFlagged===0)wrap.append(make('p',
+   'No observations exceed the selected triage threshold or have unresolved outcomes. This does NOT certify accuracy.','note'));
+ }catch(e){
+  latestRetestPlan=null;$('downloadRetest').disabled=true;
+  $('retestItems').replaceChildren();
+  text('retestSummary','Cannot build retest plan: '+e.message);
+ }
+}
+function downloadRetestPlan(){
+ if(!latestRetestPlan)return;
+ const content=JSON.stringify(latestRetestPlan,null,2);
+ const blob=new Blob([content],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='evercraft-spatial-proposed-retests.json';
+ a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 function render(report,source){
  try{
   const review=inspectFieldReport(report);
@@ -227,9 +288,9 @@ function render(report,source){
   text('breakdown',review.evaluated+' evaluated · '+(review.total-review.evaluated)+
     ' unresolved. Missing measurements are not scored as zero error.');
   $('search').value='';$('filter').value='all';$('sort').value='error_desc';
-  scatter(review);outcomes(review);updateRows();
+  scatter(review);outcomes(review);updateRows();updateRetestPlan();
   text('message',source+' loaded locally. No report bytes were transmitted. Accuracy remains unverified.');
- }catch(e){current=null;$('dashboard').hidden=true;
+ }catch(e){current=null;latestRetestPlan=null;$('downloadRetest').disabled=true;$('dashboard').hidden=true;
   text('message','Report rejected: '+e.message+'. Verify the original V5 report and avoid manually editing summary totals.');}
 }
 function syntheticDemo(){
@@ -272,6 +333,8 @@ function syntheticDemo(){
  },'Synthetic demo');
 }
 $('demo').addEventListener('click',syntheticDemo);
+$('buildRetest').addEventListener('click',updateRetestPlan);
+$('downloadRetest').addEventListener('click',downloadRetestPlan);
 $('file').addEventListener('change',async()=>{
  const file=$('file').files?.[0];if(!file)return;
  if(file.size>10000000){text('message','Report rejected: file exceeds local 10 MB limit.');return;}
