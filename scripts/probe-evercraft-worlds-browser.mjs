@@ -1,5 +1,6 @@
 // Evercraft Worlds WebGL browser conformance. Synthetic scene, no hosted/real-world data.
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -75,17 +76,34 @@ try{
           authority:'window_civic_social_rule_policy',inference:'none',external_actions:false,
           fictional:true,content_sha256:'b'.repeat(64)}]}
     };
+    observation.source_fetch={
+      kind:'github_https_commit_pinned_read_only',
+      repo:'jgaethle10/forge-operator',branch:'window-society-state',
+      path:'state/window.json',commit_sha:'c'.repeat(40),
+      blob_sha:'d'.repeat(40),observed_at:'2026-10-19T00:00:00.000Z',
+      assertion:'git_blob_and_world_content_consistency_not_signed_attestation'
+    };
+    const receipt=observation.decision_projection.receipts[0];
+    const receiptEvidence={
+      event_id:receipt.event_id,source:receipt.source,event_type:receipt.event_type,
+      actor_id:receipt.actor_id,related_actor_id:receipt.related_actor_id,
+      day:receipt.day,time:receipt.time,description:receipt.description
+    };
+    receipt.content_sha256=createHash('sha256').update(JSON.stringify(receiptEvidence)).digest('hex');
     await page.locator('#sl-file').setInputFiles({
       name:'synthetic-observer.json',mimeType:'application/json',
       buffer:Buffer.from(JSON.stringify(observation))
     });
     await page.locator('#sl-loaded').waitFor({state:'visible'});
-    assert.match(await page.locator('#sl-status').textContent(),/not independently verified/,profile.name+': observation caveat absent');
+    assert.match(await page.locator('#sl-status').textContent(),/does not independently authenticate/,profile.name+': observation caveat absent');
+    assert.match(await page.locator('#sl-meta').textContent(),/GitHub commit cccccccccccc \(file-reported\)/,profile.name+': source claim label missing');
     assert.equal(await page.locator('#sl-events li').count(),1,profile.name+': policy evidence did not render');
     await page.locator('#sl-resident').selectOption('r4');
     assert.match(await page.locator('#sl-events').textContent(),/No retained policy decisions/,profile.name+': resident filter failed');
     await page.locator('#sl-resident').selectOption('r2');
     assert.match(await page.locator('#sl-events').textContent(),/Synthetic fictional promise/,profile.name+': actor evidence missing');
+    await page.locator('#sl-events .sl-evidence summary').click();
+    assert.match(await page.locator('#sl-events .sl-evidence').textContent(),/Content digest \(not a signature\)/,profile.name+': receipt disclosure missing');
     const observerBox=await page.locator('#societyLedgerPanel').boundingBox();
     assert.ok(observerBox&&observerBox.x>=0&&observerBox.x+observerBox.width<=profile.viewport.width+2,profile.name+': society ledger overflows viewport');
     assert.equal(await page.evaluate(()=>Object.keys(localStorage).some(k=>k.includes('society-ledger'))),false,profile.name+': viewer persisted private evidence');
