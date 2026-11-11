@@ -5,6 +5,13 @@ import http from 'node:http';
 import path from 'node:path';
 import { startLocalOrganism } from './local-organism.mjs';
 
+// Local organism CI proves managed runtime startup/restart/clean shutdown,
+// not production Portfolio Sentinel policy compliance. The Sentinel still
+// records real blocking findings, but the fixture must not convert expected
+// unconfigured public-portfolio findings into a Core process failure.
+// Production defaults and the dedicated Sentinel enforcement tests are unchanged.
+process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH='false';
+
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
   ready:false,
@@ -220,6 +227,7 @@ try {
     zero_spend_capacity: true,
     native_browser_bootstrap_receipted: true,
     native_browser_bootstrap_network_disabled_in_proof: true,
+    portfolio_sentinel_enforce_health_disabled_in_local_proof: true,
     public_ingress: false,
     multicast_announcement: false,
     persistent_device_identity: true,
