@@ -13,6 +13,8 @@ on:
       - 'tests/saban-nodeseed-receipt-gate.test.mjs'
       - 'tests/saban-yard-unified-dispatch.test.mjs'
       - 'tests/saban-yard-split-identity-mailbox.test.mjs'
+      - 'tests/yard-split-identity-consumer.test.mjs'
+      - 'systemia/yard/split-identity-request-consumer.mjs'
       - 'systemia/saban/split-identity-handoff.mjs'
       - 'scripts/prepare-saban-yard-split-mailbox.sh'
       - 'systemia/yard/saban-intent-drain-runner.mjs'
@@ -43,6 +45,8 @@ on:
       - 'tests/saban-nodeseed-receipt-gate.test.mjs'
       - 'tests/saban-yard-unified-dispatch.test.mjs'
       - 'tests/saban-yard-split-identity-mailbox.test.mjs'
+      - 'tests/yard-split-identity-consumer.test.mjs'
+      - 'systemia/yard/split-identity-request-consumer.mjs'
       - 'systemia/saban/split-identity-handoff.mjs'
       - 'scripts/prepare-saban-yard-split-mailbox.sh'
       - 'systemia/yard/saban-intent-drain-runner.mjs'
@@ -107,6 +111,8 @@ jobs:
         run: node --test tests/saban-yard-unified-dispatch.test.mjs
       - name: Prove split-account mailbox is immutable, receipt-bound and secret-free
         run: node --test tests/saban-yard-split-identity-mailbox.test.mjs
+      - name: Prove Yard split-account broker execution and crash recovery holds
+        run: node --test tests/yard-split-identity-consumer.test.mjs
       - name: Check split-account mailbox provisioning syntax
         run: bash -n scripts/prepare-saban-yard-split-mailbox.sh && node --check systemia/saban/split-identity-handoff.mjs
       - name: Check unified Saban drainer shell safety and runner syntax
