@@ -51,3 +51,26 @@ test('Paid pilot states payment and verification boundaries', () => {
   assert.match(html, /Evercraft Payments order is required/);
   assert.match(html, /not independently verified/i);
 });
+
+
+test('Structured Closeout offer is inquiry-only and does not invent payment evidence', () => {
+  const offer = JSON.parse(readFileSync(new URL('../public/closeout/product.json', import.meta.url), 'utf8'));
+  assert.equal(offer.product_id, 'evercraft.commerce.closeout');
+  assert.equal(offer.proposed_price_usd, 49);
+  assert.equal(offer.checkout.order_created, false);
+  assert.equal(offer.checkout.checkout_available, false);
+  assert.equal(offer.checkout.provider_paid_receipt_verified, false);
+  assert.equal(offer.checkout.direct_stripe_link_allowed, false);
+  assert.equal(offer.launch_evidence.revenue_verified, false);
+  assert.equal(offer.free_tool.file_upload_to_server, false);
+  assert.equal(offer.checkout.payment_authority, 'Evercraft Payments');
+  assert.equal(offer.checkout.provider_boundary, 'Raven Nexus');
+});
+
+test('Machine discovery and product description agree on purpose and boundaries', () => {
+  const text = readFileSync(new URL('../public/closeout/llms.txt', import.meta.url), 'utf8');
+  assert.match(html, /href=".\/product.json"/);
+  assert.match(html, /href=".\/llms.txt"/);
+  assert.match(text, /inquiry-only/i);
+  assert.match(text, /No Closeout checkout or paid customer has been verified/i);
+});
