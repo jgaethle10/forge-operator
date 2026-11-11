@@ -202,3 +202,18 @@ test('private reconciliation endpoint compares bank observations but never issue
   assert.deepEqual(storedAfter,saved);
  }finally{await x.dispose()}
 });
+
+
+test('private order storage rejects symlink redirection and unsafe store paths',async()=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'evercraft-bank-store-'));
+ const real=path.join(root,'private-state');
+ const link=path.join(root,'redirected-state');
+ await fs.mkdir(real,{mode:0o700});
+ await fs.symlink(real,link);
+ try{
+  await assert.rejects(()=>startBankCreditRequestRuntime({...opts,storeDir:link}),/symlink_forbidden/);
+  await assert.rejects(()=>startBankCreditRequestRuntime({...opts,storeDir:'relative/state'}),/absolute_path_required/);
+  await assert.rejects(()=>startBankCreditRequestRuntime({...opts,storeDir:'/'}),/root_forbidden/);
+  assert.deepEqual(await fs.readdir(real),[]);
+ }finally{await fs.rm(root,{recursive:true,force:true})}
+});
