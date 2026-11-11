@@ -50,19 +50,46 @@ export function wgsStaticSvg(layers){
 }
 export function addNoScriptPreview(template,layers){
  const anchor='<canvas id="map" aria-label="Interactive map of locally loaded WGS geology data"></canvas>';
- if(!template.includes(anchor)||!template.includes('No source files loaded.'))throw Error('Unexpected first-party map template');
+ const mapLayers='<h2>Map layers</h2>';
+ const permitLegend='<div class="layer"><i class="swatch" style="background:#ffa95b"></i>WA DNR approximate permit location</div>';
+ if(!template.includes(anchor)||!template.includes('No source files loaded.')||
+    !template.includes(mapLayers)||!template.includes(permitLegend))
+  throw Error('Unexpected first-party map template');
  const css=[
- '#mobile-static-preview{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#0a1926;padding:10px;gap:6px}',
- '#mobile-static-preview svg{height:calc(100% - 34px);width:100%;object-fit:contain}',
- '#mobile-static-preview p{font-size:12px;color:#c5e0eb;margin:0;text-align:center}',
- '#mobile-static-preview[hidden]{display:none}',
- '.canvas-wrap .controls{display:none}',
- '@media(max-width:820px){main{display:flex;flex-direction:column}.canvas-wrap{order:-1;min-height:76dvh}aside{order:2}}'
+  '[hidden]{display:none!important}',
+  '#mobile-static-preview{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#0a1926;padding:10px;gap:6px}',
+  '#mobile-static-preview svg{height:calc(100% - 34px);width:100%;object-fit:contain}',
+  '#mobile-static-preview p{font-size:12px;color:#c5e0eb;margin:0;text-align:center}',
+  '#mobile-static-preview[hidden]{display:none}',
+  '.canvas-wrap .controls{display:none}',
+  'body:not(.evermaps-live) label.file,body:not(.evermaps-live) #status,body:not(.evermaps-live) #map-layer-heading,body:not(.evermaps-live) #toggles{display:none!important}',
+  'body:not(.evermaps-live) aside{background:#0d1c28}',
+  'body:not(.evermaps-live) aside h1{font-size:18px;margin:0 0 10px}',
+  'body:not(.evermaps-live) aside p{margin:6px 0 14px}',
+  'body:not(.evermaps-live) aside .group>.layer{display:flex;align-items:center}',
+  '@media(max-width:820px){',
+   'main{display:flex;flex-direction:column}',
+   '.canvas-wrap{order:-1;min-height:76dvh}',
+   'aside{order:2;padding:16px 17px 26px}',
+   'header{padding:10px 15px}',
+   'header .brand{font-size:15px}',
+   'header .sub{font-size:11px}',
+   'body:not(.evermaps-live) .group>.layer{padding:7px 0;font-size:12px}',
+   'body:not(.evermaps-live) .group h2{margin:15px 0 8px;font-size:13px}',
+   'body:not(.evermaps-live) .note{font-size:11px;padding:9px 10px}',
+  '}'
  ].join('');
  return template.replace('</style>',css+'</style>')
- .replace(anchor,anchor+'<div id="mobile-static-preview">'+wgsStaticSvg(layers)+'<p>Static preview. Interactive map requires a browser-hosted page.</p></div>')
- .replace('No source files loaded.','All verified WGS layers are embedded. Interactive controls require JavaScript.')
- .replace('Load WGS GeoJSON files<input','Add other GeoJSON files<input')
- .replace('Open the GeoJSON files from the GitHub Actions full Grant County research artifact. This page uses native browser Canvas with no map service, account, or API key.',
-  'The geography is already embedded. iPhone file preview may block the interactive code, so a verified static map remains visible. Open a browser-hosted map for pan, zoom and inspection.');
+  .replace(anchor,anchor+'<div id="mobile-static-preview">'+wgsStaticSvg(layers)+
+   '<p>Regional geology preview. Interactive controls appear in a browser with JavaScript.</p></div>')
+  .replace('No source files loaded.','Source verified. The interactive viewer needs browser JavaScript.')
+  .replace('Load WGS GeoJSON files<input','Add other GeoJSON files<input')
+  .replace(mapLayers,'<h2 id="map-layer-heading">Map layers</h2>')
+  .replace(permitLegend,'<div class="layer permit-legend" hidden><i class="swatch" style="background:#ffa95b"></i>WA DNR approximate permit points (optional layer)</div>')
+  .replace('<h1>WGS evidence layers</h1>','<h1>Understand the map</h1>')
+  .replace('Open the GeoJSON files from the GitHub Actions full Grant County research artifact. This page uses native browser Canvas with no map service, account, or API key.',
+   'Source-verified Washington Geological Survey data for Grant County. Colors describe published geology classifications, not places approved for mining.')
+  .replace('<h2>Evidence policy</h2>','<h2>Important distinction</h2>')
+  .replace('Mapped geology is not a mineable resource, land-rights finding, current operating mine, permission to extract, or investment recommendation. The map is intended for regional review, generally not finer than 1:24,000.',
+   'Regional geology is not land title, extraction permission, economic reserves or environmental clearance. Detailed site decisions need independent verification.');
 }

@@ -218,3 +218,6 @@ EVERMAPS_OUTPUT_DIR=/path/to/verified/evermaps-evidence \
 node systemia/evermaps/public-https-canary-cli.mjs
 ```
 This step requires the actual domain, not a guessed URL. It never creates a route or deploys code. Do not claim public launch merely because the local `/api/health` is green.
+
+## November 10, 2026 | iPhone preview usability correction
+An iPhone screenshot confirmed the source-derived map renders, but showed an empty `Map layers` heading, a nonfunctional `Add other GeoJSON files` button, and the key/legend hidden by an existing mobile media rule. The no-JavaScript fallback now hides inactive upload, status and toggle controls until the Canvas has initialized, **shows** the actual geology color legend in file previews, shortens the on-page caveat, and keeps the map ahead of the legend on narrow screens. It hides the permit-point legend until that layer is explicitly loaded, because the preloaded WGS-only map does not contain the 48 current DNR permit points. In browser-hosted interactive mode all working controls are restored. No live HTTPS route is inferred from this file-preview improvement.

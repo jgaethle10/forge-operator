@@ -27,8 +27,15 @@ test('complete audited WGS GeoJSON embeds in a single offline viewer with no sou
  assert.ok(html.includes('id="mobile-static-preview"'));
  assert.ok(html.includes('<svg'));
  assert.ok(html.includes('preview.hidden=true'));
- assert.ok(html.includes('Static preview.'));
- assert.ok(html.includes('All verified WGS layers are embedded.'));
+ assert.ok(html.includes('Regional geology preview.'));
+ assert.ok(html.includes('Understand the map'));
+ assert.ok(html.includes('id="map-layer-heading"'));
+ assert.ok(html.includes('body:not(.evermaps-live) #toggles{display:none!important}'));
+ assert.ok(html.includes('aside .group>.layer{display:flex'));
+ assert.ok(html.includes('class="layer permit-legend" hidden'));
+ assert.ok(html.includes("document.body.classList.add('evermaps-live')"));
+ assert.ok(html.includes('permitLegend.hidden=!data.permits'));
+ assert.ok(html.includes('Source verified. The interactive viewer needs browser JavaScript.'));
  assert.ok(html.includes('resetToggles();onStatus();fit();'));
  assert.equal(html.includes('</script><script>alert(1)'),false);
  assert.ok(html.includes('\\u003c/script'));

@@ -30,6 +30,6 @@ export function buildPreloadedWgsViewer({template,collections,receipt}={}){
   'Object.assign(data,'+sourceJson+');\nresetToggles();onStatus();fit();\n</script></body></html>';
  const enhanced=addNoScriptPreview(template,data);
  // Replace inside the generated bootstrap script, not an earlier local-file change handler.
- const bootstrap=script.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';");
+ const bootstrap=script.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';\ndocument.body.classList.add('evermaps-live');\nconst permitLegend=document.querySelector('.permit-legend');if(permitLegend)permitLegend.hidden=!data.permits;");
  return enhanced.replace(MARKER,bootstrap);
 }
