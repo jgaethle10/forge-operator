@@ -19,8 +19,26 @@
     "private_plugin_version": "1.0.6",
     "public_version": "1.0.2",
     "upgrade_target": "1.0.6",
-    "upgrade_state": "not_submitted_or_confirmed",
-    "update_existing_public_listing": true
+    "upgrade_state": "draft_uploaded_attestations_pending",
+    "update_existing_public_listing": true,
+    "draft_uploaded_reported": true,
+    "draft_upload_provenance": "Work mode report supplied by founder 2026-11-10",
+    "draft_zip_sha256": "a958d71ab95e579bfa7f1c434071f7d92b1233bae56d2287d42abf61e8f94a9a",
+    "draft_zip_sha256_local_verified": true,
+    "draft_package_checks": "passed_no_metadata_or_skill_findings_reported",
+    "draft_submission_for_review": "not_submitted",
+    "publisher_attestations": {
+      "required": 6,
+      "completed": 0,
+      "authorization": "publisher_only",
+      "provider_dialog_state": "open_in_Work_session_as_reported"
+    },
+    "mcp_rescan": {
+      "previous_scan_age_reported_days": 25,
+      "latest_scan_has_no_findings": true,
+      "newer_scan_timestamp_observed": false,
+      "rescan_attempt_reported": true
+    }
   },
   "independent_observations": {
     "public_directory_search_result": "not_confirmed_from_this_session",
@@ -36,5 +54,5 @@
     "do_not_create_duplicate_public_listing": true,
     "do_not_claim_public_version_updated_without_provider_receipt": true
   },
-  "next_gate": "Authenticated publisher account updates the existing public Evercraft listing; record review/publish/version and test from an account without a personal Evercraft plugin"
+  "next_gate": "Publisher reviews six legal/policy attestations and submits the existing listing draft for review. After any approval, separately publish and verify public version 1.0.6 and fresh-account invocation."
 }
