@@ -138,8 +138,9 @@ export function extractGltfEmbeddedImages(gltf,buffers,{maxImages=32,maxEncodedB
     return {index,mimeType,sourceSha256:sha256,encodedBase64:bytes.toString('base64')};
   });
 }
-function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes){
-  const cache=new Map(),textures=[],imageEvidence=new Map();
+function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes,
+  allowBaseLevelMipmapSampling=false){
+  const cache=new Map(),textures=[],imageEvidence=new Map(),samplerDowngrades=new Map();
   let total=0;
   function raster(texIndex,role){
     const tex=gltf.textures?.[texIndex];
@@ -201,8 +202,17 @@ function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes
       v===33648?'mirror-repeat':(check(false,'sampler_address_unsupported'),null);
     const filter=(v)=>v===undefined||v===9729?'linear':v===9728?'nearest':
       (check(false,'sampler_filter_unsupported'),null);
+    let minFilter;
+    if([9984,9985,9986,9987].includes(raw.minFilter)){
+      check(allowBaseLevelMipmapSampling,'sampler_mipmaps_require_explicit_preview_downgrade');
+      minFilter=[9984,9986].includes(raw.minFilter)?'nearest':'linear';
+      samplerDowngrades.set(info.index,{
+        texture_index:info.index,source_min_filter:raw.minFilter,
+        applied_min_filter:minFilter,policy:'mipmap_base_level_only_preview'
+      });
+    }else minFilter=filter(raw.minFilter);
     return {addressModeU:mode(raw.wrapS),addressModeV:mode(raw.wrapT),
-      magFilter:filter(raw.magFilter),minFilter:filter(raw.minFilter)};
+      magFilter:filter(raw.magFilter),minFilter};
   }
   return {
     sampler,
@@ -214,6 +224,7 @@ function importTextureFactory(gltf,buffers,decodedImages,assetId,maxTextureBytes
     },
     orm,
     result:()=>({textures,imageEvidence:[...imageEvidence.values()].sort((a,b)=>a.image_index-b.image_index),
+      samplerDowngrades:[...samplerDowngrades.values()].sort((a,b)=>a.texture_index-b.texture_index),
       totalTextureBytes:total})
   };
 }
@@ -263,7 +274,8 @@ function makeMaterial(gltf,i,assetId,tex){
 }
 export function importGltfAssetPack({
   gltf,buffers,decodedImages={},assetId,provenance,lods=null,
-  maxVertices=750000,maxTextureBytes=128*1024*1024
+  maxVertices=750000,maxTextureBytes=128*1024*1024,
+  allowBaseLevelMipmapSampling=false
 }){
   safeId(assetId);
   check(gltf?.asset?.version==='2.0','version_unsupported');
@@ -278,7 +290,8 @@ export function importGltfAssetPack({
   check(Array.isArray(buffers),'supplied_buffers_missing');
   const binary=resolveBuffers(gltf,buffers);
   check(Array.isArray(gltf.meshes)&&gltf.meshes.length>0,'meshes_missing');
-  const tex=importTextureFactory(gltf,binary,decodedImages,assetId,maxTextureBytes);
+  const tex=importTextureFactory(gltf,binary,decodedImages,assetId,maxTextureBytes,
+    allowBaseLevelMipmapSampling);
   const materialCount=gltf.materials?.length||0;
   const materials=Array.from({length:materialCount+1},
     (_,i)=>makeMaterial(gltf,i===materialCount?-1:i,assetId,tex));
@@ -343,6 +356,8 @@ export function importGltfAssetPack({
     provenance:structuredClone(provenance),sourceDocumentSha256:'sha256:'+digest(gltf),
     buffers:binary.map((b,i)=>({index:i,sha256:'sha256:'+sha(b),bytes:b.length})),
     images:rendered.imageEvidence,
+    samplerDowngrades:rendered.samplerDowngrades,
+    qualityStatus:rendered.samplerDowngrades.length?'preview_degraded':'source_sampling_preserved',
     geometry:geometry.map(g=>({id:g.id,digest:geometryAssetDigest(g),
       vertices:g.positions.length/3,triangles:(g.indices?.length||g.positions.length/3)/3})),
     materials:materials.map(m=>({id:m.id,digest:digest(m)})),
