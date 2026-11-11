@@ -163,11 +163,15 @@ export function runSyntheticCgroupCanary({
     requireTrue(payload&&typeof payload==='object'&&
       Object.keys(payload).sort().join('|')===
         ['schema','scope_id','nonce','unified_cgroup_v2',
-          'actual_unit_member','model_inference_executed',
-          'external_actions_authorized'].sort().join('|')&&
-      payload.schema==='evercraft.eo001.gate1.synthetic-scope-child.v1'&&
+          'actual_unit_member','resource_limits_read_back',
+          'memory_limit_exact','pids_limit_exact','cpu_quota_exact',
+          'model_inference_executed','external_actions_authorized'].sort().join('|')&&
+      payload.schema==='evercraft.eo001.gate1.synthetic-scope-child.v2'&&
       payload.scope_id===unit&&payload.nonce===nonce&&
       payload.unified_cgroup_v2===true&&payload.actual_unit_member===true&&
+      payload.resource_limits_read_back===true&&
+      payload.memory_limit_exact===true&&payload.pids_limit_exact===true&&
+      payload.cpu_quota_exact===true&&
       payload.model_inference_executed===false&&
       payload.external_actions_authorized===false,
       'SYNTHETIC_SCOPE_MEMBERSHIP_NOT_PROVEN');
@@ -197,12 +201,13 @@ export function runSyntheticCgroupCanary({
   requireTrue(receipt!==null,'SCOPE_RECEIPT_INVALID');
   return {
     schema:'evercraft.eo001.gate1.synthetic-scope-admission.v1',
-    state:'ONE_SHOT_SYNTHETIC_CGROUP_SCOPE_MEMBER_REPORTED',
+    state:'ONE_SHOT_SYNTHETIC_CGROUP_RESOURCE_READBACK_REPORTED',
     reviewed_source_commit:reviewedPin,
     local_scope_created:true,synthetic_child_reported_member:true,
     cgroup_unit_identity:unit,
     scope_collected_after_probe:true,
     memory_tasks_cpu_limits_requested:true,
+    synthetic_child_resource_limits_read_back:true,
     resource_limits_independently_read_back:false,
     escaped_descendant_kill_proven:false,
     cold_boot_persistence_proven:false,
