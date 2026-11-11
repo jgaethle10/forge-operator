@@ -150,7 +150,7 @@ A passing validation result now requires **local checkout admission**, in additi
 This **does not run from GitHub or ChatGPT by itself**. Execute from the Evercraft node's approved agent/operator context after fetching the research branch, or provide the command to Systemia once its execution route is confirmed:
 
 ```bash
-bash research/fungal-defense-001/tools/validate_on_owned_node.sh evercraft-node002-nextgen
+bash research/fungal-defense-001/tools/validate_on_owned_node.sh "$REVIEWED_COMMIT" evercraft-node002-nextgen
 ```
 
 The script uses GitHub **only as canonical source retrieval**, never as an application runtime. It clones `research/fungal-defense-001` into a restricted temporary directory on the node, runs `run_owned_validation.py`, writes a private local receipt at `${XDG_STATE_HOME:-$HOME/.local/state}/evercraft/fungal-defense/latest-node-validation.json`, and removes its own temporary checkout. It does not contact Base44 or other application hosts, modify an existing checkout, use cloud compute, or open a public port.
@@ -186,7 +186,7 @@ To validate the v0.3 source lane on a checked-out research branch:
 ```bash
 python3 research/fungal-defense-001/tools/check_provisional.py
 python3 -m unittest discover -s research/fungal-defense-001/tools -p 'test_*.py' -v
-bash research/fungal-defense-001/tools/validate_on_owned_node.sh evercraft-node002-nextgen
+bash research/fungal-defense-001/tools/validate_on_owned_node.sh "$REVIEWED_COMMIT" evercraft-node002-nextgen
 ```
 
 The last command **must be executed on the intended Evercraft-owned node**; its label is self-reported, not hardware attestation. As of this commit, this has not been done. The v0.3 panel has passed source/HTML structural integrity assertions within the connector session, but not a fully instrumented actual-device browser review or owned-node runtime execution.
@@ -198,4 +198,30 @@ The last command **must be executed on the intended Evercraft-owned node**; its 
 3. Establish NNDSS update cadence with **manual source-review admission**, not an automatic live outbreak feed. Every future week must be linked to the exact CDC record.
 4. Obtain independent scientific, privacy and accessibility review before any public health-related publication or clinical positioning.
 5. Keep `release-gates.json` unapproved until those checks have genuine, attributable evidence.
+
+
+## November 10, 2026: immutable commit admission and handoff tests
+
+The handoff previously cloned a **mutable research branch** and executed its current HEAD without requiring the human-reviewed commit. This has been corrected.
+
+- `tools/validate_on_owned_node.sh` **requires the exact 40-character lowercase Git commit** as its first argument. Missing, malformed, or changed commit IDs stop before any validation script executes.
+- The script downloads only the canonical branch into a disposable checkout, resolves its HEAD, compares it byte-for-byte to the approved expected SHA, and refuses to run if they differ.
+- A unique private receipt is produced for each run (not an overwritten `latest` file). Temporary source is removed by a cleanup trap.
+- `tools/test_node_handoff.py` performs six offline integration checks using fake Git and Python binaries. These cover missing/malformed pins, changed branch commits, success with a matching pin, failed downstream validation and distinct receipt names.
+- **Observed in an isolated development container:** all six tests passed, `bash -n` passed, and the missing-pin invocation correctly exited 2. Verified Git blob hashes: handoff `3469af4a4ba2528ced2d87219c6bb2c1ac974fef`; test suite `d5da2b50a03363bd97a3701e3b92a596fcfe8266`.
+
+### Running a reviewed source on NextGen
+
+Set `REVIEWED_COMMIT` to the **exact current, explicitly inspected 40-character HEAD** of the draft research branch; do not substitute a mutable branch name, use an unverified value from an email, or auto-resolve HEAD at execution time.
+
+```bash
+REVIEWED_COMMIT="PASTE_REVIEWED_40_HEX_COMMIT_HERE"
+bash research/fungal-defense-001/tools/validate_on_owned_node.sh "$REVIEWED_COMMIT" evercraft-node002-nextgen
+```
+
+If the branch changes after review, the command **must fail**. Review the new commit before trying with a different pin. This is a safety feature, not a runtime outage.
+
+The script must itself be retrieved from the reviewed commit or have its Git blob hash checked against the reviewed source. The local node label is informational only; the output does not cryptographically prove the machine identity. It does not deploy the observatory or issue public-health alerts.
+
+**Still missing:** an authentic execution receipt from Evercraft Node001/Node002, browser accessibility checks, expert scientific review, and owned Systemia integration. Public release remains blocked by `release-gates.json`.
 
