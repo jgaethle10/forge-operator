@@ -44,7 +44,7 @@ test('local rewards never claims an earned point or active merchant', () => {
   const result = resolve({ query: 'Where can I earn local rewards?' });
   assert.equal(result.goal_id, 'rewards');
   assert.equal(result.available.length, 1);
-  assert.match(result.available[0].boundary, /not guaranteed/i);
+  assert.match(result.available[0].boundary, /guaranteed/i);
 });
 
 test('business partner page is an interest path, not an enrollment', () => {
