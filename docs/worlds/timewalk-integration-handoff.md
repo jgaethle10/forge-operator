@@ -129,3 +129,24 @@ This is **cataloged source metadata**, not physical confirmation, inspection of 
 - `tests/timewalk-architectural-drawing-intake.test.mjs` adds seven regression cases enforcing accession, catalog location, item rights, uninspected status and no independent Worlds runtime authority. Included automatically in `node --test tests/timewalk-*.test.mjs`.
 
 **Acceptance path:** archivist confirms item existence and access; Timewalk examines actual dimensioned plans and their revision/as-built labels; rights are reviewed independently; a dated image / period record cross-checks 1960 continuity; human-reviewed geometry data is submitted through the original Worlds engine. The standalone alpha remains a non-authoritative reference.
+
+## 2026-11-10 critical archive response: exact sheets #6 and #15
+
+**A CSUN Sanborn Collection staff response has been received** to the November 9 information-only inquiry, with exact sheet IDs:
+- **Sheet #6**, covering the **A.E. Larson Building**; CSUN staff supplied the public [LOC digitized 1952 sheet, viewer page 11](https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=11&r=0.251,0.255,0.496,0.416,0).
+- **Sheet #15**, covering the **Capitol Theatre**; CSUN staff supplied the public [LOC digitized 1952 sheet, viewer page 20](https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=20&st=image&r=0.56,0.858,0.345,0.289,0).
+
+The archivist describes the final Yakima volume as **apparently corrected to 1960** and reports the building footprints on the LOC 1952 originals appear **identical** to their 1960-corrected volume. That comparison is valuable **archivist testimony**, NOT independent inspection of either 1960 physical sheet by Evercraft. We have not established **sheet-level 1960 correction stamp dates**. A concise no-cost follow-up asked for those exact dates and distinct rights conditions. **No paid scan or license was ordered.**
+
+**Rights split:** The [Library of Congress online Sanborn collection rights statement](https://www.loc.gov/collections/sanborn-maps/about-this-collection/rights-and-access/) says material in its **online collection is public domain and freely reusable**, so those *LOC-hosted 1952 images* have a known collection-level reuse basis. Do **not** extend that permission to separately scanned **CSUN 1960 originals**. The archive staff's informal interpretation of LOC rights does not itself grant a legal license for CSUN's copies. A 1952 map image also does not prove specific 1960 shopfront designs, store occupants, or walkable street details.
+
+**New executable data contract:**
+- `csun-1960-acquisition.v1.json`: reply status advanced to `archive-sheet-numbers-confirmed-awaiting-original-inspection`; records numbered sheet-to-landmark association, exact LOC viewer URLs, and archivist-reported footprint comparison. **Original 1960 images, GCPs, image hash, geometry and rights remain null/false.**
+- `map-registration-pending.v1.json`: maintains the original unlocated 1950 collection fallback while separately listing 1952 digital page 11 / sheet 6 and page 20 / sheet 15 with 1960 curator correction questions still unresolved.
+- `evidence.v1.json`: adds LOC digital 1952 volume as a separate source from the 1960 CSUN physical holding, with unambiguous distinct reuse rights.
+- `archive-acquisition.mjs`: accepts a supported intermediate *archivist replied, sheets located* state, but rejects uninspected originals, invented exact sheet dates or premature commercial publication rights.
+- `map-sheet-anchors.mjs`: produces a **data-only** sheet-to-landmark crosswalk with `historicCoordinates:null`, `extractedPolygon:null`, `worldGeometry:null` and `accurate1960SceneAuthorized:false`.
+- `walk-topology.mjs`: optional fourth argument to `makeTimewalkSceneHandoff(ledger,route,architecture,archiveAcquisition)`, which attaches those provenance anchors without modifying Worlds scene simulation, physics or renderer. The earlier three-argument call remains supported.
+- `tests/timewalk-map-sheet-anchors.test.mjs` and updated acquisition tests verify the progression of archival evidence but leave physical 1960 source geometry untrusted.
+
+**Outstanding for main Worlds:** visually inspect LOC 1952 originals, confirm individual 1960 correction dates or obtain licensed 1960 physical-source access, review surveyed control points and independent 1960 shape changes, then supply reviewed renderable geometry as a separate authorized dataset. PR #1780 is still a draft; issue #1938 tracks archive reply/rights and issue #1794 the canonical-engine integration. This research **is not** a launch of a 1960 3D city.
