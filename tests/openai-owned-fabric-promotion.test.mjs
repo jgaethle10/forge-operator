@@ -76,9 +76,51 @@ test('verified canary promotes all OpenAI package pointers to owned Fabric',()=>
   assert.equal(compat.mcpServers.evercraft.url,result.mcp_url);
   assert.equal(source.owned_fabric_transport.mcp,result.mcp_url);
   assert.equal(source.compatibility_transport.active,false);
+  assert.equal(source.compatibility_transport.mcp,null);
+  assert.equal(compat.mcpServers.evercraft.type,'streamable-http');
+  assert.equal(result.provider_action_performed,false);
+  assert.equal(result.existing_public_listing_observed,false);
   assert.equal(source.compatibility_transport.owned_fabric_cutover_required,false);
   assert.equal(distribution.mcp.url,result.mcp_url);
   assert.equal(distribution.mcp.authority,'owned_public_fabric');
   assert.equal(distribution.mcp.origin_change_requires_new_plugin_submission,true);
   assert.ok(fs.existsSync(path.join(root,'artifacts/openai-owned-fabric-promotion-receipt.json')));
+});
+
+test('portal-observed public Evercraft upgrade preserves existing listing and never recreates legacy transport',()=>{
+  const root=fixture();
+  const input=path.join(root,'distribution/openai-plugin/submission.json');
+  const submission=JSON.parse(fs.readFileSync(input,'utf8'));
+  submission.mcp.url='https://fabric.evercraft.example/mcp';
+  submission.existing_public_listing={
+    portal_observed_status:'Listed publicly',
+    portal_observed_version:'1.0.2',
+    release_action:'update_existing_listing_not_create_new',
+  };
+  fs.writeFileSync(input,JSON.stringify(submission));
+  const result=promoteOpenAiOwnedFabric({root,receiptPath:'artifacts/canary.json'});
+  assert.equal(result.existing_public_listing_observed,true);
+  assert.equal(result.requires_existing_listing_update,true);
+  assert.equal(result.openai_origin_change_requires_new_plugin_submission,false);
+  assert.equal(result.legacy_mcp,null);
+  assert.equal(result.provider_action_performed,false);
+  const after=JSON.parse(fs.readFileSync(input,'utf8'));
+  assert.equal(after.existing_public_listing.portal_observed_version,'1.0.2');
+  assert.ok(after.remaining_platform_prerequisites[0].includes('existing Evercraft LLC public plugin listing'));
+  const source=JSON.parse(fs.readFileSync(path.join(root,'plugins/evercraft-fabric/openai-submission.json'),'utf8'));
+  assert.equal(source.compatibility_transport.mcp,null);
+  assert.equal(source.compatibility_transport.active,false);
+  assert.equal(source.submission_state,'existing_public_listing_v1_0_2_observed_source_update_v1_0_6_prepared');
+});
+
+test('an owned MCP origin change to an existing public listing requires manual review',()=>{
+  const root=fixture();
+  const input=path.join(root,'distribution/openai-plugin/submission.json');
+  const submission=JSON.parse(fs.readFileSync(input,'utf8'));
+  submission.existing_public_listing={
+    portal_observed_status:'Listed publicly',
+    portal_observed_version:'1.0.2',
+  };
+  fs.writeFileSync(input,JSON.stringify(submission));
+  assert.throws(()=>promoteOpenAiOwnedFabric({root,receiptPath:'artifacts/canary.json'}),/existing_public_listing_origin_change_requires_manual_platform_review/);
 });
