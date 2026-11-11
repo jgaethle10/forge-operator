@@ -91,3 +91,76 @@ jobs:
             ${{ runner.temp }}/aiw-2026-data/bridges2026.sqlite
             ${{ runner.temp }}/aiw-vi-diagnostic.json
           retention-days: 7
+  live-2026-washington-probe:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Import all actual Washington 2026 SNBI bridge records
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py sync \
+            --state Washington \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-wa"
+      - name: Build isolated, explicitly partial SQLite index
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py build \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-wa" \
+            --db "$RUNNER_TEMP/aiw-2026-wa/bridges2026.sqlite"
+      - name: Audit FHWA state bridge count, condition and coordinate quality
+        run: |
+          python3 - <<'PY'
+          import json,os,sqlite3
+          from collections import Counter
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'aiw-2026-wa'
+          receipt=json.loads((root/'state_53_2026.receipt.json').read_text())
+          assert receipt['state']=='Washington'
+          assert receipt['expected']==receipt['indexed']==8619 and receipt['verified'] is True
+          with sqlite3.connect(root/'bridges2026.sqlite') as db:
+              db.row_factory=sqlite3.Row
+              records=db.execute('SELECT state,latitude,longitude,condition FROM bridges').fetchall()
+              meta=dict(db.execute('SELECT k,v FROM meta'))
+          assert len(records)==8619
+          assert json.loads(meta['partial']) is True
+          assert json.loads(meta['states_verified'])==1
+          ratings=Counter(r['condition'] for r in records)
+          inside=lambda r:(r['latitude'] is not None and r['longitude'] is not None
+                            and 45.5<=r['latitude']<=49.1
+                            and -125<=r['longitude']<=-116.8)
+          valid=sum(inside(r) for r in records)
+          around_yakima=sum(inside(r) and 46.3<=r['latitude']<=47.2
+                       and -121.1<=r['longitude']<=-120.15 for r in records)
+          audited={
+            'state':'Washington','year':2026,'bridge_records':len(records),
+            'published_state_count':8619,
+            'source_raw_sha256':receipt['raw_sha256'],
+            'source_url':receipt['source_url'],
+            'conditions':dict(ratings),
+            'fhwa_condition_reference':{'G':4298,'F':3918,'P':403},
+            'condition_counts_match_fhwa':all(ratings.get(k,0)==v for k,v in [('G',4298),('F',3918),('P',403)]),
+            'plottable_in_broad_WA_bounds':valid,'not_plottable':len(records)-valid,
+            'yakima_area_box_records_not_county':around_yakima,
+            'import_coverage':'one_state_verified_nation_incomplete',
+            'safety_note':'Historical bridge condition, not current danger or closure.'
+          }
+          (root/'wa_2026_audit.json').write_text(json.dumps(audited,indent=2)+'\n')
+          print(json.dumps(audited,indent=2))
+          if ratings.get('U',0): print('NOTICE: unknown condition codes are preserved, not interpreted as danger')
+          PY
+      - name: Retain Washington records and receipt for review
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-wa-verified-records
+          path: |
+            ${{ runner.temp }}/aiw-2026-wa/state_53_2026.ndjson
+            ${{ runner.temp }}/aiw-2026-wa/state_53_2026.receipt.json
+            ${{ runner.temp }}/aiw-2026-wa/bridges2026.sqlite
+            ${{ runner.temp }}/aiw-2026-wa/wa_2026_audit.json
+          retention-days: 7
