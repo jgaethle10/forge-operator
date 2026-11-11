@@ -121,3 +121,18 @@ test('asset receipts reject subsequent pixel, geometry and material tampering',(
     assert.equal(verifyGltfAssetPack(p),false);
   }
 });
+
+test('mipmapped sampler is rejected unless explicitly admitted as degraded preview',()=>{
+  const f=fixture();
+  f.gltf.samplers=[{minFilter:9987,magFilter:9729,wrapS:10497,wrapT:10497}];
+  f.gltf.textures[0].sampler=0;
+  assert.throws(()=>importGltfAssetPack(f),
+    /sampler_mipmaps_require_explicit_preview_downgrade/);
+  const pack=importGltfAssetPack({...f,allowBaseLevelMipmapSampling:true});
+  assert.equal(pack.qualityStatus,'preview_degraded');
+  assert.deepEqual(pack.samplerDowngrades,[{
+    texture_index:0,source_min_filter:9987,
+    applied_min_filter:'linear',policy:'mipmap_base_level_only_preview'
+  }]);
+  assert.equal(verifyGltfAssetPack(pack),true);
+});
