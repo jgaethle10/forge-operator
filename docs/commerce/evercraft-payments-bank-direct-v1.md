@@ -85,11 +85,40 @@ is still required to actually move money.
    eligibility and integration approval. Do not advertise instant payment
    or use a third-party host without owner authorization.
 
+## Safe first-party setup
+
+The source now includes a secrets-only bootstrap for Node001/Node002. It
+generates independent cryptographic keys **locally**, never prints them, never
+prompts for bank numbers, and creates an exclusive 0600 configuration in a
+0700 private directory outside the Git repository.
+
+```bash
+cd ~/forge-operator
+node systemia/payments/bank-credit-bootstrap.mjs \
+  "$HOME/.local/share/evercraft/private-payments/bank-credit-private.json"
+```
+
+The bootstrap intentionally leaves the state
+`HELD_BANK_CONFIRMATION_REQUIRED`, with no bank account and no approved offers.
+**It cannot process or issue a buyer link.** After independently confirming
+Evercraft's eligible business receiving bank information, an authorized
+operator edits this file on the local computer, adds the bank payee and
+owner-approved exact-priced offers, and changes
+`current_state` to `BANK_ACCOUNT_AND_TERMS_APPROVED`. Never share the
+bank account or secrets in chat, GitHub, logs, social media or public files.
+
+The runner refuses to start without the private approved-state schema,
+0600 file permissions, a nonsymlink config path and verified local runtime
+bank/offer configuration. A runtime starting is not a payment settlement or
+public deployment acceptance.
+
 ## Private configuration contract (schema illustration; NOT live values)
 All tokens and banking details below are placeholders and must NOT be copied
 into the repository or pasted into a public chat.
 
 {
+  "schema": "evercraft.payments.bank-credit-private-config.v1",
+  "current_state": "HELD_BANK_CONFIRMATION_REQUIRED",
   "operator_token": "<private cryptographically random 32+ byte value>",
   "link_signing_key": "<different private cryptographically random 32+ byte value>",
   "approved_offers": [{
