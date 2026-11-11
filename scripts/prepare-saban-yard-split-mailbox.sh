@@ -52,6 +52,13 @@ YARD_GROUP="$(id -gn "$YARD_USER")"
 [[ -d /var/lib/evercraft && ! -L /var/lib/evercraft ]] || {
   echo "ERROR: existing /var/lib/evercraft directory required" >&2; exit 3;
 }
+command -v runuser >/dev/null || { echo "ERROR: runuser is required" >&2; exit 3; }
+for user in "$SABAN_USER" "$YARD_USER"; do
+  runuser -u "$user" -- test -x /var/lib/evercraft || {
+    echo "ERROR: parent directory is not traversable by $user; refusing to alter its permissions" >&2
+    exit 3
+  }
+done
 
 # Do not replace existing directories or silently rewrite their owners/ACLs.
 check_dir(){
