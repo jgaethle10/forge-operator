@@ -5,6 +5,12 @@ on:
     paths:
       - 'systemia/clip/linkedin-organization-publisher.mjs'
       - 'systemia/clip/linkedin-organization-publisher.test.mjs'
+      - 'systemia/evercraft-home/clip-journal-linkedin-publish-adapter.mjs'
+      - 'systemia/evercraft-home/clip-journal-linkedin-publish.test.mjs'
+      - 'systemia/evercraft-home/provider-credentials.mjs'
+      - 'systemia/evercraft-home/provider-credentials.test.mjs'
+      - 'systemia/evercraft-home/server.mjs'
+      - 'systemia/evercraft-home/public/credentials.html'
       - 'systemia/clip/social-publisher-runtime.mjs'
       - 'systemia/clip/public-link-preflight.mjs'
       - 'systemia/clip/family-social-safety.mjs'
@@ -33,4 +39,5 @@ jobs:
       - name: Native LinkedIn publisher unit tests (mocked provider, no social writes)
         run: |
           node --check systemia/clip/linkedin-organization-publisher.mjs
-          node --test systemia/clip/linkedin-organization-publisher.test.mjs systemia/clip/social-publisher-runtime.test.mjs
+          node --check systemia/evercraft-home/server.mjs
+          node --test systemia/clip/linkedin-organization-publisher.test.mjs systemia/clip/social-publisher-runtime.test.mjs systemia/evercraft-home/provider-credentials.test.mjs systemia/evercraft-home/clip-journal-linkedin-publish.test.mjs
