@@ -7,6 +7,7 @@ import {randomBytes} from 'node:crypto';
 import {YardOperator} from './operator.mjs';
 import {readSplitIdentityRequests,publishSplitIdentityOutcome} from '../saban/split-identity-handoff.mjs';
 import {verifyNodeSeedWorkerCompletion} from '../saban/nodeseed-worker-completion-verifier.mjs';
+import {publishSplitIdentityCapacity} from '../saban/split-identity-capacity.mjs';
 
 // Yard-only execution consumer. No Saban state root is opened by this process.
 // Claiming is durable BEFORE a remote job can be sent. A restart after a claim
@@ -143,7 +144,7 @@ async function executeRequest({request,yard,brokerDeploymentId,brokerOrigin,rout
 export async function runYardSplitIdentityConsumeOnce({
   yardStateDir,mailboxRoot,journalRoot,brokerDeploymentId,
   brokerLoopbackOrigin,maxRequests=4,timeoutMs=10000,
-  yardOperator=null,
+  publishCapacity=false,yardOperator=null,
 }={}){
   requireOk(yardStateDir,'yard_state_dir_required');
   requireOk(mailboxRoot,'mailbox_root_required');
@@ -161,6 +162,14 @@ export async function runYardSplitIdentityConsumeOnce({
     route.verification==='instance_and_deployment_receipt_match'&&
     /^sha256:[a-f0-9]{64}$/.test(String(route.receipt_hash||'')),
     'broker_identity_invalid');
+
+  // This publication is a fresh authorized/attested capacity *snapshot*
+  // without grants or tokens. It is never written into Saban private state.
+  const capacity=publishCapacity===true
+    ? publishSplitIdentityCapacity({
+        mailboxRoot,inventory:await yard.listRemoteCapacityNodes(brokerDeploymentId),
+      })
+    : null;
 
   const rows=[];
   const pending=readSplitIdentityRequests({
@@ -199,6 +208,8 @@ export async function runYardSplitIdentityConsumeOnce({
     verification_hold:rows.filter(x=>x.status==='verification_hold').length,
     rows,
     broker_route_receipt_hash:route.receipt_hash,
+    safe_capacity_published:capacity!==null,
+    safe_capacity_receipt_hash:capacity?.inventory_receipt_hash||null,
     authority_material_persisted:false,
     saban_private_state_read:false,
     commercial_spend_usd:0,
@@ -214,6 +225,7 @@ async function main(){
     brokerLoopbackOrigin:arg('--broker-loopback-origin',''),
     maxRequests:Number(arg('--max-requests','4')),
     timeoutMs:Number(arg('--timeout-ms','10000')),
+    publishCapacity:process.argv.includes('--publish-safe-capacity'),
   });
   process.stdout.write(JSON.stringify(result)+'\n');
 }

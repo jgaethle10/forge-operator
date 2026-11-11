@@ -17,6 +17,7 @@ Default --check is read-only. --apply creates only:
   /var/lib/evercraft/saban-yard-mailbox       root:root              0711
     requests/                                  SABAN_USER:YARD_GROUP  2750
     outcomes/                                  YARD_USER:SABAN_GROUP  2750
+    capacity/                                  YARD_USER:SABAN_GROUP  2750
 
 The issuing account can write requests but cannot modify Yard's results.
 The Yard account can write outcomes but cannot modify Saban's requests.
@@ -83,24 +84,31 @@ if [[ "$MODE" == apply ]]; then
   if [[ ! -e "$MAILBOX/outcomes" && ! -L "$MAILBOX/outcomes" ]]; then
     install -d -o "$YARD_USER" -g "$SABAN_GROUP" -m 2750 "$MAILBOX/outcomes"
   fi
+  if [[ ! -e "$MAILBOX/capacity" && ! -L "$MAILBOX/capacity" ]]; then
+    install -d -o "$YARD_USER" -g "$SABAN_GROUP" -m 2750 "$MAILBOX/capacity"
+  fi
 fi
 
 check_dir "$MAILBOX" root root 711
 check_dir "$MAILBOX/requests" "$SABAN_USER" "$YARD_GROUP" 2750
 check_dir "$MAILBOX/outcomes" "$YARD_USER" "$SABAN_GROUP" 2750
+check_dir "$MAILBOX/capacity" "$YARD_USER" "$SABAN_GROUP" 2750
 command -v runuser >/dev/null || { echo "ERROR: runuser is required" >&2; exit 3; }
 
 runuser -u "$SABAN_USER" -- test -w "$MAILBOX/requests"
 runuser -u "$SABAN_USER" -- test -r "$MAILBOX/outcomes"
 runuser -u "$YARD_USER" -- test -r "$MAILBOX/requests"
 runuser -u "$YARD_USER" -- test -w "$MAILBOX/outcomes"
+runuser -u "$SABAN_USER" -- test -r "$MAILBOX/capacity"
+runuser -u "$YARD_USER" -- test -w "$MAILBOX/capacity"
 
 if runuser -u "$SABAN_USER" -- test -w "$MAILBOX/outcomes" ||
+   runuser -u "$SABAN_USER" -- test -w "$MAILBOX/capacity" ||
    runuser -u "$YARD_USER" -- test -w "$MAILBOX/requests"; then
   echo "ERROR: one runtime account can modify the other's files" >&2
   exit 3
 fi
 
 echo "PASS: split-identity mailbox permissions are correct ($MODE)"
-echo "Saban may write only requests; Yard may write only outcomes."
+echo "Saban may write only requests; Yard may write outcomes and safe capacity snapshots."
 echo "No private state, account membership, services, timers, or credentials changed."
