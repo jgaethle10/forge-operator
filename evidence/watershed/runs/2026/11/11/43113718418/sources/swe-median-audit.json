@@ -1,0 +1,81 @@
+{
+  "schema": "evercraft.research.swe-median-audit.v1",
+  "as_of": "2026-11-11T22:40:33.167Z",
+  "period": "1991-2020",
+  "denominator_floor_in": 1,
+  "station_comparisons": [
+    {
+      "station_id": "375:WA:SNTL",
+      "date": "2026-11-10",
+      "observed_swe_in": 0.2,
+      "median_swe_in": 0.2,
+      "ratio_percent": null,
+      "state": "small_or_zero_median_suppressed",
+      "comparison_scope": "single_station_only",
+      "median_period": "1991-2020",
+      "source": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+    },
+    {
+      "station_id": "478:WA:SNTL",
+      "date": "2026-11-10",
+      "observed_swe_in": 0,
+      "median_swe_in": 0.2,
+      "ratio_percent": null,
+      "state": "small_or_zero_median_suppressed",
+      "comparison_scope": "single_station_only",
+      "median_period": "1991-2020",
+      "source": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+    },
+    {
+      "station_id": "502:WA:SNTL",
+      "date": "2026-11-10",
+      "observed_swe_in": 1.3,
+      "median_swe_in": 0.9,
+      "ratio_percent": null,
+      "state": "small_or_zero_median_suppressed",
+      "comparison_scope": "single_station_only",
+      "median_period": "1991-2020",
+      "source": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+    },
+    {
+      "station_id": "642:WA:SNTL",
+      "date": "2026-11-10",
+      "observed_swe_in": 3,
+      "median_swe_in": 2,
+      "ratio_percent": 150,
+      "state": "station_comparison_valid",
+      "comparison_scope": "single_station_only",
+      "median_period": "1991-2020",
+      "source": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+    },
+    {
+      "station_id": "734:WA:SNTL",
+      "date": "2026-11-10",
+      "observed_swe_in": 0.2,
+      "median_swe_in": 0.5,
+      "ratio_percent": null,
+      "state": "small_or_zero_median_suppressed",
+      "comparison_scope": "single_station_only",
+      "median_period": "1991-2020",
+      "source": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+    },
+    {
+      "station_id": "863:WA:SNTL",
+      "date": "2026-11-10",
+      "observed_swe_in": 0,
+      "median_swe_in": 0,
+      "ratio_percent": null,
+      "state": "small_or_zero_median_suppressed",
+      "comparison_scope": "single_station_only",
+      "median_period": "1991-2020",
+      "source": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+    }
+  ],
+  "ratios_admitted": 1,
+  "ratios_suppressed": 5,
+  "basin_percent_of_median": null,
+  "basin_percent_status": "not_calculated_requires_official_basin_aggregation",
+  "message": "October site percentages with zero/small medians suppressed to avoid misleading claims.",
+  "publication_authorized": false,
+  "failures": []
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.research.nrcs-basin-index.v1",
+  "source": "NRCS Washington SNOTEL Snowpack Update Report",
+  "source_url": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington",
+  "observed_date": "2026-11-11",
+  "collected_at": "2026-11-11T22:40:35.219Z",
+  "reference_period": "1991-2020",
+  "basins": [
+    {
+      "id": "upper-yakima",
+      "name": "UPPER YAKIMA",
+      "value_percent": 34,
+      "warning_flag": true,
+      "condition": "potentially_unrepresentative",
+      "observation_date": "2026-11-11",
+      "reference_period": "1991-2020",
+      "source_family": "usda-nrcs-official-basin-update",
+      "metric": "basin_swe_index_percent_of_median",
+      "provenance": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington"
+    },
+    {
+      "id": "naches",
+      "name": "NACHES",
+      "value_percent": 85,
+      "warning_flag": true,
+      "condition": "potentially_unrepresentative",
+      "observation_date": "2026-11-11",
+      "reference_period": "1991-2020",
+      "source_family": "usda-nrcs-official-basin-update",
+      "metric": "basin_swe_index_percent_of_median",
+      "provenance": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington"
+    },
+    {
+      "id": "lower-yakima",
+      "name": "LOWER YAKIMA",
+      "value_percent": 108,
+      "warning_flag": true,
+      "condition": "potentially_unrepresentative",
+      "observation_date": "2026-11-11",
+      "reference_period": "1991-2020",
+      "source_family": "usda-nrcs-official-basin-update",
+      "metric": "basin_swe_index_percent_of_median",
+      "provenance": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington"
+    }
+  ],
+  "all_basins_warned": true,
+  "method": "NRCS: 100 * sum(valid station current SWE) / sum(corresponding station medians), with official exclusions.",
+  "warning_interpretation": "NRCS * indicates analysis may not validly represent conditions; early-season daily medians may be very small.",
+  "station_roster_from_source": "official_predefined_report",
+  "not_an_independent_recalculation": true,
+  "seasonal_outlook_verified": false,
+  "flood_or_hazard_state": "not_assessed",
+  "publication_authorized": false
+}

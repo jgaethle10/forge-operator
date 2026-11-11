@@ -1,0 +1,337 @@
+{
+  "schema": "evercraft.watershed.evidence-history.v1",
+  "key": "2026-11-11/43113718418",
+  "source_run_id": "43113718418",
+  "source_head_sha": "d72485724bc88195f95e9bd9b3c20147c4443c22",
+  "source_event": "schedule",
+  "collection_day_utc": "2026-11-11",
+  "ingested_at": "2026-11-11T22:41:07.284Z",
+  "source_digests": {
+    "latest.json": "ff0f17eedc7f425ca0f27a8667619522039843b91203b8116d22e5d74684e5d5",
+    "swe-median-audit.json": "b5fd158ed3908311d00dc5333d7fd8426b12a59e5d41f5e11e4a453c3486e4f1",
+    "official-basin-report.json": "cc87d982156c8f10b6cebebc462e702809f25aeea1f01d522c5f028a93ee3d68",
+    "reservoir-source-probe.json": "375a8505a1cffb426b8ea9a1910f2a5efdcfc35a5b1fefd45e4d48b6ccf77a02"
+  },
+  "archived_sources": [
+    "latest.json",
+    "official-basin-report.json",
+    "reservoir-source-probe.json",
+    "swe-median-audit.json"
+  ],
+  "sensors": {
+    "as_of": "2026-11-11T22:40:33.167Z",
+    "report_status": "partial",
+    "snow": [
+      {
+        "station_id": "375:WA:SNTL",
+        "kind": "SNWD",
+        "source_day": "2026-11-10",
+        "value": 0,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "375:WA:SNTL",
+        "kind": "WTEQ",
+        "source_day": "2026-11-10",
+        "value": 0.2,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "478:WA:SNTL",
+        "kind": "SNWD",
+        "source_day": "2026-11-10",
+        "value": 1,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "478:WA:SNTL",
+        "kind": "WTEQ",
+        "source_day": "2026-11-10",
+        "value": 0,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "502:WA:SNTL",
+        "kind": "SNWD",
+        "source_day": "2026-11-10",
+        "value": 3,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "502:WA:SNTL",
+        "kind": "WTEQ",
+        "source_day": "2026-11-10",
+        "value": 1.3,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "642:WA:SNTL",
+        "kind": "SNWD",
+        "source_day": "2026-11-10",
+        "value": 8,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "642:WA:SNTL",
+        "kind": "WTEQ",
+        "source_day": "2026-11-10",
+        "value": 3,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "734:WA:SNTL",
+        "kind": "SNWD",
+        "source_day": "2026-11-10",
+        "value": 2,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "734:WA:SNTL",
+        "kind": "WTEQ",
+        "source_day": "2026-11-10",
+        "value": 0.2,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "863:WA:SNTL",
+        "kind": "SNWD",
+        "source_day": "2026-11-10",
+        "value": 1,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "863:WA:SNTL",
+        "kind": "WTEQ",
+        "source_day": "2026-11-10",
+        "value": 0,
+        "unit": "in",
+        "freshness": "current",
+        "quality": "observed"
+      }
+    ],
+    "river": [
+      {
+        "station_id": "USGS-12484500",
+        "kind": "gage_height",
+        "observed_at": "2026-11-11T22:15:00.000Z",
+        "value": 30.72,
+        "unit": "ft",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "USGS-12484500",
+        "kind": "stream_discharge",
+        "observed_at": "2026-11-11T22:15:00.000Z",
+        "value": 774,
+        "unit": "ft^3/s",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "USGS-12500450",
+        "kind": "gage_height",
+        "observed_at": "2026-11-11T21:30:00.000Z",
+        "value": 39.83,
+        "unit": "ft",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "USGS-12500450",
+        "kind": "stream_discharge",
+        "observed_at": "2026-11-11T21:30:00.000Z",
+        "value": 915,
+        "unit": "ft^3/s",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "USGS-12510500",
+        "kind": "gage_height",
+        "observed_at": "2026-11-11T21:30:00.000Z",
+        "value": 4.13,
+        "unit": "ft",
+        "freshness": "current",
+        "quality": "observed"
+      },
+      {
+        "station_id": "USGS-12510500",
+        "kind": "stream_discharge",
+        "observed_at": "2026-11-11T21:30:00.000Z",
+        "value": 1690,
+        "unit": "ft^3/s",
+        "freshness": "current",
+        "quality": "observed"
+      }
+    ],
+    "coverage": {
+      "snow_stations": 6,
+      "river_locations": 3,
+      "status": "connected_minimum"
+    },
+    "failure_count": 0
+  },
+  "medians": {
+    "period": "1991-2020",
+    "comparisons": [
+      {
+        "station_id": "375:WA:SNTL",
+        "source_day": "2026-11-10",
+        "swe_in": 0.2,
+        "median_in": 0.2,
+        "station_percent": null,
+        "state": "small_or_zero_median_suppressed"
+      },
+      {
+        "station_id": "478:WA:SNTL",
+        "source_day": "2026-11-10",
+        "swe_in": 0,
+        "median_in": 0.2,
+        "station_percent": null,
+        "state": "small_or_zero_median_suppressed"
+      },
+      {
+        "station_id": "502:WA:SNTL",
+        "source_day": "2026-11-10",
+        "swe_in": 1.3,
+        "median_in": 0.9,
+        "station_percent": null,
+        "state": "small_or_zero_median_suppressed"
+      },
+      {
+        "station_id": "642:WA:SNTL",
+        "source_day": "2026-11-10",
+        "swe_in": 3,
+        "median_in": 2,
+        "station_percent": 150,
+        "state": "station_comparison_valid"
+      },
+      {
+        "station_id": "734:WA:SNTL",
+        "source_day": "2026-11-10",
+        "swe_in": 0.2,
+        "median_in": 0.5,
+        "station_percent": null,
+        "state": "small_or_zero_median_suppressed"
+      },
+      {
+        "station_id": "863:WA:SNTL",
+        "source_day": "2026-11-10",
+        "swe_in": 0,
+        "median_in": 0,
+        "station_percent": null,
+        "state": "small_or_zero_median_suppressed"
+      }
+    ]
+  },
+  "basins": {
+    "source_day": "2026-11-11",
+    "period": "1991-2020",
+    "source_url": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington",
+    "indices": [
+      {
+        "id": "upper-yakima",
+        "index_percent": 34,
+        "warning_flag": true
+      },
+      {
+        "id": "naches",
+        "index_percent": 85,
+        "warning_flag": true
+      },
+      {
+        "id": "lower-yakima",
+        "index_percent": 108,
+        "warning_flag": true
+      }
+    ]
+  },
+  "reservoirs": {
+    "readings": [
+      {
+        "station_id": "KEE",
+        "source_day": "2026-11-08",
+        "storage_af": 9183.03,
+        "unit": "af",
+        "freshness": "recent_daily_time_zone_unresolved",
+        "provisional": true,
+        "timezone_reconciled": false
+      },
+      {
+        "station_id": "KAC",
+        "source_day": "2026-11-08",
+        "storage_af": 55912,
+        "unit": "af",
+        "freshness": "recent_daily_time_zone_unresolved",
+        "provisional": true,
+        "timezone_reconciled": false
+      },
+      {
+        "station_id": "CLE",
+        "source_day": "2026-11-08",
+        "storage_af": 22089,
+        "unit": "af",
+        "freshness": "recent_daily_time_zone_unresolved",
+        "provisional": true,
+        "timezone_reconciled": false
+      },
+      {
+        "station_id": "BUM",
+        "source_day": "2026-11-08",
+        "storage_af": 3484,
+        "unit": "af",
+        "freshness": "recent_daily_time_zone_unresolved",
+        "provisional": true,
+        "timezone_reconciled": false
+      },
+      {
+        "station_id": "RIM",
+        "source_day": "2026-11-08",
+        "storage_af": 56431.2,
+        "unit": "af",
+        "freshness": "recent_daily_time_zone_unresolved",
+        "provisional": true,
+        "timezone_reconciled": false
+      }
+    ],
+    "derived_provisional_sum_af": 147099.22999999998,
+    "provisional": true,
+    "official_total": false,
+    "reporting_day_reconciled": false,
+    "source_day": "2026-11-08"
+  },
+  "source_completeness": {
+    "sensor": true,
+    "medians": true,
+    "official_basins": true,
+    "reservoirs": true
+  },
+  "publication_authorized": false,
+  "forecast_authorized": false,
+  "hazard_alert_authorized": false,
+  "customer_delivery_verified": false,
+  "payment_verified": false
+}

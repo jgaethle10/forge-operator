@@ -1,0 +1,237 @@
+{
+  "profile_id": "yakima-basin-wa",
+  "live_collection": true,
+  "source_coverage": {
+    "status": "connected_minimum",
+    "snow_station_count": 6,
+    "usgs_discharge_location_count": 3,
+    "source_failures": [],
+    "basin_representation_verified": false,
+    "reservoir_connected": false,
+    "water_supply_forecast_verified": false,
+    "suitable_for_publication": false
+  },
+  "schema": "evercraft.research.watershed-intelligence.v1",
+  "region": "yakima-basin-wa",
+  "as_of": "2026-11-11T22:40:33.167Z",
+  "status": "partial",
+  "snow": [
+    {
+      "station_id": "375:WA:SNTL",
+      "kind": "SNWD",
+      "time": "2026-11-10",
+      "value": 0,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "375:WA:SNTL",
+      "kind": "WTEQ",
+      "time": "2026-11-10",
+      "value": 0.2,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "478:WA:SNTL",
+      "kind": "SNWD",
+      "time": "2026-11-10",
+      "value": 1,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "478:WA:SNTL",
+      "kind": "WTEQ",
+      "time": "2026-11-10",
+      "value": 0,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "502:WA:SNTL",
+      "kind": "SNWD",
+      "time": "2026-11-10",
+      "value": 3,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "502:WA:SNTL",
+      "kind": "WTEQ",
+      "time": "2026-11-10",
+      "value": 1.3,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "642:WA:SNTL",
+      "kind": "SNWD",
+      "time": "2026-11-10",
+      "value": 8,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "642:WA:SNTL",
+      "kind": "WTEQ",
+      "time": "2026-11-10",
+      "value": 3,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "734:WA:SNTL",
+      "kind": "SNWD",
+      "time": "2026-11-10",
+      "value": 2,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "734:WA:SNTL",
+      "kind": "WTEQ",
+      "time": "2026-11-10",
+      "value": 0.2,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "863:WA:SNTL",
+      "kind": "SNWD",
+      "time": "2026-11-10",
+      "value": 1,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    },
+    {
+      "station_id": "863:WA:SNTL",
+      "kind": "WTEQ",
+      "time": "2026-11-10",
+      "value": 0,
+      "unit": "in",
+      "state": "observed",
+      "quality_code": null,
+      "provenance": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data",
+      "freshness": "current"
+    }
+  ],
+  "river": [
+    {
+      "station_id": "USGS-12484500",
+      "kind": "gage_height",
+      "time": "2026-11-11T22:15:00.000Z",
+      "value": 30.72,
+      "unit": "ft",
+      "state": "observed",
+      "provenance": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/c86dde4b-e6ed-4009-b65a-5de548c718c4?f=json",
+      "freshness": "current"
+    },
+    {
+      "station_id": "USGS-12484500",
+      "kind": "stream_discharge",
+      "time": "2026-11-11T22:15:00.000Z",
+      "value": 774,
+      "unit": "ft^3/s",
+      "state": "observed",
+      "provenance": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/064eed32-74c6-4bc1-949e-65d9b33db05b?f=json",
+      "freshness": "current"
+    },
+    {
+      "station_id": "USGS-12500450",
+      "kind": "gage_height",
+      "time": "2026-11-11T21:30:00.000Z",
+      "value": 39.83,
+      "unit": "ft",
+      "state": "observed",
+      "provenance": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/a6a33949-69b3-40e5-add9-4d6a2362a11b?f=json",
+      "freshness": "current"
+    },
+    {
+      "station_id": "USGS-12500450",
+      "kind": "stream_discharge",
+      "time": "2026-11-11T21:30:00.000Z",
+      "value": 915,
+      "unit": "ft^3/s",
+      "state": "observed",
+      "provenance": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/7684c6d8-46f4-4ede-b7eb-51706321f3e2?f=json",
+      "freshness": "current"
+    },
+    {
+      "station_id": "USGS-12510500",
+      "kind": "gage_height",
+      "time": "2026-11-11T21:30:00.000Z",
+      "value": 4.13,
+      "unit": "ft",
+      "state": "observed",
+      "provenance": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/74b2585c-6e5d-4a04-9383-191f3599b5b8?f=json",
+      "freshness": "current"
+    },
+    {
+      "station_id": "USGS-12510500",
+      "kind": "stream_discharge",
+      "time": "2026-11-11T21:30:00.000Z",
+      "value": 1690,
+      "unit": "ft^3/s",
+      "state": "observed",
+      "provenance": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/14f445e2-9230-455b-94e2-0dd2f1439afb?f=json",
+      "freshness": "current"
+    }
+  ],
+  "reservoir": {
+    "status": "not_verified",
+    "readings_admitted": 0
+  },
+  "percent_of_normal": {
+    "value": null,
+    "status": "unverified",
+    "reason": "Requires matched official same-date SWE climatological normals and basin aggregation rules."
+  },
+  "season_outlook": {
+    "status": "not_inferred",
+    "reason": "Early-season snow measurements do not establish winter water supply."
+  },
+  "holds": [
+    "reservoir_data_not_connected"
+  ],
+  "source_families": [
+    "usda-nrcs-awdb",
+    "usgs-water-data-api"
+  ],
+  "publication_authorized": false,
+  "drone_operations_authorized": false,
+  "failures": []
+}
