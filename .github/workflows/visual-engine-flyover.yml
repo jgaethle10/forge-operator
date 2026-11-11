@@ -37,6 +37,8 @@ jobs:
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-asset-pack.test.mjs
       - name: Validate authored glTF scene-node hierarchies, mirror transform and lineage
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-scene-placements.test.mjs
+      - name: Validate fitted authored-model composition at wide and portrait ratios
+        run: node --test systemia/visual-engine/authored-camera.test.mjs
       - name: Check native pixel proof syntax
         run: node --check systemia/visual-engine/flyover-pixel-proof.mjs
 
@@ -114,5 +116,6 @@ jobs:
             reference-aircraft/receipt.json
             reference-aircraft/authored-pixel-receipt.json
             reference-aircraft/authored-b737-angle-*.png
+            reference-aircraft/authored-b737-portrait.png
           if-no-files-found: error
           retention-days: 14
