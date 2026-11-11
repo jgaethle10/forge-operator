@@ -48,17 +48,43 @@ export function verifyScienceCandidate(markdown,manifest){
  if(!hero.alt||!hero.caption||!hero.photographer_credit||!hero.capture_date)throw Error('candidate_hero_provenance_missing');
  if(hero.local_preview_filename!=='arase-aurora-review.jpg'||hero.local_preview_state!=='fetch_to_private_ci_artifact_only')throw Error('candidate_local_preview_asset_boundary_invalid');
  if(!Array.isArray(manifest.sources)||manifest.sources.length<3)throw Error('candidate_sources_missing');
- const seen=new Set();
+ const seen=new Set(),sourceIds=new Set();
  for(const source of manifest.sources){
   const src=url(source.url);
-  if(!source.label||seen.has(src)||!markdown.includes(source.url))throw Error('candidate_source_not_bound');
-  seen.add(src);
+  if(!source.source_id||!source.label||seen.has(src)||sourceIds.has(source.source_id)||!markdown.includes(source.url))throw Error('candidate_source_not_bound');
+  seen.add(src);sourceIds.add(source.source_id);
  }
+ if(!Array.isArray(manifest.claims)||manifest.claims.length<4)throw Error('candidate_claims_missing');
+ for(const claim of manifest.claims){
+  if(!claim.claim||!['reported','verified'].includes(claim.evidence_state)||
+     !Array.isArray(claim.source_refs)||!claim.source_refs.length||
+     claim.source_refs.some(ref=>!sourceIds.has(ref)))throw Error('candidate_claim_source_ref_invalid');
+ }
+ if(!Array.isArray(manifest.uncertainties)||manifest.uncertainties.length<2)throw Error('candidate_uncertainty_missing');
  if(!Array.isArray(manifest.release_holds)||manifest.release_holds.length<5)throw Error('candidate_holds_missing');
  return article;
 }
 function paragraphHtml(input){
  return String(input).split(/\n\s*\n/).filter(Boolean).map(p=>'<p>'+esc(p.trim().replace(/\n/g,' '))+'</p>').join('\n');
+}
+
+export function stageScienceCandidatePackage({markdown,manifest}){
+ const article=verifyScienceCandidate(markdown,manifest);
+ return {
+  schema:'evercraft.journal.editorial-candidate.v1',
+  status:'editorial_review_only',
+  story_id:manifest.story_id,slug:manifest.slug,
+  title:article.title,dek:article.dek,desk:'Science & Discovery',
+  story_type:'Research analysis',sections:article.sections,
+  sources:manifest.sources.map(s=>({source_id:s.source_id,label:s.label,url:s.url,evidence_state:'reported',role:s.role})),
+  claims:manifest.claims,uncertainties:manifest.uncertainties,
+  hero_visual:{local_preview_filename:manifest.hero.local_preview_filename,source_url:manifest.hero.image_url,
+   rights_state:'candidate_not_approved_for_release',preview_source_sha256:manifest.hero.expected_sha256,
+   credit:manifest.hero.photographer_credit,caption:manifest.hero.caption},
+  editorial_gate:{status:'pending',score:0},production_grade:{status:'pending'},
+  release_holds:manifest.release_holds,
+  publication_authorized:false,clip_authorized:false
+ };
 }
 
 export function renderScienceCandidate({markdown,manifest}){
@@ -96,7 +122,10 @@ export function createScienceProof({markdown,manifest,output=path.join(os.tmpdir
  const html=renderScienceCandidate({markdown,manifest});
  fs.mkdirSync(path.dirname(file),{recursive:true});
  fs.writeFileSync(file,html);
- return {schema:'evercraft.journal.candidate-proof.v1',output:file,publication_state:'editorial_draft_only',release_authorized:false,clip_authorized:false,source_sha256:hash(markdown),manifest_sha256:hash(JSON.stringify(manifest)),html_sha256:hash(html)};
+ const packet=stageScienceCandidatePackage({markdown,manifest});
+ const packetFile=file.replace(/\.html$/,'.candidate.json');
+ fs.writeFileSync(packetFile,JSON.stringify(packet,null,2)+'\n');
+ return {schema:'evercraft.journal.candidate-proof.v1',output:file,candidate_packet:packetFile,publication_state:'editorial_draft_only',release_authorized:false,clip_authorized:false,source_sha256:hash(markdown),manifest_sha256:hash(JSON.stringify(manifest)),html_sha256:hash(html),packet_sha256:hash(JSON.stringify(packet))};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
  const markdown=fs.readFileSync(markdownFile,'utf8');
