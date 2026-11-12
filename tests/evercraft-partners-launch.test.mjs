@@ -92,3 +92,11 @@ test('third-party services are referenced only by their honest current inquiry p
  assert.match(page,/\.\.\/forensiscope\//);
  assert.doesNotMatch(page,/base44|aliev|rivet/i);
 });
+
+test('the existing partner program offers a truthful customer commercial pilot, not guaranteed earnings',()=>{
+ const page=load('public/partners/index.html');
+ assert.match(page,/\.\.\/commercial-studio\/\?src=partners#inquire/);
+ assert.match(page,/30-second social commercial/);
+ assert.match(page,/Every brief and delivery slot requires approval/);
+ assert.doesNotMatch(page,/\$10 commission|20% commission/);
+});
