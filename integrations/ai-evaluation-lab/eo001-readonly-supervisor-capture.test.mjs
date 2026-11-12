@@ -148,6 +148,56 @@ test('subtree enumeration must include only empty descendants',()=>{
   assert.equal(state.closed,1);
 });
 
+test('failed cleanup carries private negative evidence without enumerating raw procfs',()=>{
+  const {state,io}=mock({stillPopulated:true});
+  const observer=begin(io);
+  state.post=true;
+  assert.throws(()=>observer.finish(stop()),error=>{
+    const receipt=error.private_negative_receipt;
+    assert.equal(receipt.state,'SCOPE_LIFECYCLE_OBSERVATION_BLOCKED');
+    assert.equal(receipt.reason,'CGROUP_SUBTREE_NOT_EMPTY');
+    assert.equal(receipt.stage,'PACKET_CONSISTENCY_CHECK');
+    assert.equal(receipt.scope_id,unit);
+    assert.equal(receipt.source_revision,sourceRevision);
+    assert.equal(receipt.pre.worker.pid,worker);
+    assert.equal(receipt.pre.detached.pid,detached);
+    assert.match(receipt.pre_sha256,/^[a-f0-9]{64}$/);
+    assert.equal(receipt.actual_cleanup_verified,false);
+    assert.equal(receipt.execution_authorized,false);
+    assert.equal(JSON.stringify(error).includes('pre_sha256'),false);
+    assert.equal(Object.keys(error).includes('private_negative_receipt'),false);
+    return true;
+  });
+  assert.equal(state.closed,1);
+});
+
+test('post-stop cgroup disappearing is an UNKNOWN block with negative receipt',()=>{
+  const {state,io}=mock();
+  const original=io.openScope;
+  io.openScope=path=>{
+    const handle=original(path);
+    const read=handle.read;
+    handle.read=file=>{
+      if(state.post&&file==='cgroup.events'){
+        const e=Error('No such cgroup');e.code='ENOENT';throw e;
+      }
+      return read(file);
+    };
+    return handle;
+  };
+  const observer=begin(io);
+  state.post=true;
+  assert.throws(()=>observer.finish(stop()),error=>{
+    const receipt=error.private_negative_receipt;
+    assert.equal(receipt.reason,'SUPERVISOR_OBSERVATION_UNVERIFIED');
+    assert.equal(receipt.stage,'POST_KERNEL_READBACK');
+    assert.equal(receipt.actual_cleanup_verified,false);
+    assert.equal(receipt.pre.worker.pid,worker);
+    return true;
+  });
+  assert.equal(state.closed,1);
+});
+
 test('held cgroup device/inode change fails closed',()=>{
   const {state,io}=mock({replaceCgroupWhenPost:true});
   const capture=begin(io);
