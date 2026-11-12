@@ -413,7 +413,7 @@ export async function startFabricLocalRuntime({
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
   studioLeadsDir='',
   signalLeadsDir=process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'',
-  signalIntakeKey=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||'',
+  signalIntakeKey=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||undefined,
   findMyPartLeadsDir='',
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
   partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',

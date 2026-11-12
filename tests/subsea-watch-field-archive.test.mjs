@@ -14,7 +14,7 @@ test('NOAA source ledger is deterministic, provenance-gated and has stable missi
  assert.equal(manifest.mission.id,'EX2306_DIVE02');
  assert.equal(manifest.mission.reconstruction_status,'NOT_RECONSTRUCTED');
  assert.equal(manifest.mission.alignment_status,'UNVERIFIED_NO_SYNC');
- assert.equal(manifest.mission.record_status,'source_metadata_only');
+ assert.equal(manifest.mission.record_status,'source_bytes_audited_schema_unverified');
  assert.equal(new Set(sources.map(x=>x.id)).size,sources.length);
  assert.equal(sources.length,8);
  const gebco=byId('gebco-2026-global-grid');
@@ -49,11 +49,15 @@ test('actual dive archives are discoverable without inventing a synchronized 3D 
  for(const id of ['noaa-ex2306-dive02-track','noaa-ex2306-dive02-ancillary','noaa-ex2306-dive02-ctd']){
   const entry=byId(id);
   assert.equal(entry.mission_id,manifest.mission.id);
-  assert.match(entry.observed_download_status,/not_byte_verified/);
+  assert.match(entry.observed_download_status,id==='noaa-ex2306-dive02-ctd'?/not_byte_verified/:/bytes_audited_schema_unverified/);
   assert.ok(entry.download_url?.includes('DIVE02'));
   assert.equal(entry.can_preview,false);
  }
  assert.match(byId('noaa-ex2306-dive02-track').file_format,/KML/);
+ assert.equal(byId('noaa-ex2306-dive02-track').audited_bytes,79769);
+ assert.equal(byId('noaa-ex2306-dive02-ancillary').audited_bytes,15727951);
+ assert.equal(byId('noaa-ex2306-dive02-ancillary').valid_position_rows_in_window,300);
+ assert.match(byId('noaa-ex2306-dive02-ancillary').replay_status,/BLOCKED_PENDING/);
  assert.equal(byId('ncei-bathymetry-library').mission_id,null);
  assert.equal(byId('noaa-photogrammetry-gallery').mission_id,null);
  assert.match(byId('noaa-photogrammetry-gallery').rights,/VIEW-ONLY RESEARCH/);

@@ -1,0 +1,42 @@
+name: Evercraft Closeout product test
+
+on:
+  pull_request:
+    paths:
+      - 'public/closeout/**'
+      - 'tests/closeout-static.test.mjs'
+      - '.github/workflows/evercraft-closeout.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/closeout/**'
+      - 'tests/closeout-static.test.mjs'
+      - '.github/workflows/evercraft-closeout.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  closeout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify standalone Closeout and buyer boundaries
+        run: |
+          node --test tests/closeout-static.test.mjs
+          test -s public/closeout/index.html
+      - name: Publish product QA receipt
+        if: success()
+        run: |
+          {
+            echo '## Evercraft Closeout'
+            echo
+            echo '- Standalone HTML structure, local image path, JS syntax, print path, and commercial boundaries: PASS'
+            echo '- No external buyer checkout or paid entitlement established by these tests'
+            echo '- Real mobile browser, PDF rendering, and deployed URL must be independently verified'
+          } >> "$GITHUB_STEP_SUMMARY"

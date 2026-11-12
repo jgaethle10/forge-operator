@@ -39,7 +39,13 @@
     "trademark_cleared": false,
     "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
     "live_traffic_claim": false,
-    "paid_sale_claim": false
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "awaiting_founder_review",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
+    "production_brand_lock": false
   },
   "assets": {
     "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",

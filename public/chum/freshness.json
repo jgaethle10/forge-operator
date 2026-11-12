@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-11-11T01:04:50.410Z",
+  "updated_at": "2026-11-12T01:53:29.588Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,7 +12,7 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-11-11T01:04:50.410Z",
+      "last_changed": "2026-11-12T01:53:29.588Z",
       "priority": 80
     }
   ],
@@ -20,43 +20,43 @@
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-11-11T01:04:50.410Z",
+      "last_changed": "2026-11-12T01:53:29.588Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-11-11T00:48:22.880Z",
+      "last_changed": "2026-11-12T01:37:59.809Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-11-11T00:48:22.880Z",
+      "last_changed": "2026-11-12T01:37:59.809Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-11-11T00:48:22.880Z",
+      "last_changed": "2026-11-12T01:37:59.809Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/forensiscope.json",
       "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-11-10T20:25:38.381Z",
+      "last_changed": "2026-11-11T22:12:51.357Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/index.json",
       "url": "/chum/proof/index.json",
-      "last_changed": "2026-11-10T20:25:38.381Z",
+      "last_changed": "2026-11-11T22:12:51.357Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-11-10T20:25:38.381Z",
+      "last_changed": "2026-11-11T22:12:51.357Z",
       "priority": 80
     },
     {

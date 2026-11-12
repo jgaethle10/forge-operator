@@ -47,10 +47,24 @@ export async function publishJournalStoryFacebookFromHome({
   authorizationRef,
   fetchImpl=globalThis.fetch,
   publisher=publishCfbJournalToFacebook,
+  resolveCredential=()=>resolveFacebookPageCredential({credentialStateDir}),
 }={}){
   const resourceRef=journalStoryResourceRef(slug);
   const {file,handoff}=readJournalClipHandoff(repoRoot,slug);
   if(!clean(credentialStateDir)) throw new Error('home_clip_credential_vault_not_configured');
+
+  // Validate the legacy CFB-specific handoff and current sealed Page credential
+  // *before* consuming the write-once claim. These local failures cannot create
+  // a provider post, so they must remain safely correctable without manual hold.
+  if(handoff.schema!=='evercraft.clip.journal-handoff.v1' ||
+     !clean(handoff.story_id).includes('cfb-power-rankings') ||
+     handoff.publication_authority!==false ||
+     !clean((handoff.derivatives||[]).find(row=>clean(row?.platform).toLowerCase()==='facebook')?.copy))
+    throw new Error('home_clip_cfb_publish_preflight_failed');
+  const credential=resolveCredential();
+  if(credential?.safe_status?.facebook!=='resolved' ||
+     !clean(credential?.config?.pageId) || !clean(credential?.config?.pageAccessToken))
+    throw new Error('home_clip_facebook_credential_not_ready');
 
   const claim=claimJournalPublish({repoRoot,stateRoot,slug:normalizeJournalStorySlug(slug),handoff});
   if(claim.state==='duplicate_hold') return {
@@ -72,7 +86,7 @@ export async function publishJournalStoryFacebookFromHome({
       handoff,
       authorizationRef:clean(authorizationRef)||'policy:evercraft-journal-autopublish-v1',
       fetchImpl,
-      resolveCredential:()=>resolveFacebookPageCredential({credentialStateDir}),
+      resolveCredential:()=>credential,
     });
   }catch{
     // A provider timeout can occur after its POST. Never erase the attempt claim.

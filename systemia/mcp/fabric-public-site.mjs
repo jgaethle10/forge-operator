@@ -93,6 +93,29 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-visual{margin:26px 0 24px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#07111b;box-shadow:0 28px 70px rgba(0,0,0,.26)}
 .offer-visual picture,.offer-visual img{display:block;width:100%}
 .offer-visual img{height:auto}
+
+/* A bounded, illustrative audit surface, not a fabricated test result. */
+.audit-preview{margin:26px 0 0;padding:22px;border:1px solid #2f536f;border-radius:20px;background:linear-gradient(140deg,#12314a,#071525);box-shadow:0 24px 48px #0003}
+.audit-preview-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.audit-preview-head strong{color:#8cd2ff;letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+.audit-preview-head span{color:#d4ecfe;border:1px solid #54809c;border-radius:40px;padding:7px 10px;font-size:11px;font-weight:700}
+.audit-preview-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.audit-demo{border:1px solid #355571;border-radius:14px;background:linear-gradient(145deg,#1a3b53,#091724);overflow:hidden;min-width:0}
+.audit-demo-bar{display:flex;align-items:center;gap:6px;padding:12px;background:#0e2637;border-bottom:1px solid #31516b}
+.audit-demo-bar i{display:block;width:7px;height:7px;background:#7199b1;border-radius:50%}
+.audit-demo-bar small{margin-left:auto;color:#a8c8dc;letter-spacing:.1em;text-transform:uppercase;font-size:9px}
+.audit-demo-body{padding:22px;min-height:195px}
+.audit-demo-body small{color:#93d1f9;text-transform:uppercase;letter-spacing:.1em;font-size:10px}
+.audit-demo-body b{display:block;margin:14px 0;font-size:clamp(22px,2.6vw,30px);letter-spacing:-.04em;line-height:1.08}
+.audit-demo-line{height:8px;background:#345a72;border-radius:4px;width:79%;margin:9px 0}
+.audit-demo-line.short{width:52%}
+.audit-demo-chip{display:inline-block;border:1px solid #62b9e9;color:#d3efff;padding:9px 12px;border-radius:8px;font-size:11px;font-weight:700;margin-top:8px}
+.audit-list{display:grid;gap:7px;align-content:center}
+.audit-list h3{font-size:14px;margin:0 0 5px}
+.audit-list-item{display:flex;align-items:center;gap:12px;background:#1d3e58aa;border:1px solid #345a71;border-radius:9px;padding:10px 12px;font-size:13px;font-weight:650}
+.audit-list-item em{font-style:normal;color:#80cfff;font-size:11px;font-weight:800}
+.audit-preview-note{font-size:12px!important;color:#b0c7d9!important;line-height:1.5!important;margin:16px 0 0!important}
+@media(max-width:700px){.audit-offer{padding-top:38px}.audit-offer h1{font-size:clamp(36px,9vw,48px);line-height:1.03;margin:20px 0}.audit-offer .lede{font-size:18px;line-height:1.45}.audit-offer .checkout-form{align-items:stretch}.audit-offer .checkout-form label{width:100%}.audit-offer .checkout-form input,.audit-offer .checkout-form button{width:100%!important;max-width:none!important}.audit-preview{padding:15px;border-radius:16px}.audit-preview-grid{grid-template-columns:1fr}.audit-demo-body{min-height:160px;padding:17px}.audit-list{grid-template-columns:1fr 1fr}.audit-list h3{grid-column:1/-1}.audit-list-item{padding:9px;font-size:12px}.audit-list-item:last-child{grid-column:1/-1}}
 .offer-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:18px;padding:24px}
 .offer-panel h2{font-size:25px;margin:0 0 14px}
 .offer-panel p,.offer-panel li{color:#c5d2e4;line-height:1.65}
@@ -202,9 +225,6 @@ const OFFER_PAGE_COPY={
     headline:"Your website is getting attention. Why isn't it getting customers?",
     lede:'We scan the public site and show you the five fixes worth making first.',
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
-    heroVisual:'/visuals/website-audit-attention/poster-hero-wide.svg',
-    heroVisualMobile:'/visuals/website-audit-attention/poster-feed.svg',
-    shareImage:'https://fabric.systemiacommandcenters.com/visuals/website-audit-attention/poster-feed.svg',
     send:['Your website URL','What you want the site to produce','Anything you already know is frustrating'],
     get:['Public-web evidence snapshot','Five priority fixes','A clear next move'],
     steps:[
@@ -376,6 +396,25 @@ export function renderOffers(capabilities=[]){
   });
 }
 
+
+function renderWebsiteAuditPreview(){
+  // An illustrated process, explicitly not real customer data or audit findings.
+  return [
+    '<aside class="audit-preview" aria-label="Illustrative Website Audit process">',
+    '<div class="audit-preview-head"><strong>Inside your Quick Win Audit</strong><span>Five prioritized fixes</span></div>',
+    '<div class="audit-preview-grid">',
+    '<div class="audit-demo" aria-hidden="true"><div class="audit-demo-bar"><i></i><i></i><i></i><small>Customer experience</small></div>',
+    '<div class="audit-demo-body"><small>Public website</small><b>See your site like a customer.</b><div class="audit-demo-line"></div><div class="audit-demo-line short"></div><span class="audit-demo-chip">Website journey</span></div></div>',
+    '<div class="audit-list"><h3>Five areas we inspect</h3>',
+    '<div class="audit-list-item"><em>01</em> Clarity</div>',
+    '<div class="audit-list-item"><em>02</em> Speed</div>',
+    '<div class="audit-list-item"><em>03</em> Trust</div>',
+    '<div class="audit-list-item"><em>04</em> Mobile experience</div>',
+    '<div class="audit-list-item"><em>05</em> Calls to action</div></div>',
+    '</div><p class="audit-preview-note">Illustrative process preview. Actual findings are made for the site you submit. No customer results are shown here.</p></aside>',
+  ].join('');
+}
+
 export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const copy=OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
@@ -391,7 +430,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
     '<main>',
-    '<section class="offer-hero">',
+    '<section class="offer-hero'+(copy.slug==='website-audit'?' audit-offer':'')+'">',
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
@@ -421,6 +460,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     ]),
+    copy.slug==='website-audit'?renderWebsiteAuditPreview():'',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',

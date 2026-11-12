@@ -39,7 +39,13 @@
     "trademark_cleared": false,
     "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
     "live_traffic_claim": false,
-    "paid_sale_claim": false
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": null,
+    "production_brand_lock": false
   },
   "assets": {
     "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand-mark.svg",

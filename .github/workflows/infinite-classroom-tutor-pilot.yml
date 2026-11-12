@@ -1,0 +1,40 @@
+name: Infinite Classroom Private Tutor Pilot Proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/classroom/**'
+      - 'tests/infinite-classroom-tutor-*.test.mjs'
+      - 'public/apps/infinite-classroom/play/index.html'
+      - 'tests/infinite-classroom-worlds.test.mjs'
+      - '.github/workflows/infinite-classroom-tutor-pilot.yml'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - 'scripts/probe-infinite-classroom-public.mjs'
+  push:
+    paths:
+      - 'systemia/classroom/**'
+      - 'tests/infinite-classroom-tutor-*.test.mjs'
+      - '.github/workflows/infinite-classroom-tutor-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  private-tutor-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check private tutor
+        run: |
+          node --check systemia/classroom/tutor-core.mjs
+          node --check systemia/classroom/tutor-runtime.mjs
+      - name: Private model contract and session tests
+        run: |
+          node --test tests/infinite-classroom-tutor-core.test.mjs tests/infinite-classroom-tutor-runtime.test.mjs
+      - name: Practice remains separate and honest
+        run: |
+          node --test tests/infinite-classroom-worlds.test.mjs

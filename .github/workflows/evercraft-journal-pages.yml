@@ -11,6 +11,7 @@ on:
       - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'scripts/probe-boardroom-public.mjs'
+      - 'scripts/probe-work-saban-share-public.mjs'
       - 'scripts/probe-subsea-watch-public.mjs'
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/domain-authority/**'
@@ -125,6 +126,10 @@ jobs:
           test -s _public_pages/partners/social-card.svg
           python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/partners/social-card.svg", write_to="_public_pages/partners/social-card.png", output_width=1200, output_height=630)'
           test -s _public_pages/partners/social-card.png
+          # Work Saban uses its exact first-party crimson SVG identity, not a generated substitute.
+          test -s _public_pages/work-saban/brand/work-saban-social.svg
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/work-saban/brand/work-saban-social.svg", write_to="_public_pages/work-saban/brand/work-saban-social.png", output_width=1200, output_height=630)'
+          test -s _public_pages/work-saban/brand/work-saban-social.png
           python systemia/clip/build-audience-social-previews.py \
             --source public/clip/audience-sites \
             --destination _public_pages/clip/audience-sites
@@ -214,7 +219,7 @@ jobs:
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
           test -s _public_pages/apps/infinite-classroom/play/index.html
           grep -q 'Reading Treehouse' _public_pages/apps/infinite-classroom/play/index.html
-          grep -q 'Homework Coach · hints, not answers' _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Offline study steps · generic hints' _public_pages/apps/infinite-classroom/play/index.html
           test -s _public_pages/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
@@ -305,6 +310,11 @@ jobs:
             echo "Clip: ${clip} (HTML, JS, status); legacy alias: ${alias}"
             echo 'Workstation and locally prepared handoffs are available; direct social publishing is not certified.'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Work Saban free CSV reporter, owned sharing and preview over public HTTPS
+        env:
+          WORK_SABAN_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/probe-work-saban-share-public.mjs
 
       - name: Verify ForensiScope fallback buyer page over deployed HTTPS
         shell: bash
