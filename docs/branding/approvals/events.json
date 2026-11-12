@@ -125,6 +125,31 @@
       ],
       "finding": "Exact-name phrase already appears in editorial and newsletter brands, including marketing. Record as risk of weak distinctiveness, not a legal trademark conclusion.",
       "resolution": "open_pending_founder_review"
+    },
+    {
+      "event_id": "BR-001-E004",
+      "event_type": "candidate_names_researched_and_proposed",
+      "date": "2026-11-11",
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "proposal_version": "BR-001-ALTERNATES.v1",
+      "review_status": "awaiting_founder_review",
+      "founder_decision": false,
+      "candidates": [
+        "Weekkin",
+        "Cadencekeep",
+        "Weekmorrow"
+      ],
+      "review_packet": "docs/branding/approvals/BR-001-name-exploration-v1.md",
+      "structured_proposals": "docs/branding/approvals/BR-001-name-exploration-v1.json",
+      "visual_preview": "public/mesh/checkout-ready/social-media-weekly/brand-review/index.html",
+      "evidence_refs": [
+        "https://weekloom.com/",
+        "https://poststead.com/",
+        "https://apps.apple.com/us/app/weekward-life-in-weeks/id6792265603",
+        "https://www.portalchile.org/detalle-marca/weekmark-1054886",
+        "https://weeklift.com/"
+      ],
+      "notes": "Distinctive naming concepts screened via limited public web search. Original candidate retains documented newsletter reuse concerns. No full trademark/domain/social clearance, founder selection or approved product change. Exact $100 original Stripe service remains intact."
     }
   ]
 }
