@@ -61,7 +61,8 @@ test('held page presents consented audit request, never promises working native 
   assert.doesNotMatch(page,/Request assisted invoicing/);
   assert.ok(page.indexOf('class="audit-intake-form"')<page.indexOf('class="audit-preview"'));
   const notReady=renderOfferPage(offer,{checkoutConfigured:false,auditInquiryAvailable:false});
-  assert.match(notReady,/Request assisted invoicing/);
+  assert.match(notReady,/Email Evercraft for invoicing/);
+  assert.doesNotMatch(notReady,/tel:\\+/);
   assert.doesNotMatch(notReady,/class="audit-intake-form"/);
   const configured=renderOfferPage(offer,{checkoutConfigured:true,auditInquiryAvailable:true});
   assert.match(configured,/Continue to checkout/);

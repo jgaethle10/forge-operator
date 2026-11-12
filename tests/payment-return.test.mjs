@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buyerOrderKey,verifyNativePaymentReturn} from '../systemia/mcp/payment-return.mjs';
+import {renderWebsiteAuditPaymentStatus} from '../systemia/mcp/fabric-public-site.mjs';
 import {PUBLIC_PAYMENT_OFFERS} from '../systemia/mcp/public-payment-offers.mjs';
 const ownedUrl='https://fabric.systemiacommandcenters.com/api/payments/ops';
 const params=()=>new URLSearchParams({offer_key:'systemia.website_audit_quick_win_49.v1',evercraft_order_key:'RAVEN-WEBSITE-AUDIT-order123',stripe_session_id:'cs_live_example123'});
@@ -47,6 +48,31 @@ test('native success return does not redisplay a buy button and cannot become pa
  const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,faieSurfaceEnabled:false,catalog:[{public_id:'audit-center-website-audit-machine-v1',name:'Audit',description:'Public website audit',commercial_state:'sell_now'}],paymentOpsUrl:ownedUrl,purchaseIntentFetch:async()=>{calls++;return Response.json({ok:false,payment_confirmed:false},{status:409});}});
  try{
   const invalid=await fetch(runtime.url+'/offers/website-audit?payment=processing&paid=true');assert.equal(invalid.status,400);assert.equal(calls,0);assert.doesNotMatch(await invalid.text(),/Continue to checkout/);
-  const pending=await fetch(runtime.url+'/offers/website-audit?payment=processing&'+params());assert.equal(pending.status,200);assert.equal(calls,1);const html=await pending.text();assert.match(html,/Do not pay again/);assert.doesNotMatch(html,/Continue to checkout|Payment verified\./);
+  const pending=await fetch(runtime.url+'/offers/website-audit?payment=processing&'+params());assert.equal(pending.status,200);assert.equal(pending.headers.get('cache-control'),'no-store');assert.equal(calls,1);const html=await pending.text();assert.match(html,/Do not pay again/);assert.doesNotMatch(html,/Continue to checkout|Payment verified\./);
  }finally{await runtime.close();}
+});
+
+test('Website Audit return page is branded, private and does not invent payment or delivery',()=>{
+ const pending=renderWebsiteAuditPaymentStatus({state:'pending'});
+ assert.match(pending,/We are checking your payment/);
+ assert.match(pending,/Do not pay again/);
+ assert.match(pending,/noindex,nofollow/);
+ assert.match(pending,/mailto:jessegaethle10@gmail.com/);
+ assert.doesNotMatch(pending,/tel:\+|Payment verified\./);
+ const invalid=renderWebsiteAuditPaymentStatus({state:'invalid'});
+ assert.match(invalid,/This checkout cannot be verified/);
+ assert.doesNotMatch(invalid,/Payment verified\./);
+ const synthetic=renderWebsiteAuditPaymentStatus({state:'synthetic'});
+ assert.match(synthetic,/QA transaction only/);
+ assert.match(synthetic,/No customer report has been authorized/);
+ const verified=renderWebsiteAuditPaymentStatus({state:'paid',queued:false});
+ assert.match(verified,/Payment verified\./);
+ assert.match(verified,/Report preparation and delivery still need independent confirmation/);
+ const queued=renderWebsiteAuditPaymentStatus({state:'paid',queued:true});
+ assert.match(queued,/audit job was queued/);
+ assert.match(queued,/A queued job is not yet a completed report/);
+ for(const doc of [pending,invalid,synthetic,verified,queued]){
+   assert.doesNotMatch(doc,/Continue to checkout|Open secure checkout/);
+   assert.match(doc,/Reviewed report delivered/);
+ }
 });
