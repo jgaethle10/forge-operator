@@ -1,0 +1,25 @@
+name: Worlds Living Lobbies policy
+on:
+  push:
+    paths:
+      - 'systemia/worlds/living-lobby-policy.mjs'
+      - 'tests/worlds-living-lobby-policy.test.mjs'
+      - '.github/workflows/worlds-living-lobbies.yml'
+  pull_request:
+    paths:
+      - 'systemia/worlds/living-lobby-policy.mjs'
+      - 'tests/worlds-living-lobby-policy.test.mjs'
+      - '.github/workflows/worlds-living-lobbies.yml'
+permissions:
+  contents: read
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/worlds/living-lobby-policy.mjs
+      - run: node --test tests/worlds-living-lobby-policy.test.mjs
