@@ -17,7 +17,8 @@ function arg(name, fallback=''){
 }
 const hostname=arg('--llama-origin','http://127.0.0.1:8080');
 const output=arg('--receipt',
- join(homedir(),'.local/state/evercraft/classroom/nextgen-live-proof.json'));
+ join(homedir(),'.local/state/evercraft/classroom/',
+  'nextgen-live-proof-'+new Date().toISOString().replace(/[:.]/g,'-')+'-'+randomBytes(3).toString('hex')+'.json'));
 const execute=process.argv.includes('--execute');
 const hash=x=>'sha256:'+createHash('sha256').update(String(x)).digest('hex');
 function fail(message){throw new Error(message)}
@@ -49,7 +50,8 @@ function outputReceipt({status,model,backend,checks,blocker}){
   provider:backend||null,
   model_ref_sha256:model?hash(model):null,
   challenges:checks,
-  actual_model_inference_observed:status==='LOCAL_INFERENCE_OBSERVED',
+  model_api_responses_observed:status==='LOOPBACK_MODEL_API_RESPONSES_OBSERVED',
+  model_process_independently_attested:false,
   student_content_used:false,
   student_data_saved:false,
   raw_prompts_or_responses_in_receipt:false,
@@ -105,13 +107,14 @@ async function main(){
    }
   }finally{tutor.close(opened.session_id)}
  }
- return outputReceipt({status:'LOCAL_INFERENCE_OBSERVED',model:validated.model,backend:validated.provider,checks});
+ return outputReceipt({status:'LOOPBACK_MODEL_API_RESPONSES_OBSERVED',model:validated.model,backend:validated.provider,checks});
 }
 try{
  const receipt=await main();
  const saved=safeSave(output,receipt);
  process.stdout.write(JSON.stringify({
-  state:receipt.state,actual_model_inference_observed:receipt.actual_model_inference_observed,
+  state:receipt.state,model_api_responses_observed:receipt.model_api_responses_observed,
+  model_process_independently_attested:false,
   synthetic_message_count:receipt.challenges.length,receipt_file:saved,
   youth_safety_certified:false,homework_integrity_certified:false,
   public_release_authorized:false
@@ -121,7 +124,7 @@ try{
  // Avoid printing underlying backend error with request content or credentials.
  process.stderr.write(JSON.stringify({
   state:'HELD',reason:/^[a-z0-9_]+$/i.test(reason)?reason:'owned_model_or_receipt_unavailable',
-  actual_model_inference_observed:false,public_release_authorized:false
+  model_api_responses_observed:false,public_release_authorized:false
  })+'\n');
  process.exitCode=1;
 }
