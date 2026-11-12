@@ -40,6 +40,17 @@ test('walking starts at founding grounds, moves, turns, and respects collisions'
  assert.ok(p.x<27.5,'Cannot walk through the training facility');
  assert.ok(p.x>25);
 });
+test('entering a developed campus looks toward a facility and never spawns inside it',()=>{
+ let s=credit(7);
+ s=placeFacility(s,'alcohol-free','franchise','training-gym',1,0);
+ const scene=walkableScene(s,'alcohol-free','franchise');
+ const start=spawnExplorer(scene);
+ assert.equal(canEnter(scene,start.x,start.z),true);
+ assert.ok(start.x>0);
+ assert.ok(start.yaw>0,'Camera starts facing the existing campus, not away from it');
+ assert.ok(nearestFacility(scene,start.x,start.z,30));
+ assert.deepEqual(spawnExplorer(),{x:0,y:1.75,z:18,yaw:0,pitch:-.06});
+});
 test('nearest facility reports a label, not any private recovery information',()=>{
  let s=credit(7);s=placeFacility(s,'alcohol-free','franchise','training-gym',1,0);
  const scene=walkableScene(s,'alcohol-free','franchise');
