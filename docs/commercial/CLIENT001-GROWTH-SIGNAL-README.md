@@ -23,7 +23,7 @@ The dashboard's demo figures are fabricated on purpose to show the design. No Ju
 ## Local test
 
 ```bash
-node api/test.mjs
+node systemia/growth-signal/client001/signal-service.test.mjs
 ```
 
 ## Local collector demonstration (do not deploy publicly as-is)
