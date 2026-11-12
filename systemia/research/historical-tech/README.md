@@ -65,6 +65,11 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 - [ACQUISITION_HANDOFF.md](ACQUISITION_HANDOFF.md) is the operator-facing, **not-yet-approved** acquisition protocol for a hypothetical future low-voltage demonstration. It describes CSV fields, manifest schema, current safety/metrology limitations and the read-only CLI.
 - This closes a **software interface gap only**. Hash matching, metadata and a computed energy ratio do not authenticate instruments, source completeness, timebase or scientific measurement. No actual data exists in this research branch and no hardware work is implied.
 
+## Stage 9: specific physical bench candidate and independent approval gate (2026-11-11)
+- [BENCH_CANDIDATE_REVIEW.md](BENCH_CANDIDATE_REVIEW.md): vendor-checked low-voltage educational module, screened DC instrument candidate, parts/limitations matrix, safe measurement and source inventory, falsification controls and an explicit **NO-GO** decision before independent review.
+- [Independent reviewer tracking issue #2088](https://github.com/jgaethle10/forge-operator/issues/2088): individually checkable hardware, calibration, synchronization, thermal/electrical safety, NIST TN 1297 uncertainty and owner-signoff criteria. **No human reviewer is assigned or contacted.**
+- Candidate Adafruit 1407 explicitly lacks a full datasheet, so it is **not** an approved calibrated physics reference. JS220 has documented precision within each unit but cross-unit synchronization must be separately verified. No equipment purchased, energized, or installed. No Systemia admission or live work asserted.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
