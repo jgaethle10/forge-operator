@@ -57,16 +57,27 @@ let broker = null;
 let broker2 = null;
 
 try {
-  organism = await startLocalOrganism({
-    root,
-    nodeId,
-    releaseRef,
-    remoteBrokerUrl: brokerUrl,
-    remoteAdmissionRetryMs: 100,
-    heartbeatTargetSeconds: 300,
-    graceSeconds: 90,
-    nativeBrowserPreparer: nativeBrowserProofPreparer,
-  });
+  try {
+    organism = await startLocalOrganism({
+      root,
+      nodeId,
+      releaseRef,
+      remoteBrokerUrl: brokerUrl,
+      remoteAdmissionRetryMs: 100,
+      heartbeatTargetSeconds: 300,
+      graceSeconds: 90,
+      nativeBrowserPreparer: nativeBrowserProofPreparer,
+    });
+  } catch(error) {
+    if(error?.route_states) {
+      console.error(JSON.stringify({
+        schema:'evercraft.local-organism.remote-admission-route-hold.v1',
+        route_states:error.route_states,
+        release_gate:'blocked'
+      }));
+    }
+    throw error;
+  }
 
   const initialHealth = await organism.health();
   assert.equal(initialHealth.ok, true);
