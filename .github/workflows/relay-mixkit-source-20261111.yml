@@ -1,0 +1,41 @@
+name: Relay Licensed Music Recovery (Private Production)
+on:
+  push:
+    branches:
+      - studio/relay-bella-refresh-20261111
+    paths:
+      - .github/workflows/relay-mixkit-source-20261111.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recover-original-music:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Download the verified original score from Mixkit CDN
+        run: |
+          mkdir private-source
+          curl --fail --location --retry 3 --max-time 60 \
+            "https://assets.mixkit.co/music/download/mixkit-driving-ambition-32.mp3" \
+            --output private-source/driving-ambition.mp3
+          ffprobe -v error -show_entries format=duration -of default=nw=1 private-source/driving-ambition.mp3
+          test "$(stat -c %s private-source/driving-ambition.mp3)" -gt 100000
+          sha256sum private-source/driving-ambition.mp3 > private-source/sha256.txt
+      - name: Preserve source license and editorial boundaries
+        run: |
+          printf '%s\n' \
+            'Title: Driving Ambition' \
+            'Artist: Ahjay Stelino' \
+            'Source: https://mixkit.co/free-stock-music/film-score/' \
+            'Track URL: https://assets.mixkit.co/music/download/mixkit-driving-ambition-32.mp3' \
+            'License: https://mixkit.co/license/modal/musicFree/' \
+            'Use: internal Relay film production only; do not repackage as a standalone audio product.' \
+            'Rights/footage final reconciliation and founder approval remain pending.' \
+            > private-source/source.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-mixkit-soundtrack-internal-source-20261111
+          path: private-source/
+          retention-days: 2
+          if-no-files-found: error
