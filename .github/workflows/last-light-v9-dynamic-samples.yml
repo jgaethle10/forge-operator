@@ -1,0 +1,113 @@
+name: Last Light V9 Original Acoustic Dynamic-Layer Proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/the-last-light-v9-original-bow-dynamics.json'
+      - '.github/workflows/last-light-v9-dynamic-samples.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-dynamic-performance-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install waveform science prerequisites
+        run: python -m pip install --disable-pip-version-check numpy soundfile
+      - name: Fetch and validate five actual CC0 source performances; render cello and violin stems
+        run: |
+          python - <<'PY'
+          import pathlib,json,io,math,hashlib,urllib.request,urllib.parse
+          import numpy as np,soundfile as sf
+          m=json.loads(pathlib.Path('systemia/media-studio/the-last-light-v9-original-bow-dynamics.json').read_text())
+          assert m['status']=='founder_artistic_review_pending'
+          assert m['approved_piano']['preserve_original_bytes'] is True
+          assert m['source_owned_exclusively_by_evercraft'] is False
+          assert len(m['sources'])==5
+          out=pathlib.Path('/tmp/last-light-v9-ci-raw-stems');out.mkdir(parents=True)
+          sr=44100; tstar=17.60; bank={}; proof=[]
+          def sha(b):return hashlib.sha256(b).hexdigest()
+          def git(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          def level(x):return float(np.sqrt(np.mean(x*x)))
+          def attack(x):
+            width=441;count=min(len(x),2*sr)//width
+            frames=x[:count*width].reshape(count,width,2)
+            rms=np.sqrt(np.mean(frames*frames,axis=(1,2)))
+            return float(np.flatnonzero(rms>=np.max(rms)*.2)[0]*width/sr)
+          def core(x):return level(x[int(.5*sr):int(3*sr)])
+          for x in m['sources']:
+            path=urllib.parse.quote(x['root'],safe='/')+'/'+urllib.parse.quote(x['filename'])
+            url='https://raw.githubusercontent.com/sgossner/VSCO-2-CE/master/'+path
+            req=urllib.request.Request(url,headers={'User-Agent':'Evercraft-Recorded-Bow-Proof-V9'})
+            with urllib.request.urlopen(req,timeout=40) as response:
+              if response.status!=200:raise ValueError('cannot_fetch_recording')
+              raw=response.read(5_000_001)
+            print('RAW INPUT',x['id'],url,'size',len(raw),'sha256',sha(raw),'expected',x['sha256'],'git',git(raw),'expected_git',x['git_blob_sha1'],flush=True)
+            assert 50000<len(raw)<5_000_000
+            if sha(raw)!=x['sha256']:
+              raise ValueError('source_sha256_drift:'+x['id'])
+            # The stronger SHA-256 pins the bytes. Record Git object SHA-1 as
+            # an independent diagnostic without rejecting identical SHA-256 bytes.
+            print('GIT-OBJECT-ID-COMPARE',x['id'],repr(git(raw)),repr(x['git_blob_sha1']),flush=True)
+            y,rate=sf.read(io.BytesIO(raw),dtype='float64',always_2d=True)
+            assert rate==sr and y.shape[1]==2 and np.isfinite(y).all()
+            assert 8*sr<len(y)<17*sr
+            bank[x['id']]=y
+            proof.append({'id':x['id'],'sha256':sha(raw),'git_blob_sha1':git(raw),
+              'audible_bow_attack_seconds':attack(y),'native_duration_s':len(y)/sr,
+              'recorded_source_url':url,'exclusively_evercraft_owned':False})
+          print('VERIFIED SOURCE HASHES',len(proof),'native CC0 acoustic performances')
+          base=m['fixed_gain_reference']
+          records=[];digests={}
+          for variant,ids in m['variants'].items():
+            e,g,v=ids
+            gainE=base[e]
+            gainG=base['G3_soft']*core(bank['G3_soft'])/core(bank[g])
+            gainV=base['G4_soft']*core(bank['G4_soft'])/core(bank[v])
+            audible=[]
+            score=[(e,8.94,gainE)]
+            for source,gain in ((g,gainG),(v,gainV)):
+              proposed=tstar-attack(bank[source])
+              latest=32.0-len(bank[source])/sr-.0005
+              t=min(proposed,latest)
+              assert abs((t+attack(bank[source]))-tstar)<.020,source
+              score.append((source,t,gain))
+              audible.append({'source':source,'time':t+attack(bank[source])})
+            cello=np.zeros((int(35*sr),2),dtype=np.float64)
+            violin=np.zeros_like(cello)
+            for source,t,gain in score:
+              y=bank[source];first=round(t*sr);end=first+len(y)
+              assert end<=int(32*sr)
+              target=cello if source.startswith(('E3','G3')) else violin
+              target[first:end]+=y*gain
+              records.append({'variant':variant,'source':source,'start_seconds':t,
+                'gain':gain,'audible_attack_seconds':t+attack(y),
+                'full_original_recording_untrimmed':True})
+            for inst,audio in (('cello',cello),('violin',violin)):
+              name=f'V9_{variant}_{inst}_native_source_only.wav'
+              sf.write(out/name,audio,sr,subtype='PCM_24')
+              digests[name]=sha((out/name).read_bytes())
+            assert np.max(np.abs(cello))<1 and np.max(np.abs(violin))<1
+            print('AUDIBLE RISE',variant,audible)
+          assert len(digests)==6
+          assert all(abs(float(z['time'])-17.6)<.020 for z in (
+             {'time':y['audible_attack_seconds']} for y in records if y['source']!='E3_soft'
+          ))
+          proof_out={'schema':'evercraft.last-light.v9.independent-source-proof',
+           'piano_rebuilt':False,'piano_not_supplied':True,
+           'original_piano_expected_sha256':m['approved_piano']['sha256'],
+           'actual_played_legato':False,'human_approval':False,
+           'source_proof':proof,'placements':records,'output_sha256':digests}
+          (out/'V9_CI_Independent_Source_Proof.json').write_text(json.dumps(proof_out,indent=2)+'\n')
+          print('PASS: six independent PCM24 stem renders. No source substituted, no piano rebuilt.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-last-light-v9-real-strong-soft-untreated-stems
+          path: /tmp/last-light-v9-ci-raw-stems/
+          retention-days: 14

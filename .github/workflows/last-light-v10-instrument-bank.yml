@@ -1,0 +1,75 @@
+name: Last Light V10 Acoustic Instrument Bank
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/instrument-foundry-v10-source-bank.json'
+      - 'systemia/media-studio/instrument-foundry-v10-build.py'
+      - 'systemia/media-studio/test_instrument_foundry_v10.py'
+      - '.github/workflows/last-light-v10-instrument-bank.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  twelve-recorded-notes-two-instruments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --disable-pip-version-check numpy soundfile
+      - name: Independently fetch all 12 recorded WAV notes; double-check original source bytes
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,urllib.parse,urllib.request,zipfile
+          meta=json.loads(pathlib.Path('systemia/media-studio/instrument-foundry-v10-source-bank.json').read_text())
+          output=pathlib.Path('/tmp/verified-real-string-recordings.zip')
+          def gitsha(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_STORED) as z:
+           assert len(meta['files'])==12
+           for r in meta['files']:
+            stem=('Strings/Cello Section/susvib/' if r['instrument']=='cello' else
+                  'Strings/Solo Violin/Arco Vib/')
+            path=urllib.parse.quote(stem+r['filename'],safe='/')
+            url='https://raw.githubusercontent.com/sgossner/VSCO-2-CE/master/'+path
+            request=urllib.request.Request(url,headers={'User-Agent':'Evercraft-Instrument-Foundry-Recording-QA'})
+            with urllib.request.urlopen(request,timeout=40) as f:
+             if f.status!=200:raise ValueError('missing_recorded_source')
+             raw=f.read(5_000_001)
+            if not 1_000_000<len(raw)<5_000_000:raise ValueError('recording_size_out_of_bounds')
+            if hashlib.sha256(raw).hexdigest()!=r['sha256']:raise ValueError('SOURCE_SHA256_DRIFT:'+r['filename'])
+            if gitsha(raw)!=r['git_blob_sha1']:raise ValueError('SOURCE_GIT_OBJECT_DRIFT:'+r['filename'])
+            z.writestr(r['filename'],raw)
+            print('VERIFIED SOURCE',r['instrument'],r['pitch'],r['dynamic'],r['sha256'][:12],flush=True)
+          print('VERIFIED 12 independent CC0 cello/violin recordings')
+          PY
+      - name: Assert genuine dual dynamic recorded bank and tamper refusal
+        env:
+          LL_V10_SOURCE_ZIP: /tmp/verified-real-string-recordings.zip
+        run: |
+          python -m unittest discover -v -s systemia/media-studio \
+            -p 'test_instrument_foundry_v10.py'
+      - name: Build authentic sample-driven SFZ instrument candidates
+        run: |
+          python systemia/media-studio/instrument-foundry-v10-build.py \
+            --sources /tmp/verified-real-string-recordings.zip \
+            --out /tmp/foundry-v10-acoustic-instruments
+          python - <<'PY'
+          import pathlib,json,hashlib
+          out=pathlib.Path('/tmp/foundry-v10-acoustic-instruments')
+          r=json.loads((out/'V10_CI_INSTRUMENT_SOURCE_CUSTODY.json').read_text())
+          assert len(r['instrument_source_records'])==12
+          assert r['genuine_performed_legato'] is False
+          assert r['sfz_playback_externally_tested'] is False
+          assert r['source_recordings_exclusive_to_evercraft'] is False
+          assert r['piano_mutated'] is False
+          assert len(list((out/'samples').glob('*.wav')))==12
+          print('V10 QA: all 12 raw WAV bytes retained; cello/violin recorded-layer prototypes generated')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v10-cc0-real-multisample-instruments-unapproved
+          path: /tmp/foundry-v10-acoustic-instruments/
+          retention-days: 14
