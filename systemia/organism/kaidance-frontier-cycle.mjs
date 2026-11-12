@@ -8,6 +8,7 @@ import { writeMedicalAbstractEvidence } from './medical-abstract-evidence.mjs';
 import { writeMedicalEvidenceTriage } from './medical-evidence-triage.mjs';
 import { writeMedicalReviewPacket } from './medical-review-packet.mjs';
 import { writeRegistryCrosscheck } from './medical-registry-crosscheck.mjs';
+import { runRegisteredTrialLane } from './medical-registered-trial-lane.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 
 const rootDir = process.cwd();
@@ -58,6 +59,11 @@ const registryCrosscheck = await writeRegistryCrosscheck({
   review: medicalReview,
   now,
   outDir: path.join(artifactRoot, 'medical-registry-crosscheck')
+});
+
+const registeredTrials = await runRegisteredTrialLane({
+  now,
+  outDir: path.join(artifactRoot, 'medical-registered-trials')
 });
 
 const cycleRoot = path.join(artifactRoot, 'kaidance-frontier');
@@ -127,6 +133,11 @@ const body = {
     registry_crosscheck_status: registryCrosscheck.source_status,
     registry_crosscheck_counts: registryCrosscheck.counts,
     registry_crosscheck_receipt: registryCrosscheck.receipt_hash,
+    registered_trial_cohort_status: registeredTrials.discovery.source_status,
+    registered_trial_cohort_sampled: registeredTrials.discovery.pubmed_ids_sampled,
+    registered_trial_cohort_candidates: registeredTrials.discovery.explicitly_registered_papers,
+    registered_trial_identifiers_verified: registeredTrials.official_nct_ids_confirmed,
+    registered_trial_cohort_receipt: registeredTrials.receipt_hash,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },
