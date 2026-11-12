@@ -182,7 +182,11 @@
       if(title==='Lower camera to room level'){roomButton=b;b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
-    overlay.append(orbit,evidenceNote,wardrobeBar,controls);
+    const costumeMount=$('office-costume-toolbar');
+    if(!costumeMount)throw Error('Owned wardrobe toolbar mount missing');
+    costumeMount.append(wardrobeBar);
+    costumeMount.hidden=!enabled;
+    overlay.append(orbit,evidenceNote,controls);
     viewport.append(overlay);
     scene.append(viewport);
     const fallback=$('office-scene')?.querySelector('.workfloor-art');
@@ -459,6 +463,8 @@
     if(enabled)build();
     const view=$('spatial-viewport');
     if(view)view.hidden=!enabled;
+    const wardrobeMount=$('office-costume-toolbar');
+    if(wardrobeMount)wardrobeMount.hidden=!enabled;
     const floor=scene?.querySelector('.workfloor-art');
     if(floor)floor.classList.toggle('office-floor-hidden',enabled);
     $('office-3d-toggle').textContent=enabled?'2D floorplan':'Explore 3D office';
