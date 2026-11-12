@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {Script} from 'node:vm';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -42,6 +43,26 @@ try {
     oneBodyStateFile:bodyStateFile,oneBodyConsumerTrustFile:trustFile,
     serviceOrigins:{},
   });
+  // Static client is reachable from Home but all operational data still
+  // comes from the protected same-origin snapshot endpoint.
+  let page=await fetch(runtime.url+'/one-body.html');
+  assert.equal(page.status,200);
+  assert.match(page.headers.get('content-type')||'',/text\/html/);
+  const html=await page.text();
+  assert.match(html,/One body\. Visible connections\./);
+  assert.match(html,/\/api\/systemia\/one-body\/snapshot/);
+  assert.match(html,/credentials:'same-origin'/);
+  assert.match(html,/cache:'no-store'/);
+  assert.match(html,/clear\('No current authorized snapshot/);
+  assert.match(html,/Auto-refresh: on/);
+  assert.match(html,/execution_authority_granted!==false/);
+  const inline=html.match(/<script>([\s\S]*?)<\/script>/i);
+  assert.ok(inline && inline[1].length>1000);
+  assert.doesNotThrow(()=>new Script(inline[1]),'private dashboard script must parse');
+  const landing=await fetch(runtime.url+'/');
+  assert.equal(landing.status,200);
+  assert.match(await landing.text(),/href="\/one-body\.html"/);
+
   const endpoint=runtime.url+'/api/systemia/one-body/snapshot';
   let response=await fetch(endpoint);
   assert.equal(response.status,401,'must deny unauthenticated read');
