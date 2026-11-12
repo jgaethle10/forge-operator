@@ -8,6 +8,10 @@ on:
       - 'public/**'
       - 'systemia/newsroom/**'
       - 'systemia/graphics-command/ranking-poster-renderer.mjs'
+      - 'systemia/graphics-command/commercial-renderer.mjs'
+      - 'systemia/graphics-command/campaigns/website-audit-attention.json'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
       - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'scripts/probe-boardroom-public.mjs'
@@ -166,6 +170,19 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
           EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
+          # Publish a real PNG (not SVG) that Facebook, LinkedIn and Messenger can preview.
+          # Its content is generated from the same owned Evercraft commercial renderer.
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {renderCommercialPoster} from './systemia/graphics-command/commercial-renderer.mjs';
+          const campaign=JSON.parse(fs.readFileSync('systemia/graphics-command/campaigns/website-audit-attention.json','utf8'));
+          const dir='_public_pages/visuals/website-audit-attention';
+          fs.mkdirSync(dir,{recursive:true});
+          fs.writeFileSync(path.join(dir,'preview-og-v2.svg'),renderCommercialPoster(campaign,null,'social-wide'),'utf8');
+          NODE
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/visuals/website-audit-attention/preview-og-v2.svg", write_to="_public_pages/visuals/website-audit-attention/preview-og-v2.png", output_width=1200, output_height=630)'
+          python -c 'from pathlib import Path; import struct; p=Path("_public_pages/visuals/website-audit-attention/preview-og-v2.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630) and len(p)<4_000_000; print("WEBSITE_AUDIT_REAL_OG_PNG_BUILT")'
           test -f _public_pages/visuals/index.html
           test -f _public_pages/visuals/index.json
           test -f _public_pages/visuals/washington-active-volcanoes/index.html
@@ -488,6 +505,18 @@ jobs:
           printf '%s' "$visual_body" | grep -q 'Washington'
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
+          # Public HTTPS proof for the image referenced by Fabric's Open Graph tags.
+          audit_og="${base%/}/visuals/website-audit-attention/preview-og-v2.png"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 \
+            "$audit_og" -o /tmp/evercraft-audit-og-live.png
+          python - <<'PY'
+          from pathlib import Path
+          import struct
+          payload=Path('/tmp/evercraft-audit-og-live.png').read_bytes()
+          assert payload[:8]==bytes.fromhex('89504e470d0a1a0a'), 'audit OG preview was not PNG'
+          assert struct.unpack('>II',payload[16:24])==(1200,630), 'audit OG preview dimensions incorrect'
+          print('WEBSITE_AUDIT_OG_PNG_LIVE_HTTPS_VERIFIED')
+          PY
           # Confirm real browser-supported social previews exist after deployment.
           preview="${base%/}/audience-sites/partscout/share.png"
           curl --fail --silent --show-error --retry 8 --retry-all-errors \
