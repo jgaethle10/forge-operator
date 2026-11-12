@@ -48,7 +48,8 @@
 <div class="group"><div class="label">DIAMETER <span class="selected" id="sizeName">19 inch</span></div><div class="sizegrid" id="sizes"></div></div>
 <div class="group"><div class="label">WHEEL FINISH <span class="selected" id="finishName">Gloss black</span></div><div class="finishes" id="finishes"></div></div>
 <div class="notice"><b>FITMENT NOT VERIFIED.</b> Wheel diameter alone cannot establish compatibility. A merchant must independently confirm bolt pattern, offset, brake clearance, tire sizing, load rating and vehicle-specific fit.</div>
-<div class="actions"><button id="reset" class="action" type="button">Reset build ↺</button><button id="share" class="action" type="button">Copy build summary ↗</button><button id="quote" class="action primary full" type="button">Export shop quote packet →</button></div>
+<div class="actions"><button id="reset" class="action" type="button">Reset build ↺</button><button id="share" class="action" type="button">Copy build summary ↗</button><button id="copyCode" class="action" type="button">Copy short concept code</button><button id="quote" class="action primary full" type="button">Export shop quote packet →</button></div>
+<div class="footnote">For an easier shop handoff, copy this appearance-only code: <code id="conceptCodeOutput" aria-live="polite">WL1-02000-2</code>. It contains no customer identity or vehicle fitment data.</div>
 <div class="sourcing-interest"><label for="sourcingInterest"><input id="sourcingInterest" type="checkbox">Need help locating a hard-to-find component?</label><p>Separate FindMyPart sourcing research may help. Checking this saves a note in your downloaded concept only. It does not open a website, submit an inquiry, verify compatibility, or share your details.</p><p style="margin:8px 0 10px;color:#bdcdb8">Or explore FindMyPart separately. Opening the link is your choice; no Wheel Lab choices, notes, files or customer information are transferred.</p><a class="findmypart-referral" href="https://fabric.systemiacommandcenters.com/findmypart/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" style="display:inline-flex;align-items:center;border:1px solid #e8ff73;border-radius:8px;padding:10px 12px;color:#e8ff73;background:#162116;text-decoration:none;font-weight:800;line-height:1.3">Explore FindMyPart research</a></div>
 <div class="footnote">Proof only: no live catalog, vehicle VIN lookup, inventory, payment, shop account, external quote delivery, lead collection or verified fitment. Nothing here is available to buy.</div>
 </aside></div>
@@ -73,8 +74,22 @@ function button(label,attribute,value,extra=''){return `<button class="${extra||
 function menu(){get('paints').innerHTML=options.paint.map(x=>`<button type="button" class="swatch" data-key="paint" data-value="${x.key}" aria-label="${x.name}" title="${x.name}" style="--c:${x.hex}" aria-pressed="${String(state.paint===x.key)}"></button>`).join('');get('styles').innerHTML=options.style.map(x=>button(`<b>${x.name}</b><span>${x.desc}</span>`,'style',x.key)).join('');get('sizes').innerHTML=options.size.map(x=>button(x+'”','size',x)).join('');get('finishes').innerHTML=options.finish.map(x=>button(x.name,'finish',x.key)).join('');}
 function draw(){const s=compared?original:state;const paint=options.paint.find(x=>x.key===s.paint);get('bodyPaint').setAttribute('fill',paint.hex);get('backWheel').innerHTML=wheelMarkup(333,429);get('frontWheel').innerHTML=wheelMarkup(912,429);get('buildTitle').textContent=options.style.find(x=>x.key===s.style).name+' · '+s.size+'”';get('buildDetail').textContent=options.finish.find(x=>x.key===s.finish).name+' wheels · '+paint.name+' paint';get('paintName').textContent=options.paint.find(x=>x.key===state.paint).name;get('styleName').textContent=options.style.find(x=>x.key===state.style).name;get('sizeName').textContent=state.size+' inch';get('finishName').textContent=options.finish.find(x=>x.key===state.finish).name;get('compareButton').textContent=compared?'ORIGINAL BUILD':'HOLD TO COMPARE ↗';}
 let toastTimer;function toast(s){const el=get('status');el.textContent=s;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800)}
-function repaint(){menu();draw();try{const u=new URL(location.href);for(const [key,value] of Object.entries(state))u.searchParams.set(key,value);history.replaceState(null,'',u)}catch{}}
+function buildConceptCode(){
+  const digits=[
+    options.style.findIndex(x=>x.key===state.style),
+    options.size.indexOf(state.size),
+    options.finish.findIndex(x=>x.key===state.finish),
+    options.paint.findIndex(x=>x.key===state.paint),
+    get('sourcingInterest').checked?1:0
+  ];
+  if(digits.some(x=>x<0))throw Error('Invalid concept appearance');
+  const check=(digits[0]*7+digits[1]*3+digits[2]*5+digits[3]*9+digits[4]*11+6)%10;
+  return 'WL1-'+digits.join('')+'-'+check;
+}
+function updateConceptCode(){get('conceptCodeOutput').textContent=buildConceptCode()}
+function repaint(){menu();draw();updateConceptCode();try{const u=new URL(location.href);for(const [key,value] of Object.entries(state))u.searchParams.set(key,value);history.replaceState(null,'',u)}catch{}}
 document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('button[data-key]');if(!b)return;const k=b.dataset.key;const v=k==='size'?Number(b.dataset.value):b.dataset.value;if(!safeParam(k,v))return;state[k]=v;repaint()});
+get('sourcingInterest').addEventListener('change',updateConceptCode);
 get('reset').addEventListener('click',()=>{Object.assign(state,original);get('sourcingInterest').checked=false;compared=false;repaint();toast('Build reset to the baseline.');});
 const compare=get('compareButton');function setCompare(v){compared=v;draw()}compare.addEventListener('pointerdown',e=>{compare.setPointerCapture(e.pointerId);setCompare(true)});compare.addEventListener('pointerup',()=>setCompare(false));compare.addEventListener('pointercancel',()=>setCompare(false));compare.addEventListener('lostpointercapture',()=>setCompare(false));compare.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter')setCompare(true)});compare.addEventListener('keyup',e=>{if(e.key===' '||e.key==='Enter')setCompare(false)});compare.addEventListener('blur',()=>setCompare(false));
 function buildSummary(){
@@ -101,6 +116,12 @@ async function copySummary(text){
   let copied=false;try{copied=document.execCommand('copy')}catch{}
   field.remove();return copied;
 }
+get('copyCode').addEventListener('click',async()=>{
+  const code=buildConceptCode();
+  updateConceptCode();
+  const copied=await copySummary(code);
+  toast(copied?'Short concept code copied. Paste it into the shop desk. No contact or quote sent.':'Copy unavailable. Select the displayed concept code manually.');
+});
 get('share').addEventListener('click',async()=>{
   const copied=await copySummary(buildSummary());
   toast(copied?'Concept build summary copied. No link or shop submission.':'Copy unavailable. Use Export shop quote packet instead.');
