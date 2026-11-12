@@ -180,3 +180,18 @@ node --import tsx systemia/world-engine/sim-to-real/motion-watch-trial-rc05d.mjs
 ```
 
 **Known limits:** matched synthetic observations are noisy and may associate the wrong anonymous object; occlusion can hide hazards entirely; constant-velocity prediction omits acceleration; request-to-motion latency remains; no calibrated brakes, true sensors, SLAM, wheel model, hardware adapter, live robot, safety certification, or production promotion. A hazard hold is **not** an emergency stop. Outcomes and failed runs must remain in evidence.
+
+
+## RC05E: Persistent modeled hazard latch and simulated queue cancellation
+
+The RC05D crossing-hazard warning could alternate with ordinary forward commands while previously queued requests remained. RC05E adds an **opt-in** `observed-motion-latched` policy and an explicit software command-queue cancellation experiment.
+
+- Persist a moving-hazard latch between ticks and during missing/stale sensor observations. Never assume one clear reading proves the crossing hazard has disappeared.
+- Inspect already pending modeled commands for predicted crossing risk. During a latch, clear pending **simulated software** commands and apply a zero desired velocity using the native engine's existing rate-limited braking path. This is **not** a real robot cancellation API, emergency stop, or guarantee of immediate rest.
+- Require five consecutive fresh, nonhazardous observations after at least six latch ticks, with modeled rover speed below 0.09m/s, before allowing a capped 0.24m/s recovery phase.
+- Keep original `baseline` behavior unchanged. RC05E's opt-in policy inherits synthetic geometry, anonymous motion-tracking limitations and uncertainty; its track-matching may miss or mischaracterize crossing objects.
+- Collect a complete native input ledger, tick-by-tick latch diagnostics, count canceled modeled commands and preserve failure windows and SHA-256 receipts.
+- Compare default RC05, RC05C, RC05D and RC05E on **49–56** (including known collision seeds 51/56) and **81–88** (new seeds but **same** synthetic course generator). An evidence-only review requires net arrival improvement of at least 25% of the cohort, actual detour/recovery movement, and no new collision/geofence regressions.
+- Full integration and results run on GitHub Actions. **Do not infer a robotics safety certification, hardware readiness, or release authorization from successful test execution.**
+
+Source: `controller-rc05-latched-watch.mjs`, `latch-trial-rc05e.mjs` and respective tests. Release remains review-only draft.
