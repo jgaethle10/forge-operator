@@ -5,6 +5,7 @@ import {buildAssetScopeInquiry} from '../public/mesh/checkout-ready/asset-diagno
 
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 const assetPage=read('public/mesh/checkout-ready/asset-diagnosis/index.html');
+const intakeSource=read('public/mesh/checkout-ready/asset-diagnosis/scope-intake.mjs');
 const freeHub=read('public/try/index.html');
 const products=JSON.parse(read('public/mesh/checkout-ready/products.json'));
 const verified=JSON.parse(read('public/mesh/checkout-ready/verified-links.json'));
@@ -69,4 +70,12 @@ test('free-to-paid link preserves one exact product and does not silently charge
   assert.ok(assetPage.includes(target.checkout_url));
   assert.deepEqual([...new Set(assetPage.match(/https:\/\/buy\.stripe\.com\/[A-Za-z0-9]+/g)??[])],[target.checkout_url]);
   assert.ok(!assetPage.includes('fetch(') && !assetPage.includes('localStorage'));
+});
+
+test('scope intake module never sends, stores, or initiates a charge on behalf of a visitor',()=>{
+  assert.doesNotMatch(intakeSource,/\\bfetch\\s*\\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|PaymentIntent|checkout\\.sessions/i);
+  assert.match(intakeSource,/mailto:/);
+  assert.match(intakeSource,/authorized !== 'yes'/);
+  assert.match(assetPage,/Opening an email draft does not send it/);
+  assert.match(assetPage,/No payment, order or service delivery is created/);
 });
