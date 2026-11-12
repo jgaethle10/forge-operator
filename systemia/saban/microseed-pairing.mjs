@@ -498,6 +498,7 @@ export function consumeMicroSeedPairingBundle({
     device_id:bundle.device_id,
     approval_ref:ticket.approval_ref,
     expires_at:new Date(at.getTime()+30*24*60*60*1000).toISOString(),
+    authorized_at:at.toISOString(),
     heartbeat_target_seconds:300,
     attestation_mode:normalized.attestation?.mode||'device',
     attestation_identity:
