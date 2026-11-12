@@ -44,8 +44,7 @@ class VoiceFoundryCastingTests(unittest.TestCase):
     def test_no_unapproved_model_voice_claims(self):
         page=cast.make_page()
         self.assertEqual(page.count("<audio controls"),8)
-        self.assertIn("not</",page.lower().replace("**","")) if False else None
-        self.assertIn("not bespoke",page)
+        self.assertIn("not bespoke", " ".join(page.replace("**","").split()))
         self.assertNotIn("af_bella",page)
         source=PATH.read_text()
         for gate in ('"productionReady":False','"humanListeningApproved":False',
