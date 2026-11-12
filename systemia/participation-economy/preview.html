@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101A20">
+<title>HOME | Participation Economy concept</title>
+<style>
+:root{color-scheme:dark;--ink:#eaf0ed;--muted:#9baeb0;--bg:#0d161b;--panel:#17252b;--line:#31434b;--teal:#86e1b1;--cream:#faf5e8;--amber:#e3bd7c}
+*{box-sizing:border-box}html{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}body{margin:0}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+.shell{max-width:1000px;margin:auto;padding:24px 24px 70px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.brand{font-size:25px;font-weight:850;letter-spacing:-1.4px}.brand b{color:var(--teal)}.tag{color:var(--teal);background:#234338;border:1px solid #387560;border-radius:60px;padding:8px 13px;font-size:12px;font-weight:700}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:25px;padding:33px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(120deg,#172e31,#102027 70%)}.eyebrow{text-transform:uppercase;letter-spacing:.17em;font-size:11px;color:var(--teal);font-weight:800}h1{font-size:clamp(31px,4.3vw,54px);letter-spacing:-.055em;line-height:1.04;margin:16px 0}p{line-height:1.55;color:var(--muted);margin:0}.hero-art{min-height:245px;display:grid;place-items:center;border-radius:20px;overflow:hidden;position:relative;background:radial-gradient(ellipse at 70% 20%,#b8d9ac 0%,transparent 28%),radial-gradient(ellipse at 30% 80%,#528f8a 0%,transparent 40%),linear-gradient(145deg,#263f54,#5f756d)}.sun{position:absolute;background:#f1d4a4;width:90px;height:90px;border-radius:100%;right:19%;top:15%;box-shadow:0 0 70px #ebdbb58a}.mountain{position:absolute;bottom:-30px;background:#203e42;transform:rotate(35deg);width:250px;height:250px;border-radius:24px}.mountain.a{left:0}.mountain.b{right:-70px;bottom:-78px;background:#365956}.art-caption{position:absolute;bottom:19px;left:20px;right:20px;background:#09171bbd;border:1px solid #849c9b55;border-radius:13px;padding:13px;font-size:13px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0 16px}.choice{border:1px solid var(--line);border-radius:12px;background:#152127;color:var(--ink);padding:11px 16px}.choice[aria-pressed="true"]{background:var(--teal);color:#0a2421;border-color:var(--teal);font-weight:800}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}.panel{border:1px solid var(--line);border-radius:22px;background:var(--panel);padding:24px}.panel h2{letter-spacing:-.035em;font-size:22px;margin:0 0 8px}.figure{font-size:43px;letter-spacing:-.045em;font-weight:800;margin:16px 0 4px;color:var(--cream)}.dim{color:var(--muted);font-size:13px}.bars{display:flex;height:17px;border-radius:20px;overflow:hidden;margin:22px 0 17px}.bars span:nth-child(1){width:60%;background:#86e1b1}.bars span:nth-child(2){width:10%;background:#8daaff}.bars span:nth-child(3){width:5%;background:#e3bd7c}.bars span:nth-child(4){width:25%;background:#748a9a}.rows{display:grid;gap:14px}.allocation{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}.allocation strong{font-size:19px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}.policy{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:18px;margin-top:20px}
+.note{margin-top:17px;padding:14px;border-radius:13px;background:#243936;color:#c5e9da;font-size:13px;line-height:1.5}
+.card{border:1px solid var(--line);background:#1c2b31;border-radius:17px;overflow:hidden;margin-top:16px}.cover{height:160px;background:linear-gradient(130deg,#425d64 10%,#9cb9a0 40%,#314e57 70%,#20373f)}.post{padding:17px}.author{font-size:13px;color:var(--teal);font-weight:700}.post h3{margin:8px 0 7px;letter-spacing:-.02em}.post p{font-size:13px}.stat{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin-top:14px;color:var(--muted)}
+footer{margin-top:22px;color:var(--muted);font-size:12px;line-height:1.6}.hidden{display:none}
+@media(max-width:740px){.shell{padding:18px 14px 44px}.hero{grid-template-columns:1fr;padding:23px;gap:18px}.hero-art{min-height:170px}.split{grid-template-columns:1fr}.figure{font-size:38px}.panel{padding:20px}.top{margin-bottom:18px}.tag{font-size:10px}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="top"><div class="brand">evercraft<span aria-hidden="true">.</span><b>home</b></div><span class="tag">CONCEPT ONLY · NOT LIVE</span></header>
+<section class="hero" aria-labelledby="headline">
+<div><div class="eyebrow">The participation economy</div><h1 id="headline">Good things grow when everyone takes part.</h1><p>Creators make the work. Communities help it travel. When a sponsor's verified revenue supports it, Home models how those contributions could be rewarded.</p></div>
+<div class="hero-art" role="img" aria-label="Abstract illustrated hills and a rising sun, representing a creative community"><div class="sun"></div><div class="mountain a"></div><div class="mountain b"></div><div class="art-caption"><strong>A story starts somewhere.</strong><br><span class="dim">Home helps its community grow.</span></div></div>
+</section>
+<nav class="controls" aria-label="Simulation scenario">
+<button class="choice" type="button" id="funded" aria-pressed="true">Verified sponsor example</button>
+<button class="choice" type="button" id="reversed" aria-pressed="false">Reverse the funding</button>
+</nav>
+<div class="split">
+<section class="panel" aria-label="Illustrative distribution">
+<div class="eyebrow">Campaign economics</div><h2 id="heading">One story. Shared value.</h2><div class="figure" id="revenue">$400.00</div><div class="dim" id="basis">Modeled distributable basis · $500 sponsor minus $100 direct costs</div>
+<div class="bars" id="bars" aria-label="Allocation proportions"><span></span><span></span><span></span><span></span></div>
+<div class="rows">
+<div class="allocation"><span><i class="dot" style="background:#86e1b1"></i>Original creator (60%)</span><strong id="creator">$240.00</strong></div>
+<div class="allocation"><span><i class="dot" style="background:#8daaff"></i>Verified distribution (10%)</span><strong id="distributor">$40.00</strong></div>
+<div class="allocation"><span><i class="dot" style="background:#e3bd7c"></i>Reviewed community work (5%)</span><strong id="community">$20.00</strong></div>
+<div class="allocation"><span><i class="dot" style="background:#748a9a"></i>Evercraft Home (25%)</span><strong id="home">$100.00</strong></div>
+</div>
+<div class="note" role="status" id="status">All numbers are synthetic projections. No funds have been collected or are payable through this preview.</div>
+<div class="policy">Actual payouts require verified settlement, source attribution, content rights, eligibility, appropriate disclosures, tax/payment checks, and compliance approval. Views, likes and follows alone do not create cash claims.</div>
+</section>
+<section class="panel" aria-labelledby="discovery">
+<div class="eyebrow">Discover to earn</div><h2 id="discovery">An audience worth building.</h2><p>Help original work find its people. If a permitted, verified conversion generates qualifying revenue, a contributor could participate.</p>
+<article class="card">
+<div class="cover" role="img" aria-label="Abstract landscape cover illustration"></div>
+<div class="post"><div class="author">Illustrative creator · Storytelling</div><h3>Before the valley wakes</h3><p>A fictional local documentary about the people and places that make a hometown feel like home.</p><div class="stat"><span>Original work stays with its creator</span><span>Sample post</span></div></div>
+</article>
+<div class="note">Home is a social product concept separate from Evercraft's authenticated operator Home. This local preview performs no tracking, payments, sign-in, or publishing.</div>
+</section>
+</div>
+<footer>Evercraft Home Participation Economy · responsive design preview · illustrative and simulation-only. Not an offer of income, an available wallet, a live community, or a production payout service.</footer>
+</main>
+<script>
+const funded=document.getElementById('funded'), reversed=document.getElementById('reversed');
+function scenario(active){
+  funded.setAttribute('aria-pressed',String(active));
+  reversed.setAttribute('aria-pressed',String(!active));
+  const values=active?['$400.00','$240.00','$40.00','$20.00','$100.00']:['Held','—','—','—','—'];
+  ['revenue','creator','distributor','community','home'].forEach((id,i)=>document.getElementById(id).textContent=values[i]);
+  document.getElementById('bars').style.opacity=active?'1':'.22';
+  document.getElementById('heading').textContent=active?'One story. Shared value.':'Funding reversed. No earnings.';
+  document.getElementById('basis').textContent=active?'Modeled distributable basis · $500 sponsor minus $100 direct costs':'No active funding snapshot · not a $0 earnings assertion';
+  document.getElementById('status').textContent=active
+    ?'All numbers are synthetic projections. No funds have been collected or are payable through this preview.'
+    :'A reversal removes the active funding basis. Previously modeled allocations are held; this preview does not claim settled funds or create a negative wallet.';
+}
+funded.addEventListener('click',()=>scenario(true));
+reversed.addEventListener('click',()=>scenario(false));
+</script>
+</body></html>
