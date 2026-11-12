@@ -46,6 +46,11 @@ $('copy').addEventListener('click',async()=>{
 async function verifyDeliveredReport(run){
   if(run?.status!=='verified_local'||run.quality?.status!=='verified'
       ||run.specialist_receipts?.length!==5
+      ||!['analyst','writer','designer','auditor','coordinator'].every(role=>
+        run.specialist_receipts.some(receipt=>receipt.role===role
+          &&receipt.status==='completed'&&receipt.quality_status==='pass'))
+      ||new Set(run.specialist_receipts.map(receipt=>receipt.role)).size!==5
+      ||run.external_actions?.length!==0||run.model_inference!==false
       ||typeof run.report_markdown!=='string'
       ||!/^[a-f0-9]{64}$/.test(run.report_sha256||''))
     throw new Error('Audit receipts incomplete');
