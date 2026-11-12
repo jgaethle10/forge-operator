@@ -170,6 +170,7 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         detect=call(IMPORTER,"--video",self.rectified,
             "--model",model,"--manifest",import_manifest,
             "--fx-px",receipt["fxPx"],"--baseline-m",receipt["baselineM"],
+            "--cx-px",receipt["cxPx"],"--cy-px",receipt["cyPx"],
             "--max-frames","4","--frame-step","1",
             "--authorized-source","--rectified-stereo",
             "--output",derived)
@@ -178,6 +179,9 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         self.assertEqual(len(observations["frames"]),4)
         self.assertEqual(observations["sourceSha256"],
             receipt["rectifiedVideoSha256"])
+        self.assertFalse(observations["calibration"]["principalPointApproximationUsed"])
+        self.assertAlmostEqual(observations["calibration"]["cxPx"],receipt["cxPx"])
+        self.assertAlmostEqual(observations["calibration"]["cyPx"],receipt["cyPx"])
         self.assertFalse(observations["frames"][0]["observations"][0]["safetyCriticalApproved"])
 
     def test_rights_and_calibration_review_required(self):
