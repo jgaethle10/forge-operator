@@ -1,0 +1,106 @@
+{
+  "schema": "evercraft.studio.distribution-lanes.v1",
+  "as_of": "2026-11-11",
+  "owner": "Evercraft LLC / Systemia",
+  "offer": {
+    "name": "30-second small-business social commercial founding pilot",
+    "price_usd": 50,
+    "scope": "One agreed concept, one social format, one included revision, client-authorized source footage/photos; rights, brief, schedule and capacity approved before checkout",
+    "customer_url": "https://jgaethle10.github.io/forge-operator/commercial-studio/#inquire",
+    "fulfillment": "human-reviewed, no automated delivery promise",
+    "status": "existing_studio_inquiry_source_change_pr_pending",
+    "proof": "Payment received from one real buyer is not a delivered public showcase; use licensed demo or consented deliverable only"
+  },
+  "attribution": {
+    "field": "claimed_discovery_channel",
+    "confidence": "visitor_supplied_url_tag_not_verified_partner_or_sale",
+    "allowed": [
+      "partners",
+      "fiverr",
+      "linkedin",
+      "nextdoor",
+      "alignable",
+      "direct",
+      "other"
+    ],
+    "unknown": "unattributed",
+    "private_storage": "Fabric studio lead record only when deployed; no cookies, IP, raw referrer or cross-site analytics added",
+    "deployment": "not_verified",
+    "manual_email_fallback": "source label included in applicant-controlled email, not counted as received"
+  },
+  "channels": [
+    {
+      "id": "partners",
+      "phase": "existing_owned_site_pending_crosslink_release",
+      "entry": "https://jgaethle10.github.io/forge-operator/partners/",
+      "destination": "https://jgaethle10.github.io/forge-operator/commercial-studio/?src=partners#inquire",
+      "first_step": "Invite relevant opted-in agencies to express interest; written partner terms first",
+      "compensation": "none published or promised"
+    },
+    {
+      "id": "fiverr",
+      "phase": "unpublished_requires_user_account_action",
+      "entry": "https://www.fiverr.com/",
+      "destination": "https://jgaethle10.github.io/forge-operator/commercial-studio/?src=fiverr#inquire",
+      "first_step": "Prepare a native platform gig using the exact bounded creative scope; follow marketplace policies; verify fees and prohibited off-platform redirection",
+      "compensation": "marketplace fees and delivery terms to be verified"
+    },
+    {
+      "id": "linkedin",
+      "phase": "unpublished_requires_authorized_business_profile",
+      "entry": "https://www.linkedin.com/services/",
+      "destination": "https://jgaethle10.github.io/forge-operator/commercial-studio/?src=linkedin#inquire",
+      "first_step": "Create authorized Services listing and show licensed playable proof, not a mockup; do not send unsolicited connection spam"
+    },
+    {
+      "id": "nextdoor",
+      "phase": "unpublished_requires_business_claim",
+      "entry": "https://business.nextdoor.com/",
+      "destination": "https://jgaethle10.github.io/forge-operator/commercial-studio/?src=nextdoor#inquire",
+      "first_step": "Create legitimate Yakima-area business page; publish only under community rules and business account permissions"
+    },
+    {
+      "id": "alignable",
+      "phase": "unpublished_requires_business_profile",
+      "entry": "https://www.alignable.com/",
+      "destination": "https://jgaethle10.github.io/forge-operator/commercial-studio/?src=alignable#inquire",
+      "first_step": "Use mutually interested business partnerships, no mass DMs or recruiting-only income"
+    }
+  ],
+  "funnel_statuses": [
+    "verified_external_listing",
+    "qualified_inquiry",
+    "manual_scope_approved",
+    "provider_paid_receipt",
+    "render_qc_passed",
+    "delivered",
+    "client_accepted",
+    "refund_or_revision",
+    "partner_compensation_paid_if_contract"
+  ],
+  "five_sales_per_day_target": {
+    "orders": 5,
+    "gross_usd": 250,
+    "weekly_orders": 35,
+    "forecast": false,
+    "costs_excluded": true
+  },
+  "release_gates": [
+    "source tests and PR review",
+    "merge to authorized deploy branch",
+    "actual public HTML and Fabric version canary",
+    "synthetic consented channel inquiry proves persisted claimed tag",
+    "client delivery quality and licensed demo",
+    "buyer/order and provider confirmation before crediting income",
+    "contracted partner attribution and payouts before any earned-commission marketing"
+  ],
+  "safety": [
+    "no paid ads or bidder fees",
+    "no cold mass messaging",
+    "no unauthorized third-party listing or account use",
+    "no automatic charge",
+    "no fabricated paid-delivered portfolio sample",
+    "no RIVET/AliEV/EV or unrelated brand outreach",
+    "no uncontracted percentage or payout promise"
+  ]
+}
