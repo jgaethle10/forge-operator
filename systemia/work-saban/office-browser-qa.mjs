@@ -147,9 +147,29 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(exitState.modal,null);
   assert.equal(exitState.scrollLocked,false);
   assert.equal(await js(send,"JSON.stringify(window.WorkSaban3D.getState())"),beforeState,'Camera presentation must not fake worker execution events');
+  const tourStart=await js(send,"(()=>{const ui=window.WorkSaban3D;const before=JSON.stringify(ui.getState());ui.toggleStudioTour();return {active:ui.getStudioTour().active,index:ui.getStudioTour().index,label:ui.getStudioTour().label,panX:ui.getCamera().panX,workerState:JSON.stringify(ui.getState()),before};})()");
+  assert.equal(tourStart.active,true,'Tour button failed to open');
+  assert.equal(tourStart.index,0);
+  assert(tourStart.label.includes('CAMERA ONLY'),'Tour must reveal that it is a visitor camera');
+  assert.equal(tourStart.workerState,tourStart.before,'Opening tour must not advance any work');
+  const tourStep=await js(send,"(()=>{const ui=window.WorkSaban3D;ui.tourNext();return {index:ui.getStudioTour().index,label:ui.getStudioTour().label,panX:ui.getCamera().panX,inspector:document.getElementById('office-agent-name').textContent,workerState:JSON.stringify(ui.getState())};})()");
+  assert.equal(tourStep.index,1,'Next button must visit the next waypoint');
+  assert.notEqual(tourStep.panX,tourStart.panX,'Tour camera must travel');
+  assert.equal(tourStep.inspector,'Mission Director','Visitor guide and agent inspector must agree');
+  assert.equal(tourStep.workerState,tourStart.before,'Tour cannot manufacture activity');
+  await sleep(650);
+  const tourPixels=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+  const tourScreenshot=path.join(out,'work-saban-'+label+'-visitor-tour.png');
+  await fs.writeFile(tourScreenshot,Buffer.from(tourPixels.data,'base64'));
+  assert((await fs.stat(tourScreenshot)).size>8000,'Guided tour screenshot unexpectedly empty');
+  const tourStop=await js(send,"(()=>{const ui=window.WorkSaban3D;ui.tourPrevious();const prev=ui.getStudioTour().index;ui.toggleStudioTour();return {prev,active:ui.getStudioTour().active,workerState:JSON.stringify(ui.getState())};})()");
+  assert.equal(tourStop.prev,0,'Visitor must be able to return to the entrance');
+  assert.equal(tourStop.active,false,'Visitor may leave the tour');
+  assert.equal(tourStop.workerState,tourStart.before);
   return {label,width,height,mobile,desks:loaded.desks,follow_control:true,camera_easing:true,
     immersive_observe:'passed',inspection_navigation:'passed',keyboard_exit:'passed',
-    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile}};
+    guided_visitor_waypoints:'passed',tour_cannot_trigger_worker_activity:true,
+    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile,visitorTour:tourScreenshot}};
 }
 const out=process.env.WORK_SABAN_BROWSER_PROOF_DIR||path.join(os.tmpdir(),'work-saban-browser-qa');
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));

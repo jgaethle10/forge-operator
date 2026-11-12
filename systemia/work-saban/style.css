@@ -600,3 +600,19 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
     padding:5px 8px}
   .spatial-orbit-label{font-size:8px;padding:6px 8px}
 }
+
+
+/* Visitor-guided studio route. A camera itinerary, never an autonomous action. */
+.spatial-tour-caption{align-self:start;order:1;max-width:88%;padding:7px 11px;
+  border-radius:8px;background:#112f45db;border:1px solid #7ac6d877;
+  color:#d6f2fb;font-size:10px;font-weight:800;letter-spacing:.075em;
+  line-height:1.4;pointer-events:none}
+.spatial-tour-caption[hidden]{display:none!important}
+.spatial-control[aria-label="Stop guided studio visitor tour"]{
+  background:#31566a;border-color:#93cde4;color:#e1fbff}
+@media(max-width:650px){
+  .spatial-tour-caption{font-size:8px;max-width:95%;padding:5px 8px;letter-spacing:.025em}
+}
+
+.spatial-control.spatial-tour-control{min-width:58px;font-size:11px;font-weight:850;letter-spacing:.06em}
+@media(pointer:coarse){.spatial-control.spatial-tour-control{min-width:62px}}

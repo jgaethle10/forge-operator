@@ -33,6 +33,8 @@ jobs:
           node --check systemia/work-saban/office-observe.proof.mjs
           node --check systemia/work-saban/office-camera.js
           node --check systemia/work-saban/office-camera.proof.mjs
+          node --check systemia/work-saban/office-tour.js
+          node --check systemia/work-saban/office-tour.proof.mjs
           node --check systemia/work-saban/office-browser-qa.mjs
           node --check systemia/work-saban/office-3d.js
           node --check systemia/work-saban/trace-client.js
@@ -55,6 +57,8 @@ jobs:
         run: node systemia/work-saban/office-observe.proof.mjs
       - name: Prove smooth observer rig, reduced motion, and frame rate independence
         run: node systemia/work-saban/office-camera.proof.mjs
+      - name: Prove safe guided visitor tour and waypoint bounds
+        run: node systemia/work-saban/office-tour.proof.mjs
       - name: Prove spatial office camera and receipt-driven state
         run: node systemia/work-saban/office-3d.proof.mjs
       - name: Inspect real desktop and phone camera in headless Chrome
