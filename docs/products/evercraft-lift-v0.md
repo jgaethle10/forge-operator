@@ -108,6 +108,22 @@ A crash can leave the lock file and require careful manual inspection before rem
 5. Jurisdiction-specific nonprofit/donation and payment approval. Only then Evercraft Payments -> Raven Nexus -> authorized settlement adapter and verified disbursement.
 
 
+## V0.3 shared Identity + Passport boundary (integration proof)
+
+**Files:** `systemia/lift/identity-boundary.mjs`, `identity-boundary.test.mjs`.
+
+Lift now has a pure service adapter designed to reuse Evercraft's **Identity** session signatures/revocation and **Passport** resource grants. No separate Lift password/token system was created.
+
+- Every call verifies an Evercraft-signed session against the configured Identity signing keyring, then checks Identity's *current* session revocation state. A signed but revoked or expired token is refused.
+- Every operation requires a live Passport decision for product `evercraft-lift` and the exact scope. Person-scoped operations also require matching record ownership. Reviewer, redaction, publisher, partner vetting, activation and suspension require an explicitly resource-bound active grant, not just a global grant.
+- The workflow actor is reconstructed from the verified subject reference and the operation's **server-selected role**. Untrusted callers cannot choose or amplify a role. The stable opaque actor key is a one-way digest for this Lift context; it should not be used as a public user profile.
+- The adapter receives only trusted `loadCase` / `loadPartner` functions and never exposes private record-reading routes; consumers must supply server-side stores, not untrusted input/cache snapshots.
+- Real Identity/Passport modules are exercised in tests using *fictional signed sessions and manual lab grants*. These tests do **not** establish that production subjects were enrolled, permissions provisioned or server endpoints deployed.
+- Case events still flow through the existing independent reviewer, consent and privacy policy functions. Live payments remain disabled.
+
+**Important:** this is a composition layer, not a running authenticated service or production identity integration. A deployed service must validate sessions and Passport grants at the transaction boundary, enforce least privilege, atomically persist state changes with revocation, prevent request races, and obtain operator/legal approvals before processing real people.
+
+
 ## Release status
 
 **Demo:** ready for local isolated evaluation. **Live assistance:** blocked. **Payments:** blocked. **Verified partners:** none onboarded by this change. **Public deployment:** not authorized by this branch. **Systemia API integration:** pending. The name is provisional pending checks for conflicts.
