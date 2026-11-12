@@ -32,6 +32,27 @@ A missed check-in means **unknown**, not a relapse. A reported hard day can chan
 - Demo credits/buildings are generated in memory only and never saved to personal progress.
 - Current 2.5D browser preview is a first playable map. **It is not a real 3D character walkthrough, 3D physics game, sports simulator, orchestra-performance engine or connected Evercraft Worlds runtime.** Those require a dedicated world renderer/runtime.
 
+## First-person campus viewer, v0.3
+A separate first-party, offline-capable browser renderer now lives at `public/art-of-becoming/campus-walk.html`. The original 2.5D map remains the **construction authority** and is linked to the new first-person view. The scene is read-only: entering it cannot spend credits, modify reflections, create facilities or save simulated achievements.
+
+- `campus-walk.mjs`: original zero-CDN WebGL2 geometry, directional lighting/fog, stadium / field / clubhouse / hall facades, footpaths, trees and founding courtyard. Uses the same facility instance IDs/lot positions as the planner.
+- `walk-engine.mjs`: pure, testable world-space projection, coordinate conversion, pedestrian collision, camera yaw/pitch and speed boundaries, nearby-facility discovery.
+- Desktop supports WASD, drag to look, Shift to speed up. Touch supports drag-to-look and direction pad. Escape/pause and return to founders are available.
+- A demonstration world uses **disposable in-memory** sample construction, clearly labeled as a preview and never persisted.
+- If WebGL2 is unavailable, the viewer reports this and directs the user back to the existing 2.5D planner rather than modifying saved state.
+- The same browser test checks actual WebGL2 frame rendering, geometry, movement, phone screen size, reload persistence, and hard-day retention.
+- The viewer generates **procedural buildings** rather than photorealistic stadium assets; building interiors, doors, crowds, live matches, collision optimization across massive cities and physically realistic sound are not implemented yet.
+- A first-person browser viewer is not the same as deploying the existing Evercraft Worlds engine as an authoritative long-lived scene; the World Engine V1 data bridge remains local/export-only.
+
+### Follow-on visualization milestones
+1. Add entrance portals and walkable interiors for stadium / academy / concert hall, preserving player controls and mobile budgets.
+2. Stream detailed geometry and textures by district and hardware quality; don't load twenty years of assets in one frame.
+3. Add non-punitive ambient music and reactive lighting authored by Evercraft, with mute and sensory comfort settings.
+4. Add landmarks and an in-world campus construction UI, then verified event persistence and secure opt-in multi-device recovery.
+5. Test with real iPhone Safari and screen-reader alternatives before broad distribution.
+
+---
+
 ## Long-horizon requirements before a lifetime ownership claim
 A browser-local save and manual JSON export **cannot guarantee** survival for decades. A credible lifetime platform requires:
 1. **User-owned durable account identity** (optional pseudonymous mode), explicit consent and no silent collection of sensitive check-ins.
@@ -47,7 +68,7 @@ A browser-local save and manual JSON export **cannot guarantee** survival for de
 
 ## Next engineering gates
 - Dedicated CI smoke green on the actual PR head, with a screenshot of Franchise and Symphony on mobile.
-- Actual iPhone Safari touch/keyboard and assistive-technology testing, beyond Chromium phone emulation.
+- Actual iPhone Safari touch/keyboard and assistive-technology testing, beyond Chromium phone emulation, for **both** campus planner and WebGL2 walk-through.
 - Visual-system pass: physically plausible 3D sports campus, navigable clubhouse and stadium, real camera/walk modes, scalable asset streaming, ambient performance.
 - Real original orchestral sound and reactive lighting for Symphony, with sound accessibility and mute controls.
 - Formal recovery/privacy/threat-model design and independently verified backup restore.
