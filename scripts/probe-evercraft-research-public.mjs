@@ -8,6 +8,7 @@ import {fileURLToPath} from "node:url";
 export const ORIGIN="https://jgaethle10.github.io/forge-operator/research/";
 export const ASSETS=Object.freeze([
  {path:"",name:"customer_website",expected:["Evercraft Research","Prepare my research brief","scope.mjs"]},
+ {path:"insurance-ai-qa/",name:"insurance_ai_qa_offer",expected:["$495","Five test scenarios","This page does not process payments or create an order","mailto:jessegaethle10@gmail.com"]},
  {path:"scope.mjs",name:"scope_engine",expected:["prepareResearchScope","researchPerformed:false","orderCreated:false"]},
  {path:"ai-discovery.json",name:"discovery",expected:["evercraft.research.public-product.v1","human_scoping_only","checkout_url"]},
  {path:"llms.txt",name:"llm_discovery",expected:["Evercraft Research","No purchase or charge"]},
