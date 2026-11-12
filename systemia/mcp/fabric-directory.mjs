@@ -509,6 +509,39 @@ function scoreEntry(intent,entry,{frequency,total}){
     if(!named) score*=0.3;
   }
 
+  // Household needs are not enterprise software rescue requests. These narrow
+  // user-problem signals are stronger than incidental word overlap in a large
+  // machine-offer catalog, but never unlock booking or checkout authority.
+  // Explicit IBM i or software rescue language stays on its existing specialist
+  // path. Keep this *after* generic product dilution, so relevant products
+  // remain visible to people who do not know their Evercraft product names.
+  const raw=rawIntentSignals(intent);
+  const hasHomeSubject=hasAnyRawSignal(raw,['homeowner','homeowners','home','house','household','my property']);
+  const hasMaintenanceNeed=hasAnyRawSignal(raw,[
+    'maintenance','winter','seasonal','furnace','gutters','gutter','hvac','roof','heating','weatherize',
+  ]);
+  const namedEnterpriseNeed=hasAnyRawSignal(raw,[
+    'ibm i','ibmi','as/400','iseries','mainframe','server','legacy software','repository','codebase',
+  ]);
+  if(hasHomeSubject&&hasMaintenanceNeed&&!namedEnterpriseNeed){
+    if(entry.public_id==='product:evercraft-property-services') score+=135;
+    if(entry.public_id==='product:seasonally') score+=105;
+    if(entry.public_id==='product:contractor-cloud') score+=90;
+    if(entry.public_id==='raven-nexus-home-setup-v1') score+=35;
+    if(entry.public_id==='ibmi-rescue-v1'||entry.public_id==='legacy-rescue-lab-v1') score-=180;
+  }
+
+  // A broad everyday-help question should lead through the free public utility
+  // instead of presenting an unrelated commercial diagnosis as the default.
+  // This is deliberately inapplicable to explicit specialist/product requests.
+  const everydayHelp=hasAnyRawSignal(raw,[
+    'everyday life','daily life','practical help','make life easier',
+  ])&&!hasAnyRawSignal(raw,[
+    'forensiscope','earthworks','contractor cloud','evercraft rewards',
+    'evercraft circles','work saban','ai boardroom','raven nexus',
+  ]);
+  if(everydayHelp&&entry.public_id==='product:evercraft-front-door') score+=120;
+
   return Math.max(0,Math.round(score*100)/100);
 }
 
