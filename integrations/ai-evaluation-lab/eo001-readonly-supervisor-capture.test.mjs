@@ -189,7 +189,7 @@ test('post-stop cgroup disappearing is an UNKNOWN block with negative receipt',(
   state.post=true;
   assert.throws(()=>observer.finish(stop()),error=>{
     const receipt=error.private_negative_receipt;
-    assert.equal(receipt.reason,'SUPERVISOR_OBSERVATION_UNVERIFIED');
+    assert.equal(receipt.reason,'POSTSTOP_KERNEL_EVIDENCE_MISSING');
     assert.equal(receipt.stage,'POST_KERNEL_READBACK');
     assert.equal(receipt.actual_cleanup_verified,false);
     assert.equal(receipt.pre.worker.pid,worker);
