@@ -30,8 +30,10 @@ jobs:
         run: |
           node --check public/art-of-becoming/engine.mjs
           node --check public/art-of-becoming/world-engine.mjs
+          node --check public/art-of-becoming/walk-engine.mjs
+          node --check public/art-of-becoming/campus-walk.mjs
       - name: Streak safety, privacy, and milestone tests
-        run: node --test tests/art-of-becoming.test.mjs tests/art-of-becoming-worlds.test.mjs
+        run: node --test tests/art-of-becoming.test.mjs tests/art-of-becoming-worlds.test.mjs tests/art-of-becoming-walk.test.mjs
 
   browser:
     needs: mvp
