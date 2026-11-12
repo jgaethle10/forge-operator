@@ -1,0 +1,26 @@
+name: Outage Bridge public contract
+
+on:
+  pull_request:
+    paths:
+      - 'public/outage-bridge/**'
+      - 'tests/outage-bridge-public-contract.test.mjs'
+      - '.github/workflows/outage-bridge-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/outage-bridge/**'
+      - 'tests/outage-bridge-public-contract.test.mjs'
+      - '.github/workflows/outage-bridge-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate free generator and commercial boundaries
+        run: node --test tests/outage-bridge-public-contract.test.mjs
