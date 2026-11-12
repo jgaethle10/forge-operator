@@ -6,6 +6,7 @@ import path from 'node:path';
 import http from 'node:http';
 import {createForensiScopeGuestOrderLedger} from '../systemia/forensiscope/guest-order-ledger.mjs';
 import {createForensiScopeCustomerRuntime} from '../systemia/forensiscope/customer-runtime.mjs';
+import {createForensiScopeEmailVerification} from '../systemia/forensiscope/email-verification.mjs';
 import {createForensiScopeOwnedCheckoutBridge} from '../systemia/forensiscope/owned-checkout-bridge.mjs';
 
 const capacity={
@@ -22,10 +23,21 @@ const media={
 function fixture(options={}){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'forensiscope-guest-ledger-'));
  let time=Date.now(),ready=capacity;
+ const sent=new Map();
+ const makeVerification=()=>createForensiScopeEmailVerification({
+  storageDir:path.join(dir,'email-challenges'),
+  secret:Buffer.alloc(32,42),
+  enabled:true,now:()=>time,resendCooldownMs:1000,
+  checkChallengeRequest:async()=>true,
+  sendCode:async ({email,verificationCode})=>{
+   sent.set(email.toLowerCase(),verificationCode);
+   return {accepted:true};
+  }
+ });
  const make=()=>createForensiScopeGuestOrderLedger({
   storageDir:dir,readCapacity:async()=>ready,
   maxUploadBytes:1024*1024,guestEnrollmentEnabled:true,
-  checkEnrollment:async()=>true,
+  checkEnrollment:async()=>true,emailVerification:makeVerification(),
   now:()=>time,sessionTtlMs:4*24*60*60*1000,
   allowedOrigins:['https://jgaethle10.github.io'],...options
  });
@@ -47,8 +59,20 @@ function fixture(options={}){
   const raw=await res.text();
   return {status:res.status,body:raw?JSON.parse(raw):null,headers:res.headers};
  };
+ const enroll=async(base,email='buyer@example.test')=>{
+  const begun=await request(base,'/v1/forensiscope/guest/challenge',{
+   method:'POST',body:{email,privacy_accepted:true}
+  });
+  assert.equal(begun.status,201);
+  const code=sent.get(email.toLowerCase());
+  assert.match(code,/^[0-9]{8}$/);
+  return request(base,'/v1/forensiscope/guest',{
+   method:'POST',body:{email,privacy_accepted:true,
+    challenge_id:begun.body.challenge_id,verification_code:code}
+  });
+ };
  return {
-  dir,start,request,get ledger(){return ledger},
+  dir,start,request,enroll,get ledger(){return ledger},
   setCapacity:x=>ready=x,
   advance:ms=>{time+=ms},
   async restart(){
@@ -65,9 +89,7 @@ function fixture(options={}){
 test('private browser HTTP guest enrollment, exact $15 order, scoped read, persistence and revocation',async()=>{
  const f=fixture();let base=await f.start();
  try{
-  const created=await f.request(base,'/v1/forensiscope/guest',{
-   method:'POST',body:{email:'Buyer@Example.Test',privacy_accepted:true}
-  });
+  const created=await f.enroll(base,'Buyer@Example.Test');
   assert.equal(created.status,201);
   const token=created.body.access_token;
   assert.match(token,/^fsg_[a-f0-9]{64}$/);
@@ -100,9 +122,7 @@ test('private browser HTTP guest enrollment, exact $15 order, scoped read, persi
   assert.ok(!sessionText.includes(token));
   const wrong=await f.request(base,'/v1/forensiscope/orders/'+key,{token:'fsg_'+'0'.repeat(64)});
   assert.equal(wrong.status,401);
-  const other=await f.request(base,'/v1/forensiscope/guest',{
-   method:'POST',body:{email:'other@example.test',privacy_accepted:true}
-  });
+  const other=await f.enroll(base,'other@example.test');
   const cross=await f.request(base,'/v1/forensiscope/orders/'+key,{
    token:other.body.access_token
   });
@@ -147,9 +167,7 @@ test('disabled enrollment, abuse gate, rights, format, capacity and expiration f
   ])assert.equal((await active.request(host,'/v1/forensiscope/guest',{
    method:'POST',body:data
   })).status,422);
-  const session=await active.request(host,'/v1/forensiscope/guest',{
-   method:'POST',body:{email:'buyer@example.test',privacy_accepted:true}
-  });
+  const session=await active.enroll(host);
   const token=session.body.access_token;
   assert.equal((await active.request(host,'/v1/forensiscope/orders',{
    method:'POST',token,body:{...media,media_rights_confirmed:false}
@@ -175,9 +193,7 @@ test('disabled enrollment, abuse gate, rights, format, capacity and expiration f
 test('owned checkout persists unpaid-only idempotent order with exact SKU and no raw checkout URL',async()=>{
  const f=fixture();const host=await f.start();
  try{
-  const session=await f.request(host,'/v1/forensiscope/guest',{
-   method:'POST',body:{email:'buyer@example.test',privacy_accepted:true}
-  });
+  const session=await f.enroll(host);
   const buyer=await f.ledger.authorizeBuyer({headers:{authorization:'Bearer '+session.body.access_token}});
   const order=await f.ledger.createOrder({buyer,...media});
   const stored=await f.ledger.loadOrder(order.order_key,buyer.subject);
@@ -221,9 +237,7 @@ test('unified customer runtime accepts guest enrollment + order with checkout he
    workerIntervalMs:1000
   });
   const {origin}=await runtime.start();
-  const register=await f.request(origin,'/v1/forensiscope/guest',{
-   method:'POST',body:{email:'buyer@example.test',privacy_accepted:true}
-  });
+  const register=await f.enroll(origin);
   assert.equal(register.status,201);
   const order=await f.request(origin,'/v1/forensiscope/orders',{
    method:'POST',token:register.body.access_token,body:media
@@ -243,4 +257,42 @@ test('unified customer runtime accepts guest enrollment + order with checkout he
   if(runtime)await runtime.stop();
   await f.close();
  }
+});
+
+
+test('verified returning buyer rotates lost token without losing paid-order ownership',async()=>{
+ const f=fixture();let base=await f.start();
+ try{
+  const first=await f.enroll(base,'buyer@example.test');
+  assert.equal(first.status,201);
+  const firstToken=first.body.access_token;
+  assert.equal(first.body.session_rotated,false);
+  const order=await f.request(base,'/v1/forensiscope/orders',{
+   method:'POST',token:firstToken,body:media
+  });
+  assert.equal(order.status,201);
+  const key=order.body.order_key;
+  f.advance(2000);
+  const recovered=await f.enroll(base,'BUYER@example.test');
+  assert.equal(recovered.status,201);
+  assert.equal(recovered.body.session_rotated,true);
+  assert.notEqual(recovered.body.access_token,firstToken);
+  assert.equal((await f.request(base,'/v1/forensiscope/orders/'+key,{
+   token:firstToken
+  })).status,401,'previous token revoked when user recovers');
+  const restored=await f.request(base,'/v1/forensiscope/orders/'+key,{
+   token:recovered.body.access_token
+  });
+  assert.equal(restored.status,200);
+  assert.equal(restored.body.order_key,key);
+  const active=await f.ledger.authorizeBuyer({
+   headers:{authorization:'Bearer '+recovered.body.access_token}
+  });
+  const loaded=await f.ledger.loadOrder(key,active.subject);
+  assert.equal(loaded.subject,active.subject);
+  base=await f.restart();
+  assert.equal((await f.request(base,'/v1/forensiscope/orders/'+key,{
+   token:recovered.body.access_token
+  })).status,200,'recoverable identity survives process restart');
+ }finally{await f.close()}
 });

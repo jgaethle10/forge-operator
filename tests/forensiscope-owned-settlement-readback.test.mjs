@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import http from 'node:http';
 import {createForensiScopeGuestOrderLedger} from '../systemia/forensiscope/guest-order-ledger.mjs';
+import {createForensiScopeEmailVerification} from '../systemia/forensiscope/email-verification.mjs';
 import {createForensiScopeOwnedSettlementReader} from '../systemia/forensiscope/owned-settlement-readback.mjs';
 import {createForensiScopeResumableIngress} from '../systemia/forensiscope/resumable-ingress.mjs';
 import {createForensiScopeCustomerRuntime} from '../systemia/forensiscope/customer-runtime.mjs';
@@ -29,12 +30,26 @@ const readback=(order)=>({
 });
 async function fixture(){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'forensi-settlement-test-'));
+ let code;
+ const emailVerification=createForensiScopeEmailVerification({
+  storageDir:path.join(root,'email-verification'),secret:Buffer.alloc(32,81),
+  enabled:true,now:()=>now,
+  checkChallengeRequest:async()=>true,
+  sendCode:async ({verificationCode})=>{
+   code=verificationCode;
+   return {accepted:true};
+  }
+ });
  const ledger=createForensiScopeGuestOrderLedger({
   storageDir:path.join(root,'ledger'),
-  guestEnrollmentEnabled:true,checkEnrollment:async()=>true,
+  guestEnrollmentEnabled:true,checkEnrollment:async()=>true,emailVerification,
   readCapacity:async()=>capacity,maxUploadBytes:1024*1024,now:()=>now
  });
- const access=await ledger.issueGuest({email:'buyer@example.test',privacyAccepted:true,request:{}});
+ const challenge=await emailVerification.sendChallenge({email:'buyer@example.test',request:{}});
+ const access=await ledger.issueGuest({
+  email:'buyer@example.test',privacyAccepted:true,
+  challengeId:challenge.challenge_id,verificationCode:code,request:{}
+ });
  const headers={authorization:'Bearer '+access.access_token};
  const buyer=await ledger.authorizeBuyer({headers});
  const fileSizeBytes=100;
@@ -71,6 +86,13 @@ async function fixture(){
  });
  return{
   root,ledger,access,buyer,headers,order,adapter,finalize,
+  enrollAnother:async email=>{
+   const challenge=await emailVerification.sendChallenge({email,request:{}});
+   return ledger.issueGuest({
+    email,privacyAccepted:true,challengeId:challenge.challenge_id,
+    verificationCode:code,request:{}
+   });
+  },
   setResponse:value=>responseValue=value,
   setStatus:value=>status=value,
   get upstreamCalls(){return upstreamCalls},
@@ -237,9 +259,7 @@ test('private buyer payment status polls only own order and never exposes provid
   assert.equal(unstarted.payload.state,'checkout_not_started');
   assert.equal(f.upstreamCalls,0);
   assert.equal((await read('')).status,401);
-  const another=await f.ledger.issueGuest({
-   email:'other@example.test',privacyAccepted:true,request:{}
-  });
+  const another=await f.enrollAnother('other@example.test');
   assert.equal((await read('Bearer '+another.access_token)).status,404);
   await f.finalize();
   f.setStatus(402);

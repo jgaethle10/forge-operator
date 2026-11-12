@@ -19,7 +19,8 @@ supplied to the private loopback customer runtime.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| POST | /v1/forensiscope/guest | Issue a secure guest session after customer consent and anti-abuse approval |
+| POST | /v1/forensiscope/guest/challenge | Send owner-controlled one-time email verification code after privacy consent and anti-abuse approval |
+| POST | /v1/forensiscope/guest | Issue a secure guest session only after a matching, unexpired, single-use email verification code |
 | GET | /v1/forensiscope/guest | Check session, no access token or private email echoed |
 | DELETE | /v1/forensiscope/guest | Revoke session, does not silently delete order/media data |
 | POST | /v1/forensiscope/orders | Create a buyer-owned exact-tier quote/order without taking money |
@@ -36,14 +37,24 @@ until TLS, abuse controls, and identity-recovery design are verified.
 
 ## Privacy and authority
 
+- Require verified control of the customer's email before issuing any buyer
+  bearer token. A valid address and generic anti-abuse check alone are
+  no longer sufficient. The challenge uses an eight-digit cryptographic
+  code, a 10-minute expiry, a five-attempt cap and replay prevention.
+  The code is delivered only through the owner-supplied sendCode callback,
+  never included in browser response, logs or persisted plaintext.
+  Email-specific cooldowns supplement, but do not replace, deployment
+  rate limits, quotas and email-delivery health checks.
 - Generate a 256-bit random bearer token. Persist only its SHA-256
   digest. Show the token to the buyer exactly once.
 - Private session files contain the email address and are chmod 0600;
   owner-only directories are 0700. No file names or raw customer media
   are collected in the ledger.
 - Sessions expire after 7 days by default. Revocation blocks subsequent
-  API access immediately. Token loss currently cannot be recovered from
-  email alone: an authenticated recovery flow is a release blocker.
+  API access immediately. A returning buyer may request a new email challenge and exchange
+  that code for a new bearer token bound to the same customer subject.
+  Previously issued tokens are revoked. This is single-node verified
+  reauthentication, not a deployed public passwordless sign-in service.
 - Token cannot be provided via a URL query string, payment redirect,
   client-supplied buyer ID or unauthenticated email.
 - The server chooses the canonical duration-based offer and amount,
@@ -82,3 +93,23 @@ node --test tests/forensiscope-guest-order-ledger.test.mjs
 
 No Stripe charge, payment or live customer account is created by these
 tests. The public ForensiScope inquiry page is unchanged.
+
+
+## Verified email implementation (November 9)
+
+The private guest-order ledger requires an enabled emailVerification
+service before enabling guest signup. The private runtime also routes
+POST /v1/forensiscope/guest/challenge. A buyer sends an approved email
+address and privacy acceptance, receives the code through a separately
+configured owned sender, then exchanges the challenge id and eight-digit
+code for the one-time private session credential.
+
+The email HMAC secret and transactional mail relay must be configured
+server-side. This code does NOT configure any outbound email sender or
+live public identity service. Returning customers can regain their original order identity through a
+new email challenge, with prior sessions revoked. Production enrollment
+still requires verified owned email delivery, abuse controls, rate limits,
+actual TLS deployment and multi-process session-rotation review.
+
+Tests:
+node --test tests/forensiscope-email-verification.test.mjs
