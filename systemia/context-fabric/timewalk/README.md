@@ -198,7 +198,62 @@ approved source integration.
 
 ```bash
 node --test systemia/context-fabric/timewalk/origin-attestation.test.mjs
+node --test systemia/context-fabric/timewalk/execution-ledger-reader.test.mjs
 node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
+```
+
+## Owned Execution Gate source-ledger reader (v0.5)
+
+The repository already persists each Execution Gate lease event to
+`execution-lease-events.jsonl`. The new
+`execution-ledger-reader.mjs` exposes a **private-only, synchronous,
+read-only receipt adapter** for *that exact existing filename* and *only*
+`evercraft.execution-gate.lease-event.v1`.
+
+A trusted internal caller binds an absolute Execution Gate state directory.
+The caller cannot choose individual files, issue URLs, edit the store,
+or use this reader to scan unrelated sources:
+
+```js
+import { createExecutionGateLedgerReceiptReader } from './execution-ledger-reader.mjs';
+
+const read_source_receipt = createExecutionGateLedgerReceiptReader({
+  state_dir: '/private/operator-approved/execution-gate-state',
+});
+const report = reconcileTimewalkSourceReceipts(contextFabric, {
+  actor_ref: verifiedInternalSession.subject_ref,
+  namespaces: ['aliev'],
+  read_source_receipt,
+});
+```
+
+The source directory is an **operator-provisioned secret**, never supplied by
+customer input or obtained from public product configuration. The adapter
+requires a non-symlink private regular file, verifies every event's embedded
+SHA-256 digest before serving any lookup, bounds source reads to 16 MiB and
+20,000 events, rejects partially appended JSONL and duplicate hashes, and
+pins the source snapshot in memory for its lifetime. Callers must construct a
+**new reader for a new source snapshot** rather than reusing an old instance
+across unrelated reconciliation runs.
+
+The adapter never claims the file's ownership is independently authenticated.
+A forged replacement JSONL with recalculated receipt hashes could still be
+internally consistent. The output therefore stays at digest/projection
+consistency, not verified origin. Existing signatures require separately
+operator-pinned keys and attestation records.
+
+**Coverage is deliberately narrow:** Intake's admission packet is synthesized
+from candidate + decision records, rather than stored in the same JSONL
+receipt format, while Systemia mission-admission receipts are returned from
+mission planning without a unified source-receipt store in this inspected
+path. We have **not** invented adapters for either of them.
+
+No repository sample paths are live environments; this code has not read
+the private production state directory, been exposed as an endpoint,
+merged, or deployed.
+
+```bash
+node --test systemia/context-fabric/timewalk/execution-ledger-reader.test.mjs
 ```
 
 ## Performance and security boundaries
