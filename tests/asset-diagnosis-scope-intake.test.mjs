@@ -73,7 +73,7 @@ test('free-to-paid link preserves one exact product and does not silently charge
 });
 
 test('scope intake module never sends, stores, or initiates a charge on behalf of a visitor',()=>{
-  assert.doesNotMatch(intakeSource,/\\bfetch\\s*\\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|PaymentIntent|checkout\\.sessions/i);
+  for(const forbidden of ['fetch(', 'XMLHttpRequest', 'sendBeacon', 'localStorage', 'sessionStorage', 'PaymentIntent', 'checkout.sessions']) assert.ok(!intakeSource.includes(forbidden),forbidden);
   assert.match(intakeSource,/mailto:/);
   assert.match(intakeSource,/authorized !== 'yes'/);
   assert.match(assetPage,/Opening an email draft does not send it/);
