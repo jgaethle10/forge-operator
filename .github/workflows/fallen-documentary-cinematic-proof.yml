@@ -1,0 +1,30 @@
+name: Fallen Documentary Cinematic Proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/documentary-cinematic-gate.mjs'
+      - 'systemia/media-studio/documentary-cinematic-gate.test.mjs'
+      - 'systemia/media-studio/DOCUMENTARY-CINEMATIC-STANDARD.md'
+      - '.github/workflows/fallen-documentary-cinematic-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  picture-and-story-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify ephemeral FFmpeg and FFprobe availability
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Render and decode original synthetic motion and static test footage
+        run: node --test systemia/media-studio/documentary-cinematic-gate.test.mjs
