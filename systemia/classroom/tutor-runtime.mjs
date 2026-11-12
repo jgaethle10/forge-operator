@@ -177,6 +177,10 @@ export async function startPrivateClassroomPilot({
     tutor.close(data.session_id);
     return reply(res,200,{ok:true,ended:true});
    }
+   if(path==='/api/classroom/reset'){
+    const cleared=tutor.clearAll();
+    return reply(res,200,{ok:true,all_volatile_sessions_erased:true,cleared_count:cleared});
+   }
    return reply(res,404,{ok:false,error:'not_found'});
   }catch(error){
    const code=String(error?.message||'unknown');
