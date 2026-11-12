@@ -13,6 +13,7 @@ import {reactiveCommandProgress} from './controller-rc05-progress.mjs';
 import {reactiveCommandShielded} from './controller-rc05-shield.mjs';
 import {reactiveCommandEscape} from './controller-rc05-escape.mjs';
 import {updateMotionMemory,reactiveCommandMotionWatch} from './controller-rc05-motion-watch.mjs';
+import {initialHazardLatch,reactiveCommandLatched} from './controller-rc05-latched-watch.mjs';
 
 export const RC05_SCHEMA='evercraft.sim-to-real.reactive-native.rc05';
 export const RC05_BENCHMARK='evercraft.sim-to-real.reactive-holdout.rc05';
@@ -26,7 +27,7 @@ const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
 
 export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline'}={}){
   assert(Number.isSafeInteger(seed)&&seed>0,'rc05_invalid_seed');
-  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape','observed-motion-watch'].includes(controllerMode),'rc05_invalid_controller_mode');
+  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape','observed-motion-watch','observed-motion-latched'].includes(controllerMode),'rc05_invalid_controller_mode');
   assert(Number.isInteger(maxTicks)&&maxTicks>0&&maxTicks<=650,'rc05_invalid_max_ticks');
   const {course,world}=createMotionWorld(seed);
   const blackout=forcedBlackout??{start:course.params.sensorBlackoutStart,length:course.params.sensorBlackoutLength};
@@ -39,6 +40,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
   let contactTicks=0,sweepTicks=0,geofenceTicks=0,sensorMissTicks=0;
   let checkpoint=null;
   let motionHistory=[];
+  let latchState=initialHazardLatch(),modeledCanceledCommands=0,latchedHoldTicks=0;
   for(let tick=1;tick<=maxTicks;tick++){
     const robotBefore=previous.entities.find(e=>e.id==='rover');
     const obstaclesBefore=previous.entities.filter(e=>e.id!=='rover');
@@ -56,7 +58,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       z:p0.z+(rng()-.5)*course.params.sensorNoiseMeters-uncertainty*.08,
       heading:orientation+(rng()-.5)*.03};
     let motionTracks=[];
-    if(controllerMode==='observed-motion-watch'&&observed){
+    if((controllerMode==='observed-motion-watch'||controllerMode==='observed-motion-latched')&&observed){
       const tracking=updateMotionMemory({history:motionHistory,scan:lastScan,estimate,tick,dt:DT});
       motionHistory=tracking.history;
       motionTracks=tracking.tracks;
@@ -65,16 +67,24 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       controllerMode==='progress-shielded'?reactiveCommandShielded:
       controllerMode==='observed-lateral-escape'?reactiveCommandEscape:
       controllerMode==='observed-motion-watch'?reactiveCommandMotionWatch:reactiveCommand;
-    const decision=decide({estimate,goal:{x:course.goal.x,z:course.goal.y},
+    const commandArgs={estimate,goal:{x:course.goal.x,z:course.goal.y},
       bounds:course.bounds,scan:lastScan,scanAgeSec:age,velocity:v0,uncertainty,
       delaySeconds:course.params.commandDelaySteps*DT,braking:course.params.braking,
-      maxSpeed:.82,robotRadius:course.robotRadius,state:{preferredTurn},tracks:motionTracks});
+      maxSpeed:.82,robotRadius:course.robotRadius,state:{preferredTurn},tracks:motionTracks};
+    const latchResult=controllerMode==='observed-motion-latched'?
+      reactiveCommandLatched(commandArgs,{latch:latchState,pendingCommands:queue}):null;
+    const decision=latchResult?latchResult.decision:decide(commandArgs);
+    if(latchResult){latchState=latchResult.latch;
+      if(latchResult.diagnostic.phase==='hold')latchedHoldTicks++;}
     preferredTurn=decision.state.preferredTurn;
     if(decision.reason.endsWith('_hold')||decision.reason==='goal_hold'){
       holdRequests++;if(length(v0)>.02)holdsWhileMoving++;
     }
-    queue.push(decision.velocity);
-    const delayed=queue.length>course.params.commandDelaySteps?queue.shift():{x:0,z:0};
+    // Experimental, MODEL-ONLY pending-command cancellation. Never a physical e-stop.
+    if(latchResult?.cancelPending){modeledCanceledCommands+=queue.length;queue.length=0;}
+    else queue.push(decision.velocity);
+    const delayed=latchResult?.cancelPending?{x:0,z:0}:
+      queue.length>course.params.commandDelaySteps?queue.shift():{x:0,z:0};
     const delta={x:delayed.x-v0.x,z:delayed.z-v0.z};
     const dLength=length(delta);
     const braking=length(delayed)<length(v0);
@@ -111,6 +121,8 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       ...(decision.shield?{shieldDiagnostics:decision.shield}:{}),
       ...(decision.escape?{escapeDiagnostics:decision.escape}:{}),
       ...(decision.motionWatch?{motionWatchDiagnostics:decision.motionWatch}:{}),
+      ...(latchResult?{latchDiagnostics:{...latchResult.diagnostic,
+        active:latchState.active,modeledQueueCanceled:latchResult.cancelPending}}:{}),
       requestedSpeed:round(length(decision.velocity)),appliedSpeed:round(length(applied)),
       nativeContacts:contacts.map(c=>({aId:c.aId,bId:c.bId})),sweptContacts:sweeps,
       obstacles:next.entities.filter(e=>e.id!=='rover').map(e=>({id:e.id,...xy(e),radius:e.collider.radius}))});
@@ -135,7 +147,8 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
     noTeleportInputs:true,robotPhysicsCalibrated:false,
     seed,controllerMode,model:'native planar sphere with velocity commands, synthetic noisy anonymous proximity scans',
     worldDigest:engine.definitionDigest,finalSnapshotDigest:final.digest,
-    outcome:{status,ticks:final.tick,holdRequests,holdsWhileMoving,contactTicks,sweepTicks,geofenceTicks,sensorMissTicks},
+    outcome:{status,ticks:final.tick,holdRequests,holdsWhileMoving,contactTicks,sweepTicks,geofenceTicks,sensorMissTicks,
+      ...(controllerMode==='observed-motion-latched'?{modeledCanceledCommands,latchedHoldTicks}: {})},
     proof:{deterministicReplay:true,snapshotRestored:restored,allTicksRecorded:frames.length===final.tick},
     courseBounds:course.bounds,goal:course.goal,inputs,frames,
     limitations:['synthetic proximity scans are not physical lidar or robust localization',
