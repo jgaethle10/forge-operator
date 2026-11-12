@@ -536,7 +536,7 @@ export function renderWebsiteAuditPaymentStatus({state='pending',queued=false}={
     ?(isQueued?'Evercraft Payments verified the order and the audit job was queued. A queued job is not yet a completed report.':'Evercraft Payments verified the order. Report preparation and delivery still need independent confirmation.')
     :status==='synthetic'?'This is a synthetic verification, not a real customer purchase. No customer report has been authorized.'
     :status==='invalid'?'The return details did not match an authorized Website Audit order. We cannot confirm any payment or begin work.'
-    :'We do not yet have a matching provider-paid receipt. If you submitted payment, do not try to pay again until it is verified.';
+    :'We do not yet have a matching provider-paid receipt. If you submitted payment, Do not pay again until it is verified.';
   const badge=paid?'Provider payment confirmed':status==='synthetic'?'Test only':status==='invalid'?'Verification unavailable':'Awaiting payment evidence';
   const progress=(label,complete,note)=>'<div style="display:grid;grid-template-columns:32px 1fr;gap:13px;align-items:start;padding:14px 0;border-bottom:1px solid #284766"><div aria-hidden="true" style="width:28px;height:28px;display:grid;place-items:center;border-radius:50%;border:1px solid '+(complete?'#78d9bb':'#577690')+';background:'+(complete?'#164334':'#16283c')+';color:'+(complete?'#acf0d8':'#b7cde0')+';font-size:12px;font-weight:800">'+(complete?'✓':'·')+'</div><div><strong style="display:block;color:#f4f9ff">'+escapeHtml(label)+'</strong><span style="font-size:13px;color:#b7cde0;line-height:1.6">'+escapeHtml(note)+'</span></div></div>';
   return shell('Website Audit order status · Evercraft',[
