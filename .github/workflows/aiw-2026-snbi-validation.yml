@@ -1,0 +1,206 @@
+name: AIW 2026 SNBI validation
+on:
+  push:
+    branches:
+      - research/american-infrastructure-watch-v09
+    paths:
+      - 'research/infrastructure-watch/**'
+      - '.github/workflows/aiw-2026-snbi-validation.yml'
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/**'
+      - '.github/workflows/aiw-2026-snbi-validation.yml'
+permissions:
+  contents: read
+jobs:
+  verify-importer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile importer
+        run: python3 -m py_compile research/infrastructure-watch/scripts/fhwa_2026.py
+      - name: Run offline importer checks
+        run: python3 -m unittest discover -s research/infrastructure-watch/tests -v
+  live-2026-small-state-probe:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Diagnose Virgin Islands published-count mismatch (non-asserting)
+        run: |
+          python3 - <<'PY'
+          import importlib.util, json, os
+          from pathlib import Path
+          mod=Path('research/infrastructure-watch/scripts/fhwa_2026.py')
+          spec=importlib.util.spec_from_file_location('fhwa_2026',mod)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          url=m.PREFIX+'VI26.json'
+          raw=json.loads(m.official_get(url))
+          diagnostic={'state':'U.S. Virgin Islands','published':23,
+                      'observed':len(raw) if isinstance(raw,list) else None,
+                      'payload_type':type(raw).__name__,'source_url':url,
+                      'verified':False,'warning':'Diagnostic only; mismatch blocks verified import'}
+          target=Path(os.environ['RUNNER_TEMP'])/'aiw-vi-diagnostic.json'
+          target.write_text(json.dumps(diagnostic,indent=2)+'\n')
+          print(json.dumps(diagnostic,indent=2))
+          PY
+      - name: Import a small real FHWA state dataset
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py sync \
+            --state 'District of Columbia' \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-data"
+      - name: Build isolated partial index
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py build \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-data" \
+            --db "$RUNNER_TEMP/aiw-2026-data/bridges2026.sqlite"
+      - name: Validate real state receipt and partial coverage
+        run: |
+          python3 - <<'PY'
+          import json,os,sqlite3
+          from pathlib import Path
+          d=Path(os.environ['RUNNER_TEMP'])/'aiw-2026-data'
+          rec=json.loads((d/'state_11_2026.receipt.json').read_text())
+          assert rec['expected']==rec['indexed']==261 and rec['verified'] is True
+          with sqlite3.connect(d/'bridges2026.sqlite') as con:
+              count=con.execute('SELECT COUNT(*) FROM bridges').fetchone()[0]
+              meta=dict(con.execute('SELECT k,v FROM meta'))
+          assert count==261
+          assert json.loads(meta['partial']) is True
+          assert json.loads(meta['complete_national_import']) is False
+          assert json.loads(meta['states_verified'])==1
+          print(json.dumps({'verified_state':rec['state'],'records':count,'partial':True,'download_sha256':rec['raw_sha256'],'source':rec['source_url']},indent=2))
+          PY
+      - name: Retain inspection receipts and partial index for reviewer
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-dc-verified-partial-index
+          path: |
+            ${{ runner.temp }}/aiw-2026-data/state_11_2026.receipt.json
+            ${{ runner.temp }}/aiw-2026-data/bridges2026.sqlite
+            ${{ runner.temp }}/aiw-vi-diagnostic.json
+          retention-days: 7
+  live-2026-washington-probe:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Import all actual Washington 2026 SNBI bridge records
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py sync \
+            --state Washington \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-wa"
+      - name: Build isolated, explicitly partial SQLite index
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py build \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-2026-wa" \
+            --db "$RUNNER_TEMP/aiw-2026-wa/bridges2026.sqlite"
+      - name: Audit FHWA state bridge count, condition and coordinate quality
+        run: |
+          python3 - <<'PY'
+          import json,os,sqlite3
+          from collections import Counter
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'aiw-2026-wa'
+          receipt=json.loads((root/'state_53_2026.receipt.json').read_text())
+          assert receipt['state']=='Washington'
+          assert receipt['expected']==receipt['indexed']==8619 and receipt['verified'] is True
+          with sqlite3.connect(root/'bridges2026.sqlite') as db:
+              db.row_factory=sqlite3.Row
+              records=db.execute('SELECT state,latitude,longitude,condition FROM bridges').fetchall()
+              meta=dict(db.execute('SELECT k,v FROM meta'))
+          assert len(records)==8619
+          assert json.loads(meta['partial']) is True
+          assert json.loads(meta['states_verified'])==1
+          ratings=Counter(r['condition'] for r in records)
+          inside=lambda r:(r['latitude'] is not None and r['longitude'] is not None
+                            and 45.5<=r['latitude']<=49.1
+                            and -125<=r['longitude']<=-116.8)
+          valid=sum(inside(r) for r in records)
+          around_yakima=sum(inside(r) and 46.3<=r['latitude']<=47.2
+                       and -121.1<=r['longitude']<=-120.15 for r in records)
+          audited={
+            'state':'Washington','year':2026,'bridge_records':len(records),
+            'published_state_count':8619,
+            'source_raw_sha256':receipt['raw_sha256'],
+            'source_url':receipt['source_url'],
+            'conditions':dict(ratings),
+            'fhwa_condition_reference':{'G':4298,'F':3918,'P':403},
+            'condition_counts_match_fhwa':all(ratings.get(k,0)==v for k,v in [('G',4298),('F',3918),('P',403)]),
+            'plottable_in_broad_WA_bounds':valid,'not_plottable':len(records)-valid,
+            'yakima_area_box_records_not_county':around_yakima,
+            'import_coverage':'one_state_verified_nation_incomplete',
+            'safety_note':'Historical bridge condition, not current danger or closure.'
+          }
+          (root/'wa_2026_audit.json').write_text(json.dumps(audited,indent=2)+'\n')
+          print(json.dumps(audited,indent=2))
+          if ratings.get('U',0): print('NOTICE: unknown condition codes are preserved, not interpreted as danger')
+          PY
+      - name: Retain Washington records and receipt for review
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-wa-verified-records
+          path: |
+            ${{ runner.temp }}/aiw-2026-wa/state_53_2026.ndjson
+            ${{ runner.temp }}/aiw-2026-wa/state_53_2026.receipt.json
+            ${{ runner.temp }}/aiw-2026-wa/bridges2026.sqlite
+            ${{ runner.temp }}/aiw-2026-wa/wa_2026_audit.json
+          retention-days: 7
+  wa-county-provenance-audit:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Extract true BL02 counties from pinned 2026 Washington data
+        run: |
+          python3 research/infrastructure-watch/scripts/wa_2026_county.py \
+            --out "$RUNNER_TEMP/aiw-wa-counties"
+      - name: Verify county totals without assuming coordinates equal counties
+        run: |
+          python3 - <<'PY'
+          import csv,json,os
+          from pathlib import Path
+          d=Path(os.environ['RUNNER_TEMP'])/'aiw-wa-counties'
+          a=json.loads((d/'wa_2026_county_audit.json').read_text())
+          county=list(csv.DictReader((d/'wa_2026_county_summary.csv').open()))
+          bridge=list(csv.DictReader((d/'wa_2026_county_bridges.csv').open()))
+          assert len(bridge)==a['bridge_records']==8619
+          assert sum(int(x['total']) for x in county)==8619
+          assert len([x for x in county if x['county_code']])==39
+          assert a['source_sha256']=='c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79'
+          yakima=next(x for x in county if x['county_code']=='077')
+          assert int(yakima['total'])>=int(yakima['poor'])>0
+          print(json.dumps({'county_field':'BL02','assigned':a['assigned'],'unassigned':a['unassigned'],
+            'yakima_county':yakima,'total':len(bridge),'source_sha256':a['source_sha256']},indent=2))
+          PY
+      - name: Preserve source-backed county files for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-wa-counties-verified
+          path: |
+            ${{ runner.temp }}/aiw-wa-counties/wa_2026_county_audit.json
+            ${{ runner.temp }}/aiw-wa-counties/wa_2026_county_summary.csv
+            ${{ runner.temp }}/aiw-wa-counties/wa_2026_county_bridges.csv
+          retention-days: 7
