@@ -6,7 +6,7 @@
   "merchant": "Evercraft LLC",
   "category": "contractor_documentation_service",
   "commercial_state": "founding_pilot_inquiry_only",
-  "checkout_state": "not_configured",
+  "checkout_state": "exact_owned_offer_registered_checkout_held",
   "proposed_price_usd": 49,
   "currency": "USD",
   "billing": "one_time",
@@ -43,7 +43,14 @@
     "payment_authority": "Evercraft Payments",
     "provider_boundary": "Raven Nexus",
     "settlement_adapter": "Stripe (not a customer-facing order system)",
-    "direct_stripe_link_allowed": false
+    "direct_stripe_link_allowed": false,
+    "canonical_offer_key": "evercraft.closeout.human_review_packet_49.v1",
+    "canonical_offer_slug": "closeout-pilot",
+    "canonical_amount_cents": 4900,
+    "source_registration_verified": true,
+    "native_order_enabled": false,
+    "owned_offer_page": "https://fabric.systemiacommandcenters.com/offers/closeout-pilot",
+    "owned_offer_page_live_verified": false
   },
   "buyer_action": {
     "mode": "explicit_email_inquiry",
@@ -57,7 +64,10 @@
     "live_deployment_verified": false,
     "external_buyer_validated": false,
     "paid_customer_verified": false,
-    "revenue_verified": false
+    "revenue_verified": false,
+    "github_pages_build_and_deploy_job_succeeded": true,
+    "github_pages_workflow_run": "https://github.com/jgaethle10/forge-operator/actions/runs/42955275153",
+    "independent_closeout_page_canary": "pending"
   },
   "discovery": {
     "human_url": "https://jgaethle10.github.io/forge-operator/closeout/",
