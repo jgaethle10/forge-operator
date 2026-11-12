@@ -76,6 +76,8 @@ jobs:
         run: |
           bash -n scripts/install-evercraft-home-edge.sh
           bash -n scripts/update-fabric-owned-edge.sh
+      - name: Prove Home release updates preserve sealed private Clip settings
+        run: node --test systemia/evercraft-home/home-release-env.test.mjs
 
       - name: Prove Evercraft Compute resident lifecycle
         run: node systemia/compute/evercraft-home-runtime.proof.mjs
