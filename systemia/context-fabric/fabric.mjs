@@ -430,6 +430,7 @@ export class EvercraftContextFabric {
         evidence_ref: requiredString(input?.evidence_ref, 'evidence_ref'),
         authority_grant_id: authorization.grant_id,
         retracted_at: retractedAt,
+        created_at: new Date().toISOString(),
       });
 
       this.retractions.set(recordId, retraction);
@@ -619,6 +620,59 @@ export class EvercraftContextFabric {
         lexical_retrieval_is_not_semantic_understanding: true,
       },
     });
+  }
+
+  /**
+   * Read-only internal Timewalk adapter. Fetch authorization time from the
+   * server clock; never accept an as-of authorization timestamp from the caller.
+   * Keeps unreadable records and their counts outside the returned snapshot.
+   * A hard cap fails closed rather than returning a misleading partial history.
+   */
+  authorizedTimewalkSnapshot({
+    actor_ref = null, namespaces = null, entity_ref = null, predicate = null,
+  } = {}) {
+    this.#reload();
+    const authAt = new Date().toISOString();
+    const actorRef = optionalString(actor_ref);
+    const nsFilter = namespaces == null ? null : new Set(
+      (Array.isArray(namespaces) ? namespaces : [namespaces]).map(namespaceValue)
+    );
+    const entityRef = optionalString(entity_ref);
+    const pred = optionalString(predicate);
+    const maxAuthorizedRecords = 5000;
+    const permissionCache = new Map();
+    const records = [];
+    for (const record of this.records.values()) {
+      if (nsFilter && !nsFilter.has(record.namespace)) continue;
+      if (entityRef !== null && record.entity_ref !== entityRef) continue;
+      if (pred !== null && record.predicate !== pred) continue;
+      if (record.visibility !== 'public') {
+        if (!actorRef) continue;
+        const scope = record.required_scope;
+        // Resource-limited grants must not become namespace-wide reads.
+        // Entity-scoped facts use their entity; unscoped facts use their record ID.
+        const resourceRef = record.entity_ref || 'context-record:' + record.record_id;
+        const cacheKey = JSON.stringify([scope, resourceRef]);
+        if (!permissionCache.has(cacheKey)) {
+          const result = this.passport.authorize({
+            subject_ref: actorRef, product: 'evercraft-context',
+            scope, resource_ref: resourceRef, at: authAt,
+          });
+          permissionCache.set(cacheKey, result.decision === 'allow');
+        }
+        if (!permissionCache.get(cacheKey)) continue;
+      }
+      records.push({ ...record, retraction: this.retractions.get(record.record_id) || null });
+      if (records.length > maxAuthorizedRecords) {
+        throw new Error('context_authorized_timewalk_snapshot_limit_exceeded');
+      }
+    }
+    return {
+      schema: 'evercraft.context.authorized-timewalk-snapshot.v1',
+      authorized_at: authAt,
+      authority_filter_applied: true,
+      records,
+    };
   }
 
   getRecord(recordId, { actor_ref = null, at = new Date().toISOString(), include_history = false } = {}) {
