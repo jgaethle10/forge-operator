@@ -88,11 +88,12 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert(environment.disclosure.includes('RECORDED EVENTS'),'Motion disclosure must stay visible and truthful');
   assert(environment.idle,'Unassigned characters must not simulate work');
   await js(send,"document.getElementById('office-scene').scrollIntoView({block:'center'});true");
-  const themed=await js(send,"(()=>{const u=window.WorkSaban3D;const before=JSON.stringify(u.getState());let n=0;while(u.getCostumes().pack!=='dragons'&&n++<5)u.setCrewCostumes();const dragons=[...document.querySelectorAll('.spatial-agent')];return {pack:u.getCostumes().pack,count:dragons.filter(x=>x.dataset.skin==='dragons').length,icons:dragons.filter(x=>x.querySelector('.spatial-costume-glyph')?.textContent).length,unchanged:before===JSON.stringify(u.getState()),controls:document.querySelectorAll('.spatial-costume-choice').length,locallySaved:!!window.localStorage.getItem('evercraft.work-saban.costumes.v1')};})()");
+  const themed=await js(send,"(()=>{const u=window.WorkSaban3D;const before=JSON.stringify(u.getState());let n=0;while(u.getCostumes().pack!=='dragons'&&n++<5)u.setCrewCostumes();const dragons=[...document.querySelectorAll('.spatial-agent')];return {pack:u.getCostumes().pack,count:dragons.filter(x=>x.dataset.skin==='dragons').length,icons:dragons.filter(x=>x.querySelector('.spatial-costume-glyph')?.textContent).length,unchanged:before===JSON.stringify(u.getState()),controls:document.querySelectorAll('.spatial-costume-choice').length,clearStage:document.getElementById('office-costume-toolbar').getBoundingClientRect().bottom<=document.getElementById('office-scene').getBoundingClientRect().top+2,locallySaved:!!window.localStorage.getItem('evercraft.work-saban.costumes.v1')};})()");
   assert.equal(themed.pack,'dragons','Dragon costume selector failed to cycle');
   assert.equal(themed.count,6,'All six original figures should take the dragon skin');
   assert.equal(themed.icons,6,'Every dragon should have a visible role glyph');
   assert.equal(themed.controls,2,'Both whole-crew and selected-agent controls must exist');
+  assert.equal(themed.clearStage,true,'Appearance chooser must be above scene and not cover 3D agents');
   assert.equal(themed.unchanged,true,'Appearance cannot change recorded worker execution');
   assert.equal(themed.locallySaved,true,'Appearance choice should persist privately');
   await sleep(350);
