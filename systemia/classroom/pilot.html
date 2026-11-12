@@ -78,11 +78,11 @@ h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
 <button type="button" class="world calm" data-room="calm" aria-pressed="false"><span class="symbol">♡ 🌿</span><strong>Calm Meadow</strong><small>Focus and feelings</small></button>
 </div></section>
 <section class="chat" id="chat" hidden aria-label="Tutor conversation">
-<div class="chattop"><div><strong id="room-title">Math Cave</strong><small>Actual local model conversation · no account history</small></div><button type="button" id="new-chat" class="secondary">New conversation</button></div>
+<div class="chattop"><div><strong id="room-title">Math Cave</strong><small>Actual local model conversation · no account history</small></div><div><button type="button" id="new-chat" class="secondary">New conversation</button> <button type="button" id="erase-all" class="secondary">Erase all chats</button></div></div>
 <div class="chatlog" id="chatlog" role="log" aria-live="polite" aria-label="Conversation"><div class="bubble guide">Tell me what you're curious about. There are no wrong questions.</div></div>
 <div class="suggestions" id="suggestions"><button type="button" data-sample="I don't have a problem, I just want to learn.">Teach me something!</button><button type="button" data-sample="Can you tell me an original mystery and let me make choices?">Let's tell a story</button><button type="button" data-sample="Does this really work?">Does this really work?</button></div>
 <div class="form"><label for="message">What are you thinking about?</label><textarea id="message" maxlength="700" placeholder="Ask anything about this world. Try a follow-up question!" disabled></textarea>
-<div class="inputactions"><label class="homework"><input type="checkbox" id="homework" checked> This is active schoolwork. Guide me, don't reveal answers.</label><button class="primary" id="send" type="button" disabled>Send to tutor</button></div><div id="chat-status" role="status" class="disclaimer"></div></div>
+<div class="inputactions"><label class="homework"><input type="checkbox" id="homework"> This is active schoolwork (safe study steps only, no AI answer).</label><button class="primary" id="send" type="button" disabled>Send to tutor</button></div><div id="chat-status" role="status" class="disclaimer"></div></div>
 </section>
 <p class="disclaimer">This is a private adult-supervised engineering pilot, not the original production release and not a certified child-safe tutor. It uses a local AI model whose output can still make mistakes. Nothing you type is saved to disk or sent to third-party inference by this application. Room sessions expire after 30 minutes or when the process restarts. Please don't enter personal or sensitive information. The original 18 fixed practice missions remain available separately.</p>
 </main>
@@ -108,7 +108,7 @@ h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
   $('chatlog').scrollTop=$('chatlog').scrollHeight;
  }
  function state(msg){$('connection').textContent=msg}
- function ready(){const yes=Boolean(access&&current&&!busy);$('message').disabled=!yes;$('send').disabled=!yes;$('new-chat').disabled=!yes;$('worlds').querySelectorAll('button').forEach(b=>b.disabled=busy)}
+ function ready(){const yes=Boolean(access&&current&&!busy);$('message').disabled=!yes;$('send').disabled=!yes;$('new-chat').disabled=!yes;$('erase-all').disabled=!Boolean(access)||busy;$('worlds').querySelectorAll('button').forEach(b=>b.disabled=busy)}
  async function api(endpoint,data,token=access){
   const response=await fetch('/api/classroom/'+endpoint,{
    method:data?'POST':'GET',
@@ -152,6 +152,19 @@ h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
  }
  $('worlds').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>void select(b.dataset.room)));
  $('suggestions').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{$('message').value=b.dataset.sample;$('message').focus()}));
+ $('erase-all').addEventListener('click',async()=>{
+  if(!access||busy)return;
+  if(!confirm('Erase every conversation from this local pilot? This cannot be undone.'))return;
+  busy=true;ready();
+  try{
+   const result=await api('reset',{});
+   if(result.all_volatile_sessions_erased!==true)throw Error('erase_unconfirmed');
+   sessions.clear();logs.clear();current='';$('chat').hidden=true;
+   $('chatlog').replaceChildren();$('message').value='';$('homework').checked=false;
+   state('All conversations erased from the local pilot. Choose a room to start again.');
+  }catch{state('Could not verify server-side deletion. Please stop the pilot service to clear volatile memory.')}
+  finally{busy=false;ready()}
+ });
  $('new-chat').addEventListener('click',async()=>{
   if(!current||!access||busy)return;
   busy=true;ready();
@@ -175,7 +188,9 @@ h2.worldtitle{font-size:1.36rem;margin:0 0 14px;letter-spacing:-.03em}
    const r=await api('message',{session_id:session,message:text,homework:$('homework').checked});
    if(current===target)add('guide',r.reply);
    else{if(!logs.has(target))logs.set(target,[]);logs.get(target).push({role:'guide',text:r.reply})}
-   $('chat-status').textContent='Local model response. No mastery or XP awarded.';
+   $('chat-status').textContent=r.source==='deterministic_homework_scaffold'
+    ?'Active schoolwork: transparent study steps only. No AI model called and no mastery or XP awarded.'
+    :'Verified local model response. No mastery or XP awarded.';
   }catch(e){
    if(current===target)add('system','No verified answer available: '+String(e.message||'unavailable')+'. Nothing was submitted as mastered.');
    $('chat-status').textContent='Local model or safety gate held the response. Ask a trusted adult if you need help.';
