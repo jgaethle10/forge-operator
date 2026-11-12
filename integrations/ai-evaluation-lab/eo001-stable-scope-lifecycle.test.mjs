@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   parseStableProcIdentity,compareStableProcIdentity,
-  verifyScopeLifecyclePacket
+  verifySwapPolicyMetadata,verifyScopeLifecyclePacket
 } from './eo001-stable-scope-lifecycle.mjs';
 
 const boot='12345678-1234-4123-8123-123456789abc';
@@ -22,7 +22,9 @@ function fixture(){
     pre:{
       boot_id:boot,monotonic_ms:1000,
       cgroup:{path:cg,device:'31',inode:'987654321',
-        events:'populated 1\nfrozen 0\n',process_ids:[worker,desc]},
+        events:'populated 1\nfrozen 0\n',process_ids:[worker,desc],
+        swap:{control_supported:true,requested_policy:'swap-disabled',
+          requested_value:'0',observed_value:'0'}},
       worker:{pid:worker,cgroup:'0::'+cg+'\n',
         stat:stats(worker,'parent ) weird',1,worker,worker,'9007199254740993')},
       detached:{pid:desc,cgroup:'0::'+cg+'\n',
@@ -54,13 +56,15 @@ function rejectAt(mutator,re){
 test('pure packet accepts internally consistent fixture but NEVER claims physical proof',()=>{
   const result=verifyScopeLifecyclePacket({packet:fixture()});
   assert.equal(result.state,'OFFLINE_LIFECYCLE_METADATA_CONSISTENT_REVIEW_REQUIRED');
-  for(const flag of ['exact_scope_identity_consistent',
+  for(const flag of ['synthetic_swap_policy_metadata_consistent',
+    'exact_scope_identity_consistent',
     'boot_identity_consistent','prestop_live_detached_descendant_consistent',
     'same_cgroup_inode_consistent','poststop_recursive_populated_zero_consistent',
     'poststop_subtree_metadata_empty','bounded_cleanup_metadata_consistent']){
     assert.equal(result[flag],true);
   }
-  for(const flag of ['observer_provenance_authenticated',
+  for(const flag of ['swap_kernel_readback_independently_verified',
+    'observer_provenance_authenticated',
     'field_observer_executed_by_this_module',
     'actual_process_death_independently_proven',
     'race_free_process_signaling_implemented','model_inference_executed',
@@ -198,4 +202,22 @@ test('forged scope IDs, paths and absent collector metadata block positive label
     /COLLECTOR_PROVENANCE_METADATA_MISSING/);
   rejectAt(p=>{p.collector.implementation_kind='worker-self-report';},
     /COLLECTOR_PROVENANCE_METADATA_MISSING/);
+});
+
+test('swap capability is an explicit negative gate, not inferred from memory.max',()=>{
+  const valid=verifySwapPolicyMetadata({
+    control_supported:true,requested_policy:'swap-disabled',
+    requested_value:'0',observed_value:'0'
+  });
+  assert.equal(valid.synthetic_swap_policy_metadata_consistent,true);
+  assert.equal(valid.swap_kernel_readback_independently_verified,false);
+  assert.equal(valid.model_resource_budget_approved,false);
+  rejectAt(p=>{delete p.pre.cgroup.swap;},/SWAP_POLICY_METADATA_MISSING/);
+  rejectAt(p=>{p.pre.cgroup.swap.control_supported=false;},
+    /SWAP_CONTROL_UNSUPPORTED_REVIEW_REQUIRED/);
+  rejectAt(p=>{p.pre.cgroup.swap.observed_value=null;},/SWAP_READBACK_MISSING/);
+  rejectAt(p=>{p.pre.cgroup.swap.observed_value='max';},/SWAP_POLICY_MISMATCH/);
+  rejectAt(p=>{p.pre.cgroup.swap.observed_value='4096';},/SWAP_POLICY_MISMATCH/);
+  rejectAt(p=>{p.pre.cgroup.swap.requested_value='max';},
+    /SWAP_POLICY_METADATA_MISSING/);
 });
