@@ -150,3 +150,27 @@ The archivist describes the final Yakima volume as **apparently corrected to 196
 - `tests/timewalk-map-sheet-anchors.test.mjs` and updated acquisition tests verify the progression of archival evidence but leave physical 1960 source geometry untrusted.
 
 **Outstanding for main Worlds:** visually inspect LOC 1952 originals, confirm individual 1960 correction dates or obtain licensed 1960 physical-source access, review surveyed control points and independent 1960 shape changes, then supply reviewed renderable geometry as a separate authorized dataset. PR #1780 is still a draft; issue #1938 tracks archive reply/rights and issue #1794 the canonical-engine integration. This research **is not** a launch of a 1960 3D city.
+
+## Nov 11: CSUN clarifies 1952–1960 differences, so nearby buildings CANNOT be copied forward
+
+In a second reply on **November 11, 2026**, the CSUN Sanborn Collection archivist clarified:
+- The Yakima volume apparently representing 1960 received **six correction rounds**.
+- **Both** sheet #6 and sheet #15 have pasted corrections.
+- The archive does **not record dates of individual pasteovers**. No future engineer should invent per-building correction dates or demand that archive staff reconstruct timestamps they cannot recover.
+- The **A.E. Larson Building** and **Capitol Theatre** appear identical between the public LOC 1952 baseline and CSUN's 1960-corrected volume, according to the archivist.
+- **Other buildings in the immediate vicinity changed** between editions. **The identities, precise changes, individual correction timing and resulting 1960 footprints are not yet known to Evercraft.** Reusing all 1952 geometry as an accurate 1960 world would misrepresent the historical record.
+- The archivist was **unable to determine** permissions for publication/commercial derivative use of CSUN's distinct physical original. Do not turn the LOC's online rights policy into permission for CSUN scans.
+
+The original 1960 atlas images have **not** been independently inspected or downloaded; the LOC 1952 viewer links are known but the image retrieval interface did not provide accessible sheet pixels at the time of this update. No measured polygons, geolocation, 1960 original-source scans or copyright licenses are acquired.
+
+**New software and tests:**
+- `csun-1960-acquisition.v1.json` records the correction rounds, named landmark comparison scope, surrounding known changes and unrecorded correction-date granularity as an archive reply, with rights and original inspection false.
+- `archive-acquisition.mjs` validates those facts and updates `acquisitionReadiness()` to stop asking for impossible pasteover timestamps and to demand **per-structure change review**.
+- `map-change-review.mjs` exports `makeMapChangeReview()` and `classify1952MapFeatureFor1960()`. Both named landmarks receive **archivist-reported apparent continuity only**. **Every 1952 footprint, including those landmarks, is barred from automatic promotion to 1960 production geometry.** All other nearby structures are `surrounding_structure_1960_unresolved` pending independent evidence.
+- `map-sheet-anchors.mjs` now explicitly scopes matching claims to the two landmarks and sets `blanket1952NeighborhoodCarryForwardAllowed:false`.
+- `walk-topology.mjs` attaches `neighborhoodChangeReview` in the **data-only canonical Worlds handoff** and exposes new warnings. It creates no scene renderer, physics, real navigation, automatic geometry or property-specific historical assertions.
+- `tests/timewalk-map-change-review.test.mjs` adds eight cases guarding false 1960 geography and dates. Run `node --test tests/timewalk-*.test.mjs` and confirm the latest branch's GitHub Actions result before asserting success.
+
+**Next realistic feature unlock:** obtain or examine the actual 1960-corrected sheet #6 and #15 images under proper access/permissions; review the public LOC 1952 counterparts; prepare a **per-building change ledger** around the named landmarks. Use 1930 original architectural designs and dated photos to separate facade appearance from plan footprint evidence. Only after human/source review may canonical Worlds admit measured 1960 geometry.
+
+Research follow-ups remain in #1938 (CSUN 1960 atlas) and #1972 (Yakima Valley Museum original plans); integration issue #1794 tracks main engine provenance ingestion.
