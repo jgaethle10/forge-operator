@@ -134,6 +134,15 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-step strong{display:block;margin-bottom:4px}
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
+/* A no-charge, consented audit request: this is not Stripe checkout. */
+.audit-intake-form{display:grid;gap:13px;margin-top:22px}
+.audit-intake-form label{font-weight:680;color:#eaf2ff;font-size:14px}
+.audit-intake-form input:not([type="checkbox"]),.audit-intake-form textarea{display:block;margin-top:6px;width:100%;min-width:0;background:#071426;color:#f1f8ff;border:1px solid #477197;border-radius:10px;padding:12px 14px;font:inherit}
+.audit-intake-form input:focus,.audit-intake-form textarea:focus{outline:2px solid #69baf1;outline-offset:2px}
+.audit-intake-form textarea{min-height:92px;resize:vertical}
+.audit-intake-check{display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.audit-intake-check input{width:18px;height:18px;flex:none;margin-top:3px}
+.audit-intake-submit{width:100%;padding:14px 17px;margin:5px 0 0}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
@@ -428,7 +437,25 @@ function renderWebsiteAuditPreview(){
   ].join('');
 }
 
-export function renderOfferPage(item,{checkoutConfigured=true}={}){
+
+function renderHeldWebsiteAuditInquiryForm(){
+  return [
+    '<section class="offer-panel" aria-label="Request a $49 Website Audit">',
+    '<h2>Request your Quick Win Audit</h2>',
+    '<p>Tell us which public website you want reviewed. Evercraft will confirm the scope, availability, and exact $49 payment option by email before asking you to pay.</p>',
+    '<form class="audit-intake-form" method="post" action="/api/website-audit/inquiry">',
+    '<label for="audit-inquiry-email">Your email<input id="audit-inquiry-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@business.com" required></label>',
+    '<label for="audit-inquiry-url">Public website to review<input id="audit-inquiry-url" name="website_url" type="url" inputmode="url" maxlength="1000" placeholder="https://yourbusiness.com" required></label>',
+    '<label for="audit-inquiry-goal">What would you like the site to do better? (optional)<textarea id="audit-inquiry-goal" name="goal" maxlength="600" placeholder="More calls, bookings, purchases, or clearer contact details"></textarea></label>',
+    '<div hidden aria-hidden="true"><label>Leave blank<input name="company_website_honey" tabindex="-1" autocomplete="off"></label></div>',
+    '<label class="audit-intake-check"><input type="checkbox" name="consent" value="yes" required><span>I agree that Evercraft may store this request privately and contact me about this specific audit. Read the <a href="/privacy">privacy policy</a>.</span></label>',
+    '<button class="btn primary audit-intake-submit" type="submit">Request audit review</button>',
+    '<p class="checkout-note">Submitting is free. No charge, payment order, or automatic audit starts here. The $49 audit is offered only after Evercraft confirms the next step.</p>',
+    '</form></section>'
+  ].join('');
+}
+
+export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvailable=false}={}){
   const copy=OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
@@ -450,7 +477,9 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
-    ...(checkoutHeld ? [
+    ...(checkoutHeld ? (copy.slug==='website-audit'&&auditInquiryAvailable ? [
+      renderHeldWebsiteAuditInquiryForm(),
+    ] : [
       '<section class="offer-panel" aria-label="Assisted purchase request">',
       copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
       copy.slug==='signal-brief'
@@ -461,7 +490,7 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
         :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
       '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
       '</section>',
-    ] : [
+    ]) : [
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
