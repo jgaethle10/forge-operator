@@ -56,6 +56,11 @@ details{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 summary{cursor:pointer;font-size:14px;font-weight:800}
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f3f2;border-radius:8px;padding:15px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
 #fallback textarea{width:100%;min-height:160px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;border:1px solid var(--line);border-radius:8px;padding:12px}
+.pilot-next{margin:24px 0 6px;padding:19px 21px;border:1px solid #eadbdf;border-radius:12px;background:#fff}
+.pilot-next h3{font-size:19px;letter-spacing:-.035em;margin:0 0 5px}
+.pilot-next p{font-size:13px;color:var(--sub);margin:0 0 15px}
+.pilot-next .pilot-cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 16px;border-radius:8px;background:var(--red);color:white;text-decoration:none;font-size:13px;font-weight:800}
+.pilot-next .pilot-cta:hover{background:#7e1026}
 .share-tool{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:27px 0 18px;padding:21px;border:1px solid var(--line);border-radius:13px;background:#fbf8f9}
 .share-tool strong{display:block;font-size:15px}
 .share-tool p{margin:5px 0 0;color:var(--sub);font-size:13px}
@@ -89,6 +94,12 @@ footer{max-width:840px;margin:10px auto 0;border-top:1px solid var(--line);paddi
 <div class="actions"><button type="button" id="download" class="secondary">Save report</button><button type="button" id="copy" class="secondary">Copy report</button></div>
 <p id="status" role="status" aria-live="polite" hidden></p>
 <div id="fallback" hidden><p class="note">If the browser blocks copying, select the report text below and copy manually.</p><textarea id="copy-text" readonly aria-label="Report text for manual copying"></textarea></div>
+<section class="pilot-next" aria-label="Ask about a customized Work Saban reporting pilot">
+<h3>Need this kind of report every month?</h3>
+<p>Tell us which reporting task you repeat. We can review a customized pilot by email, with scope and pricing agreed in writing before any work. No calls required.</p>
+<a class="pilot-cta" id="report-pilot-inquiry" href="mailto:jessegaethle10@gmail.com?subject=Work%20Saban%20private%20reporting%20pilot%20inquiry&amp;body=I%20used%20the%20free%20browser-based%20Work%20Saban%20reporter%20and%20would%20like%20to%20discuss%20a%20customized%20or%20recurring%20monthly%20reporting%20pilot.%0A%0AMy%20role%20or%20business%20type%3A%0AWhat%20I%20want%20the%20report%20to%20answer%3A%0AHow%20often%20I%20need%20the%20report%3A%0AThe%20part%20of%20reporting%20that%20takes%20too%20much%20time%3A%0A%0APlease%20reply%20in%20writing.%20I%20understand%20that%20this%20is%20only%20an%20inquiry%2C%20not%20an%20order%20or%20approved%20price.%0ASource%3A%20work-saban-report-result%0A%0AI%20will%20not%20include%20confidential%20CSV%20files%20or%20customer%20information%20in%20this%20initial%20inquiry.">Ask about a reporting pilot</a>
+<p class="note">Opens your email app only if you choose. Work Saban never attaches or sends your CSV, report, figures, or proof hashes. No payment or service is started.</p>
+</section>
 <details><summary>How were my numbers checked?</summary>
 <p class="note">A separate arithmetic pass compared every monthly total, grand total, and latest-month change against the selected source rows. Hashes identify the source and report bytes; they are not signed attestations or an external audit.</p>
 <pre id="proof"></pre>

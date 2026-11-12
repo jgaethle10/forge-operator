@@ -8,6 +8,7 @@ on:
       - 'public/work-saban/demo/index.html'
       - 'tests/work-saban-customer-csv.test.mjs'
       - 'tests/work-saban-customer-csv-flow.test.mjs'
+      - 'tests/work-saban-pilot-conversion.test.mjs'
       - '.github/workflows/work-saban-customer-csv.yml'
   push:
     branches: [main]
@@ -33,4 +34,4 @@ jobs:
         run: |
           node --check public/work-saban/report/engine.mjs
           node --check public/work-saban/report/report.js
-          node --test tests/work-saban-customer-csv.test.mjs tests/work-saban-customer-csv-flow.test.mjs
+          node --test tests/work-saban-customer-csv.test.mjs tests/work-saban-customer-csv-flow.test.mjs tests/work-saban-pilot-conversion.test.mjs

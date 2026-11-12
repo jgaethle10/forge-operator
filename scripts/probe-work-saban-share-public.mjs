@@ -12,7 +12,7 @@ if(root.protocol!=='https:'||root.hostname!=='jgaethle10.github.io'||
 
 const pages=[
   {key:'owned_try_hub',route:'try/',markers:[
-    '03 / Work Saban','Make a free sales report',
+    '03 / Work Saban','Make a free sales report','Need a customized report? Ask about a private pilot',
     '../work-saban/report/?utm_source=evercraft_try',
     'Sample data only'
   ]},
@@ -24,6 +24,8 @@ const pages=[
     'Your numbers.','id="csv-file"','id="consent"',
     'id="share-tool"','id="share-feedback"',
     'Nothing will be uploaded to Evercraft.','work-saban-social.png',
+    'id="report-pilot-inquiry"','Need this kind of report every month?',
+    'No payment or service is started.',
     "connect-src 'none'",'./report.js'
   ]},
   {key:'local_report_script',route:'work-saban/report/report.js',markers:[
