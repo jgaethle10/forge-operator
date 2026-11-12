@@ -84,7 +84,7 @@ select{width:100%;background:#213b34;border:1px solid #547367;border-radius:9px;
         <span class="demo-tag" id="scene-flag">Personal world</span>
       </div>
       <div class="scene" id="scene" aria-label="Interactive campus map. Select a lot to build." role="region"></div>
-      <div class="scene-bottom">
+      <div class="scene-bottom"><a href="./campus-walk.html" id="walk-link" style="display:inline-flex;align-items:center;gap:8px;border:1px solid #e4c796;background:#e6c48d;color:#26362f;text-decoration:none;padding:10px 14px;border-radius:9px;font-size:12px;font-weight:850">Enter my 3D campus →</a>
         <div class="centered" role="group" aria-label="Pan world camera">
           <button type="button" class="nav" data-pan="west" aria-label="Move west">←</button>
           <button type="button" class="nav" data-pan="north" aria-label="Move north">↑</button>
@@ -120,13 +120,13 @@ select{width:100%;background:#213b34;border:1px solid #547367;border-radius:9px;
         <p class="note" style="margin-top:0">Select a facility, then tap a free lot on the map. Select an existing facility to inspect or upgrade it. You can build multiple copies and open more districts as the years accumulate.</p>
         <div class="catalog" id="catalog" role="group" aria-label="Buildable facilities"></div>
         <div class="detail" id="detail" aria-live="polite">Choose a facility and an available lot.</div>
-        <p class="note">This is an interactive 2.5D campus-planning prototype. Walk-through 3D, characters, acoustics, and real music performances are later engine work, not shipped features.</p>
+        <p class="note">Use the 2.5D map to construct and upgrade your campus, then enter a first-person WebGL2 preview of those same facilities. Detailed buildings, characters, acoustic simulation and live orchestral performances remain future work.</p>
       </section>
     </div>
   </div>
   <div class="foot">
     <div class="legend"><span><span class="key"></span>Available lot</span><span><span class="key occupied"></span>Your building</span><span><span class="key locked"></span>Future land</span></div>
-    <p>The campus is currently saved only to this browser. Use <a href="./index.html">daily reflections &amp; backups</a> to export a JSON copy. For a truly lifelong product, optional encrypted cross-device backup, ownership, migration, and disaster-recovery systems still need engineering and verification.</p>
+    <p>Your campus is currently saved only to this browser. The separate 3D preview is read-only and does not change earned credits.  Use <a href="./index.html">daily reflections &amp; backups</a> to export a JSON copy. For a truly lifelong product, optional encrypted cross-device backup, ownership, migration, and disaster-recovery systems still need engineering and verification.</p>
   </div>
 </main>
 <script type="module">
