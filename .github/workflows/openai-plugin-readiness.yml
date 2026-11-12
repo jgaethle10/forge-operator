@@ -5,6 +5,8 @@ on:
     paths:
       - 'plugins/evercraft-fabric/**'
       - 'distribution/openai-plugin/**'
+      - 'systemia/distribution/publisher-ownership.json'
+      - 'tests/openai-public-version-reconciliation.test.mjs'
       - 'scripts/validate-openai-plugin-submission.mjs'
       - 'scripts/build-evercraft-openai-plugin.sh'
       - 'scripts/promote-openai-owned-fabric.mjs'
@@ -26,6 +28,8 @@ on:
     paths:
       - 'plugins/evercraft-fabric/**'
       - 'distribution/openai-plugin/**'
+      - 'systemia/distribution/publisher-ownership.json'
+      - 'tests/openai-public-version-reconciliation.test.mjs'
       - 'scripts/validate-openai-plugin-submission.mjs'
       - 'scripts/build-evercraft-openai-plugin.sh'
       - 'scripts/promote-openai-owned-fabric.mjs'
@@ -62,7 +66,7 @@ jobs:
           node-version: '22'
       - name: Prove OpenAI package and Fabric contract
         run: |
-          node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/openai-owned-fabric-promotion.test.mjs tests/fabric-local-runtime.test.mjs
+          node --test tests/openai-public-version-reconciliation.test.mjs tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/openai-owned-fabric-promotion.test.mjs tests/fabric-local-runtime.test.mjs
           node scripts/validate-openai-plugin-submission.mjs
 
       - name: Build OpenAI upload ZIP

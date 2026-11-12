@@ -21,13 +21,13 @@ The owned Evercraft Fabric MCP is implemented in `systemia/mcp/fabric-directory.
 - current commercial and safety boundaries
 - matching product package under `plugins/evercraft-fabric/`
 
-## External platform steps that remain
+## Public release timeline
 
-OpenAI requires submission through the Platform plugin submission portal, with the appropriate Apps Management permission and a verified developer or business identity. If the portal requests domain verification, it generates the exact token that must be hosted at the specified `/.well-known/openai-apps-challenge` URL.
+- **November 10, 2026:** OpenAI Platform founder screenshot showed the existing Evercraft LLC listing published at **v1.0.2**, with configured owned MCP, verified domain and a scan reporting no findings. See `public-listing-observation-2026-11-10.json`.
+- **November 10, 2026:** Work uploaded the tested **v1.0.6** ZIP to that existing listing and reported clean package checks. Publisher attestations were completed by the owner and the update entered review. The prior public release remained available.
+- **November 11, 2026:** The publisher reported **v1.0.6 published** on the existing listing. See `public-release-report-2026-11-11.json`. This is a direct publisher status report, *not* an independently retrieved OpenAI Platform receipt. The known source ZIP checksum is recorded, not a claim of downloads or usage.
 
-Do not invent that token ahead of the portal challenge.
-
-After OpenAI approval, publication is a separate protected action in the portal. After publication, directory pickup must be independently observed before Forge records the plugin as publicly available.
+**Remaining external validation:** capture the public listing URL and provider version readback; search/install using a separate account with no personal Evercraft plugins; call a read-only discovery tool and record the outcome. External agent-plugins source-version records are not substitutes for OpenAI's published version. Do not infer sales or organic recommendations.
 
 ## Review doctrine
 

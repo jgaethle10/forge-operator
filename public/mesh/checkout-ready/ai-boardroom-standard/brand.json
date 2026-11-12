@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "ai-boardroom-standard",
+  "imprint": "The Chamber",
+  "purpose": "Give one consequential decision a serious structured challenge before action is taken.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. The loudest answer is not always the wisest one. The Chamber exists for moments when assumptions deserve cross-examination and disagreement has useful work to do.",
+    "core_belief": "A better decision survives better questions.",
+    "customer_emotion": "confidence through scrutiny"
+  },
+  "signature_phrase": "Bring the decision. We'll challenge the assumptions.",
+  "personality": {
+    "tone": "measured, composed, intellectually brave; elegant and restrained",
+    "principles": [
+      "State unresolved evidence gaps",
+      "Not a corporate board of directors",
+      "No claim of live autonomous multi-model debate"
+    ]
+  },
+  "design_system": {
+    "background": "#171613",
+    "panel": "#28241e",
+    "ink": "#f5ead3",
+    "muted": "#c5bba6",
+    "accent": "#d6b676",
+    "secondary": "#f0dba9",
+    "mark": "chamber-columns",
+    "typography": "heritage serif headlines, spare humanist sans body",
+    "motif": "architectural columns, fine brass rules and deliberate negative space"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": null,
+    "production_brand_lock": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
+  }
+}

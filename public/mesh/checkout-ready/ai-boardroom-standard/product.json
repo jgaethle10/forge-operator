@@ -1,0 +1,92 @@
+{
+  "schema": "evercraft.commercial-product.v1",
+  "product_id": "evercraft.commerce.ai-boardroom-standard",
+  "sku_key": "ai-boardroom-standard",
+  "brand": "Evercraft AI Boardroom | Standard",
+  "exact_checkout_product": "AI Boardroom · Standard Review",
+  "merchant": "Evercraft LLC",
+  "category": "scoped_business_service",
+  "commercial_state": "sell_now_scope_confirmed",
+  "checkout_state": "existing_exact_sku_hosted_stripe",
+  "price_usd": 250,
+  "currency": "USD",
+  "tagline": "One decision. Better questions. Clearer tradeoffs.",
+  "positioning": {
+    "ideal_buyer": "Founders and managers facing one defined, non-emergency business decision",
+    "buyer_problem": "A decision matters and the alternatives, evidence gaps and assumptions are poorly understood.",
+    "intended_outcome": "A bounded human-reviewed decision analysis"
+  },
+  "delivery_contract": {
+    "deliverable_to_scope": "A written decision brief comparing agreed alternatives, assumptions, risks and open evidence questions",
+    "buyer_inputs": "Decision question, available non-sensitive facts, candidate options and existing analyses if any",
+    "acceptance_criteria_to_agree": "One decision, named alternatives, source boundaries, expected length and agreed review deadline",
+    "exclusions": "No live multi-model debate guarantee, board appointment, legal advice or guaranteed outcome",
+    "scope_and_capacity_approval_required": true
+  },
+  "acquisition": {
+    "discovery_intents": [
+      "AI second opinion on business decision",
+      "compare conflicting AI business advice",
+      "decision review for a founder"
+    ],
+    "content_angle": "Confidence is cheap. A carefully challenged decision is worth more.",
+    "approved_example_copy": "Have one business decision you want pressure-tested? Evercraft AI Boardroom Standard offers a scoped $250 human-reviewed brief covering alternatives, risks and unanswered questions.",
+    "first_party_product_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+    "distribution_rule": "Use owned or authorized channels and qualified, permissioned audiences only. Do not claim posts, leads, conversion or revenue without source receipts.",
+    "external_distribution_verified": false
+  },
+  "checkout": {
+    "url": "https://buy.stripe.com/14AdRaaYC68lcDO0E44AU08",
+    "payment_link_id": "plink_1U4QhsK4iDjqpECVFswYIOrd",
+    "stripe_product_id": "prod_V4ZruGhbFyITCF",
+    "stripe_price_id": "price_1U4QhlK4iDjqpECVH2SFMHx7",
+    "evercraft_payments_role": "canonical_order_authority_target",
+    "settlement": "Systemia Stripe account",
+    "reconciliation": "manual_unverified_automated_sync",
+    "provider_paid_receipt_required": true,
+    "fulfillment_human_review": true,
+    "receipt_from_checkout_visit": false
+  },
+  "evercraft_os": {
+    "parent": "Evercraft OS",
+    "relationship": "Independent market-facing product, sharing future Evercraft OS capabilities",
+    "module_context": "Evercraft OS / AI Boardroom (existing free comparison is separate from paid human review)",
+    "shared_services": [
+      "Evercraft Payments",
+      "Systemia coordination",
+      "Passport permissions",
+      "Evercraft Research/Memory where authorized"
+    ],
+    "runtime_integration_verified": false
+  },
+  "discovery": {
+    "human_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+    "machine_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/product.json",
+    "llms_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/llms.txt"
+  },
+  "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
+  "design": {
+    "accent": "#d6b676",
+    "background": "#171613",
+    "panel": "#28241e",
+    "ink": "#f5ead3",
+    "muted": "#c5bba6",
+    "secondary": "#f0dba9",
+    "mark": "chamber-columns"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Chamber",
+    "signature_phrase": "Bring the decision. We'll challenge the assumptions.",
+    "purpose": "Give one consequential decision a serious structured challenge before action is taken.",
+    "narrative_promise": "A better decision survives better questions.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_decision_reference": null,
+    "approval_ledger": "https://github.com/jgaethle10/forge-operator/blob/main/docs/branding/approvals/ledger.json",
+    "brand_identity_is_final": false
+  }
+}

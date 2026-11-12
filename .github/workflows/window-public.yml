@@ -6,10 +6,10 @@ on:
       - 'tests/the-window-public.test.mjs'
       - 'tests/window-decision-receipts.test.mjs'
       - 'tests/window-decision-observer.test.mjs'
-      - 'systemia/society/window-snapshot-fetch.mjs'
       - 'tests/window-snapshot-fetch.test.mjs'
       - 'systemia/society/window-decision-receipts.mjs'
       - 'systemia/society/window-decision-observer.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
       - '.github/workflows/window-public.yml'
   push:
     branches:
@@ -18,6 +18,12 @@ on:
     paths:
       - 'public/the-window/**'
       - 'tests/the-window-public.test.mjs'
+      - 'tests/window-decision-receipts.test.mjs'
+      - 'tests/window-decision-observer.test.mjs'
+      - 'tests/window-snapshot-fetch.test.mjs'
+      - 'systemia/society/window-decision-receipts.mjs'
+      - 'systemia/society/window-decision-observer.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
       - '.github/workflows/window-public.yml'
 
 permissions:

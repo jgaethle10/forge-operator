@@ -1,7 +1,13 @@
 {
   "schema": "evercraft.journal.index.v1",
-  "generated_at": "2026-11-10T02:08:44.501Z",
+  "generated_at": "2026-11-11T08:21:09.309Z",
   "live_edition": false,
+  "reader_assets": [
+    {
+      "relative_path": "assets/listen.js",
+      "sha256": "d3c94a09bd9f2076316a60cae36211a8a1c695efc565a7a6494cd69b6a94ec56"
+    }
+  ],
   "stories": [],
   "archive": [
     {

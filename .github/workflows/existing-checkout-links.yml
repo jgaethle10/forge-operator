@@ -6,6 +6,10 @@ on:
       - 'public/mesh/index.html'
       - 'tests/existing-checkout-links.test.mjs'
       - 'tests/exact-service-sales-pages.test.mjs'
+      - 'tests/independent-commercial-products.test.mjs'
+      - 'tests/brand-identities.test.mjs'
+      - 'tests/brand-approval-governance.test.mjs'
+      - 'docs/branding/approvals/**'
       - '.github/workflows/existing-checkout-links.yml'
   push:
     branches: [main]
@@ -14,6 +18,10 @@ on:
       - 'public/mesh/index.html'
       - 'tests/existing-checkout-links.test.mjs'
       - 'tests/exact-service-sales-pages.test.mjs'
+      - 'tests/independent-commercial-products.test.mjs'
+      - 'tests/brand-identities.test.mjs'
+      - 'tests/brand-approval-governance.test.mjs'
+      - 'docs/branding/approvals/**'
       - '.github/workflows/existing-checkout-links.yml'
 permissions:
   contents: read
@@ -26,4 +34,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --test tests/existing-checkout-links.test.mjs tests/exact-service-sales-pages.test.mjs
+      - run: node --test tests/existing-checkout-links.test.mjs tests/exact-service-sales-pages.test.mjs tests/independent-commercial-products.test.mjs tests/brand-identities.test.mjs tests/brand-approval-governance.test.mjs

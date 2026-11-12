@@ -1,4 +1,4 @@
-name: Spatial perception V4
+name: Spatial perception V7
 on:
   pull_request:
     paths:
@@ -13,6 +13,9 @@ on:
       - 'tests/spatial-temporal.test.mjs'
       - 'tests/spatial-temporal-browser.test.mjs'
       - 'tests/spatial-offline-bridge.test.mjs'
+      - 'tests/spatial-field-review.test.mjs'
+      - 'tests/spatial-field-review-browser.test.mjs'
+      - 'tests/spatial-field-retest.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
   push:
     paths:
@@ -27,6 +30,9 @@ on:
       - 'tests/spatial-temporal.test.mjs'
       - 'tests/spatial-temporal-browser.test.mjs'
       - 'tests/spatial-offline-bridge.test.mjs'
+      - 'tests/spatial-field-review.test.mjs'
+      - 'tests/spatial-field-review-browser.test.mjs'
+      - 'tests/spatial-field-retest.test.mjs'
       - '.github/workflows/spatial-perception-v0.yml'
 jobs:
   core-tests:
@@ -39,7 +45,7 @@ jobs:
         with:
           node-version: '22'
       - name: Stereo geometry and consumer boundary tests
-        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs tests/spatial-offline-bridge.test.mjs
+        run: node --test tests/spatial-perception.test.mjs tests/spatial-audit.test.mjs tests/spatial-viewport.test.mjs tests/spatial-temporal.test.mjs tests/spatial-temporal-browser.test.mjs tests/spatial-offline-bridge.test.mjs tests/spatial-field-review.test.mjs tests/spatial-field-review-browser.test.mjs tests/spatial-field-retest.test.mjs
   offline-detector-contract:
     runs-on: ubuntu-latest
     permissions:
@@ -72,5 +78,5 @@ jobs:
           python -m pip install --disable-pip-version-check --no-input \
             numpy==1.26.4 opencv-python-headless==4.10.0.84 \
             onnx==1.17.0 onnxruntime==1.20.1
-      - name: Run synthetic video through ONNX runtime, disparity and JS product adapters
+      - name: Run synthetic ONNX stereo video, JS adapters, and field metric evaluation
         run: python3 -m unittest discover -s systemia/spatial-perception -p 'e2e_synthetic_stereo.py' -v

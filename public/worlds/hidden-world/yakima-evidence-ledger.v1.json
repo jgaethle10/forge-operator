@@ -24,7 +24,27 @@
       "geometry_verified": false,
       "connected_tunnel_verified": false,
       "recorded_coordinates": null,
-      "model_status": "evidence_reference_only"
+      "model_status": "evidence_reference_only",
+      "documented_architecture": {
+        "source_url": "https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa",
+        "source_type": "1983 National Register nomination, section 7 description and section 8 significance",
+        "facts": [
+          "1898–1899 construction, local stone, two-story structure.",
+          "Original 1899 Alfalfa Saloon used the southwest corner entrance with both floors truncated at the corner.",
+          "Circa 1910 retail conversion introduced plate-glass storefronts; upper story retained truncated corner.",
+          "Second-floor windows described as segmentally arched.",
+          "First-floor ceiling described as fourteen feet high.",
+          "Metal marquee added to Yakima Avenue elevation in the 1920s.",
+          "1983 nomination states building interior connected to two adjacent buildings by doorways."
+        ],
+        "inference_limits": [
+          "1983 doorway connections were not identified as below ground.",
+          "The document does not establish which adjacent buildings, or date/location of these connections.",
+          "No surveyed historical elevation, footprint or underground tunnel alignment is supplied."
+        ],
+        "period_model_url": "lund-building.html",
+        "feature_status": "architectural_features_documented_model_proportions_interpretive"
+      }
     },
     {
       "id": "yk-capitol-theatre",
@@ -122,5 +142,6 @@
       "recorded_coordinates": null,
       "model_status": "evidence_reference_only"
     }
-  ]
+  ],
+  "last_enriched_at": "2026-11-09"
 }

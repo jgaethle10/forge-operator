@@ -50,7 +50,8 @@ function positiveInt(value){
  */
 export function createForensiScopeCustomerRuntime({
  storageDir,authorizeBuyer,resolveOrder,verifyPaidOrder,
- verifyResultAccess,readCapacity,processRecording,checkoutBridge=null,
+ verifyResultAccess,readCapacity,processRecording,checkoutBridge=null,guestLedger=null,
+ settlementReader=null,
  allowedOrigins=[],maxUploadBytes=256*1024*1024,
  chunkBytes=2*1024*1024,workerIntervalMs=5000,
  now=()=>Date.now()
@@ -60,6 +61,12 @@ export function createForensiScopeCustomerRuntime({
  if([authorizeBuyer,resolveOrder,verifyPaidOrder,verifyResultAccess,readCapacity]
     .some(x=>typeof x!=='function'))
   throw error('trusted_customer_payment_capacity_callbacks_required');
+ if(settlementReader!==null&&typeof settlementReader?.verifyPaidOrder!=='function')
+  throw error('trusted_settlement_reader_required');
+ if(guestLedger!==null&&(typeof guestLedger.handler!=='function'||
+  typeof guestLedger.authorizeBuyer!=='function'||
+  typeof guestLedger.resolveOrder!=='function'))
+  throw error('trusted_guest_order_ledger_required');
  if(checkoutBridge!==null&&typeof checkoutBridge?.createCheckout!=='function')
   throw error('trusted_owned_checkout_bridge_required');
  if(!positiveInt(workerIntervalMs)||workerIntervalMs<10||workerIntervalMs>60000)
@@ -99,11 +106,59 @@ export function createForensiScopeCustomerRuntime({
      authenticated_customer_integration_required:true,
      public_checkout_enabled:false,
      private_checkout_adapter_configured:Boolean(checkoutBridge?.readiness?.configured),
+     private_guest_ledger_configured:Boolean(guestLedger),
+     private_settlement_reader_configured:Boolean(settlementReader?.readiness?.configured),
+     guest_enrollment_enabled:Boolean(guestLedger?.readiness?.guest_enrollment_enabled),
      production_settlement_proven:false,
      public_upload_enabled:false,
      private_worker_started:Boolean(worker)
     });
    }
+   const paymentStatus=route.match(/^\/v1\/forensiscope\/orders\/(forensiscope-[a-f0-9]{32})\/payment$/);
+   if(paymentStatus){
+    if(req.method==='OPTIONS'){
+     if(!allowed)throw error('origin_not_allowed',403);
+     res.writeHead(204,{
+      'access-control-allow-origin':origin,'vary':'Origin',
+      'access-control-allow-methods':'GET,OPTIONS',
+      'access-control-allow-headers':'authorization',
+      'cache-control':'no-store'
+     });return res.end();
+    }
+    if(req.method!=='GET')throw error('method_not_allowed',405);
+    if(!guestLedger||!settlementReader)
+     throw error('private_settlement_status_not_configured',503);
+    const buyer=await authorizeBuyer(req);
+    if(typeof buyer?.subject!=='string'||!buyer.subject)
+     throw error('buyer_authentication_required',401);
+    const order=await guestLedger.loadOrder(paymentStatus[1],buyer.subject);
+    if(!order)throw error('order_not_found',404);
+    const started=order.checkout_state==='created';
+    const receipt=started?await settlementReader.verifyPaidOrder(order.order_key):null;
+    const paid=Boolean(receipt?.verification_source===
+      'evercraft_payments_authoritative_provider_readback'&&
+      receipt.order_key===order.order_key&&
+      receipt.offer_key===order.quote.offer_key&&
+      receipt.amount_cents===order.quote.amount_cents&&
+      receipt.provider_paid_verified===true&&
+      receipt.settlement_verified===true);
+    return respond(200,{
+     ok:true,schema:'evercraft.forensiscope.private-buyer-payment-status.v1',
+     order_key:order.order_key,
+     checkout_state:order.checkout_state,
+     state:paid?'verified_paid':started?'pending_provider_verification':'checkout_not_started',
+     provider_paid_verified:paid,
+     media_upload_authorized:false,
+     job_started:false,
+     external_checkout_url:null,
+     provider_receipt_id:null
+    });
+   }
+   if(guestLedger&&(
+    route==='/v1/forensiscope/guest'||
+    route==='/v1/forensiscope/orders'||
+    /^\/v1\/forensiscope\/orders\/forensiscope-[a-f0-9]{32}$/.test(route)
+   ))return guestLedger.handler(req,res);
    if(route==='/v1/forensiscope/checkout'){
     if(req.method==='OPTIONS'){
      if(!allowed)throw error('origin_not_allowed',403);

@@ -54,8 +54,12 @@ test('commercial poster makes the conversion leak the visual subject',()=>{
   assert.match(svg,/DOWN\?/);
   assert.match(svg,/QUICK WIN AUDIT/);
   assert.match(svg,/>\$49</);
-  assert.match(svg,/CONVERT/);
-  assert.match(svg,/SYNTHETIC VISUAL/);
+  assert.match(svg,/FIVE AREAS WE CHECK/);
+  assert.match(svg,/MESSAGE CLARITY/);
+  assert.match(svg,/MOBILE EXPERIENCE/);
+  assert.doesNotMatch(svg,/>CONVERT</);
+  assert.match(svg,/NOT AN AUDIT RESULT/);
+  assert.match(svg,/ILLUSTRATIVE SERVICE OVERVIEW/);
   assert.doesNotMatch(svg,/health score.*[0-9]/i);
 });
 
@@ -76,6 +80,7 @@ test('commercial builder emits complete campaign pack',()=>{
     'poster-square.svg',
     'poster-story.svg',
     'poster-hero-wide.svg',
+    'poster-social-wide.svg',
     'motion.html',
     'manifest.json',
     'clip-handoff.json',
@@ -86,6 +91,9 @@ test('commercial builder emits complete campaign pack',()=>{
     assert.equal(fs.existsSync(path.join(dir,name)),true,name);
   }
   assert.equal(built.manifest.assets.feed.endsWith('/poster-feed.svg'),true);
+  const social=fs.readFileSync(path.join(dir,'poster-social-wide.svg'),'utf8');
+  assert.match(social,/width="1200" height="630"/);
+  assert.doesNotMatch(social,/>CONVERT</);
   assert.equal(built.manifest.offerUrl,'https://fabric.systemiacommandcenters.com/offers/website-audit');
   assert.equal(built.manifest.publicationAuthority,false);
 });

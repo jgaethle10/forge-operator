@@ -4,7 +4,7 @@
   "slug": "boeing-fa-xx-industrial-base",
   "title": "The $20 Billion Fighter Award Is Also an Industrial-Base Test",
   "published_at": "2026-09-30T22:00:00.000Z",
-  "built_at": "2026-11-10T02:08:44.501Z",
+  "built_at": "2026-11-11T08:21:09.309Z",
   "canonical_url": "https://fabric.systemiacommandcenters.com/journal/boeing-fa-xx-industrial-base/",
   "clip_handoff_ref": "production/boeing-fa-xx-industrial-base/clip-handoff.json",
   "evidence_state": "verified_and_reported_public_sources",
@@ -35,7 +35,7 @@
     "text_primary": false,
     "note": "Public-release hero art is labeled as an artist rendering. Fallen companion package uses source-bound data visualization."
   },
-  "article_sha256": "78d4c0133acb4286a427ae7c9f3ec7a162d47e1279d149cac9743f300daeed58",
+  "article_sha256": "67688b79fb7edbcd847b45b2e52fbe95591e80593cff9c686128df2e9ab01c39",
   "fallen_brief_sha256": "302ff8370e70d63883586cc821d54883302f5f54fcfc6372d86a1718cddbad8a",
   "machine_evidence_ref": null,
   "machine_evidence_sha256": null,

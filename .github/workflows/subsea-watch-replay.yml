@@ -6,12 +6,18 @@ on:
       - 'public/subsea-watch/**'
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
+      - 'tests/subsea-watch-video-sync.test.mjs'
+      - 'tests/subsea-watch-field-archive.test.mjs'
+      - 'scripts/probe-subsea-watch-public.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   pull_request:
     paths:
       - 'public/subsea-watch/**'
       - 'tests/subsea-watch-replay.test.mjs'
       - 'tests/subsea-watch-immersive.test.mjs'
+      - 'tests/subsea-watch-video-sync.test.mjs'
+      - 'tests/subsea-watch-field-archive.test.mjs'
+      - 'scripts/probe-subsea-watch-public.mjs'
       - '.github/workflows/subsea-watch-replay.yml'
   workflow_dispatch:
 permissions:
@@ -26,17 +32,21 @@ jobs:
         with:
           node-version: '22'
       - name: Test dive log evidence and no fabricated tracking
-        run: node --test tests/subsea-watch-replay.test.mjs tests/subsea-watch-immersive.test.mjs
+        run: node --test tests/subsea-watch-replay.test.mjs tests/subsea-watch-immersive.test.mjs tests/subsea-watch-video-sync.test.mjs tests/subsea-watch-field-archive.test.mjs
       - name: Validate browser modules
         run: |
           node --check public/subsea-watch/core.mjs
           node --check public/subsea-watch/viewer.mjs
           node --check public/subsea-watch/immersive/scene.mjs
+          node --check public/subsea-watch/immersive/video-sync.mjs
+          node --check public/subsea-watch/field-archive/catalog.mjs
       - name: Inspect owned static page
         run: |
           test -s public/subsea-watch/index.html
           test -s public/subsea-watch/immersive/index.html
           test -s public/subsea-watch/sample.json
+          test -s public/subsea-watch/field-archive/index.html
+          test -s public/subsea-watch/field-archive/sources.json
           grep -q "Prototype, not a safety device" public/subsea-watch/index.html
 
       - name: Capture immersive WebGL browser smoke
@@ -57,6 +67,9 @@ jobs:
           "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --enable-webgl --enable-unsafe-swiftshader --use-gl=angle --use-angle=swiftshader --virtual-time-budget=6000 --dump-dom 'http://127.0.0.1:18765/subsea-watch/immersive/' >/tmp/subsea-dom.html 2>/tmp/subsea-chrome-dom.log
           grep -q 'data-subsea-sample="synthetic-loaded"' /tmp/subsea-dom.html
           grep -q 'data-subsea-renderer="webgl-drawn"' /tmp/subsea-dom.html
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --virtual-time-budget=6000 --dump-dom 'http://127.0.0.1:18765/subsea-watch/field-archive/' >/tmp/subsea-field-archive-dom.html 2>/tmp/subsea-field-chrome.log
+          grep -q 'data-field-archive="ledger-ready"' /tmp/subsea-field-archive-dom.html
+          grep -q 'NOAA BlueTopo' /tmp/subsea-field-archive-dom.html
           test -s artifacts/subsea/immersive-desktop.png
           echo "IMMERSIVE_WEBGL_BROWSER_SMOKE_PASS: actual synthetic sample + WebGL draw" >> "$GITHUB_STEP_SUMMARY"
       - name: Preserve immersive screenshot when present

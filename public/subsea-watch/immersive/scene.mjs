@@ -1,7 +1,9 @@
 import {normalizeDive,atTime,parseInput} from '../core.mjs';
+import {parseVideoStart,videoAtMissionTime} from './video-sync.mjs';
 
 const $=id=>document.getElementById(id);
 const canvas=$('view');
+const video=$('dive-video');
 const gl=canvas.getContext('webgl',{alpha:false,antialias:true,depth:true});
 if(!gl){
  $('unsupported').hidden=false;
@@ -120,6 +122,55 @@ if(!gl){
  }
  const meshes={floor:buffer(terrain),objects:buffer(objects),pipe:buffer(pipe),diver:buffer(diver)};
  let track=null,logs=null,dive=null,current=0,playing=false,last=0;
+ let videoUrl=null,videoReady=false,videoStart=0,videoPlayBlocked=false,videoState='';
+ function videoStatus(message){
+  if(videoState!==message){videoState=message;$('video-status').textContent=message;}
+ }
+ function clearFootage(){
+  video.pause();
+  video.removeAttribute('src');video.load();
+  if(videoUrl)URL.revokeObjectURL(videoUrl);
+  videoUrl=null;videoReady=false;videoStart=0;videoPlayBlocked=false;
+  video.muted=true;
+  $('video-offset').value='0';
+  $('video-clock').textContent='No footage loaded';
+  $('sound-toggle').textContent='Sound off';
+  $('sound-toggle').setAttribute('aria-pressed','false');
+  $('footage-panel').hidden=true;
+  $('footage-toggle').setAttribute('aria-expanded','false');
+  videoStatus('Choose a local recording. Alignment is not independently verified.');
+ }
+ function updateVideoClock(forceSeek=false){
+  if(!videoUrl)return;
+  if(!Number.isFinite(videoStart)){
+   video.pause();$('video-clock').textContent='Invalid offset';
+   videoStatus('Enter a valid video start second (-86400 to 86400).');
+   return;
+  }
+  const mapped=videoAtMissionTime(current,videoStart,videoReady?video.duration:NaN);
+  if(mapped.state!=='within_video'){
+   video.pause();
+   $('video-clock').textContent=mapped.state==='before_video'?'Video not started':
+    mapped.state==='after_video'?'Footage has ended':'Reading video metadata…';
+   videoStatus(mapped.state==='before_video'?'No footage at this mission time (before video start).':
+    mapped.state==='after_video'?'No footage at this mission time (recording ended).':
+    'Waiting for supported video metadata. No alignment is inferred.');
+   return;
+  }
+  const desired=mapped.videoTime;
+  if(forceSeek||Math.abs(video.currentTime-desired)>(playing?0.35:0.07)){
+   // Object URL points only to a file selected by the user; no upload or external playback.
+   try{video.currentTime=Math.min(desired,Math.max(0,video.duration-0.03));}
+   catch{videoStatus('This video cannot seek in this browser; alignment is not available.');return;}
+  }
+  $('video-clock').textContent=fmt(desired)+' / '+fmt(video.duration);
+  if(!videoPlayBlocked)videoStatus('Manually aligned footage · unverified; displayed time is approximate.');
+  if(playing&&!$('footage-panel').hidden&&video.paused&&!videoPlayBlocked){
+   const attempt=video.play();
+   if(attempt&&typeof attempt.catch==='function')
+    attempt.catch(()=>{videoPlayBlocked=true;videoStatus('Video playback blocked; pause and scrub the timeline to inspect frames.');});
+  }else if((!playing||$('footage-panel').hidden)&&!video.paused)video.pause();
+ }
  let mode='synthetic',origin=[0,0],lastKnown=[-4,-3,-7];
  let yaw=-.43,pitch=.35,distance=12,following=true,drag=null,pinchDistance=null;
  const pointers=new Map();
@@ -141,6 +192,8 @@ if(!gl){
  const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
  function activate(next,synthetic){
   dive=next;mode=synthetic?'synthetic':'imported';
+  $('pick-video').disabled=synthetic;
+  if(synthetic)videoStatus('Import a dive log before pairing a real video with it.');
   playing=false;$('play').textContent='▶ Play';$('play').disabled=false;
   current=dive.points[0].t;
   origin=dive.xyAvailable?[dive.points[0].x,dive.points[0].y]:[0,0];
@@ -189,6 +242,7 @@ if(!gl){
    if(current>=dive.points.at(-1).t){playing=false;$('play').textContent='▶ Play';}
   }
   last=time;
+  updateVideoClock();
   const pt=dive?atTime(dive,current):null;
   const pos=pt&&pt.x!==null&&pt.depth!==null?world(pt):null;
   if(pos)lastKnown=pos;
@@ -218,8 +272,13 @@ if(!gl){
   if(!dive)return;
   if(current>=dive.points.at(-1).t)current=dive.points[0].t;
   playing=!playing;$('play').textContent=playing?'Ⅱ Pause':'▶ Play';
+  videoPlayBlocked=false;updateVideoClock(true);
  });
- $('timeline').addEventListener('input',e=>current=Number(e.target.value));
+ $('timeline').addEventListener('input',e=>{
+  current=Number(e.target.value);
+  playing=false;$('play').textContent='▶ Play';
+  videoPlayBlocked=false;updateVideoClock(true);
+ });
  $('follow').addEventListener('click',()=>{following=!following;$('follow').setAttribute('aria-pressed',String(following));});
  $('rotate').addEventListener('click',()=>{yaw=-.43;pitch=.35;distance=Math.min(window.innerWidth,window.innerHeight)<700?11:18;following=true;$('follow').setAttribute('aria-pressed','true');});
  $('zoom-in').addEventListener('click',()=>distance=clamp(distance*.8,5,65));
@@ -265,13 +324,69 @@ if(!gl){
    const next=parseInput(await file.text(),file.name);
    if(next.demo||next.positionSource==='SIMULATED')
     throw Error('SIMULATED paths belong only in the clearly labeled example mission.');
-   activate(next,false);
+   clearFootage();activate(next,false);
    $('file-status').textContent=next.xyAvailable?
     'Local file loaded. Coordinates are user-declared, not independently verified. No site model is shown.':
     'Depth data loaded. Horizontal position is missing or incomplete, so no 3D route is shown.';
   }catch(err){$('file-status').textContent='Import failed: '+err.message;}
  });
- $('reset-sample').addEventListener('click',load);
- document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;$('play').textContent='▶ Play';}});
+ $('reset-sample').addEventListener('click',()=>{clearFootage();load();});
+ $('footage-toggle').addEventListener('click',()=>{
+  const opening=$('footage-panel').hidden;
+  $('footage-panel').hidden=!opening;
+  $('footage-toggle').setAttribute('aria-expanded',String(opening));
+  if(!opening)video.pause();
+  if(opening)updateVideoClock(true);
+ });
+ $('close-footage').addEventListener('click',()=>{
+  $('footage-panel').hidden=true;
+  $('footage-toggle').setAttribute('aria-expanded','false');
+  video.pause();
+ });
+ $('pick-video').addEventListener('click',()=>{
+  if(mode!=='imported'){videoStatus('Import a dive log first.');return;}
+  $('load-video').click();
+ });
+ $('load-video').addEventListener('change',e=>{
+  const file=e.target.files?.[0];
+  e.target.value='';
+  if(!file)return;
+  if(mode!=='imported'){videoStatus('Import a dive log before pairing video.');return;}
+  if(!file.size||file.size>2_147_483_648){
+   videoStatus('Choose a nonempty video under 2 GB for this local preview.');return;
+  }
+  if(!file.type.startsWith('video/')&&!/\.(?:mp4|mov|m4v|webm|ogv)$/i.test(file.name)){
+   videoStatus('Select a supported local video recording.');return;
+  }
+  video.pause();video.removeAttribute('src');video.load();
+  if(videoUrl)URL.revokeObjectURL(videoUrl);
+  videoUrl=URL.createObjectURL(file);videoReady=false;videoPlayBlocked=false;
+  video.muted=true;$('sound-toggle').textContent='Sound off';
+  $('sound-toggle').setAttribute('aria-pressed','false');
+  video.src=videoUrl;video.load();
+  videoStatus('Local video selected: '+file.name.slice(0,90)+'. Reading metadata…');
+ });
+ video.addEventListener('loadedmetadata',()=>{
+  videoReady=Number.isFinite(video.duration)&&video.duration>0;
+  videoPlayBlocked=false;updateVideoClock(true);
+ });
+ video.addEventListener('error',()=>{
+  if(videoUrl){videoReady=false;video.pause();videoStatus('Video codec or file is not supported here. Try MP4/H.264.');}
+ });
+ $('video-offset').addEventListener('change',e=>{
+  try{videoStart=parseVideoStart(e.target.value);videoPlayBlocked=false;updateVideoClock(true);}
+  catch(err){videoStart=NaN;video.pause();videoStatus(err.message);}
+ });
+ $('sound-toggle').addEventListener('click',()=>{
+  video.muted=!video.muted;
+  $('sound-toggle').textContent=video.muted?'Sound off':'Sound on';
+  $('sound-toggle').setAttribute('aria-pressed',String(!video.muted));
+ });
+ document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){playing=false;$('play').textContent='▶ Play';video.pause();}
+ });
+ window.addEventListener('pagehide',()=>{
+  video.pause();if(videoUrl){URL.revokeObjectURL(videoUrl);videoUrl=null;}
+ });
  load().then(()=>requestAnimationFrame(frame));
 }

@@ -1,6 +1,12 @@
 name: Evercraft Worlds external release gate
 on:
   workflow_dispatch:
+    inputs:
+      allow_disposable_write:
+        description: 'Explicitly create, edit and DELETE one temporary unlisted world after read-only gates pass'
+        required: true
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -27,7 +33,13 @@ jobs:
           node scripts/probe-worlds-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/receipt.json
           node scripts/probe-worlds-heritage-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/heritage-receipt.json
           node scripts/probe-hidden-world-public.mjs "$WORLDS_ORIGIN" | tee artifacts/worlds-public-gate/hidden-world-receipt.json
-      - name: Preserve read-only release receipt
+      - name: Opt-in external disposable write proof
+        if: ${{ github.event.inputs.allow_disposable_write == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/probe-worlds-write.mjs "$WORLDS_ORIGIN" --execute | tee artifacts/worlds-public-gate/write-proof-receipt.json
+      - name: Preserve public release receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:

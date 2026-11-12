@@ -22,16 +22,16 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-25T16:57:56.827Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-29T06:14:03.378Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-11-10T02:11:07.360Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-11-12T01:39:32.722Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-11-01T21:58:12.106Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-11-10T02:11:07.360Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-11-10T02:11:07.360Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-11-10T02:11:07.360Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-11-12T01:37:59.809Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-11-12T01:37:59.809Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-11-12T01:37:59.809Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/index.json</loc><lastmod>2026-11-10T02:11:06.909Z</lastmod></url>
+  <url><loc>/chum/proof/index.json</loc><lastmod>2026-11-11T22:12:51.357Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-11-10T02:11:06.909Z</lastmod></url>
-  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-11-10T02:11:06.909Z</lastmod></url>
+  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-11-11T22:12:51.357Z</lastmod></url>
+  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-11-11T22:12:51.357Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
@@ -139,7 +139,7 @@
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-10-22T03:30:02.662Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/forge-operator/commercial-studio/</loc></url>
+  <url><loc>https://jgaethle10.github.io/forge-operator/commercial-studio/</loc></url>
   <url><loc>/forensiscope/editorial/long-video-ai-tools/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/forensiscope-vs-gemini/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
