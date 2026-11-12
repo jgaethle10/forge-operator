@@ -56,8 +56,13 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/property="og:description"/);
   assert.match(page,/property="og:url" content="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
-  assert.match(page,/name="twitter:card" content="summary"/);
-  assert.doesNotMatch(page,/poster-feed\.svg|poster-hero-wide\.svg|property="og:image"/);
+  assert.match(page,/name="twitter:card" content="summary_large_image"/);
+  assert.match(page,/property="og:image" content="https:\/\/jgaethle10\.github\.io\/forge-operator\/visuals\/website-audit-attention\/preview-og-v2\.png"/);
+  assert.match(page,/property="og:image:type" content="image\/png"/);
+  assert.match(page,/property="og:image:width" content="1200"/);
+  assert.match(page,/property="og:image:height" content="630"/);
+  assert.match(page,/property="og:image:alt" content="Systemia Website Audit by Evercraft/);
+  assert.doesNotMatch(page,/poster-feed\.svg|poster-hero-wide\.svg/);
   assert.match(page,/Inside your Quick Win Audit/);
   assert.match(page,/Five prioritized fixes/);
   assert.match(page,/Illustrative process preview/);
