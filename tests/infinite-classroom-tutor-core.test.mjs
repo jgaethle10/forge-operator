@@ -109,3 +109,15 @@ test('Adult can erase all volatile conversations and prevent stale session reuse
  await assert.rejects(()=>tutor.say({session_id:first.session_id,message:'Continue'}),/session_not_found/);
  await assert.rejects(()=>tutor.say({session_id:second.session_id,message:'Continue'}),/session_not_found/);
 });
+
+test('Adult erase wins over a pending local-model reply',async()=>{
+ let release;
+ const tutor=createClassroomTutor({newId:id,infer:()=>new Promise(resolve=>{release=resolve})});
+ const {session_id}=tutor.start('reading');
+ const pending=tutor.say({session_id,message:'Tell me a short story about a key.'});
+ assert.equal(typeof release,'function');
+ assert.equal(tutor.clearAll(),1);
+ release({status:'completed',provider:'llama.cpp',text:'The key is under the tree.',provider_receipt:'sha256:'+('a'.repeat(64))});
+ await assert.rejects(pending,/session_revoked/);
+ assert.equal(tutor.status().session_count,0);
+});
