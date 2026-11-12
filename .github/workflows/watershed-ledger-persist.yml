@@ -1,12 +1,14 @@
-name: Yakima watershed immutable source history
+name: Yakima watershed source history read-only staging
 on:
   workflow_run:
     workflows: ["Yakima Watershed Intelligence live-source canary"]
     types: [completed]
     branches: [main]
 
-# Source collection and history preservation are distinct from publication.
-# Never elevate PR artifacts. Only completed official canary runs from this repo/main qualify.
+# Security hold: writer authorization is not approved. This workflow verifies a
+# trusted main-branch collection and uploads a temporary, reviewable evidence
+# artifact. It MUST NOT commit, push, or call itself an immutable archive.
+# Only official main-branch canary runs from this repository qualify.
 permissions:
   contents: read
 
@@ -15,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  archive-source-receipts:
+  stage-source-receipts:
     if: >-
       github.event.workflow_run.head_repository.full_name == github.repository &&
       github.event.workflow_run.head_branch == 'main' &&
@@ -25,7 +27,7 @@ jobs:
     timeout-minutes: 8
     permissions:
       actions: read
-      contents: write
+      contents: read
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
@@ -37,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
-          persist-credentials: true
+          persist-credentials: false
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
@@ -74,7 +76,7 @@ jobs:
             --run-id "$SOURCE_RUN_ID" \
             --head-sha "$SOURCE_HEAD_SHA" \
             --event "$SOURCE_EVENT" | tee "$RUNNER_TEMP/watershed-history-operation.json"
-      - name: Verify stored raw hashes and 7-day history readback before push
+      - name: Verify staged raw hashes and 7-day history readback (read only)
         shell: bash
         run: |
           set -euo pipefail
@@ -91,28 +93,31 @@ jobs:
                v.public_release_authorized!==false||v.interpolation_performed!==false)
               process.exit(1);
           ' "$RUNNER_TEMP/watershed-history-readback.json"
-      - name: Push only source-receipt records to evidence branch
+      - name: Package verified run receipt for manual preservation
         shell: bash
         run: |
           set -euo pipefail
-          cd "$RUNNER_TEMP/watershed-ledger-worktree"
-          git config user.name "evercraft-watershed-source-recorder"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- evidence/watershed/runs/
-          if git diff --cached --quiet; then
-            echo "Same run and exact source fingerprints already archived."
-            exit 0
-          fi
-          git commit -m "Record source-only Yakima watershed run $SOURCE_RUN_ID"
-          git push origin "HEAD:refs/heads/$LEDGER_BRANCH"
-      - name: Preserve archival operation receipt
+          receipt_rel="$(node --input-type=module -e '
+            import fs from "node:fs";
+            const op = JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            if(!new RegExp("^runs/[0-9]{4}/[0-9]{2}/[0-9]{2}/[1-9][0-9]{4,17}$").test(String(op.destination||""))){
+              process.exit(1);
+            }
+            console.log(op.destination);
+          ' "$RUNNER_TEMP/watershed-history-operation.json")"
+          mkdir -p "$RUNNER_TEMP/watershed-staged-receipt"
+          cp -a "$RUNNER_TEMP/watershed-ledger-worktree/evidence/watershed/$receipt_rel" "$RUNNER_TEMP/watershed-staged-receipt/"
+          echo "PERSISTENT_ARCHIVE=HELD_REQUIRES_WRITER_AUTHORIZATION"
+          echo "STAGED_RUN_RECEIPT=$receipt_rel"
+      - name: Preserve read-only verification and source receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: yakima-immutable-ledger-operation
+          name: yakima-watershed-source-staging-no-push
           path: |
             ${{ runner.temp }}/watershed-history-operation.json
             ${{ runner.temp }}/watershed-history-readback.json
+            ${{ runner.temp }}/watershed-staged-receipt/
           if-no-files-found: warn
           retention-days: 30
       - name: Record narrow evidence boundary
@@ -120,11 +125,12 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Yakima source-only immutable evidence archive"
+            echo "## Yakima read-only watershed evidence staging (temporary)"
             echo
             echo "Source run: $SOURCE_RUN_ID"
             echo "Source event: $SOURCE_EVENT"
-            echo "Destination: $LEDGER_BRANCH, evidence/watershed/runs/"
+            echo "Persistent branch writes: HELD pending explicit workflow-writer approval" 
+            echo "Evidence artifact: GitHub Actions (30-day retention, not immutable)"
             echo "Archive success is NOT public report approval, customer billing, a water forecast or flood alert."
-            echo "Raw source files and hashes are preserved, including partial readings when valid."
+            echo "Raw source files and hashes are staged in a time-limited artifact only."
           } >> "$GITHUB_STEP_SUMMARY"
