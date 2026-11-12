@@ -133,5 +133,17 @@
   "owner_approved_promotion": true,
   "buyer_browser_evidence": "Owner-supplied mobile screenshots of live Stripe-hosted checkout UI for existing exact-price services; does not establish a paid charge.",
   "no_prior_customer_charge_required_for_marketing": true,
-  "scope_confirmation_required_before_customer_payment": true
+  "scope_confirmation_required_before_customer_payment": true,
+  "last_read_only_browser_canary": {
+    "observed_at": "2026-11-10T04:49:33Z",
+    "pacific_calendar_date": "2026-11-09",
+    "state": "ALL_SEVEN_READ_ONLY_FORMS_VERIFIED",
+    "verified_count": 7,
+    "total": 7,
+    "evidence_run": "https://github.com/jgaethle10/forge-operator/actions/runs/42758200403",
+    "confirmed": "exact original SKU name, USD amount, visible hosted payment fields and Stripe domain",
+    "confirms_completed_charge": false,
+    "confirms_automatic_evercraft_payments_reconciliation": false,
+    "confirms_fulfillment": false
+  }
 }
