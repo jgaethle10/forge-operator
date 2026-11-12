@@ -31,7 +31,17 @@ export function walkableScene(state,goal,mode){
     }))
   };
 }
-export function spawnExplorer(){return {x:0,y:1.75,z:18,yaw:0,pitch:-.06};}
+export function spawnExplorer(scene=null){
+  const first=scene?.buildings?.[0];
+  if(first){
+    const x=first.x-first.halfWidth-9;
+    const z=first.z+first.halfDepth+14;
+    if(canEnter(scene,x,z)){
+      return {x,y:1.75,z,yaw:Math.atan2(first.x-x,z-first.z),pitch:-.09};
+    }
+  }
+  return {x:0,y:1.75,z:18,yaw:0,pitch:-.06};
+}
 export function canEnter(scene,x,z){
   if(!scene||!Number.isFinite(x)||!Number.isFinite(z))return false;
   if(Math.abs(x)>scene.radius||Math.abs(z)>scene.radius)return false;
