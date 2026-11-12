@@ -302,9 +302,16 @@ export function beginReadOnlyScopeObservation({
           operator_approval_for_new_run:false
         };
       }catch(error){
-        const code=/^[A-Z_]+$/.test(error?.code||'')?error.code:
-          /^[A-Z_]+$/.test(error?.message||'')?error.message:
+        const failure=error instanceof Error?error:
+          new Error('SUPERVISOR_OBSERVATION_UNVERIFIED');
+        const rawCode=/^[A-Z_]+$/.test(failure.code||'')?failure.code:
+          /^[A-Z_]+$/.test(failure.message||'')?failure.message:
           'SUPERVISOR_OBSERVATION_UNVERIFIED';
+        const code=['ENOENT','EACCES','EPERM'].includes(rawCode)?
+          'POSTSTOP_KERNEL_EVIDENCE_MISSING':rawCode;
+        let stopMetadata;
+        try{stopMetadata=structuredClone(stop??null);}
+        catch{stopMetadata={state:'UNCLONEABLE_STOP_METADATA'};}
         const privateReceipt={
           schema:'evercraft.eo001.gate1.private-negative-observation.v1',
           state:'SCOPE_LIFECYCLE_OBSERVATION_BLOCKED',
@@ -312,17 +319,17 @@ export function beginReadOnlyScopeObservation({
           source_revision:sourceRevision,
           pre_sha256:createHash('sha256')
             .update(JSON.stringify(pre)).digest('hex'),
-          pre:structuredClone(pre),stop_metadata:structuredClone(stop??null),
+          pre:structuredClone(pre),stop_metadata:stopMetadata,
           actual_cleanup_verified:false,
           execution_authorized:false,
           independent_hardware_attestation:false
         };
         // Keep sensitive raw observations out of normal exception JSON/logging.
         // A future approved runner MUST persist this private object itself.
-        Object.defineProperty(error,'private_negative_receipt',{
+        Object.defineProperty(failure,'private_negative_receipt',{
           configurable:false,enumerable:false,value:privateReceipt
         });
-        throw error;
+        throw failure;
       }finally{
         closed=true;
         handle.close();
