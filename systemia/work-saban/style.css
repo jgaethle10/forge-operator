@@ -600,3 +600,114 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
     padding:5px 8px}
   .spatial-orbit-label{font-size:8px;padding:6px 8px}
 }
+
+
+/* EVERCRAFT | AGENT COSTUME WARDROBE v1
+   Original CSS body and outfit silhouettes with role-specific emoji symbols.
+   A costume is appearance only: it never changes permission, mission status,
+   provenance, credentials, worker selection, or reported execution. */
+.spatial-costume-bar{
+  display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;
+  gap:6px;align-self:flex-end;max-width:min(100%,540px);margin:0;
+  padding:7px 9px;border:1px solid #688da24f;border-radius:12px;
+  background:#0b2236e8;box-shadow:0 7px 20px #030d1b50;
+  pointer-events:auto;order:1;
+}
+.spatial-costume-label{font-size:9px;font-weight:850;letter-spacing:.1em;
+  color:#adcadf;margin:0 3px}
+.spatial-costume-choice{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:34px;max-width:180px;padding:6px 11px;white-space:nowrap;
+  border:1px solid #7097ae;border-radius:8px;color:#eaf5fd;
+  background:linear-gradient(155deg,#254960,#153249);
+  font-size:10px;font-weight:850;letter-spacing:.055em;
+  cursor:pointer;touch-action:manipulation;
+}
+.spatial-costume-choice:hover{background:#315d77;border-color:#9edbeb}
+.spatial-costume-choice:focus-visible{outline:3px solid #acebf6;outline-offset:2px}
+.spatial-costume-caption{font-size:8px;letter-spacing:.04em;color:#8db7cc;
+  line-height:1.35;max-width:174px}
+.spatial-costume-glyph{display:none;position:absolute;left:-15px;top:-22px;
+  width:76px;height:76px;align-items:center;justify-content:center;
+  z-index:9;font-size:53px;line-height:1;white-space:nowrap;
+  filter:drop-shadow(0 5px 2px #0006);pointer-events:none}
+.spatial-agent:not([data-skin="classic"]) .spatial-costume-glyph{display:flex}
+.spatial-agent:not([data-skin="classic"]) .spatial-person-face{opacity:0}
+.spatial-agent:not([data-skin="classic"]) .spatial-person-hair{opacity:0}
+.spatial-agent:not([data-skin="classic"]) .spatial-person-head{
+  background:linear-gradient(145deg,#edd8c4,#6d819a);
+  border-color:#ffffff55;box-shadow:0 5px 12px #0c183e70;
+}
+/* Fantasy: original wing-and-tail shapes, six individually colored bodies. */
+.spatial-agent[data-skin="dragons"] .spatial-person-body{
+  background:linear-gradient(140deg,var(--skin-accent,#7dd1ca),#274662 85%);
+  border:3px solid #efffef70;border-radius:45% 45% 22% 22%;
+}
+.spatial-agent[data-skin="dragons"] .spatial-person-body:before,
+.spatial-agent[data-skin="dragons"] .spatial-person-body:after{
+  content:'';position:absolute;top:11px;height:48px;width:37px;
+  background:linear-gradient(130deg,var(--skin-accent,#84bfd7),#183959);
+  border:2px solid #c7f0f9aa;
+  clip-path:polygon(0 0,100% 22%,81% 64%,90% 100%,45% 68%,11% 84%);
+  box-shadow:0 0 11px #6bbfe34c;pointer-events:none;
+}
+.spatial-agent[data-skin="dragons"] .spatial-person-body:before{
+  left:-34px;transform:rotate(-18deg) skewY(-5deg);
+}
+.spatial-agent[data-skin="dragons"] .spatial-person-body:after{
+  right:-34px;transform:scaleX(-1) rotate(-18deg) skewY(-5deg);
+}
+.spatial-agent[data-skin="dragons"] .spatial-person-leg{background:#1f4350}
+/* Original animal mascot pack, not real teams or school insignia. */
+.spatial-agent[data-skin="mascots"] .spatial-person-body{
+  background:linear-gradient(150deg,var(--skin-accent,#aecedc),#405674);
+  border:3px solid #ecf4f7a0;
+  box-shadow:inset -5px 0 #182c4a70,0 4px 12px #040d1c77;
+}
+.spatial-agent[data-skin="mascots"] .spatial-person-collar{
+  background:#f8df9b;border-radius:0 0 45% 45%;height:12px;
+}
+/* Emoji pack keeps the emoji as the face and the original little body. */
+.spatial-agent[data-skin="emoji"] .spatial-person-head{
+  background:transparent;border:0;box-shadow:none;
+}
+.spatial-agent[data-skin="emoji"] .spatial-costume-glyph{
+  top:-20px;left:-21px;font-size:60px;width:85px;
+}
+.spatial-agent[data-skin="emoji"] .spatial-person-body{
+  background:linear-gradient(145deg,var(--skin-accent,#c8c9e4),#283c54);
+  border:2px solid #ffffff66;
+}
+/* Fictional tactical work crew, no military logo, real rank or insignia. */
+.spatial-agent[data-skin="tactical"] .spatial-person-body{
+  background:repeating-linear-gradient(32deg,#40594b 0 9px,#314a42 10px 17px,#596955 18px 23px);
+  border:3px solid #a3c3a0;border-radius:21px;
+  box-shadow:inset -9px -6px #1329218a;
+}
+.spatial-agent[data-skin="tactical"] .spatial-person-head{
+  background:linear-gradient(120deg,#5c7766,#253b34);
+  border-color:#9daf98;border-radius:45% 45% 26% 26%;
+}
+.spatial-agent[data-skin="tactical"] .spatial-costume-glyph{
+  font-size:37px;top:-15px;left:-13px;opacity:.96;
+  filter:drop-shadow(0 2px 1px #0b231c80);
+}
+.spatial-agent[data-skin="tactical"] .spatial-person-collar{background:#d0deac}
+.spatial-agent[data-skin="tactical"] .spatial-person-arm{
+  background:#385146;border-color:#93b0a1;
+}
+.spatial-agent[data-skin="tactical"] .spatial-person-leg{
+  background:#263b32;border-color:#4c6858;
+}
+@media(max-width:650px){
+  .spatial-costume-bar{
+    max-width:100%;align-self:flex-end;gap:5px;padding:5px 6px;
+    background:#091e32e8;
+  }
+  .spatial-costume-label{display:none}
+  .spatial-costume-choice{min-height:42px;padding:6px 9px;font-size:9px}
+  .spatial-costume-caption{width:100%;max-width:none;text-align:right;font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){
+  .spatial-agent[data-skin] .spatial-costume-glyph{transition:none!important;animation:none!important}
+}
