@@ -87,7 +87,7 @@ export function assessCommercialReleaseState({connections,health,buyerCatalog,cr
     external_action_taken:false,
     failures:failuresUnique,findings,
     caveats:[
-      'A safe quarantine is NOT a successful checkout. Provider HTTP 402 remains a commercial P0.',
+      'A safe quarantine is NOT a successful checkout. HTTP 402 was observed on 2026-10-17; this read-only audit does NOT establish the provider status today.',
       'Historic buyer_url fields in the catalog are archival references, NOT a current availability claim.',
       'Only authenticated provider readback and canonical paid/fulfillment receipts can reopen transactions.',
     ],
