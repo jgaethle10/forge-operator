@@ -74,6 +74,7 @@ export function nativeReadOnlyIO(){
     },
     readAbsolute(file){
       expect(file==='/proc/sys/kernel/random/boot_id'||
+        file==='/proc/self/cgroup'||
         /^\/proc\/[1-9][0-9]*\/(stat|cgroup)$/.test(file),
       'ABSOLUTE_PROBE_PATH_NOT_ALLOWED');
       return fs.readFileSync(file,'utf8');
@@ -212,6 +213,17 @@ export function beginReadOnlyScopeObservation({
   const cgroupPath=props.ControlGroup;
   const leaf=ownCgroupMountPath({scopeId,
     procCgroup:'0::'+cgroupPath});
+  // The observer must not be the synthetic worker or a child of its scope.
+  // This prevents a trivial worker self-report from posing as a supervisor.
+  const observerMembership=mustRead(io.readAbsolute('/proc/self/cgroup'),
+    2048,'SUPERVISOR_SELF_CGROUP_UNAVAILABLE').trim();
+  expect(/^0::\/[^\r\n]+$/.test(observerMembership),
+    'SUPERVISOR_UNIFIED_CGROUP_REQUIRED');
+  const observerPath=observerMembership.slice(3);
+  expect(!observerPath.split('/').includes('..')&&
+    observerPath!==cgroupPath&&
+    !observerPath.startsWith(cgroupPath+'/'),
+    'OBSERVER_INSIDE_WORKER_SCOPE');
   const handle=io.openScope(leaf);
   let pre,closed=false,finalized=false;
   try{
@@ -270,6 +282,7 @@ export function beginReadOnlyScopeObservation({
           scope:{unit:scopeId,cgroup_path:cgroupPath},
           pre,stop,post,
           collector:{source_revision:sourceRevision,
+            observer_proc_cgroup:observerMembership,
             implementation_kind:'external-supervisor',
             raw_capture_sha256:'0'.repeat(64)}
         };
