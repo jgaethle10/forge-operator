@@ -3,7 +3,7 @@
 **Location:** Yakima, Washington, USA  
 **Contact:** Jesse Gaethle, Founder / Project Lead  
 **Email:** jessegaethle10@gmail.com  
-**Phone:** (509) 759-0440  
+**Current preferred contact:** Email only, at jessegaethle10@gmail.com. Phone and text are temporarily unavailable.  
 **Prepared:** October 20, 2026
 
 ## Focus
