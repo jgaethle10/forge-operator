@@ -88,6 +88,33 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert(environment.disclosure.includes('RECORDED EVENTS'),'Motion disclosure must stay visible and truthful');
   assert(environment.idle,'Unassigned characters must not simulate work');
   await js(send,"document.getElementById('office-scene').scrollIntoView({block:'center'});true");
+  const themed=await js(send,"(()=>{const u=window.WorkSaban3D;const before=JSON.stringify(u.getState());let n=0;while(u.getCostumes().pack!=='dragons'&&n++<5)u.setCrewCostumes();const dragons=[...document.querySelectorAll('.spatial-agent')];return {pack:u.getCostumes().pack,count:dragons.filter(x=>x.dataset.skin==='dragons').length,icons:dragons.filter(x=>x.querySelector('.spatial-costume-glyph')?.textContent).length,unchanged:before===JSON.stringify(u.getState()),controls:document.querySelectorAll('.spatial-costume-choice').length,clearStage:document.getElementById('office-costume-toolbar').getBoundingClientRect().bottom<=document.getElementById('office-scene').getBoundingClientRect().top+2,locallySaved:!!window.localStorage.getItem('evercraft.work-saban.costumes.v1')};})()");
+  assert.equal(themed.pack,'dragons','Dragon costume selector failed to cycle');
+  assert.equal(themed.count,6,'All six original figures should take the dragon skin');
+  assert.equal(themed.icons,6,'Every dragon should have a visible role glyph');
+  assert.equal(themed.controls,2,'Both whole-crew and selected-agent controls must exist');
+  assert.equal(themed.clearStage,true,'Appearance chooser must be above scene and not cover 3D agents');
+  assert.equal(themed.unchanged,true,'Appearance cannot change recorded worker execution');
+  assert.equal(themed.locallySaved,true,'Appearance choice should persist privately');
+  await sleep(350);
+  const dragonCapture=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+  const dragonFile=path.join(out,'work-saban-'+label+'-dragons.png');
+  await fs.writeFile(dragonFile,Buffer.from(dragonCapture.data,'base64'));
+  assert((await fs.stat(dragonFile)).size>8000,'Dragon costume screenshot is empty');
+  const mixed=await js(send,"(()=>{const u=window.WorkSaban3D;const before=JSON.stringify(u.getState());u.select('writer');u.setSelectedCostume();const roles=[...document.querySelectorAll('.spatial-agent')];return {writer:roles.find(x=>x.dataset.agent==='writer')?.dataset.skin,director:roles.find(x=>x.dataset.agent==='director')?.dataset.skin,count:roles.length,unchanged:before===JSON.stringify(u.getState()),aria:roles.find(x=>x.dataset.agent==='writer')?.getAttribute('aria-label')};})()");
+  assert.equal(mixed.writer,'mascots','Individual agent must support a different style');
+  assert.equal(mixed.director,'dragons','Unchanged coworkers retain their original skin');
+  assert(mixed.unchanged,'Changing individual costume must not start tasks');
+  assert(mixed.aria.includes('Mascots costume'),'Character accessibility must name its costume');
+  await sleep(250);
+  const mixCapture=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+  const mixedFile=path.join(out,'work-saban-'+label+'-mixed-costumes.png');
+  await fs.writeFile(mixedFile,Buffer.from(mixCapture.data,'base64'));
+  assert((await fs.stat(mixedFile)).size>8000,'Mixed-character screenshot is empty');
+  const allStyles=await js(send,"(()=>{const u=window.WorkSaban3D,seen=[u.getCostumes().pack];for(let i=0;i<4;i++){u.setCrewCostumes();seen.push(u.getCostumes().pack)}return {seen,workerCount:Object.keys(u.getState()).length,workerState:JSON.stringify(u.getState())};})()");
+  assert.equal(new Set(allStyles.seen).size,5,'All five costume packs must be selectable');
+  assert.equal(allStyles.workerCount,6,'Costumes must not alter agent roster');
+  assert.equal(allStyles.workerState,JSON.stringify({director:'idle',analyst:'idle',writer:'idle',designer:'idle',auditor:'idle',coordinator:'idle'}),'Idle workers cannot become busy by changing costumes');
   await sleep(350);
   const overview=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
   const overviewFile=path.join(out,'work-saban-'+label+'-overview.png');
@@ -149,7 +176,7 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(await js(send,"JSON.stringify(window.WorkSaban3D.getState())"),beforeState,'Camera presentation must not fake worker execution events');
   return {label,width,height,mobile,desks:loaded.desks,follow_control:true,camera_easing:true,
     immersive_observe:'passed',inspection_navigation:'passed',keyboard_exit:'passed',
-    touch_orbit:mobile?'passed':'not_applicable',screenshots:{overview:overviewFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile}};
+    touch_orbit:mobile?'passed':'not_applicable',costume_packs:'five verified',individual_role_override:'passed',screenshots:{overview:overviewFile,dragons:dragonFile,mixedCostumes:mixedFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile}};
 }
 const out=process.env.WORK_SABAN_BROWSER_PROOF_DIR||path.join(os.tmpdir(),'work-saban-browser-qa');
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));

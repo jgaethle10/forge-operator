@@ -31,6 +31,8 @@ jobs:
           node --check systemia/work-saban/app.js
           node --check systemia/work-saban/office-observe.js
           node --check systemia/work-saban/office-observe.proof.mjs
+          node --check systemia/work-saban/office-costumes.js
+          node --check systemia/work-saban/office-costumes.proof.mjs
           node --check systemia/work-saban/office-camera.js
           node --check systemia/work-saban/office-camera.proof.mjs
           node --check systemia/work-saban/office-browser-qa.mjs
@@ -55,6 +57,8 @@ jobs:
         run: node systemia/work-saban/office-observe.proof.mjs
       - name: Prove smooth observer rig, reduced motion, and frame rate independence
         run: node systemia/work-saban/office-camera.proof.mjs
+      - name: Prove agent costumes are local-only and do not mutate worker tasks
+        run: node systemia/work-saban/office-costumes.proof.mjs
       - name: Prove spatial office camera and receipt-driven state
         run: node systemia/work-saban/office-3d.proof.mjs
       - name: Inspect real desktop and phone camera in headless Chrome

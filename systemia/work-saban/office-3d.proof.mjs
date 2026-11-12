@@ -47,9 +47,11 @@ class Element {
 }
 const scene=new Element('div');scene.id='office-scene';
 const toggle=new Element('button');toggle.id='office-3d-toggle';
+const costumeMount=new Element('div');costumeMount.id='office-costume-toolbar';costumeMount.hidden=true;
 const doc={
   createElement:tag=>new Element(tag),
-  getElementById:(id)=>id==='office-scene'?scene:id==='office-3d-toggle'?toggle:scene.querySelector('#'+id)
+  getElementById:(id)=>id==='office-scene'?scene:id==='office-3d-toggle'?toggle:
+      id==='office-costume-toolbar'?costumeMount:scene.querySelector('#'+id)
 };
 let clock=0,frameId=0;
 const frames=new Map();
@@ -67,6 +69,8 @@ const context={document:doc,window:{innerWidth:1110,requestAnimationFrame:raf,ca
 const directory=path.dirname(fileURLToPath(import.meta.url));
 const cameraSource=fs.readFileSync(path.join(directory,'office-camera.js'),'utf8');
 vm.runInNewContext(cameraSource,context,{filename:'office-camera.js'});
+const costumeSource=fs.readFileSync(path.join(directory,'office-costumes.js'),'utf8');
+vm.runInNewContext(costumeSource,context,{filename:'office-costumes.js'});
 const source=fs.readFileSync(path.join(directory,'office-3d.js'),'utf8');
 vm.runInNewContext(source,context,{filename:'office-3d.js'});
 const ui=context.window.WorkSaban3D;
@@ -93,6 +97,27 @@ assert(role,'agent desk rendered');
 assert.equal(scene.querySelector('.spatial-world')!==null,true,'spatial geometry rendered');
 const all=documentWalk(scene).filter(x=>x.className==='spatial-agent');
 assert.equal(all.length,6);
+assert.equal(ui.getCostumes().pack,'classic','the original coworkers are the default');
+const wardrobeButtons=documentWalk(costumeMount).filter(x=>x.className==='spatial-costume-choice');
+assert.equal(costumeMount.hidden,false,'costume controls are visible above the 3D scene');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-costume-bar').length,0,
+  'wardrobe buttons must never cover the 3D agents');
+assert.equal(wardrobeButtons.length,2,'crew and selected-agent wardrobes accessible');
+const beforeCostumeWork=JSON.stringify(ui.getState());
+wardrobeButtons[0].listeners.click[0]({stopPropagation(){}});
+assert.equal(ui.getCostumes().pack,'dragons','crew button changes all six appearances');
+assert(all.every(node=>node.dataset.skin==='dragons'));
+assert(all.every(node=>node.querySelector('.spatial-costume-glyph').textContent.length>0),'each fantasy character has a visible face');
+ui.select('writer');
+wardrobeButtons[1].listeners.click[0]({stopPropagation(){}});
+assert.equal(ui.getCostume('writer').pack,'mascots','selected agent cycles independently');
+assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.skin,'mascots');
+assert.equal(all.find(x=>x.dataset.agent==='director').dataset.skin,'dragons');
+assert.equal(JSON.stringify(ui.getState()),beforeCostumeWork,'costume changes cannot fabricate jobs');
+assert.equal(all.find(x=>x.dataset.agent==='analyst').dataset.state,'verified','role receipts survive wardrobe changes');
+for(let i=0;i<4;i++)wardrobeButtons[0].listeners.click[0]({stopPropagation(){}});
+assert.equal(ui.getCostumes().pack,'classic','whole-crew cycling wraps to original');
+assert(all.every(node=>node.dataset.skin==='classic'),'whole-crew change clears one-off overrides');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-plant').length,6,'six decorative plants');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-fishtank').length,1,'aquarium rendered');
 assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-studio-shell').length,1,'one shared 3D architectural studio');
@@ -163,9 +188,11 @@ viewport.listeners.pointerup[0]({pointerId:11});
 viewport.listeners.pointerup[0]({pointerId:12});
 ui.setEnabled(false);
 assert.equal(viewport.hidden,true);
+assert.equal(costumeMount.hidden,true,'costumes hidden when the scene is in 2D floorplan mode');
 ui.consume({type:'stage_started',role:'writer'});
 ui.consume({type:'stage_verified',role:'writer',receipt:{quality_status:'pass',result_sha256:'sha256:other'}});
 ui.setEnabled(true);
+assert.equal(costumeMount.hidden,false,'costumes return alongside the 3D view');
 assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.state,'verified','2D and 3D retain state consistency');
 ui.reset();
 assert.equal(ui.getState().writer,'idle');

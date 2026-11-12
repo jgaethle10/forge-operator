@@ -16,6 +16,7 @@
   const scene=$('office-scene');
   let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};
   let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null,roomLevel=false,roomButton=null;
+  let costumes=null,crewButton=null,individualButton=null,costumeCaption=null;
   const touches=new Map();
   let gesture=null;
   const rooms=[
@@ -47,6 +48,11 @@
     world=make('div','spatial-world');
     stage.append(world);
     viewport.append(stage);
+    const wardrobe=window.EvercraftOfficeThemes;
+    if(!wardrobe)throw Error('Owned Work Saban costume module was not loaded');
+    let storage=null;
+    try{storage=window.localStorage||null;}catch{}
+    costumes=wardrobe.create({storage});
     const floor=make('div','spatial-floor');
     world.append(floor);
     // One shared studio shell, with distinct work zones but no six closed cubicles.
@@ -125,6 +131,9 @@
         make('span','spatial-cheek cheek-left'),make('span','spatial-cheek cheek-right'),
         make('span','spatial-smile'));
       head.append(face);
+      const costumeGlyph=make('span','spatial-costume-glyph');
+      costumeGlyph.setAttribute('aria-hidden','true');
+      head.append(costumeGlyph);
       figure.append(head);
       figure.setAttribute('aria-hidden','true');
       const badge=make('span','spatial-desk-label');
@@ -141,6 +150,18 @@
     const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · FOLLOW SELECTED');
     const evidenceNote=make('div','spatial-motion-disclosure','MOTION VISUALIZES RECORDED EVENTS · NOT PHYSICAL AGENT TRAVEL');
     evidenceNote.setAttribute('aria-label','Character animations illustrate verified local worker state changes, not physical movement by autonomous AI agents.');
+    const wardrobeBar=make('div','spatial-costume-bar');
+    const wardrobeTitle=make('span','spatial-costume-label','CHARACTER STYLES');
+    crewButton=make('button','spatial-costume-choice','CREW: CLASSIC');
+    crewButton.type='button';
+    crewButton.setAttribute('aria-label','Change the appearance of the whole crew');
+    crewButton.addEventListener('click',e=>{e.stopPropagation();setCrewCostumes();});
+    individualButton=make('button','spatial-costume-choice','SELECTED: CLASSIC');
+    individualButton.type='button';
+    individualButton.setAttribute('aria-label','Change the selected agent costume');
+    individualButton.addEventListener('click',e=>{e.stopPropagation();setSelectedCostume();});
+    costumeCaption=make('span','spatial-costume-caption','APPEARANCE ONLY · NO WORKER-STATE CHANGE');
+    wardrobeBar.append(wardrobeTitle,crewButton,individualButton,costumeCaption);
     const controls=make('div','spatial-controls');
     const buttons=[
       ['−','Zoom out',()=>zoom(-0.1)],
@@ -161,6 +182,10 @@
       if(title==='Lower camera to room level'){roomButton=b;b.setAttribute('aria-pressed','false');}
       controls.append(b);
     });
+    const costumeMount=$('office-costume-toolbar');
+    if(!costumeMount)throw Error('Owned wardrobe toolbar mount missing');
+    costumeMount.append(wardrobeBar);
+    costumeMount.hidden=!enabled;
     overlay.append(orbit,evidenceNote,controls);
     viewport.append(overlay);
     scene.append(viewport);
@@ -303,10 +328,43 @@
     focusAgent(coworker.id);
     window.WorkSabanOffice?.select(coworker.id);
   }
+  function renderCostumes(){
+    if(!costumes)return;
+    for(const role of roster){
+      const node=agents.get(role.id);
+      if(node)costumes.paint(node,role.id);
+    }
+    updateCostumeButtons();
+  }
+  function updateCostumeButtons(){
+    if(!costumes)return;
+    const chosen=costumes.resolve(selected);
+    if(crewButton){
+      crewButton.textContent='CREW: '+costumes.getPackLabel().toUpperCase();
+      crewButton.title='Change whole crew costume pack. Current: '+costumes.getPackLabel();
+    }
+    if(individualButton){
+      individualButton.textContent='SELECTED: '+chosen.packLabel.toUpperCase();
+      individualButton.title='Change '+selected+' costume. Current: '+chosen.packLabel;
+    }
+  }
+  function setCrewCostumes(){
+    if(!costumes)return;
+    costumes.cyclePack();
+    renderCostumes();
+    paint();
+  }
+  function setSelectedCostume(){
+    if(!costumes)return;
+    costumes.cycleRole(selected);
+    renderCostumes();
+    paint();
+  }
   function select(id){
     if(!agents.has(id))return;
     selected=id;
     for(const [key,node] of agents)node.classList.toggle('is-selected',key===id);
+    updateCostumeButtons();
     if(followSelected)focusAgent(id);
   }
   function paint(){
@@ -318,10 +376,12 @@
         state[role.id]==='failed'?'concerned':
         state[role.id]==='running'?'focused':'calm';
       node.querySelector('small').textContent=state[role.id].replaceAll('_',' ').toUpperCase();
-      node.setAttribute('aria-label',role.name+' at '+role.room+', '+state[role.id]);
+      const appearance=costumes?.resolve(role.id).packLabel||'Classic';
+      node.setAttribute('aria-label',role.name+' at '+role.room+', '+state[role.id]+', '+appearance+' costume');
       node.title=role.name+' · '+(receipts[role.id]||state[role.id]);
     }
     select(selected);
+    renderCostumes();
     for(const role of roster){
       const node=agents.get(role.id);
       if(node)node.dataset.activity=state[role.id]==='running'?'working':state[role.id]==='verified'?'celebrating':'waiting';
@@ -403,6 +463,8 @@
     if(enabled)build();
     const view=$('spatial-viewport');
     if(view)view.hidden=!enabled;
+    const wardrobeMount=$('office-costume-toolbar');
+    if(wardrobeMount)wardrobeMount.hidden=!enabled;
     const floor=scene?.querySelector('.workfloor-art');
     if(floor)floor.classList.toggle('office-floor-hidden',enabled);
     $('office-3d-toggle').textContent=enabled?'2D floorplan':'Explore 3D office';
@@ -411,5 +473,7 @@
     if(enabled)applyCamera();
   }
   window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,
-    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel};
+    setCrewCostumes,setSelectedCostume,
+    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel,
+    getCostumes:()=>costumes?.snapshot()||null,getCostume:(role)=>costumes?.resolve(role)||null};
 })();
