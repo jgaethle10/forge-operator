@@ -63,14 +63,18 @@ test('four distinct resident dream arcs accumulate milestones and survive long d
   const signatures=a.actors.map(r=>r.goal.id);
   assert.equal(new Set(signatures).size,4);
   assert.ok(a.actors.every(r=>r.goal.phase===0&&r.goal.completed===0));
-  for(let tick=0;tick<600;tick++){advanceHouse(a);advanceHouse(b);}
+  let observedMilestone=false;
+  for(let tick=0;tick<600;tick++){
+    advanceHouse(a);advanceHouse(b);
+    if(a.events[0]?.type==='milestone')observedMilestone=true;
+  }
   assert.deepEqual(a,b);
   assert.ok(validateHouse(a));
   assert.ok(a.actors.some(r=>r.goal.completed>0));
   assert.ok(a.actors.every(r=>r.goal.highlights.length<=6));
   assert.ok(a.actors.every(r=>r.goal.progress<GOAL_THRESHOLD));
   assert.ok(a.actors.every(r=>r.goal.phase<GOAL_TRACKS[r.id].phases.length));
-  assert.ok(a.events.some(e=>e.type==='milestone'));
+  assert.equal(observedMilestone,true,'At least one milestone must occur during the long timeline');
   assert.ok(a.actors.every(r=>r.goal.highlights.some(h=>h.includes(r.name+' achieved:'))));
 });
 test('old House v1 saves migrate only on a simulation tick and retain resident identity',()=>{
