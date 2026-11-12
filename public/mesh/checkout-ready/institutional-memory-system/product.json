@@ -66,6 +66,29 @@
   },
   "launch_evidence": "Existing exact-price Stripe service page tested historically, with owner-shared buyer-view screenshots. This is not a new live purchase or automated delivery attestation.",
   "design": {
-    "accent": "#a5e0c2"
+    "accent": "#a7d6b7",
+    "background": "#172720",
+    "panel": "#26392e",
+    "ink": "#f3f3e6",
+    "muted": "#c6d9c7",
+    "secondary": "#dec7a0",
+    "mark": "continuity-rings",
+    "typography": "bookish serif headline with precise metadata typography",
+    "motif": "overlapping rings, archival stamps and provenance threads"
+  },
+  "identity": {
+    "customer_facing_imprint": "The Living Archive",
+    "signature_phrase": "Keep the reason, not just the record.",
+    "purpose": "Preserve how a team reached decisions, who owns the next action and where the evidence lives.",
+    "narrative_promise": "Continuity is something a team can design.",
+    "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/brand.json",
+    "creative_status": "working_brand_direction_not_trademark_cleared",
+    "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/brand-mark.svg",
+    "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_decision_reference": null,
+    "approval_ledger": "https://github.com/jgaethle10/forge-operator/blob/main/docs/branding/approvals/ledger.json",
+    "brand_identity_is_final": false
   }
 }

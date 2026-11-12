@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "social-intelligence-launch",
+  "imprint": "Signal Map",
+  "purpose": "Help teams understand real audience patterns before committing effort to a launch.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. More posts cannot repair a missing understanding of the people they are meant to reach. Signal Map begins with evidence, context and the questions a campaign should answer.",
+    "core_belief": "Know the room before raising the volume.",
+    "customer_emotion": "informed direction"
+  },
+  "signature_phrase": "Listen for the pattern, then launch.",
+  "personality": {
+    "tone": "insightful, curious, grounded; never surveillance-oriented",
+    "principles": [
+      "Authorized or public legitimate signals only",
+      "No guarantee of reach or growth",
+      "Audiences are people, not targets for covert profiling"
+    ]
+  },
+  "design_system": {
+    "background": "#151829",
+    "panel": "#242840",
+    "ink": "#f0efff",
+    "muted": "#cecde4",
+    "accent": "#bcacff",
+    "secondary": "#86e3d1",
+    "mark": "signal-nodes",
+    "typography": "geometric display sans with analytical micro-labels",
+    "motif": "connected audience nodes, soft gradients and signal trails"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": null,
+    "production_brand_lock": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
+  }
+}

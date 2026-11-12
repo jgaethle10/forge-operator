@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "asset-diagnosis",
+  "imprint": "The Second Look",
+  "purpose": "Reveal what is actually happening inside one asset before the owner spends on the wrong fix.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. When a website, workflow or tool underperforms, the instinct is to rebuild. The Second Look begins with a quieter question: what do we actually know?",
+    "core_belief": "Evidence should come before expensive changes.",
+    "customer_emotion": "clarity"
+  },
+  "signature_phrase": "See it clearly before changing it.",
+  "personality": {
+    "tone": "clear-eyed, exact, curious; never alarmist",
+    "principles": [
+      "State what is observed versus inferred",
+      "Don't promise a rebuild inside a diagnosis",
+      "Respect access boundaries"
+    ]
+  },
+  "design_system": {
+    "background": "#0d202c",
+    "panel": "#142e3c",
+    "ink": "#e9f6fb",
+    "muted": "#b6cdda",
+    "accent": "#71c5ed",
+    "secondary": "#c0e7f6",
+    "mark": "focus-frame",
+    "typography": "precise compact sans-serif with small technical labels",
+    "motif": "framing corners, grids and a single focal point"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": null,
+    "production_brand_lock": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
+  }
+}

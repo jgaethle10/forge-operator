@@ -29,3 +29,16 @@ Systemia's existing approved release receipts should feed RC04's fail-closed med
 ## QA
 `node --test tests/evercraft-live-portal.test.mjs tests/evercraft-live-workroom.test.mjs`
 plus existing repository public/mobile and external published-source canaries. Merge/release only after checks and after independent public readback.
+
+
+## Systemia Mission Control evidence companion (Build 01)
+
+- Operator page: `/forge-operator/live/mission-control.html` (source file `public/live/mission-control.html`).
+- Reuses the existing public GitHub normalization source, then groups eligible PR reviews by revenue/infrastructure, real GitHub Actions by execution/build checks, and draft/open PRs by review-needed status. This is **not** a private mission stream, and a CI result is **not** a Saban/Yard execution receipt.
+- Payments, Penguin Node001, NextGen Node002 and execution authority deliberately display **UNKNOWN / NOT GRANTED**. GitHub changes never establish account funds, checkout success, public deployment, remote agent presence, node health, or exact-request authority.
+- A user may open a JSON file containing an approved Systemia operator mission export. File contents stay in browser memory in that tab; there is no upload, local storage, remote read, or server write. The import is **operator-reported and unverified**, even when a record says completed or includes a GitHub link. Always use `textContent` for imported strings.
+- Accepted schema: `evercraft.systemia.operator-mission-snapshot.v1`. Required top-level fields: `schema`, `exported_at`, `missions`. Each mission requires unique `id`, `title`, `lane` (revenue/infrastructure/execution/approvals), `status` (planned/admitted/running/held/completed/failed/unknown), and `observed_at`. Optional fields: `owner`, `note`, `public_receipt_url`. References must be allowed public GitHub PR/commit/Action URLs. Unknown data and future/stale timestamps fail closed.
+- Next integration step is an authenticated, server-side Systemia adapter emitting scoped status plus cryptographically verifiable receipt references. It must be built through existing Passport, Context Fabric, Signal Fabric, Execution Gate, and Raven payment boundaries. **Do not** place an API key or unfiltered private mission ledger on a public page.
+- Validation: `node --test tests/systemia-mission-control.test.mjs tests/evercraft-live-workroom.test.mjs`. Dedicated pull request check: `.github/workflows/systemia-mission-control.yml`.
+
+No checkout, job execution, release, publishing, payout or revenue is triggered by this view.

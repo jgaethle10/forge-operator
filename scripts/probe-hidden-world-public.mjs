@@ -23,6 +23,12 @@ export async function probeHiddenWorldPublic(origin,{fetchFn=fetch}={}){
     ['/worlds/hidden-world/','Hidden World Atlas','text/html','atlas_entry'],
     ['/worlds/hidden-world/yakima-evidence.html','Connected tunnels established by the records reviewed','text/html','yakima_evidence'],
     ['/worlds/hidden-world/lund-building.html','National Register nomination PDF','text/html','lund_architecture'],
+    ['/worlds/hidden-world/titan-i-1962.html','Original educational SVG','text/html','titan_exhibit'],
+    ['/worlds/hidden-world/titan-i-1962-evidence.v1.json','evercraft.hidden-world.cold-war-evidence.v1','application/json','titan_ledger'],
+    ['/worlds/hidden-world/titan-walk/','ORIGINAL ART · NOT A SITE PLAN','text/html','titan_walk_page'],
+    ['/worlds/hidden-world/titan-walk/app.mjs','buildTitanDrawList','text/javascript','titan_walk_runtime'],
+    ['/worlds/hidden-world/titan-walk/scene.mjs','evercraft.hidden-world.titan-gallery.v1','text/javascript','titan_walk_scene'],
+    ['/worlds/hidden-world/titan-walk/tour.mjs','TITAN_TOUR_SECONDS','text/javascript','titan_walk_tour'],
     ['/worlds/hidden-world/yakima-standalone.html','scene-ready','text/html','yakima_exhibit'],
     ['/worlds/hidden-world/hidden_world_atlas_v1.csv','yakima,','text/csv','research_data'],
     ['/worlds/hidden-world/yakima-evidence-ledger.v1.json','evercraft.hidden-world.evidence-ledger.v1','application/json','evidence_ledger']
@@ -32,7 +38,7 @@ export async function probeHiddenWorldPublic(origin,{fetchFn=fetch}={}){
     catch{return fail(id+'_not_verified');}
   }
   return {schema:'evercraft.hidden-world.public-release-gate.v1',verified:true,origin:safe,
-    checks:['owned_worlds_health','atlas_entry','yakima_evidence','lund_architecture','yakima_exhibit','research_data','evidence_ledger'],
+    checks:['owned_worlds_health','atlas_entry','yakima_evidence','lund_architecture','titan_exhibit','titan_ledger','titan_walk_page','titan_walk_runtime','titan_walk_scene','titan_walk_tour','yakima_exhibit','research_data','evidence_ledger'],
     physical_iphone_verified:false,write_test_performed:false};
 }
 

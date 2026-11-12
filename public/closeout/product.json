@@ -1,0 +1,72 @@
+{
+  "schema": "evercraft.commercial-product.v1",
+  "product_id": "evercraft.commerce.closeout",
+  "sku_key": "closeout-pilot",
+  "brand": "Evercraft Closeout",
+  "merchant": "Evercraft LLC",
+  "category": "contractor_documentation_service",
+  "commercial_state": "founding_pilot_inquiry_only",
+  "checkout_state": "not_configured",
+  "proposed_price_usd": 49,
+  "currency": "USD",
+  "billing": "one_time",
+  "tagline": "The job is finished. Make it official.",
+  "positioning": {
+    "ideal_buyer": "Independent contractors, property maintenance teams and service businesses closing one job",
+    "buyer_problem": "Customers receive disorganized completion records, uncaptioned photos and unclear next steps",
+    "intended_outcome": "Professional reviewed closeout PDF for one completed job"
+  },
+  "delivery_contract": {
+    "deliverable": "One human-reviewed customer-facing PDF closeout packet",
+    "maximum_photos": 4,
+    "revisions_included": 1,
+    "buyer_inputs": "Authorized job summary, company and customer names, completed-work checklist, follow-up items, accurate warranty/care language and consented photographs",
+    "exclusions": "No licensed inspection, certification, legal warranty, guaranteed customer acceptance or digital signature",
+    "scope_and_capacity_approval_required": true,
+    "delivery_timing": "agreed_in_writing_after_scope_confirmation"
+  },
+  "free_tool": {
+    "url": "https://jgaethle10.github.io/forge-operator/closeout/",
+    "browser_local": true,
+    "file_upload_to_server": false,
+    "print_or_save_pdf": true,
+    "account_required": false,
+    "limits": "Up to four local image files at 5 MB each; no persistence or auto-sending"
+  },
+  "checkout": {
+    "url": null,
+    "order_created": false,
+    "checkout_available": false,
+    "provider_paid_receipt_verified": false,
+    "fulfillment_entitlement_verified": false,
+    "price_experiment_only": true,
+    "payment_authority": "Evercraft Payments",
+    "provider_boundary": "Raven Nexus",
+    "settlement_adapter": "Stripe (not a customer-facing order system)",
+    "direct_stripe_link_allowed": false
+  },
+  "buyer_action": {
+    "mode": "explicit_email_inquiry",
+    "url": "mailto:jessegaethle10@gmail.com?subject=Evercraft%20Closeout%20%7C%20%2449%20pilot%20inquiry",
+    "payment_required_before_paid_fulfillment": true,
+    "consent_required": true
+  },
+  "launch_evidence": {
+    "github_branch": "engineering/closeout-paid-pilot-20261109",
+    "pull_request": "https://github.com/jgaethle10/forge-operator/pull/1970",
+    "live_deployment_verified": false,
+    "external_buyer_validated": false,
+    "paid_customer_verified": false,
+    "revenue_verified": false
+  },
+  "discovery": {
+    "human_url": "https://jgaethle10.github.io/forge-operator/closeout/",
+    "machine_url": "https://jgaethle10.github.io/forge-operator/closeout/product.json",
+    "llms_url": "https://jgaethle10.github.io/forge-operator/closeout/llms.txt"
+  },
+  "brand_approval": {
+    "status": "working_identity_not_final_approved",
+    "trademark_cleared": false,
+    "founder_reviewed": false
+  }
+}

@@ -74,7 +74,7 @@ OWNER_SUBJECT="$("$NODE_BIN" -e "const x=require(process.argv[1]);process.stdout
 OWNER_LOGIN="$("$NODE_BIN" -e "const x=require(process.argv[1]);process.stdout.write(String(x.login||'owner'))" "$CLAIM_JSON")"
 OWNER_DISPLAY="$("$NODE_BIN" -e "const x=require(process.argv[1]);process.stdout.write(String(x.display_name||'Owner'))" "$CLAIM_JSON")"
 
-install -d -o "$RUN_USER" -g "$RUN_USER" -m 0700 "$HOME_STATE" "$HOME_STATE/identity" "$HOME_STATE/passport" "$HOME_STATE/credentials"
+install -d -o "$RUN_USER" -g "$RUN_USER" -m 0700 "$HOME_STATE" "$HOME_STATE/identity" "$HOME_STATE/passport" "$HOME_STATE/credentials" "$HOME_STATE/clip" "$HOME_STATE/clip/journal-attempts"
 install -d -o root -g root -m 0700 "$HOME_SECRET_DIR"
 
 IDENTITY_SECRET_FILE="$HOME_SECRET_DIR/identity-secret"
@@ -99,6 +99,8 @@ EVERCRAFT_IDENTITY_SECRET=$IDENTITY_SECRET
 EVERCRAFT_IDENTITY_STATE_DIR=$HOME_STATE/identity
 EVERCRAFT_PASSPORT_STATE_DIR=$HOME_STATE/passport
 EVERCRAFT_CREDENTIAL_STATE_DIR=$HOME_STATE/credentials
+# A durable per-story claim must exist before any Clip Journal provider POST.
+EVERCRAFT_CLIP_JOURNAL_STATE_DIR=$HOME_STATE/clip/journal-attempts
 EVERCRAFT_HOME_SESSION_TTL_SECONDS=1800
 EVERCRAFT_HOME_COOKIE_SECURE=true
 EVERCRAFT_HOME_COOKIE_PATH=/home

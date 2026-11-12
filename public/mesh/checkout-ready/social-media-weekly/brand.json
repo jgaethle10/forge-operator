@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "social-media-weekly",
+  "imprint": "The Weekly Signal",
+  "purpose": "Make consistent communication achievable for small teams without forcing an agency retainer.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. Some businesses have plenty to say and no spare afternoon to say it. The Weekly Signal exists for the week when showing up matters more than producing another elaborate plan.",
+    "core_belief": "Consistency is built one honest week at a time.",
+    "customer_emotion": "momentum"
+  },
+  "signature_phrase": "Show up. Say something that matters.",
+  "personality": {
+    "tone": "energetic, kind, practical; short rhythmic sentences; no hype",
+    "principles": [
+      "No vanity metrics promised",
+      "Real permissions before publishing",
+      "One week is a complete, bounded engagement"
+    ]
+  },
+  "design_system": {
+    "background": "#141d2c",
+    "panel": "#202b3b",
+    "ink": "#fff1e6",
+    "muted": "#cbd4df",
+    "accent": "#ffad79",
+    "secondary": "#ffddbd",
+    "mark": "rising-signal",
+    "typography": "rounded modern sans-serif with decisive bold headlines",
+    "motif": "repeating ascending bars and weekly cadence lines"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "awaiting_founder_review",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
+    "production_brand_lock": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
+  }
+}

@@ -10,6 +10,25 @@ on:
       - 'scripts/install-yard-saban-intent-drainer.sh'
       - 'tests/saban-yard-intent-drainer.test.mjs'
       - 'tests/saban-nodeseed-automatic-failover.test.mjs'
+      - 'tests/saban-nodeseed-receipt-gate.test.mjs'
+      - 'tests/saban-yard-unified-dispatch.test.mjs'
+      - 'tests/saban-yard-split-identity-mailbox.test.mjs'
+      - 'tests/yard-split-identity-consumer.test.mjs'
+      - 'tests/saban-yard-split-resident-cycle.test.mjs'
+      - 'scripts/preflight-saban-yard-split-runtime.mjs'
+      - 'tests/saban-yard-split-physical-preflight.test.mjs'
+      - 'scripts/inspect-penguin-broker-restart-safety.mjs'
+      - 'tests/penguin-broker-restart-safety.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
+      - 'systemia/saban/split-identity-capacity.mjs'
+      - 'systemia/saban/split-identity-cycle-runner.mjs'
+      - 'systemia/yard/split-identity-request-consumer.mjs'
+      - 'systemia/saban/split-identity-handoff.mjs'
+      - 'scripts/prepare-saban-yard-split-mailbox.sh'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
+      - 'systemia/saban/nodeseed-worker-completion-verifier.mjs'
+      - 'systemia/saban/ambient-job-dispatcher.mjs'
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
@@ -32,6 +51,25 @@ on:
       - 'scripts/install-yard-saban-intent-drainer.sh'
       - 'tests/saban-yard-intent-drainer.test.mjs'
       - 'tests/saban-nodeseed-automatic-failover.test.mjs'
+      - 'tests/saban-nodeseed-receipt-gate.test.mjs'
+      - 'tests/saban-yard-unified-dispatch.test.mjs'
+      - 'tests/saban-yard-split-identity-mailbox.test.mjs'
+      - 'tests/yard-split-identity-consumer.test.mjs'
+      - 'tests/saban-yard-split-resident-cycle.test.mjs'
+      - 'scripts/preflight-saban-yard-split-runtime.mjs'
+      - 'tests/saban-yard-split-physical-preflight.test.mjs'
+      - 'scripts/inspect-penguin-broker-restart-safety.mjs'
+      - 'tests/penguin-broker-restart-safety.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
+      - 'systemia/saban/split-identity-capacity.mjs'
+      - 'systemia/saban/split-identity-cycle-runner.mjs'
+      - 'systemia/yard/split-identity-request-consumer.mjs'
+      - 'systemia/saban/split-identity-handoff.mjs'
+      - 'scripts/prepare-saban-yard-split-mailbox.sh'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
+      - 'systemia/saban/nodeseed-worker-completion-verifier.mjs'
+      - 'systemia/saban/ambient-job-dispatcher.mjs'
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
@@ -55,6 +93,8 @@ jobs:
           node-version: '22'
       - name: Prove Yard Operator over Evercraft Compute
         run: node systemia/yard/proof.mjs
+      - name: Prove Yard route persistence across stale lease renewal
+        run: node systemia/yard/route-persistence.proof.mjs
       - name: Prove Evercraft Fabric directory routing
         run: npm run test:fabric-directory
       - name: Prove owned Fabric edge updater safety
@@ -83,5 +123,27 @@ jobs:
         run: node systemia/yard/public-edge-private-yard-authority.proof.mjs
       - name: Prove authenticated field enrollment packet
         run: node systemia/yard/field-enrollment-packet.proof.mjs
+      - name: Prove Saban remote worker receipt integrity and verification hold
+        run: node --test tests/saban-nodeseed-receipt-gate.test.mjs
+      - name: Prove bounded unified Saban to Yard dispatch and loopback fail-close
+        run: node --test tests/saban-yard-unified-dispatch.test.mjs
+      - name: Prove split-account mailbox is immutable, receipt-bound and secret-free
+        run: node --test tests/saban-yard-split-identity-mailbox.test.mjs
+      - name: Prove Yard split-account broker execution and crash recovery holds
+        run: node --test tests/yard-split-identity-consumer.test.mjs
+      - name: Prove cross-account inventory freshness and full Saban Yard dispatch round-trip
+        run: node --test tests/saban-yard-split-resident-cycle.test.mjs
+      - name: Prove physical split-account preflight is non-mutating and fail-closed
+        run: node --test tests/saban-yard-split-physical-preflight.test.mjs
+      - name: Prove missing resident broker entrypoint never authorizes restart
+        run: node --test tests/penguin-broker-restart-safety.test.mjs
+      - name: Prove cold-started broker cannot inherit prior Yard deployment identity
+        run: node --test tests/broker-cold-restart-identity.test.mjs
+      - name: Check role-specific resident cycle syntax
+        run: node --check systemia/saban/split-identity-cycle-runner.mjs && node --check systemia/saban/split-identity-capacity.mjs
+      - name: Check split-account mailbox provisioning syntax
+        run: bash -n scripts/prepare-saban-yard-split-mailbox.sh && node --check systemia/saban/split-identity-handoff.mjs
+      - name: Check unified Saban drainer shell safety and runner syntax
+        run: bash -n scripts/install-yard-saban-intent-drainer.sh && node --check systemia/yard/saban-intent-drain-runner.mjs
       - name: Prove Yard Saban resident execution bridge
         run: node --test tests/saban-yard-intent-drainer.test.mjs tests/saban-nodeseed-automatic-failover.test.mjs

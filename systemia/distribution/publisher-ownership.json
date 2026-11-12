@@ -1,8 +1,26 @@
 {
   "schema": "evercraft.distribution.publisher-ownership.v1",
-  "reviewed_at": "2026-10-29",
+  "reviewed_at": "2026-11-11",
   "policy": "Evidence required for every positive ownership assertion; no publisher-side writes without authority",
   "entries": [
+    {
+      "key": "chatgpt-evercraft-public-current",
+      "provider": "OpenAI Platform / ChatGPT",
+      "status": "PORTAL_LISTED_PUBLICLY_OBSERVED",
+      "release": "1.0.6",
+      "visibility": "PUBLIC_PORTAL",
+      "public_url": null,
+      "identification_state": "public_listing_id_not_confirmed",
+      "evidence": {
+        "source": "Publisher direct ChatGPT statement on 2026-11-11: v1.0.6 is published",
+        "receipt": "distribution/openai-plugin/public-release-report-2026-11-11.json",
+        "prior_portal_screenshot": "distribution/openai-plugin/public-listing-observation-2026-11-10.json",
+        "independent_fresh_account_discovery": false,
+        "evidence_level": "PUBLISHER_REPORT_OF_PUBLIC_VERSION_NOT_INDEPENDENT_PLATFORM_READBACK"
+      },
+      "next": "Independently verify public v1.0.6 listing and fresh-account search/install/read-only invocation; keep private plugin installs separate",
+      "current_release_verified": false
+    },
     {
       "key": "chatgpt-evercraft-personal-106",
       "provider": "OpenAI ChatGPT",
@@ -14,7 +32,7 @@
       "evidence": {
         "source": "Plugin Creator personal inventory 2026-10-25"
       },
-      "next": "Determine canonical release and actual public submission state"
+      "next": "Keep separate as private test installation; publisher reports public v1.0.6, independent external verification still pending"
     },
     {
       "key": "chatgpt-evercraft-personal-104",
@@ -32,15 +50,16 @@
     {
       "key": "chatgpt-evercraft-development",
       "provider": "OpenAI ChatGPT",
-      "status": "DISCOVERED",
+      "status": "UNINSTALLED_FROM_CHATGPT",
       "public_url": null,
       "release": "1.0.0",
-      "visibility": "PRIVATE",
+      "visibility": "NOT_INSTALLED",
       "internal_plugin_id": "plugin_asdk_app_6abc50d3a2188191af12b62d59d1ec3e",
       "evidence": {
-        "source": "Plugin Creator personal inventory 2026-10-25"
+        "source": "ChatGPT uninstall result 2026-11-10 after owner-authorized consolidation",
+        "note": "Backend source artifact may remain; this status covers the chat installation only"
       },
-      "next": "Determine developer-only versus canonical release"
+      "next": "No reconnection planned. Do not alter existing public Evercraft listing."
     },
     {
       "key": "glama-machine-commerce",

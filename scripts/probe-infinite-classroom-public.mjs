@@ -30,7 +30,7 @@ assert.match(play.body,/Science Sky Lab/);
 assert.match(play.body,/Language Tower/);
 assert.match(play.body,/Creative Studio/);
 assert.match(play.body,/Calm Meadow/);
-assert.match(play.body,/Homework Coach · hints, not answers/);
+assert.match(play.body,/Offline study steps · generic hints/);
 const match=play.body.match(/<script type="application\/json" id="quest-data">([\s\S]*?)<\/script>/);
 assert(match,'structured_quests_missing');
 const quests=JSON.parse(match[1]);

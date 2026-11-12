@@ -74,6 +74,69 @@ try{
     const archWidths=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
     assert.ok(archWidths[0]<=archWidths[1]+4,profile.name+': Lund page horizontal overflow '+archWidths);
     await page.screenshot({path:output+'/'+profile.name+'-lund.png',timeout:15000});
+
+    const titanResponse=await page.goto(origin+'/worlds/hidden-world/titan-i-1962.html',
+      {waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(titanResponse?.status(),200,profile.name+': Titan exhibit route');
+    assert.equal(await page.locator('svg[aria-labelledby="titan-svg-title titan-svg-desc"]').count(),1);
+    assert.equal(await page.locator('#era1962').isChecked(),true);
+    assert.equal(await page.locator('.phase1962').isVisible(),true);
+    await page.locator('label[for="era1959"]').click();
+    assert.equal(await page.locator('#era1959').isChecked(),true);
+    assert.equal(await page.locator('.phase1959').isVisible(),true);
+    await page.locator('label[for="era1965"]').click();
+    assert.equal(await page.locator('#era1965').isChecked(),true);
+    assert.equal(await page.locator('.phase1965').isVisible(),true);
+    await page.locator('label[for="erapresent"]').click();
+    assert.equal(await page.locator('.phasepresent').isVisible(),true);
+    await page.locator('label[for="era1962"]').click();
+    await page.locator('label[for="fConnections"]').click();
+    assert.equal(await page.locator('.connections').isVisible(),true);
+    assert.ok((await page.locator('.caution').textContent()).includes('closed to visitors'),
+      profile.name+': Titan restricted-access warning absent');
+    assert.ok((await page.locator('a[href*="historylink.org"]').count())>0,
+      profile.name+': source absent');
+    const titanWidths=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
+    assert.ok(titanWidths[0]<=titanWidths[1]+4,profile.name+': Titan horizontal overflow '+titanWidths);
+    await page.evaluate(()=>document.querySelector('.exhibit').scrollIntoView({block:'start'}));
+    await page.screenshot({path:output+'/'+profile.name+'-titan.png',timeout:15000});
+
+    // Force script unavailability as well as disabling JS in emulation; verify the real static fallback.
+    if(!profile.scripts)await page.route('**/worlds/hidden-world/titan-walk/*.mjs',route=>route.abort());
+    const walkResponse=await page.goto(origin+'/worlds/hidden-world/titan-walk/',{waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(walkResponse?.status(),200,profile.name+': Titan gallery homepage');
+    assert.equal(await page.locator('a[href="../titan-i-1962.html"]').count()>=1,true,
+      profile.name+': lost historical evidence fallback');
+    if(profile.scripts){
+      await page.waitForFunction(()=>document.body.classList.contains('js'),{timeout:10000});
+      assert.equal(await page.locator('#static-fallback').isVisible(),false);
+      await page.waitForFunction(()=>typeof window.__evercraftTitanQA==='function',{timeout:12000});
+      await page.locator('#start').click();
+      await page.waitForFunction(()=>window.__evercraftTitanQA?.().running===true,{timeout:10000});
+      const before=await page.evaluate(()=>window.__evercraftTitanQA());
+      await page.keyboard.down('w');await page.waitForTimeout(380);await page.keyboard.up('w');
+      const after=await page.evaluate(()=>window.__evercraftTitanQA());
+      assert.ok(after.z<before.z-.1,profile.name+': WASD does not move camera');
+      await page.locator('#guide').click();
+      assert.equal(await page.locator('#panel').isVisible(),true,profile.name+': research panel missing');
+      assert.ok((await page.locator('#panel-copy').textContent()).includes('fictional research museum'));
+      await page.locator('#close').click();
+      await page.locator('#tour').click();
+      await page.waitForTimeout(180);
+      assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,true,
+        profile.name+': guided history tour did not start');
+      await page.locator('#tour').click();
+      assert.equal((await page.evaluate(()=>window.__evercraftTitanQA())).tourActive,false);
+    }else{
+      const currentClass=await page.locator('body').getAttribute('class');
+      assert.equal(currentClass,'no-js',profile.name+': expected static state, got '+currentClass);
+      assert.ok((await page.locator('body').textContent()).includes('3D is unavailable without JavaScript'));
+      assert.equal(await page.locator('#static-fallback .fallback-link').isVisible(),true,
+        profile.name+': historical fallback not visible');
+      assert.equal(await page.locator('#start').isVisible(),false,
+        profile.name+': inert WebGL button visible with JavaScript disabled');
+    }
+    await page.screenshot({path:output+'/'+profile.name+'-titan-walk.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');
     receipt.scenarios.push({name:profile.name,status:'PASS',viewport:[profile.width,profile.height],
       javascript_enabled:profile.scripts,no_horizontal_overflow:true,sources_visible:true});

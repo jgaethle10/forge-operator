@@ -1,0 +1,28 @@
+{
+  "schema": "evercraft.openai.public-version-report.v1",
+  "reported_at_date": "2026-11-11",
+  "reported_by": "Evercraft publisher in ChatGPT",
+  "observed_source": "publisher_direct_message",
+  "reported_event": "Existing Evercraft LLC public plugin listing v1.0.6 published following review and separate publish action",
+  "existing_listing": true,
+  "publisher": "Evercraft LLC",
+  "plugin_name": "Evercraft",
+  "reported_public_version": "1.0.6",
+  "previously_observed_public_version": "1.0.2",
+  "package_version": "1.0.6",
+  "upload_sha256": "a958d71ab95e579bfa7f1c434071f7d92b1233bae56d2287d42abf61e8f94a9a",
+  "prior_evidence_ref": "distribution/openai-plugin/public-listing-observation-2026-11-10.json",
+  "evidence_state": "publisher_reported_not_independently_read_back_in_openai_platform",
+  "verified_elsewhere": {
+    "agent_plugins_directory_source_version": "1.0.6",
+    "note": "External Agent Plugins Directory reflects source manifest; does not prove OpenAI public listing version"
+  },
+  "remaining": {
+    "public_listing_url": "not_captured",
+    "platform_public_version_screenshot": "not_captured",
+    "outside_account_search_install": "not_verified",
+    "outside_account_mcp_invocation": "not_verified",
+    "customer_usage_and_sales": "not_measured"
+  },
+  "next_gate": "Confirm existing public listing version from OpenAI Platform listing URL and complete brand-blind clean-account discovery, install and read-only routing smoke test."
+}

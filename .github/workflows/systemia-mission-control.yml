@@ -1,0 +1,57 @@
+name: Systemia Mission Control Evidence Contract
+on:
+  pull_request:
+    paths:
+      - "public/live/mission-control.*"
+      - "public/live/mission-source.mjs"
+      - "public/live/work-source.mjs"
+      - "public/live/index.html"
+      - "public/live/README.md"
+      - "tests/systemia-mission-control.test.mjs"
+      - "tests/systemia-mission-control-export.test.mjs"
+      - "systemia/organism/mission-control-projection.mjs"
+      - "systemia/organism/mission-control-export.mjs"
+      - "systemia/organism/mission-control-node-watch.mjs"
+      - "systemia/organism/mission-control-local-reader.mjs"
+      - "systemia/organism/mission-control-local-server.mjs"
+      - "tests/systemia-mission-control-local-server.test.mjs"
+      - "tests/systemia-mission-control-node.test.mjs"
+      - ".github/workflows/systemia-mission-control.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/live/mission-control.*"
+      - "public/live/mission-source.mjs"
+      - "public/live/work-source.mjs"
+      - "public/live/index.html"
+      - "public/live/README.md"
+      - "tests/systemia-mission-control.test.mjs"
+      - "tests/systemia-mission-control-export.test.mjs"
+      - "systemia/organism/mission-control-projection.mjs"
+      - "systemia/organism/mission-control-export.mjs"
+      - "systemia/organism/mission-control-node-watch.mjs"
+      - "systemia/organism/mission-control-local-reader.mjs"
+      - "systemia/organism/mission-control-local-server.mjs"
+      - "tests/systemia-mission-control-local-server.test.mjs"
+      - "tests/systemia-mission-control-node.test.mjs"
+permissions:
+  contents: read
+jobs:
+  verify-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check JavaScript syntax
+        run: |
+          node --check public/live/mission-source.mjs
+          node --check public/live/mission-control.mjs
+          node --check systemia/organism/mission-control-projection.mjs
+          node --check systemia/organism/mission-control-export.mjs
+          node --check systemia/organism/mission-control-node-watch.mjs
+          node --check systemia/organism/mission-control-local-reader.mjs
+          node --check systemia/organism/mission-control-local-server.mjs
+      - name: Verify mission control and existing workroom boundaries
+        run: node --test tests/systemia-mission-control.test.mjs tests/systemia-mission-control-export.test.mjs tests/systemia-mission-control-node.test.mjs tests/systemia-mission-control-local-server.test.mjs tests/evercraft-live-workroom.test.mjs

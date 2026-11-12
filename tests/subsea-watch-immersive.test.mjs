@@ -104,7 +104,7 @@ test('public HTTPS canary checks the deployed footage controls and clock module'
  assert.match(publicProbe,/immersive\/video-sync\.mjs/);
  assert.match(publicProbe,/id="dive-video"/);
  assert.match(publicProbe,/id="video-offset"/);
- assert.match(publicProbe,/SUBSEA_PUBLIC_HTTPS_WEBGL_AND_LOCAL_FOOTAGE_VERIFIED/);
+ assert.match(publicProbe,/SUBSEA_PUBLIC_HTTPS_WEBGL_LOCAL_FOOTAGE_AND_NOAA_ARCHIVE_VERIFIED/);
  assert.match(publicProbe,/sample/);
  assert.doesNotMatch(publicProbe,/if\(!dive\.demo/);
 });

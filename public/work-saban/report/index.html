@@ -7,6 +7,16 @@
 <meta name="description" content="Make a checked monthly sales report from your own CSV privately in your browser. No upload or signup.">
 <link rel="icon" href="../brand/work-saban-mark.svg?v=flow3" type="image/svg+xml">
 <link rel="canonical" href="https://jgaethle10.github.io/forge-operator/work-saban/report/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Evercraft">
+<meta property="og:title" content="Work Saban | Free checked monthly sales report">
+<meta property="og:description" content="Choose your sales CSV and make a checked monthly report privately in your browser. No account or upload.">
+<meta property="og:url" content="https://jgaethle10.github.io/forge-operator/work-saban/report/">
+<meta property="og:image" content="https://jgaethle10.github.io/forge-operator/work-saban/brand/work-saban-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Work Saban by Evercraft, crimson flowing logo on white. Give your work a team.">
+<meta name="twitter:card" content="summary_large_image">
 <title>My sales report | Work Saban</title>
 <style>
 :root{color-scheme:light;--red:#a4142f;--ink:#171717;--line:#e8e4e3;--sub:#575757}
@@ -46,6 +56,11 @@ details{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 summary{cursor:pointer;font-size:14px;font-weight:800}
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f3f2;border-radius:8px;padding:15px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
 #fallback textarea{width:100%;min-height:160px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;border:1px solid var(--line);border-radius:8px;padding:12px}
+.share-tool{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:27px 0 18px;padding:21px;border:1px solid var(--line);border-radius:13px;background:#fbf8f9}
+.share-tool strong{display:block;font-size:15px}
+.share-tool p{margin:5px 0 0;color:var(--sub);font-size:13px}
+.share-tool button{min-height:44px;padding:10px 15px;white-space:nowrap}
+#share-feedback{font-size:13px;color:#71304a;min-height:1.3em;overflow-wrap:anywhere}
 .links{margin:30px 0 0;font-size:13px;color:#555}
 footer{max-width:840px;margin:10px auto 0;border-top:1px solid var(--line);padding:21px 25px 36px;color:#777;font-size:12px}
 @media(max-width:650px){.top{padding:15px 19px}.brand img{width:30px;height:30px}main{padding:48px 19px 30px}.lead{font-size:16px}.panel,.report{padding:20px}button{width:100%}.actions{flex-direction:column}}
@@ -78,6 +93,11 @@ footer{max-width:840px;margin:10px auto 0;border-top:1px solid var(--line);paddi
 <p class="note">A separate arithmetic pass compared every monthly total, grand total, and latest-month change against the selected source rows. Hashes identify the source and report bytes; they are not signed attestations or an external audit.</p>
 <pre id="proof"></pre>
 </details></div>
+</section>
+<section class="share-tool" aria-label="Share the free Work Saban tool">
+<div><strong>Know someone stuck making monthly reports?</strong><p>Share the free tool. Your CSV and report stay on your device.</p></div>
+<button type="button" id="share-tool" class="secondary">Share this free tool</button>
+<p id="share-feedback" role="status" aria-live="polite"></p>
 </section>
 <p class="links">Need more than a sales report? <a href="../plan/">Plan a task with Saban</a>. The broader multi-agent product is still in development.</p>
 </main>

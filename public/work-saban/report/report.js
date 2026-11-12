@@ -94,3 +94,33 @@ $('copy').addEventListener('click',async()=>{
     notice('Clipboard access blocked. Copy the selected report text manually.');
   }
 });
+
+const toolShareUrl='https://jgaethle10.github.io/forge-operator/work-saban/report/?utm_source=work_saban_tool&utm_medium=organic_share&utm_campaign=work_saban';
+$('share-tool').addEventListener('click',async()=>{
+  const feedback=$('share-feedback');
+  feedback.textContent='';
+  // Share only this fixed public tool URL. Never share a selected CSV, report or its digest.
+  if(typeof navigator.share==='function'){
+    try{
+      await navigator.share({
+        title:'Work Saban | Free monthly sales reporter',
+        text:'Make a checked monthly sales report from your CSV, privately in your browser. Free and no signup.',
+        url:toolShareUrl
+      });
+      feedback.textContent='Share sheet closed. No report or CSV data was shared by Work Saban.';
+      return;
+    }catch(error){
+      if(error?.name==='AbortError'){feedback.textContent='Sharing canceled.';return;}
+    }
+  }
+  try{
+    if(!navigator.clipboard?.writeText)throw new Error('clipboard_unavailable');
+    await navigator.clipboard.writeText(toolShareUrl);
+    feedback.textContent='Free tool link copied. Share it anywhere.';
+  }catch{
+    const link=document.createElement('a');
+    link.href=toolShareUrl;
+    link.textContent='Open or copy the free Work Saban link';
+    feedback.replaceChildren(document.createTextNode('Copy this link: '),link);
+  }
+});

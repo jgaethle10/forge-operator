@@ -4,7 +4,7 @@
   "slug": "college-football-power-rankings-2026-10-07",
   "title": "Evercraft College Football Power Rankings: Alabama Leads the Field",
   "published_at": "2026-10-08T13:55:57.119Z",
-  "built_at": "2026-11-10T02:34:49.035Z",
+  "built_at": "2026-11-11T08:21:09.309Z",
   "canonical_url": "https://fabric.systemiacommandcenters.com/journal/college-football-power-rankings-2026-10-07/",
   "clip_handoff_ref": "production/college-football-power-rankings-2026-10-07/clip-handoff.json",
   "evidence_state": "model_derived_from_verified_public_results",
@@ -37,7 +37,7 @@
     "text_primary": false,
     "note": "The ranking surface is structured data. Fallen should build the social and motion visual package from the same Top 25 receipt."
   },
-  "article_sha256": "a38a5030c7b40d3eb4aac4cc5fcb766b75836290d792b28ef00bb3505b043545",
+  "article_sha256": "4fcfea39460fb3b9f3e4b60493839e7ac43d0d71838110f1340f9bc714c7029d",
   "fallen_brief_sha256": "b2b4211ba8b1a866aee6cc190234121c73c7b260ec8c6f7713f36ddaa74a53a6",
   "machine_evidence_ref": "data/college-football-power-rankings-2026-10-07.json",
   "machine_evidence_sha256": "a962ac507e867106c12d8304d57e615f58215d24c3b37bc0652b9ea51c0a2f86",

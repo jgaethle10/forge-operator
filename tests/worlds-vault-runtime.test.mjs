@@ -103,6 +103,33 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  assert.equal(lund.status,200,'Lund exhibit route should resolve from owned vault');
  assert.match(lund.headers.get('content-type')||'',/^text\/html/);
  assert.match(await lund.text(),/National Register nomination PDF/);
+ const titan=await fetch(base+'/worlds/hidden-world/titan-i-1962.html');
+ assert.equal(titan.status,200);
+ assert.match(titan.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await titan.text(),/Original educational SVG/);
+ const titanEvidence=await fetch(base+'/worlds/hidden-world/titan-i-1962-evidence.v1.json');
+ assert.equal(titanEvidence.status,200);
+ assert.match(titanEvidence.headers.get('content-type')||'',/^application\/json/);
+ const titanData=await titanEvidence.json();
+ assert.equal(titanData.schema,'evercraft.hidden-world.cold-war-evidence.v1');
+ assert.equal(titanData.broad_regions.every(x=>x.actual_complex_coordinates===null&&x.open_to_public===false),true);
+ const walk=await fetch(base+'/worlds/hidden-world/titan-walk/');
+ assert.equal(walk.status,200);
+ assert.match(walk.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await walk.text(),/ORIGINAL ART · NOT A SITE PLAN/);
+ for(const [file,marker] of [
+  ['app.mjs','buildTitanDrawList'],
+  ['scene.mjs','evercraft.hidden-world.titan-gallery.v1'],
+  ['tour.mjs','TITAN_TOUR_SECONDS']
+ ]){
+  const resource=await fetch(base+'/worlds/hidden-world/titan-walk/'+file);
+  assert.equal(resource.status,200,file+' must be hosted by owned vault');
+  assert.match(resource.headers.get('content-type')||'',/^text\/javascript/);
+  assert.ok((await resource.text()).includes(marker));
+ }
+ assert.equal((await fetch(base+'/worlds/hidden-world/titan-walk/.env')).status,404);
+
+
 
  const hiddenCsv=await fetch(base+'/worlds/hidden-world/hidden_world_atlas_v1.csv');
  assert.equal(hiddenCsv.status,200);
