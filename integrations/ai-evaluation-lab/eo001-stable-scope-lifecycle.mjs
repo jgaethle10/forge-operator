@@ -97,6 +97,29 @@ function checkProcAbsent(row,identity){
     row.observer==='supervisor-procfs',
     'RECORDED_PROCESS_STILL_PRESENT_OR_UNKNOWN');
 }
+
+/**
+ * Contract v0.2 requires an explicit swap policy for the next synthetic
+ * physical field proof. The earlier owner-run canary did NOT read swap.
+ * No silent fallback from unsupported cgroup or absent readback to "off".
+ * This is supplied metadata only, never independent kernel enforcement.
+ */
+export function verifySwapPolicyMetadata(swap){
+  ensure(swap&&swap.requested_policy==='swap-disabled'&&
+    swap.requested_value==='0',
+    'SWAP_POLICY_METADATA_MISSING');
+  ensure(swap.control_supported===true,
+    'SWAP_CONTROL_UNSUPPORTED_REVIEW_REQUIRED');
+  ensure(swap.observed_value!==null&&
+    swap.observed_value!==undefined,
+    'SWAP_READBACK_MISSING');
+  ensure(swap.observed_value==='0','SWAP_POLICY_MISMATCH');
+  return Object.freeze({
+    synthetic_swap_policy_metadata_consistent:true,
+    swap_kernel_readback_independently_verified:false,
+    model_resource_budget_approved:false
+  });
+}
 /**
  * A packet describes kernel observations supplied by a future privileged
  * read-only observer. This validator checks internal consistency only.
@@ -134,6 +157,7 @@ export function verifyScopeLifecyclePacket({packet}={}){
   ensure(pre.cgroup.path===cgroupPath&&post.cgroup.path===cgroupPath,
     'CGROUP_SCOPE_PATH_CHANGED');
   parsePopulation(pre.cgroup.events,1);
+  verifySwapPolicyMetadata(pre.cgroup.swap);
   parsePopulation(post.cgroup.events,0);
 
   ensure(Number.isSafeInteger(stop.cleanup_budget_ms)&&
@@ -211,6 +235,8 @@ export function verifyScopeLifecyclePacket({packet}={}){
     poststop_recursive_populated_zero_consistent:true,
     poststop_subtree_metadata_empty:true,
     bounded_cleanup_metadata_consistent:true,
+    synthetic_swap_policy_metadata_consistent:true,
+    swap_kernel_readback_independently_verified:false,
     observer_provenance_authenticated:false,
     field_observer_executed_by_this_module:false,
     actual_process_death_independently_proven:false,
