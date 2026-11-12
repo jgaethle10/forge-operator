@@ -5,6 +5,10 @@ on:
     paths:
       - 'public/closeout/**'
       - 'tests/closeout-static.test.mjs'
+      - 'tests/closeout-owned-payment-route.test.mjs'
+      - 'systemia/closeout/**'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'scripts/probe-closeout-public.mjs'
       - '.github/workflows/evercraft-closeout.yml'
   push:
     branches: [main]
@@ -28,7 +32,7 @@ jobs:
           node-version: '22'
       - name: Verify standalone Closeout and buyer boundaries
         run: |
-          node --test tests/closeout-static.test.mjs
+          node --test tests/closeout-static.test.mjs tests/closeout-owned-payment-route.test.mjs tests/public-payment-offers.test.mjs
           test -s public/closeout/index.html
       - name: Publish product QA receipt
         if: success()
