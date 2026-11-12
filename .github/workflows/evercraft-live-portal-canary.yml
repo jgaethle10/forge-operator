@@ -1,5 +1,8 @@
 name: Evercraft LIVE verified public workroom canary
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/evercraft-live-portal-canary.yml'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -37,12 +40,24 @@ jobs:
           check 'live/workroom.mjs' "fetch(API+path"
           check 'live/work-source.mjs' 'normalizePublicActivity'
           check 'live/workroom.css' '.focus-title'
+          # This is source-independent deployed HTTPS verification of Build 04,
+          # not a substitute for private Systemia/Passport/Yard runtime proofs.
+          check 'live/mission-control.html' 'BUILD 04 / EVIDENCE-FIRST OPERATOR VIEW'
+          grep -Fq 'id="localNodeCards"' "$tmp"
+          grep -Fq 'CHECKOUT UNKNOWN' "$tmp"
+          grep -Fq "connect-src 'self' https://api.github.com" "$tmp"
+          check 'live/mission-control.mjs' "if(LOCAL_ONLY)"
+          grep -Fq "fetch('/v1/snapshot'" "$tmp"
+          check 'live/mission-source.mjs' 'evercraft.systemia.operator-mission-snapshot.v1'
+          check 'live/mission-control.css' '.local-nodes'
+          echo 'MISSION_CONTROL_DEPLOYED_ASSETS_HTTPS_VERIFIED'
+
           # Original functional artifacts remain available but are not the default 24/7 stage.
           check 'demos/earthworks-autonomy/?studio=1' 'studioCamera'
           check 'visuals/washington-active-volcanoes/motion.html' 'WASHINGTON'
           {
-            echo '## Evercraft LIVE public Workroom'
-            echo "Verified public workroom assets and original demos at $BASE/live/"
-            echo 'This checks static host availability, not actual GitHub REST freshness, streaming uptime, or private mission activity.'
+            echo '## Evercraft LIVE public Workroom and Mission Control'
+            echo "Verified public Workroom and Mission Control assets at $BASE/live/; original demos retained"
+            echo 'This checks static HTTPS host availability and source integrity, not authenticated node state, GitHub REST freshness, streaming uptime, real agent execution or paid revenue.'
             echo "Observed: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           } >> "$GITHUB_STEP_SUMMARY"
