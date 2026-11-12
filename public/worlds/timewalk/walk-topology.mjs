@@ -5,6 +5,7 @@
 import {makeHistoricalOverlay} from './historical-evidence.mjs';
 import {resolvePeriodAppearance} from './architectural-periods.mjs';
 import {makeMapSheetAnchors} from './map-sheet-anchors.mjs';
+import {makeMapChangeReview} from './map-change-review.mjs';
 export const WALK_TOPOLOGY_SCHEMA='evercraft.timewalk.walk-topology.v1';
 const fail=(message)=>{throw Error('timewalk_walk_topology_'+message)};
 const matchPlace=(a,b)=>['city','region','country'].every(k=>String(a?.[k]||'').toLowerCase()===String(b?.[k]||'').toLowerCase());
@@ -51,6 +52,7 @@ export function makeTimewalkSceneHandoff(ledger,route,architecture,archiveAcquis
   const evidence=makeHistoricalOverlay(ledger,route.sceneYear);
   const architecturalCue=resolvePeriodAppearance(architecture,ledger,route.sceneYear);
   const historicalMapAnchors=archiveAcquisition ? makeMapSheetAnchors(archiveAcquisition,ledger) : null;
+  const neighborhoodChangeReview=archiveAcquisition?.curatorConfirmation?.additionalReply ? makeMapChangeReview(archiveAcquisition,ledger) : null;
   return {
     schema:'evercraft.timewalk.scene-handoff.v1',
     worldId:route.worldId,sceneYear:route.sceneYear,mode:'walk',
@@ -59,6 +61,7 @@ export function makeTimewalkSceneHandoff(ledger,route,architecture,archiveAcquis
     historicalEvidence:evidence,
     architecturalCues:[architecturalCue],
     historicalMapAnchors,
+    neighborhoodChangeReview,
     orderedWaypoints:route.routeNodes.map(n=>({
       id:n.id,placeId:n.placeId,title:n.title,
       streetContext:n.streetContext,position:null,worldPosition:null,
@@ -76,7 +79,9 @@ export function makeTimewalkSceneHandoff(ledger,route,architecture,archiveAcquis
       'Street sequence is a research storyboard based on modern route orientation, not verified 1960 sidewalk geometry.',
       'Canonical Worlds must provide all player movement, physics, rendering, placement and persistent scenes.',
       'Building appearance before the 1963 bank remodel is retrospectively inferred, not a 1960 photogrammetric facade.',
-      'Archivist identified Yakima Sanborn sheets 6 and 15 and reports matching 1952/1960 footprints; original 1960 sheets remain uninspected and no georeferenced geometry is approved.'
+      'CSUN archivist reported six correction rounds on the Yakima volume; two named landmarks appear unchanged but other nearby buildings changed between 1952 and 1960.',
+      'Exact dates of individual sheet pasteovers were not recorded; no blanket 1952 neighborhood carry-forward into 1960 is authorized.',
+      'Original CSUN 1960 sheets remain uninspected by Evercraft; independent georeferenced 1960 geometry and separate publication rights remain unverified.'
     ]
   };
 }
