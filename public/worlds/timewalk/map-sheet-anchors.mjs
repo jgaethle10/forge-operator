@@ -32,6 +32,12 @@ export function makeMapSheetAnchors(acquisition,ledger) {
    curatorReportedVolumeCorrectedThrough:1960,
    individual1960CorrectionDateVerified:false,
    curatorReportedFootprintsMatch1952:true,
+   curatorFootprintStatementScope:'two_named_landmark_buildings_only',
+   correctionRoundsReported:receipt.additionalReply?.reportedCorrectionRounds??null,
+   bothSheetsCarryUndatedCorrections:receipt.additionalReply?.bothSheetsHaveCorrections===true,
+   surroundingBuildingsChanged:receipt.additionalReply?.surroundingBuildingsChangedBetween1952And1960===true,
+   blanket1952NeighborhoodCarryForwardAllowed:false,
+   individualPasteoverDatesRecoverable:false,
    independentFootprintComparisonComplete:false,
    sourceImageRights1952:'loc-online-public-domain',
    sourceImageRights1960:'unverified-separate-physical-copy',
@@ -59,6 +65,6 @@ export function makeMapSheetAnchors(acquisition,ledger) {
    realWorldNavigationAuthorized:false,
    publishing1960OriginalAllowed:false,
    accurate1960SceneAuthorized:false,
-   nextReview:'Inspect digital 1952 source pixels and then item-level 1960 corrections; verify rights for any CSUN 1960 scan and separate ground-control points.'
+   nextReview:'Six map correction rounds, no individually dated pasteovers, nearby building changes known. Inspect LOC 1952 pixels and per-feature 1960 revisions; verify distinct CSUN rights and survey control points.'
  };
 }
