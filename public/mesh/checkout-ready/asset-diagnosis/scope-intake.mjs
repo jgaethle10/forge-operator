@@ -14,6 +14,7 @@ export function buildAssetScopeInquiry(values = {}) {
   const issue = clean(values.issue, 320);
   const decision = clean(values.decision, 240);
   const timing = clean(values.timing, 100);
+  if (values.authorized !== 'yes' && values.authorized !== true) throw new Error('Confirm that you own this asset or are authorized to discuss it.');
   const source = values.source === 'evercraft_try'
     ? 'Evercraft free tools (visitor-provided link context)'
     : 'Asset Diagnosis page';
