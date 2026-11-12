@@ -27,7 +27,7 @@ Never label a dashboard number LIVE without authenticated runtime evidence or an
 
 ## Release gate
 1. Preserve Forge Operator's existing Vite main root; do not replace that business application's route silently.
-2. Approve a corporate host. Mount the headquarters page at the approved hostname's / using Evercraft-owned Yard/Edge routing.
+2. GitHub Pages fallback now builds the company homepage at the Pages root, preserving CHUM under /chum/. Approve a distinct corporate hostname and map it to Evercraft-owned Yard/Edge when independently ready.
 3. Verify DNS, actual TLS, mobile/desktop layouts, accessibility, no broken links and metadata against that host.
 4. Independently verify services, Journal and CHUM destinations. Source references alone cannot prove public reachability.
 5. Confirm email draft links work; no server-side leads are claimed.
@@ -40,3 +40,6 @@ Never label a dashboard number LIVE without authenticated runtime evidence or an
 Black #090A0C; engineering white #F5F5F2; titanium #B7BDC5; champagne gold #B79A56; electric ice blue #4FB8FF as a focus accent. Native font fallback avoids third-party dependencies. The exact commercial Montserrat Extended font can be used later only with appropriate licensing.
 
 The goal is the feeling of stepping inside a consequential institution without pretending Evercraft has a physical Manhattan office.
+
+## Pages-root promotion
+The existing Evercraft public web fallback was redirecting visitors from / to CHUM. The publisher now copies the public Headquarters page to the Pages artifact root, verifies the site after HTTPS deployment, and retains the source /headquarters/ alias. This is a GitHub Pages public fallback, not proof of a separate corporate custom domain. The source repo's Vite Forge Operator index remains unchanged.
