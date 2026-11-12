@@ -3,6 +3,7 @@ import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
 import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
+import {mountSocietyLedger} from './society-ledger.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
 let cloudOwner=null;
 try{cloudOwner=validateOwner(JSON.parse(localStorage.getItem(CLOUD_KEY)||'null'));}catch{}
@@ -36,6 +37,7 @@ function lookAt(eye,target){const z=norm([eye[0]-target[0],eye[1]-target[1],eye[
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm=v=>{const d=Math.hypot(...v)||1;return v.map(x=>x/d);};
 let state=loadWorld(localStorage),visitingShared=false,pendingShared=null,started=false,editorOpen=false,previous=performance.now(),elapsed=0,fpsFrames=0,fpsStart=performance.now(),fps=0,lastSave=0;
 let camera={x:state.player.x,y:1.72,z:state.player.z,yaw:state.player.yaw,pitch:-.06,vy:0},keys={},joystick={x:0,y:0},renderAgents=[];
+const societyLedger=mountSocietyLedger({onOpen:()=>{keys={};joystick={x:0,y:0};}});
 let qualityMode='auto',quality={...DEFAULT_QUALITY};
 try{qualityMode=validQualityMode(localStorage.getItem(QUALITY_KEY));}catch{}
 $('qualityMode').value=qualityMode;
@@ -143,7 +145,7 @@ function extra(kind,x,z){const arr=[];const a=(type,dx,y,dz,sx,sy,sz,color)=>arr
  return arr;
 }
 function resize(){const ratio=Math.min(devicePixelRatio||1,1.65)*modeScale(qualityMode,quality),w=Math.max(1,Math.round(canvas.clientWidth*ratio)),h=Math.max(1,Math.round(canvas.clientHeight*ratio));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
-function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInstanceCount=0;const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen){
+function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInstanceCount=0;const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen&&!societyLedger.isOpen()){
  let f=Number(Boolean(keys.KeyW||keys.ArrowUp))-Number(Boolean(keys.KeyS||keys.ArrowDown))-joystick.y,side=Number(Boolean(keys.KeyD||keys.ArrowRight))-Number(Boolean(keys.KeyA||keys.ArrowLeft))+joystick.x;
  const mag=Math.hypot(f,side);if(mag>.02){f/=Math.max(1,mag);side/=Math.max(1,mag);const step=dt*(keys.ShiftLeft?6.6:3.75),s=Math.sin(camera.yaw),c=Math.cos(camera.yaw),x=camera.x+(s*f+c*side)*step,z=camera.z+(-c*f+s*side)*step;if(canWalk(x,camera.z))camera.x=x;if(canWalk(camera.x,z))camera.z=z;}
  camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}
@@ -261,7 +263,7 @@ $('unpublishOnline').onclick=async()=>{
 $('commandForm').onsubmit=e=>{e.preventDefault();runCommand($('command').value);};document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('download').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evercraft-worlds-mossmere.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500);};
 $('upload').onchange=async e=>{try{const file=e.target.files?.[0];if(!file||file.size>200000)throw Error('Choose a world JSON under 200 KB');const w=validateWorld(JSON.parse(await file.text()));state=w;camera.x=w.player.x;camera.z=w.player.z;camera.yaw=w.player.yaw;visitingShared=false;forgetCloudOwner();$('save').textContent='Save';persist();notify('World imported successfully.');}catch(err){notify(`Import rejected: ${err.message}`);}e.target.value='';};
-addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
+addEventListener('keydown',e=>{if(societyLedger.isOpen()||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
 let pointer=null;canvas.addEventListener('pointerdown',e=>{if(!started||editorOpen||!$('modal').classList.contains('hidden'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;camera.yaw+=dx*.004;camera.pitch=Math.max(-1.18,Math.min(1.18,camera.pitch-dy*.0034));pointer.x=e.clientX;pointer.y=e.clientY;});canvas.addEventListener('pointerup',()=>{pointer=null;});
 let stickPointer=null;const stick=$('joystick'),thumb=$('joystickThumb');function stickMove(e){const r=stick.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),rad=Math.max(25,r.width*.4),scale=Math.min(1,rad/(Math.hypot(x,y)||1));joystick={x:x*scale/rad,y:y*scale/rad};thumb.style.transform=`translate(${joystick.x*rad}px,${joystick.y*rad}px)`;}stick.addEventListener('pointerdown',e=>{stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);stickMove(e);});stick.addEventListener('pointermove',e=>{if(stickPointer===e.pointerId)stickMove(e);});function releaseStick(){stickPointer=null;joystick={x:0,y:0};thumb.style.transform='translate(0,0)';}stick.addEventListener('pointerup',releaseStick);stick.addEventListener('pointercancel',releaseStick);
 addEventListener('pagehide',()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();});
