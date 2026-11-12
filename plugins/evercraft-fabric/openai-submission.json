@@ -14,7 +14,7 @@
     "terms_url": "https://fabric.systemiacommandcenters.com/terms",
     "support_url": "https://fabric.systemiacommandcenters.com/support"
   },
-  "submission_state": "existing_public_listing_v1_0_2_observed_source_update_v1_0_6_prepared",
+  "submission_state": "existing_public_listing_v1_0_6_publisher_reports_published",
   "public_directory_claim_allowed": false,
   "compatibility_transport": {
     "mcp": null,
@@ -102,8 +102,11 @@
     "independent_directory_search": "not_confirmed",
     "upgrade_version": "1.0.6",
     "upgrade_submission_status": "not_confirmed",
-    "upgrade_publication_status": "not_confirmed",
-    "evidence_ref": "distribution/openai-plugin/public-listing-observation-2026-11-10.json"
+    "upgrade_publication_status": "publisher_reports_published_not_independently_verified",
+    "evidence_ref": "distribution/openai-plugin/public-listing-observation-2026-11-10.json",
+    "publisher_reported_latest_public_version": "1.0.6",
+    "publisher_report_date": "2026-11-11",
+    "publisher_report_evidence_ref": "distribution/openai-plugin/public-release-report-2026-11-11.json"
   },
-  "public_directory_claim_scope": "fresh_external_directory_discovery_not_yet_verified"
+  "public_directory_claim_scope": "publisher reported public v1.0.6; independent brand-blind discovery unverified"
 }
