@@ -1,0 +1,66 @@
+name: EO-001 Gate 1 integrated offline review (NO physical admission)
+on:
+  push:
+    branches:
+      - research/eo001-gate1-integrated-offline-20261111
+  pull_request:
+    branches:
+      - research/eo001-gate1-escaped-session-negative-control-20261110
+    paths:
+      - 'integrations/ai-evaluation-lab/**'
+      - 'systemia/saban/microseed-pairing.mjs'
+      - '.github/workflows/eo001-gate1-integration-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review-only-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check integration candidates
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.mjs
+          node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
+          node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
+      - name: Verify authorization expiry is not weakened
+        run: |
+          node --test tests/saban-microseed-device-pair-cli.test.mjs
+          node --test tests/saban-microseed-pairing.test.mjs
+      - name: Verify user systemd scope and supervisor readback refusal offline
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-session-proof.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.test.mjs
+      - name: Verify live Linux synthetic process-group negative controls (no scope)
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-process-group-escape-negative.test.mjs
+          node --test --test-concurrency=1 integrations/ai-evaluation-lab/eo001-hardstop-offline-supervisor.test.mjs
+      - name: Verify gateway protocol, aborts and guarded timing with fixtures only
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-gate1-offline-contract.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-gateway-abort.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-guarded-whole-decision.test.mjs
+      - name: Prove default admission remains held and no Qwen is run
+        run: |
+          set +e
+          node integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs > /tmp/eo001-gate1-integration-refusal.json
+          R=$?
+          set -e
+          test "$R" -eq 2
+          python3 - <<'PY'
+          import json
+          x=json.load(open('/tmp/eo001-gate1-integration-refusal.json'))
+          assert x['state']=='CGROUP_SCOPE_ADMISSION_BLOCKED'
+          assert x['model_inference_executed'] is False
+          assert x['external_actions_authorized'] is False
+          print('EO001_REVIEW_ONLY: PASS')
+          PY
