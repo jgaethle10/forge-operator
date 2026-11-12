@@ -44,7 +44,7 @@
     "acquisitionPaid": false,
     "purchaseAuthorized": false,
     "requestedPurpose": "identify sheet metadata and request rights options; no paid scan authorization",
-    "rightsDecision": "unverified",
+    "rightsDecision": "unverified_for_csun_1960_physical_map; LOC_online_1952_separate",
     "publicDistributionAllowed": false,
     "originalMapImageEmbeddingAllowed": false,
     "commercialDerivedGeometryAllowed": false,
@@ -55,7 +55,7 @@
     "replyReceived": true,
     "archiveSheetNumbersConfirmed": true,
     "replyReceivedLocalDate": "2026-11-10",
-    "replySummary": "CSUN collection staff identified sheets 6 and 15 in a Yakima volume apparently corrected through 1960 and supplied direct LOC 1952 comparisons; actual 1960 scans not obtained."
+    "replySummary": "CSUN confirmed sheets #6/#15 and supplied LOC 1952 comparisons. In Nov 11 reply, staff confirmed six correction rounds, corrections on both sheets, no dates per pasteover, two landmarks visually identical 1952 vs 1960 but changes nearby. Physical 1960 scans not inspected by Evercraft."
   },
   "searchTargets": [
     {
@@ -79,11 +79,11 @@
       "goal": "Identify actual Capitol Theatre footprint; historic numeric address discrepancy unresolved"
     }
   ],
-  "nextAction": "Review LOC 1952 viewer pages 11 and 20, request optional no-cost 1960 sheet correction date/license clarification, and obtain independently controlled map tie points. No purchase or publication of physical CSUN scans.",
+  "nextAction": "Treat neighborhood 1952 geometry as period-unverified due to documented 1952–1960 changes; inspect the two LOC 1952 sheets and obtain item-level 1960 comparison if permitted, separately review rights and geographic controls. No paid scans ordered.",
   "geometryReady": false,
   "sourceOriginalVerified": false,
   "worldsRuntimeAuthorized": false,
-  "sourceControlStatus": "curator-identified 1960 Yakima sheets #6/#15, still no original 1960 scan, measured geometry or specific image license",
+  "sourceControlStatus": "historian-reported six 1952–1960 correction rounds: landmarks appear unchanged, nearby buildings changed; no 1960 pixels independently examined, geometric validation or 1960 image rights",
   "curatorConfirmation": {
     "confirmationStatus": "archive_staff_identified_sheets_not_direct_item_review",
     "receivedLocalDate": "2026-11-10",
@@ -120,6 +120,22 @@
     "rightsDecision1960Original": "not-granted; archive staff's suggestion about LOC online public-domain reuse does not license CSUN physical 1960 sheet",
     "publicOriginal1960SheetReproductionAllowed": false,
     "coordinates": null,
-    "note": "Do not silently promote matching building footprints to 1960 facade/tenants or infer validated meter-scale geometry from these viewer URLs."
+    "note": "Do not silently promote matching building footprints to 1960 facade/tenants or infer validated meter-scale geometry from these viewer URLs.",
+    "additionalReply": {
+      "receivedLocalDate": "2026-11-11",
+      "reportedCorrectionRounds": 6,
+      "bothSheetsHaveCorrections": true,
+      "individualPasteoverDatesRecorded": false,
+      "latestVolumeAppearanceYear": 1960,
+      "landmarkBuildingsAppearIdenticalTo1952": true,
+      "surroundingBuildingsChangedBetween1952And1960": true,
+      "changedSurroundingBuildingsIdentified": false,
+      "changedSurroundingBuildingGeometryExtracted": false,
+      "archivistIdentity": "David Deis, CSUN Sanborn Collection",
+      "status": "archivist_report_direct_email_not_independent_original_inspection",
+      "statementSummary": "Six correction rounds in the CSUN volume, both sheets have corrections, exact pasteover dates were not recorded; landmark buildings appear identical to the 1952 online atlas while nearby buildings did change.",
+      "copyrightClarificationStatus": "archive_staff_could_not_confirm_1960_reuse_rights",
+      "sourceDelivery": "connected Gmail, reply in original CSUN inquiry thread"
+    }
   }
 }
