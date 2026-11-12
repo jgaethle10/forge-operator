@@ -70,8 +70,29 @@
             "https://workforcesignal.com/newsletter"
           ],
           "reviewer_resolution": null
+        },
+        {
+          "id": "BR-001-RISK-CLEARANCE-002",
+          "status": "open",
+          "severity": "needs_review",
+          "type": "candidate_names_not_officially_cleared",
+          "finding": "New exploratory candidates have received only limited public exact-name searching; US trademark, domain and social-handle clearances not performed.",
+          "reviewer_resolution": null
         }
-      ]
+      ],
+      "exploration": {
+        "version": "BR-001-ALTERNATES.v1",
+        "state": "unapproved_concept_comparison",
+        "review_file": "docs/branding/approvals/BR-001-name-exploration-v1.md",
+        "structured_file": "docs/branding/approvals/BR-001-name-exploration-v1.json",
+        "preview_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/",
+        "candidates": [
+          "Weekkin",
+          "Cadencekeep",
+          "Weekmorrow"
+        ],
+        "founder_selected_candidate": null
+      }
     },
     {
       "order": 2,
