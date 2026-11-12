@@ -22,6 +22,7 @@ const shell=(title,body,{
   ogImageWidth=0,
   ogImageHeight=0,
   ogImageAlt='',
+  noindex=false,
 }={})=>{
   const canonicalUrl=canonical
     ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
@@ -48,6 +49,7 @@ ${socialImage&&ogImageType?'<meta property="og:image:type" content="'+escapeHtml
 ${socialImage&&ogImageWidth?'<meta property="og:image:width" content="'+Number(ogImageWidth)+'">':''}
 ${socialImage&&ogImageHeight?'<meta property="og:image:height" content="'+Number(ogImageHeight)+'">':''}
 ${socialImage&&ogImageAlt?'<meta property="og:image:alt" content="'+escapeHtml(ogImageAlt)+'">':''}
+${noindex?'<meta name="robots" content="noindex,nofollow">':''}
 <meta name="twitter:card" content="${socialImage?'summary_large_image':'summary'}">
 ${socialImage?'<meta name="twitter:image" content="'+socialImage+'">':''}
 <meta name="twitter:title" content="${socialTitle}">
@@ -522,6 +524,43 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
     ogImageWidth:copy.shareImageWidth||0,
     ogImageHeight:copy.shareImageHeight||0,
     ogImageAlt:copy.shareImageAlt||'',
+  });
+}
+
+export function renderWebsiteAuditPaymentStatus({state='pending',queued=false}={}){
+  const known=['paid','pending','invalid','synthetic'];
+  const status=known.includes(state)?state:'pending';
+  const paid=status==='paid', isQueued=paid&&queued===true;
+  const heading=paid?'Payment verified.':status==='synthetic'?'QA transaction only.':status==='invalid'?'This checkout cannot be verified.':'We are checking your payment.';
+  const explanation=paid
+    ?(isQueued?'Evercraft Payments verified the order and the audit job was queued. A queued job is not yet a completed report.':'Evercraft Payments verified the order. Report preparation and delivery still need independent confirmation.')
+    :status==='synthetic'?'This is a synthetic verification, not a real customer purchase. No customer report has been authorized.'
+    :status==='invalid'?'The return details did not match an authorized Website Audit order. We cannot confirm any payment or begin work.'
+    :'We do not yet have a matching provider-paid receipt. If you submitted payment, do not try to pay again until it is verified.';
+  const badge=paid?'Provider payment confirmed':status==='synthetic'?'Test only':status==='invalid'?'Verification unavailable':'Awaiting payment evidence';
+  const progress=(label,complete,note)=>'<div style="display:grid;grid-template-columns:32px 1fr;gap:13px;align-items:start;padding:14px 0;border-bottom:1px solid #284766"><div aria-hidden="true" style="width:28px;height:28px;display:grid;place-items:center;border-radius:50%;border:1px solid '+(complete?'#78d9bb':'#577690')+';background:'+(complete?'#164334':'#16283c')+';color:'+(complete?'#acf0d8':'#b7cde0')+';font-size:12px;font-weight:800">'+(complete?'✓':'·')+'</div><div><strong style="display:block;color:#f4f9ff">'+escapeHtml(label)+'</strong><span style="font-size:13px;color:#b7cde0;line-height:1.6">'+escapeHtml(note)+'</span></div></div>';
+  return shell('Website Audit order status · Evercraft',[
+    '<main style="max-width:870px;margin:0 auto;padding:60px 0 100px">',
+    '<div class="eyebrow">Evercraft Payments · Website Audit</div>',
+    '<h1 style="font-size:clamp(38px,6.8vw,68px);margin:18px 0 20px;max-width:850px">'+heading+'</h1>',
+    '<p class="lede">'+escapeHtml(explanation)+'</p>',
+    '<section aria-label="Payment and delivery progress" style="padding:clamp(20px,4vw,36px);margin:34px 0 24px;border:1px solid #355d7d;border-radius:22px;background:linear-gradient(140deg,#102b41,#0a1728)">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap"><h2 style="margin:0;font-size:23px">Your audit journey</h2><span style="border:1px solid #5585a5;padding:8px 12px;border-radius:999px;font-size:12px;color:#d6eeff">'+escapeHtml(badge)+'</span></div>',
+    progress('Secure checkout',paid,'Checkout details alone never prove payment.'),
+    progress('Provider-paid receipt',paid,'Only matching evidence from Evercraft Payments can confirm this step.'),
+    progress('Audit work queued',isQueued,'We inspect one public site and prioritize five specific fixes.'),
+    progress('Reviewed report delivered',false,'A completed, reviewed delivery is confirmed separately.'),
+    '</section>',
+    '<section aria-label="Next step" class="offer-panel">',
+    '<h2>'+(paid?'What happens next?':'Need assistance?')+'</h2>',
+    '<p>'+(paid?'Check the email address used for checkout for updates. No report is claimed delivered on this page.':'If you have a charge or receipt, preserve it and email us. Do not repeat a payment just because the return page is pending.')+'</p>',
+    '<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=Website%20Audit%20order%20status">Email Evercraft about this order</a><a class="btn" href="/offers/website-audit">Website Audit details</a></div>',
+    '<p class="checkout-note">We do not require a phone call to request help. This page never takes a second payment.</p>',
+    '</section></main>'
+  ].join('\n'),{
+    description:'Secure Website Audit order-status page with verified payment and delivery state.',
+    canonical:'/offers/website-audit',
+    noindex:true,
   });
 }
 
