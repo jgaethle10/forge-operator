@@ -614,6 +614,29 @@ function rpcError(id,code,message){
   return {jsonrpc:'2.0',id:id??null,error:{code,message}};
 }
 
+// The live MCP connector can be fully operational while a *different*
+// product checkout or payment provider remains unverified. Returning a
+// successful tool call is direct evidence of this read-only operation,
+// NOT a newly checked customer payment flow.
+const pluginResponseStatus=(method)=>Object.freeze({
+  state:'operational_for_this_request',
+  method,
+  scope:'read_only_capability_discovery',
+  payment_or_order_created:false,
+});
+const historicalCheckoutEvidence=Object.freeze({
+  state:'checkout_unverified_and_not_offered',
+  checkout_enabled:false,
+  last_observed_provider_failure:{
+    http_status:402,
+    observed_date:'2026-10-17',
+    evidence_scope:'historical_commercial_checkout_probe',
+  },
+  current_provider_http_status:'not_checked_by_this_plugin_call',
+  current_paid_receipt:'not_verified',
+  plugin_usable_independently:true,
+});
+
 function toolResult(payload){
   return {
     content:[{type:'text',text:JSON.stringify(payload,null,2)}],
@@ -653,6 +676,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
+        plugin_operation:pluginResponseStatus('match_evercraft_capability'),
         intent,
         matches,
         match_count:matches.length,
@@ -667,6 +691,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
+        plugin_operation:pluginResponseStatus('list_evercraft_capabilities'),
         capabilities,
         returned:capabilities.length,
         total:normalized.length,
@@ -682,13 +707,16 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
+        plugin_operation:pluginResponseStatus('get_evercraft_connection_options'),
+        checkout_evidence:historicalCheckoutEvidence,
         public_id:capability.public_id,
         name:capability.name,
         state:capability.state,
         connections:capability.connections,
-        // Public buyer URLs are held after independent HTTP 402 findings.
-        // A dated catalog validation does not prove current checkout availability.
-        // Restore only with an explicitly verified provider-to-canonical-receipt gate.
+        // The checkout hold is a separate commercial gate. Its last
+        // observed provider 402 was October 17, not a fresh provider
+        // probe from this successful plugin call. Keep customer payment
+        // blocked until provider settlement/fulfillment is verified.
         human_offer_url:null,
         owned_human_buyer_options:[],
         human_buyer_options:[],
