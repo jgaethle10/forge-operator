@@ -229,7 +229,7 @@ jobs:
           test -s _public_pages/commercial-studio/index.html
           grep -Fq 'id="intro-offer"' _public_pages/commercial-studio/index.html
           grep -Fq '$50 introductory 30-second social commercial' _public_pages/commercial-studio/index.html
-          grep -Fq '<option>$50 launch-week 30-second social commercial pilot</option>' _public_pages/commercial-studio/index.html
+          grep -Fq '<option value="$50 launch-week 30-second social commercial pilot">$50 founding 30-second social commercial pilot</option>' _public_pages/commercial-studio/index.html
           grep -Fq 'id="studio-request"' _public_pages/commercial-studio/index.html
           grep -q 'eps-continuity-20261017' _public_pages/eps/index.html
           grep -q 'havenly-continuity-20261017' _public_pages/havenly/index.html
