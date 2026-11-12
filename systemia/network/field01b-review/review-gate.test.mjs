@@ -1,0 +1,43 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {reviewCandidate, PINNED_REVIEW_SNAPSHOT} from './review-gate.mjs';
+const fixture=JSON.parse(readFileSync(new URL('./review-record.json', import.meta.url), 'utf8'));
+const changed=(f)=>{const value=structuredClone(fixture);f(value);return value;};
+const rejected=(name, mutation, message)=>test(name,()=>assert.throws(()=>reviewCandidate(changed(mutation)),message));
+
+test('pinned review record passes but every authority output stays false',()=>{
+ const result=reviewCandidate(fixture);
+ assert.equal(result.status,'REVIEW_HELD');
+ assert.equal(result.record_matches_pinned_snapshot,true);
+ for(const field of ['admitted_by_systemia','deployment_verified','physical_proof_verified','custody_independently_verified'])assert.equal(result[field],false);
+});
+test('expected digest and test counts pinned independently of candidate JSON',()=>{
+ assert.equal(PINNED_REVIEW_SNAPSHOT.archive_sha256,'5474e311286bf614b1c3f2e8b4821886b2550abe6277e831d50ac26274527426');
+ assert.equal(PINNED_REVIEW_SNAPSHOT.owned_core_tests,106);
+ assert.equal(PINNED_REVIEW_SNAPSHOT.yard_ci_tests,172);
+});
+rejected('rejects a different valid 64-digit digest',r=>{r.artifact.sha256='1'.repeat(64);},/unpinned artifact digest/);
+rejected('rejects an altered byte count',r=>{r.artifact.bytes++;},/unpinned archive bytes/);
+rejected('rejects inflated matching test counts',r=>{r.tests.owned_core.passed=r.tests.owned_core.total=9999;},/unpinned test result/);
+rejected('rejects suppressed failures',r=>{r.tests.owned_core.passed--;},/unpinned test result/);
+rejected('rejects inflated Yard CI results',r=>{r.tests.yard_ci.passed=r.tests.yard_ci.total=173;},/unpinned test result/);
+rejected('rejects inflated fixture build steps',r=>{r.tests.yard_fixture.passed=r.tests.yard_fixture.total=4;},/unpinned test result/);
+rejected('rejects candidate swapped without digest change',r=>{r.candidate='other-candidate';},/unpinned candidate/);
+rejected('rejects an undeclared top-level promotion field',r=>{r.production_status='DEPLOYED';},/unexpected or missing field/);
+rejected('rejects undeclared nested physical claim',r=>{r.claims.satellite_coverage_proven=true;},/unexpected or missing field/);
+rejected('rejects injected __proto__ JSON object field',r=>{r.claims=JSON.parse('{"__proto__": {"deployed": true}, "deployed": false, "compute_executed": false, "physical_exchange_proven": false, "geographic_coverage_proven": false, "carrier_service_proven": false, "emergency_backhaul_proven": false, "public_safety_authority": false, "wsf_deployed": false}');},/unexpected or missing field/);
+rejected('rejects undeclared authority receipt',r=>{r.authority.release_signature='forged';},/unexpected or missing field/);
+rejected('rejects forged admitted authority receipt',r=>{r.authority.systemia_admission_receipt='forged';},/unsupported receipt/);
+rejected('rejects false production deployment claim',r=>{r.claims.deployed=true;},/unsupported claim/);
+rejected('rejects false carrier claim',r=>{r.claims.carrier_service_proven=true;},/unsupported claim/);
+rejected('rejects false emergency authority',r=>{r.claims.public_safety_authority=true;},/unsupported claim/);
+rejected('rejects fixture deployment true',r=>{r.tests.yard_fixture.deployed=true;},/fixture authorization boundary/);
+rejected('rejects incorrect release hold',r=>{r.tests.yard_fixture.release_denial='approved';},/fixture authorization boundary/);
+rejected('rejects claim 401 means unreachable',r=>{r.field01b_reachability.any_valid_http_response_means_core_reachable=false;},/false reachability claim/);
+rejected('rejects silent LAN drop',r=>{r.field01b_reachability.infrastructure_lan_available_required=false;},/false reachability claim/);
+rejected('rejects illicit private source assertion',r=>{r.source_in_public_repo=true;},/private Core boundary/);
+rejected('rejects a changed safety boundary sentence',r=>{r.boundary='Verified physically';},/truth boundary changed/);
+rejected('rejects missing control field',r=>{delete r.claims.emergency_backhaul_proven;},/unexpected or missing field/);
+rejected('rejects added artifact property',r=>{r.artifact.approval='granted';},/unexpected or missing field/);
+rejected('rejects missing source state',r=>{delete r.state;},/unexpected or missing field/);

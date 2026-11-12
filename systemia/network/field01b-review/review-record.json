@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.network.field01b.public-review.v1",
+  "service_id": "evercraft-network-field01b-owned-core",
+  "candidate": "field01b-v3-owned-core-p03-20261013",
+  "state": "REVIEW_HELD",
+  "repository_visibility": "public_metadata_only",
+  "source_in_public_repo": false,
+  "contains_secrets": false,
+  "artifact": {
+    "sha256": "5474e311286bf614b1c3f2e8b4821886b2550abe6277e831d50ac26274527426",
+    "bytes": 202379,
+    "custody_note": "verified_by_owned_drive_readback_not_by_this_gate"
+  },
+  "tests": {
+    "owned_core": {
+      "passed": 106,
+      "total": 106
+    },
+    "yard_ci": {
+      "passed": 172,
+      "total": 172
+    },
+    "yard_fixture": {
+      "passed": 3,
+      "total": 3,
+      "release_denial": "compute_attestation_required",
+      "deployment_authorized": false,
+      "deployed": false
+    }
+  },
+  "authority": {
+    "systemia_admission_receipt": null,
+    "compute_attestation_receipt": null,
+    "yard_deployment_receipt": null,
+    "route_verification_receipt": null,
+    "rollback_receipt": null,
+    "physical_field_test_receipt": null
+  },
+  "claims": {
+    "deployed": false,
+    "compute_executed": false,
+    "physical_exchange_proven": false,
+    "geographic_coverage_proven": false,
+    "carrier_service_proven": false,
+    "emergency_backhaul_proven": false,
+    "public_safety_authority": false,
+    "wsf_deployed": false
+  },
+  "field01b_reachability": {
+    "any_valid_http_response_means_core_reachable": true,
+    "unreachable_requires_transport_failure": true,
+    "infrastructure_lan_available_required": true
+  },
+  "boundary": "Public metadata consistency only. No proof of authority, physical test, Drive bytes, or live route."
+}
