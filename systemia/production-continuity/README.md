@@ -106,3 +106,20 @@ The completed Saban job must also carry a matching `job_id`, `updated_at`, `agen
 Open `systemia/production-continuity/private-view.html` locally on an owned phone or computer. Choose the private JSON produced by `run-private.mjs` (or the original private ledger). It renders three lanes: **Evidence current**, **Needs recovery / evidence**, and **Founder decisions**. A search, status filter and opt-in private-blocker reveal are provided. The file uses no network, cookies, analytics, browser storage, publishing APIs, or agent dispatch.
 
 Only the generic viewer code belongs in this public repository. Keep loaded JSON and all unpublished story/research materials on a private device.
+ 
+
+## Durable single-cycle checkpoint (source-stage)
+
+`resident.mjs` runs one bounded continuity cycle against a **private, owner-only directory**. It refuses state located inside a Git checkout, takes an exclusive process lock, imports only byte-verified Saban artifacts, audits all ledger entries, and atomically persists an integrity-chained `resident-state.json`. A restarted cycle verifies the preceding state digest and keeps the prior ledger authoritative; an overwritten seed file cannot reset the production history. A crashed process deliberately leaves its lock for operator inspection rather than silently stealing an execution lease. This is **not yet a continually running service**.
+
+On an owned node with this branch checked out, place the previously recovered private `ledger.json` into `~/.local/share/evercraft/production-continuity/` outside the Git checkout; ensure the directory has mode `0700` and ledger file mode `0600`. Then run:
+
+```bash
+node systemia/production-continuity/resident-once.mjs
+```
+
+The command prints only a sanitized cycle receipt and stores the full private state at `~/.local/share/evercraft/production-continuity/resident-state.json`. If a real `saban-work-state.json` and `artifacts/` are present in that same private directory, the cycle attempts byte/owner/action reconciliation. Otherwise it only plans recovery, not execution. No network access, publishing, payment, manuscript rewriting, or agent dispatch occurs.
+
+**Continuous unattended execution is still blocked** until the actual owned Systemia/Saban worker, private mission authorization, timer or resident service, and restart/lease proof are installed and verified on a controlled device. The code and a passing synthetic CI test do not establish that these host-side steps happened.
+
+The GitHub Actions `production-continuity-contract.yml` checks the three synthetic test suites on relevant pull requests. It deliberately never reads the private ledger or research/manuscript files.
