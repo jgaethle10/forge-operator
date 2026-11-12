@@ -252,6 +252,13 @@ jobs:
           grep -q 'Roman Kilinkaridis' _public_pages/campaigns/roman/index.html
           grep -q 'https://donate.voteroman.com/' _public_pages/campaigns/roman/index.html
 
+      - name: Assert Closeout files are included in the Pages artifact
+        if: steps.page_state.outputs.enabled == 'true'
+        run: |
+          test -s _public_pages/closeout/index.html
+          test -s _public_pages/closeout/product.json
+          test -s _public_pages/closeout/llms.txt
+
       - name: Upload Pages artifact
         if: steps.page_state.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
@@ -565,3 +572,16 @@ jobs:
             echo "Visual Desk specimen: $visual"
             echo "Roman campaign emergency mirror: $roman"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Closeout deployed page, product offer and HTTPS boundaries
+        shell: bash
+        run: node scripts/probe-closeout-public.mjs "${{ steps.deployment.outputs.page_url }}"
+
+      - name: Preserve Closeout public HTTPS evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-closeout-public-canary
+          path: artifacts/closeout-public-canary.json
+          if-no-files-found: warn
+          retention-days: 30
