@@ -5,6 +5,7 @@ on:
       - 'public/headquarters/**'
       - 'systemia/evercraft-home/public/index.html'
       - 'tests/evercraft-headquarters-home.test.mjs'
+      - '.github/workflows/evercraft-journal-pages.yml'
       - '.github/workflows/evercraft-headquarters-acceptance.yml'
   workflow_dispatch:
 permissions:
