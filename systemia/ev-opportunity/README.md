@@ -75,3 +75,40 @@ Verified official reference URLs:
 - https://www.energy.ca.gov/programs-and-topics/programs/federal-ev-infrastructure-programs/californias-national-electric
 
 This remains an offline draft awaiting source acquisition, rights checks, field evidence, qualified subcontract partners and separate contracting authority.
+
+
+## Owned conceptual site-plan renderer v0.2 (November 11)
+
+A fully offline vector-sheet renderer is now included:
+
+- `site-plan-renderer.mjs`: SVG sheet compiler with local-metric coordinate transform, parcel/geometric validity checks, basic polygon self-intersection rejection, proposed charger/route/equipment parcel containment, source references and explicit modeling states, safe XML text escaping, and an internal-only release state. It never fetches or embeds remote imagery.
+- `site-plan-demo.synthetic.json`: **entirely synthetic** parcel, building, road, landscaping, six charger stalls, preliminary accessible route, trench and equipment pad. It is not a real location or source of feasibility estimates.
+- `site-plan-renderer-cli.mjs`: explicit local JSON input and `--output filename.svg` path with no implicit writes, browsing, outbound calls or deployment.
+- `tests/ev-site-plan-renderer.test.mjs`: 15 synthetic tests for SVG escape, deterministic output, source/lineage gating, duplicate features, invalid/crossing polygon geometry, out-of-parcel features, prohibited release claims, and withheld north/scale assertions.
+
+Run from repository root:
+
+```bash
+node --test tests/ev-site-plan-renderer.test.mjs
+node systemia/ev-opportunity/site-plan-renderer-cli.mjs \
+  --input systemia/ev-opportunity/site-plan-demo.synthetic.json \
+  --output /tmp/ev-concept-demo.svg --role site_concept
+node systemia/ev-opportunity/site-plan-renderer-cli.mjs \
+  --input systemia/ev-opportunity/site-plan-demo.synthetic.json \
+  --output /tmp/ev-context-demo.svg --role area_context
+```
+
+The CLI refuses to overwrite an existing output file. The `area_context` sheet is an alternate title/label view of the same synthetic geometry; it is **not** a real regional geospatial context map.
+
+The demonstration visually resembles a professional preliminary planning sheet but is *not* imagery-based, surveyed, geo-aligned, utility-verified, architecturally or electrically engineered, ADA-approved, permitted or sealed. Every output says NOT FOR CONSTRUCTION. No final scales or north arrow are inferred when unverified. A successful metadata preflight or file hash is not an engineering approval.
+
+### Next engineering milestones
+
+1. Select one independently licensed real parcel and confirm the parcel/address join and restrictions on map/aerial imagery use.
+2. Create a truthful local metric coordinate transform from a known CRS, with enough precision to overlay property and parking geometry. Record source versions and geospatial accuracy bounds.
+3. Add source-licensed image layer support with exact source credit and offline asset validation; no blank or fabricated imagery marketed as real.
+4. Run real polygon intersection/clearance and parking-fit evaluations, including ADA compliance checks by a qualified reviewer, and add survey/utility field-verification placeholders.
+5. Create multi-sheet production-grade title blocks, PDF export and independent visual acceptance before any client delivery. Re-run the license/ownership and qualified-professional gates.
+6. Only after approved contracting scope, connect proposals and verified Evercraft Payments settlements. No automatic outreach or bid submissions.
+
+**Status:** code and local synthetic rendering passed 15/15 tests. Hosted branch CI has not been certified. Branch is deliberately draft, not merged or deployed.
