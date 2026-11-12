@@ -1,0 +1,55 @@
+name: Relay Bella V05 Fresh Audio (Private Review)
+on:
+  push:
+    branches:
+      - studio/relay-bella-refresh-20261111
+    paths:
+      - systemia/media-studio/relay-bella-refresh-20261111.py
+      - .github/workflows/relay-bella-refresh-20261111.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-bella-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify locked commercial script
+        run: python systemia/media-studio/relay-bella-refresh-20261111.py --verify-only
+      - name: Install original native Bella runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render native Bella seven-line audition
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: python systemia/media-studio/relay-bella-refresh-20261111.py relay-bella-review
+      - name: Verify evidence and immutable source audio
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,wave
+          root=Path("relay-bella-review")
+          r=json.loads((root/"evidence.json").read_text())
+          assert r["voice"]=="af_bella" and r["kokoroVersion"]=="0.9.4"
+          assert r["reviewOnly"] is True and r["publicReleaseApproved"] is False
+          assert len(r["lines"])==7
+          for line in r["lines"]:
+              path=root/line["filename"]
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==line["sha256"]
+              with wave.open(str(path)) as wav:
+                  assert wav.getframerate()==24000 and wav.getnchannels()==1
+              assert line["durationSec"]>0.5
+          print("PASS: seven fresh dry Bella WAVs; release held for listening and rights.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-bella-v05-fresh-20261111-private
+          path: relay-bella-review/
+          retention-days: 7
+          if-no-files-found: error
