@@ -1,0 +1,32 @@
+name: Client 001 Spanish V37 Connected Voice
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths:
+      - systemia/media-studio/on-the-go-v37-espanol-connected.py
+      - .github/workflows/otg-v37-connected-spanish.yml
+permissions:
+  contents: read
+jobs:
+  connected:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install speech generator
+        run: |
+          timeout 75s sudo apt-get update -qq || true
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install 'kokoro==0.9.4' 'soundfile>=0.12,<1' 'misaki[es]'
+      - name: Generate connected Spanish lines with timing gates
+        run: python systemia/media-studio/on-the-go-v37-espanol-connected.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: onthego-client001-v37-spanish-connected-voices
+          path: onthego-v37-espanol-takes/
+          retention-days: 10
+          if-no-files-found: warn
