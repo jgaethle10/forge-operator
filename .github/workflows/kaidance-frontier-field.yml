@@ -12,6 +12,7 @@ on:
       - 'systemia/organism/medical-evidence-triage*.mjs'
       - 'systemia/organism/medical-review-packet*.mjs'
       - 'systemia/organism/medical-registry-crosscheck*.mjs'
+      - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
@@ -31,6 +32,7 @@ on:
       - 'systemia/organism/medical-evidence-triage*.mjs'
       - 'systemia/organism/medical-review-packet*.mjs'
       - 'systemia/organism/medical-registry-crosscheck*.mjs'
+      - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
@@ -95,6 +97,9 @@ jobs:
       - name: Probe official ClinicalTrials.gov endpoint (no publication claim)
         run: node systemia/organism/medical-registry-source-probe.mjs
 
+      - name: Prove registered-trial PubMed cohort and official crosscheck
+        run: node systemia/organism/medical-registered-trial-lane.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -138,6 +143,12 @@ jobs:
             artifacts/medical-registry-crosscheck/review.md
             artifacts/medical-registry-crosscheck/index.html
             artifacts/medical-registry-crosscheck/source-health.json
+            artifacts/medical-registered-trials/latest.json
+            artifacts/medical-registered-trials/review.json
+            artifacts/medical-registered-trials/registry.json
+            artifacts/medical-registered-trials/review.md
+            artifacts/medical-registered-trials/registry.md
+            artifacts/medical-registered-trials/index.html
           if-no-files-found: warn
           retention-days: 14
 
