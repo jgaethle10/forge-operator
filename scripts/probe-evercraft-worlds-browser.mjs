@@ -87,13 +87,13 @@ try{
       blob_sha:'d'.repeat(40),observed_at:'2026-10-19T00:00:00.000Z',
       assertion:'git_blob_and_world_content_consistency_not_signed_attestation'
     };
-    const receipt=observation.decision_projection.receipts[0];
+    const policyReceipt=observation.decision_projection.receipts[0];
     const receiptEvidence={
-      event_id:receipt.event_id,source:receipt.source,event_type:receipt.event_type,
-      actor_id:receipt.actor_id,related_actor_id:receipt.related_actor_id,
-      day:receipt.day,time:receipt.time,description:receipt.description
+      event_id:policyReceipt.event_id,source:policyReceipt.source,event_type:policyReceipt.event_type,
+      actor_id:policyReceipt.actor_id,related_actor_id:policyReceipt.related_actor_id,
+      day:policyReceipt.day,time:policyReceipt.time,description:policyReceipt.description
     };
-    receipt.content_sha256=createHash('sha256').update(JSON.stringify(receiptEvidence)).digest('hex');
+    policyReceipt.content_sha256=createHash('sha256').update(JSON.stringify(receiptEvidence)).digest('hex');
     await page.locator('#sl-file').setInputFiles({
       name:'synthetic-observer.json',mimeType:'application/json',
       buffer:Buffer.from(JSON.stringify(observation))
