@@ -1,0 +1,53 @@
+name: Pacific Bella V05 Native Private Narration
+on:
+  push:
+    branches:
+      - studio/pacific-bella-commercial-20261111
+    paths:
+      - systemia/media-studio/pacific-bella-v05-private.py
+      - .github/workflows/pacific-bella-v05-private.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-bella-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify client preview script
+        run: python systemia/media-studio/pacific-bella-v05-private.py --verify-only
+      - name: Install Evercraft original native Bella runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate original Bella V05 spoken lines
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: python systemia/media-studio/pacific-bella-v05-private.py pacific-bella-private
+      - name: Verify artifacts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib,wave
+          root=Path("pacific-bella-private")
+          data=json.loads((root/"evidence.json").read_text())
+          assert data["voice"]=="af_bella" and data["reviewOnly"]
+          assert len(data["lines"])==6
+          for entry in data["lines"]:
+              f=root/entry["filename"]
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==entry["sha256"]
+              with wave.open(str(f)) as audio:
+                  assert audio.getframerate()==24000 and audio.getnchannels()==1
+          print("Bella native review audio verified; release remains held.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-bella-v05-original-private
+          path: pacific-bella-private/
+          retention-days: 7
+          if-no-files-found: error
