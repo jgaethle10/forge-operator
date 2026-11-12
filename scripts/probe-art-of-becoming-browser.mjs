@@ -109,6 +109,8 @@ try {
   assert.equal(await page.locator('#view').getAttribute('data-facility-count'),'1');
   assert.equal(await page.locator('#view').getAttribute('data-mode'),'franchise');
   assert.ok(Number(await page.locator('#view').getAttribute('data-geometry-triangles'))>100);
+  assert.equal(await page.locator('#touch-controls').isVisible(),true,'Mobile users must have visible movement controls');
+  assert.ok(await page.evaluate(() => document.querySelector('#view')?.getContext('webgl2') !== null),'The rendered scene must use WebGL2');
   const initialZ=Number(await page.locator('#view').getAttribute('data-player-z'));
   await page.keyboard.down('w');
   await page.waitForTimeout(450);
