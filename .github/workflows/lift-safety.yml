@@ -19,6 +19,6 @@ jobs:
         with:
           node-version: '22'
       - name: Parse Lift policy modules
-        run: node --check systemia/lift/lift-core.mjs && node --check systemia/lift/review-workflow.mjs
+        run: node --check systemia/lift/lift-core.mjs && node --check systemia/lift/review-workflow.mjs && node --check systemia/lift/identity-boundary.mjs && node --check systemia/lift/lab-journal.mjs
       - name: Verify privacy, workflow and UI invariants
         run: node --test systemia/lift/*.test.mjs
