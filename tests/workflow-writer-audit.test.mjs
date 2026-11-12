@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import { inspectWorkflow,assessWriterInventory,auditWorkflowFiles } from '../scripts/audit-workflow-writers.mjs';
 
 const known='.github/workflows/known-publisher.yml';
@@ -53,4 +54,18 @@ test('real repository audit runs with no new unapproved main writer',()=>{
  assert.ok(r.writers.every(x=>x.startsWith('.github/workflows/')));
  assert.ok(r.writers.includes('.github/workflows/chum-watershed.yml'));
  assert.ok(!r.writers.includes('.github/workflows/legacy-provider-purge.yml'));
+});
+
+test('watershed receipt staging remains read-only until separately approved',()=>{
+  const content=readFileSync(new URL('../.github/workflows/watershed-ledger-persist.yml',import.meta.url),'utf8');
+  const inspected=inspectWorkflow(content,'.github/workflows/watershed-ledger-persist.yml');
+  assert.equal(inspected.writer,false);
+  assert.equal(inspected.contents_write,false);
+  assert.equal(inspected.has_push_command,false);
+  assert.equal(inspected.id_token_write,false);
+  assert.match(content,/persist-credentials:\s*false/);
+  assert.match(content,/PERSISTENT_ARCHIVE=HELD_REQUIRES_WRITER_AUTHORIZATION/);
+  assert.match(content,/yakima-watershed-source-staging-no-push/);
+  assert.match(content,/30-day retention, not immutable/);
+  assert.doesNotMatch(content,/git\s+push|git\s+commit|contents:\s*write/);
 });
