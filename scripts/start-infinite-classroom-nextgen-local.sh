@@ -26,7 +26,7 @@ fi
 mkdir -p "$STATE_DIR"
 chmod 700 "$STATE_DIR"
 if [[ ! -f "$TOKEN" ]]; then
-  node -e 'process.stdout.write(require("node:crypto").randomBytes(48).toString("base64")+"\\n")' > "$TOKEN"
+  node -e 'process.stdout.write(require("node:crypto").randomBytes(48).toString("base64")+"\n")' > "$TOKEN"
 fi
 chmod 600 "$TOKEN"
 
