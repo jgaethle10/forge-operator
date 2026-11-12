@@ -1,0 +1,35 @@
+name: Client 001 Growth Signal | Safe Proof CI
+on:
+  push:
+    branches: [feature/client001-growth-signal-pilot-20261111]
+    paths:
+      - public/client001-growth-signal-preview/**
+      - systemia/growth-signal/client001/**
+      - .github/workflows/client001-growth-signal.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check collector
+        run: node --check systemia/growth-signal/client001/signal-service.mjs
+      - name: Run local-only signed proof integration checks
+        run: node systemia/growth-signal/client001/signal-service.test.mjs
+      - name: Verify preview is plainly labeled and has no network integrations
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const html=fs.readFileSync('public/client001-growth-signal-preview/index.html','utf8');
+          for(const label of ['SIMULATED SCENARIO','NO LIVE CLIENT DATA','Square payments','Cash App / other payments','Actual business data']) assert.ok(html.includes(label),label);
+          assert.ok(!/<script[^>]*src\s*=/.test(html),'no external scripts in private preview');
+          assert.ok(!/fetch\s*\(/.test(html),'preview must not contact real customer systems');
+          console.log('Isolated preview has explicit demo and actual-data boundaries');
+          JS
