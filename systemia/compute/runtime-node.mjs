@@ -2885,6 +2885,15 @@ export async function startEvercraftComputeNode({
               process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true' &&
               process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH === 'false'
                 ? 'false' : 'true',
+            PORTFOLIO_SENTINEL_OFFLINE:
+              process.env.NODE_ENV === 'test' &&
+              process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true' &&
+              process.env.PORTFOLIO_SENTINEL_OFFLINE === 'true'
+                ? 'true' : 'false',
+            EVERCRAFT_LOCAL_ORGANISM_PROOF:
+              process.env.NODE_ENV === 'test' &&
+              process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true'
+                ? 'true' : 'false',
             EVERCRAFT_RELEASE_REF: releaseRef,
             SYSTEMIA_YARD_STATE_DIR: yardStateDir,
             KAIDANCE_DEPLOYMENT_ID: kaidanceDeploymentId,
