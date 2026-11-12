@@ -242,7 +242,7 @@ function tick(now){
  if(running){
    player=updateExplorer(scene,player,inputs(),dt);
    sampleTimer+=dt;
-   if(sampleTimer>.3){sampleTimer=0;const nearby=nearestFacility(scene,player.x,player.z,22);
+   if(sampleTimer>.3){sampleTimer=0;const nearby=nearestFacility(scene,player.x,player.z,60);
      el('nearby').textContent=nearby?nearby.name:'Founders Ground';
      el('description').textContent=nearby?'Level '+nearby.level+' · '+nearby.distance+' meters away':'Walk toward a facility to discover it';
      canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);
