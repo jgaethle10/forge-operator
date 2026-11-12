@@ -236,3 +236,47 @@ jobs:
             /tmp/evercraft-rc05d-49-56.json
             /tmp/evercraft-rc05d-73-80.json
           retention-days: 7
+
+      - name: RC05E latched moving-hazard controller tests
+        run: node --test systemia/world-engine/sim-to-real/controller-rc05-latched-watch.test.mjs
+      - name: RC05E native latch tests and default-preservation checks
+        run: node --import tsx --test systemia/world-engine/sim-to-real/latch-trial-rc05e.test.mjs
+      - name: RC05E collision regression seeds 49-56 (includes 51 and 56)
+        run: node --import tsx systemia/world-engine/sim-to-real/latch-trial-rc05e.mjs --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05e-49-56.json
+      - name: RC05E next synthetic seed group 81-88
+        run: node --import tsx systemia/world-engine/sim-to-real/latch-trial-rc05e.mjs --first-seed 81 --seeds 8 --out /tmp/evercraft-rc05e-81-88.json
+      - name: RC05E verify modeled outcomes and strict no-hardware HOLD
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyLatchTrial} from './systemia/world-engine/sim-to-real/latch-trial-rc05e.mjs';
+          for(const cohort of ['49-56','81-88']){
+            const r=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05e-'+cohort+'.json','utf8'));
+            if(!verifyLatchTrial(r)||r.hardwareExecution!==false||r.realEmergencyStop!==false||
+                r.productionAuthorized!==false||r.review?.hardwareAuthorized!==false)
+              throw Error('rc05e_evidence_integrity_or_authority_failure:'+cohort);
+            for(const k of ['baseline','escape','motionWatch','latched']){
+              const s=r.scores[k];
+              if(s.total!==s.arrived+s.collisions+s.geofence+s.timeouts)
+                throw Error('rc05e_outcome_accounting_failed:'+cohort+':'+k);
+            }
+            if(r.review.reviewEligible && (r.scores.latched.collisions>r.scores.baseline.collisions||
+                r.scores.latched.shieldedMoves===0||
+                r.scores.latched.arrived-r.scores.baseline.arrived<Math.ceil(r.seeds*.25)))
+              throw Error('rc05e_false_safety_or_progress_promotion:'+cohort);
+            console.log('RC05E VERIFIED',JSON.stringify({cohort,scores:r.scores,review:r.review,
+              failures:r.pairs.filter(p=>p.latched.status!=='arrived').map(p=>({seed:p.seed,
+                outcome:p.latched.status,collisionObstacleIds:p.latched.collisionObstacleIds,
+                holds:p.latched.latchedHolds,queueCancels:p.latched.modeledCanceledCommands})),
+              digest:r.sha256}));
+            if(!r.review.reviewEligible)console.log('RC05E CANDIDATE HELD',cohort,r.review.reasons);
+          }
+          NODE
+      - name: Upload RC05E modeled latch receipts, not physical validation
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05e-modeled-latched-watch
+          path: |
+            /tmp/evercraft-rc05e-49-56.json
+            /tmp/evercraft-rc05e-81-88.json
+          retention-days: 7
