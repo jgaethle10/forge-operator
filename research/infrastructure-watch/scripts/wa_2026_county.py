@@ -78,7 +78,7 @@ def summary(rows,source_hash):
     counties=defaultdict(lambda:Counter())
     for r in rows:counties[r['county_code'] or 'unassigned'][r['condition']]+=1
     county_rows=[]
-    for fips,name in COUNTIES:
+    for name,fips in COUNTIES:
         c=counties[fips]
         county_rows.append({'county_code':fips,'county_name':name,'total':sum(c.values()),
              'good':c['G'],'fair':c['F'],'poor':c['P'],'unclassified':c['U']})
@@ -118,8 +118,8 @@ def download():
     req=Request(WA_URL,headers={'User-Agent':'Evercraft-Infrastructure-Watch/0.13 public-research'})
     with urlopen(req,timeout=75) as r:
         if r.geturl()!=WA_URL:raise ValueError('Unexpected redirect from FHWA source')
-        raw=r.read(20_000_000+1)
-        if len(raw)>20_000_000:raise ValueError('Refusing unexpectedly large FHWA payload')
+        raw=r.read(180_000_000+1)
+        if len(raw)>180_000_000:raise ValueError('Refusing unexpectedly large FHWA payload')
         return raw
 
 if __name__=='__main__':
