@@ -660,6 +660,22 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         owned_human_buyer_options:[],
         human_buyer_options:[],
         human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',
+        // Optional, separately priced service navigation. This is NOT a substitute
+        // checkout for the held $49 Website Quick Win Audit or any payment claim.
+        related_independent_services:capability.public_id==='audit-center-website-audit-machine-v1'
+          ? [{
+              service_name:'Evercraft Asset Diagnosis',
+              price_usd:149,
+              url:'https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/',
+              scope:'One owned website, app, workflow or other digital/operational asset: a scoped, human-reviewed diagnostic summary and practical next actions.',
+              distinct_from_requested_offer:true,
+              requested_website_audit_checkout_still_held:true,
+              scope_and_delivery_confirmation_required:true,
+              payment_url:null,
+              purchase_initiated:false,
+              explanation:'Separate existing $149 Asset Diagnosis service, not the $49 Quick Win Audit. Only present when a broader asset diagnosis genuinely fits the user problem; agree in writing before payment.',
+            }]
+          : [],
         buyer_checkout_available:false,
         checkout_suppression_reason:'evercraft_public_commercial_mcp_http402_20261017',
         transactional:false,
