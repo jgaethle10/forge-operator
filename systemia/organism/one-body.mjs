@@ -62,6 +62,9 @@ const HUMAN_GATE_KINDS = new Set([
   'external_publish',
   'external_message',
   'destructive_change',
+  'outreach',
+  'external_purchase',
+  'trust_change',
 ]);
 
 function hash(value, length = 24) {
@@ -242,13 +245,12 @@ export function classifyCommercial(raw, { now = new Date().toISOString(), produc
 }
 
 function needsHumanGate(raw) {
-  if (raw.human_gate_required === true) return true;
-  if (raw.human_gate_required === false) return false;
-  const kind = normalize(raw.action_kind || raw.kind);
-  if (HUMAN_GATE_KINDS.has(kind)) return true;
+  // Inbound "false" is never permission to bypass consequential work gates.
+  if (HUMAN_GATE_KINDS.has(normalize(raw.action_kind)) ||
+      HUMAN_GATE_KINDS.has(normalize(raw.kind))) return true;
   if (raw.external_action_requested === true) return true;
   if (raw.money_movement === true || raw.legal_effect === true || raw.employment_effect === true) return true;
-  return false;
+  return raw.human_gate_required === true;
 }
 
 function missionIntent(raw, commercial) {
@@ -283,12 +285,15 @@ export function routeBodyEvent(raw, {
     lanes.add('revenue_circulation');
     lanes.add('chum_commercial_mesh');
   }
-  if (
+  // Caller-supplied payment flags are leads, not authoritative paid-state receipts.
+  // Reconciliation must independently establish canonical Evercraft Payments authority
+  // before the separate fulfillment gate can admit any work.
+  const claimedPaymentOrFulfillment =
     raw.payment_verified === true ||
     normalize(raw.status) === 'paid' ||
     normalize(raw.stage) === 'payment_verified' ||
-    raw.fulfillment_ready === true
-  ) lanes.add('portfolio_fulfillment_router');
+    raw.fulfillment_ready === true;
+  if (claimedPaymentOrFulfillment) lanes.add('payment_authority_reconciliation');
   if (raw.publish_candidate === true && raw.public_safe === true) {
     lanes.add('media_studio');
     lanes.add('evercraft_clip_distribution');
@@ -313,6 +318,7 @@ export function routeBodyEvent(raw, {
   if (product.product_key === 'unknown') nextMotion.push('resolve_product_or_create_portfolio_admission_candidate');
   if (commercial.state !== 'not_commercial') nextMotion.push(commercial.next_action);
   if (gates.human_required) nextMotion.push('hold_consequential_external_action_until_authorized');
+  if (claimedPaymentOrFulfillment) nextMotion.push('verify_canonical_evercraft_payments_receipt_before_fulfillment');
   if (signal.severity === 'warning' || signal.severity === 'critical') nextMotion.push('open_or_update_operational_incident');
   if (!nextMotion.length) nextMotion.push('receipt_and_keep_available_to_shared_context');
 
@@ -333,6 +339,10 @@ export function routeBodyEvent(raw, {
     gates,
     lanes: [...lanes],
     next_motion: unique(nextMotion),
+    // A planned route is not a delivered signal, verified runtime, or actual outcome.
+    handoff_state: 'routing_planned_unverified',
+    execution_authority_granted: false,
+    fulfillment_authority_granted: false,
     dead_end: false,
   };
 }
@@ -344,6 +354,8 @@ export function emptyBodyState() {
     opportunities: {},
     products: {},
     lane_queues: {},
+    // Acknowledgements remain private evidence pointers, never execution authority.
+    lane_acknowledgements: {},
   };
 }
 
@@ -405,6 +417,75 @@ export function ingestBodyEvent(state, raw, options = {}) {
       repeat_count: (prior?.repeat_count || 0) + 1,
     },
   };
+}
+
+
+/**
+ * Accept a trusted, exact lane-consumer acknowledgement into private One-Body
+ * state. The supplied verifier MUST be an internal source-specific adapter,
+ * not a predicate or flag selected by an event sender.
+ *
+ * This updates a caller-owned state value. The runtime adapter must durably
+ * persist it. On read/export the verifier must revalidate the authoritative
+ * receipt reference; a persisted pointer alone is not proof.
+ */
+export function recordBodyLaneAcknowledgement(state, receipt, {
+  verifyReceipt = null,
+  now = new Date().toISOString(),
+} = {}) {
+  if (state?.schema !== 'evercraft.one-body.state.v1' ||
+      !state.events || typeof state.events !== 'object') throw new Error('invalid_one_body_state');
+  if (!receipt || receipt.schema !== 'evercraft.one-body.lane-consumer-receipt.v1') {
+    throw new Error('unsupported_lane_receipt_schema');
+  }
+  const event = Object.hasOwn(state.events, receipt.event_id)
+    ? state.events[receipt.event_id] : null;
+  if (!event || !Array.isArray(event.lanes)) throw new Error('unknown_body_event');
+  if (typeof receipt.lane !== 'string' || !event.lanes.includes(receipt.lane)) {
+    throw new Error('lane_not_routed');
+  }
+  if (typeof receipt.receipt_ref !== 'string' ||
+      !receipt.receipt_ref.trim() || receipt.receipt_ref.length > 512) {
+    throw new Error('receipt_reference_required');
+  }
+  const clock = Date.parse(now);
+  const occurred = Date.parse(event.occurred_at);
+  const acknowledged = Date.parse(receipt.observed_at);
+  if (![clock, occurred, acknowledged].every(Number.isFinite) ||
+      acknowledged < occurred || acknowledged > clock) {
+    throw new Error('invalid_lane_receipt_time');
+  }
+  if (typeof verifyReceipt !== 'function' || verifyReceipt(receipt, event) !== true) {
+    throw new Error('lane_receipt_unverified');
+  }
+
+  const key = JSON.stringify([receipt.event_id, receipt.lane]);
+  const prior = state.lane_acknowledgements?.[key] || null;
+  if (prior && prior.receipt_ref === receipt.receipt_ref) {
+    return { state, status: 'duplicate_acknowledgement', recorded: false };
+  }
+  if (prior && Date.parse(prior.observed_at) >= acknowledged) {
+    throw new Error('stale_lane_receipt');
+  }
+  const next = structuredClone(state);
+  next.lane_acknowledgements ||= {};
+  // No free-form content, buyer identity, arbitrary source payload, or
+  // caller-asserted verification boolean is retained.
+  next.lane_acknowledgements[key] = {
+    schema: 'evercraft.one-body.lane-consumer-receipt.v1',
+    event_id: receipt.event_id,
+    lane: receipt.lane,
+    receipt_ref: receipt.receipt_ref,
+    observed_at: receipt.observed_at,
+    // Signature is inert evidence, not an authority grant. The privileged
+    // read adapter must verify it again against its current trusted keys.
+    ...(typeof receipt.signer_key_id === 'string' &&
+        typeof receipt.signature_base64 === 'string'
+      ? { signer_key_id: receipt.signer_key_id,
+          signature_base64: receipt.signature_base64 }
+      : {}),
+  };
+  return { state: next, status: 'acknowledgement_recorded_pending_read_reverification', recorded: true };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

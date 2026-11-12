@@ -72,6 +72,42 @@ Current Home scopes:
 
 Home does not issue grants to itself.
 
+## One-Body evidence screen (owned Home, source only)
+
+The executive Home navigation now links to `/one-body.html`. This is the **canonical operator-facing One-Body handoff view**, not a separate login, API, or mission system. It uses same-origin cookies to request `GET /api/systemia/one-body/snapshot`. The API continues to enforce both the Home Identity/Passport gate and the separate `evercraft-context` read scope, without client-provided identities or trust anchors.
+
+The mobile-responsive page contains a simple interactive handoff topology, sampled unconfirmed handoff list, manual refresh and a visible 30-second auto-refresh switch. It separates **routed**, **unverified**, **unobserved overdue**, and **consumer ACK verified**. A signature only verifies consumer inbox acceptance; there is no work-completion or payment-state inference. The UI shows `runtime unverified` even if a snapshot was retrieved. When authorization, schema validation, connectivity or the upstream snapshot fails, the page immediately clears stale graph information rather than displaying an old green status.
+
+This is a static document served by Evercraft Home with a privileged **read-only API**. Opening the page alone gives no private data. The ordinary Home endpoint stays unavailable in local development auth mode and until the private One-Body state file is configured. No external hosted service, third-party identity or browser storage is needed.
+
+`one-body-home-route.proof.mjs` now checks HTML serving, the executive navigation link, inline browser-script parsing, same-origin no-cache retrieval and clearing of unauthorized/stale data, in addition to the full HTTP Identity/Passport grant+revocation test.
+
+## Systemia One-Body private control-room snapshot (source-integrated, not deployed)
+
+Evercraft Home now has an optional **read-only** route:
+
+```
+GET /api/systemia/one-body/snapshot
+```
+
+It uses the **existing Evercraft Identity session cookie** and verifies the `evercraft-home` grant for `home.systemia.read`. Then the One-Body snapshot reader independently checks a current `evercraft-context` grant for `context.read.systemia`, scoped to `systemia:one-body`. Both must be present. Revocation is honored on the next read. Local-development `authMode=local` cannot activate this private route.
+
+On an owner-controlled Home runtime only, configure:
+
+```bash
+EVERCRAFT_HOME_AUTH=passport
+EVERCRAFT_ONE_BODY_STATE_FILE=/var/lib/evercraft/systemia/one-body.json
+EVERCRAFT_ONE_BODY_CONSUMER_TRUST_FILE=/var/lib/evercraft/systemia/consumer-trust.json
+```
+
+The state path points to the **revisioned private One-Body store** written by the existing operator/runtime adapter. Consumer-trust is an **optional** operator-provisioned 0600 JSON file of lane-scoped Ed25519 public keys. If absent, acknowledgements remain unverified; if configured but unreadable or insecure, the request fails closed. Never put private signing keys in this trust registry or the repository. The authenticated session alone does not mint the second Context grant; an authorized identity/Passport operator must provision it separately.
+
+This route serves **only** a privacy-filtered `evercraft.systemia.visual-snapshot.v1` payload. GET only, no cross-origin access, no request query data, no browser cache, bounded reads. It never returns raw event IDs, buyer details, signer private keys or receipts. It does not execute work, settle payment, prove live host health or publish data.
+
+`one-body-home-route.proof.mjs` tests the actual Home server over loopback: owner bootstrap/login, denial without the Context grant, scoped access, cross-origin and write rejection, privacy filters, no-cache headers and immediate Passport revocation. It is included in `npm run proof:one-body`.
+
+**Deployment truth:** source integration and CI are not a live control room. Home still needs an owned HTTPS ingress with trusted TLS, a deployed One-Body writer and actual enrolled consumer hosts before a mobile client can pull operational receipts. Keep any remote exposure gated on Yard/Network deployment evidence and a production security review.
+
 ## Owned Raven execution boundary
 
 The first execution slice is deliberately narrow. Systemia still admits and routes the mission, then the Home execution endpoint can hand only non-consequential internal `analyze`, `research`, or `qa` work to the owned Nexus team-review bridge.

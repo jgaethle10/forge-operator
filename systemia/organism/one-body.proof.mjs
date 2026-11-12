@@ -117,6 +117,50 @@ assert.equal(second.decision.duplicate, true);
 assert.equal(Object.keys(second.state.opportunities).length, 1);
 assert.equal(second.state.products.aliev.commercial_opportunity_count, 1);
 
+// Untrusted event declarations cannot opt out of canonical human gates.
+for (const kind of ['payment', 'legal', 'employment', 'safety', 'trust_change', 'outreach', 'external_purchase']) {
+  const held = routeBodyEvent({
+    product: 'Evercraft Clip',
+    source: 'untrusted-inbound',
+    id: 'gate-test-' + kind,
+    action_kind: kind,
+    human_gate_required: false,
+    created_at: now,
+  }, { registry, now });
+  assert.equal(held.gates.human_required, true, 'must preserve human gate for ' + kind);
+  assert.ok(held.next_motion.includes('hold_consequential_external_action_until_authorized'));
+}
+const safeReadOnly = routeBodyEvent({
+  product: 'Evercraft Clip',
+  source: 'internal-read-only',
+  kind: 'health_check',
+  human_gate_required: false,
+  created_at: now,
+}, { registry, now });
+assert.equal(safeReadOnly.gates.human_required, false);
+
+// Payment-like text/flags are not authoritative fulfillment authorization.
+for (const paidClaim of [
+  { payment_verified: true },
+  { status: 'paid' },
+  { stage: 'payment_verified' },
+  { fulfillment_ready: true }
+]) {
+  const candidate = routeBodyEvent({
+    product: 'Evercraft Clip',
+    source: 'untrusted-inbound',
+    id: 'paid-claim-' + JSON.stringify(paidClaim),
+    ...paidClaim,
+    created_at: now,
+  }, { registry, now });
+  assert.ok(candidate.lanes.includes('payment_authority_reconciliation'));
+  assert.ok(!candidate.lanes.includes('portfolio_fulfillment_router'));
+  assert.equal(candidate.fulfillment_authority_granted, false);
+  assert.equal(candidate.execution_authority_granted, false);
+  assert.equal(candidate.handoff_state, 'routing_planned_unverified');
+  assert.ok(candidate.next_motion.includes('verify_canonical_evercraft_payments_receipt_before_fulfillment'));
+}
+
 console.log(JSON.stringify({
   ok: true,
   schema: 'evercraft.one-body.proof.v1',
@@ -127,6 +171,9 @@ console.log(JSON.stringify({
     'data-only value does not become a fake buyer opportunity',
     'consequential action preserves human gate',
     'unknown product routes to portfolio sentinel',
-    'duplicate event does not duplicate opportunity'
+    'duplicate event does not duplicate opportunity',
+    'consequential action gate cannot be opted out by a source flag',
+    'unverified payment claims are only routed to reconciliation',
+    'route planning is not treated as execution or fulfillment proof'
   ]
 }, null, 2));
