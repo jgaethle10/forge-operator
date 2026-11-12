@@ -1,0 +1,31 @@
+name: Evercraft Network layered edge fault-domain proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/public-edge-layer-diagnosis.mjs'
+      - 'tests/public-edge-layer-diagnosis.test.mjs'
+      - 'scripts/fabric-edge-external-canary.mjs'
+      - '.github/workflows/network-edge-layer-diagnosis.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/network/public-edge-layer-diagnosis.mjs'
+      - 'tests/public-edge-layer-diagnosis.test.mjs'
+      - 'scripts/fabric-edge-external-canary.mjs'
+      - '.github/workflows/network-edge-layer-diagnosis.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  layer-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove separation of network transport and product contract
+        run: node --test tests/public-edge-layer-diagnosis.test.mjs
