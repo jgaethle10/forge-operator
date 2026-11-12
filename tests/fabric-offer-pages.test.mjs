@@ -254,7 +254,8 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     assert.match(response.headers.get('content-type')||'',/^text\/html/i);
     const body=await response.text();
     assert.match(body,/Checkout could not be confirmed\./);
-    assert.match(body,/Request payment assistance/);
+    assert.match(body,/Email Evercraft for payment help/);
+    assert.doesNotMatch(body,/tel:\+15097590440|Call Evercraft/);
     assert.match(body,/Evercraft Payments/);
     assert.match(body,/Return to the offer/);
     assert.doesNotMatch(body,/evercraft_payments_checkout_not_ready|adapter_error|gate_key/);

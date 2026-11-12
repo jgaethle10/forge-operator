@@ -18,9 +18,9 @@ const offer={
 test('held transport offers honest assisted contact rather than a broken checkout',()=>{
   const held=renderOfferPage(offer,{checkoutConfigured:false});
   assert.match(held,/Online checkout is temporarily unavailable/);
-  assert.match(held,/Request assisted invoicing/);
+  assert.match(held,/Email Evercraft for invoicing/);
   assert.match(held,/mailto:jessegaethle10@gmail.com\?subject=/);
-  assert.match(held,/tel:\+15097590440/);
+  assert.doesNotMatch(held,/tel:|Call Evercraft/);
   assert.match(held,/\$49/);
   assert.doesNotMatch(held,/Continue to checkout/);
   assert.doesNotMatch(held,/class="checkout-form"/);

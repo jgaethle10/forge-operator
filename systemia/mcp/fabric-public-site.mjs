@@ -489,7 +489,7 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
         :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
       copy.slug==='signal-brief'
         ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/signal/#request">Prepare my incident brief request</a><a class="btn" href="/offers">Explore Evercraft offers</a></div>'
-        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
+        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Email Evercraft for invoicing</a></div>',
       '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
       '</section>',
     ]) : [
@@ -568,9 +568,8 @@ export function renderPaymentHoldPage({slug='',orderKey='',noAttempt=false}={}){
     '<h1>'+ (noAttempt?'Checkout is temporarily unavailable.':'Checkout could not be confirmed.') +'</h1>',
     '<p class="lede">'+message+'</p>',
     '<div class="actions">',
-    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Request payment assistance</a>',
+    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Email Evercraft for payment help</a>',
     '<a class="btn" href="'+back+'">Return to the offer</a>',
-    '<a class="btn" href="tel:+15097590440">Call Evercraft</a>',
     '</div>',
     order?'<div class="checkout-note">Reference to mention when contacting support: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',

@@ -45,11 +45,11 @@ jobs:
           for domain in evercraftpropertyservices.com havenlycleaning.com; do
             curl -fsS --max-time 5 -H "Host: $domain" http://127.0.0.1:3080/ > /tmp/"$domain".html
           done
-          grep -q 'tel:+15097590440' /tmp/evercraftpropertyservices.com.html
           grep -q 'mailto:jessegaethle10@gmail.com' /tmp/evercraftpropertyservices.com.html
-          grep -q 'mailto:evercraftpropertyservices@gmail.com' /tmp/evercraftpropertyservices.com.html
-          grep -q 'sms:+15095605190' /tmp/havenlycleaning.com.html
-          grep -q 'mailto:havenlycleaning@gmail.com' /tmp/havenlycleaning.com.html
+          grep -q 'Email Evercraft' /tmp/evercraftpropertyservices.com.html
+          grep -q 'mailto:jessegaethle10@gmail.com' /tmp/havenlycleaning.com.html
+          if grep -qE 'tel:|sms:|759-0440' /tmp/evercraftpropertyservices.com.html; then exit 1; fi
+          if grep -qE 'tel:|sms:|560-5190' /tmp/havenlycleaning.com.html; then exit 1; fi
           test "$(curl -sS -o /dev/null -w '%{http_code}' -H 'Host: evercraftpropertyservices.com' http://127.0.0.1:3080/apps/eps-estimator/)" = "200"
           test "$(curl -sS -o /dev/null -w '%{http_code}' -H 'Host: attacker.example' http://127.0.0.1:3080/)" = "421"
           test "$(curl -sS -o /dev/null -w '%{http_code}' -H 'Host: havenlycleaning.com' http://127.0.0.1:3080/api/private)" = "404"

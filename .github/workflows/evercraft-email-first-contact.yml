@@ -1,0 +1,31 @@
+name: Evercraft email-first contact guard
+on:
+  pull_request:
+    paths:
+      - 'public/eps/index.html'
+      - 'public/havenly/index.html'
+      - 'infra/evercraft-edge/service-frontdoor/**'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/evercraft-email-first-contact.test.mjs'
+      - '.github/workflows/evercraft-email-first-contact.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/eps/index.html'
+      - 'public/havenly/index.html'
+      - 'infra/evercraft-edge/service-frontdoor/**'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/evercraft-email-first-contact.test.mjs'
+      - '.github/workflows/evercraft-email-first-contact.yml'
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/evercraft-email-first-contact.test.mjs tests/eps-havenly-rescue.test.mjs tests/fabric-precheckout-hold.test.mjs infra/evercraft-edge/service-frontdoor/worker.test.mjs

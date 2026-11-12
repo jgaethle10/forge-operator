@@ -14,26 +14,23 @@ test('generated site bytes exactly match EPS, HAVENLY and calculator originals',
   assert.equal(embeddedSource(),fs.readFileSync(new URL('./embedded-sites.mjs',import.meta.url),'utf8'));
 });
 
-test('EPS apex returns independent site with owner-confirmed contact',async()=>{
+test('EPS apex returns independent site with email-first contact',async()=>{
   const res=await invoke('evercraftpropertyservices.com');
   assert.equal(res.status,200);
   assert.equal(res.headers.get('x-evercraft-frontdoor'),'embedded-static-no-legacy-upstream');
   const body=await res.text();
   assert.equal(body,EPS_HTML);
-  assert.match(body,/tel:\+15097590440/);
-  assert.match(body,/sms:\+15097590440/);
-  assert.match(body,/jessegaethle10@gmail\.com/);
-  assert.match(body,/evercraftpropertyservices@gmail\.com/);
+  assert.match(body,/mailto:jessegaethle10@gmail\.com/);
+  assert.doesNotMatch(body,/tel:\+15097590440|sms:\+15097590440|759-0440/);
 });
 
-test('HAVENLY apex returns separate correct phone and email',async()=>{
+test('HAVENLY apex routes through working Evercraft email, not a phone CTA',async()=>{
   const res=await invoke('havenlycleaning.com');
   assert.equal(res.status,200);
   const body=await res.text();
   assert.equal(body,HAVENLY_HTML);
-  assert.match(body,/sms:\+15095605190/);
-  assert.match(body,/havenlycleaning@gmail\.com/);
-  assert.doesNotMatch(body,/15097590440/);
+  assert.match(body,/mailto:jessegaethle10@gmail\.com/);
+  assert.doesNotMatch(body,/tel:\+15095605190|sms:\+15095605190|560-5190|15097590440/);
 });
 
 test('EPS estimator returns local interactive code without talking to Base44',async()=>{
