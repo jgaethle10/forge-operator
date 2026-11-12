@@ -18,7 +18,7 @@ import {randomUUID} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
 export const SCOPE_LIMITS=Object.freeze({
-  memory_bytes:268435456,tasks_max:12,cpu_quota:'75%',
+  memory_bytes:268435456,swap_bytes:0,tasks_max:12,cpu_quota:'75%',
   runtime_max_seconds:4,kill_mode:'control-group'
 });
 const SHA40=/^[a-f0-9]{40}$/;
@@ -134,6 +134,10 @@ export function fixedSyntheticScopeCommand({
     arguments:[
       '--user','--scope','--collect','--quiet','--unit='+unit,
       '--property=MemoryMax='+SCOPE_LIMITS.memory_bytes,
+      // Must request the same synthetic zero-swap policy that the independent
+      // supervisor expects to read from memory.swap.max. If the host cannot
+      // enforce it, the later field check is BLOCKED, not relaxed.
+      '--property=MemorySwapMax='+SCOPE_LIMITS.swap_bytes,
       '--property=TasksMax='+SCOPE_LIMITS.tasks_max,
       '--property=CPUQuota='+SCOPE_LIMITS.cpu_quota,
       '--property=KillMode='+SCOPE_LIMITS.kill_mode,
