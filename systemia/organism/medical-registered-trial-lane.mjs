@@ -15,6 +15,7 @@ const safeId=(v)=>/^\d{1,12}$/.test(String(v??''))?String(v):null;
 const clamp=(x,lo,hi,fallback)=>Number.isFinite(Number(x))?
   Math.max(lo,Math.min(hi,Math.floor(Number(x)))):fallback;
 const hold=(reason,source)=>({ok:false,reason,source});
+const defaultPause=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
 const RESEARCH_POLICY=[
  'This discovery lane uses PubMed Secondary Source ID indexing, not speculative title-matching.',
  'An explicit NCT ID in the PubMed source is a reported association, not an independently appraised connection between study methods and outcomes.',
@@ -51,6 +52,18 @@ async function boundedXml(url,fetcher) {
  finally{clearTimeout(timer);}
 }
 
+// NCBI E-utilities enforces request-rate limits. Retry only transient throttling/outages;
+// never silently retry malformed JSON or identifiers, and retain explicit source holds.
+async function withSourceRetry(request,url,fetcher,pause){
+ let result;
+ for(let attempt=0;attempt<3;attempt++){
+  if(attempt>0)await pause(attempt===1?1500:3200);
+  result=await request(url,fetcher);
+  if(result.ok || !['http_429','http_503'].includes(result.reason))break;
+ }
+ return result;
+}
+
 export function registeredTrialSearchUrl({days=120,retmax=30}={}) {
  const u=new URL(PUBMED_SEARCH);
  u.searchParams.set('db','pubmed');
@@ -71,7 +84,7 @@ export function eligibleSearchIds(data) {
 }
 
 export async function discoverRegisteredTrialLiterature({
- fetcher=globalThis.fetch,now=new Date(),days=120,retmax=30,maxCandidates=8
+ fetcher=globalThis.fetch,pause=defaultPause,now=new Date(),days=120,retmax=30,maxCandidates=8
 }={}) {
  const observed=now.toISOString();
  const url=registeredTrialSearchUrl({days,retmax});
@@ -79,7 +92,10 @@ export async function discoverRegisteredTrialLiterature({
  const eligible=[];
  if(typeof fetcher!=='function')sourceHold='fetcher_unavailable';
  else {
-  const search=await boundedJson(url,fetcher);
+  // The regular PubMed watch and EFetch run just before this lane. Yield the
+  // NLM rate window before initiating another E-utilities call.
+  await pause(1200);
+  const search=await withSourceRetry(boundedJson,url,fetcher,pause);
   if(!search.ok)sourceHold='pubmed_esearch_'+search.reason;
   else {
    const parsed=eligibleSearchIds(search.data);
@@ -95,7 +111,8 @@ export async function discoverRegisteredTrialLiterature({
    u.searchParams.set('db','pubmed');
    u.searchParams.set('id',chunk.join(','));
    u.searchParams.set('retmode','xml');
-   const result=await boundedXml(u.toString(),fetcher);
+   await pause(450);
+   const result=await withSourceRetry(boundedXml,u.toString(),fetcher,pause);
    if(!result.ok){sourceHold='pubmed_efetch_'+result.reason;break;}
    const parsed=parsePubmedEfetch(result.xml,chunk);
    inspected+=chunk.length;
@@ -157,10 +174,10 @@ export function buildRegisteredTrialReview(discovery,{now=new Date()}={}) {
 }
 
 export async function runRegisteredTrialLane({
- fetcher=globalThis.fetch,now=new Date(),days=120,retmax=30,maxCandidates=8,
+ fetcher=globalThis.fetch,pause=defaultPause,now=new Date(),days=120,retmax=30,maxCandidates=8,
  outDir=path.join(process.cwd(),'artifacts/medical-registered-trials')
 }={}) {
- const discovery=await discoverRegisteredTrialLiterature({fetcher,now,days,retmax,maxCandidates});
+ const discovery=await discoverRegisteredTrialLiterature({fetcher,pause,now,days,retmax,maxCandidates});
  const {source,review}=buildRegisteredTrialReview(discovery,{now});
  const registry=await crosscheckClinicalRegistrations({
   abstracts:source,review,fetcher,now,maxRegistrations:3
