@@ -223,8 +223,8 @@ def calibrate(manifest_file, output, authorized_source=False):
 
 
 def validated_calibration(data, np):
-    if data.get("schema")!=CALIBRATION_SCHEMA or
-       data.get("qualityStatus")!="prototype_checkerboard_solution_not_field_verified":
+    if (data.get("schema") != CALIBRATION_SCHEMA or
+        data.get("qualityStatus") != "prototype_checkerboard_solution_not_field_verified"):
         error("invalid_calibration_schema")
     if data.get("realWorldAccuracyCertified") is not False or
        data.get("safetyCriticalApproved") is not False:
