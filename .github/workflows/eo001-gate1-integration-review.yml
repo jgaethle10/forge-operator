@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - research/eo001-gate1-integrated-offline-20261111
+      - research/eo001-gate1-stable-identity-subtree-20261111
   pull_request:
     branches:
       - research/eo001-gate1-escaped-session-negative-control-20261110
+      - research/eo001-gate1-integrated-offline-20261111
     paths:
       - 'integrations/ai-evaluation-lab/**'
       - 'systemia/saban/microseed-pairing.mjs'
@@ -26,6 +28,7 @@ jobs:
         run: |
           node --check integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs
           node --check integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.mjs
+          node --check integrations/ai-evaluation-lab/eo001-stable-scope-lifecycle.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
           node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
       - name: Verify authorization expiry is not weakened
@@ -39,6 +42,8 @@ jobs:
           node --test integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.test.mjs
           node --test integrations/ai-evaluation-lab/eo001-cgroup-session-proof.test.mjs
           node --test integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.test.mjs
+      - name: Verify stable process identity and recursive subtree evidence, offline only
+        run: node --test integrations/ai-evaluation-lab/eo001-stable-scope-lifecycle.test.mjs
       - name: Verify live Linux synthetic process-group negative controls (no scope)
         run: |
           node --test integrations/ai-evaluation-lab/eo001-process-group-escape-negative.test.mjs
