@@ -6,7 +6,7 @@ const path='/tmp/growth-signal-test-'+process.pid+'.ndjson';
 const secret='test-secret-is-at-least-32-chars-long-1234';
 const reader='read-test-token-is-also-32-characters-long';
 const port=18800+Math.floor(Math.random()*400);
-const proc=spawn(process.execPath,['api/signal-service.mjs'],{cwd:process.cwd(),env:{...process.env,SIGNAL_PORT:String(port),SIGNAL_CLIENT_APPROVED:'true',SIGNAL_INGEST_HMAC_SECRET:secret,SIGNAL_READ_TOKEN:reader,SIGNAL_LEDGER_PATH:path},stdio:['ignore','pipe','pipe']});
+const proc=spawn(process.execPath,['systemia/growth-signal/client001/signal-service.mjs'],{cwd:process.cwd(),env:{...process.env,SIGNAL_PORT:String(port),SIGNAL_CLIENT_APPROVED:'true',SIGNAL_INGEST_HMAC_SECRET:secret,SIGNAL_READ_TOKEN:reader,SIGNAL_LEDGER_PATH:path},stdio:['ignore','pipe','pipe']});
 let ready=false;let stderr='';proc.stdout.on('data',b=>{if(String(b).includes('listening'))ready=true});proc.stderr.on('data',b=>{stderr+=String(b)});
 const url=`http://127.0.0.1:${port}`;
 async function req(route,data,headers={}){const body=JSON.stringify(data),sig=createHmac('sha256',secret).update(body).digest('hex');const r=await fetch(url+route,{method:'POST',headers:{'Content-Type':'application/json','x-evercraft-signature':sig,...headers},body});return {status:r.status,data:await r.json()}}
