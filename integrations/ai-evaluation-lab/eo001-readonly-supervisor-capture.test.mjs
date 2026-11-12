@@ -61,6 +61,10 @@ const mock=(options={})=>{
     readAbsolute:file=>{
       o.calls.push('abs:'+file);
       if(file==='/proc/sys/kernel/random/boot_id')return boot+'\n';
+      if(file==='/proc/self/cgroup')return '0::'+(
+        o.observerInside?cg+'/observer':
+        '/user.slice/user-1000.slice/user@1000.service/app.slice/supervisor.service'
+      )+'\n';
       const m=file.match(/^\/proc\/(\d+)\/(stat|cgroup)$/);
       if(!m)throw Error('read outside allowlist');
       const pid=Number(m[1]);
@@ -161,6 +165,12 @@ test('swap controls absent or unbounded block before observer returns',()=>{
 test('must observe a real, active exact systemd scope before opening a handle',()=>{
   const {state,io}=mock({badSystemd:'ActiveState=inactive\nLoadState=not-found\nControlGroup='+cg+'\n'});
   assert.throws(()=>begin(io),/SCOPE_NOT_ACTIVE/);
+  assert.equal(state.calls.some(x=>x.startsWith('open:')),false);
+});
+
+test('observer running inside worker scope cannot claim independent supervision',()=>{
+  const {state,io}=mock({observerInside:true});
+  assert.throws(()=>begin(io),/OBSERVER_INSIDE_WORKER_SCOPE/);
   assert.equal(state.calls.some(x=>x.startsWith('open:')),false);
 });
 
