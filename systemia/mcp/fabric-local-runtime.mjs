@@ -41,6 +41,7 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import {createWebsiteAuditInquiryHandler,websiteAuditInquiryReadiness,createWebsiteAuditAlertDispatcher} from './website-audit-inquiry.mjs';
 import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignalInquiryAlertDispatcher } from './signal-public-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
@@ -412,6 +413,7 @@ export async function startFabricLocalRuntime({
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
   studioLeadsDir='',
+  websiteAuditLeadsDir=process.env.EVERCRAFT_WEBSITE_AUDIT_LEADS_DIR||'',
   signalLeadsDir=process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'',
   signalIntakeKey=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||undefined,
   findMyPartLeadsDir='',
@@ -432,6 +434,12 @@ export async function startFabricLocalRuntime({
   const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
   const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
     onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
+  const websiteAuditAlertDispatcher=createWebsiteAuditAlertDispatcher({storeDir:websiteAuditLeadsDir||undefined});
+  const websiteAuditInquiry=createWebsiteAuditInquiryHandler({
+    storeDir:websiteAuditLeadsDir||undefined,
+    onAlertQueued:()=>{if(websiteAuditAlertDispatcher.enabled)void websiteAuditAlertDispatcher.dispatch().catch(()=>{});},
+  });
+  const auditInquiryAvailable=()=>websiteAuditInquiryReadiness({storeDir:websiteAuditLeadsDir||undefined}).intake_available;
   const signalAlertDispatcher=createSignalInquiryAlertDispatcher({folder:signalLeadsDir||undefined,key:signalIntakeKey});
   const signalInquiry=createSignalBuyerInquiryHandler({storeDir:signalLeadsDir||undefined,key:signalIntakeKey,
     onAlertQueued:()=>{if(signalAlertDispatcher.enabled)void signalAlertDispatcher.dispatch().catch(()=>{});}});
@@ -679,6 +687,7 @@ export async function startFabricLocalRuntime({
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
     payment_authority:'Evercraft Payments',
+    website_audit_inquiry_available:auditInquiryAvailable(),
     payment_router:'Raven Nexus',
     // This legacy field covers read-only MCP connections only, not payment.
     base44_transport_enabled:false,
@@ -832,6 +841,15 @@ export async function startFabricLocalRuntime({
       if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/inquiry'){
         return await findMyPartInquiry(req,res);
       }
+
+      // Human-reviewed audit interest, never a payment, order, or agent mission.
+      const auditRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(auditRoute==='/api/website-audit/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return sendJson(res,200,{schema:'evercraft.website-audit.intake-readiness.v1',
+          intake_available:auditInquiryAvailable(),payment_ready:false,payment_verified:false});
+      }
+      if(auditRoute==='/api/website-audit/inquiry')return await websiteAuditInquiry(req,res);
 
       // Only this bounded route accepts untrusted commercial inquiry data.
       // It never invokes agents or checkout, sends email, or exposes stored leads.
@@ -1441,7 +1459,7 @@ export async function startFabricLocalRuntime({
               'Payment verification pending. Do not pay again. Refresh this page later or contact Evercraft.';
             return sendText(res,result.status,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Evercraft Payments</title></head><body style="background:#0b1120;color:#ecf1fa;font:18px/1.6 system-ui;padding:32px;max-width:720px;margin:auto"><h1>Evercraft Payments</h1><p>'+message+'</p><a style="color:#9debdc" href="/support">Contact support</a></body></html>',{contentType:'text/html; charset=utf-8'});
           }
-          const page=renderOfferPage(offer,{checkoutConfigured:commerceTransport.fully_configured});
+          const page=renderOfferPage(offer,{checkoutConfigured:commerceTransport.fully_configured,auditInquiryAvailable:auditInquiryAvailable()});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
@@ -1741,6 +1759,10 @@ export async function startFabricLocalRuntime({
     studioAlertDispatcher.start();
     void studioAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(websiteAuditAlertDispatcher.enabled){
+    websiteAuditAlertDispatcher.start();
+    void websiteAuditAlertDispatcher.dispatch().catch(()=>{});
+  }
   if(signalAlertDispatcher.enabled){
     signalAlertDispatcher.start();
     void signalAlertDispatcher.dispatch().catch(()=>{});
@@ -1774,6 +1796,7 @@ export async function startFabricLocalRuntime({
     },
     close:async()=>{
       studioAlertDispatcher.stop();
+      websiteAuditAlertDispatcher.stop();
       signalAlertDispatcher.stop();
       findMyPartAlertDispatcher.stop();
       partnerAlertDispatcher.stop();
