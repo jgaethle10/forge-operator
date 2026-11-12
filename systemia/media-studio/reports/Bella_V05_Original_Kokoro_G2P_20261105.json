@@ -1,0 +1,463 @@
+{
+  "schema": "evercraft.bella.lexical-frontend-inspection.v1",
+  "voiceId": "af_bella",
+  "lockedScriptSha256": "854d5f8042943e700950658e576de779fbf268f790760652ba40bdb76366e32e",
+  "lockedScript": "You know that moment when everything begins to make sense. The noise falls away. The next step becomes clear. And suddenly, you can see where this could go. That's what we're building at Evercraft. Something worth paying attention to. Something you'll want to come back to.",
+  "modelGenerationDisabled": true,
+  "neuralInferencePerformed": false,
+  "audioGenerated": false,
+  "pitchStressOutputAvailable": false,
+  "phonemeDurationModelRun": false,
+  "lexicalStressIsNotSemanticEmphasis": true,
+  "g2pProvenanceWithoutFallbackLogs": "unknown",
+  "tokenAudioTimingAvailable": false,
+  "sourceTextCoverageVerified": false,
+  "combinedGraphemes": "You know that moment when everything begins to make sense. The noise falls away. The next step becomes clear. And suddenly, you can see where this could go. That's what we're building at Evercraft. Something worth paying attention to. Something you'll want to come back to.",
+  "originalBellaVoiceUntouched": true,
+  "releaseAuthorized": false,
+  "chunks": [
+    {
+      "chunk": 1,
+      "graphemes": "You know that moment when everything begins to make sense. The noise falls away. The next step becomes clear. And suddenly, you can see where this could go. That's what we're building at Evercraft. Something worth paying attention to. Something you'll want to come back to.",
+      "phonemes": "jˌu nˈO ðˈæt mˈOmᵊnt wˌɛn ˈɛvəɹiθˌɪŋ bəɡˈɪnz tə mˌAk sˈɛns. ðə nˈYz fˈɔlz əwˈA. ðə nˈɛkst stˈɛp bəkˈʌmz klˈɪɹ. ˌænd sˈʌdᵊnli, ju kæn sˈi wˌɛɹ ðɪs kʊd ɡˌO. ðˈæts wˌʌt wɪɹ bˈɪldɪŋ æt ˌɛvəɹkɹˈæft. sˈʌmθˌɪŋ wˈɜɹθ pˈAɪŋ ətˈɛnʧən tu. sˈʌmθˌɪŋ jul wˈɑnt tə kˈʌm bˈæk tu.",
+      "primaryStressMarks": 26,
+      "secondaryStressMarks": 11,
+      "tokens": [
+        {
+          "grapheme": "You",
+          "phonemes": "jˌu",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "know",
+          "phonemes": "nˈO",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "that",
+          "phonemes": "ðˈæt",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "moment",
+          "phonemes": "mˈOmᵊnt",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "when",
+          "phonemes": "wˌɛn",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "everything",
+          "phonemes": "ˈɛvəɹiθˌɪŋ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "begins",
+          "phonemes": "bəɡˈɪnz",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "to",
+          "phonemes": "tə",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "make",
+          "phonemes": "mˌAk",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "sense",
+          "phonemes": "sˈɛns",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "The",
+          "phonemes": "ðə",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "noise",
+          "phonemes": "nˈYz",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "falls",
+          "phonemes": "fˈɔlz",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "away",
+          "phonemes": "əwˈA",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "The",
+          "phonemes": "ðə",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "next",
+          "phonemes": "nˈɛkst",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "step",
+          "phonemes": "stˈɛp",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "becomes",
+          "phonemes": "bəkˈʌmz",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "clear",
+          "phonemes": "klˈɪɹ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "And",
+          "phonemes": "ˌænd",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "suddenly",
+          "phonemes": "sˈʌdᵊnli",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ",",
+          "phonemes": ",",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "you",
+          "phonemes": "ju",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "can",
+          "phonemes": "kæn",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "see",
+          "phonemes": "sˈi",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "where",
+          "phonemes": "wˌɛɹ",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "this",
+          "phonemes": "ðɪs",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "could",
+          "phonemes": "kʊd",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "go",
+          "phonemes": "ɡˌO",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "That's",
+          "phonemes": "ðˈæts",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "what",
+          "phonemes": "wˌʌt",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "we're",
+          "phonemes": "wɪɹ",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "building",
+          "phonemes": "bˈɪldɪŋ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "at",
+          "phonemes": "æt",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "Evercraft",
+          "phonemes": "ˌɛvəɹkɹˈæft",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "Something",
+          "phonemes": "sˈʌmθˌɪŋ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "worth",
+          "phonemes": "wˈɜɹθ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "paying",
+          "phonemes": "pˈAɪŋ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "attention",
+          "phonemes": "ətˈɛnʧən",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "to",
+          "phonemes": "tu",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "Something",
+          "phonemes": "sˈʌmθˌɪŋ",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 1,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "you'll",
+          "phonemes": "jul",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "want",
+          "phonemes": "wˈɑnt",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "to",
+          "phonemes": "tə",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "come",
+          "phonemes": "kˈʌm",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "back",
+          "phonemes": "bˈæk",
+          "lexicalPrimaryStressMarks": 1,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": "to",
+          "phonemes": "tu",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        },
+        {
+          "grapheme": ".",
+          "phonemes": ".",
+          "lexicalPrimaryStressMarks": 0,
+          "lexicalSecondaryStressMarks": 0,
+          "predictedAudioWordStartSec": null,
+          "predictedAudioWordEndSec": null
+        }
+      ],
+      "phonemesSha256": "b609c9bb842a59167dd2eb0319d3e9cabfce0ccdc56a060ef71e456581dac70d"
+    }
+  ],
+  "status": "PHONEME_FRONTEND_DIAGNOSTIC_REVIEW_ONLY"
+}

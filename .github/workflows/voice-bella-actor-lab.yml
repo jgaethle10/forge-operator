@@ -1,0 +1,65 @@
+name: Voice Foundry | Bella Actor Lab (review only)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-actor-lab.py'
+      - 'systemia/media-studio/test_voice_bella_actor_lab.py'
+      - '.github/workflows/voice-bella-actor-lab.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-actor-lab.py'
+      - 'systemia/media-studio/test_voice_bella_actor_lab.py'
+      - '.github/workflows/voice-bella-actor-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  neural-audition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify exact text and run no-model regression tests
+        run: |
+          python systemia/media-studio/voice-bella-actor-lab.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_actor_lab.py -v
+      - name: Install original open-weight Bella speech runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate three original native performances (no publish)
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/voice-bella-actor-lab.py bella-actor-lab-private
+      - name: Recheck actual audio, hashes and negative release flags
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('bella-actor-lab-private')
+          r=json.loads((root/'evidence.json').read_text())
+          assert r['voiceId']=='af_bella' and r['sameSpokenWords']
+          assert r['kokoroVersion']=='0.9.4'
+          assert not r['pitchShift'] and not r['voiceBlending'] and not r['phonemeOverrides']
+          assert not r['humanListeningApproved'] and not r['published']
+          assert not r['commercialRightsIndependentlyVerified']
+          assert len(r['blindTakes'])==3
+          for item in r['blindTakes']:
+              p=root/item['filename']
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256']
+              with wave.open(str(p),'rb') as wav:
+                  assert wav.getframerate()==24000 and wav.getnchannels()==1
+                  assert wav.getsampwidth()==2 and 10<=wav.getnframes()/24000<=34
+          assert 'REVIEW ONLY' in (root/'index.html').read_text()
+          print('PASS: three native Bella WAV digests and fail-closed release metadata')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-actor-lab-three-blind-takes-private
+          path: bella-actor-lab-private/
+          retention-days: 7
+          if-no-files-found: error
