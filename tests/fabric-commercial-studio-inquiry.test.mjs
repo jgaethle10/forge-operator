@@ -31,6 +31,7 @@ test('public first-party inquiry stores consented record with no payment or agen
   assert.equal(lines.length,1);
   const record=JSON.parse(lines[0]);
   assert.equal(record.email,LEAD.email);
+  assert.equal(record.claimed_discovery_channel,'unattributed');
   assert.equal(record.agent_execution_authorized,false);
   assert.equal(record.automated_payment,false);
   assert.equal(fs.statSync(pathname).mode&0o777,0o600);
@@ -70,4 +71,17 @@ test('studio public page calls owned capture route and requires consent; receipt
 test('field validator ignores browser-only statement of another product',()=>{
  assert.equal(validateStudioInquiry({...LEAD,project:'FindMyPart'}).error,'invalid_inquiry_fields');
  assert.equal(validateStudioInquiry({...LEAD,goal:'x'}).error,'invalid_inquiry_fields');
+});
+
+test('commercial campaign tags are bounded, self-reported, and not a partner sale receipt',()=>{
+ const known=validateStudioInquiry({...LEAD,claimedChannel:'partners'});
+ assert.equal(known.value.claimed_discovery_channel,'partners');
+ const unknown=validateStudioInquiry({...LEAD,claimedChannel:'<img src=x onerror=alert(1)>'});
+ assert.equal(unknown.value.claimed_discovery_channel,'unattributed');
+ const page=fs.readFileSync(new URL('../public/commercial-studio/index.html',import.meta.url),'utf8');
+ assert.match(page,/sourceOptions=new Set/);
+ assert.match(page,/claimedChannel/);
+ assert.match(page,/Founding introductory offer/);
+ assert.match(page,/value="\$50 launch-week 30-second social commercial pilot"/);
+ assert.doesNotMatch(page,/For our launch week/);
 });
