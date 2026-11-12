@@ -23,6 +23,7 @@ const xml='<PubmedArticleSet>'+
  '<ArticleTitle>No NCT on source record</ArticleTitle>'+
  '<Abstract><AbstractText>Research abstract with no explicit registry ID</AbstractText></Abstract>'+
  '</Article></MedlineCitation></PubmedArticle></PubmedArticleSet>';
+const noPause=async()=>{};
 const registry=(id)=>({
  protocolSection:{
   identificationModule:{nctId:id,briefTitle:'Registered public study'},
@@ -61,7 +62,7 @@ test('uses NLM documented Secondary Source ID search and bounded inputs',()=>{
 
 test('discovers only PubMed-verified NCT candidates and produces real matching registry receipts',async()=>{
  const at=new Date('2026-11-11T23:00:00Z');
- const r=await discoverRegisteredTrialLiterature({fetcher:fakeFetcher,now:at});
+ const r=await discoverRegisteredTrialLiterature({fetcher:fakeFetcher,pause:noPause,now:at});
  assert.equal(r.source_status,'source_indexed_unreviewed');
  assert.equal(r.pubmed_search_total,2);
  assert.equal(r.explicitly_registered_papers,1);
@@ -73,7 +74,7 @@ test('discovers only PubMed-verified NCT candidates and produces real matching r
  assert.equal(review.evidence_matrix[0].independently_confirmed,false);
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-nct-lane-'));
  try{
-  const output=await runRegisteredTrialLane({fetcher:fakeFetcher,now:at,outDir:dir});
+  const output=await runRegisteredTrialLane({fetcher:fakeFetcher,pause:noPause,now:at,outDir:dir});
   assert.equal(output.official_nct_ids_confirmed,1);
   assert.equal(output.independently_verified_outcomes,0);
   assert.equal(output.publication_disposition,'held_with_reason');
@@ -89,10 +90,10 @@ test('discovers only PubMed-verified NCT candidates and produces real matching r
 test('source search failure fails closed; registry is never queried',async()=>{
  let fetched=0;
  const r=await runRegisteredTrialLane({
-  fetcher:async(url)=>{fetched++;return{ok:false,status:503};},
+  fetcher:async(url)=>{fetched++;return{ok:false,status:503};},pause:noPause,
   outDir:fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-nct-hold-'))
  });
- assert.equal(fetched,1);
+ assert.equal(fetched,3);
  assert.equal(r.discovery.source_status,'held_source_unavailable');
  assert.equal(r.official_nct_ids_confirmed,0);
  assert.equal(r.independently_verified_outcomes,0);
@@ -100,11 +101,11 @@ test('source search failure fails closed; registry is never queried',async()=>{
 });
 
 test('invalid ESearch structure and unavailable EFetch never fabricate registered papers',async()=>{
- const invalid=await discoverRegisteredTrialLiterature({fetcher:async()=>({
+ const invalid=await discoverRegisteredTrialLiterature({pause:noPause,fetcher:async()=>({
   ok:true,text:async()=>JSON.stringify({esearchresult:{idlist:['10001']}})
  })});
  assert.equal(invalid.source_hold,'pubmed_esearch_invalid_response');
- const down=await discoverRegisteredTrialLiterature({fetcher:async(url)=>{
+ const down=await discoverRegisteredTrialLiterature({pause:noPause,fetcher:async(url)=>{
   if(url.includes('esearch.fcgi'))return{
    ok:true,text:async()=>JSON.stringify({esearchresult:{count:'1',idlist:['10001']}})
   };
@@ -112,6 +113,27 @@ test('invalid ESearch structure and unavailable EFetch never fabricate registere
  }});
  assert.equal(down.source_status,'held_source_unavailable');
  assert.equal(down.explicitly_registered_papers,0);
+});
+
+test('recovers from transient NLM 429 without guessing or silently ignoring throttling',async()=>{
+ let esearchCalls=0;
+ const waits=[];
+ const fetcher=async(url,options)=>{
+  if(url.includes('esearch.fcgi')){
+   esearchCalls++;
+   if(esearchCalls===1)return{ok:false,status:429};
+   return{ok:true,text:async()=>JSON.stringify({esearchresult:{count:'0',idlist:[]}})};
+  }
+  throw Error('unexpected request after empty ESearch');
+ };
+ const result=await discoverRegisteredTrialLiterature({
+  fetcher,pause:async(ms)=>{waits.push(ms);}
+ });
+ assert.equal(esearchCalls,2);
+ assert.deepEqual(waits,[1200,1500]);
+ assert.equal(result.source_status,'source_indexed_unreviewed');
+ assert.equal(result.explicitly_registered_papers,0);
+ assert.equal(result.pubmed_search_total,0);
 });
 
 test('valid search with no explicit NCT metadata does not trigger speculative registry lookup',async()=>{
@@ -124,7 +146,7 @@ test('valid search with no explicit NCT metadata does not trigger speculative re
  };
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-nct-nohit-'));
  try{
-  const output=await runRegisteredTrialLane({fetcher,outDir:dir});
+  const output=await runRegisteredTrialLane({fetcher,pause:noPause,outDir:dir});
   assert.equal(output.discovery.explicitly_registered_papers,0);
   assert.equal(output.official_nct_ids_confirmed,0);
   assert.equal(registryCalls,0);
