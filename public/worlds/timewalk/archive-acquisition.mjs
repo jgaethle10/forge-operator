@@ -68,6 +68,19 @@ export function validateArchiveAcquisition(a,ledger) {
          receipt.coordinates!==null)fail("unsupported_1960_original_claim");
       if(!Array.isArray(receipt.sheetMatches) || receipt.sheetMatches.length!==2)
         fail("missing_archivist_sheet_matches");
+      const follow=receipt.additionalReply;
+      if(follow!==undefined && (
+         follow.reportedCorrectionRounds!==6 ||
+         follow.bothSheetsHaveCorrections!==true ||
+         follow.individualPasteoverDatesRecorded!==false ||
+         follow.latestVolumeAppearanceYear!==1960 ||
+         follow.landmarkBuildingsAppearIdenticalTo1952!==true ||
+         follow.surroundingBuildingsChangedBetween1952And1960!==true ||
+         follow.changedSurroundingBuildingsIdentified!==false ||
+         follow.changedSurroundingBuildingGeometryExtracted!==false ||
+         follow.copyrightClarificationStatus!=="archive_staff_could_not_confirm_1960_reuse_rights" ||
+         follow.status!=="archivist_report_direct_email_not_independent_original_inspection"))
+         fail("unsupported_archivist_followup_claim");
       for(const [i,n] of [6,15].entries()){
         const match=receipt.sheetMatches[i];
         if(match?.sheetNumber!==n || match.locDigitalEdition!==1952 ||
@@ -122,13 +135,17 @@ export function acquisitionReadiness(acquisition,ledger) {
     sheetNumbersIdentifiedByArchivist:a.sourceAccess.archiveSheetNumbersConfirmed===true,
     identifiedSheetNumbers:a.curatorConfirmation?.confirmedNumbers||[],
     digital1952ComparisonLinks:(a.curatorConfirmation?.sheetMatches||[]).map(x=>x.locViewerUrl),
+    correctionRoundsReported:a.curatorConfirmation?.additionalReply?.reportedCorrectionRounds??null,
+    surroundingBuildingsChangedReported:a.curatorConfirmation?.additionalReply?.surroundingBuildingsChangedBetween1952And1960??null,
+    unidentifiedChangesRequireReview:true,
     originalItemExamined:false,
     georeferencingAuthorized:false,
     publishOriginalMapAllowed:false,
     publicSceneAccuracyVerified:false,
     outstanding:[
       a.sourceAccess.replyReceived===true ? "Inspect or compare CSUN originals for sheets 6/15; log 1960 sheet correction dates and rights" : a.sourceAccess.priorInquirySent ? "Await CSUN response identifying downtown 1960 volume and sheet numbers" : "Ask archive for downtown block and 1960 sheet numbers",
-      "Inspect original sheet and individual correction dates",
+      a.curatorConfirmation?.additionalReply?.individualPasteoverDatesRecorded===false ? "Individual pasteover dates were not recorded; do not request exact dates as if recoverable" : "Inspect original sheets for any independently dated corrections",
+      a.curatorConfirmation?.additionalReply?.surroundingBuildingsChangedBetween1952And1960===true ? "Map and assess nearby 1952–1960 changes individually; never clone all 1952 neighboring buildings into 1960" : "Check whether nearby buildings changed before treating 1952 map as a 1960 neighborhood",
       "Get written public/commercial reuse permission if applicable",
       "Separate independent survey control-point verification and 1960 timeline review"
     ]
