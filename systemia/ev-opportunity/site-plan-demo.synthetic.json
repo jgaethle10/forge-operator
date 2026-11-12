@@ -1,0 +1,418 @@
+{
+  "demonstration": true,
+  "independent_source_review": false,
+  "project": {
+    "id": "DEMO-2026-001",
+    "name": "Evercraft EV | Demonstration Site"
+  },
+  "site": {
+    "address": "100 Example Road, Demo City, WA",
+    "parcel_id": "SYNTHETIC-PARCEL-001",
+    "field_survey_verified": false,
+    "utility_capacity_verified": false,
+    "accessible_route_verified": false
+  },
+  "coordinates": {
+    "units": "local_meters",
+    "north_verified": false,
+    "metric_scale_verified": false
+  },
+  "lineage": {
+    "independent_cleared": true
+  },
+  "sources": [
+    {
+      "id": "SOURCE-SYNTH",
+      "name": "Synthetic, no real parcel or imagery",
+      "url": "https://example.org/synthetic",
+      "rights": "cleared_independent",
+      "observed_date": "2026-11-11"
+    }
+  ],
+  "features": [
+    {
+      "id": "road",
+      "kind": "roadway",
+      "basis": "source_derived",
+      "source_id": "SOURCE-SYNTH",
+      "label": "EXAMPLE ACCESS ROAD",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            -8,
+            0
+          ],
+          [
+            187,
+            0
+          ],
+          [
+            187,
+            16
+          ],
+          [
+            -8,
+            16
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parcel",
+      "kind": "parcel",
+      "basis": "source_derived",
+      "source_id": "SOURCE-SYNTH",
+      "label": "DEMONSTRATION PARCEL",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            18,
+            18
+          ],
+          [
+            162,
+            18
+          ],
+          [
+            162,
+            110
+          ],
+          [
+            18,
+            110
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building",
+      "kind": "existing",
+      "basis": "source_derived",
+      "source_id": "SOURCE-SYNTH",
+      "label": "EXAMPLE EXISTING BUILDING",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            34,
+            65
+          ],
+          [
+            99,
+            65
+          ],
+          [
+            99,
+            95
+          ],
+          [
+            34,
+            95
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parking",
+      "kind": "parking",
+      "basis": "modeled",
+      "source_id": "",
+      "label": "CONCEPT PARKING ENVELOPE",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            34,
+            24
+          ],
+          [
+            146,
+            24
+          ],
+          [
+            146,
+            53
+          ],
+          [
+            34,
+            53
+          ]
+        ]
+      }
+    },
+    {
+      "id": "landscape-1",
+      "kind": "vegetation",
+      "basis": "modeled",
+      "source_id": "",
+      "label": "MODELED LANDSCAPE",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            111,
+            72
+          ],
+          [
+            143,
+            72
+          ],
+          [
+            143,
+            93
+          ],
+          [
+            111,
+            93
+          ]
+        ]
+      }
+    },
+    {
+      "id": "equipment",
+      "kind": "equipment",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "EQUIPMENT PAD",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            114,
+            30
+          ],
+          [
+            126,
+            30
+          ],
+          [
+            126,
+            40
+          ],
+          [
+            114,
+            40
+          ]
+        ]
+      }
+    },
+    {
+      "id": "accessible-route",
+      "kind": "access",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "CONCEPT ROUTE",
+      "geometry": {
+        "type": "polyline",
+        "points": [
+          [
+            77,
+            40
+          ],
+          [
+            77,
+            58
+          ],
+          [
+            89,
+            64
+          ]
+        ]
+      }
+    },
+    {
+      "id": "trench-concept",
+      "kind": "trench",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "TRENCH CONCEPT",
+      "geometry": {
+        "type": "polyline",
+        "points": [
+          [
+            120,
+            34
+          ],
+          [
+            110,
+            34
+          ],
+          [
+            108,
+            21
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stall-01",
+      "kind": "charger",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "1",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            50,
+            29
+          ],
+          [
+            55.6,
+            29
+          ],
+          [
+            55.6,
+            39
+          ],
+          [
+            50,
+            39
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stall-02",
+      "kind": "charger",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "2",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            59.8,
+            29
+          ],
+          [
+            65.39999999999999,
+            29
+          ],
+          [
+            65.39999999999999,
+            39
+          ],
+          [
+            59.8,
+            39
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stall-03",
+      "kind": "charger",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "3",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            69.6,
+            29
+          ],
+          [
+            75.19999999999999,
+            29
+          ],
+          [
+            75.19999999999999,
+            39
+          ],
+          [
+            69.6,
+            39
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stall-04",
+      "kind": "charger",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "4",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            79.4,
+            29
+          ],
+          [
+            85,
+            29
+          ],
+          [
+            85,
+            39
+          ],
+          [
+            79.4,
+            39
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stall-05",
+      "kind": "charger",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "5",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            89.2,
+            29
+          ],
+          [
+            94.8,
+            29
+          ],
+          [
+            94.8,
+            39
+          ],
+          [
+            89.2,
+            39
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stall-06",
+      "kind": "charger",
+      "basis": "proposed",
+      "source_id": "",
+      "label": "6",
+      "geometry": {
+        "type": "polygon",
+        "points": [
+          [
+            99,
+            29
+          ],
+          [
+            104.6,
+            29
+          ],
+          [
+            104.6,
+            39
+          ],
+          [
+            99,
+            39
+          ]
+        ]
+      }
+    }
+  ]
+}
