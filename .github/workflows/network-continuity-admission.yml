@@ -1,0 +1,31 @@
+name: Evercraft Network continuity resource admission
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/continuity-kernel.mjs'
+      - 'systemia/network/continuity-kernel-proof.mjs'
+      - 'systemia/network/CONTINUITY-KERNEL.md'
+      - '.github/workflows/network-continuity-admission.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/network/continuity-kernel.mjs'
+      - 'systemia/network/continuity-kernel-proof.mjs'
+      - 'systemia/network/CONTINUITY-KERNEL.md'
+      - '.github/workflows/network-continuity-admission.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove fail-closed capacity, priority, and fallback admission
+        run: node systemia/network/continuity-kernel-proof.mjs

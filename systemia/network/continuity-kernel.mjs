@@ -17,26 +17,124 @@ const PRIORITY_NAME = Object.freeze({
   5: 'ordinary',
   6: 'bulk'
 });
+const RESOURCES = Object.freeze([
+  ['cpu_units', 'cpu'],
+  ['memory_mb', 'memory'],
+  ['power_units', 'power']
+]);
+const MAX_WORKLOADS = 10000;
 
-function finiteNumber(value, fallback = 0) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
+function validResource(value) {
+  // Number() coercion would silently turn null, false and '' into free capacity.
+  return typeof value === 'number' && Number.isFinite(value) &&
+    value >= 0 && value <= Number.MAX_SAFE_INTEGER;
 }
 
-function costOf(workload) {
+function readResources(input, label, errors) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+    errors.push(label + '_must_be_object');
+    return null;
+  }
+  const result = {};
+  for (const [name, key] of RESOURCES) {
+    if (!validResource(input[name])) {
+      errors.push(label + '_' + name + '_invalid');
+    } else {
+      result[key] = input[name];
+    }
+  }
+  return result;
+}
+
+function invalidPlan(errors) {
   return {
-    cpu: Math.max(0, finiteNumber(workload.cpu_units)),
-    memory: Math.max(0, finiteNumber(workload.memory_mb)),
-    power: Math.max(0, finiteNumber(workload.power_units))
+    schema: 'evercraft.continuity-plan.v1',
+    mode: 'HOLD_INVALID_RESOURCE_EVIDENCE',
+    errors: errors.slice(0, 30),
+    capacity: null,
+    remaining: null,
+    admitted: [],
+    degraded: [],
+    shed: [],
+    invariants: {
+      resource_evidence_valid: false,
+      required_workloads_preserved: false,
+      life_safety_shed: null,
+      control_plane_shed: null,
+      mission_critical_shed: null
+    }
   };
 }
 
+function validateInput(capacity, workloads) {
+  const errors = [];
+  const initial = readResources(capacity, 'capacity', errors);
+  if (!Array.isArray(workloads)) {
+    errors.push('workloads_must_be_array');
+    return { errors, initial, normalized: [] };
+  }
+  if (workloads.length > MAX_WORKLOADS) {
+    errors.push('workload_count_exceeds_bound');
+    return { errors, initial, normalized: [] };
+  }
+
+  const seen = new Set();
+  const normalized = [];
+  for (let index = 0; index < workloads.length; index++) {
+    const workload = workloads[index];
+    const label = 'workload_' + index;
+    if (!workload || typeof workload !== 'object' || Array.isArray(workload)) {
+      errors.push(label + '_must_be_object');
+      continue;
+    }
+    const id = workload.id;
+    if (typeof id !== 'string' || !id.trim() || id.length > 160) {
+      errors.push(label + '_id_invalid');
+    } else if (seen.has(id)) {
+      errors.push(label + '_duplicate_id');
+    } else {
+      seen.add(id);
+    }
+
+    // A malformed required flag must never downgrade critical work to optional.
+    if (workload.required !== undefined && typeof workload.required !== 'boolean') {
+      errors.push(label + '_required_invalid');
+    }
+
+    const priority = workload.priority === undefined
+      ? PRIORITY.ORDINARY : workload.priority;
+    if (!Number.isInteger(priority) ||
+        priority < PRIORITY.LIFE_SAFETY || priority > PRIORITY.BULK) {
+      errors.push(label + '_priority_invalid');
+    }
+
+    const cost = readResources(workload, label, errors);
+    let fallbackCost = null;
+    if (workload.fallback !== undefined && workload.fallback !== null) {
+      fallbackCost = readResources(workload.fallback, label + '_fallback', errors);
+      if (typeof workload.fallback?.mode !== 'string' ||
+          !workload.fallback.mode.trim()) {
+        errors.push(label + '_fallback_mode_invalid');
+      }
+    }
+
+    normalized.push({
+      id,
+      priority,
+      required: workload.required === true,
+      _index: index,
+      _cost: cost,
+      _fallbackCost: fallbackCost,
+      _fallbackMode: workload.fallback?.mode || null
+    });
+  }
+  return { errors, initial, normalized };
+}
+
 function fits(remaining, cost) {
-  return (
-    remaining.cpu >= cost.cpu &&
+  return remaining.cpu >= cost.cpu &&
     remaining.memory >= cost.memory &&
-    remaining.power >= cost.power
-  );
+    remaining.power >= cost.power;
 }
 
 function subtract(remaining, cost) {
@@ -45,32 +143,15 @@ function subtract(remaining, cost) {
   remaining.power -= cost.power;
 }
 
-function normalizedPriority(value) {
-  const n = Number.parseInt(String(value), 10);
-  if (!Number.isFinite(n)) return PRIORITY.ORDINARY;
-  return Math.max(PRIORITY.LIFE_SAFETY, Math.min(PRIORITY.BULK, n));
-}
-
 export { PRIORITY, PRIORITY_NAME };
 
-export function planContinuity({ capacity, workloads }) {
-  const initial = {
-    cpu: Math.max(0, finiteNumber(capacity?.cpu_units)),
-    memory: Math.max(0, finiteNumber(capacity?.memory_mb)),
-    power: Math.max(0, finiteNumber(capacity?.power_units))
-  };
+export function planContinuity({ capacity, workloads } = {}) {
+  const { errors, initial, normalized } = validateInput(capacity, workloads);
+  if (errors.length) return invalidPlan(errors);
   const remaining = { ...initial };
-
-  const normalized = (workloads || []).map((workload, index) => ({
-    ...workload,
-    priority: normalizedPriority(workload.priority),
-    _index: index,
-    _cost: costOf(workload)
-  }));
-
   const ordered = normalized.sort((a, b) =>
     a.priority - b.priority ||
-    Number(Boolean(b.required)) - Number(Boolean(a.required)) ||
+    Number(b.required) - Number(a.required) ||
     a._index - b._index
   );
 
@@ -83,39 +164,28 @@ export function planContinuity({ capacity, workloads }) {
       id: workload.id,
       priority: workload.priority,
       priority_name: PRIORITY_NAME[workload.priority],
-      required: Boolean(workload.required),
+      required: workload.required,
       cost: workload._cost
     };
 
     if (fits(remaining, workload._cost)) {
       subtract(remaining, workload._cost);
-      admitted.push({
+      admitted.push({ ...base, mode: 'full' });
+      continue;
+    }
+
+    if (workload._fallbackCost && fits(remaining, workload._fallbackCost)) {
+      subtract(remaining, workload._fallbackCost);
+      degraded.push({
         ...base,
-        mode: 'full'
+        mode: workload._fallbackMode,
+        cost: workload._fallbackCost,
+        original_cost: workload._cost
       });
       continue;
     }
 
-    const fallback = workload.fallback;
-    if (fallback) {
-      const fallbackCost = costOf(fallback);
-      if (fits(remaining, fallbackCost)) {
-        subtract(remaining, fallbackCost);
-        degraded.push({
-          ...base,
-          mode: fallback.mode || 'degraded',
-          cost: fallbackCost,
-          original_cost: workload._cost
-        });
-        continue;
-      }
-    }
-
-    shed.push({
-      ...base,
-      mode: 'shed',
-      reason: 'insufficient_capacity'
-    });
+    shed.push({ ...base, mode: 'shed', reason: 'insufficient_capacity' });
   }
 
   const requiredLost = shed.filter((row) => row.required);
@@ -140,6 +210,7 @@ export function planContinuity({ capacity, workloads }) {
     degraded,
     shed,
     invariants: {
+      resource_evidence_valid: true,
       required_workloads_preserved: requiredLost.length === 0,
       life_safety_shed: shed.some((row) => row.priority === PRIORITY.LIFE_SAFETY),
       control_plane_shed: shed.some((row) => row.priority === PRIORITY.CONTROL_PLANE),
