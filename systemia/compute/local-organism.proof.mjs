@@ -1,8 +1,19 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
+import http from 'node:http';
 import path from 'node:path';
 import { startLocalOrganism } from './local-organism.mjs';
+
+// Local organism CI proves managed runtime startup/restart/clean shutdown,
+// not production Portfolio Sentinel policy compliance. The Sentinel still
+// records real blocking findings, but the fixture must not convert expected
+// unconfigured public-portfolio findings into a Core process failure.
+// Production defaults and the dedicated Sentinel enforcement tests are unchanged.
+process.env.NODE_ENV='test';
+process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF='true';
+process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH='false';
+process.env.PORTFOLIO_SENTINEL_OFFLINE='true';
 
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
@@ -14,6 +25,70 @@ const nativeBrowserProofPreparer=async()=>({
   receipt_hash:'sha256:'+'b'.repeat(64),
   browserRuntimeFactory:null,
 });
+
+// Test-only creation trace: attribute an unclosed listening server to its
+// source module. Records source file names only, never token or request data.
+const serverOriginSites=new WeakMap();
+const createHttpServerOriginal=http.createServer;
+http.createServer=function(...args){
+  const callStack=String(new Error().stack||'');
+  const origin=callStack.match(/systemia\/[A-Za-z0-9_./-]+\.mjs(?::[0-9]+){0,2}/g)
+    ?.find(site=>!site.includes('local-organism.proof.mjs'))||'unknown';
+  const server=createHttpServerOriginal.apply(this,args);
+  serverOriginSites.set(server,origin);
+  return server;
+};
+
+function activeLoopbackListenerSummary() {
+  return (process._getActiveHandles?.() || [])
+    .filter(handle => handle?.constructor?.name === 'Server')
+    .map(server => {
+      const address=server.address?.();
+      return {
+        listening: server.listening === true,
+        source_module:serverOriginSites.get(server)||'unknown',
+        // Test-only ephemeral loopback ports, never a remote endpoint or token.
+        local_port: address && typeof address === 'object'
+          ? address.port : null,
+      };
+    });
+}
+
+async function requireStableOrganismHealth(organism,stage) {
+  let last=null;
+  let consecutive=0;
+  for(let attempt=0;attempt<20;attempt++){
+    const health=await organism.health();
+    last=health;
+    if(health.ok===true && health.kaidance?.ok===true &&
+       health.systemia_core?.ok===true && health.fabric?.ok===true) {
+      if(++consecutive>=2)return health;
+    } else consecutive=0;
+    await new Promise(resolve=>setTimeout(resolve,400));
+  }
+  let coreServices=null;
+  try {
+    const coreRoute=await organism.yard.verifyRoute('systemia-core-local-resident');
+    coreServices={
+      healthy_count:coreRoute.health?.healthy_count,
+      failed_count:coreRoute.health?.failed_count,
+      held_count:coreRoute.health?.held_count,
+      services:(coreRoute.health?.services||[]).map(service=>({
+        key:service.service_key,
+        status:service.status,
+        hold_reason:service.hold_reason||null,
+        last_exit_code:service.last_exit_code
+      }))
+    };
+  } catch {}
+  console.error(JSON.stringify({
+    schema:'evercraft.local-organism.proof-health-hold.v1',stage,
+    status:{ok:last?.ok,kaidance:last?.kaidance?.state,
+      systemia_core:last?.systemia_core?.state,
+      fabric:last?.fabric?.state},core_services:coreServices,clean_exit_claimed:false
+  }));
+  assert.fail('resident_services_not_stably_healthy');
+}
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-local-organism-proof-'));
 const releaseRef = 'e293e0d75d1622f12b54249be8d403a06774e4e9';
@@ -49,7 +124,7 @@ try {
   assert.equal(first.pulse.state, 'healthy');
   assert.equal(first.pulse.field_attestation.state, 'not_verified');
 
-  const firstHealth = await first.health();
+  const firstHealth = await requireStableOrganismHealth(first,'first_boot');
   assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.systemia_core.ok, true);
@@ -89,7 +164,15 @@ try {
     true
   );
 
+  const firstComputePort=Number(new URL(first.seed.endpoint).port);
+  const firstFabricPort=Number(new URL(first.fabric.result.local_url).port);
   await first.close();
+  console.error(JSON.stringify({
+    schema:'evercraft.local-organism.shutdown-boundary.v1',
+    stage:'after_first_close',
+    known_test_ports:{compute:firstComputePort,fabric:firstFabricPort},
+    listeners:activeLoopbackListenerSummary()
+  }));
   first = null;
 
   second = await startLocalOrganism({
@@ -111,7 +194,7 @@ try {
   assert.notEqual(second.kaidance.receipt.receipt_hash, firstKaidanceReceipt);
   assert.notEqual(second.core.receipt.receipt_hash, firstCoreReceipt);
 
-  const secondHealth = await second.health();
+  const secondHealth = await requireStableOrganismHealth(second,'restart');
   assert.equal(secondHealth.ok, true);
 
   const allocatorSecret = fs.readFileSync(
@@ -147,6 +230,7 @@ try {
     zero_spend_capacity: true,
     native_browser_bootstrap_receipted: true,
     native_browser_bootstrap_network_disabled_in_proof: true,
+    portfolio_sentinel_enforce_health_disabled_in_local_proof: true,
     public_ingress: false,
     multicast_announcement: false,
     persistent_device_identity: true,
@@ -161,11 +245,40 @@ try {
     named_cloud_required: false,
   }, null, 2));
 } finally {
+  const cleanupFailures=[];
   if (first) {
-    try { await first.close(); } catch {}
+    try { await first.close(); }
+    catch(error){cleanupFailures.push(new Error('first_organism_close_failed',{cause:error}));}
   }
   if (second) {
-    try { await second.close(); } catch {}
+    try { await second.close(); }
+    catch(error){cleanupFailures.push(new Error('second_organism_close_failed',{cause:error}));}
   }
   fs.rmSync(root, { recursive: true, force: true });
+  if(cleanupFailures.length){
+    throw new AggregateError(cleanupFailures,'local_organism_proof_cleanup_incomplete');
+  }
 }
+
+// A successful restart receipt is not proof that the resident runtime has
+// released its process resources. In CI, fail explicitly and report bounded
+// handle *classes* if shutdown leaves listeners/children alive. Never force
+// a success exit, and never log raw sockets, process args, paths, or tokens.
+const shutdownWatchdog=setTimeout(()=>{
+  const activeHandles=process._getActiveHandles?.() || [];
+  const classes=activeHandles
+    .filter(handle=>handle!==process.stdout&&handle!==process.stderr&&handle!==process.stdin)
+    .map(handle=>handle?.constructor?.name||'unknown');
+  const resources=typeof process.getActiveResourcesInfo==='function'
+    ?process.getActiveResourcesInfo():[];
+  console.error(JSON.stringify({
+    schema:'evercraft.local-organism.shutdown-diagnostic.v1',
+    state:'shutdown_resources_still_active',
+    active_handle_classes:classes,
+    active_resource_types:resources,
+    listeners:activeLoopbackListenerSummary(),
+    authorization_changes:false
+  }));
+  process.exit(1);
+},3000);
+shutdownWatchdog.unref?.();

@@ -9,6 +9,7 @@ import { once } from 'node:events';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
+import {createSignedMicroSeedExecutionReceipt} from '../saban/signed-microseed-execution.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
@@ -713,6 +714,7 @@ export async function startEvercraftComputeNode({
   };
   const leases = new Map();
   const services = new Map();
+  let shuttingDown=false;
   const stagedBlobs = new Map();
   const sabanInflight = new Map();
   const leaseArtifactAccess = new Map();
@@ -973,6 +975,7 @@ export async function startEvercraftComputeNode({
 
   const server = http.createServer(async (req, res) => {
     try {
+      if(shuttingDown)return send(res,503,{error:'compute_node_shutting_down'});
       if (
         (req.method === 'GET' && req.url === '/v1/operator/status') ||
         (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(String(req.url || '')))
@@ -1355,12 +1358,21 @@ export async function startEvercraftComputeNode({
             }
             return send(res, 422, { error: message });
           }
+          const signedExecution = deviceIdentity && body.execution_nonce
+            ? createSignedMicroSeedExecutionReceipt({
+                identity:deviceIdentity,
+                workerReceipt:worker,
+                leaseId:body.lease_id,
+                nonce:body.execution_nonce
+              })
+            : null;
           return send(res, 200, {
             ok: true,
             node_id: nodeId,
             workload_class: workloadClass,
             result: worker.result,
             worker_receipt: worker,
+            signed_execution: signedExecution,
             deduplicated: worker.deduplicated === true,
             idempotency_key: idempotencyKey,
             receipt: chain.issue(
@@ -2520,6 +2532,13 @@ export async function startEvercraftComputeNode({
             maxConcurrency: Number(body.input?.max_concurrency || 2),
             imageTag: String(body.input?.image_tag || ''),
           });
+          // An accepted request can outlive its socket if the caller aborts
+          // while native/Docker browser startup is underway. If shutdown
+          // began during the factory wait, never register the late listener.
+          if(shuttingDown){
+            await runtime.close();
+            return send(res,503,{error:'compute_node_shutting_down'});
+          }
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           const delegatedDraftAutomationSupported =
@@ -2858,6 +2877,23 @@ export async function startEvercraftComputeNode({
 
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
+            // The isolated localhost lifecycle proof tests service continuity,
+            // not Portfolio Sentinel product policy findings. Preserve strict
+            // enforcement by default in production and all ordinary tests.
+            PORTFOLIO_SENTINEL_ENFORCE_HEALTH:
+              process.env.NODE_ENV === 'test' &&
+              process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true' &&
+              process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH === 'false'
+                ? 'false' : 'true',
+            PORTFOLIO_SENTINEL_OFFLINE:
+              process.env.NODE_ENV === 'test' &&
+              process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true' &&
+              process.env.PORTFOLIO_SENTINEL_OFFLINE === 'true'
+                ? 'true' : 'false',
+            EVERCRAFT_LOCAL_ORGANISM_PROOF:
+              process.env.NODE_ENV === 'test' &&
+              process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true'
+                ? 'true' : 'false',
             EVERCRAFT_RELEASE_REF: releaseRef,
             SYSTEMIA_YARD_STATE_DIR: yardStateDir,
             KAIDANCE_DEPLOYMENT_ID: kaidanceDeploymentId,
@@ -4089,13 +4125,34 @@ export async function startEvercraftComputeNode({
     allowed_root: allowedRoot,
     placement_labels: nodePlacementLabels,
     close: async () => {
+      shuttingDown=true;
       clearInterval(leaseMonitor);
-      for (const serviceId of [...services.keys()]) {
-        await stopService(serviceId, 'compute_node_shutdown');
+      // Drain HTTP handlers before snapshotting resident services. An in-flight
+      // accepted job can register a browser adapter while the old shutdown
+      // order is stopping services, leaving a new listener orphaned.
+      const failures=[];
+      try {
+        await new Promise((resolve, reject) =>
+          server.close((error) => error ? reject(error) : resolve())
+        );
+      } catch(error) {
+        if(error?.code!=='ERR_SERVER_NOT_RUNNING') {
+          failures.push(new Error('compute_http_listener_stop_failed',{cause:error}));
+        }
       }
-      await new Promise((resolve, reject) =>
-        server.close((error) => error ? reject(error) : resolve())
-      );
+      // Even if one independent service fails to stop, continue releasing
+      // the others. Otherwise a single failed Core/Kaidance teardown can
+      // strand a later browser adapter with a live localhost port.
+      for(const serviceId of [...services.keys()]) {
+        try {
+          await stopService(serviceId,'compute_node_shutdown');
+        } catch(error) {
+          failures.push(new Error('compute_resident_service_stop_failed:'+serviceId,{cause:error}));
+        }
+      }
+      if(failures.length){
+        throw new AggregateError(failures,'compute_node_shutdown_incomplete');
+      }
     },
   };
 }

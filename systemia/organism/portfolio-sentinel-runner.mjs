@@ -26,7 +26,12 @@ function parseArgs(argv) {
   const out = {
     root: '.',
     outDir: 'artifacts/portfolio-sentinel',
-    offline: false,
+    // Offline is only inherited from a tightly marked local-organism CI
+    // fixture. The ordinary sentinel defaults to live public inventory.
+    offline:
+      process.env.NODE_ENV === 'test' &&
+      process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF === 'true' &&
+      process.env.PORTFOLIO_SENTINEL_OFFLINE === 'true',
     maxUrls: 24,
     githubOwner: process.env.PORTFOLIO_SENTINEL_GITHUB_OWNER || 'jgaethle10',
     githubRepo: process.env.GITHUB_REPOSITORY || 'jgaethle10/forge-operator',

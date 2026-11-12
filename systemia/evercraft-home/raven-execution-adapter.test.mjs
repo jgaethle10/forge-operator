@@ -14,6 +14,7 @@ test("owned Raven execution allowlist is internal and read-only", () => {
   assert.deepEqual(ravenReadOnlyWorkTypes(), ["analyze", "research", "qa"]);
   const adapter = createRavenReadOnlyTeamAdapter();
   assert.equal(adapter.authority, "read-only");
+  assert.equal(adapter.authority_boundary,"systemia+passport+bounded-nexus");
   assert.equal(adapter.human_gate_required, false);
 });
 
