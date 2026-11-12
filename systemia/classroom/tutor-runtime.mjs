@@ -185,7 +185,7 @@ export async function startPrivateClassroomPilot({
   }catch(error){
    const code=String(error?.message||'unknown');
    const safe=new Set(['invalid_json','payload_too_large','json_required','invalid_room','session_not_found',
-    'session_expired','session_busy','session_turn_limit','invalid_message','invalid_homework_flag',
+    'session_expired','session_revoked','session_busy','session_turn_limit','invalid_message','invalid_homework_flag',
     'pilot_capacity_reached','local_inference_unavailable','local_inference_unverified',
     'local_output_unusable','homework_answer_guard_blocked','output_guard_blocked']);
    return reply(res,code.startsWith('local_')||code==='homework_answer_guard_blocked'?503:422,
