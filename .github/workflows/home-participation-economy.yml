@@ -26,8 +26,10 @@ jobs:
           node --check systemia/participation-economy/journal.mjs
           node --check systemia/participation-economy/journal-pilot.mjs
           node --check systemia/participation-economy/creator-intake.mjs
+          node --check systemia/participation-economy/creator-record-store.mjs
+          node --check systemia/participation-economy/creator-queue-pilot.mjs
       - name: Run economy and fraud-hold tests
-        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs
+        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs
       - name: Prove demo remains read-only
         run: |
           node systemia/participation-economy/pilot.mjs > /tmp/home-participation-pilot.json
@@ -44,4 +46,18 @@ jobs:
             if(journal.before_refund.payouts_enabled!==false) process.exit(1);
             if(journal.after_refund.status!=="held" || journal.after_refund.revenue_basis_cents!==null) process.exit(1);
             if(journal.after_refund.payouts_enabled!==false) process.exit(1);
+          '
+
+      - name: Verify creator queue demo is persistence-only and withdrawn content stays held
+        run: |
+          node systemia/participation-economy/creator-queue-pilot.mjs > /tmp/home-creator-queue-pilot.json
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const p=JSON.parse(readFileSync("/tmp/home-creator-queue-pilot.json","utf8"));
+            if(p.persisted_after_restart!==true)process.exit(1);
+            if(p.demonstration!=="synthetic_unverified_no_media_no_money_movement")process.exit(1);
+            for(const k of ["submitted","reviewed","withdrawn"]){
+              if(p[k].published!==false || p[k].payouts_enabled!==false || p[k].payable_cents!==null)process.exit(1);
+            }
+            if(p.withdrawn.routes.some(x=>x.state!=="held"))process.exit(1);
           '
