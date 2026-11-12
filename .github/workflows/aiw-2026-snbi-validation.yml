@@ -164,3 +164,43 @@ jobs:
             ${{ runner.temp }}/aiw-2026-wa/bridges2026.sqlite
             ${{ runner.temp }}/aiw-2026-wa/wa_2026_audit.json
           retention-days: 7
+  wa-county-provenance-audit:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Extract true BL02 counties from pinned 2026 Washington data
+        run: |
+          python3 research/infrastructure-watch/scripts/wa_2026_county.py \
+            --out "$RUNNER_TEMP/aiw-wa-counties"
+      - name: Verify county totals without assuming coordinates equal counties
+        run: |
+          python3 - <<'PY'
+          import csv,json,os
+          from pathlib import Path
+          d=Path(os.environ['RUNNER_TEMP'])/'aiw-wa-counties'
+          a=json.loads((d/'wa_2026_county_audit.json').read_text())
+          county=list(csv.DictReader((d/'wa_2026_county_summary.csv').open()))
+          bridge=list(csv.DictReader((d/'wa_2026_county_bridges.csv').open()))
+          assert len(bridge)==a['bridge_records']==8619
+          assert sum(int(x['total']) for x in county)==8619
+          assert len([x for x in county if x['county_code']])==39
+          assert a['source_sha256']=='c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79'
+          yakima=next(x for x in county if x['county_code']=='077')
+          assert int(yakima['total'])>=int(yakima['poor'])>0
+          print(json.dumps({'county_field':'BL02','assigned':a['assigned'],'unassigned':a['unassigned'],
+            'yakima_county':yakima,'total':len(bridge),'source_sha256':a['source_sha256']},indent=2))
+          PY
+      - name: Preserve source-backed county files for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-wa-counties-verified
+          path: |
+            ${{ runner.temp }}/aiw-wa-counties/wa_2026_county_audit.json
+            ${{ runner.temp }}/aiw-wa-counties/wa_2026_county_summary.csv
+            ${{ runner.temp }}/aiw-wa-counties/wa_2026_county_bridges.csv
+          retention-days: 7
