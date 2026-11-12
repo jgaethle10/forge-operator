@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/classroom/**'
       - 'tests/infinite-classroom-tutor-*.test.mjs'
+      - 'tests/infinite-classroom-homework-boundary.test.mjs'
+      - 'scripts/probe-infinite-classroom-nextgen-local.mjs'
       - 'public/apps/infinite-classroom/play/index.html'
       - 'tests/infinite-classroom-worlds.test.mjs'
       - '.github/workflows/infinite-classroom-tutor-pilot.yml'
@@ -14,6 +16,8 @@ on:
     paths:
       - 'systemia/classroom/**'
       - 'tests/infinite-classroom-tutor-*.test.mjs'
+      - 'tests/infinite-classroom-homework-boundary.test.mjs'
+      - 'scripts/probe-infinite-classroom-nextgen-local.mjs'
       - '.github/workflows/infinite-classroom-tutor-pilot.yml'
 
 permissions:
@@ -32,9 +36,11 @@ jobs:
         run: |
           node --check systemia/classroom/tutor-core.mjs
           node --check systemia/classroom/tutor-runtime.mjs
+          node --check systemia/classroom/homework-boundary.mjs
+          node --check scripts/probe-infinite-classroom-nextgen-local.mjs
       - name: Private model contract and session tests
         run: |
-          node --test tests/infinite-classroom-tutor-core.test.mjs tests/infinite-classroom-tutor-runtime.test.mjs
+          node --test tests/infinite-classroom-tutor-core.test.mjs tests/infinite-classroom-tutor-runtime.test.mjs tests/infinite-classroom-homework-boundary.test.mjs
       - name: Practice remains separate and honest
         run: |
           node --test tests/infinite-classroom-worlds.test.mjs
