@@ -191,7 +191,7 @@ test('prestop survivor must be alive, in a different session, and in intended cg
 
 test('forged scope IDs, paths and absent collector metadata block positive labels',()=>{
   rejectAt(p=>{p.scope.unit='../evil';},/EXACT_SCOPE_REQUIRED/);
-  rejectAt(p=>{p.scope.cgroup_path='/tmp/'+unit;},/EXACT_LEAF_SCOPE_MEMBERSHIP_REQUIRED|EXACT_SCOPE_PATH_REQUIRED/);
+  rejectAt(p=>{p.scope.cgroup_path='/tmp/'+unit;},/EXACT_LEAF_SCOPE_MEMBERSHIP_REQUIRED|EXACT_SCOPE_PATH_REQUIRED|CGROUP_SCOPE_PATH_CHANGED/);
   rejectAt(p=>{p.collector.source_revision='latest';},
     /COLLECTOR_PROVENANCE_METADATA_MISSING/);
   rejectAt(p=>{p.collector.raw_capture_sha256=null;},
