@@ -9,7 +9,7 @@
 
 - Public website: https://onthego.theengagency.com/
 - The public scheduling and contact pages expose `[lc_calendar id="aYADey1SOIbEqKaHJ4rC"]` as visible text in the prior supervised Saban Chromium audit on mobile and desktop. This establishes a visible rendering problem, not a confirmed number of lost bookings.
-- Public contact: **509-833-5025** and **onthegomobileoilchange@outlook.com**; owner to verify both for use as conversion routes.
+- **Client 001 phone: 509-833-5025 is already included in the approved English commercial and independently reconfirmed by the Evercraft founder on November 11, 2026.** Use this number consistently as the call CTA; do not ask the founder to reconfirm it again. Public website email: **onthegomobileoilchange@outlook.com** (email use and routing still to be confirmed with Juan).
 - Public hours: **Monday–Friday, 9:00 AM–5:00 PM**.
 - Published service areas: Yakima, Moxee, Selah, Tieton, Gleed, Toppenish, Wapato, Zillah. These are website claims; coverage and travel fees to be confirmed by Juan.
 - Published menu at research time: semi-synthetic oil change from $74.99; full synthetic from $99.99; full synthetic + tire rotation from $120.99; other services also available. **Prices are not owner-verified current quotes**.
@@ -79,7 +79,7 @@ Do not infer exact fleet sizes, schedules or willingness to buy. Do not auto-con
 
 | Gate | What gets made | Who must approve | Pass condition |
 | --- | --- | --- | --- |
-| 1 | Juan-confirmed contact and one service/price to lead with | Juan | Reply confirming usable phone/email, pricing, areas, booking channel |
+| 1 | Juan-confirmed contact and one service/price to lead with | Juan | Phone already confirmed by founder; Juan's reply needed only for email routing, pricing, service areas, and booking workflow |
 | 2 | Booking route repair or direct-contact fallback | Juan + site manager | Real visitor can request an appointment, including phone browser |
 | 3 | English + Spanish offer posts and commercial clips | Juan, channel owners | Approved offer, claims, source permissions, visible published URLs |
 | 4 | Fleet pilot interest test | Juan | Qualified business has agreed to discuss, service capacity checked |
@@ -93,7 +93,7 @@ Avoid a blanket share of On The Go's gross revenue. Start with a defined subscri
 
 ## Ready-to-send founder check-in to Juan
 
-> Bro, I put Saban and Radar to work auditing your customer booking journey, and we actually caught a calendar display problem on the public website. I've already built a bilingual contact-page prototype that can route people straight to On The Go while the calendar gets fixed. Before I put anything in front of customers, can you confirm that 509-833-5025 and onthegomobileoilchange@outlook.com are the best contact options, and tell me who manages your site? I also want to make sure we promote the service and price that make you the most profit. Then we can start tracking the work we actually help bring in. 🔥
+> Bro, I put Saban and Radar to work auditing your customer booking journey, and we actually caught a calendar display problem on the public website. I've already built a bilingual contact-page prototype that can route people straight to On The Go while the calendar gets fixed. Before I put anything in front of customers, we're using the same 509-833-5025 number already in your commercial as the call option. Who manages your current site, and do you want inquiries sent to your public email as well? I also want to make sure we promote the service and price that make you the most profit. Then we can start tracking the work we actually help bring in. 🔥
 
 ## Security / authority
 
