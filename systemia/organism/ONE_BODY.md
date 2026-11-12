@@ -164,6 +164,30 @@ Only after authorization does the adapter open the One-Body private state and ge
 
 `one-body-snapshot-reader.proof.mjs` exercises no-grant and wrong-scope denial, a verified subject's scoped read, cross-subject isolation, redaction, and immediate grant revocation. It is included in `npm run proof:one-body`.
 
+## Node001 / NextGen consumer enrollment (offline, operator-reviewed)
+
+`one-body-enrollment.mjs` and `one-body-enroll-cli.mjs` produce an **enrollment candidate** on the actual receiving host without transmitting any private signing material:
+
+```bash
+# Run separately on each owned host. Never check in the output directory.
+node systemia/organism/one-body-enroll-cli.mjs \
+  node001 context_fabric node001:context:v1 \
+  "$HOME/.local/state/evercraft/one-body-private"
+
+# For Node002, on that machine, use its own independent signing identity:
+node systemia/organism/one-body-enroll-cli.mjs \
+  node002 context_fabric node002:context:v1 \
+  "$HOME/.local/state/evercraft/one-body-private"
+```
+
+Each run creates a **0600 private Ed25519 PEM** and a **0600 public candidate JSON** under a **0700 directory**, using create-only filenames. It refuses to overwrite an existing identity or use a group/world-accessible directory. The CLI prints paths and a public fingerprint, **not the private key**. The candidate includes `pending_operator_verification` and `enrolled: false`. It is not an authorization grant, a health receipt, or a runtime bootstrap.
+
+**Operator ceremony:** Verify the host identity through an out-of-band trusted channel, inspect the candidate public fingerprint, then manually provision its `{ "lane": "context_fabric", "public_key_pem": "..." }` entry under `node001:context:v1` (or `node002:context:v1`) in the already privileged One-Body consumer trust registry. No candidate may self-enroll or choose the authoritative registry. If a host is lost or compromised, revoke its registry entry; subsequent snapshot reads fail back to **unverified** without altering older history. Host-specific private PEM files must stay on their own machines and never enter chat, source control, logs, or a browser.
+
+After real consumer deployment and protected key provisioning, the locally generated private signer path may be supplied to `one-body-consumer-cli.mjs`, with the event's correct routed lane. This step records only **local inbox acceptance**. It does not activate specialist runtime dispatch, sign payments, or prove remote delivery. No command above has been executed on Node001/NextGen from this chat.
+
+`one-body-enrollment.proof.mjs` covers private/public file modes, candidate state, duplicate rejection, cryptographic compatibility, lane mismatch, and trust revocation. The suite runs under `npm run proof:one-body`.
+
 ## Proof
 
 Run:
