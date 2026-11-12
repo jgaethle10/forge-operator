@@ -32,6 +32,7 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.mjs
           node --check integrations/ai-evaluation-lab/eo001-stable-scope-lifecycle.mjs
           node --check integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.mjs
+          node --check integrations/ai-evaluation-lab/eo001-private-evidence-vault.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
           node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
       - name: Verify authorization expiry is not weakened
@@ -49,6 +50,8 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-stable-scope-lifecycle.test.mjs
       - name: Verify held-FD two-phase supervisor capture without starting/stopping services
         run: node --test integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.test.mjs
+      - name: Verify optional owner-only archive refuses overwrites and unsafe directories
+        run: node --test integrations/ai-evaluation-lab/eo001-private-evidence-vault.test.mjs
       - name: Verify live Linux synthetic process-group negative controls (no scope)
         run: |
           node --test integrations/ai-evaluation-lab/eo001-process-group-escape-negative.test.mjs
