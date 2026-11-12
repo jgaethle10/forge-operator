@@ -1,0 +1,30 @@
+name: On The Go V35 Guitar Source Recovery
+on:
+  push:
+    branches:
+      - feature/onthego-bella-native-voice-20261026
+    paths:
+      - .github/workflows/otg-v35-licensed-guitar-recovery.yml
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Fetch original Mixkit Running Out of Time recording
+        run: |
+          curl -fSL --retry 3 --retry-delay 1 --connect-timeout 15 'https://assets.mixkit.co/music/77/77.mp3' -o running-out-of-time.mp3
+          test $(stat -c%s running-out-of-time.mp3) -gt 1000000
+          file running-out-of-time.mp3
+          sha256sum running-out-of-time.mp3 > provenance.sha256
+          printf 'Mixkit Running Out of Time, Ahjay Stelino\nOriginal Mixkit asset https://assets.mixkit.co/music/77/77.mp3\n' > provenance.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: on-the-go-v35-original-licensed-guitar
+          path: |
+            running-out-of-time.mp3
+            provenance.sha256
+            provenance.txt
+          retention-days: 7
+          if-no-files-found: error

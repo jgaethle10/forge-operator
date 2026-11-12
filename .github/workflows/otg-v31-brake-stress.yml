@@ -1,0 +1,33 @@
+name: OTG V31 BRAKE emphasis auditions (private)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/onthego-bella-native-voice-20261026
+    paths:
+      - systemia/media-studio/on-the-go-v31-brake-emphasis.py
+      - .github/workflows/otg-v31-brake-stress.yml
+permissions:
+  contents: read
+jobs:
+  audition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install voice engine
+        run: |
+          timeout 75s sudo apt-get update -qq || echo 'apt index timed out, retry using local cache'
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install 'kokoro==0.9.4' 'soundfile>=0.12,<1'
+      - name: Generate natural unpitched Bella A takes
+        run: python systemia/media-studio/on-the-go-v31-brake-emphasis.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otg-v31-bella-brake-stress-auditions
+          path: v31-brake-emphasis/
+          retention-days: 7
+          if-no-files-found: error

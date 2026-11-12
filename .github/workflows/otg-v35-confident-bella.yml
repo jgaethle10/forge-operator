@@ -1,0 +1,30 @@
+name: On The Go V35 Confident Bella Auditions
+on:
+  push:
+    branches:
+      - feature/onthego-bella-native-voice-20261026
+    paths:
+      - .github/workflows/otg-v35-confident-bella.yml
+      - systemia/media-studio/on-the-go-v35-confident-bella.py
+permissions:
+  contents: read
+jobs:
+  native-bella:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          timeout 75s sudo apt-get update -qq || echo 'cached package metadata'
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install 'kokoro==0.9.4' 'soundfile>=0.12,<1'
+      - run: python systemia/media-studio/on-the-go-v35-confident-bella.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otg-v35-confident-bella-private-review
+          path: otg-v35-confident-voice-review/
+          retention-days: 7
+          if-no-files-found: error

@@ -1,0 +1,49 @@
+name: On The Go V7 Licensed Music Sourcing (Private)
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths: ['.github/workflows/otg-v7-music-source.yml']
+  pull_request:
+    paths: ['.github/workflows/otg-v7-music-source.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  license-ledger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Download professionally produced Mixkit music from canonical asset CDN
+        run: |
+          mkdir -p private-licensed-music
+          curl --fail --location --retry 2 --max-time 120 -o private-licensed-music/running-out-of-time.mp3 'https://assets.mixkit.co/music/77/77.mp3'
+          curl --fail --location --retry 2 --max-time 120 -o private-licensed-music/close-up.mp3 'https://assets.mixkit.co/music/1167/1167.mp3'
+          test $(stat -c %s private-licensed-music/running-out-of-time.mp3) -gt 200000
+          test $(stat -c %s private-licensed-music/close-up.mp3) -gt 200000
+      - name: Preserve rights audit and SHA256 ledger
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib
+          files=[
+            ('running-out-of-time.mp3','Running Out of Time','Ahjay Stelino','https://assets.mixkit.co/music/77/77.mp3'),
+            ('close-up.mp3','Close Up','Michael Ramir C.','https://assets.mixkit.co/music/1167/1167.mp3')]
+          out=[]
+          for file,title,author,url in files:
+            p=pathlib.Path('private-licensed-music')/file
+            data=p.read_bytes()
+            assert data[:3]==b'ID3' or data[:2] in (b'\\xff\\xfb',b'\\xff\\xf3',b'\\xff\\xf2') or len(data)>100000
+            out.append(dict(file=file,title=title,composer=author,source=url,
+              sha256=hashlib.sha256(data).hexdigest()))
+          ledger=dict(schema='evercraft.commercial.music-source.v1',
+            sourceCollection='https://mixkit.co/free-stock-music/corporate-music/',
+            license='https://mixkit.co/license/modal/musicFree/',
+            usage='Online commercial advertising only; embedded into a composite audiovisual commercial, not standalone distribution',
+            licenseChecksAtPublicationStillRequired=True,tracks=out)
+          pathlib.Path('private-licensed-music/music-source-ledger.json').write_text(json.dumps(ledger,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otg-v7-private-licensed-music-inputs
+          path: private-licensed-music/
+          retention-days: 7
+          if-no-files-found: error

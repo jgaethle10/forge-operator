@@ -1,0 +1,33 @@
+name: On The Go V30 Expressive Bella Auditions (Private)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/onthego-bella-native-voice-20261026
+    paths:
+      - systemia/media-studio/on-the-go-v30-expressive-voice-blends.py
+      - .github/workflows/otg-v30-expressive-bella.yml
+permissions:
+  contents: read
+jobs:
+  synthesize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install native voice engine
+        run: |
+          timeout 75s sudo apt-get update -qq || echo 'apt metadata timed out; use cached lists'
+          DEBIAN_FRONTEND=noninteractive timeout 120s sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install 'kokoro==0.9.4' 'soundfile>=0.12,<1'
+      - name: Generate distinct Bella-led emotional options
+        run: python systemia/media-studio/on-the-go-v30-expressive-voice-blends.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otg-v30-expressive-bella-owner-auditions
+          path: v30-bella-expressive/
+          retention-days: 7
+          if-no-files-found: error

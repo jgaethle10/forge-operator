@@ -1,0 +1,55 @@
+name: On The Go V9 YOU Emphasis - Bella Native Opening
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths:
+      - 'systemia/media-studio/on-the-go-v9-you-emphasis.py'
+      - '.github/workflows/onthego-v9-you-emphasis.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/on-the-go-v9-you-emphasis.py'
+      - '.github/workflows/onthego-v9-you-emphasis.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  opening-performance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify focused opener retakes
+        run: python systemia/media-studio/on-the-go-v9-you-emphasis.py --verify-only
+      - name: Install native Relay Bella runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate two fresh Bella performances, no voice cloning
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/on-the-go-v9-you-emphasis.py otg-v9-you-private
+      - name: Verify audio hashes and durations
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          p=pathlib.Path('otg-v9-you-private')
+          d=json.loads((p/'evidence.json').read_text())
+          assert d['voiceId']=='af_bella' and len(d['readings'])==2
+          assert not d['published'] and not d['ownerApproval']
+          for r in d['readings']:
+              f=p/r['file']
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==r['sha256']
+              with wave.open(str(f),'rb') as w:
+                  assert w.getframerate()==24000 and 7<w.getnframes()/24000<10.5
+          print('PASS: focused native Bella audio')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onthego-v9-you-emphasis-native-private
+          path: otg-v9-you-private/
+          retention-days: 7
+          if-no-files-found: error
