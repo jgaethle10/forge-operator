@@ -1,6 +1,13 @@
 name: Evercraft Research public HTTPS canary
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "public/research/**"
+      - "scripts/probe-evercraft-research-public.mjs"
+      - "tests/evercraft-research-public-canary.test.mjs"
+      - ".github/workflows/evercraft-research-public-canary.yml"
   workflow_run:
     workflows: ["Evercraft public web fallback"]
     types: [completed]
