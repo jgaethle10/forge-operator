@@ -2,6 +2,7 @@ import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,c
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
+import {makeLandscapeGeometry,makeGrassTuftGeometry,makeGrassPatches} from './scenic-landscape.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
 import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
@@ -57,7 +58,8 @@ function cube(){const p=[],n=[];const faces=[[[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],
 function sphere(lat=12,lon=18){const p=[],n=[];for(let a=0;a<lat;a++)for(let b=0;b<lon;b++){const verts=[];for(const [i,j]of [[a,b],[a+1,b],[a+1,b+1],[a,b+1]]){const phi=Math.PI*i/lat,theta=2*Math.PI*j/lon;const v=[Math.sin(phi)*Math.cos(theta)*.5,Math.cos(phi)*.5,Math.sin(phi)*Math.sin(theta)*.5];verts.push(v);}for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(...verts[k].map(x=>x*2));}}return mesh(p,n);}
 function cylinder(seg=22){const p=[],n=[];for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const aa=[Math.cos(a)*.5,Math.sin(a)*.5],bb=[Math.cos(b)*.5,Math.sin(b)*.5];for(const [t,vs]of [[0,[[aa[0],-.5,aa[1]],[bb[0],-.5,bb[1]],[bb[0],.5,bb[1]],[aa[0],.5,aa[1]]]],[1,[[0,.5,0],[aa[0],.5,aa[1]],[bb[0],.5,bb[1]]]],[2,[[0,-.5,0],[bb[0],-.5,bb[1]],[aa[0],-.5,aa[1]]]]]){const ids=vs.length===4?[0,1,2,0,2,3]:[0,1,2];for(const k of ids){const v=vs[k];p.push(...v);n.push(...(t===1?[0,1,0]:t===2?[0,-1,0]:[v[0]*2,0,v[2]*2]));}}}return mesh(p,n);}
 function ring(){const p=[],n=[];const rings=38,sides=8,R=.5,r=.068;for(let i=0;i<rings;i++)for(let j=0;j<sides;j++){const at=(a,b)=>{const theta=a*2*Math.PI/rings,phi=b*2*Math.PI/sides;return [(R+r*Math.cos(phi))*Math.cos(theta),(R+r*Math.cos(phi))*Math.sin(theta),r*Math.sin(phi)];};const verts=[at(i,j),at(i+1,j),at(i+1,j+1),at(i,j+1)];for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(verts[k][0],verts[k][1],verts[k][2]);}}return mesh(p,n);}
-const meshes={cube:cube(),sphere:sphere(),sphereStatic:sphere(9,14),cylinder:cylinder(),cylinderStatic:cylinder(14),ring:ring()};
+const terrainMesh=makeLandscapeGeometry(),grassMesh=makeGrassTuftGeometry();
+const meshes={cube:cube(),sphere:sphere(),sphereStatic:sphere(9,14),cylinder:cylinder(),cylinderStatic:cylinder(14),ring:ring(),landscape:mesh(terrainMesh.positions,terrainMesh.normals),grass:mesh(grassMesh.positions,grassMesh.normals)};
 const col=x=>{const z=x.replace('#','');return [0,2,4].map(i=>parseInt(z.slice(i,i+2),16)/255);};
 const M=(x,y,z,sx,sy,sz,rot=0)=>{const c=Math.cos(rot),s=Math.sin(rot);return new Float32Array([c*sx,0,-s*sx,0,0,sy,0,0,s*sz,0,c*sz,0,x,y,z,1]);};
 const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),o=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*o,-1,0,0,2*far*near*o,0]);};
@@ -77,6 +79,8 @@ function rand(seed){let s=seed>>>0;return()=>((s=Math.imul(s,1664525)+1013904223
 const random=rand(412);
 // Original authored world geometry: the workshop and its small surrounding biome.
 box(0,-.34,0,38,.7,38,'#779e80');
+// Meadow grasses are combined into one instanced draw group.
+for(const plant of makeGrassPatches())staticDraw.push(colored('grass',plant.x,.014,plant.z,plant.width,plant.height,plant.width,plant.color,plant.rotation));
 // Dappled garden patches.
 for(let i=0;i<110;i++){const x=(random()-.5)*34,z=(random()-.5)*34;if(x>-7&&x<1&&z>-8&&z<3)continue;ball(x,.015,z,.25,.035,.18,i%4===0?'#b9be72':'#7ca884');}
 // Winding path and stepping stones.
@@ -104,7 +108,16 @@ for(let i=0;i<8;i++){ball(-1.55+random()*1.25,1.02+random()*.12,-5.02+random()*.
 tube(7,-.11,-5,8.2,.38,6.8,'#6b8374');tube(7,.07,-5,7.8,.13,6.4,'#589fa4');for(let j=0;j<20;j++){const a=j/20*Math.PI*2,r=1+(j%3)*.1;ball(7+Math.cos(a)*4.02*r,.13,-5+Math.sin(a)*3.37*r,.64,.34,.5,j%2?'#bdbaa4':'#b4b1a5');}
 for(let i=0;i<12;i++){const x=5+random()*4.2,z=-6.9+random()*3.4;tube(x,.16,z,.38,.03,.35,'#7aaf87');}
 // Ferny trees at the edges.
-function tree(x,z,s=1){tube(x,1.35*s,z,.39*s,2.7*s,.39*s,'#856e57');for(let i=0;i<4;i++){ball(x+Math.sin(i*2.2)*.46*s,(2.65+Math.sin(i))*s,z+Math.cos(i*1.5)*.4*s,2*s,1.5*s,1.9*s,['#7ea488','#87ab88','#719d81','#a3b98c'][i]);}}
+function tree(x,z,s=1){
+ tube(x,1.18*s,z,.31*s,2.36*s,.31*s,'#786454');
+ const colors=['#638971','#789d78','#94b18a','#6f9477','#a2b996'];
+ for(let i=0;i<11;i++){
+  const angle=i*2.39996,spread=(.52+(i%3)*.27)*s,height=(2.5+(i%4)*.21)*s;
+  ball(x+Math.cos(angle)*spread,height,z+Math.sin(angle)*spread,
+   (1.05+(i%3)*.12)*s,(.95+(i%2)*.14)*s,(1.02+(i%4)*.07)*s,colors[i%colors.length]);
+ }
+ ball(x,3.7*s,z,1.16*s,1.02*s,1.12*s,'#84a883');
+}
 for(const [x,z,s]of [[-12,-10,1.5],[-16,0,1.2],[-13,11,1.3],[12,-12,1.4],[15,2,1.2],[10,13,1.25],[-3,15,1.55],[16,15,1.3],[3,-16,1.1]])tree(x,z,s);
 // Flower heads and mushrooms.
 for(let i=0;i<60;i++){const x=(random()-.5)*34,z=(random()-.5)*34;if(x>-7&&x<.8&&z>-8.2&&z<-.2)continue;tube(x,.2,z,.026,.4,.026,'#497752');ball(x,.4,z,.13,.13,.13,['#f2d3bd','#f1d8a0','#dee6c3','#efbcbf'][i%4]);}
@@ -181,6 +194,8 @@ function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInst
  resize();const sky={day:['#bedad2','#e6dbc0',.6],sunset:['#d3a48c','#f6ccae',.43],night:['#314b64','#92a3ad',.36]}[state.sky];const fog=col(sky[0]);gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);drawAtmosphere(state.sky);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(program);
  gl.uniformMatrix4fv(loc.projection,false,perspective(65*Math.PI/180,canvas.width/Math.max(1,canvas.height),.07,110));const cy=Math.cos(camera.yaw),sy=Math.sin(camera.yaw),cp=Math.cos(camera.pitch),sp=Math.sin(camera.pitch),eye=[camera.x,camera.y,camera.z];gl.uniformMatrix4fv(loc.view,false,lookAt(eye,[camera.x+sy*cp,camera.y+sp,camera.z-cy*cp]));gl.uniform3fv(loc.cameraPos,eye);gl.uniform3fv(loc.fogColor,fog);gl.uniform3fv(loc.lightColor,col(sky[1]));gl.uniform1f(loc.ambient,sky[2]);
  drawStaticInstances();
+ // The sculpted outer terrain is deliberately below the central playable floor.
+ draw(colored('landscape',0,0,0,1,1,1,'#779c80'));
  // Water animated surface, reeds and living fish in the glass tank.
  draw(colored('cylinder',7,.146+Math.sin(elapsed*1.4)*.014,-5,7.6,.075,6.3,'#80cacc',0,.84));
  for(let i=0;i<3;i++){const x=-1.38+i*.45,z=-4.75+Math.sin(elapsed*1.5+i)*.19;draw(colored('sphere',x,1.3+Math.sin(elapsed*2+i)*.12,z,.25,.16,.12,['#f6bf85','#edd7a0','#dd9ba9'][i]));draw(colored('sphere',x-.12,1.32+Math.sin(elapsed*2+i)*.12,z-.1,.045,.046,.038,'#333e46'));}
