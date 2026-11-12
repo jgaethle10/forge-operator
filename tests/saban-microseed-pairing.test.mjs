@@ -78,6 +78,10 @@ test('explicit one-time pairing enrolls exact signed device and transfers creden
       bundle,
       now:new Date('2026-10-01T05:03:00.000Z'),
     });
+    const persistedTrust=registry.get(consumed.device_id);
+    const authorization=persistedTrust.history.find(x=>x.action==='authorize');
+    assert.equal(authorization.authorized_at,'2026-10-01T05:03:00.000Z');
+    assert.ok(Date.parse(persistedTrust.authorization_expires_at)>Date.parse(authorization.authorized_at));
     assert.equal(consumed.enrollment_signature_verified,true);
     assert.equal(consumed.device_token_exposed,false);
     assert.equal(consumed.pairing_secret_destroyed,true);
