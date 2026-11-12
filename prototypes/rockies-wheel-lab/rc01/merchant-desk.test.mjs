@@ -11,7 +11,7 @@ const row='W-100,"Spoke, twin",Bronze,19,249.95';
 function launch() {
   const elements=new Map();
   const created=[];
-  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary','sourcingBrief']){
+  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary','sourcingBrief','codeInput','loadCode']){
     elements.set(id,{
       value: id==='quantity'?'4':id==='service'?'none':'',
       textContent:'', listeners:{}, children:[],
@@ -270,4 +270,79 @@ test('RC09 explicitly rejects a false interest and never generates a sourcing fi
   assert.throws(()=>api.sourcingBrief(),/No shopper sourcing interest/);
   elements.get('sourcingBrief').listeners.click();
   assert.equal(created.some(x=>x.download==='findmypart-unsent-research-note.txt'),false);
+});
+
+test('RC10 short-code decodes locally into an unverified appearance and preserves opt-in',()=>{
+  const {api,elements}=launch();
+  assert.equal(api.parseConceptCode('WL1-02000-2').wheel_design,'Orbit');
+  assert.equal(api.parseConceptCode('WL1-02000-2').diameter_in,19);
+  assert.equal(api.parseConceptCode('WL1-02000-2').findmypart_sourcing_interest_requested,false);
+  elements.get('codeInput').value='wl1-13221-1';
+  elements.get('loadCode').listeners.click();
+  const packet=api.packet();
+  assert.equal(packet.requested_appearance.wheel_design,'Turbine');
+  assert.equal(packet.requested_appearance.diameter_in,20);
+  assert.equal(packet.requested_appearance.wheel_finish,'Warm bronze');
+  assert.equal(packet.requested_appearance.paint,'Electric blue');
+  assert.equal(packet.findmypart_sourcing_interest_requested,true);
+  assert.equal(packet.findmypart_referral_sent,false);
+  assert.equal(packet.findmypart_customer_contact_shared,false);
+  assert.equal(packet.fitment_verified,false);
+  assert.equal(packet.merchant_sku_matched_to_concept,false);
+  assert.equal(elements.get('sourcingBrief').disabled,false);
+  assert.match(elements.get('message').textContent,/Appearance code loaded locally/);
+  elements.get('reset').listeners.click();
+  assert.equal(elements.get('codeInput').value,'');
+  assert.equal(api.packet().requested_appearance,null);
+  assert.equal(elements.get('sourcingBrief').disabled,true);
+});
+
+test('RC10 rejects altered digits and unsupported codes without replacing the last valid concept',()=>{
+  const {api,elements}=launch();
+  elements.get('codeInput').value='WL1-02000-2';
+  elements.get('loadCode').listeners.click();
+  const last=api.packet().requested_appearance.wheel_design;
+  for(const invalid of ['WL1-02000-3','WL1-93000-9','WL1-02000-2?q=pii',
+    'WL1-02000-2-EXTRA','WL2-02000-2','WL1-02ABC-1','javascript:alert(1)',
+    'WL1-02000','WL1-02000-22']){
+    assert.throws(()=>api.parseConceptCode(invalid),/Concept code/);
+    elements.get('codeInput').value=invalid;
+    elements.get('loadCode').listeners.click();
+    assert.match(elements.get('message').textContent,/Code rejected/);
+    assert.equal(api.packet().requested_appearance.wheel_design,last);
+  }
+});
+
+test('RC10 shopper generated codes round-trip across all allowed appearance selections',()=>{
+  const source=readFileSync(new URL('./index.html',import.meta.url),'utf8');
+  const begin=source.indexOf('const options='),end=source.indexOf('const original=');
+  const funcBegin=source.indexOf('function buildConceptCode(){');
+  const funcEnd=source.indexOf('function updateConceptCode()',funcBegin);
+  assert.ok(begin>0&&end>begin&&funcBegin>0&&funcEnd>funcBegin);
+  assert.match(source,/id="copyCode"/);
+  assert.match(source,/id="conceptCodeOutput"/);
+  const ctx={state:{style:'orbit',size:19,finish:'black',paint:'red'},
+    get:()=>({checked:false})};
+  const context=createContext(ctx);
+  new Script(source.slice(begin,end)+source.slice(funcBegin,funcEnd)).runInContext(context);
+  const {api}=launch();
+  const styles=['orbit','turbine','mesh','heritage'],sizes=[17,18,19,20,21];
+  const finishes=['black','silver','bronze'],paints=['red','white','blue','silver','black'];
+  let checked=0;
+  for(let si=0;si<4;si++)for(let zi=0;zi<5;zi++)
+  for(let fi=0;fi<3;fi++)for(let pi=0;pi<5;pi++)for(let intent=0;intent<2;intent++){
+    Object.assign(context.state,{style:styles[si],size:sizes[zi],finish:finishes[fi],paint:paints[pi]});
+    context.get=()=>({checked:!!intent});
+    const code=context.buildConceptCode();
+    assert.match(code,/^WL1-[0-3][0-4][0-2][0-4][01]-[0-9]$/);
+    const result=api.parseConceptCode(code);
+    assert.equal(result.wheel_design,['Orbit','Turbine','Mesh','Heritage'][si]);
+    assert.equal(result.diameter_in,sizes[zi]);
+    assert.equal(result.wheel_finish,['Gloss black','Brushed silver','Warm bronze'][fi]);
+    assert.equal(result.paint,['Torch red','Pearl white','Electric blue','Machine silver','Midnight'][pi]);
+    assert.equal(result.findmypart_sourcing_interest_requested,!!intent);
+    assert.equal(result.fitment_verified,false);
+    checked++;
+  }
+  assert.equal(checked,600);
 });
