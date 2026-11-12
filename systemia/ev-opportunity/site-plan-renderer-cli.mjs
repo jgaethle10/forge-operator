@@ -8,7 +8,7 @@ const idx = name => process.argv.indexOf(name);
 const value = name => idx(name) >= 0 ? process.argv[idx(name)+1] : undefined;
 const source=value('--input'), output=value('--output');
 const role=value('--role')||'site_concept';
-if(!source || !output || !/\\.svg$/i.test(output)) throw new Error('usage: --input path.json --output path.svg [--role site_concept|area_context]');
+if(!source || !output || !/\.svg$/i.test(output)) throw new Error('usage: --input path.json --output path.svg [--role site_concept|area_context]');
 const model=JSON.parse(readFileSync(source,'utf8'));
 const result=renderEvConceptSheet(model,{role});
 if(!result.svg) {
