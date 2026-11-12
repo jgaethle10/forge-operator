@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.incident-fabric.synthetic.v1",
+  "synthetic": true,
+  "incident_id": "spider-synthetic-crash-001",
+  "mission_id": "evercraft-agent-continuity-fabric-20261016",
+  "occurred_at": "2026-10-16T19:00:00Z",
+  "agent_id": "spider-demo-worker-001",
+  "operation_id": "synthetic-ticket-001",
+  "failure_type": "worker_process_exited_during_external_action",
+  "execution_environment": "synthetic-local-worker",
+  "possible_downstream": [
+    "ticket-creation",
+    "retry-queue",
+    "customer-notification"
+  ],
+  "spider_society": {
+    "incident_id": "spider-synthetic-crash-001",
+    "evidence_state": "synthetic",
+    "persistence_signal": "retry_queue_may_still_be_scheduled",
+    "action_taken": false
+  },
+  "evercraft_network": {
+    "incident_id": "spider-synthetic-crash-001",
+    "evidence_state": "synthetic",
+    "continuity_state": "partitioned_delivery_pending",
+    "delivered": false
+  },
+  "saban": {
+    "incident_id": "spider-synthetic-crash-001",
+    "evidence_state": "synthetic",
+    "hypothesis": "crash_after_attempt_but_before_acknowledgment_requires_provider_readback",
+    "dispatched": false
+  },
+  "systemia": {
+    "incident_id": "spider-synthetic-crash-001",
+    "evidence_state": "synthetic",
+    "admitted": false
+  },
+  "chum": {
+    "incident_id": "spider-synthetic-crash-001",
+    "evidence_state": "synthetic",
+    "published": false
+  },
+  "fallen": {
+    "incident_id": "spider-synthetic-crash-001",
+    "evidence_state": "synthetic",
+    "rendered": false
+  }
+}

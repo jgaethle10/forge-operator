@@ -1,0 +1,21 @@
+{
+  "schema_version": "1",
+  "operation_id": "synthetic-ticket-003",
+  "idempotency_key": "synthetic-idem-003",
+  "intended_action": "create_ticket",
+  "agent_report": "success",
+  "observations": [
+    {
+      "operation_id": "synthetic-ticket-003",
+      "idempotency_key": "synthetic-idem-003",
+      "provider_state": "committed",
+      "reference": "synthetic-ref-03"
+    },
+    {
+      "operation_id": "synthetic-ticket-003",
+      "idempotency_key": "synthetic-idem-003",
+      "provider_state": "failed",
+      "reference": "synthetic-ref-03"
+    }
+  ]
+}
