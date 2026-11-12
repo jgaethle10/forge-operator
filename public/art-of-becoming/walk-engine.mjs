@@ -34,8 +34,8 @@ export function walkableScene(state,goal,mode){
 export function spawnExplorer(scene=null){
   const first=scene?.buildings?.[0];
   if(first){
-    const x=first.x-first.halfWidth-9;
-    const z=first.z+first.halfDepth+14;
+    const x=first.x-first.halfWidth-18;
+    const z=first.z+first.halfDepth+27;
     if(canEnter(scene,x,z)){
       return {x,y:1.75,z,yaw:Math.atan2(first.x-x,z-first.z),pitch:-.09};
     }
