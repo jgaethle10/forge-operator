@@ -148,3 +148,19 @@ test('llama-server missing model or failed completion holds and never fabricates
  await offline.validate();
  await assert.rejects(()=>offline.infer({prompt:'Can we learn?' }),/llama_inference_failed/);
 });
+
+test('Adult reset requires authorization and destroys all private room sessions',async()=>{
+ const srv=await service();
+ try{
+  const opened=await request(srv.url,'/api/classroom/session',{method:'POST',body:{room:'reading'}});
+  assert.equal(opened.status,201);
+  const denied=await request(srv.url,'/api/classroom/reset',{method:'POST',body:{},headers:{'content-type':'application/json'}});
+  assert.equal(denied.status,401);
+  const done=await request(srv.url,'/api/classroom/reset',{method:'POST',body:{}});
+  assert.equal(done.status,200);
+  assert.equal(done.body.all_volatile_sessions_erased,true);
+  assert.equal(done.body.cleared_count,1);
+  const stale=await request(srv.url,'/api/classroom/message',{method:'POST',body:{session_id:opened.body.session_id,message:'What happens next?'}});
+  assert.equal(stale.body.error,'session_not_found');
+ }finally{await srv.close()}
+});
