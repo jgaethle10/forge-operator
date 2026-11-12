@@ -44,7 +44,6 @@ class OriginalCharacterTests(unittest.TestCase):
     def test_original_copy_in_real_languages(self):
         self.assertIn("¿",recipes.casting.SCRIPTS["es-ES"])
         self.assertIn("ç",recipes.casting.SCRIPTS["pt-BR"])
-        self.assertIn("Worth",recipes.casting.SCRIPTS["en-US"].capitalize()) if False else None
         self.assertEqual(recipes.casting.SCRIPTS["en-US"],
                          recipes.casting.SCRIPTS["en-GB"])
 
