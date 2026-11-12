@@ -25,7 +25,7 @@ test('scope request is plain text and generates a user-initiated mailto for the 
   assert.match(x.mailto,/^mailto:jessegaethle10@gmail\.com\?subject=/);
   assert.equal(decodeURIComponent(x.mailto.split('&body=')[1]),x.body);
   assert.match(x.body,/This is a scope request, not an order or authorization to charge me/);
-  assert.match(x.body,/confirm availability/);
+  assert.match(x.body,/delivery availability/);
   assert.match(x.body,/Evercraft free tools \(visitor-provided link context\)/);
   assert.ok(x.mailto.length<2200,'mailto kept within practical client length');
 });
