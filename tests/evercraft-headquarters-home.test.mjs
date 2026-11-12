@@ -26,3 +26,12 @@ test('executive Home remains the private operational surface',()=>{
   assert.ok(command.includes('apps.html'));
   assert.ok(command.includes('evercraft-command-metal'));
 });
+
+test('headquarters Pages root is not redirected to the technical directory',()=>{
+  const pages=fs.readFileSync('.github/workflows/evercraft-journal-pages.yml','utf8');
+  assert.ok(pages.includes('cp _public_pages/headquarters/index.html _public_pages/index.html'));
+  assert.ok(pages.includes('HEADQUARTERS_PUBLIC_ROOT_HTTPS_VERIFIED'));
+  assert.ok(pages.includes("test -s _public_pages/headquarters/index.html"));
+  assert.ok(!pages.includes('meta http-equiv="refresh" content="0; url=/forge-operator/chum/"'));
+  assert.ok(pages.includes('test -f _public_pages/chum/index.html'));
+});
