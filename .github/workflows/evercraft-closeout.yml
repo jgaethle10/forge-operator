@@ -15,6 +15,10 @@ on:
     paths:
       - 'public/closeout/**'
       - 'tests/closeout-static.test.mjs'
+      - 'tests/closeout-owned-payment-route.test.mjs'
+      - 'systemia/closeout/**'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'scripts/probe-closeout-public.mjs'
       - '.github/workflows/evercraft-closeout.yml'
   workflow_dispatch:
 
