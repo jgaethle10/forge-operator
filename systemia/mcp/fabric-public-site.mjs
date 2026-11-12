@@ -17,6 +17,10 @@ const shell=(title,body,{
   canonical='',
   ogType='website',
   ogImage='',
+  ogImageType='',
+  ogImageWidth=0,
+  ogImageHeight=0,
+  ogImageAlt='',
 }={})=>{
   const canonicalUrl=canonical
     ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
@@ -39,6 +43,10 @@ const shell=(title,body,{
 <meta property="og:description" content="${socialDescription}">
 <meta property="og:url" content="${socialUrl}">
 ${socialImage?'<meta property="og:image" content="'+socialImage+'">':''}
+${socialImage&&ogImageType?'<meta property="og:image:type" content="'+escapeHtml(ogImageType)+'">':''}
+${socialImage&&ogImageWidth?'<meta property="og:image:width" content="'+Number(ogImageWidth)+'">':''}
+${socialImage&&ogImageHeight?'<meta property="og:image:height" content="'+Number(ogImageHeight)+'">':''}
+${socialImage&&ogImageAlt?'<meta property="og:image:alt" content="'+escapeHtml(ogImageAlt)+'">':''}
 <meta name="twitter:card" content="${socialImage?'summary_large_image':'summary'}">
 ${socialImage?'<meta name="twitter:image" content="'+socialImage+'">':''}
 <meta name="twitter:title" content="${socialTitle}">
@@ -225,6 +233,11 @@ const OFFER_PAGE_COPY={
     headline:"Your website is getting attention. Why isn't it getting customers?",
     lede:'We scan the public site and show you the five fixes worth making first.',
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
+    shareImage:'https://jgaethle10.github.io/forge-operator/visuals/website-audit-attention/preview-og-v2.png',
+    shareImageType:'image/png',
+    shareImageWidth:1200,
+    shareImageHeight:630,
+    shareImageAlt:'Systemia Website Audit by Evercraft. $49 Quick Win Audit, five areas reviewed and five prioritized fixes.',
     send:['Your website URL','What you want the site to produce','Anything you already know is frustrating'],
     get:['Public-web evidence snapshot','Five priority fixes','A clear next move'],
     steps:[
@@ -474,6 +487,10 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     canonical:'/offers/'+copy.slug,
     ogType:'website',
     ogImage:copy.shareImage||'',
+    ogImageType:copy.shareImageType||'',
+    ogImageWidth:copy.shareImageWidth||0,
+    ogImageHeight:copy.shareImageHeight||0,
+    ogImageAlt:copy.shareImageAlt||'',
   });
 }
 
