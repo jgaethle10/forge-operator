@@ -94,6 +94,9 @@ export function nativeReadOnlyIO(){
         return p==='.'?root:path.join(root,p);
       };
       const entryStat=p=>{
+        // /proc/self/fd/N is intentionally a symlink to the already-held FD.
+        // Inspect that root using fstat; never follow an arbitrary child link.
+        if(p==='.')return fs.fstatSync(fd);
         const s=fs.lstatSync(resolve(p));
         expect(!s.isSymbolicLink(),'CGROUP_SUBTREE_SYMLINK_REJECTED');
         return s;
