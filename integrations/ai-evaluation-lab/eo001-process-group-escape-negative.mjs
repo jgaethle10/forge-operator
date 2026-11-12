@@ -14,6 +14,8 @@ import path from 'node:path';
 import process from 'node:process';
 import {spawn} from 'node:child_process';
 import {fileURLToPath,pathToFileURL} from 'node:url';
+import {observeLinuxProcessIdentity,compareObservedSurvivor}
+  from './eo001-stable-proc-identity.mjs';
 
 const source=fileURLToPath(import.meta.url);
 const isPid=n=>Number.isSafeInteger(n)&&n>1;
@@ -131,8 +133,8 @@ export async function runEscapedSessionNegativeControl({
   if(!driver||!isPid(driver.pid))refuse('NEGATIVE_DRIVER_START_FAILED');
   // The synthetic survivor is bounded to a four-second process lifetime,
   // even if this parent or CI test exits before finally runs.
-  let survivorPid=null,cleanedDriver=false,cleanupAttempted=false;
-  let independentlyOwned=false,driverCgroup=null;
+  let survivorPid=null,cleanedDriver=false,driverCgroup=null;
+  let originalIdentity=null;
   try{
     const line=await firstLine(driver,1100);
     let message;
@@ -142,12 +144,24 @@ export async function runEscapedSessionNegativeControl({
       refuse('NEGATIVE_DRIVER_RECEIPT_INVALID');
     survivorPid=message.survivor_pid;
     driverCgroup=read('/proc/'+driver.pid+'/cgroup','utf8');
-    verifyOwnedDetachedDescendant({
-      driverPid:driver.pid,survivorPid,driverCgroup,
-      survivorCgroup:read('/proc/'+survivorPid+'/cgroup','utf8'),
-      survivorStat:read('/proc/'+survivorPid+'/stat','utf8')
+    const bootId=read('/proc/sys/kernel/random/boot_id','utf8');
+    const driverIdentity=observeLinuxProcessIdentity({
+      bootId,procCgroup:driverCgroup,
+      procStat:read('/proc/'+driver.pid+'/stat','utf8')
     });
-    independentlyOwned=true;
+    if(driverIdentity.pid!==driver.pid||driverIdentity.ppid!==process.pid||
+       driverIdentity.pgrp!==driver.pid||driverIdentity.sid!==driver.pid)
+      refuse('DRIVER_PROCESS_IDENTITY_NOT_VERIFIED');
+    originalIdentity=observeLinuxProcessIdentity({
+      bootId,
+      procCgroup:read('/proc/'+survivorPid+'/cgroup','utf8'),
+      procStat:read('/proc/'+survivorPid+'/stat','utf8')
+    });
+    compareObservedSurvivor({
+      before:originalIdentity,after:originalIdentity,expectedDriverPid:driver.pid
+    });
+    // This signal is to the directly spawned FIXED synthetic driver group.
+    // No group-stop capability is exported for model workers.
     signalGroup(driver.pid,'SIGTERM');
     cleanedDriver=await boundedClose(driver,600);
     if(!cleanedDriver){
@@ -155,34 +169,36 @@ export async function runEscapedSessionNegativeControl({
       cleanedDriver=await boundedClose(driver,450);
     }
     if(!cleanedDriver)refuse('ORIGINAL_GROUP_TERMINATION_NOT_OBSERVED');
-    const verdict=validateEscapedSessionSnapshot({
-      driverPid:driver.pid,survivorPid,driverCgroup,
-      survivorCgroup:read('/proc/'+survivorPid+'/cgroup','utf8'),
-      survivorStat:read('/proc/'+survivorPid+'/stat','utf8'),
-      driverTerminated:cleanedDriver
+    const observedAfter=observeLinuxProcessIdentity({
+      bootId:read('/proc/sys/kernel/random/boot_id','utf8'),
+      procCgroup:read('/proc/'+survivorPid+'/cgroup','utf8'),
+      procStat:read('/proc/'+survivorPid+'/stat','utf8')
     });
-    return {...verdict,
-      // A cleanup attempt occurs in finally and is not an attested kill/reap.
+    const stable=compareObservedSurvivor({
+      before:originalIdentity,after:observedAfter,expectedDriverPid:driver.pid
+    });
+    return {
+      schema:'evercraft.eo001.synthetic-pgroup-negative-control.v2',
+      original_group_terminated:true,
+      live_separate_session_survived_group_termination:true,
+      survivor_still_in_same_cgroup:true,
+      ...stable,
+      // Never convert a numeric PID recheck to authority to signal.
+      group_kill_sufficient_for_descendant_cleanup:false,
       survivor_cleanup_verified:false,
-      survivor_reaping_verified:false};
+      survivor_reaping_verified:false,
+      systemd_scope_forced_kill_proven:false,
+      model_execution_authorized:false,
+      provider_effects_authorized:false
+    };
   }finally{
-    signalGroup(driver.pid,'SIGKILL');
-    if(independentlyOwned&&isPid(survivorPid)){
-      // Recheck the same session and cgroup before using a PID as a target.
-      // If the child has exited or its identity changed, never kill by PID.
-      let same=false;
-      try{
-        const stat=statSnapshot(read('/proc/'+survivorPid+'/stat','utf8'));
-        const member=read('/proc/'+survivorPid+'/cgroup','utf8');
-        same=stat.pid===survivorPid&&stat.pgrp===survivorPid&&
-          stat.sid===survivorPid&&stat.state!=='Z'&&stat.state!=='X'&&
-          member===driverCgroup;
-      }catch{/* Child exited or procfs became unavailable; no signal. */}
-      if(same)cleanupAttempted=signalGroup(survivorPid,'SIGTERM');
-      // The survivor self-exits within four seconds regardless of signals.
-      // Do not claim that signaling proves reaping of an orphaned process.
+    // Do not signal an orphan's numeric PID or process group. A procfs
+    // starttime recheck is not a race-free stable process handle.
+    // The fixed synthetic survivor self-exits within four seconds.
+    if(!cleanedDriver){
+      try{driver.kill('SIGKILL');}catch{}
     }
-    await boundedClose(driver,300);
+    await boundedClose(driver,500);
   }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
