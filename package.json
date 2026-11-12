@@ -230,7 +230,7 @@
     "sentinel:resident": "node systemia/sentinel/resident-runner.mjs",
     "test:sentinel-region-profiles": "node systemia/sentinel/region-profile.test.mjs",
     "test:fabric-directory": "node --test tests/evercraft-fabric-runtime.test.mjs",
-    "proof:one-body": "node systemia/organism/one-body.proof.mjs && node systemia/organism/one-body-visibility.proof.mjs && node systemia/organism/one-body-store.proof.mjs && node systemia/organism/one-body-local-consumer.proof.mjs && node systemia/organism/one-body-snapshot-reader.proof.mjs && node systemia/organism/one-body-home-route.proof.mjs",
+    "proof:one-body": "node systemia/organism/one-body.proof.mjs && node systemia/organism/one-body-visibility.proof.mjs && node systemia/organism/one-body-store.proof.mjs && node systemia/organism/one-body-local-consumer.proof.mjs && node systemia/organism/one-body-snapshot-reader.proof.mjs && node systemia/organism/one-body-home-route.proof.mjs && node systemia/organism/one-body-enrollment.proof.mjs",
     "test:remote-operator": "node systemia/compute/remote-operator.test.mjs && node systemia/network/remote-operator.proof.mjs && node systemia/remote-operator/mcp-gateway.test.mjs",
     "test:node-self-bootstrap": "node --test tests/node-self-bootstrap.test.mjs",
     "test:control-room-canary-contract": "node tests/control-room-canary-contract.test.mjs",
