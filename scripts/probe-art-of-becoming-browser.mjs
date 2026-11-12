@@ -15,7 +15,7 @@ await fs.mkdir(out,{recursive:true});
 const server=createServer(async (request,response)=>{
   try {
     const url=new URL(request.url,'http://127.0.0.1');
-    const files={'/':'index.html','/index.html':'index.html','/engine.mjs':'engine.mjs','/world-engine.mjs':'world-engine.mjs','/worlds.html':'worlds.html'};
+    const files={'/':'index.html','/index.html':'index.html','/engine.mjs':'engine.mjs','/world-engine.mjs':'world-engine.mjs','/worlds.html':'worlds.html','/campus-walk.html':'campus-walk.html','/campus-walk.mjs':'campus-walk.mjs','/walk-engine.mjs':'walk-engine.mjs'};
     const filename=files[url.pathname];
     if(!filename){response.writeHead(404);response.end('Not found');return;}
     const buffer=await fs.readFile(path.join(root,filename));
@@ -28,7 +28,7 @@ const origin='http://127.0.0.1:'+server.address().port;
 const errors=[], externalRequests=[];
 let browser;
 try {
-  browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+  browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   const context=await browser.newContext({
     viewport:{width:390,height:844},deviceScaleFactor:2,
     isMobile:true,hasTouch:true,acceptDownloads:true,reducedMotion:'reduce'
@@ -98,6 +98,29 @@ try {
   assert.ok(Number(await page.locator('#structures').innerText())>1);
   await page.locator('#demo').click();
   assert.equal(await page.locator('#structures').innerText(),'1');
+  assert.equal(await page.locator('#walk-link').getAttribute('href'),'./campus-walk.html');
+
+  // Enter the same saved facility in the real owned WebGL2 first-person view.
+  await page.goto(origin+'/campus-walk.html',{waitUntil:'load'});
+  await assertViewport(page,390);
+  assert.match(await page.title(),/Walk Your World/);
+  await page.locator('#enter').click();
+  await page.waitForFunction(() => document.getElementById('view')?.dataset.rendered === 'true',null,{timeout:20000});
+  assert.equal(await page.locator('#view').getAttribute('data-facility-count'),'1');
+  assert.equal(await page.locator('#view').getAttribute('data-mode'),'franchise');
+  assert.ok(Number(await page.locator('#view').getAttribute('data-geometry-triangles'))>100);
+  const initialZ=Number(await page.locator('#view').getAttribute('data-player-z'));
+  await page.keyboard.down('w');
+  await page.waitForTimeout(450);
+  await page.keyboard.up('w');
+  await page.waitForTimeout(420);
+  const newZ=Number(await page.locator('#view').getAttribute('data-player-z'));
+  assert.ok(newZ<initialZ-1,'WASD walking must move the camera in 3D');
+  await page.screenshot({path:path.join(out,'walkable-franchise-webgl-mobile.png'),fullPage:true});
+  await page.reload();
+  await page.locator('#enter').click();
+  await page.waitForFunction(() => document.getElementById('view')?.dataset.rendered === 'true',null,{timeout:20000});
+  assert.equal(await page.locator('#view').getAttribute('data-facility-count'),'1','Reload must preserve real facilities');
   await page.goto(origin+'/index.html',{waitUntil:'load'});
 
   // A difficult day does not destroy the completed work.
@@ -112,6 +135,10 @@ try {
   assert.equal(await page.locator('#art-frame.hard').count(),1);
   await page.goto(origin+'/worlds.html',{waitUntil:'load'});
   assert.equal(await page.locator('#structures').innerText(),'1', 'A hard day must not demolish an earned building');
+  await page.goto(origin+'/campus-walk.html',{waitUntil:'load'});
+  await page.locator('#enter').click();
+  await page.waitForFunction(() => document.getElementById('view')?.dataset.rendered === 'true',null,{timeout:20000});
+  assert.equal(await page.locator('#view').getAttribute('data-facility-count'),'1','Hard day cannot demolish 3D facility');
   await page.goto(origin+'/index.html',{waitUntil:'load'});
 
   // Goals cannot overwrite each other's progress.
@@ -182,7 +209,7 @@ try {
   await fs.writeFile(path.join(out,'receipt.json'),JSON.stringify({
     schema:'evercraft.art-of-becoming.browser-qa.v1',ok:true,
     viewport_checks:[320,390,1440],
-    checks:['mobile render','lifetime world campus construction','world modes and demo isolation','check-in progression','completed SVG download','permanent local gallery','difficult-day preservation','reload','multiple goals','theme selection','backup export','erase','validated restore','corrupt storage recovery','no external requests','no runtime exceptions'],
+    checks:['mobile render','lifetime world campus construction','owned WebGL2 walk and mobile screenshot','world modes and demo isolation','check-in progression','completed SVG download','permanent local gallery','difficult-day preservation','reload','multiple goals','theme selection','backup export','erase','validated restore','corrupt storage recovery','no external requests','no runtime exceptions'],
     tested_at:new Date().toISOString(),external_requests:externalRequests.length,page_errors:errors.length
   },null,2)+'\n');
   console.log('ART_OF_BECOMING_BROWSER_QA_PASS: all mobile, desktop, privacy and retention checks passed');
