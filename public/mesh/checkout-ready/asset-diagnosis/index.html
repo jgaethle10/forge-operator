@@ -13,6 +13,8 @@
 .intake-card .controls{margin:18px 0}
 .intake-preview{min-height:245px;margin-top:10px;font-size:.91rem}
 .intake-status{min-height:1.5em;color:var(--mint)}
+.intake-consent{display:flex;align-items:flex-start;gap:10px;font-weight:650;margin-top:17px}
+.intake-consent input{width:21px;height:21px;flex-shrink:0;margin-top:6px}
 .intake-disclaimer{font-size:.9rem;color:var(--muted);margin-top:12px!important}
 </style><link rel="icon" type="image/svg+xml" href="./brand-mark.svg"></head><body class="brand-world identity-asset-diagnosis" style="--identity-bg:#0d202c;--identity-panel:#142e3c;--identity-ink:#e9f6fb;--identity-muted:#b6cdda;--identity-accent:#71c5ed;--identity-secondary:#c0e7f6;"
 <header><div class="wrap"><a href="../"><span class="brand-mini">The Second Look</span><span class="brand-parent"> · Evercraft OS</span></a></div></header>
@@ -32,6 +34,7 @@
       <label class="intake-field" for="intake-timing"><span>Any preferred timing? (optional)</span><input id="intake-timing" name="timing" type="text" maxlength="100" placeholder="This week, next month or flexible"></label>
     </div>
     <p class="intake-disclaimer">Use public or non-sensitive descriptions only. Never include passwords, customer records, card details or API keys. You must own the asset or be authorized to discuss it.</p>
+    <label class="intake-consent"><input id="intake-authorized" name="authorized" type="checkbox" value="yes" required><span>I own this asset or am authorized to discuss it with Evercraft.</span></label>
     <div class="controls"><button class="button primary" type="submit">Prepare my scope email</button></div>
   </form>
   <div id="asset-scope-output" hidden>
