@@ -14,6 +14,7 @@ const PROJECTS=new Set([
   'Something else',
 ]);
 const EMAIL=/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
+const CLAIMED_CHANNELS=new Set(['partners','fiverr','linkedin','nextdoor','alignable','direct','other']);
 function send(res,status,body,origin=''){
   const text=JSON.stringify(body);
   const cors=TRUSTED_ORIGINS.has(origin)?{
@@ -39,7 +40,9 @@ export function validateStudioInquiry(input){
   if(!name||name.length<2||!email||!EMAIL.test(email)||!company||!project||!PROJECTS.has(project)||!goal||goal.length<12)
     return {error:'invalid_inquiry_fields'};
   if(input.consent!==true)return {error:'consent_required'};
-  return {value:{name,email,company,project,goal,consent:true}};
+  // A visitor-supplied URL campaign tag is not authenticated partner attribution.
+  const claimed_discovery_channel=CLAIMED_CHANNELS.has(input.claimedChannel)?input.claimedChannel:'unattributed';
+  return {value:{name,email,company,project,goal,consent:true,claimed_discovery_channel}};
 }
 export function createStudioInquiryHandler({storeDir='',now=Date.now,onAlertQueued=()=>{},alertEnqueue=enqueueStudioAlert}={}){
   const folder=storeDir||process.env.EVERCRAFT_STUDIO_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','studio-leads');
