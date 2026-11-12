@@ -223,7 +223,7 @@ function tick(now){
  requestAnimationFrame(tick);
 }
 function start(demo){
- isDemo=demo;refreshScene();player=spawnExplorer();running=true;el('welcome').classList.add('hidden');el('hud').classList.remove('hidden');
+ isDemo=demo;refreshScene();player=spawnExplorer();canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);running=true;el('welcome').classList.add('hidden');el('hud').classList.remove('hidden');
  el('status').textContent=demo?'Preview only. No progress was changed.':'Your lifetime facilities are safe.';
 }
 el('enter').addEventListener('click',()=>start(false));
