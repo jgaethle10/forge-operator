@@ -1,0 +1,153 @@
+/**
+ * Timewalk archival-source acquisition gate.
+ * Pure data validation only. It neither contacts archives nor pays for scans.
+ * Catalog coverage is NOT equivalent to a verified sheet, edition date, license,
+ * georeferencing result, or 1960 reconstructed scene.
+ */
+export const ARCHIVE_ACQUISITION_SCHEMA="evercraft.timewalk.archive-acquisition.v1";
+const fail=why=>{throw Error("timewalk_acquisition_"+why)};
+const text=v=>typeof v==="string"&&v.trim().length>0;
+const https=v=>typeof v==="string"&&v.startsWith("https://");
+const date=v=>/^\d{4}(?:-\d{2}-\d{2})?$/.test(String(v||""));
+const city=(a,b)=>["city","region","country"].every(k=>
+  text(a?.[k])&&String(a[k]).toLowerCase()===String(b?.[k]||"").toLowerCase());
+
+export function validateArchiveAcquisition(a,ledger) {
+  if(!a||a.schema!==ARCHIVE_ACQUISITION_SCHEMA||!ledger||
+     a.worldId!==ledger.worldId||a.selectedYear!==ledger.sceneYear)
+    fail("wrong_world_or_schema");
+  if(!city(a.location,ledger.location.jurisdiction))fail("wrong_city");
+  const catalog=a.catalog;
+  const source=ledger.sources.find(s=>s.id===a.evidenceSourceId);
+  if(!source||source.rights?.status!=="catalog_metadata_only"||
+     source.url!==catalog?.sourceUrl)fail("source_catalog_unverified");
+  if(!Array.isArray(catalog.holdingYearsListed)||!catalog.holdingYearsListed.includes(a.selectedYear)||
+     catalog.collectionEditionYear!==a.selectedYear)
+    fail("no_selected_year_in_catalog");
+  if(!https(catalog.sourceUrl))fail("missing_catalog_url");
+  if(!a.sourceAccess||!https(a.sourceAccess.sourceUrl)||
+     a.sourceAccess.email!=="sanborn@csun.edu")fail("unverified_archive_contact");
+  if(!Number.isFinite(a.sourceAccess.postedVolumePullFee)||
+     !Number.isFinite(a.sourceAccess.postedImagingFeePerSheet)||
+     a.sourceAccess.postedVolumePullFee<0||a.sourceAccess.postedImagingFeePerSheet<0)
+    fail("invalid_fee_reference");
+  if(!Array.isArray(a.searchTargets)||a.searchTargets.length<2||
+     a.searchTargets.some(t=>!text(t.address)||!t.address.includes("Yakima, WA")))
+    fail("insufficient_block_addresses");
+  if(a.catalog.holdingStatus!=="catalog_verified_not_item_inspected")
+    fail("acquisition_state_not_catalog_only");
+  if(a.catalog.exactCoverageConfirmed||a.catalog.originalSheetInspected||
+     a.catalog.originalSheetId!==null||a.catalog.itemLocator!==null||
+     a.catalog.imageOriginalUrl!==null||a.catalog.sheetUpdateDate!==null||
+     a.catalog.originalImageHash!==null||a.catalog.currentGeoreferencing!==null)
+    fail("cannot_assert_1960_original_from_collection_listing");
+  if(a.sourceAccess.acquisitionPaid||a.sourceAccess.purchaseAuthorized||
+     a.sourceAccess.publicDistributionAllowed||
+     a.sourceAccess.originalMapImageEmbeddingAllowed||
+     a.sourceAccess.commercialDerivedGeometryAllowed||
+     a.geometryReady||a.sourceOriginalVerified||a.worldsRuntimeAuthorized)
+    fail("premature_publication_purchase_or_geometry");
+  if(a.sourceAccess.priorInquirySent===true){
+    if(a.sourceAccess.replyReceived===false) {
+      if(a.sourceAccess.inquiryStatus!=="sent-awaiting-archive-response" ||
+         a.sourceAccess.archiveSheetNumbersConfirmed!==false ||
+         a.curatorConfirmation!==undefined)fail("inconsistent_inquiry_state");
+    }else if(a.sourceAccess.replyReceived===true){
+      if(a.sourceAccess.inquiryStatus!=="archive-sheet-numbers-confirmed-awaiting-original-inspection" ||
+         a.sourceAccess.archiveSheetNumbersConfirmed!==true)fail("inconsistent_archive_reply");
+      const receipt=a.curatorConfirmation;
+      if(!receipt || receipt.confirmationStatus!=="archive_staff_identified_sheets_not_direct_item_review" ||
+         receipt.comparisonConfidence!=="archivist-reported-not-independently-verified" ||
+         !Array.isArray(receipt.confirmedNumbers) ||
+         receipt.confirmedNumbers.length!==2 ||
+         receipt.confirmedNumbers[0]!==6 || receipt.confirmedNumbers[1]!==15 ||
+         receipt.original1960ImagesObtained!==false ||
+         receipt.independentSheetComparisonCompleted!==false ||
+         receipt.exactRevisionStampsRead!==false ||
+         receipt.publicOriginal1960SheetReproductionAllowed!==false ||
+         receipt.coordinates!==null)fail("unsupported_1960_original_claim");
+      if(!Array.isArray(receipt.sheetMatches) || receipt.sheetMatches.length!==2)
+        fail("missing_archivist_sheet_matches");
+      const follow=receipt.additionalReply;
+      if(follow!==undefined && (
+         follow.reportedCorrectionRounds!==6 ||
+         follow.bothSheetsHaveCorrections!==true ||
+         follow.individualPasteoverDatesRecorded!==false ||
+         follow.latestVolumeAppearanceYear!==1960 ||
+         follow.landmarkBuildingsAppearIdenticalTo1952!==true ||
+         follow.surroundingBuildingsChangedBetween1952And1960!==true ||
+         follow.changedSurroundingBuildingsIdentified!==false ||
+         follow.changedSurroundingBuildingGeometryExtracted!==false ||
+         follow.copyrightClarificationStatus!=="archive_staff_could_not_confirm_1960_reuse_rights" ||
+         follow.status!=="archivist_report_direct_email_not_independent_original_inspection"))
+         fail("unsupported_archivist_followup_claim");
+      for(const [i,n] of [6,15].entries()){
+        const match=receipt.sheetMatches[i];
+        if(match?.sheetNumber!==n || match.locDigitalEdition!==1952 ||
+           match.locViewerPage!==(n===6?11:20) ||
+           match.original1960ExaminedByUs!==false || match.georeferenced!==false ||
+           !/^https:\/\/www\.loc\.gov\/resource\/g4284ym\.g4284ym_g093811952\/\?/.test(match.locViewerUrl||""))
+          fail("wrong_archive_sheet_or_viewer");
+      }
+    }else fail("inconsistent_archive_reply");
+  }
+  return a;
+}
+
+export function archiveInquiryPacket(acquisition,ledger) {
+  const a=validateArchiveAcquisition(acquisition,ledger);
+  const targets=a.searchTargets.map(t=>"- "+t.address).join("\n");
+  return {
+    schema:"evercraft.timewalk.archive-inquiry.v1",
+    recipient:a.sourceAccess.email,
+    subject:"Research inquiry: 1960 Yakima Sanborn atlas, downtown Second / Third Street sheets",
+    body:[
+      "Hello CSUN Sanborn Collection team,",
+      "",
+      "I'm researching downtown Yakima, Washington as it appeared circa 1960.",
+      "Your Washington holdings index lists Yakima Sanborn editions including 1960.",
+      "Could you confirm which 1960 volume and map sheet number(s) cover:",
+      targets,
+      "",
+      "Before any paid scans, could you please advise whether the sheets cover these specific locations; how their dates or correction stamps appear; what catalog/index metadata you can share at no cost; and whether a research scan can be obtained remotely?",
+      "Please also explain the available permissions for an original historical research/interactive 3D reconstruction intended for public or eventual commercial viewing, including whether independent permission from the map copyright owner would be necessary.",
+      "",
+      "I have seen the posted $10 volume-pull and $20-per-sheet imaging schedule. This message is only an information request, not authorization for any paid service.",
+      "",
+      "Thank you."
+    ].join("\n"),
+    sendAuthorized:false,
+    feeApproved:false,
+    mediaPublicationApproved:false,
+    deliveryStatus:a.sourceAccess.replyReceived===true?"archive-replied-do-not-resend":a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent",
+    inquiryAlreadySent:a.sourceAccess.priorInquirySent===true,
+    flags:[a.sourceAccess.replyReceived===true?"archive-replied-do-not-resend":a.sourceAccess.priorInquirySent===true?"sent-awaiting-archive-response":"not-sent","no-fee-authority","1960-original-not-inspected"]
+  };
+}
+
+export function acquisitionReadiness(acquisition,ledger) {
+  const a=validateArchiveAcquisition(acquisition,ledger);
+  return {
+    schema:"evercraft.timewalk.archive-readiness.v1",
+    worldId:a.worldId,year:a.selectedYear,
+    catalogHoldingConfirmed:true,
+    exactSheetConfirmed:false,
+    sheetNumbersIdentifiedByArchivist:a.sourceAccess.archiveSheetNumbersConfirmed===true,
+    identifiedSheetNumbers:a.curatorConfirmation?.confirmedNumbers||[],
+    digital1952ComparisonLinks:(a.curatorConfirmation?.sheetMatches||[]).map(x=>x.locViewerUrl),
+    correctionRoundsReported:a.curatorConfirmation?.additionalReply?.reportedCorrectionRounds??null,
+    surroundingBuildingsChangedReported:a.curatorConfirmation?.additionalReply?.surroundingBuildingsChangedBetween1952And1960??null,
+    unidentifiedChangesRequireReview:true,
+    originalItemExamined:false,
+    georeferencingAuthorized:false,
+    publishOriginalMapAllowed:false,
+    publicSceneAccuracyVerified:false,
+    outstanding:[
+      a.sourceAccess.replyReceived===true ? "Inspect or compare CSUN originals for sheets 6/15; log 1960 sheet correction dates and rights" : a.sourceAccess.priorInquirySent ? "Await CSUN response identifying downtown 1960 volume and sheet numbers" : "Ask archive for downtown block and 1960 sheet numbers",
+      a.curatorConfirmation?.additionalReply?.individualPasteoverDatesRecorded===false ? "Individual pasteover dates were not recorded; do not request exact dates as if recoverable" : "Inspect original sheets for any independently dated corrections",
+      a.curatorConfirmation?.additionalReply?.surroundingBuildingsChangedBetween1952And1960===true ? "Map and assess nearby 1952–1960 changes individually; never clone all 1952 neighboring buildings into 1960" : "Check whether nearby buildings changed before treating 1952 map as a 1960 neighborhood",
+      "Get written public/commercial reuse permission if applicable",
+      "Separate independent survey control-point verification and 1960 timeline review"
+    ]
+  };
+}

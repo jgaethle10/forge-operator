@@ -1,0 +1,141 @@
+{
+  "schema": "evercraft.timewalk.archive-acquisition.v1",
+  "id": "csun-yakima-sanborn-1960",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "selectedYear": 1960,
+  "location": {
+    "city": "Yakima",
+    "region": "WA",
+    "country": "US"
+  },
+  "evidenceSourceId": "csun-sanborn-yakima-1960-catalog",
+  "catalog": {
+    "collection": "CSUN Geography & Environmental Studies, Sanborn Fire Insurance Atlas Collection",
+    "sourceUrl": "https://www.csun.edu/sites/default/files/outside_california.pdf",
+    "holdingYearsListed": [
+      1953,
+      1955,
+      1956,
+      1958,
+      1959,
+      1960
+    ],
+    "holdingStatus": "catalog_verified_not_item_inspected",
+    "collectionEditionYear": 1960,
+    "volumeIdentifier": null,
+    "originalSheetId": null,
+    "itemLocator": null,
+    "exactCoverageConfirmed": false,
+    "originalSheetInspected": false,
+    "imageOriginalUrl": null,
+    "sheetUpdateDate": null,
+    "currentGeoreferencing": null,
+    "originalImageHash": null
+  },
+  "sourceAccess": {
+    "email": "sanborn@csun.edu",
+    "sourceUrl": "https://www.csun.edu/social-behavioral-sciences/sanborn-collection/about",
+    "priorInquirySent": true,
+    "quotedServiceCurrency": "USD",
+    "postedVolumePullFee": 10,
+    "postedImagingFeePerSheet": 20,
+    "terms": "Archive describes digital copies as non-commercial, research or personal use; cost is a posted base schedule, not a quote for this request.",
+    "actualQuoteObtained": false,
+    "acquisitionPaid": false,
+    "purchaseAuthorized": false,
+    "requestedPurpose": "identify sheet metadata and request rights options; no paid scan authorization",
+    "rightsDecision": "unverified_for_csun_1960_physical_map; LOC_online_1952_separate",
+    "publicDistributionAllowed": false,
+    "originalMapImageEmbeddingAllowed": false,
+    "commercialDerivedGeometryAllowed": false,
+    "firstInquiryDateLocal": "2026-11-09",
+    "inquiryStatus": "archive-sheet-numbers-confirmed-awaiting-original-inspection",
+    "inquiryDeliveryEvidence": "connected Gmail provider returned SENT label, recipient sanborn@csun.edu",
+    "inquiryScope": "No-cost identification of Yakima 1960 sheet(s), update dates, remote access and licensing for public/commercial interactive reconstruction.",
+    "replyReceived": true,
+    "archiveSheetNumbersConfirmed": true,
+    "replyReceivedLocalDate": "2026-11-10",
+    "replySummary": "CSUN confirmed sheets #6/#15 and supplied LOC 1952 comparisons. In Nov 11 reply, staff confirmed six correction rounds, corrections on both sheets, no dates per pasteover, two landmarks visually identical 1952 vs 1960 but changes nearby. Physical 1960 scans not inspected by Evercraft."
+  },
+  "searchTargets": [
+    {
+      "id": "larson",
+      "address": "6 South Second Street, Yakima, WA",
+      "goal": "Locate 1960 atlas sheet showing A.E. Larson Building and west/east frontage"
+    },
+    {
+      "id": "second-yakima",
+      "address": "South Second Street and East Yakima Avenue, Yakima, WA",
+      "goal": "Identify sheet number covering intersection and adjacent building footprints"
+    },
+    {
+      "id": "third-yakima",
+      "address": "South Third Street and East Yakima Avenue, Yakima, WA",
+      "goal": "Find continuation sheet(s) and street-grid transitions"
+    },
+    {
+      "id": "capitol",
+      "address": "South Third Street south of Yakima Avenue, Yakima, WA",
+      "goal": "Identify actual Capitol Theatre footprint; historic numeric address discrepancy unresolved"
+    }
+  ],
+  "nextAction": "Treat neighborhood 1952 geometry as period-unverified due to documented 1952–1960 changes; inspect the two LOC 1952 sheets and obtain item-level 1960 comparison if permitted, separately review rights and geographic controls. No paid scans ordered.",
+  "geometryReady": false,
+  "sourceOriginalVerified": false,
+  "worldsRuntimeAuthorized": false,
+  "sourceControlStatus": "historian-reported six 1952–1960 correction rounds: landmarks appear unchanged, nearby buildings changed; no 1960 pixels independently examined, geometric validation or 1960 image rights",
+  "curatorConfirmation": {
+    "confirmationStatus": "archive_staff_identified_sheets_not_direct_item_review",
+    "receivedLocalDate": "2026-11-10",
+    "originalEditionYearAsDescribed": "The last Yakima bound volume appears to be corrected to 1960; precise correction dates on individual sheets not yet supplied.",
+    "confirmedNumbers": [
+      6,
+      15
+    ],
+    "sheetMatches": [
+      {
+        "sheetNumber": 6,
+        "landmark": "ae-larson",
+        "locDigitalEdition": 1952,
+        "locViewerPage": 11,
+        "locViewerUrl": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=11&r=0.251,0.255,0.496,0.416,0",
+        "original1960ExaminedByUs": false,
+        "georeferenced": false
+      },
+      {
+        "sheetNumber": 15,
+        "landmark": "capitol",
+        "locDigitalEdition": 1952,
+        "locViewerPage": 20,
+        "locViewerUrl": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=20&st=image&r=0.56,0.858,0.345,0.289,0",
+        "original1960ExaminedByUs": false,
+        "georeferenced": false
+      }
+    ],
+    "footprintComparison": "Archive staff report building footprints appear identical on their 1960-corrected volume and LOC digitized 1952 copies.",
+    "comparisonConfidence": "archivist-reported-not-independently-verified",
+    "exactRevisionStampsRead": false,
+    "original1960ImagesObtained": false,
+    "independentSheetComparisonCompleted": false,
+    "rightsDecision1960Original": "not-granted; archive staff's suggestion about LOC online public-domain reuse does not license CSUN physical 1960 sheet",
+    "publicOriginal1960SheetReproductionAllowed": false,
+    "coordinates": null,
+    "note": "Do not silently promote matching building footprints to 1960 facade/tenants or infer validated meter-scale geometry from these viewer URLs.",
+    "additionalReply": {
+      "receivedLocalDate": "2026-11-11",
+      "reportedCorrectionRounds": 6,
+      "bothSheetsHaveCorrections": true,
+      "individualPasteoverDatesRecorded": false,
+      "latestVolumeAppearanceYear": 1960,
+      "landmarkBuildingsAppearIdenticalTo1952": true,
+      "surroundingBuildingsChangedBetween1952And1960": true,
+      "changedSurroundingBuildingsIdentified": false,
+      "changedSurroundingBuildingGeometryExtracted": false,
+      "archivistIdentity": "David Deis, CSUN Sanborn Collection",
+      "status": "archivist_report_direct_email_not_independent_original_inspection",
+      "statementSummary": "Six correction rounds in the CSUN volume, both sheets have corrections, exact pasteover dates were not recorded; landmark buildings appear identical to the 1952 online atlas while nearby buildings did change.",
+      "copyrightClarificationStatus": "archive_staff_could_not_confirm_1960_reuse_rights",
+      "sourceDelivery": "connected Gmail, reply in original CSUN inquiry thread"
+    }
+  }
+}

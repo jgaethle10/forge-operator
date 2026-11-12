@@ -1,0 +1,150 @@
+{
+  "schema": "evercraft.timewalk.archive-drawing-catalog.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "researchGoal": "Historic Yakima 1960 architectural reconstruction inputs, without assuming proposed drawings were built or remained unchanged",
+  "archive": {
+    "name": "Yakima Valley Museum, Sundquist Research Library & Archives",
+    "catalogUrl": "https://dahp.wa.gov/sites/default/files/Drawings_at_YakimaValleyMuseum.pdf",
+    "archiveUrl": "https://yvmuseum.org/news/our-library-archives",
+    "contactName": "John Baule",
+    "contactRole": "Archivist",
+    "email": "john@yvmuseum.org",
+    "catalogSourceId": "dahp-yvm-architectural-drawings-index",
+    "inquirySent": true,
+    "inquirySentLocalDate": "2026-11-09",
+    "followupSent": true,
+    "replyReceived": false,
+    "purchaseAuthorized": false,
+    "paid": false,
+    "requestScope": "No-cost confirmation of items, accessibility, rights, dates and sheet titles; no scans ordered"
+  },
+  "catalogItems": [
+    {
+      "id": "larson-office-july1930",
+      "placeId": "ae-larson",
+      "title": "Office Building for A.E. Larson",
+      "catalogAccession": "0096-085",
+      "originalDesignYear": 1930,
+      "displayDate": "July 15, 1930",
+      "catalogLocation": "Drawer 7, bottom left",
+      "listedSheetGroups": [
+        {
+          "type": "architectural",
+          "range": "1–33"
+        },
+        {
+          "type": "electrical",
+          "range": "E1–E10"
+        },
+        {
+          "type": "structural",
+          "range": "S1–S8"
+        }
+      ],
+      "documentRole": "original-design-candidate",
+      "inspectionStatus": "catalog-only",
+      "archiveItemConfirmed": false,
+      "historicallyBuiltAsDrawn": null,
+      "unchangedBy1960": null,
+      "geometrySourceApproved": false,
+      "rights": {
+        "itemReviewed": false,
+        "commercialDerivativeAllowed": false,
+        "publicReproductionAllowed": false
+      }
+    },
+    {
+      "id": "larson-linen-tracings-july1930",
+      "placeId": "ae-larson",
+      "title": "A.E. Larson Building - tracings (linen)",
+      "catalogAccession": "0096-085",
+      "originalDesignYear": 1930,
+      "displayDate": "July 15, 1930",
+      "catalogLocation": "5-2; no tube; rolled tracings about 3 inches diameter",
+      "listedSheetGroups": [
+        {
+          "type": "architectural",
+          "range": "A1–A33"
+        },
+        {
+          "type": "electrical",
+          "range": "E1–E9"
+        },
+        {
+          "type": "structural",
+          "range": "S1–S8"
+        }
+      ],
+      "documentRole": "original-tracing-candidate",
+      "inspectionStatus": "catalog-only",
+      "archiveItemConfirmed": false,
+      "historicallyBuiltAsDrawn": null,
+      "unchangedBy1960": null,
+      "geometrySourceApproved": false,
+      "rights": {
+        "itemReviewed": false,
+        "commercialDerivativeAllowed": false,
+        "publicReproductionAllowed": false
+      }
+    },
+    {
+      "id": "capitol-alterations-june1930",
+      "placeId": "capitol",
+      "title": "Alterations to the Fox Capitol Theatre",
+      "catalogAccession": "0096-085",
+      "originalDesignYear": 1930,
+      "displayDate": "June 27, 1930",
+      "catalogLocation": "5-1; Tube Y-11",
+      "listedSheetGroups": [
+        {
+          "type": "architectural-alterations",
+          "range": "1–4"
+        }
+      ],
+      "documentRole": "historical-alteration-candidate",
+      "inspectionStatus": "catalog-only",
+      "archiveItemConfirmed": false,
+      "historicallyBuiltAsDrawn": null,
+      "unchangedBy1960": null,
+      "geometrySourceApproved": false,
+      "rights": {
+        "itemReviewed": false,
+        "commercialDerivativeAllowed": false,
+        "publicReproductionAllowed": false
+      }
+    },
+    {
+      "id": "larson-post1960-floorplans",
+      "placeId": "ae-larson",
+      "title": "A.E. Larson Building - Floor Plans, 1962–79",
+      "catalogAccession": "0096-085",
+      "originalDesignYear": null,
+      "displayDate": "1962–79",
+      "catalogLocation": "4-1",
+      "listedSheetGroups": [],
+      "documentRole": "later-change-reference-only",
+      "inspectionStatus": "catalog-only",
+      "archiveItemConfirmed": false,
+      "historicallyBuiltAsDrawn": null,
+      "unchangedBy1960": null,
+      "geometrySourceApproved": false,
+      "rights": {
+        "itemReviewed": false,
+        "commercialDerivativeAllowed": false,
+        "publicReproductionAllowed": false
+      }
+    }
+  ],
+  "outputAuthority": {
+    "canPublishArchivalImages": false,
+    "canUseAsBuilt1960Geometry": false,
+    "canOverwriteWorldsScene": false,
+    "reuseRules": [
+      "Catalog is evidence that an entry exists, not proof the museum still physically holds every original sheet",
+      "1930 designs are not necessarily built, and built design may have changed before 1960",
+      "Public/commercial derivative reuse requires a separate rights decision",
+      "Evercraft Worlds stays sole scene renderer, physics engine and navigation authority"
+    ]
+  },
+  "nextStep": "Await archivist reply, then inspect original sheets, provenance, condition, exact drawings and permissions before supplying interpreted architectural measurements to Worlds"
+}

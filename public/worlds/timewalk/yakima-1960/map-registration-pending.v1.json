@@ -1,0 +1,83 @@
+{
+  "schema": "evercraft.timewalk.map-registration-draft.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "sheetId": "yakima-sanborn-1950-target-block-pending",
+  "mapEditionYear": 1950,
+  "sceneTargetYear": 1960,
+  "jurisdiction": {
+    "city": "Yakima",
+    "region": "WA",
+    "country": "US"
+  },
+  "collectionUrl": "https://www.loc.gov/item/sanborn09381_002/",
+  "sheetUrl": null,
+  "sheetIndexVerified": false,
+  "sheetInspected": false,
+  "projectedCrs": null,
+  "controls": [],
+  "publicationRightsReviewed": true,
+  "baselineRights": {
+    "claim": "LOC online Sanborn collection public domain",
+    "source": "https://www.loc.gov/item/sanborn09381_002/",
+    "attribution": "Library of Congress, Geography and Map Division, Sanborn Maps Collection"
+  },
+  "cautions": [
+    "Collection-level 1920–1950 title does not establish which specific sheet covers the South 2nd/3rd block.",
+    "Exact selected map sheet URL, sheet effective correction date and independently referenced ground control points are missing.",
+    "All 1960 building storefronts, footprint continuities and geographic coordinates remain unsupported.",
+    "Do not insert placeholder pixel or geographic coordinates to make a map look finished.",
+    "A 1960 Yakima atlas holding is catalogued at CSUN, but its exact downtown map sheet, scan, correction dates and rights have not been inspected. The 1950 LOC layer remains a separate older fallback.",
+    "CSUN curator's Nov 10 report of identical 1952/1960 footprints is evidence of a comparison, not an independently verified 1960 digital sheet, 3D model, facade or georeferenced outline."
+  ],
+  "nextChecks": [
+    "Confirm whether individual CSUN Yakima sheets #6/#15 carry 1960 correction stamps; archivist confirmed sheet numbers but original scans/date stamps not yet inspected.",
+    "Inspect public LOC 1952 sheet #6 (viewer page 11) and #15 (viewer page 20), identify actual 1952 footprint polygons without inventing GCPs.",
+    "Check sheet dates, original 1960 annotation/revision stamps and public/commercial permissions before any public display.",
+    "Open the LOC 1950 collection sheet index and identify the exact downtown block sheet.",
+    "Record its image index, sheet number, visible revision dates and published sheet URL.",
+    "Gather at least four noncollinear, independently surveyed tie points and identify an appropriate projected CRS.",
+    "Validate affine residuals and map distortions; demand human visual QC before exporting geometry.",
+    "Match historic year and permissions separately before any timewalk accurate-geometry claim."
+  ],
+  "preferredTargetYearAcquisition": {
+    "archiveCandidateId": "csun-yakima-sanborn-1960",
+    "acquisitionRecord": "csun-1960-acquisition.v1.json",
+    "collectionEditionYearListed": 1960,
+    "availableFromCatalog": true,
+    "exactSheetConfirmed": false,
+    "originalSourceInspected": false,
+    "publicationRightsConfirmed": false,
+    "sourceLicensing": "CSUN offers research/personal copies; public/commerce rights to be requested separately",
+    "priority": "Request sheet-level 1960 correction dates and independently compare sheets 6 and 15 before any 1960 geometry claim.",
+    "archiveSheetNumbersIdentified": true,
+    "identifiedSheetNumbers": [
+      6,
+      15
+    ],
+    "archiveObservationStatus": "CSUN archivist reports 1960-corrected volume has same building footprints as LOC 1952 maps; exact individual correction dates and original 1960 scans still unreviewed."
+  },
+  "resolvedPre1960Baseline": {
+    "mapEditionYear": 1952,
+    "sourceId": "loc-yakima-1952-sheets-six-fifteen",
+    "onlineCollectionRights": "public_domain_per_holding_institution",
+    "sheetLocators": [
+      {
+        "sheet": 6,
+        "digitalViewerPage": 11,
+        "landmark": "ae-larson",
+        "url": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=11&r=0.251,0.255,0.496,0.416,0"
+      },
+      {
+        "sheet": 15,
+        "digitalViewerPage": 20,
+        "landmark": "capitol",
+        "url": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=20&st=image&r=0.56,0.858,0.345,0.289,0"
+      }
+    ],
+    "imagePixelsInspectedByEvercraft": false,
+    "georeferenced": false,
+    "measuredFootprintsApproved": false,
+    "locDigitalSheetsReuseStatus": "LOC-hosted digital images public domain according to collection policy; do not extend this to physical CSUN 1960 scans",
+    "note": "This identifies 1952 digital baselines, not the 1950 fallback sheet nor surveyed 1960 geometry."
+  }
+}
