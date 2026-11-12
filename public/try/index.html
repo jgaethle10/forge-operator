@@ -52,6 +52,15 @@ h2{font-size:clamp(1.5rem,2.5vw,1.95rem);line-height:1.2;letter-spacing:-.035em;
 .next{margin:0 0 58px}
 .next p{color:var(--muted)}
 .next a{font-weight:750}
+.paid-paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:24px 0}
+.paid-path{min-width:0;background:linear-gradient(155deg,var(--surface-high),var(--surface));border:1px solid var(--line);border-radius:15px;padding:22px;display:flex;flex-direction:column}
+.paid-path-price{color:var(--ice);font-weight:850;font-size:.91rem}
+.paid-path h3{font-size:1.24rem;line-height:1.25;margin:9px 0}
+.paid-path p{font-size:.94rem;color:var(--muted);margin:0 0 20px;flex:1}
+.paid-path a{display:block;text-align:center;text-decoration:none;color:#04111a;background:var(--ice);border-radius:9px;padding:11px 13px;min-height:48px;font-weight:850}
+.paid-path a:hover{background:#b5ecff}
+.paid-disclosure{font-size:.87rem;max-width:890px}
+@media(max-width:800px){.paid-paths{grid-template-columns:1fr}}
 .share{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:0 0 54px;padding:27px 28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(110deg,rgba(17,50,69,.85),rgba(10,24,35,.88))}
 .share h2{margin:8px 0;font-size:clamp(1.35rem,2.5vw,1.7rem)}
 .share p{margin:0;color:var(--muted)}
@@ -103,7 +112,14 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.86rem;padd
 <a class="action" href="../mesh/checkout-ready/asset-diagnosis/?utm_source=evercraft_try&amp;utm_medium=free_hub&amp;utm_campaign=asset_diagnosis&amp;utm_content=scope_request">Describe an asset for a $149 diagnosis</a>
 <small>Scope and delivery availability must be confirmed before payment. This is a service inquiry, not an automatic purchase.</small>
 </section>
-<section class="next"><div class="eyebrow">Like what you see?</div><h2>Explore the full Evercraft services.</h2><p>When a task needs deeper analysis or human review, discover individual services with transparent, existing prices. The checkout system is infrastructure, not the product.</p><p><a href="../mesh/checkout-ready/">See available Evercraft Services</a> · <a href="../partners/">Explore independent partner introductions</a></p></section>
+<section class="next" id="services" aria-label="Scoped professional services"><div class="eyebrow">When a free tool is not enough</div><h2>Bring us one problem worth solving.</h2><p>Choose a defined, human-reviewed Evercraft service. Each has its own scope and exact published price. Review the details, then confirm delivery and availability with us before authorizing payment.</p>
+<div class="paid-paths" aria-label="Three independent paid service options">
+<article class="paid-path"><div class="paid-path-price">$149 · One-time</div><h3>The Second Look</h3><p>Asset Diagnosis: get a focused assessment of one digital or operational asset before committing to the wrong fix.</p><a href="../mesh/checkout-ready/asset-diagnosis/?utm_source=evercraft_try&amp;utm_medium=free_hub&amp;utm_campaign=services_handoff&amp;utm_content=asset_diagnosis">Review Asset Diagnosis →</a></article>
+<article class="paid-path"><div class="paid-path-price">$250 · One-time</div><h3>The Chamber</h3><p>AI Boardroom Standard Review: pressure-test a consequential business decision with a bounded, human-reviewed assessment.</p><a href="../mesh/checkout-ready/ai-boardroom-standard/?utm_source=evercraft_try&amp;utm_medium=free_hub&amp;utm_campaign=services_handoff&amp;utm_content=ai_boardroom_standard">Review Boardroom service →</a></article>
+<article class="paid-path"><div class="paid-path-price">$100 · One-time</div><h3>The Weekly Signal</h3><p>Weekly Social Media Management: explore a defined week of support for a small business, subject to channel access and scheduling.</p><a href="../mesh/checkout-ready/social-media-weekly/?utm_source=evercraft_try&amp;utm_medium=free_hub&amp;utm_campaign=services_handoff&amp;utm_content=weekly_social">Review Weekly Social →</a></article>
+</div>
+<p class="paid-disclosure">These are scoped professional engagements, not instant digital downloads or guaranteed available slots. The linked pages contain their own scope-confirmation and exact-product checkout options. Opening a page is not an order, and referral parameters do not establish actual visitors or revenue.</p>
+<p><a href="../mesh/checkout-ready/">See all seven independently priced Evercraft Services</a> · <a href="../partners/">Explore independent partner introductions</a></p></section>
 </main><footer><div class="wrap">Evercraft LLC · <a href="../mesh/">Explore Evercraft</a> · <a href="mailto:jessegaethle10@gmail.com">Contact</a><p>We do not claim tracked traffic or sales until independently observed. Referral parameters label a link source only and are not visitor analytics.</p></div></footer>
 <script>
 (() => {
