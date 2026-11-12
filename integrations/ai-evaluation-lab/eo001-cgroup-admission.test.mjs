@@ -101,6 +101,8 @@ test('rendered command includes only fixed synthetic child and resource limits',
   assert.ok(p.arguments.includes('--collect'));
   assert.ok(p.arguments.includes('--unit='+UNIT));
   assert.ok(p.arguments.includes('--property=MemoryMax=268435456'));
+  assert.ok(p.arguments.includes('--property=MemorySwapMax=0'));
+  assert.equal(p.arguments.filter(x=>x.startsWith('--property=MemorySwapMax=')).length,1);
   assert.ok(p.arguments.includes('--property=TasksMax=12'));
   assert.ok(p.arguments.includes('--property=KillMode=control-group'));
   assert.ok(p.arguments.includes('--property=CPUQuota=75%'));
