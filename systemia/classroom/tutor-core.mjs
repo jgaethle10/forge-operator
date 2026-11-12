@@ -108,6 +108,8 @@ export function createClassroomTutor({infer,now=()=>Date.now(),newId=()=>randomU
    let result;
    try{result=await infer({request_id:'classroom-'+newId(),role:'classroom-private-teaching-pilot',prompt})}
    catch{fail('local_inference_unavailable')}
+   // Adult revocation wins over in-flight inference: do not reveal or retain its reply.
+   if(sessions.get(session_id)!==s || now()>s.expiresAt)fail('session_revoked');
    if(!result || result.status!=='completed' || !['ollama','llama.cpp'].includes(result.provider) || typeof result.text!=='string' || !/^sha256:[a-f0-9]{64}$/.test(String(result.provider_receipt||'')))fail('local_inference_unverified');
    const answer=clean(result.text,bounds.maxOutput);
    if(!answer)fail('local_output_unusable');
