@@ -1,0 +1,62 @@
+name: Art of Becoming smoke
+
+on:
+  pull_request:
+    paths:
+      - 'public/art-of-becoming/**'
+      - 'scripts/probe-art-of-becoming-browser.mjs'
+      - 'tests/art-of-becoming.test.mjs'
+      - 'docs/art-of-becoming/**'
+      - '.github/workflows/art-of-becoming-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: art-of-becoming-smoke-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  mvp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax validation
+        run: |
+          node --check public/art-of-becoming/engine.mjs
+          node --check public/art-of-becoming/world-engine.mjs
+          node --check public/art-of-becoming/walk-engine.mjs
+          node --check public/art-of-becoming/campus-walk.mjs
+      - name: Streak safety, privacy, and milestone tests
+        run: node --test tests/art-of-becoming.test.mjs tests/art-of-becoming-worlds.test.mjs tests/art-of-becoming-walk.test.mjs
+
+  browser:
+    needs: mvp
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Run phone-sized and desktop browser journeys
+        run: |
+          node --check scripts/probe-art-of-becoming-browser.mjs
+          node scripts/probe-art-of-becoming-browser.mjs
+      - name: Preserve screenshots and QA receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: art-of-becoming-browser-qa
+          path: artifacts/art-of-becoming-browser-qa/
+          if-no-files-found: warn
+          retention-days: 21

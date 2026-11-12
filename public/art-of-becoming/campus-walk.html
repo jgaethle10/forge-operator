@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#15272a"><meta name="robots" content="noindex,nofollow">
+<title>Walk Your World | Evercraft Becoming</title>
+<style>
+:root{color-scheme:dark;--paper:#f3ead9;--muted:#ccded4;--line:#b4cfba55;--panel:#142923cc;--gold:#efc38a}
+*{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0;background:#12262b;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--paper);touch-action:none}
+button,select{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+#view{position:fixed;inset:0;display:block;width:100%;height:100dvh;background:linear-gradient(#526b7f,#9fb1a0 60%,#547b6c);touch-action:none}
+.shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#061417a8 0%,transparent 33%,transparent 68%,#071713a0);z-index:1}
+.header{position:fixed;z-index:3;top:0;left:0;right:0;padding:25px clamp(17px,3vw,40px);display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.brand{letter-spacing:.14em;font-size:11px;font-weight:850;color:#f4d6a8}.brand span{display:block;font-family:Georgia,serif;font-size:28px;font-weight:400;letter-spacing:-.03em;color:white;margin-top:4px;line-height:1.1}
+.header a{text-decoration:none;border:1px solid var(--line);padding:10px 14px;border-radius:10px;color:white;background:var(--panel);font-size:12px;font-weight:800}
+.topmeta{margin-top:7px;color:#dce9e4;font-size:12px;text-shadow:0 2px 12px #0006}
+#welcome{position:fixed;z-index:4;top:50%;left:clamp(22px,8vw,110px);transform:translateY(-48%);background:#092121b8;max-width:min(490px,calc(100vw - 44px));border:1px solid #9db7ab77;backdrop-filter:blur(15px);border-radius:20px;padding:32px}
+.kicker{text-transform:uppercase;letter-spacing:.19em;font-size:11px;color:var(--gold);font-weight:850}
+#welcome h1{font:400 clamp(38px,5.7vw,66px)/1.04 Georgia,serif;letter-spacing:-.046em;margin:10px 0 14px}
+#welcome p{max-width:410px;color:#d2e5db;font-size:14px;line-height:1.7}
+#welcome button{margin-top:12px;padding:15px 22px;background:#e9c99c;border:0;border-radius:9px;color:#142821;font-size:13px;font-weight:850}
+#welcome .secondary{background:#26483d;color:white;margin-left:8px;border:1px solid #6a9080}
+#hud{position:fixed;inset:0;z-index:2;pointer-events:none}
+#hud.hidden,#welcome.hidden{display:none!important}
+.cross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:21px;font-weight:200;color:#fff9;text-shadow:0 1px 5px #000b}
+.bottom{position:absolute;bottom:22px;left:clamp(18px,3vw,40px);right:clamp(18px,3vw,40px);display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.readout{background:#132d29ce;border:1px solid var(--line);border-radius:13px;padding:14px 18px;max-width:410px;backdrop-filter:blur(10px)}
+.readout strong{font:400 23px Georgia,serif;display:block;line-height:1.1}
+.readout span{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+#status{font-size:12px;color:var(--gold);margin-top:6px}
+.controls{display:flex;gap:12px;align-items:center;pointer-events:auto}
+.controls button{font-size:12px;font-weight:850;border-radius:10px;padding:12px 14px;border:1px solid #b0d0bc88;background:#143a30cb;min-height:48px}
+#touch-controls{position:absolute;right:20px;bottom:115px;display:none;gap:5px;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px);pointer-events:auto}
+#touch-controls button{border-radius:12px;border:1px solid #e1eee5a3;background:#0c3129b9;font-size:19px;color:white}
+#touch-controls [data-move="forward"]{grid-column:2;grid-row:1}
+#touch-controls [data-move="strafe-left"]{grid-column:1;grid-row:2}
+#touch-controls [data-move="back"]{grid-column:2;grid-row:2}
+#touch-controls [data-move="strafe-right"]{grid-column:3;grid-row:2}
+#touch-controls [data-move="run"]{grid-column:2;grid-row:3;font-size:10px;font-weight:850}
+#fallback{display:none;position:fixed;z-index:9;inset:20px;background:#132d29;border:1px solid #56786c;padding:28px;border-radius:14px;max-width:520px;max-height:250px}
+#fallback a{color:#f6d29b}
+@media(hover:none),(pointer:coarse){#touch-controls{display:grid}#welcome{left:20px;top:45%;padding:25px}.bottom{bottom:12px;left:14px;right:14px}.readout{max-width:calc(100% - 100px);padding:10px}.readout strong{font-size:19px}.controls{align-self:flex-end}.controls button{padding:8px 10px;font-size:11px;min-height:43px}.cross{opacity:.5}}
+@media(max-width:680px){#touch-controls{display:grid;bottom:195px}}@media(max-width:600px){.header{padding:15px 18px}.brand span{font-size:22px}.topmeta{font-size:10px}.readout{max-width:230px}#touch-controls{right:14px;bottom:195px;grid-template-columns:repeat(3,50px);grid-template-rows:repeat(3,50px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="view" aria-label="Original WebGL2 three-dimensional walkable Evercraft Becoming campus"></canvas>
+<div class="shade"></div>
+<header class="header"><div><div class="brand">EVERCRAFT / BECOMING<span id="world-name">Franchise World</span></div><div class="topmeta" id="meta">Your permanent facilities, now in three dimensions.</div></div><a href="./worlds.html">← Campus planner</a></header>
+<div id="fallback" role="alert">3D graphics are not available on this device. Your saved facilities are safe. <a href="./worlds.html">Return to the 2.5D campus planner.</a></div>
+<div id="welcome"><div class="kicker">First-person world preview · Local only</div><h1>Step inside<br>what you've built.</h1><p>Walk between facilities from your actual Becoming World. The campus is generated entirely in your browser from your locally saved structures. It doesn't send check-ins anywhere.</p><p>Desktop: WASD to move, drag to look, hold Shift to move faster. Phone: move with the direction pad and drag the view to look around.</p><button id="enter">Enter my campus</button><button id="demo" class="secondary">Explore a sample</button></div>
+<div id="hud" class="hidden">
+  <div class="cross" aria-hidden="true">＋</div>
+  <div id="touch-controls" role="group" aria-label="Walking controls">
+    <button data-move="forward" aria-label="Walk forward">↑</button>
+    <button data-move="strafe-left" aria-label="Walk left">←</button>
+    <button data-move="back" aria-label="Walk backward">↓</button>
+    <button data-move="strafe-right" aria-label="Walk right">→</button>
+    <button data-move="run" aria-label="Move faster">RUN</button>
+  </div>
+  <div class="bottom"><div class="readout"><strong id="nearby">Founders Ground</strong><span id="description">Your world starts here.</span><div id="status" role="status" aria-live="polite"></div></div><div class="controls"><button id="reset">Return to founders</button><button id="pause">Pause</button></div></div>
+</div>
+<script type="module" src="./campus-walk.mjs"></script>
+</body></html>
