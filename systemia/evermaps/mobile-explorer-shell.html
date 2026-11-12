@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>EverMaps | Grant County Research Explorer</title>
+<meta name="description" content="Evercraft EverMaps geological evidence map for Grant County, Washington. Read-only research, not mining permission.">
+<style>
+:root{color-scheme:dark;--bg:#070f18;--surface:#0e1c29;--soft:#142533;--line:#29394a;--white:#f3f8fb;--ink:#a8bbc8;--mint:#75e0c9;--sky:#7bd0f8;--gold:#e4bd62}
+*{box-sizing:border-box}
+html{background:var(--bg)}body{margin:0;color:var(--white);font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:linear-gradient(180deg,#0b1826 0,#07111b 55%,#08111a 100%);min-height:100vh}
+button,input,summary{font:inherit}button{cursor:pointer}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 18px;max-width:1260px;margin:auto}
+.logo{display:flex;align-items:center;gap:10px;font-weight:850;font-size:18px;letter-spacing:-.06em}.mark{display:grid;place-items:center;width:33px;height:33px;background:var(--mint);color:#08211c;border-radius:10px;font-size:20px;transform:rotate(-6deg)}.logo span:nth-child(2){letter-spacing:-.05em}.logo i{font-style:normal;color:var(--mint)}
+.edition{font-size:11px;font-weight:750;letter-spacing:.09em;color:#9fb4c4;border:1px solid #2d4556;background:#0b1c29;padding:7px 11px;border-radius:30px}
+.layout{max-width:1260px;margin:auto;padding:4px 24px 60px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(285px,.75fr);gap:30px}
+.heading{padding:18px 0 24px}.eyebrow{color:#80d9cb;font-size:11px;font-weight:800;letter-spacing:.17em}.heading h1{font-size:clamp(32px,5vw,58px);letter-spacing:-.065em;line-height:1.07;margin:9px 0}.heading h1 em{font-style:normal;color:var(--sky)}.subtitle{color:var(--ink);margin:0;font-size:14px}
+.map-wrap{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#233f4e 0%,#142c3c 45%,#0e2030 100%);border:1px solid #345063;border-radius:24px;height:min(75vh,760px);min-height:420px;box-shadow:0 24px 65px #0007}
+.map-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#08172361 0,transparent 18%,transparent 75%,#0817236e 100%)}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:1}
+#mobile-static-preview{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;z-index:3;padding:17px}
+#mobile-static-preview[hidden]{display:none!important}
+#mobile-static-preview svg{height:100%;width:100%;max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0px 3px 18px #04131c88)}
+#mobile-static-preview svg rect,#mobile-static-preview svg text{display:none}
+.static-only-note{position:absolute;z-index:5;bottom:16px;right:16px;left:16px;background:#06131edc;border:1px solid #375368;border-radius:10px;padding:9px 10px;font-size:11px;color:#c8dae5;text-align:center}
+.evermaps-live .static-only-note{display:none}
+#layers-detail{display:none}.evermaps-live #layers-detail{display:block}
+.map-marker{position:absolute;z-index:5;top:18px;left:18px;display:flex;align-items:center;gap:8px;background:#091924db;border:1px solid #2f4c5e;border-radius:100px;padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.08em;backdrop-filter:blur(8px)}.map-marker b{height:7px;width:7px;display:inline-block;border-radius:50%;background:var(--mint);box-shadow:0 0 12px #75e0c9}
+.map-corner{position:absolute;z-index:5;top:21px;right:20px;color:#b5ccdc;font-size:11px;font-weight:650}
+.map-controls{display:none;position:absolute;z-index:6;right:15px;top:56px;flex-direction:column;gap:6px}.map-controls button{background:#0d2332f0;color:#e9f6fb;border:1px solid #416275;border-radius:10px;min-width:42px;min-height:42px;font-size:20px;font-weight:800}.map-controls #fit{font-size:12px}
+#empty{display:none}.inspector{position:absolute;z-index:8;bottom:14px;left:14px;right:14px;max-width:460px;padding:16px;background:#071622f2;border:1px solid #4b7385;border-radius:16px;backdrop-filter:blur(10px);font-size:12px}.inspector b{font-size:14px;color:var(--mint)}.muted{color:#b3c6d3;line-height:1.5}
+.info-panel{padding-top:35px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:10px 0 23px}.stat{background:linear-gradient(150deg,#142938,#101f2d);border:1px solid #2a4051;border-radius:14px;padding:14px 10px 13px;min-width:0}.stat strong{display:block;font-size:clamp(20px,2vw,30px);line-height:1.1;letter-spacing:-.05em}.stat small{display:block;color:#a3bbc9;font-size:10px;font-weight:650;line-height:1.3;margin-top:6px}
+.section-label{font-size:11px;letter-spacing:.14em;color:var(--mint);font-weight:800}.section-heading{font-size:20px;line-height:1.25;letter-spacing:-.035em;margin:7px 0 14px}
+.legend{margin:0 0 22px;padding:0 1px}.legend-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#cddde7;white-space:nowrap}.dot{width:11px;height:11px;display:inline-block;border-radius:4px;flex:none}.legend-hint{font-size:11px;color:#8faabc;margin:14px 0 0}
+.breakdown{margin:21px 0 0;border:1px solid #304656;border-radius:15px;background:#111f2a;overflow:hidden}.breakdown summary{cursor:pointer;padding:15px 17px;font-size:13px;color:#d5e5ef;font-weight:720;list-style:none;display:flex;justify-content:space-between;align-items:center}.breakdown summary::-webkit-details-marker{display:none}.breakdown summary::after{content:'+';font-size:21px;color:#8fd5e9}.breakdown[open] summary::after{content:'−'}.breakdown-content{padding:0 17px 18px;color:#aabfcb;font-size:12px;line-height:1.65}.breakdown p{margin:0 0 7px}.breakdown small{color:#9fb5c4}
+#toggles .layer{display:flex;gap:9px;align-items:center;border-bottom:1px solid #203440;padding:9px 0;font-size:12px;color:#d0e2eb}#toggles input{accent-color:var(--mint)}
+#files{display:none}.file-control{display:none}.status{display:none}.permit-legend[hidden]{display:none}
+.bottom-note{color:#849dac;margin:20px 0;font-size:11px;line-height:1.6}
+@media(max-width:820px){
+ .topbar{padding:14px 15px 10px}.edition{font-size:9px;padding:6px 9px}.logo{font-size:17px}
+ .layout{display:flex;flex-direction:column;padding:0 11px 35px;gap:0}
+ .heading{padding:13px 9px 18px}.heading h1{font-size:35px;margin:7px 0}.subtitle{font-size:12px}
+ .map-wrap{height:min(65dvh,610px);min-height:420px;border-radius:20px}
+ .map-marker{top:12px;left:12px}.map-corner{top:16px;right:13px;font-size:9px}
+ #mobile-static-preview{padding:4px}.static-only-note{bottom:11px;left:12px;right:12px;font-size:10px;padding:8px}
+ .info-panel{padding:9px 4px}.stats{margin:7px 0 17px;gap:8px}.stat{padding:12px 9px;border-radius:13px}.stat strong{font-size:24px}.stat small{font-size:10px}
+ .section-heading{font-size:17px;margin:5px 0 12px}.legend-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.legend-item{font-size:12px}.bottom-note{margin-top:15px}
+}
+@media(max-width:360px){.legend-grid{gap:9px 5px}.legend-item{font-size:11px}.heading h1{font-size:31px}}
+</style></head>
+<body>
+<header class="topbar"><div class="logo"><span class="mark">E</span><span>EVER<i>MAPS</i></span></div><span class="edition">RESEARCH EDITION</span></header>
+<main class="layout">
+<section class="map-area"><div class="heading"><div class="eyebrow">EVERCRAFT / GEOSPATIAL INTELLIGENCE</div><h1>Explore the <em>ground.</em></h1><p class="subtitle">Grant County, Washington · Published geological evidence</p></div>
+<section class="map-wrap" id="wrap">
+<canvas id="map" aria-label="Interactive map of official Grant County geological layers"></canvas>
+<div id="mobile-static-preview">__SVG__</div>
+<div class="map-marker"><b></b> GRANT COUNTY</div><div class="map-corner">WASHINGTON · USA</div>
+<div class="map-controls controls"><button id="zoomIn" aria-label="Zoom in">+</button><button id="zoomOut" aria-label="Zoom out">−</button><button id="fit">Fit</button></div>
+<div id="empty" hidden>Source-verified geography is loading.</div>
+<div id="inspector" class="inspector" hidden><b id="itemTitle"></b><div id="itemDetail" class="muted"></div></div>
+<div class="static-only-note">Static preview · Full interaction requires a browser-hosted Evercraft page.</div>
+</section></section>
+<aside class="info-panel">
+<div class="stats"><div class="stat"><strong>1,161</strong><small>Geological areas</small></div><div class="stat"><strong>232</strong><small>Material test sites</small></div><div class="stat"><strong>304</strong><small>Historic mine sites</small></div></div>
+<div class="legend"><div class="section-label">READ THE TERRAIN</div><h2 class="section-heading">Geological classifications</h2>
+<div class="legend-grid"><div class="legend-item"><i class="dot" style="background:#42bda1"></i>Demonstrated</div><div class="legend-item"><i class="dot" style="background:#baab60"></i>Inferred</div><div class="legend-item"><i class="dot" style="background:#d98661"></i>Speculative</div><div class="legend-item"><i class="dot" style="background:#47677b"></i>Not a resource</div><div class="legend-item"><i class="dot" style="background:#64dce8;border-radius:50%"></i>Material tests</div><div class="legend-item"><i class="dot" style="background:#f1a3cb;border-radius:50%"></i>Historic sites</div><div class="legend-item permit-legend" hidden><i class="dot" style="background:#ffa95b;border-radius:50%"></i>Permit points</div></div>
+<p class="legend-hint">Classification names are from the Washington Geological Survey, not mineability ratings.</p></div>
+<details class="breakdown" id="layers-detail"><summary>Map layers &amp; visibility</summary><div class="breakdown-content"><p>In the interactive browser version, switch geological layers on and off.</p><div id="toggles"></div><label class="file-control">Add GeoJSON<input id="files" type="file" multiple accept=".geojson,.json,application/geo+json"></label><div id="status" class="status" role="status">Source-verified map</div></div></details>
+<details class="breakdown"><summary>Source &amp; research boundaries</summary><div class="breakdown-content"><p>Data: Washington Geological Survey aggregate resource inventory. Regional maps are for geological study, not parcel-level decisions.</p><p>Mineral rights, access, current zoning, environmental clearance, permit status and extraction economics require separate verification.</p><small>The browser-hosted map is a distinct deployment step. This local preview does not assert a public URL is live.</small></div></details>
+<p class="bottom-note">EVERCRAFT · EVERMAPS · GRANT COUNTY RESEARCH PILOT<br>Original WGS source data verified in the research bundle. Not an operating mine inventory or investment recommendation.</p>
+</aside></main>
+<script>__SCRIPT__</script></body></html>

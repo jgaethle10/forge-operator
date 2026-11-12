@@ -4,6 +4,7 @@
  */
 import {auditGeojsonCollection} from './spatial-integrity.mjs';
 import {addNoScriptPreview} from './static-map-fallback.mjs';
+import {renderEvermapsMobileExplorer} from './mobile-explorer-shell.mjs';
 const LAYERS=['resources','tests','mineHistory','studies'];
 const MARKER='resetToggles();redraw();\n</script></body></html>';
 export function buildPreloadedWgsViewer({template,collections,receipt}={}){
@@ -31,5 +32,5 @@ export function buildPreloadedWgsViewer({template,collections,receipt}={}){
  const enhanced=addNoScriptPreview(template,data);
  // Replace inside the generated bootstrap script, not an earlier local-file change handler.
  const bootstrap=script.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';\ndocument.body.classList.add('evermaps-live');\nconst permitLegend=document.querySelector('.permit-legend');if(permitLegend)permitLegend.hidden=!data.permits;");
- return enhanced.replace(MARKER,bootstrap);
+ return renderEvermapsMobileExplorer(enhanced.replace(MARKER,bootstrap));
 }
