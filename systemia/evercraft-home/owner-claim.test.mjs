@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { startEvercraftHomeServer } from "./server.mjs";
+import { EvercraftPassport } from "../passport/passport.mjs";
 
 test("one-time owner claim bootstraps Evercraft Identity and Passport without an external identity provider", async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "evercraft-home-claim-"));
@@ -52,6 +53,34 @@ test("one-time owner claim bootstraps Evercraft Identity and Passport without an
     assert.equal(body.state, "claimed");
     assert.equal(body.claim_reusable, false);
     assert.equal(body.external_identity_provider_used, false);
+    assert.equal(body.owner_clip_publishing_scope_created,true);
+    const ownerPassport = new EvercraftPassport({stateDir:passportStateDir});
+    const clipAuthority = ownerPassport.authorize({
+      subject_ref:"user:claim-proof",
+      product:"evercraft-home",scope:"home.clip.publish",
+      resource_ref:"journal-story:approved-example"
+    });
+    assert.equal(clipAuthority.decision,"allow");
+    const grants=fs.readFileSync(path.join(passportStateDir,"grants.jsonl"),"utf8")
+      .trim().split("\n").map(line=>JSON.parse(line));
+    const publishingGrant=grants.find(g=>g.grant_id===clipAuthority.grant_id);
+    assert.deepEqual(publishingGrant.scopes,["home.clip.publish"]);
+    assert.equal(publishingGrant.max_delegation_depth,0);
+    assert.equal(publishingGrant.subject_ref,"user:claim-proof");
+    assert.throws(()=>ownerPassport.delegateGrant({
+      idempotency_key:"illegal-delegated-clip-publish",
+      parent_grant_id:publishingGrant.grant_id,
+      delegator_ref:"user:claim-proof",
+      subject_ref:"agent:any",
+      scopes:["home.clip.publish"],
+      starts_at:publishingGrant.starts_at,
+      ends_at:publishingGrant.ends_at,
+    }),/delegation_depth_exceeded/);
+    assert.equal(ownerPassport.authorize({
+      subject_ref:"agent:any",
+      product:"evercraft-home",scope:"home.clip.publish",
+      resource_ref:"journal-story:approved-example"
+    }).decision,"deny");
 
     response = await fetch(runtime.url + "/api/owner-claim", {
       method: "POST",
