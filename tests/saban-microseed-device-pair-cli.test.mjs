@@ -65,6 +65,10 @@ test('visible pairing ticket can drive one-command device enrollment package end
       now:new Date('2026-10-01T09:02:00.000Z'),
     });
 
+    const persistedTrust=registry.get(consumed.device_id);
+    const authorization=persistedTrust.history.find(x=>x.action==='authorize');
+    assert.equal(authorization.authorized_at,'2026-10-01T09:02:00.000Z');
+    assert.ok(Date.parse(persistedTrust.authorization_expires_at)>Date.parse(authorization.authorized_at));
     assert.equal(consumed.device_id,'spare-laptop-01');
     assert.equal(consumed.enrollment_signature_verified,true);
     assert.equal(consumed.conformance_required,true);
