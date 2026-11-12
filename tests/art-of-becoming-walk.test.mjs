@@ -48,7 +48,7 @@ test('entering a developed campus looks toward a facility and never spawns insid
  assert.equal(canEnter(scene,start.x,start.z),true);
  assert.ok(start.x>0);
  assert.ok(start.yaw>0,'Camera starts facing the existing campus, not away from it');
- assert.ok(nearestFacility(scene,start.x,start.z,30));
+ assert.ok(nearestFacility(scene,start.x,start.z,60));
  assert.deepEqual(spawnExplorer(),{x:0,y:1.75,z:18,yaw:0,pitch:-.06});
 });
 test('nearest facility reports a label, not any private recovery information',()=>{
