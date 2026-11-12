@@ -90,6 +90,35 @@ remain **unsigned/unattested**. No synthetic backfill or private-key
 material is committed. Unit tests generate ephemeral Ed25519 keys in
 memory using synthetic receipts only.
 
+## Physical read-only source adapter: Execution Gate
+
+Inspected existing source: `systemia/execution-gate/gate.mjs`.
+
+- `EvercraftExecutionGate` uses the **existing** state file
+  `execution-lease-events.jsonl` under its configured state directory.
+- The internal `#append` stamps receipts and appends them to this JSONL.
+  `completeExecution` emits a `completed` lease event with an
+  `outcome_evidence_ref` and `outcome_state`.
+- The read-only `timewalk/execution-ledger-reader.mjs` can reconstruct
+  the **serialized receipt object** for a matching digest, without writing
+  to the source file or calling a remote service.
+- The reader checks the whole bounded input for tampering and torn writes
+  before serving a lookup. It snapshots at most 16 MiB / 20,000 events and
+  requires a private, nonsymlinked regular file.
+- Its source data is provided only after Context Fabric's current-time,
+  per-resource Passport authorization; results from the reconciler are
+  aggregate counts, never the private raw source records.
+- A consistent hash is not an independently authenticated receipt origin.
+  No production source was read in this research PR.
+
+**Intake/mission limits:** The inspected Intake Fabric builds a Systemia
+admission packet by combining a candidate and an admission decision. This
+packet is not directly persisted as the same unified source receipt in
+`admission-decisions.jsonl`. The Control Plane constructs a mission admission
+receipt in memory. Neither has a verified read-only source receipt adapter
+in this PR. We must not claim corresponding source validation until
+reconstruction, authorization and origin-equivalence tests exist.
+
 ## Unresolved gaps worth documenting, not guessing away
 
 | Gap | Present state | Consequence / next evidence gate |
