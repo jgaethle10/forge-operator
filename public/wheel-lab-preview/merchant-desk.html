@@ -27,6 +27,10 @@ main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{
 <div class="two"><div><label class="label" for="quantity">Quantity</label><select id="quantity"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option></select></div>
 <div><label class="label" for="vehicle">Vehicle note</label><input id="vehicle" maxlength="120" placeholder="Year / make / model" autocomplete="off"></div></div>
 <div class="line"></div><h2>2. Customer's concept</h2>
+<label class="label" for="codeInput">Paste a short Wheel Lab code</label>
+<div class="two"><input id="codeInput" maxlength="20" placeholder="WL1-02000-2" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="codeHint"><button id="loadCode" type="button">Load concept</button></div>
+<p id="codeHint" class="hint">Simpler than a file: copy the code from the shopper screen and paste it here. Appearance only, no name, VIN, or fitment guarantee.</p>
+<p class="hint">Or import the saved JSON file instead.</p>
 <label class="label" for="conceptFile">Import a Wheel Lab concept JSON</label>
 <input id="conceptFile" type="file" accept=".json,application/json">
 <p class="hint">From the shopper preview's "Export shop quote packet" button. Local to this browser, never transmitted. Maximum 20 KB.</p>
@@ -116,6 +120,22 @@ function parseConcept(text){
     findmypart_sourcing_interest_requested:raw.findmypart_sourcing_interest_requested===true,
     fitment_verified:false, merchant_sku_matched:false});
 }
+function parseConceptCode(input){
+  const match=/^WL1-([0-3])([0-4])([0-2])([0-4])([01])-([0-9])$/.exec(String(input||'').trim().toUpperCase());
+  if(!match)throw Error('Concept code format is invalid');
+  const digits=match.slice(1).map(Number);
+  const [style,size,finish,paint,interest,check]=digits;
+  if((style*7+size*3+finish*5+paint*9+interest*11+6)%10!==check)throw Error('Concept code check digit does not match');
+  return Object.freeze({
+    source:'wheel-lab-rc01-code',vehicle:'Illustrative coupe only',
+    wheel_design:['Orbit','Turbine','Mesh','Heritage'][style],
+    diameter_in:[17,18,19,20,21][size],
+    wheel_finish:['Gloss black','Brushed silver','Warm bronze'][finish],
+    paint:['Torch red','Pearl white','Electric blue','Machine silver','Midnight'][paint],
+    findmypart_sourcing_interest_requested:interest===1,
+    fitment_verified:false,merchant_sku_matched:false
+  });
+}
 function money(cents){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100)}
 function render(){
   const chosen=inventory[Number($('item').value)]||inventory[0];
@@ -186,14 +206,24 @@ $('inventoryFile').addEventListener('change',async(e)=>{
   }catch(error){$('message').textContent='Import rejected: '+error.message}
   e.target.value='';
 });
+function setConcept(parsed){
+  importedConcept=parsed;
+  $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.'+(parsed.findmypart_sourcing_interest_requested?' Separate FindMyPart research interest was included for local review only; no inquiry or referral sent.':'');
+  updateSourcingAction();
+}
+$('loadCode').addEventListener('click',()=>{
+  try{
+    const parsed=parseConceptCode($('codeInput').value);
+    setConcept(parsed);
+    $('message').textContent='Appearance code loaded locally. SKU matching, fitment and quote require a person.';
+  }catch(error){$('message').textContent='Code rejected: '+error.message}
+});
 $('conceptFile').addEventListener('change',async(e)=>{
   const file=e.target.files?.[0];if(!file)return;
   try{
     if(file.size>20000)throw Error('Concept file exceeds 20 KB');
     const parsed=parseConcept(await file.text());
-    importedConcept=parsed;
-    $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.'+(parsed.findmypart_sourcing_interest_requested?' Separate FindMyPart research interest was included for local review only; no inquiry or referral sent.':'');
-    updateSourcingAction();
+    setConcept(parsed);
     $('message').textContent='Shopper concept loaded locally; SKU match still requires a person.';
   }catch(error){$('message').textContent='Concept rejected: '+error.message}
   e.target.value='';
@@ -218,13 +248,13 @@ $('export').addEventListener('click',()=>{
 $('reset').addEventListener('click',()=>{
   inventory=SAMPLE;source='fictional_sample';inputName='';importedConcept=null;
   $('conceptSummary').textContent='No shopper concept imported yet.';
-  for(const id of ['shop','vehicle'])$(id).value='';
+  for(const id of ['shop','vehicle','codeInput'])$(id).value='';
   $('quantity').value='4';$('service').value='none';
   $('catalogNote').textContent='Using fictional sample inventory. CSV headers: sku,name,finish,diameter,unit_price_usd. Max 200 rows, 200 KB. All data stays in this browser.';
   $('message').textContent='Local quote desk reset.';populate();updateSourcingAction()
 });
 populate();updateSourcingAction();
-window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,packet,sourcingBrief};
+window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,parseConceptCode,packet,sourcingBrief};
 })();
 </script>
 </body></html>
