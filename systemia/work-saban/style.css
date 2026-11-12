@@ -711,3 +711,32 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
 @media(prefers-reduced-motion:reduce){
   .spatial-agent[data-skin] .spatial-costume-glyph{transition:none!important;animation:none!important}
 }
+
+
+/* Visual QA correction: put appearance controls in their own room-header row.
+   Never cover the coworker figures, stage, or bottom camera navigation. */
+.office-costume-toolbar{
+  display:flex;position:relative;align-items:center;justify-content:center;
+  padding:6px 12px;background:#101f35;border-bottom:1px solid #3b5974;
+}
+.office-costume-toolbar[hidden]{display:none!important}
+.office-costume-toolbar .spatial-costume-bar{
+  display:flex;width:100%;max-width:none;align-items:center;
+  justify-content:flex-start;gap:8px;flex-wrap:wrap;
+  padding:0;border:0;background:transparent;box-shadow:none;
+}
+.office-costume-toolbar .spatial-costume-caption{
+  margin-left:auto;max-width:none;text-align:right;
+}
+@media(max-width:650px){
+  .office-costume-toolbar{padding:7px 9px}
+  .office-costume-toolbar .spatial-costume-bar{
+    justify-content:space-between;gap:5px;
+  }
+  .office-costume-toolbar .spatial-costume-choice{
+    flex:1 1 auto;min-width:110px;max-width:none;
+  }
+  .office-costume-toolbar .spatial-costume-caption{
+    width:100%;text-align:center;margin-left:0;
+  }
+}
