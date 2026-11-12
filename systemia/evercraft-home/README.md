@@ -72,6 +72,16 @@ Current Home scopes:
 
 Home does not issue grants to itself.
 
+## One-Body evidence screen (owned Home, source only)
+
+The executive Home navigation now links to `/one-body.html`. This is the **canonical operator-facing One-Body handoff view**, not a separate login, API, or mission system. It uses same-origin cookies to request `GET /api/systemia/one-body/snapshot`. The API continues to enforce both the Home Identity/Passport gate and the separate `evercraft-context` read scope, without client-provided identities or trust anchors.
+
+The mobile-responsive page contains a simple interactive handoff topology, sampled unconfirmed handoff list, manual refresh and a visible 30-second auto-refresh switch. It separates **routed**, **unverified**, **unobserved overdue**, and **consumer ACK verified**. A signature only verifies consumer inbox acceptance; there is no work-completion or payment-state inference. The UI shows `runtime unverified` even if a snapshot was retrieved. When authorization, schema validation, connectivity or the upstream snapshot fails, the page immediately clears stale graph information rather than displaying an old green status.
+
+This is a static document served by Evercraft Home with a privileged **read-only API**. Opening the page alone gives no private data. The ordinary Home endpoint stays unavailable in local development auth mode and until the private One-Body state file is configured. No external hosted service, third-party identity or browser storage is needed.
+
+`one-body-home-route.proof.mjs` now checks HTML serving, the executive navigation link, inline browser-script parsing, same-origin no-cache retrieval and clearing of unauthorized/stale data, in addition to the full HTTP Identity/Passport grant+revocation test.
+
 ## Systemia One-Body private control-room snapshot (source-integrated, not deployed)
 
 Evercraft Home now has an optional **read-only** route:
