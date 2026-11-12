@@ -319,7 +319,25 @@ export async function startLocalOrganism({
         fabricRoute.local_health_ok === true
       );
     if (!kaidanceRoute.ok || !coreRoute.ok || !fabricLocalHealthy) {
-      throw new Error('local organism route verification failed');
+      // Report bounded route/service *states* only, never endpoints, bearer
+      // tokens, request objects, environment, workspace paths or credentials.
+      // A failed service remains a startup hold, not a silent degradation.
+      const routeStates={
+        kaidance:{ok:kaidanceRoute.ok===true,state:kaidanceRoute.state},
+        systemia_core:{
+          ok:coreRoute.ok===true,state:coreRoute.state,
+          failed_count:coreRoute.health?.failed_count ?? null,
+          held_count:coreRoute.health?.held_count ?? null,
+          failing_services:(coreRoute.health?.services||[])
+            .filter(x=>x.status==='failed'||x.status==='held')
+            .map(x=>({key:x.service_key,status:x.status,exit_code:x.last_exit_code ?? null}))
+        },
+        fabric:{ok:fabricLocalHealthy,state:fabricRoute.state,
+          local_health_ok:fabricRoute.local_health_ok===true}
+      };
+      const error=new Error('local organism route verification failed');
+      error.route_states=routeStates;
+      throw error;
     }
 
     const pulse = await getKaidanceStartupPulse(yard,'kaidance-local-resident');
