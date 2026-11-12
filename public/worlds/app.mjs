@@ -1,6 +1,7 @@
 import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,canWalk} from './world-core.mjs';
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
+import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
 import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
@@ -23,6 +24,34 @@ precision highp float;in vec3 vNormal,vWorld,vColor;uniform vec3 lightColor,fogC
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
 const loc={};for(const k of ['projection','view','model','color','lightColor','fogColor','cameraPos','opacity','ambient','instancing'])loc[k]=gl.getUniformLocation(program,k);
+
+const skyProgram=gl.createProgram();
+gl.attachShader(skyProgram,shader(gl.VERTEX_SHADER,SKY_VERTEX_SHADER));
+gl.attachShader(skyProgram,shader(gl.FRAGMENT_SHADER,SKY_FRAGMENT_SHADER));
+gl.linkProgram(skyProgram);
+if(!gl.getProgramParameter(skyProgram,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(skyProgram));
+const skyLoc={
+ resolution:gl.getUniformLocation(skyProgram,'resolution'),
+ yaw:gl.getUniformLocation(skyProgram,'yaw'),
+ pitch:gl.getUniformLocation(skyProgram,'pitch'),
+ skyMode:gl.getUniformLocation(skyProgram,'skyMode')
+};
+const skyVao=gl.createVertexArray();
+function drawAtmosphere(mode){
+ gl.useProgram(skyProgram);
+ gl.bindVertexArray(skyVao);
+ gl.disable(gl.DEPTH_TEST);
+ gl.depthMask(false);
+ gl.uniform2f(skyLoc.resolution,canvas.width,canvas.height);
+ gl.uniform1f(skyLoc.yaw,camera.yaw);
+ gl.uniform1f(skyLoc.pitch,camera.pitch);
+ gl.uniform1f(skyLoc.skyMode,skyModeIndex(mode));
+ gl.drawArrays(gl.TRIANGLES,0,3);
+ gl.bindVertexArray(null);
+ gl.depthMask(true);
+ frameDrawCalls++;
+}
+
 function mesh(p,n){const vao=gl.createVertexArray();gl.bindVertexArray(vao);for(const [attr,data] of [['position',p],['normal',n]]){const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);const i=gl.getAttribLocation(program,attr);gl.enableVertexAttribArray(i);gl.vertexAttribPointer(i,3,gl.FLOAT,false,0,0);}gl.bindVertexArray(null);return {vao,count:p.length/3};}
 function cube(){const p=[],n=[];const faces=[[[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]]],[[0,0,-1],[[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]],[[1,0,0],[[.5,-.5,.5],[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5]]],[[-1,0,0],[[-.5,-.5,-.5],[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5]]],[[0,1,0],[[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5],[-.5,.5,-.5]]],[[0,-1,0],[[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5],[-.5,-.5,.5]]]];for(const [normal,verts]of faces){for(const i of [0,1,2,0,2,3]){p.push(...verts[i]);n.push(...normal);}}return mesh(p,n);}
 function sphere(lat=12,lon=18){const p=[],n=[];for(let a=0;a<lat;a++)for(let b=0;b<lon;b++){const verts=[];for(const [i,j]of [[a,b],[a+1,b],[a+1,b+1],[a,b+1]]){const phi=Math.PI*i/lat,theta=2*Math.PI*j/lon;const v=[Math.sin(phi)*Math.cos(theta)*.5,Math.cos(phi)*.5,Math.sin(phi)*Math.sin(theta)*.5];verts.push(v);}for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(...verts[k].map(x=>x*2));}}return mesh(p,n);}
@@ -149,7 +178,7 @@ function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInst
  camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}
  if(time-lastSave>6500){state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();lastSave=time;}
  }
- resize();const sky={day:['#bedad2','#e6dbc0',.6],sunset:['#d3a48c','#f6ccae',.43],night:['#314b64','#92a3ad',.36]}[state.sky];const fog=col(sky[0]);gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(program);
+ resize();const sky={day:['#bedad2','#e6dbc0',.6],sunset:['#d3a48c','#f6ccae',.43],night:['#314b64','#92a3ad',.36]}[state.sky];const fog=col(sky[0]);gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);drawAtmosphere(state.sky);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(program);
  gl.uniformMatrix4fv(loc.projection,false,perspective(65*Math.PI/180,canvas.width/Math.max(1,canvas.height),.07,110));const cy=Math.cos(camera.yaw),sy=Math.sin(camera.yaw),cp=Math.cos(camera.pitch),sp=Math.sin(camera.pitch),eye=[camera.x,camera.y,camera.z];gl.uniformMatrix4fv(loc.view,false,lookAt(eye,[camera.x+sy*cp,camera.y+sp,camera.z-cy*cp]));gl.uniform3fv(loc.cameraPos,eye);gl.uniform3fv(loc.fogColor,fog);gl.uniform3fv(loc.lightColor,col(sky[1]));gl.uniform1f(loc.ambient,sky[2]);
  drawStaticInstances();
  // Water animated surface, reeds and living fish in the glass tank.
