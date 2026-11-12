@@ -839,6 +839,22 @@
       "acquisition": "Direct LOC viewer references received from CSUN archivist Nov 10, 2026; high-resolution originals have not been extracted or reviewed within Evercraft.",
       "rights": "LOC online Sanborn collection public-domain reuse; verify each desired image is actually LOC-hosted before embedding; CSUN 1960 map rights remain separate.",
       "useFor1960": "Archival staff reports footprints on 1952 sheets appear identical to a volume corrected through 1960; not independently inspected, georegistered or certified for exact 1960 buildings, shopfronts or streets."
+    },
+    {
+      "id": "csun-yakima-1960-six-corrections-followup",
+      "name": "CSUN archivist confirmation: six pasteover rounds, named landmark continuity and nearby structure changes",
+      "sourceId": "csun-sanborn-yakima-1960-catalog",
+      "period": {
+        "display": "Archival correspondence received November 11, 2026 about volume representing 1960",
+        "earliest": 1960,
+        "latest": 1960,
+        "approximate": true
+      },
+      "spatialMatch": "1960-corrected Yakima volume sheet 6 / Larson Building, sheet 15 / Capitol Theatre and adjacent blocks",
+      "itemType": "archivist-correspondence-description-of-undated-1960-corrected-volume",
+      "acquisition": "Archive staff direct reply Nov 11: both sheets carry corrections, six rounds in volume, individual pasteover dates unrecorded; landmark buildings apparently unchanged since 1952, nearby structures changed. Original 1960 sheets not downloaded or independently inspected.",
+      "rights": "No publication/commercial derivative use permission established for distinct CSUN physical volume; LOC online 1952 images have separate public-domain notice.",
+      "useFor1960": "Two named landmarks only have archivist-reported apparent continuity. Do not copy entire 1952 neighborhood. Specific changed adjacent buildings and exact 1952–1960 dates unknown."
     }
   ],
   "researchGoals": {
@@ -929,15 +945,24 @@
         "id": "inspect-loc-sheets-6-15",
         "dependsOn": [],
         "deliverable": "Visually inspect LOC 1952 digital viewer page 11 / sheet 6 and page 20 / sheet 15, review image-specific metadata and note labeled 1952 locations/building outlines. No coordinates or footprints until verified source pixels and independently sourced control points.",
-        "status": "sheet numbers identified by CSUN Nov 10; viewer links obtained; scans not yet reviewed"
+        "status": "LOC viewer links known but direct image retrieval failed in current research interface; original pixel analysis not yet performed"
       },
       {
         "id": "compare-csun-1960-footprints",
         "dependsOn": [
           "inspect-loc-sheets-6-15"
         ],
-        "deliverable": "Obtain item-specific correction dates or inspected 1960 original for sheets 6/15, compare polygon outlines and document which footprints unchanged, shifted or corrected; do not interpret tenants or facade shapes from footprint equivalence.",
-        "status": "archivist-reported apparently identical footprints; independent 1960 comparison pending"
+        "deliverable": "Inspect actual CSUN 1960 volumes or authorized derivatives; identify and trace specific changed buildings on sheets 6 and 15 against LOC 1952, note individual pasteover dates were not recorded. No blanket 1952 carry-forward.",
+        "status": "archivist-confirmed six correction rounds with unchanged-looking Larson/Capitol and changed-neighbor structures; original 1960 sheets not independently examined"
+      },
+      {
+        "id": "change-by-building-review",
+        "dependsOn": [
+          "inspect-loc-sheets-6-15",
+          "compare-csun-1960-footprints"
+        ],
+        "deliverable": "Build per-building 1952-versus-1960 change ledger for parcels immediately around Larson and Capitol using actual source pixels: added, demolished, altered, unchanged, or unresolved. Do not publish a 1960 streetscape by cloning LOC 1952 sheets.",
+        "status": "blocked: 1960 physical original images uninspected, specific changed buildings unidentified"
       }
     ]
   },
