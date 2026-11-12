@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {
   parseUnifiedCgroup,cgroupCapabilities,preflightCgroupScope,
-  fixedSyntheticScopeCommand,runSyntheticCgroupCanary
+  fixedSyntheticScopeCommand,runSyntheticCgroupCanary,ownedUserManagerEnvironment
 } from './eo001-cgroup-admission.mjs';
 import {inspectScopedChild} from './eo001-cgroup-synthetic-child.mjs';
 
@@ -12,6 +12,8 @@ const HERE=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(HERE,'../..');
 const PIN='a'.repeat(40),ID='b'.repeat(32),NONCE='c'.repeat(32);
 const UNIT='eo001-g1-synthetic-'+ID+'.scope';
+const fakeUserEnv=()=>({PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
+  HOME:'/home/runner',XDG_RUNTIME_DIR:'/run/user/1000'});
 const fakeSessionProbe=()=>({detached_new_session_reported:true,
   new_session_child_same_cgroup:true,child_exited_and_reaped:true,
   model_execution_authorized:false});
@@ -149,6 +151,28 @@ test('synthetic child accepts only exact cgroup leaf with verified limits',()=>{
     scopeId:'invalid.scope',nonce:NONCE,procCgroup:'0::/',readFile:fakeScopeResources,sessionProbe:fakeSessionProbe,parentWitness:fakeParentWitness
   }),/INVALID_SYNTHETIC_SCOPE_INPUT/);
 });
+test('minimal user systemd environment validates UID and private runtime',()=>{
+  const ok={uid:1000,mode:0o40700,isDirectory:()=>true};
+  const params={uid:1000,home:'/home/verified',inspect:dir=>{
+    assert.equal(dir,'/run/user/1000');return ok;
+  }};
+  const env=ownedUserManagerEnvironment(params);
+  assert.deepEqual(env,{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C',
+    HOME:'/home/verified',XDG_RUNTIME_DIR:'/run/user/1000'});
+  assert.equal(env.NODE_OPTIONS,undefined);
+  assert.equal(env.DBUS_SESSION_BUS_ADDRESS,undefined);
+  for(const bad of [{...ok,uid:1001},{...ok,mode:0o40755},
+    {...ok,isDirectory:()=>false}]){
+    assert.throws(()=>ownedUserManagerEnvironment({uid:1000,inspect:()=>bad}),
+      /OWNED_USER_RUNTIME_DIR_UNTRUSTED/);
+  }
+  assert.throws(()=>ownedUserManagerEnvironment({uid:1000,
+    inspect:()=>{throw Error('not found')}}),
+    /OWNED_USER_RUNTIME_DIR_UNAVAILABLE/);
+  assert.throws(()=>ownedUserManagerEnvironment({uid:0,inspect:()=>ok}),
+    /NONROOT_LINUX_REQUIRED/);
+});
+
 test('unapproved scope canary does not even run preflight',()=>{
   let called=false;
   assert.throws(()=>runSyntheticCgroupCanary({
@@ -180,7 +204,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   };
   let k=0;
   const result=runSyntheticCgroupCanary({
-    root:ROOT,reviewedPin:PIN,ownerApproved:true,
+    root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({
       state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false
@@ -203,7 +227,7 @@ test('mocked one-shot scope canary checks exact reported membership',()=>{
   assert.equal(result.model_inference_executed,false);
 });
 test('synthetic scope report that is out-of-scope or malformed cannot be promoted',()=>{
-  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,
+  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false}),uuid:()=>ID};
   const withCleanup=onRun=>(cmd,args)=>{
@@ -224,7 +248,7 @@ test('synthetic scope report that is out-of-scope or malformed cannot be promote
   }),/SCOPE_RECEIPT_INVALID/);
 });
 test('uncleared transient scope blocks the report even if child claimed membership',()=>{
-  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,
+  const base={root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false}),uuid:()=>ID};
   const calls=[];
@@ -266,7 +290,7 @@ test('legacy v3 resource-only report cannot claim new-session evidence',()=>{
     })};
   };
   assert.throws(()=>runSyntheticCgroupCanary({
-    root:ROOT,reviewedPin:PIN,ownerApproved:true,
+    root:ROOT,reviewedPin:PIN,ownerApproved:true,userEnv:fakeUserEnv,
     preflight:()=>({state:'CANDIDATE_NEEDS_EXPLICIT_SYNTHETIC_FIELD_CANARY',
       scope_test_executed:false}),
     uuid:()=>ID,run
