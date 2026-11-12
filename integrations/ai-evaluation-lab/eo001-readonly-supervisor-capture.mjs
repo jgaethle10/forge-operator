@@ -263,6 +263,7 @@ export function beginReadOnlyScopeObservation({
     finish(stop){
       expect(!closed&&!finalized,'SCOPE_OBSERVER_ALREADY_CLOSED');
       finalized=true;
+      let stage='POST_KERNEL_READBACK';
       try{
         const post={
           boot_id:mustRead(io.readAbsolute('/proc/sys/kernel/random/boot_id'),
@@ -290,6 +291,7 @@ export function beginReadOnlyScopeObservation({
         packet.collector.raw_capture_sha256=createHash('sha256').update(
           JSON.stringify({...packet,collector:{...packet.collector,
             raw_capture_sha256:null}})).digest('hex');
+        stage='PACKET_CONSISTENCY_CHECK';
         const verdict=verifyScopeLifecyclePacket({packet});
         return {
           state:'READ_ONLY_LIFECYCLE_CONSISTENCY_REVIEW_REQUIRED',
@@ -299,6 +301,28 @@ export function beginReadOnlyScopeObservation({
           physical_cleanup_attested:false,
           operator_approval_for_new_run:false
         };
+      }catch(error){
+        const code=/^[A-Z_]+$/.test(error?.code||'')?error.code:
+          /^[A-Z_]+$/.test(error?.message||'')?error.message:
+          'SUPERVISOR_OBSERVATION_UNVERIFIED';
+        const privateReceipt={
+          schema:'evercraft.eo001.gate1.private-negative-observation.v1',
+          state:'SCOPE_LIFECYCLE_OBSERVATION_BLOCKED',
+          reason:code,stage,scope_id:scopeId,
+          source_revision:sourceRevision,
+          pre_sha256:createHash('sha256')
+            .update(JSON.stringify(pre)).digest('hex'),
+          pre:structuredClone(pre),stop_metadata:structuredClone(stop??null),
+          actual_cleanup_verified:false,
+          execution_authorized:false,
+          independent_hardware_attestation:false
+        };
+        // Keep sensitive raw observations out of normal exception JSON/logging.
+        // A future approved runner MUST persist this private object itself.
+        Object.defineProperty(error,'private_negative_receipt',{
+          configurable:false,enumerable:false,value:privateReceipt
+        });
+        throw error;
       }finally{
         closed=true;
         handle.close();
