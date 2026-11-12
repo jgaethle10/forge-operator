@@ -60,6 +60,19 @@ class OfflineStereoContractTests(unittest.TestCase):
         self.assertEqual(valid["frameId"], "f0")
         self.assertEqual(valid["schema"], "evercraft.spatial-perception.observation.v0")
 
+    def test_actual_rectified_principal_point_overrides_image_center(self):
+        args=("f0",0,0,"car",.95,(20,30,24,18),4,120,.12,"a"*64,160,100)
+        base=runner.observation(*args)
+        calibrated=runner.observation(*args,cx_px=32,cy_px=40)
+        self.assertEqual(calibrated["depthEstimateM"],3.6)
+        self.assertNotEqual(calibrated["cameraPositionM"]["x"],base["cameraPositionM"]["x"])
+        self.assertNotEqual(calibrated["cameraPositionM"]["y"],base["cameraPositionM"]["y"])
+        self.assertAlmostEqual(calibrated["cameraPositionM"]["x"],0.0,places=3)
+        with self.assertRaisesRegex(ValueError,"principal_point_requires_both_axes"):
+            runner.observation(*args,cx_px=32)
+        with self.assertRaisesRegex(ValueError,"invalid_cx_px"):
+            runner.observation(*args,cx_px=170,cy_px=40)
+
     def test_bad_confidence_and_invalid_box_rejected(self):
         args = ("f0", 0, 0, "car")
         with self.assertRaisesRegex(ValueError, "invalid_detector_confidence"):
