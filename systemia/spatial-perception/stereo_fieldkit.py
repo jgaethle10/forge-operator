@@ -226,8 +226,8 @@ def validated_calibration(data, np):
     if (data.get("schema") != CALIBRATION_SCHEMA or
         data.get("qualityStatus") != "prototype_checkerboard_solution_not_field_verified"):
         error("invalid_calibration_schema")
-    if data.get("realWorldAccuracyCertified") is not False or
-       data.get("safetyCriticalApproved") is not False:
+    if (data.get("realWorldAccuracyCertified") is not False or
+        data.get("safetyCriticalApproved") is not False):
         error("unsupported_calibration_authority")
     w=integer(data.get("imageWidth"),320,1920,"image_width")
     h=integer(data.get("imageHeight"),240,1080,"image_height")
