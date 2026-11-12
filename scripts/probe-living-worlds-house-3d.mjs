@@ -61,7 +61,9 @@ try{
         overflow:document.documentElement.scrollWidth>innerWidth+3};
     });
     assert.equal(await page.locator('#house-story').isVisible(),true,'Resident dream panel missing');
-    assert.match(await page.locator('#house-story-people').innerText(),/Mara[\\s\\S]*Ivo[\\s\\S]*Jun[\\s\\S]*Sable/);
+    const residentPanelText=await page.locator('#house-story-people').innerText();
+    for(const name of ['Mara','Ivo','Jun','Sable'])
+      assert.ok(residentPanelText.includes(name),profile.name+': resident story missing '+name);
     assert.equal(before.webgl2,true,'WebGL2 missing');
     assert.equal(before.glError,0,'House GL error');
     assert.ok(before.width>100&&before.height>100,'No framebuffer');
