@@ -136,3 +136,23 @@ test('public buyer can request an audit without a charge; private receipt and PI
     fs.rmSync(folder,{recursive:true,force:true});
   }
 });
+
+
+test('website audit buyer sees honest, low-friction $49 journey and can choose a specific conversion goal',()=>{
+  const held=renderOfferPage(offer,{checkoutConfigured:false,auditInquiryAvailable:true});
+  assert.match(held,/No jargon\. No giant contract/);
+  assert.match(held,/YOUR QUICK WIN MAP/);
+  assert.match(held,/Illustrative sample/);
+  assert.match(held,/No meeting or website credentials are needed/);
+  assert.match(held,/Does \$49 include changing my website/);
+  assert.match(held,/id="audit-order"/);
+  assert.match(held,/href="#audit-order"/);
+  assert.match(held,/select id="audit-inquiry-goal" name="goal" required/);
+  assert.match(held,/Get more quote requests/);
+  assert.doesNotMatch(held,/We audited your website|Guaranteed more sales|62%/i);
+  assert.ok(held.indexOf('class="audit-journey"')<held.indexOf('id="audit-order"'));
+  const configured=renderOfferPage(offer,{checkoutConfigured:true,auditInquiryAvailable:true});
+  assert.match(configured,/id="audit-order" class="checkout-form"/);
+  assert.match(configured,/Continue to checkout/);
+  assert.doesNotMatch(configured,/class="audit-intake-form"/);
+});
