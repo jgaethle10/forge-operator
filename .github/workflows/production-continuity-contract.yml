@@ -1,0 +1,26 @@
+name: Production continuity contract
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/production-continuity/**'
+      - 'tests/production-continuity.test.mjs'
+      - 'tests/production-receipt-bridge.test.mjs'
+      - 'tests/production-resident.test.mjs'
+      - '.github/workflows/production-continuity-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-continuity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test synthetic continuity, Saban artifact bridge, and resident restart integrity
+        run: node --test tests/production-continuity.test.mjs tests/production-receipt-bridge.test.mjs tests/production-resident.test.mjs
