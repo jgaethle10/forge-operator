@@ -14,7 +14,8 @@ const valid={
   issue:'Visitors leave without contacting the business.',
   decision:'Do we need to fix the page or rebuild it?',
   timing:'This month',
-  source:'evercraft_try'
+  source:'evercraft_try',
+  authorized:'yes'
 };
 
 test('scope request is plain text and generates a user-initiated mailto for the exact $149 SKU',()=>{
@@ -31,8 +32,8 @@ test('scope request is plain text and generates a user-initiated mailto for the 
 });
 
 test('incomplete or blank buyer problems cannot generate vague requests',()=>{
-  for(const v of [{...valid,asset:'  '},{...valid,issue:'too short'},{...valid,decision:'nothing'}]){
-    assert.throws(()=>buildAssetScopeInquiry(v),/asset|working|decision/i);
+  for(const v of [{...valid,asset:'  '},{...valid,issue:'too short'},{...valid,decision:'nothing'},{...valid,authorized:null}]){
+    assert.throws(()=>buildAssetScopeInquiry(v),/asset|working|decision|authorized/i);
   }
 });
 
@@ -42,7 +43,8 @@ test('untrusted line breaks and long text remain confined to plain message field
     issue:'The public page is confusing for customers\nSUBJECT:fake',
     decision:'Understand the root problem before a rebuild\r\n',
     timing:'x'.repeat(500),
-    source:'untrusted_tag'
+    source:'untrusted_tag',
+    authorized:true
   });
   assert.match(x.body,/Asset or public URL: Public site BCC:someone@example.net/);
   assert.doesNotMatch(x.body,/\r/);
@@ -58,6 +60,9 @@ test('free-to-paid link preserves one exact product and does not silently charge
   assert.ok(freeHub.includes('before payment'));
   assert.ok(assetPage.includes('id="asset-scope-form"'));
   assert.ok(assetPage.includes('id="asset-scope-output" hidden'));
+  assert.ok(assetPage.includes('id="intake-authorized" name="authorized"'));
+  assert.ok(assetPage.includes('I own this asset or am authorized to discuss it'));
+
   assert.ok(assetPage.includes('scope-intake.mjs'));
   assert.ok(assetPage.includes('Nothing is uploaded, saved or sent'));
   assert.ok(assetPage.includes('Scope and delivery availability') || assetPage.includes('scope and delivery availability'));
