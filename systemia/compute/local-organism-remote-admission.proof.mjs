@@ -14,6 +14,7 @@ import { startLocalOrganism } from './local-organism.mjs';
 process.env.NODE_ENV='test';
 process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF='true';
 process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH='false';
+process.env.PORTFOLIO_SENTINEL_OFFLINE='true';
 
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
