@@ -141,7 +141,21 @@ const fragmentSource=[
 'float light=.48+sun*.5;vec3 lit=vColor*light;',
 'float fog=clamp((vDistance-65.)/240.,0.,.84);frag=vec4(mix(lit,fogColor,fog),1.);}'
 ].join('\n');
-let gl=null,program=null,buffer=null,loc={},drawCount=0;
+const skyVertexSource=[
+'#version 300 es','precision highp float;','out vec2 uv;',
+'void main(){vec2 pos=vec2(gl_VertexID==1?3.:-1.,gl_VertexID==2?3.:-1.);uv=(pos+1.)*.5;gl_Position=vec4(pos,0.,1.);}'
+].join('\n');
+const skyFragmentSource=[
+'#version 300 es','precision highp float;','in vec2 uv;','uniform float mood;','out vec4 frag;',
+'void main(){vec3 low=vec3(.45,.66,.61);vec3 high=vec3(.10,.24,.30);',
+'if(mood>1.5){low=vec3(.65,.65,.55);high=vec3(.16,.31,.31);}else if(mood>.5){low=vec3(.34,.43,.57);high=vec3(.06,.10,.21);}',
+'vec3 sky=mix(low,high,pow(clamp(uv.y,0.,1.),.9));',
+'float sun=exp(-pow(distance(uv,vec2(.76,.69))*11.,2.));',
+'sky+=vec3(.27,.20,.11)*sun;',
+'float glow=exp(-pow(distance(uv,vec2(.76,.69))*3.9,2.));',
+'sky+=vec3(.10,.09,.09)*glow;frag=vec4(sky,1.);}'
+].join('\n');
+let gl=null,program=null,skyProgram=null,skyVao=null,skyMood=null,buffer=null,loc={},drawCount=0;
 try{gl=canvas.getContext('webgl2',{antialias:true,alpha:false,depth:true,powerPreference:'default'});}catch{}
 if(!gl){el('fallback').style.display='block';}
 else{
@@ -153,6 +167,14 @@ else{
     if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
     gl.useProgram(program);
     for(const name of ['projection','view','fogColor'])loc[name]=gl.getUniformLocation(program,name);
+    skyProgram=gl.createProgram();
+    gl.attachShader(skyProgram,compile(gl.VERTEX_SHADER,skyVertexSource));
+    gl.attachShader(skyProgram,compile(gl.FRAGMENT_SHADER,skyFragmentSource));
+    gl.linkProgram(skyProgram);
+    if(!gl.getProgramParameter(skyProgram,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(skyProgram));
+    skyMood=gl.getUniformLocation(skyProgram,'mood');
+    skyVao=gl.createVertexArray();
+    gl.useProgram(program);
     buffer=gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     const attrs=[['position',0],['normal',12],['color',24]];
@@ -192,6 +214,13 @@ function draw(){
  if(!gl)return;
  resize();const fog=hex(colors[mode].sky);
  gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ gl.disable(gl.DEPTH_TEST);
+ gl.useProgram(skyProgram);
+ gl.bindVertexArray(skyVao);
+ gl.uniform1f(skyMood,mode==='symphony'?1:mode==='sanctuary'?2:0);
+ gl.drawArrays(gl.TRIANGLES,0,3);
+ gl.bindVertexArray(null);
+ gl.enable(gl.DEPTH_TEST);
  gl.useProgram(program);
  const eye=[player.x,player.y,player.z];
  const toward=[Math.sin(player.yaw)*Math.cos(player.pitch),Math.sin(player.pitch),-Math.cos(player.yaw)*Math.cos(player.pitch)];
@@ -223,7 +252,7 @@ function tick(now){
  requestAnimationFrame(tick);
 }
 function start(demo){
- isDemo=demo;refreshScene();player=spawnExplorer();canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);running=true;el('welcome').classList.add('hidden');el('hud').classList.remove('hidden');
+ isDemo=demo;refreshScene();player=spawnExplorer(scene);canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);running=true;el('welcome').classList.add('hidden');el('hud').classList.remove('hidden');
  el('status').textContent=demo?'Preview only. No progress was changed.':'Your lifetime facilities are safe.';
 }
 el('enter').addEventListener('click',()=>start(false));
