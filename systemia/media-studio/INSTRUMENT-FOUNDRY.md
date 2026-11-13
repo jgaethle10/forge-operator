@@ -1,0 +1,452 @@
+# Evercraft Instrument Foundry | Canonical PulseGrid bridge (draft)
+
+This is an engineering slice of **Fallen Sessions / PulseGrid**, not a standalone DAW and **not a release-ready grand piano**.
+
+## Why
+The frozen *Weight of Silence* reference recording is the creative quality floor. The sample-free oscillator replacement was rejected after human listening. Instead, Evercraft is developing a recorded/expressive instrument pipeline with clear custody, verified source WAV bytes, and no invented license grants.
+
+Foundry v1 already exists as an offline capture-plan and recording renderer in the founder's workspace (172 score-targeted slots, 9 local Python tests). It has **no owned acoustic captures yet**. This PR adds the **PulseGrid admission layer** for WAV assets after the offline capture/render step. It does not import founder workspace files or imply studio recordings occurred.
+
+## Contracts
+- `compileFoundryImport({session,assets,attachments})` validates canonical `PulseGridSession` identity and existing *audio* tracks, conservative rights, content-addressed asset IDs, provenance, bounds, and no silent replacement; it returns the canonical `asset.register_audio` + `clip.attach_audio_asset` operations as a transaction request.
+- `verifyFoundryWavBytes(asset, bytes)` validates actual RIFF/WAV shape and SHA-256 using `crypto.subtle` (browser/Node), rather than trusting a self-reported manifest.
+- **The caller must run byte verification for every asset before invoking** the existing `applyPulseGridTransaction` function, and separately supply a hash-verifying, permission-scoped `PulseGridAudioAssetResolver` for playback. The compiler itself intentionally does not mutate the session or read stored assets.
+- The transaction response labels `release_ready=false`, `playback_verified=false`, and `CANDIDATE_NOT_COMMITTED` regardless of a claimed rights state. Commercial sample/master ownership is a separate independent decision.
+- The actual performer-owned captures, consent/rights evidence, instrument model and expressive recording QA are not in this PR.
+
+## Tests
+```bash
+node --test systemia/media-studio/instrument-foundry-bridge.test.mjs
+```
+Tests cover transaction shape, unknown/restricted rights, forged metadata, custodial collisions, missing/invalid content hashes, cross-track rejection, idempotent asset reuse, and actual byte tampering.
+
+## Next: make the instrument sound beautiful
+1. Record/commission a small *rights-clear* grand piano multisample pilot across key dynamic layers and round-robins; document pedal-up/down, dampers, sympathetic resonance, two microphones, performer releases and room impulse responses.
+2. Create an expressive performance/voice allocator consuming actual validated samples with pedal-state, voice stealing, key-off and velocity crossfades; do not synthesize missing score notes as if sampled.
+3. Integrate the existing canonical PulseGrid audio resolver with **independent byte verification**, expression automation and production source receipts. Validate end-to-end in CI against the canonical session transaction and a browser playback test.
+4. A/B test against the frozen original with listening panel; preserve the original if a new timbre makes the music worse.
+5. Keep public music release held until external sample rights, musical human authorship and final master clearance have been documented.
+
+**What this branch does NOT prove:** live Foundry samples, recording contracts, production mixing, a new audio engine deployed to users, commercial music rights, or improved expressive sound.
+
+
+## Verified playback resolution (second engineering slice, v3)
+
+`createFoundryVerifiedResolver` implements the existing PulseGrid audio asset
+resolver contract. The host must supply a **trusted** authenticated tenant,
+session and audition/review scope, a separate `authorizeRead` guard that
+checks actual identity/tenant/project permissions, and a `readBytes` storage
+adapter. Do not accept tenant context merely from client-supplied metadata.
+
+The resolver checks identity, format, budgets, and rights before storage;
+authorizes every access, snapshots returned bytes before async verification,
+and checks actual RIFF/WAVE data and SHA-256. On success it returns a browser
+WAV Blob ready for PulseGridAudioEngine.setAudioAssetResolver.
+
+```js
+import {createFoundryVerifiedResolver} from './instrument-foundry-resolver.mjs';
+const resolver=createFoundryVerifiedResolver({
+  scope: authenticatedHostSession, // trusted, never raw user input
+  authorizeRead: enforceTenantProjectAndIdentityPermission,
+  readBytes: authorizedStoredWavRead,
+  onReceipt: auditVerifiedRead,
+});
+pulseGridAudioEngine.setAudioAssetResolver(resolver);
+```
+
+A verified read **is not audible playback proof**. This PR includes
+no live host storage connector, credentials, owned acoustic samples,
+expressive grand piano, or commercial rights clearance. Unknown rights allow
+only independently authorized internal listening; restricted rights and
+self-declared release flags are rejected. Reader and verifier must be used
+together, not bypassed by a direct Blob URL.
+
+```bash
+node --experimental-strip-types --test \
+  systemia/media-studio/instrument-foundry-bridge.test.mjs \
+  systemia/media-studio/instrument-foundry-resolver.test.mjs \
+  systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs
+```
+
+Next: authorize a real recording storage adapter and run actual
+recording -> storage -> verified Blob -> canonical audio decode/playback
+in a browser, with separately attributable producer and listener receipts.
+Continue holding the rejected oscillator remake out of the master path.
+
+
+## Founder audition path in Fallen Sessions (third slice)
+
+The `/fallen-sessions` route now has an **Import Foundry WAV** control beside the existing general import. It accepts a locally selected RIFF/WAV file as `rights:'unknown'`, then uses the existing `PulseGridBrowserAudioAssetVault` to hash, decode and retain the recording. Before any canonical transaction it re-reads the stored Blob, independently verifies WAV bytes/format/SHA-256 with `verifyFoundryWavBytes`, and invokes `compileFoundryImport` and the **existing** `applyPulseGridTransaction` to attach the asset to a real Audio Take scene. On Play, the existing `PulseGridAudioEngine` uses the same vault's `getVerifiedBlob` resolver.
+
+The source reference `sha256:<digest>` in this local workflow records **only the content fingerprint of the user-selected local WAV**. It does **not** verify performer attribution, commercial sampling rights, independent host identity or that the file is Evercraft-owned. The authenticated multi-tenant storage resolver remains a separate host-side integration, not a property of local imports.
+
+This special import automatically grows an audio clip up to the existing 16-bar limit based on the current PulseGrid BPM. Longer WAVs fail explicitly rather than being silently truncated. This is for **short piano and string instrument takes**, not for importing the full 68-second master through a single clip. General Import Audio continues to support normal formats and behavior.
+
+**What the code tests prove:** the UI is wired to the canonical transaction and the verified stored-audio path; batch and byte custody tests pass. **What they do not prove yet:** an actual founder device clicked the new UI, audible browser playback of a captured acoustic piano, web deployment or release rights. Use an owned recording for that next end-to-end demonstration and capture the exact build/source/asset/playback receipts.
+
+Run the dedicated workflow and also existing `npm run test:media-studio` / TypeScript check before any merge. The original *Weight of Silence* master is immutable in this change.
+
+
+## Bounded playable sampled piano (fourth engineering slice)
+
+The canonical **MIDI Keys** synthesizer can now hold a reversible
+\`clip.set_foundry_piano_patch\` referencing content-addressed audio assets
+already registered in the **same** PulseGrid session. The patch lives on the
+canonical clip provenance and survives graph export, undo and session migration.
+It is not an independent hidden instrument database.
+
+The first supported patch is \`recorded_piano_v1\`, with explicitly declared
+sample root pitch (MIDI 21–108), recorded velocity range, \`release_sec\`,
+and a conservative **±2 semitone** maximum transposition. A missing sample,
+uncovered MIDI pitch, unrecorded velocity, restricted sample, malformed patch,
+or absent verified storage fails **closed**, rather than substituting the old
+oscillator synth or claiming the user has a fully sampled grand piano.
+
+During playback, \`PulseGridAudioEngine\` resolves and decodes every referenced
+sample through its existing vault-backed asset resolver and schedules an
+actual \`AudioBufferSourceNode\` through the existing track bus. The note
+uses playback-rate transposition, velocity scaling, a short attack envelope,
+and a controlled key-off release envelope. This is **first-generation
+sample playback**, not modeled hammer mechanics, multi-mic resonance, piano
+pedal sensing, continuous round-robin variation, or a natural-instrument
+performance guarantee.
+
+The Fallen Sessions screen exposes an **Import Foundry WAV** control and an
+**Arm Recorded Piano** action with an explicit **Piano root MIDI** field. The
+founder can import one genuine recording for internal listening, set its root
+note, attach it to the canonical \`keys\` MIDI scene, add/play MIDI notes within
+two semitones, and undo the assignment. WAV hash proves its bytes only, not
+exclusive rights, who performed it, or payment/distribution eligibility.
+Broader note-by-note instrument coverage will need more authorized captures.
+
+**Do not accidentally confuse the MIDI sampler with the existing Audio Take
+one-shot clip**. The latter plays the complete WAV as a clip. This new
+instrument voice is MIDI-triggered and envelope-controlled from a user-selected
+root note.
+
+Tests include a real canonical patch assignment and undo, pitch and velocity
+coverage, no invented missing notes, cross-track rejection, simulated Web Audio
+buffer rate/gain/start/stop events, and the UI's verify-before-arm path.
+These are **automated implementation tests**. To claim audible success, capture
+the authenticated source WAV, deploy the specific PR build in a supported
+browser, press Play, listen to the actual note and tail, and save the
+exact source/hash/session/asset/playback and human QA receipts.
+
+The beloved *Weight of Silence* master remains unchanged; no rights clearance,
+acoustic piano capture, production release, or proven listening quality is
+asserted by this code.
+
+
+## Reusable multi-note piano bank and Saban review lane
+
+The Fallen Sessions **Arm Recorded Piano** control now **appends** the verified Audio Take sample to the current canonical Keys scene's \`recorded_piano_v1\` patch. The UI exposes the recording's root MIDI pitch and bounded **velocity minimum/maximum**. Subsequent captures at new roots or non-overlapping velocity layers accumulate instead of replacing the first sample. The original recording is detached from Audio Take (not deleted from the asset vault), preventing double playback, and the same reversible PulseGrid transaction preserves undo.
+
+The \`appendFoundryPianoSample\` helper preserves previous layers, validates every referenced sample against registered canonical audio, rejects unregistered/restricted samples, rejects overlapping layers at an identical root, respects the same ±2-semitone transposition bound and refuses missing pitch or unrecorded velocity ranges. Existing sound-quality limits still apply: dynamic layers require **actual distinct recordings**, not amplitude scaling falsely presented as several real performance layers. A patch currently supports no more than 64 declared sample layers, and missing/overlapping coverage is surfaced as an error rather than silently repaired. The studio does not auto-authorize any recording for publication.
+
+### Saban in the review pipeline
+
+Existing \`systemia/media-studio/saban-adapter.mjs\` is reused by \`instrument-foundry-saban-review.mjs\` to run four **parallel planning reviewers**: continuity, rights-requirement, provenance and timing. Saban's current adapter checks **that requirements and references are present**, not the authenticity of legal ownership or musical quality. A wrapper further requires an accepted human-listening receipt and a valid SHA-256 digest, but still reports \`release_ready:false\` and \`sample_rights_independently_verified:false\`.
+
+GitHub Actions runs \`bridge-evidence\` and \`saban-capture-review\` as separate parallel jobs. The CI role checks are **local deterministic adapter invocations**, **not a deployed Saban resident compute worker or autonomous agent reviewing recorded audio**. This gets us faster repeatable preflight without misstating independent creative clearance.
+
+At the first multi-layer commit, GitHub run 39085112409 passed 88/88 bridge tests and 4/4 Saban review tests. The broader Forge workflows are checked separately.
+
+### Remaining proof
+
+1. Capture real consented/licensed multi-velocity acoustic piano notes with room, performer and equipment receipts; verify the actual sources.
+2. Test import, accumulation, note selection and audio in a real supported browser, documenting output and source fingerprints.
+3. Human A/B against the immutable original *Weight of Silence*.
+4. Complete independent rights and distribution-platform review before any commercial master is approved.
+
+No new acoustic samples, deployed instrument, commercial clearance or human-approved new sound quality is implied by a green CI status.
+
+
+## Technical acoustic-capture quality gate
+
+A verified SHA-256 checksum only proves that bytes match a source. It does **not** establish the recording is musically useful. The new \`instrument-foundry-capture-qa.mjs\` analyzes the **actual PCM/float samples** in a WAV and reports bounded, reproducible technical metrics before the canonical piano bank may accept it:
+
+- RIFF/WAVE, codec, channel count, sample rate and block alignment. Accepted: PCM16/24/32 and IEEE float32; mono/stereo; 44.1/48/96 kHz; 0.3–15 seconds; maximum 64 MiB.
+- Measured peak, RMS, the final 70 ms tail RMS, DC offset, non-finite samples, clipped-sample count and total samples inspected.
+- A near-silent recording, sustained sample clipping, excessive DC bias, non-finite/out-of-range samples, or a conspicuously loud final decay window holds sample admission. The high final tail may also represent an intentional non-piano effect; a new recording or explicit engineering review is required, never automatic silent correction.
+- The existing \`Arm Recorded Piano\` UI re-reads the **same** locally verified WAV byte source, first checks its identity via \`verifyFoundryWavBytes\`, then calls \`analyzeFoundryPianoWav\`. If held, no canonical instrument-bank transaction is committed. If passed, it displays peak/tail measurements while **retaining the unknown performer/music rights and no subjective quality claim**.
+- The Saban capture preflight now requires the technical-signal QA report to be declared successful in addition to the existing roles and human listening acceptance. Saban's current adapter **does not itself reexamine the waveform bytes**: this checks report completeness/consistency only; source bytes remain independently checked by the Foundry tool.
+
+**Limitations:** This is an early conservative signal gate, not pitch identification, piano authenticity classification, microphone calibration, room-noise analysis, semantic copyright clearance, or a substitute for listening and recording provenance. Passing does not mean \`musical_quality_approved\`, \`performer_rights_verified\` or \`commercial_release_ready\`. Quiet piano samples are allowed when their signal levels remain physically meaningful.
+
+CI exercises clean and quiet decays, heavily clipped samples, near silence, abrupt tails, DC bias, PCM24 stereo, float32/non-finite, malformed RIFF/alignment, and byte-slice handling. Run [39087701525](https://github.com/jgaethle10/forge-operator/actions/runs/39087701525) passed **101/101 Foundry and 6/6 Saban capture preflight tests** at commit \`8318c906ac678679e99eaa66790516b6cfcd1129\`. Broader Forge workflows are tracked separately.
+
+**Next artistic gate:** A real captured piano note with known origin, documented microphone setup and performer consent, followed by an actual user-browser playback receipt and human A/B versus the frozen original *Weight of Silence*.
+
+
+## Selected MIDI root versus measured WAV pitch
+
+The recording may have healthy amplitude, decay and bit depth yet still be the **wrong musical note**. The new \`checkFoundryPianoRootPitch(actualWavBytes, expectedMidi)\` uses a short, bounded channel-wise time-domain periodicity test to compare actual recorded content against the selected MIDI root (21–108). It returns immutable-style evidence with expected frequency, inferred frequency, estimated cents deviation, periodicity and one of:
+
+- \`consistent\`: period resolved with sufficient confidence and deviation within 45 cents of selected MIDI root
+- \`mismatch\`: a confident periodicity measurement differs by more than 45 cents
+- \`indeterminate\`: silence/weak signal, ambiguity, non-finite data or inadequate period resolution, requiring review rather than false automatic labeling
+
+The analyzer examines a bounded early section of the actual PCM samples after SHA-256 and technical waveform quality checks. Stereo takes select the stronger measured channel so phase-opposed stereo won't cancel a legitimate piano pitch. It **does not claim to detect piano authenticity, tune complex attack transients, identify a copyright holder or certify a note by human listening**. Heavy pedal resonance, hammer noise, room noise, instrument inharmonicity and complex polyphonic takes can cause uncertainty and require musician judgment.
+
+\`Arm Recorded Piano\` now holds mismatched or indeterminate captures before the canonical \`clip.set_foundry_piano_patch\` operation. The user sees the cause and cents deviation when available, and the WAV remains available for independent audition and review. A consistent signal still has \`human_pitch_confirmed:false\`.
+
+The existing Saban planning preflight requires its **declared** pitch-evidence root to match the selected root and pass this consistency status; its adapter **does not itself analyze the WAV** or authorize release. Missing, inconsistent and indeterminate pitch evidence blocks its review-ready state. Human listening and independently verified recording rights remain required after these technical gates.
+
+At PR head \`b2c85e65d35b42b86b3e496ade4d682fb4c83d61\`, [Foundry workflow 39089331736](https://github.com/jgaethle10/forge-operator/actions/runs/39089331736) passed **110/110 Foundry tests and 8/8 Saban planning tests**. Broader Forge checks are validated independently. Tests currently use synthetic periodic WAV fixtures and *do not* establish performance accuracy on a real piano dataset. Before treating inferred pitch as reliable on acoustic multisamples, gather diverse clean/noisy note captures across the whole 88-key range and measure false acceptance/rejection in human-reviewed samples.
+
+The original *Weight of Silence* reference master is not modified. No release authorization, production deployment, professional acoustic sample recording or actual human browser audio proof is claimed.
+
+
+## Octave alias protection and reproducible local WAV intake
+
+The first bounded WAV pitch evidence tool accepted some incorrect octave labels because a waveform can repeat at both a fundamental's period and a multiple of that period. Adversarial **octave-only and even-harmonic** tests caught this defect on commit \`fbdc51b\`; both tests failed while the old code incorrectly returned \`consistent\`.
+
+The fix in \`instrument-foundry-capture-qa.mjs\` checks corroboration in the actual audio spectrum after lag-based periodicity measurement. A defensible MIDI root needs either clear root-frequency energy or jointly sufficient second and third harmonics indicating a *virtual fundamental*. An octave-only or even-harmonic-only recording now receives \`indeterminate\` rather than being silently labeled one octave lower. Rich, slightly inharmonic fixtures and a weak-fundamental recording with second and third harmonics remain accepted when evidence supports the selected note. Technical ambiguity is not an invitation to hallucinate a label.
+
+### Internal sampled-instrument reference diagnostic
+
+A **local, exploratory Python port** of the JS pitch checker was evaluated against the already-installed TimGM6mb SoundFont **GPL-2**, using its grand-piano program in a FluidSynth internal audition. This test **does not use Evercraft-owned recorded piano takes**, does not ship source samples, and is **not a claim of production JS equivalence or accuracy on genuine microphones**.
+
+Results at 19 MIDI roots from 21 to 108, and three velocities (40, 80, 120):
+- **True MIDI roots:** 56 of 57 marked \`consistent\`; one quiet note at root 108 held as \`indeterminate\`.
+- **Adjacent wrong note:** 0 of 54 falsely accepted; all 54 marked \`mismatch\`.
+- **Octave-below mislabeling:** 0 of 51 falsely accepted; 40 held \`indeterminate\` and 11 marked \`mismatch\`.
+
+The numerical diagnostic was generated locally and is not an acoustic-performance test or a commercial distribution artifact. A separate real-instrument corpus with independent MIDI and performer evidence is still required for statistical calibration.
+
+### Actual local piano capture receipt
+
+\`instrument-foundry-capture-audit.mjs\` adds a bounded, read-only capture intake that accepts a locally recorded WAV and the asserted MIDI note. It creates a SHA-256 asset identity, independently checks the WAV structure and recorded bytes, inspects waveform quality and checks pitch consistency. The result is an auditable **candidate for human listening** or a **held capture**, never an asset registration or commercial rights grant.
+
+From the repository root:
+
+\`\`\`bash
+node systemia/media-studio/instrument-foundry-capture-audit.mjs \
+  --wav ./captures/piano-c4-quiet.wav \
+  --midi 60 \
+  --out ./receipts/piano-c4-quiet.receipt.json
+\`\`\`
+
+Output receipt includes source basename, content fingerprint, byte count, selected root, detailed waveform and pitch reports, blockers, and explicit \`source_provenance_verified:false\`, \`performer_consent_verified:false\`, \`human_listening_review:null\`, \`music_sample_rights_verified:false\`, and \`release_ready:false\`. The source recording bytes are not modified, the receipt writes with exclusive creation and cannot silently overwrite a prior receipt. The CLI exits with code **0** for a technically sound candidate, **2** for a held capture, and **1** for a parser/file/usage failure. The job requires the recording to be locally authorized; the tool makes no network requests.
+
+This is a convenience intake for a **future genuine acoustic capture session**, not evidence one already occurred. The existing canonical PulseGrid import and Saban preflight still hold independent auth, source licensing, actual browser output, and human musical approval.
+
+[GitHub Foundry run 39090349758](https://github.com/jgaethle10/forge-operator/actions/runs/39090349758) passed **122/122 engineering tests and 8/8 Saban planning tests** with the audit CLI, octave fix and strict receipts. The broader Forge workflows must be checked at the exact current head. The original *Weight of Silence* master is unchanged.
+
+
+## Oct 20 2026: dynamic-performance experiment and genuine-sample acquisition route
+
+Playback head `efa6c08a986e140a3c6f020d24d04b030339a6a8` introduced
+sample-layer-aware piano gain and a bounded cosine-squared four-segment damper
+release. These are **engineering audition candidates**, NOT heard/audited
+improvements or replacements for *The Weight of Silence*. For a single broad
+velocity layer, the established linear MIDI-gain response is retained. For a
+distinctly recorded velocity layer, MIDI attenuation is softened slightly to
+avoid double-counting the naturally quiet source recording. Output remains
+bounded at gain 0.68; sample bytes, onset and pitch are not re-synthesized.
+The release tail stays inside the decoded sample duration. Unit and simulated
+browser-path tests do not certify audible quality. Compare level-matched
+key-offs at short, medium and long durations with headphones and real speakers.
+
+### Two public candidate recording libraries, not yet obtained/admitted
+
+1. **Salamander Grand Piano V3** (Yamaha C5, Alexander Holm):
+   https://github.com/sfzinstruments/SalamanderGrandPiano .
+   Stated license CC BY 3.0, 48kHz/24-bit stereo, 16 recorded velocity layers,
+   minor-third key sampling, with separate release/hammer/string resonance.
+   A commercial integration must carry complete attribution and original
+   source/license and transformation lineage. The original source archive and
+   repository license must be retained in the provenance receipt. **Not an
+   Evercraft-recorded piano.** Using its separate hammer/strings or sustain
+   articulation requires new explicit playback lanes, not pretending the
+   current one-shot sampler already supports those features.
+
+2. **VSCO 2 Community Edition** (Versilian Studios / Sam Gossner and
+   Ivy Audio / Simon Dalzell): https://versilian-studios.com/vsco-community/
+   and https://github.com/sgossner/VSCO-2-CE . The vendor states CC0 for
+   the Community Edition raw orchestral WAV sample set (strings, brass,
+   woodwinds and other sections). This is a starting source for real
+   articulations and bowed-string patches. Credit the contributors as a
+   courtesy and verify the individual downloaded file, original LICENSE,
+   hash, articulation and provenance before registration. Do not label it
+   an Evercraft-owned original recording.
+
+Both are *source candidates*. No WAV bytes were imported in this push, no
+license evidence was attached to individual assets, and no human audible
+comparison was performed. `rights:'licensed'` must be based on independently
+retained evidence, not inferred merely from this paragraph. Preserve the
+existing verified resolver, `rights:'unknown'` intake and release hold.
+
+### Next **audible** proof (do not skip)
+
+- Secure authorized source bytes and pin the actual version, license, author
+  and cryptographic sample digests. Import 3 real piano roots (bass, mid, high)
+  with distinct velocity layers; independently authorize playback.
+- Run capture audit, pitch verification, Source WAV -> canonical asset vault
+  -> mapped MIDI patch -> browser actual audio output. Record device/browser
+  playback receipts separately from WAV SHA/technical checks.
+- Render exactly matched expressive MIDI phrases under old and new gain/release
+  behavior with the **same source samples** and the original *Weight of Silence*
+  as a separate frozen reference. Match listening loudness, record transients,
+  abrupt tail events, stereo image and whether rests actually breathe.
+- Musician/founder blind A/B and release-rights audit are still required.
+  No general claim of best-in-class or commercial-ready instruments before
+  those checks.
+
+
+## Oct 26: Authorable sample-piano sustain pedal, limited to existing recordings
+
+New `instrument-foundry-pedal.mjs` describes a **bounded authored pedal** with alternating down/up events at the 16th-step grid. `clip.set_foundry_piano_pedal` stores and reverses these events inside the canonical PulseGrid clip provenance, with transaction/undo support and clip-resize truncation. The Fallen Sessions Music Theory Lab exposes foldable Pedal Down, Pedal Up and Clear actions on the selected step, without adding bulky controls to the mobile transport toolbar.
+
+`PulseGridAudioEngine` now computes key-off duration for recorded-piano notes using the first pedal lift **only if the pedal is down at note release**; late pedal depression never resurrects a note, and a pedal hold never crosses the clip end. The existing sampler still stops at the **actual decoded WAV exhaustion**, regardless of MIDI pedal length. This does not synthesize sustained sound beyond the recording, create sympathetic resonance, add physical damper or half-pedal modeling, claim continuous CC64 recording, or alter an oscillator track. Pedal timeline edits invalidate current recorded audio authority and stop old scheduled voices pending a fresh authorized Play.
+
+This is an audition-stage expression primitive. No acoustic piano captures, listener-quality verdict, licensed sample ownership, released master, or deployment is established here. Test suite covers malformed/ambiguous event rejection, no late-pedal resurrection, clip/asset boundaries, canonical reversibility, and simulated Web Audio hold vs release; the CI results for this exact commit must be checked independently. Human listening still decides whether the sustain is musically convincing. Original `The Weight of Silence` reference remains immutable.
+
+
+## October 26 next slice: MIDI CC64 keyboard pedal capture, still a draft
+
+The existing Fallen Sessions Web MIDI note listener now also decodes **Control Change 64** (0–63 up, 64–127 down; 16 MIDI channels) through `instrument-foundry-midi-pedal.mjs`. Other MIDI controls and malformed/truncated packets cannot be mistaken for sustain. Step-quantized down/up events are normalized to ordered, alternating changes; repeated controller chatter does not create fake note-offs or duplicate graph receipts. A source/channel latch avoids combining simultaneous unrelated controller streams.
+
+**Crucial playback rule:** when PulseGrid transport is actively playing, CC64 is **buffered** as an audition take anchored to the original clip ID and original pedal lane. The UI exposes **Commit Pedal Take** and **Discard Take**. Commit is forbidden while transport is still playing; the original clip must be unchanged before the canonical `clip.set_foundry_piano_pedal` controller receipt is written. This avoids changing the audio authority fingerprint and stopping playback in the middle of a performance. No uncommitted take is promoted automatically. If transport stops by means other than the Play/Stop control, the draft stays pending and still requires explicit commit or discard. The buffered events are intentionally not the live-performing damper sound during their capture.
+
+When stopped, the pedal can also be edited at a chosen step without adding a MIDI note. The separate event-step selector helps mobile musicians avoid unintentional composition edits. Removing an event now removes just the chosen step rather than silently clearing the entire authored lane. Canonical undo and sample-length/clip-length limits remain unchanged.
+
+Tests cover CC64 threshold/channel parsing, rejection of note/SysEx/wrong-controller data, sorted/lossless event updates, duplicate suppression, malformed event denial, canonical reversible controller provenance, UI capture order, and pending-state safeguarding. Dedicated Foundry CI and Forge checks still need final-head proof after changes. Web MIDI controller hardware has **not** been exercised here; this is code-based recording-path evidence, not a real acoustic performance, a captured physical pedal demo, half-pedal dynamics, commercial clearance, or a release-ready piano.
+
+
+## October 26: Tail Budget and corrected CI verification
+
+The **Recorded Piano Tail Budget** in the existing Fallen Sessions Music Theory Lab compares authored note duration (including swing and the CC64 pedal lane) with the **canonical WAV asset's duration metadata**, adjusted for the piano sample's bounded semitone playback rate. A sample that ends before the key/pedal hold is categorized as a **note-hold shortfall**; one that holds but cannot supply the selected damper release is a separate **release-tail shortfall**. Missing recorded pitch/velocity layers are distinct blockers. Muted, solo and probabilistic score events are included as authored evidence, not as proof a voice was audible. Results are displayed read-only with source note positions, affected pitches and estimated deficit seconds.
+
+**Evidence limitation:** Audio metadata can be stale or inaccurate. This report does *not* read the decoded `AudioBuffer.duration`, recognize acoustic decay, prove a WAV's natural release is musically convincing, justify sample ownership, or hear/compare a performance. Browser decoded duration and real musician listening remain the authority before sample-capture recommendations become approved remedies. No synthetic fallback, sample looping, invented tail or acoustic fix is introduced.
+
+**CI correction:** An earlier workflow command did not include the newest Arrangement Arc, CC64 and pedal timing tests, and some watched paths were accidentally concatenated into invalid filenames. The GitHub workflow now enumerates **18 distinct Foundry test modules**, explicitly including the tail budget, pedal, MIDI, arrangement and simulated runtime suite; watched paths are separate. Earlier green CI jobs should not be cited as proof those omitted tests ran. Only a completed run on the **corrected exact commit** can establish this suite's pass/fail status. Forge typecheck/build is a separate independent gate.
+
+
+### Actual browser decoded-buffer follow-up (independent of metadata)
+
+The existing `PulseGridAudioEngine` now separately checks each *scheduled recorded-piano voice* against the independently decoded `AudioBuffer.duration`, the actual semitone-dependent sample playback rate, the CC64-dependent hold duration and the mapped release seconds. The engine emits `decoded_sample_tail_warnings` and `decoded_key_hold_shortfalls` via the playback status for the current Play. This does **not** replace the existing sampler safety clamps, reauthorize old buffers, infer audible quality or alter the WAV. A new end-to-end simulated Web Audio regression deliberately gives the asset **incorrect** duration metadata and verifies that dry/wet tail flags follow the decoder, not the metadata.
+
+Counts are playback events (a looping note may be counted more than once); they reset on each explicit Play and are not a unique note inventory or listening verdict. Human listening and physical speaker/device QA remain unperformed.
+
+
+## October 26 next push: preserve real recorded-piano attack transients
+
+The sample scheduler previously applied the same fixed 4 ms gain fade to every recorded note. An entirely legitimate near-zero aligned source recording may have a fast hammer transient that the blanket fade softens. `planFoundryPianoAttack(buffer)` now inspects a **bounded 1.5 ms** of the first two channels of actual decoded PCM: a near-zero initial 0.35 ms can receive a **0.5 ms** protective onset; intermediate boundary energy receives **1.5 ms**; a sharply nonzero initial waveform receives a **3 ms** cut-in microfade to limit clicks. Uninspectable or malformed audio retains the original **4 ms** conservative guard. Every attack remains limited by sample playback length, with no WAV alteration, new samples, invented timbre or rights promotion.
+
+`PulseGridAudioEngine` exposes per-Play counts of fast zero-aligned attacks and guarded abrupt starts next to independently decoded sample-tail warnings. Unit and simulated actual-engine integration tests exercise near-zero and abrupt decoded PCM, preserve sample-only playback, and assert bounded automation ordering. This is an **engineering audition hypothesis**, not evidence a real acoustic piano was sampled or sounded better: a proper A/B listening pass is still mandatory before promoting any change to live music releases.
+
+
+## Oct 26, later: Non-destructive operator-silence alignment
+
+The sampler now includes `planFoundryPianoPreRoll(decodedAudioBuffer)`. Some manually captured samples contain substantial silence *before* the actual hammer onset; playing those bytes untrimmed can make correctly timed MIDI keys sound late. This read-only planner inspects a bounded first 55 ms of mono/stereo PCM in ~1 ms RMS windows, requires the initial 8 ms quiet (max RMS below .001), an unambiguous two-window onset above .006 following four quiet windows, and a detected onset no earlier than ~12 ms. Only then does the Web Audio `AudioBufferSourceNode.start(time,offset)` skip confidently silent operator pre-roll, retaining 4 ms before the event. The original content-addressed WAV bytes and canonical asset record never change. PCM is never stretched, synthesized, or silently licensed. Truly soft piano attacks, ambiguous noise, early hits, malformed PCM and device failures keep offset **zero**.
+
+`PulseGridAudioEngine` counts per-Play aligned sampled voices, and its separate actual-decoded-WAV tail budget now subtracts any source offset when assessing real remaining sample length. Dedicated unit tests and full simulated AudioEngine tests cover delayed transient alignment, protected pianissimo, unwanted isolated clicks, stereo disagreement, immutable source PCM, and preservation of sample/rights authorization. The offset heuristic is not an ear-approved fix, and a clean MIDI onset is not a completed acoustic-piano model or commercially usable recording. A/B listening against `The Weight of Silence` still gates deployment.
+
+
+## October 26 further engineering: sampled-chord headroom observation, not compression
+
+Sampled voices that overlap can sum even when each individually stays within the existing conservative gain envelope. The new `instrument-foundry-polyphony.mjs` records the **actual start/stop times and gain scheduled by the existing recorded-piano playback engine**. It sweeps end-events before start-events at identical timestamps so consecutive notes do not count as a false chord. It reports the maximum simultaneous recorded voices and the maximum sum of pre-effect voice gain. This is a conservative *scalar proxy* for possible mixing headroom pressure, **not a measured PCM peak, clipping assertion, LUFS metric, or mastering approval**. Its observation budget is bounded to 2048 scheduled voices per explicit Play, with visible incomplete-evidence status if exceeded. The counter resets on Play and preserves the previous last-play result on Stop.
+
+Crucially, this slice makes **no changes** to recorded-voice gain, filters, compressors, source offsets, transposition, sample rights or playback loudness. It surfaces a review cue in the Fallen Sessions Music Theory Lab and tests real simulated PulseGrid playback: two simultaneously scheduled MIDI notes use their independently pitched verified sample sources, increase the overlap warning without replacing or compressing either note, and the ledger resets on the next audition.
+
+Additional safety fix: `scheduleFoundryPianoNote` now verifies bounded pitch, playback-rate, release seconds, decoded sample length, and complete attack/release timing **before allocating any Web Audio gain or buffer-source node**. Malformed/exhausted recordings fail without orphaning an unscheduled source in the engine's active-source set. New tests exercise both the full audio engine and allocation-free failures. The dedicated CI command now explicitly enumerates **19** Foundry test modules. The result of that full suite and the broader Forge typecheck must be checked on this exact head, not inferred from older green commits.
+
+The next listener-approved mixing intervention must be deliberate and reversible. These measurements do not justify quietly applying a compressor to *The Weight of Silence* or another protected original.
+
+
+## October 26 final push: inspect the actually decoded dry piano chord PCM, explicitly after Stop
+
+The former `FoundryPianoPolyphonyLedger` exposes an intentionally conservative **voice-gain sum**, *not* audio amplitude. `instrument-foundry-dry-pcm.mjs` now provides a separate **explicit offline read-only audit** from real decoded PCM data and the scheduled, authorized recorded-piano voices. It applies source offsets, semitone-dependent playback rates, the actual note attack timing and the four-segment cosine-square release at a bounded 48 kHz inspection resolution. A two-note same-phase fixture genuinely sums above 0 dBFS, whereas opposite-polarity waves cancel, proving why the simple voice-gain-sum metric must not be presented as sound pressure, clipping or a mastering verdict.
+
+The actual `PulseGridAudioEngine.auditRecordedPianoDryPeak()` method refuses to run during playback; it uses **no new Web Audio nodes** and refuses if too many notes were scheduled or the verified decoded audio cache was revoked. The engine keeps only the first 16 authorized decoded voice descriptors, and an explicit authority/resolver change clears references and returns **unavailable**, not a fabricated clean result. The musician presses **Inspect decoded chord PCM** *after stopping* the audition. CPU work is bounded to 0.8 s at up to 48 kHz, 16 voices and two channels. Reports state when the window is partial. The original WAV bytes, canonical score, pitch selection, voice levels, master, effects, mix and frozen reference recording are not changed.
+
+**Strict scope:** the reported sample peak and over-full-scale PCM frame count describe a **dry, decoded piano-voice approximation** before filters, bus volume, delay, feedback, master gain and speaker output. The analyzer uses linear sample interpolation to estimate Web Audio resampling; it is not the physical browser output stream, an intersample true-peak meter or LUFS analyzer, nor proof of audible clipping in the final mix. A value above one only calls for listening and an independent offline full-bus render before any audio processing change is approved. Empty PCM, truncated source data, invalid scheduling, too many voices and revoked authorization all fail closed. The dedicated CI runner now invokes 20 modules including the PCM audit tests and real simulated PulseGrid integration tests.
+
+Do not label this a release-ready recording or human listening approval. The next promotion gate remains an ears-on comparison against the frozen *The Weight of Silence*.
+
+
+## October 26: bounded offline piano-only track effects bus and master evidence
+
+After a successful 20-module Foundry check and full Forge build on the preceding head, the next draft slice adds `instrument-foundry-offline-bus.{mjs,d.mts,test.mjs}`. A real browser with `OfflineAudioContext` can independently render up to **16 authorized decoded piano voices for 0.8 seconds** using the existing `scheduleFoundryPianoNote` note envelopes, sample source offsets and pitches. The testable offline graph reproduces PulseGrid's **piano track input gain, low-pass filter, dry branch, delay/feedback/wet branch and 0.72 master gain**; it uses the selected track's note-on automation snapshot.
+
+The operator presses **Inspect piano effects bus offline** only after stopping playback. The result measures the returned offline buffer's stereo sample peak, RMS, and sample frames above full scale. An unavailable OfflineAudioContext, bad/incomplete PCM, missing source authorization, invalid/unbounded note data, more than 16 recorded voices, or incompatible automation snapshots fails closed. An in-progress render also invalidates itself if playback restarts or asset/session authorization changes. No original WAV, score, track parameters or master output is written or modified, and no synthetic notes or commercial-rights grants are introduced.
+
+**Important boundaries:** this is a **sampled-piano-only effects-bus offline audition**, not the complete final mix. It excludes non-piano tracks (including drums, audio clips and unsampled synths), transport-driven automation changes between notes, the full-song arrangement, intersample true peaks, physical speaker output and human listening quality. The 0.8-second preview covers the selected note-event window, while feedback/wet delay can extend beyond it, so the report explicitly marks the **effects tail incomplete** when any track has a nonzero delay mix. It does not prove that a final master clips or clears music rights. A full-song, full-asset, full-DSP bounce and actual listening panel are separate further gates.
+
+The dedicated CI command now includes **21 modules**, including graph-contract tests with a simulated Web Audio offline context and live PulseGrid simulated playback integration testing authority revocation across a pending render. These tests confirm code-path correctness, *not real speaker sound*. A new production-quality recording or final mix is not asserted by this change. The protected original *The Weight of Silence* remains unchanged.
+
+
+## October 26 multi-track offline audition: verified audio bed joins the piano
+
+The earlier effects-bus renderer handled only recorded-piano voices. This slice now includes **up to four authorized imported audio-track sources** scheduled in the actual live PulseGrid engine alongside those sampled piano notes. The new `audioBeds` input on `renderFoundryPianoOfflineBus` uses the **identical `schedulePulseGridAudioBuffer` one-shot/loop helper** used during normal playback, routes each decoded WAV through its own existing filter/dry/delay/feedback/wet track topology and the existing master gain, and emits a single bounded offline PCM sample-peak measurement. It never rewrites the source sample or its hash, creates missing notes, claims extra dynamic layers, or authorizes additional recordings.
+
+Audio beds are captured only from already scheduled, validated, decoded media on the real engine. Cache/resolver/session revocation clears them; in-flight rendering is invalidated on authority, explicit transport, or canonical session identity changes. The offline render refuses corrupted or unknown bed modes, unknown bus IDs, excess sources, and automation disagreements. `Included` and `omitted` canonical track IDs are displayed in the actual Fallen Sessions UI. This makes partial coverage visible rather than calling a piano-plus-audio preview a full song. Imported audio tracks longer than the **0.8-second** preview are explicitly reported as **incomplete**. Wet/delay feedback may also extend beyond the window.
+
+**Still excluded:** drum synthesis, unsampled synthesizers, every unscheduled/unselected track, changing transport automation inside the phrase, later arrangement bars, device output, true-peak and integrated loudness metering, and listening/recording-rights verification. This feature is a deliberately partial **verified piano + imported audio bed** mix, not a release-ready master. Source WAV files, *The Weight of Silence* and their rights/ownership state remain untouched.
+
+The dedicated tests now cover piano plus a two-second imported recording on the **actual simulated PulseGridAudioEngine**, verify that both sample sources reach the offline graph and no oscillator is substituted, check source identity and untouched rights, distinguish loop from one-shot imported audio, and fail closed on unrecognized tracks/modes or excessive beds. These are software tests, not a physical listening audition.
+
+
+## October 27: identical original synth-note envelope inside the bounded offline mix
+
+A new shared `pulsegrid-synth-voice.{mjs,d.mts,test.mjs}` now owns PulseGrid's existing oscillator-note behavior, used identically by the **live** `PulseGridAudioEngine.note` and the offline `renderFoundryPianoOfflineBus` audition. It retains the original sawtooth bass, sine bell, and triangle default synth choice, 440 Hz MIDI pitch mapping, 8 ms envelope attack, target release, and source stop time. This is *not* an acoustic piano sample claim: it preserves the original deliberately synthetic instruments as written.
+
+The live engine captures only actual synth notes scheduled for playback, with original track, pitch, velocity, timing, note-on automation and a 16-event bound. On explicit Stop and user request, it may reconstruct these scheduled synth voices **alongside the previously authorized recorded-piano WAV and imported-audio tracks**, passing them through the same bounded low-pass, effects bus and master. Missing bus identities, malformed note data, too many voices, inaccessible recordings and authority changes fail closed without publishing a misleading clean result. The user-facing report now distinguishes **recorded-piano voices, verified audio beds and original synthesized-note events** and explicitly names the track IDs left out.
+
+**Drums and full arrangement remain excluded.** No synthetic kick, randomized hi-hat or other missing-note performance is invented to make the preview look complete. The 0.8-second preview can still truncate wet delay tails or long audio beds, and note-on frozen automation is not a complete song automation timeline. It is *not* final true-peak, LUFS, speaker output, rights certification or human listening evidence. The frozen *The Weight of Silence* reference and all recorded WAV bytes remain untouched.
+
+Dedicated CI now enumerates 22 distinct Foundry test modules: new pure synth timbre/timing/fail-closed tests and a real PulseGrid simulated live-to-offline piano-plus-bass integration test, in addition to previous verified sample and imported-bed tests. This is a technical parity advancement, not yet a full-song bounce or physical audible quality proof.
+
+
+## October 27: preserve performed drums across live-to-offline review
+
+The last short-mix gap was that live PulseGrid drums are made dynamically: a 135→46 Hz sine kick glide and a randomly prepared 90 ms high-frequency noise hat. A separate offline simulation would silently **invent another** noise waveform and possibly reroll probabilistic hits. The new shared `pulsegrid-drum-voice.{mjs,d.mts,test.mjs}` schedules both **from the same code** in live and OfflineAudioContext; real `PulseGridAudioEngine` captures only events actually fired by live steps, including the **exact noise AudioBuffer** already used for that hi-hat. The offline reviewer never invokes `Math.random` or generates another hat sample. Drum timing/velocity, kick frequency glide, high-pass hat, gain release and playback stop are shared. A limit of 16 drum events per explicit Play is enforced, and excess/invalid data returns unavailable rather than a misleading complete render.
+
+Together the stop-only offline audition can now cover **recorded piano, authorized imported WAV beds, actual synth oscillators, and performed kick/hi-hat events** passing through their existing frozen-note-on effects buses and master. It reports the realized drum-hit count and explicit inclusions/omissions. Drum rolls which did not happen during live Play remain omitted. This remains a <=0.8s excerpt with incomplete delay/long-bed tails and stationary automation; not a full arrangement bounce, on-device mastering meter, commercial rights grant or an ear-certified output.
+
+The CI recipe now runs **23 Foundry test modules**, including original kick/hat shared-scheduler tests, original noise-buffer identity, strict invalid input, and an end-to-end simulated `PulseGridAudioEngine` test capturing kick/hat beside an authorized piano and replaying those exact two performed drum hits offline. Source WAV bytes and the frozen *The Weight of Silence* remain unchanged. The companion Forge CI provides an independent broader typecheck/build and must be observed on the exact HEAD.
+
+
+## October 27: private audible multi-bar offline audition, 0.8s or 8s
+
+Fallen Sessions now offers a musician-triggered **Hear up to eight seconds** option beside the original 0.8-second pre-effects / performed-mix inspections. `renderFoundryPianoOfflineBus` accepts only explicit `window_sec:0.8|8` and `includeAuditionWav:true`, allocating at most 384,000 frames at 48kHz stereo. It reconstructs already performed, authorized sampled piano, imported audio beds, original synth voices, and probabilistically *realized* kick/hat events through the existing bus/master snapshot. The longer path can cover multiple bars if the bounded event capture is complete (max 16 piano, 16 synth and 16 performed drum events, 4 imported audio beds). Excess events, unsupported timing, mutable authorization or absent browser offline rendering fail closed. It does NOT silently expand to arbitrary song length.
+
+After `OfflineAudioContext.startRendering()`, a new tested `instrument-foundry-audition-wav.mjs` creates a temporary, internal-only 16-bit stereo PCM WAV from the **actual rendered browser buffer** without uploading any audio. On the user's direct click, the browser plays it using its built-in audio control and a transient `blob:` URL. The UI revokes those URLs when playback restarts, the scene/session changes, the user requests a new audition or the component unmounts. The source decoded WAVs, canonical score, copyright/provenance, MIDI recording, and master parameters remain untouched. The audit receipt still measures float-PCM sample peaks *before* WAV conversion.
+
+**Important:** PCM above full scale is clamped into 16-bit preview bytes and visibly disclosed; that audition clipping is not an automatic gain, normalization or mastering change. The 8-second rendering and audio sample controls **do not imply commercial rights, public publishing permission, full-song coverage, automation parity across multiple changing steps, complete feedback tails, device true-peak metering or human-listener approval.** A longer snippet might make the effects easier to hear but cannot by itself certify musical quality. *The Weight of Silence* remains an unchanged musical comparison benchmark.
+
+Dedicated Foundry CI now enumerates **24 test modules**, including full PCM WAV header/channel/clamping tests, multi-bar 8-second renderer boundedness, source rights unchanged across an actual engine preview, and mobile UI source URL cleanup.
+
+
+## October 27: played-step automation and honest eight-second performance coverage
+
+The eight-second local WAV option previously offered a fixed-length OfflineAudioContext result even when the musician pressed Stop after just the first step was actually scheduled. This could leave many seconds of silent/unobserved space and conceal that the long preview was **not** a complete performed eight-second phrase. The audio engine now separately captures the earliest and latest genuinely scheduled transport-step timestamps and displays **observed scheduled-performance coverage** and an explicit **partial performance** warning when that observed horizon is shorter than the requested 0.8- or 8-second preview. A result cannot claim `complete:true` unless source/event coverage AND the observed transport horizon both clear the window. The frame count of an offline render alone is not performance evidence.
+
+The original PulseGrid `scheduleStep` records actual bus automation even on *silent* steps. A new `pulsegrid-bus-automation.{mjs,d.mts,test.mjs}` validates up to **1024 captured real scheduled events** and maps each event to the precise existing `scheduleBus` gain and low-pass filter values. The offline Web Audio graph replays only actually observed step changes using `setValueAtTime`, never invented interpolation or a fabricated later arrangement. It initializes the opening mix from the last performed step at/before the excerpt origin where available and excludes later events beyond its chosen window. It refuses missing/forged bus IDs, out-of-range automation values, excess events, or changed base track volume/filterHz. Unchanged static delay/feedback settings remain in the original offline bus graph and are still frozen for this excerpt.
+
+**Scope remains:** this is a bounded private audition of events scheduled during Play, not a full-song bounce; it does not recreate a performance that never played, dynamically automate controls other than the original track volume/filter steps, guarantee a complete feedback tail, determine intersample true peak, certify commercial recording rights, or establish listener-approved acoustic quality. Physical A/B audition versus the frozen *The Weight of Silence* and an independent full arrangement export remain gates.
+
+The dedicated CI recipe now runs **25 modules** including a new pure automation step timing/rejection suite, a real engine live-to-offline silent-step automation integration case, and UI assertions for incomplete live coverage.
+
+
+## October 27, late: make the eight-second multi-bar audition genuinely usable
+
+The originally safe offline review had a **16-event limit per piano/synth/drum family**, enough for a chord but insufficient for several bars of active playing. This engineering slice centralizes the local mobile graph budgets in `instrument-foundry-review-budget.mjs`: **64 actually scheduled recorded-piano notes, 64 synth notes, 96 performed kick/hat events, four imported audio beds**, a separate **224-node combined source cap**, eight included track buses, 1024 captured bus-automation steps, and at most eight seconds of 48kHz stereo rendering. Both the real PulseGrid live capture and offline graph validator now use that same source limit contract. A four-bar stress fixture with 32 piano + 32 synth + 64 drum events fits (128 sources), while an individually legal 228-source graph fails before allocating the OfflineAudioContext.
+
+The separate **0.8-second decoded dry-piano-only PCM diagnostic deliberately stays at 16 voices** for mobile CPU and memory safety; it reports unavailable when the song contains more than those notes. This does not block the newly expanded full-track offline mix. The private audio-player panel displays the actual reviewed source count and the maximum budget so the operator can see what is within scope.
+
+Actual PulseGrid engine integration also schedules more than 16 piano voices and 44 drum hits in one bounded observed preview, verifies the distinct offline source count, refuses to label a partial observed transport eight seconds as complete, preserves unknown recording-rights metadata and does not mutate the canonical authored session or *The Weight of Silence*.
+
+**Not a release claim:** expanded node budget does not create a complete long-song bounce. Reviews still use actual scheduled performance history with only captured steps and available authorized recordings, keep static delay parameters frozen and cannot certify complete wet-feedback tails, licensing or human auditory quality. The new 26-module CI runner covers the shared budget and live simulated four-bar proof.
+
+
+## October 28: contiguous performed-step proof instead of first/last timestamps
+
+The eight-second offline sound preview previously reported transport coverage as the maximum minus minimum of captured per-track automation step times. That mistakenly allowed **a missing middle bar, a repeated/wrong step number or a timing skip** to look like continuous performance merely because first and last timestamps were eight seconds apart. The true Web Audio render length remains unrelated to how many performed steps were *scheduled* before Stop.
+
+New `pulsegrid-performance-coverage.{mjs,d.mts,test.mjs}` verifies **the real global transport scheduler's** monotonic step receipts, original scheduled step durations, loop index continuity and exact swing-dependent next-step times. The real PulseGrid engine captures each step once before the per-track processing, in a separately bounded 1024-step ledger, resets it on Play/cache/rights/scene changes and fails closed on overflow. For the selected 0.8s/8s excerpt origin, it now computes only the uninterrupted scheduled-step coverage **up to the first hole, timing mismatch, duplicated clock event or wrong sequence**, never bridging a missing section using later timestamps. The `complete` flag requires this entire contiguous step window *plus* all previous recording/audio/effects completeness guards. A verified scheduled step is still not proof a physical speaker played to completion.
+
+The Fallen Sessions local audio-review panel now distinguishes **contiguous scheduled-step seconds**, **number of real step receipts**, whether the selected window is continuous, and the **first detected gap offset**. This helps a musician identify a skipped/reordered bar while preserving the private in-browser WAV playback. The software neither fabricates missing notes nor silently heals gaps, changes the actual live clock/sound, overwrites recorded piano WAVs, promotes unknown rights, or touches the protected original *The Weight of Silence*.
+
+CI now runs **27 Foundry modules**, including deterministic 64-step four-bar proof, missing step in the middle of an eight-second span, wrong/repeated step order, valid swing, an origin within a real step, malicious duplicate/nonfinite event rejection and two whole-engine simulated PulseGrid playback integration tests, one continuous and one missing a middle step. Physical listening, longer automation and tail-safe full-song export remain independent release gates.
