@@ -1,0 +1,32 @@
+name: Systemia modernization safety review
+
+on:
+  pull_request:
+    paths:
+      - "tools/systemia_modernization_gate.py"
+      - "tests/test_systemia_modernization_gate.py"
+      - "docs/SYSTEMIA_MODERNIZATION_SAFETY_GATE.md"
+      - ".github/workflows/modernization-safety-gate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/systemia_modernization_gate.py"
+      - "tests/test_systemia_modernization_gate.py"
+      - "docs/SYSTEMIA_MODERNIZATION_SAFETY_GATE.md"
+      - ".github/workflows/modernization-safety-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-review-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assert fail-closed review behavior
+        run: python -m unittest discover -s tests -p 'test_systemia_modernization_gate.py' -v
