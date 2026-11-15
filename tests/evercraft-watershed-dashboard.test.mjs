@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {validateIndexReview,indexReviewCounts,INDEX_REVIEW_PATH} from '../public/watershed/index-review.mjs';
 import {
   validateEvidence,EVIDENCE_SCHEMA,SNAPSHOT_PATH,isOfficialSource,
   formatNumber,sourceAgeLabel,shortDate,ratioLabel
@@ -8,6 +9,7 @@ import {
 
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const evidence=JSON.parse(read('public/watershed/data/yakima-2026-11-09.json'));
+const review=JSON.parse(read('public/watershed/data/nrcs-index-review-2026-11-11-to-15.json'));
 const page=read('public/watershed/index.html');
 const app=read('public/watershed/app.mjs');
 const copy=v=>structuredClone(v);
@@ -100,4 +102,57 @@ test('mobile public preview has source provenance and request handoff, not PDF, 
   assert.match(app,/section\.hidden=true/);
   assert.doesNotMatch(app,/\.innerHTML\s*=/);
   assert.doesNotMatch(app,/localStorage|sessionStorage|navigator\.geolocation|fetch\(.+?https?:/);
+});
+
+test('five real NRCS report days retain every warning and distinguish durable from temporary records',()=>{
+  assert.equal(INDEX_REVIEW_PATH,'./data/nrcs-index-review-2026-11-11-to-15.json');
+  assert.deepEqual(validateIndexReview(review),{valid:true,errors:[]});
+  assert.deepEqual(indexReviewCounts(review),{
+    days:5,durable_days:1,temporary_days:4,warned_indices:15,
+    reservoir_trend_available:false,safe_for_forecasting:false
+  });
+  assert.deepEqual(review.days.map(x=>x.date),[
+    '2026-11-11','2026-11-12','2026-11-13','2026-11-14','2026-11-15'
+  ]);
+  assert.deepEqual(review.days.map(x=>x.indices.map(v=>v.percent)),[
+    [34,85,108],[5,66,109],[4,52,86],[15,50,110],[17,57,120]
+  ]);
+  assert.ok(review.days.every(x=>x.indices.every(v=>v.nrcs_warning===true)));
+  assert.ok(review.days.every(x=>x.reservoir_comparable_sum_af===null));
+  assert.ok(review.days.every(x=>x.source_report_sha256.length===64));
+  assert.equal(review.human_publication_approved,false);
+  assert.equal(review.water_supply_forecast_authorized,false);
+});
+test('invalid NRCS reports fail closed before any browser history cards render',()=>{
+  const mutants=[
+    r=>{r.presentation='PUBLISHED';},
+    r=>{r.human_publication_approved=true;},
+    r=>{r.water_supply_forecast_authorized=true;},
+    r=>{r.days[0].preservation='temporary_staged';},
+    r=>{r.days[3].preservation='ledger_recorded';},
+    r=>{r.days[1].staging_run_url='https://evil.example/';},
+    r=>{r.days[1].source_run_url='javascript:alert(1)';},
+    r=>{r.days[2].source_report_sha256='bad';},
+    r=>{r.days[4].indices[1].nrcs_warning=false;},
+    r=>{r.days[4].indices[1].percent=-10;},
+    r=>{r.days[4].reservoir_comparable_sum_af=147099.23;},
+    r=>{r.days[3].date='2026-11-13';},
+    r=>{r.days.pop();}
+  ];
+  for(const mutate of mutants){
+    const copy=structuredClone(review);mutate(copy);
+    assert.equal(validateIndexReview(copy).valid,false,mutate.toString());
+    assert.throws(()=>indexReviewCounts(copy),/unverified index review/);
+  }
+});
+test('historical visual stays phone-first, dated, unapproved and source-anchored',()=>{
+  assert.match(page,/id="index-history"/);
+  assert.match(page,/id="index-history-list"/);
+  assert.match(page,/id="index-history-error"/);
+  assert.match(page,/Temporary staging/);
+  assert.match(page,/not forecasts/i);
+  assert.match(app,/loadIndexReview/);
+  assert.match(app,/validateIndexReview/);
+  assert.match(app,/indexReviewCounts/);
+  assert.doesNotMatch(app,/innerHTML\s*=/);
 });
