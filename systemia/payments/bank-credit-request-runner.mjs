@@ -10,6 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {startBankCreditRequestRuntime} from './bank-credit-request-runtime.mjs';
+import {startBankCreditPublicGateway} from './bank-credit-public-gateway.mjs';
 
 const privateConfig=String(process.env.EVERCRAFT_BANK_CREDIT_PRIVATE_CONFIG||'').trim();
 if(!privateConfig)throw Error('private_bank_credit_config_path_required');
@@ -29,7 +30,37 @@ const instance=await startBankCreditRequestRuntime({
  operatorToken:cfg.operator_token,linkSigningKey:cfg.link_signing_key,
  approvedOffers:cfg.approved_offers||[],bankPayee:cfg.bank_payee||null,
 });
-process.stdout.write(JSON.stringify({ok:true,url:instance.url,bank_credit_configured:instance.health().bank_credit_configured,approved_offer_count:instance.health().approved_offer_count})+'\n');
-const stop=async()=>{await instance.close();process.exit(0)};
-process.on('SIGTERM',stop);
-process.on('SIGINT',stop);
+// Never start the public gateway with a fake or unapproved receiving account.
+if(!instance.health().bank_credit_configured||instance.health().approved_offer_count<1){
+ await instance.close();
+ throw Error('bank_credit_launch_conditions_missing');
+}
+let publicGateway;
+try{
+ publicGateway=await startBankCreditPublicGateway({
+  host:'127.0.0.1',
+  port:Number(process.env.EVERCRAFT_BANK_CREDIT_PUBLIC_LOOPBACK_PORT||8796),
+  privateRuntimeUrl:instance.url,
+ });
+}catch(error){
+ await instance.close();
+ throw error;
+}
+process.stdout.write(JSON.stringify({
+ ok:true,
+ state:'STARTED_LOCAL_ONLY_NOT_PUBLICLY_VERIFIED',
+ operator_loopback:instance.url,
+ public_buyer_loopback:publicGateway.url,
+ bank_credit_configured:instance.health().bank_credit_configured,
+ approved_offer_count:instance.health().approved_offer_count,
+ actual_bank_deposit_verified:false,
+})+'\n');
+let stopping=false;
+const stop=async()=>{
+ if(stopping)return;
+ stopping=true;
+ await publicGateway.close();
+ await instance.close();
+};
+process.on('SIGTERM',()=>{void stop().catch(()=>{process.exitCode=1})});
+process.on('SIGINT',()=>{void stop().catch(()=>{process.exitCode=1})});
