@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 // Alpaca PAPER-only, read-only credential and broker-state preflight.
 // NO ORDER ENDPOINTS, NO POST/DELETE, NO LIVE HOST, NO LIVE TRADE AUTHORITY.
 const PAPER_ORIGIN = 'https://paper-api.alpaca.markets';
@@ -85,6 +86,9 @@ export async function inspectPaperBroker({ credentials, fetchImpl = globalThis.f
   if (!clock || typeof clock !== 'object' || typeof clock.is_open !== 'boolean') throw new Error('paper_preflight_invalid_clock');
   if (!Array.isArray(positions) || !Array.isArray(orders)) throw new Error('paper_preflight_invalid_broker_lists');
   if (orders.length >= 500) throw new Error('paper_preflight_orders_pagination_required');
+  const accountIdentity = account.account_number || account.id;
+  const accountFingerprint = typeof accountIdentity === 'string' && accountIdentity.length > 3
+    ? createHash('sha256').update(accountIdentity).digest('hex') : null;
   const cash = asNonnegativeMoney(account.cash, 'cash');
   const buyingPower = asNonnegativeMoney(account.buying_power, 'buying_power');
   const accountReady = account.status === 'ACTIVE' && account.account_blocked === false && account.trading_blocked === false;
@@ -94,6 +98,7 @@ export async function inspectPaperBroker({ credentials, fetchImpl = globalThis.f
     schema: 'evercraft.daytrade.paper-broker-preflight.v1',
     observed_at: new Date().toISOString(),
     environment: 'ALPACA_PAPER_ONLY',
+    account_fingerprint: accountFingerprint,
     mode: 'READ_ONLY_NO_ORDERS',
     verified_paper_auth: true,
     account_ready: accountReady,
