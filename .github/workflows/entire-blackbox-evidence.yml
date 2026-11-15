@@ -50,6 +50,8 @@ jobs:
         run: node --test ../../systemia/agent-continuity/incident-event.test.mjs
       - name: EO-001 negative evidence projects to Black Box without new authority
         run: node --test ../../systemia/agent-continuity/eo001-blackbox-projection.test.mjs
+      - name: Private EO-001 evidence archive read-only ingress and tamper refusal
+        run: node --test ../../systemia/agent-continuity/eo001-private-archive-reader.test.mjs
       - name: Local custody and replay-safe incident projections
         run: node --test ../../systemia/agent-continuity/incident-journal.test.mjs
       - name: Authenticated Github Actions read-only source adapter tests
