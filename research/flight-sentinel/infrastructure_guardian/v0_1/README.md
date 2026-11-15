@@ -14,7 +14,7 @@ Primary record: https://www.faa.gov/newsroom/nationwide-ground-stop-questions-an
 
 - `model.py`: validation, persistence checks, dual-observer comparison, backup-dependency precaution, symbolic containment proposal, isolated what-if evaluator.
 - `scenarios.py`: 10 fictional fault fixtures (including known misses).
-- `test_infrastructure.py`: 19 regression tests.
+- `test_infrastructure.py`: 21 regression tests.
 - `run_campaign.py`: creates local `campaign-results.json`; no network interaction.
 
 Run from this directory:
