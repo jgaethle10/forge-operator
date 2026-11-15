@@ -63,8 +63,10 @@ test('existing Evercraft queue and Journal source produce a truthful handoff',()
   assert.equal(x.company.candidate_count,actualQueue.entries.length);
   assert.equal(Object.values(x.company.by_state).reduce((a,b)=>a+b,0),actualQueue.entries.length);
   assert.equal(x.journal.live_edition_in_source,actualJournal.live_edition);
-  assert.ok(x.company.missing_platforms.some(p=>p.platform==='tiktok'));
-  assert.ok(x.company.missing_platforms.some(p=>p.platform==='youtube'));
+  for(const platform of ['tiktok','youtube']){
+    const represented=actualQueue.entries.some(e=>String(e.platform).toLowerCase()===platform);
+    assert.equal(x.company.missing_platforms.some(p=>p.platform===platform),!represented);
+  }
   const md=toMarkdown(x);
   assert.match(md,/Evercraft Creator & Publishing Lane Readiness/);
   assert.match(md,/account_identity_unverified/);
