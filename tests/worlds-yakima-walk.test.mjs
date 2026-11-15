@@ -12,6 +12,7 @@ test('Yakima gallery explicitly excludes surveyed and below-grade geometry',()=>
  assert.equal(YAKIMA_SCENE.geometryStatus,'original_illustrative_streetscape_not_georeferenced');
  assert.equal(YAKIMA_SCENE.undergroundConnectionsVerified,false);
  assert.equal(YAKIMA_SCENE.markers.length,6);
+ assert.ok(Math.abs(YAKIMA_SCENE.markers.find(m=>m.id==='orientation').x)>=4,'first research marker must not block entry camera');
  assert.ok(YAKIMA_SCENE.sources.every(s=>s.startsWith('https://')));
  assert.ok(YAKIMA_SCENE.markers.every(m=>YAKIMA_SCENE.sources[m.source]));
  assert.match(YAKIMA_SCENE.markers.find(m=>m.id==='doorways').body,/does not say those connections were below grade/);
