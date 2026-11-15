@@ -14,6 +14,7 @@ import {reactiveCommandShielded} from './controller-rc05-shield.mjs';
 import {reactiveCommandEscape} from './controller-rc05-escape.mjs';
 import {updateMotionMemory,reactiveCommandMotionWatch} from './controller-rc05-motion-watch.mjs';
 import {initialHazardLatch,reactiveCommandLatched} from './controller-rc05-latched-watch.mjs';
+import {FAMILY_NAMES,createFamilyScenario,familyMovingInputs} from './adversarial-families-rc05f.mjs';
 
 export const RC05_SCHEMA='evercraft.sim-to-real.reactive-native.rc05';
 export const RC05_BENCHMARK='evercraft.sim-to-real.reactive-holdout.rc05';
@@ -25,11 +26,12 @@ const xy=e=>({x:e.transform.position.x,z:e.transform.position.z});
 const length=v=>Math.hypot(v.x,v.z);
 const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
 
-export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline'}={}){
+export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline',scenarioFamily='legacy'}={}){
   assert(Number.isSafeInteger(seed)&&seed>0,'rc05_invalid_seed');
   assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape','observed-motion-watch','observed-motion-latched'].includes(controllerMode),'rc05_invalid_controller_mode');
   assert(Number.isInteger(maxTicks)&&maxTicks>0&&maxTicks<=650,'rc05_invalid_max_ticks');
-  const {course,world}=createMotionWorld(seed);
+  assert(scenarioFamily==='legacy'||FAMILY_NAMES.includes(scenarioFamily),'rc05f_invalid_scenario_family');
+  const {course,world}=scenarioFamily==='legacy'?createMotionWorld(seed):createFamilyScenario(seed,scenarioFamily);
   const blackout=forcedBlackout??{start:course.params.sensorBlackoutStart,length:course.params.sensorBlackoutLength};
   assert(Number.isInteger(blackout.start)&&blackout.start>=0&&Number.isInteger(blackout.length)&&blackout.length>=0,'rc05_invalid_blackout');
   const rng=makeRng((seed^0x50916d2c)>>>0);
@@ -99,6 +101,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
     const moving=obstaclesBefore.find(o=>o.id==='moving');
     if(moving)stepInputs.push({id:'rc05-moving-'+tick,tick,entityId:'moving',kind:'set_velocity',
       value:{x:0,y:0,z:moving.transform.position.z<2.45?course.params.movingSpeed:0}});
+    if(scenarioFamily!=='legacy')stepInputs.push(...familyMovingInputs({course,obstaclesBefore,tick}));
     inputs.push(...stepInputs);
     const next=engine.step(stepInputs);
     assert(next.tick===tick&&verifyWorldSnapshot(next),'rc05_native_snapshot_invalid');
@@ -145,7 +148,9 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
   const core={schema:RC05_SCHEMA,evidence_state:'modeled',nativeWorldEngineExecuted:true,
     hardwareExecution:false,realSensorData:false,autonomousHardwareControl:false,
     noTeleportInputs:true,robotPhysicsCalibrated:false,
-    seed,controllerMode,model:'native planar sphere with velocity commands, synthetic noisy anonymous proximity scans',
+    seed,controllerMode,
+    ...(scenarioFamily!=='legacy'?{scenarioFamily,scenarioFamilySchema:course.schema}:{}),
+    model:'native planar sphere with velocity commands, synthetic noisy anonymous proximity scans',
     worldDigest:engine.definitionDigest,finalSnapshotDigest:final.digest,
     outcome:{status,ticks:final.tick,holdRequests,holdsWhileMoving,contactTicks,sweepTicks,geofenceTicks,sensorMissTicks,
       ...(controllerMode==='observed-motion-latched'?{modeledCanceledCommands,latchedHoldTicks}: {})},
