@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {verifyDocumentarySources} from './documentary-source-proof.mjs';
 
 export const CINEMATIC_SCHEMA='evercraft.fallen.documentary-cinematic-input.v1';
 export const CINEMATIC_RECEIPT_SCHEMA='evercraft.fallen.documentary-cinematic-receipt.v1';
@@ -150,14 +151,35 @@ export function assessDocumentaryCinematic(input,observed){
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  const [master,manifestFile,receiptFile]=process.argv.slice(2);
-  if(!master||!manifestFile||!receiptFile){
-    console.error('Usage: node documentary-cinematic-gate.mjs <master.mp4> <private-story-manifest.json> <private-receipt.json>');
+  const [master,manifestFile,receiptFile,authorizedMediaRoot]=process.argv.slice(2);
+  if(!master||!manifestFile||!receiptFile||!authorizedMediaRoot){
+    console.error('Usage: node documentary-cinematic-gate.mjs <master.mp4> <private-story-manifest.json> <private-receipt.json> <authorized-media-root>');
     process.exitCode=1;
   }else{
     try{
       const input=JSON.parse(fs.readFileSync(path.resolve(manifestFile),'utf8'));
-      const result=assessDocumentaryCinematic(input,inspectDocumentaryDynamics(master));
+      // Required live byte verification. Manifest fields cannot bypass these checks.
+      const sourceProof=verifyDocumentarySources(input,{additionalRoots:[authorizedMediaRoot]});
+      const picture=inspectDocumentaryDynamics(master);
+      const editorial=assessDocumentaryCinematic(input,picture);
+      const proofCoverage=picture.durationSec>0?sourceProof.verifiedShotFootageSeconds/picture.durationSec:0;
+      const proofValid=sourceProof.status==='verified_for_private_edit_input'&&
+        sourceProof.verifiedReferencedSourceCount>=3&&
+        proofCoverage>=.6&&
+        Math.abs(proofCoverage-editorial.measurements.verifiedFootageFraction)<.015;
+      const blockers=[...editorial.blockers,
+        ...(proofValid?[]:['verified_source_video_proof_not_accepted']),
+        ...sourceProof.blockers];
+      const result={...editorial,
+        status:blockers.length?'rejected':editorial.status,
+        blockers:[...new Set(blockers)],
+        sourceProof,sourceProofBoundToMaster:{masterSha256:picture.masterSha256,
+          verifiedCoverageSeconds:sourceProof.verifiedShotFootageSeconds,
+          coverageFraction:Number(proofCoverage.toFixed(5)),
+          note:'Only timeline/source metadata bound; final pixels still require human visual provenance check'},
+        boundaries:{...editorial.boundaries,
+          byteVerifiedFootageProofRequired:true,
+          finalPixelsNotAuthenticatedAgainstSources:true}};
       const target=path.resolve(receiptFile);
       fs.mkdirSync(path.dirname(target),{recursive:true});
       fs.writeFileSync(target,JSON.stringify(result,null,2)+'\n',{mode:0o600});
