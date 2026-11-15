@@ -207,3 +207,22 @@ test('capture never executes actions, only reads a bounded local subtree',t=>{
   assert.equal(Object.hasOwn(snapshot,'raw_model_output'),false);
   assert.equal(Object.hasOwn(snapshot,'token'),false);
 });
+
+test('a frozen plan cannot accept unbounded cgroup limits as an admitted cleanup',t=>{
+  const x=fixture(t);
+  for(const key of ['memory.max','memory.swap.max','pids.max','cpu.max']){
+    const file=path.join(x.leaf,key);
+    const original=fs.readFileSync(file,'utf8');
+    fs.writeFileSync(file,key==='cpu.max'?'max 100000\n':'max\n');
+    const before=x.capture(10);
+    x.clear();
+    const after=x.capture(40);
+    assert.throws(()=>assessSyntheticSubtreeCleanup({
+      before,after,frozenResourcePlan:before.resource_readback,
+      cleanupDeadlineMs:2500
+    }),/FROZEN_RESOURCE_UNBOUNDED/);
+    fs.writeFileSync(file,original);
+    // Restore the baseline populated state for the next control.
+    fs.writeFileSync(path.join(x.leaf,'cgroup.events'),'populated 1\n');
+  }
+});
