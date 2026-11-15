@@ -195,3 +195,22 @@ The RC05D crossing-hazard warning could alternate with ordinary forward commands
 - Full integration and results run on GitHub Actions. **Do not infer a robotics safety certification, hardware readiness, or release authorization from successful test execution.**
 
 Source: `controller-rc05-latched-watch.mjs`, `latch-trial-rc05e.mjs` and respective tests. Release remains review-only draft.
+
+## RC05F: distinct synthetic hazard geometries
+
+RC05F preserves the original course fixtures while adding **crossing-lanes** (three staggered static islands, two dynamic crossing hazards) and **offset-slalom** (five staggered islands and one moving sweeper). Both use the actual Evercraft World Engine's native planar sphere entities and tick-bound `set_velocity` inputs. The rover receives only synthetic noisy anonymous proximity detections.
+
+Pairwise evidence compares the original baseline to the existing opt-in RC05E persistent hazard latch. Every arrival, timeout, collision and geofence failure is recorded, with integrity-checked native replay and terminal failure windows. The admission gate rejects both safety regressions and safety-by-immobility.
+
+Run:
+
+```sh
+node --test systemia/world-engine/sim-to-real/adversarial-families-rc05f.test.mjs
+node --import tsx --test systemia/world-engine/sim-to-real/family-trial-rc05f.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/family-trial-rc05f.mjs --family crossing-lanes --first-seed 101 --seeds 8
+node --import tsx systemia/world-engine/sim-to-real/family-trial-rc05f.mjs --family offset-slalom --first-seed 201 --seeds 8
+```
+
+**Limits:** different synthetic geometry is not independently sourced real-world data. The worlds still share simplified sphere physics and synthetic sensing. No calibrated physical braking, safety certification, physical hardware, e-stop, production release, or merge is authorized. The original RC05 default is unchanged.
+
+Native CI also examines the final 60 ticks of **legacy seed 55 and 56** without modifying their controller or reclassifying their timeouts.
