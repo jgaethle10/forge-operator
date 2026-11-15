@@ -12,6 +12,7 @@ const FILES=new Map([
  ['/mission-control.css',['mission-control.css','text/css; charset=utf-8']],
  ['/mission-control.mjs',['mission-control.mjs','text/javascript; charset=utf-8']],
  ['/mission-source.mjs',['mission-source.mjs','text/javascript; charset=utf-8']],
+ ['/mission-triage.mjs',['mission-triage.mjs','text/javascript; charset=utf-8']],
  ['/work-source.mjs',['work-source.mjs','text/javascript; charset=utf-8']],
  ['/index.html',['index.html','text/html; charset=utf-8']],
  ['/workroom.css',['workroom.css','text/css; charset=utf-8']],
