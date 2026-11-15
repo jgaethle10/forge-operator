@@ -204,3 +204,26 @@ test('expired permit fails before network', async () => {
     assert.equal(calls, 0);
   } finally { cleanup(x.root); }
 });
+
+test('STOP path must be bound to the private session root', async () => {
+  const x = setup();
+  try {
+    let calls = 0;
+    await assert.rejects(() => submitOneShotPaperOrder({
+      ...x.args, stopFile: path.join(os.tmpdir(), 'unrelated-stop'),
+      fetchImpl: async () => { calls++; },
+    }), /stop_file_must_be_in_state_root/);
+    assert.equal(calls, 0);
+  } finally { cleanup(x.root); }
+});
+test('world-readable state directory is rejected before network', async () => {
+  const x = setup();
+  try {
+    fs.chmodSync(x.root, 0o777);
+    let calls = 0;
+    await assert.rejects(() => submitOneShotPaperOrder({
+      ...x.args, fetchImpl: async () => { calls++; },
+    }), /insecure_state_directory/);
+    assert.equal(calls, 0);
+  } finally { cleanup(x.root); }
+});
