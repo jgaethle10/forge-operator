@@ -1,5 +1,6 @@
 import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,canWalk} from './world-core.mjs';
 import {draftQuest,previewQuest,executeQuest} from './quest-master.mjs';
+import {BUSINESS_SQUARE_ENTRY,BUSINESS_SPOTS,describeBusinessTopic,inBusinessSquare,addBusinessSquareGeometry} from './business-square.mjs';
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
@@ -64,7 +65,7 @@ const M=(x,y,z,sx,sy,sz,rot=0)=>{const c=Math.cos(rot),s=Math.sin(rot);return ne
 const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),o=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*o,-1,0,0,2*far*near*o,0]);};
 function lookAt(eye,target){const z=norm([eye[0]-target[0],eye[1]-target[1],eye[2]-target[2]]),x=norm(cross([0,1,0],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm=v=>{const d=Math.hypot(...v)||1;return v.map(x=>x/d);};
-let state=loadWorld(localStorage),visitingShared=false,pendingShared=null,started=false,editorOpen=false,previous=performance.now(),elapsed=0,fpsFrames=0,fpsStart=performance.now(),fps=0,lastSave=0;
+let state=loadWorld(localStorage),visitingShared=false,pendingShared=null,started=false,editorOpen=false,businessOpen=false,previous=performance.now(),elapsed=0,fpsFrames=0,fpsStart=performance.now(),fps=0,lastSave=0;
 let camera={x:state.player.x,y:1.72,z:state.player.z,yaw:state.player.yaw,pitch:-.06,vy:0},keys={},joystick={x:0,y:0},renderAgents=[];
 let qualityMode='auto',quality={...DEFAULT_QUALITY};
 try{qualityMode=validQualityMode(localStorage.getItem(QUALITY_KEY));}catch{}
@@ -113,6 +114,8 @@ for(let i=0;i<60;i++){const x=(random()-.5)*34,z=(random()-.5)*34;if(x>-7&&x<.8&
 box(13,.15,9.5,6,.25,6,'#d7c4a6');box(13,1.3,12,5.5,2.6,.15,'#e4d5b7');box(13,2.8,9.5,6,.16,6,'#8d9a82');box(13,.6,10,1.4,.9,.8,'#92765d');
 // Portal pedestal, permanent glowy portal ring drawn dynamically.
 tube(PORTAL.x,.22,PORTAL.z,2.6,.45,1.7,'#b9a98e');box(PORTAL.x,PORTAL.y,-10.45,PORTAL.frameWidth,PORTAL.frameHeight,.15,'#6b817c');
+// Business Square is added to this SAME renderer and static instance batch.
+addBusinessSquareGeometry({box,ball,tube});
 // Static mesh transforms/colors are uploaded once as instance attributes, never repeated each frame.
 const opaqueGroups=new Map();
 for(const d of staticDraw){if(d.alpha!==1)continue;const group=opaqueGroups.get(d.kind)||[];group.push(d);opaqueGroups.set(d.kind,group);}
@@ -173,7 +176,7 @@ function extra(kind,x,z){const arr=[];const a=(type,dx,y,dz,sx,sy,sz,color)=>arr
  return arr;
 }
 function resize(){const ratio=Math.min(devicePixelRatio||1,1.65)*modeScale(qualityMode,quality),w=Math.max(1,Math.round(canvas.clientWidth*ratio)),h=Math.max(1,Math.round(canvas.clientHeight*ratio));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
-function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInstanceCount=0;const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen){
+function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInstanceCount=0;const dt=Math.min((time-previous)/1000,.05);previous=time;elapsed+=dt;if(started&&!editorOpen&&!businessOpen){
  let f=Number(Boolean(keys.KeyW||keys.ArrowUp))-Number(Boolean(keys.KeyS||keys.ArrowDown))-joystick.y,side=Number(Boolean(keys.KeyD||keys.ArrowRight))-Number(Boolean(keys.KeyA||keys.ArrowLeft))+joystick.x;
  const mag=Math.hypot(f,side);if(mag>.02){f/=Math.max(1,mag);side/=Math.max(1,mag);const step=dt*(keys.ShiftLeft?6.6:3.75),s=Math.sin(camera.yaw),c=Math.cos(camera.yaw),x=camera.x+(s*f+c*side)*step,z=camera.z+(-c*f+s*side)*step;if(canWalk(x,camera.z))camera.x=x;if(canWalk(camera.x,z))camera.z=z;}
  camera.vy-=12.4*dt;camera.y+=camera.vy*dt;if(camera.y<1.72){camera.y=1.72;camera.vy=0;}
@@ -194,23 +197,56 @@ function present(time){requestAnimationFrame(present);frameDrawCalls=0;frameInst
  }
  renderAgents=stepAgents(state,dt,elapsed);for(let i=0;i<renderAgents.length;i++)agentDraw(renderAgents[i],i);
  for(const o of state.objects)for(const d of extra(o.kind,o.x,o.z))draw(d);
- if(started){const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
+ if(started){$('place').textContent=inBusinessSquare(camera.x,camera.z)?'Worlds Business Square':'Mossmere Workshop';const near=nearby();if(near?.id!==lastNearby?.id){lastNearby=near;$('prompt').textContent=near?`Press E to ${near.action}${near.agent?' · '+near.agent.activity:''}`:'Look for friends, the fish tank and the glowing portal.';}const bearing=((camera.yaw*180/Math.PI)%360+360)%360;$('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8];$('weather').textContent=state.sky==='day'?'Golden afternoon · Daylight':state.sky==='sunset'?'Warm skies · Sunset':'Quiet stars · Night';}
  fpsFrames++;if(time-fpsStart>1200){fps=Math.round(fpsFrames*1000/(time-fpsStart));fpsStart=time;fpsFrames=0;if(started&&qualityMode==='auto'&&!document.hidden)quality=tuneQuality(quality,fps);$('metrics').textContent=`${fps} fps · ${canvas.width}×${canvas.height} · ${frameDrawCalls} draws · ${staticDrawCount} instanced · ${qualityMode} ${modeScale(qualityMode,quality).toFixed(2)}× · scene ${state.revision}`;}
 }
-function nearby(){const list=[...renderAgents.map(a=>({id:a.id,x:a.renderX,z:a.renderZ,action:`talk to ${a.name}`,agent:a})),{id:'portal',x:3,z:-10.2,action:'step through the portal'},{id:'tank',x:-.9,z:-4.5,action:'inspect the fish tank'},{id:'workshop',x:-4.9,z:-3.5,action:'inspect the workspace'},{id:'pond',x:7,z:-3.5,action:'admire Glasswater Pond'},{id:'cove',x:13,z:9,action:'return through the cove portal'}];const found=list.map(x=>({...x,d:Math.hypot(camera.x-x.x,camera.z-x.z)})).sort((a,b)=>a.d-b.d)[0];return found&&found.d<3.2?found:null;}
+function nearby(){const list=[...BUSINESS_SPOTS,...renderAgents.map(a=>({id:a.id,x:a.renderX,z:a.renderZ,action:`talk to ${a.name}`,agent:a})),{id:'portal',x:3,z:-10.2,action:'step through the portal'},{id:'tank',x:-.9,z:-4.5,action:'inspect the fish tank'},{id:'workshop',x:-4.9,z:-3.5,action:'inspect the workspace'},{id:'pond',x:7,z:-3.5,action:'admire Glasswater Pond'},{id:'cove',x:13,z:9,action:'return through the cove portal'}];const found=list.map(x=>({...x,d:Math.hypot(camera.x-x.x,camera.z-x.z)})).sort((a,b)=>a.d-b.d)[0];return found&&found.d<3.2?found:null;}
 function notify(msg){$('prompt').textContent=msg;$('result').textContent=msg;}
-function interact(){const n=nearby();if(!n){notify('Explore closer to a person or an interesting object.');return;}if(n.id==='portal'){camera.x=13;camera.z=9;notify('The portal hums softly. Welcome to the Sunlit Cove.');return;}if(n.id==='cove'){camera.x=2;camera.z=-8;notify('You have returned to Mossmere.');return;}if(n.agent){const a=state.agents.find(x=>x.id===n.id);a.memories=[...a.memories.slice(-7),`Visitor said hello while ${n.agent.activity.toLowerCase()}.`];state.revision++;persist();notify(`${n.agent.name} · ${n.agent.activity}: “${n.agent.dialogue}”`);return;}notify({tank:'Three tiny fish glide through the sunlit tank.',workshop:'A living workspace. The notebook on the desk is waiting for ideas.',pond:'The pond reflects the afternoon light. Little lily pads float across it.'}[n.id]);}
+function openBusinessPanel(topic='overview'){
+ editorOpen=false;businessOpen=true;
+ $('editor').classList.add('hidden');
+ $('questPanel').classList.add('hidden');
+ $('businessPanel').classList.remove('hidden');
+ const info=describeBusinessTopic(topic);
+ $('businessEyebrow').textContent=info.eyebrow;
+ $('businessTopicTitle').textContent=info.title;
+ $('businessTopicText').textContent=info.message;
+ $('businessClose').focus({preventScroll:true});
+}
+function closeBusinessPanel(){
+ businessOpen=false;$('businessPanel').classList.add('hidden');
+ $('businessToggle').focus({preventScroll:true});
+}
+function interact(){const n=nearby();if(!n){notify('Explore closer to a person or an interesting object.');return;}if(n.id==='portal'){camera.x=13;camera.z=9;notify('The portal hums softly. Welcome to the Sunlit Cove.');return;}if(n.id==='cove'){camera.x=2;camera.z=-8;notify('You have returned to Mossmere.');return;}if(n.id.startsWith('business-')){openBusinessPanel(n.topic);return;}if(n.agent){const a=state.agents.find(x=>x.id===n.id);a.memories=[...a.memories.slice(-7),`Visitor said hello while ${n.agent.activity.toLowerCase()}.`];state.revision++;persist();notify(`${n.agent.name} · ${n.agent.activity}: “${n.agent.dialogue}”`);return;}notify({tank:'Three tiny fish glide through the sunlit tank.',workshop:'A living workspace. The notebook on the desk is waiting for ideas.',pond:'The pond reflects the afternoon light. Little lily pads float across it.'}[n.id]);}
 function persist(){if(visitingShared)return;try{state=saveWorld(localStorage,state);}catch(e){console.warn('World save unavailable:',e);}}
 function runCommand(command){const result=applyCommand(state,command);if(result.world!==state){state=result.world;persist();}notify(result.message+(visitingShared?' Preview only until you save a copy.':''));$('command').value='';}
 $('start').onclick=()=>{started=true;$('intro').classList.add('hide');$('hud').classList.remove('hidden');if(matchMedia('(pointer:coarse)').matches){$('joystick').classList.remove('hidden');$('touchhint').classList.remove('hidden');}};
+$('startBusiness').onclick=()=>{
+ $('start').click();
+ camera.x=BUSINESS_SQUARE_ENTRY.x;camera.z=BUSINESS_SQUARE_ENTRY.z;camera.yaw=BUSINESS_SQUARE_ENTRY.yaw;
+ openBusinessPanel('overview');
+};
+$('businessToggle').onclick=()=>businessOpen?closeBusinessPanel():openBusinessPanel('overview');
+$('businessClose').onclick=closeBusinessPanel;
+$('businessEnter').onclick=()=>{
+ camera.x=BUSINESS_SQUARE_ENTRY.x;camera.z=BUSINESS_SQUARE_ENTRY.z;camera.yaw=BUSINESS_SQUARE_ENTRY.yaw;
+ closeBusinessPanel();notify('Exploring Worlds Business Square. Local walkthrough only, no other visitors connected.');
+};
+$('businessReturn').onclick=()=>{
+ camera.x=0;camera.z=8;camera.yaw=0;
+ closeBusinessPanel();notify('Returned to the Mossmere workshop.');
+};
+document.querySelectorAll('[data-business-topic]').forEach(button=>{
+ button.onclick=()=>openBusinessPanel(button.dataset.businessTopic);
+});
 $('help').onclick=()=>{$('modal').classList.remove('hidden');};$('closeModal').onclick=$('gotIt').onclick=()=>{$('modal').classList.add('hidden');};
-$('buildToggle').onclick=()=>{editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen){$('questPanel').classList.add('hidden');if(matchMedia('(pointer:fine)').matches)$('command').focus();}};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
+$('buildToggle').onclick=()=>{if(businessOpen)closeBusinessPanel();editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen){$('questPanel').classList.add('hidden');if(matchMedia('(pointer:fine)').matches)$('command').focus();}};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
 // Player-authorized offline quest prototype. No model, server, or inventory authority.
 let proposedQuest=null,proposedQuestRevision=null;
 function closeQuestPanel(){$('questPanel').classList.add('hidden');$('questToggle').focus({preventScroll:true});}
 $('questToggle').onclick=()=>{
   const panel=$('questPanel'),opening=panel.classList.contains('hidden');
-  if(opening){editorOpen=false;$('editor').classList.add('hidden');}
+  if(opening){if(businessOpen)closeBusinessPanel();editorOpen=false;$('editor').classList.add('hidden');}
   panel.classList.toggle('hidden',!opening);
   if(opening)$('questIdea').focus({preventScroll:true});
 };
@@ -329,8 +365,8 @@ $('unpublishOnline').onclick=async()=>{
 $('commandForm').onsubmit=e=>{e.preventDefault();runCommand($('command').value);};document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('download').onclick=()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='evercraft-worlds-mossmere.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500);};
 $('upload').onchange=async e=>{try{const file=e.target.files?.[0];if(!file||file.size>200000)throw Error('Choose a world JSON under 200 KB');const w=validateWorld(JSON.parse(await file.text()));state=w;camera.x=w.player.x;camera.z=w.player.z;camera.yaw=w.player.yaw;visitingShared=false;forgetCloudOwner();$('save').textContent='Save';persist();notify('World imported successfully.');}catch(err){notify(`Import rejected: ${err.message}`);}e.target.value='';};
-addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
-let pointer=null;canvas.addEventListener('pointerdown',e=>{if(!started||editorOpen||!$('modal').classList.contains('hidden'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;camera.yaw+=dx*.004;camera.pitch=Math.max(-1.18,Math.min(1.18,camera.pitch-dy*.0034));pointer.x=e.clientX;pointer.y=e.clientY;});canvas.addEventListener('pointerup',()=>{pointer=null;});
+addEventListener('keydown',e=>{if(businessOpen){if(e.code==='Escape'){e.preventDefault();closeBusinessPanel();}return;}if(document.activeElement?.tagName==='INPUT')return;keys[e.code]=true;if(e.code==='KeyE'){e.preventDefault();interact();}if(e.code==='KeyB'&&started){e.preventDefault();$('buildToggle').click();}if(e.code==='Space'&&camera.y<=1.721){camera.vy=5.1;e.preventDefault();}});addEventListener('keyup',e=>{keys[e.code]=false;});addEventListener('blur',()=>{keys={};joystick={x:0,y:0};});
+let pointer=null;canvas.addEventListener('pointerdown',e=>{if(!started||editorOpen||businessOpen||!$('modal').classList.contains('hidden'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;camera.yaw+=dx*.004;camera.pitch=Math.max(-1.18,Math.min(1.18,camera.pitch-dy*.0034));pointer.x=e.clientX;pointer.y=e.clientY;});canvas.addEventListener('pointerup',()=>{pointer=null;});
 let stickPointer=null;const stick=$('joystick'),thumb=$('joystickThumb');function stickMove(e){const r=stick.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),rad=Math.max(25,r.width*.4),scale=Math.min(1,rad/(Math.hypot(x,y)||1));joystick={x:x*scale/rad,y:y*scale/rad};thumb.style.transform=`translate(${joystick.x*rad}px,${joystick.y*rad}px)`;}stick.addEventListener('pointerdown',e=>{stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);stickMove(e);});stick.addEventListener('pointermove',e=>{if(stickPointer===e.pointerId)stickMove(e);});function releaseStick(){stickPointer=null;joystick={x:0,y:0};thumb.style.transform='translate(0,0)';}stick.addEventListener('pointerup',releaseStick);stick.addEventListener('pointercancel',releaseStick);
 addEventListener('pagehide',()=>{state.player={x:camera.x,z:camera.z,yaw:camera.yaw};persist();});
 requestAnimationFrame(present);
