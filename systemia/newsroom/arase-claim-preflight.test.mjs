@@ -7,6 +7,10 @@ import {validateJournalStory} from './journal-publisher.mjs';
 const input=JSON.parse(fs.readFileSync(new URL('./editorial-queue/2026-11-15-arase-claim-input.json',import.meta.url),'utf8'));
 const copy=()=>structuredClone(input);
 
+const rights=JSON.parse(fs.readFileSync(new URL('./editorial-assets/arase-photo-rights-review-20261115.json',import.meta.url),'utf8'));
+const candidateMedia=JSON.parse(fs.readFileSync(new URL('./editorial-assets/arase-may-2024-storm-media.json',import.meta.url),'utf8'));
+
+
 test('Arase actual research claims pass source-bound preflight without being approved for publication',()=>{
  const result=runEditorialClaimPreflight(copy());
  assert.equal(result.story_id,'journal:2026-10-31:arase-radiation-barrier');
@@ -72,4 +76,21 @@ test('the paper and institution sources are not mistaken for independent replica
  assert.ok(input.unresolved.some(x=>x.includes('5,000-fold')));
  assert.ok(input.unresolved.some(x=>x.includes('NASA')));
  assert.ok(input.unresolved.some(x=>x.includes('Systemia')));
+});
+
+test('source-specific NASA photo rights review has intact hash and no forged license',()=>{
+ assert.equal(rights.original_photo.sha256,candidateMedia.hero.expected_sha256);
+ assert.equal(rights.original_photo.url,candidateMedia.hero.image_url);
+ assert.equal(rights.original_photo.bytes,candidateMedia.hero.expected_bytes);
+ assert.equal(rights.original_photo.item_credit,candidateMedia.hero.photographer_credit);
+ assert.deepEqual([rights.original_photo.dimensions_px.width,rights.original_photo.dimensions_px.height],candidateMedia.hero.source_dimensions_px);
+ assert.equal(rights.preliminary_decision.local_source_hash_verified,true);
+ assert.equal(rights.preliminary_decision.visual_rights_state,'not_yet_verified');
+ assert.equal(rights.preliminary_decision.article_approval,false);
+ assert.equal(rights.preliminary_decision.newsroom_hero_may_publish,false);
+ assert.equal(rights.preliminary_decision.clip_promotional_use_authorized,false);
+ assert.equal(rights.preliminary_decision.nasa_approval_or_endorsement_claimed,false);
+ assert.ok(rights.preliminary_decision.outstanding_checks.length>=3);
+ assert.ok(rights.policy.promotion_limitation.includes('advertisements'));
+ assert.ok(rights.evidence_urls.includes(candidateMedia.hero.source_url));
 });
