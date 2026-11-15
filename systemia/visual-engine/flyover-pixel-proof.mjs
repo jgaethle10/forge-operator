@@ -10,6 +10,7 @@ import {once} from 'node:events';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import {buildAtmosphericFlyoverScene} from './atmospheric-flyover.mjs';
+import {SCREEN_ENVIRONMENT_WGSL} from './screen-environment.mjs';
 import {EvercraftWorldRuntime} from '../world-engine/engine.ts';
 import {compileVisualFrame} from '../world-engine/visual.ts';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,EVERCRAFT_WEBGPU_WGSL} from '../world-engine/webgpu.ts';
@@ -54,8 +55,8 @@ async function loopback(){
   return {server,url:'http://127.0.0.1:'+server.address().port+'/'};
 }
 
-export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=[]){
-  return page.evaluate(async({plan,geometry,shader,textures})=>{
+export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=[],environment=null){
+  return page.evaluate(async({plan,geometry,shader,textures,environment,environmentShader})=>{
     if(!globalThis.isSecureContext) throw new Error('flyover_secure_context_required');
     if(!navigator.gpu) throw new Error('flyover_navigator_gpu_unavailable');
     const adapter=await navigator.gpu.requestAdapter({powerPreference:'high-performance'});
@@ -164,9 +165,43 @@ export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=
       const readback=track(device.createBuffer({size:rowBytes*plan.height,
         usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ}));
       const encoder=device.createCommandEncoder();
+      if(environment){
+        if(!Array.isArray(environment.uniformData)||environment.uniformData.length!==28)
+          throw new Error('environment_uniform_packet_invalid');
+        if(environment.width!==plan.width||environment.height!==plan.height)
+          throw new Error('environment_frame_dimensions_mismatch');
+        const skyModule=device.createShaderModule({code:environmentShader});
+        const skyCompilation=await skyModule.getCompilationInfo();
+        const skyErrors=skyCompilation.messages.filter(x=>x.type==='error');
+        if(skyErrors.length)throw new Error('environment_wgsl_invalid:'+
+          skyErrors.map(x=>x.message).join('|'));
+        const skyLayout=device.createBindGroupLayout({entries:[
+          {binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:'uniform'}}
+        ]});
+        const skyBuffer=createBuffer(environment.uniformData,GPUBufferUsage.UNIFORM);
+        const skyGroup=device.createBindGroup({layout:skyLayout,entries:[
+          {binding:0,resource:{buffer:skyBuffer}}
+        ]});
+        const skyPipeline=device.createRenderPipeline({
+          layout:device.createPipelineLayout({bindGroupLayouts:[skyLayout]}),
+          vertex:{module:skyModule,entryPoint:'vs_environment'},
+          fragment:{module:skyModule,entryPoint:'fs_environment',
+            targets:[{format:'rgba8unorm'}]},
+          primitive:{topology:'triangle-list',cullMode:'none'},
+          multisample:{count:MSAA_SAMPLES}
+        });
+        const background=encoder.beginRenderPass({colorAttachments:[{
+          view:msaaTarget.createView(),
+          clearValue:{r:0,g:0,b:0,a:0},loadOp:'clear',storeOp:'store'
+        }]});
+        background.setPipeline(skyPipeline);
+        background.setBindGroup(0,skyGroup);
+        background.draw(3,1,0,0);
+        background.end();
+      }
       const pass=encoder.beginRenderPass({colorAttachments:[{
         view:msaaTarget.createView(),resolveTarget:target.createView(),
-        clearValue:{...plan.clearColor,a:1},loadOp:'clear',storeOp:'store'
+        clearValue:{...plan.clearColor,a:1},loadOp:environment?'load':'clear',storeOp:'store'
       }],depthStencilAttachment:{
         view:depth.createView(),depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'
       }});
@@ -233,7 +268,7 @@ export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=
       for(let i=0;i<rgba.length;i+=4){
         const delta=Math.max(
           Math.abs(rgba[i]-clear[0]),Math.abs(rgba[i+1]-clear[1]),Math.abs(rgba[i+2]-clear[2]));
-        if(delta>16){
+        if(environment?rgba[i+3]>64:delta>16){
           visible++;
           const pixel=i/4,x=pixel%plan.width,y=Math.floor(pixel/plan.width);
           minX=Math.min(minX,x);maxX=Math.max(maxX,x);
@@ -243,6 +278,26 @@ export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=
         if(lum<35) dark++;
         if(lum>215) bright++;
         colorSum+=lum;
+      }
+      let environmentEvidence=null;
+      if(environment){
+        const probe=(x,y)=>{
+          const index=4*(Math.floor(y)*plan.width+Math.floor(x));
+          return [rgba[index],rgba[index+1],rgba[index+2]];
+        };
+        const top=probe(8,8);
+        const haze=probe(8,Math.max(8,Math.floor(plan.height*environment.preset.horizonY)-16));
+        const ocean=probe(8,plan.height-9);
+        const difference=(a,b)=>Math.max(...a.map((x,j)=>Math.abs(x-b[j])));
+        environmentEvidence={
+          skyTopRgb:top,skyHorizonRgb:haze,oceanRgb:ocean,
+          skyVerticalDifference:difference(top,haze),
+          skyOceanDifference:difference(top,ocean),
+          shaderSha256:environment.shaderSha256,
+          environmentDigest:environment.digest
+        };
+        // Alpha=0 on backdrop is a diagnostic mask ONLY; final output is opaque.
+        for(let i=3;i<rgba.length;i+=4)rgba[i]=255;
       }
       const surface=document.createElement('canvas');
       surface.width=plan.width;surface.height=plan.height;
@@ -259,14 +314,14 @@ export async function renderWebGpuPlanOnPage(page,plan,geometry,shader,textures=
         pixelFraction:visible/(plan.width*plan.height)
       }:null;
       return {png,adapterInfo:info,visiblePixels:visible,foregroundBounds,
-        darkPixels:dark,brightPixels:bright,
+        environmentEvidence,darkPixels:dark,brightPixels:bright,
         meanLuminance:colorSum/(plan.width*plan.height),drawCount:plan.draws.length,
         width:plan.width,height:plan.height,sampleCount:MSAA_SAMPLES};
     }finally{
       for(const resource of resources) try{resource.destroy()}catch{}
       if(!destroyed) device.destroy();
     }
-  },{plan,geometry,shader,textures});
+  },{plan,geometry,shader,textures,environment,environmentShader:SCREEN_ENVIRONMENT_WGSL});
 }
 
 export async function runFlyoverPixelProof({
