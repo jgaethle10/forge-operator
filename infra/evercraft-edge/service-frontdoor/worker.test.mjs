@@ -24,13 +24,15 @@ test('EPS apex returns independent site with email-first contact',async()=>{
   assert.doesNotMatch(body,/tel:\+15097590440|sms:\+15097590440|759-0440/);
 });
 
-test('HAVENLY apex routes through working Evercraft email, not a phone CTA',async()=>{
+test('HAVENLY retains Nikki contact channels separately from founder EPS',async()=>{
   const res=await invoke('havenlycleaning.com');
   assert.equal(res.status,200);
   const body=await res.text();
   assert.equal(body,HAVENLY_HTML);
-  assert.match(body,/mailto:jessegaethle10@gmail\.com/);
-  assert.doesNotMatch(body,/tel:\+15095605190|sms:\+15095605190|560-5190|15097590440/);
+  assert.match(body,/mailto:havenlycleaning@gmail\.com/);
+  assert.match(body,/tel:\+15095605190/);
+  assert.match(body,/sms:\+15095605190/);
+  assert.doesNotMatch(body,/mailto:jessegaethle10@gmail\.com/);
 });
 
 test('EPS estimator returns local interactive code without talking to Base44',async()=>{
