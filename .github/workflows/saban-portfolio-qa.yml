@@ -1,0 +1,42 @@
+name: Saban portfolio QA mission
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/product-qa-adapter.mjs'
+      - 'systemia/saban/portfolio-qa-mission.mjs'
+      - 'systemia/saban/qa-device-admission.mjs'
+      - 'systemia/saban/multiplication-registry.json'
+      - 'tests/saban-portfolio-qa.test.mjs'
+      - 'tests/saban-qa-device-admission.test.mjs'
+      - 'scripts/saban-qa-device-admission.mjs'
+      - '.github/workflows/saban-portfolio-qa.yml'
+      - 'docs/qa/saban-portfolio-qa-v1.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    name: Four registered Saban product workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate fixed allowlists, execution and device safety holds
+        run: |
+          node --check systemia/saban/product-qa-adapter.mjs
+          node --check systemia/saban/portfolio-qa-mission.mjs
+          node --check scripts/saban-qa-device-admission.mjs
+          node --test tests/saban-portfolio-qa.test.mjs tests/saban-qa-device-admission.test.mjs
+      - name: Dispatch actual registered Saban workers over leased loopback NodeSeed
+        run: node systemia/saban/portfolio-qa-mission.mjs --out=/tmp/saban-portfolio-qa
+      - name: Preserve worker evidence even after a held or failed mission
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-portfolio-qa-receipts
+          path: /tmp/saban-portfolio-qa/
+          if-no-files-found: ignore
+          retention-days: 14
