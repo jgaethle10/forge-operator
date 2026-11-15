@@ -7,11 +7,10 @@ test('EPS and Havenly customer routes are present and not tied to legacy infrast
   const havenly=read('public/havenly/index.html');
   for(const marker of ['mailto:jessegaethle10@gmail.com','Email Evercraft','id="emailQuote"','id="copyQuote"']) assert.ok(eps.includes(marker),`Missing EPS marker: ${marker}`);
   assert.doesNotMatch(eps,/509[\s-]*910[\s-]*3256|15099103256|jesse@evercraftpropertyservices\.com/i);
-  for(const marker of ['mailto:jessegaethle10@gmail.com','id="emailRequest"','Nothing is automatically submitted or booked']) assert.ok(havenly.includes(marker));
-  for(const page of [eps,havenly]) {
-    assert.doesNotMatch(page,/base44\.app|@base44|base44Client|base44-prod/i);
-    assert.doesNotMatch(page,/(?:tel:|sms:)|Call \(509\)|Text HAVENLY|Text this request/i);
-  }
+  for(const marker of ['mailto:havenlycleaning@gmail.com','tel:+15095605190','sms:+15095605190','id="textRequest"','id="emailRequest"','Nothing is automatically submitted or booked']) assert.ok(havenly.includes(marker));
+  for(const page of [eps,havenly]) assert.doesNotMatch(page,/base44\.app|@base44|base44Client|base44-prod/i);
+  assert.doesNotMatch(eps,/(?:tel:|sms:)|Call \(509\)|Text this request/i);
+  assert.doesNotMatch(havenly,/mailto:jessegaethle10@gmail\.com/i);
 });
 test('recovery ledger does not equate source code with completed migration',()=>{
   const state=JSON.parse(read('systemia/migrations/base44-exit/eps-havenly-recovery-state.json'));

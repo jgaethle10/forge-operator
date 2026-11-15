@@ -9,7 +9,7 @@ The customer can keep typing **evercraftpropertyservices.com** or **havenlyclean
 - HAVENLY: https://jgaethle10.github.io/forge-operator/havenly/
 - EPS estimator: https://jgaethle10.github.io/forge-operator/apps/eps-estimator/
 
-These are deployment-independent reference surfaces; do not mistake their availability for the two custom domains having moved. The edge shell embeds each canonical HTML at build time and serves it without calling GitHub Pages either. **November 12, 2026 emergency contact override:** the previously published EPS phone 509-759-0440 is temporarily unavailable and must not appear as a customer-facing call or SMS action. The owner-directed active contact is **jessegaethle10@gmail.com**. HAVENLY, a registered Evercraft trade name, is also routed to this owner email pending phone restoration. Other prior brand inboxes and historic phone numbers remain in source history, not active contact recommendations.
+These are deployment-independent reference surfaces; do not mistake their availability for the two custom domains having moved. The edge shell embeds each canonical HTML at build time and serves it without calling GitHub Pages either. **November 12, 2026 emergency contact override:** the previously published EPS phone 509-759-0440 is temporarily unavailable and must not appear as a customer-facing call or SMS action. EPS's active contact is **jessegaethle10@gmail.com**. **HAVENLY is Nikki's separate operation:** its customer page retains **havenlycleaning@gmail.com**, phone **(509) 560-5190**, and text option. Do not reroute HAVENLY to Evercraft, treat it as an Evercraft product/lead source, or alter its contact settings without Nikki's own authorization. Historical source here is preserved solely to avoid accidentally breaking her currently reachable website during a future handoff.
 
 ## Option A: fastest emergency rescue by IONOS domain forwarding
 
@@ -56,9 +56,13 @@ If either custom domain is still 402, it is **not** fronted by this shell. A scr
 
 ## Emergency communication contract (2026-11-12)
 
-- Public EPS and HAVENLY pages must show email-first and launch mailto drafts to `jessegaethle10@gmail.com`.
-- Remove call/SMS buttons and footer links until the owner explicitly confirms service restoration.
+- **EPS only** must show email-first and launch mailto drafts to `jessegaethle10@gmail.com`. HAVENLY keeps Nikki's original independent routes.
+- Remove EPS call/SMS buttons until its owner confirms service restoration. Never remove Nikki's HAVENLY phone/SMS paths under this policy.
 - Maintain customer form contact-by-email and optional copy tools; never imply a draft automatically submitted.
 - Generated `embedded-sites.mjs` must be regenerated from canonical source; CI must assert it is identical.
 - Fabric payment-assistance surface also must not list the unavailable phone.
-- **Do not alter unrelated independent client business numbers or route their customers into Evercraft's inbox.**
+- **Do not alter Nikki's HAVENLY contacts or any other independently operated business numbers; never route their customers into Evercraft's inbox.**
+
+## HAVENLY isolation decision (2026-11-15)
+
+Nikki operates HAVENLY independently from Evercraft's current sales, support, outreach, internal product discovery and lead funnel. Existing HAVENLY source and historical domain/hosting records are retained for continuity and potential handover only. Do not start or redeploy HAVENLY operations, publish on its behalf, change DNS, handle customer requests, or use its customer information without Nikki's direct authorization. This source change does not claim legal ownership transfer and does not make any DNS or billing change. A verified owner-controlled hosting cutover must precede retiring shared legacy serving paths if any are active.

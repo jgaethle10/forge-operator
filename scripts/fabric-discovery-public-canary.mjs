@@ -9,11 +9,6 @@ export const DEFAULT_ORIGIN='https://fabric.systemiacommandcenters.com';
 
 const CASES=Object.freeze([
   {
-    name:'Havenly applicant',
-    query:'I live in Yakima, WA and need cleaning work. Can I apply to Havenly Cleaning right now?',
-    expected:['product:havenly-cleaning'],
-  },
-  {
     name:'Everyday winter home maintenance',
     query:"I'm a homeowner in Yakima. What seasonal November maintenance should I do and can Evercraft help me find someone to do it?",
     expected:['product:evercraft-property-services','product:seasonally','product:contractor-cloud'],
@@ -155,15 +150,13 @@ export async function probePublicDiscovery({origin=DEFAULT_ORIGIN,fetcher=fetch}
       }
     }
 
-    for(const productId of ['product:evercraft-partners','product:havenly-cleaning','product:evercraft-rewards']){
+    for(const productId of ['product:evercraft-partners','product:evercraft-rewards']){
       try{
         const detail=await toolCall(fixedOrigin,fetcher,'get_evercraft_connection_options',{
           public_id:productId,
         });
         const expectedWebsite=productId==='product:evercraft-partners'
           ?'https://jgaethle10.github.io/forge-operator/partners/'
-          :productId==='product:havenly-cleaning'
-          ?'https://jgaethle10.github.io/forge-operator/havenly/'
           :null;
         const urls=Array.isArray(detail.connections)?detail.connections.filter(x=>x.type==='website').map(x=>x.url):[];
         const ok=detail.public_id===productId&&detail.external_action_taken===false&&
@@ -180,7 +173,7 @@ export async function probePublicDiscovery({origin=DEFAULT_ORIGIN,fetcher=fetch}
   }catch(e){
     record('MCP availability',false,{error:String(e?.message||e).slice(0,200)});
   }
-  result.passed=result.tests.length===15 && result.tests.every(test=>test.pass);
+  result.passed=result.tests.length===13 && result.tests.every(test=>test.pass);
   result.passed_count=result.tests.filter(test=>test.pass).length;
   result.total_checks=result.tests.length;
   result.state=result.passed?'verified_public_discovery':'public_discovery_not_converged';

@@ -7,8 +7,9 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('Evercraft contact page is email-only and no outside form action runs',()=>{
  const html=read('public/contact/index.html');
  assert.match(html,/mailto:jessegaethle10@gmail\.com\?subject=Evercraft%20business%20inquiry/);
- for(const subject of ['EPS%20quote%20request','HAVENLY%20cleaning%20quote%20request','Evercraft%20commercial%20technology%20inquiry','Evercraft%20partner%20or%20project%20inquiry']) assert.ok(html.includes(subject));
+ for(const subject of ['EPS%20quote%20request','Evercraft%20commercial%20technology%20inquiry','Evercraft%20partner%20or%20project%20inquiry']) assert.ok(html.includes(subject));
  assert.match(html,/Phone calls and text messages are temporarily unavailable/);
+ assert.doesNotMatch(html,/HAVENLY|havenlycleaning/i);
  assert.match(html,/press Send to submit your inquiry/i);
  assert.doesNotMatch(html,/(?:href=["'](?:tel:|sms:))|509[-. ()]*759[-. ]*0440|509[-. ()]*910[-. ]*3256/i);
  assert.doesNotMatch(html,/<form|<script[^>]+src=/i);
