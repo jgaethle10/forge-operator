@@ -1,0 +1,239 @@
+{
+  "schema": "evercraft.journal.claim-evidence-input.v1",
+  "story_id": "journal:2026-10-31:arase-radiation-barrier",
+  "preparation_date": "2026-11-15",
+  "release_state": "candidate_only_not_approved",
+  "artifact": {
+    "artifact_id": "journal:2026-10-31:arase-radiation-barrier",
+    "kind": "scientific_editorial_candidate",
+    "publisher": "Evercraft Journal Curiosity Desk",
+    "url": "https://doi.org/10.1029/2026GL125879",
+    "original_text": "The Impenetrable Barrier That Made Its Own Radiation (Evercraft Journal draft, 2026-10-31). Internal draft is not a publication; its claims are traced to Miyoshi et al. (2026) and JAXA/ISAS."
+  },
+  "sources": [
+    {
+      "source_id": "arase-peer-reviewed",
+      "publisher": "Geophysical Research Letters / AGU",
+      "title": "Local Acceleration of Multi-MeV Electrons Inside Earth's Impenetrable Barrier During the May 2024 Superstorm",
+      "published_at": "2026-10-26",
+      "url": "https://doi.org/10.1029/2026GL125879",
+      "authority": "peer_reviewed_research_letter",
+      "primary": true,
+      "notes": "Miyoshi et al.; scientific evidence for source population, PSD peak, wave association and >5,000-fold flux change; observational study with modeling limitations."
+    },
+    {
+      "source_id": "jaxa-is-as-2026",
+      "publisher": "JAXA Institute of Space and Astronautical Science",
+      "title": "Ultra-Relativistic Electrons Accelerated Inside Earth's Impenetrable Barrier",
+      "published_at": "2026-10-27",
+      "url": "https://www.isas.jaxa.jp/en/topics/004418.html",
+      "authority": "mission_institutional_report",
+      "primary": false,
+      "notes": "Mission/institution explanation of same research team, not an independent replication."
+    },
+    {
+      "source_id": "nagoya-university-2026",
+      "publisher": "Nagoya University",
+      "title": "2024 solar storm triggered ultra-relativistic electrons inside Earth's impenetrable barrier",
+      "published_at": "2026-10-28",
+      "url": "https://en.nagoya-u.ac.jp/news/articles/pr-2024-solar-storm-triggered-ultra-relativistic-electrons-inside-earths-impenetrable-barrier/",
+      "authority": "lead_institution_report",
+      "primary": false,
+      "notes": "Lead institution release derived from the same study; not independent mechanistic corroboration."
+    },
+    {
+      "source_id": "nasa-svs-14835",
+      "publisher": "NASA Goddard Scientific Visualization Studio",
+      "title": "What Happened During the Biggest Geomagnetic Storm in Over 20 Years",
+      "published_at": "2025-05-09",
+      "url": "https://svs.gsfc.nasa.gov/14835/",
+      "authority": "original_photo_source_and_caption",
+      "primary": true,
+      "notes": "Mara Johnson-Groh May 10, 2024 southwest British Columbia aurora photo. Context image, NOT Arase data."
+    },
+    {
+      "source_id": "nasa-media-guidelines",
+      "publisher": "NASA",
+      "title": "NASA Images and Media Usage Guidelines",
+      "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "authority": "agency_usage_guidelines",
+      "primary": true,
+      "notes": "Generally permits factual editorial image use; third-party and advertising use are distinct and require asset-level review."
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "e:arase-2024-observation",
+      "summary": "Miyoshi et al. (2026) examine Arase near-equatorial multi-MeV electron, phase-space-density, plasma and wave measurements from the May 2024 superstorm, identifying unexpected high-energy electrons within L* < 3.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed",
+        "jaxa-is-as-2026"
+      ],
+      "time_period": "May 9–17, 2024 geomagnetic storm",
+      "geography": "Near-Earth inner magnetosphere, L* < 3",
+      "population": "Near-equatorial multi-MeV electrons",
+      "method": "Arase in situ electron and plasma-wave observations",
+      "supports": true,
+      "confidence": 0.97
+    },
+    {
+      "evidence_id": "e:flux-5000",
+      "summary": "The published Section 3.3 reports that at L* < 3, the 3,128-keV electron flux increased by more than a factor of 5,000 compared with the pre-storm level; the paper provides L* 2.5 and 3.0 examples.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed"
+      ],
+      "baseline": "Pre-storm electron flux at same energy and region",
+      "time_period": "May 2024 superstorm recovery relative to pre-storm baseline",
+      "geography": "Inner magnetosphere L* < 3",
+      "population": "Arase 3,128-keV ultra-relativistic electron channel",
+      "method": "Section 3.3, Figure 2g, paper",
+      "supports": true,
+      "confidence": 0.98
+    },
+    {
+      "evidence_id": "e:psd-local-peak",
+      "summary": "Section 3.4 and Figure 3 identify a growing radial phase-space-density peak at L* ~3 during early recovery; the authors interpret it as evidence for local in situ acceleration, followed by inward and outward redistribution.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed",
+        "jaxa-is-as-2026"
+      ],
+      "time_period": "Early recovery phase of May 2024 storm",
+      "geography": "Near L* ~3",
+      "population": "2–3 MeV-equivalent electron PSD",
+      "method": "Arase multi-pass PSD gradients at fixed adiabatic invariants",
+      "supports": true,
+      "confidence": 0.96
+    },
+    {
+      "evidence_id": "e:chorus-conditions",
+      "summary": "The authors report intense dawn-side whistler-mode chorus waves, severe plasmasphere erosion, and slow plasma recovery associated with a negative ionospheric storm; the combined pattern is consistent with chorus-driven energization, though contribution ratios require more modeling.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "arase-peer-reviewed",
+        "jaxa-is-as-2026"
+      ],
+      "time_period": "May 2024 storm main and recovery phases",
+      "geography": "Dawn-side near-Earth magnetosphere",
+      "population": "Energetic electrons and local plasma-wave environment",
+      "method": "Arase plasma density and wave spectra; interpretation in paper",
+      "supports": true,
+      "confidence": 0.94
+    },
+    {
+      "evidence_id": "e:satellite-risks",
+      "summary": "JAXA describes the high-energy electrons in the Van Allen belts as a risk to spacecraft electronics, and frames the discovery as a space-weather modeling result rather than a failure of Earth's atmosphere or an immediate ground radiation event.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "jaxa-is-as-2026",
+        "nagoya-university-2026"
+      ],
+      "time_period": "2026 research reporting about May 2024 event",
+      "geography": "Near-Earth space",
+      "population": "Spacecraft operating in radiation belts",
+      "supports": true,
+      "confidence": 0.94
+    },
+    {
+      "evidence_id": "e:nasa-photo-provenance",
+      "summary": "NASA SVS labels its May 10, 2024 southwest British Columbia aurora photograph 'NASA/Mara Johnson-Groh' (6000x4000 original). This depicts visible aurora, not electron phase-space-density measurements, and NASA distinguishes factual editorial reuse from advertising and third-party imagery rights.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "nasa-svs-14835",
+        "nasa-media-guidelines"
+      ],
+      "time_period": "May 10, 2024 photo; NASA SVS collection released May 9, 2025",
+      "geography": "Southwestern British Columbia, Canada",
+      "population": "Photograph of auroral light, not radiation-belt electron data",
+      "supports": true,
+      "confidence": 0.95
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "c:observations",
+      "claim": "The 2026 peer-reviewed Arase study describes multi-MeV electron enhancement within Earth's previously characterized impenetrable barrier during the May 2024 storm.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:arase-2024-observation"
+      ],
+      "time_period": "May 2024 observations; publication October 2026"
+    },
+    {
+      "claim_id": "c:factor",
+      "claim": "In the paper's 3,128-keV Arase electron measurements at L* < 3, the storm-time flux exceeded its pre-storm baseline by more than 5,000-fold.",
+      "claim_type": "statistical",
+      "supporting_evidence_refs": [
+        "e:flux-5000"
+      ],
+      "time_period": "May 2024 recovery vs pre-storm",
+      "geography": "L* < 3, near-Earth inner magnetosphere",
+      "population": "3,128-keV Arase electron flux",
+      "baseline": "Pre-storm flux at same energy and region"
+    },
+    {
+      "claim_id": "c:local-acceleration",
+      "claim": "The study interprets a growing near-L* ~3 electron phase-space-density peak as evidence that multi-MeV electrons were accelerated locally before subsequently dispersing radially.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:psd-local-peak"
+      ],
+      "attributed_to": "Miyoshi et al. (2026)",
+      "open_questions": [
+        "Quantify the relative contribution from local energization versus transport and losses."
+      ]
+    },
+    {
+      "claim_id": "c:chorus-associated",
+      "claim": "The research links the local acceleration interpretation to observed chorus waves and unusual plasma depletion, while stating that further modeling is needed to resolve how strongly each process contributed.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:chorus-conditions"
+      ],
+      "attributed_to": "Miyoshi et al. (2026)",
+      "open_questions": [
+        "What independent simulations or later measurements constrain the contribution of each process?"
+      ]
+    },
+    {
+      "claim_id": "c:satellite-context",
+      "claim": "This finding concerns near-Earth spacecraft radiation environments and does not establish that Earth's entire magnetic field or atmosphere collapsed.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:satellite-risks"
+      ],
+      "attributed_to": "Evercraft Journal scientific context and JAXA source reporting"
+    },
+    {
+      "claim_id": "c:photo-not-data",
+      "claim": "The NASA/Mara Johnson-Groh May 10, 2024 aurora photograph provides context for the geomagnetic storm but is not an image of Arase's electron measurements.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:nasa-photo-provenance"
+      ],
+      "open_questions": [
+        "Final asset-specific NASA credit/third-party rights review before release; do not use the photo as a paid advertisement."
+      ]
+    }
+  ],
+  "unresolved": [
+    "Headline phrase 'made its own radiation' must be reviewed for precision: electrons were energized locally, not created from nothing.",
+    "No independent replication of the specific local-acceleration mechanism has been verified here; JAXA and Nagoya summaries describe the same research team.",
+    "A 5,000-fold measured flux increase does not mean every electron channel or location increased by the same factor.",
+    "The distribution of causal contributions between wave acceleration, transport, radial diffusion and losses still requires modeling.",
+    "NASA's original image has a verified provenance and pinned SHA-256 in the media manifest, but commercial/promotional rights and third-party exceptions require asset-specific review.",
+    "An editorial preflight packet is not the independent 10/10 editorial acceptance, Fallen production proof, Systemia signed release, public deployment or Clip authorization."
+  ],
+  "required_next_gates": [
+    "independent_editorial_10_of_10",
+    "source_link_freshness_recheck",
+    "photo_asset_rights_and_cropped_visual_review",
+    "fallen_visual_science_review",
+    "production_grade_review",
+    "systemia_signed_publication_release",
+    "owned_journal_article_build_and_public_origin_canary",
+    "clip_destination_authorization_and_provider_receipts"
+  ]
+}
