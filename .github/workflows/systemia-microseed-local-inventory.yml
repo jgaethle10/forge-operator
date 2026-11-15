@@ -1,0 +1,30 @@
+name: Systemia MicroSeed existing-node inventory proof
+on:
+  push:
+    paths:
+      - 'systemia/saban/microseed-local-inventory*.mjs'
+      - '.github/workflows/systemia-microseed-local-inventory.yml'
+  pull_request:
+    paths:
+      - 'systemia/saban/microseed-local-inventory*.mjs'
+      - '.github/workflows/systemia-microseed-local-inventory.yml'
+permissions:
+  contents: read
+jobs:
+  read-only-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect static syntax and no-write help mode
+        run: |
+          node --check systemia/saban/microseed-local-inventory.mjs
+          node --check systemia/saban/microseed-local-inventory.test.mjs
+          node systemia/saban/microseed-local-inventory.mjs --help
+      - name: Prove no-bootstrap, trusted manifest, tamper, and relocation behavior
+        run: node --test systemia/saban/microseed-local-inventory.test.mjs
+      - name: Run unprivileged empty GitHub runner inventory without mutating runtime
+        run: node systemia/saban/microseed-local-inventory.mjs
