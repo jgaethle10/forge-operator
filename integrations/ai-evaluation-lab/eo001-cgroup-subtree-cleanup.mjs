@@ -167,6 +167,15 @@ function identicalResources(before,plan){
   for(const key of keys){
     if(typeof plan[key]!=='string'||plan[key]!==before[key])
       refuse('FROZEN_RESOURCE_LIMIT_MISMATCH');
+    // No unbounded limits can become a synthetic cleanup PASS through a
+    // conveniently chosen frozen plan. A changed policy requires a new
+    // jointly reviewed contract, never a silent fallback.
+    if(key==='cpu.max'?plan[key].startsWith('max '):
+       plan[key]==='max')
+      refuse('FROZEN_RESOURCE_UNBOUNDED');
+    if(key!=='cpu.max'&&key!=='memory.swap.max'&&
+       (!/^[1-9][0-9]*$/.test(plan[key])))
+      refuse('FROZEN_RESOURCE_LIMIT_INVALID');
   }
 }
 
