@@ -1,6 +1,7 @@
 import {
   SNAPSHOT_PATH,validateEvidence,formatNumber,sourceAgeLabel,shortDate,ratioLabel,isOfficialSource
 } from './model.mjs';
+import {INDEX_REVIEW_PATH,validateIndexReview,indexReviewCounts} from './index-review.mjs';
 
 // Browser-only read of a pinned, review-only historical evidence file.
 // No automatic sensors, external JS, geolocation, personal data, payments or publishing.
@@ -138,6 +139,44 @@ function renderEvidence(source){
   });
 }
 
+function renderIndexReview(review){
+  const result=validateIndexReview(review);
+  if(!result.valid)throw new TypeError('Index source history validation failed: '+result.errors.join(', '));
+  const counts=indexReviewCounts(review);
+  $('index-history-summary').textContent=counts.days+' verified dated NRCS reports · '+
+    counts.durable_days+' ledger-recorded · '+counts.temporary_days+
+    ' temporary staging receipts · '+counts.warned_indices+' official warning flags.';
+  blockInto('index-history-list',parent=>{
+    for(const day of review.days){
+      const article=el('article','index-review-card');
+      const heading=el('div','index-review-head');
+      put(heading,span(shortDate(day.date),'index-review-date'),
+        span(day.preservation==='ledger_recorded'?'Recorded in ledger':'Temporary staging',
+          'index-review-badge '+(day.preservation==='ledger_recorded'?'':'temporary')));
+      const values=el('div','index-review-values');
+      const names={'upper-yakima':'Upper Yakima','naches':'Naches','lower-yakima':'Lower Yakima'};
+      for(const item of day.indices){
+        const stat=el('div','');
+        const v=el('div','v');
+        put(v,document.createTextNode(formatNumber(item.percent)+'%'),el('small','','*'));
+        put(stat,v,span(names[item.id],'k'));
+        values.append(stat);
+      }
+      const source=el('div','index-review-source');
+      put(source,span('Official basin index • receipt '+day.source_report_sha256.slice(0,14)+'… · '),
+        officialLink(day.source_run_url,'Original collection ↗'));
+      if(day.staging_run_url)put(source,span(' · '),officialLink(day.staging_run_url,'Temporary staging ↗'));
+      put(article,heading,values,source);
+      parent.append(article);
+    }
+  });
+  $('index-history-error').hidden=true;
+}
+export async function loadIndexReview(fetchImpl=fetch){
+  const response=await fetchImpl(INDEX_REVIEW_PATH,{cache:'no-store'});
+  if(!response?.ok)throw new Error('index history source HTTP '+String(response?.status??'unknown'));
+  renderIndexReview(await response.json());
+}
 export function renderWatershed(source){
   const check=validateEvidence(source);
   if(!check.valid)throw new Error('Evidence cannot be displayed: '+check.problems.join(', '));
@@ -160,7 +199,13 @@ export async function loadWatershed(fetchImpl=fetch){
   renderWatershed(snapshot);
 }
 if(typeof document!=='undefined'){
-  loadWatershed().catch(error=>{
+  loadWatershed().then(()=>loadIndexReview().catch(error=>{
+    $('index-history-list')?.replaceChildren();
+    const warning=$('index-history-error');
+    if(warning)warning.hidden=false;
+    if($('index-history-summary'))$('index-history-summary').textContent='History withheld: source validation unavailable';
+    console.error('Watershed source history held:',error?.message||'unknown error');
+  })).catch(error=>{
     const alert=$('load-error');
     if(alert){alert.hidden=false;alert.textContent='The archived evidence could not be verified. Measurements are hidden; use official NRCS, USGS and USBR sources instead.';}
     const section=$('dashboard');
