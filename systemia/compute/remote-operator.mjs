@@ -205,7 +205,9 @@ export class EvercraftRemoteOperator {
       execution: {
         mode: 'bounded-program',
         interactive_tty: false,
-        root_privilege: false,
+        // Report the process's actual effective privilege. File-API
+        // containment is not an OS sandbox and can run as root if misconfigured.
+        root_privilege: typeof process.geteuid === 'function' ? process.geteuid() === 0 : null,
         programs: [...DEFAULT_PROGRAMS].sort(),
         ambient_secret_environment_forwarded: false,
       },
