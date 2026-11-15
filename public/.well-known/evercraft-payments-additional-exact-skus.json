@@ -1,0 +1,9 @@
+{
+  "schema": "evercraft.payments.additional-exact-sku-links.v1",
+  "authority": "Evercraft Payments",
+  "settlement_provider": "Stripe",
+  "settlement_account": "Systemia",
+  "mode": "fail_closed_until_exact_sku_and_provider_buyer_view_verified",
+  "note": "Do not reuse any of the seven existing Stripe payment links. Add only product-specific, owner-approved SKU identities with real provider and independent rendered buyer-view evidence. An entry is not a paid receipt or entitlement.",
+  "offers": []
+}

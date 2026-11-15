@@ -16,10 +16,14 @@ Public capability discovery does not prove that every specialist runtime, Field 
 
 ## Evercraft Payments
 
-**Checkout is held**, not live. Historic provider-hosted buyer forms and a buyer-door snapshot are not valid purchase links. Current commercial truth:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json
+**Seven approved exact-price services have working Stripe-hosted buyer checkout forms.** The most recent independent browser verification on November 9, 2026 confirmed **7 of 7** existing original Systemia/Stripe SKU names, amounts and visible payment fields, with no card entry or charge. Customers can review their own matching service pages at:
+https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/
 
-A customer may review an owned information page and request a separately verified payment method. No AI installation or read-only discovery action creates charges, invoices, subscriptions, entitlements or verified revenue. Orders and delivery require explicit customer consent, verified provider payment records and Systemia Shipping receipts.
+**Native Evercraft Payments checkout and automatic settlement-to-fulfillment remain held.** That is a different claim from the seven separately verified processor-hosted links. Evercraft Payments remains canonical commerce authority, Raven Nexus is the controlled provider boundary, and Stripe processes those seven original exact-price services under the Systemia account. Agree scope and delivery capacity before billing, reconcile actual provider-paid receipts manually, and never treat a rendered checkout or browser return as payment or entitlement.
+
+The old thirteen-offer provider-hosted buyer-form snapshot is archival and must not be reused; the separate seven Stripe URLs only apply to their original exact product and amount. Other products need separately authorized provider SKUs, checkout links and delivery gates. No AI read-only discovery action creates a charge or a verified sale.
+
+Evidence: https://github.com/jgaethle10/forge-operator/actions/runs/42758200403 and https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-commercial-readiness.json
 
 ## Machine-readable discovery
 
