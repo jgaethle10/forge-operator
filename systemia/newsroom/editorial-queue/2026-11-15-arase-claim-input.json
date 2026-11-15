@@ -8,7 +8,7 @@
     "kind": "scientific_editorial_candidate",
     "publisher": "Evercraft Journal Curiosity Desk",
     "url": "https://doi.org/10.1029/2026GL125879",
-    "original_text": "The Impe​netrable Barrier That Made Its Own Radiation (Evercraft Journal draft, 2026-10-31). Internal draft is not a publication; its claims are traced to Miyoshi et al. (2026) and JAXA/ISAS."
+    "original_text": "The Impenetrable Barrier That Made Its Own Radiation (Evercraft Journal draft, 2026-10-31). Internal draft is not a publication; its claims are traced to Miyoshi et al. (2026) and JAXA/ISAS."
   },
   "sources": [
     {
@@ -219,6 +219,7 @@
     }
   ],
   "unresolved": [
+    "Headline phrase 'made its own radiation' must be reviewed for precision: electrons were energized locally, not created from nothing.",
     "No independent replication of the specific local-acceleration mechanism has been verified here; JAXA and Nagoya summaries describe the same research team.",
     "A 5,000-fold measured flux increase does not mean every electron channel or location increased by the same factor.",
     "The distribution of causal contributions between wave acceleration, transport, radial diffusion and losses still requires modeling.",
