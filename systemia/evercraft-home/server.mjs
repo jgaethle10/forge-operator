@@ -950,6 +950,26 @@ export async function startEvercraftHomeServer({
       }
     }
 
+    // Read-only Raven Nexus vehicle-safety module metadata. No observations are uploaded.
+    if (req.method === "GET" && url.pathname === "/api/raven/vehicle-safety") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      const vehicle = readRavenOverview(repoRoot).vehicle_safety;
+      if (!vehicle) return json(res, 503, { ok: false, state: "vehicle_safety_not_available" });
+      return json(res, 200, { ok: true, subject: session.subject, ...vehicle });
+    }
+
+    // Authenticated Evercraft OS entrypoint for the local-only QuickCheck pilot.
+    // Browser records stay in the user's browser, unencrypted, until user export/erase.
+    // This route does not claim Bluetooth scanning or backend tracker detection.
+    if (req.method === "GET" && url.pathname === "/safety/vehicle") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      const file = path.join(repoRoot, "products", "vehicle-sentinel", "quickcheck.html");
+      if (!fs.existsSync(file)) return json(res, 503, { ok: false, state: "vehicle_safety_source_unavailable" });
+      return html(res, 200, fs.readFileSync(file, "utf8"));
+    }
+
     if (req.method === "GET" && url.pathname === "/api/raven/overview") {
       const session = sessionFor(req);
       if (!session.ok) return json(res, session.status, session);
