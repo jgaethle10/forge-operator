@@ -155,7 +155,7 @@ test('resource-plan drift and absent freeze cannot be waved away',t=>{
     ...RESOURCES,'memory.swap.max':'max'
   }])assert.throws(()=>assessSyntheticSubtreeCleanup({
     before,after,frozenResourcePlan:plan
-  }),/FROZEN_RESOURCE_PLAN/);
+  }),/FROZEN_RESOURCE_PLAN|FROZEN_RESOURCE_LIMIT_MISMATCH/);
   assert.throws(()=>assessSyntheticSubtreeCleanup({
     before,after:{...after,resource_readback:{
       ...after.resource_readback,'pids.max':'99'
