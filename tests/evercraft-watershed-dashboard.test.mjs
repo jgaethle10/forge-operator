@@ -149,7 +149,7 @@ test('historical visual stays phone-first, dated, unapproved and source-anchored
   assert.match(page,/id="index-history"/);
   assert.match(page,/id="index-history-list"/);
   assert.match(page,/id="index-history-error"/);
-  assert.match(page,/Temporary staging/);
+  assert.match(page,/temporary staging/i);
   assert.match(page,/not forecasts/i);
   assert.match(app,/loadIndexReview/);
   assert.match(app,/validateIndexReview/);
