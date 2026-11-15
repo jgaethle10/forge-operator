@@ -1,0 +1,55 @@
+name: EO-001 Gate 1 independent supervisor subtree observation
+on:
+  push:
+    branches:
+      - research/eo001-gate1-supervisor-subtree-observer-20261115
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-cgroup-*'
+      - '.github/workflows/eo001-gate1-subtree-observation.yml'
+  pull_request:
+    branches:
+      - research/eo001-gate1-stable-identity-refusal-20261111
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-model-supervisor-observations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate offline supervisor and cgroup evidence sources
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-subtree-cleanup.mjs
+      - name: Exercise supervisor-only, pre-stop Linux scope snapshot contract
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.test.mjs
+      - name: Exercise actual local filesystem read-only subtree captures and adversarial cleanup refusal
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-subtree-cleanup.test.mjs
+      - name: Retain original real Linux detached-process control and identity refusals
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-stable-proc-identity.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-process-group-escape-negative.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.test.mjs
+      - name: Verify scope controller and admission refusal regressions
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-resource-proof.test.mjs
+          node --test integrations/ai-evaluation-lab/eo001-cgroup-admission.test.mjs
+      - name: Refuse unapproved physical model execution
+        run: |
+          set +e
+          node integrations/ai-evaluation-lab/eo001-cgroup-admission.mjs > /tmp/eo001-read-only-denial.json
+          RC=$?
+          set -e
+          test "$RC" -eq 2
+          python3 - <<'PY'
+          import json
+          x=json.load(open('/tmp/eo001-read-only-denial.json',encoding='utf8'))
+          assert x['state']=='CGROUP_SCOPE_ADMISSION_BLOCKED'
+          assert x['model_inference_executed'] is False
+          assert x['external_actions_authorized'] is False
+          print('EO001_DEFAULT_PHYSICAL_MODEL_REFUSAL: PASS')
+          PY
