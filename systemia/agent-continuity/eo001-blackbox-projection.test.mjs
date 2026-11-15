@@ -198,7 +198,7 @@ test('synthetic EO-001 failure flows through original custody and Spider candida
   }};
   const purpose='evercraft.blackbox.readonly-ingest.v1';
   const envelope={key_id:'eo001-ci-source',purpose,payload:result.payload,
-    signature:sign(null,Buffer.from(purpose+'\\n'+JSON.stringify(result.payload)),
+    signature:sign(null,Buffer.from(purpose+'\n'+JSON.stringify(result.payload)),
       privateKey).toString('base64')};
   const policy={
     tenant_id:config().tenant_id,mission_id:config().mission_id,
