@@ -13,7 +13,7 @@ test('Saban portfolio QA roles are fixed and never accept arbitrary commands or 
  assert.ok(validatePortfolioQaAssignment(assignment('work_saban_checker')).files.includes('tests/work-saban-customer-csv.test.mjs'));
  assert.throws(()=>validatePortfolioQaAssignment(assignment('shell')),/unregistered/);
  assert.throws(()=>validatePortfolioQaAssignment({...assignment('work_saban_checker'),work:{kind:'arbitrary',key:'work_saban_checker'}}),/scope/);
- assert.throws(()=>validatePortfolioQaAssignment({...assignment('findmypart_checker'),item:{kind:'qa_suite',key:'findmypart_checker',raw:{command:'curl'}}}),/parameters_disallowed/);
+ assert.throws(()=>validatePortfolioQaAssignment({...assignment('findmypart_checker'),item:{kind:'qa_suite',key:'findmypart_checker',raw:{command:'curl'}}}),/external_parameters_not_allowed/);
  assert.throws(()=>validatePortfolioQaAssignment(assignment('work_saban_checker'),'/tmp'),/root_mismatch/);
 });
 test('Saban QA adapter actually executes bounded Work Saban regression tests',async()=>{
