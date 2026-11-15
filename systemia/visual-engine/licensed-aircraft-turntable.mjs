@@ -14,6 +14,7 @@ import {compileVisualFrame} from '../world-engine/visual.ts';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,EVERCRAFT_WEBGPU_WGSL} from '../world-engine/webgpu.ts';
 import {classifyWebGpuAdapter} from '../evercraft-web/browser-worker/webgpu-conformance.mjs';
 import {fitAuthoredCamera} from './authored-camera.mjs';
+import {compileScreenEnvironment,ENVIRONMENT_PRESETS} from './screen-environment.mjs';
 
 const sha=v=>'sha256:'+crypto.createHash('sha256').update(v).digest('hex');
 const PROFILES=[
@@ -116,8 +117,15 @@ export async function captureAuthoredTurntable({
           const angle=shot.angle;
           const {plan,geometry,textures,bounds,cameraFit,placementReceipt}=
             buildAuthoredTurntablePlan(gltf,pack,angle,shot);
+          const environment=compileScreenEnvironment({
+            ...ENVIRONMENT_PRESETS.clear_coastal_day,timeSec:index*2.0
+          },plan.width,plan.height);
           const pixels=await renderWebGpuPlanOnPage(
-            page,plan,geometry,EVERCRAFT_WEBGPU_WGSL,textures);
+            page,plan,geometry,EVERCRAFT_WEBGPU_WGSL,textures,environment);
+          assert.ok(pixels.environmentEvidence?.skyVerticalDifference>35,
+            'environment_sky_gradient_not_visible:'+index);
+          assert.ok(pixels.environmentEvidence?.skyOceanDifference>25,
+            'environment_ocean_separation_not_visible:'+index);
           assert.ok(pixels.visiblePixels>10000,'turntable_model_too_sparse:'+index);
           assert.ok(pixels.foregroundBounds?.widthFraction>=.33,
             'turntable_subject_too_small:'+index);
@@ -144,12 +152,14 @@ export async function captureAuthoredTurntable({
             camera_distance:cameraFit.distance,camera_projected_bounds:cameraFit.projectedBounds,
             foreground_bounds:pixels.foregroundBounds,
             frame_width:plan.width,frame_height:plan.height,
+            environment_digest:environment.digest,
+            environment_evidence:pixels.environmentEvidence,
             adapter_info:pixels.adapterInfo
           });
         }
         const cls=classifyWebGpuAdapter(captures[0].adapter_info,profile);
         const core={
-          schema:'evercraft.visual-engine.licensed-aircraft-pixel-proof.v2',
+          schema:'evercraft.visual-engine.licensed-aircraft-pixel-proof.v3',
           status:'verified',
           authored_asset_provenance:pack.provenance,
           source_digest:pack.receipt.digest,
@@ -159,7 +169,7 @@ export async function captureAuthoredTurntable({
           hardware_execution_claim:cls.hardware_execution_claim,
           software_forced:profile.forcedSoftware,
           profile:profile.id,msaa_samples:4,
-          quality_status:'preview_only_no_cinematic_acceptance',
+          quality_status:'screen_space_environment_preview_not_cinematic',
           source_sampling_quality:pack.qualityStatus,
           samples:captures
         };
