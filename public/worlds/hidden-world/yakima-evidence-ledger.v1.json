@@ -143,5 +143,25 @@
       "model_status": "evidence_reference_only"
     }
   ],
-  "last_enriched_at": "2026-11-09"
+  "last_enriched_at": "2026-11-09",
+  "virtual_exhibits": [
+    {
+      "id": "yakima-streetscape-inquiry-v1",
+      "route": "yakima-walk/",
+      "mode": "original_illustrative_3d_gallery",
+      "historical_period": "1899–1915, not a single precise year",
+      "source_bounds": [
+        "yk-lund-building",
+        "yk-eastward-avenue-postcard",
+        "yk-archive-drawings",
+        "yk-sanborn-guide"
+      ],
+      "no_surveyed_building_geometry": true,
+      "underground_connections_verified": false,
+      "public_access_claimed": false,
+      "physical_coordinates_encoded": false,
+      "model_manifest": "yakima-walk/scene.mjs",
+      "note": "Six research stops in deliberately fictional model units. An interpretive gallery is not a surveyed city block or private-access guide."
+    }
+  ]
 }

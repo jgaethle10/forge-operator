@@ -128,6 +128,22 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
   assert.ok((await resource.text()).includes(marker));
  }
  assert.equal((await fetch(base+'/worlds/hidden-world/titan-walk/.env')).status,404);
+ const yakimaWalk=await fetch(base+'/worlds/hidden-world/yakima-walk/');
+ assert.equal(yakimaWalk.status,200);
+ assert.match(yakimaWalk.headers.get('content-type')||'',/^text\/html/);
+ assert.match(await yakimaWalk.text(),/NO VERIFIED TUNNELS/);
+ for(const [file,marker] of [
+  ['app.mjs','buildYakimaDrawList'],
+  ['scene.mjs','evercraft.hidden-world.yakima-streetscape.v1'],
+  ['tour.mjs','YAKIMA_TOUR_SECONDS']
+ ]){
+  const resource=await fetch(base+'/worlds/hidden-world/yakima-walk/'+file);
+  assert.equal(resource.status,200,file+' must be served by the owned vault');
+  assert.match(resource.headers.get('content-type')||'',/^text\/javascript/);
+  assert.ok((await resource.text()).includes(marker));
+ }
+ assert.equal((await fetch(base+'/worlds/hidden-world/yakima-walk/.env')).status,404);
+
 
 
 
