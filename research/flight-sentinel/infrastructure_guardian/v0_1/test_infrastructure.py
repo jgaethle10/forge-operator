@@ -51,6 +51,19 @@ class GuardianTests(unittest.TestCase):
         g.inspect(sample(0,500,maintenance_window=True))
         self.assertEqual(g.inspect(sample(1,500,maintenance_window=True)).action,'MANUAL_CHANGE_REVIEW')
 
+    def test_stale_sample_resets_persistence(self):
+        g=Guardian()
+        g.inspect(sample(0,500))
+        g.inspect(sample(1,500,telemetry_fresh=False))
+        self.assertEqual(g.inspect(sample(2,500)).action,'DEGRADE_AND_REVIEW')
+
+    def test_monitor_cannot_consume_hidden_truth(self):
+        s=Snapshot(0,{'incorrect':-1},
+                   {'node-a':35.,'node-b':35.,'node-c':35.},
+                   {'node-a':35.,'node-b':35.,'node-c':35.})
+        self.assertEqual(Guardian().inspect(s).action,'OBSERVE')
+        with self.assertRaises(ValueError): service_state(s,set(),Policy())
+
     def test_no_external_effect(self):
         seq=snapshots('flood')
         before=seq[3].actual_rates['node-a']
