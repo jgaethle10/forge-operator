@@ -92,7 +92,12 @@ export function verifyPrivateSabanTransitionJournal(raw){
        !DIGEST.test(entry.entry_digest||'')||entry.previous_digest!==previous){
       throw new Error('Broken Saban journal sequence or chain');
     }
-    const event=validateSabanAggregateEvent(entry);
+    if(Object.keys(entry).some(k=>!['schema','seq','previous_digest','entry_digest',
+       'kind','at','counts','total','source_class'].includes(k)))throw new Error('Unexpected journal fields');
+    const event=validateSabanAggregateEvent({
+      kind:entry.kind,at:entry.at,total:entry.total,
+      counts:entry.counts,source_class:entry.source_class
+    });
     const payload={schema:entry.schema,seq:entry.seq,previous_digest:entry.previous_digest,...event};
     const expected=sha(JSON.stringify(payload));
     if(expected!==entry.entry_digest)throw new Error('Saban journal digest mismatch');
