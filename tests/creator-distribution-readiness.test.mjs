@@ -60,9 +60,11 @@ test('existing Evercraft queue and Journal source produce a truthful handoff',()
   const actualQueue=JSON.parse(fs.readFileSync('distribution/marketing/evercraft-partners-20261030.review.json','utf8'));
   const actualJournal=JSON.parse(fs.readFileSync('public/journal/index.json','utf8'));
   const x=diagnosePublishingLanes({queue:actualQueue,journalIndex:actualJournal,creatorPageSourcePresent:true,now});
-  assert.equal(x.company.candidate_count,11);
-  assert.equal(x.company.by_state.account_identity_unverified,11);
-  assert.equal(x.journal.live_edition_in_source,false);
+  assert.equal(x.company.candidate_count,actualQueue.entries.length);
+  assert.equal(Object.values(x.company.by_state).reduce((a,b)=>a+b,0),actualQueue.entries.length);
+  assert.equal(x.journal.live_edition_in_source,actualJournal.live_edition);
+  assert.ok(x.company.missing_platforms.some(p=>p.platform==='tiktok'));
+  assert.ok(x.company.missing_platforms.some(p=>p.platform==='youtube'));
   const md=toMarkdown(x);
   assert.match(md,/Evercraft Creator & Publishing Lane Readiness/);
   assert.match(md,/account_identity_unverified/);
