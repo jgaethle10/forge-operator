@@ -23,7 +23,10 @@ try {
   const status = operator.status();
   assert.equal(status.ok, true);
   assert.deepEqual(status.roots, ['home']);
-  assert.equal(status.execution.root_privilege, false);
+  assert.equal(
+    status.execution.root_privilege,
+    typeof process.geteuid === 'function' ? process.geteuid() === 0 : null
+  );
   assert.equal(status.execution.ambient_secret_environment_forwarded, false);
   assert.equal(status.network_observation.read_only, true);
 
