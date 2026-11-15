@@ -66,7 +66,6 @@ class Guardian:
     def inspect(self, s: Snapshot) -> Advisory:
         if (not isinstance(s, Snapshot)
             or type(s.tick) is not int or s.tick < 0
-            or not rates_valid(s.actual_rates)
             or not rates_valid(s.edge_rates)
             or not rates_valid(s.core_rates)
             or any(type(v) is not bool for v in (
@@ -79,15 +78,18 @@ class Guardian:
                             ('MISSING_OR_REPLAYED_SAMPLE',), False)
         self.last_tick = s.tick
         if not s.telemetry_fresh:
+            self.streak = {key: 0 for key in SOURCES}
             return Advisory(s.tick, 'CONSERVATIVE_HOLD', None,
                             ('STALE_TELEMETRY',), True)
         for key in SOURCES:
             a, b = s.edge_rates[key], s.core_rates[key]
             if abs(a-b) > max(self.policy.mismatch_floor,
                               self.policy.mismatch_fraction * max(a, b)):
+                self.streak = {key: 0 for key in SOURCES}
                 return Advisory(s.tick, 'CONSERVATIVE_HOLD', None,
                                 ('EVIDENCE_CONFLICT', key), True)
         if s.shared_failure or not s.backup_independent:
+            self.streak = {key: 0 for key in SOURCES}
             return Advisory(s.tick, 'CONSERVATIVE_HOLD', None,
                             ('BACKUP_COMMON_MODE_UNTRUSTED',), True)
         for key in SOURCES:
@@ -114,6 +116,8 @@ class Guardian:
 
 def service_state(s: Snapshot, isolated: set[str], policy: Policy) -> dict:
     """Hypothetical topology only; independent backup is a Boolean assumption."""
+    if not rates_valid(s.actual_rates):
+        raise ValueError("invalid synthetic ground truth")
     load = sum(rate for src, rate in s.actual_rates.items() if src not in isolated)
     primary_ok = load <= policy.shared_capacity and not s.shared_failure
     backup_ok = s.backup_operational and s.backup_independent and not s.shared_failure
