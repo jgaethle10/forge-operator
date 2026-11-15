@@ -1,0 +1,16 @@
+import {readFile,writeFile,mkdir} from "node:fs/promises";
+import {dirname,resolve,join} from "node:path";
+import {fileURLToPath} from "node:url";
+import {createHash} from "node:crypto";
+import {validateCatalog,portableHTML} from "../public/passage/catalog.mjs";
+const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+const catalog=validateCatalog(JSON.parse(await readFile(join(root,"public/passage/catalog.json"),"utf8")));
+const destination=resolve(process.env.PASSAGE_EXPORT_DIR||join(root,".passage-preview"));
+await mkdir(destination,{recursive:true});
+const file="passage-offline-library-"+catalog.edition+".html";
+const html=portableHTML(catalog),digest=createHash("sha256").update(html).digest("hex");
+await writeFile(join(destination,file),html,"utf8");
+await writeFile(join(destination,"SHA256SUMS.txt"),digest+"  "+file+"\n","utf8");
+await writeFile(join(destination,"READ-ME.txt"),"Evercraft Passage prototype, edition "+catalog.edition+"\nThis is original demonstration editorial text, not a verified news mirror, not an anonymity or censorship-bypass tool. The HTML copy opens offline and is unencrypted. A checksum detects accidental changes only; it is not a digital signature or proof of authorship. Redistribution rights are not broadly granted.\n","utf8");
+console.log("Built offline demonstration copy:",join(destination,file));
+console.log("SHA-256:",digest);

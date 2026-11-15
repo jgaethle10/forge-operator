@@ -1,0 +1,8 @@
+# Passage | Knowledge travels
+Evercraft Passage is an early offline-first public-interest reading prototype by Evercraft LLC.
+Prototype front door: https://jgaethle10.github.io/forge-operator/passage/
+Current functionality: browse original educational demonstration guides; search and filter; download one as plain text or the demonstration library as a standalone HTML file; store local bookmarks; HTTPS-capable service-worker app shell caching after successful installation.
+Important exclusions: no account, server-side storage, encrypted delivery, censorship bypass, anonymity claim, automated editorial verification, rights-cleared external content ingestion, peer-to-peer transport, live emergency information, or public production deployment claim.
+Sample source links are provided for further reading; referenced organizations do not endorse Passage.
+All sample prose is original demonstration material. Broad redistribution rights have not been approved.
+Public status: prototype, pending independent security/privacy/accessibility/rights review and live-host verification.
