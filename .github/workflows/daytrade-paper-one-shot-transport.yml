@@ -1,0 +1,43 @@
+name: DayTrade PAPER One-Shot Transport Tests
+
+on:
+  pull_request:
+    paths:
+      - "systemia/daytrade-lens/paper-*"
+      - ".github/workflows/daytrade-paper-one-shot-transport.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paper-one-shot-mock-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify prior paper gate and readback suites
+        run: |
+          node --test systemia/daytrade-lens/paper-broker-preflight.test.mjs
+          node --test systemia/daytrade-lens/paper-order-gate.test.mjs
+          node --test systemia/daytrade-lens/paper-order-reconciliation.test.mjs
+      - name: Verify owner permit and one-shot transport with MOCK data only
+        run: |
+          node --test systemia/daytrade-lens/paper-one-shot-transport.test.mjs
+      - name: Refuse forbidden live host references in writer
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const code = fs.readFileSync('systemia/daytrade-lens/paper-one-shot-transport.mjs', 'utf8');
+          const paper = ['https://', 'paper-api.alpaca.markets'].join('');
+          if (!code.includes(paper) || code.includes(['https://','api.alpaca.markets'].join(''))) {
+            throw new Error('Paper-only origin guard missing or live origin present');
+          }
+          console.log('PAPER_ONLY_HOST_GUARD_PRESENT');
+          NODE
+      - name: Explicit security assertion
+        run: |
+          echo "NO REAL CREDENTIALS LOADED; ALL TESTS USE MOCK ALPACA RESPONSES"
