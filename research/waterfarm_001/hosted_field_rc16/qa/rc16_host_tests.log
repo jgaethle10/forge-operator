@@ -1,0 +1,9 @@
+test_changed_remote_bytes_hold (test_hosted_verifier.HostVerifierTests.test_changed_remote_bytes_hold) ... ok
+test_missing_security_header_hold (test_hosted_verifier.HostVerifierTests.test_missing_security_header_hold) ... ok
+test_release_matches_exact_static_files (test_hosted_verifier.HostVerifierTests.test_release_matches_exact_static_files) ... ok
+test_unapproved_http_and_host_hold (test_hosted_verifier.HostVerifierTests.test_unapproved_http_and_host_hold) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK
