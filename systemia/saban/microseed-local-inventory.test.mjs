@@ -93,3 +93,29 @@ test('operator-specified existing roots checked without recursive scan',()=>fixt
  assert.equal(data.network_requests_made,false);
  assert.equal(data.files_modified,false);
 }));
+
+test('system-level gateway and pairing API are detected while native agent remains unverified',()=>fixture(home=>{
+ const run=(cmd,args)=>args.includes('--user')
+   ? {status:0,stdout:'evercraft-autonomy-broker.service loaded active running broker\n'}
+   : {status:0,stdout:[
+       'evercraft-saban-microseed-gateway.service loaded active running gateway',
+       'evercraft-saban-pairing-api.service loaded active running pairing',
+       'evercraft-saban-capacity.service loaded inactive dead capacity',
+     ].join('\n')+'\n'};
+ const data=inspectLocalMicroSeedInventory({home,run});
+ assert.equal(data.system_services.count,3);
+ assert.equal(data.system_gateway_present,true);
+ assert.equal(data.system_pairing_api_present,true);
+ assert.equal(data.verified_manifest_count,0);
+ assert.equal(data.current_agent_live_verified,false);
+ assert.equal(data.signed_execution_verified,false);
+ assert.equal(data.active_device_authorization_verified,false);
+ assert.equal(data.services.count,0);
+}));
+test('system-level service observation may be unavailable without inferring no deployment',()=>fixture(home=>{
+ const data=inspectLocalMicroSeedInventory({home,run:()=>({status:1,stdout:''})});
+ assert.equal(data.system_services.state,'unavailable');
+ assert.equal(data.system_gateway_present,false);
+ assert.equal(data.system_pairing_api_present,false);
+ assert.equal(data.current_agent_live_verified,false);
+}));
