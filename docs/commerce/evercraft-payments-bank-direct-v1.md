@@ -231,6 +231,34 @@ bank-verified payment. Keep this API on the operator side, not publicly
 reverse-proxied. Read bank records from the authorized merchant account,
 then apply a separate verified economic-event and fulfillment gate.
 
+## Bluevine receiving-account option (verified public documentation November 15)
+
+Bluevine publicly confirms that eligible Business Checking accounts can
+receive ACH/wire deposits and direct customer payments. It also permits
+business invoices without Stripe, with the customer instructed separately
+how to pay. This is consistent with Evercraft's proposed **buyer-initiated
+bank-credit** instructions. It does not prove that Evercraft's specific bank
+account, payee identity, invoice permissions or inbound deposit monitoring
+have been verified.
+
+**Important:** Bluevine's hosted online card, wallet and ACH *direct debit*
+payment links require a Stripe account connection. A Bluevine invoice without
+Stripe is therefore NOT an online pay-now button. Bluevine also says Zelle
+is not currently supported. Do not promise Stripe-free Bluevine pay-now,
+instant funds, Zelle or automatic Bluevine bank notifications.
+
+- Official invoicing FAQ: https://www.bluevine.com/accept-payments/invoicing
+- Official June 2, 2026 ACH deposit instructions: https://support.bluevine.com/s/article/How-do-I-transfer-money
+- Official June 2, 2026 receive-account guidance: https://support.bluevine.com/s/article/How-do-I-set-up-direct-deposits
+- Official Bluevine acceptance roles: https://support.bluevine.com/s/article/Roles-and-Permissions-for-Accepting-Payments
+- Official Bluevine/Zelle status: https://support.bluevine.com/s/article/How-do-I-deposit-funds-into-my-Bluevine-Business-Checking-Account
+
+**Operator bank activation:** verify that an active business account is
+actually Evercraft-owned, confirm its ACH-credit receiving instructions in
+the financial institution's secure dashboard and test a permitted merchant-
+authorized bank credit. Never copy account details into source, chat, public
+issues or logs. Prefer a bank-issued receivables/virtual account if available.
+
 ## Bank facts / sources
 - Nacha B2B ACH Quick Start: https://www.nacha.org/b2bquickstart
 - Nacha Pay-by-Bank FAQs: https://www.nacha.org/pay-by-bank-faqs
