@@ -280,3 +280,60 @@ jobs:
             /tmp/evercraft-rc05e-49-56.json
             /tmp/evercraft-rc05e-81-88.json
           retention-days: 7
+
+      - name: RC05F test distinct synthetic crossing and slalom world constructors
+        run: node --test systemia/world-engine/sim-to-real/adversarial-families-rc05f.test.mjs
+      - name: RC05F native full-tick replay and evidence integrity tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/family-trial-rc05f.test.mjs
+      - name: RC05F crossing-lanes synthetic cohort seeds 101-108
+        run: node --import tsx systemia/world-engine/sim-to-real/family-trial-rc05f.mjs --family crossing-lanes --first-seed 101 --seeds 8 --out /tmp/evercraft-rc05f-crossing.json
+      - name: RC05F offset-slalom synthetic cohort seeds 201-208
+        run: node --import tsx systemia/world-engine/sim-to-real/family-trial-rc05f.mjs --family offset-slalom --first-seed 201 --seeds 8 --out /tmp/evercraft-rc05f-slalom.json
+      - name: RC05F audit outcomes without silently promoting unsafe controllers
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyFamilyTrial} from './systemia/world-engine/sim-to-real/family-trial-rc05f.mjs';
+          for(const file of ['crossing','slalom']){
+            const r=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05f-'+file+'.json','utf8'));
+            if(!verifyFamilyTrial(r)||r.hardwareExecution!==false||
+                r.productionAuthorized!==false||r.review.hardwareAuthorized!==false)
+              throw Error('rc05f_invalid_evidence:'+file);
+            const baseline=r.scores.baseline, candidate=r.scores.latched;
+            const unsafe=r.pairs.some(p=>['collision','geofence'].includes(p.latched.status)&&
+              !['collision','geofence'].includes(p.baseline.status));
+            if(unsafe&&r.review.reviewEligible)throw Error('rc05f_unjustified_review_approval:'+file);
+            if(r.review.reviewEligible&&(candidate.shieldedMoves===0||
+              candidate.arrived-baseline.arrived<Math.ceil(r.seeds*.25)))
+              throw Error('rc05f_immobility_misclassified:'+file);
+            console.log('RC05F AUDIT',JSON.stringify({family:r.scenarioFamily,baseline,candidate,
+              newSafetyFailures:unsafe,review:r.review,digest:r.sha256}));
+          }
+          NODE
+      - name: RC05F diagnose known latched timeouts 55 and 56 without adjusting policy
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import {runReactiveEpisode} from './systemia/world-engine/sim-to-real/native-reactive-rc05.mjs';
+          for(const seed of [55,56]){
+            const e=runReactiveEpisode({seed,controllerMode:'observed-motion-latched'});
+            const last=e.frames.at(-1);
+            const tail=e.frames.slice(-60);
+            const reasons={};
+            for(const f of tail)reasons[f.requested]=(reasons[f.requested]||0)+1;
+            console.log('RC05F LEGACY TIMEOUT DIAGNOSIS',JSON.stringify({seed,outcome:e.outcome.status,
+              finalPosition:last.position,finalVelocity:last.velocity,
+              last60CommandReasons:reasons,
+              movingHazardWarnings:tail.filter(f=>f.motionWatchDiagnostics?.hazard).length,
+              latchActiveFrames:tail.filter(f=>f.latchDiagnostics?.active).length,
+              provenance:'synthetic_native_world_engine',
+              realEmergencyStop:false,hardwareExecution:false}));
+          }
+          NODE
+      - name: Upload RC05F distinct synthetic-family evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05f-two-new-synthetic-families
+          path: |
+            /tmp/evercraft-rc05f-crossing.json
+            /tmp/evercraft-rc05f-slalom.json
+          retention-days: 7
