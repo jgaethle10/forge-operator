@@ -149,7 +149,8 @@ test('historical visual stays phone-first, dated, unapproved and source-anchored
   assert.match(page,/id="index-history"/);
   assert.match(page,/id="index-history-list"/);
   assert.match(page,/id="index-history-error"/);
-  assert.match(page,/temporary staging/i);
+  assert.match(page,/time-limited GitHub Actions staging artifacts/i);
+  assert.match(app,/Temporary staging/);
   assert.match(page,/not forecasts/i);
   assert.match(app,/loadIndexReview/);
   assert.match(app,/validateIndexReview/);
