@@ -1,0 +1,68 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "eps-partner-circle-local-intro-20261115",
+  "brand_key": "eps",
+  "parent_brand": "evercraft",
+  "scope": "Yakima Valley EPS expression of interest only",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "status": "HELD_LEGAL_WORKER_CLASSIFICATION_AND_OFFICIAL_CONTRACTOR_ADVERTISING_REVIEW",
+  "founder_direction": "Prioritize a real partner distribution circle and prospective self-directed schedule, but avoid job/earnings claims until WA role and compensation compliance is approved",
+  "founder_editorial_approval": false,
+  "issuer_backed_publishing_authorization": false,
+  "provider_page_identity_verified": false,
+  "published_posts_verified": 0,
+  "actual_partner_applications_verified": null,
+  "paying_partner_jobs_verified": 0,
+  "live_url_approved_for_promotion": false,
+  "code_review_url": "https://github.com/jgaethle10/forge-operator/pull/2123",
+  "candidate_url": "https://jgaethle10.github.io/forge-operator/eps-partners/",
+  "candidate_status": "draft_PR_not_publicly_verified",
+  "permissions": "Do not contact unknown individuals, publish to pages, generate earnings figures, buy ads or represent participant as paid/active",
+  "eps_legal_gate": {
+    "official_lni_registration_number_third_party_listed": "EVERCPS747OH",
+    "official_status_verified": false,
+    "worker_classification_approved": false,
+    "compensation_contract_approved": false,
+    "earnings_claims_allowed": false,
+    "outside_sales_exemption_assumed": false,
+    "service_scope_and_capacity_approved": false
+  },
+  "channel_candidates": [
+    {
+      "id": "eps_organic_page",
+      "kind": "facebook",
+      "status": "HELD",
+      "caption": "Know property owners or people who manage rentals around the Yakima Valley? Evercraft Property Services is exploring a flexible local introduction program for people with real community connections. You can sketch what days work for you, without committing to a fixed schedule. We're inviting expressions of interest only, not offering an active paid role. No signup fee, no recruiting requirement, and no guaranteed earnings. Participation, duties and compensation would be discussed individually after required review. Learn about the EPS Partner Circle."
+    },
+    {
+      "id": "partner_personal_professional",
+      "kind": "linkedin",
+      "status": "HELD",
+      "caption": "We're exploring an EPS community-introduction pathway for individuals and established local businesses that already know Yakima Valley homeowners, landlords, realtors, or property managers. The concept is straightforward: identify genuine needs with consent and let EPS handle scoping, estimates, contracting and delivery. Interested people can try a private weekly planning exercise and express interest. This is a proposed program, not an active employment offer or published compensation plan."
+    },
+    {
+      "id": "permissioned_local_groups",
+      "kind": "community_post",
+      "status": "HELD",
+      "caption": "Have a connection to homeowners, rental properties or local service businesses around Yakima? EPS is exploring a local partner-interest program built around useful, permissioned introductions. No fee to express interest, no requirement to recruit anyone, and no promise of income or paid work. We're collecting interest before any partner program is activated."
+    }
+  ],
+  "distinct_customer_service_pitch": {
+    "audience": "local homeowners, rental owners, realtors, property managers",
+    "status": "HOLD_UNTIL_LNI_AND_CUSTOMER_SITE_VERIFIED",
+    "text": "Need a yard cleanup, rental turnover, painting or property refresh quote in the Yakima Valley? Evercraft Property Services reviews each request, confirms scope and provides estimates directly. Ask EPS about your property and availability.",
+    "official_customer_site": "https://evercraftpropertyservices.com/",
+    "no_prices_or_timing_claims": true
+  },
+  "conditions_for_any_release": [
+    "legal counsel and payroll approve factual role/earnings description",
+    "official L&I contractor status and approved advertising identity verified",
+    "first-party EPS authorized provider page and brand account",
+    "published original creative and public route canary",
+    "Systemia Passport/Clip signed exact scope with provider permalink readback",
+    "no public person or customer PII in promotional copy",
+    "no promises of recruiting pay or downline revenue"
+  ],
+  "no_outreach_or_publications_executed": true
+}
