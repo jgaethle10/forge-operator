@@ -48,6 +48,8 @@ jobs:
         run: node --test ../../systemia/agent-continuity/response-policy.test.mjs
       - name: Signed read-only incident event contract and denial tests
         run: node --test ../../systemia/agent-continuity/incident-event.test.mjs
+      - name: EO-001 negative evidence projects to Black Box without new authority
+        run: node --test ../../systemia/agent-continuity/eo001-blackbox-projection.test.mjs
       - name: Local custody and replay-safe incident projections
         run: node --test ../../systemia/agent-continuity/incident-journal.test.mjs
       - name: Authenticated Github Actions read-only source adapter tests
