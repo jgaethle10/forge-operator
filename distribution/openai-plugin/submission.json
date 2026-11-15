@@ -33,13 +33,10 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "Select the existing Evercraft LLC public listing in the owning OpenAI Platform organization; do not create a second listing",
-    "Compare the current published v1.0.2 metadata, tools, domain and privacy / support URLs to the tested v1.0.6 package",
-    "Upload or select the canonical v1.0.6 update for that existing listing using the provider's supported update flow",
-    "Confirm the same owned Fabric MCP endpoint and verify the domain / scan results on that update",
-    "Review the five positive and three negative tests, documentation and walkthrough for v1.0.6",
-    "Complete any review / approval and explicitly publish the updated version if required by Platform",
-    "Record the actual public version, provider change receipt, and independent uninstalled-account search, installation and read-only invocation"
+    "Capture provider public listing URL and confirm published v1.0.6 version in authenticated OpenAI Platform",
+    "Test search for exact Evercraft listing on a clean account without any personal Evercraft plugins",
+    "Install and use a read-only capability-routing example, record success/failure and permission boundaries",
+    "Track real installations, eligible qualified traffic, free usage, referrals and paid conversions separately without invented numbers"
   ],
   "public_directory_claim_allowed": false,
   "package_version": "1.0.6",
@@ -67,11 +64,15 @@
     "portal_observed_status": "Listed publicly",
     "portal_observed_version": "1.0.2",
     "latest_provider_scan": "No findings in the latest MCP scan",
-    "current_account_update_state": "not_observed",
+    "current_account_update_state": "publisher_reports_published_v1_0_6",
     "independent_fresh_account_discovery": "not_verified",
     "public_identifier": "not_confirmed",
     "target_version": "1.0.6",
-    "release_action": "update_existing_listing_not_create_new"
+    "release_action": "update_existing_listing_not_create_new",
+    "publisher_reported_public_version": "1.0.6",
+    "publisher_publication_report_date": "2026-11-11",
+    "publisher_publication_receipt": "distribution/openai-plugin/public-release-report-2026-11-11.json",
+    "publication_evidence_state": "publisher_reported_not_independently_platform_verified"
   },
   "public_directory_claim_scope": "independent_public_directory_discovery_not_yet_verified; founder portal reports Listed publicly for existing version 1.0.2"
 }

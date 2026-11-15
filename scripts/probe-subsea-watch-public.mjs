@@ -16,9 +16,9 @@ async function read(name){
  }
  throw Error('Public Subsea asset failed '+url+' : '+error?.message);
 }
-const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs','immersive/video-sync.mjs','field-archive/','field-archive/catalog.mjs','field-archive/sources.json'];
+const names=['','core.mjs','viewer.mjs','sample.json','README.md','immersive/','immersive/scene.mjs','immersive/video-sync.mjs','field-archive/','field-archive/catalog.mjs','field-archive/sources.json','field-archive/track-review/','field-archive/track-review/review.mjs','field-archive/track-review/sample-5s.json'];
 const contents=await Promise.all(names.map(read));
-const [html,core,viewer,sampleText,readme,immersive,scene,videoSync,fieldArchive,fieldScript,fieldSourcesText]=contents;
+const [html,core,viewer,sampleText,readme,immersive,scene,videoSync,fieldArchive,fieldScript,fieldSourcesText,trackReview,trackScript,trackJson]=contents;
 assert.match(html,/Revisit the dive/);
 assert.match(html,/Prototype, not a safety device/);
 assert.match(html,/id="no-xy"/);
@@ -67,8 +67,23 @@ assert.equal(fieldSources.mission.alignment_status,'UNVERIFIED_NO_SYNC');
 assert.equal(fieldSources.entries.length,8);
 assert.ok(fieldSources.entries.some(x=>x.id==='gebco-2026-global-grid'));
 assert.ok(fieldSources.entries.some(x=>x.id==='noaa-bluetopo-bathymetry'));
+assert.match(fieldArchive,/href="\.\/track-review\/"/);
+assert.match(trackReview,/Unverified positioning/);
+assert.match(trackReview,/No interpolation/);
+assert.match(trackReview,/id="position-plot"/);
+assert.match(trackReview,/id="observation"/);
+assert.match(trackScript,/fetch\('\.\/sample-5s\.json'/);
+assert.match(trackScript,/One dot per observed source sample/);
+const trackSample=JSON.parse(trackJson);
+assert.equal(trackSample.schema,'evercraft.subsea.raw_track_preview_5s.v1');
+assert.equal(trackSample.mission_id,'EX2306_DIVE02');
+assert.equal(trackSample.source_archive_sha256,'b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61');
+assert.equal(trackSample.preview_sample_count,61);
+assert.equal(trackSample.points.length,61);
+assert.equal(trackSample.positioning_quality,'UNVERIFIED');
+assert.equal(trackSample.safety,'NOT_FOR_NAVIGATION_OR_DIVE_CLEARANCE');
 
-console.log('SUBSEA_PUBLIC_HTTPS_WEBGL_LOCAL_FOOTAGE_AND_NOAA_ARCHIVE_VERIFIED');
+console.log('SUBSEA_PUBLIC_HTTPS_NOAA_SOURCE_OBSERVATIONS_AND_REPLAY_VERIFIED');
 if(process.env.GITHUB_STEP_SUMMARY){
  const fs=await import('node:fs');
  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,

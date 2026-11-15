@@ -45,6 +45,18 @@ The original EX2306 DIVE02 KML and ROV ancillary ZIP were successfully audited b
 
 This workflow is neither a commercial dive data certification nor approval for live navigation. See engineering issue #1982 for the next acceptance steps.
 
+### Real NOAA observation review (November 15, 2026)
+
+**Preview route:** `/subsea-watch/field-archive/track-review/`. This is a real-data, two-dimensional **evidence reviewer**, NOT a 3D dive reconstruction. It displays independently sourced source-file fields `LAT_DD`, `LON_DD`, `DEPTH` and `UNIXTIME` from the NOAA ROV 1Hz CSV.
+
+The source-hash-pinned exporter `scripts/prepare-noaa-ex2306-track-review.py` uses the previously verified original ROV ancillary archive (SHA-256 `b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61`) and exports a 300-second, 300-observation **provisional** JSON artifact covering 18:30:00–18:34:59 UTC. The original full-resolution JSON can be retrieved from the `Subsea NOAA source byte audit` workflow artifact; no raw archive is published by that workflow.
+
+For a faster mobile experience, the first-party static review page contains a separate **61-point, rounded display sample** (one point every 5 seconds, plus second 299). It preserves the source signed depth values and lat/lon readings, rounded for preview only. It draws **unconnected dots**: missing readings and movement between observations are not filled or interpolated. It does not calculate world-space X/Y, distance, route safety, obstacles, terrain, or underwater instrument accuracy.
+
+**Evidence limitations:** Source-reported geographic coordinates require independent positioning-solution review; signed `DEPTH` requires confirmation of units, sign convention and vertical reference. Having 300 timestamps overlapping a 299-second NOAA video segment does not establish frame synchronization. The live video remains a separate source link. No feature is for underwater navigation, operational safety, dive clearance or certified site surveying.
+
+**Acceptance:** GitHub Actions now checks the actual NOAA file hash, converter boundaries, 61-point source preview, browser-rendered review page and eventual public HTTPS deployment. Professional instrument/datum verification is still required before any source coordinates could be promoted into `evercraft.subsea.replay.v1` for 3D visualization.
+
 ### Next adapter gate
 
 The bytes are now audited; next validate schema and measurement provenance before writing a reconstruction converter. Verify which measurements correspond to the **ROV** versus the camera platform or ship. Explicitly establish time basis, UTC offsets, horizontal measurement method, position validity, coordinate datum, local origin and depth sign/reference. Build a converter that emits `evercraft.subsea.replay.v1` **only for validated fields** and leaves missing XY unknown. Never interpolate unknown positions across long intervals or imply video-frame accuracy without a verified clock alignment.

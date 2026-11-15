@@ -43,9 +43,38 @@
 .command-context{font-size:11px;color:#817c72;margin-top:7px}
 @media(max-width:760px){.command-head{display:block}.command-head .command-title{margin-top:6px}.intel-options{grid-template-columns:1fr}.command form{grid-template-columns:1fr}.command button{min-height:44px}}
 </style>
+<style id="evercraft-command-identity">
+:root{color-scheme:dark;color:#f0f1f4;background:#090a0c;font-family:Arial,system-ui,-apple-system,sans-serif;--command-gold:#b79a56;--command-line:#34332e;--command-ink:#eef0f3;--command-muted:#abb0ba}
+body,.auth-screen{background:#090a0c;color:var(--command-ink)}
+.top,.foot{background:#090a0c;border-color:#3e3629;color:#abb0b6}.top{min-height:74px;height:auto}
+.brand .mark{border:0;width:43px;height:43px;display:flex;align-items:center;justify-content:center}
+.brand .mark svg{display:block;width:42px;height:42px}.brand .name{font:750 14px/1.2 Arial,system-ui,sans-serif;letter-spacing:.29em;color:#f3f4f4}.brand .sub{color:#b8a276;letter-spacing:.17em;text-transform:uppercase}.private{color:#a8a9ae}
+.hero{background:radial-gradient(ellipse at 95% 0,#242016 0,transparent 45%),#0d0f12;border-color:#3a3429}
+.hero h1,.auth-intro h1{font:500 clamp(44px,5vw,72px)/1.04 Arial,system-ui,sans-serif;letter-spacing:-.055em;color:#f2f0ed}
+.hero p,.mode p,.aside p,.portfolio-head p,.command-context,.command-result,.brief-card .detail,.evidence-card span,.portfolio-note,.portfolio-empty,.attention-row .copy{color:#b0b4bc}
+.eyebrow,.brief-card .kicker,.portfolio-panel-head .eyebrow,.intel-option strong{color:#d9bc7c}
+.mode,.providers{background:#17191e;border-color:#4b4030}.mode strong{font:500 23px/1.2 Arial,system-ui,sans-serif;color:#f2ece2}
+.strip,.portfolio{background:#111317;border-color:var(--command-line)}.metric{border-color:var(--command-line)}.metric span,.portfolio-stat span{color:#b0b3bb}.metric b{font:500 27px/1.2 Arial,system-ui,sans-serif;color:#f4f2ed}
+.brief{background:#0c0e12}.brief-head h2,.portfolio-head h2,.aside h2,.section h2,.portfolio-panel h3,.command-title{font-family:Arial,system-ui,sans-serif;color:#f0f1f3;font-weight:500;letter-spacing:-.045em}
+.brief-grid,.portfolio-stats{border-color:var(--command-line);background:var(--command-line)}
+.brief-card,.portfolio-stat,.evidence-card,.portfolio-panel{background:linear-gradient(155deg,#191b1f,#111316);border-color:#3b352b}
+.brief-card .value,.portfolio-stat b{font-family:Arial,system-ui,sans-serif;color:#f3f3f2;font-weight:550}
+.attention,.attention-row,.attention-empty,.surface,.aside,.rule,.portfolio-panel-head,.portfolio-row,.evidence{border-color:var(--command-line)}
+.attention-row .label,.surface h3,.portfolio-name{color:#eceef1}.attention-row .badge,.portfolio-status,.portfolio-state,.portfolio-meta,.portfolio-sub,.rule,.idx{color:#aeb0b5}
+.command{background:#13161a;border-color:#433a2b}.command-title{font-size:30px}.command input,.auth-field input{background:#0c0e12;color:#fff;border-color:#676052}.command input::placeholder{color:#9499a3}.command input:focus,.auth-field input:focus{border-color:#d2b36d;box-shadow:0 0 0 3px #d2b36d3b}
+.command button,.auth-submit{background:#c8aa68;color:#12130f;border:1px solid #c8aa68;font-weight:750}.command button:hover,.auth-submit:hover{background:#ebd09a}
+.intel-mode{background:#171a1f;color:#d1d2d6;border-color:#585040}.intel-mode.active{background:#d2b674;color:#101114;border-color:#d2b674}
+.intel-options{color:#ededed}.intel-option{background:#181a1f;border-color:#554d3c;color:#d1d5d8}.intel-option strong{color:#e4d0a2}.intel-option span{color:#b3b7be}
+.surface p,.state,.provider,.aside .rule,.foot{color:#b7bac1}.surface .cat{color:#cbb078}.portfolio-note strong{color:#e4e1dd}
+.auth-intro{background:radial-gradient(circle at 90% 0,#342a1b,transparent 48%),#0c0e12;border-color:#464033}.auth-intro p,.auth-card .help{color:#b9bcc3}.auth-card{background:#17191d}.auth-card h2{font:500 31px Arial,system-ui,sans-serif;color:#eeefee}
+.auth-field label{color:#e1c78f}.auth-error{color:#ffb2a6}.auth-field input{border-radius:0}.signout{color:#e6e4df;border-color:#5d523c}.signout:hover{background:#2b261d}
+.command-rail{display:flex;gap:11px;flex-wrap:wrap;align-items:center;padding:13px 6vw;background:#0d0f12;border-bottom:1px solid #33312d}.command-rail a{color:#c7c9cf;border:1px solid #474239;padding:9px 13px;text-decoration:none;font-size:11px;letter-spacing:.05em}.command-rail a:hover{border-color:#d2b674;color:#fff}.command-rail span{font-size:10px;letter-spacing:.16em;color:#d6bd83;text-transform:uppercase;margin-right:10px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4fb8ff;outline-offset:3px}
+@media(max-width:600px){.command-rail{padding:12px 22px}.command-rail span{width:100%}.top{padding:12px 18px}.brand .name{font-size:12px}.brand .sub{font-size:9px}.brief-grid{grid-template-columns:1fr}.command-title{font-size:25px}}
+</style>
 </head>
 <body>
-<header class="top"><div class="brand"><div class="mark">E</div><div><div class="name">EVERCRAFT</div><div class="sub">Executive Home</div></div></div><div style="display:flex;align-items:center;gap:14px"><div class="private">Private · Evercraft controlled</div><a class="signout" id="apps-link" href="/apps.html">Apps</a><a class="signout" id="lineage-link" href="/lineage">Lineage</a><button class="signout" id="signout" type="button">Sign out</button></div></header>
+<header class="top"><div class="brand"><div class="mark"><svg viewBox="0 0 180 170" aria-hidden="true" focusable="false"><defs><linearGradient id="evercraft-command-metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5f5f5"/><stop offset=".5" stop-color="#b7bdc5"/><stop offset="1" stop-color="#666b74"/></linearGradient></defs><path d="M33 125C-1 55 51 5 132 9" fill="none" stroke="#b79a56" stroke-width="2"/><g transform="translate(10 0)" fill="url(#evercraft-command-metal)"><path d="M55 28H167L147 53H35Z"/><path d="M35 72H148L128 97H15Z"/><path d="M15 115H128L108 140H-5Z"/></g></svg></div><div><div class="name">EVERCRAFT</div><div class="sub">Executive Home</div></div></div><div style="display:flex;align-items:center;gap:14px"><div class="private">Private · Evercraft controlled</div><a class="signout" id="apps-link" href="/apps.html">Apps</a><a class="signout" id="lineage-link" href="/lineage">Lineage</a><button class="signout" id="signout" type="button">Sign out</button></div></header>
 <section class="auth-screen" id="auth-screen">
   <div class="auth-intro">
     <div>
@@ -77,9 +106,10 @@
   </div>
 </section>
 <main id="app-shell">
+<nav class="command-rail" aria-label="Founder command shortcuts"><span>Command / Navigation</span><a href="#brief">Brief</a><a href="#command">New mission</a><a href="#portfolio">Operations</a><a href="apps.html">Apps</a><a href="credentials.html">Connections</a></nav>
 <section class="hero"><div><div class="eyebrow" id="date"></div><h1 id="greeting">Good evening.</h1><p>One owned front door into the company, Systemia, Raven Nexus, The Yard, the Evercraft Network, sovereign intelligence and the systems underneath them.</p></div><div class="mode"><div class="eyebrow">Operating mode</div><strong>Direct Mode</strong><p>Default. Operate Evercraft without an AI intermediary. Intelligence is available when you choose it.</p></div></section>
 <section class="strip"><div class="metric"><span>Owned services</span><b id="owned">5</b></div><div class="metric"><span>Reachable now</span><b id="reachable">0</b></div><div class="metric"><span>External dependencies to boot</span><b>0</b></div><div class="metric"><span>Root authority</span><b>Evercraft</b></div></section>
-<section class="brief" aria-label="Executive brief">
+<section id="brief" class="brief" aria-label="Executive brief">
   <div class="brief-head">
     <div><div class="eyebrow">Executive brief</div><h2>What needs attention now.</h2></div>
     <div class="brief-note" id="brief-observed">Evidence loading…</div>
@@ -97,7 +127,7 @@
     <div class="evidence-card"><strong>Provider boundary</strong><span>Outside AI and legacy builders remain optional. The front door and authority chain boot without them.</span></div>
   </div>
 </section>
-<section class="command">
+<section id="command" class="command">
   <div class="command-grid">
     <div class="command-head">
       <div><div class="eyebrow">Personal command</div><div class="command-title">What do you want to do?</div></div>
@@ -115,7 +145,7 @@
     <div class="command-result" id="plan-result">Direct Mode is the default. Systemia prepares the mission without handing authority to an AI provider.</div>
   </div>
 </section>
-<section class="portfolio" aria-label="Operating portfolio">
+<section id="portfolio" class="portfolio" aria-label="Operating portfolio">
   <div class="portfolio-head">
     <div><div class="eyebrow">Operating portfolio</div><h2>The systems behind the company.</h2></div>
     <p>Owned operating evidence first. Source records, persisted deployment state, and live runtime claims remain separate.</p>

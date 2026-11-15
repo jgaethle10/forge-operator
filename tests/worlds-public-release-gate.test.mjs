@@ -47,6 +47,10 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   if(url.endsWith('/lund-building.html'))return response(200,'National Register nomination PDF');
   if(url.endsWith('/titan-i-1962.html'))return response(200,'Original educational SVG');
   if(url.endsWith('/titan-i-1962-evidence.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.cold-war-evidence.v1'}),'application/json');
+  if(url.endsWith('/titan-walk/'))return response(200,'ORIGINAL ART · NOT A SITE PLAN');
+  if(url.endsWith('/titan-walk/app.mjs'))return response(200,'buildTitanDrawList','text/javascript');
+  if(url.endsWith('/titan-walk/scene.mjs'))return response(200,'evercraft.hidden-world.titan-gallery.v1','text/javascript');
+  if(url.endsWith('/titan-walk/tour.mjs'))return response(200,'TITAN_TOUR_SECONDS','text/javascript');
   if(url.endsWith('/yakima-standalone.html'))return response(200,'scene-ready');
   if(url.endsWith('.csv'))return response(200,'id,title\nyakima,example','text/csv');
   if(url.endsWith('yakima-evidence-ledger.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.evidence-ledger.v1'}),'application/json');
@@ -70,6 +74,12 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
  const missingTitanLedger=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
   url.endsWith('/titan-i-1962-evidence.v1.json')?response(404,'not deployed'):mock(url)});
  assert.equal(missingTitanLedger.reason,'titan_ledger_not_verified');
+ const missingWalk=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/titan-walk/')?response(404,'not deployed'):mock(url)});
+ assert.equal(missingWalk.reason,'titan_walk_page_not_verified');
+ const missingRuntime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/titan-walk/app.mjs')?response(404,'not deployed'):mock(url)});
+ assert.equal(missingRuntime.reason,'titan_walk_runtime_not_verified');
 
  const wrongMime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
   url.endsWith('.csv')?response(200,'yakima,','text/html'):mock(url)});

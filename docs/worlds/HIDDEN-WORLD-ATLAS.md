@@ -35,6 +35,16 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 - KATS-FM, “More Haunted Spots Across the Yakima Valley” (2021), local recollection: https://katsfm.com/more-haunted-spots-across-the-yakima-valley/
 
 
+## Walkable Titan I Research Gallery (November 11, 2026)
+
+- Owned Worlds route: `/worlds/hidden-world/titan-walk/`, linked from the 1962 Titan source exhibit and the Hidden World Atlas. Original, local WebGL2 gallery; no hosted rendering APIs, external JavaScript libraries, telemetry or geolocation.
+- Existing Worlds heritage renderer and control model adapted to a **separately labeled fictional museum**: keyboard WASD/arrow movement, drag look, touchscreen joystick, research markers, optional interpretive walls and deterministic 60-second guided tour. The source and tour modules are isolated under `titan-walk/`; later renderer deduplication may be done after parity QA, not by destabilizing the working Heritage exhibit.
+- Five historical research stops linked to published HistoryLink, Air Force and Space Force sources. Their **local XYZ values have no georeferenced meaning**, and their invented room relationships must never be plotted against the real Washington complexes.
+- The 3D scene deliberately uses stylized gallery sculptures, not missile engineering hardware, real silo-scale models, actual control panels or precise passage topology. It carries access disclaimers in its introduction, source panel, guided tour and no-script static fallback.
+- No-JavaScript and no-WebGL2 fallback leads to `/worlds/hidden-world/titan-i-1962.html`, a script-free public evidence exhibit. A 3D failure must not leave an empty page.
+- Tests: `tests/worlds-titan-gallery.test.mjs` validates source provenance, bounded fictional coordinates, no actual facility coordinates, geometry tiers and deterministic tour. The existing Hidden World browser probe now validates WASD navigation, research panels, tour control and JS-blocked fallback at four browser viewport/script profiles.
+- Owned HTTPS release gate now requires `titan-walk/`, `app.mjs`, `scene.mjs`, and `tour.mjs`, with exact content markers and MIME checks. **Passing CI does not prove deployment or a physical iPhone run**.
+
 ## Cold War File 001 · Titan I (November 9, 2026)
 
 - New conceptual historical exhibit: `/worlds/hidden-world/titan-i-1962.html` linked from both the atlas sidebar and its earlier 1962 cutaway. The interactive date lenses use CSS-only radio selectors and original, static SVG to remain visible in script-blocking phone previews.

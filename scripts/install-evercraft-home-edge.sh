@@ -89,7 +89,14 @@ if [[ "${#IDENTITY_SECRET}" -lt 32 ]]; then
   exit 4
 fi
 
-cat > "$HOME_ENV" <<EOF
+if [[ -e "$HOME_ENV" || -L "$HOME_ENV" ]]; then
+  # A resident update must never destroy the private owner, Passport, Clip
+  # or provider settings already sealed into the Home environment.
+  [[ -s "$HOME_ENV" ]] || { echo "ERROR: existing Home environment is empty" >&2; exit 4; }
+  "$NODE_BIN" "$REPO_ROOT/systemia/evercraft-home/home-release-env.mjs" "$HOME_ENV" "$RELEASE_REF" >/dev/null
+else
+  umask 077
+  cat > "$HOME_ENV" <<EOF
 EVERCRAFT_HOME_HOST=127.0.0.1
 EVERCRAFT_HOME_PORT=$HOME_PORT
 EVERCRAFT_HOME_AUTH=passport
@@ -117,6 +124,7 @@ SOVEREIGN_AI_ORIGIN=
 EXTERNAL_AI_ORIGIN=
 LEGACY_APP_ORIGIN=
 EOF
+fi
 chmod 0600 "$HOME_ENV"
 
 cat > "/etc/systemd/system/$HOME_SERVICE" <<EOF

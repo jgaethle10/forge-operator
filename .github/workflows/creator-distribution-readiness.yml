@@ -1,0 +1,44 @@
+name: Founder creator and publishing lane source gate
+
+on:
+  pull_request:
+    paths:
+      - 'public/jesse/**'
+      - 'systemia/clip/distribution-readiness.mjs'
+      - 'tests/creator-distribution-readiness.test.mjs'
+      - 'docs/creator/FOUNDING_DISTRIBUTION_RECOVERY_20261115.md'
+      - '.github/workflows/creator-distribution-readiness.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'public/jesse/**'
+      - 'systemia/clip/distribution-readiness.mjs'
+      - 'tests/creator-distribution-readiness.test.mjs'
+      - '.github/workflows/creator-distribution-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test source-to-publication truth and brand isolation
+        run: node --test tests/creator-distribution-readiness.test.mjs
+      - name: Produce source-only account readiness evidence
+        run: |
+          node systemia/clip/distribution-readiness.mjs --json > creator-distribution-readiness.json
+          node --input-type=module -e "import fs from 'node:fs';const a=JSON.parse(fs.readFileSync('creator-distribution-readiness.json','utf8'));if(a.boundaries.publication_performed!==false||a.boundaries.actual_social_reach_proven!==false)process.exit(2);"
+      - name: Preserve audit for owner inspection (NOT live social proof)
+        uses: actions/upload-artifact@v4
+        with:
+          name: creator-distribution-source-readiness
+          path: creator-distribution-readiness.json
+          retention-days: 14

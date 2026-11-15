@@ -41,6 +41,8 @@ The order is maintained in [ledger.json](./ledger.json). Only **one** brand ente
 
 Only #1 has a full open packet. The rest remain queued until their turn.
 
+**BR-001 supplementary name exploration (November 11, 2026):** [Three name directions and documented exclusions](./BR-001-name-exploration-v1.md), [machine-readable concept proposals](./BR-001-name-exploration-v1.json), and [visual side-by-side review](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/). This is research and draft design, **not a founder decision, approval or rebrand**. The previous name proposal and original $100 service remain unchanged pending explicit feedback.
+
 ## Distribution and preservation rules
 - Existing original **service names and exact-price checkout routes** may continue buyer-specific, permissioned marketing even when the new creative imprint awaits founder approval.
 - The **new imprint/name, logo and story** must not be described as formally founder-approved, legally trademarked, externally posted, or final merely because their prototypes already appear in owned pages.

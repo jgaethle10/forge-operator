@@ -56,3 +56,19 @@ test('persist structured local audit without posting, secrets or invented receip
     assert.equal(mission.boundaries.publication_authority,false);
   }finally{fs.rmSync(d,{recursive:true,force:true});}
 });
+
+test('the commercial services campaign is actually included in Clip repo-side monitoring',()=>{
+  const queueFile=path.resolve('distribution/marketing/evercraft-services-clip-20261110.review.json');
+  const campaign=JSON.parse(fs.readFileSync(queueFile,'utf8'));
+  assert.equal(campaign.campaign_id,'evercraft-services-clip-buyer-rotation-20261110');
+  assert.equal(campaign.entries.length,5);
+  assert.ok(campaign.entries.every(e=>e.planned_day===e.proposed_day));
+  const receipt=auditSocialContinuity({queue:campaign,receipts:[],receiptSourceAvailable:false,now:new Date('2026-11-15T22:00:00Z')});
+  assert.equal(receipt.counts.total,5);
+  assert.equal(receipt.counts.approval_hold,5);
+  assert.equal(receipt.counts.provider_receipt_recorded,0);
+  assert.equal(receipt.platform_connections_verified,false);
+  const github=fs.readFileSync(path.resolve('.github/workflows/clip-social-continuity-watch.yml'),'utf8');
+  assert.match(github,/--queue distribution\/marketing\/evercraft-services-clip-20261110\.review\.json/);
+  assert.match(github,/artifacts\/clip\/social-continuity-watch\/commercial-services\/latest\.json/);
+});

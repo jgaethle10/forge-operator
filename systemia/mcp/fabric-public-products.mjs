@@ -93,23 +93,8 @@ export function loadPublicProductDiscovery({
       website:SOURCE_ROOT+'/partners/',
       label:'Founding partner application (submission not verified)',
     }));
-    // Operating-business discovery only. Neither this company page nor an
-    // internal command-center record is an independently verified job posting.
-    products.push(discoveryRecord({
-      id:'product:havenly-cleaning',
-      name:'Havenly Cleaning',
-      description:'Havenly Cleaning is a Yakima Valley cleaning and property-care business with a published customer site. Hiring status, job vacancies, applicant intake and work availability are not verified. Do not advertise a live cleaning job or offer to apply without a separate authentic vacancy and application route.',
-      keywords:[
-        'Havenly Cleaning',
-        'Havenly Cleaning jobs Yakima',
-        'apply to Havenly Cleaning',
-        'work for Havenly Cleaning',
-        'Havenly cleaner employment',
-        'Havenly Cleaning quotes Yakima',
-      ],
-      website:SOURCE_ROOT+'/havenly/',
-      label:'Havenly business information (not a job application)',
-    }));
+    // HAVENLY is independently operated. Do not enroll Nikki's business in Evercraft discovery, jobs or sales routing.
+
   }
   return products;
 }
