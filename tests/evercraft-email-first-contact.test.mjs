@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read = name => readFileSync(new URL('../'+name, import.meta.url),'utf8');
 
-test('Only EPS follows founder's emergency email-first contact policy',()=>{
+test('Only EPS follows the founder emergency email-first contact policy',()=>{
   const s=read('public/eps/index.html');
   assert.match(s,/mailto:jessegaethle10@gmail\.com/);
   assert.doesNotMatch(s,/tel:|sms:|Call \(509\)|Text this request|id="textQuote"/i);
