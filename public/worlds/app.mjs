@@ -1,4 +1,5 @@
 import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,canWalk} from './world-core.mjs';
+import {draftQuest,previewQuest,executeQuest} from './quest-master.mjs';
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
@@ -203,7 +204,45 @@ function persist(){if(visitingShared)return;try{state=saveWorld(localStorage,sta
 function runCommand(command){const result=applyCommand(state,command);if(result.world!==state){state=result.world;persist();}notify(result.message+(visitingShared?' Preview only until you save a copy.':''));$('command').value='';}
 $('start').onclick=()=>{started=true;$('intro').classList.add('hide');$('hud').classList.remove('hidden');if(matchMedia('(pointer:coarse)').matches){$('joystick').classList.remove('hidden');$('touchhint').classList.remove('hidden');}};
 $('help').onclick=()=>{$('modal').classList.remove('hidden');};$('closeModal').onclick=$('gotIt').onclick=()=>{$('modal').classList.add('hidden');};
-$('buildToggle').onclick=()=>{editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen&&matchMedia('(pointer:fine)').matches)$('command').focus();};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
+$('buildToggle').onclick=()=>{editorOpen=!editorOpen;$('editor').classList.toggle('hidden',!editorOpen);if(editorOpen){$('questPanel').classList.add('hidden');if(matchMedia('(pointer:fine)').matches)$('command').focus();}};$('closeEditor').onclick=()=>{editorOpen=false;$('editor').classList.add('hidden');$('buildToggle').focus({preventScroll:true});};
+// Player-authorized offline quest prototype. No model, server, or inventory authority.
+let proposedQuest=null,proposedQuestRevision=null;
+function closeQuestPanel(){$('questPanel').classList.add('hidden');$('questToggle').focus({preventScroll:true});}
+$('questToggle').onclick=()=>{
+  const panel=$('questPanel'),opening=panel.classList.contains('hidden');
+  if(opening){editorOpen=false;$('editor').classList.add('hidden');}
+  panel.classList.toggle('hidden',!opening);
+  if(opening)$('questIdea').focus({preventScroll:true});
+};
+$('questClose').onclick=closeQuestPanel;
+$('questDraft').onclick=()=>{
+  proposedQuest=null;proposedQuestRevision=null;$('questExecute').disabled=true;
+  $('questReceipt').textContent='';$('questSteps').replaceChildren();
+  if(visitingShared){$('questStatus').textContent='This is a visitor preview. Save a local copy before creating quests.';return;}
+  try{
+    const proposal=draftQuest(state,$('questIdea').value);
+    const preview=previewQuest(state,proposal);
+    proposedQuest=proposal;proposedQuestRevision=preview.original_revision;
+    $('questInfo').textContent=proposal.narrator+' · '+proposal.title+' · '+proposal.story;
+    for(const item of preview.steps){
+      const li=document.createElement('li');li.textContent=item.action;$('questSteps').append(li);
+    }
+    $('questStatus').textContent='Preview only. No changes have been made. Approve to apply these '+preview.steps.length+' local scene actions.';
+    $('questExecute').disabled=false;
+  }catch(error){$('questStatus').textContent='Quest preview rejected: '+error.message;}
+};
+$('questExecute').onclick=()=>{
+  if(visitingShared){$('questStatus').textContent='Visitor worlds are read-only. Save a copy first.';return;}
+  if(!proposedQuest||proposedQuestRevision===null){$('questStatus').textContent='Preview a quest before approving it.';return;}
+  try{
+    const result=executeQuest(state,proposedQuest,{authorized:true,expectedRevision:proposedQuestRevision});
+    state=result.world;persist();
+    $('questStatus').textContent='Quest complete. '+result.receipt.actions.length+' scene actions applied to this browser.';
+    $('questReceipt').textContent=JSON.stringify(result.receipt,null,2);
+    notify(proposedQuest.narrator+': '+proposedQuest.title+' is complete!');
+    proposedQuest=null;proposedQuestRevision=null;$('questExecute').disabled=true;
+  }catch(error){$('questStatus').textContent='Quest not applied: '+error.message+'. Preview again using the latest world.';}
+};
 function adjustMobileEditorForKeyboard(){
  const vp=window.visualViewport;
  if(!vp)return;
