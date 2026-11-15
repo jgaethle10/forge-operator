@@ -137,6 +137,41 @@ try{
         profile.name+': inert WebGL button visible with JavaScript disabled');
     }
     await page.screenshot({path:output+'/'+profile.name+'-titan-walk.png',timeout:15000});
+
+    // Yakima streetscape: documented history, deliberately invented spatial layout.
+    if(!profile.scripts)await page.route('**/worlds/hidden-world/yakima-walk/*.mjs',route=>route.abort());
+    const yakimaWalk=await page.goto(origin+'/worlds/hidden-world/yakima-walk/',{
+      waitUntil:'domcontentloaded',timeout:20000});
+    assert.equal(yakimaWalk?.status(),200,profile.name+': Yakima 3D walk missing');
+    assert.ok(await page.locator('a[href="../yakima-evidence.html"]').count()>=1,
+      profile.name+': 3D walk lost archived evidence fallback');
+    if(profile.scripts){
+      await page.waitForFunction(()=>typeof window.__evercraftYakimaQA==='function',{timeout:12000});
+      assert.equal(await page.locator('body.js').count(),1);
+      await page.locator('#start').click();
+      await page.waitForFunction(()=>window.__evercraftYakimaQA().running===true,{timeout:10000});
+      const begin=await page.evaluate(()=>window.__evercraftYakimaQA());
+      await page.keyboard.down('w');await page.waitForTimeout(350);await page.keyboard.up('w');
+      const changed=await page.evaluate(()=>window.__evercraftYakimaQA());
+      assert.ok(changed.z<begin.z-.1,profile.name+': Yakima gallery cannot walk forward');
+      await page.locator('#guide').click();
+      assert.equal(await page.locator('#panel').isVisible(),true);
+      assert.ok((await page.locator('#panel-copy').textContent()).includes('The Lund Building'));
+      await page.locator('#close').click();
+      await page.locator('#tour').click();
+      await page.waitForTimeout(170);
+      assert.equal((await page.evaluate(()=>window.__evercraftYakimaQA())).tourActive,true,
+        profile.name+': Yakima source tour fails');
+      await page.locator('#tour').click();
+      assert.equal((await page.evaluate(()=>window.__evercraftYakimaQA())).tourActive,false);
+    }else{
+      assert.equal(await page.locator('body').getAttribute('class'),'no-js');
+      assert.equal(await page.locator('#static-fallback .fallback-link').isVisible(),true,
+        profile.name+': Yakima source-based fallback must remain usable');
+      assert.equal(await page.locator('#start').isVisible(),false,
+        profile.name+': inert 3D button visible in blocked-script preview');
+    }
+    await page.screenshot({path:output+'/'+profile.name+'-yakima-walk.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');
     receipt.scenarios.push({name:profile.name,status:'PASS',viewport:[profile.width,profile.height],
       javascript_enabled:profile.scripts,no_horizontal_overflow:true,sources_visible:true});

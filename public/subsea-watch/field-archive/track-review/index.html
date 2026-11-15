@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071923"><meta name="robots" content="noindex,nofollow">
+<title>Kodiak Seep | Source Track Review · Subsea Watch</title>
+<meta name="description" content="A source-grounded 2D review of original NOAA ROV observations. Preliminary positions and signed depth, not verified terrain, navigation or synchronized video.">
+<style>
+:root{color-scheme:dark;--bg:#071923;--surface:#0c2a36;--line:#315866;--mint:#b3f5e8;--ink:#eaf9f7;--soft:#c4d9dc;--warn:#eed29b}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(circle at 80% 0,#173847 0%,var(--bg) 46%);color:var(--ink);font:14px/1.5 system-ui,-apple-system,sans-serif}
+a{color:var(--mint)}a:hover{text-decoration:underline}button,input{font:inherit}button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.shell{max-width:1250px;margin:0 auto;padding:20px clamp(14px,4vw,45px) 64px}
+nav{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:11px;letter-spacing:.15em;text-transform:uppercase}.brand small{display:block;color:#99c7c4;font-size:9px;letter-spacing:.25em}
+.link{display:inline-flex;padding:9px 14px;border:1px solid var(--line);border-radius:30px;text-decoration:none;font-size:12px}
+.hero{padding:51px 0 27px;border-bottom:1px solid var(--line)}
+.overline{color:var(--mint);font-weight:800;font-size:10px;letter-spacing:.19em;text-transform:uppercase}
+h1{font:400 clamp(42px,6.2vw,76px)/1.06 Georgia,serif;letter-spacing:-.045em;margin:12px 0}h1 em{font-weight:400;color:var(--mint)}
+.lead{max-width:810px;color:var(--soft);font-size:16px;margin:0 0 18px}
+.warning{max-width:920px;padding:12px 15px;border-left:3px solid #ddba79;background:#25313a;color:#f6dfb9;font-size:12px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.stats span{padding:7px 11px;border-radius:30px;border:1px solid var(--line);font-size:11px;color:#d2e7e8}
+.workspace{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.7fr);gap:18px;margin-top:24px}
+.panel{background:#0c2634e8;border:1px solid var(--line);border-radius:14px;overflow:hidden}.pad{padding:21px}
+h2{font:400 26px Georgia,serif;margin:0 0 9px}p{margin:0 0 13px}
+.chart-title{font-weight:800;letter-spacing:.11em;text-transform:uppercase;font-size:11px;color:#b6e5de;margin-bottom:10px}
+.chartnote{font-size:11px;color:var(--soft);margin:4px 0 0}
+.plot{width:100%;display:block;aspect-ratio:1.9/1;background:#09202c;border:1px solid #2b5663;border-radius:10px}
+.plot.depth{aspect-ratio:2.7/1;margin-top:12px}
+.readout{padding:17px 21px;background:#0a2030;border-top:1px solid var(--line)}
+.readout strong{color:var(--mint)}.readout-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.readout-grid div span{display:block;color:var(--soft);font-size:11px}
+.readout-grid div b{display:block;font:400 20px Georgia,serif;color:var(--ink);overflow-wrap:anywhere}
+.scrub{display:flex;align-items:center;gap:9px;margin-top:15px}.scrub input{flex:1;width:100%;accent-color:#9ceade}
+.scrub button{border:1px solid #668f97;border-radius:7px;background:#153847;color:var(--ink);padding:8px 12px;min-width:40px}
+.subline{font-size:11px;color:var(--soft);margin-top:8px}
+.aside p,.aside li{color:var(--soft);font-size:13px}
+.aside ul{padding-left:19px;margin:7px 0 18px}.aside li{margin-bottom:9px}
+.fact{border-top:1px solid var(--line);padding:12px 0;font-size:12px;overflow-wrap:anywhere}
+.fact small{display:block;color:var(--soft);margin-bottom:3px}.fact strong{font-size:12px;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.actions a{font-size:12px;border:1px solid #5c9798;border-radius:8px;padding:10px 12px;text-decoration:none}
+#load-state{font-size:12px;color:var(--warn);margin:10px 0 0}
+footer{margin-top:26px;font-size:12px;color:var(--soft);max-width:920px}
+@media(max-width:830px){.workspace{grid-template-columns:1fr}.hero{padding:38px 0 23px}}
+@media(max-width:540px){.readout-grid div b{font-size:17px}.pad{padding:16px}.readout{padding:14px 16px}.plot{aspect-ratio:1.25/1}.plot.depth{aspect-ratio:2/1}}
+</style>
+</head>
+<body>
+<div class="shell">
+<nav><div class="brand"><small>EVERCRAFT</small>SUBSEA WATCH · SOURCE REVIEW</div><a class="link" href="../">Back to Field Archive</a></nav>
+<section class="hero">
+<div class="overline">Real NOAA source readings · research preview</div>
+<h1>The dive's <em>recorded trace.</em></h1>
+<p class="lead">A first look at the original ROV 1Hz records from Kodiak Seep, August 25, 2023. These are two-dimensional source fields and signed depth observations, not a reconstructed underwater world.</p>
+<div class="warning"><strong>Unverified positioning:</strong> The original LAT_DD / LON_DD values have not been certified against the ROV's navigation solution, accuracy or datum. No video has been synchronized. Do not use for navigation, dive clearance, site mapping or hazard avoidance.</div>
+<div class="stats"><span>EX2306 · Dive 02</span><span>18:30:00–18:34:59 UTC</span><span>300 source rows</span><span>61 displayed observations</span><span>No interpolation</span></div>
+</section>
+<main class="workspace">
+<section class="panel">
+<div class="pad">
+<h2>Observed positions and depth</h2>
+<p class="chartnote">Dots are individual observations, not a continuous route. Coordinates are plotted as reported decimal degrees without geodetic correction or claimed meter-scale accuracy.</p>
+<div class="chart-title">Source longitude (horizontal) / latitude (vertical)</div>
+<canvas class="plot" id="position-plot" role="img" aria-label="Observed source longitude and latitude points, with no inferred connecting route"></canvas>
+<div class="chart-title" style="margin-top:18px">Signed DEPTH field / elapsed clip second</div>
+<canvas class="plot depth" id="depth-plot" role="img" aria-label="Recorded signed depth-field dots over time, with no interpolated readings"></canvas>
+<p class="chartnote">Depth values remain signed exactly as in the archive. Depth sign convention, units and vertical datum have not been independently established.</p>
+</div>
+<div class="readout">
+<div class="readout-grid">
+<div><span>Recorded sample time</span><b id="readout-time">Not loaded</b></div>
+<div><span>Raw signed DEPTH</span><b id="readout-depth">Not loaded</b></div>
+<div><span>Source LAT_DD</span><b id="readout-lat">Not loaded</b></div>
+<div><span>Source LON_DD</span><b id="readout-lon">Not loaded</b></div>
+</div>
+<div class="scrub"><button id="prev" type="button" aria-label="Previous recorded observation" disabled>←</button><input id="observation" type="range" min="0" max="60" step="1" value="0" aria-label="Select one actual recorded sample" disabled><button id="next" type="button" aria-label="Next recorded observation" disabled>→</button></div>
+<div class="subline" id="sample-info" role="status" aria-live="polite">Preparing the observed data points…</div>
+<div id="load-state"></div>
+</div>
+</section>
+<aside class="panel aside"><div class="pad">
+<div class="overline">Evidence passport</div>
+<h2>Where this came from</h2>
+<p>Original NOAA Okeanos Explorer telemetry in <code>EX2306_DIVE02_RovTrack1Hz.csv</code>, acquired from the expedition's ancillary ZIP. The archive was SHA-256 checked, then this viewer's observations were downsampled for mobile presentation.</p>
+<ul>
+<li><strong>Real readings:</strong> Original UNIXTIME, LAT_DD, LON_DD and signed DEPTH fields</li>
+<li><strong>Downsampled:</strong> Every 5 seconds plus the final second, rounded for display</li>
+<li><strong>Not inferred:</strong> Missing fixes, intermediate movement, site terrain, pipe geometry or camera pose</li>
+<li><strong>Outstanding:</strong> Positioning solution, accuracy, depth reference and independently verified video timing</li>
+</ul>
+<div class="fact"><small>NOAA ancillary archive SHA-256</small><strong id="hash-value">Verified source receipt</strong></div>
+<div class="fact"><small>Position review status</small><strong>PROVISIONAL / NOT CERTIFIED</strong></div>
+<div class="fact"><small>Video clock status</small><strong>Overlapping UTC window; frame sync unverified</strong></div>
+<div class="actions">
+<a href="https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/" target="_blank" rel="noopener noreferrer">Original NOAA expedition</a>
+<a href="https://github.com/jgaethle10/forge-operator/blob/main/research/subsea-watch/noaa-ex2306-dive02-byte-audit.md" target="_blank" rel="noopener noreferrer">Evidence audit</a>
+<a href="../../immersive/">Synthetic 3D demo (separate)</a>
+</div>
+</div></aside>
+</main>
+<footer>Evercraft Subsea Watch · Research-only evidence review. Credit: NOAA Ocean Exploration. The original ROV sensors and camera are not verified as a calibrated spatial or temporal system. No derived coordinate path or graphical observation constitutes clearance for a real dive.</footer>
+</div>
+<script type="module" src="./review.mjs"></script>
+</body></html>

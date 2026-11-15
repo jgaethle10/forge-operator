@@ -1,0 +1,29 @@
+name: Evercraft contact hub contract
+on:
+  pull_request:
+    paths:
+      - 'public/contact/**'
+      - 'public/try/index.html'
+      - 'public/mesh/index.html'
+      - 'tests/evercraft-contact-hub.test.mjs'
+      - '.github/workflows/evercraft-contact-hub.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/contact/**'
+      - 'public/try/index.html'
+      - 'public/mesh/index.html'
+      - 'tests/evercraft-contact-hub.test.mjs'
+      - '.github/workflows/evercraft-contact-hub.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/evercraft-contact-hub.test.mjs

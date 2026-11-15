@@ -49,6 +49,16 @@
 .editor .tools button#unpublishOnline:disabled{opacity:.55;cursor:wait}
 @media(max-width:700px){.editor .tools #unpublishOnline{grid-column:span 2;min-height:46px}}
 
+/* Authored, permissioned local Quest Master. Uses the same mobile editor sheet. */
+.quest-panel{z-index:9}
+.quest-panel .quest-proposal{margin:22px 0 10px;padding:16px;border-radius:12px;background:#eaf0e7;border:1px solid #d3dfd1}
+.quest-panel .quest-proposal h3{font:400 21px/1.4 Georgia,serif;margin:0 0 12px;color:#315349}
+.quest-panel .quest-proposal ol{margin:0;padding-left:22px;color:#35564e;font-size:12px;line-height:1.9}
+.quest-panel .quest-approve{width:100%;min-height:48px;margin:12px 0;background:#274f43;color:#fff;border:0;border-radius:9px;font-weight:800}
+.quest-panel .quest-approve:disabled{opacity:.47;cursor:not-allowed}
+.quest-panel .quest-receipt{font-size:11px;color:#3e5f57;padding:12px 0;border-top:1px solid #d3dfd1}
+.quest-panel .quest-receipt pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto;background:#e2eae1;border-radius:8px;padding:10px}
+@media(max-width:700px){.quest-panel .formrow{flex-wrap:wrap}.quest-panel .formrow button{min-height:44px}.quest-panel .quest-approve{min-height:50px}}
 
 /* Private, user-file-selected historical Window policy observer. Never a live agent panel. */
 .society-ledger{position:fixed;z-index:14;top:85px;right:18px;bottom:18px;width:min(444px,calc(100vw - 36px));overflow:auto;overscroll-behavior:contain;touch-action:pan-y;background:#f5f4eaf5;color:#27473f;border:1px solid #fff8e2;border-radius:18px;padding:23px;box-shadow:0 20px 72px #071c25a8;backdrop-filter:blur(18px)}

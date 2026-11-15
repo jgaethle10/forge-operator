@@ -2,6 +2,7 @@
 // Adult-supervised private pilot, NOT a youth-safety certification or public API.
 // Caller must supply a REAL local model inference function and verified authority.
 import {randomUUID} from 'node:crypto';
+import {activeSchoolworkDetected,guidedHomeworkStep} from './homework-boundary.mjs';
 
 export const CLASSROOM_ROOMS=Object.freeze({
   math:{name:'Math Cave',discipline:'math and algebra, puzzles, number sense, visual examples'},
@@ -70,7 +71,7 @@ export function createClassroomTutor({infer,now=()=>Date.now(),newId=()=>randomU
   if(typeof sessionId!=='string'||sessionId.length<20||sessions.has(sessionId))fail('session_id_invalid');
   sessions.set(sessionId,{
    room,history:[],turns:0,expiresAt:current+bounds.ttlMs,
-   startedAt:current,active:false
+   startedAt:current,active:false,homeworkMode:false
   });
   return {session_id:sessionId,room,context_retention:'memory_only_30_minutes',personal_profile_created:false};
  }
@@ -90,10 +91,25 @@ export function createClassroomTutor({infer,now=()=>Date.now(),newId=()=>randomU
     s.turns++;
     return {reply:response,room:s.room,source:'safety_boundary',session_id,no_mastery_awarded:true};
    }
-   const prompt=makePrompt(s.room,s.history.slice(-bounds.maxTurns*2),question,homework);
+   // Once an assignment is detected, this private pilot never forwards its
+   // questions to the generative model. The rule is sticky until session reset.
+   s.homeworkMode=s.homeworkMode||homework||activeSchoolworkDetected(question);
+   if(s.homeworkMode){
+    const response=guidedHomeworkStep(question,s.room);
+    s.history.push({role:'user',text:question},{role:'assistant',text:response});
+    if(s.history.length>24)s.history.splice(0,s.history.length-24);
+    s.turns++;
+    s.expiresAt=stamp+bounds.ttlMs;
+    return {reply:response,room:s.room,source:'deterministic_homework_scaffold',
+      session_id,no_mastery_awarded:true,context_turns:s.turns,
+      model_receipt_verified:false,homework_mode:true};
+   }
+   const prompt=makePrompt(s.room,s.history.slice(-bounds.maxTurns*2),question,false);
    let result;
    try{result=await infer({request_id:'classroom-'+newId(),role:'classroom-private-teaching-pilot',prompt})}
    catch{fail('local_inference_unavailable')}
+   // Adult revocation wins over in-flight inference: do not reveal or retain its reply.
+   if(sessions.get(session_id)!==s || now()>s.expiresAt)fail('session_revoked');
    if(!result || result.status!=='completed' || !['ollama','llama.cpp'].includes(result.provider) || typeof result.text!=='string' || !/^sha256:[a-f0-9]{64}$/.test(String(result.provider_receipt||'')))fail('local_inference_unverified');
    const answer=clean(result.text,bounds.maxOutput);
    if(!answer)fail('local_output_unusable');
@@ -111,7 +127,8 @@ export function createClassroomTutor({infer,now=()=>Date.now(),newId=()=>randomU
   }finally{s.active=false}
  }
  function close(sessionId){return sessions.delete(clean(sessionId,100))}
+ function clearAll(){const count=sessions.size;sessions.clear();return count}
  function status(){return {session_count:sessions.size,retention:'volatile_memory_only',max_turns:bounds.maxTurns,
   model_safety_certified:false,public_youth_release_authorized:false,homework_safety_verified:false}}
- return {start,say,close,status};
+ return {start,say,close,clearAll,status};
 }

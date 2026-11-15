@@ -123,7 +123,7 @@ function renderWebsiteAuditEditorialPoster(campaign,spec){
   const panelY=wide?Math.round(h*.12):Math.round(h*.39);
   const panelW=wide?Math.round(w*.385):w-136;
   const panelH=wide?Math.round(h*.67):Math.round(h*.435);
-  const titleSize=wide?Math.round(w*.052):Math.round(w*.086);
+  const titleSize=wide?Math.round(w*.038):Math.round(w*.086); // Protect the right-hand panel at 1200×630.
   const titleY=wide?Math.round(h*.325):Math.round(h*.16)+30;
   const secondY=titleY+Math.round(titleSize*1.12);
   const subtitleY=secondY+(wide?58:68);

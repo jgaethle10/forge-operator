@@ -54,7 +54,6 @@ try{
     assert.ok(pre.draw_calls>0&&pre.draw_calls<100,profile.name+': opaque batching failed; draws='+pre.draw_calls);
     assert.ok(pre.document_width<=pre.viewport_width+3,profile.name+': horizontal page overflow');
     await page.screenshot({path:out+'/'+profile.name+'-arrival.png',timeout:10000});
-
     // A synthetic local observation is displayed read-only inside the existing world.
     // This fixture is NOT the canonical GitHub society state or live LLM behavior.
     await page.locator('#societyLedgerOpen').click();
@@ -115,6 +114,7 @@ try{
     assert.equal(await page.evaluate(()=>Object.keys(localStorage).some(k=>k.includes('society-ledger'))),false,profile.name+': viewer persisted private evidence');
     await page.locator('#sl-close').click();
     assert.equal(await page.locator('#societyLedgerPanel').isVisible(),false,profile.name+': observer panel did not close');
+
     if(profile.hasTouch){
       assert.equal(await page.locator('#joystick').isVisible(),true,'phone joystick missing');
       assert.equal(await page.locator('#touchhint').isVisible(),true,'phone look hint missing');
