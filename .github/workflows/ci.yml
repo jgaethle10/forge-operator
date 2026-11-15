@@ -28,12 +28,25 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install media runtime
+      - name: Verify or install media runtime
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          ffmpeg -version
-          ffprobe -version
+          set -euo pipefail
+          if command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1; then
+            echo "Using existing runner FFmpeg and FFprobe; no package-manager network call."
+          else
+            echo "FFmpeg missing; attempting bounded package installation."
+            export DEBIAN_FRONTEND=noninteractive
+            sudo timeout 180 apt-get update \
+              -o Acquire::Retries=1 \
+              -o Acquire::http::Timeout=20 \
+              -o Acquire::https::Timeout=20
+            sudo timeout 180 apt-get install -y --no-install-recommends ffmpeg \
+              -o Acquire::Retries=1 \
+              -o Acquire::http::Timeout=20 \
+              -o Acquire::https::Timeout=20
+          fi
+          ffmpeg -hide_banner -version | head -n 1
+          ffprobe -hide_banner -version | head -n 1
 
       - name: Install
         run: npm install --no-audit --no-fund

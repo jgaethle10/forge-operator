@@ -74,7 +74,7 @@ OWNER_SUBJECT="$("$NODE_BIN" -e "const x=require(process.argv[1]);process.stdout
 OWNER_LOGIN="$("$NODE_BIN" -e "const x=require(process.argv[1]);process.stdout.write(String(x.login||'owner'))" "$CLAIM_JSON")"
 OWNER_DISPLAY="$("$NODE_BIN" -e "const x=require(process.argv[1]);process.stdout.write(String(x.display_name||'Owner'))" "$CLAIM_JSON")"
 
-install -d -o "$RUN_USER" -g "$RUN_USER" -m 0700 "$HOME_STATE" "$HOME_STATE/identity" "$HOME_STATE/passport" "$HOME_STATE/credentials"
+install -d -o "$RUN_USER" -g "$RUN_USER" -m 0700 "$HOME_STATE" "$HOME_STATE/identity" "$HOME_STATE/passport" "$HOME_STATE/credentials" "$HOME_STATE/clip" "$HOME_STATE/clip/journal-attempts"
 install -d -o root -g root -m 0700 "$HOME_SECRET_DIR"
 
 IDENTITY_SECRET_FILE="$HOME_SECRET_DIR/identity-secret"
@@ -89,7 +89,14 @@ if [[ "${#IDENTITY_SECRET}" -lt 32 ]]; then
   exit 4
 fi
 
-cat > "$HOME_ENV" <<EOF
+if [[ -e "$HOME_ENV" || -L "$HOME_ENV" ]]; then
+  # A resident update must never destroy the private owner, Passport, Clip
+  # or provider settings already sealed into the Home environment.
+  [[ -s "$HOME_ENV" ]] || { echo "ERROR: existing Home environment is empty" >&2; exit 4; }
+  "$NODE_BIN" "$REPO_ROOT/systemia/evercraft-home/home-release-env.mjs" "$HOME_ENV" "$RELEASE_REF" >/dev/null
+else
+  umask 077
+  cat > "$HOME_ENV" <<EOF
 EVERCRAFT_HOME_HOST=127.0.0.1
 EVERCRAFT_HOME_PORT=$HOME_PORT
 EVERCRAFT_HOME_AUTH=passport
@@ -99,6 +106,8 @@ EVERCRAFT_IDENTITY_SECRET=$IDENTITY_SECRET
 EVERCRAFT_IDENTITY_STATE_DIR=$HOME_STATE/identity
 EVERCRAFT_PASSPORT_STATE_DIR=$HOME_STATE/passport
 EVERCRAFT_CREDENTIAL_STATE_DIR=$HOME_STATE/credentials
+# A durable per-story claim must exist before any Clip Journal provider POST.
+EVERCRAFT_CLIP_JOURNAL_STATE_DIR=$HOME_STATE/clip/journal-attempts
 EVERCRAFT_HOME_SESSION_TTL_SECONDS=1800
 EVERCRAFT_HOME_COOKIE_SECURE=true
 EVERCRAFT_HOME_COOKIE_PATH=/home
@@ -115,6 +124,7 @@ SOVEREIGN_AI_ORIGIN=
 EXTERNAL_AI_ORIGIN=
 LEGACY_APP_ORIGIN=
 EOF
+fi
 chmod 0600 "$HOME_ENV"
 
 cat > "/etc/systemd/system/$HOME_SERVICE" <<EOF

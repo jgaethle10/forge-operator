@@ -77,5 +77,26 @@
     ],
     "pages_publishing_workflow": "Evercraft public web fallback",
     "disclosure": "GitHub Pages deployment is a separate event from verifying this Research route"
+  },
+  "fixed_scope_pilot": {
+    "name": "Insurance AI Evidence-QA Pilot",
+    "canonical_url": "https://jgaethle10.github.io/forge-operator/research/insurance-ai-qa/",
+    "price_usd": 495,
+    "price_status": "fixed_fee_offer_only_not_an_order",
+    "cases": 5,
+    "permitted_data": "synthetic_public_or_authorized_deidentified_only",
+    "deliverables": [
+      "five source-linked case packets",
+      "source-to-claim ledger",
+      "failure severity matrix",
+      "review summary",
+      "one correction round"
+    ],
+    "execution_state": "manual_written_scope_and_work_order_required",
+    "checkout_url": null,
+    "payment_verified": false,
+    "customer_order_verified": false,
+    "automatic_fulfillment_verified": false,
+    "disclaimer": "No actual customer model or claims record is evaluated by this page. Buyer must agree written scope, evidence access, price and payment terms before work."
   }
 }

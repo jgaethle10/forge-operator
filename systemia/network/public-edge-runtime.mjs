@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
+import {isIP} from 'node:net';
 import { randomBytes, createHash } from 'node:crypto';
 import { validatePublicEdgeAdmission } from './public-edge-tls.mjs';
 
@@ -47,7 +48,7 @@ function normalizeUpstream(value,{allowPrivateUpstream=false}={}){
   return url.origin;
 }
 
-function proxyRequest(req,res,upstreamOrigin,{forwardedProto=''}={}){
+function proxyRequest(req,res,upstreamOrigin,{forwardedProto='',canonicalWorldsClient=false}={}){
   const target=new URL(req.url||'/',upstreamOrigin);
   const client=target.protocol==='https:'?https:http;
   const originalHost=String(req.headers.host||'').trim();
@@ -61,6 +62,16 @@ function proxyRequest(req,res,upstreamOrigin,{forwardedProto=''}={}){
   };
   delete headers.connection;
   delete headers['proxy-connection'];
+  if(canonicalWorldsClient){
+    // Dedicated Worlds leases only. Never forward a forged browser-supplied IP.
+    delete headers['x-worlds-client-ip'];
+    delete headers['x-forwarded-for'];
+    const peer=String(req.socket?.remoteAddress||'');
+    if(isIP(peer)){
+      headers['x-worlds-client-ip']=peer;
+      headers['x-forwarded-for']=peer;
+    }
+  }
   const upstream=client.request(target,{
     method:req.method,
     headers,
@@ -130,7 +141,7 @@ export async function startPublicEdgeRuntime({
         : null;
       const lease=exact||wildcard;
       if(!lease) return sendJson(res,404,{error:'route_not_found'});
-      proxyRequest(req,res,lease.upstream_origin,{forwardedProto:'https'});
+      proxyRequest(req,res,lease.upstream_origin,{forwardedProto:'https',canonicalWorldsClient:lease.deployment_id==='evercraft-worlds-vault'&&!lease.wildcard_subdomains});
     });
     await new Promise((resolve,reject)=>{
       tlsServer.once('error',reject);
@@ -188,7 +199,7 @@ export async function startPublicEdgeRuntime({
     let wildcardSubdomains=false;
     let proxyServer=null;
     if(mode==='proof_loopback'){
-      proxyServer=http.createServer((proxyReq,proxyRes)=>proxyRequest(proxyReq,proxyRes,upstream));
+      proxyServer=http.createServer((proxyReq,proxyRes)=>proxyRequest(proxyReq,proxyRes,upstream,{canonicalWorldsClient:deploymentId==='evercraft-worlds-vault'}));
       await new Promise((resolve,reject)=>{
         proxyServer.once('error',reject);
         proxyServer.listen(0,'127.0.0.1',resolve);

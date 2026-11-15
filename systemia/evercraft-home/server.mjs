@@ -13,10 +13,13 @@ import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.m
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import { inspectClipFacebookConnection } from "../clip/facebook-page-connection-diagnostic.mjs";
 import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
 } from "./clip-journal-publish-adapter.mjs";
+import {publishGeneralJournalFacebookFromHome} from "./clip-journal-facebook-general.mjs";
+import { publishJournalStoryLinkedInFromHome } from "./clip-journal-linkedin-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
 import { planEvercraftHomeOsAppInstall, readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
@@ -136,6 +139,8 @@ export async function startEvercraftHomeServer({
   ownerLogin = String(process.env.EVERCRAFT_OWNER_LOGIN || "owner").trim(),
   ownerDisplayName = String(process.env.EVERCRAFT_OWNER_DISPLAY_NAME || "Jesse").trim(),
   sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
+  clipFacebookFetch = globalThis.fetch,
+  clipLinkedInFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -296,6 +301,36 @@ export async function startEvercraftHomeServer({
     }
   }
 
+  // Only the authenticated Evercraft owner may receive the nondelegable
+  // Clip publication scope. This never bypasses the specific story's
+  // editorial, current-publication, issuer, or provider/account checks.
+  function ensureOwnerClipPublishingGrant(subjectRef) {
+    if (!passport || subjectRef !== ownerSubjectRef)
+      throw new Error("clip_owner_identity_required");
+    const authority = passport.authorize({
+      subject_ref: subjectRef,
+      product: "evercraft-home",
+      scope: "home.identity.sessions.manage",
+      at: new Date().toISOString(),
+    });
+    if (authority.decision !== "allow" || !authority.grant_id)
+      throw new Error("clip_owner_admin_grant_required");
+    const now = new Date(), ends = new Date(now.getTime() + 3650 * 24 * 60 * 60 * 1000);
+    return passport.issueGrant({
+      idempotency_key: "evercraft-home-owner-clip-publish:" + subjectRef,
+      subject_ref: subjectRef,
+      issuer_ref: "evercraft:identity-authority",
+      product: "evercraft-home",
+      scopes: ["home.clip.publish"],
+      starts_at: now.toISOString(),
+      ends_at: ends.toISOString(),
+      max_delegation_depth: 0,
+      authority_state: "verified_identity_authority",
+      authority_receipt_ref: authority.grant_id,
+      purpose: "owner_only_release_gated_journal_publication",
+    });
+  }
+
   function publicService(service) {
     const origin = String(serviceOrigins?.[service.origin_env] || "").trim();
     return {
@@ -413,10 +448,14 @@ export async function startEvercraftHomeServer({
           authority_receipt_ref: bootstrapped.receipt.receipt_hash,
           purpose: "owner_access_to_evercraft_home",
         });
+        // The separate Clip grant cannot be delegated to autonomous agents.
+        // Its runtime still accepts only independently published Journal stories.
+        const clipGrant = ensureOwnerClipPublishingGrant(ownerSubjectRef);
         claimLimiter.recordSuccess(rateKey);
         return json(res, 201, {
           ok: true,
           state: "claimed",
+          owner_clip_publishing_scope_created: clipGrant.grant?.scopes?.includes("home.clip.publish") === true,
           subject: bootstrapped.subject.subject_ref,
           display_name: bootstrapped.subject.display_name,
           passport_grant_id: grant.grant.grant_id,
@@ -460,6 +499,12 @@ export async function startEvercraftHomeServer({
           throw new Error("home_access_denied");
         }
 
+        // Repair older, already-claimed owner installs after an authorized
+        // login without broadening any third-party or agent permissions.
+        if (authentication.subject_ref === ownerSubjectRef) {
+          try { ensureOwnerClipPublishingGrant(authentication.subject_ref); }
+          catch { /* Owner login remains usable; Clip publisher stays denied. */ }
+        }
         const issued = identity.issueSession(authentication, {
           signingSecret: identitySecret,
           signingKeyId: identityKeyId,
@@ -540,7 +585,7 @@ export async function startEvercraftHomeServer({
     }
 
     const providerCredentialMatch = url.pathname.match(
-      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai|facebook-pages|gemini|openai)(\/status)?$/
+      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai|facebook-pages|linkedin-organization|gemini|openai)(\/status)?$/
     );
     if (providerCredentialMatch && req.method === "GET" && providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
@@ -619,6 +664,124 @@ export async function startEvercraftHomeServer({
       }
     }
 
+    // Operator-initiated diagnostic. Only authenticated Evercraft Home can ask
+    // the private vault to probe Meta, and every provider operation is GET.
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/diagnose") {
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      if (!credentialVault) return json(res, 503, {
+        ok: false, state: "credential_vault_not_configured",
+        provider_mutation_attempted: false, secret_material_returned: false,
+      });
+      let body;
+      try {
+        body = await readJsonBody(req, 4096);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            (body.credential_ref !== undefined && typeof body.credential_ref !== "string")) {
+          throw new Error("clip_diagnostic_selection_invalid");
+        }
+      } catch {
+        return json(res, 400, {
+          ok: false, state: "clip_diagnostic_selection_invalid",
+          provider_mutation_attempted: false, secret_material_returned: false,
+        });
+      }
+      const diagnostic = await inspectClipFacebookConnection({
+        credentialStateDir,
+        credentialRef: body.credential_ref || "",
+        fetchImpl: clipFacebookFetch,
+      });
+      return json(res, 200, {
+        ok: true, diagnostic,
+        secret_material_returned: false,
+      });
+    }
+
+
+    // Journal-first company LinkedIn. This is a private Home execution surface,
+    // not a public tool or a generic "post arbitrary copy" endpoint.
+    if (req.method === "POST" && url.pathname === "/api/clip/journal/linkedin") {
+      if (authMode !== "passport") return json(res, 403, {
+        ok:false,state:"clip_linkedin_passport_runtime_required",
+        publication_performed:false,secret_material_returned:false,
+      });
+      let body, resourceRef;
+      try {
+        body = await readJsonBody(req, 4096);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            Object.keys(body).length !== 1) throw Error("clip_linkedin_request_invalid");
+        resourceRef = journalStoryResourceRef(body.slug);
+      } catch {
+        return json(res, 400, {ok:false,state:"clip_linkedin_request_invalid",
+          publication_performed:false,secret_material_returned:false});
+      }
+      const session = sessionFor(req, "home.clip.publish", resourceRef);
+      if (!session.ok) return json(res, session.status, session);
+      if (!session.grant_id) return json(res, 403, {
+        ok:false,state:"clip_linkedin_scoped_passport_grant_required",
+        publication_performed:false,secret_material_returned:false,
+      });
+      if (!credentialVault) return json(res, 503, {
+        ok:false,state:"credential_vault_not_configured",
+        publication_performed:false,secret_material_returned:false,
+      });
+      try {
+        const receipt = await publishJournalStoryLinkedInFromHome({
+          repoRoot,slug:body.slug,credentialStateDir,
+          stateRoot:String(serviceOrigins?.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "").trim(),
+          organizationId:String(serviceOrigins?.CLIP_LINKEDIN_ORGANIZATION_ID || "").trim(),
+          credentialRef:String(serviceOrigins?.CLIP_LINKEDIN_CREDENTIAL_REF || "").trim(),
+          authorizationRef:"passport-grant:" + session.grant_id,
+          linkedinVersion:String(serviceOrigins?.CLIP_LINKEDIN_API_VERSION || "").trim(),
+          publisherEnabled:serviceOrigins?.CLIP_LINKEDIN_PUBLISH_ENABLED === "true",
+          orgAccessVerified:serviceOrigins?.CLIP_LINKEDIN_ORG_ACCESS_VERIFIED === "true",
+          writePermissionVerified:serviceOrigins?.CLIP_LINKEDIN_WRITE_VERIFIED === "true",
+          readPermissionVerified:serviceOrigins?.CLIP_LINKEDIN_READ_VERIFIED === "true",
+          fetchImpl:clipLinkedInFetch,
+        });
+        const published=receipt.state === "published";
+        const held=receipt.manual_reconciliation_required===true ||
+          receipt.state === "reconciliation_required" ||
+          receipt.state === "duplicate_or_reconciliation_hold";
+        return json(res,published?200:held?409:502,{
+          ok:published,
+          state:receipt.state,
+          publication_performed:published?true:
+            (held || receipt.provider_may_have_published===true)?null:false,
+          publication_may_have_occurred:receipt.provider_may_have_published===true,
+          automatic_retry_allowed:false,
+          authorization:{scope:"home.clip.publish",
+            resource_ref:resourceRef,grant_id:session.grant_id,mode:session.mode},
+          secret_material_returned:false,
+          receipt,
+        });
+      } catch (error) {
+        // Safe fixed errors: never return LinkedIn token, HTTP response text,
+        // private claim location, session cookie, or upstream JSON.
+        const known=new Set([
+          "clip_linkedin_passport_grant_required",
+          "clip_linkedin_publisher_disabled",
+          "clip_linkedin_durable_claim_state_required",
+          "clip_linkedin_credential_missing",
+          "clip_linkedin_credential_selection_ambiguous",
+          "clip_linkedin_private_organization_allowlist_missing",
+          "clip_linkedin_organization_identity_mismatch",
+          "clip_linkedin_journal_release_receipt_unverified",
+          "clip_linkedin_journal_derivative_missing",
+          "clip_linkedin_journal_receipt_reference_mismatch",
+          "clip_linkedin_journal_publication_receipt_missing",
+          "clip_linkedin_journal_publication_receipt_unverified",
+          "home_clip_journal_handoff_missing",
+          "home_clip_journal_slug_invalid",
+          "clip_journal_durable_state_root_required",
+        ]);
+        const state=known.has(String(error?.message))?error.message:"clip_linkedin_publish_held";
+        return json(res,503,{ok:false,state,
+          publication_performed:false,automatic_retry_allowed:false,
+          secret_material_returned:false});
+      }
+    }
+
     if (req.method === "POST" && url.pathname === "/api/clip/journal/facebook") {
       let body;
       let resourceRef;
@@ -644,17 +807,34 @@ export async function startEvercraftHomeServer({
       }
 
       try {
-        const receipt = await publishJournalStoryFacebookFromHome({
-          repoRoot,
-          slug: body.slug,
-          credentialStateDir,
-          authorizationRef: session.grant_id
-            ? "passport-grant:" + session.grant_id
-            : "local-development:home.clip.publish",
-        });
+        const scopedAuth = session.grant_id
+          ? "passport-grant:" + session.grant_id
+          : "local-development:home.clip.publish";
+        const stateRoot = serviceOrigins?.EVERCRAFT_CLIP_JOURNAL_STATE_DIR || "";
+        const cfbSeries = /^college-football-power-rankings-\d{4}-\d{2}-\d{2}$/.test(body.slug);
+        const receipt = cfbSeries
+          ? await publishJournalStoryFacebookFromHome({
+              repoRoot,slug:body.slug,credentialStateDir,stateRoot,
+              authorizationRef:scopedAuth,
+            })
+          : await publishGeneralJournalFacebookFromHome({
+              repoRoot,slug:body.slug,credentialStateDir,stateRoot,
+              authorizationRef:scopedAuth,
+              expectedPageId:String(serviceOrigins?.CLIP_FACEBOOK_JOURNAL_PAGE_ID || "").trim(),
+              publisherEnabled:serviceOrigins?.CLIP_FACEBOOK_JOURNAL_PUBLISH_ENABLED==="true",
+              writePermissionVerified:serviceOrigins?.CLIP_FACEBOOK_JOURNAL_WRITE_VERIFIED==="true",
+              fetchImpl:clipFacebookFetch,
+            });
         const published = receipt.state === "published";
-        return json(res, published ? 200 : 502, {
+        const previouslyAttempted = receipt.state === "duplicate_or_reconciliation_hold";
+        const unresolved = previouslyAttempted || receipt.state === "reconciliation_required";
+        const mayHavePublished = receipt.provider_may_have_published === true ||
+          receipt.state === "published_postflight_failed" || unresolved;
+        return json(res, published ? 200 : unresolved ? 409 : 502, {
           ok: published,
+          publication_may_have_occurred: mayHavePublished,
+          manual_reconciliation_required: unresolved,
+          automatic_retry_allowed: false,
           subject: session.subject,
           authorization: {
             scope: "home.clip.publish",
@@ -662,14 +842,18 @@ export async function startEvercraftHomeServer({
             mode: session.mode,
             grant_id: session.grant_id || null,
           },
-          publication_performed: receipt.state === "published" || receipt.state === "published_postflight_failed",
+          publication_performed: published || receipt.state === "published_postflight_failed"
+            ? true : mayHavePublished ? null : false,
           secret_material_returned: false,
           receipt,
         });
       } catch (error) {
+        const safeError = String(error?.message || "");
+        const state = /^clip_facebook_general_[a-z_]+$/.test(safeError)
+          ? safeError : "clip_journal_publish_failed";
         return json(res, 400, {
           ok: false,
-          state: error?.message || "clip_journal_publish_failed",
+          state,
           authorization: {
             scope: "home.clip.publish",
             resource_ref: resourceRef,
@@ -950,7 +1134,7 @@ export async function startEvercraftHomeServer({
       }
     }
 
-    // Read-only Raven Nexus vehicle-safety module metadata. No observations are uploaded.
+    // Read-only vehicle safety status. No scan results or location data accepted.
     if (req.method === "GET" && url.pathname === "/api/raven/vehicle-safety") {
       const session = sessionFor(req);
       if (!session.ok) return json(res, session.status, session);
@@ -959,9 +1143,7 @@ export async function startEvercraftHomeServer({
       return json(res, 200, { ok: true, subject: session.subject, ...vehicle });
     }
 
-    // Authenticated Evercraft OS entrypoint for the local-only QuickCheck pilot.
-    // Browser records stay in the user's browser, unencrypted, until user export/erase.
-    // This route does not claim Bluetooth scanning or backend tracker detection.
+    // First-party authenticated QuickCheck. Client-local notes are unencrypted.
     if (req.method === "GET" && url.pathname === "/safety/vehicle") {
       const session = sessionFor(req);
       if (!session.ok) return json(res, session.status, session);

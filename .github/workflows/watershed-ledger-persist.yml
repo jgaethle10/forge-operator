@@ -1,0 +1,136 @@
+name: Yakima watershed source history read-only staging
+on:
+  workflow_run:
+    workflows: ["Yakima Watershed Intelligence live-source canary"]
+    types: [completed]
+    branches: [main]
+
+# Security hold: writer authorization is not approved. This workflow verifies a
+# trusted main-branch collection and uploads a temporary, reviewable evidence
+# artifact. It MUST NOT commit, push, or call itself an immutable archive.
+# Only official main-branch canary runs from this repository qualify.
+permissions:
+  contents: read
+
+concurrency:
+  group: yakima-watershed-immutable-ledger
+  cancel-in-progress: false
+
+jobs:
+  stage-source-receipts:
+    if: >-
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_branch == 'main' &&
+      (github.event.workflow_run.event == 'schedule' ||
+       github.event.workflow_run.event == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+      SOURCE_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+      SOURCE_EVENT: ${{ github.event.workflow_run.event }}
+      LEDGER_BRANCH: research/watershed-evidence-ledger
+    steps:
+      - name: Checkout trusted source collector implementation
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify archive contract before handling evidence
+        run: |
+          node --check systemia/research-service/watershed-history.mjs
+          node --check systemia/research-service/watershed-history-archive.mjs
+          node --check systemia/research-service/watershed-history-read.mjs
+          node --test tests/evercraft-watershed-history.test.mjs
+      - name: Download ONLY source-run canary receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/watershed-source"
+          gh run download "$SOURCE_RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --name yakima-watershed-official-source-readback \
+            --dir "$RUNNER_TEMP/watershed-source"
+          test -s "$RUNNER_TEMP/watershed-source/latest.json"
+      - name: Checkout dedicated source-only evidence branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "+refs/heads/$LEDGER_BRANCH:refs/remotes/origin/$LEDGER_BRANCH"
+          git worktree add --detach "$RUNNER_TEMP/watershed-ledger-worktree" "refs/remotes/origin/$LEDGER_BRANCH"
+      - name: Append run receipt without rewriting prior runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node systemia/research-service/watershed-history-archive.mjs \
+            --source-dir "$RUNNER_TEMP/watershed-source" \
+            --ledger-dir "$RUNNER_TEMP/watershed-ledger-worktree/evidence/watershed" \
+            --run-id "$SOURCE_RUN_ID" \
+            --head-sha "$SOURCE_HEAD_SHA" \
+            --event "$SOURCE_EVENT" | tee "$RUNNER_TEMP/watershed-history-operation.json"
+      - name: Verify staged raw hashes and 7-day history readback (read only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_day="$(node -e 'const fs=require("node:fs"); console.log(JSON.parse(fs.readFileSync(process.argv[1],"utf8")).as_of.slice(0,10))' "$RUNNER_TEMP/watershed-source/latest.json")"
+          node systemia/research-service/watershed-history-read.mjs \
+            --ledger-dir "$RUNNER_TEMP/watershed-ledger-worktree/evidence/watershed" \
+            --as-of "$run_day" \
+            --window-days 7 \
+            > "$RUNNER_TEMP/watershed-history-readback.json"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            if(v.raw_digests_verified!==true||v.verified_run_count<1||
+               v.public_release_authorized!==false||v.interpolation_performed!==false)
+              process.exit(1);
+          ' "$RUNNER_TEMP/watershed-history-readback.json"
+      - name: Package verified run receipt for manual preservation
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt_rel="$(node --input-type=module -e '
+            import fs from "node:fs";
+            const op = JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            if(!new RegExp("^runs/[0-9]{4}/[0-9]{2}/[0-9]{2}/[1-9][0-9]{4,17}$").test(String(op.destination||""))){
+              process.exit(1);
+            }
+            console.log(op.destination);
+          ' "$RUNNER_TEMP/watershed-history-operation.json")"
+          mkdir -p "$RUNNER_TEMP/watershed-staged-receipt"
+          cp -a "$RUNNER_TEMP/watershed-ledger-worktree/evidence/watershed/$receipt_rel" "$RUNNER_TEMP/watershed-staged-receipt/"
+          echo "PERSISTENT_ARCHIVE=HELD_REQUIRES_WRITER_AUTHORIZATION"
+          echo "STAGED_RUN_RECEIPT=$receipt_rel"
+      - name: Preserve read-only verification and source receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yakima-watershed-source-staging-no-push
+          path: |
+            ${{ runner.temp }}/watershed-history-operation.json
+            ${{ runner.temp }}/watershed-history-readback.json
+            ${{ runner.temp }}/watershed-staged-receipt/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Record narrow evidence boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Yakima read-only watershed evidence staging (temporary)"
+            echo
+            echo "Source run: $SOURCE_RUN_ID"
+            echo "Source event: $SOURCE_EVENT"
+            echo "Persistent branch writes: HELD pending explicit workflow-writer approval" 
+            echo "Evidence artifact: GitHub Actions (30-day retention, not immutable)"
+            echo "Archive success is NOT public report approval, customer billing, a water forecast or flood alert."
+            echo "Raw source files and hashes are staged in a time-limited artifact only."
+          } >> "$GITHUB_STEP_SUMMARY"

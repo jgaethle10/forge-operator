@@ -1,12 +1,15 @@
-# Evercraft AI Suite plugin
+# Evercraft AI Suite legacy compatibility package
 
-This folder packages Evercraft's universal Machine Commerce MCP as a reusable AI plugin.
+This folder is a **legacy compatibility package**, not the primary public ChatGPT plugin. The canonical customer-facing package is `plugins/evercraft-fabric/`, listed as **Evercraft**. Do not publish or install this package as a competing front door.
 
 ## Purpose
 
 The plugin gives an AI assistant one pain-first Evercraft front door instead of requiring users to know product names. It can discover public capabilities, inspect current public offers, return read-only public discovery information and owned capability-page links. Any specialist execution and commerce require separate independently verified routes.
 
 ## MCP
+
+The compatibility client manifest and the portable manifest both point to the same owned, read-only Streamable HTTP MCP. Legacy Base44 transport is not an authorized fallback.
+
 
 Remote MCP:
 

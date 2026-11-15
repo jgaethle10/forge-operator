@@ -1,5 +1,6 @@
 import path from 'node:path';
 import {AmbientWorkQueue} from './ambient-work-queue.mjs';
+import {verifyNodeSeedWorkerCompletion} from './nodeseed-worker-completion-verifier.mjs';
 import {
   getNodeSeedExecutionIntent,
   listNodeSeedExecutionIntents,
@@ -41,6 +42,7 @@ export async function executeNodeSeedExecutionIntent({
   yard,
   brokerDeploymentId,
   timeoutMs=10000,
+  allowLoopbackProof=false,
   now=new Date(),
 }={}){
   if(!root) throw new Error('nodeseed_intent_executor_root_required');
@@ -103,7 +105,7 @@ export async function executeNodeSeedExecutionIntent({
     };
   }
 
-  const grant=await yard.remoteCapacityGrant(brokerDeploymentId,intent.node_id);
+  const grant=await yard.remoteCapacityGrant(brokerDeploymentId,intent.node_id,{allowLoopbackProof});
   if(
     grant.node_id!==intent.node_id ||
     grant.device_fingerprint!==selected.device_fingerprint ||
@@ -114,6 +116,7 @@ export async function executeNodeSeedExecutionIntent({
   }
 
   let lease=null;
+  let jobSubmissionAttempted=false;
   try{
     lease=await requestJson(grant.capacity_endpoint+'/v1/leases',{
       method:'POST',
@@ -124,6 +127,9 @@ export async function executeNodeSeedExecutionIntent({
       }),
     },timeoutMs);
 
+    // Once a job request is sent, a timeout or transport failure does not
+    // prove it was not executed. Never blindly resubmit to another worker.
+    jobSubmissionAttempted=true;
     const result=await requestJson(grant.capacity_endpoint+'/v1/jobs',{
       method:'POST',
       body:JSON.stringify({
@@ -135,9 +141,13 @@ export async function executeNodeSeedExecutionIntent({
       }),
     },timeoutMs);
 
-    if(result?.worker_receipt?.schema!=='evercraft.compute.registered-worker-receipt.v1'){
-      throw new Error('nodeseed_registered_worker_receipt_required');
-    }
+    const verified=verifyNodeSeedWorkerCompletion({
+      response:result,
+      nodeId:intent.node_id,
+      workloadClass:intent.workload_class,
+      idempotencyKey:intent.idempotency_key,
+      payload:job.payload,
+    });
 
     const completedAt=(now instanceof Date?now:new Date(now)).toISOString();
     updateNodeSeedExecutionIntent({
@@ -163,7 +173,9 @@ export async function executeNodeSeedExecutionIntent({
         intent_id:intent.intent_id,
         node_id:intent.node_id,
         worker_receipt_hash:result.worker_receipt.receipt_hash,
-        compute_receipt_hash:result.receipt?.receipt_hash||null,
+        compute_receipt_hash:verified.compute_receipt_hash,
+        worker_receipt_verified:true,
+        content_hash_verified:verified.content_hash_verified,
         authority_material_persisted:false,
         completed_at:completedAt,
       },
@@ -180,7 +192,9 @@ export async function executeNodeSeedExecutionIntent({
       workload_class:intent.workload_class,
       deduplicated:result.deduplicated===true,
       worker_receipt_hash:result.worker_receipt.receipt_hash,
-      compute_receipt_hash:result.receipt?.receipt_hash||null,
+      compute_receipt_hash:verified.compute_receipt_hash,
+      worker_receipt_verified:true,
+      content_hash_verified:verified.content_hash_verified,
       authority_material_persisted:false,
       allocator_token_persisted:false,
       lease_token_persisted:false,
@@ -192,6 +206,42 @@ export async function executeNodeSeedExecutionIntent({
     const at=(now instanceof Date?now:new Date(now));
     const waitMs=Math.min(60*60*1000,30_000*Math.pow(2,Math.min(6,attempts-1)));
     const reason=String(error?.message||error);
+
+    // A response with broken receipt/payload integrity has an uncertain
+    // execution outcome. Hold for inspection, never automatically retry it.
+    if(reason.startsWith('nodeseed_receipt_')||jobSubmissionAttempted){
+      const safeReason=reason.startsWith('nodeseed_receipt_')
+        ? reason
+        : 'remote_job_outcome_unknown';
+      updateNodeSeedExecutionIntent({
+        root,intentId,
+        patch:{
+          state:'verification_hold',
+          last_error:safeReason,
+          failed_at:at.toISOString(),
+        },
+      });
+      queue.update(job.job_id,{
+        state:'held',
+        last_hold:{
+          reason:'unverified_remote_worker_result',
+          verification_error:safeReason,
+          intent_id:intent.intent_id,
+          node_id:intent.node_id,
+          observed_at:at.toISOString(),
+        },
+      });
+      return {
+        schema:'evercraft.saban.nodeseed-intent-execution.v1',
+        status:'verification_hold',
+        intent_id:intent.intent_id,
+        job_id:job.job_id,
+        node_id:intent.node_id,
+        reason:safeReason,
+        authority_material_persisted:false,
+      };
+    }
+
     updateNodeSeedExecutionIntent({
       root,intentId,
       patch:{
@@ -231,6 +281,7 @@ export async function drainNodeSeedExecutionIntents({
   brokerDeploymentId,
   maxIntents=16,
   timeoutMs=10000,
+  allowLoopbackProof=false,
   now=new Date(),
 }={}){
   const intents=listNodeSeedExecutionIntents({
@@ -245,6 +296,7 @@ export async function drainNodeSeedExecutionIntents({
       yard,
       brokerDeploymentId,
       timeoutMs,
+      allowLoopbackProof,
       now,
     }));
   }
@@ -255,6 +307,7 @@ export async function drainNodeSeedExecutionIntents({
     replan_required:rows.filter(x=>x.status==='replan_required').length,
     retry_wait:rows.filter(x=>x.status==='retry_wait').length,
     dead_letter:rows.filter(x=>x.status==='dead_letter').length,
+    verification_hold:rows.filter(x=>x.status==='verification_hold').length,
     authority_material_persisted:false,
     rows,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),

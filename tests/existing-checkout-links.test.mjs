@@ -31,6 +31,20 @@ test('seven links match real Systemia service identity and exact Stripe prices',
   assert.ok(!ids.has(item.payment_link_id));ids.add(item.payment_link_id);
  }
 });
+test('seven scoped services are marketable now without falsely claiming completed payment',()=>{
+ assert.equal(manifest.commercial_marketing_state,'sell_now_exact_sku_scoped_services');
+ assert.equal(manifest.owner_approved_promotion,true);
+ assert.equal(manifest.no_prior_customer_charge_required_for_marketing,true);
+ assert.equal(manifest.scope_confirmation_required_before_customer_payment,true);
+ assert.ok(manifest.links.every(x=>x.commercial_state==='sell_now_original_sku'&&x.public_promotion_allowed&&x.checkout_ready));
+ assert.ok(manifest.links.every(x=>x.payment_verified_by_checkout_view===false));
+ assert.equal(manifest.canonical_order_reconciliation,'manual_not_automated');
+ const guide=get('checkout-ready/llms.txt');
+ assert.match(guide,/Commercial promotion state: SELL NOW/);
+ const page=get('checkout-ready/index.html');
+ assert.match(page,/All seven original service checkouts are available for customer inquiries now/);
+ assert.equal((page.match(/secure checkout ↗/g)||[]).length,7);
+});
 test('no unrelated $19, $49 or PDF product is passed through existing service links',()=>{
  assert.deepEqual(manifest.forbidden_substitutions,['Garage Field Notes PDF products','FindMyPart Quick Hunt','Website Quick Win Audit']);
  assert.ok(manifest.links.every(x=>![700,900,1900,4900].includes(x.amount_cents)));

@@ -56,6 +56,12 @@ The next time someone says chainsaws were invented for childbirth, the most usef
 
 **Follow-up source check (2026-11-03):** [Independent-link and contradiction review](./2026-11-03-chainsaw-source-verification.md). This cross-check confirms dates against medical-history scholarship and artifacts, records the 1830 versus 1834 secondary-source discrepancy, and explicitly leaves visual and editorial approvals pending.
 
+## Evidence-atomized Claim Reactor preflight | CANDIDATE, NOT AN APPROVAL
+
+The core claims have now been mapped to individually named source and evidence records in [the November 5 input packet](./2026-11-05-chainsaw-claim-input.json). The reusable [editorial preflight runner](../editorial-claim-preflight.mjs) feeds those records to Systemia's existing `buildClaimReactorPacket` function, preserving source lineage, uncertainty and unresolved questions. This is not a separate research engine or a duplicate publisher.
+
+Run `node systemia/newsroom/editorial-claim-preflight.mjs` from the repository root to produce a local JSON report on standard output. All source evidence can be considered for independent editorial review *only* if the runner says `evidence_preflight_ready: true`. That flag **does not** establish rights clearance, historical visual QA, a 10/10 editorial acceptance, Fallen media delivery, Systemia authorization, actual Journal publication or social distribution. The script cannot write into production output paths or sign a release.
+
 ## Primary source and claim ledger
 
 1. **Historical peer-reviewed review:** Skippen M., Kirkup J., Maxton R. M., McDonald S. W., “The chain saw—a Scottish invention,” *Scottish Medical Journal* 49(2), 72–75 (2004), PMID 15209147, DOI 10.1177/003693300404900218. https://pubmed.ncbi.nlm.nih.gov/15209147/ . **Evidence:** early linked saw c. 1783–1785; Aitken and symphysiotomy; Jeffray and diseased bone; Aitken's 1785 illustration; Jeffray's later manufacture; later medical history. **State:** published historical review. Do not equate both pioneers' motivations.
@@ -148,7 +154,8 @@ Early chain saws were surgical tools. In the 1780s, John Aitken's version was li
 - [x] Evidentiary distinctions and editorial draft assembled.
 - [x] Visual and Fallen production brief prepared, historical depiction constraints recorded.
 - [x] Platform-specific derivatives drafted, explicitly on HOLD.
-- [ ] Claim Reactor receipt and 10/10 independent editorial review.
+- [x] Claim Reactor input and executable fail-closed preflight staged with unit tests (no independent editorial acceptance implied).
+- [ ] Independent 10/10 editorial acceptance and genuine release authorization.
 - [x] Original self-authored conceptual SVG created and staged on the editorial branch (not a rights-cleared museum photograph).
 - [x] Public-domain historical-artifact photo provenance documented, correctly labeled as Heine's later osteotome.
 - [ ] Independent historical visual QA and production-grade art approval.

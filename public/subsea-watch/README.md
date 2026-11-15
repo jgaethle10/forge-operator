@@ -5,9 +5,72 @@
 ## Two separate prototype surfaces
 
 - **Telemetry lab:** https://jgaethle10.github.io/forge-operator/subsea-watch/ . Depth profiles and source-checked recorded positions, with strict refusal to fabricate underwater X/Y.
-- **Immersive WebGL concept:** https://jgaethle10.github.io/forge-operator/subsea-watch/immersive/ . A separate original 3D renderer with procedural fictional seafloor, a deliberately simplified diver mesh, illustrative pipe geometry, cinematic orbit/follow camera, pinch-to-zoom and playback scrub. It reads **only the checked synthetic sample**, not real diver data. Do not mistake this rendered scene for sonar reconstruction or safety-grade positioning.
+- **Immersive WebGL concept:** https://jgaethle10.github.io/forge-operator/subsea-watch/immersive/ . A separate original 3D renderer with procedural fictional seafloor, a deliberately simplified diver mesh, illustrative pipe geometry, orbit/follow camera, pinch-to-zoom and playback scrub. The built-in mission remains **synthetic**. The new local JSON/CSV import can replay user-declared timed X/Y/depth telemetry; real imports deliberately hide the fictional seabed, illustrative pipe and debris. Files are read only in the browser and are not sent to Evercraft. A depth-only or partial-position file does **not** render a 3D route. Do not mistake an imported track for sonar reconstruction or safety-grade positioning.
 
-The immersive experiment does not replace the evidence lab. The product requires a trustworthy source-to-scene mapping for real dive logs, video and surveyed site geometry before any reconstructed real missions can be shown. Neither route is authorized for underwater navigation, intake avoidance, or dive clearance.
+The immersive experiment does not replace the evidence lab. It now accepts local replay telemetry, but the product still requires a trustworthy source-to-scene mapping for real dive logs, video and surveyed site geometry before any reconstructed real missions can be shown. Neither route is authorized for underwater navigation, intake avoidance, or dive clearance.
+
+## Replay import boundary (new)
+
+1. In the **immersive view**, select **Import dive JSON / CSV** and choose a local file. Use the same documented schema as the telemetry lab: `t_s,depth_m,x_m,y_m,position_source` for spatial replay, or `t_s,depth_m` for depth only. The UI displays a user-file / unverified status and the claimed positioning method.
+2. When local X/Y/depth and a consistent declared source are all available, the immersive view renders the imported path and a generic marker in an empty 3D coordinate space. The view is **not a reconstruction of a real underwater scene**. All synthetic site elements are hidden; no underwater hazards, pipelines, seabed or scale registration are inferred.
+3. If horizontal positioning is absent, partial or inconsistently attributed, the immersive scene **draws no route or diver** and gives a clear explanation. Gaps over 15 seconds are not bridged. Discontinuous points remain evidence gaps, not safe travel corridors.
+4. **Reset demo** returns to the fictional environment. Imported data stays in the browser session, is not uploaded by the page, and cannot certify positioning, hazards, visibility, isolation or clearance.
+5. Do not publish the imported data or represent its user-declared positioning source as independently verified. A later real reconstruction needs independently sourced survey geometry, coordinate registration, uncertainty and video timestamps, with independent operator review.
+
+## First real-data source packet: NOAA EX2306 DIVE02 (research preview)
+
+**First-party discovery route:** `/subsea-watch/field-archive/`. It shows a documented NOAA Ocean Exploration video segment from the Kodiak Seep ROV dive, with a user-initiated preview, original NOAA clip citation and direct file download. It also links the original DIVE02 track KML, ROV ancillary ZIP and CTD/sensor ZIP. The first two have now been byte-audited; the CTD ZIP remains uninspected. None is certified for spatial reconstruction or video synchronization.
+
+The first-party registry is `field-archive/sources.json`, with stable source IDs, original provider links, credit/rights notes, published metadata, access status, and explicit evidence boundaries. The mobile page uses only first-party JavaScript and defers fetching the external NOAA MP4 until the viewer chooses **Preview NOAA footage**.
+
+- **Source verified by metadata:** NOAA EX2306 DIVE02 Kodiak Seep; one 299-second HD camera segment starting 2023-08-25 18:30:00 UTC; original low-res H.264 MP4 URL published in NCEI metadata. NOAA's Ocean Exploration Video Portal describes its video as public domain; credit NOAA Ocean Exploration and preserve the dataset citation.
+- **Actual downloaded originals (Nov 10, 2026):** KML 79,769 bytes SHA256 `57b9fcffe9faf8a1a7157ba728a05ae0cff9fb80db2086115ef8a970cc4b3fe2`, one untimed LineString with 1,963 coordinate tokens. Ancillary ZIP 15,727,951 bytes SHA256 `b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61`, seven members including a 26,092-row 1Hz track CSV. The original CTD ZIP remains not byte-verified.
+- **Future geometry exploration:** NCEI bathymetry, the public-domain GEBCO_2026 global grid (with measured/predicted TID distinctions), NOAA BlueTopo (with uncertainty/contributor layers), and NOAA's photogrammetry collection are discovery links only, not surveyed local models for the Kodiak Seep dive. GEBCO requires attribution and must not be used for safety at sea; BlueTopo source-contributor restrictions and coverage quality must be checked; partner-hosted photogrammetry needs separate license verification before use.
+- **No synthetic contamination:** The real NOAA clip is never mapped onto the fictional diver, pipe or seafloor; there is no imported real XY route unless an actual validated sensor adapter produces one. Public video alone cannot establish depth, camera pose, bathymetry or the location of underwater structures.
+- **Safety and ethics:** No recorded visual is a safe-route claim, clearance to dive or automated hazard detection. Keep exact source, licensing, clock uncertainty and limitations attached in downstream outputs.
+
+**Do not ingest as free commercial footage:** MBARI VARS materials have separate data use restrictions and require permission; discovery does not confer reuse rights.
+
+**Original records:** https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/ and https://www.ncei.noaa.gov/metadata/granule/geoportal/rest/metadata/item/EX2306_DIVE02_20230825T183000Z_ROVHD/html
+
+### Source-byte audit contract (engineering gate)
+
+The original EX2306 DIVE02 KML and ROV ancillary ZIP were successfully audited by the first-party `Subsea NOAA source byte audit` GitHub Actions workflow. The owning script is `scripts/audit-noaa-subsea-sources.py`, with offline guardrail tests in `tests/test_subsea_noaa_audit.py`.
+
+- Fetches **only** two hard-coded NOAA/MS State archive URLs over HTTPS with guarded redirects and bounded reads (KML 500 KB, ancillary ZIP 24 MB).
+- Records actual response metadata, byte count and SHA-256. The KML inspector inventories geometry and timestamp tags but **never converts** KML elevation into diver depth or claims underwater position accuracy.
+- The ZIP inspector inventories up to 80 member names, checks path traversal, encryption and declared expansion size, and extracts only bounded textual schema hints from up to eight members. Raw archives are not uploaded or checked into the repository.
+- The workflow saves a sanitized JSON receipt artifact. When downloads fail, its `SOURCE_ACCESS_INCOMPLETE` status and detailed blockers are preserved. An HTTP success alone is **not** a schema validation or a licensed 3D reconstruction.
+- Even when both sources are byte-audited, the receipt says `BYTE_AUDIT_COMPLETE_SCHEMA_UNVERIFIED`. A separate engineering review must establish instrument identification, UTC clock, coordinate datum, depth reference, uncertainty and video alignment before adapting any positions into `evercraft.subsea.replay.v1`.
+
+This workflow is neither a commercial dive data certification nor approval for live navigation. See engineering issue #1982 for the next acceptance steps.
+
+### Real NOAA observation review (November 15, 2026)
+
+**Preview route:** `/subsea-watch/field-archive/track-review/`. This is a real-data, two-dimensional **evidence reviewer**, NOT a 3D dive reconstruction. It displays independently sourced source-file fields `LAT_DD`, `LON_DD`, `DEPTH` and `UNIXTIME` from the NOAA ROV 1Hz CSV.
+
+The source-hash-pinned exporter `scripts/prepare-noaa-ex2306-track-review.py` uses the previously verified original ROV ancillary archive (SHA-256 `b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61`) and exports a 300-second, 300-observation **provisional** JSON artifact covering 18:30:00–18:34:59 UTC. The original full-resolution JSON can be retrieved from the `Subsea NOAA source byte audit` workflow artifact; no raw archive is published by that workflow.
+
+For a faster mobile experience, the first-party static review page contains a separate **61-point, rounded display sample** (one point every 5 seconds, plus second 299). It preserves the source signed depth values and lat/lon readings, rounded for preview only. It draws **unconnected dots**: missing readings and movement between observations are not filled or interpolated. It does not calculate world-space X/Y, distance, route safety, obstacles, terrain, or underwater instrument accuracy.
+
+**Evidence limitations:** Source-reported geographic coordinates require independent positioning-solution review; signed `DEPTH` requires confirmation of units, sign convention and vertical reference. Having 300 timestamps overlapping a 299-second NOAA video segment does not establish frame synchronization. The live video remains a separate source link. No feature is for underwater navigation, operational safety, dive clearance or certified site surveying.
+
+**Acceptance:** GitHub Actions now checks the actual NOAA file hash, converter boundaries, 61-point source preview, browser-rendered review page and eventual public HTTPS deployment. Professional instrument/datum verification is still required before any source coordinates could be promoted into `evercraft.subsea.replay.v1` for 3D visualization.
+
+### Next adapter gate
+
+The bytes are now audited; next validate schema and measurement provenance before writing a reconstruction converter. Verify which measurements correspond to the **ROV** versus the camera platform or ship. Explicitly establish time basis, UTC offsets, horizontal measurement method, position validity, coordinate datum, local origin and depth sign/reference. Build a converter that emits `evercraft.subsea.replay.v1` **only for validated fields** and leaves missing XY unknown. Never interpolate unknown positions across long intervals or imply video-frame accuracy without a verified clock alignment.
+
+## Local footage / mission clock pairing (experimental)
+
+This next increment adds **local video preview**, **manual clock alignment**, and playback alongside the imported telemetry. It does **not** automatically discover or validate camera start times, derive survey geometry from frames, or produce a synchronized evidence package.
+
+1. In the immersive view, **Import dive JSON / CSV** first. Camera footage is disabled for the built-in fictional mission to avoid implying a real dive happened at the fictional site.
+2. Choose **Camera footage**, then **Choose local video**. The browser uses a temporary `blob:` object URL for the user-selected file, does not transmit the file, and revokes that URL when replacing footage, changing telemetry, resetting the demo, or navigating away. The local video preview is limited to nonempty files under 2 GB; actual playback depends on codec support in the user's browser.
+3. **Video begins at mission second** accepts a signed offset. For example, if the imported mission started at `t=0` and the camera starts 25 seconds into the dive, enter `25`. If the recording started 5 seconds before the first mission reading, enter `-5`. This is a **user-entered alignment**, not a validated clock correlation.
+4. The playback/scrub timeline remains the mission clock. Footage outside its own known duration appears explicitly **unavailable**, before or after the recording. Browser codec, seek accuracy and device playback restrictions can affect synchronization; the indicated time is approximate and must not be described as frame-accurate.
+5. Muted playback is the default; **Sound on** is a voluntary user control. The feature is intended for post-dive review, not real-time monitoring, navigation, dive safety clearance, or automatic hazard recognition.
+6. No uploader, tracking service, remote transcoder, third-party CDN, or cloud video analysis is added. No synchronized export or evidence claim is produced by this preview. A later professionally validated release needs independently verified time bases, sensor calibration, audit trail and protected evidence retention.
 
 ## Experience quality gates
 

@@ -33,3 +33,11 @@ Never turn an FAA restriction radius into an exposure zone. Never turn a no-dete
 - Distribution gate: public HTTPS, source links, OG preview validation, organic shares with no threat inflation, and measurable qualified leads.
 
 **Owner:** Evercraft LLC. **Design:** customer sees one clear case; the watershed of agents and systems stays behind the scenes.
+
+## Evercraft Payments canonical product route (November 4)
+
+Signal's proposed $250 USD one-time founding evidence brief is registered as the exact owned offer key `signal.incident_evidence_brief_250.v1` under `systemia/mcp/public-payment-offers.mjs` (slug `signal-brief`, amount 25,000 cents). Product route: Signal → **Evercraft Payments** (order and entitlement truth) → Raven Nexus (provider boundary) → settlement adapter. A processor link must not appear as a separate product checkout or be borrowed from a same-price unrelated service.
+
+The owned offer-page route is `/offers/signal-brief` on Fabric, but **source registration does not prove the public runtime is updated or that checkout works**. Until an accepted scope, exact SKU provider acceptance, and a real independent checkout canary are available, `native_order_enabled=false`; the runtime returns HTTP 409 and does not invoke payment operations. The customer sees scope preparation instead of a fake purchase. The main Signal site continues to collect only a draft email request, not payment or an order.
+
+**Reopen only after:** live owned HTTP offer verification; explicit bounded scope and delivery capacity; authorized native ops allowlist for exact key/price/currency; idempotent checkout request; real provider-paid/refund verification and matching Systemia fulfillment receipt. The same-price Workflow X-Ray or other Stripe SKU must never be substituted. A green unit test or rendered form isn't a collected payment.

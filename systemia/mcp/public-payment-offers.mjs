@@ -1,5 +1,28 @@
 // Fixed public offers approved in the buyer-door manifest. No inferred SKUs.
 export const PUBLIC_PAYMENT_OFFERS=Object.freeze({
+  "closeout-pilot": {
+    "offer_key": "evercraft.closeout.human_review_packet_49.v1",
+    "title": "Evercraft Closeout | Professional Job Handoff Packet",
+    "intent": "One human-reviewed contractor job completion packet with up to four authorized photos and one factual revision after scope agreement.",
+    "amount_cents": 4900,
+    "currency": "usd",
+    "product_key": "evercraft-closeout",
+    "requires_scope_approval": true,
+    "native_order_enabled": false,
+    "release_state": "held_exact_sku_scope_and_payment_acceptance"
+  },
+
+  "signal-brief": {
+    "offer_key": "signal.incident_evidence_brief_250.v1",
+    "title": "Evercraft Signal | Incident Evidence Brief",
+    "intent": "One human-reviewed, source-linked incident brief with a timeline, claims, contradictions, and missing evidence.",
+    "amount_cents": 25000,
+    "currency": "usd",
+    "product_key": "evercraft-signal",
+    "requires_scope_approval": true,
+    "native_order_enabled": false,
+    "release_state": "held_exact_sku_scope_and_payment_acceptance"
+  },
   "workflow-xray": {
     "offer_key": "workflow_foundry.xray_250.v1",
     "title": "Evercraft Workflow X-Ray",

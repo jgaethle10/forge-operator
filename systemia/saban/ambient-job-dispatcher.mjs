@@ -43,6 +43,7 @@ export async function dispatchAmbientJobsOnce({
   gatewayUrl='http://127.0.0.1:8791',
   gatewayToken='',
   maxJobs=16,
+  nodeSeedOnly=false,
   now=new Date(),
 }={}){
   const resolvedRoot=path.resolve(
@@ -64,7 +65,7 @@ export async function dispatchAmbientJobsOnce({
           .filter(Boolean)
       : []
   );
-  const caps=activeCapabilities(snapshot).filter(cap=>
+  const caps=(nodeSeedOnly?[]:activeCapabilities(snapshot)).filter(cap=>
     !suspendedDevices.has(String(cap.metadata?.device_id||''))
   );
   const nodeSeedInventoryFile=path.join(resolvedRoot,'nodeseed-capacity-inventory.json');
@@ -81,6 +82,32 @@ export async function dispatchAmbientJobsOnce({
   const rows=[];
 
   for(const job of jobs){
+    // Never replace an uncertainty hold with a workload-policy hold.
+    // The operator must reconcile the original remote execution outcome.
+    if(job.state==='held'&&job.last_hold?.reason==='unverified_remote_worker_result'){
+      rows.push({
+        job_id:job.job_id,
+        state:'held',
+        reason:'unverified_remote_worker_result',
+        manual_review_required:true,
+      });
+      continue;
+    }
+    if(nodeSeedOnly&&job.workload_class!=='systemia.content-hash.v1'){
+      queue.update(job.job_id,{
+        state:'held',
+        last_hold:{
+          reason:'unattended_workload_not_authorized',
+          observed_at:(now instanceof Date?now:new Date(now)).toISOString(),
+        },
+      });
+      rows.push({
+        job_id:job.job_id,
+        state:'held',
+        reason:'unattended_workload_not_authorized',
+      });
+      continue;
+    }
     if(job.state==='retry_wait'&&job.next_attempt_at){
       const retryAt=Date.parse(job.next_attempt_at);
       const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
@@ -159,6 +186,11 @@ export async function dispatchAmbientJobsOnce({
     };
 
     const chosen=executionPlan.placements[0];
+    // An unattended Yard-owned cycle never falls back to a different
+    // ambient-device gateway or commercial market.
+    if(nodeSeedOnly&&chosen?.market!=='evercraft-nodeseed'){
+      throw new Error('saban_unattended_dispatch_market_not_authorized');
+    }
     if(chosen?.market==='evercraft-nodeseed'){
       const intent=createNodeSeedExecutionIntent({
         root:resolvedRoot,
@@ -272,6 +304,7 @@ export async function dispatchAmbientJobsOnce({
     commercial_capacity_considered:false,
     commercial_capacity_authorized:false,
     arbitrary_code_execution:false,
+    unattended_nodeseed_only:nodeSeedOnly===true,
     autonomy_plan_present:autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1',
     autonomy_plan_receipt:autonomyPlan?.receipt_hash||null,
     suspended_device_count:suspendedDevices.size,

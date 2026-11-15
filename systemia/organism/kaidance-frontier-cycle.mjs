@@ -3,6 +3,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { writeFrontierArtifacts } from './frontier-watch.mjs';
 import { runScienceHazardWatch } from './science-hazard-watch.mjs';
+import { writeMedicalEvidenceBrief } from './medical-evidence-brief.mjs';
+import { writeMedicalAbstractEvidence } from './medical-abstract-evidence.mjs';
+import { writeMedicalEvidenceTriage } from './medical-evidence-triage.mjs';
+import { writeMedicalReviewPacket } from './medical-review-packet.mjs';
+import { writeRegistryCrosscheck } from './medical-registry-crosscheck.mjs';
+import { runRegisteredTrialLane } from './medical-registered-trial-lane.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 
 const rootDir = process.cwd();
@@ -16,6 +22,48 @@ const frontier = writeFrontierArtifacts({
 const science = await runScienceHazardWatch({
   outDir: path.join(artifactRoot, 'science-hazard-watch'),
   now
+});
+
+const medicalBrief = writeMedicalEvidenceBrief({
+  watch: science.report,
+  outDir: path.join(artifactRoot, 'medical-evidence-radar'),
+  now
+});
+
+const medicalAbstracts = await writeMedicalAbstractEvidence({
+  watch: science.report,
+  outDir: path.join(artifactRoot, 'medical-abstract-evidence'),
+  now
+});
+
+const triageDir = path.join(artifactRoot, 'medical-evidence-triage');
+let previousTriage = null;
+try { previousTriage = JSON.parse(fs.readFileSync(path.join(triageDir,'state.json'),'utf8')); }
+catch { /* First cycle has no durable triage ledger; output will mark it as first-seen. */ }
+const medicalTriage = writeMedicalEvidenceTriage({
+  abstractReport: medicalAbstracts,
+  previous: previousTriage,
+  outDir: triageDir,
+  now
+});
+
+const medicalReview = writeMedicalReviewPacket({
+  abstractReport: medicalAbstracts,
+  triageReport: medicalTriage.report,
+  outDir: path.join(artifactRoot, 'medical-review-packets'),
+  now
+});
+
+const registryCrosscheck = await writeRegistryCrosscheck({
+  abstracts: medicalAbstracts,
+  review: medicalReview,
+  now,
+  outDir: path.join(artifactRoot, 'medical-registry-crosscheck')
+});
+
+const registeredTrials = await runRegisteredTrialLane({
+  now,
+  outDir: path.join(artifactRoot, 'medical-registered-trials')
 });
 
 const cycleRoot = path.join(artifactRoot, 'kaidance-frontier');
@@ -68,6 +116,30 @@ const body = {
     recent_medical_matches: science.report.lanes.medical_research.total_recent_matches ?? null,
     held_sources: science.snapshot.counts.held,
     receipt_hash: science.report.receipt_hash
+  },
+  medical_evidence: {
+    status: medicalBrief.status,
+    sampled_titles: medicalBrief.sampled_titles,
+    abstract_evidence_status: medicalAbstracts.status,
+    abstracts_retrieved: medicalAbstracts.abstracts_retrieved,
+    abstract_evidence_receipt: medicalAbstracts.receipt_hash,
+    triage_status: medicalTriage.report.source_status,
+    triage_history_status: medicalTriage.report.history_status,
+    triage_counts: medicalTriage.report.counts,
+    triage_receipt: medicalTriage.report.receipt_hash,
+    review_packet_status: medicalReview.source_status,
+    review_packet_counts: medicalReview.counts,
+    review_packet_receipt: medicalReview.receipt_hash,
+    registry_crosscheck_status: registryCrosscheck.source_status,
+    registry_crosscheck_counts: registryCrosscheck.counts,
+    registry_crosscheck_receipt: registryCrosscheck.receipt_hash,
+    registered_trial_cohort_status: registeredTrials.discovery.source_status,
+    registered_trial_cohort_sampled: registeredTrials.discovery.pubmed_ids_sampled,
+    registered_trial_cohort_candidates: registeredTrials.discovery.explicitly_registered_papers,
+    registered_trial_identifiers_verified: registeredTrials.official_nct_ids_confirmed,
+    registered_trial_cohort_receipt: registeredTrials.receipt_hash,
+    publication_disposition: medicalBrief.publication_disposition,
+    receipt_hash: medicalBrief.receipt_hash
   },
   kaidance: result.ok ? {
     cycle_key: result.cycle?.cycle_key || null,

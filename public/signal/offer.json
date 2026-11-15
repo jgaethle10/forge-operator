@@ -34,18 +34,44 @@
   },
   "buyer_action": {
     "url": "https://jgaethle10.github.io/forge-operator/signal/#request",
-    "mode": "client-side-email-draft",
+    "mode": "owned_encrypted_inquiry_when_ready_else_local_email_draft",
     "send_automatically": false,
     "payment_link": null,
     "order_created": false,
-    "checkout_available": false
+    "checkout_available": false,
+    "user_consent_required": true,
+    "email_required_for_reply": true,
+    "native_api": "https://fabric.systemiacommandcenters.com/api/signal/inquiry",
+    "readiness_api": "https://fabric.systemiacommandcenters.com/api/signal/readiness",
+    "native_runtime_deployment_verified": false,
+    "customer_receipt_required": true
   },
   "commercial_controls": {
     "official_checkout_required": true,
     "scope_and_capacity_approval_before_payment": true,
     "do_not_substitute_existing_stripe_sku": true,
     "provider_paid_receipt_required_before_fulfillment_entitlement": true,
-    "no_customer_purchase_evidence_yet": true
+    "no_customer_purchase_evidence_yet": true,
+    "live_native_intake_verified": false,
+    "native_intake_not_purchase": true
   },
-  "revision_date": "2026-11-04"
+  "revision_date": "2026-11-04",
+  "payment_authority": {
+    "system": "Evercraft Payments",
+    "provider_boundary": "Raven Nexus",
+    "settlement_adapter": "Stripe, processor only",
+    "canonical_order_owner": "evercraft_payments",
+    "canonical_entitlement_owner": "evercraft_payments",
+    "product_key": "evercraft-signal",
+    "offer_slug": "signal-brief",
+    "offer_key": "signal.incident_evidence_brief_250.v1",
+    "amount_cents": 25000,
+    "currency": "usd",
+    "owned_offer_page": "https://fabric.systemiacommandcenters.com/offers/signal-brief",
+    "owned_offer_page_status": "source_registered_not_live_verified",
+    "native_order_enabled": false,
+    "checkout_ready": false,
+    "provider_paid_receipt_verified": false,
+    "direct_stripe_link_allowed": false
+  }
 }

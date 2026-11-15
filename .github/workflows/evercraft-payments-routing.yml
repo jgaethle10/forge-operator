@@ -4,6 +4,13 @@ on:
   pull_request:
     paths:
       - 'systemia/payments/**'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/signal-publication/payment-offer.mjs'
+      - 'tests/signal-owned-payment-route.test.mjs'
+      - 'tests/signal-native-payment-canary.test.mjs'
+      - 'scripts/probe-signal-native-payments.mjs'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
       - '.github/workflows/evercraft-payments-routing.yml'
@@ -11,6 +18,13 @@ on:
     branches: [main]
     paths:
       - 'systemia/payments/**'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/signal-publication/payment-offer.mjs'
+      - 'tests/signal-owned-payment-route.test.mjs'
+      - 'tests/signal-native-payment-canary.test.mjs'
+      - 'scripts/probe-signal-native-payments.mjs'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
       - '.github/workflows/evercraft-payments-routing.yml'
@@ -28,7 +42,40 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Evercraft-owned payment routing
-        run: node --test systemia/payments/*.test.mjs
+        run: node --test systemia/payments/*.test.mjs tests/signal-owned-payment-route.test.mjs tests/signal-native-payment-canary.test.mjs
       - name: Reject Stripe-first EarthWorks commerce metadata
         run: |
           node -e "const x=require('./public/apps/earthworks-autonomy/capability.json'); if(x.commerce?.layer!=='evercraft_payments'||x.commerce?.provider_boundary!=='raven_nexus'||x.commerce?.direct_provider_checkout!==false) process.exit(1)"
+
+  signal-owned-offer-observation:
+    name: Signal owned offer / public read-only observation
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: routing-invariant
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Observe exact Evercraft Payments page without creating orders
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {observeSignalNativeOffer} from './scripts/probe-signal-native-payments.mjs';
+          const receipt=await observeSignalNativeOffer();
+          fs.mkdirSync('artifacts/signal-payments',{recursive:true});
+          fs.writeFileSync('artifacts/signal-payments/read-only-probe.json',JSON.stringify(receipt,null,2)+'\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            '## Signal / Evercraft Payments independent GET probe\n\n'+
+            'Owned page: **'+receipt.status+'**\n\n'+
+            'Source/deployment attestation observed: **'+receipt.deploy_attestation_verified+'**\n\n'+
+            'Checkout or payment verified: **false**\n\n'+
+            'No POST, orders or card charges were attempted.\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signal-evercraft-payments-read-only
+          path: artifacts/signal-payments/read-only-probe.json
+          if-no-files-found: warn
+          retention-days: 14

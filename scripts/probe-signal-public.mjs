@@ -46,6 +46,11 @@ export async function verifySignalPublic({
       assert.match(html, /id="known"/);
       assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
       assert.match(html, /savannah-river-20261028\.json/);
+      assert.match(html, /id="signal-inquiry"/);
+      assert.match(html, /id="signal-email"/);
+      assert.match(html, /api\/signal\/inquiry/);
+      assert.match(html, /api\/signal\/readiness/);
+      assert.match(html, /Use email instead/);
       const data = JSON.parse(json);
       assert.equal(data.schema,'evercraft.signal.incident.v1');
       assert.equal(data.id,EXPECTED_ID);

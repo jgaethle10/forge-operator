@@ -1,0 +1,31 @@
+name: Infinite Classroom Owned Source Proof
+
+on:
+  pull_request:
+    paths:
+      - "public/apps/infinite-classroom/**"
+      - "tests/infinite-classroom-owned.test.mjs"
+      - "tests/infinite-classroom-worlds.test.mjs"
+      - "public/infinite-classroom/**"
+      - ".github/workflows/infinite-classroom-owned.yml"
+  push:
+    paths:
+      - "public/apps/infinite-classroom/**"
+      - "tests/infinite-classroom-owned.test.mjs"
+      - "tests/infinite-classroom-worlds.test.mjs"
+      - "public/infinite-classroom/**"
+      - ".github/workflows/infinite-classroom-owned.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  owned-classroom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify module syntax
+        run: node --check public/apps/infinite-classroom/learning-engine.mjs
+      - name: Verify lesson behavior and provider-free source
+        run: node --test tests/infinite-classroom-owned.test.mjs tests/infinite-classroom-worlds.test.mjs

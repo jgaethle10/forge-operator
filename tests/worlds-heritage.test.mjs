@@ -37,7 +37,7 @@ test('Public browser labels and source link are required',()=>{
  assert.match(html,/not diving guidance/);
  assert.match(html,/id="joystick"/);
  assert.match(html,/id="toggle"/);
- assert.match(html,/submerged-heritage/);
+ assert.match(html,/href="\.\/atlas\/"/); // The owned Worlds edge only routes /worlds/; preserve evidence navigation.
  assert.match(app,/closestMarker/);
  assert.match(app,/scene\.sources/);
  assert.match(app,/webgl2/);

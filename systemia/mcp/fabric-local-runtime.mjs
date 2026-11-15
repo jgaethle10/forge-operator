@@ -31,6 +31,7 @@ import {
   listHumanOffers,
   renderPaymentHandoffPage,
   renderPaymentHoldPage,
+  renderWebsiteAuditPaymentStatus,
   renderAliEvLanding,
 } from './fabric-public-site.mjs';
 import {
@@ -41,6 +42,8 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import {createWebsiteAuditInquiryHandler,websiteAuditInquiryReadiness,createWebsiteAuditAlertDispatcher} from './website-audit-inquiry.mjs';
+import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignalInquiryAlertDispatcher } from './signal-public-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import {createPartnerApplicationHandler,createPartnerApplicationDispatcher} from './partners-public-inquiry.mjs';
@@ -411,6 +414,9 @@ export async function startFabricLocalRuntime({
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
   studioLeadsDir='',
+  websiteAuditLeadsDir=process.env.EVERCRAFT_WEBSITE_AUDIT_LEADS_DIR||'',
+  signalLeadsDir=process.env.EVERCRAFT_SIGNAL_LEADS_DIR||'',
+  signalIntakeKey=process.env.EVERCRAFT_SIGNAL_INTAKE_KEY_B64||undefined,
   findMyPartLeadsDir='',
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
   partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',
@@ -429,6 +435,15 @@ export async function startFabricLocalRuntime({
   const studioAlertDispatcher=createStudioAlertDispatcher({folder:studioLeadsDir||undefined});
   const studioInquiry=createStudioInquiryHandler({storeDir:studioLeadsDir,
     onAlertQueued:()=>{if(studioAlertDispatcher.enabled)void studioAlertDispatcher.dispatch().catch(()=>{});}});
+  const websiteAuditAlertDispatcher=createWebsiteAuditAlertDispatcher({storeDir:websiteAuditLeadsDir||undefined});
+  const websiteAuditInquiry=createWebsiteAuditInquiryHandler({
+    storeDir:websiteAuditLeadsDir||undefined,
+    onAlertQueued:()=>{if(websiteAuditAlertDispatcher.enabled)void websiteAuditAlertDispatcher.dispatch().catch(()=>{});},
+  });
+  const auditInquiryAvailable=()=>websiteAuditInquiryReadiness({storeDir:websiteAuditLeadsDir||undefined}).intake_available;
+  const signalAlertDispatcher=createSignalInquiryAlertDispatcher({folder:signalLeadsDir||undefined,key:signalIntakeKey});
+  const signalInquiry=createSignalBuyerInquiryHandler({storeDir:signalLeadsDir||undefined,key:signalIntakeKey,
+    onAlertQueued:()=>{if(signalAlertDispatcher.enabled)void signalAlertDispatcher.dispatch().catch(()=>{});}});
   const findMyPartAlertDispatcher=createFindMyPartInquiryAlertDispatcher({folder:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey});
   const findMyPartInquiry=createFindMyPartInquiryHandler({storeDir:findMyPartLeadsDir||undefined,key:findMyPartIntakeKey,
     onAlertQueued:()=>{if(findMyPartAlertDispatcher.enabled)void findMyPartAlertDispatcher.dispatch().catch(()=>{});}});
@@ -673,6 +688,7 @@ export async function startFabricLocalRuntime({
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
     payment_authority:'Evercraft Payments',
+    website_audit_inquiry_available:auditInquiryAvailable(),
     payment_router:'Raven Nexus',
     // This legacy field covers read-only MCP connections only, not payment.
     base44_transport_enabled:false,
@@ -808,11 +824,33 @@ export async function startFabricLocalRuntime({
         return await partnerApplication(req,res);
       }
 
+      // Signal buyer requests are encrypted intake receipts, NOT payment orders.
+      const signalRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(signalRoute==='/api/signal/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        const state=signalBuyerIntakeReadiness({storeDir:signalLeadsDir||undefined,key:signalIntakeKey});
+        const caller=String(req.headers.origin||'');
+        const cors=(caller==='https://jgaethle10.github.io'||caller==='https://fabric.systemiacommandcenters.com')
+          ?{'access-control-allow-origin':caller,'vary':'origin'}:{'vary':'origin'};
+        return sendJson(res,200,{schema:'evercraft.signal.intake-readiness.v1',
+          ...state,payment_ready:false,payment_verified:false},cors);
+      }
+      if(signalRoute==='/api/signal/inquiry')return await signalInquiry(req,res);
+
       // A separately bounded owned route accepts only consented FindMyPart part briefs.
       // Customer content cannot create a paid order or an executable mission.
       if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/findmypart/inquiry'){
         return await findMyPartInquiry(req,res);
       }
+
+      // Human-reviewed audit interest, never a payment, order, or agent mission.
+      const auditRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(auditRoute==='/api/website-audit/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        return sendJson(res,200,{schema:'evercraft.website-audit.intake-readiness.v1',
+          intake_available:auditInquiryAvailable(),payment_ready:false,payment_verified:false});
+      }
+      if(auditRoute==='/api/website-audit/inquiry')return await websiteAuditInquiry(req,res);
 
       // Only this bounded route accepts untrusted commercial inquiry data.
       // It never invokes agents or checkout, sends email, or exposes stored leads.
@@ -1199,6 +1237,23 @@ export async function startFabricLocalRuntime({
         const directOffer=publicPaymentOffer(slug);
         const capabilityKey=offerPurchaseKeyForSlug(slug);
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        // A published Signal SKU does not confer payment authority before scope
+        // approval and exact provider-accepted native checkout evidence.
+        if(directOffer?.native_order_enabled===false){
+          return sendJson(res,409,{
+            ok:false,
+            error:'offer_requires_scope_acceptance',
+            authority:'Evercraft Payments',
+            offer_key:directOffer.offer_key,
+            amount_cents:directOffer.amount_cents,
+            currency:directOffer.currency,
+            checkout_ready:false,
+            order_created:false,
+            fulfillment_release:false,
+            scope_url:'https://jgaethle10.github.io/forge-operator/signal/#request'
+          });
+        }
+
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
@@ -1399,13 +1454,14 @@ export async function startFabricLocalRuntime({
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
           if(parsed.searchParams.get('payment')==='processing'){
             const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch,directPaymentOpsEndpoint);
+            if(slug==='website-audit')return sendMobileHtml(res,result.status,renderWebsiteAuditPaymentStatus(result));
             const message=result.state==='paid'?'Payment verified. '+(result.queued?'Your work is queued.':'Delivery status is awaiting confirmation.'):
               result.state==='synthetic'?'QA payment verified. No fulfillment was released.':
               result.state==='invalid'?'Checkout return cannot be verified. Do not pay twice. Contact Evercraft using your checkout email.':
               'Payment verification pending. Do not pay again. Refresh this page later or contact Evercraft.';
             return sendText(res,result.status,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Evercraft Payments</title></head><body style="background:#0b1120;color:#ecf1fa;font:18px/1.6 system-ui;padding:32px;max-width:720px;margin:auto"><h1>Evercraft Payments</h1><p>'+message+'</p><a style="color:#9debdc" href="/support">Contact support</a></body></html>',{contentType:'text/html; charset=utf-8'});
           }
-          const page=renderOfferPage(offer,{checkoutConfigured:commerceTransport.fully_configured});
+          const page=renderOfferPage(offer,{checkoutConfigured:commerceTransport.fully_configured,auditInquiryAvailable:auditInquiryAvailable()});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
@@ -1705,6 +1761,14 @@ export async function startFabricLocalRuntime({
     studioAlertDispatcher.start();
     void studioAlertDispatcher.dispatch().catch(()=>{});
   }
+  if(websiteAuditAlertDispatcher.enabled){
+    websiteAuditAlertDispatcher.start();
+    void websiteAuditAlertDispatcher.dispatch().catch(()=>{});
+  }
+  if(signalAlertDispatcher.enabled){
+    signalAlertDispatcher.start();
+    void signalAlertDispatcher.dispatch().catch(()=>{});
+  }
   if(findMyPartAlertDispatcher.enabled){
     findMyPartAlertDispatcher.start();
     void findMyPartAlertDispatcher.dispatch().catch(()=>{});
@@ -1734,6 +1798,8 @@ export async function startFabricLocalRuntime({
     },
     close:async()=>{
       studioAlertDispatcher.stop();
+      websiteAuditAlertDispatcher.stop();
+      signalAlertDispatcher.stop();
       findMyPartAlertDispatcher.stop();
       partnerAlertDispatcher.stop();
       await faieSurface?.close();

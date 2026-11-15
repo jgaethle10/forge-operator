@@ -177,6 +177,13 @@ try {
   );
   assert.ok(sentinelHealth);
   assert.equal(['running', 'healthy', 'idle'].includes(sentinelHealth.status), true);
+  const workSabanClipHealth = route.health.services.find(
+    (service) => service.service_key === 'work-saban-clip-facebook-company-publisher'
+  );
+  assert.ok(workSabanClipHealth, 'Work Saban Clip resident must be in the actual owned supervisor');
+  assert.equal(workSabanClipHealth.status, 'disabled',
+    'Missing a verified Work Saban company Page and private Passport must disable publishing');
+  assert.equal(workSabanClipHealth.hold_reason, 'optional_environment_not_configured');
   const ravenPrivateHealth = route.health.services.find(
     (service) => service.service_key === 'raven-private-runtime'
   );
@@ -355,6 +362,7 @@ try {
     deployment_receipt_bound: true,
     private_paths_redacted_from_health: true,
     provider_credential_vault_bound: true,
+    work_saban_company_publisher_registered_but_disabled_without_private_binding: true,
     raven_private_runtime_bound: true,
     raven_inference_gateway_bound: true,
     raven_authority_file_permissions_verified: true,

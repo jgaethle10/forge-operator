@@ -26,7 +26,11 @@
       "stripe_product_id": "prod_V4cGNCezEew2dm",
       "stripe_price_id": "price_1U4T2MK4iDjqpECVqSxLlBn8",
       "description": "One week of social media management. Scope, start date, supported channels and deliverables must be confirmed before work begins.",
-      "note": "Service capacity, scheduling and channel access require individual confirmation."
+      "note": "Service capacity, scheduling and channel access require individual confirmation.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     },
     {
       "key": "asset-diagnosis",
@@ -38,7 +42,11 @@
       "stripe_product_id": "prod_V4ZrYAjgvFtJug",
       "stripe_price_id": "price_1U4QhlK4iDjqpECVuUcr2XnI",
       "description": "One-time digital or operational asset diagnosis. Confirm which asset is in scope before proceeding.",
-      "note": "The assessment scope and written handoff will be agreed individually."
+      "note": "The assessment scope and written handoff will be agreed individually.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     },
     {
       "key": "ai-boardroom-standard",
@@ -50,7 +58,11 @@
       "stripe_product_id": "prod_V4ZruGhbFyITCF",
       "stripe_price_id": "price_1U4QhlK4iDjqpECVH2SFMHx7",
       "description": "A bounded AI Boardroom review. Scope and what will be delivered are confirmed before work starts.",
-      "note": "An AI assessment is decision support, not licensed professional advice."
+      "note": "An AI assessment is decision support, not licensed professional advice.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     },
     {
       "key": "ai-boardroom-financial",
@@ -62,7 +74,11 @@
       "stripe_product_id": "prod_V4ZrjGDcuNeOoz",
       "stripe_price_id": "price_1U4QhlK4iDjqpECVhOTAtXEK",
       "description": "A bounded AI Boardroom review with financial-scenario modeling. Assumptions and deliverables require confirmation.",
-      "note": "Models are scenarios, not a promise of business outcomes or investment returns."
+      "note": "Models are scenarios, not a promise of business outcomes or investment returns.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     },
     {
       "key": "knowledge-activation",
@@ -74,7 +90,11 @@
       "stripe_product_id": "prod_V4Zr47KqoQ8s4b",
       "stripe_price_id": "price_1U4QhlK4iDjqpECVwqsB5Aes",
       "description": "A scoped effort to organize or activate usable organizational knowledge. Confirm source access, exact deliverables and handoff.",
-      "note": "Do not supply sensitive records before agreeing on a secure, authorized scope."
+      "note": "Do not supply sensitive records before agreeing on a secure, authorized scope.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     },
     {
       "key": "social-intelligence-launch",
@@ -86,7 +106,11 @@
       "stripe_product_id": "prod_V4apG7t9NUJxMk",
       "stripe_price_id": "price_1U4RdoK4iDjqpECVzhUZ5dmB",
       "description": "A project-based social intelligence launch engagement. Confirm the intended audience, supported analysis and approved delivery scope.",
-      "note": "Requires individually agreed service scope and delivery capacity before checkout; not a guarantee of engagement or growth."
+      "note": "Requires individually agreed service scope and delivery capacity before checkout; not a guarantee of engagement or growth.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     },
     {
       "key": "institutional-memory-system",
@@ -98,7 +122,16 @@
       "stripe_product_id": "prod_V4ZrPRWhjZUTzt",
       "stripe_price_id": "price_1U4QhlK4iDjqpECVidrwxUxU",
       "description": "A project-based institutional memory design or implementation engagement. Requirements, rights and acceptance criteria must be agreed first.",
-      "note": "Data handling, integration, retention and access permissions require a written scope before any purchase."
+      "note": "Data handling, integration, retention and access permissions require a written scope before any purchase.",
+      "commercial_state": "sell_now_original_sku",
+      "public_promotion_allowed": true,
+      "checkout_ready": true,
+      "payment_verified_by_checkout_view": false
     }
-  ]
+  ],
+  "commercial_marketing_state": "sell_now_exact_sku_scoped_services",
+  "owner_approved_promotion": true,
+  "buyer_browser_evidence": "Owner-supplied mobile screenshots of live Stripe-hosted checkout UI for existing exact-price services; does not establish a paid charge.",
+  "no_prior_customer_charge_required_for_marketing": true,
+  "scope_confirmation_required_before_customer_payment": true
 }

@@ -376,6 +376,20 @@
         "--passport-state-dir": "EVERCRAFT_PASSPORT_STATE_DIR",
         "--expected-facebook-page-id": "EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID"
       }
+    },
+    {
+      "service_key": "work-saban-clip-delivery-watch",
+      "mode": "cycle",
+      "manifest": "systemia/clip/work-saban-delivery-watch.workflow.json",
+      "executable": "systemia/clip/work-saban-delivery-watch.mjs",
+      "cadence_seconds": 300,
+      "env_args": {
+        "--state-dir": "SYSTEMIA_WORK_SABAN_CLIP_STATE_DIR",
+        "--out": "SYSTEMIA_WORK_SABAN_DELIVERY_WATCH_OUT"
+      },
+      "optional_env_args": {
+        "--expected-facebook-page-id": "EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID"
+      }
     }
   ]
 }

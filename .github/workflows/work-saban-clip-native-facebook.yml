@@ -3,21 +3,35 @@ on:
   pull_request:
     paths:
       - 'systemia/clip/work-saban-publish-authorize.mjs'
+      - 'systemia/clip/authority/work-saban-corporate-rotation.json'
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.workflow.json'
+      - 'tests/work-saban-clip-delivery-watch.test.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
       - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
       - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/core-on-compute.proof.mjs'
+      - 'systemia/clip/work-saban-facebook-activation.md'
       - '.github/workflows/work-saban-clip-native-facebook.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/clip/work-saban-publish-authorize.mjs'
+      - 'systemia/clip/authority/work-saban-corporate-rotation.json'
       - 'systemia/clip/work-saban-facebook-resident.mjs'
       - 'systemia/clip/work-saban-facebook-resident-runner.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.mjs'
+      - 'systemia/clip/work-saban-delivery-watch.workflow.json'
+      - 'tests/work-saban-clip-delivery-watch.test.mjs'
       - 'tests/work-saban-facebook-resident.test.mjs'
       - 'systemia/clip/work-saban-facebook-publisher.workflow.json'
       - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/core-on-compute.proof.mjs'
+      - 'systemia/clip/work-saban-facebook-activation.md'
       - '.github/workflows/work-saban-clip-native-facebook.yml'
 permissions:
   contents: read
@@ -31,7 +45,9 @@ jobs:
         with:
           node-version: '22'
       - name: Verify first-party Work Saban recipient scope and provider receipts
-        run: node --test tests/work-saban-facebook-resident.test.mjs
+        run: node --test tests/work-saban-facebook-resident.test.mjs tests/work-saban-clip-delivery-watch.test.mjs
+      - name: Verify owned Compute launcher syntax
+        run: node --check systemia/compute/runtime-node.mjs
       - name: Read-only dry run for current date
         run: node systemia/clip/work-saban-facebook-resident-runner.mjs
       - name: Guarded publisher never auto-fires from CI

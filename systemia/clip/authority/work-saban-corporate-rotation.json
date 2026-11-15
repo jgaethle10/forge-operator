@@ -1,0 +1,42 @@
+{
+  "schema": "evercraft.clip.operator-authority.v1",
+  "authorized": true,
+  "authority_state": "manual_authorized",
+  "authority_receipt_ref": "founder-directive:2026-10-30:work-saban-evercraft-clip-company-rotation",
+  "issuer_ref": "authority:evercraft-operator",
+  "subject_ref": "system:work-saban-clip-publisher",
+  "product": "evercraft-home",
+  "scopes": [
+    "home.clip.publish"
+  ],
+  "resource_refs": [
+    "brand:evercraft-work-saban"
+  ],
+  "excluded_brand_keys": [
+    "eps",
+    "havenly-cleaning",
+    "rnb-chicken-and-soul",
+    "christmaslightsusa"
+  ],
+  "starts_at": "2026-10-30T00:00:00.000Z",
+  "ends_at": "2027-01-31T00:00:00.000Z",
+  "purpose": "Founder-authorized organic Work Saban CSV reporter distribution exclusively to verified Evercraft company Facebook Page via first-party Clip. No paid spend, personal profiles, general-agent feature claims, or unverifiable posting.",
+  "campaign_id": "work-saban-clip-evergreen-20261030",
+  "boundaries": {
+    "channel_scope": "verified_evercraft_corporate_only",
+    "no_personal_automated_posting": true,
+    "maximum_posts_per_cycle": 1,
+    "minimum_hours_between_posts_per_platform": 72,
+    "max_posts_per_platform_per_7_days": 2,
+    "paid_spend_usd": 0,
+    "first_comment_provider_receipt_required": true,
+    "provider_id_and_readback_required": true,
+    "durable_claim_required": true,
+    "media_state": "approved_original_brand_only_no_unreviewed_commercial",
+    "account_verification": "provider_readback_and_expected_page_id_required"
+  },
+  "notes": {
+    "directive_source": "Founder explicitly directed Evercraft Clip to put Work Saban in rotation everywhere (October 30) and reiterated Push (November 4). This source record is NOT itself a verified runtime Passport grant or provider authorization.",
+    "runtime_activation": "The live resident must verify the account, resolve vault credentials and install a scoped Passport grant in private runtime before publishing."
+  }
+}

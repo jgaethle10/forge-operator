@@ -3,12 +3,16 @@ on:
   pull_request:
     paths:
       - 'scripts/work-saban-public-canary.mjs'
+      - 'scripts/probe-work-saban-share-public.mjs'
+      - 'tests/work-saban-organic-share.test.mjs'
       - 'public/work-saban/**'
       - '.github/workflows/work-saban-public-route.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/work-saban-public-canary.mjs'
+      - 'scripts/probe-work-saban-share-public.mjs'
+      - 'tests/work-saban-organic-share.test.mjs'
       - 'public/work-saban/**'
       - '.github/workflows/work-saban-public-route.yml'
   schedule:
@@ -26,5 +30,10 @@ jobs:
         with:
           node-version: '22'
       - run: node --check scripts/work-saban-public-canary.mjs
+      - name: Verify Work Saban privacy-first native share and official preview
+        run: |
+          node --check public/work-saban/report/report.js
+          node --check scripts/probe-work-saban-share-public.mjs
+          node --test tests/work-saban-organic-share.test.mjs
       - name: Prove public buyer door HTTP and actual page content
         run: node scripts/work-saban-public-canary.mjs

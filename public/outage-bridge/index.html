@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07131d">
+<meta name="description" content="Build a free, independent emergency contact page for business outages. Evercraft Outage Bridge helps businesses plan for Microsoft 365, email, and website disruptions.">
+<meta property="og:title" content="Evercraft Outage Bridge | Stay reachable">
+<meta property="og:description" content="A practical backup contact page you can make in your browser, plus a real one-site continuity audit.">
+<title>Outage Bridge | Evercraft</title>
+<style>
+:root{color-scheme:dark;--bg:#07131d;--panel:#102331;--panel2:#132b3a;--line:#335064;--ink:#f2fbff;--muted:#bed0da;--aqua:#89e1f8}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 85% 0%,#1a4356 0%,#07131d 38%);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--aqua);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #bdefff;outline-offset:3px}
+.wrap{width:min(1060px,calc(100% - 36px));margin:auto}
+header{border-bottom:1px solid var(--line);padding:18px 0}
+header .wrap,nav{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.brand{font-size:.89rem;font-weight:900;letter-spacing:.16em;color:var(--ink);text-decoration:none}
+.brand b{color:var(--aqua)}
+nav a{font-size:.93rem;color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--aqua)}
+.hero{padding:74px 0 60px;max-width:875px}
+.eyebrow{color:var(--aqua);font-size:.78rem;letter-spacing:.17em;text-transform:uppercase;font-weight:850}
+h1{font-size:clamp(2.7rem,6.8vw,5rem);line-height:1.07;letter-spacing:-.055em;margin:14px 0 20px}
+h1 span{color:var(--aqua)}
+.lead{color:var(--muted);font-size:clamp(1.09rem,2.5vw,1.3rem);max-width:720px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.btn,button{display:inline-flex;align-items:center;justify-content:center;min-height:49px;border:1px solid var(--aqua);border-radius:10px;padding:12px 19px;background:var(--aqua);color:#081d29;font:800 .98rem/1.25 system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.btn.secondary{color:var(--ink);background:transparent;border-color:#67889a}
+button:disabled{opacity:.45;cursor:not-allowed}
+.pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:25px}
+.pills span{border:1px solid var(--line);padding:5px 11px;border-radius:99px;color:var(--muted);font-size:.82rem}
+section{margin-bottom:64px;scroll-margin-top:20px}
+h2{font-size:clamp(1.6rem,3.5vw,2.3rem);line-height:1.2;letter-spacing:-.035em;margin:0 0 14px}
+section>p{color:var(--muted);max-width:780px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:25px}
+.card,.panel{border:1px solid var(--line);background:linear-gradient(135deg,var(--panel2),var(--panel));border-radius:17px;padding:24px}
+.card strong{font-size:1.04rem}
+.card p,.small{color:var(--muted)}
+.step{display:block;color:var(--aqua);font-weight:850;font-size:.78rem;letter-spacing:.12em;margin-bottom:8px}
+.builder{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+label{display:block;font-size:.9rem;font-weight:750;margin:14px 0 5px}
+label:first-child{margin-top:0}
+input,textarea{display:block;width:100%;border:1px solid #668193;background:#071722;color:var(--ink);border-radius:8px;padding:11px 12px;font:inherit}
+textarea{min-height:92px;resize:vertical}
+.hint{font-size:.8rem;color:var(--muted);margin:5px 0 0}
+.preview{background:#f4fafc;color:#153344;border-radius:12px;padding:22px;min-height:250px;overflow-wrap:anywhere}
+.preview h3{font-size:1.55rem;margin:3px 0 6px}
+.preview p{margin:9px 0}
+.preview a{color:#005c80}
+.preview .status{display:inline-block;background:#dff5fb;padding:4px 9px;border-radius:20px;font-size:.78rem;font-weight:850;color:#21576b}
+.preview-links{display:flex;flex-direction:column;align-items:start;gap:5px;margin-top:15px}
+.hidden{display:none!important}
+.builder-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+#builder-status{min-height:26px;font-size:.86rem;color:var(--muted);margin-top:9px}
+.warn{color:#e8e1b0!important}
+.offer{border:1px solid #4a889e;background:linear-gradient(115deg,#133a4c,#0c1f2b);border-radius:19px;padding:30px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:25px}
+.price{font-size:2.55rem;font-weight:900;letter-spacing:-.04em}
+footer{border-top:1px solid var(--line);padding:23px 0 42px;color:var(--muted);font-size:.83rem}
+@media(max-width:760px){.grid,.builder,.offer{grid-template-columns:1fr}.hero{padding:53px 0 44px}.price{font-size:2rem}}
+@media print{body{background:white;color:black}header,nav,.actions,.builder-tools,.offer,footer{display:none}section{margin-bottom:20px}.panel,.card{background:white;color:black;border-color:#aaa}.preview{border:1px solid #999}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="../try/">EVERCRAFT <b>◆</b></a><nav aria-label="Main navigation"><a href="#how">How it works</a><a href="#builder">Free contact page</a><a href="#audit">Continuity audit</a></nav></div></header>
+<main class="wrap">
+<div class="hero"><div class="eyebrow">Evercraft / Business Continuity</div><h1>When email goes down, <span>your business doesn't have to disappear.</span></h1><p class="lead">Outlook, Microsoft 365, a website, or your regular scheduling system can fail. Give customers a separate route to reach you and make a plan before the next interruption.</p><div class="actions"><a class="btn" href="#builder">Make a free backup contact page</a><a class="btn secondary" href="#audit">Explore the $250 rapid audit</a></div><div class="pills"><span>Built with Evercraft-owned source</span><span>No signup for free tool</span><span>No customer details transmitted</span></div></div>
+<section id="how"><span class="eyebrow">The continuity basics</span><h2>Three pieces that reduce the damage.</h2><div class="grid"><div class="card"><span class="step">01 / REACHABILITY</span><strong>Independent contact route</strong><p>Publish an emergency page somewhere separate from the system that failed. Include a tested phone number or independently hosted inbox.</p></div><div class="card"><span class="step">02 / OPERATIONS</span><strong>Small, practical fallback plan</strong><p>Know how to receive new requests, record them safely, and reconnect with customers after service returns.</p></div><div class="card"><span class="step">03 / VALIDATION</span><strong>Test it before you need it</strong><p>Verify the backup from another device and network. An untested fallback is only a theory.</p></div></div></section>
+<section id="builder"><span class="eyebrow">Free, in-browser tool</span><h2>Build your emergency contact page.</h2><p>This creates a standalone HTML file on your device. No form entries are sent to Evercraft. To make it available to customers, publish the file on hosting independent of your primary failed system. The downloaded page has no back-end intake or storage.</p>
+<div class="builder"><form class="panel" id="contact-form" novalidate>
+<label for="name">Business name</label><input id="name" name="name" maxlength="90" required placeholder="Example: Riverbend Repairs">
+<label for="phone">Backup phone or SMS number</label><input id="phone" name="phone" inputmode="tel" maxlength="40" placeholder="+1 509 555 0100"><p class="hint">Use a number you can reach without Microsoft Teams.</p>
+<label for="email">Independent backup email</label><input id="email" name="email" type="email" maxlength="160" placeholder="backup@example.com"><p class="hint">Choose a mailbox not dependent on the affected Microsoft 365 account or its routing.</p>
+<label for="booking">Optional independent booking URL</label><input id="booking" name="booking" type="url" maxlength="320" placeholder="https://..."><p class="hint">HTTPS only. Leave blank if your booking system depends on the outage.</p>
+<label for="message">Customer notice</label><textarea id="message" name="message" maxlength="500">We're experiencing an interruption to our usual communications. You can still reach us using the backup options below. Thank you for your patience.</textarea>
+<div class="builder-tools"><button type="button" id="download" disabled>Download contact page</button><button type="button" id="print" class="btn secondary">Print plan</button></div><div role="status" aria-live="polite" id="builder-status">Enter your business name and a backup phone or email.</div>
+</form>
+<div class="panel"><span class="step">LIVE PREVIEW / LOCAL ONLY</span><article class="preview" id="preview"><span class="status">Alternate contact route</span><h3 id="preview-name">Your business</h3><p id="preview-message">Your customer notice appears here.</p><div class="preview-links" id="preview-links"></div></article><p class="small">The file is standalone, but it must be hosted and linked where your customers can find it. A backup on the same failed provider is not independent.</p><p class="small">Safety: do not enter customer data, passwords, or secrets into this generator. Customers should avoid sending sensitive information over unverified channels.</p></div></div>
+</section>
+<section id="audit"><div class="offer"><div><span class="eyebrow">Existing Evercraft Service</span><h2>Site-Survive Rapid Audit</h2><p>We map one site's critical dependencies, identify three major failure points, and propose prioritized next actions. One-time, human-reviewed service. No promise of restored Microsoft access, guaranteed uptime, or automated recovery.</p><p class="small">Scope and payment require a human-confirmed handoff. This is an existing Evercraft offer, not an instant self-service checkout.</p></div><div><div class="price">$250</div><div class="small">one-time</div><a class="btn" href="https://fabric.systemiacommandcenters.com/offers/site-survive">See audit offer</a></div></div></section>
+<section><h2>What to do during an outage</h2><div class="grid"><div class="card"><strong>1. Verify</strong><p>Check your provider's official service-status source. Do not assume all users are affected.</p></div><div class="card"><strong>2. Switch channels</strong><p>Use your tested alternate number or independent contact page. Keep a timestamped list of incoming requests.</p></div><div class="card"><strong>3. Reconcile</strong><p>When service returns, compare missed inquiries and bookings. Contact people who might have been lost in the gap.</p></div></div></section>
+</main><footer><div class="wrap">© Evercraft LLC · Independent continuity planning, not affiliated with Microsoft. This free generator does not monitor outages or host your emergency page.</div></footer>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const els = ["name","phone","email","booking","message"].map($);
+const button = $("download");
+const status = $("builder-status");
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const validPhone = raw => /^\+?[0-9]{7,15}$/.test(raw.replace(/[\s().-]/g,""));
+const normalizedPhone = raw => raw.replace(/[\s().-]/g,"");
+const validEmail = raw => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
+const safeHttps = raw => {if(!raw)return "";try{const u=new URL(raw);return u.protocol==="https:"?u.href:"";}catch{return "";}};
+const getValues = () => Object.fromEntries(els.map(el=>[el.id,el.value.trim()]));
+const getValidated = () => {
+  const v=getValues();
+  const phone=v.phone&&validPhone(v.phone)?normalizedPhone(v.phone):"";
+  const email=v.email&&validEmail(v.email)?v.email:"";
+  const booking=safeHttps(v.booking);
+  let error="";
+  if(!v.name)error="Enter a business name.";
+  else if(v.phone&&!phone)error="Use a valid backup phone number with 7–15 digits.";
+  else if(v.email&&!email)error="Use a valid backup email address.";
+  else if(v.booking&&!booking)error="Use a valid HTTPS booking URL.";
+  else if(!phone&&!email)error="Add an independent phone number or backup email.";
+  return {v,phone,email,booking,error};
+};
+const addLink = (container,label,href) => {const a=document.createElement("a");a.textContent=label;a.href=href;if(href.startsWith("https:")){a.target="_blank";a.rel="noopener noreferrer";}container.append(a);};
+function redraw(){
+  const {v,phone,email,booking,error}=getValidated();
+  $("preview-name").textContent=v.name||"Your business";
+  $("preview-message").textContent=v.message||"Alternate ways to contact us.";
+  const container=$("preview-links");container.replaceChildren();
+  if(phone)addLink(container,"Call or text: "+v.phone,"tel:"+phone);
+  if(email)addLink(container,"Email: "+email,"mailto:"+email);
+  if(booking)addLink(container,"Book an appointment",booking);
+  if(!phone&&!email)container.textContent="No backup contact channel entered yet.";
+  button.disabled=Boolean(error);
+  status.textContent=error||"Ready. Download and publish your backup page on independent hosting.";
+  status.classList.toggle("warn",Boolean(error));
+}
+function generatedHtml(x){
+ const {v,phone,email,booking}=x;
+ const links=[
+ phone?'<p><a href="tel:'+escapeHtml(phone)+'">Call or text: '+escapeHtml(v.phone)+'</a></p>':"",
+ email?'<p><a href="mailto:'+escapeHtml(email)+'">Email: '+escapeHtml(email)+'</a></p>':"",
+ booking?'<p><a href="'+escapeHtml(booking)+'" rel="noopener noreferrer">Request an appointment</a></p>':""
+ ].join("");
+ return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Backup contact | '+escapeHtml(v.name)+'</title><style>body{margin:0;background:#0c1b25;color:#fff;font:18px/1.55 system-ui,sans-serif}.wrap{max-width:670px;margin:10vh auto;padding:24px}h1{line-height:1.15;font-size:clamp(2rem,6vw,3.5rem)}p{overflow-wrap:anywhere}a{color:#9deafa}small{color:#c5d9e4}</style></head><body><main class="wrap"><small>Alternate contact route</small><h1>'+escapeHtml(v.name)+'</h1><p>'+escapeHtml(v.message||"Please use these backup options to reach us.")+'</p>'+links+'<small>If your matter is urgent, call directly. Do not send passwords or sensitive records through an unverified channel.</small></main></body></html>';
+}
+button.addEventListener("click",()=>{
+ const x=getValidated();if(x.error){redraw();return;}
+ const blob=new Blob([generatedHtml(x)],{type:"text/html;charset=utf-8"});
+ const url=URL.createObjectURL(blob);const a=document.createElement("a");
+ a.href=url;a.download="emergency-contact.html";document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),30000);
+ status.textContent="File generated locally. Publish on independent hosting, then test from another device and network.";
+});
+$("print").addEventListener("click",()=>window.print());
+els.forEach(el=>el.addEventListener("input",redraw));redraw();
+})();
+</script>
+</body></html>

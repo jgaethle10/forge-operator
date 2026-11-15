@@ -8,6 +8,9 @@ BROKER_DEPLOYMENT_ID=""
 RUN_USER=""
 CADENCE="2min"
 MAX_INTENTS="16"
+UNIFIED_CONTENT_HASH="false"
+BROKER_LOOPBACK_ORIGIN=""
+MAX_JOBS="4"
 
 usage(){
   cat <<'EOF'
@@ -18,6 +21,8 @@ Usage:
     --saban-state-dir /var/lib/evercraft/saban-capacity \
     --broker-deployment-id <existing-yard-broker-deployment> \
     [--user user] [--cadence 2min] [--max-intents 16]
+    [--unified-content-hash-dispatch] [--max-jobs 4]
+    [--broker-loopback-origin http://127.0.0.1:8797]
 
 Installs the Yard-owned bridge that:
   - refreshes Saban's sanitized NodeSeed inventory from Yard;
@@ -25,6 +30,13 @@ Installs the Yard-owned bridge that:
   - never writes allocator/control tokens into Saban state.
 
 It does NOT deploy a broker, authorize a remote device, or permit paid capacity.
+The opt-in unified mode becomes the sole Saban dispatcher on this host:
+  - stops the independent Saban dispatch timer after checking it is idle;
+  - re-verifies the existing broker identity on each cycle;
+  - plans only authorized zero-cost NodeSeed SHA-256 work;
+  - dispatches and verifies up to four jobs per cycle;
+  - holds uncertain outcomes for manual review without auto retry.
+Never enable unified mode without inspecting the existing Saban state and services.
 EOF
 }
 
@@ -37,6 +49,9 @@ while [[ $# -gt 0 ]]; do
     --user) RUN_USER="${2:-}"; shift 2 ;;
     --cadence) CADENCE="${2:-}"; shift 2 ;;
     --max-intents) MAX_INTENTS="${2:-}"; shift 2 ;;
+    --max-jobs) MAX_JOBS="${2:-}"; shift 2 ;;
+    --unified-content-hash-dispatch) UNIFIED_CONTENT_HASH="true"; shift ;;
+    --broker-loopback-origin) BROKER_LOOPBACK_ORIGIN="${2:-}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "ERROR: unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -58,11 +73,23 @@ done
   echo "ERROR: cadence must look like 30s, 2min, or 1h." >&2; exit 2;
 }
 [[ "$MAX_INTENTS" =~ ^[1-9][0-9]*$ ]] || { echo "ERROR: --max-intents must be positive." >&2; exit 2; }
+[[ "$MAX_JOBS" =~ ^[1-9][0-9]*$ ]] || { echo "ERROR: --max-jobs must be positive." >&2; exit 2; }
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  [[ "$BROKER_LOOPBACK_ORIGIN" =~ ^http://127\.0\.0\.1:[0-9]{1,5}$ ]] || {
+    echo "ERROR: unified dispatch requires an explicit loopback broker origin." >&2; exit 2;
+  }
+  command -v flock >/dev/null || { echo "ERROR: flock is required." >&2; exit 2; }
+  if systemctl is-active --quiet evercraft-saban-dispatch.service; then
+    echo "ERROR: independent Saban dispatch is running; retry when it is idle." >&2
+    exit 3
+  fi
+elif [[ -n "$BROKER_LOOPBACK_ORIGIN" ]]; then
+  echo "ERROR: loopback origin is only allowed in explicit unified mode." >&2
+  exit 2
+fi
 
 REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
 YARD_STATE_DIR="$(cd "$YARD_STATE_DIR" && pwd)"
-mkdir -p "$SABAN_STATE_DIR"
-SABAN_STATE_DIR="$(cd "$SABAN_STATE_DIR" && pwd)"
 NODE_BIN="$(command -v node || true)"
 [[ -n "$NODE_BIN" ]] || { echo "ERROR: node is required." >&2; exit 2; }
 
@@ -72,11 +99,44 @@ fi
 id "$RUN_USER" >/dev/null 2>&1 || { echo "ERROR: --user is not a local account." >&2; exit 2; }
 RUN_GROUP="$(id -gn "$RUN_USER")"
 
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  [[ -f "$REPO_ROOT/systemia/saban/nodeseed-worker-completion-verifier.mjs" ]] || {
+    echo "ERROR: installed source lacks the verified worker receipt gate." >&2; exit 3;
+  }
+  grep -q 'unified_dispatch_enabled' "$REPO_ROOT/systemia/yard/saban-intent-drain-runner.mjs" && \
+    grep -q 'remote_job_outcome_unknown' "$REPO_ROOT/systemia/saban/nodeseed-intent-executor.mjs" || {
+    echo "ERROR: installed source lacks the unified dispatch and uncertain-result hold implementation." >&2
+    exit 3
+  }
+  if [[ -d "$SABAN_STATE_DIR" ]]; then
+    SABAN_OWNER="$(stat -c '%U' "$SABAN_STATE_DIR")"
+    [[ "$SABAN_OWNER" == "$RUN_USER" ]] || {
+      echo "ERROR: Saban state owner differs from Yard runner user; refusing to change ownership." >&2
+      exit 3
+    }
+  fi
+fi
+mkdir -p "$SABAN_STATE_DIR"
+SABAN_STATE_DIR="$(cd "$SABAN_STATE_DIR" && pwd)"
+
 BROKER_RECORD="$YARD_STATE_DIR/$BROKER_DEPLOYMENT_ID.json"
 [[ -s "$BROKER_RECORD" ]] || {
   echo "ERROR: configured broker deployment does not exist in Yard state: $BROKER_RECORD" >&2
   exit 3
 }
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  command -v runuser >/dev/null || { echo "ERROR: runuser required for access preflight." >&2; exit 3; }
+  runuser -u "$RUN_USER" -- test -r "$BROKER_RECORD" || {
+    echo "ERROR: configured Yard user cannot read the broker deployment record." >&2; exit 3;
+  }
+  runuser -u "$RUN_USER" -- test -w "$YARD_STATE_DIR" || {
+    echo "ERROR: configured Yard user cannot persist verified route state." >&2; exit 3;
+  }
+  runuser -u "$RUN_USER" -- test -r "$YARD_STATE_DIR/.lease-secrets/$BROKER_DEPLOYMENT_ID.json" || {
+    echo "ERROR: configured Yard user cannot read private lease authority." >&2; exit 3;
+  }
+fi
+
 node - "$BROKER_RECORD" <<'NODE'
 const fs=require('fs');
 const row=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
@@ -93,6 +153,62 @@ NODE
 install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0750 "$SABAN_STATE_DIR"
 install -d -m 0755 /etc/evercraft
 
+# Prevent competing schedulers from both claiming and mutating a work queue.
+# Only the explicit unified installation changes the existing Saban timer.
+# Back up any existing unit/environment files so a failed installation can
+# restore the previous service definitions, not merely re-enable stale timers.
+OLD_SABAN_TIMER_ENABLED="false"
+OLD_YARD_TIMER_ENABLED="false"
+RESTORE_TIMERS_ON_FAILURE="false"
+ROLLBACK_DIR=""
+ROLLBACK_PATHS=(
+  /etc/systemd/system/evercraft-yard-saban-intent-drain.service
+  /etc/systemd/system/evercraft-yard-saban-intent-drain.timer
+  /etc/evercraft/yard-saban-intent-drain.env
+)
+restore_timers_on_failure() {
+  if [[ "$RESTORE_TIMERS_ON_FAILURE" == "true" ]]; then
+    systemctl disable --now evercraft-yard-saban-intent-drain.timer >/dev/null 2>&1 || true
+    for existing in "${ROLLBACK_PATHS[@]}"; do
+      saved="$ROLLBACK_DIR/$(basename "$existing")"
+      if [[ -f "$saved" ]]; then
+        cp -p "$saved" "$existing"
+      else
+        rm -f "$existing"
+      fi
+    done
+    systemctl daemon-reload || true
+    if [[ "$OLD_YARD_TIMER_ENABLED" == "true" ]]; then
+      systemctl enable --now evercraft-yard-saban-intent-drain.timer >/dev/null 2>&1 || true
+    fi
+    if [[ "$OLD_SABAN_TIMER_ENABLED" == "true" ]]; then
+      systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || true
+    fi
+  fi
+  if [[ -n "$ROLLBACK_DIR" ]]; then
+    rm -rf -- "$ROLLBACK_DIR"
+  fi
+}
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  systemctl is-enabled --quiet evercraft-saban-dispatch.timer && OLD_SABAN_TIMER_ENABLED="true" || true
+  systemctl is-enabled --quiet evercraft-yard-saban-intent-drain.timer && OLD_YARD_TIMER_ENABLED="true" || true
+  ROLLBACK_DIR="$(mktemp -d /tmp/evercraft-yard-saban-rollback-XXXXXX)"
+  chmod 0700 "$ROLLBACK_DIR"
+  for existing in "${ROLLBACK_PATHS[@]}"; do
+    if [[ -f "$existing" ]]; then
+      cp -p "$existing" "$ROLLBACK_DIR/$(basename "$existing")"
+    fi
+  done
+  RESTORE_TIMERS_ON_FAILURE="true"
+  trap restore_timers_on_failure EXIT
+  systemctl disable --now evercraft-saban-dispatch.timer 2>/dev/null || true
+  if systemctl is-active --quiet evercraft-saban-dispatch.timer || \
+     systemctl is-active --quiet evercraft-saban-dispatch.service; then
+    echo "ERROR: independent Saban dispatcher must be stopped before unified activation." >&2
+    exit 3
+  fi
+fi
+
 ENV_FILE=/etc/evercraft/yard-saban-intent-drain.env
 cat > "$ENV_FILE" <<EOF
 EVERCRAFT_YARD_STATE_DIR=$YARD_STATE_DIR
@@ -100,6 +216,15 @@ SABAN_AMBIENT_STATE_DIR=$SABAN_STATE_DIR
 EVERCRAFT_REMOTE_BROKER_DEPLOYMENT_ID=$BROKER_DEPLOYMENT_ID
 EOF
 chmod 0644 "$ENV_FILE"
+
+RUNNER_FLAGS="--max-intents $MAX_INTENTS"
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  RUNNER_FLAGS="$RUNNER_FLAGS --dispatch-content-hash-only --max-jobs $MAX_JOBS --allow-loopback-proof --broker-loopback-origin $BROKER_LOOPBACK_ORIGIN"
+  FLOCK_BIN="$(command -v flock)"
+  EXEC_START="$FLOCK_BIN --nonblock $SABAN_STATE_DIR/.yard-saban-unified.lock $NODE_BIN $REPO_ROOT/systemia/yard/saban-intent-drain-runner.mjs $RUNNER_FLAGS"
+else
+  EXEC_START="$NODE_BIN $REPO_ROOT/systemia/yard/saban-intent-drain-runner.mjs $RUNNER_FLAGS"
+fi
 
 cat >/etc/systemd/system/evercraft-yard-saban-intent-drain.service <<EOF
 [Unit]
@@ -113,7 +238,7 @@ User=$RUN_USER
 Group=$RUN_GROUP
 WorkingDirectory=$REPO_ROOT
 EnvironmentFile=$ENV_FILE
-ExecStart=$NODE_BIN $REPO_ROOT/systemia/yard/saban-intent-drain-runner.mjs --max-intents $MAX_INTENTS
+ExecStart=$EXEC_START
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
@@ -144,10 +269,21 @@ EOF
 
 systemctl daemon-reload
 systemctl enable --now evercraft-yard-saban-intent-drain.timer
-systemctl start evercraft-yard-saban-intent-drain.service || true
+if [[ "$UNIFIED_CONTENT_HASH" == "true" ]]; then
+  # In opt-in unattended mode, installation is not successful until the
+  # first identity-checked, bounded service cycle finishes successfully.
+  systemctl start evercraft-yard-saban-intent-drain.service
+  RESTORE_TIMERS_ON_FAILURE="false"
+  restore_timers_on_failure
+  trap - EXIT
+else
+  systemctl start evercraft-yard-saban-intent-drain.service || true
+fi
 
 echo "Yard/Saban NodeSeed intent drainer installed."
 echo "Broker deployment: $BROKER_DEPLOYMENT_ID"
 echo "Safe Saban inventory: $SABAN_STATE_DIR/nodeseed-capacity-inventory.json"
 echo "Drain receipt: $SABAN_STATE_DIR/yard-saban-intent-drain.json"
 echo "Authority material persisted into Saban state: false"
+echo "Unified content-hash dispatch enabled: $UNIFIED_CONTENT_HASH"
+echo "Unattended workload policy: systemia.content-hash.v1 only"

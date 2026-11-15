@@ -8,14 +8,21 @@ on:
       - 'public/**'
       - 'systemia/newsroom/**'
       - 'systemia/graphics-command/ranking-poster-renderer.mjs'
+      - 'systemia/graphics-command/commercial-renderer.mjs'
+      - 'systemia/graphics-command/campaigns/website-audit-attention.json'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
       - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'scripts/probe-boardroom-public.mjs'
+      - 'scripts/probe-work-saban-share-public.mjs'
       - 'scripts/probe-subsea-watch-public.mjs'
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/domain-authority/**'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/product-url-fabric.test.mjs'
+      - 'tests/boardroom-heritage.test.mjs'
+      - 'tests/boardroom-compare.test.mjs'
       - 'tests/clip-public-entry.test.mjs'
       - '.github/workflows/evercraft-journal-pages.yml'
   workflow_dispatch:
@@ -123,6 +130,10 @@ jobs:
           test -s _public_pages/partners/social-card.svg
           python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/partners/social-card.svg", write_to="_public_pages/partners/social-card.png", output_width=1200, output_height=630)'
           test -s _public_pages/partners/social-card.png
+          # Work Saban uses its exact first-party crimson SVG identity, not a generated substitute.
+          test -s _public_pages/work-saban/brand/work-saban-social.svg
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/work-saban/brand/work-saban-social.svg", write_to="_public_pages/work-saban/brand/work-saban-social.png", output_width=1200, output_height=630)'
+          test -s _public_pages/work-saban/brand/work-saban-social.png
           python systemia/clip/build-audience-social-previews.py \
             --source public/clip/audience-sites \
             --destination _public_pages/clip/audience-sites
@@ -159,28 +170,30 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
           EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
+          # Publish a real PNG (not SVG) that Facebook, LinkedIn and Messenger can preview.
+          # Its content is generated from the same owned Evercraft commercial renderer.
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {renderCommercialPoster} from './systemia/graphics-command/commercial-renderer.mjs';
+          const campaign=JSON.parse(fs.readFileSync('systemia/graphics-command/campaigns/website-audit-attention.json','utf8'));
+          const dir='_public_pages/visuals/website-audit-attention';
+          fs.mkdirSync(dir,{recursive:true});
+          fs.writeFileSync(path.join(dir,'preview-og-v2.svg'),renderCommercialPoster(campaign,null,'social-wide'),'utf8');
+          NODE
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/visuals/website-audit-attention/preview-og-v2.svg", write_to="_public_pages/visuals/website-audit-attention/preview-og-v2.png", output_width=1200, output_height=630)'
+          python -c 'from pathlib import Path; import struct; p=Path("_public_pages/visuals/website-audit-attention/preview-og-v2.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630) and len(p)<4_000_000; print("WEBSITE_AUDIT_REAL_OG_PNG_BUILT")'
           test -f _public_pages/visuals/index.html
           test -f _public_pages/visuals/index.json
           test -f _public_pages/visuals/washington-active-volcanoes/index.html
           test -f _public_pages/visuals/washington-active-volcanoes/card-story.svg
           test -f _public_pages/visuals/washington-active-volcanoes/motion.html
           touch _public_pages/.nojekyll
-          cat > _public_pages/index.html <<'HTML'
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width,initial-scale=1">
-            <title>Evercraft Public Directory</title>
-            <meta http-equiv="refresh" content="0; url=/forge-operator/chum/">
-            <link rel="canonical" href="/forge-operator/chum/">
-          </head>
-          <body>
-            <p><a href="/forge-operator/chum/">Open Evercraft public directory</a></p>
-            <p><a href="/forge-operator/site-status/roman/">Independent Roman website recovery directory</a></p>
-          </body>
-          </html>
-          HTML
+          # Corporate front door belongs at the root; technical discovery remains at /chum/.
+          # Do not replace the visitor homepage with a machine directory redirect.
+          test -s _public_pages/headquarters/index.html
+          grep -Fq 'id="hero-title"' _public_pages/headquarters/index.html
+          cp _public_pages/headquarters/index.html _public_pages/index.html
           node <<'NODE'
           const fs=require('fs');
           const path=require('path');
@@ -210,6 +223,10 @@ jobs:
           test -f _public_pages/chum/index.html
           test -f _public_pages/chum/products/infinite-classroom/index.html
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
+          test -s _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Reading Treehouse' _public_pages/apps/infinite-classroom/play/index.html
+          grep -q 'Offline study steps · generic hints' _public_pages/apps/infinite-classroom/play/index.html
+          test -s _public_pages/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
           test -f _public_pages/eps/index.html
@@ -235,6 +252,13 @@ jobs:
           grep -q 'Roman Kilinkaridis' _public_pages/campaigns/roman/index.html
           grep -q 'https://donate.voteroman.com/' _public_pages/campaigns/roman/index.html
 
+      - name: Assert Closeout files are included in the Pages artifact
+        if: steps.page_state.outputs.enabled == 'true'
+        run: |
+          test -s _public_pages/closeout/index.html
+          test -s _public_pages/closeout/product.json
+          test -s _public_pages/closeout/llms.txt
+
       - name: Upload Pages artifact
         if: steps.page_state.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
@@ -256,6 +280,23 @@ jobs:
       - name: Deploy Evercraft public directory
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify Evercraft Headquarters at the public HTTPS root
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${base%/}/" -o /tmp/evercraft-headquarters-root.html
+          grep -Fq '<title>Evercraft | Built to Endure. Designed to Empower.</title>' /tmp/evercraft-headquarters-root.html
+          grep -Fq 'id="hero-title"' /tmp/evercraft-headquarters-root.html
+          grep -Fq 'Built to endure.' /tmp/evercraft-headquarters-root.html
+          ! grep -Fq 'http-equiv="refresh"' /tmp/evercraft-headquarters-root.html
+          {
+            echo '## Evercraft Headquarters public root verified'
+            echo
+            echo "Public company homepage: ${base%/}/"
+            echo 'HEADQUARTERS_PUBLIC_ROOT_HTTPS_VERIFIED'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Verify Signal one-time buyer scope assets over public HTTPS
         shell: bash
@@ -299,6 +340,11 @@ jobs:
             echo "Clip: ${clip} (HTML, JS, status); legacy alias: ${alias}"
             echo 'Workstation and locally prepared handoffs are available; direct social publishing is not certified.'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Work Saban free CSV reporter, owned sharing and preview over public HTTPS
+        env:
+          WORK_SABAN_PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/probe-work-saban-share-public.mjs
 
       - name: Verify ForensiScope fallback buyer page over deployed HTTPS
         shell: bash
@@ -420,6 +466,10 @@ jobs:
             echo "Store review and real logged-in social-feed compatibility are independent gates."
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Verify Infinite Classroom learning worlds on deployed HTTPS
+        shell: bash
+        run: node scripts/probe-infinite-classroom-public.mjs "${{ steps.deployment.outputs.page_url }}"
+
       - name: Verify customer fallback doors
         shell: bash
         run: |
@@ -462,6 +512,18 @@ jobs:
           printf '%s' "$visual_body" | grep -q 'Washington'
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
+          # Public HTTPS proof for the image referenced by Fabric's Open Graph tags.
+          audit_og="${base%/}/visuals/website-audit-attention/preview-og-v2.png"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 \
+            "$audit_og" -o /tmp/evercraft-audit-og-live.png
+          python - <<'PY'
+          from pathlib import Path
+          import struct
+          payload=Path('/tmp/evercraft-audit-og-live.png').read_bytes()
+          assert payload[:8]==bytes.fromhex('89504e470d0a1a0a'), 'audit OG preview was not PNG'
+          assert struct.unpack('>II',payload[16:24])==(1200,630), 'audit OG preview dimensions incorrect'
+          print('WEBSITE_AUDIT_OG_PNG_LIVE_HTTPS_VERIFIED')
+          PY
           # Confirm real browser-supported social previews exist after deployment.
           preview="${base%/}/audience-sites/partscout/share.png"
           curl --fail --silent --show-error --retry 8 --retry-all-errors \
@@ -510,3 +572,16 @@ jobs:
             echo "Visual Desk specimen: $visual"
             echo "Roman campaign emergency mirror: $roman"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Closeout deployed page, product offer and HTTPS boundaries
+        shell: bash
+        run: node scripts/probe-closeout-public.mjs "${{ steps.deployment.outputs.page_url }}"
+
+      - name: Preserve Closeout public HTTPS evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-closeout-public-canary
+          path: artifacts/closeout-public-canary.json
+          if-no-files-found: warn
+          retention-days: 30

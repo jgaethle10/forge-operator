@@ -1,0 +1,23 @@
+name: Open Conflict safety tests
+on:
+  push:
+    paths:
+      - 'docs/products/open-conflict/**'
+      - '.github/workflows/open-conflict-tests.yml'
+  pull_request:
+    paths:
+      - 'docs/products/open-conflict/**'
+      - '.github/workflows/open-conflict-tests.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Open Conflict safety regression suite
+        run: node --test docs/products/open-conflict/prototype/*.test.mjs

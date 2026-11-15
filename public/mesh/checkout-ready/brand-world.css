@@ -1,0 +1,44 @@
+/* Evercraft OS: individual commercial product visual identity system.
+   Original CSS-only styling; no third-party fonts, assets, analytics or scripts. */
+body.brand-world{
+ --bg:var(--identity-bg);--card:var(--identity-panel);--panel:var(--identity-panel);
+ --line:color-mix(in srgb,var(--identity-accent) 30%,var(--identity-bg));
+ --ink:var(--identity-ink);--muted:var(--identity-muted);--mint:var(--identity-accent);
+ color:var(--identity-ink);
+ background:radial-gradient(ellipse at 88% -6%,color-mix(in srgb,var(--identity-accent) 17%,transparent),transparent 42%),var(--identity-bg);
+}
+body.brand-world .brand-stage {position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(130px,.45fr) minmax(0,1.55fr);align-items:center;gap:clamp(16px,4vw,38px);padding:clamp(22px,4vw,42px);margin:18px 0 31px;border:1px solid color-mix(in srgb,var(--identity-accent) 42%,var(--identity-bg));border-radius:var(--identity-radius,18px);background:color-mix(in srgb,var(--identity-panel) 92%,var(--identity-bg));}
+body.brand-world .brand-stage::before {content:'';position:absolute;inset:0;z-index:-1;opacity:.24;pointer-events:none;background:var(--identity-pattern,linear-gradient(transparent,transparent))}
+body.brand-world .brand-emblem {height:clamp(118px,16vw,190px);width:100%;display:grid;place-items:center;aspect-ratio:1;color:var(--identity-accent);background:radial-gradient(circle,color-mix(in srgb,var(--identity-accent) 13%,transparent),transparent 67%)}
+body.brand-world .brand-emblem svg{width:min(82%,164px);height:auto;overflow:visible}
+body.brand-world .brand-intro {min-width:0}
+body.brand-world .brand-overline{color:var(--identity-accent);font-size:.73rem;font-weight:850;letter-spacing:.17em;text-transform:uppercase}
+body.brand-world .brand-intro h2{font-family:var(--identity-display,ui-sans-serif,system-ui,sans-serif);font-size:clamp(2rem,5vw,3.7rem);font-weight:var(--identity-weight,800);line-height:1.04;letter-spacing:-.05em;color:var(--identity-ink);margin:12px 0 14px}
+body.brand-world .brand-intro p{color:var(--identity-muted);line-height:1.7;margin:12px 0}
+body.brand-world .brand-intro .brand-belief{font-size:.94rem;color:var(--identity-ink);border-left:3px solid var(--identity-accent);padding-left:14px;margin-top:18px}
+body.brand-world .brand-intro .brand-purpose{font-size:.84rem;letter-spacing:.02em}
+body.brand-world .brand-intro .brand-purpose strong{color:var(--identity-accent)}
+body.brand-world .commercial-product{background:color-mix(in srgb,var(--identity-panel) 91%,var(--identity-bg));border-radius:var(--identity-radius,18px);border-color:var(--line)}
+body.brand-world .card,body.brand-world .policy{background:var(--identity-panel);border-color:var(--line)}
+body.brand-world .tag,body.brand-world .product-label{color:var(--identity-accent)}
+body.brand-world header{background:color-mix(in srgb,var(--identity-bg) 93%,transparent);border-color:var(--line)}
+body.brand-world header a{color:var(--identity-ink);text-decoration:none}
+body.brand-world header .brand-mini{font-family:var(--identity-display,system-ui,sans-serif);font-weight:850;letter-spacing:.01em;font-size:1rem;text-transform:none}
+body.brand-world header .brand-parent{font-family:system-ui,sans-serif;color:var(--identity-accent);letter-spacing:.09em;font-weight:650;font-size:.68rem;white-space:nowrap}
+body.brand-world .hero h1{color:var(--identity-ink)}
+body.brand-world a:not(.button):not(.primary){color:var(--identity-accent)}
+body.brand-world .button.primary,body.brand-world .primary{background:var(--identity-accent);border-color:var(--identity-accent);color:var(--identity-bg)}
+body.brand-world .price{color:var(--identity-secondary)}
+body.brand-world .brand-stage a:focus-visible,body.brand-world a:focus-visible,body.brand-world input:focus-visible{outline:3px solid var(--identity-secondary);outline-offset:4px}
+body.brand-world.identity-social-media-weekly{--identity-radius:24px;--identity-weight:900;--identity-display:ui-sans-serif,system-ui,sans-serif;--identity-pattern:repeating-linear-gradient(90deg,transparent 0 42px,rgba(255,255,255,.09) 43px,transparent 44px)}
+body.brand-world.identity-asset-diagnosis{--identity-radius:8px;--identity-weight:680;--identity-display:ui-sans-serif,system-ui,sans-serif;--identity-pattern:linear-gradient(90deg,rgba(255,255,255,.11) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.11) 1px,transparent 1px);--identity-grid-size:28px}
+body.brand-world.identity-asset-diagnosis .brand-stage::before{background-size:28px 28px}
+body.brand-world.identity-ai-boardroom-standard{--identity-radius:3px;--identity-display:Georgia,"Iowan Old Style",serif;--identity-weight:500;--identity-pattern:repeating-linear-gradient(90deg,transparent 0 76px,rgba(235,216,172,.08) 77px,transparent 78px)}
+body.brand-world.identity-ai-boardroom-financial-modeling{--identity-radius:6px;--identity-display:Georgia,"Iowan Old Style",serif;--identity-weight:500;--identity-pattern:linear-gradient(90deg,rgba(255,255,255,.10) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.10) 1px,transparent 1px)}
+body.brand-world.identity-ai-boardroom-financial-modeling .brand-stage::before{background-size:44px 44px}
+body.brand-world.identity-knowledge-activation{--identity-radius:13px;--identity-display:Georgia,"Iowan Old Style",serif;--identity-weight:550;--identity-pattern:repeating-linear-gradient(0deg,transparent 0 25px,rgba(255,255,255,.10) 26px,transparent 27px)}
+body.brand-world.identity-social-intelligence-launch{--identity-radius:26px;--identity-display:ui-sans-serif,system-ui,sans-serif;--identity-weight:760;--identity-pattern:radial-gradient(circle,rgba(255,255,255,.4) 1px,transparent 2px)}
+body.brand-world.identity-social-intelligence-launch .brand-stage::before{background-size:43px 43px}
+body.brand-world.identity-institutional-memory-system{--identity-radius:3px;--identity-display:Georgia,"Iowan Old Style",serif;--identity-weight:500;--identity-pattern:repeating-radial-gradient(circle at 16% 50%,transparent 0 16px,rgba(255,255,255,.09) 17px,transparent 18px)}
+@media(max-width:580px){body.brand-world .brand-stage{grid-template-columns:1fr;padding:22px}body.brand-world .brand-emblem{height:116px;width:116px;justify-self:start}body.brand-world .brand-intro h2{font-size:clamp(2rem,9vw,3rem)}body.brand-world header .brand-parent{display:block}}
+@media(prefers-reduced-motion:reduce){body.brand-world *{scroll-behavior:auto}}

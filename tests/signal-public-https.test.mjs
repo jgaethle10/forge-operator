@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { verifySignalPublic } from '../scripts/probe-signal-public.mjs';
 
-const html='<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>Savannah River Laboratory Fire | Evercraft Signal</title></head><body><main id="known"><section id="timeline"></section><section id="sources"></section><p>No live feed connected</p><p>not live radiation monitoring</p><a href="./incidents/savannah-river-20261028.json">Case data</a></main></body></html>';
+const html='<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>Savannah River Laboratory Fire | Evercraft Signal</title></head><body><main id="known"><form id="signal-inquiry"><input id="signal-email" type="email"/><span>api/signal/inquiry</span><span>api/signal/readiness</span><button>Use email instead</button></form><section id="timeline"></section><section id="sources"></section><p>No live feed connected</p><p>not live radiation monitoring</p><a href="./incidents/savannah-river-20261028.json">Case data</a></main></body></html>';
 const data={schema:'evercraft.signal.incident.v1',id:'us-sc-savannah-river-laboratory-fire-2026-10-28',monitoring_state:'static_editorial_case_not_live',official_emergency_status:'terminated',editorial_snapshot_date:'2026-10-29',sources:[{id:'1'},{id:'2'},{id:'3'}],verified:[{claim:'A',source_ids:['1']}],reported_not_confirmed:[{claim:'B',source_ids:['2']}],timeline:[{event:'C',source_ids:['3']}]};
 const root='https://jgaethle10.github.io/forge-operator/';
 function responses({page=html,caseData=data,status=200}={}) {

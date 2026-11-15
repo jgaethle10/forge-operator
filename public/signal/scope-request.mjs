@@ -18,6 +18,8 @@ function field(value, label, min, max, optional = false) {
 
 export function prepareSignalInquiry(input = {}) {
   const incident = field(input.incident, 'Incident or facility', 4, 120);
+  const email = field(input.email, 'Reply email', 0, 200, true);
+  if(email&&!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email))throw new Error('Reply email must be valid.');
   const question = field(input.question, 'Decision or evidence question', 15, 500);
   const location = field(input.location, 'Location', 0, 120, true);
   const organization = field(input.organization, 'Organization', 0, 100, true);
@@ -37,6 +39,9 @@ export function prepareSignalInquiry(input = {}) {
   const body = [
     'EVERCRAFT SIGNAL | INCIDENT EVIDENCE BRIEF',
     'I would like a scope review for the proposed $250 USD founding pilot.',
+    '',
+    'REPLY EMAIL',
+    email||'Please reply directly to this message',
     '',
     'INCIDENT OR FACILITY',
     incident,
@@ -58,7 +63,7 @@ export function prepareSignalInquiry(input = {}) {
     '',
     'PURCHASE STATUS',
     'This email is a request, not a paid order or authorization to charge.',
-    'Please confirm exact scope, delivery date, final price and an official matching payment route before I pay.',
+    'Please confirm the bounded scope, delivery date, final price, and the exact Evercraft Payments order for Signal before I pay. No unrelated payment link.',
     '',
     'No passwords, payment cards or sensitive records are included in this request.'
   ].join('\n');

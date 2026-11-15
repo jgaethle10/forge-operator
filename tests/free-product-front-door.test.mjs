@@ -9,7 +9,7 @@ const readme=read('README.md');
 const tools=[
  {name:'AI Boardroom',path:'public/mesh/ai-boardroom/compare/index.html',target:'../mesh/ai-boardroom/compare/'},
  {name:'Evercraft Research',path:'public/research/index.html',target:'../research/'},
- {name:'Work Saban',path:'public/work-saban/demo/index.html',target:'../work-saban/demo/'}
+ {name:'Work Saban',path:'public/work-saban/report/index.html',target:'../work-saban/report/'}
 ];
 test('three real, existing free browser experiences have a public shared entrance',()=>{
  assert.equal((hub.match(/class="card"/g)||[]).length,3);
@@ -29,6 +29,11 @@ test('free product claims stay truthful; payments are optional follow-up',()=>{
  assert.match(hub,/does not call remote AI models/i);
  assert.match(hub,/not a completed fact-checked report/i);
  assert.match(hub,/Sample data only/i);
+ assert.match(hub,/No account or file upload/i);
+ assert.match(hub,/work-saban\/report\/\?utm_source=evercraft_try/);
+ assert.match(hub,/work-saban\/demo\/\?utm_source=evercraft_try/);
+ assert.match(source,/free private monthly sales reporter/i);
+ assert.match(readme,/work-saban\/report\/\?utm_source=github_readme/);
  assert.doesNotMatch(hub,/Buy now|Guaranteed results|instant paid/i);
  assert.match(hub,/The checkout system is infrastructure, not the product/i);
  assert.match(source,/not a claim of live multi-agent/i);

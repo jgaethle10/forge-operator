@@ -5,7 +5,7 @@ import path from 'node:path';
 import {EvercraftPassport} from '../passport/passport.mjs';
 import {resolveFacebookPageCredential} from './facebook-page-credential-resolver.mjs';
 import {runWorkSabanFacebookCycle} from './work-saban-facebook-resident.mjs';
-import {WORK_SABAN_SUBJECT} from './work-saban-publish-authorize.mjs';
+import {WORK_SABAN_SUBJECT,loadWorkSabanClipAuthority,installWorkSabanClipGrant} from './work-saban-publish-authorize.mjs';
 const arg=(key,fallback='')=>{
   const i=process.argv.indexOf(key);
   return i<0?fallback:(process.argv[i+1]||fallback);
@@ -27,6 +27,19 @@ if(fire&&missing.length){
  process.exit(0);
 }
 const passport=fire?new EvercraftPassport({stateDir:path.resolve(passportStateDir)}):null;
+let grantStatus='not_requested';
+if(fire){
+  try{
+    const approved=loadWorkSabanClipAuthority({repoRoot,now:new Date()});
+    const receipt=installWorkSabanClipGrant({passport,receipt:approved,now:new Date()});
+    grantStatus=receipt.status;
+  }catch(error){
+    const safe=String(error?.message||'issuer_unavailable').slice(0,150);
+    process.stdout.write(JSON.stringify({status:'blocked_issuer_receipt',reason:safe,
+      fire,post_submitted:false,secret_material_returned:false})+'\n');
+    process.exit(0);
+  }
+}
 const r=await runWorkSabanFacebookCycle({
  repoRoot,stateDir:path.resolve(stateDir||path.join(process.cwd(),'.work-saban-clip-dryrun')),
  expectedPageId,fire,
@@ -35,7 +48,10 @@ const r=await runWorkSabanFacebookCycle({
    scope,resource_ref,at:new Date().toISOString()
  }):undefined,
  credentialResolver:fire?()=>resolveFacebookPageCredential({
-   credentialStateDir:path.resolve(credentialStateDir)
+   credentialStateDir:path.resolve(credentialStateDir),
+   env:{...env,CLIP_FACEBOOK_CREDENTIAL_REF:String(
+     env.EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_CREDENTIAL_REF || env.CLIP_FACEBOOK_CREDENTIAL_REF || ''
+   ).trim()}
  }):undefined
 });
-process.stdout.write(JSON.stringify(r)+'\n');
+process.stdout.write(JSON.stringify({...r,passport_grant_status:grantStatus})+'\n');

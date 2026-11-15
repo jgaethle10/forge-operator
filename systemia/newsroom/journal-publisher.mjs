@@ -227,9 +227,17 @@ function renderArticle(story, publicOrigin, { archived = false, rankingHeroUrl =
     ...(image ? { image: [imageUrl] } : {})
   };
 
-  const sections = story.sections.map((section) =>
-    `<section><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(section.body)}</p></section>`
-  ).join('\n');
+  const readingWords = [story.title, story.dek, ...story.sections.map((section) => section.heading + " " + section.body)]
+    .join(" ").trim().split(/\s+/).filter(Boolean).length;
+  const readingMinutes = Math.max(1, Math.ceil(readingWords / 210));
+  const tocHtml = story.sections.map((section, index) =>
+    `<li><a href="#story-section-${index + 1}">${escapeHtml(section.heading)}</a></li>`
+  ).join("\n");
+  const sections = story.sections.map((section, index) => {
+    const paragraphs = String(section.body).split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean)
+      .map((part) => `<p>${escapeHtml(part).replace(/\s*\n\s*/g, " ")}</p>`).join("\n");
+    return `<section id="story-section-${index + 1}"><h2>${escapeHtml(section.heading)}</h2>${paragraphs}</section>`;
+  }).join("\n");
 
   const uncertainty = unique(story.uncertainty_notes || []);
   const uncertaintyHtml = uncertainty.length
@@ -267,9 +275,10 @@ h1{font-size:clamp(2.4rem,7vw,5rem);line-height:1.02;letter-spacing:-.045em;marg
 .hero{margin:36px 0}.hero img{display:block;width:100%;border-radius:16px}.hero figcaption{color:var(--muted);font-size:.88rem;margin-top:9px}
 .ranking-surface{margin:38px 0}.ranking-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;border-bottom:1px solid #2b3535;padding-bottom:14px}.ranking-heading h2,.ranking-heading p{margin:0}.ranking-heading p{color:var(--muted);max-width:520px;text-align:right}.ranking-list{list-style:none;padding:0;margin:0}.ranking-row{display:grid;grid-template-columns:64px minmax(0,1fr) 58px 92px 112px;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #1f2929}.ranking-rank{font-size:1.12rem;font-weight:900;color:var(--gold)}.ranking-team{min-width:0;display:flex;flex-direction:column}.ranking-team strong{font-size:1.05rem;white-space:normal}.ranking-team span,.ranking-score span,.ranking-confidence span{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}.ranking-move{font-weight:800;text-align:center}.ranking-score,.ranking-confidence{display:flex;flex-direction:column;align-items:flex-end}.ranking-score strong,.ranking-confidence strong{font-variant-numeric:tabular-nums}
 @media(max-width:640px){.ranking-heading{display:block}.ranking-heading p{text-align:left;margin-top:6px}.ranking-row{grid-template-columns:48px minmax(0,1fr) 48px}.ranking-score,.ranking-confidence{grid-column:2;align-items:flex-start;display:inline-flex;flex-direction:row;gap:8px}.ranking-confidence{margin-top:-8px}.ranking-move{grid-column:3;grid-row:1 / span 3}.ranking-team strong{font-size:1rem}}
-section{margin:42px 0}h2{font-size:1.65rem;letter-spacing:-.02em}p{font-size:1.08rem}.evidence-box{border:1px solid #2b3535;background:var(--panel);padding:22px 24px;border-radius:14px;margin:40px 0}
+section{margin:42px 0}h2{font-size:1.65rem;letter-spacing:-.02em}p{font-size:1.08rem}.article-toc{border-top:1px solid #2b3535;border-bottom:1px solid #2b3535;margin:40px 0;padding:18px 0}.article-toc strong{color:var(--gold);text-transform:uppercase;font-size:.8rem;letter-spacing:.12em}.article-toc ol{padding-left:23px;columns:2;column-gap:28px}.article-toc li{break-inside:avoid;margin:8px 0}.article-toc a{color:#c6e6de}.read-aloud{margin:35px 0;padding:20px 24px;border:1px solid #395e58;background:#101e20;border-radius:10px}.read-aloud h2{font-family:Georgia,serif;font-weight:normal;margin:0;font-size:1.5rem}.read-aloud p{color:#b1c0bd;margin:7px 0;font-size:.85rem}.listen-controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px}.listen-controls button,.listen-controls select{background:#19332f;color:#eaf4ed;border:1px solid #456e65;border-radius:4px;min-height:44px;padding:9px 13px;font:inherit}.listen-controls button:first-child{background:#96daca;color:#0b241e;font-weight:700}.listen-controls button:disabled{opacity:.45;cursor:not-allowed}.listen-controls label{margin-left:auto;color:#b1c0bd;font-size:.8rem}.article-body{font-family:Georgia,"Times New Roman",serif;font-size:1.13rem;line-height:1.8}.article-body p{font-size:inherit}.article-body section{scroll-margin-top:24px}.read-aloud button:focus-visible,.read-aloud select:focus-visible{outline:2px solid #96daca;outline-offset:3px}@media(max-width:640px){.article-toc ol{columns:1}.read-aloud{padding:16px}.listen-controls label{margin-left:0}}.evidence-box{border:1px solid #2b3535;background:var(--panel);padding:22px 24px;border-radius:14px;margin:40px 0}
 .sources{border-top:1px solid #263030;padding-top:24px}.source-publisher{color:var(--muted)}footer{padding:28px 0 50px;color:var(--muted);border-top:1px solid #222b2b}
 </style>
+<script defer src="../assets/listen.js"></script>
 </head>
 <body>
 <header><div class="brand">Evercraft <span>Journal</span></div></header>
@@ -279,10 +288,21 @@ section{margin:42px 0}h2{font-size:1.65rem;letter-spacing:-.02em}p{font-size:1.0
 ${archived ? '<aside class="evidence-box"><strong>Archived analysis.</strong> This story remains available for durable reporting and source history, but its live freshness window has expired. It is not part of the current live edition.</aside>' : ''}
 <h1>${escapeHtml(story.title)}</h1>
 <p class="dek">${description}</p>
-<p class="meta">Published ${escapeHtml(new Date(story.published_at).toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'long',timeStyle:'short'}))} PT · Evidence state: ${escapeHtml(story.evidence_state || 'source-grounded')}</p>
+<p class="meta">Published ${escapeHtml(new Date(story.published_at).toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'long',timeStyle:'short'}))} PT · ${readingMinutes} min read · Evidence state: ${escapeHtml(story.evidence_state || 'source-grounded')}</p>
 ${heroHtml}
 ${rankingHtml}
-${sections}
+<nav class="article-toc" aria-label="In this article"><strong>In this article</strong><ol>${tocHtml}</ol></nav>
+<aside class="read-aloud" aria-label="Listen to this article">
+  <div><h2>Listen to this article</h2><p>Device-generated narration. Available when your browser supports speech synthesis.</p></div>
+  <div class="listen-controls">
+    <button type="button" id="play">Listen</button>
+    <button type="button" id="pause" disabled>Pause</button>
+    <button type="button" id="stop" disabled>Stop</button>
+    <label for="speed">Speed</label><select id="speed" aria-label="Read aloud speed"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+  <p id="listen-status" role="status" aria-live="polite">Press Listen to hear the article.</p>
+</aside>
+<div id="article-body" class="article-body">${sections}</div>
 ${uncertaintyHtml}
 <section class="sources"><h2>Sources and evidence</h2><ol>${renderSourceList(story)}</ol></section>
 </article>
@@ -293,19 +313,112 @@ ${uncertaintyHtml}
 }
 
 function renderIndex(stories, archivedStories = []) {
-  const cards = stories.map((story) => `<article><div class="kicker">${escapeHtml(story.desk)}</div><h2><a href="./${escapeHtml(story.slug)}/">${escapeHtml(story.title)}</a></h2><p>${escapeHtml(story.dek)}</p><div class="meta">${escapeHtml(new Date(story.published_at).toISOString().slice(0,10))}</div></article>`).join('\n');
-  const archiveCards = archivedStories.map((story) => `<article><div class="kicker">Archive · ${escapeHtml(story.desk)}</div><h2><a href="./${escapeHtml(story.slug)}/">${escapeHtml(story.title)}</a></h2><p>${escapeHtml(story.dek)}</p><div class="meta">Originally published ${escapeHtml(new Date(story.published_at).toISOString().slice(0,10))} · freshness window expired</div></article>`).join('\n');
+  const all = [...stories, ...archivedStories];
   const latest = stories[0] || null;
-  const edition = latest
-    ? `<div class="edition">Live edition ${escapeHtml(new Date(latest.published_at).toLocaleDateString('en-US',{timeZone:'America/Los_Angeles',weekday:'long',month:'long',day:'numeric',year:'numeric'}))}</div>`
-    : '<div class="edition">No current live edition · archived reporting remains available below.</div>';
-  const liveSection = latest
-    ? `<section><h2 class="section-title">Current</h2><div class="grid">${cards}</div></section>`
-    : '<section><h2 class="section-title">Current</h2><p class="sub">No source-grounded story is inside its live freshness window right now.</p></section>';
-  const archiveSection = archivedStories.length
-    ? `<section><h2 class="section-title">Archive</h2><p class="sub">Durable reporting preserved after its live freshness window closes.</p><div class="grid">${archiveCards}</div></section>`
+  const featured = latest || archivedStories[0] || null;
+  const isFeaturedArchived = Boolean(!latest && featured);
+  const desks = [...new Set(all.map((story) => String(story.desk || '').trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+  const anchor = (desk) => 'desk-' + desk.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const date = (story) => escapeHtml(new Date(story.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }));
+  const storyLink = (story) => './' + encodeURIComponent(story.slug) + '/';
+  const card = (story, archived) => `<article class="story">
+    <div class="story-label">${archived ? '<span class="archived">Archive</span>' : '<span class="current">Current edition</span>'} <span>${escapeHtml(story.desk)}</span></div>
+    <h3><a href="${storyLink(story)}">${escapeHtml(story.title)}</a></h3>
+    <p>${escapeHtml(story.dek)}</p>
+    <div class="story-date"><time datetime="${escapeHtml(story.published_at)}">${date(story)}</time></div>
+  </article>`;
+  const deskLinks = desks.map((desk) => `<a href="#${anchor(desk)}">${escapeHtml(desk)}</a>`).join('');
+  const heroPhoto = featured?.hero_visual?.url
+    ? `<div class="feature-photo"><img src="${escapeHtml(featured.hero_visual.url)}" alt="${escapeHtml(featured.hero_visual.alt || featured.title)}" fetchpriority="high" decoding="async"><p>${escapeHtml(featured.hero_visual.caption || '')}</p></div>`
     : '';
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Journal</title><meta name="description" content="Evercraft Journal is a source-grounded newsroom for the physical world, technology, science, infrastructure and local life."><meta property="og:site_name" content="Evercraft Journal"><meta property="og:title" content="Evercraft Journal"><meta property="og:description" content="Source-grounded reporting, analysis and education from Evercraft."><style>:root{color-scheme:dark;--bg:#080b0b;--text:#f5f5f2;--muted:#b7bdc5;--gold:#b79a56;--ice:#4fb8ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}main,header,footer{width:min(960px,calc(100% - 36px));margin:auto}header{padding:48px 0 24px;border-bottom:1px solid #222b2b}h1{font-size:clamp(3rem,8vw,6rem);letter-spacing:-.06em;line-height:.95;margin:0}.sub{color:var(--muted);font-size:1.15rem;max-width:720px}.edition{color:var(--gold);font-weight:800;margin-top:16px}.grid{display:grid;gap:28px;padding:18px 0 42px}section{padding-top:28px}.section-title{font-size:1rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold)}article{border-bottom:1px solid #222b2b;padding-bottom:28px}.kicker{color:var(--ice);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}h2{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.08;margin:.35em 0}a{color:inherit;text-decoration:none}a:hover{color:var(--ice)}p,.meta{color:#d7dddd}.meta{font-size:.9rem}footer{border-top:1px solid #222b2b;padding:28px 0 50px;color:var(--muted)}</style></head><body><header><h1>Evercraft Journal</h1><p class="sub">A continuously refreshed, evidence-controlled newsroom built to explain what the world is doing, what changed and what the evidence can actually support.</p>${edition}</header><main>${liveSection}${archiveSection}</main><footer>Observed, reported, modeled and inferred are kept separate. Uncertainty stays visible.</footer></body></html>`;
+  const lead = featured ? `<section class="lead" id="lead" aria-labelledby="lead-title">
+    <div class="feature-copy">
+      <p class="eyebrow">${isFeaturedArchived ? 'From the archive' : 'The lead story'} <span class="dot">·</span> ${escapeHtml(featured.desk)}</p>
+      <h2 id="lead-title"><a href="${storyLink(featured)}">${escapeHtml(featured.title)}</a></h2>
+      <p class="feature-dek">${escapeHtml(featured.dek)}</p>
+      <div class="feature-meta"><time datetime="${escapeHtml(featured.published_at)}">${date(featured)}</time>${isFeaturedArchived ? ' · Archived reporting, not a live update' : ''}</div>
+      <a class="read-link" href="${storyLink(featured)}">Read the story <span aria-hidden="true">↗</span></a>
+    </div>
+    ${heroPhoto}
+  </section>` : '';
+  const liveSection = stories.length ? `<section class="section" id="latest" aria-labelledby="latest-title">
+    <div class="section-head"><p class="eyebrow">Current edition</p><h2 id="latest-title">Latest reporting</h2><p>Fresh work, with its evidence and limitations visible.</p></div>
+    <div class="story-grid">${stories.map((story)=>card(story,false)).join('\n')}</div>
+  </section>` : `<section class="edition-notice" id="latest" aria-label="Edition status">
+    <strong>No current live edition</strong>
+    <p>The latest approved stories have moved into the archive. We keep them available without presenting older reporting as breaking news.</p>
+  </section>`;
+  const categorySections = desks.map((desk) => {
+    const members = all.filter((story) => story.desk === desk);
+    return `<section class="section desk-section" id="${anchor(desk)}" aria-labelledby="${anchor(desk)}-title">
+      <div class="section-head"><p class="eyebrow">Explore a desk</p><h2 id="${anchor(desk)}-title">${escapeHtml(desk)}</h2></div>
+      <div class="story-grid">${members.map((story)=>card(story,archivedStories.includes(story))).join('\n')}</div>
+    </section>`;
+  }).join('\n');
+  const archive = archivedStories.length ? `<section class="archive-intro" id="archive" aria-labelledby="archive-title">
+    <p class="eyebrow">The record stays open</p><h2 id="archive-title">Stories worth keeping</h2>
+    <p>${archivedStories.length} archived ${archivedStories.length === 1 ? 'story' : 'stories'} in this owned edition. Every archived article is dated and clearly distinguished from current reporting.</p>
+    <a href="#desks">Browse the archive by desk <span aria-hidden="true">↓</span></a>
+  </section>` : '';
+  const css = `
+:root{color-scheme:dark;--paper:#0a1013;--white:#0e1619;--ink:#edf2ee;--muted:#adbfbc;--rule:#294041;--accent:#e2bb82;--blue:#96daca}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.62;overflow-x:hidden}
+a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}a:focus-visible{outline:3px solid #2879a1;outline-offset:5px;border-radius:2px}
+img{max-width:100%;height:auto}.skip{position:absolute;left:-999px;top:8px;padding:8px;background:var(--blue);color:#0a1013;z-index:5}.skip:focus{left:8px}
+.shell{max-width:1180px;width:calc(100% - 48px);margin:0 auto}.tiny{font-size:.76rem;letter-spacing:.105em;text-transform:uppercase;font-weight:750}
+.topline{background:#0e1619;color:#d5e8e1;border-bottom:1px solid #243f40}.topline .shell{display:flex;justify-content:space-between;gap:12px;align-items:center;min-height:36px;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+.brand{padding:24px 0 22px;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;align-items:center;text-align:center}
+.brand h1{font-family:Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:-.065em;font-size:clamp(2.7rem,7.5vw,6.3rem);line-height:1;margin:0}
+.brand p{max-width:650px;color:var(--muted);font-size:.92rem;line-height:1.55;margin:12px 0 0}.brand::after{content:'';width:64px;height:2px;background:var(--accent);margin-top:19px}
+.nav{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:13px 0;border-bottom:3px double var(--ink);font-weight:650;font-size:.83rem}
+.nav a{white-space:nowrap}.nav .archive-link{color:var(--blue)}
+.lead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(24px,5vw,65px);align-items:center;padding:44px 0 52px;border-bottom:1px solid var(--rule)}
+.lead:not(:has(.feature-photo)){grid-template-columns:minmax(0,1fr) 0.65fr}
+.lead:not(:has(.feature-photo))::after{content:"EJ";font-family:Georgia,"Times New Roman",serif;font-size:clamp(8rem,18vw,18rem);letter-spacing:-.11em;line-height:1;text-align:center;color:#20383a;pointer-events:none;user-select:none}
+.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:.76rem;font-weight:800;color:var(--accent);margin:0 0 11px}.dot{color:var(--muted);padding:0 3px}
+.feature-copy h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.5rem,5.3vw,5rem);letter-spacing:-.052em;font-weight:600;line-height:1.06;margin:0 0 20px}
+.feature-dek{font-size:clamp(1rem,1.8vw,1.21rem);line-height:1.6;color:var(--muted);margin:0 0 20px;max-width:620px}
+.feature-meta,.story-date{color:var(--muted);font-size:.82rem}.read-link{display:inline-block;margin-top:23px;font-weight:800;border-bottom:2px solid var(--accent);padding-bottom:5px}
+.feature-photo img{width:100%;max-height:520px;object-fit:cover;display:block}.feature-photo p{color:var(--muted);font-size:.75rem;margin:8px 0 0}
+.edition-notice{background:#142428;border-left:3px solid var(--accent);margin:26px 0;padding:18px 22px;color:var(--ink)}.edition-notice strong{font-family:Georgia,serif;font-size:1.3rem}.edition-notice p{margin:5px 0 0;color:var(--muted);font-size:.93rem}
+.section{padding:45px 0 35px;border-top:1px solid var(--rule)}.section-head{margin-bottom:24px}.section-head h2,.archive-intro h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.045em;font-weight:500;line-height:1.06;margin:0}.section-head>p:last-child{color:var(--muted);margin:9px 0 0}
+.story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}.story{min-width:0;padding-top:16px;border-top:2px solid var(--ink)}
+.story-label{display:flex;gap:9px;flex-wrap:wrap;align-items:center;text-transform:uppercase;letter-spacing:.08em;font-size:.7rem;font-weight:800;color:var(--blue)}.story-label .archived{color:#e2bb82}.story-label .current{color:#96daca}
+.story h3{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.4rem,2.1vw,1.75rem);font-weight:600;line-height:1.2;letter-spacing:-.025em;margin:12px 0 10px}
+.story p{color:var(--muted);line-height:1.6;font-size:.95rem;margin:0 0 13px}
+.archive-intro{border-top:3px double var(--ink);border-bottom:1px solid var(--rule);background:#111f22;padding:36px 42px;margin:20px 0 0}
+.archive-intro>p:not(.eyebrow){color:var(--muted);max-width:650px;margin:15px 0}.archive-intro>a{color:var(--blue);font-weight:750;text-decoration:underline;text-underline-offset:3px}
+footer{background:#0e1619;color:#eaf1f1;margin-top:55px;padding:30px 0;font-size:.9rem}footer p{margin:4px 0;color:#bbc9ca}footer strong{font-family:Georgia,serif;font-size:1.3rem}
+@media(max-width:800px){.lead{grid-template-columns:1fr;gap:28px}.lead:not(:has(.feature-photo)){grid-template-columns:1fr}.lead:not(:has(.feature-photo))::after{display:none}.story-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.shell{width:calc(100% - 30px)}.topline .shell{font-size:.63rem}.brand{padding:22px 0}.brand h1{font-size:clamp(2.6rem,11vw,4rem)}.nav{justify-content:flex-start;gap:15px;overflow-x:auto;flex-wrap:nowrap;padding:12px 3px;scrollbar-width:thin}.lead{padding:28px 0 34px}.feature-copy h2{font-size:clamp(2.45rem,10vw,3.65rem)}.story-grid{grid-template-columns:1fr;gap:25px}.section{padding:32px 0}.archive-intro{padding:27px 20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}`;
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft Journal | News, Discovery &amp; Ideas Worth Exploring</title>
+<meta name="description" content="Independent, source-grounded reporting on science, engineering, hidden history, public systems and the world around us.">
+<meta property="og:site_name" content="Evercraft Journal">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Evercraft Journal">
+<meta property="og:description" content="News that moves. Ideas that become things.">
+<style>${css}</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to stories</a>
+<div class="topline"><div class="shell"><span>Evercraft Journal</span><span>Reporting · Discovery · Evidence</span></div></div>
+<header class="brand shell"><h1>Evercraft Journal</h1><p>News that moves. Ideas that become things. The world, the systems underneath it, and the stories worth understanding.</p></header>
+<nav class="nav shell" aria-label="Journal sections"><a href="#lead">Featured</a>${stories.length ? '<a href="#latest">Latest</a>' : ''}${deskLinks}${archivedStories.length ? '<a class="archive-link" href="#archive">Archive</a>' : ''}${stories.length ? '<a href="./feed.xml">RSS</a>' : ''}</nav>
+<main class="shell" id="main">
+${lead}
+${liveSection}
+${archive}
+<div id="desks">${categorySections}</div>
+</main>
+<footer><div class="shell"><strong>Evercraft Journal</strong><p>We distinguish what is observed, reported, modeled and inferred. Older stories remain dated and discoverable.</p></div></footer>
+</body>
+</html>`;
 }
 
 function renderFeed(stories, publicOrigin) {
@@ -342,6 +455,8 @@ export function publishJournalStories(inputStories, {
   if (!stories.length && !archivedStories.length) throw new Error('At least one approved story is required.');
 
   fs.mkdirSync(outDir, { recursive: true });
+  fs.mkdirSync(path.join(outDir, "assets"), { recursive: true });
+  fs.copyFileSync(new URL("./assets/listen.js", import.meta.url), path.join(outDir, "assets", "listen.js"));
   const receipts = [];
 
   for (const story of [...stories, ...archivedStories]) {
@@ -459,6 +574,7 @@ export function publishJournalStories(inputStories, {
     schema: 'evercraft.journal.index.v1',
     generated_at: now.toISOString(),
     live_edition: stories.length > 0,
+    reader_assets: [{ relative_path: 'assets/listen.js', sha256: sha256(fs.readFileSync(path.join(outDir, 'assets', 'listen.js'))) }],
     stories: stories.map((story) => ({
       story_id: story.story_id,
       slug: story.slug,
