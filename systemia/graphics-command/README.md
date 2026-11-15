@@ -178,3 +178,62 @@ node --test systemia/graphics-command/saban-work-observe.test.mjs
 The GitHub Actions visual QA uses a separate explicitly labeled synthetic
 Saban state-machine specimen at desktop and 390px mobile widths. Synthetic
 screenshots are safe for review; real operator snapshots stay private.
+
+### Opt-in scheduler transitions: a genuine local sequence
+
+The Saban scheduler can now emit **minimal aggregate observations** at a
+successful lease, completion, retry requeue, dead letter, and scheduler finish.
+The graphics hook is **off by default**. It is invoked after the existing state
+save where a state path is present. No job IDs, customer inputs, agent names,
+worker IDs, adapters, error messages or paths go into the journal.
+
+For an **already authorized Saban execution**, the operator can choose an
+absolute private journal directory outside the repository, along with an
+explicit state path:
+
+```bash
+node systemia/saban/multiplier.mjs \
+  --software <already-approved-registered-software> \
+  --execute --state /absolute/private/saban/state.json \
+  --graphics-journal-dir /absolute/private/graphics-run-001
+```
+
+Do **not** run this example on a production node without reviewing the
+registered software contract and authorizing the execution itself. The
+journal flag does not authorize task execution. It does not enroll machines,
+trigger a new scheduler, open a service, or perform remote access. It merely
+observes the **existing** execution if the operator starts one.
+
+A fresh per-run private directory is created with restrictive permissions.
+The append-only JSONL file contains exact aggregate counts and a local
+SHA-256 hash chain. This chain is useful for detecting accidental changes
+and some tampering; it is **not a cryptographic signature or independent
+attestation**. Earlier or external state transitions are not known to this
+journal. If any event write fails, the scheduler continues normally rather
+than retrying an otherwise successful job; the scheduler receipt reports
+an observation gap, and no completeness claim is made.
+
+Once the local run is over, an authorized operator may render the journal
+in the **same private directory**:
+
+```bash
+node systemia/graphics-command/saban-transition-view.mjs \
+  /absolute/private/graphics-run-001
+```
+
+That verifies the local sequence and hash chain, then creates
+`saban-transitions-review.html` with mode 0600. It renders genuine local
+scheduler observations as an offline visual timeline, not a remotely hosted
+live dashboard. Never push private journals, HTML, agent state, or receipts
+into GitHub artifacts or a public website.
+
+The GitHub graphics workflow instead generates a strictly **synthetic**
+scheduler run through the same API and exports only the redacted synthetic
+HTML and screenshot artifacts for desktop and 390px mobile review.
+
+```bash
+node --test systemia/graphics-command/saban-transition-journal.test.mjs
+node --test systemia/graphics-command/saban-transition-view.test.mjs
+```
+
+**Actual Node001/Node002 run:** not yet observed or independently verified.
