@@ -27,7 +27,7 @@ test('verified private scheduler entries become readable mobile-first timeline w
     assert.match(html,/The work\./);
     assert.match(html,/Work assigned/);
     assert.match(html,/Work completed/);
-    assert.match(html,/SOURCE/); // semantic metadata only
+    assert.match(html,/LOCAL SHA-256/); // local integrity, not independent attestation
     assert.equal((html.match(/class="event"/g)||[]).length,3);
     assert.doesNotMatch(html,/<script|<iframe|https?:\/\//i);
     const result=createPrivateTransitionReview({directory:s.directory});
