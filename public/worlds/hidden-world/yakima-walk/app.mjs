@@ -7,7 +7,7 @@ const gl=canvas.getContext('webgl2',{alpha:false,antialias:false,depth:true,powe
 if(!gl){$('intro').classList.add('hidden');$('unsupported').classList.remove('hidden');}else run();
 function run(){
 const vs='#version 300 es\nprecision highp float;\nin vec3 aPosition;in vec3 aNormal;in vec3 aColor;\nuniform mat4 uProj,uView;out vec3 vColor;out vec3 vNormal;out float vDepth;out vec3 vWorld;\nvoid main(){vec4 v=uView*vec4(aPosition,1.);gl_Position=uProj*v;vDepth=-v.z;vColor=aColor;vNormal=aNormal;vWorld=aPosition;}';
-const fs='#version 300 es\nprecision highp float;\nin vec3 vColor;in vec3 vNormal;in float vDepth;in vec3 vWorld;out vec4 frag;\nvoid main(){vec3 n=normalize(vNormal);float glow=max(dot(n,normalize(vec3(-.5,1.,.35))),0.);float light=.53+glow*.48+max(n.y,0.)*.17;float ripple=.028*sin(vWorld.x*.18+vWorld.z*.13)+.025*cos(vWorld.z*.22);vec3 lit=vColor*(light+ripple)+vec3(.040,.034,.016);float fog=clamp((vDepth-19.)/94.,0.,.83);vec3 c=mix(lit,vec3(.32,.32,.33),fog);frag=vec4(pow(c,vec3(.91)),1.);}';
+const fs='#version 300 es\nprecision highp float;\nin vec3 vColor;in vec3 vNormal;in float vDepth;in vec3 vWorld;out vec4 frag;\nvoid main(){vec3 n=normalize(vNormal);float glow=max(dot(n,normalize(vec3(-.5,1.,.35))),0.);float light=.65+glow*.35+max(n.y,0.)*.22;float ripple=.028*sin(vWorld.x*.18+vWorld.z*.13)+.025*cos(vWorld.z*.22);vec3 lit=vColor*(light+ripple)+vec3(.040,.034,.016);float fog=clamp((vDepth-19.)/94.,0.,.83);vec3 c=mix(lit,vec3(.48,.55,.57),fog);frag=vec4(pow(c,vec3(.91)),1.);}';
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
 const attribs=['aPosition','aNormal','aColor'].map(n=>gl.getAttribLocation(program,n));
@@ -24,7 +24,7 @@ function mesh(items){const vertices=[];for(const o of items){const c=rgb(o.color
  const vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
  for(let i=0;i<3;i++){if(attribs[i]<0)throw Error('Missing vertex attribute');gl.enableVertexAttribArray(attribs[i]);gl.vertexAttribPointer(attribs[i],3,gl.FLOAT,false,36,i*12);}gl.bindVertexArray(null);return {vao,count:vertices.length/9};}
 const drawList=buildYakimaDrawList(scene),base=mesh(drawList.filter(x=>x.tier!=='interpretive')),imagined=mesh(drawList.filter(x=>x.tier==='interpretive'));
-gl.enable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.clearColor(.20,.23,.24,1);
+gl.enable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.clearColor(.49,.59,.62,1);
 const norm=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l)},cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 function lookAt(eye,target){const z=norm([eye[0]-target[0],eye[1]-target[1],eye[2]-target[2]]),x=norm(cross([0,1,0],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
 function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),v=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*v,-1,0,0,2*far*near*v,0]);}
