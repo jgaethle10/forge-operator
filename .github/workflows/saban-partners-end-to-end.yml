@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'public/partners/**'
+      - 'public/eps-partners/**'
+      - 'tests/eps-partner-circle.test.mjs'
       - 'systemia/mcp/partners-public-inquiry.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'scripts/partners-owner-inbox.mjs'
@@ -13,6 +15,8 @@ on:
     branches: [main]
     paths:
       - 'public/partners/**'
+      - 'public/eps-partners/**'
+      - 'tests/eps-partner-circle.test.mjs'
       - 'systemia/mcp/partners-public-inquiry.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'scripts/partners-owner-inbox.mjs'
@@ -34,7 +38,7 @@ jobs:
         with:
           node-version: 22
       - name: Saban durable private application and failure gauntlet
-        run: node --test tests/evercraft-partners-launch.test.mjs tests/evercraft-partners-end-to-end.test.mjs
+        run: node --test tests/evercraft-partners-launch.test.mjs tests/evercraft-partners-end-to-end.test.mjs tests/eps-partner-circle.test.mjs
       - name: Existing customer FindMyPart isolation regression
         run: node --test tests/findmypart-public-inquiry.test.mjs
 
