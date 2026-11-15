@@ -1,0 +1,271 @@
+{
+  "schema": "evercraft.marketing.owner-review-queue.v1",
+  "campaign_id": "evercraft-services-clip-buyer-rotation-20261110",
+  "engine": "evercraft_clip",
+  "orchestrator": "systemia",
+  "purpose": "Reach buyers for the seven exact-price existing Systemia Stripe-hosted scoped services without misrepresenting native Evercraft Payments.",
+  "created_date": "2026-11-10",
+  "status": "founder_organic_direction_received_publisher_authority_unverified",
+  "owner_organic_distribution_approved": true,
+  "owner_direction_ref": "founder-directive:2026-11-10:use-evercraft-clip-for-customer-acquisition",
+  "publication_authority": false,
+  "platform_connections_verified": false,
+  "published_posts_verified": 0,
+  "provider_publication_receipts": [],
+  "scope_confirmation_required_before_payment": true,
+  "provider_paid_receipts_verified": 0,
+  "sku_source": "public/mesh/checkout-ready/verified-links.json",
+  "independent_buyer_form_evidence": "https://github.com/jgaethle10/forge-operator/actions/runs/42728476003",
+  "native_evercraft_payments_state": "held_separate_from_hosted_links",
+  "policy": {
+    "paid_spend_usd": 0,
+    "only_company_brands": true,
+    "no_personal_automated_posting": true,
+    "no_crossposting_without_platform_grants": true,
+    "maximum_posts_per_cycle": 1,
+    "minimum_hours_between_company_page_posts": 72,
+    "max_posts_per_company_page_per_7_days": 2,
+    "check_all_other_clip_campaigns_for_cadence": true,
+    "unverified_media_never_posted": true,
+    "current_provider_page_id_and_pages_manage_posts_required": true,
+    "issuer_passport_grant_required": true,
+    "provider_permalinks_and_readback_required": true,
+    "no_bulk_outbound_dm": true,
+    "no_placeholder_publisher_credentials": true
+  },
+  "entries": [
+    {
+      "id": "evc-clip-services-01",
+      "sku_keys": [
+        "weekly-social"
+      ],
+      "audience": "small businesses with inconsistent posting",
+      "angle": "weekly-social",
+      "proposed_day": "2026-11-11",
+      "date_is_not_an_automatic_schedule": true,
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "brand_key": "evercraft",
+      "proposed_channels": [
+        "facebook-page",
+        "linkedin-organization"
+      ],
+      "caption": "A small business can do good work all week and still disappear from its customers' feeds. The photos are on somebody's phone, the promotion is in a message thread, and posting slips to the bottom of the list.\n\nEvercraft has a $100 one-week social media management service for a clearly agreed set of posts and channels. We use material you approve and settle the scope, schedule and account access before payment. It's a week of focused support, not a promise of followers or instant sales.\n\nSee what the week can include and tell us what needs to be promoted: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+      "canonical_offer_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+      "source_offer_registry": "public/mesh/checkout-ready/verified-links.json",
+      "payment_route": "exact_sku_human_offer_page_then_scope_confirmation_then_original_provider_checkout",
+      "payment_verification": "none_from_publication",
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+        "requireCanonicalSelfMatch": true
+      },
+      "artwork_state": "text_or_original_verified_media_only_no_placeholder_video",
+      "account_scope": "exact_verified_evercraft_company_account_only",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "metrics": {
+        "provider_impressions": null,
+        "provider_clicks": null,
+        "qualified_inquiries": null,
+        "paid_orders_verified": 0
+      },
+      "fulfillment_state": "not_inferred"
+    },
+    {
+      "id": "evc-clip-services-02",
+      "sku_keys": [
+        "asset-diagnosis"
+      ],
+      "audience": "owners with underperforming sites or workflows",
+      "angle": "asset-diagnosis",
+      "proposed_day": "2026-11-15",
+      "date_is_not_an_automatic_schedule": true,
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "brand_key": "evercraft",
+      "proposed_channels": [
+        "facebook-page",
+        "linkedin-organization"
+      ],
+      "caption": "When a website, workflow or business asset underperforms, rebuilding it isn't always the right first move. A focused diagnosis can uncover a missing handoff, an unclear customer journey, or a problem nobody has had time to examine.\n\nEvercraft's $149 Asset Diagnosis is a scoped review of one agreed digital or operational asset, with written findings and practical next steps. We define the asset and decision first. We don't promise a particular business result, and we won't ask for sensitive access through a public comment.\n\nIf one asset has been bothering you, start here: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+      "canonical_offer_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+      "source_offer_registry": "public/mesh/checkout-ready/verified-links.json",
+      "payment_route": "exact_sku_human_offer_page_then_scope_confirmation_then_original_provider_checkout",
+      "payment_verification": "none_from_publication",
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+        "requireCanonicalSelfMatch": true
+      },
+      "artwork_state": "text_or_original_verified_media_only_no_placeholder_video",
+      "account_scope": "exact_verified_evercraft_company_account_only",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "metrics": {
+        "provider_impressions": null,
+        "provider_clicks": null,
+        "qualified_inquiries": null,
+        "paid_orders_verified": 0
+      },
+      "fulfillment_state": "not_inferred"
+    },
+    {
+      "id": "evc-clip-services-03",
+      "sku_keys": [
+        "ai-boardroom-standard",
+        "ai-boardroom-financial"
+      ],
+      "audience": "founders making difficult business decisions",
+      "angle": "boardroom",
+      "proposed_day": "2026-11-19",
+      "date_is_not_an_automatic_schedule": true,
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "brand_key": "evercraft",
+      "proposed_channels": [
+        "facebook-page",
+        "linkedin-organization"
+      ],
+      "caption": "Two AI answers can sound equally confident and recommend opposite decisions. The useful question isn't which one sounds smarter. It's what each answer assumes, what evidence is missing, and what would change the decision.\n\nEvercraft Boardroom offers a $250 scoped, human-reviewed decision assessment, with a separate $500 option for agreed financial-scenario modeling. Neither is investment advice or a guarantee. We confirm the question, assumptions and deliverable before checkout.\n\nSee the Standard Review and ask whether it fits your decision: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/\nFor the separate financial-modeling option, see our full services directory: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/",
+      "canonical_offer_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+      "source_offer_registry": "public/mesh/checkout-ready/verified-links.json",
+      "payment_route": "exact_sku_human_offer_page_then_scope_confirmation_then_original_provider_checkout",
+      "payment_verification": "none_from_publication",
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+        "requireCanonicalSelfMatch": true
+      },
+      "artwork_state": "text_or_original_verified_media_only_no_placeholder_video",
+      "account_scope": "exact_verified_evercraft_company_account_only",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "metrics": {
+        "provider_impressions": null,
+        "provider_clicks": null,
+        "qualified_inquiries": null,
+        "paid_orders_verified": 0
+      },
+      "fulfillment_state": "not_inferred"
+    },
+    {
+      "id": "evc-clip-services-04",
+      "sku_keys": [
+        "knowledge-activation",
+        "institutional-memory-system"
+      ],
+      "audience": "teams repeatedly losing the reasoning behind decisions",
+      "angle": "knowledge-activation",
+      "proposed_day": "2026-11-23",
+      "date_is_not_an_automatic_schedule": true,
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "brand_key": "evercraft",
+      "proposed_channels": [
+        "facebook-page",
+        "linkedin-organization"
+      ],
+      "caption": "A company can keep every document and still lose its memory. Decisions live in old conversations, instructions live with one employee, and the next project starts by rediscovering work that was already done.\n\nEvercraft offers $500 Knowledge Activation for a bounded source-and-handoff engagement and a separate $1,500 Institutional Memory System service for a larger, explicitly scoped design or implementation. Source permissions, retention and sensitive-data handling are agreed before any work or payment.\n\nStart with the smaller knowledge service, or ask us which scope fits: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/\nOther services and prices: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/",
+      "canonical_offer_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+      "source_offer_registry": "public/mesh/checkout-ready/verified-links.json",
+      "payment_route": "exact_sku_human_offer_page_then_scope_confirmation_then_original_provider_checkout",
+      "payment_verification": "none_from_publication",
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+        "requireCanonicalSelfMatch": true
+      },
+      "artwork_state": "text_or_original_verified_media_only_no_placeholder_video",
+      "account_scope": "exact_verified_evercraft_company_account_only",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "metrics": {
+        "provider_impressions": null,
+        "provider_clicks": null,
+        "qualified_inquiries": null,
+        "paid_orders_verified": 0
+      },
+      "fulfillment_state": "not_inferred"
+    },
+    {
+      "id": "evc-clip-services-05",
+      "sku_keys": [
+        "social-intelligence-launch"
+      ],
+      "audience": "organizations wanting an evidence-based audience strategy",
+      "angle": "social-intelligence",
+      "proposed_day": "2026-11-27",
+      "date_is_not_an_automatic_schedule": true,
+      "platform": "facebook",
+      "destination": "facebook-page",
+      "brand_key": "evercraft",
+      "proposed_channels": [
+        "facebook-page",
+        "linkedin-organization"
+      ],
+      "caption": "Publishing more content is not the same as understanding who it's helping. If a business can't explain which audience it's reaching, what questions people keep asking, or what it should test next, more posts can just create more noise.\n\nEvercraft's $1,000 Social Intelligence Launch is a project-based engagement to define an audience, review approved evidence and organize a practical next-step plan. We agree on accessible data, deliverables and capacity before taking payment. No bought engagement, invented results or growth guarantees.\n\nExplore the scope here: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+      "canonical_offer_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+      "source_offer_registry": "public/mesh/checkout-ready/verified-links.json",
+      "payment_route": "exact_sku_human_offer_page_then_scope_confirmation_then_original_provider_checkout",
+      "payment_verification": "none_from_publication",
+      "linkVerification": {
+        "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+        "requireCanonicalSelfMatch": true
+      },
+      "artwork_state": "text_or_original_verified_media_only_no_placeholder_video",
+      "account_scope": "exact_verified_evercraft_company_account_only",
+      "authorization": {
+        "approved": false,
+        "authorizationRef": null
+      },
+      "publicationAuthority": false,
+      "publisher_state": "not_submitted",
+      "provider_post_id": null,
+      "provider_post_url": null,
+      "provider_published_at": null,
+      "metrics": {
+        "provider_impressions": null,
+        "provider_clicks": null,
+        "qualified_inquiries": null,
+        "paid_orders_verified": 0
+      },
+      "fulfillment_state": "not_inferred"
+    }
+  ],
+  "review_gates": [
+    "buyer_page_public_https_and_canonical_identity",
+    "verify_correct_company_page_and_write_permissions",
+    "admit_exact_campaign_via_systemia_and_live_passport",
+    "cross_campaign_cooldown_and_duplicate_check",
+    "verified_clip_provider_adapter",
+    "provider_post_id_and_public_url_and_readback",
+    "lead_inquiry_intake_to_interaction_ledger",
+    "exact_customer_scope_and_available_delivery_capacity",
+    "only_actual_provider_paid_event_counts_as_revenue"
+  ]
+}
