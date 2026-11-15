@@ -112,6 +112,15 @@ Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch 
 - **Validation:** dedicated `FIRST-CONTACT research verification` GitHub Actions succeeded for source/tests commit `b396902d...`, evidence-schema regression `5ba93140...` and field-guide commit `ba69801f...` (run `42959628711`). These are source-code test receipts only, not real camera accuracy measurements or scientific evidence of anomalous technology.
 - **Systemia/publication:** mission is still `NOT_DISPATCHED`; specialists are `UNASSIGNED`; public publication is `HOLD_REVIEW`.
 
+## Sprint 10, November 15, 2026: quantify pixel and focal-calibration sensitivity
+
+- **New synthetic uncertainty engine:** `pixel-error-sensitivity.mjs` projects a known invented reference point into two rectified camera models, deliberately perturbs the image centers with independent Gaussian pixel noise and optional **common pixel shift** or **common focal-scale calibration error**, then invokes the existing ENU-bearing/triangulation solver. It reports accepted/rejected counts, refusal causes and *accepted-only* median/P95/max 3D errors. These are sensitivity statistics, **not calibrated confidence intervals**.
+- **Software falsification cases:** `pixel-error-sensitivity.test.mjs` adds **11** tests demonstrating that a common focal-length error can produce consistent ray intersection but incorrect range, that common pixel shifts can yield false target location, and that short baselines amplify range error under equal assumed image noise. Also covers weak-parallax holds, strict residual filters, seeded reproducibility, bad inputs and all essential scientific-disclosure flags.
+- **Operator CLI and data fixtures:** `pixel-error-cli.mjs`, **5** integration tests, `fixtures/pixel-error-random-only.json` and `fixtures/pixel-error-shared-focal-bias.json` permit no-network replay of two invented scenarios and output SHA-256 input-byte receipts. The CLI refuses packets without `synthetic:true`. Nothing opens actual footage, tracks people, controls cameras or dispatches workers.
+- **Field protocol:** `PIXEL_ERROR_FIELD_GATE.md` requires separately verified intrinsics, distortion rectification, pixel localization scatter, synchronized frame identity, surveyed camera geometry, pre-capture thresholds and independent scientific review. The next milestone remains a real, permitted known stationary reference-target session.
+- **GitHub proof:** the dedicated FIRST-CONTACT research workflow **passed** for the math/11-test commit `7e60286e...` (run `43770001014`) and for the executable/fixtures/5-test commit `47736b5d...` (run `43770118928`). Later documentation and mission commits must be checked separately. None of these runs validates real camera accuracy.
+- **Execution and evidence:** Systemia agents remain `UNASSIGNED` / `NOT_DISPATCHED`; no live hardware, actual camera input, new physical sample, unusual propulsion finding or extraterrestrial origin established. Publication stays `HOLD_REVIEW`.
+
 ## Decision and escalation gates
 
 - `primary_observation`: original public primary source with reproducible metadata or official release.
