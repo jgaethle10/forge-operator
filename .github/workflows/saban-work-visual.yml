@@ -6,6 +6,9 @@ on:
       - 'systemia/graphics-command/saban-work-visual*'
       - 'systemia/graphics-command/saban-work-operator*'
       - 'systemia/graphics-command/saban-work-observe*'
+      - 'systemia/graphics-command/saban-transition-journal*'
+      - 'systemia/saban/scheduler.mjs'
+      - 'systemia/saban/multiplier.mjs'
       - '.github/workflows/saban-work-visual.yml'
   push:
     branches: [main]
@@ -13,6 +16,9 @@ on:
       - 'systemia/graphics-command/saban-work-visual*'
       - 'systemia/graphics-command/saban-work-operator*'
       - 'systemia/graphics-command/saban-work-observe*'
+      - 'systemia/graphics-command/saban-transition-journal*'
+      - 'systemia/saban/scheduler.mjs'
+      - 'systemia/saban/multiplier.mjs'
       - '.github/workflows/saban-work-visual.yml'
 
 permissions:
@@ -32,12 +38,16 @@ jobs:
           node --check systemia/graphics-command/saban-work-visual.mjs
           node --check systemia/graphics-command/saban-work-operator.mjs
           node --check systemia/graphics-command/saban-work-observe.mjs
+          node --check systemia/graphics-command/saban-transition-journal.mjs
+          node --check systemia/saban/scheduler.mjs
+          node --check systemia/saban/multiplier.mjs
           node --check systemia/graphics-command/saban-work-observe.specimen.mjs
           node --check systemia/graphics-command/saban-work-visual.specimen.mjs
           node --check systemia/graphics-command/saban-work-visual-browser.cjs
           node --test systemia/graphics-command/saban-work-visual.test.mjs
           node --test systemia/graphics-command/saban-work-operator.test.mjs
           node --test systemia/graphics-command/saban-work-observe.test.mjs
+          node --test systemia/graphics-command/saban-transition-journal.test.mjs
       - name: Render synthetic Saban source-backed specimen
         run: node systemia/graphics-command/saban-work-visual.specimen.mjs artifacts/saban-work-visual-specimen
       - name: Generate sampled synthetic Saban history
