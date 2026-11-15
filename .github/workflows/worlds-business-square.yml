@@ -1,0 +1,32 @@
+name: Worlds Business Square projection
+on:
+  pull_request:
+    paths:
+      - 'public/worlds/business-square.mjs'
+      - 'public/worlds/app.mjs'
+      - 'public/worlds/index.html'
+      - 'public/worlds/styles.css'
+      - 'tests/worlds-business-square.test.mjs'
+      - '.github/workflows/worlds-business-square.yml'
+  push:
+    paths:
+      - 'public/worlds/business-square.mjs'
+      - 'public/worlds/app.mjs'
+      - 'public/worlds/index.html'
+      - 'public/worlds/styles.css'
+      - 'tests/worlds-business-square.test.mjs'
+      - '.github/workflows/worlds-business-square.yml'
+permissions:
+  contents: read
+jobs:
+  business-square:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check public/worlds/business-square.mjs
+      - run: node --check public/worlds/app.mjs
+      - run: node --test tests/worlds-business-square.test.mjs
