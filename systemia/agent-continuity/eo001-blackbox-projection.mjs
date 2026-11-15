@@ -35,7 +35,7 @@ function utc(value){
     Number.isFinite(Date.parse(value))&&
     new Date(value).toISOString().slice(0,19)===value.slice(0,19);
 }
-function exactId(value){return typeof value==='string'&&IDENT.test(value);}
+function exactId(value){return typeof value==='string'&&IDENT.test(value)&&!value.includes('..');}
 function failClosedReceipt(sourceBytes,sourceRevision){
   ensure(typeof sourceBytes==='string'||Buffer.isBuffer(sourceBytes),
     'EO001_SOURCE_BYTES_REQUIRED');
