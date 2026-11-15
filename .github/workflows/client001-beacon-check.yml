@@ -1,0 +1,22 @@
+name: Client 001 Beacon Preview Safety
+on:
+  push:
+    branches: [feature/client001-growth-beacon-20261115]
+    paths:
+      - public/client001-onthego-growth-preview/index.html
+      - systemia/growth-signal/client001/beacon-probe.test.mjs
+      - .github/workflows/client001-beacon-check.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  beacon:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify safe client referral handoff
+        run: node systemia/growth-signal/client001/beacon-probe.test.mjs
