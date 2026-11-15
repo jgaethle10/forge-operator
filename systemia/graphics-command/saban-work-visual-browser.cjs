@@ -70,5 +70,34 @@ const digest=filename=>crypto.createHash('sha256').update(fs.readFileSync(filena
         bytes:fs.statSync(target).size,status:'passed',synthetic_test:true}));
       await page.close();
     }
+    // Verified synthetic scheduler events, not an invented animated timeline.
+    for(const width of [1280,390]){
+      const page=await browser.newPage({viewport:{width,height:840},deviceScaleFactor:1});
+      const errors=[];
+      page.on('pageerror',e=>errors.push(e.message));
+      page.on('request',request=>{
+        if(!request.url().startsWith('file:'))errors.push('Unexpected network request: '+request.url());
+      });
+      await page.goto(pathToFileURL(path.join(base,'saban-transitions-synthetic.html')).href,{waitUntil:'load'});
+      const metrics=await page.evaluate(()=>({
+        scrollWidth:document.documentElement.scrollWidth,
+        width:document.documentElement.clientWidth,
+        events:document.querySelectorAll('article.event').length,
+        text:document.body.textContent
+      }));
+      assert.ok(metrics.scrollWidth<=metrics.width+1,
+        'Scheduler timeline exceeds viewport '+width+': '+JSON.stringify(metrics));
+      assert.equal(metrics.events,25);
+      assert.match(metrics.text,/SYNTHETIC TEST/);
+      assert.match(metrics.text,/Work completed/);
+      assert.match(metrics.text,/independently authenticated audit/);
+      assert.deepEqual(errors,[],'Timeline browser errors or external requests');
+      const filename='saban-transitions-'+width+'px.png';
+      const target=path.join(base,filename);
+      await page.screenshot({path:target,fullPage:true,animations:'disabled'});
+      console.log(JSON.stringify({width,rendered_png:filename,sha256:digest(target),
+        bytes:fs.statSync(target).size,status:'passed',synthetic_test:true}));
+      await page.close();
+    }
   }finally{await browser.close();}
 })().catch(err=>{console.error(err.stack||err);process.exitCode=1;});
