@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash,generateKeyPairSync,sign} from 'node:crypto';
+import {mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {SCHEMA,ingestSignedAudit} from './incident-event.mjs';
+import {appendJournalEvent,localIncidentProjections} from './incident-journal.mjs';
 import {projectEo001NegativeToBlackBox}
   from './eo001-blackbox-projection.mjs';
 
@@ -180,5 +184,60 @@ test('no implicit sign, filesystem mutation, provider request or containment act
   for(const bad of ['writeFileSync(','process.kill(','spawn(','fetch(',
     'sign(','systemctl stop']){
     assert.equal(source.includes(bad),false);
+  }
+});
+
+test('synthetic EO-001 failure flows through original custody and Spider candidate projection',()=>{
+  // Entire path runs in one CI process with test-only keys; no live Spider API.
+  const result=project();
+  const {privateKey,publicKey}=generateKeyPairSync('ed25519');
+  const trust={'eo001-ci-source':{
+    public_key_pem:publicKey.export({type:'spki',format:'pem'}),
+    tenant_id:config().tenant_id,source_id:config().source_id,
+    actor_ids:[config().actor_id],permission_scopes:['audit:read']
+  }};
+  const purpose='evercraft.blackbox.readonly-ingest.v1';
+  const envelope={key_id:'eo001-ci-source',purpose,payload:result.payload,
+    signature:sign(null,Buffer.from(purpose+'\\n'+JSON.stringify(result.payload)),
+      privateKey).toString('base64')};
+  const policy={
+    tenant_id:config().tenant_id,mission_id:config().mission_id,
+    now:Date.parse('2026-11-15T12:00:20Z')
+  };
+  const journal_root=mkdtempSync(join(tmpdir(),'eo001-blackbox-custody-ci-'));
+  try{
+    const stored=appendJournalEvent({envelope,trust,policy,journal_root});
+    assert.equal(stored.receipt.execution_authority,'NONE_READ_ONLY');
+    assert.equal(stored.receipt.external_effect_provider_verified,false);
+    assert.equal(stored.receipt.external_effect_state,'UNKNOWN');
+    assert.deepEqual(stored.receipt.verified_impact,[]);
+    assert.equal(stored.local_custody_state,
+      'WRITE_ONCE_FILE_SYNCED_NOT_REMOTE_OR_INDEPENDENT');
+    const view=localIncidentProjections({
+      journal_root,trust,policy,
+      tenant_id:config().tenant_id,mission_id:config().mission_id,
+      incident_id:config().incident_id
+    });
+    assert.equal(view.schema,'evercraft.blackbox.local-readonly-projections.v1');
+    assert.equal(view.black_box.timeline.length,1);
+    assert.equal(view.black_box.timeline[0].kind,'permission_observation');
+    assert.equal(view.black_box.external_provider_verification,'NOT_PERFORMED');
+    assert.deepEqual(view.black_box.verified_impact,[]);
+    assert.deepEqual(view.black_box.possible_impact,
+      ['possible-unverified-worker-continuity']);
+    assert.deepEqual(view.spider_society.persistence_candidates.map(x=>({
+      type:x.type,resource_id:x.resource_id,state:x.state
+    })),[{type:'worker',resource_id:scope,state:'unknown'}]);
+    assert.equal(view.spider_society.live_process_inventory,false);
+    assert.equal(view.spider_society.no_regeneration_proven,false);
+    assert.equal(view.chum.real_chum_invocation,false);
+    assert.equal(view.execution_authority,'NONE_READ_ONLY');
+    assert.equal(view.proof_state,
+      'LOCAL_SIGNED_SOURCE_REVALIDATION_NOT_INDEPENDENT_REMOTE_ATTESTATION');
+    assert.throws(()=>appendJournalEvent({envelope,trust,policy,journal_root}),
+      /replay or conflicting event id already held/);
+    assert.doesNotMatch(JSON.stringify(view),/SECRET_PRIVATE_PROCFS|PRIVATE_STOP_METADATA/);
+  }finally{
+    rmSync(journal_root,{recursive:true,force:true});
   }
 });
