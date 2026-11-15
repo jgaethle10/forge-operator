@@ -455,8 +455,9 @@ async function main() {
   const inventoryPath = argValue(argv, '--inventory', null);
   const execute = hasFlag(argv, '--execute');
   const graphicsJournalDir=argValue(argv,'--graphics-journal-dir',null);
-  if(graphicsJournalDir!==null &&
-     (!execute||!hasFlag(argv,'--state')||!path.isAbsolute(graphicsJournalDir))){
+  if(hasFlag(argv,'--graphics-journal-dir') &&
+     (graphicsJournalDir===null||!execute||!hasFlag(argv,'--state')||
+       !path.isAbsolute(graphicsJournalDir))){
     throw new Error('Private graphics journal requires --execute, explicit --state, and absolute --graphics-journal-dir');
   }
   const reconcile = hasFlag(argv, '--reconcile');
