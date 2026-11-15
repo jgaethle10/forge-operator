@@ -71,6 +71,10 @@ export function diagnosePublishingLanes({
   });
   const counts={};
   for(const channel of channels)counts[channel.state]=(counts[channel.state]||0)+1;
+  const coveredPlatforms=new Set(channels.map(x=>x.platform));
+  const missingPlatforms=['facebook','instagram','linkedin','tiktok','youtube','x']
+    .filter(platform=>!coveredPlatforms.has(platform))
+    .map(platform=>({platform,state:'no_owned_account_in_campaign_queue',next:'Identify actual company account, publishing adapter and authorization before any post'}));
   const journal=journalIndex?.schema==='evercraft.journal.index.v1'
     ?{
       state:journalIndex.live_edition===true?'source_reports_live_external_verification_required':'no_verified_live_edition_in_source',
@@ -97,7 +101,7 @@ export function diagnosePublishingLanes({
     },
     journal,
     company:{
-      candidate_count:channels.length,by_state:counts,channels,
+      candidate_count:channels.length,by_state:counts,channels,missing_platforms:missingPlatforms,
       platform_connections_independently_verified:false,
     },
     boundaries:{
@@ -129,6 +133,7 @@ export function toMarkdown(report){
     '| Jesse creator front door | '+cell(report.creator.state)+' | '+cell(report.creator.next)+' |',
     '| Evercraft Journal | '+cell(report.journal.state)+' | '+cell(report.journal.next)+' |',
     ...report.company.channels.map(x=>'| '+cell(x.account_label+' ('+x.platform+')')+' | '+cell(x.state)+' | '+cell(x.next)+' |'),
+    ...report.company.missing_platforms.map(x=>'| Evercraft '+cell(x.platform)+' | '+cell(x.state)+' | '+cell(x.next)+' |'),
     '',
     'Evidence available: '+(report.company.channels.some(x=>x.provider_receipt_recorded)?'some provider receipts in supplied data':'no verified provider receipts in supplied data')+'.',
     'No account credentials or platform write permissions were inspected.',
