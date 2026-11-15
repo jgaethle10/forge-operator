@@ -72,7 +72,8 @@ export async function reconcile({results=[]}={}) {
   const missing=[...ROLES].filter(x=>!found.has(x));
   return {
     schema:'evercraft.saban.community-radio-preflight-reconciliation.v1',
-    status:missing.length?'held_incomplete_review':'held_pending_authorized_physical_test',
+    status:'reconciled',
+    mission_state:missing.length?'held_incomplete_review':'held_pending_authorized_physical_test',
     completed_roles:[...found].sort(),
     missing_roles:missing,
     actual_node_access_confirmed:false,
