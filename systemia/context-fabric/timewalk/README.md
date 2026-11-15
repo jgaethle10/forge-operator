@@ -199,6 +199,7 @@ approved source integration.
 ```bash
 node --test systemia/context-fabric/timewalk/origin-attestation.test.mjs
 node --test systemia/context-fabric/timewalk/execution-ledger-reader.test.mjs
+node --test systemia/context-fabric/timewalk/intake-ledger-reader.test.mjs
 node --test systemia/context-fabric/timewalk/source-reconciliation.test.mjs
 ```
 
@@ -254,6 +255,59 @@ merged, or deployed.
 
 ```bash
 node --test systemia/context-fabric/timewalk/execution-ledger-reader.test.mjs
+```
+
+## Owned Intake admission source replay (v0.6 research slice)
+
+`intake-ledger-reader.mjs` reconstructs a real
+`evercraft.intake.systemia-admission-packet.v1` **only** from the Intake
+Fabric's existing `candidates.jsonl` and `admission-decisions.jsonl`.
+It follows the exact field insertion order and receipt-hashing contract
+in `systemia/intake-fabric/intake.mjs`'s
+`buildSystemiaAdmissionPacket()`. No admission packets are invented or
+secretly persisted to a new store.
+
+```js
+import { createIntakeAdmissionLedgerReceiptReader } from './intake-ledger-reader.mjs';
+
+const read_source_receipt = createIntakeAdmissionLedgerReceiptReader({
+  state_dir: operatorOwnedIntakeStateDirectory, // never user-controlled
+});
+const report = reconcileTimewalkSourceReceipts(contextFabric, {
+  actor_ref: authenticatedInternalSession.subject_ref, // currently Passport-checked
+  namespaces: ['systemia'],
+  read_source_receipt,
+});
+```
+
+This source adapter opens only two hardcoded files in one private directory,
+with no network connections, writes, arbitrary paths or source-listing API.
+It checks both entire JSONL inputs for signed record hashes, torn writes,
+duplicate IDs, symlinks, loose POSIX permissions and bounded size/event
+counts. It reconstructs packets for accepted decisions and returns a packet
+**only when its exact digest matches the already-authorized Context record**.
+
+**Deliberate holds and remaining uncertainty:**
+
+- Quarantined candidates are not reconstructed by this two-ledger adapter,
+  even if a separate authorized release might exist. That release is stored
+  in `quarantine-releases.jsonl`; do not infer authorization without
+  independently validating that ledger. This is a conservative
+  **false-negative**, not evidence the packet never existed.
+- A candidate, intake decision, and derived packet have unkeyed SHA-256
+  integrity only. Matching them does not authenticate the actual producer.
+  Independent source attestation/key custody remain separate evidence gates.
+- No source completeness percentage is reported. A missing packet may mean
+  it was not stored/projected, is outside the trusted bounds, was quarantined,
+  or is inaccessible to the current identity.
+- The adapter does not reauthorize an old decision for new execution. It only
+  resolves receipts after the **current-time Passport Context check**.
+- Mission-admission receipts in `control-plane.mjs` are constructed from
+  planning inputs but **not shown here as persisted receipt bytes**. No
+  mission replay/source-origin claims are made without authoritative storage.
+
+```bash
+node --test systemia/context-fabric/timewalk/intake-ledger-reader.test.mjs
 ```
 
 ## Performance and security boundaries
