@@ -11,6 +11,13 @@ const API=base+'/api/partners';
 let applicationReady=false;
 let requestId=crypto.randomUUID();
 const field=id=>String(document.getElementById(id)?.value||'').trim().replace(/[\r\n]+/g,' ');
+// A fixed focus preselects the already-existing audience field. No raw URL tag,
+// tracking cookie, independent partner program or payout credential is created.
+if(new URLSearchParams(location.search).get('focus')==='eps'){
+ const audience=document.getElementById('audience');
+ if(audience&&[...audience.options].some(option=>option.value==='Local homeowners & property managers (EPS)'))
+  audience.value='Local homeowners & property managers (EPS)';
+}
 function prepareEmail() {
  const lines=[
   'Hello Evercraft Partners,','',
