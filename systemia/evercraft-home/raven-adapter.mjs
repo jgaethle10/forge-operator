@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { readVehicleSentinelSafetyModule } from "../raven-nexus/vehicle-sentinel-safety.mjs";
 
 function readJson(file) {
   if (!fs.existsSync(file)) return null;
@@ -87,6 +88,7 @@ export function readRavenOverview(repoRoot) {
       public_discovery_route_declared: Boolean(canonicalUrl),
       legacy_public_route_declared: isLegacyProviderUrl(canonicalUrl),
     },
+    vehicle_safety: readVehicleSentinelSafetyModule(root),
     evidence_semantics:
       "Raven registry, public discovery metadata, and Nexus probe contracts only. This is not proof of a live private Raven human runtime, an authorized provider session, or completed provider behavior.",
   };
