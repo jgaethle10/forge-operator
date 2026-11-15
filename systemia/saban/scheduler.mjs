@@ -116,7 +116,8 @@ export async function runScheduler({
       enabled:onStateObservation!==null,emitted:observed,
       failures:observationFailures,
       locally_observed_only:true,
-      event_history_complete:onStateObservation!==null && observationFailures===0
+      event_history_complete:false,
+      callback_gaps:observationFailures>0
     },
     state
   };
