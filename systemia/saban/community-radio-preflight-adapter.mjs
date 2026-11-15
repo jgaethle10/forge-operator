@@ -54,6 +54,7 @@ export async function runAssignment({assignment, rootDir=process.cwd()}={}) {
   return {
     schema:'evercraft.saban.community-radio-preflight-finding.v1',
     status:'completed',
+    role:assignment.role,
     review_role:assignment.role,
     review_state:'held_pending_authorized_physical_test',
     result:conditions[assignment.role],
