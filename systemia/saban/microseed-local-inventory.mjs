@@ -78,9 +78,10 @@ function inspectRoot(root, label) {
   }
   return out;
 }
-function discoverUserUnits(run) {
+function discoverUnits(run, scope) {
   const result = run('systemctl', [
-    '--user', 'list-units', '--all', '--type=service', '--plain', '--no-legend', '--no-pager',
+    ...(scope==='user'?['--user']:[]), 'list-units', '--all', '--type=service',
+    '--plain', '--no-legend', '--no-pager',
   ]);
   if (result?.status !== 0 || typeof result.stdout !== 'string') return {state:'unavailable', count:0, units:[]};
   const units = result.stdout.split(/\r?\n/)
@@ -90,6 +91,8 @@ function discoverUserUnits(run) {
     .map(a=>({name:a[0],active:a[2]==='active',substate:a[3]}));
   return {state:'observed',count:units.length,units};
 }
+const discoverUserUnits=run=>discoverUnits(run,'user');
+const discoverSystemUnits=run=>discoverUnits(run,'system');
 export function inspectLocalMicroSeedInventory({
   home=homedir(),
   run=(cmd,args)=>spawnSync(cmd,args,{encoding:'utf8',timeout:2500,maxBuffer:256*1024}),
@@ -105,6 +108,7 @@ export function inspectLocalMicroSeedInventory({
   }
   const roots = locations.map(([label,root])=>inspectRoot(root,label));
   const units = discoverUserUnits(run);
+  const systemUnits = discoverSystemUnits(run);
   const found = roots.filter(x=>x.bootstrap==='manifest_verified');
   const suspect = roots.filter(x=>x.bootstrap!=='not_found' && x.bootstrap!=='manifest_verified');
   return {
@@ -116,6 +120,7 @@ export function inspectLocalMicroSeedInventory({
     uncertain_root_count:suspect.length,
     roots,
     services:units,
+    system_services:systemUnits,
     recommended_action:found.length>0 ? 'review_existing_bootstrap_before_any_deployment'
       : suspect.length>0 ? 'review_existing_ambiguous_roots_do_not_rebootstrap'
       : 'no_bootstrap_in_known_roots_inspect_other_owned_install_paths',
@@ -125,6 +130,8 @@ export function inspectLocalMicroSeedInventory({
     signed_execution_verified:false,
     operator_identity_verified:false,
     physical_hardware_attested:false,
+    system_gateway_present:systemUnits.units.some(u=>u.name==='evercraft-saban-microseed-gateway.service'&&u.active),
+    system_pairing_api_present:systemUnits.units.some(u=>u.name==='evercraft-saban-pairing-api.service'&&u.active),
     files_modified:false,
     network_requests_made:false,
     credentials_read:false,
