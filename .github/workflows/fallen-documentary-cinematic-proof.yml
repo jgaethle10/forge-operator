@@ -4,6 +4,9 @@ on:
     paths:
       - 'systemia/media-studio/documentary-cinematic-gate.mjs'
       - 'systemia/media-studio/documentary-cinematic-gate.test.mjs'
+      - 'systemia/media-studio/documentary-source-proof.mjs'
+      - 'systemia/media-studio/documentary-source-proof.test.mjs'
+      - 'systemia/forensiscope/authorized-source.mjs'
       - 'systemia/media-studio/DOCUMENTARY-CINEMATIC-STANDARD.md'
       - '.github/workflows/fallen-documentary-cinematic-proof.yml'
   workflow_dispatch:
@@ -26,5 +29,7 @@ jobs:
           fi
           command -v ffmpeg
           command -v ffprobe
-      - name: Render and decode original synthetic motion and static test footage
+      - name: Decode original synthetic motion and static test footage; validate cinematic holds
         run: node --test systemia/media-studio/documentary-cinematic-gate.test.mjs
+      - name: Verify actual source bytes, rooted paths, hashes and scene trims
+        run: node --test systemia/media-studio/documentary-source-proof.test.mjs
