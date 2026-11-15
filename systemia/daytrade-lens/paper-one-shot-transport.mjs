@@ -95,6 +95,9 @@ export async function submitOneShotPaperOrder({
   const credentials = paperOrderReconciliationCredentials(env);
   if (!credentials) throw new Error('paper_transport_dedicated_paper_credentials_required');
   if (!path.isAbsolute(stateRoot || '')) throw new Error('paper_transport_state_root_required');
+  if (path.dirname(path.resolve(stopFile || '')) !== path.resolve(stateRoot)) {
+    throw new Error('paper_transport_stop_file_must_be_in_state_root');
+  }
   ensureNoStop(stopFile);
   const proposal = proposePaperOrder({ broker, signal, riskAttestation, now });
   if (!proposal.admitted || !CLIENT_ID.test(proposal.client_order_id || '') ||
@@ -114,6 +117,11 @@ export async function submitOneShotPaperOrder({
   // Only one session attempt per state root, ever. A crash leaves the lock in place.
   // Recovery requires independent inspection and manual replacement of this whole lab state.
   fs.mkdirSync(stateRoot, { recursive: true, mode: 0o700 });
+  const rootStat = fs.statSync(stateRoot);
+  if (!rootStat.isDirectory() || (rootStat.mode & 0o077) !== 0 ||
+      (typeof process.getuid === 'function' && rootStat.uid !== process.getuid())) {
+    throw new Error('paper_transport_insecure_state_directory');
+  }
   const lock = path.join(stateRoot, 'one-shot.lock');
   try { fs.mkdirSync(lock, { mode: 0o700 }); }
   catch { throw new Error('paper_transport_prior_attempt_locked'); }
