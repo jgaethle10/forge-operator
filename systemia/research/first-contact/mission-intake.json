@@ -3,7 +3,7 @@
   "mission_id": "FIRST-CONTACT-001",
   "title": "Evercraft | First Contact: evidence-gated UAP research",
   "created_at": "2026-10-31",
-  "updated_at": "2026-11-10",
+  "updated_at": "2026-11-15",
   "owner": "Evercraft LLC",
   "routing_priority": "Systemia first",
   "execution_state": "NOT_DISPATCHED",
@@ -219,6 +219,23 @@
       ],
       "validation": "Dedicated GitHub Actions FIRST-CONTACT research verification passed for synthetic pixel modules/tests on commit ba69801f... (run 42959628711); 12 projection/bearing unit tests, 5 pair-CLI tests, 5 multi-frame CLI tests, and 2 evidence-audit schema tests added. No real camera images, source device, lens calibration, surveyed pose, verified timebase or human independent review.",
       "acceptance": "Convert manually identified rectified pixel centers with operator-supplied calibrated intrinsics and camera-to-ENU pose into guarded two-view geometry and numeric known-reference accuracy; hold malformed/unrectified/unsynchronized observations and verify source provenance externally."
+    },
+    {
+      "id": "FC-PIXEL-UNCERTAINTY-01",
+      "lane": "sensor_forensics",
+      "status": "SYNTHETIC_PIXEL_SENSITIVITY_CI_VERIFIED_AWAITING_ACTUAL_CAMERA_ERROR_BUDGET",
+      "completed": "2026-11-15",
+      "artifacts": [
+        "pixel-error-sensitivity.mjs",
+        "pixel-error-sensitivity.test.mjs",
+        "pixel-error-cli.mjs",
+        "pixel-error-cli.test.mjs",
+        "fixtures/pixel-error-random-only.json",
+        "fixtures/pixel-error-shared-focal-bias.json",
+        "PIXEL_ERROR_FIELD_GATE.md"
+      ],
+      "validation": "Dedicated GitHub Actions FIRST-CONTACT research verification passed math/11-test commit 7e60286e... (run 43770001014) and CLI/fixtures/5-test commit 47736b5d... (run 43770118928). Conditional accepted-only simulated errors cannot be reported as measured sensor confidence or field accuracy.",
+      "acceptance": "Reproduce random pixel-location, shared pixel alignment and shared focal-scale systematic error effects on triangulated known-target position; report conditional P95 with rejection fraction, require actual measured pixel/camera uncertainty before physical validation."
     }
   ],
   "hard_constraints": [
@@ -228,6 +245,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Use two truly independent rectified and calibrated cameras on a lawful known stationary target: measure intrinsics, rotationCameraToEnu and surveyed optical centers, independently verify capture synchronization, pre-register numerical limits, preserve native local media and compare measured pixel-derived 3D position with independent ground truth. Systemia mission dispatch remains NOT_DISPATCHED.",
-  "validation_note": "2026-11-10 sprint 9: dedicated FIRST-CONTACT research workflow passed on commit ba69801f... (run 42959628711) covering synthetic rectified-pixel-to-ENU conversion, two-view intake, multi-frame reference-target accuracy and evidence-source schema linkage. Field calibration and source authenticity remain unverified. No Systemia runtime dispatch."
+  "next_execution_gate": "Acquire a safe authorized known stationary target with two genuinely independently surveyed/calibrated cameras. Measure actual lens intrinsics/rectification, localization scatter in genuine image pixels, camera poses and clock synchronization, then pre-register and independently review accuracy criteria. Run pixel-calibration-cli.mjs and private field-evidence audit on the real dataset. No Systemia worker dispatch or public anomaly claim without signed receipts and independent review.",
+  "validation_note": "2026-11-15: dedicated FIRST-CONTACT research workflow passed pixel-uncertainty math commit 7e60286e... run 43770001014 and executable fixtures/tests commit 47736b5d... run 43770118928. No real camera data, independently measured pixel/focal calibration errors or verified field source authenticity. Latest README/mission head CI to be checked separately."
 }
