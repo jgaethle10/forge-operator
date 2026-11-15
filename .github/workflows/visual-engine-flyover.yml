@@ -39,6 +39,8 @@ jobs:
         run: npm exec --yes --package=tsx@4.20.6 -- tsx --test systemia/visual-engine/gltf-scene-placements.test.mjs
       - name: Validate fitted authored-model composition at wide and portrait ratios
         run: node --test systemia/visual-engine/authored-camera.test.mjs
+      - name: Validate deterministic atmospheric sky and ocean preview contracts
+        run: node --test systemia/visual-engine/screen-environment.test.mjs
       - name: Check native pixel proof syntax
         run: node --check systemia/visual-engine/flyover-pixel-proof.mjs
 
