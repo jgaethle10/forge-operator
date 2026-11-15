@@ -21,7 +21,7 @@ test('an unconfigured owned payment endpoint does not invent an order or strand 
     assert.match(html,/Checkout is temporarily unavailable/);
     assert.match(html,/No order or charge was created by this attempt/);
     assert.match(html,/mailto:jessegaethle10@gmail\.com\?subject=/);
-    assert.match(html,/Request payment assistance/);
+    assert.match(html,/Email Evercraft for payment help/);
     assert.match(html,/Return to the offer/);
     assert.match(html,/does not automatically email you, create an invoice, take a charge/);
     assert.doesNotMatch(html,/We saved the purchase request|Try again|checkout\.stripe\.com|base44\.app/i);
@@ -52,7 +52,7 @@ test('unreachable owned payment transport gives assistance instead of a raw 500'
   const html=await response.text();
   assert.match(html,/Checkout could not be confirmed/);
   assert.match(html,/Do not make a second payment/);
-  assert.match(html,/Request payment assistance/);
+  assert.match(html,/Email Evercraft for payment help/);
   assert.doesNotMatch(html,/provider_unreachable|base44\\.app/);
  }finally{await rt.close();}
 });

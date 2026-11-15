@@ -301,6 +301,36 @@ export async function startEvercraftHomeServer({
     }
   }
 
+  // Only the authenticated Evercraft owner may receive the nondelegable
+  // Clip publication scope. This never bypasses the specific story's
+  // editorial, current-publication, issuer, or provider/account checks.
+  function ensureOwnerClipPublishingGrant(subjectRef) {
+    if (!passport || subjectRef !== ownerSubjectRef)
+      throw new Error("clip_owner_identity_required");
+    const authority = passport.authorize({
+      subject_ref: subjectRef,
+      product: "evercraft-home",
+      scope: "home.identity.sessions.manage",
+      at: new Date().toISOString(),
+    });
+    if (authority.decision !== "allow" || !authority.grant_id)
+      throw new Error("clip_owner_admin_grant_required");
+    const now = new Date(), ends = new Date(now.getTime() + 3650 * 24 * 60 * 60 * 1000);
+    return passport.issueGrant({
+      idempotency_key: "evercraft-home-owner-clip-publish:" + subjectRef,
+      subject_ref: subjectRef,
+      issuer_ref: "evercraft:identity-authority",
+      product: "evercraft-home",
+      scopes: ["home.clip.publish"],
+      starts_at: now.toISOString(),
+      ends_at: ends.toISOString(),
+      max_delegation_depth: 0,
+      authority_state: "verified_identity_authority",
+      authority_receipt_ref: authority.grant_id,
+      purpose: "owner_only_release_gated_journal_publication",
+    });
+  }
+
   function publicService(service) {
     const origin = String(serviceOrigins?.[service.origin_env] || "").trim();
     return {
@@ -418,10 +448,14 @@ export async function startEvercraftHomeServer({
           authority_receipt_ref: bootstrapped.receipt.receipt_hash,
           purpose: "owner_access_to_evercraft_home",
         });
+        // The separate Clip grant cannot be delegated to autonomous agents.
+        // Its runtime still accepts only independently published Journal stories.
+        const clipGrant = ensureOwnerClipPublishingGrant(ownerSubjectRef);
         claimLimiter.recordSuccess(rateKey);
         return json(res, 201, {
           ok: true,
           state: "claimed",
+          owner_clip_publishing_scope_created: clipGrant.grant?.scopes?.includes("home.clip.publish") === true,
           subject: bootstrapped.subject.subject_ref,
           display_name: bootstrapped.subject.display_name,
           passport_grant_id: grant.grant.grant_id,
@@ -465,6 +499,12 @@ export async function startEvercraftHomeServer({
           throw new Error("home_access_denied");
         }
 
+        // Repair older, already-claimed owner installs after an authorized
+        // login without broadening any third-party or agent permissions.
+        if (authentication.subject_ref === ownerSubjectRef) {
+          try { ensureOwnerClipPublishingGrant(authentication.subject_ref); }
+          catch { /* Owner login remains usable; Clip publisher stays denied. */ }
+        }
         const issued = identity.issueSession(authentication, {
           signingSecret: identitySecret,
           signingKeyId: identityKeyId,

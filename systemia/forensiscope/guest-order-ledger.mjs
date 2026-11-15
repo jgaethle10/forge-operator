@@ -112,12 +112,17 @@ function publicOrder(order,admission){
 export function createForensiScopeGuestOrderLedger({
  storageDir,readCapacity,maxUploadBytes=256*1024*1024,
  guestEnrollmentEnabled=false,checkEnrollment=async()=>false,
- allowedOrigins=[],now=()=>Date.now(),
+ emailVerification=null,allowedOrigins=[],now=()=>Date.now(),
  sessionTtlMs=7*24*60*60*1000
 }={}){
  if(!storageDir||!path.isAbsolute(storageDir))throw fail('absolute_private_ledger_required');
  if(typeof readCapacity!=='function'||typeof checkEnrollment!=='function')
   throw fail('trusted_capacity_and_enrollment_checks_required');
+ if(guestEnrollmentEnabled===true&&(
+    typeof emailVerification?.sendChallenge!=='function'||
+    typeof emailVerification?.verifyAndConsume!=='function'||
+    emailVerification.readiness?.enabled!==true))
+  throw fail('trusted_email_verification_required',503);
  if(!Number.isSafeInteger(maxUploadBytes)||maxUploadBytes<=0||
     !Number.isSafeInteger(sessionTtlMs)||sessionTtlMs<=0)
   throw fail('invalid_guest_order_limits');
@@ -127,6 +132,7 @@ export function createForensiScopeGuestOrderLedger({
  privateDir(sessions);privateDir(orders);
  const origins=new Set(allowedOrigins);
  const pending=new Set();
+ const sessionIssuePending=new Set();
  const loadSession=token=>{
   if(typeof token!=='string'||!TOKEN.test(token))return null;
   const record=readRecord(sessions,digest(token));
@@ -146,30 +152,58 @@ export function createForensiScopeGuestOrderLedger({
    expires_at:new Date(session.expires_at_ms).toISOString()
   }):null;
  };
- const issueGuest=async({email,privacyAccepted,request}={})=>{
+ const issueGuest=async({email,privacyAccepted,challengeId,verificationCode,request}={})=>{
   if(guestEnrollmentEnabled!==true)throw fail('guest_enrollment_disabled',503);
   if(privacyAccepted!==true||!validEmail(email))
    throw fail('valid_email_and_privacy_acceptance_required',422);
   if(await checkEnrollment(request)!==true)
    throw fail('guest_enrollment_not_authorized',429);
-  const token='fsg_'+hex(32);
-  const subject='buyer-'+hex(16);
-  const stamp=now();
-  const state={
-   schema:'evercraft.forensiscope.guest-session.v1',
-   token_digest:digest(token),subject,email:email.toLowerCase(),
-   issued_at_ms:stamp,expires_at_ms:stamp+sessionTtlMs,revoked:false
-  };
-  writeRecord(sessions,state.token_digest,state,{create:true});
-  return Object.freeze({
-   schema:'evercraft.forensiscope.guest-access.v1',
-   access_token:token,
-   bearer_token_display_once:true,
-   expires_at:new Date(state.expires_at_ms).toISOString(),
-   checkout_enabled:false,
-   payment_state:'not_started',
-   recovery_note:'Save your private access token. Email-only recovery is not yet enabled.'
-  });
+  if(await emailVerification.verifyAndConsume({
+   email,challengeId,verificationCode,request
+  })!==true)throw fail('verified_email_challenge_required',403);
+  const normalized=email.toLowerCase();
+  if(sessionIssuePending.has(normalized))
+   throw fail('guest_session_issue_in_progress',409);
+  sessionIssuePending.add(normalized);
+  try{
+   const previous=[];
+   for(const name of fs.readdirSync(sessions)){
+    if(!/^[a-f0-9]{64}\.json$/.test(name))continue;
+    const record=readRecord(sessions,name.slice(0,-5));
+    if(record?.schema==='evercraft.forensiscope.guest-session.v1'&&
+       record.email===normalized&&typeof record.subject==='string'&&
+       /^buyer-[a-f0-9]{32}$/.test(record.subject))
+     previous.push(record);
+   }
+   // Earliest verified identity owns the existing orders. Return visitors
+   // renew this subject instead of silently creating a second buyer.
+   previous.sort((a,b)=>a.issued_at_ms-b.issued_at_ms);
+   const subject=previous[0]?.subject||'buyer-'+hex(16);
+   const token='fsg_'+hex(32);
+   const stamp=now();
+   const state={
+    schema:'evercraft.forensiscope.guest-session.v1',
+    token_digest:digest(token),subject,email:normalized,
+    issued_at_ms:stamp,expires_at_ms:stamp+sessionTtlMs,revoked:false
+   };
+   // Revoke old tokens before returning the new credential. The mailbox
+   // owner can repeat the code challenge if a disk write fails mid-rotation.
+   for(const old of previous){
+    if(old.revoked!==true)
+     writeRecord(sessions,old.token_digest,{...old,revoked:true});
+   }
+   writeRecord(sessions,state.token_digest,state,{create:true});
+   return Object.freeze({
+    schema:'evercraft.forensiscope.guest-access.v1',
+    access_token:token,
+    bearer_token_display_once:true,
+    expires_at:new Date(state.expires_at_ms).toISOString(),
+    session_rotated:previous.length>0,
+    checkout_enabled:false,
+    payment_state:'not_started',
+    recovery_note:'A new verified sign-in replaces prior sessions. Keep your private access token safe.'
+   });
+  }finally{sessionIssuePending.delete(normalized)}
  };
  const expireAt=buyer=>{
   const expiry=Date.parse(String(buyer?.expires_at||''));
@@ -301,10 +335,21 @@ export function createForensiScopeGuestOrderLedger({
      'cache-control':'no-store'
     });return res.end();
    }
+   if(req.method==='POST'&&route==='/v1/forensiscope/guest/challenge'){
+    if(guestEnrollmentEnabled!==true)throw fail('guest_enrollment_disabled',503);
+    const body=await limitedJson(req);
+    if(body.privacy_accepted!==true||!validEmail(body.email))
+     throw fail('valid_email_and_privacy_acceptance_required',422);
+    if(await checkEnrollment(req)!==true)
+     throw fail('guest_enrollment_not_authorized',429);
+    const challenge=await emailVerification.sendChallenge({email:body.email,request:req});
+    return respond(201,{ok:true,...challenge});
+   }
    if(req.method==='POST'&&route==='/v1/forensiscope/guest'){
     const body=await limitedJson(req);
     const access=await issueGuest({
-     email:body.email,privacyAccepted:body.privacy_accepted===true,request:req
+     email:body.email,privacyAccepted:body.privacy_accepted===true,
+     challengeId:body.challenge_id,verificationCode:body.verification_code,request:req
     });
     return respond(201,{ok:true,...access});
    }
@@ -347,10 +392,15 @@ export function createForensiScopeGuestOrderLedger({
   loadTrustedSettlementOrder,persistCheckout,revokeGuest,
   readiness:Object.freeze({
    guest_enrollment_enabled:guestEnrollmentEnabled===true,
+   verified_email_required:true,
+   email_challenge_available:guestEnrollmentEnabled===true&&
+    emailVerification?.readiness?.enabled===true,
    public_identity_provider:false,
    live_checkout_enabled:false,
    payment_authority:'Evercraft Payments',
-   token_recovery_enabled:false
+   token_recovery_enabled:guestEnrollmentEnabled===true&&
+    emailVerification?.readiness?.enabled===true,
+   prior_sessions_revoked_on_verified_signin:true
   })
  });
 }

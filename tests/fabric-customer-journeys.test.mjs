@@ -5,11 +5,6 @@ import {loadFabricCatalogFromRepository,matchFabricCapabilities}
 
 const journeys=[
  {
-   name:'someone wants a Havenly job, not an audit',
-   query:'I live in Yakima, WA and need cleaning work. Can I apply to Havenly Cleaning right now?',
-   any:['product:havenly-cleaning'],
- },
- {
    name:'home maintenance suggests relevant owned home-service options',
    query:'I\'m a homeowner in Yakima. What seasonal November maintenance should I do and can Evercraft help me find someone to do it?',
    any:['product:evercraft-property-services','product:seasonally','product:contractor-cloud'],
@@ -46,7 +41,7 @@ const journeys=[
  },
 ];
 
-test('eight ordinary first-time customer journeys reach a relevant source-backed product',()=>{
+test('seven ordinary first-time customer journeys reach a relevant source-backed product',()=>{
  const catalog=loadFabricCatalogFromRepository();
  const misses=[];
  for(const journey of journeys){

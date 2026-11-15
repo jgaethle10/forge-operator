@@ -35,6 +35,17 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 - KATS-FM, “More Haunted Spots Across the Yakima Valley” (2021), local recollection: https://katsfm.com/more-haunted-spots-across-the-yakima-valley/
 
 
+## Yakima 3D Historical Inquiry (November 15, 2026)
+
+- New static-file WebGL2 experience at `/worlds/hidden-world/yakima-walk/`, accessed from the atlas, Yakima Evidence Lab and Lund architecture exhibit; no external JavaScript or graphics host. Continues the original conceptual `yakima-standalone.html` rather than replacing it.
+- Six source-linked stops: source/geometry boundary; 1899 Lund Building; c.1910 Chicago Clothing conversion; F. H. Newell 1905–1915 Yakima Avenue photograph; archival map/drawing research; and the 1983 nomination's **connecting interior doorways, which are not verified underground tunnels**.
+- NPS 1983 Lund nomination sections 7–8: https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa; Spokane Public Library postcard metadata, public domain: https://lange.spokanelibrary.org/items/show/5659; Yakima Valley Libraries maps: https://www.yvl.org/services/special-collections-and-archive-services/maps-and-atlases/; Yakima Valley Museum archive guide: https://yvmuseum.org/news/our-library-archives.
+- Scene geometry is an **original fictional streetscape**. The facade shapes, streets, neighboring building positions, railroad/lamps, colors, route coordinates and scale are all interpretive. The Lund Building's historic existence, local stone, two-story nature, corner entrance and storefront date are sourced categories, not verified 3D measurements. No presumed tunnel network, subterranean passageway, private access route or contemporary entry point is drawn.
+- `public/worlds/hidden-world/yakima-evidence-ledger.v1.json` now explicitly registers this gallery as an unmeasured virtual exhibit while preserving the seven earlier evidence records and their unchanged geometry-uncertainty flags.
+- Reuses Evercraft's existing native WebGL2 walk renderer semantics, 72-second deterministic source tour, desktop keyboard/mouse navigation, mobile joystick, research panels and optional illustrative glazing. When JavaScript is disabled the HTML starts in **working static fallback mode**, with no dead interactive controls, linking to the Yakima Evidence Lab. No WebGL2 also presents an evidence link.
+- QA: schema/geometry/uncertainty source tests; owned vault HTTP and MIME tests; Chromium desktop, phone, phone-no-JS and narrow-phone-no-JS movement, guided tour, fallback and research link regression; release gate requiring the page and all three JS modules at the verified owned HTTPS origin.
+- **Not yet production public:** no source check or CI screenshot substitutes for an independently verified Evercraft-owned HTTPS route or actual iPhone Safari acceptance. The release blocker remains #1994.
+
 ## Walkable Titan I Research Gallery (November 11, 2026)
 
 - Owned Worlds route: `/worlds/hidden-world/titan-walk/`, linked from the 1962 Titan source exhibit and the Hidden World Atlas. Original, local WebGL2 gallery; no hosted rendering APIs, external JavaScript libraries, telemetry or geolocation.

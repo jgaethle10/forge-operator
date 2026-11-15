@@ -20,7 +20,7 @@ test('source-backed discovery covers the public product graph without checkout a
     'product:evercraft-rewards','product:evernest','product:seasonally',
     'product:evercraft-circles','product:opportunity-fabric',
     'product:contractor-cloud','product:evercraft-property-services',
-    'product:evercraft-partners','product:havenly-cleaning',
+    'product:evercraft-partners',
   ]) assert.ok(ids.has(id),'missing '+id);
   assert.equal(ids.size,sourced.length,'source discovery IDs must be unique');
   assert.ok(sourced.every(c=>c.commercial_state==='discovery_only'));
@@ -45,7 +45,6 @@ test('the resident directory merges source products, deduplicated, without dropp
 test('explicit product and brand names reach their genuine directory records, not unrelated machine offers',()=>{
   const catalog=loadFabricCatalogFromRepository();
   for(const [query,expected] of [
-    ['Can I apply to Havenly Cleaning for work in Yakima right now?','product:havenly-cleaning'],
     ['Which Evercraft Rewards points and local merchant offers can I use?','product:evercraft-rewards'],
     ['How do I connect Evercraft Contractor Cloud to my home maintenance project?','product:contractor-cloud'],
     ['How does EverNest help a household after a baby?','product:evernest'],
@@ -61,14 +60,13 @@ test('explicit product and brand names reach their genuine directory records, no
   }
 });
 
-test('Havenly does not claim a job vacancy, and Partners does not claim commissions',()=>{
+test('Independent HAVENLY is excluded from Evercraft discovery; Partners does not claim commissions',()=>{
   const catalog=loadFabricCatalogFromRepository();
   const havenly=catalog.find(c=>c.public_id===ID+'havenly-cleaning');
   const partners=catalog.find(c=>c.public_id===ID+'evercraft-partners');
-  assert.match(havenly.description,/hiring status.*not verified/i);
+  assert.equal(havenly,undefined);
   assert.match(partners.description,/not a reseller contract.*approved referral commission/i);
   assert.ok(partners.connections[0].url.endsWith('/partners/'));
-  assert.equal(havenly.start_url_state,'not_sell_now');
   assert.equal(partners.start_url_state,'not_sell_now');
 });
 
