@@ -55,6 +55,46 @@ is still required to actually move money.
 - `tests/bank-credit-reconciliation.test.mjs` verifies duplicate, missing, ambiguous, wrong account, wrong amount, unsupported evidence and fulfillment-locked outcomes, alongside account-rotation tests on the request server.
 - Merchant-bank posting date may be later than link expiry; the link expiry only prevents new instructions, not accounting review of funds already transferred.
 
+## Public-only payment gateway (November 15, 2026)
+
+The new systemia/payments/bank-credit-public-gateway.mjs puts a separate,
+strict loopback listener between customers and the private order runtime.
+The public listener forwards **GET/HEAD only** for exact signed
+/pay/bank/bpr_<opaque>.<signature> paths. It blocks /v1/operator/*,
+other GET routes, POST, query strings and redirects. Unavailable upstreams
+fail closed without leaking operator details.
+
+When configured, the runner opens two local listeners:
+
+- **127.0.0.1:8795 PRIVATE:** operator API and bank order storage.
+  Never reverse proxy this service to the internet.
+- **127.0.0.1:8796 PUBLIC-ONLY:** signed read-only buyer pages.
+  This is the ONLY listener eligible for public reverse proxy.
+
+The two ports may be overridden by EVERCRAFT_BANK_CREDIT_LOOPBACK_PORT and
+EVERCRAFT_BANK_CREDIT_PUBLIC_LOOPBACK_PORT. The runner rejects held bank
+configuration, missing approved offers and missing receiving-bank
+confirmation before starting the public gateway.
+
+Example Caddy fragment for an *already verified* owned HTTPS site,
+subject to operator review, not automatically deployed:
+
+```caddyfile
+# Inside the existing site block. Preserve all unrelated site routes.
+# handle preserves the /pay/bank/ path. handle_path would strip it.
+handle /pay/bank/* {
+  reverse_proxy 127.0.0.1:8796
+}
+# Never reverse_proxy public traffic to 127.0.0.1:8795.
+```
+
+Before exposure, inspect active Caddy routing for conflicting catchalls.
+Verify that external GET /health, POST /v1/operator/bank-requests and
+POST /v1/operator/bank-credit/reconcile cannot reach the private API.
+Check no-store/noindex/no-referrer headers and exact approved service
+terms on a test buyer page. Never paste a live bearer payment link into
+GitHub, logs or a public test. A reachable buyer page does not prove payment.
+
 ## Deployment prerequisites (NOT complete in PR)
 1. Confirm Evercraft's *own* receiving business account can accept domestic
    ACH credit transfers, including the actual beneficiary name, routing number,
@@ -69,8 +109,8 @@ is still required to actually move money.
    containing the keys below. Generate independent 32+ byte secrets using
    an approved secrets manager; no keys or actual bank numbers in Git.
 4. Configure an actual owned public HTTPS reverse proxy for the URL path,
-   forwarding GET /pay/bank/* to the loopback backend. Keep /v1/operator/*
-   reachable ONLY on private operator/loopback control plane. TLS, rate
+   forwarding GET/HEAD /pay/bank/* only to 127.0.0.1:8796. Keep the
+   operator runtime 127.0.0.1:8795 private and never public-proxied. TLS, rate
    limiting, access log redaction and deployment rollback must be verified.
 5. Use the private configured publicOrigin. Deploy only after independent
    endpoint canary proves the real browser page shows EXACT amount, bank
@@ -147,6 +187,7 @@ Set environment:
 - EVERCRAFT_BANK_CREDIT_PRIVATE_CONFIG=/path/to/private/0600-config.json
 - EVERCRAFT_BANK_CREDIT_PRIVATE_STATE=/path/to/private/order-state
 - EVERCRAFT_BANK_CREDIT_LOOPBACK_PORT=8795
+- EVERCRAFT_BANK_CREDIT_PUBLIC_LOOPBACK_PORT=8796
 - EVERCRAFT_BANK_CREDIT_PUBLIC_ORIGIN=https://fabric.systemiacommandcenters.com
 
 Start with:
