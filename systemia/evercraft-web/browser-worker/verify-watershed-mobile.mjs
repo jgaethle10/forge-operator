@@ -36,6 +36,12 @@ try {
     assert.equal(await page.locator('#snow-list .data-tile').count(),6,'six SNOTEL sites');
     assert.equal(await page.locator('#river-list .data-tile').count(),3,'three USGS gauges');
     assert.equal(await page.locator('#reservoir-list .data-tile').count(),5,'five USBR sites');
+    await page.locator('#index-history-list .index-review-card').first().waitFor();
+    assert.equal(await page.locator('#index-history-list .index-review-card').count(),5,'five source-reported days');
+    assert.equal(await page.locator('#index-history-list .temporary').count(),4,'four temporary staged days');
+    assert.equal(await page.locator('#index-history-list .index-review-badge:not(.temporary)').count(),1,'one ledger day');
+    assert.equal(await page.locator('#index-history-list .index-review-values .v small').count(),15,'fifteen NRCS warning stars');
+    assert.match(await page.locator('#index-history-summary').textContent(),/temporary staging/);
     assert.match(await page.locator('#source-age').textContent(),/Archived/);
     assert.match(await page.locator('#reservoir-total').textContent(),/147,099.23/);
     assert.match(await page.locator('#basin-note').textContent(),/NRCS.*warning|NRCS cautions/i);
@@ -71,6 +77,19 @@ try {
   assert.equal(await page.locator('.basin').count(),0);
   receipt.tampered_receipt='REJECTED_BEFORE_DISPLAY';
   await context.close();
+  const historyContext=await browser.newContext({viewport:{width:390,height:844}});
+  const historyPage=await historyContext.newPage();
+  const history=JSON.parse(readFileSync(new URL('../../../public/watershed/data/nrcs-index-review-2026-11-11-to-15.json',import.meta.url),'utf8'));
+  history.days[4].indices[0].nrcs_warning=false;
+  await historyPage.route('**/watershed/data/nrcs-index-review-2026-11-11-to-15.json',route=>
+    route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(history)})
+  );
+  await historyPage.goto(url,{waitUntil:'networkidle'});
+  await historyPage.locator('#index-history-error:visible').waitFor();
+  assert.equal(await historyPage.locator('#index-history-list .index-review-card').count(),0);
+  assert.equal(await historyPage.locator('#dashboard').isVisible(),true,'independent historical hold must not erase older verified snapshot');
+  receipt.tampered_history='REJECTED_WITH_SNAPSHOT_INTACT';
+  await historyContext.close();
   receipt.status='PASS';
 }catch(error){
   receipt.status='FAIL';
