@@ -6,10 +6,22 @@ on:
       - feat/vehicle-sentinel-quickcheck-v0-2
     paths:
       - 'products/vehicle-sentinel/**'
+      - 'systemia/raven-nexus/**'
+      - 'systemia/evercraft-home/raven-adapter.mjs'
+      - 'systemia/evercraft-home/server.mjs'
+      - 'systemia/evercraft-home/public/index.html'
+      - 'systemia/evercraft-home/public/apps.html'
+      - 'systemia/evercraft-home/vehicle-sentinel.integration.test.mjs'
       - '.github/workflows/vehicle-sentinel-beta.yml'
   pull_request:
     paths:
       - 'products/vehicle-sentinel/**'
+      - 'systemia/raven-nexus/**'
+      - 'systemia/evercraft-home/raven-adapter.mjs'
+      - 'systemia/evercraft-home/server.mjs'
+      - 'systemia/evercraft-home/public/index.html'
+      - 'systemia/evercraft-home/public/apps.html'
+      - 'systemia/evercraft-home/vehicle-sentinel.integration.test.mjs'
       - '.github/workflows/vehicle-sentinel-beta.yml'
   workflow_dispatch:
 
@@ -41,6 +53,10 @@ jobs:
 
       - name: Validate private, local-only QuickCheck
         run: node products/vehicle-sentinel/tests/quickcheck-v2.test.js
+
+      - name: Verify Raven Nexus safety and authenticated OS handoff
+        run: |
+          node --test systemia/raven-nexus/vehicle-sentinel-safety.test.mjs systemia/evercraft-home/vehicle-sentinel.integration.test.mjs
 
       - name: Verify proximity analysis regression tests
         working-directory: products/vehicle-sentinel/ios
