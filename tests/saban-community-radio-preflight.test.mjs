@@ -42,7 +42,7 @@ test('Saban reconciliation refuses to claim a real field trial even when all fou
   const roles=['station_boundary_guard','device_authorization_guard','source_integrity_guard','field_receipt_guard'];
   const rows=await Promise.all(roles.map(role=>runAssignment({assignment:{...source(),role},rootDir})));
   const report=await reconcile({results:rows});
-  assert.equal(report.status,'held_pending_authorized_physical_test');
+  assert.equal(report.status,'reconciled');assert.equal(report.mission_state,'held_pending_authorized_physical_test');
   assert.equal(report.completed_roles.length,4);
   assert.equal(report.actual_node_access_confirmed,false);
   assert.equal(report.physical_two_device_test_completed,false);
@@ -58,7 +58,7 @@ test('actual Saban multiplier schedules four bounded reviews, reconciles, never 
     const receipt=await executeMultiplicationPlan({contract,plan,workItems,rootDir,reconcile:true,statePath:path.join(tmp,'saban-state.json')});
     assert.equal(receipt.software_id,'community-radio-preflight');
     assert.equal(receipt.logical_agents,4);
-    assert.equal(receipt.reconciliation.status,'held_pending_authorized_physical_test');
+    assert.equal(receipt.reconciliation.status,'reconciled');assert.equal(receipt.reconciliation.mission_state,'held_pending_authorized_physical_test');
     assert.equal(receipt.reconciliation.physical_two_device_test_completed,false);
     assert.equal(receipt.reconciliation.side_effects_executed,0);
     assert.equal(receipt.quality.status,'pass');
