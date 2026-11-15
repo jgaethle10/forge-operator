@@ -76,7 +76,8 @@
         "qualified_inquiries": null,
         "paid_orders_verified": 0
       },
-      "fulfillment_state": "not_inferred"
+      "fulfillment_state": "not_inferred",
+      "planned_day": "2026-11-11"
     },
     {
       "id": "evc-clip-services-02",
@@ -120,7 +121,8 @@
         "qualified_inquiries": null,
         "paid_orders_verified": 0
       },
-      "fulfillment_state": "not_inferred"
+      "fulfillment_state": "not_inferred",
+      "planned_day": "2026-11-15"
     },
     {
       "id": "evc-clip-services-03",
@@ -165,7 +167,8 @@
         "qualified_inquiries": null,
         "paid_orders_verified": 0
       },
-      "fulfillment_state": "not_inferred"
+      "fulfillment_state": "not_inferred",
+      "planned_day": "2026-11-19"
     },
     {
       "id": "evc-clip-services-04",
@@ -210,7 +213,8 @@
         "qualified_inquiries": null,
         "paid_orders_verified": 0
       },
-      "fulfillment_state": "not_inferred"
+      "fulfillment_state": "not_inferred",
+      "planned_day": "2026-11-23"
     },
     {
       "id": "evc-clip-services-05",
@@ -254,7 +258,8 @@
         "qualified_inquiries": null,
         "paid_orders_verified": 0
       },
-      "fulfillment_state": "not_inferred"
+      "fulfillment_state": "not_inferred",
+      "planned_day": "2026-11-27"
     }
   ],
   "review_gates": [
