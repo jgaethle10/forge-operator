@@ -24,7 +24,7 @@ const maxMedia=250*1024*1024;
 export function newJob(id,name,note=''){
   if(!safeId.test(id)||!clean(name))throw Error('invalid_job_identity');
   return {schema:SCHEMA,id,name,goal:'',audience:'',offer:'',cta:'',format:'9:16',
-    notes:note,assets:[],approvedAssembly:false,technicalRender:null};
+    notes:note,narration:'narrated',assets:[],approvedAssembly:false,technicalRender:null};
 }
 export function patchJob(job,patch) {
   const next={...job};
@@ -33,6 +33,10 @@ export function patchJob(job,patch) {
       if(typeof patch[key]!=='string'||patch[key].length>2000)throw Error('invalid_field_'+key);
       next[key]=patch[key].trim();
     }
+  }
+  if(Object.hasOwn(patch,'narration')){
+    if(!['narrated','music_only'].includes(patch.narration))throw Error('invalid_narration_mode');
+    next.narration=patch.narration;
   }
   if(Object.hasOwn(patch,'format')){
     if(!['9:16','16:9','1:1'].includes(patch.format))throw Error('invalid_format');
@@ -46,7 +50,8 @@ export function readiness(job){
   if(!job.assets.some(x=>x.type==='picture'))blockers.push('Upload authorized real picture or video');
   if(!job.assets.some(x=>x.type==='picture'&&x.rights==='reviewed'))blockers.push('Record reviewed picture rights evidence');
   if(!job.assets.some(x=>x.type==='music'&&x.rights==='reviewed'))blockers.push('Approve actual music recording and rights');
-  if(!job.assets.some(x=>x.type==='voice'&&x.rights==='reviewed'))blockers.push('Approve narration take, or document intentionally silent format');
+  if(job.narration!=='music_only'&&!job.assets.some(x=>x.type==='voice'&&x.rights==='reviewed'))
+    blockers.push('Approve actual narration take and rights');
   if(!job.approvedAssembly)blockers.push('Approved source-first assembly still required');
   if(!job.technicalRender)blockers.push('No rendered technical master');
   blockers.push('Independent final-master Signature review and client approval required');
@@ -56,7 +61,7 @@ export function readiness(job){
 export function packet(job){
   return {schema:'evercraft.fallen.founder-production-packet.v1',
     project:{id:job.id,name:job.name,goal:job.goal,audience:job.audience,
-      offer:job.offer,cta:job.cta,format:job.format,notes:job.notes},
+      offer:job.offer,cta:job.cta,format:job.format,notes:job.notes,narration:job.narration},
     assets:job.assets.map(x=>({id:x.id,name:x.name,type:x.type,size:x.size,sha256:x.sha256,
       rights:x.rights,evidence:x.evidence})),
     readiness:readiness(job),productionRoute:{
@@ -110,7 +115,8 @@ async function ingest(req,root,job,type,name){
     for await (const chunk of req) {
       size+=chunk.length;
       if(size>maxMedia)throw Error('media_too_large');
-      fs.writeSync(f,chunk);sha.update(chunk);
+      let offset=0;while(offset<chunk.length)offset+=fs.writeSync(f,chunk,offset,chunk.length-offset);
+      sha.update(chunk);
     }
     if(!size)throw Error('empty_media');
     good=true;
