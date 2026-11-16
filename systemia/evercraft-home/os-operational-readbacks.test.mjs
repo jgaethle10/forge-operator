@@ -43,14 +43,18 @@ test("real Saban state transitions project counts, retries and checkpoints witho
   const first=leaseNext(s,{workerId:"private-worker-a",now:when+1000});
   checkpoint(s,{jobId:first.job_id,workerId:"private-worker-a",data:{secret:"do-not-expose"},now:when+1100});
   fail(s,{jobId:first.job_id,workerId:"private-worker-a",error:{message:"secret exception"},retry:true,now:when+1200});
-  const second=leaseNext(s,{workerId:"private-worker-a",now:when+1300});
-  complete(s,{jobId:second.job_id,workerId:"private-worker-a",result:{customer:"private"},now:when+1400});
+  // Scheduler prioritizes not-yet-attempted work before retrying failed work.
+  const second=leaseNext(s,{workerId:"private-worker-b",now:when+1300});
+  complete(s,{jobId:second.job_id,workerId:"private-worker-b",result:{customer:"private"},now:when+1400});
+  const retry=leaseNext(s,{workerId:"private-worker-a",now:when+1500});
+  assert.equal(retry.job_id,first.job_id);
+  complete(s,{jobId:retry.job_id,workerId:"private-worker-a",result:{customer:"private"},now:when+1600});
   fs.writeFileSync(f.file,JSON.stringify(s),{mode:0o600});
-  const result=readEvercraftOsSabanSnapshot({stateFile:f.file,now:()=>when+1500});
+  const result=readEvercraftOsSabanSnapshot({stateFile:f.file,now:()=>when+1700});
   assert.equal(result.state,"local_snapshot_observed");
   assert.equal(result.total_jobs,2);
-  assert.equal(result.counts.completed,1);
-  assert.equal(result.counts.queued,1);
+  assert.equal(result.counts.completed,2);
+  assert.equal(result.counts.queued,0);
   assert.equal(result.retried_jobs,1);
   assert.equal(result.checkpointed_jobs,1);
   assert.equal(result.snapshot_recent,true);
