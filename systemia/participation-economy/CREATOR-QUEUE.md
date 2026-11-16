@@ -42,3 +42,12 @@ Issue: https://github.com/jgaethle10/forge-operator/issues/1998
 - \`creator-access.test.mjs\` covers impersonation, expiry, signature tampering, audience separation, role/scope restriction, tenant isolation and withdrawal.
 - A real issuer must independently authenticate people, authorize reviewers, securely manage signing keys with rotation and revocation, and enforce rate limits and auditing. HMAC key custody is the responsibility of the service hosting this module.
 - **No public HTTP endpoint or public creator login is introduced.** A signed token alone is not proof that footage exists, a source is correct, a reviewer is impartial, or a payment has settled. Review records remain non-authoritative claims for publishing.
+
+
+## Creator Studio local prototype
+
+Open creator-studio-preview.html in a browser to explore the mobile-first creator flow. The page lets creators draft a title and format, select Home/Journal/EverMaps/Clip destinations, record source IDs and optional cemetery/marker confidence, choose a local file (its bytes are not read), acknowledge rights/consent, and export a JSON draft manifest.
+
+This page deliberately has no authentication, media upload, external data transfer, draft persistence, payment integration, or publication. Its generated identity and asset IDs are labeled unverified local placeholders. The exported metadata is **not** accepted as a trusted approval, real source attestation, verified creator identity, or signed media receipt.
+
+Next required wiring: an owned identity issuer with secure session handling; an authorized uploader that returns scoped, verified media receipts; a server API invoking the restricted creator-access facade; authenticated editorial review; source verification; and separate publisher adapters.
