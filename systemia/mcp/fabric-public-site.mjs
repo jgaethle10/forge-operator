@@ -457,6 +457,7 @@ function renderHeldWebsiteAuditInquiryForm(){
     '<p class="checkout-note">One-time $49, including applicable sales tax. Stripe processes payment for Evercraft. Your URL and priority are requested during checkout. Purchase does not authorize website changes or guarantee sales results. Work begins only after verified payment, then a human-reviewed report is delivered by email.</p>',
     '<details style="margin-top:22px"><summary style="cursor:pointer;font-weight:700">Not ready to purchase? Request a free review first.</summary>',
     '<p>Use the optional form below to ask about fit and availability. This is separate from the live payment link and does not charge you.</p>',
+    '<h3>Request your Quick Win Audit</h3>',
     '<form class="audit-intake-form" method="post" action="/api/website-audit/inquiry">',
     '<label for="audit-inquiry-email">Your email<input id="audit-inquiry-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@business.com" required></label>',
     '<label for="audit-inquiry-url">Public website to review<input id="audit-inquiry-url" name="website_url" type="url" inputmode="url" maxlength="1000" placeholder="https://yourbusiness.com" required></label>',
