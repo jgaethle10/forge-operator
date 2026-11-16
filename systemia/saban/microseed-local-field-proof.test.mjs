@@ -10,6 +10,7 @@ import { loadMicroSeedDeviceIdentity } from './microseed-device-identity.mjs';
 import { startMicroSeedNativeAgent } from './microseed-native-agent.mjs';
 import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 import { readSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
+import { reserveSignedMicroSeedExecution } from './microseed-execution-intent-store.mjs';
 import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { normalizeMicroDeviceManifest } from './microseed-device-bridge.mjs';
 import { inspectLocalMicroSeedEvidence } from './microseed-local-field-proof.mjs';
@@ -142,6 +143,7 @@ test('signed native execution uses only journal and replays exact signed bytes',
   const one=await first.json();
   assert.equal(one.result.ok,true);
   assert.equal(fs.existsSync(path.join(root,'state','idempotency')),false);
+  assert.equal(fs.existsSync(path.join(root,'state','signed-execution-intents','v1')),true);
   const durable=await readSignedMicroSeedReceipt({
     stateDir:path.join(root,'state'),
     device_id:manifest.device_id,idempotency_key:request.idempotency_key,
@@ -197,6 +199,37 @@ test('signed agent holds a legacy unsigned attempt instead of reexecuting it',()
   assert.equal(response.status,422);
   assert.equal((await response.json()).error,
     'microseed_unsigned_legacy_attempt_requires_review');
+  assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
+}));
+
+test('interrupted signed attempt is held rather than silently executed after restart',()=>withNode(async({root,agent,token,manifest})=>{
+  const idempotency_key='interrupted-before-signed-journal';
+  const request={
+    device_id:manifest.device_id,
+    workload_class:'systemia.content-hash.v1',
+    idempotency_key,
+    payload:{value:'this must not re-execute'},
+    requested_memory_mb:0,
+    requested_cpu_fraction:0,
+  };
+  const { normalizeMicroSeedExecutionRequest }=await import('./microseed-executor.mjs');
+  const normalized=normalizeMicroSeedExecutionRequest(request);
+  await reserveSignedMicroSeedExecution({
+    stateDir:path.join(root,'state'),
+    device_id:manifest.device_id,
+    idempotency_key,
+    request_hash:normalized.request_hash,
+    manifest_hash:manifest.manifest_hash,
+    workload_class:normalized.workload_class,
+  });
+  const response=await fetch(agent.url+'/v1/execute',{
+    method:'POST',headers:{
+      authorization:'Bearer '+token,'content-type':'application/json',
+    },body:JSON.stringify({request}),
+  });
+  assert.equal(response.status,422);
+  assert.equal((await response.json()).error,'microseed_execution_intent_unresolved');
+  assert.equal(fs.existsSync(path.join(root,'state','idempotency')),false);
   assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
 }));
 
