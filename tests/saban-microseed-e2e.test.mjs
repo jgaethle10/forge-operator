@@ -242,6 +242,7 @@ test('Saban gateway quarantines Node001 across every work-dispatch endpoint befo
       endpoint:'http://127.0.0.1:1',
       supported_workloads:['systemia.content-hash.v1'],
       resources:{cpu_units:1,memory_mb:1024,storage_gb:1},
+      attestation:{mode:'device',device_identity:'synthetic-quarantine-identity'},
     });
     const registry=new AmbientDeviceRegistry({root:registryRoot});
     registry.observe({device_id:deviceId});
@@ -259,6 +260,7 @@ test('Saban gateway quarantines Node001 across every work-dispatch endpoint befo
       capability_manifest_hash:manifest.manifest_hash,
       attestation_identity:manifest.attestation.device_identity,
     });
+    assert.equal(registry.list({now:new Date()}).eligible_count,1);
     gateway=await startMicroSeedGateway({
       registryRoot,
       stateDir:path.join(root,'gateway-state'),
