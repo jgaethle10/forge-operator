@@ -1,6 +1,6 @@
 # FIRST-CONTACT-001 | Evercraft anomalous technology research
 
-**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-10.
+**Status:** research branch / preliminary evidence and reproducibility baseline. **Owner:** Evercraft LLC. **Route:** Systemia-first. **Last source review:** 2026-11-15.
 
 ## Mission
 
@@ -120,6 +120,16 @@ Review: `node --test systemia/research/first-contact/*.test.mjs` on this branch 
 - **Field protocol:** `PIXEL_ERROR_FIELD_GATE.md` requires separately verified intrinsics, distortion rectification, pixel localization scatter, synchronized frame identity, surveyed camera geometry, pre-capture thresholds and independent scientific review. The next milestone remains a real, permitted known stationary reference-target session.
 - **GitHub proof:** the dedicated FIRST-CONTACT research workflow **passed** for the math/11-test commit `7e60286e...` (run `43770001014`) and for the executable/fixtures/5-test commit `47736b5d...` (run `43770118928`). Later documentation and mission commits must be checked separately. None of these runs validates real camera accuracy.
 - **Execution and evidence:** Systemia agents remain `UNASSIGNED` / `NOT_DISPATCHED`; no live hardware, actual camera input, new physical sample, unusual propulsion finding or extraterrestrial origin established. Publication stays `HOLD_REVIEW`.
+
+## Sprint 11, November 15, 2026: local real-image annotation intake
+
+- **First hands-on field tool:** `field-annotation.html` is an owned, zero-CDN local browser desk. It loads two **previously rectified PNG** frames through browser file inputs, checks PNG headers and dimensions, hashes the exact local rectified PNG bytes using WebCrypto, lets an operator click/nudge a reference marker on each image, and imports or accepts per-camera calibration/ENU pose JSON and original capture timestamps. The images are not uploaded or included in the generated packet.
+- **Geometry-validated export:** `field-annotation-core.mjs` generates the existing `evercraft.first-contact.rectified-pixel-two-view.v1` JSON schema, checks supplied camera intrinsics/orientation and PNG dimensions via the existing pixel solver, refuses duplicate cameras and duplicate photo SHA-256, refuses missing quality thresholds and marks **all evidence flags false unless the operator explicitly checks them**. Imported camera metadata is **strictly whitelisted** to the geometry fields; unrelated private notes/API credentials are not copied into the exported measurement.
+- **Browser-independent verification:** `field-annotation-core.test.mjs` tests generated packet compatibility with the real offline two-view CLI, evidence HOLD behavior, PNG metadata/hash bounds, privacy field filtering, and parsing of the inline browser script via Node 22. These are successful code/contract tests, **not a fully observed human browser workflow or a validated field instrument**.
+- **Multi-pair workflow:** `field-annotation-batch.mjs` / `field-annotation-batch-cli.mjs` and integration tests build the existing pixel-based known-target calibration input from **3–500 distinct annotation JSON files**. They bind each source JSON to an exact SHA-256 hash, require unique rectified PNG hashes and increasing synchronized capture times, reject changes in camera calibration or operator-supplied predeclared thresholds, and preserve unverified source provenance flags.
+- **Operator guide:** `FIELD_ANNOTATION_DESK.md` explains how to run the desk from `127.0.0.1` on Node001 or Node002, privately select target markers, export two-view packets and assemble local multi-frame known-target inputs without manually writing the entire JSON. There is still no real lens rectification, optical calibration, independent survey, verified sync or native media authenticity check in the browser desk.
+- **GitHub verification:** Dedicated FIRST-CONTACT research workflow **passed** on batch commit `9350cc0c...` (run `43811899590`) and final camera-metadata privacy commit `ae22f38a...` (run `43812197993`), including the full research Node test glob and offline input integrity audit. Later documentation/mission commits require their own latest-head checks.
+- **Evidence/worker boundary:** All sample inputs are synthetic, original photos supplied by a field operator remain private, a hash does not authenticate a source, and real camera geometry remains unmeasured in this repo. Systemia stays `NOT_DISPATCHED`, agent assignments `UNASSIGNED`, publication `HOLD_REVIEW`.
 
 ## Decision and escalation gates
 
