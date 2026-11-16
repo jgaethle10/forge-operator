@@ -1,0 +1,37 @@
+name: Client001 No Referral Customer Preview HTTPS Proof
+on:
+  push:
+    branches: [verify/client001-no-referral-live-20261115]
+    paths:
+      - .github/workflows/client001-no-referral-live-canary.yml
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify external live page has no customer-facing referral jargon
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/'
+          passed=0
+          for i in {1..12}; do
+            curl --fail --silent --show-error --location --max-time 25 "$URL" -o /tmp/customer.html || true
+            if grep -Fq 'On The Go Mobile Quick Lube | Client Preview V2' /tmp/customer.html &&
+               grep -Fq 'Tap to open your phone or email app. This preview does not take bookings.' /tmp/customer.html &&
+               ! grep -Fq 'How optional referral tracking would work' /tmp/customer.html &&
+               ! grep -Fq 'refCode' /tmp/customer.html &&
+               ! grep -Fq 'beaconTitle' /tmp/customer.html; then
+              passed=1
+              break
+            fi
+            sleep 8
+          done
+          test "$passed" = 1
+          grep -Fq '509-833-5025' /tmp/customer.html
+          grep -Fq 'Cambio de aceite sintético' /tmp/customer.html
+          grep -Fq 'mailto:onthegomobileoilchange@outlook.com' /tmp/customer.html
+          echo 'CLIENT001_CUSTOMER_PAGE_NO_REFERRAL_JARGON_HTTPS_VERIFIED'
+          echo "Page: $URL"
