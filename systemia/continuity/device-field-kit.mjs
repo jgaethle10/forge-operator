@@ -9,7 +9,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { randomBytes } from "node:crypto";
+import { randomBytes, createHash } from "node:crypto";
 import { createVault, verifyVault } from "./source-vault.mjs";
 import { createOfflineKey, sealSourceVault, recoverSealedVault } from "./sealed-transfer.mjs";
 import { rehearseOfflineHome } from "./offline-hq-drill.mjs";
@@ -84,9 +84,17 @@ function stageTools(dir){
  const sourceDir=path.dirname(fileURLToPath(import.meta.url));
  for(const name of TOOL_FILES){
    const from=path.join(sourceDir,name),to=path.join(target,name);
-   if(fs.existsSync(to))throw Error("recovery_tool_already_staged");
    const st=fs.lstatSync(from);
    if(!st.isFile()||st.isSymbolicLink())throw Error("recovery_tool_untrusted");
+   if(fs.existsSync(to)){
+     const existing=fs.lstatSync(to);
+     if(!existing.isFile()||existing.isSymbolicLink()||(existing.mode&0o077)!==0)
+       throw Error("staged_tool_untrusted");
+     const digest=buffer=>createHash("sha256").update(buffer).digest("hex");
+     if(digest(fs.readFileSync(from))!==digest(fs.readFileSync(to)))
+       throw Error("recovery_tool_version_conflict");
+     continue;
+   }
    fs.copyFileSync(from,to,fs.constants.COPYFILE_EXCL);
    fs.chmodSync(to,0o600);
  }
