@@ -58,6 +58,12 @@ test('actual dive archives are discoverable without inventing a synchronized 3D 
  assert.equal(byId('noaa-ex2306-dive02-ancillary').audited_bytes,15727951);
  assert.equal(byId('noaa-ex2306-dive02-ancillary').valid_position_rows_in_window,300);
  assert.match(byId('noaa-ex2306-dive02-ancillary').replay_status,/BLOCKED_PENDING/);
+ const ancillary=byId('noaa-ex2306-dive02-ancillary');
+ assert.equal(ancillary.upstream_interpolation_and_padding,true);
+ assert.equal(ancillary.independent_raw_position_fixes_per_second,false);
+ assert.match(ancillary.noaa_processing_method,/last-good value pad/);
+ assert.match(ancillary.processing_plan_url,/noaa_55994_DS1\.pdf/);
+ assert.match(ancillary.verified_metadata,/not 300 independent raw sensor fixes/);
  assert.equal(byId('ncei-bathymetry-library').mission_id,null);
  assert.equal(byId('noaa-photogrammetry-gallery').mission_id,null);
  assert.match(byId('noaa-photogrammetry-gallery').rights,/VIEW-ONLY RESEARCH/);
