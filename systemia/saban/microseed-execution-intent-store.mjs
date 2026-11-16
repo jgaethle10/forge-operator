@@ -33,6 +33,9 @@ export async function reserveSignedMicroSeedExecution({
   const state=resolve(stateDir);
   // Verify each existing parent before creating a child. A symlinked
   // intermediate parent must not redirect even the initial mkdir.
+  // Fresh native agents may not have a state directory until first work.
+  // Create it with private permissions, then reject redirected roots.
+  await mkdir(state,{recursive:true,mode:0o700});
   need(await realpath(state)===state,'unsafe_root');
   const parent=join(state,'signed-execution-intents');
   await mkdir(parent,{recursive:true,mode:0o700});
