@@ -117,7 +117,7 @@ strong{color:#fff}
 <p class="footnote">All modeled outcomes are deterministic for replay and critique. No real market data is used.</p></div>
 </section>
 <section id="cockpit" class="cockpit" hidden aria-label="Business simulation cockpit">
-<div class="flightbar"><div><div class="kicker" id="flight-label">30-DAY FLIGHT</div><h2 id="day-title">Day 1 of 30</h2></div><div class="progress" aria-label="Flight progress"><span id="progress"></span></div><button class="ghost" id="restart" type="button">Start over</button></div>
+<div class="flightbar"><div><div class="kicker" id="flight-label">30-DAY FLIGHT</div><h2 id="day-title">Day 1 of 30</h2></div><div class="progress" aria-label="Flight progress"><span id="progress"></span></div><div class="setup-actions" style="margin-top:0"><button class="ghost" id="rewind" type="button" disabled>Rewind one day</button><button class="ghost" id="restart" type="button">Start over</button></div></div>
 <div class="metrics" aria-label="Simulation totals">
 <div class="metric"><div class="tag">Available cash</div><div id="cash" class="value">$0</div><div class="sub">Modeled, fictional dollars</div></div>
 <div class="metric"><div class="tag">Revenue to date</div><div id="revenue" class="value">$0</div><div class="sub">Completed days</div></div>
@@ -139,6 +139,7 @@ strong{color:#fff}
 <li><span>Sales</span><strong id="estimate-revenue">$0</strong></li>
 <li><span>Expenses (all-in)</span><strong id="estimate-expenses">$0</strong></li>
 </ul></div>
+<p class="preview-note" id="compare-note" aria-live="polite">Holding course is the comparison baseline for today.</p>
 <p class="preview-note" id="preview-explain">These figures are deterministic arithmetic using visible simplified assumptions, not forecasts.</p>
 <h3>Cash path</h3><div class="spark" id="spark" aria-label="Daily modeled net cash contribution chart"></div>
 <h3 style="margin-top:20px">Assumption ledger</h3><ul class="rows" id="assumptions"></ul>
