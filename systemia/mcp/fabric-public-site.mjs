@@ -1,4 +1,5 @@
 import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
+import {renderWebsiteAuditDecisionJourney} from './website-audit-experience.mjs';
 import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
@@ -21,6 +22,7 @@ const shell=(title,body,{
   ogImageWidth=0,
   ogImageHeight=0,
   ogImageAlt='',
+  noindex=false,
 }={})=>{
   const canonicalUrl=canonical
     ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
@@ -47,6 +49,7 @@ ${socialImage&&ogImageType?'<meta property="og:image:type" content="'+escapeHtml
 ${socialImage&&ogImageWidth?'<meta property="og:image:width" content="'+Number(ogImageWidth)+'">':''}
 ${socialImage&&ogImageHeight?'<meta property="og:image:height" content="'+Number(ogImageHeight)+'">':''}
 ${socialImage&&ogImageAlt?'<meta property="og:image:alt" content="'+escapeHtml(ogImageAlt)+'">':''}
+${noindex?'<meta name="robots" content="noindex,nofollow">':''}
 <meta name="twitter:card" content="${socialImage?'summary_large_image':'summary'}">
 ${socialImage?'<meta name="twitter:image" content="'+socialImage+'">':''}
 <meta name="twitter:title" content="${socialTitle}">
@@ -137,7 +140,7 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 /* A no-charge, consented audit request: this is not Stripe checkout. */
 .audit-intake-form{display:grid;gap:13px;margin-top:22px}
 .audit-intake-form label{font-weight:680;color:#eaf2ff;font-size:14px}
-.audit-intake-form input:not([type="checkbox"]),.audit-intake-form textarea{display:block;margin-top:6px;width:100%;min-width:0;background:#071426;color:#f1f8ff;border:1px solid #477197;border-radius:10px;padding:12px 14px;font:inherit}
+.audit-intake-form input:not([type="checkbox"]),.audit-intake-form textarea,.audit-intake-form select{display:block;margin-top:6px;width:100%;min-width:0;background:#071426;color:#f1f8ff;border:1px solid #477197;border-radius:10px;padding:12px 14px;font:inherit}
 .audit-intake-form input:focus,.audit-intake-form textarea:focus{outline:2px solid #69baf1;outline-offset:2px}
 .audit-intake-form textarea{min-height:92px;resize:vertical}
 .audit-intake-check{display:flex;align-items:flex-start;gap:10px;line-height:1.5}
@@ -440,13 +443,13 @@ function renderWebsiteAuditPreview(){
 
 function renderHeldWebsiteAuditInquiryForm(){
   return [
-    '<section class="offer-panel" aria-label="Request a $49 Website Audit">',
+    '<section id="audit-order" class="offer-panel" aria-label="Request a $49 Website Audit">',
     '<h2>Request your Quick Win Audit</h2>',
     '<p>Tell us which public website you want reviewed. Evercraft will confirm the scope, availability, and exact $49 payment option by email before asking you to pay.</p>',
     '<form class="audit-intake-form" method="post" action="/api/website-audit/inquiry">',
     '<label for="audit-inquiry-email">Your email<input id="audit-inquiry-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@business.com" required></label>',
     '<label for="audit-inquiry-url">Public website to review<input id="audit-inquiry-url" name="website_url" type="url" inputmode="url" maxlength="1000" placeholder="https://yourbusiness.com" required></label>',
-    '<label for="audit-inquiry-goal">What would you like the site to do better? (optional)<textarea id="audit-inquiry-goal" name="goal" maxlength="600" placeholder="More calls, bookings, purchases, or clearer contact details"></textarea></label>',
+    '<label for="audit-inquiry-goal">What should your website do better?<select id="audit-inquiry-goal" name="goal" required><option value="" disabled selected>Choose your top priority</option><option value="Get more phone calls">Get more phone calls</option><option value="Get more quote requests">Get more quote requests</option><option value="Get more bookings">Get more bookings</option><option value="Get more online orders">Get more online orders</option><option value="Make the site clearer and easier to trust">Make the site clearer and easier to trust</option></select></label>',
     '<div hidden aria-hidden="true"><label>Leave blank<input name="company_website_honey" tabindex="-1" autocomplete="off"></label></div>',
     '<label class="audit-intake-check"><input type="checkbox" name="consent" value="yes" required><span>I agree that Evercraft may store this request privately and contact me about this specific audit. Read the <a href="/privacy">privacy policy</a>.</span></label>',
     '<button class="btn primary audit-intake-submit" type="submit">Request audit review</button>',
@@ -476,7 +479,8 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="offer-price-note">'+escapeHtml(offerName)+(copy.slug==='website-audit'?' · one public website · five prioritized fixes':' · '+escapeHtml(item.pricing||''))+'</div>',
+    copy.slug==='website-audit'?renderWebsiteAuditDecisionJourney():'',
     ...(checkoutHeld ? (copy.slug==='website-audit'&&auditInquiryAvailable ? [
       renderHeldWebsiteAuditInquiryForm(),
     ] : [
@@ -487,11 +491,11 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
         :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
       copy.slug==='signal-brief'
         ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/signal/#request">Prepare my incident brief request</a><a class="btn" href="/offers">Explore Evercraft offers</a></div>'
-        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
+        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Email Evercraft for invoicing</a></div>',
       '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
       '</section>',
     ]) : [
-    '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
+    '<form '+(copy.slug==='website-audit'?'id="audit-order" ':'')+'class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<label for="offer-customer-email">Email for your receipt and delivery</label>',
@@ -520,6 +524,43 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
     ogImageWidth:copy.shareImageWidth||0,
     ogImageHeight:copy.shareImageHeight||0,
     ogImageAlt:copy.shareImageAlt||'',
+  });
+}
+
+export function renderWebsiteAuditPaymentStatus({state='pending',queued=false}={}){
+  const known=['paid','pending','invalid','synthetic'];
+  const status=known.includes(state)?state:'pending';
+  const paid=status==='paid', isQueued=paid&&queued===true;
+  const heading=paid?'Payment verified.':status==='synthetic'?'QA transaction only.':status==='invalid'?'This checkout cannot be verified.':'We are checking your payment.';
+  const explanation=paid
+    ?(isQueued?'Evercraft Payments verified the order and the audit job was queued. A queued job is not yet a completed report.':'Evercraft Payments verified the order. Report preparation and delivery still need independent confirmation.')
+    :status==='synthetic'?'This is a synthetic verification, not a real customer purchase. No customer report has been authorized.'
+    :status==='invalid'?'The return details did not match an authorized Website Audit order. We cannot confirm any payment or begin work.'
+    :'We do not yet have a matching provider-paid receipt. Do not pay again until the payment is verified. If you paid, keep your receipt.';
+  const badge=paid?'Provider payment confirmed':status==='synthetic'?'Test only':status==='invalid'?'Verification unavailable':'Awaiting payment evidence';
+  const progress=(label,complete,note)=>'<div style="display:grid;grid-template-columns:32px 1fr;gap:13px;align-items:start;padding:14px 0;border-bottom:1px solid #284766"><div aria-hidden="true" style="width:28px;height:28px;display:grid;place-items:center;border-radius:50%;border:1px solid '+(complete?'#78d9bb':'#577690')+';background:'+(complete?'#164334':'#16283c')+';color:'+(complete?'#acf0d8':'#b7cde0')+';font-size:12px;font-weight:800">'+(complete?'✓':'·')+'</div><div><strong style="display:block;color:#f4f9ff">'+escapeHtml(label)+'</strong><span style="font-size:13px;color:#b7cde0;line-height:1.6">'+escapeHtml(note)+'</span></div></div>';
+  return shell('Website Audit order status · Evercraft',[
+    '<main style="max-width:870px;margin:0 auto;padding:60px 0 100px">',
+    '<div class="eyebrow">Evercraft Payments · Website Audit</div>',
+    '<h1 style="font-size:clamp(38px,6.8vw,68px);margin:18px 0 20px;max-width:850px">'+heading+'</h1>',
+    '<p class="lede">'+escapeHtml(explanation)+'</p>',
+    '<section aria-label="Payment and delivery progress" style="padding:clamp(20px,4vw,36px);margin:34px 0 24px;border:1px solid #355d7d;border-radius:22px;background:linear-gradient(140deg,#102b41,#0a1728)">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap"><h2 style="margin:0;font-size:23px">Your audit journey</h2><span style="border:1px solid #5585a5;padding:8px 12px;border-radius:999px;font-size:12px;color:#d6eeff">'+escapeHtml(badge)+'</span></div>',
+    progress('Secure checkout',paid,'Checkout details alone never prove payment.'),
+    progress('Provider-paid receipt',paid,'Only matching evidence from Evercraft Payments can confirm this step.'),
+    progress('Audit work queued',isQueued,'We inspect one public site and prioritize five specific fixes.'),
+    progress('Reviewed report delivered',false,'A completed, reviewed delivery is confirmed separately.'),
+    '</section>',
+    '<section aria-label="Next step" class="offer-panel">',
+    '<h2>'+(paid?'What happens next?':'Need assistance?')+'</h2>',
+    '<p>'+(paid?'Check the email address used for checkout for updates. No report is claimed delivered on this page.':'If you have a charge or receipt, preserve it and email us. Do not repeat a payment just because the return page is pending.')+'</p>',
+    '<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=Website%20Audit%20order%20status">Email Evercraft about this order</a><a class="btn" href="/offers/website-audit">Website Audit details</a></div>',
+    '<p class="checkout-note">We do not require a phone call to request help. This page never takes a second payment.</p>',
+    '</section></main>'
+  ].join('\n'),{
+    description:'Secure Website Audit order-status page with verified payment and delivery state.',
+    canonical:'/offers/website-audit',
+    noindex:true,
   });
 }
 
@@ -566,9 +607,8 @@ export function renderPaymentHoldPage({slug='',orderKey='',noAttempt=false}={}){
     '<h1>'+ (noAttempt?'Checkout is temporarily unavailable.':'Checkout could not be confirmed.') +'</h1>',
     '<p class="lede">'+message+'</p>',
     '<div class="actions">',
-    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Request payment assistance</a>',
+    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Email Evercraft for payment help</a>',
     '<a class="btn" href="'+back+'">Return to the offer</a>',
-    '<a class="btn" href="tel:+15097590440">Call Evercraft</a>',
     '</div>',
     order?'<div class="checkout-note">Reference to mention when contacting support: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',

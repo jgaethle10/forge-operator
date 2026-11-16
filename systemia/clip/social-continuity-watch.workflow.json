@@ -12,10 +12,16 @@
   "inputs": {
     "review_queue": "distribution/marketing/evercraft-problem-first-20261022.review.json",
     "provider_receipt_directory": "artifacts/clip/social-publish-receipts",
-    "receipt_directory_override": "SYSTEMIA_CLIP_SOCIAL_RECEIPTS_DIR"
+    "receipt_directory_override": "SYSTEMIA_CLIP_SOCIAL_RECEIPTS_DIR",
+    "additional_read_only_campaigns": [
+      "distribution/marketing/evercraft-services-clip-20261110.review.json"
+    ]
   },
   "outputs": {
-    "latest_receipt": "artifacts/clip/social-continuity-watch/latest.json"
+    "latest_receipt": "artifacts/clip/social-continuity-watch/latest.json",
+    "additional_receipts": [
+      "artifacts/clip/social-continuity-watch/commercial-services/latest.json"
+    ]
   },
   "authority": {
     "source": "review_queue_and_local_clip_provider_receipts",

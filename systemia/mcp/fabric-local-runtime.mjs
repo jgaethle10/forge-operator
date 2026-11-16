@@ -31,6 +31,7 @@ import {
   listHumanOffers,
   renderPaymentHandoffPage,
   renderPaymentHoldPage,
+  renderWebsiteAuditPaymentStatus,
   renderAliEvLanding,
 } from './fabric-public-site.mjs';
 import {
@@ -1453,6 +1454,7 @@ export async function startFabricLocalRuntime({
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
           if(parsed.searchParams.get('payment')==='processing'){
             const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch,directPaymentOpsEndpoint);
+            if(slug==='website-audit')return sendMobileHtml(res,result.status,renderWebsiteAuditPaymentStatus(result));
             const message=result.state==='paid'?'Payment verified. '+(result.queued?'Your work is queued.':'Delivery status is awaiting confirmation.'):
               result.state==='synthetic'?'QA payment verified. No fulfillment was released.':
               result.state==='invalid'?'Checkout return cannot be verified. Do not pay twice. Contact Evercraft using your checkout email.':

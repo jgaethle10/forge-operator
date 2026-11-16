@@ -1,4 +1,4 @@
-name: Spatial perception V7
+name: Spatial perception V8
 on:
   pull_request:
     paths:
@@ -57,8 +57,8 @@ jobs:
           python-version: '3.11'
       - name: Python offline import contract tests (no model or cloud inference)
         run: python3 -m unittest discover -s systemia/spatial-perception -p 'test_*.py' -v
-      - name: Syntax-check offline runner
-        run: python3 -m py_compile systemia/spatial-perception/offline_stereo.py
+      - name: Syntax-check offline runner, stereo kit and field evaluator
+        run: python3 -m py_compile systemia/spatial-perception/offline_stereo.py systemia/spatial-perception/stereo_fieldkit.py systemia/spatial-perception/field_evaluation.py
 
   synthetic-end-to-end:
     runs-on: ubuntu-latest
@@ -80,3 +80,5 @@ jobs:
             onnx==1.17.0 onnxruntime==1.20.1
       - name: Run synthetic ONNX stereo video, JS adapters, and field metric evaluation
         run: python3 -m unittest discover -s systemia/spatial-perception -p 'e2e_synthetic_stereo.py' -v
+      - name: Run synthetic checkerboard calibration and rectified-video handoff
+        run: python3 -m unittest discover -s systemia/spatial-perception -p 'e2e_stereo_fieldkit.py' -v

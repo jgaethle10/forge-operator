@@ -18,9 +18,9 @@ const offer={
 test('held transport offers honest assisted contact rather than a broken checkout',()=>{
   const held=renderOfferPage(offer,{checkoutConfigured:false});
   assert.match(held,/Online checkout is temporarily unavailable/);
-  assert.match(held,/Request assisted invoicing/);
+  assert.match(held,/Email Evercraft for invoicing/);
   assert.match(held,/mailto:jessegaethle10@gmail.com\?subject=/);
-  assert.match(held,/tel:\+15097590440/);
+  assert.doesNotMatch(held,/tel:|Call Evercraft/);
   assert.match(held,/\$49/);
   assert.doesNotMatch(held,/Continue to checkout/);
   assert.doesNotMatch(held,/class="checkout-form"/);
@@ -38,7 +38,10 @@ test('unconfigured Fabric runtime exposes assisted contact but no checkout form'
     const response=await fetch(runtime.url+'/offers/website-audit');
     assert.equal(response.status,200);
     const html=await response.text();
-    assert.match(html,/Request assisted invoicing/);
+    assert.match(html,/Request your Quick Win Audit/);
+    assert.ok(html.includes('method="post" action="/api/website-audit/inquiry"'));
+    assert.match(html,/No charge, payment order, or automatic audit starts here/);
+    assert.doesNotMatch(html,/Request assisted invoicing/);
     assert.doesNotMatch(html,/Continue to checkout/);
     assert.doesNotMatch(html,/class="checkout-form"/);
   }finally{await runtime.close()}
@@ -58,7 +61,10 @@ test('one configured owned endpoint is not sufficient to publish a checkout CTA'
       const response=await fetch(runtime.url+'/offers/website-audit');
       assert.equal(response.status,200);
       const html=await response.text();
-      assert.match(html,/Request assisted invoicing/);
+      assert.match(html,/Request your Quick Win Audit/);
+    assert.ok(html.includes('method="post" action="/api/website-audit/inquiry"'));
+    assert.match(html,/No charge, payment order, or automatic audit starts here/);
+    assert.doesNotMatch(html,/Request assisted invoicing/);
       assert.doesNotMatch(html,/Continue to checkout/);
       assert.doesNotMatch(html,/class="checkout-form"/);
     }finally{await runtime.close()}
