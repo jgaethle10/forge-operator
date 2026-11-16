@@ -17,6 +17,7 @@ import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs"
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
 import { inspectClipFacebookConnection } from "../clip/facebook-page-connection-diagnostic.mjs";
+import { createMetaPageReconnect } from "./meta-page-reconnect.mjs";
 import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
@@ -171,6 +172,14 @@ export async function startEvercraftHomeServer({
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
+  const metaPageReconnect = createMetaPageReconnect({
+    appId: String(serviceOrigins?.CLIP_META_APP_ID || "").trim(),
+    appSecretFile: String(serviceOrigins?.CLIP_META_APP_SECRET_FILE || "").trim(),
+    redirectUri: String(serviceOrigins?.CLIP_META_REDIRECT_URI || "").trim(),
+    graphVersion: String(serviceOrigins?.CLIP_META_GRAPH_VERSION || "v27.0").trim(),
+    credentialVault,
+    fetchImpl: clipFacebookFetch,
+  });
   if (ownerClaimSha256 && !/^[a-f0-9]{64}$/.test(ownerClaimSha256)) {
     throw new Error("owner_claim_sha256_invalid");
   }
@@ -591,6 +600,52 @@ export async function startEvercraftHomeServer({
     if (req.method === "GET" && url.pathname === "/api/session") {
       const session = sessionFor(req);
       return json(res, session.ok ? 200 : session.status, session);
+    }
+
+    // Authenticated one-login Meta Pages connection. Callback receives no Home
+    // session cookie because it originates cross-site: only unguessable,
+    // single-use state is redeemed. Page selection needs the original Passport
+    // session after the owner returns by clicking a first-party link.
+    if (req.method === "GET" && url.pathname === "/api/clip/facebook/oauth/status") {
+      if (authMode !== "passport") return json(res, 403, {ok:false,state:"passport_required"});
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, metaPageReconnect.status(session));
+    }
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/oauth/start") {
+      if (authMode !== "passport") return json(res, 403, {ok:false,state:"passport_required"});
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      try { return json(res, 200, metaPageReconnect.start(session)); }
+      catch (error) { return json(res, 409, {ok:false,state:String(error.message||"meta_start_failed")}); }
+    }
+    if (req.method === "GET" && url.pathname === "/api/clip/facebook/oauth/callback") {
+      const outcome = await metaPageReconnect.callback({
+        state: url.searchParams.get("state"),
+        code: url.searchParams.get("code"),
+        error: url.searchParams.get("error"),
+      });
+      const message = outcome.ok
+        ? "Meta authorization received. Return to Evercraft to review your Pages. Nothing has been connected or published yet."
+        : "Meta authorization was not completed. Return to Evercraft and start again. No Pages were connected.";
+      return html(res, outcome.ok ? 200 : 400,
+        '<!doctype html><html><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><title>Evercraft Clip · Meta authorization</title></head><body style="font:16px system-ui;max-width:640px;margin:70px auto;padding:24px"><h1>Evercraft Clip</h1><p>' + message + '</p><p><a href="' + metaPageReconnect.returnPath + '">Return to Evercraft Connections</a></p></body></html>');
+    }
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/oauth/commit") {
+      if (authMode !== "passport") return json(res, 403, {ok:false,state:"passport_required"});
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 8192);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            Object.keys(body).length !== 1 || !Object.hasOwn(body,"page_ids")) {
+          throw Error("meta_page_selection_invalid");
+        }
+        return json(res, 200, metaPageReconnect.commit(session, body.page_ids));
+      } catch (error) {
+        const state = String(error.message || "meta_page_selection_invalid");
+        return json(res, 409, {ok:false,state,secret_material_returned:false,publishing_enabled:false});
+      }
     }
 
     const providerCredentialMatch = url.pathname.match(
