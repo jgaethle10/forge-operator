@@ -134,6 +134,13 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
                     "--video",self.source,"--output-video",self.rectified,
                     "--receipt",self.receipt,"--max-frames","4",
                     "--authorized-source","--reviewed-calibration")
+    def rectify_field(self):
+        return call(KIT,"rectify","--calibration",self.calibration,
+                    "--video",self.source,"--output-video",self.rectified,
+                    "--receipt",self.receipt,"--max-frames","4",
+                    "--authorized-source","--reviewed-calibration",
+                    "--field-mode","--heldout-report",self.heldout_report)
+
 
     def heldout_check(self, output=None):
         return call(HELDOUT,"--calibration",self.calibration,
@@ -177,6 +184,24 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
             "heldout_epipolar_failed_review_required")
         self.assertGreater(receipt["verticalEpipolarResidualPx"]["p95AbsVerticalPx"],1.5)
         self.assertFalse(receipt["worldPersistenceAuthorized"])
+        refused=self.rectify_field()
+        self.assertNotEqual(refused.returncode,0)
+        self.assertIn("heldout_receipt_not_accepted",refused.stderr)
+        self.assertFalse(self.rectified.exists())
+
+    def test_field_mode_rejects_missing_or_stale_heldout(self):
+        self.assertEqual(self.calibrate().returncode,0)
+        without=self.rectify_field()
+        self.assertEqual(without.returncode,2)
+        self.assertIn("missing_or_unsafe_heldout_receipt",without.stderr)
+        self.assertEqual(self.heldout_check().returncode,0)
+        # A single changed byte of calibration JSON breaks receipt binding.
+        self.calibration.write_bytes(self.calibration.read_bytes()+b" ")
+        stale=self.rectify_field()
+        self.assertEqual(stale.returncode,2)
+        self.assertIn("heldout_receipt_not_accepted",stale.stderr)
+        self.assertFalse(self.rectified.exists())
+        self.assertFalse(self.receipt.exists())
 
     def test_heldout_reused_calibration_pair_fails_without_report(self):
         calibrated=self.calibrate()
@@ -202,8 +227,10 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         self.assertFalse(data["realWorldAccuracyCertified"])
         self.assertFalse(data["timestampSyncVerified"])
         self.assertEqual(self.calibration.stat().st_mode & 0o777,0o600)
+        preflight=self.heldout_check()
+        self.assertEqual(preflight.returncode,0,preflight.stderr)
 
-        rect=self.rectify()
+        rect=self.rectify_field()
         self.assertEqual(rect.returncode,0,rect.stderr)
         receipt=json.loads(self.receipt.read_text())
         self.assertEqual(receipt["framesWritten"],4)
@@ -214,6 +241,11 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         self.assertEqual(receipt["calibrationFileSha256"],
             hashlib.sha256(self.calibration.read_bytes()).hexdigest())
         self.assertFalse(receipt["fieldAccuracyCertified"])
+        self.assertTrue(receipt["fieldModeRequested"])
+        self.assertTrue(receipt["heldoutProvisionalPassBound"])
+        self.assertEqual(receipt["heldoutEpipolarReceiptSha256"],
+            hashlib.sha256(self.heldout_report.read_bytes()).hexdigest())
+        self.assertLessEqual(receipt["heldoutEpipolarP95Px"],1.5)
         cap=cv2.VideoCapture(str(self.rectified))
         observed=0
         while True:
