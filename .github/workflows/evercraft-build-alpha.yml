@@ -1,0 +1,30 @@
+name: Evercraft Build alpha acceptance
+on:
+  pull_request:
+    paths:
+      - 'public/build/**'
+      - 'tests/evercraft-build-alpha.test.mjs'
+      - '.github/workflows/evercraft-build-alpha.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/build/**'
+      - 'tests/evercraft-build-alpha.test.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  alpha-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check pure engine and app syntax
+        run: |
+          node --check public/build/engine.mjs
+          node --check public/build/app.mjs
+      - name: Verify alpha contract
+        run: node --test tests/evercraft-build-alpha.test.mjs
