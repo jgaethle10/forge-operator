@@ -1,0 +1,30 @@
+name: Evercraft Plugin Live Read-only Canary
+
+on:
+  schedule:
+    - cron: '13 */12 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/probe-evercraft-plugin-live.mjs'
+      - '.github/workflows/evercraft-plugin-live-canary.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-plugin-live-canary
+  cancel-in-progress: true
+
+jobs:
+  verify-public-plugin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify public Evercraft MCP discovery without payment or customer data
+        run: node scripts/probe-evercraft-plugin-live.mjs
