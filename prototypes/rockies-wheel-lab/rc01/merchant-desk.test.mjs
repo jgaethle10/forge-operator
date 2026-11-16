@@ -11,10 +11,12 @@ const row='W-100,"Spoke, twin",Bronze,19,249.95';
 function launch() {
   const elements=new Map();
   const created=[];
-  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary','sourcingBrief','codeInput','loadCode']){
+  for(const id of ['shop','inventoryFile','catalogNote','item','quantity','vehicle','service','message','selectedSku','unitPrice','selectedQty','subtotal','dataState','export','reset','conceptFile','conceptSummary','sourcingBrief','codeInput','loadCode','viewConcept']){
     elements.set(id,{
       value: id==='quantity'?'4':id==='service'?'none':'',
       textContent:'', listeners:{}, children:[],
+      href:id==='viewConcept'?'./index.html':'',hidden:id==='viewConcept',
+      getAttribute(name){return name==='href'?this.href:null},
       addEventListener(type,cb){this.listeners[type]=cb},
       replaceChildren(){this.children=[];this.value='0'},
       append(child){this.children.push(child)},
@@ -345,4 +347,69 @@ test('RC10 shopper generated codes round-trip across all allowed appearance sele
     checked++;
   }
   assert.equal(checked,600);
+});
+
+test('RC11 local merchant preview displays the exact accepted appearance and no private fields',()=>{
+  const {api,elements}=launch();
+  const view=elements.get('viewConcept');
+  assert.equal(view.hidden,true);
+  assert.equal(view.href,'./index.html');
+  assert.throws(()=>api.visualPreviewHref(null),/No accepted appearance/);
+  elements.get('vehicle').value='SECRET VIN 12345';
+  elements.get('shop').value='PRIVATE SHOP NAME';
+  elements.get('codeInput').value='WL1-13221-1';
+  elements.get('loadCode').listeners.click();
+  assert.equal(view.hidden,false);
+  assert.equal(view.href,'./index.html?paint=blue&style=turbine&size=20&finish=bronze');
+  const preview=new URL(view.href,'https://review.example/rc01/');
+  assert.equal(preview.pathname,'/rc01/index.html');
+  assert.deepEqual([...preview.searchParams.keys()].sort(),['finish','paint','size','style']);
+  assert.doesNotMatch(view.href,/SECRET|VIN|PRIVATE|shop=|contact|findmypart/);
+  assert.equal(api.packet().requested_appearance.fitment_verified,false);
+  elements.get('reset').listeners.click();
+  assert.equal(view.hidden,true);
+  assert.equal(view.href,'./index.html');
+  assert.throws(()=>api.visualPreviewHref(undefined),/No accepted appearance/);
+});
+
+test('RC11 rejects forged appearance before changing an accepted visual preview link',()=>{
+  const {api,elements}=launch();
+  elements.get('codeInput').value='WL1-02000-2';
+  elements.get('loadCode').listeners.click();
+  const approved=elements.get('viewConcept').href;
+  assert.ok(!elements.get('viewConcept').hidden);
+  for(const candidate of [
+    {...api.packet().requested_appearance,wheel_design:'javascript:alert(1)'},
+    {...api.packet().requested_appearance,paint:'blue&email=private'},
+    {...api.packet().requested_appearance,wheel_finish:'fake'},
+    {...api.packet().requested_appearance,diameter_in:30}
+  ])assert.throws(()=>api.visualPreviewHref(candidate),/Unsupported/);
+  elements.get('codeInput').value='WL1-02000-3';
+  elements.get('loadCode').listeners.click();
+  assert.match(elements.get('message').textContent,/Code rejected/);
+  assert.equal(elements.get('viewConcept').href,approved);
+  assert.deepEqual([...new URL(approved,'https://review.example/rc01/').searchParams.keys()].sort(),['finish','paint','size','style']);
+});
+
+test('RC11 all accepted shopper code permutations map into exactly four safe visual parameters',()=>{
+  const {api}=launch();
+  const style=['orbit','turbine','mesh','heritage'],finish=['black','silver','bronze'],paint=['red','white','blue','silver','black'];
+  let count=0;
+  for(let s=0;s<4;s++)for(let z=0;z<5;z++)for(let f=0;f<3;f++)for(let p=0;p<5;p++)for(let interest=0;interest<2;interest++){
+    const checksum=(s*7+z*3+f*5+p*9+interest*11+6)%10;
+    const code='WL1-'+[s,z,f,p,interest].join('')+'-'+checksum;
+    const concept=api.parseConceptCode(code),url=api.visualPreviewHref(concept);
+    const parsed=new URL(url,'https://review.example/rc01/');
+    assert.equal(parsed.origin,'https://review.example');
+    assert.equal(parsed.pathname,'/rc01/index.html');
+    assert.equal(parsed.searchParams.get('style'),style[s]);
+    assert.equal(parsed.searchParams.get('size'),String(z+17));
+    assert.equal(parsed.searchParams.get('finish'),finish[f]);
+    assert.equal(parsed.searchParams.get('paint'),paint[p]);
+    assert.deepEqual([...parsed.searchParams.keys()].sort(),['finish','paint','size','style']);
+    assert.equal(parsed.hash,'');
+    assert.equal(concept.fitment_verified,false);
+    count++;
+  }
+  assert.equal(count,600);
 });
