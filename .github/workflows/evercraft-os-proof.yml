@@ -9,6 +9,8 @@ on:
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-integration-adapter.mjs"
       - "systemia/evercraft-home/os-outcome-source-audit.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.test.mjs"
       - "systemia/evercraft-home/os-outcome-source-audit.test.mjs"
       - "systemia/evercraft-home/os-saban-snapshot.mjs"
       - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
@@ -25,6 +27,8 @@ on:
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-integration-adapter.mjs"
       - "systemia/evercraft-home/os-outcome-source-audit.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.test.mjs"
       - "systemia/evercraft-home/os-outcome-source-audit.test.mjs"
       - "systemia/evercraft-home/os-saban-snapshot.mjs"
       - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
@@ -71,6 +75,8 @@ jobs:
         run: node --test systemia/evercraft-home/os-integration.test.mjs
       - name: Prove commercial outcome receipts do not fabricate live authority
         run: node --test systemia/evercraft-home/os-outcome-source-audit.test.mjs
+      - name: Prove signed private outcome bridge is scoped and replay-safe
+        run: node --test systemia/evercraft-home/os-private-outcome-readback.test.mjs
       - name: Prove private Saban aggregates and scoped commerce projection
         run: node --test systemia/evercraft-home/os-operational-readbacks.test.mjs
       - name: Emit boot envelope
