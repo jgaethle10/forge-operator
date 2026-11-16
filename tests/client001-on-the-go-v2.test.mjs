@@ -1,0 +1,45 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {test} from 'node:test';
+
+const html=fs.readFileSync('public/clients/on-the-go/review/index.html','utf8');
+test('V2 authentic client media and brand review gates',()=>{
+ assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V2<\/title>/);
+ assert.match(html,/noindex,nofollow,noarchive/);
+ assert.match(html,/--navy:#0b2342/);
+ assert.match(html,/--green:#3bd275/);
+ assert.match(html,/JUAN BELLO/);
+ assert.match(html,/509-833-5025/);
+ assert.match(html,/tel:\+15098335025/);
+ assert.match(html,/mailto:onthegomobileoilchange@outlook\.com/);
+ assert.match(html,/Not a live booking service/);
+ assert.match(html,/Full synthetic \+ tire rotation/);
+ const embedded=[...html.matchAll(/data:image\/jpeg;base64,([a-zA-Z0-9+/=]+)/g)];
+ assert.equal(embedded.length,4,'approved customer image frames embedded locally');
+ for(const [,b64] of embedded){const img=Buffer.from(b64,'base64');assert.equal(img[0],0xff);assert.equal(img[1],0xd8);assert.ok(img.length>10_000);}
+ assert.doesNotMatch(html,/<script[^>]*src\s*=/i);
+ assert.doesNotMatch(html,/\bfetch\s*\(|\bXMLHttpRequest\b|\bnavigator\.sendBeacon\b/);
+ assert.doesNotMatch(html,/gtag\(|facebook\.com\/tr\//);
+});
+test('English and Spanish selection prepares customer-authored email, no tracking',()=>{
+ const src=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];assert.ok(src);
+ const elements=new Map(),events=new Map();
+ const get=id=>{if(!elements.has(id))elements.set(id,{dataset:{},textContent:'',href:'',attrs:{},setAttribute(k,v){this.attrs[k]=v},addEventListener(type,cb){events.set(id+':'+type,cb)},scrollIntoView(){}});return elements.get(id)};
+ const hero=get('hero1');hero.dataset.i18n='hero1';
+ const full={dataset:{service:'full'},addEventListener(type,cb){events.set('full:'+type,cb)}};
+ const document={documentElement:{lang:'en'},getElementById:get,querySelectorAll(selector){if(selector==='[data-i18n]')return[hero];if(selector==='[data-service]')return[full];return[]}};
+ const crypto={getRandomValues(a){for(let i=0;i<a.length;i++)a[i]=i+11;return a;}};
+ const window={matchMedia(){return{matches:true}}};
+ vm.runInNewContext(src,{document,location:{search:'?ec_source=EC-ES-001'},URLSearchParams,crypto,window}, {timeout:3000});
+ assert.equal(hero.textContent,'Your day keeps moving.');
+ assert.match(decodeURIComponent(get('emailCta').href),/EC-ES-001/);
+ events.get('full:click')();
+ assert.match(get('selection').textContent,/Full synthetic oil change/);
+ events.get('es:click')();
+ assert.equal(document.documentElement.lang,'es');
+ assert.equal(hero.textContent,'Tu día sigue.');
+ assert.match(get('selection').textContent,/Cambio de aceite sintético/);
+ assert.match(decodeURIComponent(get('emailCta').href),/Me interesa: Cambio de aceite sintético/);
+ assert.equal(get('refCode').textContent,'EC-0B0C0D0E0F10');
+});
