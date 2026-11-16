@@ -43,3 +43,37 @@ A first documentary-grade 60s teaser should contain an atmospheric observed open
 ## Acceptance remaining
 
 Creative gate CI green -> owned-node runtime and decode proof -> licensed *real* moving source footage -> approved editable timeline -> excellent 1080p mix and final mastered export -> phone/desktop full viewing -> independently authenticated rights and editorial verification -> named founder signoff -> private client review -> scoped contract/payment/delivery. A green technical receipt does not eliminate any of these steps.
+
+
+## November 15 source-to-final-pixels proof
+
+The production CLI now requires an **authorized private media root** as its fourth argument:
+
+    node systemia/media-studio/documentary-cinematic-gate.mjs \
+      ./private/final-master.mp4 \
+      ./private/cinematic-manifest.json \
+      ./private/cinematic-receipt.json \
+      /private/verified-camera-media
+
+Each real \`sources[]\` entry must carry its actual absolute path, 64-hex SHA-256,
+film-use consent declaration, rights and privacy evidence references, and origin
+reference. Each footage \`shots[]\` entry must include \`sourceInSec\` so the
+exact source trim can be checked. The source verifier checks bytes, file type,
+video stream metadata, safe paths, and trim ranges. It requires three distinct
+verified source files and at least 60% bound footage runtime before advancing.
+
+The additional \`documentary-source-concordance.mjs\` inspector compares
+grayscale decoded sample frames at each footage shot midpoint against the
+corresponding frame in the exact exported master (SHA-256 bound). Default
+minimum correlation is 0.58; the CLI does not accept a lowered threshold.
+Mismatches are **blocked** for private editorial preview and require a
+corrected edit or further human inspection and reviewed tooling adjustments.
+Genuine reframing, multiple layers, transitions and heavy grades can cause
+conservative false positives; similarity cannot authenticate news provenance,
+licensing, artistic quality or all frames. A match at sample points does not
+prove all pixels or all footage are legitimate.
+
+**Important:** CI uses synthetic images/encoded videos with fictional test
+rights solely to test failure behavior. No owned-node deployment or
+rights-cleared client film has been completed by these new checks. Draft PR
+review and real-world creative approval remain mandatory.
