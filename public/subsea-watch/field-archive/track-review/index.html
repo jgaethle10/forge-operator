@@ -51,20 +51,20 @@ footer{margin-top:26px;font-size:12px;color:var(--soft);max-width:920px}
 <section class="hero">
 <div class="overline">Real NOAA source readings · research preview</div>
 <h1>The dive's <em>recorded trace.</em></h1>
-<p class="lead">A first look at the original ROV 1Hz records from Kodiak Seep, August 25, 2023. These are two-dimensional source fields and signed depth observations, not a reconstructed underwater world.</p>
-<div class="warning"><strong>Unverified positioning:</strong> The original LAT_DD / LON_DD values have not been certified against the ROV's navigation solution, accuracy or datum. No video has been synchronized. Do not use for navigation, dive clearance, site mapping or hazard avoidance.</div>
-<div class="stats"><span>EX2306 · Dive 02</span><span>18:30:00–18:34:59 UTC</span><span>300 source rows</span><span>61 displayed observations</span><span>No interpolation</span></div>
+<p class="lead">A review of NOAA's processed 1 Hz Deep Discoverer navigation product from Kodiak Seep, August 25, 2023. NOAA filtered and interpolated upstream; Evercraft shows selected exported coordinates and signed depth values without constructing an underwater world.</p>
+<div class="warning"><strong>Unverified positioning:</strong> The original NOAA track is USBL-derived, filtered, interpolated and padded to 1 Hz. These display samples are not independent raw fixes. Positioning accuracy and depth reference remain unverified, and no video is frame-synchronized. Do not use for navigation, dive clearance, site mapping or hazard avoidance.</div>
+<div class="stats"><span>EX2306 · Dive 02</span><span>18:30:00–18:34:59 UTC</span><span>300 source rows</span><span>61 displayed observations</span><span>No extra Evercraft interpolation</span></div>
 </section>
 <main class="workspace">
 <section class="panel">
 <div class="pad">
 <h2>Observed positions and depth</h2>
-<p class="chartnote">Dots are individual observations, not a continuous route. Coordinates are plotted as reported decimal degrees without geodetic correction or claimed meter-scale accuracy.</p>
+<p class="chartnote">Dots are individual rows sampled from NOAA's already-processed navigation product, not independent 1 Hz fixes. Evercraft draws no connecting route and does not claim meter-scale positional accuracy.</p>
 <div class="chart-title">Source longitude (horizontal) / latitude (vertical)</div>
 <canvas class="plot" id="position-plot" role="img" aria-label="Observed source longitude and latitude points, with no inferred connecting route"></canvas>
 <div class="chart-title" style="margin-top:18px">Signed DEPTH field / elapsed clip second</div>
-<canvas class="plot depth" id="depth-plot" role="img" aria-label="Recorded signed depth-field dots over time, with no interpolated readings"></canvas>
-<p class="chartnote">Depth values remain signed exactly as in the archive. Depth sign convention, units and vertical datum have not been independently established.</p>
+<canvas class="plot depth" id="depth-plot" role="img" aria-label="Selected NOAA processed signed-depth records over time, without additional Evercraft interpolation"></canvas>
+<p class="chartnote">The NOAA export's signed DEPTH values are displayed with rounding. NOAA combined pressure-derived depth with navigation upstream. Units, sign convention and vertical datum still need independent verification.</p>
 </div>
 <div class="readout">
 <div class="readout-grid">
@@ -81,13 +81,15 @@ footer{margin-top:26px;font-size:12px;color:var(--soft);max-width:920px}
 <aside class="panel aside"><div class="pad">
 <div class="overline">Evidence passport</div>
 <h2>Where this came from</h2>
-<p>Original NOAA Okeanos Explorer telemetry in <code>EX2306_DIVE02_RovTrack1Hz.csv</code>, acquired from the expedition's ancillary ZIP. The archive was SHA-256 checked, then this viewer's observations were downsampled for mobile presentation.</p>
+<p>NOAA/GFOE's processed <code>EX2306_DIVE02_RovTrack1Hz.csv</code> product from the expedition's ancillary ZIP. The archive SHA-256 is pinned; this viewer selects and rounds 61 of its 300 window rows.</p>
 <ul>
-<li><strong>Real readings:</strong> Original UNIXTIME, LAT_DD, LON_DD and signed DEPTH fields</li>
+<li><strong>Source values:</strong> NOAA's processed UNIXTIME, LAT_DD, LON_DD and signed DEPTH fields. Not raw sensor samples</li>
 <li><strong>Downsampled:</strong> Every 5 seconds plus the final second, rounded for display</li>
-<li><strong>Not inferred:</strong> Missing fixes, intermediate movement, site terrain, pipe geometry or camera pose</li>
-<li><strong>Outstanding:</strong> Positioning solution, accuracy, depth reference and independently verified video timing</li>
+<li><strong>No additional Evercraft inference:</strong> No movement between selected samples, new fixes, site terrain, pipe geometry or camera pose</li>
+<li><strong>Outstanding:</strong> Source processing specifics at each timestamp, independent accuracy, depth datum and independently verified video timing</li>
 </ul>
+<div class="fact"><small>Source product processing</small><strong id="processing-lineage">USBL filtering and upstream time interpolation; 1 Hz last-good-value padding</strong></div>
+<div class="fact"><small>2023 NOAA data-management plan</small><a href="https://repository.library.noaa.gov/view/noaa/55994/noaa_55994_DS1.pdf" target="_blank" rel="noopener noreferrer">Original processing methodology (DOI 10.25923/hkht-a163)</a></div>
 <div class="fact"><small>NOAA ancillary archive SHA-256</small><strong id="hash-value">Verified source receipt</strong></div>
 <div class="fact"><small>Position review status</small><strong>PROVISIONAL / NOT CERTIFIED</strong></div>
 <div class="fact"><small>Video clock status</small><strong>Overlapping UTC window; frame sync unverified</strong></div>
@@ -98,7 +100,7 @@ footer{margin-top:26px;font-size:12px;color:var(--soft);max-width:920px}
 </div>
 </div></aside>
 </main>
-<footer>Evercraft Subsea Watch · Research-only evidence review. Credit: NOAA Ocean Exploration. The original ROV sensors and camera are not verified as a calibrated spatial or temporal system. No derived coordinate path or graphical observation constitutes clearance for a real dive.</footer>
+<footer>Evercraft Subsea Watch · Research-only evidence review. Credit: NOAA Ocean Exploration. The NOAA 1 Hz product includes upstream filtering, interpolation and padding; displayed points are not independent raw fixes. ROV sensors and camera are not verified as one calibrated spatial or temporal system. No derived coordinate path or graphical observation constitutes clearance for a real dive.</footer>
 </div>
 <script type="module" src="./review.mjs"></script>
 </body></html>
