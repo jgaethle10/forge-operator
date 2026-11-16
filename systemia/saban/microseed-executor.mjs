@@ -84,6 +84,9 @@ export async function executeMicroSeedWorkload({
   stateDir='',
   bridgeAdapters={},
   executionContext='device',
+  // Signed native agents commit to their immutable journal instead of writing
+  // an unsigned success cache before their signature is safely persisted.
+  persistUnsignedIdempotency=true,
   now=new Date(),
 }={}){
   if(manifest?.schema!=='evercraft.microseed.device-manifest.v1'){
@@ -124,7 +127,7 @@ export async function executeMicroSeedWorkload({
   const replayFile=root&&workloadSpec?.sensitive_result!==true
     ? path.join(root,'idempotency',safeKey(req.device_id),safeKey(req.idempotency_key)+'.json')
     : null;
-  if(replayFile&&fs.existsSync(replayFile)){
+  if(persistUnsignedIdempotency&&replayFile&&fs.existsSync(replayFile)){
     const prior=JSON.parse(fs.readFileSync(replayFile,'utf8'));
     if(prior.request_hash!==req.request_hash) throw new Error('microseed_idempotency_key_conflict');
     return {...prior,deduplicated:true};
@@ -165,7 +168,7 @@ export async function executeMicroSeedWorkload({
     completed_at:new Date(now instanceof Date?now.getTime():Date.parse(String(now))).toISOString(),
   };
   const receipt={...body,receipt_hash:sha(body)};
-  if(replayFile) atomicJson(replayFile,receipt);
+  if(persistUnsignedIdempotency&&replayFile) atomicJson(replayFile,receipt);
   return receipt;
 }
 
