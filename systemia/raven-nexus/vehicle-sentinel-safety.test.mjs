@@ -17,6 +17,9 @@ test("Raven Vehicle Sentinel is a held commercial beta despite source completene
   assert.equal(module.capabilities.confirmed_tracker_identification, false);
   assert.equal(module.capabilities.gps_or_hardwired_tracker_detection, false);
   assert.equal(module.privacy.observation_upload_automatic, false);
+  assert.equal(module.privacy.report_storage, "ephemeral_tab_memory");
+  assert.equal(module.privacy.durable_record_requires_explicit_export, true);
+  assert.equal(module.privacy.export_files_not_encrypted_by_app, true);
   assert.equal(module.privacy.automatic_location_collection, false);
   assert.equal(module.authority.device_bluetooth_permission_granted, false);
   assert.equal(module.authority.payment_authority_granted, false);
