@@ -9,6 +9,7 @@ import { bootstrapNativeMicroSeed } from './microseed-native-bootstrap.mjs';
 import { loadMicroSeedDeviceIdentity } from './microseed-device-identity.mjs';
 import { startMicroSeedNativeAgent } from './microseed-native-agent.mjs';
 import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
+import { readSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
 import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { normalizeMicroDeviceManifest } from './microseed-device-bridge.mjs';
 import { inspectLocalMicroSeedEvidence } from './microseed-local-field-proof.mjs';
@@ -118,6 +119,84 @@ test('hash probe refuses legacy agent without journal commit support before POST
   }),/field_proof_signed_journal_protocol_unavailable/);
   assert.equal(calls.some(call=>call.method==='POST'),false);
   assert.equal(fs.existsSync(path.join(root,'state','idempotency')),false);
+  assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
+}));
+
+test('signed native execution uses only journal and replays exact signed bytes',()=>withNode(async({root,agent,token,manifest})=>{
+  const request={
+    device_id:manifest.device_id,
+    workload_class:'systemia.content-hash.v1',
+    idempotency_key:'signed-journal-first-test',
+    payload:{value:'bounded synthetic fixture'},
+    requested_memory_mb:0,
+    requested_cpu_fraction:0,
+  };
+  const execute=async value=>fetch(agent.url+'/v1/execute',{
+    method:'POST',headers:{
+      authorization:'Bearer '+token,
+      'content-type':'application/json',
+    },body:JSON.stringify({request:value}),
+  });
+  const first=await execute(request);
+  assert.equal(first.status,200);
+  const one=await first.json();
+  assert.equal(one.result.ok,true);
+  assert.equal(fs.existsSync(path.join(root,'state','idempotency')),false);
+  const durable=await readSignedMicroSeedReceipt({
+    stateDir:path.join(root,'state'),
+    device_id:manifest.device_id,idempotency_key:request.idempotency_key,
+  });
+  assert.equal(durable.receipt_hash,one.receipt_hash);
+  const replay=await execute(request);
+  assert.equal(replay.status,200);
+  const two=await replay.json();
+  assert.equal(two.receipt_hash,one.receipt_hash);
+  assert.equal(two.device_signature.signature_base64,
+    one.device_signature.signature_base64);
+  assert.equal(two.completed_at,one.completed_at);
+  const conflict=await execute({
+    ...request,payload:{value:'different payload, same key'},
+  });
+  assert.equal(conflict.status,422);
+  assert.equal((await conflict.json()).error,
+    'microseed_signed_attempt_conflict_or_invalid');
+  assert.equal(fs.existsSync(path.join(root,'state','idempotency')),false);
+}));
+
+test('signed journal write failure never publishes unsigned success cache',()=>withNode(async({root,agent,token,manifest})=>{
+  const state=path.join(root,'state');
+  fs.writeFileSync(path.join(state,'signed-receipts'),'blocked',{mode:0o600});
+  const response=await fetch(agent.url+'/v1/execute',{
+    method:'POST',headers:{
+      authorization:'Bearer '+token,'content-type':'application/json',
+    },body:JSON.stringify({request:{
+      device_id:manifest.device_id,
+      workload_class:'systemia.content-hash.v1',
+      idempotency_key:'synthetic-journal-blocked',
+      payload:{value:'no unsigned acknowledgement'},
+    }}),
+  });
+  assert.notEqual(response.status,200);
+  assert.equal(fs.existsSync(path.join(state,'idempotency')),false);
+}));
+
+test('signed agent holds a legacy unsigned attempt instead of reexecuting it',()=>withNode(async({root,agent,token,manifest})=>{
+  const pending=path.join(root,'state','idempotency',manifest.device_id);
+  fs.mkdirSync(pending,{recursive:true,mode:0o700});
+  fs.writeFileSync(path.join(pending,'legacy-hold.json'),'{"unsigned":true}',{mode:0o600});
+  const response=await fetch(agent.url+'/v1/execute',{
+    method:'POST',headers:{
+      authorization:'Bearer '+token,'content-type':'application/json',
+    },body:JSON.stringify({request:{
+      device_id:manifest.device_id,
+      workload_class:'systemia.content-hash.v1',
+      idempotency_key:'legacy-hold',
+      payload:{value:'must not run'},
+    }}),
+  });
+  assert.equal(response.status,422);
+  assert.equal((await response.json()).error,
+    'microseed_unsigned_legacy_attempt_requires_review');
   assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
 }));
 
