@@ -4,14 +4,18 @@ on:
   pull_request:
     paths:
       - "tools/systemia_modernization_gate.py"
+      - "tools/systemia_recovery_receipt_gate.py"
       - "tests/test_systemia_modernization_gate.py"
+      - "tests/test_systemia_recovery_receipt_gate.py"
       - "docs/SYSTEMIA_MODERNIZATION_SAFETY_GATE.md"
       - ".github/workflows/modernization-safety-gate.yml"
   push:
     branches: [main]
     paths:
       - "tools/systemia_modernization_gate.py"
+      - "tools/systemia_recovery_receipt_gate.py"
       - "tests/test_systemia_modernization_gate.py"
+      - "tests/test_systemia_recovery_receipt_gate.py"
       - "docs/SYSTEMIA_MODERNIZATION_SAFETY_GATE.md"
       - ".github/workflows/modernization-safety-gate.yml"
   workflow_dispatch:
@@ -29,4 +33,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Assert fail-closed review behavior
-        run: python -m unittest discover -s tests -p 'test_systemia_modernization_gate.py' -v
+        run: python -m unittest discover -s tests -p 'test_systemia_*_gate.py' -v
