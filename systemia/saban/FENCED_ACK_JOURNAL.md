@@ -86,3 +86,16 @@ Restart preflight checks that a Saban-completed job has the matching Systemia co
 CI tests create synthetic isolated Systemia goal files alongside an ephemeral localhost NodeSeed and private Passport fixture. They assert a recorded Systemia attempt before NodeSeed HTTP, matching completion on successful restart, and reject missing mission identity, mismatched work digests, tampered work state or attempted replay.
 
 **Limit:** The Goal Store persists a mission-bound work attempt, not a cryptographically verified founder approval or a deployed Systemia mission ledger. Live hardware enrollment, operational Yard custody and customer delivery remain separate holds.
+
+
+## November 15 | First-party loopback-only NodeSeed transport
+
+The signed-MicroSeed canary previously accepted an arbitrary caller-owned `adapter.runAssignment` callback, even though the candidate contract declared `external_network: loopback_only`. That metadata alone was **not** a network boundary.
+
+The signed candidate now admits only `createLocalSignedMicroSeedAdapter` from `local-signed-microseed-adapter.mjs`. A private first-party adapter registry checks the **original frozen adapter function**, the exact Saban job ID, immutable work digest, content-hash payload, idempotency key, and independently pinned device fingerprint, node ID, lease and nonce before any journal write. A callback wrapper or a changed payload cannot pass the check.
+
+The first-party transport accepts only literal `http://127.0.0.1:PORT` or `http://[::1]:PORT` origins with an explicit non-default port. It rejects localhost DNS, numeric-IP aliases, remote addresses, credentials, fragments, paths, query strings, HTTPS and redirects. At runtime it sends exactly one registered `systemia.content-hash.v1` request with the already-selected lease and nonce, a bounded timeout and response size, and leaves the original signed result verification to the scheduler. The bearer lease token is held in an unexposed closure and is not returned in any receipt.
+
+A dedicated test rejects forged adapter objects, changed job keys, payloads, lease or device pins, and malformed origins. The actual Saban → Passport → Systemia → NodeSeed integration test now uses an isolated loopback HTTP relay for controlled signature corruption and observation of the pre-HTTP durable Goal Store checkpoint; it does not use arbitrary adapter code in the signed canary.
+
+**Remaining limits:** A literal loopback destination is not an OS-level seccomp/network namespace sandbox, and it does not prove the port belongs to the intended physical device. The source-only test adapter is not a Yard-authorized physical worker, a founder-authenticated production grant, an allowed external effect, or customer delivery. No Node001/Node002 activation, checkout, remote job, or production merge is authorized by this work.
