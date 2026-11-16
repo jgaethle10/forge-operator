@@ -169,6 +169,29 @@ class StudioHTTPTests(unittest.TestCase):
         self.assertEqual(status,200)
         self.assertEqual(headers["Content-Type"],"audio/wav")
         self.assertGreater(len(raw),120000)
+        ratings={"diction":5,"naturalness":4,"semantic_emphasis":4,
+                 "brand_pronunciation":3,"accent":3}
+        post_url=f"/api/jobs/{jobid}/review"
+        review_headers={"Origin":self.base,"X-Voice-Foundry-Token":self.engine.csrf}
+        code,_,body=self.request(post_url,"POST",{
+            "scores":ratings,"notes":"0:02 assess the proper noun", "fluent":False},
+            headers=review_headers)
+        self.assertEqual(code,200)
+        self.assertFalse(json.loads(body)["productionApproved"])
+        saved=json.loads((self.engine.root/jobid/"private-review.json").read_text())
+        self.assertEqual(saved["ratings"],ratings)
+        self.assertFalse(saved["commercialReleaseApproved"])
+        self.assertFalse(saved["fluentInLanguageClaim"])
+        invalid=dict(ratings,diction=8)
+        code,_,_=self.request(post_url,"POST",{
+            "scores":invalid,"notes":"invalid","fluent":False},headers=review_headers)
+        self.assertEqual(code,422)
+        code,_,_=self.request(post_url,"POST",{
+            "scores":ratings,"notes":"cross origin","fluent":True},
+            headers={"Origin":"https://evil.example",
+                     "X-Voice-Foundry-Token":self.engine.csrf})
+        self.assertEqual(code,403)
+        self.assertEqual(json.loads((self.engine.root/jobid/"private-review.json").read_text())["ratings"],ratings)
         status,_,_=self.request(f"/api/jobs/{jobid}/invalid.txt")
         self.assertEqual(status,404)
         status,_,_=self.request("/api/jobs/../../etc/passwd")
