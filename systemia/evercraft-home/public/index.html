@@ -176,7 +176,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4fb8
    <div class="executive-receipts-grid" aria-live="polite">
      <article class="executive-receipt-card"><span>JOURNAL / SOURCE</span><strong id="executive-journal-state">Not checked</strong><p id="executive-journal-detail">Checking the local published article against its receipt and byte digest.</p><small id="executive-journal-time"></small></article>
      <article class="executive-receipt-card"><span>CLIP / DISTRIBUTION</span><strong id="executive-clip-state">Not checked</strong><p id="executive-clip-detail">A handoff file is not a social provider posting receipt.</p></article>
-     <article class="executive-receipt-card"><span>PAYMENTS / SALES</span><strong id="executive-payments-state">Not connected</strong><p id="executive-payments-detail">Paid order and settlement receipts are not attached to this Home view. Revenue is unknown, not zero.</p></article>
+     <article class="executive-receipt-card"><span>PAYMENTS / SALES</span><strong id="executive-payments-state">Not connected</strong><p id="executive-payments-detail">Canonical settled orders appear only after an authorized and complete Evercraft Payments readback. Unverified totals remain unknown.</p></article>
    </div>
    <p id="executive-evidence-observed" class="executive-evidence-observed">Source observation pending · no live storefront or provider audit implied</p>
  </section>
@@ -508,7 +508,46 @@ async function refreshExecutiveEvidence(){
     set("executive-payments-detail","No payment outcome can be inferred from a failed readback.");
     set("executive-evidence-observed","No verified observation returned");
   }finally{
+    await refreshExecutivePayments();
     if(refresh)refresh.disabled=false;
+  }
+}
+async function refreshExecutivePayments(){
+  const stateEl=document.getElementById("executive-payments-state");
+  const detailEl=document.getElementById("executive-payments-detail");
+  if(!stateEl||!detailEl)return;
+  stateEl.textContent="Checking private readback";
+  detailEl.textContent="Requesting a complete, recent authoritative settlement snapshot. No amount is assumed.";
+  try{
+    const response=await homeFetch("/api/executive/payments");
+    if(response.status===403){
+      stateEl.textContent="Permission required";
+      detailEl.textContent="Your Passport grant needs the separate home.payments.read scope. No business payment data was accessed.";
+      return;
+    }
+    if(response.status===401){
+      stateEl.textContent="Session required";
+      detailEl.textContent="Sign in through Evercraft Identity to view private payment evidence.";
+      return;
+    }
+    if(!response.ok)throw new Error("payments_readback_unavailable");
+    const result=await response.json();
+    if(result.ok!==true||result.schema!=="evercraft.home.payments-readback.v1")throw new Error("payments_readback_schema_mismatch");
+    if(result.state==="verified_settled_snapshot"&&result.full_period_covered===true&&
+       Number.isSafeInteger(result.verified_paid_orders)&&
+       Number.isSafeInteger(result.gross_settled_cents)&&result.currency==="USD"){
+      const dollars=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(result.gross_settled_cents/100);
+      stateEl.textContent=dollars+" gross settled";
+      detailEl.textContent=result.verified_paid_orders+" verified paid order(s) · rolling seven days · source attested "+
+        String(result.source_verified_at||"")+". Gross is not net revenue or profit.";
+    }else{
+      stateEl.textContent="Payment evidence held";
+      detailEl.textContent=String(result.detail||"No complete canonical paid-order snapshot was verified.")+
+        " Unknown is not zero.";
+    }
+  }catch{
+    stateEl.textContent="Payment evidence unavailable";
+    detailEl.textContent="Private payment readback failed. No sale, refund or gross total can be inferred.";
   }
 }
 document.getElementById("executive-evidence-refresh").addEventListener("click",()=>{void refreshExecutiveEvidence();});
