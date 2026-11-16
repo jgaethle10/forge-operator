@@ -36,7 +36,7 @@ jobs:
           html=Path(sys.argv[1]).read_text(encoding='utf-8')
           readiness=json.loads(Path(sys.argv[2]).read_text(encoding='utf-8'))
           checks={
-            'headline': 'Your website is getting attention' in html,
+            'headline': 'See your website through their eyes.' in html,
             'price': '$49' in html,
             'offer': 'Quick Win Audit' in html,
             'payments_authority': 'Evercraft Payments' in html,
@@ -75,6 +75,10 @@ jobs:
             checks['no_charge_claim']=('No charge, payment order, or automatic audit starts here.' in html)
             checks['private_intake_ready']=readiness.get('intake_available') is True
             checks['native_payment_still_held']=readiness.get('payment_ready') is False
+          artwork=html.find('<div class="offer-visual">')
+          disclosure=html.find('<details class="audit-more-info">')
+          actions=[i for i in (form, hosted_link, inquiry) if i>=0]
+          checks['large_artwork_collapsed_after_buying_action']=bool(actions) and disclosure>min(actions) and preview>disclosure and (artwork<0 or artwork>disclosure)
           for name,passed in checks.items():
             print(f'{name}: {"PASS" if passed else "FAIL"}')
           print('buyer_action_mode:',mode)

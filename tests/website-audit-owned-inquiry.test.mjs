@@ -151,7 +151,8 @@ test('website audit buyer sees honest, low-friction $49 journey and can choose a
   assert.match(held,/select id="audit-inquiry-goal" name="goal" required/);
   assert.match(held,/Get more quote requests/);
   assert.doesNotMatch(held,/We audited your website|Guaranteed more sales|62%/i);
-  assert.ok(held.indexOf('class="audit-journey"')<held.indexOf('id="audit-order"'));
+  assert.ok(held.indexOf('id="audit-order"')<held.indexOf('class="audit-journey"'),
+    'mobile buyer action must precede the longer illustrative journey');
   const configured=renderOfferPage(offer,{checkoutConfigured:true,auditInquiryAvailable:true});
   assert.match(configured,/id="audit-order" class="checkout-form"/);
   assert.match(configured,/Continue to checkout/);

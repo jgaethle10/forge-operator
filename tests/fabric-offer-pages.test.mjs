@@ -36,11 +36,11 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
 
   const directory=renderOffers([websiteAudit]);
   assert.match(directory,/\/offers\/website-audit/);
-  assert.match(directory,/Your website is getting attention/);
+  assert.match(directory,/See your website through their eyes/);
   assert.match(directory,/Starts at \$49/);
 
   const page=renderOfferPage(websiteAudit);
-  assert.match(page,/Your website is getting attention\. Why isn&#39;t it getting customers\?/);
+  assert.match(page,/See your website through their eyes/);
   assert.match(page,/What you are buying/);
   assert.match(page,/What you send us/);
   assert.match(page,/What you get back/);
@@ -68,6 +68,13 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/Illustrative process preview/);
   assert.doesNotMatch(page,/62%|conversion drop-off rate|fake audit score/i);
   assert.ok(page.indexOf('name="customer_ref"') < page.indexOf('class="audit-preview"'), 'checkout appears before illustration');
+  const details=page.indexOf('<details class="audit-more-info">');
+  const poster=page.indexOf('<div class="offer-visual">');
+  const preview=page.indexOf('class="audit-preview"');
+  const price=page.indexOf('<div class="offer-price">');
+  const submit=page.indexOf('Continue to checkout');
+  assert.ok(price>0&&submit>price&&details>submit&&preview>details&&(poster<0||poster>details),
+    'Website Audit must show $49 and action before optional artwork and native preview');
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 

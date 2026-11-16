@@ -186,6 +186,31 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
   .navlinks{display:none}.hero{padding-top:48px}.trust{grid-template-columns:repeat(2,1fr)}
   .grid,.prompts,.capability-grid,.detail-grid{grid-template-columns:1fr}
 }
+
+/* Mobile-first Website Audit offer: put the real $49 buyer action before promo art. */
+.website-audit-mobile-fix .audit-offer{max-width:850px;padding-top:32px}
+.website-audit-mobile-fix .audit-offer h1{font-size:clamp(38px,5vw,60px);line-height:1.08;letter-spacing:-.055em;margin:18px 0 13px;max-width:830px}
+.website-audit-mobile-fix .audit-offer .lede{font-size:clamp(17px,1.7vw,21px);line-height:1.55;max-width:740px;margin:0}
+.website-audit-mobile-fix .offer-price{margin:20px 0 5px;font-size:clamp(44px,5.5vw,60px)}
+.website-audit-mobile-fix .offer-price-note{font-size:15px;line-height:1.5;max-width:680px}
+.website-audit-mobile-fix .checkout-form{margin-top:20px;display:grid;gap:9px;align-items:stretch;max-width:570px;padding:21px;border:1px solid #365777;border-radius:17px;background:linear-gradient(150deg,#0d1e33,#071222)}
+.website-audit-mobile-fix .checkout-form label{font-size:14px;font-weight:660}
+.website-audit-mobile-fix .checkout-form input{width:100%!important;max-width:100%!important;min-width:0!important;min-height:45px}
+.website-audit-mobile-fix .checkout-form .btn{width:100%;min-height:48px;text-align:center}
+.website-audit-mobile-fix .audit-offer>.offer-panel{margin-top:20px}
+.website-audit-mobile-fix .audit-more-info{border:1px solid #304f6c;border-radius:14px;padding:15px 17px;margin-top:26px;color:#c9daec}
+.website-audit-mobile-fix .audit-more-info summary{cursor:pointer;font-size:14px;font-weight:700;line-height:1.5}
+.website-audit-mobile-fix .audit-more-info .offer-visual{max-width:510px;margin:18px 0}
+.website-audit-mobile-fix .audit-more-info .offer-visual img{width:100%;height:auto}
+.website-audit-mobile-fix .audit-more-info p{font-size:13px;line-height:1.65;color:#b8cce0}
+@media(max-width:780px){
+ .website-audit-mobile-fix .audit-offer{padding-top:18px}
+ .website-audit-mobile-fix .audit-offer h1{font-size:clamp(35px,9vw,44px);margin:13px 0 10px;line-height:1.07}
+ .website-audit-mobile-fix .audit-offer .lede{font-size:16px;line-height:1.5}
+ .website-audit-mobile-fix .offer-price{font-size:45px;margin:15px 0 5px}
+ .website-audit-mobile-fix .checkout-form{padding:17px;margin-top:16px}
+ .website-audit-mobile-fix .audit-more-info{margin-top:20px}
+}
 </style>
 </head>
 <body>
@@ -242,8 +267,8 @@ const OFFER_PAGE_COPY={
     slug:'website-audit',
     purchase_key:'website-audit-quick-win',
     eyebrow:'Website Audit',
-    headline:"Your website is getting attention. Why isn't it getting customers?",
-    lede:'We scan the public site and show you the five fixes worth making first.',
+    headline:'See your website through their eyes.',
+    lede:'A focused look at your public website, five prioritized fixes, and clear next steps.',
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
     shareImage:'https://jgaethle10.github.io/forge-operator/visuals/website-audit-attention/preview-og-v2.png',
     shareImageType:'image/png',
@@ -494,18 +519,19 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
   const checkoutHeld=!checkoutConfigured||PUBLIC_PAYMENT_OFFERS[copy.slug]?.native_order_enabled===false;
+  const auditOffer=copy.slug==='website-audit';
+  const auditHeroVisual=copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'';
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
-    '<main>',
+    '<main'+(auditOffer?' class="website-audit-mobile-fix"':'')+'>',
     '<section class="offer-hero'+(copy.slug==='website-audit'?' audit-offer':'')+'">',
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(copy.slug==='website-audit'&&checkoutHeld&&auditInquiryAvailable?' · $49 secure checkout available':checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
-    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
+    auditOffer?'':auditHeroVisual,
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+(copy.slug==='website-audit'?' · one public website · five prioritized fixes':' · '+escapeHtml(item.pricing||''))+'</div>',
-    copy.slug==='website-audit'?renderWebsiteAuditDecisionJourney():'',
     ...(checkoutHeld ? (copy.slug==='website-audit'&&auditInquiryAvailable ? [
       renderHeldWebsiteAuditInquiryForm(),
     ] : [
@@ -535,6 +561,8 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     ]),
+    auditOffer?renderWebsiteAuditDecisionJourney():'',
+    auditOffer?'<details class="audit-more-info"><summary>Optional example artwork and other audit options</summary>'+auditHeroVisual+'<p>'+escapeHtml(String(item.pricing||''))+'</p><p>Artwork is illustrative, not a finding about your website. Payment and delivery are verified separately.</p></details>':'',
     copy.slug==='website-audit'?renderWebsiteAuditPreview():'',
     '</section>',
     '<div class="offer-grid">',
