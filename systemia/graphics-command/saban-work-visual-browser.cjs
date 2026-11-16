@@ -82,16 +82,32 @@ const digest=filename=>crypto.createHash('sha256').update(fs.readFileSync(filena
       const metrics=await page.evaluate(()=>({
         scrollWidth:document.documentElement.scrollWidth,
         width:document.documentElement.clientWidth,
-        events:document.querySelectorAll('article.event').length,
+        recent:document.querySelectorAll('.recent-event').length,
+        all:document.querySelectorAll('.history-event').length,
+        historyOpen:document.querySelector('details.history')?.open,
+        height:document.documentElement.scrollHeight,
+        summary:[...document.querySelectorAll('.metric strong')].map(e=>e.textContent),
         text:document.body.textContent
       }));
       assert.ok(metrics.scrollWidth<=metrics.width+1,
         'Scheduler timeline exceeds viewport '+width+': '+JSON.stringify(metrics));
-      assert.equal(metrics.events,25);
+      assert.equal(metrics.recent,4);
+      assert.equal(metrics.all,25);
+      assert.equal(metrics.historyOpen,false,'Full log must be collapsed by default');
+      assert.ok(metrics.height<(width===390?1900:1500),
+        'At-a-glance view is still an unreadable skyscraper: '+JSON.stringify(metrics));
+      assert.deepEqual(metrics.summary,['10','2','0','0']);
       assert.match(metrics.text,/SYNTHETIC TEST/);
-      assert.match(metrics.text,/Work completed/);
-      assert.match(metrics.text,/independently authenticated audit/);
+      assert.match(metrics.text,/WHAT TO DO NEXT/);
+      assert.match(metrics.text,/2 jobs need review/);
+      assert.match(metrics.text,/Local SHA-256 chain only/);
       assert.deepEqual(errors,[],'Timeline browser errors or external requests');
+      const disclosure=page.locator('details.history');
+      await disclosure.locator('summary').click();
+      assert.equal(await disclosure.getAttribute('open'),'');
+      assert.equal(await disclosure.locator('.history-event').count(),25);
+      await disclosure.locator('summary').click();
+      assert.equal(await disclosure.getAttribute('open'),null);
       const filename='saban-transitions-'+width+'px.png';
       const target=path.join(base,filename);
       await page.screenshot({path:target,fullPage:true,animations:'disabled'});
