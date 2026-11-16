@@ -9,9 +9,12 @@ This repository package contains two separate experiences:
 
 ## Privacy
 
-QuickCheck is a standalone HTML file. It includes no telemetry, analytics, advertisements, network API calls, image uploads, or account system. The Apple Support link works if clicked. The QuickCheck journal uses browser `localStorage` only when available; it is **not encrypted** and may be lost when browser data is cleared. Exports are user initiated. No cloud sync or backend exists. The native app source only uses Bluetooth radio advertisements while opened, and its state is local in UserDefaults (also not an encrypted forensic vault). There are no server, GPS, microphone, or camera permissions.
+QuickCheck v0.3 is a standalone HTML file. It includes no telemetry, analytics, advertisements, network API calls, image uploads, or account system. The Apple Support link works if clicked. The QuickCheck journal now uses **open-tab memory only**: it does not write notes to `localStorage`, `sessionStorage` or IndexedDB. Refreshing or closing the page discards the session. Users explicitly export TXT/JSON and can import their JSON export to resume. Exports and clipboard copies are **not encrypted by Sentinel**; store them securely. No cloud sync or backend exists. When served by Evercraft Home, a route-specific Content Security Policy blocks network requests and nonessential permissions. The native app source only uses Bluetooth radio advertisements while opened, and its state is local in UserDefaults (also not an encrypted forensic vault). There are no server, GPS, microphone, or camera permissions.
 
-## What's new in v0.2
+## What's new in v0.2–v0.3
+
+- **QuickCheck v0.3 privacy improvement:** no shared-origin persistent browser evidence. Local-only tab memory, manual JSON import/export, and clearer data-loss/erasure disclosures.
+- Evercraft Home adds a script-hash Content Security Policy and denies browser networking and sensor permissions on `/safety/vehicle`. This does not replace a full product security review.
 
 - New responsive Vehicle Sentinel QuickCheck with session timestamps, inspection progress, observed/not-observed distinction, dated evidence journal, TXT/JSON export, local erase, and no detection verdict.
 - Native scan interpretation now rejects comparisons using sessions where either scan is under 30 seconds, the control scan is over 30 minutes later, scanning order is reversed, or either sample contained no BLE observations.
@@ -23,14 +26,14 @@ QuickCheck is a standalone HTML file. It includes no telemetry, analytics, adver
 ## Test commands
 
 - From this project directory (requires Swift installed):
-  `swiftc JeepSentinel/Models.swift Tests/AnalyzerSmoke.swift -o /tmp/sentinel-smoke && /tmp/sentinel-smoke`
+  `cd ios && swiftc JeepSentinel/Models.swift Tests/AnalyzerSmoke.swift -o /tmp/sentinel-smoke && /tmp/sentinel-smoke`
 - From this project directory (requires Node 18+):
-  `node Tests/quickcheck-v2.test.js`
+  `node tests/quickcheck-v2.test.js`
 - Real Bluetooth scan testing **requires an iPhone**. We cannot validate it with a Linux compiler or simulator alone.
 
 ## Run the pilot today
 
-Open `Vehicle-Sentinel-QuickCheck.html` on a phone or computer in a browser. The export button may place the report in the device's downloads folder; if local storage is disabled for files or private browsing, export right away. A hosted HTTPS copy would require an actual deployment and separate privacy review.
+Open `quickcheck.html` on a phone or computer in a browser. **Export the notes before closing or refreshing the page**, because this version intentionally retains them only in open-tab memory. A JSON report can be imported to resume. Downloads and clipboard copies are outside Sentinel's deletion control. The authenticated Evercraft Home `/safety/vehicle` route is source-ready but must be actually deployed and assessed before customer-facing claims.
 
 For the Swift source, open `JeepSentinel.xcodeproj` using Xcode on a Mac, select a signing team, install on an iPhone, approve Bluetooth, and conduct 60-second near and away scans within 30 minutes. Keep the app in the foreground; leaving the app ends the scan. This build is not an installable iOS app delivered through this ZIP.
 
