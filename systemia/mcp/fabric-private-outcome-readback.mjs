@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { reconcileEvercraftOutcomeSource } from "../evercraft-home/os-outcome-source-audit.mjs";
+import { verifyFabricOutcomeLocalLedgers } from "./fabric-outcome-ledger-witness.mjs";
 
 const REQUEST_SCHEMA = "evercraft.os.private-outcome-read-request.v1";
 const ENVELOPE_SCHEMA = "evercraft.os.private-outcome-source-envelope.v1";
@@ -60,6 +61,8 @@ export function createFabricOutcomeReadback({
   tokenFile="",
   signatureKeyFile="",
   loadAuthorityRecords=null,
+  executionEventsFile="",
+  shippingLedgerFile="",
   now=()=>Date.now(),
 }={}) {
   if(typeof now!=="function" ||
@@ -156,6 +159,16 @@ export function createFabricOutcomeReadback({
     if(!records || typeof records!=="object" || Array.isArray(records) ||
        reconcileEvercraftOutcomeSource(records).state!=="source_consistent_unattested") {
       send(res,503,{ok:false,state:"private_outcome_source_held"});
+      return true;
+    }
+    // A source-shaped object alone cannot be published as a coherent owned
+    // readback. Require matches in both private resident ledgers as well.
+    // This only witnesses local state, NOT the provider or payment issuer.
+    const witness=verifyFabricOutcomeLocalLedgers({
+      executionEventsFile,shippingLedgerFile,records,
+    });
+    if(witness.state!=="local_ledgers_consistent_unattested") {
+      send(res,503,{ok:false,state:"private_outcome_local_ledger_unverified"});
       return true;
     }
     const envelope={
