@@ -60,6 +60,11 @@ test('held-FD survey reads only kernel metadata and never opens the write-only c
     assert.equal(operations.opened.some(x=>
       x.filename.endsWith('/cgroup.kill')),false);
     assert.equal(operations.opened.length,operations.closed.length);
+    for(const opened of operations.opened){
+      // Linux O_RDONLY is 0 and the access mode is stored in the low 2 bits.
+      assert.equal(opened.flags&3,fs.constants.O_RDONLY);
+      assert.notEqual(opened.flags&fs.constants.O_NOFOLLOW,0);
+    }
     for(const k of ['scope_stop_requested',
       'kernel_permission_to_write_verified',
       'manager_unit_incarnation_verified','live_detached_child_verified',
