@@ -33,6 +33,7 @@ export async function probeHiddenWorldPublic(origin,{fetchFn=fetch}={}){
     ['/worlds/hidden-world/yakima-walk/app.mjs','buildYakimaDrawList','text/javascript','yakima_walk_runtime'],
     ['/worlds/hidden-world/yakima-walk/scene.mjs','evercraft.hidden-world.yakima-streetscape.v1','text/javascript','yakima_walk_scene'],
     ['/worlds/hidden-world/yakima-walk/tour.mjs','YAKIMA_TOUR_SECONDS','text/javascript','yakima_walk_tour'],
+    ['/worlds/hidden-world/yakima-walk/periods.mjs','evercraft.hidden-world.yakima-period-lenses.v1','text/javascript','yakima_period_lenses'],
     ['/worlds/hidden-world/yakima-standalone.html','scene-ready','text/html','yakima_exhibit'],
     ['/worlds/hidden-world/hidden_world_atlas_v1.csv','yakima,','text/csv','research_data'],
     ['/worlds/hidden-world/yakima-evidence-ledger.v1.json','evercraft.hidden-world.evidence-ledger.v1','application/json','evidence_ledger']
@@ -42,7 +43,7 @@ export async function probeHiddenWorldPublic(origin,{fetchFn=fetch}={}){
     catch{return fail(id+'_not_verified');}
   }
   return {schema:'evercraft.hidden-world.public-release-gate.v1',verified:true,origin:safe,
-    checks:['owned_worlds_health','atlas_entry','yakima_evidence','lund_architecture','titan_exhibit','titan_ledger','titan_walk_page','titan_walk_runtime','titan_walk_scene','titan_walk_tour','yakima_walk_page','yakima_walk_runtime','yakima_walk_scene','yakima_walk_tour','yakima_exhibit','research_data','evidence_ledger'],
+    checks:['owned_worlds_health','atlas_entry','yakima_evidence','lund_architecture','titan_exhibit','titan_ledger','titan_walk_page','titan_walk_runtime','titan_walk_scene','titan_walk_tour','yakima_walk_page','yakima_walk_runtime','yakima_walk_scene','yakima_walk_tour','yakima_period_lenses','yakima_exhibit','research_data','evidence_ledger'],
     physical_iphone_verified:false,write_test_performed:false};
 }
 

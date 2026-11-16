@@ -161,7 +161,35 @@
       "public_access_claimed": false,
       "physical_coordinates_encoded": false,
       "model_manifest": "yakima-walk/scene.mjs",
-      "note": "Six research stops in deliberately fictional model units. An interpretive gallery is not a surveyed city block or private-access guide."
+      "note": "Six research stops in deliberately fictional model units. An interpretive gallery is not a surveyed city block or private-access guide.",
+      "period_lenses": [
+        {
+          "id": "1899",
+          "label": "Alfalfa Saloon",
+          "documented": "Completion of the Lund stone building and saloon use",
+          "source_url": "https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa",
+          "geometry_verified": false,
+          "date_precision": "year"
+        },
+        {
+          "id": "1910",
+          "label": "Chicago Clothing retail conversion",
+          "documented": "Circa 1910 converted retail storefront with larger plate-glass windows",
+          "source_url": "https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa",
+          "geometry_verified": false,
+          "date_precision": "circa"
+        },
+        {
+          "id": "1920s",
+          "label": "Storefront with metal marquee",
+          "documented": "A metal marquee was added along Yakima Avenue during the decade",
+          "source_url": "https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa",
+          "geometry_verified": false,
+          "date_precision": "decade"
+        }
+      ],
+      "period_art_model": "yakima-walk/periods.mjs",
+      "period_note": "Selecting a date changes only original illustrated facade objects; the facade geometry has not been derived from surveyed plans."
     }
   ]
 }

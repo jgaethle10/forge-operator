@@ -150,6 +150,22 @@ try{
       assert.equal(await page.locator('body.js').count(),1);
       await page.locator('#start').click();
       await page.waitForFunction(()=>window.__evercraftYakimaQA().running===true,{timeout:10000});
+      assert.equal((await page.evaluate(()=>window.__evercraftYakimaQA())).period,'1910');
+      for(const id of ['1899','1920s','1910']){
+        await page.locator('#period-'+id).click();
+        assert.equal(await page.locator('#period-'+id).getAttribute('aria-pressed'),'true',
+          profile.name+': period button selection inaccessible '+id);
+        assert.equal((await page.evaluate(()=>window.__evercraftYakimaQA())).period,id,
+          profile.name+': period mesh state failed '+id);
+      }
+      assert.ok((await page.locator('#period-note').textContent()).includes('imagined'));
+      await page.locator('#period-1899').click();
+      await page.waitForTimeout(160);
+      await page.screenshot({path:output+'/'+profile.name+'-yakima-1899.png',timeout:15000});
+      await page.locator('#period-1920s').click();
+      await page.waitForTimeout(160);
+      await page.screenshot({path:output+'/'+profile.name+'-yakima-1920s.png',timeout:15000});
+      await page.locator('#period-1910').click();
       const begin=await page.evaluate(()=>window.__evercraftYakimaQA());
       await page.keyboard.down('w');await page.waitForTimeout(350);await page.keyboard.up('w');
       const changed=await page.evaluate(()=>window.__evercraftYakimaQA());
@@ -170,6 +186,8 @@ try{
         profile.name+': Yakima source-based fallback must remain usable');
       assert.equal(await page.locator('#start').isVisible(),false,
         profile.name+': inert 3D button visible in blocked-script preview');
+      assert.equal(await page.locator('#period-1899').isVisible(),false,
+        profile.name+': historical controls must not be inert with JavaScript disabled');
     }
     await page.screenshot({path:output+'/'+profile.name+'-yakima-walk.png',timeout:15000});
     assert.deepEqual(errors,[],profile.name+': browser errors');

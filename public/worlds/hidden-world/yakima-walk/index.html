@@ -23,6 +23,15 @@ body{background:#101a20}.intro{background:linear-gradient(90deg,#17232af0,#16273
 #unsupported{background:#101a20}
 .static-fallback{display:block;margin-top:8px;font-size:.82rem;color:var(--muted)}
 .fallback-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:9px 12px;border:1px solid var(--edge);border-radius:8px;background:#172b32cc}
+/* Source-dated lenses control illustrative meshes only, never surveyed coordinates. */
+.period-heading{margin:13px 0 7px;font-size:.68rem;font-weight:800;color:var(--amber);letter-spacing:.035em}
+.period-choices{display:flex;gap:5px;flex-wrap:wrap}
+.period-choices button{min-width:52px;flex:1;border:1px solid #8b7c65;border-radius:6px;background:#12232ade;color:#f5e4c6;padding:6px 4px;font-size:.68rem;font-weight:800}
+.period-choices button[aria-pressed="true"]{background:#edcb92;color:#1c2930}
+.period-choices button:focus-visible{outline:2px solid white;outline-offset:2px}
+.period-label{margin-top:8px;color:#f0d9af;font-size:.69rem;font-weight:850}
+.status .period-note{margin:5px 0 0;font-size:.65rem;line-height:1.35;color:#d0d1c9}
+@media(max-width:690px){.period-heading{font-size:.57rem;margin-top:8px}.period-choices button{min-width:36px;padding:6px 2px;font-size:.57rem}.period-label{font-size:.59rem}.status .period-note{font-size:.55rem}}
 </style>
 <style>
 .no-js .introactions,.no-js .intro footer.small,.no-js .intro .pill{display:none!important}
@@ -45,8 +54,17 @@ body{background:#101a20}.intro{background:linear-gradient(90deg,#17232af0,#16273
 
 </div></section>
 <div class="hud hidden" id="hud">
-<div class="status"><span class="eyebrow">Yakima · 1899–1915</span><strong>Illustrated historic downtown</strong><small>Lund architecture sourced · street layout illustrative</small></div>
-<div class="right"><button class="action" id="tour" aria-pressed="false">▶ Guided walk · 72s</button><button class="action" id="toggle" aria-pressed="false">◧ Show imagined storefront details</button><button class="action" id="guide">ⓘ Research &amp; sources</button></div><div class="reticle" aria-hidden="true">+</div>
+<div class="status"><span class="eyebrow">Yakima · 1899–1920s</span><strong>Illustrated historic downtown</strong><small>Lund history sourced · all spatial geometry illustrative</small>
+<div class="period-heading">Select historical lens</div>
+<div class="period-choices" role="group" aria-label="Artistic historical era lenses">
+<button type="button" id="period-1899" aria-pressed="false">1899</button>
+<button type="button" id="period-1910" aria-pressed="true">c. 1910</button>
+<button type="button" id="period-1920s" aria-pressed="false">1920s</button>
+</div>
+<div class="period-label" id="period-label">c. 1910 · Chicago Clothing storefront</div>
+<p class="period-note" id="period-note" aria-live="polite">Documented retail conversion; the modeled window proportions are invented.</p>
+</div>
+<div class="right"><button class="action" id="tour" aria-pressed="false">▶ Guided walk · 72s</button><button class="action" id="toggle" aria-pressed="true">◧ Hide artistic period details</button><button class="action" id="guide">ⓘ Research &amp; sources</button></div><div class="reticle" aria-hidden="true">+</div>
 <div class="bottom"><div class="tourprogress hidden" id="tourprogress" role="status" aria-live="off"><strong id="tourchapter">Six evidence stops · not a street survey</strong><div class="meter" aria-hidden="true"><span class="fill" id="tourfill"></span></div></div>
 <div class="message"><strong id="location">Historic-street inquiry</strong><p id="distance">Approach a marker to inspect archival evidence.</p></div>
 <button class="inspect" id="inspect">Inspect nearest research stop [E]</button><small>One documented Lund Building · six research stops · zero verified underground routes</small></div>

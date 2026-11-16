@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {YAKIMA_SCENE,YAKIMA_WALK_SCHEMA,validateYakimaScene,buildYakimaDrawList,
  closestYakimaMarker,safeYakimaPosition} from '../public/worlds/hidden-world/yakima-walk/scene.mjs';
 import {YAKIMA_TOUR_SECONDS,yakimaTourFrame} from '../public/worlds/hidden-world/yakima-walk/tour.mjs';
+import {YAKIMA_PERIOD_SCHEMA,YAKIMA_PERIODS,getYakimaPeriod,buildYakimaPeriodDrawList,validateYakimaPeriodDrawList} from '../public/worlds/hidden-world/yakima-walk/periods.mjs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
 test('Yakima gallery explicitly excludes surveyed and below-grade geometry',()=>{
@@ -58,4 +59,39 @@ test('Yakima walk has static-first mobile fallback and bidirectional research li
  assert.doesNotMatch(app,/Titan I|missile|Pavlopetri|actual underground facility/i);
  for(const p of [atlas,lab,lund])assert.match(p,/href="yakima-walk\/"/);
  assert.doesNotMatch(page,/<script[^>]+src="https?:\/\//);
+});
+
+test('Yakima decade lenses show distinct historically sourced categories, never surveyed doors',()=>{
+ assert.equal(YAKIMA_PERIOD_SCHEMA,'evercraft.hidden-world.yakima-period-lenses.v1');
+ assert.deepEqual(YAKIMA_PERIODS.map(p=>p.id),['1899','1910','1920s']);
+ assert.ok(YAKIMA_PERIODS.every(p=>p.source_url.startsWith('https://npgallery.nps.gov/')));
+ assert.ok(YAKIMA_PERIODS.every(p=>/documented|imagined|measured|NOT|not/.test(p.certainty)));
+ const saloon=buildYakimaPeriodDrawList('1899');
+ const retail=buildYakimaPeriodDrawList('1910');
+ const later=buildYakimaPeriodDrawList('1920s');
+ for(const [id,items] of [['1899',saloon],['1910',retail],['1920s',later]]){
+  assert.equal(validateYakimaPeriodDrawList(id,items),true);
+  assert.ok(items.every(x=>x.provenance==='illustrative_geometry_only'));
+  assert.ok(items.every(x=>x.tier==='interpretive'));
+ }
+ assert.ok(saloon.some(x=>/saloon/.test(x.name)));
+ assert.equal(saloon.some(x=>/retail bay/.test(x.name)),false);
+ assert.ok(retail.some(x=>/retail bay/.test(x.name)));
+ assert.equal(retail.some(x=>/marquee/.test(x.name)),false);
+ assert.ok(later.some(x=>/marquee/.test(x.name)));
+ assert.ok(later.length>retail.length);
+ assert.throws(()=>getYakimaPeriod('1924'),/unknown_yakima_period/);
+ assert.throws(()=>validateYakimaPeriodDrawList('1899',[{tier:'documented_category'}]),/empty_period_artwork/);
+});
+test('Yakima UI exposes live era switching with plain-language provenance',()=>{
+ const page=read('public/worlds/hidden-world/yakima-walk/index.html');
+ const app=read('public/worlds/hidden-world/yakima-walk/app.mjs');
+ const lab=JSON.parse(read('public/worlds/hidden-world/yakima-evidence-ledger.v1.json'));
+ for(const id of ['1899','1910','1920s'])assert.match(page,new RegExp('id="period-'+id+'"'));
+ assert.match(page,/role="group" aria-label="Artistic historical era lenses"/);
+ assert.match(page,/aria-live="polite"/);
+ assert.match(app,/function setPeriod\(id\)/);
+ assert.match(app,/eraMeshes\.get\(period\)/);
+ assert.ok(lab.virtual_exhibits[0].period_lenses.every(p=>p.geometry_verified===false));
+ assert.equal(lab.virtual_exhibits[0].underground_connections_verified,false);
 });

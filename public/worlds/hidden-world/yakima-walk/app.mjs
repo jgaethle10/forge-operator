@@ -1,5 +1,6 @@
 import {YAKIMA_SCENE as scene,closestYakimaMarker,safeYakimaPosition,buildYakimaDrawList} from './scene.mjs';
 import {yakimaTourFrame,YAKIMA_TOUR_SECONDS} from './tour.mjs';
+import {YAKIMA_PERIODS,getYakimaPeriod,buildYakimaPeriodDrawList,validateYakimaPeriodDrawList} from './periods.mjs';
 // Static access remains usable unless the 3D module initializes successfully.
 document.body.classList.replace('no-js','js');
 const $=id=>document.getElementById(id),canvas=$('world');
@@ -23,17 +24,23 @@ const faces=[
 function mesh(items){const vertices=[];for(const o of items){const c=rgb(o.color);for(const f of faces)for(const k of [0,1,2,0,2,3]){const p=f.v[k];vertices.push(o.x+p[0]*o.sx,o.y+p[1]*o.sy,o.z+p[2]*o.sz,...f.n,...c);}}
  const vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
  for(let i=0;i<3;i++){if(attribs[i]<0)throw Error('Missing vertex attribute');gl.enableVertexAttribArray(attribs[i]);gl.vertexAttribPointer(attribs[i],3,gl.FLOAT,false,36,i*12);}gl.bindVertexArray(null);return {vao,count:vertices.length/9};}
-const drawList=buildYakimaDrawList(scene),base=mesh(drawList.filter(x=>x.tier!=='interpretive')),imagined=mesh(drawList.filter(x=>x.tier==='interpretive'));
+const drawList=buildYakimaDrawList(scene);
+const base=mesh(drawList.filter(x=>x.tier!=='interpretive'));
+const eraMeshes=new Map(YAKIMA_PERIODS.map(p=>{
+ const objects=buildYakimaPeriodDrawList(p.id,scene);
+ validateYakimaPeriodDrawList(p.id,objects);
+ return [p.id,mesh(objects)];
+}));
 gl.enable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.clearColor(.49,.59,.62,1);
 const norm=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l)},cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 function lookAt(eye,target){const z=norm([eye[0]-target[0],eye[1]-target[1],eye[2]-target[2]]),x=norm(cross([0,1,0],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
 function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),v=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*v,-1,0,0,2*far*near*v,0]);}
-let running=false,interpretive=false,x=0,z=17,yaw=0,pitch=-.13,last=performance.now(),lastMarker=null,lastDist=Infinity,lookPointer=null,joyPointer=null,dragX=0,dragY=0;
+let running=false,interpretive=true,period='1910',x=0,z=17,yaw=0,pitch=-.13,last=performance.now(),lastMarker=null,lastDist=Infinity,lookPointer=null,joyPointer=null,dragX=0,dragY=0;
 let move={x:0,y:0},tourActive=false,tourElapsed=0;const keys=new Set(),joy=$('joystick');
 // Read-only QA snapshot restricted to loopback test servers, never the public release.
 if(['127.0.0.1','localhost'].includes(location.hostname)){
  Object.defineProperty(window,'__evercraftYakimaQA',{value:()=>({
-  running,tourActive,tourElapsed,x,z,yaw,pitch,move:{...move},keys:[...keys],frameTime:last,
+  running,tourActive,tourElapsed,period,interpretive,x,z,yaw,pitch,move:{...move},keys:[...keys],frameTime:last,
   focused:document.activeElement?.id||null
  }),configurable:false});
 }
@@ -60,7 +67,23 @@ function startTour(){
  $('location').textContent=shot.markerTitle;
  $('distance').textContent=shot.evidenceBoundary;
 }
-function toggle(){interpretive=!interpretive;$('toggle').setAttribute('aria-pressed',String(interpretive));$('toggle').textContent=interpretive?'◧ Hide imagined storefront details':'◧ Show imagined storefront details';$('distance').textContent=interpretive?'Added shop glazing is artist-made, not a surveyed historical elevation.':'Showing historical structure categories in an illustrated, non-surveyed streetscape.';}
+function toggle(){
+ interpretive=!interpretive;
+ $('toggle').setAttribute('aria-pressed',String(interpretive));
+ $('toggle').textContent=interpretive?'◧ Hide artistic period details':'◧ Show artistic period details';
+ $('distance').textContent=interpretive?'Period artwork is illustrative, not measured building geometry.':'Period artwork hidden; documented historical categories remain.';
+}
+function setPeriod(id){
+ const p=getYakimaPeriod(id);
+ period=p.id;
+ for(const candidate of YAKIMA_PERIODS)$('period-'+candidate.id).setAttribute('aria-pressed',String(candidate.id===period));
+ $('period-label').textContent=p.label+' · '+p.title;
+ $('period-note').textContent=p.certainty;
+ $('distance').textContent=p.record+' All visible period geometry remains interpretive.';
+}
+for(const p of YAKIMA_PERIODS){
+ $('period-'+p.id).addEventListener('click',()=>setPeriod(p.id));
+}
 function openPanel(title,body,sources){$('panel-title').textContent=title;$('panel-copy').textContent=body;const box=$('sources');box.replaceChildren();const label=document.createElement('div');label.className='detail-label';label.textContent='Research sources';box.append(label);sources.forEach((s,i)=>{const a=document.createElement('a');a.href=s;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open historical source '+(i+1)+' ↗';box.append(a)});$('panel').classList.remove('hidden');}
 function inspect(){stopTour();const m=closestYakimaMarker(x,z,scene).marker;if(m)openPanel(m.title,m.body,[scene.sources[m.source]]);}
 function guide(){stopTour();openPanel('What is documented? What is illustrated?','The Lund Building and its change from the Alfalfa Saloon to the Chicago Clothing Company are documented in the 1983 National Register nomination. An archival postcard documents Yakima Avenue from the railroad tracks in 1905–1915. The buildings, streets and view in this 3D exhibit are artistic and not aligned to those records. No tunnels, connections or private access routes are verified by this model. The 1983 building-to-building doorways are not evidence of a subterranean network.',scene.sources);}
@@ -97,7 +120,9 @@ if(running&&$('panel').classList.contains('hidden')){
 resize();gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
 const dir=[Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch)],eye=[x,1.65,z],target=eye.map((v,i)=>v+dir[i]);
 gl.uniformMatrix4fv(uView,false,lookAt(eye,target));gl.uniformMatrix4fv(uProj,false,perspective(Math.PI/3,canvas.width/canvas.height,.12,180));
-gl.bindVertexArray(base.vao);gl.drawArrays(gl.TRIANGLES,0,base.count);if(interpretive){gl.bindVertexArray(imagined.vao);gl.drawArrays(gl.TRIANGLES,0,imagined.count);}gl.bindVertexArray(null);requestAnimationFrame(frame);
+gl.bindVertexArray(base.vao);gl.drawArrays(gl.TRIANGLES,0,base.count);
+if(interpretive){const eraMesh=eraMeshes.get(period);gl.bindVertexArray(eraMesh.vao);gl.drawArrays(gl.TRIANGLES,0,eraMesh.count);}
+gl.bindVertexArray(null);requestAnimationFrame(frame);
 }
 window.addEventListener('resize',resize);resize();requestAnimationFrame(frame);
 }
