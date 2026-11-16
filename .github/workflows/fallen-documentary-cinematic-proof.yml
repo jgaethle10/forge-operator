@@ -6,6 +6,8 @@ on:
       - 'systemia/media-studio/documentary-cinematic-gate.test.mjs'
       - 'systemia/media-studio/documentary-source-proof.mjs'
       - 'systemia/media-studio/documentary-source-proof.test.mjs'
+      - 'systemia/media-studio/documentary-source-concordance.mjs'
+      - 'systemia/media-studio/documentary-source-concordance.test.mjs'
       - 'systemia/forensiscope/authorized-source.mjs'
       - 'systemia/media-studio/DOCUMENTARY-CINEMATIC-STANDARD.md'
       - '.github/workflows/fallen-documentary-cinematic-proof.yml'
@@ -33,3 +35,5 @@ jobs:
         run: node --test systemia/media-studio/documentary-cinematic-gate.test.mjs
       - name: Verify actual source bytes, rooted paths, hashes and scene trims
         run: node --test systemia/media-studio/documentary-source-proof.test.mjs
+      - name: Prove unrelated master is rejected by actual decoded-frame comparison
+        run: node --test systemia/media-studio/documentary-source-concordance.test.mjs
