@@ -151,8 +151,34 @@ function drawFacilityRoom(room){
     box(-w+1.3,.05,z,.16,.06,2.2,p.accent);
     box(w-1.3,.05,z,.16,.06,2.2,p.accent);
   }
-  // An uninterrupted central path keeps even the narrowest facility accessible.
+  // Architectural rhythm, readable wayfinding and a coherent central walkway.
   box(0,.01,0,2.4,.025,d*1.7,p.path);
+  for(let i=0;i<7;i++){
+    const z=-d+1.5+i*(d*2-3)/6;
+    box(0,.039,z,1.45,.018,.07,p.accent);
+    box(-w+.75,2.2,z,.08,3.8,.1,p.roof);
+    box(w-.75,2.2,z,.08,3.8,.1,p.roof);
+  }
+  // The far wall reads as a dramatic institutional or performance landmark.
+  box(0,4.15,-d+.53,Math.min(10.7,w*1.45),3.65,.22,'#1c3533');
+  box(0,4.15,-d+.67,Math.min(9.9,w*1.32),2.95,.11,
+    room.type==='performance'?'#554c74':room.type==='reflection'?'#496e5d':'#355851');
+  box(0,5.72,-d+.76,Math.min(9.8,w*1.3),.15,.12,p.accent);
+  for(let i=-3;i<=3;i++){
+    const x=i*.69;
+    box(x,4.05+(i%2===0?.14:-.12),-d+.79,.42,
+      i%2===0?1.2:.76,.1,i%2===0?'#e6c99e':'#b5c9b7');
+  }
+  // Warm downlights, wall recesses and architectural trim.
+  for(const wallSide of [-1,1]){
+    for(let i=-1;i<=1;i++){
+      const z=i*d*.46;
+      box(wallSide*(w-.46),3.7,z,.12,3.9,1.6,'#203e3c');
+      box(wallSide*(w-.38),4.4,z,.13,1.4,1.12,
+        room.type==='performance'?'#bfa6cf':'#c6ddc1');
+      box(wallSide*(w-1.2),h-.45,z,.7,.1,1.35,'#f1e0b7');
+    }
+  }
   for(const s of room.stations){
     const x=s.x,z=s.z;
     if(s.kind==='training-rig'){
@@ -209,9 +235,9 @@ const vertexSource=[
 ].join('\n');
 const fragmentSource=[
 '#version 300 es','precision highp float;','in vec3 vNormal;','in vec3 vColor;','in float vDistance;',
-'uniform vec3 fogColor;','out vec4 frag;',
+'uniform vec3 fogColor;','uniform float indoor;','out vec4 frag;',
 'void main(){float sun=max(dot(normalize(vNormal),normalize(vec3(-.34,.88,.4))),0.);',
-'float light=.48+sun*.5;vec3 lit=vColor*light;',
+'float light=mix(.48+sun*.5,.82+sun*.18,indoor);vec3 lit=vColor*light;',
 'float fog=clamp((vDistance-65.)/240.,0.,.84);frag=vec4(mix(lit,fogColor,fog),1.);}'
 ].join('\n');
 const skyVertexSource=[
@@ -239,7 +265,7 @@ else{
     gl.linkProgram(program);
     if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
     gl.useProgram(program);
-    for(const name of ['projection','view','fogColor'])loc[name]=gl.getUniformLocation(program,name);
+    for(const name of ['projection','view','fogColor','indoor'])loc[name]=gl.getUniformLocation(program,name);
     skyProgram=gl.createProgram();
     gl.attachShader(skyProgram,compile(gl.VERTEX_SHADER,skyVertexSource));
     gl.attachShader(skyProgram,compile(gl.FRAGMENT_SHADER,skyFragmentSource));
@@ -311,6 +337,7 @@ function draw(){
  gl.uniformMatrix4fv(loc.projection,false,perspective(Math.PI/2.8,canvas.width/canvas.height,.08,760));
  gl.uniformMatrix4fv(loc.view,false,lookAt(eye,target));
  gl.uniform3f(loc.fogColor,...fog);
+ gl.uniform1f(loc.indoor,interior?1:0);
  gl.drawArrays(gl.TRIANGLES,0,drawCount);
  canvas.dataset.rendered=drawCount>0?'true':'false';
 }
@@ -353,7 +380,7 @@ function visitFacility(){
    refreshScene();
    el('nearby').textContent='Your Campus';
    el('description').textContent='Back outside. Every facility is still yours.';
-   el('status').textContent='Returned outside without changing any earned progress.';
+   el('status').textContent='Your campus is unchanged.';
  }else{
    const target=el('facility-picker').value;
    if(!scene.buildings.some(b=>b.id===target))return;
@@ -363,7 +390,7 @@ function visitFacility(){
    refreshScene();
    el('nearby').textContent=interior.name;
    el('description').textContent='Inside your '+interior.type+' space · Level '+interior.level;
-   el('status').textContent='This room is built from your owned facility. No check-in data was shared.';
+   el('status').textContent='Private room · your progress is unchanged.';
  }
  canvas.dataset.playerX=player.x.toFixed(3);
  canvas.dataset.playerZ=player.z.toFixed(3);
