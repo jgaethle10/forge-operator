@@ -6,6 +6,7 @@ import { executeMicroSeedWorkload, normalizeMicroSeedExecutionRequest } from './
 import { signMicroSeedExecutionReceipt, verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 import { signMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
 import { persistSignedMicroSeedReceipt, readSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
+import { reserveSignedMicroSeedExecution } from './microseed-execution-intent-store.mjs';
 
 function clean(v){return String(v??'').trim();}
 function send(res,status,body){
@@ -167,6 +168,19 @@ export async function startMicroSeedNativeAgent({
             }
           }
           const telemetry=await telemetryProvider({manifest,request:normalized});
+          // An agent can be halted after workload execution but before the
+          // signed journal commits. Reserve BEFORE work so a future restart
+          // holds this attempt as uncertain instead of silently rerunning it.
+          // A verified signed journal above always wins on a matching replay.
+          if(receiptSigningPrivateKey){
+            await reserveSignedMicroSeedExecution({
+              stateDir,device_id:normalized.device_id,
+              idempotency_key:normalized.idempotency_key,
+              request_hash:normalized.request_hash,
+              manifest_hash:manifest.manifest_hash,
+              workload_class:normalized.workload_class,
+            });
+          }
           const receipt=await executeMicroSeedWorkload({
             manifest,
             trustDecision:{eligible:true,state:'active',reason:'local_agent_authorized'},
