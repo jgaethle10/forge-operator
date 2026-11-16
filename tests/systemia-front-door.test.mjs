@@ -16,7 +16,7 @@ test('Systemia new front door offers real bounded proof and honest limits',()=>{
   assert.match(page,/work-saban\/report\/\?utm_source=systemia_front_door/);
   assert.match(page,/mesh\/ai-boardroom\/compare\//);
   assert.match(page,/\.\.\/research\//);
-  assert.match(page,/not a claim that the end-to-end autonomous customer workflow/i);
+  assert.match(page,/end-to-end autonomous customer workflow is already publicly available/i);
   assert.match(page,/No pretend live agents/i);
   assert.doesNotMatch(page,/Systemia has already (earned|collected|automated)/i);
 });
