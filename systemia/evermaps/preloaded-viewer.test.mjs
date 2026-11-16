@@ -68,7 +68,7 @@ test('current signed WGS and DNR receipt includes approximate permit dots with n
   site_recommendation_allowed:false,land_title_verified:false,permit_count:1};
  const template=await readFile(new URL('./research-viewer.html',import.meta.url),'utf8');
  const html=buildPreloadedWgsViewer({template,collections,receipt,permits:p,permitReceipt:r});
- assert.ok(html.includes('1 approximate reclamation permit locations'));
+ assert.ok(html.includes('1 permit points*'));
  assert.ok(html.includes('class="legend-item permit-legend"'));
  assert.ok(!html.includes('class="legend-item permit-legend" hidden'));
  assert.ok(html.includes('fill="#ffa95b"'));
