@@ -81,12 +81,14 @@ test("canonical constructors yield a structurally consistent but NEVER externall
   const data=specimen(),result=reconcileEvercraftOutcomeSource(data);
   assert.equal(result.state,"source_consistent_unattested");
   assert.deepEqual(result.reason_codes,[]);
-  assert.equal(result.source_integrity_consistent,true);
+  assert.equal(result.source_contracts_structurally_consistent,true);
   for(const key of [
     "payment_issuer_authenticated","systemia_ledger_authenticated",
     "execution_gate_ledger_authenticated","shipping_provider_independently_refetched",
     "worker_result_attested","customer_acceptance_verified",
     "customer_outcome_verified","business_margin_verified",
+    "exact_offer_to_product_mapping_verified",
+    "duplicate_order_or_side_effect_replay_checked",
     "production_release_authorized","action_performed","private_ids_returned"
   ])assert.equal(result[key],false,key);
   const publicView=JSON.stringify(result);
