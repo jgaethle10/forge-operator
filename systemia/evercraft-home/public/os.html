@@ -30,6 +30,14 @@ h1{font-size:clamp(40px,6vw,78px);line-height:.97;letter-spacing:-.06em;margin:1
 .stage[data-state="held"] .status{color:#a73c3c}
 .stage[data-state="source_proven"] .status,.stage[data-state="source_present"] .status{color:#22695e}
 .stage p{font-size:12px;line-height:1.55;color:#626269;margin:0}
+.runtime-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.runtime-card{border:1px solid #d7d7da;background:#fff;padding:22px}
+.runtime-card .kicker{margin-bottom:11px}
+.runtime-card h3{font-size:21px;letter-spacing:-.035em;margin:0 0 8px}
+.runtime-card p{font-size:12px;color:#62626b;line-height:1.65;margin:0}
+.runtime-card .measure{font-weight:800;font-size:29px;margin:12px 0 7px}
+.runtime-card .measure small{font-size:12px;font-weight:500;color:#696970}
+.runtime-card .footnote{font-size:11px;color:#767680;margin-top:11px}
 .notebook{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .note{padding:23px;background:#eeeeef;border:1px solid #d7d7d9}
 .note h3{font-size:13px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em}
@@ -38,7 +46,7 @@ h1{font-size:clamp(40px,6vw,78px);line-height:.97;letter-spacing:-.06em;margin:1
 #load-message{padding:18px 0;color:#67676f;font-size:13px}
 #load-message[hidden]{display:none}
 @media(max-width:970px){.path{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){main{padding-top:32px}.path,.notebook{grid-template-columns:1fr}.report{display:block}#overall{display:inline-block;text-align:left;margin-top:14px}.stage{min-height:0}header{flex-direction:column;align-items:flex-start}}
+@media(max-width:600px){main{padding-top:32px}.path,.notebook,.runtime-grid{grid-template-columns:1fr}.report{display:block}#overall{display:inline-block;text-align:left;margin-top:14px}.stage{min-height:0}header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -57,6 +65,23 @@ h1{font-size:clamp(40px,6vw,78px);line-height:.97;letter-spacing:-.06em;margin:1
   </div>
   <div id="load-message">Requesting authenticated Evercraft Home integration evidence…</div>
   <section class="path" id="path" aria-label="Evercraft OS integration stages" hidden></section>
+  <section aria-label="Private operational readbacks">
+    <div class="report"><div><h2>Operational evidence</h2><p>Extra permission-scoped views. These do not promote any end-to-end stage to completed.</p></div></div>
+    <div class="runtime-grid">
+      <article class="runtime-card"><div class="kicker">Work Saban · Systemia read scope</div>
+        <h3 id="saban-status">Checking permissions</h3>
+        <p id="saban-detail">Reading only a local sanitized work-state summary, if configured.</p>
+        <div class="measure" id="saban-measure">—</div>
+        <p class="footnote">Not a live worker feed, mission admission or proof of customer fulfillment.</p>
+      </article>
+      <article class="runtime-card"><div class="kicker">Evercraft Payments · Payment read scope</div>
+        <h3 id="payments-status">Checking permissions</h3>
+        <p id="payments-detail">Reading only an authenticated canonical settlement summary, if configured.</p>
+        <div class="measure" id="payments-measure">—</div>
+        <p class="footnote">Paid settlement summary is not net profit or proof of delivery.</p>
+      </article>
+    </div>
+  </section>
   <section class="notebook">
     <div class="note"><h3>What counts as success</h3><p>One authorized request, correct permission, a real Systemia mission, a bounded specialist job, independent QA, and an actual delivered artifact. For paid work, provider-confirmed settlement and fulfillment must also reconcile without duplicate charges.</p></div>
     <div class="note"><h3>What this screen can do</h3><p>Read a sanitized status contract and direct you to existing Evercraft Home mission planning and app contracts. No execution, purchase, or publication occurs from this page. Missing evidence stays unknown, not zero.</p></div>
@@ -71,6 +96,49 @@ const path=document.getElementById("path");
 const overall=document.getElementById("overall");
 const observed=document.getElementById("observed");
 const prefix=location.pathname.startsWith("/home/")?"/home":"";
+async function readScopedCard(endpoint,statusId,detailId,measureId,render){
+  const status=document.getElementById(statusId),detail=document.getElementById(detailId),measure=document.getElementById(measureId);
+  status.textContent="Checking readback";detail.textContent="Contacting owned Home endpoint…";measure.textContent="—";
+  try{
+    const response=await fetch(prefix+endpoint,{credentials:"same-origin",cache:"no-store"});
+    if(response.status===401||response.status===403){
+      status.textContent="Restricted";detail.textContent="This readback requires its own Passport scope. No private data was exposed.";return;
+    }
+    if(!response.ok)throw Error("Unable to read this owned endpoint.");
+    const data=await response.json();
+    if(data.ok!==true)throw Error("Readback rejected its evidence.");
+    render(data,status,detail,measure);
+  }catch{
+    status.textContent="Unavailable";detail.textContent="No reliable operational evidence is available from this source.";measure.textContent="—";
+  }
+}
+async function loadOperationalReadbacks(){
+  await Promise.all([
+    readScopedCard("/api/os/saban-snapshot","saban-status","saban-detail","saban-measure",(data,status,detail,measure)=>{
+      if(data.schema!=="evercraft.home.os-saban-snapshot.v1")throw Error("wrong schema");
+      if(data.state!=="local_snapshot_observed"){
+        status.textContent="Not verified";detail.textContent=String(data.detail||"No private state available.");return;
+      }
+      status.textContent=data.snapshot_recent?"Source snapshot observed":"Stale source snapshot";
+      const c=data.counts||{};
+      measure.textContent=String(data.total_jobs)+" recorded jobs";
+      detail.textContent="Queued: "+c.queued+" · Leased: "+c.leased+" · Completed in snapshot: "+c.completed+" · Dead-letter: "+c.dead_letter+" · Retried: "+data.retried_jobs+" · Checkpointed: "+data.checkpointed_jobs+". Recorded state is not independent execution proof.";
+    }),
+    readScopedCard("/api/os/commerce","payments-status","payments-detail","payments-measure",(data,status,detail,measure)=>{
+      if(data.schema!=="evercraft.home.payments-readback.v1")throw Error("wrong schema");
+      if(data.state!=="verified_settled_snapshot"){
+        status.textContent="Unverified / held";detail.textContent=String(data.detail||"No canonical settlement attestation.");return;
+      }
+      status.textContent="Provider settlement verified";
+      measure.textContent=Number(data.verified_paid_orders).toLocaleString()+" paid orders";
+      const total=Number(data.gross_settled_cents)/100;
+      detail.textContent="Gross verified settlements over a complete rolling seven-day period: "+
+        total.toLocaleString("en-US",{style:"currency",currency:"USD"})+
+        ". Settlement is not profit and does not attest customer delivery.";
+    }),
+  ]);
+}
+
 async function refresh(){
   msg.hidden=false;msg.textContent="Reading authenticated OS evidence…";
   path.hidden=true;overall.textContent="Checking";
@@ -99,6 +167,7 @@ async function refresh(){
     msg.textContent=String(error?.message||"Unable to read authenticated evidence.");
     observed.textContent="No runtime claim made";
   }
+  await loadOperationalReadbacks();
 }
 document.getElementById("refresh").addEventListener("click",refresh);
 refresh();
