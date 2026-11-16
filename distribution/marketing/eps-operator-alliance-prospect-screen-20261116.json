@@ -117,7 +117,10 @@
       "priority": 7,
       "prior_gmail_exact_name_or_address_match": 0,
       "proposed_status": "research_only_not_contacted",
-      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income"
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "28605 Dallas Rd, Richland, WA 99352, USA",
+      "public_record_address_source": "https://govtribe.com/vendors/white-arrow-land-works-llc-242c8",
+      "address_note": "SAM-derived vendor profile location, not confirmed customer-facing yard; differing public aggregators conflict on SAM status, do not assert current SAM eligibility"
     },
     {
       "name": "J&M Landscape & Earthworks",
@@ -138,7 +141,10 @@
       "priority": 8,
       "prior_gmail_exact_name_or_address_match": 0,
       "proposed_status": "research_only_not_contacted",
-      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income"
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "1463 Rimrock Ave, Richland, WA 99352, USA",
+      "public_record_address_source": "https://safer.fmcsa.dot.gov/query.asp?query_param=USDOT&query_string=4541748&query_type=queryCarrierSnapshot",
+      "address_note": "FMCSA carrier-snapshot registered address, not verified public walk-in location; USDOT status/operating authority not evidence of valid contracting license"
     },
     {
       "name": "Calvert Excavating Inc",
@@ -159,7 +165,10 @@
       "priority": 9,
       "prior_gmail_exact_name_or_address_match": 0,
       "proposed_status": "research_only_not_contacted",
-      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income"
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "7580 N Wenas Rd, Selah, WA 98942, USA",
+      "public_record_address_source": "https://secure.lni.wa.gov/verify/Detail.aspx?LIC=CALVEEI966LC",
+      "address_note": "WA L&I official indexed location and active general-contractor snapshot, subject to current verification"
     },
     {
       "name": "Atkins Landscaping",
@@ -180,7 +189,10 @@
       "priority": 10,
       "prior_gmail_exact_name_or_address_match": 0,
       "proposed_status": "research_only_not_contacted",
-      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income"
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "492 McLaughlin Rd, Yakima, WA 98908, USA",
+      "public_record_address_source": "web business search business profile; company contact lists operator phone + official email",
+      "address_note": "Business locator may differ from mailing address, confirm actual job or public meeting site"
     },
     {
       "name": "Alpha Pro Exteriors",
@@ -203,7 +215,10 @@
       "priority": 11,
       "prior_gmail_exact_name_or_address_match": 0,
       "proposed_status": "research_only_not_contacted",
-      "next": "Hold for owner-approved precise fit question, not a rushed cold blast"
+      "next": "Hold for owner-approved precise fit question, not a rushed cold blast",
+      "public_record_address": "7009 Valley View Pl, Pasco, WA 99301, USA",
+      "public_record_address_source": "https://www.alphaproexteriors.com/",
+      "address_note": "Published business location; no confirmation operator is interested"
     }
   ],
   "excluded_duplicate_outreach": [
@@ -323,5 +338,6 @@
     "partner_replies_confirmed": 0,
     "operator_contracts_signed": 0,
     "customer_jobs_settled": 0
-  }
+  },
+  "geographic_caveat": "Public record addresses are used only for preliminary geography, not proof of equipment storage, public visitor premises, or a contractual service territory."
 }
