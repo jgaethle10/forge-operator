@@ -104,9 +104,9 @@ test("Local-loopback Home readback returns no authority or secret material",asyn
 
 test("Executive Floor actually requests readback only after authenticated Home entry",()=>{
   const source=fs.readFileSync(path.join(here,"public","index.html"),"utf8");
-  const idx=source.indexOf("void refreshExecutiveEvidence();");
   const show=source.indexOf("  showApp();",source.indexOf("async function load(afterLogin=false)"));
-  assert.ok(idx>show);
+  const idx=source.indexOf("  void refreshExecutiveEvidence();",show);
+  assert.ok(show>=0 && idx>show);
   assert.ok(source.includes('homeFetch("/api/executive/evidence")'));
   for(const id of ["executive-journal-state","executive-clip-state","executive-payments-state","executive-evidence-refresh"]){
     assert.ok(source.includes('id="'+id+'"'));
