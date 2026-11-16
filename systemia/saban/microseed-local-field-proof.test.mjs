@@ -100,6 +100,27 @@ test('read-only field check verifies signed local telemetry without executing wo
   assert.equal(JSON.stringify(report).includes(identity.private_key),false);
 }));
 
+test('hash probe refuses legacy agent without journal commit support before POST',()=>withNode(async({root})=>{
+  const calls=[];
+  await assert.rejects(inspectLocalMicroSeedEvidence({
+    root,hashProbe:true,
+    fetchImpl:async(url,options)=>{
+      const route=new URL(url).pathname;
+      calls.push({route,method:options.method});
+      const response=await fetch(url,options);
+      if(route!=='/health')return response;
+      const body=await response.json();
+      delete body.signed_journal_commit_before_ack;
+      return new Response(JSON.stringify(body),{
+        status:200,headers:{'content-type':'application/json'},
+      });
+    },
+  }),/field_proof_signed_journal_protocol_unavailable/);
+  assert.equal(calls.some(call=>call.method==='POST'),false);
+  assert.equal(fs.existsSync(path.join(root,'state','idempotency')),false);
+  assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
+}));
+
 test('explicit registered hash probe reopens and verifies actual signed local journal',()=>withNode(async({root,boot,manifest,identity,token})=>{
   const report=await inspectLocalMicroSeedEvidence({root,hashProbe:true});
   assert.equal(report.ok,true);
