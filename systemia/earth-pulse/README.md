@@ -29,6 +29,37 @@ Run: node --test tests/earth-pulse-*.test.mjs
 5. Validate any image model against a hand-labeled dataset before making performance claims.
 6. Publish evidence cards only after human approval, source-rights review, independent evidence review, and privacy screening.
 
+
+## Waterway research context (new)
+
+The offline waterway-context.mjs module takes private review pairs, an
+operator-configured list of candidate sites and USGS station identifiers, a
+bounded set of **already-normalized** observations from the existing USGS Water
+Data adapter, and a caller-supplied as-of timestamp. It DOES NOT fetch a feed,
+verify site-to-gauge geography, change Sentinel state, or create a public claim.
+
+Only these USGS source codes are used:
+- 00060: stream discharge
+- 00065: gage height
+
+Inputs must match exact station ID, parameter code, metric type, official
+provenance hostname/path, and a configurable +/- observation-time window.
+Units, agency approval status, and source references are preserved in the
+private output. Missing coverage is null, never zero. Source approval is not
+field-photo verification, and water quantity is not a water-quality measure.
+
+Example research invocation:
+    node --test tests/earth-pulse-*.test.mjs
+
+Synthetic tests exercise source spoofing, timestamp freshness, wrong station,
+consent and publication blocks, image duplication, and private geography.
+The source-family field and provenance URL are structural checks only; the
+trusted USGS adapter itself must be the ingestion boundary for live data.
+
+**Not deployed:** No reviewed field-site registry, controlled photo uploader,
+media safety checks, subscriber access controls, production sensor ingestion,
+scientific image model, public map, or signed publication receipts.
+
 ## Hard boundaries
 - No inference of potability, contamination, disease, structural danger, or imminent hazard from appearance alone.
 - No autonomous Sentinel hazard escalation, enforcement decision, or municipal condition certification.
