@@ -87,3 +87,40 @@ test('no private manuscript fields or story text leak into Saban assignments',()
  const b=make([project(1,{title:secret,source_path:secret,story_draft:secret})]);
  assert.equal(JSON.stringify(b).includes(secret),false);
 });
+
+test('private preparation CLI persists all 12 jobs and refuses reset',async()=>{
+ const {mkdtempSync,writeFileSync,readFileSync,rmSync}=await import('node:fs');
+ const {tmpdir}=await import('node:os');
+ const {join}=await import('node:path');
+ const {spawnSync}=await import('node:child_process');
+ const root=mkdtempSync(join(tmpdir(),'evercraft-parallel-'),{mode:0o700});
+ try {
+   writeFileSync(join(root,'ledger.json'),JSON.stringify(ledger()),{mode:0o600});
+   const cli=new URL('../systemia/production-continuity/prepare-parallel.mjs',import.meta.url).pathname;
+   const first=spawnSync(process.execPath,[cli,'--private-dir',root,'--max-in-flight','6'],{encoding:'utf8'});
+   assert.equal(first.status,0,first.stderr);
+   const batch=JSON.parse(readFileSync(join(root,'parallel-slate.json'),'utf8'));
+   assert.equal(batch.queued_count,12);
+   assert.equal(batch.max_in_flight,6);
+   assert.equal(batch.dispatched,false);
+   const duplicate=spawnSync(process.execPath,[cli,'--private-dir',root],{encoding:'utf8'});
+   assert.notEqual(duplicate.status,0);
+   assert.equal(JSON.parse(readFileSync(join(root,'parallel-slate.json'),'utf8')).queued_count,12);
+ } finally {rmSync(root,{recursive:true,force:true});}
+});
+
+test('private preparation CLI refuses a public checkout',async()=>{
+ const {mkdtempSync,writeFileSync,mkdirSync,rmSync}=await import('node:fs');
+ const {tmpdir}=await import('node:os');
+ const {join}=await import('node:path');
+ const {spawnSync}=await import('node:child_process');
+ const root=mkdtempSync(join(tmpdir(),'evercraft-public-'),{mode:0o700});
+ try {
+   mkdirSync(join(root,'.git'));
+   writeFileSync(join(root,'ledger.json'),JSON.stringify(ledger()),{mode:0o600});
+   const cli=new URL('../systemia/production-continuity/prepare-parallel.mjs',import.meta.url).pathname;
+   const r=spawnSync(process.execPath,[cli,'--private-dir',root],{encoding:'utf8'});
+   assert.notEqual(r.status,0);
+   assert.match(r.stderr,/Source checkout cannot hold private slate/);
+ } finally {rmSync(root,{recursive:true,force:true});}
+});
