@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {verifyDocumentarySources} from './documentary-source-proof.mjs';
+import {inspectDocumentarySourceConcordance} from './documentary-source-concordance.mjs';
 
 export const CINEMATIC_SCHEMA='evercraft.fallen.documentary-cinematic-input.v1';
 export const CINEMATIC_RECEIPT_SCHEMA='evercraft.fallen.documentary-cinematic-receipt.v1';
@@ -167,19 +168,27 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
         sourceProof.verifiedReferencedSourceCount>=3&&
         proofCoverage>=.6&&
         Math.abs(proofCoverage-editorial.measurements.verifiedFootageFraction)<.015;
+      const pixelProof=proofValid?
+        inspectDocumentarySourceConcordance({
+          masterPath:master,expectedMasterSha256:picture.masterSha256,
+          sources:input.sources,shots:input.shots}):
+        {status:'blocked',blockers:['pixel_proof_skipped_until_source_bytes_verified']};
+      const pixelValid=pixelProof.status==='pixel_concordance_verified_for_private_review';
       const blockers=[...editorial.blockers,
         ...(proofValid?[]:['verified_source_video_proof_not_accepted']),
-        ...sourceProof.blockers];
+        ...(pixelValid?[]:['source_master_pixel_concordance_not_accepted']),
+        ...sourceProof.blockers,...pixelProof.blockers];
       const result={...editorial,
         status:blockers.length?'rejected':editorial.status,
         blockers:[...new Set(blockers)],
-        sourceProof,sourceProofBoundToMaster:{masterSha256:picture.masterSha256,
+        sourceProof,pixelProof,sourceProofBoundToMaster:{masterSha256:picture.masterSha256,
           verifiedCoverageSeconds:sourceProof.verifiedShotFootageSeconds,
           coverageFraction:Number(proofCoverage.toFixed(5)),
-          note:'Only timeline/source metadata bound; final pixels still require human visual provenance check'},
+          note:'Source frames sampled against exact exported master. Crops/effects can fail automatically; independent human visual and editorial review still required'},
         boundaries:{...editorial.boundaries,
           byteVerifiedFootageProofRequired:true,
-          finalPixelsNotAuthenticatedAgainstSources:true}};
+          sourceMasterPixelConcordanceRequired:true,
+          automaticPixelMatchIsNotAuthenticityOrArtisticQualityProof:true}};
       const target=path.resolve(receiptFile);
       fs.mkdirSync(path.dirname(target),{recursive:true});
       fs.writeFileSync(target,JSON.stringify(result,null,2)+'\n',{mode:0o600});
