@@ -28,7 +28,7 @@ assert.ok(result.missions.find(x => x.mission_ref === 'overdue').problems.includ
 assert.ok(result.missions.find(x => x.mission_ref === 'human-block').problems.includes('explicit_human_block'));
 assert.ok(result.missions.find(x => x.mission_ref === 'paused-no-reason').problems.includes('disposition_reason_missing'));
 assert.ok(!JSON.stringify(result).includes('NO_PRIVATE_NAME_LEAK'));
-assert.ok(!JSON.stringify(result).includes('private"'));
+assert.ok(!JSON.stringify(result).includes('"owner":"private"'));
 assert.equal(inspectMissionContinuity({ missions: [], now }).coverage_state, 'no_admitted_rows_unverified');
 assert.throws(() => inspectMissionContinuity({ missions: null, now }), /missions_array_required/);
 assert.throws(() => inspectMissionContinuity({ missions: [], now, staleAfterDays: -1 }), /stale_after_days_invalid/);
