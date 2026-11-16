@@ -1,8 +1,8 @@
 # Evercraft Fungal Defense Observatory
 
 **Research ID:** FUNGAL-DEFENSE-001  
-**Build status:** v0.3 standalone offline prototype with a separate provisional 2026 surveillance lane; not deployed  
-**Last manual evidence review:** Historical CDC data 2026-11-04; provisional CDC NNDSS weekly series 2026-11-09  
+**Build status:** v0.4 standalone offline prototype with the CDC Nov. 13, 2026 annual revision, archived historical snapshots and separate 2026 provisional lane; not deployed  
+**Last manual evidence review:** Latest CDC annual revision 2026-11-15 (source page dated 2026-11-13); earlier historical data 2026-11-04; provisional NNDSS weekly series 2026-11-09  
 **Mode:** Public aggregate data, static and non-clinical
 
 ## What is actually working
@@ -225,3 +225,42 @@ The script must itself be retrieved from the reviewed commit or have its Git blo
 
 **Still missing:** an authentic execution receipt from Evercraft Node001/Node002, browser accessibility checks, expert scientific review, and owned Systemia integration. Public release remains blocked by `release-gates.json`.
 
+
+
+## November 15, 2026: CDC annual revision and recycled-claim correction
+
+The CDC tracking page updated on **November 13, 2026**. This is a surveillance-data revision, not the discovery of a new hospital fungus. *Candida auris* was first described in 2009 and the CDC published U.S. case information in 2016.
+
+**New source of record:** [CDC National Clinical Cases Reported Over Time](https://www.cdc.gov/candida-auris/tracking-c-auris/), dated November 13, 2026.
+
+| Case series | Latest relevant observation | Source meaning |
+| --- | --- | --- |
+| Revised annual CDC tracking | 2025: **8,780**, 2024: **6,370** | Retrospective reported U.S. clinical cases; 2025 is the latest full year in this series |
+| Archived earlier CDC tracking snapshot | 2024: **6,304** | Earlier observed version of the CDC tracking page; preserved rather than overwritten |
+| Corrected CDC MMWR 2026 analysis | 2024: **6,197** | Separate frozen case-level analytic surveillance, do not merge with tracking |
+| Provisional CDC NNDSS week 43 | 2026 year-to-date clinical notifications: **6,572** | Weekly cumulative *provisional* notifications, distinct scope and method; screening notifications separately tracked |
+
+**New artifacts:** `data/cdc-cauris-annual-2026-11-13.json`, `observatory-v0.4.html`, `tools/check_annual_revision.py` and `tools/test_annual_revision.py`. The earlier data and v0.2/v0.3 pages are still in the branch. The local preview now points to v0.4, and checkout admission plus `run_owned_validation.py` require the revised annual dataset and checker.
+
+**Source monitor:** `tools/source_watch.py` now compares against the 2025 **8,780** annual figure from the dated November 13 CDC page. This avoids permanently flagging the already-reviewed revision as an unexplained new source change. It remains manual-review-only and does not generate case alarms or publish new data.
+
+**Editorial:** `editorial/2026-11-15-candida-auris-fact-check.md` is an evidence-led Journal candidate. It was committed internally, **not** published to any Journal build, social media or public dashboard.
+
+### Local checks
+
+```bash
+python3 research/fungal-defense-001/tools/check_annual_revision.py
+python3 research/fungal-defense-001/tools/check_provisional.py
+python3 research/fungal-defense-001/tools/check_observatory.py
+python3 research/fungal-defense-001/tools/validate_surveillance.py --self-test
+python3 -m unittest discover -s research/fungal-defense-001/tools -p 'test_*.py' -v
+python3 research/fungal-defense-001/tools/release_gate.py --stage public
+```
+
+The last command **must exit 2** with `status=blocked`; it is a safety assertion, not an error to override. A separate GitHub CI workflow, `.github/workflows/fungal-defense-evidence.yml`, runs the offline tests for the draft PR without deploying the product. GitHub CI is only a test service, not an Evercraft application runtime or a substitute for an actual Node001/Node002 receipt.
+
+**Executed in this session:** 21 checks of verified GitHub source fields and file consistency; all three v0.4 inline JavaScript blocks compiled in V8; the revised annual year-selector behavior was executed with a minimal simulated DOM and correctly showed 2025 = 8,780, 2024 = 6,370, and 2016 = 51. This is **not** a full browser, accessibility or owned-node execution test. The dedicated Python workflow had not yet returned a completed result at the time of this README update.
+
+### Public release gates remain closed
+
+The project is a research prototype. Do not merge or publish as a clinical decision system or live disease tracker. Preserve original sources and reporting definitions. Before an owned Evercraft deployment, require an authentic Node001/Node002 receipt, security/privacy and accessibility checks, independent scientific review, and a documented release signoff. `release-gates.json` remains unapproved.
