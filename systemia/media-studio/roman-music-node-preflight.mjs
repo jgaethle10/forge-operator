@@ -58,7 +58,12 @@ export function classifyHardware({gpus=[],python=null,free_disk_gb=null,memory_g
 export function collectHardware(){
  const platform=os.platform();
  const ver=tryCmd('python3',['--version'])||tryCmd('python',['--version']);
- const gpus=parseGpuCsv(tryCmd('nvidia-smi',['--query-gpu=name,memory.total,driver_version','--format=csv,noheader,nounits']));
+ const smiArgs=['--query-gpu=name,memory.total,driver_version','--format=csv,noheader,nounits'];
+ // NVIDIA documents this location for WSL when nvidia-smi is not on PATH.
+ const pathSmi=tryCmd('nvidia-smi',smiArgs);
+ const wslSmi=pathSmi===null&&fs.existsSync('/usr/lib/wsl/lib/nvidia-smi')?
+   tryCmd('/usr/lib/wsl/lib/nvidia-smi',smiArgs):null;
+ const gpus=parseGpuCsv(pathSmi??wslSmi);
  const df=tryCmd('df',['-Pk','.']);
  const memory_gb=Number((os.totalmem()/GB).toFixed(1));
  const wsl=Boolean(process.env.WSL_DISTRO_NAME||
@@ -67,6 +72,8 @@ export function collectHardware(){
   observed_at:new Date().toISOString(),machine:os.hostname(),platform,architecture:os.arch(),
   wsl,cpu_logical_cores:os.cpus().length,
   memory_gb,free_disk_gb:parseDf(df),
+  wsl_gpu_device_visible:fs.existsSync('/dev/dxg'),
+  gpu_probe_source:pathSmi!==null?'PATH:nvidia-smi':wslSmi!==null?'WSL:/usr/lib/wsl/lib/nvidia-smi':'NOT_DETECTED',
   python:parsePython(ver),ffmpeg:Boolean(tryCmd('ffmpeg',['-version'])),
   ffprobe:Boolean(tryCmd('ffprobe',['-version'])),gpus,
   caveat:'Read-only local snapshot. A visible GPU and model compatibility do not prove successful music inference.'};
