@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {generateKeyPairSync} from 'node:crypto';
-import {mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {mkdtemp,writeFile,readFile,rm} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {fingerprintPublicKey,createNodeAttestation} from '../systemia/compute/device-identity.mjs';
@@ -61,6 +63,17 @@ test('identity-only explicit reader excludes raw key, challenge and receipt, and
   assert.equal(result.nodes.length,0);
   assert.equal(result.identity_checks[0].verification,'pinned_signature_verified');
   assert.doesNotMatch(JSON.stringify(result),/BEGIN PUBLIC KEY|owner-verified-challenge|node-test-001|att\.json|pinned\.pem/);
+  const cliOut=path.join(dir,'identity-export.json');
+  const exporter=fileURLToPath(new URL('../systemia/organism/mission-control-export.mjs',import.meta.url));
+  const cli=spawnSync(process.execPath,[exporter,
+   '--node001-attestation',file,'--node001-public-key',keyFile,
+   '--node001-nonce-file',nonceFile,'--node001-id',key.node_id,
+   '--out',cliOut],{encoding:'utf8',timeout:10000});
+  assert.equal(cli.status,0,cli.stderr);
+  const exported=JSON.parse(await readFile(cliOut,'utf8'));
+  assert.equal(exported.identity_checks.length,1);
+  assert.equal(exported.nodes.length,0);
+  assert.match(cli.stdout,/1 pinned identity check/);
   const view=parseOperatorSnapshot(result,now);
   assert.equal(view.identity_checks[0].verification,'operator_reported_key_check');
   assert.match(view.identity_checks[0].provenance,/NOT BROWSER-AUTHENTICATED/);
