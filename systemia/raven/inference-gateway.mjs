@@ -151,7 +151,13 @@ export function createInferenceEngine({
         ...(responseFormat === "json" ? { format: "json" } : {}),
       }),
     }, { fetchImpl, timeoutMs });
-    const text = clean(body?.response);
+    const rawText = typeof body?.response === "string" ? body.response : "";
+    // Structured responses must be checked byte-faithfully, not silently
+    // normalized by clean(), which replaces control characters.
+    if (responseFormat === "json" && Buffer.byteLength(rawText, "utf8") > 50000) {
+      throw new Error("raven_inference_json_too_large");
+    }
+    const text = responseFormat === "json" ? rawText.trim() : clean(rawText);
     if (!response.ok || !text) {
       throw new Error(clean(body?.error || ("ollama_http_" + response.status), 2000));
     }
