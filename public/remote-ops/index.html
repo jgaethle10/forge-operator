@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d16">
+<title>Remote Ops | A 30-Day Business Flight by Evercraft</title>
+<meta name="description" content="Rehearse 30 days of operating a fictional business. Make decisions, compare the consequences, and see what your assumptions change. Free browser-only prototype.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{color-scheme:dark;--bg:#080d16;--surface:#111c2c;--surface2:#162337;--border:#2b3f59;--ink:#f1f7ff;--muted:#b1c1d7;--accent:#85dbff;--good:#89e3ba;--bad:#ff9b9b}
+*{box-sizing:border-box}
+html{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{margin:0;color:var(--ink);background:radial-gradient(ellipse 900px 480px at 85% -10%,#1a4461 0,transparent 65%),var(--bg);line-height:1.5}
+a{color:var(--accent)}
+button,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.45}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{width:min(1220px,calc(100% - 32px));margin:0 auto}
+.top{border-bottom:1px solid var(--border);background:#080f1ad9}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 0}
+.brand{font-weight:950;letter-spacing:.16em;color:#fff;text-decoration:none;font-size:.78rem}
+.brand b{color:var(--accent)}
+.top nav{display:flex;gap:18px;font-size:.85rem}
+.top nav a{color:var(--muted);text-decoration:none}
+.hero{padding:46px 0 32px;display:flex;flex-direction:column;gap:12px}
+.kicker{color:var(--accent);font-weight:900;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em}
+h1{font-size:clamp(2.6rem,7vw,5.7rem);line-height:.96;letter-spacing:-.07em;margin:0;max-width:910px}
+h1 span{color:var(--accent)}
+.lead{max-width:760px;color:var(--muted);font-size:1.04rem;margin:8px 0}
+.hint{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.hint span{padding:6px 10px;border:1px solid var(--border);border-radius:30px;font-size:.78rem;color:#d7e6f6}
+.panel{background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:17px;padding:23px}
+.setup{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(290px,1fr);gap:22px;margin-bottom:22px}
+.setup p,.panel p{color:var(--muted)}
+h2{font-size:1.4rem;line-height:1.18;letter-spacing:-.035em;margin:0 0 11px}
+h3{font-size:1rem;margin:0 0 11px}
+label{font-size:.83rem;color:var(--muted);font-weight:800;display:block;margin:0 0 6px}
+select{display:block;width:100%;background:#0b1522;color:#fff;border:1px solid #55718b;border-radius:9px;padding:14px 12px;min-height:50px}
+strong{color:#fff}
+.cta{min-height:50px;padding:11px 18px;border:1px solid var(--accent);border-radius:10px;background:var(--accent);font-weight:900;color:#071421}
+.cta:hover:not(:disabled){background:#c0f0ff}
+.ghost{padding:10px 14px;border:1px solid #60778c;border-radius:10px;background:transparent;color:#e7f6ff}
+.ghost:hover:not(:disabled){background:#244158}
+.setup-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:17px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.specs div{border:1px solid var(--border);padding:12px;border-radius:10px;background:#0a1423}
+.specs small{display:block;color:var(--muted)}
+.specs strong{font-size:1.3rem}
+.cockpit[hidden],.setup[hidden],.finish[hidden]{display:none}
+.flightbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.flightbar h2{margin:3px 0}
+.progress{height:9px;max-width:330px;min-width:180px;width:30vw;background:#223249;border-radius:50px;overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#57b8eb,#87e9cf);transition:width .3s}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px}
+.metric{background:#111c2c;border:1px solid var(--border);border-radius:13px;padding:17px;min-width:0}
+.metric .tag{color:var(--muted);font-size:.8rem;font-weight:800}
+.metric .value{font-size:clamp(1.3rem,2.7vw,2.2rem);font-weight:950;letter-spacing:-.05em;overflow-wrap:anywhere}
+.metric .sub{font-size:.76rem;color:var(--muted)}
+.value.neg{color:var(--bad)}.value.pos{color:var(--good)}
+.columns{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(310px,.9fr);gap:15px;margin-bottom:15px}
+.event{padding:16px;background:#0b1522;border-radius:12px;border:1px solid #395873;margin:14px 0}
+.event small{display:block;color:var(--accent);font-size:.73rem;font-weight:850;letter-spacing:.1em}
+.event p{margin:6px 0 0;font-size:.9rem}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0}
+.choice{border:1px solid #405c78;border-radius:11px;background:#0c1829;padding:14px;text-align:left;color:var(--ink);min-height:95px}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice[aria-pressed=true]{border-color:var(--accent);background:#17334b;box-shadow:inset 0 0 0 1px var(--accent)}
+.choice strong{display:block;font-size:.91rem}
+.choice small{display:block;color:#c1d2e3;margin-top:5px;font-size:.77rem}
+.footnote{font-size:.79rem}
+.situation{padding:14px;background:#0a1524;border:1px solid var(--border);border-radius:11px}
+.situation h3{margin-bottom:12px}
+.estimate{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+.estimate div small{display:block;color:var(--muted);font-size:.77rem}
+.estimate strong{font-size:1.45rem;letter-spacing:-.035em}
+.preview-note{font-size:.8rem;color:var(--muted)}
+.rows{list-style:none;padding:0;margin:0}
+.rows li{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid #27394d;padding:9px 0;font-size:.86rem}
+.rows li:last-child{border:0}
+.rows li span{color:var(--muted)}
+.ledger{display:flex;flex-direction:column;gap:9px;max-height:290px;overflow:auto}
+.receipt{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border-bottom:1px solid var(--border);padding:10px 0;font-size:.86rem}
+.receipt .day{font-weight:900;color:var(--accent);font-size:.77rem}
+.receipt small{display:block;color:var(--muted)}
+.right{text-align:right;font-variant-numeric:tabular-nums}
+.spark{display:flex;align-items:end;gap:3px;height:68px;margin-top:15px;border-bottom:1px solid #4d687e}
+.spark i{display:block;flex:1;min-width:3px;background:#66b7e0;opacity:.85;border-radius:3px 3px 0 0}
+.spark i.loss{background:#e28b8b}
+.finish{margin-bottom:28px;border:1px solid #5488a3;border-radius:17px;background:#112d3e;padding:23px}
+.finish h2{font-size:2rem}
+.footer{border-top:1px solid var(--border);margin-top:34px;padding:20px 0 42px;color:var(--muted);font-size:.81rem}
+.footer p{max-width:940px}
+@media(max-width:800px){.columns,.setup{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.hero{padding:32px 0 22px}}
+@media(max-width:470px){.metrics{gap:8px}.metric{padding:12px}.choice{padding:11px;min-height:107px}.choices{gap:7px}.top nav{gap:9px}.top .wrap{padding:14px 0}.estimate strong{font-size:1.22rem}.panel{padding:16px}}
+@media(prefers-reduced-motion:reduce){.progress span{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="../try/" aria-label="Evercraft home">EVERCRAFT <b>/ REMOTE OPS</b></a><nav><a href="../try/">Free tools</a><a href="mailto:jessegaethle10@gmail.com?subject=Remote%20Ops%20feedback">Feedback</a></nav></div></header>
+<main class="wrap">
+<section class="hero"><div class="kicker">SYSTEMIA / BUSINESS FLIGHT SIMULATOR</div>
+<h1>Run the decision.<br><span>Before you risk the business.</span></h1>
+<p class="lead">Thirty fictional days. Real decisions to practice. Choose a company, manage the cash, see where your assumptions lead. No account, no upload, no payment.</p>
+<div class="hint"><span>30-day playable prototype</span><span>Runs on your device</span><span>Explicit fictional assumptions</span></div>
+</section>
+<section class="setup" id="setup" aria-label="Set up the simulation">
+<div class="panel"><div class="kicker">01 / PICK YOUR BUSINESS</div><h2>What are you going to operate?</h2>
+<p>This first flight uses three deliberately simplified models. It is a practice environment, not a viability score for your actual company.</p>
+<label for="business">Business type</label><select id="business"><option value="service">Home services · cleaning crew</option><option value="gym">Fitness studio · classes / day passes</option><option value="cafe">Coffee cart · walk-in sales</option></select>
+<p id="business-detail">Run a small service crew with bookings, supplies and payroll.</p>
+<div class="setup-actions"><button class="cta" id="start" type="button">Begin 30-day flight</button></div></div>
+<div class="panel"><div class="kicker">HOW THE FLIGHT WORKS</div><h2>Every move has a cost.</h2>
+<p>You'll see a fictional daily event, choose an action and inspect a projected receipt before advancing. Keep cash above zero through day 30.</p>
+<div class="specs"><div><small>Control</small><strong>Price</strong></div><div><small>Control</small><strong>Hiring</strong></div><div><small>Control</small><strong>Marketing</strong></div><div><small>Control</small><strong>Quality</strong></div></div>
+<p class="footnote">All modeled outcomes are deterministic for replay and critique. No real market data is used.</p></div>
+</section>
+<section id="cockpit" class="cockpit" hidden aria-label="Business simulation cockpit">
+<div class="flightbar"><div><div class="kicker" id="flight-label">30-DAY FLIGHT</div><h2 id="day-title">Day 1 of 30</h2></div><div class="progress" aria-label="Flight progress"><span id="progress"></span></div><div class="setup-actions" style="margin-top:0"><button class="ghost" id="rewind" type="button" disabled>Rewind one day</button><button class="ghost" id="restart" type="button">Start over</button></div></div>
+<div class="metrics" aria-label="Simulation totals">
+<div class="metric"><div class="tag">Available cash</div><div id="cash" class="value">$0</div><div class="sub">Modeled, fictional dollars</div></div>
+<div class="metric"><div class="tag">Revenue to date</div><div id="revenue" class="value">$0</div><div class="sub">Completed days</div></div>
+<div class="metric"><div class="tag">Net result to date</div><div id="net" class="value">$0</div><div class="sub">Revenue less modeled expenses</div></div>
+<div class="metric"><div class="tag">Price / staffing</div><div id="price" class="value">$0</div><div class="sub" id="staff">0 staff modeled</div></div>
+</div>
+<div class="columns">
+<div class="panel"><div class="kicker">02 / DAILY DECISION</div><h2>What would you do?</h2>
+<div class="event" id="event"><small>TODAY'S CONDITIONS</small><strong id="event-title">Routine operations</strong><p id="event-desc"></p></div>
+<div class="choices" id="choices" role="group" aria-label="Choose today's operating decision"></div>
+<button class="cta" id="advance" type="button">Commit this simulated day</button>
+<p class="footnote">Only the fictional model changes. This cannot contact customers, hire people, charge cards or change a real business.</p>
+</div>
+<div class="panel"><div class="kicker">03 / LOOK BEFORE YOU LEAP</div><h2>Preview this decision</h2>
+<div class="situation"><div class="estimate"><div><small>Estimated daily net</small><strong id="estimate-net">$0</strong></div><div><small>Cash after this day</small><strong id="estimate-cash">$0</strong></div></div>
+<ul class="rows">
+<li><span>Modeled customers</span><strong id="estimate-demand">0</strong></li>
+<li><span>Capacity served</span><strong id="estimate-served">0</strong></li>
+<li><span>Sales</span><strong id="estimate-revenue">$0</strong></li>
+<li><span>Expenses (all-in)</span><strong id="estimate-expenses">$0</strong></li>
+</ul></div>
+<p class="preview-note" id="compare-note" aria-live="polite">Holding course is the comparison baseline for today.</p>
+<p class="preview-note" id="preview-explain">These figures are deterministic arithmetic using visible simplified assumptions, not forecasts.</p>
+<h3>Cash path</h3><div class="spark" id="spark" aria-label="Daily modeled net cash contribution chart"></div>
+<h3 style="margin-top:20px">Assumption ledger</h3><ul class="rows" id="assumptions"></ul>
+</div>
+</div>
+<div class="panel" style="margin-bottom:20px"><div class="kicker">04 / FLIGHT RECORDER</div><h2>What actually happened in the model?</h2><div id="ledger" class="ledger" aria-live="polite"><p>No simulated days completed yet.</p></div></div>
+</section>
+<section id="finish" class="finish" hidden aria-label="Flight summary" tabindex="-1"><div class="kicker">FLIGHT COMPLETE</div><h2 id="finish-title">End of simulation</h2><p id="finish-details"></p>
+<div class="setup-actions"><button class="cta" id="export" type="button">Export run as JSON</button><button class="ghost" id="replay" type="button">Fly another company</button></div>
+<p class="footnote">A modeled balance is not evidence that a business would survive. Explore the assumptions and test them with real data before taking action.</p></section>
+</main>
+<footer class="footer"><div class="wrap"><strong>Evercraft LLC · Systemia Remote Ops</strong><p>Experimental browser-only training simulator. Fictional businesses, transparent arithmetic, no external API calls or actual business data. No simulation is a prediction, accounting statement, financing approval or authorization to act. Built independently on Evercraft-owned code.</p><a href="https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops">How Remote Ops fits into Systemia</a></div></footer>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>
