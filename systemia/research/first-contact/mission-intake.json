@@ -236,6 +236,34 @@
       ],
       "validation": "Dedicated GitHub Actions FIRST-CONTACT research verification passed math/11-test commit 7e60286e... (run 43770001014) and CLI/fixtures/5-test commit 47736b5d... (run 43770118928). Conditional accepted-only simulated errors cannot be reported as measured sensor confidence or field accuracy.",
       "acceptance": "Reproduce random pixel-location, shared pixel alignment and shared focal-scale systematic error effects on triangulated known-target position; report conditional P95 with rejection fraction, require actual measured pixel/camera uncertainty before physical validation."
+    },
+    {
+      "id": "FC-ANNOTATION-DESK-01",
+      "lane": "sensor_forensics",
+      "status": "OFFLINE_DESK_CODE_CI_VERIFIED_AWAITING_REAL_BROWSER_FIELD_CAPTURE",
+      "completed": "2026-11-15",
+      "artifacts": [
+        "field-annotation.html",
+        "field-annotation-core.mjs",
+        "field-annotation-core.test.mjs",
+        "FIELD_ANNOTATION_DESK.md"
+      ],
+      "validation": "Dedicated FIRST-CONTACT GitHub research workflow passed browser desk core/security/syntax and full Node suite at code commit ae22f38a... (run 43812197993). No end-to-end GUI human evaluation or actual camera images were supplied.",
+      "acceptance": "Use local rectified PNG images to manually select independently known reference target, preserve local PNG SHA-256, include camera calibration/ENU pose/capture time and produce strict guarded two-view packet without image upload or private-field leakage; independently verify real instrument and capture evidence."
+    },
+    {
+      "id": "FC-ANNOTATION-BATCH-01",
+      "lane": "sensor_forensics",
+      "status": "OFFLINE_MULTI_FRAME_ASSEMBLY_CI_VERIFIED_AWAITING_FIELD_SOURCE_TRUTH",
+      "completed": "2026-11-15",
+      "artifacts": [
+        "field-annotation-batch.mjs",
+        "field-annotation-batch-cli.mjs",
+        "field-annotation-batch.test.mjs",
+        "FIELD_ANNOTATION_DESK.md"
+      ],
+      "validation": "Dedicated FIRST-CONTACT GitHub research workflow passed batch full Node tests on code commit 9350cc0c... (run 43811899590). Tests include 3-frame synthetic end-to-end assembly to the existing known-target CLI, repeated-frame/timestamp, calibration-identity, threshold and source-hash refusal gates. No real physical field data.",
+      "acceptance": "Assemble 3–500 distinct locally annotated rectified image pair JSON sources into known-target calibration-session input, preserve exact annotation packet and photo hash references, reject inconsistent rigs and non-independent frames, and preserve unverified provenance flags."
     }
   ],
   "hard_constraints": [
@@ -245,6 +273,6 @@
     "No high-voltage or hazardous physical testing without safety approval and qualified controls",
     "No marketing or external release before evidence and review gate"
   ],
-  "next_execution_gate": "Acquire a safe authorized known stationary target with two genuinely independently surveyed/calibrated cameras. Measure actual lens intrinsics/rectification, localization scatter in genuine image pixels, camera poses and clock synchronization, then pre-register and independently review accuracy criteria. Run pixel-calibration-cli.mjs and private field-evidence audit on the real dataset. No Systemia worker dispatch or public anomaly claim without signed receipts and independent review.",
-  "validation_note": "2026-11-15: dedicated FIRST-CONTACT research workflow passed pixel-uncertainty math commit 7e60286e... run 43770001014 and executable fixtures/tests commit 47736b5d... run 43770118928. No real camera data, independently measured pixel/focal calibration errors or verified field source authenticity. Latest README/mission head CI to be checked separately."
+  "next_execution_gate": "Use field-annotation.html locally on Node001/Node002 for a permitted, non-sensitive stationary target with real, externally calibrated and independently surveyed camera images. Preserve native sources separately. Capture >=3 distinct synchronized rectified PNG pairs, create local per-pair JSON, use field-annotation-batch-cli.mjs and pixel-calibration-cli.mjs to compute real position errors, independently audit native source/clock/survey/plan evidence. Systemia NOT_DISPATCHED and publication HOLD_REVIEW until independently approved.",
+  "validation_note": "2026-11-15 sprint 11: FIRST-CONTACT dedicated GitHub workflow passed offline annotator/batch source and tests at commit 9350cc0c... (run 43811899590) and final privacy-filter code commit ae22f38a... (run 43812197993). Browser UI has a Node script parse/static check and the exported packet/batch code has integration tests; real GUI operation on an actual field image remains unverified. No actual surveyed camera captures, clock/survey certification or Systemia agent dispatch."
 }
