@@ -97,13 +97,13 @@ function validateInput(capacity, workloads) {
     }
 
     // A malformed required flag must never downgrade critical work to optional.
-    if (workload.required !== undefined && typeof workload.required !== 'boolean') {
+    if (typeof workload.required !== 'boolean') {
       errors.push(label + '_required_invalid');
     }
 
-    const priority = workload.priority === undefined
-      ? PRIORITY.ORDINARY : workload.priority;
-    if (!Number.isInteger(priority) ||
+    // Priority and criticality must be explicit evidence, never guessed defaults.
+    const priority = workload.priority;
+    if (!Number.isSafeInteger(priority) ||
         priority < PRIORITY.LIFE_SAFETY || priority > PRIORITY.BULK) {
       errors.push(label + '_priority_invalid');
     }
