@@ -1,4 +1,5 @@
-// Original NOAA source points only. DO NOT interpolate, certify, georegister, or invent geometry.
+// NOAA's 1Hz navigation PRODUCT was already filtered, interpolated and padded upstream.
+// We draw selected exported rows only: no extra interpolation, certification, or invented geometry.
 const $=id=>document.getElementById(id);
 const EXPECTED_SHA='b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61';
 const EXPECTED_SCHEMA='evercraft.subsea.raw_track_preview_5s.v1';
@@ -76,16 +77,21 @@ function show(){
  $('readout-depth').textContent=fmt(p.depth,3)+' (raw)';
  $('readout-lat').textContent=p.lat===null?'Not recorded':fmt(p.lat,9)+'°';
  $('readout-lon').textContent=p.lon===null?'Not recorded':fmt(p.lon,9)+'°';
- $('sample-info').textContent='Observation '+(selected+1)+' of '+samples.length+' · elapsed second '+p.t+' · source fields only, no interpolation';
+ $('sample-info').textContent='Observation '+(selected+1)+' of '+samples.length+' · elapsed second '+p.t+' · NOAA processed export; no additional Evercraft interpolation';
  $('prev').disabled=selected===0;
  $('next').disabled=selected===samples.length-1;
  renderPosition();renderDepth();
 }
 function validate(raw){
  if(raw.schema!==EXPECTED_SCHEMA||raw.source_archive_sha256!==EXPECTED_SHA)throw Error('Unexpected dataset or source hash.');
- if(raw.status!=='PROVISIONAL_ROUNDED_DOWNSAMPLED_OBSERVATIONS')throw Error('Missing provisional evidence status.');
+ if(raw.status!=='PROVISIONAL_PROCESSED_TRACK_DISPLAY')throw Error('Missing provisional evidence status.');
+ const p=raw.processing_lineage;
+ if(!p||p.source_processing_applied_before_evercraft!==true||p.independent_fix_at_each_second!==false||
+    p.evercraft_added_interpolation!==false||p.raw_sensor_positions!==false||
+    !p.source_plan?.includes('noaa_55994_DS1.pdf')||p.original_processing?.length!==4)
+  throw Error('Missing or incorrect upstream NOAA processing lineage.');
  if(raw.original_window_count!==300||raw.preview_sample_count!==61||raw.points?.length!==61)throw Error('Missing expected 300-second source window.');
- if(raw.positioning_quality!=='UNVERIFIED'||raw.site_geometry!=='NONE'||raw.safety!=='NOT_FOR_NAVIGATION_OR_DIVE_CLEARANCE')
+ if(raw.positioning_quality!=='NOAA_USBL_DERIVED_1HZ_POSITIONING_ACCURACY_UNVERIFIED'||raw.site_geometry!=='NONE'||raw.safety!=='NOT_FOR_NAVIGATION_OR_DIVE_CLEARANCE')
   throw Error('Source dataset lacks mandatory safety labels.');
  return raw.points.map((row,i)=>{
   if(!Array.isArray(row)||row.length!==4)throw Error('Malformed source observation.');
@@ -106,7 +112,7 @@ async function load(){
   $('hash-value').textContent=EXPECTED_SHA;
   $('observation').max=String(samples.length-1);
   $('observation').disabled=false;
-  $('load-state').textContent='Authenticated source archive · display values rounded · no site model or certified positions';
+  $('load-state').textContent='NOAA filtered/interpolated/padded upstream; Evercraft displays rounded selected rows only · not certified positioning';
   document.documentElement.dataset.noaaTrack='source-observations-loaded';
   show();
  }catch(error){
