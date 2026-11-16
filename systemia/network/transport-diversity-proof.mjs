@@ -98,6 +98,8 @@ try {
   const spoofed=[null,{...incomplete[0],id:'too_small',latency_class:'realtime',max_payload_bytes:4}];
   assert.equal(selectTransport({transports:spoofed,payload_bytes:4096}).status,'NO_ROUTE');
   assert.equal(selectTransport({transports:catalog,payload_bytes:0}).status,'ROUTE_READY');
+  assert.equal(selectTransport({transports:catalog,requires_offline:'false'}).status,'INVALID_REQUEST');
+  assert.equal(selectTransport({transports:catalog,requires_offline:null}).status,'INVALID_REQUEST');
   // String purposes and forged negative power budgets cannot win routing.
   const validShape={id:'valid',state:'verified',purposes:['data'],
     offline_usable:true,bidirectional:true,latency_class:'realtime',
