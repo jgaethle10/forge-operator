@@ -510,6 +510,14 @@ jobs:
           havenly="${base%/}/havenly/"
           havenly_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$havenly")"
           printf '%s' "$havenly_body" | grep -q 'havenly-continuity-20261017'
+          # Read back the real Systemia landing page and social PNG after deployment.
+          systemia_url="${base%/}/systemia/"
+          systemia_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$systemia_url")"
+          [[ "$systemia_body" == *'One vision.'* ]]
+          [[ "$systemia_body" == *'work-saban/report/'* ]]
+          systemia_png="${base%/}/systemia/social-card.png"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$systemia_png" -o /tmp/systemia-share-live.png
+          python -c 'from pathlib import Path; import struct; p=Path("/tmp/systemia-share-live.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630); print("SYSTEMIA_FRONT_DOOR_AND_SOCIAL_PNG_LIVE_HTTPS_VERIFIED")'
           # Live customer-path proof after GitHub Pages reports deployment.
           studio="${base%/}/commercial-studio/"
           studio_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$studio")"
