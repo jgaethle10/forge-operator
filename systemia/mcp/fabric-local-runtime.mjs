@@ -415,6 +415,8 @@ export async function startFabricLocalRuntime({
   outcomeReadbackTokenFile=process.env.EVERCRAFT_FABRIC_OUTCOME_READBACK_TOKEN_FILE||'',
   outcomeReadbackSigningKeyFile=process.env.EVERCRAFT_FABRIC_OUTCOME_READBACK_SIGNING_KEY_FILE||'',
   outcomeReadbackRecordLoader=null,
+  outcomeExecutionEventsFile=process.env.EVERCRAFT_FABRIC_OUTCOME_EXECUTION_EVENTS_FILE||'',
+  outcomeShippingLedgerFile=process.env.EVERCRAFT_FABRIC_OUTCOME_SHIPPING_LEDGER_FILE||'',
   outcomeReadbackNow=()=>Date.now(),
   purchaseIntentFetch=fetch,
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
@@ -505,6 +507,8 @@ export async function startFabricLocalRuntime({
     tokenFile:outcomeReadbackTokenFile,
     signatureKeyFile:outcomeReadbackSigningKeyFile,
     loadAuthorityRecords:outcomeReadbackRecordLoader,
+    executionEventsFile:outcomeExecutionEventsFile,
+    shippingLedgerFile:outcomeShippingLedgerFile,
     now:outcomeReadbackNow,
   });
   const commerceTransport=ownedPaymentTransportConfig({purchaseIntentUrl,paymentOpsUrl});
