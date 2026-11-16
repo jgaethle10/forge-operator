@@ -120,6 +120,59 @@
       "rationale": "Specialized technical data and Space Safety domain; no priced procurement request yet",
       "award_verified": false,
       "payment_verified": false
+    },
+    {
+      "id": "WA-DES-DISCOVERY-02426",
+      "notice": "02426",
+      "buyer": "Washington State Department of Enterprise Services",
+      "name": "Statewide Master Contract: Discovery Services",
+      "source_url": "https://pr-webs-vendor.des.wa.gov/SearchBidPublicDetails.aspx?ID=57251",
+      "posted": "2026-10-30",
+      "response_due_local": "2027-01-15",
+      "prebid_date_local": "2026-11-17T09:00:00",
+      "questions_due_local": "2027-01-07",
+      "estimated_initial_contract_value": "$8,000,000 (total procurement estimate, not per-vendor award)",
+      "intake_type": "state_competitive_master_contract",
+      "decision": "qualify_as_prime_or_sub",
+      "state": "review_required",
+      "eligibility": "minimum_qualifications_pricing_categories_to_verify",
+      "scope": "data preparation/processing, image and media conversion, evidence/provenance indexing, records-management technology integration",
+      "rationale": "Scope is adjacent to Evercraft evidence-processing engineering; legal discovery, sensitive data, forensic qualifications, security and insurance are not verified and require formal minimum-qualification review",
+      "submission": "WEBS solicitation instructions; not yet bid",
+      "award_verified": false,
+      "payment_verified": false
+    },
+    {
+      "id": "WA-COURTS-LMS-20261019",
+      "notice": "RFP-20261019LMS",
+      "buyer": "Washington Administrative Office of the Courts",
+      "name": "Learning Management System LMS",
+      "source_url": "https://pr-webs-vendor.des.wa.gov/SearchBidPublicDetails.aspx?ID=57613",
+      "response_due_local": "2026-11-30",
+      "questions_due_local": "2026-11-09",
+      "estimated_initial_contract_value": "$40,000 (published estimate)",
+      "intake_type": "state_RFP",
+      "decision": "hold",
+      "state": "screened",
+      "eligibility": "production_LMS_security_support_and_full_RFP_requirements_unverified",
+      "rationale": "Potential training-platform alignment but comprehensive hosted secure LMS vendor qualifications and support obligations exceed currently verified production capacity; question period already closed",
+      "award_verified": false,
+      "payment_verified": false
+    },
+    {
+      "id": "WA-CWU-HRIS-RFI-26011",
+      "notice": "RFI 26-011",
+      "buyer": "Central Washington University",
+      "name": "HRIS Services RFI",
+      "source_url": "https://pr-webs-vendor.des.wa.gov/bidcalendar.aspx",
+      "response_due_local": "2026-11-18",
+      "intake_type": "RFI_market_research",
+      "decision": "monitor",
+      "state": "screened",
+      "eligibility": "full HRIS requirements unverified",
+      "rationale": "Exploratory market research not an immediate paid project; potential integration/QA subcontract only",
+      "award_verified": false,
+      "payment_verified": false
     }
   ],
   "external_outreach": [
@@ -130,6 +183,30 @@
       "sent_date": "2026-11-15",
       "email_subject": "Evercraft LLC | Request for first federal technology bid review",
       "receipt_source": "Sent-mail receipt verified in founder-controlled mailbox; private message identifiers deliberately omitted"
+    },
+    {
+      "type": "state_procurement_scope_clarification",
+      "recipient": "descontractsteamapple@des.wa.gov",
+      "status": "sent",
+      "sent_date": "2026-11-15",
+      "subject": "WA DES Solicitation 02426 | Discovery Services category and subcontractor clarification | Evercraft LLC",
+      "receipt_source": "Verified sent-mail receipt in connected founder mailbox, not publicly included"
+    },
+    {
+      "type": "prime_subcontract_followup",
+      "recipient": "saic.sblo@saic.com",
+      "status": "sent",
+      "sent_date": "2026-11-15",
+      "subject": "Re: Small Business Vendor Introduction: Evercraft LLC, Software & AI Consulting",
+      "receipt_source": "Verified sent-mail receipt in connected founder mailbox, not publicly included"
+    },
+    {
+      "type": "prime_subcontract_followup",
+      "recipient": "wayne.pizer@caci.com",
+      "status": "sent",
+      "sent_date": "2026-11-15",
+      "subject": "Re: Small Business Introduction: Evercraft LLC, AI/ML & Software Development",
+      "receipt_source": "Verified sent-mail receipt in connected founder mailbox, not publicly included"
     }
   ],
   "assertions": {
@@ -137,5 +214,22 @@
     "award_confirmed": false,
     "invoice_confirmed": false,
     "bank_payment_confirmed": false
-  }
+  },
+  "source_validation": {
+    "air_force_call_text": "https://govtribe.com/file/government-file/fa877126sc0001-2-dot-call-0001-marketplace-29-oct-26-dot-pdf-1",
+    "air_force_base_cso": "https://govtribe.com/file/government-file/fa877126sc0001-1-dot-cso-solicitation-29-oct-26-dot-pdf-1",
+    "air_force_qa": "https://govtribe.com/file/government-file/fa877126sc0001-3-dot-bes-cso-call-0001-q-a-5-nov-26-dot-xlsx",
+    "sam_latest_notice": "https://sam.gov/workspace/contract/opp/0818d0087f7e4f148bffe38dc68c2461/view",
+    "verified_2026_11_15": true,
+    "limitations": "Public mirror renders source attachment text; final offer must be checked against original current files on SAM.gov."
+  },
+  "immediate_gates": [
+    "Check inbox for APEX, Leidos, SAIC, CACI, DES replies; no replies in latest check for APEX/Leidos",
+    "Validate live SAM, NAICS and SBA profile",
+    "Verify POC reachable phone and SAM address before Air Force external white paper",
+    "Obtain latest official original BES base/call/Q&A attachments and final confirm pdf length",
+    "Review WA DES 02426 full requirements, categories, insurance/security and prebid addenda",
+    "Review docs/QA evidence and have founder approve final white paper",
+    "Do not count a quote, white paper or sources sought as an award or revenue"
+  ]
 }
