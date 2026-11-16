@@ -217,9 +217,10 @@ export function attemptApprovedExactSyntheticScopeStop({
     typeof witness.finish==='function'&&
     typeof witness.close==='function',
     'NATIVE_STOP_PERSISTENCE_OR_WITNESS_MISSING');
-  let issued=false,stage='PRE_ADMISSION',reserved=false;
+  let issued=false,stage='PRE_ADMISSION';
   let approvedDigest=null,localIO=null,pre=null;
   let stopStart=null,stopEnd=null,stopResult=null;
+  let witnessFinished=false;
   const record=(receipt)=>{
     const ok=sink.record(receipt);
     requireThat(ok===true,'NATIVE_STOP_PRIVATE_RECEIPT_NOT_DURABLE');
@@ -242,12 +243,17 @@ export function attemptApprovedExactSyntheticScopeStop({
     stage='PRE_STOP_DURABLE_RESERVATION';
     requireThat(sink.reserve(approvedDigest)===true,
       'NATIVE_STOP_PERMIT_REPLAY_OR_RESERVATION_FAILED');
-    reserved=true;
     record({schema:'evercraft.eo001.native-stop-prestop.v1',
       state:'PRESTOP_APPROVAL_AND_SCOPE_METADATA_RECORDED',
       permit_digest_sha256:approvedDigest,
       scope_unit:permit.scope_unit,source_revision:permit.source_revision,
       actual_stop_performed:false,physical_proof:false});
+    // Reservation/audit may block: re-read the *same* active unit and
+    // exact worker identities immediately before the native stop request.
+    stage='FINAL_PRESTOP_REVALIDATION';
+    const secondRead=verifyImmediateKernelReadback(localIO,permit,pre,identities);
+    requireThat(localIO.monotonic()-secondRead<=200,
+      'NATIVE_STOP_FINAL_RECHECK_STALE');
     stage='EXACT_UNIT_STOP';
     stopStart=localIO.monotonic();
     issued=true;
@@ -258,6 +264,7 @@ export function attemptApprovedExactSyntheticScopeStop({
       stopEnd>=stopStart&&stopEnd-stopStart<=permit.stop_budget_ms,
       'NATIVE_STOP_NOT_ACKNOWLEDGED_OR_TIMEOUT');
     stage='POSTSTOP_SUPERVISOR_READBACK';
+    witnessFinished=true;
     const observed=witness.finish({
       method:'systemd-user-exact-unit-control-group',
       unit:permit.scope_unit,start_monotonic_ms:stopStart,
@@ -286,18 +293,41 @@ export function attemptApprovedExactSyntheticScopeStop({
       local_supervisor_metadata_consistent:true
     });
   }catch(error){
+    // Even a failed/timeout systemctl stop may have changed the cgroup.
+    // Attempt one independent readback using the held original cgroup FD,
+    // but never treat it as cleanup success or run another stop/kill.
+    let postFailure=error?.private_negative_receipt||null;
+    if(issued&&!witnessFinished){
+      witnessFinished=true;
+      try{
+        const outcome=witness.finish({
+          method:'systemd-user-exact-unit-control-group',
+          unit:permit.scope_unit,start_monotonic_ms:stopStart,
+          end_monotonic_ms:stopEnd??localIO.monotonic(),
+          cleanup_budget_ms:permit.stop_budget_ms,
+          outcome:'stop-failed-or-unknown'
+        });
+        // A mismatched supplied witness should not become a success here.
+        if(outcome)postFailure={
+          state:'POSTSTOP_CAPTURE_SUPPLIED_BUT_STOP_NOT_ACKNOWLEDGED'
+        };
+      }catch(secondary){
+        postFailure=secondary?.private_negative_receipt||{
+          state:'POSTSTOP_KERNEL_OBSERVATION_MISSING_OR_UNVERIFIED'
+        };
+      }
+    }
     const reason=/^[A-Z_]+$/.test(error?.code||'')?error.code:
       /^[A-Z_]+$/.test(error?.message||'')?error.message:
       'NATIVE_STOP_UNKNOWN_FAILURE';
     const blocked=hold('NATIVE_EXACT_SCOPE_STOP_HELD',reason,stage,issued,{
       permit_digest_sha256:approvedDigest,
-      private_negative_observation_supplied:Boolean(error?.private_negative_receipt)
+      private_negative_observation_supplied:Boolean(postFailure)
     });
     try{
       // NO retries, numeric PID kills or broad cleanup from this path.
       // The caller's private sink must retain the full error receipt itself.
-      record({...blocked,private_negative_receipt:
-        error?.private_negative_receipt||null});
+      record({...blocked,private_negative_receipt:postFailure});
     }catch{
       return hold('NATIVE_EXACT_SCOPE_STOP_HELD',
         'NATIVE_STOP_PRIVATE_RECEIPT_NOT_DURABLE',stage,issued,{
