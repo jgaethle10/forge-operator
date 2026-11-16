@@ -10,6 +10,7 @@ import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.m
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
 import { readExecutiveEvidence } from "./executive-evidence-adapter.mjs";
 import { createExecutivePaymentsReader } from "./payments-executive-readback.mjs";
+import { readLocalVaultReadiness } from "./continuity-adapter.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.mjs";
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
@@ -1171,6 +1172,17 @@ export async function startEvercraftHomeServer({
       return json(res, 200, {
         ok: true, subject: session.subject,
         ...(await executivePayments.read()),
+      });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/continuity/status") {
+      const session = sessionFor(req, "home.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true, subject: session.subject,
+        ...readLocalVaultReadiness({
+          vaultDir: String(serviceOrigins?.EVERCRAFT_CONTINUITY_VAULT_DIR || "").trim(),
+        }),
       });
     }
 
