@@ -123,3 +123,22 @@ The command prints only a sanitized cycle receipt and stores the full private st
 **Continuous unattended execution is still blocked** until the actual owned Systemia/Saban worker, private mission authorization, timer or resident service, and restart/lease proof are installed and verified on a controlled device. The code and a passing synthetic CI test do not establish that these host-side steps happened.
 
 The GitHub Actions `production-continuity-contract.yml` checks the three synthetic test suites on relevant pull requests. It deliberately never reads the private ledger or research/manuscript files.
+
+
+## Parallel production slate: all living projects
+
+`parallel-slate.mjs` now builds a **distinct, idempotent Saban work assignment for every authorized live project**, not only the 10 oldest continuity alerts. The logic does **not** impose a one-project-at-a-time franchise bottleneck. It is designed for multiple specialist departments to advance in parallel, while an owned worker pool controls actual heavy computation by node capacity.
+
+It can prepare up to 12 simultaneous adapter slots for testing. Use a conservative capacity like 4-6 on constrained machines; that is **concurrency**, not a rule limiting the number of projects in the slate. A failure in one project must never kill the other jobs. The suite includes a 12-project / six-concurrent-worker canary with isolated failure handling, protected publication/canon holds and no untrusted manuscript text in the queue.
+
+Prepare the whole private slate on an owned node **after** the 12-project private `ledger.json` has been placed outside this source checkout, with directory mode `0700` and file mode `0600`:
+
+```bash
+node systemia/production-continuity/prepare-parallel.mjs --max-in-flight 6
+```
+
+This creates the private `parallel-slate.json` once, refusing to overwrite existing work. It contains Saban-shaped **queued, unleased** jobs. It does not launch them and does not prove that department owner labels are registered Saban worker identities. Before real execution the resident must reconcile those identities with authenticated Saban capacity, persist job leases/checkpoints, and require verified byte-level artifacts from each specialist. Re-running the preparation command cannot silently reset work.
+
+**Safety gates**: canon, rights, external outreach, spending, or publishing actions are explicitly held. Any verified byte-level artifact from a department remains *internal work evidence*, not a finished book, research conclusion, approved film, or public release. Private source files, recovered manuscripts, and the full production ledger remain outside the public repository.
+
+The **production continuity contract** GitHub workflow now runs **39 synthetic tests across four suites**, including parallel fan-out. Passing CI is not proof of on-device installation or autonomous worker dispatch.
