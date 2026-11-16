@@ -168,3 +168,46 @@ test('normalizing an already-normalized MicroSeed preserves nested constraints a
   assert.equal(second.placement.persistent_storage,true);
   assert.notEqual(second.manifest_hash,first.manifest_hash);
 });
+
+
+test('quarantined Node001 never advertises executable Ambient capabilities even with old conformance',()=>{
+  const manifest=normalizeMicroDeviceManifest({
+    device_id:'evercraft-node001-penguin',
+    device_class:'linux-host',
+    bridge_mode:'native_agent',
+    authorization_ref:'synthetic-owner-approval',
+    endpoint:'http://127.0.0.1:8792',
+    supported_workloads:['systemia.content-hash.v1'],
+    capabilities:[{kind:'observation',operations:['observe']}],
+    resources:{cpu_units:0.5,memory_mb:256,storage_gb:1},
+    attestation:{mode:'device',device_identity:'synthetic-key'},
+  });
+  const conformance={
+    schema:'evercraft.microseed.conformance-receipt.v1',
+    device_id:manifest.device_id,
+    manifest_hash:manifest.manifest_hash,
+    verified_workloads:['systemia.content-hash.v1'],
+    verified_at:new Date().toISOString(),
+    expires_at:new Date(Date.now()+60000).toISOString(),
+  };
+  assert.deepEqual(microDeviceToAmbientCapabilities(manifest,{conformance}),[]);
+  assert.throws(
+    ()=>microDeviceToAmbientCapability(manifest,{conformance}),
+    /microseed_device_quarantined_pending_host_review/
+  );
+});
+
+test('quarantine does not suppress unrelated approved device capability discovery',()=>{
+  const manifest=normalizeMicroDeviceManifest({
+    device_id:'synthetic-test-node-002',
+    device_class:'linux-host',
+    bridge_mode:'native_agent',
+    authorization_ref:'synthetic-owner-approval',
+    endpoint:'http://127.0.0.1:8793',
+    supported_workloads:['systemia.content-hash.v1'],
+    resources:{cpu_units:0.5,memory_mb:256,storage_gb:1},
+  });
+  const capability=microDeviceToAmbientCapability(manifest);
+  assert.equal(capability.metadata.device_id,'synthetic-test-node-002');
+  assert.equal(capability.kind,'compute');
+});
