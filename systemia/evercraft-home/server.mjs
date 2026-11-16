@@ -174,6 +174,7 @@ export async function startEvercraftHomeServer({
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
   const metaPageReconnect = createMetaPageReconnect({
     appId: String(serviceOrigins?.CLIP_META_APP_ID || "").trim(),
+    loginConfigId: String(serviceOrigins?.CLIP_META_LOGIN_CONFIG_ID || "").trim(),
     appSecretFile: String(serviceOrigins?.CLIP_META_APP_SECRET_FILE || "").trim(),
     redirectUri: String(serviceOrigins?.CLIP_META_REDIRECT_URI || "").trim(),
     graphVersion: String(serviceOrigins?.CLIP_META_GRAPH_VERSION || "v27.0").trim(),

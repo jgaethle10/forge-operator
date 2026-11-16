@@ -70,3 +70,17 @@ node --test systemia/evercraft-home/facebook-page-credential-http.test.mjs
 \`\`\`
 
 Tests simulate Meta responses and assert Passport authorization, callback CSRF state, cross-site session behavior, duplicate prevention, hard exclusions, explicit selection, vault isolation, and no token leakage. They are *not* proof of a real Meta app or live Page connection.
+
+## Facebook Login for Business invalid scopes remediation (November 2026)
+
+Facebook Login for Business requires a **Configuration ID** selecting the token type, assets and requested Page permissions. Our original OAuth `scope=pages_show_list,pages_read_engagement,pages_manage_posts` request was rejected because Meta's Page permissions were not in the app's active Business Login configuration. The current code sends `config_id` without `scope`, and the owned resident refuses to initiate login until an explicit numeric `CLIP_META_LOGIN_CONFIG_ID` is configured.
+
+Meta App Dashboard → Facebook Login for Business → **Configurations** → **Create configuration**. Select **User access token** (matching the current `/me/accounts` discovery and short/long-lived user-token exchange), Pages as the asset, and enable the minimum three Page permissions in the config: `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`. Meta may also require adding `pages_read_engagement` and `pages_manage_posts` under **Use cases → Manage everything on your Page → Customize → Permissions and features** before they can be selected. This is an account-owner authorization step, not something GitHub can grant.
+
+After the owner saves the configuration, note its **numeric Configuration ID**. The App ID is a different number, and the App Secret is already sealed on Penguin. Deploy the accepted revision via Systemia Fabric update, then on Penguin run:
+
+```bash
+sudo bash ~/.local/share/evercraft/forge-operator/scripts/set-home-meta-login-config.sh YOUR_NUMERIC_CONFIGURATION_ID
+```
+
+This helper surgically writes only `CLIP_META_LOGIN_CONFIG_ID` to the private Home environment and restarts Home. It never needs the App Secret or provider tokens. Then use **Connect Facebook once** to perform the fresh owner-authorized consent. Do not enable social posting until the real read and write gates and provider receipts are verified. Source: Meta [Facebook Login for Business documentation](https://developers.facebook.com/documentation/facebook-login/facebook-login-for-business).

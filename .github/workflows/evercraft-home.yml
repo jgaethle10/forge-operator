@@ -21,6 +21,7 @@ on:
       - ".github/workflows/evercraft-home-canary.yml"
       - "scripts/install-evercraft-home-edge.sh"
       - "scripts/configure-home-meta-app.sh"
+      - "scripts/set-home-meta-login-config.sh"
       - "scripts/update-fabric-owned-edge.sh"
       - "tests/home-canary-contract.test.mjs"
       - ".github/workflows/evercraft-home.yml"
@@ -77,6 +78,7 @@ jobs:
         run: |
           bash -n scripts/install-evercraft-home-edge.sh
           bash -n scripts/configure-home-meta-app.sh
+          bash -n scripts/set-home-meta-login-config.sh
           bash -n scripts/update-fabric-owned-edge.sh
       - name: Prove Home release updates preserve sealed private Clip settings
         run: node --test systemia/evercraft-home/home-release-env.test.mjs

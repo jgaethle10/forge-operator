@@ -9,6 +9,7 @@ import { ProviderCredentialVault } from './credential-vault.mjs';
 import { startEvercraftHomeServer } from './server.mjs';
 
 const appId='123456789123456';
+const configId='987654321098765';
 const redirectUri='https://fabric.systemiacommandcenters.com/home/api/clip/facebook/oauth/callback';
 const owner={mode:'passport',subject:'user:owner',session_id:'session-1'};
 const approved={id:'1253915241138545',name:'Evercraft',tasks:['CREATE_CONTENT','ANALYZE'],access_token:'page-secret-abcdefghijklmnopqrstuv'};
@@ -34,7 +35,7 @@ function fixture(){
     throw Error('unexpected Meta URL');
   };
   const vault=new ProviderCredentialVault({stateDir:path.join(root,'vault')});
-  const flow=createMetaPageReconnect({appId,appSecretFile:secretFile,redirectUri,
+  const flow=createMetaPageReconnect({appId,appSecretFile:secretFile,redirectUri,loginConfigId:configId,
     credentialVault:vault,fetchImpl});
   return {root,secretFile,calls,vault,flow,fetchImpl,cleanup:()=>fs.rmSync(root,{recursive:true,force:true})};
 }
@@ -53,6 +54,14 @@ test('unconfigured Meta app fails closed without contacting Meta or disclosing s
   const flow=createMetaPageReconnect({});
   assert.equal(flow.status(owner).configured,false);
   assert.throws(()=>flow.start(owner),/meta_app_configuration_required/);
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-meta-missing-config-'));
+  try {
+    const secret=path.join(root,'private');fs.writeFileSync(secret,'a'.repeat(40),{mode:0o600});
+    const vault=new ProviderCredentialVault({stateDir:path.join(root,'vault')});
+    const missing=createMetaPageReconnect({appId,appSecretFile:secret,redirectUri,credentialVault:vault});
+    assert.equal(missing.status(owner).configured,false);
+    assert.throws(()=>missing.start(owner),/meta_app_configuration_required/);
+  } finally {fs.rmSync(root,{recursive:true,force:true});}
 });
 
 test('one-time OAuth state discovers only in memory and seals only selected Pages',async()=>{
@@ -63,7 +72,8 @@ test('one-time OAuth state discovers only in memory and seals only selected Page
     const auth=new URL(started.authorization_url);
     assert.equal(auth.hostname,'www.facebook.com');
     assert.equal(auth.searchParams.get('redirect_uri'),redirectUri);
-    assert.match(auth.searchParams.get('scope'),/pages_show_list/);
+    assert.equal(auth.searchParams.get('config_id'),configId);
+    assert.equal(auth.searchParams.has('scope'),false);
     assert.equal(f.vault.list().length,0);
     const wrong=await f.flow.callback({state:'wrong',code:'abc'});
     assert.equal(wrong.ok,false);
@@ -121,7 +131,7 @@ test('Home HTTP routes require Passport and callback never needs or reveals Home
       ownerClaimSha256:claimSha256,
       ownerSubjectRef:'user:owner',ownerLogin:'jesse',ownerDisplayName:'Jesse',
       serviceOrigins:{
-        CLIP_META_APP_ID:appId,CLIP_META_APP_SECRET_FILE:f.secretFile,
+        CLIP_META_APP_ID:appId,CLIP_META_LOGIN_CONFIG_ID:configId,CLIP_META_APP_SECRET_FILE:f.secretFile,
         CLIP_META_REDIRECT_URI:redirectUri,CLIP_META_GRAPH_VERSION:'v27.0'
       },
       clipFacebookFetch:f.fetchImpl
@@ -143,7 +153,10 @@ test('Home HTTP routes require Passport and callback never needs or reveals Home
     res=await fetch(runtime.url+'/api/clip/facebook/oauth/start',{method:'POST',headers:{cookie}});
     assert.equal(res.status,200);
     const start=await res.json();
-    const state=new URL(start.authorization_url).searchParams.get('state');
+    const parsed = new URL(start.authorization_url);
+    assert.equal(parsed.searchParams.get('config_id'),configId);
+    assert.equal(parsed.searchParams.has('scope'),false);
+    const state=parsed.searchParams.get('state');
     res=await fetch(runtime.url+'/api/clip/facebook/oauth/callback?state='+encodeURIComponent(state)+'&code=example-code');
     assert.equal(res.status,200);
     const callbackHtml=await res.text();

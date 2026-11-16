@@ -16,7 +16,8 @@ const HISTORICAL_PAGE_IDS = new Set([
 const EXCLUDED_IDS = new Set(['116675248108887','924929507380565','990957940766644']);
 const EXCLUDED_NAMES = new Set(['r&b chicken & soul','havenly cleaning','evercraft property services']);
 const TTL_MS = 10 * 60 * 1000;
-const SCOPE = 'pages_show_list,pages_read_engagement,pages_manage_posts';
+// Meta Facebook Login for Business permissions are declared inside a login configuration.
+// Do not pass scope in the OAuth URL. Meta rejects unconfigured Page permissions.
 const safe = (value) => String(value ?? '').trim();
 const nameKey = (value) => safe(value).toLowerCase().replace(/\s+/g,' ');
 
@@ -45,17 +46,19 @@ function readMetaAppSecret(file) {
 }
 
 export function createMetaPageReconnect({
-  appId = '', appSecretFile = '', redirectUri = '',
+  appId = '', appSecretFile = '', redirectUri = '', loginConfigId = '',
   graphVersion = 'v27.0', credentialVault = null, fetchImpl = globalThis.fetch,
   now = () => Date.now()
 } = {}) {
   const flows = new Map();
   const clientId = safe(appId);
+  const configurationId = safe(loginConfigId);
   const secretFile = safe(appSecretFile);
   const redirect = safe(redirectUri);
   const version = safe(graphVersion);
   const redirectParsed = (() => { try { return new URL(redirect); } catch { return null; } })();
   const validConfig = /^[0-9]{5,30}$/.test(clientId) &&
+    /^[0-9]{5,30}$/.test(configurationId) &&
     /^v[0-9]{1,3}\.0$/.test(version) &&
     redirectParsed?.protocol === 'https:' &&
     redirectParsed.username === '' && redirectParsed.password === '' &&
@@ -150,7 +153,8 @@ export function createMetaPageReconnect({
       url.searchParams.set('client_id',clientId);
       url.searchParams.set('redirect_uri',redirect);
       url.searchParams.set('response_type','code');
-      url.searchParams.set('scope',SCOPE);
+      url.searchParams.set('config_id',configurationId);
+      // Facebook Login for Business config owns the permission grant; no scope=.
       url.searchParams.set('state',state);
       return {ok:true,authorization_url:url.href,state:'authorization_started',secret_material_returned:false};
     },
