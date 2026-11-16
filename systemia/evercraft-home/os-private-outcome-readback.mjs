@@ -106,7 +106,8 @@ export function createPrivateOutcomeReadback({
   if (!empty) {
     try {
       endpoint = parseOwnedPaymentUrl(endpointUrl, {allowMissing:false});
-      if (!endpoint || endpoint.search || endpoint.hash || endpoint.port ||
+      if (!endpoint || endpoint.origin !== "https://fabric.systemiacommandcenters.com" ||
+          endpoint.search || endpoint.hash || endpoint.port ||
           !ALLOWED_PATH.test(endpoint.pathname) ||
           !tokenFile || !signatureKeyFile || tokenFile === signatureKeyFile) throw Error("private_endpoint_invalid");
       privateKeyFile(tokenFile);
