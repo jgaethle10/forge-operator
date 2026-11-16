@@ -45,7 +45,7 @@ test('review station is non-submitting, mobile-aware, and keeps a documented loc
  assert.match(station,/name="candidate" value="Weekmorrow"/);
  assert.equal((station.match(/class="candidate"/g)||[]).length,3);
  assert.equal((station.match(/data-dimension=/g)||[]).length,8);
- assert.equal((station.match(/name="disposition"/g)||[]).length,5);
+ assert.equal((station.match(/<input type="radio" name="disposition"/g)||[]).length,5);
  for(const term of ['continue_exploration','revise','hold','reject_shortlist','request_approval_review'])assert.ok(station.includes('value="'+term+'"'));
  for(const term of ['LOCAL_UNSUBMITTED_DRAFT_NOT_APPROVAL','founder_approved:false','submitted_to_evercraft:false','legally_cleared:false','review_packet:version','candidate_feedback:','dimension_feedback:','other_feedback:'])
   assert.ok(station.includes(term),term+' required');
