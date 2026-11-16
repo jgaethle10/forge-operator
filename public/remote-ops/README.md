@@ -10,7 +10,8 @@ This is an Evercraft-owned, static, no-account demonstration of the existing Rem
 
 - Select one of three fictional businesses: home services, class/day-pass fitness studio, or coffee cart.
 - Run 30 modeled days with daily events and six decisions.
-- Preview the arithmetic of a decision before committing it.
+- Preview the arithmetic of a decision before committing it, including a same-day comparison against holding course.
+- Rewind the previous simulated day to try a different decision and compare its consequences.
 - Change prices, marketing, staffing and quality, then see modeled effects on cash and capacity.
 - Review day-by-day receipts and export a local JSON record of assumptions and outcomes.
 
