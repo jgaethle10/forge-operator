@@ -3,7 +3,7 @@
 
 Fetches only the allowlisted CDC URL in --online mode, or accepts a local
 HTML fixture for deterministic tests. Reports whether the CDC overview's
-headline year/count matches our *historical* pinned tracking snapshot.
+headline year/count matches our *latest reviewed* annual CDC snapshot.
 Never updates the dataset, infers cases, or publishes health alerts.
 """
 from __future__ import annotations
@@ -20,7 +20,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data" / "cdc-cauris-clinical-annual.json"
+DATA = ROOT / "data" / "cdc-cauris-annual-2026-11-13.json"
 CDC_URL = "https://www.cdc.gov/candida-auris/tracking-c-auris/index.html"
 MAX_SOURCE_BYTES = 2_000_000
 HEADLINE = re.compile(
@@ -61,15 +61,15 @@ def parse_headline(raw: bytes) -> tuple[int, int] | None:
 
 def probe(raw: bytes, source_mode: str, checked_at: str) -> dict:
     data = json.loads(DATA.read_text(encoding="utf-8"))
-    tracking = next(item for item in data["datasets"] if item["id"] == "cdc_tracking_public")
-    pinned = tracking["values"][-1]
+    pinned = {"year": data["surveillance_years"][-1],
+              "cases": data["yearly_clinical_cases"][-1]}
     found = parse_headline(raw)
     status = "unverified"
     explanation = "CDC headline was not found in the expected format; manually review before making any change."
     if found:
         status = "match" if found == (pinned["year"], pinned["cases"]) else "source_drift"
         explanation = (
-            "CDC overview headline matches the pinned historical tracking snapshot."
+            "CDC overview headline matches the newest reviewed annual CDC tracking snapshot."
             if status == "match" else
             "Headline differs from pinned snapshot: investigate source date, revision and case definition manually."
         )
@@ -83,7 +83,8 @@ def probe(raw: bytes, source_mode: str, checked_at: str) -> dict:
         "headline_observed": None if found is None else {"year": found[0], "clinical_cases": found[1]},
         "status": status,
         "explanation": explanation,
-        "data_reviewed_at": data["reviewed_at"],
+        "data_reviewed_at": data["evidence_review_date"],
+        "pinned_source_version_date": data["source_publication_date"],
         "may_auto_publish": False,
         "is_outbreak_alert": False,
     }
