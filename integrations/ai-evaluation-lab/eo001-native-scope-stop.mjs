@@ -237,7 +237,7 @@ export function attemptApprovedExactSyntheticScopeStop({
     try{witness.close();}catch{}
     refuse('NATIVE_STOP_PERSISTENCE_OR_WITNESS_MISSING');
   }
-  let issued=false,stage='PRE_ADMISSION';
+  let issued=false,reserved=false,stage='PRE_ADMISSION';
   let approvedDigest=null,localIO=null,pre=null;
   let stopStart=null,stopEnd=null,stopResult=null;
   let witnessFinished=false;
@@ -263,6 +263,7 @@ export function attemptApprovedExactSyntheticScopeStop({
     stage='PRE_STOP_DURABLE_RESERVATION';
     requireThat(sink.reserve(approvedDigest)===true,
       'NATIVE_STOP_PERMIT_REPLAY_OR_RESERVATION_FAILED');
+    reserved=true;
     record({schema:'evercraft.eo001.native-stop-prestop.v1',
       state:'PRESTOP_APPROVAL_AND_SCOPE_METADATA_RECORDED',
       permit_digest_sha256:approvedDigest,
@@ -344,6 +345,18 @@ export function attemptApprovedExactSyntheticScopeStop({
       permit_digest_sha256:approvedDigest,
       private_negative_observation_supplied:Boolean(postFailure)
     });
+    // A ledger with one-use semantics must refuse record() before
+    // reserve(). Early validation or replay failure therefore has no
+    // write authorization. Keep the precise denial reason visible, rather
+    // than rewriting it as an unrelated disk-persistence failure.
+    if(!reserved){
+      return hold('NATIVE_EXACT_SCOPE_STOP_HELD',reason,stage,issued,{
+        permit_digest_sha256:approvedDigest,
+        private_negative_observation_supplied:Boolean(postFailure),
+        local_failure_record_persisted:false,
+        stop_permit_reserved:false
+      });
+    }
     try{
       // NO retries, numeric PID kills or broad cleanup from this path.
       // The caller's private sink must retain the full error receipt itself.
