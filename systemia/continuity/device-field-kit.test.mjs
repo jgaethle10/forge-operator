@@ -69,6 +69,8 @@ test("Penguin stages encrypted source, NextGen locally restores and boots HQ wit
  assert.equal(prep.physical_transfer_to_nextgen_verified,false);
  assert.equal(prep.independent_key_custody_verified,false);
  assert.equal(prep.staged_tool_count,4);
+ assert.match(prep.encrypted_file_sha256,/^[a-f0-9]{64}$/);
+ assert.equal(Object.keys(prep.recovery_tool_sha256).length,4);
  const key=path.join(f.state,"private-key","recovery.key");
  const outgoing=path.join(f.state,"transfer");
  const sealed=path.join(outgoing,prep.sealed_file);
@@ -80,7 +82,7 @@ test("Penguin stages encrypted source, NextGen locally restores and boots HQ wit
  assert.ok(tools.includes("source-vault.mjs"));
  assert.ok(tools.includes("device-field-kit.mjs"));
  const restore=await recoverNextGen({
-   sealed,keyFile:key,state:f.nextgen,
+   sealed,keyFile:key,state:f.nextgen,expectedEncryptedSha256:prep.encrypted_file_sha256,
    now:()=>new Date("2026-11-15T23:58:00Z")
  });
  assert.equal(restore.ok,true);
@@ -110,11 +112,32 @@ test("wrong recovery key refuses remote-device restore and success receipt",asyn
  const badKeys=path.join(f.root,"badkeys");fs.mkdirSync(badKeys,{mode:0o700});
  const wrong=path.join(badKeys,"wrong.key");createOfflineKey({keyFile:wrong});
  const sealed=path.join(f.state,"transfer",prep.sealed_file);
- await assert.rejects(()=>recoverNextGen({sealed,keyFile:wrong,state:f.nextgen}));
+ await assert.rejects(()=>recoverNextGen({sealed,keyFile:wrong,state:f.nextgen,expectedEncryptedSha256:prep.encrypted_file_sha256}));
  assert.equal(fs.existsSync(path.join(f.nextgen,"receipts")),false);
 });
 test("preflight cannot treat a shallow or non-repository input as a verified backup",t=>{
  const f=fixture(t);
  const nonRepo=path.join(f.root,"unrelated");fs.mkdirSync(nonRepo);
  assert.throws(()=>preflightDevice({repo:nonRepo}));
+});
+
+test("NextGen holds a ciphertext that differs from the Penguin out-of-band fingerprint",async t=>{
+ const f=fixture(t);
+ const prep=await preparePenguin({repo:f.source,state:f.state});
+ const sealed=path.join(f.state,"transfer",prep.sealed_file);
+ const keyFile=path.join(f.state,"private-key","recovery.key");
+ fs.appendFileSync(sealed,"tampered by transfer");
+ await assert.rejects(()=>recoverNextGen({
+   sealed,keyFile,state:f.nextgen,expectedEncryptedSha256:prep.encrypted_file_sha256
+ }),/encrypted_copy_digest_mismatch/);
+ assert.equal(fs.existsSync(f.nextgen),false);
+});
+test("NextGen refuses recovery when the trusted fingerprint is absent",async t=>{
+ const f=fixture(t);
+ const prep=await preparePenguin({repo:f.source,state:f.state});
+ await assert.rejects(()=>recoverNextGen({
+   sealed:path.join(f.state,"transfer",prep.sealed_file),
+   keyFile:path.join(f.state,"private-key","recovery.key"),
+   state:f.nextgen
+ }),/penguin_ciphertext_fingerprint_required/);
 });
