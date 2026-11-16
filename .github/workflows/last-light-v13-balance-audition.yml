@@ -1,0 +1,79 @@
+name: Last Light V13 Pinned Real-Strings A/B Listening Studio
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-v13-balance-audition.py'
+      - 'systemia/media-studio/test_last_light_v13_balance_audition.py'
+      - '.github/workflows/last-light-v13-balance-audition.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  v13-pinned-acoustic-gain-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install small acoustic PCM analysis dependencies
+        run: python -m pip install --disable-pip-version-check numpy soundfile
+      - name: Download original independently source-verified V12 GitHub Actions artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: internal-v12-real-strings-only-excerpts-unapproved
+          path: /tmp/v12-audio
+          run-id: 43147387386
+          repository: jgaethle10/forge-operator
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Package and independently verify the pinned source WAV archive
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          d=Path('/tmp/v12-audio')
+          expected={'V12_AUDITION_PROVENANCE.json','LISTEN_FIRST.txt',
+           'V12_cello_SOURCE_EXCERPTS_UNAPPROVED.wav',
+           'V12_violin_I_SOURCE_EXCERPTS_UNAPPROVED.wav',
+           'V12_violin_II_SOURCE_EXCERPTS_UNAPPROVED.wav',
+           'V12_cello_only_STRINGS_ONLY.wav',
+           'V12_cello_violin_II_STRINGS_ONLY.wav',
+           'V12_three_part_strings_STRINGS_ONLY.wav'}
+          assert {x.name for x in d.iterdir() if x.is_file()}==expected
+          with zipfile.ZipFile('/tmp/v13-original-v12-sound.zip','w',zipfile.ZIP_DEFLATED) as archive:
+           for name in sorted(expected):archive.write(d/name,name)
+          print('Bundled 8 original V12 files for pinned hash validation')
+          PY
+      - name: Twelve tests on actual source-receipted V12 recordings
+        env:
+          LL_V13_SOURCE_ZIP: /tmp/v13-original-v12-sound.zip
+        run: |
+          python -m unittest discover -v -s systemia/media-studio \
+            -p 'test_last_light_v13_balance_audition.py'
+      - name: Render baseline and two reversible acoustic A/B mixes
+        run: |
+          python systemia/media-studio/last-light-v13-balance-audition.py \
+            --source-zip /tmp/v13-original-v12-sound.zip \
+            --out /tmp/v13-listening-artifact
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          out=Path('/tmp/v13-listening-artifact')
+          r=json.loads((out/'V13_AUDIO_QA_RECEIPT.json').read_text())
+          assert r['source_note_events']==9 and r['missing_instrument_events']==38
+          assert r['input_verified_against_independent_pinned_v12_stem_hashes']
+          assert not r['performed_legato'] and not r['artistic_approval']
+          assert not r['original_piano_included']
+          assert not r['new_recordings_created']
+          for f,h in r['rehearsal_files_sha256'].items():
+           assert hashlib.sha256((out/f).read_bytes()).hexdigest()==h
+          print('V13 PASS: two level-matched alternatives + byte-identical V12 source mix; 0 false acoustic claims')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v13-acoustic-ab-gain-only-unapproved
+          path: /tmp/v13-listening-artifact/
+          retention-days: 14
