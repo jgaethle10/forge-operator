@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CORRIDOR, SCENARIOS, EVIDENCE_STATE, simulateRoute, compareScenarios } from '../../public/apps/route-twin/route-core.mjs';
+import { CORRIDOR, SCENARIOS, EVIDENCE_STATE, simulateRoute, compareScenarios } from '../public/apps/route-twin/route-core.mjs';
 
 test('corridor is schematic and no source claims live authority', () => {
   assert.match(CORRIDOR.notice,/Not surveyed/);
