@@ -8,6 +8,8 @@ on:
       - "systemia/evercraft-os/**"
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-integration-adapter.mjs"
+      - "systemia/evercraft-home/os-saban-snapshot.mjs"
+      - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
       - "systemia/evercraft-home/os-integration.test.mjs"
       - "systemia/evercraft-home/public/os.html"
       - "systemia/evercraft-home/os-status.test.mjs"
@@ -20,6 +22,8 @@ on:
       - "systemia/evercraft-os/**"
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-integration-adapter.mjs"
+      - "systemia/evercraft-home/os-saban-snapshot.mjs"
+      - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
       - "systemia/evercraft-home/os-integration.test.mjs"
       - "systemia/evercraft-home/public/os.html"
       - "systemia/evercraft-home/os-status.test.mjs"
@@ -61,6 +65,8 @@ jobs:
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Prove unified OS readback is honest and non-executing
         run: node --test systemia/evercraft-home/os-integration.test.mjs
+      - name: Prove private Saban aggregates and scoped commerce projection
+        run: node --test systemia/evercraft-home/os-operational-readbacks.test.mjs
       - name: Emit boot envelope
         run: node systemia/evercraft-os/runtime.mjs
       - name: Emit sanitized device profile
