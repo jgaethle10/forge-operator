@@ -43,3 +43,26 @@ Research candidate → duplicate screened → exact hook verified → authorized
 - WA DOR sent a new letter notification Nov 13; content not yet inspected in My DOR.
 - biBERK case 08486073 is only a receipt for coverage inquiry.
 - Contractor registration/insurance must be checked in official tools before any EPS construction solicitations.
+
+## November 16 prospect expansion and vetted directory channels
+The canonical JSON source of truth now lists **11 research-only operator candidates**: First Choice Multi-Cleaning, Exterior Experts, Abel's and Sons, Allende's Lawn, Columbia Property Maintenance, Sagebrush Construction, White Arrow Land Works, J&M Landscape & Earthworks, Calvert Excavating, Atkins Landscaping, and Alpha Pro Exteriors. This count is **not** a contact/reply/partnership count: outreach from this push = 0; accepted partnerships = 0.
+
+Priority by collaboration fit rather than invented financial distress:
+- **Sagebrush Construction** (Tri-Cities / Yakima): small-team excavation, utility/septic and snow work; company website https://sagebrush-construction.com/. Potential operator with a clear, specific field-project workflow, no invented need to recruit.
+- **White Arrow Land Works** (Richland / Yakima): veteran-owned excavation, debris, site prep and orchard maintenance; https://walandworks.com/contact-us. A cross-county equipment-and-site-work candidate; company-published licensing claims must be verified with WA L&I.
+- **J&M Landscape & Earthworks** (Richland / Tri-Cities): owner-run grading, stonework, landscaping and small-loader work; https://www.jmlandscapeandearthworks.com/. Do not infer an actual broken website contact form from untested placeholder error text.
+- **Calvert Excavating Inc.** (Selah / Yakima): named backhoes, excavators, water truck, grader, bulldozers and roller; https://www.calvertexcavating.com/. Government L&I public record https://secure.lni.wa.gov/verify/Detail.aspx?LIC=CALVEEI966LC reports active general-contractor registration, subject to actual current recheck before any work.
+- **Atkins Landscaping** (Yakima / Kittitas): family-owned, multi-foreman project and maintenance teams; https://www.atkinslandscaping.net/about-us. Mature peer, not a distressed-business claim.
+- **Alpha Pro Exteriors**: newly listed Tri-Cities HBA member on Nov 9, 2026, separately verified by company roofing/siding site https://www.alphaproexteriors.com/. Networking participation does not equal desire for alliance or need for cash.
+
+**Acquisition source lane 1: CWHBA public member directory** https://memberships.cwhba.org/directory. Research trade and service-area categories and inspect each company's official website; private contact lists are not authorized or implied.  
+**Acquisition source lane 2: Tri-Cities HBA public member/new-member directory** https://www.hbatc.com/ and https://web.hbatc.com/directory/results/results.aspx?affcode=Tri+Cities+Chapter. Dates and self-published trade areas are useful public signals, not authorization to mass solicit.  
+**Acquisition source lane 3: WALP** https://www.walp.org/membership/. A trade association with paid dues, so no memberships, sponsorships, account creation or fees are authorized until measured buyer conversion makes a case.
+
+**Existing-contact exclusion:** Joe's Yard Service has historical Evercraft outreach including an Aug 20 contractor-beta email. Do not treat the firm as fresh outreach. Existing ServiceMaster/SERVPRO inquiries also remain separate contacted threads.
+
+## Offer truth for operators
+The current Evercraft public capability directory (Nov 16 read-only check) lists **Evercraft Workflow X-Ray** as an available optional $250 one-time scoped human-reviewed diagnostic: https://fabric.systemiacommandcenters.com/offers/workflow-xray. It does *not* buy the operator's place in the alliance or guarantee leads. **EPS Estimate Intelligence** is contractor beta with no publicly approved self-service price, checkout or partner entitlement, and **Contractor Cloud** is discovery-only. Do not imply automatic scheduling, live regional dispatch or a production subscription has been shipped. A founder operator conversation can begin for free to test a mutual fit, and only a separate accepted service contract could authorize a paid diagnostic.
+
+## Minimum pilot to justify expanding
+A recorded business-owner expression of interest → independent license/insurance proof → a specific eligible workflow/project scope → one consensual real project/referral or separately agreed diagnostic → delivered receipt → customer/partner satisfaction and transparent financial settlement. Only after that proof should a public expansion campaign promote commercial results.
