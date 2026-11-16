@@ -41,6 +41,14 @@ try {
     assert.equal(await page.locator('#index-history-list .temporary').count(),4,'four temporary staged days');
     assert.equal(await page.locator('#index-history-list .index-review-badge:not(.temporary)').count(),1,'one ledger day');
     assert.equal(await page.locator('#index-history-list .index-review-values .v small').count(),15,'fifteen NRCS warning stars');
+    assert.equal(await page.locator('#index-review-visuals .index-chart').count(),3,'three basin index mini charts');
+    assert.equal(await page.locator('#index-review-visuals .index-day').count(),15,'exactly fifteen source-day bars');
+    assert.equal(await page.locator('#print-evidence').isEnabled(),true,'user print only after history validation');
+    if(width===390){
+      await page.evaluate(()=>{window.__waterPrintCalls=0;window.print=()=>{window.__waterPrintCalls++}});
+      await page.locator('#print-evidence').click();
+      assert.equal(await page.evaluate(()=>window.__waterPrintCalls),1,'browser-native print invoked on user click');
+    }
     assert.match(await page.locator('#index-history-summary').textContent(),/temporary staging/);
     assert.match(await page.locator('#source-age').textContent(),/Archived/);
     assert.match(await page.locator('#reservoir-total').textContent(),/147,099.23/);
@@ -87,6 +95,8 @@ try {
   await historyPage.goto(url,{waitUntil:'networkidle'});
   await historyPage.locator('#index-history-error:visible').waitFor();
   assert.equal(await historyPage.locator('#index-history-list .index-review-card').count(),0);
+  assert.equal(await historyPage.locator('#index-review-visuals .index-chart').count(),0);
+  assert.equal(await historyPage.locator('#print-evidence').isEnabled(),false);
   assert.equal(await historyPage.locator('#dashboard').isVisible(),true,'independent historical hold must not erase older verified snapshot');
   receipt.tampered_history='REJECTED_WITH_SNAPSHOT_INTACT';
   await historyContext.close();
