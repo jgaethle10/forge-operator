@@ -25,10 +25,16 @@ test('verified private scheduler entries become readable mobile-first timeline w
     const html=renderVerifiedSabanTransitionView(raw);
     assert.match(html,/SYNTHETIC TEST \/ NOT LIVE/);
     assert.match(html,/The work\./);
+    assert.match(html,/At a glance/);
+    assert.match(html,/WHAT TO DO NEXT/);
+    assert.match(html,/No outstanding jobs in the final observation/);
     assert.match(html,/Work assigned/);
     assert.match(html,/Work completed/);
-    assert.match(html,/LOCAL SHA-256/); // local integrity, not independent attestation
-    assert.equal((html.match(/class="event"/g)||[]).length,3);
+    assert.match(html,/Local hash chain checked/); // local integrity, not independent attestation
+    assert.match(html,/<details class="history">/);
+    assert.match(html,/Inspect all 3 recorded transitions/);
+    assert.equal((html.match(/class="history-event"/g)||[]).length,3);
+    assert.equal((html.match(/class="recent-event"/g)||[]).length,3);
     assert.doesNotMatch(html,/<script|<iframe|https?:\/\//i);
     const result=createPrivateTransitionReview({directory:s.directory});
     assert.equal(result.local_chain_verified,true);
