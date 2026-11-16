@@ -14,7 +14,7 @@ const PACKET = 'evercraft.intake.systemia-admission-packet.v1';
 const seal = (body) => ({ ...body,
   receipt_hash: 'sha256:' + createHash('sha256').update(JSON.stringify(body)).digest('hex'),
 });
-function setup() {
+function setup({ quarantine = false } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'timewalk-native-intake-'));
   const passportStateDir = path.join(root, 'passport');
   const intakeStateDir = path.join(root, 'intake');
@@ -25,7 +25,7 @@ function setup() {
   const to = new Date(now + 86400000).toISOString();
   const grants = [
     ['adapter:form', 'evercraft-intake', ['intake.write.form']],
-    ['systemia:admission', 'evercraft-intake', ['intake.admit', 'intake.read']],
+    ['systemia:admission', 'evercraft-intake', ['intake.admit', 'intake.read', 'intake.quarantine.release']],
     ['systemia:receipt-bridge', 'evercraft-context', ['context.write.systemia']],
     ['agent:auditor', 'evercraft-context', ['context.read.systemia']],
   ];
@@ -53,9 +53,21 @@ function setup() {
     intent_excerpt: 'Please inspect the evidence but do not execute anything.',
     requested_capability_hints: ['research', 'review'],
     source_trust_state: 'untrusted_external',
+    ...(quarantine ? { adapter_risk_flags: ['active_content_suspected'] } : {}),
     received_at: received,
   });
-  assert.equal(created.state, 'candidate_only');
+  assert.equal(created.state, quarantine ? 'quarantined_candidate' : 'candidate_only');
+  if (quarantine) {
+    const released = intake.releaseQuarantine({
+      idempotency_key: 'fixture:quarantine-release-1',
+      candidate_id: 'candidate-form-one',
+      actor_ref: 'systemia:admission',
+      evidence_ref: 'fixture:quarantine-reviewed',
+      reason: 'Synthetic quarantine release for read-only test',
+      released_at: new Date(now - 45000).toISOString(),
+    });
+    assert.equal(released.state, 'released');
+  }
   const admittedResult = intake.decideAdmission({
     idempotency_key: 'fixture:accept-1',
     candidate_id: 'candidate-form-one',
@@ -72,8 +84,9 @@ function setup() {
   });
   const candidateFile = path.join(intakeStateDir, 'candidates.jsonl');
   const decisionFile = path.join(intakeStateDir, 'admission-decisions.jsonl');
+  const releaseFile = path.join(intakeStateDir, 'quarantine-releases.jsonl');
   return { root, passport, passportStateDir, contextStateDir, intakeStateDir,
-    packet, candidateFile, decisionFile };
+    packet, candidateFile, decisionFile, releaseFile };
 }
 function rewrite(file, rows) {
   fs.writeFileSync(file, rows.map((v) => JSON.stringify(v)).join('\n') + '\n', { mode: 0o600 });
@@ -217,5 +230,122 @@ test('duplicate identities and bounds fail closed before returning any candidate
     assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
       state_dir: f.intakeStateDir, max_bytes: 64,
     }), f.packet), /not_private_regular/);
+  } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
+});
+
+test('native quarantine release ledger unlocks exact accepted packet only after verified linked release', () => {
+  const f = setup({ quarantine: true });
+  try {
+    const release = rows(f.releaseFile)[0];
+    assert.equal(release.schema, 'evercraft.intake.quarantine-release.v1');
+    assert.equal(release.candidate_id, 'candidate-form-one');
+    assert.equal(release.evidence_ref, 'fixture:quarantine-reviewed');
+    const before = fs.readFileSync(f.releaseFile, 'utf8');
+    const reader = createIntakeAdmissionLedgerReceiptReader({ state_dir: f.intakeStateDir });
+    assert.deepEqual(lookup(reader, f.packet), f.packet);
+    assert.equal(fs.readFileSync(f.releaseFile, 'utf8'), before);
+    const bridge = new EvercraftContextReceiptBridge({
+      passportStateDir: f.passportStateDir, contextStateDir: f.contextStateDir,
+    });
+    assert.equal(bridge.project({
+      actor_ref: 'systemia:receipt-bridge', receipt: f.packet,
+    }).state, 'recorded');
+    const out = reconcileTimewalkSourceReceipts(bridge.fabric, {
+      actor_ref: 'agent:auditor', namespaces: ['systemia'],
+      read_source_receipt: createIntakeAdmissionLedgerReceiptReader({
+        state_dir: f.intakeStateDir,
+      }),
+    });
+    assert.equal(out.digest_and_projection_consistent_count, 1);
+    assert.equal(out.source_origin_authenticated, false);
+    assert.equal(out.execution_authority_granted, false);
+    assert.equal(out.trusted_origin_registry_independently_validated, false);
+  } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
+});
+
+test('missing release ledger with a quarantined candidate never replays acceptance', () => {
+  const f = setup({ quarantine: true });
+  try {
+    fs.unlinkSync(f.releaseFile);
+    assert.equal(lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), null);
+  } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
+});
+
+test('tampered release evidence is rejected before any accepted packet replay', () => {
+  const f = setup({ quarantine: true });
+  try {
+    const release = rows(f.releaseFile)[0];
+    rewrite(f.releaseFile, [{ ...release, evidence_ref: 'fixture:forged-review' }]);
+    assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), /receipt_integrity_failure/);
+  } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
+});
+
+test('backdated or late release cannot legitimize an earlier accepted decision', () => {
+  const f = setup({ quarantine: true });
+  try {
+    const old = rows(f.releaseFile)[0];
+    const { receipt_hash: _ignored, ...body } = old;
+    const decision = rows(f.decisionFile)[0];
+    rewrite(f.releaseFile, [seal({
+      ...body,
+      released_at: new Date(Date.parse(decision.decided_at) + 60_000).toISOString(),
+    })]);
+    assert.equal(lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), null);
+    rewrite(f.releaseFile, [seal({
+      ...body,
+      released_at: new Date(Date.parse(rows(f.candidateFile)[0].received_at) - 60_000).toISOString(),
+    })]);
+    assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), /invalid_quarantine_release_lineage/);
+  } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
+});
+
+test('duplicate or unrelated release receipts fail closed rather than authorizing a candidate', () => {
+  const f = setup({ quarantine: true });
+  try {
+    const receipt = rows(f.releaseFile)[0];
+    rewrite(f.releaseFile, [receipt, receipt]);
+    assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), /invalid_quarantine_release_lineage/);
+    const { receipt_hash: _removed, ...body } = receipt;
+    rewrite(f.releaseFile, [seal({ ...body, candidate_id: 'candidate:unknown' })]);
+    assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), /invalid_quarantine_release_lineage/);
+  } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
+});
+
+test('release ledger symlinks, insecure permissions and truncated writes fail closed', () => {
+  const f = setup({ quarantine: true });
+  try {
+    const original = fs.readFileSync(f.releaseFile, 'utf8');
+    fs.unlinkSync(f.releaseFile);
+    const target = path.join(f.root, 'release-elsewhere.jsonl');
+    fs.writeFileSync(target, original, { mode: 0o600 });
+    fs.symlinkSync(target, f.releaseFile);
+    assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), /not_private_regular/);
+    fs.unlinkSync(f.releaseFile);
+    fs.writeFileSync(f.releaseFile, original, { mode: 0o600 });
+    if (process.platform !== 'win32') {
+      fs.chmodSync(f.releaseFile, 0o644);
+      assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+        state_dir: f.intakeStateDir,
+      }), f.packet), /not_private_regular/);
+      fs.chmodSync(f.releaseFile, 0o600);
+    }
+    fs.writeFileSync(f.releaseFile, original.trimEnd());
+    assert.throws(() => lookup(createIntakeAdmissionLedgerReceiptReader({
+      state_dir: f.intakeStateDir,
+    }), f.packet), /incomplete_snapshot/);
   } finally { fs.rmSync(f.root, { recursive: true, force: true }); }
 });
