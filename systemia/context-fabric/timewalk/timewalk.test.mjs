@@ -21,6 +21,7 @@ function fakeFabric(records, allowed = new Set(records.map((r) => r.record_id)))
       const ns = namespaces == null ? null : new Set(Array.isArray(namespaces) ? namespaces : [namespaces]);
       return {
         schema: 'evercraft.context.authorized-timewalk-snapshot.v1',
+        authority_filter_applied: true,
         authorized_at: stamp('2026-11-04'),
         records: records.filter((r) => actor_ref === 'agent:auditor' && allowed.has(r.record_id) &&
           (!ns || ns.has(r.namespace)) &&
@@ -68,7 +69,12 @@ test('retractions are visible in history but only effective after retraction tim
   const r = signed({ record_id: 'a', retracted_at: stamp('2026-10-18'),
     evidence_ref: 'audit:a', created_at: stamp('2026-10-18') });
   const fab = fakeFabric([{ ...a, retraction: r }]);
-  assert.equal(queryTimewalk(fab, args).facts[0].status, 'active');
+  const before = queryTimewalk(fab, args).facts[0];
+  assert.equal(before.status, 'active');
+  assert.equal(before.retraction_recorded_at, null);
+  assert.equal(before.retraction_time_basis, null);
+  assert.equal(before.retracted_at, null);
+  assert.equal(before.retraction_evidence_ref, null);
   const later = queryTimewalk(fab, { ...args, known_at: stamp('2026-10-20') });
   assert.equal(later.facts[0].status, 'retracted');
   assert.equal(later.facts[0].retraction_evidence_ref, 'audit:a');
@@ -132,8 +138,16 @@ test('backdated retraction is not known before recorded timestamp', () => {
     evidence_ref: 'audit:backdated', created_at: stamp('2026-10-20'),
   });
   const fab = fakeFabric([{ ...record, retraction }]);
-  assert.equal(queryTimewalk(fab, args).facts[0].status, 'active');
-  assert.equal(queryTimewalk(fab, { ...args, known_at: stamp('2026-10-21') }).facts[0].status, 'retracted');
+  const before = queryTimewalk(fab, args).facts[0];
+  assert.equal(before.status, 'active');
+  assert.equal(before.retracted_at, null);
+  assert.equal(before.retraction_recorded_at, null);
+  assert.equal(before.retraction_evidence_ref, null);
+  const after = queryTimewalk(fab, { ...args, known_at: stamp('2026-10-21') }).facts[0];
+  assert.equal(after.status, 'retracted');
+  assert.equal(after.retracted_at, stamp('2026-10-11'));
+  assert.equal(after.retraction_recorded_at, stamp('2026-10-20'));
+  assert.equal(after.retraction_evidence_ref, 'audit:backdated');
 });
 
 test('legacy retraction without creation time is explicitly unknowable', () => {
@@ -148,6 +162,35 @@ test('legacy retraction without creation time is explicitly unknowable', () => {
   assert.equal(result.facts[0].status, 'retraction_time_unverified');
   assert.equal(result.historical_status_complete, false);
   assert.equal(result.active_count, 0);
+});
+
+test('legacy retractions expose uncertainty but not unverified private metadata', () => {
+  const record = fact('legacy-secret', 'down', '2026-10-10', '2026-10-10');
+  const retraction = signed({
+    record_id: 'legacy-secret',
+    retracted_at: stamp('2026-10-29'),
+    evidence_ref: 'fixture:future-secret-evidence',
+  });
+  const result = queryTimewalk(fakeFabric([{ ...record, retraction }]), args);
+  const factRow = result.facts[0];
+  assert.equal(factRow.status, 'retraction_time_unverified');
+  assert.equal(factRow.retraction_time_basis, 'legacy_unverifiable');
+  assert.equal(factRow.retracted_at, null);
+  assert.equal(factRow.retraction_evidence_ref, null);
+  assert.equal(result.historical_status_complete, false);
+  assert.equal(JSON.stringify(result).includes('future-secret-evidence'), false);
+});
+
+test('authorized snapshot must explicitly attest authority filtering', () => {
+  const record = fact('a', 'active', '2026-10-10', '2026-10-10');
+  const fab = fakeFabric([record]);
+  const unfiltered = {
+    authorizedTimewalkSnapshot: (options) => ({
+      ...fab.authorizedTimewalkSnapshot(options),
+      authority_filter_applied: false,
+    }),
+  };
+  assert.throws(() => queryTimewalk(unfiltered, args), /timewalk_authorized_snapshot_invalid/);
 });
 
 test('invalid authorized snapshot contract fails closed', () => {
