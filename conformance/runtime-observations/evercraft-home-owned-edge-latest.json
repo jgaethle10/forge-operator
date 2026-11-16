@@ -12,6 +12,9 @@
   "clip_connection_ui_verified": true,
   "clip_diagnostic_anonymous_access_denied": true,
   "clip_auto_publishing_verified": false,
+  "payments_executive_anonymous_access_denied": false,
+  "payments_executive_route_state": "route_unverified",
+  "payments_order_feed_verified": false,
   "owner_state": "claim_required",
   "anonymous_session_denied": true,
   "owner_claim_or_login_ready": true,
@@ -20,5 +23,5 @@
   "external_identity_provider_required": false,
   "external_ai_required": false,
   "base44_required": false,
-  "observed_at": "2026-11-16T03:47:41Z"
+  "observed_at": "2026-11-16T03:50:10Z"
 }
