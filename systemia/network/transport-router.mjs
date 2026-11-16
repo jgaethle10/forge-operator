@@ -23,19 +23,45 @@ export function selectTransport({
     near_realtime: 1,
     delay_tolerant: 2
   };
-  const maxRank = latencyRank[max_latency_class] ?? latencyRank.delay_tolerant;
+  const invalid=(reason)=>({
+    schema:'evercraft.transport-selection.v1',
+    status:'INVALID_REQUEST',
+    selected:null,
+    candidates:[],
+    reason,
+  });
+  if(!Array.isArray(transports)) return invalid('transport_catalog_must_be_array');
+  if(typeof purpose!=='string'||!purpose.trim()){
+    return invalid('purpose_must_be_nonempty_string');
+  }
+  if(!Number.isSafeInteger(payload_bytes)||payload_bytes<0){
+    return invalid('payload_bytes_must_be_nonnegative_safe_integer');
+  }
+  if(!Object.hasOwn(latencyRank,max_latency_class)){
+    return invalid('max_latency_class_unrecognized');
+  }
+  const maxRank=latencyRank[max_latency_class];
 
-  const candidates = (transports || [])
+  const candidates = transports
+    .filter((transport) => transport && typeof transport === 'object' && !Array.isArray(transport))
     .filter((transport) => transport.state === STATE.VERIFIED)
-    .filter((transport) => (transport.purposes || []).includes(purpose))
+    .filter((transport) => typeof transport.id === 'string' && Boolean(transport.id.trim()))
+    .filter((transport) => Array.isArray(transport.purposes) && transport.purposes.includes(purpose))
+    // Untrusted/coerced metrics cannot game suitability rankings.
+    .filter((transport) => typeof transport.power_cost === 'number' &&
+      Number.isFinite(transport.power_cost) && transport.power_cost >= 0)
+    .filter((transport) => typeof transport.bidirectional === 'boolean' &&
+      typeof transport.offline_usable === 'boolean' &&
+      typeof transport.requires_external_infrastructure === 'boolean')
     .filter((transport) => !requires_offline || transport.offline_usable === true)
     .filter((transport) => {
-      const maxPayload = finite(transport.max_payload_bytes, Number.MAX_SAFE_INTEGER);
-      return payload_bytes <= maxPayload;
+      // Unknown/invalid payload ceilings are not authorization to send unlimited bytes.
+      const maxPayload=transport.max_payload_bytes;
+      return Number.isSafeInteger(maxPayload)&&maxPayload>=0&&payload_bytes<=maxPayload;
     })
     .filter((transport) => {
-      const rank = latencyRank[transport.latency_class] ?? latencyRank.delay_tolerant;
-      return rank <= maxRank;
+      if(!Object.hasOwn(latencyRank,transport.latency_class)) return false;
+      return latencyRank[transport.latency_class] <= maxRank;
     })
     .map((transport) => {
       const latency = latencyRank[transport.latency_class] ?? 2;
