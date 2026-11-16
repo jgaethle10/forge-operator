@@ -20,6 +20,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install trusted FFmpeg tools for actual audio fixture validation
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffprobe -version | head -n 1
       - name: Validate audition adapter without model downloads or paid inference
         run: |
           node --test systemia/media-studio/commercial-music-open-source-bridge.test.mjs
