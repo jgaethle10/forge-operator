@@ -78,3 +78,29 @@ A green receipt proves **committed source can be restored and Home can boot loca
 Never expose local development mode to a public interface. The tool forces loopback and is NOT a production Home deployment or authorization replacement. A standalone recovery proof does not recover the Identity, Passport, CRM, settlements, inbox, media archives or customers. Those still need private, encrypted backup with restore receipts.
 
 Next gates: encrypted independent physical media, actual node-by-node receipts, signed offline release and rollback, production Identity/Passport recovery and full company Direct Mode operations while external AI and GitHub are unreachable. GitHub Actions only executes the tool's standalone regression tests; GitHub is not part of the tool's runtime.
+
+## Encrypted portable recovery media (V3)
+
+The existing Source Vault is private on disk but **not encrypted**. Before making a portable copy, the operator can now seal it using a local 256-bit key and authenticated AES-256-GCM with a fresh nonce for every copy. This uses Node's built-in crypto implementation, not GitHub or a cloud service. It has not had an independent external security audit.
+
+Set up two **separate owner-controlled private 0700 directories**, one for the 0600 key file and one for the sealed recovery archive. Never keep the only key on the same portable drive as the archive. Use absolute paths throughout. Do not put the key contents in Git, issues, logs or chat.
+
+    node systemia/continuity/sealed-transfer.mjs keygen --key-file /private/key-custody/recovery.key
+
+    node systemia/continuity/sealed-transfer.mjs seal --vault /private/source-vault --output /private/media/evercraft-source.evsealed --key-file /private/key-custody/recovery.key
+
+Copy the **encrypted** file to NextGen or separately controlled encrypted media, using approved local transfer. Independently provide the key through a secure channel. On NextGen, with this tool already available:
+
+    node /offline/copy/sealed-transfer.mjs unseal --input /private/media/evercraft-source.evsealed --vault /private/recovered-source-vault --key-file /private/key-custody/recovery.key
+
+    node /offline/copy/source-vault.mjs verify --vault /private/recovered-source-vault
+
+    node /offline/copy/offline-hq-drill.mjs --vault /private/recovered-source-vault --receipt-dir /private/recovery-receipts
+
+The unseal operation **does not overwrite** a prior vault. It decrypts into a new mode 0700 temporary vault, checks authenticated encryption before trusting metadata, validates the original source hash and performs an independent Git restore/fsck before moving the vault to the requested location. Invalid keys, modified ciphertext, unsafe permissions and existing destinations cause a hold.
+
+**Scope of the receipt:** `encrypted_copy_created` only proves a local encrypted file was written. `encrypted_copy_restored_and_git_verified` proves local key-authenticated decryption and committed Git history restoration on the tested machine. Neither result proves the copied file reached NextGen, survived loss of Penguin, was transported on removable media, or restored customer data, Passport, private credentials or production HQ.
+
+**Critical security and operating limits:** Historical secrets may live inside the underlying Git bundle. The unsealed vault is plaintext and should be held only temporarily on encrypted private disk with restricted access. Back up the recovery key separately: loss of the only key makes the sealed copy unrecoverable. The envelope uses AES-GCM confidentiality and integrity but is not a signed supply-chain release and is not an independent forensic attestation. No service may execute payments, publications or production deployments from an unseal event.
+
+The next field gate is a real operator-controlled cross-device recovery on Penguin and NextGen, followed by separately encrypted private operational-state backups. This script never logs into either device, disables the network, performs a remote transfer or alters the production edge.
