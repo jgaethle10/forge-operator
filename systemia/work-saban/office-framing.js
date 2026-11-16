@@ -15,7 +15,7 @@
     const horizontal=(Math.max(80,width-26))/(1060*1.20);
     const vertical=(Math.max(120,height-58))/(680*1.25);
     const zoom=clamp(Math.min(horizontal,vertical),MIN,MAX);
-    return Object.freeze({yaw:-9,pitch:61,zoom,panX:0,panY:0});
+    return Object.freeze({yaw:-9,pitch:61,zoom,panX:0,panY:clamp(Math.round(height*.12),24,68)});
   }
   root.EvercraftOfficeFraming=Object.freeze({fit,MIN,MAX});
 })(typeof window!=='undefined'?window:globalThis);
