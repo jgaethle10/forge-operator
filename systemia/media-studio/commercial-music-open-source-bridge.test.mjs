@@ -60,8 +60,8 @@ test('refuses provider-supplied off-host audio URLs',async()=>{
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 test('audio inspector technical pass is not creative approval',()=>{
- try{execFileSync('ffprobe',['-version'],{stdio:'ignore'});execFileSync('ffmpeg',['-version'],{stdio:'ignore'});}
- catch{return;}
+ execFileSync('ffprobe',['-version'],{stdio:'ignore'});
+ execFileSync('ffmpeg',['-version'],{stdio:'ignore'});
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-inspect-'));
  try{
   const file=path.join(dir,'test.wav');
