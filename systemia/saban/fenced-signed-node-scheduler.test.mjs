@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import http from 'node:http';
 import {randomBytes} from 'node:crypto';
 import {startNodeSeed} from '../compute/node-seed.mjs';
 import {createWorkState,loadWorkState} from './work-state.mjs';
@@ -13,6 +14,7 @@ import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
 import {EvercraftPassport} from '../passport/passport.mjs';
 import {fingerprintFencedMicroSeedExecution} from './fenced-execution-admission.mjs';
 import {fencedSchedulerWorkDigest} from './fenced-local-scheduler.mjs';
+import {createLocalSignedMicroSeedAdapter} from './local-signed-microseed-adapter.mjs';
 
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'saban-fenced-signed-node-'));
 const token='isolated-ci-only-allocator-token';
@@ -21,7 +23,51 @@ const seed=await startNodeSeed({
   host:'127.0.0.1',advertiseHost:'127.0.0.1',port:0,
   allocatorToken:token,zeroCost:true,announce:false
 });
-test.after(async()=>{await seed.close();fs.rmSync(dir,{recursive:true,force:true});});
+// The actual scheduler uses the strict first-party HTTP adapter, not a test
+// callback capable of arbitrary effects. A loopback-only test relay observes
+// the pre-HTTP Goal Store checkpoint and can simulate a corrupt signed reply.
+const scopes=new Map();
+const proxy=http.createServer(async(req,res)=>{
+  try{
+    if(req.method!=='POST'||req.url!=='/v1/jobs'){
+      res.writeHead(404);res.end();return;
+    }
+    let raw='';
+    for await(const chunk of req){
+      raw+=chunk.toString('utf8');
+      if(Buffer.byteLength(raw)>64*1024)throw Error('test_payload_too_large');
+    }
+    const body=JSON.parse(raw);
+    const scope=scopes.get(body.idempotency_key);
+    if(!scope)throw Error('unregistered_test_request');
+    scope.calls++;
+    const persistedGoal=await readGoalState(scope.goalStateFile);
+    assert.equal(persistedGoal.tasks[0].status,'executing',
+      'Systemia must checkpoint the exact attempt before NodeSeed HTTP');
+    assert.equal(persistedGoal.tasks[0].attempt,1);
+    const response=await fetch(seed.endpoint+'/v1/jobs',{
+      method:'POST',redirect:'error',
+      headers:{'content-type':'application/json'},body:raw
+    });
+    const result=await response.json();
+    if(scope.malform)result.signed_execution.statement.lease_id='forged-other-lease';
+    res.writeHead(response.status,{'content-type':'application/json'});
+    res.end(JSON.stringify(result));
+  }catch{
+    res.writeHead(500,{'content-type':'application/json'});
+    res.end(JSON.stringify({error:'test_relay_validation_failed'}));
+  }
+});
+await new Promise((resolve,reject)=>{
+  proxy.once('error',reject);
+  proxy.listen(0,'127.0.0.1',resolve);
+});
+const relayEndpoint='http://127.0.0.1:'+proxy.address().port;
+test.after(async()=>{
+  await new Promise(resolve=>proxy.close(resolve));
+  await seed.close();
+  fs.rmSync(dir,{recursive:true,force:true});
+});
 const workload='systemia.content-hash.v1';
 const contract={
   software_id:'saban-fenced-microseed-canary',
@@ -124,29 +170,14 @@ async function scenario(name,malform=false,{unconsumed=false,expired=false}={}){
       consumed_at:new Date(expired?ms-19000:ms-500).toISOString()
     });
   }
-  let calls=0;
-  const adapter={
-    runAssignment:async({assignment})=>{
-      calls++;
-      const persistedGoal=await readGoalState(goalStateFile);
-      assert.equal(persistedGoal.tasks[0].status,'executing',
-        'Systemia must checkpoint the precise attempt before NodeSeed HTTP');
-      assert.equal(persistedGoal.tasks[0].attempt,1);
-      const result=await request('/v1/jobs',{
-        body:{
-          lease_id:lease.lease_id,token:lease.token,
-          workload_class:assignment.work.workload_class,
-          idempotency_key:assignment.idempotency_key,
-          execution_nonce:nonce,
-          input:{payload:assignment.item.payload}
-        }
-      });
-      if(malform){
-        result.signed_execution.statement.lease_id='forged-other-lease';
-      }
-      return result;
-    }
-  };
+  const scope={goalStateFile,malform,calls:0};
+  scopes.set(assignment.idempotency_key,scope);
+  const adapter=createLocalSignedMicroSeedAdapter({
+    endpoint:relayEndpoint,leaseToken:lease.token,nodePin:pin,
+    jobKey:jobId,
+    workDigest:fencedSchedulerWorkDigest(state.jobs[jobId]),
+    idempotencyKey:assignment.idempotency_key,payload
+  });
   return {
     state,adapter,contract,plan:{...plan,mission_key:missionKey,goal_key:goalKey},
     physicalWorkers:1,statePath,
@@ -154,7 +185,7 @@ async function scenario(name,malform=false,{unconsumed=false,expired=false}={}){
     fencedJournal:journal,fencedNodeSeedPin:{[jobId]:pin},
     fencedPassportStateDir:passportDir,
     fencedExecutionPermitIds:{[jobId]:permitId},
-    calls:()=>calls,jobId,journal,passport,permitId,
+    calls:()=>scope.calls,jobId,journal,passport,permitId,
     grantId:grant.grant.grant_id,requestFingerprint,goalStateFile
   };
 }
@@ -208,7 +239,7 @@ test('independent pin missing blocks before any job execution',async()=>{
 test('wrong independently pinned fingerprint blocks before NodeSeed is called',async()=>{
   const s=await scenario('fingerprint-denied');
   s.fencedNodeSeedPin[s.jobId].device_fingerprint='sha256:'+'0'.repeat(64);
-  await assert.rejects(runScheduler(s),/fenced_scheduler_passport_execution_permit_denied/);
+  await assert.rejects(runScheduler(s),/fenced_scheduler_first_party_local_adapter_binding_denied/);
   assert.equal(s.calls(),0);
   assert.equal(s.journal.inspect({jobKey:s.jobId}).journal_events,0);
 });
@@ -239,11 +270,11 @@ test('a consumed permit for another job or a modified job payload cannot be repl
   assert.equal(target.calls(),0);
   const changed=await scenario('permit-payload-tamper');
   changed.state.jobs[changed.jobId].item.payload.value.scenario='altered-payload';
-  // A forged work digest is rejected by the durable Systemia goal binding
-  // before Passport has to evaluate its own independent request fingerprint.
-  // The critical invariant is zero adapter and NodeSeed invocations.
+  // The pinned first-party transport rejects a changed payload before any
+  // journal or network side effects, even before the separate Systemia goal
+  // and Passport checks have to examine the tampered request.
   await assert.rejects(runScheduler(changed),
-    /fenced_systemia_goal_job_binding_hold/);
+    /fenced_scheduler_first_party_local_adapter_binding_denied/);
   assert.equal(changed.calls(),0);
   assert.equal(changed.journal.inspect({jobKey:changed.jobId}).journal_events,0);
 });
