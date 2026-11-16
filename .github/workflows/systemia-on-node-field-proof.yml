@@ -6,6 +6,10 @@ on:
       - 'systemia/saban/microseed-local-field-proof*.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/saban/microseed-device-quarantine.mjs'
+      - 'systemia/saban/microseed-device-bridge.mjs'
+      - 'systemia/saban/ambient-compute-fabric.mjs'
+      - 'tests/saban-microseed-device-bridge.test.mjs'
+      - 'tests/saban-ambient-compute-fabric.test.mjs'
       - 'systemia/saban/microseed-gateway.mjs'
       - 'systemia/saban/microseed-executor.mjs'
       - 'systemia/saban/microseed-capability-executor.mjs'
@@ -21,6 +25,10 @@ on:
       - 'systemia/saban/microseed-local-field-proof*.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/saban/microseed-device-quarantine.mjs'
+      - 'systemia/saban/microseed-device-bridge.mjs'
+      - 'systemia/saban/ambient-compute-fabric.mjs'
+      - 'tests/saban-microseed-device-bridge.test.mjs'
+      - 'tests/saban-ambient-compute-fabric.test.mjs'
       - 'systemia/saban/microseed-gateway.mjs'
       - 'systemia/saban/microseed-executor.mjs'
       - 'systemia/saban/microseed-capability-executor.mjs'
@@ -48,6 +56,8 @@ jobs:
         run: |
           node --check systemia/saban/microseed-local-field-proof.mjs
           node --check systemia/saban/microseed-device-quarantine.mjs
+          node --check systemia/saban/microseed-device-bridge.mjs
+          node --check systemia/saban/ambient-compute-fabric.mjs
           node --check systemia/saban/microseed-gateway.mjs
           node --check systemia/saban/microseed-executor.mjs
           node --check systemia/saban/microseed-capability-executor.mjs
@@ -65,6 +75,8 @@ jobs:
             tests/saban-microseed-signed-receipt-store.test.mjs \
             tests/saban-microseed-e2e.test.mjs \
             tests/saban-microseed-quarantine-core.test.mjs \
+            tests/saban-microseed-device-bridge.test.mjs \
+            tests/saban-ambient-compute-fabric.test.mjs \
             systemia/control-plane/visualization/passport-signed-device-read.test.mjs
       - name: Package portable Evercraft-owned field kit
         run: |
