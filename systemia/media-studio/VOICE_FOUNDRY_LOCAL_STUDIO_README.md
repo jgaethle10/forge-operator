@@ -12,6 +12,7 @@ The local studio gives the Evercraft workstation a responsive white/black/red we
 - Server listens at **127.0.0.1 only**, rejects nonlocal clients, foreign browser Origin, missing secret browser token and invalid JSON. It never accepts remote URL input, file paths or arbitrary command arguments from browser submissions.
 - Default review files are held in `~/.local/share/evercraft/voice-foundry/reviews/` with separate secure job IDs; text inputs are removed after processing. Final evidence contains the script as intended; recordings persist until the operator removes them. Never assume automatic expiry.
 - Every generated artifact is checked against the original workstation SHA-256 receipt before preview/download.
+- Built-in private QA scorecard for diction, naturalness, semantic emphasis, brand pronunciation, and accent (1–5 each), plus timecoded notes and a self-reported fluency checkbox. Scores are persisted next to each audio receipt as `private-review.json` with `productionApproved = false` and `commercialReleaseApproved = false`.
 
 This **does not** synthesize Bella V05, clone living speakers, train a novel voice model, establish native language quality, or authorize any commercial/public voice release. The local server requires the owning operator's machine access and is not designed for multiple remote users.
 
@@ -44,6 +45,7 @@ If dependencies are absent, install them only in a separate reviewed virtual env
 - `POST /api/render` only `{"voice":"ef_dora","script":"..."}` from same-origin UI
 - `GET /api/jobs/<opaque-job-id>` private status, opaque IDs required
 - `GET /api/jobs/<opaque-job-id>/preview.mp3` / `native.wav` / `evidence.json` with receipt validation before audio playback
+- `POST /api/jobs/<opaque-job-id>/review` private scored listener feedback; requires identical same-origin/CSRF protection, never creates release approval
 
 No CORS exemptions. No public-key handshake. No account sessions. No remote-access trust assumption. This is a local-only operator workstation.
 
