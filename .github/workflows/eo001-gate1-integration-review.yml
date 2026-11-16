@@ -36,6 +36,7 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.mjs
           node --check integrations/ai-evaluation-lab/eo001-cgroup-subtree-cleanup.mjs
           node --check integrations/ai-evaluation-lab/eo001-supervisor-evidence-join.mjs
+          node --check integrations/ai-evaluation-lab/eo001-exact-scope-stop-review.mjs
           node --check integrations/ai-evaluation-lab/eo001-private-evidence-vault.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
           node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
@@ -56,6 +57,8 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-subtree-cleanup.test.mjs
       - name: Verify source-only join refuses cross-observer identity and clock mismatches
         run: node --test integrations/ai-evaluation-lab/eo001-supervisor-evidence-join.test.mjs
+      - name: Verify inert exact-unit stop candidate never grants execution
+        run: node --test integrations/ai-evaluation-lab/eo001-exact-scope-stop-review.test.mjs
       - name: Verify held-FD two-phase supervisor capture without starting/stopping services
         run: node --test integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.test.mjs
       - name: Verify optional owner-only archive refuses overwrites and unsafe directories
