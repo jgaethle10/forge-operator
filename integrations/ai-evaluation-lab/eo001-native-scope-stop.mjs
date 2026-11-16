@@ -194,14 +194,21 @@ function nativeIo(repoRoot){
     },
     cleanCommit:pin=>{
       requireThat(typeof repoRoot==='string'&&path.isAbsolute(repoRoot)&&
-        !repoRoot.includes('..'),'NATIVE_STOP_ROOT_UNTRUSTED');
+        path.normalize(repoRoot)===repoRoot&&!repoRoot.includes('..'),
+        'NATIVE_STOP_ROOT_UNTRUSTED');
+      // A symlinked checkout or untracked file can obscure what a future
+      // physical runner actually loads. Refuse both rather than relying on
+      // tracked-file status alone.
+      requireThat(fs.realpathSync(repoRoot)===repoRoot&&
+        fs.lstatSync(repoRoot).isDirectory(),
+        'NATIVE_STOP_ROOT_UNTRUSTED');
       const cmd=(args)=>spawnSync('/usr/bin/git',['-C',repoRoot,...args],{
         encoding:'utf8',maxBuffer:2048,timeout:1500,
         stdio:['ignore','pipe','pipe'],
         env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C'}
       });
       const head=cmd(['rev-parse','--verify','HEAD']);
-      const dirty=cmd(['status','--porcelain','--untracked-files=no']);
+      const dirty=cmd(['status','--porcelain','--untracked-files=all']);
       return head.status===0&&dirty.status===0&&
         head.stdout.trim()===pin&&dirty.stdout.trim()==='';
     },
