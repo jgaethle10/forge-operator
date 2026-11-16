@@ -1,0 +1,99 @@
+{
+  "schema": "evercraft.upstream-candidate-screen.v1",
+  "captured_at": "2026-11-16",
+  "scope": "Research-only screen from 25.8s user-supplied video. No code installed, model executed or buyer conversion verified.",
+  "authority": "Systemia and existing Capability Mesh only",
+  "candidates": [
+    {
+      "id": "autoresearch",
+      "source_url": "https://github.com/karpathy/autoresearch",
+      "kind": "repository",
+      "decision": "pattern_only",
+      "license_review": "required",
+      "existing_evercraft_owner": "Systemia/Saban mission execution",
+      "proposed_use": "Borrow bounded change-measure-keep-or-revert; no GPU training pilot authorized",
+      "known_constraints": [
+        "Official GPU quickstart tested on NVIDIA H100",
+        "README states MIT but root LICENSE file not found: verify exact reuse rights",
+        "Dataset access and GPU spending require separate authorization"
+      ],
+      "real_runtime_test": false,
+      "paid_customer_effect_verified": false
+    },
+    {
+      "id": "nanoGPT",
+      "source_url": "https://github.com/karpathy/nanoGPT",
+      "kind": "repository",
+      "decision": "reference_only",
+      "license_review": "mit_file_observed",
+      "existing_evercraft_owner": "Sovereign inference research",
+      "proposed_use": "Historical training reference; do not deploy deprecated code",
+      "known_constraints": [
+        "Upstream README calls project deprecated and recommends nanochat"
+      ],
+      "real_runtime_test": false,
+      "paid_customer_effect_verified": false
+    },
+    {
+      "id": "nanochat",
+      "source_url": "https://github.com/karpathy/nanochat",
+      "kind": "repository",
+      "decision": "research_candidate",
+      "license_review": "mit_file_observed_model_rights_separate",
+      "existing_evercraft_owner": "Sovereign compute/inference research",
+      "proposed_use": "Read-only architecture review; optional small CPU isolated compatibility study after admission",
+      "known_constraints": [
+        "Published training examples assume high GPU compute",
+        "CPU extra exists but commercial viability untested",
+        "Model and dataset rights require separate review"
+      ],
+      "real_runtime_test": false,
+      "paid_customer_effect_verified": false
+    },
+    {
+      "id": "llm-wiki",
+      "source_url": "https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f",
+      "kind": "idea_file",
+      "decision": "pattern_only",
+      "license_review": "no_external_code_proposed",
+      "existing_evercraft_owner": "Evercraft Context Fabric / Research / Journal",
+      "proposed_use": "Evolve citation-backed syntheses from immutable raw evidence inside existing Context Fabric",
+      "known_constraints": [
+        "Concept file, not installable application",
+        "Preserve contradiction flags and derived-summary trust status"
+      ],
+      "real_runtime_test": false,
+      "paid_customer_effect_verified": false
+    },
+    {
+      "id": "llm.c",
+      "source_url": "https://github.com/karpathy/llm.c",
+      "kind": "repository",
+      "decision": "reference_only",
+      "license_review": "mit_file_observed_model_rights_separate",
+      "existing_evercraft_owner": "Sovereign compute research",
+      "proposed_use": "Study C/CUDA CPU reference patterns without substituting production inference",
+      "known_constraints": [
+        "GPU code is CUDA-oriented",
+        "Downloaded training models and datasets need rights review"
+      ],
+      "real_runtime_test": false,
+      "paid_customer_effect_verified": false
+    },
+    {
+      "id": "micrograd",
+      "source_url": "https://github.com/karpathy/micrograd",
+      "kind": "repository",
+      "decision": "reference_only",
+      "license_review": "mit_file_observed",
+      "existing_evercraft_owner": "Infinite Classroom / educational R&D",
+      "proposed_use": "Evaluate as optional classroom exercise; not production inference",
+      "known_constraints": [
+        "Scalar autograd educational engine, not a commercial LLM runtime"
+      ],
+      "real_runtime_test": false,
+      "paid_customer_effect_verified": false
+    }
+  ],
+  "visual_claim_boundary": "The video displays a Repo Swarm dashboard, but no source, license or working application for that visualization was established. Do not claim it is part of the six items or of Evercraft."
+}
