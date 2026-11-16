@@ -78,6 +78,13 @@ test('Owned Closeout captures only explicit inquiries, never an order',async()=>
     assert.equal(record.company,'Sample Services');
     assert.equal(record.note,payload.note);
     assert.ok(!JSON.stringify(record).includes('ip_address'));
+    const offerPage=await fetch(runtime.url+'/offers/closeout-pilot');
+    assert.equal(offerPage.status,200);
+    const offerHtml=await offerPage.text();
+    assert.match(offerHtml,/Try the free builder/);
+    assert.match(offerHtml,/Request the \$49 pilot/);
+    assert.doesNotMatch(offerHtml,/Continue to checkout/);
+    assert.doesNotMatch(offerHtml,/signal\/#request/);
     const held=await fetch(runtime.url+'/api/offers/closeout-pilot/checkout',{
       method:'POST',headers:{'content-type':'application/json'},
       body:JSON.stringify({user_confirmed:true,customer_ref:'worker@example.com'})
