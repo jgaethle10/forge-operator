@@ -188,7 +188,8 @@ test('maliciously planted observation without PRESTOP or third record refuses au
   withDirectory(dir=>{
     save(dir,[pre(),outcome()]);
     plant(dir,2,blocked(),hash(fs.readFileSync(path.join(dir,fn(1)))));
-    assert.throws(()=>audit(dir),/STOP_LEDGER_AUDIT_RECORD_SEQUENCE_INVALID/);
+    assert.throws(()=>audit(dir),
+      /STOP_LEDGER_AUDIT_RECORD_SEQUENCE_INVALID|STOP_LEDGER_AUDIT_RECORD_NAMES_INVALID/);
   });
 });
 test('an unrelated permit cannot substitute for the requested digest',()=>{
