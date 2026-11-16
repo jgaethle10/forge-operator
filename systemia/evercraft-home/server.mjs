@@ -27,6 +27,7 @@ import { publishJournalStoryLinkedInFromHome } from "./clip-journal-linkedin-pub
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
 import { planEvercraftHomeOsAppInstall, readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
+import { readEvercraftOsIntegration } from "./os-integration-adapter.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -1055,6 +1056,19 @@ export async function startEvercraftHomeServer({
           authority_granted: false
         });
       }
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/os/integration") {
+      const session = sessionFor(req, "home.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true,
+        subject: session.subject,
+        ...readEvercraftOsIntegration({
+          repoRoot,
+          vaultDir: String(serviceOrigins?.EVERCRAFT_CONTINUITY_VAULT_DIR || "").trim(),
+        }),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/os/status") {
