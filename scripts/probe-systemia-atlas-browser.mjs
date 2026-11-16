@@ -79,7 +79,7 @@ try{
     await page.locator('#scenario').selectOption('closure');
     assert.equal(await page.locator('#eta').textContent(),'NO-GO');
     assert.match(await page.locator('#disposition').textContent(),/STOP/);
-    await page.locator('#progress').fill('750');
+    await page.evaluate(()=>{const input=document.querySelector('#progress');input.value='750';input.dispatchEvent(new Event('input',{bubbles:true}));});
     assert.ok(Number(await page.locator('#progress').inputValue())<=250,profile.name+': blocked scenario allowed driving through');
     await page.screenshot({path:out+'/'+profile.name+'-route-twin.png',timeout:10000});
     assert.deepEqual(errors,[],profile.name+': browser JS exceptions');
