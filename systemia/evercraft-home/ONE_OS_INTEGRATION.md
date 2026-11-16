@@ -36,9 +36,26 @@ node --test systemia/evercraft-home/os-operational-readbacks.test.mjs
 
 Only a successful CI run on this branch proves this source-level test. It does not prove a resident OS rollout.
 
+## Cross-lane source correlation (lab-only)
+
+`os-outcome-source-audit.mjs` is a pure, non-mutating, synthetic-testable consistency checker for a **single** commercial-outcome chain using the existing data shapes:
+
+- Evercraft Payments' exact paid-order row fields (amount, USD, provider boundary, synthetic/livemode, refund/dispute, provider verification, timestamp). A standalone input row is not a trusted Payments response.
+- Systemia's mission-admission receipt, with its existing 12-character SHA-256 structural hash and `execution_authority_granted:false`. Admission itself does not authorize dispatch.
+- Execution Gate's completed lease event, with its existing SHA-256 receipt hash and outcome evidence ref. A submitted event is not proof the canonical execution ledger contains it or that a worker physically ran.
+- Shipping's v2 verified-delivery receipt and v3 proof bundle, checked for structural hashes, matching package/message/receipt fields, completed sent-copy flags, and temporal ordering. The bundle is not independently refetched from the shipping provider.
+
+Required cross-system links are the same order key in Payments and Shipping, same mission key in Systemia and Shipping, and the Execution Gate's `outcome_evidence_ref` in Shipping's recorded evidence references. Shipping's own control-tower order key is a separate namespace and must **not** be forced to match the Payments order key.
+
+Any missing, inconsistent, tampered, sandbox, refunded, disputed, unjoined or out-of-order source evidence returns `held` with sanitized reason codes. Even all-consistent inputs return only `source_consistent_unattested`; result flags for independently authenticated payment, trusted mission/execution ledgers, shipping provider delivery, worker attestation, customer acceptance, profit and release authority remain **false**.
+
+This audit intentionally has **no HTTP route, no browser upload, no resident file ingestion, no source authorization, and no customer-specific data in CI**. Operator-owned, authenticated, independent backend retrieval and a separately permissioned private join are the next gate before a live status screen can claim a customer outcome.
+
+Run its tests: `node --test systemia/evercraft-home/os-outcome-source-audit.test.mjs`.
+
 ## Next vertical integration
 
-Reuse Issue #1546 and existing Saban, Payments and Shipping implementation owners. Add a permission-scoped, canonical cross-system receipt reader joining:
+Reuse Issue #1546 and existing Saban, Payments and Shipping implementation owners. Build an authenticated, permission-scoped canonical receipt reader (the source-only structural audit above does **not** satisfy this) joining:
 
 `offer_key -> order_key -> provider receipt -> mission_key -> authorized attempt -> worker/QA receipt -> delivery receipt -> margin/refund`.
 
