@@ -16,3 +16,19 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border
 .node-observation-state{font-size:12px;line-height:1.5;display:block;color:#f4dabb;margin-bottom:7px}
 .node-observation-detail{display:block;font:11px/1.55 ui-monospace,monospace;color:var(--muted);margin-top:5px}
 @media(max-width:640px){.local-nodes{grid-template-columns:1fr}.local-node-title{display:block}.local-node-title span{display:block;margin-top:7px}}
+
+/* Build 05: local, read-only attention summary. No status here grants execution. */
+.triage-board{margin-top:18px;border:1px solid #3c6270;border-radius:13px;background:linear-gradient(140deg,#102934,#0b202a);padding:16px}
+.triage-head{display:flex;justify-content:space-between;align-items:end;gap:12px;padding-bottom:12px;border-bottom:1px solid #36505c}
+.triage-head h3{font-size:15px;letter-spacing:-.01em;margin:5px 0 0}
+.triage-head>span{font:10px/1.6 ui-monospace,monospace;color:#a1c4ce;text-align:right}
+.triage-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:13px 0}
+.triage-metric{padding:12px;border:1px solid #385867;background:#0a202d;border-radius:8px}
+.triage-metric strong{display:block;color:#d5f9ee;font-size:23px;font-variant-numeric:tabular-nums}
+.triage-metric small{font:9px/1.5 ui-monospace,monospace;color:#a1b9c5;display:block;margin-top:3px;letter-spacing:.04em}
+.triage-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.triage-item{border:1px solid #415868;border-radius:9px;padding:12px;background:#091923}
+.triage-item-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font:9px/1.6 ui-monospace,monospace;letter-spacing:.04em;color:#d6c39e;margin-bottom:8px}
+.triage-item strong{display:block;font-size:12px;line-height:1.4}
+.triage-item small{display:block;font-size:11px;color:#a5bdc7;line-height:1.5;margin-top:5px}
+@media(max-width:640px){.triage-head{display:block}.triage-head>span{display:block;margin-top:9px;text-align:left}.triage-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.triage-list{grid-template-columns:1fr}}

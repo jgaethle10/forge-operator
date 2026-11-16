@@ -34,6 +34,10 @@
   <div class="import-tools"><label class="file-button" for="snapshotFile">Open local snapshot</label><input type="file" id="snapshotFile" accept="application/json,.json"><button type="button" id="clearSnapshot">Clear import</button></div>
  </div>
  <div id="snapshotStatus" class="snapshot-status" role="status" aria-live="polite">No local Systemia snapshot loaded. Internal mission state is unknown.</div>
+ <section class="triage-board" aria-label="Selected local mission triage">
+  <div class="triage-head"><div><div class="eyebrow">BUILD 05 / READ-ONLY REVIEW QUEUE</div><h3>Needs attention in selected goals</h3></div><span>EXPLICITLY SELECTED GOAL FILES ONLY · SELF-REPORTED</span></div>
+  <div id="missionTriage" class="triage-content" aria-live="polite"><p class="empty">No selected local goal records. System-wide operational health is unknown.</p></div>
+ </section>
  <div class="local-node-title"><h3>Local node observations</h3><span>Self-reported watcher receipts, never remote attestation</span></div>
  <div class="local-nodes" id="localNodeCards" aria-label="Imported node observations"><p class="empty">No local node watch imported. Current node health unknown.</p></div>
  <div class="reported-lanes" id="reportedLanes"><p class="empty">Local mission details appear here after an operator export is opened.</p></div>

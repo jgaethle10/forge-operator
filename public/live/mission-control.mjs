@@ -1,5 +1,6 @@
 import {API,normalizePublicActivity,publicUrl} from './work-source.mjs';
 import {LANES,classifyPublicEvidence,parseOperatorSnapshot} from './mission-source.mjs';
+import {summarizeSelectedMissions} from './mission-triage.mjs';
 
 const byId=id=>document.getElementById(id);
 const state={publicData:null,operator:null,checking:false,localBusy:false,manualOverride:false};
@@ -51,6 +52,7 @@ function drawPublic(){
     :'No current public GitHub evidence. Runtime and revenue status unknown.';
 }
 function drawOperator(){
+  drawTriage();
   const node=byId('reportedLanes');
   node.replaceChildren();
   if(!state.operator){
@@ -64,8 +66,11 @@ function drawOperator(){
     if(!items.length)container.append(element('p','empty','No operator-reported missions in this lane.'));
     for(const m of items){
       const card=element('div','reported-card');
+      const runningStale=m.status==='running'&&Date.now()-Date.parse(m.observed_at)>15*60000;
       card.append(element('strong','',m.title),
-        element('small','reported-state','REPORTED '+m.status.toUpperCase()+' · UNVERIFIED'),
+        element('small','reported-state',runningStale
+          ?'RUNNING CLAIM STALE · CURRENT ACTIVITY UNKNOWN'
+          :'REPORTED '+m.status.toUpperCase()+' · UNVERIFIED'),
         element('small','',m.id+' · observed '+fmtTime(m.observed_at)));
       if(m.owner)card.append(element('small','','Owner: '+m.owner));
       if(m.note)card.append(element('small','',m.note));
@@ -78,6 +83,47 @@ function drawOperator(){
     node.append(container);
   }
 }
+function drawTriage(){
+  const host=byId('missionTriage');
+  host.replaceChildren();
+  if(!state.operator?.missions?.length){
+    host.append(element('p','empty','No selected local goal records. Overall Systemia health remains unknown.'));
+    return;
+  }
+  const summary=summarizeSelectedMissions(state.operator.missions);
+  const metricGrid=element('div','triage-metrics');
+  const metrics=[
+    ['SELECTED GOALS',summary.counts.selected],
+    ['NEEDS REVIEW',summary.counts.attention],
+    ['RECENT LOCAL RUNNING',summary.counts.recent_running],
+    ['REPORTED COMPLETE',summary.counts.recorded_complete]
+  ];
+  for(const [label,value] of metrics){
+    const metric=element('div','triage-metric');
+    metric.append(element('strong','',value),element('small','',label));
+    metricGrid.append(metric);
+  }
+  host.append(metricGrid);
+  const list=element('div','triage-list');
+  if(!summary.attention.length)list.append(element('p','empty',
+    'No holds, failures or stale observations in the selected goal files. Other Systemia work remains unknown.'));
+  for(const item of summary.attention){
+    const card=element('div','triage-item');
+    const meta=element('div','triage-item-meta');
+    meta.append(element('span','',item.lane.toUpperCase()),
+      element('span','',item.status.toUpperCase()+' · LOCAL SELF-REPORT'));
+    card.append(meta,element('strong','',item.title),
+      element('small','',item.reason),
+      element('small','','Observed '+fmtTime(item.observed_at)+' · NOT AUTHENTICATED'));
+    list.append(card);
+  }
+  if(summary.hidden_attention_count){
+    list.append(element('p','empty','+'+summary.hidden_attention_count+
+      ' further selected goal(s) need review; no automatic action is available.'));
+  }
+  host.append(list);
+}
+
 function drawLocalNodes(){
   const host=byId('localNodeCards');
   host.replaceChildren();
@@ -217,4 +263,4 @@ if(LOCAL_ONLY){
   refreshLocal();
   setInterval(()=>{if(!document.hidden)refreshLocal();},30000);
 }
-setInterval(drawLocalNodes,60000); // Expire previously imported health reports in-place.
+setInterval(()=>{drawLocalNodes();drawOperator();},60000); // Expire imported node/mission claims in-place.
