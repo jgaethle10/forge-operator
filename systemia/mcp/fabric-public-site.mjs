@@ -486,7 +486,7 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero'+(copy.slug==='website-audit'?' audit-offer':'')+'">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(copy.slug==='website-audit'&&checkoutHeld&&auditInquiryAvailable?' · $49 secure checkout available':checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
