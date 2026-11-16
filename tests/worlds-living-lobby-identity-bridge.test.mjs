@@ -25,6 +25,7 @@ function fixture(t,options={}){
   return {
     identity,bridge,issue,get clock(){return clock;},advance:ms=>clock+=ms,
     rotate:()=>keys={key2:'new-worlds-first-party-secret-bbbb-2222'},
+    replaceSameId:()=>keys={key1:'different-worlds-first-party-secret-cccc-3333'},
   };
 }
 test('uses a real first-party signed Identity session, not a client subject claim',t=>{
@@ -60,6 +61,15 @@ test('revoke-all cutoff and signing key retirement both disable previously verif
   other.rotate();
   assert.equal(other.bridge.isHumanActive({kind:'human',
     subject_ref:claims.subject_ref,auth_ref:claims.session_id}),false);
+});
+test('replacing the signing secret without rotating its key ID invalidates cached presence',t=>{
+  const h=fixture(t),issued=h.issue(),claims=h.bridge.verifySession(issued.token);
+  assert.equal(h.bridge.isHumanActive({kind:'human',subject_ref:claims.subject_ref,
+    auth_ref:claims.session_id}),true);
+  h.replaceSameId();
+  assert.equal(h.bridge.isHumanActive({kind:'human',subject_ref:claims.subject_ref,
+    auth_ref:claims.session_id}),false);
+  assert.throws(()=>h.bridge.verifySession(issued.token),/session_signature_invalid/);
 });
 test('owned identity adapter plus Passport yields revocable private Worlds presence',t=>{
   const h=fixture(t),issued=h.issue();
