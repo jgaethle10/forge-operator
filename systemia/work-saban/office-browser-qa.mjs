@@ -78,6 +78,14 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert(loaded.rig,'Owned camera did not load');
   assert.equal(loaded.desks,6);
   assert(loaded.shown,'CSS3D office remained hidden');
+  const initialFit=await js(send,"(()=>{const u=window.WorkSaban3D,s=document.getElementById('office-scene'),bar=document.getElementById('office-camera-toolbar'),r=s.getBoundingClientRect(),expected=window.EvercraftOfficeFraming.fit({width:r.width,height:r.height});const view=document.getElementById('spatial-viewport');const vp=view.getBoundingClientRect();const actors=[...document.querySelectorAll('.spatial-agent .spatial-person')];const centers=actors.map(x=>{const b=x.getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}});return {width:r.width,height:r.height,zoom:u.getCamera().zoom,expected:expected.zoom,auto:u.isAutoFraming(),toolbarVisible:!bar.hidden,toolbarOutside:bar.getBoundingClientRect().top>=r.bottom-2,cameraButtonsInScene:view.querySelectorAll('.spatial-control').length,actorsVisible:centers.filter(p=>p.x>=vp.left&&p.x<=vp.right&&p.y>=vp.top&&p.y<=vp.bottom).length,totalActors:actors.length};})()");
+  assert(initialFit.width>0&&initialFit.height>0,'3D viewport must have dimensions');
+  assert.equal(initialFit.zoom,initialFit.expected,'Initial camera uses measured scene, not browser width');
+  assert.equal(initialFit.auto,true,'Initial camera is in responsive whole-crew mode');
+  assert(initialFit.toolbarVisible&&initialFit.toolbarOutside,'Camera controls must be outside the stage');
+  assert.equal(initialFit.cameraButtonsInScene,0,'No giant buttons should obscure character faces');
+  assert.equal(initialFit.totalActors,6);
+  assert(initialFit.actorsVisible>=5,'Whole-crew view should make most specialists visible initially');
   const environment=await js(send,"(()=>{const shell=document.querySelector('.spatial-studio-shell'),meeting=document.querySelector('.spatial-meeting-hub'),people=[...document.querySelectorAll('.spatial-agent')];return {shared:!!shell,meeting:!!meeting,windows:document.querySelectorAll('.spatial-window').length,arms:document.querySelectorAll('.spatial-person-arm').length,legs:document.querySelectorAll('.spatial-person-leg').length,oneRoom:getComputedStyle(document.querySelector('.spatial-room-wall')).display==='none',disclosure:document.querySelector('.spatial-motion-disclosure')?.textContent||'',idle:people.every(x=>x.dataset.activity==='waiting')};})()");
   assert(environment.shared,'Shared studio shell did not render');
   assert(environment.meeting,'Central meeting table missing');
@@ -176,7 +184,7 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(await js(send,"JSON.stringify(window.WorkSaban3D.getState())"),beforeState,'Camera presentation must not fake worker execution events');
   return {label,width,height,mobile,desks:loaded.desks,follow_control:true,camera_easing:true,
     immersive_observe:'passed',inspection_navigation:'passed',keyboard_exit:'passed',
-    touch_orbit:mobile?'passed':'not_applicable',costume_packs:'five verified',individual_role_override:'passed',screenshots:{overview:overviewFile,dragons:dragonFile,mixedCostumes:mixedFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile}};
+    touch_orbit:mobile?'passed':'not_applicable',costume_packs:'five verified',individual_role_override:'passed',crew_framing:initialFit,stage_controls:'clear',screenshots:{overview:overviewFile,dragons:dragonFile,mixedCostumes:mixedFile,sharedStudio:groundFile,focus:screenshot,immersive:immersiveFile}};
 }
 const out=process.env.WORK_SABAN_BROWSER_PROOF_DIR||path.join(os.tmpdir(),'work-saban-browser-qa');
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'saban-chrome-'));
