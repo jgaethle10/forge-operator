@@ -91,3 +91,48 @@ test('micro workload vocabulary covers useful tiny-node work',()=>{
     'systemia.chunk-transform.v1',
   ]) assert.ok(AmbientMicroWorkloads.includes(id));
 });
+
+
+test('stale approved Node001 capability is rejected at offer resolution',()=>{
+  const oldNode001={
+    ...fridge,
+    id:'microseed:evercraft-node001-penguin:compute',
+    source_type:'microseed-device',
+    endpoint:'http://127.0.0.1:8792',
+    metadata:{
+      ...fridge.metadata,
+      device_id:'evercraft-node001-penguin',
+      device_class:'linux-host',
+      verified_workloads:['systemia.content-hash.v1'],
+      conformance_expires_at:new Date(Date.now()+60000).toISOString(),
+    },
+  };
+  assert.throws(
+    ()=>ambientCapabilityToComputeOffer(oldNode001),
+    /microseed_device_quarantined_pending_host_review/
+  );
+  const resolved=resolveAmbientComputeOffers({
+    capabilities:[oldNode001,fridge],
+    workloadClass:'systemia.content-hash.v1',
+  });
+  assert.equal(resolved.offers.length,1);
+  assert.equal(resolved.offers[0].provider_id,fridge.id);
+  assert.equal(resolved.rejected.length,1);
+  assert.equal(resolved.rejected[0].reason,
+    'microseed_device_quarantined_pending_host_review');
+});
+
+test('quarantine still holds cached Node001 offer when its device ID metadata is stripped',()=>{
+  const stripped={
+    ...fridge,
+    id:'microseed:evercraft-node001-penguin:compute',
+    source_type:'microseed-device',
+    metadata:{...fridge.metadata,device_id:null},
+  };
+  const resolution=resolveAmbientComputeOffers({
+    capabilities:[stripped],workloadClass:'systemia.content-hash.v1',
+  });
+  assert.equal(resolution.offers.length,0);
+  assert.equal(resolution.rejected[0].reason,
+    'microseed_device_quarantined_pending_host_review');
+});
