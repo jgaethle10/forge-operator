@@ -76,6 +76,29 @@ capability check, kernel-version and cgroup-delegation assessment, explicit
 scoped authority, and independent post-stop observation are necessary.
 The native host stop route remains disabled.
 
+## Read-only capability survey now available (NOT run on NextGen)
+
+The opt-in `eo001-cgroup-kill-readonly-capability.mjs` function checks
+an **already-existing** exact synthetic scope using a root-to-leaf chain
+of `O_DIRECTORY|O_NOFOLLOW` directory opens, retaining the final cgroup
+directory FD. It checks that the mount and held leaf report cgroup v2,
+reads bounded `cgroup.type` and `cgroup.events`, verifies the observer
+is outside the scope, and uses `lstat` to inspect `cgroup.kill`
+**without opening the write-only control file**. All returned metadata
+remains local and explicitly *unattested*, with permission, manager unit
+incarnation, live detached worker, and resource-limit gates **false**.
+
+The adapter has **no CLI, no shell, no systemd command, no file writes and
+no stop/kill operation**. The new CI tests use temporary fake control
+files and an injected fake cgroup2 statfs response, NOT an actual HP
+NextGen cgroup. A control file showing owner-write bits does **not**
+establish an effective write permission or safe authorization, and
+mere availability does not guarantee kernel support for the operation.
+
+Any future invocation on NextGen is a distinct **read-only inspection**
+subject to owner scope and privacy review. It cannot replace an
+independent, digest-bound host observation or approve a physical test.
+
 ## Mandatory pre-field decisions
 
 | Requirement | Current state | Physical-test gate |
