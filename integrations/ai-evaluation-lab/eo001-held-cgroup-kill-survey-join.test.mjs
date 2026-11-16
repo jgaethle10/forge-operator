@@ -184,3 +184,35 @@ test('join source cannot open controls, write files, run processes or call netwo
     'writeFileSync(','writeSync(','process.kill(','fetch('])
     assert.equal(code.includes(forbidden),false,forbidden);
 });
+
+test('Lab review: matching numeric device/inode JSON values must still be refused',()=>{
+  for(const field of ['device','inode']){
+    const f=fixture();
+    const candidateKey=field==='device'?
+      'expected_original_cgroup_device':'expected_original_cgroup_inode';
+    const surveyKey=field==='device'?
+      'original_scope_device':'original_scope_inode';
+    f.candidate={...f.candidate,[candidateKey]:31};
+    f.survey[surveyKey]=31;
+    assert.throws(()=>joinHeldScopeKillSurveyForReview(f),
+      /CGKILL_JOIN_BOOT_OR_KERNEL_IDENTITY_MISMATCH/);
+  }
+});
+test('Lab review: agreed relative cgroup path and matching hashes cannot join',()=>{
+  const f=fixture();
+  const changed=P.slice(1);
+  f.proposal.cgroup_path=changed;
+  f.candidate={...f.candidate,cgroup_path_sha256:hash(changed)};
+  f.survey.scope_path_sha256=hash(changed);
+  assert.throws(()=>joinHeldScopeKillSurveyForReview(f),
+    /CGKILL_JOIN_UNREVIEWED_PROPOSAL/);
+});
+test('Lab review: agreed dot-dot cgroup path and matching hashes cannot join',()=>{
+  const f=fixture();
+  const changed='/user.slice/../user.slice/user-1000.slice/user@1000.service/app.slice/'+U;
+  f.proposal.cgroup_path=changed;
+  f.candidate={...f.candidate,cgroup_path_sha256:hash(changed)};
+  f.survey.scope_path_sha256=hash(changed);
+  assert.throws(()=>joinHeldScopeKillSurveyForReview(f),
+    /CGKILL_JOIN_UNREVIEWED_PROPOSAL/);
+});
