@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PRESETS, ACTIONS, newRun, eventForDay,
-  previewAction, advanceDay, summarizeRun
+  previewAction, advanceDay, rewindDay, summarizeRun
 } from '../public/remote-ops/engine.mjs';
 
 test('presets are fictional, bounded, with distinct economics', () => {
@@ -37,7 +37,8 @@ test('preview is pure and matches the posted day receipt', () => {
 });
 
 test('pricing, hiring and quality have explainable different tradeoffs', () => {
-  const base = newRun('service');
+  // Use a volume where whole-customer rounding does not conceal price response.
+  const base = newRun('gym');
   const hold = previewAction(base, 'hold');
   const higher = previewAction(base, 'raise');
   const lower = previewAction(base, 'lower');
@@ -52,6 +53,40 @@ test('pricing, hiring and quality have explainable different tradeoffs', () => {
   assert.equal(hire.costs.actionCost, 300);
   assert.equal(quality.costs.actionCost, 450);
   assert.ok(quality.brand > base.brand);
+});
+
+test('small-business integer rounding can mask a price response without breaking arithmetic', () => {
+  const base = newRun('service');
+  const hold = previewAction(base, 'hold');
+  const higher = previewAction(base, 'raise');
+  const lower = previewAction(base, 'lower');
+  assert.ok(higher.demand <= hold.demand);
+  assert.ok(lower.demand >= hold.demand);
+  assert.ok(higher.price > hold.price && lower.price < hold.price);
+  assert.ok(higher.revenue === higher.served * higher.price);
+});
+
+test('rewinding one day restores the exact prior state and can explore another decision', () => {
+  const initial = newRun('gym');
+  const dayOne = advanceDay(initial, 'quality');
+  const dayTwo = advanceDay(dayOne, 'hire');
+  const undo = rewindDay(dayTwo);
+  assert.deepEqual(undo, dayOne);
+  const alternative = advanceDay(undo, 'promote');
+  assert.equal(alternative.history.length, dayTwo.history.length);
+  assert.notDeepEqual(alternative.history.at(-1), dayTwo.history.at(-1));
+  assert.deepEqual(rewindDay(initial), initial);
+});
+
+test('rewind after a 30-day finish reopens the final decision while preserving history', () => {
+  let run = newRun('service');
+  while (!run.finished) run = advanceDay(run, 'hold');
+  const replay = rewindDay(run);
+  assert.equal(replay.finished, false);
+  assert.equal(replay.ending, null);
+  assert.equal(replay.day, 30);
+  assert.equal(replay.history.length, 29);
+  assert.equal(advanceDay(replay, 'hold').ending, 'completed_30_days');
 });
 
 test('stress test: cash exhaustion ends the run, with no further decisions', () => {
