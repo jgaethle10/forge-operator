@@ -123,6 +123,33 @@ export function advanceDay(state, actionId = 'hold') {
   };
 }
 
+/**
+ * Rewind a committed fictional day without mutating the incoming state.
+ * Rebuild totals from immutable receipts; no external business state exists.
+ */
+export function rewindDay(state) {
+  const preset = PRESETS[state?.presetKey];
+  if (!preset || !Array.isArray(state.history)) throw new RangeError('Invalid flight state');
+  if (state.history.length === 0) return { ...state };
+  const history = state.history.slice(0, -1);
+  const previous = history.at(-1);
+  return {
+    ...state,
+    day: history.length + 1,
+    price: previous ? previous.price : preset.ticket,
+    staff: previous ? previous.staff : preset.staff,
+    brand: previous ? previous.brand : 1,
+    cash: previous ? previous.cash : preset.openingCash,
+    totalRevenue: round(history.reduce((sum, item) => sum + item.revenue, 0)),
+    totalExpenses: round(history.reduce((sum, item) => sum + item.expenses, 0)),
+    totalServed: history.reduce((sum, item) => sum + item.served, 0),
+    totalUnserved: history.reduce((sum, item) => sum + item.unserved, 0),
+    history,
+    finished: false,
+    ending: null
+  };
+}
+
 export function summarizeRun(state) {
   const preset = PRESETS[state.presetKey];
   if (!preset) throw new RangeError('Unknown business');
