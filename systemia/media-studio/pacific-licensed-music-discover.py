@@ -45,12 +45,18 @@ for name in TARGETS:
 # Download only these three individually identified licensed music records for private editorial auditions.
 # The video editor must not publish stand-alone music files or claim ownership.
 graph_nodes=[]
+def walk(obj):
+    if isinstance(obj,dict):
+        if obj.get('@type')=='MusicRecording': graph_nodes.append(obj)
+        for v in obj.values(): walk(v)
+    elif isinstance(obj,list):
+        for v in obj: walk(v)
 for node in soup.select('script[type="application/ld+json"]'):
     try:
-        loaded=json.loads(node.string or node.get_text())
-        graph_nodes.extend(loaded.get('@graph',[]) if isinstance(loaded,dict) else [])
+        walk(json.loads(node.string or node.get_text()))
     except Exception:
         pass
+print('OFFICIAL_RECORDS',len(graph_nodes),[x.get('name') for x in graph_nodes if x.get('name') in TARGETS])
 for name in TARGETS:
     rec=next((x for x in graph_nodes if x.get('@type')=='MusicRecording' and x.get('name')==name),None)
     if not rec:
