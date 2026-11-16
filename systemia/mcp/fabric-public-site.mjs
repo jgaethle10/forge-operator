@@ -345,6 +345,19 @@ if(signalOfferCopy){
   });
 }
 
+const closeoutOfferCopy=OFFER_PAGE_COPY['payment-offer-closeout-pilot'];
+if(closeoutOfferCopy){
+  Object.assign(closeoutOfferCopy,{
+    eyebrow:'Evercraft Closeout / field-service handoffs',
+    headline:'Your job is finished. Make the handoff just as professional.',
+    lede:'Create a customer-ready completion report yourself for free, or request a $49 human-reviewed pilot packet for one job.',
+    promise:'One human-reviewed, properly formatted customer-facing PDF packet with a work summary, follow-up notes, up to four authorized job photos and one factual correction round. Actual scope is confirmed before payment.',
+    send:['A short service scope and approved company contact details','Job photos and customer details only by a separately authorized secure intake method after scope agreement'],
+    get:['A reviewed customer handoff packet for one completed job','A clearly stated next-step or warranty-care section based on contractor-supplied facts','One round of factual corrections after the first delivered draft'],
+    steps:[['1. Preview the free builder','Make a synthetic packet or inspect a preview without uploading job photos.'],['2. Request a $49 scope review','Give business contact details and a short, non-sensitive description.'],['3. Confirm and deliver','Evercraft agrees scope, securely collects authorized job materials, verifies payment through Evercraft Payments, and delivers the reviewed PDF.']]
+  });
+}
+
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
 }
@@ -485,13 +498,17 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
       renderHeldWebsiteAuditInquiryForm(),
     ] : [
       '<section class="offer-panel" aria-label="Assisted purchase request">',
-      copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
+      copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':copy.slug==='closeout-pilot'?'<h2>Preview a closeout packet, then request a pilot.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
       copy.slug==='signal-brief'
         ?'<p>This is an Evercraft Payments offer for $250, not a processor-first link. The specific Signal checkout remains held until the bounded incident scope and native settlement route are accepted. No payment or order is created here yet.</p>'
-        :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
+        :copy.slug==='closeout-pilot'
+          ?'<p>Build a private sample without an account or photos leaving your browser. A $49 human-reviewed service is available by scope inquiry only. No payment order or fulfillment is created yet.</p>'
+          :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
       copy.slug==='signal-brief'
         ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/signal/#request">Prepare my incident brief request</a><a class="btn" href="/offers">Explore Evercraft offers</a></div>'
-        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Email Evercraft for invoicing</a></div>',
+        :copy.slug==='closeout-pilot'
+          ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/closeout/">Try the free builder</a><a class="btn" href="https://jgaethle10.github.io/forge-operator/closeout/#service">Request the $49 pilot</a></div>'
+          :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Email Evercraft for invoicing</a></div>',
       '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
       '</section>',
     ]) : [
