@@ -104,3 +104,30 @@ test('public listener refuses arbitrary remote targets and nonloopback interface
   await assert.rejects(()=>startBankCreditPublicGateway(changes),/invalid|loopback_only/);
  }
 });
+
+
+test('public gateway stops serving a signed ACH instruction after private operator revocation',async()=>{
+ const x=await setup();
+ try{
+  const order=await issue(x.privateRuntime.url);
+  const signedPath=new URL(order.payment_request_url).pathname;
+  assert.equal((await fetch(x.gateway.url+signedPath)).status,200);
+  const result=await fetch(x.privateRuntime.url+'/v1/operator/bank-requests/revoke',{
+   method:'POST',
+   headers:{'authorization':'Bearer '+token,'content-type':'application/json'},
+   body:JSON.stringify({request_id:order.request_id,reason:'suspected_link_compromise'}),
+  });
+  assert.equal(result.status,200);
+  const held=await fetch(x.gateway.url+signedPath);
+  assert.equal(held.status,410);
+  const redacted=await held.json();
+  assert.equal(redacted.error,'payment_request_revoked');
+  assert.equal(redacted.fulfillment_release,undefined);
+  const head=await fetch(x.gateway.url+signedPath,{method:'HEAD'});
+  assert.equal(head.status,410);
+  assert.equal(await head.text(),'');
+  assert.equal((await fetch(x.gateway.url+'/v1/operator/bank-requests/revoke',{
+   method:'POST',headers:{'authorization':'Bearer '+token},
+  })).status,405);
+ }finally{await x.close()}
+});
