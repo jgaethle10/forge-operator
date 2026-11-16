@@ -61,6 +61,9 @@ jobs:
           npm run test:product-url-fabric
           node --test tests/clip-public-entry.test.mjs
 
+      - name: Prove Systemia front door and honest commercial handoff
+        run: node --test tests/systemia-front-door.test.mjs
+
       - name: Verify Boardroom source logic and luxury theme
         run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs
       - name: Prove owned Journal contracts
@@ -134,6 +137,11 @@ jobs:
           test -s _public_pages/work-saban/brand/work-saban-social.svg
           python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/work-saban/brand/work-saban-social.svg", write_to="_public_pages/work-saban/brand/work-saban-social.png", output_width=1200, output_height=630)'
           test -s _public_pages/work-saban/brand/work-saban-social.png
+          # Systemia's dedicated social-card is an actual PNG for Facebook and LinkedIn.
+          test -s _public_pages/systemia/index.html
+          test -s _public_pages/systemia/social-card.svg
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/systemia/social-card.svg", write_to="_public_pages/systemia/social-card.png", output_width=1200, output_height=630)'
+          python -c 'from pathlib import Path; import struct; p=Path("_public_pages/systemia/social-card.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630) and len(p)<4_000_000; print("SYSTEMIA_SOCIAL_PNG_VERIFIED")'
           python systemia/clip/build-audience-social-previews.py \
             --source public/clip/audience-sites \
             --destination _public_pages/clip/audience-sites
@@ -502,6 +510,14 @@ jobs:
           havenly="${base%/}/havenly/"
           havenly_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$havenly")"
           printf '%s' "$havenly_body" | grep -q 'havenly-continuity-20261017'
+          # Read back the real Systemia landing page and social PNG after deployment.
+          systemia_url="${base%/}/systemia/"
+          systemia_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$systemia_url")"
+          [[ "$systemia_body" == *'One vision.'* ]]
+          [[ "$systemia_body" == *'work-saban/report/'* ]]
+          systemia_png="${base%/}/systemia/social-card.png"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$systemia_png" -o /tmp/systemia-share-live.png
+          python -c 'from pathlib import Path; import struct; p=Path("/tmp/systemia-share-live.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630); print("SYSTEMIA_FRONT_DOOR_AND_SOCIAL_PNG_LIVE_HTTPS_VERIFIED")'
           # Live customer-path proof after GitHub Pages reports deployment.
           studio="${base%/}/commercial-studio/"
           studio_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$studio")"
