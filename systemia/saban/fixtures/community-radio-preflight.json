@@ -1,0 +1,12 @@
+{
+  "schema": "evercraft.saban.community-radio-preflight-fixture.v1",
+  "items": [
+    {
+      "scenario_id": "synthetic-field-acceptance-only",
+      "scenario": "synthetic_only",
+      "station_content_permitted": false,
+      "real_device_authority_present": false,
+      "physical_receipts_present": false
+    }
+  ]
+}
