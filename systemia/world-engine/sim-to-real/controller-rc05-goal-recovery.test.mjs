@@ -67,3 +67,12 @@ test('RC05G rejects fabricated/malformed state instead of issuing arbitrary move
   assert.throws(()=>applyGoalInwardRecovery({...args,uncertainty:NaN},latched()),/rc05g_invalid_recovery_inputs/);
   assert.throws(()=>applyGoalInwardRecovery(args,latched(),{pendingCommands:[{x:Infinity,z:0}]}),/rc05g_invalid_recovery_inputs/);
 });
+test('RC05G allows the final few centimeters of inward recovery without weakening outer bounds',()=>{
+  const near={...args,estimate:{x:10.46,z:.10,heading:0}};
+  const r=applyGoalInwardRecovery(near,latched());
+  assert.equal(r.decision.reason,'goal_inward_recovery');
+  assert.ok(r.diagnostic.goalRecovery.newViolation<r.diagnostic.goalRecovery.oldViolation);
+  assert.ok(r.diagnostic.goalRecovery.oldViolation<.07);
+  const outside=applyGoalInwardRecovery({...args,estimate:{x:10.81,z:0,heading:0}},latched());
+  assert.equal(outside.decision.reason,'geofence_uncertain_hold');
+});
