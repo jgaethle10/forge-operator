@@ -1,0 +1,26 @@
+name: Pacific Owned Public Shorts Private Footage Recon
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [systemia/media-studio/pacific-youtube-shorts-recon.py,.github/workflows/pacific-youtube-shorts-recon.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install 'yt-dlp>=2026.10.01'
+      - run: python systemia/media-studio/pacific-youtube-shorts-recon.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-official-shorts-private-recon
+          path: pacific-youtube-short-recon/
+          retention-days: 7
+          if-no-files-found: error
