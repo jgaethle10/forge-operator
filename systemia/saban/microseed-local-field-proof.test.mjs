@@ -22,13 +22,13 @@ async function freePort(){
   await new Promise((resolve,reject)=>s.close(e=>e?reject(e):resolve()));
   return port;
 }
-async function withNode(fn){
+async function withNode(fn,{deviceId='test-node-002'}={}){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-physical-proof-synthetic-'));
   let agent=null;
   try{
     const port=await freePort();
     const boot=bootstrapNativeMicroSeed({
-      root,device_id:'test-node-002',device_class:'test-linux',
+      root,device_id:deviceId,device_class:'test-linux',
       authorization_ref:'synthetic-owner-authorization',
       endpoint:'http://127.0.0.1:'+port,
       supported_workloads:['systemia.content-hash.v1'],
@@ -101,6 +101,51 @@ test('read-only field check verifies signed local telemetry without executing wo
   assert.equal(JSON.stringify(report).includes(token),false);
   assert.equal(JSON.stringify(report).includes(identity.private_key),false);
 }));
+
+test('quarantined Node001 rejects on-node hash proof without any network call',()=>withNode(async({root})=>{
+  let calls=0;
+  await assert.rejects(inspectLocalMicroSeedEvidence({
+    root,hashProbe:true,fetchImpl:async()=>{
+      calls+=1;
+      throw new Error('unexpected_network_request');
+    },
+  }),/field_proof_device_quarantined_pending_host_review/);
+  assert.equal(calls,0);
+  assert.equal(fs.existsSync(path.join(root,'state','signed-execution-intents')),false);
+  assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
+}),{deviceId:'evercraft-node001-penguin'}));
+
+test('quarantined Node001 allows signed telemetry but blocks direct execution POST',()=>withNode(async({
+  root,agent,token,manifest,
+})=>{
+  const healthResponse=await fetch(agent.url+'/health');
+  assert.equal(healthResponse.status,200);
+  assert.equal((await healthResponse.json()).execution_quarantined,true);
+  const telemetryResponse=await fetch(agent.url+'/v1/telemetry',{
+    headers:{authorization:'Bearer '+token},
+  });
+  assert.equal(telemetryResponse.status,200);
+  assert.equal((await telemetryResponse.json()).schema,
+    'evercraft.microseed.device-telemetry.v1');
+  const check=await inspectLocalMicroSeedEvidence({root,hashProbe:false});
+  assert.equal(check.signed_telemetry_verified,true);
+  const response=await fetch(agent.url+'/v1/execute',{
+    method:'POST',headers:{
+      authorization:'Bearer '+token,
+      'content-type':'application/json',
+    },body:JSON.stringify({request:{
+      device_id:manifest.device_id,
+      workload_class:'systemia.content-hash.v1',
+      idempotency_key:'quarantined-no-execution',
+      payload:{value:'should never execute'},
+    }}),
+  });
+  assert.equal(response.status,423);
+  assert.equal((await response.json()).error,
+    'microseed_device_quarantined_pending_host_review');
+  assert.equal(fs.existsSync(path.join(root,'state','signed-execution-intents')),false);
+  assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
+}),{deviceId:'evercraft-node001-penguin'}));
 
 test('hash probe refuses legacy agent without journal commit support before POST',()=>withNode(async({root})=>{
   const calls=[];
