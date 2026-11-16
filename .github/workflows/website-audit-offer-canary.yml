@@ -2,6 +2,8 @@ name: Website audit offer canary
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '19 */4 * * *'
   push:
     branches: [main]
     paths:
