@@ -116,6 +116,52 @@ For Windows PowerShell, \`node .\\systemia\\crypto\\pq-field-preflight.mjs --sel
 
 This is only a host-readiness signal. Never infer that node001/node002 are healthy from a GitHub test runner; actual node results must come from their own execution. A production canary needs verified trust distribution, scoped service credentials, transport/network consent, safe failover, a separate human review and a rollback plan.
 
+## Offline physical Node001 ⇄ Node002 courier rehearsal (not deployed)
+
+`pq-offline-courier.mjs` provides a **manual file-transfer** rehearsal on the real Penguin and NextGen hosts, with no sockets, listening ports, production service changes, root enrollment, or live Relay integration. CI exercises the equivalent procedure on one test runner; **physical cross-host acceptance requires receipts from both hosts and does not exist until the operator runs it**.
+
+The operator first updates each *isolated* `~/evercraft-pq-lab` checkout (`git pull --ff-only` while on the lab branch), and uses only the isolated Node 24 executable. The following commands are run separately on each computer:
+
+```bash
+# Penguin / Node001
+cd "$HOME/evercraft-pq-lab" && git pull --ff-only
+PQ_NODE="$HOME/.local/opt/evercraft-pq/node-v24.22.1-linux-x64/bin/node"
+"$PQ_NODE" systemia/crypto/pq-offline-courier.mjs init --node node001 --dir "$HOME/evercraft-pq-courier-node001"
+
+# NextGen / Node002 (in Ubuntu WSL, NOT Penguin)
+cd "$HOME/evercraft-pq-lab" && git pull --ff-only
+PQ_NODE="$HOME/.local/opt/evercraft-pq/node-v24.22.1-linux-x64/bin/node"
+"$PQ_NODE" systemia/crypto/pq-offline-courier.mjs init --node node002 --dir "$HOME/evercraft-pq-courier-node002"
+```
+
+Each command creates a **new** mode-0700 lab directory with ephemeral, unencrypted, mode-0600 **PKCS8 private keys** and a public-only `public.json`. Neither private key is ever to be copied, uploaded, printed, or committed. The directory must be outside a Git checkout and unsynced. The tool refuses existing identity directories to avoid overwriting keys.
+
+Before sending, transfer **only `public.json`** in each direction using an existing user-approved file-transfer method. Independently compare both printed `recipient_key_id` and `sender_key_id` (64-character SHA-256 fingerprints) from the receiving bundle against values observed on the originating physical host over a separately trusted channel. Merely reading a fingerprint from the transferred bundle is not independent authentication.
+
+Once identities and fingerprints are compared, the sender issues a synthetic, signed and ML-KEM-encrypted 5-minute message (replace placeholders only with independently confirmed SHA-256 key IDs):
+
+```bash
+# Run on Penguin after copying NextGen's PUBLIC bundle to a local path:
+"$PQ_NODE" systemia/crypto/pq-offline-courier.mjs send \
+  --dir "$HOME/evercraft-pq-courier-node001" \
+  --peer "$HOME/node002-public.json" \
+  --expect-recipient-key "<NextGen recipient_key_id>"
+
+# Transfer ONLY the returned outgoing_file (JSON ciphertext) to NextGen.
+# Run on NextGen, within 5 minutes after encryption:
+"$PQ_NODE" systemia/crypto/pq-offline-courier.mjs receive \
+  --dir "$HOME/evercraft-pq-courier-node002" \
+  --peer "$HOME/node001-public.json" \
+  --expect-sender-key "<Penguin sender_key_id>" \
+  --file "$HOME/incoming-courier-message.json"
+```
+
+Repeat in the reverse direction with each machine's identity, peer, and fingerprint roles swapped. An accepted receipt prints only fixed **synthetic plaintext**, sender/recipient IDs, a signer fingerprint and the scope `durable-on-this-recipient-only`. Attempting the same `receive` a second time must fail, because the recipient keeps its local SQLite replay ledger. The tool also rejects tampered signed messages, wrong routes, unpinned sender/recipient IDs, wrong algorithms and non-synthetic content.
+
+**No live shared replay authority is used in this portable demonstration.** The SQLite ledger is only durable on each respective receiver. This manual proof is not trust-root enrollment, multi-node globally consistent replay prevention, instant revocation, secure key custody or permission to deploy. It does not provide a production-safe transport or revocation channel.
+
+**Lab-key cleanup:** once field receipts are captured and the user no longer needs the rehearsal, remove the two temporary courier directories and any transferred bundles/message files manually. Never copy an unencrypted lab private key into a shared folder or a production node identity location. Do not claim that deletion guarantees secure media erasure.
+
 ## Migration gates
 
 1. Inventory cryptographic key exchange and signatures in Relay, lineage, agents and customer interfaces; identify stored traffic requiring long-term confidentiality.
