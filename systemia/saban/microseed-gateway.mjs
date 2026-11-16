@@ -7,6 +7,7 @@ import { loadPerformanceLedger, recordPerformanceSample, savePerformanceLedger }
 import { runMicroSeedConformance, evaluateMicroSeedConformance } from './microseed-conformance.mjs';
 import { runMicroSeedCalibration } from './microseed-calibration.mjs';
 import { invokeMicroSeedCapability } from './microseed-capability-executor.mjs';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 
 function clean(v){return String(v??'').trim();}
 function loopback(host){
@@ -60,6 +61,14 @@ export async function startMicroSeedGateway({
   const activeByDevice=new Map();
   let activeGlobal=0;
   let server=null;
+
+  // Reject Node001 before looking up trust, fetching telemetry, reserving
+  // execution, running canaries, or touching the device adapter.
+  function rejectQuarantined(res,deviceId){
+    if(!isMicroSeedExecutionQuarantined(deviceId)) return false;
+    send(res,423,{ok:false,error:MICROSEED_EXECUTION_QUARANTINE_REASON});
+    return true;
+  }
 
   const health=()=>({
     schema:'evercraft.saban.microseed-gateway-health.v1',
@@ -166,6 +175,7 @@ export async function startMicroSeedGateway({
         const invocation=body.request||body;
         const deviceId=clean(invocation?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
         if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
@@ -195,6 +205,7 @@ export async function startMicroSeedGateway({
         const body=await readJson(req);
         const deviceId=clean(body?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
         if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
@@ -240,6 +251,7 @@ export async function startMicroSeedGateway({
         const body=await readJson(req);
         const deviceId=clean(body?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
         const conformance=registry.conformance(deviceId);
@@ -293,6 +305,7 @@ export async function startMicroSeedGateway({
         const body=await readJson(req);
         const deviceId=clean(body?.request?.device_id||body?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
 
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
