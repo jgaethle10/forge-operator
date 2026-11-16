@@ -157,6 +157,7 @@ test('no private evidence sink or witness always refuses before any real IO',()=
   assert.throws(()=>f.execute({witness:null}),
     /NATIVE_STOP_PERSISTENCE_OR_WITNESS_MISSING/);
   assert.equal(f.calls.stop.length,0);
+  assert.equal(f.calls.close,1);
 });
 test('missing, forged, expired or wrong-role signature blocks all stops',()=>{
   for(const modify of [
@@ -176,6 +177,23 @@ test('missing, forged, expired or wrong-role signature blocks all stops',()=>{
     assert.equal(out.stop_request_issued,false);
     assert.equal(f.calls.close,1);
   }
+});
+test('distinct PEM strings for the SAME key do not establish independent approvals',()=>{
+  const f=input();
+  f.trust.reviewer=f.trust.owner+'\n';
+  f.signatures.reviewer=f.signatures.owner;
+  const r=f.execute();
+  assert.equal(r.reason,'STOP_PERMIT_ROLES_NOT_INDEPENDENT');
+  assert.equal(f.calls.stop.length,0);
+});
+test('extra signed authority fields cannot sneak into a strictly bounded permit',()=>{
+  const f=input();
+  f.permit.model_execution_authorized=true;
+  f.signatures.owner=f.signature(f.permit,f.owner.privateKey);
+  f.signatures.reviewer=f.signature(f.permit,f.reviewer.privateKey);
+  const r=f.execute();
+  assert.equal(r.reason,'STOP_PERMIT_FIELDS_NOT_EXACT');
+  assert.equal(f.calls.stop.length,0);
 });
 test('missing clean exact source pin refuses physical stop before reservation',()=>{
   const f=input({dirty:true});
