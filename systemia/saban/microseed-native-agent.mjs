@@ -78,6 +78,8 @@ export async function startMicroSeedNativeAgent({
     signed_telemetry_required:manifest.attestation?.telemetry_signing_required===true,
     signed_receipts_enabled:Boolean(receiptSigningPrivateKey),
     signed_telemetry_enabled:Boolean(receiptSigningPrivateKey),
+    // Capability signal only; the field proof must still reopen the journal.
+    signed_journal_commit_before_ack:Boolean(receiptSigningPrivateKey),
   });
 
   server=http.createServer(async(req,res)=>{
