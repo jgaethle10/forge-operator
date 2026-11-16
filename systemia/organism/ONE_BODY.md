@@ -182,6 +182,29 @@ node systemia/organism/one-body-enroll-cli.mjs \
 
 Each run creates a **0600 private Ed25519 PEM** and a **0600 public candidate JSON** under a **0700 directory**, using create-only filenames. It refuses to overwrite an existing identity or use a group/world-accessible directory. The CLI prints paths and a public fingerprint, **not the private key**. The candidate includes `pending_operator_verification` and `enrolled: false`. It is not an authorization grant, a health receipt, or a runtime bootstrap.
 
+**Read-only, on-host keypair preflight (new):** Independently record the expected
+consumer ID, receiving lane, signer ID and public fingerprint through a trusted
+operator channel. On the *same host* that owns the private PEM, use the two
+actual file paths printed by the enrollment CLI:
+
+```bash
+node systemia/organism/one-body-enrollment-preflight-cli.mjs \
+  "<candidate-json-path-on-this-host>" \
+  "<private-pem-path-on-this-host>" \
+  node001 context_fabric node001:context:v1 \
+  "sha256:<independently-verified-64-hex-fingerprint>"
+```
+
+On NextGen use its distinct `node002` and `node002:context:v1` identity
+and fingerprint instead. This check refuses a wrong host/lane/key ID, a
+mismatched private/public key, a changed fingerprint, symlinks, unsafe file
+permissions and an unsafe signing directory. The result contains only public
+identity fields and explicit `operator_trust_registry_updated:false`,
+`remote_runtime_connected:false` and
+`consumer_acknowledgement_verified:false`. It does **not** establish hardware
+attestation, prove the caller's physical host identity, or enroll anything.
+Do not send private PEM contents to chat, GitHub or the operator.
+
 **Operator ceremony:** Verify the host identity through an out-of-band trusted channel, inspect the candidate public fingerprint, then manually provision its `{ "lane": "context_fabric", "public_key_pem": "..." }` entry under `node001:context:v1` (or `node002:context:v1`) in the already privileged One-Body consumer trust registry. No candidate may self-enroll or choose the authoritative registry. If a host is lost or compromised, revoke its registry entry; subsequent snapshot reads fail back to **unverified** without altering older history. Host-specific private PEM files must stay on their own machines and never enter chat, source control, logs, or a browser.
 
 After real consumer deployment and protected key provisioning, the locally generated private signer path may be supplied to `one-body-consumer-cli.mjs`, with the event's correct routed lane. This step records only **local inbox acceptance**. It does not activate specialist runtime dispatch, sign payments, or prove remote delivery. No command above has been executed on Node001/NextGen from this chat.
