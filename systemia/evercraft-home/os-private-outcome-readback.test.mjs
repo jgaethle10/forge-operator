@@ -213,3 +213,40 @@ test("Home exposes private readback only on an authenticated scoped route",async
   assert.equal(body.customer_delivery_verified,false);
   assert.equal(body.private_order_data_returned,false);
 });
+
+test("Home HTTP boundary performs a private signed read and emits no customer identifiers",async t=>{
+  const creds=fixture(t);
+  let calls=0;
+  const server=await startEvercraftHomeServer({
+    host:"127.0.0.1",port:0,authMode:"local",operator:"OS Signed Integration Lab",
+    serviceOrigins:{
+      EVERCRAFT_OS_OUTCOME_READBACK_URL:URL,
+      EVERCRAFT_OS_OUTCOME_READBACK_TOKEN_FILE:creds.tok,
+      EVERCRAFT_OS_OUTCOME_READBACK_SIGNING_KEY_FILE:creds.key,
+    },
+    outcomeReadbackFetch:async(url,opts)=>{
+      calls++;
+      assert.equal(url,URL);
+      assert.equal(opts.headers.authorization,"Bearer "+TOKEN);
+      const request=JSON.parse(opts.body);
+      const base={...envelope(),nonce:request.nonce,observed_at:new Date().toISOString()};
+      const {signature:ignored,...body}=base;
+      return Response.json({...body,signature:"hmac-sha256:"+
+        createHmac("sha256",KEY).update(JSON.stringify(body)).digest("hex")});
+    },
+  });
+  t.after(()=>server.close());
+  const response=await fetch(server.url+"/api/os/outcome-readback");
+  assert.equal(response.status,200);
+  const body=await response.json();
+  assert.equal(calls,1);
+  assert.equal(body.state,"authenticated_source_consistent_unattested");
+  assert.equal(body.bridge_response_authenticated,true);
+  assert.equal(body.customer_delivery_verified,false);
+  assert.equal(body.payment_issuer_independently_authenticated,false);
+  const serialized=JSON.stringify(body);
+  for(const secret of [TOKEN,KEY,"buyer-secret@example.test","buyer-internal-12345",
+    "pi_fixture_private_001","private-worker-reference-123"]) {
+    assert.equal(serialized.includes(secret),false);
+  }
+});
