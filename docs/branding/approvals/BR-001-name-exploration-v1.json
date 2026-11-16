@@ -1,0 +1,167 @@
+{
+  "schema": "evercraft.brand.name-exploration.v1",
+  "packet": "BR-001",
+  "source_brand_revision": "v1.0-proposal",
+  "product_id": "evercraft.commerce.social-media-weekly",
+  "source_service_name": "Social Media Management · Weekly",
+  "listed_price_usd": 100,
+  "current_working_imprint": "The Weekly Signal",
+  "decision_status": "awaiting_founder_review",
+  "explicit_founder_approval": false,
+  "purpose": "Founder review alternatives only. Names, color palettes, prototype copy, and marks are not official launch identities.",
+  "screen_date": "2026-11-11",
+  "search_method": "Limited public web exact-name search; not exhaustive, no official trademark register searched, no domain ownership verification.",
+  "excluded": [
+    {
+      "name": "The Weekly Signal",
+      "reason": "Multiple newsletter/editorial uses including marketing",
+      "source": "https://mktrintheloop.com/p/introducing-the-weekly-signal"
+    },
+    {
+      "name": "Weekloom",
+      "reason": "Existing commercial weekly planner product",
+      "source": "https://weekloom.com/"
+    },
+    {
+      "name": "Poststead",
+      "reason": "Existing subscription digest publishing product",
+      "source": "https://poststead.com/"
+    },
+    {
+      "name": "Weekward",
+      "reason": "Existing iPhone lifestyle app",
+      "source": "https://apps.apple.com/us/app/weekward-life-in-weeks/id6792265603"
+    },
+    {
+      "name": "Weekmark",
+      "reason": "Established brand with foreign trademark registration in multiple service classes",
+      "source": "https://www.portalchile.org/detalle-marca/weekmark-1054886"
+    },
+    {
+      "name": "Weeklift",
+      "reason": "Existing SEO reporting product",
+      "source": "https://weeklift.com/"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "BR-001-ALT-A",
+      "name": "Weekkin",
+      "headline": "A little more room to run your business.",
+      "signature": "Your business deserves to be heard, even on the busiest week.",
+      "belief": "A consistent presence starts with practical human help.",
+      "purpose": "Give busy neighborhood-scale businesses a reliable, manageable week of social media support.",
+      "story": "Running a small business already asks for a full day. Then there's the public side of it: the update that never gets written, the project people never hear about, and the post sitting in drafts. Weekkin is the idea of a capable extra hand for one agreed week, without turning a small problem into a long retainer.",
+      "voice": "Warm, neighborly, observant, complete sentences; no cute baby talk, no fake promises",
+      "color": {
+        "bg": "#17252a",
+        "panel": "#243c3d",
+        "ink": "#f9f2e6",
+        "accent": "#f1bb8c",
+        "secondary": "#a9dbc9"
+      },
+      "mark": "paired offset speech tiles with a shared baseline",
+      "visual": "Editorial photography of real small-business work, soft cream copy panels, two gently overlapping rectangular speech tiles",
+      "strength": "Friendly and independently ownable-sounding word; centers companionship rather than algorithm hacks",
+      "risk": "Invented name does not communicate social marketing on its own; needs service descriptor. Search coverage is not legal clearance.",
+      "score": {
+        "distinctiveness": 4,
+        "clarity": 2,
+        "emotional_fit": 5,
+        "scalability": 4
+      },
+      "label": "Warm and human",
+      "tagline": "Present, even when you're busy.",
+      "screening": {
+        "public_exact_name_match_found": "none_in_limited_search",
+        "legal_clearance": "not_performed",
+        "trademark_cleared": false,
+        "domain_verified": false
+      }
+    },
+    {
+      "id": "BR-001-ALT-B",
+      "name": "Cadencekeep",
+      "headline": "Stay in the conversation.",
+      "signature": "One good week of steady, approved communication.",
+      "belief": "The habit of showing up is more valuable than a burst of noise.",
+      "purpose": "Help small organizations sustain a credible publishing rhythm within a finite, agreed weekly scope.",
+      "story": "Every business has something worth saying, but a scattered posting schedule makes it hard for people to notice. Cadencekeep is built around an attainable rhythm: agree what matters, create or manage the approved work, hand back a clearer next week. The goal is consistency, not a promise of viral growth.",
+      "voice": "Composed, concise, reliable, businesslike, not agency-jargon heavy",
+      "color": {
+        "bg": "#111f31",
+        "panel": "#1b3245",
+        "ink": "#f4f6ed",
+        "accent": "#c6d55e",
+        "secondary": "#afc7d5"
+      },
+      "mark": "four offset vertical beats plus a closed continuation line",
+      "visual": "Structured cobalt grid, chartlike rhythm motif, acid-lime signal markers, strong sans typography",
+      "strength": "Communicates rhythm and long-term consistency; more professional than the first direction",
+      "risk": "Slightly long to say and type; compound may not feel elegant to a buyer.",
+      "score": {
+        "distinctiveness": 4,
+        "clarity": 3,
+        "emotional_fit": 3,
+        "scalability": 4
+      },
+      "label": "Modern and operational",
+      "tagline": "Consistency without the extra overhead.",
+      "screening": {
+        "public_exact_name_match_found": "none_in_limited_search",
+        "legal_clearance": "not_performed",
+        "trademark_cleared": false,
+        "domain_verified": false
+      }
+    },
+    {
+      "id": "BR-001-ALT-C",
+      "name": "Weekmorrow",
+      "headline": "Make this week matter to the next.",
+      "signature": "A useful week of content. A better starting point tomorrow.",
+      "belief": "Small consistent acts add up to the presence people remember.",
+      "purpose": "Help an owner regain momentum through one scoped week of thoughtful social support and a usable handoff.",
+      "story": "The days get busy, and communication slides to tomorrow. Weekmorrow turns that vague tomorrow into one practical week: choose the message, agree on the work and approvals, and hand off something useful. It is about forward progress, not pretending a week can transform a whole company.",
+      "voice": "Optimistic, thoughtful, unhurried and plainspoken; no miracle language",
+      "color": {
+        "bg": "#1e2930",
+        "panel": "#293f43",
+        "ink": "#fff2df",
+        "accent": "#f5ad6e",
+        "secondary": "#b4d4b4"
+      },
+      "mark": "sun crossing a seven-day horizon, two rising lines",
+      "visual": "Warm dawn horizon, paper textures made with CSS, calm editorial serif and honest work photography",
+      "strength": "Strong narrative arc and possible visual storytelling; future-forward without sounding enterprise-only",
+      "risk": "Can sound like a planner or lifestyle brand; may need obvious service descriptor on every page.",
+      "score": {
+        "distinctiveness": 4,
+        "clarity": 2,
+        "emotional_fit": 4,
+        "scalability": 3
+      },
+      "label": "Optimistic and story-led",
+      "tagline": "The week ahead starts here.",
+      "screening": {
+        "public_exact_name_match_found": "none_in_limited_search",
+        "legal_clearance": "not_performed",
+        "trademark_cleared": false,
+        "domain_verified": false
+      }
+    }
+  ],
+  "recommendation": {
+    "candidate": "Weekkin",
+    "scope": "Working lead for discussion only",
+    "reason": "The human support story is more differentiated from a generic newsletter. The product descriptor must remain visible to communicate the actual one-week service; candidate still needs independent name clearance."
+  },
+  "commercial_boundaries": {
+    "canonical_existing_product": "Social Media Management · Weekly",
+    "price_usd": 100,
+    "do_not_modify_stripe": true,
+    "scope_confirmation_required": true,
+    "no_external_marketing_publication_without_approval": true,
+    "manual_payment_reconciliation": true
+  },
+  "approved_candidate": null
+}

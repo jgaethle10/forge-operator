@@ -84,15 +84,19 @@ def nms(detections, threshold=0.5, limit=MAX_OBJECTS):
 
 
 def observation(frame_id, timestamp_ms, index, label, score, box, disparity, fx, baseline,
-                video_digest, width, height):
+                video_digest, width, height, cx_px=None, cy_px=None):
     x, y, w, h = box
     if w <= 0 or h <= 0 or x < 0 or y < 0 or x + w > width or y + h > height:
         raise ValueError("invalid_detection_box")
     number(score, 0, 1, "detector_confidence")
+    if (cx_px is None) != (cy_px is None):
+        raise ValueError("principal_point_requires_both_axes")
+    center_x = (width - 1) / 2 if cx_px is None else number(cx_px, 0, width, "cx_px")
+    center_y = (height - 1) / 2 if cy_px is None else number(cy_px, 0, height, "cy_px")
     z = None if disparity is None or not math.isfinite(disparity) or disparity <= 1 else round(fx * baseline / disparity, 3)
     pos = None if z is None else {
-        "x": round((x + w / 2 - (width - 1) / 2) * z / fx, 3),
-        "y": round(((height - 1) / 2 - y - h / 2) * z / fx, 3),
+        "x": round((x + w / 2 - center_x) * z / fx, 3),
+        "y": round((center_y - y - h / 2) * z / fx, 3),
         "z": z,
     }
     return {
@@ -212,6 +216,12 @@ def run(args):
     fx = number(args.fx_px, 1, 10000, "fx_px")
     baseline = number(args.baseline_m, 0.001, 10, "baseline_m")
     number(args.confidence, 0.05, 0.99, "confidence")
+    cx_px, cy_px = getattr(args, "cx_px", None), getattr(args, "cy_px", None)
+    if (cx_px is None) != (cy_px is None):
+        raise ValueError("principal_point_requires_both_axes")
+    if cx_px is not None:
+        number(cx_px, 0, 1920, "cx_px")
+        number(cy_px, 0, 1080, "cy_px")
     if not isinstance(args.max_frames, int) or not 1 <= args.max_frames <= MAX_FRAMES:
         raise ValueError("invalid_max_frames")
     if not isinstance(args.frame_step, int) or not 1 <= args.frame_step <= 120:
@@ -263,6 +273,8 @@ def run(args):
             if pair_width % 2:
                 raise ValueError("stereo_video_must_be_even_width")
             width = pair_width // 2
+            if cx_px is not None and (cx_px > width or cy_px > height):
+                raise ValueError("principal_point_out_of_bounds")
             if width < 128 or height < 64 or width > 1920 or height > 1080:
                 raise ValueError("stereo_frame_dimensions_not_supported")
             left, right = full[:, :width], full[:, width:]
@@ -284,7 +296,7 @@ def run(args):
                 observations.append(observation(
                     frame_id, timestamp_ms, index, manifest["labels"][cls], confidence,
                     (x1, y1, x2 - x1, y2 - y1), z_disp, fx, baseline,
-                    video_digest, width, height
+                    video_digest, width, height, cx_px, cy_px
                 ))
             frames.append({"frameId": frame_id, "timestampMs": timestamp_ms,
                            "width": width, "height": height, "observations": observations})
@@ -300,7 +312,10 @@ def run(args):
         "modelFormat": FORMAT,
         "media": "local_authorized_rectified_stereo_side_by_side",
         "frameTimestampBasis": "decoded_source_frame_index_over_reported_fps",
-        "calibration": {"fxPx": fx, "baselineM": baseline, "rectification": "user_asserted_not_verified"},
+        "calibration": {"fxPx": fx, "baselineM": baseline,
+                        "cxPx": cx_px, "cyPx": cy_px,
+                        "principalPointApproximationUsed": cx_px is None,
+                        "rectification": "user_asserted_not_verified"},
         "evidenceStatus": "unreviewed_not_field_calibrated",
         "coordinateFrame": "camera_relative",
         "frames": frames
@@ -322,6 +337,8 @@ def main():
     parser.add_argument("--manifest", required=True, type=Path, help="Local format/labels/license/model-SHA manifest")
     parser.add_argument("--fx-px", required=True, type=float, help="Calibrated left-camera focal length in original pixels")
     parser.add_argument("--baseline-m", required=True, type=float, help="Measured stereo separation in meters")
+    parser.add_argument("--cx-px", type=float, help="Rectified principal point X in original left pixels")
+    parser.add_argument("--cy-px", type=float, help="Rectified principal point Y in original left pixels")
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--confidence", type=float, default=0.45)
     parser.add_argument("--max-frames", type=int, default=60)
