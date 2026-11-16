@@ -17,6 +17,8 @@ export function stageWheelLabMarkup(file,source){
     const withLink='<p>Separate FindMyPart sourcing research may help. Checking this saves a note in your downloaded concept only. It does not open a website, submit an inquiry, verify compatibility, or share your details.</p><p style="margin:8px 0 10px;color:#bdcdb8">Or explore FindMyPart separately. Opening the link is your choice; no Wheel Lab choices, notes, files or customer information are transferred.</p>'+LINK+'</div>';
     return replaceExactlyOnce(noindexed,interestEnd,withLink);
   }
+  // Merchant's relative preview must resolve to the staged shopper page, not the launcher.
+  const withPreview=replaceExactlyOnce(noindexed,'id="viewConcept" class="concept-preview" href="./index.html"','id="viewConcept" class="concept-preview" href="./shopper.html"');
   const bridge='<p class="small">For independent parts research, '+LINK+'. Opens a separate Evercraft service only when clicked. No quote, customer details or concept file is transmitted by Wheel Lab.</p>\n';
-  return replaceExactlyOnce(noindexed,'<p id="message" role="status" aria-live="polite"></p>',bridge+'<p id="message" role="status" aria-live="polite"></p>');
+  return replaceExactlyOnce(withPreview,'<p id="message" role="status" aria-live="polite"></p>',bridge+'<p id="message" role="status" aria-live="polite"></p>');
 }
