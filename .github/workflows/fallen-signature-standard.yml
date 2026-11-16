@@ -7,6 +7,8 @@ on:
       - 'systemia/media-studio/founder-desk.mjs'
       - 'systemia/media-studio/founder-desk.html'
       - 'systemia/media-studio/founder-desk.test.mjs'
+      - 'systemia/media-studio/commercial-shotlist.mjs'
+      - 'systemia/media-studio/commercial-shotlist.test.mjs'
       - 'systemia/media-studio/customer-commercial-gate.mjs'
       - 'systemia/media-studio/customer-commercial-gate.test.mjs'
       - 'systemia/media-studio/FALLEN-SIGNATURE-STANDARD.md'
@@ -19,6 +21,8 @@ on:
       - 'systemia/media-studio/founder-desk.mjs'
       - 'systemia/media-studio/founder-desk.html'
       - 'systemia/media-studio/founder-desk.test.mjs'
+      - 'systemia/media-studio/commercial-shotlist.mjs'
+      - 'systemia/media-studio/commercial-shotlist.test.mjs'
       - 'systemia/media-studio/customer-commercial-gate.mjs'
       - 'systemia/media-studio/customer-commercial-gate.test.mjs'
       - '.github/workflows/fallen-signature-standard.yml'
@@ -47,5 +51,6 @@ jobs:
           node --test \
             systemia/media-studio/fallen-signature-gate.test.mjs \
             systemia/media-studio/founder-desk.test.mjs \
+            systemia/media-studio/commercial-shotlist.test.mjs \
             systemia/media-studio/customer-commercial-gate.test.mjs \
             systemia/media-studio/commercial-release-preflight.test.mjs
