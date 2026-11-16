@@ -1,0 +1,101 @@
+name: Fallen Open-Source Studio Integration
+on:
+  push:
+    branches: [integrations/fallen-open-source-studio-v1-20261115]
+    paths:
+      - 'systemia/media-studio/open-source/**'
+      - '.github/workflows/fallen-open-source-studio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-toolchain-proof:
+    name: OTIO native interchange + FFmpeg media + ComfyUI contract safety
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned Apache-2.0 OpenTimelineIO library
+        run: |
+          python -m pip install --disable-pip-version-check 'opentimelineio==0.18.1'
+          python -c 'import opentimelineio as otio; print("OpenTimelineIO",otio.__version__)'
+      - name: Verify FFmpeg is available
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+      - name: Test strict local ComfyUI contract and inventory
+        run: |
+          node --test systemia/media-studio/open-source/toolchain.test.mjs
+          node systemia/media-studio/open-source/local-capability-probe.mjs > "$RUNNER_TEMP/local-capability.json"
+      - name: Test original Fallen-to-OTIO bridge (10 real library tests)
+        run: |
+          python -m unittest discover -s systemia/media-studio/open-source -p 'test_otio_bridge.py' -v
+      - name: Create tiny synthetic verification-only footage and emit true OTIO editorial interchange
+        run: |
+          mkdir -p "$RUNNER_TEMP/fallen-otio-proof"
+          ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=size=640x360:rate=24 \
+            -t 2 -c:v libx264 -pix_fmt yuv420p -movflags +faststart \
+            "$RUNNER_TEMP/fallen-otio-proof/test-picture.mp4"
+          ffmpeg -hide_banner -loglevel error -y -f lavfi -i 'sine=frequency=440:sample_rate=44100' \
+            -t 2 -c:a pcm_s16le "$RUNNER_TEMP/fallen-otio-proof/test-sound.wav"
+          python - <<'PY'
+          import os,json,hashlib,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'fallen-otio-proof'
+          m=p/'test-picture.mp4';a=p/'test-sound.wav'
+          def sha(f):return hashlib.sha256(f.read_bytes()).hexdigest()
+          project={
+            'schema':'evercraft.fallen.timeline.v1','id':'synthetic-test-only','title':'Fallen Toolchain Test',
+            'version':1,'fps':24,'aspectRatio':'16:9',
+            'assets':[
+              {'id':'test-video','path':str(m),'digest':sha(m),'kind':'video','sourceRefs':['ci:ffmpeg-testsrc2']},
+              {'id':'test-audio','path':str(a),'digest':sha(a),'kind':'audio','sourceRefs':['ci:sine-test-only']}
+            ],
+            'tracks':[
+              {'id':'picture','kind':'video','name':'Picture','clips':[
+                {'id':'cut-one','trackId':'picture','assetId':'test-video','startSec':0,'durationSec':1,'trimStartSec':0},
+                {'id':'cut-two','trackId':'picture','assetId':'test-video','startSec':1,'durationSec':1,'trimStartSec':1}
+              ]},
+              {'id':'music','kind':'music','name':'Score','clips':[
+                {'id':'tone','trackId':'music','assetId':'test-audio','startSec':0,'durationSec':2}
+              ]}
+            ]}
+          (p/'project.json').write_text(json.dumps(project,indent=2))
+          PY
+          python systemia/media-studio/open-source/otio_bridge.py \
+            "$RUNNER_TEMP/fallen-otio-proof/project.json" \
+            "$RUNNER_TEMP/fallen-otio-proof/evercraft-edit.otio" \
+            --verify-media --asset-root "$RUNNER_TEMP/fallen-otio-proof"
+          python - <<'PY'
+          import os,pathlib,json,opentimelineio as otio
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'fallen-otio-proof'
+          x=otio.adapters.read_from_file(str(p/'evercraft-edit.otio'))
+          r=json.loads((p/'evercraft-edit.otio.receipt.json').read_text())
+          assert r['realOpenTimelineIORoundtrip'] is True and r['mediaDigestsChecked'] is True
+          assert r['clipCount']==3 and len(x.tracks)==2
+          assert r['publicationAuthorityGranted'] is False
+          print('PASS: actual OpenTimelineIO parser read 2-track 3-clip edit with verified inputs')
+          PY
+          ffmpeg -hide_banner -loglevel error -i "$RUNNER_TEMP/fallen-otio-proof/test-picture.mp4" -f null -
+      - name: Prepare portable CI proof bundle
+        run: |
+          mkdir -p artifacts/fallen-open-source-studio
+          cp "$RUNNER_TEMP/local-capability.json" artifacts/fallen-open-source-studio/
+          cp "$RUNNER_TEMP/fallen-otio-proof/evercraft-edit.otio" artifacts/fallen-open-source-studio/
+          cp "$RUNNER_TEMP/fallen-otio-proof/evercraft-edit.otio.receipt.json" artifacts/fallen-open-source-studio/
+          cp "$RUNNER_TEMP/fallen-otio-proof/project.json" artifacts/fallen-open-source-studio/
+      - name: Preserve test receipts only, not user footage
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-open-source-studio-otio-proof
+          path: artifacts/fallen-open-source-studio/
+          retention-days: 30
+          if-no-files-found: error
