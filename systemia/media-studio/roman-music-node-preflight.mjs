@@ -36,8 +36,30 @@ function parseDf(s){
  const availableKb=Number(parts.at(-3));
  return Number.isFinite(availableKb)?Number((availableKb*1024/GB).toFixed(1)):null;
 }
+export function parseMemAvailableGb(content){
+ const m=String(content||'').match(/^MemAvailable:\s*(\d+)\s*kB\s*$/m);
+ return m?Number((Number(m[1])*1024/GB).toFixed(2)):null;
+}
+function availableMem(){
+ try{return parseMemAvailableGb(fs.readFileSync('/proc/meminfo','utf8'));}
+ catch{return null;}
+}
+function findSupportedPython(){
+ const local312=path.join(os.homedir(),'.local/share/uv/python/cpython-3.12-linux-x86_64-gnu/bin/python3.12');
+ const candidates=['python3.12','python3.11',
+   ...(fs.existsSync(local312)?[local312]:[]),
+   path.join(os.homedir(),'evercraft-labs/ace-step/.venv/bin/python'),
+   'python3','python'];
+ for(const candidate of candidates){
+  const detected=parsePython(tryCmd(candidate,['--version']));
+  if(detected?.major===3&&[11,12].includes(detected.minor))
+    return {version:detected,selected_executable:candidate};
+ }
+ return {version:parsePython(tryCmd('python3',['--version'])||tryCmd('python',['--version'])),
+   selected_executable:'system_default'};
+}
 export function classifyHardware({gpus=[],python=null,free_disk_gb=null,memory_gb=null,
-  ffmpeg=false,ffprobe=false,wsl=false}={}){
+  memory_available_gb=null,ffmpeg=false,ffprobe=false,wsl=false}={}){
  const blockers=[],warnings=[];
  if(!python||python.major!==3||![11,12].includes(python.minor))
   blockers.push('python_3_11_or_3_12_not_detected');
@@ -52,12 +74,16 @@ export function classifyHardware({gpus=[],python=null,free_disk_gb=null,memory_g
  else if(maxVram>0)recommended_lane='ace_step_2b_constrained_offload_candidate';
  else warnings.push('gpu_vram_unavailable_or_no_cuda_device');
  if(memory_gb!==null&&memory_gb<8)warnings.push('system_memory_below_8gb');
+ if(memory_available_gb!==null&&memory_available_gb<6){
+  warnings.push('available_ram_below_conservative_2b_inference_floor');
+  if(maxVram===0)recommended_lane='owned_audio_edit_master_only_no_large_model';
+ }
  return {model_installed_or_running:'NOT_CHECKED',recommended_lane,blockers,warnings,
   deployment_authorized:false,commercial_audio_approved:false};
 }
 export function collectHardware(){
  const platform=os.platform();
- const ver=tryCmd('python3',['--version'])||tryCmd('python',['--version']);
+ const pythonMatch=findSupportedPython();
  const smiArgs=['--query-gpu=name,memory.total,driver_version','--format=csv,noheader,nounits'];
  // NVIDIA documents this location for WSL when nvidia-smi is not on PATH.
  const pathSmi=tryCmd('nvidia-smi',smiArgs);
@@ -71,10 +97,10 @@ export function collectHardware(){
  const inventory={schema:'evercraft.fallen.node-music-hardware-preflight.v1',
   observed_at:new Date().toISOString(),machine:os.hostname(),platform,architecture:os.arch(),
   wsl,cpu_logical_cores:os.cpus().length,
-  memory_gb,free_disk_gb:parseDf(df),
+  memory_gb,memory_available_gb:availableMem(),free_disk_gb:parseDf(df),
   wsl_gpu_device_visible:fs.existsSync('/dev/dxg'),
   gpu_probe_source:pathSmi!==null?'PATH:nvidia-smi':wslSmi!==null?'WSL:/usr/lib/wsl/lib/nvidia-smi':'NOT_DETECTED',
-  python:parsePython(ver),ffmpeg:Boolean(tryCmd('ffmpeg',['-version'])),
+  python:pythonMatch.version,python_executable:pythonMatch.selected_executable,ffmpeg:Boolean(tryCmd('ffmpeg',['-version'])),
   ffprobe:Boolean(tryCmd('ffprobe',['-version'])),gpus,
   caveat:'Read-only local snapshot. A visible GPU and model compatibility do not prove successful music inference.'};
  return {...inventory,decision:classifyHardware(inventory)};

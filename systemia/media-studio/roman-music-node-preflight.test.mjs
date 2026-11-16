@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {classifyHardware,collectHardware} from './roman-music-node-preflight.mjs';
+import {classifyHardware,collectHardware,parseMemAvailableGb} from './roman-music-node-preflight.mjs';
 
 test('GPU candidate with supported Python gives 2B trial, not deployment permission',()=>{
  const report=classifyHardware({gpus:[{name:'NVIDIA',vram_gb:8}],
@@ -28,4 +28,18 @@ test('host inspection reports snapshot without installing anything',()=>{
  assert.ok(Array.isArray(r.gpus));
  assert.ok(Number.isFinite(r.memory_gb));
  assert.ok(r.machine.length>0);
+});
+
+test('parses Linux MemAvailable as actual available WSL RAM, not total',()=>{
+ const sample='MemTotal:       7979000 kB\nMemFree:         11000 kB\nMemAvailable:  4215275 kB\n';
+ assert.equal(parseMemAvailableGb(sample),4.02);
+ assert.equal(parseMemAvailableGb('MemTotal: 100 kB'),null);
+});
+test('CPU-only 4GB available prohibits a large-model recommendation',()=>{
+ const r=classifyHardware({gpus:[],memory_gb:7.6,memory_available_gb:4.02,
+ python:{major:3,minor:12,patch:16},free_disk_gb:900,ffmpeg:true,ffprobe:true,wsl:true});
+ assert.equal(r.recommended_lane,'owned_audio_edit_master_only_no_large_model');
+ assert.equal(r.blockers.length,0);
+ assert.ok(r.warnings.includes('available_ram_below_conservative_2b_inference_floor'));
+ assert.equal(r.deployment_authorized,false);
 });
