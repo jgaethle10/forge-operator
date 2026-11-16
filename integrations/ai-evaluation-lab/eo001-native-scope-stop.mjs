@@ -1,27 +1,20 @@
 /**
  * EO-001 Gate 1: source-only opt-in native exact-user-scope STOP controller.
  *
- * This is a COMPONENT, not an admitted CLI, service, or authorized field run.
- * Importing it has no effects. The one exact `systemctl --user stop UNIT`
- * command is reachable only via a separate two-role Ed25519-signed permit,
- * pinned clean checkout, freshly reobserved target, and a private external
- * one-use reservation/audit sink. No trust roots, signatures, or sink are
- * provisioned here. Nothing calls this from the existing CLI.
+ * This is an OFFLINE SIMULATION component, not a live stop controller.
+ * Importing it has no effects. In-memory fake stop calls require a scoped
+ * Ed25519 test permit, pinned fake checkout and a private one-use audit sink.
+ * There is NO native systemd stop adapter: a name-based StopUnit remains
+ * unsafe under unit replacement races. No production keys/runner are wired.
  *
  * This cannot guarantee manager unit identity against replacement races,
  * enforce a private sink's true durability, attest a host or prove physical
  * cleanup. The supervisor must separately verify post-stop kernel evidence.
  * NO numeric PID/group signals, retries, model/provider or production effects.
  */
-import fs from 'node:fs';
-import process from 'node:process';
-import path from 'node:path';
-import {spawnSync} from 'node:child_process';
 import {createPublicKey,verify,createHash} from 'node:crypto';
 import {parseExactScopeProperties} from './eo001-cgroup-supervisor-observer.mjs';
 import {parseStableProcIdentity} from './eo001-stable-scope-lifecycle.mjs';
-import {ownCgroupMountPath} from './eo001-cgroup-resource-proof.mjs';
-import {ownedUserManagerEnvironment} from './eo001-cgroup-admission.mjs';
 
 const refuse=code=>{const e=new Error(code);e.code=code;throw e;};
 const requireThat=(p,code)=>{if(!p)refuse(code);};
@@ -155,76 +148,21 @@ function verifyImmediateKernelReadback(io,permit,pre,identities){
   return io.monotonic();
 }
 /**
- * Native I/O adapter is deliberately NOT exported. An approved host runner
- * would have to provision explicit trusted keys and an owner-owned,
- * durable one-shot reservation/audit sink. No such runner exists today.
+ * Native host I/O is deliberately absent until a reviewed stable target
+ * binding mechanism is approved for an exact synthetic unit.
  */
-function nativeIo(repoRoot){
-  const env=ownedUserManagerEnvironment();
-  const run=(args,timeout)=>{
-    const r=spawnSync('/usr/bin/systemctl',args,{
-      env,encoding:'utf8',timeout,maxBuffer:4096,
-      stdio:['ignore','pipe','pipe']
-    });
-    return {status:r.status,timedOut:r.error?.code==='ETIMEDOUT',
-      stdout:r.stdout||'',stderr:r.stderr||''};
-  };
-  return {
-    now:()=>Date.now(),
-    monotonic:()=>Number(process.hrtime.bigint()/1000000n),
-    show:unit=>{
-      requireThat(UNIT.test(unit),'NATIVE_STOP_UNIT_INVALID');
-      const r=run(['--user','show',unit,'-p','LoadState',
-        '-p','ActiveState','-p','ControlGroup'],2000);
-      requireThat(r.status===0,'NATIVE_STOP_MANAGER_UNAVAILABLE');
-      return r.stdout;
-    },
-    boot:()=>fs.readFileSync('/proc/sys/kernel/random/boot_id','utf8').trim(),
-    selfCgroup:()=>fs.readFileSync('/proc/self/cgroup','utf8'),
-    procStat:pid=>fs.readFileSync('/proc/'+pid+'/stat','utf8'),
-    procCgroup:pid=>fs.readFileSync('/proc/'+pid+'/cgroup','utf8'),
-    identity:(cg,unit)=>{
-      const filename=ownCgroupMountPath({scopeId:unit,procCgroup:'0::'+cg});
-      const fd=fs.openSync(filename,
-        fs.constants.O_RDONLY|fs.constants.O_DIRECTORY|
-        fs.constants.O_NOFOLLOW);
-      try{const st=fs.fstatSync(fd,{bigint:true});
-        return {device:st.dev.toString(),inode:st.ino.toString()};
-      }finally{fs.closeSync(fd);}
-    },
-    cleanCommit:pin=>{
-      requireThat(typeof repoRoot==='string'&&path.isAbsolute(repoRoot)&&
-        path.normalize(repoRoot)===repoRoot&&!repoRoot.includes('..'),
-        'NATIVE_STOP_ROOT_UNTRUSTED');
-      // A symlinked checkout or untracked file can obscure what a future
-      // physical runner actually loads. Refuse both rather than relying on
-      // tracked-file status alone.
-      requireThat(fs.realpathSync(repoRoot)===repoRoot&&
-        fs.lstatSync(repoRoot).isDirectory(),
-        'NATIVE_STOP_ROOT_UNTRUSTED');
-      const cmd=(args)=>spawnSync('/usr/bin/git',['-C',repoRoot,...args],{
-        encoding:'utf8',maxBuffer:2048,timeout:1500,
-        stdio:['ignore','pipe','pipe'],
-        env:{PATH:'/usr/bin:/bin',LANG:'C',LC_ALL:'C'}
-      });
-      const head=cmd(['rev-parse','--verify','HEAD']);
-      const dirty=cmd(['status','--porcelain','--untracked-files=all']);
-      return head.status===0&&dirty.status===0&&
-        head.stdout.trim()===pin&&dirty.stdout.trim()==='';
-    },
-    stopExact:(unit,timeout)=>{
-      requireThat(UNIT.test(unit),'NATIVE_STOP_UNIT_INVALID');
-      return run(['--user','stop',unit],timeout);
-    }
-  };
-}
+// No production native I/O adapter is admitted. The older source used a
+// by-name systemctl stop after a readback, which is not an atomic identity
+// binding. This component now accepts only injected, explicitly labeled
+// offline simulation responses. A future owned field runner needs a
+// separately reviewed stop primitive, trust roots, and explicit host approval.
 /**
  * Side effects require ALL external dependencies. A mere user approval
  * sentence/boolean or CI green status is never one-shot field permission.
  * io/sink can be mocked in CI; this is not remote independent attestation.
  */
 export function attemptApprovedExactSyntheticScopeStop({
-  proposal,permit,signatures,trust,witness,repoRoot,
+  proposal,permit,signatures,trust,witness,
   sink,io
 }={}){
   // Refuse before even reading systemd if the caller lacks a private sink.
@@ -237,6 +175,16 @@ export function attemptApprovedExactSyntheticScopeStop({
     try{witness.close();}catch{}
     refuse('NATIVE_STOP_PERSISTENCE_OR_WITNESS_MISSING');
   }
+  if(!io||io.executionMode!=='OFFLINE_SYNTHETIC_IO'){
+    try{witness.close();}catch{}
+    return hold('NATIVE_EXACT_SCOPE_STOP_HELD',
+      'NATIVE_STOP_MANAGER_ATOMIC_BINDING_UNAVAILABLE',
+      'PRE_ADMISSION',false,{
+        offline_simulation_only:true,
+        stop_permit_reserved:false,
+        local_failure_record_persisted:false
+      });
+  }
   let issued=false,reserved=false,stage='PRE_ADMISSION';
   let approvedDigest=null,localIO=null,pre=null;
   let stopStart=null,stopEnd=null,stopResult=null;
@@ -247,7 +195,7 @@ export function attemptApprovedExactSyntheticScopeStop({
   };
   try{
     checkProposal(proposal);
-    localIO=io||nativeIo(repoRoot);
+    localIO=io;
     approvedDigest=checkPermit({permit,signatures,trust,
       proposal,now:localIO.now()});
     requireThat(localIO.cleanCommit(permit.source_revision)===true,
