@@ -76,6 +76,7 @@ export function reviewHeldCgroupKillAlternative({
     cgroup_path_sha256:sha(proposal.cgroup_path),
     expected_original_cgroup_device:observation.device,
     expected_original_cgroup_inode:observation.inode,
+    expected_boot_id:observation.boot_id,
     candidate_kernel_control_file:'cgroup.kill',
     candidate_single_write_value:'1',
     candidate_signal_semantics:'SIGKILL_WHOLE_CGROUP_SUBTREE',
