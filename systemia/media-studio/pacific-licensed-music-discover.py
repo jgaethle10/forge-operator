@@ -56,7 +56,7 @@ for name in TARGETS:
     if not rec:
         raise RuntimeError('Missing official MusicRecording license metadata: '+name)
     url=rec.get('url','')
-    if not re.fullmatch(r'https://assets\\.mixkit\\.co/music/(\\d+)/\\1\\.mp3',url):
+    if not re.fullmatch(r'https://assets\.mixkit\.co/music/(\d+)/\1\.mp3',url):
         raise RuntimeError('Unexpected recording URL: '+url)
     if rec.get('license')!='https://mixkit.co/license/#musicFree':
         raise RuntimeError('Missing verified Mixkit Stock Music Free License: '+name)
