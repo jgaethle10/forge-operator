@@ -51,6 +51,9 @@ test('single customer gate assembles all quality receipts with no shipping autho
   const r=assemble();
   assert.equal(r.schema,'evercraft.fallen.customer-commercial-gate-report.v1');
   assert.equal(r.status,'blocked'); // missing real rights, actual creative and production approval
+  assert.equal(r.signatureQualityStatus,'blocked');
+  assert.ok(r.signatureQuality.reasons.includes('signature_review_schema_invalid'));
+  assert.equal(r.boundaries.signatureReviewMandatoryForClientReady,true);
   assert.equal(r.masterSha256,SHA);
   assert.equal(r.audioStatus,'accepted');
   assert.equal(r.pictureStatus,'accepted');
