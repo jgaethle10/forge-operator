@@ -217,3 +217,46 @@ test('private order storage rejects symlink redirection and unsafe store paths',
   assert.deepEqual(await fs.readdir(real),[]);
  }finally{await fs.rm(root,{recursive:true,force:true})}
 });
+
+
+test('operator can revoke signed ACH instruction immediately, without affecting bank accounting',async()=>{
+ const x=await setup();
+ try{
+  const c=(await issue(x.rt,approved)).data;
+  const endpoint=x.rt.url+'/v1/operator/bank-requests/revoke';
+  const revoke=(body,token=opts.operatorToken)=>fetch(endpoint,{
+    method:'POST',
+    headers:{authorization:'Bearer '+token,'content-type':'application/json'},
+    body:JSON.stringify(body),
+  });
+  const body={request_id:c.request_id,reason:'buyer_cancelled'};
+  assert.equal((await revoke(body,'wrong-operator-token')).status,401);
+  assert.equal((await revoke({...body,reason:'anything'})).status,422);
+  assert.equal((await revoke({...body,request_id:'../../etc/passwd'})).status,422);
+  assert.equal((await revoke({...body,request_id:'bpr_'+'f'.repeat(32)})).status,404);
+  const original=JSON.parse(await fs.readFile(path.join(x.dir,c.request_id+'.json'),'utf8'));
+  const first=await revoke(body);
+  assert.equal(first.status,200);
+  const revoked=await first.json();
+  assert.equal(revoked.state,'revoked');
+  assert.equal(revoked.already_revoked,false);
+  assert.equal(revoked.paid_verified,false);
+  assert.equal(revoked.fulfillment_release,false);
+  const page=await fetch(x.rt.url+new URL(c.payment_request_url).pathname);
+  assert.equal(page.status,410);
+  assert.equal((await page.json()).error,'payment_request_revoked');
+  const replay=await issue(x.rt,approved);
+  assert.equal(replay.status,410);
+  assert.equal(replay.data.error,'payment_request_revoked');
+  const second=await revoke({...body,reason:'suspected_link_compromise'});
+  assert.equal(second.status,200);
+  assert.equal((await second.json()).already_revoked,true);
+  const flag=JSON.parse(await fs.readFile(path.join(x.dir,c.request_id+'.revoked.json'),'utf8'));
+  assert.equal(flag.reason,'buyer_cancelled','first revocation remains authoritative');
+  assert.equal((await fs.stat(path.join(x.dir,c.request_id+'.revoked.json'))).mode&0o777,0o600);
+  const after=JSON.parse(await fs.readFile(path.join(x.dir,c.request_id+'.json'),'utf8'));
+  assert.deepEqual(after,original,'revocation must not alter original economic record');
+  assert.equal(after.payment_verified,false);
+  assert.equal(after.fulfillment_release,false);
+ }finally{await x.dispose()}
+});
