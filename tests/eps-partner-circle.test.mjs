@@ -73,6 +73,11 @@ test('operator alliance preserves independent business identity and reuses exist
  assert.match(page,/who contracts with the customer/);
  assert.match(page,/separately registered eligible operator/);
  assert.match(page,/software design partner/i);
+ assert.match(page,/Workflow X-Ray/);
+ assert.match(page,/\$250 one-time/);
+ assert.match(page,/Contractor beta/);
+ assert.match(page,/No public self-service subscription/);
+ assert.match(page,/Expressing alliance interest is free/);
  assert.match(page,/franchise, licensing, branding/i);
  assert.match(page,/\.\.\/\.\.\/partners\/\?focus=eps_operator#apply/);
  assert.match(epsPage,/href="\.\/operators\/"/);
