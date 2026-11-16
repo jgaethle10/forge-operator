@@ -24,3 +24,15 @@ test('working first-party lead submission remains present',()=>{
  assert.match(html,/Send my commercial brief/);
  assert.match(html,/receipt\.received!==true/);
 });
+
+
+test('visible direct-email fallback is accessible before optional intake and never claims submission',()=>{
+ const hero=html.slice(html.indexOf('<section class="hero">'),html.indexOf('</section>',html.indexOf('<section class="hero">')));
+ assert.match(hero,/id="studio-email-hero"/);
+ assert.match(hero,/mailto:jessegaethle10@gmail\.com\?subject=Evercraft%20%2450%20commercial%20brief/);
+ assert.match(hero,/Email my brief directly/);
+ assert.match(hero,/A request is not booked until we reply with a written scope/);
+ assert.match(html,/The secure form could not confirm delivery/);
+ assert.match(html,/Your details have NOT been confirmed received/);
+ assert.match(html,/No payment at inquiry/);
+});
