@@ -40,6 +40,7 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-stop-sequence-review.mjs
           node --check integrations/ai-evaluation-lab/eo001-native-scope-stop.mjs
           node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.mjs
           node --check integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.mjs
           node --check integrations/ai-evaluation-lab/eo001-private-evidence-vault.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
@@ -69,6 +70,8 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-native-scope-stop.test.mjs
       - name: Verify held-FD cgroup.kill alternative remains read-only and review gated
         run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.test.mjs
+      - name: Verify native held-FD read-only cgroup capability probe using temp fake mount
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.test.mjs
       - name: Verify local fsynced one-use permit ledger and replay refusals
         run: node --test integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.test.mjs
       - name: Audit missing, reordered and tampered private stop receipts without running systemd
