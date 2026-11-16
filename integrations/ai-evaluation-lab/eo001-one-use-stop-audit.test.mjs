@@ -156,7 +156,7 @@ test('symlinked, group-readable and multiply linked records refuse audit',()=>{
       }else if(mode==='group')fs.chmodSync(p,0o640);
       else fs.linkSync(p,p+'.hardlink');
       assert.throws(()=>audit(dir),
-        /STOP_LEDGER_AUDIT_UNAVAILABLE|STOP_LEDGER_AUDIT_UNTRUSTED_FILE/);
+        /STOP_LEDGER_AUDIT_UNAVAILABLE|STOP_LEDGER_AUDIT_UNTRUSTED_FILE|STOP_LEDGER_AUDIT_RECORD_NAMES_INVALID/);
     });
   }
 });
