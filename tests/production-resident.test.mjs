@@ -119,3 +119,19 @@ test('founder-gated canon selection remains blocked even when a completed job co
   assert.equal(r.publication_performed,false);
   assert.equal(r.canon_modified,false);
 }));
+
+test('all twelve projects survive resident checkpoint while older recovery probe remains capped', () => fixture(root => {
+ const many = ledger();
+ many.projects = Array.from({length:12},(_,i)=>({
+   ...project(), project_id:'synthetic-story-'+String(i).padStart(2,'0')
+ }));
+ fs.writeFileSync(path.join(root,'ledger.json'),JSON.stringify(many),{mode:0o600});
+ const receipt=runResidentCycle({privateDir:root,now:NOW});
+ const saved=state(root);
+ assert.equal(receipt.projects,12);
+ assert.equal(receipt.parallel_projects_queued,12);
+ assert.equal(saved.parallel_intake.queued_count,12);
+ assert.equal(saved.parallel_intake.dispatch_performed,false);
+ assert.equal(receipt.agent_dispatch_performed,false);
+ assert.equal(saved.parallel_intake.separate_queue_authoritative,true);
+}));
