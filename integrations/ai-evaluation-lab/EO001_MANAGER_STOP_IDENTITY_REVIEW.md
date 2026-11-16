@@ -51,6 +51,31 @@ provided source**. A future `systemctl` exit status would not prove
 which cgroup instance was affected or that the old detached child died.
 A local replay ledger or source digest does not fix this race.
 
+## Candidate alternative: held-original-scope `cgroup.kill` (NOT approved)
+
+A new source-only, **pure** assessment module,
+`eo001-held-cgroup-kill-alternative.mjs`, evaluates supplied metadata for
+the Linux cgroup v2 `cgroup.kill` interface. Per the kernel specification,
+writing `1` would **SIGKILL all processes in the cgroup and descendants**,
+with fork/migration semantics handled by the kernel. This is materially
+different from a graceful systemd StopUnit, may fail for threaded cgroups,
+and requires actual permission and ownership validation on NextGen.
+See: https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#cgroup-kill
+
+The module **never opens or writes a kernel file**, never stops a scope, and
+treats every supplied held-FD, cgroup-type and permission observation as
+**unauthenticated metadata**. Its proposed target rule is explicitly
+*relative to a held original cgroup directory FD*, never a freshly resolved
+name or absolute filesystem path. This is a research hypothesis about
+target binding, **not evidence** that Linux delegated the necessary write
+permission or that an approved user-manager unit would be cleaned up.
+
+The existing owner/reviewer stop permit is **not valid for this changed
+method**. A separate Lab/owner-reviewed protocol amendment, live read-only
+capability check, kernel-version and cgroup-delegation assessment, explicit
+scoped authority, and independent post-stop observation are necessary.
+The native host stop route remains disabled.
+
 ## Mandatory pre-field decisions
 
 | Requirement | Current state | Physical-test gate |
