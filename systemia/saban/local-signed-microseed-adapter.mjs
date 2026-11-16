@@ -15,6 +15,11 @@ export function validateLocalMicroSeedOrigin(endpoint){
   if(typeof endpoint!=='string'||!endpoint.trim()){
     throw Error('fenced_nodeseed_loopback_origin_required');
   }
+  // Reject shorthand or numeric host aliases before WHATWG URL normalizes
+  // values such as 127.1 into 127.0.0.1. The request origin has one form.
+  if(!/^http:\/\/(?:127\.0\.0\.1|\[::1\]):[1-9][0-9]{0,4}\/?$/.test(endpoint)){
+    throw Error('fenced_nodeseed_loopback_origin_denied');
+  }
   let url;
   try{url=new URL(endpoint);}catch{
     throw Error('fenced_nodeseed_loopback_origin_invalid');
