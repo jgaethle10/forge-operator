@@ -5,6 +5,7 @@
 import {auditGeojsonCollection} from './spatial-integrity.mjs';
 import {addNoScriptPreview} from './static-map-fallback.mjs';
 import {renderEvermapsMobileExplorer} from './mobile-explorer-shell.mjs';
+import {computeMapGesture} from './mobile-map-gestures.mjs';
 const LAYERS=['resources','tests','mineHistory','studies'];
 const MARKER='resetToggles();redraw();\n</script></body></html>';
 export function buildPreloadedWgsViewer({template,collections,receipt}={}){
@@ -29,7 +30,8 @@ export function buildPreloadedWgsViewer({template,collections,receipt}={}){
     '\u2028':'\\u2028','\u2029':'\\u2029'})[ch]);
  const script='// First-party offline preloaded WGS source data; loaded only after source SHA checks.\n'+
   'Object.assign(data,'+sourceJson+');\nresetToggles();onStatus();fit();\n</script></body></html>';
- const enhanced=addNoScriptPreview(template,data);
+ const withGestures=template.replace("'use strict';", "'use strict';\n"+computeMapGesture.toString()+"\n");
+ const enhanced=addNoScriptPreview(withGestures,data);
  // Replace inside the generated bootstrap script, not an earlier local-file change handler.
  const bootstrap=script.replace('resetToggles();onStatus();fit();',"resetToggles();onStatus();fit();\nconst preview=document.querySelector('#mobile-static-preview');if(preview)preview.hidden=true;\nconst controls=document.querySelector('.controls');if(controls)controls.style.display='flex';\ndocument.body.classList.add('evermaps-live');\nconst permitLegend=document.querySelector('.permit-legend');if(permitLegend)permitLegend.hidden=!data.permits;");
  return renderEvermapsMobileExplorer(enhanced.replace(MARKER,bootstrap));

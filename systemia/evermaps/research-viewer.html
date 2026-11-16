@@ -62,7 +62,7 @@ const colors={Demonstrated:'#42bda1',Inferred:'#d9b95b',Speculative:'#d98661'};
 const data={},visible={resources:true,tests:true,mineHistory:true,studies:true,permits:true};
 const canvas=document.querySelector('#map'),wrap=document.querySelector('#wrap'),ctx=canvas.getContext('2d');
 const ui=document.querySelector('#toggles'),status=document.querySelector('#status'),inspector=document.querySelector('#inspector');
-let viewport={xmin:-120,ymin:46,xmax:-118,ymax:48},view={center:[-119,47],scale:1},drag=null;
+let viewport={xmin:-120,ymin:46,xmax:-118,ymax:48},view={center:[-119,47],scale:1};
 function coords(g){const result=[];const walk=n=>{if(!Array.isArray(n))return;if(n.length>=2&&typeof n[0]==='number'&&typeof n[1]==='number'){if(Number.isFinite(n[0])&&Number.isFinite(n[1]))result.push(n);return;}for(const c of n)walk(c);};walk(g?.coordinates);return result;}
 function featureBoxes(fc){return fc.features.flatMap(f=>coords(f.geometry)).filter(p=>p[0]>=-180&&p[0]<=180&&p[1]>=-90&&p[1]<=90);}
 function fit(){
@@ -130,16 +130,55 @@ document.querySelector('#fit').onclick=fit;
 document.querySelector('#zoomIn').onclick=()=>zoom(1.4);
 document.querySelector('#zoomOut').onclick=()=>zoom(1/1.4);
 canvas.addEventListener('wheel',e=>{e.preventDefault();const b=canvas.getBoundingClientRect();zoom(e.deltaY<0?1.2:1/1.2,[e.clientX-b.left,e.clientY-b.top]);},{passive:false});
-canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY};});
+// Pointer-events gesture state keeps native iPhone pinch and drag separate from taps.
+const activePointers=new Map();
+let hadMultiplePointers=false,gestureTravel=0,redrawQueued=false;
+function pointerLocal(e){
+ const box=canvas.getBoundingClientRect();
+ return [e.clientX-box.left,e.clientY-box.top];
+}
+function scheduleRedraw(){
+ if(redrawQueued)return;
+ redrawQueued=true;
+ requestAnimationFrame(()=>{redrawQueued=false;redraw();});
+}
+canvas.addEventListener('pointerdown',e=>{
+ if(e.pointerType==='mouse'&&e.button!==0)return;
+ canvas.setPointerCapture(e.pointerId);
+ activePointers.set(e.pointerId,pointerLocal(e));
+ if(activePointers.size>1)hadMultiplePointers=true;
+ if(activePointers.size===1){hadMultiplePointers=false;gestureTravel=0;}
+});
 canvas.addEventListener('pointermove',e=>{
- if(!drag)return;
- const cos=Math.cos(view.center[1]*Math.PI/180);
- view.center[0]-=(e.clientX-drag.x)/(view.scale*cos);view.center[1]+=(e.clientY-drag.y)/view.scale;drag.x=e.clientX;drag.y=e.clientY;redraw();
+ const original=activePointers.get(e.pointerId);
+ if(!original)return;
+ const updated=pointerLocal(e);
+ const movement=Math.hypot(updated[0]-original[0],updated[1]-original[1]);
+ if(movement<.05)return;
+ gestureTravel+=movement;
+ const before=[...activePointers.values()];
+ activePointers.set(e.pointerId,updated);
+ const after=[...activePointers.values()];
+ if(before.length>2)return;
+ view=computeMapGesture({view,before,after,width:wrap.clientWidth,height:wrap.clientHeight});
+ scheduleRedraw();
 });
 function pointInRing(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;}return inside;}
 function pointInGeo(p,g){if(!g)return false;const polys=g.type==='Polygon'?[g.coordinates]:g.type==='MultiPolygon'?g.coordinates:[];return polys.some(rings=>pointInRing(p,rings[0])&&!rings.slice(1).some(hole=>pointInRing(p,hole)));}
-canvas.addEventListener('pointerup',e=>{
- if(!drag)return;const d=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);drag=null;if(d>7)return;
+function endPointer(e,allowTap){
+ const old=activePointers.get(e.pointerId);
+ if(!old)return;
+ const now=pointerLocal(e);
+ const travelled=gestureTravel+Math.hypot(now[0]-old[0],now[1]-old[1]);
+ const shouldInspect=allowTap&&activePointers.size===1&&!hadMultiplePointers&&travelled<=7;
+ activePointers.delete(e.pointerId);
+ if(activePointers.size===0){gestureTravel=0;hadMultiplePointers=false;}
+ if(shouldInspect)inspectPointerTap(e);
+}
+canvas.addEventListener('pointerup',e=>endPointer(e,true));
+canvas.addEventListener('pointercancel',e=>endPointer(e,false));
+canvas.addEventListener('lostpointercapture',e=>endPointer(e,false));
+function inspectPointerTap(e){
  const box=canvas.getBoundingClientRect(),xy=[e.clientX-box.left,e.clientY-box.top],pt=inverse(xy);
  let hit=null;
  for(const k of ['permits','tests','mineHistory']){if(!visible[k])continue;const features=data[k]?.features||[];let nearest=12;for(const f of features){const q=transform(f.geometry.coordinates);const dist=Math.hypot(q[0]-xy[0],q[1]-xy[1]);if(dist<nearest){hit={kind:k,feature:f};nearest=dist;}}if(hit)break;}
@@ -149,7 +188,11 @@ canvas.addEventListener('pointerup',e=>{
  const p=hit.feature.properties;
  document.querySelector('#itemDetail').textContent=Object.entries(p).filter(([k,v])=>v!==null&&v!==''&&!['Shape__Area','Shape__Length'].includes(k)).slice(0,9).map(([k,v])=>k+': '+v).join(' • ')+'. Map evidence only. No current operating status, land rights or extraction permission implied.';
  inspector.hidden=false;
-});
+}
+const inspectorClose=document.querySelector('#inspectorClose');
+if(inspectorClose)inspectorClose.addEventListener('click',()=>{inspector.hidden=true;});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')inspector.hidden=true;});
+canvas.addEventListener('dblclick',e=>{zoom(1.6,pointerLocal(e));});
 window.addEventListener('resize',redraw);
 resetToggles();redraw();
 </script></body></html>
