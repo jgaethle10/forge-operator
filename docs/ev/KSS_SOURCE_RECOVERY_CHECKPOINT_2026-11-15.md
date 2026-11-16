@@ -94,3 +94,20 @@ node --test systemia/graphics-command/kss-spatial-ingress.test.mjs
 ```
 
 The inspector checks document structure only and sets `external_release_allowed=false` regardless of the result. It cannot certify visual overlay accuracy or the origin of geospatial imagery. Full current World Engine importer tests and hosted CI have not been verified.
+
+
+## Owned-machine and archive recovery path
+
+Added `scripts/kss_source_locator.py` and `scripts/tests/test_kss_source_locator.py`. These search **explicit local roots only** for the five historical Python KSS component filenames or matching ZIP central-directory entries. They do not make network calls, follow symlinks, extract files, alter sources, or upload bytes. Full path and SHA-256 of matching files remain in the **local-only output** until reviewed.
+
+Locally, the source locator passed **4/4 synthetic tests**, including exact-name discovery, ZIP-member discovery without extraction, symlink avoidance and bounded scanning. The current chat working mount was searched (48 files): **zero original KSS Python filename matches**. This says nothing about the user's physical machines or the rest of the private Drive archive.
+
+On an owner-controlled machine, a human can run a read-only search when appropriate:
+
+```bash
+python3 scripts/kss_source_locator.py --root "$HOME" --include-zips
+```
+
+Do not paste output publicly if a local path is sensitive; no raw source or credentials are required for the inventory. Leave the original repositories and history untouched.
+
+**Total newly executed local checks:** recovered original KSS bridge 9/9; PDF inspector 6/6; source locator 4/4. All are synthetic or structural tests and do not confer site-plan engineering acceptance.
