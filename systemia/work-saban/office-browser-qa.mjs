@@ -70,11 +70,19 @@ async function viewport(send,{width,height,mobile,label,out}){
   let ready=false;
   for(let i=0;i<60;i++){
     await sleep(100);
-    ready=await js(send,"Boolean(document.readyState==='complete'&&window.WorkSaban3D&&window.WorkSabanObserver&&document.getElementById('office-3d-toggle'))");
+    ready=await js(send,"Boolean(document.readyState==='complete'&&window.WorkSaban3D&&window.WorkSabanObserver&&document.getElementById('office-3d-toggle')&&document.getElementById('office-details'))");
     if(ready)break;
   }
   assert(ready,'Office scripts did not load');
-  const loaded=await js(send,"(()=>{document.getElementById('office-details').open=true;if(document.getElementById('spatial-viewport')?.hidden===true)document.getElementById('office-3d-toggle').click();return {rig:!!window.EvercraftObserverCamera,desks:document.querySelectorAll('.spatial-agent').length,shown:document.getElementById('spatial-viewport').hidden===false};})()");
+  await js(send,"(()=>{document.getElementById('office-details').open=true;const view=document.getElementById('spatial-viewport');if(!view||view.hidden)document.getElementById('office-3d-toggle').click();return true;})()");
+  let sceneReady=false;
+  for(let i=0;i<60;i++){
+    await sleep(100);
+    sceneReady=await js(send,"Boolean(document.getElementById('spatial-viewport')&&!document.getElementById('spatial-viewport').hidden&&document.querySelectorAll('.spatial-agent').length===6)");
+    if(sceneReady)break;
+  }
+  assert(sceneReady,'3D scene did not mount after explicit toggle');
+  const loaded=await js(send,"(()=>{const view=document.getElementById('spatial-viewport');return {rig:!!window.EvercraftObserverCamera,desks:document.querySelectorAll('.spatial-agent').length,shown:!!view&&!view.hidden};})()");
   assert(loaded.rig,'Owned camera did not load');
   assert.equal(loaded.desks,6);
   assert(loaded.shown,'CSS3D office remained hidden');
