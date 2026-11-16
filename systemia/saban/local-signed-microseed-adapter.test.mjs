@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import http from 'node:http';
 import {
   createLocalSignedMicroSeedAdapter,
   validateLocalMicroSeedOrigin,
@@ -107,5 +108,31 @@ test('invalid lease, pin or timeout rejected before an HTTP request',()=>{
     {jobKey:'bad/job'}
   ]){
     assert.throws(()=>create(item),/fenced_nodeseed_local_transport_binding_invalid/);
+  }
+});
+
+
+test('oversized localhost response is rejected while streaming, before JSON parsing',async()=>{
+  let requests=0;
+  const server=http.createServer((req,res)=>{
+    requests++;
+    assert.equal(req.method,'POST');
+    assert.equal(req.url,'/v1/jobs');
+    res.writeHead(200,{'content-type':'application/json'});
+    res.end('x'.repeat(130*1024));
+  });
+  await new Promise((resolve,reject)=>{
+    server.once('error',reject);
+    server.listen(0,'127.0.0.1',resolve);
+  });
+  try{
+    const adapter=create({endpoint:'http://127.0.0.1:'+server.address().port});
+    await assert.rejects(
+      adapter.runAssignment({assignment:job}),
+      /fenced_nodeseed_local_response_too_large/
+    );
+    assert.equal(requests,1);
+  }finally{
+    await new Promise(resolve=>server.close(resolve));
   }
 });
