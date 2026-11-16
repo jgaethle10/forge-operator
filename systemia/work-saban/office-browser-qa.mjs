@@ -88,6 +88,11 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert.equal(initialFit.cameraButtonsInScene,0,'No giant buttons should obscure character faces');
   assert.equal(initialFit.totalActors,6);
   assert(initialFit.actorsVisible>=5,'Whole-crew view should make most specialists visible initially');
+  const cleanerStage=await js(send,"(()=>{const a=document.querySelector('.spatial-orbit-label'),b=document.querySelector('.spatial-motion-disclosure'),footer=document.querySelector('.office-motion-note'),s=getComputedStyle(footer);return {orbitHidden:getComputedStyle(a).display==='none',truthHidden:getComputedStyle(b).display==='none',footerText:footer.textContent,footerVisible:s.display!=='none'&&s.visibility!=='hidden'};})()");
+  assert(cleanerStage.orbitHidden&&cleanerStage.truthHidden,
+    'Info plaques should not cover the 3D coworkers');
+  assert(cleanerStage.footerVisible&&cleanerStage.footerText.includes('RECORDED EVENTS'),
+    'The honest animation notice must remain visible outside the stage');
   const environment=await js(send,"(()=>{const shell=document.querySelector('.spatial-studio-shell'),meeting=document.querySelector('.spatial-meeting-hub'),people=[...document.querySelectorAll('.spatial-agent')];return {shared:!!shell,meeting:!!meeting,windows:document.querySelectorAll('.spatial-window').length,arms:document.querySelectorAll('.spatial-person-arm').length,legs:document.querySelectorAll('.spatial-person-leg').length,oneRoom:getComputedStyle(document.querySelector('.spatial-room-wall')).display==='none',disclosure:document.querySelector('.spatial-motion-disclosure')?.textContent||'',idle:people.every(x=>x.dataset.activity==='waiting')};})()");
   assert(environment.shared,'Shared studio shell did not render');
   assert(environment.meeting,'Central meeting table missing');
