@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import http from 'node:http';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {inspectCommercialPicture} from './commercial-visual-qc.mjs';
 
 const HERE=path.dirname(fileURLToPath(import.meta.url));
 export const SCHEMA='evercraft.fallen.founder-job.v1';
@@ -54,6 +55,10 @@ export function readiness(job){
     blockers.push('Approve actual narration take and rights');
   if(!job.approvedAssembly)blockers.push('Approved source-first assembly still required');
   if(!job.technicalRender)blockers.push('No rendered technical master');
+  if(job.technicalRender?.pictureStatus==='review_required')
+    blockers.push('Automated picture scan flagged low activity: director must inspect each beat');
+  if(job.technicalRender?.pictureStatus==='inspection_failed')
+    blockers.push('Automated picture inspection failed; do not clear this master');
   blockers.push('Independent final-master Signature review and client approval required');
   return {state:job.technicalRender?'rendered_technical_only':'not_client_ready',
     blockers,canPublish:false,canDeliver:false,canCharge:false};
@@ -144,10 +149,23 @@ async function render(root,job){
       if(status===0&&fs.existsSync(f)){
         const result=load(f);
         if(result.status==='rendered_and_technically_qc_accepted'){
+          // Inspect the *actual final master* using the brief's exact scene timing.
+          // Luma motion analysis flags static shots but does not claim cinematic quality.
+          let pictureStatus='inspection_failed',flaggedBeats=[],pictureError=null;
+          try{
+            const manifest=load(input);
+            const beats=manifest.brief.scenes.map(x=>({id:x.id,durationSec:x.durationSec}));
+            const pic=inspectCommercialPicture({filePath:result.videoPath,
+              expectedSha256:result.mediaSha256,beats});
+            pictureStatus=pic.status;
+            flaggedBeats=pic.segments.filter(x=>x.flags.length).map(x=>({beatId:x.beatId,flags:x.flags}));
+            store(path.join(output,'founder-picture-qc.json'),pic);
+          }catch(e){pictureError=String(e.message||e);}
           job.technicalRender={sha256:result.mediaSha256,localVideoPath:result.videoPath,
-            receiptPath:f,qualityState:'technical_only_not_client_ready'};
+            receiptPath:f,qualityState:'technical_only_not_client_ready',
+            pictureStatus,flaggedBeats,pictureError};
           store(jobPath(root,job.id),job);
-          return resolve({ok:true,readiness:readiness(job)});
+          return resolve({ok:true,pictureStatus,flaggedBeats,readiness:readiness(job)});
         }
       }
       resolve({ok:false,diagnostics:logs,state:'render_failed_without_customer_delivery'});
