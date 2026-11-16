@@ -8,6 +8,8 @@ on:
       - "systemia/evercraft-os/**"
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-integration-adapter.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.test.mjs"
       - "systemia/evercraft-home/os-saban-snapshot.mjs"
       - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
       - "systemia/evercraft-home/os-integration.test.mjs"
@@ -22,6 +24,8 @@ on:
       - "systemia/evercraft-os/**"
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-integration-adapter.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.test.mjs"
       - "systemia/evercraft-home/os-saban-snapshot.mjs"
       - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
       - "systemia/evercraft-home/os-integration.test.mjs"
@@ -65,6 +69,8 @@ jobs:
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Prove unified OS readback is honest and non-executing
         run: node --test systemia/evercraft-home/os-integration.test.mjs
+      - name: Prove commercial outcome receipts do not fabricate live authority
+        run: node --test systemia/evercraft-home/os-outcome-source-audit.test.mjs
       - name: Prove private Saban aggregates and scoped commerce projection
         run: node --test systemia/evercraft-home/os-operational-readbacks.test.mjs
       - name: Emit boot envelope
