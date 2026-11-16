@@ -1,0 +1,22 @@
+name: Network Field01B metadata review (never deploys)
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/field01b-review/**'
+      - '.github/workflows/network-field01b-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate public-safe review record
+        run: node --test systemia/network/field01b-review/review-gate.test.mjs
+      - name: Verify review remains held
+        run: node systemia/network/field01b-review/review-gate.mjs systemia/network/field01b-review/review-record.json
