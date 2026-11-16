@@ -4,7 +4,7 @@ No bypass, no sign-in, no third-party proxies, no auto-publication.
 """
 import subprocess,json,pathlib
 root=pathlib.Path("pacific-public-youtube-discovery");root.mkdir(exist_ok=True)
-url="https://www.youtube.com/@PacificMobileMechanic/videos"
+url="https://www.youtube.com/@PacificMobileMechanic/shorts"
 cmd=["yt-dlp","--flat-playlist","--playlist-end","25","--dump-single-json","--skip-download","--no-warnings",url]
 p=subprocess.run(cmd,text=True,capture_output=True,timeout=110)
 (root/"stderr.txt").write_text(p.stderr[-6000:])
