@@ -4,15 +4,19 @@ on:
     paths:
       - 'systemia/worlds/living-lobby-policy.mjs'
       - 'systemia/worlds/living-lobby-invitation-proof.mjs'
+      - 'systemia/worlds/living-lobby-presence-proof.mjs'
       - 'tests/worlds-living-lobby-policy.test.mjs'
       - 'tests/worlds-living-lobby-invitations.test.mjs'
+      - 'tests/worlds-living-lobby-presence.test.mjs'
       - '.github/workflows/worlds-living-lobbies.yml'
   pull_request:
     paths:
       - 'systemia/worlds/living-lobby-policy.mjs'
       - 'systemia/worlds/living-lobby-invitation-proof.mjs'
+      - 'systemia/worlds/living-lobby-presence-proof.mjs'
       - 'tests/worlds-living-lobby-policy.test.mjs'
       - 'tests/worlds-living-lobby-invitations.test.mjs'
+      - 'tests/worlds-living-lobby-presence.test.mjs'
       - '.github/workflows/worlds-living-lobbies.yml'
 permissions:
   contents: read
@@ -27,4 +31,5 @@ jobs:
           node-version: '22'
       - run: node --check systemia/worlds/living-lobby-policy.mjs
       - run: node --check systemia/worlds/living-lobby-invitation-proof.mjs
-      - run: node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs
+      - run: node --check systemia/worlds/living-lobby-presence-proof.mjs
+      - run: node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs tests/worlds-living-lobby-presence.test.mjs
