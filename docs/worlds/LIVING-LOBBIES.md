@@ -47,3 +47,16 @@ Run: node --test tests/worlds-living-lobby-policy.test.mjs
 7. Only then test opt-in real-business meeting and Saban job, with payments treated as an independent checked transaction.
 
 Never ship anonymous public matchmaking by exposing this pure policy module as a caller-controlled endpoint.
+
+## November 15 follow-up: private invitation acceptance proof
+
+`systemia/worlds/living-lobby-invitation-proof.mjs` now provides an **in-process test kernel**, not a live messaging service or persistent queue.
+
+- A trusted host verifies a human/agent session before submitting an invitation. Client-claimed subject IDs are not authority.
+- Every proposal and acceptance rechecks current lobby presence, Passport scopes and block state.
+- Human approaches require the named recipient to accept independently.
+- Agent-facilitated introductions require **both humans to accept independently**. Neither the facilitator nor the proposer can accept for them.
+- Invitations expire after five minutes by default, are bounded in count, and support participant cancellation.
+- Even `consent_complete` returns `delivery_authorized:false`: an authorized delivery mechanism, durable state, rate limits, session-to-presence binding and anti-abuse audits remain unbuilt.
+
+Run `node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs`. This is synthetic proof only, not evidence of authenticated internet participants or messages.
