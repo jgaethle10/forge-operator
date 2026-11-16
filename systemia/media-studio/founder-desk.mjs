@@ -148,18 +148,19 @@ async function render(root,job){
     });
   });
 }
-export function makeServer({root,port=8789}){
+export function makeServer({root,port=8793}){
   if(!root||!Number.isInteger(port))throw Error('private_root_and_port_required');
   initialize(root);
   const token=crypto.randomBytes(24).toString('hex');
   const busy=new Set();
-  return http.createServer(async(req,res)=>{
+  const server=http.createServer(async(req,res)=>{
     try{
-      if(!['127.0.0.1:'+port,'localhost:'+port].includes(req.headers.host))
+      const boundPort=server.address()?.port||port;
+      if(!['127.0.0.1:'+boundPort,'localhost:'+boundPort].includes(req.headers.host))
         return reply(res,403,{error:'local_host_only'});
-      const url=new URL(req.url,'http://127.0.0.1:'+port);
+      const url=new URL(req.url,'http://127.0.0.1:'+boundPort);
       if(req.method!=='GET'){
-        if(req.headers.origin&&!['http://127.0.0.1:'+port,'http://localhost:'+port].includes(req.headers.origin))
+        if(req.headers.origin&&!['http://127.0.0.1:'+boundPort,'http://localhost:'+boundPort].includes(req.headers.origin))
           return reply(res,403,{error:'foreign_origin'});
         if(req.headers['x-fallen-token']!==token)return reply(res,403,{error:'local_token_required'});
       }
@@ -216,11 +217,12 @@ export function makeServer({root,port=8789}){
       return reply(res,405,{error:'method_not_allowed'});
     }catch(e){return reply(res,400,{error:String(e.message||e)});}
   });
+  return server;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const root=path.resolve(process.env.FALLEN_PRIVATE_DESK_DIR||
     path.join(os.homedir(),'.local','share','evercraft','fallen-founder-desk'));
-  const port=Number(process.env.FALLEN_FOUNDER_PORT||8789);
+  const port=Number(process.env.FALLEN_FOUNDER_PORT||8793);
   if(!Number.isInteger(port)||port<1024||port>65535)throw Error('invalid_port');
   makeServer({root,port}).listen(port,'127.0.0.1',()=>{
     process.stdout.write('Fallen Founder Desk: http://127.0.0.1:'+port+'\n');
