@@ -376,3 +376,19 @@ test('controller has no native host subprocess or by-name stop implementation',(
   assert.equal(code.includes('function nativeIo('),false);
   assert.equal(code.includes("'/usr/bin/systemctl'"),false);
 });
+
+test('alternative held-FD cgroup.kill review can never reuse StopUnit permit',()=>{
+  const f=input();
+  const reviewOnly={
+    schema:'evercraft.eo001.gate1.held-cgroup-kill-review.v1',
+    state:'HELD_SCOPE_CGROUP_KILL_CANDIDATE_SOURCE_REVIEW_ONLY',
+    candidate_kernel_control_file:'cgroup.kill',
+    candidate_single_write_value:'1',
+    execution_authorized:false
+  };
+  const r=f.execute({proposal:reviewOnly});
+  assert.equal(r.reason,'NATIVE_STOP_UNREVIEWED_PROPOSAL');
+  assert.equal(r.stop_request_issued,false);
+  assert.equal(f.calls.reserve.length,0);
+  assert.equal(f.calls.stop.length,0);
+});
