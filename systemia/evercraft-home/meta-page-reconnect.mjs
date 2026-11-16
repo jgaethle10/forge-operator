@@ -62,7 +62,7 @@ export function createMetaPageReconnect({
     redirectParsed.search === '' && redirectParsed.hash === '' &&
     redirectParsed.pathname === '/home/api/clip/facebook/oauth/callback' &&
     Boolean(secretFile) && Boolean(credentialVault);
-  const returnPath = '/home/credentials.html';
+  const returnPath = '/home/credentials.html?provider=facebook-pages';
   const graphBase = 'https://graph.facebook.com/' + version;
   function prune() {
     for (const [state, flow] of flows) if (flow.expires <= now()) flows.delete(state);
