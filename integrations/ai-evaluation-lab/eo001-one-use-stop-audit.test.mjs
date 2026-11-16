@@ -167,13 +167,27 @@ test('extra spoofed filenames and noncontiguous numbering block readback',()=>{
     assert.throws(()=>audit(dir),/STOP_LEDGER_AUDIT_RECORD_NAMES_INVALID/);
   });
 });
-test('observation without PRESTOP and more than one terminal are refused',()=>{
+test('maliciously planted observation without PRESTOP or third record refuses audit',()=>{
+  // The writer itself now rejects these invalid sequences. Plant exact
+  // locally hash-consistent bytes to exercise independent auditor refusals.
+  const plant=(dir,i,receipt,previous)=>{
+    const row={
+      schema:'evercraft.eo001.one-use-stop-record.v1',
+      permit_digest_sha256:D,ordinal:i,previous_record_sha256:previous,
+      receipt_sha256:hash(Buffer.from(JSON.stringify(receipt))),receipt,
+      independent_host_attestation:false,immutable_owner_proof:false
+    };
+    fs.writeFileSync(path.join(dir,fn(i)),JSON.stringify(row),
+      {flag:'wx',mode:0o600});
+  };
   withDirectory(dir=>{
-    save(dir,[outcome()]);
+    save(dir);
+    plant(dir,0,outcome(),null);
     assert.throws(()=>audit(dir),/STOP_LEDGER_AUDIT_RECORD_SEQUENCE_INVALID/);
   });
   withDirectory(dir=>{
-    save(dir,[pre(),outcome(),blocked()]);
+    save(dir,[pre(),outcome()]);
+    plant(dir,2,blocked(),hash(fs.readFileSync(path.join(dir,fn(1)))));
     assert.throws(()=>audit(dir),/STOP_LEDGER_AUDIT_RECORD_SEQUENCE_INVALID/);
   });
 });
