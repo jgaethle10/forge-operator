@@ -3,12 +3,14 @@ import {RADIO_BROWSER_MIRRORS,RADIO_PRESETS,radioQuery,radioRegionalQuery,normal
 // Independent, opt-in live-radio layer. It does not touch world saves, player pose, or the 3D renderer.
 const isYakimaWalk=/\/worlds\/hidden-world\/yakima-walk\/(?:index\.html)?$/.test(location.pathname);
 const isYakimaScene=location.pathname.endsWith('/worlds/hidden-world/yakima-standalone.html')||isYakimaWalk;
-const topbar=document.querySelector('.topright')||(isYakimaScene?document.body:null);
+// The newer Yakima walk owns a right-side HUD. Mount radio *inside* that
+// HUD instead of floating over its research-panel close button.
+const topbar=document.querySelector('.topright')||(isYakimaWalk?document.querySelector('.right'):(isYakimaScene?document.body:null));
 if(topbar){
   const toggle=document.createElement('button');
   toggle.type='button';
   toggle.id='worldRadioToggle';
-  toggle.className='world-radio-toggle'+(isYakimaScene?' world-radio-floating':'');
+  toggle.className='world-radio-toggle'+(isYakimaScene&&!isYakimaWalk?' world-radio-floating':'');
   toggle.setAttribute('aria-controls','worldRadioPanel');
   toggle.setAttribute('aria-expanded','false');
   toggle.textContent=isYakimaScene?'📻 Live Yakima radio':'📻 Radio';
