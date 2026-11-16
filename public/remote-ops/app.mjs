@@ -1,4 +1,4 @@
-import { PRESETS, ACTIONS, newRun, eventForDay, previewAction, advanceDay, summarizeRun } from './engine.mjs';
+import { PRESETS, ACTIONS, newRun, eventForDay, previewAction, advanceDay, rewindDay, summarizeRun } from './engine.mjs';
 
 const id = name => document.getElementById(name);
 const money = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
@@ -48,6 +48,12 @@ function renderChoices() {
 
 function renderPreview() {
   const p = previewAction(state, selectedAction);
+  const hold = previewAction(state, 'hold');
+  const deltaFromHold = p.profit - hold.profit;
+  text(id('compare-note'), selectedAction === 'hold'
+    ? 'Holding course is the comparison baseline for today.'
+    : 'Compared with holding course today: ' + (deltaFromHold >= 0 ? '+' : '') + money(deltaFromHold) +
+      ' modeled daily contribution. This is a same-day comparison, not a long-term projection.');
   text(id('estimate-net'), money(p.profit));
   text(id('estimate-cash'), money(p.cash));
   text(id('estimate-demand'), p.demand);
@@ -164,6 +170,7 @@ function render() {
   id('net').className = 'value ' + (state.totalRevenue - state.totalExpenses >= 0 ? 'pos' : 'neg');
   text(id('price'), priceMoney(state.price));
   text(id('staff'), state.staff + ' staff modeled');
+  id('rewind').disabled = state.history.length === 0;
   renderAssumptions();
   renderSpark();
   renderLedger();
@@ -198,6 +205,13 @@ id('advance').addEventListener('click', () => {
   render();
 });
 id('restart').addEventListener('click', showSetup);
+id('rewind').addEventListener('click', () => {
+  if (!state || !state.history.length) return;
+  state = rewindDay(state);
+  selectedAction = 'hold';
+  render();
+  id('cockpit').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 id('replay').addEventListener('click', showSetup);
 id('export').addEventListener('click', () => {
   if (!state) return;
