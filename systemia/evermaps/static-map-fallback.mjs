@@ -36,7 +36,7 @@ export function wgsStaticSvg(layers){
   const d=path(f.geometry);return d?'<path d="'+d+'" fill="'+(COLORS[f.properties?.CLASSIFICATION]||COLORS['Not Analyzed'])+'" fill-opacity=".76" stroke="#87adbc" stroke-width=".4" fill-rule="evenodd"/>':'';
  }).join('');
  const border=layers.studies.features.map(f=>'<path d="'+path(f.geometry)+'" fill="none" stroke="#e9f6fd" stroke-width="2.8" stroke-dasharray="7 6"/>').join('');
- const dots=(k,color,r)=>layers[k].features.map(f=>{
+ const dots=(k,color,r)=>(layers[k]?.features||[]).map(f=>{
   const p=f.geometry?.coordinates;
   if(f.geometry?.type!=='Point'||!Array.isArray(p)||!p.slice(0,2).every(Number.isFinite))return '';
   const [x,y]=pt(p);return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r+'" fill="'+color+'"/>';
@@ -44,7 +44,7 @@ export function wgsStaticSvg(layers){
  return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grant County WGS geological map" viewBox="0 0 900 1050">'+
   '<rect width="900" height="1050" rx="18" fill="#102536"/>'+
   '<text x="26" y="47" font-size="24" font-weight="700" fill="#edf8ff">GRANT COUNTY | WGS GEOLOGY</text>'+
-  polygons+border+dots('tests','#64dce8',3)+dots('mineHistory','#f1a3cb',2.5)+
+  polygons+border+dots('tests','#64dce8',3)+dots('mineHistory','#f1a3cb',2.5)+dots('permits','#ffa95b',4)+
   '<text x="25" y="1007" font-size="18" fill="#e3f2fa">'+layers.resources.features.length+' polygons / '+layers.tests.features.length+' tests / '+layers.mineHistory.features.length+' historical mines</text>'+
   '<text x="25" y="1033" font-size="15" fill="#a1c0ce">Static regional preview. No mineral rights or site approval established.</text></svg>';
 }
