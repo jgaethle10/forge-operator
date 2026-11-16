@@ -27,7 +27,7 @@ test('EPS application reuses founding Partners secure intake, not an independent
  assert.match(partners,/Local homeowners & property managers \(EPS\)/);
  assert.match(partners,/\.\.\/eps-partners\//);
  assert.match(app,/get\('focus'\)/);
- assert.match(app,/eps:'Local homeowners & property managers \\(EPS\\)'/);
+ assert.match(app,/eps:'Local homeowners & property managers \(EPS\)'/);
  assert.match(app,/api\/partners/);
  assert.doesNotMatch(page,/<form[^>]*action=/);
 });
