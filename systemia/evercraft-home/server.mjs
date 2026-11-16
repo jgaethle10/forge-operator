@@ -8,6 +8,7 @@ import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
+import { readExecutiveEvidence } from "./executive-evidence-adapter.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.mjs";
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
@@ -1154,6 +1155,15 @@ export async function startEvercraftHomeServer({
       const session = sessionFor(req, "home.network.read");
       if (!session.ok) return json(res, session.status, session);
       return json(res, 200, { ok: true, subject: session.subject, ...readNetworkOverview(repoRoot) });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/executive/evidence") {
+      const session = sessionFor(req, "home.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true, subject: session.subject,
+        ...readExecutiveEvidence({ repoRoot }),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/overview") {
