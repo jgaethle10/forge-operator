@@ -40,7 +40,7 @@ test('each owned path links to a real file in this checkout',()=>{
 test('official external employment resource links and EPS origin use HTTPS',()=>{
   assert.match(html,/href="https:\/\/www\.worksourcewa\.com\/"/);
   assert.match(html,/href="https:\/\/esd\.wa\.gov\/jobs-and-training\/find-job\/job-seekers-get-help-worksource"/);
-  assert.match(html,/href="https:\/\/evercraftpropertyservices\.com\/"/);
+  assert.match(html,/href="\/forge-operator\/eps\/"/);
   assert.doesNotMatch(html,/base44\.app/i);
 });
 
@@ -49,7 +49,7 @@ test('Fabric public products choose truthful action pages without commercial aut
   const eps=byId('product:evercraft-property-services');
   const partner=byId('product:evercraft-partners');
   assert.equal(front.connections[0].url,'https://jgaethle10.github.io/forge-operator/help/');
-  assert.equal(eps.connections[0].url,'https://evercraftpropertyservices.com/');
+  assert.equal(eps.connections[0].url,'https://jgaethle10.github.io/forge-operator/eps/');
   assert.equal(partner.connections[0].url,'https://jgaethle10.github.io/forge-operator/partners/');
   for(const product of [front,eps,partner]){
     assert.equal(product.commercial_state,'discovery_only');
@@ -63,7 +63,7 @@ test('Fabric MCP exposes the link and remains strictly read-only',async()=>{
   const catalog=loadFabricCatalogFromRepository();
   for(const [public_id,expected_url] of [
     ['product:evercraft-front-door','https://jgaethle10.github.io/forge-operator/help/'],
-    ['product:evercraft-property-services','https://evercraftpropertyservices.com/'],
+    ['product:evercraft-property-services','https://jgaethle10.github.io/forge-operator/eps/'],
   ]){
     const rpc=await executeFabricDirectoryRpc({
       jsonrpc:'2.0',id:15,method:'tools/call',params:{
