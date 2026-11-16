@@ -6,6 +6,7 @@ on:
       - 'public/apps/route-twin/**'
       - 'tests/systemia-atlas-rebuild.test.mjs'
       - 'tests/atlas-route-twin.test.mjs'
+      - 'scripts/probe-systemia-atlas-browser.mjs'
       - '.github/workflows/systemia-atlas-rebuild-checks.yml'
   push:
     branches:
@@ -47,3 +48,26 @@ jobs:
           assert.match(twin,/Synthetic proof/);
           assert.match(twin,/\.\/app\.mjs/);
           EOF
+  browser-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install owned browser test harness
+        run: npm install --no-save --no-audit --no-fund playwright@1.55.1
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+      - name: Atlas lifecycle and 3D RouteTwin desktop/mobile emulation
+        run: node scripts/probe-systemia-atlas-browser.mjs
+      - name: Save browser screenshots and proof receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-route-twin-browser-evidence
+          path: artifacts/systemia-atlas-browser/
+          if-no-files-found: warn
