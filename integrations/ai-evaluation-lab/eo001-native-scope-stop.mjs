@@ -41,6 +41,12 @@ const hold=(state,reason,step,stopIssued=false,extra={})=>Object.freeze({
   ...extra
 });
 function checkPermit({permit,signatures,trust,proposal,now}){
+  const fields=['action','boot_id','cgroup_path','device','inode',
+    'nonce','schema','scope_unit','source_revision','stop_budget_ms',
+    'valid_from_ms','valid_until_ms'];
+  requireThat(permit&&typeof permit==='object'&&!Array.isArray(permit)&&
+    Object.keys(permit).sort().join('|')===fields.sort().join('|'),
+    'STOP_PERMIT_FIELDS_NOT_EXACT');
   requireThat(permit?.schema==='evercraft.eo001.synthetic-stop-permit.v1'&&
     permit.action==='EXACT_USER_SCOPE_STOP_ONLY'&&
     UNIT.test(permit.scope_unit||'')&&
@@ -65,6 +71,7 @@ function checkPermit({permit,signatures,trust,proposal,now}){
     trust.owner!==trust.reviewer,
     'STOP_PERMIT_ROLES_NOT_INDEPENDENT');
   const bytes=Buffer.from(DOMAIN+JSON.stringify(permit));
+  const normalized=[];
   for(const role of ['owner','reviewer']){
     const signature=signatures[role];
     requireThat(typeof signature==='string'&&
@@ -74,11 +81,14 @@ function checkPermit({permit,signatures,trust,proposal,now}){
     try{
       const sig=Buffer.from(signature,'base64');
       const key=createPublicKey(trust[role]);
+      normalized.push(key.export({format:'der',type:'spki'}).toString('hex'));
       ok=sig.length===64&&key.asymmetricKeyType==='ed25519'&&
         verify(null,bytes,key,sig);
     }catch{}
     requireThat(ok,'STOP_PERMIT_SIGNATURE_INVALID');
   }
+  requireThat(normalized.length===2&&normalized[0]!==normalized[1],
+    'STOP_PERMIT_ROLES_NOT_INDEPENDENT');
   return sha(bytes);
 }
 function checkProposal(p){
@@ -211,12 +221,15 @@ export function attemptApprovedExactSyntheticScopeStop({
   sink,io
 }={}){
   // Refuse before even reading systemd if the caller lacks a private sink.
-  requireThat(sink&&typeof sink.reserve==='function'&&
-    typeof sink.record==='function'&&
-    witness&&typeof witness.before==='function'&&
+  requireThat(witness&&typeof witness.before==='function'&&
     typeof witness.finish==='function'&&
     typeof witness.close==='function',
     'NATIVE_STOP_PERSISTENCE_OR_WITNESS_MISSING');
+  if(!sink||typeof sink.reserve!=='function'||
+    typeof sink.record!=='function'){
+    try{witness.close();}catch{}
+    refuse('NATIVE_STOP_PERSISTENCE_OR_WITNESS_MISSING');
+  }
   let issued=false,stage='PRE_ADMISSION';
   let approvedDigest=null,localIO=null,pre=null;
   let stopStart=null,stopEnd=null,stopResult=null;
