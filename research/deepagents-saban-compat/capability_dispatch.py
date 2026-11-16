@@ -44,7 +44,7 @@ def run(plan, mission_id, db, endpoint, timeout):
     authorization = dispatch_roles(plan)
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,60}", mission_id):
         raise ValueError("invalid mission id")
-    if not re.fullmatch(r"http://(?:127\\.0\\.0\\.1|localhost):[0-9]{1,5}/v1/chat/completions", endpoint):
+    if not re.fullmatch(r"http://(?:127\.0\.0\.1|localhost):[0-9]{1,5}/v1/chat/completions", endpoint):
         raise ValueError("only local model endpoint allowed")
     full_id = mission_id + "-" + authorization["plan_sha256"][:12]
     db = Path(db).expanduser()
