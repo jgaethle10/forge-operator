@@ -81,6 +81,17 @@ Without an actual canonical source loader, the private route returns **503**, ev
 
 Run `node --test tests/fabric-private-outcome-readback.test.mjs` to prove the actual Fabric HTTP server and Home HTTP server can exchange an authenticated signed, redacted result in one local integration test. All order, payment, mission and Shipping records in this test are synthetic. **CI passing does not mean the real source loader exists, a paying buyer was observed, or either resident runtime was deployed.**
 
+## Local Execution Gate + Shipping ledger witness
+
+Fabric's private endpoint now additionally requires `fabric-outcome-ledger-witness.mjs` to match **two persisted private stores** before it signs even an *unattested* source bundle:
+
+- `EVERCRAFT_FABRIC_OUTCOME_EXECUTION_EVENTS_FILE`: the **actual** Execution Gate `execution-lease-events.jsonl`, with a current, hash-consistent completed event matching the supplied lease/receipt/outcome reference; a later canceled/failed/altered event holds the outcome
+- `EVERCRAFT_FABRIC_OUTCOME_SHIPPING_LEDGER_FILE`: the **actual** Shipping `shipping-ledger.json`, with a uniquely matched verified-delivered shipment, original send authorization, accepted provider message, verified sent-copy recipient/subject/attachments, exact package digest, exact shipment idempotency key, and matching delivery receipt/proof fields
+
+Both are absolute, non-symlinked, privately permissioned regular files (0600) under private immediate directories (0700), limited to 8 MiB. Missing, truncated, world-readable, structurally contradictory, duplicate or updated-to-noncompleted records return **503** with no private IDs. The witness performs no writes or provider calls. It is **not** an independent issuer signature and does not establish source authenticity outside the local owner's machine. Real Payments provider settlement, canonical Systemia mission persistence, Saban worker attestation, QA, and external Shipping provider confirmation remain unconnected and unverified. These two local ledgers are deliberately necessary but insufficient gates.
+
+CI tests simulate *private persisted* Execution Gate and Shipping state, not production data. The production Fabric readback record loader remains `null`; configuring the two paths alone cannot enable a customer success claim.
+
 ## Next vertical integration
 
 Reuse Issue #1546 and existing Saban, Payments and Shipping implementation owners. Build an authenticated, permission-scoped canonical receipt reader (the source-only structural audit above does **not** satisfy this) joining:
