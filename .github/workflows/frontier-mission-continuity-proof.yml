@@ -1,0 +1,23 @@
+name: Frontier Mission Continuity Offline Proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/mission-continuity-readonly.mjs'
+      - 'systemia/organism/mission-continuity-readonly.proof.mjs'
+      - '.github/workflows/frontier-mission-continuity-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove redaction, no false-green, stale receipt holds
+        run: node systemia/organism/mission-continuity-readonly.proof.mjs
