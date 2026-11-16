@@ -1,0 +1,36 @@
+name: DayTrade PAPER Auth Canary
+
+on:
+  pull_request:
+    paths:
+      - "systemia/daytrade-lens/paper-auth-canary*"
+      - ".github/workflows/daytrade-paper-auth-canary.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/daytrade-lens/paper-auth-canary*"
+      - ".github/workflows/daytrade-paper-auth-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paper-auth-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test paper-auth safety (mock network only)
+        run: node --test systemia/daytrade-lens/paper-auth-canary.test.mjs
+      - name: Read-only PAPER credentials verification (no orders)
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          ALPACA_PAPER_KEY_ID: ${{ secrets.ALPACA_PAPER_KEY_ID }}
+          ALPACA_PAPER_SECRET_KEY: ${{ secrets.ALPACA_PAPER_SECRET_KEY }}
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+        run: node systemia/daytrade-lens/paper-auth-canary.mjs
