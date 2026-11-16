@@ -16,6 +16,9 @@ test('founder and customers face the same hard stop for unfinished commercials',
   assert.equal(job.technicalRender,null);
   assert.equal(readiness(job).canPublish,false);
   assert.equal(readiness(job).canDeliver,false);
+  job.technicalRender={pictureStatus:'review_required',sha256:'a'.repeat(64)};
+  assert.ok(readiness(job).blockers.some(x=>x.includes('Automated picture scan')));
+  job.technicalRender=null;
   assert.ok(readiness(job).blockers.some(x=>x.includes('Signature')));
   assert.throws(()=>patchJob(job,{format:'4:3'}),/invalid_format/);
   assert.throws(()=>patchJob(job,{narration:'silently_fake_voice'}),/invalid_narration_mode/);
