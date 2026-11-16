@@ -155,7 +155,9 @@ if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.
     fs.mkdirSync(path.dirname(out),{recursive:true});
     fs.writeFileSync(out,JSON.stringify(result,null,2)+'\n','utf8');
     console.log(JSON.stringify({schema:result.schema,orderId:result.orderId,status:result.status,
-      reasons:result.release.reasons,audioStatus:result.audioStatus,pictureStatus:result.pictureStatus,
+      reasons:[...new Set([...result.release.reasons,...result.signatureQuality.reasons])].sort(),
+      signatureQualityStatus:result.signatureQualityStatus,
+      audioStatus:result.audioStatus,pictureStatus:result.pictureStatus,
       outputPath:out},null,2));
     if(result.status==='blocked')process.exitCode=2;
   }catch(err){console.error(err instanceof Error?err.message:String(err));process.exitCode=1;}
