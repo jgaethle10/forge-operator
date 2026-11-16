@@ -13,9 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - state: Oregon
-            fips: '41'
-            expected: 8325
           - state: Idaho
             fips: '16'
             expected: 4645
@@ -170,4 +167,43 @@ jobs:
         with:
           name: aiw-2026-oregon-source-discrepancy
           path: ${{ runner.temp }}/aiw-oregon-discrepancy.json
+          retention-days: 7
+
+  oregon-special-reconciliation:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preserve 8326 raw Oregon records and reconcile exactly one N
+        run: |
+          python3 research/infrastructure-watch/scripts/oregon_2026_reconcile.py \
+            --out "$RUNNER_TEMP/aiw-oregon-reconciled"
+      - name: Independently validate published 8325 rated and one unclassified
+        run: |
+          python3 - <<'PY'
+          import collections,json,os
+          from pathlib import Path
+          dest=Path(os.environ['RUNNER_TEMP'])/'aiw-oregon-reconciled'
+          meta=json.loads((dest/'oregon_2026_reconciliation_audit.json').read_text())
+          assert meta['source_sha256']=='773af32721950315adb5b5cb64560ef698d3752dabd7ac7c3d5cc41d631bdcf2'
+          assert meta['official_classified_total']==8325 and meta['raw_records']==8326
+          assert meta['conditions']=={'G':2470,'F':5426,'P':429,'N':1}
+          lines=[json.loads(x) for x in (dest/'oregon_2026_reconciled.ndjson').read_text().splitlines()]
+          assert len(lines)==8326 and len({x['bridge_id'] for x in lines})==8326
+          assert sum(x['condition']=='N' for x in lines)==1
+          assert all(x['current_imminent_danger_verified'] is False for x in lines)
+          assert meta['national_import_complete'] is False
+          print(json.dumps(meta,indent=2))
+          PY
+      - name: Retain reconciled Oregon records and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-oregon-reconciled-with-unclassified
+          path: |
+            ${{ runner.temp }}/aiw-oregon-reconciled/oregon_2026_reconciled.ndjson
+            ${{ runner.temp }}/aiw-oregon-reconciled/oregon_2026_reconciliation_audit.json
           retention-days: 7
