@@ -295,3 +295,52 @@ test('real local fsynced one-use sink works with fake systemd and forbids replay
     assert.equal(fs.readdirSync(dir).length,3);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('real disk ledger preserves pre-reservation refusal instead of masking it as write failure',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'eo001-stop-denial-ci-'));
+  try{
+    for(const mode of ['forged-signature','changed-manager-scope','dirty-source']){
+      const f=input({
+        changedUnit:mode==='changed-manager-scope',
+        dirty:mode==='dirty-source'
+      });
+      if(mode==='forged-signature')f.signatures.owner='broken';
+      const sink=openPrivateOneUseStopLedger({directory:dir});
+      try{
+        const result=f.execute({sink});
+        assert.equal(result.state,'NATIVE_EXACT_SCOPE_STOP_HELD');
+        assert.equal(result.reason,
+          mode==='forged-signature'?'STOP_PERMIT_SIGNATURE_INVALID':
+          mode==='changed-manager-scope'?'NATIVE_STOP_MANAGER_SCOPE_CHANGED':
+          'NATIVE_STOP_SOURCE_NOT_PINNED_CLEAN');
+        assert.equal(result.stop_permit_reserved,false);
+        assert.equal(result.local_failure_record_persisted,false);
+        assert.equal(result.stop_request_issued,false);
+        assert.equal(f.calls.stop.length,0);
+        assert.equal(f.calls.close,1);
+        assert.equal(fs.readdirSync(dir).length,0);
+      }finally{sink.close();}
+    }
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('real disk ledger replay returns replay denial without creating new receipts',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'eo001-stop-replay-ci-'));
+  try{
+    const first=input(),firstSink=openPrivateOneUseStopLedger({directory:dir});
+    try{
+      assert.equal(first.execute({sink:firstSink}).state,
+        'SYNTHETIC_STOP_ACK_METADATA_REVIEW_REQUIRED');
+    }finally{firstSink.close();}
+    const files=fs.readdirSync(dir).sort();
+    const again=input(),secondSink=openPrivateOneUseStopLedger({directory:dir});
+    try{
+      const denied=again.execute({sink:secondSink});
+      assert.equal(denied.reason,
+        'NATIVE_STOP_PERMIT_REPLAY_OR_RESERVATION_FAILED');
+      assert.equal(denied.stop_permit_reserved,false);
+      assert.equal(denied.local_failure_record_persisted,false);
+      assert.equal(again.calls.stop.length,0);
+      assert.deepEqual(fs.readdirSync(dir).sort(),files);
+    }finally{secondSink.close();}
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
