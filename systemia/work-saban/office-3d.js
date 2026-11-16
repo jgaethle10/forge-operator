@@ -17,6 +17,7 @@
   let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};
   let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null,roomLevel=false,roomButton=null;
   let costumes=null,crewButton=null,individualButton=null,costumeCaption=null;
+  let autoFraming=true;
   const touches=new Map();
   let gesture=null;
   const rooms=[
@@ -147,8 +148,8 @@
     path.innerHTML='<span>AUTHORIZED WORK ONLY</span>';
     world.append(path);
     const overlay=make('div','spatial-overlay');
-    const orbit=make('div','spatial-orbit-label','SHARED STUDIO · DRAG TO ORBIT · PINCH TO ZOOM · FOLLOW SELECTED');
-    const evidenceNote=make('div','spatial-motion-disclosure','MOTION VISUALIZES RECORDED EVENTS · NOT PHYSICAL AGENT TRAVEL');
+    const orbit=make('div','spatial-orbit-label','DRAG TO LOOK · PINCH TO ZOOM');
+    const evidenceNote=make('div','spatial-motion-disclosure','RECORDED EVENTS · NOT AGENT TRAVEL');
     evidenceNote.setAttribute('aria-label','Character animations illustrate verified local worker state changes, not physical movement by autonomous AI agents.');
     const wardrobeBar=make('div','spatial-costume-bar');
     const wardrobeTitle=make('span','spatial-costume-label','CHARACTER STYLES');
@@ -162,8 +163,12 @@
     individualButton.addEventListener('click',e=>{e.stopPropagation();setSelectedCostume();});
     costumeCaption=make('span','spatial-costume-caption','APPEARANCE ONLY · NO WORKER-STATE CHANGE');
     wardrobeBar.append(wardrobeTitle,crewButton,individualButton,costumeCaption);
+    const primary=make('div','spatial-camera-primary');
     const controls=make('div','spatial-controls');
+    const more=make('details','spatial-camera-more');
+    const moreLabel=make('summary','spatial-camera-more-label','More views');
     const buttons=[
+      ['FIT','Fit whole crew',()=>fitCrew()],
       ['−','Zoom out',()=>zoom(-0.1)],
       ['+','Zoom in',()=>zoom(0.1)],
       ['⟲','Orbit left',()=>orbitCamera(-15,0)],
@@ -180,13 +185,20 @@
       b.addEventListener('click',e=>{e.stopPropagation();fn();});
       if(title==='Follow selected coworker'){followButton=b;b.setAttribute('aria-pressed','false');}
       if(title==='Lower camera to room level'){roomButton=b;b.setAttribute('aria-pressed','false');}
-      controls.append(b);
+      if(['Fit whole crew','Zoom out','Zoom in','Follow selected coworker','Visit next coworker'].includes(title))
+        primary.append(b);
+      else controls.append(b);
     });
     const costumeMount=$('office-costume-toolbar');
     if(!costumeMount)throw Error('Owned wardrobe toolbar mount missing');
     costumeMount.append(wardrobeBar);
     costumeMount.hidden=!enabled;
-    overlay.append(orbit,evidenceNote,controls);
+    const cameraMount=$('office-camera-toolbar');
+    if(!cameraMount)throw Error('Owned camera toolbar mount missing');
+    more.append(moreLabel,controls);
+    cameraMount.append(primary,more);
+    cameraMount.hidden=!enabled;
+    overlay.append(orbit,evidenceNote);
     viewport.append(overlay);
     scene.append(viewport);
     const fallback=$('office-scene')?.querySelector('.workfloor-art');
@@ -215,7 +227,7 @@
           const [a,b]=[...touches.values()];
           const current={x:(a.x+b.x)/2,y:(a.y+b.y)/2,span:Math.hypot(a.x-b.x,a.y-b.y)};
           if(gesture){
-            disengageFollow();
+            disengageFollow();autoFraming=false;
             position.panX=clamp(position.panX+(current.x-gesture.x)*.75,-480,480);
             position.panY=clamp(position.panY+(current.y-gesture.y)*.75,-360,360);
             position.zoom=clamp(position.zoom+(current.span-gesture.span)*.0025,.35,1.42);
@@ -232,7 +244,7 @@
       const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
       drag.x=e.clientX;drag.y=e.clientY;
       if(drag.pan){
-        disengageFollow();
+        disengageFollow();autoFraming=false;
         position.panX=clamp(position.panX+dx,-480,480);
         position.panY=clamp(position.panY+dy,-360,360);
         applyCamera();
@@ -246,7 +258,7 @@
       const key=e.key.toLowerCase(),step=e.shiftKey?42:22;
       const panKeys={arrowleft:[step,0],arrowright:[-step,0],arrowup:[0,step],arrowdown:[0,-step],w:[0,step],a:[step,0],s:[0,-step],d:[-step,0]};
       if(key in panKeys){
-        e.preventDefault();disengageFollow();position.panX=clamp(position.panX+panKeys[key][0],-480,480);
+        e.preventDefault();disengageFollow();autoFraming=false;position.panX=clamp(position.panX+panKeys[key][0],-480,480);
         position.panY=clamp(position.panY+panKeys[key][1],-360,360);
         applyCamera();
       }else if(key==='n'||key==='p'){
@@ -288,6 +300,7 @@
     if(followSelected)focusAgent(selected);
   }
   function toggleRoomLevel(){
+    autoFraming=false;
     roomLevel=!roomLevel;
     if(roomButton)roomButton.setAttribute('aria-pressed',String(roomLevel));
     const compact=(scene?.getBoundingClientRect?.().width||window.innerWidth||1000)<540;
@@ -298,13 +311,31 @@
     applyCamera();
   }
   function orbitCamera(dx,dy){
+    autoFraming=false;
     position.yaw=clamp(position.yaw+dx,-170,170);
     position.pitch=clamp(position.pitch+dy,32,74);
     applyCamera();
   }
-  function zoom(delta){position.zoom=clamp(position.zoom+delta,0.35,1.42);applyCamera();}
-  function resetCamera(){disengageFollow();roomLevel=false;if(roomButton)roomButton.setAttribute('aria-pressed','false');position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};applyCamera();}
+  function zoom(delta){autoFraming=false;position.zoom=clamp(position.zoom+delta,0.20,1.42);applyCamera();}
+  function fitCrew({instant=false}={}){
+    disengageFollow();
+    roomLevel=false;
+    if(roomButton)roomButton.setAttribute('aria-pressed','false');
+    autoFraming=true;
+    const m=scene?.getBoundingClientRect?.();
+    if(m&&m.width>0&&m.height>0&&window.EvercraftOfficeFraming){
+      position=window.EvercraftOfficeFraming.fit({width:m.width,height:m.height});
+    }else{
+      position={yaw:-14,pitch:58,
+        zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?.40:.72,
+        panX:0,panY:0};
+    }
+    if(instant&&cameraRig)cameraRig.snap(position);
+    else applyCamera();
+  }
+  function resetCamera(){fitCrew();}
   function focusAgent(id){
+    autoFraming=false;
     const role=roster.find(r=>r.id===id);
     if(!role)return;
     // A phone has a smaller viewing window: never crop the agent into an
@@ -460,9 +491,12 @@
   }
   function setEnabled(next){
     enabled=Boolean(next);
+    const firstVisit=!world;
     if(enabled)build();
     const view=$('spatial-viewport');
     if(view)view.hidden=!enabled;
+    const cameraMount=$('office-camera-toolbar');
+    if(cameraMount)cameraMount.hidden=!enabled;
     const wardrobeMount=$('office-costume-toolbar');
     if(wardrobeMount)wardrobeMount.hidden=!enabled;
     const floor=scene?.querySelector('.workfloor-art');
@@ -470,10 +504,17 @@
     $('office-3d-toggle').textContent=enabled?'2D floorplan':'Explore 3D office';
     $('office-3d-toggle').setAttribute('aria-pressed',String(enabled));
     if(cameraRig)cameraRig.setSuspended(!enabled);
-    if(enabled)applyCamera();
+    if(enabled){
+      if(firstVisit||autoFraming)fitCrew({instant:firstVisit});
+      else applyCamera();
+    }
   }
+  window.addEventListener?.('resize',()=>{
+    if(enabled&&autoFraming)fitCrew();
+  });
   window.WorkSaban3D={setEnabled,consume,consumeExecutorEvent,proposed,reset,select,focusAgent,tourNext,toggleFollow,toggleRoomLevel,
     setCrewCostumes,setSelectedCostume,
-    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel,
+    getState:()=>({...state}),getCamera:()=>({...position}),getRenderedCamera:()=>cameraRig?.getPose()||({...position}),
+    fitCrew,isAutoFraming:()=>autoFraming,isFollowing:()=>followSelected,isRoomLevel:()=>roomLevel,
     getCostumes:()=>costumes?.snapshot()||null,getCostume:(role)=>costumes?.resolve(role)||null};
 })();
