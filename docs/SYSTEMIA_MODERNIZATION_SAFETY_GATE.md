@@ -116,3 +116,73 @@ blackout and architecture-health tools.
 source review, real integration test, externally observed canary, separately
 tested restore, release receipt, signed ownership, controlled rollback,
 and measured operating cost, each linked to its own evidence.
+
+## Recovery drill claim reconciliation (v1 extension, 2026-11-15)
+
+The separate `tools/systemia_recovery_receipt_gate.py` performs **read-only
+structural reconciliation** of four supplied, redacted event claims:
+`baseline`, `fault`, `recovered`, and `external`. Every event must
+identify the same run and service and carry a timezone-aware observation
+timestamp plus an observer identity. The external observation must claim
+trusted HTTPS, a different observer, and the restored deployment identity.
+The baseline and restored checkpoints must have identical SHA-256 digest
+claims, and the supplied last-commit times must respect declared recovery
+point and recovery time objectives (RPO/RTO). Irreversible action counts
+and accepted replay/duplicate counts must show no duplicate effect.
+
+```bash
+python tools/systemia_recovery_receipt_gate.py --manifest /private/REDACTED-drill.json
+python -m unittest discover -s tests -p 'test_systemia_*_gate.py' -v
+```
+
+Manifest envelope:
+
+```json
+{
+  "schema": "evercraft.recovery-drill-evidence.v1",
+  "run_id": "EXAMPLE-ONLY",
+  "service_id": "illustrative-private-service",
+  "mode": "isolated_simulation",
+  "objectives": {"rto_seconds": 120, "rpo_seconds": 0},
+  "irreversible_actions": {
+    "before": 0,
+    "after": 0,
+    "duplicate_executions": 0,
+    "expired_replays_accepted": 0
+  },
+  "events": {
+    "baseline": {},
+    "fault": {},
+    "recovered": {},
+    "external": {}
+  }
+}
+```
+
+The example intentionally **fails closed** until actual reviewed evidence
+exists. Read `tests/test_systemia_recovery_receipt_gate.py` for a fully
+synthetic conformance specimen, never for a production receipt.
+
+Output states:
+
+- `held`: evidence missing, inconsistent, or outside the stated objective.
+- `simulation_consistent_for_review`: **simulation-only** claims are structurally
+  consistent; this does not establish hardware continuity.
+- `field_evidence_candidate_for_review`: submitted field claims are
+  structurally consistent and identify different host/power domains.
+  They **still need** independent source authentication and a witnessed
+  physical drill before becoming field proof.
+- `invalid_manifest`: cannot even evaluate the declaration.
+
+This tool does not do a network probe, restore data, verify an observer's
+identity, authenticate receipts, detect fraudulent claims or grant approval.
+No `mode` string can turn a synthetic trace into certification. The
+protected Systemia evidence workflow must verify genuine source lineage,
+approval, actual availability, physical power/network independence and
+real recovery before labeling a product resilient. In particular, the
+existing `systemia/network/blackout-resilience-proof.mjs` is a local
+process simulation, **not** physical failover proof.
+
+For the first field trial, select a non-customer test service and a
+redacted snapshot. Never inject a fault into live Payments, public DNS,
+private customer records or a production edge for this source review.
