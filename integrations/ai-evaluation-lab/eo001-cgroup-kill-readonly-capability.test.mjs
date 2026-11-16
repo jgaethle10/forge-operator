@@ -26,10 +26,12 @@ function fixture(run){
   io.injectedBootId=boot;
   io.statfsSync=()=>({type:0x63677270n});
   io.openSync=(filename,flags,...args)=>{
-    operations.opened.push({filename:String(filename),flags});
     if(String(filename).endsWith('/cgroup.kill'))
       throw Error('NEVER_OPEN_CGROUP_KILL');
-    return fs.openSync(filename,flags,...args);
+    const fd=fs.openSync(filename,flags,...args);
+    // Track successfully opened FDs, not a rejected open attempt.
+    operations.opened.push({filename:String(filename),flags,fd});
+    return fd;
   };
   io.closeSync=fd=>{operations.closed.push(fd);return fs.closeSync(fd);};
   const query=(overrides={})=>surveyExistingSyntheticCgroupKillReadOnly({
