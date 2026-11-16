@@ -38,6 +38,27 @@ jobs:
           node-version: '22'
       - name: Test evidence and false-positive rejection
         run: node --test tests/website-audit-public-preview-canary.test.mjs
+      - name: Diagnose public Fabric network path independently
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          echo '=== DNS ANSWERS ==='
+          getent ahostsv4 fabric.systemiacommandcenters.com | head -n 8
+          echo '=== IPv4 PAGE REACHABILITY ==='
+          curl --ipv4 -L -sS -o /tmp/fabric-audit-page-4.html --max-time 12 \
+            -w 'http=%{http_code} remote_ip=%{remote_ip} total=%{time_total}\n' \
+            https://fabric.systemiacommandcenters.com/offers/website-audit
+          echo "curl_ipv4_exit=$?"
+          echo '=== IPv6 PAGE REACHABILITY ==='
+          curl --ipv6 -L -sS -o /tmp/fabric-audit-page-6.html --max-time 8 \
+            -w 'http=%{http_code} remote_ip=%{remote_ip} total=%{time_total}\n' \
+            https://fabric.systemiacommandcenters.com/offers/website-audit
+          echo "curl_ipv6_exit=$?"
+          echo '=== PRESERVE VALIDATED METADATA WHEN AVAILABLE ==='
+          if [ -s /tmp/fabric-audit-page-4.html ]; then
+            grep -oE '<meta[^>]+(og:image|twitter:card)[^>]*>' /tmp/fabric-audit-page-4.html | head -n 10
+          fi
       - name: Probe public social metadata and real PNG
         shell: bash
         run: |
