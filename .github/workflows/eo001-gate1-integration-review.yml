@@ -68,6 +68,8 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-native-scope-stop.test.mjs
       - name: Verify local fsynced one-use permit ledger and replay refusals
         run: node --test integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.test.mjs
+      - name: Audit missing, reordered and tampered private stop receipts without running systemd
+        run: node --test integrations/ai-evaluation-lab/eo001-one-use-stop-audit.test.mjs
       - name: Verify held-FD two-phase supervisor capture without starting/stopping services
         run: node --test integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.test.mjs
       - name: Verify optional owner-only archive refuses overwrites and unsafe directories
