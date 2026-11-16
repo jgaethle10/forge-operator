@@ -77,3 +77,19 @@ Added \`systemia/worlds/living-lobby-presence-proof.mjs\` and \`tests/worlds-liv
 Run \`node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs tests/worlds-living-lobby-presence.test.mjs\`.
 
 **Live blockers:** Connect verified Identity session validation including session revocation; issue actual Passport grants through authorized UI; add durable, privacy-preserving invitation state; implement authenticated per-session transport, blocking and abuse moderation; physical iPhone/network testing; and verify the owned Worlds HTTPS release. No customer-facing multiplayer is deployed by these tests or source changes.
+
+
+## First-party signed Identity integration
+
+The private presence kernel can now use \`systemia/worlds/living-lobby-identity-bridge.mjs\` for human sessions. Its trusted host supplies the active Identity instance and signing keyring, with:
+
+- \`verifyEvercraftSession\` validating the exact session signature and expiration.
+- \`EvercraftIdentity.assertSessionActive\` checking the current session revocation and subject-wide sign-out cutoff at admission **and on subsequent presence lookups**.
+- Keyring retirement invalidating cached sessions; this bridge retains only opaque subject/session references, issued/expiry timestamps and signing-key ID, **not** display names, password material or bearer tokens.
+- An independent owned, verified **agent attestation** adapter is still required. An AI agent does not become authenticated by sending an \`agent\` string.
+- Adult eligibility and Passport rights are separate mandatory services. The Identity signature alone does not establish that a human is an adult or has opted into networking.
+
+Test against real first-party signed synthetic sessions and private temporary Identity state with:
+\`node --test tests/worlds-living-lobby-identity-bridge.test.mjs\`.
+
+These source tests do not register people, expose a shared websocket, publish account identity or activate any customer-facing multiplayer session.
