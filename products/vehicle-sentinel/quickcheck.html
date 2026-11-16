@@ -29,7 +29,7 @@ const findMyStatuses=new Set(['not-checked','no-alert','alert','uncertain']);
 let state;
 const create=()=>({schema:'evercraft.vehicle-sentinel.session.v2',id:'VS-'+new Date().toISOString().slice(0,10)+'-'+Math.random().toString(36).slice(2,8).toUpperCase(),startedAt:new Date().toISOString(),completedAt:null,findMy:'not-checked',checks:[],events:[]});
 function normalizeImport(s){
-  if(!s||s.schema!=='evercraft.vehicle-sentinel.session.v2'||typeof s.id!=='string'||s.id.length>96||!Array.isArray(s.checks)||!Array.isArray(s.events)||s.events.length>250)throw Error('unsupported_report');
+  if(!s||s.schema!=='evercraft.vehicle-sentinel.session.v2'||typeof s.id!=='string'||!/^VS-[A-Za-z0-9_-]{6,90}$/.test(s.id)||!Array.isArray(s.checks)||!Array.isArray(s.events)||s.events.length>250)throw Error('unsupported_report');
   const started=typeof s.startedAt==='string'&&Number.isFinite(Date.parse(s.startedAt))?s.startedAt:null;
   if(!started)throw Error('invalid_timestamp');
   const completed=typeof s.completedAt==='string'&&Number.isFinite(Date.parse(s.completedAt))?s.completedAt:null;
