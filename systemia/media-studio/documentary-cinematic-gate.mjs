@@ -89,6 +89,10 @@ export function assessDocumentaryCinematic(input,observed){
       if(SHA.test(source.sha256||''))sourceHashes.add(source.sha256);
       need(source.independentlyVerified===true&&nonempty(source.rightsReviewRef)&&
         nonempty(source.privacyReviewRef)&&nonempty(source.sourceOriginRef),'source_evidence_missing:'+id);
+      // Federal/agency provenance on a whole video does NOT clear every embedded shot.
+      // Wire-service logos (e.g., AFP) and reused third-party visuals need segment-level clearance.
+      need(['none_observed','cleared_per_shot'].includes(source.embeddedThirdPartyStatus),
+        'embedded_third_party_rights_review_missing_or_blocked:'+id);
     }
   }
   const shotIds=new Set(),scaleSet=new Set(),roleSet=new Set(),footageIds=new Set();
@@ -110,6 +114,10 @@ export function assessDocumentaryCinematic(input,observed){
       footageShots++;
       const source=sourceById.get(shot.sourceId);
       need(Boolean(source&&REAL_KINDS.has(source.kind)),'footage_not_authorized_real_video:'+id);
+      if(source?.embeddedThirdPartyStatus==='cleared_per_shot'){
+        need(shot.segmentRightsReviewed===true&&nonempty(shot.segmentRightsEvidenceRef),
+          'third_party_segment_not_independently_cleared:'+id);
+      }
       need(VIDEO_SCALES.has(shot.shotScale),'shot_scale_missing:'+id);
       if(VIDEO_SCALES.has(shot.shotScale))scaleSet.add(shot.shotScale);
       if(source&&REAL_KINDS.has(source.kind)){footageIds.add(shot.sourceId);footageSeconds+=length;}
