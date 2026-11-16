@@ -302,7 +302,7 @@ test("Passport-mode Home denies outcome bridge without payments scope and permit
     starts_at:new Date(now-60_000).toISOString(),
     ends_at:new Date(now+60*60_000).toISOString(),
   });
-  assert.equal(granted.state,"issued");
+  assert.equal(granted.state,"granted");
   response=await fetch(runtime.url+"/api/os/outcome-readback",{
     headers:{cookie},
   });
