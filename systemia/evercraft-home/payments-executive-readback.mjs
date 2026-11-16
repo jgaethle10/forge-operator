@@ -2,6 +2,7 @@
 // Never infer settlement from checkout links, Stripe redirects, discovery, or synthetic records.
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { parseOwnedPaymentUrl } from "../mcp/owned-payment-transport.mjs";
 
 export const EXECUTIVE_PAYMENT_SCHEMA = "evercraft.home.payments-readback.v1";
@@ -76,6 +77,20 @@ function validateSnapshot(snapshot, period, nowMs) {
     !Number.isSafeInteger(snapshot.order_count) ||
     snapshot.order_count !== snapshot.orders.length
   ) throw Error("canonical_snapshot_unverified");
+  // Canonical digest over the exact receipt fields prevents a mismatched aggregate
+  // being treated as a coherent snapshot. TLS and the private bearer authenticate
+  // its source; this digest is integrity, NOT an independent signature.
+  const signedPayload = {
+    schema: snapshot.schema, authority: snapshot.authority,
+    provider_boundary: snapshot.provider_boundary, source: snapshot.source,
+    complete: snapshot.complete, synthetic: snapshot.synthetic,
+    livemode: snapshot.livemode, currency: snapshot.currency,
+    window_start: snapshot.window_start, window_end: snapshot.window_end,
+    verified_at: snapshot.verified_at, order_count: snapshot.order_count,
+    gross_settled_cents: snapshot.gross_settled_cents, orders: snapshot.orders,
+  };
+  const computed = "sha256:"+createHash("sha256").update(JSON.stringify(signedPayload)).digest("hex");
+  if (snapshot.snapshot_receipt_sha256 !== computed) throw Error("canonical_snapshot_digest_mismatch");
   const seenOrders = new Set(), seenReceipts = new Set();
   let cents = 0;
   for (const order of snapshot.orders) {
