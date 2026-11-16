@@ -1,4 +1,4 @@
-# EO-001 Gate 1 | native exact-unit synthetic stop controller
+# EO-001 Gate 1 | offline exact-unit stop simulation and host stop hold
 
 **DRAFT, REVIEW ONLY. NOT A PHYSICAL TEST AUTHORIZATION.**
 
@@ -9,14 +9,18 @@ remains **NOT FROZEN**.
 
 ## What was built and what was tested
 
-The opt-in exported `attemptApprovedExactSyntheticScopeStop` function can
-construct an exact `/usr/bin/systemctl --user stop
-eo001-g1-synthetic-<32-hex>.scope` call with a finite timeout. It does
-**not** expose a CLI, register a service, run a worker, execute a model, or
-call this function automatically. All CI tests use **in-memory fake systemd
-and kernel responses**; no real systemd stop occurs in CI.
+The opt-in exported `attemptApprovedExactSyntheticScopeStop` function now
+accepts **only explicitly labeled offline synthetic I/O**, and invokes the
+injected fake `stopExact()` method with a fixed synthetic scope and bounded
+budget. The earlier built-in `/usr/bin/systemctl --user stop` subprocess
+route was **removed** because stop-by-name is not atomically bound to the
+original cgroup identity. Without injected offline I/O the function returns
+`NATIVE_STOP_MANAGER_ATOMIC_BINDING_UNAVAILABLE` before reserving a permit.
+It does **not** expose a CLI, register a service, run a worker, execute a
+model, or automatically call the function. No host systemd stop exists in
+this source tree. Passing CI cannot authorize a physical stop.
 
-The native path refuses actuation unless the caller separately supplies:
+The **offline simulated** path refuses its fake stop event unless the caller supplies:
 
 1. An exact source-pinned, **review-only** scope proposal derived from a live
    pre-stop supervisor snapshot, with fixed synthetic scope unit and
@@ -25,11 +29,12 @@ The native path refuses actuation unless the caller separately supplies:
    device+inode/time-limited **permit** signed by *two distinct Ed25519
    private keys*, owner and independent reviewer, against the
    `evercraft.eo001.synthetic-scope-stop-permit.v1\n` domain.
-3. A clean Git checkout at the **permitted exact source commit** (including
-   no untracked files or symlinked checkout root, checked immediately before
-   execution), a running user systemd manager and fresh
-   readback of the exact active unit/cgroup, host boot identity, pre-recorded
-   worker/descendant kernel starttime, session, group and membership.
+3. A **simulated** clean source checkout at the permitted exact commit and
+   injected readbacks of the manager unit/cgroup, boot identity, original
+   worker/descendant starttime, session, group and membership. These are
+   checked as supplied I/O, **not independently obtained host evidence**.
+   Any future production checkout and manager access must be separately
+   implemented and source-reviewed.
 4. An owner-controlled external `reserve` + `record` sink that claims a
    durable **one-use** permit reservation and persists a pre-stop audit record
    **before** actuation. The controller revalidates the manager/unit/process
@@ -40,7 +45,7 @@ The native path refuses actuation unless the caller separately supplies:
    and retain failure/unknown evidence. A missing, removed or recreated
    cgroup is **UNKNOWN**, never independently proven empty.
 
-This is **still not a complete field implementation**. An opt-in local
+This is **not a field implementation**. An opt-in local
 `eo001-one-use-stop-ledger.mjs` prototype now supports a dedicated 0700
 owner-only directory, 0600 exclusive one-use permit reservation, fsync of
 file and parent directory, and bounded ordered private receipts. Its CI tests
@@ -49,8 +54,8 @@ It is **not a deployed or independently approved trust service**; an owner
 or root user can edit/delete/rollback its directory, and disk failures can
 leave a burned permit requiring manual investigation. The controller does not
 automatically instantiate this ledger. No actual owner or reviewer keys have
-been independently provisioned and no approved host runner wires the pieces
-together. Passing ephemeral test signatures only proves signature checking
+been independently provisioned, and no approved host runner or production
+stop adapter wires the pieces together. Passing ephemeral test signatures only proves signature checking
 against injected public keys. A caller can inject keys they control: cryptographic
 verification **does not establish human identity, approval provenance,
 independent Lab approval, or real authorization**. A test IO can fake the
@@ -60,11 +65,12 @@ review.
 ## Explicit unknowns and stop authority boundaries
 
 - Exact systemd **unit names can be recycled between a unit recheck and a
-  stop**. Fresh procfs metadata and a 200 ms recheck interval limit
-  staleness but **do not remove the race**. Before physical testing,
-  the reviewing owner/Lab must settle a manager-backed identity strategy
-  and how to bind a stop to the original held cgroup when systemd removes
-  transient units quickly.
+  stop**. Fresh procfs metadata and a 200 ms recheck interval reduce
+  staleness but **do not remove the race**. The previously coded by-name
+  host stop adapter was removed at this review checkpoint. Before any
+  new physical runner, the owner and Lab must approve a verifiable binding
+  from the original held scope to the actual stop target, or explicitly
+  assess a narrower alternative under independent observation.
 - A successful `systemctl --user stop` exit code is only a **request
   acknowledgment**, not proof that an independently observed detached
   descendant was killed.
@@ -86,11 +92,12 @@ review.
 
 ## Exact next decision, not standing permission
 
-Before using this on HP NextGen, independently review the source and
-systemd unit-replacement risk, provision and verify separate trust roots,
-implement a durable owner-controlled one-use sink, freeze a **specific
-synthetic scope** and bounded observation window, and obtain **explicit,
-separate host-owner permission** for that exact run. The earlier one-shot
+Do **not** use this source as a physical stop runner on HP NextGen. First
+independently review and implement a manager-safe scope stop strategy,
+provision and verify separate trust roots, independently review the
+owner-controlled one-use sink, freeze a **specific synthetic scope** and
+bounded observation window, and obtain **explicit, separate host-owner
+permission** for that exact proposed run. The earlier one-shot
 synthetic canary approval cannot be reused.
 
 Only after an independently observed still-live separate-session descendant,
