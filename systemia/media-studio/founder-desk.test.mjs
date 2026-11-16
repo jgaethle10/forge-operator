@@ -18,6 +18,10 @@ test('founder and customers face the same hard stop for unfinished commercials',
   assert.equal(readiness(job).canDeliver,false);
   assert.ok(readiness(job).blockers.some(x=>x.includes('Signature')));
   assert.throws(()=>patchJob(job,{format:'4:3'}),/invalid_format/);
+  assert.throws(()=>patchJob(job,{narration:'silently_fake_voice'}),/invalid_narration_mode/);
+  const musicOnly=patchJob(job,{narration:'music_only'});
+  assert.equal(musicOnly.narration,'music_only');
+  assert.equal(readiness(musicOnly).blockers.some(x=>x.includes('narration take')),false);
   assert.throws(()=>patchJob(job,{cta:3}),/invalid_field_cta/);
   const updated=patchJob(job,{goal:'Show actual tile workmanship',cta:'Verified client CTA'});
   assert.equal(updated.cta,'Verified client CTA');
