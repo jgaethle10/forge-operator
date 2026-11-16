@@ -21,7 +21,7 @@ const validPath=value=>{
      value.length>512||/[\\\x00-\x1f\x7f]/.test(value))
     return false;
   const segments=value.slice(1).split('/');
-  return segments.length>=3&&segments.length<=24&&
+  return segments.length>=2&&segments.length<=24&&
     segments.every(part=>/^[A-Za-z0-9_.@-]+$/.test(part)&&
       part!=='.'&&part!=='..');
 };
