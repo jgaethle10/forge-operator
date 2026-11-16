@@ -214,3 +214,21 @@ node --import tsx systemia/world-engine/sim-to-real/family-trial-rc05f.mjs --fam
 **Limits:** different synthetic geometry is not independently sourced real-world data. The worlds still share simplified sphere physics and synthetic sensing. No calibrated physical braking, safety certification, physical hardware, e-stop, production release, or merge is authorized. The original RC05 default is unchanged.
 
 Native CI also examines the final 60 ticks of **legacy seed 55 and 56** without modifying their controller or reclassifying their timeouts.
+
+## RC05G: bounded modeled inward recovery (experimental)
+
+`controller-rc05-goal-recovery.mjs` is an opt-in wrapper around the existing RC05E latched controller. Only a `geofence_uncertain_hold` **near the modeled goal** can be replaced with a low-speed (0.16 m/s proxy) inward request. It requires a recent anonymous sensor scan, low estimated pose uncertainty, low actual modeled velocity, strictly reduced **inner** geofence violation, clearance in the proposed direction, no moving-hazard prediction, and no active hazard latch. Outward commands still queued in the simulated pipeline are cleared before attempting recovery. The existing default and RC05E modes are unchanged.
+
+RC05G initially showed 23 modeled inward requests on old seed 55 but still timed out just outside the inner margin. We then corrected the minimum-progress threshold to scale with the remaining violation, rather than demanding seven centimeters when fewer than seven remained. Latch hold and canceled-command counts are now also included in RC05G native receipts, fixing an evidence-reporting omission. New GitHub CI validates both changes before any results are considered.
+
+Run:
+
+```sh
+node --test systemia/world-engine/sim-to-real/controller-rc05-goal-recovery.test.mjs
+node --import tsx --test systemia/world-engine/sim-to-real/recovery-trial-rc05g.test.mjs
+node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family legacy --first-seed 49 --seeds 8
+node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family crossing-lanes --first-seed 101 --seeds 8
+node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family offset-slalom --first-seed 201 --seeds 8
+```
+
+**Safety and evidence:** This is synthetic, planar sphere motion, not verified rover dynamics. It cannot command physical hardware, bypass an outer modeled fence, certify an emergency stop, or authorize deployment. Deterministic SHA-256 receipts demonstrate replay consistency only. A collision, geofence failure, lost arrival or absent improvement blocks review promotion. The PR must remain draft until separately reviewed.
