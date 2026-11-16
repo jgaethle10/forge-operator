@@ -156,7 +156,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
     model:'native planar sphere with velocity commands, synthetic noisy anonymous proximity scans',
     worldDigest:engine.definitionDigest,finalSnapshotDigest:final.digest,
     outcome:{status,ticks:final.tick,holdRequests,holdsWhileMoving,contactTicks,sweepTicks,geofenceTicks,sensorMissTicks,
-      ...(controllerMode==='observed-motion-latched'?{modeledCanceledCommands,latchedHoldTicks}: {})},
+      ...((controllerMode==='observed-motion-latched'||controllerMode==='observed-goal-recovery')?{modeledCanceledCommands,latchedHoldTicks}: {})},
     proof:{deterministicReplay:true,snapshotRestored:restored,allTicksRecorded:frames.length===final.tick},
     courseBounds:course.bounds,goal:course.goal,inputs,frames,
     limitations:['synthetic proximity scans are not physical lidar or robust localization',
