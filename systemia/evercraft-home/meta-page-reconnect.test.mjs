@@ -98,8 +98,9 @@ test('OAuth callbacks fail closed on denied consent, expired state, and weak app
     const deny=new URL(f.flow.start(owner).authorization_url).searchParams.get('state');
     assert.equal((await f.flow.callback({state:deny,error:'access_denied'})).ok,false);
     assert.equal(f.flow.status(owner).pages.length,0);
-    fs.chmodSync(f.secretFile,0o644);
     const bad=new URL(f.flow.start(owner).authorization_url).searchParams.get('state');
+    fs.chmodSync(f.secretFile,0o644);
+    assert.equal(f.flow.status(owner).configured,false);
     assert.equal((await f.flow.callback({state:bad,code:'fake-code'})).ok,false);
     assert.equal(f.vault.list().length,0);
   }finally{f.cleanup();}
