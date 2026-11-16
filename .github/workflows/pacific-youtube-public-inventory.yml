@@ -1,0 +1,23 @@
+name: Pacific Public YouTube Inventory
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [systemia/media-studio/pacific-youtube-public-inventory.py,.github/workflows/pacific-youtube-public-inventory.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m pip install 'yt-dlp>=2026.10.01'
+      - run: python systemia/media-studio/pacific-youtube-public-inventory.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-public-youtube-inventory
+          path: pacific-public-youtube-discovery/
+          retention-days: 7
+          if-no-files-found: error
