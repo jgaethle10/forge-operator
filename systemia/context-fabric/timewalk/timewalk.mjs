@@ -67,6 +67,7 @@ export function queryTimewalk(fabric, input = {}) {
     actor_ref, namespaces, entity_ref, predicate,
   });
   if (snapshot?.schema !== 'evercraft.context.authorized-timewalk-snapshot.v1' ||
+      snapshot.authority_filter_applied !== true ||
       !Array.isArray(snapshot.records)) {
     throw new Error('timewalk_authorized_snapshot_invalid');
   }
@@ -83,15 +84,24 @@ export function queryTimewalk(fabric, input = {}) {
 
     let retractedAt = null;
     let retractionRecordedAt = null;
+    let retractionEvidenceRef = null;
     let legacyRetractionTimeUnknown = false;
     if (retraction) {
       verifyTimewalkRecordReceipt(retraction);
-      retractedAt = strictInstant(retraction.retracted_at, 'retracted_at');
+      const eventAt = strictInstant(retraction.retracted_at, 'retracted_at');
       if (retraction.created_at) {
-        retractionRecordedAt = strictInstant(retraction.created_at, 'retraction_created_at');
+        const recordedAt = strictInstant(retraction.created_at, 'retraction_created_at');
+        // Do not reveal a later-learned retraction's timestamp, evidence,
+        // or even its existence inside an earlier knowledge-time projection.
+        if (recordedAt <= knownAt) {
+          retractedAt = eventAt;
+          retractionRecordedAt = recordedAt;
+          retractionEvidenceRef = retraction.evidence_ref ?? null;
+        }
       } else {
-        // Old retractions have no independent system clock. A backdated
-        // event timestamp cannot establish when the system learned it.
+        // Legacy receipts lack an independent knowledge clock. We cannot
+        // truthfully reconstruct status; flag uncertainty without exposing
+        // a possibly future event timestamp or private evidence reference.
         legacyRetractionTimeUnknown = true;
       }
     }
@@ -117,8 +127,9 @@ export function queryTimewalk(fabric, input = {}) {
       supersedes_record_id: record.supersedes_record_id,
       retracted_at: retractedAt,
       retraction_recorded_at: retractionRecordedAt,
-      retraction_time_basis: retraction ? (legacyRetractionTimeUnknown ? 'legacy_unverifiable' : 'created_at') : null,
-      retraction_evidence_ref: retraction?.evidence_ref ?? null,
+      retraction_time_basis: legacyRetractionTimeUnknown ? 'legacy_unverifiable'
+        : retractionRecordedAt ? 'created_at' : null,
+      retraction_evidence_ref: retractionEvidenceRef,
       status: legacyRetractionTimeUnknown ? 'retraction_time_unverified'
         : retractionRecordedAt && retractionRecordedAt <= knownAt ? 'retracted' : 'active',
       citation: `context:${record.record_id}`,
