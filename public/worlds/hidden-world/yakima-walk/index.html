@@ -31,7 +31,7 @@ body{background:#101a20}.intro{background:linear-gradient(90deg,#17232af0,#16273
 .static-fallback{display:block;padding:14px 16px;border:1px solid #b9a273;background:#0b2531e8;color:#f5e6c8;border-radius:10px}
 .static-fallback .fallback-link{background:#edcb92!important;color:#15242b!important;font-weight:850;text-decoration:none}
 </style>
-</head><body class="no-js">
+<link rel="stylesheet" href="../../world-radio.css" /></head><body class="no-js">
 <canvas id="world" tabindex="0" aria-label="Walkable illustrated Yakima historical research environment. No surveyed building geometry or underground tunnels are represented."></canvas><div id="shade"></div>
 <header class="top"><a class="brand" href="../">EVERCRAFT <b>WORLDS</b> · HIDDEN WORLD</a><a class="back" href="../yakima-evidence.html">← Yakima research evidence</a></header>
 <section class="intro" id="intro"><div class="introcontent">
@@ -56,4 +56,11 @@ body{background:#101a20}.intro{background:linear-gradient(90deg,#17232af0,#16273
 <div class="detail-label">Historical source boundary</div><p>The Lund Building is documented at North Front Street and Yakima Avenue. The 3D placement, other facade designs and walking path are illustrative and are not aligned to the 1905–1915 photograph or to Sanborn sheets. The 1983 nomination reports connecting doorways, not verified underground tunnels.</p><div id="sources"></div></aside>
 <div id="unsupported" class="hidden"><div><h2>WebGL2 is unavailable here.</h2><p>The full historical evidence exhibit still works without interactive graphics.</p><a class="fallback-link" href="../yakima-evidence.html">Open the Yakima Evidence Lab ↗</a></div></div>
 <script type="module" src="./app.mjs"></script>
+<script>
+// Optional present-day live radio; the recreated 1899-1915 streetscape is not period audio.
+// Keep local file:// historical research view free of directory/network dependencies.
+if(location.protocol==='https:'||location.protocol==='http:'){
+  import('../../world-radio.mjs').catch(()=>{});
+}
+</script>
 </body></html>
