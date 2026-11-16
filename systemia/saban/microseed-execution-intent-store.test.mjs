@@ -79,7 +79,6 @@ test('redirected intent directory is rejected without writing outside the state 
       reserveSignedMicroSeedExecution({stateDir,...request}),
       /microseed_execution_intent_unsafe_root/
     );
-    assert.deepEqual(fs.readdirSync(outside),['v1']);
-    assert.deepEqual(fs.readdirSync(path.join(outside,'v1')),[sha(request.device_id)]);
+    assert.deepEqual(fs.readdirSync(outside),[]);
   }finally{fs.rmSync(outside,{recursive:true,force:true});}
 }));
