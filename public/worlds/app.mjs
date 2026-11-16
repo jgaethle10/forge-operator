@@ -1,5 +1,5 @@
 import {initialWorld,loadWorld,saveWorld,applyCommand,stepAgents,validateWorld,canWalk} from './world-core.mjs';
-import {draftQuest,previewQuest,executeQuest} from './quest-master.mjs';
+import {draftQuest,previewQuest,executeQuest,validateQuestProposal} from './quest-master.mjs';
 import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from './quality.mjs';
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
@@ -230,21 +230,36 @@ $('questToggle').onclick=()=>{
   if(opening)$('questIdea').focus({preventScroll:true});
 };
 $('questClose').onclick=closeQuestPanel;
-$('questDraft').onclick=()=>{
+function resetQuestPreview(){
   proposedQuest=null;proposedQuestRevision=null;$('questExecute').disabled=true;
-  $('questReceipt').textContent='';$('questSteps').replaceChildren();
-  if(visitingShared){$('questStatus').textContent='This is a visitor preview. Save a local copy before creating quests.';return;}
+  $('questSteps').replaceChildren();$('questReceipt').textContent='No quest executed yet.';
+}
+function stageQuestProposal(proposal,source){
+  resetQuestPreview();
+  if(visitingShared)throw Error('Visitor worlds are read-only. Save a local copy first.');
+  const verified=validateQuestProposal(proposal),preview=previewQuest(state,verified);
+  proposedQuest=verified;proposedQuestRevision=preview.original_revision;
+  $('questInfo').textContent=verified.narrator+' · '+verified.title+' · '+verified.story;
+  for(const item of preview.steps){
+    const li=document.createElement('li');li.textContent=item.action;$('questSteps').append(li);
+  }
+  $('questStatus').textContent=source+': '+preview.steps.length+' local scene changes proposed. Check every action. Nothing happens without approval.';
+  $('questExecute').disabled=false;
+}
+$('questDraft').onclick=()=>{
+  try{stageQuestProposal(draftQuest(state,$('questIdea').value),'Offline authored quest');}
+  catch(error){resetQuestPreview();$('questStatus').textContent='Quest preview rejected: '+error.message;}
+};
+$('questImport').onchange=async event=>{
+  resetQuestPreview();
   try{
-    const proposal=draftQuest(state,$('questIdea').value);
-    const preview=previewQuest(state,proposal);
-    proposedQuest=proposal;proposedQuestRevision=preview.original_revision;
-    $('questInfo').textContent=proposal.narrator+' · '+proposal.title+' · '+proposal.story;
-    for(const item of preview.steps){
-      const li=document.createElement('li');li.textContent=item.action;$('questSteps').append(li);
-    }
-    $('questStatus').textContent='Preview only. No changes have been made. Approve to apply these '+preview.steps.length+' local scene actions.';
-    $('questExecute').disabled=false;
-  }catch(error){$('questStatus').textContent='Quest preview rejected: '+error.message;}
+    const file=event.target.files?.[0];
+    if(!file||file.size>8192||!file.name.toLowerCase().endsWith('.json'))
+      throw Error('Choose an AI proposal JSON file under 8 KB.');
+    const parsed=JSON.parse(await file.text());
+    stageQuestProposal(parsed,'Imported untrusted proposal');
+  }catch(error){resetQuestPreview();$('questStatus').textContent='Imported proposal refused: '+error.message;}
+  finally{event.target.value='';}
 };
 $('questExecute').onclick=()=>{
   if(visitingShared){$('questStatus').textContent='Visitor worlds are read-only. Save a copy first.';return;}
