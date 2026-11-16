@@ -90,6 +90,21 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4fb8
 .deck-disclaimer{font-size:11px;line-height:1.55;color:#a0a3aa;margin:18px 0 0}
 @media(max-width:1000px){.deck-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.deck-header{align-items:start;flex-direction:column;gap:20px}}
 @media(max-width:590px){.executive-floor{padding:37px 22px}.deck-grid{grid-template-columns:1fr}.deck-item{min-height:174px;padding:20px}.deck-header h2{font-size:34px}.deck-public-link{white-space:normal}}
+
+.executive-receipts{margin-top:27px;border:1px solid #4d4433;padding:25px;background:#0f1218}
+.executive-receipts-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}
+.executive-receipts-heading h3{font:500 27px/1.1 Arial,system-ui,sans-serif;letter-spacing:-.035em;color:#f0eae0;margin:10px 0 0}
+.executive-receipts-heading button{background:transparent;border:1px solid #85714c;color:#edd6a6;padding:12px 15px;font-size:12px;cursor:pointer}
+.executive-receipts-heading button:hover{background:#52412555}.executive-receipts-heading button:disabled{opacity:.55;cursor:default}
+.executive-receipts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.executive-receipt-card{min-height:162px;padding:21px;background:#191c22;border:1px solid #363b45;display:flex;flex-direction:column}
+.executive-receipt-card span{font-size:10px;letter-spacing:.17em;color:#dfc086;font-weight:700}
+.executive-receipt-card strong{font-size:20px;font-weight:560;line-height:1.2;color:#f2f1f0;margin-top:18px}
+.executive-receipt-card p{color:#b8bec8;font-size:12px;line-height:1.65;margin:10px 0 0}
+.executive-receipt-card small{font-size:11px;color:#a7a9b0;margin-top:auto;padding-top:8px}
+.executive-evidence-observed{font-size:11px;color:#9ea4ad;margin:13px 0 0}
+@media(max-width:900px){.executive-receipts-grid{grid-template-columns:1fr}.executive-receipt-card{min-height:135px}}
+@media(max-width:590px){.executive-receipts-heading{display:block}.executive-receipts-heading button{margin-top:16px}}
 </style>
 </head>
 <body>
@@ -156,6 +171,15 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4fb8
  <a class="deck-item" href="apps.html"><span class="deck-kicker">05 / PRODUCTS</span><strong>Applications & portfolio</strong><span>Use the existing authenticated Evercraft OS application directory and its governed install planning.</span><small>Private applications ↗</small></a>
  <a class="deck-item" href="credentials.html"><span class="deck-kicker">06 / SECURITY</span><strong>Connections & custody</strong><span>Review provider connections within the private credential interface. No secrets appear in this card.</span><small>Private connections ↗</small></a>
  </div>
+ <section class="executive-receipts" aria-labelledby="receipt-title">
+   <div class="executive-receipts-heading"><div><div class="eyebrow">Read-only evidence / not a simulation</div><h3 id="receipt-title">Proof before numbers.</h3></div><button type="button" id="executive-evidence-refresh">Refresh source receipts</button></div>
+   <div class="executive-receipts-grid" aria-live="polite">
+     <article class="executive-receipt-card"><span>JOURNAL / SOURCE</span><strong id="executive-journal-state">Not checked</strong><p id="executive-journal-detail">Checking the local published article against its receipt and byte digest.</p><small id="executive-journal-time"></small></article>
+     <article class="executive-receipt-card"><span>CLIP / DISTRIBUTION</span><strong id="executive-clip-state">Not checked</strong><p id="executive-clip-detail">A handoff file is not a social provider posting receipt.</p></article>
+     <article class="executive-receipt-card"><span>PAYMENTS / SALES</span><strong id="executive-payments-state">Not connected</strong><p id="executive-payments-detail">Paid order and settlement receipts are not attached to this Home view. Revenue is unknown, not zero.</p></article>
+   </div>
+   <p id="executive-evidence-observed" class="executive-evidence-observed">Source observation pending · no live storefront or provider audit implied</p>
+ </section>
  <p class="deck-disclaimer">Command status is sourced from the authenticated Home APIs above. Revenue totals, completed publishing, and automatic fulfillment are not asserted by this screen.</p>
 </section>
 <section id="command" class="command">
@@ -454,6 +478,41 @@ document.getElementById("plan-form").addEventListener("submit",async(event)=>{
   }
 });
 
+async function refreshExecutiveEvidence(){
+  const refresh=document.getElementById("executive-evidence-refresh");
+  if(refresh)refresh.disabled=true;
+  const set=(id,value)=>{const element=document.getElementById(id);if(element)element.textContent=String(value||"");};
+  try{
+    const response=await homeFetch("/api/executive/evidence");
+    if(!response.ok)throw new Error("evidence_feed_unavailable");
+    const proof=await response.json();
+    if(!proof.ok||proof.schema!=="evercraft.home.executive-evidence.v1")throw new Error("evidence_schema_mismatch");
+    const journal=proof.journal||{};
+    set("executive-journal-state",journal.state==="source_receipt_verified"?"Source receipt verified":"Held / "+(journal.state||"unavailable"));
+    set("executive-journal-detail",journal.state==="source_receipt_verified"
+      ? String(journal.title||"Article receipt verified")+". Source evidence only; public HTTPS not checked."
+      : String(journal.detail||"No trustworthy source receipt available."));
+    set("executive-journal-time",journal.state==="source_receipt_verified"&&journal.published_at?"Source date: "+journal.published_at:"");
+    set("executive-clip-state",proof.clip?.state==="handoff_source_present"?"Handoff present":"Provider unverified");
+    set("executive-clip-detail",proof.clip?.detail||"No verified provider posting receipt.");
+    set("executive-payments-state","Order feed not connected");
+    set("executive-payments-detail",proof.payments?.detail||"No verified paid order feed. Revenue remains unknown.");
+    set("executive-evidence-observed","Local source checked "+String(proof.observed_at||"")+" · not an external site or settlement confirmation");
+  }catch{
+    set("executive-journal-state","Evidence unavailable");
+    set("executive-journal-detail","The authenticated source readback could not be verified.");
+    set("executive-journal-time","");
+    set("executive-clip-state","Evidence unavailable");
+    set("executive-clip-detail","No provider post can be inferred.");
+    set("executive-payments-state","Order feed not connected");
+    set("executive-payments-detail","No payment outcome can be inferred from a failed readback.");
+    set("executive-evidence-observed","No verified observation returned");
+  }finally{
+    if(refresh)refresh.disabled=false;
+  }
+}
+document.getElementById("executive-evidence-refresh").addEventListener("click",()=>{void refreshExecutiveEvidence();});
+
 async function load(afterLogin=false){
   document.getElementById("date").textContent=new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric"}).format(new Date());
 
@@ -485,6 +544,7 @@ async function load(afterLogin=false){
   const session=await sessionResponse.json();
   if(!session.ok){showLogin("");return;}
   showApp();
+  void refreshExecutiveEvidence();
   const hour=new Date().getHours();
   const greeting=hour<12?"Good morning":hour<17?"Good afternoon":"Good evening";
   document.getElementById("greeting").textContent=greeting+", "+session.display_name+".";
