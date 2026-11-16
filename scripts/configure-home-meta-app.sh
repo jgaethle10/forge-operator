@@ -15,7 +15,7 @@ if [[ "$EUID" -ne 0 ]]; then
   echo "Run as root: sudo bash scripts/configure-home-meta-app.sh <numeric-app-id>" >&2
   exit 2
 fi
-APP_ID="$1"
+APP_ID="$(printf "%s" "$@")"
 if [[ "$#" -ne 1 || ! "$APP_ID" =~ ^[0-9]{5,30}$ ]]; then
   echo "Provide the numeric Meta App ID. Never pass the App Secret as an argument." >&2
   exit 2
