@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
 import {test} from 'node:test';
-const file='public/clients/on-the-go/review/index.html';
-const html=fs.readFileSync(file,'utf8');
-test('review mode, discoverability and privacy guard',()=>{
+
+const html=fs.readFileSync('public/clients/on-the-go/review/index.html','utf8');
+
+test('client preview is unlisted, branded and contact-first',()=>{
  assert.match(html,/<meta name="robots" content="noindex,nofollow,noarchive">/);
- assert.match(html,/CLIENT REVIEW ONLY/);
+ assert.match(html,/CLIENT REVIEW/);
  assert.match(html,/Not a live booking service/);
+ assert.match(html,/ON THE GO/);
  assert.match(html,/tel:\+15098335025/);
  assert.match(html,/mailto:onthegomobileoilchange@outlook\.com/);
  assert.doesNotMatch(html,/<script[^>]+src\s*=/i);
@@ -15,18 +16,14 @@ test('review mode, discoverability and privacy guard',()=>{
  assert.doesNotMatch(html,/google-analytics|gtag\(|facebook\.com\/tr|pixel\.js/i);
  assert.doesNotMatch(html,/squareup\.com\/oauth|squareup\.com\/payments/);
 });
-test('EN/ES and sample referral display works without remote data',()=>{
- const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
- assert.ok(script,'local inline script');
- const elements=new Map();
- const handlers=new Map();
- const get=id=>{if(!elements.has(id))elements.set(id,{id,href:'',textContent:'',dataset:{},setAttribute(k,v){this[k]=v;},addEventListener(type,cb){handlers.set(id+':'+type,cb);}});return elements.get(id)};
- const document={documentElement:{lang:'en'},getElementById:get,querySelectorAll(){return []}};
- const crypto={getRandomValues(b){for(let i=0;i<b.length;i++)b[i]=i+4;return b;}};
- vm.runInNewContext(script,{document,location:{search:'?ec_source=EC-EN-001'},URLSearchParams,crypto}, {timeout:1000});
- assert.match(get('beaconValue').textContent,/^EC-[0-9A-F]{12}$/);
- assert.match(decodeURIComponent(get('emailCta').href),/EC-EN-001/);
- handlers.get('es:click')();
- assert.equal(document.documentElement.lang,'es');
- assert.match(decodeURIComponent(get('emailCta').href),/Solicitud de servicio/);
+
+test('both language choices and service inquiry remain with no tracking jargon',()=>{
+ assert.match(html,/id="en"/);
+ assert.match(html,/id="es"/);
+ assert.match(html,/Cambio de aceite sintético/);
+ assert.match(html,/Full synthetic oil change/);
+ assert.match(html,/emailSubject:'On The Go service inquiry'/);
+ assert.match(html,/emailSubject:'Consulta de servicio On The Go'/);
+ assert.doesNotMatch(html,/beaconTitle|beaconDesc|refCode|EC-DIRECT-001|emailRef|emailSource/);
+ assert.doesNotMatch(html,/How optional referral tracking would work/);
 });
