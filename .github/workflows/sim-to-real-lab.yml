@@ -395,12 +395,15 @@ jobs:
             return r;
           });
           const unsafe=reports.some(r=>r.review.newCollision.length||r.review.newGeofence.length||r.review.lostArrivals.length);
+          const unresolvedSafetyFailures=reports.some(r=>r.scores.recovery.collisions>0||r.scores.recovery.geofence>0);
           const improvements=reports.reduce((sum,r)=>sum+r.review.improvedArrivals.length,0);
-          const researchGate=!unsafe&&improvements>0;
+          const researchGate=!unsafe&&!unresolvedSafetyFailures&&improvements>0;
           const decision=researchGate?'FURTHER_SYNTHETIC_REVIEW_ONLY':'HOLD';
+          if(researchGate&&reports.some(r=>r.pairs.some(p=>['collision','geofence'].includes(p.recovery.status))))
+            throw Error('rc05g_unsafe_research_approval');
           // This decision NEVER represents permission to ship or actuate a robot.
           const summary={decision,improvements,newSafetyOrCompletionRegressions:unsafe,
-            hardwareAuthorized:false,productionAuthorized:false,
+            unresolvedSafetyFailures,hardwareAuthorized:false,productionAuthorized:false,
             sources:reports.map(r=>({family:r.scenarioFamily,firstSeed:r.firstSeed,sha256:r.sha256}))};
           fs.writeFileSync('/tmp/evercraft-rc05g-review.json',JSON.stringify(summary,null,2)+'\n');
           console.log('RC05G GLOBAL MODELED REVIEW',JSON.stringify(summary));
