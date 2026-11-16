@@ -337,3 +337,27 @@ jobs:
             /tmp/evercraft-rc05f-crossing.json
             /tmp/evercraft-rc05f-slalom.json
           retention-days: 7
+
+      - name: RC05F verify combined family gate cannot authorize hardware
+        run: |
+          node --import tsx --test systemia/world-engine/sim-to-real/family-review-gate-rc05f.test.mjs
+          node --import tsx systemia/world-engine/sim-to-real/family-review-gate-rc05f.mjs \
+            --crossing /tmp/evercraft-rc05f-crossing.json \
+            --slalom /tmp/evercraft-rc05f-slalom.json \
+            --out /tmp/evercraft-rc05f-global-hold-gate.json
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyFamilyGate} from './systemia/world-engine/sim-to-real/family-review-gate-rc05f.mjs';
+          const g=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05f-global-hold-gate.json','utf8'));
+          if(!verifyFamilyGate(g)||g.hardwareAuthorized!==false||g.productionAuthorized!==false)
+            throw Error('rc05f_global_authority_or_receipt_invalid');
+          console.log('RC05F GLOBAL RESEARCH REVIEW',JSON.stringify({
+            decision:g.decision,overallResearchEligible:g.overallResearchEligible,
+            families:g.families,digest:g.sha256}));
+          NODE
+      - name: Upload strict RC05F global review gate
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05f-cross-family-gate
+          path: /tmp/evercraft-rc05f-global-hold-gate.json
+          retention-days: 7
