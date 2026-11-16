@@ -60,3 +60,20 @@ Never ship anonymous public matchmaking by exposing this pure policy module as a
 - Even `consent_complete` returns `delivery_authorized:false`: an authorized delivery mechanism, durable state, rate limits, session-to-presence binding and anti-abuse audits remain unbuilt.
 
 Run `node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs`. This is synthetic proof only, not evidence of authenticated internet participants or messages.
+
+
+## November 16: private presence kernel, integrated proof
+
+Added \`systemia/worlds/living-lobby-presence-proof.mjs\` and \`tests/worlds-living-lobby-presence.test.mjs\`. This is an **ephemeral server-owned data structure**, not an HTTP service or a public multiplayer API.
+
+- A trusted server verifies a real Identity session or agent attestation, its validity window, and its current revocation status. The registry does not take browser-claimed role, consent, name, location or age flags.
+- A server-owned adult eligibility service must affirm the adult pilot gate for each human; age is never revealed in the policy projection.
+- Passport scopes \`worlds.presence.enter.human\` and \`worlds.presence.enter.agent\` are required at admission and on every subsequent presence resolve, alongside current Identity revocation and adult checks.
+- Each returned opaque presence ID is tied to one verified subject and one session or agent attestation. A second device cannot silently take over an existing presence. No roster endpoint or direct contact discovery is provided.
+- Default lease is 60 seconds, capped at 120 seconds. A trusted same-session renewal is required to stay visible. Entries are bounded (default 100, max 500); a process restart deliberately discards all active presence.
+- Internal \`resolvePresence\` returns the minimal fields required by the existing Living Lobbies policy and invitations. **Never return it directly to the browser.** No credentials, precise position, conversations, names or memory are stored.
+- Synthetic integration proves a human-to-human proposal and a two-human, one-agent introduction, with each recipient independently accepting; even completed consent does not permit message delivery.
+
+Run \`node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs tests/worlds-living-lobby-presence.test.mjs\`.
+
+**Live blockers:** Connect verified Identity session validation including session revocation; issue actual Passport grants through authorized UI; add durable, privacy-preserving invitation state; implement authenticated per-session transport, blocking and abuse moderation; physical iPhone/network testing; and verify the owned Worlds HTTPS release. No customer-facing multiplayer is deployed by these tests or source changes.
