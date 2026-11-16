@@ -126,3 +126,48 @@ jobs:
           name: aiw-2026-wa-unassigned-county-audit
           path: ${{ runner.temp }}/aiw-wa-unassigned-audit.json
           retention-days: 7
+
+  oregon-source-discrepancy-audit:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Diagnose Oregon discrepancy without importing an unverified dataset
+        run: |
+          python3 - <<'PY'
+          import collections,hashlib,importlib.util,json,os
+          from pathlib import Path
+          f=Path('research/infrastructure-watch/scripts/fhwa_2026.py')
+          spec=importlib.util.spec_from_file_location('fhwa2026',f)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          index=m.parse_official_index(m.official_get(m.INDEX,max_bytes=2_000_000).decode(),target_state='Oregon')
+          info=index['Oregon']
+          raw=m.official_get(info['url'])
+          rows=json.loads(raw)
+          assert info['count']==8325,'Published count changed: halt and review'
+          ids=[r.get('BID01') for r in rows if isinstance(r,dict)] if isinstance(rows,list) else []
+          state_codes=collections.Counter(str(r.get('BL01')) for r in rows if isinstance(r,dict)) if isinstance(rows,list) else {}
+          grades=collections.Counter(str(r.get('BC12')) for r in rows if isinstance(r,dict)) if isinstance(rows,list) else {}
+          repeats=[k for k,v in collections.Counter(ids).items() if v>1][:8]
+          audit={'state':'Oregon','year':2026,'official_expected_count':info['count'],
+                 'downloaded_record_count':len(rows) if isinstance(rows,list) else None,
+                 'raw_sha256':hashlib.sha256(raw).hexdigest(),'source_url':info['url'],
+                 'payload_type':type(rows).__name__,'state_code_counts':dict(state_codes),
+                 'condition_counts':dict(grades),'duplicate_bridge_id_sample':repeats,
+                 'id_missing_count':sum(not x for x in ids),
+                 'full_state_import_verified':False,
+                 'note':'Diagnostic only. Do not treat this file as reconciled or current safety evidence.'}
+          dest=Path(os.environ['RUNNER_TEMP'])/'aiw-oregon-discrepancy.json'
+          dest.write_text(json.dumps(audit,indent=2)+'\n')
+          print(json.dumps(audit,indent=2))
+          PY
+      - name: Preserve quarantined Oregon discrepancy report
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-oregon-source-discrepancy
+          path: ${{ runner.temp }}/aiw-oregon-discrepancy.json
+          retention-days: 7
