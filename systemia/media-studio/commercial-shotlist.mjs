@@ -17,6 +17,7 @@ const BEATS=new Set(['hook','problem','proof','transformation','cta']);
 const MEDIA=new Set(['video','image']);
 const EVIDENCE=new Set(['observed','licensed','synthetic_visualization']);
 const RIGHTS=new Set(['owned','licensed']);
+const PHOTO_TREATMENTS=new Set(['macro_push','gentle_pan','subtle_parallax','matched_frame']);
 
 function objectDigest(value){
   return crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -61,6 +62,12 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
   const formats=ensureArray(brief.formats,'formats');
   if(formats.some(x=>!['9:16','16:9','1:1'].includes(x)))throw new Error('commercial_brief_format_unsupported');
   const assets=ensureArray(brief.sourceAssets,'source_assets');
+  const photoMode=brief.creativeStandard==='source-photo-motion-v1';
+  if(photoMode){
+    const a=brief.photoMotionApproval||{};
+    if(!clean(a.reviewedBy)||!clean(a.reviewedAt)||!clean(a.evidenceRef)||a.noSyntheticAction!==true)
+      throw new Error('commercial_photo_motion_director_approval_missing');
+  }
   assertRelayFloorBrief(brief);
   if(brief.creativeStandard==='relay-floor-v1'&&!checkFiles)
     throw new Error('relay_floor_requires_file_verification');
@@ -107,8 +114,15 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
       if(!visualSource.subjects.includes(subject))throw new Error('commercial_must_show_not_proven:'+sceneId+':'+subject);
     }
     // The opening must contain relevant action in real/owned/licensed footage.
-    if(index===0 && (visualSource.mediaKind!=='video'||visualSource.evidenceState==='synthetic_visualization'))
+    if(index===0 && visualSource.mediaKind!=='video'){
+      if(!(photoMode&&visualSource.mediaKind==='image'&&visualSource.evidenceState==='observed'&&
+        PHOTO_TREATMENTS.has(scene.motionTreatment)))
+        throw new Error('commercial_opening_real_action_required');
+    }
+    if(index===0 && visualSource.evidenceState==='synthetic_visualization')
       throw new Error('commercial_opening_real_action_required');
+    if(photoMode&&visualSource.mediaKind==='image'&&!PHOTO_TREATMENTS.has(scene.motionTreatment))
+      throw new Error('commercial_photo_motion_treatment_missing:'+sceneId);
     if(index>0 && scene.assetId===scenes[index-1].assetId)
       throw new Error('commercial_adjacent_repeated_hero_footage:'+sceneId);
     if(visualSource.evidenceState==='synthetic_visualization'&&scene.syntheticLabel!==true)
@@ -143,7 +157,9 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
       sourceRefs:[...visualSource.sourceRefs],rights:visualSource.rights,
       evidenceState:visualSource.evidenceState,
       subjectIds:[...subjects],intent:intention,
-      videoFirst:true,voiceLine,voiceMood,scoreEnergy:energy
+      videoFirst:visualSource.mediaKind==='video',
+      ...(photoMode&&visualSource.mediaKind==='image'?{photoMotionTreatment:scene.motionTreatment,requiresFinalMotionReview:true}:{}),
+      voiceLine,voiceMood,scoreEnergy:energy
     };
     timeline.push(item);
     sabanJobs.push({kind:'fallen_creative_shot',key:id+':'+sceneId,
@@ -151,7 +167,8 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
         beat:scene.beat,aspectRatio:formats[0],durationSec:time,storyPrompt:brand+': '+offer,
         intent:intention,subjectIds:[...subjects],coverage:subjects.map((subject,i)=>({
           id:sceneId+'-coverage-'+i,subjectId:subject,subjectLabel:subject,
-          preferredTreatment:'real_source_footage',matchedAssetIds:[visualSource.id],
+          preferredTreatment:photoMode&&visualSource.mediaKind==='image'?'authentic_still_motion':'real_source_footage',
+          matchedAssetIds:[visualSource.id],
           status:'covered'
         })),sourcePath:visualSource.path,mediaKind:visualSource.mediaKind}});
   }
@@ -160,12 +177,14 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
     schema:'evercraft.fallen.source-first-commercial-plan.v1',id,brand,audience,offer,durationSec,
     formats:[...new Set(formats)],timeline,sfxSpots,voiceTakes,musicMap,
     ...(brief.creativeStandard==='relay-floor-v1'?{creativeStandard:brief.creativeStandard,motionObservations}:{}),
+    ...(photoMode?{creativeStandard:brief.creativeStandard,photoMotionApprovalDeclared:true}:{}),
     sabanInventory:{jobs:sabanJobs},
     releaseGates:{
       sourceDigestsVerified:checkFiles,assetRightsDeclared:true,
       voiceAuditionsMustBeListenedTo:true,musicStemsMustBeVerified:true,
       soundSyncMustBeApproved:true,visualTournamentRequired:true,
       finalEncodedAudioQcRequired:true,finalClientReviewRequired:true,
+      photoMotionFinalReviewRequired:photoMode,
       finalVideoMasterCreated:false,publicationAuthority:false
     },
     status:'ready_for_creative_execution_not_final_delivery'
