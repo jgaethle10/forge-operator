@@ -182,7 +182,11 @@ try{
       name:'synthetic-model-proposal.json',mimeType:'application/json',
       buffer:Buffer.from(JSON.stringify(staged))
     });
-    assert.equal(await page.locator('#questExecute').isEnabled(),true,profile.name+': valid imported quest was not staged');
+    await page.waitForFunction(()=>/Imported untrusted proposal|Imported proposal refused/.test(
+      document.querySelector('#questStatus')?.textContent||''),null,{timeout:5000});
+    const importStatus=await page.locator('#questStatus').textContent();
+    assert.equal(await page.locator('#questExecute').isEnabled(),true,
+      profile.name+': valid imported quest was not staged; status='+importStatus);
     const stagedText=await page.locator('#questSteps').innerText();
     assert.match(stagedText,/Place flower at 5, 2/,profile.name+': actions were not previewed');
     const beforeApproval=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')).objects.length);
