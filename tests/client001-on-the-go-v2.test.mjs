@@ -21,6 +21,7 @@ test('V2 authentic client media and brand review gates',()=>{
  assert.doesNotMatch(html,/<script[^>]*src\s*=/i);
  assert.doesNotMatch(html,/\bfetch\s*\(|\bXMLHttpRequest\b|\bnavigator\.sendBeacon\b/);
  assert.doesNotMatch(html,/gtag\(|facebook\.com\/tr\//);
+ assert.doesNotMatch(html,/beacon|refCode|EC-DIRECT-001|How optional referral tracking|Código de referencia/i,'customer page must not show internal tracking');
 });
 test('English and Spanish selection prepares customer-authored email, no tracking',()=>{
  const src=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];assert.ok(src);
@@ -33,7 +34,7 @@ test('English and Spanish selection prepares customer-authored email, no trackin
  const window={matchMedia(){return{matches:true}}};
  vm.runInNewContext(src,{document,location:{search:'?ec_source=EC-ES-001'},URLSearchParams,crypto,window}, {timeout:3000});
  assert.equal(hero.textContent,'Your day keeps moving.');
- assert.match(decodeURIComponent(get('emailCta').href),/EC-ES-001/);
+ assert.doesNotMatch(decodeURIComponent(get('emailCta').href),/EC-ES-001|EVERCRAFT|Preview reference/i);
  events.get('full:click')();
  assert.match(get('selection').textContent,/Full synthetic oil change/);
  events.get('es:click')();
@@ -41,5 +42,5 @@ test('English and Spanish selection prepares customer-authored email, no trackin
  assert.equal(hero.textContent,'Tu día sigue.');
  assert.match(get('selection').textContent,/Cambio de aceite sintético/);
  assert.match(decodeURIComponent(get('emailCta').href),/Me interesa: Cambio de aceite sintético/);
- assert.equal(get('refCode').textContent,'EC-0B0C0D0E0F10');
+ assert.doesNotMatch(decodeURIComponent(get('emailCta').href),/referral|referencia|campaña/i);
 });
