@@ -190,10 +190,10 @@ test('production ratchet passes while grandfathered debt remains visible', () =>
   assert.ok(mesh.summary.missing_contract_count > 0);
   assert.equal(mesh.summary.shared_runtime_contract_count, 4);
   assert.equal(mesh.summary.private_runtime_contract_count, 1);
-  assert.equal(mesh.summary.discovery_only_contract_count, 6);
+  assert.equal(mesh.summary.discovery_only_contract_count, 7);
   assert.deepEqual(
     mesh.priority_queues.contracted_not_shared_runtime,
-    ['earthworks-autonomy', 'evernest-atlas', 'fallen-sessions', 'game-fabric', 'lineage', 'opportunity-fabric', 'systemia-university']
+    ['ai-boardroom', 'earthworks-autonomy', 'evernest-atlas', 'fallen-sessions', 'game-fabric', 'lineage', 'opportunity-fabric', 'systemia-university']
   );
 });
 
@@ -348,6 +348,7 @@ test('new specialist-only door is blocked for explicit review rather than auto-p
 
 test('new current-trunk products are explicitly contracted without overclaiming shared runtime', () => {
   const mesh = renderCapabilityMesh(process.cwd());
+  const boardroom = mesh.products.find((row) => row.product_key === 'ai-boardroom');
   const earthworks = mesh.products.find((row) => row.product_key === 'earthworks-autonomy');
   const evernest = mesh.products.find((row) => row.product_key === 'evernest-atlas');
   const fallen = mesh.products.find((row) => row.product_key === 'fallen-sessions');
@@ -356,9 +357,11 @@ test('new current-trunk products are explicitly contracted without overclaiming 
   const opportunity = mesh.products.find((row) => row.product_key === 'opportunity-fabric');
   const university = mesh.products.find((row) => row.product_key === 'systemia-university');
 
-  for (const row of [earthworks, evernest, fallen, gameFabric, lineage, opportunity, university]) {
+  for (const row of [boardroom, earthworks, evernest, fallen, gameFabric, lineage, opportunity, university]) {
     assert.equal(row.contract_state, 'complete_declaration');
   }
+  assert.equal(boardroom.adoption_stage, 'discovery_only');
+  assert.equal(boardroom.runtime_verified, false);
   assert.equal(earthworks.adoption_stage, 'discovery_only');
   assert.equal(evernest.adoption_stage, 'discovery_only');
   assert.equal(fallen.adoption_stage, 'discovery_only');
@@ -369,6 +372,7 @@ test('new current-trunk products are explicitly contracted without overclaiming 
   assert.equal(university.adoption_stage, 'discovery_only');
   assert.equal(mesh.ratchet.state, 'pass');
   assert.deepEqual(mesh.ratchet.new_public_products.sort(), [
+    'ai-boardroom',
     'earthworks-autonomy',
     'evernest-atlas',
     'fallen-sessions',

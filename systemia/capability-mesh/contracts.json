@@ -728,6 +728,60 @@
         "discovery_creates_payment_obligation": false,
         "shared_runtime_contracted": false
       }
+    },
+    {
+      "product_key": "ai-boardroom",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Boardroom public discovery and its browser-only free answer comparison grant no shared Passport execution scopes. The private multi-provider engine is not activated as a public customer runtime."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "The public comparison works locally on user-pasted text and has no approved shared Context Fabric namespace for private customer decisions or provider outputs."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Public discovery and the free browser-only comparison create no payment or metered usage. The $250 and $500 decision reviews require separate human-confirmed scope and payment; there is no public machine Meter grant."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public comparison accepts only browser-local pasted text, not private server uploads. Human-scoped review intake and data rights are separate, not automatically admitted by public discovery."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "The private multi-model prototype needs server-only vendor credentials and lacks a public authenticated paid-entitlement boundary. The public page cannot execute autonomous provider debates or charge AI models."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery cannot contact advisors, vendors or prospects, or create outreach on a visitor's behalf."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared receipt reconciliation for customer model outputs or decision reviews has been admitted; public comparison does not claim fulfillment or payments."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Withdraw discovery or future public runtime bindings independently, preserving the free on-device comparison and existing human-reviewed service agreements without introducing credentials, public execution or payment authority."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "business_decision_review_and_multi_perspective_ai_analysis"
+        ]
+      },
+      "boundaries": {
+        "public_discovery_only": true,
+        "shared_runtime_contracted": false,
+        "free_browser_comparison_local_only": true,
+        "automatic_external_model_calls": false,
+        "automatic_payment": false,
+        "automatic_review_delivery": false,
+        "private_provider_keys_not_exposed": true,
+        "requires_human_scope_for_paid_reviews": true,
+        "independent_fact_verification_claimed": false
+      }
     }
   ]
 }
