@@ -6,6 +6,8 @@ on:
       - 'systemia/saban/microseed-local-field-proof*.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/saban/microseed-device-quarantine.mjs'
+      - 'systemia/saban/microseed-gateway.mjs'
+      - 'tests/saban-microseed-e2e.test.mjs'
       - 'systemia/saban/microseed-execution-intent-store*.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.test.mjs'
@@ -16,6 +18,8 @@ on:
       - 'systemia/saban/microseed-local-field-proof*.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/saban/microseed-device-quarantine.mjs'
+      - 'systemia/saban/microseed-gateway.mjs'
+      - 'tests/saban-microseed-e2e.test.mjs'
       - 'systemia/saban/microseed-execution-intent-store*.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.test.mjs'
@@ -38,6 +42,7 @@ jobs:
         run: |
           node --check systemia/saban/microseed-local-field-proof.mjs
           node --check systemia/saban/microseed-device-quarantine.mjs
+          node --check systemia/saban/microseed-gateway.mjs
           node --check systemia/saban/microseed-local-field-proof.test.mjs
           node --check systemia/saban/microseed-signed-receipt-store.test.mjs
           node --check systemia/saban/microseed-execution-intent-store.test.mjs
