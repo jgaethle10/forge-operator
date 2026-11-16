@@ -74,3 +74,8 @@ Never count page visitors, sample plans, friend counts, issued codes or drafts a
 - [ ] Only after genuine issuer-backed EPS brand authority and legal clearance, distribute one source-grounded announcement and measure actual provider-published permalinks and consenting applications.
 
 No new recurring automation, no new payment processor, no paid recruitment acquisition, no deceptive earnings claim and no account creation are authorized here.
+
+## Second partner lane: independent operators (Nov 16)
+The distinct `/eps-partners/operators/` concept is **within the same draft PR and same private Partners intake**, not a replacement for the individual introduction/schedule lane. `?focus=eps_operator` safely preselects "Independent field-service operator (EPS)". Operators must keep their own registered business, crews, insurance, equipment and service geography. No company may borrow the EPS registration. A white-label, franchise or fee/royalty arrangement is NOT authorized by this exploratory page.
+
+See `docs/commercial/eps-operator-alliance-qualification-20261116.md` and the 11-candidate deduplicated research registry. One real Workflow X-Ray diagnostic is sell-now as a separate optional service; EPS Estimate Intelligence remains contractor beta and Contractor Cloud remains discovery-only. Partner-interest intake stays free. No operator signup, partner activation, posting, customer dispatch or revenue is confirmed.
