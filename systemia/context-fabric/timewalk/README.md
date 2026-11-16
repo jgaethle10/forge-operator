@@ -257,11 +257,13 @@ merged, or deployed.
 node --test systemia/context-fabric/timewalk/execution-ledger-reader.test.mjs
 ```
 
-## Owned Intake admission source replay (v0.6 research slice)
+## Owned Intake admission source replay (v0.7 research slice)
 
 `intake-ledger-reader.mjs` reconstructs a real
 `evercraft.intake.systemia-admission-packet.v1` **only** from the Intake
 Fabric's existing `candidates.jsonl` and `admission-decisions.jsonl`.
+For originally quarantined candidates, it additionally verifies an explicit
+`quarantine-releases.jsonl` event before admitting the reconstruction.
 It follows the exact field insertion order and receipt-hashing contract
 in `systemia/intake-fabric/intake.mjs`'s
 `buildSystemiaAdmissionPacket()`. No admission packets are invented or
@@ -280,20 +282,30 @@ const report = reconcileTimewalkSourceReceipts(contextFabric, {
 });
 ```
 
-This source adapter opens only two hardcoded files in one private directory,
-with no network connections, writes, arbitrary paths or source-listing API.
-It checks both entire JSONL inputs for signed record hashes, torn writes,
+This source adapter opens only three hardcoded source filenames in one private
+directory, with no network connections, writes, arbitrary paths or
+source-listing API. The quarantine-release file is optional only when no
+release events exist: absence always **holds** quarantined candidates.
+It checks every existing JSONL input for receipt hashes, torn writes,
 duplicate IDs, symlinks, loose POSIX permissions and bounded size/event
 counts. It reconstructs packets for accepted decisions and returns a packet
 **only when its exact digest matches the already-authorized Context record**.
 
 **Deliberate holds and remaining uncertainty:**
 
-- Quarantined candidates are not reconstructed by this two-ledger adapter,
-  even if a separate authorized release might exist. That release is stored
-  in `quarantine-releases.jsonl`; do not infer authorization without
-  independently validating that ledger. This is a conservative
-  **false-negative**, not evidence the packet never existed.
+- Quarantined candidates require an intact, hash-consistent
+  `evercraft.intake.quarantine-release.v1` record for the same candidate,
+  with distinct release identity and evidence references. A missing,
+  altered, duplicated, orphaned, or post-admission release cannot
+  substantiate an earlier acceptance. Reconciliation remains read-only.
+- The release's `authority_grant_id` is a **recorded claim**. Hash
+  validation does not independently replay Passport's historical grant,
+  verify the review evidence contents, or prove a source actor's identity.
+  Independent issuer/key attestation and authority validation are still
+  required before calling the original release *authentic*.
+- The Intake source file snapshots are loaded sequentially rather than as a
+  transactionally atomic three-file snapshot. A concurrent writer can race
+  the audit; production rollout requires source consistency/watermark checks.
 - A candidate, intake decision, and derived packet have unkeyed SHA-256
   integrity only. Matching them does not authenticate the actual producer.
   Independent source attestation/key custody remain separate evidence gates.
